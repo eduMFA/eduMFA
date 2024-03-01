@@ -396,15 +396,7 @@ class SmsTokenClass(HotpTokenClass):
         :return: submitted message
         :rtype: string
         """
-        if is_true(self.get_tokeninfo("dynamic_phone")):
-            phone = self.user.get_user_phone("mobile")
-            if type(phone) == list and phone:
-                # if there is a non-empty list, we use the first entry
-                phone = phone[0]
-        else:
-            phone = self.get_tokeninfo("phone")
-        if not phone:  # pragma: no cover
-            log.warning("Token {0!s} does not have a phone number!".format(self.token.serial))
+
         otp = self.get_otp()[2]
         serial = self.get_serial()
         User = options.get("user")
@@ -452,8 +444,34 @@ class SmsTokenClass(HotpTokenClass):
                 log.debug("{0!s}".format(traceback.format_exc()))
                 raise Exception("Failed to load sms.providerConfig: {0!r}".format(exc))
 
-        log.debug("submitMessage: {0!r}, to phone {1!r}".format(message, phone))
-        ret = sms.submit_message(phone, message)
+        if sms.send_to_uid():
+            uid = None
+            if User:
+                uid = User.login
+            if not uid:
+                if sms_gateway_identifier:
+                    uid_attribute_name = sms.smsgateway.option_dict.get("UID_TOKENINFO_ATTRIBUTE")
+                else:
+                    uid_attribute_name = sms.config.get("UID_TOKENINFO_ATTRIBUTE")
+                if uid_attribute_name:
+                    uid = self.get_tokeninfo(uid_attribute_name)
+            if not uid:
+                log.warning("Token {0!s} does not have a uid!".format(self.token.serial))
+            destination = uid
+        else:
+            if is_true(self.get_tokeninfo("dynamic_phone")):
+                phone = self.user.get_user_phone("mobile")
+                if type(phone) == list and phone:
+                    # if there is a non-empty list, we use the first entry
+                    phone = phone[0]
+            else:
+                phone = self.get_tokeninfo("phone")
+            if not phone:  # pragma: no cover
+                log.warning("Token {0!s} does not have a phone number!".format(self.token.serial))
+            destination = phone
+
+        log.debug("submitMessage: {0!r}, to {1!r}".format(message, destination))
+        ret = sms.submit_message(destination, message)
         return ret, message
 
     @staticmethod

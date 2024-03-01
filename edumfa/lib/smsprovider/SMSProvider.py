@@ -44,6 +44,7 @@ log = logging.getLogger(__name__)
 
 SMS_PROVIDERS = [
     "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider",
+    "edumfa.lib.smsprovider.HttpMessageToUidProvider.HttpMessageToUidProvider",
     "edumfa.lib.smsprovider.SipgateSMSProvider.SipgateSMSProvider",
     "edumfa.lib.smsprovider.SmtpSMSProvider.SmtpSMSProvider",
     "edumfa.lib.smsprovider.SmppSMSProvider.SmppSMSProvider",
@@ -163,6 +164,16 @@ class ISMSProvider(object):
         :return: None
         """
         self.config = config_dict
+
+    def send_to_uid(self):
+        """
+        This should return True, if this provider expects a uid
+        instead of a phone number for submit_message
+
+        :return: False
+        :rtype: bool
+        """
+        return False
 
 
 def get_sms_provider_class(packageName, className):
