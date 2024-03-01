@@ -525,10 +525,15 @@ class IdResolver (UserIdResolver):
             else:
                 tls_verify = ssl.CERT_NONE
                 tls_ca_file = None
+            ciphers = None
+            if "EDUMFA_LDAP_WEAK_TLS" in os.environ and os.environ["EDUMFA_LDAP_WEAK_TLS"] == "True":
+                ciphers = "DEFAULT"
             tls_context = Tls(validate=tls_verify,
                               version=int(tls_version),
                               ssl_options=tls_options,
-                              ca_certs_file=tls_ca_file)
+                              ca_certs_file=tls_ca_file,
+                              ciphers=ciphers
+                              )
         else:
             tls_context = None
 
