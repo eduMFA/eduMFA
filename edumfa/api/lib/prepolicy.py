@@ -1389,8 +1389,12 @@ def is_remote_user_allowed(req, write_to_audit_log=True):
     :return: Return a value or REMOTE_USER, can be "disable", "active" or "force".
     :rtype: str
     """
-    if req.remote_user:
-        loginname, realm = split_user(req.remote_user)
+    user = req.remote_user
+    if not user and not req.headers.get("Remote-User") is None and not req.headers.get("Remote-User") == "":
+        user = req.headers.get("Remote-User")
+
+    if user:
+        loginname, realm = split_user(user)
         realm = realm or get_default_realm()
         ruser_active = Match.generic(g, scope=SCOPE.WEBUI,
                                      action=ACTION.REMOTE_USER,

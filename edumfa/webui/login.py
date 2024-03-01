@@ -130,7 +130,10 @@ def single_page_application():
         r = is_remote_user_allowed(request, write_to_audit_log=False)
         force_remote_user = r == REMOTE_USER.FORCE
         if r != REMOTE_USER.DISABLE:
-            remote_user = request.remote_user
+            user = request.remote_user
+            if not user and not request.headers.get("Remote-User") is None and not request.headers.get("Remote-User") == "":
+                user = request.headers.get("Remote-User")
+            remote_user = user
         password_reset = is_password_reset(g)
         hsm_ready = True
     except HSMException:

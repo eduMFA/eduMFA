@@ -251,8 +251,11 @@ def get_auth_token():
     admin_auth = False
     user_auth = False
 
+    user = request.remote_user
+    if not user and not request.headers.get("Remote-User") is None and not request.headers.get("Remote-User") == "":
+        user = request.headers.get("Remote-User")
     # Check if the remote user is allowed
-    if (request.remote_user == username) and is_remote_user_allowed(request) != REMOTE_USER.DISABLE:
+    if (user == username) and is_remote_user_allowed(request) != REMOTE_USER.DISABLE:
         # Authenticated by the Web Server
         # Check if the username exists
         # 1. in local admins
