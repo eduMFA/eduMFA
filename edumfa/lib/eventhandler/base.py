@@ -230,8 +230,10 @@ class BaseEventHandler(object):
             },
             CONDITION.USER_TOKEN_NUMBER: {
                 "type": "str",
-                "desc": _("Action is triggered, if the user has this number "
-                          "of tokens assigned."),
+                "desc": _("This condition checks whether or not the number of "
+                          "tokens assigned to the user meets a certain condition."
+                          "Valid conditions are '>2', '<=10', '=0', '==3', '!=1', "
+                          "for example"),
                 "group": GROUP.USER
             },
             CONDITION.OTP_COUNTER: {
@@ -481,8 +483,8 @@ class BaseEventHandler(object):
 
         if CONDITION.USER_TOKEN_NUMBER in conditions and user:
             num_tokens = get_tokens(user=user, count=True)
-            if num_tokens != int(conditions.get(
-                    CONDITION.USER_TOKEN_NUMBER)):
+            cond = conditions.get(CONDITION.USER_TOKEN_NUMBER)
+            if not compare_condition(cond, num_tokens):
                 return False
 
         if CONDITION.DETAIL_ERROR_MESSAGE in conditions:
