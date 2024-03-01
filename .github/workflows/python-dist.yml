@@ -14,6 +14,10 @@ jobs:
       contents: write
       packages: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+          # clone submodules as well
+          submodules: 'recursive'
       - run: mkdir -p dist
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
