@@ -143,8 +143,7 @@ setup(
                  "Development Status :: 5 - Production/Stable",
                  "Topic :: Internet",
                  "Topic :: Security",
-                 "Topic :: System ::"
-                 "Systems Administration :: Authentication/Directory",
+                 "Topic :: System :: Systems Administration :: Authentication/Directory",
                  'Programming Language :: Python',
                  'Programming Language :: Python :: 3',
                  'Programming Language :: Python :: 3.6',
