@@ -5,7 +5,7 @@ OCRA
 
 .. index:: OCRA
 
-Starting with version 2.20 privacyIDEA supports common OCRA tokens.
+Starting with version 2.20 eduMFA supports common OCRA tokens.
 OCRA tokens can not be enrolled via the UI but need to be imported via a seed
 file.
 The OATH CSV seed file would look like this::
@@ -21,14 +21,14 @@ For more information see :ref:`code_ocra_token`.
 DisplayTAN token
 ~~~~~~~~~~~~~~~~
 
-privacyIDEA supports the DisplayTAN [#displaytan]_, which can be used for
+eduMFA supports the DisplayTAN [#displaytan]_, which can be used for
 securing banking
 transactions. The OCRA Algorithm is used to digitally sign transaction data.
 The transaction data can be verified by the user on an external banking card.
 All cryptographical processes are running on the external card, so that an
 attacker can not interfere with the user's component.
 
-The DisplayTAN cards would be imported into privacyIDEA using the token import.
+The DisplayTAN cards would be imported into eduMFA using the token import.
 
 A banking website will use the :ref:`rest_validate` API.
 
@@ -40,7 +40,7 @@ amount of money to transfer::
 
 Please note the tilde::
 
-    POST https://privacyidea.example.com/validate/check
+    POST https://eduMFA.example.com/validate/check
 
     pass=pin
     serial=ocra1234
@@ -77,7 +77,7 @@ This will result in a response like this::
                 "transaction_id": "05221757445370623976"
      },
      "versionnumber": "2.20.dev2",
-     "version": "privacyIDEA 2.20.dev2",
+     "version": "eduMFA 2.20.dev2",
      "result": {
                 "status": true,
                 "value": false
@@ -94,17 +94,17 @@ The user can verify the data on the card and transaction data will be
 digitally signed on the card.
 The card will calculate an OTP value for this very transaction.
 
-The banking website can now send the OTP value to privacyIDEA to check,
+The banking website can now send the OTP value to eduMFA to check,
 if the user authorized the correct transaction data. The banking site
 will issue this request::
 
-    POST https://privacyidea.example.com/validate/check
+    POST https://eduMFA.example.com/validate/check
 
     serial=ocra1234
     transaction_id=05221757445370623976
     pass=54006635
 
-privacyIDEA will respond with a usual authentication response::
+eduMFA will respond with a usual authentication response::
 
     {
      "jsonrpc": "2.0",
@@ -115,7 +115,7 @@ privacyIDEA will respond with a usual authentication response::
                 "threadid": 139847549368064
                },
      "versionnumber": "2.20.dev2",
-     "version": "privacyIDEA 2.20.dev2",
+     "version": "eduMFA 2.20.dev2",
      "result": {
                 "status": true,
                 "value": true

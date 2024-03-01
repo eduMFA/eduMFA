@@ -14,25 +14,25 @@ gettokensoftype
 getToken....
 """
 from .base import MyTestCase, FakeAudit, FakeFlaskG
-from privacyidea.lib.user import (User)
-from privacyidea.lib.tokenclass import (TokenClass, TOKENKIND,
+from edumfa.lib.user import (User)
+from edumfa.lib.tokenclass import (TokenClass, TOKENKIND,
                                         FAILCOUNTER_EXCEEDED,
                                         FAILCOUNTER_CLEAR_TIMEOUT)
-from privacyidea.lib.token import weigh_token_type
-from privacyidea.lib.tokens.totptoken import TotpTokenClass
-from privacyidea.models import (db, Token, Challenge, TokenRealm)
-from privacyidea.lib.config import (set_privacyidea_config, get_token_types,
-                                    delete_privacyidea_config, SYSCONF)
-from privacyidea.lib.policy import (set_policy, SCOPE, ACTION, PolicyClass,
+from edumfa.lib.token import weigh_token_type
+from edumfa.lib.tokens.totptoken import TotpTokenClass
+from edumfa.models import (db, Token, Challenge, TokenRealm)
+from edumfa.lib.config import (set_edumfa_config, get_token_types,
+                                    delete_edumfa_config, SYSCONF)
+from edumfa.lib.policy import (set_policy, SCOPE, ACTION, PolicyClass,
                                     delete_policy)
-from privacyidea.lib.utils import b32encode_and_unicode, hexlify_and_unicode
-from privacyidea.lib.error import PolicyError
+from edumfa.lib.utils import b32encode_and_unicode, hexlify_and_unicode
+from edumfa.lib.error import PolicyError
 import datetime
 from dateutil import parser
 import hashlib
 import binascii
 import warnings
-from privacyidea.lib.token import (create_tokenclass_object,
+from edumfa.lib.token import (create_tokenclass_object,
                                    get_tokens, list_tokengroups,
                                    get_token_type, check_serial,
                                    get_num_tokens_in_realm,
@@ -63,10 +63,10 @@ from privacyidea.lib.token import (create_tokenclass_object,
                                    get_tokens_from_serial_or_user,
                                    get_tokens_paginated_generator,
                                    assign_tokengroup, unassign_tokengroup)
-from privacyidea.lib.tokengroup import set_tokengroup, delete_tokengroup
-from privacyidea.lib.error import (TokenAdminError, ParameterError,
-                                   privacyIDEAError, ResourceNotFoundError)
-from privacyidea.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.tokengroup import set_tokengroup, delete_tokengroup
+from edumfa.lib.error import (TokenAdminError, ParameterError,
+                                   eduMFAError, ResourceNotFoundError)
+from edumfa.lib.tokenclass import DATE_FORMAT
 from dateutil.tz import tzlocal
 
 PWFILE = "tests/testdata/passwords"
@@ -181,7 +181,7 @@ class TokenTestCase(MyTestCase):
         remove_token("yk1")
 
         # Tokeninfo with more than one entry is not supported
-        self.assertRaises(privacyIDEAError, get_tokens,
+        self.assertRaises(eduMFAError, get_tokens,
                           tokeninfo={"key1": "value1",
                                      "key2": "value2"})
 
@@ -297,11 +297,11 @@ class TokenTestCase(MyTestCase):
         # check the beginning of the serial
         self.assertTrue("PIUN0000" in serial, serial)
 
-        set_privacyidea_config("SerialLength", 12)
+        set_edumfa_config("SerialLength", 12)
         serial = gen_serial(tokentype="hotp")
         self.assertTrue("OATH0001" in serial, serial)
         self.assertEqual(len(serial), len("OATH") + 12)
-        set_privacyidea_config("SerialLength", 8)
+        set_edumfa_config("SerialLength", 8)
 
     def test_15_init_token(self):
         count = get_tokens(count=True)
@@ -1572,8 +1572,8 @@ class TokenTestCase(MyTestCase):
 
     def test_57b_registration_token_no_auth_counter(self):
         # Test, that a registration token is deleted even if no_auth_counter is used.
-        from privacyidea.lib.config import set_privacyidea_config, delete_privacyidea_config
-        set_privacyidea_config("no_auth_counter", 1)
+        from edumfa.lib.config import set_edumfa_config, delete_edumfa_config
+        set_edumfa_config("no_auth_counter", 1)
         tok = init_token({"type": "registration"})
         serial = tok.token.serial
         detail = tok.get_init_detail()
@@ -1581,7 +1581,7 @@ class TokenTestCase(MyTestCase):
         r, rdetail = check_token_list([tok], reg_password)
         self.assertTrue(r)
         self.assertEqual(rdetail["message"], "matching 1 tokens")
-        delete_privacyidea_config("no_auth_counter")
+        delete_edumfa_config("no_auth_counter")
         # Check that the token is deleted
         toks = get_tokens(serial=serial)
         self.assertEqual(len(toks), 0)
@@ -1591,7 +1591,7 @@ class TokenTestCase(MyTestCase):
         tokenobject = init_token({"serial": serial,
                                   "otpkey": "1234567890123456"})
         # now set the old pin
-        from privacyidea.lib.crypto import hash
+        from edumfa.lib.crypto import hash
         tokenobject.token.pin_hash = hash("1234", b"1234567890")
         tokenobject.token.pin_seed = hexlify_and_unicode(b"1234567890")
         tokenobject.token.save()
@@ -1755,7 +1755,7 @@ class TokenFailCounterTestCase(MyTestCase):
         remove_token(pin2)
 
     def test_04_reset_all_failcounters(self):
-        from privacyidea.lib.policy import (set_policy, PolicyClass, SCOPE,
+        from edumfa.lib.policy import (set_policy, PolicyClass, SCOPE,
             ACTION)
         from flask import g
 
@@ -1815,7 +1815,7 @@ class TokenFailCounterTestCase(MyTestCase):
                           "serial": "test05",
                           "otpkey": self.otpkey})
         # Set failcounter clear timeout to 1 minute
-        set_privacyidea_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
+        set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
         tok.token.count = 10
         tok.set_pin("hotppin")
         tok.set_failcount(10)
@@ -1825,7 +1825,7 @@ class TokenFailCounterTestCase(MyTestCase):
         # OTP value #11
         res, reply = check_token_list([tok], "hotppin481090")
         self.assertTrue(res)
-        set_privacyidea_config(FAILCOUNTER_CLEAR_TIMEOUT, 0)
+        set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 0)
         remove_token("test05")
 
     def test_06_reset_failcounter_out_of_sync(self):
@@ -1836,8 +1836,8 @@ class TokenFailCounterTestCase(MyTestCase):
                           "serial": "test06",
                           "otpkey": self.otpkey})
 
-        set_privacyidea_config("AutoResyncTimeout", "300")
-        set_privacyidea_config("AutoResync", 1)
+        set_edumfa_config("AutoResyncTimeout", "300")
+        set_edumfa_config("AutoResync", 1)
 
         tok.set_pin("hotppin")
         tok.set_count_window(2)
@@ -1849,7 +1849,7 @@ class TokenFailCounterTestCase(MyTestCase):
         tok.set_failcount(10)
         exceeded_timestamp = datetime.datetime.now(tzlocal()) - datetime.timedelta(minutes=1)
         tok.add_tokeninfo(FAILCOUNTER_EXCEEDED, exceeded_timestamp.strftime(DATE_FORMAT))
-        set_privacyidea_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
+        set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
 
         # authentication with otp value #3 will fail
         res, reply = check_token_list([tok], "hotppin{0!s}".format(self.valid_otp_values[3]))
@@ -1860,9 +1860,9 @@ class TokenFailCounterTestCase(MyTestCase):
         self.assertTrue(res)
         self.assertEqual(tok.get_failcount(), 0)
 
-        set_privacyidea_config(FAILCOUNTER_CLEAR_TIMEOUT, 0)
-        delete_privacyidea_config("AutoResyncTimeout")
-        delete_privacyidea_config("AutoResync")
+        set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 0)
+        delete_edumfa_config("AutoResyncTimeout")
+        delete_edumfa_config("AutoResync")
         remove_token("test06")
 
     def test_07_reset_failcounter_on_pin_only(self):
@@ -1870,7 +1870,7 @@ class TokenFailCounterTestCase(MyTestCase):
                           "serial": "test07",
                           "otpkey": self.otpkey})
         # Set failcounter clear timeout to 1 minute
-        set_privacyidea_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
+        set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
         tok.token.count = 10
         tok.set_pin("hotppin")
         tok.set_failcount(10)
@@ -1882,15 +1882,15 @@ class TokenFailCounterTestCase(MyTestCase):
         self.assertEqual(tok.get_failcount(), 10)
         self.assertFalse(res)
         # with the corresponding config option ...
-        set_privacyidea_config(SYSCONF.RESET_FAILCOUNTER_ON_PIN_ONLY, "True")
+        set_edumfa_config(SYSCONF.RESET_FAILCOUNTER_ON_PIN_ONLY, "True")
         # ... correct PIN + wrong OTP resets the failcounter ...
         res, reply = check_token_list([tok], "hotppin123456")
         self.assertEqual(tok.get_failcount(), 0)
         # ... but authentication still fails
         self.assertFalse(res)
 
-        set_privacyidea_config(FAILCOUNTER_CLEAR_TIMEOUT, 0)
-        delete_privacyidea_config(SYSCONF.RESET_FAILCOUNTER_ON_PIN_ONLY)
+        set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 0)
+        delete_edumfa_config(SYSCONF.RESET_FAILCOUNTER_ON_PIN_ONLY)
         remove_token("test07")
 
 
@@ -2115,7 +2115,7 @@ class TokenGroupTestCase(MyTestCase):
         self.assertEqual(len(tok2.token.tokengroup_list), 0)
 
         # check that deleting a tokengroup with tokens still assigned results in an error
-        self.assertRaises(privacyIDEAError, delete_tokengroup, name='g2')
+        self.assertRaises(eduMFAError, delete_tokengroup, name='g2')
 
         # cleanup
         for s in serials:

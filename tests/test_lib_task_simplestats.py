@@ -3,15 +3,15 @@
 This tests the files
   lib/task/simplestats.py
 """
-from privacyidea.lib.user import User
-from privacyidea.lib.tokenclass import TOKENKIND
-from privacyidea.lib.token import init_token
-from privacyidea.models import db
+from edumfa.lib.user import User
+from edumfa.lib.tokenclass import TOKENKIND
+from edumfa.lib.token import init_token
+from edumfa.models import db
 from .base import MyTestCase
-from privacyidea.lib.monitoringstats import get_values
+from edumfa.lib.monitoringstats import get_values
 from flask import current_app
 
-from privacyidea.lib.task.simplestats import SimpleStatsTask
+from edumfa.lib.task.simplestats import SimpleStatsTask
 
 simple_results = {'total_tokens': (1, 2, 3, 4),
                   'hardware_tokens': (0, 1, 2, 2),

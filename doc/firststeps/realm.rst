@@ -8,7 +8,7 @@ Creating your first realm
    realm. During these first steps you may say "No", to get a better
    understanding.
 
-Users in privacyIDEA are read from existing sources. See :ref:`realms` for
+Users in eduMFA are read from existing sources. See :ref:`realms` for
 more information.
 
 In these first steps we will simply read the users from your `/etc/passwd` file.

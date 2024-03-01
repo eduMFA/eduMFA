@@ -4,12 +4,12 @@ to fetch machine information and to attach token to machines
 """
 import passlib
 
-from privacyidea.lib.user import User
+from edumfa.lib.user import User
 from .base import MyApiTestCase
 import json
-from privacyidea.lib.token import init_token, get_tokens, remove_token
-from privacyidea.lib.machine import attach_token, detach_token, ANY_MACHINE, NO_RESOLVER
-from privacyidea.lib.policy import (set_policy, delete_policy, ACTION, SCOPE)
+from edumfa.lib.token import init_token, get_tokens, remove_token
+from edumfa.lib.machine import attach_token, detach_token, ANY_MACHINE, NO_RESOLVER
+from edumfa.lib.policy import (set_policy, delete_policy, ACTION, SCOPE)
 
 HOSTSFILE = "tests/testdata/hosts"
 

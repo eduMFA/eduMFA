@@ -20,8 +20,8 @@ It also contains a shortcut to the :ref:`policies`, :ref:`eventhandler` and
    caconnectors.rst
    smtpserver_config.rst
    radiusserver_config.rst
-   privacyideaserver_config.rst
+   eduMFAserver_config.rst
    sms_gateway_config.rst
    serviceids.rst
    token_config.rst
-   privacyidea-appliance.rst
+   eduMFA-appliance.rst

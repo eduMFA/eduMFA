@@ -118,10 +118,10 @@ savefile
 The *savefile* action saves a file to a spool directory.
 Each time the event handler is triggered a new file is saved.
 
-In the ``pi.cfg`` file you can use the setting ``PI_NOTIFICATION_HANDLER_SPOOLDIRECTORY``
+In the ``edumfa.cfg`` file you can use the setting ``PI_NOTIFICATION_HANDLER_SPOOLDIRECTORY``
 to configure a spool directory, where the notification files will be written.
-The default file location is ``/var/lib/privacyidea/notifications/``.
-The directory needs to be writable for the user *privacyidea*.
+The default file location is ``/var/lib/eduMFA/notifications/``.
+The directory needs to be writable for the user *eduMFA*.
 
 **filename**
 
@@ -153,7 +153,7 @@ The body may contain the following tags
   * {realm} realm of the logged in user.
   * {action} the action that the logged in user performed.
   * {serial} the serial number of the token.
-  * {url} the URL of the privacyIDEA system.
+  * {url} the URL of the eduMFA system.
   * {user} the given name of the token owner.
   * {givenname} the given name of the token owner.
   * {surname} the surname of the token owner.
@@ -178,7 +178,7 @@ Code
 ~~~~
 
 
-.. automodule:: privacyidea.lib.eventhandler.usernotification
+.. automodule:: eduMFA.lib.eventhandler.usernotification
    :members:
    :undoc-members:
 

@@ -5,14 +5,14 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.radiustoken import RadiusTokenClass
-from privacyidea.lib.challenge import get_challenges
-from privacyidea.models import Token
-from privacyidea.lib.error import ParameterError
-from privacyidea.lib.config import set_privacyidea_config
+from edumfa.lib.tokens.radiustoken import RadiusTokenClass
+from edumfa.lib.challenge import get_challenges
+from edumfa.models import Token
+from edumfa.lib.error import ParameterError
+from edumfa.lib.config import set_edumfa_config
 from . import radiusmock
-from privacyidea.lib.token import init_token
-from privacyidea.lib.radiusserver import add_radius
+from edumfa.lib.token import init_token
+from edumfa.lib.radiusserver import add_radius
 
 DICT_FILE = "tests/testdata/dictionary"
 
@@ -84,7 +84,7 @@ class RadiusTokenTestCase(MyTestCase):
     @radiusmock.activate
     def test_04_do_request_success(self):
         radiusmock.setdata(response=radiusmock.AccessAccept)
-        set_privacyidea_config("radius.dictfile", DICT_FILE)
+        set_edumfa_config("radius.dictfile", DICT_FILE)
         db_token = Token.query.filter(Token.serial == self.serial1).first()
         token = RadiusTokenClass(db_token)
         otpcount = token.check_otp("123456")
@@ -126,8 +126,8 @@ class RadiusTokenTestCase(MyTestCase):
 
     @radiusmock.activate
     def test_10_authenticate_system_radius_settings(self):
-        set_privacyidea_config("radius.server", "my.other.radiusserver:1812")
-        set_privacyidea_config("radius.secret", "testing123")
+        set_edumfa_config("radius.server", "my.other.radiusserver:1812")
+        set_edumfa_config("radius.secret", "testing123")
         radiusmock.setdata(response=radiusmock.AccessAccept)
         token = init_token({"type": "radius",
                             "radius.system_settings": True,
@@ -140,7 +140,7 @@ class RadiusTokenTestCase(MyTestCase):
 
     @radiusmock.activate
     def test_11_RADIUS_request(self):
-        set_privacyidea_config("radius.dictfile", DICT_FILE)
+        set_edumfa_config("radius.dictfile", DICT_FILE)
         radiusmock.setdata(response=radiusmock.AccessAccept)
         r = add_radius(identifier="myserver", server="1.2.3.4",
                        secret="testing123", dictionary=DICT_FILE)
@@ -154,7 +154,7 @@ class RadiusTokenTestCase(MyTestCase):
 
     @radiusmock.activate
     def test_12_non_ascii(self):
-        set_privacyidea_config("radius.dictfile", DICT_FILE)
+        set_edumfa_config("radius.dictfile", DICT_FILE)
         radiusmock.setdata(response=radiusmock.AccessAccept)
         r = add_radius(identifier="myserver", server="1.2.3.4",
                        secret="testing123", dictionary=DICT_FILE)
@@ -190,8 +190,8 @@ class RadiusTokenTestCase(MyTestCase):
         self.assertEqual(r, radiusmock.AccessReject)
 
     @radiusmock.activate
-    def test_13_privacyidea_challenge_response(self):
-        # This tests the challenge response with the privacyIDEA PIN.
+    def test_13_edumfa_challenge_response(self):
+        # This tests the challenge response with the eduMFA PIN.
         # First an authentication request with only the local PIN of the
         # radius token is sent.
         r = add_radius(identifier="myserver", server="1.2.3.4",
@@ -206,7 +206,7 @@ class RadiusTokenTestCase(MyTestCase):
         r = token.is_challenge_request("local")
         self.assertTrue(r)
 
-        # create challenge of privacyidea
+        # create challenge of edumfa
         r, message, transaction_id, _attr = token.create_challenge()
         self.assertTrue(r)
         self.assertEqual("Enter your RADIUS tokencode:", message)
@@ -232,7 +232,7 @@ class RadiusTokenTestCase(MyTestCase):
         # the radius server. The PIN is checked locally.
         # A AccessRequest is sent to the RADIUS server, the RADIUS server
         # answers with an AccessChallenge, which creates a transaction id
-        # in privacyIDEA.
+        # in eduMFA.
         # This is answered and the RADIUS server sends an AccessAccept
         r = add_radius(identifier="myserver", server="1.2.3.4",
                        secret="testing123", dictionary=DICT_FILE)
@@ -254,7 +254,7 @@ class RadiusTokenTestCase(MyTestCase):
         self.assertEqual(opts.get("radius_result"), radiusmock.AccessChallenge)
         self.assertEqual(opts.get("radius_state"), state1[0])
 
-        # Creating the challenge within privacyIDEA
+        # Creating the challenge within eduMFA
         r, message, transaction_id, _attr = token.create_challenge(options=opts)
         self.assertTrue(r)
         self.assertEqual(message, "Please provide more information.")
@@ -305,7 +305,7 @@ class RadiusTokenTestCase(MyTestCase):
         self.assertEqual(opts.get("radius_result"), radiusmock.AccessChallenge)
         self.assertEqual(opts.get("radius_state"), state1[0])
 
-        # Creating the challenge within privacyIDEA
+        # Creating the challenge within eduMFA
         r, message, transaction_id, _attr = token.create_challenge(options=opts)
         self.assertTrue(r)
         self.assertEqual(message, "Please provide more information.")

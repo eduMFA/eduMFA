@@ -16,10 +16,10 @@ Possible Actions
 ~~~~~~~~~~~~~~~~
 
 The actions of the script event handler are the scripts located in a certain
-script directory. The default script directory is ``/etc/privacyidea/scripts``.
+script directory. The default script directory is ``/etc/eduMFA/scripts``.
 
 You can change the location of the script directory and give the new
-directory in the parameter ``PI_SCRIPT_HANDLER_DIRECTORY`` in your ``pi.cfg``
+directory in the parameter ``PI_SCRIPT_HANDLER_DIRECTORY`` in your ``edumfa.cfg``
 file.
 
 Possible Options

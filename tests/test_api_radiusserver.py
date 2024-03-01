@@ -2,8 +2,8 @@
 from .base import MyApiTestCase
 import json
 from . import radiusmock
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.lib.radiusserver import delete_radius
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.radiusserver import delete_radius
 DICT_FILE = "tests/testdata/dictionary"
 
 
@@ -70,7 +70,7 @@ class RADIUSServerTestCase(MyApiTestCase):
 
     @radiusmock.activate
     def test_02_send_test_email(self):
-        set_privacyidea_config("radius.dictfile", DICT_FILE)
+        set_edumfa_config("radius.dictfile", DICT_FILE)
         radiusmock.setdata(response=radiusmock.AccessAccept)
 
         with self.app.test_request_context('/radiusserver/test_request',

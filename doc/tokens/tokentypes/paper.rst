@@ -66,7 +66,7 @@ A good example for the ``token.enrolled.paper.bottom.html`` is::
 
 .. note:: You can change the directory *static/customize* to a URL that fits
    your needs the best by defining a variable `PI_CUSTOMIZATION` in the file
-   *pi.cfg*. This way you can put all modifications in one place apart from
+   *edumfa.cfg*. This way you can put all modifications in one place apart from
    the original code.
 
 OTP Table

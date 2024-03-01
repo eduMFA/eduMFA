@@ -3,7 +3,7 @@
 Database connect string
 -----------------------
 
-Due to its use of a database abstraction layer, privacyIDEA can work with several
+Due to its use of a database abstraction layer, eduMFA can work with several
 databases with the help of corresponding database drivers.
 
 The database and corresponding diver are specified in the connect string
@@ -19,7 +19,7 @@ which is a pure Python package and does not require external libraries or a buil
 environment on the server.
 
 *PyMySQL* is already installed in the virtual environment as a requirement for
-privacyIDEA.
+eduMFA.
 
 **connect string**: ``mysql+pymysql://<user>:<password>@<host>/<database>``
 
@@ -30,9 +30,9 @@ PostgreSQL
 ~~~~~~~~~~
 
 PostgreSQL is tested using the ``psycopg2`` driver which can be installed into
-the privacyIDEA virtual environment with::
+the eduMFA virtual environment with::
 
-   (privacyidea) $ pip install psycopg2_binary
+   (eduMFA) $ pip install psycopg2_binary
 
 The corresponding connect string looks like this:
 

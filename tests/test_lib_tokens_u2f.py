@@ -3,18 +3,18 @@ This test file tests the lib.tokens.u2ftoken
 This depends on lib.tokenclass
 """
 from .base import MyTestCase
-from privacyidea.lib.tokens.u2ftoken import U2fTokenClass
-from privacyidea.lib.tokens.u2f import (check_registration_data,
+from edumfa.lib.tokens.u2ftoken import U2fTokenClass
+from edumfa.lib.tokens.u2f import (check_registration_data,
                                         parse_registration_data, url_decode,
                                         check_response, parse_response_data)
-from privacyidea.lib.token import init_token, remove_token, check_user_pass
-from privacyidea.lib.user import User
-from privacyidea.lib.policy import set_policy, SCOPE, ACTION, delete_policy
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.lib.challenge import get_challenges
-from privacyidea.lib.utils import hexlify_and_unicode, to_bytes
-from privacyidea.lib.error import TokenAdminError
-from privacyidea.lib import _
+from edumfa.lib.token import init_token, remove_token, check_user_pass
+from edumfa.lib.user import User
+from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.utils import hexlify_and_unicode, to_bytes
+from edumfa.lib.error import TokenAdminError
+from edumfa.lib import _
 import binascii
 from hashlib import sha256
 from OpenSSL import crypto
@@ -122,7 +122,7 @@ class U2FTokenTestCase(MyTestCase):
     def test_00_users(self):
         self.setUp_user_realms()
 
-        set_privacyidea_config("u2f.appId", APP_ID)
+        set_edumfa_config("u2f.appId", APP_ID)
 
     def test_01_create_token(self):
         pin = "test"
@@ -222,7 +222,7 @@ class U2FTokenTestCase(MyTestCase):
                                     user_pub_key, key_handle, broken_sig)
 
     def test_03_missing_app_id(self):
-        set_privacyidea_config("u2f.appId", '')
+        set_edumfa_config("u2f.appId", '')
         pin = "test"
         token = init_token({"type": "u2f",
                             "pin": pin})
@@ -309,7 +309,7 @@ class MultipleU2FTokenTestCase(MyTestCase):
         self.setUp_user_realms()
         self.user = User(login='cornelius', resolver=self.resolvername1,
                          realm=self.realm1)
-        set_privacyidea_config("u2f.appId", self.app_id)
+        set_edumfa_config("u2f.appId", self.app_id)
         # init step 1
         self.token1 = init_token({'type': 'u2f'})
         self.serial1 = self.token1.token.serial

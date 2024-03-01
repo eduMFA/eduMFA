@@ -3,9 +3,9 @@
 Validate endpoints
 ~~~~~~~~~~~~~~~~~~
 
-.. automodule:: privacyidea.api.validate
+.. automodule:: edumfa.api.validate
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: validate_blueprint
 

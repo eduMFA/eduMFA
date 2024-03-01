@@ -14,15 +14,15 @@ login_mode
 
 type: ``string``
 
-allowed values: ``userstore``, ``privacyIDEA``, ``disable``
+allowed values: ``userstore``, ``eduMFA``, ``disable``
 
 If set to *userstore* (default), users and administrators need to
 authenticate with the password of their userstore, being an LDAP service or
 an SQL database.
 
-If this action is set to *login_mode=privacyIDEA*, the users and
+If this action is set to *login_mode=eduMFA*, the users and
 administrators need to
-authenticate against privacyIDEA when logging into the WebUI.
+authenticate against eduMFA when logging into the WebUI.
 I.e. they can not login with their domain password anymore
 but need to authenticate with one of their tokens.
 
@@ -32,7 +32,7 @@ realms can not login to the UI anymore.
 .. warning:: If you set this action and the user deletes or disables
    all his tokens, he will not be able to login anymore.
 
-.. note:: Administrators defined in the database using the pi-manage
+.. note:: Administrators defined in the database using the edumfa-manage
    command can still login with their normal passwords.
 
 .. note:: A sensible way to use this, is to combine this action in
@@ -52,7 +52,7 @@ remote_user
 
 type: ``string``
 
-This policy defines, if the login to the privacyIDEA using the web servers
+This policy defines, if the login to the eduMFA using the web servers
 integrated authentication (like basic authentication or digest
 authentication) should be allowed.
 
@@ -75,7 +75,7 @@ can only login with the REMOTE_USER from the browser.
 
 You can use this policy to enable Single-Sign-On and integration into Kerberos
 or Active Directory. Add the following template into you apache configuration
-in /etc/apache2/sites-available/privacyidea.conf::
+in /etc/apache2/sites-available/eduMFA.conf::
 
         <Directory />
                 # For Apache 2.4 you need to set this:
@@ -173,7 +173,7 @@ default URL is a Github repository [#defaulturl]_.
 .. note:: When setting a template_url policy the modified URL will only get
    active after the user has logged out and in again.
 
-.. [#defaulturl] https://github.com/privacyidea/policy-templates/.
+.. [#defaulturl] https://github.com/eduMFA/policy-templates/.
 
 
 .. index:: Default tokentype
@@ -218,11 +218,11 @@ Create the files::
 to display the contents in the first step (pre) or in the second step (post).
 
 .. note:: You can change the directory *static/customize* to a URL that fits
-   your needs the best by defining a variable `PI_CUSTOMIZATION` in the file
-   *pi.cfg*. This way you can put all modifications in one place apart from
+   your needs the best by defining a variable `EDUMFA_CUSTOMIZATION` in the file
+   *edumfa.cfg*. This way you can put all modifications in one place apart from
    the original code.
 
-If you want to adapt the privacyIDEA look and feel even more, read :ref:`customize`.
+If you want to adapt the eduMFA look and feel even more, read :ref:`customize`.
 
 .. index:: Wizard, Token wizard
 
@@ -264,7 +264,7 @@ Sometimes this can be too time consuming. You can use this policy to change
 the behaviour that the administrator needs to press *enter* to trigger the
 search.
 
-(Since privacyIDEA 2.17)
+(Since eduMFA 2.17)
 
 user_details
 ~~~~~~~~~~~~
@@ -285,14 +285,14 @@ The administrator can replace the file ``templates/baseline.html`` with another 
 This way he can change the links to e.g. internal documentation or ticketing systems.
 The new file could be called ``mytemplates/mybase.html``.
 
-This will only work with a valid subscription of privacyIDEA Enterprise Edition.
+This will only work with a valid subscription of eduMFA Enterprise Edition.
 
 .. note:: This policy is evaluated before login. So any realm or user setting will have no
    effect. But you can specify different baselines for different client IP addresses.
 
-If you want to adapt the privacyIDEA look and feel even more, read :ref:`customize`.
+If you want to adapt the eduMFA look and feel even more, read :ref:`customize`.
 
-(Since privacyIDEA 2.21)
+(Since eduMFA 2.21)
 
 .. index:: Customize menu
 .. _webui_custom_menu:
@@ -306,14 +306,14 @@ The administrator can replace the file ``templates/menu.html`` with another temp
 This way he can change the links to e.g. internal documentation or ticketing systems.
 The new file could be called ``mytemplates/mymenu.html``.
 
-This will only work with a valid subscription of privacyIDEA Enterprise Edition.
+This will only work with a valid subscription of eduMFA Enterprise Edition.
 
 .. note:: This policy is evaluated before login. So any realm or user setting will have no
    effect. But you can specify different menus for different client IP addresses.
 
-If you want to adapt the privacyIDEA look and feel even more, read :ref:`customize`.
+If you want to adapt the eduMFA look and feel even more, read :ref:`customize`.
 
-(Since privacyIDEA 2.21)
+(Since eduMFA 2.21)
 
 hide_buttons
 ~~~~~~~~~~~~
@@ -323,7 +323,7 @@ type: ``bool``
 Buttons for actions that a user is not allowed to perform, are hidden instead of
 being disabled.
 
-(Since privacyIDEA 3.0)
+(Since eduMFA 3.0)
 
 deletion_confirmation
 ~~~~~~~~~~~~~~~~~~~~~
@@ -334,7 +334,7 @@ To avoid careless deletion of important configurations, this policy can be
 activated. After activation, an additional confirmation for the deletion is
 requested for policies, events, mresolvers, resolvers and periodic-tasks.
 
-(Since privacyIDEA 3.9)
+(Since eduMFA 3.9)
 
 token_rollover
 ~~~~~~~~~~~~~~
@@ -348,7 +348,7 @@ new token secret for the displayed token.
 This e.g. enables a user to transfer a softtoken to a new device while keeping the
 token number restricted to 1.
 
-(Since privacyIDEA 3.6)
+(Since eduMFA 3.6)
 
 login_text
 ~~~~~~~~~~
@@ -359,29 +359,29 @@ This way the text "Please sign in" on the login dialog can be changed. Since the
 also depend on the IP address of the client, you can also choose different login texts depending
 on from where a user tries to log in.
 
-(Since privacyIDEA 3.0)
+(Since eduMFA 3.0)
 
-show_android_privacyidea_authenticator
+show_android_eduMFA_authenticator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 type: ``bool``
 
 If this policy is activated, the enrollment page for HOTP, TOTP and Push tokens
 will contain a QR code, that leads the user to the Google Play Store where he can
-directly install the privacyIDEA Authenticator App for Android devices.
+directly install the unsupported privacyIDEA Authenticator App for Android devices.
 
-(Since privacyIDEA 3.3)
+(Since eduMFA 3.3)
 
-show_ios_privacyidea_authenticator
+show_ios_eduMFA_authenticator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 type: ``bool``
 
 If this policy is activated, the enrollment page for HOTP, TOTP and Push tokens
 will contain a QR code, that leads the user to the Apple App Store where he can
-directly install the privacyIDEA Authenticator App for iOS devices.
+directly install the unsupported privacyIDEA Authenticator App for iOS devices.
 
-(Since privacyIDEA 3.3)
+(Since eduMFA 3.3)
 
 show_custom_authenticator
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -391,7 +391,7 @@ type: ``string``
 If this policy is activated, the enrollment page for HOTP, TOTP and Push tokens
 will contain a QR code, that leads the user to the given URL.
 
-The idea is, that an organization running privacyIDEA can create its own URL,
+The idea is, that an organization running eduMFA can create its own URL,
 where the user is taken to, e.g.
 
 * Show information about the used Authenticator apps...
@@ -402,20 +402,20 @@ where the user is taken to, e.g.
 
 Other scenarios are possible.
 
-(Since privacyIDEA 3.3)
+(Since eduMFA 3.3)
 
 show_node
 ~~~~~~~~~
 
 type: ``bool``
 
-If this policy is activated the UI will display the name of the privacyIDEA node in the top left
+If this policy is activated the UI will display the name of the eduMFA node in the top left
 corner next to the logo.
 
-This is useful, if you have a lot of different privacyIDEA nodes in a redundant setup or if you have
+This is useful, if you have a lot of different eduMFA nodes in a redundant setup or if you have
 test instances and productive instances. This way you can easily distinguish the different instances.
 
-(Since privacyIDEA 3.5)
+(Since eduMFA 3.5)
 
 show_seed
 ~~~~~~~~~
@@ -434,7 +434,7 @@ with the value of the given user attribute.
 
 For more details of this token type see :ref:`indexedsecret_token`.
 
-(Since privacyIDEA 3.3)
+(Since eduMFA 3.3)
 
 .. index:: admin dashboard, dashboard
 
@@ -450,7 +450,7 @@ It is displayed as a starting page in the WebUI and contains information about
 token numbers, authentication requests, recent administrative changes, policies,
 event handlers and subscriptions.
 
-(Since privacyIDEA 3.4)
+(Since eduMFA 3.4)
 
 dialog_no_token
 ~~~~~~~~~~~~~~~

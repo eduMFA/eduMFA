@@ -5,7 +5,7 @@ the URLs for the smartphone enrollment
 """
 from .base import MyTestCase
 
-from privacyidea.lib.apps import (create_google_authenticator_url,
+from edumfa.lib.apps import (create_google_authenticator_url,
                                    create_motp_url,
                                    create_oathtoken_url)
 
@@ -21,7 +21,7 @@ class AppsTestCase(MyTestCase):
         r = create_google_authenticator_url(tokentype="TOTP", key="123456",
                                             period=60)
         self.assertTrue("otpauth://TOTP/mylabel?secret=CI2FM&period"
-                        "=60&digits=6&issuer=privacyIDEA" in r, r)
+                        "=60&digits=6&issuer=eduMFA" in r, r)
 
         r = create_oathtoken_url("12345678")
         self.assertEqual(r, "oathtoken:///addToken?name=mylabel&"
@@ -30,7 +30,7 @@ class AppsTestCase(MyTestCase):
         self.assertEqual(r, "oathtoken:///addToken?name=mylabel&"
                              "lockdown=true&key=12345678&timeBased=true")
         r = create_motp_url("12345678")
-        self.assertEqual(r, "motp://privacyidea:mylabel?secret=12345678")
+        self.assertEqual(r, "motp://edumfa:mylabel?secret=12345678")
 
     def test_02_extra_data(self):
         extra_data = {

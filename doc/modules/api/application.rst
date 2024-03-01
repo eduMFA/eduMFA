@@ -1,12 +1,12 @@
 .. _rest_application:
 
 .. use the docstring from the module file
-.. automodule:: privacyidea.api.application
+.. automodule:: edumfa.api.application
 
 Application endpoints
 .....................
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: application_blueprint
 

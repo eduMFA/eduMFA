@@ -3,6 +3,6 @@
 SSHKey Token
 ~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.sshkeytoken.SSHkeyTokenClass
+.. autoclass:: edumfa.lib.tokens.sshkeytoken.SSHkeyTokenClass
    :members:
    :undoc-members:

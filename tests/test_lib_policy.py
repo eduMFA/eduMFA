@@ -9,8 +9,8 @@ import mock
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
 
-from privacyidea.lib.auth import ROLE
-from privacyidea.lib.policy import (set_policy, delete_policy,
+from edumfa.lib.auth import ROLE
+from edumfa.lib.policy import (set_policy, delete_policy,
                                     import_policies, export_policies,
                                     get_static_policy_definitions,
                                     PolicyClass, SCOPE, enable_policy,
@@ -18,11 +18,11 @@ from privacyidea.lib.policy import (set_policy, delete_policy,
                                     delete_all_policies,
                                     get_action_values_from_options, Match, MatchingError,
                                     get_allowed_custom_attributes)
-from privacyidea.lib.realm import (set_realm, delete_realm, get_realms)
-from privacyidea.lib.resolver import (save_resolver, get_resolver_list,
+from edumfa.lib.realm import (set_realm, delete_realm, get_realms)
+from edumfa.lib.resolver import (save_resolver, get_resolver_list,
                                       delete_resolver)
-from privacyidea.lib.error import ParameterError
-from privacyidea.lib.user import User
+from edumfa.lib.error import ParameterError
+from edumfa.lib.user import User
 from .base import PWFILE as FILE_PASSWORDS
 from .base import PWFILE2 as FILE_PASSWD
 
@@ -668,7 +668,7 @@ class PolicyTestCase(MyTestCase):
         thursday = dateutil.parser.parse("Jul 04 2019 14:34")
 
         # Simulate a Wednesday
-        with mock.patch('privacyidea.lib.utils.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.utils.datetime') as mock_dt:
             mock_dt.now.return_value = wednesday
 
             P = PolicyClass()
@@ -682,7 +682,7 @@ class PolicyTestCase(MyTestCase):
             self.assertEqual(policies[0]["name"], "time1")
 
         # Simulate a Thursday
-        with mock.patch('privacyidea.lib.utils.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.utils.datetime') as mock_dt:
             mock_dt.now.return_value = thursday
 
             P = PolicyClass()
@@ -1240,7 +1240,7 @@ class PolicyTestCase(MyTestCase):
                          {"notverysecure"})
 
         # an unforeseen error in the comparison function => policy error
-        with mock.patch("privacyidea.lib.policy.compare_values") as mock_function:
+        with mock.patch("edumfa.lib.policy.compare_values") as mock_function:
             mock_function.side_effect = ValueError
             with self.assertRaisesRegex(PolicyError, r".*Invalid comparison.*"):
                 P.match_policies(user_object=user1)
@@ -1309,48 +1309,48 @@ class PolicyTestCase(MyTestCase):
             P.match_policies(user_object=user4)
         delete_policy("error")
 
-    def test_31_match_pinode(self):
+    def test_31_match_edumfanode(self):
         # import_admin is only allowed to import on node1
         set_policy("import_node1", scope=SCOPE.ADMIN, action=ACTION.IMPORT,
-                   adminuser="import_admin, delete_admin", pinode="pinode1")
+                   adminuser="import_admin, delete_admin", edumfanode="edumfanode1")
         # delete_admin is allowed to do everything everywhere
         set_policy("delete_node2", scope=SCOPE.ADMIN, action=ACTION.DELETE,
-                   adminuser="delete_admin", pinode="pinode2, pinode1")
+                   adminuser="delete_admin", edumfanode="edumfanode2, edumfanode1")
         # enable_admin is allowed to enable on all nodes
         set_policy("enable", scope=SCOPE.ADMIN, action=ACTION.ENABLE,
-                   adminuser="enable_admin", pinode="")
+                   adminuser="enable_admin", edumfanode="")
 
         P = PolicyClass()
         # Check what the user "import_admin" is allowed to do
-        # Allowed to import on pinode 1
-        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="import_admin", action=ACTION.IMPORT, pinode="pinode1")
+        # Allowed to import on edumfanode 1
+        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="import_admin", action=ACTION.IMPORT, edumfanode="edumfanode1")
         self.assertEqual({"import_node1"}, set(p['name'] for p in pols),)
-        # Not allowed to import on pinode 2
-        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="import_admin", action=ACTION.IMPORT, pinode="pinode2")
+        # Not allowed to import on edumfanode 2
+        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="import_admin", action=ACTION.IMPORT, edumfanode="edumfanode2")
         self.assertEqual(set(), set(p['name'] for p in pols))
         # not allowed to delete on any node
         pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="import_admin", action=ACTION.DELETE)
         self.assertEqual(set(), set(p['name'] for p in pols))
 
         # Check what the user "delete_admin" is allowerd to do
-        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="delete_admin", action=ACTION.IMPORT, pinode="pinode1")
+        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="delete_admin", action=ACTION.IMPORT, edumfanode="edumfanode1")
         self.assertEqual({"import_node1"}, set(p['name'] for p in pols))
-        # Not allowed to import on pinode 2
-        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="delete_admin", action=ACTION.IMPORT, pinode="pinode2")
+        # Not allowed to import on edumfanode 2
+        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="delete_admin", action=ACTION.IMPORT, edumfanode="edumfanode2")
         self.assertEqual(set(), set(p['name'] for p in pols))
         # Allowed to delete on node 1 and node 2
-        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="delete_admin", action=ACTION.DELETE, pinode="pinode1")
+        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="delete_admin", action=ACTION.DELETE, edumfanode="edumfanode1")
         self.assertEqual(set({"delete_node2"}), set(p['name'] for p in pols))
-        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="delete_admin", action=ACTION.DELETE, pinode="pinode2")
+        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="delete_admin", action=ACTION.DELETE, edumfanode="edumfanode2")
         self.assertEqual(set({"delete_node2"}), set(p['name'] for p in pols))
 
         # Check what the user "enable_admin" is allowed to do
-        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="enable_admin", action=ACTION.ENABLE, pinode="pinode1")
+        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="enable_admin", action=ACTION.ENABLE, edumfanode="edumfanode1")
         self.assertEqual({"enable"}, set(p['name'] for p in pols))
-        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="enable_admin", action=ACTION.ENABLE, pinode="pinode2")
+        pols = P.match_policies(scope=SCOPE.ADMIN, adminuser="enable_admin", action=ACTION.ENABLE, edumfanode="edumfanode2")
         self.assertEqual({"enable"}, set(p['name'] for p in pols))
 
-        # Now check the Match-Object, which uses the pinode from the config: In testing environment it is "Node1".
+        # Now check the Match-Object, which uses the edumfanode from the config: In testing environment it is "Node1".
         g = FakeFlaskG()
         g.client_ip = "127.0.0.1"
         g.audit_object = mock.Mock()
@@ -1373,8 +1373,8 @@ class PolicyTestCase(MyTestCase):
         def _names(policies):
             return set(p['name'] for p in policies)
 
-        from privacyidea.lib.tokenclass import TokenClass
-        from privacyidea.models import Token
+        from edumfa.lib.tokenclass import TokenClass
+        from edumfa.models import Token
         serial = "filter_by_conditions_token"
         db_token = Token(serial, tokentype="spass")
         db_token.save()
@@ -1418,8 +1418,8 @@ class PolicyTestCase(MyTestCase):
         def _names(policies):
             return set(p['name'] for p in policies)
 
-        from privacyidea.lib.tokenclass import TokenClass
-        from privacyidea.models import Token
+        from edumfa.lib.tokenclass import TokenClass
+        from edumfa.models import Token
         serial = "filter_by_conditions_token"
         db_token = Token(serial, tokentype="spass")
         db_token.save()

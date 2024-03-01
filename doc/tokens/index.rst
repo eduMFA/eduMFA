@@ -3,11 +3,11 @@
 Tokens
 ------
 
-PrivacyIDEA is a token management system which supports a great variety of different
+eduMFA is a token management system which supports a great variety of different
 token types. They each have different requirements concerning configuration and how
 the authentication works. This chapter explains the authentication modes, lists the
 supported hardware and software tokens and explains how the token types can be used
-with privacyIDEA.
+with eduMFA.
 Tools which facilitate and automate token enrollment are found in :ref:`enrollment_tools`.
 
 .. toctree::

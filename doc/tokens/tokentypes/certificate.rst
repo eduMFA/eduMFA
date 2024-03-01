@@ -5,13 +5,13 @@ Certificate Token
 
 .. index:: certificates, client certificates, request, CSR, CA, attestation
 
-Starting with version 2.3 privacyIDEA supports certificates. A user can
+Starting with version 2.3 eduMFA supports certificates. A user can
 
 * submit a certificate signing request (including an attestation certificate),
 * upload a certificate or
-* generate a certificate signing request within privacyIDEA.
+* generate a certificate signing request within eduMFA.
 
-privacyIDEA does not sign certificate signing requests itself but connects to
+eduMFA does not sign certificate signing requests itself but connects to
 existing certificate authorities. To do so, you need to define
 :ref:`caconnectors`.
 
@@ -66,11 +66,11 @@ Pending certificate requests
 
 When sending certificate requests the issuing of the certificate can be pending.
 This can happen with e.g. the Microsoft CA, when a CA manage approval is required.
-In this case the certificate token in privacyIDEA is marked in the `rollout_state`
+In this case the certificate token in eduMFA is marked in the `rollout_state`
 "pending".
 
 Using the :ref:`eventhandler` a user can be notified if a certificate request is pending.
-E.g. privacyIDEA can automatically send an email to the user.
+E.g. eduMFA can automatically send an email to the user.
 
 Example event handler
 .....................
@@ -80,6 +80,6 @@ To configure this, create a new post event handler on the event `token_init` wit
 
 In the conditions set the `rollout_state=pending` and in the `actions` choose to send an
 email to the tokenowner. This way, after the token is enrolled and in the state *pending*,
-privacyIDEA will send the notification email.
+eduMFA will send the notification email.
 
 

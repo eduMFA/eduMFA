@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-2015-06-04 Create REDIS mock
-           Cornelius Kölbel <cornelius@privacyidea.org>
+2015-06-04 Cornelius Kölbel <cornelius@privacyidea.org>
 
 Original responses.py is:
 Copyright 2013 Dropbox, Inc.

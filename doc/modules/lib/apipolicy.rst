@@ -6,7 +6,7 @@ API Policies
 Pre Policies
 ~~~~~~~~~~~~
 
-.. automodule:: privacyidea.api.lib.prepolicy
+.. automodule:: edumfa.api.lib.prepolicy
    :members:
    :undoc-members:
    :exclude-members: current_app, g
@@ -14,7 +14,7 @@ Pre Policies
 Post Policies
 ~~~~~~~~~~~~~
 
-.. automodule:: privacyidea.api.lib.postpolicy
+.. automodule:: edumfa.api.lib.postpolicy
    :members:
    :undoc-members:
    :exclude-members: current_app, g

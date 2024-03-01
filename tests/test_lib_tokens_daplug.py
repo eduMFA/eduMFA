@@ -6,15 +6,15 @@ The lib.tokenclass depends on the DB model and lib.user
 PWFILE = "tests/testdata/passwords"
 
 from .base import MyTestCase
-from privacyidea.lib.resolver import (save_resolver)
-from privacyidea.lib.realm import (set_realm)
-from privacyidea.lib.user import (User)
-from privacyidea.lib.tokenclass import DATE_FORMAT
-from privacyidea.lib.tokens.daplugtoken import (DaplugTokenClass, _digi2daplug)
-from privacyidea.models import (Token,
+from edumfa.lib.resolver import (save_resolver)
+from edumfa.lib.realm import (set_realm)
+from edumfa.lib.user import (User)
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.tokens.daplugtoken import (DaplugTokenClass, _digi2daplug)
+from edumfa.models import (Token,
                                  Config,
                                  Challenge)
-from privacyidea.lib.config import (set_privacyidea_config, set_prepend_pin)
+from edumfa.lib.config import (set_edumfa_config, set_prepend_pin)
 import datetime
 from dateutil.tz import tzlocal
 
@@ -535,7 +535,7 @@ class DaplugTokenTestCase(MyTestCase):
     def test_22_autosync(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = DaplugTokenClass(db_token)
-        set_privacyidea_config("AutoResync", True)
+        set_edumfa_config("AutoResync", True)
         token.update({"otpkey": self.otpkey,
                       "otplen": 6})
         token.token.count = 0
@@ -551,7 +551,7 @@ class DaplugTokenTestCase(MyTestCase):
         # Autosync with a gap in the next otp value will fail
         token.token.count = 0
         # Just try some bullshit config value
-        set_privacyidea_config("AutoResyncTimeout", "totally not a number")
+        set_edumfa_config("AutoResyncTimeout", "totally not a number")
         # counter = 7, is out of sync
         r = token.check_otp(anOtpVal=_digi2daplug("162583"))
         self.assertTrue(r == -1, r)
@@ -561,7 +561,7 @@ class DaplugTokenTestCase(MyTestCase):
 
         # Autosync fails, if dueDate is over
         token.token.count = 0
-        set_privacyidea_config("AutoResyncTimeout", 0)
+        set_edumfa_config("AutoResyncTimeout", 0)
         # counter = 8, is out of sync
         r = token.check_otp(anOtpVal=_digi2daplug("399871"))
         self.assertTrue(r == -1, r)
@@ -570,7 +570,7 @@ class DaplugTokenTestCase(MyTestCase):
         self.assertTrue(r == -1, r)
 
         # No _autosync
-        set_privacyidea_config("AutoResync", False)
+        set_edumfa_config("AutoResync", False)
         token.token.count = 0
         # counter = 8, is out of sync
         r = token.check_otp(anOtpVal=_digi2daplug("399871"))

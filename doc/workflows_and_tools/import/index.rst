@@ -17,29 +17,29 @@ GPG Encryption
 
 .. index:: GPG encryption, Encrypted Seed File
 
-Starting with privacyIDEA 2.14 you can import GPG encrypted seed files.
+Starting with eduMFA 2.14 you can import GPG encrypted seed files.
 All files mentioned below can be encrypted this way.
 
-privacyIDEA needs its own GPG key. You may create one like this::
+eduMFA needs its own GPG key. You may create one like this::
 
-    mkdir /etc/privacyidea/gpg
-    GNUPGHOME=/etc/privacyidea/gpg gpg --gen-key
+    mkdir /etc/eduMFA/gpg
+    GNUPGHOME=/etc/eduMFA/gpg gpg --gen-key
 
-Then make sure, that the directory /etc/privacyidea/gpg is *chown 700* for
-the user *privacyidea*.
+Then make sure, that the directory /etc/eduMFA/gpg is *chown 700* for
+the user *eduMFA*.
 
 Now you can export the public key and hand it to your token vendor::
 
-   GNUPGHOME=/etc/privacyidea/gpg gpg -a --export <keyid>
+   GNUPGHOME=/etc/eduMFA/gpg gpg -a --export <keyid>
 
 Now the token vendor can send the seed file GPG encrypted. You do not need to
 decrypt the file and store the decrypted file on a network folder. Just
-import the GPG encrypted file to privacyIDEA!
+import the GPG encrypted file to eduMFA!
 
-.. note:: Using the key *PI_GNUPG_HOME* in pi.cfg you can change the default
+.. note:: Using the key *PI_GNUPG_HOME* in edumfa.cfg you can change the default
    above mentioned *GNUPGHOME* directory.
 
-.. note:: privacyIDEA imports an ASCII armored file. The file needs to be
+.. note:: eduMFA imports an ASCII armored file. The file needs to be
    encrypted like this:
 
       gpg -e -a -r <keyid>  import.csv
@@ -113,7 +113,7 @@ Yubikey CSV
 -----------
 
 Here you can import the CSV file that is written by the :ref:`ykpersgui` [#yubipers]_.
-privacyIDEA can import all Yubikey modes, either Yubico mode or HOTP mode.
+eduMFA can import all Yubikey modes, either Yubico mode or HOTP mode.
 
 .. figure:: yubikey.png
    :width: 500
@@ -128,7 +128,7 @@ PSKC
 
 The *Portable Symmetric Key Container* is specified in [#RFC6030]_.
 OATH compliant token vendors provide the token seeds in a PSKC file.
-privacyIDEA lets you import PSKC files.
+eduMFA lets you import PSKC files.
 All necessary information (OTP length, Hash algorithm, token type) are read
 from the file.
 

@@ -73,11 +73,11 @@ Also see :ref:`brute_force`.
 Do not use an authentication counter per token.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Usually privacyIDEA keeps track of how often a token is used for authentication and
+Usually eduMFA keeps track of how often a token is used for authentication and
 how often this authentication was successful. This is a per token counter.
 This information is written to the token database as a parameter of each token.
 
-This setting means that privacyIDEA does not track this information at all.
+This setting means that eduMFA does not track this information at all.
 
 
 Prepend the PIN in front of the OTP value.
@@ -157,7 +157,7 @@ Override Authorization Client
 This setting is important with client specific
 policies (see :ref:`policies`) and RADIUS servers or other proxies. In
 case of RADIUS the authenticating client
-for the privacyIDEA system will always be the RADIUS server, which issues
+for the eduMFA system will always be the RADIUS server, which issues
 the authentication request. But you can allow the RADIUS server IP to
 send another client information (in this case the RADIUS client) so that
 the policy is evaluated for the RADIUS client. A RADIUS server

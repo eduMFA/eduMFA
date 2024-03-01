@@ -11,11 +11,11 @@ import types
 import sqlalchemy.engine
 from mock import mock
 
-from privacyidea.config import TestingConfig
-from privacyidea.lib.audit import getAudit, search
-from privacyidea.lib.auditmodules.containeraudit import Audit as ContainerAudit
-from privacyidea.lib.auditmodules.loggeraudit import Audit as LoggerAudit
-from privacyidea.lib.auditmodules.sqlaudit import column_length
+from edumfa.config import TestingConfig
+from edumfa.lib.audit import getAudit, search
+from edumfa.lib.auditmodules.containeraudit import Audit as ContainerAudit
+from edumfa.lib.auditmodules.loggeraudit import Audit as LoggerAudit
+from edumfa.lib.auditmodules.sqlaudit import column_length
 from .base import MyTestCase, OverrideConfigTestCase
 from testfixtures import log_capture
 
@@ -126,7 +126,7 @@ class AuditTestCase(MyTestCase):
         current_timestamp = datetime.datetime.now()
 
         # create a new audit log entry 2 seconds after the previous ones
-        with mock.patch('privacyidea.models.datetime') as mock_dt:
+        with mock.patch('edumfa.models.datetime') as mock_dt:
             mock_dt.now.return_value = current_timestamp + datetime.timedelta(seconds=2)
             self.Audit.log({"action": "/validate/check",
                             "success": True})
@@ -235,11 +235,11 @@ class AuditTestCase(MyTestCase):
 
     def test_07_sign_and_verify(self):
         # Test with broken key file paths
-        self.app.config["PI_AUDIT_KEY_PUBLIC"] = PUBLIC
-        self.app.config["PI_AUDIT_KEY_PRIVATE"] = '/path/not/valid'
+        self.app.config["EDUMFA_AUDIT_KEY_PUBLIC"] = PUBLIC
+        self.app.config["EDUMFA_AUDIT_KEY_PRIVATE"] = '/path/not/valid'
         with self.assertRaises(Exception):
             getAudit(self.app.config)
-        self.app.config["PI_AUDIT_KEY_PRIVATE"] = PRIVATE
+        self.app.config["EDUMFA_AUDIT_KEY_PRIVATE"] = PRIVATE
         # Log a username as unicode with a non-ascii character
         self.Audit.log({"serial": "1234",
                         "action": "token/assign",
@@ -279,7 +279,7 @@ class AuditTestCase(MyTestCase):
         self.assertEqual(audit_log.auditdata[0].get("policies"), "rule4,rule5")
 
     def test_09_check_external_audit_db(self):
-        self.app.config["PI_AUDIT_SQL_URI"] = AUDIT_DB
+        self.app.config["EDUMFA_AUDIT_SQL_URI"] = AUDIT_DB
         audit = getAudit(self.app.config)
         total = audit.get_count({})
         self.assertEqual(total, 5)
@@ -287,14 +287,14 @@ class AuditTestCase(MyTestCase):
         db_entries = audit.search_query({"user": "testuser"})
         db_entry = next(db_entries)
         self.assertTrue(db_entry.signature.startswith('213842441384'), db_entry)
-        # by default, PI_CHECK_OLD_SIGNATURES is false and thus the signature check fails
+        # by default, EDUMFA_CHECK_OLD_SIGNATURES is false and thus the signature check fails
         audit_log = audit.search({"user": "testuser"})
         self.assertEqual(audit_log.total, 1)
         self.assertEqual(audit_log.auditdata[0].get("sig_check"), "FAIL")
 
-        # they validate correctly when PI_CHECK_OLD_SIGNATURES is true
+        # they validate correctly when EDUMFA_CHECK_OLD_SIGNATURES is true
         # we need to create a new audit object to enable the new config
-        self.app.config['PI_CHECK_OLD_SIGNATURES'] = True
+        self.app.config['EDUMFA_CHECK_OLD_SIGNATURES'] = True
         audit = getAudit(self.app.config)
         total = audit.get_count({})
         self.assertEqual(total, 5)
@@ -307,25 +307,25 @@ class AuditTestCase(MyTestCase):
         self.assertEqual(audit_log.auditdata[0].get("sig_check"), "FAIL")
 
         # check that SQLALCHEMY_ENGINE_OPTIONS get passed to create_engin()
-        with mock.patch('privacyidea.lib.auditmodules.sqlaudit.create_engine') as engine_mock:
+        with mock.patch('edumfa.lib.auditmodules.sqlaudit.create_engine') as engine_mock:
             cfg = self.app.config.copy()
             cfg.update({'SQLALCHEMY_ENGINE_OPTIONS': {'foo': 'bar'}})
             _audit = getAudit(cfg)
             engine_mock.assert_called_once_with(AUDIT_DB, pool_size=20,
                                                 pool_recycle=600, foo='bar')
 
-        # check that PI_AUDIT_SQL_OPTIONS overwrite SQLALCHEMY_ENGINE_OPTIONS
-        with mock.patch('privacyidea.lib.auditmodules.sqlaudit.create_engine') as engine_mock:
+        # check that EDUMFA_AUDIT_SQL_OPTIONS overwrite SQLALCHEMY_ENGINE_OPTIONS
+        with mock.patch('edumfa.lib.auditmodules.sqlaudit.create_engine') as engine_mock:
             cfg = self.app.config.copy()
             cfg.update({'SQLALCHEMY_ENGINE_OPTIONS': {'foo': 'bar', 'temp': 100}})
-            cfg.update({'PI_AUDIT_SQL_OPTIONS': {'foo': 'baz'}})
+            cfg.update({'EDUMFA_AUDIT_SQL_OPTIONS': {'foo': 'baz'}})
             _audit = getAudit(cfg)
             engine_mock.assert_called_once_with(AUDIT_DB, pool_size=20,
                                                 pool_recycle=600, foo='baz')
 
         # TODO: add new audit entry and check for new style signature
         # remove the audit SQL URI from app config
-        self.app.config.pop("PI_AUDIT_SQL_URI", None)
+        self.app.config.pop("EDUMFA_AUDIT_SQL_URI", None)
 
     def test_10_check_tokentype(self):
         # Add a tokentype
@@ -350,7 +350,7 @@ class AuditTestCase(MyTestCase):
 class AuditColumnLengthTestCase(OverrideConfigTestCase):
     class Config(TestingConfig):
         # this needs to exist on app creation
-        PI_AUDIT_SQL_COLUMN_LENGTH = {'user': 10}
+        EDUMFA_AUDIT_SQL_COLUMN_LENGTH = {'user': 10}
 
     def setUp(self):
         self.Audit = getAudit(self.app.config)
@@ -368,7 +368,7 @@ class AuditColumnLengthTestCase(OverrideConfigTestCase):
 class AuditFileTestCase(OverrideConfigTestCase):
     class Config(TestingConfig):
         # this needs to exist on app creation
-        PI_LOGCONFIG = "tests/testdata/logging.cfg"
+        EDUMFA_LOGCONFIG = "tests/testdata/logging.cfg"
 
     def test_10_external_file_audit(self):
         a = LoggerAudit(config={})
@@ -394,37 +394,37 @@ class AuditFileTestCase(OverrideConfigTestCase):
 
     @log_capture()
     def test_30_logger_audit_qualname(self, capture):
-        # Check that the default qualname is 'privacyidea.lib.auditmodules.loggeraudit'
+        # Check that the default qualname is 'edumfa.lib.auditmodules.loggeraudit'
         # The audit log runs 2 seconds - mocked
         current_utc_time = datetime.datetime(2018, 3, 4, 5, 6, 8)
         startdate_time = datetime.datetime(2018, 3, 4, 5, 6, 6)
-        with mock.patch('privacyidea.lib.auditmodules.loggeraudit.datetime') as mock_timestamp:
-            with mock.patch('privacyidea.lib.auditmodules.base.datetime.datetime') as mock_startdate:
+        with mock.patch('edumfa.lib.auditmodules.loggeraudit.datetime') as mock_timestamp:
+            with mock.patch('edumfa.lib.auditmodules.base.datetime.datetime') as mock_startdate:
                 mock_timestamp.utcnow.return_value = current_utc_time
                 mock_startdate.now.return_value = startdate_time
                 a = LoggerAudit(config={})
-                a.log({"action": "No PI_AUDIT_LOGGER_QUALNAME given"})
+                a.log({"action": "No EDUMFA_AUDIT_LOGGER_QUALNAME given"})
                 a.finalize_log()
                 capture.check_present(
-                    ('privacyidea.lib.auditmodules.loggeraudit', 'INFO',
-                     '{{"action": "No PI_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:02", '
+                    ('edumfa.lib.auditmodules.loggeraudit', 'INFO',
+                     '{{"action": "No EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:02", '
                      '"policies": "", "startdate": "{startdate}", '
                      '"timestamp": "{timestamp}"}}'.format(timestamp=current_utc_time.isoformat(),
                                                            startdate=startdate_time.isoformat())))
 
-        # Now change the qualname to 'pi-audit'
+        # Now change the qualname to 'edumfa-audit'
         current_utc_time = datetime.datetime(2020, 3, 4, 5, 6, 8)
         startdate_time = datetime.datetime(2020, 3, 4, 5, 6, 0)
-        with mock.patch('privacyidea.lib.auditmodules.loggeraudit.datetime') as mock_dt:
-            with mock.patch('privacyidea.lib.auditmodules.base.datetime.datetime') as mock_startdate:
+        with mock.patch('edumfa.lib.auditmodules.loggeraudit.datetime') as mock_dt:
+            with mock.patch('edumfa.lib.auditmodules.base.datetime.datetime') as mock_startdate:
                 mock_dt.utcnow.return_value = current_utc_time
                 mock_startdate.now.return_value = startdate_time
-                a = LoggerAudit(config={"PI_AUDIT_LOGGER_QUALNAME": "pi-audit"})
-                a.log({"action": "PI_AUDIT_LOGGER_QUALNAME given"})
+                a = LoggerAudit(config={"EDUMFA_AUDIT_LOGGER_QUALNAME": "edumfa-audit"})
+                a.log({"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given"})
                 a.finalize_log()
                 capture.check_present(
-                    ('pi-audit', 'INFO',
-                     '{{"action": "PI_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:08", '
+                    ('edumfa-audit', 'INFO',
+                     '{{"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:08", '
                      '"policies": "", "startdate": "{startdate}", '
                      '"timestamp": "{timestamp}"}}'.format(timestamp=current_utc_time.isoformat(),
                                                            startdate=startdate_time.isoformat())))
@@ -433,16 +433,16 @@ class AuditFileTestCase(OverrideConfigTestCase):
 class ContainerAuditTestCase(OverrideConfigTestCase):
     class Config(TestingConfig):
         # this needs to available on app creation
-        PI_LOGCONFIG = "tests/testdata/logging.cfg"
+        EDUMFA_LOGCONFIG = "tests/testdata/logging.cfg"
 
     def test_10_container_audit(self):
         import os
         basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
-        a = ContainerAudit({"PI_AUDIT_CONTAINER_WRITE": ["privacyidea.lib.auditmodules.loggeraudit",
-                                                         "privacyidea.lib.auditmodules.sqlaudit"],
-                            "PI_AUDIT_CONTAINER_READ": "privacyidea.lib.auditmodules.sqlaudit",
-                            "PI_AUDIT_NO_SIGN": True,
-                            "PI_AUDIT_SQL_URI": self.app.config['SQLALCHEMY_DATABASE_URI']},
+        a = ContainerAudit({"EDUMFA_AUDIT_CONTAINER_WRITE": ["edumfa.lib.auditmodules.loggeraudit",
+                                                         "edumfa.lib.auditmodules.sqlaudit"],
+                            "EDUMFA_AUDIT_CONTAINER_READ": "edumfa.lib.auditmodules.sqlaudit",
+                            "EDUMFA_AUDIT_NO_SIGN": True,
+                            "EDUMFA_AUDIT_SQL_URI": self.app.config['SQLALCHEMY_DATABASE_URI']},
                            startdate=None)
         self.assertFalse(a.has_data)
         a.log({"action": "something_test_30"})
@@ -459,8 +459,8 @@ class ContainerAuditTestCase(OverrideConfigTestCase):
         self.assertEqual(r.auditdata[0].get("action"), "something_test_30")
 
         # Non readable read module!
-        a = ContainerAudit({"PI_AUDIT_CONTAINER_WRITE": ["privacyidea.lib.auditmodules.loggeraudit"],
-                            "PI_AUDIT_CONTAINER_READ": "privacyidea.lib.auditmodules.loggeraudit"})
+        a = ContainerAudit({"EDUMFA_AUDIT_CONTAINER_WRITE": ["edumfa.lib.auditmodules.loggeraudit"],
+                            "EDUMFA_AUDIT_CONTAINER_READ": "edumfa.lib.auditmodules.loggeraudit"})
         a.log({"action": "logger_30"})
         a.finalize_log()
         r = a.search({"action": "*logger*"})
@@ -471,11 +471,11 @@ class ContainerAuditTestCase(OverrideConfigTestCase):
     def test_15_container_audit_check_audit(self):
         import os
         basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
-        a = ContainerAudit({"PI_AUDIT_CONTAINER_WRITE": ["privacyidea.lib.auditmodules.loggeraudit",
-                                                         "privacyidea.lib.auditmodules.sqlaudit"],
-                            "PI_AUDIT_CONTAINER_READ": "privacyidea.lib.auditmodules.sqlaudit",
-                            "PI_AUDIT_NO_SIGN": True,
-                            "PI_AUDIT_SQL_URI": self.app.config['SQLALCHEMY_DATABASE_URI']})
+        a = ContainerAudit({"EDUMFA_AUDIT_CONTAINER_WRITE": ["edumfa.lib.auditmodules.loggeraudit",
+                                                         "edumfa.lib.auditmodules.sqlaudit"],
+                            "EDUMFA_AUDIT_CONTAINER_READ": "edumfa.lib.auditmodules.sqlaudit",
+                            "EDUMFA_AUDIT_NO_SIGN": True,
+                            "EDUMFA_AUDIT_SQL_URI": self.app.config['SQLALCHEMY_DATABASE_URI']})
         a.log({"action": "something_test_35"})
         a.add_to_log({'action_detail': 'some detail'})
         a.add_policy('some policy')
@@ -506,9 +506,9 @@ class ContainerAuditTestCase(OverrideConfigTestCase):
         import os
         basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
         module_config = {
-            "PI_AUDIT_CONTAINER_WRITE": ["privacyidea.lib.auditmodules.doesnotexist",
-                                         "privacyidea.lib.auditmodules.sqlaudit"],
-            "PI_AUDIT_CONTAINER_READ": "privacyidea.lib.auditmodules.sqlaudit",
-            "PI_AUDIT_NO_SIGN": True,
-            "PI_AUDIT_SQL_URI": self.app.config['SQLALCHEMY_DATABASE_URI']}
+            "EDUMFA_AUDIT_CONTAINER_WRITE": ["edumfa.lib.auditmodules.doesnotexist",
+                                         "edumfa.lib.auditmodules.sqlaudit"],
+            "EDUMFA_AUDIT_CONTAINER_READ": "edumfa.lib.auditmodules.sqlaudit",
+            "EDUMFA_AUDIT_NO_SIGN": True,
+            "EDUMFA_AUDIT_SQL_URI": self.app.config['SQLALCHEMY_DATABASE_URI']}
         self.assertRaises(ImportError, ContainerAudit, module_config)

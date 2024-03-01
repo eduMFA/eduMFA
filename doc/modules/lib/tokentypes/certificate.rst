@@ -3,6 +3,6 @@
 Certificate Token
 ~~~~~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.certificatetoken.CertificateTokenClass
+.. autoclass:: edumfa.lib.tokens.certificatetoken.CertificateTokenClass
    :members:
    :undoc-members:

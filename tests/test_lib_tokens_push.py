@@ -5,24 +5,24 @@ from datetime import datetime, timedelta
 from pytz import utc
 
 from .base import MyTestCase, FakeFlaskG
-from privacyidea.lib.error import ParameterError, privacyIDEAError, PolicyError
-from privacyidea.lib.user import (User)
-from privacyidea.lib.framework import get_app_local_store
-from privacyidea.lib.tokens.pushtoken import (PushTokenClass, PUSH_ACTION,
+from edumfa.lib.error import ParameterError, eduMFAError, PolicyError
+from edumfa.lib.user import (User)
+from edumfa.lib.framework import get_app_local_store
+from edumfa.lib.tokens.pushtoken import (PushTokenClass, PUSH_ACTION,
                                               DEFAULT_CHALLENGE_TEXT, strip_key,
                                               PUBLIC_KEY_SMARTPHONE, PRIVATE_KEY_SERVER,
                                               PUBLIC_KEY_SERVER,
                                               PushAllowPolling, POLLING_ALLOWED, POLL_ONLY)
-from privacyidea.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
-from privacyidea.lib.token import get_tokens, remove_token, init_token
-from privacyidea.lib.challenge import get_challenges
-from privacyidea.lib.crypto import geturandom
-from privacyidea.models import Token, Challenge
-from privacyidea.lib.policy import (SCOPE, set_policy, delete_policy, ACTION,
+from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
+from edumfa.lib.token import get_tokens, remove_token, init_token
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.crypto import geturandom
+from edumfa.models import Token, Challenge
+from edumfa.lib.policy import (SCOPE, set_policy, delete_policy, ACTION,
                                     LOGINMODE, PolicyClass)
-from privacyidea.lib.utils import to_bytes, b32encode_and_unicode, to_unicode
-from privacyidea.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
-from privacyidea.lib.error import ConfigAdminError
+from edumfa.lib.utils import to_bytes, b32encode_and_unicode, to_unicode
+from edumfa.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
+from edumfa.lib.error import ConfigAdminError
 from base64 import b32decode, b32encode
 import json
 import responses
@@ -144,17 +144,17 @@ class PushTokenTestCase(MyTestCase):
 
         # Wrong JSON file
         self.assertRaises(ConfigAdminError, set_smsgateway,
-                          "fb1", 'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider', "myFB",
+                          "fb1", 'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider', "myFB",
                           fb_config)
 
         # Everything is fine
         fb_config[FIREBASE_CONFIG.JSON_CONFIG] = FIREBASE_FILE
-        r = set_smsgateway("fb1", 'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider', "myFB",
+        r = set_smsgateway("fb1", 'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider', "myFB",
                            fb_config)
         self.assertTrue(r > 0)
 
         detail = token.get_init_detail(params={"firebase_config": self.firebase_config_name,
-                                               "push_registration_url": "https://privacyidea.com/enroll"})
+                                               "push_registration_url": "https://edumfa.io/enroll"})
         self.assertEqual(detail.get("serial"), self.serial1)
         self.assertEqual(detail.get("rollout_state"), "clientwait")
         enrollment_credential = detail.get("enrollment_credential")
@@ -198,14 +198,14 @@ class PushTokenTestCase(MyTestCase):
         tparams.update(FB_CONFIG_VALS)
         tok = init_token(param=tparams)
         detail = tok.get_init_detail(params={PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
-                                             PUSH_ACTION.REGISTRATION_URL: "https://privacyidea.com/enroll",
+                                             PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
                                              ACTION.FORCE_APP_PIN: True})
         self.assertIn('pin=True', detail['pushurl']['value'])
         remove_token(tok.get_serial())
 
     def test_02a_lib_enroll(self):
         r = set_smsgateway(self.firebase_config_name,
-                           'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                           'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                            "myFB", FB_CONFIG_VALS)
         self.assertTrue(r > 0)
         set_policy("push1", scope=SCOPE.ENROLL,
@@ -220,7 +220,7 @@ class PushTokenTestCase(MyTestCase):
         self.setUp_user_realms()
         # create FireBase Service and policies
         set_smsgateway(self.firebase_config_name,
-                       'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                       'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                        "myFB", FB_CONFIG_VALS)
         set_policy("push1", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
@@ -236,7 +236,7 @@ class PushTokenTestCase(MyTestCase):
         tokenobj.add_user(User("cornelius", self.realm1))
 
         # We mock the ServiceAccountCredentials, since we can not directly contact the Google API
-        with mock.patch('privacyidea.lib.smsprovider.FirebaseProvider.service_account.Credentials'
+        with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                         '.from_service_account_file') as mySA:
             # alternative: side_effect instead of return_value
             mySA.return_value = _create_credential_mock()
@@ -266,7 +266,7 @@ class PushTokenTestCase(MyTestCase):
                     # Check that the user was informed about the need to poll
                     detail = res.json.get("detail")
                     self.assertEqual("Please confirm the authentication on your mobile device! "
-                                     "Use the polling feature of your privacyIDEA Authenticator App "
+                                     "Use the polling feature of your unsupported privacyIDEA Authenticator App "
                                      "to check for a new Login request.", detail.get("message"))
 
             # Our ServiceAccountCredentials mock has been called once, because
@@ -390,7 +390,7 @@ class PushTokenTestCase(MyTestCase):
         self.setUp_user_realms()
         # create FireBase Service and policies
         set_smsgateway(self.firebase_config_name,
-                       'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                       'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                        "myFB", FB_CONFIG_VALS)
         set_policy("push_config", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s}".format(PUSH_ACTION.FIREBASE_CONFIG,
@@ -407,7 +407,7 @@ class PushTokenTestCase(MyTestCase):
                 FB_CONFIG_VALS[FIREBASE_CONFIG.JSON_CONFIG]: _create_credential_mock()}}
         self.app.config.setdefault('_app_local_store', {}).update(cached_fbtoken)
         # We mock the ServiceAccountCredentials, since we can not directly contact the Google API
-        with mock.patch('privacyidea.lib.smsprovider.FirebaseProvider.service_account'
+        with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account'
                         '.Credentials.from_service_account_file') as mySA:
             # add responses, to simulate the communication to firebase
             responses.add(responses.POST, 'https://fcm.googleapis.com/v1/projects'
@@ -498,11 +498,11 @@ class PushTokenTestCase(MyTestCase):
         # Do single shot auth with waiting
         # Also mock time.time to be 4000 seconds in the future (exceeding the validity of myAccessTokenInfo),
         # so that we fetch a new auth token
-        with mock.patch('privacyidea.lib.smsprovider.FirebaseProvider.time') as mock_time:
+        with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.time') as mock_time:
             mock_time.time.return_value = time.time() + 4000
 
             with mock.patch(
-                    'privacyidea.lib.smsprovider.FirebaseProvider.service_account.Credentials'
+                    'edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                     '.from_service_account_file') as mySA:
                 # alternative: side_effect instead of return_value
                 mySA.return_value = _create_credential_mock()
@@ -538,7 +538,7 @@ class PushTokenTestCase(MyTestCase):
                              "my_new_bearer_token")
 
         # Authentication fails, if the push notification is not accepted within the configured time
-        with mock.patch('privacyidea.lib.smsprovider.FirebaseProvider.service_account.Credentials'
+        with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                         '.from_service_account_file') as mySA:
             # alternative: side_effect instead of return_value
             mySA.return_value = _create_credential_mock()
@@ -588,7 +588,7 @@ class PushTokenTestCase(MyTestCase):
         tokenobj.add_user(User("cornelius", self.realm1))
 
         # We mock the ServiceAccountCredentials, since we can not directly contact the Google API
-        with mock.patch('privacyidea.lib.smsprovider.FirebaseProvider.service_account.Credentials'
+        with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                         '.from_service_account_file') as mySA:
             # alternative: side_effect instead of return_value
             mySA.from_json_keyfile_name.return_value = _create_credential_mock()
@@ -753,7 +753,7 @@ class PushTokenTestCase(MyTestCase):
         tokenobj.add_user(User("cornelius", self.realm1))
 
         # We mock the ServiceAccountCredentials, since we can not directly contact the Google API
-        with mock.patch('privacyidea.lib.smsprovider.FirebaseProvider.service_account.Credentials'
+        with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                         '.from_service_account_file') as mySA:
             # alternative: side_effect instead of return_value
             mySA.from_json_keyfile_name.return_value = _create_credential_mock()
@@ -796,7 +796,7 @@ class PushTokenTestCase(MyTestCase):
                                              padding.PKCS1v15(),
                                              hashes.SHA256()))
 
-        # Simulate the decline request to a pre privacyIDEA 3.8 system.
+        # Simulate the decline request to a pre eduMFA 3.8 system.
         # It will ignore the "decline" parameter, so we do not add it in the
         # request. The request should fail due to an invalid signature
         with self.app.test_request_context('/ttype/push',
@@ -859,10 +859,10 @@ class PushTokenTestCase(MyTestCase):
 
         # Set a loginmode policy
         set_policy("webui", scope=SCOPE.WEBUI,
-                   action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.PRIVACYIDEA))
-        # Set a PUSH_WAIT action which will be ignored by privacyIDEA
+                   action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA))
+        # Set a PUSH_WAIT action which will be ignored by eduMFA
         set_policy("push1", scope=SCOPE.AUTH, action="{0!s}=20".format(PUSH_ACTION.WAIT))
-        with mock.patch('privacyidea.lib.smsprovider.FirebaseProvider.service_account.Credentials'
+        with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                         '.from_service_account_file') as mySA:
             # alternative: side_effect instead of return_value
             mySA.from_json_keyfile_name.return_value = _create_credential_mock()
@@ -940,27 +940,27 @@ class PushTokenTestCase(MyTestCase):
 
     def test_07_check_timestamp(self):
         timestamp_fmt = 'broken_timestamp_010203'
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp {0!s}. ISO-Format '
                                r'required.'.format(timestamp_fmt),
                                PushTokenClass._check_timestamp_in_range, timestamp_fmt, 10)
         timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=utc)
-        with mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
-        with mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt:
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
-        with mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
-            self.assertRaisesRegex(privacyIDEAError,
+            self.assertRaisesRegex(eduMFAError,
                                    r'Timestamp {0!s} not in valid '
                                    r'range.'.format(timestamp.isoformat().replace('+', r'\+')),
                                    PushTokenClass._check_timestamp_in_range,
                                    timestamp.isoformat(), 8)
-        with mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt:
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
-            self.assertRaisesRegex(privacyIDEAError,
+            self.assertRaisesRegex(eduMFAError,
                                    r'Timestamp {0!s} not in valid '
                                    r'range.'.format(timestamp.isoformat().replace('+', r'\+')),
                                    PushTokenClass._check_timestamp_in_range,
@@ -975,7 +975,7 @@ class PushTokenTestCase(MyTestCase):
 
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01'}
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                'Method PUT not allowed in \'api_endpoint\' '
                                'for push token.',
                                PushTokenClass.api_endpoint, req, g)
@@ -1003,7 +1003,7 @@ class PushTokenTestCase(MyTestCase):
         req.all_data = {'serial': 'SPASS01',
                         'timestamp': '2019-10-05T22:13:23+0100',
                         'signature': 'unknown'}
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                r'Timestamp 2019-10-05T22:13:23\+0100 not in valid range.',
                                PushTokenClass.api_endpoint, req, g)
 
@@ -1013,7 +1013,7 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': (datetime.now(utc)
                                       - timedelta(minutes=2)).isoformat(),
                         'signature': 'unknown'}
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                r'Timestamp .* not in valid range.',
                                PushTokenClass.api_endpoint, req, g)
 
@@ -1023,7 +1023,7 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': (datetime.now(utc)
                                       + timedelta(minutes=2)).isoformat(),
                         'signature': 'unknown'}
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                r'Timestamp .* not in valid range.',
                                PushTokenClass.api_endpoint, req, g)
 
@@ -1032,7 +1032,7 @@ class PushTokenTestCase(MyTestCase):
         req.all_data = {'serial': 'SPASS01',
                         'timestamp': '2019-broken-timestamp',
                         'signature': 'unknown'}
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp .*\. ISO-Format required.',
                                PushTokenClass.api_endpoint, req, g)
 
@@ -1041,7 +1041,7 @@ class PushTokenTestCase(MyTestCase):
         req.all_data = {'serial': 'SPASS01',
                         'timestamp': datetime.utcnow(),
                         'signature': 'unknown'}
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp .*\. ISO-Format required.',
                                PushTokenClass.api_endpoint, req, g)
 
@@ -1050,7 +1050,7 @@ class PushTokenTestCase(MyTestCase):
         req.all_data = {'serial': 'SPASS01',
                         'timestamp': datetime.utcnow().isoformat(),
                         'signature': 'unknown'}
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',
                                PushTokenClass.api_endpoint, req, g)
 
@@ -1101,7 +1101,7 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = req_data
         req.all_data.update({'signature': 'bad-signature'})
-        self.assertRaisesRegex(privacyIDEAError, 'Could not verify signature!',
+        self.assertRaisesRegex(eduMFAError, 'Could not verify signature!',
                                PushTokenClass.api_endpoint, req, g)
 
         # Create a correct signature
@@ -1136,7 +1136,7 @@ class PushTokenTestCase(MyTestCase):
         g.policy_object = PolicyClass()
         # set up the Firebase Gateway
         r = set_smsgateway(self.firebase_config_name,
-                           'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                           'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                            "myFB", FB_CONFIG_VALS)
         self.assertGreater(r, 0)
 
@@ -1162,8 +1162,8 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': ts,
                         'signature': b32encode(sig)}
         # poll for challenges
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
@@ -1174,7 +1174,7 @@ class PushTokenTestCase(MyTestCase):
         # we need to create a challenge which we can check for with polling
         # use a given time for the challenge (15 seconds before the poll)
         challenge_timestamp = timestamp - timedelta(seconds=15)
-        with mock.patch('privacyidea.models.datetime') as mock_datetime:
+        with mock.patch('edumfa.models.datetime') as mock_datetime:
             mock_datetime.utcnow.return_value = challenge_timestamp.replace(tzinfo=None)
             challenge = b32encode_and_unicode(geturandom())
             db_challenge = Challenge(serial, challenge=challenge)
@@ -1184,8 +1184,8 @@ class PushTokenTestCase(MyTestCase):
 
         # now check that we receive the challenge when polling
         # since we mock the time we can use the same request data
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
@@ -1206,8 +1206,8 @@ class PushTokenTestCase(MyTestCase):
 
         # Now mark the challenge as answered so we receive an empty list
         db_challenge.set_otp_status(True)
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
@@ -1218,8 +1218,8 @@ class PushTokenTestCase(MyTestCase):
         set_policy('push_poll', SCOPE.AUTH,
                    action='{0!s}={1!s}'.format(PUSH_ACTION.ALLOW_POLLING,
                                                PushAllowPolling.DENY))
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(PolicyError,
@@ -1231,8 +1231,8 @@ class PushTokenTestCase(MyTestCase):
                    action='{0!s}={1!s}'.format(PUSH_ACTION.ALLOW_POLLING,
                                                PushAllowPolling.TOKEN))
         # If no tokeninfo is set, allow polling
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
@@ -1241,8 +1241,8 @@ class PushTokenTestCase(MyTestCase):
 
         # now set the tokeninfo POLLING_ALLOWED to 'False'
         tok.add_tokeninfo(POLLING_ALLOWED, 'False')
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(PolicyError,
@@ -1251,8 +1251,8 @@ class PushTokenTestCase(MyTestCase):
 
         # Explicitly allow polling for this token
         tok.add_tokeninfo(POLLING_ALLOWED, 'True')
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
@@ -1265,8 +1265,8 @@ class PushTokenTestCase(MyTestCase):
         set_policy('push_poll', SCOPE.AUTH,
                    action='{0!s}={1!s}'.format(PUSH_ACTION.ALLOW_POLLING,
                                                PushAllowPolling.ALLOW))
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
@@ -1275,8 +1275,8 @@ class PushTokenTestCase(MyTestCase):
 
         # this should also work if there is no ALLOW_POLLING policy
         delete_policy('push_poll')
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
@@ -1290,11 +1290,11 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': ts,
                         'signature': b32encode(b'no signature check')}
         # poll for challenges
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            self.assertRaisesRegex(privacyIDEAError,
+            self.assertRaisesRegex(eduMFAError,
                                    r'Could not verify signature!',
                                    PushTokenClass.api_endpoint, req, g)
 
@@ -1305,11 +1305,11 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': ts,
                         'signature': b32encode(sig_fail)}
         # poll for challenges
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            self.assertRaisesRegex(privacyIDEAError,
+            self.assertRaisesRegex(eduMFAError,
                                    r'Could not verify signature!',
                                    PushTokenClass.api_endpoint, req, g)
 
@@ -1322,11 +1322,11 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': ts,
                         'signature': b32encode(sig_fail2)}
         # poll for challenges
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            self.assertRaisesRegex(privacyIDEAError,
+            self.assertRaisesRegex(eduMFAError,
                                    r'Could not verify signature!',
                                    PushTokenClass.api_endpoint, req, g)
 
@@ -1338,7 +1338,7 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': datetime.utcnow().isoformat(),
                         'signature': b32encode(b"signature not needed")}
         # poll for challenges
-        self.assertRaisesRegex(privacyIDEAError,
+        self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',
                                PushTokenClass.api_endpoint, req, g)
 
@@ -1350,11 +1350,11 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': ts,
                         'signature': b32encode(sig)}
         # poll for challenges
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            self.assertRaisesRegex(privacyIDEAError,
+            self.assertRaisesRegex(eduMFAError,
                                    r'Could not verify signature!',
                                    PushTokenClass.api_endpoint, req, g)
 
@@ -1364,11 +1364,11 @@ class PushTokenTestCase(MyTestCase):
                         'timestamp': ts,
                         'signature': b32encode(sig)}
         # poll for challenges
-        with mock.patch('privacyidea.models.datetime') as mock_dt1,\
-                mock.patch('privacyidea.lib.tokens.pushtoken.datetime') as mock_dt2:
+        with mock.patch('edumfa.models.datetime') as mock_dt1,\
+                mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt2:
             mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(seconds=15)
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            self.assertRaisesRegex(privacyIDEAError,
+            self.assertRaisesRegex(eduMFAError,
                                    r'Could not verify signature!',
                                    PushTokenClass.api_endpoint, req, g)
 

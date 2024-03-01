@@ -24,13 +24,13 @@ triggered (and the conditions match).
 
 **name**
 
-  * *default:* ``pi-eventlogger``
+  * *default:* ``edumfa-eventlogger``
 
 The name of the logger to use when emitting the log message. This can be used
 for a fine-grained control of the log messages via :ref:`advanced_logging`.
 
-.. note:: Logger names beginning with ``privacyidea`` will be handled by the
-   default privacyIDEA logger and will end up in the privacyIDEA log.
+.. note:: Logger names beginning with ``eduMFA`` will be handled by the
+   default eduMFA logger and will end up in the eduMFA log.
 
 **level**
 
@@ -59,7 +59,7 @@ with the following tags:
   * ``{serial}``
         The serial of a token used in this event.
   * ``{url}``
-        The URL of the privacyIDEA system.
+        The URL of the eduMFA system.
   * ``{user}``
         The given name of the token owner.
   * ``{surname}``

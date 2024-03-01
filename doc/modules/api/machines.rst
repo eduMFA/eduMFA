@@ -3,9 +3,9 @@
 Machine endpoints
 ~~~~~~~~~~~~~~~~~
 
-.. automodule:: privacyidea.api.machine
+.. automodule:: edumfa.api.machine
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: machine_blueprint
 

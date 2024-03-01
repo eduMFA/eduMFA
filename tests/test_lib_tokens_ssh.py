@@ -3,11 +3,11 @@
 This test file tests the lib.tokens.sshkeytoken
 This depends on lib.tokenclass
 """
-from privacyidea.lib.error import TokenAdminError
+from edumfa.lib.error import TokenAdminError
 from .base import MyTestCase
-from privacyidea.lib.tokenclass import ROLLOUTSTATE
-from privacyidea.lib.tokens.sshkeytoken import SSHkeyTokenClass
-from privacyidea.models import Token
+from edumfa.lib.tokenclass import ROLLOUTSTATE
+from edumfa.lib.tokens.sshkeytoken import SSHkeyTokenClass
+from edumfa.models import Token
 
 
 class SSHTokenTestCase(MyTestCase):

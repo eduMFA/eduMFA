@@ -5,8 +5,8 @@ lib/machines/ldap.py
 
 HOSTSFILE = "tests/testdata/hosts"
 from .base import MyTestCase
-from privacyidea.lib.machines.ldap import LdapMachineResolver
-from privacyidea.lib.machines.base import MachineResolverError
+from edumfa.lib.machines.ldap import LdapMachineResolver
+from edumfa.lib.machines.base import MachineResolverError
 from . import ldap3mock
 import netaddr
 
@@ -51,10 +51,10 @@ class LdapMachineTestCase(MyTestCase):
 
     mrAD = LdapMachineResolver("myreso",
                                config={"LDAPURI": "ldap://172.16.200.202",
-                                       "LDAPBASE": "dc=privacyidea,"
+                                       "LDAPBASE": "dc=edumfa,"
                                                    "dc=test",
                                        "BINDDN":
-                                           "administrator@privacyidea.test",
+                                           "administrator@edumfa.test",
                                        "BINDPW": "Test1234!",
                                        "HOSTNAMEATTRIBUTE": "dNSHostName"})
 
@@ -76,12 +76,12 @@ class LdapMachineTestCase(MyTestCase):
     def test_01_get_machines(self):
         machines = self.mrAD.get_machines()
         self.assertEqual(len(machines), 1)
-        self.assertEqual(machines[0].hostname, "dc01.privacyidea.test")
+        self.assertEqual(machines[0].hostname, "dc01.edumfa.test")
 
     def test_02_get_machine_id(self):
-        id = self.mrAD.get_machine_id(hostname="dc01.privacyidea.test")
+        id = self.mrAD.get_machine_id(hostname="dc01.edumfa.test")
         self.assertEqual(id,
-                         "CN=DC01,OU=Domain Controllers,DC=privacyidea,DC=test")
+                         "CN=DC01,OU=Domain Controllers,DC=edumfa,DC=test")
     """
 
     @ldap3mock.activate

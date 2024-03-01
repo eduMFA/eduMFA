@@ -7,7 +7,7 @@ Token Enrollment Wizard
 
 The enrollment wizard helps the user to enroll his first token. When
 enrolling the first token, we assume, that the user is not very familiar with
-the privacyIDEA web UI. So the enrollment wizard only contains a very
+the eduMFA web UI. So the enrollment wizard only contains a very
 reduced API.
 
 Necessary requirements for the enrollment wizard
@@ -47,21 +47,21 @@ you can modify the text here::
 
 .. note:: You can change the directory static/customize to a URL that fits
    your needs the best by defining a variable PI_CUSTOMIZATION in the file
-   pi.cfg. This way you can put all modifications in one place apart from the
+   edumfa.cfg. This way you can put all modifications in one place apart from the
    original code.
 
 Example
 ~~~~~~~
 
-Your privacyIDEA system is running in the URL sub path ``/pi``.
+Your eduMFA system is running in the URL sub path ``/pi``.
 The files could be addressed via a path component ``mydesign`` (in this case ``pi/mydesign``).
 Thus the WebUI will look for the files in the URL path ``/pi/mydesign/views/includes/``.
 
-So you set in ``pi.cfg``::
+So you set in ``edumfa.cfg``::
 
     PI_CUSTOMIZATION = "/mydesign"
 
-Your customized files are located in ``/etc/privacyidea/customize/views/includes/``.
-In the Apache webserver you need to map ``/pi/mydesign`` to ``/etc/privacyidea/customize``::
+Your customized files are located in ``/etc/eduMFA/customize/views/includes/``.
+In the Apache webserver you need to map ``/pi/mydesign`` to ``/etc/eduMFA/customize``::
 
-    Alias /pi/mydesign /etc/privacyidea/customize
+    Alias /pi/mydesign /etc/eduMFA/customize

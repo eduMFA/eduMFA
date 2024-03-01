@@ -22,22 +22,22 @@ import uuid
 import pytest
 import json
 import ssl
-from privacyidea.lib.resolvers.LDAPIdResolver import IdResolver as LDAPResolver, LockingServerPool
-from privacyidea.lib.resolvers.SQLIdResolver import IdResolver as SQLResolver
-from privacyidea.lib.resolvers.SCIMIdResolver import IdResolver as SCIMResolver
-from privacyidea.lib.resolvers.UserIdResolver import UserIdResolver
-from privacyidea.lib.resolvers.LDAPIdResolver import (SERVERPOOL_ROUNDS, SERVERPOOL_SKIP)
-from privacyidea.lib.resolvers.HTTPResolver import HTTPResolver
+from edumfa.lib.resolvers.LDAPIdResolver import IdResolver as LDAPResolver, LockingServerPool
+from edumfa.lib.resolvers.SQLIdResolver import IdResolver as SQLResolver
+from edumfa.lib.resolvers.SCIMIdResolver import IdResolver as SCIMResolver
+from edumfa.lib.resolvers.UserIdResolver import UserIdResolver
+from edumfa.lib.resolvers.LDAPIdResolver import (SERVERPOOL_ROUNDS, SERVERPOOL_SKIP)
+from edumfa.lib.resolvers.HTTPResolver import HTTPResolver
 
-from privacyidea.lib.resolver import (save_resolver,
+from edumfa.lib.resolver import (save_resolver,
                                       delete_resolver,
                                       get_resolver_config,
                                       get_resolver_list,
                                       get_resolver_object, pretestresolver,
                                       CENSORED)
-from privacyidea.lib.realm import (set_realm, delete_realm)
-from privacyidea.models import ResolverConfig
-from privacyidea.lib.utils import to_bytes, to_unicode
+from edumfa.lib.realm import (set_realm, delete_realm)
+from edumfa.models import ResolverConfig
+from edumfa.lib.utils import to_bytes, to_unicode
 from requests import HTTPError
 
 objectGUIDs = [
@@ -2067,7 +2067,7 @@ class LDAPResolverTestCase(MyTestCase):
                       'NOREFERRALS': True,
                       'CACHE_TIMEOUT': cache_timeout
                       })
-        from privacyidea.lib.resolvers.LDAPIdResolver import CACHE
+        from edumfa.lib.resolvers.LDAPIdResolver import CACHE
         # assert that the other tests haven't left anything in the cache
         self.assertNotIn(y.getResolverId(), CACHE)
         bob_id = y.getUserId('bob')
@@ -2081,7 +2081,7 @@ class LDAPResolverTestCase(MyTestCase):
         self.assertIn('bob', CACHE[y.getResolverId()]['getUserId'])
         # assert requests later than CACHE_TIMEOUT seconds query the directory again
         now = datetime.datetime.now()
-        with mock.patch('privacyidea.lib.resolvers.LDAPIdResolver.datetime.datetime',
+        with mock.patch('edumfa.lib.resolvers.LDAPIdResolver.datetime.datetime',
                         wraps=datetime.datetime) as mock_datetime:
             # we now live CACHE_TIMEOUT + 2 seconds in the future
             mock_datetime.now.return_value = now + datetime.timedelta(seconds=cache_timeout + 2)
@@ -2095,7 +2095,7 @@ class LDAPResolverTestCase(MyTestCase):
                           'timestamp': now + datetime.timedelta(seconds=cache_timeout + 2)})
         # we now go 2 * (CACHE_TIMEOUT + 2) seconds to the future and query for someone else's user ID.
         # This will cause bob's cache entry to be evicted.
-        with mock.patch('privacyidea.lib.resolvers.LDAPIdResolver.datetime.datetime',
+        with mock.patch('edumfa.lib.resolvers.LDAPIdResolver.datetime.datetime',
                         wraps=datetime.datetime) as mock_datetime:
             mock_datetime.now.return_value = now + datetime.timedelta(seconds=2 * (cache_timeout + 2))
             manager_id = y.getUserId('manager')
@@ -2123,7 +2123,7 @@ class LDAPResolverTestCase(MyTestCase):
                       'NOREFERRALS': True,
                       'CACHE_TIMEOUT': 0
                       })
-        from privacyidea.lib.resolvers.LDAPIdResolver import CACHE
+        from edumfa.lib.resolvers.LDAPIdResolver import CACHE
         # assert that the other tests haven't left anything in the cache
         self.assertNotIn(y.getResolverId(), CACHE)
         bob_id = y.getUserId('bob')
@@ -2358,7 +2358,7 @@ class ResolverTestCase(MyTestCase):
         self.assertTrue("some other" not in reso_list)
 
     def test_05_create_resolver_object(self):
-        from privacyidea.lib.resolvers.PasswdIdResolver import IdResolver
+        from edumfa.lib.resolvers.PasswdIdResolver import IdResolver
 
         reso_obj = get_resolver_object(self.resolvername1)
         self.assertTrue(isinstance(reso_obj, IdResolver), type(reso_obj))

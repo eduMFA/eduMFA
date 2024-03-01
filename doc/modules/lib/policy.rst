@@ -4,6 +4,6 @@
 Policy Module
 .............
 
-.. automodule:: privacyidea.lib.policy
+.. automodule:: edumfa.lib.policy
    :members:
    :undoc-members:

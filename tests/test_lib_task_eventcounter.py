@@ -4,10 +4,10 @@ This tests the files
 """
 from .base import MyTestCase
 from .test_lib_counter import increase_and_read
-from privacyidea.lib.counter import increase, read
-from privacyidea.lib.monitoringstats import get_values
+from edumfa.lib.counter import increase, read
+from edumfa.lib.monitoringstats import get_values
 
-from privacyidea.lib.task.eventcounter import EventCounterTask
+from edumfa.lib.task.eventcounter import EventCounterTask
 from flask import current_app
 
 

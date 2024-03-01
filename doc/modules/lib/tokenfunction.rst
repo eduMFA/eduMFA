@@ -3,6 +3,6 @@
 Token Functions
 ...............
 
-.. automodule:: privacyidea.lib.token
+.. automodule:: edumfa.lib.token
    :members:
    :undoc-members:

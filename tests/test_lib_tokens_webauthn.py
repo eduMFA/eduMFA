@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-# 2020-01-16 Jean-Pierre Höhmann <jean-pierre.hoehmann@netknights.it>
-#
 # License:  AGPLv3
-# Contact:  https://www.privacyidea.org
+# This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
+# Copyright (c) 2024 eduMFA Project-Team
+# Previous changes by privacyIDEA project:
+#
+# 2020-01-16 Jean-Pierre Höhmann <jean-pierre.hoehmann@netknights.it>
 #
 # Copyright (C) 2020 NetKnights GmbH
 #
@@ -19,7 +21,6 @@
 #
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 # This file contains a class originally adapted from the Duo Security
 # implementation of WebAuthn for Python, available under BSD-3-Clause.
 #
@@ -63,24 +64,24 @@ import unittest
 from copy import copy
 from mock import patch
 from testfixtures import log_capture
-from privacyidea.lib.user import User
+from edumfa.lib.user import User
 
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.lib.tokens.webauthn import (COSE_ALGORITHM, RegistrationRejectedException,
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.tokens.webauthn import (COSE_ALGORITHM, RegistrationRejectedException,
                                              WebAuthnMakeCredentialOptions, AuthenticationRejectedException,
                                              webauthn_b64_decode, webauthn_b64_encode,
                                              WebAuthnRegistrationResponse, ATTESTATION_REQUIREMENT_LEVEL,
                                              ATTESTATION_LEVEL, AuthenticatorDataFlags, WebAuthnAssertionResponse,
                                              WebAuthnUser)
-from privacyidea.lib.utils import hexlify_and_unicode
+from edumfa.lib.utils import hexlify_and_unicode
 from .base import MyTestCase
-from privacyidea.lib.tokens.webauthntoken import (WebAuthnTokenClass, WEBAUTHNACTION, WEBAUTHNCONFIG,
+from edumfa.lib.tokens.webauthntoken import (WebAuthnTokenClass, WEBAUTHNACTION, WEBAUTHNCONFIG,
                                                   DEFAULT_AUTHENTICATOR_ATTESTATION_FORM,
                                                   DEFAULT_USER_VERIFICATION_REQUIREMENT, WEBAUTHNINFO)
-from privacyidea.lib.token import init_token, check_user_pass, remove_token
-from privacyidea.lib.policy import set_policy, SCOPE, ACTION, delete_policy
-from privacyidea.lib.challenge import get_challenges
-from privacyidea.lib.error import PolicyError, ParameterError, EnrollmentError
+from edumfa.lib.token import init_token, check_user_pass, remove_token
+from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.error import PolicyError, ParameterError, EnrollmentError
 
 TRUST_ANCHOR_DIR = "{}/testdata/trusted_attestation_roots".format(os.path.abspath(os.path.dirname(__file__)))
 REGISTRATION_RESPONSE_TMPL = {
@@ -221,7 +222,7 @@ class WebAuthnTokenTestCase(MyTestCase):
         return response_details
 
     def _setup_token(self):
-        with patch('privacyidea.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce') as mock_nonce:
+        with patch('edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce') as mock_nonce:
             mock_nonce.return_value = webauthn_b64_decode(REGISTRATION_CHALLENGE)
             self.token.get_init_detail(self.init_params, self.user)
         self.token.update({
@@ -241,8 +242,8 @@ class WebAuthnTokenTestCase(MyTestCase):
                    scope=SCOPE.ENROLL,
                    action=WEBAUTHNACTION.RELYING_PARTY_NAME + "=" + RP_NAME + ","
                           + WEBAUTHNACTION.RELYING_PARTY_ID + "=" + RP_ID)
-        set_privacyidea_config(WEBAUTHNCONFIG.TRUST_ANCHOR_DIR, TRUST_ANCHOR_DIR)
-        set_privacyidea_config(WEBAUTHNCONFIG.APP_ID, APP_ID)
+        set_edumfa_config(WEBAUTHNCONFIG.TRUST_ANCHOR_DIR, TRUST_ANCHOR_DIR)
+        set_edumfa_config(WEBAUTHNCONFIG.APP_ID, APP_ID)
 
         self.user = User(login=USER_NAME, realm=self.realm1,
                          resolver=self.resolvername1)
@@ -402,14 +403,14 @@ class WebAuthnTokenTestCase(MyTestCase):
             })
         self.assertTrue(sign_count == -1)
         capture.check_present(
-            ('privacyidea.lib.tokens.webauthntoken',
+            ('edumfa.lib.tokens.webauthntoken',
              'WARNING',
              'Checking response for token {0!s} failed. HTTP Origin header '
              'missing.'.format(self.token.get_serial()))
         )
 
     def test_07_none_attestation(self):
-        with patch('privacyidea.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce') as mock_nonce:
+        with patch('edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce') as mock_nonce:
             mock_nonce.return_value = webauthn_b64_decode(NONE_ATTESTATION_REGISTRATION_CHALLENGE)
             self.init_params[WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM] = 'none'
             self.user = User(login=NONE_ATTESTATION_USER_NAME)
@@ -822,7 +823,7 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
                                                            self.rp_name,
                                                            WEBAUTHNACTION.RELYING_PARTY_ID,
                                                            self.rp_id))
-        set_privacyidea_config(WEBAUTHNCONFIG.APP_ID, self.app_id)
+        set_edumfa_config(WEBAUTHNCONFIG.APP_ID, self.app_id)
         self.user = User(login='hans', realm=self.realm1,
                          resolver=self.resolvername1)
         # TODO: extract token enrollment into a local function
@@ -831,7 +832,7 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
                                   'serial': self.serial1},
                                  user=self.user)
         # TODO: use mocking to set nonce
-        with patch('privacyidea.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce') as mock_nonce:
+        with patch('edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce') as mock_nonce:
             mock_nonce.return_value = webauthn_b64_decode(self.nonce1)
             res = self.token1.get_init_detail(self.init_params, self.user)
         self.assertEqual(self.serial1, res['serial'], res)
@@ -855,7 +856,7 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
         self.token2 = init_token({'type': 'webauthn',
                                   'serial': self.serial2},
                                  user=self.user)
-        with patch('privacyidea.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce') as mock_nonce:
+        with patch('edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce') as mock_nonce:
             mock_nonce.return_value = webauthn_b64_decode(self.nonce2)
             res = self.token2.get_init_detail(self.init_params, self.user)
         self.assertEqual(self.serial2, res['serial'], res)

@@ -3,6 +3,6 @@
 Event Handler Base Class
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.eventhandler.base.BaseEventHandler
+.. autoclass:: edumfa.lib.eventhandler.base.BaseEventHandler
    :members:
    :undoc-members:

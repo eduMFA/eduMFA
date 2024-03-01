@@ -4,9 +4,9 @@ to create, update, delete CA connectors.
 """
 from .base import MyApiTestCase
 import json
-from privacyidea.lib.caconnector import get_caconnector_list, save_caconnector
-from privacyidea.lib.policy import set_policy, SCOPE, ACTION
-from privacyidea.lib.error import ERROR
+from edumfa.lib.caconnector import get_caconnector_list, save_caconnector
+from edumfa.lib.policy import set_policy, SCOPE, ACTION
+from edumfa.lib.error import ERROR
 
 
 class CAConnectorTestCase(MyApiTestCase):

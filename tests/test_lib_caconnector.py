@@ -13,12 +13,12 @@ import shutil
 import mock
 from io import StringIO
 from mock import patch
-from privacyidea.lib.caconnectors.localca import LocalCAConnector, ATTR
-from privacyidea.lib.caconnectors.msca import MSCAConnector, ATTR as MS_ATTR
+from edumfa.lib.caconnectors.localca import LocalCAConnector, ATTR
+from edumfa.lib.caconnectors.msca import MSCAConnector, ATTR as MS_ATTR
 from OpenSSL import crypto
-from privacyidea.lib.utils import int_to_hex, to_unicode
-from privacyidea.lib.error import CAError, CSRError, CSRPending
-from privacyidea.lib.caconnector import (get_caconnector_list,
+from edumfa.lib.utils import int_to_hex, to_unicode
+from edumfa.lib.error import CAError, CSRError, CSRPending
+from edumfa.lib.caconnector import (get_caconnector_list,
                                          get_caconnector_class,
                                          get_caconnector_config,
                                          get_caconnector_config_description,
@@ -26,7 +26,7 @@ from privacyidea.lib.caconnector import (get_caconnector_list,
                                          get_caconnector_type,
                                          get_caconnector_types,
                                          save_caconnector, delete_caconnector)
-from privacyidea.lib.caconnectors.baseca import AvailableCAConnectors
+from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
 from .mscamock import CAServiceMock
 
 
@@ -36,37 +36,48 @@ CACERT = "cacert.pem"
 OPENSSLCNF = "openssl.cnf"
 WORKINGDIR = "tests/testdata/ca"
 REQUEST = """-----BEGIN CERTIFICATE REQUEST-----
-MIICmTCCAYECAQAwVDELMAkGA1UEBhMCREUxDzANBgNVBAgMBkhlc3NlbjEUMBIG
-A1UECgwLcHJpdmFjeWlkZWExHjAcBgNVBAMMFXJlcXVlc3Rlci5sb2NhbGRvbWFp
-bjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAM2+FE/6zgE/QiIbHZyv
-3ZLSf9tstz45Q0NrEwPxBfQHdLx2aSgLrxmO1/zjzcZY8sp/CG1T/AcCRCTGtDRM
-jAT+Mw5A4iC6AnNa9/VPY27MxrbfVB03OX1RNiZfvdw/qItroq62ndYh599BuHoo
-KmhIyqgt7eHpRl5acm20hDiHkf2UEQsohMbCLyr7Afk2egl10TOIPHNBW8i/lIlw
-ofDAuS5QUx6xF2Rp9C2B4KkNDjLpulWKhfEbb0l5tH+Iww0+VIibPR84jATz7mpj
-K/XG27SDqsR4QTp9S+HIPnHKG2FZ6sbEyjJeyem/EinmxsNj/qBV2nrxYJhNJu36
-cC0CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQB7uJC6I1By0T29IZ0B1ue5YNxM
-NDPbqCytRPMQ9awJ6niMMIQRS1YPhSFPWyEWrGKWAUvbn/lV0XHH7L/tvHg6HbC0
-AjLc8qPH4Xqkb1WYV1GVJYr5qyEFS9QLZQLQDC2wk018B40MSwZWtsv14832mPu8
-gP5WP+mj9LRgWCP1MdAR9pcNGd9pZMcCHQLxT76mc/eol4kb/6/U6yxBmzaff8eB
-oysLynYXZkm0wFudTV04K0aKlMJTp/G96sJOtw1yqrkZSe0rNVcDs9vo+HAoMWO/
-XZp8nprZvJuk6/QIRpadjRkv4NElZ2oNu6a8mtaO38xxnfQm4FEMbm5p+4tM
+MIIDlTCCAf0CAQAwUDELMAkGA1UEBhMCREUxEDAOBgNVBAgMB0JhdmFyaWExDzAN
+BgNVBAoMBmVkdU1GQTEeMBwGA1UEAwwVcmVxdWVzdGVyLmxvY2FsZG9tYWluMIIB
+ojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAyRYIVX4twFuATjXmWrM4fn8S
+DW8ZHf4/K3UgKP2ZPSgWGFkHX7Wz1CR84k1aXvTaLsx4bzjwZjpbGgVjIDU/O+we
+6PEGXgIuwCwdU0uzL+FlmZD0CWdoFze8m99u4MZULo0o41sfMDnKz1PbEDCvzLoV
+aDP97WC/Vg0dNPZDISeQm5If3olQvNKkdQDXqE/Kgfn5lueB61yWh1N/SeoMmYcM
+y0Ud0OdgI0xt/S3gwKCH4YPPdnEh2jEojE2IKTdqx9w+qWaje6S1ikva60xd+5Uy
+MyagEz1rro+tlT6d8dr3cmc+3rncDOtXyoU8zZFyMbXAgUFwjEzqv9ppdNFi/uTO
+BvwjR+85JDaFKdvGyBTP4yhXynal7nXK2GiN9yYo+1qtJQvUtMXb2CvOQaHbf9y+
+UBsnT9HSXddvj2Kq8iPj3R5qtW2xq6UB3w0TRNDXUytWF9W9/Z6pox9VEx9sVs+T
+4NDQz4jamq8eZx2zA8RbOQ/W9pS/K2LEyb+6SWofAgMBAAGgADANBgkqhkiG9w0B
+AQsFAAOCAYEAUVC5zDO0qPHs0mgem+PCb/64Vd80JeRD8iwhWAPCb3KFgXHDO9sX
+YZhWklo/Y+rAy+D2VBvQKH7itUJnodFDfFfc0Lkm4ZBRrlMXb5uFe0M3pvt2LkXH
+6BSINCk3GX31Uk37fnbpRDzkeG8vGVQ4f5n/+mrA4ZfyZECFd0gH6/qIGAZFNy7X
+EvmSm1k+X8Wci+npLS2O3IyxdcY/dnznZzC3PvDVAdzzWdPEIHmJaWDRWMek+oP6
+vLdMaYMsi2r0hv6yJe0xUvLAjXKTQjfnH3oKXM6a6RmSRFU9lySzNfZlEyRpiC60
+OJC18Ett63+gYuVikIGrgjl8ZiwPECRC0bBza0HN64SCUsDm5U28VtOFOvSB4djM
+QqACwhT5aKU1nddY9iUz7rCrRRYh6v+UlaTPImb/5YIPHeHkVK39/pYbn3Hh7oOf
+cq5y3tVeY7n21HpHeTwnwB3sXxVjWexfTGqN5fh5PKnRVg/LW+jRLOn//uWLRe/P
+cUWD4Ib9FGVI
 -----END CERTIFICATE REQUEST-----"""
 
 REQUEST_USER = """-----BEGIN CERTIFICATE REQUEST-----
-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
+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
 -----END CERTIFICATE REQUEST-----"""
 
 CERTIFICATE = """-----BEGIN CERTIFICATE-----
@@ -225,10 +236,10 @@ class LocalCATestCase(MyTestCase):
         for f in filelist:
             os.remove(f)
 
-        FILES = ["DE_Hessen_privacyidea_requester.localdomain.req",
-                 "DE_Hessen_privacyidea_requester.localdomain.pem",
-                 "DE_Hessen_privacyidea_usercert.pem",
-                 "DE_Hessen_privacyidea_usercert.req",
+        FILES = ["DE_Bavaria_eduMFA_requester.localdomain.req",
+                 "DE_Bavaria_eduMFA_requester.localdomain.pem",
+                 "DE_Bavaria_eduMFA_usercert.pem",
+                 "DE_Bavaria_eduMFA_usercert.req",
                  "index.txt.attr.old",
                  "index.txt.old",
                  "serial.old",
@@ -280,12 +291,9 @@ class LocalCATestCase(MyTestCase):
         serial = cert.get_serial_number()
 
         self.assertEqual("{0!r}".format(cert.get_issuer()),
-                         "<X509Name object "
-                         "'/C=DE/ST=Hessen/O=privacyidea/CN=CA001'>")
+                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
         self.assertEqual("{0!r}".format(cert.get_subject()),
-                         "<X509Name object "
-                         "'/C=DE/ST=Hessen/O=privacyidea/CN=requester"
-                         ".localdomain'>")
+                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=requester.localdomain'>")
 
         # Fail to revoke certificate due to non-existing-reasing
         self.assertRaises(CAError, cacon.revoke_cert, cert, reason="$(rm -fr)")
@@ -336,11 +344,9 @@ class LocalCATestCase(MyTestCase):
 
         _, cert = cacon.sign_request(REQUEST_USER)
         self.assertEqual("{0!r}".format(cert.get_issuer()),
-                         "<X509Name object "
-                         "'/C=DE/ST=Hessen/O=privacyidea/CN=CA001'>")
+                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
         self.assertEqual("{0!r}".format(cert.get_subject()),
-                         "<X509Name object "
-                         "'/C=DE/ST=Hessen/O=privacyidea/CN=usercert'>")
+                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=usercert'>")
 
     def test_04_sign_SPKAC_request(self):
         cwd = os.getcwd()
@@ -352,8 +358,7 @@ class LocalCATestCase(MyTestCase):
 
         _, cert = cacon.sign_request(SPKAC, options={"spkac": 1})
         self.assertEqual("{0!r}".format(cert.get_issuer()),
-                         "<X509Name object "
-                         "'/C=DE/ST=Hessen/O=privacyidea/CN=CA001'>")
+                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
         self.assertEqual("{0!r}".format(cert.get_subject()),
                          "<X509Name object '/CN=Steve Test"
                          "/emailAddress=steve@openssl.org'>")
@@ -441,7 +446,7 @@ CONF_LAB = {MS_ATTR.HOSTNAME: "10.0.5.100",
             MS_ATTR.CA: "CA03.nilsca.com\\nilsca-CA03-CA"}
 
 
-@unittest.skipUnless("privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+@unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
                      "Can not test MSCA. grpc module seems not available.")
 class MSCATestCase(MyTestCase):
     """

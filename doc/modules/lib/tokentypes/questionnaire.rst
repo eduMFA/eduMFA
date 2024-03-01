@@ -3,6 +3,6 @@
 Questionnaire Token
 ~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.questionnairetoken.QuestionnaireTokenClass
+.. autoclass:: edumfa.lib.tokens.questionnairetoken.QuestionnaireTokenClass
    :members:
    :undoc-members:

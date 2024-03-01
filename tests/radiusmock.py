@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-2019-08-15 More sophisticated radiusmock
-        Cornelius Kölbel <cornelius.koelbel@netknights.it>
-2017-10-30 Add mocking the timeout
-        Cornelius Kölbel <cornelius.koelbel@netknights.it>
-2015-01-29 Change responses.py to be able to run with RADIUS
-        Cornelius Kölbel <cornelius@privacyidea.org>
+2019-08-15 Cornelius Kölbel <cornelius.koelbel@netknights.it>
+2017-10-30 Cornelius Kölbel <cornelius.koelbel@netknights.it>
+2015-01-29 Cornelius Kölbel <cornelius@privacyidea.org>
 
 Original responses.py is:
 Copyright 2013 Dropbox, Inc.

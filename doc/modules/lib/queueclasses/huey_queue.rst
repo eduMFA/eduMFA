@@ -3,6 +3,6 @@
 Huey Queue Class
 ~~~~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.queues.huey_queue.HueyQueue
+.. autoclass:: edumfa.lib.queues.huey_queue.HueyQueue
    :members:
    :undoc-members:

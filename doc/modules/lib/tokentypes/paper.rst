@@ -3,6 +3,6 @@
 Paper Token
 ~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.papertoken.PaperTokenClass
+.. autoclass:: edumfa.lib.tokens.papertoken.PaperTokenClass
    :members:
    :undoc-members:

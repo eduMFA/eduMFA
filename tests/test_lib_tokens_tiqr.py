@@ -5,15 +5,15 @@ This depends on lib.tokenclass
 """
 from tests import smtpmock
 from .base import MyTestCase, MyApiTestCase
-from privacyidea.lib.challenge import get_challenges
-from privacyidea.lib.tokens.tiqrtoken import TiqrTokenClass
-from privacyidea.lib.tokens.ocratoken import OcraTokenClass
-from privacyidea.lib.tokens.ocra import OCRASuite, OCRA
-from privacyidea.lib.user import User
-from privacyidea.lib.token import init_token, remove_token
-from privacyidea.lib.utils import hexlify_and_unicode
-from privacyidea.lib.error import ParameterError
-from privacyidea.lib import _
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.tokens.tiqrtoken import TiqrTokenClass
+from edumfa.lib.tokens.ocratoken import OcraTokenClass
+from edumfa.lib.tokens.ocra import OCRASuite, OCRA
+from edumfa.lib.user import User
+from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.utils import hexlify_and_unicode
+from edumfa.lib.error import ParameterError
+from edumfa.lib import _
 import re
 import binascii
 import hashlib
@@ -590,18 +590,18 @@ class TiQRTokenTestCase(MyApiTestCase):
         self._test_create_token('cornelius')
 
     def test_02_api_endpoint(self):
-        self._test_api_endpoint('cornelius', 'cornelius_realm1@org.privacyidea')
+        self._test_api_endpoint('cornelius', 'cornelius_realm1@io.edumfa')
 
     def test_03_create_token_nonascii(self):
         self._test_create_token('nönäscii')
 
     def test_04_api_endpoint_nonascii(self):
-        self._test_api_endpoint('nönäscii', 'n%C3%B6n%C3%A4scii_realm1@org.privacyidea')
+        self._test_api_endpoint('nönäscii', 'n%C3%B6n%C3%A4scii_realm1@io.edumfa')
 
     @smtpmock.activate
     def test_05_api_endpoint_with_multiple_tokens(self):
         # We test the behavior of the TiQR token with other CR tokens (ie. an email token) present
-        smtpmock.setdata(response={"pi_tester@privacyidea.org": (200, 'OK')})
+        smtpmock.setdata(response={"tester@edumfa.io": (200, 'OK')})
         other_token = init_token({"type": "email",
                                   "email": "some@example.com",
                                   "pin": "somepin"}, User('selfservice', self.realm1))
@@ -689,7 +689,7 @@ class TiQRTokenTestCase(MyApiTestCase):
 
         # check the URL
         parsed_url = urlparse(image_url)
-        self.assertEqual(parsed_url.netloc, "selfservice_realm1@org.privacyidea")
+        self.assertEqual(parsed_url.netloc, "selfservice_realm1@io.edumfa")
 
         ocrasuite = token.get_tokeninfo("ocrasuite")
         ocra_object = OCRA(ocrasuite, key=binascii.unhexlify(KEY20))

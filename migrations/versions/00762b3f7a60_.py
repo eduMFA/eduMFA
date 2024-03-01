@@ -13,7 +13,7 @@ down_revision = '86f40f535d7c'
 import re
 from alembic import op
 from sqlalchemy import orm, update
-from privacyidea.models import Policy
+from edumfa.models import Policy
 
 old_policy_action = 'webauthn_public_key_credential_algorithm_preference'
 new_policy_action = 'webauthn_public_key_credential_algorithms'

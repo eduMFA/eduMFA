@@ -3,14 +3,14 @@
 Job Queue
 .........
 
-The following queue classes are known to privacyIDEA
+The following queue classes are known to eduMFA
 
 .. toctree::
    :glob:
 
    queueclasses/*
 
-.. automodule:: privacyidea.lib.queue
+.. automodule:: edumfa.lib.queue
    :members:
    :undoc-members:
 
@@ -18,7 +18,7 @@ Base class
 ~~~~~~~~~~
 
 
-.. autoclass:: privacyidea.lib.queues.base.BaseQueue
+.. autoclass:: edumfa.lib.queues.base.BaseQueue
    :members:
    :undoc-members:
 

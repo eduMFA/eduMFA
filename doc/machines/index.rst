@@ -5,9 +5,9 @@ Applications and Machines or Services
 
 .. index:: machines, services, client machines
 
-privacyIDEA supports authentication schemes, that happen on other machines or services with special applications.
+eduMFA supports authentication schemes, that happen on other machines or services with special applications.
 
-privacyIDEA lets you define Machine Resolvers to connect to existing machine
+eduMFA lets you define Machine Resolvers to connect to existing machine
 stores. The idea is for users to be able to authenticate
 on those client machines.
 Not in all cases an online authentication request is possible,
@@ -18,8 +18,8 @@ In addition you need to define, which application or service on the client machi
 the user should authenticate
 to. Different application require different authentication items.
 
-Therefore privacyIDEA can define application types.
-At the moment privacyIDEA knows the application
+Therefore eduMFA can define application types.
+At the moment eduMFA knows the application
 ``luks``, ``offline`` and ``ssh``. You can write your own application class,
 which is defined in
 :ref:`code_application_class`.
@@ -52,26 +52,26 @@ Read more about :ref:`serviceids`.
 authorized keys command
 .......................
 
-To facilitate this, the SSH server fetches the managed SSH keys from the privacyIDEA server on demand.
+To facilitate this, the SSH server fetches the managed SSH keys from the eduMFA server on demand.
 The SSH server uses the ``AuthorizedKeysCommand`` in the ``sshd_config`` to do this.
 
-There is an Python script `privacyidea-authorizedkey` in the privacyideaadm repository. Note, that this
+There is an Python script `eduMFA-authorizedkey` in the eduMFAadm repository. Note, that this
 script currently does not support the ``service_id``.
-The `tools/` directory of the privacyIDEA Server ships a shell script `privacyidea-authorizedkeys` that
+The `tools/` directory of the eduMFA Server ships a shell script `eduMFA-authorizedkeys` that
 supports the ``service_id``.
 
 In the ``sshd_config`` file you need to configure the ``AuthorizedKeysCommand`` accordingly.
 Set it to e.g.::
 
-   privacyidea-authorizedkeys
+   eduMFA-authorizedkeys
 
 This will fetch the SSH public keys for the requesting machine and the given user.
 
-If you are using the shell script you need to configure the privacyIDEA Server and
+If you are using the shell script you need to configure the eduMFA Server and
 the service account at the top of the script.
 
 The Python script however expects a configuration file
-*/etc/privacyidea/authorizedkeyscommand* which looks like this::
+*/etc/eduMFA/authorizedkeyscommand* which looks like this::
 
    [Default]
    url=https://localhost
@@ -81,7 +81,7 @@ The Python script however expects a configuration file
    service_id=webservers
 
 In this example the SSH keys that are attached to the service_id "webservers" are fetched from the
-privacyIDEA server.
+eduMFA server.
 
 managing in WebUI
 .................
@@ -90,7 +90,7 @@ The administrator can view all SSH keys attached to service in the WebUI at *Tok
 administrator can filter for service_ids., to find all SSH keys that are attached e.g. to webservers.
 
 .. note:: To disable a SSH key for all servers, you simply can disable the
-    distinct SSH token in privacyIDEA.
+    distinct SSH token in eduMFA.
 
 .. warning:: In a productive environment you should not set **nosslcheck** to
     true, otherwise you are vulnerable to man in the middle attacks.
@@ -109,12 +109,12 @@ Parameters:
 ``partition`` The encrypted partition (usually /dev/sda3 or /dev/sda5)
 
 These authentication items need to be pulled on the client machine from
-the privacyIDEA server.
+the eduMFA server.
 
 Thus, the following script need to be executed with root rights (able to
 write to LUKS) on the client machine::
 
-   privacyidea-luks-assign @secrets.txt --clearslot --name salt-minion
+   eduMFA-luks-assign @secrets.txt --clearslot --name salt-minion
 
 For more information please see the man page of this tool.
 
@@ -140,7 +140,7 @@ the response to validate/check is enriched with a "auth_items" tree
 containing the salted SHA512 hashes of the next OTP values.
 
 The client can cache these values to enable offline authentication.
-The caching is implemented in the privacyIDEA PAM module.
+The caching is implemented in the eduMFA PAM module.
 
 The server increases the counter to the last offline cached OTP value, so
 that it will not be possible to authenticate with those OTP values available

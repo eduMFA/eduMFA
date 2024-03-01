@@ -4,16 +4,16 @@ This test file tests the lib.tokens.smstoken
 import logging
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
-from privacyidea.lib.resolver import (save_resolver)
-from privacyidea.lib.realm import (set_realm)
-from privacyidea.lib.user import (User)
-from privacyidea.lib.utils import is_true
-from privacyidea.lib.token import init_token, remove_token
-from privacyidea.lib.tokens.smstoken import SmsTokenClass, SMSACTION
-from privacyidea.models import (Token, Config, Challenge)
-from privacyidea.lib.config import (set_privacyidea_config, set_prepend_pin)
-from privacyidea.lib.policy import set_policy, SCOPE, PolicyClass
-from privacyidea.lib import _
+from edumfa.lib.resolver import (save_resolver)
+from edumfa.lib.realm import (set_realm)
+from edumfa.lib.user import (User)
+from edumfa.lib.utils import is_true
+from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.tokens.smstoken import SmsTokenClass, SMSACTION
+from edumfa.models import (Token, Config, Challenge)
+from edumfa.lib.config import (set_edumfa_config, set_prepend_pin)
+from edumfa.lib.policy import set_policy, SCOPE, PolicyClass
+from edumfa.lib import _
 import datetime
 import mock
 import responses
@@ -359,7 +359,7 @@ class SMSTokenTestCase(MyTestCase):
                       self.SMSHttpUrl,
                       body=self.success_body)
         transactionid = "123456098712"
-        set_privacyidea_config("sms.providerConfig", self.SMSProviderConfig)
+        set_edumfa_config("sms.providerConfig", self.SMSProviderConfig)
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = SmsTokenClass(db_token)
         self.assertTrue(token.check_otp("123456", 1, 10) == -1)
@@ -380,7 +380,7 @@ class SMSTokenTestCase(MyTestCase):
                       self.SMSHttpUrl,
                       body=self.success_body)
         transactionid = "123456098712"
-        set_privacyidea_config("sms.providerConfig", self.SMSProviderConfig)
+        set_edumfa_config("sms.providerConfig", self.SMSProviderConfig)
         db_token = Token.query.filter_by(serial=self.serial2).first()
         token = SmsTokenClass(db_token)
         self.assertTrue(token.check_otp("123456", 1, 10) == -1)
@@ -400,13 +400,13 @@ class SMSTokenTestCase(MyTestCase):
                       self.SMSHttpUrl,
                       body=self.success_body)
         transactionid = "123456098712"
-        set_privacyidea_config("sms.providerConfig", self.SMSProviderConfig)
+        set_edumfa_config("sms.providerConfig", self.SMSProviderConfig)
         db_token = Token.query.filter_by(serial=self.serial2).first()
         token = SmsTokenClass(db_token)
         # if the email is a multi-value attribute, the first address should be chosen
         new_user_info = token.user.info.copy()
         new_user_info['mobile'] = ['1234', '5678']
-        with mock.patch('privacyidea.lib.resolvers.PasswdIdResolver.IdResolver.getUserInfo') as mock_user_info:
+        with mock.patch('edumfa.lib.resolvers.PasswdIdResolver.IdResolver.getUserInfo') as mock_user_info:
             mock_user_info.return_value = new_user_info
             c = token.create_challenge(transactionid)
             self.assertTrue(c[0], c)
@@ -437,7 +437,7 @@ class SMSTokenTestCase(MyTestCase):
             responses.add(responses.POST,
                           self.SMSHttpUrl,
                           body=self.success_body)
-            set_privacyidea_config("sms.providerConfig", self.SMSProviderConfig)
+            set_edumfa_config("sms.providerConfig", self.SMSProviderConfig)
             db_token = Token.query.filter_by(serial=self.serial1).first()
             token = SmsTokenClass(db_token)
             c = token.create_challenge(options=options)
@@ -470,9 +470,9 @@ class SMSTokenTestCase(MyTestCase):
     def test_21_failed_loading(self, capture):
         token = init_token({'type': 'sms', 'phone': self.phone1})
         transactionid = "123456098712"
-        set_privacyidea_config("sms.providerConfig", "noJSON")
-        set_privacyidea_config("sms.provider",
-                               "privacyidea.lib.smsprovider."
+        set_edumfa_config("sms.providerConfig", "noJSON")
+        set_edumfa_config("sms.provider",
+                               "edumfa.lib.smsprovider."
                                "HttpSMSProvider.HttpSMSProviderWRONG")
 
         with mock.patch("logging.Logger.error") as mock_log:
@@ -480,15 +480,15 @@ class SMSTokenTestCase(MyTestCase):
             self.assertFalse(c[0], c)
             self.assertTrue(c[1].startswith("The PIN was correct, but"), c[1])
             expected = "Failed to load SMSProvider: ImportError" \
-                       "('privacyidea.lib.smsprovider.HttpSMSProvider has no attribute HttpSMSProviderWRONG'"
+                       "('edumfa.lib.smsprovider.HttpSMSProvider has no attribute HttpSMSProviderWRONG'"
             mock_log.mock_called()
             mocked_str = mock_log
             self.assertTrue(mocked_str.startswith(expected), mocked_str)
         capture.clear()
 
         with mock.patch("logging.Logger.error") as mock_log:
-            set_privacyidea_config("sms.provider",
-                                   "privacyidea.lib.smsprovider."
+            set_edumfa_config("sms.provider",
+                                   "edumfa.lib.smsprovider."
                                    "HttpSMSProvider.HttpSMSProvider")
             c = token.create_challenge(transactionid)
             self.assertFalse(c[0], c)

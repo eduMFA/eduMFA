@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: File a bug report to help us improve future versions of privacyIDEA
+about: File a bug report to help us improve future versions of eduMFA
 title: ''
 labels: 'Type: Possible bug'
 assignees: ''
@@ -8,15 +8,9 @@ assignees: ''
 ---
 
 <!--
-Thank you for filing a bug within privacyIDEA. The more information you provide, the easier it is to identify the problem!
+Thank you for filing a bug within eduMFA. The more information you provide, the easier it is to identify the problem!
 
-Issues are not meant for asking questions! You're welcome to ask questions in our community forum: https://community.privacyidea.org
-
-privacyIDEA is licensed under the AGPL and comes without warranty. If you require reliable, professional help, please consider getting either
-- consultancy 
-  (https://netknights.it/en/leistungen/one-time-services/)
-- or the privacyIDEA Enterprise Edition 
-  (https://netknights.it/en/leistungen/service-level-agreements/)
+eduMFA is licensed under the AGPL and comes without warranty.
 -->
 
 ### Top-level intent
@@ -39,7 +33,7 @@ What did actually happen?
 
 ### Configuration
 
-* **privacyIDEA version**:
+* **eduMFA version**:
 * **Installation method**: (from Ubuntu packages, github, PyPI, ...)
 * **Python version**:
 * **Operating system**:
@@ -48,5 +42,5 @@ What did actually happen?
 
 ### Log file
 
-**Set PI_LOGLEVEL = logging.DEBUG in pi.cfg and take a look at the privacyidea.log!**
+**Set EDUMFA_LOGLEVEL = logging.DEBUG in edumfa.cfg and take a look at the edumfa.log!**
 **If appropriate, attach the log file or paste relevant portions.**

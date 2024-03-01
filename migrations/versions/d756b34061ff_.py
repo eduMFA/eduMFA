@@ -9,7 +9,7 @@ Create Date: 2019-09-02 13:59:24.244529
 from sqlalchemy import orm
 from sqlalchemy.sql.ddl import CreateSequence
 
-from privacyidea.lib.config import get_privacyidea_node
+from edumfa.lib.config import get_edumfa_node
 
 revision = 'd756b34061ff'
 down_revision = '3d7f8b29cbb1'
@@ -71,7 +71,7 @@ def upgrade():
                         mysql_row_format='DYNAMIC'
                         )
         # Step 3: Migrate data from eventcounter to eventcounter_new
-        node = get_privacyidea_node()
+        node = get_edumfa_node()
         for old_ctr in session.query(OldEventCounter).all():
             new_ctr = NewEventCounter(counter_name=old_ctr.counter_name,
                                       counter_value=old_ctr.counter_value,

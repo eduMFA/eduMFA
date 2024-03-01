@@ -41,10 +41,10 @@ The RADIUS secret for this RADIUS client.
 .. note:: Using the RADIUS token you can design migration scenarios. When
    migrating from other (proprietary) OTP solutions, you can enroll a RADIUS
    token for the users. The RADIUS token points to the RADIUS server of the
-   old solution. Thus the user can authenticate against privacyIDEA with the
-   old, proprietary token, till he is enrolled a new token in privacyIDEA. The
+   old solution. Thus the user can authenticate against eduMFA with the
+   old, proprietary token, till he is enrolled a new token in eduMFA. The
    interesting thing is, that you also get the
    authentication request with the proprietary token in the audit log of
-   privacyIDEA. This way you can have a scenario, where users are still using
-   old tokens and other users are already using new (privacyIDEA) tokens. You
-   will see all authentication requests in the privacyIDEA system.
+   eduMFA. This way you can have a scenario, where users are still using
+   old tokens and other users are already using new (eduMFA) tokens. You
+   will see all authentication requests in the eduMFA system.

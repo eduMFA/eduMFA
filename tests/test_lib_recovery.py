@@ -3,17 +3,17 @@
 This test file tests the lib/passwordreset.py
 """
 from .base import MyTestCase, FakeFlaskG
-from privacyidea.lib.smtpserver import add_smtpserver
+from edumfa.lib.smtpserver import add_smtpserver
 from . import smtpmock
-from privacyidea.lib.error import privacyIDEAError
-from privacyidea.lib.passwordreset import (create_recoverycode,
+from edumfa.lib.error import eduMFAError
+from edumfa.lib.passwordreset import (create_recoverycode,
                                            check_recoverycode,
                                            is_password_reset)
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.lib.user import User
-from privacyidea.lib.resolver import save_resolver
-from privacyidea.lib.realm import set_realm
-from privacyidea.lib.policy import ACTION, SCOPE, set_policy, PolicyClass
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.user import User
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.realm import set_realm
+from edumfa.lib.policy import ACTION, SCOPE, set_policy, PolicyClass
 
 
 class RecoveryTestCase(MyTestCase):
@@ -45,13 +45,13 @@ class RecoveryTestCase(MyTestCase):
         smtpmock.setdata(response={"user@localhost.localdomain": (200, "OK")})
 
         # missing configuration
-        self.assertRaises(privacyIDEAError, create_recoverycode,
+        self.assertRaises(eduMFAError, create_recoverycode,
                           user=User("cornelius", self.realm1))
 
         # recover password with "recovery.identifier"
         r = add_smtpserver(identifier="myserver", server="1.2.3.4")
         self.assertTrue(r > 0)
-        set_privacyidea_config("recovery.identifier", "myserver")
+        set_edumfa_config("recovery.identifier", "myserver")
         r = create_recoverycode(User("cornelius", self.realm1))
         self.assertEqual(r, True)
 
@@ -113,7 +113,7 @@ class RecoveryTestCase(MyTestCase):
         # recover password with "recovery.identifier"
         r = add_smtpserver(identifier="myserver", server="1.2.3.4")
         self.assertTrue(r > 0)
-        set_privacyidea_config("recovery.identifier", "myserver")
+        set_edumfa_config("recovery.identifier", "myserver")
         r = create_recoverycode(User("nönäscii", "register"), recoverycode=recoverycode)
         self.assertEqual(r, True)
 

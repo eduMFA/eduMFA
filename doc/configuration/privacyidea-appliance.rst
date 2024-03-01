@@ -1,11 +1,11 @@
-.. _privacyidea-appliance:
+.. _eduMFA-appliance:
 
-privacyIDEA Appliance
+eduMFA Appliance
 ---------------------
 
 .. index:: appliance, setup tool
 
-privacyIDEA offers an appliance tool to manage your token administrators, RADIUS clients and
+eduMFA offers an appliance tool to manage your token administrators, RADIUS clients and
 also setup MySQL master-master replication.
 It can be found in a Github repository [#applianceGithub]_.
 
@@ -26,13 +26,13 @@ This will bring you to this start screen.
 
    Start screen of the appliance setup tool.
 
-You can configure privacyidea settings, the log level, administrators, encryption key and
+You can configure eduMFA settings, the log level, administrators, encryption key and
 much more. You can configure the webserver settings and RADIUS clients.
 
-.. figure:: images/appliance/configure-privacyidea.png
+.. figure:: images/appliance/configure-eduMFA.png
    :width: 400px
 
-   Configure privacyidea
+   Configure eduMFA
 
 .. figure:: images/appliance/manage-admins.png
    :width: 400px
@@ -63,10 +63,10 @@ Backup and Restore
 .. index:: Backup, Restore
 
 Starting with version 1.5 the setup tool also supports backup and
-restore. Backups are written to the directory `/var/lib/privacyidea/backup`.
+restore. Backups are written to the directory `/var/lib/eduMFA/backup`.
 
-The backup contains all privacyIDEA configuration, the contents of
-the directory `/etc/privacyidea`, the encryption key, the configured
+The backup contains all eduMFA configuration, the contents of
+the directory `/etc/eduMFA`, the encryption key, the configured
 administrators, the complete token database (MySQL) and Audit log.
 Furthermore if you are running FreeRADIUS the backup also contains
 the `/etc/freeradius/clients.conf` file.
@@ -125,9 +125,9 @@ Database: Setup Redundancy
 ..........................
 
 The appliance-tool is also capable of setting up a redundant setup between
-two privacyIDEA nodes in master-master replication. The administrator sets
+two eduMFA nodes in master-master replication. The administrator sets
 up redundancy on the first configured node. On the second node the same version
-of privacyIDEA needs to be installed. No configuration needs to be done on the
+of eduMFA needs to be installed. No configuration needs to be done on the
 second node. The configuration and the token database is completely copied from the
 first node to the second node. Possible existing configuration on the second node will
 be overwritten during the setup.
@@ -166,5 +166,5 @@ in :ref:`backup_and_restore`.
    setup. If you chose to rotate both audit logs, make sure you do it at different times to
    avoid synchronisation issues.
 
-.. [#applianceGithub] https://github.com/NetKnights-GmbH/privacyidea-appliance
-.. [#applianceNetKnights] https://netknights.it/en/products/privacyidea-enterprise-edition/
+.. [#applianceGithub] https://github.com/NetKnights-GmbH/eduMFA-appliance
+.. [#applianceNetKnights] https://netknights.it/en/products/eduMFA-enterprise-edition/

@@ -1,6 +1,6 @@
 import json
 from .base import MyApiTestCase
-from privacyidea.lib.clientapplication import save_clientapplication
+from edumfa.lib.clientapplication import save_clientapplication
 
 
 class APIClienttypeTestCase(MyApiTestCase):

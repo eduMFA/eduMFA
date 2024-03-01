@@ -1,13 +1,13 @@
 import json
 
-from privacyidea.lib.event import set_event, delete_event
-from privacyidea.lib.eventhandler.customuserattributeshandler import ACTION_TYPE, USER_TYPE
-from privacyidea.lib.policy import SCOPE, set_policy, delete_policy
-from privacyidea.lib.token import init_token, remove_token
-from privacyidea.lib.user import User
+from edumfa.lib.event import set_event, delete_event
+from edumfa.lib.eventhandler.customuserattributeshandler import ACTION_TYPE, USER_TYPE
+from edumfa.lib.policy import SCOPE, set_policy, delete_policy
+from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.user import User
 from .base import MyApiTestCase
 from . import smtpmock
-from privacyidea.lib.config import set_privacyidea_config
+from edumfa.lib.config import set_edumfa_config
 
 # TODO: this should be imported from lib.event when available
 HANDLERS = ["UserNotification", "Token", "Federation", "Script", "Counter",
@@ -481,13 +481,13 @@ class APIEventsTestCase(MyApiTestCase):
 
     @smtpmock.activate
     def test_08_create_token_for_user(self):
-        smtpmock.setdata(response={"pi_tester@privacyidea.org": (200, 'OK')})
+        smtpmock.setdata(response={"tester@edumfa.io": (200, 'OK')})
         transactionid = "123456098712"
         # send the email with the old configuration
-        set_privacyidea_config("email.mailserver", "localhost")
-        set_privacyidea_config("email.username", "user")
-        set_privacyidea_config("email.username", "password")
-        set_privacyidea_config("email.tls", True)
+        set_edumfa_config("email.mailserver", "localhost")
+        set_edumfa_config("email.username", "user")
+        set_edumfa_config("email.username", "password")
+        set_edumfa_config("email.tls", True)
         # We create a token for a user, who has currently no token!
         # create an event configuration
         param = {

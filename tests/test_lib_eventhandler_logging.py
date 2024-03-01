@@ -11,10 +11,10 @@ from werkzeug.test import EnvironBuilder
 from flask import Request
 from testfixtures import log_capture
 
-from privacyidea.lib.token import init_token
-from privacyidea.app import PiResponseClass as Response
-from privacyidea.lib.eventhandler.logginghandler import LoggingEventHandler
-from privacyidea.lib.user import User
+from edumfa.lib.token import init_token
+from edumfa.app import PiResponseClass as Response
+from edumfa.lib.eventhandler.logginghandler import LoggingEventHandler
+from edumfa.lib.user import User
 from .base import MyTestCase, FakeFlaskG, FakeAudit
 
 
@@ -47,7 +47,7 @@ class LoggingTestCase(MyTestCase):
         res = log_handler.do("logging", options=options)
         self.assertTrue(res)
         capture.check(
-            ('pi-eventlogger', 'INFO', 'event=/auth triggered')
+            ('edumfa-eventlogger', 'INFO', 'event=/auth triggered')
         )
 
     @log_capture()
@@ -67,7 +67,7 @@ class LoggingTestCase(MyTestCase):
             "response": resp,
             "handler_def": {
                 'options': {
-                    'name': 'eventlogger-privacyidea',
+                    'name': 'eventlogger-edumfa',
                     'level': 'WARN',
                     'message': 'Hello {username}!'
                 }
@@ -77,7 +77,7 @@ class LoggingTestCase(MyTestCase):
         res = log_handler.do("logging", options=options)
         self.assertTrue(res)
         capture.check_present(
-            ('eventlogger-privacyidea', 'WARNING', 'Hello cornelius!')
+            ('eventlogger-edumfa', 'WARNING', 'Hello cornelius!')
         )
 
     @log_capture()
@@ -145,14 +145,14 @@ class LoggingTestCase(MyTestCase):
             }
         }
         current_utc_time = datetime(2018, 3, 4, 5, 6, 8)
-        with mock.patch('privacyidea.lib.utils.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.utils.datetime') as mock_dt:
             mock_dt.now.return_value = current_utc_time
 
             log_handler = LoggingEventHandler()
             res = log_handler.do("logging", options=options)
             self.assertTrue(res)
             capture.check_present(
-                ('pi-eventlogger', 'INFO',
+                ('edumfa-eventlogger', 'INFO',
                  'admin=admin realm=super action=/auth serial=testserial '
                  'url=http://localhost/ user=Cornelius surname=Kölbel '
                  'givenname=None username=cornelius userrealm=sqliterealm '

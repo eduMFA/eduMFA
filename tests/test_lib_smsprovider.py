@@ -10,13 +10,13 @@ This test file tests the modules:
 """
 
 from .base import MyTestCase
-from privacyidea.lib.smsprovider.HttpSMSProvider import HttpSMSProvider
-from privacyidea.lib.smsprovider.SipgateSMSProvider import SipgateSMSProvider
-from privacyidea.lib.smsprovider.SipgateSMSProvider import URL
-from privacyidea.lib.smsprovider.SmtpSMSProvider import SmtpSMSProvider
-from privacyidea.lib.smsprovider.SmppSMSProvider import SmppSMSProvider
-from privacyidea.lib.smsprovider.ScriptSMSProvider import ScriptSMSProvider, SCRIPT_WAIT
-from privacyidea.lib.smsprovider.SMSProvider import (SMSError,
+from edumfa.lib.smsprovider.HttpSMSProvider import HttpSMSProvider
+from edumfa.lib.smsprovider.SipgateSMSProvider import SipgateSMSProvider
+from edumfa.lib.smsprovider.SipgateSMSProvider import URL
+from edumfa.lib.smsprovider.SmtpSMSProvider import SmtpSMSProvider
+from edumfa.lib.smsprovider.SmppSMSProvider import SmppSMSProvider
+from edumfa.lib.smsprovider.ScriptSMSProvider import ScriptSMSProvider, SCRIPT_WAIT
+from edumfa.lib.smsprovider.SMSProvider import (SMSError,
                                                      get_sms_provider_class,
                                                      set_smsgateway,
                                                      get_smsgateway,
@@ -25,8 +25,8 @@ from privacyidea.lib.smsprovider.SMSProvider import (SMSError,
                                                      delete_smsgateway_header,
                                                      delete_smsgateway_key_generic,
                                                      create_sms_instance)
-from privacyidea.lib.smsprovider.SMSProvider import ISMSProvider
-from privacyidea.lib.smtpserver import add_smtpserver
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider
+from edumfa.lib.smtpserver import add_smtpserver
 import responses
 from responses import json_params_matcher
 import os
@@ -48,19 +48,19 @@ class SMSTestCase(MyTestCase):
 
     def test_01_get_provider_class(self):
         _provider =get_sms_provider_class(
-            "privacyidea.lib.smsprovider.SipgateSMSProvider",
+            "edumfa.lib.smsprovider.SipgateSMSProvider",
             "SipgateSMSProvider")
 
         _provider =get_sms_provider_class(
-            "privacyidea.lib.smsprovider.HttpSMSProvider",
+            "edumfa.lib.smsprovider.HttpSMSProvider",
             "HttpSMSProvider")
 
         _provider =get_sms_provider_class(
-            "privacyidea.lib.smsprovider.SmtpSMSProvider",
+            "edumfa.lib.smsprovider.SmtpSMSProvider",
             "SmtpSMSProvider")
         
         _provider =get_sms_provider_class(
-            "privacyidea.lib.smsprovider.SmppSMSProvider",
+            "edumfa.lib.smsprovider.SmppSMSProvider",
             "SmppSMSProvider")
 
         # A non-existing module will raise an error
@@ -73,12 +73,12 @@ class SMSTestCase(MyTestCase):
         # submit_method
         self.assertRaises(Exception,
                           get_sms_provider_class,
-                          "privacyidea.lib.smsprovider.SMSProvider",
+                          "edumfa.lib.smsprovider.SMSProvider",
                           "SMSError")
 
     def test_02_create_modify_delete_smsgateway_configuration(self):
         identifier = "myGW"
-        provider_module = "privacyidea.lib.smsprovider.HttpSMSProvider.HttpSMSProvider"
+        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options={"HTTP_METHOD": "POST",
                                      "URL": "example.com"},
@@ -141,7 +141,7 @@ class SMSTestCase(MyTestCase):
     def test_03_create_instance_by_identifier(self):
         # SMS gateway definition
         identifier = "myGW"
-        provider_module = "privacyidea.lib.smsprovider.HttpSMSProvider" \
+        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider" \
                           ".HttpSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options={"HTTP_METHOD": "POST",
@@ -268,7 +268,7 @@ class SmtpSMSTestCase(MyTestCase):
         smtpmock.setdata(response={"recp@example.com": (200, "OK")})
 
         identifier = "myMail"
-        provider_module = "privacyidea.lib.smsprovider.SmtpSMSProvider" \
+        provider_module = "edumfa.lib.smsprovider.SmtpSMSProvider" \
                           ".SmtpSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options={"SMTPIDENTIFIER": "myServer",
@@ -350,7 +350,7 @@ class SipgateSMSTestCase(MyTestCase):
         responses.add(responses.POST,
                       self.url)
         identifier = "mySMS"
-        provider_module = "privacyidea.lib.smsprovider.SipgateSMSProvider" \
+        provider_module = "edumfa.lib.smsprovider.SipgateSMSProvider" \
                           ".SipgateSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options=self.config)
@@ -371,7 +371,7 @@ class ScriptSMSTestCase(MyTestCase):
         identifier = "myScriptSMS"
         config = {"background": SCRIPT_WAIT,
                   "script": "sms-script-does-not-exist.sh"}
-        provider_module = "privacyidea.lib.smsprovider.ScriptSMSProvider" \
+        provider_module = "edumfa.lib.smsprovider.ScriptSMSProvider" \
                           ".ScriptSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options=config)
@@ -390,7 +390,7 @@ class ScriptSMSTestCase(MyTestCase):
         config = {"background": SCRIPT_WAIT,
                   "script": "success.sh",
                   "REGEXP": "/[+-/. ]//"}
-        provider_module = "privacyidea.lib.smsprovider.ScriptSMSProvider" \
+        provider_module = "edumfa.lib.smsprovider.ScriptSMSProvider" \
                           ".ScriptSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options=config)
@@ -407,7 +407,7 @@ class ScriptSMSTestCase(MyTestCase):
         identifier = "myScriptSMS"
         config = {"background": SCRIPT_WAIT,
                   "script": "fail.sh"}
-        provider_module = "privacyidea.lib.smsprovider.ScriptSMSProvider" \
+        provider_module = "edumfa.lib.smsprovider.ScriptSMSProvider" \
                           ".ScriptSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options=config)
@@ -601,7 +601,7 @@ class HttpSMSTestCase(MyTestCase):
     @responses.activate
     def test_10_new_smsgateway(self):
         identifier = "myGW"
-        provider_module = "privacyidea.lib.smsprovider.HttpSMSProvider" \
+        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider" \
                           ".HttpSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options={"HTTP_METHOD": "POST",
@@ -636,7 +636,7 @@ class HttpSMSTestCase(MyTestCase):
     @responses.activate
     def test_12_send_sms_post_success_as_json(self):
         identifier = "myGWJSON"
-        provider_module = "privacyidea.lib.smsprovider.HttpSMSProvider" \
+        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider" \
                           ".HttpSMSProvider"
         id = set_smsgateway(identifier, provider_module, description="test",
                             options={"HTTP_METHOD": "POST",
@@ -670,15 +670,15 @@ class SmppSMSTestCase(MyTestCase):
 
     config = {'SMSC_HOST': "192.168.1.1",
               'SMSC_PORT': "1234",
-              'SYSTEM_ID': "privacyIDEA",
+              'SYSTEM_ID': "eduMFA",
               'PASSWORD': "secret",
               'S_ADDR_TON': "0x5",
               'S_ADDR_NPI': "0x1",
-              'S_ADDR': "privacyIDEA",
+              'S_ADDR': "eduMFA",
               'D_ADDR_TON': "0x5",
               'D_ADDR_NPI': "0x1"}
 
-    provider_module = "privacyidea.lib.smsprovider.SmppSMSProvider" \
+    provider_module = "edumfa.lib.smsprovider.SmppSMSProvider" \
                       ".SmppSMSProvider"
 
     def setUp(self):
@@ -719,7 +719,7 @@ class SmppSMSTestCase(MyTestCase):
     def test_01_success(self):
         # Here we need to send the SMS
         smppmock.setdata(connection_success=True,
-                         systemid="privacyIDEA",
+                         systemid="eduMFA",
                          password="secret")
         r = self.provider.submit_message("123456", "Hello")
         self.assertTrue(r)
@@ -727,14 +727,14 @@ class SmppSMSTestCase(MyTestCase):
     @smppmock.activate
     def test_02_fail_connection(self):
         smppmock.setdata(connection_success=False,
-                         systemid="privacyIDEA",
+                         systemid="eduMFA",
                          password="secret")
         self.assertRaises(SMSError, self.provider.submit_message, "123456", "hello")
 
     @smppmock.activate
     def test_03_fail_wrong_credentials(self):
         smppmock.setdata(connection_success=True,
-                         systemid="privacyIDEA",
+                         systemid="eduMFA",
                          password="wrong")
         self.assertRaises(SMSError, self.provider.submit_message, "123456", "hello")
 
@@ -742,11 +742,11 @@ class SmppSMSTestCase(MyTestCase):
     def test_04_send_sms_regexp_success(self):
         config_regexp = {'SMSC_HOST': "192.168.1.1",
                          'SMSC_PORT': "1234",
-                         'SYSTEM_ID': "privacyIDEA",
+                         'SYSTEM_ID': "eduMFA",
                          'PASSWORD': "secret",
                          'S_ADDR_TON': "0x5",
                          'S_ADDR_NPI': "0x1",
-                         'S_ADDR': "privacyIDEA",
+                         'S_ADDR': "eduMFA",
                          'D_ADDR_TON': "0x5",
                          'D_ADDR_NPI': "0x1",
                          "REGEXP": "/[+-/. ]//"}
@@ -758,7 +758,7 @@ class SmppSMSTestCase(MyTestCase):
         regexp_provider = create_sms_instance(identifier=identifier_regexp)
         self.assertEqual(type(regexp_provider), SmppSMSProvider)
         smppmock.setdata(connection_success=True,
-                         systemid="privacyIDEA",
+                         systemid="eduMFA",
                          password="secret")
         # Here we need to send the SMS
         with mock.patch("logging.Logger.debug") as log:

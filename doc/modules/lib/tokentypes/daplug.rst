@@ -3,6 +3,6 @@
 Daplug Token
 ~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.daplugtoken.DaplugTokenClass
+.. autoclass:: edumfa.lib.tokens.daplugtoken.DaplugTokenClass
    :members:
    :undoc-members:

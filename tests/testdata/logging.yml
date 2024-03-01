@@ -1,13 +1,13 @@
 formatters:
   detail:
-    (): privacyidea.lib.log.SecureFormatter
+    (): edumfa.lib.log.SecureFormatter
     format: '[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d]
       %(message)s'
 handlers:
   file:
     backupCount: 5
     class: logging.handlers.RotatingFileHandler
-    filename: privacyidea.log
+    filename: edumfa.log
     formatter: detail
     level: DEBUG
     maxBytes: 10000000
@@ -18,14 +18,14 @@ handlers:
     level: INFO
     maxBytes: 10000000
 loggers:
-  privacyidea:
+  edumfa:
     handlers:
     - file
     level: INFO
-    qualname: privacyidea
+    qualname: edumfa
   audit:
     handlers:
     - file_audit
     level: INFO
-    qualname: pi-audit
+    qualname: edumfa-audit
 version: 1

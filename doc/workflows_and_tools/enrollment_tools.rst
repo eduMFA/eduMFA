@@ -4,7 +4,7 @@ Enrollment Tools
 ----------------
 
 This section describes the usage of several software tools to facilitate
-and automate token enrollment with privacyIDEA. This is especially
+and automate token enrollment with eduMFA. This is especially
 important for hardware tokens whose secrets have to be brought to the system.
 
 .. toctree::

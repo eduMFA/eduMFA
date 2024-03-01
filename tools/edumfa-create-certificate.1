@@ -1,0 +1,32 @@
+.\" Manpage for edumfa-create-certificate.
+.
+.TH EDUMFA-CREATE-CERTIFICATE 1 "11 Oct 2015" "1.0" "edumfa-create-certificate man page"
+.SH NAME
+edumfa-create-certificate \- create the webserver certificate.
+.SH SYNOPSIS
+edumfa-create-auditkeys \-f <apache config>
+.SH DESCRIPTION
+This tool creates the private key and the self\-signed certificate for the eduMFA webserver.
+It reads the edumfa apache config and thus gets the information, where the certificate and
+the key should be located.
+.SH COMMON OPTIONS
+.PP
+\fB\-f <apache config file> \fR
+.RS 4
+The apache config file containing the information where the keys are located.
+.RE
+
+.PP
+\fB\-h\fR
+.RS 4
+Display a help message.
+.RE
+
+.SH INTERNET SOURCES
+http://www.privacyidea.org, http://www.linotp.org
+.SH SEE ALSO
+
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+LSE Leading Security Experts GmbH <linotp-community@lsexperts.de>

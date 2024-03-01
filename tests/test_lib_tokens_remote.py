@@ -4,35 +4,35 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.remotetoken import RemoteTokenClass
-from privacyidea.models import Token
+from edumfa.lib.tokens.remotetoken import RemoteTokenClass
+from edumfa.models import Token
 import responses
 import json
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.lib.token import remove_token
-from privacyidea.lib.error import ConfigAdminError
-from privacyidea.lib.privacyideaserver import add_privacyideaserver
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.token import remove_token
+from edumfa.lib.error import ConfigAdminError
+from edumfa.lib.edumfaserver import add_edumfaserver
 
 
 class RemoteTokenTestCase(MyTestCase):
 
     otppin = "topsecret"
     serial1 = "ser1"
-    params1 = {"remote.server": "http://my.privacyidea.server",
+    params1 = {"remote.server": "http://my.edumfa.server",
                "remote.local_checkpin": True,
                "remote.serial": "s0001",
                "remote.user": "",
                "remote.realm": "",
                "remote.resolver": ""}
     serial2 = "use1"
-    params2 = {"remote.server": "http://my.privacyidea.server",
+    params2 = {"remote.server": "http://my.edumfa.server",
                "remote.path": "/mypi/validate/check",
                "remote.local_checkpin": False,
                "remote.user": "user1",
                "remote.realm": "realm1",
                "remote.resolver": "reso1"}
     serial3 = "serial3"
-    params3 = {"remote.server": "http://my.privacyidea.server"}
+    params3 = {"remote.server": "http://my.edumfa.server"}
 
     success_body = {"detail": {"message": "matching 1 tokens",
                                "serial": "PISP0000AB00",
@@ -42,7 +42,7 @@ class RemoteTokenTestCase(MyTestCase):
                     "result": {"status": True,
                                "value": True
                     },
-                    "version": "privacyIDEA unknown"
+                    "version": "edumfa unknown"
     }
 
     fail_body = {"detail": {"message": "wrong otp value"},
@@ -51,7 +51,7 @@ class RemoteTokenTestCase(MyTestCase):
                     "result": {"status": True,
                                "value": False
                     },
-                    "version": "privacyIDEA unknown"
+                    "version": "edumfa unknown"
     }
 
     def test_01_create_token(self):
@@ -103,7 +103,7 @@ class RemoteTokenTestCase(MyTestCase):
     @responses.activate
     def test_04_do_request_success(self):
         responses.add(responses.POST,
-                      "http://my.privacyidea.server/validate/check",
+                      "http://my.edumfa.server/validate/check",
                       body=json.dumps(self.success_body),
                       content_type="application/json")
 
@@ -119,7 +119,7 @@ class RemoteTokenTestCase(MyTestCase):
     @responses.activate
     def test_05_do_request_fail(self):
         responses.add(responses.POST,
-                      "http://my.privacyidea.server/validate/check",
+                      "http://my.edumfa.server/validate/check",
                       body=json.dumps(self.fail_body),
                       content_type="application/json")
 
@@ -132,9 +132,9 @@ class RemoteTokenTestCase(MyTestCase):
     @responses.activate
     def test_06_do_request_success_remote_user(self):
         # verify SSL
-        set_privacyidea_config("remote.verify_ssl_certificate", True)
+        set_edumfa_config("remote.verify_ssl_certificate", True)
         responses.add(responses.POST,
-                      "http://my.privacyidea.server/mypi/validate/check",
+                      "http://my.edumfa.server/mypi/validate/check",
                       body=json.dumps(self.success_body),
                       content_type="application/json")
 
@@ -146,7 +146,7 @@ class RemoteTokenTestCase(MyTestCase):
     @responses.activate
     def test_07_do_request_missing_config(self):
         responses.add(responses.POST,
-                      "http://my.privacyidea.server/mypi/validate/check",
+                      "http://my.edumfa.server/mypi/validate/check",
                       body=json.dumps(self.success_body),
                       content_type="application/json")
 
@@ -159,7 +159,7 @@ class RemoteTokenTestCase(MyTestCase):
     @responses.activate
     def test_08_authenticate_local_pin(self):
         responses.add(responses.POST,
-                      "http://my.privacyidea.server/validate/check",
+                      "http://my.edumfa.server/validate/check",
                       body=json.dumps(self.success_body),
                       content_type="application/json")
         db_token = Token.query.filter(Token.serial == self.serial1).first()
@@ -180,7 +180,7 @@ class RemoteTokenTestCase(MyTestCase):
     @responses.activate
     def test_09_authenticate_remote_pin(self):
         responses.add(responses.POST,
-                      "http://my.privacyidea.server/mypi/validate/check",
+                      "http://my.edumfa.server/mypi/validate/check",
                       body=json.dumps(self.success_body),
                       content_type="application/json")
         db_token = Token.query.filter(Token.serial == self.serial2).first()
@@ -218,7 +218,7 @@ class RemoteTokenTestCase(MyTestCase):
 
     @responses.activate
     def test_21_create_remote_token_with_remote_server_id(self):
-        r_server_id = add_privacyideaserver("myRemote", "https://localhost")
+        r_server_id = add_edumfaserver("myRemote", "https://localhost")
         self.assertTrue(r_server_id >= 0)
         remove_token(self.serial3)
         db_token = Token(self.serial3, tokentype="remote")

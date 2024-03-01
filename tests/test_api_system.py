@@ -6,13 +6,13 @@ import json
 
 from .base import MyApiTestCase
 
-from privacyidea.lib.policy import PolicyClass, set_policy, delete_policy, ACTION, SCOPE
-from privacyidea.lib.config import (set_privacyidea_config,
-                                    delete_privacyidea_config, SYSCONF)
-from privacyidea.lib.caconnector import save_caconnector, delete_caconnector
-from privacyidea.lib.caconnectors.localca import ATTR
-from privacyidea.lib.radiusserver import add_radius, delete_radius
-from privacyidea.lib.resolver import save_resolver, delete_resolver, CENSORED
+from edumfa.lib.policy import PolicyClass, set_policy, delete_policy, ACTION, SCOPE
+from edumfa.lib.config import (set_edumfa_config,
+                                    delete_edumfa_config, SYSCONF)
+from edumfa.lib.caconnector import save_caconnector, delete_caconnector
+from edumfa.lib.caconnectors.localca import ATTR
+from edumfa.lib.radiusserver import add_radius, delete_radius
+from edumfa.lib.resolver import save_resolver, delete_resolver, CENSORED
 from .test_lib_resolver import LDAPDirectory, ldap3mock
 from .test_lib_caconnector import CACERT, CAKEY, WORKINGDIR, OPENSSLCNF
 from urllib.parse import urlencode
@@ -129,7 +129,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # Set a policy with a more complicated client which might interfere
         # with override client
-        set_privacyidea_config(SYSCONF.OVERRIDECLIENT, "10.0.0.1")
+        set_edumfa_config(SYSCONF.OVERRIDECLIENT, "10.0.0.1")
         with self.app.test_request_context('/policy/pol1',
                                            data={'action': "enroll",
                                                  'scope': "selfservice",
@@ -147,7 +147,7 @@ class APIConfigTestCase(MyApiTestCase):
             result = res.json['result']
             self.assertTrue(result["status"], result)
             self.assertEqual(result['value']['setPolicy pol1'], 1, result)
-        delete_privacyidea_config(SYSCONF.OVERRIDECLIENT)
+        delete_edumfa_config(SYSCONF.OVERRIDECLIENT)
 
         # setting policy with invalid name fails
         with self.app.test_request_context('/policy/invalid policy name',
@@ -842,7 +842,7 @@ class APIConfigTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual(res.mimetype, 'text/plain', res)
-            self.assertTrue(b"privacyIDEA configuration documentation" in
+            self.assertTrue(b"eduMFA configuration documentation" in
                             res.data)
 
     def test_16_get_hsm(self):

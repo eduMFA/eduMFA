@@ -79,7 +79,7 @@ issuer of the soft token.
 You can use the tags ``{user}``, ``{realm}``, ``{serial}``, ``{givenname}``
 and ``{surname}`` in the issuer label.
 
-.. note:: A good idea is to set this to the instance name of your privacyIDEA
+.. note:: A good idea is to set this to the instance name of your eduMFA
    installation or the name of your company.
 
 tokenlabel
@@ -109,8 +109,7 @@ appimageurl
 type: string
 
 With this action the administrator may specify the URL to a token image which is included in the
-QR code during enrollment (key in otpauth URL: ``image``). It is used by the privacyIDEA Authenticator
-and some other smartphone apps like FreeOTP (supported file formats: PNG, JPG and GIF).
+QR code during enrollment (key in otpauth URL: ``image``). It is used by smartphone apps like FreeOTP (supported file formats: PNG, JPG and GIF).
 
 .. _autoassignment:
 
@@ -167,7 +166,7 @@ type: string
 If the ``otp_pin_random`` policy is defined, you can use this policy to
 define, what should happen with the random pin.
 The action value take the class of a PinHandler like
-``privacyidea.lib.pinhandling.base.PinHandler``.
+``eduMFA.lib.pinhandling.base.PinHandler``.
 The base PinHandler just logs the PIN to the log file. You can add classes to
 send the PIN via EMail or print it in a letter.
 
@@ -192,7 +191,7 @@ trigger the change of the PIN using the API */token/setpin*. See
 .. note:: If the application does not honour the "pin_change" attribute, then
    the user can still authenticate with his old PIN.
 
-.. note:: Starting with version 3.4 privacyIDEA also allows to force the user to change
+.. note:: Starting with version 3.4 eduMFA also allows to force the user to change
    the PIN in such a case using the policy :ref:`policy_change_pin_via_validate`.
 
 .. _policy_change_pin_every:
@@ -308,7 +307,7 @@ yubikey_access_code
 type: string
 
 This is a 12 character long access code in hex format to be used to initialize Yubikeys.
-This access code is not actively used by the privacyIDEA server. It is meant to be read by
+This access code is not actively used by the eduMFA server. It is meant to be read by
 an admin client or enrollment client, so the component initializing the Yubikey can use this
 access code, without the operator knowing the code.
 
@@ -401,10 +400,10 @@ force_app_pin
 type: bool
 
 This is a token type specific parameter (with ``hotp_`` or ``totp_`` prefix).
-During enrollment of a privacyIDEA Authenticator smartphone app this policy is used
+During enrollment of a unsupported privacyIDEA Authenticator smartphone app this policy is used
 to force the user to protect the token with a PIN.
 
-.. note:: This only works with the privacyIDEA Authenticator.
+.. note:: This only works with the unsupported privacyIDEA Authenticator.
    This policy has no effect, if the QR code is scanned with other smartphone apps.
 
 This is new in version 3.1.
@@ -428,7 +427,7 @@ This is new in version 3.0.
 
 Starting with version 3.6, if the push token is supposed to run in poll-only mode,
 then the entry "poll only" can be selected instead of a firebase configuration.
-In this mode, neither the privacyIDEA server nor the smartphone app will connect to Google
+In this mode, neither the eduMFA server nor the smartphone app will connect to Google
 Firebase during enrollment or authentication.
 Note, that you also need to set the authentication policy
 :ref:`policy_auth_push_allow_poll` to allow the push token to poll for challenges.
@@ -438,15 +437,15 @@ push_registration_url
 
 type: string
 
-This is the URL of your privacyIDEA server, which the push App should
+This is the URL of your eduMFA server, which the push App should
 connect to for the second registration step.
 This URL usually ends with ``/ttype/push``. Note, that the smartphone app
-may connect to a different privacyIDEA URL than the URL of the privacyIDEA Web UI.
+may connect to a different eduMFA URL than the URL of the eduMFA Web UI.
 
 push_ttl
 ~~~~~~~~
 
-This is the time (in minutes) how long the privacyIDEA server
+This is the time (in minutes) how long the eduMFA server
 accepts the response of the second registration step.
 The smartphone could have connection issues, so the second step
 could take some time to happen.
@@ -458,7 +457,7 @@ push_ssl_verify
 
 type: int
 
-The smartphone needs to verify the SSL certificate of the privacyIDEA server during
+The smartphone needs to verify the SSL certificate of the eduMFA server during
 the enrollment of push tokens. By default, the verification is enabled. To disable
 verification during authentication, see :ref:`policy_push_ssl_verify_auth`.
 
@@ -633,7 +632,7 @@ webauthn_public_key_credential_algorithms
 type: string
 
 This action configures which algorithms should be available for the creation
-of WebAuthn asymmetric cryptography key pairs. privacyIDEA
+of WebAuthn asymmetric cryptography key pairs. eduMFA
 currently supports ECDSA, RSASSA-PSS and RSASSA-PKCS1-v1_5. Please check back
 with the manufacturer of your authenticators to get information on which
 algorithms are acceptable to your model of authenticator.
@@ -770,7 +769,7 @@ certificate_require_attestation
 
 type: string
 
-When enrolling a certificate token, privacyIDEA can require that an attestation
+When enrolling a certificate token, eduMFA can require that an attestation
 certificate is passed along to verify, if the key pair was generated on a (PIV) smartcard.
 
 This policy can be set to:
@@ -797,7 +796,7 @@ from which the CSR should be signed.
 This policy adds the given CA connector parameter to the request.
 The list of CA connectors is read from the configured connectors.
 
-.. note:: When using the privacyIDEA Smartcard Enrollment Tool, this policy needs to be set, otherwise
+.. note:: When using the eduMFA Smartcard Enrollment Tool, this policy needs to be set, otherwise
    the enrollment will fail.
 
 
@@ -812,7 +811,7 @@ During enrollment of a `certificate` token the user needs to specify the certifi
 for enrollment. This policy adds the given template parameter to the request.
 The administrator needs to add the name of the template manually in this policy.
 
-.. note:: When using the privacyIDEA Smartcard Enrollment Tool in combination with a Microsoft CA,
+.. note:: When using the eduMFA Smartcard Enrollment Tool in combination with a Microsoft CA,
    this policy needs to be set, otherwise the enrollment will fail.
 
 
@@ -823,7 +822,7 @@ certificate_request_subject_component
 
 type: string
 
-During enrollment of a `certificate` by creating a request, privacyIDEA can add additional
+During enrollment of a `certificate` by creating a request, eduMFA can add additional
 components to the request subject.
 
 This can be "email" (The email of the user read from the userstore) and/or "realm", which

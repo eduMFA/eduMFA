@@ -7,17 +7,17 @@ How to disable policies?
 I create an evil admin policy and locked myself out. How can I disable a
 policy?
 
-You can use the *pi-manage* command line tool to list, enable and disable
+You can use the *edumfa-manage* command line tool to list, enable and disable
 policies. See
 
-   pi-manage policy -h
+   edumfa-manage policy -h
 
 
 How do policies work anyway?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :ref:`policies` are just a set of definitions. These definitions are meant to
-modify the way privacyIDEA reacts on requests. Different policies have
+modify the way eduMFA reacts on requests. Different policies have
 different **scopes** where they act.
 
 *admin* policies define, what an administrator is

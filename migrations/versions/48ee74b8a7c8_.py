@@ -16,7 +16,7 @@ import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import Sequence, CreateSequence
 from sqlalchemy import orm
-from privacyidea.models import TokenRealm, Resolver
+from edumfa.models import TokenRealm, Resolver
 import sys
 
 Base = declarative_base()

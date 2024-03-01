@@ -1,0 +1,42 @@
+.\" Manpage for eduMFA-fix-access-rights.
+.
+.TH EDUMFA-FIX-ACCESS-RIGHTS 1 "11 Oct 2015" "1.0" "eduMFA-fix-access-rights man page"
+.SH NAME
+eduMFA-fix-access-rights \- fix the access rights of several files.
+.SH SYNOPSIS
+eduMFA-fix-access-rights \-f <cfg file> \-u <eduMFA user>
+.SH DESCRIPTION
+This tool fixes the access rights of the
+ - encryption key
+ - log directory
+ - edumfa.cfg file
+
+It reads the locations from the edumfa.ini file.
+.SH COMMON OPTIONS
+.PP
+\fB\-f <cfg file> \fR
+.RS 4
+The edumfa.cfg file containing all necessary information.
+.RE
+
+.PP
+\fB\-u <eduMFA user> \fR
+.RS 4
+This is the user, eduMFA runs with. Usually "eduMFA".
+.RE
+
+
+.PP
+\fB\-h\fR
+.RS 4
+Display a help message.
+.RE
+
+.SH INTERNET SOURCES
+http://www.privacyidea.org,  http://www.linotp.org
+.SH SEE ALSO
+
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+LSE Leading Security Experts GmbH <linotp-community@lsexperts.de>, privacyIDEA <info@privacyidea.org>

@@ -3,9 +3,9 @@
 Token endpoints
 ...............
 
-.. automodule:: privacyidea.api.token
+.. automodule:: edumfa.api.token
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: token_blueprint
 

@@ -4,10 +4,10 @@ Authentication endpoints
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. use the docstring from the module file
-.. automodule:: privacyidea.api.auth
+.. automodule:: edumfa.api.auth
 
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: jwtauth
 
@@ -16,7 +16,7 @@ Authentication endpoints
 
 **Example Request**:
 
-Requests to privacyidea then should use this security token in the
+Requests to eduMFA then should use this security token in the
 Authorization field in the header.
 
 .. sourcecode:: http

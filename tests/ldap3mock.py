@@ -1,26 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 2020-09-07 Cornelius Kölbel <cornelius.koelbel@netknights.it>
-           Add exception
 2017-04-26 Friedrich Weber <friedrich.weber@netknights.it>
-           Make it possible to check for correct LDAPS/STARTTLS settings
 2017-01-08 Cornelius Kölbel <cornelius.koelbel@netknights.it>
-           Remove objectGUID. Since we stick with ldap3 version 2.1,
-           the objectGUID is returned in a human readable format.
 2016-12-05 Martin Wheldon <martin.wheldon@greenhills-it.co.uk>
-           Fixed issue creating ldap entries with objectClasses defined
-           Fix problem when searching for attribute values containing the
-           space character.
 2016-05-26 Martin Wheldon <martin.wheldon@greenhills-it.co.uk>
-           Rewrite of search functionality to add recursive parsing
-           of ldap search filters
-           Fixed issue searching for attributes with multiple values
-           Added ability to use ~= in searches
-           Created unittests for mock
 2016-02-19 Cornelius Kölbel <cornelius.koelbel@netknights.it>
-           Add the possibility to check objectGUID
-2015-01-31 Change responses.py to be able to run with SMTP
-        Cornelius Kölbel <cornelius@privacyidea.org>
+2015-01-31 Cornelius Kölbel <cornelius@privacyidea.org>
 
 Original responses.py is:
 Copyright 2013 Dropbox, Inc.
@@ -51,7 +37,7 @@ from .smtpmock import get_wrapped
 from collections import namedtuple
 from collections.abc import Sequence, Sized
 
-from privacyidea.lib.utils import to_bytes, to_unicode
+from edumfa.lib.utils import to_bytes, to_unicode
 
 DIRECTORY = "tests/testdata/tmp_directory"
 

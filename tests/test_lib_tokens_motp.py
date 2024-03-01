@@ -4,12 +4,12 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.motptoken import MotpTokenClass
-from privacyidea.lib.tokens.mOTP import mTimeOtp
-from privacyidea.models import Token
-from privacyidea.lib.resolver import save_resolver
-from privacyidea.lib.realm import set_realm
-from privacyidea.lib.user import User
+from edumfa.lib.tokens.motptoken import MotpTokenClass
+from edumfa.lib.tokens.mOTP import mTimeOtp
+from edumfa.models import Token
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.realm import set_realm
+from edumfa.lib.user import User
 PWFILE = "tests/testdata/passwords"
 
 class MotpTokenTestCase(MyTestCase):
@@ -123,7 +123,7 @@ class MotpTokenTestCase(MyTestCase):
         self.assertTrue("img" in otpkey, otpkey)
         self.assertTrue("motpurl" in detail, detail)
         motpurl = detail.get("motpurl").get("value")
-        self.assertTrue(motpurl == 'motp://privacyidea:mylabel?'
+        self.assertTrue(motpurl == 'motp://edumfa:mylabel?'
                         'secret=11223344556677889900', motpurl)
         self.assertRaises(Exception, token.set_init_details, "invalid value")
         token.set_init_details({"detail1": "value1"})

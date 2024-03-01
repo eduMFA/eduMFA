@@ -2,7 +2,7 @@
 """
 This tests the module lib.utils.compare
 """
-from privacyidea.lib.utils.compare import compare_values, CompareError, parse_comma_separated_string
+from edumfa.lib.utils.compare import compare_values, CompareError, parse_comma_separated_string
 from .base import MyTestCase
 
 

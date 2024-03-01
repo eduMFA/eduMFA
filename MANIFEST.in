@@ -1,9 +1,8 @@
 include LICENSE
 include README.rst
 
-recursive-include privacyidea *
+recursive-include edumfa *
 recursive-include tools *
-recursive-include authmodules *
 recursive-include deploy *
 recursive-include migrations *
 recursive-include tests *

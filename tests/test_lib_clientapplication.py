@@ -5,9 +5,9 @@ import mock
 from datetime import datetime, timedelta
 from contextlib import contextmanager
 
-from privacyidea.models import ClientApplication
+from edumfa.models import ClientApplication
 from .base import MyTestCase
-from privacyidea.lib.clientapplication import (get_clientapplication,
+from edumfa.lib.clientapplication import (get_clientapplication,
                                                save_clientapplication)
 
 
@@ -47,14 +47,14 @@ class ClientApplicationTestCase(MyTestCase):
         @contextmanager
         def _set_node(node):
             """ context manager that sets the current node name """
-            with mock.patch("privacyidea.lib.clientapplication.get_privacyidea_node") as mock_node:
+            with mock.patch("edumfa.lib.clientapplication.get_edumfa_node") as mock_node:
                 mock_node.return_value = node
                 yield
 
         @contextmanager
         def _fake_time(t):
             """ context manager that fakes the current time that is written to the ``lastseen`` column """
-            with mock.patch("privacyidea.models.datetime") as mock_dt:
+            with mock.patch("edumfa.models.datetime") as mock_dt:
                 mock_dt.now.return_value = t
                 yield
 
@@ -67,22 +67,22 @@ class ClientApplicationTestCase(MyTestCase):
         t3 = t2 + timedelta(minutes=5)
 
         with _fake_time(t1):
-            with _set_node("pinode1"):
+            with _set_node("edumfanode1"):
                 save_clientapplication("1.2.3.4", "PAM")
-            with _set_node("pinode2"):
+            with _set_node("edumfanode2"):
                 save_clientapplication("1.2.3.4", "RADIUS")
                 save_clientapplication("2.3.4.5", "PAM")
 
         # check that the rows are written correctly
         row1 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="PAM").one()
         self.assertEqual(row1.lastseen, t1)
-        self.assertEqual(row1.node, "pinode1")
+        self.assertEqual(row1.node, "edumfanode1")
         row2 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="RADIUS").one()
         self.assertEqual(row2.lastseen, t1)
-        self.assertEqual(row2.node, "pinode2")
+        self.assertEqual(row2.node, "edumfanode2")
         row3 = ClientApplication.query.filter_by(ip="2.3.4.5", clienttype="PAM").one()
         self.assertEqual(row3.lastseen, t1)
-        self.assertEqual(row3.node, "pinode2")
+        self.assertEqual(row3.node, "edumfanode2")
 
         # check that the apps are returned correctly
         apps = get_clientapplication(clienttype="PAM")
@@ -92,23 +92,23 @@ class ClientApplicationTestCase(MyTestCase):
         self.assertIn({"ip": "2.3.4.5", "hostname": None, "lastseen": t1}, apps["PAM"])
 
         with _fake_time(t2):
-            with _set_node("pinode1"):
+            with _set_node("edumfanode1"):
                 save_clientapplication("1.2.3.4", "RADIUS")
-            with _set_node("pinode2"):
+            with _set_node("edumfanode2"):
                 save_clientapplication("1.2.3.4", "PAM")
 
         # check that the rows are written correctly
-        # 1.2.3.4 + PAM was last seen on pinode1 at t1 ...
-        row1 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="PAM", node="pinode1").one()
+        # 1.2.3.4 + PAM was last seen on edumfanode1 at t1 ...
+        row1 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="PAM", node="edumfanode1").one()
         self.assertEqual(row1.lastseen, t1)
-        # but on pinode2, it was t2!
-        row2 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="PAM", node="pinode2").one()
+        # but on edumfanode2, it was t2!
+        row2 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="PAM", node="edumfanode2").one()
         self.assertEqual(row2.lastseen, t2)
-        # 1.2.3.4 + RADIUS was last seen on pinode1 at t2 ...
-        row3 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="RADIUS", node="pinode1").one()
+        # 1.2.3.4 + RADIUS was last seen on edumfanode1 at t2 ...
+        row3 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="RADIUS", node="edumfanode1").one()
         self.assertEqual(row3.lastseen, t2)
-        # ... but on pinode2, it was t1!
-        row4 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="RADIUS", node="pinode2").one()
+        # ... but on edumfanode2, it was t1!
+        row4 = ClientApplication.query.filter_by(ip="1.2.3.4", clienttype="RADIUS", node="edumfanode2").one()
         self.assertEqual(row4.lastseen, t1)
 
         # check that the apps are returned correctly

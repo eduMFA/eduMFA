@@ -3,9 +3,9 @@
 Client endpoints
 ................
 
-.. automodule:: privacyidea.api.clienttype
+.. automodule:: edumfa.api.clienttype
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: client_blueprint
 

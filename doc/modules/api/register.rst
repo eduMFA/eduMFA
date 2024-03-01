@@ -3,9 +3,9 @@
 Register endpoints
 ..................
 
-.. automodule:: privacyidea.api.register
+.. automodule:: edumfa.api.register
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: register_blueprint
 

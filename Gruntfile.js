@@ -4,20 +4,22 @@ grunt.initConfig({
   nggettext_extract: {
     pot: {
       files: {
-        'po/template.pot': ['privacyidea/static/components/*/views/*.html',
-                            'privacyidea/static/templates/*.html',
-                            'privacyidea/static/components/*/controllers/*.js',
-                            'privacyidea/static/components/*/factories/*.js',
-                            'privacyidea/static/*.js']
-      }
+        "po/template.pot": [
+          "edumfa/static/components/*/views/*.html",
+          "edumfa/static/templates/*.html",
+          "edumfa/static/components/*/controllers/*.js",
+          "edumfa/static/components/*/factories/*.js",
+          "edumfa/static/*.js",
+        ],
+      },
     },
   },
   nggettext_compile: {
     all: {
       files: {
-        'privacyidea/static/components/translation/translations.js': ['po/*.po']
-      }
+        "edumfa/static/components/translation/translations.js": ["po/*.po"],
+      },
     },
   },
-})
+});
 };

@@ -14,20 +14,20 @@ from dateutil.tz import tzlocal
 from flask import Request
 from werkzeug.test import EnvironBuilder
 
-from privacyidea.app import PiResponseClass as Response
-from privacyidea.lib.eventhandler.base import CONDITION
-from privacyidea.lib.eventhandler.usernotification import (UserNotificationEventHandler,
+from edumfa.app import PiResponseClass as Response
+from edumfa.lib.eventhandler.base import CONDITION
+from edumfa.lib.eventhandler.usernotification import (UserNotificationEventHandler,
                                                            NOTIFY_TYPE)
-from privacyidea.lib.policy import ACTION
-from privacyidea.lib.realm import set_realm, delete_realm
-from privacyidea.lib.resolver import save_resolver, delete_resolver
-from privacyidea.lib.smsprovider.SMSProvider import set_smsgateway
-from privacyidea.lib.smtpserver import add_smtpserver
-from privacyidea.lib.token import init_token, unassign_token, remove_token
-from privacyidea.lib.tokenclass import DATE_FORMAT
-from privacyidea.lib.user import User, create_user
-from privacyidea.lib.utils import to_unicode
-from privacyidea.models import TokenOwner
+from edumfa.lib.policy import ACTION
+from edumfa.lib.realm import set_realm, delete_realm
+from edumfa.lib.resolver import save_resolver, delete_resolver
+from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
+from edumfa.lib.smtpserver import add_smtpserver
+from edumfa.lib.token import init_token, unassign_token, remove_token
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.user import User, create_user
+from edumfa.lib.utils import to_unicode
+from edumfa.models import TokenOwner
 from . import smtpmock
 from .base import MyTestCase, FakeFlaskG, FakeAudit
 
@@ -125,7 +125,7 @@ class UserNotificationTestCase(MyTestCase):
         self.setUp_user_realms()
 
         r = set_smsgateway(identifier="myGW",
-                           providermodule="privacyidea.lib.smsprovider."
+                           providermodule="edumfa.lib.smsprovider."
                                           "SmtpSMSProvider.SmtpSMSProvider",
                            options={"SMTPIDENTIFIER": "myserver",
                                     "MAILTO": "test@example.com"})

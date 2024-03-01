@@ -3,6 +3,6 @@
 SPass Token
 ~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.spasstoken.SpassTokenClass
+.. autoclass:: edumfa.lib.tokens.spasstoken.SpassTokenClass
    :members:
    :undoc-members:

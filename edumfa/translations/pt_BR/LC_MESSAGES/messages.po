@@ -1,0 +1,3342 @@
+# Portuguese (Brazil) translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-02-29 11:21+0100\n"
+"PO-Revision-Date: 2022-03-10 23:07+0000\n"
+"Last-Translator: Thiago Augusto Koroll <thiagok@cloudbasis.com.br>\n"
+"Language: pt_BR\n"
+"Language-Team: Portuguese (Brazil) "
+"<https://hosted.weblate.org/projects/edumfa/edumfa-ui/pt_BR/>\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: api/auth.py:218
+msgid "Authentication failure. Unknown realm: {0!s}."
+msgstr "Falha na autenticação. Domínio: {0!s} desconhecido: {0!s}."
+
+#: api/auth.py:222
+msgid "Authentication failure. Missing Username"
+msgstr "Falha na autenticação. Usuário ausente"
+
+#: api/auth.py:343
+msgid "Authentication failure. Wrong credentials"
+msgstr "Falha na autenticação. Credenciais incorretas"
+
+#: api/lib/prepolicy.py:2211
+#, fuzzy
+msgid "Missing description for {} token."
+msgstr "A nova descrição do token."
+
+#: api/lib/prepolicy.py:2212
+#, fuzzy
+msgid "Description required for {} token."
+msgstr "A nova descrição do token."
+
+#: api/lib/utils.py:349
+msgid "Authentication failure. Missing Authorization header."
+msgstr "Falha na autenticação. Cabeçalho de autorização pendente."
+
+#: api/lib/utils.py:355 api/lib/utils.py:388
+msgid "Authentication failure. Error during decoding your token: {0!s}"
+msgstr "Falha na autenticação. Erro ao decodificar seu token: {0!s}"
+
+#: api/lib/utils.py:381 api/lib/utils.py:391
+msgid "Authentication failure. Your token has expired: {0!s}"
+msgstr "Falha na autenticação. Seu token expirou: {0!s}"
+
+#: api/lib/utils.py:395
+msgid ""
+"Authentication failure. The username {0!s} is not allowed to impersonate "
+"via JWT."
+msgstr ""
+"Falha na autenticação. O usuário {0!s} não está autorizado a impersonar "
+"via JWT."
+
+#: api/lib/utils.py:399
+msgid ""
+"Authentication failure. You do not have the necessary role ({0!s}) to "
+"access this resource!"
+msgstr ""
+"Falha na autenticação. Você não possui o papel ({0!s}) para acessar esse "
+"recurso!"
+
+#: api/lib/utils.py:417
+msgid "'{0!s}' is an invalid policy name."
+msgstr "'{0!s}' é um nome de política inválido."
+
+#: api/lib/utils.py:420
+msgid "The name of the policy may only contain the characters a-zA-Z0-9_. -"
+msgstr "O nome da política deve conter apenas caracteres a-zA-Z0-9_.-"
+
+#: lib/challengeresponsedecorators.py:152
+msgid "Please enter the new PIN again"
+msgstr "Por favor, entre o novo PIN novamente"
+
+#: lib/challengeresponsedecorators.py:166
+msgid "Please enter a new PIN"
+msgstr "Por favor, entre o novo PIN"
+
+#: lib/challengeresponsedecorators.py:204
+msgid "To resync your token, please enter the next OTP value"
+msgstr "Para ressincronizar seu token, insira o próximo valor OTP"
+
+#: lib/decorators.py:45 lib/token.py:2175
+msgid "This action is not possible, since the token is locked"
+msgstr "Esta ação não é possível, pois o token está bloqueado"
+
+#: lib/decorators.py:96
+msgid "You need to specify a serial or a user."
+msgstr "Você precisa especificar um serial ou um usuário."
+
+#: lib/decorators.py:98
+msgid "Invalid serial number."
+msgstr "Número de série inválido."
+
+#: lib/decorators.py:100
+msgid "Invalid user."
+msgstr "Usuário inválido."
+
+#: lib/error.py:196
+msgid "You either need to provide user or serial"
+msgstr "Você necessita preencher um usuário ou serial"
+
+#: lib/policy.py:1291
+msgid "Invalid client definition!"
+msgstr ""
+
+#: lib/policy.py:1472
+msgid "Define in which resolver the user should be registered."
+msgstr "Define em qual resolver o usuário deveria ser registrado."
+
+#: lib/policy.py:1476
+msgid "Define in which realm the user should be registered."
+msgstr "Defina em qual realm o usuário deveria estar registrado."
+
+#: lib/policy.py:1480
+msgid ""
+"The SMTP server configuration, that should be used to send the "
+"registration email."
+msgstr ""
+"A configuração do servidor SMTP, que deveria ser usada para enviar o "
+"e-mail de registro."
+
+#: lib/policy.py:1484
+msgid ""
+"Only users with this email address are allowed to register. This is a "
+"regular expression."
+msgstr ""
+"Somente usuários com este endereço de e-mail são permitidos a registrar. "
+"Esta é uma expressão regular."
+
+#: lib/policy.py:1489
+msgid ""
+"The body of the registration email. Use '{regkey}' as tag for the "
+"registration key."
+msgstr ""
+"O corpo do registro de e-mail. Use '{regkey}' como tag para a chave de "
+"registro."
+
+#: lib/policy.py:1495
+msgid "Admin is allowed to enable tokens."
+msgstr "Admin é permitido a habilitar tokens."
+
+#: lib/policy.py:1499
+msgid "Admin is allowed to disable tokens."
+msgstr "Admin é permitido a desabilitar tokens."
+
+#: lib/policy.py:1503
+msgid "Admin is allowed to set token properties."
+msgstr "Admin é permitido a definir propriedades do token."
+
+#: lib/policy.py:1508
+#, fuzzy
+msgid "The admin is allowed to set the token description."
+msgstr "O usuário é autorizado para definir a descrição do token."
+
+#: lib/policy.py:1512
+msgid "Admin is allowed to set the OTP PIN of tokens."
+msgstr "Admin é permitido definir OTP PIN dos tokens."
+
+#: lib/policy.py:1518
+msgid "Admin is allowed to set a random OTP PIN of tokens."
+msgstr "Admin é permitido definir OTP PIN aleatório dos tokens."
+
+#: lib/policy.py:1522
+msgid "Admin is allowed to manually set and delete token info."
+msgstr "Admin é permitido manualmente definir e excluir informações do token."
+
+#: lib/policy.py:1526
+msgid "Admin is allowed to set the OTP PIN during enrollment."
+msgstr "Admin é permitido definir o OTP PIN durante a inscrição."
+
+#: lib/policy.py:1531
+msgid "Admin is allowed to resync tokens."
+msgstr "Admin é permitido ressincronizar tokens."
+
+#: lib/policy.py:1535
+msgid "Admin is allowed to reset the Failcounter of a token."
+msgstr "Admin é permitido reiniciar a contagem de falhas de um token."
+
+#: lib/policy.py:1541
+msgid "Admin is allowed to revoke a token"
+msgstr "Admin é autorizado a revogar um token"
+
+#: lib/policy.py:1545
+msgid "Admin is allowed to assign a token to a user."
+msgstr "Admin é permitido associar um token a um usuário."
+
+#: lib/policy.py:1551
+msgid "Admin is allowed to remove the token from a user, i.e. unassign a token."
+msgstr ""
+"Admin é permitido remover o token de um usuário, ou seja, desassociar um "
+"token."
+
+#: lib/policy.py:1557
+msgid "Admin is allowed to import token files."
+msgstr "Admin é permitido importar arquivos de token."
+
+#: lib/policy.py:1562
+msgid "Admin is allowed to remove tokens from the database."
+msgstr "Admin é permitido remover tokens do banco de dados."
+
+#: lib/policy.py:1568
+msgid "Admin is allowed to view the list of the users."
+msgstr "Admin é permitido visualizar a lista de usuários."
+
+#: lib/policy.py:1574
+msgid "The Admin is allowed to list the machines."
+msgstr "Admin é permitido listar os computadores."
+
+#: lib/policy.py:1579
+msgid "The Admin is allowed to attach and detach tokens to machines."
+msgstr "Admin é permitido anexar e desanexar tokens de computadores."
+
+#: lib/policy.py:1586
+msgid ""
+"The Admin is allowed to fetch authentication items of tokens assigned to "
+"machines."
+msgstr ""
+"Admin é permitido buscar itens de autenticação de tokens atribuídos a "
+"máquinas."
+
+#: lib/policy.py:1591
+msgid "Admin is allowed to manage the realms of a token."
+msgstr "Admin é autorizado a gerir os realms de um token."
+
+#: lib/policy.py:1596
+msgid "Admin is allowed to list tokens."
+msgstr "Admin é autorizado a listar tokens."
+
+#: lib/policy.py:1600
+msgid "Admin is allowed to retrieve a serial for a given OTP value."
+msgstr "Admin é autorizado a recuperar um serial de um OTP fornecido."
+
+#: lib/policy.py:1605
+msgid "Admin is allowed to retrieve random keys from eduMFA."
+msgstr "Admin é autorizado a recuperar chaves aleatórias do eduMFA."
+
+#: lib/policy.py:1609
+msgid "Admin is allowed to copy the PIN of one token to another token."
+msgstr "Admin é autorizado a copiar o PIN de um token para outro token."
+
+#: lib/policy.py:1614
+msgid ""
+"Admin is allowed to copy the assigned user to another token, i.e. assign "
+"a user to another token."
+msgstr ""
+"Admin é autorizado a copiar o usuário associado para outro token, ou "
+"seja, associar um usuário a outro token."
+
+#: lib/policy.py:1620
+msgid "Admin is allowed to trigger the lost token workflow."
+msgstr "Admin é autorizado a disparar o fluxo de token perdido."
+
+#: lib/policy.py:1626
+msgid "Admin is allowed to write and modify the system configuration."
+msgstr "Admin é permitido a escrever e modificar a configuração do sistema."
+
+#: lib/policy.py:1631
+msgid "Admin is allowed to delete keys in the system configuration."
+msgstr "Admin é autorizado a excluir chaves na configuração do sistema."
+
+#: lib/policy.py:1637
+msgid "Admin is allowed to read basic system configuration."
+msgstr "Admin é permitido a ler as configurações básicas do sistema."
+
+#: lib/policy.py:1642
+msgid ""
+"Admin is allowed to export a documentation of the complete configuration "
+"including resolvers and realm."
+msgstr ""
+"Admin é autorizado a exportar a documentação da configuração completa, "
+"incluindo resolvers e realm."
+
+#: lib/policy.py:1650
+msgid "Admin is allowed to write and modify the policies."
+msgstr "Admin é autorizado a escrever e modificar as políticas."
+
+#: lib/policy.py:1655
+msgid "Admin is allowed to delete policies."
+msgstr "Admin é autorizado a excluir políticas."
+
+#: lib/policy.py:1660
+msgid "Admin is allowed to read policies."
+msgstr "Admin é autorizado a ler políticas."
+
+#: lib/policy.py:1664
+msgid "Admin is allowed to write and modify the resolver and realm configuration."
+msgstr ""
+"Admin é autorizado a excrever e moficiar a configuração do resolver e "
+"realm."
+
+#: lib/policy.py:1671
+msgid "Admin is allowed to delete resolvers and realms."
+msgstr "Admin é autorizado a excluir resolvers e realms."
+
+#: lib/policy.py:1676
+msgid "Admin is allowed to read resolvers."
+msgstr "Admin é autorizado a ler resolvers."
+
+#: lib/policy.py:1680
+msgid ""
+"Admin is allowed to create new CA Connector definitions and modify "
+"existing ones."
+msgstr "Admin é autorizado a criar conector de CA e modificar os existentes."
+
+#: lib/policy.py:1686
+msgid "Admin is allowed to delete CA Connector definitions."
+msgstr "Admin é autorizado a excluir definições de conectores de CA."
+
+#: lib/policy.py:1691
+msgid "Admin is allowed to read CA Connector definitions."
+msgstr "Admin é autorizado a ler definições de conectores de CA."
+
+#: lib/policy.py:1696
+msgid "Admin is allowed to write and modify the machine resolvers."
+msgstr "Admin é autorizado a escrever e modificar resolvers de computadores."
+
+#: lib/policy.py:1702
+msgid "Admin is allowed to delete machine resolvers."
+msgstr "Admin é autorizado a excluir resolvers de computadores."
+
+#: lib/policy.py:1708
+msgid "Admin is allowed to read machine resolvers."
+msgstr "Admin é autorizado a ler resolvers de computadores."
+
+#: lib/policy.py:1715 lib/policy.py:1996
+msgid "Set the maximum allowed length of the OTP PIN."
+msgstr "Defina o comprimento máximo requerido para o OTP PIN."
+
+#: lib/policy.py:1720 lib/policy.py:2001
+msgid "Set the minimum required length of the OTP PIN."
+msgstr "Defina o comprimento mínimo requerido para o OTP PIN."
+
+#: lib/policy.py:1724 lib/policy.py:2005
+msgid ""
+"Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, "
+"(s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
+msgstr ""
+"Especifique os requisitos de conteúdo para o OTP PIN: (c)aracteres, "
+"(n)úmeros, caracteres e(s)peciais. Use modificadores +/- ou a lista de "
+"caracteres permitidos [1234567890]"
+
+#: lib/policy.py:1733
+msgid "The length of a random PIN set by the administrator."
+msgstr "O comprimento de um PIN aleatório definido pelo administrador."
+
+#: lib/policy.py:1736
+msgid "Admin is allowed to view the Audit log."
+msgstr "Admin é autorizado a visualizar os logs de auditoria."
+
+#: lib/policy.py:1740
+msgid "The admin will only see audit entries of the last 10d, 3m or 2y."
+msgstr "O administrador só verá entradas de auditoria dos últimos 10d, 3m ou 2y."
+
+#: lib/policy.py:1745
+msgid "The admin will not see the specified columns in the audit."
+msgstr "O administrador não verá as colunas especificadas na auditoria."
+
+#: lib/policy.py:1750
+msgid "The admin is allowed to download the complete auditlog."
+msgstr "O administrador é autorizado a descarregar o diário de auditoria completo."
+
+#: lib/policy.py:1755
+msgid "Admin is allowed to add users in a userstore/UserIdResolver."
+msgstr "Admin é autorizado a adicionar utilizadores a um userstore/UserIdResolver."
+
+#: lib/policy.py:1760
+msgid "Admin is allowed to update the users data in a userstore."
+msgstr "Admin é autorizado a atualizar os dados dos usuários em um userstore."
+
+#: lib/policy.py:1765
+msgid "Admin is allowed to delete a user object in a userstore."
+msgstr "Admin é autorizado a excluir o usuário de um userstore."
+
+#: lib/policy.py:1770
+msgid "Admin is allowed to set the password of the HSM/Security Module."
+msgstr "Admin está autorizado a definir a senha do módulo HSM/Security."
+
+#: lib/policy.py:1774
+msgid "Admin is allowed to retrieve the list of active challenges."
+msgstr "Admin é autorizado a recuperar a lista de desafios ativos."
+
+#: lib/policy.py:1780
+msgid "Admin is allowed to write new SMTP server definitions."
+msgstr "Admin é autorizado a escrever definições do servidor SMTP."
+
+#: lib/policy.py:1785
+msgid "Admin is allowed to read SMTP server definitions."
+msgstr "Admin é autorizado a ler definições do servidor SMTP."
+
+#: lib/policy.py:1790
+msgid "Admin is allowed to write new RADIUS server definitions."
+msgstr "Admin é autorizado a escrever novas definições de servidor RADIUS."
+
+#: lib/policy.py:1796
+msgid "Admin is allowed to read RADIUS server definitions."
+msgstr "Admin é autorizado a ler definições do servidor RADIUS."
+
+#: lib/policy.py:1801
+msgid "Admin is allowed to write remote eduMFA server definitions."
+msgstr ""
+"Admin é autorizado a escrever definições de privacidade remotas do "
+"servidor eduMFA."
+
+#: lib/policy.py:1808
+msgid "Admin is allowed to read remote eduMFA server definitions."
+msgstr "Admin é autorizado a ler definições remotas do servidor eduMFA."
+
+#: lib/policy.py:1815
+msgid "Admin is allowed to write periodic task definitions."
+msgstr "Admin é autorizado a escrever definições de tarefas periódicas."
+
+#: lib/policy.py:1820
+msgid "Admin is allowed to read periodic task definitions."
+msgstr "Admin é autorizado a ler definições de tarefas periódicas."
+
+#: lib/policy.py:1825
+msgid "Admin is allowed to read statistics data."
+msgstr "Admin é autorizado a ler dados estatísticos."
+
+#: lib/policy.py:1828
+msgid "Admin is allowed to delete statistics data."
+msgstr "Admin é autorizado a deletar dados estatísticos."
+
+#: lib/policy.py:1831
+msgid "Admin is allowed to write and modify the event handling configuration."
+msgstr ""
+"Admin é autorizado a escrever e modificar a configuração de tratamento de"
+" eventos."
+
+#: lib/policy.py:1837
+msgid "Admin is allowed to read event handling configuration."
+msgstr "Admin é autorizado a ler a configuração de tratamento de eventos."
+
+#: lib/policy.py:1842
+msgid "Admin is allowed to write and modify SMS gateway definitions."
+msgstr "Admin é autorizado a escrever e modificar as definições do gateway de SMS."
+
+#: lib/policy.py:1848
+msgid "Admin is allowed to read SMS gateway definitions."
+msgstr "Admin é autorizado a ler as definições do gateway de SMS."
+
+#: lib/policy.py:1853
+msgid "Admin is allowed to get the list of authenticated clients and their types."
+msgstr ""
+"Admin é autorizado para obter a lista de clientes autenticados e seus "
+"tipos."
+
+#: lib/policy.py:1860
+msgid "Admin is allowed to add and delete component subscriptions."
+msgstr "Admin é autorizado para adicionar e deletar assinaturas de componentes."
+
+#: lib/policy.py:1866
+msgid "The Admin is allowed to trigger a challenge for e.g. SMS OTP token."
+msgstr "O Admin é autorizado para acionar um recurso, por exemplo, SMS OTP token."
+
+#: lib/policy.py:1872
+msgid ""
+"The Admin is allowed to set certain custom user attributes. If the Admin "
+"should be allowed to set any attribute, set this to '*:*'. For more "
+"details, check the documentation."
+msgstr ""
+"O Admin é autorizado para definir certos atributos de usuários "
+"personalizados. Se o Admin for autorizado para definir qualquer atributo,"
+" defina este como '*:*'. Para obter mais detalhes, verifique a "
+"documentação."
+
+#: lib/policy.py:1880
+msgid ""
+"The Admin is allowed to delete certain custom user attributes. If the "
+"Admin should be allowed to delete any attribute, set this to '*'. For "
+"more details, check the documentation."
+msgstr ""
+"O Admin é autorizado para deletar certos atributos personalizados do "
+"usuário. Se o Admin for autorizado para deletar qualquer atributo, "
+"definir isto como '*'. Para obter mais detalhes, consulte a documentação."
+
+#: lib/policy.py:1888
+msgid ""
+"A whitespace-separated list of tokeninfo fields which are not displayed "
+"to the admin."
+msgstr ""
+
+#: lib/policy.py:1893
+msgid "The Admin is allowed list the available tokengroups."
+msgstr ""
+
+#: lib/policy.py:1898
+msgid "The Admin is allowed to add a new tokengroup."
+msgstr ""
+
+#: lib/policy.py:1903
+msgid "The Admin is allowed delete a tokengroup."
+msgstr ""
+
+#: lib/policy.py:1908
+#, fuzzy
+msgid "The Admin is allowed list the available service ID definitions."
+msgstr "Admin é autorizado a ler definições do servidor RADIUS."
+
+#: lib/policy.py:1913
+#, fuzzy
+msgid "The Admin is allowed to add a new service ID definition."
+msgstr "Admin é autorizado a ler definições do servidor RADIUS."
+
+#: lib/policy.py:1918
+#, fuzzy
+msgid "The Admin is allowed delete a service ID definition."
+msgstr "Admin é autorizado a excluir definições de conectores de CA."
+
+#: lib/policy.py:1923
+msgid "The Admin is allowed to manage the tokengroups of a token."
+msgstr ""
+
+#: lib/policy.py:1930
+msgid ""
+"The user is allowed to assign an existing token that is not yet assigned "
+"using the token serial number."
+msgstr ""
+"O usuário é autorizado para atribuir um token existente que ainda não foi"
+" atribuído usando o número de série do token."
+
+#: lib/policy.py:1936
+msgid "The user is allowed to disable his own tokens."
+msgstr "O usuário é autorizado para desativar seus próprios tokens."
+
+#: lib/policy.py:1942
+msgid "The user is allowed to enable his own tokens."
+msgstr "O usuário é autorizado para habilitar seus próprios tokens."
+
+#: lib/policy.py:1948
+msgid "The user is allowed to delete his own tokens."
+msgstr "O usuário é autorizado para deletar seus próprios tokens."
+
+#: lib/policy.py:1954
+msgid "The user is allowed to unassign his own tokens."
+msgstr "O usuário é autorizado para desatribuir seus próprios tokens."
+
+#: lib/policy.py:1959
+msgid "The user is allowed to resyncronize his tokens."
+msgstr "O usuário é autorizado para ressincronizar seus tokens."
+
+#: lib/policy.py:1964
+msgid "The user is allowed to revoke a token"
+msgstr "O usuário é autorizado para revogar um token"
+
+#: lib/policy.py:1969
+msgid "The user is allowed to reset the failcounter of his tokens."
+msgstr "O usuário é autorizado a reiniciar o contador de falhas de seus tokens."
+
+#: lib/policy.py:1974
+msgid "The user is allowed to set the OTP PIN of his tokens."
+msgstr "O usuário é autorizado a definir o PIN OTP de seus tokens."
+
+#: lib/policy.py:1979
+msgid "The user is allowed to set a random OTP PIN of his tokens."
+msgstr "O usuário é autorizado a estabelecer um PIN OTP aleatório de sus tokens."
+
+#: lib/policy.py:1984
+msgid "The length of a random PIN set by the user."
+msgstr "O comprimento de um PIN aleatório definido pelo usuário."
+
+#: lib/policy.py:1987
+msgid "The user is allowed to set the token description."
+msgstr "O usuário é autorizado para definir a descrição do token."
+
+#: lib/policy.py:1991
+msgid "The user is allowed to set the OTP PIN during enrollment."
+msgstr "O usuário é autorizado para definir o PIN OTP durante a inscrição."
+
+#: lib/policy.py:2014
+msgid "Allow the user to view his own token history."
+msgstr "Permite que o usuário veja seu próprio histórico de tokens."
+
+#: lib/policy.py:2017
+msgid "The user will only see audit entries of the last 10d, 3m or 2y."
+msgstr ""
+"O usuário só verá entradas de auditoria dos últimos 10 dias, 3 meses ou 2"
+" anos."
+
+#: lib/policy.py:2021
+msgid "The user will not see the specified columns in the audit."
+msgstr "O usuário não verá as colunas especificadas na auditoria."
+
+#: lib/policy.py:2026
+msgid "The user is allowed to view his own user information."
+msgstr ""
+"O usuário é autorizado para visualizar suas próprias informações de "
+"usuário."
+
+#: lib/policy.py:2030
+msgid ""
+"The user is allowed to update his own user information, like changing his"
+" password."
+msgstr ""
+"O usuário é autorizado para atualizar suas próprias informações de "
+"usuário, como mudar sua senha."
+
+#: lib/policy.py:2035
+msgid "The user is allowed to do a password reset in an editable UserIdResolver."
+msgstr "O usuário pode fazer um reset de senha em um UserIdResolver editável."
+
+#: lib/policy.py:2041
+msgid ""
+"The user is allowed to set certain custom user attributes. If the user "
+"should be allowed to set any attribute, set this to '*:*'. Use '*' with "
+"CAUTION! For more details, check the documentation."
+msgstr ""
+"O usuário é autorizado para definir certos atributos de usuário "
+"personalizados. Se o usuário tem permissão para definir qualquer "
+"atributo, defina este como '*:*'. Use '*' com CUIDADO! Para obter mais "
+"detalhes, verifique a documentação."
+
+#: lib/policy.py:2049
+msgid ""
+"The user is allowed to delete certain custom user attributes. If the user"
+" should be allowed to delete any attribute, set this to '*'. Use '*' with"
+" CAUTION! For more details, check the documentation."
+msgstr ""
+"O usuário é autorizado para excluir certos atributos personalizados do "
+"usuário. Se o usuário tem permissão para excluir qualquer atributo, "
+"defina este como '*'. Use '*' com CUIDADO! Para obter mais detalhes, "
+"verifique a documentação."
+
+#: lib/policy.py:2057
+msgid ""
+"A whitespace-separated list of tokeninfo fields which are not displayed "
+"to the user."
+msgstr ""
+
+#: lib/policy.py:2065
+msgid "Limit the number of allowed tokens in a realm."
+msgstr "Limita o número de tokens permitidos em um domínio."
+
+#: lib/policy.py:2069
+msgid ""
+"During the rollout process, this policy makes the description required "
+"for all selected tokentypes."
+msgstr ""
+
+#: lib/policy.py:2077
+msgid "Limit the number of tokens a user may have assigned."
+msgstr "Limita o número de tokens que um usuário pode ter atribuído."
+
+#: lib/policy.py:2082
+msgid "Limit the number of active tokens a user may have assigned."
+msgstr "Limita o número de tokens ativos que um usuário possa ter atribuído."
+
+#: lib/policy.py:2087
+msgid ""
+"Set a random OTP PIN with this length for a token during the enrollment "
+"process."
+msgstr ""
+"Defina um PIN OTP aleatório com este comprimento para um token durante o "
+"processo de inscrição."
+
+#: lib/policy.py:2092
+msgid "In case of a random OTP PIN use this python module to process the PIN."
+msgstr ""
+"No caso de um PIN OTP aleatório, use este módulo python para processar o "
+"PIN."
+
+#: lib/policy.py:2097
+msgid ""
+"If the administrator sets the OTP PIN during enrollment or later, the "
+"user will have to change the PIN during first use."
+msgstr ""
+"Se o administrador definir o PIN OTP durante a inscrição ou "
+"posteriormente, o usuário terá que alterar o PIN durante a primeira "
+"utilização."
+
+#: lib/policy.py:2104
+msgid ""
+"The user needs to change his PIN on a regular basis. To change the PIN "
+"every 180 days, enter '180d'."
+msgstr ""
+"O usuário precisa mudar seu PIN regularmente. Para mudar o PIN a cada 180"
+" dias, digite '180d'."
+
+#: lib/policy.py:2111
+msgid ""
+"The OTP PIN can be hashed or encrypted. Hashing the PIN is the default "
+"behaviour."
+msgstr ""
+"O PIN OTP pode ser hashed ou criptografado. O hashing do PIN é o "
+"comportamento padrão."
+
+#: lib/policy.py:2116
+msgid ""
+"The label for a new enrolled Smartphone token. Possible tags are "
+"<code>{user}</code>, <code>{realm}</code>, <code>{serial}</code>, "
+"<code>{givenname}</code> and <code>{surname}</code>."
+msgstr ""
+
+#: lib/policy.py:2122
+msgid ""
+"The issuer label for new enrolled Smartphone token.Possible tags are "
+"<code>{user}</code>, <code>{realm}</code>, <code>{serial}</code>, "
+"<code>{givenname}</code> and <code>{surname}</code>."
+msgstr ""
+
+#: lib/policy.py:2129
+msgid ""
+"This is the URL to the token image for apps like FreeOTP (supported file "
+"formats: PNG, JPG and GIF)."
+msgstr ""
+
+#: lib/policy.py:2135
+msgid ""
+"Users can assign a token just by using the unassigned token to "
+"authenticate."
+msgstr ""
+"Usuários podem atribuir um token apenas usando o token não atribuído para"
+" autenticar."
+
+#: lib/policy.py:2141
+msgid "The length of the password in case of temporary token (lost token)."
+msgstr "O comprimento da senha em caso de token temporário (token perdido)."
+
+#: lib/policy.py:2145
+msgid ""
+"The contents of the temporary password, described by the characters C, c,"
+" n, s, 8."
+msgstr "O conteúdo da senha temporária, descrita pelos caracteres C, c, n, s, 8."
+
+#: lib/policy.py:2150
+msgid "The length of the validity for the temporary token (in days)."
+msgstr "A duração da validade do token temporário (em dias)."
+
+#: lib/policy.py:2155
+msgid "Set the length of registration codes."
+msgstr "Defina o período de duração dos códigos de registro."
+
+#: lib/policy.py:2159
+msgid ""
+"Specify the required contents of the registration code. (c)haracters, "
+"(n)umeric, (s)pecial. Use modifiers +/- or a list of allowed characters "
+"[1234567890]"
+msgstr ""
+"Especifique o conteúdo necessário do código de registro. (c)haracters, "
+"(n)umeric, (s)pecial. Use modificadores +/- ou uma lista de caracteres "
+"permitidos [1234567890]"
+
+#: lib/policy.py:2168
+msgid "Set the length of the password of generated password tokens."
+msgstr ""
+
+#: lib/policy.py:2172
+msgid ""
+"Specify the required contents of the password of a password token. "
+"(c)haracters, (n)umeric, (s)pecial. Use modifiers +/- or a list of "
+"allowed characters [1234567890]"
+msgstr ""
+
+#: lib/policy.py:2180
+msgid ""
+"Specify a white space separated list of token types, that should be "
+"verified during enrollment."
+msgstr ""
+
+#: lib/policy.py:2189
+msgid ""
+"Either use the Token PIN , use the Userstore Password or use no fixed "
+"password component."
+msgstr ""
+"Use o PIN do token, a senha da loja do usuário ou um componente sem uma "
+"senha fixa."
+
+#: lib/policy.py:2194
+msgid ""
+"This is a whitespace separated list of tokentypes, that can be used with "
+"challenge response."
+msgstr ""
+"Esta é uma lista de tipos de tokens separados por espaços em branco, que "
+"podem ser usados com a resposta ao desafio."
+
+#: lib/policy.py:2201
+msgid ""
+"Use an alternate challenge text for telling the user to enter an OTP "
+"value."
+msgstr ""
+"Use um texto de desafio alternativo para dizer ao usuário para inserir um"
+" valor OTP."
+
+#: lib/policy.py:2206
+msgid ""
+"If there are several different challenges, this text precedes the list of"
+" the challenge texts."
+msgstr ""
+"Se houver vários desafios diferentes, este texto precede a lista dos "
+"textos dos desafios."
+
+#: lib/policy.py:2211
+msgid ""
+"If there are several different challenges, this text follows the list of "
+"the challenge texts."
+msgstr ""
+"Se houver vários desafios diferentes, este texto segue a lista dos textos"
+" de desafio."
+
+#: lib/policy.py:2216
+msgid ""
+"If the PIN of a token is to be changed, this will allow the user to "
+"change the PIN during a validate/check request via challenge / response."
+msgstr ""
+"Se o PIN de um token for alterado, isto permitirá ao usuário alterar o "
+"PIN durante um pedido de validação/verificação via desafio/resposta."
+
+#: lib/policy.py:2221
+msgid ""
+"The autoresync of a token can be done via a challenge response "
+"message.You need to activate 'Automatic resync' in the general settings!"
+msgstr ""
+"A auto sincronização de um token pode ser feita através de uma mensagem "
+"de resposta a um desafio, você precisa ativar a 'auto sincronização' nas "
+"configurações gerais!"
+
+#: lib/policy.py:2226
+msgid ""
+"In case of a successful authentication the following tokentype is "
+"enrolled. The maximum number of tokens for a user is checked."
+msgstr ""
+
+#: lib/policy.py:2233
+msgid ""
+"If set, the user in this realm will be authenticated against the "
+"userstore or against the given RADIUS config, if the user has no tokens "
+"assigned."
+msgstr ""
+"Se definido, o usuário neste domínio será autenticado contra a loja do "
+"usuário ou contra a configuração fornecida RADIUS , se o usuário não "
+"tiver nenhum token atribuído."
+
+#: lib/policy.py:2240
+msgid ""
+"This allows to automatically assign a Token within eduMFA, if the user "
+"was authenticated via passthru against a RADIUS server. The OTP value is "
+"used to find the unassigned token in eduMFA. Enter the length of the OTP "
+"value and where the PIN is set like 8:pin or pin:6."
+msgstr ""
+"Isto permite atribuir automaticamente um Token dentro da eduMFA, se o "
+"usuário foi autenticado via passthru contra um servidor RADIUS. O valor "
+"OTP é usado para encontrar o token não atribuído em eduMFA. Digite o "
+"valor do OTP e onde o PIN é definido como 8:pin ou pin:6."
+
+#: lib/policy.py:2247
+msgid ""
+"If the user has no token, the authentication request for this user will "
+"always be true."
+msgstr ""
+"Se o usuário não tiver um token, o pedido de autenticação para este "
+"usuário será sempre verdadeiro."
+
+#: lib/policy.py:2252
+msgid ""
+"If the user user does not exist, the authentication request for this non-"
+"existing user will always be true."
+msgstr ""
+"Se o usuário não existir, o pedido de autenticação para este usuário "
+"inexistente será sempre verdadeiro."
+
+#: lib/policy.py:2258
+msgid ""
+"Can be used to modify the parameters pass, user and realm in an "
+"authentication request. See the documentation for an example."
+msgstr ""
+"Pode ser usado para modificar a passagem do parâmetro, o usuário e o "
+"domínio em um pedido de autenticação. Veja a documentação para um "
+"exemplo."
+
+#: lib/policy.py:2264
+msgid ""
+"If a user authenticates successfully reset the failcounter of all of his "
+"tokens."
+msgstr ""
+"Se um usuário autenticar com sucesso o contador de falhas de todos os "
+"seus tokens."
+
+#: lib/policy.py:2269
+msgid ""
+"Increase the failcounter for all the tokens, for which a challenge has "
+"been triggered."
+msgstr ""
+
+#: lib/policy.py:2273
+msgid ""
+"Cache the password used for authentication and allow authentication with "
+"the same credentials for a certain amount of time. Specify timeout like "
+"4h or 4h/5m."
+msgstr ""
+"Coloca em cache a senha usada para autenticação e permite a autenticação "
+"com as mesmas credenciais por um período de tempo especificado. "
+"Especifique um tempo limite, como 4h ou 4h / 5m."
+
+#: lib/policy.py:2280
+msgid ""
+"You can set the client modes in the order that you prefer. For example: "
+"\"interactive webauthn poll u2f\". Accepted values are: <code>interactive"
+" webauthn poll u2f</code>"
+msgstr ""
+
+#: lib/policy.py:2288
+msgid ""
+"Allow the user to authenticate (default). If set to '{0!s}', the "
+"authentication of the user will be denied."
+msgstr ""
+"Permite que o usuário se autentique (padrão). Se definido como '{0!s}', a"
+" autenticação do usuário será negada."
+
+#: lib/policy.py:2295
+msgid ""
+"Allow the application to choose which token types should be used for "
+"authentication. Application may set the parameter 'type' in the request. "
+"Works with validate/check, validate/samlcheck and "
+"validate/triggerchallenge."
+msgstr ""
+"Permita que o aplicativo escolha quais tipos de token devem ser usados "
+"para autenticação. O aplicativo pode definir o parâmetro 'type' na "
+"solicitação. Funciona com validate/check, validate/samlcheck e "
+"validate/triggerchallenge."
+
+#: lib/policy.py:2302
+msgid ""
+"You can specify how many successful authentication requests a user is "
+"allowed to do in a given time. Specify like 1/5s, 2/10m, 10/1h - s, m, h "
+"being second, minute and hour."
+msgstr ""
+"Você pode especificar quantos pedidos de autenticação bem sucedidos um "
+"usuário tem permissão para fazer em um determinado tempo. Especifique "
+"como 1/5s, 2/10m, 10/1h - s, m, h sendo segundo, minuto e hora."
+
+#: lib/policy.py:2310
+msgid ""
+"You can specify how many failed authentication requests a user is allowed"
+" to do in a given time. Specify like 1/5s, 2/10m, 10/1h - s, m, h being "
+"second, minute and hour."
+msgstr ""
+"Você pode especificar quantos pedidos de autenticação falhados um usuário"
+" tem permissão para fazer em um determinado tempo. Especifique como 1/5s,"
+" 2/10m, 10/1h - s, m, h sendo segundo, minuto e hora."
+
+#: lib/policy.py:2318
+msgid ""
+"You can specify in which time frame the user needs to authenticate again "
+"with this token. If the user authenticates later, authentication will "
+"fail. Specify like 30h, 7d or 1y."
+msgstr ""
+"Você pode especificar em que período de tempo o usuário precisa se "
+"autenticar novamente com este token. Se o usuário se autenticar mais "
+"tarde, a autenticação falhará. Especifique como 30h, 7d ou 1y."
+
+#: lib/policy.py:2326
+msgid "The user will only be authenticated with this very tokentype."
+msgstr "O usuário só será autenticado com este mesmo tokentype."
+
+#: lib/policy.py:2333
+msgid ""
+"The user will only be authenticated if the serial number of the token "
+"matches this regexp."
+msgstr ""
+"O usuário só será autenticado se o número de série do token corresponder "
+"a este regexp."
+
+# | msgid ""
+# | "The user will only be authenticated if the tokeninfo field matches the "
+# | "regexp. key/&lt;regexp&gt;/"
+#: lib/policy.py:2339
+#, fuzzy
+msgid ""
+"The user will only be authenticated if the tokeninfo field matches the "
+"regexp (key/&lt;regexp&gt;/)."
+msgstr ""
+"O usuário só será autenticado se o campo tokeninfo corresponder à regexp."
+" key/&lt;regexp&gt;/"
+
+#: lib/policy.py:2346
+msgid ""
+"The Realm of the user is set to this very realm. This is important if the"
+" user is not contained in the default realm and can not pass his realm."
+msgstr ""
+"O Domínio do usuário está configurado para este mesmo domínio. Isto é "
+"importante se o usuário não estiver contido no domínio padrão e não puder"
+" passar seu domínio."
+
+#: lib/policy.py:2353
+msgid ""
+"In case of successful authentication additional no detail information "
+"will be returned."
+msgstr ""
+"Em caso de autenticação bem sucedida, nenhuma informação adicional de "
+"detalhes será devolvida."
+
+#: lib/policy.py:2359
+msgid ""
+"In case of failed authentication additional no detail information will be"
+" returned."
+msgstr ""
+"Em caso de falha na autenticação, nenhuma informação adicional detalhada "
+"será devolvida."
+
+#: lib/policy.py:2365
+msgid ""
+"In case of successful authentication user data will be added in the "
+"detail branch of the authentication response."
+msgstr ""
+"Em caso de autenticação bem sucedida, os dados do usuário serão "
+"adicionados no campo de detalhes da resposta de autenticação."
+
+#: lib/policy.py:2372
+msgid ""
+"In case of successful authentication the user resolver and realm will be "
+"added in the detail branch of the authentication response."
+msgstr ""
+"Em caso de autenticação bem sucedida, o resolver e o domínio do usuário "
+"serão adicionados no campo de detalhes da resposta de autenticação."
+
+#: lib/policy.py:2379
+msgid ""
+"The sending of an API Auth Key is required duringauthentication. This "
+"avoids rogue authenticate requests against the /validate/check interface."
+msgstr ""
+"O envio de uma chave API Auth é necessário durante a autenticação. Isto "
+"evita pedidos de autenticação desonestos contra a interface "
+"/validar/checar."
+
+#: lib/policy.py:2389
+msgid ""
+"If set, administrators will see a dashboard as start screen when logging "
+"in to eduMFA WebUI."
+msgstr ""
+"Se definido, os administradores verão um painel de controle como tela "
+"inicial ao fazer o login na eduMFA WebUI."
+
+#: lib/policy.py:2394
+msgid ""
+"If set to \"eduMFA\" the users and admins need to authenticate against "
+"eduMFA when they log in to the Web UI. Defaults to \"userstore\"."
+msgstr ""
+"Se definido como \"eduMFA\", os usuários e administradores precisam se "
+"autenticar com eduMFA quando fazem o login na interface Web. A "
+"configuração padrão é \"userstore\"."
+
+#: lib/policy.py:2403
+msgid ""
+"An alternative text to display on the WebUI login dialog instead of "
+"\"Please sign in\"."
+msgstr ""
+"Um texto alternativo para exibir no diálogo de login da WebUI em vez de "
+"\"Por favor, faça o login\"."
+
+#: lib/policy.py:2407
+msgid ""
+"When searching in the user list, the search will only performed when "
+"pressing enter."
+msgstr ""
+"Ao pesquisar na lista de usuários, a busca só será feita ao pressionar "
+"Enter."
+
+#: lib/policy.py:2412
+msgid ""
+"The action taken when a user is idle beyond the logout_time limit. "
+"Defaults to \"lockscreen\"."
+msgstr ""
+"A ação tomada quando um usuário está ocioso além do limite de "
+"\"logout_time\". O padrão é \"tela de bloqueio\"."
+
+#: lib/policy.py:2420
+msgid ""
+"The REMOTE_USER set by the webserver can be used to login to eduMFA or it"
+" will be ignored. Defaults to \"disable\"."
+msgstr ""
+"O valor \"REMOTE_USER\" definido pelo webserver pode ser usado para login"
+" na eduMFA ou ele será ignorado. O padrão é \"desativar\"."
+
+#: lib/policy.py:2426
+msgid ""
+"Set the time in seconds after which the user will be logged out from the "
+"WebUI. Default: 120"
+msgstr ""
+"Defina o tempo em segundos após o qual o usuário será deslogado da WebUI."
+" Padrão: 120"
+
+#: lib/policy.py:2431
+msgid "Set how many tokens should be displayed in the token view on one page."
+msgstr ""
+"Defina quantos tokens devem ser exibidos na visualização de tokens em uma"
+" página."
+
+#: lib/policy.py:2436
+msgid "Set how many users should be displayed in the user view on one page."
+msgstr ""
+"Defina quantos usuários devem ser exibidos na visualização do usuário em "
+"uma página."
+
+#: lib/policy.py:2441
+msgid ""
+"Set how many audit entries should be displayed in the audit view on one "
+"page."
+msgstr ""
+
+#: lib/policy.py:2446
+msgid "Use your own html template for the web UI menu."
+msgstr "Use seu próprio modelo html para o menu UI da web."
+
+#: lib/policy.py:2450
+msgid "Use your own html template for the web UI baseline/footer."
+msgstr "Use seu próprio modelo html para a linha de base/rodapé da interface web."
+
+#: lib/policy.py:2454
+msgid "Link your privacy statement to be displayed in the baseline/footer."
+msgstr ""
+"Vincule sua declaração de privacidade a ser exibida na linha de "
+"base/rodapé."
+
+#: lib/policy.py:2458
+msgid ""
+"Whether the user ID and the resolver should be displayed in the token "
+"list."
+msgstr ""
+"A identificação do usuário e o resolvedor devem ser exibidos na lista de "
+"tokens."
+
+#: lib/policy.py:2463
+#, fuzzy
+msgid ""
+"The URL of a repository, where the policy templates can be found.  "
+"(Default https://raw.githubusercontent.com/eduMFA/policy-"
+"templates/main/templates/)"
+msgstr ""
+"A URL de um repositório, onde os modelos de políticas podem ser "
+"encontrados.  (https predefinidos: //raw.githubusercontent.com/ edumfa"
+"/policy-templates /master/templates/)"
+
+#: lib/policy.py:2470
+msgid ""
+"The URL of an SSO provider for redirect at logout.(The URL must start "
+"with http:// or https://)"
+msgstr ""
+
+#: lib/policy.py:2475
+msgid "As long as a user has no token, he will only see a token wizard in the UI."
+msgstr ""
+"Enquanto um usuário não tiver um token, ele só verá um assistente de "
+"token na interface do usuário."
+
+#: lib/policy.py:2480
+msgid ""
+"The tokenwizard will be displayed in the token menu, even if the user "
+"already has a token."
+msgstr ""
+"O assistente de token será exibido no menu token, mesmo que o usuário já "
+"tenha um token."
+
+#: lib/policy.py:2485
+msgid ""
+"This is a whitespace separated list of tokentypes, for which a rollover "
+"button is displayed in the token details."
+msgstr ""
+"Esta é uma lista de tipos de tokens separadas por espaços em branco, para"
+" a qual um botão de rolagem é exibido nos detalhes do token."
+
+#: lib/policy.py:2492
+msgid "The welcome dialog will be displayed if the user has no tokens assigned."
+msgstr ""
+"O diálogo de boas-vindas será exibido se o usuário não tiver nenhum token"
+" atribuído."
+
+#: lib/policy.py:2496
+msgid "This is the default token type in the token enrollment dialog."
+msgstr "Este é o tipo de token padrão no diálogo de inscrição de token."
+
+#: lib/policy.py:2502
+msgid ""
+"A list of realm names, which are displayed in a drop down menu in the "
+"WebUI login screen. Realms are separated by white spaces."
+msgstr ""
+"Uma lista de nomes do domínio, que são exibidos em um menu suspenso na "
+"tela de login da WebUI. Os domínios são separados por espaços em branco."
+
+#: lib/policy.py:2508
+msgid ""
+"If this checked, the administrator will not see the welcome dialog "
+"anymore."
+msgstr ""
+"Se isto for verificado, o administrador não verá mais o diálogo de boas-"
+"vindas."
+
+#: lib/policy.py:2513
+msgid ""
+"Per default disabled actions result in disabled buttons. When checking "
+"this action, buttons of disabled actions are hidden."
+msgstr ""
+"Por padrão, as ações desativadas resultam em botões desativados. Ao "
+"verificar esta ação, botões de ações desabilitadas são ocultados."
+
+#: lib/policy.py:2518
+msgid ""
+"If this is checked, there will be a confirmation prompt when deleting "
+"policies, events, mresolver, resolver or periodic tasks!"
+msgstr ""
+
+#: lib/policy.py:2523
+msgid "If this is checked, the seed will be displayed as text during enrollment."
+msgstr ""
+"Se esta opção for marcada, a semente será exibida como texto durante a "
+"inscrição."
+
+#: lib/policy.py:2528
+#, fuzzy
+msgid ""
+"If this is checked, the eduMFA Node name will be displayed in the menu "
+"bar."
+msgstr ""
+"Se isto for verificado, o nome do nó de eduMFA será exibido na barra de "
+"menu."
+
+#: lib/policy.py:2533
+#, fuzzy
+msgid ""
+"If this is checked, the enrollment page for HOTP, TOTP and Push tokens "
+"will contain a QR code that leads to the unsupported privacyIDEA "
+"Authenticator in the Google Play Store."
+msgstr ""
+"Se isto for verificado, a página de inscrição para os tokens HOTP, TOTP e"
+" Push conterá um código QR que leva ao privacyIDEA Authenticator no "
+"Google Play Store."
+
+#: lib/policy.py:2540
+#, fuzzy
+msgid ""
+"If this is checked, the enrollment page for HOTP, TOTP and Push tokens "
+"will contain a QR code that leads to the unsupported privacyIDEA "
+"Authenticator in the iOS App Store."
+msgstr ""
+"Se isto for verificado, a página de inscrição para os tokens HOTP, TOTP e"
+" Push conterá um código QR que leva ao privacyIDEA Authenticator na App "
+"Store do iOS."
+
+#: lib/policy.py:2547
+msgid ""
+"This action adds a QR code in the enrollment page for HOTP, TOTP and Push"
+" tokens, that lead to this given URL."
+msgstr ""
+"Esta ação adiciona um código QR na página de inscrição para os tokens "
+"HOTP, TOTP e Push, que levam a esta URL."
+
+#: lib/policy.py:2592
+msgid ""
+"The policy only matches if certain conditions on the user info are "
+"fulfilled."
+msgstr ""
+"A política só corresponde se certas condições sobre as informações do "
+"usuário forem cumpridas."
+
+#: lib/policy.py:2595
+msgid ""
+"The policy only matches if certain conditions of the token attributes are"
+" fulfilled."
+msgstr ""
+"A política só corresponde se certas condições dos atributos de token "
+"forem cumpridas."
+
+#: lib/policy.py:2598
+msgid ""
+"The policy only matches if certain conditions on the token info are "
+"fulfilled."
+msgstr ""
+"A política só corresponde se certas condições nas informações de token "
+"forem cumpridas."
+
+#: lib/policy.py:2601
+msgid ""
+"The policy only matches if certain conditions on the HTTP Request header "
+"are fulfilled."
+msgstr ""
+"A política só corresponde se certas condições no cabeçalho solicitação "
+"HTTP forem cumpridas."
+
+#: lib/policy.py:2604
+msgid ""
+"The policy only matches if certain conditions on the HTTP Environment are"
+" fulfilled."
+msgstr ""
+"A política só corresponde se certas condições sobre o ambiente HTTP forem"
+" cumpridas."
+
+#: lib/radiusserver.py:226 lib/radiusserver.py:258
+msgid "The RADIUS secret is too long"
+msgstr "O segredo do RADIUS é muito longo"
+
+#: lib/token.py:126
+msgid "create_tokenclass_object failed:  {0!r}"
+msgstr ""
+
+#: lib/token.py:282
+msgid "I can only create SQL filters from tokeninfo of length 1."
+msgstr ""
+
+#: lib/token.py:544
+msgid "The requested token could not be found."
+msgstr ""
+
+#: lib/token.py:549
+msgid "More than one matching token was found."
+msgstr ""
+
+#: lib/token.py:863
+msgid "multiple tokens are matching this OTP value!"
+msgstr ""
+
+#: lib/token.py:1023
+msgid "init token failed: unknown token type {0!r}"
+msgstr ""
+
+#: lib/token.py:1044
+msgid "initToken failed: {0!s}"
+msgstr ""
+
+#: lib/token.py:1204
+msgid "Token already assigned to user {0!r}"
+msgstr ""
+
+#: lib/token.py:1218
+msgid "Token assign failed for {0!r}/{1!s} : {2!r}"
+msgstr ""
+
+#: lib/token.py:1246
+msgid "Token unassign failed for {0!r}/{1!r}: {2!r}"
+msgstr ""
+
+#: lib/token.py:1322
+msgid "Parameter user must not be a string: {0!r}"
+msgstr ""
+
+#: lib/token.py:1861
+msgid "You can only define a lost token for an assigned token."
+msgstr ""
+
+#: lib/token.py:1887
+msgid "temporary replacement for {0!s}"
+msgstr ""
+
+#: lib/token.py:1943
+msgid "There is no active and assigned token in this realm"
+msgstr ""
+
+#: lib/token.py:1955
+msgid ""
+"There is no active and assigned token in this realm, included types: "
+"{0!s}, excluded types: {1!s}"
+msgstr ""
+
+#: lib/token.py:2009
+msgid "OTP verification failed."
+msgstr ""
+
+#: lib/token.py:2042
+msgid "The user has no tokens assigned"
+msgstr ""
+
+#: lib/token.py:2257
+msgid "matching {0:d} tokens"
+msgstr ""
+
+#: lib/token.py:2309
+msgid "Challenge matches, but token is not fit for challenge"
+msgstr ""
+
+#: lib/token.py:2319
+msgid "Found matching challenge"
+msgstr ""
+
+#: lib/token.py:2361
+msgid "Response did not match the challenge."
+msgstr ""
+
+#: lib/token.py:2363
+msgid "Response did not match for {0!s} tokens."
+msgstr ""
+
+#: lib/token.py:2371
+msgid "No active challenge response token found"
+msgstr ""
+
+#: lib/token.py:2387
+msgid "wrong otp value"
+msgstr ""
+
+#: lib/token.py:2394
+msgid ". previous otp used again"
+msgstr ""
+
+#: lib/token.py:2408
+msgid "wrong otp pin"
+msgstr ""
+
+#: lib/token.py:2416
+msgid "No suitable token found for authentication."
+msgstr ""
+
+#: lib/token.py:2441
+#, fuzzy
+msgid "Admin is allowed to initialize {0!s} tokens."
+msgstr "O administrador é autorizado para inicializar {0!s} tokens."
+
+#: lib/token.py:2449
+msgid "The user is allowed to enroll a {0!s} token."
+msgstr "O usuário tem permissão para registrar um token {0!s} ."
+
+#: lib/token.py:2480
+msgid "Set the maximum allowed PIN length of the {0!s} token."
+msgstr "Defina o tamanho máximo permitido do PIN do token {0!s}."
+
+#: lib/token.py:2487
+msgid "Set the minimum required PIN length of the {0!s} token."
+msgstr "Defina o tamanho mínimo requerido do PIN do token {0!s}."
+
+#: lib/token.py:2493
+msgid ""
+"Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
+"(n)umeric, (s)pecial, (o)thers. [+/-]!"
+msgstr ""
+"Especifique o conteúdo do PIN requerido do token {0!s}. (c)aracteres, "
+"(n)uméricos, e(s)peciais, (o)utros. [+/-]!"
+
+#: lib/token.py:2538 lib/token.py:2554
+msgid "The tokengroup does not exist."
+msgstr ""
+
+#: lib/tokenclass.py:1644
+msgid "please enter otp: "
+msgstr "por favor, digite otp: "
+
+#: lib/applications/ssh.py:106
+#, fuzzy
+msgid "The username on the SSH server."
+msgstr "Forçar a chave a ser gerada no servidor."
+
+#: lib/applications/ssh.py:108
+msgid ""
+"The service ID of the SSH server. Several servers can have the same "
+"service ID."
+msgstr ""
+
+#: lib/eventhandler/base.py:144
+msgid ""
+"The rollout_state of the token has a certain value like 'clientwait' or "
+"'enrolled'."
+msgstr ""
+"O rollout_state do token tem um certo valor como 'clientwait' ou "
+"'enrolled'."
+
+#: lib/eventhandler/base.py:149
+msgid "The realm of the user, for which this event should apply."
+msgstr "O domínio do usuário, ao qual este evento deve se aplicar."
+
+#: lib/eventhandler/base.py:155
+msgid "The resolver of the user, for which this event should apply."
+msgstr "O resolvedor do usuário, ao qual este evento deve se aplicar."
+
+#: lib/eventhandler/base.py:161
+msgid "The realm of the token, for which this event should apply."
+msgstr "O domínio do token, para o qual este evento deve se aplicar."
+
+#: lib/eventhandler/base.py:168
+msgid "The resolver of the token, for which this event should apply."
+msgstr "O resolvedor do token, para o qual este evento deve se aplicar."
+
+#: lib/eventhandler/base.py:175
+msgid "The type of the token."
+msgstr "O tipo do token."
+
+#: lib/eventhandler/base.py:181
+msgid "The logged in user is of the following type."
+msgstr "O usuário logado é do seguinte tipo."
+
+#: lib/eventhandler/base.py:187
+msgid "The result.value within the response is True or False."
+msgstr "O resultado da resposta é Verdadeiro ou Falso."
+
+#: lib/eventhandler/base.py:194
+msgid "The result.status within the response is True or False."
+msgstr "O \"status\" da resposta é Verdadeiro ou Falso."
+
+#: lib/eventhandler/base.py:201
+msgid "Check if the max failcounter of the token is reached."
+msgstr "Verifique se o número máximo de falhas do token é alcançado."
+
+#: lib/eventhandler/base.py:208
+msgid "The token has a user assigned."
+msgstr "O token tem um usuário atribuído."
+
+#: lib/eventhandler/base.py:214
+msgid ""
+"The token has a user assigned, but the user does not exist in the "
+"userstore anymore."
+msgstr ""
+"O token tem um usuário atribuído, mas o usuário não existe mais no "
+"userstore."
+
+#: lib/eventhandler/base.py:221
+msgid "Check if the token is within its validity period."
+msgstr "Verifique se o token está dentro do prazo de validade."
+
+#: lib/eventhandler/base.py:227
+msgid "Action is triggered, if the serial matches this regular expression."
+msgstr "A ação é acionada se o serial corresponder a essa expressão regular."
+
+#: lib/eventhandler/base.py:233
+#, fuzzy
+msgid "Action is triggered, if the user has this number of tokens assigned."
+msgstr "A ação é acionada se o serial corresponder a essa expressão regular."
+
+#: lib/eventhandler/base.py:239
+msgid ""
+"Action is triggered, if the counter of the token equals this setting. Can"
+" also be '>100' or '<99' for no exact match."
+msgstr ""
+"A ação é acionada se o contador do token for igual a essa configuração. "
+"Também pode ser '>100' ou '<99' para correspondência não exata."
+
+#: lib/eventhandler/base.py:246
+msgid ""
+"Action is triggered, if the last authentication of the token is older "
+"than 7h, 10d or 1y."
+msgstr ""
+"A ação é acionada se a última autenticação do token for anterior a 7h, "
+"10d ou 1y."
+
+#: lib/eventhandler/base.py:252
+msgid ""
+"This can be '>100', '<99', or '=100', to trigger the action, if the "
+"tokeninfo field 'count_auth' is bigger than 100, less than 99 or exactly "
+"100."
+msgstr ""
+"Pode ser '>100', '<99' ou '=100' para acionar a ação se o campo tokeninfo"
+" 'count_auth' for maior que 100, menor que 99 ou exatamente 100."
+
+#: lib/eventhandler/base.py:259
+msgid ""
+"This can be '>100', '<99', or '=100', to trigger the action, if the "
+"tokeninfo field 'count_auth_success' is bigger than 100, less than 99 or "
+"exactly 100."
+msgstr ""
+"Pode ser '>100', '<99' ou '=100' para acionar a ação se o campo tokeninfo"
+" 'count_auth_success' for maior que 100, menor que 99 ou exatamente 100."
+
+#: lib/eventhandler/base.py:267
+msgid ""
+"This can be '>100', '<99', or '=100', to trigger the action, if the "
+"difference between the tokeninfo field 'count_auth' and "
+"'count_auth_success is bigger than 100, less than 99 or exactly 100."
+msgstr ""
+"Isto pode ser '>100', '<99', ou '=100', para acionar a ação, se a "
+"diferença entre o campo tokeninfo 'count_auth' e 'count_auth_success for "
+"maior que 100, menor que 99 ou exatamente 100."
+
+#: lib/eventhandler/base.py:275
+msgid ""
+"This can be '>9', '<9', or '=10', to trigger the action, if the "
+"failcounter of a token matches this value. Note that the failcounter "
+"stops increasing, if the max_failcount is reached."
+msgstr ""
+"Isto pode ser '>9', '<9', ou '=10', para acionar a ação, se o contador de"
+" falhas de um token corresponder a este valor. Observe que o contador de "
+"faltas deixa de aumentar, se o valor máximo de faltas for atingido."
+
+#: lib/eventhandler/base.py:283
+msgid ""
+"This condition can check any arbitrary tokeninfo field. You need to enter"
+" something like '<fieldname> == <fieldvalue>', '<fieldname> > "
+"<fieldvalue>' or '<fieldname> < <fieldvalue>'."
+msgstr ""
+"Esta condição pode verificar qualquer campo de \"tokeninfo\" arbitrário. "
+"Você precisa digitar algo como '<nome do campo> == <valor do campo>', "
+"'<nome do campo> > <valor do campo>' ou '<nome do campo> < <valor do "
+"campo>'."
+
+#: lib/eventhandler/base.py:291
+msgid ""
+"This condition can check the value of an arbitrary event counter and "
+"compare it like 'myCounter == 1000', 'myCounter > 1000' or 'myCounter < "
+"1000'."
+msgstr ""
+"Esta condição pode verificar o valor de um contador de eventos arbitrário"
+" e compará-lo como 'myCounter == 1000', 'myCounter > 1000' ou 'myCounter "
+"< 1000'."
+
+#: lib/eventhandler/base.py:298
+msgid ""
+"Here you can enter a regular expression. The condition only applies if "
+"the regular expression matches the detail->error->message in the "
+"response."
+msgstr ""
+"Aqui você pode inserir uma expressão regular. A condição só se aplica se "
+"a expressão regular corresponder ao detalhe -> erro -> mensagem na "
+"resposta."
+
+#: lib/eventhandler/base.py:305
+msgid ""
+"Here you can enter a regular expression. The condition only applies if "
+"the regular expression matches the detail->message in the response."
+msgstr ""
+"Aqui você pode inserir uma expressão regular. A condição só se aplica se "
+"a expressão regular corresponder ao detalhe -> mensagem na resposta."
+
+#: lib/eventhandler/base.py:312
+msgid "Trigger the action, if the client IP matches."
+msgstr "Acione a ação se o IP do cliente corresponder."
+
+#: lib/eventhandler/counterhandler.py:70 lib/eventhandler/counterhandler.py:75
+#: lib/eventhandler/counterhandler.py:83
+msgid "The identifier/key of the counter."
+msgstr "O identificador/chave do contador."
+
+#: lib/eventhandler/counterhandler.py:78
+msgid "Don't stop counter if it reaches zero."
+msgstr "Não pare o contador se chegar a zero."
+
+#: lib/eventhandler/customuserattributeshandler.py:61
+msgid "The user for whom the custom attribute should be set."
+msgstr ""
+
+#: lib/eventhandler/customuserattributeshandler.py:68
+msgid "The key of the custom user attribute that should be set."
+msgstr ""
+
+#: lib/eventhandler/customuserattributeshandler.py:71
+msgid "The value of the custom user attribute."
+msgstr ""
+
+#: lib/eventhandler/customuserattributeshandler.py:77
+msgid "The user from which the custom attribute should be deleted."
+msgstr ""
+
+#: lib/eventhandler/customuserattributeshandler.py:84
+msgid "The key of the custom user attribute that should be deleted."
+msgstr ""
+
+#: lib/eventhandler/federationhandler.py:78
+msgid "The remote/child eduMFA Server."
+msgstr "O servidor privacidadeIDEA remoto/filho."
+
+#: lib/eventhandler/federationhandler.py:83
+msgid "Change the realm name to a realm on the child eduMFA system."
+msgstr "Altere o nome do realm para um realm no sistema eduMFA filho."
+
+#: lib/eventhandler/federationhandler.py:89
+msgid "Change the resolver name to a resolver on the child eduMFA system."
+msgstr "Altere o nome do resolver para um resolver no sistema eduMFA filho."
+
+#: lib/eventhandler/federationhandler.py:95
+msgid ""
+"Forward the client IP to the child eduMFA server. Otherwise this server "
+"will be the client."
+msgstr ""
+"Encaminhe o IP do cliente para o servidor eduMFA filho. Caso contrário "
+"este servidor será o cliente."
+
+#: lib/eventhandler/federationhandler.py:102
+msgid ""
+"Forward the authorization header. This allows to also forward request "
+"like token- and system-requests."
+msgstr ""
+"Encaminhe o cabeçalho de autorização. Isso permite também encaminhar "
+"solicitações como de token e de sistema."
+
+#: lib/eventhandler/logginghandler.py:89
+msgid "The name of the logging facility"
+msgstr "O nome do recurso de registro (logging facility)"
+
+#: lib/eventhandler/logginghandler.py:95
+msgid "The string to write to the log"
+msgstr "A string para gravar no log"
+
+#: lib/eventhandler/logginghandler.py:101
+msgid "The logging level for this logging notification"
+msgstr "O nível de registro para esta notificação de registro (logging level)"
+
+#: lib/eventhandler/requestmangler.py:102
+msgid "The parameter that should be deleted."
+msgstr "O parâmetro que deve ser excluído."
+
+#: lib/eventhandler/requestmangler.py:108
+msgid "The parameter that should be added or modified."
+msgstr "O parâmetro que deve ser adicionado ou modificado."
+
+#: lib/eventhandler/requestmangler.py:113
+msgid ""
+"The new value of the parameter. Can contain tags like {0}, {1} for the "
+"matched sub strings."
+msgstr ""
+"O novo valor do parâmetro. Pode conter tags como {0}, {1} para as "
+"substrings correspondentes."
+
+#: lib/eventhandler/requestmangler.py:118
+msgid "The parameter, that should match some values."
+msgstr "O parâmetro que deve corresponder a alguns valores."
+
+#: lib/eventhandler/requestmangler.py:122
+msgid ""
+"The value of the match_parameter. It can contain a regular expression and"
+" '()' to transfer values to the new parameter."
+msgstr ""
+"O valor do match_parameter. Ele pode conter uma expressão regular e '()' "
+"para transferir valores para o novo parâmetro."
+
+#: lib/eventhandler/responsemangler.py:83
+msgid ""
+"The JSON pointer (key) that should be deleted. Please specify in the "
+"format '/detail/message'."
+msgstr ""
+"O ponteiro JSON (chave) que deve ser excluído. Por favor especifique no "
+"formato '/detalhe/mensagem'."
+
+#: lib/eventhandler/responsemangler.py:90
+msgid ""
+"The JSON pointer (key) that should be set. Please specify in the format "
+"'/detail/message'."
+msgstr ""
+"O ponteiro JSON (chave) que deve ser definido. Favor especificar no "
+"formato '/detalhe/mensagem'."
+
+#: lib/eventhandler/responsemangler.py:96
+msgid "The type of the value."
+msgstr "O tipo do valor."
+
+#: lib/eventhandler/responsemangler.py:102
+msgid "The value of the JSON key that should be set."
+msgstr "O valor da chave JSON que deve ser definida."
+
+#: lib/eventhandler/scripthandler.py:98
+#: lib/smsprovider/ScriptSMSProvider.py:128
+msgid ""
+"Wait for script to complete or run script in background. This will either"
+" return the HTTP request early or could also block the request."
+msgstr ""
+"Aguarde o roteiro para completar ou executar o roteiro em segundo plano. "
+"Isto retornará a solicitação HTTP com antecedência ou também poderá "
+"bloquear a solicitação."
+
+#: lib/eventhandler/scripthandler.py:106
+msgid "On script error raise exception in HTTP request."
+msgstr ""
+"Se ocorrer um erro no roteiro, uma exceção é levantada na solicitação "
+"HTTP."
+
+#: lib/eventhandler/scripthandler.py:110
+msgid ""
+"Finish current transaction before running the script. This is useful if "
+"changes to the database should be made available to the script or the "
+"running request."
+msgstr ""
+"Encerrar a transação atual antes de executar o roteiro. Isto é útil se as"
+" mudanças no banco de dados tiverem de estar disponíveis para o roteiro "
+"ou pedido em execução."
+
+#: lib/eventhandler/scripthandler.py:117
+msgid "Add '--serial <serial number>' as script parameter."
+msgstr "Adicione '--serial <número de série>' como parâmetro de roteiro."
+
+#: lib/eventhandler/scripthandler.py:122
+msgid "Add '--user <username>' as script parameter."
+msgstr "Adicione '--usuário <nome de usuário>' como parâmetro de roteiro."
+
+#: lib/eventhandler/scripthandler.py:127
+msgid "Add '--realm <realm>' as script parameter."
+msgstr "Adicione '--domínio <domínio>' como parâmetro de roteiro."
+
+#: lib/eventhandler/scripthandler.py:132
+msgid ""
+"Add the username of the logged in user as script parameter like '--"
+"logged_in_user <username>'."
+msgstr ""
+"Adicione o nome de usuário do usuário logado como parâmetro de script "
+"como '--logado_em_usuário <nome de usuário>'."
+
+#: lib/eventhandler/scripthandler.py:138
+msgid ""
+"Add the role (either admin or user) of the logged in user as script "
+"parameter like '--logged_in_role <role>'."
+msgstr ""
+"Adicione a função (admin ou usuário) do usuário logado como parâmetro de "
+"script como '--logado_em_função<função>'."
+
+#: lib/eventhandler/tokenhandler.py:133
+msgid "set a new realm of the token"
+msgstr "estabelecer um novo domínio do token"
+
+#: lib/eventhandler/tokenhandler.py:137
+#, fuzzy
+msgid ""
+"The new realm will be the only realm of the token. I.e. all other realms "
+"will be removed from this token. If disabled, the realm will be added to "
+"the token."
+msgstr ""
+"O novo domínio será o único domínio do token. Isto é, todos os outros "
+"domínios serão removidos deste token. Caso contrário, o domínio será "
+"adicionado ao token."
+
+#: lib/eventhandler/tokenhandler.py:152
+msgid "set the PIN of the token to a random PIN of this length."
+msgstr "definir o PIN do token para um PIN aleatório deste tamanho."
+
+#: lib/eventhandler/tokenhandler.py:159
+msgid "Token type to create"
+msgstr "Tipo de token para criar"
+
+#: lib/eventhandler/tokenhandler.py:164
+msgid "Assign token to user in request or to tokenowner."
+msgstr "Atribuir token ao usuário em pedido ou ao proprietário do token."
+
+#: lib/eventhandler/tokenhandler.py:169
+msgid "Set the realm of the newly created token."
+msgstr "Definir o domínio do token recém-criado."
+
+#: lib/eventhandler/tokenhandler.py:176
+msgid "Dynamically read the mobile number from the user store."
+msgstr "Ler dinamicamente o número móvel da loja do usuário."
+
+#: lib/eventhandler/tokenhandler.py:183
+msgid "Dynamically read the email address from the user store."
+msgstr "Ler dinamicamente o endereço de e-mail da loja do usuário."
+
+#: lib/eventhandler/tokenhandler.py:190
+msgid "Use a specific SMTP server configuration for this token."
+msgstr "Use uma configuração específica de servidor SMTP para este token."
+
+#: lib/eventhandler/tokenhandler.py:197
+msgid "Use a specific SMS gateway configuration for this token."
+msgstr "Use uma configuração específica de gateway de SMS para este token."
+
+#: lib/eventhandler/tokenhandler.py:202
+msgid "A dictionary of additional init parameters."
+msgstr "Um dicionário de parâmetros de ativação adicionais."
+
+#: lib/eventhandler/tokenhandler.py:208
+msgid ""
+"Set the MOTP PIN of the MOTP token during enrollment. This is a required "
+"value for enrolling MOTP tokens."
+msgstr ""
+"Definir o PIN MOTP do token MOTP durante a inscrição. Este é um valor "
+"necessário para matricular os tokens MOTP."
+
+#: lib/eventhandler/tokenhandler.py:217
+msgid "The new description of the token."
+msgstr "A nova descrição do token."
+
+#: lib/eventhandler/tokenhandler.py:224
+msgid ""
+"The token will be valid starting at the given date. Can be a fixed date "
+"or an offset like +10m, +24h, +7d."
+msgstr ""
+"O token será validado a partir da data determinada. Pode ser uma data "
+"fixa ou uma compensação como +10m, +24h, +7d."
+
+#: lib/eventhandler/tokenhandler.py:231
+msgid ""
+"The token will be valid until the given date. Can be a fixed date or an "
+"offset like +10m, +24h, +7d."
+msgstr ""
+"O token será valido até a data determinada. Pode ser uma data fixa ou uma"
+" compensação como +10m, +24h, +7d."
+
+#: lib/eventhandler/tokenhandler.py:244
+msgid "Set the new count window of the token."
+msgstr "Configure a nova janela de contagem do token."
+
+#: lib/eventhandler/tokenhandler.py:254
+msgid "Set the failcounter of the token."
+msgstr "Defina o contador de falhas do token."
+
+#: lib/eventhandler/tokenhandler.py:264
+msgid ""
+"Increase or decrease the fail counter of the token. Values of +n, -n with"
+" n being an integer are accepted."
+msgstr ""
+"Aumentar ou diminuir o contador de falhas do token. Valores de +n, -n "
+"sendo n um número inteiro são aceitos."
+
+#: lib/eventhandler/tokenhandler.py:274
+msgid "Set the maximum failcounter of the token."
+msgstr "Define o contador máximo de falhas do token."
+
+#: lib/eventhandler/tokenhandler.py:282
+msgid "Set this tokeninfo key."
+msgstr "Defina o valor desta chave tokeninfo."
+
+#: lib/eventhandler/tokenhandler.py:287
+#, fuzzy
+msgid "Set the above key to this value."
+msgstr "Define a chave anterior deste valor."
+
+#: lib/eventhandler/tokenhandler.py:296
+msgid "Delete this tokeninfo key."
+msgstr "Delete a chave com este valor de tokeinfo."
+
+#: lib/eventhandler/tokenhandler.py:304
+msgid "Add a tokengroup to the token."
+msgstr ""
+
+#: lib/eventhandler/tokenhandler.py:313
+msgid "Remove a tokengroup from the token."
+msgstr ""
+
+#: lib/eventhandler/tokenhandler.py:322
+msgid "The ID of the machine you want to attach the token to"
+msgstr ""
+
+#: lib/eventhandler/tokenhandler.py:328
+msgid "Set the service_id for an SSH application."
+msgstr ""
+
+#: lib/eventhandler/tokenhandler.py:336
+msgid ""
+"Set a token application like 'offline' or 'SSH'. Note: Not all tokens "
+"work well with all applications!"
+msgstr ""
+
+#: lib/eventhandler/tokenhandler.py:345
+msgid "The number of offline OTP values available"
+msgstr ""
+
+#: lib/eventhandler/tokenhandler.py:353
+msgid "The number of rounds for password hashing"
+msgstr ""
+
+#: lib/eventhandler/usernotification.py:115
+msgid "Send notification email via this email server."
+msgstr "Enviar e-mail de notificação através deste servidor de e-mail."
+
+#: lib/eventhandler/usernotification.py:119
+msgid "Either send email as plain text or HTML."
+msgstr "Envie um e-mail como texto simples ou HTML."
+
+#: lib/eventhandler/usernotification.py:123
+msgid "Send QR-Code image as an attachment (cid URL: token_image)"
+msgstr "Enviar imagem de QR-Code como anexo (cid URL: token_image)"
+
+#: lib/eventhandler/usernotification.py:128
+msgid "The subject of the mail that is sent."
+msgstr "O assunto do correio que é enviado."
+
+#: lib/eventhandler/usernotification.py:132
+msgid "The Reply-To header in the sent email."
+msgstr "O cabeçalho Reply-To no e-mail enviado."
+
+#: lib/eventhandler/usernotification.py:154
+#: lib/eventhandler/usernotification.py:186
+msgid "Any email address, to which the notification should be sent."
+msgstr "Qualquer endereço de e-mail, para o qual a notificação deve ser enviada."
+
+#: lib/eventhandler/usernotification.py:161
+msgid "The body of the mail that is sent."
+msgstr "O corpo do e-mail que é enviado."
+
+#: lib/eventhandler/usernotification.py:165
+#: lib/eventhandler/usernotification.py:203
+msgid "Send notification to this user."
+msgstr "Enviar notificação a este usuário."
+
+#: lib/eventhandler/usernotification.py:195
+msgid "Send the user notification via a predefined SMS gateway."
+msgstr "Enviar a notificação do usuário através de um gateway SMS pré-definido."
+
+#: lib/eventhandler/usernotification.py:200
+msgid "The text of the SMS."
+msgstr "O texto da SMS."
+
+#: lib/eventhandler/usernotification.py:210
+msgid ""
+"This is the template content of the new file. Can contain the tags as "
+"specified in the documentation."
+msgstr ""
+"Este é o conteúdo do modelo do novo arquivo. Pode conter as etiquetas "
+"conforme especificado na documentação."
+
+#: lib/eventhandler/usernotification.py:216
+msgid ""
+"The filename of the notification. Existing files are overwritten. The "
+"name can contain tags as specified in the documentation and can also "
+"contain the tag {random}."
+msgstr ""
+"O nome do arquivo da notificação. Os arquivos existentes são "
+"sobregravados. O nome pode conter tags como especificado na documentação "
+"e também pode conter a tag {aleatória}."
+
+#: lib/eventhandler/webhookeventhandler.py:86
+msgid "The URL the WebHook is posted to"
+msgstr ""
+
+#: lib/eventhandler/webhookeventhandler.py:91
+msgid "The encoding that is sent to the WebHook, for example json"
+msgstr ""
+
+#: lib/eventhandler/webhookeventhandler.py:99
+msgid "You can replace placeholder like {logged_in_user}"
+msgstr ""
+
+#: lib/eventhandler/webhookeventhandler.py:104
+msgid "The data posted in the WebHook"
+msgstr ""
+
+#: lib/machines/ldap.py:339
+#, python-format
+msgid "Your LDAP config seems to be OK, %i machine objects found."
+msgstr "Sua configuração LDAP parece estar OK, %i objetos de máquina encontrados."
+
+#: lib/resolvers/LDAPIdResolver.py:1104
+msgid ""
+"Your LDAP config found {0!s} user objects, but only {1!s} with the "
+"specified uidtype"
+msgstr ""
+"Sua configuração LDAP encontrou {0!s} objetos de usuário, mas somente "
+"{1!s} com o tipo uid especificado"
+
+#: lib/resolvers/LDAPIdResolver.py:1107
+msgid "Your LDAP config seems to be OK, {0!s} user objects found."
+msgstr ""
+"Sua configuração LDAP parece estar OK, {0!s} objetos de usuário "
+"encontrados."
+
+#: lib/smsprovider/FirebaseProvider.py:204
+msgid ""
+"The filename of the JSON config file, that allows eduMFA to talk to the "
+"Firebase REST API."
+msgstr ""
+"O nome do arquivo de configuração do JSON, que permite à eduMFA falar com"
+" a API REST da Firebase."
+
+#: lib/smsprovider/FirebaseProvider.py:209
+msgid "Proxy setting for HTTPS connections to googleapis.com."
+msgstr "Configuração de proxy para conexões HTTPS para googleapis.com."
+
+#: lib/smsprovider/HttpSMSProvider.py:230
+msgid "The base URL of the HTTP Gateway"
+msgstr "A URL base do gateway HTTP"
+
+#: lib/smsprovider/HttpSMSProvider.py:233
+msgid "Should the HTTP Gateway be connected via an HTTP GET or POST request."
+msgstr ""
+"Caso o Gateway HTTP seja conectado através de uma solicitação HTTP GET ou"
+" POST."
+
+#: lib/smsprovider/HttpSMSProvider.py:238
+msgid ""
+"Specify a substring, that indicates, that the SMS was delivered "
+"successfully."
+msgstr "Especifique um substrato, que indica que o SMS foi entregue com sucesso."
+
+#: lib/smsprovider/HttpSMSProvider.py:242
+msgid "Specify a substring, that indicates, that the SMS failed to be delivered."
+msgstr "Especifique um substrato, que indica que o SMS não foi entregue."
+
+#: lib/smsprovider/HttpSMSProvider.py:246
+msgid "Username in case of basic authentication."
+msgstr "Nome de usuário em caso de autenticação básica."
+
+#: lib/smsprovider/HttpSMSProvider.py:250
+msgid "Password in case of basic authentication."
+msgstr "Senha em caso de autenticação básica."
+
+#: lib/smsprovider/HttpSMSProvider.py:255
+msgid "Should the SSL certificate be verified."
+msgstr "Caso o certificado SSL seja verificado."
+
+#: lib/smsprovider/HttpSMSProvider.py:261
+msgid "Should the data in a POST Request be sent as JSON."
+msgstr ""
+
+#: lib/smsprovider/HttpSMSProvider.py:268
+msgid ""
+"An optional proxy string. DEPRECATED. Do not use this anymore. Rather use"
+" HTTP_PROXY for http connections and HTTPS_PROXY for https connection. "
+"The PROXY option will be removed in future."
+msgstr ""
+"Uma cadeia opcional de proxy. DEPRECIADO. Não use mais isto. Em vez "
+"disso, use HTTP_PROXY para conexões http e HTTPS_PROXY para conexões "
+"https. A opção PROXY será removida no futuro."
+
+#: lib/smsprovider/HttpSMSProvider.py:273
+msgid "Proxy setting for HTTP connections."
+msgstr "Configuração de proxy para conexões HTTP."
+
+#: lib/smsprovider/HttpSMSProvider.py:274
+msgid "Proxy setting for HTTPS connections."
+msgstr "Configuração de proxy para conexões HTTPS."
+
+#: lib/smsprovider/HttpSMSProvider.py:275
+msgid "The timeout in seconds."
+msgstr "O tempo limite em segundos."
+
+#: lib/smsprovider/SMSProvider.py:74
+#, fuzzy
+msgid ""
+"Regular expression to modify the phone number to make it compatible with "
+"provider. For example to remove pluses and slashes enter something like "
+"'/[\\+/]//'."
+msgstr ""
+"Expressão regular para modificar o número de telefone a fim de torná-lo "
+"compatível com o provedor. Digite algo como '/[\\+/]//' para remover os "
+"prós e contras."
+
+#: lib/smsprovider/ScriptSMSProvider.py:120
+#, fuzzy
+msgid ""
+"The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to "
+"call. Expects phone as the parameter and the message from stdin."
+msgstr ""
+"Script a ser executado no diretório do script: "
+"PI_SCRIPT_SMSPROVIDER_DIRECTORY. Ele espera \"telefone\" como parâmetro e"
+" a mensagem de \"stdin\"."
+
+#: lib/smsprovider/SmppSMSProvider.py:128
+msgid "SMSC Host IP"
+msgstr "IP do Host SMSC"
+
+#: lib/smsprovider/SmppSMSProvider.py:131
+msgid "SMSC Port"
+msgstr "Porto SMSC"
+
+#: lib/smsprovider/SmppSMSProvider.py:133
+msgid "SMSC Service ID"
+msgstr "ID do serviço SMSC"
+
+#: lib/smsprovider/SmppSMSProvider.py:135
+msgid "Password for authentication on SMSC"
+msgstr "Senha para autenticação no SMSC"
+
+#: lib/smsprovider/SmppSMSProvider.py:137
+msgid "SOURCE_ADDR_TON Special Flag"
+msgstr "SOURCE_ADDR_TON \"Bandeira\" Especial"
+
+#: lib/smsprovider/SmppSMSProvider.py:139
+msgid "S_ADDR_NPI Special Flag"
+msgstr "S_ADDR_NPI \"Bandeira\" Especial"
+
+#: lib/smsprovider/SmppSMSProvider.py:141
+msgid "Source address (SMS sender)"
+msgstr "Endereço de origem (remetente de SMS)"
+
+#: lib/smsprovider/SmppSMSProvider.py:142
+msgid "DESTINATION_ADDR_TON Special Flag"
+msgstr "DESTINATION_ADDR_TON \"Bandeira\" especial"
+
+#: lib/smsprovider/SmppSMSProvider.py:143
+msgid "D_ADDR_NPI Special Flag"
+msgstr "D_ADDR_NPI \"Bandeira\" Especial"
+
+#: lib/task/eventcounter.py:46
+msgid "The name of the event counter to read."
+msgstr "O nome do contador de eventos a ser lido."
+
+#: lib/task/eventcounter.py:51
+msgid "The name of the stats key to write to the MonitoringStats table."
+msgstr "O nome da chave de estatísticas para escrever na tabela MonitoringStats."
+
+#: lib/task/eventcounter.py:57
+msgid ""
+"Whether to reset the event_counter, if it is read and written to the "
+"MonitoringStats table."
+msgstr ""
+"Reinicializar \"event_counter\" se for lido e escrito na tabela "
+"\"MonitoringStats\"."
+
+#: lib/task/simplestats.py:50
+msgid "Total number of tokens"
+msgstr "Número total de tokens"
+
+#: lib/task/simplestats.py:53
+msgid "Total number of hardware tokens"
+msgstr "Número total de tokens de hardware"
+
+#: lib/task/simplestats.py:56
+msgid "Total number of software tokens"
+msgstr "Número total de tokens de software"
+
+#: lib/task/simplestats.py:59
+msgid "Number of hardware tokens not assigned to a user"
+msgstr "Número de tokens de hardware não atribuídos a um usuário"
+
+#: lib/task/simplestats.py:62
+msgid "Number of tokens assigned to users"
+msgstr "Número de tokens atribuídos aos usuários"
+
+#: lib/task/simplestats.py:65
+msgid "Number of users with tokens assigned"
+msgstr "Número de usuários com tokens atribuídos"
+
+#: lib/tokens/applicationspecificpasswordtoken.py:81
+msgid ""
+"Application Specific Password: A token with a fixed password. Can be used"
+" for certain applications or services."
+msgstr ""
+
+#: lib/tokens/applicationspecificpasswordtoken.py:92
+#, fuzzy
+msgid ""
+"The user may only have this maximum number of application specific "
+"password tokens assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de senha\""
+" ativos."
+
+#: lib/tokens/applicationspecificpasswordtoken.py:98
+#, fuzzy
+msgid ""
+"The user may only have this maximum number of active application specific"
+" password tokens assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de senha\""
+" ativos."
+
+#: lib/tokens/certificatetoken.py:275
+msgid "Certificate: Enroll an x509 Certificate Token."
+msgstr "Certificado: Inscrição de um Token de Certificado x509."
+
+#: lib/tokens/certificatetoken.py:286
+msgid "The user may only have this maximum number of certificates assigned."
+msgstr "O usuário só pode ter este número máximo de certificados atribuídos."
+
+#: lib/tokens/certificatetoken.py:291
+msgid ""
+"The user may only have this maximum number of active certificates "
+"assigned."
+msgstr ""
+"O usuário só pode ter este número máximo de certificados ativos "
+"atribuídos."
+
+#: lib/tokens/certificatetoken.py:296
+msgid ""
+"Enrolling a certificate token can require an attestation certificate. "
+"(Default: ignore)"
+msgstr ""
+"A inscrição de um token de certificado pode exigir um certificado de "
+"atestado.( Padrão: ignorar)"
+
+#: lib/tokens/certificatetoken.py:305
+msgid "The CA connector that should be used during certificate enrollment."
+msgstr ""
+
+#: lib/tokens/certificatetoken.py:311
+msgid "The template that should be used to issue a certificate."
+msgstr ""
+
+#: lib/tokens/certificatetoken.py:316
+msgid ""
+"This takes a space separated list of elements to be added to the subject."
+" Can be 'email' and 'realm'."
+msgstr ""
+
+#: lib/tokens/certificatetoken.py:324 lib/tokens/certificatetoken.py:331
+msgid "The directory containing attestation certificate chains."
+msgstr "O diretório contendo cadeias de certificados de atestados."
+
+#: lib/tokens/daplugtoken.py:121
+msgid "event based OTP token using the HOTP algorithm"
+msgstr "token OTP baseado em eventos usando o algoritmo HOTP"
+
+#: lib/tokens/daplugtoken.py:127
+msgid "The user may only have this maximum number of daplug tokens assigned."
+msgstr "A usuário só pode ser atribuído este número máximo de tokens de daplug."
+
+#: lib/tokens/daplugtoken.py:132
+msgid ""
+"The user may only have this maximum number of active daplug tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter este número máximo de tokens de daplug ativos "
+"atribuídos."
+
+#: lib/tokens/daypasswordtoken.py:40
+#, fuzzy
+msgid "Specify the time step of the DayPassword token. For example: \"24h\""
+msgstr "Defina o contador de falhas do token."
+
+#: lib/tokens/daypasswordtoken.py:88
+msgid ""
+"DayPassword: A time-based token with a variable timestep and the "
+"possibility to use the OTP more than once."
+msgstr ""
+
+#: lib/tokens/daypasswordtoken.py:125
+#, fuzzy
+msgid "Enforce setting an app pin for the privacyIDEA Authenticator App"
+msgstr ""
+"Configuração de pinos necessária para a aplicação privacyIDEA "
+"Authenticator"
+
+#: lib/tokens/daypasswordtoken.py:130
+#, fuzzy
+msgid "The user may only have this maximum number of daypassword tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens de senha\"."
+
+#: lib/tokens/daypasswordtoken.py:136
+#, fuzzy
+msgid ""
+"The user may only have this maximum number of active daypassword tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de senha\""
+" ativos."
+
+#: lib/tokens/emailtoken.py:145
+msgid "EMail Token"
+msgstr "Token de e-mail"
+
+#: lib/tokens/emailtoken.py:147
+msgid "EMail: Send a One Time Password to the users email address."
+msgstr "EMail: Envie uma senha única para o endereço de e-mail dos usuários."
+
+#: lib/tokens/emailtoken.py:155
+msgid ""
+"The text that will be sent via EMail for an EMail-token. Several tags "
+"like {otp} and {serial} can be used as parameters. You may also specify a"
+" filename as email template starting with \"file:\"."
+msgstr ""
+"O texto que será enviado via EMail para um token de EMail. Use {otp} e "
+"{serial} como parâmetros. Você também pode especificar um nome de arquivo"
+" como modelo de e-mail, começando com \"file:\"."
+
+#: lib/tokens/emailtoken.py:162
+msgid ""
+"The subject of the EMail for an EMail token. Use tags like {otp} and "
+"{serial} as parameters."
+msgstr ""
+"O tema do EMail para um token de EMail. Use {otp} e {serial} como "
+"parâmetros."
+
+#: lib/tokens/emailtoken.py:167
+msgid ""
+"If set, a new EMail OTP will be sent after successful authentication with"
+" one EMail OTP."
+msgstr ""
+"Se definido, um novo e-mail OTP será enviado após uma autenticação bem "
+"sucedida por e-mail."
+
+#: lib/tokens/emailtoken.py:172
+msgid ""
+"Use an alternate challenge text for telling the user to enter the code "
+"from the eMail."
+msgstr ""
+"Use um texto alternativo de desafio para dizer ao usuário para inserir o "
+"código do eMail."
+
+#: lib/tokens/emailtoken.py:179
+msgid "The user may only have this maximum number of email tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens de e-mail."
+
+#: lib/tokens/emailtoken.py:184
+msgid ""
+"The user may only have this maximum number of active email tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter este número máximo de tokens de e-mail ativos "
+"atribuídos."
+
+#: lib/tokens/emailtoken.py:266
+msgid "Enter the OTP from the Email:"
+msgstr "Entrar no OTP a partir do e-mail:"
+
+#: lib/tokens/emailtoken.py:305
+msgid "The PIN was correct, but the EMail could not be sent!"
+msgstr ""
+
+#: lib/tokens/emailtoken.py:536
+msgid "Please enter your new email address!"
+msgstr ""
+
+#: lib/tokens/foureyestoken.py:126
+msgid "4Eyes Token: Use tokens of two or more users to authenticate"
+msgstr "Token 4Eyes: Use tokens de dois ou mais usuários para autenticar"
+
+#: lib/tokens/foureyestoken.py:137
+msgid "The user may only have this maximum number of 4eyes tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens de \"4eyes\"."
+
+#: lib/tokens/foureyestoken.py:142
+msgid ""
+"The user may only have this maximum number of active 4eyes tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de tokens \"4eyes\" "
+"ativos."
+
+#: lib/tokens/hotptoken.py:72
+msgid "Please enter a valid OTP value of the new token."
+msgstr ""
+
+#: lib/tokens/hotptoken.py:87
+msgid "Specify the hashing function to be used. Can be SHA1, SHA256 or SHA512."
+msgstr "Especificar o hashlib a ser utilizado. Pode ser SHA1, SHA-256 ou SHA-512."
+
+#: lib/tokens/hotptoken.py:89
+msgid "Specify the OTP length to be used. Can be 6 or 8 digits."
+msgstr "Especifique o ''otp'' a ser utilizado. Pode ser de 6 ou 8 dígitos."
+
+#: lib/tokens/hotptoken.py:90
+msgid "Force the key to be generated on the server."
+msgstr "Forçar a chave a ser gerada no servidor."
+
+#: lib/tokens/hotptoken.py:91
+msgid "Specify whether users are allowed or forced to use two-step enrollment."
+msgstr ""
+"Especificar se os usuários são permitidos ou forçados a utilizar a "
+"inscrição em duas etapas."
+
+#: lib/tokens/hotptoken.py:93
+msgid "Specify whether admins are allowed or forced to use two-step enrollment."
+msgstr ""
+"Especificar se os administradores são permitidos ou forçados a utilizar a"
+" inscrição em duas etapas."
+
+#: lib/tokens/hotptoken.py:130
+msgid "HOTP: Event based One Time Passwords."
+msgstr "HOTP: Senhas de uso único baseadas em eventos."
+
+#: lib/tokens/hotptoken.py:138
+msgid "The user may only have this maximum number of HOTP tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens HOTP."
+
+#: lib/tokens/hotptoken.py:143
+msgid "The user may only have this maximum number of active HOTP tokens assigned."
+msgstr "O usuário só pode ser atribuído este número máximo de tokens HOTP ativos."
+
+#: lib/tokens/hotptoken.py:148 lib/tokens/totptoken.py:149
+msgid "The size of the OTP seed part contributed by the client (in bytes)"
+msgstr "O tamanho da parte da semente OTP contribuída pelo cliente (em bytes)"
+
+#: lib/tokens/hotptoken.py:153 lib/tokens/totptoken.py:152
+msgid "The size of the OTP seed part contributed by the server (in bytes)"
+msgstr "O tamanho da parte da semente OTP fornecida pelo servidor (em bytes)"
+
+#: lib/tokens/hotptoken.py:158 lib/tokens/totptoken.py:155
+msgid ""
+"The difficulty factor used for the OTP seed generation (should be at "
+"least 10000)"
+msgstr ""
+"O fator de dificuldade utilizado para a geração de sementes OTP (deve ser"
+" de pelo menos 10000)"
+
+#: lib/tokens/hotptoken.py:163 lib/tokens/totptoken.py:160
+#, fuzzy
+msgid "Enforce setting an app pin for the eduMFA Authenticator App"
+msgstr ""
+"Configuração de pinos necessária para a aplicação privacyIDEA "
+"Authenticator"
+
+#: lib/tokens/hotptoken.py:269
+msgid "URL for google Authenticator"
+msgstr "URL para google Authenticator"
+
+#: lib/tokens/hotptoken.py:282
+msgid "URL for OATH token"
+msgstr "URL para o token OATH"
+
+#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1049
+msgid "Please scan the QR code!"
+msgstr "Por favor, faça o scan do Código QR"
+
+#: lib/tokens/indexedsecrettoken.py:52
+msgid "Please enter the positions {0!s} from your secret."
+msgstr "Por favor, digite as posições {0!s} de seu segredo."
+
+#: lib/tokens/indexedsecrettoken.py:101
+msgid "Indexed Secret Token"
+msgstr "Token Secreto Indexado"
+
+#: lib/tokens/indexedsecrettoken.py:103
+msgid "IndexedSecret: Request certain positions of a shared secret from the user."
+msgstr ""
+"IndexedSecret: Solicitar certas posições de um segredo compartilhado do "
+"usuário."
+
+#: lib/tokens/indexedsecrettoken.py:110
+msgid ""
+"Use an alternate challenge text for telling the user which positions of "
+"the secret he should enter."
+msgstr ""
+"Use um texto alternativo de desafio para dizer ao usuário quais posições "
+"do segredo ele deve entrar."
+
+#: lib/tokens/indexedsecrettoken.py:116
+msgid "Number of necessary positions to be answered by the user."
+msgstr "Número de posições necessárias a serem respondidas pelo usuário."
+
+#: lib/tokens/indexedsecrettoken.py:123
+msgid "Preset the enrollment with the value of the given attribute."
+msgstr "Pré-ajuste a inscrição com o valor do atributo dado."
+
+#: lib/tokens/indexedsecrettoken.py:130 lib/tokens/indexedsecrettoken.py:137
+msgid "The attribute whose value should be force set during enrollment."
+msgstr "O atributo cujo valor deve ser definido em força durante a inscrição."
+
+#: lib/tokens/indexedsecrettoken.py:144
+msgid ""
+"The user may only have this maximum number of indexed secret tokens "
+"assigned."
+msgstr ""
+"Ao usuário só pode ter atribuído este número máximo tokens \"Segredo "
+"Indexado\"."
+
+#: lib/tokens/indexedsecrettoken.py:149
+msgid ""
+"The user may only have this maximum number of active indexed secret "
+"tokens assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de tokens \"Indexed "
+"Secret\" ativos."
+
+#: lib/tokens/motptoken.py:97
+msgid "The user may only have this maximum number of mOTP tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens mOTP."
+
+#: lib/tokens/motptoken.py:102
+msgid "The user may only have this maximum number of active mOTP tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens mOTP ativos."
+
+#: lib/tokens/motptoken.py:145
+msgid "URL for MOTP token"
+msgstr "URL para o token MOTP"
+
+#: lib/tokens/ocratoken.py:92
+msgid "OCRA: Enroll an OCRA token."
+msgstr "OCRA: Inscreva um token OCRA."
+
+#: lib/tokens/ocratoken.py:102
+msgid "The user may only have this maximum number of OCRA tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens OCRA."
+
+#: lib/tokens/ocratoken.py:107
+msgid "The user may only have this maximum number of active OCRA tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens OCRA ativos."
+
+#: lib/tokens/papertoken.py:111 lib/tokens/tantoken.py:109
+msgid "The number of OTP values, which are printed on the paper."
+msgstr "O número de valores OTP, que são impressos no papel."
+
+#: lib/tokens/papertoken.py:116
+msgid "The user may only have this maximum number of paper tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens de papel\"."
+
+#: lib/tokens/papertoken.py:121
+msgid ""
+"The user may only have this maximum number of active paper tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de papel\""
+" ativos."
+
+#: lib/tokens/passwordtoken.py:114
+msgid ""
+"A token with a fixed password. Can be combined  with the OTP PIN. Is used"
+" for the lost token scenario."
+msgstr ""
+"Um token com uma senha fixa. Pode ser combinado com o PIN OTP. É usado "
+"para o cenário do token perdido."
+
+#: lib/tokens/passwordtoken.py:126
+msgid "The user may only have this maximum number of password tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens de senha\"."
+
+#: lib/tokens/passwordtoken.py:131
+msgid ""
+"The user may only have this maximum number of active password tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de senha\""
+" ativos."
+
+#: lib/tokens/pushtoken.py:72
+msgid "Please confirm the authentication on your mobile device!"
+msgstr "Por favor, confirme a autenticação em seu dispositivo móvel!"
+
+#: lib/tokens/pushtoken.py:73
+msgid ""
+"Use the polling feature of your unsupported privacyIDEA Authenticator App"
+" to check for a new Login request."
+msgstr ""
+
+#: lib/tokens/pushtoken.py:75
+msgid "Do you want to confirm the login?"
+msgstr "Você quer confirmar o login?"
+
+#: lib/tokens/pushtoken.py:301
+msgid "PUSH Token"
+msgstr "Token PUSH"
+
+#: lib/tokens/pushtoken.py:303
+msgid "PUSH: Send a push notification to a smartphone."
+msgstr "PUSH: envia uma notificação push para um smartphone."
+
+#: lib/tokens/pushtoken.py:311
+msgid "The configuration of your Firebase application."
+msgstr "A configuração de sua aplicação Firebase."
+
+#: lib/tokens/pushtoken.py:319
+msgid ""
+"The URL the Push App should contact in the second enrollment step. "
+"Usually it is the endpoint /ttype/push of the eduMFA server."
+msgstr ""
+"O URL que o Push App deve contatar na segunda etapa da inscrição. "
+"Normalmente é o \"endpoint /ttype/push\" do servidor eduMFA."
+
+#: lib/tokens/pushtoken.py:325
+msgid ""
+"The second enrollment step must be completed within this time (in "
+"minutes)."
+msgstr ""
+"A segunda etapa da inscrição deve ser concluída dentro deste tempo (em "
+"minutos)."
+
+#: lib/tokens/pushtoken.py:329
+msgid "The smartphone needs to verify SSL during the enrollment. (default 1)"
+msgstr "O smartphone precisa verificar o SSL durante a inscrição. (padrão 1)"
+
+#: lib/tokens/pushtoken.py:335
+msgid "The user may only have this maximum number of Push tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens Push\"."
+
+#: lib/tokens/pushtoken.py:340
+msgid "The user may only have this maximum number of active Push tokens assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens Push\" "
+"ativos."
+
+#: lib/tokens/pushtoken.py:346
+msgid "Require to unlock the Smartphone before Push requests can be accepted"
+msgstr ""
+
+#: lib/tokens/pushtoken.py:352
+msgid "The question the user sees on his mobile phone."
+msgstr "A pergunta que o usuário vê em seu telefone celular."
+
+#: lib/tokens/pushtoken.py:357
+msgid "The title of the notification, the user sees on his mobile phone."
+msgstr "O título da notificação, o usuário vê em seu telefone celular."
+
+#: lib/tokens/pushtoken.py:362
+msgid "The smartphone needs to verify SSL during authentication. (default 1)"
+msgstr "O smartphone precisa verificar o SSL durante a autenticação. (padrão 1)"
+
+#: lib/tokens/pushtoken.py:368
+msgid ""
+"Wait for number of seconds for the user to confirm the challenge in the "
+"first request."
+msgstr ""
+"Esperar o número de segundos para que o usuário confirme o desafio na "
+"primeira solicitação."
+
+#: lib/tokens/pushtoken.py:374
+msgid "Configure whether to allow push tokens to poll for challenges"
+msgstr ""
+"Configurar se é necessário permitir que os tokens sejam usados para "
+"pesquisar desafios"
+
+#: lib/tokens/pushtoken.py:509
+msgid "URL for eduMFA Push Token"
+msgstr "URL para eduMFA Push Token"
+
+#: lib/tokens/questionnairetoken.py:98
+msgid "Questionnaire: Enroll Questions for the user."
+msgstr "Questionário: Perguntas de inscrição para o usuário."
+
+#: lib/tokens/questionnairetoken.py:109
+msgid "The user has to answer this number of questions during authentication."
+msgstr ""
+"O usuário tem que responder a este número de perguntas durante a "
+"autenticação."
+
+#: lib/tokens/questionnairetoken.py:117
+msgid ""
+"The user may only have this maximum number of questionaire tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de "
+"questionário\"."
+
+#: lib/tokens/questionnairetoken.py:122
+msgid ""
+"The user may only have this maximum number of active questionaire tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de "
+"questionário ativo\"."
+
+#: lib/tokens/questionnairetoken.py:166
+#, python-format
+msgid "You need to provide at least %s answers."
+msgstr "Você precisa fornecer pelo menos %s de respostas."
+
+#: lib/tokens/radiustoken.py:95
+msgid "RADIUS: Forward authentication request to a RADIUS server."
+msgstr "RADIUS: Encaminhar pedido de autenticação a um servidor RADIUS."
+
+#: lib/tokens/radiustoken.py:104
+msgid "The user may only have this maximum number of RADIUS tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens RADIUS\"."
+
+#: lib/tokens/radiustoken.py:109
+msgid ""
+"The user may only have this maximum number of active RADIUS tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de tokens RADIUS "
+"ativos."
+
+#: lib/tokens/registrationtoken.py:128
+msgid ""
+"Registration: A token that creates a registration code that can be used "
+"as a second factor once."
+msgstr ""
+"Registro: Um token que cria um código de registro que pode ser usado como"
+" um segundo fator uma vez."
+
+#: lib/tokens/registrationtoken.py:140
+msgid ""
+"The user may only have this maximum number of registration tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de "
+"registro\"."
+
+#: lib/tokens/registrationtoken.py:145
+msgid ""
+"The user may only have this maximum number of active registration tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens de "
+"registro\" ativos."
+
+#: lib/tokens/remotetoken.py:110
+msgid "Remote Token: Forward authentication request to another server."
+msgstr "Token Remoto: Encaminhar pedido de autenticação para outro servidor."
+
+#: lib/tokens/remotetoken.py:119 lib/tokens/totptoken.py:165
+msgid "The user may only have this maximum number of remote tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens remotos\"."
+
+#: lib/tokens/remotetoken.py:124 lib/tokens/totptoken.py:170
+msgid ""
+"The user may only have this maximum number of active remote tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens remotos\" "
+"ativos."
+
+#: lib/tokens/smstoken.py:186
+msgid "SMS Token"
+msgstr "Token SMS"
+
+#: lib/tokens/smstoken.py:188
+msgid "SMS: Send a One Time Password to the users mobile phone."
+msgstr "SMS: Envie uma senha única para o telefone celular dos usuários."
+
+#: lib/tokens/smstoken.py:197
+msgid ""
+"The text that will be send via SMS for an SMS token. Use tags like {otp} "
+"and {serial} as parameters."
+msgstr ""
+"O texto que será enviado via SMS para um token SMS. Use {otp} e {serial} "
+"como parâmetros."
+
+#: lib/tokens/smstoken.py:202
+msgid ""
+"If set, a new SMS OTP will be sent after successful authentication with "
+"one SMS OTP."
+msgstr ""
+"Se configurado, um novo OTP será enviado por SMS após a autenticação bem "
+"sucedida do SMS."
+
+#: lib/tokens/smstoken.py:207
+msgid ""
+"Use an alternate challenge text for telling the user to enter the code "
+"from the SMS."
+msgstr ""
+"Use um texto de desafio alternativo para dizer ao usuário para inserir o "
+"código do SMS."
+
+#: lib/tokens/smstoken.py:215
+msgid "Choose the gateways the administrator is allowed to set."
+msgstr "Escolha os gateways que o administrador tem permissão para definir."
+
+#: lib/tokens/smstoken.py:223
+msgid "Choose the gateways the user is allowed to set."
+msgstr "Escolha as portas de entrada que o usuário tem permissão para definir."
+
+#: lib/tokens/smstoken.py:230
+msgid "The user may only have this maximum number of SMS tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens \"SMS\"."
+
+#: lib/tokens/smstoken.py:235
+msgid "The user may only have this maximum number of active SMS tokens assigned."
+msgstr ""
+"O usuário só pode ter atribuídos este número máximo de \"tokens SMS\" "
+"ativos."
+
+#: lib/tokens/smstoken.py:312
+msgid "Enter the OTP from the SMS:"
+msgstr "Digite o OTP a partir do SMS:"
+
+#: lib/tokens/smstoken.py:343
+msgid "The PIN was correct, but the SMS could not be sent!"
+msgstr ""
+
+#: lib/tokens/smstoken.py:591
+msgid "Please enter your new phone number!"
+msgstr ""
+
+#: lib/tokens/spasstoken.py:86
+msgid "SPass: Simple Pass token. Static passwords."
+msgstr "SPass: Token de passe simples. Senhas estáticas."
+
+#: lib/tokens/spasstoken.py:98
+msgid "The user may only have this maximum number of SPASS tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens SPASS\"."
+
+#: lib/tokens/spasstoken.py:103
+msgid ""
+"The user may only have this maximum number of active SPASS tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens SPASS\" "
+"ativos."
+
+#: lib/tokens/sshkeytoken.py:86
+msgid "SSH Public Key: The public SSH key."
+msgstr "Chave Pública SSH: A chave SSH pública."
+
+#: lib/tokens/sshkeytoken.py:95
+msgid "The user may only have this maximum number of SSH keys assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de chaves SSH."
+
+#: lib/tokens/sshkeytoken.py:100
+msgid "The user may only have this maximum number of active SSH keys assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de chaves SSH ativas."
+
+#: lib/tokens/tantoken.py:114
+msgid "The user may only have this maximum number of TAN tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens TAN\"."
+
+#: lib/tokens/tantoken.py:119
+msgid "The user may only have this maximum number of active TAN tokens assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens TAN\" "
+"ativos."
+
+#: lib/tokens/tiqrtoken.py:159
+msgid "TiQR: Enroll a TiQR token."
+msgstr "TiQR: Inscreva um token TiQR."
+
+#: lib/tokens/tiqrtoken.py:169
+msgid "The user may only have this maximum number of TiQR tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens TiQR\"."
+
+#: lib/tokens/tiqrtoken.py:174
+msgid "The user may only have this maximum number of active TiQR tokens assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens TiQR\" "
+"ativos."
+
+#: lib/tokens/tiqrtoken.py:239
+msgid "URL for TiQR enrollment"
+msgstr "URL para inscrição no TiQR"
+
+#: lib/tokens/tiqrtoken.py:396
+msgid "Please scan the QR Code"
+msgstr "Por favor, faça o scan do Código QR"
+
+#: lib/tokens/totptoken.py:61
+msgid "Specify the time step of the time-based OTP token."
+msgstr ""
+
+#: lib/tokens/totptoken.py:108
+msgid "TOTP: Time based One Time Passwords."
+msgstr "TOTP: Senhas de uso único baseadas no tempo."
+
+#: lib/tokens/u2ftoken.py:253
+msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
+msgstr ""
+"Esta é uma lista de nomes de host da FQDN que tem como base os tokens U2F"
+" registrados."
+
+#: lib/tokens/u2ftoken.py:257
+msgid ""
+"Use an alternate challenge text for telling the user to confirm with his "
+"U2F device."
+msgstr ""
+"Use um texto alternativo de desafio para dizer ao usuário para confirmar "
+"com seu dispositivo U2F."
+
+#: lib/tokens/u2ftoken.py:264
+msgid "Only specified U2F tokens are authorized."
+msgstr "Somente os tokens U2F especificadas são autorizados."
+
+#: lib/tokens/u2ftoken.py:272
+msgid "Only specified U2F tokens are allowed to be registered."
+msgstr "Somente os tokens U2F especificados são permitidos para serem registrados."
+
+#: lib/tokens/u2ftoken.py:277
+msgid "Do not verify the U2F attestation certificate."
+msgstr "Não verificar o certificado de atestado U2F."
+
+#: lib/tokens/u2ftoken.py:282
+msgid "The user may only have this maximum number of U2F tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens U2F\"."
+
+#: lib/tokens/u2ftoken.py:287
+msgid "The user may only have this maximum number of active U2F tokens assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens U2F\" "
+"ativos."
+
+#: lib/tokens/u2ftoken.py:372
+msgid "You need to define the appId in the token config!"
+msgstr "Você precisa definir o appId na configuração do token!"
+
+#: lib/tokens/u2ftoken.py:437
+msgid "Please confirm with your U2F token ({0!s})"
+msgstr "Favor confirmar com seu token U2F ({0!s})"
+
+#: lib/tokens/vascotoken.py:101
+msgid "VASCO Token: Authentication using VASCO tokens"
+msgstr "Token VASCO: Autenticação usando tokens VASCO"
+
+#: lib/tokens/vascotoken.py:110
+msgid "The user may only have this maximum number of Vasco tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de \"tokens Vasco\"."
+
+#: lib/tokens/vascotoken.py:115
+msgid ""
+"The user may only have this maximum number of active Vasco tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de \"tokens Vasco\" "
+"ativos."
+
+#: lib/tokens/webauthntoken.py:462
+msgid "Generic WebAuthn Token"
+msgstr "Token genérico WebAuthn"
+
+#: lib/tokens/webauthntoken.py:472
+msgid "Please confirm with your WebAuthn token ({0!s})"
+msgstr "Por favor, confirme com seu token WebAuthn ({0!s})"
+
+#: lib/tokens/webauthntoken.py:473
+msgid "Please confirm with your WebAuthn token"
+msgstr "Por favor, confirme com seu token WebAuthn"
+
+#: lib/tokens/webauthntoken.py:610
+msgid ""
+"A list of transports to prefer to communicate with WebAuthn tokens. "
+"Default: usb ble nfc internal (All standard transports)"
+msgstr ""
+"Uma lista dos transportes que preferem se comunicar com tokens de "
+"WebAuthn. Padrão: usb ble nfc interno (Todos os transportes padrão)"
+
+#: lib/tokens/webauthntoken.py:615
+msgid ""
+"The time in seconds the user has to confirm authorization on his WebAuthn"
+" token. Note: You will want to increase the ChallengeValidityTime along "
+"with this. Default: 60"
+msgstr ""
+"O tempo em segundos que o usuário tem que confirmar a autorização em seu "
+"token WebAuthn. Nota: Você vai querer aumentar o ChallengeValidityTime "
+"junto com isto. Padrão : 60"
+
+#: lib/tokens/webauthntoken.py:621
+msgid ""
+"Whether the user's identity should be verified when authenticating with a"
+" WebAuthn token. Default: preferred (verify the user if supported by the "
+"token)"
+msgstr ""
+"Se a identidade do usuário deve ser verificada ao se autenticar com uma "
+"ficha WebAuthn. Padrão: preferido (verificar o usuário se suportado pelo "
+"token)"
+
+#: lib/tokens/webauthntoken.py:631
+msgid ""
+"Use an alternative challenge text for telling the user to confirm with "
+"his WebAuthn token."
+msgstr ""
+"Use um texto alternativo de desafio para dizer ao usuário para confirmar "
+"com seu token WebAuthn."
+
+#: lib/tokens/webauthntoken.py:638
+msgid ""
+"A list of WebAuthn authenticators acceptable for authorization, given as "
+"a space-separated list of AAGUIDs. Per default all authenticators are "
+"acceptable."
+msgstr ""
+"Uma lista de autenticadores WebAuthn aceitáveis para autorização, dada "
+"como uma lista de AAGUIDs separada por espaço. Por padrão, todos os "
+"autenticadores são aceitáveis."
+
+#: lib/tokens/webauthntoken.py:644
+msgid "Only the specified WebAuthn-tokens are authorized."
+msgstr "Somente os WebAuthn-tokens especificados são autorizados."
+
+#: lib/tokens/webauthntoken.py:651
+msgid "One webauthn token can not be registered to a user more than once."
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:656
+#, fuzzy
+msgid "A human-readable name for the organization rolling out WebAuthn tokens."
+msgstr ""
+"Um nome legível pelo ser humano para a organização que implementa os "
+"tokens WebAuthn."
+
+#: lib/tokens/webauthntoken.py:661
+msgid ""
+"A domain name that is a subset of the respective FQDNs for all the "
+"webservices the users should be able to sign in to using WebAuthn tokens."
+msgstr ""
+"Um nome de domínio que é um subconjunto dos respectivos FQDNs para todos "
+"os serviços web que os usuários devem ser capazes de assinar para usar os"
+" tokens WebAuthn."
+
+#: lib/tokens/webauthntoken.py:667
+msgid ""
+"The time in seconds the user has to confirm enrollment on his WebAuthn "
+"token. Note: You will want to increase the ChallengeValidityTime along "
+"with this. Default: 60"
+msgstr ""
+"O tempo em segundos que o usuário tem que confirmar a inscrição em seu "
+"token WebAuthn. Nota: Você vai querer aumentar o ChallengeValidityTime "
+"junto com isto. Padrão: 60"
+
+#: lib/tokens/webauthntoken.py:674
+msgid ""
+"Whether to limit roll out of WebAuthn tokens to either only platform "
+"authenticators, or only cross-platform authenticators. Default: either"
+msgstr ""
+"Seja para limitar o lançamento de tokens WebAuthn a apenas autenticadores"
+" de plataforma, ou apenas autenticadores de plataforma cruzada. Padrão: "
+"ou"
+
+#: lib/tokens/webauthntoken.py:685
+msgid ""
+"A list of WebAuthn authenticators acceptable for enrollment, given as a "
+"space-separated list of AAGUIDs. Per default all authenticators are "
+"acceptable."
+msgstr ""
+"Uma lista de autenticadores WebAuthn aceitáveis para matrícula, dada como"
+" uma lista de AAGUIDs separada por espaço. Por padrão, todos os "
+"autenticadores são aceitáveis."
+
+#: lib/tokens/webauthntoken.py:691
+msgid ""
+"Whether the user's identity should be verified when rolling out a new "
+"WebAuthn token. Default: preferred (verify the user if supported by the "
+"token)"
+msgstr ""
+"Se a identidade do usuário deve ser verificada ao lançar um novo token "
+"WebAuthn. Padrão: preferido (verificar o usuário se for suportado pelo "
+"token)"
+
+#: lib/tokens/webauthntoken.py:705
+msgid ""
+"Which algorithm are available to use for creating public key credentials "
+"for WebAuthn tokens. (Default: [{0!s}], Order: [{1!s}])"
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:712
+msgid ""
+"Whether to request attestation data when enrolling a new WebAuthn token. "
+"Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
+"Default: direct (ask for non-anonymized attestation data)"
+msgstr ""
+"Se deve solicitar dados de atestado ao matricular um novo token WebAuthn."
+" Nota: para o u2f_req trabalhar com a WebAuthn, isto não pode ser "
+"definido como nenhum. Padrão: direto (solicitar dados de atestado não "
+"anonimizados)"
+
+#: lib/tokens/webauthntoken.py:724
+msgid ""
+"Whether and how strictly to check authenticator attestation data. Note: "
+"If the attestation form is none, the attestation level needs to also be "
+"none. Default: untrusted (attestation is required, but can be unknown or "
+"self-signed)"
+msgstr ""
+"Se e como verificar rigorosamente os dados do atestado do autenticador. "
+"Nota: Se o formulário de atestado não for nenhum, o nível de atestado "
+"também não precisa ser nenhum. Padrão: não confiável (o certificado é "
+"necessário, mas pode ser desconhecido ou autoassinado)"
+
+#: lib/tokens/webauthntoken.py:736
+msgid "Only the specified WebAuthn-tokens are allowed to be registered."
+msgstr "Somente os WebAuthn-tokens especificados podem ser registrados."
+
+#: lib/tokens/webauthntoken.py:741
+msgid "The user may only have this number of WebAuthn tokens assigned."
+msgstr "O usuário só pode ter atribuído este número de tokens WebAuthn."
+
+#: lib/tokens/webauthntoken.py:746
+msgid "The user may only have this number of active WebAuthn tokens assigned."
+msgstr "O usuário só pode ter atribuído este número de tokens WebAuthn ativos."
+
+#: lib/tokens/webauthntoken.py:751
+msgid ""
+"Use an alternate challenge text for telling the user to confirm with his "
+"WebAuthn device."
+msgstr ""
+"Use um texto alternativo de desafio para dizer ao usuário para confirmar "
+"com seu dispositivo WebAuthn."
+
+#: lib/tokens/yubicotoken.py:94
+msgid "Yubikey Cloud mode: Forward authentication request to YubiCloud."
+msgstr "Modo Yubikey Cloud: Encaminhar o pedido de autenticação para YubiCloud."
+
+#: lib/tokens/yubicotoken.py:103
+msgid "The user may only have this maximum number of Yubico tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens Yubico."
+
+#: lib/tokens/yubicotoken.py:108
+msgid ""
+"The user may only have this maximum number of active Yubico tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de tokens Yubico "
+"ativos."
+
+#: lib/tokens/yubikeytoken.py:152
+msgid "Yubikey AES mode: One Time Passwords with Yubikey."
+msgstr "Modo Yubikey AES: Senhas de uso único com Yubikey."
+
+#: lib/tokens/yubikeytoken.py:161
+msgid "The user may only have this maximum number of Yubikey tokens assigned."
+msgstr "O usuário só pode ter atribuído este número máximo de tokens Yubikey."
+
+#: lib/tokens/yubikeytoken.py:166
+msgid ""
+"The user may only have this maximum number of active Yubikey tokens "
+"assigned."
+msgstr ""
+"O usuário só pode ter atribuído este número máximo de tokens Yubikey "
+"ativos."
+
+#: lib/tokens/yubikeytoken.py:172
+msgid ""
+"The Yubikey access code can be read by an enrollment client to initialize"
+" Yubikeys."
+msgstr "O código de acesso Yubikey utilizado para inicializar os Yubikeys."
+
+#: lib/utils/compare.py:194
+msgid "true if the value of the left attribute contains the right value"
+msgstr "verdadeiro se o valor do atributo esquerdo contiver o valor direito"
+
+#: lib/utils/compare.py:195
+msgid "false if the value of the left attribute contains the right value"
+msgstr "falso se o valor do atributo esquerdo contiver o valor direito"
+
+#: lib/utils/compare.py:197
+msgid "true if the value of the left attribute equals the right value"
+msgstr "verdadeiro se o valor do atributo esquerdo for igual ao valor direito"
+
+#: lib/utils/compare.py:198
+msgid "false if the value of the left attribute equals the right value"
+msgstr "falso se o valor do atributo esquerdo for igual ao valor direito"
+
+#: lib/utils/compare.py:200
+msgid ""
+"true if the value of the left attribute completely matches the given "
+"regular expression pattern on the right"
+msgstr ""
+"verdadeiro se o valor do atributo esquerdo corresponder completamente ao "
+"padrão de expressão regular do atributo direito"
+
+#: lib/utils/compare.py:201
+msgid ""
+"false if the value of the left attribute completely matches the given "
+"regular expression pattern on the right"
+msgstr ""
+"falso se o valor do atributo esquerdo corresponder completamente ao "
+"padrão de expressão regular do atributo direito"
+
+#: lib/utils/compare.py:203
+msgid ""
+"true if the value of the left attribute is contained in the comma-"
+"separated values on the right"
+msgstr ""
+"verdadeiro se o valor do atributo esquerdo estiver contido nos valores "
+"separados por vírgula do lado direito"
+
+#: lib/utils/compare.py:204
+msgid ""
+"false if the value of the left attribute is contained in the comma-"
+"separated values on the right"
+msgstr ""
+"falso se o valor do atributo esquerdo estiver contido nos valores "
+"separados por vírgula do lado direito"
+
+#: lib/utils/compare.py:206
+msgid ""
+"true if the integer value of the left attribute is smaller than the right"
+" integer value"
+msgstr ""
+"verdadeiro se o valor inteiro do atributo esquerdo for menor do que o "
+"valor inteiro direito"
+
+#: lib/utils/compare.py:207
+msgid ""
+"true if the integer value of the left attribute is bigger than the right "
+"integer value"
+msgstr ""
+"verdadeiro se o valor inteiro do atributo esquerdo for maior do que o "
+"valor inteiro direito"
+
+#~ msgid ""
+#~ "Set label for a new enrolled "
+#~ "Google Authenticator. Possible tags are "
+#~ "&lt;u&gt; (user), &lt;r&gt; (realm), &lt;s&gt;"
+#~ " (serial)."
+#~ msgstr ""
+#~ "Defina etiqueta para um novo registro"
+#~ " do Google Autenticador. As etiquetas "
+#~ "possíveis são &lt;u&gt; (usuário), &lt;r&gt;"
+#~ " ( domínio), &lt;s&gt; (série)."
+
+#~ msgid "This is the issuer label for new enrolled Google Authenticators."
+#~ msgstr ""
+#~ "Esta é a etiqueta do emissor para"
+#~ " os novos inscritos no Google "
+#~ "Autenticador."
+
+#~ msgid "This is the URL to the token image for smartphone apps like FreeOTP."
+#~ msgstr ""
+#~ "Esta é a URL da imagem do "
+#~ "token para aplicativos de smartphones "
+#~ "como o FreeOTP."
+
+#~ msgid ""
+#~ "The project ID, that the client "
+#~ "should use. Get it from your "
+#~ "Firebase console."
+#~ msgstr ""
+#~ "A identificação do projeto, que o "
+#~ "cliente deve utilizar. Obtenha-a de seu"
+#~ " console Firebase."
+
+#~ msgid ""
+#~ "The project number, that the client "
+#~ "should use. Get it from your "
+#~ "Firebase console."
+#~ msgstr ""
+#~ "O número do projeto, que o cliente"
+#~ " deve utilizar. Obtenha-a de seu "
+#~ "console Firebase."
+
+#~ msgid ""
+#~ "The App ID, that the Android "
+#~ "client should use. Get it from "
+#~ "your Firebase console."
+#~ msgstr ""
+#~ "A identificação do aplicativo, que o "
+#~ "cliente Android deve usar. Obtenha-a de"
+#~ " seu console Firebase."
+
+#~ msgid ""
+#~ "The API Key, that the Android "
+#~ "client should use. Get it from "
+#~ "your Firebase console."
+#~ msgstr ""
+#~ "A chave API, que o cliente Android"
+#~ " deve usar. Obtenha-a de seu console"
+#~ " Firebase."
+
+#~ msgid ""
+#~ "The App ID, that the iOS client"
+#~ " should use. Get it from your "
+#~ "Firebase console."
+#~ msgstr ""
+#~ "O ID do aplicativo, que o cliente"
+#~ " iOS deve usar. Obtenha-a de seu "
+#~ "console Firebase."
+
+#~ msgid ""
+#~ "The API Key, that the iOS client"
+#~ " should use. Get it from your "
+#~ "Firebase console."
+#~ msgstr ""
+#~ "A chave API, que o cliente iOS "
+#~ "deve utilizar. Obtenha-a de seu console"
+#~ " Firebase."
+
+#~ msgid ""
+#~ "This is the URL to the token "
+#~ "image for the privacyIDEA Authenticator "
+#~ "and some other apps like FreeOTP "
+#~ "(supported file formats: PNG, JPG and"
+#~ " GIF)."
+#~ msgstr ""
+
+#~ msgid "More than one matching token were found."
+#~ msgstr ""
+
+#~ msgid "Action is triggered, if the user has this number of tokens assigned."
+#~ msgstr "A ação é acionada, se o usuário tiver esse número de tokens atribuídos."
+
+#~ msgid ""
+#~ "Use the polling feature of your "
+#~ "privacyIDEA Authenticator App to check "
+#~ "for a new Login request."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This condition checks whether or not "
+#~ "the number of tokens assigned to "
+#~ "the user meets a certain condition.Valid"
+#~ " conditions are '>2', '<=10', '=0', "
+#~ "'==3', '!=1', for example"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Specify a substring, that indicates, "
+#~ "that the message was delivered "
+#~ "successfully."
+#~ msgstr ""
+#~ "Especifique um substrato, que indica que"
+#~ " o SMS foi entregue com sucesso."
+
+#~ msgid ""
+#~ "Specify a substring, that indicates, "
+#~ "that the message failed to be "
+#~ "delivered."
+#~ msgstr "Especifique um substrato, que indica que o SMS não foi entregue."
+
+#~ msgid ""
+#~ "This provider expects a uid instead "
+#~ "of a phone number as message "
+#~ "destination."
+#~ msgstr ""

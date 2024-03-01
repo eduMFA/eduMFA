@@ -1,12 +1,12 @@
 .. _faq_time:
 
-Time is sensitive in privacyIDEA
+Time is sensitive in eduMFA
 --------------------------------
 
 .. index:: Time, Time server, NTP
 
 The time of your system is used at many different scenarios. It is crucial that your
-privacyIDEA system has a correct, well defined time.
+eduMFA system has a correct, well defined time.
 
 Tokens
 ~~~~~~
@@ -34,7 +34,7 @@ Set up NTP
 
 On a Linux system running `systemd` you can use the `timesyncd`.
 
-If your privacyIDEA system is running in a Windows domain, each domain controller also acts as a NTP server.
+If your eduMFA system is running in a Windows domain, each domain controller also acts as a NTP server.
 In the file `/etc/systemd/timesyncd.conf` you can configure your local NTP servers like::
 
     [Time]

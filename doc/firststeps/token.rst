@@ -41,7 +41,7 @@ that you need to install on your smartphone.
 **Congratulations!** You just enrolled your first token to a user.
 
 Now you are ready to attach applications to
-privacyIDEA in order to add two factor authentication to those applications.
+eduMFA in order to add two factor authentication to those applications.
 To attach applications read the chapter :ref:`application_plugins`.
 
 You may also go on reading the chapter :ref:`configuration` to get a deeper

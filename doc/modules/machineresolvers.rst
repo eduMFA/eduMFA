@@ -5,18 +5,18 @@ Machine Resolvers
 
 .. index:: Machine Resolvers
 
-.. automodule:: privacyidea.lib.machines
+.. automodule:: edumfa.lib.machines
 
 Base class
 ..........
 
 .. index:: Machine Resolvers
 
-.. autoclass:: privacyidea.lib.machines.base.BaseMachineResolver
+.. autoclass:: edumfa.lib.machines.base.BaseMachineResolver
    :members:
 
 Hosts Machine Resolver
 ......................
 
-.. autoclass:: privacyidea.lib.machines.hosts.HostsMachineResolver
+.. autoclass:: edumfa.lib.machines.hosts.HostsMachineResolver
    :members:

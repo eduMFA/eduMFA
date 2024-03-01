@@ -3,9 +3,9 @@
 Event endpoints
 ...............
 
-.. automodule:: privacyidea.api.event
+.. automodule:: edumfa.api.event
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: eventhandling_blueprint
 

@@ -5,33 +5,33 @@ import os
 import datetime
 import codecs
 from mock import mock
-from privacyidea.lib.policy import (set_policy, delete_policy, SCOPE, ACTION,
+from edumfa.lib.policy import (set_policy, delete_policy, SCOPE, ACTION,
                                     enable_policy,
                                     PolicyClass)
-from privacyidea.lib.token import (get_tokens, init_token, remove_token,
+from edumfa.lib.token import (get_tokens, init_token, remove_token,
                                    get_tokens_from_serial_or_user, enable_token,
                                    check_serial_pass, get_realms_of_token,
                                    assign_token, token_exist, add_tokeninfo)
-from privacyidea.lib.resolver import save_resolver
-from privacyidea.lib.realm import set_realm
-from privacyidea.lib.user import User
-from privacyidea.lib.event import set_event, delete_event, EventConfiguration
-from privacyidea.lib.caconnector import save_caconnector
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.realm import set_realm
+from edumfa.lib.user import User
+from edumfa.lib.event import set_event, delete_event, EventConfiguration
+from edumfa.lib.caconnector import save_caconnector
 from urllib.parse import urlencode, quote
-from privacyidea.lib.tokenclass import DATE_FORMAT
-from privacyidea.lib.tokenclass import ROLLOUTSTATE
-from privacyidea.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
-from privacyidea.lib.config import set_privacyidea_config, delete_privacyidea_config
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.tokenclass import ROLLOUTSTATE
+from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
+from edumfa.lib.config import set_edumfa_config, delete_edumfa_config
 from dateutil.tz import tzlocal
-from privacyidea.lib import _
+from edumfa.lib import _
 import os
 import unittest
 import mock
-from privacyidea.lib.caconnectors.baseca import AvailableCAConnectors
-from privacyidea.lib.caconnectors.msca import MSCAConnector
+from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
+from edumfa.lib.caconnectors.msca import MSCAConnector
 from .mscamock import CAServiceMock
-from privacyidea.lib.caconnectors.msca import ATTR as MS_ATTR
-from privacyidea.lib.token import init_token
+from edumfa.lib.caconnectors.msca import ATTR as MS_ATTR
+from edumfa.lib.token import init_token
 
 # Mock for certificate from MSCA
 MY_CA_NAME = "192.168.47.11"
@@ -431,7 +431,7 @@ class APIAttestationTestCase(MyApiTestCase):
                              result.get("error").get("message"))
 
         # If a valid attestation certificate can not be verified due to missing CA path, we will fail.
-        from privacyidea.lib.tokens.certificatetoken import ACTION, REQUIRE_ACTIONS
+        from edumfa.lib.tokens.certificatetoken import ACTION, REQUIRE_ACTIONS
         set_policy(name="pol_verify",
                    scope=SCOPE.ENROLL,
                    action="{0!s}={1!s}".format(ACTION.REQUIRE_ATTESTATION, REQUIRE_ACTIONS.REQUIRE_AND_VERIFY))
@@ -1446,7 +1446,7 @@ class APITokenTestCase(MyApiTestCase):
             value = result.get("value")['n_imported']
             self.assertTrue(value == 3, result)
         # Now check, if the tokens are in the realm
-        from privacyidea.lib.token import get_realms_of_token
+        from edumfa.lib.token import get_realms_of_token
         r = get_realms_of_token("token01")
         self.assertIn(self.realm1, r)
 
@@ -1769,7 +1769,7 @@ class APITokenTestCase(MyApiTestCase):
             self.assertEqual(len(result["value"]["tokens"]), 2)
 
         # Finally we try to enroll a certificate with an attestation certificate required:
-        from privacyidea.lib.tokens.certificatetoken import ACTION, REQUIRE_ACTIONS
+        from edumfa.lib.tokens.certificatetoken import ACTION, REQUIRE_ACTIONS
         set_policy(name="pol1",
                    scope=SCOPE.ENROLL,
                    action="{0!s}={1!s}".format(ACTION.REQUIRE_ATTESTATION, REQUIRE_ACTIONS.REQUIRE_AND_VERIFY))
@@ -1971,7 +1971,7 @@ class APITokenTestCase(MyApiTestCase):
                    action=ACTION.CHANGE_PIN_FIRST_USE)
 
         current_time = datetime.datetime.now(tzlocal())
-        with mock.patch('privacyidea.lib.tokenclass.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.tokenclass.datetime') as mock_dt:
             mock_dt.now.return_value = current_time
             with self.app.test_request_context('/token/init',
                                                method='POST',
@@ -1996,7 +1996,7 @@ class APITokenTestCase(MyApiTestCase):
         self.assertEqual(ti, None)
         # Now we set the PIN
         current_time = datetime.datetime.now(tzlocal())
-        with mock.patch('privacyidea.lib.tokenclass.datetime') as mock_dt:
+        with mock.patch('edumfa.lib.tokenclass.datetime') as mock_dt:
             mock_dt.now.return_value = current_time
             with self.app.test_request_context('/token/setpin/SP001',
                                                method='POST',
@@ -2134,7 +2134,7 @@ class APITokenTestCase(MyApiTestCase):
         # Now this user is authenticated as selfservice@realm1
 
         # first test with system configuration
-        set_privacyidea_config('totp.hashlib', 'sha512')
+        set_edumfa_config('totp.hashlib', 'sha512')
         with self.app.test_request_context('/token/init',
                                            method='POST',
                                            data={
@@ -2192,7 +2192,7 @@ class APITokenTestCase(MyApiTestCase):
         remove_token(serial)
 
         # Set OTP len using the system wide default
-        set_privacyidea_config("DefaultOtpLen", 8)
+        set_edumfa_config("DefaultOtpLen", 8)
         with self.app.test_request_context('/token/init',
                                            method='POST',
                                            data={
@@ -2238,7 +2238,7 @@ class APITokenTestCase(MyApiTestCase):
             self.assertEqual(token.token.otplen, 6)
 
         remove_token(serial)
-        delete_privacyidea_config("DefaultOtpLen")
+        delete_edumfa_config("DefaultOtpLen")
 
     def test_26_supply_key_size(self):
         with self.app.test_request_context('/token/init',
@@ -3032,7 +3032,7 @@ class API00TokenPerformance(MyApiTestCase):
             self.assertFalse(result["status"])
 
         # run POST unassign with a wildcard. This shall not unassign
-        from privacyidea.lib.token import assign_token, unassign_token
+        from edumfa.lib.token import assign_token, unassign_token
         assign_token("perf001", User("cornelius", self.realm1))
         with self.app.test_request_context('/token/unassign',
                                            method='POST',
@@ -3369,7 +3369,7 @@ class APIRolloutState(MyApiTestCase):
 
 class APIMSCACertTestCase(MyApiTestCase):
 
-    @unittest.skipUnless("privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
                          "Can not test MSCA. grpc module seems not available.")
     def test_00_setup(self):
         self.setUp_user_realms()
@@ -3379,7 +3379,7 @@ class APIMSCACertTestCase(MyApiTestCase):
         r = save_caconnector(CONF)
         self.assertEqual(r, 1)
 
-    @unittest.skipUnless("privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
                          "Can not test MSCA. grpc module seems not available.")
     def test_01_msca_certificate_pending_and_enrolled(self):
         with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
@@ -3425,7 +3425,7 @@ class APIMSCACertTestCase(MyApiTestCase):
                 # certificate is still pending
                 self.assertEqual(ROLLOUTSTATE.ENROLLED, token.get("rollout_state"))
 
-    @unittest.skipUnless("privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
                          "Can not test MSCA. grpc module seems not available.")
     def test_02_msca_certificate_pending_and_denied(self):
         with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:

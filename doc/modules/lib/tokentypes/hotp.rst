@@ -3,6 +3,6 @@
 HOTP Token
 ~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.hotptoken.HotpTokenClass
+.. autoclass:: edumfa.lib.tokens.hotptoken.HotpTokenClass
    :members:
    :undoc-members:

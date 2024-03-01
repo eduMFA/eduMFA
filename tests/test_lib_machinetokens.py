@@ -5,11 +5,11 @@ This test file tests the lib/machine.py for attaching and detaching tokens
 
 HOSTSFILE = "tests/testdata/hosts"
 from .base import MyTestCase
-from privacyidea.lib.machine import (attach_token, detach_token, add_option,
+from edumfa.lib.machine import (attach_token, detach_token, add_option,
                                      delete_option, list_machine_tokens,
                                      list_token_machines, get_auth_items)
-from privacyidea.lib.token import init_token, get_tokens
-from privacyidea.lib.machineresolver import save_resolver
+from edumfa.lib.token import init_token, get_tokens
+from edumfa.lib.machineresolver import save_resolver
 
 
 sshkey = "ssh-rsa " \

@@ -3,11 +3,11 @@
 So what's the thing with all the admins?
 ----------------------------------------
 
-.. index:: admin accounts, pi-manage
+.. index:: admin accounts, edumfa-manage
 
-privacyIDEA comes with its own admins, who are stored in a database table
+eduMFA comes with its own admins, who are stored in a database table
 ``Admin`` in its own database (:ref:`code_db`). You can use the tool
-``pi-manage`` to
+``edumfa-manage`` to
 manage those admins from the command line as the system's root user. (see
 :ref:`installation`)
 
@@ -19,17 +19,17 @@ Then you can define realms (see :ref:`realms`), that should be administrative
 realms. I.e. each user in this realm will have administrative rights in the
 WebUI.
 
-.. note:: You need to configure these realms within privacyIDEA. Only
+.. note:: You need to configure these realms within eduMFA. Only
    after these realms exist, you can raise their rights to an administrative
    role.
 
 .. note:: Use this carefully. Imagine you defined a resolver to a specific
    group in your Active Directory to be the pricacyIDEA admins. Then the Active
    Directory domain admins can
-   simply add users to be administrator in privacyIDEA.
+   simply add users to be administrator in eduMFA.
 
-You define the administrative realms in the config file ``pi.cfg``, which is
-usually located at ``/etc/privacyidea/pi.cfg``::
+You define the administrative realms in the config file ``edumfa.cfg``, which is
+usually located at ``/etc/eduMFA/edumfa.cfg``::
 
    SUPERUSER_REALM = ["adminrealm1", "super", "boss"]
 

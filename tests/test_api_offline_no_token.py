@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from .base import MyApiTestCase
-from privacyidea.lib.user import (User)
-from privacyidea.lib.token import init_token
-from privacyidea.lib.policy import SCOPE, ACTION, set_policy
-from privacyidea.lib.machine import attach_token
+from edumfa.lib.user import (User)
+from edumfa.lib.token import init_token
+from edumfa.lib.policy import SCOPE, ACTION, set_policy
+from edumfa.lib.machine import attach_token
 
 
 class OfflinePassNoTokenTestCase(MyApiTestCase):

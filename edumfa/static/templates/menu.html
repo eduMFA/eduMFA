@@ -1,0 +1,165 @@
+<div class="alert alert-warning" role="alert"
+    ng-show="backend_log_level === 10" translate>
+    eduMFA is running in DEBUG mode. You can change the debug level in
+    edumfa.cfg.
+</div>
+<div class="alert alert-danger" role="alert"
+    ng-show="backend_log_level < 10" translate>
+    eduMFA is running in DEBUG mode with PASSWORDS being written to the
+    log file. You can change the debug level in
+    edumfa.cfg. Afterwards be sure to remove the logfile!
+</div>
+<div class="navbar navbar-default">
+    <div class="container">
+        <a class="navbar-brand" ui-sref="token.list" ng-show="loggedInUser.role">
+            <img ng-src="{{ instanceUrl }}/static/css/{{ piLogo }}"
+                 class="pilogo" alt="eduMFA">
+        </a>
+        <a class="navbar-brand" ng-hide="loggedInUser.role">
+            <img ng-src="{{ instanceUrl }}/static/css/{{ piLogo }}"
+                 class="pilogo" alt="eduMFA">
+        </a>
+        <button type="button" class="navbar-toggle"
+                data-toggle="collapse" data-target=".myMainNavbar"
+                aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <div class="navbar-collapse collapse myMainNavbar">
+            <ul class="nav navbar-nav" ng-hide="token_wizard">
+                <li ui-sref-active="active"
+                    ng-show="loggedInUser.role == 'admin' && admin_dashboard">
+                    <a ui-sref="dashboard">
+                    <span class="glyphicon glyphicon-dashboard"
+                          aria-hidden="true"></span>
+                        <translate>Dashboard</translate>
+                    </a></li>
+
+                <li ng-class="{ 'active': $state.includes('token')}"
+                    ng-show="loggedInUser.role && checkMainMenu('tokens')">
+                    <a ui-sref="token.list">
+                    <span class="glyphicon glyphicon-phone"
+                          aria-hidden="true"></span>
+                        <translate>Tokens</translate>
+                    </a></li>
+
+                <li ng-class="{ 'active': $state.includes('user')}"
+                    ng-show="loggedInUser.role == 'admin' && checkMainMenu('users')">
+                    <a ui-sref="user.list">
+                    <span class="glyphicon glyphicon-user"
+                          aria-hidden="true"></span>
+                        <translate>Users</translate>
+                    </a></li>
+
+                <li ui-sref-active="active"
+                    ng-show="loggedInUser.role == 'user' && checkMainMenu('users')">
+                    <a ui-sref="user.password">
+                    <span class="glyphicon glyphicon-user"
+                          aria-hidden="true"></span>
+                        <translate>User</translate>
+                    </a></li>
+
+                <li ui-sref-active="active"
+                    ng-show="loggedInUser.role == 'admin' && checkMainMenu('machines')">
+                    <a ui-sref="machine.list">
+                    <span class="glyphicon glyphicon-tasks"
+                          aria-hidden="true"></span>
+                        <translate>Machines</translate>
+                    </a></li>
+                <li ng-show="loggedInUser.role == 'admin' && checkMainMenu('config')"
+                    ng-class="{ 'active': $state.includes('config')}">
+                    <a ui-sref="config.system">
+                        <span class="glyphicon glyphicon-cog"
+                              aria-hidden="true"></span>
+                        <translate>Config</translate>
+                    </a>
+                </li>
+                <li ui-sref-active="active"
+                    ng-show="loggedInUser.role && checkMainMenu('audit')">
+                    <a ui-sref="audit.log">
+                        <span class="glyphicon glyphicon-search"
+                              aria-hidden="true"></span>
+                        <translate>Audit</translate>
+                    </a>
+                </li>
+                <li ng-class="{ 'active': $state.includes('component')}"
+                    ng-show="loggedInUser.role == 'admin' && checkMainMenu('components')">
+                    <a ui-sref="component.clienttype">
+                        <span class="glyphicon glyphicon-calendar"
+                              aria-hidden="true"></span>
+                        <translate>Components</translate>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ng-show="show_node">
+                    <a>
+                        <b>{{ show_node }}</b>
+                    </a>
+                </li>
+                <li>
+                    <spinner name="spinner" show="false"></spinner>
+                </li>
+                <li ng-show="loggedInUser.role && showReload">
+                    <a ng-click="reload()" style="cursor: pointer">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                    <translate>Refresh</translate>
+                    </a>
+                </li>
+                <li ng-class="{active: $state.includes('register')}"
+                    ng-show="registrationAllowed">
+                    <a ui-sref="register" ng-hide="loggedInUser.username"
+                       translate>Register</a>
+                </li>
+                <li ng-class="{active: $state.includes('login')}">
+                    <a ui-sref="login" ng-hide="loggedInUser.username"
+                       translate>Login</a>
+                </li>
+                <li>
+                    <div class="btn-group" ng-show="loggedInUser.username">
+                        <button type="button" class="btn btn-warning">
+                            {{ loggedInUser.username }}
+                            @{{ loggedInUser.realm }}
+                            ({{ loggedInUser.role }})
+                        </button>
+                        <button type="button"
+                                class="btn btn-warning dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                           <!-- TODO: Insert links here
+                            <li><a ng-href="TBD"
+				                   target="documentation" translate>
+                                Online Documentation</a></li>
+                            <li ng-show="piExternalLinks !== 'False'">
+                                <a href="TBD"
+				                   target="_external" translate>Community</a></li>
+                            <li ng-show="piExternalLinks !== 'False'">
+                                <a ng-href="TBD"
+				                   target="_external" translate>Support</a></li>
+                            <li class="divider"></li>
+                           -->
+                            <li ng-click="lock_screen()">
+                                <a translate>Lock screen</a>
+                            </li>
+                            <li ng-click="logout()">
+                                <a href="#" translate>Logout</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div inform class="inform-fixed inform-shadow"></div>
+
+<div class="alert alert-warning" ng-show="logoutWarning" translate>
+    You will be logged out in {{ myCountdown }} second(s).
+</div>

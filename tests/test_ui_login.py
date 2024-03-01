@@ -6,11 +6,11 @@ This file tests the web UI Login
 implementation is contained webui/login.py
 """
 from .base import MyTestCase, MyApiTestCase
-from privacyidea.lib.policy import set_policy, SCOPE, ACTION, PolicyClass, delete_all_policies
-from privacyidea.lib.utils import to_unicode
+from edumfa.lib.policy import set_policy, SCOPE, ACTION, PolicyClass, delete_all_policies
+from edumfa.lib.utils import to_unicode
 import re
-from privacyidea.app import create_app
-from privacyidea.models import db, save_config_timestamp
+from edumfa.app import create_app
+from edumfa.models import db, save_config_timestamp
 
 
 class AlternativeWebUI(MyTestCase):
@@ -49,13 +49,13 @@ class LoginUITestCase(MyTestCase):
             self.assertTrue(b"/static/templates/menu.html" in res.data)
 
     def test_02_deactivated(self):
-        self.app.config['PI_UI_DEACTIVATED'] = True
+        self.app.config['EDUMFA_UI_DEACTIVATED'] = True
         with self.app.test_request_context('/', method='GET'):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual(res.mimetype, 'text/html', res)
-            self.assertTrue(b"The privacyIDEA WebUI is deactivated." in res.data)
-        self.app.config['PI_UI_DEACTIVATED'] = False
+            self.assertTrue(b"The eduMFA WebUI is deactivated." in res.data)
+        self.app.config['EDUMFA_UI_DEACTIVATED'] = False
 
     def test_03_realm_dropdown(self):
         set_policy("realmdrop", scope=SCOPE.WEBUI,
@@ -67,7 +67,7 @@ class LoginUITestCase(MyTestCase):
                                            to_unicode(res.data)), res)
 
     def test_04_custom_menu_baseline(self):
-        # We provide a non-existing file, so we can not read "privacyIDEA" in the footer.
+        # We provide a non-existing file, so we can not read "eduMFA" in the footer.
         set_policy("custom1", scope=SCOPE.WEBUI,
                    action="{0!s}=mytemplates/nonexist_base.html".format(ACTION.CUSTOM_BASELINE))
         set_policy("custom2", scope=SCOPE.WEBUI,
@@ -112,12 +112,12 @@ class LoginUITestCase(MyTestCase):
 
     def test_07_privacy_statement_link(self):
         set_policy("gdpr_link", scope=SCOPE.WEBUI,
-                   action="{0!s}=https://privacyidea.org/".format(ACTION.GDPR_LINK))
+                   action="{0!s}=https://edumfa.io/".format(ACTION.GDPR_LINK))
         with self.app.test_request_context('/',
                                            method='GET'):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
-            self.assertTrue(b"https://privacyidea.org/" in res.data)
+            self.assertTrue(b"https://edumfa.io/" in res.data)
 
 
 class LanguageTestCase(MyApiTestCase):

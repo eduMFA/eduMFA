@@ -5,10 +5,10 @@ PinHandler
 
 .. index:: PinHandler
 
-.. automodule:: privacyidea.lib.pinhandling.base
+.. automodule:: edumfa.lib.pinhandling.base
 
 Base class
 ..........
 
-.. autoclass:: privacyidea.lib.pinhandling.base.PinHandler
+.. autoclass:: edumfa.lib.pinhandling.base.PinHandler
    :members:

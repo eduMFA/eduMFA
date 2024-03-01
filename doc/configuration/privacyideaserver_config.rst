@@ -1,12 +1,12 @@
-.. _privacyideaserver_config:
+.. _eduMFAserver_config:
 
-privacyIDEA server configuration
+eduMFA server configuration
 --------------------------------
 
-.. index:: privacyIDEA server
+.. index:: eduMFA server
 
-At *config->system->privacyIDEA servers* the administrator
-can configure a remote privacyIDEA servers.
+At *config->system->eduMFA servers* the administrator
+can configure a remote eduMFA servers.
 These can be used in the :ref:`remote_token`
 or in the :ref:`federationhandler` to forward the authentication request to.
 

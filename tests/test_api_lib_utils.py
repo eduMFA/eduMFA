@@ -4,20 +4,20 @@ This tests the file api.lib.utils
 """
 from .base import MyApiTestCase
 
-from privacyidea.api.lib.utils import (getParam,
+from edumfa.api.lib.utils import (getParam,
                                        check_policy_name,
                                        verify_auth_token, is_fqdn, attestation_certificate_allowed,
                                        get_priority_from_param)
-from privacyidea.lib.policy import ACTION, SCOPE, set_policy, delete_policy
-from privacyidea.lib.user import User
-from privacyidea.lib.error import ParameterError
+from edumfa.lib.policy import ACTION, SCOPE, set_policy, delete_policy
+from edumfa.lib.user import User
+from edumfa.lib.error import ParameterError
 import jwt
 import mock
 import datetime
 import warnings
 from urllib.parse import quote
-from privacyidea.lib.error import AuthError
-from privacyidea.lib.token import init_token, remove_token
+from edumfa.lib.error import AuthError
+from edumfa.lib.token import init_token, remove_token
 
 
 class UtilsTestCase(MyApiTestCase):
@@ -48,11 +48,11 @@ class UtilsTestCase(MyApiTestCase):
 
         # some disallowed patterns:
         self.assertRaises(ParameterError, check_policy_name, "Check")
-        self.assertRaises(ParameterError, check_policy_name, "pi-update-policy-something")
+        self.assertRaises(ParameterError, check_policy_name, "edumfa-update-policy-something")
         # Some patterns that work
         check_policy_name("check this out.")
-        check_policy_name("my own pi-update-policy-something")
-        check_policy_name("pi-update-policysomething")
+        check_policy_name("my own edumfa-update-policy-something")
+        check_policy_name("edumfa-update-policysomething")
 
     def test_03_verify_auth_token(self):
         # check broken JWT
@@ -122,7 +122,7 @@ class UtilsTestCase(MyApiTestCase):
             self.assertEqual(r.get("resolver"), "resolverX",)
             self.assertEqual(r.get("role"), "user")
             # ...but there is an unsupported configuration
-            mock_log.assert_called_once_with("Unsupported JWT algorithm in PI_TRUSTED_JWT.")
+            mock_log.assert_called_once_with("Unsupported JWT algorithm in EDUMFA_TRUSTED_JWT.")
 
         # The signature has expired
         expired_token = jwt.encode(payload={"role": "admin",
@@ -283,7 +283,7 @@ class UtilsTestCase(MyApiTestCase):
                                            method='POST',
                                            data={'username': 'pwpercent',
                                                  'password': 'pw%45#test'},
-                                           headers={'User-Agent': 'privacyIDEA-LDAP-Proxy'}):
+                                           headers={'User-Agent': 'eduMFA-LDAP-Proxy'}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
@@ -292,7 +292,7 @@ class UtilsTestCase(MyApiTestCase):
                                            method='POST',
                                            data={'username': 'pwpercent',
                                                  'password': 'pw%45#test'},
-                                           headers={'User-Agent': 'privacyIDEA-LDAP-Proxy/1.0'}):
+                                           headers={'User-Agent': 'eduMFA-LDAP-Proxy/1.0'}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
@@ -310,7 +310,7 @@ class UtilsTestCase(MyApiTestCase):
                                            method='POST',
                                            data={'username': 'pwpercent',
                                                  'password': 'pw%45#test'},
-                                           headers={'User-Agent': 'privacyidea-cp/2.0'}):
+                                           headers={'User-Agent': 'eduMFA-cp/2.0'}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
@@ -361,7 +361,7 @@ class UtilsTestCase(MyApiTestCase):
                                            data={"user": "pwpercent",
                                                  "realm": self.realm1,
                                                  "pass": "pw%45#test"},
-                                           headers={'User-Agent': 'privacyidea-cp/3.0'}):
+                                           headers={'User-Agent': 'eduMFA-cp/3.0'}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200, res)
             result = res.json.get("result")

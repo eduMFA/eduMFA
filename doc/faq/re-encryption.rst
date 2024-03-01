@@ -6,7 +6,7 @@ Re-Encrypting data
 You might need to reencrypt your token data, i.e. the secret OTP keys of your tokens.
 It could be since you are changing your security module or you think your encryption key is compromised.
 
-privacyIDEA provides tools to reencrypt your token data.
+eduMFA provides tools to reencrypt your token data.
 
 Note, that currently we do not reencrypt configuration data like LDAP resolver passwords.
 
@@ -25,7 +25,7 @@ of the tokens and also the tokeninfos of the tokens.
 
 You need to handle this file with care!
 
-    privacyidea-token-janitor find --action export --yaml my-tokens.yaml
+    eduMFA-token-janitor find --action export --yaml my-tokens.yaml
 
 Check for error messages written to stderr!
 
@@ -33,11 +33,11 @@ Updating tokens
 ~~~~~~~~~~~~~~~
 
 You can then turn to the system with the new security module or encryption key.
-Note, that the new privacyIDEA system actually has to contain the tokens!
+Note, that the new eduMFA system actually has to contain the tokens!
 
 Use the update command to to store the secret OTP keys with the new encryption mechanism.
 
-    privacyidea-token-janitor updatetokens --yaml my-tokens.yaml
+    eduMFA-token-janitor updatetokens --yaml my-tokens.yaml
 
 Check for error messages written to stderr!
 
@@ -54,11 +54,11 @@ Thoughts about the configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We described how you can reencrypt the token data. Configuration data is not reencrypted.
-If you want to reencrypt the configuration data, you can use `pi-manage` to export and import the configuration.
+If you want to reencrypt the configuration data, you can use `edumfa-manage` to export and import the configuration.
 
 Export resolvers:
 
-    pi-manage config exporter -t resolver -f yaml
+    edumfa-manage config exporter -t resolver -f yaml
 
 This will export the resolver configuration with the decrypted passwords. You could then import the configuration on
 the new system to encrypt the passwords again. However, you could also set the password in the configuration of

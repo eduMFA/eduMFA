@@ -1,13 +1,13 @@
-.. _rest_privacyideaserver:
+.. _rest_eduMFAserver:
 
-privacyIDEA Server endpoints
+eduMFA Server endpoints
 ............................
 
-.. automodule:: privacyidea.api.privacyideaserver
+.. automodule:: edumfa.api.eduMFAserver
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
-   :blueprints: privacyideaserver_blueprint
+   :blueprints: eduMFAserver_blueprint
 
    :include-empty-docstring:
 

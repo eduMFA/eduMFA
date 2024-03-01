@@ -12,4 +12,4 @@ E.g. you can use ``alt-e`` to go to the *Enroll Token* Dialog and ``alt-r`` to
 actually enroll the token.
 
 For any further ideas about shortcuts/hotkeys please drop us a note at
-`GitHub <https://github.com/privacyidea/privacyidea>`_.
+`GitHub <https://github.com/eduMFA/eduMFA>`_.

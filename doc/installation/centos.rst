@@ -9,7 +9,7 @@ Step-by-Step installation on CentOS
 
 .. index:: CentOS, Red Hat, RHEL
 
-In this chapter we describe a way to install privacyIDEA on CentOS 7 based on the
+In this chapter we describe a way to install eduMFA on CentOS 7 based on the
 installation via :ref:`pip_install`. It follows the
 approach used in the enterprise packages (See `RPM Repository`_).
 
@@ -20,7 +20,7 @@ Setting up the required services
 
 In this guide we use Python 2.7 even though its end-of-life draws closer.
 CentOS 7 will support Python 2 until the end of its support frame.
-Basically the steps for using privacyIDEA with Python 3 are the same but several
+Basically the steps for using eduMFA with Python 3 are the same but several
 other packages need to be installed [#py3]_.
 
 First the necessary packages need to be installed::
@@ -33,7 +33,7 @@ Now enable and configure the services::
     $ systemctl enable --now mariadb
     $ mysql_secure_installation
 
-Setup the database for the privacyIDEA server::
+Setup the database for the eduMFA server::
 
     $ echo 'create database pi;' | mysql -u root -p
     $ echo 'create user "pi"@"localhost" identified by "<dbsecret>";' | mysql -u root -p
@@ -47,55 +47,55 @@ be installed for building these packages::
 
 Create the necessary directories::
 
-    $ mkdir /etc/privacyidea
-    $ mkdir /opt/privacyidea
-    $ mkdir /var/log/privacyidea
+    $ mkdir /etc/eduMFA
+    $ mkdir /opt/eduMFA
+    $ mkdir /var/log/eduMFA
 
-Add a dedicated user for the privacyIDEA server and change some ownerships::
+Add a dedicated user for the eduMFA server and change some ownerships::
 
-    $ useradd -r -M -d /opt/privacyidea privacyidea
-    $ chown privacyidea:privacyidea /opt/privacyidea /etc/privacyidea /var/log/privacyidea
+    $ useradd -r -M -d /opt/eduMFA eduMFA
+    $ chown eduMFA:eduMFA /opt/eduMFA /etc/eduMFA /var/log/eduMFA
 
-Install the privacyIDEA server
+Install the eduMFA server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Now switch to that user and install the virtual environment for the privacyIDEA
+Now switch to that user and install the virtual environment for the eduMFA
 server::
 
-    $ su - privacyidea
+    $ su - eduMFA
 
 Create the virtual environment::
 
-    $ virtualenv /opt/privacyidea
+    $ virtualenv /opt/eduMFA
 
 activate it::
 
-    $ . /opt/privacyidea/bin/activate
+    $ . /opt/eduMFA/bin/activate
 
 and install/update some prerequisites::
 
-    (privacyidea)$ pip install -U pip setuptools
+    (eduMFA)$ pip install -U pip setuptools
 
 If this should be a pinned installation (that is the environment we use to build and test),
 we need to install some pinned dependencies first. They should match the version of the targeted
-privacyIDEA. You can get the latest version tag from the `GitHub release page <https://github
-.com/privacyidea/privacyidea/releases>`_ or the `PyPI package history <https://pypi
-.org/project/privacyIDEA/#history>`_ (e.g. "3.3.1")::
+eduMFA. You can get the latest version tag from the `GitHub release page <https://github
+.com/eduMFA/eduMFA/releases>`_ or the `PyPI package history <https://pypi
+.org/project/eduMFA/#history>`_ (e.g. "3.3.1")::
 
-        (privacyidea)$ export PI_VERSION=3.3.1
-        (privacyidea)$ pip install -r https://raw.githubusercontent.com/privacyidea/privacyidea/v${PI_VERSION}/requirements.txt
+        (eduMFA)$ export PI_VERSION=3.3.1
+        (eduMFA)$ pip install -r https://raw.githubusercontent.com/eduMFA/eduMFA/v${PI_VERSION}/requirements.txt
 
-Then just install the targeted privacyIDEA version with::
+Then just install the targeted eduMFA version with::
 
-        (privacyidea)$ pip install privacyidea==${PI_VERSION}
+        (eduMFA)$ pip install eduMFA==${PI_VERSION}
 
 .. _centos_setup_pi:
 
-Setting up privacyIDEA
+Setting up eduMFA
 ^^^^^^^^^^^^^^^^^^^^^^
 
-In order to setup privacyIDEA a configuration file must be added in
-``/etc/privacyidea/pi.cfg``. It should look something like this::
+In order to setup eduMFA a configuration file must be added in
+``/etc/eduMFA/edumfa.cfg``. It should look something like this::
 
     import logging
     # The realm, where users are allowed to login as administrators
@@ -105,61 +105,61 @@ In order to setup privacyIDEA a configuration file must be added in
     # This is used to encrypt the auth_token
     #SECRET_KEY = 't0p s3cr3t'
     # This is used to encrypt the admin passwords
-    #PI_PEPPER = "Never know..."
+    #EDUMFA_PEPPER = "Never know..."
     # This is used to encrypt the token data and token passwords
-    PI_ENCFILE = '/etc/privacyidea/enckey'
+    EDUMFA_ENCFILE = '/etc/eduMFA/enckey'
     # This is used to sign the audit log
-    PI_AUDIT_KEY_PRIVATE = '/etc/privacyidea/private.pem'
-    PI_AUDIT_KEY_PUBLIC = '/etc/privacyidea/public.pem'
-    PI_AUDIT_SQL_TRUNCATE = True
+    EDUMFA_AUDIT_KEY_PRIVATE = '/etc/eduMFA/private.pem'
+    EDUMFA_AUDIT_KEY_PUBLIC = '/etc/eduMFA/public.pem'
+    EDUMFA_AUDIT_SQL_TRUNCATE = True
     # The Class for managing the SQL connection pool
     PI_ENGINE_REGISTRY_CLASS = "shared"
-    PI_AUDIT_POOL_SIZE = 20
-    PI_LOGFILE = '/var/log/privacyidea/privacyidea.log'
-    PI_LOGLEVEL = logging.INFO
+    EDUMFA_AUDIT_POOL_SIZE = 20
+    EDUMFA_LOGFILE = '/var/log/eduMFA/eduMFA.log'
+    EDUMFA_LOGLEVEL = logging.INFO
 
 Make sure the configuration file is not world readable:
 
 .. code-block:: bash
 
-    (privacyidea)$ chmod 640 /etc/privacyidea/pi.cfg
+    (eduMFA)$ chmod 640 /etc/eduMFA/edumfa.cfg
 
 More information on the configuration parameters can be found in :ref:`cfgfile`.
 
-In order to secure the installation a new ``PI_PEPPER`` and ``SECRET_KEY`` must be generated:
+In order to secure the installation a new ``EDUMFA_PEPPER`` and ``SECRET_KEY`` must be generated:
 
 .. code-block:: bash
 
-    (privacyidea)$ PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
-    (privacyidea)$ echo "PI_PEPPER = '$PEPPER'" >> /etc/privacyidea/pi.cfg
-    (privacyidea)$ SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
-    (privacyidea)$ echo "SECRET_KEY = '$SECRET'" >> /etc/privacyidea/pi.cfg
+    (eduMFA)$ PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+    (eduMFA)$ echo "EDUMFA_PEPPER = '$PEPPER'" >> /etc/eduMFA/edumfa.cfg
+    (eduMFA)$ SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+    (eduMFA)$ echo "SECRET_KEY = '$SECRET'" >> /etc/eduMFA/edumfa.cfg
 
-From now on the ``pi-manage``-tool can be used to configure and manage the privacyIDEA server:
-
-.. code-block:: bash
-
-    (privacyidea)$ pi-manage create_enckey  # encryption key for the database
-    (privacyidea)$ pi-manage create_audit_keys  # key for verification of audit log entries
-    (privacyidea)$ pi-manage create_tables  # create the database structure
-    (privacyidea)$ pi-manage db stamp head -d /opt/privacyidea/lib/privacyidea/migrations/  # stamp the db
-
-An administrative account is needed to configure and maintain privacyIDEA:
+From now on the ``edumfa-manage``-tool can be used to configure and manage the eduMFA server:
 
 .. code-block:: bash
 
-    (privacyidea)$ pi-manage admin add <admin-user>
+    (eduMFA)$ edumfa-manage create_enckey  # encryption key for the database
+    (eduMFA)$ edumfa-manage create_audit_keys  # key for verification of audit log entries
+    (eduMFA)$ edumfa-manage create_tables  # create the database structure
+    (eduMFA)$ edumfa-manage db stamp head -d /opt/eduMFA/lib/eduMFA/migrations/  # stamp the db
+
+An administrative account is needed to configure and maintain eduMFA:
+
+.. code-block:: bash
+
+    (eduMFA)$ edumfa-manage admin add <admin-user>
 
 Setting up the Apache webserver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Now We need to set up apache to forward requests to privacyIDEA, so the next
+Now We need to set up apache to forward requests to eduMFA, so the next
 steps are executed as the ``root``-user again.
 
 First the SELinux settings must be adjusted in order to allow the
-``httpd``-process to access the database and write to the privacyIDEA logfile::
+``httpd``-process to access the database and write to the eduMFA logfile::
 
-    $ semanage fcontext -a -t httpd_sys_rw_content_t "/var/log/privacyidea(/.*)?"
-    $ restorecon -R /var/log/privacyidea
+    $ semanage fcontext -a -t httpd_sys_rw_content_t "/var/log/eduMFA(/.*)?"
+    $ restorecon -R /var/log/eduMFA
 
 and::
 
@@ -181,21 +181,21 @@ For testing purposes we use a self-signed certificate which should already have
 been created. In production environments this should be replaced by a certificate
 from a trusted authority.
 
-To correctly load the apache config file for privacyIDEA we need to disable some
+To correctly load the apache config file for eduMFA we need to disable some
 configuration first::
 
     $ cd /etc/httpd/conf.d
     $ mv ssl.conf ssl.conf.inactive
     $ mv welcome.conf welcome.conf.inactive
-    $ curl -o privacyidea.conf https://raw.githubusercontent.com/NetKnights-GmbH/centos7/master/SOURCES/privacyidea.conf
+    $ curl -o eduMFA.conf https://raw.githubusercontent.com/NetKnights-GmbH/centos7/master/SOURCES/eduMFA.conf
 
 In order to avoid recreation of the configuration files during update You can
 create empty dummy files for ``ssl.conf`` and ``welcome.conf``.
 
-And we need a corresponding ``wsgi``-script file in ``/etc/privacyidea/``::
+And we need a corresponding ``wsgi``-script file in ``/etc/eduMFA/``::
 
-    $ cd /etc/privacyidea
-    $ curl -O https://raw.githubusercontent.com/NetKnights-GmbH/centos7/master/SOURCES/privacyideaapp.wsgi
+    $ cd /etc/eduMFA
+    $ curl -O https://raw.githubusercontent.com/NetKnights-GmbH/centos7/master/SOURCES/eduMFAapp.wsgi
 
 If `firewalld` is running (:code:`$ firewall-cmd --state`) You need to open the https
 port to allow connections::
@@ -205,7 +205,7 @@ port to allow connections::
 
 After a restart of the apache webserver (:code:`$ systemctl restart httpd`)
 everything should be up and running.
-You can log in with Your admin user at ``https://<privacyidea server>`` and start
+You can log in with Your admin user at ``https://<eduMFA server>`` and start
 enrolling tokens.
 
 .. _rpm_installation:
@@ -217,11 +217,11 @@ RPM Repository
 
 For customers with a valid service level agreement [#SLA]_ with NetKnights
 there is an RPM repository,
-that can be used to easily install and update privacyIDEA on CentOS 7 / RHEL 7.
+that can be used to easily install and update eduMFA on CentOS 7 / RHEL 7.
 For more information see [#RPMInstallation]_.
 
 .. rubric:: Footnotes
 
 .. [#py3] https://stackoverflow.com/questions/42004986/how-to-install-mod-wgsi-for-apache-2-4-with-python3-5-on-centos-7
 .. [#SLA] https://netknights.it/en/leistungen/service-level-agreements/
-.. [#RPMInstallation] https://netknights.it/en/additional-service-privacyidea-support-customers-centos-7-repository/
+.. [#RPMInstallation] https://netknights.it/en/additional-service-eduMFA-support-customers-centos-7-repository/

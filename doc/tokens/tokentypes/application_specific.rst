@@ -13,7 +13,7 @@ The user can set the static password and in addition a `service_id` needs to be 
 This `service_id` ensures, that the token is only used for this service (like "mailserver", "owncloud", "SAP").
 
 The `service_id` is a parameter that is passed in the `/validate/check` request. The corresponding plugin can
-send the parameter itself. The privacyIDEA administrator can also define an event handler
+send the parameter itself. The eduMFA administrator can also define an event handler
 (:ref:`requestmanglerhandler`), to set the `service_id` e.g. based on the IP address or based on a realm.
 
 If the passed service_id matches the one of the token, the token can be used for authentication.

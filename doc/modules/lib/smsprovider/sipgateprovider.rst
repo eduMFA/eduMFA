@@ -3,6 +3,6 @@
 Sipgate SMS Provider
 ~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.smsprovider.SipgateSMSProvider.SipgateSMSProvider
+.. autoclass:: edumfa.lib.smsprovider.SipgateSMSProvider.SipgateSMSProvider
    :members:
    :undoc-members:

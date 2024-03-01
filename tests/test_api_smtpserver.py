@@ -29,7 +29,7 @@ class SMTPServerTestCase(MyApiTestCase):
                                                  "password": "secret",
                                                  "port": "123",
                                                  "server": "1.2.3.4",
-                                                 "sender": "privacyidea@local",
+                                                 "sender": "mfa@local",
                                                  "description": "myServer"},
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
@@ -48,7 +48,7 @@ class SMTPServerTestCase(MyApiTestCase):
             self.assertEqual(len(server_list), 1)
             server1 = server_list.get("server1")
             self.assertEqual(server1.get("server"), "1.2.3.4")
-            self.assertEqual(server1.get("sender"), "privacyidea@local")
+            self.assertEqual(server1.get("sender"), "mfa@local")
             self.assertEqual(server1.get("username"), "cornelius")
             self.assertEqual(server1.get("password"), "secret")
 
@@ -80,7 +80,7 @@ class SMTPServerTestCase(MyApiTestCase):
                                                  "password": "secret",
                                                  "port": "123",
                                                  "server": "1.2.3.4",
-                                                 "sender": "privacyidea@local",
+                                                 "sender": "mfa@local",
                                                  "recipient":
                                                      "recp@example.com",
                                                  "description": "myServer"},

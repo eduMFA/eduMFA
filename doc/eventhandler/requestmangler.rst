@@ -7,7 +7,7 @@ RequestMangler Handler Module
 
 The RequestMangler is a special handler module, that can modify
 the request parameters of an HTTP request.
-This way privacyIDEA can change the data that is processed within the request.
+This way eduMFA can change the data that is processed within the request.
 
 Usually this handler is used in the **pre** location. However there might be occasions
 when you want to modify parameters only *before* passing them to the next **post** handler.
@@ -88,6 +88,6 @@ Code
 ~~~~
 
 
-.. automodule:: privacyidea.lib.eventhandler.requestmangler
+.. automodule:: eduMFA.lib.eventhandler.requestmangler
    :members:
    :undoc-members:

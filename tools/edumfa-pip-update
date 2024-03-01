@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import pipes
+from subprocess import call, check_output
+import getopt
+import sys
+import os
+
+# We follow the hint at https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program to invoke pip.
+PIP_EXECUTABLE = [sys.executable, '-m', 'pip']
+
+
+def usage():
+    print("""
+edumfa-pip-update
+
+    -f, --force      force the update
+    -s, --skipstamp  skip the stamping of the database. Use this, if you know
+                     your DB has the correct version.
+    -n, --noschema   do not run the schema update.
+    -h, --help       show this help
+    """)
+
+
+def update(environment):
+    call(PIP_EXECUTABLE + ["install", "--upgrade", "edumfa"])
+    # Now we need to run the new requirements of edumfa
+    # dependencies like ldap3 or pyasn1. This call could downgrade packages
+    call(PIP_EXECUTABLE + ["install", "-r", "{0!s}/lib/edumfa/requirements.txt".format(environment)])
+
+
+def update_db_schema(environment, skip_stamp=False):
+    mig_path = environment + "/lib/edumfa/migrations"
+    command = "edumfa-schema-upgrade {0}".format(pipes.quote(mig_path))
+    if skip_stamp:
+        command += " --skipstamp"
+    # update the database schema
+    call(command, shell=True)
+
+
+def main():
+    force = False
+    skip_stamp = False
+    no_schema = False
+
+    environment = os.environ.get("VIRTUAL_ENV")
+
+    if not environment:
+        print("This script must be run inside a python virtual environment!")
+        sys.exit(2)
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "snhf", ["help", "force", "skipstamp", "noschema"])
+    except getopt.GetoptError as e:
+        print(str(e))
+        sys.exit(1)
+
+    for o, a in opts:
+        if o in ("-f", "--force"):
+            force = True
+        if o in ("-s", "--skipstamp"):
+            skip_stamp = True
+        if o in ("-n", "--noschema"):
+            no_schema = True
+        if o in ("-h", "--help"):
+            usage()
+            sys.exit(2)
+
+    if force:
+        update(environment)
+    else:
+        answer = False
+        res = 'n'
+        while not answer:
+            res = input("Do you really want to update your "
+                        "python environment and the DB schema? (y/N)")
+            answer = res.lower() in ['y', 'n', '']
+
+        if res.lower() == 'y':
+            update(environment)
+            if not no_schema:
+                update_db_schema(environment, skip_stamp)
+        else:
+            print("You canceled the update process.")
+
+
+if __name__ == "__main__":
+    main()

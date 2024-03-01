@@ -7,10 +7,10 @@ The api.lib.policy.py depends on lib.policy and on flask!
 import json
 import logging
 from testfixtures import log_capture
-from privacyidea.lib.tokens.webauthn import (webauthn_b64_decode, AUTHENTICATOR_ATTACHMENT_TYPE,
+from edumfa.lib.tokens.webauthn import (webauthn_b64_decode, AUTHENTICATOR_ATTACHMENT_TYPE,
                                              ATTESTATION_LEVEL, ATTESTATION_FORM,
                                              USER_VERIFICATION_LEVEL)
-from privacyidea.lib.tokens.webauthntoken import (WEBAUTHNACTION, DEFAULT_ALLOWED_TRANSPORTS,
+from edumfa.lib.tokens.webauthntoken import (WEBAUTHNACTION, DEFAULT_ALLOWED_TRANSPORTS,
                                                   WebAuthnTokenClass, DEFAULT_CHALLENGE_TEXT_AUTH,
                                                   PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
                                                   DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE,
@@ -19,14 +19,14 @@ from privacyidea.lib.tokens.webauthntoken import (WEBAUTHNACTION, DEFAULT_ALLOWE
                                                   DEFAULT_CHALLENGE_TEXT_ENROLL, DEFAULT_TIMEOUT,
                                                   DEFAULT_USER_VERIFICATION_REQUIREMENT,
                                                   PUBKEY_CRED_ALGORITHMS_ORDER)
-from privacyidea.lib.utils import hexlify_and_unicode
-from privacyidea.lib.config import set_privacyidea_config, SYSCONF
+from edumfa.lib.utils import hexlify_and_unicode
+from edumfa.lib.config import set_edumfa_config, SYSCONF
 from .base import (MyApiTestCase)
 
-from privacyidea.lib.policy import (set_policy, delete_policy, enable_policy,
+from edumfa.lib.policy import (set_policy, delete_policy, enable_policy,
                                     PolicyClass, SCOPE, ACTION, REMOTE_USER,
                                     AUTOASSIGNVALUE, AUTHORIZED)
-from privacyidea.api.lib.prepolicy import (check_token_upload,
+from edumfa.api.lib.prepolicy import (check_token_upload,
                                            check_base_action, check_token_init,
                                            check_max_token_user,
                                            check_anonymous_user,
@@ -52,9 +52,9 @@ from privacyidea.api.lib.prepolicy import (check_token_upload,
                                            hide_tokeninfo, init_ca_template, init_ca_connector,
                                            init_subject_components, increase_failcounter_on_challenge,
                                            require_description)
-from privacyidea.lib.realm import set_realm as create_realm
-from privacyidea.lib.realm import delete_realm
-from privacyidea.api.lib.postpolicy import (check_serial, check_tokentype,
+from edumfa.lib.realm import set_realm as create_realm
+from edumfa.lib.realm import delete_realm
+from edumfa.api.lib.postpolicy import (check_serial, check_tokentype,
                                             check_tokeninfo,
                                             no_detail_on_success,
                                             no_detail_on_fail, autoassign,
@@ -64,33 +64,33 @@ from privacyidea.api.lib.postpolicy import (check_serial, check_tokentype,
                                             add_user_detail_to_response,
                                             mangle_challenge_response, is_authorized,
                                             check_verify_enrollment)
-from privacyidea.lib.token import (init_token, get_tokens, remove_token,
+from edumfa.lib.token import (init_token, get_tokens, remove_token,
                                    set_realms, check_user_pass, unassign_token,
                                    enable_token)
-from privacyidea.lib.user import User
-from privacyidea.lib.tokens.papertoken import PAPERACTION
-from privacyidea.lib.tokens.tantoken import TANACTION
-from privacyidea.lib.tokens.smstoken import SMSACTION
-from privacyidea.lib.tokens.pushtoken import PUSH_ACTION
-from privacyidea.lib.tokens.indexedsecrettoken import PIIXACTION
-from privacyidea.lib.tokens.registrationtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
-from privacyidea.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
+from edumfa.lib.user import User
+from edumfa.lib.tokens.papertoken import PAPERACTION
+from edumfa.lib.tokens.tantoken import TANACTION
+from edumfa.lib.tokens.smstoken import SMSACTION
+from edumfa.lib.tokens.pushtoken import PUSH_ACTION
+from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
+from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
+from edumfa.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
 
 from flask import Request, g, current_app, jsonify
 from werkzeug.test import EnvironBuilder
-from privacyidea.lib.error import PolicyError, RegistrationError, ValidateError
-from privacyidea.lib.machineresolver import save_resolver
-from privacyidea.lib.machine import attach_token
-from privacyidea.lib.auth import ROLE
+from edumfa.lib.error import PolicyError, RegistrationError, ValidateError
+from edumfa.lib.machineresolver import save_resolver
+from edumfa.lib.machine import attach_token
+from edumfa.lib.auth import ROLE
 import jwt
 from passlib.hash import pbkdf2_sha512
 from datetime import datetime, timedelta
 from dateutil.tz import tzlocal
-from privacyidea.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.tokenclass import DATE_FORMAT
 from .test_lib_tokens_webauthn import (ALLOWED_TRANSPORTS, CRED_ID, ASSERTION_RESPONSE_TMPL,
                                        ASSERTION_CHALLENGE, RP_ID, RP_NAME, ORIGIN,
                                        REGISTRATION_RESPONSE_TMPL)
-from privacyidea.lib.utils import (create_img, generate_charlists_from_pin_policy,
+from edumfa.lib.utils import (create_img, generate_charlists_from_pin_policy,
                                    CHARLIST_CONTENTPOLICY, check_pin_contents)
 
 
@@ -728,7 +728,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                    action="{0!s}={1!s}".format(ACTION.OTPPINCONTENTS, contents_policy))
         set_policy(name="pinhandling",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}=privacyidea.lib.pinhandling.base.PinHandler".format(
+                   action="{0!s}=edumfa.lib.pinhandling.base.PinHandler".format(
                           ACTION.PINHANDLING))
         g.policy_object = PolicyClass()
 
@@ -1017,14 +1017,14 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(check_otp_pin(req))
 
         # check that no pin is checked during rollover or verify
-        logging.getLogger('privacyidea').setLevel(logging.DEBUG)
+        logging.getLogger('edumfa').setLevel(logging.DEBUG)
         req.all_data = {
             "user": "cornelius",
             "realm": "home",
             "rollover": True
         }
         self.assertTrue(check_otp_pin(req))
-        capture.check_present(("privacyidea.api.lib.prepolicy", "DEBUG",
+        capture.check_present(("edumfa.api.lib.prepolicy", "DEBUG",
                                "Disable PIN checking due to rollover (True) or verify (None)"))
         req.all_data = {
             "user": "cornelius",
@@ -1032,9 +1032,9 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "verify": 123456
         }
         self.assertTrue(check_otp_pin(req))
-        capture.check_present(("privacyidea.api.lib.prepolicy", "DEBUG",
+        capture.check_present(("edumfa.api.lib.prepolicy", "DEBUG",
                                "Disable PIN checking due to rollover (None) or verify (123456)"))
-        logging.getLogger('privacyidea').setLevel(logging.INFO)
+        logging.getLogger('edumfa').setLevel(logging.INFO)
 
         # finally delete policy
         delete_policy("pol1")
@@ -1108,14 +1108,14 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(check_otp_pin(req))
 
         # check that no pin is checked during rollover or verify
-        logging.getLogger('privacyidea').setLevel(logging.DEBUG)
+        logging.getLogger('edumfa').setLevel(logging.DEBUG)
         req.all_data = {
             "user": "cornelius",
             "realm": "home",
             "rollover": True
         }
         self.assertTrue(check_otp_pin(req))
-        capture.check_present(("privacyidea.api.lib.prepolicy", "DEBUG",
+        capture.check_present(("edumfa.api.lib.prepolicy", "DEBUG",
                                "Disable PIN checking due to rollover (True) or verify (None)"))
         req.all_data = {
             "user": "cornelius",
@@ -1123,9 +1123,9 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "verify": 123456
         }
         self.assertTrue(check_otp_pin(req))
-        capture.check_present(("privacyidea.api.lib.prepolicy", "DEBUG",
+        capture.check_present(("edumfa.api.lib.prepolicy", "DEBUG",
                                "Disable PIN checking due to rollover (None) or verify (123456)"))
-        logging.getLogger('privacyidea').setLevel(logging.INFO)
+        logging.getLogger('edumfa').setLevel(logging.INFO)
 
         # finally delete policy
         delete_policy("pol1")
@@ -1210,14 +1210,14 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(r)
 
         # Check success with external function
-        current_app.config["PI_INIT_CHECK_HOOK"] = \
-            "privacyidea.api.lib.prepolicy.mock_success"
+        current_app.config["EDUMFA_INIT_CHECK_HOOK"] = \
+            "edumfa.api.lib.prepolicy.mock_success"
         r = check_external(req)
         self.assertTrue(r)
 
         # Check exception with external function
-        current_app.config["PI_INIT_CHECK_HOOK"] = \
-            "privacyidea.api.lib.prepolicy.mock_fail"
+        current_app.config["EDUMFA_INIT_CHECK_HOOK"] = \
+            "edumfa.api.lib.prepolicy.mock_fail"
         self.assertRaises(Exception, check_external, req)
 
     def test_11_api_key_required(self):
@@ -1348,7 +1348,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # check that Splt@Sign works correctly
         create_realm(self.realm1)
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, True)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, True)
         env["REMOTE_USER"] = "super@realm1"
         req = Request(env)
         self.assertEqual(REMOTE_USER.ACTIVE, is_remote_user_allowed(req))
@@ -1360,10 +1360,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                    user="super")
         self.assertEqual(REMOTE_USER.FORCE, is_remote_user_allowed(req))
 
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, False)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, False)
         self.assertEqual(REMOTE_USER.DISABLE, is_remote_user_allowed(req))
 
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, True)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, True)
         delete_policy("ruser")
 
     def test_14_required_email(self):
@@ -1444,7 +1444,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req.User = User()
         req.all_data = {"name": "newpol",
                         "scope": SCOPE.WEBUI,
-                        "action": ["loginmode=privacyIDEA"],
+                        "action": ["loginmode=eduMFA"],
                         "active": True,
                         "client": [],
                         "realm": ["realmB"],
@@ -1772,7 +1772,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
     def test_21_u2f_verify_cert(self):
         # Usually the attestation certificate gets verified during enrollment unless
         # we set the policy scope=enrollment, action=no_verifcy
-        from privacyidea.lib.tokens.u2ftoken import U2FACTION
+        from edumfa.lib.tokens.u2ftoken import U2FACTION
         g.logged_in_user = {"username": "user1",
                             "realm": "",
                             "role": "user"}
@@ -1853,7 +1853,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("sms1")
 
     def test_22_push_firebase_config(self):
-        from privacyidea.lib.tokens.pushtoken import PUSH_ACTION
+        from edumfa.lib.tokens.pushtoken import PUSH_ACTION
         g.logged_in_user = {"username": "user1",
                             "realm": "",
                             "role": "user"}
@@ -1880,7 +1880,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(name="push_pol",
                    scope=SCOPE.ENROLL,
                    action="{0!s}=some-fb-config,"
-                          "{1!s}=https://privacyidea.com/enroll,"
+                          "{1!s}=https://edumfa.io/enroll,"
                           "{2!s}=10".format(PUSH_ACTION.FIREBASE_CONFIG,
                                             PUSH_ACTION.REGISTRATION_URL,
                                             PUSH_ACTION.TTL))
@@ -1889,7 +1889,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "type": "push"}
         pushtoken_add_config(req, "init")
         self.assertEqual(req.all_data.get(PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
-        self.assertEqual(req.all_data.get(PUSH_ACTION.REGISTRATION_URL), "https://privacyidea.com/enroll")
+        self.assertEqual(req.all_data.get(PUSH_ACTION.REGISTRATION_URL), "https://edumfa.io/enroll")
         self.assertEqual("10", req.all_data.get(PUSH_ACTION.TTL))
         self.assertEqual("1", req.all_data.get(PUSH_ACTION.SSL_VERIFY))
 
@@ -3103,7 +3103,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(req.all_data.get("type"), None)
 
     def test_35_require_piv_attestation(self):
-        from privacyidea.lib.tokens.certificatetoken import ACTION, REQUIRE_ACTIONS
+        from edumfa.lib.tokens.certificatetoken import ACTION, REQUIRE_ACTIONS
         builder = EnvironBuilder(method='POST',
                                  data={'user': "cornelius"},
                                  headers={})
@@ -3175,7 +3175,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req.all_data = {"user": "cornelius", "realm": "home", "type": "pw", "genkey": 1}
         init_token_length_contents(req)
         # Check, if the tokenlabel was added
-        from privacyidea.lib.tokens.passwordtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
+        from edumfa.lib.tokens.passwordtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
         self.assertEqual(req.all_data.get("pw.length"), DEFAULT_LENGTH)
         self.assertEqual(req.all_data.get("pw.contents"), DEFAULT_CONTENTS)
 
@@ -3438,7 +3438,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "PISP0000AB00",
@@ -3486,7 +3486,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 2 tokens",
                           "type": "undetermined"}}
@@ -3521,7 +3521,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "PISP0001",
@@ -3579,7 +3579,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "HOTP123456",
@@ -3624,7 +3624,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "HOTP123456",
@@ -3655,7 +3655,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": False},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "HOTP123456",
@@ -3676,7 +3676,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "HOTP123456",
@@ -3705,7 +3705,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "HOTP123456",
@@ -3818,7 +3818,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": False},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1}
         resp = jsonify(res)
 
@@ -3878,7 +3878,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": False},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1}
         resp = jsonify(res)
 
@@ -3942,7 +3942,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "detail": {"serial": serial},
                "id": 1}
         resp = jsonify(res)
@@ -3975,7 +3975,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
     def test_06a_offline_auth_postpend_pin(self):
         serial = "offline01"
         # Do prepend_pin == False
-        set_privacyidea_config(SYSCONF.PREPENDPIN, False)
+        set_edumfa_config(SYSCONF.PREPENDPIN, False)
         # The request with an OTP value and a PIN of a user, who has not
         # token assigned
         builder = EnvironBuilder(method='POST',
@@ -3994,7 +3994,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "detail": {"serial": serial},
                "id": 1}
         resp = jsonify(res)
@@ -4020,7 +4020,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = tokenobject.check_otp("462985")  # count = 201
         self.assertEqual(res, 201)
         # Revert
-        set_privacyidea_config(SYSCONF.PREPENDPIN, True)
+        set_edumfa_config(SYSCONF.PREPENDPIN, True)
 
     def test_07_sign_response(self):
         builder = EnvironBuilder(method='POST',
@@ -4037,26 +4037,26 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1}
         resp = jsonify(res)
-        from privacyidea.lib.crypto import Sign
+        from edumfa.lib.crypto import Sign
         sign_object = Sign(private_key=None,
                            public_key=open("tests/testdata/public.pem", 'rb').read())
 
-        # check that we don't sign if 'PI_NO_RESPONSE_SIGN' is set
-        current_app.config['PI_NO_RESPONSE_SIGN'] = True
+        # check that we don't sign if 'EDUMFA_NO_RESPONSE_SIGN' is set
+        current_app.config['EDUMFA_NO_RESPONSE_SIGN'] = True
         new_response = sign_response(req, resp)
         self.assertEqual(new_response, resp, new_response)
-        current_app.config['PI_NO_RESPONSE_SIGN'] = False
+        current_app.config['EDUMFA_NO_RESPONSE_SIGN'] = False
 
         # set a broken signing key path. The function should return without
         # changing the response
-        orig_key_path = current_app.config['PI_AUDIT_KEY_PRIVATE']
-        current_app.config['PI_AUDIT_KEY_PRIVATE'] = '/path/does/not/exist'
+        orig_key_path = current_app.config['EDUMFA_AUDIT_KEY_PRIVATE']
+        current_app.config['EDUMFA_AUDIT_KEY_PRIVATE'] = '/path/does/not/exist'
         new_response = sign_response(req, resp)
         self.assertEqual(new_response, resp, new_response)
-        current_app.config['PI_AUDIT_KEY_PRIVATE'] = orig_key_path
+        current_app.config['EDUMFA_AUDIT_KEY_PRIVATE'] = orig_key_path
 
         # signing of API responses is the default
         new_response = sign_response(req, resp)
@@ -4085,7 +4085,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
                "result": {"status": True,
                           "value": {"role": "user",
                                     "username": "cornelius"}},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "detail": {"serial": None},
                "id": 1}
         resp = jsonify(res)
@@ -4135,9 +4135,9 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(name="pol_qr1", scope=SCOPE.WEBUI, action=ACTION.SHOW_ANDROID_AUTHENTICATOR)
         set_policy(name="pol_qr2", scope=SCOPE.WEBUI, action=ACTION.SHOW_IOS_AUTHENTICATOR)
         set_policy(name="pol_qr3", scope=SCOPE.WEBUI,
-                   action="{0!s}=http://privacyidea.org".format(ACTION.SHOW_CUSTOM_AUTHENTICATOR))
+                   action="{0!s}=https://edumfa.io".format(ACTION.SHOW_CUSTOM_AUTHENTICATOR))
 
-        custom_url = create_img("http://privacyidea.org")
+        custom_url = create_img("https://edumfa.io")
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
@@ -4238,7 +4238,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
                "result": {"status": True,
                           "value": {"role": "user",
                                     "username": "cornelius"}},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1}
         resp = jsonify(res)
 
@@ -4292,7 +4292,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
                "result": {"status": True,
                           "value": {"role": "admin",
                                     "username": "cornelius"}},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1}
         resp = jsonify(res)
 
@@ -4403,7 +4403,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "changePIN1",
@@ -4430,7 +4430,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "changePIN2",
@@ -4499,7 +4499,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": False},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "enter the HOTP from your email, "
                                      "enter the HOTP from your email, "
@@ -4546,7 +4546,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"message": "matching 1 tokens",
                           "serial": "HOTP123456",
@@ -4598,12 +4598,12 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         self.setUp_user_realms()
         req.User = User("autoassignuser", self.realm1)
         # The response contains the token type HOTP, enrollment
-        from privacyidea.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
-        from privacyidea.lib.tokenclass import ROLLOUTSTATE
+        from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
+        from edumfa.lib.tokenclass import ROLLOUTSTATE
         res = {"jsonrpc": "2.0",
                "result": {"status": True,
                           "value": True},
-               "version": "privacyIDEA test",
+               "version": "eduMFA test",
                "id": 1,
                "detail": {"serial": serial}}
         resp = jsonify(res)

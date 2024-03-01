@@ -3,9 +3,9 @@
 CA Connector endpoints
 ......................
 
-.. automodule:: privacyidea.api.caconnector
+.. automodule:: edumfa.api.caconnector
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: caconnector_blueprint
 

@@ -1,0 +1,85 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#  This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
+# Previous changes by privacyIDEA project:
+#  May 08, 2014 Cornelius Kölbel
+#
+#  Copyright (C) 2010 - 2014 LSE Leading Security Experts GmbH
+#  License:  GPLv2
+#  contact:  http://www.linotp.org
+#            http://www.lsexperts.de
+#            linotp@lsexperts.de
+"""
+  Description:  This tool generates lines for a PasswdIdResolver user file
+
+  Dependencies: ./.
+
+"""
+
+import sys
+from getopt import getopt, GetoptError
+import getpass
+import crypt
+import random
+
+__version__ = '0.1'
+
+
+def usage():
+    print('''
+    Parameter:
+    -u username
+    -i uid (numerical)
+    -p password
+    -d description
+    ''')
+
+
+def main():
+    user = ""
+    password = ""
+    uid = ""
+    description = ""
+
+    try:
+        opts, args = getopt(sys.argv[1:], "u:i:p:hd:", ["help"])
+
+    except GetoptError:
+        print("There is an error in your parameter syntax:")
+        usage()
+        sys.exit(1)
+
+    for opt, arg in opts:
+        if opt in ('-u',):
+            user = arg
+        elif opt in ('-i',):
+            uid = arg
+        elif opt in ('-p',):
+            password = arg
+        elif opt in ('-d',):
+            description = arg
+        elif opt in ('-h', '--help'):
+            usage()
+            sys.exit(1)
+
+    if password == "":
+        password = getpass.getpass("Please enter a password: ")
+
+    # without salt, the strongest available hash function will be selected
+    # and a random salt is created
+    encryptedPW = crypt.crypt(password)
+
+    gid = uid
+    home = ""
+    shell = ""
+    print("%s:%s:%s:%s:%s:%s:%s" % (user,
+                                    encryptedPW,
+                                    uid,
+                                    gid,
+                                    description,
+                                    home,
+                                    shell))
+
+
+if __name__ == '__main__':
+    main()

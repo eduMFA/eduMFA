@@ -3,11 +3,11 @@
 WebAuthn Token
 ~~~~~~~~~~~~~~
 
-.. automodule:: privacyidea.lib.tokens.webauthntoken
+.. automodule:: edumfa.lib.tokens.webauthntoken
 
 Implementation
 ..............
 
-.. autoclass:: privacyidea.lib.tokens.webauthntoken.WebAuthnTokenClass
+.. autoclass:: edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass
     :members:
     :undoc-members:

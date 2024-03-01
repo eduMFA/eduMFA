@@ -4,7 +4,7 @@
 Authentication Modes and Client Modes
 =====================================
 
-privacyIDEA supports a variety of tokens that implement different
+eduMFA supports a variety of tokens that implement different
 authentication flows. We call these flows *authentication modes*. Currently,
 tokens may implement three authentication modes, namely ``authenticate``,
 ``challenge`` and ``outofband``.
@@ -34,15 +34,15 @@ Here are examples for the flows:
 * The HOTP token type implements the ``authenticate`` mode, which is a
   single-shot authentication flow. For each authentication request, the user
   uses their token to generate a new HOTP value and enters it along with their
-  OTP PIN. The plugin sends both values to privacyIDEA, which decides whether
+  OTP PIN. The plugin sends both values to eduMFA, which decides whether
   the authentication is valid or not.
 * The E-Mail and SMS token types implement the ``challenge`` mode. With such a
   token, the authentication flow consists of two steps: In a
-  first step, the plugin triggers a challenge. privacyIDEA sends the challenge
+  first step, the plugin triggers a challenge. eduMFA sends the challenge
   response --- a fresh OTP value --- to the user via E-Mail or SMS.
   In a second step, the user responds to the challenge by entering the
   respective OTP value in the plugin's login form. The plugin sends the
-  challenge response to privacyIDEA, which decides whether the authentication
+  challenge response to eduMFA, which decides whether the authentication
   is valid or not.
   The "client_mode" is set to ``interactive``. This indicates that
   the plugin should display an input field, so that the user can enter the response
@@ -54,11 +54,11 @@ Here are examples for the flows:
   can handle the cryptographic challenge accordingly.
 * The PUSH and TiQR token types implement the ``outofband`` mode.
   With a PUSH token, the authentication step also consists of two steps:
-  In a first step, the user triggers a challenge. privacyIDEA pushes the
+  In a first step, the user triggers a challenge. eduMFA pushes the
   challenge to the user's smartphone app. In a second step, the user approves
   the challenge on their phone, and the app responds to the challenge by
-  communicating with the privacyIDEA server on behalf of the user.
-  The plugin periodically queries privacyIDEA to check if
+  communicating with the eduMFA server on behalf of the user.
+  The plugin periodically queries eduMFA to check if
   the challenge has been answered correctly and the authentication is valid.
   In this case the "client_mode" is set to ``poll``, so that the plugin knows, that
   it needs to poll for the response to the challenge.
@@ -74,13 +74,13 @@ modes in more detail.
 .. uml::
   :width: 500
 
-  Service -> privacyIDEA: POST /validate/check
-  Service <-- privacyIDEA
+  Service -> eduMFA: POST /validate/check
+  Service <-- eduMFA
 
-The *Service* is an application that is protected with a second factor by privacyIDEA.
+The *Service* is an application that is protected with a second factor by eduMFA.
 
 * The user enters a OTP PIN along with an OTP value at the *Service*.
-* The plugin sends a request to the ``/validate/check`` endpoint of privacyIDEA:
+* The plugin sends a request to the ``/validate/check`` endpoint of eduMFA:
 
   .. code-block:: text
 
@@ -88,7 +88,7 @@ The *Service* is an application that is protected with a second factor by privac
 
     user=<user>&pass=<PIN+OTP>
 
- and privacyIDEA returns whether the authentication request has succeeded
+ and eduMFA returns whether the authentication request has succeeded
  or not.
 
 .. _authentication_mode_challenge:
@@ -101,22 +101,22 @@ The *Service* is an application that is protected with a second factor by privac
 
   alt with pin
 
-    Service -> privacyIDEA: POST /validate/check
-    Service <-- privacyIDEA: transaction_id
+    Service -> eduMFA: POST /validate/check
+    Service <-- eduMFA: transaction_id
 
   else without pin
 
-    Service -> privacyIDEA: POST /validate/triggerchallenge
-    Service <-- privacyIDEA: transaction_id
+    Service -> eduMFA: POST /validate/triggerchallenge
+    Service <-- eduMFA: transaction_id
 
   end
 
-  privacyIDEA -> "SMS Gateway": OTP
+  eduMFA -> "SMS Gateway": OTP
 
   ...User enters OTP from SMS...
 
-  Service -> privacyIDEA: POST /validate/check
-  Service <-- privacyIDEA
+  Service -> eduMFA: POST /validate/check
+  Service <-- eduMFA
 
 * The plugin triggers a challenge, for example via the
   ``/validate/triggerchallenge`` endpoint:
@@ -139,7 +139,7 @@ The *Service* is an application that is protected with a second factor by privac
   In both variants, the plugin receives a transaction ID which we call
   ``transaction_id`` and asks the user for the challenge response.
 * The user enters the challenge response, which we call ``OTP``.
-  The plugin forwards the response to privacyIDEA along with the
+  The plugin forwards the response to eduMFA along with the
   transaction ID:
 
   .. code-block:: text
@@ -148,7 +148,7 @@ The *Service* is an application that is protected with a second factor by privac
 
     user=<user>&transaction_id=<transaction_id>&pass=<OTP>
 
- and privacyIDEA returns whether the authentication request succeeded or not.
+ and eduMFA returns whether the authentication request succeeded or not.
 
 .. _authentication_mode_outofband:
 
@@ -160,37 +160,37 @@ The *Service* is an application that is protected with a second factor by privac
 
   alt with pin
 
-    Service -> privacyIDEA: POST /validate/check
-    Service <-- privacyIDEA: transaction_id
+    Service -> eduMFA: POST /validate/check
+    Service <-- eduMFA: transaction_id
 
   else without pin
 
-    Service -> privacyIDEA: POST /validate/triggerchallenge
-    Service <-- privacyIDEA: transaction_id
+    Service -> eduMFA: POST /validate/triggerchallenge
+    Service <-- eduMFA: transaction_id
 
   end
 
-  privacyIDEA -> Firebase: PUSH Notification
+  eduMFA -> Firebase: PUSH Notification
   Firebase -> Phone: PUSH Notification
 
   loop until confirmed
 
-    Service -> privacyIDEA: GET /validate/polltransaction
-    Service <-- privacyIDEA: false
+    Service -> eduMFA: GET /validate/polltransaction
+    Service <-- eduMFA: false
 
   end
 
   ...User confirms sign in on phone...
 
-  Phone -> privacyIDEA: POST /ttype/push
+  Phone -> eduMFA: POST /ttype/push
 
-  Service -> privacyIDEA: GET /validate/polltransaction
-  Service <-- privacyIDEA: true
+  Service -> eduMFA: GET /validate/polltransaction
+  Service <-- eduMFA: true
 
   |||
 
-  Service -> privacyIDEA: POST /validate/check
-  Service <-- privacyIDEA
+  Service -> eduMFA: POST /validate/check
+  Service <-- eduMFA
 
 * The plugin triggers a challenge, for example via the
   ``/validate/triggerchallenge`` endpoint:
@@ -223,7 +223,7 @@ The *Service* is an application that is protected with a second factor by privac
   If this endpoint returns ``false``, the challenge has not been answered yet.
 * The user approves the challenge on a separate device, e.g. their
   smartphone app. The app communicates with a tokentype-specific endpoint of
-  privacyIDEA, which marks the challenge as answered.
+  eduMFA, which marks the challenge as answered.
   The exact communication depends on the token type.
 * Once ``/validate/polltransaction`` returns ``true``, the plugin *must*
   finalize the authentication via the ``/validate/check`` endpoint:

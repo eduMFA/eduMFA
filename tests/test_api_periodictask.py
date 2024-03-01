@@ -8,7 +8,7 @@ from contextlib import contextmanager
 import mock
 from dateutil.parser import parse as parse_timestamp
 
-from privacyidea.lib.periodictask import TASK_MODULES
+from edumfa.lib.periodictask import TASK_MODULES
 from tests.base import MyApiTestCase
 
 
@@ -53,7 +53,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         with self.mock_task_module():
             task_dict1 = {
                 'name': 'some task',
-                'nodes': 'pinode1, pinode2',
+                'nodes': 'edumfanode1, edumfanode2',
                 'active': False,
                 'interval': '0 8 * * *',
                 'taskmodule': 'UnitTest',
@@ -98,7 +98,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
             # unknown taskmodule
             {
                 'name': 'some other task',
-                'nodes': 'pinode1, pinode2',
+                'nodes': 'edumfanode1, edumfanode2',
                 'active': False,
                 'interval': '0 8 * * *',
                 'taskmodule': 'Unknown',
@@ -107,7 +107,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
             # invalid interval
             {
                 'name': 'some other task',
-                'nodes': 'pinode1, pinode2',
+                'nodes': 'edumfanode1, edumfanode2',
                 'active': False,
                 'interval': 'every day',
                 'taskmodule': 'UnitTest',
@@ -116,7 +116,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
             # invalid options
             {
                 'name': 'some task',
-                'nodes': 'pinode1, pinode2',
+                'nodes': 'edumfanode1, edumfanode2',
                 'active': False,
                 'interval': '0 8 * * *',
                 'taskmodule': 'UnitTest',
@@ -136,7 +136,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         with self.mock_task_module():
             task_dict2 = {
                 'name': 'some other task',
-                'nodes': 'pinode1',
+                'nodes': 'edumfanode1',
                 'active': False,
                 'interval': '0 8 * * 0',
                 'taskmodule': 'UnitTest',
@@ -164,7 +164,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         self.assertEqual(result_dict['name'], 'some task')
         self.assertEqual(result_dict['active'], False)
         self.assertEqual(result_dict['interval'], '0 8 * * *')
-        self.assertEqual(result_dict['nodes'], ['pinode1', 'pinode2'])
+        self.assertEqual(result_dict['nodes'], ['edumfanode1', 'edumfanode2'])
         self.assertEqual(result_dict['last_runs'], {})
         last_update = parse_timestamp(result_dict['last_update'])
         self.assertEqual(result_dict['retry_if_failed'], False)

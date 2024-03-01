@@ -3,9 +3,9 @@
 Tokentype endpoints
 ~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: privacyidea.api.ttype
+.. automodule:: edumfa.api.ttype
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: ttype_blueprint
 

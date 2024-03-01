@@ -1,9 +1,9 @@
 ######################
-Welcome to privacyIDEA
+Welcome to eduMFA
 ######################
 
-privacyIDEA is a modular authentication system.
-Using privacyIDEA you can enhance your existing applications like
+eduMFA is a modular authentication system.
+Using eduMFA you can enhance your existing applications like
 :ref:`local login <pam_plugin>`,
 :ref:`VPN <freeradius>`,
 :ref:`remote access <freeradius>`,
@@ -16,7 +16,7 @@ Originally it was used for OTP authentication devices.
 But other "devices" like challenge response and SSH keys are also available.
 It runs on Linux and is completely Open Source, licensed under the AGPLv3.
 
-privacyIDEA can read users from many different sources like flat files,
+eduMFA can read users from many different sources like flat files,
 different LDAP services, SQL databases and SCIM services. (see :ref:`realms`)
 
 Authentication devices to provide two factor authentication can be
@@ -50,16 +50,14 @@ Table of Contents
    machines/index
    workflows_and_tools/index
    jobqueue/index
-   application_plugins/index
    modules/index
    faq/index
    glossary/index
 
 
 If you are missing any information or descriptions
-file an issue at `github <https://github.com/privacyidea/privacyidea/issues>`_ (which would be the preferred way),
-drop a note to info(@)privacyidea.org
-or go to the `Community Forum <https://community.privacyidea.org>`_.
+file an issue at `github <https://github.com/eduMFA/eduMFA/issues>`_ (which would be the preferred way),
+or drop a note to edufma(@)listserv.dfn.de.
 
 This will help us a lot to improve documentation to your needs.
 

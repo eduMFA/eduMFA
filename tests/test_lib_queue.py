@@ -7,12 +7,12 @@ lib/queue/*.py
 from huey import RedisHuey
 import mock
 
-from privacyidea.app import create_app
-from privacyidea.config import TestingConfig
-from privacyidea.lib.error import ServerError
-from privacyidea.lib.queue import job, JOB_COLLECTOR, JobCollector, get_job_queue, wrap_job, has_job_queue
-from privacyidea.lib.queues.huey_queue import HueyQueue
-from privacyidea.lib.queues.base import QueueError
+from edumfa.app import create_app
+from edumfa.config import TestingConfig
+from edumfa.lib.error import ServerError
+from edumfa.lib.queue import job, JOB_COLLECTOR, JobCollector, get_job_queue, wrap_job, has_job_queue
+from edumfa.lib.queues.huey_queue import HueyQueue
+from edumfa.lib.queues.base import QueueError
 from .base import OverrideConfigTestCase, MyTestCase
 
 
@@ -38,7 +38,7 @@ def my_send_mail(message):
 
 class NoQueueTestCase(OverrideConfigTestCase):
     class Config(TestingConfig):
-        PI_JOB_QUEUE_CLASS = ""
+        EDUMFA_JOB_QUEUE_CLASS = ""
 
     def test_01_no_job_queue(self):
         self.assertFalse(has_job_queue())
@@ -58,17 +58,17 @@ class NoQueueTestCase(OverrideConfigTestCase):
 class InvalidQueueTestCase(MyTestCase):
     def test_01_create_app_graciously(self):
         class Config(TestingConfig):
-            PI_JOB_QUEUE_CLASS = "obviously.invalid"
+            EDUMFA_JOB_QUEUE_CLASS = "obviously.invalid"
 
-        with mock.patch.dict("privacyidea.config.config", {"testing": Config}):
+        with mock.patch.dict("edumfa.config.config", {"testing": Config}):
             app = create_app("testing", "") # we do not throw an exception
 
 
 class HueyQueueTestCase(OverrideConfigTestCase):
     class Config(TestingConfig):
-        PI_JOB_QUEUE_CLASS = "privacyidea.lib.queues.huey_queue.HueyQueue"
-        PI_JOB_QUEUE_NAME = "myqueuename"
-        PI_JOB_QUEUE_IMMEDIATE = True  # avoid redis server for testing
+        EDUMFA_JOB_QUEUE_CLASS = "edumfa.lib.queues.huey_queue.HueyQueue"
+        EDUMFA_JOB_QUEUE_NAME = "myqueuename"
+        EDUMFA_JOB_QUEUE_IMMEDIATE = True  # avoid redis server for testing
 
     def test_01_app_job_queue(self):
         queue = get_job_queue()

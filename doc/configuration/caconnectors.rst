@@ -5,7 +5,7 @@ CA Connectors
 
 .. index:: caconnectors, CA, Certificate Authority, certificate token
 
-You can use privacyIDEA to enroll certificates and assign certificates to users.
+You can use eduMFA to enroll certificates and assign certificates to users.
 
 You can define connections to Certificate Authorities, that are used when
 enrolling certificates.
@@ -18,9 +18,9 @@ enrolling certificates.
    *A local CA definition*
 
 When you enroll a Token of type *certificate* the Certificate Signing Request
-gets signed by one of the CAs attached to privacyIDEA by the CA connectors.
+gets signed by one of the CAs attached to eduMFA by the CA connectors.
 
-The first CA connector that ships with privacyIDEA is a connector to a local
+The first CA connector that ships with eduMFA is a connector to a local
 openSSL based Certificate Authority as shown in figure :ref:`fig_caconnector`.
 
 When enrolling a certificate token you can choose, which CA should sign the
@@ -40,8 +40,8 @@ Local CA Connector
 
 The local CA connector calls a local openSSL configuration.
 
-Starting with privacyIDEA version 2.12 an example *openssl.cnf* is provided in
-*/etc/privacyidea/CA/openssl.cnf*.
+Starting with eduMFA version 2.12 an example *openssl.cnf* is provided in
+*/etc/eduMFA/CA/openssl.cnf*.
 
 .. note:: This configuration and also this
    description is ment to be as an example. When setting up a productive CA, you
@@ -50,36 +50,36 @@ Starting with privacyIDEA version 2.12 an example *openssl.cnf* is provided in
 Manual Setup
 ............
 
-1. Modify the parameters in the file */etc/privacyidea/CA/openssl.cnf* according
+1. Modify the parameters in the file */etc/eduMFA/CA/openssl.cnf* according
    to your needs.
 
 2. Create your CA certificate::
 
-       openssl req -days 1500 -new -x509 -keyout /etc/privacyidea/CA/ca.key \
-                   -out /etc/privacyidea/CA/ca.crt \
-                   -config /etc/privacyidea/CA/openssl.cnf
+       openssl req -days 1500 -new -x509 -keyout /etc/eduMFA/CA/ca.key \
+                   -out /etc/eduMFA/CA/ca.crt \
+                   -config /etc/eduMFA/CA/openssl.cnf
 
-       chmod 0600 /etc/privacyidea/CA/ca.key
-       touch /etc/privacyidea/CA/index.txt
-       echo 01 > /etc/privacyidea/CA/serial
-       chown -R privacyidea /etc/privacyidea/CA
+       chmod 0600 /etc/eduMFA/CA/ca.key
+       touch /etc/eduMFA/CA/index.txt
+       echo 01 > /etc/eduMFA/CA/serial
+       chown -R eduMFA /etc/eduMFA/CA
 
-3. Now set up a local CA connector within privacyIDEA with the directory
-   */etc/privacyidea/CA* and the files accordingly.
+3. Now set up a local CA connector within eduMFA with the directory
+   */etc/eduMFA/CA* and the files accordingly.
 
 Easy Setup
 ..........
 
-Starting with privacyIDEA version 2.18 it gets easier to setup local CAs.
+Starting with eduMFA version 2.18 it gets easier to setup local CAs.
 
 You can use the :ref:`pimanage` tool to setup a new CA like this::
 
-   pi-manage ca create myCA
+   edumfa-manage ca create myCA
 
 This will ask you for all necessary parameters for the CA and then automatically
 
 1. Create the files for this new CA and
-2. Create the CA connector in privacyIDEA.
+2. Create the CA connector in eduMFA.
 
 Management
 ..........
@@ -89,27 +89,27 @@ There are different ways to enroll a certificate token. See :ref:`certificate_to
 When an administrator *revokes* a certificate token, the certificate is
 revoked and a CRL is created.
 
-.. note:: privacyIDEA does not create the CRL regularly. The CRL usually has a
+.. note:: eduMFA does not create the CRL regularly. The CRL usually has a
    validity period of 30 days. I.e. you need to create the CRL on a regular
-   basis. You can use openssl to do so or the pi-manage command.
+   basis. You can use openssl to do so or the edumfa-manage command.
 
-Starting with version 2.18 the pi-manage command has an additional
+Starting with version 2.18 the edumfa-manage command has an additional
 sub-command ``ca``::
 
-    pi-manage ca list
+    edumfa-manage ca list
 
 which lists all configured *CA connectors*. You can use the ``-v`` switch to get more
 information.
 
 You can create a new CRL with the command::
 
-    pi-manage ca create_crl <CA name>
+    edumfa-manage ca create_crl <CA name>
 
 This command will check the *overlap period* and only create a new CRL if it
 is necessary. If you want to force the creation of the CRL, you can use the
 switch *-f*.
 
-For more information on pi-manage see :ref:`pimanage`.
+For more information on edumfa-manage see :ref:`pimanage`.
 
 Templates
 .........
@@ -146,15 +146,15 @@ The file can look like this, defining three templates "user", "webserver" and
 Microsoft CA Connector
 ~~~~~~~~~~~~~~~~~~~~~~
 
-This CA connector communicates to the privacyIDEA MS CA worker, that is installed
-on a Windows server in the Windows Domain. Through this worker, privacyIDEA can connect
+This CA connector communicates to the eduMFA MS CA worker, that is installed
+on a Windows server in the Windows Domain. Through this worker, eduMFA can connect
 potentially to all Microsoft CAs in the Windows Domain.
 
 The Microsoft CA Connector has the following options.
 
 **Hostname**
 
-The hostname (FQDN) or IP address where the privacyIDEA MS CA worker is running.
+The hostname (FQDN) or IP address where the eduMFA MS CA worker is running.
 
 .. note:: If you configure `Use SSL`, you need to provide the correct hostname as it is
    contained in the server certificate.
@@ -170,14 +170,14 @@ Whether the worker is situated behind a HTTP proxy.
 **Domain CA**
 
 The worker will provide a list of available CAs in the domain. This is the
-actual CA to which privacyIDEA shall communicate. After providing the initial
-connection information `hostname` and `Port`, privacyIDEA can fetch the available
+actual CA to which eduMFA shall communicate. After providing the initial
+connection information `hostname` and `Port`, eduMFA can fetch the available
 CAs in the Windows Domain. The CA is identified by the hostname where the Microsoft CA is
 running and the name of the CA like `<hostname>\\<name of CA>`.
 
 **Use SSL**
 
-This is a boolean parameter. If it is checked, then privacyIDEA will communicate to
+This is a boolean parameter. If it is checked, then eduMFA will communicate to
 the CA worker via TLS. Depending on the worker configuration it will also be required,
 to provide a client certificate for authentication.
 
@@ -187,14 +187,14 @@ to provide a client certificate for authentication.
 **CA certificate**
 
 This is the location of the file, that contains the CA certificate, that issued the
-CA worker server certificate. This file is located on the privacyIDEA server in PEM format.
+CA worker server certificate. This file is located on the eduMFA server in PEM format.
 
 **Client certificate**
 
-This is the file location of the certificate that privacyIDEA uses to authenticate against the CA worker.
+This is the file location of the certificate that eduMFA uses to authenticate against the CA worker.
 It is in PEM format.
 
-.. note:: The subject of this certificate must match the name of the privacyIDEA server as
+.. note:: The subject of this certificate must match the name of the eduMFA server as
    seen by the CA worker. It is a good idea to request the client certificate from the
    CA on the domain where the CA worker is actually running at.
 
@@ -227,10 +227,10 @@ This is the password of the encrypted client private key.
 Basic setup from the command line
 .................................
 
-Of course the MS CA Connector can be configured in the privacyIDEA Web UI.
+Of course the MS CA Connector can be configured in the eduMFA Web UI.
 For quick setup, you can also configure a connector at the command line using
 :ref:`pimanage` like this::
 
-    pi-manage ca create -t microsoft <name-of-connector>
+    edumfa-manage ca create -t microsoft <name-of-connector>
 
-It will ask you all relevant questions and setup a connector in privacyIDEA.
+It will ask you all relevant questions and setup a connector in eduMFA.

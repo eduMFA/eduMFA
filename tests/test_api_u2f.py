@@ -7,15 +7,15 @@ from hashlib import sha256
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes
 
-from privacyidea.lib.token import assign_token, remove_token, get_tokens
-from privacyidea.lib.user import User
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.lib.tokens.u2f import (check_response, url_encode)
-from privacyidea.lib.policy import set_policy, delete_policy, SCOPE
-from privacyidea.lib.tokens.u2ftoken import U2FACTION
-from privacyidea.models import Challenge
-from privacyidea.lib.utils import hexlify_and_unicode, to_bytes
-from privacyidea.lib.error import ERROR
+from edumfa.lib.token import assign_token, remove_token, get_tokens
+from edumfa.lib.user import User
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.tokens.u2f import (check_response, url_encode)
+from edumfa.lib.policy import set_policy, delete_policy, SCOPE
+from edumfa.lib.tokens.u2ftoken import U2FACTION
+from edumfa.models import Challenge
+from edumfa.lib.utils import hexlify_and_unicode, to_bytes
+from edumfa.lib.error import ERROR
 
 
 PWFILE = "tests/testdata/passwords"
@@ -77,7 +77,7 @@ class APIU2fTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 400)
 
-        set_privacyidea_config("u2f.appId", "http://localhost:5000")
+        set_edumfa_config("u2f.appId", "http://localhost:5000")
 
     def test_00_sign_check(self):
         # Test the low level functions
@@ -285,7 +285,7 @@ class APIU2fTestCase(MyApiTestCase):
         # test data taken from
         # https://fidoalliance.org/specs/fido-u2f-v1.0-ps-20141009/fido-u2f-raw-message-formats-ps-20141009.html#examples
         serial = "U2F0010BF6F"
-        set_privacyidea_config("u2f.appId",
+        set_edumfa_config("u2f.appId",
                                "https://puck.az.intern")
         # Registration data
         client_data = "eyJ0eXAiOiJuYXZpZ2F0b3IuaWQuZmluaXNoRW5yb2xsbWVudCIsImNoYWxsZW5nZSI6ImpIakIxaEM2VjA3dDl4ZnNNaDRfOEQ3U1JuSHRFY1BqUTdsaVl3cWxkX009Iiwib3JpZ2luIjoiaHR0cHM6Ly9wdWNrLmF6LmludGVybiIsImNpZF9wdWJrZXkiOiJ1bnVzZWQifQ"
@@ -356,7 +356,7 @@ class APIU2fTestCase(MyApiTestCase):
         # test data taken from
         # https://fidoalliance.org/specs/fido-u2f-v1.0-ps-20141009/fido-u2f-raw-message-formats-ps-20141009.html#examples
         serial = "U2F0010BF6F"
-        set_privacyidea_config("u2f.appId",
+        set_edumfa_config("u2f.appId",
                                "https://puck.az.intern")
         # Registration data
         client_data = "eyJ0eXAiOiJuYXZpZ2F0b3IuaWQuZmluaXNoRW5yb2xsbWVudCIsImNoYWxsZW5nZSI6ImpIakIxaEM2VjA3dDl4ZnNNaDRfOEQ3U1JuSHRFY1BqUTdsaVl3cWxkX009Iiwib3JpZ2luIjoiaHR0cHM6Ly9wdWNrLmF6LmludGVybiIsImNpZF9wdWJrZXkiOiJ1bnVzZWQifQ"
@@ -432,7 +432,7 @@ class APIU2fTestCase(MyApiTestCase):
         # test data taken from
         # https://fidoalliance.org/specs/fido-u2f-v1.0-ps-20141009/fido-u2f-raw-message-formats-ps-20141009.html#examples
         serial = "U2F0010BF6F"
-        set_privacyidea_config("u2f.appId",
+        set_edumfa_config("u2f.appId",
                                "https://puck.az.intern")
         # Registration data
         client_data = "eyJ0eXAiOiJuYXZpZ2F0b3IuaWQuZmluaXNoRW5yb2xsbWVudCIsImNoYWxsZW5nZSI6ImpIakIxaEM2VjA3dDl4ZnNNaDRfOEQ3U1JuSHRFY1BqUTdsaVl3cWxkX009Iiwib3JpZ2luIjoiaHR0cHM6Ly9wdWNrLmF6LmludGVybiIsImNpZF9wdWJrZXkiOiJ1bnVzZWQifQ"

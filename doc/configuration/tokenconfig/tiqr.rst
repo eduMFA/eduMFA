@@ -15,9 +15,9 @@ Configuration Parameters
 
 **TiQR Registration Server**
    You need to at least enter the *TiQR Registration Server*.
-   This is the URL of your privacyIDEA installation, that can be reached from
+   This is the URL of your eduMFA installation, that can be reached from
    the smartphone during enrollment. So your smartphone needs to be on the same
-   LAN (WLAN) like the privacyIDEA server, or the enrollment URL needs to be
+   LAN (WLAN) like the eduMFA server, or the enrollment URL needs to be
    accessible from the internet.
 
    You also need to specify the path, which is usually ``/ttype/tiqr``.

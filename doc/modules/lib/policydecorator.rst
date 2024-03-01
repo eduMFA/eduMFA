@@ -4,6 +4,6 @@
 Policy Decorators
 .................
 
-.. automodule:: privacyidea.lib.policydecorators
+.. automodule:: edumfa.lib.policydecorators
    :members:
    :undoc-members:

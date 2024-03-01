@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from privacyidea.models import (Resolver,
+from edumfa.models import (Resolver,
                                 ResolverConfig,
                                 db)
 from .base import MyTestCase, MyApiTestCase

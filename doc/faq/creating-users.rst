@@ -1,12 +1,12 @@
-How can I create users in the privacyIDEA Web UI?
+How can I create users in the eduMFA Web UI?
 -------------------------------------------------
 
 .. index:: Creating Users
 
-So you installed privacyIDEA and want to enroll tokens to the users and are
+So you installed eduMFA and want to enroll tokens to the users and are
 wondering how to create users.
 
-privacyIDEA can read users from different existing sources like LDAP, SQL,
+eduMFA can read users from different existing sources like LDAP, SQL,
 flat files and SCIM.
 
 You very much likely already have an application (like your VPN or a Web

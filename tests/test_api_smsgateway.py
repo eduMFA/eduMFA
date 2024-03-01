@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .base import MyApiTestCase
-from privacyidea.lib.policy import set_policy, delete_policy, SCOPE, ACTION
+from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION
 
 
 class APISmsGatewayTestCase(MyApiTestCase):
@@ -26,7 +26,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
         # create an sms gateway definition
         param = {
             "name": "myGW",
-            "module": "privacyidea.lib.smsprovider.SMSProvider.ISMSProvider",
+            "module": "edumfa.lib.smsprovider.SMSProvider.ISMSProvider",
             "description": "myGateway",
             "option.URL": "http://example.com"
         }
@@ -55,14 +55,14 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertEqual(sms_gw.get("name"), "myGW")
             self.assertEqual(sms_gw.get("id"), 1)
             self.assertEqual(sms_gw.get("providermodule"),
-                             "privacyidea.lib.smsprovider.SMSProvider.ISMSProvider")
+                             "edumfa.lib.smsprovider.SMSProvider.ISMSProvider")
             self.assertEqual(sms_gw.get("options").get("URL"),
                              "http://example.com")
 
         # update
         param = {
             "name": "myGW",
-            "module": "privacyidea.lib.smsprovider.SMSProvider.ISMSProvider",
+            "module": "edumfa.lib.smsprovider.SMSProvider.ISMSProvider",
             "description": "new description",
             "id": 1
         }
@@ -117,7 +117,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
         # create an sms gateway configuration
         param = {
             "name": "myGW",
-            "module": "privacyidea.lib.smsprovider.SMSProvider.ISMSProvider",
+            "module": "edumfa.lib.smsprovider.SMSProvider.ISMSProvider",
             "description": "myGateway",
             "option.URL": "http://example.com",
             "header.header1": "headervalue1"
@@ -206,24 +206,24 @@ class APISmsGatewayTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             value = res.json.get("result").get("value")
-            self.assertEqual(len(value), 6)
-            self.assertTrue('privacyidea.lib.smsprovider.HttpSMSProvider'
+            self.assertEqual(len(value), 7)
+            self.assertTrue('edumfa.lib.smsprovider.HttpSMSProvider'
                             '.HttpSMSProvider' in value)
-            self.assertTrue('privacyidea.lib.smsprovider.SmtpSMSProvider'
+            self.assertTrue('edumfa.lib.smsprovider.SmtpSMSProvider'
                             '.SmtpSMSProvider' in value)
-            self.assertTrue('privacyidea.lib.smsprovider.SipgateSMSProvider'
+            self.assertTrue('edumfa.lib.smsprovider.SipgateSMSProvider'
                             '.SipgateSMSProvider' in value)
-            self.assertTrue('privacyidea.lib.smsprovider.SmppSMSProvider'
+            self.assertTrue('edumfa.lib.smsprovider.SmppSMSProvider'
                             '.SmppSMSProvider' in value)
-            self.assertIn('privacyidea.lib.smsprovider.ScriptSMSProvider'
+            self.assertIn('edumfa.lib.smsprovider.ScriptSMSProvider'
                           '.ScriptSMSProvider', value)
-            http_parameters = value.get('privacyidea.lib.smsprovider.'
+            http_parameters = value.get('edumfa.lib.smsprovider.'
                                         'HttpSMSProvider.HttpSMSProvider')
-            smtp_parameters = value.get('privacyidea.lib.smsprovider.'
+            smtp_parameters = value.get('edumfa.lib.smsprovider.'
                                         'SmtpSMSProvider.SmtpSMSProvider')
-            sipgate_parameters = value.get('privacyidea.lib.smsprovider.'
+            sipgate_parameters = value.get('edumfa.lib.smsprovider.'
                                         'SipgateSMSProvider.SipgateSMSProvider')
-            smpp_parameters = value.get('privacyidea.lib.smsprovider.'
+            smpp_parameters = value.get('edumfa.lib.smsprovider.'
                                         'SmppSMSProvider.SmppSMSProvider')
             self.assertEqual(http_parameters.get("options_allowed"), True)
             self.assertEqual(smtp_parameters.get("options_allowed"), False)
@@ -239,7 +239,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
         # create an sms gateway configuration
         param = {
             "name": "myGW",
-            "module": "privacyidea.lib.smsprovider.SMSProvider.ISMSProvider",
+            "module": "edumfa.lib.smsprovider.SMSProvider.ISMSProvider",
             "description": "myGateway",
             "option.URL": "http://example.com"
         }

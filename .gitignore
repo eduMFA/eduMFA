@@ -24,10 +24,10 @@ tests/testdata/tmp_directory
 node_modules
 po/*.mo
 htmlcov/
-privacyidea/static/customize/views/
-privacyidea/static/customize/css/
+edumfa/static/customize/views/
+edumfa/static/customize/css/
 .eggs/
-privacyIDEA.egg-info/
+edumfa.egg-info/
 __pycache__/
 /enckey
 /public.pem

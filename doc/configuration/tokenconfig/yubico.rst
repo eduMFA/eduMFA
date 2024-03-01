@@ -16,11 +16,11 @@ the Yubico Cloud service or another (possibly self hosted) validation server.
 
 To contact the Yubico Cloud service you need to get an API key and a Client
 ID from Yubico and enter them here in the config dialog. In that case you
-can leave the Yubico URL blank and privacyIDEA will use the Yubico servers.
+can leave the Yubico URL blank and eduMFA will use the Yubico servers.
 
 You can use another validation host, e.g. a self hosted validation server.
-If you use the privacyIDEA token type *Yubikey*, you can use the URL
-``https://<privacyideaserver>/ttype/yubikey``, other validation servers might
+If you use the eduMFA token type *Yubikey*, you can use the URL
+``https://<eduMFAserver>/ttype/yubikey``, other validation servers might
 use ``https://<validationserver>/wsapi/2.0/verify``. You'll get the Client ID
 and API key from the configuration of your validation server.
 

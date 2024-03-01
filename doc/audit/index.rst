@@ -12,10 +12,10 @@ WebUI.
 
    *Audit Log*
 
-privacyIDEA comes with a default SQL audit module (see :ref:`code_audit`).
+eduMFA comes with a default SQL audit module (see :ref:`code_audit`).
 
-Starting with version 3.2 privacyIDEA also provides a :ref:`logger_audit` and
-a :ref:`container_audit` which can be used to send privacyIDEA audit log messages
+Starting with version 3.2 eduMFA also provides a :ref:`logger_audit` and
+a :ref:`container_audit` which can be used to send eduMFA audit log messages
 to services like splunk or logstash.
 
 .. _sql_audit:
@@ -41,9 +41,9 @@ Cleaning based on the number of entries:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can specify a *highwatermark* and a *lowwatermark*. To clean
-up the audit log table, you can call ``pi-manage`` at command line::
+up the audit log table, you can call ``edumfa-manage`` at command line::
 
-   pi-manage rotate_audit --highwatermark 20000 --lowwatermark 18000
+   edumfa-manage rotate_audit --highwatermark 20000 --lowwatermark 18000
 
 If there are more than 20000 log entries, this will clean up all old log entries, leaving only 18000 log entries.
 
@@ -52,7 +52,7 @@ Cleaning based on the age:
 
 You can specify the number of days, how old an audit entry may be at a max::
 
-   pi-manage rotate_audit --age 365
+   edumfa-manage rotate_audit --age 365
 
 This will delete all audit entries that are older than one year.
 
@@ -96,7 +96,7 @@ The config file is a YAML format and looks like this::
       action: .*
 
 This is a list of rules.
-privacyIDEA iterates over *all* audit entries. The first matching rule for an entry wins.
+eduMFA iterates over *all* audit entries. The first matching rule for an entry wins.
 If the rule matches, the audit entry is deleted if the entry is older than the days
 specified in "rotate".
 
@@ -104,12 +104,12 @@ If is a good idea to have a *catch-all* rule at the end.
 
 .. note:: The keys "user", "action"... correspond to the column names of the audit table.
    You can use any column name here like "date", "action", "action_detail", "success", "serial", "administrator",
-   "user", "realm"... for a complete list, see the model definition here: :class:`privacyidea.models.Audit`.
+   "user", "realm"... for a complete list, see the model definition here: :class:`edumfa.models.Audit`.
    You may use Python regular expressions for matching.
 
 You can then add a call like::
 
-   pi-manage rotate_audit --config /etc/privacyidea/audit.yaml
+   edumfa-manage rotate_audit --config /etc/edumfa/audit.yaml
 
 in your crontab.
 
@@ -118,17 +118,17 @@ Access rights
 ~~~~~~~~~~~~~
 
 You may also want to run the cron job with reduced rights. I.e. a user who
-has no read access to the original pi.cfg file, since this job does not need
-read access to the SECRET or PEPPER in the pi.cfg file.
+has no read access to the original edumfa.cfg file, since this job does not need
+read access to the SECRET or PEPPER in the edumfa.cfg file.
 
 So you can simply specify a config file with only the content::
 
-   PI_AUDIT_SQL_URI = <your database uri>
+   EDUMFA_AUDIT_SQL_URI = <your database uri>
 
-Then you can call ``pi-manage`` like this::
+Then you can call ``edumfa-manage`` like this::
 
-   PRIVACYIDEA_CONFIGFILE=/home/cornelius/src/privacyidea/audit.cfg \
-   pi-manage rotate_audit
+   EDUMFA_CONFIGFILE=/etc/edummfa/edumfa.cfg \
+   edumfa-manage rotate_audit
 
 This will read the configuration (only the database URI) from the config file
 ``audit.cfg``.
@@ -139,19 +139,19 @@ Table size
 Sometimes the entries to be written to the database may be longer than the
 column in the database. You should set::
 
-   PI_AUDIT_SQL_TRUNCATE = True
+   EDUMFA_AUDIT_SQL_TRUNCATE = True
 
-in ``pi.cfg``. This will truncate each entry to the defined column length.
+in ``edumfa.cfg``. This will truncate each entry to the defined column length.
 
 However, if you sill want to fetch more information in the audit log, you can
 increase the column length directly in the database by the usual database means.
-However, privacyIDEA does not know about this and will still truncate the entries
+However, eduMFA does not know about this and will still truncate the entries
 to the originally defined length.
 
-To avoid this, you need to tell privacyIDEA about the changes.
+To avoid this, you need to tell eduMFA about the changes.
 In Your :ref:`config file <cfgfile>` add the setting like::
 
-    PI_AUDIT_SQL_COLUMN_LENGTH = {"user": 100,
+    EDUMFA_AUDIT_SQL_COLUMN_LENGTH = {"user": 100,
                                   "policies": 1000}
 
 which will increase truncation of the user column to 100 and the policies
@@ -171,25 +171,25 @@ facility is a JSON-encoded string of the fields of the audit entry.
 You can find more information about this in :ref:`advanced_logging`.
 
 To activate the *Logger Audit* module you need to configure the following
-settings in your :ref:`pi.cfg <cfgfile>` file::
+settings in your :ref:`edumfa.cfg <cfgfile>` file::
 
-   PI_AUDIT_MODULE = "privacyidea.lib.auditmodules.loggeraudit"
-   PI_AUDIT_SERVERNAME = "your choice"
-   PI_LOGCONFIG = "/etc/privacyidea/logging.cfg"
+   EDUMFA_AUDIT_MODULE = "edumfa.lib.auditmodules.loggeraudit"
+   EDUMFA_AUDIT_SERVERNAME = "your choice"
+   EDUMFA_LOGCONFIG = "/etc/edumfa/logging.cfg"
 
 You can optionally set a custom logging name for the logger audit with::
 
-   PI_AUDIT_LOGGER_QUALNAME = "pi-audit"
+   EDUMFA_AUDIT_LOGGER_QUALNAME = "edumfa-audit"
 
-It defaults to the module name ``privacyidea.lib.auditmodules.loggeraudit``.
-In contrast to the :ref:`sql_audit` you *need* a ``PI_LOGCONFIG`` otherwise
+It defaults to the module name ``edumfa.lib.auditmodules.loggeraudit``.
+In contrast to the :ref:`sql_audit` you *need* a ``EDUMFA_LOGCONFIG`` otherwise
 the *Logger Audit* will not work correctly.
 
 In the ``logging.cfg`` you then need to define the audit logger::
 
    [logger_audit]
    handlers=audit
-   qualname=privacyidea.lib.auditmodules.loggeraudit
+   qualname=edumfa.lib.auditmodules.loggeraudit
    level=INFO
 
    [handler_audit]
@@ -198,10 +198,10 @@ In the ``logging.cfg`` you then need to define the audit logger::
    maxBytes=10000000
    formatter=detail
    level=INFO
-   args=('/var/log/privacyidea/audit.log',)
+   args=('/var/log/edumfa/audit.log',)
 
 Note, that the ``level`` always needs to be *INFO*. In this example, the
-audit log will be written to the file ``/var/log/privacyidea/audit.log``.
+audit log will be written to the file ``/var/log/edumfa/audit.log``.
 
 Finally you need to extend the following settings with the defined audit logger
 and audit handler::
@@ -210,12 +210,12 @@ and audit handler::
    keys=file,audit
 
    [loggers]
-   keys=root,privacyidea,audit
+   keys=root,edumfa,audit
 
 .. note:: The *Logger Audit* only allows to **write** audit information. It
    can not be used to **read** data. So if you are only using the
    *Audit Logger*, you will not be able to *view* audit information in the
-   privacyIDEA Web UI!
+   edumfa Web UI!
    To still be able to *read* audit information, take a look at the
    :ref:`container_audit`.
 
@@ -232,21 +232,21 @@ Container Audit
 The *Container Audit* module is a meta audit module, that can be used to
 write audit information to more than one audit module.
 
-It is configured in the ``pi.cfg`` like this::
+It is configured in the ``edumfa.cfg`` like this::
 
-    PI_AUDIT_MODULE = 'privacyidea.lib.auditmodules.containeraudit'
-    PI_AUDIT_CONTAINER_WRITE = ['privacyidea.lib.auditmodules.sqlaudit','privacyidea.lib.auditmodules.loggeraudit']
-    PI_AUDIT_CONTAINER_READ = 'privacyidea.lib.auditmodules.sqlaudit'
+    EDUMFA_AUDIT_MODULE = 'edumfa.lib.auditmodules.containeraudit'
+    EDUMFA_AUDIT_CONTAINER_WRITE = ['edumfa.lib.auditmodules.sqlaudit','edumfa.lib.auditmodules.loggeraudit']
+    EDUMFA_AUDIT_CONTAINER_READ = 'edumfa.lib.auditmodules.sqlaudit'
 
-The key ``PI_AUDIT_CONTAINER_WRITE`` contains a list of audit modules,
+The key ``EDUMFA_AUDIT_CONTAINER_WRITE`` contains a list of audit modules,
 to which the audit information should be written. The listed
 audit modules need to be configured as mentioned in the corresponding audit
 module description.
 
-The key ``PI_AUDIT_CONTAINER_READ`` contains one single audit module, that
+The key ``EDUMFA_AUDIT_CONTAINER_READ`` contains one single audit module, that
 is capable of reading information. In this case the :ref:`sql_audit` module can be
 used. The :ref:`logger_audit` module can **not** be used for reading!
 
 Using the *Container Audit* module you can on the one hand send audit information
 to external services using the :ref:`logger_audit` but also keep the
-audit information visible within privacyIDEA using the :ref:`sql_audit` module.
+audit information visible within eduMFA using the :ref:`sql_audit` module.

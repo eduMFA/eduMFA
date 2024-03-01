@@ -4,15 +4,15 @@ import unittest
 import mock
 from sqlalchemy.orm.session import close_all_sessions
 
-from privacyidea.app import create_app
-from privacyidea.config import TestingConfig
-from privacyidea.models import db, save_config_timestamp
-from privacyidea.lib.resolver import (save_resolver)
-from privacyidea.lib.realm import (set_realm)
-from privacyidea.lib.user import User
-from privacyidea.lib.auth import create_db_admin
-from privacyidea.lib.auditmodules.base import Audit
-from privacyidea.lib.lifecycle import call_finalizers
+from edumfa.app import create_app
+from edumfa.config import TestingConfig
+from edumfa.models import db, save_config_timestamp
+from edumfa.lib.resolver import (save_resolver)
+from edumfa.lib.realm import (set_realm)
+from edumfa.lib.user import User
+from edumfa.lib.auth import create_db_admin
+from edumfa.lib.auditmodules.base import Audit
+from edumfa.lib.lifecycle import call_finalizers
 
 
 PWFILE = "tests/testdata/passwords"
@@ -247,8 +247,8 @@ class OverrideConfigTestCase(MyTestCase):
 
     @classmethod
     def setUpClass(cls):
-        """ override privacyidea.config.config["testing"] with the inner config class """
-        with mock.patch.dict("privacyidea.config.config", {"testing": cls.Config}):
+        """ override edumfa.config.config["testing"] with the inner config class """
+        with mock.patch.dict("edumfa.config.config", {"testing": cls.Config}):
             MyTestCase.setUpClass()
 
 

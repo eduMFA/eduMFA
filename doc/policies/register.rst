@@ -10,7 +10,7 @@ Register Policy
 User registration
 .................
 
-Starting with privacyIDEA 2.10 users are allowed to register with privacyIDEA.
+Starting with eduMFA 2.10 users are allowed to register with eduMFA.
 I.e. a user that does not exist in a given realm and resolver can create a
 new account.
 

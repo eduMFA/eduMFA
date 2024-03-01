@@ -9,8 +9,8 @@ import inspect
 import logging
 import mock
 from testfixtures import Comparison, compare
-from privacyidea.app import create_app, PiResponseClass
-from privacyidea.config import config, TestingConfig
+from edumfa.app import create_app, PiResponseClass
+from edumfa.config import config, TestingConfig
 
 dirname = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
@@ -33,8 +33,8 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(app.env, 'production', app)
         self.assertTrue(app.debug, app)
         self.assertFalse(app.testing, app)
-        self.assertEqual(app.import_name, 'privacyidea.app', app)
-        self.assertEqual(app.name, 'privacyidea.app', app)
+        self.assertEqual(app.import_name, 'edumfa.app', app)
+        self.assertEqual(app.name, 'edumfa.app', app)
         self.assertTrue(app.response_class == PiResponseClass, app)
         blueprints = ['validate_blueprint', 'token_blueprint', 'system_blueprint',
                       'resolver_blueprint', 'realm_blueprint', 'defaultrealm_blueprint',
@@ -43,8 +43,8 @@ class AppTestCase(unittest.TestCase):
                       'application_blueprint', 'caconnector_blueprint', 'cert_blueprint',
                       'ttype_blueprint', 'register_blueprint', 'smtpserver_blueprint',
                       'recover_blueprint', 'radiusserver_blueprint', 'periodictask_blueprint',
-                      'privacyideaserver_blueprint', 'eventhandling_blueprint',
-                      'smsgateway_blueprint', 'client_blueprint', 'subscriptions_blueprint',
+                      'edumfaserver_blueprint', 'eventhandling_blueprint',
+                      'smsgateway_blueprint', 'client_blueprint',
                       'monitoring_blueprint']
         self.assertTrue(all(k in app.before_request_funcs for k in blueprints), app)
         self.assertTrue(all(k in app.blueprints for k in blueprints), app)
@@ -59,12 +59,12 @@ class AppTestCase(unittest.TestCase):
         conf = [m for m in members if not (m[0].startswith('__') and m[0].endswith('__'))]
         self.assertTrue(all(app.config[k] == v for k, v in conf), app)
         # check the correct initialization of the logging
-        logger = logging.getLogger('privacyidea')
+        logger = logging.getLogger('edumfa')
         self.assertEqual(logger.level, logging.DEBUG, logger)
         compare([
             Comparison('logging.handlers.RotatingFileHandler',
-                       baseFilename=os.path.join(dirname, 'privacyidea.log'),
-                       formatter=Comparison('privacyidea.lib.log.SecureFormatter',
+                       baseFilename=os.path.join(dirname, 'edumfa.log'),
+                       formatter=Comparison('edumfa.lib.log.SecureFormatter',
                                             _fmt="[%(asctime)s][%(process)d]"
                                                  "[%(thread)d][%(levelname)s]"
                                                  "[%(name)s:%(lineno)d] "
@@ -83,16 +83,16 @@ class AppTestCase(unittest.TestCase):
 
     def test_03_logging_config_file(self):
         class Config(TestingConfig):
-            PI_LOGCONFIG = "tests/testdata/logging.cfg"
-        with mock.patch.dict("privacyidea.config.config", {"testing": Config}):
+            EDUMFA_LOGCONFIG = "tests/testdata/logging.cfg"
+        with mock.patch.dict("edumfa.config.config", {"testing": Config}):
             app = create_app(config_name='testing')
             # check the correct initialization of the logging from config file
-            logger = logging.getLogger('privacyidea')
+            logger = logging.getLogger('edumfa')
             self.assertEqual(logger.level, logging.DEBUG, logger)
             compare([
                 Comparison('logging.handlers.RotatingFileHandler',
-                           baseFilename=os.path.join(dirname, 'privacyidea.log'),
-                           formatter=Comparison('privacyidea.lib.log.SecureFormatter',
+                           baseFilename=os.path.join(dirname, 'edumfa.log'),
+                           formatter=Comparison('edumfa.lib.log.SecureFormatter',
                                                 _fmt="[%(asctime)s][%(process)d]"
                                                      "[%(thread)d][%(levelname)s]"
                                                      "[%(name)s:%(lineno)d] "
@@ -101,12 +101,12 @@ class AppTestCase(unittest.TestCase):
                            level=logging.DEBUG,
                            partial=True)
             ], logger.handlers)
-            logger = logging.getLogger('privacyidea.lib.auditmodules.loggeraudit')
+            logger = logging.getLogger('edumfa.lib.auditmodules.loggeraudit')
             self.assertEqual(logger.level, logging.INFO, logger)
             compare([
                 Comparison('logging.handlers.RotatingFileHandler',
                            baseFilename=os.path.join(dirname, 'audit.log'),
-                           formatter=Comparison('privacyidea.lib.log.SecureFormatter',
+                           formatter=Comparison('edumfa.lib.log.SecureFormatter',
                                                 _fmt="[%(asctime)s][%(process)d]"
                                                      "[%(thread)d][%(levelname)s]"
                                                      "[%(name)s:%(lineno)d] "
@@ -118,16 +118,16 @@ class AppTestCase(unittest.TestCase):
 
     def test_04_logging_config_yaml(self):
         class Config(TestingConfig):
-            PI_LOGCONFIG = "tests/testdata/logging.yml"
-        with mock.patch.dict("privacyidea.config.config", {"testing": Config}):
+            EDUMFA_LOGCONFIG = "tests/testdata/logging.yml"
+        with mock.patch.dict("edumfa.config.config", {"testing": Config}):
             app = create_app(config_name='testing')
             # check the correct initialization of the logging from config file
-            logger = logging.getLogger('privacyidea')
+            logger = logging.getLogger('edumfa')
             self.assertEqual(logger.level, logging.INFO, logger)
             compare([
                 Comparison('logging.handlers.RotatingFileHandler',
-                           baseFilename=os.path.join(dirname, 'privacyidea.log'),
-                           formatter=Comparison('privacyidea.lib.log.SecureFormatter',
+                           baseFilename=os.path.join(dirname, 'edumfa.log'),
+                           formatter=Comparison('edumfa.lib.log.SecureFormatter',
                                                 _fmt="[%(asctime)s][%(process)d]"
                                                      "[%(thread)d][%(levelname)s]"
                                                      "[%(name)s:%(lineno)d] "
@@ -150,17 +150,17 @@ class AppTestCase(unittest.TestCase):
 
     def test_05_logging_config_broken_yaml(self):
         class Config(TestingConfig):
-            PI_LOGCONFIG = "tests/testdata/logging_broken.yaml"
-        with mock.patch.dict("privacyidea.config.config", {"testing": Config}):
+            EDUMFA_LOGCONFIG = "tests/testdata/logging_broken.yaml"
+        with mock.patch.dict("edumfa.config.config", {"testing": Config}):
             app = create_app(config_name='testing')
             # check the correct initialization of the logging with the default
             # values since the yaml file is broken
-            logger = logging.getLogger('privacyidea')
+            logger = logging.getLogger('edumfa')
             self.assertEqual(logger.level, logging.INFO, logger)
             compare([
                 Comparison('logging.handlers.RotatingFileHandler',
-                           baseFilename=os.path.join(dirname, 'privacyidea.log'),
-                           formatter=Comparison('privacyidea.lib.log.SecureFormatter',
+                           baseFilename=os.path.join(dirname, 'edumfa.log'),
+                           formatter=Comparison('edumfa.lib.log.SecureFormatter',
                                                 _fmt="[%(asctime)s][%(process)d]"
                                                      "[%(thread)d][%(levelname)s]"
                                                      "[%(name)s:%(lineno)d] "

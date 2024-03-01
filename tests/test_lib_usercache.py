@@ -8,20 +8,20 @@ from contextlib import contextmanager
 
 from mock import patch
 
-from privacyidea.lib.error import UserError
+from edumfa.lib.error import UserError
 from tests import ldap3mock
 from tests.test_mock_ldap3 import LDAPDirectory
 from .base import MyTestCase
-from privacyidea.lib.resolver import (save_resolver, delete_resolver, get_resolver_object)
-from privacyidea.lib.realm import (set_realm, delete_realm)
-from privacyidea.lib.user import (User, get_username, create_user)
-from privacyidea.lib.usercache import (get_cache_time,
+from edumfa.lib.resolver import (save_resolver, delete_resolver, get_resolver_object)
+from edumfa.lib.realm import (set_realm, delete_realm)
+from edumfa.lib.user import (User, get_username, create_user)
+from edumfa.lib.usercache import (get_cache_time,
                                        cache_username, delete_user_cache,
                                        EXPIRATION_SECONDS, retrieve_latest_entry, is_cache_enabled)
-from privacyidea.lib.config import set_privacyidea_config
+from edumfa.lib.config import set_edumfa_config
 from datetime import timedelta
 from datetime import datetime
-from privacyidea.models import UserCache
+from edumfa.models import UserCache
 
 
 class UserCacheTestCase(MyTestCase):
@@ -71,19 +71,19 @@ class UserCacheTestCase(MyTestCase):
 
     def test_00_set_config(self):
         # Save wrong data in EXPIRATION_SECONDS
-        set_privacyidea_config(EXPIRATION_SECONDS, "wrong")
+        set_edumfa_config(EXPIRATION_SECONDS, "wrong")
         exp_delta = get_cache_time()
         self.assertEqual(exp_delta, timedelta(seconds=0))
         self.assertFalse(is_cache_enabled())
 
         # Save empty data in EXPIRATION_SECONDS
-        set_privacyidea_config(EXPIRATION_SECONDS, "")
+        set_edumfa_config(EXPIRATION_SECONDS, "")
         exp_delta = get_cache_time()
         self.assertEqual(exp_delta, timedelta(seconds=0))
         self.assertFalse(is_cache_enabled())
 
         # Save real data in EXPIRATION_SECONDS
-        set_privacyidea_config(EXPIRATION_SECONDS, 600)
+        set_edumfa_config(EXPIRATION_SECONDS, 600)
         exp_delta = get_cache_time()
         self.assertEqual(exp_delta, timedelta(seconds=600))
         self.assertTrue(is_cache_enabled())
@@ -106,7 +106,7 @@ class UserCacheTestCase(MyTestCase):
 
     def test_02_get_resolvers(self):
         # enable user cache
-        set_privacyidea_config(EXPIRATION_SECONDS, 600)
+        set_edumfa_config(EXPIRATION_SECONDS, 600)
         # create realm
         self._create_realm()
         # delete user_cache
@@ -399,8 +399,8 @@ class UserCacheTestCase(MyTestCase):
         # TODO: Interestingly, if we mock `datetime` here to increase the time by one
         # day, this test works, but a subsequent test (test_ui_certificate) will fail
         # with weird error messages. So we do not use the datetime mock for now.
-        #with self._patch_datetime_now('privacyidea.lib.usercache.datetime.datetime') as mock_datetime:
-        with patch('privacyidea.lib.usercache.get_cache_time') as mock_get_cache_time:
+        #with self._patch_datetime_now('edumfa.lib.usercache.datetime.datetime') as mock_datetime:
+        with patch('edumfa.lib.usercache.get_cache_time') as mock_get_cache_time:
             # Instead, we just decrease the cache time from 600 to 60 seconds,
             # which causes the entries above to be considered expired
             mock_get_cache_time.return_value = timedelta(seconds=60)
@@ -496,15 +496,15 @@ class UserCacheTestCase(MyTestCase):
     def test_99_unset_config(self):
         # Test early exit!
         # Assert that the function `retrieve_latest_entry` is called if the cache is enabled
-        with patch('privacyidea.lib.usercache.retrieve_latest_entry') as mock_retrieve:
+        with patch('edumfa.lib.usercache.retrieve_latest_entry') as mock_retrieve:
             mock_retrieve.return_value = None
             get_username('some-userid', 'resolver1')
             self.assertEqual(mock_retrieve.call_count, 1)
-        set_privacyidea_config(EXPIRATION_SECONDS, 0)
+        set_edumfa_config(EXPIRATION_SECONDS, 0)
 
         self.assertFalse(is_cache_enabled())
         # Assert that the function `retrieve_latest_entry` is not called anymore
-        with patch('privacyidea.lib.usercache.retrieve_latest_entry') as mock_retrieve:
+        with patch('edumfa.lib.usercache.retrieve_latest_entry') as mock_retrieve:
             mock_retrieve.return_value = None
             get_username('some-userid', 'resolver1')
             self.assertEqual(mock_retrieve.call_count, 0)
@@ -545,11 +545,11 @@ class TestUserCacheMultipleLoginAttributes(MyTestCase):
     @classmethod
     def setUpClass(cls):
         MyTestCase.setUpClass()
-        set_privacyidea_config(EXPIRATION_SECONDS, 600)
+        set_edumfa_config(EXPIRATION_SECONDS, 600)
 
     @classmethod
     def tearDownClass(cls):
-        set_privacyidea_config(EXPIRATION_SECONDS, 0)
+        set_edumfa_config(EXPIRATION_SECONDS, 0)
         MyTestCase.tearDownClass()
 
     @ldap3mock.activate

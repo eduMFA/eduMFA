@@ -3,7 +3,7 @@
 Installation
 ============
 
-The ways described here to install privacyIDEA are
+The ways described here to install eduMFA are
 
  * the installation via the :ref:`pip_install`, which can be used on
    any Linux distribution and
@@ -22,7 +22,7 @@ If you want to upgrade please read :ref:`upgrade`.
    system/inifile
    system/logging
    system/wsgiscript
-   system/pi-manage
+   system/edumfa-manage
    system/securitymodule
 
 After installation you might want to take a look at :ref:`first_steps`.

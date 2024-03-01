@@ -11,7 +11,7 @@ Policies
 Policies can be used to define the reaction and behaviour of the system.
 
 Each policy defines the behaviour in a certain area, called scope. 
-privacyIDEA knows the scopes:
+eduMFA knows the scopes:
 
 .. toctree::
    :maxdepth: 1
@@ -32,7 +32,7 @@ The logic of the policies in the scopes is additive.
 
    *Policy Definition*
 
-Starting with privacyIDEA 2.5 you can use policy templates to ease the setup.
+Starting with eduMFA 2.5 you can use policy templates to ease the setup.
 
 .. toctree::
    :maxdepth: 1
@@ -119,22 +119,22 @@ Each policy can contain the following attributes:
   You can enter several IP addresses or subnets divided by comma. Exclude item
   by prepending a minus sign (like ``10.2.0.0/16, -10.2.0.1, 192.168.0.1``).
 
-**privacyIDEA Node**
+**eduMFA Node**
 
-  (added in privacyIDEA 3.4)
+  (added in eduMFA 3.4)
 
   If you have a redundant setup requests can hit different dedicated nodes of
-  your privacyIDEA cluster. If you want a policy to only be valid for certain
-  privacyIDEA Nodes, you can set a list of allowed nodes.
+  your eduMFA cluster. If you want a policy to only be valid for certain
+  eduMFA Nodes, you can set a list of allowed nodes.
 
   This can be useful if you e.g. only want certain administrative actions on
   dedicated nodes.
 
-  The nodes are configured in pi.cfg. See :ref:`cfgfile`.
+  The nodes are configured in edumfa.cfg. See :ref:`cfgfile`.
 
 **time**
 
-  (added in privacyIDEA 2.12)
+  (added in eduMFA 2.12)
 
   In the time field of a policy you can define a list of time ranges. A time
   range can consist of day of weeks (*dow*) and of times in 24h format.
@@ -156,7 +156,7 @@ Each policy can contain the following attributes:
 
 **priority**
 
-  (added in privacyIDEA 2.23)
+  (added in eduMFA 2.23)
 
   The priority field of policies contains a positive number and defaults to 1.
   In case of policy conflicts, policies with a lower priority number take precedence.
@@ -167,7 +167,7 @@ Each policy can contain the following attributes:
   and ``pol2`` defines ``passthru=radius1``.
   If multiple policies match for an incoming authentication request, the priority
   value is used to determine the policy that should take precedence: Assuming ``pol1``
-  has a priority of 3 and ``pol2`` has a priority of 2, privacyIDEA
+  has a priority of 3 and ``pol2`` has a priority of 2, eduMFA
   will honor only the ``pol2`` policy and authenticate the user against the RADIUS server ``radius1``.
 
   Policy conflicts can still occur if multiple policies with the same priority
@@ -176,7 +176,7 @@ Each policy can contain the following attributes:
 
 **additional conditions**
 
-  (added in privacyIDEA 3.1)
+  (added in eduMFA 3.1)
 
   Using conditions, you can specify more advanced rules that determine whether
   a policy is valid for a request.

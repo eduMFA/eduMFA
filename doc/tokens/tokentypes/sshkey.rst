@@ -24,5 +24,5 @@ Definitions :ref:`application_ssh`.
 
 .. note:: This way you can manage SSH keys centrally, as you do not need to
    distribute the SSH keys to all machines. You rather store the SSH keys
-   centrally in privacyIDEA and use **privacyidea-authorizedkeys** to fetch
+   centrally in eduMFA and use **eduMFA-authorizedkeys** to fetch
    the keys in real time during the login process.

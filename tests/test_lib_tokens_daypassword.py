@@ -7,13 +7,13 @@ import logging
 import time
 from unittest import mock
 from .base import MyTestCase, FakeAudit, FakeFlaskG
-from privacyidea.lib.resolver import (save_resolver)
-from privacyidea.lib.realm import (set_realm)
-from privacyidea.lib.user import (User)
-from privacyidea.lib.policy import (PolicyClass, set_policy, delete_policy, SCOPE)
-from privacyidea.models import (Token, Config, Challenge)
-from privacyidea.lib.config import set_prepend_pin
-from privacyidea.lib.tokens.daypasswordtoken import DayPasswordTokenClass
+from edumfa.lib.resolver import (save_resolver)
+from edumfa.lib.realm import (set_realm)
+from edumfa.lib.user import (User)
+from edumfa.lib.policy import (PolicyClass, set_policy, delete_policy, SCOPE)
+from edumfa.models import (Token, Config, Challenge)
+from edumfa.lib.config import set_prepend_pin
+from edumfa.lib.tokens.daypasswordtoken import DayPasswordTokenClass
 
 PWFILE = "tests/testdata/passwords"
 

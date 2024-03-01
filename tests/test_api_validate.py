@@ -4,40 +4,41 @@ from testfixtures import log_capture
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
-from privacyidea.lib.utils import to_unicode
+
+from edumfa.lib.utils import to_unicode
 from urllib.parse import urlencode, quote
 import json
-from privacyidea.lib.tokens.pushtoken import PUSH_ACTION, strip_key
-from privacyidea.lib.utils import hexlify_and_unicode
+from edumfa.lib.tokens.pushtoken import PUSH_ACTION, strip_key
+from edumfa.lib.utils import hexlify_and_unicode
 from .base import MyApiTestCase
-from privacyidea.lib.user import (User)
-from privacyidea.lib.tokens.totptoken import HotpTokenClass
-from privacyidea.lib.tokens.yubikeytoken import YubikeyTokenClass
-from privacyidea.lib.tokens.registrationtoken import RegistrationTokenClass
-from privacyidea.lib.tokenclass import DATE_FORMAT
-from privacyidea.models import (Token, Policy, Challenge, AuthCache, db, TokenOwner)
-from privacyidea.lib.authcache import _hash_password
-from privacyidea.lib.config import (set_privacyidea_config,
+from edumfa.lib.user import (User)
+from edumfa.lib.tokens.totptoken import HotpTokenClass
+from edumfa.lib.tokens.yubikeytoken import YubikeyTokenClass
+from edumfa.lib.tokens.registrationtoken import RegistrationTokenClass
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.models import (Token, Policy, Challenge, AuthCache, db, TokenOwner)
+from edumfa.lib.authcache import _hash_password
+from edumfa.lib.config import (set_edumfa_config,
                                     get_inc_fail_count_on_false_pin,
-                                    delete_privacyidea_config)
-from privacyidea.lib.token import (get_tokens, init_token, remove_token,
+                                    delete_edumfa_config)
+from edumfa.lib.token import (get_tokens, init_token, remove_token,
                                    reset_token, enable_token, revoke_token,
                                    set_pin, get_one_token)
-from privacyidea.lib.policy import SCOPE, ACTION, set_policy, delete_policy, AUTHORIZED
-from privacyidea.lib.event import set_event
-from privacyidea.lib.event import delete_event
-from privacyidea.lib.error import ERROR
-from privacyidea.lib.resolver import save_resolver, get_resolver_list, delete_resolver
-from privacyidea.lib.realm import set_realm, set_default_realm, delete_realm
-from privacyidea.lib.radiusserver import add_radius
-from privacyidea.lib.challenge import get_challenges
-from privacyidea.lib.tokens.webauthn import webauthn_b64_decode
-from privacyidea.lib.tokens.registrationtoken import DEFAULT_LENGTH as DEFAULT_LENGTH_REG
-from privacyidea.lib.tokens.passwordtoken import DEFAULT_LENGTH as DEFAULT_LENGTH_PW
-from privacyidea.lib.tokenclass import ROLLOUTSTATE, CLIENTMODE
-from privacyidea.lib import _
+from edumfa.lib.policy import SCOPE, ACTION, set_policy, delete_policy, AUTHORIZED
+from edumfa.lib.event import set_event
+from edumfa.lib.event import delete_event
+from edumfa.lib.error import ERROR
+from edumfa.lib.resolver import save_resolver, get_resolver_list, delete_resolver
+from edumfa.lib.realm import set_realm, set_default_realm, delete_realm
+from edumfa.lib.radiusserver import add_radius
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.tokens.webauthn import webauthn_b64_decode
+from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH as DEFAULT_LENGTH_REG
+from edumfa.lib.tokens.passwordtoken import DEFAULT_LENGTH as DEFAULT_LENGTH_PW
+from edumfa.lib.tokenclass import ROLLOUTSTATE, CLIENTMODE
+from edumfa.lib import _
 from passlib.hash import argon2
-from privacyidea.lib.smsprovider.SMSProvider import set_smsgateway
+from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
 
 from testfixtures import Replace, test_datetime
 import datetime
@@ -274,12 +275,12 @@ class AuthorizationPolicyTestCase(MyApiTestCase):
     def test_04_testing_token_with_setrealm(self):
         """
         When testing a token in the UI, the following request is triggered.
-        https://privacyidea/validate/check
+        https://edumfa/validate/check
         serial=PISM1234
         pass=1234
 
         If we have a setrealm policy, this request is triggered:
-        https://privacyidea/validate/check
+        https://edumfa/validate/check
         serial=PISM1234
         pass=1234
         realm=newrealm
@@ -360,7 +361,7 @@ class DisplayTANTestCase(MyApiTestCase):
             value = result.get("value")['n_imported']
             self.assertTrue(value == 1, result)
 
-        from privacyidea.lib.token import set_pin
+        from edumfa.lib.token import set_pin
         set_pin("ocra1234", "test")
 
         # Issue a challenge response
@@ -436,7 +437,7 @@ def setup_sms_gateway():
     success_body = "ID 12345"
 
     identifier = "myGW"
-    provider_module = "privacyidea.lib.smsprovider.HttpSMSProvider" \
+    provider_module = "edumfa.lib.smsprovider.HttpSMSProvider" \
                       ".HttpSMSProvider"
     id = set_smsgateway(identifier, provider_module, description="test",
                         options={"HTTP_METHOD": "POST",
@@ -446,7 +447,7 @@ def setup_sms_gateway():
                                  "phone": "{phone}"})
     assert (id > 0)
     # set config sms.identifier = myGW
-    r = set_privacyidea_config("sms.identifier", identifier)
+    r = set_edumfa_config("sms.identifier", identifier)
     assert (r in ["insert", "update"])
     responses.add(responses.POST,
                   post_url,
@@ -476,9 +477,9 @@ class AValidateOfflineTestCase(MyApiTestCase):
         pass
         # create offline app
         #tokenobj = get_tokens(self.serials[0])[0]
-        from privacyidea.lib.applications.offline import REFILLTOKEN_LENGTH
-        from privacyidea.lib.machine import attach_token, detach_token
-        from privacyidea.lib.machineresolver import save_resolver, delete_resolver
+        from edumfa.lib.applications.offline import REFILLTOKEN_LENGTH
+        from edumfa.lib.machine import attach_token, detach_token
+        from edumfa.lib.machineresolver import save_resolver, delete_resolver
         mr_obj = save_resolver({"name": "testresolver",
                                 "type": "hosts",
                                 "filename": HOSTSFILE,
@@ -897,7 +898,7 @@ class ValidateAPITestCase(MyApiTestCase):
         tok = get_tokens(serial="s3")[0]
         self.assertEqual(tok.token.failcount, 1)
 
-        set_privacyidea_config("IncFailCountOnFalsePin", False)
+        set_edumfa_config("IncFailCountOnFalsePin", False)
         self.assertFalse(get_inc_fail_count_on_false_pin())
         reset_token(serial="SE1")
         reset_token(serial="s2")
@@ -990,7 +991,7 @@ class ValidateAPITestCase(MyApiTestCase):
 
     def test_10_saml_check(self):
         # test successful authentication
-        set_privacyidea_config("ReturnSamlAttributes", "0")
+        set_edumfa_config("ReturnSamlAttributes", "0")
         with self.app.test_request_context('/validate/samlcheck',
                                            method='POST',
                                            data={"user": "cornelius",
@@ -1005,7 +1006,7 @@ class ValidateAPITestCase(MyApiTestCase):
             # No SAML return attributes
             self.assertEqual(attributes.get("email"), None)
 
-        set_privacyidea_config("ReturnSamlAttributes", "1")
+        set_edumfa_config("ReturnSamlAttributes", "1")
 
         with self.app.test_request_context('/validate/samlcheck',
                                            method='POST',
@@ -1045,7 +1046,7 @@ class ValidateAPITestCase(MyApiTestCase):
             self.assertEqual(attributes.get("realm"), None)
             self.assertEqual(attributes.get("username"), None)
 
-        set_privacyidea_config("ReturnSamlAttributesOnFail", "1")
+        set_edumfa_config("ReturnSamlAttributesOnFail", "1")
         with self.app.test_request_context('/validate/samlcheck',
                                            method='POST',
                                            data={"user": "cornelius",
@@ -1348,7 +1349,7 @@ class ValidateAPITestCase(MyApiTestCase):
         pol.save()
 
         # create the challenge by authenticating with the OTP PIN
-        with Replace('privacyidea.models.datetime',
+        with Replace('edumfa.models.datetime',
                      test_datetime(2020, 6, 13, 1, 2, 3,
                                    tzinfo=datetime.timezone(datetime.timedelta(hours=+5)))):
             with self.app.test_request_context('/validate/check',
@@ -1366,7 +1367,7 @@ class ValidateAPITestCase(MyApiTestCase):
         # send the OTP value while being an hour too early (timezone +1)
         # This should not happen unless there is a server misconfiguration
         # The transaction should not be removed by the janitor
-        with Replace('privacyidea.models.datetime',
+        with Replace('edumfa.models.datetime',
                      test_datetime(2020, 6, 13, 1, 2, 4,
                                    tzinfo=datetime.timezone(datetime.timedelta(hours=+6)))):
             with self.app.test_request_context('/validate/check',
@@ -1380,7 +1381,7 @@ class ValidateAPITestCase(MyApiTestCase):
                 self.assertFalse(result.get("value"))
 
         # send the OTP value while being an hour too late (timezone -1)
-        with Replace('privacyidea.models.datetime',
+        with Replace('edumfa.models.datetime',
                      test_datetime(2020, 6, 13, 1, 2, 4,
                                    tzinfo=datetime.timezone(datetime.timedelta(hours=+1)))):
             with self.app.test_request_context('/validate/check',
@@ -1580,7 +1581,7 @@ class ValidateAPITestCase(MyApiTestCase):
             result = res.json.get("result")
             self.assertTrue(result.get("value"))
 
-        set_privacyidea_config("splitAtSign", "0")
+        set_edumfa_config("splitAtSign", "0")
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user":
@@ -1589,7 +1590,7 @@ class ValidateAPITestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 400, res)
 
-        set_privacyidea_config("splitAtSign", "1")
+        set_edumfa_config("splitAtSign", "1")
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user":
@@ -1613,7 +1614,7 @@ class ValidateAPITestCase(MyApiTestCase):
 
         # The default behaviour - if the config entry does not exist,
         # is to split the @Sign
-        delete_privacyidea_config("splitAtSign")
+        delete_edumfa_config("splitAtSign")
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user":
@@ -1629,7 +1630,7 @@ class ValidateAPITestCase(MyApiTestCase):
         token = init_token({"serial": serial,
                             "otpkey": self.otpkey,
                             "pin": "async"}, User("cornelius", self.realm2))
-        set_privacyidea_config("AutoResync", True)
+        set_edumfa_config("AutoResync", True)
         token.set_sync_window(10)
         token.set_count_window(5)
         # counter = 8, is out of sync
@@ -1655,7 +1656,7 @@ class ValidateAPITestCase(MyApiTestCase):
             result = res.json.get("result")
             self.assertEqual(result.get("value"), True)
 
-        delete_privacyidea_config("AutoResync")
+        delete_edumfa_config("AutoResync")
         remove_token(serial)
 
     def test_16_autoresync_hotp_via_multichallenge(self):
@@ -1663,7 +1664,7 @@ class ValidateAPITestCase(MyApiTestCase):
         token = init_token({"serial": serial,
                             "otpkey": self.otpkey,
                             "pin": "async"}, User("cornelius", self.realm2))
-        set_privacyidea_config("AutoResync", True)
+        set_edumfa_config("AutoResync", True)
         set_policy(name="mcr_resync", scope=SCOPE.AUTH, action=ACTION.RESYNC_VIA_MULTICHALLENGE)
         token.set_sync_window(10)
         token.set_count_window(5)
@@ -1708,7 +1709,7 @@ class ValidateAPITestCase(MyApiTestCase):
             result = res.json.get("result")
             self.assertEqual(result.get("value"), True)
 
-        delete_privacyidea_config("AutoResync")
+        delete_edumfa_config("AutoResync")
         remove_token(serial)
         delete_policy("mcr_resync")
 
@@ -1849,7 +1850,7 @@ class ValidateAPITestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 400, res)
 
-        set_privacyidea_config("question.num_answers", 2)
+        set_edumfa_config("question.num_answers", 2)
         with self.app.test_request_context('/token/init',
                                            method='POST',
                                            data={"type": "question",
@@ -2109,8 +2110,8 @@ class ValidateAPITestCase(MyApiTestCase):
 
     @responses.activate
     def test_24_trigger_challenge(self):
-        from privacyidea.lib.smsprovider.SMSProvider import set_smsgateway
-        from privacyidea.lib.config import set_privacyidea_config
+        from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
+        from edumfa.lib.config import set_edumfa_config
         setup_sms_gateway()
 
         self.setUp_user_realms()
@@ -2189,7 +2190,7 @@ class ValidateAPITestCase(MyApiTestCase):
     @smtpmock.activate
     def test_25_trigger_challenge_smtp(self):
         smtpmock.setdata(response={"hans@dampf.com": (200, 'OK')})
-        from privacyidea.lib.tokens.emailtoken import EMAILACTION
+        from edumfa.lib.tokens.emailtoken import EMAILACTION
 
         self.setUp_user_realms()
         self.setUp_user_realm2()
@@ -2580,7 +2581,7 @@ class ValidateAPITestCase(MyApiTestCase):
 
         # Configure the SMS Gateway
         setup_sms_gateway()
-        from privacyidea.lib.config import set_privacyidea_config
+        from edumfa.lib.config import set_edumfa_config
 
         self.setUp_user_realms()
         user = User("cornelius", self.realm1)
@@ -2697,7 +2698,7 @@ class ValidateAPITestCase(MyApiTestCase):
 
         self.assertEqual(int(tok.get_tokeninfo("count_auth")), 1)
 
-        set_privacyidea_config("no_auth_counter", "True")
+        set_edumfa_config("no_auth_counter", "True")
         # Now an authentication does not increase the counter!
         with self.app.test_request_context('/validate/check',
                                            method='POST',
@@ -2710,7 +2711,7 @@ class ValidateAPITestCase(MyApiTestCase):
 
         self.assertEqual(int(tok.get_tokeninfo("count_auth")), 1)
         remove_token(serial)
-        delete_privacyidea_config("no_auth_counter")
+        delete_edumfa_config("no_auth_counter")
 
     @ldap3mock.activate
     def test_32_secondary_login_attribute(self):
@@ -3406,7 +3407,7 @@ class WebAuthn(MyApiTestCase):
         recorded_nonce = "nh0iBz0SMndlVsPRGLvOCQc-PprPxOJf30KeZmTXY94"
         recorded_nonce_hex = hexlify_and_unicode(webauthn_b64_decode(recorded_nonce))
         # Update the nonce in the challenge database.
-        from privacyidea.lib.challenge import get_challenges
+        from edumfa.lib.challenge import get_challenges
         chal = get_challenges(serial=self.serial, transaction_id=transaction_id)[0]
         chal.challenge = recorded_nonce_hex
         chal.save()
@@ -3478,7 +3479,7 @@ class WebAuthn(MyApiTestCase):
         recorded_nonce = "nh0iBz0SMndlVsPRGLvOCQc-PprPxOJf30KeZmTXY94"
         recorded_nonce_hex = hexlify_and_unicode(webauthn_b64_decode(recorded_nonce))
         # Update the nonce in the challenge database.
-        from privacyidea.lib.challenge import get_challenges
+        from edumfa.lib.challenge import get_challenges
         chal = get_challenges(serial=self.serial, transaction_id=transaction_id)[0]
         chal.challenge = recorded_nonce_hex
         chal.save()
@@ -3889,7 +3890,7 @@ class MultiChallege(MyApiTestCase):
         TTL = "10"
 
         # set policy
-        from privacyidea.lib.tokens.pushtoken import POLL_ONLY
+        from edumfa.lib.tokens.pushtoken import POLL_ONLY
         set_policy("push2", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
                        PUSH_ACTION.FIREBASE_CONFIG, POLL_ONLY,
@@ -4157,7 +4158,7 @@ class AChallengeResponse(MyApiTestCase):
 
     @smtpmock.activate
     def test_03_two_challenges_from_one_email_token(self):
-        set_privacyidea_config("email.concurrent_challenges", "True")
+        set_edumfa_config("email.concurrent_challenges", "True")
         smtpmock.setdata(response={"bla@example.com": (200, 'OK')})
         # remove tokens for user cornelius
         remove_token(user=User("cornelius", self.realm1))
@@ -4225,11 +4226,11 @@ class AChallengeResponse(MyApiTestCase):
             self.assertTrue(data.get("result").get("value"))
 
         remove_token(self.serial_email)
-        delete_privacyidea_config("email.concurrent_challenges")
+        delete_edumfa_config("email.concurrent_challenges")
 
     @smtpmock.activate
     def test_04_only_last_challenge_from_one_email_token(self):
-        set_privacyidea_config("email.concurrent_challenges", "False")
+        set_edumfa_config("email.concurrent_challenges", "False")
         smtpmock.setdata(response={"bla@example.com": (200, 'OK')})
         # remove tokens for user cornelius
         remove_token(user=User("cornelius", self.realm1))
@@ -4299,7 +4300,7 @@ class AChallengeResponse(MyApiTestCase):
             self.assertTrue(data.get("result").get("value"))
 
         remove_token(self.serial_email)
-        delete_privacyidea_config("email.concurrent_challenges")
+        delete_edumfa_config("email.concurrent_challenges")
 
     @responses.activate
     def test_05_two_challenges_from_one_sms_token(self):
@@ -4307,7 +4308,7 @@ class AChallengeResponse(MyApiTestCase):
         setup_sms_gateway()
 
         ### Now do the enrollment and authentication
-        set_privacyidea_config("sms.concurrent_challenges", "True")
+        set_edumfa_config("sms.concurrent_challenges", "True")
         # remove tokens for user cornelius
         remove_token(user=User("cornelius", self.realm1))
         # Enroll an SMS-Token to the user
@@ -4372,7 +4373,7 @@ class AChallengeResponse(MyApiTestCase):
             self.assertTrue(data.get("result").get("value"))
 
         remove_token(self.serial_sms)
-        delete_privacyidea_config("sms.concurrent_challenges")
+        delete_edumfa_config("sms.concurrent_challenges")
 
     @responses.activate
     def test_06_only_last_challenges_from_one_sms_token(self):
@@ -4381,7 +4382,7 @@ class AChallengeResponse(MyApiTestCase):
 
         ### Now do the enrollment and authentication
         try:
-            delete_privacyidea_config("sms.concurrent_challenges")
+            delete_edumfa_config("sms.concurrent_challenges")
         except AttributeError:
             pass
 
@@ -5048,9 +5049,9 @@ class AChallengeResponse(MyApiTestCase):
         tok = init_token({"type": "hotp", "otpkey": self.otpkey, "pin": "adminpin2", "serial": "admintok2"},
                          user=User("cornelius", self.realm3))
         self.assertTrue(tok.get_tokeninfo("tokenkind"), "software")
-        # user: privacyidea@realm3
+        # user: edumfa@realm3
         tok = init_token({"type": "hotp", "otpkey": self.otpkey, "pin": "adminpin3", "serial": "admintok3"},
-                         user=User("privacyidea", self.realm3))
+                         user=User("edumfa", self.realm3))
         self.assertTrue(tok.get_tokeninfo("tokenkind"), "software")
 
         # Start the authentication with the PIN of the 4eyes token
@@ -5144,9 +5145,9 @@ class AChallengeResponse(MyApiTestCase):
         tok = init_token({"type": "hotp", "otpkey": self.otpkey, "pin": "adminpin2", "serial": "admintok2"},
                          user=User("cornelius", self.realm3))
         self.assertTrue(tok.get_tokeninfo("tokenkind"), "software")
-        # user: privacyidea@realm3
+        # user: edumfa@realm3
         tok = init_token({"type": "hotp", "otpkey": self.otpkey, "pin": "adminpin3", "serial": "admintok3"},
-                         user=User("privacyidea", self.realm3))
+                         user=User("edumfa", self.realm3))
         self.assertTrue(tok.get_tokeninfo("tokenkind"), "software")
 
         # Start the authentication with one of the tokens!
@@ -5223,7 +5224,7 @@ class AChallengeResponse(MyApiTestCase):
         # However, the authentication with the expired transaction_id has to fail
         new_utcnow = datetime.datetime.utcnow().replace(tzinfo=None) + datetime.timedelta(minutes=12)
         new_now = datetime.datetime.now().replace(tzinfo=None) + datetime.timedelta(minutes=12)
-        with mock.patch('privacyidea.models.datetime') as mock_datetime:
+        with mock.patch('edumfa.models.datetime') as mock_datetime:
             mock_datetime.utcnow.return_value = new_utcnow
             mock_datetime.now.return_value = new_now
             with self.app.test_request_context('/validate/check',
@@ -5408,7 +5409,7 @@ class MultiChallengeEnrollTest(MyApiTestCase):
     def test_01_enroll_HOTP(self, capture):
         # Init LDAP
         ldap3mock.setLDAPDirectory(LDAPDirectory)
-        logging.getLogger('privacyidea').setLevel(logging.DEBUG)
+        logging.getLogger('edumfa').setLevel(logging.DEBUG)
         # create realm
         r = set_realm("ldaprealm", resolvers=["catchall"])
         set_default_realm("ldaprealm")
@@ -5483,7 +5484,7 @@ class MultiChallengeEnrollTest(MyApiTestCase):
         self.assertIn('HIDDEN', log_msg, log_msg)
         # Verify that the force_pin enrollment policy worked for validate-check-enrollment
         self.assertIn('Exiting get_init_tokenlabel_parameters with result {\'force_app_pin\': True}', log_msg, log_msg)
-        logging.getLogger('privacyidea').setLevel(logging.INFO)
+        logging.getLogger('edumfa').setLevel(logging.INFO)
 
         # Cleanup
         delete_policy("pol_passthru")

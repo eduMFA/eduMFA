@@ -223,6 +223,6 @@ Code
 ~~~~
 
 
-.. automodule:: privacyidea.lib.eventhandler.tokenhandler
+.. automodule:: eduMFA.lib.eventhandler.tokenhandler
    :members:
    :undoc-members:

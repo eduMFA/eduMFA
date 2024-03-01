@@ -1,7 +1,7 @@
 .. _token_overview:
 .. _tokentypes:
 
-Token types in privacyIDEA
+Token types in eduMFA
 --------------------------
 
 .. index:: token types, Yubico, Yubikey, SMS, SSH Key, registration, TiQR
@@ -45,7 +45,7 @@ Some token require prior configuration as described in :ref:`tokentypes_details`
   a RADIUS server.
 * registration
 * :ref:`remote_token` - A virtual token that forwards the authentication request to
-  another privacyIDEA server.
+  another eduMFA server.
 * :ref:`sms_token` - A token that sends the OTP value to the mobile phone of the
   user.
 * :ref:`spass_token` - The simple pass token. A token that has no OTP component and
@@ -64,7 +64,7 @@ Some token require prior configuration as described in :ref:`tokentypes_details`
 * :ref:`webauthn` - The WebAuthn or FIDO2 token which can use several different mechanisms like
   USB tokens or TPMs to authenticate via public key cryptography.
 * :ref:`yubikey_token` - A Yubikey hardware initialized in the AES mode, that
-  authenticates against privacyIDEA.
+  authenticates against eduMFA.
 * :ref:`yubico_token` - A Yubikey hardware that authenticates against the Yubico
   Cloud service.
 
@@ -75,7 +75,7 @@ Some token require prior configuration as described in :ref:`tokentypes_details`
 Token type details
 .....................
 
-Detailed information on the different token types used in privacyIDEA can
+Detailed information on the different token types used in eduMFA can
 be found in the following sections.
 
 .. toctree::

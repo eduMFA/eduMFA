@@ -5,7 +5,7 @@ REST API
 
 .. index:: API, REST
 
-.. automodule:: privacyidea.api
+.. automodule:: edumfa.api
 
 Start to read about authentication to the API at :ref:`rest_auth`.
 
@@ -28,7 +28,7 @@ Now you can take a look at the several REST endpoints.
    api/event
    api/machineresolver
    api/machines
-   api/privacyideaserver
+   api/eduMFAserver
    api/caconnector
    api/recover
    api/register
@@ -39,5 +39,4 @@ Now you can take a look at the several REST endpoints.
    api/smtpserver
    api/smsgateway
    api/radiusserver
-   api/subscriptions
    api/client

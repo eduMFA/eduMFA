@@ -3,6 +3,6 @@
 4 Eyes Token
 ~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.foureyestoken.FourEyesTokenClass
+.. autoclass:: edumfa.lib.tokens.foureyestoken.FourEyesTokenClass
    :members:
    :undoc-members:

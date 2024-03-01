@@ -7,7 +7,7 @@ Yubikey AES mode
 .. index:: Yubikey AES mode
 
 The Yubico AES mode uses the same kind of token as the Yubico Cloud service
-but validates the OTP in your local privacyIDEA server. So the secrets
+but validates the OTP in your local eduMFA server. So the secrets
 stay local to your system and are not stored in Yubico's Cloud service.
 
 .. figure:: images/yubikey.png
@@ -26,7 +26,7 @@ the API key, but then the request and answer can't be verified against
 the key. It is useful to use *HTTPS* for your validation requests, but
 this is another kind of protection.
 
-OTP validation can either use the privacyidea API ``/validate/check`` or
+OTP validation can either use the eduMFA API ``/validate/check`` or
 the Yubikey validation protocol ``/ttype/yubikey`` or - if enabled in
 your web-server configuration - ``/wsapi/2.0/verify``.
 

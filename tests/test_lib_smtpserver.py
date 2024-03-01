@@ -4,12 +4,12 @@ This test file tests the lib/smtpserver.py
 import email
 from email.mime.image import MIMEImage
 import binascii
-from privacyidea.lib.queue import get_job_queue
+from edumfa.lib.queue import get_job_queue
 
 from tests.queuemock import MockQueueTestCase
 from .base import MyTestCase
-from privacyidea.lib.error import ResourceNotFoundError
-from privacyidea.lib.smtpserver import (get_smtpservers, add_smtpserver,
+from edumfa.lib.error import ResourceNotFoundError
+from edumfa.lib.smtpserver import (get_smtpservers, add_smtpserver,
                                         delete_smtpserver, get_smtpserver,
                                         SMTPServer)
 from . import smtpmock
@@ -112,14 +112,14 @@ class SMTPServerTestCase(MyTestCase):
                  username=username, password=password, sender=sender,
                  tls=tls)
         r = SMTPServer.test_email(s, recipient,
-                                  "Test Email from privacyIDEA",
-                                  "This is a test email from privacyIDEA. "
+                                  "Test Email from eduMFA",
+                                  "This is a test email from eduMFA. "
                                   "The configuration %s is working." % identifier)
         self.assertTrue(r)
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
         self.assertEqual(parsed_email.get_content_type(), 'text/plain', parsed_email)
         self.assertEqual(parsed_email.get('To'), recipient, parsed_email)
-        self.assertEqual(parsed_email.get('Subject'), "Test Email from privacyIDEA", parsed_email)
+        self.assertEqual(parsed_email.get('Subject'), "Test Email from eduMFA", parsed_email)
 
         # Now with an already prepared MIME email
         msg = MIMEImage(binascii.a2b_base64(PNG_IMG))
@@ -150,14 +150,14 @@ class SMTPServerTestCase(MyTestCase):
                  username=username, password=password, sender=sender,
                  tls=tls)
         r = SMTPServer.test_email(s, recipient,
-                                  "Test Email from privacyIDEA",
-                                  "This is a test email from privacyIDEA. "
+                                  "Test Email from eduMFA",
+                                  "This is a test email from eduMFA. "
                                   "The configuration %s is working." % identifier)
         self.assertTrue(r)
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
         self.assertEqual(parsed_email.get_content_type(), 'text/plain', parsed_email)
         self.assertEqual(parsed_email.get('To'), recipient, parsed_email)
-        self.assertEqual(parsed_email.get('Subject'), "Test Email from privacyIDEA", parsed_email)
+        self.assertEqual(parsed_email.get('Subject'), "Test Email from eduMFA", parsed_email)
 
         # Now with an already prepared MIME email
         msg = MIMEImage(binascii.a2b_base64(PNG_IMG))

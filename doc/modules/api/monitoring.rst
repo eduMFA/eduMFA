@@ -3,9 +3,9 @@
 Monitoring endpoints
 ....................
 
-.. automodule:: privacyidea.api.monitoring
+.. automodule:: edumfa.api.monitoring
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: monitoring_blueprint
 

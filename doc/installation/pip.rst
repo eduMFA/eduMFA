@@ -5,50 +5,50 @@ Python Package Index
 
 .. index:: pip install, virtual environment
 
-You can install privacyidea usually on any Linux distribution in a python
-virtual environment. This way you keep all privacyIDEA code in one defined
+You can install eduMFA usually on any Linux distribution in a python
+virtual environment. This way you keep all eduMFA code in one defined
 subdirectory.
 
-privacyIDEA currently runs with Python 3.6 to 3.10. Other
+eduMFA currently runs with Python 3.6 to 3.10. Other
 versions either do not work or are not tested.
 
 You first need to install a package for creating a python `virtual environment
 <https://virtualenv.pypa.io/en/stable/>`_.
 
-Now you can setup the virtual environment for privacyIDEA like this::
+Now you can setup the virtual environment for eduMFA like this::
 
-  virtualenv /opt/privacyidea
+  virtualenv /opt/eduMFA
 
-  cd /opt/privacyidea
+  cd /opt/eduMFA
   source bin/activate
 
 .. note::
     Some distributions still ship Python 2.7 as the system python. If you want
     to use Python 3 you can create the virtual environment like this:
-    `virtualenv -p /usr/bin/python3 /opt/privacyidea`
+    `virtualenv -p /usr/bin/python3 /opt/eduMFA`
 
 Now you are within the python virtual environment and you can run::
 
-  pip install privacyidea
+  pip install eduMFA
 
-in order to install the latest privacyIDEA version from
-`PyPI <https://pypi.org/project/privacyIDEA>`_.
+in order to install the latest eduMFA version from
+`PyPI <https://pypi.org/project/eduMFA>`_.
 
 Deterministic Installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The privacyIDEA package contains dependencies with a minimal required version. However, newest
+The eduMFA package contains dependencies with a minimal required version. However, newest
 versions of dependencies are not always tested and might cause problems.
 If you want to achieve a deterministic installation, you can now install the pinned and tested
 versions of the dependencies::
 
-  pip install -r lib/privacyidea/requirements.txt
+  pip install -r lib/eduMFA/requirements.txt
 
-It would even be safer to install the pinned dependencies *before* installing privacyIDEA.
+It would even be safer to install the pinned dependencies *before* installing eduMFA.
 So if you e.g. know that you are going to install version 3.6 you can run::
 
-    pip install -r https://raw.githubusercontent.com/privacyidea/privacyidea/v3.6/requirements.txt
-    pip install privacyidea==3.6
+    pip install -r https://raw.githubusercontent.com/eduMFA/eduMFA/v3.6/requirements.txt
+    pip install eduMFA==3.6
 
 .. _pip_configuration:
 
@@ -58,14 +58,14 @@ Configuration
 Database
 ^^^^^^^^
 
-privacyIDEA makes use of `SQLAlchemy <https://www.sqlalchemy.org>`_ to be able
+eduMFA makes use of `SQLAlchemy <https://www.sqlalchemy.org>`_ to be able
 to talk to different SQL-based databases. Our best experience is with
 `MySQL <https://www.mysql.com/>`_ but SQLAlchemy supports many different
 databases [#sqlaDialects]_.
 
 The database server should be installed on the host or be otherwise reachable.
 
-In order for privacyIDEA to use the database, a database user with the
+In order for eduMFA to use the database, a database user with the
 appropriate privileges is needed.
 The following SQL commands will create the database as well as a user in `MySQL`::
 
@@ -73,42 +73,42 @@ The following SQL commands will create the database as well as a user in `MySQL`
     CREATE USER "pi"@"localhost" IDENTIFIED BY "<dbsecret>";
     GRANT ALL PRIVILEGES ON pi.* TO "pi"@"localhost";
 
-You must then add the database name, user and password to your `pi.cfg`. See
+You must then add the database name, user and password to your `edumfa.cfg`. See
 :ref:`cfgfile` for more information on the configuration.
 
-Setting up privacyIDEA
+Setting up eduMFA
 ^^^^^^^^^^^^^^^^^^^^^^
-Additionally to the database connection a new ``PI_PEPPER`` and ``SECRET_KEY``
+Additionally to the database connection a new ``EDUMFA_PEPPER`` and ``SECRET_KEY``
 must be generated in order to secure the installation::
 
     PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
-    echo "PI_PEPPER = '$PEPPER'" >> /path/to/pi.cfg
+    echo "EDUMFA_PEPPER = '$PEPPER'" >> /path/to/edumfa.cfg
     SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
-    echo "SECRET_KEY = '$SECRET'" >> /path/to/pi.cfg
+    echo "SECRET_KEY = '$SECRET'" >> /path/to/edumfa.cfg
 
 An encryption key for encrypting the secrets in the database and a key for
 signing the :ref:`audit` log is also needed (the following commands should be
 executed inside the virtual environment)::
 
-    pi-manage create_enckey  # encryption key for the database
-    pi-manage create_audit_keys  # key for verification of audit log entries
+    edumfa-manage create_enckey  # encryption key for the database
+    edumfa-manage create_audit_keys  # key for verification of audit log entries
 
 To create the database tables execute::
 
-    pi-manage create_tables
+    edumfa-manage create_tables
 
 Stamping the database to the current database schema version is important for
 the update process later::
 
-    pi-manage db stamp head -d /opt/privacyidea/lib/privacyidea/migrations/
+    edumfa-manage db stamp head -d /opt/eduMFA/lib/eduMFA/migrations/
 
 After creating a local administrative user with::
 
-    pi-manage admin add <login>
+    edumfa-manage admin add <login>
 
 the development server can be started with::
 
-    pi-manage runserver
+    edumfa-manage runserver
 
 .. warning::
     The development server should not be used for a productive environment.
@@ -124,7 +124,7 @@ is needed.
 Setup and configuration of a webserver can be a complex procedure depending on
 several parameter (host OS, SSL, internal network structure, ...).
 Some example configuration can be found in the NetKnights GitHub
-repositories [#nkgh]_. More on the WSGI setup for privacyIDEA can be found in
+repositories [#nkgh]_. More on the WSGI setup for eduMFA can be found in
 :ref:`wsgiscript`.
 
 

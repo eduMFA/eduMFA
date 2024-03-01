@@ -5,5 +5,5 @@ The database model
 
 .. index:: database
 
-.. automodule:: privacyidea.models
+.. automodule:: edumfa.models
    :members:

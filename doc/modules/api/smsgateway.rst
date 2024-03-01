@@ -3,9 +3,9 @@
 SMS Gateway endpoints
 .....................
 
-.. automodule:: privacyidea.api.smsgateway
+.. automodule:: edumfa.api.smsgateway
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: smsgateway_blueprint
 

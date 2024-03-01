@@ -3,7 +3,7 @@ Event Handler
 
 .. index:: Event Handler
 
-The following event handlers are known to privacyIDEA
+The following event handlers are known to eduMFA
 
 .. toctree::
    :glob:
@@ -11,7 +11,7 @@ The following event handlers are known to privacyIDEA
    eventhandler/*
 
 
-.. automodule:: privacyidea.lib.event
+.. automodule:: edumfa.lib.event
    :members:
    :undoc-members:
 

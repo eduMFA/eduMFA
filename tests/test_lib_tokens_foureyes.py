@@ -6,9 +6,9 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.foureyestoken import FourEyesTokenClass
-from privacyidea.lib.token import init_token, check_serial_pass, remove_token
-from privacyidea.lib.user import User
+from edumfa.lib.tokens.foureyestoken import FourEyesTokenClass
+from edumfa.lib.token import init_token, check_serial_pass, remove_token
+from edumfa.lib.user import User
 
 
 class FourEyesTokenTestCase(MyTestCase):

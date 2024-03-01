@@ -1,6 +1,6 @@
 .. _crypto_considerations:
 
-Cryptographic considerations of privacyIDEA
+Cryptographic considerations of eduMFA
 -------------------------------------------
 
 .. index:: Crypto considerations
@@ -9,7 +9,7 @@ Encryption keys
 ~~~~~~~~~~~~~~~
 
 The encryption key is a set of 3 256bit AES keys. Usually this key is located
-in a 96 byte long file "enckey" specified by *PI_ENCFILE* in :ref:`cfgfile`.
+in a 96 byte long file "enckey" specified by *EDUMFA_ENCFILE* in :ref:`cfgfile`.
 The encryption key can be encrypted with a password.
 
 The three encryption keys are used to encrypt
@@ -34,7 +34,7 @@ and SHA2-512.
 PIN Hashing
 ~~~~~~~~~~~
 
-Token PINs are managed by privacyIDEA as the first of the two factors. Each
+Token PINs are managed by eduMFA as the first of the two factors. Each
 token has its own token PIN. The token PIN is hashed with Argon2 (9 rounds)
 and stored in the *Token* database table.
 
@@ -43,13 +43,13 @@ This PIN hashing is performed in *lib.crypto:hash*.
 Administrator Passwords
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-privacyIDEA can manage internal administrators using :ref:`pimanage`.
+eduMFA can manage internal administrators using :ref:`pimanage`.
 Internal administrators are stored in the database table *Admin*.
 
 The password is stored using Argon2 (9 rounds) with an additional pepper.
 While Argon2 uses a salt which is stored in the *Admin* table
 created randomly for each admin password the pepper is unique for one
-privacyIDEA installation and stored in the pi.cfg file.
+eduMFA installation and stored in the edumfa.cfg file.
 
 This way a database administrator is not able to inject rogue password hashes.
 
@@ -62,17 +62,17 @@ Audit Signing
 
 The audit log is digitally signed. (see :ref:`audit` and :ref:`audit_parameters`).
 
-The audit log can be handled by different modules. privacyIDEA comes with an
+The audit log can be handled by different modules. eduMFA comes with an
 SQL Audit Module which is enabled by default.
 
 For signing the audit log the SQL Audit Module uses the RSA keys specified
-with the values ``PI_AUDIT_KEY_PUBLIC`` and ``PI_AUDIT_KEY_PRIVATE`` in
+with the values ``EDUMFA_AUDIT_KEY_PUBLIC`` and ``EDUMFA_AUDIT_KEY_PRIVATE`` in
 :ref:`cfgfile`.
 
 By default the installer generates 2048bit RSA keys.
 
 If you can assure that the private key has not been tampered with, the config
-entry ``PI_AUDIT_NO_PRIVATE_KEY_CHECK = True`` avoids a time-consuming check during
+entry ``EDUMFA_AUDIT_NO_PRIVATE_KEY_CHECK = True`` avoids a time-consuming check during
 loading of the private key (See also :ref:`faq_perf_crypto_audit`).
 
 The audit signing is performed in *lib.crypto:Sign.sign* using SHA2-256 as

@@ -6,7 +6,7 @@ UserIdResolvers
 .. index:: useridresolvers, LDAP, Active Directory
 
 Each organisation or company usually has its users managed at a central location.
-This is why privacyIDEA does not provide its own user management but rather
+This is why eduMFA does not provide its own user management but rather
 connects to existing user stores.
 
 UserIdResolvers are connectors to those user stores, the locations,
@@ -19,7 +19,7 @@ user store.
 Today with many more online cloud services SCIM is also an uprising
 protocol to access userstores.
 
-privacyIDEA already comes with UserIdResolvers to talk to all these
+eduMFA already comes with UserIdResolvers to talk to all these
 user stores:
 
  * :ref:`flatfile_resolver`
@@ -37,7 +37,7 @@ When you have added all configuration data, most UIs of the UserIdResolvers have
 button "Test resolver", so that you can test your configuration before saving
 it.
 
-Starting with privacyIDEA 2.4 resolvers can be editable, i.e. you can edit
+Starting with eduMFA 2.4 resolvers can be editable, i.e. you can edit
 the users in the user store. Read more about this at :ref:`manage_users`.
 
 .. note:: Using the authentication policy ``otppin=userstore`` users can
@@ -57,12 +57,12 @@ Flatfile resolvers read files like ``/etc/passwd``.
 .. note:: The file ``/etc/passwd`` does not contain the unix password.
    Thus, if you create a flatfile resolver from this file the functionality
    with ``otppin=userstore`` is not available. You can create a flatfile with
-   passwords using the tool ``privacyidea-create-pwidresolver-user`` which is
-   usually found in ``/opt/privacyidea/bin/``.
+   passwords using the tool ``eduMFA-create-pwidresolver-user`` which is
+   usually found in ``/opt/eduMFA/bin/``.
 
 Create a flat file like this::
 
-   privacyidea-create-pwidresolver-user -u user2 -i 1002 >> /your/flat/file
+   eduMFA-create-pwidresolver-user -u user2 -i 1002 >> /your/flat/file
 
 
 .. _ldap_resolver:
@@ -101,20 +101,20 @@ This will create LDAP requests to
 TLS Version
 """""""""""
 
-When using TLS, you may specify the TLS version to use. Starting from version 3.6, privacyIDEA offers
+When using TLS, you may specify the TLS version to use. Starting from version 3.6, eduMFA offers
 TLS v1.3 by default.
 
 
 TLS certificates
 """"""""""""""""
 
-When using TLS with LDAP, you can tell privacyIDEA to verify the certificate. The according
+When using TLS with LDAP, you can tell eduMFA to verify the certificate. The according
 checkbox is visible in the WebUI if the target URL starts with *ldaps* or when using STARTTLS.
 
 You can specify a file with the trusted CA certificate, that signed the
-TLS certificate. The default CA filename is */etc/privacyidea/ldap-ca.crt*
+TLS certificate. The default CA filename is */etc/eduMFA/ldap-ca.crt*
 and can contain a list of base64 encoded CA certificates.
-PrivacyIDEA will use the CA file if specified. If you leave the field empty
+eduMFA will use the CA file if specified. If you leave the field empty
 it will also try the system certificate store (*/etc/ssl/certs/ca-certificates.crt*
 or */etc/ssl/certs/ca-bundle.crt*).
 
@@ -130,10 +130,10 @@ The ``Bind Type`` for querying the LDAP-Server can be ``Anonymous``, ``Simple``,
    ``DOMAINNAME\\username``. In case of ``SASL Kerberos`` the Bind-DN needs to
    be the *PrincipalName* corresponding to the given *keytab*-file.
 
-For the ``SASL Kerberos`` bind type, the privacyIDEA server needs to be
+For the ``SASL Kerberos`` bind type, the eduMFA server needs to be
 integrated into the AD Domain. A basic setup and more information on the Kerberos
 authentication can be found in the corresponding
-`GitHub Wiki <https://github.com/privacyidea/privacyidea/wiki/concept:-LDAP-resolver-with-Kerberos-auth>`_.
+`GitHub Wiki <https://github.com/eduMFA/eduMFA/wiki/concept:-LDAP-resolver-with-Kerberos-auth>`_.
 
 Caching
 """""""
@@ -165,8 +165,8 @@ which a LDAP server from the pool is down for extended periods of time.
 Modifying users
 """""""""""""""
 
-Starting with privacyIDEA 2.12, you can define the LDAP resolver as editable.
-I.e. you can create and modify users from within privacyIDEA.
+Starting with eduMFA 2.12, you can define the LDAP resolver as editable.
+I.e. you can create and modify users from within eduMFA.
 
 There are two additional configuration parameters for this case.
 
@@ -203,7 +203,7 @@ in this resolver. The search filter is used for forward and backward
 search the object in LDAP.
 
 The ``attribute mapping`` maps LDAP object attributes to user attributes in
-privacyIDEA. privacyIDEA knows the following attributes:
+eduMFA. eduMFA knows the following attributes:
 
  * ``phone``,
  * ``mobile``,
@@ -213,7 +213,7 @@ privacyIDEA. privacyIDEA knows the following attributes:
  * ``password``
  * ``accountExpires``.
 
-The above attributes are used for privacyIDEA's normal functionality and are
+The above attributes are used for eduMFA's normal functionality and are
 listed in the :ref:`user_details`. However, with a SAML authentication request,
 the user attributes can be returned. (see :ref:`return_saml_attributes`). To return
 arbitrary attributes from the LDAP You can add additional keys to the
@@ -272,7 +272,7 @@ in the attribute mapping for Microsoft Active Directories. You can then call
 the user listing API with the parameter ``accountExpires=1`` and you will only
 see expired accounts.
 
-This functionality is used with the script *privacyidea-expired-users*.
+This functionality is used with the script *eduMFA-expired-users*.
 
 .. _sql_resolver:
 
@@ -308,7 +308,7 @@ The ``Limit`` is the SQL limit for a userlist request. This can be important
 if you have several thousand user entries in the table.
 
 The ``Attribute mapping`` defines which table column should be mapped to
-which privacyIDEA attribute. The known attributes are:
+which eduMFA attribute. The known attributes are:
 
  * userid *(mandatory)*,
  * username *(mandatory)*,
@@ -324,7 +324,7 @@ password. This is used, if you are doing user authentication against the SQL
 database.
 
 .. note:: There is no standard way to store passwords in an SQL database.
-   privacyIDEA supports the most
+   eduMFA supports the most
    common ways like Wordpress hashes starting with *$P* or *$S*. Secure hashes
    starting with *{SHA}* or salted secure hashes starting with *{SSHA}*,
    *{SSHA256}* or *{SSHA512}*. Password hashes of length 64 are interpreted as
@@ -368,7 +368,7 @@ the "Open Source Identity & Access Management".
 
 To connect to a SCIM service you need to provide a URL to an authentication
 server and a URL to the resource server. The authentication server is used to
-authenticate the privacyIDEA server. The authentication is based on a ``Client``
+authenticate the eduMFA server. The authentication is based on a ``Client``
 name and the ``Secret`` for this client.
 
 .. figure:: images/scim-resolver.png
@@ -393,14 +393,14 @@ HTTP resolver
 .. index:: HTTP resolver, resolver, api, http
 
 Starting with version 3.4 the HTTP resolver is available to retrieve user information from any kind
-of web service API. privacyIDEA issues a request to the target service and expects a JSON object in return.
+of web service API. eduMFA issues a request to the target service and expects a JSON object in return.
 The configuration of the HTTP resolver sets the details of the request in the ``Request Mapping`` as well as the
 mapping of the obtained information as a ``Response Mapping``.
 
 .. figure:: images/http_resolver.png
    :width: 500
 
-The ``Request Mapping`` is used to build the request issued to the remote API from privacyIDEA's user information.
+The ``Request Mapping`` is used to build the request issued to the remote API from eduMFA's user information.
 For example an endpoint definition::
 
    POST /get-user
@@ -437,7 +437,7 @@ The above configuration image will throw an error for a response
 
    { "success": false, "message": "There was an error!" }
 
-because privacyIDEA will match ``{ "success": false }``.
+because eduMFA will match ``{ "success": false }``.
 
 .. note:: If the HTTP response status is >= 400, the resolver will throw an exception.
 
@@ -448,11 +448,11 @@ User Cache
 
 .. index:: user cache, caching
 
-privacyIDEA does not implement local user management by design and relies on UserIdResolvers to
-connect to external user stores instead. Consequently, privacyIDEA queries user stores quite frequently,
+eduMFA does not implement local user management by design and relies on UserIdResolvers to
+connect to external user stores instead. Consequently, eduMFA queries user stores quite frequently,
 e.g. to resolve a login name to a user ID while processing an authentication request, which
 may introduce a significant slowdown.
-In order to optimize the response time of authentication requests, privacyIDEA 2.19 introduces the *user cache*
+In order to optimize the response time of authentication requests, eduMFA 2.19 introduces the *user cache*
 which is located in the local database. It can be enabled in the system configuration (see :ref:`user_cache_timeout`).
 
 A user cache entry stores the association of a login name in a specific UserIdResolver with a specific
@@ -463,10 +463,10 @@ does not require any queries to the user store, but only to the user cache.
 The user cache should only be enabled if the association of users and user ID is not expected to change often:
 In case a user is deleted from the user store, but can still be found in the user cache and still has assigned
 tokens, the user will still be able to authenticate during the expiration timeout! Likewise, any changes to the
-user ID will not be noticed by privacyIDEA until the corresponding cache entry expires.
+user ID will not be noticed by eduMFA until the corresponding cache entry expires.
 
 Expired cache entries are *not* deleted from the user cache table automatically. Instead, the tool
-``privacyidea-usercache-cleanup`` should be used to delete expired cache entries from the database,
+``eduMFA-usercache-cleanup`` should be used to delete expired cache entries from the database,
 e.g. in a cronjob.
 
 However, cache entries are removed at some defined events:

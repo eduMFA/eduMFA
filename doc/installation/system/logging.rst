@@ -5,16 +5,16 @@ Debugging and Logging
 
 .. index:: Debugging, Logging
 
-You can set ``PI_LOGLEVEL`` to a value 10 (Debug), 20 (Info), 30 (Warning),
+You can set ``EDUMFA_LOGLEVEL`` to a value 10 (Debug), 20 (Info), 30 (Warning),
 40 (Error) or 50 (Critical).
-If you experience problems, set ``PI_LOGLEVEL = 10`` restart the web service
-and resume the operation. The log file ``privacyidea.log`` should contain
+If you experience problems, set ``EDUMFA_LOGLEVEL = 10`` restart the web service
+and resume the operation. The log file ``eduMFA.log`` should contain
 some clues.
 
-You can define the location of the logfile using the key ``PI_LOGFILE``.
+You can define the location of the logfile using the key ``EDUMFA_LOGFILE``.
 Usually it is set to::
 
-   PI_LOGFILE = "/var/log/privacyidea/privacyidea.log"
+   EDUMFA_LOGFILE = "/var/log/eduMFA/eduMFA.log"
 
 .. _advanced_logging:
 
@@ -22,12 +22,12 @@ Advanced Logging
 ~~~~~~~~~~~~~~~~
 
 You can also define a more detailed logging by specifying a
-log configuration file. By default the file is ``/etc/privacyidea/logging.cfg``.
+log configuration file. By default the file is ``/etc/eduMFA/logging.cfg``.
 
 You can change the location of the logging configuration file
 in :ref:`cfgfile` like this::
 
-   PI_LOGCONFIG = "/path/to/logging.yml"
+   EDUMFA_LOGCONFIG = "/path/to/logging.yml"
 
 Since Version 3.3 the logging configuration can be written in YAML [#yaml]_.
 Such a YAML based configuration could look like this:
@@ -37,14 +37,14 @@ Such a YAML based configuration could look like this:
     version: 1
     formatters:
       detail:
-        class: privacyidea.lib.log.SecureFormatter
+        class: eduMFA.lib.log.SecureFormatter
         format: '[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s'
 
     handlers:
       mail:
         class: logging.handlers.SMTPHandler
         mailhost: mail.example.com
-        fromaddr: privacyidea@example.com
+        fromaddr: eduMFA@example.com
         toaddrs:
         - admin1@example.com
         - admin2@example.com
@@ -58,7 +58,7 @@ Such a YAML based configuration could look like this:
         maxBytes: 1000000
         formatter: detail
         level: INFO
-        filename: /var/log/privacyidea/privacyidea.log
+        filename: /var/log/eduMFA/eduMFA.log
       syslog:
         class: logging.handlers.SysLogHandler
         address: ('192.168.1.110', 514)
@@ -67,7 +67,7 @@ Such a YAML based configuration could look like this:
 
     loggers:
       # The logger name is the qualname
-      privacyidea:
+      eduMFA:
         handlers:
         - file
         - mail
@@ -91,14 +91,14 @@ The old `python logging config file format <https://docs.python.org/3/library/lo
    keys=file,mail
 
    [formatter_detail]
-   class=privacyidea.lib.log.SecureFormatter
+   class=eduMFA.lib.log.SecureFormatter
    format=[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s
 
    [handler_mail]
    class=logging.handlers.SMTPHandler
    level=ERROR
    formatter=detail
-   args=('mail.example.com', 'privacyidea@example.com', ['admin1@example.com',\
+   args=('mail.example.com', 'eduMFA@example.com', ['admin1@example.com',\
       'admin2@example.com'], 'PI Error')
 
    [handler_file]
@@ -108,14 +108,14 @@ The old `python logging config file format <https://docs.python.org/3/library/lo
    maxBytes=10000000
    formatter=detail
    level=DEBUG
-   args=('/var/log/privacyidea/privacyidea.log',)
+   args=('/var/log/eduMFA/eduMFA.log',)
 
    [loggers]
-   keys=root,privacyidea
+   keys=root,eduMFA
 
-   [logger_privacyidea]
+   [logger_eduMFA]
    handlers=file,mail
-   qualname=privacyidea
+   qualname=eduMFA
    level=DEBUG
 
    [logger_root]

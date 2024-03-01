@@ -1,0 +1,21 @@
+<uwsgi>
+    <plugin>python</plugin>
+    <socket>/run/uwsgi/app/edumfa/edumfa.socket</socket>
+    <chdir>/etc/edumfa/</chdir>
+    <module>edumfaapp</module>
+    <master/>
+    <processes>4</processes>
+    <harakiri>60</harakiri>
+    <reload-mercy>8</reload-mercy>
+    <cpu-affinity>1</cpu-affinity>
+    <stats>/tmp/stats.socket</stats>
+    <max-requests>2000</max-requests>
+    <limit-as>1024</limit-as>
+    <reload-on-as>368</reload-on-as>
+    <reload-on-rss>192</reload-on-rss>
+    <reload-on-exception/>
+    <no-orphans/>
+    <uid>edumfa</uid>
+    <gid>www-data</gid>
+    <vacuum/>
+</uwsgi>

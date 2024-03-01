@@ -3,9 +3,9 @@
 RADIUS server endpoints
 .......................
 
-.. automodule:: privacyidea.api.radiusserver
+.. automodule:: edumfa.api.radiusserver
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: radiusserver_blueprint
 

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 2017-12-27 Cornelius Kölbel <cornelius.koelbel@netknights.it>
-           Mocking the SMPP client
-
 
 Original responses.py is:
 Copyright 2013 Dropbox, Inc.

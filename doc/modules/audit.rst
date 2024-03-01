@@ -5,12 +5,12 @@ Audit log
 
 .. index:: audit modules
 
-.. automodule:: privacyidea.lib.auditmodules
+.. automodule:: edumfa.lib.auditmodules
 
 Base class
 ..........
 
-.. autoclass:: privacyidea.lib.auditmodules.base.Audit
+.. autoclass:: edumfa.lib.auditmodules.base.Audit
    :members:
    :undoc-members:
 
@@ -18,7 +18,7 @@ Base class
 SQL Audit module
 ................
 
-.. autoclass:: privacyidea.lib.auditmodules.sqlaudit.Audit
+.. autoclass:: edumfa.lib.auditmodules.sqlaudit.Audit
    :members:
 
 

@@ -5,10 +5,10 @@ This test file tests the lib.serviceid methods.
 This tests the token functions on an interface level
 """
 from .base import MyTestCase
-from privacyidea.lib.error import privacyIDEAError, ResourceNotFoundError
+from edumfa.lib.error import eduMFAError, ResourceNotFoundError
 
-from privacyidea.lib.serviceid import set_serviceid, delete_serviceid, get_serviceids
-from privacyidea.models import Serviceid
+from edumfa.lib.serviceid import set_serviceid, delete_serviceid, get_serviceids
+from edumfa.models import Serviceid
 
 WEBSERVER = "webserver"
 MAILSERVER = "mailserver"
@@ -40,7 +40,7 @@ class TokenTestCase(MyTestCase):
         r = set_serviceid("webserver", "other machines")
         self.assertGreaterEqual(r, 1)
 
-        self.assertRaises(privacyIDEAError,
+        self.assertRaises(eduMFAError,
                           delete_serviceid, sid=(r + 1), name=WEBSERVER)
 
         delete_serviceid(sid=r)

@@ -14,11 +14,11 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from privacyidea.lib.config import get_privacyidea_node
+from edumfa.lib.config import get_edumfa_node
 
 
 def upgrade():
-    node = get_privacyidea_node()
+    node = get_edumfa_node()
     try:
         # The ``node`` field is not nullable. Hence, We set the server_default to the current node to ensure that
         # the ``node`` of all existing rows is set to the current node.

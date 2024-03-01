@@ -4,17 +4,17 @@ This test file tests the lib.tokenclass
 The lib.tokenclass depends on the DB model and lib.user
 """
 from .base import MyTestCase, FakeFlaskG
-from privacyidea.lib.resolver import (save_resolver, delete_resolver)
-from privacyidea.lib.realm import (set_realm, delete_realm)
-from privacyidea.lib.user import (User)
-from privacyidea.lib.policy import ACTION
-from privacyidea.lib.tokenclass import (TokenClass, DATE_FORMAT)
-from privacyidea.lib.config import (set_privacyidea_config,
-                                    delete_privacyidea_config)
-from privacyidea.lib.crypto import geturandom
-from privacyidea.lib.utils import hexlify_and_unicode, to_unicode
-from privacyidea.lib.error import TokenAdminError
-from privacyidea.models import (Token,
+from edumfa.lib.resolver import (save_resolver, delete_resolver)
+from edumfa.lib.realm import (set_realm, delete_realm)
+from edumfa.lib.user import (User)
+from edumfa.lib.policy import ACTION
+from edumfa.lib.tokenclass import (TokenClass, DATE_FORMAT)
+from edumfa.lib.config import (set_edumfa_config,
+                                    delete_edumfa_config)
+from edumfa.lib.crypto import geturandom
+from edumfa.lib.utils import hexlify_and_unicode, to_unicode
+from edumfa.lib.error import TokenAdminError
+from edumfa.models import (Token,
                                 Config,
                                 Challenge)
 import datetime
@@ -465,7 +465,7 @@ class TokenBaseTestCase(MyTestCase):
 
         token.token.otplen = 6
         # postpend pin
-        from privacyidea.lib.config import set_prepend_pin
+        from edumfa.lib.config import set_prepend_pin
         set_prepend_pin(False)
         (_res, pin, value) = token.split_pin_pass("123456test")
         self.assertTrue(pin == "test", pin)
@@ -857,7 +857,7 @@ class TokenBaseTestCase(MyTestCase):
         token_obj.delete_token()
 
     def test_40_failcounter_exceeded(self):
-        from privacyidea.lib.tokenclass import (FAILCOUNTER_EXCEEDED,
+        from edumfa.lib.tokenclass import (FAILCOUNTER_EXCEEDED,
                                                 FAILCOUNTER_CLEAR_TIMEOUT)
         db_token = Token("failcounter", tokentype="spass")
         db_token.save()
@@ -877,7 +877,7 @@ class TokenBaseTestCase(MyTestCase):
         self.assertEqual(ti, None)
 
         # Now check with failcounter clear, with timeout 5 minutes
-        set_privacyidea_config(FAILCOUNTER_CLEAR_TIMEOUT, 5)
+        set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 5)
         token_obj.set_failcount(10)
         failed_recently = (datetime.datetime.now(tzlocal()) -
                            datetime.timedelta(minutes=3)).strftime(DATE_FORMAT)
@@ -889,7 +889,7 @@ class TokenBaseTestCase(MyTestCase):
         self.assertFalse(r)
 
         # Set the timeout to a shorter value
-        set_privacyidea_config(FAILCOUNTER_CLEAR_TIMEOUT, 2)
+        set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 2)
         r = token_obj.check_reset_failcount()
         # The fail is longer ago.
         self.assertTrue(r)

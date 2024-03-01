@@ -1,10 +1,9 @@
 python_test:
-  - 'authmodules/apache2/**/*.py'
   - 'tests/**'
   - 'tools/**'
-  - 'privacyidea/**/*.py'
+  - 'edumfa/**/*.py'
   - '.github/workflows/python.yml'
   - '.github/filters.yml'
-  - 'pi-manage'
+  - 'edumfa-manage'
   - 'requirements.txt'
   - 'setup.py'

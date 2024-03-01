@@ -3,6 +3,6 @@
 Application Class
 .................
 
-.. autoclass:: privacyidea.lib.applications.MachineApplicationBase
+.. autoclass:: edumfa.lib.applications.MachineApplicationBase
    :members:
    :undoc-members:

@@ -16,14 +16,14 @@ import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import orm
 from sqlalchemy.schema import Sequence
-from privacyidea.lib.policy import SCOPE, ACTION
+from edumfa.lib.policy import SCOPE, ACTION
 
 Base = declarative_base()
 
 # dashes are not allowed, when creating policies in the WebUI
 # or via the library. So we are sure, that in normal operation
 # this policy can never be created.
-POLICYNAME = u"pi-update-policy-3d7f8b29cbb1"
+POLICYNAME = u"edumfa-update-policy-3d7f8b29cbb1"
 
 
 class Policy(Base):
@@ -63,7 +63,7 @@ def upgrade():
     :return:
     """
     actions = u",".join([ACTION.PERIODICTASKREAD, ACTION.MACHINERESOLVERREAD,
-                         ACTION.PRIVACYIDEASERVERREAD, ACTION.RADIUSSERVERREAD,
+                         ACTION.EDUMFASERVERREAD, ACTION.RADIUSSERVERREAD,
                          ACTION.SMTPSERVERREAD, ACTION.EVENTHANDLINGREAD,
                          ACTION.POLICYREAD, ACTION.RESOLVERREAD,
                          ACTION.CACONNECTORREAD, ACTION.SMSGATEWAYREAD,

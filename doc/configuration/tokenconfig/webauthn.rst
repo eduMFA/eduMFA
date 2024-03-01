@@ -10,12 +10,12 @@ Trust Anchor Directory
 
 You may define a directory containing trust roots for attestation certificates.
 
-This should be a path to a local directory on the server to which privacyIDEA has
+This should be a path to a local directory on the server to which eduMFA has
 read access to. Any certificate in this
 directory will be trusted to correctly attest authenticators during enrollment.
 
 This does not need to be set for WebAuthn to work, however without this,
-privacyIDEA can not check, whether an attestation certificate is actually
+eduMFA can not check, whether an attestation certificate is actually
 trusted (it will still be checked for validity). Therefore it is mandatory to
 set this, if :ref:`policy_webauthn_enroll_authenticator_attestation_level` is
 set to “trusted” through policy for any user.
@@ -36,7 +36,7 @@ The ID of the relying party must be a fully-qualified domain name. Every web-ser
 where the WebAuthn token should be used needs to be reachable under a domain name
 which is a superset (i.e. a subdomain) of this ID.
 This means that a WebAuthn token enrolled with a relying party ID of ``example.com``
-may be used to sign in to ``privacyidea.example.com`` and ``owncloud.example.com``.
+may be used to sign in to ``eduMFA.example.com`` and ``owncloud.example.com``.
 However, this token will not be able to sign in to a service under ``example.de``, or any
 other webservice that is not hosted on a subdomain of ``example.com``.
 

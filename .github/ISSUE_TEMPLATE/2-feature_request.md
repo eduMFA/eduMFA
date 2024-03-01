@@ -23,7 +23,7 @@ A clear and concise description of any alternative solutions or features you've 
 
 Add any other context or screenshots, that might help us to better understand your idea, your need and your circumstances.
 
-For privacyIDEA developers. Describe and document the development plans:
+For eduMFA developers. Describe and document the development plans:
 
 # Top level requirements and scenarios
 

@@ -6,14 +6,14 @@ This test file tests the lib.importotp
 import pytest
 
 from .base import MyTestCase
-from privacyidea.lib.importotp import (parseOATHcsv, parseYubicoCSV,
+from edumfa.lib.importotp import (parseOATHcsv, parseYubicoCSV,
                                        parseSafeNetXML,
                                        parsePSKCdata, GPGImport)
-from privacyidea.lib.error import TokenImportException
-from privacyidea.lib.token import remove_token
-from privacyidea.lib.token import init_token
-from privacyidea.lib.importotp import export_pskc
-from privacyidea.lib.utils import hexlify_and_unicode
+from edumfa.lib.error import TokenImportException
+from edumfa.lib.token import remove_token
+from edumfa.lib.token import init_token
+from edumfa.lib.importotp import export_pskc
+from edumfa.lib.utils import hexlify_and_unicode
 
 XML_PSKC_PASSWORD_PREFIX = """<?xml version="1.0" encoding="UTF-8"?>
   <KeyContainer
@@ -739,7 +739,7 @@ class ImportOTPTestCase(MyTestCase):
 class GPGTestCase(MyTestCase):
 
     def test_00_gpg_decrypt(self):
-        GPG = GPGImport({"PI_GNUPG_HOME": "tests/testdata/gpg"})
+        GPG = GPGImport({"EDUMFA_GNUPG_HOME": "tests/testdata/gpg"})
         pubkeys = GPG.get_publickeys()
         self.assertEqual(len(pubkeys), 1)
         self.assertTrue("2F25BAF8645350BB" in pubkeys)

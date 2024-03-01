@@ -3,6 +3,6 @@
 Push Token
 ~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.pushtoken.PushTokenClass
+.. autoclass:: edumfa.lib.tokens.pushtoken.PushTokenClass
    :members:
    :undoc-members:

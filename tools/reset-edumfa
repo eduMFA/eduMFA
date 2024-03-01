@@ -1,0 +1,86 @@
+#!/bin/bash
+
+create_files() {
+        mkdir -p /var/log/edumfa
+        mkdir -p /var/lib/edumfa
+        touch /var/log/edumfa/edumfa.log
+        edumfa-manage create_enckey || true > /dev/null
+        edumfa-manage create_tables || true > /dev/null
+        edumfa-manage create_audit_keys || true > /dev/null
+        chown -R $USERNAME /var/log/edumfa
+        chown -R $USERNAME /var/lib/edumfa
+        chown -R $USERNAME /etc/edumfa
+        chmod 600 /etc/edumfa/enckey
+        chmod 600 /etc/edumfa/private.pem
+	# we need to change access right, otherwise each local user could call
+	# edumfa-manage
+	chgrp root /etc/edumfa/edumfa.cfg
+	chmod 640 /etc/edumfa/edumfa.cfg
+}
+
+create_certificate() {
+if [ ! -e /etc/edumfa/server.pem ]; then
+        # This is the certificate when running with paster...
+        cd /etc/edumfa
+        openssl genrsa -out server.key 2048
+        openssl req -new -key server.key -out server.csr -subj "/CN=edumfa"
+        openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+        cat server.crt server.key > server.pem
+        rm -f server.crt server.key
+        chown edumfa server.pem
+        chmod 400 server.pem
+fi
+
+if [ ! -e /etc/ssl/certs/edumfaserver.pem ]; then
+        # This is the certificate when running with apache or nginx
+        KEY=/etc/ssl/private/edumfaserver.key
+        CSR=`mktemp`
+        CERT=/etc/ssl/certs/edumfaserver.pem
+        openssl genrsa -out $KEY 2048
+        openssl req -new -key $KEY -out $CSR -subj "/CN=`hostname`"
+        openssl x509 -req -days 365 -in $CSR -signkey $KEY -out $CERT
+        rm -f $CSR
+        chmod 400 $KEY
+fi
+}
+
+adapt_edumfa_cfg() {
+	    # PEPPER does not exist, yet
+	    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+	    echo "EDUMFA_PEPPER = '$PEPPER'" >> /etc/edumfa/edumfa.cfg
+	    # SECRET_KEY does not exist, yet
+	    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+	    echo "SECRET_KEY = '$SECRET'" >> /etc/edumfa/edumfa.cfg
+}
+
+reset_database() {
+	# reset the MYSQL database
+	    USER="debian-sys-maint"
+	    PASSWORD=$(grep "^password" /etc/mysql/debian.cnf | sort -u | cut -d " " -f3)
+	    NPW="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c12)"
+	    mysql -u $USER --password=$PASSWORD -e "drop database pi;" || true
+	    mysql -u $USER --password=$PASSWORD -e "create database pi;" || true
+	    mysql -u $USER --password=$PASSWORD -e "grant all privileges on pi.* to 'pi'@'localhost' identified by '$NPW';"
+	    echo "SQLALCHEMY_DATABASE_URI = 'mysql://pi:$NPW@localhost/pi'" >> /etc/edumfa/edumfa.cfg
+}
+
+update_db() {
+	# Set the version to the first PI 2.0 version
+	edumfa-manage db stamp 4f32a4e1bf33 -d /usr/lib/edumfa/migrations > /dev/null
+	# Upgrade the database
+	edumfa-manage db upgrade -d /usr/lib/edumfa/migrations > /dev/null
+}
+
+# clean up
+rm -f /etc/edumfa/enckey
+rm -f /etc/edumfa/private.pem
+rm -f /etc/edumfa/public.pem
+rm -f /etc/edumfa/server.pem
+rm -f /etc/ssl/certs/edumfaserver.pem
+
+adapt_edumfa_cfg
+create_files
+create_certificate
+reset_database
+update_db
+service apache2 restart

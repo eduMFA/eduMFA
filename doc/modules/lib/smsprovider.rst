@@ -3,7 +3,7 @@ SMS Provider
 
 .. index:: SMS Provider
 
-The following SMS providers are know to privacyIDEA
+The following SMS providers are know to eduMFA
 
 .. toctree::
    :glob:
@@ -11,13 +11,13 @@ The following SMS providers are know to privacyIDEA
    smsprovider/*
 
 
-.. automodule:: privacyidea.lib.smsprovider
+.. automodule:: edumfa.lib.smsprovider
    :members:
    :undoc-members:
 
 Base Class
 ~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.smsprovider.SMSProvider.ISMSProvider
+.. autoclass:: edumfa.lib.smsprovider.SMSProvider.ISMSProvider
    :members:
    :undoc-members:

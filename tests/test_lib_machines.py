@@ -10,14 +10,14 @@ lib.machines.hosts
 
 HOSTSFILE = "tests/testdata/hosts"
 from .base import MyTestCase
-from privacyidea.lib.machines import BaseMachineResolver
-from privacyidea.lib.machines.hosts import HostsMachineResolver
-from privacyidea.lib.machines.base import Machine, MachineResolverError
+from edumfa.lib.machines import BaseMachineResolver
+from edumfa.lib.machines.hosts import HostsMachineResolver
+from edumfa.lib.machines.base import Machine, MachineResolverError
 import netaddr
-from privacyidea.lib.machineresolver import (get_resolver_list, save_resolver,
+from edumfa.lib.machineresolver import (get_resolver_list, save_resolver,
                                      delete_resolver, get_resolver_config,
                                      get_resolver_object, pretestresolver)
-from privacyidea.lib.machine import get_machines
+from edumfa.lib.machine import get_machines
 
 
 class MachineObjectTestCase(MyTestCase):

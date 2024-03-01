@@ -3,18 +3,18 @@ This test file tests the lib.tokens.smstoken
 """
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
-from privacyidea.lib.resolver import (save_resolver)
-from privacyidea.lib.realm import (set_realm)
-from privacyidea.lib.user import (User)
-from privacyidea.lib.utils import is_true
-from privacyidea.lib.tokenclass import DATE_FORMAT
-from privacyidea.lib.tokens.emailtoken import EmailTokenClass, EMAILACTION
-from privacyidea.models import (Token, Config, Challenge)
-from privacyidea.lib.config import (set_privacyidea_config, set_prepend_pin,
-                                    delete_privacyidea_config)
-from privacyidea.lib.policy import set_policy, SCOPE, PolicyClass
-from privacyidea.lib.smtpserver import add_smtpserver, delete_smtpserver
-from privacyidea.lib import _
+from edumfa.lib.resolver import (save_resolver)
+from edumfa.lib.realm import (set_realm)
+from edumfa.lib.user import (User)
+from edumfa.lib.utils import is_true
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.tokens.emailtoken import EmailTokenClass, EMAILACTION
+from edumfa.models import (Token, Config, Challenge)
+from edumfa.lib.config import (set_edumfa_config, set_prepend_pin,
+                                    delete_edumfa_config)
+from edumfa.lib.policy import set_policy, SCOPE, PolicyClass
+from edumfa.lib.smtpserver import add_smtpserver, delete_smtpserver
+from edumfa.lib import _
 import datetime
 from dateutil.tz import tzlocal
 from . import smtpmock
@@ -28,7 +28,7 @@ class EmailTokenTestCase(MyTestCase):
     """
     Test the Email Token
     """
-    email = "pi_tester@privacyidea.org"
+    email = "tester@edumfa.io"
     otppin = "topsecret"
     resolvername1 = "resolver1"
     resolvername2 = "Resolver2"
@@ -330,13 +330,13 @@ class EmailTokenTestCase(MyTestCase):
 
     @smtpmock.activate
     def test_18_challenge_request(self):
-        smtpmock.setdata(response={"pi_tester@privacyidea.org": (200, 'OK')})
+        smtpmock.setdata(response={"tester@edumfa.io": (200, 'OK')})
         transactionid = "123456098712"
         # send the email with the old configuration
-        set_privacyidea_config("email.mailserver", "localhost")
-        set_privacyidea_config("email.username", "user")
-        set_privacyidea_config("email.username", "password")
-        set_privacyidea_config("email.tls", True)
+        set_edumfa_config("email.mailserver", "localhost")
+        set_edumfa_config("email.username", "user")
+        set_edumfa_config("email.username", "password")
+        set_edumfa_config("email.tls", True)
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = EmailTokenClass(db_token)
         self.assertTrue(token.check_otp("123456", 1, 10) == -1)
@@ -351,13 +351,13 @@ class EmailTokenTestCase(MyTestCase):
 
     @smtpmock.activate
     def test_18a_challenge_request_dynamic(self):
-        smtpmock.setdata(response={"pi_tester@privacyidea.org": (200, 'OK')})
+        smtpmock.setdata(response={"tester@edumfa.io": (200, 'OK')})
         transactionid = "123456098712"
         # send the email with the old configuration
-        set_privacyidea_config("email.mailserver", "localhost")
-        set_privacyidea_config("email.username", "user")
-        set_privacyidea_config("email.username", "password")
-        set_privacyidea_config("email.tls", True)
+        set_edumfa_config("email.mailserver", "localhost")
+        set_edumfa_config("email.username", "user")
+        set_edumfa_config("email.username", "password")
+        set_edumfa_config("email.tls", True)
         db_token = Token.query.filter_by(serial=self.serial2).first()
         token = EmailTokenClass(db_token)
         self.assertTrue(token.check_otp("123456", 1, 10) == -1)
@@ -376,7 +376,7 @@ class EmailTokenTestCase(MyTestCase):
         # if the email is a multi-value attribute, the first address should be chosen
         new_user_info = token.user.info.copy()
         new_user_info['email'] = ['email1@example.com', 'email2@example.com']
-        with mock.patch('privacyidea.lib.resolvers.PasswdIdResolver.IdResolver.getUserInfo') as mock_user_info:
+        with mock.patch('edumfa.lib.resolvers.PasswdIdResolver.IdResolver.getUserInfo') as mock_user_info:
             mock_user_info.return_value = new_user_info
             self.assertEqual(token._email_address, 'email1@example.com')
 
@@ -394,7 +394,7 @@ class EmailTokenTestCase(MyTestCase):
         g.policy_object = P
         g.audit_object = FakeAudit()
         options = {"g": g}
-        smtpmock.setdata(response={"pi_tester@privacyidea.org": (200, "OK")})
+        smtpmock.setdata(response={"tester@edumfa.io": (200, "OK")})
         transactionid = "123456098713"
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = EmailTokenClass(db_token)
@@ -432,7 +432,7 @@ class EmailTokenTestCase(MyTestCase):
         g.policy_object = P
         g.audit_object = FakeAudit()
         options = {"g": g}
-        smtpmock.setdata(response={"pi_tester@privacyidea.org": (200, "OK")})
+        smtpmock.setdata(response={"tester@edumfa.io": (200, "OK")})
         transactionid = "123456098714"
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = EmailTokenClass(db_token)
@@ -460,7 +460,7 @@ class EmailTokenTestCase(MyTestCase):
 
     @smtpmock.activate
     def test_21_test_email_config(self):
-        from privacyidea.lib.tokens.emailtoken import TEST_SUCCESSFUL
+        from edumfa.lib.tokens.emailtoken import TEST_SUCCESSFUL
         smtpmock.setdata(response={"user@example.com": (200, "OK")})
         r = EmailTokenClass.test_config({"email.mailserver": "mail.example.com",
                                          "email.mailfrom": "pi@example.com",
@@ -470,11 +470,11 @@ class EmailTokenTestCase(MyTestCase):
 
     @smtpmock.activate
     def test_22_new_email_config(self):
-        smtpmock.setdata(response={"pi_tester@privacyidea.org": (200, 'OK')})
+        smtpmock.setdata(response={"tester@edumfa.io": (200, 'OK')})
         transactionid = "123456098717"
         # send the email with the new configuration
         r = add_smtpserver(identifier="myServer", server="1.2.3.4")
-        set_privacyidea_config("email.identifier", "myServer")
+        set_edumfa_config("email.identifier", "myServer")
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = EmailTokenClass(db_token)
         self.assertTrue(token.check_otp("123456", 1, 10) == -1)
@@ -487,15 +487,15 @@ class EmailTokenTestCase(MyTestCase):
         r = token.check_challenge_response(passw=otp)
         self.assertTrue(r, r)
         delete_smtpserver("myServer")
-        delete_privacyidea_config("email.identifier")
+        delete_edumfa_config("email.identifier")
 
     @smtpmock.activate
     def test_23_specific_email_config(self):
-        smtpmock.setdata(response={"pi_tester@privacyidea.org": (200, 'OK')})
+        smtpmock.setdata(response={"tester@edumfa.io": (200, 'OK')})
         transactionid = "123456098723"
         # create new configuration
         r = add_smtpserver(identifier="myServer", server="1.2.3.4")
-        set_privacyidea_config("email.identifier", "myServer")
+        set_edumfa_config("email.identifier", "myServer")
         # set it to the token instead of changing the global config
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = EmailTokenClass(db_token)

@@ -94,7 +94,7 @@ passthru_assign
 type: str
 
 This policy is only evaluated, if the policy ``passthru`` is set.
-If the user is authenticated against a RADIUS server, then privacyIDEA
+If the user is authenticated against a RADIUS server, then eduMFA
 splits the sent password into PIN and OTP value and tries to find an unassigned token,
 that is in the user's realm by using the OTP value. If it can identify this token, it assigns this
 token to the user and sets the sent PIN.
@@ -111,7 +111,7 @@ Examples are
   otp values would be checked for each token.
 
 .. note:: This method can be used to automatically migrated tokens from an old system
-   to privacyIDEA. The administrator needs to import all seeds of the old tokens
+   to eduMFA. The administrator needs to import all seeds of the old tokens
    and put the tokens in the user's realm.
 
 .. warning:: This can be very time consuming if the OTP values to check is set to high!
@@ -191,7 +191,7 @@ Default: *<otp>*
    in the format::
 
      Your OTP is {otp}
-     @privacyidea.mydomain.com #{otp}
+     @eduMFA.mydomain.com #{otp}
 
 
 smsautosend
@@ -239,7 +239,7 @@ challenge parameter. This could contain banking transaction data.
 Default: *<otp>*
 
 You can also provide the filename to an email template. The filename must be prefixed with
-``file:`` like ``file:/etc/privacyidea/emailtemplate.html``. The template is
+``file:`` like ``file:/etc/eduMFA/emailtemplate.html``. The template is
 an HTML file.
 
 .. note:: If a message text is supplied directly, the email is sent as plain text.
@@ -359,7 +359,7 @@ This policy is based on the global setting :ref:`autosync`.
 If *AutoResync* is enabled and this policy is configured, a user can synchronize
 his token during authentication via challenge response.
 
-If privacyIDEA realizes, that the first given OTP value is within the syncwindow,
+If eduMFA realizes, that the first given OTP value is within the syncwindow,
 a challenge will be presented to the user saying "To resync your token, please enter the next OTP value".
 In contrast to the generic AutoResync a user has to enter the token PIN only once.
 
@@ -410,7 +410,7 @@ have to enter the OTP value sent via email or text message.
 **PUSH**
 
 After the fist successful authentication step the user is presented a QR code for push token
-enrollment. The user needs to scan the QR code with the privacyIDEA Authenticator App.
+enrollment. The user needs to scan the QR code with an Authenticator App.
 If the token is successfully enrolled, the user is logged in without any further interaction.
 Since the successful enrollment of the Push token already verifies the presence of the user's smartphone,
 there is no additional authentication step anymore during enrollment.
@@ -427,7 +427,7 @@ u2f_facets
 type: string
 
 This is a white space separated list of domain names, that are trusted to
-also use a U2F device that was registered with privacyIDEA.
+also use a U2F device that was registered with eduMFA.
 
 You need to specify a list of FQDNs without the https scheme like:
 
@@ -500,12 +500,12 @@ dependent on the clients IP address and the user agent.
    attempts to log in with the same expired credentials again. In all other cases,
    expired entries need to be deleted from this table manually by running::
 
-      pi-manage authcache cleanup --minutes MIN
+      edumfa-manage authcache cleanup --minutes MIN
 
    which deletes all cache entries whose last authentication has occurred at least
    ``MIN`` minutes ago. As an example::
 
-      pi-manage authcache cleanup --minutes 300
+      edumfa-manage authcache cleanup --minutes 300
 
    will delete all authentication cache entries whose last authentication happened more
    than 5 hours ago.
@@ -565,7 +565,7 @@ Sensible numbers might be 10 or 20 seconds.
    will only return after this number of seconds.
 
 .. warning:: Using simple webserver setups like Apache WSGI this actually
-   can block all available worker threads, which will cause privacyIDEA
+   can block all available worker threads, which will cause eduMFA
    to become unresponsive if the number of open PUSH challenges exceeds
    the number of available worker threads!
 
@@ -610,7 +610,7 @@ push_ssl_verify
 
 type: int
 
-The smartphone needs to verify the SSL certificate of the privacyIDEA server during
+The smartphone needs to verify the SSL certificate of the eduMFA server during
 the authentication with push tokens. By default, the verification is enabled. To disable
 verification during enrollment, see :ref:`policy_push_ssl_verify_enrollment`.
 

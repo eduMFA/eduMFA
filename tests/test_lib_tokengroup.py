@@ -14,10 +14,10 @@ gettokensoftype
 getToken....
 """
 from .base import MyTestCase
-from privacyidea.lib.error import privacyIDEAError, ResourceNotFoundError
+from edumfa.lib.error import eduMFAError, ResourceNotFoundError
 
-from privacyidea.lib.tokengroup import set_tokengroup, delete_tokengroup, get_tokengroups
-from privacyidea.models import Tokengroup
+from edumfa.lib.tokengroup import set_tokengroup, delete_tokengroup, get_tokengroups
+from edumfa.models import Tokengroup
 
 
 class TokenTestCase(MyTestCase):
@@ -45,7 +45,7 @@ class TokenTestCase(MyTestCase):
         r = set_tokengroup("gruppe1", "my other first group")
         self.assertGreaterEqual(r, 1)
 
-        self.assertRaises(privacyIDEAError,
+        self.assertRaises(eduMFAError,
                           delete_tokengroup, tokengroup_id=(r + 1), name='gruppe1')
 
         delete_tokengroup(tokengroup_id=r)

@@ -24,15 +24,15 @@ highest performance.
 Config caching
 ~~~~~~~~~~~~~~
 
-Starting with privacyIDEA 2.15 privacyIDEA uses a Cache per instance and process to
+Starting with eduMFA 2.15 eduMFA uses a Cache per instance and process to
 cache system configuration, resolver, realm and policies.
 
 As the configuration might have been changed in the database by another process
-or another instance, privacyIDEA compares a cache timestamp with the timestamp in the
-database. Thus at the beginning of the request privacyIDEA reads the timestamp from
+or another instance, eduMFA compares a cache timestamp with the timestamp in the
+database. Thus at the beginning of the request eduMFA reads the timestamp from
 the database.
 
-You can configure how often the timestamp should be read using the pi.cfg
+You can configure how often the timestamp should be read using the edumfa.cfg
 variable ``PI_CHECK_RELOAD_CONFIG``. You can set this to seconds. If you use this
 config value to set values higher than 0, you will improve your performance.
 But: other processes or instances will learn later about configuration changes
@@ -44,7 +44,7 @@ Cryptography
 ~~~~~~~~~~~~
 
 Cryptography, especially Public-key cryptography is typically based on solving
-difficult and/or time-consuming problems. privacyIDEA uses a lot of cryptographic
+difficult and/or time-consuming problems. eduMFA uses a lot of cryptographic
 techniques to ensure the security of its operation.
 
 Some cryptographic operations are not strictly necessary for the secure operation
@@ -59,18 +59,18 @@ The Audit-log
 ^^^^^^^^^^^^^
 
 Each entry in the :ref:`audit` log is digitally signed to detect tampering.
-If you can be sure that the private key in ``PI_AUDIT_KEY_PRIVATE`` has not been
-tampered with, you can set the config entry ``PI_AUDIT_NO_PRIVATE_KEY_CHECK = True``
+If you can be sure that the private key in ``EDUMFA_AUDIT_KEY_PRIVATE`` has not been
+tampered with, you can set the config entry ``EDUMFA_AUDIT_NO_PRIVATE_KEY_CHECK = True``
 in :ref:`cfgfile` to improve the performance when loading the key.
 
-With the config entry ``PI_AUDIT_NO_SIGN = True`` the signing of the Audit-log
+With the config entry ``EDUMFA_AUDIT_NO_SIGN = True`` the signing of the Audit-log
 can be deactivated completely.
 
-The privacyIDEA Response
+The eduMFA Response
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-By default, privacyIDEA signs every JSON-Response with the private key in
-``PI_AUDIT_KEY_PRIVATE``. To improve the performance when loading the private
+By default, eduMFA signs every JSON-Response with the private key in
+``EDUMFA_AUDIT_KEY_PRIVATE``. To improve the performance when loading the private
 key the config entry ``PI_RESPONSE_NO_PRIVATE_KEY_CHECK`` can be set to ``True``.
 
 The signing of the response can be disabled completely by setting

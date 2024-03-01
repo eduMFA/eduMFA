@@ -4,10 +4,10 @@ Tokengroup endpoints
 ~~~~~~~~~~~~~~~~~~~~
 
 .. use the docstring from the module file
-.. automodule:: privacyidea.api.tokengroup
+.. automodule:: edumfa.api.tokengroup
 
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: tokengroup_blueprint
 

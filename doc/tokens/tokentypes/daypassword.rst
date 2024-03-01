@@ -3,7 +3,7 @@
 Day Password Token
 -------------------
 
-Starting with version 3.9 privacyIDEA supports a password token with arbitrary time periods.
+Starting with version 3.9 eduMFA supports a password token with arbitrary time periods.
 
 The day password token is a modification of the :ref:`totp_token`. The difference between the
 :ref:`totp_token` and the day password token is, that the OTP value of the day password token can be used more
@@ -27,7 +27,7 @@ TOTP token with arbitrary time periods.
 
 .. Note :: The link in the QR code looks like this:
 
-    ``otpauth://daypassword/DYPW0000536F?secret=<base32 encoded secret>&issuer=privacyIDEA&algorithm=SHA256&digits=6&period=86400``
+    ``otpauth://daypassword/DYPW0000536F?secret=<base32 encoded secret>&issuer=eduMFA&algorithm=SHA256&digits=6&period=86400``
 
 
 The day password token algorithm can be adjusted with the following parameters:

@@ -1,7 +1,5 @@
 info:
 	@echo "make clean        	 - remove all automatically created files"
-	@echo "make doc-man          - create the documentation as man-page"
-	@echo "make doc-html         - create the documentation as html"
 	@echo "make pypi             - upload package to pypi"
 	@echo "make translate        - translate WebUI"
 	@echo "make translate-server - translate string in the server code."
@@ -34,11 +32,11 @@ translate:
 	grunt nggettext_compile
 
 translate-server:
-	(cd privacyidea; pybabel extract -F babel.cfg -o messages.pot .)
+	(cd edumfa; pybabel extract -F babel.cfg -o messages.pot .)
 	# pybabel init -i messages.pot -d translations -l de
-	(cd privacyidea; pybabel update -i messages.pot -d translations)
+	(cd edumfa; pybabel update -i messages.pot -d translations)
 	# create the .mo file
-	(cd privacyidea; pybabel compile -d translations)
+	(cd edumfa; pybabel compile -d translations)
 
 pypi:
 	make doc-man
@@ -57,7 +55,7 @@ NPM_VERSION := $(shell npm --version 2>/dev/null)
 
 update-contrib:
 ifdef NPM_VERSION
-	(cd privacyidea/static && npm install && ./update_contrib.sh)
+	(cd edumfa/static && npm install && ./update_contrib.sh)
 else
 	@echo "Command 'npm' not found! It is needed to install the JS contrib libraries."
 endif

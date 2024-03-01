@@ -4,10 +4,10 @@ Service ID endpoints
 ~~~~~~~~~~~~~~~~~~~~
 
 .. use the docstring from the module file
-.. automodule:: privacyidea.api.serviceid
+.. automodule:: edumfa.api.serviceid
 
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: serviceid_blueprint
 

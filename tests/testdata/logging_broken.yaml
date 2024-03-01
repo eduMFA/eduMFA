@@ -2,14 +2,14 @@ handlers:
   file:
     backupCount: 5
     class: logging.handlers.RotatingFileHandler
-    filename: privacyidea.log
+    filename: edumfa.log
     formatter: detail
     level: BLABLA
     maxBytes: 10000000
 loggers:
-  privacyidea:
+  edumfa:
     handlers:
     - filehandler
     level: INFO
-    qualname: privacyidea
+    qualname: edumfa
 version: 1

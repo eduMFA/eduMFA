@@ -7,10 +7,10 @@ from binascii import hexlify
 
 import mock
 
-from privacyidea.lib.error import ParameterError
-from privacyidea.lib.token import check_serial_pass
-from privacyidea.lib.tokens.vascotoken import VascoTokenClass
-from privacyidea.models import Token
+from edumfa.lib.error import ParameterError
+from edumfa.lib.token import check_serial_pass
+from edumfa.lib.tokens.vascotoken import VascoTokenClass
+from edumfa.models import Token
 from tests.base import MyTestCase
 
 
@@ -18,7 +18,7 @@ def mock_verification(replacement):
     def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
-            with mock.patch('privacyidea.lib.tokens.vasco.vasco_dll') as mock_dll:
+            with mock.patch('edumfa.lib.tokens.vasco.vasco_dll') as mock_dll:
                 mock_dll.AAL2VerifyPassword.side_effect = replacement
                 return f(*args, **kwargs)
         return wrapper
@@ -46,7 +46,7 @@ def create_mock_failure(return_value):
 def mock_missing_dll(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        with mock.patch('privacyidea.lib.tokens.vasco.vasco_dll', None):
+        with mock.patch('edumfa.lib.tokens.vasco.vasco_dll', None):
             return f(*args, **kwargs)
     return wrapper
 

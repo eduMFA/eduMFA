@@ -5,17 +5,17 @@ Tools
 
 .. index:: tools
 
-privacyIDEA comes with a list of command line tools, which also help to
-automate tasks. The tools can be found in the directory `privacyidea/bin`.
+eduMFA comes with a list of command line tools, which also help to
+automate tasks. The tools can be found in the directory `eduMFA/bin`.
 
 .. _token_janitor:
 
-privacyidea-token-janitor
+eduMFA-token-janitor
 -------------------------
 
 .. index:: orphaned tokens
 
-Starting with version 2.19 privacyIDEA comes with a token janitor script.
+Starting with version 2.19 eduMFA comes with a token janitor script.
 This script can find orphaned tokens, unused tokens or tokens of specific
 type, description or token info.
 
@@ -55,7 +55,7 @@ deleted in the LDAP directory.
 
 Example::
 
-    privacyidea-token-janitor find --orphaned 1
+    eduMFA-token-janitor find --orphaned 1
 
 This returns all orphaned tokens for later processing.
 
@@ -66,7 +66,7 @@ Searches for tokens that are either active or inactive, this means enabled or di
 
 Example::
 
-    privacyidea-token-janitor find --active False
+    eduMFA-token-janitor find --active False
 
 This returns all disabled tokens. May you later want to delete these disabled tokens.
 
@@ -77,7 +77,7 @@ Searches for tokens that are either assigned to a user or unassigned.
 
 Example::
 
-    privacyidea-token-janitor find --assigned False
+    eduMFA-token-janitor find --assigned False
 
 This returns all tokens, that are not assigned to a user. You could combine this with other filters
 like the ``tokenkind`` to find out how many hardware tokens are not assigned and still available for assignment.
@@ -90,14 +90,14 @@ Searches for all tokens, where the last authentication happens longer ago than t
 
 Example::
 
-    privacyidea-token-janitor find --last_auth 10d
+    eduMFA-token-janitor find --last_auth 10d
 
 This will find all tokens, that did not authenticate within the last 10 days. You can also use "h" and "y"
 to specify hours and years.
 
 Since the last_auth is an entry in the ``tokeninfo`` table you could also search like this::
 
-   privacyidea-token-janitor find --tokeninfo-key last_auth --tokeninfo-value-after '2021-06-01 18:00:00+0200'
+   eduMFA-token-janitor find --tokeninfo-key last_auth --tokeninfo-value-after '2021-06-01 18:00:00+0200'
 
 
 Description
@@ -107,7 +107,7 @@ Searches through all tokens and returns the ones with the selected description.
 
 Example::
 
-    privacyidea-token-janitor find --description '^fo.*'
+    eduMFA-token-janitor find --description '^fo.*'
 
 Return all tokens where the description begins with "fo".
 
@@ -118,7 +118,7 @@ Searches through all tokens and returns the ones with the selected serial.
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0013B2B4
+    eduMFA-token-janitor find --serial OATH0013B2B4
 
 Return all tokens with the serial ``OATH0013B2B4``.
 
@@ -127,7 +127,7 @@ which might be a tokentype "HOTP", but where the serial starts with UBOM.
 
 Example::
 
-    privacyidea-token-janitor find --serial '^UBOM.*'
+    eduMFA-token-janitor find --serial '^UBOM.*'
 
 
 Tokentype
@@ -137,7 +137,7 @@ Searches through all tokens and returns the ones with the selected tokentype.
 
 Example::
 
-    privacyidea-token-janitor find --tokentype hotp
+    eduMFA-token-janitor find --tokentype hotp
 
 Return all tokens with the tokentype ``hotp``.
 
@@ -155,7 +155,7 @@ The value of the token-attribute which should match.
 
 Example::
 
-    privacyidea-token-janitor find --tokenattribute rollout_state --tokenattribute-value clientwait
+    eduMFA-token-janitor find --tokenattribute rollout_state --tokenattribute-value clientwait
 
 Search for all tokens with the tokenattribute-key ``rollout_state`` and the associated tokenattribute-value ``clientwait``.
 
@@ -168,7 +168,7 @@ Match if the value of the token attribute is less than the given value.
 
 Example::
 
-    privacyidea-token-janitor find --tokenattribute failcount --tokenattribute-value-less-than 10
+    eduMFA-token-janitor find --tokenattribute failcount --tokenattribute-value-less-than 10
 
 Search for all tokens with the tokenattribute-key ``failcount`` and the associated tokenattribute-value below ``10``.
 This way you can find tokens, where the fail counter is less than 10 and thus the tokens are not blocked.
@@ -180,7 +180,7 @@ Match if the value of the token attribute is greater than the given value.
 
 Example::
 
-    privacyidea-token-janitor find --tokenattribute failcount --tokenattribute-value-greater-than 10
+    eduMFA-token-janitor find --tokenattribute failcount --tokenattribute-value-greater-than 10
 
 Search for all tokens with the tokenattribute-key ``failcount`` and the associated tokenattribute-value greater than ``10``.
 This way you can find tokens, where the fail counter is greater than 10 and thus the tokens are blocked.
@@ -199,7 +199,7 @@ Filters for tokens that have given the specified tokeninfo-key no matter which v
 
 Example::
 
-    privacyidea-token-janitor find --has-tokeninfo-key import_time
+    eduMFA-token-janitor find --has-tokeninfo-key import_time
 
 Searches for all tokens that have a tokeninfo-key ``import_time`` set.
 
@@ -212,7 +212,7 @@ Filters for tokens that have not set the specified tokeninfo-key.
 
 Example::
 
-    privacyidea-token-janitor find --has-not-tokeninfo-key import_time
+    eduMFA-token-janitor find --has-not-tokeninfo-key import_time
 
 Searches for all tokens that didn't store the tokeninfo-key ``import_time``.
 
@@ -223,7 +223,7 @@ The tokeninfo-value to match.
 
 Example::
 
-    privacyidea-token-janitor find --tokeninfo-key tokenkind --tokeninfo-value software
+    eduMFA-token-janitor find --tokeninfo-key tokenkind --tokeninfo-value software
 
 Search for all tokens with the tokeninfo-key ``tokenkind`` and the associated tokeninfo-value ``software``.
 
@@ -234,7 +234,7 @@ Interpret tokeninfo-values as integers and match only if they are smaller than t
 
 Example::
 
-    privacyidea-token-janitor find --tokeninfo-key timeWindow --tokeninfo-value-less-than 200
+    eduMFA-token-janitor find --tokeninfo-key timeWindow --tokeninfo-value-less-than 200
 
 Search for all tokens with the tokeninfo-key ``timeWindow`` and the associated tokeninfo-value below ``200``.
 
@@ -245,7 +245,7 @@ Interpret tokeninfo-values as integers and match only if they are greater than t
 
 Example::
 
-    privacyidea-token-janitor find --tokeninfo-key timeWindow --tokeninfo-value-greater-than 100
+    eduMFA-token-janitor find --tokeninfo-key timeWindow --tokeninfo-value-greater-than 100
 
 Search for all tokens with the tokeninfo-key ``timeWindow`` and the associated tokeninfo-value greater than ``100``.
 
@@ -265,7 +265,7 @@ The tokens are marked by setting a tokeninfo-key and an associated tokininfo-val
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key unused --set-tokeninfo-value True
+    eduMFA-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key unused --set-tokeninfo-value True
 
 A new tokeninfo-key and the associated tokeninfo-value would be added for the token ``OAUTH0004C934``
 and are now marked for later processing. If the token already containd this tokeninf-key, the value
@@ -280,7 +280,7 @@ With **disable** the found tokens can be disabled.
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0004C934 --action disable
+    eduMFA-token-janitor find --serial OATH0004C934 --action disable
 
 The token with the serial ``OAUTH0004C934`` will be disabled.
 
@@ -292,7 +292,7 @@ With **delete** the found tokens can be deleted.
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0004C934 --action delete
+    eduMFA-token-janitor find --serial OATH0004C934 --action delete
 
 The token with the serial ``OAUTH0004C934`` will be deleted.
 
@@ -307,7 +307,7 @@ YAML in theory can export all token types and all tokeninfo.
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0004C934 --action export > OAUTH0004C934.xml
+    eduMFA-token-janitor find --serial OATH0004C934 --action export > OAUTH0004C934.xml
 
 The token with the serial ``OAUTH0004C934`` will be exported and saved in an xml file.
 
@@ -322,7 +322,7 @@ With **listuser** the found tokens are listed in a summarized view.
 
 Example::
 
-    privacyidea-token-janitor find --action listuser
+    eduMFA-token-janitor find --action listuser
 
 lists all tokens in a summarized view.
 
@@ -337,7 +337,7 @@ A user without any assigned token is not listed here!
 
 Example::
 
-    privacyidea-token-janitor find --sum --action listuser
+    eduMFA-token-janitor find --sum --action listuser
 
 tokenrealms
 ...........
@@ -350,7 +350,7 @@ Please note that without a previous selection of a certain token, all found toke
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0005B88E --action tokenrealms --tokenrealms defrealm
+    eduMFA-token-janitor find --serial OATH0005B88E --action tokenrealms --tokenrealms defrealm
 
 Setting realms of token ``OATH0005B88E`` to ``defrealm``.
 
@@ -358,7 +358,7 @@ You can also assign a list of realms by comma separating.
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0005B88E --action tokenrealms --tokenrealms defrealm,realmA,realmB
+    eduMFA-token-janitor find --serial OATH0005B88E --action tokenrealms --tokenrealms defrealm,realmA,realmB
 
 Set
 ***
@@ -376,7 +376,7 @@ This will only work together it is not possible to set a tokeninfo-key or a toke
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key import_time --set-tokeninfo-value $(date --iso-8601=minutes)
+    eduMFA-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key import_time --set-tokeninfo-value $(date --iso-8601=minutes)
 
 Mark the token with the serial ``OATH0004C934`` and set a new tokeninfo-key ``import_time`` and a
 new tokeninfo-value ``$(date --iso-8601=minutes)``.
@@ -390,16 +390,16 @@ It is important to note that this is only possible with a previously marked toke
 
 Example::
 
-    privacyidea-token-janitor find --serial OATH0004C934 --action mark --set-description L4
+    eduMFA-token-janitor find --serial OATH0004C934 --action mark --set-description L4
 
 Mark the token with the serial ``OATH0004C934`` and set the description ``example``.
 
 .. _get_unused_tokens:
 
-privacyidea-get-unused-tokens
+eduMFA-get-unused-tokens
 -----------------------------
 
-The script ``privacyidea-get-unused-tokens`` allows you to search for tokens,
+The script ``eduMFA-get-unused-tokens`` allows you to search for tokens,
 which were not used for authentication for a while. These tokens can be
 listed, disabled, marked or deleted.
 
@@ -410,7 +410,7 @@ the last 180 days.
 
 The command::
 
-    privacyidea-get-unused-tokens disable 180d
+    eduMFA-get-unused-tokens disable 180d
 
 will disable those tokens.
 

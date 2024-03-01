@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-2022-07-24 Cornelius Kölbel <cornelius.koelbel@netknights.it>
-           Move all MS CA mocking into this file.
-"""
 #
-#  License:  AGPLv3
-#  contact:  http://www.privacyidea.org
+# License:  AGPLv3
+# This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
+# Copyright (c) 2024 eduMFA Project-Team
+# Previous changes by privacyIDEA project:
+#
+# 2022 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #
 # This code is free software; you can redistribute it and/or
 # modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE

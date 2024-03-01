@@ -4,11 +4,11 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.yubicotoken import (YubicoTokenClass, YUBICO_URL)
-from privacyidea.models import Token
+from edumfa.lib.tokens.yubicotoken import (YubicoTokenClass, YUBICO_URL)
+from edumfa.models import Token
 import responses
 import json
-from privacyidea.lib.config import set_privacyidea_config
+from edumfa.lib.config import set_edumfa_config
 
 
 class YubicoTokenTestCase(MyTestCase):
@@ -70,7 +70,7 @@ status=REPLAYED_OTP"""
 
     @responses.activate
     def test_04_check_otp_success_with_post_request(self):
-        set_privacyidea_config("yubico.do_post", True)
+        set_edumfa_config("yubico.do_post", True)
         responses.add(responses.POST, YUBICO_URL,
                       body=self.success_body)
 
@@ -79,7 +79,7 @@ status=REPLAYED_OTP"""
         otpcount = token.check_otp("vvbgidlghkhgndujklhhudbcuttkcklhvjktrjrt")
         # Nonce and hash do not match
         self.assertTrue(otpcount == -2, otpcount)
-        set_privacyidea_config("yubico.do_post", False)
+        set_edumfa_config("yubico.do_post", False)
 
 
     @responses.activate

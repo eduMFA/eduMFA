@@ -3,9 +3,9 @@
 Recover endpoints
 .................
 
-.. automodule:: privacyidea.api.recover
+.. automodule:: edumfa.api.recover
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: recover_blueprint
 

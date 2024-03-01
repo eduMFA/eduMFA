@@ -8,26 +8,26 @@ Ubuntu Packages
 
 There are ready made packages for Ubuntu.
 
-Packages of older releases of privacyIDEA up to version 2.23 are available for
+Packages of older releases of eduMFA up to version 2.23 are available for
 Ubuntu 14.04 LTS and Ubuntu 16.04 LTS from a public ppa repository [#ppa]_.
 Using these is deprecated.
 
-For recent releases of privacyIDEA starting from version 3.0 a repository is
+For recent releases of eduMFA starting from version 3.0 a repository is
 available which provides packages for Ubuntu 18.04 LTS, 20.04LTS and 22.04LTS [#ubuntu]_.
 
-.. note:: The packages ``privacyidea-apache2`` and ``privacyidea-nginx`` assume
-   that you want to run a privacyIDEA system. These packages deactivate all
+.. note:: The packages ``eduMFA-apache2`` and ``eduMFA-nginx`` assume
+   that you want to run a eduMFA system. These packages deactivate all
    other (default) websites. Instead, you may install the package
-   ``privacyidea-mysql`` to install the privacyIDEA application and setup the
+   ``eduMFA-mysql`` to install the eduMFA application and setup the
    database without any webserver configuration. After this, you can integrate
-   privacyIDEA with your existing webserver configuration.
+   eduMFA with your existing webserver configuration.
 
 Read about the upgrading process in :ref:`upgrade_packaged`.
 
-Installing privacyIDEA 3.0 or higher
+Installing eduMFA 3.0 or higher
 ....................................
 
-Before installing privacyIDEA 3.0 or upgrading to 3.0 you need to add the repository.
+Before installing eduMFA 3.0 or upgrading to 3.0 you need to add the repository.
 
 .. _add_ubuntu_repository:
 
@@ -70,7 +70,7 @@ or::
    add-apt-repository http://lancelot.netknights.it/community/jammy/stable
 
 As an alternative you can add the repo in a dedicated file. Create a new
-file ``/etc/apt/sources.list.d/privacyidea-community.list`` with the
+file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the
 following contents::
 
    deb http://lancelot.netknights.it/community/bionic/stable bionic main
@@ -83,16 +83,16 @@ or::
 
    deb http://lancelot.netknights.it/community/jammy/stable jammy main
 
-Installation of privacyIDEA 3.x
+Installation of eduMFA 3.x
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After having added the repositories, run::
 
    apt update
-   apt install privacyidea-apache2
+   apt install eduMFA-apache2
 
 If you do not like the Apache2 webserver you could
-alternatively use the meta package ``privacyidea-nginx``.
+alternatively use the meta package ``eduMFA-nginx``.
 
 ------------
 
@@ -104,20 +104,20 @@ Now you may proceed to :ref:`first_steps`.
 FreeRADIUS
 ..........
 
-privacyIDEA has a perl module to "translate" RADIUS requests to the API of the
-privacyIDEA server. This module plugs into FreeRADIUS. The FreeRADIUS does not
-have to run on the same machine as privacyIDEA.
+eduMFA has a perl module to "translate" RADIUS requests to the API of the
+eduMFA server. This module plugs into FreeRADIUS. The FreeRADIUS does not
+have to run on the same machine as eduMFA.
 To install this module run::
 
-   apt-get install privacyidea-radius
+   apt-get install eduMFA-radius
 
 For further details see :ref:`rlm_perl`.
 
 .. rubric:: Footnotes
 
-.. [#ppa] https://launchpad.net/~privacyidea
-.. [#ubuntu] Starting with privacyIDEA 2.15 Ubuntu 16.04 packages are
-   provided. Starting with privacyIDEA 3.0 Ubuntu 16.04 and 18.04 packages
+.. [#ppa] https://launchpad.net/~eduMFA
+.. [#ubuntu] Starting with eduMFA 2.15 Ubuntu 16.04 packages are
+   provided. Starting with eduMFA 3.0 Ubuntu 16.04 and 18.04 packages
    are provided, Ubuntu 14.04 packages are dropped.
-   Starting with privacyIDEA 3.5 Ubuntu 20.04 packages are available.
-   Starting with privacyIDEA 3.8 Ubuntu 22.04 packages are available, Ubuntu 16.04 packages are dropped.
+   Starting with eduMFA 3.5 Ubuntu 20.04 packages are available.
+   Starting with eduMFA 3.8 Ubuntu 22.04 packages are available, Ubuntu 16.04 packages are dropped.

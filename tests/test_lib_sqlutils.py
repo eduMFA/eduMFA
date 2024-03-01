@@ -8,8 +8,8 @@ from datetime import datetime
 from mock import MagicMock
 import warnings
 from sqlalchemy.testing import AssertsCompiledSQL
-from privacyidea.lib.sqlutils import DeleteLimit, delete_matching_rows
-from privacyidea.models import Audit as LogEntry
+from edumfa.lib.sqlutils import DeleteLimit, delete_matching_rows
+from edumfa.models import Audit as LogEntry
 from .base import MyTestCase
 
 
@@ -34,15 +34,15 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=BytesWarning)
             self.assert_compile(stmt_age,
-                                "DELETE FROM pidea_audit WHERE pidea_audit.id IN "
-                                "(SELECT pidea_audit.id FROM pidea_audit WHERE "
-                                "pidea_audit.date < :date_1 LIMIT :param_1)",
+                                "DELETE FROM mfa_audit WHERE mfa_audit.id IN "
+                                "(SELECT mfa_audit.id FROM mfa_audit WHERE "
+                                "mfa_audit.date < :date_1 LIMIT :param_1)",
                                 checkparams={"date_1": now, "param_1": 1000},
                                 dialect='default')
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=BytesWarning)
             self.assert_compile(stmt_age,
-                                "DELETE FROM pidea_audit WHERE pidea_audit.date < %s LIMIT 1000",
+                                "DELETE FROM mfa_audit WHERE mfa_audit.date < %s LIMIT 1000",
                                 checkpositional=(now,),
                                 dialect='mysql')
 
@@ -50,15 +50,15 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=BytesWarning)
             self.assert_compile(stmt_id,
-                                "DELETE FROM pidea_audit WHERE pidea_audit.id IN "
-                                "(SELECT pidea_audit.id FROM pidea_audit WHERE "
-                                "pidea_audit.id < :id_1 LIMIT :param_1)",
+                                "DELETE FROM mfa_audit WHERE mfa_audit.id IN "
+                                "(SELECT mfa_audit.id FROM mfa_audit WHERE "
+                                "mfa_audit.id < :id_1 LIMIT :param_1)",
                                 checkparams={"id_1": 1000, "param_1": 1234},
                                 dialect='default')
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=BytesWarning)
             self.assert_compile(stmt_id,
-                                "DELETE FROM pidea_audit WHERE pidea_audit.id < %s LIMIT 1234",
+                                "DELETE FROM mfa_audit WHERE mfa_audit.id < %s LIMIT 1234",
                                 checkpositional=(1000,),
                                 dialect='mysql')
 

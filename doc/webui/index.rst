@@ -5,8 +5,8 @@ WebUI
 
 .. index:: ! webui, ! WebUI
 
-privacyIDEA comes with a web-based user interface which is used to manage and configure
-the privacyIDEA server. It is also used a self-service portal for the average user, who
+eduMFA comes with a web-based user interface which is used to manage and configure
+the eduMFA server. It is also used a self-service portal for the average user, who
 manages his own tokens. This section gives an overview on the interface and links the
 respective sections in the documentation.
 
@@ -17,7 +17,7 @@ Dashboard
 
 .. index:: dashboard
 
-Starting with version 3.4, privacyIDEA includes a basic dashboard, which can be enabled
+Starting with version 3.4, eduMFA includes a basic dashboard, which can be enabled
 by the WebUI policy :ref:`webui_admin_dashboard`. The dashboard will be displayed as a starting page
 for administrators and contains information about token numbers, authentication requests,
 recent administrative changes, policies, event handlers and subscriptions. It uses the usual
@@ -106,14 +106,14 @@ In most cases there is no need to manage machines and this view is empty.
 Config
 ------
 
-The configuration tab is the heart of the privacyIDEA server. It contains the general
+The configuration tab is the heart of the eduMFA server. It contains the general
 :ref:`system_config`, allows configuring :ref:`policies` which are important to configure
 behavior of the system, manages the :ref:`eventhandler` and lets the user set up :ref:`periodic_tasks`.
 
 .. figure:: ../configuration/images/system-config.png
    :width: 500
 
-   *The Config section is the heart of the privacyIDEA server.*
+   *The Config section is the heart of the eduMFA server.*
 
 .. _webui_audit:
 
@@ -135,8 +135,8 @@ Components
 
 .. index:: Components
 
-Starting with privacyIDEA 2.15 you can see privacyIDEA components in the Web UI.
-privacyIDEA collects authenticating clients with their User Agent. Usually
+Starting with eduMFA 2.15 you can see eduMFA components in the Web UI.
+eduMFA collects authenticating clients with their User Agent. Usually
 this is a type like *PAM*, *FreeRADIUS*, *Wordpress*, *OwnCloud*, ...
 For more information, you may read on :ref:`application_plugins`.
 This overview helps you to understand your network and keep track which clients
@@ -146,7 +146,3 @@ are connected to your network.
    :width: 500
 
    *The Components display client applications and subscriptions*
-
-
-Subscriptions, e.g. with `NetKnights <https://netknights.it/en/>`_, the
-company behind privacyIDEA, can also be viewed and managed in this tab.

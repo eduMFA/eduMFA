@@ -12,39 +12,39 @@ import os
 import mock
 
 from mock import patch, MagicMock
-from privacyidea.lib.eventhandler.customuserattributeshandler import (CustomUserAttributesHandler,
+from edumfa.lib.eventhandler.customuserattributeshandler import (CustomUserAttributesHandler,
                                                                       ACTION_TYPE as CUAH_ACTION_TYPE)
-from privacyidea.lib.eventhandler.customuserattributeshandler import USER_TYPE
-from privacyidea.lib.eventhandler.webhookeventhandler import ACTION_TYPE, WebHookHandler, CONTENT_TYPE
-from privacyidea.lib.eventhandler.usernotification import UserNotificationEventHandler
-from privacyidea.lib.machine import list_token_machines
+from edumfa.lib.eventhandler.customuserattributeshandler import USER_TYPE
+from edumfa.lib.eventhandler.webhookeventhandler import ACTION_TYPE, WebHookHandler, CONTENT_TYPE
+from edumfa.lib.eventhandler.usernotification import UserNotificationEventHandler
+from edumfa.lib.machine import list_token_machines
 from .base import MyTestCase, FakeFlaskG, FakeAudit
-from privacyidea.lib.config import get_config_object
-from privacyidea.lib.eventhandler.tokenhandler import (TokenEventHandler,
+from edumfa.lib.config import get_config_object
+from edumfa.lib.eventhandler.tokenhandler import (TokenEventHandler,
                                                        ACTION_TYPE, VALIDITY)
-from privacyidea.lib.eventhandler.scripthandler import ScriptEventHandler, SCRIPT_WAIT
-from privacyidea.lib.eventhandler.counterhandler import CounterEventHandler
-from privacyidea.lib.eventhandler.responsemangler import ResponseManglerEventHandler
-from privacyidea.models import EventCounter
-from privacyidea.lib.eventhandler.federationhandler import FederationEventHandler
-from privacyidea.lib.eventhandler.requestmangler import RequestManglerEventHandler
-from privacyidea.lib.eventhandler.base import BaseEventHandler, CONDITION
-from privacyidea.lib.counter import increase as counter_increase
+from edumfa.lib.eventhandler.scripthandler import ScriptEventHandler, SCRIPT_WAIT
+from edumfa.lib.eventhandler.counterhandler import CounterEventHandler
+from edumfa.lib.eventhandler.responsemangler import ResponseManglerEventHandler
+from edumfa.models import EventCounter
+from edumfa.lib.eventhandler.federationhandler import FederationEventHandler
+from edumfa.lib.eventhandler.requestmangler import RequestManglerEventHandler
+from edumfa.lib.eventhandler.base import BaseEventHandler, CONDITION
+from edumfa.lib.counter import increase as counter_increase
 from flask import Request
 from werkzeug.test import EnvironBuilder
-from privacyidea.lib.event import (delete_event, set_event,
+from edumfa.lib.event import (delete_event, set_event,
                                    EventConfiguration, get_handler_object,
                                    enable_event)
-from privacyidea.lib.token import (init_token, remove_token, get_realms_of_token, get_tokens,
+from edumfa.lib.token import (init_token, remove_token, get_realms_of_token, get_tokens,
                                    add_tokeninfo)
-from privacyidea.lib.tokenclass import DATE_FORMAT
-from privacyidea.lib.user import User
-from privacyidea.lib.error import ResourceNotFoundError
-from privacyidea.lib.utils import is_true
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.user import User
+from edumfa.lib.error import ResourceNotFoundError
+from edumfa.lib.utils import is_true
 from datetime import datetime, timedelta
 from dateutil.parser import parse as parse_date_string
 from dateutil.tz import tzlocal
-from privacyidea.app import PiResponseClass as Response
+from edumfa.app import PiResponseClass as Response
 from collections import OrderedDict
 
 
@@ -829,19 +829,19 @@ class ScriptEventTestCase(MyTestCase):
         d = "{0!s}/tests/testdata/scripts/".format(d)
         t_handler = ScriptEventHandler(script_directory=d)
         # first check that the db session is not synced by default
-        with mock.patch('privacyidea.lib.eventhandler.scripthandler.db') as mdb:
+        with mock.patch('edumfa.lib.eventhandler.scripthandler.db') as mdb:
             res = t_handler.do(script_name, options=options)
             mdb.session.commit.assert_not_called()
         self.assertTrue(res)
         # now set the parameter to sync the db session before running the script
         options['handler_def']['options']['sync_to_database'] = "1"
-        with mock.patch('privacyidea.lib.eventhandler.scripthandler.db') as mdb:
+        with mock.patch('edumfa.lib.eventhandler.scripthandler.db') as mdb:
             res = t_handler.do(script_name, options=options)
             mdb.session.commit.assert_called_with()
         self.assertTrue(res)
         # and now with the parameter explicitly disabled
         options['handler_def']['options']['sync_to_database'] = "0"
-        with mock.patch('privacyidea.lib.eventhandler.scripthandler.db') as mdb:
+        with mock.patch('edumfa.lib.eventhandler.scripthandler.db') as mdb:
             res = t_handler.do(script_name, options=options)
             mdb.session.commit.assert_not_called()
         self.assertTrue(res)
@@ -850,7 +850,7 @@ class ScriptEventTestCase(MyTestCase):
 class FederationEventTestCase(MyTestCase):
 
     def test_00_static_actions(self):
-        from privacyidea.lib.eventhandler.federationhandler import ACTION_TYPE
+        from edumfa.lib.eventhandler.federationhandler import ACTION_TYPE
         actions = FederationEventHandler().actions
         self.assertTrue(ACTION_TYPE.FORWARD in actions)
 
@@ -865,7 +865,7 @@ class FederationEventTestCase(MyTestCase):
         g.audit_object = audit_object
 
         # An authentication request for user root with a password, which does
-        #  not exist on the local privacyIDEA system
+        #  not exist on the local eduMFA system
         builder = EnvironBuilder(method='POST',
                                  data={'user': "root", "pass": "lakjsiqdf"},
                                  headers={})
@@ -883,17 +883,17 @@ class FederationEventTestCase(MyTestCase):
                                        {"realm": "xyz",
                                         "resolver": "resoremote",
                                         "forward_client_ip": True,
-                                        "privacyIDEA": "remotePI"}
+                                        "eduMFA": "remotePI"}
                                    }
                    }
         f_handler = FederationEventHandler()
-        from privacyidea.lib.eventhandler.federationhandler import ACTION_TYPE
-        from privacyidea.lib.privacyideaserver import add_privacyideaserver
+        from edumfa.lib.eventhandler.federationhandler import ACTION_TYPE
+        from edumfa.lib.edumfaserver import add_edumfaserver
         responses.add(responses.POST, "https://remote/validate/check",
                       body="""{
                         "jsonrpc": "2.0",
                         "detail": {},
-                        "version": "privacyIDEA 2.20.dev2",
+                        "version": "eduMFA 2.20.dev2",
                         "result": {
                           "status": true,
                           "value": true},
@@ -902,7 +902,7 @@ class FederationEventTestCase(MyTestCase):
                         }""",
                       content_type="application/json",
                       )
-        add_privacyideaserver("remotePI", url="https://remote", tls=False)
+        add_edumfaserver("remotePI", url="https://remote", tls=False)
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         response = options.get("response").json
@@ -926,14 +926,14 @@ class FederationEventTestCase(MyTestCase):
                    "handler_def": {"options":
                                        {"realm": "xyz",
                                         "forward_client_ip": True,
-                                        "privacyIDEA": "remotePI"}
+                                        "eduMFA": "remotePI"}
                                    }
                    }
         responses.add(responses.GET, "https://remote/validate/check",
                       body="""{
                                 "jsonrpc": "2.0",
                                 "detail": {},
-                                "version": "privacyIDEA 2.20.dev2",
+                                "version": "eduMFA 2.20.dev2",
                                 "result": {
                                   "status": true,
                                   "value": true},
@@ -942,7 +942,7 @@ class FederationEventTestCase(MyTestCase):
                                 }""",
                       content_type="application/json",
                       )
-        add_privacyideaserver("remotePI", url="https://remote", tls=False)
+        add_edumfaserver("remotePI", url="https://remote", tls=False)
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         response = options.get("response").json
@@ -965,14 +965,14 @@ class FederationEventTestCase(MyTestCase):
                    "handler_def": {"options":
                                        {"realm": "xyz",
                                         "forward_client_ip": True,
-                                        "privacyIDEA": "remotePI"}
+                                        "eduMFA": "remotePI"}
                                    }
                    }
         responses.add(responses.DELETE, "https://remote/token/serial",
                       body="""{
                                         "jsonrpc": "2.0",
                                         "detail": {},
-                                        "version": "privacyIDEA 2.20.dev2",
+                                        "version": "eduMFA 2.20.dev2",
                                         "result": {
                                           "status": true,
                                           "value": true},
@@ -981,7 +981,7 @@ class FederationEventTestCase(MyTestCase):
                                         }""",
                       content_type="application/json",
                       )
-        add_privacyideaserver("remotePI", url="https://remote", tls=False)
+        add_edumfaserver("remotePI", url="https://remote", tls=False)
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         response = options.get("response").json
@@ -1005,14 +1005,14 @@ class FederationEventTestCase(MyTestCase):
                    "handler_def": {"options":
                                        {"realm": "xyz",
                                         "forward_client_ip": True,
-                                        "privacyIDEA": "remotePI"}
+                                        "eduMFA": "remotePI"}
                                    }
                    }
         responses.add(responses.PUT, "https://remote/token",
                       body="""{
                                         "jsonrpc": "2.0",
                                         "detail": {},
-                                        "version": "privacyIDEA 2.20.dev2",
+                                        "version": "eduMFA 2.20.dev2",
                                         "result": {
                                           "status": true,
                                           "value": true},
@@ -1021,7 +1021,7 @@ class FederationEventTestCase(MyTestCase):
                                         }""",
                       content_type="application/json",
                       )
-        add_privacyideaserver("remotePI", url="https://remote", tls=False)
+        add_edumfaserver("remotePI", url="https://remote", tls=False)
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         # No Response data, since this method is not supported
@@ -1053,28 +1053,28 @@ class FederationEventTestCase(MyTestCase):
                    "response": resp,
                    "handler_def": {"options":
                                        {"forward_authorization_token": True,
-                                        "privacyIDEA": "remotePI"}
+                                        "eduMFA": "remotePI"}
                                    }
                    }
         f_handler = FederationEventHandler()
-        from privacyidea.lib.eventhandler.federationhandler import ACTION_TYPE
-        from privacyidea.lib.privacyideaserver import add_privacyideaserver
+        from edumfa.lib.eventhandler.federationhandler import ACTION_TYPE
+        from edumfa.lib.edumfaserver import add_edumfaserver
         responses.add(responses.POST, "https://remote/token/init",
                       body="""{"jsonrpc": "2.0",
                                "detail": {"googleurl":
-                                              {"value": "otpauth://totp/TOTP0019C11A?secret=5IUZZICQQI7CFA6VZA4HO6L52RA4ZIVC&period=30&digits=6&issuer=privacyIDEA",
+                                              {"value": "otpauth://totp/TOTP0019C11A?secret=5IUZZICQQI7CFA6VZA4HO6L52RA4ZIVC&period=30&digits=6&issuer=eduMFA",
                                                "description": "URL for google Authenticator",
                                                "img": "data:image/png;base64,YII="},
                                "threadid": 140161650956032},
                                "versionnumber": "2.20.1",
-                               "version": "privacyIDEA 2.20.1",
+                               "version": "eduMFA 2.20.1",
                                "result": {"status": true,
                                           "value": true},
                                "time": 1510135880.189272,
                                "id": 1}""",
                       content_type="application/json",
                       )
-        add_privacyideaserver("remotePI", url="https://remote", tls=False)
+        add_edumfaserver("remotePI", url="https://remote", tls=False)
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         response = options.get("response").json
@@ -2369,7 +2369,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
         # create a tokengroup
-        from privacyidea.lib.tokengroup import set_tokengroup, delete_tokengroup
+        from edumfa.lib.tokengroup import set_tokengroup, delete_tokengroup
         set_tokengroup("group1")
 
         init_token({"serial": "SPASS01", "type": "spass"},

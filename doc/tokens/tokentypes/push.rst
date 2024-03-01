@@ -5,7 +5,7 @@ Push Token
 
 .. index:: Push Token, Firebase service
 
-The push token uses the *privacyIDEA Authenticator* app. You can get it
+The push token uses the *unsupported privacyIDEA Authenticator* app. You can get it
 from `Google Play Store`_ or `Apple App Store`_.
 
 .. _Google Play Store: https://play.google.com/store/apps/details?id=it.netknights.piauthenticator
@@ -17,8 +17,8 @@ notification is displayed on the smartphone of the user with a text
 that tells the user that he or somebody else requests to login to a
 service. The user can simply accept this request.
 The smartphone sends a cryptographically signed response to the
-privacyIDEA server and the login request gets marked as confirmed
-in the privacyIDEA server. The application checks for this mark and
+eduMFA server and the login request gets marked as confirmed
+in the eduMFA server. The application checks for this mark and
 logs the user in automatically. For an example of how the components in a
 typical deployment of push tokens interact reference the following diagram.
 
@@ -35,7 +35,7 @@ typical deployment of push tokens interact reference the following diagram.
       database LDAP
     }
     card "2nd Factor" {
-      node privacyIDEA as PI
+      node eduMFA as PI
       file "User Resolver" as Users
     }
   }
@@ -69,7 +69,7 @@ typical deployment of push tokens interact reference the following diagram.
   APN --> iPhone
   iPhone --> PI : Confirm Token
 
-To allow privacyIDEA to send push notifications, a Firebase service
+To allow eduMFA to send push notifications, a Firebase service
 needs to be configured. To do so see :ref:`firebase_provider`.
 
 The PUSH token implements the :ref:`outofband mode <authentication_mode_outofband>`.
@@ -107,7 +107,7 @@ Step 2
 
 The smartphone sends its Firebase ID, the public key of the keypair,
 the serial number and an enrollment credential back to the
-enrollment URL of the privacyIDEA server.
+enrollment URL of the eduMFA server.
 
 The server responds with it's public key for this token.
 
@@ -123,7 +123,7 @@ challenge response tokens either with the PIN to the
 endpoint ``/validate/check`` or via the endpoint
 ``/validate/triggerchallenge``.
 
-privacyIDEA sends a cryptographic challenge with a signature to
+eduMFA sends a cryptographic challenge with a signature to
 the Firebase service.
 The firebase service sends the notification to the smartphone,
 which can verify the signature using the public key from enrollment step 2.
@@ -133,8 +133,8 @@ Accepting login
 
 The user can now accept the login by tapping on the push notification.
 The smartphone sends the signed challenge back to the authentication URL
-of the privacyIDEA server.
-The privacyIDEA server verifies the response and marks this authentication
+of the eduMFA server.
+The eduMFA server verifies the response and marks this authentication
 request as successfully answered.
 
 In some cases the push notification does not reach the smartphone. Since
@@ -144,21 +144,6 @@ Login to application
 ....................
 
 The application can check with the original transaction ID
-with the privacyIDEA server, if the challenge has been successfully
+with the eduMFA server, if the challenge has been successfully
 answered and automatically login the user.
 
-
-More information
-~~~~~~~~~~~~~~~~
-
-For a more detailed insight see the code documentation for the :ref:`code_push_token`.
-
-For an in depth view of the protocol see
-`the github issue <https://github.com/privacyidea/privacyidea/issues/1342>`_ and
-`the wiki page <https://github.com/privacyidea/privacyidea/wiki/concept%3A-PushToken>`_.
-
-Information on the polling mechanism can be found in the `corresponding wiki page <https://github
-.com/privacyidea/privacyidea/wiki/concept%3A-pushtoken-poll>`_.
-
-For recent information and a setup guide, visit the
-`community blog <https://www.privacyidea.org/tag/push-token/>`_

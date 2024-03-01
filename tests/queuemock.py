@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-#  2019-01-07 Friedrich Weber <friedrich.weber@netknights.it>
-#             Implement queue mock
+# License:  AGPLv3
+# This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
+# Copyright (c) 2024 eduMFA Project-Team
+# Previous changes by privacyIDEA project:
 #
-#  License:  AGPLv3
-#  contact:  http://www.privacyidea.org
+# 2019 Friedrich Weber <friedrich.weber@netknights.it>
 #
 # This code is free software; you can redistribute it and/or
 # modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -20,9 +21,9 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from privacyidea.lib.queue import get_job_queue
-from privacyidea.config import TestingConfig
-from privacyidea.lib.queues.base import BaseQueue, QueueError
+from edumfa.lib.queue import get_job_queue
+from edumfa.config import TestingConfig
+from edumfa.lib.queues.base import BaseQueue, QueueError
 
 from tests.base import OverrideConfigTestCase
 
@@ -66,7 +67,7 @@ class MockQueueTestCase(OverrideConfigTestCase):
     The ``enqueued_jobs`` attribute is reset for each test case.
     """
     class Config(TestingConfig):
-        PI_JOB_QUEUE_CLASS = "tests.queuemock.FakeQueue"
+        EDUMFA_JOB_QUEUE_CLASS = "tests.queuemock.FakeQueue"
 
     def setUp(self):
         get_job_queue().reset()

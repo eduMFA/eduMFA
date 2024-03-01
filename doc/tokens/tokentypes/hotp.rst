@@ -34,24 +34,24 @@ Usually the hardware tokens like keyfobs or display cards contain a secret
 key that was generated and implanted at the vendors factory. The vendor ships
 the tokens and a seed file.
 
-.. warning:: In this case privacyIDEA can not guarantee that the secret seed of
+.. warning:: In this case eduMFA can not guarantee that the secret seed of
    the token is unique and if you are using a real strong factor.
 
-privacyIDEA also supports the following seedable HOTP tokens:
+eduMFA also supports the following seedable HOTP tokens:
 
 * SafeNet eToken NG OTP
 * SafeNet eToken Pass
 * Yubikey in OATH mode (See :ref:`yubikey_enrollment_tools` on how to enroll Yubikeys in HOTP mode.)
 * Daplug
 
-Those tokens can be initialized by privacyIDEA. Thus you can be sure, that
+Those tokens can be initialized by eduMFA. Thus you can be sure, that
 only you are in possession of the secret seed.
 
 Experiences
 ...........
 
-The above mentioned hardware tokens are known to play well with privacyIDEA.
-In theory all OATH/HOTP tokens should work well with privacyIDEA. However,
+The above mentioned hardware tokens are known to play well with eduMFA.
+In theory all OATH/HOTP tokens should work well with eduMFA. However,
 there are good experiences with Smartdisplayer OTP cards [#smartdisplayer]_ and
 Feitian C200 [#feitian]_
 tokens.

@@ -3,11 +3,11 @@
 This test file tests the lib/radiusserver.py
 """
 from .base import MyTestCase
-from privacyidea.lib.error import ConfigAdminError, privacyIDEAError
-from privacyidea.lib.radiusserver import (add_radius, delete_radius,
+from edumfa.lib.error import ConfigAdminError, eduMFAError
+from edumfa.lib.radiusserver import (add_radius, delete_radius,
                                           get_radiusservers, get_radius,
                                           RADIUSServer, test_radius)
-from privacyidea.lib.config import set_privacyidea_config
+from edumfa.lib.config import set_edumfa_config
 from . import radiusmock
 DICT_FILE = "tests/testdata/dictionary"
 
@@ -95,7 +95,7 @@ class RADIUSServerTestCase(MyTestCase):
         self.assertTrue(r)
 
         # raises error on long secrets
-        self.assertRaises(privacyIDEAError,
+        self.assertRaises(eduMFAError,
                           test_radius,
                           identifier="myserver", server="1.2.3.4",
                           user="user", password="password",

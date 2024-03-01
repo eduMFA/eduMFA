@@ -4,8 +4,8 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.passwordtoken import PasswordTokenClass
-from privacyidea.models import Token
+from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
+from edumfa.models import Token
 
 
 class PasswordTokenTestCase(MyTestCase):

@@ -1,63 +1,27 @@
-# You are welcome to contribute to privacyIDEA
+# You are welcome to contribute to eduMFA
 
 There are different ways to contribute. Some of them should
 be really easy.
 
 First of all:  
-**Thanks a lot for contributing to privacyIDEA!**
+**Thanks a lot for contributing to eduMFA!**
 
 ## Tell about it
 
-You are using privacyIDEA in your network? Tell about it!
+You are using eduMFA in your network? Tell about it!
 Write a blog post, tell your friends or simply twitter about it.
-This will make privacyIDEA wider known and attract new users and contributors.
-
-## Talk to us
-
-You may join talking in the privacyIDEA Forum.
-Talk to other users and share your experience!
-
-https://community.privacyidea.org
-
-### A word about community
-
-Community does not mean that some developers are responsible
-for solving all your problems. Read the AGPL!
-**THIS SOFTWARE COMES WITH NO WARRANTY**
-
-As soon as you start using privacyIDEA you are becoming part of
-the community and this also comes with some kind of responsibility.
-So you can make privacyIDEA better and earn karma points by
-sharing your experience and helping other, younger users.
-
-By doing so the developers have more time to develop and
-improving your beloved project.
-
-So **you are "the community"**, go and help others!
-
-https://community.privacyidea.org
-
-## Professional services
-
-If you want to get rid of the NO-WARRANTY
-label take a look at privacyIDEA Enterprise Edition including a
-Service Level Agreement or get professional consultancy:
-
-- consultancy
-  https://netknights.it/en/leistungen/one-time-services/
-- privacyIDEA Enterprise Edition
-  https://netknights.it/en/leistungen/service-level-agreements/
+This will make eduMFA wider known and attract new users and contributors.
 
 
 ## Tell us your ideas
 
 If you have a *new idea* you may submit a feature request.
-This should be a new idea that puts forward privacyIDEA and looks
+This should be a new idea that puts forward eduMFA and looks
 at some things from a new angle.
 
 Submit an issue and describe your idea in the best possible details.
 
-https://github.com/privacyidea/privacyidea/issues
+https://github.com/eduMFA/eduMFA/issues
 
 ## Documentation
 
@@ -70,20 +34,7 @@ cd doc/ && make html
 This also pulls the API-documentation from the source code.
 The latest release documentation can be found here:
 
-http://privacyidea.readthedocs.io/en/latest/
-
-## Translations
-
-If you have no programming skills you can still get involved
-directly with the software by providing translations into
-different languages.
-
-You can do it easily without technical skills in your browser at
-weblate.org https://hosted.weblate.org/engage/privacyidea/.
-
-Or use your own system:
-
-http://privacyidea.readthedocs.io/en/latest/faq/translation.html
+http://eduMFA.readthedocs.io/en/latest/
 
 ## Test coverage
 
@@ -94,12 +45,12 @@ The tests are also split in three levels: database, library and API.
 Here you can find files that should get an improved test coverage.
 Take a look at yellow and red files.
 
-https://codecov.io/github/privacyidea/privacyidea?branch=master
+https://codecov.io/github/eduMFA/eduMFA?branch=main
 
 ## Report a security vulnerability
 
 If you found a problematic security vulnerability, please
-refrain from reporting an issue at github but send this vulnerability to
+refrain from reporting an issue at GitHub but send this vulnerability to
 us directly.
 Please include the following details:
 
@@ -114,17 +65,8 @@ Please include the following details:
 * Your name, (handle or alias) to be included in the
   disclosure and hall of fame.
 
-You can send this information to the privacyIDEA core development team by
-sending an email to
+You can send this information to the eduMFA core development team by submitting a security report using the GitHub Form.
 
-   security@privacyidea.org
-
-or, if you want to stay anonymous/pseudonymous, you can upload your information
-to
-
-   https://lancelot.netknights.it/owncloud/s/a6sVvOT0Fb3utd9
-
-Thanks a lot for your support and your discretion.
 
 ## Develop
 
@@ -152,14 +94,14 @@ If you are sending a pull request, please note the following:
   that it can be used and different use cases.
 * We are proud of our **code coverage**. The modular code with decorators can
   be tested more easy. Write **tests** for your code!
-* If you need to change the database model, edit ``privacyidea/models.py``
+* If you need to change the database model, edit ``edumfa/models.py``
   accordingly. Then you can use
-  ``./pi-manage`` to create migration scripts. The migration scripts
+  ``./edumfa-manage`` to create migration scripts. The migration scripts
   are located at ``migrations/versions/``.
   To create a migration script to update the database schema run:
 
   ```
-  ./pi-manage db migrate
+  ./edumfa-manage db migrate
   ```
 
   This will create a new file in ``migrations/versions/``. Edit the description
@@ -168,7 +110,7 @@ scripts.
   Then you can run:
 
   ```
-  ./pi-manage db upgrade
+  ./edumfa-manage db upgrade
   ```
 
   To update the local database.
@@ -176,12 +118,12 @@ scripts.
 ## Development Workflow
 
 The following section describes our development workflow: How do we handle
-issues, how do we develop privacyIDEA, how do we perform code reviews?
+issues, how do we develop eduMFA, how do we perform code reviews?
 
 ### Terminology
 
-In the following, *"we"* and *"team"* refers to the [privacyIDEA development
-team](https://github.com/orgs/privacyidea/people). *"External contributors"*
+In the following, *"we"* and *"team"* refers to the [eduMFA development
+team](https://github.com/orgs/eduMFA/people). *"External contributors"*
 refers to contributing developers from the community.
 
 ### Issues
@@ -211,7 +153,7 @@ We use *Github Projects* to organize our weekly develoment cycle.
 
 In a weekly meeting we decide, which issues will be handled during the
 following week. Issues are put into the
-[project](https://github.com/privacyidea/privacyidea/projects) in the state
+[project](https://github.com/eduMFA/eduMFA/projects) in the state
 *Todo*.
 
 When a developer starts working on the issue, the developer puts the issue
@@ -219,7 +161,7 @@ into the state *In progress*. When he is done he opens a pull requests,
 assigns a reviewer and puts the issue into the state *Review in progress*.
 
 When the reviewer is happy with the pull request, he can merge the PR
-into the master branch. The issue is closed and goes into the state
+into the `main` branch. The issue is closed and goes into the state
 *Nearly done*.
 
 The closes issue is again discussed in the next meeting and then finally
@@ -229,7 +171,7 @@ moved to the state *Done*.
 
 ### Branches
 
-##### ``master`` branch
+##### ``main`` branch
 
 Our ``master`` branch represents the current development state and, as a
 consequence, may be unstable. Features are usually added there.
@@ -238,13 +180,13 @@ consequence, may be unstable. Features are usually added there.
 
 For each minor version ``X.Y`` (e.g. 2.23, 3.0, ...), we create a *stable
 branch* called ``branch-X.Y``, e.g.
-[``branch-3.0``](https://github.com/privacyidea/privacyidea/tree/branch-3.0).
+[``branch-3.0``](https://github.com/eduMFA/eduMFA/tree/branch-3.0).
 Hotfixes for stable versions are usually added to the stable branches. Stable
 branches are then merged back into the master branch.
 
 ##### Local Branches and Pull Requests
 
-We do not directly work on the ``master`` branch or the stable branches.
+We do not directly work on the ``main`` branch or the stable branches.
 Instead, we locally create new branches, diverging either from ``master`` or a
 stable branch. These branches are called ``123/some-shortname``, where ``123``
 refers to an issue number, and ``some-shortname`` is a short description of the
@@ -288,7 +230,7 @@ assign responsibility.
 
 ##### Reviewing Pull Requests
 
-The reviewer uses the github [code review
+The reviewer uses the GitHub [code review
 features](https://github.com/features/code-review/) to add comments and request
 changes. The developer addresses the remarks in the following commits and
 replies to the comments. If the reviewer is satisfied with the changes, the

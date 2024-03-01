@@ -5,7 +5,7 @@ In particular, this tests
 lib/task/base.py
 """
 
-from privacyidea.lib.task.base import BaseTask
+from edumfa.lib.task.base import BaseTask
 from .base import MyTestCase
 
 

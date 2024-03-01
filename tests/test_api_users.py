@@ -1,11 +1,11 @@
 # coding: utf-8
 from .base import MyApiTestCase
 import json
-from privacyidea.lib.resolver import (save_resolver)
-from privacyidea.lib.realm import (set_realm)
-from privacyidea.lib.user import User
-from privacyidea.lib.token import init_token, remove_token
-from privacyidea.lib.policy import set_policy, delete_policy, SCOPE, ACTION
+from edumfa.lib.resolver import (save_resolver)
+from edumfa.lib.realm import (set_realm)
+from edumfa.lib.user import User
+from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION
 from urllib.parse import urlencode
 
 PWFILE = "tests/testdata/passwd"
@@ -376,7 +376,7 @@ class APIUsersTestCase(MyApiTestCase):
             self.assertTrue(result.get("value"))
 
     def test_10_additional_attributes(self):
-        from privacyidea.lib.policy import set_policy, ACTION, SCOPE, delete_policy
+        from edumfa.lib.policy import set_policy, ACTION, SCOPE, delete_policy
         with self.app.test_request_context('/user/attribute',
                                            method='POST',
                                            data={"user": "cornelius@realm1",

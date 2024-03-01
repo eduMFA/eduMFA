@@ -3,11 +3,11 @@
 OCRA Token
 ~~~~~~~~~~
 
-.. automodule:: privacyidea.lib.tokens.ocratoken
+.. automodule:: edumfa.lib.tokens.ocratoken
 
 Implementation
 ..............
 
-.. autoclass:: privacyidea.lib.tokens.ocratoken.OcraTokenClass
+.. autoclass:: edumfa.lib.tokens.ocratoken.OcraTokenClass
    :members:
    :undoc-members:

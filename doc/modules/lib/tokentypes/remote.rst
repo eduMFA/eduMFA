@@ -3,6 +3,6 @@
 Remote Token
 ~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.remotetoken.RemoteTokenClass
+.. autoclass:: edumfa.lib.tokens.remotetoken.RemoteTokenClass
    :members:
    :undoc-members:

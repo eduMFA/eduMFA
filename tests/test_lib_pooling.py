@@ -6,10 +6,10 @@ lib/pooling.py
 """
 from sqlalchemy import create_engine
 
-from privacyidea.app import create_app
-from privacyidea.lib.auth import create_db_admin
-from privacyidea.lib.pooling import get_engine, get_registry, SharedEngineRegistry, NullEngineRegistry
-from privacyidea.models import db, save_config_timestamp
+from edumfa.app import create_app
+from edumfa.lib.auth import create_db_admin
+from edumfa.lib.pooling import get_engine, get_registry, SharedEngineRegistry, NullEngineRegistry
+from edumfa.models import db, save_config_timestamp
 from .base import MyTestCase
 
 
@@ -18,7 +18,7 @@ class SharedPoolingTestCase(MyTestCase):
     def setUpClass(cls):
         # Modified setup method to use SharedEngineRegistry
         cls.app = create_app('testing', "")
-        cls.app.config['PI_ENGINE_REGISTRY_CLASS'] = 'shared'
+        cls.app.config['EDUMFA_ENGINE_REGISTRY_CLASS'] = 'shared'
         cls.app_context = cls.app.app_context()
         cls.app_context.push()
         db.create_all()

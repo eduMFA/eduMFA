@@ -3,6 +3,6 @@
 Email Token
 ~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.emailtoken.EmailTokenClass
+.. autoclass:: edumfa.lib.tokens.emailtoken.EmailTokenClass
    :members:
    :undoc-members:

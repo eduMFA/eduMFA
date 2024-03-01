@@ -6,10 +6,10 @@ The lib.resolvers.py only depends on the database model.
 import json
 from .base import MyTestCase
 
-from privacyidea.lib.resolver import (save_resolver,
+from edumfa.lib.resolver import (save_resolver,
                                       delete_resolver)
 
-from privacyidea.lib.realm import (set_realm,
+from edumfa.lib.realm import (set_realm,
                                    get_realms,
                                    get_default_realm,
                                    realm_is_defined,

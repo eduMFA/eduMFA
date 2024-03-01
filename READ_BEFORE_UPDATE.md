@@ -145,7 +145,7 @@ The current database schema now is d5870fd2f2a4.
   /opt/privacyidea/lib/python2.7/ these will not be found anymore
   and the WebUI could result in not being accessable.
   This could be relevant when using ``PI_CUSTOM_CSS = True``
-  or ``PI_CUSTOMIZATION`` in your pi.cfg file.
+  or ``PI_CUSTOMIZATION`` in your edumfa.cfg file.
 
   You will have to move the corresponding files to
   /opt/privacyidea/lib/python3.x/...
@@ -173,7 +173,7 @@ The current database schema now is d5870fd2f2a4.
   action assures, that admins can only list tokens in certain realms.
   Without this action, and administrator can not view any tokens.
   To allow all administrators to still list tokens, during migration
-  from 3.0 to 3.1 a new policy **pi-update-policy-b9131d0686eb** is
+  from 3.0 to 3.1 a new policy **edumfa-update-policy-b9131d0686eb** is
   automatically created.
 
   After the update you might want to review this policy and the
@@ -225,7 +225,7 @@ The current database schema now is d5870fd2f2a4.
 
 * Due to the switch from PyCrypto to cryptography, the calculation of signatures
   changed. In order to be able to verify old audit entry signatures,
-   PI_CHECK_OLD_SIGNATURES must be set to "True" in your pi.cfg.
+   PI_CHECK_OLD_SIGNATURES must be set to "True" in your edumfa.cfg.
 
 ## Update from 2.22 to 2.23
 
@@ -233,11 +233,11 @@ The current database schema now is d5870fd2f2a4.
   Thus you need to run "apt dist-upgrade" on Ubuntu systems,
   to also install this new dependency.
 
-* When upgrading on Ubuntu using apt, you will be notified, that pi.cfg was changed by the maintainer.
-  This is fine. You must keep your pi.cfg, so press "N"!
+* When upgrading on Ubuntu using apt, you will be notified, that edumfa.cfg was changed by the maintainer.
+  This is fine. You must keep your edumfa.cfg, so press "N"!
   This is due to the PI_ENGINE_REGISTRY_CLASS which is set to "shared" on new installations.
   If you want to, you can set PI_ENGINE_REGISTRY_CLASS = "shared"
-  in your pi.cfg manually.
+  in your edumfa.cfg manually.
 
 * The database schema was changed. The meta packages on Ubuntu
   privacyidea-apache2 and privacyidea-nginx should take care of this.

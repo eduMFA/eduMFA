@@ -3,6 +3,6 @@
 Registration Code Token
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.registrationtoken.RegistrationTokenClass
+.. autoclass:: edumfa.lib.tokens.registrationtoken.RegistrationTokenClass
    :members:
    :undoc-members:

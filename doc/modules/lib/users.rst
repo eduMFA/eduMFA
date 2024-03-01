@@ -1,6 +1,6 @@
 Users
 .....
 
-.. automodule:: privacyidea.lib.user
+.. automodule:: edumfa.lib.user
    :members:
    :undoc-members:

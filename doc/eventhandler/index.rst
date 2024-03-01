@@ -116,7 +116,7 @@ the same conditions.
    can not be determined, this condition will be evaluated as fulfilled.
 
    Event Handlers are a mighty and complex tool to tweak the functioning of your
-   privacyIDEA system. We recommend to test your definitions thoroughly to assure
+   eduMFA system. We recommend to test your definitions thoroughly to assure
    your expected outcome.
 
 Basic conditions
@@ -363,7 +363,7 @@ value. Valid compares are::
 Managing Events
 ---------------
 
-Using the command ``pi-manage events`` you can list, delete, enable and disable events.
+Using the command ``edumfa-manage events`` you can list, delete, enable and disable events.
 You can also export the complete event definitions to a file or import the event definitions from a file again.
 During import you can specify if you want to remove all existing events or if you want to add the events from the file
 to the existing events in the database.

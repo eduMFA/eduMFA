@@ -1,0 +1,92 @@
+<!-- Modal -->
+
+<div class="modal fade lock-dialog" id="dialogWelcome" tabindex="-1"
+     role="dialog"
+     ng-show="welcomeStep < 5"
+     data-backdrop="static" data-keyboard="false"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+
+        <div class="modal-content" ng-show="welcomeStep === 0">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel" translate
+                >Welcome</h4>
+            </div>
+
+            <!-- In case of no subscription and less than 50 users -->
+            <div class="modal-body" translate>
+                <p>First, we would like to give you some background
+                    information on eduMFA.</p>
+                <p>eduMFA is an <b>Enterprise Level</b>
+                    Multi Factor Authentication System.
+                    It is open source and optimized for research and education institutions.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        ng-click="nextWelcome()" translate>Next
+                </button>
+            </div>
+        </div>
+
+        <div class="modal-content" ng-show="welcomeStep === 1">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel" translate
+                >The value of open source</h4>
+            </div>
+            <div class="modal-body" translate>
+                <p>
+                    You are reading books, which do not belong to you anymore. Your ebook reader
+                    only provides them for the time of reading. You are using software as a service
+                    and you do not have any control, when the software will be updated,
+                    which features will be added or removed or if the service might even be stopped.
+                    You only get a legal right of time limited use.
+                </p>
+                <p>
+                    You could install proprietary software on your own server, but you also have only
+                    limited rights in regards to this installation. You are not allowed to modify or pass along
+                    this proprietary software.
+                </p>
+                <p>
+                    The open source software eduMFA now is <b>your property</b>! No one can take away this software
+                    or this installation. According to the license AGPLv3 you can modify or distribute this software.
+                    You do not have to worry about end-of-life.
+                </p>
+                <p>
+                    <b>Using open source is not about spending no money, but is is about full control you get over
+                        your own system! Forever!</b>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        ng-click="nextWelcome()" translate>Next
+                </button>
+            </div>
+        </div>
+
+
+        <div class="modal-content" ng-show="welcomeStep === 3">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel" translate
+                >Thank you for improving your security!</h4>
+            </div>
+            <div class="modal-body" translate>
+                <p>Thank you for using eduMFA and making your network
+                    and thus this world a more secure place!</p>
+                <p>Have fun using eduMFA!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        ng-click="resetWelcome()" translate>
+                    Read again
+                </button>
+                <button type="button" class="btn btn-success"
+                        ng-click="nextWelcome()" translate>Dive In!
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

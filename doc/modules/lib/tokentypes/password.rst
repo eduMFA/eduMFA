@@ -3,6 +3,6 @@
 PasswordToken
 ~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.passwordtoken.PasswordTokenClass
+.. autoclass:: edumfa.lib.tokens.passwordtoken.PasswordTokenClass
    :members:
    :undoc-members:

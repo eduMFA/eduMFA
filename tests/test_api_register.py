@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from privacyidea.lib.resolver import save_resolver
-from privacyidea.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.realm import set_realm
 from .base import MyApiTestCase
-from privacyidea.lib.policy import SCOPE, ACTION, set_policy
-from privacyidea.lib.resolvers.SQLIdResolver import IdResolver as SQLResolver
+from edumfa.lib.policy import SCOPE, ACTION, set_policy
+from edumfa.lib.resolvers.SQLIdResolver import IdResolver as SQLResolver
 import json
-from privacyidea.lib.smtpserver import add_smtpserver
+from edumfa.lib.smtpserver import add_smtpserver
 from . import smtpmock
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.lib.passwordreset import create_recoverycode
-from privacyidea.lib.user import User
-from privacyidea.lib.error import ERROR
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.passwordreset import create_recoverycode
+from edumfa.lib.user import User
+from edumfa.lib.error import ERROR
 
 
 class RegisterTestCase(MyApiTestCase):
@@ -125,7 +125,7 @@ class RegisterTestCase(MyApiTestCase):
     @smtpmock.activate
     def test_02_reset_password(self):
         smtpmock.setdata(response={"cornelius@privacyidea.org": (200, "OK")})
-        set_privacyidea_config("recovery.identifier", "myserver")
+        set_edumfa_config("recovery.identifier", "myserver")
         with self.app.test_request_context('/recover',
                                            method='POST',
                                            data={"user": "corneliusReg",

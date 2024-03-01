@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from .base import MyApiTestCase
-from privacyidea.lib.policy import set_policy, SCOPE, ACTION, delete_policy, CONDITION_SECTION
-from privacyidea.lib.token import remove_token
+from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy, CONDITION_SECTION
+from edumfa.lib.token import remove_token
 
 
 class APIPolicyTestCase(MyApiTestCase):
@@ -114,12 +114,12 @@ class APIPolicyTestCase(MyApiTestCase):
 
         delete_policy("pol1")
 
-        with self.app.test_request_context('/policy/polpinode',
+        with self.app.test_request_context('/policy/poledumfanode',
                                            method='POST',
                                            data={"action": ACTION.NODETAILFAIL,
                                                  "client": "10.1.2.3",
                                                  "scope": SCOPE.AUTHZ,
-                                                 "pinode": "Node1",
+                                                 "edumfanode": "Node1",
                                                  "priority": 1,
                                                  "realm": "realm1"},
                                            headers={'Authorization': self.at}):
@@ -127,10 +127,10 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             result = data.get("result")
-            self.assertTrue("setPolicy polpinode" in result.get("value"),
+            self.assertTrue("setPolicy poledumfanode" in result.get("value"),
                             result.get("value"))
 
-        # get the policies and see if the pinode was set
+        # get the policies and see if the edumfanode was set
         with self.app.test_request_context('/policy/',
                                            method='GET',
                                            headers={'Authorization': self.at}):
@@ -140,9 +140,9 @@ class APIPolicyTestCase(MyApiTestCase):
             value = res.json['result']['value']
             self.assertEqual(len(value), 1)
             pol1 = value[0]
-            self.assertEqual(pol1.get("pinode"), ["Node1"])
+            self.assertEqual(pol1.get("edumfanode"), ["Node1"])
 
-        delete_policy("polpinode")
+        delete_policy("poledumfanode")
 
     def test_02_set_policy_conditions(self):
         # set a policy with conditions
@@ -387,7 +387,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertIn("comparators", value)
             self.assertIn("sections", value)
 
-        with self.app.test_request_context('/policy/defs/pinodes',
+        with self.app.test_request_context('/policy/defs/edumfanodes',
                                            method='GET',
                                            headers={
                                                'Authorization': self.at}):
@@ -412,7 +412,7 @@ class APIPolicyTestCase(MyApiTestCase):
                                                                "User-Agent", "broken",
                                                                "SpecialApp", True]],
                                                "scope": SCOPE.AUTHZ},
-                                           headers={'PI-Authorization': self.at}):
+                                           headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 400)
             data = res.json
@@ -429,7 +429,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                                            json={"type": "spass", "pin": "1234",
                                                  "serial": "sp1", "user": "cornelius", "realm": "realm1",
                                                  "client": "10.1.2.3"},
-                                           headers={'PI-Authorization': self.at}):
+                                           headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
@@ -454,7 +454,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                                                  "conditions": [[CONDITION_SECTION.HTTP_REQUEST_HEADER,
                                                                  "User-Agent", "equals", "SpecialApp", True]],
                                                  "scope": SCOPE.AUTHZ},
-                                           headers={'PI-Authorization': self.at}):
+                                           headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
@@ -517,7 +517,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                                                                  "User-Agent", "broken",
                                                                  "SpecialApp", True]],
                                                  "scope": SCOPE.AUTHZ},
-                                           headers={'PI-Authorization': self.at}):
+                                           headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
         # now test the policy
@@ -543,7 +543,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                                                                  "User-Agent", "equals",
                                                                  "SpecialApp", True]],
                                                  "scope": SCOPE.AUTHZ},
-                                           headers={'PI-Authorization': self.at}):
+                                           headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
         # now test the policy
@@ -572,7 +572,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                                            json={"type": "spass", "pin": "1234",
                                                  "serial": "sp1", "user": "cornelius", "realm": "realm1",
                                                  "client": "10.1.2.3"},
-                                           headers={'PI-Authorization': self.at}):
+                                           headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
@@ -597,7 +597,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                                                  "conditions": [[CONDITION_SECTION.HTTP_ENVIRONMENT,
                                                                  "REQUEST_METHOD", "equals", "POST", True]],
                                                  "scope": SCOPE.AUTHZ},
-                                           headers={'PI-Authorization': self.at}):
+                                           headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
@@ -632,7 +632,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                                                  "conditions": [[CONDITION_SECTION.HTTP_ENVIRONMENT,
                                                                  "NON_EXISTING", "equals", "POST", True]],
                                                  "scope": SCOPE.AUTHZ},
-                                           headers={'PI-Authorization': self.at}):
+                                           headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 

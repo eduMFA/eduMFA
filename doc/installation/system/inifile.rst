@@ -5,48 +5,48 @@ The Config File
 
 .. index:: config file, external hook, hook, debug, loglevel
 
-privacyIDEA reads its configuration from different locations:
+eduMFA reads its configuration from different locations:
 
-   1. default configuration from the module ``privacyidea/config.py``
-   2. then from the config file ``/etc/privacyidea/pi.cfg`` if it exists and then
-   3. from the file specified in the environment variable ``PRIVACYIDEA_CONFIGFILE``::
+   1. default configuration from the module ``eduMFA/config.py``
+   2. then from the config file ``/etc/eduMFA/edumfa.cfg`` if it exists and then
+   3. from the file specified in the environment variable ``eduMFA_CONFIGFILE``::
 
-         export PRIVACYIDEA_CONFIGFILE=/your/config/file
+         export eduMFA_CONFIGFILE=/your/config/file
 
 The configuration is overwritten and extended in each step. I.e. values define
-in ``privacyidea/config.py``
+in ``eduMFA/config.py``
 that are not redefined in one of the other config files, stay the same.
 
-You can create a new config file (either ``/etc/privacyidea/pi.cfg``) or any other
+You can create a new config file (either ``/etc/eduMFA/edumfa.cfg``) or any other
 file at any location and set the environment variable.
 The file should contain the following contents::
 
    # The realm, where users are allowed to login as administrators
    SUPERUSER_REALM = ['super', 'administrators']
    # Your database
-   SQLALCHEMY_DATABASE_URI = 'sqlite:////etc/privacyidea/data.sqlite'
+   SQLALCHEMY_DATABASE_URI = 'sqlite:////etc/eduMFA/data.sqlite'
    # Set maximum identifier length to 128
    # SQLALCHEMY_ENGINE_OPTIONS = {"max_identifier_length": 128}
    # This is used to encrypt the auth_token
    SECRET_KEY = 't0p s3cr3t'
    # This is used to encrypt the admin passwords
-   PI_PEPPER = "Never know..."
+   EDUMFA_PEPPER = "Never know..."
    # This is used to encrypt the token data and token passwords
-   PI_ENCFILE = '/etc/privacyidea/enckey'
+   EDUMFA_ENCFILE = '/etc/eduMFA/enckey'
    # This is used to sign the audit log
-   PI_AUDIT_KEY_PRIVATE = '/home/cornelius/src/privacyidea/private.pem'
-   PI_AUDIT_KEY_PUBLIC = '/home/cornelius/src/privacyidea/public.pem'
-   # PI_AUDIT_MODULE = <python audit module>
-   # PI_AUDIT_SQL_URI = <special audit log DB uri>
+   EDUMFA_AUDIT_KEY_PRIVATE = '/home/cornelius/src/eduMFA/private.pem'
+   EDUMFA_AUDIT_KEY_PUBLIC = '/home/cornelius/src/eduMFA/public.pem'
+   # EDUMFA_AUDIT_MODULE = <python audit module>
+   # EDUMFA_AUDIT_SQL_URI = <special audit log DB uri>
    # Options passed to the Audit DB engine (supersedes SQLALCHEMY_ENGINE_OPTIONS)
-   # PI_AUDIT_SQL_OPTIONS = {}
+   # EDUMFA_AUDIT_SQL_OPTIONS = {}
    # Truncate Audit entries to fit into DB columns
-   PI_AUDIT_SQL_TRUNCATE = True
-   # PI_LOGFILE = '....'
-   # PI_LOGLEVEL = 20
-   # PI_INIT_CHECK_HOOK = 'your.module.function'
-   # PI_CSS = '/location/of/theme.css'
-   # PI_UI_DEACTIVATED = True
+   EDUMFA_AUDIT_SQL_TRUNCATE = True
+   # EDUMFA_LOGFILE = '....'
+   # EDUMFA_LOGLEVEL = 20
+   # EDUMFA_INIT_CHECK_HOOK = 'your.module.function'
+   # EDUMFA_CSS = '/location/of/theme.css'
+   # EDUMFA_UI_DEACTIVATED = True
 
 .. note:: The config file is parsed as python code, so you can use variables to
    set the path and you need to take care of the indentation.
@@ -66,7 +66,7 @@ the `max_identifier_length <https://docs.sqlalchemy.org/en/14/core/engines
 The ``SUPERUSER_REALM`` is a list of realms, in which the users get the role
 of an administrator.
 
-``PI_INIT_CHECK_HOOK`` is a function in an external module, that will be
+``EDUMFA_INIT_CHECK_HOOK`` is a function in an external module, that will be
 called as decorator to ``token/init`` and ``token/assign``. This function
 takes the ``request`` and ``action`` (either "init" or "assign") as an
 arguments and can modify the request or raise an exception to avoid the
@@ -113,7 +113,7 @@ will be used as the default language::
 
 .. note:: If ``PI_PREFERRED_LANGUAGE`` is not defined, the following list is used:
 
-   .. autodata:: privacyidea.webui.login.DEFAULT_LANGUAGE_LIST
+   .. autodata:: eduMFA.webui.login.DEFAULT_LANGUAGE_LIST
 
 The parameter ``PI_TRANSLATION_WARNING`` can be used to provide a prefix, that is
 set in front of every string in the UI, that is not translated to the language your browser
@@ -123,29 +123,29 @@ Logging
 -------
 
 There are three config entries, that can be used to define the logging. These
-are ``PI_LOGLEVEL``, ``PI_LOGFILE``, ``PI_LOGCONFIG``. These are described in
+are ``EDUMFA_LOGLEVEL``, ``EDUMFA_LOGFILE``, ``EDUMFA_LOGCONFIG``. These are described in
 :ref:`debug_log`.
 
-You can use ``PI_CSS`` to define the location of another cascading style
+You can use ``EDUMFA_CSS`` to define the location of another cascading style
 sheet to customize the look and feel. Read more at :ref:`themes`.
 
 .. note:: If you ever need passwords being logged in the log file, you may
-   set ``PI_LOGLEVEL = 9``, which is a lower log level than ``logging.DEBUG``.
+   set ``EDUMFA_LOGLEVEL = 9``, which is a lower log level than ``logging.DEBUG``.
    Use this setting with caution and always delete the logfiles!
 
-privacyIDEA digitally signs the responses with the private key in
-``PI_AUDIT_KEY_PRIVATE``. If you can be sure that the private key has
-not been tampered with, you can set the parameter ``PI_AUDIT_NO_PRIVATE_KEY_CHECK``
+eduMFA digitally signs the responses with the private key in
+``EDUMFA_AUDIT_KEY_PRIVATE``. If you can be sure that the private key has
+not been tampered with, you can set the parameter ``EDUMFA_AUDIT_NO_PRIVATE_KEY_CHECK``
 to ``True`` in order to improve the performance when loading the key.
 
 You can disable the signing of the responses completely using the parameter
 ``PI_NO_RESPONSE_SIGN``. Set this to ``True`` to suppress the response signature.
 
-You can set ``PI_UI_DEACTIVATED = True`` to deactivate the privacyIDEA UI.
+You can set ``EDUMFA_UI_DEACTIVATED = True`` to deactivate the eduMFA UI.
 This can be interesting if you are only using the command line client or your
 own UI and you do not want to present the UI to the user or the outside world.
 
-.. note:: The API calls are all still accessible, i.e. privacyIDEA is
+.. note:: The API calls are all still accessible, i.e. eduMFA is
    technically fully functional.
 
 .. _engine-registry:
@@ -167,34 +167,34 @@ its value defaults to ``"null"``.
 Audit parameters
 ----------------
 
-``PI_AUDIT_MODULE`` lets you specify an alternative auditing module. The
-default which is shipped with privacyIDEA is
-``privacyidea.lib.auditmodules.sqlaudit``. There is usually no need to change this.
+``EDUMFA_AUDIT_MODULE`` lets you specify an alternative auditing module. The
+default which is shipped with eduMFA is
+``eduMFA.lib.auditmodules.sqlaudit``. There is usually no need to change this.
 
-You can change the server name of the privacyIDEA node, which will be logged
-to the audit log using the variable ``PI_AUDIT_SERVERNAME``. If this variable
+You can change the server name of the eduMFA node, which will be logged
+to the audit log using the variable ``EDUMFA_AUDIT_SERVERNAME``. If this variable
 is not set, the value from ``PI_NODE`` or ``localnode`` will be used.
 
 You can run the database for the audit module on another database or even
-server. For this you can specify the database URI via ``PI_AUDIT_SQL_URI``.
-With ``PI_AUDIT_SQL_OPTIONS`` You can pass a dictionary of options to the
-database engine. If ``PI_AUDIT_SQL_OPTIONS`` is not set,
+server. For this you can specify the database URI via ``EDUMFA_AUDIT_SQL_URI``.
+With ``EDUMFA_AUDIT_SQL_OPTIONS`` You can pass a dictionary of options to the
+database engine. If ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set,
 ``SQLALCHEMY_ENGINE_OPTIONS`` will be used.
 
-``PI_AUDIT_SQL_TRUNCATE = True`` lets you truncate audit entries to the length
+``EDUMFA_AUDIT_SQL_TRUNCATE = True`` lets you truncate audit entries to the length
 of the database fields.
 
 In certain cases when you experiencing problems you may use the parameters
-``PI_AUDIT_POOL_SIZE`` and ``PI_AUDIT_POOL_RECYCLE``. However, they are only
+``EDUMFA_AUDIT_POOL_SIZE`` and ``EDUMFA_AUDIT_POOL_RECYCLE``. However, they are only
 effective if you also set ``PI_ENGINE_REGISTRY_CLASS`` to ``"shared"``.
 
-For signing and verifying each Audit entry, the RSA keys in ``PI_AUDIT_KEY_PRIVATE``
-and ``PI_AUDIT_KEY_PUBLIC`` are used. If you can be sure that the private key has
-not been tampered with, you can set the parameter ``PI_AUDIT_NO_PRIVATE_KEY_CHECK``
+For signing and verifying each Audit entry, the RSA keys in ``EDUMFA_AUDIT_KEY_PRIVATE``
+and ``EDUMFA_AUDIT_KEY_PUBLIC`` are used. If you can be sure that the private key has
+not been tampered with, you can set the parameter ``EDUMFA_AUDIT_NO_PRIVATE_KEY_CHECK``
 to ``True`` in order to improve the performance when loading the key.
 
 If you by any reason want to avoid signing audit entries entirely, you can
-set ``PI_AUDIT_NO_SIGN = True``. If ``PI_AUDIT_NO_SIGN`` is set to ``True``
+set ``EDUMFA_AUDIT_NO_SIGN = True``. If ``EDUMFA_AUDIT_NO_SIGN`` is set to ``True``
 audit entries will not be signed and also the signature of audit entries will not be
 verified. Audit entries will appear with the *signature* *fail*.
 Please see also :ref:`faq_crypto_audit` and :ref:`faq_perf_crypto_audit`
@@ -208,7 +208,7 @@ Monitoring parameters
 The monitoring module takes care of writing values with timestamps to a store.
 This is used e.g. by the :ref:`eventcounter` and :ref:`taskmodule_simplestats`.
 
-The first available monitoring module is ``privacyidea.lib.monitoringmodules.sqlstats``.
+The first available monitoring module is ``eduMFA.lib.monitoringmodules.sqlstats``.
 It accepts the following additional parameters:
 
 ``PI_MONITORING_SQL_URI`` can hold an alternative SQL connect string. If not specified the
@@ -222,16 +222,16 @@ you configure pooling. It uses the settings from the above mentioned
    Other monitoring modules will follow.
 
 
-privacyIDEA Nodes
+eduMFA Nodes
 -----------------
 
-privacyIDEA can run in a redundant setup. For statistics and monitoring purposes you
+eduMFA can run in a redundant setup. For statistics and monitoring purposes you
 can give these different nodes, dedicated names.
 
 ``PI_NODE`` is a string with the name of this very node. ``PI_NODES`` is a list of
 all available nodes in the cluster.
 
-If ``PI_NODE`` is not set, then ``PI_AUDIT_SERVERNAME`` is used as node name.
+If ``PI_NODE`` is not set, then ``EDUMFA_AUDIT_SERVERNAME`` is used as node name.
 If this is also not set, the node name is returned as "localnode".
 
 .. _trusted_jwt:
@@ -274,19 +274,19 @@ A JWT can be created like this::
    resolver!
    But there probably must be certain policies defined for this user.
    If you are using an administrative user, the realm for this administrative
-   must be defined in ``pi.cfg`` in the list ``SUPERUSER_REALM``.
+   must be defined in ``edumfa.cfg`` in the list ``SUPERUSER_REALM``.
 
 .. _picfg_3rd_party_tokens:
 
 3rd party token types
 ---------------------
 
-You can add 3rd party token types to privacyIDEA. Read more about this
+You can add 3rd party token types to eduMFA. Read more about this
 at :ref:`customize_3rd_party_tokens`.
 
-To make the new token type available in privacyIDEA,
+To make the new token type available in eduMFA,
 you need to specify a list of your 3rd party token class modules
-in ``pi.cfg`` using the parameter ``PI_TOKEN_MODULES``::
+in ``edumfa.cfg`` using the parameter ``PI_TOKEN_MODULES``::
 
     PI_TOKEN_MODULES = [ "myproject.cooltoken", "myproject.lametoken" ]
 
@@ -299,7 +299,7 @@ The Web UI is a single page application, that is initiated from the file
 ``static/templates/index.html``. This file pulls all CSS, the javascript framework
 and all the javascript business logic.
 
-You can configure privacyIDEA to use your own WebUI, which is completely different and stored at another location.
+You can configure eduMFA to use your own WebUI, which is completely different and stored at another location.
 
 You can do this using the following config values::
 

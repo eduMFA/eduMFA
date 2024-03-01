@@ -6,7 +6,7 @@ What are possible rollout strategies?
 .. index:: rollout strategy
 
 There are different ways to enroll tokens to a big number of users.
-Here are some selected high level ideas, you can do with privacyIDEA.
+Here are some selected high level ideas, you can do with eduMFA.
 
 Autoenrollment
 ~~~~~~~~~~~~~~
@@ -43,7 +43,7 @@ where the first authentication fails.
 In this case you can use the following workflow.
 
 In the TOTP token settings you can set the ``timeWindow`` to a very high
-value. Note that this timeWindow are the seconds that privacyIDEA will search
+value. Note that this timeWindow are the seconds that eduMFA will search
 for the valid OTP value *before* and *after* the current time. E.g. you can
 set this to 86400. This way you allow the clock in the TOTP token to have
 drifted for a maximum of one day.

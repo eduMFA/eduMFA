@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 from .base import MyApiTestCase
-from privacyidea.lib.user import (User)
-from privacyidea.lib.config import (set_privacyidea_config)
-from privacyidea.lib.token import (get_tokens, init_token, remove_token)
-from privacyidea.lib.policy import (SCOPE, set_policy, delete_policy)
-from privacyidea.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
-from privacyidea.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
+from edumfa.lib.user import (User)
+from edumfa.lib.config import (set_edumfa_config)
+from edumfa.lib.token import (get_tokens, init_token, remove_token)
+from edumfa.lib.policy import (SCOPE, set_policy, delete_policy)
+from edumfa.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
+from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from privacyidea.lib.utils import to_bytes, to_unicode
-from privacyidea.lib.tokens.pushtoken import (PUSH_ACTION,
+from edumfa.lib.utils import to_bytes, to_unicode
+from edumfa.lib.tokens.pushtoken import (PUSH_ACTION,
                                               strip_key,
                                               PUBLIC_KEY_SMARTPHONE, PRIVATE_KEY_SERVER,
                                               PUBLIC_KEY_SERVER,
                                               POLL_ONLY)
-from privacyidea.lib.utils import b32encode_and_unicode
+from edumfa.lib.utils import b32encode_and_unicode
 from datetime import datetime, timedelta
 from pytz import utc
 from base64 import b32decode, b32encode
@@ -57,10 +57,10 @@ class TtypeAPITestCase(MyApiTestCase):
             identity = data.get("identity")
             service = data.get("service")
             self.assertEqual(identity.get("displayName"), "Cornelius ")
-            self.assertEqual(service.get("displayName"), "privacyIDEA")
+            self.assertEqual(service.get("displayName"), "eduMFA")
 
     def test_02_u2f(self):
-        set_privacyidea_config("u2f.appId", "https://puck.az.intern")
+        set_edumfa_config("u2f.appId", "https://puck.az.intern")
         with self.app.test_request_context('/ttype/u2f',
                                            method='GET'):
             res = self.app.full_dispatch_request()
@@ -157,7 +157,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             self.assertEqual(error.get("code"), 303)
 
         r = set_smsgateway(self.firebase_config_name,
-                           'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                           'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                            "myFB", FB_CONFIG_VALS)
         self.assertTrue(r > 0)
         set_policy("push1", scope=SCOPE.ENROLL,
@@ -252,7 +252,7 @@ class TtypePushAPITestCase(MyApiTestCase):
 
     def test_02_api_push_poll(self):
         r = set_smsgateway(self.firebase_config_name,
-                           'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                           'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                            "myFB", FB_CONFIG_VALS)
         self.assertGreater(r, 0)
 
@@ -265,7 +265,7 @@ class TtypePushAPITestCase(MyApiTestCase):
         tokenobj.add_user(User("cornelius", self.realm1))
 
         # We mock the ServiceAccountCredentials, since we can not directly contact the Google API
-        with mock.patch('privacyidea.lib.smsprovider.FirebaseProvider.service_account.Credentials'
+        with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                         '.from_service_account_file') as mySA:
             # alternative: side_effect instead of return_value
             mySA.return_value = _create_credential_mock()

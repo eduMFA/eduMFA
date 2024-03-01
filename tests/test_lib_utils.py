@@ -4,7 +4,7 @@ This tests the package lib.utils
 """
 from .base import MyTestCase
 
-from privacyidea.lib.utils import (parse_timelimit,
+from edumfa.lib.utils import (parse_timelimit,
                                    check_time_in_range, parse_proxy,
                                    check_proxy, reduce_realms, is_true,
                                    parse_date, compare_condition,
@@ -25,12 +25,12 @@ from privacyidea.lib.utils import (parse_timelimit,
                                    check_ip_in_policy, split_pin_pass, create_tag_dict,
                                    check_serial_valid, determine_logged_in_userparams,
                                    to_list, parse_string_to_dict, convert_imagefile_to_dataimage)
-from privacyidea.lib.crypto import generate_password
+from edumfa.lib.crypto import generate_password
 from datetime import timedelta, datetime
 from netaddr import IPAddress, IPNetwork, AddrFormatError
 from dateutil.tz import tzlocal, tzoffset, gettz
-from privacyidea.lib.tokenclass import DATE_FORMAT
-from privacyidea.lib.error import PolicyError
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.error import PolicyError
 import binascii
 
 
@@ -531,8 +531,8 @@ class UtilsTestCase(MyTestCase):
         self.assertEqual(convert_column_to_unicode("yes"), "yes")
 
     def test_18_censor_connect_string(self):
-        self.assertEqual(censor_connect_string("sqlite:////home/foo/privacyidea/privacyidea/data.sqlite"),
-                         "sqlite:////home/foo/privacyidea/privacyidea/data.sqlite")
+        self.assertEqual(censor_connect_string("sqlite:////home/foo/edumfa/edumfa/data.sqlite"),
+                         "sqlite:////home/foo/edumfa/edumfa/data.sqlite")
         self.assertEqual(censor_connect_string("mysql://pi@localhost/pi"),
                          "mysql://pi@localhost/pi")
         self.assertEqual(censor_connect_string("mysql://pi:kW44sqqWtGYX@localhost/pi"),
@@ -659,21 +659,21 @@ class UtilsTestCase(MyTestCase):
         self.assertFalse(r)
 
     def test_21_get_module_class(self):
-        r = get_module_class("privacyidea.lib.auditmodules.sqlaudit", "Audit", "log")
-        from privacyidea.lib.auditmodules.sqlaudit import Audit
+        r = get_module_class("edumfa.lib.auditmodules.sqlaudit", "Audit", "log")
+        from edumfa.lib.auditmodules.sqlaudit import Audit
         self.assertEqual(r, Audit)
 
         # Fails to return the class, if the method does not exist
-        self.assertRaises(NameError, get_module_class, "privacyidea.lib.auditmodules.sqlaudit", "Audit",
+        self.assertRaises(NameError, get_module_class, "edumfa.lib.auditmodules.sqlaudit", "Audit",
                           "this_method_does_not_exist")
 
         # Fails if the class does not exist
         with self.assertRaises(ImportError):
-            get_module_class("privacyidea.lib.auditmodules.sqlaudit", "DoesNotExist")
+            get_module_class("edumfa.lib.auditmodules.sqlaudit", "DoesNotExist")
 
         # Fails if the package does not exist
         with self.assertRaises(ImportError):
-            get_module_class("privacyidea.lib.auditmodules.doesnotexist", "Aduit")
+            get_module_class("edumfa.lib.auditmodules.doesnotexist", "Aduit")
 
     def test_22_decodebase32check(self):
         real_client_componet = "TIXQW4ydvn2aos4cj6ta"

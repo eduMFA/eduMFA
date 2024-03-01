@@ -5,14 +5,14 @@ This test file tests the lib.tokens.yubikeytoken
 PWFILE = "tests/testdata/passwords"
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.yubikeytoken import (YubikeyTokenClass,
+from edumfa.lib.tokens.yubikeytoken import (YubikeyTokenClass,
                                                  yubico_api_signature,
                                                  yubico_check_api_signature)
-from privacyidea.lib.token import init_token
-from privacyidea.models import (Token)
+from edumfa.lib.token import init_token
+from edumfa.models import (Token)
 from flask import Request, g
 from werkzeug.test import EnvironBuilder
-from privacyidea.lib.config import set_privacyidea_config
+from edumfa.lib.config import set_edumfa_config
 
 
 class YubikeyTokenTestCase(MyTestCase):
@@ -190,7 +190,7 @@ class YubikeyTokenTestCase(MyTestCase):
         nonce = "random nonce"
         apiid = "hallo"
         apikey = "1YMEbMZijD3DzL21UfKGnOOI13c="
-        set_privacyidea_config("yubikey.apiid.{0!s}".format(apiid), apikey)
+        set_edumfa_config("yubikey.apiid.{0!s}".format(apiid), apikey)
         req.all_data = {'id': apiid,
                         "otp": otps[0],
                         "nonce": nonce}
@@ -227,7 +227,7 @@ class YubikeyTokenTestCase(MyTestCase):
         nonce = "random nonce"
         apiid = "hallo"
         apikey = "1YMEbMZijD3DzL21UfKGnOOI13c="
-        set_privacyidea_config("yubikey.apiid.{0!s}".format(apiid), apikey)
+        set_edumfa_config("yubikey.apiid.{0!s}".format(apiid), apikey)
         req.all_data = {'id': apiid,
                         "otp": otps[0],
                         "nonce": nonce}

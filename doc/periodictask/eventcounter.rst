@@ -4,13 +4,13 @@ EventCounter
 ------------
 
 The Event Counter task module can be used with the :ref:`periodic_tasks` to create time series of certain events.
-An event could be a failed authentication request. Using the Event Counter, privacyIDEA can create graphs that display
+An event could be a failed authentication request. Using the Event Counter, eduMFA can create graphs that display
 the development of failed authentication requests over time.
 
 To do this, the Event Counter task module reads a counter value from the database table ``EventCounter`` and adds this
 current value in a time series in the database table ``MonitoringStats``.
 As the administrator can use the event handler :ref:`counterhandler` to record any arbitrary event under any condition,
-this task module can be used to graph any metrics in privacyIDEA, be it failed authentication requests per time unit,
+this task module can be used to graph any metrics in eduMFA, be it failed authentication requests per time unit,
 the number of token delete requests or the number of PIN resets per month.
 
 Options

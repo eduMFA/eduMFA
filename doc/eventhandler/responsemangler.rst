@@ -7,7 +7,7 @@ ResponseMangler Handler Module
 
 The ResponseMangler is a special handler module, that can modify
 the response of an HTTP request.
-This way privacyIDEA can change the data sent back to the client, depending
+This way eduMFA can change the data sent back to the client, depending
 on certain conditions.
 
 All actions take a JSON pointer, which looks like a path variable like
@@ -47,6 +47,6 @@ Code
 ~~~~
 
 
-.. automodule:: privacyidea.lib.eventhandler.responsemangler
+.. automodule:: eduMFA.lib.eventhandler.responsemangler
    :members:
    :undoc-members:

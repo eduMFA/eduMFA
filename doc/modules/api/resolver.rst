@@ -4,10 +4,10 @@ Resolver endpoints
 ~~~~~~~~~~~~~~~~~~
 
 .. use the docstring from the module file
-.. automodule:: privacyidea.api.resolver
+.. automodule:: edumfa.api.resolver
 
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: resolver_blueprint
 

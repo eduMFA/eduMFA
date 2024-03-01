@@ -92,18 +92,18 @@ def get_scripts(dir):
 
 
 setup(
-    name='privacyIDEA',
+    name='edumfa',
     version=VERSION,
-    description='privacyIDEA: identity, multifactor authentication (OTP), '
+    description='eduMFA: identity, multifactor authentication (OTP), '
                 'authorization, audit',
-    author='privacyidea.org',
+    author='edumfa.io',
     license='AGPLv3',
-    author_email='cornelius@privacyidea.org',
-    url='http://www.privacyidea.org',
+    author_email='edumfa@listserv.dfn.de',
+    url='https://www.edumfa.io',
     keywords='OTP, two factor authentication, management, security',
     python_requires='>=3.6',
     packages=find_packages(),
-    scripts=["pi-manage"] + get_scripts("tools"),
+    scripts=["edumfa-manage"] + get_scripts("tools"),
     extras_require={
         'doc': ["Pallets-Sphinx-Themes>=1.2.3",
                 "Sphinx>=1.3.1",
@@ -121,18 +121,18 @@ setup(
     },
     install_requires=install_requires,
     include_package_data=True,
-    data_files=[('etc/privacyidea/',
-                 ['deploy/apache/privacyideaapp.wsgi',
-                  'deploy/privacyidea/dictionary']),
+    data_files=[('etc/edumfa/',
+                 ['deploy/apache/edumfaapp.wsgi',
+                  'deploy/edumfa/dictionary']),
                 ('share/man/man1', get_man_pages("tools")),
-                ('lib/privacyidea/migrations',
+                ('lib/edumfa/migrations',
                  ["migrations/alembic.ini",
                   "migrations/env.py",
                   "migrations/README",
                   "migrations/script.py.mako"]),
-                ('lib/privacyidea/migrations/versions',
+                ('lib/edumfa/migrations/versions',
                  get_file_list("migrations/versions/")),
-                ('lib/privacyidea/', ['requirements.txt'])
+                ('lib/edumfa/', ['requirements.txt'])
                 ],
     classifiers=["Framework :: Flask",
                  "License :: OSI Approved :: "
@@ -142,7 +142,7 @@ setup(
                  "Topic :: Internet",
                  "Topic :: Security",
                  "Topic :: System ::"
-                 " Systems Administration :: Authentication/Directory",
+                 "Systems Administration :: Authentication/Directory",
                  'Programming Language :: Python',
                  'Programming Language :: Python :: 3',
                  'Programming Language :: Python :: 3.6',

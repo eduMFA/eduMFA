@@ -4,10 +4,10 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.registrationtoken import RegistrationTokenClass
-from privacyidea.lib.token import init_token
-from privacyidea.models import Token
-from privacyidea.lib.tokens.registrationtoken import DEFAULT_LENGTH
+from edumfa.lib.tokens.registrationtoken import RegistrationTokenClass
+from edumfa.lib.token import init_token
+from edumfa.models import Token
+from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH
 
 
 class RegistrationTokenTestCase(MyTestCase):

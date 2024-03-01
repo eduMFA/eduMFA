@@ -6,10 +6,10 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.questionnairetoken import QuestionnaireTokenClass
-from privacyidea.lib.token import init_token
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.models import Token
+from edumfa.lib.tokens.questionnairetoken import QuestionnaireTokenClass
+from edumfa.lib.token import init_token
+from edumfa.lib.config import set_edumfa_config
+from edumfa.models import Token
 import json
 
 
@@ -30,7 +30,7 @@ class QuestionnaireTokenTestCase(MyTestCase):
         self.setUp_user_realms()
 
     def test_01_create_token(self):
-        set_privacyidea_config("question.num_answers", 3)
+        set_edumfa_config("question.num_answers", 3)
         token = init_token({"type": "question",
                             "pin": self.pin,
                             "serial": self.serial1,
@@ -78,7 +78,7 @@ class QuestionnaireTokenTestCase(MyTestCase):
         self.assertEqual(r, "public")
 
     def test_04_dumb_question(self):
-        set_privacyidea_config("question.num_answers", 1)
+        set_edumfa_config("question.num_answers", 1)
         token = init_token({"type": "question",
                             "pin": self.pin,
                             "serial": "2ndtoken",
@@ -94,7 +94,7 @@ class QuestionnaireTokenTestCase(MyTestCase):
         questions = {'cité': 'Nîmes',
                      '城市': '北京',
                      'ciudad': 'Almería'}
-        set_privacyidea_config("question.num_answers", 2)
+        set_edumfa_config("question.num_answers", 2)
         token = init_token({"type": "question",
                             "pin": self.pin,
                             "user": "cornelius",
@@ -116,7 +116,7 @@ class QuestionnaireTokenTestCase(MyTestCase):
 
     def test_06_wrong_answer(self):
         questions = {'ciudad': 'Almería'}
-        set_privacyidea_config("question.num_answers", 1)
+        set_edumfa_config("question.num_answers", 1)
         token = init_token({"type": "question",
                             "pin": self.pin,
                             "user": "cornelius",

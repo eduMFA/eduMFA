@@ -5,22 +5,22 @@ This test file tests the lib.crypto and lib.security.default
 from mock import call
 import binascii
 
-from privacyidea.config import TestingConfig
-from privacyidea.lib.error import HSMException
+from edumfa.config import TestingConfig
+from edumfa.lib.error import HSMException
 from .base import MyTestCase, OverrideConfigTestCase
 # need to import pkcs11mock before PyKCS11, because it may be replaced by a mock module
 from .pkcs11mock import PKCS11Mock
-from privacyidea.lib.crypto import (encryptPin, encryptPassword, decryptPin,
+from edumfa.lib.crypto import (encryptPin, encryptPassword, decryptPin,
                                     decryptPassword, urandom, get_rand_digit_str,
                                     geturandom, get_alphanum_str, hash_with_pepper,
                                     verify_with_pepper, aes_encrypt_b64, aes_decrypt_b64,
                                     get_hsm, init_hsm, set_hsm_password, hash,
                                     encrypt, decrypt, Sign, generate_keypair,
                                     generate_password, pass_hash, verify_pass_hash)
-from privacyidea.lib.utils import to_bytes, to_unicode
-from privacyidea.lib.security.default import (SecurityModule,
+from edumfa.lib.utils import to_bytes, to_unicode
+from edumfa.lib.security.default import (SecurityModule,
                                               DefaultSecurityModule)
-from privacyidea.lib.security.aeshsm import AESHardwareSecurityModule
+from edumfa.lib.security.aeshsm import AESHardwareSecurityModule
 
 from flask import current_app
 import PyKCS11
@@ -45,8 +45,8 @@ class SecurityModuleTestCase(MyTestCase):
 
     def test_01_default_security_module(self):
         config = current_app.config
-        hsm = DefaultSecurityModule({"file": config.get("PI_ENCFILE")})
-        hsm.setup_module({"file": config.get("PI_ENCFILE")})
+        hsm = DefaultSecurityModule({"file": config.get("EDUMFA_ENCFILE")})
+        hsm.setup_module({"file": config.get("EDUMFA_ENCFILE")})
         self.assertTrue(hsm is not None, hsm)
         self.assertTrue(hsm.secFile is not None, hsm.secFile)
         self.assertTrue(hsm.is_ready)
@@ -56,7 +56,7 @@ class SecurityModuleTestCase(MyTestCase):
 
     def test_04_random(self):
         config = current_app.config
-        hsm = DefaultSecurityModule({"file": config.get("PI_ENCFILE"),
+        hsm = DefaultSecurityModule({"file": config.get("EDUMFA_ENCFILE"),
                                      "crypted": True})
         r = hsm.random(20)
         self.assertTrue(len(r) == 20, r)
@@ -64,7 +64,7 @@ class SecurityModuleTestCase(MyTestCase):
 
     def test_05_encrypt_decrypt(self):
         config = current_app.config
-        hsm = DefaultSecurityModule({"file": config.get("PI_ENCFILE")})
+        hsm = DefaultSecurityModule({"file": config.get("EDUMFA_ENCFILE")})
 
         cipher = hsm.encrypt(b"data", b"iv12345678901234")
         self.assertEqual(binascii.b2a_hex(cipher), b"ac17c4a5aa8703d7129c09158adc5fd4")
@@ -114,7 +114,7 @@ class SecurityModuleTestCase(MyTestCase):
 
     def test_07_encrypted_key_file(self):
         config = current_app.config
-        hsm = DefaultSecurityModule({"file": config.get("PI_ENCFILE_ENC"),
+        hsm = DefaultSecurityModule({"file": config.get("EDUMFA_ENCFILE_ENC"),
                                      "crypted": True})
         # The HSM is not ready, since the file is crypted and we did not
         # provide the password, yet
@@ -339,7 +339,7 @@ class RandomTestCase(MyTestCase):
         self.assertEqual(r, False)
 
     def test_06_test_old_passwords(self):
-        phash = passlib.hash.pbkdf2_sha512.hash(current_app.config.get("PI_PEPPER", "") + "test")
+        phash = passlib.hash.pbkdf2_sha512.hash(current_app.config.get("EDUMFA_PEPPER", "") + "test")
         self.assertTrue(phash.startswith("$pbkdf2"))
         r = verify_with_pepper(phash, "test")
         self.assertTrue(r)
@@ -558,9 +558,9 @@ class AESHardwareSecurityModuleLibLevelTestCase(MyTestCase):
 
     def setUp(self):
         """ set up config to load the AES HSM module """
-        current_app.config["PI_HSM_MODULE"] = "privacyidea.lib.security.aeshsm.AESHardwareSecurityModule"
-        current_app.config["PI_HSM_MODULE_MODULE"] = "testmodule"
-        current_app.config["PI_HSM_MODULE_PASSWORD"] = "test123!"
+        current_app.config["EDUMFA_HSM_MODULE"] = "edumfa.lib.security.aeshsm.AESHardwareSecurityModule"
+        current_app.config["EDUMFA_HSM_MODULE_MODULE"] = "testmodule"
+        current_app.config["EDUMFA_HSM_MODULE_PASSWORD"] = "test123!"
         with self.pkcs11:
             MyTestCase.setUp(self)
 
@@ -612,8 +612,8 @@ class AESHardwareSecurityModuleLibLevelPasswordTestCase(MyTestCase):
 
     def setUp(self):
         """ set up config to load the AES HSM module """
-        current_app.config["PI_HSM_MODULE"] = "privacyidea.lib.security.aeshsm.AESHardwareSecurityModule"
-        current_app.config["PI_HSM_MODULE_MODULE"] = "testmodule"
+        current_app.config["EDUMFA_HSM_MODULE"] = "edumfa.lib.security.aeshsm.AESHardwareSecurityModule"
+        current_app.config["EDUMFA_HSM_MODULE_MODULE"] = "testmodule"
         # the config misses the password
         with self.pkcs11:
             MyTestCase.setUp(self)
@@ -639,12 +639,12 @@ class SignObjectTestCase(MyTestCase):
         with self.assertRaises(Exception):
             Sign(b'This is not a private key', b'This is not a public key')
         with self.assertRaises(Exception):
-            priv_key = open(current_app.config.get("PI_AUDIT_KEY_PRIVATE"), 'rb').read()
+            priv_key = open(current_app.config.get("EDUMFA_AUDIT_KEY_PRIVATE"), 'rb').read()
             Sign(private_key=priv_key,
                  public_key=b'Still not a public key')
         # this should work
-        priv_key = open(current_app.config.get("PI_AUDIT_KEY_PRIVATE"), 'rb').read()
-        pub_key = open(current_app.config.get("PI_AUDIT_KEY_PUBLIC"), 'rb').read()
+        priv_key = open(current_app.config.get("EDUMFA_AUDIT_KEY_PRIVATE"), 'rb').read()
+        pub_key = open(current_app.config.get("EDUMFA_AUDIT_KEY_PUBLIC"), 'rb').read()
         so = Sign(priv_key, pub_key)
         self.assertEqual(so.sig_ver, 'rsa_sha256_pss')
 
@@ -657,8 +657,8 @@ class SignObjectTestCase(MyTestCase):
         self.assertFalse(res)
 
     def test_01_sign_and_verify_data(self):
-        priv_key = open(current_app.config.get("PI_AUDIT_KEY_PRIVATE"), 'rb').read()
-        pub_key = open(current_app.config.get("PI_AUDIT_KEY_PUBLIC"), 'rb').read()
+        priv_key = open(current_app.config.get("EDUMFA_AUDIT_KEY_PRIVATE"), 'rb').read()
+        pub_key = open(current_app.config.get("EDUMFA_AUDIT_KEY_PUBLIC"), 'rb').read()
         so = Sign(priv_key, pub_key)
         data = 'short text'
         sig = so.sign(data)
@@ -722,7 +722,7 @@ class DefaultHashAlgoListTestCase(MyTestCase):
         self.assertTrue(verify_pass_hash(password, ph))
         # Checks if the password can also be verified with pbkdf2_sha512 from "DEFAULT_HASH_ALGO_LIST".
         self.assertTrue(verify_pass_hash(password, pbkdf2_sha512_hash))
-        # Checks if an error message is issued if algorithm is not contain in "PI_HASH_ALGO_LIST".
+        # Checks if an error message is issued if algorithm is not contain in "EDUMFA_HASH_ALGO_LIST".
         self.assertRaises(passlib.exc.UnknownHashError, verify_pass_hash, password, 'password')
         # Checks if a faulty hash is failing.
         self.assertFalse(verify_pass_hash(password, argon2_fail_hash))
@@ -732,8 +732,8 @@ class CustomParamsDefaultHashAlgoListTestCase(OverrideConfigTestCase):
     """Check if the default hash algorithm list is used with params from config."""
 
     class Config(TestingConfig):
-        # Set custom parameter for hash algorithms in pi.cfg.
-        PI_HASH_ALGO_PARAMS = {'argon2__rounds': 5, 'argon2__memory_cost': 768}
+        # Set custom parameter for hash algorithms in edumfa.cfg.
+        EDUMFA_HASH_ALGO_PARAMS = {'argon2__rounds': 5, 'argon2__memory_cost': 768}
 
     def test_01_default_hash_algorithm_list_with_custom_params(self):
         password = "password"
@@ -752,12 +752,12 @@ class CustomParamsDefaultHashAlgoListTestCase(OverrideConfigTestCase):
 
 
 class CustomHashAlgoListTestCase(OverrideConfigTestCase):
-    """Test for custom list of hash algorithms in pi.cfg"""
+    """Test for custom list of hash algorithms in edumfa.cfg"""
 
     class Config(TestingConfig):
-        # Set custom list of algorithms in pi.cfg.
-        PI_HASH_ALGO_LIST = ['pbkdf2_sha1', 'pbkdf2_sha512', 'argon2']
-        PI_HASH_ALGO_PARAMS = {'pbkdf2_sha1__rounds': 50000}
+        # Set custom list of algorithms in edumfa.cfg.
+        EDUMFA_HASH_ALGO_LIST = ['pbkdf2_sha1', 'pbkdf2_sha512', 'argon2']
+        EDUMFA_HASH_ALGO_PARAMS = {'pbkdf2_sha1__rounds': 50000}
 
     def test_01_custom_hash_algorithm_list(self):
         password = "password"
@@ -769,13 +769,13 @@ class CustomHashAlgoListTestCase(OverrideConfigTestCase):
 
         argon2_fail_hash = '$argon2id$v=19$m=102400,t=9,p=8$vZeyFqI0xhiDEIKw1przfg$8FX07S7VpaYae51Oe9Cj7g'
 
-        # Check if the first entry is taken from "PI_HASH_ALGO_LIST" .
+        # Check if the first entry is taken from "EDUMFA_HASH_ALGO_LIST" .
         self.assertTrue(pass_hash(password).startswith('$pbkdf2$50000$'))
         # Checks if the password can also be verified with pbkdf2_sha512".
         self.assertTrue(verify_pass_hash(password, pbkdf2_sha512_hash))
         # Checks if the password can also be verified with argon2".
         self.assertTrue(verify_pass_hash(password, argon2_hash))
-        # Checks if an error message is issued if algorithm is not contain in "PI_HASH_ALGO_LIST".
+        # Checks if an error message is issued if algorithm is not contain in "EDUMFA_HASH_ALGO_LIST".
         self.assertRaises(passlib.exc.UnknownHashError, verify_pass_hash, password, 'password')
         # Checks if a faulty hash is failing.
         self.assertFalse(verify_pass_hash(password, argon2_fail_hash))

@@ -5,12 +5,12 @@ Monitoring
 
 .. index:: monitoring modules
 
-.. automodule:: privacyidea.lib.monitoringmodules
+.. automodule:: edumfa.lib.monitoringmodules
 
 Base class
 ..........
 
-.. autoclass:: privacyidea.lib.monitoringmodules.base.Monitoring
+.. autoclass:: edumfa.lib.monitoringmodules.base.Monitoring
    :members:
    :undoc-members:
 
@@ -18,7 +18,7 @@ Base class
 SQL Statistics module
 .....................
 
-.. autoclass:: privacyidea.lib.monitoringmodules.sqlstats.Monitoring
+.. autoclass:: edumfa.lib.monitoringmodules.sqlstats.Monitoring
    :members:
 
 

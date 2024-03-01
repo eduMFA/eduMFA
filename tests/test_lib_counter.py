@@ -6,8 +6,8 @@ import mock
 from contextlib import contextmanager
 
 from .base import MyTestCase
-from privacyidea.lib.counter import increase, decrease, reset, read
-from privacyidea.models import EventCounter
+from edumfa.lib.counter import increase, decrease, reset, read
+from edumfa.models import EventCounter
 
 
 def increase_and_read(name):
@@ -99,7 +99,7 @@ class CounterTestCase(MyTestCase):
         @contextmanager
         def _set_node(node):
             """ context manager that sets the current node name """
-            with mock.patch("privacyidea.lib.counter.get_privacyidea_node") as mock_node:
+            with mock.patch("edumfa.lib.counter.get_edumfa_node") as mock_node:
                 mock_node.return_value = node
                 yield
 

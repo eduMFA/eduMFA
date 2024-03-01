@@ -10,9 +10,9 @@ Create Date: 2021-05-18 23:29:59.273457
 revision = 'fa07bd604a75'
 down_revision = '3ba618f6b820'
 
-from privacyidea.lib.smsprovider.SMSProvider import get_smsgateway, delete_smsgateway_option
-from privacyidea.lib.tokens.pushtoken import GWTYPE, PUSH_ACTION
-from privacyidea.lib.policy import PolicyClass, set_policy, SCOPE
+from edumfa.lib.smsprovider.SMSProvider import get_smsgateway, delete_smsgateway_option
+from edumfa.lib.tokens.pushtoken import GWTYPE, PUSH_ACTION
+from edumfa.lib.policy import PolicyClass, set_policy, SCOPE
 
 
 def upgrade():

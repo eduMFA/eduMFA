@@ -1,0 +1,57 @@
+{% include 'header.html' %}
+
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">eduMFA Certificate Request</a>
+    </div>
+</div>
+
+<div class="container">
+
+<form action="{{ instance }}/certificate/enroll" method="post">
+
+    <div class="form-group">
+        <label>CA Connector: {{ ca }}</label>
+    </div>
+
+    <input type="hidden" name="authtoken" value="{{ authtoken }}">
+
+    <div class="form-group">
+        <label for="key">
+            Key strength
+        </label>
+        <keygen name="requestkey" id="key" />
+    </div>
+  <input type="submit">
+</form>
+</div>
+
+
+<div class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <a ng-click="about()"
+            class="navbar-text pull-left">
+            eduMFA
+            {{ eduMFAVersionNumber }}
+        </a>
+        <!--
+        <a class="navbar-btn btn btn-success pull-right"
+           href="https://netknights.it/leistungen/support/"
+           target="_external">
+            Support
+        </a>
+        <a class="navbar-text pull-right"
+                href="https://community.privacyidea.org/"
+                target="_external">
+            eduMFA Forum</a>
+        <a class="navbar-text pull-right"
+           ng-show="eduMFAVersionNumber"
+           ng-href="https://edumfa.readthedocs.io/en/v{{ eduMFAVersionNumber }}"
+                target="documentation">
+            Online Documentation
+        </a>
+        -->
+    </div>
+</div>
+
+{% include 'footer.html' %}

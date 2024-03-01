@@ -24,7 +24,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Bandit Scan
         uses: shundor/python-bandit-scan@v1.0
         with: # optional arguments
@@ -33,7 +33,7 @@ jobs:
           # GitHub token of the repository (automatically created by GitHub)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information.
           # File or directory to run bandit on
-          path: privacyidea
+          path: edumfa
           # Report only issues of a given severity level or higher. Can be LOW, MEDIUM or HIGH. Default is UNDEFINED (everything)
           # level: # optional, default is UNDEFINED
           # Report only issues of a given confidence level or higher. Can be LOW, MEDIUM or HIGH. Default is UNDEFINED (everything)

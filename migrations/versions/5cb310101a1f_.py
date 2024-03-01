@@ -17,7 +17,7 @@ from sqlalchemy.schema import Sequence, CreateSequence, DropSequence
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import func
 from sqlalchemy.exc import OperationalError, ProgrammingError
-from privacyidea.models import db
+from edumfa.models import db
 
 
 Session = sessionmaker()

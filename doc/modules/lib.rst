@@ -5,7 +5,7 @@ library functions
 
 .. index:: library
 
-.. automodule:: privacyidea.lib
+.. automodule:: edumfa.lib
    :members:
    :undoc-members:
 

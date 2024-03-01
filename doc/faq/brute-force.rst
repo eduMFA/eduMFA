@@ -5,7 +5,7 @@ How to mitigate brute force and lock tokens
 
 .. index:: brute force, fail counter
 
-For each failed authentication attempt privacyIDEA will increase a fail
+For each failed authentication attempt eduMFA will increase a fail
 counter of a token. If the maximum allowed fail counter is reached,
 authentication with this token is not possible anymore. The token gets a timestamp
 mark, when the maximum fail counter was reached.

@@ -1,12 +1,12 @@
 .. _rest_machineresolver:
 
 .. use the docstring from the module file
-.. automodule:: privacyidea.api.machineresolver
+.. automodule:: edumfa.api.machineresolver
 
 Machine Resolver endpoints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: machineresolver_blueprint
 

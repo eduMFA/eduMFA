@@ -1,6 +1,6 @@
 # coding: utf-8
-from privacyidea.models import MonitoringStats, db
-from privacyidea.lib.monitoringstats import (write_stats, delete_stats,
+from edumfa.models import MonitoringStats, db
+from edumfa.lib.monitoringstats import (write_stats, delete_stats,
                                              get_stats_keys, get_values,
                                              get_last_value)
 

@@ -18,15 +18,15 @@ There are different providers (gateways) to deliver SMS.
 Firebase Provider
 ~~~~~~~~~~~~~~~~~
 
-The Firebase provider was added in privacyIDEA 3.0. It sends notifications
+The Firebase provider was added in eduMFA 3.0. It sends notifications
 via the Google Firebase service and this is used for the :ref:`push_token`.
 For an exemplary configuration, you may have a look on the articles on the
-privacyIDEA community website `tagged with push token <https://www.privacyidea.org/tag/push-token/>`_.
+eduMFA community website `tagged with push token <https://www.eduMFA.org/tag/push-token/>`_.
 
 **JSON config file**
 
    This is the location of the configuration file of
-   the Firebase service. It has to be located on the privacyIDEA
+   the Firebase service. It has to be located on the eduMFA
    server.
 
 
@@ -75,14 +75,14 @@ behaviour of the SMS Gateway definition.
 **RETURN_FAIL**
 
    If the text of ``RETURN_FAIL`` is found in the HTTP response
-   of the gateway privacyIDEA assumes that the SMS could not be sent
+   of the gateway eduMFA assumes that the SMS could not be sent
    and an error occurred.
 
 **RETURN_SUCCESS**
 
    You can either use ``RETURN_SUCCESS`` or ``RETURN_FAIL``.
    If the text of ``RETURN_SUCCESS`` is found in the HTTP response
-   of the gateway privacyIDEA assumes that the SMS was sent successfully.
+   of the gateway eduMFA assumes that the SMS was sent successfully.
 
 **TIMEOUT**
 
@@ -135,7 +135,7 @@ This will construct an HTTP GET request like this::
         api_id=YOUR API ID&text=....&to=....
 
 where ``text`` and ``to`` will contain the OTP value and the mobile
-phone number. privacyIDEA will assume a successful sent SMS if the
+phone number. eduMFA will assume a successful sent SMS if the
 response contains the text "ID".
 
 GTX-Messaging
@@ -214,11 +214,11 @@ content from the Sipgate gateway.
 SMPP Provider
 ~~~~~~~~~~~~~
 
-The SMPP provider was added in privacyIDEA 2.22. It uses an SMS Center via the SMPP protocol to
+The SMPP provider was added in eduMFA 2.22. It uses an SMS Center via the SMPP protocol to
 deliver SMS to the users.
 
 You need to specify the **SMSC_HOST** and **SMSC_PORT** to talk to the SMS center.
-privacyIDEA need to authenticate against the SMS center. For this you can add the parameters
+eduMFA need to authenticate against the SMS center. For this you can add the parameters
 **SYSTEM_ID** and **PASSWORD**. The parameter **S_ADDR** is the sender's number, shown to the users
 receiving an SMS.
 For the other parameters contact your SMS center operator.
@@ -266,7 +266,7 @@ Script provider
 The *Script provider* calls a script which can take care of sending the SMS.
 The script takes the phone number as the only parameter. The message is expected at stdin.
 
-Scripts are located in the directory ``/etc/privacyidea/scripts/``. You can change this default
+Scripts are located in the directory ``/etc/eduMFA/scripts/``. You can change this default
 location by setting the value in ``PI_SCRIPT_SMSPROVIDER_DIRECTORY`` in :ref:`cfgfile`.
 
 In the configuration of the Script provider you can set two attributes.

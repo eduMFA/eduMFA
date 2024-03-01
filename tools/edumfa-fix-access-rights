@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+__version__ = '0.1'
+import sys
+from getopt import getopt, GetoptError
+from subprocess import call
+from shlex import quote as shlex_quote
+
+
+def usage():
+    print('''
+    Parameter:
+    -f <edumfa.cfg file>
+    -u <edumfa user>
+    -h : help
+    ''')
+
+
+def fix_rights(file, user):
+
+    # READ the configs
+    conf = {'__file__': file}
+    exec(compile(open(file).read(), file, 'exec'), conf)
+
+    # Create the user
+    try:
+        call("/usr/sbin/adduser  --system %s" % shlex_quote(user), shell=True)
+        print("Created user %s" % user)
+    except Exception as e:
+        print("Failed to create user %s: %s" % (user, str(e)))
+
+    # fix the file itself!
+    try:
+        call("chmod 640 %s" % shlex_quote(file), shell=True)
+        call("chown %s:%s %s" % (shlex_quote(user), "root", shlex_quote(file)), shell=True)
+        print("Fixed access rights for %s" % file)
+    except Exception as _e:
+        print("Failed to fix access rights for %s" % file)
+
+    # Fix the encryption file
+    try:
+        call("chmod 400 %s" % shlex_quote(conf.get("EDUMFA_ENCFILE")), shell=True)
+        call("chown %s %s" % (shlex_quote(user), shlex_quote(conf.get("EDUMFA_ENCFILE"))), shell=True)
+        print("Fixed access rights for %s" % conf.get("EDUMFA_ENCFILE"))
+    except Exception as _e:
+        print("Failed to fix access rights for %s" % conf.get("EDUMFA_ENCFILE"))
+
+    # fix the audit key
+    try:
+        call("chmod 400 %s" % shlex_quote(conf.get("EDUMFA_AUDIT_KEY_PRIVATE")), shell=True)
+        call("chown %s %s" % (shlex_quote(user), shlex_quote(conf.get("EDUMFA_AUDIT_KEY_PRIVATE"))), shell=True)
+        print("Fixed access rights for %s" % conf.get("EDUMFA_AUDIT_KEY_PRIVATE"))
+    except Exception as _e:
+        print("Failed to fix access rights for %s" % conf.get("EDUMFA_AUDIT_KEY_PRIVATE"))
+
+    # TODO: logfile
+
+
+def main():
+
+    file = ""
+    user = ""
+    try:
+        opts, args = getopt(sys.argv[1:], "f:u:h", ["file=", "user=", "help"])
+
+    except GetoptError:
+        print("There is an error in your parameter syntax:")
+        usage()
+        sys.exit(1)
+
+    for opt, arg in opts:
+        if opt in ('-f', '--file'):
+            file = arg
+        elif opt in ('-h', '--help'):
+            usage()
+            sys.exit(1)
+        elif opt in ('-u', '--user'):
+            user = arg
+
+    if file and user:
+        fix_rights(file, user)
+    else:
+        usage()
+        sys.exit(2)
+
+
+if __name__ == '__main__':
+    main()

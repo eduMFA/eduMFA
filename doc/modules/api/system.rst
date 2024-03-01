@@ -3,9 +3,9 @@
 System endpoints
 ................
 
-.. automodule:: privacyidea.api.system
+.. automodule:: edumfa.api.system
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: system_blueprint
 

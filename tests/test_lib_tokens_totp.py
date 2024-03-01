@@ -6,16 +6,16 @@ The lib.tokenclass depends on the DB model and lib.user
 PWFILE = "tests/testdata/passwords"
 
 from .base import MyTestCase, FakeAudit, FakeFlaskG
-from privacyidea.lib.resolver import (save_resolver)
-from privacyidea.lib.realm import (set_realm)
-from privacyidea.lib.user import (User)
-from privacyidea.lib.tokens.totptoken import TotpTokenClass
-from privacyidea.lib.policy import (PolicyClass, set_policy, delete_policy, SCOPE)
+from edumfa.lib.resolver import (save_resolver)
+from edumfa.lib.realm import (set_realm)
+from edumfa.lib.user import (User)
+from edumfa.lib.tokens.totptoken import TotpTokenClass
+from edumfa.lib.policy import (PolicyClass, set_policy, delete_policy, SCOPE)
 from unittest import mock
-from privacyidea.models import (Token,
+from edumfa.models import (Token,
                                  Config,
                                  Challenge)
-from privacyidea.lib.config import (set_privacyidea_config, set_prepend_pin)
+from edumfa.lib.config import (set_edumfa_config, set_prepend_pin)
 import datetime
 import binascii
 import time
@@ -573,7 +573,7 @@ class TOTPTokenTestCase(MyTestCase):
     def test_22_autosync(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = TotpTokenClass(db_token)
-        set_privacyidea_config("AutoResync", True)
+        set_edumfa_config("AutoResync", True)
         token.update({"otpkey": self.otpkey,
                       "otplen": 6})
         token.token.count = 47251640
@@ -607,7 +607,7 @@ class TOTPTokenTestCase(MyTestCase):
         # Autosync with a gap in the next otp value will fail
         token.token.count = 47251640
         # Just try some bullshit config value
-        set_privacyidea_config("AutoResyncTimeout", "totally not a number")
+        set_edumfa_config("AutoResyncTimeout", "totally not a number")
         # counter = 47251648 => otp = 032819, is out of sync
         r = token.check_otp(anOtpVal="032819", window=30,
                             options={"initTime": 47251645 * 30 })
@@ -620,7 +620,7 @@ class TOTPTokenTestCase(MyTestCase):
         # TOTP has no dueDate / AutoResyncTimeout
 
         # No _autosync
-        set_privacyidea_config("AutoResync", False)
+        set_edumfa_config("AutoResync", False)
         token.token.count = 47251640
         token.set_sync_window(10)
         # counter = 47251649 => otp = 705493, is out of sync

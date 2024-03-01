@@ -14,7 +14,7 @@ API :ref:`rest_token`, :ref:`rest_system`, :ref:`rest_realm` and
 Admin policies are implemented as decorators in :ref:`code_policy` and
 :ref:`policy_decorators`.
 
-Starting with privacyIDEA 2.4 admin policies can also store a field "admin
+Starting with eduMFA 2.4 admin policies can also store a field "admin
 realm". This is used, if you define realms to be superuser realms. See
 :ref:`cfgfile` for information how to do this. Read :ref:`faq_admins` for
 more information on the admin realms.
@@ -636,19 +636,19 @@ type: bool
 
 Allow the administrator to read the :ref:`radiusserver_config` definitions.
 
-privacyideaserver_write
+eduMFAserver_write
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 type: bool
 
-Allow the administrator to write or delete :ref:`privacyideaserver_config` definitions.
+Allow the administrator to write or delete :ref:`eduMFAserver_config` definitions.
 
-privacyideaserver_read
+eduMFAserver_read
 ~~~~~~~~~~~~~~~~~~~~~~
 
 type: bool
 
-Allow the administrator to read the :ref:`privacyideaserver_config` definitions.
+Allow the administrator to read the :ref:`eduMFAserver_config` definitions.
 
 .. _policywrite:
 .. _policyread:
@@ -987,7 +987,7 @@ clienttype
 
 type: bool
 
-This policy action allows the admin to view the list of clients which authenticate to privacyIDEA
+This policy action allows the admin to view the list of clients which authenticate to eduMFA
 at the :ref:`rest_client`.
 
 managesubscription

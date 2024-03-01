@@ -1,0 +1,20 @@
+.\" Manpage for edumfa-create-userdb
+.
+.TH EDUMFA-CREATE-USERDB  1 "11 Oct 2015" "1.0" "edumfa-create-userdb man page"
+.SH NAME
+edumfa-create-userdb \- creates a sqlite user database.
+.SH SYNOPSIS
+edumfa-create-userdb
+.SH DESCRIPTION
+This creates a sqlite3 database at /etc/edumfa/users.sqlite. In addition it creates an editable
+resolver 'localusers' and a realm 'localsql'.
+You can use this realm in eduMFA to create users from with the web UI.
+
+.SH INTERNET SOURCES
+http://www.privacyidea.org
+.SH SEE ALSO
+
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+privacyIDEA <info@privacyidea.org>

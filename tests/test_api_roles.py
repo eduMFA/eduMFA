@@ -11,15 +11,15 @@ import json
 from . import ldap3mock
 from .test_api_validate import LDAPDirectory
 from .base import MyApiTestCase
-from privacyidea.lib.token import (get_tokens, remove_token, enable_token,
+from edumfa.lib.token import (get_tokens, remove_token, enable_token,
                                    assign_token, init_token)
-from privacyidea.lib.user import User
-from privacyidea.lib.tokenclass import AUTH_DATE_FORMAT
-from privacyidea.lib.resolver import save_resolver
-from privacyidea.models import Token
-from privacyidea.lib.realm import (set_realm, delete_realm, set_default_realm)
-from privacyidea.api.lib.postpolicy import DEFAULT_POLICY_TEMPLATE_URL
-from privacyidea.lib.policy import (ACTION, SCOPE, set_policy, delete_policy,
+from edumfa.lib.user import User
+from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
+from edumfa.lib.resolver import save_resolver
+from edumfa.models import Token
+from edumfa.lib.realm import (set_realm, delete_realm, set_default_realm)
+from edumfa.api.lib.postpolicy import DEFAULT_POLICY_TEMPLATE_URL
+from edumfa.lib.policy import (ACTION, SCOPE, set_policy, delete_policy,
                                     LOGINMODE, ACTIONVALUE)
 
 
@@ -171,8 +171,8 @@ class APIAuthChallengeResponse(MyApiTestCase):
               realm=self.realm1).save()
         # Define HOTP token to be challenge response
         set_policy(name="pol_cr", scope=SCOPE.AUTH, action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
-        set_policy(name="webuilog", scope=SCOPE.WEBUI, action="{0!s}=privacyIDEA".format(ACTION.LOGINMODE))
-        from privacyidea.lib.token import set_pin
+        set_policy(name="webuilog", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE))
+        from edumfa.lib.token import set_pin
         set_pin("hotp1", "pin")
 
     def tearDown(self):
@@ -706,7 +706,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
     def test_10_authz_lastauth(self):
         # Test LASTAUTH policy action for /auth endpoint
-        # This only works if we authenticate against privacyIDEA
+        # This only works if we authenticate against eduMFA
         set_policy("pol_lastauth",
                    scope=SCOPE.AUTHZ,
                    action={
@@ -715,7 +715,7 @@ class APISelfserviceTestCase(MyApiTestCase):
         set_policy("pol_loginmode",
                    scope=SCOPE.WEBUI,
                    action={
-                       ACTION.LOGINMODE: LOGINMODE.PRIVACYIDEA,
+                       ACTION.LOGINMODE: LOGINMODE.EDUMFA,
                    })
         selfservice_token = init_token({"type": "spass", "pin": "somepin"},
                                        user=User("selfservice", "realm1"))
@@ -767,7 +767,7 @@ class APISelfserviceTestCase(MyApiTestCase):
         set_policy("pol_loginmode",
                    scope=SCOPE.WEBUI,
                    action={
-                       ACTION.LOGINMODE: LOGINMODE.PRIVACYIDEA,
+                       ACTION.LOGINMODE: LOGINMODE.EDUMFA,
                    })
         set_policy("pol_tokentype",
                    scope=SCOPE.AUTHZ,
@@ -825,7 +825,7 @@ class APISelfserviceTestCase(MyApiTestCase):
         set_policy("pol_loginmode",
                    scope=SCOPE.WEBUI,
                    action={
-                       ACTION.LOGINMODE: LOGINMODE.PRIVACYIDEA,
+                       ACTION.LOGINMODE: LOGINMODE.EDUMFA,
                    })
         set_policy("pol_tokeninfo",
                    scope=SCOPE.AUTHZ,
@@ -879,7 +879,7 @@ class APISelfserviceTestCase(MyApiTestCase):
         set_policy("pol_loginmode",
                    scope=SCOPE.WEBUI,
                    action={
-                       ACTION.LOGINMODE: LOGINMODE.PRIVACYIDEA,
+                       ACTION.LOGINMODE: LOGINMODE.EDUMFA,
                    })
         set_policy("pol_serial",
                    scope=SCOPE.AUTHZ,
@@ -936,7 +936,7 @@ class APISelfserviceTestCase(MyApiTestCase):
         set_policy("pol_loginmode",
                    scope=SCOPE.WEBUI,
                    action={
-                       ACTION.LOGINMODE: LOGINMODE.PRIVACYIDEA,
+                       ACTION.LOGINMODE: LOGINMODE.EDUMFA,
                    })
 
         # Without the policy, there are details in the response
@@ -1064,7 +1064,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
     def test_42_auth_timelimit_maxfail(self):
         self.setUp_user_realm2()
-        # check that AUTHMAXFAIL also takes effect for /auth with loginmode=privacyIDEA
+        # check that AUTHMAXFAIL also takes effect for /auth with loginmode=eduMFA
         user = User("timelimituser", realm=self.realm2)
         pin = "spass"
         # create a token
@@ -1075,7 +1075,7 @@ class APISelfserviceTestCase(MyApiTestCase):
                    action="{0!s}=2/20s".format(ACTION.AUTHMAXFAIL))
         set_policy(name="pol_loginmode",
                    scope=SCOPE.WEBUI,
-                   action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.PRIVACYIDEA))
+                   action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA))
         for _ in range(2):
             with self.app.test_request_context('/auth',
                                                method='POST',
@@ -1113,7 +1113,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
     def test_43_auth_timelimit_maxsuccess(self):
         self.setUp_user_realm2()
-        # check that AUTHMAXSUCCESS also takes effect for /auth with loginmode=privacyIDEA
+        # check that AUTHMAXSUCCESS also takes effect for /auth with loginmode=eduMFA
         user = User("timelimituser", realm=self.realm2)
         pin = "spass"
         # create a token
@@ -1124,7 +1124,7 @@ class APISelfserviceTestCase(MyApiTestCase):
                    action="{0!s}=2/20s".format(ACTION.AUTHMAXSUCCESS))
         set_policy(name="pol_loginmode",
                    scope=SCOPE.WEBUI,
-                   action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.PRIVACYIDEA))
+                   action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA))
         for _ in range(2):
             with self.app.test_request_context('/auth',
                                                method='POST',
@@ -1206,7 +1206,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
     def test_01_policies_with_userinfo_conditions(self):
         ldap3mock.setLDAPDirectory(LDAPDirectory)
         # create some webui policies with conditions: Depending on their LDAP group membership,
-        # users cannot log in at all, are authenticated against privacyIDEA, or against the userstore.
+        # users cannot log in at all, are authenticated against eduMFA, or against the userstore.
 
         # disabled policy: by default, login is disabled
         with self.app.test_request_context('/policy/disabled',
@@ -1235,9 +1235,9 @@ class PolicyConditionsTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
-        # privacyidea policy: for helpdesk users, require the token PIN
-        with self.app.test_request_context('/policy/privacyidea',
-                                           json={'action': "{}={}".format(ACTION.LOGINMODE, LOGINMODE.PRIVACYIDEA),
+        # edumfa policy: for helpdesk users, require the token PIN
+        with self.app.test_request_context('/policy/edumfa',
+                                           json={'action': "{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA),
                                                  'scope': SCOPE.WEBUI,
                                                  'realm': '',
                                                  'priority': 1,
@@ -1308,10 +1308,10 @@ class PolicyConditionsTestCase(MyApiTestCase):
             self.assertFalse(result.get("status"))
             self.assertIn("Wrong credentials", result["error"]["message"])
 
-        # if we now disable the condition on userstore and privacyidea, we get a conflicting policy error
-        with self.app.test_request_context('/policy/privacyidea',
+        # if we now disable the condition on userstore and edumfa, we get a conflicting policy error
+        with self.app.test_request_context('/policy/edumfa',
                                            json={'scope': SCOPE.WEBUI,
-                                                 'action': "{}={}".format(ACTION.LOGINMODE, LOGINMODE.PRIVACYIDEA),
+                                                 'action': "{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA),
                                                  'realm': '',
                                                  'active': True,
                                                  'conditions': [
@@ -1348,7 +1348,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
         # delete all policies
         delete_policy("disabled")
         delete_policy("userstore")
-        delete_policy("privacyidea")
+        delete_policy("edumfa")
 
     @ldap3mock.activate
     def test_02_enroll_rights(self):

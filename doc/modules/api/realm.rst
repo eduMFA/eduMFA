@@ -4,9 +4,9 @@ Realm endpoints
 ~~~~~~~~~~~~~~~
 
 .. use the docstring from the module file
-.. automodule:: privacyidea.api.realm
+.. automodule:: edumfa.api.realm
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: realm_blueprint
 

@@ -3,6 +3,6 @@
 HTTP SMS Provider
 ~~~~~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.smsprovider.HttpSMSProvider.HttpSMSProvider
+.. autoclass:: edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider
    :members:
    :undoc-members:

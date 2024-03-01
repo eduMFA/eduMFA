@@ -3,11 +3,11 @@
 U2F Token
 ~~~~~~~~~
 
-.. automodule:: privacyidea.lib.tokens.u2ftoken
+.. automodule:: edumfa.lib.tokens.u2ftoken
 
 Implementation
 ..............
 
-.. autoclass:: privacyidea.lib.tokens.u2ftoken.U2fTokenClass
+.. autoclass:: edumfa.lib.tokens.u2ftoken.U2fTokenClass
    :members:
    :undoc-members:

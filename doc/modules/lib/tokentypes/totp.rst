@@ -3,6 +3,6 @@
 TOTP Token
 ~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.totptoken.TotpTokenClass
+.. autoclass:: edumfa.lib.tokens.totptoken.TotpTokenClass
    :members:
    :undoc-members:

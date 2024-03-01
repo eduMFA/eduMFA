@@ -5,7 +5,7 @@ Four Eyes
 
 .. index:: Four Eyes, 4 Eyes, Two Man
 
-Starting with version 2.6 privacyIDEA supports 4 Eyes Token. This is a meta
+Starting with version 2.6 eduMFA supports 4 Eyes Token. This is a meta
 token, that can be used to define, that two or more token must be used to
 authenticate. This way, you can set up a "two man rule".
 
@@ -49,7 +49,7 @@ The response looks like this in case of success::
        "status": true,
        "value": true
      },
-     "version": "privacyIDEA 2.6dev0",
+     "version": "eduMFA 2.6dev0",
      "versionnumber": "2.6dev0"
    }
 
@@ -68,7 +68,7 @@ In case of a failed authentication the response looks like this::
        "status": true,
        "value": false
      },
-     "version": "privacyIDEA 2.6dev0",
+     "version": "eduMFA 2.6dev0",
      "versionnumber": "2.6dev0"
    }
 

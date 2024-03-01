@@ -3,6 +3,6 @@
 SMTP SMS Provider
 ~~~~~~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.smsprovider.SmtpSMSProvider.SmtpSMSProvider
+.. autoclass:: edumfa.lib.smsprovider.SmtpSMSProvider.SmtpSMSProvider
    :members:
    :undoc-members:

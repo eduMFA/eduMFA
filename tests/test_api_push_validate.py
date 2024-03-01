@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 from .base import MyApiTestCase
-from privacyidea.lib.user import User
-from privacyidea.lib.token import get_tokens, init_token, remove_token, get_one_token
-from privacyidea.lib.policy import SCOPE, set_policy, delete_policy
-from privacyidea.lib.tokens.pushtoken import PUSH_ACTION, strip_key
-from privacyidea.lib.smsprovider.SMSProvider import set_smsgateway
-from privacyidea.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
+from edumfa.lib.user import User
+from edumfa.lib.token import get_tokens, init_token, remove_token, get_one_token
+from edumfa.lib.policy import SCOPE, set_policy, delete_policy
+from edumfa.lib.tokens.pushtoken import PUSH_ACTION, strip_key
+from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
+from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.hazmat.backends import default_backend
-from privacyidea.lib.utils import to_bytes, to_unicode
+from edumfa.lib.utils import to_bytes, to_unicode
 from cryptography.hazmat.primitives.asymmetric import rsa
-from privacyidea.lib.policy import ACTION
-from privacyidea.lib.token import enable_token
-from privacyidea.lib.realm import set_realm, set_default_realm
-from privacyidea.lib.resolver import save_resolver
-from privacyidea.lib.tokenclass import CLIENTMODE
+from edumfa.lib.policy import ACTION
+from edumfa.lib.token import enable_token
+from edumfa.lib.realm import set_realm, set_default_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.tokenclass import CLIENTMODE
 from . import ldap3mock
 
 
@@ -82,7 +82,7 @@ class PushAPITestCase(MyApiTestCase):
                        PUSH_ACTION.TTL, TTL))
         # Create push config
         r = set_smsgateway(self.firebase_config_name,
-                           'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                           'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                            "myFB", FB_CONFIG_VALS)
         self.assertTrue(r > 0)
 
@@ -190,7 +190,7 @@ class PushAPITestCase(MyApiTestCase):
         set_policy("chalresp", action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE), scope=SCOPE.AUTH)
         # Create push config
         r = set_smsgateway(self.firebase_config_name,
-                           'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                           'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                            "myFB", FB_CONFIG_VALS)
         self.assertTrue(r > 0)
 
@@ -302,7 +302,7 @@ class PushAPITestCase(MyApiTestCase):
                        PUSH_ACTION.REGISTRATION_URL, REGISTRATION_URL))
         # Create push config
         r = set_smsgateway(self.firebase_config_name,
-                           'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                           'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                            "myFB", FB_CONFIG_VALS)
         self.assertTrue(r > 0)
 
@@ -405,7 +405,7 @@ class PushAPITestCase(MyApiTestCase):
                        PUSH_ACTION.TTL, TTL))
         # Create push config
         r = set_smsgateway(self.firebase_config_name,
-                           'privacyidea.lib.smsprovider.FirebaseProvider.FirebaseProvider',
+                           'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
                            "myFB", FB_CONFIG_VALS)
         self.assertTrue(r > 0)
         # Now we should get an authentication Challenge

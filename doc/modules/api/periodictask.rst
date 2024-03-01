@@ -3,9 +3,9 @@
 Periodic Task endpoints
 .......................
 
-.. automodule:: privacyidea.api.periodictask
+.. automodule:: edumfa.api.periodictask
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: periodictask_blueprint
 

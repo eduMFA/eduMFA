@@ -3,6 +3,6 @@
 Yubico Token
 ~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.yubicotoken.YubicoTokenClass
+.. autoclass:: edumfa.lib.tokens.yubicotoken.YubicoTokenClass
    :members:
    :undoc-members:

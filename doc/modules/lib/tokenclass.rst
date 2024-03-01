@@ -2,7 +2,7 @@
 Token Class
 ...........
 
-The following token types are known to privacyIDEA. All are inherited from
+The following token types are known to edumfa. All are inherited from
 the base tokenclass describe below.
 
 .. toctree::
@@ -11,7 +11,7 @@ the base tokenclass describe below.
    tokentypes/*
 
 
-.. autoclass:: privacyidea.lib.tokenclass.TokenClass
+.. autoclass:: edumfa.lib.tokenclass.TokenClass
    :members:
    :undoc-members:
 

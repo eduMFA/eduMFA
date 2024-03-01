@@ -3,6 +3,6 @@
 RADIUS Token
 ~~~~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.radiustoken.RadiusTokenClass
+.. autoclass:: edumfa.lib.tokens.radiustoken.RadiusTokenClass
    :members:
    :undoc-members:

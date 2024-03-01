@@ -3,7 +3,7 @@
 First Steps
 ===========
 
-You installed privacyIDEA successfully according to :ref:`installation`.
+You installed eduMFA successfully according to :ref:`installation`.
 
 These first steps will guide you through the tasks of logging in to the
 management web UI, attaching your first users and enrolling the first token.
@@ -17,7 +17,7 @@ management web UI, attaching your first users and enrolling the first token.
    token
 
 After these first steps you will be able to start attaching applications to
-privacyIDEA in order to add two factor authentication to those applications.
+eduMFA in order to add two factor authentication to those applications.
 You can 
 
  * use a PAM module to authenticate with OTP at SSH or local 

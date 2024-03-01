@@ -3,29 +3,29 @@ This test file tests the lib.config
 
 The lib.config only depends on the database model.
 """
-from privacyidea.models import Config, PRIVACYIDEA_TIMESTAMP, save_config_timestamp, db
+from edumfa.models import Config, save_config_timestamp, db
 from .base import MyTestCase
-from privacyidea.lib.config import (get_resolver_list,
+from edumfa.lib.config import (get_resolver_list,
                                     get_resolver_classes,
                                     get_resolver_class_dict,
                                     get_resolver_types,
                                     get_resolver_module_list,
                                     get_from_config,
-                                    get_privacyidea_config,
-                                    set_privacyidea_config,
-                                    delete_privacyidea_config,
+                                    get_edumfa_config,
+                                    set_edumfa_config,
+                                    delete_edumfa_config,
                                     get_token_list,
                                     get_token_module_list,
                                     get_token_class_dict,
                                     get_token_types,
                                     get_token_classes, get_token_prefix,
                                     get_machine_resolver_class_dict,
-                                    get_privacyidea_node, get_privacyidea_nodes,
+                                    get_edumfa_node, get_edumfa_nodes,
                                     this, get_config_object, invalidate_config_object,
                                     get_multichallenge_enrollable_tokentypes)
-from privacyidea.lib.resolvers.PasswdIdResolver import IdResolver as PWResolver
-from privacyidea.lib.tokens.hotptoken import HotpTokenClass
-from privacyidea.lib.tokens.totptoken import TotpTokenClass
+from edumfa.lib.resolvers.PasswdIdResolver import IdResolver as PWResolver
+from edumfa.lib.tokens.hotptoken import HotpTokenClass
+from edumfa.lib.tokens.totptoken import TotpTokenClass
 from flask import current_app
 import importlib
 
@@ -36,7 +36,7 @@ class ConfigTestCase(MyTestCase):
     """
     def test_00_get_config(self):
         # set the config
-        set_privacyidea_config(key="Hallo", value="What?", typ="string",
+        set_edumfa_config(key="Hallo", value="What?", typ="string",
                                desc="Some dumb value")
 
         # get the complete config
@@ -49,34 +49,34 @@ class ConfigTestCase(MyTestCase):
         conf = get_from_config("Hello", "Does not exist")
         self.assertTrue(conf == "Does not exist", conf)
 
-        conf = get_privacyidea_config()
+        conf = get_edumfa_config()
         self.assertTrue("Hallo" in conf, conf)
 
         # delete privacyidea config
-        delete_privacyidea_config("Hallo")
+        delete_edumfa_config("Hallo")
         conf = get_from_config("Hallo")
         self.assertFalse(conf == "What?", conf)
 
         # set more values to create a timestamp and overwrite
-        set_privacyidea_config(key="k1", value="v1")
-        set_privacyidea_config(key="k2", value="v2")
-        set_privacyidea_config(key="k3", value="v3")
+        set_edumfa_config(key="k1", value="v1")
+        set_edumfa_config(key="k2", value="v2")
+        set_edumfa_config(key="k3", value="v3")
         conf = get_from_config("k3")
         self.assertTrue(conf == "v3", conf)
-        set_privacyidea_config(key="k3", value="new", typ="string", desc="n")
+        set_edumfa_config(key="k3", value="new", typ="string", desc="n")
         conf = get_from_config("k3")
         self.assertTrue(conf == "new", conf)
 
     def test_01_resolver(self):
         r = get_resolver_list()
-        self.assertTrue("privacyidea.lib.resolvers.PasswdIdResolver" in r, r)
-        self.assertTrue("privacyidea.lib.resolvers.LDAPIdResolver" in r, r)
-        self.assertTrue("privacyidea.lib.resolvers.SCIMIdResolver" in r, r)
-        self.assertTrue("privacyidea.lib.resolvers.SQLIdResolver" in r, r)
+        self.assertTrue("edumfa.lib.resolvers.PasswdIdResolver" in r, r)
+        self.assertTrue("edumfa.lib.resolvers.LDAPIdResolver" in r, r)
+        self.assertTrue("edumfa.lib.resolvers.SCIMIdResolver" in r, r)
+        self.assertTrue("edumfa.lib.resolvers.SQLIdResolver" in r, r)
 
         # check modules
         mlist = get_resolver_module_list()
-        mod_name = "privacyidea.lib.resolvers.PasswdIdResolver"
+        mod_name = "edumfa.lib.resolvers.PasswdIdResolver"
         module = importlib.import_module(mod_name)
 
         self.assertTrue(module in mlist, mlist)
@@ -89,14 +89,14 @@ class ConfigTestCase(MyTestCase):
 
         # Class dict
         (classes, types) = get_resolver_class_dict()
-        self.assertTrue('privacyidea.lib.resolvers.PasswdIdResolver'
+        self.assertTrue('edumfa.lib.resolvers.PasswdIdResolver'
                         '.IdResolver' in classes, classes)
         self.assertTrue(classes.get(
-            'privacyidea.lib.resolvers.PasswdIdResolver.IdResolver') ==
+            'edumfa.lib.resolvers.PasswdIdResolver.IdResolver') ==
                         PWResolver, classes)
-        self.assertTrue('privacyidea.lib.resolvers.PasswdIdResolver'
+        self.assertTrue('edumfa.lib.resolvers.PasswdIdResolver'
                         '.IdResolver' in types, types)
-        self.assertTrue(types.get('privacyidea.lib.resolvers.PasswdIdResolver'
+        self.assertTrue(types.get('edumfa.lib.resolvers.PasswdIdResolver'
                         '.IdResolver') == "passwdresolver", types)
 
         # With calling 'get_resolver_classes()' the resolver types will also be cached
@@ -107,12 +107,12 @@ class ConfigTestCase(MyTestCase):
 
     def test_02_token(self):
         r = get_token_list()
-        self.assertTrue("privacyidea.lib.tokens.totptoken" in r, r)
-        self.assertTrue("privacyidea.lib.tokens.hotptoken" in r, r)
+        self.assertTrue("edumfa.lib.tokens.totptoken" in r, r)
+        self.assertTrue("edumfa.lib.tokens.hotptoken" in r, r)
 
         # check modules
         mlist = get_token_module_list()
-        mod_name = "privacyidea.lib.tokens.totptoken"
+        mod_name = "edumfa.lib.tokens.totptoken"
         module = importlib.import_module(mod_name)
         self.assertTrue(module in mlist, mlist)
 
@@ -122,24 +122,24 @@ class ConfigTestCase(MyTestCase):
 
         # get_token_class_dict
         (classes, types) = get_token_class_dict()
-        self.assertTrue('privacyidea.lib.tokens.hotptoken.HotpTokenClass'
+        self.assertTrue('edumfa.lib.tokens.hotptoken.HotpTokenClass'
                         in classes, classes)
         self.assertTrue(classes.get(
-            'privacyidea.lib.tokens.hotptoken.HotpTokenClass') ==
+            'edumfa.lib.tokens.hotptoken.HotpTokenClass') ==
                         HotpTokenClass, classes)
-        self.assertTrue('privacyidea.lib.tokens.totptoken.TotpTokenClass'
+        self.assertTrue('edumfa.lib.tokens.totptoken.TotpTokenClass'
                         in classes, classes)
         self.assertTrue(classes.get(
-            'privacyidea.lib.tokens.totptoken.TotpTokenClass') ==
+            'edumfa.lib.tokens.totptoken.TotpTokenClass') ==
                         TotpTokenClass, classes)
 
-        self.assertTrue('privacyidea.lib.tokens.hotptoken.HotpTokenClass'
+        self.assertTrue('edumfa.lib.tokens.hotptoken.HotpTokenClass'
                         in types, types)
-        self.assertTrue('privacyidea.lib.tokens.totptoken.TotpTokenClass'
+        self.assertTrue('edumfa.lib.tokens.totptoken.TotpTokenClass'
                         in types, types)
-        self.assertTrue(types.get('privacyidea.lib.tokens.hotptoken'
+        self.assertTrue(types.get('edumfa.lib.tokens.hotptoken'
                                   '.HotpTokenClass') == "hotp", types)
-        self.assertTrue(types.get('privacyidea.lib.tokens.totptoken'
+        self.assertTrue(types.get('edumfa.lib.tokens.totptoken'
                                   '.TotpTokenClass') == "totp", types)
 
         types = get_token_types()
@@ -155,7 +155,7 @@ class ConfigTestCase(MyTestCase):
 
         # Test custom token types
         with self.app_context:
-            self.app.config['PI_TOKEN_MODULES'] = 'tests.testdata.fancytoken'
+            self.app.config['EDUMFA_TOKEN_MODULES'] = 'tests.testdata.fancytoken'
             r = get_token_list()
             self.assertIn("tests.testdata.fancytoken", r, r)
             mlist = get_token_module_list()
@@ -165,7 +165,7 @@ class ConfigTestCase(MyTestCase):
             self.assertIn('tests.testdata.fancytoken.FancyTokenClass', classes, classes)
             self.assertIn('tests.testdata.fancytoken.FancyTokenClass', types, types)
             self.assertEqual(types['tests.testdata.fancytoken.FancyTokenClass'], 'fancy', types)
-            self.app.config.pop('PI_TOKEN_MODULES')
+            self.app.config.pop('EDUMFA_TOKEN_MODULES')
 
     def test_03_token_prefix(self):
         prefix = get_token_prefix("totp")
@@ -179,7 +179,7 @@ class ConfigTestCase(MyTestCase):
         self.assertTrue(prefix.get("hotp") == "OATH", prefix)
 
     def test_04_store_encrypted_values(self):
-        r = set_privacyidea_config("mySecretData", "soho",
+        r = set_edumfa_config("mySecretData", "soho",
                                    typ="password", desc="Very important")
         self.assertTrue(r == "insert", r)
 
@@ -193,14 +193,14 @@ class ConfigTestCase(MyTestCase):
     def test_05_machine_resolvers(self):
         (classes, types) = get_machine_resolver_class_dict()
         self.assertTrue("hosts" in types.values(), list(types.values()))
-        self.assertTrue("privacyidea.lib.machines.hosts.HostsMachineResolver"
+        self.assertTrue("edumfa.lib.machines.hosts.HostsMachineResolver"
                         in classes, classes)
 
     def test_06_public_and_admin(self):
         # This tests the new public available config
-        set_privacyidea_config("publicInfo1", "info1", typ="public")
-        set_privacyidea_config("publicInfo2", "info2", typ="public")
-        set_privacyidea_config("secretInfo1", "info1")
+        set_edumfa_config("publicInfo1", "info1", typ="public")
+        set_edumfa_config("publicInfo2", "info2", typ="public")
+        set_edumfa_config("secretInfo1", "info1")
 
         # Get administrators info
         a = get_from_config()
@@ -224,9 +224,9 @@ class ConfigTestCase(MyTestCase):
         self.assertEqual(a, None)
 
     def test_07_node_names(self):
-        node = get_privacyidea_node()
+        node = get_edumfa_node()
         self.assertEqual(node, "Node1")
-        nodes = get_privacyidea_nodes()
+        nodes = get_edumfa_nodes()
         self.assertTrue("Node1" in nodes)
         self.assertTrue("Node2" in nodes)
 
@@ -234,13 +234,13 @@ class ConfigTestCase(MyTestCase):
         obj1 = get_config_object()
         # Another call to ``get_config_object`` returns the identical config object
         self.assertIs(obj1, get_config_object())
-        set_privacyidea_config(key="k1", value="v1")
-        # ``set_privacyidea_config`` invalidates the config object, so we get a different one
+        set_edumfa_config(key="k1", value="v1")
+        # ``set_edumfa_config`` invalidates the config object, so we get a different one
         obj2 = get_config_object()
         self.assertIsNot(obj1, obj2)
         self.assertEqual(get_config_object().get_config("k1"), "v1")
-        # ``set_privacyidea_config`` again invalidates the config object
-        set_privacyidea_config(key="k1", value="v2")
+        # ``set_edumfa_config`` again invalidates the config object
+        set_edumfa_config(key="k1", value="v2")
         obj3 = get_config_object()
         self.assertIsNot(obj2, obj3)
         self.assertEqual(get_config_object().get_config("k1"), "v2")

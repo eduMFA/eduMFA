@@ -4,9 +4,9 @@ This depends on lib.tokenclass
 """
 
 from .base import MyTestCase
-from privacyidea.lib.tokens.tantoken import TanTokenClass
-from privacyidea.lib.token import init_token, get_tokens_paginate, import_token
-from privacyidea.models import Token
+from edumfa.lib.tokens.tantoken import TanTokenClass
+from edumfa.lib.token import init_token, get_tokens_paginate, import_token
+from edumfa.models import Token
 
 OTPKEY = "3132333435363738393031323334353637383930"
 

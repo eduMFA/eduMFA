@@ -12,8 +12,8 @@ down_revision = 'fa07bd604a75'
 
 from alembic import op
 from sqlalchemy import orm
-from privacyidea.models import EventHandlerOption
-from privacyidea.lib.eventhandler.usernotification import NOTIFY_TYPE
+from edumfa.models import EventHandlerOption
+from edumfa.lib.eventhandler.usernotification import NOTIFY_TYPE
 from sqlalchemy import and_
 
 

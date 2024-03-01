@@ -5,12 +5,12 @@ The lib.auth_cache.py only depends on the database model.
 """
 from .base import MyTestCase
 
-from privacyidea.lib.authcache import (add_to_cache, delete_from_cache,
+from edumfa.lib.authcache import (add_to_cache, delete_from_cache,
                                        update_cache, verify_in_cache,
                                        _hash_password,
                                        cleanup)
 from passlib.hash import argon2
-from privacyidea.models import AuthCache
+from edumfa.models import AuthCache
 import datetime
 
 
@@ -124,7 +124,7 @@ class AuthCacheTestCase(MyTestCase):
         self.assertEqual(1, r)
 
     def test_05_old_hashes(self):
-        from privacyidea.lib.crypto import hash
+        from edumfa.lib.crypto import hash
         # Test that old hashes do not break the code
         r = cleanup(100000000)
         # Add an entry with an old password hash

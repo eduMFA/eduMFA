@@ -3,7 +3,7 @@ from mock import mock
 import os
 from sqlalchemy import func
 
-from privacyidea.models import (Token,
+from edumfa.models import (Token,
                                 Resolver,
                                 ResolverRealm,
                                 TokenRealm,
@@ -16,7 +16,7 @@ from privacyidea.models import (Token,
                                 CAConnector, CAConnectorConfig, SMTPServer,
                                 PasswordReset, EventHandlerOption,
                                 EventHandler, SMSGatewayOption, SMSGateway,
-                                EventHandlerCondition, PrivacyIDEAServer,
+                                EventHandlerCondition, eduMFAServer,
                                 ClientApplication, Subscription, UserCache,
                                 EventCounter, PeriodicTask, PeriodicTaskLastRun,
                                 PeriodicTaskOption, MonitoringStats, PolicyCondition, db,
@@ -402,16 +402,16 @@ class TokenModelTestCase(MyTestCase):
         p.resolver = "*"
         p.client = "0.0.0.0"
         p.time = "anytime"
-        p.pinode = "pinode1, pinode2"
+        p.edumfanode = "edumfanode1, edumfanode2"
         p.save()
         self.assertTrue(p.user == "cornelius", p.user)
-        self.assertEqual(p.pinode, "pinode1, pinode2")
+        self.assertEqual(p.edumfanode, "edumfanode1, edumfanode2")
 
         # save admin policy
         p3 = Policy("pol3", active="false", scope="admin",
-                    adminrealm='superuser', action="*", pinode="pinode3")
+                    adminrealm='superuser', action="*", edumfanode="edumfanode3")
         self.assertEqual(p3.adminrealm, "superuser")
-        self.assertEqual(p3.pinode, "pinode3")
+        self.assertEqual(p3.edumfanode, "edumfanode3")
         p3.save()
 
         # set conditions
@@ -435,7 +435,7 @@ class TokenModelTestCase(MyTestCase):
 
         # Check that the change has been persisted to the database
         p3_reloaded1 = Policy.query.filter_by(name="pol3").one()
-        self.assertEqual(p3_reloaded1.get()["pinode"], ["pinode3"])
+        self.assertEqual(p3_reloaded1.get()["edumfanode"], ["edumfanode3"])
         self.assertEqual(p3_reloaded1.get()["conditions"],
                          [("userinfo", "type", "==", "baz", True)])
         self.assertEqual(len(p3_reloaded1.conditions), 1)
@@ -546,7 +546,7 @@ class TokenModelTestCase(MyTestCase):
     def test_14_save_update_admin(self):
         # create an admin user
         adminname = Admin(username="admin", password="secret",
-                          email="admin@privacyidea.org").save()
+                          email="admin@edumfa.io").save()
         self.assertEqual(adminname, "admin")
         password1 = Admin.query.filter_by(username="admin").first().password
 
@@ -672,7 +672,7 @@ class TokenModelTestCase(MyTestCase):
 
     def test_20_add_update_delete_smsgateway(self):
         name = "myGateway"
-        provider_module = "privacyidea.lib.smsprovider.httpbla"
+        provider_module = "edumfa.lib.smsprovider.httpbla"
         provider_module2 = "module2"
         gw = SMSGateway(name, provider_module, options={"k": "v"})
 
@@ -694,7 +694,7 @@ class TokenModelTestCase(MyTestCase):
     def test_21_add_update_delete_clientapp(self):
         # MySQLs DATETIME type supports only seconds so we have to mock now()
         current_time = datetime(2018, 3, 4, 5, 6, 8)
-        with mock.patch('privacyidea.models.datetime') as mock_dt:
+        with mock.patch('edumfa.models.datetime') as mock_dt:
             mock_dt.now.return_value = current_time
 
             ClientApplication(ip="1.2.3.4", hostname="host1",
@@ -788,19 +788,19 @@ class TokenModelTestCase(MyTestCase):
                                            username).first()
         self.assertFalse(find_user)
 
-    def test_24_add_and_delete_privacyideaserver(self):
-        pi1 = PrivacyIDEAServer(identifier="myserver",
+    def test_24_add_and_delete_eduMfaServer(self):
+        pi1 = eduMFAServer(identifier="myserver",
                                 url="https://pi.example.com")
         pi1.save()
-        pi2 = PrivacyIDEAServer.query.filter_by(identifier="myserver").first()
+        pi2 = eduMFAServer.query.filter_by(identifier="myserver").first()
         self.assertEqual(pi2.url, "https://pi.example.com")
         self.assertFalse(pi2.tls)
 
         # Update the server
-        r = PrivacyIDEAServer(identifier="myserver",
+        r = eduMFAServer(identifier="myserver",
                               url="https://pi2.example.com", tls=True,
                               description="test").save()
-        modified_server = PrivacyIDEAServer.query.filter_by(
+        modified_server = eduMFAServer.query.filter_by(
             identifier="myserver").first()
 
         self.assertTrue(modified_server.tls, "100.2.3.4")
@@ -810,7 +810,7 @@ class TokenModelTestCase(MyTestCase):
         # Delete the server
         pi2.delete()
         # Try to find the server
-        pi2 = PrivacyIDEAServer.query.filter_by(identifier="myserver").first()
+        pi2 = eduMFAServer.query.filter_by(identifier="myserver").first()
         # The server does not exist anymore
         self.assertEqual(pi2, None)
 
@@ -860,7 +860,7 @@ class TokenModelTestCase(MyTestCase):
 
     def test_26_periodictask(self):
         current_utc_time = datetime(2018, 3, 4, 5, 6, 8)
-        with mock.patch('privacyidea.models.datetime') as mock_dt:
+        with mock.patch('edumfa.models.datetime') as mock_dt:
             mock_dt.utcnow.return_value = current_utc_time
 
             task1 = PeriodicTask("task1", False, "0 5 * * *", ["localhost"], "some.module", 2, {
@@ -901,7 +901,7 @@ class TokenModelTestCase(MyTestCase):
 
         # assert we can update the task
         later_utc_time = current_utc_time + timedelta(seconds=1)
-        with mock.patch('privacyidea.models.datetime') as mock_dt:
+        with mock.patch('edumfa.models.datetime') as mock_dt:
             mock_dt.utcnow.return_value = later_utc_time
             PeriodicTask("task one", True, "0 8 * * *", ["localhost", "otherhost"], "some.module", 3, {
                 "KEY2": "value number 2",

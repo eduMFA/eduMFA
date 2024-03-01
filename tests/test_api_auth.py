@@ -5,19 +5,19 @@ import logging
 from testfixtures import log_capture
 from .base import MyApiTestCase, OverrideConfigTestCase
 import mock
-from privacyidea.lib.config import set_privacyidea_config, SYSCONF
-from privacyidea.lib.policy import (set_policy, SCOPE, ACTION, REMOTE_USER,
+from edumfa.lib.config import set_edumfa_config, SYSCONF
+from edumfa.lib.policy import (set_policy, SCOPE, ACTION, REMOTE_USER,
                                     delete_policy)
-from privacyidea.lib.auth import create_db_admin
-from privacyidea.lib.resolver import save_resolver, delete_resolver
-from privacyidea.lib.realm import (set_realm, set_default_realm, delete_realm,
+from edumfa.lib.auth import create_db_admin
+from edumfa.lib.resolver import save_resolver, delete_resolver
+from edumfa.lib.realm import (set_realm, set_default_realm, delete_realm,
                                    get_default_realm)
-from privacyidea.lib.event import set_event, delete_event
-from privacyidea.lib.eventhandler.base import CONDITION
-from privacyidea.lib.token import get_tokens, remove_token
-from privacyidea.lib.user import User
-from privacyidea.lib.utils import to_unicode
-from privacyidea.config import TestingConfig
+from edumfa.lib.event import set_event, delete_event
+from edumfa.lib.eventhandler.base import CONDITION
+from edumfa.lib.token import get_tokens, remove_token
+from edumfa.lib.user import User
+from edumfa.lib.utils import to_unicode
+from edumfa.config import TestingConfig
 from . import ldap3mock
 
 
@@ -27,7 +27,7 @@ PWFILE = "tests/testdata/passwd-duplicate-name"
 class AuthApiTestCase(MyApiTestCase):
     def test_01_auth_with_split(self):
         # By default, splitAtSign should be true
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, True)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, True)
         self.setUp_user_realms()
         with self.app.test_request_context('/auth',
                                            method='POST',
@@ -193,7 +193,7 @@ class AuthApiTestCase(MyApiTestCase):
 
     # And now we do all of the above without the splitAtSign setting
     def test_02_auth_without_split(self):
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, False)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, False)
         self.setUp_user_realms()
         with self.app.test_request_context('/auth',
                                            method='POST',
@@ -369,10 +369,10 @@ class AuthApiTestCase(MyApiTestCase):
                        "realm='realm3', resolver='') exists in NO resolver."
             mock_log.assert_called_once_with(expected)
 
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, True)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, True)
 
     def test_03_admin_auth(self):
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, True)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, True)
         # check that the default admin works
         with self.app.test_request_context('/auth',
                                            method='POST',
@@ -403,7 +403,7 @@ class AuthApiTestCase(MyApiTestCase):
             self.assertEqual('admin', result['value']['role'], result)
 
         # both admin logins should also work with 'splitAtSign' set to False
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, False)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, False)
         with self.app.test_request_context('/auth',
                                            method='POST',
                                            data={"username": "testadmin",
@@ -429,7 +429,7 @@ class AuthApiTestCase(MyApiTestCase):
             self.assertEqual('admin', result['value']['role'], result)
 
         # reset 'splitAtSign' to default value
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, True)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, True)
 
     def test_04_remote_user_auth(self):
         self.setUp_user_realms()
@@ -534,7 +534,7 @@ class AuthApiTestCase(MyApiTestCase):
         # check split@sign is working correctly
         set_policy(name="remote", scope=SCOPE.WEBUI, realm=self.realm1,
                    action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE))
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, False)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, False)
         with self.app.test_request_context('/auth',
                                            method='POST',
                                            data={"username": "user@test"},
@@ -550,7 +550,7 @@ class AuthApiTestCase(MyApiTestCase):
         self.assertEqual(aentry['policies'], 'remote', aentry)
 
         delete_policy(name='remote')
-        set_privacyidea_config(SYSCONF.SPLITATSIGN, True)
+        set_edumfa_config(SYSCONF.SPLITATSIGN, True)
 
     @ldap3mock.activate
     def test_05_local_admin_with_failing_resolver(self):
@@ -665,10 +665,10 @@ class AuthApiTestCase(MyApiTestCase):
             self.assertEqual(4031, error.get("code"))
             self.assertEqual("Authentication failure. Wrong credentials", error.get("message"))
 
-        # set a policy to authenticate against privacyIDEA
-        set_policy("piLogin", scope=SCOPE.WEBUI, action="{0!s}=privacyIDEA".format(ACTION.LOGINMODE))
+        # set a policy to authenticate against eduMFA
+        set_policy("piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE))
 
-        # user authenticates against privacyidea but user does not exist
+        # user authenticates against eduMFA but user does not exist
         with self.app.test_request_context('/auth',
                                            method='POST',
                                            data={"username": "user-really-does-not-exist",
@@ -811,8 +811,8 @@ class EventHandlerTest(MyApiTestCase):
 
         set_default_realm(self.realm1)
 
-        # set a policy to authenticate against privacyIDEA
-        set_policy("piLogin", scope=SCOPE.WEBUI, action="{0!s}=privacyIDEA".format(ACTION.LOGINMODE))
+        # set a policy to authenticate against eduMFA
+        set_policy("piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE))
         # set a policy to for otppin=userstore
         set_policy("otppin", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN))
         # Set a policy to do C/R with HOTP tokens
@@ -898,7 +898,7 @@ class EventHandlerTest(MyApiTestCase):
             self.assertTrue(result.get("status"), result)
 
         capture.check_present(
-            ('pi-eventlogger', 'INFO',
+            ('edumfa-eventlogger', 'INFO',
              'User: someuser Event: /auth')
         )
 

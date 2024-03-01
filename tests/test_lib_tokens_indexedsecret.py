@@ -3,13 +3,13 @@ This test file tests the lib.tokens.smstoken
 """
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
-from privacyidea.lib.resolver import (save_resolver)
-from privacyidea.lib.realm import (set_realm)
-from privacyidea.lib.user import (User)
-from privacyidea.lib.tokens.indexedsecrettoken import IndexedSecretTokenClass, PIIXACTION
-from privacyidea.lib.policy import set_policy, delete_policy, SCOPE, ACTION, PolicyClass
-from privacyidea.models import Token
-from privacyidea.lib.token import init_token, remove_token
+from edumfa.lib.resolver import (save_resolver)
+from edumfa.lib.realm import (set_realm)
+from edumfa.lib.user import (User)
+from edumfa.lib.tokens.indexedsecrettoken import IndexedSecretTokenClass, PIIXACTION
+from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION, PolicyClass
+from edumfa.models import Token
+from edumfa.lib.token import init_token, remove_token
 
 PWFILE = "tests/testdata/passwords"
 
@@ -18,7 +18,7 @@ class IndexedSecretTokenTestCase(MyTestCase):
     """
     Test the IndexedSecret Token
     """
-    email = "pi_tester@privacyidea.org"
+    email = "tester@edumfa.io"
     otppin = "topsecret"
     resolvername1 = "resolver1"
     resolvername2 = "Resolver2"

@@ -5,11 +5,11 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta
 
 from .base import MyApiTestCase
-from privacyidea.lib.policy import set_policy, SCOPE, ACTION, delete_policy
-from privacyidea.models import Audit
-from privacyidea.lib.resolver import save_resolver
-from privacyidea.lib.realm import set_realm
-from privacyidea.lib.auditmodules.base import Audit as BaseAudit
+from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
+from edumfa.models import Audit
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.realm import set_realm
+from edumfa.lib.auditmodules.base import Audit as BaseAudit
 
 PWFILE = "tests/testdata/passwords"
 
@@ -81,7 +81,7 @@ class APIAuditTestCase(MyApiTestCase):
         def _fake_time(t):
             """ context manager that fakes the current time that is written
             to the database """
-            with mock.patch("privacyidea.models.datetime") as mock_dt:
+            with mock.patch("edumfa.models.datetime") as mock_dt:
                 mock_dt.now.return_value = t
                 yield
 
@@ -255,7 +255,7 @@ class APIAuditTestCase(MyApiTestCase):
                                                  "page": "1",
                                                  "page_size": "10",
                                                  "policies": "**",
-                                                 "privacyidea_server": "**",
+                                                 "edumfa_server": "**",
                                                  "realm": "**",
                                                  "resolver": "**",
                                                  "serial": "**",
@@ -334,7 +334,7 @@ class APIAuditTestCase(MyApiTestCase):
                                                  "page": "1",
                                                  "page_size": "10",
                                                  "policies": "**",
-                                                 "privacyidea_server": "**",
+                                                 "edumfa_server": "**",
                                                  "realm": "**",
                                                  "resolver": "**",
                                                  "serial": "**",
@@ -367,7 +367,7 @@ class APIAuditTestCase(MyApiTestCase):
                                                  "page": "1",
                                                  "page_size": "10",
                                                  "policies": "**",
-                                                 "privacyidea_server": "**",
+                                                 "edumfa_server": "**",
                                                  "realm": self.realm2b,
                                                  "resolver": "**",
                                                  "serial": "**",

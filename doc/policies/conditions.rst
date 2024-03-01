@@ -3,7 +3,7 @@
 Extended Policy Conditions
 --------------------------
 
-Since privacyIDEA 3.1, *extended policy conditions* allow to define more advanced rules
+Since eduMFA 3.1, *extended policy conditions* allow to define more advanced rules
 for policy matching, i.e. for determining which policies are valid for a
 specific request.
 
@@ -30,7 +30,7 @@ consists of five parts:
 Sections
 ~~~~~~~~
 
-privacyIDEA implements the sections ``userinfo``, ``token``, ``tokeninfo``, ``HTTP Request Headers``
+eduMFA implements the sections ``userinfo``, ``token``, ``tokeninfo``, ``HTTP Request Headers``
 and ``HTTP Environment``.
 
 ``userinfo``
@@ -40,7 +40,7 @@ The section ``userinfo`` can be used to define conditions that are checked again
 current user in the request (the so-called *handled user*).
 The validity of a policy condition with section ``userinfo`` is determined as follows:
 
-* privacyIDEA retrieves the userinfo of the currently handled user. These are the user attributes as they are
+* eduMFA retrieves the userinfo of the currently handled user. These are the user attributes as they are
   determined by the respective resolver. This is configured via the attribute mappings of resolvers
   (see :ref:`useridresolvers`).
 * Then, it retrieves the userinfo attribute given by ``Key``
@@ -48,11 +48,11 @@ The validity of a policy condition with section ``userinfo`` is determined as fo
   The result of the comparison determines if the request matches the condition or not.
 
 .. note:: There are situations in which the currently handled user
-   cannot be determined.  If privacyIDEA encounters a policy with ``userinfo``
+   cannot be determined.  If eduMFA encounters a policy with ``userinfo``
    conditions in such a situation, it throws an error and the current request is
    aborted.
 
-   Likewise, privacyIDEA raises an error if ``Key`` refers to an unknown userinfo
+   Likewise, eduMFA raises an error if ``Key`` refers to an unknown userinfo
    attribute, or if the condition definition is invalid due to some other reasons.
    More detailed information are then written to the logfile.
 
@@ -96,15 +96,15 @@ email address ending in ``@example.com``:
 
 The policy only takes effect if the user that is trying to log in has a matching
 email address *and* is a member of the specified group. In other words, members
-of the group with an email address ending in ``@privacyidea.org`` will still be
+of the group with an email address ending in ``@eduMFA.org`` will still be
 allowed to log in.
 
 .. note:: Keep in mind that changes in the LDAP directory may not be
-   immediately visible to privacyIDEA due to caching settings (see
+   immediately visible to eduMFA due to caching settings (see
    :ref:`ldap_resolver`).
 
 If the userinfo of the user that is trying to log in does not contain attributes
-``email`` or ``groups`` (due to a resolver misconfiguration, for example), privacyIDEA
+``email`` or ``groups`` (due to a resolver misconfiguration, for example), eduMFA
 throws an error and the request is aborted.
 
 
@@ -144,10 +144,10 @@ the request header key-value pairs.
 
 The ``Key`` specifies the request header key. It is case-sensitive.
 
-privacyIDEA uses the ``Comparator`` to check if the value of a header is equal or a substring
+eduMFA uses the ``Comparator`` to check if the value of a header is equal or a substring
 of the required value.
 
-.. note:: privacyIDEA raises an error if ``Key`` refers to an unknown request header.
+.. note:: eduMFA raises an error if ``Key`` refers to an unknown request header.
    If the header in question is missing, the policy can not get completely evaluated.
    Be aware that requests, that do not contain the header ``Key`` will always fail!
    Thus, if you are using uncommon headers you should
@@ -165,7 +165,7 @@ The ``Key`` is case sensitive.
 The environment contains information like the ``PATH_INFO`` which contains the name of the
 endpoint like ``/validate/check`` or ``/auth``.
 
-.. note:: privacyIDEA raises an error if ``Key`` refers to an unknown environment key.
+.. note:: eduMFA raises an error if ``Key`` refers to an unknown environment key.
    The log file then contains information about the available keys.
    The behaviour is similar to the extended conditions of HTTP Request Header.
 
@@ -188,8 +188,8 @@ The following comparators can be used in definitions of policy conditions:
 Error Handling
 ~~~~~~~~~~~~~~
 
-privacyIDEA's error handling when checking policy conditions is quite strict,
+eduMFA's error handling when checking policy conditions is quite strict,
 in order to prevent policy misconfiguration from going unnoticed. If
-privacyIDEA encounters a policy condition that evaluates neither to true nor
-false, but simply *invalid* due to a misconfiguration, privacyIDEA throws an
+eduMFA encounters a policy condition that evaluates neither to true nor
+false, but simply *invalid* due to a misconfiguration, eduMFA throws an
 error and the current request is aborted.

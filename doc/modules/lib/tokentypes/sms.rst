@@ -3,6 +3,6 @@
 SMS Token
 ~~~~~~~~~
 
-.. autoclass:: privacyidea.lib.tokens.smstoken.SmsTokenClass
+.. autoclass:: edumfa.lib.tokens.smstoken.SmsTokenClass
    :members:
    :undoc-members:

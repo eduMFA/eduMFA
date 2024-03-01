@@ -3,9 +3,9 @@
 SMTP server endpoints
 .....................
 
-.. automodule:: privacyidea.api.smtpserver
+.. automodule:: edumfa.api.smtpserver
 
-.. autoflask:: privacyidea.app:create_app()
+.. autoflask:: edumfa.app:create_app()
    :endpoints:
    :blueprints: smtpserver_blueprint
 

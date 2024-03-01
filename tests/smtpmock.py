@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 2016-01-20 Cornelius Kölbel <cornelius@privacyidea.org>
-           Support STARTTLS mock
-
 2015-01-30 Cornelius Kölbel <cornelius@privacyidea.org>
-           Change responses.py to be able to run with SMTP
-
 
 Original responses.py is:
 Copyright 2013 Dropbox, Inc.

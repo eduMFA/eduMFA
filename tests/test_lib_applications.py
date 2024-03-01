@@ -2,21 +2,21 @@
 This test file tests the applications definitions standalone
 lib/applications/*
 """
-from privacyidea.lib.error import ParameterError
+from edumfa.lib.error import ParameterError
 from .base import MyTestCase
-from privacyidea.lib.applications import MachineApplicationBase
-from privacyidea.lib.applications.ssh import (MachineApplication as
+from edumfa.lib.applications import MachineApplicationBase
+from edumfa.lib.applications.ssh import (MachineApplication as
                                               SSHApplication)
-from privacyidea.lib.applications.luks import (MachineApplication as
+from edumfa.lib.applications.luks import (MachineApplication as
                                                LUKSApplication)
-from privacyidea.lib.applications.offline import (MachineApplication as
+from edumfa.lib.applications.offline import (MachineApplication as
                                                   OfflineApplication,
                                                   REFILLTOKEN_LENGTH)
-from privacyidea.lib.applications import (get_auth_item,
+from edumfa.lib.applications import (get_auth_item,
                                           is_application_allow_bulk_call,
                                           get_application_types)
-from privacyidea.lib.token import init_token, get_tokens
-from privacyidea.lib.user import User
+from edumfa.lib.token import init_token, get_tokens
+from edumfa.lib.user import User
 import passlib.hash
 import mock
 
@@ -190,7 +190,7 @@ class BaseApplicationTestCase(MyTestCase):
 
     def test_03_allow_bulk_call(self):
         bulk = is_application_allow_bulk_call(
-            "privacyidea.lib.applications.base")
+            "edumfa.lib.applications.base")
         self.assertFalse(bulk)
 
     def test_04_get_application_types(self):

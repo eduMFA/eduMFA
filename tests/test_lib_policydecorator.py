@@ -9,10 +9,10 @@ DICT_FILE = "tests/testdata/dictionary"
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
 
-from privacyidea.lib.policy import (set_policy, delete_policy,
+from edumfa.lib.policy import (set_policy, delete_policy,
                                     PolicyClass, SCOPE,
                                     ACTION, ACTIONVALUE, LOGINMODE)
-from privacyidea.lib.policydecorators import (auth_otppin,
+from edumfa.lib.policydecorators import (auth_otppin,
                                               auth_user_does_not_exist,
                                               auth_user_passthru,
                                               auth_user_has_no_token,
@@ -20,20 +20,20 @@ from privacyidea.lib.policydecorators import (auth_otppin,
                                               challenge_response_allowed,
                                               auth_user_timelimit, auth_cache,
                                               auth_lastauth, reset_all_user_tokens)
-from privacyidea.lib.user import User
-from privacyidea.lib.resolver import save_resolver, delete_resolver
-from privacyidea.lib.realm import set_realm, delete_realm
-from privacyidea.lib.token import (init_token, remove_token, check_user_pass,
+from edumfa.lib.user import User
+from edumfa.lib.resolver import save_resolver, delete_resolver
+from edumfa.lib.realm import set_realm, delete_realm
+from edumfa.lib.token import (init_token, remove_token, check_user_pass,
                                    get_tokens)
-from privacyidea.lib.error import UserError, PolicyError
-from privacyidea.lib.radiusserver import add_radius
+from edumfa.lib.error import UserError, PolicyError
+from edumfa.lib.radiusserver import add_radius
 from flask import g
 import datetime
 from . import radiusmock
 import binascii
 import hashlib
-from privacyidea.models import AuthCache
-from privacyidea.lib.authcache import delete_from_cache, _hash_password
+from edumfa.models import AuthCache
+from edumfa.lib.authcache import delete_from_cache, _hash_password
 from datetime import timedelta
 
 
@@ -332,7 +332,7 @@ class LibPolicyTestCase(MyTestCase):
                                        check_otp=False):
             self.assertEqual(check_otp, False)
 
-        def check_webui_user_privacyidea(user_obj, password,
+        def check_webui_user_edumfa(user_obj, password,
                                          options=None, superuser_realms=None,
                                          check_otp=False):
             self.assertEqual(check_otp, True)
@@ -351,7 +351,7 @@ class LibPolicyTestCase(MyTestCase):
 
         set_policy(name="pol2",
                    scope=SCOPE.WEBUI,
-                   action="{0!s}={1!s}".format(ACTION.LOGINMODE, LOGINMODE.PRIVACYIDEA))
+                   action="{0!s}={1!s}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA))
         g = FakeFlaskG()
         P = PolicyClass()
         g.policy_object = P
@@ -359,7 +359,7 @@ class LibPolicyTestCase(MyTestCase):
         options = {"g": g}
 
         # Policy is set, the function is called with check_otp=True
-        login_mode(check_webui_user_privacyidea, user_obj, "",
+        login_mode(check_webui_user_edumfa, user_obj, "",
                    options=options, superuser_realms="", check_otp=False)
 
         # Set policy, so that the user is not allowed to login at all
@@ -374,7 +374,7 @@ class LibPolicyTestCase(MyTestCase):
 
         # Policy is set. Trying to login raises a policy error
         self.assertRaises(PolicyError, login_mode,
-                          check_webui_user_privacyidea, user_obj, "",
+                          check_webui_user_edumfa, user_obj, "",
                           options=options, superuser_realms="",
                           check_otp=False)
         delete_policy("pol2")

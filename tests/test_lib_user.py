@@ -9,16 +9,16 @@ import logging
 from testfixtures import log_capture
 
 from .base import MyTestCase
-from privacyidea.lib.resolver import (save_resolver, delete_resolver)
-from privacyidea.lib.config import set_privacyidea_config
-from privacyidea.lib.realm import (set_realm, delete_realm)
-from privacyidea.lib.user import (User, create_user,
+from edumfa.lib.resolver import (save_resolver, delete_resolver)
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.realm import (set_realm, delete_realm)
+from edumfa.lib.user import (User, create_user,
                                   get_username,
                                   get_user_list,
                                   split_user,
                                   get_user_from_param,
                                   UserError)
-from privacyidea.lib.user import log as user_log
+from edumfa.lib.user import log as user_log
 from . import ldap3mock
 from .test_lib_resolver import LDAPDirectory_small
 
@@ -184,7 +184,7 @@ class UserTestCase(MyTestCase):
     @log_capture(level=logging.DEBUG)
     def test_09_get_user_from_param(self, capture):
         # enable splitAtSign
-        set_privacyidea_config("splitAtSign", True)
+        set_edumfa_config("splitAtSign", True)
         user = get_user_from_param({"user": "cornelius"})
         self.assertTrue(user.realm == self.realm1, user)
         self.assertTrue(user.resolver == self.resolvername1, user)
@@ -217,7 +217,7 @@ class UserTestCase(MyTestCase):
         self.assertEqual("{0!s}".format(user), "<cornelius.resolver1@realm2>")
 
         # test with splitAtSign set to False
-        set_privacyidea_config("splitAtSign", False)
+        set_edumfa_config("splitAtSign", False)
 
         # don't split at @, realm will be default realm
         param = {"user": "cornelius@realm2"}
@@ -257,7 +257,7 @@ class UserTestCase(MyTestCase):
         user_log.setLevel(logging.INFO)
 
         # reset splitAtSign setting
-        set_privacyidea_config("splitAtSign", True)
+        set_edumfa_config("splitAtSign", True)
 
     def test_10_check_user_password(self):
         (added, failed) = set_realm("passwordrealm",

@@ -3,26 +3,26 @@ This test file tests the lib.tokens.certificatetoken
 """
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
-from privacyidea.models import Token
-from privacyidea.lib.caconnector import save_caconnector
-from privacyidea.lib.token import get_tokens, remove_token
-from privacyidea.lib.error import ParameterError, privacyIDEAError
-from privacyidea.lib.utils import int_to_hex
-from privacyidea.lib.tokens.certificatetoken import (parse_chainfile, verify_certificate_path, ACTION,
+from edumfa.models import Token
+from edumfa.lib.caconnector import save_caconnector
+from edumfa.lib.token import get_tokens, remove_token
+from edumfa.lib.error import ParameterError, eduMFAError
+from edumfa.lib.utils import int_to_hex
+from edumfa.lib.tokens.certificatetoken import (parse_chainfile, verify_certificate_path, ACTION,
                                                      CertificateTokenClass)
-from privacyidea.lib.policy import set_policy, delete_policy, PolicyClass, SCOPE
+from edumfa.lib.policy import set_policy, delete_policy, PolicyClass, SCOPE
 import os
 import unittest
 import mock
 from OpenSSL import crypto
-from privacyidea.lib.caconnectors.baseca import AvailableCAConnectors
-from privacyidea.lib.caconnectors.msca import MSCAConnector
+from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
+from edumfa.lib.caconnectors.msca import MSCAConnector
 from .mscamock import (MyTemplateReply, MyCAReply, MyCSRReply,
                        MyCertReply, MyCertificateReply, MyCSRStatusReply, CAServiceMock)
-from privacyidea.lib.caconnectors.msca import ATTR as MS_ATTR
-from privacyidea.lib.token import init_token
-from privacyidea.lib.tokenclass import ROLLOUTSTATE
-from privacyidea.lib.user import User
+from edumfa.lib.caconnectors.msca import ATTR as MS_ATTR
+from edumfa.lib.token import init_token
+from edumfa.lib.tokenclass import ROLLOUTSTATE
+from edumfa.lib.user import User
 
 CERT = """-----BEGIN CERTIFICATE-----
 MIIGXDCCBUSgAwIBAgITYwAAAA27DqXl0fVdOAAAAAAADTANBgkqhkiG9w0BAQsF
@@ -66,20 +66,26 @@ CACERT = "cacert.pem"
 OPENSSLCNF = "openssl.cnf"
 WORKINGDIR = "tests/testdata/ca"
 REQUEST = """-----BEGIN CERTIFICATE REQUEST-----
-MIICmTCCAYECAQAwVDELMAkGA1UEBhMCREUxDzANBgNVBAgMBkhlc3NlbjEUMBIG
-A1UECgwLcHJpdmFjeWlkZWExHjAcBgNVBAMMFXJlcXVlc3Rlci5sb2NhbGRvbWFp
-bjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAM2+FE/6zgE/QiIbHZyv
-3ZLSf9tstz45Q0NrEwPxBfQHdLx2aSgLrxmO1/zjzcZY8sp/CG1T/AcCRCTGtDRM
-jAT+Mw5A4iC6AnNa9/VPY27MxrbfVB03OX1RNiZfvdw/qItroq62ndYh599BuHoo
-KmhIyqgt7eHpRl5acm20hDiHkf2UEQsohMbCLyr7Afk2egl10TOIPHNBW8i/lIlw
-ofDAuS5QUx6xF2Rp9C2B4KkNDjLpulWKhfEbb0l5tH+Iww0+VIibPR84jATz7mpj
-K/XG27SDqsR4QTp9S+HIPnHKG2FZ6sbEyjJeyem/EinmxsNj/qBV2nrxYJhNJu36
-cC0CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IBAQB7uJC6I1By0T29IZ0B1ue5YNxM
-NDPbqCytRPMQ9awJ6niMMIQRS1YPhSFPWyEWrGKWAUvbn/lV0XHH7L/tvHg6HbC0
-AjLc8qPH4Xqkb1WYV1GVJYr5qyEFS9QLZQLQDC2wk018B40MSwZWtsv14832mPu8
-gP5WP+mj9LRgWCP1MdAR9pcNGd9pZMcCHQLxT76mc/eol4kb/6/U6yxBmzaff8eB
-oysLynYXZkm0wFudTV04K0aKlMJTp/G96sJOtw1yqrkZSe0rNVcDs9vo+HAoMWO/
-XZp8nprZvJuk6/QIRpadjRkv4NElZ2oNu6a8mtaO38xxnfQm4FEMbm5p+4tM
+MIIDlTCCAf0CAQAwUDELMAkGA1UEBhMCREUxEDAOBgNVBAgMB0JhdmFyaWExDzAN
+BgNVBAoMBmVkdU1GQTEeMBwGA1UEAwwVcmVxdWVzdGVyLmxvY2FsZG9tYWluMIIB
+ojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAyRYIVX4twFuATjXmWrM4fn8S
+DW8ZHf4/K3UgKP2ZPSgWGFkHX7Wz1CR84k1aXvTaLsx4bzjwZjpbGgVjIDU/O+we
+6PEGXgIuwCwdU0uzL+FlmZD0CWdoFze8m99u4MZULo0o41sfMDnKz1PbEDCvzLoV
+aDP97WC/Vg0dNPZDISeQm5If3olQvNKkdQDXqE/Kgfn5lueB61yWh1N/SeoMmYcM
+y0Ud0OdgI0xt/S3gwKCH4YPPdnEh2jEojE2IKTdqx9w+qWaje6S1ikva60xd+5Uy
+MyagEz1rro+tlT6d8dr3cmc+3rncDOtXyoU8zZFyMbXAgUFwjEzqv9ppdNFi/uTO
+BvwjR+85JDaFKdvGyBTP4yhXynal7nXK2GiN9yYo+1qtJQvUtMXb2CvOQaHbf9y+
+UBsnT9HSXddvj2Kq8iPj3R5qtW2xq6UB3w0TRNDXUytWF9W9/Z6pox9VEx9sVs+T
+4NDQz4jamq8eZx2zA8RbOQ/W9pS/K2LEyb+6SWofAgMBAAGgADANBgkqhkiG9w0B
+AQsFAAOCAYEAUVC5zDO0qPHs0mgem+PCb/64Vd80JeRD8iwhWAPCb3KFgXHDO9sX
+YZhWklo/Y+rAy+D2VBvQKH7itUJnodFDfFfc0Lkm4ZBRrlMXb5uFe0M3pvt2LkXH
+6BSINCk3GX31Uk37fnbpRDzkeG8vGVQ4f5n/+mrA4ZfyZECFd0gH6/qIGAZFNy7X
+EvmSm1k+X8Wci+npLS2O3IyxdcY/dnznZzC3PvDVAdzzWdPEIHmJaWDRWMek+oP6
+vLdMaYMsi2r0hv6yJe0xUvLAjXKTQjfnH3oKXM6a6RmSRFU9lySzNfZlEyRpiC60
+OJC18Ett63+gYuVikIGrgjl8ZiwPECRC0bBza0HN64SCUsDm5U28VtOFOvSB4djM
+QqACwhT5aKU1nddY9iUz7rCrRRYh6v+UlaTPImb/5YIPHeHkVK39/pYbn3Hh7oOf
+cq5y3tVeY7n21HpHeTwnwB3sXxVjWexfTGqN5fh5PKnRVg/LW+jRLOn//uWLRe/P
+cUWD4Ib9FGVI
 -----END CERTIFICATE REQUEST-----"""
 
 BOGUS_ATTESTATION = """-----BEGIN CERTIFICATE-----
@@ -376,11 +382,11 @@ class CertificateTokenTestCase(MyTestCase):
         # At each testrun, the certificate might get another serial number!
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
         self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Hessen"
-                         "/O=privacyidea/CN=CA001'>")
+                         "<X509Name object '/C=DE/ST=Bavaria"
+                         "/O=eduMFA/CN=eduMFA Test-CA'>")
         self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/C=DE/ST=Hessen"
-                         "/O=privacyidea/CN=requester.localdomain'>")
+                         "<X509Name object '/C=DE/ST=Bavaria"
+                         "/O=eduMFA/CN=requester.localdomain'>")
 
         # Test, if the certificate is also completely stored in the tokeninfo
         # and if we can retrieve it from the tokeninfo
@@ -388,11 +394,11 @@ class CertificateTokenTestCase(MyTestCase):
         certificate = token.get_tokeninfo("certificate")
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
         self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Hessen"
-                         "/O=privacyidea/CN=CA001'>")
+                         "<X509Name object '/C=DE/ST=Bavaria"
+                         "/O=eduMFA/CN=eduMFA Test-CA'>")
         self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/C=DE/ST=Hessen"
-                         "/O=privacyidea/CN=requester.localdomain'>")
+                         "<X509Name object '/C=DE/ST=Bavaria"
+                         "/O=eduMFA/CN=requester.localdomain'>")
         remove_token(self.serial2)
 
     def test_02a_fail_request_with_attestation(self):
@@ -412,7 +418,7 @@ class CertificateTokenTestCase(MyTestCase):
         token = CertificateTokenClass(db_token)
 
         # A cert request will fail, since the attestation certificate does not match
-        self.assertRaises(privacyIDEAError,
+        self.assertRaises(eduMFAError,
                           token.update,
                           {"ca": "localCA",
                            "attestation": BOGUS_ATTESTATION,
@@ -449,8 +455,8 @@ class CertificateTokenTestCase(MyTestCase):
         # At each testrun, the certificate might get another serial number!
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
         self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Hessen"
-                         "/O=privacyidea/CN=CA001'>")
+                         "<X509Name object '/C=DE/ST=Bavaria"
+                         "/O=eduMFA/CN=eduMFA Test-CA'>")
         self.assertEqual("{0!r}".format(x509obj.get_subject()),
                          "<X509Name object '/CN=cn=cornelius'>")
         remove_token(self.serial2)
@@ -497,8 +503,8 @@ class CertificateTokenTestCase(MyTestCase):
         # At each testrun, the certificate might get another serial number!
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
         self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Hessen"
-                         "/O=privacyidea/CN=CA001'>")
+                         "<X509Name object '/C=DE/ST=Bavaria"
+                         "/O=eduMFA/CN=eduMFA Test-CA'>")
         # No Email Address in the subject!
         subject = x509obj.get_subject()
         self.assertEqual("{0!s}".format(subject), "<X509Name object '/CN=cornelius'>")
@@ -509,8 +515,8 @@ class CertificateTokenTestCase(MyTestCase):
         certificate = token.get_tokeninfo("certificate")
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
         self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Hessen"
-                         "/O=privacyidea/CN=CA001'>")
+                         "<X509Name object '/C=DE/ST=Bavaria"
+                         "/O=eduMFA/CN=eduMFA Test-CA'>")
         self.assertEqual("{0!r}".format(x509obj.get_subject()), "<X509Name object '/CN=cornelius'>")
 
         privatekey = token.get_tokeninfo("privatekey")
@@ -567,13 +573,13 @@ class CertificateTokenTestCase(MyTestCase):
         # If we have no policy, we revert to default
         g.policy_object = PolicyClass()
         p = CertificateTokenClass.get_default_settings(g, params)
-        self.assertEqual(["/etc/privacyidea/trusted_attestation_ca"],
+        self.assertEqual(["/etc/edumfa/trusted_attestation_ca"],
                          p.get(ACTION.TRUSTED_CA_PATH))
 
 
 class MSCACertTestCase(MyTestCase):
 
-    @unittest.skipUnless("privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
                          "Can not test MSCA. grpc module seems not available.")
     def test_00_setup(self):
         self.setUp_user_realms()
@@ -583,7 +589,7 @@ class MSCACertTestCase(MyTestCase):
         r = save_caconnector(CONF)
         self.assertEqual(r, 1)
 
-    @unittest.skipUnless("privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
                          "Can not test MSCA. grpc module seems not available.")
     def test_01_msca_certificate_pending_and_enrolled(self):
         with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
@@ -622,7 +628,7 @@ class MSCACertTestCase(MyTestCase):
             self.assertEqual(-1, r)
             self.assertEqual(ROLLOUTSTATE.ENROLLED, cert_tok.rollout_state)
 
-    @unittest.skipUnless("privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
                          "Can not test MSCA. grpc module seems not available.")
     def test_02_msca_certificate_pending_and_denied(self):
         with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
@@ -661,9 +667,9 @@ class MSCACertTestCase(MyTestCase):
             self.assertEqual(-1, r)
             self.assertEqual(ROLLOUTSTATE.DENIED, cert_tok.rollout_state)
 
-    @unittest.skipUnless("privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
                          "Can not test MSCA. grpc module seems not available.")
-    def test_03_msca_certificate_pending_but_cert_broken_in_privacyIDEA(self):
+    def test_03_msca_certificate_pending_but_cert_broken_in_edumfa(self):
         with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
             mock_conncect_worker.return_value = CAServiceMock(CONF,
