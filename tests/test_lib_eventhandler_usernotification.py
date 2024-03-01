@@ -1122,6 +1122,36 @@ class UserNotificationTestCase(MyTestCase):
         # The user has not two tokens!
         self.assertEqual(r, False)
 
+        r = uhandler.check_condition(
+            {"g": {},
+             "handler_def": {"conditions": {CONDITION.USER_TOKEN_NUMBER: "<10"}},
+             "request": req,
+             "response": resp
+             }
+        )
+        # The user has less than ten tokens
+        self.assertEqual(r, True)
+
+        r = uhandler.check_condition(
+            {"g": {},
+             "handler_def": {"conditions": {CONDITION.USER_TOKEN_NUMBER: ">=1"}},
+             "request": req,
+             "response": resp
+             }
+        )
+        # The user has more than or equal one token
+        self.assertEqual(r, True)
+
+        r = uhandler.check_condition(
+            {"g": {},
+             "handler_def": {"conditions": {CONDITION.USER_TOKEN_NUMBER: "<1"}},
+             "request": req,
+             "response": resp
+             }
+        )
+        # The user does not have less than one token!
+        self.assertEqual(r, False)
+
         remove_token("oath1234")
 
     def test_17_check_conditions_otp_counter(self):
