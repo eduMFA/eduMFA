@@ -103,6 +103,7 @@ Actions:
         --set-description="new description"
         --set-tokeninfo-key=<key>
         --set-tokeninfo-value=<value>    
+        --limit=<value>
     
 .. note:: If you fail to redirect the output of this command at the commandline
    to e.g. a file with a UnicodeEncodeError, you need to set the environment
@@ -464,6 +465,9 @@ def export_user_data(token_list, attributes=None):
                 help='In case of exporting found tokens to CSV the seed is written base32 encoded instead of hex.')
 @manager.option('--chunksize', default=None,
                 help='Read tokens from the database in smaller chunks to perform operations.')
+@manager.option('--limit', default=None,
+                help='If an action which writes changes to any token is given, then only apply these changes if ' 
+                     'less than or equal LIMIT tokens are affected.')
 def find(last_auth, assigned, active, tokeninfo_key, tokeninfo_value,
          tokeninfo_value_greater_than, tokeninfo_value_less_than,
          tokeninfo_value_after, tokeninfo_value_before,
@@ -471,7 +475,7 @@ def find(last_auth, assigned, active, tokeninfo_key, tokeninfo_value,
          set_tokeninfo_key, set_tokeninfo_value, sum_tokens, tokenrealms, csv,
          chunksize, attributes, b32, has_not_tokeninfo_key, has_tokeninfo_key,
          tokenattribute, tokenattribute_value, tokenattribute_value_greater_than,
-         tokenattribute_value_less_than, yaml):
+         tokenattribute_value_less_than, yaml, limit):
     """
     finds all tokens which match the conditions
     """
@@ -578,36 +582,40 @@ def find(last_auth, assigned, active, tokeninfo_key, tokeninfo_value,
                                  "tokens again:\n\n\t{0!s}\n\n".format(key))
                 print("{0!s}".format(soup))
         else:
-            for token_obj in tlist:
-                try:
-                    if action == "tokenrealms":
-                        trealms = [r.strip() for r in tokenrealms.split(",") if r]
-                        token_obj.set_realms(trealms)
-                        print("Setting realms of token {0!s} to {1!s}.".format(token_obj.token.serial, trealms))
-                    if action == "disable":
-                        enable_token(serial=token_obj.token.serial, enable=False)
-                        print("Disabling token {0!s}".format(token_obj.token.serial))
-                    elif action == "delete":
-                        remove_token(serial=token_obj.token.serial)
-                        print("Deleting token {0!s}".format(token_obj.token.serial))
-                    elif action == "unassign":
-                        unassign_token(serial=token_obj.token.serial)
-                        print("Unassigning token {0!s}".format(token_obj.token.serial))
-                    elif action == "mark":
-                        if set_description:
-                            print("Setting description for token {0!s}: {1!s}".format(
-                                token_obj.token.serial, set_description))
-                            token_obj.set_description(set_description)
-                            token_obj.save()
-                        if set_tokeninfo_value and set_tokeninfo_key:
-                            print("Setting tokeninfo for token {0!s}: {1!s}={2!s}".format(
-                                token_obj.token.serial, set_tokeninfo_key, set_tokeninfo_value))
-                            token_obj.add_tokeninfo(set_tokeninfo_key, set_tokeninfo_value)
-                            token_obj.save()
-                except Exception as exx:
-                    print("Failed to process token {0}.".format(
-                        token_obj.token.serial))
-                    print("{0}".format(exx))
+            if limit is not None and int(limit) < len(tlist):
+                print("{0!s} tokens would be affected of given action \"{1!s}\", but limit was {2!s}. Aborting the action!".format(
+                    len(tlist), action, limit))
+            else:
+                for token_obj in tlist:
+                    try:
+                        if action == "tokenrealms":
+                            trealms = [r.strip() for r in tokenrealms.split(",") if r]
+                            token_obj.set_realms(trealms)
+                            print("Setting realms of token {0!s} to {1!s}.".format(token_obj.token.serial, trealms))
+                        if action == "disable":
+                            enable_token(serial=token_obj.token.serial, enable=False)
+                            print("Disabling token {0!s}".format(token_obj.token.serial))
+                        elif action == "delete":
+                            remove_token(serial=token_obj.token.serial)
+                            print("Deleting token {0!s}".format(token_obj.token.serial))
+                        elif action == "unassign":
+                            unassign_token(serial=token_obj.token.serial)
+                            print("Unassigning token {0!s}".format(token_obj.token.serial))
+                        elif action == "mark":
+                            if set_description:
+                                print("Setting description for token {0!s}: {1!s}".format(
+                                    token_obj.token.serial, set_description))
+                                token_obj.set_description(set_description)
+                                token_obj.save()
+                            if set_tokeninfo_value and set_tokeninfo_key:
+                                print("Setting tokeninfo for token {0!s}: {1!s}={2!s}".format(
+                                    token_obj.token.serial, set_tokeninfo_key, set_tokeninfo_value))
+                                token_obj.add_tokeninfo(set_tokeninfo_key, set_tokeninfo_value)
+                                token_obj.save()
+                    except Exception as exx:
+                        print("Failed to process token {0}.".format(
+                            token_obj.token.serial))
+                        print("{0}".format(exx))
         del tlist
 
 
