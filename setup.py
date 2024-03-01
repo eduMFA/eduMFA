@@ -4,8 +4,7 @@ import os
 import stat
 import sys
 
-#VERSION = "2.1dev4"
-VERSION = "3.9.2"
+VERSION = "1.0.0"
 
 # Taken from kennethreitz/requests/setup.py
 package_directory = os.path.realpath(os.path.dirname(__file__))
@@ -94,8 +93,7 @@ def get_scripts(dir):
 setup(
     name='edumfa',
     version=VERSION,
-    description='eduMFA: identity, multifactor authentication (OTP), '
-                'authorization, audit',
+    description='eduMFA: identity, multifactor authentication (OTP), authorization, audit',
     author='edumfa.io',
     license='AGPLv3',
     author_email='edumfa@listserv.dfn.de',
