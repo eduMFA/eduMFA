@@ -21,7 +21,7 @@ Different upgrade processes
 
 Depending on the way eduMFA was installed, there are different recommended update procedures.
 The following section describes the process for pip installations.
-Instructions for packaged versions on RHEL and Ubuntu are found in :ref:`upgrade_packaged`.
+Instructions for packaged versions on Ubuntu are found in :ref:`upgrade_packaged`.
 
 Upgrading a pip installation
 ............................
@@ -117,15 +117,3 @@ using::
     of obsolete packages after upgrading which may be removed with::
 
        apt autoremove
-
-
-CentOS upgrade
-^^^^^^^^^^^^^^
-
-For a Red Hat Enterprise Linux (RHEL) installation run::
-
- yum update
-
-to upgrade.
-
-.. _READ_BEFORE_UPDATE: https://github.com/eduMFA/eduMFA/blob/master/READ_BEFORE_UPDATE.md

@@ -55,7 +55,7 @@ timestamp=$(date +"%y-%m-%d")
 diag_file="/tmp/${timestamp}_$(basename "$diag_info").tar.gz"
 
 case $OS in
-	centos | rhel | debian | ubuntu)
+	debian | ubuntu)
 	;;
 	*)
 		echo  "Your operating system $OS is not supported!"
@@ -111,13 +111,7 @@ edumfa_versions() {
 	log_edumfa_config "Installed packages"
 	log_edumfa_config "------------------"
 	FileName=$(mktemp)
-	if [[ "${OS}" == "centos" || "${OS}" == "rhel" ]]; then
-		# In case it is CentOS/RHEL
-		rpm -qa | sort >> "$FileName"
-	elif [[ "${OS}" == "ubuntu" || "${OS}" == "debian" ]]; then
-		# In case it is Ubuntu/Debian
-		dpkg -l | sort >> "$FileName";
-	fi
+	dpkg -l | sort >> "$FileName";
 	# save all installed packages
 	cat "$FileName" >> "$edumfa_config"
 	rm -f "$FileName"
@@ -161,21 +155,12 @@ FreeRADIUS_config() {
 	log
 	log "SECTION: FreeRADIUS Configurations"
 	log "=================================="
-	if [[ "${OS}" == "centos" || "${OS}" == "rhel" ]]; then
-		if (rpm -qa | grep freeradius > /dev/null); then
-			ls -R /etc/raddb  >> "$tempfile";
-		else
-			log
-			log "FreeRADIUS is not installed"
-		fi
-	elif [[ "${OS}" == "ubuntu" || "${OS}" == "debian" ]]; then
-		if (dpkg -l | grep freeradius > /dev/null); then
-			ls -R /etc//freeradius/3.0 >> "$tempfile";
-		else
-			log
-			log "FreeRADIUS is not installed"
-		fi
-	fi
+	if (dpkg -l | grep freeradius > /dev/null); then
+  	ls -R /etc//freeradius/3.0 >> "$tempfile";
+  else
+  	log
+  	log "FreeRADIUS is not installed"
+  fi
 }
 
 system_status() {
@@ -191,50 +176,22 @@ system_status() {
 	df -h >> "$tempfile"
 }
 
-centos_auditlog() {
-	if [[ "$(getenforce)" == "Enforcing" ]]; then
-		log
-		log "SECTION: centOS Auditlog"
-		log "========================"
-		grep "denied" /var/log/audit/audit.log  >> "$tempfile"
-	fi
-}
-
 apache_log() {
-	if [[ "${OS}" == "centos" || "${OS}" == "rhel" ]]; then
-		if [ -f /var/log/httpd/ssl_error_log ] && [ -f /var/log/httpd/ssl_access_log ]; then
-			log
-			log "SECTION: httpd SSL_error_log"
-			log "============================"
-			tail -100 /var/log/httpd/ssl_error_log  >> "$tempfile"
-			log
-			log "SECTION: httpd SSL_error_log"
-			log "============================"
-			tail -100 /var/log/httpd/ssl_error_log  >> "$tempfile"
-		fi
-		if [ -f /etc/httpd/conf/httpd.conf ] && [ -f /etc/httpd/conf.d/edumfa.conf ]; then
-			log
-			log "SECTION: apache configuration"
-			log "============================="
-			tail -n +1 /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/edumfa.conf >>  "$tempfile"
-		fi
-	elif [[ "${OS}" == "ubuntu" || "${OS}" == "debian" ]]; then
-		if [ -f /var/log/apache2/error.log ] && [ -f /var/log/apache2/ssl_access.log ]; then
-			log
-			log "SECTION: apache2 error_log"
-			log "=========================="
-			tail -100 /var/log/apache2/error.log >> "$tempfile"
-			log
-			log "SECTION: apache2 SSL_access_log"
-			log "==============================="
-			tail -100 /var/log/apache2/ssl_access.log >> "$tempfile"
-		fi
-		if [ -f /etc/apache2/apache2.conf ] && [ -d /etc/apache2/sites-enabled ]; then
-			log
-			log "SECTION: apache configuration"
-			log "============================="
-			tail -n +1 /etc/apache2/apache2.conf /etc/apache2/sites-enabled/* >> "$tempfile"
-		fi
+	if [ -f /var/log/apache2/error.log ] && [ -f /var/log/apache2/ssl_access.log ]; then
+		log
+		log "SECTION: apache2 error_log"
+		log "=========================="
+		tail -100 /var/log/apache2/error.log >> "$tempfile"
+		log
+		log "SECTION: apache2 SSL_access_log"
+		log "==============================="
+		tail -100 /var/log/apache2/ssl_access.log >> "$tempfile"
+	fi
+	if [ -f /etc/apache2/apache2.conf ] && [ -d /etc/apache2/sites-enabled ]; then
+		log
+		log "SECTION: apache configuration"
+		log "============================="
+		tail -n +1 /etc/apache2/apache2.conf /etc/apache2/sites-enabled/* >> "$tempfile"
 	fi
 }
 
@@ -269,9 +226,6 @@ edumfa_config
 server_config
 FreeRADIUS_config
 system_status
-if [[ "${OS}" == "centos" ]]; then
-	centos_auditlog
-fi
 apache_log
 ngnix_log
 edumfa_logfile

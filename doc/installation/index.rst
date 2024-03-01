@@ -17,7 +17,6 @@ If you want to upgrade please read :ref:`upgrade`.
 
    pip
    ubuntu
-   centos
    upgrade
    system/inifile
    system/logging
