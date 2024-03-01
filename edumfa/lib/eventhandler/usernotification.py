@@ -382,10 +382,12 @@ class UserNotificationEventHandler(BaseEventHandler):
             googleurl_img = content.get("detail", {}).get("googleurl",
                                                           {}).get("img")
             tokentype = None
+            tokendescription = None
             if serial:
                 tokens = get_tokens(serial=serial)
                 if tokens:
                     tokentype = tokens[0].get_tokentype()
+                    tokendescription = tokens[0].token.description
             else:
                 token_objects = get_tokens(user=tokenowner)
                 serial = ','.join([tok.get_serial() for tok in token_objects])
@@ -399,6 +401,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                                    tokenowner=tokenowner,
                                    serial=serial,
                                    tokentype=tokentype,
+                                   description=tokendescription,
                                    registrationcode=registrationcode,
                                    escape_html=action.lower() == "sendmail" and
                                                handler_options.get("mimetype", "").lower() == "html")

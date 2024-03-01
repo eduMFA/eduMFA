@@ -1334,6 +1334,7 @@ def create_tag_dict(logged_in_user=None,
                     serial=None,
                     tokenowner=None,
                     tokentype=None,
+                    description=None,
                     recipient=None,
                     registrationcode=None,
                     googleurl_value=None,
@@ -1351,6 +1352,7 @@ def create_tag_dict(logged_in_user=None,
     :param tokenowner: The owner of the token
     :type tokenowner: user object
     :param tokentype: The type of the token
+    :param description: The description of the token
     :param recipient: The recipient
     :type recipient: dictionary with "givenname" and "surname"
     :param registrationcode: The registration code of a token
@@ -1375,6 +1377,7 @@ def create_tag_dict(logged_in_user=None,
                 username=tokenowner.login if tokenowner else "",
                 userrealm=tokenowner.realm if tokenowner else "",
                 tokentype=tokentype,
+                description=description,
                 registrationcode=registrationcode,
                 recipient_givenname=recipient.get("givenname"),
                 recipient_surname=recipient.get("surname"),
