@@ -10,8 +10,7 @@ on:
   push:
   pull_request:
     branches:
-      - 'master'
-      - 'branch-*'
+      - "*"
 
 jobs:
   pre_check:
