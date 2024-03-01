@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: docker.io/mariadb:lts-jammy
+    restart: always
+    networks:
+       - edumfa-net
+    volumes:
+      - edumfa-data:/var/lib/mysql:rw
+    environment:
+      - MARIADB_PORT_NUMBER=3306
+      - MARIADB_DATABASE=edumfa
+      - MARIADB_USER=edumfa
+      - MARIADB_PASSWORD=pass
+      - MARIADB_ROOT_PASSWORD=pass
+
+  edumfa:
+    image: edumfa:latest
+    restart: always
+    networks:
+       - edumfa-net
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docker-example/edumfa-setup.sh:/opt/edumfa/user-scripts/01-setup.sh:ro
+      - ./docker-example/edumfa-config.conf:/opt/edumfa/policy.conf:ro
+      - ./docker-example/edumfa.cfg:/opt/edumfa/edumfa.cfg:ro
+      - ./docker-example/config:/etc/edumfa/:rw
+    environment:
+      - EDUMFA_CONFIGFILE=/opt/edumfa/edumfa.cfg
+      - EDUMFA_ADMIN_USER=admin
+      - EDUMFA_ADMIN_PASS=Passwort123
+    depends_on:
+      - mariadb
+
+networks:
+  edumfa-net:
+    name: edumfa-network
+    driver: bridge
+
+volumes:
+  edumfa-data:
+    name: edumfa-data
+    driver: local

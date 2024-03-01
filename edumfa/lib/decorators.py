@@ -88,8 +88,15 @@ class check_user_or_serial_in_request(object):
         self.request = request
 
     def __call__(self, func):
+        from edumfa.lib.tokens.webauthntoken import WebAuthnTokenClass
         @functools.wraps(func)
         def check_user_or_serial_in_request_wrapper(*args, **kwds):
+            if self.request.full_path.startswith("/validate/triggerchallenge") or self.request.full_path.startswith("/validate/check"):
+                type = self.request.all_data.get("type", "")
+                if type and type == WebAuthnTokenClass.get_class_type():
+                    f_result = func(*args, **kwds)
+                    return f_result
+
             user = self.request.all_data.get("user", "").strip()
             serial = self.request.all_data.get("serial", "").strip()
             if not serial and not user:

@@ -85,7 +85,7 @@ This file is tested in tests/test_lib_tokens_webauthn.py
 
 # Default client extensions
 #
-DEFAULT_CLIENT_EXTENSIONS = {'appid': None}
+DEFAULT_CLIENT_EXTENSIONS = {'appid': None, 'credProps': {'rk': None} }
 
 # Default authenticator extensions
 #
@@ -300,6 +300,43 @@ TRANSPORTS = (
     TRANSPORT.INTERNAL,
 )
 
+class RESIDENT_KEY_LEVEL(object):
+    """
+    The different resident key levels
+    """
+    DISCOURAGED = 'discouraged'
+    REQUIRED = 'required'
+    PREFERRED = 'preferred'
+
+RESIDENT_KEY_LEVELS = (
+    RESIDENT_KEY_LEVEL.DISCOURAGED,
+    RESIDENT_KEY_LEVEL.REQUIRED,
+    RESIDENT_KEY_LEVEL.PREFERRED
+)
+
+class USERNAMELESS_AUTHN(object):
+    """
+    Whether to allow username-less authentication.
+    """
+    ENABLED = True
+    DISABLED = False
+
+USERNAMELESS_AUTHNS = (
+    USERNAMELESS_AUTHN.ENABLED,
+    USERNAMELESS_AUTHN.DISABLED
+)
+
+class USERNAMELESS_REALM_POLICY(object):
+    """
+    Whether to enable realm-specific policies in username-less authentication scenarios.
+    """
+    ENABLED = True
+    DISABLED = False
+
+USERNAMELESS_REALM_POLICYS = (
+    USERNAMELESS_REALM_POLICY.ENABLED,
+    USERNAMELESS_REALM_POLICY.DISABLED
+)
 
 class COSEKeyException(Exception):
     """
@@ -387,7 +424,7 @@ class AuthenticatorDataFlags(object):
     @property
     def extension_data_included(self):
         """
-        :return: Whether the authenticator respone included extension data.
+        :return: Whether the authenticator response included extension data.
         :rtype: bool
         """
 
@@ -414,7 +451,8 @@ class WebAuthnMakeCredentialOptions(object):
                  authenticator_attachment=None,
                  authenticator_selection_list=None,
                  location=None,
-                 credential_ids=None):
+                 credential_ids=None,
+                 resident_key=None):
         """
         Create a new WebAuthnMakeCredentialOptions object.
 
@@ -448,6 +486,8 @@ class WebAuthnMakeCredentialOptions(object):
         :type location: bool
         :param credential_ids: A list of ids that are already enrolled to the user.
         :type credential_ids: list
+        :param resident_key: The resident key level to ask for.
+        :type resident_key: basestring
         :return: A WebAuthnMakeCredentialOptions object.
         :rtype: WebAuthnMakeCredentialOptions
         """
@@ -487,6 +527,12 @@ class WebAuthnMakeCredentialOptions(object):
                 raise ValueError(
                     'authenticator_attachment must be one of {0!s}'.format(', '.join(AUTHENTICATOR_ATTACHMENT_TYPES)))
         self.authenticator_attachment = authenticator_attachment
+
+        if resident_key is not None:
+            resident_key = str(resident_key).lower()
+            if resident_key not in RESIDENT_KEY_LEVELS:
+                raise ValueError('resident_key must be one of {0!s}'.format(', '.join(RESIDENT_KEY_LEVELS)))
+        self.resident_key = resident_key
 
         if int(timeout) < 1:
             raise ValueError('timeout must be a positive integer.')
@@ -533,6 +579,9 @@ class WebAuthnMakeCredentialOptions(object):
         if self.authenticator_attachment is not None:
             registration_dict['authenticatorSelection']['authenticatorAttachment'] = self.authenticator_attachment
 
+        if self.resident_key is not None:
+            registration_dict['authenticatorSelection']['residentKey'] = self.resident_key
+
         if self.icon_url is not None:
             registration_dict['user']['icon'] = self.icon_url
 
@@ -564,20 +613,26 @@ class WebAuthnAssertionOptions(object):
                  webauthn_user,
                  transports,
                  user_verification_requirement,
-                 timeout):
+                 timeout,
+                 is_usernameless_realm=False,
+                 rp_id=None):
         """
         Create a new WebAuthnAssertionOptions object.
 
         :param challenge: The challenge is a buffer of cryptographically random bytes needed to prevent replay attacks.
         :type challenge: basestring
         :param webauthn_user: A user cred or a list of user creds to allow authentication with.
-        :type webauthn_user: WebAuthnUser or list of WebAuthnUser
+        :type webauthn_user: WebAuthnUser or list of WebAuthnUser or None
         :param transports: Which transports to ask for.
-        :type transports: list of basestring
+        :type transports: list of basestring or None
         :param user_verification_requirement: The level of user verification this authentication requires.
-        :type user_verification_requirement: basestring
+        :type user_verification_requirement: basestring or None
         :param timeout: The time (in milliseconds) that the user has to respond to the prompt for authentication.
-        :type timeout: int
+        :type timeout: int or None
+        :param is_usernameless_realm: Whether realm policies for username-less authentication should be used.
+        :type is_usernameless_realm: bool
+        :param rp_id: The ID of the relying party in case username-less authentication and realm-wide policy is enabled.
+        :type rp_id: basestring or None
         :return: A WebAuthnAssertionOptions object.
         :rtype: WebAuthnAssertionOptions
         """
@@ -585,34 +640,47 @@ class WebAuthnAssertionOptions(object):
         self.challenge = challenge
         if not self.challenge:
             raise ValueError('The challenge may not be empty.')
+        if webauthn_user is not None:
+            self.webauthn_users = webauthn_user if isinstance(webauthn_user, list) else [webauthn_user]
 
-        self.webauthn_users = webauthn_user if isinstance(webauthn_user, list) else [webauthn_user]
-        if not self.webauthn_users:
-            raise ValueError('webauthn_user may not be empty.')
-        for user in self.webauthn_users:
-            if not isinstance(user, WebAuthnUser):
-                raise ValueError('webauthn_user must be of type WebAuthnUser.')
-            if not user.credential_id:
-                raise ValueError('user must have a credential_id.')
-            if not user.rp_id:
-                raise ValueError('user must have a rp_id.')
+            for user in self.webauthn_users:
+                if not isinstance(user, WebAuthnUser):
+                    raise ValueError('webauthn_user must be of type WebAuthnUser.')
+                if not user.credential_id:
+                    raise ValueError('user must have a credential_id.')
+                if not user.rp_id:
+                    raise ValueError('user must have a rp_id.')
 
-        if len(set([u.rp_id for u in self.webauthn_users])) != 1:
-            raise ValueError('all users must have the same rp_id.')
-        self.rp_id = self.webauthn_users[0].rp_id
+            if len(set([u.rp_id for u in self.webauthn_users])) != 1:
+                raise ValueError('all users must have the same rp_id.')
+            self.rp_id = self.webauthn_users[0].rp_id
 
-        self.timeout = timeout
-        if int(self.timeout) < 1:
-            raise ValueError('timeout must be a positive integer.')
+            self.timeout = timeout
+            if int(self.timeout) < 1:
+                raise ValueError('timeout must be a positive integer.')
 
-        self.transports = transports
-        if not self.transports:
-            raise ValueError('transports may not be empty.')
+            self.transports = transports
+            if not self.transports:
+                raise ValueError('transports may not be empty.')
 
-        self.user_verification_requirement = str(user_verification_requirement).lower()
-        if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
-            raise ValueError(
-                'user_verification_requirement must be one of {0!s}'.format(', '.join(USER_VERIFICATION_LEVELS)))
+            self.user_verification_requirement = str(user_verification_requirement).lower()
+            if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
+                raise ValueError(
+                    'user_verification_requirement must be one of {0!s}'.format(', '.join(USER_VERIFICATION_LEVELS)))
+        else:
+            if is_usernameless_realm:
+                self.usernameless = is_usernameless_realm
+                self.timeout = timeout
+                if int(self.timeout) < 1:
+                    raise ValueError('timeout must be a positive integer.')
+
+                self.user_verification_requirement = str(user_verification_requirement).lower()
+                if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
+                    raise ValueError(
+                        'user_verification_requirement must be one of {0!s}'.format(
+                            ', '.join(USER_VERIFICATION_LEVELS)))
+            if rp_id:
+                self.rp_id = rp_id
 
     @property
     def assertion_dict(self):
@@ -620,21 +688,31 @@ class WebAuthnAssertionOptions(object):
         :return: The publicKeyCredentialRequestOptions dictionary.
         :rtype: dict
         """
-
-        return {
-            'challenge': self.challenge,
-            'allowCredentials': [
-                {
-                    'type': 'public-key',
-                    'id': user.credential_id,
-                    'transports': self.transports
-                }
-                for user in self.webauthn_users
-            ],
-            'rpId': self.rp_id,
-            'userVerification': self.user_verification_requirement,
-            'timeout': self.timeout
+        assertion = {
+            'challenge': self.challenge
         }
+        if hasattr(self, 'webauthn_users'):
+            assertion.update({
+                'allowCredentials': [
+                    {
+                        'type': 'public-key',
+                        'id': user.credential_id,
+                        'transports': self.transports
+                    }
+                    for user in self.webauthn_users
+                ],
+                'rpId': self.rp_id,
+                'userVerification': self.user_verification_requirement,
+                'timeout': self.timeout
+            })
+        else:
+            if hasattr(self, "usernameless"):
+                assertion.update({
+                    'userVerification': self.user_verification_requirement,
+                    'timeout': self.timeout,
+                    'rpId': self.rp_id
+                })
+        return assertion
 
     @property
     def json(self):
@@ -790,6 +868,7 @@ class WebAuthnRegistrationResponse(object):
                  attestation_requirement_level,
                  trust_anchor_dir=None,
                  uv_required=False,
+                 rk_required=False,
                  expected_registration_client_extensions=None,
                  expected_registration_authenticator_extensions=None):
         """
@@ -809,6 +888,8 @@ class WebAuthnRegistrationResponse(object):
         :type trust_anchor_dir: basestring
         :param uv_required: Whether user verification is required.
         :type uv_required: bool
+        :param rk_required: Whether a resident key is required.
+        :type rk_required: bool
         :param expected_registration_client_extensions: A dict whose keys indicate which client extensions are expected.
         :type expected_registration_client_extensions: dict
         :param expected_registration_authenticator_extensions: A dict whose keys indicate which auth exts to expect.
@@ -822,6 +903,7 @@ class WebAuthnRegistrationResponse(object):
         self.challenge = challenge
         self.trust_anchor_dir = trust_anchor_dir
         self.uv_required = uv_required
+        self.rk_required = rk_required
 
         self.expected_registration_client_extensions = expected_registration_client_extensions \
             if expected_registration_client_extensions \
@@ -1357,6 +1439,24 @@ class WebAuthnRegistrationResponse(object):
             ):
                 raise RegistrationRejectedException('Unable to verify client extensions.')
 
+            # Step 12b.
+            #
+            # If a resident key is required for registration, verify that
+            # the credProps extension is returned and rk is set to true.
+            #
+            # Info: This currently leads to unwanted enrollment errors due to inconsistent Webauthn implementations.
+            #       Therefore, it is commented for now.
+            #
+            # if self.rk_required:
+            #     extensions = self.registration_response.get('registrationClientExtensions')
+            #     if extensions:
+            #         ext_keys = list(json.loads(extensions).keys())
+            #         ext_values = list(json.loads(extensions).values())
+            #         if "credProps" not in ext_keys or {'rk': True} not in ext_values:
+            #             raise RegistrationRejectedException('Resident Key not created.')
+            #     else:
+            #         raise RegistrationRejectedException('Resident Key not created.')
+
             # Step 13.
             #
             # Determine the attestation statement format by performing
@@ -1607,7 +1707,7 @@ class WebAuthnAssertionResponse(object):
             #
             # Verify that the value of C.type is the string webauthn.get.
             if not _verify_type(c.get('type'), CLIENT_DATA_TYPE.GET):
-                raise RegistrationRejectedException('Invalid type.')
+                raise AuthenticationRejectedException('Invalid type.')
 
             # Step 8.
             #
@@ -1656,7 +1756,7 @@ class WebAuthnAssertionResponse(object):
             # If user verification is required for this assertion, verify that
             # the User Verified bit of the flags in authData is set.
             if self.uv_required and not AuthenticatorDataFlags(a_data).user_verified:
-                raise RegistrationRejectedException('Malformed request received.')
+                raise AuthenticationRejectedException('Malformed request received.')
 
             # Step 14.
             #

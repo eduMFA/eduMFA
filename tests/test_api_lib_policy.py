@@ -2362,11 +2362,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_27b_webauthn_authz_auth(self):
-        class RequestMock(object):
-            pass
-
+        builder = EnvironBuilder(method='POST', data={},headers={})
+        env = builder.get_environ()
+        request = Request(env)
         # Normal request
-        request = RequestMock()
         request.all_data = {
             "credentialid": CRED_ID,
             "authenticatordata": ASSERTION_RESPONSE_TMPL['authData'],
@@ -2381,7 +2380,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                          list())
 
         # Not a WebAuthn authorization
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             "username": "foo",
             "password": ""
@@ -2397,7 +2396,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             scope=SCOPE.AUTHZ,
             action=WEBAUTHNACTION.REQ + '=' + allowed_certs
         )
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             "credentialid": CRED_ID,
             "authenticatordata": ASSERTION_RESPONSE_TMPL['authData'],
@@ -2585,11 +2584,11 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_29a_webauthn_request_token_init(self):
-        class RequestMock(object):
-            pass
+        builder = EnvironBuilder(method='POST', data={},headers={})
+        env = builder.get_environ()
+        request = Request(env)
 
         # Normal request
-        request = RequestMock()
         request.all_data = {
             "type": WebAuthnTokenClass.get_class_type()
         }
@@ -2607,7 +2606,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                          ORIGIN)
 
         # Not a WebAuthn token
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             "type": "footoken"
         }
@@ -2635,7 +2634,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                   +WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT + '=' + user_verification_requirement + ','
                   +WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST + '=' + authenticator_selection_list
         )
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             "type": WebAuthnTokenClass.get_class_type()
         }
@@ -2651,7 +2650,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                          set(authenticator_selection_list.split()))
 
         # Malformed policies
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             "type": WebAuthnTokenClass.get_class_type()
         }
@@ -2674,11 +2673,11 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_29b_webauthn_request_validate_triggerchallenge(self):
-        class RequestMock(object):
-            pass
+        builder = EnvironBuilder(method='POST', data={},headers={})
+        env = builder.get_environ()
+        request = Request(env)
 
         # Normal request
-        request = RequestMock()
         request.all_data = {
             'user': 'foo'
         }
@@ -2694,7 +2693,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                          ORIGIN)
 
         # Request via serial
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             'serial': WebAuthnTokenClass.get_class_prefix() + '123'
         }
@@ -2710,7 +2709,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                          ORIGIN)
 
         # Not a WebAuthn token
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             'serial': 'FOO123'
         }
@@ -2734,7 +2733,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             action=WEBAUTHNACTION.TIMEOUT + '=' + str(timeout) + ','
                   +WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT + '=' + user_verification_requirement
         )
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             "user": "foo"
         }
@@ -2806,11 +2805,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_29d_webauthn_request_auth_authz(self):
-        class RequestMock(object):
-            pass
-
+        builder = EnvironBuilder(method='POST', data={},headers={})
+        env = builder.get_environ()
+        request = Request(env)
         # Normal request
-        request = RequestMock()
         request.all_data = {
             "credentialid": CRED_ID,
             "authenticatordata": ASSERTION_RESPONSE_TMPL['authData'],
@@ -2836,7 +2834,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             scope=SCOPE.AUTHZ,
             action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST + '=' + authenticator_selection_list
         )
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             "credentialid": CRED_ID,
             "authenticatordata": ASSERTION_RESPONSE_TMPL['authData'],
@@ -2849,7 +2847,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.environ = {
             "HTTP_ORIGIN": ORIGIN
         }
-        webauthntoken_request(request, None)
+        webauthntoken_authz(request, None)
         self.assertEqual(set(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST)),
                          set(authenticator_selection_list.split()))
 
@@ -2912,11 +2910,11 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_29f_webauthn_request_validate_check_authz(self):
-        class RequestMock(object):
-            pass
+        builder = EnvironBuilder(method='POST', data={},headers={})
+        env = builder.get_environ()
+        request = Request(env)
 
         # Normal request
-        request = RequestMock()
         request.all_data = {
             "credentialid": CRED_ID,
             "authenticatordata": ASSERTION_RESPONSE_TMPL['authData'],
@@ -2942,7 +2940,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             scope=SCOPE.AUTHZ,
             action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST + '=' + authenticator_selection_list
         )
-        request = RequestMock()
+        request = Request(env)
         request.all_data = {
             "credentialid": CRED_ID,
             "authenticatordata": ASSERTION_RESPONSE_TMPL['authData'],
@@ -2955,7 +2953,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.environ = {
             "HTTP_ORIGIN": ORIGIN
         }
-        webauthntoken_request(request, None)
+        webauthntoken_authz(request, None)
         self.assertEqual(set(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST)),
                          set(authenticator_selection_list.split()))
 
@@ -2967,10 +2965,11 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_30_webauthn_allowed_req(self):
-        class RequestMock(object):
-            pass
 
-        request = RequestMock()
+        builder = EnvironBuilder(method='POST', data={},headers={})
+        env = builder.get_environ()
+        request = Request(env)
+
         request.all_data = {
             "type": WebAuthnTokenClass.get_class_type(),
             "serial": WebAuthnTokenClass.get_class_prefix() + "123",

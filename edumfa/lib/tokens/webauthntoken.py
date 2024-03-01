@@ -24,7 +24,9 @@
 #
 
 import binascii
+import json
 
+import jwt
 from OpenSSL import crypto
 from cryptography import x509
 
@@ -34,20 +36,21 @@ from edumfa.lib.config import get_from_config
 from edumfa.lib.crypto import geturandom
 from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.error import ParameterError, EnrollmentError, PolicyError
-from edumfa.lib.token import get_tokens
+from edumfa.lib.token import get_tokens, get_tokens_from_serial_or_user
 from edumfa.lib.tokenclass import TokenClass, CLIENTMODE, ROLLOUTSTATE
 from edumfa.lib.tokens.webauthn import (COSE_ALGORITHM, webauthn_b64_encode, WebAuthnRegistrationResponse,
                                              ATTESTATION_REQUIREMENT_LEVEL, webauthn_b64_decode,
                                              WebAuthnMakeCredentialOptions, WebAuthnAssertionOptions, WebAuthnUser,
                                              WebAuthnAssertionResponse, AuthenticationRejectedException,
-                                             USER_VERIFICATION_LEVEL)
+                                             USER_VERIFICATION_LEVEL, RESIDENT_KEY_LEVEL)
 from edumfa.lib.tokens.u2ftoken import IMAGES
 from edumfa.lib.log import log_with
 import logging
 from edumfa.lib import _
 from edumfa.lib.policy import SCOPE, GROUP, ACTION
 from edumfa.lib.user import User
-from edumfa.lib.utils import hexlify_and_unicode, is_true, convert_imagefile_to_dataimage
+from edumfa.lib.utils import hexlify_and_unicode, is_true, to_unicode, convert_imagefile_to_dataimage
+from flask import current_app
 
 __doc__ = """
 WebAuthn  is the Web Authentication API specified by the FIDO Alliance.
@@ -469,6 +472,9 @@ DEFAULT_AUTHENTICATOR_ATTACHMENT = 'either'
 DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE = ['ecdsa', 'rsassa-pss']
 DEFAULT_AUTHENTICATOR_ATTESTATION_LEVEL = 'untrusted'
 DEFAULT_AUTHENTICATOR_ATTESTATION_FORM = 'direct'
+DEFAULT_RESIDENT_KEY_LEVEL = 'preferred'
+DEFAULT_USERNAMELESS_AUTHN = False
+DEFAULT_USERNAMELESS_REALM_POLICY = False
 DEFAULT_CHALLENGE_TEXT_AUTH = _('Please confirm with your WebAuthn token ({0!s})')
 DEFAULT_CHALLENGE_TEXT_ENROLL = _('Please confirm with your WebAuthn token')
 
@@ -517,6 +523,9 @@ class WEBAUTHNACTION(object):
     PUBLIC_KEY_CREDENTIAL_ALGORITHMS = 'webauthn_public_key_credential_algorithms'
     AUTHENTICATOR_ATTESTATION_FORM = 'webauthn_authenticator_attestation_form'
     AUTHENTICATOR_ATTESTATION_LEVEL = 'webauthn_authenticator_attestation_level'
+    AUTHENTICATOR_RESIDENT_KEY = 'webauthn_resident_key'
+    USERNAMELESS_AUTHN = 'webauthn_usernameless_authn'
+    USERNAMELESS_REALM_POLICY = 'webauthn_usernameless_realm_policy'
     REQ = 'webauthn_req'
     AVOID_DOUBLE_REGISTRATION = 'webauthn_avoid_double_registration'
 
@@ -535,6 +544,7 @@ class WEBAUTHNINFO(object):
     ATTESTATION_SUBJECT = "attestation_subject"
     RELYING_PARTY_ID = "relying_party_id"
     RELYING_PARTY_NAME = "relying_party_name"
+    RESIDENT_KEY = "resident_key"
 
 
 class WEBAUTHNGROUP(object):
@@ -605,16 +615,24 @@ class WebAuthnTokenClass(TokenClass):
             'ui_enroll': ["admin", "user"],
             'policy': {
                 SCOPE.AUTH: {
+                    ACTION.CHALLENGETEXT: {
+                        'type': 'str',
+                        'desc': _("Use an alternative challenge text for telling the user to confirm with his WebAuthn "
+                                  "token."),
+                        'group': WEBAUTHNGROUP.WEBAUTHN
+                    },
                     WEBAUTHNACTION.ALLOWED_TRANSPORTS: {
                         'type': 'str',
                         'desc': _("A list of transports to prefer to communicate with WebAuthn tokens. "
-                                  "Default: usb ble nfc internal (All standard transports)")
+                                  "Default: usb ble nfc internal (All standard transports)"),
+                        'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.TIMEOUT: {
                         'type': 'int',
                         'desc': _("The time in seconds the user has to confirm authorization on his WebAuthn token. " 
                                   "Note: You will want to increase the ChallengeValidityTime along with this. "
-                                  "Default: 60")
+                                  "Default: 60"),
+                        'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT: {
                         'type': 'str',
@@ -624,12 +642,28 @@ class WebAuthnTokenClass(TokenClass):
                             'required',
                             'preferred',
                             'discouraged'
-                        ]
+                        ],
+                        'group': WEBAUTHNGROUP.WEBAUTHN
                     },
-                    ACTION.CHALLENGETEXT: {
-                        'type': 'str',
-                        'desc': _("Use an alternative challenge text for telling the user to confirm with his WebAuthn "
-                                  "token.")
+                    WEBAUTHNACTION.USERNAMELESS_AUTHN: {
+                        'type': 'bool',
+                        'desc': _("Enable username-less authentication, also known as Conditional UI, Conditional "
+                                  "Mediation, or Browser Autofill UI? "
+                                  "Note: This function only works if resident keys are enrolled as WebAuthn tokens and "
+                                  "if the browsers support this feature. "
+                                  "Also, the WebAuthn authentication policies 'challenge_text', 'allowed_transports', "
+                                  "and 'timeout' will be ignored. Policies for the RP_ID and UV can only be enforced "
+                                  "for a whole realm with the option below."),
+                        'group': WEBAUTHNGROUP.WEBAUTHN
+                    },
+                    WEBAUTHNACTION.USERNAMELESS_REALM_POLICY: {
+                        'type': 'bool',
+                        'desc': _("Enable the WebAuthn authentication policies for Relying Party ID and User "
+                                  "Verification Requirement realm-wide, i.e for all users in a realm? "
+                                  "Note: This requires username-less authentication to be enabled. The client has to "
+                                  "send its realm via a query parameter in the calls to /validate/triggerchallenge and "
+                                  "/validate/check, e.g. /validate/triggerchallenge?type=webauthn&realm=foo"),
+                        'group': WEBAUTHNGROUP.WEBAUTHN
                     }
                 },
                 SCOPE.AUTHZ: {
@@ -735,6 +769,16 @@ class WebAuthnTokenClass(TokenClass):
                         'type': 'str',
                         'desc': _("Only the specified WebAuthn-tokens are allowed to be registered."),
                         'group': WEBAUTHNGROUP.WEBAUTHN
+                    },
+                    WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY: {
+                        'type': 'str',
+                        'desc': _("Whether a resident key shall be requested or not"),
+                        'group': WEBAUTHNGROUP.WEBAUTHN,
+                        'value': [
+                            "discouraged",
+                            "required",
+                            "preferred"
+                        ]
                     },
                     ACTION.MAXTOKENUSER: {
                         'type': 'int',
@@ -860,6 +904,7 @@ class WebAuthnTokenClass(TokenClass):
 
             rp_id = getParam(param, WEBAUTHNACTION.RELYING_PARTY_ID, required)
             uv_req = getParam(param, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, optional)
+            rk_req = getParam(param, WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY, optional)
             attestation_level = getParam(param, WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL, required)
 
             try:
@@ -900,6 +945,7 @@ class WebAuthnTokenClass(TokenClass):
                     challenge=webauthn_b64_encode(challenge),
                     attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[attestation_level],
                     trust_anchor_dir=get_from_config(WEBAUTHNCONFIG.TRUST_ANCHOR_DIR),
+                    rk_required=rk_req == RESIDENT_KEY_LEVEL.REQUIRED,
                     uv_required=uv_req == USER_VERIFICATION_LEVEL.REQUIRED
                 ).verify([
                     # TODO: this might get slow when a lot of webauthn tokens are registered
@@ -934,6 +980,16 @@ class WebAuthnTokenClass(TokenClass):
 
                 cn = webauthn_credential.attestation_cert.subject.get_attributes_for_oid(x509.NameOID.COMMON_NAME)
                 automatic_description = cn[0].value if len(cn) else None
+
+            # Add info to token about whether a resident key/ discoverable credential was enrolled
+            resident_key = registration_client_extensions and b'{"rk":true}' in \
+                webauthn_b64_decode(registration_client_extensions)
+            print(registration_client_extensions)
+            if resident_key:
+                self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Yes")
+                automatic_description = "Passkey (Webauthn Resident Key)"
+            else:
+                self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Not enough info")
 
             # If no description has already been set, set the automatic description or the
             # description given in the 2nd request
@@ -975,7 +1031,7 @@ class WebAuthnTokenClass(TokenClass):
             if not params:
                 raise ValueError("Creating a WebAuthn token requires params to be provided")
             if not user:
-                raise ParameterError("Failed to create a WebAuhn token."
+                raise ParameterError("Failed to create a WebAuthn token."
                                      "Creating a WebAuthn token requires user to be provided")
 
             # To aid with unit testing a fixed nonce may be passed in.
@@ -1029,6 +1085,9 @@ class WebAuthnTokenClass(TokenClass):
                 authenticator_selection_list=getParam(params,
                                                       WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST,
                                                       optional),
+                resident_key=getParam(params,
+                                      WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY,
+                                      optional),
                 credential_ids=credential_ids
             ).registration_dict
 
@@ -1101,6 +1160,51 @@ class WebAuthnTokenClass(TokenClass):
                               user=user,
                               options=options or {})
 
+    @staticmethod
+    def create_usernameless_challenge(options):
+        """
+        Creates a challenge for a username less authentication
+
+        :param options: The request context parameters and data
+        :type options: dict
+        :return: Success status, message, transaction id and reply_dict
+        :rtype: (bool, basestring, basestring, dict)
+        """
+        nonce = WebAuthnTokenClass._get_nonce()
+        transactionid = Challenge.create_transaction_id()
+        challenge = jwt.encode(
+            {
+                "nonce": webauthn_b64_encode(nonce),
+                "transactionId": transactionid
+            },
+            current_app.secret_key, algorithm='HS256')
+        challenge = webauthn_b64_encode(challenge)
+        if getParam(options, WEBAUTHNACTION.USERNAMELESS_REALM_POLICY, optional):
+            public_key_credential_request_options = WebAuthnAssertionOptions(
+                challenge=challenge,
+                webauthn_user=None,
+                transports=None,
+                user_verification_requirement=getParam(options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, required),
+                timeout=getParam(options, WEBAUTHNACTION.TIMEOUT, required),
+                is_usernameless_realm=True,
+                rp_id=getParam(options, WEBAUTHNACTION.RELYING_PARTY_ID, required)
+                ).assertion_dict
+        else:
+            public_key_credential_request_options = \
+                WebAuthnAssertionOptions(challenge=challenge,
+                                         webauthn_user=None,
+                                         transports=None,
+                                         user_verification_requirement=None,
+                                         timeout=None).assertion_dict
+
+        reply_dict = {"attributes":
+                          {"webAuthnSignRequest": public_key_credential_request_options,
+                           "hideResponseInput": False,
+                           "img": ""},
+                      "image": ""}
+
+        return True, "", transactionid, reply_dict
+
     def create_challenge(self, transactionid=None, options=None):
         """
         Create a challenge for challenge-response authentication.
@@ -1127,7 +1231,6 @@ class WebAuthnTokenClass(TokenClass):
 
         if not options:
             raise ValueError("Creating a WebAuthn challenge requires options to be provided")
-
         try:
             user = self._get_webauthn_user(getParam(options, "user", required))
         except ParameterError:
@@ -1186,6 +1289,50 @@ class WebAuthnTokenClass(TokenClass):
 
         return True, message, db_challenge.transaction_id, reply_dict
 
+    @staticmethod
+    def check_userless_otp(options=None):
+        if is_webauthn_assertion_response(options):
+            client_data = webauthn_b64_decode(getParam(options, "clientdata", required))
+            json_text = to_unicode(client_data)
+            c = json.loads(json_text)
+            challenge = webauthn_b64_decode(c.get("challenge"))
+            try:
+                jwt.decode(challenge, current_app.secret_key, algorithms=['HS256'])
+            except jwt.DecodeError as err:
+                raise AuthenticationRejectedException("Provided response does not contain a challenge issued by this "
+                                                      "instance")
+            except jwt.ExpiredSignatureError as err:
+                raise AuthenticationRejectedException("Provided response does not contain a challenge issued by this "
+                                                      "instance")
+
+            # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI
+            user_handle = getParam(options, "userhandle", required)
+            token = get_tokens_from_serial_or_user(serial=user_handle, user=None)[0]
+            reply_dict = {}
+            if token is None:
+                return False, reply_dict
+            options['user'] = token.user
+            options['challenge'] = hexlify_and_unicode(challenge)
+            try:
+                count = token.check_otp(otpval=None, options=options)
+                reply_dict["user"] = {"username": token.user.login,
+                                      "realm": token.user.realm,
+                                      "resolver": token.user.resolver
+                                      }
+                reply_dict["message"] = "Username-less authentication worked!"
+                reply_dict["serial"] = token.token.serial
+                reply_dict["type"] = token.token.tokentype
+                if count != -1:
+                    return True, reply_dict
+                else:
+                    return False, reply_dict
+            except Exception as e:
+                return False, reply_dict
+        else:
+            # Not all necessary data provided.
+            return False, {}
+
+
     @check_token_locked
     def check_otp(self, otpval, counter=None, window=None, options=None):
         """
@@ -1221,7 +1368,8 @@ class WebAuthnTokenClass(TokenClass):
             except ParameterError:
                 raise ValueError("When performing WebAuthn authorization, options must contain user")
 
-            uv_req = getParam(options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, optional)
+            uv_requirement = getParam(options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, optional)
+            uv_req = uv_requirement == USER_VERIFICATION_LEVEL.REQUIRED
 
             challenge = binascii.unhexlify(getParam(options, "challenge", required))
 

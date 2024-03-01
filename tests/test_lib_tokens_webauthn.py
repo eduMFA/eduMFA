@@ -527,6 +527,7 @@ class WebAuthnTestCase(unittest.TestCase):
             attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.NONE],
             trust_anchor_dir=TRUST_ANCHOR_DIR,
             uv_required=False,
+            rk_required=False,
             expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
         ).verify()
 
@@ -656,6 +657,19 @@ class WebAuthnTestCase(unittest.TestCase):
         with self.assertRaises(AuthenticationRejectedException):
             webauthn_assertion_response.verify()
 
+    def test_05b_no_user_verification_fail_assertion(self):
+        webauthn_assertion_response = self.getAssertionResponse()
+        webauthn_assertion_response.uv_required = True
+
+        # FIXME: This *should* fail because UV=0, but will fail anyway later on because the
+        #  signature is invalid.
+        # TODO: Build a mock Authenticator implementation, to be able to sign arbitrary
+        #  authenticator data statements.
+        # TODO: Sign an authenticator data statement with UV=0 and test against that so that the
+        #  signature is valid.
+        with self.assertRaises(AuthenticationRejectedException):
+            webauthn_assertion_response.verify()
+
     def test_06_duplicate_authentication_fail_assertion(self):
         webauthn_assertion_response = self.getAssertionResponse()
         webauthn_assertion_response.webauthn_user.sign_count = ASSERTION_RESPONSE_SIGN_COUNT
@@ -738,6 +752,24 @@ class WebAuthnTestCase(unittest.TestCase):
                 trust_anchor_dir=TRUST_ANCHOR_DIR,
                 expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS
             ).verify)
+
+    # Info: This currently leads to unwanted enrollment errors due to inconsistent Webauthn implementations.
+    #       Therefore, it is commented for now.
+    #
+    # def test_10_registration_invalid_resident_key(self):
+    #     registration_response = WebAuthnRegistrationResponse(
+    #         rp_id=RP_ID,
+    #         origin=ORIGIN,
+    #         registration_response=copy(REGISTRATION_RESPONSE_TMPL),
+    #         challenge=REGISTRATION_CHALLENGE,
+    #         attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.UNTRUSTED],
+    #         trust_anchor_dir=TRUST_ANCHOR_DIR,
+    #         expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
+    #         rk_required=True
+    #     )
+    #     with self.assertRaisesRegexp(RegistrationRejectedException,
+    #                                  'Resident Key not created.'):
+    #         registration_response.verify()
 
 
 class MultipleWebAuthnTokenTestCase(MyTestCase):

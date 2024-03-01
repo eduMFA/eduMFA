@@ -2050,6 +2050,30 @@ def check_user_pass(user, passw, options=None):
     return res, reply_dict
 
 
+def create_challenge_without_token(reply_dict, options=None):
+    options = options or {}
+    reply_dict["multi_challenge"] = []
+    message_list = []
+    from edumfa.lib.tokens.webauthntoken import WebAuthnTokenClass
+
+    r_chal, message, transaction_id, challenge_info = WebAuthnTokenClass.create_usernameless_challenge(options)
+    message_list.append(message)
+    if r_chal:
+        challenge_info = challenge_info or {}
+        challenge_info["transaction_id"] = transaction_id
+        challenge_info["serial"] = ""
+        challenge_info["type"] = ""
+        challenge_info["client_mode"] = False
+        challenge_info["message"] = message
+        reply_dict.update(challenge_info)
+        reply_dict["multi_challenge"].append(challenge_info)
+
+    if message_list:
+        reply_dict["message"] = ", ".join(message_list)
+        # The "messages" element is needed by some decorators
+    reply_dict["messages"] = message_list
+    reply_dict["transaction_ids"] = [chal.get("transaction_id") for chal in reply_dict.get("multi_challenge", [])]
+
 def create_challenges_from_tokens(token_list, reply_dict, options=None):
     """
     Get a list of active tokens and create challenges for these tokens.
@@ -2080,7 +2104,7 @@ def create_challenges_from_tokens(token_list, reply_dict, options=None):
                 challenge_info["type"] = token_obj.get_tokentype()
                 challenge_info["client_mode"] = token_obj.client_mode
                 challenge_info["message"] = message
-                # If exist, add next pin and next password change
+                # If exists, add next pin and next password change
                 next_pin = token_obj.get_tokeninfo(
                         "next_pin_change")
                 if next_pin:

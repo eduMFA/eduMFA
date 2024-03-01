@@ -5,6 +5,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
+from edumfa.lib.tokens.webauthntoken import WEBAUTHNACTION
 from edumfa.lib.utils import to_unicode
 from urllib.parse import urlencode, quote
 import json
@@ -3507,7 +3508,7 @@ class WebAuthn(MyApiTestCase):
         self.assertEqual(get_tokens(serial=self.serial)[0].token.description, "Yubico U2F EE Serial 61730834")
 
     def test_10_validate_check(self):
-        # Run challenge request agsint /validate/check
+        # Run challenge request against /validate/check
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user": self.username,
@@ -3523,7 +3524,7 @@ class WebAuthn(MyApiTestCase):
                              data.get("detail").get("message"))
 
     def test_11_trigger_challenge(self):
-        # Run challenge request agsint /validate/triggerchallenge
+        # Run challenge request against /validate/triggerchallenge
         with self.app.test_request_context('/validate/triggerchallenge',
                                            method='POST',
                                            data={"user": self.username},
@@ -3540,6 +3541,157 @@ class WebAuthn(MyApiTestCase):
                              data.get("detail").get("message"))
 
         remove_token(self.serial)
+
+    def test_12_usernameless_authentication(self):
+        # Set usernameless policy
+        set_policy("allow_usernameless", scope=SCOPE.AUTH, action=WEBAUTHNACTION.USERNAMELESS_AUTHN)
+
+        # 1st step: Run challenge request against /validate/triggerchallenge?type=webauthn without user
+        with self.app.test_request_context('/validate/triggerchallenge?type=webauthn',
+                                           method='GET',
+                                           headers={"Host": "pi.example.com",
+                                                    "authorization": self.at,
+                                                    "Origin": "https://pi.example.com"}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            print(data)
+            self.assertEqual(200, res.status_code)
+            self.assertTrue("transaction_id" in data.get("detail"))
+            # No serial
+            self.assertEqual("", data.get("detail").get("serial"))
+            # Only a challenge in webAuthnSignRequest
+            webauthn_sign_request = data.get("detail").get("attributes").get("webAuthnSignRequest")
+            self.assertEqual(1, len(webauthn_sign_request))
+            self.assertIn("challenge", webauthn_sign_request)
+
+        challenge = webauthn_sign_request.get("challenge")
+
+        # 2nd step: Run auth request against /validate/check?type=webauthn without user but with userhandle
+        with self.app.test_request_context('/validate/check?type=webauthn',
+                                           method='POST',
+                                           data={
+                                              "userhandle": self.serial
+                                           },
+                                           headers={"Host": "pi.example.com",
+                                                    "Origin": "https://pi.example.com"}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            print(data)
+            self.assertEqual(200, res.status_code)
+
+            # Test for failed Authentication because we do not have a valid webauthn_assertion_response
+            self.assertIsNone(data.get("detail"))
+            self.assertEqual("REJECT", data.get("result").get("authentication"))
+
+            # FIXME: A test for a valid usernameless authentication would be better.
+            # TODO: Build a mock Authenticator implementation, to be able to sign arbitrary
+            #  authenticator data statements.
+
+        delete_policy("allow_usernameless")
+
+    def test_12b_usernameless_realm_policy(self):
+        # Set usernameless policies
+        set_policy("allow_usernameless", scope=SCOPE.AUTH, action=WEBAUTHNACTION.USERNAMELESS_AUTHN)
+        set_policy("allow_usernameless_policy", scope=SCOPE.AUTH, action=WEBAUTHNACTION.USERNAMELESS_REALM_POLICY)
+
+        # set realm-wide policy
+        set_policy("realm_timeout_policy", scope=SCOPE.AUTH, action="{0!s}=42".format(WEBAUTHNACTION.TIMEOUT),
+                   realm="foo-realm")
+
+        # Run challenge request against /validate/triggerchallenge?type=webauthn&foo-realm without user
+        with self.app.test_request_context('/validate/triggerchallenge?type=webauthn&realm=foo-realm',
+                                           method='GET',
+                                           headers={"Host": "pi.example.com",
+                                                    "authorization": self.at,
+                                                    "Origin": "https://pi.example.com"}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            print(data)
+            self.assertEqual(200, res.status_code)
+            self.assertTrue("transaction_id" in data.get("detail"))
+            # No serial
+            self.assertEqual("", data.get("detail").get("serial"))
+            # Timeout also in webAuthnSignRequest and set to 42000
+            webauthn_sign_request = data.get("detail").get("attributes").get("webAuthnSignRequest")
+            self.assertLess(1, len(webauthn_sign_request))
+            self.assertIn("timeout", webauthn_sign_request)
+            self.assertEqual(42000, webauthn_sign_request.get("timeout"))
+
+        delete_policy("allow_usernameless")
+        delete_policy("allow_usernameless_policy")
+        delete_policy("realm_timeout_policy")
+
+    def test_12c_ensure_conditions_userless(self):
+
+        self.test_02_enroll_token()
+
+        set_policy("allow_usernameless", scope=SCOPE.AUTH, action=WEBAUTHNACTION.USERNAMELESS_AUTHN)
+        set_policy("allow_usernameless_policy", scope=SCOPE.AUTH, action=WEBAUTHNACTION.USERNAMELESS_REALM_POLICY)
+
+        # set realm-wide policy
+        set_policy("realm_timeout_policy", scope=SCOPE.AUTH, action="{0!s}=42".format(WEBAUTHNACTION.TIMEOUT),
+                   realm=self.realm1)
+        set_policy(name="pol_chalresp", scope=SCOPE.AUTH,
+                   action="{0!s}=hotp totp".format(ACTION.CHALLENGERESPONSE))
+        with self.app.test_request_context('/validate/triggerchallenge',
+                                           method='POST',
+                                           data={"user": self.username},
+                                           headers={"Host": "pi.example.com",
+                                                    "authorization": self.at,
+                                                    "Origin": "https://pi.example.com"}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            self.assertEqual(1, len(data.get("detail").get("multi_challenge")))
+        init_token({"serial": "CR2A",
+                    "type": "hotp",
+                    "otpkey": "31323334353637383930313233343536373839AA",
+                    "pin": "otppin"}, user=User("selfservice", self.realm1))
+
+        init_token({"serial": "CR2B",
+                              "type": "hotp",
+                              "otpkey": self.otpkey,
+                              "pin": "otppin"}, user=User("selfservice", self.realm1))
+
+        with self.app.test_request_context('/validate/triggerchallenge',
+                                           method='POST',
+                                           data={"user": self.username},
+                                           headers={"Host": "pi.example.com",
+                                                    "authorization": self.at,
+                                                    "Origin": "https://pi.example.com"}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            self.assertEqual(3, len(data.get("detail").get("multi_challenge")))
+
+        with self.app.test_request_context('/validate/triggerchallenge',
+                                           method='POST',
+                                           data={"type": "webauthn"},
+                                           headers={"Host": "pi.example.com",
+                                                    "authorization": self.at,
+                                                    "Origin": "https://pi.example.com"}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            self.assertEqual(1, len(data.get("detail").get("multi_challenge")))
+            self.assertTrue("transaction_id" in data.get("detail"))
+            self.assertEqual("", data.get("detail").get("serial"))
+
+        set_policy(name="pol_application_tokentype",
+                   scope=SCOPE.AUTHZ,
+                   action=ACTION.APPLICATION_TOKENTYPE)
+
+        with self.app.test_request_context('/validate/triggerchallenge',
+                                           method='POST',
+                                           data={"type": "hotp", "user": self.username, "realm": self.realm1},
+                                           headers={"Host": "pi.example.com",
+                                                    "authorization": self.at,
+                                                    "Origin": "https://pi.example.com"}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            self.assertEqual(2, len(data.get("detail").get("multi_challenge")))
+            self.assertTrue("transaction_id" in data.get("detail"))
+
+        remove_token(self.serial)
+        remove_token("CR2B")
+        remove_token("CR2A")
 
     def test_20_authenticate_with_token(self):
         # Ensure that a not readily enrolled WebAuthn token does not disturb the usage

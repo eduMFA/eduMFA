@@ -1,0 +1,16 @@
+**/__pycache__
+**/venv
+*.egg-info
+dist/
+build/
+cover/
+DEBUILD/
+doc/
+.idea/
+.pytest_cache/
+.github/
+.circleci/
+*.pyc
+*.log
+tests/
+data-test.sqlite

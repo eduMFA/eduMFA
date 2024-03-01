@@ -105,16 +105,20 @@ setup(
     packages=find_packages(),
     scripts=["edumfa-manage"] + get_scripts("tools"),
     extras_require={
-        'doc': ["Pallets-Sphinx-Themes>=1.2.3",
-                "Sphinx>=1.3.1",
-                "sphinxcontrib-httpdomain>=1.3.0",
-                "sphinxcontrib-plantuml>=0.18",
-                "sphinxcontrib-spelling>=7.0.0"],
-        'test': ["mock>=2.0.0",
-                 "pytest>=3.6.0",
-                 "pytest-cov>=2.5.1",
-                 "responses>=0.9.0",
-                 "testfixtures>=6.14.2"],
+        'doc': [
+            "Pallets-Sphinx-Themes>=1.2.3",
+            "Sphinx>=1.3.1",
+            "sphinxcontrib-httpdomain>=1.3.0",
+            "sphinxcontrib-plantuml>=0.18",
+            "sphinxcontrib-spelling>=7.0.0"
+        ],
+        'test': [
+            "mock>=2.0.0",
+            "pytest>=3.6.0",
+            "pytest-cov>=2.5.1",
+            "responses>=0.9.0",
+            "testfixtures>=6.14.2"
+        ],
         'postgres': ['psycopg2>=2.8.3'],
         'hsm': ['PyKCS11>=1.5.10'],
         'kerberos': ['gssapi>=1.7.0']

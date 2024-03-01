@@ -64,7 +64,8 @@ import importlib
 from edumfa.lib.tokens.webauthn import (WebAuthnRegistrationResponse,
                                              AUTHENTICATOR_ATTACHMENT_TYPES,
                                              USER_VERIFICATION_LEVELS, ATTESTATION_LEVELS,
-                                             ATTESTATION_FORMS)
+                                             ATTESTATION_FORMS, RESIDENT_KEY_LEVELS,
+                                             USERNAMELESS_AUTHN, USERNAMELESS_REALM_POLICY)
 from edumfa.lib.tokens.webauthntoken import (WEBAUTHNACTION,
                                                   DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE,
                                                   PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
@@ -73,6 +74,8 @@ from edumfa.lib.tokens.webauthntoken import (WEBAUTHNACTION,
                                                   DEFAULT_USER_VERIFICATION_REQUIREMENT,
                                                   DEFAULT_AUTHENTICATOR_ATTESTATION_LEVEL,
                                                   DEFAULT_AUTHENTICATOR_ATTESTATION_FORM,
+                                                  DEFAULT_RESIDENT_KEY_LEVEL,
+                                                  DEFAULT_USERNAMELESS_AUTHN, DEFAULT_USERNAMELESS_REALM_POLICY,
                                                   WebAuthnTokenClass, DEFAULT_CHALLENGE_TEXT_AUTH,
                                                   DEFAULT_CHALLENGE_TEXT_ENROLL,
                                                   is_webauthn_assertion_response)
@@ -339,6 +342,13 @@ def check_application_tokentype(request=None, action=None):
 
     # if the application is not allowed, we remove the tokentype
     if not application_allowed and "type" in request.all_data:
+        # We need the tokentype to be present in usernameless authentication
+        is_usernameless = Match.generic(g, scope=SCOPE.AUTH,
+                                        action=WEBAUTHNACTION.USERNAMELESS_AUTHN,
+                                        user_object=None,
+                                        active=True).any()
+        if "user" not in request.all_data and "serial" not in request.all_data and is_usernameless:
+            return True
         log.info("Removing parameter 'type' from request, "
                  "since application is not allowed to authenticate by token type.")
         del request.all_data["type"]
@@ -1633,7 +1643,9 @@ def webauthntoken_request(request, action):
     # Check if a WebAuthn token is being authorized.
     if is_webauthn_assertion_response(request.all_data):
         webauthn = True
-        scope = SCOPE.AUTHZ
+        # Assertions need to be verified according to policies of scope AUTH. If they are scoped as AUTHZ, UV and other
+        # checks are not performed.
+        scope = SCOPE.AUTH
 
     # Check if this is an auth request (as opposed to an enrollment), and it
     # is not a WebAuthn authorization, and the request is either for
@@ -1650,62 +1662,138 @@ def webauthntoken_request(request, action):
     if not request.all_data.get("type") \
             and not is_webauthn_assertion_response(request.all_data) \
             and ('serial' not in request.all_data
-                or request.all_data['serial'].startswith(WebAuthnTokenClass.get_class_prefix())):
+                 or request.all_data['serial'].startswith(WebAuthnTokenClass.get_class_prefix()))\
+            or request.path == '/validate/triggerchallenge' and ttype \
+            and ttype.lower() == WebAuthnTokenClass.get_class_type():
         webauthn = True
         scope = SCOPE.AUTH
 
     # If this is a WebAuthn token, or an authentication request for no particular token.
     if webauthn:
         actions = WebAuthnTokenClass.get_class_info('policy').get(scope)
+        realm = request.all_data.get("realm")
+        # Add information about whether authentication can be usernameless or not.
+        is_usernameless = False
+        usernameless_activated = Match.realm(g,
+                                             scope=scope,
+                                             action=WEBAUTHNACTION.USERNAMELESS_AUTHN,
+                                             realm=realm).any()
 
-        if WEBAUTHNACTION.TIMEOUT in actions:
-            timeout_policies = Match \
-                .user(g,
-                      scope=scope,
-                      action=WEBAUTHNACTION.TIMEOUT,
-                      user_object=request.User if hasattr(request, 'User') else None) \
-                .action_values(unique=True)
-            timeout = int(list(timeout_policies)[0]) if timeout_policies else DEFAULT_TIMEOUT
+        if usernameless_activated and not request.all_data.get("user"):
+            is_usernameless = True
 
-            request.all_data[WEBAUTHNACTION.TIMEOUT] \
-                = timeout * 1000
+        request.all_data[WEBAUTHNACTION.USERNAMELESS_AUTHN] = is_usernameless
+        is_usernameless_realm_policy = False
 
-        if WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT in actions:
-            user_verification_requirement_policies = Match \
-                .user(g,
-                      scope=scope,
-                      action=WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                      user_object=request.User if hasattr(request, 'User') else None) \
-                .action_values(unique=True)
-            user_verification_requirement = list(user_verification_requirement_policies)[0] \
-                if user_verification_requirement_policies \
-                else DEFAULT_USER_VERIFICATION_REQUIREMENT
-            if user_verification_requirement not in USER_VERIFICATION_LEVELS:
-                raise PolicyError(
-                    "{0!s} must be one of {1!s}"
-                        .format(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                                ", ".join(USER_VERIFICATION_LEVELS)))
+        if realm and scope == SCOPE.AUTH and is_usernameless:
+            # Add information about whether to use realm policies in usernameless scenarios.
+            is_usernameless_realm_policy = Match.realm(g,
+                                                       scope=scope,
+                                                       action=WEBAUTHNACTION.USERNAMELESS_REALM_POLICY,
+                                                       realm=realm).any()
 
-            request.all_data[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] \
-                = user_verification_requirement
+            request.all_data[WEBAUTHNACTION.USERNAMELESS_REALM_POLICY] = is_usernameless_realm_policy
 
-        if WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST in actions:
-            allowed_aaguids_pols = Match \
-                .user(g,
-                      scope=scope,
-                      action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST,
-                      user_object=request.User if hasattr(request, 'User') else None) \
-                .action_values(unique=False,
-                               allow_white_space_in_action=True)
-            allowed_aaguids = set(
-                aaguid
-                for allowed_aaguid_pol in allowed_aaguids_pols
-                for aaguid in allowed_aaguid_pol.split()
-            )
+        if not is_usernameless_realm_policy:
+            if WEBAUTHNACTION.TIMEOUT in actions:
+                timeout_policies = Match \
+                    .user(g,
+                          scope=scope,
+                          action=WEBAUTHNACTION.TIMEOUT,
+                          user_object=request.User if hasattr(request, 'User') else None) \
+                    .action_values(unique=True)
+                timeout = int(list(timeout_policies)[0]) if timeout_policies else DEFAULT_TIMEOUT
 
-            if allowed_aaguids:
-                request.all_data[WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST] \
-                    = list(allowed_aaguids)
+                request.all_data[WEBAUTHNACTION.TIMEOUT] \
+                    = timeout * 1000
+
+            if WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT in actions:
+                user_verification_requirement_policies = Match \
+                    .user(g,
+                          scope=scope,
+                          action=WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
+                          user_object=request.User if hasattr(request, 'User') else None) \
+                    .action_values(unique=True)
+                user_verification_requirement = list(user_verification_requirement_policies)[0] \
+                    if user_verification_requirement_policies \
+                    else DEFAULT_USER_VERIFICATION_REQUIREMENT
+                if user_verification_requirement not in USER_VERIFICATION_LEVELS:
+                    raise PolicyError(
+                        "{0!s} must be one of {1!s}"
+                            .format(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
+                                    ", ".join(USER_VERIFICATION_LEVELS)))
+
+                request.all_data[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] \
+                    = user_verification_requirement
+
+            if WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST in actions:
+                allowed_aaguids_pols = Match \
+                    .user(g,
+                          scope=scope,
+                          action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST,
+                          user_object=request.User if hasattr(request, 'User') else None) \
+                    .action_values(unique=False,
+                                   allow_white_space_in_action=True)
+                allowed_aaguids = set(
+                    aaguid
+                    for allowed_aaguid_pol in allowed_aaguids_pols
+                    for aaguid in allowed_aaguid_pol.split()
+                )
+
+                if allowed_aaguids:
+                    request.all_data[WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST] \
+                        = list(allowed_aaguids)
+        elif is_usernameless_realm_policy and scope == SCOPE.AUTH:
+            # Extract realm policies in case of usernameless authn and enabled policy
+            # Get the rp_id from the realm sent by the client through the enrollment policy
+            rp_id_policies = Match \
+                .realm(g,
+                       scope=SCOPE.ENROLL,
+                       action=WEBAUTHNACTION.RELYING_PARTY_ID,
+                       realm=realm).action_values(unique=True)
+            if rp_id_policies:
+                rp_id = str(list(rp_id_policies)[0])
+                # The RP ID is a domain name and thus may not contain any punctuation except '-' and '.'.
+                if not is_fqdn(rp_id):
+                    log.warning(
+                        "Illegal value for {0!s} (must be a domain name): {1!s}"
+                        .format(WEBAUTHNACTION.RELYING_PARTY_ID, rp_id))
+                    raise PolicyError(
+                        "Illegal value for {0!s} (must be a domain name)."
+                        .format(WEBAUTHNACTION.RELYING_PARTY_ID))
+
+                request.all_data[WEBAUTHNACTION.RELYING_PARTY_ID] = rp_id
+
+            if WEBAUTHNACTION.TIMEOUT in actions:
+                timeout_policies = Match \
+                    .realm(g,
+                           scope=scope,
+                           action=WEBAUTHNACTION.TIMEOUT,
+                           realm=realm)\
+                    .action_values(unique=True)
+                timeout = int(list(timeout_policies)[0]) if timeout_policies else DEFAULT_TIMEOUT
+
+                request.all_data[WEBAUTHNACTION.TIMEOUT] \
+                    = timeout * 1000
+
+            if WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT in actions:
+                user_verification_requirement_policies = Match \
+                    .realm(g,
+                           scope=scope,
+                           action=WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
+                           realm=realm)\
+                    .action_values(unique=True)
+                user_verification_requirement = list(user_verification_requirement_policies)[0] \
+                    if user_verification_requirement_policies \
+                    else DEFAULT_USER_VERIFICATION_REQUIREMENT
+                if user_verification_requirement not in USER_VERIFICATION_LEVELS:
+                    raise PolicyError(
+                        "{0!s} must be one of {1!s}"
+                            .format(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
+                                    ", ".join(USER_VERIFICATION_LEVELS)))
+
+                request.all_data[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] \
+                    = user_verification_requirement
 
         request.all_data['HTTP_ORIGIN'] = request.environ.get('HTTP_ORIGIN')
 
@@ -1744,6 +1832,23 @@ def webauthntoken_authz(request, action):
         request.all_data[WEBAUTHNACTION.REQ] \
             = list(allowed_certs_pols)
 
+        allowed_aaguids_pols = Match \
+            .user(g,
+                  scope=SCOPE.AUTHZ,
+                  action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST,
+                  user_object=request.User if hasattr(request, 'User') else None) \
+            .action_values(unique=False,
+                           allow_white_space_in_action=True)
+        allowed_aaguids = set(
+            aaguid
+            for allowed_aaguid_pol in allowed_aaguids_pols
+            for aaguid in allowed_aaguid_pol.split()
+        )
+
+        if allowed_aaguids:
+            request.all_data[WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST] \
+                = list(allowed_aaguids)
+
     return True
 
 
@@ -1781,15 +1886,16 @@ def webauthntoken_auth(request, action):
     # have any WebAuthn tokens enrolled, but  since this decorator is entirely
     # passive and will just pull values from policies and add them to properly
     # prefixed fields in the request data, this is not a problem.
+
     if not request.all_data.get("type") \
             and not is_webauthn_assertion_response(request.all_data) \
             and ('serial' not in request.all_data
                  or request.all_data['serial'].startswith(WebAuthnTokenClass.get_class_prefix())):
-        allowed_transports_policies = Match\
+        allowed_transports_policies = Match \
             .user(g,
                   scope=SCOPE.AUTH,
                   action=WEBAUTHNACTION.ALLOWED_TRANSPORTS,
-                  user_object=request.User if hasattr(request, 'User') else None) \
+                  user_object=request.User if (hasattr(request, 'User') and request.User) else None) \
             .action_values(unique=False,
                            allow_white_space_in_action=True)
         allowed_transports = set(
@@ -1802,11 +1908,11 @@ def webauthntoken_auth(request, action):
             for transport in allowed_transports_policy.split()
         )
 
-        challengetext_policies = Match\
+        challengetext_policies = Match \
             .user(g,
                   scope=SCOPE.AUTH,
                   action="{0!s}_{1!s}".format(WebAuthnTokenClass.get_class_type(), ACTION.CHALLENGETEXT),
-                  user_object=request.User if hasattr(request, 'User') else None) \
+                  user_object=request.User if (hasattr(request, 'User') and request.User) else None) \
             .action_values(unique=True,
                            allow_white_space_in_action=True,
                            write_to_audit_log=False)
@@ -1943,7 +2049,19 @@ def webauthntoken_enroll(request, action):
             raise PolicyError(
                 "{0!s} must be one of {1!s}".format(WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM,
                                                     ', '.join(ATTESTATION_FORMS)))
-
+        authenticator_resident_key_levels = Match\
+            .user(g,
+                  scope=SCOPE.ENROLL,
+                  action=WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY,
+                  user_object=request.User if hasattr(request, 'User') else None) \
+            .action_values(unique=True)
+        authenticator_resident_key = list(authenticator_resident_key_levels)[0] \
+            if authenticator_resident_key_levels \
+            else DEFAULT_RESIDENT_KEY_LEVEL
+        if authenticator_resident_key not in RESIDENT_KEY_LEVELS:
+            raise PolicyError(
+                "{0!s} must be one of {1!s}".format(WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY,
+                                                    ', '.join(RESIDENT_KEY_LEVELS)))
         challengetext_policies = Match\
             .user(g,
                   scope=SCOPE.ENROLL,
@@ -1975,6 +2093,7 @@ def webauthntoken_enroll(request, action):
             = authenticator_attestation_level
         request.all_data[WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM] \
             = authenticator_attestation_form
+        request.all_data[WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY] = authenticator_resident_key
         request.all_data["{0!s}_{1!s}".format(WebAuthnTokenClass.get_class_type(), ACTION.CHALLENGETEXT)] \
             = challengetext
         request.all_data[WEBAUTHNACTION.AVOID_DOUBLE_REGISTRATION] = avoid_double_registration_policy

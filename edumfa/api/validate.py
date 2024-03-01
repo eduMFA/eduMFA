@@ -60,7 +60,8 @@ from ..lib.decorators import (check_user_or_serial_in_request)
 from .lib.utils import required
 from edumfa.lib.error import ParameterError
 from edumfa.lib.token import (check_user_pass, check_serial_pass,
-                                   check_otp, create_challenges_from_tokens, get_one_token)
+                                   check_otp, create_challenges_from_tokens,
+                                   create_challenge_without_token, get_one_token)
 from edumfa.lib.utils import is_true
 from edumfa.api.lib.utils import get_all_params
 from edumfa.lib.config import (return_saml_attributes, get_from_config,
@@ -362,9 +363,11 @@ def check():
     (like "myOwn") which you can define in the LDAP resolver in the attribute
     mapping.
     """
+    from edumfa.lib.tokens.webauthntoken import WebAuthnTokenClass
+
     user = request.User
     serial = getParam(request.all_data, "serial")
-    password = getParam(request.all_data, "pass", required)
+    user_handle = getParam(request.all_data, "userhandle")
     otp_only = getParam(request.all_data, "otponly")
     token_type = getParam(request.all_data, "type")
     options = {"g": g,
@@ -375,6 +378,21 @@ def check():
         if value and key not in ["g", "clientip", "user"]:
             options[key] = value
 
+    if not user.login and not serial and token_type == WebAuthnTokenClass.get_class_type() and user_handle:
+        # 2. call in usernameless setting, this time including a userhandle
+        success, details = WebAuthnTokenClass.check_userless_otp(options)
+        result = success
+        if success:
+            user = options["user"]
+        serials = ",".join([challenge_info["serial"] for challenge_info in details["multi_challenge"]]) \
+            if 'multi_challenge' in details else details.get('serial')
+        g.audit_object.log({"info": log_used_user(user, details.get("message")),
+                            "success": success,
+                            "serial": serials,
+                            "token_type": details.get("type")})
+        return send_result(result, rid=2, details=details)
+
+    password = getParam(request.all_data, "pass", required)
     g.audit_object.log({"user": user.login,
                         "resolver": user.resolver,
                         "realm": user.realm})
@@ -545,6 +563,7 @@ def trigger_challenge():
             }
 
     """
+
     user = request.User
     serial = getParam(request.all_data, "serial")
     token_type = getParam(request.all_data, "type")
@@ -557,25 +576,31 @@ def trigger_challenge():
     for key, value in request.all_data.items():
         if value and key not in ["g", "clientip", "user"]:
             options[key] = value
+    if getParam(request.all_data, "webauthn_usernameless_authn"):
+        create_challenge_without_token(details, options)
+        result_obj = len(details.get("multi_challenge"))
+        g.audit_object.log({
+            "success": True,
+        })
+    else:
+        token_objs = get_tokens(serial=serial, user=user, active=True, revoked=False, locked=False, tokentype=token_type)
+        # Only use the tokens, that are allowed to do challenge response
+        chal_resp_tokens = [token_obj for token_obj in token_objs if "challenge" in token_obj.mode]
+        if is_true(options.get("increase_failcounter_on_challenge")):
+            for token_obj in chal_resp_tokens:
+                token_obj.inc_failcount()
+        create_challenges_from_tokens(chal_resp_tokens, details, options)
+        result_obj = len(details.get("multi_challenge"))
 
-    token_objs = get_tokens(serial=serial, user=user, active=True, revoked=False, locked=False, tokentype=token_type)
-    # Only use the tokens, that are allowed to do challenge response
-    chal_resp_tokens = [token_obj for token_obj in token_objs if "challenge" in token_obj.mode]
-    if is_true(options.get("increase_failcounter_on_challenge")):
-        for token_obj in chal_resp_tokens:
-            token_obj.inc_failcount()
-    create_challenges_from_tokens(chal_resp_tokens, details, options)
-    result_obj = len(details.get("multi_challenge"))
-
-    challenge_serials = [challenge_info["serial"] for challenge_info in details["multi_challenge"]]
-    g.audit_object.log({
-        "user": user.login,
-        "resolver": user.resolver,
-        "realm": user.realm,
-        "success": result_obj > 0,
-        "info": log_used_user(user, "triggered {0!s} challenges".format(result_obj)),
-        "serial": ",".join(challenge_serials),
-    })
+        challenge_serials = [challenge_info["serial"] for challenge_info in details["multi_challenge"]]
+        g.audit_object.log({
+            "user": user.login,
+            "resolver": user.resolver,
+            "realm": user.realm,
+            "success": result_obj > 0,
+            "info": log_used_user(user, "triggered {0!s} challenges".format(result_obj)),
+            "serial": ",".join(challenge_serials),
+        })
 
     return send_result(result_obj, rid=2, details=details)
 
