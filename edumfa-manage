@@ -1707,12 +1707,12 @@ config_import_manager.add_command('event', Command(e_import))
 if __name__ == '__main__':
     # We add one blank line, to separate the messages from the initialization
     print("""
-           _       __  __ ______
-          | |     |  \/  |  ____/\
-   ___  __| |_   _| \  / | |__ /  \
-  / _ \/ _` | | | | |\/| |  __/ /\ \
- |  __/ (_| | |_| | |  | | | / ____ \
-  \___|\__,_|\__,_|_|  |_|_|/_/    \_\
-{0!s:>51}
-    """.format('v{0!s}'.format(get_version_number())), file=sys.stderr)
+               _       __  __ ______      
+              | |     |  \/  |  ____/\    
+       ___  __| |_   _| \  / | |__ /  \   
+      / _ \/ _` | | | | |\/| |  __/ /\ \  
+     |  __/ (_| | |_| | |  | | | / ____ \ 
+      \___|\__,_|\__,_|_|  |_|_|/_/    \_\
+    {0!s:>12}
+        """.format('v{0!s}'.format(get_version_number())), file=sys.stderr)
     manager.run()
