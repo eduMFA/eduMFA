@@ -3,6 +3,7 @@
 ## eduMFA 1.3.0
 
 * Fixed handling Windows Hello passkeys
+* Include curl in container to enable health checks
 * Bugfixes for CI and docs
 
 ## eduMFA 1.2.0
