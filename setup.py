@@ -34,13 +34,12 @@ install_requires = ["beautifulsoup4[lxml]>=4.3.2",
                     "cbor2>=5.0.1",
                     "configobj>=5.0.6",
                     "croniter>=0.3.8",
-                    "cryptography>=2.4.2",
+                    "cryptography>=42.0.5",
                     "defusedxml>=0.4.1",
-                    "Flask>=0.10.1,<2.0",
-                    "Flask-Babel>=0.9",
-                    "Flask-Migrate>=1.2.0,<3.0",
-                    "Flask-Script>=2.0.5",
-                    "Flask-SQLAlchemy>=2.0",
+                    "Flask>=3.0",
+                    "Flask-Babel>=4.0.0",
+                    "Flask-Migrate>=3.2.0",
+                    "Flask-SQLAlchemy>=3.0",
                     "Flask-Versioned>=0.9.4",
                     "google-auth>=1.23.0",
                     "huey[redis]>=1.11.0",
@@ -52,16 +51,16 @@ install_requires = ["beautifulsoup4[lxml]>=4.3.2",
                     "pydash>=4.7.4",
                     "PyJWT>=1.3.0",
                     "PyMySQL>=0.6.6",
-                    "pyOpenSSL>=17.5",
+                    "pyOpenSSL>=24",
                     "pyrad>=2.0",
                     "python-dateutil>=2.7.3",
                     "python-gnupg>=0.4.4",
                     "PyYAML>=5.1",
-                    "requests>=2.7.0",
+                    "requests>=2.31.0",
                     "segno>=1.5",
+                    "urllib3>=2.2.1",
                     "smpplib>=2.0",
-                    "SQLAlchemy>=1.4.0,<2.0",
-                    "MarkupSafe<2.1"]
+                    "SQLAlchemy>=1.4.0"]
 
 
 def get_man_pages(dir):
@@ -101,7 +100,7 @@ setup(
     author_email='edumfa@listserv.dfn.de',
     url='https://www.edumfa.io',
     keywords='OTP, two factor authentication, management, security',
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     packages=find_packages(),
     entry_points={
         'console_scripts': [
@@ -142,8 +141,7 @@ setup(
                 ('lib/edumfa/', ['requirements.txt'])
                 ],
     classifiers=["Framework :: Flask",
-                 "License :: OSI Approved :: "
-                 "GNU Affero General Public License v3",
+                 "License :: OSI Approved :: GNU Affero General Public License v3",
                  "Programming Language :: Python",
                  "Development Status :: 5 - Production/Stable",
                  "Topic :: Internet",
@@ -151,10 +149,11 @@ setup(
                  "Topic :: System :: Systems Administration :: Authentication/Directory",
                  'Programming Language :: Python',
                  'Programming Language :: Python :: 3',
-                 'Programming Language :: Python :: 3.7',
                  'Programming Language :: Python :: 3.8',
                  'Programming Language :: Python :: 3.9',
-                 'Programming Language :: Python :: 3.10'
+                 'Programming Language :: Python :: 3.10',
+                 'Programming Language :: Python :: 3.11',
+                 'Programming Language :: Python :: 3.12'
                  ],
     zip_safe=False,
     long_description=get_file_contents('README.rst')
