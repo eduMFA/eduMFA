@@ -12,7 +12,7 @@ COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
 COPY ./deploy/logging.cfg /etc/edumfa/logging.cfg
 COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
 
-RUN apt update && apt install -Y curl && \
+RUN apt update && apt install -y curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
