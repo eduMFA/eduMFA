@@ -50,6 +50,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+from typing import Dict
 
 import binascii
 import codecs
@@ -89,7 +90,7 @@ DEFAULT_CLIENT_EXTENSIONS = {'appid': None, 'credProps': {'rk': None} }
 
 # Default authenticator extensions
 #
-DEFAULT_AUTHENTICATOR_EXTENSIONS = {}
+DEFAULT_AUTHENTICATOR_EXTENSIONS = {"credProtect": None}
 
 log = logging.getLogger(__name__)
 
@@ -936,6 +937,16 @@ class WebAuthnRegistrationResponse(object):
         return cbor2.loads(webauthn_b64_decode(attestation_object))
 
     @staticmethod
+    def get_extensions(auth_data) -> Dict:
+        attestation_data = auth_data[37:]
+        credential_id_len = struct.unpack('!H', attestation_data[16:18])[0]
+
+        credential_public_key = cbor2.loads(auth_data[37+16+2+credential_id_len:])
+        len_key = len(cbor2.dumps(credential_public_key))
+        extensions = cbor2.loads(auth_data[37+16+2+credential_id_len+len_key:])
+        return extensions
+
+    @staticmethod
     def verify_attestation_statement(fmt, att_stmt, auth_data, client_data_hash=b'', none_attestation_permitted=True):
         """
         The procedure for verifying an attestation statement.
@@ -975,7 +986,7 @@ class WebAuthnRegistrationResponse(object):
         aaguid = attestation_data[:16]
         credential_id_len = struct.unpack('!H', attestation_data[16:18])[0]
         cred_id = attestation_data[18:18 + credential_id_len]
-        credential_pub_key = attestation_data[18 + credential_id_len:]
+        credential_pub_key = cbor2.dumps(cbor2.loads(attestation_data[18 + credential_id_len:]))
 
         if fmt == ATTESTATION_FORMAT.FIDO_U2F:
             # Step 1.
@@ -2092,7 +2103,11 @@ def _verify_authenticator_extensions(auth_data, expected_authenticator_extension
     :return: Whether there were any unexpected extensions.
     :rtype: bool
     """
-    return not AuthenticatorDataFlags(auth_data).extension_data_included
+    if AuthenticatorDataFlags(auth_data).extension_data_included:
+        extensions = WebAuthnRegistrationResponse.get_extensions(auth_data)
+        match = set(expected_authenticator_extensions.keys()).issuperset(extensions.keys())
+        return match
+    return True
 
 
 def _verify_rp_id_hash(auth_data_rp_id_hash, rp_id):
