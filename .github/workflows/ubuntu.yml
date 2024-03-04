@@ -18,14 +18,18 @@ jobs:
         run: |
           mv deploy/ubuntu debian
           sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b
+          dpkg-buildpackage -us -uc -b --source-option=-Sa
       - name: Build server packages
         run: |
           mv deploy/ubuntu-server debian
           sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b
+          dpkg-buildpackage -us -uc -b --source-option=-Sa
       - name: Upload packages to Nexus
-        run: 'curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@*.deb" $NEXUS_URL/repository/edumfa-ubuntu-jammy/'
+        run: |
+          for deb_file in $(ls *.deb); do
+            curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" $NEXUS_URL/repository/edumfa-ubuntu-jammy/
+          done
+        
   build-focal:
     name: Ubuntu 20.04 LTS build
     runs-on: ubuntu-20.04
