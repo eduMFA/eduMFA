@@ -21,7 +21,7 @@ jobs:
           dpkg-buildpackage -us -uc -b
       - name: Build server packages
         run: |
-          mv deploy/debian-server debian
+          mv deploy/ubuntu-server debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
       - name: Upload packages to Nexus
@@ -44,7 +44,7 @@ jobs:
           dpkg-buildpackage -us -uc -b
       - name: Build server packages
         run: |
-          mv deploy/debian-server debian
+          mv deploy/ubuntu-server debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
       - name: Upload packages to Nexus
