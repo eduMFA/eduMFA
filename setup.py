@@ -24,6 +24,8 @@ def get_file_contents(file_path):
 def get_file_list(file_path):
     full_path = os.path.join(package_directory, file_path)
     file_list = os.listdir(full_path)
+    # Filter out __pycache__
+    file_list = [x for x in file_list if "__pycache__" not in x]
     # now we need to add the path to the files
     return [file_path + f for f in file_list]
 
@@ -99,9 +101,12 @@ setup(
     author_email='edumfa@listserv.dfn.de',
     url='https://www.edumfa.io',
     keywords='OTP, two factor authentication, management, security',
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     packages=find_packages(),
-    scripts=["edumfa-manage"] + get_scripts("tools"),
+    entry_points={
+        'console_scripts': [
+            'edumfa-manage = edumfa.commands.manage.main:cli'
+        ]},
     extras_require={
         'doc': [
             "Pallets-Sphinx-Themes>=1.2.3",
@@ -146,7 +151,6 @@ setup(
                  "Topic :: System :: Systems Administration :: Authentication/Directory",
                  'Programming Language :: Python',
                  'Programming Language :: Python :: 3',
-                 'Programming Language :: Python :: 3.6',
                  'Programming Language :: Python :: 3.7',
                  'Programming Language :: Python :: 3.8',
                  'Programming Language :: Python :: 3.9',
