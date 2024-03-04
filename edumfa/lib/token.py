@@ -482,8 +482,7 @@ def get_tokens_paginate(tokentype=None, realm=None, assigned=None, user=None,
     else:
         sql_query = sql_query.order_by(sortby.asc())
 
-    pagination = sql_query.paginate(page, per_page=psize,
-                                    error_out=False)
+    pagination = sql_query.paginate(page=page, per_page=psize, error_out=False)
     tokens = pagination.items
     prev = None
     if pagination.has_prev:

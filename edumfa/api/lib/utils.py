@@ -292,6 +292,9 @@ def get_all_params(request):
         # Add the unquoted HTML and form parameters
         return_param = check_unquote(request, request.values)
 
+    if request.method == "GET" and request.form:
+        return_param.update(check_unquote(request, request.form))
+
     if request.is_json:
         log.debug("Update params in request {0!s} {1!s} with JSON data.".format(request.method,
                                                                                 request.base_url))
