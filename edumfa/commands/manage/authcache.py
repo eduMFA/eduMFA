@@ -1,16 +1,8 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
-# Previous authors by privacyIDEA project:
-#
-# 2020 Henning Hollermann <henning.hollermann@netknights.it>
-# 2017 Diogenes S. Jesus
-# 2014 - 2020 Cornelius Kölbel <cornelius.koelbel@netknights.it>
-#
-# (c) Cornelius Kölbel
 #
 # This code is free software; you can redistribute it and/or
 # modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -24,12 +16,23 @@
 #
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# ./manage.py db init
-# ./manage.py db migrate
-# ./manage.py create_tables
 #
+import click
+from flask.cli import AppGroup
 
-from edumfa.commands.manage.main import cli as manage_cli
+from edumfa.lib.authcache import cleanup
 
-if __name__ == '__main__':
-    manage_cli()
+authcache_cli = AppGroup("auth cache", help="Manage authentication cache")
+
+
+@authcache_cli.command("cleanup")
+@click.option("-m", "--minutes", default=480, show_default=True, type=int,
+              help="Clean up authcache entries older than this number of minutes")
+def authcache_cleanup(minutes: int):
+    """
+    Remove entries from the authcache.
+    Remove all entries where the last_auth entry is older than the given number
+    of minutes.
+    """
+    r = cleanup(minutes)
+    click.echo(f"{r} entries deleted from authcache")
