@@ -30,7 +30,6 @@ class AppTestCase(unittest.TestCase):
         # This will create the app with the 'development' configuration
         app = create_app()
         self.assertIsInstance(app, flask.app.Flask, app)
-        self.assertEqual(app.env, 'production', app)
         self.assertTrue(app.debug, app)
         self.assertFalse(app.testing, app)
         self.assertEqual(app.import_name, 'edumfa.app', app)
