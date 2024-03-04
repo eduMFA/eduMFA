@@ -1,5 +1,18 @@
 # Update Notes
 
+## eduMFA 1.3.0
+
+* Fixed handling Windows Hello passkeys
+* Bugfixes for CI and docs
+
+## eduMFA 1.2.0
+
+* Only bugfix release for CI actions no functional changes
+
+## eduMFA 1.1.0
+
+* Only bugfix release for CI actions no functional changes
+
 ## eduMFA 1.0.0
 
 * Add option to enroll passkeys

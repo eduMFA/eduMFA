@@ -23,7 +23,7 @@ import functools
 # built documents.
 #
 # The short X.Y version.
-version = '1.2.0'
+version = '1.3.0'
 # The full version, including alpha/beta/rc tags.
 #release = '2.16dev5'
 release = version
