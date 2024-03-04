@@ -1,0 +1,16 @@
+deploy/edumfa/edumfa.cfg                            etc/edumfa/
+deploy/edumfa/openssl.cnf			etc/edumfa/CA
+deploy/edumfa/eduMFA.pem		etc/edumfa/
+
+# radius client
+deploy/edumfa/dictionary			etc/edumfa/
+
+deploy/nginx/edumfaapp.py			etc/edumfa/
+
+# uwsgi and nginx config
+
+deploy/nginx/sites-available/edumfa	etc/nginx/sites-available/
+deploy/uwsgi/apps-available/edumfa.xml	etc/uwsgi/apps-available/
+
+# Crontab
+deploy/crontab/edumfa			etc/cron.d/

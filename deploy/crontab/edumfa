@@ -1,5 +1,5 @@
 # Run the edumfa-cron runner every 5 minutes
-*/5 * * * *	edumfa	edumfa-cron run_scheduled -c
+*/5 * * * *	edumfa	/opt/edumfa/bin/edumfa-cron run_scheduled -c
 
-# Audit rotate
-#1 2 * * *	edumfa	edumfa-manage audit rotate_audit --age 360
+# Audit rotation example: once a week at 00:00 on Sunday
+#0 0 * * 0	edumfa	/opt/edumfa/bin/edumfa-manage audit rotate_audit --age 360

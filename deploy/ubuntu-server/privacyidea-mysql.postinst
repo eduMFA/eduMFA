@@ -1,0 +1,113 @@
+#!/bin/sh
+# see: dh_installdeb(1)
+
+set -e
+
+# source debconf library
+. /usr/share/debconf/confmodule
+
+# Source dbconfig-common functions
+if [ -f /usr/share/dbconfig-common/dpkg/postinst.pgsql  ]; then
+  . /usr/share/dbconfig-common/dpkg/postinst.pgsql
+fi
+
+USERNAME=edumfa
+
+if test -f /etc/default/edumfa; then
+    . /etc/default/edumfa
+    # If the daemon user was changed,
+    # we set other access rights
+    USERNAME=$USER
+fi
+
+
+create_user() {
+        useradd -r $USERNAME -m || true
+}
+
+create_files() {
+        mkdir -p /var/log/edumfa
+        mkdir -p /var/lib/edumfa
+        touch /var/log/edumfa/edumfa.log
+        edumfa-manage create_enckey || true > /dev/null
+        # edumfa-manage create_tables || true > /dev/null
+	edumfa-manage createdb || true > /dev/null
+        edumfa-manage create_audit_keys || true > /dev/null
+        chown -R $USERNAME /var/log/edumfa
+        chown -R $USERNAME /var/lib/edumfa
+        chown -R $USERNAME /etc/edumfa
+        chmod 600 /etc/edumfa/enckey
+        chmod 600 /etc/edumfa/private.pem
+	# we need to change access right, otherwise each local user could call
+	# edumfa-manage
+	chgrp root /etc/edumfa/edumfa.cfg
+	chmod 640 /etc/edumfa/edumfa.cfg
+}
+
+adapt_edumfa_cfg() {
+	if [ !$(grep "^PI_PEPPER" /etc/edumfa/edumfa.cfg) ]; then
+	    # PEPPER does not exist, yet
+	    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+	    echo "PI_PEPPER = '$PEPPER'" >> /etc/edumfa/edumfa.cfg
+	fi
+	if [ !$(grep "^SECRET_KEY" /etc/edumfa/edumfa.cfg || true) ]; then
+	    # SECRET_KEY does not exist, yet
+	    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+	    echo "SECRET_KEY = '$SECRET'" >> /etc/edumfa/edumfa.cfg
+	fi
+}
+
+create_database() {
+	# create the MYSQL database
+	if [ !$(grep "^SQLALCHEMY_DATABASE_URI" /etc/edumfa/edumfa.cfg || true) ]; then
+	    USER="debian-sys-maint"
+	    PASSWORD=$(grep "^password" /etc/mysql/debian.cnf | sort -u | cut -d " " -f3)
+	    NPW="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c12)"
+	    mysql -u $USER --password=$PASSWORD -e "create database edumfa;" || true
+	    mysql -u $USER --password=$PASSWORD -e "grant all privileges on edumfa.* to 'edumfa'@'localhost' identified by '$NPW';"
+	    echo "SQLALCHEMY_DATABASE_URI = 'mysql://edumfa:$NPW@localhost/edumfa'" >> /etc/edumfa/edumfa.cfg
+	fi
+}
+
+
+update_db() {
+	# Upgrade the database
+	/opt/edumfa/bin/edumfa-schema-upgrade /opt/edumfa/lib/edumfa/migrations > /dev/null
+}
+
+case "$1" in
+
+  configure)
+	create_user
+	adapt_edumfa_cfg
+	create_database
+	create_files
+	if [ -z "$2" ]; then
+		# We are in the install step
+		# So we stamp the DB
+		touch /tmp/edumfa-install
+		/opt/edumfa/bin/edumfa-manage db stamp -d /opt/edumfa/lib/edumfa/migrations/ head
+	else
+		# We are in an update step
+		touch /tmp/edumfa-upgrade
+		update_db
+	fi
+  ;;
+
+  abort-upgrade|abort-remove|abort-deconfigure)
+    exit 0
+  ;;
+
+  *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+  ;;
+
+esac
+
+
+#DEBHELPER#
+
+db_stop
+
+exit 0

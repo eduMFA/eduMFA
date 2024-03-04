@@ -1,0 +1,28 @@
+#!/bin/sh
+# see: dh_installdeb(1)
+
+set -e
+
+# source debconf library
+. /usr/share/debconf/confmodule
+
+# Source dbconfig-common functions
+if [ -f /usr/share/dbconfig-common/dpkg/postinst.pgsql  ]; then
+  . /usr/share/dbconfig-common/dpkg/postinst.pgsql
+fi
+
+unset_sites () {
+	rm -f /etc/nginx/sites-enabled/privacycidea
+	rm -f /etc/uwsgi/apps-enabled/edumfa.xml
+}
+
+
+unset_sites
+
+# Remove the symbolic link to edumfa-manage
+if [ -L /usr/local/bin/edumfa-manage ]; then
+    rm /usr/local/bin/edumfa-manage
+fi
+
+#DEBHELPER#
+exit 0
