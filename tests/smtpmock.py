@@ -21,7 +21,7 @@ limitations under the License.
 
 import smtplib
 
-from inspect import formatargspec, getfullargspec as getargspec
+from inspect import getfullargspec as getargspec
 from collections.abc import Sequence, Sized
 
 from collections import namedtuple
@@ -44,14 +44,13 @@ def get_wrapped(func, wrapper_template, evaldict):
     args = getargspec(func)
     values = args.args[-len(args.defaults):] if args.defaults else None
 
-    signature = formatargspec(*args)
     is_bound_method = hasattr(func, '__self__')
     if is_bound_method:
         args.args = args.args[1:]     # Omit 'self'
-    callargs = formatargspec(*args, formatvalue=lambda v: '=' + v)
 
-    ctx = {'signature': signature, 'funcargs': callargs}
-    exec(wrapper_template % ctx, evaldict, evaldict)
+    ctx = {'signature': '(self)', 'funcargs': '(self)'}
+    exec (wrapper_template % ctx, evaldict, evaldict)
+
 
     wrapper = evaldict['wrapper']
 
