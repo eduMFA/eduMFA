@@ -45,10 +45,10 @@ create_files() {
 }
 
 adapt_edumfa_cfg() {
-	if [ !$(grep "^PI_PEPPER" /etc/edumfa/edumfa.cfg) ]; then
+	if [ !$(grep "^EDUMFA_PEPPER" /etc/edumfa/edumfa.cfg) ]; then
 	    # PEPPER does not exist, yet
 	    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
-	    echo "PI_PEPPER = '$PEPPER'" >> /etc/edumfa/edumfa.cfg
+	    echo "EDUMFA_PEPPER = '$PEPPER'" >> /etc/edumfa/edumfa.cfg
 	fi
 	if [ !$(grep "^SECRET_KEY" /etc/edumfa/edumfa.cfg || true) ]; then
 	    # SECRET_KEY does not exist, yet
