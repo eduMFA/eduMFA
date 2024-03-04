@@ -1,0 +1,52 @@
+name: Ubuntu
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-jammy:
+    name: Ubuntu 22.04 LTS build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
+      - name: Build core package
+        run: |
+          mv deploy/ubuntu .
+          sudo mk-build-deps -ri
+          dpkg-buildpackage -us -uc -b
+      - name: Build server packages
+        run: |
+          mv deploy/debian-server .
+          sudo mk-build-deps -ri
+          dpkg-buildpackage -us -uc -b
+      - name: Upload packages to Nexus
+        run: 'curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@*.deb" $NEXUS_URL/repository/edumfa-ubuntu-jammy/'
+  build-focal:
+    name: Ubuntu 20.04 LTS build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+          sudo apt update
+          sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
+      - name: Build core package
+        run: |
+          mv deploy/ubuntu .
+          sudo mk-build-deps -ri
+          dpkg-buildpackage -us -uc -b
+      - name: Build server packages
+        run: |
+          mv deploy/debian-server .
+          sudo mk-build-deps -ri
+          dpkg-buildpackage -us -uc -b
+      - name: Upload packages to Nexus
+        run: 'curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@*.deb" $NEXUS_URL/repository/edumfa-ubuntu-focal/'
+
