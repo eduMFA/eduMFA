@@ -16,12 +16,12 @@ jobs:
           sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
       - name: Build core package
         run: |
-          mv deploy/ubuntu .
+          mv deploy/ubuntu debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
       - name: Build server packages
         run: |
-          mv deploy/debian-server .
+          mv deploy/debian-server debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
       - name: Upload packages to Nexus
@@ -39,12 +39,12 @@ jobs:
           sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
       - name: Build core package
         run: |
-          mv deploy/ubuntu .
+          mv deploy/ubuntu debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
       - name: Build server packages
         run: |
-          mv deploy/debian-server .
+          mv deploy/debian-server debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
       - name: Upload packages to Nexus
