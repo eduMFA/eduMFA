@@ -30,7 +30,7 @@ def get_file_list(file_path):
     return [file_path + f for f in file_list]
 
 
-install_requires = ["beautifulsoup4[lxml]>=4.3.2",
+install_requires = ["beautifulsoup4[lxml]>=4.12.3",
                     "cbor2>=5.0.1",
                     "configobj>=5.0.6",
                     "croniter>=0.3.8",
@@ -45,6 +45,7 @@ install_requires = ["beautifulsoup4[lxml]>=4.3.2",
                     "huey[redis]>=1.11.0",
                     "importlib_metadata>=2.1.1",
                     "ldap3>=2.6",
+                    "lxml>=5.0.0",
                     "netaddr>=0.7.12",
                     "passlib[bcrypt]>=1.7.0",
                     "argon2_cffi>=20.1.0",
