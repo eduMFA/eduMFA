@@ -82,4 +82,5 @@ jobs:
       if: ${{ steps.pytest_run.outcome == 'success' }}
       uses: codecov/codecov-action@v4
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml
