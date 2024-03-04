@@ -33,7 +33,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-
 class ROLE(object):
     ADMIN = "admin"
     USER = "user"
@@ -67,20 +66,12 @@ def db_admin_exist(username):
     return bool(get_db_admin(username))
 
 
-def create_db_admin(app, username, email=None, password=None):
+def create_db_admin(username: str, email: str = None, password=None):
     pw_dig = None
     if password:
         pw_dig = hash_with_pepper(password)
     user = Admin(email=email, username=username, password=pw_dig)
     user.save()
-
-
-def list_db_admin():
-    admins = Admin.query.all()
-    print("Name \t email")
-    print(30*"=")
-    for admin in admins:
-        print("{0!s} \t {1!s}".format(admin.username, admin.email))
 
 
 def get_db_admins():
@@ -119,8 +110,7 @@ def check_webui_user(user_obj,
     :type options: dict
     :param superuser_realms: list of realms, that contain admins
     :type superuser_realms: list
-    :param check_otp: If set, the user is not authenticated against the
-         userstore but against eduMFA
+    :param check_otp: If set, the user is not authenticated against the userstore but against eduMFA
     :return: tuple of bool, string and dict/None
     """
     options = options or {}
