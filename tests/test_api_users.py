@@ -367,7 +367,7 @@ class APIUsersTestCase(MyApiTestCase):
             self.assertTrue(role == "user", result)
 
         # Delete the users
-        with self.app.test_request_context('/user/{0!s}/{1!s}'.format(resolver, "wördy").encode('utf-8'),
+        with self.app.test_request_context('/user/{0!s}/{1!s}'.format(resolver, u"wördy"),
                                            method='DELETE',
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
