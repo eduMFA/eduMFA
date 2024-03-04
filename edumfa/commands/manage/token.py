@@ -1,16 +1,8 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
-# Previous authors by privacyIDEA project:
-#
-# 2020 Henning Hollermann <henning.hollermann@netknights.it>
-# 2017 Diogenes S. Jesus
-# 2014 - 2020 Cornelius Kölbel <cornelius.koelbel@netknights.it>
-#
-# (c) Cornelius Kölbel
 #
 # This code is free software; you can redistribute it and/or
 # modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -24,12 +16,28 @@
 #
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# ./manage.py db init
-# ./manage.py db migrate
-# ./manage.py create_tables
 #
 
-from edumfa.commands.manage.main import cli as manage_cli
+import click
+from flask.cli import AppGroup
 
-if __name__ == '__main__':
-    manage_cli()
+from edumfa.lib.importotp import parseOATHcsv
+from edumfa.lib.token import import_token
+
+token_cli = AppGroup("token", help="Manage tokens")
+
+
+@token_cli.command("import")
+@click.argument("file", type=click.File("r"))
+@click.option("-t", "tokenrealm", help="The token realm", type=str)
+def import_tokens(file, tokenrealm):
+    """
+    Import Tokens from a CSV file
+    """
+    contents = file.read()
+    tokens = parseOATHcsv(contents)
+    i = 0
+    for serial in tokens:
+        i += 1
+        click.echo(u"{0!s}/{1!s} Importing token {2!s}".format(i, len(tokens), serial))
+        import_token(serial, tokens[serial], tokenrealms=tokenrealm)

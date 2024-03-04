@@ -387,7 +387,7 @@ class AuthApiTestCase(MyApiTestCase):
             self.assertEqual('admin', result['value']['role'], result)
 
         # add an admin with an '@' in the login name
-        create_db_admin(self.app, 'super@intern', password='testing')
+        create_db_admin('super@intern', password='testing')
         # as long as the part after the '@' does not resemble an existing realm,
         # this should work with 'spltAtSign' set to True
         with self.app.test_request_context('/auth',
