@@ -33,12 +33,12 @@ jobs:
     name: 'Run tests with Python'
     needs: pre_check
     if: needs.pre_check.outputs.run_tests == 'true' && !(github.actor == 'dependabot[bot]' && github.event_name == 'push')
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       # don't cancel running matrix tests when one test fails
       fail-fast: false
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     steps:
     - uses: actions/checkout@v4

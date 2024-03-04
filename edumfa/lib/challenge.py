@@ -102,7 +102,7 @@ def get_challenges_paginate(serial=None, transaction_id=None,
     else:
         sql_query = sql_query.order_by(sortby.asc())
 
-    pagination = sql_query.paginate(page, per_page=psize,
+    pagination = sql_query.paginate(page=page, per_page=psize,
                                     error_out=False)
     challenges = pagination.items
     prev = None
