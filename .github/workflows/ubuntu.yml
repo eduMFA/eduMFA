@@ -28,9 +28,8 @@ jobs:
           rm -r debian
       - name: Upload packages to Nexus
         run: |
-          cd ..
-          for deb_file in $(ls *.deb); do
-            curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy/"
+          for deb_file in $(ls ../*.deb); do
+            curl --trace -u $NEXUS_USERNAME:$NEXUS_PASSWORD -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy/"
           done
         
   build-focal:
@@ -58,9 +57,6 @@ jobs:
           rm -r debian
       - name: Upload packages to Nexus
         run: |
-          cd ..
-          ls
-          ls *.deb
-          for deb_file in $(ls *.deb); do
-            curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal/"
+          for deb_file in $(ls ../*.deb); do
+            curl --trace -u $NEXUS_USERNAME:$NEXUS_PASSWORD -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal/"
           done
