@@ -28,7 +28,7 @@ jobs:
         run: |
           cd ..
           for deb_file in $(ls *.deb); do
-            curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" $NEXUS_URL/repository/edumfa-ubuntu-jammy/
+            curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary @$deb_file $NEXUS_URL/repository/edumfa-ubuntu-jammy/
           done
         
   build-focal:
@@ -56,5 +56,5 @@ jobs:
         run: |
           cd ..
           for deb_file in $(ls *.deb); do
-            curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" $NEXUS_URL/repository/edumfa-ubuntu-jammy/
+            curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary @$deb_file $NEXUS_URL/repository/edumfa-ubuntu-jammy/
           done
