@@ -23,9 +23,10 @@ jobs:
         run: |
           mv deploy/ubuntu-server debian
           sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b --source-option=-Sa
+          dpkg-buildpackage -us -uc -b
       - name: Upload packages to Nexus
         run: |
+          cd ..
           for deb_file in $(ls *.deb); do
             curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" $NEXUS_URL/repository/edumfa-ubuntu-jammy/
           done
@@ -52,5 +53,8 @@ jobs:
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
       - name: Upload packages to Nexus
-        run: 'curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@*.deb" $NEXUS_URL/repository/edumfa-ubuntu-focal/'
-
+        run: |
+          cd ..
+          for deb_file in $(ls *.deb); do
+            curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD --upload-file -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" $NEXUS_URL/repository/edumfa-ubuntu-jammy/
+          done
