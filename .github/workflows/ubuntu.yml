@@ -19,11 +19,13 @@ jobs:
           mv deploy/ubuntu debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b --source-option=-Sa
+          rm debian
       - name: Build server packages
         run: |
           mv deploy/ubuntu-server debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
+          rm debian
       - name: Upload packages to Nexus
         run: |
           cd ..
@@ -47,11 +49,13 @@ jobs:
           mv deploy/ubuntu debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
+          rm debian
       - name: Build server packages
         run: |
           mv deploy/ubuntu-server debian
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
+          rm debian
       - name: Upload packages to Nexus
         run: |
           cd ..
