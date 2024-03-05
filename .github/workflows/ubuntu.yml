@@ -1,0 +1,66 @@
+name: Ubuntu
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-jammy:
+    name: Ubuntu 22.04 LTS build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
+      - name: Build core package
+        run: |
+          mv deploy/ubuntu debian
+          sudo mk-build-deps -ri
+          dpkg-buildpackage -us -uc -b --source-option=-Sa
+          rm -r debian
+      - name: Build server packages
+        run: |
+          mv deploy/ubuntu-server debian
+          sudo mk-build-deps -ri
+          dpkg-buildpackage -us -uc -b
+          rm -r debian
+      - name: Upload packages to Nexus
+        run: |
+          for deb_file in $(ls ../*.deb); do
+            curl --trace -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy/"
+          done
+
+  build-focal:
+    name: Ubuntu 20.04 LTS build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+          sudo apt update
+          sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
+      - name: Build core package
+        run: |
+          mv deploy/ubuntu debian
+          sudo mk-build-deps -ri
+          dpkg-buildpackage -us -uc -b
+          rm -r debian
+      - name: Build server packages
+        run: |
+          mv deploy/ubuntu-server debian
+          sudo mk-build-deps -ri
+          dpkg-buildpackage -us -uc -b
+          rm -r debian
+      - name: Upload packages to Nexus
+        run: |
+          for deb_file in $(ls ../*.deb); do
+            curl --trace -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal/"
+            done
