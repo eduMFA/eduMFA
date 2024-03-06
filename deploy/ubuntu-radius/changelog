@@ -1,4 +1,4 @@
-edumfa-radius (1.0.0jammy) jammy; urgency=medium
+edumfa (1.0.0{{VERSION}}) {{VERSION}}; urgency=medium
 
   * Initial Release
 
