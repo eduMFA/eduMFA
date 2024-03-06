@@ -43,18 +43,27 @@ class HttpMessageToUidProvider(ISMSProvider):
 
 
     def submit_message(self, uid, message):
+        return self._submit_message(uid, message, False)
+
+    def submit_post_check(self, uid, message):
+        return self._submit_message(uid, message, True)
+
+    def _submit_message(self, uid, message, postcheck):
         """
         send a message to a user via an http gateway
 
         :param uid: the recipients uid
         :param message: the message to submit to the phone
+        :param postcheck: true, if this is the post check action, false otherwise
         :return:
         """
         parameter = {}
         headers = {}
         if self.smsgateway:
-
-            url = self.smsgateway.option_dict.get("URL")
+            if postcheck:
+                url = self.smsgateway.option_dict.get("POST_CHECK_URL")
+            else:
+                url = self.smsgateway.option_dict.get("URL")
             method = self.smsgateway.option_dict.get("HTTP_METHOD", "GET")
             username = self.smsgateway.option_dict.get("USERNAME")
             password = self.smsgateway.option_dict.get("PASSWORD")
@@ -71,8 +80,10 @@ class HttpMessageToUidProvider(ISMSProvider):
                     parameter[k] = v.format(otp=message, uid=uid)
             headers = self.smsgateway.header_dict
         else:
-
-            url = self.config.get('URL')
+            if postcheck:
+                url = self.config.get("POST_CHECK_URL")
+            else:
+                url = self.config.get("URL")
             method = self.config.get('HTTP_Method', 'GET')
             username = self.config.get('USERNAME')
             password = self.config.get('PASSWORD')
@@ -85,7 +96,10 @@ class HttpMessageToUidProvider(ISMSProvider):
 
         log.debug("submitting message {0!r} to {1!s}".format(message, uid))
 
-        if url is None:
+        if not url:
+            if postcheck:
+                # silently return if no POST_CHECK_URL is configured
+                return True
             log.warning("can not submit message. URL is missing.")
             raise SMSError(-1, "No URL specified in the provider config.")
         basic_auth = None
@@ -258,9 +272,8 @@ class HttpMessageToUidProvider(ISMSProvider):
                       "HTTP_PROXY": {"description": _("Proxy setting for HTTP connections.")},
                       "HTTPS_PROXY": {"description": _("Proxy setting for HTTPS connections.")},
                       "TIMEOUT": {"description": _("The timeout in seconds.")},
-                      "SEND_TO_UID": {"description": _("This provider expects a uid instead of a phone number as message destination."),
-                                      "values": ["yes", "no"]},
-                      "UID_TOKENINFO_ATTRIBUTE": {"description": _("If SEND_TO_UID is enabled and the token is not assigned to a user, use this attribute from token_info as a fallback.")}
+                      "UID_TOKENINFO_ATTRIBUTE": {"description": _("If the token is not assigned to a user, use this attribute from token_info as a fallback.")},
+                      "POST_CHECK_URL": {"description": _("The URL for the post check action")}
                   }
                   }
         return params
