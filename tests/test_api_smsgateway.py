@@ -227,7 +227,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
                                         'SipgateSMSProvider.SipgateSMSProvider')
             smpp_parameters = value.get('edumfa.lib.smsprovider.'
                                         'SmppSMSProvider.SmppSMSProvider')
-            msg2uid_parameters = value.get('privacyidea.lib.smsprovider.'
+            msg2uid_parameters = value.get('edumfa.lib.smsprovider.'
                                          'HttpMessageToUidProvider.HttpMessageToUidProvider')
             self.assertEqual(http_parameters.get("options_allowed"), True)
             self.assertEqual(smtp_parameters.get("options_allowed"), False)
