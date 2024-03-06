@@ -97,7 +97,7 @@ eduMFA server. This module plugs into FreeRADIUS. The FreeRADIUS does not
 have to run on the same machine as eduMFA.
 To install this module run::
 
-   apt-get install eduMFA-radius
+   apt-get install edumfa-radius
 
 For further details see :ref:`rlm_perl`.
 
