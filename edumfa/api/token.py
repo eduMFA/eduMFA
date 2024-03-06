@@ -83,6 +83,7 @@ from edumfa.api.lib.postpolicy import (save_pin_change, check_verify_enrollment,
 from edumfa.lib.event import event
 from edumfa.api.auth import admin_required
 from edumfa.lib.subscriptions import CheckSubscription
+import json
 
 token_blueprint = Blueprint('token_blueprint', __name__)
 log = logging.getLogger(__name__)
