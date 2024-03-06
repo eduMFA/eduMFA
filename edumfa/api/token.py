@@ -1201,6 +1201,40 @@ def delete_tokeninfo_api(serial, key):
     return send_result(success)
 
 
+@token_blueprint.route('/info/<serial>', methods=['POST'])
+@admin_required
+@prepolicy(check_base_action, request, action=ACTION.SETTOKENINFO)
+@event("token_info", request, g)
+@log_with(log)
+def modify_tokeninfo_api(serial):
+    """
+    Modifies tokeninfo entries for a token. Already existing entries
+    with the same key are overwritten, keys with null value are deleted
+
+    :jsonparam dict info: dictionary with key value pairs. keys with null value are deleted. always make sure not to
+    : include keys with null value by accident!
+    :param serial: the serial number/identifier of the token
+    :return: returns value=True in case at least one token matching the serial could be found
+    :rtype: bool
+    """
+    tokeninfo = getParam(request.all_data, "info", required, allow_empty=False)
+    count = 0
+    if type(tokeninfo) is not dict:
+        tokeninfo = json.loads(tokeninfo)
+    if type(tokeninfo) is not dict:
+        raise ParameterError("Parameter 'info' must be a list of key, value pairs (dictionary). but is of type {0!r}", type(tokeninfo))
+    else:
+        g.audit_object.log({"serial": serial})
+        for key, value in tokeninfo.items():
+            g.audit_object.add_to_log({"action_detail": "'{0!s}':'{1!s}', ".format(key, value)})
+            if value is None:
+                count += delete_tokeninfo(serial, key)
+            else:
+                count += add_tokeninfo(serial, key, value)
+    success = count > 0
+    g.audit_object.log({"success": success})
+
+
 @token_blueprint.route('/group/<serial>/<groupname>', methods=['POST'])
 @token_blueprint.route('/group/<serial>', methods=['POST'])
 @admin_required
