@@ -1173,6 +1173,7 @@ def set_tokeninfo_api(serial, key):
     """
     value = getParam(request.all_data, "value", required)
     g.audit_object.log({"serial": serial})
+    g.audit_object.log({"action_detail": "key={0!s}, value={1!s}".format(key, value)})
     count = add_tokeninfo(serial, key, value)
     success = count > 0
     g.audit_object.log({"success": success})
