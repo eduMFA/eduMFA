@@ -553,9 +553,9 @@ class TokenEventHandler(BaseEventHandler):
                                         " Token serial: {!0s}".format(serial))
 
 
-                else:
-                    log.info("Action {0!s} requires serial number. But no serial "
-                             "number could be found in request {1!s}.".format(action, request))
+            else:
+                log.info("Action {0!s} requires serial number. But no serial "
+                         "number could be found in request {1!s}.".format(action, request))
 
         if action.lower() == ACTION_TYPE.INIT:
             log.info("Initializing new token")
