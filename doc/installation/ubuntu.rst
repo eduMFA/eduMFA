@@ -1,4 +1,3 @@
-
 .. _install_ubuntu:
 
 Ubuntu Packages
@@ -104,3 +103,43 @@ For further details see :ref:`rlm_perl`.
 .. rubric:: Footnotes
 
 .. [#ubuntu] Starting with eduMFA 1.0 Ubuntu 20.04 and 22.04 packages are available.
+
+
+Building your own Packages
+...........................
+To build custom packages from the source code, follow these steps meticulously:
+
+Ensure you have the necessary build tools by executing the following command::
+
+   sudo apt install build-essential debhelper devscripts equivs
+
+Install [dh-virtualenv](https://github.com/spotify/dh-virtualenv) by referring to their official documentation
+for installation instructions: [dh-virtualenv Docs](https://dh-virtualenv.readthedocs.io/en/latest/tutorial.html#step-1-install-dh-virtualenv)
+
+Clone the repository and navigate to the project directory::
+
+   git clone https://github.com/eduMFA/eduMFA.git
+   cd eduMFA
+
+Choose the package you want to build based on your requirements. Use one of the following commands::
+
+    cp -r deploy/ubuntu debian
+
+or::
+
+    cp -r deploy/ubuntu-server debian
+
+or::
+
+    cp -r deploy/ubuntu-radius debian
+
+Update the Linux distribution version in the changelog file. For example, for Ubuntu 22.04 LTS focal::
+
+    sed -i 's/{{VERSION}}/focal/g' debian/changelog
+
+Install build dependencies and build the package::
+
+   sudo mk-build-deps -ri
+   dpkg-buildpackage -us -uc -b
+
+By following these steps, you can successfully build a package from source.
