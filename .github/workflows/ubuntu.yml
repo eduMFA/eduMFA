@@ -1,11 +1,6 @@
 name: Ubuntu
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  release:
 
 jobs:
   build-jammy:
