@@ -41,7 +41,7 @@ import logging
 from .log import log_with
 from .config import (get_resolver_types, get_resolver_classes, get_config_object)
 from edumfa.lib.usercache import delete_user_cache
-from edumfa.lib.framework import get_request_local_store
+from edumfa.lib.framework import get_app_local_store
 from ..models import (Resolver,
                       ResolverConfig)
 from ..api.lib.utils import required
@@ -220,7 +220,7 @@ def delete_resolver(resolvername):
         reso.delete()
         ret = reso.id
     # Delete resolver object from cache
-    store = get_request_local_store()
+    store = get_app_local_store()
     if 'resolver_objects' in store:
         if resolvername in store['resolver_objects']:
             del store['resolver_objects'][resolvername]
@@ -321,7 +321,7 @@ def get_resolver_object(resolvername):
         log.error("Can not find resolver with name {0!s} ".format(resolvername))
         return None
     else:
-        store = get_request_local_store()
+        store = get_app_local_store()
         if 'resolver_objects' not in store:
             store['resolver_objects'] = {}
         resolver_objects = store['resolver_objects']
