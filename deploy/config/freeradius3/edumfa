@@ -1,0 +1,25 @@
+server {
+    authorize {
+        #files
+	update request {
+		# Add the Packet Src IP to the request as client fallback
+		Packet-Src-IP-Address = "%{Packet-Src-IP-Address}"
+	}
+        perl-edumfa
+        if (ok || updated) {
+            update control {
+                Auth-Type := Perl
+            }
+        }
+    }
+    listen {
+        type = auth
+        ipaddr = *
+        port = 0
+    }
+    authenticate {
+        Auth-Type Perl {
+            perl-edumfa
+        }
+    }
+}
