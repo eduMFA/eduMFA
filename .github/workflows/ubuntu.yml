@@ -36,9 +36,12 @@ jobs:
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Upload packages to Nexus
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           for deb_file in $(ls ../*.deb); do
-            curl --trace -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy/"
+            curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy/"
           done
 
   build-focal:
@@ -74,7 +77,10 @@ jobs:
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Upload packages to Nexus
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           for deb_file in $(ls ../*.deb); do
-            curl --trace -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal/"
-            done
+            curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal/"
+          done
