@@ -42,6 +42,10 @@ You can find tokens by providing filter parameters. Note, that you can combine a
 parameters as you want to. This way you can reduce the set of found tokens.
 Several filter parameters allow to search with regular expressions.
 
+The parameters ``tokentype`` and ``username`` are exact matches and will be applied before any other filters. This means
+that only tokens of given tokentype and username will be processed.
+If neither of those two parameters is given all tokens will be processed and checked against other filters.
+
 Actions will then be performed only on this reduced set.
 
 These are important filter parameters:
@@ -129,6 +133,23 @@ Example::
 
     eduMFA-token-janitor find --serial '^UBOM.*'
 
+Username
+******
+
+Searches through all tokens and returns the ones belonging to the given username.
+The username should contain the realm in the format ``user@realm``. If no realm is given the default realm is used.
+
+Example::
+
+    eduMFA-token-janitor find --username testuser@testrealm
+
+Return all tokens belonging to the user ``testuser`` in the realm ``testrealm``.
+
+Example::
+
+    eduMFA-token-janitor find --username testuser
+
+Return all tokens belonging to the user ``testuser`` in the default realm.
 
 Tokentype
 *********

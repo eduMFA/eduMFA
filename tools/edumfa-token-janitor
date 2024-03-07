@@ -46,6 +46,8 @@ from edumfa.lib.importotp import export_pskc
 from edumfa.lib.token import (get_tokens, remove_token, enable_token,
                                    unassign_token, import_token,
                                    get_tokens_paginated_generator)
+from edumfa.lib.user import User, split_user
+from edumfa.lib.realm import get_default_realm
 from edumfa.models import Token
 from edumfa.app import create_app
 from flask_script import Manager
@@ -95,6 +97,7 @@ Actions:
         --assigned false
         --orphaned true
         --tokentype=<type>
+        --username=<username@realm>
         --serial=<regexp>
         --description=<regexp>
         
@@ -264,25 +267,33 @@ def build_tokenvalue_filter(key,
 
 def _get_tokenlist(last_auth, assigned, active, tokeninfo_key,
                    tokeninfo_value_filter, tokenattribute, tokenattribute_filter,
-                   orphaned, tokentype, serial, description, chunksize, has_not_tokeninfo_key, has_tokeninfo_key):
+                   orphaned, tokentype, serial, description, username, chunksize, has_not_tokeninfo_key, has_tokeninfo_key):
     filter_active = None
     filter_assigned = None
+    user_obj = None
     orphaned = orphaned or ""
 
     if assigned is not None:
         filter_assigned = assigned.lower() == "true"
     if active is not None:
         filter_active = active.lower() == "true"
+    if username is not None:
+        user_login, user_realm = split_user(username)
+        if not user_realm:
+            user_realm = get_default_realm()
+        user_obj = User(login=user_login, realm=user_realm)
 
     if chunksize is not None:
         iterable = get_tokens_paginated_generator(tokentype=tokentype,
                                                   active=filter_active,
                                                   assigned=filter_assigned,
-                                                  psize=chunksize)
+                                                  psize=chunksize,
+                                                  user=user_obj)
     else:
         iterable = [get_tokens(tokentype=tokentype,
                                active=filter_active,
-                               assigned=filter_assigned)]
+                               assigned=filter_assigned,
+                               user=user_obj)]
     for tokenobj_list in iterable:
         filtered_list = []
         sys.stderr.write("++ Creating token object list.\n")
@@ -441,6 +452,8 @@ def export_user_data(token_list, attributes=None):
 @manager.option('--tokentype', help='The tokentype to search.')
 @manager.option('--serial', help='A regular expression on the serial')
 @manager.option('--description', help='A regular expression on the description')
+@manager.option('--username', help='An exact username including the userrealm concatenated by "@". If no realm is given, '
+                                   'the default realm will be used.')
 @manager.option('--attributes', help='Extends the "listuser" function to display additional user attributes')
 @manager.option('--tokenrealms', help='A comma separated list of realms, to which the tokens should be assigned.')
 @manager.option('--sum', help='In case of the action "listuser", this switch specifies if '
@@ -471,7 +484,7 @@ def export_user_data(token_list, attributes=None):
 def find(last_auth, assigned, active, tokeninfo_key, tokeninfo_value,
          tokeninfo_value_greater_than, tokeninfo_value_less_than,
          tokeninfo_value_after, tokeninfo_value_before,
-         orphaned, tokentype, serial, description, action, set_description,
+         orphaned, tokentype, serial, description, username, action, set_description,
          set_tokeninfo_key, set_tokeninfo_value, sum_tokens, tokenrealms, csv,
          chunksize, attributes, b32, has_not_tokeninfo_key, has_tokeninfo_key,
          tokenattribute, tokenattribute_value, tokenattribute_value_greater_than,
@@ -509,7 +522,7 @@ def find(last_auth, assigned, active, tokeninfo_key, tokeninfo_value,
                                tokeninfo_key, tvfilter,
                                tokenattribute, tafilter,
                                orphaned, tokentype, serial,
-                               description, chunksize, has_not_tokeninfo_key,
+                               description, username, chunksize, has_not_tokeninfo_key,
                                has_tokeninfo_key)
     if chunksize is not None:
         sys.stderr.write("+ Reading tokens from database in chunks of {}...\n".format(chunksize))
