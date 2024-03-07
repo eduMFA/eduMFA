@@ -51,10 +51,21 @@ __version__ = "0.1"
 from edumfa.lib.token import get_tokens, remove_token, enable_token
 from edumfa.lib.policy import ACTION
 from edumfa.app import create_app
-from flask_script import Manager
+import click
+from flask.cli import FlaskGroup
+from flask import current_app as app
 
-app = create_app(config_name='production', silent=True)
-manager = Manager(app)
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+
+def create_prod_app():
+    return create_app("production", silent=True, script=True)
+
+
+@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
+             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
+def cli():
+    pass
 
 def _get_tokenlist(age):
     tlist = []
@@ -64,24 +75,24 @@ def _get_tokenlist(age):
             tlist.append(token_obj)
     return tlist
 
-
-@manager.option('age', help='Can be something like 10h, 7d, or 2y')
+@cli.command()
+@click.argument('age')
 def list(age):
     """
     finds all tokens, where the last_auth is too old.
     """
     # Oh bad performance, we have to look at *ALL* tokens!
     tlist = _get_tokenlist(age)
-    print("Token serial\tLast authentication")
-    print("="*42)
+    click.echo("Token serial\tLast authentication")
+    click.echo("="*42)
     for token_obj in tlist:
-        print("{0!s}\t{1!s}".format(token_obj.token.serial,
+        click.echo("{0!s}\t{1!s}".format(token_obj.token.serial,
                                     token_obj.get_tokeninfo(ACTION.LASTAUTH)))
 
-
-@manager.option('age', help='Can be something like 10h, 7d, or 2y')
-@manager.option('-d', '--description', help='The description that will be set.')
-@manager.option('-t', '--tokeninfo',
+@cli.command()
+@click.argument('age')
+@click.option('-d', '--description', help='The description that will be set.')
+@click.option('-t', '--tokeninfo',
                 help='The tokeninfo that will be set. It needs a key and a '
                      'value and should be specified like key=value.')
 def mark(age, description=None, tokeninfo=None):
@@ -94,19 +105,19 @@ def mark(age, description=None, tokeninfo=None):
     tlist = _get_tokenlist(age)
     for token_obj in tlist:
         if description:
-            print("Setting description for token {0!s}: {1!s}".format(
+            click.echo("Setting description for token {0!s}: {1!s}".format(
                 token_obj.token.serial, description))
             token_obj.set_description(description)
             token_obj.save()
         if tokeninfo:
             key, value = tokeninfo.split("=")
-            print("Setting tokeninfo for token {0!s}: {1!s}={2!s}".format(
+            click.echo("Setting tokeninfo for token {0!s}: {1!s}={2!s}".format(
                 token_obj.token.serial, key, value))
             token_obj.add_tokeninfo(key, value)
             token_obj.save()
 
-
-@manager.option('age', help='Can be something like 10h, 7d, or 2y')
+@cli.command()
+@click.argument('age')
 def delete(age):
     """
     Find unused tokens and delete them.
@@ -115,10 +126,10 @@ def delete(age):
     for token_obj in tlist:
         serial = token_obj.token.serial
         remove_token(serial)
-        print("Token {0!s} deleted.".format(serial))
+        click.echo("Token {0!s} deleted.".format(serial))
 
-
-@manager.option('age', help='Can be something like 10h, 7d, or 2y')
+@cli.command()
+@click.argument('age')
 def disable(age):
     """
     Find unused tokens and delete them.
@@ -127,9 +138,8 @@ def disable(age):
     for token_obj in tlist:
         serial = token_obj.token.serial
         enable_token(serial, enable=False)
-        print("Token {0!s} disabled.".format(serial))
-
+        click.echo("Token {0!s} disabled.".format(serial))
 
 if __name__ == '__main__':
-    manager.run()
+    cli()
 

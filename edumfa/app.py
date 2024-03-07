@@ -97,7 +97,7 @@ def get_locale():
 
 def create_app(config_name="development",
                config_file='/etc/edumfa/edumfa.cfg',
-               silent=False, init_hsm=False):
+               silent=False, init_hsm=False, script=False):
     """
     First the configuration from the config.py is loaded depending on the
     config type like "production" or "development" or "testing".
@@ -183,7 +183,8 @@ def create_app(config_name="development",
     app.register_blueprint(tokengroup_blueprint, url_prefix='/tokengroup')
     app.register_blueprint(serviceid_blueprint, url_prefix='/serviceid')
     db.init_app(app)
-    migrate = Migrate(app, db)
+    if not script:
+        migrate = Migrate(app, db)
 
     app.response_class = PiResponseClass
 
