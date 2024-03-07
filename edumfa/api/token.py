@@ -1234,6 +1234,7 @@ def modify_tokeninfo_api(serial):
                 count += add_tokeninfo(serial, key, value)
     success = count > 0
     g.audit_object.log({"success": success})
+    return send_result(success)
 
 
 @token_blueprint.route('/group/<serial>/<groupname>', methods=['POST'])
