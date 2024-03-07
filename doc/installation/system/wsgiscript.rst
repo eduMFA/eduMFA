@@ -7,8 +7,8 @@ The WSGI Script
 
 Apache2 and Nginx are using a WSGI script to start the application.
 
-This script is usually located at ``/etc/eduMFA/eduMFAapp.py`` or
-``/etc/eduMFA/eduMFAapp.wsgi`` and has the following contents:
+This script is usually located at ``/etc/edumfa/eduMFAapp.py`` or
+``/etc/edumfa/eduMFAapp.wsgi`` and has the following contents:
 
 .. literalinclude:: ../../../deploy/apache/eduMFAapp.wsgi
     :language: python
@@ -23,7 +23,7 @@ least::
 
   <VirtualHost _default_:443>
       ...
-      WSGIScriptAlias /      /etc/eduMFA/eduMFAapp.wsgi
+      WSGIScriptAlias /      /etc/edumfa/eduMFAapp.wsgi
       WSGIDaemonProcess eduMFA processes=1 threads=15 display-name=%{GROUP} user=eduMFA
       WSGIProcessGroup eduMFA
       WSGIApplicationGroup %{GLOBAL}
@@ -60,11 +60,11 @@ Each config file can define its own
  * ...
 
 To create the new database you need :ref:`pimanage`. The *edumfa-manage* command
-reads the configuration from */etc/eduMFA/edumfa.cfg* by default.
+reads the configuration from */etc/edumfa/edumfa.cfg* by default.
 
 If you want to use another instance with another config file, you need to set
 an environment variable and create the database like this::
 
-   eduMFA_CONFIGFILE=/etc/eduMFA3/edumfa.cfg edumfa-manage create_tables
+   EDUMFA_CONFIGFILE=/etc/eduMFA3/edumfa.cfg edumfa-manage create_tables
 
 This way you can use *edumfa-manage* for each instance.

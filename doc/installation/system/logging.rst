@@ -22,7 +22,7 @@ Advanced Logging
 ~~~~~~~~~~~~~~~~
 
 You can also define a more detailed logging by specifying a
-log configuration file. By default the file is ``/etc/eduMFA/logging.cfg``.
+log configuration file. By default the file is ``/etc/edumfa/logging.cfg``.
 
 You can change the location of the logging configuration file
 in :ref:`cfgfile` like this::

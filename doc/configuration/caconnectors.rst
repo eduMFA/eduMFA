@@ -41,7 +41,7 @@ Local CA Connector
 The local CA connector calls a local openSSL configuration.
 
 Starting with eduMFA version 2.12 an example *openssl.cnf* is provided in
-*/etc/eduMFA/CA/openssl.cnf*.
+*/etc/edumfa/CA/openssl.cnf*.
 
 .. note:: This configuration and also this
    description is ment to be as an example. When setting up a productive CA, you
@@ -50,22 +50,22 @@ Starting with eduMFA version 2.12 an example *openssl.cnf* is provided in
 Manual Setup
 ............
 
-1. Modify the parameters in the file */etc/eduMFA/CA/openssl.cnf* according
+1. Modify the parameters in the file */etc/edumfa/CA/openssl.cnf* according
    to your needs.
 
 2. Create your CA certificate::
 
-       openssl req -days 1500 -new -x509 -keyout /etc/eduMFA/CA/ca.key \
-                   -out /etc/eduMFA/CA/ca.crt \
-                   -config /etc/eduMFA/CA/openssl.cnf
+       openssl req -days 1500 -new -x509 -keyout /etc/edumfa/CA/ca.key \
+                   -out /etc/edumfa/CA/ca.crt \
+                   -config /etc/edumfa/CA/openssl.cnf
 
-       chmod 0600 /etc/eduMFA/CA/ca.key
-       touch /etc/eduMFA/CA/index.txt
-       echo 01 > /etc/eduMFA/CA/serial
-       chown -R eduMFA /etc/eduMFA/CA
+       chmod 0600 /etc/edumfa/CA/ca.key
+       touch /etc/edumfa/CA/index.txt
+       echo 01 > /etc/edumfa/CA/serial
+       chown -R eduMFA /etc/edumfa/CA
 
 3. Now set up a local CA connector within eduMFA with the directory
-   */etc/eduMFA/CA* and the files accordingly.
+   */etc/edumfa/CA* and the files accordingly.
 
 Easy Setup
 ..........

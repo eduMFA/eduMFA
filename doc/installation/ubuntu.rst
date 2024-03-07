@@ -15,10 +15,10 @@ Using these is deprecated.
 For recent releases of eduMFA starting from version 3.0 a repository is
 available which provides packages for Ubuntu 18.04 LTS, 20.04LTS and 22.04LTS [#ubuntu]_.
 
-.. note:: The packages ``eduMFA-apache2`` and ``eduMFA-nginx`` assume
+.. note:: The packages ``edumfa-apache2`` and ``edumfa-nginx`` assume
    that you want to run a eduMFA system. These packages deactivate all
    other (default) websites. Instead, you may install the package
-   ``eduMFA-mysql`` to install the eduMFA application and setup the
+   ``edumfa-mysql`` to install the eduMFA application and setup the
    database without any webserver configuration. After this, you can integrate
    eduMFA with your existing webserver configuration.
 
@@ -89,10 +89,10 @@ Installation of eduMFA 3.x
 After having added the repositories, run::
 
    apt update
-   apt install eduMFA-apache2
+   apt install edumfa-apache2
 
 If you do not like the Apache2 webserver you could
-alternatively use the meta package ``eduMFA-nginx``.
+alternatively use the meta package ``edumfa-nginx``.
 
 ------------
 

@@ -29,7 +29,7 @@ WebUI.
    simply add users to be administrator in eduMFA.
 
 You define the administrative realms in the config file ``edumfa.cfg``, which is
-usually located at ``/etc/eduMFA/edumfa.cfg``::
+usually located at ``/etc/edumfa/edumfa.cfg``::
 
    SUPERUSER_REALM = ["adminrealm1", "super", "boss"]
 

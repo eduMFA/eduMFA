@@ -10,7 +10,7 @@ automate tasks. The tools can be found in the directory `eduMFA/bin`.
 
 .. _token_janitor:
 
-eduMFA-token-janitor
+edumfa-token-janitor
 -------------------------
 
 .. index:: orphaned tokens
@@ -55,7 +55,7 @@ deleted in the LDAP directory.
 
 Example::
 
-    eduMFA-token-janitor find --orphaned 1
+    edumfa-token-janitor find --orphaned 1
 
 This returns all orphaned tokens for later processing.
 
@@ -66,7 +66,7 @@ Searches for tokens that are either active or inactive, this means enabled or di
 
 Example::
 
-    eduMFA-token-janitor find --active False
+    edumfa-token-janitor find --active False
 
 This returns all disabled tokens. May you later want to delete these disabled tokens.
 
@@ -77,7 +77,7 @@ Searches for tokens that are either assigned to a user or unassigned.
 
 Example::
 
-    eduMFA-token-janitor find --assigned False
+    edumfa-token-janitor find --assigned False
 
 This returns all tokens, that are not assigned to a user. You could combine this with other filters
 like the ``tokenkind`` to find out how many hardware tokens are not assigned and still available for assignment.
@@ -90,14 +90,14 @@ Searches for all tokens, where the last authentication happens longer ago than t
 
 Example::
 
-    eduMFA-token-janitor find --last_auth 10d
+    edumfa-token-janitor find --last_auth 10d
 
 This will find all tokens, that did not authenticate within the last 10 days. You can also use "h" and "y"
 to specify hours and years.
 
 Since the last_auth is an entry in the ``tokeninfo`` table you could also search like this::
 
-   eduMFA-token-janitor find --tokeninfo-key last_auth --tokeninfo-value-after '2021-06-01 18:00:00+0200'
+   edumfa-token-janitor find --tokeninfo-key last_auth --tokeninfo-value-after '2021-06-01 18:00:00+0200'
 
 
 Description
@@ -107,7 +107,7 @@ Searches through all tokens and returns the ones with the selected description.
 
 Example::
 
-    eduMFA-token-janitor find --description '^fo.*'
+    edumfa-token-janitor find --description '^fo.*'
 
 Return all tokens where the description begins with "fo".
 
@@ -118,7 +118,7 @@ Searches through all tokens and returns the ones with the selected serial.
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0013B2B4
+    edumfa-token-janitor find --serial OATH0013B2B4
 
 Return all tokens with the serial ``OATH0013B2B4``.
 
@@ -127,7 +127,7 @@ which might be a tokentype "HOTP", but where the serial starts with UBOM.
 
 Example::
 
-    eduMFA-token-janitor find --serial '^UBOM.*'
+    edumfa-token-janitor find --serial '^UBOM.*'
 
 
 Tokentype
@@ -137,7 +137,7 @@ Searches through all tokens and returns the ones with the selected tokentype.
 
 Example::
 
-    eduMFA-token-janitor find --tokentype hotp
+    edumfa-token-janitor find --tokentype hotp
 
 Return all tokens with the tokentype ``hotp``.
 
@@ -155,7 +155,7 @@ The value of the token-attribute which should match.
 
 Example::
 
-    eduMFA-token-janitor find --tokenattribute rollout_state --tokenattribute-value clientwait
+    edumfa-token-janitor find --tokenattribute rollout_state --tokenattribute-value clientwait
 
 Search for all tokens with the tokenattribute-key ``rollout_state`` and the associated tokenattribute-value ``clientwait``.
 
@@ -168,7 +168,7 @@ Match if the value of the token attribute is less than the given value.
 
 Example::
 
-    eduMFA-token-janitor find --tokenattribute failcount --tokenattribute-value-less-than 10
+    edumfa-token-janitor find --tokenattribute failcount --tokenattribute-value-less-than 10
 
 Search for all tokens with the tokenattribute-key ``failcount`` and the associated tokenattribute-value below ``10``.
 This way you can find tokens, where the fail counter is less than 10 and thus the tokens are not blocked.
@@ -180,7 +180,7 @@ Match if the value of the token attribute is greater than the given value.
 
 Example::
 
-    eduMFA-token-janitor find --tokenattribute failcount --tokenattribute-value-greater-than 10
+    edumfa-token-janitor find --tokenattribute failcount --tokenattribute-value-greater-than 10
 
 Search for all tokens with the tokenattribute-key ``failcount`` and the associated tokenattribute-value greater than ``10``.
 This way you can find tokens, where the fail counter is greater than 10 and thus the tokens are blocked.
@@ -199,7 +199,7 @@ Filters for tokens that have given the specified tokeninfo-key no matter which v
 
 Example::
 
-    eduMFA-token-janitor find --has-tokeninfo-key import_time
+    edumfa-token-janitor find --has-tokeninfo-key import_time
 
 Searches for all tokens that have a tokeninfo-key ``import_time`` set.
 
@@ -212,7 +212,7 @@ Filters for tokens that have not set the specified tokeninfo-key.
 
 Example::
 
-    eduMFA-token-janitor find --has-not-tokeninfo-key import_time
+    edumfa-token-janitor find --has-not-tokeninfo-key import_time
 
 Searches for all tokens that didn't store the tokeninfo-key ``import_time``.
 
@@ -223,7 +223,7 @@ The tokeninfo-value to match.
 
 Example::
 
-    eduMFA-token-janitor find --tokeninfo-key tokenkind --tokeninfo-value software
+    edumfa-token-janitor find --tokeninfo-key tokenkind --tokeninfo-value software
 
 Search for all tokens with the tokeninfo-key ``tokenkind`` and the associated tokeninfo-value ``software``.
 
@@ -234,7 +234,7 @@ Interpret tokeninfo-values as integers and match only if they are smaller than t
 
 Example::
 
-    eduMFA-token-janitor find --tokeninfo-key timeWindow --tokeninfo-value-less-than 200
+    edumfa-token-janitor find --tokeninfo-key timeWindow --tokeninfo-value-less-than 200
 
 Search for all tokens with the tokeninfo-key ``timeWindow`` and the associated tokeninfo-value below ``200``.
 
@@ -245,7 +245,7 @@ Interpret tokeninfo-values as integers and match only if they are greater than t
 
 Example::
 
-    eduMFA-token-janitor find --tokeninfo-key timeWindow --tokeninfo-value-greater-than 100
+    edumfa-token-janitor find --tokeninfo-key timeWindow --tokeninfo-value-greater-than 100
 
 Search for all tokens with the tokeninfo-key ``timeWindow`` and the associated tokeninfo-value greater than ``100``.
 
@@ -265,7 +265,7 @@ The tokens are marked by setting a tokeninfo-key and an associated tokininfo-val
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key unused --set-tokeninfo-value True
+    edumfa-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key unused --set-tokeninfo-value True
 
 A new tokeninfo-key and the associated tokeninfo-value would be added for the token ``OAUTH0004C934``
 and are now marked for later processing. If the token already containd this tokeninf-key, the value
@@ -280,7 +280,7 @@ With **disable** the found tokens can be disabled.
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0004C934 --action disable
+    edumfa-token-janitor find --serial OATH0004C934 --action disable
 
 The token with the serial ``OAUTH0004C934`` will be disabled.
 
@@ -292,7 +292,7 @@ With **delete** the found tokens can be deleted.
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0004C934 --action delete
+    edumfa-token-janitor find --serial OATH0004C934 --action delete
 
 The token with the serial ``OAUTH0004C934`` will be deleted.
 
@@ -307,7 +307,7 @@ YAML in theory can export all token types and all tokeninfo.
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0004C934 --action export > OAUTH0004C934.xml
+    edumfa-token-janitor find --serial OATH0004C934 --action export > OAUTH0004C934.xml
 
 The token with the serial ``OAUTH0004C934`` will be exported and saved in an xml file.
 
@@ -322,7 +322,7 @@ With **listuser** the found tokens are listed in a summarized view.
 
 Example::
 
-    eduMFA-token-janitor find --action listuser
+    edumfa-token-janitor find --action listuser
 
 lists all tokens in a summarized view.
 
@@ -337,7 +337,7 @@ A user without any assigned token is not listed here!
 
 Example::
 
-    eduMFA-token-janitor find --sum --action listuser
+    edumfa-token-janitor find --sum --action listuser
 
 tokenrealms
 ...........
@@ -350,7 +350,7 @@ Please note that without a previous selection of a certain token, all found toke
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0005B88E --action tokenrealms --tokenrealms defrealm
+    edumfa-token-janitor find --serial OATH0005B88E --action tokenrealms --tokenrealms defrealm
 
 Setting realms of token ``OATH0005B88E`` to ``defrealm``.
 
@@ -358,7 +358,7 @@ You can also assign a list of realms by comma separating.
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0005B88E --action tokenrealms --tokenrealms defrealm,realmA,realmB
+    edumfa-token-janitor find --serial OATH0005B88E --action tokenrealms --tokenrealms defrealm,realmA,realmB
 
 Set
 ***
@@ -376,7 +376,7 @@ This will only work together it is not possible to set a tokeninfo-key or a toke
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key import_time --set-tokeninfo-value $(date --iso-8601=minutes)
+    edumfa-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key import_time --set-tokeninfo-value $(date --iso-8601=minutes)
 
 Mark the token with the serial ``OATH0004C934`` and set a new tokeninfo-key ``import_time`` and a
 new tokeninfo-value ``$(date --iso-8601=minutes)``.
@@ -390,7 +390,7 @@ It is important to note that this is only possible with a previously marked toke
 
 Example::
 
-    eduMFA-token-janitor find --serial OATH0004C934 --action mark --set-description L4
+    edumfa-token-janitor find --serial OATH0004C934 --action mark --set-description L4
 
 Mark the token with the serial ``OATH0004C934`` and set the description ``example``.
 

@@ -33,25 +33,25 @@ First you might want to backup your program directory:
 
 .. code-block:: bash
 
-   tar -zcf eduMFA-old.tgz /opt/eduMFA
+   tar -zcf edumfa-old.tgz /opt/eduMFA
 
 and your database:
 
 .. code-block:: bash
 
-   source /opt/eduMFA/bin/activate
+   source /opt/edumfa/bin/activate
    edumfa-manage backup create
 
 Running upgrade
 ^^^^^^^^^^^^^^^
 
-Starting with version 2.17 the script ``eduMFA-pip-update`` performs the
+Starting with version 2.17 the script ``edumfa-pip-update`` performs the
 update of the python virtualenv and the DB schema.
 
 Just enter your python virtualenv (you already did so, when running the
 backup) and run the command:
 
-   eduMFA-pip-update
+   edumfa-pip-update
 
 The following parameters are allowed:
 
@@ -69,14 +69,14 @@ Now you can upgrade the installation:
 
 .. code-block:: bash
 
-   source /opt/eduMFA/bin/activate
-   pip install --upgrade eduMFA
+   source /opt/edumfa/bin/activate
+   pip install --upgrade edumfa
 
 Usually you will need to upgrade/migrate the database:
 
 .. code-block:: bash
 
-   eduMFA-schema-upgrade /opt/eduMFA/lib/eduMFA/migrations
+   edumfa-schema-upgrade /opt/edumfa/lib/edumfa/migrations
 
 Now you need to restart your webserver for the new code to take effect.
 

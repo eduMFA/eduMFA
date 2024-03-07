@@ -7,24 +7,24 @@ The Config File
 
 eduMFA reads its configuration from different locations:
 
-   1. default configuration from the module ``eduMFA/config.py``
-   2. then from the config file ``/etc/eduMFA/edumfa.cfg`` if it exists and then
-   3. from the file specified in the environment variable ``eduMFA_CONFIGFILE``::
+   1. default configuration from the module ``edumfa/config.py``
+   2. then from the config file ``/etc/edumfa/edumfa.cfg`` if it exists and then
+   3. from the file specified in the environment variable ``EDUMFA_CONFIGFILE``::
 
-         export eduMFA_CONFIGFILE=/your/config/file
+         export EDUMFA_CONFIGFILE=/your/config/file
 
 The configuration is overwritten and extended in each step. I.e. values define
-in ``eduMFA/config.py``
+in ``edumfa/config.py``
 that are not redefined in one of the other config files, stay the same.
 
-You can create a new config file (either ``/etc/eduMFA/edumfa.cfg``) or any other
+You can create a new config file (either ``/etc/edumfa/edumfa.cfg``) or any other
 file at any location and set the environment variable.
 The file should contain the following contents::
 
    # The realm, where users are allowed to login as administrators
    SUPERUSER_REALM = ['super', 'administrators']
    # Your database
-   SQLALCHEMY_DATABASE_URI = 'sqlite:////etc/eduMFA/data.sqlite'
+   SQLALCHEMY_DATABASE_URI = 'sqlite:////etc/edumfa/data.sqlite'
    # Set maximum identifier length to 128
    # SQLALCHEMY_ENGINE_OPTIONS = {"max_identifier_length": 128}
    # This is used to encrypt the auth_token
@@ -32,7 +32,7 @@ The file should contain the following contents::
    # This is used to encrypt the admin passwords
    EDUMFA_PEPPER = "Never know..."
    # This is used to encrypt the token data and token passwords
-   EDUMFA_ENCFILE = '/etc/eduMFA/enckey'
+   EDUMFA_ENCFILE = '/etc/edumfa/enckey'
    # This is used to sign the audit log
    EDUMFA_AUDIT_KEY_PRIVATE = '/home/cornelius/src/eduMFA/private.pem'
    EDUMFA_AUDIT_KEY_PUBLIC = '/home/cornelius/src/eduMFA/public.pem'

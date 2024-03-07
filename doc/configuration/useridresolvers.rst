@@ -57,12 +57,12 @@ Flatfile resolvers read files like ``/etc/passwd``.
 .. note:: The file ``/etc/passwd`` does not contain the unix password.
    Thus, if you create a flatfile resolver from this file the functionality
    with ``otppin=userstore`` is not available. You can create a flatfile with
-   passwords using the tool ``eduMFA-create-pwidresolver-user`` which is
-   usually found in ``/opt/eduMFA/bin/``.
+   passwords using the tool ``edumfa-create-pwidresolver-user`` which is
+   usually found in ``/opt/edumfa/bin/``.
 
 Create a flat file like this::
 
-   eduMFA-create-pwidresolver-user -u user2 -i 1002 >> /your/flat/file
+   edumfa-create-pwidresolver-user -u user2 -i 1002 >> /your/flat/file
 
 
 .. _ldap_resolver:
@@ -112,7 +112,7 @@ When using TLS with LDAP, you can tell eduMFA to verify the certificate. The acc
 checkbox is visible in the WebUI if the target URL starts with *ldaps* or when using STARTTLS.
 
 You can specify a file with the trusted CA certificate, that signed the
-TLS certificate. The default CA filename is */etc/eduMFA/ldap-ca.crt*
+TLS certificate. The default CA filename is */etc/edumfa/ldap-ca.crt*
 and can contain a list of base64 encoded CA certificates.
 eduMFA will use the CA file if specified. If you leave the field empty
 it will also try the system certificate store (*/etc/ssl/certs/ca-certificates.crt*
@@ -272,7 +272,7 @@ in the attribute mapping for Microsoft Active Directories. You can then call
 the user listing API with the parameter ``accountExpires=1`` and you will only
 see expired accounts.
 
-This functionality is used with the script *eduMFA-expired-users*.
+This functionality is used with the script *edumfa-expired-users*.
 
 .. _sql_resolver:
 
@@ -466,7 +466,7 @@ tokens, the user will still be able to authenticate during the expiration timeou
 user ID will not be noticed by eduMFA until the corresponding cache entry expires.
 
 Expired cache entries are *not* deleted from the user cache table automatically. Instead, the tool
-``eduMFA-usercache-cleanup`` should be used to delete expired cache entries from the database,
+``edumfa-usercache-cleanup`` should be used to delete expired cache entries from the database,
 e.g. in a cronjob.
 
 However, cache entries are removed at some defined events:

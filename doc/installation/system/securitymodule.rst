@@ -111,7 +111,7 @@ Encrypt Key Security Module
 
 The Encrypt Key Security Module uses a hardware security module (HSM)
 to decrypt the encrypted encryption key. Within the HSM a private RSA key is
-used to decrypt an encrypted file like `/etc/eduMFA/enckey.enc`.
+used to decrypt an encrypted file like `/etc/edumfa/enckey.enc`.
 
 With the first request to each process of the eduMFA server, the HSM is used
 to decrypt the encryption key. After that the encryption key is kept in memory during run time.
@@ -151,7 +151,7 @@ You could e.g. use a Yubikey this way::
     EDUMFA_HSM_MODULE_SLOTNAME = "Yubico YubiKey"
     EDUMFA_HSM_MODULE_KEYLABEL = 'Private key for PIV Authentication'
     EDUMFA_HSM_MODULE_PASSWORD = 'yourPin'
-    EDUMFA_HSM_MODULE_ENCFILE = "/etc/eduMFA/enckey.enc"
+    EDUMFA_HSM_MODULE_ENCFILE = "/etc/edumfa/enckey.enc"
 
 To encrypt an existing key file you can use the module like this::
 
@@ -171,12 +171,12 @@ the keys before the first request is sent to eduMFA. To do so, you need to modif
 and add the parameter `init_hsm`::
 
     application = create_app(config_name="production",
-                             config_file="/etc/eduMFA/edumfa.cfg", init_hsm=True)
+                             config_file="/etc/edumfa/edumfa.cfg", init_hsm=True)
 
 Moreover, you need to add the `WSGIImportScript` statement to your Apache2 configuration::
 
     WSGIApplicationGroup %{GLOBAL}
-    WSGIImportScript /etc/eduMFA/eduMFAapp.wsgi process-group=eduMFA application-group=%{GLOBAL}
+    WSGIImportScript /etc/edumfa/eduMFAapp.wsgi process-group=eduMFA application-group=%{GLOBAL}
 
 .. note:: Please note, that this security module uses a lock file, to handle concurrent access to the HSM.
    In certain cases of errors the log file could remain and not cleaned up.

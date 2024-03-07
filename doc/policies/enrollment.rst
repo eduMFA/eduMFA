@@ -166,7 +166,7 @@ type: string
 If the ``otp_pin_random`` policy is defined, you can use this policy to
 define, what should happen with the random pin.
 The action value take the class of a PinHandler like
-``eduMFA.lib.pinhandling.base.PinHandler``.
+``edumfa.lib.pinhandling.base.PinHandler``.
 The base PinHandler just logs the PIN to the log file. You can add classes to
 send the PIN via EMail or print it in a letter.
 

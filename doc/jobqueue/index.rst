@@ -20,7 +20,7 @@ Configuration
 
 The job queue is disabled by default. In order to enable it, add the following configuration option to ``edumfa.cfg``::
 
-	PI_JOB_QUEUE_CLASS = 'eduMFA.lib.queues.huey_queue.HueyQueue'
+	EDUMFA_JOB_QUEUE_CLASS = 'edumfa.lib.queues.huey_queue.HueyQueue'
 
 After a server restart, you will be able to instruct individual SMTP servers to send all mails via the job queue by checking a corresponding box in the SMTP server configuration (see :ref:`smtpserver`). This means that you can have separate SMTP server configurations, some of which send mails via the job queue, some of which send mails during the request processing.
 
@@ -30,11 +30,11 @@ Note that you need to run a `Redis`_ server which is reachable for the eduMFA se
 
 In addition to the eduMFA server, you will have to run a worker process which fetches jobs from the queue and executes them. You can start it as follows::
 
-	eduMFA-queue-huey
+	edumfa-queue-huey
 
-By default, the worker process logs to ``eduMFA-queue.log`` in the current working directory. You can pass a different logfile by using the ``-l`` option::
+By default, the worker process logs to ``edumfa-queue.log`` in the current working directory. You can pass a different logfile by using the ``-l`` option::
 
-	eduMFA-queue-huey -l /var/log/queue.log
+	edumfa-queue-huey -l /var/log/queue.log
 
 As the script is heavily based on the huey consumer script, you can find information about additional options in the `huey documentation <https://huey.readthedocs.io/en/latest/consumer.html#options-for-the-consumer>`_.
 

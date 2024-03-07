@@ -55,15 +55,15 @@ authorized keys command
 To facilitate this, the SSH server fetches the managed SSH keys from the eduMFA server on demand.
 The SSH server uses the ``AuthorizedKeysCommand`` in the ``sshd_config`` to do this.
 
-There is an Python script `eduMFA-authorizedkey` in the eduMFAadm repository. Note, that this
+There is an Python script `edumfa-authorizedkey` in the eduMFAadm repository. Note, that this
 script currently does not support the ``service_id``.
-The `tools/` directory of the eduMFA Server ships a shell script `eduMFA-authorizedkeys` that
+The `tools/` directory of the eduMFA Server ships a shell script `edumfa-authorizedkeys` that
 supports the ``service_id``.
 
 In the ``sshd_config`` file you need to configure the ``AuthorizedKeysCommand`` accordingly.
 Set it to e.g.::
 
-   eduMFA-authorizedkeys
+   edumfa-authorizedkeys
 
 This will fetch the SSH public keys for the requesting machine and the given user.
 
@@ -71,7 +71,7 @@ If you are using the shell script you need to configure the eduMFA Server and
 the service account at the top of the script.
 
 The Python script however expects a configuration file
-*/etc/eduMFA/authorizedkeyscommand* which looks like this::
+*/etc/edumfa/authorizedkeyscommand* which looks like this::
 
    [Default]
    url=https://localhost

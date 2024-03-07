@@ -300,7 +300,7 @@ Script provider
 The *Script provider* calls a script which can take care of sending the SMS.
 The script takes the phone number as the only parameter. The message is expected at stdin.
 
-Scripts are located in the directory ``/etc/eduMFA/scripts/``. You can change this default
+Scripts are located in the directory ``/etc/edumfa/scripts/``. You can change this default
 location by setting the value in ``PI_SCRIPT_SMSPROVIDER_DIRECTORY`` in :ref:`cfgfile`.
 
 In the configuration of the Script provider you can set two attributes.

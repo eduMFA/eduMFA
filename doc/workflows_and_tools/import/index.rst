@@ -22,15 +22,15 @@ All files mentioned below can be encrypted this way.
 
 eduMFA needs its own GPG key. You may create one like this::
 
-    mkdir /etc/eduMFA/gpg
-    GNUPGHOME=/etc/eduMFA/gpg gpg --gen-key
+    mkdir /etc/edumfa/gpg
+    GNUPGHOME=/etc/edumfa/gpg gpg --gen-key
 
-Then make sure, that the directory /etc/eduMFA/gpg is *chown 700* for
+Then make sure, that the directory /etc/edumfa/gpg is *chown 700* for
 the user *eduMFA*.
 
 Now you can export the public key and hand it to your token vendor::
 
-   GNUPGHOME=/etc/eduMFA/gpg gpg -a --export <keyid>
+   GNUPGHOME=/etc/edumfa/gpg gpg -a --export <keyid>
 
 Now the token vendor can send the seed file GPG encrypted. You do not need to
 decrypt the file and store the decrypted file on a network folder. Just

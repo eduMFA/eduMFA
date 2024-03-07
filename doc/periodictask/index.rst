@@ -5,22 +5,22 @@ Periodic Tasks
 
 .. index:: periodic task, recurring task
 
-Starting with version 2.23, eduMFA comes with the ability to define periodically recurring tasks
+eduMFA comes with the ability to define periodically recurring tasks
 in the Web UI. The purpose of such tasks is to periodically execute certain processes automatically.
 The administrator defines which tasks should be executed using task modules. Currently there are task modules
 for simple statistics and for handling recorded events. Further task modules can be added easily.
 
 As eduMFA is a web application, it can not actually execute the defined periodic tasks itself. For that,
-eduMFA comes with a script ``eduMFA-cron`` which must be invoked by the system cron daemon.
-This can, for example, be achieved by creating a file ``/etc/cron.d/eduMFA`` with the following
+eduMFA comes with a script ``edumfa-cron`` which must be invoked by the system cron daemon.
+This can, for example, be achieved by creating a file ``/etc/cron.d/edumfa`` with the following
 contents (this is done automatically by the Ubuntu package)::
 
-	 */5 * * * *	eduMFA	eduMFA-cron run_scheduled -c
+	 */5 * * * *	edumfa	edumfa-cron run_scheduled -c
 
-This tells the system cron daemon to invoke the ``eduMFA-cron`` script every five minutes. At
-each invocation, the ``eduMFA-cron`` script determines which tasks should be executed and
+This tells the system cron daemon to invoke the ``edumfa-cron`` script every five minutes. At
+each invocation, the ``edumfa-cron`` script determines which tasks should be executed and
 execute the scheduled tasks. The ``-c`` option tells the script to be quiet and only print to stderr
-in case of an error (see :ref:`eduMFA_cron`).
+in case of an error (see :ref:`edumfa_cron`).
 
 Periodic tasks can be managed in the WebUI by navigating to *Config->Periodic Tasks*:
 
@@ -38,7 +38,7 @@ Every periodic task has the following attributes:
 
 **order**
 	A number (at least zero) that can be used to rearrange the order of periodic tasks. This is
-	used by ``eduMFA-cron`` to determine the running order of tasks if multiple
+	used by ``edumfa-cron`` to determine the running order of tasks if multiple
 	periodic tasks are scheduled to be run. Tasks with a lower number are run first.
 
 **interval**
@@ -47,7 +47,7 @@ Every periodic task has the following attributes:
 
 	Keep in mind that the entry in the system crontab determines the minimal resolution
 	of periodic tasks: If you specify a periodic task that should be run every two minutes,
-	but the ``eduMFA-cron`` script is invoked every five minutes only, the periodic task
+	but the ``edumfa-cron`` script is invoked every five minutes only, the periodic task
 	will actually be executed every five minutes!
 
 **nodes**
@@ -80,12 +80,12 @@ eduMFA comes with the following task modules:
    eventcounter
 
 
-.. _eduMFA_cron:
+.. _edumfa_cron:
 
-The ``eduMFA-cron`` script
+The ``edumfa-cron`` script
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``eduMFA-cron`` script is used to execute periodic tasks defined in the Web UI. The
+The ``edumfa-cron`` script is used to execute periodic tasks defined in the Web UI. The
 ``run_scheduled`` command collects all active jobs that are scheduled to run on the current node
 and executes them. The order is determined by their ``ordering`` values (tasks with low values
 are executed first). The ``-c`` option causes the script to is useful if the script is executed via the system

@@ -61,7 +61,7 @@ So you set in ``edumfa.cfg``::
 
     PI_CUSTOMIZATION = "/mydesign"
 
-Your customized files are located in ``/etc/eduMFA/customize/views/includes/``.
-In the Apache webserver you need to map ``/pi/mydesign`` to ``/etc/eduMFA/customize``::
+Your customized files are located in ``/etc/edumfa/customize/views/includes/``.
+In the Apache webserver you need to map ``/pi/mydesign`` to ``/etc/edumfa/customize``::
 
-    Alias /pi/mydesign /etc/eduMFA/customize
+    Alias /pi/mydesign /etc/edumfa/customize

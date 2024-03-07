@@ -239,7 +239,7 @@ challenge parameter. This could contain banking transaction data.
 Default: *<otp>*
 
 You can also provide the filename to an email template. The filename must be prefixed with
-``file:`` like ``file:/etc/eduMFA/emailtemplate.html``. The template is
+``file:`` like ``file:/etc/edumfa/emailtemplate.html``. The template is
 an HTML file.
 
 .. note:: If a message text is supplied directly, the email is sent as plain text.

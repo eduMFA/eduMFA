@@ -10,13 +10,13 @@ setup the database and do many other tasks.
 
 .. note:: The interesting thing about edumfa-manage is, that it does not need
    the server to run as it acts directly on the database.
-   Therefor you need read access to /etc/eduMFA/edumfa.cfg and the encryption
+   Therefor you need read access to /etc/edumfa/edumfa.cfg and the encryption
    key.
 
-If you want to use a config file other than /etc/eduMFA/edumfa.cfg, you can
+If you want to use a config file other than /etc/edumfa/edumfa.cfg, you can
 set an environment variable::
 
-   eduMFA_CONFIGFILE=/home/user/edumfa.cfg edumfa-manage
+   EDUMFA_CONFIGFILE=/home/user/edumfa.cfg edumfa-manage
 
 edumfa-manage always takes a command and sometimes a sub command::
 
@@ -46,7 +46,7 @@ to set the correct access rights.
 
 You can also encrypt the encryption key with a passphrase. To do this do::
 
-   edumfa-manage encrypt_enckey /etc/eduMFA/enckey
+   edumfa-manage encrypt_enckey /etc/edumfa/enckey
 
 and pipe the encrypted *enckey* to a new file.
 
@@ -57,7 +57,7 @@ Backup and Restore
 
 .. index:: Backup, Restore
 
-You can create a backup which will be save to */var/lib/eduMFA/backup/*.
+You can create a backup which will be save to */var/lib/edumfa/backup/*.
 
 The backup will contain the database dump and the complete directory
 */etc/eduMFA*. You may choose if you want to add the encryption key to
