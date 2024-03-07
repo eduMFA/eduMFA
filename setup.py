@@ -108,6 +108,7 @@ setup(
     keywords='OTP, two factor authentication, management, security',
     python_requires='>=3.8',
     packages=find_packages(),
+    scripts=get_scripts("tools"),
     entry_points={
         'console_scripts': [
             'edumfa-manage = edumfa.commands.manage.main:cli'

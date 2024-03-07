@@ -22,7 +22,7 @@ from flask.cli import AppGroup
 
 from edumfa.lib.authcache import cleanup
 
-authcache_cli = AppGroup("auth cache", help="Manage authentication cache")
+authcache_cli = AppGroup("authcache", help="Manage authentication cache")
 
 
 @authcache_cli.command("cleanup")
