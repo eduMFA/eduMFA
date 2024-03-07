@@ -54,21 +54,21 @@ Now you need to add the repository for your release (focal/20.04LTS or jammy/22.
 
 You can do this by running the command::
 
-   add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal
+   add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy
 
 or::
 
-   add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy
+   add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal
 
 As an alternative you can add the repo in a dedicated file. Create a new
 file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the
 following contents::
 
-   deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal focal main
+   deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy jammy main
 
 or::
 
-   deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy jammy main
+   deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal focal main
 
 Installation of eduMFA 1.x
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -133,9 +133,9 @@ or::
 
     cp -r deploy/ubuntu-radius debian
 
-Update the Linux distribution version in the changelog file. For example, for Ubuntu 22.04 LTS focal::
+Update the Linux distribution version in the changelog file. For example, for Ubuntu 22.04 LTS jammy::
 
-    sed -i 's/{{VERSION}}/focal/g' debian/changelog
+    sed -i 's/{{VERSION}}/jammy/g' debian/changelog
 
 Install build dependencies and build the package::
 
