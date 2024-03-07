@@ -46,17 +46,31 @@ You can call the script like this:
 """
 __version__ = "0.1"
 
+import click
 from edumfa.lib.token import get_tokens, get_serial_by_otp
 from edumfa.app import create_app
-from flask_script import Manager
+from flask.cli import FlaskGroup
+from flask import current_app as app
 
-app = create_app(config_name='production', silent=True)
-manager = Manager(app)
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+def create_prod_app():
+    return create_app("production", silent=True, script=True)
 
 
-@manager.command
-def byotp(otp=None, type=None, serial="", window=10, unassigned=False,
-          assigned=False):
+@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
+             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
+def cli():
+    pass
+
+@cli.command()
+@click.option('--otp', help='The OTP value, which the token generates')
+@click.option('--type', help='The tokentype like hotp, totp, ...')
+@click.option('--serial', help='A part of the serial number')
+@click.option('--window', default=10, help='The OTP window for calculating OTP values')
+@click.option('--unassigned', is_flag=True, help='If set, searches only unassigned tokens')
+@click.option('--assigned', is_flag=True, help='If set, searches only assigned tokens')
+def byotp(otp, type, serial, window, unassigned, assigned):
     """
     This searches the list of the specified tokens for the given OTP value.
     :param otp: the OTP value, which the token generates
@@ -67,23 +81,20 @@ def byotp(otp=None, type=None, serial="", window=10, unassigned=False,
     :param assigned: If set, searches only assigned tokens
     :return: The serial number of the token
     """
-    print()
     if not assigned and not unassigned:
         assigned = None
     count = get_tokens(tokentype=type, serial_wildcard="*{0!s}*".format(
             serial), assigned=assigned, count=True)
-    print("Searching in {0!s} tokens.".format(count))
-
+    click.echo("Searching in {0!s} tokens.".format(count))
     tokenobj_list = get_tokens(tokentype=type,
                                serial_wildcard="*{0!s}*".format(serial),
                                assigned=assigned)
     serial = get_serial_by_otp(tokenobj_list, otp=otp, window=window)
     if serial:
-        print("Found the token with serial {0!s}".format(serial))
+        click.echo("Found the token with serial {0!s}".format(serial))
     else:
-        print("No token found.")
-
+        click.echo("No token found.")
 
 if __name__ == '__main__':
-    print()
-    manager.run()
+    cli()
+
