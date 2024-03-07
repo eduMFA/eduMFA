@@ -217,6 +217,8 @@ class APISmsGatewayTestCase(MyApiTestCase):
                             '.SmppSMSProvider' in value)
             self.assertIn('edumfa.lib.smsprovider.ScriptSMSProvider'
                           '.ScriptSMSProvider', value)
+            self.assertIn('edumfa.lib.smsprovider.HttpMessageToUidProvider'
+                          '.HttpMessageToUidProvider', value)
             http_parameters = value.get('edumfa.lib.smsprovider.'
                                         'HttpSMSProvider.HttpSMSProvider')
             smtp_parameters = value.get('edumfa.lib.smsprovider.'
@@ -225,6 +227,8 @@ class APISmsGatewayTestCase(MyApiTestCase):
                                         'SipgateSMSProvider.SipgateSMSProvider')
             smpp_parameters = value.get('edumfa.lib.smsprovider.'
                                         'SmppSMSProvider.SmppSMSProvider')
+            msg2uid_parameters = value.get('edumfa.lib.smsprovider.'
+                                         'HttpMessageToUidProvider.HttpMessageToUidProvider')
             self.assertEqual(http_parameters.get("options_allowed"), True)
             self.assertEqual(smtp_parameters.get("options_allowed"), False)
             self.assertEqual(sipgate_parameters.get("options_allowed"), False)
@@ -232,6 +236,9 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertTrue("URL" in http_parameters.get("parameters"))
             self.assertTrue("PROXY" in http_parameters.get("parameters"))
             self.assertTrue("HTTP_METHOD" in http_parameters.get("parameters"))
+            self.assertTrue("URL" in msg2uid_parameters.get("parameters"))
+            self.assertTrue("UID_TOKENINFO_ATTRIBUTE" in msg2uid_parameters.get("parameters"))
+            self.assertTrue("POST_CHECK_URL" in msg2uid_parameters.get("parameters"))
 
     def test_05_read_write_policies(self):
         set_policy(name="pol_read", scope=SCOPE.ADMIN,

@@ -99,6 +99,16 @@ class ISMSProvider(object):
         """
         return True
 
+    def submit_post_check(self, phone, message):  # pragma: no cover
+        """
+        Executes a post check action. It should return a bool indicating
+        if it was executed successfully.
+
+        :return: Success
+        :rtype: bool
+        """
+        return True
+
     def check_configuration(self):
         """
         This method checks the sanity of the configuration of this provider.
