@@ -180,6 +180,40 @@ Set the additional **options** as POST parameters:
  * Body: {otp}
  * To: {phone}
 
+HTTP Message To Uid Provider
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. index:: HTTP Message To Uid Provider
+
+The HTTP message to uid provider is an extension of the HTTP SMS Provider
+and can be used to send HTTP POST or GET request to a uid instead of a
+phone number.
+It has all the parameters of the **HTTP Provider** above and the following
+additional parameters:
+
+
+**UID_TOKENINFO_ATTRIBUTE**
+
+  If this parameter is set, read the uid from this tokeninfo attribute.
+  This is useful for verification of the token when it is not assigned
+  to a user initially.
+
+**POST_CHECK_URL**
+
+  When set, call this URL after validate/check.
+  Can be used to clear an OTP message from a device after it was entered.
+  The **POST_CHECK_URL** will be called with the same parameters as the
+  **URL**.
+
+The uid can be set as an additional **option** to be passed as HTTP
+parameter, it contains the uid of the user the token is assigned to
+or the value of the tokeninfo attribute when **UID_TOKENINFO_ATTRIBUTE**
+is set.
+
+ * user: {uid}
+ * text: Your OTP value is {otp}.
+
+See **HTTP provider** for more examples.
 
 Sipgate provider
 ~~~~~~~~~~~~~~~~
