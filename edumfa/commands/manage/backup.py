@@ -26,6 +26,7 @@ from subprocess import Popen, PIPE, call
 from urllib.parse import urlparse
 
 import click
+import sqlalchemy
 from flask import current_app
 from flask.cli import AppGroup
 
@@ -109,17 +110,17 @@ def restore(backup_file: str):
         call(["cp", sqlfile, productive_file])
         os.unlink(sqlfile)
     elif sqltype in MYSQL_DIALECTS:
-        m = re.match(r".*mysql://(.*):(.*)@(.*)/(\w*)\??(.*)", sqluri)
-        username = m.groups()[0]
-        password = m.groups()[1]
-        datahost = m.groups()[2]
-        database = m.groups()[3]
+        parsed_sqluri = sqlalchemy.make_url(sqluri)
+        username = parsed_sqluri.username
+        password = parsed_sqluri.password
+        hostname = parsed_sqluri.host
+        database = parsed_sqluri.database
         defaults_file = "/etc/edumfa/mysql.cnf"
         _write_mysql_defaults(defaults_file, username, password)
         # Rewriting database
         click.echo("Restoring database.")
         call("mysql --defaults-file=%s -h %s %s < %s" % (
-            shlex_quote(defaults_file), shlex_quote(datahost), shlex_quote(database), shlex_quote(sqlfile)), shell=True)
+            shlex_quote(defaults_file), shlex_quote(hostname), shlex_quote(database), shlex_quote(sqlfile)), shell=True)
         os.unlink(sqlfile)
     else:
         click.echo("unsupported SQL syntax: %s" % sqltype)
@@ -159,8 +160,8 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
     backup_file = "%s/%s-%s.tgz" % (target_dir, BASE_NAME, DATE)
 
     sqluri = current_app.config.get("SQLALCHEMY_DATABASE_URI")
-    parsed_sqluri = urlparse(current_app.config.get("SQLALCHEMY_DATABASE_URI"))
-    sqltype = parsed_sqluri.scheme
+    parsed_sqluri = sqlalchemy.make_url(sqluri)
+    sqltype = parsed_sqluri.drivername
 
     if sqltype == "sqlite":
         productive_file = sqluri[len("sqlite:///"):]
@@ -170,8 +171,8 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
     elif sqltype in MYSQL_DIALECTS:
         username = parsed_sqluri.username
         password = parsed_sqluri.password
-        hostname = parsed_sqluri.hostname
-        database = parsed_sqluri.path[1:]
+        hostname = parsed_sqluri.host
+        database = parsed_sqluri.database
         defaults_file = "{0!s}/mysql.cnf".format(config_dir)
         _write_mysql_defaults(defaults_file, username, password)
         cmd = ['mysqldump', '--defaults-file={!s}'.format(shlex_quote(defaults_file)), '-h', shlex_quote(hostname)]
