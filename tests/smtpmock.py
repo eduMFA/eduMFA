@@ -48,7 +48,7 @@ def get_wrapped(func, wrapper_template, evaldict):
     if is_bound_method:
         args.args = args.args[1:]     # Omit 'self'
 
-    ctx = {'signature': '(self)', 'funcargs': '(self)'}
+    ctx = {'signature': f'({",".join(args.args)})', 'funcargs': f'({",".join(args.args)})'}
     exec (wrapper_template % ctx, evaldict, evaldict)
 
 
