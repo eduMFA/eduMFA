@@ -170,7 +170,6 @@ def create_audit_keys(keysize):
 
 
 @core_cli.command("create_tables")
-@core_cli.command("createdb")
 @click.option("-s", "--stamp", is_flag=True,
               help='Stamp database to current head revision.')
 def create_tables(stamp=False):
@@ -187,6 +186,9 @@ def create_tables(stamp=False):
         migration_dir = os.path.dirname(os.path.abspath(p[0]))
         fm_stamp(directory=migration_dir)
     db.session.commit()
+
+
+core_cli.add_command(create_tables, "createdb")
 
 
 @core_cli.command("drop_tables")

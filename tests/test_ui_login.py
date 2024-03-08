@@ -5,6 +5,8 @@ This file tests the web UI Login
 
 implementation is contained webui/login.py
 """
+import flask_babel as babel
+
 from .base import MyTestCase, MyApiTestCase
 from edumfa.lib.policy import set_policy, SCOPE, ACTION, PolicyClass, delete_all_policies
 from edumfa.lib.utils import to_unicode
@@ -131,7 +133,12 @@ class LanguageTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.json['result']['value']['totp'], 'TOTP: Time based One Time Passwords.')
 
-    def test_02_check_for_german_translation(self):
+
+class LanguageGermanTestCase(MyApiTestCase):
+
+    locale = "de"
+
+    def test_01_check_for_german_translation(self):
         with self.app.test_request_context('/auth/rights',
                                            method='GET',
                                            headers={
