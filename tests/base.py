@@ -253,11 +253,14 @@ class OverrideConfigTestCase(MyTestCase):
 
 
 class MyApiTestCase(MyTestCase):
+
+    locale = "en"
+
     @classmethod
     def cls_auth(cls, app):
         with app.test_request_context('/auth', data={"username": cls.testadmin,
                                                      "password": cls.testadminpw},
-                                      method='POST'):
+                                      method='POST', headers={"Accept-Language": cls.locale}):
             res = app.full_dispatch_request()
             assert res.status_code == 200
             result = res.json.get("result")
