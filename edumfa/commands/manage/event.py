@@ -28,7 +28,6 @@ from edumfa.lib.event import delete_event, set_event
 
 event_cli = AppGroup("event", help="Manage events")
 
-
 @event_cli.command("list")
 def list_events():
     """
@@ -47,7 +46,7 @@ def list_events():
 
 @event_cli.command("enable")
 @click.argument("eid", type=int, required=True)
-def enable(eid: str):
+def enable(eid: int):
     """
     enable en event by ID
     """
@@ -78,8 +77,6 @@ def delete(eid):
     click.echo(r)
 
 
-@event_cli.command("e_export")
-@event_cli.command("export")
 @export_cli.command("event")
 @click.option("-f", "filename", help="filename to export")
 @click.option("-n", "name", help="event to export")
@@ -91,8 +88,6 @@ def e_export(filename, name):
     conf_export({"event": get_conf_event(name)}, filename=filename)
 
 
-@event_cli.command("e_import")
-@event_cli.command("import")
 @import_cli.command("event")
 @click.option("-f", "filename", help="filename to import", required=True)
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
@@ -106,3 +101,8 @@ def e_import(filename, cleanup, update):
     data = conf_import(conftype="event", filename=filename)
     import_conf_event(data["event"], cleanup, update)
 
+
+event_cli.add_command(e_export, "e_export")
+event_cli.add_command(e_export, "export")
+event_cli.add_command(e_import, "e_import")
+event_cli.add_command(e_import, "import")

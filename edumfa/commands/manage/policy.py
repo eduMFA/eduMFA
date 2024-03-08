@@ -73,8 +73,6 @@ def delete(name):
     click.echo(r)
 
 
-@policy_cli.command("p_export")
-@policy_cli.command("export")
 @export_cli.command("policy")
 @click.option("-f", "filename", help="filename to export")
 @click.option("-n", "name", help="policy to export")
@@ -86,8 +84,6 @@ def p_export(filename, name):
     conf_export({"policy": get_conf_policy(name)}, filename=filename)
 
 
-@policy_cli.command("p_import")
-@policy_cli.command("import")
 @import_cli.command("policy")
 @click.option("-f", "filename", help="filename to import", required=True)
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
@@ -158,3 +154,8 @@ def create(name, scope, action, filename):
         r = set_policy(name, scope, action)
         return r
 
+
+policy_cli.add_command(p_export, "p_export")
+policy_cli.add_command(p_export, "export")
+policy_cli.add_command(p_import, "p_import")
+policy_cli.add_command(p_import, "import")

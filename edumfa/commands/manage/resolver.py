@@ -135,8 +135,6 @@ def create_internal(name):
     metadata.create_all(engine)
 
 
-@resolver_cli.command("r_export")
-@resolver_cli.command("export")
 @export_cli.command("resolver")
 @click.option("-f", "filename", help="filename to export")
 @click.option("-n", "name", help="resolver to export")
@@ -153,8 +151,6 @@ def r_export(filename, name, print_passwords):
     conf_export({"resolver": get_conf_resolver(name, print_passwords)}, filename=filename)
 
 
-@resolver_cli.command("r_import")
-@resolver_cli.command("import")
 @import_cli.command("resolver")
 @click.option("-f", "filename", help="filename to import", required=True)
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
@@ -169,3 +165,8 @@ def r_import(filename, cleanup, update):
     data = conf_import(conftype="resolver", filename=filename)
     import_conf_resolver(data["resolver"], cleanup=cleanup, update=update)
 
+
+resolver_cli.add_command(r_export, "r_export")
+resolver_cli.add_command(r_export, "export")
+resolver_cli.add_command(r_import, "r_import")
+resolver_cli.add_command(r_import, "import")
