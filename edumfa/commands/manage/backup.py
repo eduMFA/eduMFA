@@ -134,7 +134,7 @@ def restore(backup_file: str):
 @click.option("-r", "--radius_dir", help="Path to FreeRADIUS config directory",
               type=click.Path(exists=True, file_okay=False, readable=True), default=None, show_default=True)
 @click.option("-e", "--enckey", is_flag=True, help="Add the encryption key to the backup")
-def create(target_dir: str, conf_dir: str, radius_directory=None, enckey: bool = False):
+def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = False):
     """
     Create a new backup of the database and the configuration. The default
     does not include the encryption key. Use the 'enckey' option to also
@@ -144,7 +144,7 @@ def create(target_dir: str, conf_dir: str, radius_directory=None, enckey: bool =
     If you want to also include the RADIUS configuration into the backup
     specify a directory using 'radius_directory'.
     """
-    CONF_DIR = conf_dir
+    CONF_DIR = config_dir
     DATE = datetime.now().strftime("%Y%m%d-%H%M")
     BASE_NAME = "eduMFA-backup"
 
@@ -172,7 +172,7 @@ def create(target_dir: str, conf_dir: str, radius_directory=None, enckey: bool =
         password = parsed_sqluri.password
         hostname = parsed_sqluri.hostname
         database = parsed_sqluri.path[1:]
-        defaults_file = "{0!s}/mysql.cnf".format(conf_dir)
+        defaults_file = "{0!s}/mysql.cnf".format(config_dir)
         _write_mysql_defaults(defaults_file, username, password)
         cmd = ['mysqldump', '--defaults-file={!s}'.format(shlex_quote(defaults_file)), '-h', shlex_quote(hostname)]
         if parsed_sqluri.port:
@@ -186,9 +186,9 @@ def create(target_dir: str, conf_dir: str, radius_directory=None, enckey: bool =
 
     backup_call = ["tar", "-zcf", backup_file, CONF_DIR, sqlfile]
 
-    if radius_directory:
+    if radius_dir:
         # Simply append the radius directory to the backup command
-        backup_call.append(radius_directory)
+        backup_call.append(radius_dir)
 
     if not enckey:
         # Exclude enckey from backup
