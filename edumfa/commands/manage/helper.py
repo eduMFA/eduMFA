@@ -146,7 +146,7 @@ def import_conf_event(config_list, cleanup=False, update=False):
         action_str = "Added"
         # Todo: This check does not work properly. The event is created nevertheless
         name = event.get("name")
-        events_with_name = [e for e in cls.events if (name in e.get("name"))]
+        events_with_name = [e for e in cls.events if (name == e.get("name"))]
         if events_with_name:
             exists = True
             event_id = events_with_name[0].get("id")
