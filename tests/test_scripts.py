@@ -5,9 +5,10 @@ import unittest
 from importlib.machinery import SourceFileLoader
 from importlib.util import spec_from_loader, module_from_spec
 
+import edumfa.models
 from edumfa.commands.manage.main import cli as edumfa_manage
 from edumfa.app import create_app
-from edumfa.models import (db)
+from edumfa.models import db, EventHandler
 
 
 class ScriptsTestCase(unittest.TestCase):
@@ -44,3 +45,48 @@ class ScriptsTestCase(unittest.TestCase):
         result = runner.invoke(edumfa_manage, ["admin", "list"])
         assert result.exit_code == 0
         assert "Admin-User" not in result.output
+        result = runner.invoke(edumfa_manage, ["admin", "delete", "Admin-User"])
+        assert result.exit_code == 1
+
+    def test_02_edumfa_resolvers(self):
+        runner = self.app.test_cli_runner()
+        result = runner.invoke(edumfa_manage, ["resolver", "list"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["resolver", "create_internal", "test-resolver"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["resolver", "list"])
+        assert result.exit_code == 0
+        assert "test-resolver" in result.output
+
+    def test_03_edumfa_realms(self):
+        runner = self.app.test_cli_runner()
+        result = runner.invoke(edumfa_manage, ["realm", "list"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["resolver", "create_internal", "test-resolver"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["realm", "create", "test-realm", "test-resolver"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["realm", "delete", "test-realm"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["realm", "delete", "test-realm"])
+        assert result.exit_code == 1
+
+    def test_04_edumfa_event(self):
+        runner = self.app.test_cli_runner()
+        result = runner.invoke(edumfa_manage, ["event", "list"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["event", "import", "-f", "./testdata/event.conf"])
+        assert result.exit_code == 0
+        events = EventHandler.query.all()
+        assert len(events) == 3
+        result = runner.invoke(edumfa_manage, ["event", "import", "-f", "./testdata/event.conf"])
+        assert result.exit_code == 0
+        events = EventHandler.query.all()
+        assert len(events) == 3
+        assert "Event reset exists" in result.output
+        result = runner.invoke(edumfa_manage, ["event", "import", "-u", "-f", "./testdata/event.conf"])
+        assert result.exit_code == 0
+        events = EventHandler.query.all()
+        assert len(events) == 3
+        assert "Updated" in result.output
+
