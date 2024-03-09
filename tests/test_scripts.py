@@ -121,4 +121,10 @@ class ScriptsTestCase(unittest.TestCase):
         result = runner.invoke(edumfa_manage, ["create_audit_keys"])
         assert result.exit_code == 1
         os.remove(path)
+        self.app.config.update({"EDUMFA_ENCFILE": path})
+        result = runner.invoke(edumfa_manage, ["create_enckey"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["create_enckey"])
+        assert result.exit_code == 1
+        os.remove(path)
         os.rmdir(dir)
