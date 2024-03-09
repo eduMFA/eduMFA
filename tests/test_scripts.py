@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
+import tempfile
 import unittest
-from importlib.machinery import SourceFileLoader
-from importlib.util import spec_from_loader, module_from_spec
 
-import edumfa.models
-from edumfa.commands.manage.main import cli as edumfa_manage
 from edumfa.app import create_app
+from edumfa.commands.manage.main import cli as edumfa_manage
 from edumfa.models import db, EventHandler
 
 
@@ -113,3 +111,14 @@ class ScriptsTestCase(unittest.TestCase):
         assert len(events) == 3
         assert "Added" in result.output
 
+    def test_05_core_commands(self):
+        runner = self.app.test_cli_runner()
+        dir = tempfile.mkdtemp()
+        path = os.path.join(dir, 'something')
+        self.app.config.update({"EDUMFA_AUDIT_KEY_PRIVATE": path})
+        result = runner.invoke(edumfa_manage, ["create_audit_keys"])
+        assert result.exit_code == 0
+        result = runner.invoke(edumfa_manage, ["create_audit_keys"])
+        assert result.exit_code == 1
+        os.remove(path)
+        os.rmdir(dir)
