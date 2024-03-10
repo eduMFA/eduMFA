@@ -82,18 +82,14 @@ class ResponseManglerEventHandler(BaseEventHandler):
                 "JSON pointer": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "The JSON pointer (key) that should be deleted. Please specify in the format '/detail/message'."
-                    ),
+                    "description": _("The JSON pointer (key) that should be deleted. Please specify in the format '/detail/message'."),
                 }
             },
             ACTION_TYPE.SET: {
                 "JSON pointer": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "The JSON pointer (key) that should be set. Please specify in the format '/detail/message'."
-                    ),
+                    "description": _("The JSON pointer (key) that should be set. Please specify in the format '/detail/message'."),
                 },
                 "type": {
                     "type": "str",

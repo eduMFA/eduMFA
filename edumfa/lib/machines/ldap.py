@@ -65,9 +65,7 @@ class LdapMachineResolver(BaseMachineResolver):
 
     def _bind(self):
         if not self.i_am_bound:
-            server_pool = IdResolver.create_serverpool(
-                self.uri, self.timeout, tls_context=self.tls_context
-            )
+            server_pool = IdResolver.create_serverpool(self.uri, self.timeout, tls_context=self.tls_context)
             self.l = IdResolver.create_connection(
                 authtype=self.authtype,
                 server=server_pool,
@@ -100,7 +98,7 @@ class LdapMachineResolver(BaseMachineResolver):
         substring=False,
         any=False,
     ):
-        filter = "(&" + search_filter
+        filter = f"(&{search_filter}"
 
         if not any:
             if id_attribute.lower() != "dn" and machine_id:
@@ -135,9 +133,7 @@ class LdapMachineResolver(BaseMachineResolver):
 
         return filter
 
-    def get_machines(
-        self, machine_id=None, hostname=None, ip=None, any=None, substring=False
-    ):
+    def get_machines(self, machine_id=None, hostname=None, ip=None, any=None, substring=False):
         """
         Return matching machines.
 
@@ -202,13 +198,9 @@ class LdapMachineResolver(BaseMachineResolver):
                     if self.id_attribute.lower() == "dn":
                         machine["machineid"] = dn
                     else:
-                        machine["machineid"] = self._get_entry(
-                            self.id_attribute, attributes
-                        )
+                        machine["machineid"] = self._get_entry(self.id_attribute, attributes)
 
-                    machine["hostname"] = self._get_entry(
-                        self.hostname_attribute, attributes
-                    )
+                    machine["hostname"] = self._get_entry(self.hostname_attribute, attributes)
                     machine["ip"] = self._get_entry(self.ip_attribute, attributes)
 
                     if machine["ip"]:
@@ -246,9 +238,7 @@ class LdapMachineResolver(BaseMachineResolver):
         machine_id = None
         machines = self.get_machines(hostname=hostname, ip=ip)
         if len(machines) > 1:
-            raise Exception(
-                "More than one machine found in LDAP resolver {0!s}".format(self.name)
-            )
+            raise Exception(f"More than one machine found in LDAP resolver {self.name!s}")
 
         if len(machines) == 1:
             machine_id = machines[0].id
@@ -334,9 +324,7 @@ class LdapMachineResolver(BaseMachineResolver):
         """
         success = False
         ldap_uri = params.get("LDAPURI")
-        if is_true(params.get("TLS_VERIFY")) and (
-            ldap_uri.lower().startswith("ldaps") or params.get("START_TLS")
-        ):
+        if is_true(params.get("TLS_VERIFY")) and (ldap_uri.lower().startswith("ldaps") or params.get("START_TLS")):
             tls_ca_file = params.get("TLS_CA_FILE") or DEFAULT_CA_FILE
             tls_context = Tls(
                 validate=ssl.CERT_REQUIRED,
@@ -346,9 +334,7 @@ class LdapMachineResolver(BaseMachineResolver):
         else:
             tls_context = None
         try:
-            server_pool = IdResolver.create_serverpool(
-                ldap_uri, float(params.get("TIMEOUT", 5)), tls_context=tls_context
-            )
+            server_pool = IdResolver.create_serverpool(ldap_uri, float(params.get("TIMEOUT", 5)), tls_context=tls_context)
             l = IdResolver.create_connection(
                 authtype=params.get("AUTHTYPE", AUTHTYPE.SIMPLE),
                 server=server_pool,
@@ -363,14 +349,12 @@ class LdapMachineResolver(BaseMachineResolver):
             l.search(
                 search_base=params["LDAPBASE"],
                 search_scope=ldap3.SUBTREE,
-                search_filter="(&" + params["SEARCHFILTER"] + ")",
+                search_filter=f"(&{params['SEARCHFILTER']})",
                 attributes=[params["HOSTNAMEATTRIBUTE"]],
             )
 
             count = len([x for x in l.response if x.get("type") == "searchResEntry"])
-            desc = (
-                _("Your LDAP config seems to be OK, %i machine objects found.") % count
-            )
+            desc = _("Your LDAP config seems to be OK, %i machine objects found.") % count
 
             l.unbind()
             success = True

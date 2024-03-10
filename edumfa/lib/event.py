@@ -63,9 +63,7 @@ class event(object):
             # here we have to evaluate the event configuration from the
             # DB table eventhandler and based on the self.eventname etc...
             # do Pre-Event Handling
-            e_handles = self.g.event_config.get_handled_events(
-                self.eventname, position="pre"
-            )
+            e_handles = self.g.event_config.get_handled_events(self.eventname, position="pre")
             for e_handler_def in e_handles:
                 log.debug(f"Pre-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
@@ -78,29 +76,21 @@ class event(object):
                     "handler_def": e_handler_def,
                 }
                 if event_handler.check_condition(options=options):
-                    log.debug(
-                        f"Pre-Handling event {self.eventname} with options {options}"
-                    )
+                    log.debug(f"Pre-Handling event {self.eventname} with options {options}")
                     # create a new audit object for this action
                     event_audit = getAudit(self.g.audit_object.config)
                     # copy all values from the original audit entry
                     event_audit_data = dict(self.g.audit_object.audit_data)
-                    event_audit_data["action"] = (
-                        "PRE-EVENT {trigger}>>{handler}:{action}".format(
-                            trigger=self.eventname,
-                            handler=e_handler_def.get("handlermodule"),
-                            action=e_handler_def.get("action"),
-                        )
+                    event_audit_data["action"] = "PRE-EVENT {trigger}>>{handler}:{action}".format(
+                        trigger=self.eventname,
+                        handler=e_handler_def.get("handlermodule"),
+                        action=e_handler_def.get("action"),
                     )
-                    event_audit_data["action_detail"] = "{0!s}".format(
-                        e_handler_def.get("options")
-                    )
+                    event_audit_data["action_detail"] = f"{e_handler_def.get('options')!s}"
                     event_audit_data["info"] = e_handler_def.get("name")
                     event_audit.log(event_audit_data)
 
-                    result = event_handler.do(
-                        e_handler_def.get("action"), options=options
-                    )
+                    result = event_handler.do(e_handler_def.get("action"), options=options)
                     # set audit object to success
                     event_audit.log({"success": result})
                     event_audit.finalize_log()
@@ -122,29 +112,21 @@ class event(object):
                     "handler_def": e_handler_def,
                 }
                 if event_handler.check_condition(options=options):
-                    log.debug(
-                        f"Post-Handling event {self.eventname} with options {options}"
-                    )
+                    log.debug(f"Post-Handling event {self.eventname} with options {options}")
                     # create a new audit object
                     event_audit = getAudit(self.g.audit_object.config)
                     # copy all values from the original audit entry
                     event_audit_data = dict(self.g.audit_object.audit_data)
-                    event_audit_data["action"] = (
-                        "POST-EVENT {trigger}>>{handler}:{action}".format(
-                            trigger=self.eventname,
-                            handler=e_handler_def.get("handlermodule"),
-                            action=e_handler_def.get("action"),
-                        )
+                    event_audit_data["action"] = "POST-EVENT {trigger}>>{handler}:{action}".format(
+                        trigger=self.eventname,
+                        handler=e_handler_def.get("handlermodule"),
+                        action=e_handler_def.get("action"),
                     )
-                    event_audit_data["action_detail"] = "{0!s}".format(
-                        e_handler_def.get("options")
-                    )
+                    event_audit_data["action_detail"] = f"{e_handler_def.get('options')!s}"
                     event_audit_data["info"] = e_handler_def.get("name")
                     event_audit.log(event_audit_data)
 
-                    result = event_handler.do(
-                        e_handler_def.get("action"), options=options
-                    )
+                    result = event_handler.do(e_handler_def.get("action"), options=options)
                     # In case the handler has modified the response
                     f_result = options.get("response")
                     # set audit object to success
@@ -313,15 +295,7 @@ class EventConfiguration(object):
         :param position: the position of the event definition
         :return:
         """
-        eventlist = [
-            e
-            for e in self.events
-            if (
-                eventname in e.get("event")
-                and e.get("active")
-                and e.get("position") == position
-            )
-        ]
+        eventlist = [e for e in self.events if (eventname in e.get("event") and e.get("active") and e.get("position") == position)]
         return eventlist
 
     def get_event(self, eventid):

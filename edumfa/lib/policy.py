@@ -140,12 +140,8 @@ log = logging.getLogger(__name__)
 optional = True
 required = False
 
-DEFAULT_ANDROID_APP_URL = (
-    "https://play.google.com/store/apps/details?id=it.netknights.piauthenticator"
-)
-DEFAULT_IOS_APP_URL = (
-    "https://apps.apple.com/us/app/privacyidea-authenticator/id1445401301"
-)
+DEFAULT_ANDROID_APP_URL = "https://play.google.com/store/apps/details?id=it.netknights.piauthenticator"
+DEFAULT_IOS_APP_URL = "https://apps.apple.com/us/app/privacyidea-authenticator/id1445401301"
 DEFAULT_PREFERRED_CLIENT_MODE_LIST = ["interactive", "webauthn", "poll", "u2f"]
 
 
@@ -543,16 +539,8 @@ class PolicyClass(object):
         p = [("name", name), ("active", active), ("scope", scope)]
         for searchkey, searchvalue in p:
             if searchvalue is not None:
-                reduced_policies = [
-                    policy
-                    for policy in reduced_policies
-                    if policy.get(searchkey) == searchvalue
-                ]
-                log.debug(
-                    "Policies after matching {1!s}={2!s}: {0!s}".format(
-                        reduced_policies, searchkey, searchvalue
-                    )
-                )
+                reduced_policies = [policy for policy in reduced_policies if policy.get(searchkey) == searchvalue]
+                log.debug(f"Policies after matching {searchkey!s}={searchvalue!s}: {reduced_policies!s}")
 
         p = [("action", action), ("user", user), ("realm", realm)]
         # If this is an admin-policy, we also do check the adminrealm
@@ -571,17 +559,11 @@ class PolicyClass(object):
                         # about the request value
                         new_policies.append(policy)
                     else:
-                        value_found, value_excluded = self._search_value(
-                            policy.get(searchkey), searchvalue
-                        )
+                        value_found, value_excluded = self._search_value(policy.get(searchkey), searchvalue)
                         if value_found and not value_excluded:
                             new_policies.append(policy)
                 reduced_policies = new_policies
-                log.debug(
-                    "Policies after matching {1!s}={2!s}: {0!s}".format(
-                        reduced_policies, searchkey, searchvalue
-                    )
-                )
+                log.debug(f"Policies after matching {searchkey!s}={searchvalue!s}: {reduced_policies!s}")
 
         # We need to act individually on the resolver key word
         # We either match the resolver exactly or we match another resolver (
@@ -596,13 +578,9 @@ class PolicyClass(object):
                         # We have a realm and a user and can get all resolvers
                         # of this user in the realm
                         if not user_resolvers:
-                            user_resolvers = User(
-                                user, realm=realm
-                            ).get_ordererd_resolvers()
+                            user_resolvers = User(user, realm=realm).get_ordererd_resolvers()
                         for reso in user_resolvers:
-                            value_found, _v_ex = self._search_value(
-                                policy.get("resolver"), reso
-                            )
+                            value_found, _v_ex = self._search_value(policy.get("resolver"), reso)
                             if value_found:
                                 new_policies.append(policy)
                                 break
@@ -611,33 +589,23 @@ class PolicyClass(object):
                     # about the request value
                     new_policies.append(policy)
                 else:
-                    value_found, _v_ex = self._search_value(
-                        policy.get("resolver"), resolver
-                    )
+                    value_found, _v_ex = self._search_value(policy.get("resolver"), resolver)
                     if value_found:
                         new_policies.append(policy)
 
             reduced_policies = new_policies
-            log.debug(
-                "Policies after matching resolver={1!s}: {0!s}".format(
-                    reduced_policies, resolver
-                )
-            )
+            log.debug(f"Policies after matching resolver={resolver!s}: {reduced_policies!s}")
 
         # Match the eduMFA node
         if edumfanode is not None:
             new_policies = []
             for policy in reduced_policies:
                 # The policy either matches if it has no edumfanode defined or if the edumfanode is contained in the list
-                if not policy.get("edumfanode") or edumfanode in policy.get(
-                    "edumfanode"
-                ):
+                if not policy.get("edumfanode") or edumfanode in policy.get("edumfanode"):
                     new_policies.append(policy)
 
             reduced_policies = new_policies
-            log.debug(
-                f"Policies after matching edumfanode={edumfanode!s}: {reduced_policies!s}"
-            )
+            log.debug(f"Policies after matching edumfanode={edumfanode!s}: {reduced_policies!s}")
 
         # Match the client IP.
         # Client IPs may be direct match, may be located in subnets or may
@@ -655,9 +623,7 @@ class PolicyClass(object):
             new_policies = []
             for policy in reduced_policies:
                 log.debug(f"checking client ip in policy {policy!s}.")
-                client_found, client_excluded = check_ip_in_policy(
-                    client, policy.get("client")
-                )
+                client_found, client_excluded = check_ip_in_policy(client, policy.get("client"))
                 if client_found and not client_excluded:
                     # The client was contained in the defined subnets and was
                     #  not excluded
@@ -669,11 +635,7 @@ class PolicyClass(object):
                 if not policy.get("client"):
                     new_policies.append(policy)
             reduced_policies = new_policies
-            log.debug(
-                "Policies after matching client={1!s}: {0!s}".format(
-                    reduced_policies, client
-                )
-            )
+            log.debug(f"Policies after matching client={client!s}: {reduced_policies!s}")
 
         if sort_by_priority:
             reduced_policies = sorted(reduced_policies, key=itemgetter("priority"))
@@ -740,11 +702,7 @@ class PolicyClass(object):
         if user_object is not None:
             # if a user_object is passed, we check, if it differs from potentially passed user, resolver, realm:
             if (
-                (
-                    user
-                    and user.lower()
-                    not in {user_object.login.lower(), user_object.used_login.lower()}
-                )
+                (user and user.lower() not in {user_object.login.lower(), user_object.used_login.lower()})
                 or (resolver and resolver.lower() != user_object.resolver.lower())
                 or (realm and realm.lower() != user_object.realm)
             ):
@@ -781,15 +739,8 @@ class PolicyClass(object):
 
         # filter policy for time. If no time is set or is a time is set and
         # it matches the time_range, then we add this policy
-        reduced_policies = [
-            policy
-            for policy in reduced_policies
-            if (policy.get("time") and check_time_in_range(policy.get("time"), time))
-            or not policy.get("time")
-        ]
-        log.debug(
-            f"Policies after matching time: {[p.get('name') for p in reduced_policies]!s}"
-        )
+        reduced_policies = [policy for policy in reduced_policies if (policy.get("time") and check_time_in_range(policy.get("time"), time)) or not policy.get("time")]
+        log.debug(f"Policies after matching time: {[p.get('name') for p in reduced_policies]!s}")
 
         # filter policies by the policy conditions
         if extended_condition_check != CONDITION_CHECK.DO_NOT_CHECK_AT_ALL:
@@ -800,11 +751,7 @@ class PolicyClass(object):
                 serial,
                 extended_condition_check,
             )
-            log.debug(
-                "Policies after matching conditions".format(
-                    [p.get("name") for p in reduced_policies]
-                )
-            )
+            log.debug("Policies after matching conditions".format([p.get("name") for p in reduced_policies]))
 
         if audit_data is not None:
             for p in reduced_policies:
@@ -837,11 +784,7 @@ class PolicyClass(object):
         for policy in policies:
             include_policy = True
             for section, key, comparator, value, active in policy["conditions"]:
-                if (
-                    extended_condition_check
-                    is CONDITION_CHECK.CHECK_AND_RAISE_EXCEPTION_ON_MISSING
-                    or section in extended_condition_check
-                ):
+                if extended_condition_check is CONDITION_CHECK.CHECK_AND_RAISE_EXCEPTION_ON_MISSING or section in extended_condition_check:
                     # We check conditions, either if we are supposed to check everything or if
                     # the section is contained in the extended condition check
                     if active:
@@ -857,12 +800,7 @@ class PolicyClass(object):
                                 include_policy = False
                                 break
                         elif section == CONDITION_SECTION.TOKENINFO:
-                            dbtoken = (
-                                dbtoken
-                                or Token.query.filter(Token.serial == serial).first()
-                                if serial
-                                else None
-                            )
+                            dbtoken = dbtoken or Token.query.filter(Token.serial == serial).first() if serial else None
                             if not self._policy_matches_info_condition(
                                 policy,
                                 key,
@@ -874,46 +812,27 @@ class PolicyClass(object):
                                 include_policy = False
                                 break
                         elif section == CONDITION_SECTION.TOKEN:
-                            dbtoken = (
-                                dbtoken
-                                or Token.query.filter(Token.serial == serial).first()
-                                if serial
-                                else None
-                            )
-                            if not self._policy_matches_token_condition(
-                                policy, key, comparator, value, dbtoken
-                            ):
+                            dbtoken = dbtoken or Token.query.filter(Token.serial == serial).first() if serial else None
+                            if not self._policy_matches_token_condition(policy, key, comparator, value, dbtoken):
                                 include_policy = False
                                 break
                         elif section == CONDITION_SECTION.HTTP_REQUEST_HEADER:
-                            if not self._policy_matches_request_header_condition(
-                                policy, key, comparator, value, request_headers
-                            ):
+                            if not self._policy_matches_request_header_condition(policy, key, comparator, value, request_headers):
                                 include_policy = False
                                 break
                         elif section == CONDITION_SECTION.HTTP_ENVIRONMENT:
-                            if not self._policy_matches_request_environ_condition(
-                                policy, key, comparator, value, request_headers
-                            ):
+                            if not self._policy_matches_request_environ_condition(policy, key, comparator, value, request_headers):
                                 include_policy = False
                                 break
                         else:
-                            log.warning(
-                                "Policy {!r} has condition with unknown section: {!r}".format(
-                                    policy["name"], section
-                                )
-                            )
-                            raise PolicyError(
-                                f"Policy {policy['name']!r} has condition with unknown section"
-                            )
+                            log.warning(f"Policy {policy['name']!r} has condition with unknown section: {section!r}")
+                            raise PolicyError(f"Policy {policy['name']!r} has condition with unknown section")
             if include_policy:
                 reduced_policies.append(policy)
         return reduced_policies
 
     @staticmethod
-    def _policy_matches_request_environ_condition(
-        policy, key, comparator, value, request_headers
-    ):
+    def _policy_matches_request_environ_condition(policy, key, comparator, value, request_headers):
         """
         :param request_headers: Request Header object
         :type request_headers: Can be accessed using .get()
@@ -926,34 +845,22 @@ class PolicyClass(object):
                     environ_value = request_environ.get(key)
                     return compare_values(environ_value, comparator, value)
                 except Exception as exx:
-                    log.warning(
-                        f"Error during handling the condition on HTTP environment {key!r} of policy {policy['name']!r}: {exx!r}"
-                    )
-                    raise PolicyError(
-                        f"Invalid comparison in the HTTP environment conditions of policy {policy['name']!r}"
-                    )
+                    log.warning(f"Error during handling the condition on HTTP environment {key!r} of policy {policy['name']!r}: {exx!r}")
+                    raise PolicyError(f"Invalid comparison in the HTTP environment conditions of policy {policy['name']!r}")
             else:
-                log.warning(
-                    f"Unknown HTTP environment key referenced in condition of policy {policy['name']!r}: {key!r}"
-                )
+                log.warning(f"Unknown HTTP environment key referenced in condition of policy {policy['name']!r}: {key!r}")
                 log.warning(f"Available HTTP environment: {request_environ!r}")
-                raise PolicyError(
-                    f"Unknown HTTP environment key referenced in condition of policy {policy['name']!r}: {key!r}"
-                )
+                raise PolicyError(f"Unknown HTTP environment key referenced in condition of policy {policy['name']!r}: {key!r}")
         else:  # pragma: no cover
             log.error(
                 "Policy {!r} has conditions on HTTP environment, but HTTP environment is not available. This should not happen - possible programming error {!s}.".format(
                     policy["name"], "".join(traceback.format_stack())
                 )
             )
-            raise PolicyError(
-                f"Policy {policy['name']!r} has conditions on environment {key!r}, but HTTP environment is not available"
-            )
+            raise PolicyError(f"Policy {policy['name']!r} has conditions on environment {key!r}, but HTTP environment is not available")
 
     @staticmethod
-    def _policy_matches_request_header_condition(
-        policy, key, comparator, value, request_headers
-    ):
+    def _policy_matches_request_header_condition(policy, key, comparator, value, request_headers):
         """
         :param request_headers: Request Header object
         :type request_headers: Can be accessed using .get()
@@ -965,31 +872,19 @@ class PolicyClass(object):
                     header_value = request_headers.get(key)
                     return compare_values(header_value, comparator, value)
                 except Exception as exx:
-                    log.warning(
-                        "Error during handling the condition on HTTP header {!r} of policy {!r}: {!r}".format(
-                            key, policy["name"], exx
-                        )
-                    )
-                    raise PolicyError(
-                        f"Invalid comparison in the HTTP header conditions of policy {policy['name']!r}"
-                    )
+                    log.warning(f"Error during handling the condition on HTTP header {key!r} of policy {policy['name']!r}: {exx!r}")
+                    raise PolicyError(f"Invalid comparison in the HTTP header conditions of policy {policy['name']!r}")
             else:
-                log.warning(
-                    f"Unknown HTTP header key referenced in condition of policy {policy['name']!r}: {key!r}"
-                )
+                log.warning(f"Unknown HTTP header key referenced in condition of policy {policy['name']!r}: {key!r}")
                 log.warning(f"Available HTTP headers: {request_headers!r}")
-                raise PolicyError(
-                    f"Unknown HTTP header key referenced in condition of policy {policy['name']!r}: {key!r}"
-                )
+                raise PolicyError(f"Unknown HTTP header key referenced in condition of policy {policy['name']!r}: {key!r}")
         else:  # pragma: no cover
             log.error(
                 "Policy {!r} has conditions on HTTP headers, but HTTP header is not available. This should not happen - possible programming error {!s}.".format(
                     policy["name"], "".join(traceback.format_stack())
                 )
             )
-            raise PolicyError(
-                f"Policy {policy['name']!r} has conditions on headers {key!r}, but HTTP header is not available"
-            )
+            raise PolicyError(f"Policy {policy['name']!r} has conditions on headers {key!r}, but HTTP header is not available")
 
     @staticmethod
     def _policy_matches_token_condition(policy, key, comparator, value, db_token):
@@ -1009,34 +904,22 @@ class PolicyClass(object):
                 try:
                     return compare_values(db_token.get(key), comparator, value)
                 except Exception as exx:
-                    log.warning(
-                        f"Error during handling the condition on token {key!r} of policy {policy['name']!r}: {exx!r}"
-                    )
-                    raise PolicyError(
-                        f"Invalid comparison in the 'token' conditions of policy {policy['name']!r}"
-                    )
+                    log.warning(f"Error during handling the condition on token {key!r} of policy {policy['name']!r}: {exx!r}")
+                    raise PolicyError(f"Invalid comparison in the 'token' conditions of policy {policy['name']!r}")
             else:
-                log.warning(
-                    f"Unknown token column referenced in a condition of policy {policy['name']!r}: {key!r}"
-                )
+                log.warning(f"Unknown token column referenced in a condition of policy {policy['name']!r}: {key!r}")
                 # If we do have token object but the referenced key is not an attribute of the token,
                 # we have a misconfiguration and raise an error.
-                raise PolicyError(
-                    f"Unknown key in the token conditions of policy {policy['name']!r}"
-                )
+                raise PolicyError(f"Unknown key in the token conditions of policy {policy['name']!r}")
         else:  # pragma: no cover
             log.error(
                 f"Policy {policy['name']!r} has conditions on tokens, but a token object is not available. This should not happen - possible programming error:"
                 f" {''.join(traceback.format_stack())!s}."
             )
-            raise PolicyError(
-                f"Policy {policy['name']!r} has conditions on tokens, but a token object is not available"
-            )
+            raise PolicyError(f"Policy {policy['name']!r} has conditions on tokens, but a token object is not available")
 
     @staticmethod
-    def _policy_matches_info_condition(
-        policy, key, comparator, value, type, user_object=None, dbtoken=None
-    ):
+    def _policy_matches_info_condition(policy, key, comparator, value, type, user_object=None, dbtoken=None):
         """
         Check if the given policy matches a certain userinfo or tokeninfo condition depending
         on the specified ``type``.
@@ -1060,27 +943,13 @@ class PolicyClass(object):
                 try:
                     return compare_values(info[key], comparator, value)
                 except Exception as exx:
-                    log.warning(
-                        "Error during handling the condition on {!s} {!r} of policy {!r}: {!r}".format(
-                            type, key, policy["name"], exx
-                        )
-                    )
-                    raise PolicyError(
-                        f"Invalid comparison in the {type!s} conditions of policy {policy['name']!r}"
-                    )
+                    log.warning(f"Error during handling the condition on {type!s} {key!r} of policy {policy['name']!r}: {exx!r}")
+                    raise PolicyError(f"Invalid comparison in the {type!s} conditions of policy {policy['name']!r}")
             else:
-                log.warning(
-                    "Unknown {!s} key referenced in a condition of policy {!r}: {!r}".format(
-                        type, policy["name"], key
-                    )
-                )
+                log.warning(f"Unknown {type!s} key referenced in a condition of policy {policy['name']!r}: {key!r}")
                 # If we do have an user or token object, but the conditions of policies reference
                 # an unknown userinfo or tokeninfo key, we have a misconfiguration and raise an error.
-                raise PolicyError(
-                    "Unknown key in the {!s} conditions of policy {!r}".format(
-                        type, policy["name"]
-                    )
-                )
+                raise PolicyError(f"Unknown key in the {type!s} conditions of policy {policy['name']!r}")
         else:
             log.error(
                 f"Policy {policy['name']!r} has condition on {type!s}, but the according object is not available - possible programming error"
@@ -1089,11 +958,7 @@ class PolicyClass(object):
             # If the policy specifies a userinfo or tokeninfo condition, but no object is available,
             # the policy is misconfigured. We have to raise a PolicyError to ensure that
             # the eduMFA server does not silently misbehave.
-            raise PolicyError(
-                "Policy {!r} has condition on {!s}, but an according object is not available".format(
-                    policy["name"], type
-                )
-            )
+            raise PolicyError(f"Policy {policy['name']!r} has condition on {type!s}, but an according object is not available")
 
     @staticmethod
     def check_for_conflicts(policies, action):
@@ -1114,16 +979,11 @@ class PolicyClass(object):
             prioritized_action = prioritized_policy["action"][action]
             highest_priority = prioritized_policy["priority"]
             for other_policy in policies:
-                if (
-                    other_policy["priority"] == highest_priority
-                    and other_policy["action"][action] != prioritized_action
-                ):
+                if other_policy["priority"] == highest_priority and other_policy["action"][action] != prioritized_action:
                     raise PolicyError(f"Contradicting {action!s} policies.")
 
     @staticmethod
-    def extract_action_values(
-        policies, action, unique=False, allow_white_space_in_action=False
-    ):
+    def extract_action_values(policies, action, unique=False, allow_white_space_in_action=False):
         """
         Given an action, extract all values the given policies specify for that action.
 
@@ -1265,9 +1125,7 @@ class PolicyClass(object):
         from edumfa.lib.token import get_dynamic_policy_definitions
 
         role = logged_in_user.get("role")
-        user_rights = self.ui_get_rights(
-            role, logged_in_user.get("realm"), logged_in_user.get("username"), client
-        )
+        user_rights = self.ui_get_rights(role, logged_in_user.get("realm"), logged_in_user.get("username"), client)
         main_menus = []
         static_rights = get_static_policy_definitions(role)
         enroll_rights = get_dynamic_policy_definitions(role)
@@ -1375,9 +1233,7 @@ class PolicyClass(object):
         # In this case we do not distinguish the userobject as for whom an administrator would enroll a token
         # We simply want to know, which tokentypes a user or an admin in generally allowed to enroll. This is
         # why we pass an empty params.
-        (role, username, userrealm, adminuser, adminrealm) = (
-            determine_logged_in_userparams(logged_in_user, {})
-        )
+        (role, username, userrealm, adminuser, adminrealm) = determine_logged_in_userparams(logged_in_user, {})
         user_object = None
         if username and userrealm:
             # We need a user_object to do user-attribute specific policy matching
@@ -1388,9 +1244,7 @@ class PolicyClass(object):
         for tokenclass in tokenclasses:
             # Check if the tokenclass is ui enrollable for "user" or "admin"
             if role in tokenclass.get_class_info("ui_enroll"):
-                enroll_types[tokenclass.get_class_type()] = tokenclass.get_class_info(
-                    "description"
-                )
+                enroll_types[tokenclass.get_class_type()] = tokenclass.get_class_info("description")
 
         if role == SCOPE.ADMIN:
             extended_condition_check = CONDITION_CHECK.DO_NOT_CHECK_AT_ALL
@@ -1409,7 +1263,7 @@ class PolicyClass(object):
                     realm=userrealm,
                     user_object=user_object,
                     active=True,
-                    action="enroll" + tokentype.upper(),
+                    action=f"enroll{tokentype.upper()}",
                     adminrealm=adminrealm,
                     adminuser=adminuser,
                     extended_condition_check=extended_condition_check,
@@ -1528,11 +1382,7 @@ def set_policy(
                 and isinstance(condition[3], str)
                 and isinstance(condition[4], bool)
             ):
-                raise ParameterError(
-                    "Conditions must be 5-tuples of four strings and one boolean: {!r}".format(
-                        condition
-                    )
-                )
+                raise ParameterError(f"Conditions must be 5-tuples of four strings and one boolean: {condition!r}")
     p1 = Policy.query.filter_by(name=name).first()
     if p1:
         # The policy already exist, we need to update
@@ -1721,21 +1571,15 @@ def get_static_policy_definitions(scope=None):
             ACTION.EMAILCONFIG: {
                 "type": "str",
                 "value": smtpconfigs,
-                "desc": _(
-                    "The SMTP server configuration, that should be used to send the registration email."
-                ),
+                "desc": _("The SMTP server configuration, that should be used to send the registration email."),
             },
             ACTION.REQUIREDEMAIL: {
                 "type": "str",
-                "desc": _(
-                    "Only users with this email address are allowed to register. This is a regular expression."
-                ),
+                "desc": _("Only users with this email address are allowed to register. This is a regular expression."),
             },
             ACTION.REGISTERBODY: {
                 "type": "text",
-                "desc": _(
-                    "The body of the registration email. Use '{regkey}' as tag for the registration key."
-                ),
+                "desc": _("The body of the registration email. Use '{regkey}' as tag for the registration key."),
             },
         },
         SCOPE.ADMIN: {
@@ -1813,9 +1657,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.UNASSIGN: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to remove the token from a user, i.e. unassign a token."
-                ),
+                "desc": _("Admin is allowed to remove the token from a user, i.e. unassign a token."),
                 "mainmenu": [MAIN_MENU.TOKENS],
                 "group": GROUP.TOKEN,
             },
@@ -1845,17 +1687,13 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.MACHINETOKENS: {
                 "type": "bool",
-                "desc": _(
-                    "The Admin is allowed to attach and detach tokens to machines."
-                ),
+                "desc": _("The Admin is allowed to attach and detach tokens to machines."),
                 "mainmenu": [MAIN_MENU.TOKENS, MAIN_MENU.MACHINES],
                 "group": GROUP.MACHINE,
             },
             ACTION.AUTHITEMS: {
                 "type": "bool",
-                "desc": _(
-                    "The Admin is allowed to fetch authentication items of tokens assigned to machines."
-                ),
+                "desc": _("The Admin is allowed to fetch authentication items of tokens assigned to machines."),
                 "group": GROUP.GENERAL,
             },
             ACTION.TOKENREALMS: {
@@ -1872,9 +1710,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.GETSERIAL: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to retrieve a serial for a given OTP value."
-                ),
+                "desc": _("Admin is allowed to retrieve a serial for a given OTP value."),
                 "mainmenu": [MAIN_MENU.TOKENS],
                 "group": GROUP.TOOLS,
             },
@@ -1885,16 +1721,12 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.COPYTOKENPIN: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to copy the PIN of one token to another token."
-                ),
+                "desc": _("Admin is allowed to copy the PIN of one token to another token."),
                 "group": GROUP.TOOLS,
             },
             ACTION.COPYTOKENUSER: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to copy the assigned user to another token, i.e. assign a user to another token."
-                ),
+                "desc": _("Admin is allowed to copy the assigned user to another token, i.e. assign a user to another token."),
                 "group": GROUP.TOOLS,
             },
             ACTION.LOSTTOKEN: {
@@ -1905,17 +1737,13 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.SYSTEMWRITE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to write and modify the system configuration."
-                ),
+                "desc": _("Admin is allowed to write and modify the system configuration."),
                 "group": GROUP.SYSTEM,
                 "mainmenu": [MAIN_MENU.CONFIG],
             },
             ACTION.SYSTEMDELETE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to delete keys in the system configuration."
-                ),
+                "desc": _("Admin is allowed to delete keys in the system configuration."),
                 "group": GROUP.SYSTEM,
                 "mainmenu": [MAIN_MENU.CONFIG],
             },
@@ -1927,9 +1755,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.CONFIGDOCUMENTATION: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to export a documentation of the complete configuration including resolvers and realm."
-                ),
+                "desc": _("Admin is allowed to export a documentation of the complete configuration including resolvers and realm."),
                 "group": GROUP.SYSTEM,
                 "mainmenu": [MAIN_MENU.CONFIG],
             },
@@ -1953,9 +1779,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.RESOLVERWRITE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to write and modify the resolver and realm configuration."
-                ),
+                "desc": _("Admin is allowed to write and modify the resolver and realm configuration."),
                 "group": GROUP.SYSTEM,
                 "mainmenu": [MAIN_MENU.CONFIG],
             },
@@ -1973,9 +1797,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.CACONNECTORWRITE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to create new CA Connector definitions and modify existing ones."
-                ),
+                "desc": _("Admin is allowed to create new CA Connector definitions and modify existing ones."),
                 "group": GROUP.SYSTEM,
                 "mainmenu": [MAIN_MENU.CONFIG],
             },
@@ -1993,9 +1815,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.MACHINERESOLVERWRITE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to write and modify the machine resolvers."
-                ),
+                "desc": _("Admin is allowed to write and modify the machine resolvers."),
                 "group": GROUP.SYSTEM,
                 "mainmenu": [MAIN_MENU.CONFIG],
             },
@@ -2025,9 +1845,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.OTPPINCONTENTS: {
                 "type": "str",
-                "desc": _(
-                    "Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, (s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
-                ),
+                "desc": _("Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, (s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"),
                 "group": GROUP.PIN,
             },
             ACTION.OTPPINSETRANDOM: {
@@ -2044,9 +1862,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.AUDIT_AGE: {
                 "type": "str",
-                "desc": _(
-                    "The admin will only see audit entries of the last 10d, 3m or 2y."
-                ),
+                "desc": _("The admin will only see audit entries of the last 10d, 3m or 2y."),
                 "group": GROUP.SYSTEM,
                 "mainmenu": [MAIN_MENU.AUDIT],
             },
@@ -2064,9 +1880,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.ADDUSER: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to add users in a userstore/UserIdResolver."
-                ),
+                "desc": _("Admin is allowed to add users in a userstore/UserIdResolver."),
                 "group": GROUP.USER,
                 "mainmenu": [MAIN_MENU.USERS],
             },
@@ -2084,16 +1898,12 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.SETHSM: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to set the password of the HSM/Security Module."
-                ),
+                "desc": _("Admin is allowed to set the password of the HSM/Security Module."),
                 "group": GROUP.SYSTEM,
             },
             ACTION.GETCHALLENGES: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to retrieve the list of active challenges."
-                ),
+                "desc": _("Admin is allowed to retrieve the list of active challenges."),
                 "mainmenu": [MAIN_MENU.TOKENS],
                 "group": GROUP.GENERAL,
             },
@@ -2123,9 +1933,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.EDUMFASERVERWRITE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to write remote eduMFA server definitions."
-                ),
+                "desc": _("Admin is allowed to write remote eduMFA server definitions."),
                 "mainmenu": [MAIN_MENU.CONFIG],
                 "group": GROUP.SYSTEM,
             },
@@ -2159,9 +1967,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.EVENTHANDLINGWRITE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to write and modify the event handling configuration."
-                ),
+                "desc": _("Admin is allowed to write and modify the event handling configuration."),
                 "mainmenu": [MAIN_MENU.CONFIG],
                 "group": GROUP.SYSTEM,
             },
@@ -2173,9 +1979,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.SMSGATEWAYWRITE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to write and modify SMS gateway definitions."
-                ),
+                "desc": _("Admin is allowed to write and modify SMS gateway definitions."),
                 "mainmenu": [MAIN_MENU.CONFIG],
                 "group": GROUP.SYSTEM,
             },
@@ -2187,25 +1991,19 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.CLIENTTYPE: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to get the list of authenticated clients and their types."
-                ),
+                "desc": _("Admin is allowed to get the list of authenticated clients and their types."),
                 "mainmenu": [MAIN_MENU.COMPONENTS],
                 "group": GROUP.SYSTEM,
             },
             ACTION.MANAGESUBSCRIPTION: {
                 "type": "bool",
-                "desc": _(
-                    "Admin is allowed to add and delete component subscriptions."
-                ),
+                "desc": _("Admin is allowed to add and delete component subscriptions."),
                 "mainmenu": [MAIN_MENU.COMPONENTS],
                 "group": GROUP.SYSTEM,
             },
             ACTION.TRIGGERCHALLENGE: {
                 "type": "bool",
-                "desc": _(
-                    "The Admin is allowed to trigger a challenge for e.g. SMS OTP token."
-                ),
+                "desc": _("The Admin is allowed to trigger a challenge for e.g. SMS OTP token."),
                 "mainmenu": [],
                 "group": GROUP.GENERAL,
             },
@@ -2229,9 +2027,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.HIDE_TOKENINFO: {
                 "type": TYPE.STRING,
-                "desc": _(
-                    "A whitespace-separated list of tokeninfo fields which are not displayed to the admin."
-                ),
+                "desc": _("A whitespace-separated list of tokeninfo fields which are not displayed to the admin."),
                 "group": GROUP.TOKEN,
             },
             ACTION.TOKENGROUP_LIST: {
@@ -2254,9 +2050,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.SERVICEID_LIST: {
                 "type": "bool",
-                "desc": _(
-                    "The Admin is allowed list the available service ID definitions."
-                ),
+                "desc": _("The Admin is allowed list the available service ID definitions."),
                 "mainmenu": [MAIN_MENU.CONFIG],
                 "group": GROUP.SERVICEID,
             },
@@ -2281,9 +2075,7 @@ def get_static_policy_definitions(scope=None):
         SCOPE.USER: {
             ACTION.ASSIGN: {
                 "type": "bool",
-                "desc": _(
-                    "The user is allowed to assign an existing token that is not yet assigned using the token serial number."
-                ),
+                "desc": _("The user is allowed to assign an existing token that is not yet assigned using the token serial number."),
                 "mainmenu": [MAIN_MENU.TOKENS],
                 "group": GROUP.TOKEN,
             },
@@ -2325,9 +2117,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.RESET: {
                 "type": "bool",
-                "desc": _(
-                    "The user is allowed to reset the failcounter of his tokens."
-                ),
+                "desc": _("The user is allowed to reset the failcounter of his tokens."),
                 "mainmenu": [MAIN_MENU.TOKENS],
                 "group": GROUP.TOKEN,
             },
@@ -2374,9 +2164,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.OTPPINCONTENTS: {
                 "type": "str",
-                "desc": _(
-                    "Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, (s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
-                ),
+                "desc": _("Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, (s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"),
                 "group": GROUP.PIN,
             },
             ACTION.AUDIT: {
@@ -2386,9 +2174,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.AUDIT_AGE: {
                 "type": "str",
-                "desc": _(
-                    "The user will only see audit entries of the last 10d, 3m or 2y."
-                ),
+                "desc": _("The user will only see audit entries of the last 10d, 3m or 2y."),
                 "mainmenu": [MAIN_MENU.AUDIT],
             },
             ACTION.HIDE_AUDIT_COLUMNS: {
@@ -2404,16 +2190,12 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.UPDATEUSER: {
                 "type": "bool",
-                "desc": _(
-                    "The user is allowed to update his own user information, like changing his password."
-                ),
+                "desc": _("The user is allowed to update his own user information, like changing his password."),
                 "mainmenu": [MAIN_MENU.USERS],
             },
             ACTION.PASSWORDRESET: {
                 "type": "bool",
-                "desc": _(
-                    "The user is allowed to do a password reset in an editable UserIdResolver."
-                ),
+                "desc": _("The user is allowed to do a password reset in an editable UserIdResolver."),
                 "mainmenu": [],
             },
             ACTION.SET_USER_ATTRIBUTES: {
@@ -2436,9 +2218,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.HIDE_TOKENINFO: {
                 "type": TYPE.STRING,
-                "desc": _(
-                    "A whitespace-separated list of tokeninfo fields which are not displayed to the user."
-                ),
+                "desc": _("A whitespace-separated list of tokeninfo fields which are not displayed to the user."),
                 "group": GROUP.TOKEN,
             },
         },
@@ -2450,9 +2230,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.REQUIRE_DESCRIPTION: {
                 "type": "str",
-                "desc": _(
-                    "During the rollout process, this policy makes the description required for all selected tokentypes."
-                ),
+                "desc": _("During the rollout process, this policy makes the description required for all selected tokentypes."),
                 "group": GROUP.ENROLLMENT,
                 "multiple": True,
                 "value": get_token_types(),
@@ -2464,45 +2242,33 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.MAXACTIVETOKENUSER: {
                 "type": "int",
-                "desc": _(
-                    "Limit the number of active tokens a user may have assigned."
-                ),
+                "desc": _("Limit the number of active tokens a user may have assigned."),
                 "group": GROUP.TOKEN,
             },
             ACTION.OTPPINRANDOM: {
                 "type": "int",
                 "value": list(range(1, 32)),
-                "desc": _(
-                    "Set a random OTP PIN with this length for a token during the enrollment process."
-                ),
+                "desc": _("Set a random OTP PIN with this length for a token during the enrollment process."),
                 "group": GROUP.PIN,
             },
             ACTION.PINHANDLING: {
                 "type": "str",
-                "desc": _(
-                    "In case of a random OTP PIN use this python module to process the PIN."
-                ),
+                "desc": _("In case of a random OTP PIN use this python module to process the PIN."),
                 "group": GROUP.PIN,
             },
             ACTION.CHANGE_PIN_FIRST_USE: {
                 "type": "bool",
-                "desc": _(
-                    "If the administrator sets the OTP PIN during enrollment or later, the user will have to change the PIN during first use."
-                ),
+                "desc": _("If the administrator sets the OTP PIN during enrollment or later, the user will have to change the PIN during first use."),
                 "group": GROUP.PIN,
             },
             ACTION.CHANGE_PIN_EVERY: {
                 "type": "str",
-                "desc": _(
-                    "The user needs to change his PIN on a regular basis. To change the PIN every 180 days, enter '180d'."
-                ),
+                "desc": _("The user needs to change his PIN on a regular basis. To change the PIN every 180 days, enter '180d'."),
                 "group": GROUP.PIN,
             },
             ACTION.ENCRYPTPIN: {
                 "type": "bool",
-                "desc": _(
-                    "The OTP PIN can be hashed or encrypted. Hashing the PIN is the default behaviour."
-                ),
+                "desc": _("The OTP PIN can be hashed or encrypted. Hashing the PIN is the default behaviour."),
                 "group": GROUP.PIN,
             },
             ACTION.TOKENLABEL: {
@@ -2523,38 +2289,28 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.APPIMAGEURL: {
                 "type": "str",
-                "desc": _(
-                    "This is the URL to the token image for apps like FreeOTP (supported file formats: PNG, JPG and GIF)."
-                ),
+                "desc": _("This is the URL to the token image for apps like FreeOTP (supported file formats: PNG, JPG and GIF)."),
                 "group": GROUP.TOKEN,
             },
             ACTION.AUTOASSIGN: {
                 "type": "str",
                 "value": [AUTOASSIGNVALUE.NONE, AUTOASSIGNVALUE.USERSTORE],
-                "desc": _(
-                    "Users can assign a token just by using the unassigned token to authenticate."
-                ),
+                "desc": _("Users can assign a token just by using the unassigned token to authenticate."),
                 "group": GROUP.TOKEN,
             },
             ACTION.LOSTTOKENPWLEN: {
                 "type": "int",
                 "value": list(range(1, 32)),
-                "desc": _(
-                    "The length of the password in case of temporary token (lost token)."
-                ),
+                "desc": _("The length of the password in case of temporary token (lost token)."),
             },
             ACTION.LOSTTOKENPWCONTENTS: {
                 "type": "str",
-                "desc": _(
-                    "The contents of the temporary password, described by the characters C, c, n, s, 8."
-                ),
+                "desc": _("The contents of the temporary password, described by the characters C, c, n, s, 8."),
             },
             ACTION.LOSTTOKENVALID: {
                 "type": "int",
                 "value": list(range(1, 61)),
-                "desc": _(
-                    "The length of the validity for the temporary token (in days)."
-                ),
+                "desc": _("The length of the validity for the temporary token (in days)."),
             },
             ACTION.REGISTRATIONCODE_LENGTH: {
                 "type": "int",
@@ -2572,9 +2328,7 @@ def get_static_policy_definitions(scope=None):
             ACTION.PASSWORD_LENGTH: {
                 "type": "int",
                 "value": list(range(1, 32)),
-                "desc": _(
-                    "Set the length of the password of generated password tokens."
-                ),
+                "desc": _("Set the length of the password of generated password tokens."),
                 "group": GROUP.TOKEN,
             },
             ACTION.PASSWORD_CONTENTS: {
@@ -2587,9 +2341,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.VERIFY_ENROLLMENT: {
                 "type": "str",
-                "desc": _(
-                    "Specify a white space separated list of token types, that should be verified during enrollment."
-                ),
+                "desc": _("Specify a white space separated list of token types, that should be verified during enrollment."),
                 "group": GROUP.TOKEN,
             },
         },
@@ -2601,67 +2353,43 @@ def get_static_policy_definitions(scope=None):
                     ACTIONVALUE.USERSTORE,
                     ACTIONVALUE.NONE,
                 ],
-                "desc": _(
-                    "Either use the Token PIN , use the Userstore Password or use no fixed password component."
-                ),
+                "desc": _("Either use the Token PIN , use the Userstore Password or use no fixed password component."),
             },
             ACTION.CHALLENGERESPONSE: {
                 "type": "str",
-                "desc": _(
-                    "This is a whitespace separated list of tokentypes, that can be used with challenge response."
-                ),
+                "desc": _("This is a whitespace separated list of tokentypes, that can be used with challenge response."),
                 "multiple": True,
-                "value": [
-                    token_obj.get_class_type()
-                    for token_obj in get_token_classes()
-                    if "challenge" in token_obj.mode and len(token_obj.mode) > 1
-                ],
+                "value": [token_obj.get_class_type() for token_obj in get_token_classes() if "challenge" in token_obj.mode and len(token_obj.mode) > 1],
             },
             ACTION.CHALLENGETEXT: {
                 "type": "str",
-                "desc": _(
-                    "Use an alternate challenge text for telling the user to enter an OTP value."
-                ),
+                "desc": _("Use an alternate challenge text for telling the user to enter an OTP value."),
             },
             ACTION.CHALLENGETEXT_HEADER: {
                 "type": "str",
-                "desc": _(
-                    "If there are several different challenges, this text precedes the list of the challenge texts."
-                ),
+                "desc": _("If there are several different challenges, this text precedes the list of the challenge texts."),
             },
             ACTION.CHALLENGETEXT_FOOTER: {
                 "type": "str",
-                "desc": _(
-                    "If there are several different challenges, this text follows the list of the challenge texts."
-                ),
+                "desc": _("If there are several different challenges, this text follows the list of the challenge texts."),
             },
             ACTION.CHANGE_PIN_VIA_VALIDATE: {
                 "type": "bool",
-                "desc": _(
-                    "If the PIN of a token is to be changed, this will allow the user to change the PIN during a validate/check request via challenge / response."
-                ),
+                "desc": _("If the PIN of a token is to be changed, this will allow the user to change the PIN during a validate/check request via challenge / response."),
             },
             ACTION.RESYNC_VIA_MULTICHALLENGE: {
                 "type": "bool",
-                "desc": _(
-                    "The autoresync of a token can be done via a challenge response message.You need to activate 'Automatic resync' in the general settings!"
-                ),
+                "desc": _("The autoresync of a token can be done via a challenge response message.You need to activate 'Automatic resync' in the general settings!"),
             },
             ACTION.ENROLL_VIA_MULTICHALLENGE: {
                 "type": "str",
-                "desc": _(
-                    "In case of a successful authentication the following tokentype is enrolled. The maximum number of tokens for a user is checked."
-                ),
-                "value": [
-                    t.upper() for t in get_multichallenge_enrollable_tokentypes()
-                ],
+                "desc": _("In case of a successful authentication the following tokentype is enrolled. The maximum number of tokens for a user is checked."),
+                "value": [t.upper() for t in get_multichallenge_enrollable_tokentypes()],
             },
             ACTION.PASSTHRU: {
                 "type": "str",
                 "value": radiusconfigs,
-                "desc": _(
-                    "If set, the user in this realm will be authenticated against the userstore or against the given RADIUS config, if the user has no tokens assigned."
-                ),
+                "desc": _("If set, the user in this realm will be authenticated against the userstore or against the given RADIUS config, if the user has no tokens assigned."),
             },
             ACTION.PASSTHRU_ASSIGN: {
                 "type": "str",
@@ -2674,33 +2402,23 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.PASSNOTOKEN: {
                 "type": "bool",
-                "desc": _(
-                    "If the user has no token, the authentication request for this user will always be true."
-                ),
+                "desc": _("If the user has no token, the authentication request for this user will always be true."),
             },
             ACTION.PASSNOUSER: {
                 "type": "bool",
-                "desc": _(
-                    "If the user user does not exist, the authentication request for this non-existing user will always be true."
-                ),
+                "desc": _("If the user user does not exist, the authentication request for this non-existing user will always be true."),
             },
             ACTION.MANGLE: {
                 "type": "str",
-                "desc": _(
-                    "Can be used to modify the parameters pass, user and realm in an authentication request. See the documentation for an example."
-                ),
+                "desc": _("Can be used to modify the parameters pass, user and realm in an authentication request. See the documentation for an example."),
             },
             ACTION.RESETALLTOKENS: {
                 "type": "bool",
-                "desc": _(
-                    "If a user authenticates successfully reset the failcounter of all of his tokens."
-                ),
+                "desc": _("If a user authenticates successfully reset the failcounter of all of his tokens."),
             },
             ACTION.INCREASE_FAILCOUNTER_ON_CHALLENGE: {
                 "type": "bool",
-                "desc": _(
-                    "Increase the failcounter for all the tokens, for which a challenge has been triggered."
-                ),
+                "desc": _("Increase the failcounter for all the tokens, for which a challenge has been triggered."),
             },
             ACTION.AUTH_CACHE: {
                 "type": "str",
@@ -2720,9 +2438,7 @@ def get_static_policy_definitions(scope=None):
         SCOPE.AUTHZ: {
             ACTION.AUTHORIZED: {
                 "type": "str",
-                "desc": _(
-                    "Allow the user to authenticate (default). If set to '{0!s}', the authentication of the user will be denied."
-                ).format(AUTHORIZED.DENY),
+                "desc": _("Allow the user to authenticate (default). If set to '{0!s}', the authentication of the user will be denied.").format(AUTHORIZED.DENY),
                 "value": [AUTHORIZED.ALLOW, AUTHORIZED.DENY],
                 "group": GROUP.MODIFYING_RESPONSE,
             },
@@ -2759,132 +2475,94 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.TOKENTYPE: {
                 "type": "str",
-                "desc": _(
-                    "The user will only be authenticated with this very tokentype."
-                ),
+                "desc": _("The user will only be authenticated with this very tokentype."),
                 "group": GROUP.CONDITIONS,
             },
             ACTION.SERIAL: {
                 "type": "str",
-                "desc": _(
-                    "The user will only be authenticated if the serial number of the token matches this regexp."
-                ),
+                "desc": _("The user will only be authenticated if the serial number of the token matches this regexp."),
                 "group": GROUP.CONDITIONS,
             },
             ACTION.TOKENINFO: {
                 "type": "str",
-                "desc": _(
-                    "The user will only be authenticated if the tokeninfo field matches the regexp (key/&lt;regexp&gt;/)."
-                ),
+                "desc": _("The user will only be authenticated if the tokeninfo field matches the regexp (key/&lt;regexp&gt;/)."),
                 "group": GROUP.CONDITIONS,
             },
             ACTION.SETREALM: {
                 "type": "str",
                 "value": realms,
-                "desc": _(
-                    "The Realm of the user is set to this very realm. This is important if the user is not contained in the default realm and can not pass his realm."
-                ),
+                "desc": _("The Realm of the user is set to this very realm. This is important if the user is not contained in the default realm and can not pass his realm."),
                 "group": GROUP.SETTING_ACTIONS,
             },
             ACTION.NODETAILSUCCESS: {
                 "type": "bool",
-                "desc": _(
-                    "In case of successful authentication additional no detail information will be returned."
-                ),
+                "desc": _("In case of successful authentication additional no detail information will be returned."),
                 "group": GROUP.SETTING_ACTIONS,
             },
             ACTION.NODETAILFAIL: {
                 "type": "bool",
-                "desc": _(
-                    "In case of failed authentication additional no detail information will be returned."
-                ),
+                "desc": _("In case of failed authentication additional no detail information will be returned."),
                 "group": GROUP.SETTING_ACTIONS,
             },
             ACTION.ADDUSERINRESPONSE: {
                 "type": "bool",
-                "desc": _(
-                    "In case of successful authentication user data will be added in the detail branch of the authentication response."
-                ),
+                "desc": _("In case of successful authentication user data will be added in the detail branch of the authentication response."),
                 "group": GROUP.SETTING_ACTIONS,
             },
             ACTION.ADDRESOLVERINRESPONSE: {
                 "type": "bool",
-                "desc": _(
-                    "In case of successful authentication the user resolver and realm will be added in the detail branch of the authentication response."
-                ),
+                "desc": _("In case of successful authentication the user resolver and realm will be added in the detail branch of the authentication response."),
                 "group": GROUP.SETTING_ACTIONS,
             },
             ACTION.APIKEY: {
                 "type": "bool",
-                "desc": _(
-                    "The sending of an API Auth Key is required duringauthentication. This avoids rogue authenticate requests against the /validate/check interface."
-                ),
+                "desc": _("The sending of an API Auth Key is required duringauthentication. This avoids rogue authenticate requests against the /validate/check interface."),
                 "group": GROUP.SETTING_ACTIONS,
             },
         },
         SCOPE.WEBUI: {
             ACTION.ADMIN_DASHBOARD: {
                 "type": "bool",
-                "desc": _(
-                    "If set, administrators will see a dashboard as start screen when logging in to eduMFA WebUI."
-                ),
+                "desc": _("If set, administrators will see a dashboard as start screen when logging in to eduMFA WebUI."),
             },
             ACTION.LOGINMODE: {
                 "type": "str",
-                "desc": _(
-                    'If set to "eduMFA" the users and admins need to authenticate against eduMFA when they log in to the Web UI. Defaults to "userstore".'
-                ),
+                "desc": _('If set to "eduMFA" the users and admins need to authenticate against eduMFA when they log in to the Web UI. Defaults to "userstore".'),
                 "value": [LOGINMODE.USERSTORE, LOGINMODE.EDUMFA, LOGINMODE.DISABLE],
             },
             ACTION.LOGIN_TEXT: {
                 "type": "str",
-                "desc": _(
-                    'An alternative text to display on the WebUI login dialog instead of "Please sign in".'
-                ),
+                "desc": _('An alternative text to display on the WebUI login dialog instead of "Please sign in".'),
             },
             ACTION.SEARCH_ON_ENTER: {
                 "type": "bool",
-                "desc": _(
-                    "When searching in the user list, the search will only performed when pressing enter."
-                ),
+                "desc": _("When searching in the user list, the search will only performed when pressing enter."),
             },
             ACTION.TIMEOUT_ACTION: {
                 "type": "str",
-                "desc": _(
-                    'The action taken when a user is idle beyond the logout_time limit. Defaults to "lockscreen".'
-                ),
+                "desc": _('The action taken when a user is idle beyond the logout_time limit. Defaults to "lockscreen".'),
                 "value": [TIMEOUT_ACTION.LOGOUT, TIMEOUT_ACTION.LOCKSCREEN],
             },
             ACTION.REMOTE_USER: {
                 "type": "str",
                 "value": [REMOTE_USER.ACTIVE, REMOTE_USER.DISABLE, REMOTE_USER.FORCE],
-                "desc": _(
-                    'The REMOTE_USER set by the webserver can be used to login to eduMFA or it will be ignored. Defaults to "disable".'
-                ),
+                "desc": _('The REMOTE_USER set by the webserver can be used to login to eduMFA or it will be ignored. Defaults to "disable".'),
             },
             ACTION.LOGOUTTIME: {
                 "type": "int",
-                "desc": _(
-                    "Set the time in seconds after which the user will be logged out from the WebUI. Default: 120"
-                ),
+                "desc": _("Set the time in seconds after which the user will be logged out from the WebUI. Default: 120"),
             },
             ACTION.TOKENPAGESIZE: {
                 "type": "int",
-                "desc": _(
-                    "Set how many tokens should be displayed in the token view on one page."
-                ),
+                "desc": _("Set how many tokens should be displayed in the token view on one page."),
             },
             ACTION.USERPAGESIZE: {
                 "type": "int",
-                "desc": _(
-                    "Set how many users should be displayed in the user view on one page."
-                ),
+                "desc": _("Set how many users should be displayed in the user view on one page."),
             },
             ACTION.AUDITPAGESIZE: {
                 "type": "int",
-                "desc": _(
-                    "Set how many audit entries should be displayed in the audit view on one page."
-                ),
+                "desc": _("Set how many audit entries should be displayed in the audit view on one page."),
             },
             ACTION.CUSTOM_MENU: {
                 "type": "str",
@@ -2896,95 +2574,65 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.GDPR_LINK: {
                 "type": "str",
-                "desc": _(
-                    "Link your privacy statement to be displayed in the baseline/footer."
-                ),
+                "desc": _("Link your privacy statement to be displayed in the baseline/footer."),
             },
             ACTION.USERDETAILS: {
                 "type": "bool",
-                "desc": _(
-                    "Whether the user ID and the resolver should be displayed in the token list."
-                ),
+                "desc": _("Whether the user ID and the resolver should be displayed in the token list."),
             },
             ACTION.POLICYTEMPLATEURL: {
                 "type": "str",
-                "desc": _(
-                    "The URL of a repository, where the policy templates can be found.  (Default https://raw.githubusercontent.com/eduMFA/policy-templates/main/templates/)"
-                ),
+                "desc": _("The URL of a repository, where the policy templates can be found.  (Default https://raw.githubusercontent.com/eduMFA/policy-templates/main/templates/)"),
             },
             ACTION.LOGOUT_REDIRECT: {
                 "type": "str",
-                "desc": _(
-                    "The URL of an SSO provider for redirect at logout.(The URL must start with http:// or https://)"
-                ),
+                "desc": _("The URL of an SSO provider for redirect at logout.(The URL must start with http:// or https://)"),
             },
             ACTION.TOKENWIZARD: {
                 "type": "bool",
-                "desc": _(
-                    "As long as a user has no token, he will only see a token wizard in the UI."
-                ),
+                "desc": _("As long as a user has no token, he will only see a token wizard in the UI."),
             },
             ACTION.TOKENWIZARD2ND: {
                 "type": "bool",
-                "desc": _(
-                    "The tokenwizard will be displayed in the token menu, even if the user already has a token."
-                ),
+                "desc": _("The tokenwizard will be displayed in the token menu, even if the user already has a token."),
             },
             ACTION.TOKENROLLOVER: {
                 "type": "str",
-                "desc": _(
-                    "This is a whitespace separated list of tokentypes, for which a rollover button is displayed in the token details."
-                ),
+                "desc": _("This is a whitespace separated list of tokentypes, for which a rollover button is displayed in the token details."),
                 "group": GROUP.TOKEN,
             },
             ACTION.DIALOG_NO_TOKEN: {
                 "type": "bool",
-                "desc": _(
-                    "The welcome dialog will be displayed if the user has no tokens assigned."
-                ),
+                "desc": _("The welcome dialog will be displayed if the user has no tokens assigned."),
             },
             ACTION.DEFAULT_TOKENTYPE: {
                 "type": "str",
-                "desc": _(
-                    "This is the default token type in the token enrollment dialog."
-                ),
+                "desc": _("This is the default token type in the token enrollment dialog."),
                 "value": get_token_types(),
             },
             ACTION.REALMDROPDOWN: {
                 "type": "str",
-                "desc": _(
-                    "A list of realm names, which are displayed in a drop down menu in the WebUI login screen. Realms are separated by white spaces."
-                ),
+                "desc": _("A list of realm names, which are displayed in a drop down menu in the WebUI login screen. Realms are separated by white spaces."),
             },
             ACTION.HIDE_WELCOME: {
                 "type": "bool",
-                "desc": _(
-                    "If this checked, the administrator will not see the welcome dialog anymore."
-                ),
+                "desc": _("If this checked, the administrator will not see the welcome dialog anymore."),
             },
             ACTION.HIDE_BUTTONS: {
                 "type": "bool",
-                "desc": _(
-                    "Per default disabled actions result in disabled buttons. When checking this action, buttons of disabled actions are hidden."
-                ),
+                "desc": _("Per default disabled actions result in disabled buttons. When checking this action, buttons of disabled actions are hidden."),
             },
             ACTION.DELETION_CONFIRMATION: {
                 "type": "bool",
-                "desc": _(
-                    "If this is checked, there will be a confirmation prompt when deleting policies, events, mresolver, resolver or periodic tasks!"
-                ),
+                "desc": _("If this is checked, there will be a confirmation prompt when deleting policies, events, mresolver, resolver or periodic tasks!"),
             },
             ACTION.SHOW_SEED: {
                 "type": "bool",
-                "desc": _(
-                    "If this is checked, the seed will be displayed as text during enrollment."
-                ),
+                "desc": _("If this is checked, the seed will be displayed as text during enrollment."),
             },
             ACTION.SHOW_NODE: {
                 "type": "bool",
-                "desc": _(
-                    "If this is checked, the eduMFA Node name will be displayed in the menu bar."
-                ),
+                "desc": _("If this is checked, the eduMFA Node name will be displayed in the menu bar."),
             },
             ACTION.SHOW_ANDROID_AUTHENTICATOR: {
                 "type": "bool",
@@ -3004,9 +2652,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.SHOW_CUSTOM_AUTHENTICATOR: {
                 "type": "str",
-                "desc": _(
-                    "This action adds a QR code in the enrollment page for HOTP, TOTP and Push tokens, that lead to this given URL."
-                ),
+                "desc": _("This action adds a QR code in the enrollment page for HOTP, TOTP and Push tokens, that lead to this given URL."),
                 "group": "QR Codes",
             },
         },
@@ -3031,11 +2677,7 @@ def get_action_values_from_options(scope, action, options):
     g = options.get("g")
     if g:
         user_object = options.get("user")
-        value = Match.user(
-            g, scope=scope, action=action, user_object=user_object
-        ).action_values(
-            unique=True, allow_white_space_in_action=True, write_to_audit_log=False
-        )
+        value = Match.user(g, scope=scope, action=action, user_object=user_object).action_values(unique=True, allow_white_space_in_action=True, write_to_audit_log=False)
         if len(value) >= 1:
             return list(value)[0]
         else:
@@ -3050,31 +2692,11 @@ def get_policy_condition_sections():
       * ``"description"``, a human-readable description of the section
     """
     return {
-        CONDITION_SECTION.USERINFO: {
-            "description": _(
-                "The policy only matches if certain conditions on the user info are fulfilled."
-            )
-        },
-        CONDITION_SECTION.TOKEN: {
-            "description": _(
-                "The policy only matches if certain conditions of the token attributes are fulfilled."
-            )
-        },
-        CONDITION_SECTION.TOKENINFO: {
-            "description": _(
-                "The policy only matches if certain conditions on the token info are fulfilled."
-            )
-        },
-        CONDITION_SECTION.HTTP_REQUEST_HEADER: {
-            "description": _(
-                "The policy only matches if certain conditions on the HTTP Request header are fulfilled."
-            )
-        },
-        CONDITION_SECTION.HTTP_ENVIRONMENT: {
-            "description": _(
-                "The policy only matches if certain conditions on the HTTP Environment are fulfilled."
-            )
-        },
+        CONDITION_SECTION.USERINFO: {"description": _("The policy only matches if certain conditions on the user info are fulfilled.")},
+        CONDITION_SECTION.TOKEN: {"description": _("The policy only matches if certain conditions of the token attributes are fulfilled.")},
+        CONDITION_SECTION.TOKENINFO: {"description": _("The policy only matches if certain conditions on the token info are fulfilled.")},
+        CONDITION_SECTION.HTTP_REQUEST_HEADER: {"description": _("The policy only matches if certain conditions on the HTTP Request header are fulfilled.")},
+        CONDITION_SECTION.HTTP_ENVIRONMENT: {"description": _("The policy only matches if certain conditions on the HTTP Environment are fulfilled.")},
     }
 
 
@@ -3083,10 +2705,7 @@ def get_policy_condition_comparators():
     :return: a dictionary mapping comparators to dictionaries with the following keys:
      * ``"description"``, a human-readable description of the comparator
     """
-    return {
-        comparator: {"description": description}
-        for comparator, description in COMPARATOR_DESCRIPTIONS.items()
-    }
+    return {comparator: {"description": description} for comparator, description in COMPARATOR_DESCRIPTIONS.items()}
 
 
 class MatchingError(ServerError):
@@ -3164,9 +2783,7 @@ class Match(object):
         """
         return bool(self.policies(write_to_audit_log=write_to_audit_log))
 
-    def action_values(
-        self, unique, allow_white_space_in_action=False, write_to_audit_log=True
-    ):
+    def action_values(self, unique, allow_white_space_in_action=False, write_to_audit_log=True):
         """
         Return a dictionary of action values extracted from the matching policies.
 
@@ -3191,9 +2808,7 @@ class Match(object):
         if write_to_audit_log:
             for action_value, policy_names in action_values.items():
                 for p_name in policy_names:
-                    self._g.audit_object.audit_data.setdefault("policies", []).append(
-                        p_name
-                    )
+                    self._g.audit_object.audit_data.setdefault("policies", []).append(p_name)
         return action_values
 
     def allowed(self, write_to_audit_log=True):
@@ -3215,9 +2830,7 @@ class Match(object):
         :return: True or False
         """
         policies_defined = self.any(write_to_audit_log=write_to_audit_log)
-        policies_at_all = self._g.policy_object.list_policies(
-            scope=self._match_kwargs["scope"], active=True
-        )
+        policies_at_all = self._g.policy_object.list_policies(scope=self._match_kwargs["scope"], active=True)
         # The action is *allowed* if a matched policy explicitly mentions it (``policies_defined`` is non-empty)
         # or if no policies are defined in the given scope (``policies_at_all`` is empty)
         if policies_defined or not policies_at_all:
@@ -3238,9 +2851,7 @@ class Match(object):
         :rtype: ``Match``
         """
         if scope == SCOPE.ADMIN:
-            raise MatchingError(
-                "Match.action_only cannot be used for policies with scope ADMIN"
-            )
+            raise MatchingError("Match.action_only cannot be used for policies with scope ADMIN")
         return cls(
             g,
             name=None,
@@ -3271,9 +2882,7 @@ class Match(object):
         :rtype: ``Match``
         """
         if scope == SCOPE.ADMIN:
-            raise MatchingError(
-                "Match.realm cannot be used for policies with scope ADMIN"
-            )
+            raise MatchingError("Match.realm cannot be used for policies with scope ADMIN")
         return cls(
             g,
             name=None,
@@ -3308,9 +2917,7 @@ class Match(object):
         :rtype: ``Match``
         """
         if scope == SCOPE.ADMIN:
-            raise MatchingError(
-                "Match.user cannot be used for policies with scope ADMIN"
-            )
+            raise MatchingError("Match.user cannot be used for policies with scope ADMIN")
         if not (user_object is None or isinstance(user_object, User)):
             raise MatchingError("Invalid user")
         # Username, realm and resolver will be extracted from the user_object parameter
@@ -3358,9 +2965,7 @@ class Match(object):
                 log.debug(f"Matching policies with tokenrealm {realms[0]!s}.")
                 return cls.realm(g, scope, action, realms[0])
             else:
-                log.warning(
-                    "The token has more than one tokenrealm. Probably not able to match correctly."
-                )
+                log.warning("The token has more than one tokenrealm. Probably not able to match correctly.")
                 return cls.action_only(g, scope, action)
 
     @classmethod
@@ -3383,9 +2988,7 @@ class Match(object):
         from edumfa.lib.auth import ROLE
 
         if g.logged_in_user["role"] != ROLE.ADMIN:
-            raise MatchingError(
-                "Policies with scope ADMIN can only be retrieved by admins"
-            )
+            raise MatchingError("Policies with scope ADMIN can only be retrieved by admins")
         return cls(
             g,
             name=None,
@@ -3513,15 +3116,11 @@ def get_allowed_custom_attributes(g, user_obj):
     """
     deleteables = []
     setables = {}
-    del_pol_dict = Match.admin_or_user(
-        g, action=ACTION.DELETE_USER_ATTRIBUTES, user_obj=user_obj
-    ).action_values(unique=False, allow_white_space_in_action=True)
+    del_pol_dict = Match.admin_or_user(g, action=ACTION.DELETE_USER_ATTRIBUTES, user_obj=user_obj).action_values(unique=False, allow_white_space_in_action=True)
     for keys in del_pol_dict:
         deleteables.extend([k.strip() for k in keys.strip().split()])
     deleteables = list(set(deleteables))
-    set_pol_dict = Match.admin_or_user(
-        g, action=ACTION.SET_USER_ATTRIBUTES, user_obj=user_obj
-    ).action_values(unique=False, allow_white_space_in_action=True)
+    set_pol_dict = Match.admin_or_user(g, action=ACTION.SET_USER_ATTRIBUTES, user_obj=user_obj).action_values(unique=False, allow_white_space_in_action=True)
     for keys in set_pol_dict:
         # parse through each policy
         d = parse_string_to_dict(keys)
@@ -3546,27 +3145,15 @@ def check_pin(g, pin, tokentype, user_obj):
     :param tokentype:
     :param user_obj:
     """
-    pol_minlen = Match.admin_or_user(
-        g, action=f"{tokentype!s}_{ACTION.OTPPINMINLEN!s}", user_obj=user_obj
-    ).action_values(unique=True)
+    pol_minlen = Match.admin_or_user(g, action=f"{tokentype!s}_{ACTION.OTPPINMINLEN!s}", user_obj=user_obj).action_values(unique=True)
     if not pol_minlen:
-        pol_minlen = Match.admin_or_user(
-            g, action=ACTION.OTPPINMINLEN, user_obj=user_obj
-        ).action_values(unique=True)
-    pol_maxlen = Match.admin_or_user(
-        g, action=f"{tokentype!s}_{ACTION.OTPPINMAXLEN!s}", user_obj=user_obj
-    ).action_values(unique=True)
+        pol_minlen = Match.admin_or_user(g, action=ACTION.OTPPINMINLEN, user_obj=user_obj).action_values(unique=True)
+    pol_maxlen = Match.admin_or_user(g, action=f"{tokentype!s}_{ACTION.OTPPINMAXLEN!s}", user_obj=user_obj).action_values(unique=True)
     if not pol_maxlen:
-        pol_maxlen = Match.admin_or_user(
-            g, action=ACTION.OTPPINMAXLEN, user_obj=user_obj
-        ).action_values(unique=True)
-    pol_contents = Match.admin_or_user(
-        g, action=f"{tokentype!s}_{ACTION.OTPPINCONTENTS!s}", user_obj=user_obj
-    ).action_values(unique=True)
+        pol_maxlen = Match.admin_or_user(g, action=ACTION.OTPPINMAXLEN, user_obj=user_obj).action_values(unique=True)
+    pol_contents = Match.admin_or_user(g, action=f"{tokentype!s}_{ACTION.OTPPINCONTENTS!s}", user_obj=user_obj).action_values(unique=True)
     if not pol_contents:
-        pol_contents = Match.admin_or_user(
-            g, action=ACTION.OTPPINCONTENTS, user_obj=user_obj
-        ).action_values(unique=True)
+        pol_contents = Match.admin_or_user(g, action=ACTION.OTPPINCONTENTS, user_obj=user_obj).action_values(unique=True)
 
     if len(pol_minlen) == 1 and len(pin) < int(list(pol_minlen)[0]):
         # check the minimum length requirement

@@ -93,9 +93,7 @@ class YubicoTokenClass(TokenClass):
         res = {
             "type": "yubico",
             "title": "Yubico Token",
-            "description": _(
-                "Yubikey Cloud mode: Forward authentication request to YubiCloud."
-            ),
+            "description": _("Yubikey Cloud mode: Forward authentication request to YubiCloud."),
             "user": ["enroll"],
             # This tokentype is enrollable in the UI for...
             "ui_enroll": ["admin", "user"],
@@ -103,16 +101,12 @@ class YubicoTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of Yubico tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of Yubico tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active Yubico tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active Yubico tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -130,9 +124,7 @@ class YubicoTokenClass(TokenClass):
         tokenid = getParam(param, "yubico.tokenid", required)
         if len(tokenid) < YUBICO_LEN_ID:
             log.error(f"The tokenid needs to be {YUBICO_LEN_ID:d} characters long!")
-            raise Exception(
-                f"The Yubikey token ID needs to be {YUBICO_LEN_ID:d} characters long!"
-            )
+            raise Exception(f"The Yubikey token ID needs to be {YUBICO_LEN_ID:d} characters long!")
 
         if len(tokenid) > YUBICO_LEN_ID:
             tokenid = tokenid[:YUBICO_LEN_ID]
@@ -159,17 +151,13 @@ class YubicoTokenClass(TokenClass):
         if apiKey == DEFAULT_API_KEY or apiId == DEFAULT_CLIENT_ID:
             log.warning("Usage of default apiKey or apiId not recommended!")
             log.warning("Please register your own apiKey and apiId at yubico website!")
-            log.warning(
-                "Configure of apiKey and apiId at the edumfa manage config menu!"
-            )
+            log.warning("Configure of apiKey and apiId at the edumfa manage config menu!")
 
         tokenid = self.get_tokeninfo("yubico.tokenid")
         if len(anOtpVal) < 12:
             log.warning(f"The otpval is too short: {anOtpVal!r}")
         elif anOtpVal[:12] != tokenid:
-            log.warning(
-                "The tokenid in the OTP value does not match the assigned token!"
-            )
+            log.warning("The tokenid in the OTP value does not match the assigned token!")
         else:
             nonce = geturandom(20, hex=True)
             p = {"nonce": nonce, "otp": anOtpVal, "id": apiId}
@@ -195,9 +183,7 @@ class YubicoTokenClass(TokenClass):
                     signature_valid = yubico_check_api_signature(data, apiKey)
 
                     if not signature_valid:
-                        log.error(
-                            f"The hash of the return from the yubico authentication server ({yubico_url!s}) does not match the data!"
-                        )
+                        log.error(f"The hash of the return from the yubico authentication server ({yubico_url!s}) does not match the data!")
 
                     if nonce != return_nonce:
                         log.error("The returned nonce does not match the sent nonce!")
@@ -213,9 +199,7 @@ class YubicoTokenClass(TokenClass):
                         log.warning(f"failed with {result!r}")
 
             except Exception as ex:
-                log.error(
-                    f"Error getting response from Yubico Cloud Server ({yubico_url!r}): {ex!r}"
-                )
+                log.error(f"Error getting response from Yubico Cloud Server ({yubico_url!r}): {ex!r}")
                 log.debug(f"{traceback.format_exc()!s}")
 
         return res

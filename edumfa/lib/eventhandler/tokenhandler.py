@@ -166,9 +166,7 @@ class TokenEventHandler(BaseEventHandler):
                 "length": {
                     "type": "int",
                     "required": True,
-                    "description": _(
-                        "set the PIN of the token to a random PIN of this length."
-                    ),
+                    "description": _("set the PIN of the token to a random PIN of this length."),
                     "value": list(range(1, 32)),
                 }
             },
@@ -181,9 +179,7 @@ class TokenEventHandler(BaseEventHandler):
                 },
                 "user": {
                     "type": "bool",
-                    "description": _(
-                        "Assign token to user in request or to tokenowner."
-                    ),
+                    "description": _("Assign token to user in request or to tokenowner."),
                 },
                 "realm": {
                     "type": "str",
@@ -195,34 +191,26 @@ class TokenEventHandler(BaseEventHandler):
                     "type": "bool",
                     "visibleIf": "tokentype",
                     "visibleValue": "sms",
-                    "description": _(
-                        "Dynamically read the mobile number from the user store."
-                    ),
+                    "description": _("Dynamically read the mobile number from the user store."),
                 },
                 "dynamic_email": {
                     "type": "bool",
                     "visibleIf": "tokentype",
                     "visibleValue": "email",
-                    "description": _(
-                        "Dynamically read the email address from the user store."
-                    ),
+                    "description": _("Dynamically read the email address from the user store."),
                 },
                 "smtp_identifier": {
                     "type": "str",
                     "visibleIf": "tokentype",
                     "visibleValue": "email",
-                    "description": _(
-                        "Use a specific SMTP server configuration for this token."
-                    ),
+                    "description": _("Use a specific SMTP server configuration for this token."),
                     "value": [server.config.identifier for server in get_smtpservers()],
                 },
                 "sms_identifier": {
                     "type": "str",
                     "visibleIf": "tokentype",
                     "visibleValue": "sms",
-                    "description": _(
-                        "Use a specific SMS gateway configuration for this token."
-                    ),
+                    "description": _("Use a specific SMS gateway configuration for this token."),
                     "value": [gateway.identifier for gateway in get_smsgateway()],
                 },
                 "additional_params": {
@@ -233,9 +221,7 @@ class TokenEventHandler(BaseEventHandler):
                     "type": "str",
                     "visibleIf": "tokentype",
                     "visibleValue": "motp",
-                    "description": _(
-                        "Set the MOTP PIN of the MOTP token during enrollment. This is a required value for enrolling MOTP tokens."
-                    ),
+                    "description": _("Set the MOTP PIN of the MOTP token during enrollment. This is a required value for enrolling MOTP tokens."),
                 },
             },
             ACTION_TYPE.SET_DESCRIPTION: {
@@ -247,15 +233,11 @@ class TokenEventHandler(BaseEventHandler):
             ACTION_TYPE.SET_VALIDITY: {
                 VALIDITY.START: {
                     "type": "str",
-                    "description": _(
-                        "The token will be valid starting at the given date. Can be a fixed date or an offset like +10m, +24h, +7d."
-                    ),
+                    "description": _("The token will be valid starting at the given date. Can be a fixed date or an offset like +10m, +24h, +7d."),
                 },
                 VALIDITY.END: {
                     "type": "str",
-                    "description": _(
-                        "The token will be valid until the given date. Can be a fixed date or an offset like +10m, +24h, +7d."
-                    ),
+                    "description": _("The token will be valid until the given date. Can be a fixed date or an offset like +10m, +24h, +7d."),
                 },
             },
             ACTION_TYPE.SET_COUNTWINDOW: {
@@ -278,9 +260,7 @@ class TokenEventHandler(BaseEventHandler):
                 "change fail counter": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "Increase or decrease the fail counter of the token. Values of +n, -n with n being an integer are accepted."
-                    ),
+                    "description": _("Increase or decrease the fail counter of the token. Values of +n, -n with n being an integer are accepted."),
                 }
             },
             ACTION_TYPE.SET_MAXFAIL: {
@@ -328,9 +308,7 @@ class TokenEventHandler(BaseEventHandler):
                 "machine ID": {
                     "type": "str",
                     "required": False,
-                    "description": _(
-                        "The ID of the machine you want to attach the token to"
-                    ),
+                    "description": _("The ID of the machine you want to attach the token to"),
                 },
                 "service_id": {
                     "type": "str",
@@ -342,9 +320,7 @@ class TokenEventHandler(BaseEventHandler):
                 "application": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "Set a token application like 'offline' or 'SSH'. Note: Not all tokens work well with all applications!"
-                    ),
+                    "description": _("Set a token application like 'offline' or 'SSH'. Note: Not all tokens work well with all applications!"),
                     "value": [
                         TOKEN_APPLICATIONS.SSH,
                         TOKEN_APPLICATIONS.OFFLINE,
@@ -405,11 +381,7 @@ class TokenEventHandler(BaseEventHandler):
         handler_def = options.get("handler_def")
         handler_options = handler_def.get("options", {})
 
-        serial = (
-            request.all_data.get("serial")
-            or content.get("detail", {}).get("serial")
-            or g.audit_object.audit_data.get("serial")
-        )
+        serial = request.all_data.get("serial") or content.get("detail", {}).get("serial") or g.audit_object.audit_data.get("serial")
 
         if action.lower() in [
             ACTION_TYPE.SET_TOKENREALM,
@@ -463,9 +435,7 @@ class TokenEventHandler(BaseEventHandler):
                     elif action.lower() == ACTION_TYPE.SET_DESCRIPTION:
                         description = handler_options.get("description") or ""
                         description, td = parse_time_offset_from_now(description)
-                        s_now = (datetime.datetime.now(tzlocal()) + td).strftime(
-                            AUTH_DATE_FORMAT
-                        )
+                        s_now = (datetime.datetime.now(tzlocal()) + td).strftime(AUTH_DATE_FORMAT)
                         set_description(
                             serial,
                             description.format(
@@ -477,15 +447,11 @@ class TokenEventHandler(BaseEventHandler):
                             ),
                         )
                     elif action.lower() == ACTION_TYPE.SET_COUNTWINDOW:
-                        set_count_window(
-                            serial, int(handler_options.get("count window", 50))
-                        )
+                        set_count_window(serial, int(handler_options.get("count window", 50)))
                     elif action.lower() == ACTION_TYPE.SET_TOKENINFO:
                         tokeninfo = handler_options.get("value") or ""
                         tokeninfo, td = parse_time_offset_from_now(tokeninfo)
-                        s_now = (datetime.datetime.now(tzlocal()) + td).strftime(
-                            AUTH_DATE_FORMAT
-                        )
+                        s_now = (datetime.datetime.now(tzlocal()) + td).strftime(AUTH_DATE_FORMAT)
                         try:
                             username = request.User.loginname
                             realm = request.User.realm
@@ -527,57 +493,36 @@ class TokenEventHandler(BaseEventHandler):
                         end_date = handler_options.get(VALIDITY.END)
                         if start_date:
                             d = parse_date(start_date)
-                            set_validity_period_start(
-                                serial, None, d.strftime(DATE_FORMAT)
-                            )
+                            set_validity_period_start(serial, None, d.strftime(DATE_FORMAT))
                         if end_date:
                             d = parse_date(end_date)
-                            set_validity_period_end(
-                                serial, None, d.strftime(DATE_FORMAT)
-                            )
+                            set_validity_period_end(serial, None, d.strftime(DATE_FORMAT))
                     elif action.lower() == ACTION_TYPE.SET_FAILCOUNTER:
                         try:
-                            set_failcounter(
-                                serial, int(handler_options.get("fail counter"))
-                            )
+                            set_failcounter(serial, int(handler_options.get("fail counter")))
                         except Exception as exx:
                             log.warning("Misconfiguration: Failed to set fail counter!")
                     elif action.lower() == ACTION_TYPE.SET_MAXFAIL:
                         try:
-                            set_max_failcount(
-                                serial, int(handler_options.get("max failcount"))
-                            )
+                            set_max_failcount(serial, int(handler_options.get("max failcount")))
                         except Exception as exx:
-                            log.warning(
-                                "Misconfiguration: Failed to set max failcount!"
-                            )
+                            log.warning("Misconfiguration: Failed to set max failcount!")
                     elif action.lower() == ACTION_TYPE.CHANGE_FAILCOUNTER:
                         try:
                             token_obj = get_one_token(serial=serial)
-                            token_obj.set_failcount(
-                                token_obj.token.failcount
-                                + int(handler_options.get("change fail counter"))
-                            )
+                            token_obj.set_failcount(token_obj.token.failcount + int(handler_options.get("change fail counter")))
                         except Exception as exx:
-                            log.warning(
-                                "Misconfiguration: Failed to increase or decrease fail counter!"
-                            )
+                            log.warning("Misconfiguration: Failed to increase or decrease fail counter!")
                     elif action.lower() == ACTION_TYPE.ADD_TOKENGROUP:
                         try:
                             assign_tokengroup(serial, handler_options.get("tokengroup"))
                         except Exception as exx:
-                            log.warning(
-                                f"Misconfiguration: Failed to add tokengroup to token {serial!s}!"
-                            )
+                            log.warning(f"Misconfiguration: Failed to add tokengroup to token {serial!s}!")
                     elif action.lower() == ACTION_TYPE.REMOVE_TOKENGROUP:
                         try:
-                            unassign_tokengroup(
-                                serial, handler_options.get("tokengroup")
-                            )
+                            unassign_tokengroup(serial, handler_options.get("tokengroup"))
                         except Exception as exx:
-                            log.warning(
-                                f"Misconfiguration: Failed to remove tokengroup from token {serial!s}!"
-                            )
+                            log.warning(f"Misconfiguration: Failed to remove tokengroup from token {serial!s}!")
                     elif action.lower() == ACTION_TYPE.ATTACH_APPLICATION:
                         try:
                             machine = handler_options.get("machine ID")
@@ -605,16 +550,10 @@ class TokenEventHandler(BaseEventHandler):
                                 options=application_options,
                             )
                         except Exception as exx:
-                            log.warning(
-                                "Misconfiguration: Failed to attach token to machine. Token serial: {!0s}".format(
-                                    serial
-                                )
-                            )
+                            log.warning("Misconfiguration: Failed to attach token to machine. Token serial: {!0s}".format(serial))
 
             else:
-                log.info(
-                    f"Action {action!s} requires serial number. But no serial number could be found in request {request!s}."
-                )
+                log.info(f"Action {action!s} requires serial number. But no serial number could be found in request {request!s}.")
 
         if action.lower() == ACTION_TYPE.INIT:
             log.info("Initializing new token")
@@ -629,9 +568,7 @@ class TokenEventHandler(BaseEventHandler):
                 tokentype = handler_options.get("tokentype")
                 # Some tokentypes need additional parameters
                 if handler_options.get("additional_params"):
-                    add_params = yaml.safe_load(
-                        handler_options.get("additional_params")
-                    )
+                    add_params = yaml.safe_load(handler_options.get("additional_params"))
                     if type(add_params) == dict:
                         init_param.update(add_params)
 
@@ -639,30 +576,20 @@ class TokenEventHandler(BaseEventHandler):
                     if is_true(handler_options.get("dynamic_phone")):
                         init_param["dynamic_phone"] = 1
                     else:
-                        init_param["phone"] = user.get_user_phone(
-                            phone_type="mobile", index=0
-                        )
+                        init_param["phone"] = user.get_user_phone(phone_type="mobile", index=0)
                         if not init_param["phone"]:
-                            log.warning(
-                                f"Enrolling SMS token. But the user {user!r} has no mobile number!"
-                            )
+                            log.warning(f"Enrolling SMS token. But the user {user!r} has no mobile number!")
                     if handler_options.get("sms_identifier"):
-                        init_param["sms.identifier"] = handler_options.get(
-                            "sms_identifier"
-                        )
+                        init_param["sms.identifier"] = handler_options.get("sms_identifier")
                 elif tokentype == "email":
                     if is_true(handler_options.get("dynamic_email")):
                         init_param["dynamic_email"] = 1
                     else:
                         init_param["email"] = user.info.get("email", "")
                         if not init_param["email"]:
-                            log.warning(
-                                f"Enrolling EMail token. But the user {user!s}has no email address!"
-                            )
+                            log.warning(f"Enrolling EMail token. But the user {user!s}has no email address!")
                     if handler_options.get("smtp_identifier"):
-                        init_param["email.identifier"] = handler_options.get(
-                            "smtp_identifier"
-                        )
+                        init_param["email.identifier"] = handler_options.get("smtp_identifier")
                 elif tokentype == "motp":
                     init_param["motppin"] = handler_options.get("motppin")
 

@@ -243,9 +243,7 @@ class Audit(object):  # pragma: no cover
     #        """
     #        pass
 
-    def search(
-        self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None
-    ):
+    def search(self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None):
         """
         This function is used to search audit events.
 

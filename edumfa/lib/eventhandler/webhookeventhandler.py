@@ -91,17 +91,13 @@ class WebHookHandler(BaseEventHandler):
                 "content_type": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "The encoding that is sent to the WebHook, for example json"
-                    ),
+                    "description": _("The encoding that is sent to the WebHook, for example json"),
                     "value": [CONTENT_TYPE.JSON, CONTENT_TYPE.URLENCODED],
                 },
                 "replace": {
                     "type": "bool",
                     "required": True,
-                    "description": _(
-                        "You can replace placeholder like {logged_in_user}"
-                    ),
+                    "description": _("You can replace placeholder like {logged_in_user}"),
                 },
                 "data": {
                     "type": "str",
@@ -162,11 +158,7 @@ class WebHookHandler(BaseEventHandler):
                     This is the main function where the webhook is sent.
                     Documentation of the requests function is found her docs.python-requests.org
                     """
-                    log.info(
-                        "A webhook is send to {0!r} with the text: {1!r}".format(
-                            webhook_url, webhook_text
-                        )
-                    )
+                    log.info(f"A webhook is send to {webhook_url!r} with the text: {webhook_text!r}")
                     resp = requests.post(
                         webhook_url,
                         data=json.dumps(webhook_text),
@@ -181,11 +173,7 @@ class WebHookHandler(BaseEventHandler):
                     This is the main function where the webhook is sent.
                     Documentation of the requests function is found her docs.python-requests.org
                     """
-                    log.info(
-                        "A webhook is send to {0!r} with the text: {1!r}".format(
-                            webhook_url, webhook_text
-                        )
-                    )
+                    log.info(f"A webhook is send to {webhook_url!r} with the text: {webhook_text!r}")
                     resp = requests.post(
                         webhook_url,
                         webhook_text,

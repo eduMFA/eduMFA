@@ -128,9 +128,7 @@ def create_pgp_keys(keysize, force):
     gpg = gnupg.GPG(gnupghome=GPG_HOME)
     keys = gpg.list_keys(True)
     if len(keys) and not force:
-        click.echo(
-            "There are already private keys. If you want to generate a new private key, use the parameter --force."
-        )
+        click.echo("There are already private keys. If you want to generate a new private key, use the parameter --force.")
         click.echo(keys)
         sys.exit(1)
     input_data = gpg.gen_key_input(
@@ -169,9 +167,7 @@ def create_audit_keys(keysize):
     if os.path.isfile(filename):
         click.echo(f"The file \n\t{filename}\nalready exist. We do not overwrite it!")
         sys.exit(1)
-    new_key = rsa.generate_private_key(
-        public_exponent=65537, key_size=keysize, backend=default_backend()
-    )
+    new_key = rsa.generate_private_key(public_exponent=65537, key_size=keysize, backend=default_backend())
     priv_pem = new_key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
@@ -188,18 +184,14 @@ def create_audit_keys(keysize):
     with open(current_app.config.get("EDUMFA_AUDIT_KEY_PUBLIC"), "wb") as f:
         f.write(pub_pem)
 
-    click.echo(
-        f"Signing keys written to {filename} and {current_app.config.get('EDUMFA_AUDIT_KEY_PUBLIC')}"
-    )
+    click.echo(f"Signing keys written to {filename} and {current_app.config.get('EDUMFA_AUDIT_KEY_PUBLIC')}")
     os.chmod(filename, 0o400)
     click.echo(f"The file permission of {filename} was set to 400!")
     click.echo("Please ensure, that it is owned by the right user.")
 
 
 @core_cli.command("create_tables")
-@click.option(
-    "-s", "--stamp", is_flag=True, help="Stamp database to current head revision."
-)
+@click.option("-s", "--stamp", is_flag=True, help="Stamp database to current head revision.")
 def create_tables(stamp=False):
     """
     Initially create the tables in the database. The database must exist
@@ -209,11 +201,7 @@ def create_tables(stamp=False):
     db.create_all()
     if stamp:
         # get the path to the migration directory from the distribution
-        p = [
-            x.locate()
-            for x in importlib_metadata.files("edumfa")
-            if "migrations/env.py" in str(x)
-        ]
+        p = [x.locate() for x in importlib_metadata.files("edumfa") if "migrations/env.py" in str(x)]
         migration_dir = os.path.dirname(os.path.abspath(p[0]))
         fm_stamp(directory=migration_dir)
     db.session.commit()
@@ -280,7 +268,5 @@ def profile(length=30, profile_dir=None):
 
     if flask.has_request_context():
         click.echo("WARNING: The app may behave unrealistically during profiling.")
-    current_app.wsgi_app = ProfilerMiddleware(
-        current_app.wsgi_app, restrictions=[length], profile_dir=profile_dir
-    )
+    current_app.wsgi_app = ProfilerMiddleware(current_app.wsgi_app, restrictions=[length], profile_dir=profile_dir)
     current_app.run()

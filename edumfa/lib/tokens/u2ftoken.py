@@ -262,15 +262,11 @@ class U2fTokenClass(TokenClass):
                 SCOPE.AUTH: {
                     U2FACTION.FACETS: {
                         "type": "str",
-                        "desc": _(
-                            "This is a list of FQDN hostnames trusting the registered U2F tokens."
-                        ),
+                        "desc": _("This is a list of FQDN hostnames trusting the registered U2F tokens."),
                     },
                     ACTION.CHALLENGETEXT: {
                         "type": "str",
-                        "desc": _(
-                            "Use an alternate challenge text for telling the user to confirm with his U2F device."
-                        ),
+                        "desc": _("Use an alternate challenge text for telling the user to confirm with his U2F device."),
                     },
                 },
                 SCOPE.AUTHZ: {
@@ -283,9 +279,7 @@ class U2fTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     U2FACTION.REQ: {
                         "type": "str",
-                        "desc": _(
-                            "Only specified U2F tokens are allowed to be registered."
-                        ),
+                        "desc": _("Only specified U2F tokens are allowed to be registered."),
                         "group": GROUP.TOKEN,
                     },
                     U2FACTION.NO_VERIFY_CERT: {
@@ -295,16 +289,12 @@ class U2fTokenClass(TokenClass):
                     },
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of U2F tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of U2F tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active U2F tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active U2F tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 },
@@ -382,13 +372,9 @@ class U2fTokenClass(TokenClass):
             # If no description has already been set, set the automatic description or the
             # description given in the 2nd request
             if not self.token.description:
-                self.set_description(
-                    getParam(param, "description", default=automatic_description)
-                )
+                self.set_description(getParam(param, "description", default=automatic_description))
         else:
-            raise ParameterError(
-                "regdata provided but token not in clientwait rollout_state."
-            )
+            raise ParameterError("regdata provided but token not in clientwait rollout_state.")
 
     @log_with(log)
     def get_init_detail(self, params=None, user=None):
@@ -403,9 +389,7 @@ class U2fTokenClass(TokenClass):
             from edumfa.lib.error import TokenAdminError
 
             if not app_id:
-                raise TokenAdminError(
-                    _("You need to define the appId in the token config!")
-                )
+                raise TokenAdminError(_("You need to define the appId in the token config!"))
             nonce = url_encode(geturandom(32))
             response_detail = TokenClass.get_init_detail(self, params, user)
             register_request = {
@@ -469,15 +453,15 @@ class U2fTokenClass(TokenClass):
         options = options or {}
         message = get_action_values_from_options(
             SCOPE.AUTH,
-            "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+            f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}",
             options,
-        ) or _("Please confirm with your U2F token ({0!s})").format(
-            self.token.description
-        )
+        ) or _(
+            "Please confirm with your U2F token ({0!s})"
+        ).format(self.token.description)
 
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
-        lookup_for = tokentype.capitalize() + "ChallengeValidityTime"
+        lookup_for = f"{tokentype.capitalize()}ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # if a transaction id is given, check if there are other u2f token and
@@ -485,9 +469,7 @@ class U2fTokenClass(TokenClass):
         challenge = None
         if transactionid:
             for c in get_challenges(transaction_id=transactionid):
-                if get_tokens(
-                    serial=c.serial, tokentype=self.get_class_type(), count=True
-                ):
+                if get_tokens(serial=c.serial, tokentype=self.get_class_type(), count=True):
                     challenge = c.challenge
                     break
 
@@ -585,15 +567,9 @@ class U2fTokenClass(TokenClass):
                     # If not, we can raise a policy exception
                     if not attestation_certificate_allowed(
                         {
-                            "attestation_issuer": self.get_tokeninfo(
-                                "attestation_issuer"
-                            ),
-                            "attestation_serial": self.get_tokeninfo(
-                                "attestation_serial"
-                            ),
-                            "attestation_subject": self.get_tokeninfo(
-                                "attestation_subject"
-                            ),
+                            "attestation_issuer": self.get_tokeninfo("attestation_issuer"),
+                            "attestation_serial": self.get_tokeninfo("attestation_serial"),
+                            "attestation_subject": self.get_tokeninfo("attestation_subject"),
                         },
                         Match.user(
                             options.get("g"),
@@ -602,25 +578,13 @@ class U2fTokenClass(TokenClass):
                             user_object=self.user if self.user else None,
                         ).action_values(unique=False),
                     ):
-                        log.warning(
-                            "The U2F device {0!s} is not allowed to authenticate due to policy restriction".format(
-                                self.token.serial
-                            )
-                        )
-                        raise PolicyError(
-                            "The U2F device is not allowed to authenticate due to policy restriction."
-                        )
+                        log.warning(f"The U2F device {self.token.serial!s} is not allowed to authenticate due to policy restriction")
+                        raise PolicyError("The U2F device is not allowed to authenticate due to policy restriction.")
 
                 else:
-                    log.warning(
-                        f"The signature of {self.token.serial} was valid, but contained an old counter."
-                    )
+                    log.warning(f"The signature of {self.token.serial} was valid, but contained an old counter.")
             else:
-                log.warning(
-                    "Checking response for token {0!s} failed.".format(
-                        self.token.serial
-                    )
-                )
+                log.warning(f"Checking response for token {self.token.serial!s} failed.")
 
         return ret
 
@@ -642,14 +606,10 @@ class U2fTokenClass(TokenClass):
         app_id = configured_app_id.strip("/")
 
         # Read the facets from the policies
-        pol_facets = Match.action_only(
-            g, scope=SCOPE.AUTH, action=U2FACTION.FACETS
-        ).action_values(unique=False)
+        pol_facets = Match.action_only(g, scope=SCOPE.AUTH, action=U2FACTION.FACETS).action_values(unique=False)
         facet_list = [f"https://{x!s}" for x in pol_facets]
         facet_list.append(app_id)
 
         log.debug(f"Sending facets lists for appId {app_id!s}: {facet_list!s}")
-        res = {
-            "trustedFacets": [{"version": {"major": 1, "minor": 0}, "ids": facet_list}]
-        }
+        res = {"trustedFacets": [{"version": {"major": 1, "minor": 0}, "ids": facet_list}]}
         return "fido.trusted-apps+json", res

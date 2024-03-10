@@ -183,7 +183,7 @@ class TokenClass(object):
         :param tokentype: The type of the token like HOTP or TOTP
         :type tokentype: string
         """
-        tokentype = "" + tokentype
+        tokentype = f"{tokentype}"
         self.type = tokentype
         self.token.tokentype = tokentype
 
@@ -219,11 +219,7 @@ class TokenClass(object):
         # prevent to init update a token changing the token owner
         # FIXME: We need to remove this, if we one day want to assign several users to one token
         if self.user and self.user != user:
-            log.info(
-                "The token with serial {0!s} is already assigned to user {1!s}. Can not assign to {2!s}.".format(
-                    self.token.serial, self.user, user
-                )
-            )
+            log.info(f"The token with serial {self.token.serial!s} is already assigned to user {self.user!s}. Can not assign to {user!s}.")
             raise TokenAdminError("This token is already assigned to another user.")
 
         if not self.user:
@@ -308,9 +304,7 @@ class TokenClass(object):
         user_object = self.user
         user_info = user_object.info
         user_identifier = f"{user_object.login!s}_{user_object.realm!s}"
-        user_displayname = "{0!s} {1!s}".format(
-            user_info.get("givenname", "."), user_info.get("surname", ".")
-        )
+        user_displayname = f"{user_info.get('givenname', '.')!s} {user_info.get('surname', '.')!s}"
         return user_identifier, user_displayname
 
     @check_token_locked
@@ -380,7 +374,7 @@ class TokenClass(object):
         """
         add_info = {key: value}
         if value_type:
-            add_info[key + ".type"] = value_type
+            add_info[f"{key}.type"] = value_type
             if value_type == "password":
                 # encrypt the value
                 add_info[key] = encryptPassword(value)
@@ -423,9 +417,7 @@ class TokenClass(object):
         """
         return -2, 0, 0, 0
 
-    def get_multi_otp(
-        self, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None
-    ):
+    def get_multi_otp(self, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None):
         """
         This returns a dictionary of multiple future OTP values of a token.
 
@@ -576,9 +568,7 @@ class TokenClass(object):
                 self.token.rollout_state = None
             if self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
                 # We do not do 2stepinit in the second step
-                raise ParameterError(
-                    "2stepinit is only to be used in the first initialization step."
-                )
+                raise ParameterError("2stepinit is only to be used in the first initialization step.")
             # In a 2-step enrollment, the server always generates a key
             genkey = 1
             # The token is disabled
@@ -607,9 +597,7 @@ class TokenClass(object):
                 # generate the new key
                 server_component = to_unicode(self.token.get_otpkey().getKey())
                 client_component = otpKey
-                otpKey = self.generate_symmetric_key(
-                    server_component, client_component, param
-                )
+                otpKey = self.generate_symmetric_key(server_component, client_component, param)
                 self.token.rollout_state = ""
                 self.token.active = True
             self.add_init_details("otpkey", otpKey)
@@ -633,7 +621,7 @@ class TokenClass(object):
 
         # Add parameters starting with the tokentype-name to the tokeninfo:
         for p in param.keys():
-            if p.startswith(self.type + "."):
+            if p.startswith(f"{self.type}."):
                 self.add_tokeninfo(p, getParam(param, p))
 
         # The base class will be a software tokenkind
@@ -660,7 +648,7 @@ class TokenClass(object):
         :param description: description of the token
         :type description: string
         """
-        self.token.set_description("" + description)
+        self.token.set_description(f"{description}")
         return
 
     def set_defaults(self):
@@ -672,7 +660,7 @@ class TokenClass(object):
         self.token.maxfail = int(get_from_config("DefaultMaxFailCount") or 10)
         self.token.sync_window = int(get_from_config("DefaultSyncWindow") or 1000)
 
-        self.token.tokentype = "" + self.type
+        self.token.tokentype = f"{self.type}"
         return
 
     def delete_token(self):
@@ -885,9 +873,7 @@ class TokenClass(object):
         if self.token.failcount < self.token.maxfail:
             self.token.failcount = self.token.failcount + 1
             if self.token.failcount == self.token.maxfail:
-                self.add_tokeninfo(
-                    FAILCOUNTER_EXCEEDED, datetime.now(tzlocal()).strftime(DATE_FORMAT)
-                )
+                self.add_tokeninfo(FAILCOUNTER_EXCEEDED, datetime.now(tzlocal()).strftime(DATE_FORMAT))
         try:
             self.token.save()
         except:  # pragma: no cover
@@ -960,7 +946,7 @@ class TokenClass(object):
         tokeninfo = self.token.get_info()
         if key:
             ret = tokeninfo.get(key, default)
-            if tokeninfo.get(key + ".type") == "password":
+            if tokeninfo.get(f"{key}.type") == "password":
                 # we need to decrypt the return value
                 ret = decryptPassword(ret)
         else:
@@ -1202,11 +1188,7 @@ class TokenClass(object):
         try:
             timeout = int(get_from_config(FAILCOUNTER_CLEAR_TIMEOUT, 0))
         except Exception as exx:
-            log.warning(
-                "Misconfiguration. Error retrieving failcounter_clear_timeout: {0!s}".format(
-                    exx
-                )
-            )
+            log.warning(f"Misconfiguration. Error retrieving failcounter_clear_timeout: {exx!s}")
         if timeout and self.token.failcount == self.get_max_failcount():
             now = datetime.now(tzlocal())
             lastfail = self.get_tokeninfo(FAILCOUNTER_EXCEEDED)
@@ -1333,11 +1315,7 @@ class TokenClass(object):
         if reset is True and get_from_config("DefaultResetFailCount") == "True":
             reset_counter = True
 
-        if (
-            reset_counter
-            and self.token.active
-            and self.token.failcount < self.token.maxfail
-        ):
+        if reset_counter and self.token.active and self.token.failcount < self.token.maxfail:
             self.set_failcount(0)
 
         # make DB persistent immediately, to avoid the re-usage of the counter
@@ -1565,9 +1543,7 @@ class TokenClass(object):
         transaction_id = options.get("transaction_id") or options.get("state")
         if transaction_id:
             # Now we also need to check, if there is a corresponding DB entry
-            chals = get_challenges(
-                serial=self.token.serial, transaction_id=transaction_id
-            )
+            chals = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
             challenge_response = bool(chals)
 
         return challenge_response
@@ -1602,9 +1578,7 @@ class TokenClass(object):
 
         # get the challenges for this transaction ID
         if transaction_id is not None:
-            challengeobject_list = get_challenges(
-                serial=self.token.serial, transaction_id=transaction_id
-            )
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
 
             for challengeobject in challengeobject_list:
                 if challengeobject.is_valid():
@@ -1675,16 +1649,14 @@ class TokenClass(object):
         additional challenge ``reply_dict``, which are displayed in the JSON challenges response.
         """
         options = options or {}
-        message = get_action_values_from_options(
-            SCOPE.AUTH, ACTION.CHALLENGETEXT, options
-        ) or _("please enter otp: ")
+        message = get_action_values_from_options(SCOPE.AUTH, ACTION.CHALLENGETEXT, options) or _("please enter otp: ")
         data = None
         reply_dict = {}
 
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
         # Maybe there is a HotpChallengeValidityTime...
-        lookup_for = tokentype.capitalize() + "ChallengeValidityTime"
+        lookup_for = f"{tokentype.capitalize()}ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # Create the challenge in the database
@@ -1728,9 +1700,7 @@ class TokenClass(object):
         :param g: The Flask global object g
         :return: Flask Response or text
         """
-        raise ParameterError(
-            "{0!s} does not support the API endpoint".format(cls.get_tokentype())
-        )
+        raise ParameterError(f"{cls.get_tokentype()!s} does not support the API endpoint")
 
     @staticmethod
     def test_config(params=None):
@@ -1804,17 +1774,12 @@ class TokenClass(object):
         # The last successful authentication of the token
         date_s = self.get_tokeninfo(ACTION.LASTAUTH)
         if date_s:
-            log.debug(
-                "Compare the last successful authentication of token %s with policy tdelta %s: %s"
-                % (self.token.serial, tdelta, date_s)
-            )
+            log.debug(f"Compare the last successful authentication of token {self.token.serial} with policy tdelta {tdelta}: {date_s}")
             # parse the string from the database
             try:
                 last_success_auth = parse_date_string(date_s)
             except ParserError:
-                log.info(
-                    f"Failed to parse the date in 'last_auth' of token {self.token.serial!s}."
-                )
+                log.info(f"Failed to parse the date in 'last_auth' of token {self.token.serial!s}.")
                 return False
 
             if not last_success_auth.tzinfo:
@@ -1824,11 +1789,7 @@ class TokenClass(object):
             # The last auth is to far in the past
             if last_success_auth + tdelta < datetime.now(tzlocal()):
                 res = False
-                log.debug(
-                    "The last successful authentication is too old: {0!s}".format(
-                        last_success_auth
-                    )
-                )
+                log.debug(f"The last successful authentication is too old: {last_success_auth!s}")
 
         return res
 
@@ -1852,9 +1813,7 @@ class TokenClass(object):
         :rtype: str
         """
         if len(server_component) <= len(client_component):
-            raise Exception(
-                "The server component must be longer than the client component."
-            )
+            raise Exception("The server component must be longer than the client component.")
 
         key = server_component[: -len(client_component)] + client_component
         return key

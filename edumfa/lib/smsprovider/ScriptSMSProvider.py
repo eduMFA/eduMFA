@@ -53,9 +53,7 @@ class ScriptSMSProvider(ISMSProvider):
         """
         self.config = db_smsprovider_object or {}
         self.smsgateway = smsgateway
-        self.script_directory = directory or get_app_config_value(
-            "EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY", "/etc/edumfa/scripts"
-        )
+        self.script_directory = directory or get_app_config_value("EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY", "/etc/edumfa/scripts")
 
     def submit_message(self, phone, message):
         """
@@ -76,7 +74,7 @@ class ScriptSMSProvider(ISMSProvider):
         script = self.smsgateway.option_dict.get("script")
         background = self.smsgateway.option_dict.get("background")
 
-        script_name = self.script_directory + "/" + script
+        script_name = f"{self.script_directory}/{script}"
         proc_args = [script_name, phone]
 
         # As the message can contain blanks... it is passed via stdin
@@ -100,11 +98,7 @@ class ScriptSMSProvider(ISMSProvider):
                 raise SMSError(-1, "Failed to start script for sending SMS.")
 
         if rcode:
-            log.warning(
-                "Script {script!r} failed to execute with error code {error!r}".format(
-                    script=script_name, error=rcode
-                )
-            )
+            log.warning(f"Script {script_name!r} failed to execute with error code {rcode!r}")
             raise SMSError(-1, "Error during execution of the script.")
         else:
             log.info(f"SMS delivered to {phone!s}.")
@@ -125,16 +119,12 @@ class ScriptSMSProvider(ISMSProvider):
             "parameters": {
                 "script": {
                     "required": True,
-                    "description": _(
-                        "The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects phone as the parameter and the message from stdin."
-                    ),
+                    "description": _("The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects phone as the parameter and the message from stdin."),
                 },
                 "REGEXP": {"description": cls.regexp_description},
                 "background": {
                     "required": True,
-                    "description": _(
-                        "Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."
-                    ),
+                    "description": _("Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."),
                     "values": [SCRIPT_BACKGROUND, SCRIPT_WAIT],
                 },
             },

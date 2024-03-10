@@ -215,9 +215,7 @@ def get_periodic_task_by_name(name):
     """
     periodic_tasks = get_periodic_tasks(name)
     if len(periodic_tasks) != 1:
-        raise ResourceNotFoundError(
-            f"The periodic task with unique name {name!r} does not exist"
-        )
+        raise ResourceNotFoundError(f"The periodic task with unique name {name!r} does not exist")
     return periodic_tasks[0]
 
 
@@ -277,17 +275,13 @@ def get_scheduled_periodic_tasks(node, current_timestamp=None, interval_tzinfo=N
     if current_timestamp is None:
         current_timestamp = datetime.now(tzutc())
     if current_timestamp.tzinfo is None:
-        raise ParameterError(
-            f"expected timezone-aware datetime, got {current_timestamp!r}"
-        )
+        raise ParameterError(f"expected timezone-aware datetime, got {current_timestamp!r}")
     scheduled_ptasks = []
     log.debug(f"Collecting periodic tasks to run at {current_timestamp.isoformat()!s}")
     for ptask in active_ptasks:
         try:
             next_timestamp = calculate_next_timestamp(ptask, node, interval_tzinfo)
-            log.debug(
-                f"Next scheduled run of {ptask['name']!r}: {next_timestamp.isoformat()!s}"
-            )
+            log.debug(f"Next scheduled run of {ptask['name']!r}: {next_timestamp.isoformat()!s}")
             if next_timestamp <= current_timestamp:
                 log.debug(f"Scheduling periodic task {ptask['name']!r}")
                 scheduled_ptasks.append(ptask)
@@ -331,8 +325,4 @@ def import_periodictask(data, name=None):
         res_data.pop("last_update")
         res_data.pop("last_runs")
         rid = set_periodic_task(**res_data)
-        log.info(
-            'Import of periodictask "{0!s}" finished, id: {1!s}'.format(
-                res_data["name"], rid
-            )
-        )
+        log.info(f"Import of periodictask \"{res_data['name']!s}\" finished, id: {rid!s}")

@@ -152,9 +152,7 @@ def add_CAServiceServicer_to_server(servicer, server):
             response_serializer=caservice__pb2.GetOptionsReply.SerializeToString,
         ),
     }
-    generic_handler = grpc.method_handlers_generic_handler(
-        "CAService", rpc_method_handlers
-    )
+    generic_handler = grpc.method_handlers_generic_handler("CAService", rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 

@@ -279,9 +279,7 @@ def create_user_api():
     if "password" in attributes:
         del attributes["password"]
     r = create_user(resolvername, attributes, password=password)
-    g.audit_object.log(
-        {"success": True, "info": f"{r!s}: {username!s}/{resolvername!s}"}
-    )
+    g.audit_object.log({"success": True, "info": f"{r!s}: {username!s}/{resolvername!s}"})
     return send_result(r)
 
 
@@ -333,9 +331,7 @@ def update_user():
     if password:
         del attributes["password"]
     r = user_obj.update_user_info(attributes, password=password)
-    g.audit_object.log(
-        {"success": True, "info": f"{r!s}: {username!s}/{resolvername!s}"}
-    )
+    g.audit_object.log({"success": True, "info": f"{r!s}: {username!s}/{resolvername!s}"})
     return send_result(r)
 
 

@@ -88,9 +88,7 @@ class User(object):
         self.uid = uid
         self.rtype = None
         if not self.login and not self.resolver and uid is not None:
-            raise UserError(
-                "Can not create a user object from a uid without a resolver!"
-            )
+            raise UserError("Can not create a user object from a uid without a resolver!")
         # Enrich user object with information from the userstore or from the
         # usercache
         if login or uid is not None:
@@ -142,9 +140,7 @@ class User(object):
             log.info(f"Comparing a non-user object: {self!s} != {type(other)!s}.")
             return False
         if (self.resolver != other.resolver) or (self.realm != other.realm):
-            log.info(
-                f"Users are not in the same resolver and realm: {self!s} != {other!s}."
-            )
+            log.info(f"Users are not in the same resolver and realm: {self!s} != {other!s}.")
             return False
         if self.uid and other.uid:
             log.debug(f"Comparing based on uid: {self.uid!s} vs {other.uid!s}")
@@ -175,9 +171,7 @@ class User(object):
         return ret
 
     def __repr__(self):
-        ret = "User(login={0!r}, realm={1!r}, resolver={2!r})".format(
-            self.login, self.realm, self.resolver
-        )
+        ret = f"User(login={self.login!r}, realm={self.realm!r}, resolver={self.resolver!r})"
         return ret
 
     def __bool__(self):
@@ -199,9 +193,7 @@ class User(object):
         resolvers_in_realm = realm_config.get(self.realm, {}).get("resolver", {})
         for resolver in resolvers_in_realm:
             # append a tuple
-            resolver_tuples.append(
-                (resolver.get("name"), resolver.get("priority") or 1000)
-            )
+            resolver_tuples.append((resolver.get("name"), resolver.get("priority") or 1000))
 
         # sort the resolvers by the 2nd entry in the tuple, the priority
         resolvers = sorted(resolver_tuples, key=lambda resolver: resolver[1])
@@ -347,9 +339,7 @@ class User(object):
                 Key=attrkey,
             ).delete()
         else:
-            ua = CustomUserAttribute.query.filter_by(
-                user_id=self.uid, resolver=self.resolver, realm_id=self.realm_id
-            ).delete()
+            ua = CustomUserAttribute.query.filter_by(user_id=self.uid, resolver=self.resolver, realm_id=self.realm_id).delete()
         db.session.commit()
         return ua
 
@@ -375,9 +365,7 @@ class User(object):
                 if len(phone) > index:
                     return phone[index]
                 else:
-                    log.warning(
-                        f"userobject ({self!r}) has not that much phone numbers ({index!r} of {phone!r})."
-                    )
+                    log.warning(f"userobject ({self!r}) has not that much phone numbers ({index!r} of {phone!r}).")
                     return ""
             else:
                 return phone
@@ -415,9 +403,7 @@ class User(object):
                     resoname = reso.get("name")
                     if resoname == self.resolver:
                         Realms.append(key.lower())
-                        log.debug(
-                            f"added realm {key!r} to Realms due to resolver {self.resolver!r}"
-                        )
+                        log.debug(f"added realm {key!r} to Realms due to resolver {self.resolver!r}")
         return Realms
 
     @log_with(log, log_entry=False)
@@ -432,9 +418,7 @@ class User(object):
         """
         success = None
         try:
-            log.info(
-                f"User {self.login!r} from realm {self.realm!r} tries to authenticate"
-            )
+            log.info(f"User {self.login!r} from realm {self.realm!r} tries to authenticate")
             res = self._get_resolvers()
             # Now we know, the resolvers of this user and we can verify the
             # password
@@ -497,9 +481,7 @@ class User(object):
             attributes["password"] = password
         success = False
         try:
-            log.info(
-                f"User info for user {self.login!r}@{self.realm!r} about to be updated."
-            )
+            log.info(f"User info for user {self.login!r}@{self.realm!r} about to be updated.")
             res = self._get_resolvers()
             # Now we know, the resolvers of this user and we can update the
             # user
@@ -747,9 +729,7 @@ def get_user_list(param=None, user=None, custom_attributes=False):
                 for ue in ulist:
                     # Add the custom attributes, by class method from User
                     # with uid, resolvername and realm_id, which we need to determine by the realm name
-                    ue.update(
-                        get_attributes(ue.get("userid"), ue.get("resolver"), realm_id)
-                    )
+                    ue.update(get_attributes(ue.get("userid"), ue.get("resolver"), realm_id))
             log.debug(f"Found this userlist: {ulist!r}")
             users.extend(ulist)
 
@@ -796,11 +776,7 @@ def log_used_user(user, other_text=""):
     :param other_text: Some additional text
     :return: str
     """
-    return (
-        f"logged in as {user.used_login}. {other_text}"
-        if user.used_login != user.login
-        else other_text
-    )
+    return f"logged in as {user.used_login}. {other_text}" if user.used_login != user.login else other_text
 
 
 def get_attributes(uid, resolver, realm_id):
@@ -813,9 +789,7 @@ def get_attributes(uid, resolver, realm_id):
     :return: A dictionary of key/values
     """
     r = {}
-    attributes = CustomUserAttribute.query.filter_by(
-        user_id=uid, resolver=resolver, realm_id=realm_id
-    ).all()
+    attributes = CustomUserAttribute.query.filter_by(user_id=uid, resolver=resolver, realm_id=realm_id).all()
     for attr in attributes:
         r[attr.Key] = attr.Value
     return r

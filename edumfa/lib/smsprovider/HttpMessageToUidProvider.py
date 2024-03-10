@@ -66,9 +66,7 @@ class HttpMessageToUidProvider(ISMSProvider):
             username = self.smsgateway.option_dict.get("USERNAME")
             password = self.smsgateway.option_dict.get("PASSWORD")
             ssl_verify = self.smsgateway.option_dict.get("CHECK_SSL", "yes") == "yes"
-            json_data = (
-                self.smsgateway.option_dict.get("SEND_DATA_AS_JSON", "no") == "yes"
-            )
+            json_data = self.smsgateway.option_dict.get("SEND_DATA_AS_JSON", "no") == "yes"
             http_proxy = self.smsgateway.option_dict.get("HTTP_PROXY")
             https_proxy = self.smsgateway.option_dict.get("HTTPS_PROXY")
             timeout = self.smsgateway.option_dict.get("TIMEOUT") or 3
@@ -159,11 +157,7 @@ class HttpMessageToUidProvider(ISMSProvider):
             timeout=float(timeout),
             proxies=proxies,
         )
-        log.debug(
-            "sent message to the HTTP gateway. status code returned: {0!s}".format(
-                r.status_code
-            )
-        )
+        log.debug(f"sent message to the HTTP gateway. status code returned: {r.status_code!s}")
 
         # We assume, that all gateways return with HTTP Status Code 200,
         # 201 or 202
@@ -206,21 +200,15 @@ class HttpMessageToUidProvider(ISMSProvider):
                 log.debug("sending message success")
                 ret = True
             else:
-                log.warning(
-                    f"failed to send message. Reply {reply} does not match the RETURN_SUCCESS definition"
-                )
+                log.warning(f"failed to send message. Reply {reply} does not match the RETURN_SUCCESS definition")
                 raise SMSError(
                     response.status_code,
-                    "We received a none success reply from the Message Gateway: {0!s} ({1!s})".format(
-                        reply, return_success
-                    ),
+                    f"We received a none success reply from the Message Gateway: {reply!s} ({return_success!s})",
                 )
 
         elif return_fail:
             if return_fail in reply:
-                log.warning(
-                    f"sending message failed. {return_fail} was not found in {reply}"
-                )
+                log.warning(f"sending message failed. {return_fail} was not found in {reply}")
                 raise SMSError(
                     response.status_code,
                     "We received the predefined error from the Message Gateway.",
@@ -251,27 +239,13 @@ class HttpMessageToUidProvider(ISMSProvider):
                 },
                 "HTTP_METHOD": {
                     "required": True,
-                    "description": _(
-                        "Should the HTTP Gateway be connected via an HTTP GET or POST request."
-                    ),
+                    "description": _("Should the HTTP Gateway be connected via an HTTP GET or POST request."),
                     "values": ["GET", "POST"],
                 },
-                "RETURN_SUCCESS": {
-                    "description": _(
-                        "Specify a substring, that indicates, that the message was delivered successfully."
-                    )
-                },
-                "RETURN_FAIL": {
-                    "description": _(
-                        "Specify a substring, that indicates, that the message failed to be delivered."
-                    )
-                },
-                "USERNAME": {
-                    "description": _("Username in case of basic authentication.")
-                },
-                "PASSWORD": {
-                    "description": _("Password in case of basic authentication.")
-                },
+                "RETURN_SUCCESS": {"description": _("Specify a substring, that indicates, that the message was delivered successfully.")},
+                "RETURN_FAIL": {"description": _("Specify a substring, that indicates, that the message failed to be delivered.")},
+                "USERNAME": {"description": _("Username in case of basic authentication.")},
+                "PASSWORD": {"description": _("Password in case of basic authentication.")},
                 "CHECK_SSL": {
                     "required": True,
                     "description": _("Should the SSL certificate be verified."),
@@ -279,24 +253,14 @@ class HttpMessageToUidProvider(ISMSProvider):
                 },
                 "SEND_DATA_AS_JSON": {
                     "required": True,
-                    "description": _(
-                        "Should the data in a POST Request be sent as JSON."
-                    ),
+                    "description": _("Should the data in a POST Request be sent as JSON."),
                     "values": ["yes", "no"],
                 },
                 "HTTP_PROXY": {"description": _("Proxy setting for HTTP connections.")},
-                "HTTPS_PROXY": {
-                    "description": _("Proxy setting for HTTPS connections.")
-                },
+                "HTTPS_PROXY": {"description": _("Proxy setting for HTTPS connections.")},
                 "TIMEOUT": {"description": _("The timeout in seconds.")},
-                "UID_TOKENINFO_ATTRIBUTE": {
-                    "description": _(
-                        "If the token is not assigned to a user, use this attribute from token_info as a fallback."
-                    )
-                },
-                "POST_CHECK_URL": {
-                    "description": _("The URL for the post check action")
-                },
+                "UID_TOKENINFO_ATTRIBUTE": {"description": _("If the token is not assigned to a user, use this attribute from token_info as a fallback.")},
+                "POST_CHECK_URL": {"description": _("The URL for the post check action")},
             },
         }
         return params

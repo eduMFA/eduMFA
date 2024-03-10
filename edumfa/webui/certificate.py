@@ -95,9 +95,7 @@ emailAddress={email!s}
     # Take the CSR and run a token init
     from edumfa.lib.token import init_token
 
-    tokenobject = init_token(
-        {"request": csr, "spkac": 1, "type": "certificate", "ca": ca}
-    )
+    tokenobject = init_token({"request": csr, "spkac": 1, "type": "certificate", "ca": ca})
     certificate = tokenobject.get_tokeninfo("certificate")
     serial = tokenobject.get_serial()
     cert_pem = certificate.replace("\r", "").replace("\n", "")

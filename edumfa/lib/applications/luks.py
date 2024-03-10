@@ -42,9 +42,7 @@ class MachineApplication(MachineApplicationBase):
     application_name = "luks"
 
     @staticmethod
-    def get_authentication_item(
-        token_type, serial, challenge=None, options=None, filter_param=None
-    ):
+    def get_authentication_item(token_type, serial, challenge=None, options=None, filter_param=None):
         """
         :param token_type: the type of the token. At the moment
                            we only support yubikeys, tokentype "TOTP".
@@ -76,14 +74,10 @@ class MachineApplication(MachineApplicationBase):
             toks = get_tokens(serial=serial, active=True)
             if len(toks) == 1:
                 # tokenclass is a TimeHmacTokenClass
-                (_r, _p, otp, _c) = toks[0].get_otp(
-                    challenge=challenge_hex, do_truncation=False
-                )
+                (_r, _p, otp, _c) = toks[0].get_otp(challenge=challenge_hex, do_truncation=False)
                 ret["response"] = otp
         else:
-            log.info(
-                f"Token {serial!r}, type {token_type!r} is not supported by LUKS application module"
-            )
+            log.info(f"Token {serial!r}, type {token_type!r} is not supported by LUKS application module")
 
         return ret
 

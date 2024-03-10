@@ -111,9 +111,7 @@ class PasswordTokenClass(TokenClass):
         res = {
             "type": "pw",
             "title": "Password Token",
-            "description": _(
-                "A token with a fixed password. Can be combined  with the OTP PIN. Is used for the lost token scenario."
-            ),
+            "description": _("A token with a fixed password. Can be combined  with the OTP PIN. Is used for the lost token scenario."),
             "init": {},
             "config": {},
             "user": [],
@@ -123,16 +121,12 @@ class PasswordTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of password tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of password tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active password tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active password tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }

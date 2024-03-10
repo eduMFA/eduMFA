@@ -61,9 +61,7 @@ class SMSError(Exception):
         self.description = description
 
     def __repr__(self):
-        ret = "{0!s}(error_id={1!r}, description={2!r})".format(
-            type(self).__name__, self.error_id, self.description
-        )
+        ret = f"{type(self).__name__!s}(error_id={self.error_id!r}, description={self.description!r})"
         return ret
 
     def __str__(self):
@@ -164,9 +162,7 @@ class ISMSProvider(object):
                 if m:
                     phone = re.sub(m.group(1), m.group(2), phone)
             except re.error:
-                log.warning(
-                    f"Can not mangle phone number. Please check your REGEXP: {regexp!s}"
-                )
+                log.warning(f"Can not mangle phone number. Please check your REGEXP: {regexp!s}")
 
         return phone
 
@@ -208,9 +204,7 @@ def get_sms_provider_class(packageName, className):
     return get_module_class(packageName, className, "submit_message")
 
 
-def set_smsgateway(
-    identifier, providermodule=None, description=None, options=None, headers=None
-):
+def set_smsgateway(identifier, providermodule=None, description=None, options=None, headers=None):
     """
     Set an SMS Gateway configuration
 
@@ -279,9 +273,7 @@ def delete_smsgateway_key_generic(id, key, Type="option"):
     :param type: The type of the key
     :return: True
     """
-    return fetch_one_resource(
-        SMSGatewayOption, gateway_id=id, Key=key, Type=Type
-    ).delete()
+    return fetch_one_resource(SMSGatewayOption, gateway_id=id, Key=key, Type=Type).delete()
 
 
 def get_smsgateway(identifier=None, id=None, gwtype=None):
@@ -323,11 +315,7 @@ def create_sms_instance(identifier):
     """
     gateway_definition = get_smsgateway(identifier)
     if not gateway_definition:
-        raise ConfigAdminError(
-            'Could not find gateway definition with identifier "{0!s}"'.format(
-                identifier
-            )
-        )
+        raise ConfigAdminError(f'Could not find gateway definition with identifier "{identifier!s}"')
     package_name, class_name = gateway_definition[0].providermodule.rsplit(".", 1)
     sms_klass = get_sms_provider_class(package_name, class_name)
     sms_object = sms_klass(smsgateway=gateway_definition[0])

@@ -72,9 +72,7 @@ def get_gateway(gwid=None):
     #  allowed to read the identifier of the definitions!
     if gwid == "providers":
         for classname in SMS_PROVIDERS:
-            smsclass = get_sms_provider_class(
-                classname.rsplit(".", 1)[0], classname.rsplit(".", 1)[1]
-            )
+            smsclass = get_sms_provider_class(classname.rsplit(".", 1)[0], classname.rsplit(".", 1)[1])
             res[classname] = smsclass.parameters()
     else:
         res = [gw.as_dict() for gw in get_smsgateway(id=gwid)]
@@ -110,9 +108,7 @@ def set_gateway():
         elif k.startswith("header."):
             headers[k[7:]] = v
 
-    res = set_smsgateway(
-        identifier, providermodule, description, options=options, headers=headers
-    )
+    res = set_smsgateway(identifier, providermodule, description, options=options, headers=headers)
     g.audit_object.log({"success": True, "info": res})
     return send_result(res)
 

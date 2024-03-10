@@ -155,9 +155,7 @@ class Token(MethodsMixin, db.Model):
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("token_seq"), primary_key=True, nullable=False)
     description = db.Column(db.Unicode(80), default="")
-    serial = db.Column(
-        db.Unicode(40), default="", unique=True, nullable=False, index=True
-    )
+    serial = db.Column(db.Unicode(40), default="", unique=True, nullable=False, index=True)
     tokentype = db.Column(db.Unicode(30), default="HOTP", index=True)
     user_pin = db.Column(db.Unicode(512), default="")  # encrypt
     user_pin_iv = db.Column(db.Unicode(32), default="")  # encrypt
@@ -194,7 +192,7 @@ class Token(MethodsMixin, db.Model):
         **kwargs,
     ):
         super(Token, self).__init__(**kwargs)
-        self.serial = "" + serial
+        self.serial = f"{serial}"
         self.tokentype = tokentype
         self.count = 0
         self.failcount = 0
@@ -217,9 +215,7 @@ class Token(MethodsMixin, db.Model):
             if tr:
                 db.session.add(tr)
 
-            to = TokenOwner(
-                token_id=token_id, user_id=userid, resolver=resolver, realm_id=realm_id
-            )
+            to = TokenOwner(token_id=token_id, user_id=userid, resolver=resolver, realm_id=realm_id)
             if to:
                 db.session.add(to)
 
@@ -240,9 +236,7 @@ class Token(MethodsMixin, db.Model):
         db.session.query(MachineToken).filter(MachineToken.token_id == self.id).delete()
         db.session.query(Challenge).filter(Challenge.serial == self.serial).delete()
         db.session.query(TokenInfo).filter(TokenInfo.token_id == self.id).delete()
-        db.session.query(TokenTokengroup).filter(
-            TokenTokengroup.token_id == self.id
-        ).delete()
+        db.session.query(TokenTokengroup).filter(TokenTokengroup.token_id == self.id).delete()
         db.session.delete(self)
         db.session.commit()
         return ret
@@ -290,9 +284,7 @@ class Token(MethodsMixin, db.Model):
         """
         # delete old Tokengroups
         if not add:
-            db.session.query(TokenTokengroup).filter(
-                TokenTokengroup.token_id == self.id
-            ).delete()
+            db.session.query(TokenTokengroup).filter(TokenTokengroup.token_id == self.id).delete()
         # add new Tokengroups
         # We must not set the same tokengroup more than once...
         # uniquify: tokengroups -> set(tokengroups)
@@ -301,9 +293,7 @@ class Token(MethodsMixin, db.Model):
             g = Tokengroup.query.filter_by(name=tokengroup).first()
             if g:
                 # Check if TokenTokengroup already exists
-                tg = TokenTokengroup.query.filter_by(
-                    token_id=self.id, tokengroup_id=g.id
-                ).first()
+                tg = TokenTokengroup.query.filter_by(token_id=self.id, tokengroup_id=g.id).first()
                 if not tg:
                     # If the Tokengroup is not yet attached to the token
                     Tg = TokenTokengroup(token_id=self.id, tokengroup_id=g.id)
@@ -425,7 +415,7 @@ class Token(MethodsMixin, db.Model):
             self.set_hashed_pin(upin)
             log.debug(f"setPin(HASH:{self.pin_hash!r})")
         else:
-            self.pin_hash = "@@" + encryptPin(upin)
+            self.pin_hash = f"@@{encryptPin(upin)}"
             log.debug(f"setPin(ENCR:{self.pin_hash!r})")
         return self.pin_hash
 
@@ -612,9 +602,7 @@ class Token(MethodsMixin, db.Model):
                 raise Exception("tokengroup does not exist")
             tokengroup_id = t.id
         if tokengroup_id:
-            tgs = TokenTokengroup.query.filter_by(
-                tokengroup_id=tokengroup_id, token_id=self.id
-            )
+            tgs = TokenTokengroup.query.filter_by(tokengroup_id=tokengroup_id, token_id=self.id)
         else:
             tgs = TokenTokengroup.query.filter_by(token_id=self.id)
         for tg in tgs:
@@ -628,7 +616,7 @@ class Token(MethodsMixin, db.Model):
         ret = {}
         for ti in self.info_list:
             if ti.Type:
-                ret[ti.Key + ".type"] = ti.Type
+                ret[f"{ti.Key}.type"] = ti.Type
             ret[ti.Key] = ti.Value
         return ret
 
@@ -885,9 +873,7 @@ class Realm(TimestampMethodsMixin, db.Model):
     name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
     default = db.Column(db.Boolean(), default=False)
     option = db.Column(db.Unicode(40), default="")
-    resolver_list = db.relationship(
-        "ResolverRealm", lazy="select", back_populates="realm"
-    )
+    resolver_list = db.relationship("ResolverRealm", lazy="select", back_populates="realm")
 
     @log_with(log)
     def __init__(self, realm):
@@ -915,14 +901,10 @@ class CAConnector(TimestampMethodsMixin, db.Model):
 
     __tablename__ = "caconnector"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer, Sequence("caconnector_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer, Sequence("caconnector_seq"), primary_key=True, nullable=False)
     name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
     catype = db.Column(db.Unicode(255), default="", nullable=False)
-    caconfig = db.relationship(
-        "CAConnectorConfig", lazy="dynamic", backref="caconnector"
-    )
+    caconfig = db.relationship("CAConnectorConfig", lazy="dynamic", backref="caconnector")
 
     def __init__(self, name, catype):
         self.name = name
@@ -931,9 +913,7 @@ class CAConnector(TimestampMethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all CAConnectorConfig
-        db.session.query(CAConnectorConfig).filter(
-            CAConnectorConfig.caconnector_id == ret
-        ).delete()
+        db.session.query(CAConnectorConfig).filter(CAConnectorConfig.caconnector_id == ret).delete()
         # Delete the CA itself
         db.session.delete(self)
         save_config_timestamp()
@@ -976,18 +956,14 @@ class CAConnectorConfig(db.Model):
         if caconnector_id:
             self.caconnector_id = caconnector_id
         elif caconnector:
-            self.caconnector_id = (
-                CAConnector.query.filter_by(name=caconnector).first().id
-            )
+            self.caconnector_id = CAConnector.query.filter_by(name=caconnector).first().id
         self.Key = Key
         self.Value = convert_column_to_unicode(Value)
         self.Type = Type
         self.Description = Description
 
     def save(self):
-        c = CAConnectorConfig.query.filter_by(
-            caconnector_id=self.caconnector_id, Key=self.Key
-        ).first()
+        c = CAConnectorConfig.query.filter_by(caconnector_id=self.caconnector_id, Key=self.Key).first()
         save_config_timestamp()
         if c is None:
             # create a new one
@@ -996,9 +972,7 @@ class CAConnectorConfig(db.Model):
             ret = self.id
         else:
             # update
-            CAConnectorConfig.query.filter_by(
-                caconnector_id=self.caconnector_id, Key=self.Key
-            ).update(
+            CAConnectorConfig.query.filter_by(caconnector_id=self.caconnector_id, Key=self.Key).update(
                 {
                     "Value": self.Value,
                     "Type": self.Type,
@@ -1019,16 +993,12 @@ class Resolver(TimestampMethodsMixin, db.Model):
 
     __tablename__ = "resolver"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer, Sequence("resolver_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer, Sequence("resolver_seq"), primary_key=True, nullable=False)
     name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
     rtype = db.Column(db.Unicode(255), default="", nullable=False)
     # This creates an attribute "resolver" in the ResolverConfig object
     config_list = db.relationship("ResolverConfig", lazy="select")
-    realm_list = db.relationship(
-        "ResolverRealm", lazy="select", back_populates="resolver"
-    )
+    realm_list = db.relationship("ResolverRealm", lazy="select", back_populates="resolver")
 
     def __init__(self, name, rtype):
         self.name = name
@@ -1037,9 +1007,7 @@ class Resolver(TimestampMethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all ResolverConfig
-        db.session.query(ResolverConfig).filter(
-            ResolverConfig.resolver_id == ret
-        ).delete()
+        db.session.query(ResolverConfig).filter(ResolverConfig.resolver_id == ret).delete()
         # delete the Resolver itself
         db.session.delete(self)
         save_config_timestamp()
@@ -1089,9 +1057,7 @@ class ResolverConfig(TimestampMethodsMixin, db.Model):
         self.Description = convert_column_to_unicode(Description)
 
     def save(self):
-        c = ResolverConfig.query.filter_by(
-            resolver_id=self.resolver_id, Key=self.Key
-        ).first()
+        c = ResolverConfig.query.filter_by(resolver_id=self.resolver_id, Key=self.Key).first()
         if c is None:
             # create a new one
             db.session.add(self)
@@ -1099,9 +1065,7 @@ class ResolverConfig(TimestampMethodsMixin, db.Model):
             ret = self.id
         else:
             # update
-            ResolverConfig.query.filter_by(
-                resolver_id=self.resolver_id, Key=self.Key
-            ).update(
+            ResolverConfig.query.filter_by(resolver_id=self.resolver_id, Key=self.Key).update(
                 {
                     "Value": self.Value,
                     "Type": self.Type,
@@ -1237,9 +1201,7 @@ class TokenRealm(MethodsMixin, db.Model):
     """
 
     __tablename__ = "tokenrealm"
-    id = db.Column(
-        db.Integer(), Sequence("tokenrealm_seq"), primary_key=True, nullable=True
-    )
+    id = db.Column(db.Integer(), Sequence("tokenrealm_seq"), primary_key=True, nullable=True)
     token_id = db.Column(db.Integer(), db.ForeignKey("token.id"))
     realm_id = db.Column(db.Integer(), db.ForeignKey("realm.id"))
     # This creates an attribute "realm_list" in the Token object
@@ -1269,9 +1231,7 @@ class TokenRealm(MethodsMixin, db.Model):
         """
         We only save this, if it does not exist, yet.
         """
-        tr_func = TokenRealm.query.filter_by(
-            realm_id=self.realm_id, token_id=self.token_id
-        ).first
+        tr_func = TokenRealm.query.filter_by(realm_id=self.realm_id, token_id=self.token_id).first
         tr = tr_func()
         if tr is None:
             # create a new one
@@ -1305,9 +1265,7 @@ class PasswordReset(MethodsMixin, db.Model):
 
     __tablename__ = "passwordreset"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer(), Sequence("pwreset_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer(), Sequence("pwreset_seq"), primary_key=True, nullable=False)
     recoverycode = db.Column(db.Unicode(255), nullable=False)
     username = db.Column(db.Unicode(64), nullable=False, index=True)
     realm = db.Column(db.Unicode(64), nullable=False, index=True)
@@ -1335,9 +1293,7 @@ class PasswordReset(MethodsMixin, db.Model):
         self.resolver = resolver
         self.email = email
         self.timestamp = timestamp or datetime.now()
-        self.expiration = expiration or datetime.now() + timedelta(
-            seconds=expiration_seconds
-        )
+        self.expiration = expiration or datetime.now() + timedelta(seconds=expiration_seconds)
 
 
 class Challenge(MethodsMixin, db.Model):
@@ -1347,9 +1303,7 @@ class Challenge(MethodsMixin, db.Model):
 
     __tablename__ = "challenge"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer(), Sequence("challenge_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer(), Sequence("challenge_seq"), primary_key=True, nullable=False)
     transaction_id = db.Column(db.Unicode(64), nullable=False, index=True)
     data = db.Column(db.Unicode(512), default="")
     challenge = db.Column(db.Unicode(512), default="")
@@ -1694,9 +1648,7 @@ class MachineToken(MethodsMixin, db.Model):
 
     __tablename__ = "machinetoken"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer(), Sequence("machinetoken_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer(), Sequence("machinetoken_seq"), primary_key=True, nullable=False)
     token_id = db.Column(db.Integer(), db.ForeignKey("token.id"))
     machineresolver_id = db.Column(db.Integer())
     machine_id = db.Column(db.Unicode(255))
@@ -1719,11 +1671,7 @@ class MachineToken(MethodsMixin, db.Model):
             self.machineresolver_id = machineresolver_id
         elif machineresolver:
             # determine the machineresolver_id:
-            self.machineresolver_id = (
-                MachineResolver.query.filter(MachineResolver.name == machineresolver)
-                .first()
-                .id
-            )
+            self.machineresolver_id = MachineResolver.query.filter(MachineResolver.name == machineresolver).first().id
         if token_id:
             self.token_id = token_id
         elif serial:
@@ -1734,9 +1682,7 @@ class MachineToken(MethodsMixin, db.Model):
 
     def delete(self):
         ret = self.id
-        db.session.query(MachineTokenOptions).filter(
-            MachineTokenOptions.machinetoken_id == self.id
-        ).delete()
+        db.session.query(MachineTokenOptions).filter(MachineTokenOptions.machinetoken_id == self.id).delete()
         db.session.delete(self)
         save_config_timestamp()
         db.session.commit()
@@ -1813,9 +1759,7 @@ class MachineTokenOptions(db.Model):
 
     __tablename__ = "machinetokenoptions"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer(), Sequence("machtokenopt_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer(), Sequence("machtokenopt_seq"), primary_key=True, nullable=False)
     machinetoken_id = db.Column(db.Integer(), db.ForeignKey("machinetoken.id"))
     mt_key = db.Column(db.Unicode(64), nullable=False)
     mt_value = db.Column(db.Unicode(64), nullable=False)
@@ -1831,17 +1775,13 @@ class MachineTokenOptions(db.Model):
 
         # if the combination machinetoken_id / mt_key already exist,
         # we need to update
-        c = MachineTokenOptions.query.filter_by(
-            machinetoken_id=self.machinetoken_id, mt_key=self.mt_key
-        ).first()
+        c = MachineTokenOptions.query.filter_by(machinetoken_id=self.machinetoken_id, mt_key=self.mt_key).first()
         if c is None:
             # create a new one
             db.session.add(self)
         else:
             # update
-            MachineTokenOptions.query.filter_by(
-                machinetoken_id=self.machinetoken_id, mt_key=self.mt_key
-            ).update({"mt_value": self.mt_value})
+            MachineTokenOptions.query.filter_by(machinetoken_id=self.machinetoken_id, mt_key=self.mt_key).update({"mt_value": self.mt_value})
         db.session.commit()
 
 
@@ -1881,9 +1821,7 @@ class EventHandler(MethodsMixin, db.Model):
 
     __tablename__ = "eventhandler"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer, Sequence("eventhandler_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer, Sequence("eventhandler_seq"), primary_key=True, nullable=False)
     # in fact the name is a description
     name = db.Column(db.Unicode(64), unique=False, nullable=True)
     active = db.Column(db.Boolean, default=True)
@@ -1896,13 +1834,9 @@ class EventHandler(MethodsMixin, db.Model):
     condition = db.Column(db.Unicode(1024), default="")
     action = db.Column(db.Unicode(1024), default="")
     # This creates an attribute "eventhandler" in the EventHandlerOption object
-    options = db.relationship(
-        "EventHandlerOption", lazy="dynamic", backref="eventhandler"
-    )
+    options = db.relationship("EventHandlerOption", lazy="dynamic", backref="eventhandler")
     # This creates an attribute "eventhandler" in the EventHandlerCondition object
-    conditions = db.relationship(
-        "EventHandlerCondition", lazy="dynamic", backref="eventhandler"
-    )
+    conditions = db.relationship("EventHandlerCondition", lazy="dynamic", backref="eventhandler")
 
     def __init__(
         self,
@@ -1938,14 +1872,10 @@ class EventHandler(MethodsMixin, db.Model):
         for k, v in conditions.items():
             EventHandlerCondition(eventhandler_id=self.id, Key=k, Value=v).save()
         # Delete event handler conditions, that ar not used anymore.
-        ev_conditions = EventHandlerCondition.query.filter_by(
-            eventhandler_id=self.id
-        ).all()
+        ev_conditions = EventHandlerCondition.query.filter_by(eventhandler_id=self.id).all()
         for cond in ev_conditions:
             if cond.Key not in conditions:
-                EventHandlerCondition.query.filter_by(
-                    eventhandler_id=self.id, Key=cond.Key
-                ).delete()
+                EventHandlerCondition.query.filter_by(eventhandler_id=self.id, Key=cond.Key).delete()
                 db.session.commit()
 
     def save(self):
@@ -1973,13 +1903,9 @@ class EventHandler(MethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all EventHandlerOptions
-        db.session.query(EventHandlerOption).filter(
-            EventHandlerOption.eventhandler_id == ret
-        ).delete()
+        db.session.query(EventHandlerOption).filter(EventHandlerOption.eventhandler_id == ret).delete()
         # delete all Conditions
-        db.session.query(EventHandlerCondition).filter(
-            EventHandlerCondition.eventhandler_id == ret
-        ).delete()
+        db.session.query(EventHandlerCondition).filter(EventHandlerCondition.eventhandler_id == ret).delete()
         # delete the event handler itself
         db.session.delete(self)
         save_config_timestamp()
@@ -2041,9 +1967,7 @@ class EventHandlerCondition(db.Model):
         self.save()
 
     def save(self):
-        ehc = EventHandlerCondition.query.filter_by(
-            eventhandler_id=self.eventhandler_id, Key=self.Key
-        ).first()
+        ehc = EventHandlerCondition.query.filter_by(eventhandler_id=self.eventhandler_id, Key=self.Key).first()
         if ehc is None:
             # create a new one
             db.session.add(self)
@@ -2051,9 +1975,7 @@ class EventHandlerCondition(db.Model):
             ret = self.id
         else:
             # update
-            EventHandlerCondition.query.filter_by(
-                eventhandler_id=self.eventhandler_id, Key=self.Key
-            ).update({"Value": self.Value, "comparator": self.comparator})
+            EventHandlerCondition.query.filter_by(eventhandler_id=self.eventhandler_id, Key=self.Key).update({"Value": self.Value, "comparator": self.comparator})
             ret = ehc.id
         db.session.commit()
         return ret
@@ -2086,9 +2008,7 @@ class EventHandlerOption(db.Model):
         self.save()
 
     def save(self):
-        eho = EventHandlerOption.query.filter_by(
-            eventhandler_id=self.eventhandler_id, Key=self.Key
-        ).first()
+        eho = EventHandlerOption.query.filter_by(eventhandler_id=self.eventhandler_id, Key=self.Key).first()
         if eho is None:
             # create a new one
             db.session.add(self)
@@ -2096,9 +2016,7 @@ class EventHandlerOption(db.Model):
             ret = self.id
         else:
             # update
-            EventHandlerOption.query.filter_by(
-                eventhandler_id=self.eventhandler_id, Key=self.Key
-            ).update(
+            EventHandlerOption.query.filter_by(eventhandler_id=self.eventhandler_id, Key=self.Key).update(
                 {
                     "Value": self.Value,
                     "Type": self.Type,
@@ -2122,14 +2040,10 @@ class MachineResolver(MethodsMixin, db.Model):
 
     __tablename__ = "machineresolver"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer, Sequence("machineresolver_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer, Sequence("machineresolver_seq"), primary_key=True, nullable=False)
     name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
     rtype = db.Column(db.Unicode(255), default="", nullable=False)
-    rconfig = db.relationship(
-        "MachineResolverConfig", lazy="dynamic", backref="machineresolver"
-    )
+    rconfig = db.relationship("MachineResolverConfig", lazy="dynamic", backref="machineresolver")
 
     def __init__(self, name, rtype):
         self.name = name
@@ -2138,9 +2052,7 @@ class MachineResolver(MethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all MachineResolverConfig
-        db.session.query(MachineResolverConfig).filter(
-            MachineResolverConfig.resolver_id == ret
-        ).delete()
+        db.session.query(MachineResolverConfig).filter(MachineResolverConfig.resolver_id == ret).delete()
         # delete the MachineResolver itself
         db.session.delete(self)
         db.session.commit()
@@ -2184,9 +2096,7 @@ class MachineResolverConfig(db.Model):
         self.Description = Description
 
     def save(self):
-        c = MachineResolverConfig.query.filter_by(
-            resolver_id=self.resolver_id, Key=self.Key
-        ).first()
+        c = MachineResolverConfig.query.filter_by(resolver_id=self.resolver_id, Key=self.Key).first()
         if c is None:
             # create a new one
             db.session.add(self)
@@ -2194,9 +2104,7 @@ class MachineResolverConfig(db.Model):
             ret = self.id
         else:
             # update
-            MachineResolverConfig.query.filter_by(
-                resolver_id=self.resolver_id, Key=self.Key
-            ).update(
+            MachineResolverConfig.query.filter_by(resolver_id=self.resolver_id, Key=self.Key).update(
                 {
                     "Value": self.Value,
                     "Type": self.Type,
@@ -2247,9 +2155,7 @@ def get_machinetoken_ids(machine_id, resolver_name, serial, application):
     ret = []
     token_id = get_token_id(serial)
     if resolver_name:
-        resolver = MachineResolver.query.filter(
-            MachineResolver.name == resolver_name
-        ).first()
+        resolver = MachineResolver.query.filter(MachineResolver.name == resolver_name).first()
         resolver_id = resolver.id
     else:
         resolver_id = None
@@ -2288,9 +2194,7 @@ class SMSGateway(MethodsMixin, db.Model):
     providermodule = db.Column(db.Unicode(1024), nullable=False)
     options = db.relationship("SMSGatewayOption", lazy="dynamic", backref="smsgw")
 
-    def __init__(
-        self, identifier, providermodule, description=None, options=None, headers=None
-    ):
+    def __init__(self, identifier, providermodule, description=None, options=None, headers=None):
         options = options or {}
         headers = headers or {}
         sql = SMSGateway.query.filter_by(identifier=identifier).first()
@@ -2309,9 +2213,7 @@ class SMSGateway(MethodsMixin, db.Model):
                     # iterate through all existing options/headers
                     if key not in vals:
                         # if the option is not contained anymore
-                        SMSGatewayOption.query.filter_by(
-                            gateway_id=self.id, Key=key, Type=typ
-                        ).delete()
+                        SMSGatewayOption.query.filter_by(gateway_id=self.id, Key=key, Type=typ).delete()
         # add the options and headers to the SMS Gateway
         for typ, vals in opts.items():
             for k, v in vals.items():
@@ -2341,9 +2243,7 @@ class SMSGateway(MethodsMixin, db.Model):
         """
         ret = self.id
         # delete all SMSGatewayOptions
-        db.session.query(SMSGatewayOption).filter(
-            SMSGatewayOption.gateway_id == ret
-        ).delete()
+        db.session.query(SMSGatewayOption).filter(SMSGatewayOption.gateway_id == ret).delete()
         # delete the SMSGateway itself
         db.session.delete(self)
         db.session.commit()
@@ -2423,9 +2323,7 @@ class SMSGatewayOption(MethodsMixin, db.Model):
     def save(self):
         # See, if there is this option or header for this this gateway
         # The first match takes precedence
-        go = SMSGatewayOption.query.filter_by(
-            gateway_id=self.gateway_id, Key=self.Key, Type=self.Type
-        ).first()
+        go = SMSGatewayOption.query.filter_by(gateway_id=self.gateway_id, Key=self.Key, Type=self.Type).first()
         if go is None:
             # create a new one
             db.session.add(self)
@@ -2433,9 +2331,7 @@ class SMSGatewayOption(MethodsMixin, db.Model):
             ret = self.id
         else:
             # update
-            SMSGatewayOption.query.filter_by(
-                gateway_id=self.gateway_id, Key=self.Key, Type=self.Type
-            ).update({"Value": self.Value, "Type": self.Type})
+            SMSGatewayOption.query.filter_by(gateway_id=self.gateway_id, Key=self.Key, Type=self.Type).update({"Value": self.Value, "Type": self.Type})
             ret = go.id
         db.session.commit()
         return ret
@@ -2457,9 +2353,7 @@ class eduMFAServer(MethodsMixin, db.Model):
     description = db.Column(db.Unicode(2000), default="")
 
     def save(self):
-        pi = eduMFAServer.query.filter(
-            eduMFAServer.identifier == self.identifier
-        ).first()
+        pi = eduMFAServer.query.filter(eduMFAServer.identifier == self.identifier).first()
         if pi is None:
             # create a new one
             db.session.add(self)
@@ -2472,9 +2366,7 @@ class eduMFAServer(MethodsMixin, db.Model):
                 values["tls"] = self.tls
             if self.description is not None:
                 values["description"] = self.description
-            eduMFAServer.query.filter(
-                eduMFAServer.identifier == self.identifier
-            ).update(values)
+            eduMFAServer.query.filter(eduMFAServer.identifier == self.identifier).update(values)
             ret = pi.id
         db.session.commit()
         return ret
@@ -2517,9 +2409,7 @@ class RADIUSServer(MethodsMixin, db.Model):
         If a RADIUS server with a given name is save, then the existing
         RADIUS server is updated.
         """
-        radius = RADIUSServer.query.filter(
-            RADIUSServer.identifier == self.identifier
-        ).first()
+        radius = RADIUSServer.query.filter(RADIUSServer.identifier == self.identifier).first()
         if radius is None:
             # create a new one
             db.session.add(self)
@@ -2540,9 +2430,7 @@ class RADIUSServer(MethodsMixin, db.Model):
                 values["timeout"] = int(self.timeout)
             if self.retries is not None:
                 values["retries"] = int(self.retries)
-            RADIUSServer.query.filter(
-                RADIUSServer.identifier == self.identifier
-            ).update(values)
+            RADIUSServer.query.filter(RADIUSServer.identifier == self.identifier).update(values)
             ret = radius.id
         db.session.commit()
         return ret
@@ -2618,9 +2506,7 @@ class SMTPServer(MethodsMixin, db.Model):
                 values["timeout"] = self.timeout
             if self.enqueue_job is not None:
                 values["enqueue_job"] = self.enqueue_job
-            SMTPServer.query.filter(SMTPServer.identifier == self.identifier).update(
-                values
-            )
+            SMTPServer.query.filter(SMTPServer.identifier == self.identifier).update(values)
             ret = smtp.id
         db.session.commit()
         return ret
@@ -2660,9 +2546,7 @@ class ClientApplication(MethodsMixin, db.Model):
             values = {"lastseen": self.lastseen}
             if self.hostname is not None:
                 values["hostname"] = self.hostname
-            ClientApplication.query.filter(ClientApplication.id == clientapp.id).update(
-                values
-            )
+            ClientApplication.query.filter(ClientApplication.id == clientapp.id).update(values)
         try:
             db.session.commit()
         except IntegrityError as e:  # pragma: no cover
@@ -2670,9 +2554,7 @@ class ClientApplication(MethodsMixin, db.Model):
             log.debug(traceback.format_exc())
 
     def __repr__(self):
-        return "<ClientApplication [{0!s}][{1!s}:{2!s}] on {3!s}>".format(
-            self.id, self.ip, self.clienttype, self.node
-        )
+        return f"<ClientApplication [{self.id!s}][{self.ip!s}:{self.clienttype!s}] on {self.node!s}>"
 
 
 class Subscription(MethodsMixin, db.Model):
@@ -2704,9 +2586,7 @@ class Subscription(MethodsMixin, db.Model):
     signature = db.Column(db.Unicode(640))
 
     def save(self):
-        subscription = Subscription.query.filter(
-            Subscription.application == self.application
-        ).first()
+        subscription = Subscription.query.filter(Subscription.application == self.application).first()
         if subscription is None:
             # create a new one
             db.session.add(self)
@@ -2721,9 +2601,7 @@ class Subscription(MethodsMixin, db.Model):
         return ret
 
     def __repr__(self):
-        return "<Subscription [{0!s}][{1!s}:{2!s}:{3!s}]>".format(
-            self.id, self.application, self.for_name, self.by_name
-        )
+        return f"<Subscription [{self.id!s}][{self.application!s}:{self.for_name!s}:{self.by_name!s}]>"
 
     def get(self):
         """
@@ -2925,9 +2803,7 @@ class AuthCache(MethodsMixin, db.Model):
     # binascii.hexlify(hashlib.sha256("secret123456").digest())
     authentication = db.Column(db.Unicode(255), default="")
 
-    def __init__(
-        self, username, realm, resolver, authentication, first_auth=None, last_auth=None
-    ):
+    def __init__(self, username, realm, resolver, authentication, first_auth=None, last_auth=None):
         self.username = username
         self.realm = realm
         self.resolver = resolver
@@ -2955,12 +2831,8 @@ class PeriodicTask(MethodsMixin, db.Model):
     taskmodule = db.Column(db.Unicode(256), nullable=False)
     ordering = db.Column(db.Integer, nullable=False, default=0)
     last_update = db.Column(db.DateTime(False), nullable=False)
-    options = db.relationship(
-        "PeriodicTaskOption", lazy="dynamic", backref="periodictask"
-    )
-    last_runs = db.relationship(
-        "PeriodicTaskLastRun", lazy="dynamic", backref="periodictask"
-    )
+    options = db.relationship("PeriodicTaskOption", lazy="dynamic", backref="periodictask")
+    last_runs = db.relationship("PeriodicTaskLastRun", lazy="dynamic", backref="periodictask")
 
     def __init__(
         self,
@@ -3008,9 +2880,7 @@ class PeriodicTask(MethodsMixin, db.Model):
             if option.key not in options:
                 PeriodicTaskOption.query.filter_by(id=option.id).delete()
         # remove all leftover last_runs
-        all_last_runs = PeriodicTaskLastRun.query.filter_by(
-            periodictask_id=self.id
-        ).all()
+        all_last_runs = PeriodicTaskLastRun.query.filter_by(periodictask_id=self.id).all()
         for last_run in all_last_runs:
             if last_run.node not in node_list:
                 PeriodicTaskLastRun.query.filter_by(id=last_run.id).delete()
@@ -3041,9 +2911,7 @@ class PeriodicTask(MethodsMixin, db.Model):
             "last_update": self.aware_last_update,
             "ordering": self.ordering,
             "options": dict((option.key, option.value) for option in self.options),
-            "last_runs": dict(
-                (last_run.node, last_run.aware_timestamp) for last_run in self.last_runs
-            ),
+            "last_runs": dict((last_run.node, last_run.aware_timestamp) for last_run in self.last_runs),
         }
 
     def save(self):
@@ -3120,18 +2988,14 @@ class PeriodicTaskOption(db.Model):
         Create or update a PeriodicTaskOption entry, depending on the value of ``self.id``
         :return: the entry ID
         """
-        option = PeriodicTaskOption.query.filter_by(
-            periodictask_id=self.periodictask_id, key=self.key
-        ).first()
+        option = PeriodicTaskOption.query.filter_by(periodictask_id=self.periodictask_id, key=self.key).first()
         if option is None:
             # create a new one
             db.session.add(self)
             ret = self.id
         else:
             # update
-            PeriodicTaskOption.query.filter_by(
-                periodictask_id=self.periodictask_id, key=self.key
-            ).update(
+            PeriodicTaskOption.query.filter_by(periodictask_id=self.periodictask_id, key=self.key).update(
                 {
                     "value": self.value,
                 }
@@ -3191,9 +3055,7 @@ class PeriodicTaskLastRun(db.Model):
             ret = self.id
         else:
             # update
-            PeriodicTaskLastRun.query.filter_by(
-                periodictask_id=self.periodictask_id, node=self.node
-            ).update(
+            PeriodicTaskLastRun.query.filter_by(periodictask_id=self.periodictask_id, node=self.node).update(
                 {
                     "timestamp": self.timestamp,
                 }
@@ -3248,9 +3110,7 @@ class Serviceid(TimestampMethodsMixin, db.Model):
 
     __tablename__ = "serviceid"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer, Sequence("serviceid_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer, Sequence("serviceid_seq"), primary_key=True, nullable=False)
     name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
     Description = db.Column(db.Unicode(2000), default="")
 
@@ -3265,9 +3125,7 @@ class Serviceid(TimestampMethodsMixin, db.Model):
             return TimestampMethodsMixin.save(self)
         else:
             # update
-            Serviceid.query.filter_by(id=si.id).update(
-                {"Description": self.Description}
-            )
+            Serviceid.query.filter_by(id=si.id).update({"Description": self.Description})
             ret = si.id
             db.session.commit()
         return ret
@@ -3281,9 +3139,7 @@ class Tokengroup(TimestampMethodsMixin, db.Model):
 
     __tablename__ = "tokengroup"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
-    id = db.Column(
-        db.Integer, Sequence("tokengroup_seq"), primary_key=True, nullable=False
-    )
+    id = db.Column(db.Integer, Sequence("tokengroup_seq"), primary_key=True, nullable=False)
     name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
     Description = db.Column(db.Unicode(2000), default="")
 
@@ -3295,9 +3151,7 @@ class Tokengroup(TimestampMethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all TokenTokenGroup
-        db.session.query(TokenTokengroup).filter(
-            TokenTokengroup.tokengroup_id == ret
-        ).delete()
+        db.session.query(TokenTokengroup).filter(TokenTokengroup.tokengroup_id == ret).delete()
         # delete the tokengroup
         db.session.delete(self)
         save_config_timestamp()
@@ -3311,9 +3165,7 @@ class Tokengroup(TimestampMethodsMixin, db.Model):
             return TimestampMethodsMixin.save(self)
         else:
             # update
-            Tokengroup.query.filter_by(id=ti.id).update(
-                {"Description": self.Description}
-            )
+            Tokengroup.query.filter_by(id=ti.id).update({"Description": self.Description})
             ret = ti.id
             db.session.commit()
         return ret
@@ -3330,9 +3182,7 @@ class TokenTokengroup(TimestampMethodsMixin, db.Model):
         db.UniqueConstraint("token_id", "tokengroup_id", name="ttgix_2"),
         {"mysql_row_format": "DYNAMIC"},
     )
-    id = db.Column(
-        db.Integer(), Sequence("tokentokengroup_seq"), primary_key=True, nullable=True
-    )
+    id = db.Column(db.Integer(), Sequence("tokentokengroup_seq"), primary_key=True, nullable=True)
     token_id = db.Column(db.Integer(), db.ForeignKey("token.id"))
     tokengroup_id = db.Column(db.Integer(), db.ForeignKey("tokengroup.id"))
     # This creates an attribute "tokengroup_list" in the Token object
@@ -3360,9 +3210,7 @@ class TokenTokengroup(TimestampMethodsMixin, db.Model):
         """
         We only save this, if it does not exist, yet.
         """
-        tr_func = TokenTokengroup.query.filter_by(
-            tokengroup_id=self.tokengroup_id, token_id=self.token_id
-        ).first
+        tr_func = TokenTokengroup.query.filter_by(tokengroup_id=self.tokengroup_id, token_id=self.token_id).first
         tr = tr_func()
         if tr is None:
             # create a new one

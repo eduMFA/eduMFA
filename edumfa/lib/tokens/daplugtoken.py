@@ -129,16 +129,12 @@ class DaplugTokenClass(HotpTokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of daplug tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of daplug tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active daplug tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active daplug tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -213,9 +209,7 @@ class DaplugTokenClass(HotpTokenClass):
         return res[0], res[1], _digi2daplug(res[2]), res[3]
 
     @log_with(log)
-    def get_multi_otp(
-        self, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None
-    ):
+    def get_multi_otp(self, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None):
         res = HotpTokenClass.get_multi_otp(
             self,
             count=count,

@@ -73,9 +73,7 @@ def parse_comma_separated_string(input_string):
         )
         rows = list(reader)
     except csv.Error as exx:
-        raise CompareError(
-            "Malformed comma-separated value: {!r}".format(input_string, exx)
-        )
+        raise CompareError("Malformed comma-separated value: {!r}".format(input_string, exx))
     return rows[0]
 
 
@@ -127,7 +125,7 @@ def _compare_matches(left, comparator, right):
         # check for regex modes
         m = re.match(r"^(\(\?[a-zA-Z]+\))(.+)$", right)
         if m and len(m.groups()) == 2:
-            regex = m.group(1) + r"^" + m.group(2) + r"$"
+            regex = f"{m.group(1)}^{m.group(2)}$"
         else:
             regex = r"^" + right + r"$"
         return re.match(regex, left) is not None
@@ -199,36 +197,16 @@ COMPARATOR_FUNCTIONS = {
 
 #: This dictionary connects comparators to their human-readable (and translated) descriptions.
 COMPARATOR_DESCRIPTIONS = {
-    COMPARATORS.CONTAINS: _(
-        "true if the value of the left attribute contains the right value"
-    ),
-    COMPARATORS.NOT_CONTAINS: _(
-        "false if the value of the left attribute contains the right value"
-    ),
-    COMPARATORS.EQUALS: _(
-        "true if the value of the left attribute equals the right value"
-    ),
-    COMPARATORS.NOT_EQUALS: _(
-        "false if the value of the left attribute equals the right value"
-    ),
-    COMPARATORS.MATCHES: _(
-        "true if the value of the left attribute completely matches the given regular expression pattern on the right"
-    ),
-    COMPARATORS.NOT_MATCHES: _(
-        "false if the value of the left attribute completely matches the given regular expression pattern on the right"
-    ),
-    COMPARATORS.IN: _(
-        "true if the value of the left attribute is contained in the comma-separated values on the right"
-    ),
-    COMPARATORS.NOT_IN: _(
-        "false if the value of the left attribute is contained in the comma-separated values on the right"
-    ),
-    COMPARATORS.SMALLER: _(
-        "true if the integer value of the left attribute is smaller than the right integer value"
-    ),
-    COMPARATORS.BIGGER: _(
-        "true if the integer value of the left attribute is bigger than the right integer value"
-    ),
+    COMPARATORS.CONTAINS: _("true if the value of the left attribute contains the right value"),
+    COMPARATORS.NOT_CONTAINS: _("false if the value of the left attribute contains the right value"),
+    COMPARATORS.EQUALS: _("true if the value of the left attribute equals the right value"),
+    COMPARATORS.NOT_EQUALS: _("false if the value of the left attribute equals the right value"),
+    COMPARATORS.MATCHES: _("true if the value of the left attribute completely matches the given regular expression pattern on the right"),
+    COMPARATORS.NOT_MATCHES: _("false if the value of the left attribute completely matches the given regular expression pattern on the right"),
+    COMPARATORS.IN: _("true if the value of the left attribute is contained in the comma-separated values on the right"),
+    COMPARATORS.NOT_IN: _("false if the value of the left attribute is contained in the comma-separated values on the right"),
+    COMPARATORS.SMALLER: _("true if the integer value of the left attribute is smaller than the right integer value"),
+    COMPARATORS.BIGGER: _("true if the integer value of the left attribute is bigger than the right integer value"),
 }
 
 

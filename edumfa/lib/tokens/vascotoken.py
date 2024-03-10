@@ -108,16 +108,12 @@ class VascoTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of Vasco tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of Vasco tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active Vasco tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active Vasco tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -151,17 +147,11 @@ class VascoTokenClass(TokenClass):
         # we unhexlify the OTP key
         if "otpkey" in param:
             if len(param["otpkey"]) != 496:
-                raise ParameterError(
-                    "Expected OTP key as 496-character hex string, but length is {!s}".format(
-                        len(param["otpkey"])
-                    )
-                )
+                raise ParameterError(f"Expected OTP key as 496-character hex string, but length is {len(param['otpkey'])!s}")
             try:
                 upd_param["otpkey"] = binascii.unhexlify(upd_param["otpkey"])
             except (binascii.Error, TypeError):
-                raise ParameterError(
-                    "Expected OTP key as 496-character hex string, but it is malformed"
-                )
+                raise ParameterError("Expected OTP key as 496-character hex string, but it is malformed")
 
         TokenClass.update(self, upd_param, reset_failcount)
 
@@ -184,15 +174,11 @@ class VascoTokenClass(TokenClass):
                 # wrong OTP value, no log message
                 pass
             elif result == 201:
-                log.warning(
-                    "VASCO token failed to authenticate, code replay attempt, previous OTP value was used again!"
-                )
+                log.warning("VASCO token failed to authenticate, code replay attempt, previous OTP value was used again!")
             elif result == 202:
                 log.warning("Token-internal fail counter reached its maximum!")
             elif result == -202:
-                log.warning(
-                    "VASCO token failed to authenticate, response too small, user did not type his complete OTP!"
-                )
+                log.warning("VASCO token failed to authenticate, response too small, user did not type his complete OTP!")
             elif result == -205:
                 log.warning("VASCO token failed to authenticate, response not decimal!")
             else:

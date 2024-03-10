@@ -85,18 +85,14 @@ def verify_certificate_path(certificate, trusted_ca_paths):
 
     for capath in trusted_ca_paths:
         if isdir(capath):
-            chainfiles = [
-                join(capath, f) for f in listdir(capath) if isfile(join(capath, f))
-            ]
+            chainfiles = [join(capath, f) for f in listdir(capath) if isfile(join(capath, f))]
             for chainfile in chainfiles:
                 chain = parse_chainfile(chainfile)
                 try:
                     verify_certificate(to_byte_string(certificate), chain)
                     return True
                 except Exception as exx:
-                    log.debug(
-                        f"Can not verify attestation certificate against chain {chain!s}."
-                    )
+                    log.debug(f"Can not verify attestation certificate against chain {chain!s}.")
         else:
             log.warning("The configured attestation CA directory does not exist.")
     return False
@@ -146,12 +142,8 @@ def verify_certificate(certificate, chain):
     chain = list(reversed(chain))
     if not chain:
         raise eduMFAError("Can not verify certificate against an empty chain.")
-    certificate = load_pem_x509_certificate(
-        to_byte_string(certificate), default_backend()
-    )
-    chain = [
-        load_pem_x509_certificate(to_byte_string(c), default_backend()) for c in chain
-    ]
+    certificate = load_pem_x509_certificate(to_byte_string(certificate), default_backend())
+    chain = [load_pem_x509_certificate(to_byte_string(c), default_backend()) for c in chain]
     # verify chain
     while chain:
         signer = chain.pop()
@@ -292,23 +284,17 @@ class CertificateTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of certificates assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of certificates assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active certificates assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active certificates assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.REQUIRE_ATTESTATION: {
                         "type": "str",
-                        "desc": _(
-                            "Enrolling a certificate token can require an attestation certificate. (Default: ignore)"
-                        ),
+                        "desc": _("Enrolling a certificate token can require an attestation certificate. (Default: ignore)"),
                         "group": GROUP.TOKEN,
                         "value": [
                             REQUIRE_ACTIONS.IGNORE,
@@ -318,44 +304,32 @@ class CertificateTokenClass(TokenClass):
                     },
                     ACTION.CA_CONNECTOR: {
                         "type": "str",
-                        "desc": _(
-                            "The CA connector that should be used during certificate enrollment."
-                        ),
+                        "desc": _("The CA connector that should be used during certificate enrollment."),
                         "group": GROUP.TOKEN,
-                        "value": [
-                            x.get("connectorname") for x in get_caconnector_list()
-                        ],
+                        "value": [x.get("connectorname") for x in get_caconnector_list()],
                     },
                     ACTION.CERTIFICATE_TEMPLATE: {
                         "type": "str",
-                        "desc": _(
-                            "The template that should be used to issue a certificate."
-                        ),
+                        "desc": _("The template that should be used to issue a certificate."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT: {
                         "type": "str",
-                        "desc": _(
-                            "This takes a space separated list of elements to be added to the subject. Can be 'email' and 'realm'."
-                        ),
+                        "desc": _("This takes a space separated list of elements to be added to the subject. Can be 'email' and 'realm'."),
                         "group": GROUP.TOKEN,
                     },
                 },
                 SCOPE.USER: {
                     ACTION.TRUSTED_CA_PATH: {
                         "type": "str",
-                        "desc": _(
-                            "The directory containing attestation certificate chains."
-                        ),
+                        "desc": _("The directory containing attestation certificate chains."),
                         "group": GROUP.TOKEN,
                     }
                 },
                 SCOPE.ADMIN: {
                     ACTION.TRUSTED_CA_PATH: {
                         "type": "str",
-                        "desc": _(
-                            "The directory containing attestation certificate chains."
-                        ),
+                        "desc": _("The directory containing attestation certificate chains."),
                         "group": GROUP.TOKEN,
                     }
                 },
@@ -384,9 +358,7 @@ class CertificateTokenClass(TokenClass):
         :return: default parameters
         """
         ret = {ACTION.TRUSTED_CA_PATH: DEFAULT_CA_PATH}
-        (role, username, userrealm, adminuser, adminrealm) = (
-            determine_logged_in_userparams(g.logged_in_user, params)
-        )
+        (role, username, userrealm, adminuser, adminrealm) = determine_logged_in_userparams(g.logged_in_user, params)
         # Now we fetch CA-pathes from the policies
         paths = Match.generic(
             g,
@@ -424,25 +396,19 @@ class CertificateTokenClass(TokenClass):
                 # TODO: Later we need to make the status CA dependent. Different CAs could return
                 # different codes. So each CA Connector needs a mapper for its specific codes.
                 if status in [3, 4]:  # issued or "issued out of band"
-                    log.info(
-                        f"The certificate {self.token.serial!s} has been issued by the CA."
-                    )
+                    log.info(f"The certificate {self.token.serial!s} has been issued by the CA.")
                     certificate = cacon.get_issued_certificate(request_id)
                     # Update the rollout state
                     self.token.rollout_state = ROLLOUTSTATE.ENROLLED
                     self.add_tokeninfo("certificate", certificate)
                 elif status == 2:  # denied
-                    log.warning(
-                        f"The certificate {self.token.serial!s} has been denied by the CA."
-                    )
+                    log.warning(f"The certificate {self.token.serial!s} has been denied by the CA.")
                     self.token.rollout_state = ROLLOUTSTATE.DENIED
                     self.token.save()
                 else:
                     log.info(f"The certificate {self.token.serial!s} is still pending.")
             else:
-                log.warning(
-                    f"The certificate token in rollout_state pending, but either the CA ({ca!s}) or the requestId ({request_id!s}) is missing."
-                )
+                log.warning(f"The certificate token in rollout_state pending, but either the CA ({ca!s}) or the requestId ({request_id!s}) is missing.")
         return status
 
     def update(self, param):
@@ -459,9 +425,7 @@ class CertificateTokenClass(TokenClass):
         certificate = getParam(param, "certificate", optional)
         generate = getParam(param, "genkey", optional)
         template_name = getParam(param, "template", optional)
-        subject_components = getParam(
-            param, "subject_components", optional=optional, default=[]
-        )
+        subject_components = getParam(param, "subject_components", optional=optional, default=[])
         request_id = None
         if request or generate:
             # If we do not upload a user certificate, then we need a CA do
@@ -472,9 +436,7 @@ class CertificateTokenClass(TokenClass):
         if request:
             if not spkac:
                 # We only do the whole attestation checking in case we have no SPKAC
-                request_csr = load_pem_x509_csr(
-                    to_byte_string(request), default_backend()
-                )
+                request_csr = load_pem_x509_csr(to_byte_string(request), default_backend())
                 if not request_csr.is_signature_valid:
                     raise eduMFAError("request has invalid signature.")
                 # If a request is sent, we can have an attestation certificate
@@ -482,40 +444,26 @@ class CertificateTokenClass(TokenClass):
                 verify_attestation = getParam(param, "verify_attestation", optional)
                 if attestation:
                     request_numbers = request_csr.public_key().public_numbers()
-                    attestation_cert = load_pem_x509_certificate(
-                        to_byte_string(attestation), default_backend()
-                    )
+                    attestation_cert = load_pem_x509_certificate(to_byte_string(attestation), default_backend())
                     attestation_numbers = attestation_cert.public_key().public_numbers()
                     if request_numbers != attestation_numbers:
-                        log.warning(
-                            "certificate request does not match attestation certificate."
-                        )
-                        raise eduMFAError(
-                            "certificate request does not match attestation certificate."
-                        )
+                        log.warning("certificate request does not match attestation certificate.")
+                        raise eduMFAError("certificate request does not match attestation certificate.")
 
                     try:
-                        verified = verify_certificate_path(
-                            attestation, param.get(ACTION.TRUSTED_CA_PATH)
-                        )
+                        verified = verify_certificate_path(attestation, param.get(ACTION.TRUSTED_CA_PATH))
                     except Exception as exx:
                         # We could have file system errors during verification.
                         log.debug(f"{traceback.format_exc()!s}")
                         verified = False
 
                     if not verified:
-                        log.warning(
-                            "Failed to verify certificate chain of attestation certificate."
-                        )
+                        log.warning("Failed to verify certificate chain of attestation certificate.")
                         if verify_attestation:
-                            raise eduMFAError(
-                                "Failed to verify certificate chain of attestation certificate."
-                            )
+                            raise eduMFAError("Failed to verify certificate chain of attestation certificate.")
 
             # During the initialization process, we need to create the certificate
-            request_id, x509object = cacon.sign_request(
-                request, options={"spkac": spkac, "template": template_name}
-            )
+            request_id, x509object = cacon.sign_request(request, options={"spkac": spkac, "template": template_name})
             certificate = crypto.dump_certificate(crypto.FILETYPE_PEM, x509object)
         elif generate:
             """
@@ -548,9 +496,7 @@ class CertificateTokenClass(TokenClass):
             r = req.sign(key, "sha256")
             csr = to_unicode(crypto.dump_certificate_request(crypto.FILETYPE_PEM, req))
             try:
-                request_id, x509object = cacon.sign_request(
-                    csr, options={"template": template_name}
-                )
+                request_id, x509object = cacon.sign_request(csr, options={"template": template_name})
                 certificate = crypto.dump_certificate(crypto.FILETYPE_PEM, x509object)
             except CSRError:
                 # Mark the token as broken
@@ -590,9 +536,7 @@ class CertificateTokenClass(TokenClass):
         # If there is a private key, we dump a PKCS12
         if privatekey:
             try:
-                response_detail["pkcs12"] = b64encode_and_unicode(
-                    self._create_pkcs12_bin()
-                )
+                response_detail["pkcs12"] = b64encode_and_unicode(self._create_pkcs12_bin())
             except Exception:
                 log.warning(f"Can not create PKCS12 for token {self.token.serial!s}.")
 
@@ -607,9 +551,7 @@ class CertificateTokenClass(TokenClass):
         certificate = self.get_tokeninfo("certificate")
         privatekey = self.get_tokeninfo("privatekey")
         pkcs12 = crypto.PKCS12()
-        pkcs12.set_certificate(
-            crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        )
+        pkcs12.set_certificate(crypto.load_certificate(crypto.FILETYPE_PEM, certificate))
         pkcs12.set_privatekey(crypto.load_privatekey(crypto.FILETYPE_PEM, privatekey))
         # TODO define a random passphrase and hand it to the user
         passphrase = self.token.get_pin()
@@ -633,9 +575,7 @@ class CertificateTokenClass(TokenClass):
 
         if "privatekey" in token_dict.get("info"):
             try:
-                token_dict["info"]["pkcs12"] = b64encode_and_unicode(
-                    self._create_pkcs12_bin()
-                )
+                token_dict["info"]["pkcs12"] = b64encode_and_unicode(self._create_pkcs12_bin())
             except Exception:
                 log.warning(f"Can not create PKCS12 for token {self.token.serial!s}.")
 

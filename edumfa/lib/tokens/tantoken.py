@@ -106,22 +106,16 @@ class TanTokenClass(PaperTokenClass):
                 SCOPE.ENROLL: {
                     TANACTION.TANTOKEN_COUNT: {
                         "type": "int",
-                        "desc": _(
-                            "The number of OTP values, which are printed on the paper."
-                        ),
+                        "desc": _("The number of OTP values, which are printed on the paper."),
                     },
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of TAN tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of TAN tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active TAN tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active TAN tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }

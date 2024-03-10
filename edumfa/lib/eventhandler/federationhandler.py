@@ -79,27 +79,19 @@ class FederationEventHandler(BaseEventHandler):
                 },
                 "realm": {
                     "type": "str",
-                    "description": _(
-                        "Change the realm name to a realm on the child eduMFA system."
-                    ),
+                    "description": _("Change the realm name to a realm on the child eduMFA system."),
                 },
                 "resolver": {
                     "type": "str",
-                    "description": _(
-                        "Change the resolver name to a resolver on the child eduMFA system."
-                    ),
+                    "description": _("Change the resolver name to a resolver on the child eduMFA system."),
                 },
                 "forward_client_ip": {
                     "type": "bool",
-                    "description": _(
-                        "Forward the client IP to the child eduMFA server. Otherwise this server will be the client."
-                    ),
+                    "description": _("Forward the client IP to the child eduMFA server. Otherwise this server will be the client."),
                 },
                 "forward_authorization_token": {
                     "type": "bool",
-                    "description": _(
-                        "Forward the authorization header. This allows to also forward request like token- and system-requests."
-                    ),
+                    "description": _("Forward the authorization header. This allows to also forward request like token- and system-requests."),
                 },
             }
         }
@@ -158,9 +150,7 @@ class FederationEventHandler(BaseEventHandler):
                 requestor = requests.delete
 
             if requestor:
-                r = requestor(
-                    url, params=params, data=data, headers=headers, verify=tls
-                )
+                r = requestor(url, params=params, data=data, headers=headers, verify=tls)
                 # convert requests Response to werkzeug Response
                 response_dict = json.loads(r.text)
                 if "detail" in response_dict:
@@ -170,9 +160,7 @@ class FederationEventHandler(BaseEventHandler):
                 # We will modify the response!
                 # We can not use flask.jsonify(response_dict) here, since we
                 # would work outside of application context!
-                options["response"] = current_app.response_class(
-                    json.dumps(response_dict), mimetype="application/json"
-                )
+                options["response"] = current_app.response_class(json.dumps(response_dict), mimetype="application/json")
                 options["response"].status_code = r.status_code
             else:
                 log.warning(f"Unsupported method: {method!r}")

@@ -86,9 +86,7 @@ class JobCollector(object):
             package_name, class_name = app.config[JOB_QUEUE_CLASS].rsplit(".", 1)
             queue_class = get_module_class(package_name, class_name)
         except (ImportError, ValueError) as exx:
-            log.warning(
-                f"Could not import job queue class {app.config[JOB_QUEUE_CLASS]!r}: {exx!r}"
-            )
+            log.warning(f"Could not import job queue class {app.config[JOB_QUEUE_CLASS]!r}: {exx!r}")
             return
         # Extract configuration from app config: All options starting with EDUMFA_JOB_QUEUE_
         options = {}

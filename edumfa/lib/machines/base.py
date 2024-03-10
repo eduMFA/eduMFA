@@ -120,9 +120,7 @@ class BaseMachineResolver(object):
     def get_type(cls):
         return cls.type
 
-    def get_machines(
-        self, machine_id=None, hostname=None, ip=None, any=None, substring=False
-    ):
+    def get_machines(self, machine_id=None, hostname=None, ip=None, any=None, substring=False):
         """
         Return a list of all machine objects in this resolver
 

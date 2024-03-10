@@ -74,9 +74,7 @@ def get_statistics(stats_key=None):
         end = getParam(param, "end")
         if end:
             end = parse_legacy_time(end, return_date=True)
-        values = get_values(
-            stats_key=stats_key, start_timestamp=start, end_timestamp=end
-        )
+        values = get_values(stats_key=stats_key, start_timestamp=start, end_timestamp=end)
         # convert timestamps to strings
         values_w_string = [(s[0].strftime(AUTH_DATE_FORMAT), s[1]) for s in values]
         g.audit_object.log({"success": True})

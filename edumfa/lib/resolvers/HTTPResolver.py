@@ -192,22 +192,16 @@ class HTTPResolver(UserIdResolver):
         param = self.config
         method = param.get("method").lower()
         endpoint = param.get("endpoint")
-        requestMappingJSON = json.loads(
-            param.get("requestMapping").replace("{userid}", userid)
-        )
+        requestMappingJSON = json.loads(param.get("requestMapping").replace("{userid}", userid))
         responseMapping = json.loads(param.get("responseMapping"))
         headers = json.loads(param.get("headers", "{}"))
         hasSpecialErrorHandler = bool(param.get("hasSpecialErrorHandler"))
         errorResponse = json.loads(param.get("errorResponse", "{}"))
 
         if method == "post":
-            httpResponse = requests.post(
-                endpoint, json=requestMappingJSON, headers=headers, timeout=60
-            )
+            httpResponse = requests.post(endpoint, json=requestMappingJSON, headers=headers, timeout=60)
         else:
-            httpResponse = requests.get(
-                endpoint, urlencode(requestMappingJSON), headers=headers, timeout=60
-            )
+            httpResponse = requests.get(endpoint, urlencode(requestMappingJSON), headers=headers, timeout=60)
 
         # Raises HTTPError, if one occurred.
         httpResponse.raise_for_status()

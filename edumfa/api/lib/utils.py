@@ -70,9 +70,7 @@ optional = True
 required = False
 
 
-def getParam(
-    param, key, optional=True, default=None, allow_empty=True, allowed_values=None
-):
+def getParam(param, key, optional=True, default=None, allow_empty=True, allowed_values=None):
     """
     returns a parameter from the request parameters.
 
@@ -297,11 +295,7 @@ def get_all_params(request):
     body = request.data
     return_param = {}
     if param:
-        log.debug(
-            "Update params in request {0!s} {1!s} with values.".format(
-                request.method, request.base_url
-            )
-        )
+        log.debug(f"Update params in request {request.method!s} {request.base_url!s} with values.")
         # Add the unquoted HTML and form parameters
         return_param = check_unquote(request, request.values)
 
@@ -309,11 +303,7 @@ def get_all_params(request):
         return_param.update(check_unquote(request, request.form))
 
     if request.is_json:
-        log.debug(
-            "Update params in request {0!s} {1!s} with JSON data.".format(
-                request.method, request.base_url
-            )
-        )
+        log.debug(f"Update params in request {request.method!s} {request.base_url!s} with JSON data.")
         # Add the original JSON data
         return_param.update(request.json)
     elif body:
@@ -326,11 +316,7 @@ def get_all_params(request):
             log.debug(f"Can not get param: {exx!s}")
 
     if request.view_args:
-        log.debug(
-            "Update params in request {0!s} {1!s} with view_args.".format(
-                request.method, request.base_url
-            )
-        )
+        log.debug(f"Update params in request {request.method!s} {request.base_url!s} with view_args.")
         # We add the unquoted view_args
         return_param.update(check_unquote(request, request.view_args))
 
@@ -377,9 +363,7 @@ def verify_auth_token(auth_token, required_role=None):
         headers = jwt.get_unverified_header(auth_token)
     except jwt.DecodeError as err:
         raise AuthError(
-            _("Authentication failure. Error during decoding your token: {0!s}").format(
-                err
-            ),
+            _("Authentication failure. Error during decoding your token: {0!s}").format(err),
             id=ERROR.AUTHENTICATE_DECODING_ERROR,
         )
     algorithm = headers.get("alg")
@@ -395,14 +379,8 @@ def verify_auth_token(auth_token, required_role=None):
                         trusted_jwt.get("public_key"),
                         algorithms=[trusted_jwt.get("algorithm")],
                     )
-                    if dict(
-                        (k, j.get(k)) for k in ("role", "resolver", "realm")
-                    ) == dict(
-                        (k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")
-                    ):
-                        if re.match(
-                            trusted_jwt.get("username") + "$", j.get("username")
-                        ):
+                    if dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
+                        if re.match(f"{trusted_jwt.get('username')}$", j.get("username")):
                             r = j
                             break
                         else:
@@ -414,9 +392,7 @@ def verify_auth_token(auth_token, required_role=None):
             except jwt.ExpiredSignatureError as err:
                 # We have the correct token. It expired, so we raise an error
                 raise AuthError(
-                    _("Authentication failure. Your token has expired: {0!s}").format(
-                        err
-                    ),
+                    _("Authentication failure. Your token has expired: {0!s}").format(err),
                     id=ERROR.AUTHENTICATE_TOKEN_EXPIRED,
                 )
 
@@ -425,9 +401,7 @@ def verify_auth_token(auth_token, required_role=None):
             r = jwt.decode(auth_token, current_app.secret_key, algorithms=["HS256"])
         except jwt.DecodeError as err:
             raise AuthError(
-                _(
-                    "Authentication failure. Error during decoding your token: {0!s}"
-                ).format(err),
+                _("Authentication failure. Error during decoding your token: {0!s}").format(err),
                 id=ERROR.AUTHENTICATE_DECODING_ERROR,
             )
         except jwt.ExpiredSignatureError as err:
@@ -436,18 +410,12 @@ def verify_auth_token(auth_token, required_role=None):
                 id=ERROR.AUTHENTICATE_TOKEN_EXPIRED,
             )
     if wrong_username:
-        raise AuthError(
-            _(
-                "Authentication failure. The username {0!s} is not allowed to impersonate via JWT."
-            ).format(wrong_username)
-        )
+        raise AuthError(_("Authentication failure. The username {0!s} is not allowed to impersonate via JWT.").format(wrong_username))
     if required_role and r.get("role") not in required_role:
         # If we require a certain role like "admin", but the users role does
         # not match
         raise AuthError(
-            _(
-                "Authentication failure. You do not have the necessary role ({0!s}) to access this resource!"
-            ).format(required_role),
+            _("Authentication failure. You do not have the necessary role ({0!s}) to access this resource!").format(required_role),
             id=ERROR.AUTHENTICATE_MISSING_RIGHT,
         )
     return r
@@ -469,9 +437,7 @@ def check_policy_name(name):
             raise ParameterError(_("'{0!s}' is an invalid policy name.").format(name))
 
     if not re.match(r"^[a-zA-Z0-9_.\- ]*$", name):
-        raise ParameterError(
-            _("The name of the policy may only contain the characters a-zA-Z0-9_. -")
-        )
+        raise ParameterError(_("The name of the policy may only contain the characters a-zA-Z0-9_. -"))
 
 
 def attestation_certificate_allowed(cert_info, allowed_certs_pols):

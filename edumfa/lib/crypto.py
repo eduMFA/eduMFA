@@ -178,9 +178,7 @@ def pass_hash(password):
     :type password: str
     :return: The hash string of the password
     """
-    DEFAULT_HASH_ALGO_PARAMS.update(
-        get_app_config_value("EDUMFA_HASH_ALGO_PARAMS", default={})
-    )
+    DEFAULT_HASH_ALGO_PARAMS.update(get_app_config_value("EDUMFA_HASH_ALGO_PARAMS", default={}))
     pass_ctx = CryptContext(
         get_app_config_value("EDUMFA_HASH_ALGO_LIST", default=DEFAULT_HASH_ALGO_LIST),
         **DEFAULT_HASH_ALGO_PARAMS,
@@ -200,9 +198,7 @@ def verify_pass_hash(password, hvalue):
     :return: True if the password matches
     :rtype: bool
     """
-    pass_ctx = CryptContext(
-        get_app_config_value("EDUMFA_HASH_ALGO_LIST", default=DEFAULT_HASH_ALGO_LIST)
-    )
+    pass_ctx = CryptContext(get_app_config_value("EDUMFA_HASH_ALGO_LIST", default=DEFAULT_HASH_ALGO_LIST))
     return pass_ctx.verify(password, hvalue)
 
 
@@ -669,9 +665,7 @@ def zerome(bufferObject):
     """
     data = ctypes.POINTER(ctypes.c_char)()
     size = ctypes.c_int()  # Note, int only valid for python 2.5
-    ctypes.pythonapi.PyObject_AsCharBuffer(
-        ctypes.py_object(bufferObject), ctypes.pointer(data), ctypes.pointer(size)
-    )
+    ctypes.pythonapi.PyObject_AsCharBuffer(ctypes.py_object(bufferObject), ctypes.pointer(data), ctypes.pointer(size))
     ctypes.memset(data, 0, size.value)
 
     return
@@ -729,9 +723,7 @@ class Sign(object):
 
         if public_key:
             try:
-                self.public = serialization.load_pem_public_key(
-                    public_key, backend=backend
-                )
+                self.public = serialization.load_pem_public_key(public_key, backend=backend)
             except Exception as e:
                 log.error(f"Error loading public key: ({e!r})")
                 log.debug(traceback.format_exc())
@@ -759,7 +751,7 @@ class Sign(object):
             ),
             hashes.SHA256(),
         )
-        res = ":".join([self.sig_ver, hexlify_and_unicode(signature)])
+        res = f"{self.sig_ver}:{hexlify_and_unicode(signature)}"
         return res
 
     def verify(self, s, signature, verify_old_sigs=False):
@@ -804,11 +796,7 @@ class Sign(object):
                     int_s = int(binascii.hexlify(sha256(to_bytes(s)).digest()), 16)
                     r = _slow_rsa_verify_raw(self.public, int(signature), int_s)
                 else:
-                    log.debug(
-                        "Could not verify old style signature {0!s} for data {1:s}".format(
-                            signature, s
-                        )
-                    )
+                    log.debug(f"Could not verify old style signature {signature!s} for data {s:s}")
         except Exception:
             log.error(f"Failed to verify signature: {s!r}")
             log.debug(f"{traceback.format_exc()!s}")
@@ -830,9 +818,7 @@ def create_hsm_object(config):
     # We need this to resolve the circular dependency between utils and crypto.
     from edumfa.lib.utils import get_module_class
 
-    hsm_module_name = config.get(
-        "EDUMFA_HSM_MODULE", "edumfa.lib.security.default.DefaultSecurityModule"
-    )
+    hsm_module_name = config.get("EDUMFA_HSM_MODULE", "edumfa.lib.security.default.DefaultSecurityModule")
     package_name, class_name = hsm_module_name.rsplit(".", 1)
     hsm_class = get_module_class(package_name, class_name, "setup_module")
     log.info(f"initializing HSM class: {hsm_class!s}")
@@ -905,9 +891,7 @@ def generate_keypair(rsa_keysize=2048):
 
     :return: tuple of (pubkey, privkey)
     """
-    private_key = rsa.generate_private_key(
-        public_exponent=65537, key_size=rsa_keysize, backend=default_backend()
-    )
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=rsa_keysize, backend=default_backend())
     public_key = private_key.public_key()
     pem_priv = to_unicode(
         private_key.private_bytes(
@@ -916,9 +900,5 @@ def generate_keypair(rsa_keysize=2048):
             encryption_algorithm=serialization.NoEncryption(),
         )
     )
-    pem_pub = to_unicode(
-        public_key.public_bytes(
-            encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.PKCS1
-        )
-    )
+    pem_pub = to_unicode(public_key.public_bytes(encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.PKCS1))
     return pem_pub, pem_priv

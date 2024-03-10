@@ -86,9 +86,7 @@ def save_resolver(params):
     # check the type
     resolvertypes = get_resolver_types()
     if resolvertype not in resolvertypes:
-        raise Exception(
-            f"resolver type : {resolvertype!s} not in {str(resolvertypes)!s}"
-        )
+        raise Exception(f"resolver type : {resolvertype!s} not in {str(resolvertypes)!s}")
 
     # check the name
     resolvers = get_resolver_list(filter_resolver_name=resolvername)
@@ -98,25 +96,17 @@ def save_resolver(params):
             # So we will update this resolver
             update_resolver = True
         else:
-            raise Exception(
-                f"resolver with similar name and other type already exists: {r_name}"
-            )
+            raise Exception(f"resolver with similar name and other type already exists: {r_name}")
 
     # create a dictionary for the ResolverConfig
     resolver_config = get_resolver_config_description(resolvertype)
     config_description = resolver_config.get(resolvertype).get("config", {})
 
-    data, types, desc = get_data_from_params(
-        params, ["resolver", "type"], config_description, resolvertype, resolvername
-    )
+    data, types, desc = get_data_from_params(params, ["resolver", "type"], config_description, resolvertype, resolvername)
 
     # Everything passed. So lets actually create the resolver in the DB
     if update_resolver:
-        resolver_id = (
-            Resolver.query.filter(func.lower(Resolver.name) == resolvername.lower())
-            .first()
-            .id
-        )
+        resolver_id = Resolver.query.filter(func.lower(Resolver.name) == resolvername.lower()).first().id
     else:
         resolver = Resolver(params.get("resolver"), params.get("type"))
         resolver_id = resolver.save()
@@ -144,9 +134,7 @@ def save_resolver(params):
 
 @log_with(log, log_exit=False)
 # @cache.memoize(10)
-def get_resolver_list(
-    filter_resolver_type=None, filter_resolver_name=None, editable=None, censor=False
-):
+def get_resolver_list(filter_resolver_type=None, filter_resolver_name=None, editable=None, censor=False):
     """
     Gets the list of configured resolvers from the database
 
@@ -182,16 +170,12 @@ def get_resolver_list(
         reduced_resolvers = {}
         if editable is True:
             for reso_name, reso in resolvers.items():
-                check_editable = is_true(reso["data"].get("Editable")) or is_true(
-                    reso["data"].get("EDITABLE")
-                )
+                check_editable = is_true(reso["data"].get("Editable")) or is_true(reso["data"].get("EDITABLE"))
                 if check_editable:
                     reduced_resolvers[reso_name] = resolvers[reso_name]
         elif editable is False:
             for reso_name, reso in resolvers.items():
-                check_editable = is_true(reso["data"].get("Editable")) or is_true(
-                    reso["data"].get("EDITABLE")
-                )
+                check_editable = is_true(reso["data"].get("Editable")) or is_true(reso["data"].get("EDITABLE"))
                 if not check_editable:
                     reduced_resolvers[reso_name] = resolvers[reso_name]
         resolvers = reduced_resolvers
@@ -221,9 +205,7 @@ def delete_resolver(resolvername):
         if reso.realm_list:
             # The resolver is still contained in a realm! We must not delete it
             realmname = reso.realm_list[0].realm.name
-            raise ConfigAdminError(
-                f"The resolver {resolvername!r} is still contained in realm {realmname!r}."
-            )
+            raise ConfigAdminError(f"The resolver {resolvername!r} is still contained in realm {realmname!r}.")
         reso.delete()
         ret = reso.id
     # Delete resolver object from cache
@@ -355,9 +337,7 @@ def pretestresolver(resolvertype, params):
     # If an already saved resolver is tested again, the password
     # could be "__CENSORED__". In this case we use the old, saved password.
     if params.get("resolver"):
-        old_config_list = (
-            get_resolver_list(filter_resolver_name=params.get("resolver")) or {}
-        )
+        old_config_list = get_resolver_list(filter_resolver_name=params.get("resolver")) or {}
         old_config = old_config_list.get(params.get("resolver")) or {}
         for key in old_config.get("censor_keys", []):
             if params.get(key) == CENSORED:
@@ -396,8 +376,4 @@ def import_resolver(data, name=None):
         rid = save_resolver(res_data)
         # TODO: we have no information if a new resolver was created or an
         #  existing resolver updated. We would need to enhance "save_resolver()".
-        log.info(
-            'Import of resolver "{0!s}" finished, id: {1!s}'.format(
-                res_data["resolver"], rid
-            )
-        )
+        log.info(f"Import of resolver \"{res_data['resolver']!s}\" finished, id: {rid!s}")

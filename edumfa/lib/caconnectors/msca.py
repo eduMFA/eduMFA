@@ -162,15 +162,10 @@ class MSCAConnector(BaseCAConnector):
             # Secure connection
             if not (self.ssl_ca_cert and self.ssl_client_cert and self.ssl_client_key):
                 log.error(
-                    "For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert' and 'ssl_client_key'. The following configuration seems incomplete: ({0!s}, {1!s}, {2!s})".format(
-                        self.ssl_ca_cert, self.ssl_client_cert, self.ssl_client_key
-                    )
+                    "For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert' and 'ssl_client_key'. The following configuration seems incomplete: ({0!s}, {1!s}, {2!s})"
+                    .format(self.ssl_ca_cert, self.ssl_client_cert, self.ssl_client_key)
                 )
-                raise CAError(
-                    "Incomplete TLS configuration for MSCA worker configuration {0!s}".format(
-                        self.name
-                    )
-                )
+                raise CAError(f"Incomplete TLS configuration for MSCA worker configuration {self.name!s}")
             else:
                 # Read all stuff. We need to provide all parameters as PEM encoded byte string
                 with open(self.ssl_ca_cert, "rb") as f:
@@ -202,15 +197,11 @@ class MSCAConnector(BaseCAConnector):
                     )
                     raise CAError("Invalid TLS configuration for MSCA worker.")
 
-                credentials = grpc.ssl_channel_credentials(
-                    ca_cert_pem, client_key_pem, client_cert_pem
-                )
+                credentials = grpc.ssl_channel_credentials(ca_cert_pem, client_key_pem, client_cert_pem)
                 channel = grpc.secure_channel(
                     f"{self.hostname!s}:{self.port!s}",
                     credentials,
-                    options=(
-                        ("grpc.enable_http_proxy", int(is_true(self.http_proxy))),
-                    ),
+                    options=(("grpc.enable_http_proxy", int(is_true(self.http_proxy))),),
                 )
         else:
             channel = grpc.insecure_channel(
@@ -220,9 +211,7 @@ class MSCAConnector(BaseCAConnector):
         try:
             grpc.channel_ready_future(channel).result(timeout=TIMEOUT)
         except grpc.FutureTimeoutError:
-            log.warning(
-                "Worker seems to be offline. No connection could be established!"
-            )
+            log.warning("Worker seems to be offline. No connection could be established!")
             log.debug(traceback.format_exc())
         except UnboundLocalError:
             log.warning("Channel to MS CA worker was not set up successfully.")
@@ -288,22 +277,12 @@ class MSCAConnector(BaseCAConnector):
         :rtype: (int, X509 or None)
         """
         if self.connection:
-            reply = self.connection.SubmitCSR(
-                SubmitCSRRequest(
-                    csr=csr, templateName=options.get("template"), caName=self.ca
-                )
-            )
+            reply = self.connection.SubmitCSR(SubmitCSRRequest(csr=csr, templateName=options.get("template"), caName=self.ca))
             if reply.disposition == 3:
                 request_id = reply.requestId
-                log.info(
-                    f"certificate with request ID {request_id!s} successfully rolled out"
-                )
-                certificate = self.connection.GetCertificate(
-                    GetCertificateRequest(id=request_id, caName=self.ca)
-                ).cert
-                return request_id, crypto.load_certificate(
-                    crypto.FILETYPE_PEM, certificate
-                )
+                log.info(f"certificate with request ID {request_id!s} successfully rolled out")
+                certificate = self.connection.GetCertificate(GetCertificateRequest(id=request_id, caName=self.ca)).cert
+                return request_id, crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
             if reply.disposition == 5:
                 log.info("cert still under submission")
                 raise CSRPending(requestId=reply.requestId)

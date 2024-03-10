@@ -205,8 +205,8 @@ def set_config():
         if key.split(".")[-1] not in ["type", "desc"]:
             # Only store base values, not type or desc
             value = getParam(param, key, optional)
-            typ = getParam(param, key + ".type", optional)
-            desc = getParam(param, key + ".desc", optional)
+            typ = getParam(param, f"{key}.type", optional)
+            desc = getParam(param, f"{key}.desc", optional)
             res = set_edumfa_config(key, value, typ, desc)
             result[key] = res
             g.audit_object.add_to_log({"info": f"{key!s}={value!s}, "})
@@ -255,9 +255,7 @@ def set_default():
             g.audit_object.add_to_log({"info": f"{k!s}={value!s}, "})
 
     if not result:
-        log.warning(
-            "Failed saving config. Could not find any known parameter. %s" % description
-        )
+        log.warning(f"Failed saving config. Could not find any known parameter. {description}")
         raise ParameterError(f"Usage: {description!s}", id=77)
 
     return send_result(result)

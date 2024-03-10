@@ -54,9 +54,7 @@ To reset your user password please visit the link
 
 
 @log_with(log)
-def create_recoverycode(
-    user, email=None, expiration_seconds=3600, recoverycode=None, base_url=""
-):
+def create_recoverycode(user, email=None, expiration_seconds=3600, recoverycode=None, base_url=""):
     """
     Create and send a password recovery code
 
@@ -117,13 +115,9 @@ def check_recoverycode(user, recoverycode):
     """
     recoverycode_valid = False
     # delete old entries
-    r = PasswordReset.query.filter(
-        and_(PasswordReset.expiration < datetime.now())
-    ).delete()
+    r = PasswordReset.query.filter(and_(PasswordReset.expiration < datetime.now())).delete()
     log.debug(f"{r!s} old password recoverycodes deleted.")
-    sql_query = PasswordReset.query.filter(
-        and_(PasswordReset.username == user.login, PasswordReset.realm == user.realm)
-    )
+    sql_query = PasswordReset.query.filter(and_(PasswordReset.username == user.login, PasswordReset.realm == user.realm))
     for pwr in sql_query:
         if verify_with_pepper(pwr.recoverycode, recoverycode):
             recoverycode_valid = True
@@ -147,8 +141,6 @@ def is_password_reset(g):
     """
     rlist = get_resolver_list(editable=True)
     log.debug(f"Number of editable resolvers: {len(rlist)!s}")
-    pwreset = Match.generic(g, scope=SCOPE.USER, action=ACTION.PASSWORDRESET).allowed(
-        write_to_audit_log=False
-    )
+    pwreset = Match.generic(g, scope=SCOPE.USER, action=ACTION.PASSWORDRESET).allowed(write_to_audit_log=False)
     log.debug(f"Password reset allowed via policies: {pwreset!s}")
     return bool(rlist and pwreset)

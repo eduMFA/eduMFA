@@ -65,31 +65,18 @@ def get_firebase_access_token(config_file_name):
         # initialize the firebase_token in the app_store as dict
         app_store[fbt] = {}
 
-    if (
-        not isinstance(
-            app_store[fbt].get(config_file_name), service_account.Credentials
-        )
-        or app_store[fbt].get(config_file_name).expired
-    ):
+    if not isinstance(app_store[fbt].get(config_file_name), service_account.Credentials) or app_store[fbt].get(config_file_name).expired:
         # If the type of the config is not of class Credentials or if the token
         # has expired we get new scoped access token credentials
-        credentials = service_account.Credentials.from_service_account_file(
-            config_file_name, scopes=SCOPES
-        )
+        credentials = service_account.Credentials.from_service_account_file(config_file_name, scopes=SCOPES)
 
-        log.debug(
-            f"Fetching a new access_token for {config_file_name!r} from firebase..."
-        )
+        log.debug(f"Fetching a new access_token for {config_file_name!r} from firebase...")
         # We do not use a lock here: The worst that could happen is that two threads
         # fetch new auth tokens concurrently. In this case, one of them wins and
         # is written to the dictionary.
         app_store[fbt][config_file_name] = credentials
-        readable_time = (
-            credentials.expiry.isoformat() if credentials.expiry else "Never"
-        )
-        log.debug(
-            f"Setting the expiration for {config_file_name!r} of the new access_token to {readable_time!s}."
-        )
+        readable_time = credentials.expiry.isoformat() if credentials.expiry else "Never"
+        log.debug(f"Setting the expiration for {config_file_name!r} of the new access_token to {readable_time!s}.")
 
     return app_store[fbt][config_file_name]
 
@@ -120,9 +107,7 @@ class FirebaseProvider(ISMSProvider):
         """
         res = False
 
-        credentials = get_firebase_access_token(
-            self.smsgateway.option_dict.get(FIREBASE_CONFIG.JSON_CONFIG)
-        )
+        credentials = get_firebase_access_token(self.smsgateway.option_dict.get(FIREBASE_CONFIG.JSON_CONFIG))
 
         authed_session = AuthorizedSession(credentials)
 
@@ -166,16 +151,12 @@ class FirebaseProvider(ISMSProvider):
 
         proxies = {}
         if self.smsgateway.option_dict.get(FIREBASE_CONFIG.HTTPS_PROXY):
-            proxies["https"] = self.smsgateway.option_dict.get(
-                FIREBASE_CONFIG.HTTPS_PROXY
-            )
+            proxies["https"] = self.smsgateway.option_dict.get(FIREBASE_CONFIG.HTTPS_PROXY)
         a = self.smsgateway.option_dict.get(FIREBASE_CONFIG.JSON_CONFIG)
         with open(a) as f:
             server_config = json.load(f)
         url = FIREBASE_URL_SEND.format(server_config["project_id"])
-        resp = authed_session.post(
-            url, data=json.dumps(fcm_message), headers=headers, proxies=proxies
-        )
+        resp = authed_session.post(url, data=json.dumps(fcm_message), headers=headers, proxies=proxies)
 
         if resp.status_code == 200:
             log.debug("Message sent successfully to Firebase service.")
@@ -197,14 +178,10 @@ class FirebaseProvider(ISMSProvider):
             server_config = json.load(f)
         if server_config:
             if server_config.get("type") != "service_account":
-                raise ConfigAdminError(
-                    description="The JSON file is not a valid firebase credentials file."
-                )
+                raise ConfigAdminError(description="The JSON file is not a valid firebase credentials file.")
 
         else:
-            raise ConfigAdminError(
-                description="Please check your configuration. Can not load JSON file."
-            )
+            raise ConfigAdminError(description="Please check your configuration. Can not load JSON file.")
 
     @classmethod
     def parameters(cls):
@@ -221,15 +198,11 @@ class FirebaseProvider(ISMSProvider):
             "parameters": {
                 FIREBASE_CONFIG.JSON_CONFIG: {
                     "required": True,
-                    "description": _(
-                        "The filename of the JSON config file, that allows eduMFA to talk to the Firebase REST API."
-                    ),
+                    "description": _("The filename of the JSON config file, that allows eduMFA to talk to the Firebase REST API."),
                 },
                 FIREBASE_CONFIG.HTTPS_PROXY: {
                     "required": False,
-                    "description": _(
-                        "Proxy setting for HTTPS connections to googleapis.com."
-                    ),
+                    "description": _("Proxy setting for HTTPS connections to googleapis.com."),
                 },
             },
         }

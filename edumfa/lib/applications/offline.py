@@ -124,16 +124,12 @@ class MachineApplication(MachineApplicationBase):
         # we sent to the client. Assume the client then requests a refill with that exact OTP value.
         # Then, we need to respond with a refill of one OTP value, as the client has consumed one OTP value.
         counter_diff = matching_count - first_offline_counter + 1
-        otps = MachineApplication.get_offline_otps(
-            token_obj, otppin, counter_diff, rounds
-        )
+        otps = MachineApplication.get_offline_otps(token_obj, otppin, counter_diff, rounds)
         token_obj.add_tokeninfo(key="offline_counter", value=count)
         return otps
 
     @staticmethod
-    def get_authentication_item(
-        token_type, serial, challenge=None, options=None, filter_param=None
-    ):
+    def get_authentication_item(token_type, serial, challenge=None, options=None, filter_param=None):
         """
         :param token_type: the type of the token. At the moment
                            we only support "HOTP" token. Supporting time
@@ -176,9 +172,7 @@ class MachineApplication(MachineApplicationBase):
                         ret["user"] = ret["username"] = uInfo.get("username")
 
         else:
-            log.info(
-                f"Token {serial!r}, type {token_type!r} is not supported by OFFLINE application module"
-            )
+            log.info(f"Token {serial!r}, type {token_type!r} is not supported by OFFLINE application module")
 
         return ret
 

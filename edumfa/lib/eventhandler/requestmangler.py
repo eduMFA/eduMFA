@@ -123,9 +123,7 @@ class RequestManglerEventHandler(BaseEventHandler):
                 "value": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "The new value of the parameter. Can contain tags like {0}, {1} for the matched sub strings."
-                    ),
+                    "description": _("The new value of the parameter. Can contain tags like {0}, {1} for the matched sub strings."),
                 },
                 "match_parameter": {
                     "type": "str",
@@ -133,9 +131,7 @@ class RequestManglerEventHandler(BaseEventHandler):
                 },
                 "match_pattern": {
                     "type": "str",
-                    "description": _(
-                        "The value of the match_parameter. It can contain a regular expression and '()' to transfer values to the new parameter."
-                    ),
+                    "description": _("The value of the match_parameter. It can contain a regular expression and '()' to transfer values to the new parameter."),
                 },
             },
         }
@@ -180,7 +176,7 @@ class RequestManglerEventHandler(BaseEventHandler):
                         always returns a tuple of strings
                         """
                         m = re.match(
-                            "^" + match_pattern + "$",
+                            f"^{match_pattern}$",
                             request.all_data.get(match_parameter),
                         )
                         if m:
@@ -188,10 +184,6 @@ class RequestManglerEventHandler(BaseEventHandler):
                             try:
                                 request.all_data[parameter] = value.format(*m.groups())
                             except IndexError:
-                                log.warning(
-                                    "The number of found tags ({0!r}) do not match the required number ({1!r}).".format(
-                                        m.groups(), value
-                                    )
-                                )
+                                log.warning(f"The number of found tags ({m.groups()!r}) do not match the required number ({value!r}).")
 
         return ret

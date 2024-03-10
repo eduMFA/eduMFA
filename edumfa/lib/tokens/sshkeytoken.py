@@ -94,16 +94,12 @@ class SSHkeyTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of SSH keys assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of SSH keys assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active SSH keys assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active SSH keys assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -177,5 +173,5 @@ class SSHkeyTokenClass(TokenClass):
         sshkey = self.get_tokeninfo("ssh_key")
         r = f"{key_type!s} {sshkey!s}"
         if key_comment:
-            r += " " + key_comment
+            r += f" {key_comment}"
         return r

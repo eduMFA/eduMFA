@@ -97,16 +97,12 @@ class SpassTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of SPASS tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of SPASS tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active SPASS tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active SPASS tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }

@@ -142,9 +142,7 @@ def before_request():
     ensure_no_config_object()
     request.all_data = get_all_params(request)
     request.User = get_user_from_param(request.all_data)
-    edumfa_server = get_app_config_value(
-        "EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host)
-    )
+    edumfa_server = get_app_config_value("EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host))
     # Create a policy_object, that reads the database audit settings
     # and contains the complete policy definition during the request.
     # This audit_object can be used in the postpolicy and prepolicy and it
@@ -209,16 +207,10 @@ def offlinerefill():
                 refilltoken = MachineApplication.generate_new_refilltoken(tokenobj)
                 response = send_result(True)
                 content = response.json
-                content["auth_items"] = {
-                    "offline": [
-                        {"refilltoken": refilltoken, "response": otps, "serial": serial}
-                    ]
-                }
+                content["auth_items"] = {"offline": [{"refilltoken": refilltoken, "response": otps, "serial": serial}]}
                 response.set_data(json.dumps(content))
                 return response
-        raise ParameterError(
-            "Token is not an offline token or refill token is incorrect"
-        )
+        raise ParameterError("Token is not an offline token or refill token is incorrect")
 
 
 @validate_blueprint.route("/check", methods=["POST", "GET"])
@@ -411,27 +403,13 @@ def check():
         if value and key not in ["g", "clientip", "user"]:
             options[key] = value
 
-    if (
-        not user.login
-        and not serial
-        and token_type == WebAuthnTokenClass.get_class_type()
-        and user_handle
-    ):
+    if not user.login and not serial and token_type == WebAuthnTokenClass.get_class_type() and user_handle:
         # 2. call in usernameless setting, this time including a userhandle
         success, details = WebAuthnTokenClass.check_userless_otp(options)
         result = success
         if success:
             user = options["user"]
-        serials = (
-            ",".join(
-                [
-                    challenge_info["serial"]
-                    for challenge_info in details["multi_challenge"]
-                ]
-            )
-            if "multi_challenge" in details
-            else details.get("serial")
-        )
+        serials = ",".join([challenge_info["serial"] for challenge_info in details["multi_challenge"]]) if "multi_challenge" in details else details.get("serial")
         g.audit_object.log(
             {
                 "info": log_used_user(user, details.get("message")),
@@ -443,9 +421,7 @@ def check():
         return send_result(result, rid=2, details=details)
 
     password = getParam(request.all_data, "pass", required)
-    g.audit_object.log(
-        {"user": user.login, "resolver": user.resolver, "realm": user.realm}
-    )
+    g.audit_object.log({"user": user.login, "resolver": user.resolver, "realm": user.realm})
 
     if serial:
         if user:
@@ -481,13 +457,7 @@ def check():
                     # additional attributes
                     for k, v in ui.items():
                         result["attributes"][k] = v
-    serials = (
-        ",".join(
-            [challenge_info["serial"] for challenge_info in details["multi_challenge"]]
-        )
-        if "multi_challenge" in details
-        else details.get("serial")
-    )
+    serials = ",".join([challenge_info["serial"] for challenge_info in details["multi_challenge"]]) if "multi_challenge" in details else details.get("serial")
     g.audit_object.log(
         {
             "info": log_used_user(user, details.get("message")),
@@ -651,18 +621,14 @@ def trigger_challenge():
             tokentype=token_type,
         )
         # Only use the tokens, that are allowed to do challenge response
-        chal_resp_tokens = [
-            token_obj for token_obj in token_objs if "challenge" in token_obj.mode
-        ]
+        chal_resp_tokens = [token_obj for token_obj in token_objs if "challenge" in token_obj.mode]
         if is_true(options.get("increase_failcounter_on_challenge")):
             for token_obj in chal_resp_tokens:
                 token_obj.inc_failcount()
         create_challenges_from_tokens(chal_resp_tokens, details, options)
         result_obj = len(details.get("multi_challenge"))
 
-        challenge_serials = [
-            challenge_info["serial"] for challenge_info in details["multi_challenge"]
-        ]
+        challenge_serials = [challenge_info["serial"] for challenge_info in details["multi_challenge"]]
         g.audit_object.log(
             {
                 "user": user.login,
@@ -699,11 +665,7 @@ def poll_transaction(transaction_id=None):
         transaction_id = getParam(request.all_data, "transaction_id", required)
     # Fetch a list of non-exired challenges with the given transaction ID
     # and determine whether it contains at least one non-expired answered challenge.
-    matching_challenges = [
-        challenge
-        for challenge in get_challenges(transaction_id=transaction_id)
-        if challenge.is_valid()
-    ]
+    matching_challenges = [challenge for challenge in get_challenges(transaction_id=transaction_id) if challenge.is_valid()]
     answered_challenges = extract_answered_challenges(matching_challenges)
 
     declined_challenges = []

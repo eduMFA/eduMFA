@@ -51,7 +51,7 @@ def tokenise(r):
     def _(s):
         ret = None
         st = s.strip()
-        m = re.match("^" + r, st)
+        m = re.match(f"^{r}", st)
         if m:
             ret = (st[: m.end()].strip(), st[m.end() :].strip())
         return ret
@@ -127,11 +127,7 @@ class IdResolver(UserIdResolver):
         if self.fileName == "":
             self.fileName = "/etc/passwd"
 
-        log.info(
-            "loading users from file {0!s} from within {1!r}".format(
-                self.fileName, os.getcwd()
-            )
-        )
+        log.info(f"loading users from file {self.fileName!s} from within {os.getcwd()!r}")
         with codecs.open(self.fileName, "r", ENCODING) as fileHandle:
             ID = self.sF["userid"]
             NAME = self.sF["username"]
@@ -213,9 +209,7 @@ class IdResolver(UserIdResolver):
                 log.warning(f"user uid {uid!s} failed to authenticate")
                 return False
         else:
-            log.warning(
-                "Failed to verify password. No encrypted password found in file"
-            )
+            log.warning("Failed to verify password. No encrypted password found in file")
             return False
 
     def getUserInfo(self, userId, no_passwd=False):

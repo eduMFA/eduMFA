@@ -89,7 +89,7 @@ class eduMFAServer(object):
         if resolver:
             data["resolver"] = resolver
         response = requests.post(
-            self.config.url + "/validate/check",
+            f"{self.config.url}/validate/check",
             data=data,
             verify=self.config.tls,
             timeout=60,
@@ -113,20 +113,14 @@ class eduMFAServer(object):
         :return: True or False. If any error occurs, an exception is raised.
         """
         response = requests.post(
-            config.url + "/validate/check",
+            f"{config.url}/validate/check",
             data={"user": quote(user), "pass": quote(password)},
             verify=config.tls,
             timeout=60,
         )
-        log.debug(
-            f"Sent request to eduMFA server. status code returned: {response.status_code!s}"
-        )
+        log.debug(f"Sent request to eduMFA server. status code returned: {response.status_code!s}")
         if response.status_code != 200:
-            log.warning(
-                "The request to the remote eduMFA server {0!s} returned a status code: {1!s}".format(
-                    config.url, response.status_code
-                )
-            )
+            log.warning(f"The request to the remote eduMFA server {config.url!s} returned a status code: {response.status_code!s}")
             return False
 
         j_response = json.loads(to_unicode(response.content))
@@ -161,9 +155,7 @@ def get_edumfaserver(identifier=None, id=None):
     """
     server_list = get_edumfaservers(identifier=identifier, id=id)
     if not server_list:
-        raise ConfigAdminError(
-            "The specified eduMFA Server configuration does not exist."
-        )
+        raise ConfigAdminError("The specified eduMFA Server configuration does not exist.")
     return server_list[0]
 
 
@@ -220,9 +212,7 @@ def add_edumfaserver(identifier, url=None, tls=True, description=""):
         definition
     :return: The Id of the database object
     """
-    r = eduMFAServerDB(
-        identifier=identifier, url=url, tls=tls, description=description
-    ).save()
+    r = eduMFAServerDB(identifier=identifier, url=url, tls=tls, description=description).save()
     return r
 
 

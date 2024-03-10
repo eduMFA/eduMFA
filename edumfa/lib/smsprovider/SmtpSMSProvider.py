@@ -52,15 +52,9 @@ class SmtpSMSProvider(ISMSProvider):
         if self.smsgateway:
             phone = self._mangle_phone(phone, self.smsgateway.option_dict)
             identifier = self.smsgateway.option_dict.get("SMTPIDENTIFIER")
-            recipient = self.smsgateway.option_dict.get("MAILTO").format(
-                otp=message, phone=phone
-            )
-            subject = self.smsgateway.option_dict.get("SUBJECT", "{phone}").format(
-                otp=message, phone=phone
-            )
-            body = self.smsgateway.option_dict.get("BODY", "{otp}").format(
-                otp=message, phone=phone
-            )
+            recipient = self.smsgateway.option_dict.get("MAILTO").format(otp=message, phone=phone)
+            subject = self.smsgateway.option_dict.get("SUBJECT", "{phone}").format(otp=message, phone=phone)
+            body = self.smsgateway.option_dict.get("BODY", "{otp}").format(otp=message, phone=phone)
         else:
             phone = self._mangle_phone(phone, self.config)
             identifier = self.config.get("IDENTIFIER")
@@ -71,9 +65,7 @@ class SmtpSMSProvider(ISMSProvider):
             body = self.config.get("BODY", MSG_TAG)
 
             if not (server and recipient and sender) and not (identifier and recipient):
-                log.error(
-                    f"incomplete config: {self.config}. MAILTO and (IDENTIFIER or MAILSERVER and MAILSENDER) needed"
-                )
+                log.error(f"incomplete config: {self.config}. MAILTO and (IDENTIFIER or MAILSERVER and MAILSENDER) needed")
                 raise SMSError(-1, "Incomplete SMS config.")
 
             recipient = recipient.replace(PHONE_TAG, phone)
@@ -88,9 +80,7 @@ class SmtpSMSProvider(ISMSProvider):
         else:
             username = self.config.get("MAILUSER")
             password = self.config.get("MAILPASSWORD")
-            r = send_email_data(
-                server, subject, body, sender, recipient, username, password
-            )
+            r = send_email_data(server, subject, body, sender, recipient, username, password)
         if not r:
             raise SMSError(500, "Failed to deliver SMS to SMTP Gateway.")
 
@@ -118,13 +108,9 @@ class SmtpSMSProvider(ISMSProvider):
                 "SMTPIDENTIFIER": {
                     "required": True,
                     "description": "Your SMTP configuration, that should be used to send the email.",
-                    "values": [
-                        provider.config.identifier for provider in get_smtpservers()
-                    ],
+                    "values": [provider.config.identifier for provider in get_smtpservers()],
                 },
-                "SUBJECT": {
-                    "description": "The optional subject of the email. Use tags {phone} and {otp}."
-                },
+                "SUBJECT": {"description": "The optional subject of the email. Use tags {phone} and {otp}."},
                 "BODY": {
                     "description": "The optional body of the email. Use tags {phone} and {otp}.",
                     "type": "text",

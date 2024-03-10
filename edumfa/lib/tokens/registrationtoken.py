@@ -126,9 +126,7 @@ class RegistrationTokenClass(PasswordTokenClass):
         res = {
             "type": "registration",
             "title": "Registration Code Token",
-            "description": _(
-                "Registration: A token that creates a registration code that can be used as a second factor once."
-            ),
+            "description": _("Registration: A token that creates a registration code that can be used as a second factor once."),
             "init": {},
             "config": {},
             "user": [],
@@ -138,16 +136,12 @@ class RegistrationTokenClass(PasswordTokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of registration tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of registration tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active registration tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active registration tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }

@@ -97,16 +97,12 @@ class MotpTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of mOTP tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of mOTP tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active mOTP tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active mOTP tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -146,9 +142,7 @@ class MotpTokenClass(TokenClass):
             tok_type = self.type.lower()
             if user is not None:
                 try:
-                    motp_url = create_motp_url(
-                        otpkey, user.login, user.realm, serial=self.get_serial()
-                    )
+                    motp_url = create_motp_url(otpkey, user.login, user.realm, serial=self.get_serial())
                     response_detail["motpurl"] = {
                         "description": _("URL for MOTP token"),
                         "value": motp_url,
@@ -224,10 +218,7 @@ class MotpTokenClass(TokenClass):
         res = mtimeOtp.checkOtp(anOtpVal, window, options=options)
 
         if res != -1 and oCount != 0 and res <= oCount:
-            log.warning(
-                "a previous OTP value was used again! former tokencounter: %i, presented counter %i"
-                % (oCount, res)
-            )
+            log.warning("a previous OTP value was used again! former tokencounter: %i, presented counter %i" % (oCount, res))
             res = -1
             return res
 

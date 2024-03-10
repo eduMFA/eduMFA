@@ -101,9 +101,7 @@ class IndexedSecretTokenClass(TokenClass):
         res = {
             "type": "indexedsecret",
             "title": _("Indexed Secret Token"),
-            "description": _(
-                "IndexedSecret: Request certain positions of a shared secret from the user."
-            ),
+            "description": _("IndexedSecret: Request certain positions of a shared secret from the user."),
             "user": ["enroll"],
             # This tokentype is enrollable in the UI for...
             "ui_enroll": ["admin", "user"],
@@ -111,59 +109,45 @@ class IndexedSecretTokenClass(TokenClass):
                 SCOPE.AUTH: {
                     ACTION.CHALLENGETEXT: {
                         "type": "str",
-                        "desc": _(
-                            "Use an alternate challenge text for telling the user which positions of the secret he should enter."
-                        ),
+                        "desc": _("Use an alternate challenge text for telling the user which positions of the secret he should enter."),
                         "group": "Indexed Secret Token",
                     },
                     PIIXACTION.COUNT: {
                         "type": "int",
-                        "desc": _(
-                            "Number of necessary positions to be answered by the user."
-                        ),
+                        "desc": _("Number of necessary positions to be answered by the user."),
                         "group": "Indexed Secret Token",
                     },
                 },
                 SCOPE.WEBUI: {
                     PIIXACTION.PRESET_ATTRIBUTE: {
                         "type": "str",
-                        "desc": _(
-                            "Preset the enrollment with the value of the given attribute."
-                        ),
+                        "desc": _("Preset the enrollment with the value of the given attribute."),
                         "group": "token",
                     }
                 },
                 SCOPE.USER: {
                     PIIXACTION.FORCE_ATTRIBUTE: {
                         "type": "str",
-                        "desc": _(
-                            "The attribute whose value should be force set during enrollment."
-                        ),
+                        "desc": _("The attribute whose value should be force set during enrollment."),
                         "group": "enrollment",
                     }
                 },
                 SCOPE.ADMIN: {
                     PIIXACTION.FORCE_ATTRIBUTE: {
                         "type": "str",
-                        "desc": _(
-                            "The attribute whose value should be force set during enrollment."
-                        ),
+                        "desc": _("The attribute whose value should be force set during enrollment."),
                         "group": "enrollment",
                     }
                 },
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of indexed secret tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of indexed secret tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active indexed secret tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active indexed secret tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 },
@@ -214,7 +198,7 @@ class IndexedSecretTokenClass(TokenClass):
         return_message = (
             get_action_values_from_options(
                 SCOPE.AUTH,
-                "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+                f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}",
                 options,
             )
             or DEFAULT_CHALLENGE_TEXT
@@ -227,7 +211,7 @@ class IndexedSecretTokenClass(TokenClass):
             position_count = int(
                 get_action_values_from_options(
                     SCOPE.AUTH,
-                    "{0!s}_{1!s}".format(self.get_class_type(), PIIXACTION.COUNT),
+                    f"{self.get_class_type()!s}_{PIIXACTION.COUNT!s}",
                     options,
                 )
                 or DEFAULT_POSITION_COUNT
@@ -240,12 +224,8 @@ class IndexedSecretTokenClass(TokenClass):
             # We need to get a number of random positions from the secret string
             secret_length = len(self.token.get_otpkey().getKey())
             if not secret_length:
-                raise ValidateError(
-                    "The indexedsecret token has an empty secret and can not be used for authentication."
-                )
-            random_positions = [
-                urandom.randint(1, secret_length) for _x in range(0, position_count)
-            ]
+                raise ValidateError("The indexedsecret token has an empty secret and can not be used for authentication.")
+            random_positions = [urandom.randint(1, secret_length) for _x in range(0, position_count)]
             position_str = ",".join([f"{x!s}" for x in random_positions])
             attributes["random_positions"] = random_positions
 
@@ -296,9 +276,7 @@ class IndexedSecretTokenClass(TokenClass):
 
         # get the challenges for this transaction ID
         if transaction_id is not None:
-            challengeobject_list = get_challenges(
-                serial=self.token.serial, transaction_id=transaction_id
-            )
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
 
             for challengeobject in challengeobject_list:
                 if challengeobject.is_valid():
@@ -309,9 +287,7 @@ class IndexedSecretTokenClass(TokenClass):
                     # Now see if the answer is the right indexes
                     secret_string = to_unicode(self.token.get_otpkey().getKey())
                     if len(options["data"]) == len(passw):
-                        expected_answer = "".join(
-                            [secret_string[x - 1] for x in options["data"]]
-                        )
+                        expected_answer = "".join([secret_string[x - 1] for x in options["data"]])
                         if safe_compare(passw, expected_answer):
                             r_success = 1
                             # Set valid OTP to true. We must not delete the challenge now,
@@ -324,9 +300,7 @@ class IndexedSecretTokenClass(TokenClass):
                             # increase the received_count
                             challengeobject.set_otp_status()
                     else:
-                        log.debug(
-                            "Length of password does not match the requested number of positions."
-                        )
+                        log.debug("Length of password does not match the requested number of positions.")
                         # increase the received_count
                         challengeobject.set_otp_status()
 
@@ -359,14 +333,12 @@ class IndexedSecretTokenClass(TokenClass):
         """
         if self.get_tokeninfo("multichallenge"):
             transaction_id = options.get("transaction_id")
-            challengeobject_list = get_challenges(
-                serial=self.token.serial, transaction_id=transaction_id
-            )
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
 
             position_count = int(
                 get_action_values_from_options(
                     SCOPE.AUTH,
-                    "{0!s}_{1!s}".format(self.get_class_type(), PIIXACTION.COUNT),
+                    f"{self.get_class_type()!s}_{PIIXACTION.COUNT!s}",
                     options,
                 )
                 or DEFAULT_POSITION_COUNT
@@ -409,8 +381,6 @@ class IndexedSecretTokenClass(TokenClass):
         if len(chals) != 1:  # pragma: no cover
             log.error("Something is wrong. There is more than one challenge!")
         transaction_id = chals[0].transaction_id
-        r = self.check_challenge_response(
-            passw=verify, options={"transaction_id": transaction_id}
-        )
+        r = self.check_challenge_response(passw=verify, options={"transaction_id": transaction_id})
         log.debug(f"Enrollment verified: {r!s}")
         return r >= 0

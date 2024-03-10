@@ -89,9 +89,7 @@ class SimpleStatsTask(BaseTask):
 
     @property
     def _unassigned_hardware_tokens(self):
-        return get_tokens(
-            count=True, tokeninfo={"tokenkind": "hardware"}, assigned=False
-        )
+        return get_tokens(count=True, tokeninfo={"tokenkind": "hardware"}, assigned=False)
 
     @property
     def _assigned_tokens(self):
@@ -101,6 +99,6 @@ class SimpleStatsTask(BaseTask):
         for opt in self.options.keys():
             if is_true(params.get(opt)):
                 log.debug(f"Got param {opt}")
-                write_stats(opt, getattr(self, "_" + opt))
+                write_stats(opt, getattr(self, f"_{opt}"))
 
         return True

@@ -144,9 +144,7 @@ def create_tokenclass_object(db_token):
         try:
             token_object = token_class(db_token)
         except Exception as e:  # pragma: no cover
-            raise TokenAdminError(
-                _("create_tokenclass_object failed:  {0!r}").format(e), id=1609
-            )
+            raise TokenAdminError(_("create_tokenclass_object failed:  {0!r}").format(e), id=1609)
     else:
         log.error(f"type {tokentype!r} not found in tokenclasses")
 
@@ -185,29 +183,19 @@ def _create_token_query(
         # filter for type
         if "*" in tokentype:
             # match with "like"
-            sql_query = sql_query.filter(
-                Token.tokentype.like(tokentype.lower().replace("*", "%"))
-            )
+            sql_query = sql_query.filter(Token.tokentype.like(tokentype.lower().replace("*", "%")))
         else:
             # exact match
-            sql_query = sql_query.filter(
-                func.lower(Token.tokentype) == tokentype.lower()
-            )
+            sql_query = sql_query.filter(func.lower(Token.tokentype) == tokentype.lower())
 
     if description is not None and description.strip("*"):
         # filter for Description
         if "*" in description:
             # match with "like"
-            sql_query = sql_query.filter(
-                func.lower(Token.description).like(
-                    description.lower().replace("*", "%")
-                )
-            )
+            sql_query = sql_query.filter(func.lower(Token.description).like(description.lower().replace("*", "%")))
         else:
             # exact match
-            sql_query = sql_query.filter(
-                func.lower(Token.description) == description.lower()
-            )
+            sql_query = sql_query.filter(func.lower(Token.description) == description.lower())
 
     if assigned is not None:
         # filter if assigned or not
@@ -258,9 +246,7 @@ def _create_token_query(
         # filter for given resolver
         if "*" in resolver:
             # match with "like"
-            sql_query = sql_query.filter(
-                TokenOwner.resolver.like(resolver.replace("*", "%"))
-            )
+            sql_query = sql_query.filter(TokenOwner.resolver.like(resolver.replace("*", "%")))
         else:
             sql_query = sql_query.filter(TokenOwner.resolver == resolver)
 
@@ -268,18 +254,14 @@ def _create_token_query(
         # filter for given userid
         if "*" in userid:
             # match with "like"
-            sql_query = sql_query.filter(
-                TokenOwner.user_id.like(userid.replace("*", "%"))
-            )
+            sql_query = sql_query.filter(TokenOwner.user_id.like(userid.replace("*", "%")))
         else:
             sql_query = sql_query.filter(TokenOwner.user_id == userid)
 
     if serial_wildcard is not None and serial_wildcard.strip("*"):
         # filter for serial
         # match with "like"
-        sql_query = sql_query.filter(
-            Token.serial.like(serial_wildcard.replace("*", "%"))
-        )
+        sql_query = sql_query.filter(Token.serial.like(serial_wildcard.replace("*", "%")))
 
     if serial_exact is not None:
         # exact match for serial
@@ -329,27 +311,17 @@ def _create_token_query(
         # Filter for tokens with the given rollout state
         if "*" in rollout_state:
             # match with "like"
-            sql_query = sql_query.filter(
-                func.lower(Token.rollout_state).like(
-                    rollout_state.lower().replace("*", "%")
-                )
-            )
+            sql_query = sql_query.filter(func.lower(Token.rollout_state).like(rollout_state.lower().replace("*", "%")))
         else:
             # exact match
-            sql_query = sql_query.filter(
-                func.lower(Token.rollout_state) == rollout_state.lower()
-            )
+            sql_query = sql_query.filter(func.lower(Token.rollout_state) == rollout_state.lower())
 
     if tokeninfo is not None:
         # Filter for tokens with token token.info.<key> and token.info.<value>
         if len(tokeninfo) != 1:
-            raise eduMFAError(
-                _("I can only create SQL filters from tokeninfo of length 1.")
-            )
+            raise eduMFAError(_("I can only create SQL filters from tokeninfo of length 1."))
         sql_query = sql_query.filter(TokenInfo.Key == list(tokeninfo)[0])
-        sql_query = sql_query.filter(
-            clob_to_varchar(TokenInfo.Value) == list(tokeninfo.values())[0]
-        )
+        sql_query = sql_query.filter(clob_to_varchar(TokenInfo.Value) == list(tokeninfo.values())[0])
         sql_query = sql_query.filter(TokenInfo.token_id == Token.id)
 
     return sql_query
@@ -632,9 +604,7 @@ def get_tokens_paginate(
                 if userobject:
                     token_dict["username"] = userobject.login
                     token_dict["user_realm"] = userobject.realm
-                    token_dict["user_editable"] = get_resolver_object(
-                        userobject.resolver
-                    ).editable
+                    token_dict["user_editable"] = get_resolver_object(userobject.resolver).editable
             except Exception as exx:
                 log.error(f"User information can not be retrieved: {exx!s}")
                 log.debug(traceback.format_exc())
@@ -907,9 +877,7 @@ def get_otp(serial, current_time=None):
 
 
 @log_with(log)
-def get_multi_otp(
-    serial, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None
-):
+def get_multi_otp(serial, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None):
     """
     This function returns a list of OTP values for the given Token.
     Please note, that the tokentype needs to support this function.
@@ -930,9 +898,7 @@ def get_multi_otp(
     """
     ret = {"result": False}
     tokenobject = get_one_token(serial=serial)
-    log.debug(
-        f"getting multiple otp values for token {tokenobject!r}. curTime={curTime!r}"
-    )
+    log.debug(f"getting multiple otp values for token {tokenobject!r}. curTime={curTime!r}")
 
     res, error, otp_dict = tokenobject.get_multi_otp(
         count=count,
@@ -981,16 +947,12 @@ def get_token_by_otp(token_list, otp="", window=10):
         except Exception as err:
             # A flaw in a single token should not stop privacyidea from finding
             # the right token
-            log.warning(
-                f"error in calculating OTP for token {token.token.serial!s}: {err!s}"
-            )
+            log.warning(f"error in calculating OTP for token {token.token.serial!s}: {err!s}")
 
     if len(result_list) == 1:
         result_token = result_list[0]
     elif result_list:
-        raise TokenAdminError(
-            _("multiple tokens are matching this OTP value!"), id=1200
-        )
+        raise TokenAdminError(_("multiple tokens are matching this OTP value!"), id=1200)
 
     return result_token
 
@@ -1104,9 +1066,7 @@ def import_token(serial, token_dict, tokenrealms=None):
         )
 
     # Imported tokens are usually hardware tokens
-    token = init_token(
-        init_param, user=user_obj, tokenrealms=tokenrealms, tokenkind=TOKENKIND.HARDWARE
-    )
+    token = init_token(init_param, user=user_obj, tokenrealms=tokenrealms, tokenkind=TOKENKIND.HARDWARE)
     if token_dict.get("counter"):
         token.set_otp_count(token_dict.get("counter"))
     if token_dict.get("timeShift"):
@@ -1151,9 +1111,7 @@ def init_token(param, user=None, tokenrealms=None, tokenkind=None):
     tokentypes = get_token_types()
     if tokentype.lower() not in tokentypes:
         log.error(f"type {tokentype!r} not found in tokentypes: {tokentypes!r}")
-        raise TokenAdminError(
-            _("init token failed: unknown token type {0!r}").format(tokentype), id=1610
-        )
+        raise TokenAdminError(_("init token failed: unknown token type {0!r}").format(tokentype), id=1610)
 
     # Check, if a token with this serial already exist
     # create a list of the found tokens
@@ -1169,10 +1127,7 @@ def init_token(param, user=None, tokenrealms=None, tokenkind=None):
         # prevent from changing the token type
         old_typ = db_token.tokentype
         if old_typ.lower() != tokentype.lower():
-            msg = (
-                "token %r already exist with type %r. Can not initialize token with new type %r"
-                % (serial, old_typ, tokentype)
-            )
+            msg = f"token {serial!r} already exist with type {old_typ!r}. Can not initialize token with new type {tokentype!r}"
             log.error(msg)
             raise TokenAdminError(_("initToken failed: {0!s}").format(msg))
 
@@ -1334,9 +1289,7 @@ def assign_token(serial, user, pin=None, encrypt_pin=False, err_message=None):
     old_user = tokenobject.user
     if old_user:
         log.warning(f"token already assigned to user: {old_user!r}")
-        err_message = err_message or _("Token already assigned to user {0!r}").format(
-            old_user
-        )
+        err_message = err_message or _("Token already assigned to user {0!r}").format(old_user)
         raise TokenAdminError(err_message, id=1103)
 
     tokenobject.add_user(user)
@@ -1376,16 +1329,12 @@ def unassign_token(serial, user=None):
 
         try:
             # Delete the tokenowner entry
-            TokenOwner.query.filter(
-                TokenOwner.token_id == tokenobject.token.id
-            ).delete()
+            TokenOwner.query.filter(TokenOwner.token_id == tokenobject.token.id).delete()
             tokenobject.save()
         except Exception as e:  # pragma: no cover
             log.error("update token DB failed")
             raise TokenAdminError(
-                _("Token unassign failed for {0!r}/{1!r}: {2!r}").format(
-                    serial, user, e
-                ),
+                _("Token unassign failed for {0!r}/{1!r}: {2!r}").format(serial, user, e),
                 id=1105,
             )
 
@@ -1463,9 +1412,7 @@ def set_pin(serial, pin, user=None, encrypt_pin=False):
         # check if by accident the wrong parameter (like PIN)
         # is put into the user attribute
         log.warning(f"Parameter user must not be a string: {user!r}")
-        raise ParameterError(
-            _("Parameter user must not be a string: {0!r}").format(user), id=1212
-        )
+        raise ParameterError(_("Parameter user must not be a string: {0!r}").format(user), id=1212)
 
     tokenobject_list = get_tokens_from_serial_or_user(serial=serial, user=user)
 
@@ -2014,9 +1961,7 @@ def lost_token(
         log.warning(f"{err!s}")
         raise TokenAdminError(err, id=2012)
 
-    character_pool = "{0!s}{1!s}{2!s}".format(
-        string.ascii_lowercase, string.ascii_uppercase, string.digits
-    )
+    character_pool = f"{string.ascii_lowercase!s}{string.ascii_uppercase!s}{string.digits!s}"
     if contents != "":
         character_pool = ""
         if "c" in contents:
@@ -2050,9 +1995,7 @@ def lost_token(
         res["pin"] = copy_token_pin(serial, new_serial)
 
         # set validity period
-        end_date = (
-            datetime.datetime.now(tzlocal()) + datetime.timedelta(days=validity)
-        ).strftime(DATE_FORMAT)
+        end_date = (datetime.datetime.now(tzlocal()) + datetime.timedelta(days=validity)).strftime(DATE_FORMAT)
         tokenobject_list = get_tokens(serial=new_serial)
         for tokenobject in tokenobject_list:
             tokenobject.set_validity_period_end(end_date)
@@ -2068,9 +2011,7 @@ def lost_token(
 
 
 @log_with(log)
-def check_realm_pass(
-    realm, passw, options=None, include_types=None, exclude_types=None
-):
+def check_realm_pass(realm, passw, options=None, include_types=None, exclude_types=None):
     """
     This function checks, if the given passw matches any token in the given
     realm. This can be used for the 4-eyes token.
@@ -2111,14 +2052,10 @@ def check_realm_pass(
             tokenobject_list = [tok for tok in tokenobject_list if tok.type not in excl]
 
         if not tokenobject_list:
-            reply_dict["message"] = _(
-                "There is no active and assigned token in this realm, included types: {0!s}, excluded types: {1!s}"
-            ).format(include_types, exclude_types)
+            reply_dict["message"] = _("There is no active and assigned token in this realm, included types: {0!s}, excluded types: {1!s}").format(include_types, exclude_types)
             return False, reply_dict
 
-        return check_token_list(
-            tokenobject_list, passw, options=options, allow_reset_all_tokens=False
-        )
+        return check_token_list(tokenobject_list, passw, options=options, allow_reset_all_tokens=False)
 
 
 @log_with(log)
@@ -2222,9 +2159,7 @@ def create_challenge_without_token(reply_dict, options=None):
     message_list = []
     from edumfa.lib.tokens.webauthntoken import WebAuthnTokenClass
 
-    r_chal, message, transaction_id, challenge_info = (
-        WebAuthnTokenClass.create_usernameless_challenge(options)
-    )
+    r_chal, message, transaction_id, challenge_info = WebAuthnTokenClass.create_usernameless_challenge(options)
     message_list.append(message)
     if r_chal:
         challenge_info = challenge_info or {}
@@ -2240,9 +2175,7 @@ def create_challenge_without_token(reply_dict, options=None):
         reply_dict["message"] = ", ".join(message_list)
         # The "messages" element is needed by some decorators
     reply_dict["messages"] = message_list
-    reply_dict["transaction_ids"] = [
-        chal.get("transaction_id") for chal in reply_dict.get("multi_challenge", [])
-    ]
+    reply_dict["transaction_ids"] = [chal.get("transaction_id") for chal in reply_dict.get("multi_challenge", [])]
 
 
 def create_challenges_from_tokens(token_list, reply_dict, options=None):
@@ -2263,11 +2196,7 @@ def create_challenges_from_tokens(token_list, reply_dict, options=None):
     for token_obj in token_list:
         # Check if the max auth is succeeded
         if token_obj.check_all(message_list):
-            r_chal, message, transaction_id, challenge_info = (
-                token_obj.create_challenge(
-                    transactionid=transaction_id, options=options
-                )
-            )
+            r_chal, message, transaction_id, challenge_info = token_obj.create_challenge(transactionid=transaction_id, options=options)
             # Add the reply to the response
             message_list.append(message)
             if r_chal:
@@ -2285,9 +2214,7 @@ def create_challenges_from_tokens(token_list, reply_dict, options=None):
                 next_passw = token_obj.get_tokeninfo("next_password_change")
                 if next_passw:
                     challenge_info["next_password_change"] = next_passw
-                    challenge_info["password_change"] = token_obj.is_pin_change(
-                        password=True
-                    )
+                    challenge_info["password_change"] = token_obj.is_pin_change(password=True)
                 # FIXME: This is deprecated and should be remove one day
                 reply_dict.update(challenge_info)
                 reply_dict["multi_challenge"].append(challenge_info)
@@ -2296,9 +2223,7 @@ def create_challenges_from_tokens(token_list, reply_dict, options=None):
     # The "messages" element is needed by some decorators
     reply_dict["messages"] = message_list
     # TODO: This line is deprecated: Add the information for the old administrative triggerchallenge
-    reply_dict["transaction_ids"] = [
-        chal.get("transaction_id") for chal in reply_dict.get("multi_challenge", [])
-    ]
+    reply_dict["transaction_ids"] = [chal.get("transaction_id") for chal in reply_dict.get("multi_challenge", [])]
 
 
 def weigh_token_type(token_obj):
@@ -2322,9 +2247,7 @@ def weigh_token_type(token_obj):
 @libpolicy(reset_all_user_tokens)
 @libpolicy(generic_challenge_response_reset_pin)
 @libpolicy(generic_challenge_response_resync)
-def check_token_list(
-    tokenobject_list, passw, user=None, options=None, allow_reset_all_tokens=False
-):
+def check_token_list(tokenobject_list, passw, user=None, options=None, allow_reset_all_tokens=False):
     """
     this takes a list of token objects and tries to find the matching token
     for the given passw. It also tests,
@@ -2366,31 +2289,21 @@ def check_token_list(
 
     # Remove locked tokens from tokenobject_list
     if len(tokenobject_list) > 0:
-        tokenobject_list = [
-            token for token in tokenobject_list if not token.is_revoked()
-        ]
+        tokenobject_list = [token for token in tokenobject_list if not token.is_revoked()]
 
         if len(tokenobject_list) == 0:
             # If there is no unlocked token left.
-            raise TokenAdminError(
-                _("This action is not possible, since the token is locked"), id=1007
-            )
+            raise TokenAdminError(_("This action is not possible, since the token is locked"), id=1007)
 
     # Remove certain disabled tokens from tokenobject_list
     if len(tokenobject_list) > 0:
-        tokenobject_list = [
-            token for token in tokenobject_list if token.use_for_authentication(options)
-        ]
+        tokenobject_list = [token for token in tokenobject_list if token.use_for_authentication(options)]
 
     for tokenobject in sorted(tokenobject_list, key=weigh_token_type):
         if log.isEnabledFor(logging.DEBUG):
             # Avoid a SQL query triggered by ``tokenobject.user`` in case
             # the log level is not DEBUG
-            log.debug(
-                "Found user with loginId {0!r}: {1!r}".format(
-                    tokenobject.user, tokenobject.get_serial()
-                )
-            )
+            log.debug(f"Found user with loginId {tokenobject.user!r}: {tokenobject.get_serial()!r}")
 
         if tokenobject.is_challenge_response(passw, user=user, options=options):
             # This is a challenge response and it still has a challenge DB entry
@@ -2409,9 +2322,7 @@ def check_token_list(
                 # pass the length of the valid_token_list to ``authenticate`` so that
                 # the push token can react accordingly
                 options["valid_token_num"] = len(valid_token_list)
-                pin_match, otp_count, repl = tokenobject.authenticate(
-                    passw, user, options=options
-                )
+                pin_match, otp_count, repl = tokenobject.authenticate(passw, user, options=options)
             except TokenAdminError as tae:
                 # Token is locked
                 pin_match = False
@@ -2495,9 +2406,7 @@ def check_token_list(
             next_passw = valid_token_list[0].get_tokeninfo("next_password_change")
             if next_passw:
                 reply_dict["next_password_change"] = next_passw
-                reply_dict["password_change"] = valid_token_list[0].is_pin_change(
-                    password=True
-                )
+                reply_dict["password_change"] = valid_token_list[0].is_pin_change(password=True)
         reply_dict["message"] = ", ".join(message_list)
 
     elif challenge_response_token_list:
@@ -2511,15 +2420,9 @@ def check_token_list(
                 matching_challenge = True
                 messages = []
                 if not tokenobject.is_fit_for_challenge(messages, options=options):
-                    messages.insert(
-                        0, _("Challenge matches, but token is not fit for challenge")
-                    )
+                    messages.insert(0, _("Challenge matches, but token is not fit for challenge"))
                     reply_dict["message"] = ". ".join(messages)
-                    log.info(
-                        "Received a valid response to a challenge for a non-fit token {0!s}. {1!s}".format(
-                            tokenobject.token.serial, reply_dict["message"]
-                        )
-                    )
+                    log.info(f"Received a valid response to a challenge for a non-fit token {tokenobject.token.serial!s}. {reply_dict['message']!s}")
                 else:
                     # Challenge matches, token is active and token is fit for challenge
                     res = True
@@ -2534,16 +2437,12 @@ def check_token_list(
                     next_passw = tokenobject.get_tokeninfo("next_password_change")
                     if next_passw:
                         reply_dict["next_password_change"] = next_passw
-                        reply_dict["password_change"] = tokenobject.is_pin_change(
-                            password=True
-                        )
+                        reply_dict["password_change"] = tokenobject.is_pin_change(password=True)
                     tokenobject.challenge_janitor()
                     if tokenobject.has_further_challenge(options):
                         # The token creates further challenges, so create the new challenge
                         # and new transaction_id
-                        create_challenges_from_tokens(
-                            [tokenobject], reply_dict, options
-                        )
+                        create_challenges_from_tokens([tokenobject], reply_dict, options)
                         further_challenge = True
                         res = False
                     else:
@@ -2554,12 +2453,8 @@ def check_token_list(
 
                     # clean up all challenges from this and other tokens. I.e.
                     # all challenges with this very transaction_id!
-                    transaction_id = options.get("transaction_id") or options.get(
-                        "state"
-                    )
-                    Challenge.query.filter(
-                        Challenge.transaction_id == "" + transaction_id
-                    ).delete()
+                    transaction_id = options.get("transaction_id") or options.get("state")
+                    Challenge.query.filter(Challenge.transaction_id == f"{transaction_id}").delete()
                     # We have one successful authentication, so we bail out
                     break
 
@@ -2572,20 +2467,14 @@ def check_token_list(
             if not matching_challenge:
                 if len(challenge_response_token_list) == 1:
                     reply_dict["serial"] = challenge_response_token_list[0].token.serial
-                    reply_dict["type"] = challenge_response_token_list[
-                        0
-                    ].token.tokentype
+                    reply_dict["type"] = challenge_response_token_list[0].token.tokentype
                     reply_dict["message"] = _("Response did not match the challenge.")
                 else:
-                    reply_dict["message"] = _(
-                        "Response did not match for {0!s} tokens."
-                    ).format(len(challenge_response_token_list))
+                    reply_dict["message"] = _("Response did not match for {0!s} tokens.").format(len(challenge_response_token_list))
 
     elif challenge_request_token_list:
         # This is the initial REQUEST of a challenge response token
-        active_challenge_token = [
-            t for t in challenge_request_token_list if t.token.active
-        ]
+        active_challenge_token = [t for t in challenge_request_token_list if t.token.active]
         if len(active_challenge_token) == 0:
             reply_dict["message"] = _("No active challenge response token found")
         else:
@@ -2601,9 +2490,7 @@ def check_token_list(
         # So we increase the failcounter. Return failure.
         for tokenobject in pin_matching_token_list:
             tokenobject.inc_failcount()
-            if get_from_config(
-                SYSCONF.RESET_FAILCOUNTER_ON_PIN_ONLY, False, return_bool=True
-            ):
+            if get_from_config(SYSCONF.RESET_FAILCOUNTER_ON_PIN_ONLY, False, return_bool=True):
                 tokenobject.check_reset_failcount()
             reply_dict["message"] = _("wrong otp value")
             if len(pin_matching_token_list) == 1:
@@ -2661,9 +2548,7 @@ def get_dynamic_policy_definitions(scope=None):
     for ttype in get_token_types():
         pol[SCOPE.ADMIN][f"enroll{ttype.upper()!s}"] = {
             "type": "bool",
-            "desc": _("Admin is allowed to initialize {0!s} tokens.").format(
-                ttype.upper()
-            ),
+            "desc": _("Admin is allowed to initialize {0!s} tokens.").format(ttype.upper()),
             "mainmenu": [MAIN_MENU.TOKENS],
             "group": GROUP.ENROLLMENT,
         }
@@ -2672,9 +2557,7 @@ def get_dynamic_policy_definitions(scope=None):
         if "enroll" in conf:
             pol[SCOPE.USER][f"enroll{ttype.upper()!s}"] = {
                 "type": "bool",
-                "desc": _("The user is allowed to enroll a {0!s} token.").format(
-                    ttype.upper()
-                ),
+                "desc": _("The user is allowed to enroll a {0!s} token.").format(ttype.upper()),
                 "mainmenu": [MAIN_MENU.TOKENS],
                 "group": GROUP.ENROLLMENT,
             }
@@ -2706,24 +2589,18 @@ def get_dynamic_policy_definitions(scope=None):
             pol[pin_scope][f"{ttype.lower()!s}_otp_pin_maxlength"] = {
                 "type": "int",
                 "value": list(range(0, 32)),
-                "desc": _(
-                    "Set the maximum allowed PIN length of the {0!s} token."
-                ).format(ttype.upper()),
+                "desc": _("Set the maximum allowed PIN length of the {0!s} token.").format(ttype.upper()),
                 "group": GROUP.PIN,
             }
             pol[pin_scope][f"{ttype.lower()!s}_otp_pin_minlength"] = {
                 "type": "int",
                 "value": list(range(0, 32)),
-                "desc": _(
-                    "Set the minimum required PIN length of the {0!s} token."
-                ).format(ttype.upper()),
+                "desc": _("Set the minimum required PIN length of the {0!s} token.").format(ttype.upper()),
                 "group": GROUP.PIN,
             }
             pol[pin_scope][f"{ttype.lower()!s}_otp_pin_contents"] = {
                 "type": "str",
-                "desc": _(
-                    "Specifiy the required PIN contents of the {0!s} token. (c)haracters, (n)umeric, (s)pecial, (o)thers. [+/-]!"
-                ).format(ttype.upper()),
+                "desc": _("Specifiy the required PIN contents of the {0!s} token. (c)haracters, (n)umeric, (s)pecial, (o)thers. [+/-]!").format(ttype.upper()),
                 "group": GROUP.PIN,
             }
 

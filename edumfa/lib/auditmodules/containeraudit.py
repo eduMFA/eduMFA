@@ -55,17 +55,10 @@ class Audit(AuditBase):
         write_conf = self.config.get("EDUMFA_AUDIT_CONTAINER_WRITE")
         read_conf = self.config.get("EDUMFA_AUDIT_CONTAINER_READ")
         # Initialize all modules
-        self.write_modules = [
-            get_module_class(audit_module, "Audit", "log")(config, startdate)
-            for audit_module in write_conf
-        ]
-        self.read_module = get_module_class(read_conf, "Audit", "log")(
-            config, startdate
-        )
+        self.write_modules = [get_module_class(audit_module, "Audit", "log")(config, startdate) for audit_module in write_conf]
+        self.read_module = get_module_class(read_conf, "Audit", "log")(config, startdate)
         if not self.read_module.is_readable:
-            log.warning(
-                f"The specified EDUMFA_AUDIT_CONTAINER_READ {self.read_module!s} is not readable."
-            )
+            log.warning(f"The specified EDUMFA_AUDIT_CONTAINER_READ {self.read_module!s} is not readable.")
 
     @property
     def has_data(self):
@@ -92,9 +85,7 @@ class Audit(AuditBase):
         for module in self.write_modules:
             module.add_policy(policyname)
 
-    def search(
-        self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None
-    ):
+    def search(self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None):
         """
         Call the search method for the one readable module
         """
@@ -110,25 +101,19 @@ class Audit(AuditBase):
         """
         Call the count method for the one readable module
         """
-        return self.read_module.get_count(
-            search_dict, timedelta=timedelta, success=success
-        )
+        return self.read_module.get_count(search_dict, timedelta=timedelta, success=success)
 
     def csv_generator(self, param=None, user=None, timelimit=None):
         """
         Call the csv_generator method for the one readable module
         """
-        return self.read_module.csv_generator(
-            param=param, user=user, timelimit=timelimit
-        )
+        return self.read_module.csv_generator(param=param, user=user, timelimit=timelimit)
 
     def get_total(self, param, AND=True, display_error=True, timelimit=None):
         """
         Call the total method for the one readable module
         """
-        return self.read_module.get_total(
-            param, AND=AND, display_error=display_error, timelimit=timelimit
-        )
+        return self.read_module.get_total(param, AND=AND, display_error=display_error, timelimit=timelimit)
 
     def finalize_log(self):
         """

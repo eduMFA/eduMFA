@@ -125,9 +125,7 @@ def vasco_verify(data, params, password, challenge=b"\0" * 16):
     # Construct actual buffers in case the library writes to ``password`` or ``challenge``
     password_buffer = create_string_buffer(password)
     challenge_buffer = create_string_buffer(challenge)
-    res = vasco_dll.AAL2VerifyPassword(
-        byref(data), byref(params), password_buffer, challenge_buffer
-    )
+    res = vasco_dll.AAL2VerifyPassword(byref(data), byref(params), password_buffer, challenge_buffer)
 
     return res, data
 

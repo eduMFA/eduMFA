@@ -118,10 +118,7 @@ def check_time_in_range(time_range, check_time=None):
                 time_end = dt_time(te[0])
 
             # check the day and the time
-            if (
-                dow_index.get(dow_start) <= check_day <= dow_index.get(dow_end)
-                and time_start <= check_hour <= time_end
-            ):
+            if dow_index.get(dow_start) <= check_day <= dow_index.get(dow_end) and time_start <= check_hour <= time_end:
                 time_match = True
     except ValueError:
         log.error("Wrong time range format: <dow>-<dow>:<hh:mm>-<hh:mm>")
@@ -371,9 +368,7 @@ def sanity_name_check(name, name_exp=r"^[A-Za-z0-9_\-\.]+$"):
     :return: True, otherwise raises an exception
     """
     if re.match(name_exp, name) is None:
-        raise Exception(
-            "non conformant characters in the name: %r (not in %s)" % (name, name_exp)
-        )
+        raise Exception(f"non conformant characters in the name: {name!r} (not in {name_exp})")
     return True
 
 
@@ -415,11 +410,7 @@ def get_data_from_params(params, exclude_params, config_description, module, typ
                 if k in config_description:
                     types[k] = config_description.get(k)
                 else:
-                    log.warning(
-                        "the passed key '{0!s}' is not a parameter for the {1!s} type '{2!s}'".format(
-                            k, module, type
-                        )
-                    )
+                    log.warning(f"the passed key '{k!s}' is not a parameter for the {module!s} type '{type!s}'")
 
     # Check that there is no type or desc without the data itself.
     # i.e. if there is a type.BindPW=password, then there must be a
@@ -608,11 +599,7 @@ def check_proxy(path_to_client, proxy_settings):
     #   as the proxy path does not match completely because 10.2.3.4 is not allowed to map to 192.168.1.1.
     # After having processed all paths in the proxy settings, we return the "deepest" IP from ``path_to_client`` that
     # is allowed according to any proxy path of the proxy settings.
-    log.debug(
-        "Determining the mapped IP from {!r} given the proxy settings {!r} ...".format(
-            path_to_client, proxy_settings
-        )
-    )
+    log.debug(f"Determining the mapped IP from {path_to_client!r} given the proxy settings {proxy_settings!r} ...")
     max_idx = 0
     for proxy_path in proxy_dict:
         log.debug(f"Proxy path: {proxy_path!r}")
@@ -624,15 +611,11 @@ def check_proxy(path_to_client, proxy_settings):
         current_max_idx = 0
         # If len(path_to_client) > len(proxy_path), ``zip`` cuts the lists to the same length.
         # Hence, we ignore any additional proxy hops that the client may send, which is what we want.
-        for idx, (proxy_path_ip, client_path_ip) in enumerate(
-            zip(proxy_path, path_to_client)
-        ):
+        for idx, (proxy_path_ip, client_path_ip) in enumerate(zip(proxy_path, path_to_client)):
             # We check if the network in the proxy path contains the IP from path_to_client.
             if client_path_ip not in proxy_path_ip:
                 # If not, the current proxy path does not match and we do not have to keep checking it.
-                log.debug(
-                    f"... ignored because {client_path_ip!r} is not in subnet {proxy_path_ip!r}"
-                )
+                log.debug(f"... ignored because {client_path_ip!r} is not in subnet {proxy_path_ip!r}")
                 break
             else:
                 current_max_idx = idx
@@ -640,9 +623,7 @@ def check_proxy(path_to_client, proxy_settings):
             # This branch is only executed if we did *not* break out of the loop. This means that the proxy path
             # completely matches the path to client, so the mapped client IP is a viable candidate.
             if current_max_idx >= max_idx:
-                log.debug(
-                    f"... setting new candidate for client IP: {path_to_client[current_max_idx]!r}"
-                )
+                log.debug(f"... setting new candidate for client IP: {path_to_client[current_max_idx]!r}")
             max_idx = max(max_idx, current_max_idx)
 
     log.debug(f"Determined mapped client IP: {path_to_client[max_idx]!r}")
@@ -680,19 +661,12 @@ def get_client_ip(request, proxy_settings):
             path_to_client = [request.remote_addr]
         else:
             # This is the case if a X-Forwarded-For header is provided.
-            path_to_client = [request.remote_addr] + list(
-                reversed(request.access_route)
-            )
+            path_to_client = [request.remote_addr] + list(reversed(request.access_route))
         # A possible ``client`` parameter is appended to the *end* of the path to client.
-        if (
-            not hasattr(request, "blueprint")
-            or request.blueprint in ["validate_blueprint", "ttype_blueprint", "jwtauth"]
-        ) and "client" in request.all_data:
+        if (not hasattr(request, "blueprint") or request.blueprint in ["validate_blueprint", "ttype_blueprint", "jwtauth"]) and "client" in request.all_data:
             path_to_client.append(request.all_data["client"])
         # We now refer to ``check_proxy`` to extract the mapped IP from ``path_to_client``.
-        return str(
-            check_proxy([IPAddress(ip) for ip in path_to_client], proxy_settings)
-        )
+        return str(check_proxy([IPAddress(ip) for ip in path_to_client], proxy_settings))
     else:
         # If no proxy settings are defined, we do not map any IPs anyway.
         return request.remote_addr
@@ -916,7 +890,7 @@ def int_to_hex(serial):
     serial_hex = hex(int(serial)).upper()
     serial_hex = serial_hex.split("X")[1]
     if len(serial_hex) % 2 != 0:
-        serial_hex = "0" + serial_hex
+        serial_hex = f"0{serial_hex}"
     return serial_hex
 
 
@@ -940,9 +914,7 @@ def parse_legacy_time(ts, return_date=False):
     d = parse_date_string(ts)
     if not d.tzinfo:
         # we need to reparse the string
-        d = parse_date_string(ts, dayfirst=re.match(r"^\d\d[/\.]", ts)).replace(
-            tzinfo=tzlocal()
-        )
+        d = parse_date_string(ts, dayfirst=re.match(r"^\d\d[/\.]", ts)).replace(tzinfo=tzlocal())
     if return_date:
         return d
     else:
@@ -1104,9 +1076,7 @@ def fetch_one_resource(table, **query):
     try:
         return table.query.filter_by(**query).one()
     except sqlalchemy.orm.exc.NoResultFound:
-        raise ResourceNotFoundError(
-            f"The requested {table.__name__!s} could not be found."
-        )
+        raise ResourceNotFoundError(f"The requested {table.__name__!s} could not be found.")
 
 
 def truncate_comma_list(data, max_len):
@@ -1218,7 +1188,7 @@ def check_pin_contents(pin, policy):
 
     # check requirements
     for str in charlists_dict["requirements"]:
-        if not re.search(re.compile("[" + re.escape(str) + "]"), pin):
+        if not re.search(re.compile(f"[{re.escape(str)}]"), pin):
             ret = False
             comment.append(f"Missing character in PIN: {str!s}")
 
@@ -1250,11 +1220,7 @@ def get_module_class(package_name, class_name, check_method=None):
     klass = getattr(mod, class_name)
     log.debug(f"klass: {klass!s}")
     if check_method and not hasattr(klass, check_method):
-        raise NameError(
-            "Class AttributeError: {0}.{1} instance has no attribute '{2}'".format(
-                package_name, class_name, check_method
-            )
-        )
+        raise NameError(f"Class AttributeError: {package_name}.{class_name} instance has no attribute '{check_method}'")
     return klass
 
 
@@ -1337,19 +1303,11 @@ def split_pin_pass(passw, otplen, prependpin):
     if prependpin:
         pin = passw[0:-otplen]
         otpval = passw[-otplen:]
-        log.debug(
-            "PIN prepended. PIN length is {0!s}, OTP length is {0!s}.".format(
-                len(pin), len(otpval)
-            )
-        )
+        log.debug("PIN prepended. PIN length is {0!s}, OTP length is {0!s}.".format(len(pin), len(otpval)))
     else:
         pin = passw[otplen:]
         otpval = passw[0:otplen]
-        log.debug(
-            "PIN appended. PIN length is {0!s}, OTP length is {0!s}.".format(
-                len(pin), len(otpval)
-            )
-        )
+        log.debug("PIN appended. PIN length is {0!s}, OTP length is {0!s}.".format(len(pin), len(otpval)))
     return pin, otpval
 
 
@@ -1422,16 +1380,8 @@ def create_tag_dict(
         challenge=challenge if challenge else "",
         result_value=result_value if result_value else "",
         result_status=result_status if result_status else "",
-        request_value=request.all_data.get("value")
-        if request
-        and hasattr(request, "all_data")
-        and request.all_data.get("value") is not None
-        else "",
-        token_realms=request.all_data.get("realms")
-        if request
-        and hasattr(request, "all_data")
-        and request.all_data.get("realms") is not None
-        else "",
+        request_value=request.all_data.get("value") if request and hasattr(request, "all_data") and request.all_data.get("value") is not None else "",
+        token_realms=request.all_data.get("realms") if request and hasattr(request, "all_data") and request.all_data.get("realms") is not None else "",
     )
     if escape_html:
         escaped_tags = {}
@@ -1451,9 +1401,7 @@ def check_serial_valid(serial):
     :return: True or Exception
     """
     if not re.match(ALLOWED_SERIAL, serial):
-        raise ParameterError(
-            f"Invalid serial number. Must comply to {ALLOWED_SERIAL!s}."
-        )
+        raise ParameterError(f"Invalid serial number. Must comply to {ALLOWED_SERIAL!s}.")
     return True
 
 
@@ -1533,9 +1481,7 @@ def parse_string_to_dict(s, split_char=":"):
     return d
 
 
-def replace_function_event_handler(
-    text, token_serial=None, tokenowner=None, logged_in_user=None
-):
+def replace_function_event_handler(text, token_serial=None, tokenowner=None, logged_in_user=None):
     if logged_in_user is not None:
         login = logged_in_user.login
         realm = logged_in_user.realm
@@ -1569,9 +1515,7 @@ def replace_function_event_handler(
         new_text = text.format(**attributes)
         return new_text
     except (ValueError, KeyError) as err:
-        log.warning(
-            f"Unable to replace placeholder: ({err!s})! Please check the webhooks data option."
-        )
+        log.warning(f"Unable to replace placeholder: ({err!s})! Please check the webhooks data option.")
         return text
 
 

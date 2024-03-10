@@ -93,15 +93,11 @@ def get_clientapplication(ip=None, clienttype=None, group_by="clienttype"):
     if clienttype:
         sql_query = sql_query.filter(ClientApplication.clienttype == clienttype)
 
-    sql_query = sql_query.group_by(
-        ClientApplication.ip, ClientApplication.hostname, ClientApplication.clienttype
-    )
+    sql_query = sql_query.group_by(ClientApplication.ip, ClientApplication.hostname, ClientApplication.clienttype)
 
     for row in sql_query.all():
         if group_by.lower() == "clienttype":
-            clients.setdefault(row.clienttype, []).append(
-                {"ip": row.ip, "hostname": row.hostname, "lastseen": row.max_lastseen}
-            )
+            clients.setdefault(row.clienttype, []).append({"ip": row.ip, "hostname": row.hostname, "lastseen": row.max_lastseen})
         else:
             clients.setdefault(row.ip, []).append(
                 {

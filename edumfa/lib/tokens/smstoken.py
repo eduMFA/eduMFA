@@ -187,9 +187,7 @@ class SmsTokenClass(HotpTokenClass):
         res = {
             "type": "sms",
             "title": _("SMS Token"),
-            "description": _(
-                "SMS: Send a One Time Password to the users mobile phone."
-            ),
+            "description": _("SMS: Send a One Time Password to the users mobile phone."),
             "user": ["enroll"],
             # This tokentype is enrollable in the UI for...
             "ui_enroll": ["admin", "user"],
@@ -197,36 +195,26 @@ class SmsTokenClass(HotpTokenClass):
                 SCOPE.AUTH: {
                     SMSACTION.SMSTEXT: {
                         "type": "str",
-                        "desc": _(
-                            "The text that will be send via SMS for an SMS token. Use tags like {otp} and {serial} as parameters."
-                        ),
+                        "desc": _("The text that will be send via SMS for an SMS token. Use tags like {otp} and {serial} as parameters."),
                     },
                     SMSACTION.SMSPOSTCHECKTEXT: {
                         "type": "str",
-                        "desc": _(
-                            "The message that will be submitted for an SMS token on post check action. Use tags like {otp} and {serial} as parameters."
-                        ),
+                        "desc": _("The message that will be submitted for an SMS token on post check action. Use tags like {otp} and {serial} as parameters."),
                     },
                     SMSACTION.SMSAUTO: {
                         "type": "bool",
-                        "desc": _(
-                            "If set, a new SMS OTP will be sent after successful authentication with one SMS OTP."
-                        ),
+                        "desc": _("If set, a new SMS OTP will be sent after successful authentication with one SMS OTP."),
                     },
                     ACTION.CHALLENGETEXT: {
                         "type": "str",
-                        "desc": _(
-                            "Use an alternate challenge text for telling the user to enter the code from the SMS."
-                        ),
+                        "desc": _("Use an alternate challenge text for telling the user to enter the code from the SMS."),
                     },
                 },
                 SCOPE.ADMIN: {
                     SMSACTION.GATEWAYS: {
                         "type": "str",
                         "desc": "{0!s} ({1!s})".format(
-                            _(
-                                "Choose the gateways the administrator is allowed to set."
-                            ),
+                            _("Choose the gateways the administrator is allowed to set."),
                             " ".join(sms_gateways),
                         ),
                     }
@@ -243,16 +231,12 @@ class SmsTokenClass(HotpTokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of SMS tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of SMS tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active SMS tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active SMS tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 },
@@ -327,7 +311,7 @@ class SmsTokenClass(HotpTokenClass):
         options = options or {}
         return_message = get_action_values_from_options(
             SCOPE.AUTH,
-            "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+            f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}",
             options,
         ) or _("Enter the OTP from the SMS:")
         reply_dict = {"attributes": {"state": transactionid}}
@@ -345,9 +329,7 @@ class SmsTokenClass(HotpTokenClass):
                 if options.get("session") != CHALLENGE_SESSION.ENROLLMENT:
                     self.inc_otp_counter(counter, reset=False)
                     message_template = self._get_sms_text(options)
-                    success, sent_message = self._send_sms(
-                        message=message_template, options=options
-                    )
+                    success, sent_message = self._send_sms(message=message_template, options=options)
 
                     # Create the challenge in the database
                     if is_true(get_from_config("sms.concurrent_challenges")):
@@ -364,7 +346,7 @@ class SmsTokenClass(HotpTokenClass):
                 transactionid = transactionid or db_challenge.transaction_id
             except Exception as e:
                 info = _("The PIN was correct, but the SMS could not be sent!")
-                log.warning(info + f" ({e!r})")
+                log.warning(f"{info} ({e!r})")
                 log.debug(f"{traceback.format_exc()!s}")
                 return_message = info
                 if is_true(options.get("exception")):
@@ -446,9 +428,7 @@ class SmsTokenClass(HotpTokenClass):
 
         # First we try to get the new SMS gateway config style
         # The token specific identifier has priority over the system wide identifier
-        sms_gateway_identifier = self.get_tokeninfo(
-            "sms.identifier"
-        ) or get_from_config("sms.identifier")
+        sms_gateway_identifier = self.get_tokeninfo("sms.identifier") or get_from_config("sms.identifier")
 
         if sms_gateway_identifier:
             # New style
@@ -483,9 +463,7 @@ class SmsTokenClass(HotpTokenClass):
                 uid = User.login
             if not uid:
                 if sms_gateway_identifier:
-                    uid_attribute_name = sms.smsgateway.option_dict.get(
-                        "UID_TOKENINFO_ATTRIBUTE"
-                    )
+                    uid_attribute_name = sms.smsgateway.option_dict.get("UID_TOKENINFO_ATTRIBUTE")
                 else:
                     uid_attribute_name = sms.config.get("UID_TOKENINFO_ATTRIBUTE")
                 if uid_attribute_name:
@@ -502,9 +480,7 @@ class SmsTokenClass(HotpTokenClass):
             else:
                 phone = self.get_tokeninfo("phone")
             if not phone:  # pragma: no cover
-                log.warning(
-                    f"Token {self.token.serial!s} does not have a phone number!"
-                )
+                log.warning(f"Token {self.token.serial!s} does not have a phone number!")
             destination = phone
 
         if options.get("smstoken_post_check"):
@@ -610,9 +586,7 @@ class SmsTokenClass(HotpTokenClass):
         g = options.get("g")
         user_object = options.get("user")
         if g:
-            autosmspol = Match.user(
-                g, scope=SCOPE.AUTH, action=SMSACTION.SMSAUTO, user_object=user_object
-            ).policies()
+            autosmspol = Match.user(g, scope=SCOPE.AUTH, action=SMSACTION.SMSAUTO, user_object=user_object).policies()
             autosms = len(autosmspol) >= 1
 
         return autosms
@@ -646,17 +620,13 @@ class SmsTokenClass(HotpTokenClass):
         from edumfa.lib.token import init_token
         from edumfa.lib.tokenclass import CLIENTMODE
 
-        token_obj = init_token(
-            {"type": cls.get_class_type(), "dynamic_phone": 1}, user=user_obj
-        )
+        token_obj = init_token({"type": cls.get_class_type(), "dynamic_phone": 1}, user=user_obj)
         content.get("result")["value"] = False
         content.get("result")["authentication"] = "CHALLENGE"
 
         detail = content.setdefault("detail", {})
         # Create a challenge!
-        c = token_obj.create_challenge(
-            options={"session": CHALLENGE_SESSION.ENROLLMENT}
-        )
+        c = token_obj.create_challenge(options={"session": CHALLENGE_SESSION.ENROLLMENT})
         # get details of token
         init_details = token_obj.get_init_detail()
         detail["transaction_ids"] = [c[2]]

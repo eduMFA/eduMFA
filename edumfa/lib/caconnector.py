@@ -69,9 +69,7 @@ def save_caconnector(params):
     sanity_name_check(connector_name)
     # check the type
     if connector_type not in get_caconnector_types():
-        raise Exception(
-            f"connector type : {connector_type!s} not in {get_caconnector_types()!s}"
-        )
+        raise Exception(f"connector type : {connector_type!s} not in {get_caconnector_types()!s}")
 
     # check the name
     connectors = get_caconnector_list(filter_caconnector_name=connector_name)
@@ -81,9 +79,7 @@ def save_caconnector(params):
             # the CA Connector config
             update_connector = True
         else:  # pragma: no cover
-            raise Exception(
-                f"CA Connector with similar name and other type already exists: {connector_name}"
-            )
+            raise Exception(f"CA Connector with similar name and other type already exists: {connector_name}")
 
     # create a dictionary for the ResolverConfig
     connector_config = get_caconnector_config_description(connector_type)
@@ -99,13 +95,7 @@ def save_caconnector(params):
 
     # Everything passed. So lets actually create the CA Connector in the DB
     if update_connector:
-        connector_id = (
-            CAConnector.query.filter(
-                func.lower(CAConnector.name) == connector_name.lower()
-            )
-            .first()
-            .id
-        )
+        connector_id = CAConnector.query.filter(func.lower(CAConnector.name) == connector_name.lower()).first().id
     else:
         db_connector = CAConnector(params.get("caconnector"), params.get("type"))
         connector_id = db_connector.save()
@@ -123,9 +113,7 @@ def save_caconnector(params):
     return connector_id
 
 
-def get_caconnector_list(
-    filter_caconnector_type=None, filter_caconnector_name=None, return_config=True
-):
+def get_caconnector_list(filter_caconnector_type=None, filter_caconnector_name=None, return_config=True):
     """
     Gets the list of configured CA Connectors from the database
 
@@ -205,9 +193,7 @@ def get_caconnector_config(connector_name):
     :return: the config of the CA connector
     :rtype: dict
     """
-    conn = get_caconnector_list(
-        filter_caconnector_name=connector_name, return_config=True
-    )
+    conn = get_caconnector_list(filter_caconnector_name=connector_name, return_config=True)
     return conn[0].get("data", {})
 
 
@@ -281,9 +267,7 @@ def get_caconnector_object(connector_name):
     """
     c_obj = None
 
-    connectors = CAConnector.query.filter(
-        func.lower(CAConnector.name) == connector_name.lower()
-    ).all()
+    connectors = CAConnector.query.filter(func.lower(CAConnector.name) == connector_name.lower()).all()
     for conn in connectors:
         c_obj_class = get_caconnector_class(conn.catype)
 
@@ -303,9 +287,7 @@ def get_caconnector_object(connector_name):
                 c_obj.set_config(connector_config)
 
     if not c_obj:
-        log.warning(
-            f"A CA connector with the name {connector_name!s} could not be found!"
-        )
+        log.warning(f"A CA connector with the name {connector_name!s} could not be found!")
 
     return c_obj
 
@@ -329,11 +311,7 @@ def import_caconnector(data, name=None):
         # also the export saves the caconnector configuration in a data dict
         res_data.update(res_data.pop("data"))
         rid = save_caconnector(res_data)
-        log.info(
-            'Import of caconnector "{0!s}" finished, id: {1!s}'.format(
-                res_data["caconnector"], rid
-            )
-        )
+        log.info(f"Import of caconnector \"{res_data['caconnector']!s}\" finished, id: {rid!s}")
 
 
 def get_all_caconnectors():

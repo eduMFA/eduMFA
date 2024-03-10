@@ -43,9 +43,7 @@ def get_machine_application_class_list():
     # We add each python module in this directory to the class list
     path = os.path.dirname(edumfa.lib.applications.__file__)
     files = os.listdir(path)
-    modules = [
-        f.split(".")[0] for f in files if f.endswith(".py") and f != "__init__.py"
-    ]
+    modules = [f.split(".")[0] for f in files if f.endswith(".py") and f != "__init__.py"]
     for module in modules:
         class_list.append(f"edumfa.lib.applications.{module!s}.MachineApplication")
     return class_list
@@ -93,9 +91,7 @@ class MachineApplication(object):
         return cls.application_name
 
     @staticmethod
-    def get_authentication_item(
-        token_type, serial, challenge=None, options=None, filter_param=None
-    ):
+    def get_authentication_item(token_type, serial, challenge=None, options=None, filter_param=None):
         """
         returns a dictionary of authentication items
         like public keys, challenges, responses...
@@ -117,9 +113,7 @@ class MachineApplication(object):
 
 
 @log_with(log)
-def get_auth_item(
-    application, token_type, serial, challenge=None, options=None, filter_param=None
-):
+def get_auth_item(application, token_type, serial, challenge=None, options=None, filter_param=None):
     options = options or {}
     # application_module from application
     class_dict = get_machine_application_class_dict()
@@ -160,9 +154,7 @@ def get_application_types():
     module_dir = os.path.dirname(current_module.__file__)
 
     # load all modules and get their application names
-    files = [
-        os.path.basename(f)[:-3] for f in os.listdir(module_dir) if f.endswith(".py")
-    ]
+    files = [os.path.basename(f)[:-3] for f in os.listdir(module_dir) if f.endswith(".py")]
     for f in files:
         if f not in ["base", "__init__"]:
             try:

@@ -53,9 +53,7 @@ def _get_monitoring():
     # check if the monitoring object is not yet in this request_store
     if "monitoring_object" not in store:
         config = get_app_config()
-        monitoring_module = config.get(
-            "EDUMFA_MONITORING_MODULE", "edumfa.lib.monitoringmodules.sqlstats"
-        )
+        monitoring_module = config.get("EDUMFA_MONITORING_MODULE", "edumfa.lib.monitoringmodules.sqlstats")
         monitoring = get_module_class(monitoring_module, "Monitoring")(config)
         store["monitoring_object"] = monitoring
     return store.get("monitoring_object")

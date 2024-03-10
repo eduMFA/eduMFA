@@ -105,9 +105,7 @@ class QuestionnaireTokenClass(TokenClass):
                 SCOPE.AUTH: {
                     QUESTACTION.NUM_QUESTIONS: {
                         "type": "int",
-                        "desc": _(
-                            "The user has to answer this number of questions during authentication."
-                        ),
+                        "desc": _("The user has to answer this number of questions during authentication."),
                         "group": GROUP.TOKEN,
                         "value": list(range(1, 31)),
                     }
@@ -115,16 +113,12 @@ class QuestionnaireTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of questionaire tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of questionaire tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active questionaire tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active questionaire tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 },
@@ -167,9 +161,7 @@ class QuestionnaireTokenClass(TokenClass):
             questions = j_questions
         num_answers = get_from_config("question.num_answers", DEFAULT_NUM_ANSWERS)
         if len(questions) < int(num_answers):
-            raise TokenAdminError(
-                _("You need to provide at least %s answers.") % num_answers
-            )
+            raise TokenAdminError(_("You need to provide at least %s answers.") % num_answers)
         # Save all questions and answers and encrypt them
         for question, answer in questions.items():
             self.add_tokeninfo(question, answer, value_type="password")
@@ -222,9 +214,7 @@ class QuestionnaireTokenClass(TokenClass):
         questions = {}
 
         # Get an integer list of the already used questions
-        used_questions = [
-            int(x) for x in options.get("data", "").split(",") if options.get("data")
-        ]
+        used_questions = [int(x) for x in options.get("data", "").split(",") if options.get("data")]
         # Fill the questions of the token
         for tinfo in self.token.info_list:
             if tinfo.Type == "password":
@@ -232,22 +222,18 @@ class QuestionnaireTokenClass(TokenClass):
                 questions[tinfo.id] = tinfo.Key
         # if all questions are used up, make a new round
         if len(questions) == len(used_questions):
-            log.info(
-                f"User has only {len(questions)!s} questions in his token. Reusing questions now."
-            )
+            log.info(f"User has only {len(questions)!s} questions in his token. Reusing questions now.")
             used_questions = []
         # Reduce the allowed questions
-        remaining_questions = {
-            k: v for (k, v) in questions.items() if k not in used_questions
-        }
+        remaining_questions = {k: v for (k, v) in questions.items() if k not in used_questions}
         message_id = secrets.choice(list(remaining_questions))
         message = remaining_questions[message_id]
-        used_questions = (options.get("data", "") + f",{message_id!s}").strip(",")
+        used_questions = f"{options.get('data', '')},{message_id!s}".strip(",")
 
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
         # Maybe there is a QUESTIONChallengeValidityTime...
-        lookup_for = tokentype.capitalize() + "ChallengeValidityTime"
+        lookup_for = f"{tokentype.capitalize()}ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # Create the challenge in the database
@@ -314,9 +300,7 @@ class QuestionnaireTokenClass(TokenClass):
 
         # get the challenges for this transaction ID
         if transaction_id is not None:
-            challengeobject_list = get_challenges(
-                serial=self.token.serial, transaction_id=transaction_id
-            )
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
 
             for challengeobject in challengeobject_list:
                 if challengeobject.is_valid():
@@ -344,13 +328,11 @@ class QuestionnaireTokenClass(TokenClass):
         :return: True, if further challenge is required.
         """
         transaction_id = options.get("transaction_id")
-        challengeobject_list = get_challenges(
-            serial=self.token.serial, transaction_id=transaction_id
-        )
+        challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
         question_number = int(
             get_action_values_from_options(
                 SCOPE.AUTH,
-                "{0!s}_{1!s}".format(self.get_class_type(), QUESTACTION.NUM_QUESTIONS),
+                f"{self.get_class_type()!s}_{QUESTACTION.NUM_QUESTIONS!s}",
                 options,
             )
             or 1

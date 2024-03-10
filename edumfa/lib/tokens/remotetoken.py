@@ -109,9 +109,7 @@ class RemoteTokenClass(TokenClass):
         res = {
             "type": "remote",
             "title": "Remote Token",
-            "description": _(
-                "Remote Token: Forward authentication request to another server."
-            ),
+            "description": _("Remote Token: Forward authentication request to another server."),
             "user": [],
             # This tokentype is enrollable in the UI for...
             "ui_enroll": ["admin"],
@@ -119,16 +117,12 @@ class RemoteTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of remote tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of remote tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active remote tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active remote tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -162,9 +156,7 @@ class RemoteTokenClass(TokenClass):
         else:
             remoteServer = getParam(param, "remote.server", required)
             self.add_tokeninfo("remote.server", remoteServer)
-            log.warning(
-                "Using remote.server for remote tokens is deprecated. Use remote.server_id!"
-            )
+            log.warning("Using remote.server for remote tokens is deprecated. Use remote.server_id!")
 
         val = getParam(param, "remote.local_checkpin", optional) or 0
         self.add_tokeninfo("remote.local_checkpin", val)
@@ -260,15 +252,8 @@ class RemoteTokenClass(TokenClass):
         else:
             # Deprecated
             remoteServer = self.get_tokeninfo("remote.server") or ""
-            log.warning(
-                "Using remote.server for remote tokens is deprecated. Use remote.server_id!"
-            )
-            ssl_verify = (
-                get_from_config(
-                    "remote.verify_ssl_certificate", False, return_bool=True
-                )
-                or False
-            )
+            log.warning("Using remote.server for remote tokens is deprecated. Use remote.server_id!")
+            ssl_verify = get_from_config("remote.verify_ssl_certificate", False, return_bool=True) or False
             # in preparation of the ability to relocate eduMFA urls,
             # we introduce the remote url path
             remotePath = self.get_tokeninfo("remote.path") or ""
@@ -281,10 +266,7 @@ class RemoteTokenClass(TokenClass):
         remoteResolver = self.get_tokeninfo("remote.resolver") or ""
 
         # here we also need to check for remote.user and so on....
-        log.debug(
-            "checking OTP len:%r remotely on server: %r, serial: %r, user: %r"
-            % (len(otpval), remoteServer, remoteSerial, remoteUser)
-        )
+        log.debug(f"checking OTP len:{len(otpval)!r} remotely on server: {remoteServer!r}, serial: {remoteSerial!r}, user: {remoteUser!r}")
         params = {}
 
         if remoteSerial:
@@ -294,9 +276,7 @@ class RemoteTokenClass(TokenClass):
             params["realm"] = remoteRealm
             params["resolver"] = remoteResolver
         else:
-            log.warning(
-                "The remote token does neither contain a remote.serial nor a remote.user."
-            )
+            log.warning("The remote token does neither contain a remote.serial nor a remote.user.")
             return otp_count
 
         try:
@@ -304,9 +284,7 @@ class RemoteTokenClass(TokenClass):
                 # Deprecated
                 params["pass"] = otpval
                 request_url = f"{remoteServer!s}{remotePath!s}"
-                r = requests.post(
-                    request_url, data=params, verify=ssl_verify, timeout=60
-                )
+                r = requests.post(request_url, data=params, verify=ssl_verify, timeout=60)
             elif pi_server_obj:
                 r = pi_server_obj.validate_check(
                     remoteUser,
@@ -328,9 +306,7 @@ class RemoteTokenClass(TokenClass):
                     )
 
         except Exception as exx:  # pragma: no cover
-            log.error(
-                f"Error getting response from remote Server ({request_url!r}): {exx!r}"
-            )
+            log.error(f"Error getting response from remote Server ({request_url!r}): {exx!r}")
             log.debug(f"{traceback.format_exc()!s}")
 
         return otp_count

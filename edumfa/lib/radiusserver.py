@@ -92,14 +92,9 @@ class RADIUSServer(object):
         success = False
 
         nas_identifier = get_from_config("radius.nas_identifier", "eduMFA")
-        r_dict = config.dictionary or get_from_config(
-            "radius.dictfile", "/etc/edumfa/dictionary"
-        )
+        r_dict = config.dictionary or get_from_config("radius.dictfile", "/etc/edumfa/dictionary")
         log.debug(f"NAS Identifier: {nas_identifier!r}, Dictionary: {r_dict!r}")
-        log.debug(
-            "constructing client object with server: %r, port: %r, secret: %r"
-            % (config.server, config.port, config.secret)
-        )
+        log.debug(f"constructing client object with server: {config.server!r}, port: {config.port!r}, secret: {config.secret!r}")
 
         srv = Client(
             server=config.server,
@@ -129,13 +124,9 @@ class RADIUSServer(object):
                 log.info(f"Radiusserver {config.server} granted access to user {user}.")
                 success = True
             else:
-                log.warning(
-                    f"Radiusserver {config.server} rejected access to user {user}."
-                )
+                log.warning(f"Radiusserver {config.server} rejected access to user {user}.")
         except Timeout:
-            log.warning(
-                f"Receiving timeout from remote radius server {config.server!s}"
-            )
+            log.warning(f"Receiving timeout from remote radius server {config.server!s}")
 
         return success
 
@@ -152,9 +143,7 @@ def get_radius(identifier):
     """
     server_list = get_radiusservers(identifier=identifier)
     if not server_list:
-        raise ConfigAdminError(
-            "The specified RADIUSServer configuration does not exist."
-        )
+        raise ConfigAdminError("The specified RADIUSServer configuration does not exist.")
     return server_list[0]
 
 

@@ -130,7 +130,7 @@ def create_internal(name):
         "User": username,
         "Password": password,
         "Database": database,
-        "Table": "users_" + name,
+        "Table": f"users_{name}",
         "Limit": "500",
         "Editable": "1",
         "Map": (
@@ -182,9 +182,7 @@ def r_export(filename, name, print_passwords):
     This behavior may be changed by 'print_passwords'.
     If the filename is omitted, the resolvers are written to stdout.
     """
-    conf_export(
-        {"resolver": get_conf_resolver(name, print_passwords)}, filename=filename
-    )
+    conf_export({"resolver": get_conf_resolver(name, print_passwords)}, filename=filename)
 
 
 @import_cli.command("resolver")

@@ -84,7 +84,5 @@ class PinHandler(object):
         """
         # The most simple way of handling a random PIN! ;-)
         log.info(f"handling pin {pin!r} for token {serial!s} of user {user!r}")
-        log.info(
-            f"The token was enrolled by {logged_in_user.get('username')!r}@{logged_in_user.get('realm')!s}"
-        )
+        log.info(f"The token was enrolled by {logged_in_user.get('username')!r}@{logged_in_user.get('realm')!s}")
         return True

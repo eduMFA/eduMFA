@@ -57,9 +57,7 @@ try:
 
     MECHANISM = PyKCS11.CKM_RSA_PKCS
 except ImportError:
-    log.info(
-        "The python module PyKCS11 is not available. So we can not use the PKCS11 security module."
-    )
+    log.info("The python module PyKCS11 is not available. So we can not use the PKCS11 security module.")
 
 # The lock directory is used for locking the different processes during startup
 # to avoid a deadlock when accessing the HSM.
@@ -84,9 +82,7 @@ def hsm_lock(timeout=DEFAULT_TIMEOUT, lock_dir=DEFAULT_LOCK_DIR):
             break
         except FileExistsError:
             # Some other process got the lock in the meantime.
-            log.info(
-                f"Can not get the lock on {lock_dir!s}. Can not initialize the HSM, yet."
-            )
+            log.info(f"Can not get the lock on {lock_dir!s}. Can not initialize the HSM, yet.")
             time.sleep(1)
         finally:
             # Cleanup
@@ -184,9 +180,7 @@ class EncryptKeyHardwareSecurityModule(DefaultSecurityModule):  # pragma: no cov
             log.info(f"Using slot {self.slot!s}")
 
             if self.slot not in slotlist:
-                raise HSMException(
-                    f"Slot {self.slot:d} ({self.slotname:s}) not present"
-                )
+                raise HSMException(f"Slot {self.slot:d} ({self.slotname:s}) not present")
 
             slotinfo = self.pkcs11.getSlotInfo(self.slot)
             log.info(f"Setting up slot {self.slot!s}: '{slotinfo.slotDescription!s}'")
@@ -202,9 +196,7 @@ class EncryptKeyHardwareSecurityModule(DefaultSecurityModule):  # pragma: no cov
                     self.session.logout()
                     self.session.login(self.password)
                 elif str(e).startswith("CKR_PIN_INCORRECT"):
-                    log.error(
-                        "A wrong HSM Password is configured. Please check your configuration in edumfa.cfg"
-                    )
+                    log.error("A wrong HSM Password is configured. Please check your configuration in edumfa.cfg")
                     # We reset the password, to avoid future PIN Locking!
                     # I think this does not work between processes!
                     self.password = None
@@ -235,9 +227,7 @@ class EncryptKeyHardwareSecurityModule(DefaultSecurityModule):  # pragma: no cov
         Returns the handle to the private key for decryption.
         """
         log.debug("Getting private key handles")
-        objs = self.session.findObjects(
-            self._add_template([(PyKCS11.CKA_CLASS, PyKCS11.CKO_PRIVATE_KEY)])
-        )
+        objs = self.session.findObjects(self._add_template([(PyKCS11.CKA_CLASS, PyKCS11.CKO_PRIVATE_KEY)]))
         log.debug(f"Found {len(objs)!s} private keys.")
         return objs[0]
 
@@ -249,9 +239,7 @@ class EncryptKeyHardwareSecurityModule(DefaultSecurityModule):  # pragma: no cov
         """
         with open(infile, "rb") as f:
             enckey = f.read()
-        objs = self.session.findObjects(
-            self._add_template([(PyKCS11.CKA_CLASS, PyKCS11.CKO_PUBLIC_KEY)])
-        )
+        objs = self.session.findObjects(self._add_template([(PyKCS11.CKA_CLASS, PyKCS11.CKO_PUBLIC_KEY)]))
         log.debug(f"Found {len(objs)!s} public keys.")
         for obj in objs:
             log.debug("========================================================")
@@ -264,13 +252,9 @@ class EncryptKeyHardwareSecurityModule(DefaultSecurityModule):  # pragma: no cov
 
     def _listkeys(self, keytype="public"):
         if keytype == "public":
-            objs = self.session.findObjects(
-                [(PyKCS11.CKA_CLASS, PyKCS11.CKO_PUBLIC_KEY)]
-            )
+            objs = self.session.findObjects([(PyKCS11.CKA_CLASS, PyKCS11.CKO_PUBLIC_KEY)])
         else:
-            objs = self.session.findObjects(
-                [(PyKCS11.CKA_CLASS, PyKCS11.CKO_PRIVATE_KEY)]
-            )
+            objs = self.session.findObjects([(PyKCS11.CKA_CLASS, PyKCS11.CKO_PRIVATE_KEY)])
         log.debug(f"Found {len(objs)!s} keys.")
         for obj in objs:
             log.debug("========================================================")

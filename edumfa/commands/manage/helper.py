@@ -104,9 +104,7 @@ def import_conf_policy(config_list, cleanup=False, update=False):
         exists = cls.list_policies(name=name)
         if exists:
             if not update:
-                click.echo(
-                    f"Policy {name!s} exists and -u is not specified, skipping import."
-                )
+                click.echo(f"Policy {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
@@ -171,9 +169,7 @@ def import_conf_event(config_list, cleanup=False, update=False):
             event_id = None
         if exists:
             if not update:
-                click.echo(
-                    f"Event {name!s} exists and -u is not specified, skipping import."
-                )
+                click.echo(f"Event {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
@@ -206,9 +202,7 @@ def import_conf_resolver(config_list, cleanup=False, update=False):
         exists = get_resolver_list(filter_resolver_name=name)
         if exists:
             if not update:
-                click.echo(
-                    f"Resolver {name!s} exists and -u is not specified, skipping import."
-                )
+                click.echo(f"Resolver {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
@@ -227,7 +221,5 @@ def get_conf_resolver(name=None, print_passwords=False):
     """helper function for conf_export"""
     from edumfa.lib.resolver import get_resolver_list
 
-    resolver_dict = get_resolver_list(
-        filter_resolver_name=name, censor=not print_passwords
-    )
+    resolver_dict = get_resolver_list(filter_resolver_name=name, censor=not print_passwords)
     return list(resolver_dict.values())

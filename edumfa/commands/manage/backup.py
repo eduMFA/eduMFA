@@ -87,9 +87,7 @@ def restore(backup_file: str):
     if enckey_contained:
         click.echo("Also restoring encryption key 'enckey'")
     else:
-        click.echo(
-            "NO FILE 'enckey' CONTAINED! BE SURE TO RESTORE THE ENCRYPTION KEY MANUALLY!"
-        )
+        click.echo("NO FILE 'enckey' CONTAINED! BE SURE TO RESTORE THE ENCRYPTION KEY MANUALLY!")
     click.echo(f"Restoring to {config_file!s} with data from {sqlfile!s}")
 
     call(["tar", "-zxf", backup_file, "-C", "/"])
@@ -163,9 +161,7 @@ def restore(backup_file: str):
     default=None,
     show_default=True,
 )
-@click.option(
-    "-e", "--enckey", is_flag=True, help="Add the encryption key to the backup"
-)
+@click.option("-e", "--enckey", is_flag=True, help="Add the encryption key to the backup")
 def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = False):
     """
     Create a new backup of the database and the configuration. The default

@@ -162,23 +162,17 @@ class YubikeyTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of Yubikey tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of Yubikey tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active Yubikey tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active Yubikey tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     "yubikey_access_code": {
                         "type": "str",
-                        "desc": _(
-                            "The Yubikey access code can be read by an enrollment client to initialize Yubikeys."
-                        ),
+                        "desc": _("The Yubikey access code can be read by an enrollment client to initialize Yubikeys."),
                     },
                 }
             },
@@ -304,9 +298,7 @@ class YubikeyTokenClass(TokenClass):
         session_counter = msg_hex[22:24]
         random = msg_hex[24:28]
         crc = msg_hex[28:]
-        log.debug(
-            f"decrypted: usage_count: {usage_counter!r}, session_count: {session_counter!r}"
-        )
+        log.debug(f"decrypted: usage_count: {usage_counter!r}, session_count: {session_counter!r}")
 
         # create the counter as integer
         # Note: The usage counter is stored LSB!
@@ -328,10 +320,7 @@ class YubikeyTokenClass(TokenClass):
 
         if tokenid != uid:
             # wrong token!
-            log.warning(
-                "The wrong token was presented for %r. Got %r, expected %r."
-                % (serial, uid, tokenid)
-            )
+            log.warning(f"The wrong token was presented for {serial!r}. Got {uid!r}, expected {tokenid!r}.")
             return -2
 
         # TODO: We also could check the timestamp
@@ -392,9 +381,7 @@ class YubikeyTokenClass(TokenClass):
             data["status"] = "NO_SUCH_CLIENT"
             data["h"] = ""
         elif otp and id and nonce:
-            if signature and not yubico_check_api_signature(
-                request.all_data, api_key, signature
-            ):
+            if signature and not yubico_check_api_signature(request.all_data, api_key, signature):
                 # yubico server don't send nonce and otp back. Do we want that?
                 data["status"] = "BAD_SIGNATURE"
             else:
@@ -448,7 +435,7 @@ h={h}
         if prefix[:2] != "vv" and prefix[:2] != "cc":
             try:
                 # Keep the backward compatibility
-                serialnum = "UBAM" + modhex_decode(prefix)
+                serialnum = f"UBAM{modhex_decode(prefix)}"
                 for i in range(1, 3):
                     s = f"{serialnum!s}_{i!s}"
                     toks = get_tokens(serial=s, tokentype="yubikey")
@@ -460,9 +447,7 @@ h={h}
         if not token_list:
             # If we did not find the token via the serial number, we also
             # search for the yubikey.prefix in the tokeninfo.
-            token_candidate_list = get_tokens(
-                tokentype="yubikey", tokeninfo={"yubikey.prefix": prefix}
-            )
+            token_candidate_list = get_tokens(tokentype="yubikey", tokeninfo={"yubikey.prefix": prefix})
             token_list.extend(token_candidate_list)
 
         if not token_list:

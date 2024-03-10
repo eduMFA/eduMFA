@@ -80,9 +80,7 @@ class ApplicationSpecificPasswordTokenClass(PasswordTokenClass):
         res = {
             "type": "applspec",
             "title": "Application Specific Password Token",
-            "description": _(
-                "Application Specific Password: A token with a fixed password. Can be used for certain applications or services."
-            ),
+            "description": _("Application Specific Password: A token with a fixed password. Can be used for certain applications or services."),
             "init": {},
             "config": {},
             "user": ["enroll"],
@@ -92,16 +90,12 @@ class ApplicationSpecificPasswordTokenClass(PasswordTokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of application specific password tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of application specific password tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active application specific password tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active application specific password tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }

@@ -102,9 +102,7 @@ def before_request():
     """
     ensure_no_config_object()
     request.all_data = get_all_params(request)
-    edumfa_server = get_app_config_value(
-        "EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host)
-    )
+    edumfa_server = get_app_config_value("EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host))
     g.policy_object = PolicyClass()
     g.audit_object = getAudit(current_app.config)
     g.event_config = EventConfiguration()
@@ -138,9 +136,7 @@ def before_request():
             request.User = User(loginname, realm)
         except Exception as e:
             request.User = None
-            log.warning(
-                f"Problem resolving user {loginname!s} in realm {realm!s}: {e!s}."
-            )
+            log.warning(f"Problem resolving user {loginname!s} in realm {realm!s}: {e!s}.")
             log.debug(f"{traceback.format_exc()!s}")
 
 
@@ -266,9 +262,7 @@ def get_auth_token():
     g.audit_object.log({"user": username, "realm": realm})
 
     secret = current_app.secret_key
-    superuser_realms = [
-        x.lower() for x in current_app.config.get("SUPERUSER_REALM", [])
-    ]
+    superuser_realms = [x.lower() for x in current_app.config.get("SUPERUSER_REALM", [])]
     # This is the default role for the logged-in user.
     # The role privileges may be risen to "admin"
     role = ROLE.USER
@@ -282,11 +276,7 @@ def get_auth_token():
     user_auth = False
 
     user = request.remote_user
-    if (
-        not user
-        and not request.headers.get("Remote-User") is None
-        and not request.headers.get("Remote-User") == ""
-    ):
+    if not user and not request.headers.get("Remote-User") is None and not request.headers.get("Remote-User") == "":
         user = request.headers.get("Remote-User")
     # Check if the remote user is allowed
     if (user == username) and is_remote_user_allowed(request) != REMOTE_USER.DISABLE:
@@ -344,40 +334,21 @@ def get_auth_token():
         # The user could not be identified against the admin database,
         # so we do the rest of the check
         if password is None:
-            g.audit_object.add_to_log(
-                {"info": 'Missing parameter "password"'}, add_with_comma=True
-            )
+            g.audit_object.add_to_log({"info": 'Missing parameter "password"'}, add_with_comma=True)
         else:
             options = {"g": g, "clientip": g.client_ip}
             for key, value in request.all_data.items():
                 if value and key not in ["g", "clientip"]:
                     options[key] = value
-            user_auth, role, details = check_webui_user(
-                user_obj, password, options=options, superuser_realms=superuser_realms
-            )
+            user_auth, role, details = check_webui_user(user_obj, password, options=options, superuser_realms=superuser_realms)
             details = details or {}
-            serials = (
-                ",".join(
-                    [
-                        challenge_info["serial"]
-                        for challenge_info in details["multi_challenge"]
-                    ]
-                )
-                if "multi_challenge" in details
-                else details.get("serial")
-            )
-            if (
-                db_admin_exist(user_obj.login)
-                and user_auth
-                and realm == get_default_realm()
-            ):
+            serials = ",".join([challenge_info["serial"] for challenge_info in details["multi_challenge"]]) if "multi_challenge" in details else details.get("serial")
+            if db_admin_exist(user_obj.login) and user_auth and realm == get_default_realm():
                 # If there is a local admin with the same login name as the user
                 # in the default realm, we inform about this in the log file.
                 # This condition can only be checked if the user was authenticated as it
                 # is the only way to verify if such a user exists.
-                log.warning(
-                    f"A user '{user_obj.login!s}' exists as local admin and as user in your default realm!"
-                )
+                log.warning(f"A user '{user_obj.login!s}' exists as local admin and as user in your default realm!")
             if role == ROLE.ADMIN:
                 g.audit_object.log(
                     {
@@ -386,9 +357,7 @@ def get_auth_token():
                         "realm": user_obj.realm,
                         "resolver": user_obj.resolver,
                         "serial": serials,
-                        "info": "{0!s}|loginmode={1!s}".format(
-                            log_used_user(user_obj), details.get("loginmode")
-                        ),
+                        "info": f"{log_used_user(user_obj)!s}|loginmode={details.get('loginmode')!s}",
                     }
                 )
             else:
@@ -398,17 +367,11 @@ def get_auth_token():
                         "realm": user_obj.realm,
                         "resolver": user_obj.resolver,
                         "serial": serials,
-                        "info": "{0!s}|loginmode={1!s}".format(
-                            log_used_user(user_obj), details.get("loginmode")
-                        ),
+                        "info": f"{log_used_user(user_obj)!s}|loginmode={details.get('loginmode')!s}",
                     }
                 )
 
-            if (
-                not user_auth
-                and "multi_challenge" in details
-                and len(details["multi_challenge"]) > 0
-            ):
+            if not user_auth and "multi_challenge" in details and len(details["multi_challenge"]) > 0:
                 return send_result(
                     {"role": role, "username": loginname, "realm": realm},
                     details=details,
@@ -432,9 +395,7 @@ def get_auth_token():
         # Add the authtype to the JWT, so that we could use it for access
         # definitions
         rights = g.policy_object.ui_get_rights(role, realm, loginname, g.client_ip)
-        menus = g.policy_object.ui_get_main_menus(
-            {"username": loginname, "role": role, "realm": realm}, g.client_ip
-        )
+        menus = g.policy_object.ui_get_main_menus({"username": loginname, "role": role, "realm": realm}, g.client_ip)
     else:
         import os
 
@@ -533,9 +494,7 @@ def get_rights():
 
     :reqheader Authorization: The authorization token acquired by /auth request
     """
-    enroll_types = g.policy_object.ui_get_enroll_tokentypes(
-        g.client_ip, g.logged_in_user
-    )
+    enroll_types = g.policy_object.ui_get_enroll_tokentypes(g.client_ip, g.logged_in_user)
 
     g.audit_object.log({"success": True})
     return send_result(enroll_types)

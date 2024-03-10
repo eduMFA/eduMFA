@@ -146,9 +146,7 @@ class BaseEventHandler(object):
         cond = {
             CONDITION.ROLLOUT_STATE: {
                 "type": "str",
-                "desc": _(
-                    "The rollout_state of the token has a certain value like 'clientwait' or 'enrolled'."
-                ),
+                "desc": _("The rollout_state of the token has a certain value like 'clientwait' or 'enrolled'."),
                 "group": GROUP.TOKEN,
             },
             CONDITION.REALM: {
@@ -159,9 +157,7 @@ class BaseEventHandler(object):
             },
             CONDITION.RESOLVER: {
                 "type": "str",
-                "desc": _(
-                    "The resolver of the user, for which this event should apply."
-                ),
+                "desc": _("The resolver of the user, for which this event should apply."),
                 "value": list(resolvers),
                 "group": GROUP.USER,
             },
@@ -173,9 +169,7 @@ class BaseEventHandler(object):
             },
             CONDITION.TOKENRESOLVER: {
                 "type": "multi",
-                "desc": _(
-                    "The resolver of the token, for which this event should apply."
-                ),
+                "desc": _("The resolver of the token, for which this event should apply."),
                 "value": [{"name": r} for r in resolvers],
                 "group": GROUP.TOKEN,
             },
@@ -217,9 +211,7 @@ class BaseEventHandler(object):
             },
             CONDITION.TOKEN_IS_ORPHANED: {
                 "type": "str",
-                "desc": _(
-                    "The token has a user assigned, but the user does not exist in the userstore anymore."
-                ),
+                "desc": _("The token has a user assigned, but the user does not exist in the userstore anymore."),
                 "value": ("True", "False"),
                 "group": GROUP.TOKEN,
             },
@@ -231,9 +223,7 @@ class BaseEventHandler(object):
             },
             "serial": {
                 "type": "regexp",
-                "desc": _(
-                    "Action is triggered, if the serial matches this regular expression."
-                ),
+                "desc": _("Action is triggered, if the serial matches this regular expression."),
                 "group": GROUP.TOKEN,
             },
             CONDITION.USER_TOKEN_NUMBER: {
@@ -246,23 +236,17 @@ class BaseEventHandler(object):
             },
             CONDITION.OTP_COUNTER: {
                 "type": "str",
-                "desc": _(
-                    "Action is triggered, if the counter of the token equals this setting. Can also be '>100' or '<99' for no exact match."
-                ),
+                "desc": _("Action is triggered, if the counter of the token equals this setting. Can also be '>100' or '<99' for no exact match."),
                 "group": GROUP.COUNTER,
             },
             CONDITION.LAST_AUTH: {
                 "type": "str",
-                "desc": _(
-                    "Action is triggered, if the last authentication of the token is older than 7h, 10d or 1y."
-                ),
+                "desc": _("Action is triggered, if the last authentication of the token is older than 7h, 10d or 1y."),
                 "group": GROUP.TOKEN,
             },
             CONDITION.COUNT_AUTH: {
                 "type": "str",
-                "desc": _(
-                    "This can be '>100', '<99', or '=100', to trigger the action, if the tokeninfo field 'count_auth' is bigger than 100, less than 99 or exactly 100."
-                ),
+                "desc": _("This can be '>100', '<99', or '=100', to trigger the action, if the tokeninfo field 'count_auth' is bigger than 100, less than 99 or exactly 100."),
                 "group": GROUP.COUNTER,
             },
             CONDITION.COUNT_AUTH_SUCCESS: {
@@ -298,23 +282,17 @@ class BaseEventHandler(object):
             },
             CONDITION.COUNTER: {
                 "type": "str",
-                "desc": _(
-                    "This condition can check the value of an arbitrary event counter and compare it like 'myCounter == 1000', 'myCounter > 1000' or 'myCounter < 1000'."
-                ),
+                "desc": _("This condition can check the value of an arbitrary event counter and compare it like 'myCounter == 1000', 'myCounter > 1000' or 'myCounter < 1000'."),
                 "group": GROUP.COUNTER,
             },
             CONDITION.DETAIL_ERROR_MESSAGE: {
                 "type": "str",
-                "desc": _(
-                    "Here you can enter a regular expression. The condition only applies if the regular expression matches the detail->error->message in the response."
-                ),
+                "desc": _("Here you can enter a regular expression. The condition only applies if the regular expression matches the detail->error->message in the response."),
                 "group": GROUP.GENERAL,
             },
             CONDITION.DETAIL_MESSAGE: {
                 "type": "str",
-                "desc": _(
-                    "Here you can enter a regular expression. The condition only applies if the regular expression matches the detail->message in the response."
-                ),
+                "desc": _("Here you can enter a regular expression. The condition only applies if the regular expression matches the detail->message in the response."),
                 "group": GROUP.GENERAL,
             },
             CONDITION.CLIENT_IP: {
@@ -352,9 +330,7 @@ class BaseEventHandler(object):
                 except Exception as exx:
                     user = User()
                     # This can happen for orphaned tokens.
-                    log.info(
-                        f"Could not determine tokenowner for {serial!s}. Maybe the user does not exist anymore."
-                    )
+                    log.info(f"Could not determine tokenowner for {serial!s}. Maybe the user does not exist anymore.")
                     log.debug(exx)
             # If the user does not exist, we set an empty user
             if not user.exist():
@@ -388,9 +364,7 @@ class BaseEventHandler(object):
         content = self._get_response_content(response)
         user = self._get_tokenowner(request)
 
-        serial = request.all_data.get("serial") or content.get("detail", {}).get(
-            "serial"
-        )
+        serial = request.all_data.get("serial") or content.get("detail", {}).get("serial")
         tokenrealms = []
         tokenresolvers = []
         tokentype = None
@@ -419,9 +393,7 @@ class BaseEventHandler(object):
 
         if CONDITION.CLIENT_IP in conditions:
             if g and g.client_ip:
-                ip_policy = [
-                    ip.strip() for ip in conditions.get(CONDITION.CLIENT_IP).split(",")
-                ]
+                ip_policy = [ip.strip() for ip in conditions.get(CONDITION.CLIENT_IP).split(",")]
                 found, excluded = check_ip_in_policy(g.client_ip, ip_policy)
                 if not found or excluded:
                     return False
@@ -535,9 +507,7 @@ class BaseEventHandler(object):
                 elif not uid and check in ["False", False]:
                     res = True
                 else:
-                    log.debug(
-                        f"Condition token_has_owner for token {token_obj!r} not fulfilled."
-                    )
+                    log.debug(f"Condition token_has_owner for token {token_obj!r} not fulfilled.")
                     return False
 
             if CONDITION.TOKEN_IS_ORPHANED in conditions:
@@ -548,16 +518,12 @@ class BaseEventHandler(object):
                 elif not orphaned and check in ["False", False]:
                     res = True
                 else:
-                    log.debug(
-                        f"Condition token_is_orphaned for token {token_obj!r} not fulfilled."
-                    )
+                    log.debug(f"Condition token_is_orphaned for token {token_obj!r} not fulfilled.")
                     return False
 
             if CONDITION.TOKEN_VALIDITY_PERIOD in conditions:
                 valid = token_obj.check_validity_period()
-                if (
-                    conditions.get(CONDITION.TOKEN_VALIDITY_PERIOD) in ["True", True]
-                ) != valid:
+                if (conditions.get(CONDITION.TOKEN_VALIDITY_PERIOD) in ["True", True]) != valid:
                     return False
 
             if CONDITION.OTP_COUNTER in conditions:

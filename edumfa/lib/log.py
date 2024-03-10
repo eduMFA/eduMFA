@@ -53,9 +53,7 @@ DEFAULT_LOGGING_CONFIG = {
             "filename": "edumfa.log",
         }
     },
-    "loggers": {
-        "edumfa": {"handlers": ["file"], "qualname": "edumfa", "level": logging.INFO}
-    },
+    "loggers": {"edumfa": {"handlers": ["file"], "qualname": "edumfa", "level": logging.INFO}},
 }
 
 
@@ -73,7 +71,7 @@ class SecureFormatter(Formatter):
                 secured = True
 
         if secured:
-            s = "!!!Log Entry Secured by SecureFormatter!!! " + s
+            s = f"!!!Log Entry Secured by SecureFormatter!!! {s}"
 
         return s
 
@@ -177,18 +175,12 @@ class log_with(object):
                     log_kwds = {}
             try:
                 if self.log_entry:
-                    self.logger.debug(
-                        self.ENTRY_MESSAGE.format(func.__name__, log_args, log_kwds)
-                    )
+                    self.logger.debug(self.ENTRY_MESSAGE.format(func.__name__, log_args, log_kwds))
                 else:
-                    self.logger.debug(
-                        self.ENTRY_MESSAGE.format(func.__name__, "HIDDEN", "HIDDEN")
-                    )
+                    self.logger.debug(self.ENTRY_MESSAGE.format(func.__name__, "HIDDEN", "HIDDEN"))
             except Exception as exx:
                 self.logger.error(exx)
-                self.logger.error(
-                    f"Error during logging of function {func.__name__}! {exx}"
-                )
+                self.logger.error(f"Error during logging of function {func.__name__}! {exx}")
 
             f_result = func(*args, **kwds)
 
@@ -198,9 +190,7 @@ class log_with(object):
                 else:
                     self.logger.debug(self.EXIT_MESSAGE.format(func.__name__, "HIDDEN"))
             except Exception as exx:
-                self.logger.error(
-                    f"Error during logging of function {func.__name__}! {exx}"
-                )
+                self.logger.error(f"Error during logging of function {func.__name__}! {exx}")
             return f_result
 
         return log_wrapper

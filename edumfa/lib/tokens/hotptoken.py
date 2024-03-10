@@ -89,17 +89,11 @@ class HotpTokenClass(TokenClass):
     # If the token is enrollable via multichallenge
     is_multichallenge_enrollable = True
 
-    desc_hash_func = _(
-        "Specify the hashing function to be used. Can be SHA1, SHA256 or SHA512."
-    )
+    desc_hash_func = _("Specify the hashing function to be used. Can be SHA1, SHA256 or SHA512.")
     desc_otp_len = _("Specify the OTP length to be used. Can be 6 or 8 digits.")
     desc_key_gen = _("Force the key to be generated on the server.")
-    desc_two_step_user = _(
-        "Specify whether users are allowed or forced to use two-step enrollment."
-    )
-    desc_two_step_admin = _(
-        "Specify whether admins are allowed or forced to use two-step enrollment."
-    )
+    desc_two_step_user = _("Specify whether users are allowed or forced to use two-step enrollment.")
+    desc_two_step_admin = _("Specify whether admins are allowed or forced to use two-step enrollment.")
 
     @staticmethod
     def get_class_type():
@@ -144,41 +138,29 @@ class HotpTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of HOTP tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of HOTP tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active HOTP tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active HOTP tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     "hotp_2step_clientsize": {
                         "type": "int",
-                        "desc": _(
-                            "The size of the OTP seed part contributed by the client (in bytes)"
-                        ),
+                        "desc": _("The size of the OTP seed part contributed by the client (in bytes)"),
                     },
                     "hotp_2step_serversize": {
                         "type": "int",
-                        "desc": _(
-                            "The size of the OTP seed part contributed by the server (in bytes)"
-                        ),
+                        "desc": _("The size of the OTP seed part contributed by the server (in bytes)"),
                     },
                     "hotp_2step_difficulty": {
                         "type": "int",
-                        "desc": _(
-                            "The difficulty factor used for the OTP seed generation (should be at least 10000)"
-                        ),
+                        "desc": _("The difficulty factor used for the OTP seed generation (should be at least 10000)"),
                     },
-                    "hotp_" + ACTION.FORCE_APP_PIN: {
+                    f"hotp_{ACTION.FORCE_APP_PIN}": {
                         "type": "bool",
-                        "desc": _(
-                            "Enforce setting an app pin for the eduMFA Authenticator App"
-                        ),
+                        "desc": _("Enforce setting an app pin for the eduMFA Authenticator App"),
                     },
                 },
                 SCOPE.USER: {
@@ -352,9 +334,7 @@ class HotpTokenClass(TokenClass):
             # Use the 2step_serversize setting for the size of the server secret
             # (if it is set)
             if "2step_serversize" in upd_param:
-                upd_param["keysize"] = int(
-                    getParam(upd_param, "2step_serversize", required)
-                )
+                upd_param["keysize"] = int(getParam(upd_param, "2step_serversize", required))
             # Add twostep settings to the tokeninfo
             for key, default in [
                 ("2step_difficulty", TWOSTEP_DEFAULT_DIFFICULTY),
@@ -370,9 +350,7 @@ class HotpTokenClass(TokenClass):
 
         # check if the key_size is provided
         # if not, we could derive it from the hashlib
-        key_size = getParam(upd_param, "key_size", optional) or getParam(
-            upd_param, "keysize", optional
-        )
+        key_size = getParam(upd_param, "key_size", optional) or getParam(upd_param, "keysize", optional)
         if key_size is None:
             upd_param["keysize"] = keylen.get(hashlibStr)
 
@@ -395,9 +373,7 @@ class HotpTokenClass(TokenClass):
 
     @property
     def hashlib(self):
-        hashlibStr = self.get_tokeninfo("hashlib") or get_from_config(
-            "hotp.hashlib", "sha1"
-        )
+        hashlibStr = self.get_tokeninfo("hashlib") or get_from_config("hotp.hashlib", "sha1")
         return hashlibStr
 
     def _calc_otp(self, counter):
@@ -408,13 +384,9 @@ class HotpTokenClass(TokenClass):
         """
         otplen = int(self.token.otplen)
         secretHOtp = self.token.get_otpkey()
-        hmac2Otp = HmacOtp(
-            secretHOtp, self.get_otp_count(), otplen, self.get_hashlib(self.hashlib)
-        )
+        hmac2Otp = HmacOtp(secretHOtp, self.get_otp_count(), otplen, self.get_hashlib(self.hashlib))
 
-        otpval = hmac2Otp.generate(
-            counter=counter, inc_counter=False, do_truncation=True
-        )
+        otpval = hmac2Otp.generate(counter=counter, inc_counter=False, do_truncation=True)
         return otpval
 
     @log_with(log)
@@ -503,9 +475,7 @@ class HotpTokenClass(TokenClass):
             previous_otp = self._calc_otp(counter - self.previous_otp_offset)
             res = previous_otp == otp
             if res:
-                log.info(
-                    f"Previous OTP used again. Serial {self.token.serial!s} with counter {counter!s}."
-                )
+                log.info(f"Previous OTP used again. Serial {self.token.serial!s} with counter {counter!s}.")
             return res
         else:
             # The internal counter is 0, the token was not used, yet.
@@ -570,9 +540,7 @@ class HotpTokenClass(TokenClass):
 
             else:
                 self.add_tokeninfo("otp1c", res)
-                self.add_tokeninfo(
-                    "dueDate", int(time.time()) + self.get_sync_timeout()
-                )
+                self.add_tokeninfo("dueDate", int(time.time()) + self.get_sync_timeout())
 
                 res = -1
 
@@ -611,9 +579,7 @@ class HotpTokenClass(TokenClass):
         nextOtp = hmac2Otp.generate(counter + 1)
 
         if nextOtp != otp2:
-            log.debug(
-                f"exit. Failed to verify second otp: nextOtp: {nextOtp!r} != otp2: {otp2!r} ret: {ret!r}"
-            )
+            log.debug(f"exit. Failed to verify second otp: nextOtp: {nextOtp!r} != otp2: {otp2!r} ret: {ret!r}")
             return ret
 
         ret = True
@@ -650,9 +616,7 @@ class HotpTokenClass(TokenClass):
         otplen = int(self.token.otplen)
         secretHOtp = self.token.get_otpkey()
 
-        hmac2Otp = HmacOtp(
-            secretHOtp, self.token.count, otplen, self.get_hashlib(self.hashlib)
-        )
+        hmac2Otp = HmacOtp(secretHOtp, self.token.count, otplen, self.get_hashlib(self.hashlib))
         otpval = hmac2Otp.generate(inc_counter=False)
 
         pin = self.token.get_pin()
@@ -696,9 +660,7 @@ class HotpTokenClass(TokenClass):
         otplen = int(self.token.otplen)
 
         secretHOtp = self.token.get_otpkey()
-        hmac2Otp = HmacOtp(
-            secretHOtp, self.token.count, otplen, self.get_hashlib(self.hashlib)
-        )
+        hmac2Otp = HmacOtp(secretHOtp, self.token.count, otplen, self.get_hashlib(self.hashlib))
         log.debug(f"retrieving {count:d} OTP values for token {hmac2Otp!s}")
 
         if count > 0:
@@ -737,9 +699,7 @@ class HotpTokenClass(TokenClass):
         ret = {}
         if not g.logged_in_user:
             return ret
-        (role, username, userrealm, adminuser, adminrealm) = (
-            determine_logged_in_userparams(g.logged_in_user, params)
-        )
+        (role, username, userrealm, adminuser, adminrealm) = determine_logged_in_userparams(g.logged_in_user, params)
         hashlib_pol = Match.generic(
             g,
             scope=role,
@@ -787,11 +747,7 @@ class HotpTokenClass(TokenClass):
         decoded_client_component = binascii.unhexlify(client_component)
         expected_client_size = int(self.get_tokeninfo("2step_clientsize"))
         if expected_client_size != len(decoded_client_component):
-            raise ParameterError(
-                "Client Secret Size is expected to be {}, but is {}".format(
-                    expected_client_size, len(decoded_client_component)
-                )
-            )
+            raise ParameterError(f"Client Secret Size is expected to be {expected_client_size}, but is {len(decoded_client_component)}")
         # Based on the two components, we generate a symmetric key using PBKDF2
         # We pass the hex-encoded server component as the password and the
         # client component as the salt.
@@ -859,9 +815,7 @@ class HotpTokenClass(TokenClass):
         :return: None, the content is modified
         """
         message = _("Please scan the QR code!")
-        token_obj = init_token(
-            {"type": cls.get_class_type(), "genkey": 1}, user=user_obj
-        )
+        token_obj = init_token({"type": cls.get_class_type(), "genkey": 1}, user=user_obj)
         content.get("result")["value"] = False
         content.get("result")["authentication"] = "CHALLENGE"
 
@@ -869,9 +823,7 @@ class HotpTokenClass(TokenClass):
         # Create a challenge!
         c = token_obj.create_challenge()
         # get details of token
-        enroll_params = get_init_tokenlabel_parameters(
-            g, user_object=user_obj, token_type=cls.get_class_type()
-        )
+        enroll_params = get_init_tokenlabel_parameters(g, user_object=user_obj, token_type=cls.get_class_type())
         init_details = token_obj.get_init_detail(params=enroll_params, user=user_obj)
         detail["transaction_ids"] = [c[2]]
         detail["messages"] = [message]

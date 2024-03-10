@@ -222,9 +222,7 @@ class IdResolver(UserIdResolver):
         success = False
 
         try:
-            access_token = cls.get_access_token(
-                str(param.get("Authserver")), param.get("Client"), param.get("Secret")
-            )
+            access_token = cls.get_access_token(str(param.get("Authserver")), param.get("Client"), param.get("Secret"))
             content = cls._search_users(param.get("Resourceserver"), access_token, "")
             num = content.get("totalResults", -1)
             desc = f"Found {num!s} users"
@@ -287,10 +285,10 @@ class IdResolver(UserIdResolver):
 
     @staticmethod
     def get_access_token(server=None, client=None, secret=None):
-        auth = to_unicode(base64.b64encode(to_bytes(client + ":" + secret)))
+        auth = to_unicode(base64.b64encode(to_bytes(f"{client}:{secret}")))
 
         url = f"{server!s}/oauth/token?grant_type=client_credentials"
-        resp = requests.get(url, headers={"Authorization": "Basic " + auth}, timeout=60)
+        resp = requests.get(url, headers={"Authorization": f"Basic {auth}"}, timeout=60)
 
         if resp.status_code != 200:
             info = f"Could not get access token: {resp.status_code!s}"
@@ -301,6 +299,4 @@ class IdResolver(UserIdResolver):
         return access_token
 
     def create_scim_object(self):
-        self.access_token = self.get_access_token(
-            self.auth_server, self.auth_client, self.auth_secret
-        )
+        self.access_token = self.get_access_token(self.auth_server, self.auth_client, self.auth_secret)

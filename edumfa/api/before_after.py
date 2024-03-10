@@ -193,9 +193,7 @@ def before_request():
     g.client_ip = get_client_ip(request, get_from_config(SYSCONF.OVERRIDECLIENT))
     # Save the HTTP header in the localproxy object
     g.request_headers = request.headers
-    edumfa_server = get_app_config_value(
-        "EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host)
-    )
+    edumfa_server = get_app_config_value("EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host))
     # Already get some typical parameters to log
     serial = getParam(request.all_data, "serial")
     if serial and not "*" in serial:

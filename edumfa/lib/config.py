@@ -110,11 +110,7 @@ class SharedConfigClass(object):
         :return:
         """
         check_reload_config = get_app_config_value("EDUMFA_CHECK_RELOAD_CONFIG", 0)
-        if (
-            not self.timestamp
-            or self.timestamp + datetime.timedelta(seconds=check_reload_config)
-            < datetime.datetime.now()
-        ):
+        if not self.timestamp or self.timestamp + datetime.timedelta(seconds=check_reload_config) < datetime.datetime.now():
             db_ts = Config.query.filter_by(Key=EDUMFA_TIMESTAMP).first()
             if reload_db(self.timestamp, db_ts):
                 log.debug("Reloading shared config from database")
@@ -374,9 +370,7 @@ def ensure_no_config_object():
     """
     store = get_request_local_store()
     if "config_object" in store:
-        log.warning(
-            "Request-local store already contains config object, even though it should not"
-        )
+        log.warning("Request-local store already contains config object, even though it should not")
         del store["config_object"]
 
 
@@ -410,9 +404,7 @@ def get_from_config(key=None, default=None, role="admin", return_bool=False):
         is given a string/bool is returned.
     """
     config_object = get_config_object()
-    return config_object.get_config(
-        key=key, default=default, role=role, return_bool=return_bool
-    )
+    return config_object.get_config(key=key, default=default, role=role, return_bool=return_bool)
 
 
 # @cache.cached(key_prefix="resolver")
@@ -487,11 +479,7 @@ def get_token_class_dict():
         for name in dir(module):
             obj = getattr(module, name)
             # We must not process imported classes!
-            if (
-                inspect.isclass(obj)
-                and issubclass(obj, TokenClass)
-                and obj.__module__ == module.__name__
-            ):
+            if inspect.isclass(obj) and issubclass(obj, TokenClass) and obj.__module__ == module.__name__:
                 try:
                     class_name = f"{module.__name__!s}.{obj.__name__!s}"
                     tokenclass_dict[class_name] = obj
@@ -601,11 +589,7 @@ def get_machine_resolver_class_dict():
         log.debug(f"module: {module!s}")
         for name in dir(module):
             obj = getattr(module, name)
-            if (
-                inspect.isclass(obj)
-                and (issubclass(obj, BaseMachineResolver))
-                and (obj != BaseMachineResolver)
-            ):
+            if inspect.isclass(obj) and (issubclass(obj, BaseMachineResolver)) and (obj != BaseMachineResolver):
                 try:
                     class_name = f"{module.__name__!s}.{obj.__name__!s}"
                     resolverclass_dict[class_name] = obj
@@ -637,11 +621,7 @@ def get_caconnector_class_dict():
         log.debug(f"module: {module!s}")
         for name in dir(module):
             obj = getattr(module, name)
-            if (
-                inspect.isclass(obj)
-                and (issubclass(obj, BaseCAConnector))
-                and (obj != BaseCAConnector)
-            ):
+            if inspect.isclass(obj) and (issubclass(obj, BaseCAConnector)) and (obj != BaseCAConnector):
                 try:
                     class_name = f"{module.__name__!s}.{obj.__name__!s}"
                     class_dict[class_name] = obj
@@ -681,9 +661,7 @@ def get_resolver_class_dict():
             obj = getattr(module, name)
             # There are other classes like HMAC in the lib.tokens module,
             # which we do not want to load.
-            if inspect.isclass(obj) and (
-                issubclass(obj, UserIdResolver) or obj == UserIdResolver
-            ):
+            if inspect.isclass(obj) and (issubclass(obj, UserIdResolver) or obj == UserIdResolver):
                 # We must not process imported classes!
                 # if obj.__module__ == module.__name__:
                 try:
@@ -923,9 +901,7 @@ def get_machine_resolver_module_list():
 
         except Exception as exx:  # pragma: no cover
             module = None
-            log.warning(
-                f"unable to load machine resolver module : {module_name!r} ({exx!r})"
-            )
+            log.warning(f"unable to load machine resolver module : {module_name!r} ({exx!r})")
 
         if module is not None:
             modules.append(module)
@@ -1040,9 +1016,7 @@ def get_edumfa_node(default="localnode"):
     If it does not exist, the EDUMFA_AUDIT_SERVERNAME is used.
     :return: the distinct node name
     """
-    node_name = get_app_config_value(
-        "EDUMFA_NODE", get_app_config_value("EDUMFA_AUDIT_SERVERNAME", default)
-    )
+    node_name = get_app_config_value("EDUMFA_NODE", get_app_config_value("EDUMFA_AUDIT_SERVERNAME", default))
     return node_name
 
 
@@ -1083,16 +1057,8 @@ def import_config(data, name=None):
             typ=values["Type"] if "Type" in values else None,
         )
         res[key] = r
-    log.info(
-        "Added configuration: {0!s}".format(
-            ", ".join([k for k, v in res.items() if v == "insert"])
-        )
-    )
-    log.info(
-        "Updated configuration: {0!s}".format(
-            ", ".join([k for k, v in res.items() if v == "update"])
-        )
-    )
+    log.info(f"Added configuration: {', '.join([k for k, v in res.items() if v == 'insert'])!s}")
+    log.info(f"Updated configuration: {', '.join([k for k, v in res.items() if v == 'update'])!s}")
 
 
 def get_multichallenge_enrollable_tokentypes():

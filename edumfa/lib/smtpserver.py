@@ -66,18 +66,12 @@ class SMTPServer(object):
         """
         self.config = db_smtpserver_object
 
-    def send_email(
-        self, recipient, subject, body, sender=None, reply_to=None, mimetype="plain"
-    ):
-        return send_or_enqueue_email(
-            self.config.get(), recipient, subject, body, sender, reply_to, mimetype
-        )
+    def send_email(self, recipient, subject, body, sender=None, reply_to=None, mimetype="plain"):
+        return send_or_enqueue_email(self.config.get(), recipient, subject, body, sender, reply_to, mimetype)
 
     @staticmethod
     @job(SEND_EMAIL_JOB_NAME)
-    def test_email(
-        config, recipient, subject, body, sender=None, reply_to=None, mimetype="plain"
-    ):
+    def test_email(config, recipient, subject, body, sender=None, reply_to=None, mimetype="plain"):
         """
         Sends an email via the configuration.
 
@@ -115,7 +109,7 @@ class SMTPServer(object):
         srv = config["server"]
         # urllib looks for a '//' to identify the host in the string. If it is
         # missing we add one.
-        smtp_server = "".join(["//", srv]) if srv.find("//") < 0 else srv
+        smtp_server = f"//{srv}" if srv.find("//") < 0 else srv
         smtp_url = urlparse(smtp_server, scheme="smtp")
         if smtp_url.scheme == "smtps":
             mail = smtplib.SMTP_SSL(
@@ -153,19 +147,13 @@ class SMTPServer(object):
             res_id, res_text = r.get(one_recipient, (200, "OK"))
             if res_id != 200 and res_text != "OK":
                 success = False
-                log.error(
-                    "Failed to send email to {0!r}: {1!r}, {2!r}".format(
-                        one_recipient, res_id, res_text
-                    )
-                )
+                log.error(f"Failed to send email to {one_recipient!r}: {res_id!r}, {res_text!r}")
         mail.quit()
         log.debug("I am done sending your email.")
         return success
 
 
-def send_or_enqueue_email(
-    config, recipient, subject, body, sender=None, reply_to=None, mimetype="plain"
-):
+def send_or_enqueue_email(config, recipient, subject, body, sender=None, reply_to=None, mimetype="plain"):
     """
     According to the value of ``config["enqueue_job"]``, send the email directly or send a job
     to the queue (if a queue is configured).
@@ -180,9 +168,7 @@ def send_or_enqueue_email(
 
 
 @log_with(log)
-def send_email_identifier(
-    identifier, recipient, subject, body, sender=None, reply_to=None, mimetype="plain"
-):
+def send_email_identifier(identifier, recipient, subject, body, sender=None, reply_to=None, mimetype="plain"):
     """
     Send the an email via the specified SMTP server configuration.
 

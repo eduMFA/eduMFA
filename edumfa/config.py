@@ -7,7 +7,7 @@ import string
 
 log = logging.getLogger(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-basedir = "/".join(basedir.split("/")[:-1]) + "/"
+basedir = f"{'/'.join(basedir.split('/')[:-1])}/"
 
 
 pubtest_key = b"""-----BEGIN PUBLIC KEY-----
@@ -34,10 +34,7 @@ WQIDAQAB
 
 def _random_password(size):
     log.info("SECRET_KEY not set in config. Generating a random key.")
-    passwd = [
-        secrets.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits)
-        for _x in range(size)
-    ]
+    passwd = [secrets.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for _x in range(size)]
     return "".join(passwd)
 
 
@@ -65,9 +62,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
     SECRET_KEY = os.environ.get("SECRET_KEY") or "t0p s3cr3t"
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DEV_DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DEV_DATABASE_URL") or f"sqlite:///{os.path.join(basedir, 'data-dev.sqlite')}"
     EDUMFA_LOGLEVEL = logging.DEBUG
     EDUMFA_TRANSLATION_WARNING = "[Missing]"
 
@@ -77,9 +72,7 @@ class TestingConfig(Config):
     # This is used to encrypt the auth token
     SUPERUSER_REALM = ["adminrealm"]
     SECRET_KEY = "secret"  # nosec B105 # used for testing
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "TEST_DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "data-test.sqlite")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL") or f"sqlite:///{os.path.join(basedir, 'data-test.sqlite')}"
     # This is used to encrypt the admin passwords
     EDUMFA_PEPPER = ""
     # This is only for testing encrypted files
@@ -136,9 +129,7 @@ class AltUIConfig(TestingConfig):
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL"
-    ) or "sqlite:///" + os.path.join(basedir, "data.sqlite")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or f"sqlite:///{os.path.join(basedir, 'data.sqlite')}"
     # SQLALCHEMY_DATABASE_URI = "mysql://pi2:pi2@localhost/pi2"
     # This is used to encrypt the auth_token
     SECRET_KEY = os.environ.get("SECRET_KEY") or _random_password(24)

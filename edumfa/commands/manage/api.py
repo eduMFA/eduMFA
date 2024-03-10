@@ -45,9 +45,7 @@ api_cli = AppGroup("api", help="Manage API Keys")
     help="The number of days the access token should be valid. Defaults to 365.",
     default=365,
 )
-@click.option(
-    "-R", "--realm", help='The realm of the admin. Defaults to "API"', default="API"
-)
+@click.option("-R", "--realm", help='The realm of the admin. Defaults to "API"', default="API")
 @click.option("-u", "--username", help="The username of the admin.")
 def createtoken(role, days, realm, username):
     """

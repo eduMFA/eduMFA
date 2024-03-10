@@ -69,9 +69,7 @@ def before_request():
     """
     ensure_no_config_object()
     request.all_data = get_all_params(request)
-    edumfa_server = get_app_config_value(
-        "EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host)
-    )
+    edumfa_server = get_app_config_value("EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host))
     # Create a policy_object, that reads the database audit settings
     # and contains the complete policy definition during the request.
     # This audit_object can be used in the postpolicy and prepolicy and it
@@ -126,10 +124,6 @@ def token(ttype=None):
     elif res[0] in ["html", "plain"]:
         return current_app.response_class(res[1], mimetype=f"text/{res[0]!s}")
     elif len(res) == 2:
-        return current_app.response_class(
-            json.dumps(res[1]), mimetype=f"application/{res[0]!s}"
-        )
+        return current_app.response_class(json.dumps(res[1]), mimetype=f"application/{res[0]!s}")
     else:
-        return current_app.response_class(
-            res[1], mimetype="application/octet-binary", headers=res[2]
-        )
+        return current_app.response_class(res[1], mimetype="application/octet-binary", headers=res[2])

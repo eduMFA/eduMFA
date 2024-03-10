@@ -78,9 +78,7 @@ def save_resolver(params):
     # check the type
     (class_dict, type_dict) = get_machine_resolver_class_dict()
     if resolvertype not in type_dict.values():
-        raise Exception(
-            f"machine resolver type : {resolvertype!s} not in {list(type_dict.values())!s}"
-        )
+        raise Exception(f"machine resolver type : {resolvertype!s} not in {list(type_dict.values())!s}")
 
     # check the name
     resolvers = get_resolver_list(filter_resolver_name=resolvername)
@@ -90,26 +88,16 @@ def save_resolver(params):
             # So we will update this resolver
             update_resolver = True
         else:  # pragma: no cover
-            raise Exception(
-                f"machine resolver with similar name and other type already exists: {r_name}"
-            )
+            raise Exception(f"machine resolver with similar name and other type already exists: {r_name}")
 
     # create a dictionary for the ResolverConfig
     resolver_config = get_resolver_config_description(resolvertype)
     config_description = resolver_config.get(resolvertype, {}).get("config", {})
-    data, types, desc = get_data_from_params(
-        params, ["name", "type"], config_description, "machine resolver", resolvertype
-    )
+    data, types, desc = get_data_from_params(params, ["name", "type"], config_description, "machine resolver", resolvertype)
 
     # Everything passed. So lets actually create the resolver in the DB
     if update_resolver:
-        resolver_id = (
-            MachineResolver.query.filter(
-                func.lower(MachineResolver.name) == resolvername.lower()
-            )
-            .first()
-            .id
-        )
+        resolver_id = MachineResolver.query.filter(func.lower(MachineResolver.name) == resolvername.lower()).first().id
     else:
         resolver = MachineResolver(params.get("name"), params.get("type"))
         resolver_id = resolver.save()
@@ -139,13 +127,9 @@ def get_resolver_list(filter_resolver_type=None, filter_resolver_name=None):
     """
     Resolvers = {}
     if filter_resolver_name:
-        resolvers = MachineResolver.query.filter(
-            func.lower(MachineResolver.name) == filter_resolver_name.lower()
-        )
+        resolvers = MachineResolver.query.filter(func.lower(MachineResolver.name) == filter_resolver_name.lower())
     elif filter_resolver_type:
-        resolvers = MachineResolver.query.filter(
-            MachineResolver.rtype == filter_resolver_type
-        )
+        resolvers = MachineResolver.query.filter(MachineResolver.rtype == filter_resolver_type)
     else:
         resolvers = MachineResolver.query.all()
 
@@ -300,8 +284,4 @@ def import_machineresolver(data, name=None):
         res_data["name"] = res_data.pop("resolvername")
         res_data.update(res_data.pop("data"))
         rid = save_resolver(res_data)
-        log.info(
-            'Import of caconnector "{0!s}" finished, id: {1!s}'.format(
-                res_data["name"], rid
-            )
-        )
+        log.info(f"Import of caconnector \"{res_data['name']!s}\" finished, id: {rid!s}")

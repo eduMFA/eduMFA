@@ -104,16 +104,10 @@ def delete_user_cache(resolver=None, username=None, expired=None):
     :return: number of deleted entries
     :rtype: int
     """
-    filter_condition = create_filter(
-        username=username, resolver=resolver, expired=expired
-    )
+    filter_condition = create_filter(username=username, resolver=resolver, expired=expired)
     rowcount = db.session.query(UserCache).filter(filter_condition).delete()
     db.session.commit()
-    log.info(
-        "Deleted {} entries from the user cache (resolver={!r}, username={!r}, expired={!r})".format(
-            rowcount, resolver, username, expired
-        )
-    )
+    log.info(f"Deleted {rowcount} entries from the user cache (resolver={resolver!r}, username={username!r}, expired={expired!r})")
     return rowcount
 
 
@@ -130,11 +124,7 @@ def add_to_cache(username, used_login, resolver, user_id):
     if is_cache_enabled():
         timestamp = datetime.datetime.now()
         record = UserCache(username, used_login, resolver, user_id, timestamp)
-        log.debug(
-            "Adding record to cache: ({!r}, {!r}, {!r}, {!r}, {!r})".format(
-                username, used_login, resolver, user_id, timestamp
-            )
-        )
+        log.debug(f"Adding record to cache: ({username!r}, {used_login!r}, {resolver!r}, {user_id!r}, {timestamp!r})")
         record.save()
 
 
@@ -144,16 +134,10 @@ def retrieve_latest_entry(filter_condition):
     :param filter_condition: SQLAlchemy filter, as created (for example) by create_filter
     :return: A `UserCache` object or None, if no entry matches the given condition.
     """
-    return (
-        UserCache.query.filter(filter_condition)
-        .order_by(UserCache.timestamp.desc())
-        .first()
-    )
+    return UserCache.query.filter(filter_condition).order_by(UserCache.timestamp.desc()).first()
 
 
-def create_filter(
-    username=None, used_login=None, resolver=None, user_id=None, expired=False
-):
+def create_filter(username=None, used_login=None, resolver=None, user_id=None, expired=False):
     """
     Build and return a SQLAlchemy query that searches the UserCache cache for a combination
     of username, resolver and user ID. This also takes the expiration time into account.
@@ -200,9 +184,7 @@ def cache_username(wrapped_function, userid, resolvername):
     result = retrieve_latest_entry(filter_conditions)
     if result:
         username = result.username
-        log.debug(
-            f"Found username of {userid!r}/{resolvername!r} in cache: {username!r}"
-        )
+        log.debug(f"Found username of {userid!r}/{resolvername!r} in cache: {username!r}")
         return username
     else:
         # record was not found in the cache
@@ -228,9 +210,7 @@ def user_init(wrapped_function, self):
         resolvers = self.get_ordererd_resolvers()
     for resolvername in resolvers:
         # If we could figure out a resolver, we can query the user cache
-        filter_conditions = create_filter(
-            used_login=self.used_login, resolver=resolvername
-        )
+        filter_conditions = create_filter(used_login=self.used_login, resolver=resolvername)
         result = retrieve_latest_entry(filter_conditions)
         if result:
             # Cached user exists, retrieve information and exit early

@@ -191,9 +191,7 @@ def create_app(
 
     # Setup logging
     log_read_func = {
-        "yaml": lambda x: logging.config.dictConfig(
-            yaml.safe_load(open(x, "r").read())
-        ),
+        "yaml": lambda x: logging.config.dictConfig(yaml.safe_load(open(x, "r").read())),
         "cfg": lambda x: logging.config.fileConfig(x),
     }
     have_config = False
@@ -212,7 +210,7 @@ def create_app(
                 pass
     if not have_config:
         if log_exx:
-            sys.stderr.write("Could not use EDUMFA_LOGCONFIG: " + str(log_exx) + "\n")
+            sys.stderr.write(f"Could not use EDUMFA_LOGCONFIG: {str(log_exx)}\n")
         if not silent:
             sys.stderr.write("Using EDUMFA_LOGLEVEL and EDUMFA_LOGFILE.\n")
         level = app.config.get("EDUMFA_LOGLEVEL", logging.INFO)
@@ -234,8 +232,6 @@ def create_app(
         with app.app_context():
             init_hsm()
 
-    logging.getLogger(__name__).debug(
-        f"Reading application from the static folder {app.static_folder!s} and the template folder {app.template_folder!s}"
-    )
+    logging.getLogger(__name__).debug(f"Reading application from the static folder {app.static_folder!s} and the template folder {app.template_folder!s}")
 
     return app

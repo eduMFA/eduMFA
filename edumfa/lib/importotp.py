@@ -72,9 +72,7 @@ def _create_static_password(key_hex):
     """
     msg_hex = "000000000000ffffffffffffffff0f2e"
     msg_bin = binascii.unhexlify(msg_hex)
-    cipher = Cipher(
-        algorithms.AES(binascii.unhexlify(key_hex)), modes.ECB(), default_backend()
-    )  # nosec B305 # part of Yubikey specification
+    cipher = Cipher(algorithms.AES(binascii.unhexlify(key_hex)), modes.ECB(), default_backend())  # nosec B305 # part of Yubikey specification
     encryptor = cipher.encryptor()
     password_bin = encryptor.update(msg_bin) + encryptor.finalize()
     password = modhex_encode(password_bin)
@@ -280,9 +278,7 @@ def parseYubicoCSV(csv):
                         "description": public_id,
                     }
                 else:
-                    log.warning(
-                        f"at the moment we do only support Yubico OTP and HOTP: {line!r}"
-                    )
+                    log.warning(f"at the moment we do only support Yubico OTP and HOTP: {line!r}")
                     continue
             elif first_column.isdigit():
                 # first column is a number, (serial number), so we are
@@ -302,9 +298,7 @@ def parseYubicoCSV(csv):
                     serial = f"UBSM{serial!s}_{slot!s}"
                     key = _create_static_password(key)
                     otplen = len(key)
-                    log.warning(
-                        "We can not enroll a static mode, since we do not know the private identify and so we do not know the static password."
-                    )
+                    log.warning("We can not enroll a static mode, since we do not know the private identify and so we do not know the static password.")
                     continue
                 else:
                     # Yubico
@@ -357,9 +351,7 @@ def parseSafeNetXML(xml):
                 tag = getTagName(elem_tdata)
                 if "ProductName" == tag:
                     DESCRIPTION = elem_tdata.text
-                    log.debug(
-                        f"The Token with the serial {SERIAL} has the productname {DESCRIPTION}"
-                    )
+                    log.debug(f"The Token with the serial {SERIAL} has the productname {DESCRIPTION}")
                 if "Applications" == tag:
                     for elem_apps in elem_tdata:
                         if getTagName(elem_apps) == "Application":
@@ -421,9 +413,7 @@ def derive_key(xml, password):
     :return: The derived key, hexlified
     """
     if not password:
-        raise TokenImportException(
-            "The XML KeyContainer specifies a derived encryption key, but no password given!"
-        )
+        raise TokenImportException("The XML KeyContainer specifies a derived encryption key, but no password given!")
 
     keymeth = xml.keycontainer.encryptionkey.derivedkey.keyderivationmethod
     derivation_algo = keymeth["algorithm"].split("#")[-1]
@@ -479,9 +469,7 @@ def parsePSKCdata(
     xml = strip_prefix_from_soup(BeautifulSoup(xml_data, "lxml"))
 
     if not xml.keycontainer:
-        raise TokenImportException(
-            "No KeyContainer found in PSKC data. Could not import any tokens."
-        )
+        raise TokenImportException("No KeyContainer found in PSKC data. Could not import any tokens.")
     if xml.keycontainer.encryptionkey and xml.keycontainer.encryptionkey.derivedkey:
         # If we have a password we also need a tag EncryptionKey in the
         # KeyContainer
@@ -504,9 +492,7 @@ def parsePSKCdata(
             "http://www.yubico.com/#yubikey-aes": ("yubikey", "UBAM"),
             "urn:ietf:params:xml:ns:keyprov:pskc:hotp": ("hotp", "UBOM"),
         }
-        if algo in yubi_mapping.keys() and re.match(
-            r"\d+:\d+", serial
-        ):  # check if the serial fits the pattern "<SerialNo>:<Slot>
+        if algo in yubi_mapping.keys() and re.match(r"\d+:\d+", serial):  # check if the serial fits the pattern "<SerialNo>:<Slot>
             t_type = yubi_mapping[algo][0]
             serial_split = serial.split(":")
             serial_no = serial_split[0]
@@ -543,9 +529,7 @@ def parsePSKCdata(
                 encryptionmethod = key.data.secret.encryptedvalue.encryptionmethod
                 enc_algorithm = encryptionmethod["algorithm"].split("#")[-1]
                 if enc_algorithm.lower() != "aes128-cbc":
-                    raise TokenImportException(
-                        "We only import PSKC files with AES128-CBC."
-                    )
+                    raise TokenImportException("We only import PSKC files with AES128-CBC.")
                 enc_data = key.data.secret.encryptedvalue.ciphervalue.text
                 enc_data = enc_data.strip()
 
@@ -571,9 +555,7 @@ def parsePSKCdata(
 
                     mac_value_xml = key.data.find("valuemac").text.strip()
 
-                    is_invalid = not hmac.compare_digest(
-                        mac_value_xml, mac_value_calculated
-                    )
+                    is_invalid = not hmac.compare_digest(mac_value_xml, mac_value_calculated)
 
                     if is_invalid and validate_mac == "check_fail_hard":
                         abort = True
@@ -584,9 +566,7 @@ def parsePSKCdata(
         except Exception as exx:
             log.error(f"Failed to import tokendata: {exx!s}")
             log.debug(traceback.format_exc())
-            raise TokenImportException(
-                f"Failed to import tokendata. Wrong encryption key? {exx}"
-            )
+            raise TokenImportException(f"Failed to import tokendata. Wrong encryption key? {exx}")
 
         if token["type"] in ["hotp", "totp"] and key.data.counter:
             token["counter"] = key.data.counter.text.strip()
@@ -690,7 +670,7 @@ def export_pskc(tokenobj_list, psk=None):
 
     # define the header
     soup = BeautifulSoup(
-        """<KeyContainer Version="1.0"
+        f"""<KeyContainer Version="1.0"
      xmlns="urn:ietf:params:xml:ns:keyprov:pskc"
      xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
      xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
@@ -706,7 +686,7 @@ def export_pskc(tokenobj_list, psk=None):
              </xenc:CipherData>
          </MACKey>
      </MACMethod>
-""".format(encrypted_mackey=encrypted_mackey),
+""",
         "html.parser",
     )
 

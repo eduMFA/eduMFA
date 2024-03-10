@@ -62,10 +62,7 @@ def convert_datetimes_to_string(ptask):
     """
     ptask = ptask.copy()
     ptask["last_update"] = ptask["last_update"].strftime(AUTH_DATE_FORMAT)
-    ptask["last_runs"] = dict(
-        (node, timestamp.strftime(AUTH_DATE_FORMAT))
-        for node, timestamp in ptask["last_runs"].items()
-    )
+    ptask["last_runs"] = dict((node, timestamp.strftime(AUTH_DATE_FORMAT)) for node, timestamp in ptask["last_runs"].items())
     return ptask
 
 

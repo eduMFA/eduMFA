@@ -183,21 +183,15 @@ def attach_token_api():
         options=options,
     )
 
-    g.audit_object.log(
-        {"success": True, "info": f"serial: {serial!s}, application: {application!s}"}
-    )
+    g.audit_object.log({"success": True, "info": f"serial: {serial!s}, application: {application!s}"})
 
     return send_result(mt_object.id)
 
 
-@machine_blueprint.route(
-    "/token/<serial>/<machineid>/<resolver>/<application>", methods=["DELETE"]
-)
+@machine_blueprint.route("/token/<serial>/<machineid>/<resolver>/<application>", methods=["DELETE"])
 @machine_blueprint.route("/token/<serial>/<application>/<mtid>", methods=["DELETE"])
 @prepolicy(check_base_action, request, ACTION.MACHINETOKENS)
-def detach_token_api(
-    serial, machineid=None, resolver=None, application=None, mtid=None
-):
+def detach_token_api(serial, machineid=None, resolver=None, application=None, mtid=None):
     """
     Detach a token from a machine with a certain application.
 
@@ -223,13 +217,9 @@ def detach_token_api(
          "application": "luks" }
 
     """
-    r = detach_token(
-        serial, application, machine_id=machineid, resolver_name=resolver, mtid=mtid
-    )
+    r = detach_token(serial, application, machine_id=machineid, resolver_name=resolver, mtid=mtid)
 
-    g.audit_object.log(
-        {"success": True, "info": f"serial: {serial!s}, application: {application!s}"}
-    )
+    g.audit_object.log({"success": True, "info": f"serial: {serial!s}, application: {application!s}"})
 
     return send_result(r)
 
@@ -322,9 +312,7 @@ def list_machinetokens_api():
             reverse=sortdir == "desc",
         )
 
-    g.audit_object.log(
-        {"success": True, "info": f"serial: {serial!s}, hostname: {hostname!s}"}
-    )
+    g.audit_object.log({"success": True, "info": f"serial: {serial!s}, hostname: {hostname!s}"})
     return send_result(res)
 
 
@@ -401,9 +389,7 @@ def set_option_api():
                 key=k,
             )
 
-    g.audit_object.log(
-        {"success": True, "info": f"serial: {serial!s}, application: {application!s}"}
-    )
+    g.audit_object.log({"success": True, "info": f"serial: {serial!s}, application: {application!s}"})
 
     return send_result({"added": o_add, "deleted": o_del})
 
@@ -468,7 +454,5 @@ def get_auth_items_api(application=None):
         challenge=challenge,
         filter_param=filter_param,
     )
-    g.audit_object.log(
-        {"success": True, "info": f"host: {hostname!s}, application: {application!s}"}
-    )
+    g.audit_object.log({"success": True, "info": f"host: {hostname!s}, application: {application!s}"})
     return send_result(ret)

@@ -103,9 +103,7 @@ class SubscriptionError(eduMFAError):
         return self.__repr__()
 
     def __repr__(self):
-        ret = "{0!s}({1!r}, application={2!s})".format(
-            type(self).__name__, self.message, self.application
-        )
+        ret = f"{type(self).__name__!s}({self.message!r}, application={self.application!s})"
         return ret
 
 
@@ -166,9 +164,7 @@ class CSRError(CAError):
 
 
 class CSRPending(CAError):
-    def __init__(
-        self, description="CSR pending", id=ERROR.CA_CSR_PENDING, requestId=None
-    ):
+    def __init__(self, description="CSR pending", id=ERROR.CA_CSR_PENDING, requestId=None):
         eduMFAError.__init__(self, description=description, id=id)
         self.requestId = requestId
 

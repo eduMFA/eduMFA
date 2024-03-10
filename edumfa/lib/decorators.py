@@ -44,9 +44,7 @@ def check_token_locked(func):
         # The token object
         token = args[0]
         if token.is_locked():
-            raise TokenAdminError(
-                _("This action is not possible, since the token is locked"), id=1007
-            )
+            raise TokenAdminError(_("This action is not possible, since the token is locked"), id=1007)
         f_result = func(*args, **kwds)
         return f_result
 
@@ -68,11 +66,7 @@ def check_user_or_serial(func):
         serial = kwds.get("serial")
         user = kwds.get("user")
         # We have no serial! The serial would be the first arg
-        if (
-            serial is None
-            and (len(args) == 0 or args[0] is None)
-            and (user is None or (user is not None and user.is_empty()))
-        ):
+        if serial is None and (len(args) == 0 or args[0] is None) and (user is None or (user is not None and user.is_empty())):
             # We either have an empty User object or None
             raise ParameterError(ParameterError.USER_OR_SERIAL)
 
@@ -100,9 +94,7 @@ class check_user_or_serial_in_request(object):
 
         @functools.wraps(func)
         def check_user_or_serial_in_request_wrapper(*args, **kwds):
-            if self.request.full_path.startswith(
-                "/validate/triggerchallenge"
-            ) or self.request.full_path.startswith("/validate/check"):
+            if self.request.full_path.startswith("/validate/triggerchallenge") or self.request.full_path.startswith("/validate/check"):
                 type = self.request.all_data.get("type", "")
                 if type and type == WebAuthnTokenClass.get_class_type():
                     f_result = func(*args, **kwds)

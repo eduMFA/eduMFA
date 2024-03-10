@@ -60,9 +60,7 @@ class LoggingEventHandler(BaseEventHandler):
     """
 
     identifier = "Logging"
-    description = (
-        "This eventhandler logs the event to the specified python logging facility"
-    )
+    description = "This eventhandler logs the event to the specified python logging facility"
 
     @property
     def allowed_positions(self):
@@ -135,11 +133,7 @@ class LoggingEventHandler(BaseEventHandler):
             response = options.get("response")
             tokenowner = self._get_tokenowner(request)
             content = self._get_response_content(response)
-            serial = (
-                request.all_data.get("serial")
-                or content.get("detail", {}).get("serial")
-                or g.audit_object.audit_data.get("serial")
-            )
+            serial = request.all_data.get("serial") or content.get("detail", {}).get("serial") or g.audit_object.audit_data.get("serial")
             result_value = None
             if content.get("result", {}).get("value") != None:
                 result_value = str(content.get("result", {}).get("value"))
@@ -168,9 +162,7 @@ class LoggingEventHandler(BaseEventHandler):
 
             logger_name = handler_options.get("name", DEFAULT_LOGGER_NAME)
             log_action = logging.getLogger(logger_name)
-            log_level = getattr(
-                logging, handler_options.get("level", DEFAULT_LOGLEVEL), logging.INFO
-            )
+            log_level = getattr(logging, handler_options.get("level", DEFAULT_LOGLEVEL), logging.INFO)
             log_template = handler_options.get("message") or DEFAULT_LOGMSG
             log_action.log(log_level, to_unicode(log_template).format(**tags))
             ret = True

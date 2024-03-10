@@ -124,9 +124,7 @@ class FourEyesTokenClass(TokenClass):
         res = {
             "type": "4eyes",
             "title": "4Eyes Token",
-            "description": _(
-                "4Eyes Token: Use tokens of two or more users to authenticate"
-            ),
+            "description": _("4Eyes Token: Use tokens of two or more users to authenticate"),
             "init": {},
             "config": {},
             "user": [],
@@ -136,16 +134,12 @@ class FourEyesTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of 4eyes tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of 4eyes tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active 4eyes tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active 4eyes tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -260,16 +254,12 @@ class FourEyesTokenClass(TokenClass):
         :return: token_id or None
         """
         serial = None
-        res, reply = check_realm_pass(
-            realm, password, exclude_types=[self.get_tokentype()]
-        )
+        res, reply = check_realm_pass(realm, password, exclude_types=[self.get_tokentype()])
         if res:
             serial = reply.get("serial")
         return serial
 
-    def _authenticate_remaining_realms(
-        self, passw, remaining_realms, used_tokens, options
-    ):
+    def _authenticate_remaining_realms(self, passw, remaining_realms, used_tokens, options):
         r_success = -1
         for realm in remaining_realms:
             # check for token in realm
@@ -277,9 +267,7 @@ class FourEyesTokenClass(TokenClass):
             if serial:
                 # check that not the same token is used again
                 if serial in used_tokens.get(realm, []):
-                    log.info(
-                        f"The same token {serial!s} was already used. You can not use a token twice."
-                    )
+                    log.info(f"The same token {serial!s} was already used. You can not use a token twice.")
                 else:
                     # Add the serial to the used tokens.
                     if realm in used_tokens:
@@ -329,11 +317,7 @@ class FourEyesTokenClass(TokenClass):
             found_serials[realm] = list(set(found_serials[realm]))
 
             if len(found_serials[realm]) < required_realms[realm]:
-                reply = {
-                    "foureyes": "Only found {0:d} tokens in realm {1!s}".format(
-                        len(found_serials[realm]), realm
-                    )
-                }
+                reply = {"foureyes": f"Only found {len(found_serials[realm]):d} tokens in realm {realm!s}"}
                 otp_counter = -1
                 break
             else:
@@ -380,9 +364,7 @@ class FourEyesTokenClass(TokenClass):
         :return: True, if further challenge is required.
         """
         transaction_id = options.get("transaction_id")
-        challengeobject_list = get_challenges(
-            serial=self.token.serial, transaction_id=transaction_id
-        )
+        challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
         if len(challengeobject_list) == 1:
             remaining_realms = self._get_remaining_realms(options.get("data", {}))
             if remaining_realms:
@@ -418,20 +400,14 @@ class FourEyesTokenClass(TokenClass):
 
         # get the challenges for this transaction ID
         if transaction_id is not None:
-            challengeobject_list = get_challenges(
-                serial=self.token.serial, transaction_id=transaction_id
-            )
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
 
             for challengeobject in challengeobject_list:
                 if challengeobject.is_valid():
                     # challenge is still valid
-                    used_tokens = json.loads(
-                        challengeobject_list[0].data or json.dumps({})
-                    )
+                    used_tokens = json.loads(challengeobject_list[0].data or json.dumps({}))
                     remaining_realms = self._get_remaining_realms(used_tokens)
-                    r_success = self._authenticate_remaining_realms(
-                        passw, remaining_realms, used_tokens, options
-                    )
+                    r_success = self._authenticate_remaining_realms(passw, remaining_realms, used_tokens, options)
 
                     if r_success:
                         challengeobject.set_otp_status(True)
@@ -470,14 +446,12 @@ class FourEyesTokenClass(TokenClass):
         used_tokens = json.loads(options.get("data", json.dumps({})))
         remaining_realms = self._get_remaining_realms(used_tokens)
         if remaining_realms:
-            message = "Please authenticate with another token from either realm: {0!s}.".format(
-                ", ".join(remaining_realms)
-            )
+            message = f"Please authenticate with another token from either realm: {', '.join(remaining_realms)!s}."
 
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
         # Maybe there is a 4EYESChallengeValidityTime...
-        lookup_for = tokentype.capitalize() + "ChallengeValidityTime"
+        lookup_for = f"{tokentype.capitalize()}ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # Create the challenge in the database
@@ -521,9 +495,7 @@ class FourEyesTokenClass(TokenClass):
             # start a multi challenge chain
             used_tokens = {}
             remaining_realms = self._get_remaining_realms({})
-            r_success = self._authenticate_remaining_realms(
-                passw, remaining_realms, used_tokens, options
-            )
+            r_success = self._authenticate_remaining_realms(passw, remaining_realms, used_tokens, options)
             return r_success >= 0
 
         return False

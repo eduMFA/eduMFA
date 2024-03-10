@@ -47,9 +47,7 @@ CA_SIGN_SPKAC = "openssl ca -keyfile {cakey} -cert {cacert} -config {config} -ex
 
 CA_REVOKE = "openssl ca -keyfile {cakey} -cert {cacert} -config {config} -revoke {certificate} -crl_reason {reason}"
 
-CA_GENERATE_CRL = (
-    "openssl ca -keyfile {cakey} -cert {cacert} -config {config} -gencrl -out {CRL}"
-)
+CA_GENERATE_CRL = "openssl ca -keyfile {cakey} -cert {cacert} -config {config} -gencrl -out {CRL}"
 
 
 CRL_REASONS = [
@@ -326,7 +324,7 @@ class LocalCAConnector(BaseCAConnector):
         self.workingdir = self.config.get(ATTR.WORKING_DIR)
         if self.template_file and self.workingdir:
             if not self.template_file.startswith("/"):
-                self.template_file = self.workingdir + "/" + self.template_file
+                self.template_file = f"{self.workingdir}/{self.template_file}"
         self.templates = self.get_templates()
 
     @staticmethod
@@ -342,7 +340,7 @@ class LocalCAConnector(BaseCAConnector):
         """
         name_components = x509_name.get_components()
         filename = "_".join([to_unicode(value) for (key, value) in name_components])
-        return ".".join([filename, file_extension])
+        return f"{filename}.{file_extension}"
 
     def sign_request(self, csr, options=None):
         """
@@ -368,9 +366,7 @@ class LocalCAConnector(BaseCAConnector):
         options = options or {}
         days = options.get("days", 365)
         spkac = options.get("spkac")
-        config = options.get(
-            ATTR.OPENSSL_CNF, self.config.get(ATTR.OPENSSL_CNF, "/etc/ssl/openssl.cnf")
-        )
+        config = options.get(ATTR.OPENSSL_CNF, self.config.get(ATTR.OPENSSL_CNF, "/etc/ssl/openssl.cnf"))
         extension = options.get("extension", "server")
         template_name = options.get("template")
         workingdir = options.get(ATTR.WORKING_DIR, self.config.get(ATTR.WORKING_DIR))
@@ -379,9 +375,9 @@ class LocalCAConnector(BaseCAConnector):
         if workingdir:
             if not csrdir.startswith("/"):
                 # No absolut path
-                csrdir = workingdir + "/" + csrdir
+                csrdir = f"{workingdir}/{csrdir}"
             if not certificatedir.startswith("/"):
-                certificatedir = workingdir + "/" + certificatedir
+                certificatedir = f"{workingdir}/{certificatedir}"
 
         if template_name:
             t_data = self.templates.get(template_name)
@@ -391,16 +387,12 @@ class LocalCAConnector(BaseCAConnector):
         # Determine filename from the CN of the request
         if spkac:
             common_name = re.search("CN=(.*)", csr).group(0).split("=")[1]
-            csr_filename = common_name + ".txt"
-            certificate_filename = common_name + ".der"
+            csr_filename = f"{common_name}.txt"
+            certificate_filename = f"{common_name}.der"
         else:
             csr_obj = crypto.load_certificate_request(crypto.FILETYPE_PEM, csr)
-            csr_filename = self._filename_from_x509(
-                csr_obj.get_subject(), file_extension="req"
-            )
-            certificate_filename = self._filename_from_x509(
-                csr_obj.get_subject(), file_extension="pem"
-            )
+            csr_filename = self._filename_from_x509(csr_obj.get_subject(), file_extension="req")
+            certificate_filename = self._filename_from_x509(csr_obj.get_subject(), file_extension="pem")
             # csr_extensions = csr_obj.get_extensions()
         csr_filename = csr_filename.replace(" ", "_")
         certificate_filename = certificate_filename.replace(" ", "_")
@@ -433,9 +425,7 @@ class LocalCAConnector(BaseCAConnector):
         # run the command
         args = shlex.split(cmd)
         # the command is configured by the administrator: CA key, CA cert, number of days, the config file
-        p = Popen(
-            args, stdout=PIPE, stderr=PIPE, cwd=workingdir, universal_newlines=True
-        )  # nosec B603
+        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=workingdir, universal_newlines=True)  # nosec B603
         result, error = p.communicate()
         if p.returncode != 0:  # pragma: no cover
             # Some error occurred
@@ -466,9 +456,7 @@ class LocalCAConnector(BaseCAConnector):
                     file_content = content_file.read()
                     content = yaml.safe_load(file_content)
             except EnvironmentError:
-                log.warning(
-                    f"Template file {self.template_file!s} for {self.name!s} not found or not permitted."
-                )
+                log.warning(f"Template file {self.template_file!s} for {self.name!s} not found or not permitted.")
                 log.debug(f"{traceback.format_exc()!s}")
         return content
 
@@ -496,23 +484,19 @@ class LocalCAConnector(BaseCAConnector):
 
         serial = cert_obj.get_serial_number()
         serial_hex = int_to_hex(serial)
-        filename = serial_hex + ".pem"
+        filename = f"{serial_hex}.pem"
         cmd = CA_REVOKE.format(
             cakey=self.cakey,
             cacert=self.cacert,
             config=self.config.get(ATTR.OPENSSL_CNF),
-            certificate="/".join(
-                p for p in [self.config.get(ATTR.CERT_DIR), filename] if p
-            ),
+            certificate="/".join(p for p in [self.config.get(ATTR.CERT_DIR), filename] if p),
             reason=reason,
         )
         workingdir = self.config.get(ATTR.WORKING_DIR)
         args = shlex.split(cmd)
         # The command is configured by the administrator: CA key, CA cert, config file, certificate,
         # the revoking reason is fetched earlier
-        p = Popen(
-            args, stdout=PIPE, stderr=PIPE, cwd=workingdir, universal_newlines=True
-        )  # nosec B603
+        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=workingdir, universal_newlines=True)  # nosec B603
         result, error = p.communicate()
         if p.returncode != 0:  # pragma: no cover
             # Some error occurred
@@ -540,21 +524,12 @@ class LocalCAConnector(BaseCAConnector):
             if crl.startswith("/"):
                 full_path_crl = crl
             else:
-                full_path_crl = workingdir + "/" + crl
+                full_path_crl = f"{workingdir}/{crl}"
             next_update = _get_crl_next_update(full_path_crl)
-            if (
-                datetime.datetime.now() + datetime.timedelta(days=self.overlap)
-                > next_update
-            ):
-                log.info(
-                    "We checked the overlap period and we need to create the new CRL."
-                )
+            if datetime.datetime.now() + datetime.timedelta(days=self.overlap) > next_update:
+                log.info("We checked the overlap period and we need to create the new CRL.")
             else:
-                log.info(
-                    "No need to create a new CRL, yet. Next Update: {0!s}, overlap: {1!s}".format(
-                        next_update, self.overlap
-                    )
-                )
+                log.info(f"No need to create a new CRL, yet. Next Update: {next_update!s}, overlap: {self.overlap!s}")
                 create_new_crl = False
 
         if create_new_crl:
@@ -566,9 +541,7 @@ class LocalCAConnector(BaseCAConnector):
             )
             args = shlex.split(cmd)
             # The command is configured by the admin: CA key, CA cert, config file and CRL location
-            p = Popen(
-                args, stdout=PIPE, stderr=PIPE, cwd=workingdir, universal_newlines=True
-            )  # nosec B603
+            p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=workingdir, universal_newlines=True)  # nosec B603
             result, error = p.communicate()
             if p.returncode != 0:  # pragma: no cover
                 # Some error occurred
@@ -611,21 +584,15 @@ class LocalCAConnector(BaseCAConnector):
         config = CONFIG(name)
 
         while 1:
-            directory = input(
-                f"In which directory do you want to create the CA [{config.directory!s}]: "
-            )
+            directory = input(f"In which directory do you want to create the CA [{config.directory!s}]: ")
             config.directory = directory or config.directory
             if not config.directory.startswith("/"):
                 config.directory = os.path.abspath(config.directory)
 
-            keysize = input(
-                f"What should be the keysize of the CA (2048/4096/8192)[{config.keysize!s}]: "
-            )
+            keysize = input(f"What should be the keysize of the CA (2048/4096/8192)[{config.keysize!s}]: ")
             config.keysize = keysize or config.keysize
 
-            validity_ca = input(
-                f"How many days should the CA be valid [{config.validity_ca!s}]: "
-            )
+            validity_ca = input(f"How many days should the CA be valid [{config.validity_ca!s}]: ")
             config.validity_ca = validity_ca or config.validity_ca
 
             dn = input(f"What is the DN of the CA [{config.dn!s}]: ")
@@ -636,13 +603,9 @@ class LocalCAConnector(BaseCAConnector):
             #    "What should be the validity period of enrolled certificates in days [{0!s}]: ".format(
             #    config.validity_cert))
             # config.validity_cert = validity_cert or config.validity_cert
-            crl_days = input(
-                f"How many days should the CRL be valid [{config.crl_days!s}]: "
-            )
+            crl_days = input(f"How many days should the CRL be valid [{config.crl_days!s}]: ")
             config.crl_days = crl_days or config.crl_days
-            crl_overlap = input(
-                f"What should be the overlap period of the CRL in days [{config.crl_overlap!s}]: "
-            )
+            crl_overlap = input(f"What should be the overlap period of the CRL in days [{config.crl_overlap!s}]: ")
             config.crl_overlap = crl_overlap or config.crl_overlap
 
             print("=" * 60)
@@ -687,9 +650,7 @@ def _generate_openssl_cnf(config):
     :param config: Config object
     :return:
     """
-    conf_file = OPENSSL_TEMPLATE.format(
-        crl_days=config.crl_days, ca_days=config.validity_ca
-    )
+    conf_file = OPENSSL_TEMPLATE.format(crl_days=config.crl_days, ca_days=config.validity_ca)
 
     f = open(f"{config.directory!s}/openssl.cnf", "w")
     f.write(conf_file)
@@ -724,9 +685,7 @@ def _init_ca(config):
     print(command)
     args = shlex.split(command)
     # The command is created by the root user at the command line anyways
-    p = Popen(
-        args, stdout=PIPE, stderr=PIPE, cwd=config.directory, universal_newlines=True
-    )  # nosec B603
+    p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=config.directory, universal_newlines=True)  # nosec B603
     result, error = p.communicate()
     if p.returncode != 0:  # pragma: no cover
         # Some error occurred
@@ -735,16 +694,12 @@ def _init_ca(config):
     # create the CA certificate
     command = """openssl req -config openssl.cnf -key cakey.pem \
       -new -x509 -days {ca_days!s} -sha256 -extensions v3_ca \
-      -out cacert.pem -subj {ca_dn!s}""".format(
-        ca_days=config.validity_ca, ca_dn=config.dn
-    )
+      -out cacert.pem -subj {ca_dn!s}""".format(ca_days=config.validity_ca, ca_dn=config.dn)
     print("Running command...")
     print(command)
     args = shlex.split(command)
     # The command is created by the root user at the command line anyways
-    p = Popen(
-        args, stdout=PIPE, stderr=PIPE, cwd=config.directory, universal_newlines=True
-    )  # nosec B603
+    p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=config.directory, universal_newlines=True)  # nosec B603
     result, error = p.communicate()
     if p.returncode != 0:  # pragma: no cover
         # Some error occurred

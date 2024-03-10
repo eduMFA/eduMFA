@@ -162,40 +162,28 @@ class TotpTokenClass(HotpTokenClass):
                 SCOPE.ENROLL: {
                     "2step_clientsize": {
                         "type": "int",
-                        "desc": _(
-                            "The size of the OTP seed part contributed by the client (in bytes)"
-                        ),
+                        "desc": _("The size of the OTP seed part contributed by the client (in bytes)"),
                     },
                     "2step_serversize": {
                         "type": "int",
-                        "desc": _(
-                            "The size of the OTP seed part contributed by the server (in bytes)"
-                        ),
+                        "desc": _("The size of the OTP seed part contributed by the server (in bytes)"),
                     },
                     "2step_difficulty": {
                         "type": "int",
-                        "desc": _(
-                            "The difficulty factor used for the OTP seed generation (should be at least 10000)"
-                        ),
+                        "desc": _("The difficulty factor used for the OTP seed generation (should be at least 10000)"),
                     },
-                    "totp_" + ACTION.FORCE_APP_PIN: {
+                    f"totp_{ACTION.FORCE_APP_PIN}": {
                         "type": "bool",
-                        "desc": _(
-                            "Enforce setting an app pin for the eduMFA Authenticator App"
-                        ),
+                        "desc": _("Enforce setting an app pin for the eduMFA Authenticator App"),
                     },
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of remote tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of remote tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active remote tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active remote tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 },
@@ -236,25 +224,17 @@ class TotpTokenClass(HotpTokenClass):
 
     @property
     def timestep(self):
-        timeStepping = int(
-            self.get_tokeninfo("timeStep") or get_from_config("totp.timeStep") or 30
-        )
+        timeStepping = int(self.get_tokeninfo("timeStep") or get_from_config("totp.timeStep") or 30)
         return timeStepping
 
     @property
     def hashlib(self):
-        hashlibStr = self.get_tokeninfo("hashlib") or get_from_config(
-            "totp.hashlib", "sha1"
-        )
+        hashlibStr = self.get_tokeninfo("hashlib") or get_from_config("totp.hashlib", "sha1")
         return hashlibStr
 
     @property
     def timewindow(self):
-        window = int(
-            self.get_tokeninfo("timeWindow")
-            or get_from_config("totp.timeWindow")
-            or 180
-        )
+        window = int(self.get_tokeninfo("timeWindow") or get_from_config("totp.timeWindow") or 180)
         return window
 
     @property
@@ -263,9 +243,7 @@ class TotpTokenClass(HotpTokenClass):
         return shift
 
     @log_with(log)
-    def check_otp_exist(
-        self, otp, window=None, options=None, symetric=True, inc_counter=True
-    ):
+    def check_otp_exist(self, otp, window=None, options=None, symetric=True, inc_counter=True):
         """
         checks if the given OTP value is/are values of this very token at all.
         This is used to autoassign and to determine the serial number of
@@ -280,9 +258,7 @@ class TotpTokenClass(HotpTokenClass):
         :rtype:  int
         """
         options = options or {}
-        timeStepping = int(
-            self.get_tokeninfo("timeStep") or get_from_config("totp.timeStep") or 30
-        )
+        timeStepping = int(self.get_tokeninfo("timeStep") or get_from_config("totp.timeStep") or 30)
         window = (window or self.get_sync_window()) * timeStepping
         res = self.check_otp(otp, window=window, options=options)
 
@@ -365,10 +341,7 @@ class TotpTokenClass(HotpTokenClass):
         res = hmac2Otp.checkOtp(anOtpVal, int(window / self.timestep), symetric=True)
 
         if res != -1 and oCount != 0 and res <= oCount:
-            log.warning(
-                "a previous OTP value was used again! former tokencounter: %i, presented counter %i"
-                % (oCount, res)
-            )
+            log.warning("a previous OTP value was used again! former tokencounter: %i, presented counter %i" % (oCount, res))
             res = -1
             return res
 
@@ -441,15 +414,11 @@ class TotpTokenClass(HotpTokenClass):
                 otp2c = res
                 log.debug(f"otp1c: {otp1c!r}, otp2c: {otp2c!r}")
                 if (otp1c + 1) != otp2c:
-                    log.debug(
-                        f"Autoresync failed for token {self.token.serial!s}. OTP values too far apart."
-                    )
+                    log.debug(f"Autoresync failed for token {self.token.serial!s}. OTP values too far apart.")
                     res = -1
                 elif otp2c <= self.token.count:
                     # The resync was done with previous (old) OTP values
-                    log.debug(
-                        f"Autoresync failed for token {self.token.serial!s}. Previous OTP values used."
-                    )
+                    log.debug(f"Autoresync failed for token {self.token.serial!s}. Previous OTP values used.")
                     res = -1
                 else:
                     log.info(f"Autoresync successful for token {self.token.serial!s}.")
@@ -492,9 +461,7 @@ class TotpTokenClass(HotpTokenClass):
         otplen = int(self.token.otplen)
         secretHOtp = self.token.get_otpkey()
 
-        log.debug(
-            f"timestep: {self.timestep!r}, syncWindow: {self.timewindow!r}, timeShift: {self.timeshift!r}"
-        )
+        log.debug(f"timestep: {self.timestep!r}, syncWindow: {self.timewindow!r}, timeShift: {self.timeshift!r}")
 
         initTime = int(options.get("initTime", -1))
         if initTime != -1:
@@ -509,32 +476,21 @@ class TotpTokenClass(HotpTokenClass):
 
         log.debug(f"tokenCounter: {oCount!r}")
         sync_window = self.get_sync_window()
-        log.debug(
-            f"now checking window {sync_window!s}, timeStepping {self.timestep!s}"
-        )
+        log.debug(f"now checking window {sync_window!s}, timeStepping {self.timestep!s}")
         # check 2nd value
         hmac2Otp = HmacOtp(secretHOtp, counter, otplen, self.get_hashlib(self.hashlib))
         log.debug(f"{otp2!s} in otpkey: {secretHOtp!s} ")
-        res2 = hmac2Otp.checkOtp(
-            otp2, int(sync_window), symetric=True
-        )  # TEST -remove the 10
+        res2 = hmac2Otp.checkOtp(otp2, int(sync_window), symetric=True)  # TEST -remove the 10
         log.debug(f"res 2: {res2!r}")
         # check 1st value
-        hmac2Otp = HmacOtp(
-            secretHOtp, counter - 1, otplen, self.get_hashlib(self.hashlib)
-        )
+        hmac2Otp = HmacOtp(secretHOtp, counter - 1, otplen, self.get_hashlib(self.hashlib))
         log.debug(f"{otp1!s} in otpkey: {secretHOtp!s} ")
-        res1 = hmac2Otp.checkOtp(
-            otp1, int(sync_window), symetric=True
-        )  # TEST -remove the 10
+        res1 = hmac2Otp.checkOtp(otp1, int(sync_window), symetric=True)  # TEST -remove the 10
         log.debug(f"res 1: {res1!r}")
 
         if res1 < oCount:
             # A previous OTP value was used again!
-            log.warning(
-                "a previous OTP value was used again! tokencounter: %i, presented counter %i"
-                % (oCount, res1)
-            )
+            log.warning("a previous OTP value was used again! tokencounter: %i, presented counter %i" % (oCount, res1))
             res1 = -1
 
         if res1 != -1 and res1 + 1 == res2:
@@ -543,9 +499,7 @@ class TotpTokenClass(HotpTokenClass):
             tokentime = (res2 + 0.5) * self.timestep
             currenttime = server_time - self.timeshift
             new_shift = tokentime - currenttime
-            log.debug(
-                f"the counters {res1!r} and {res2!r} matched. New shift: {new_shift!r}"
-            )
+            log.debug(f"the counters {res1!r} and {res2!r} matched. New shift: {new_shift!r}")
             self.add_tokeninfo("timeShift", new_shift)
 
             # The OTP value that was used for resync must not be used again!
@@ -561,9 +515,7 @@ class TotpTokenClass(HotpTokenClass):
         log.debug(f"end. {msg!s}: ret: {ret!r}")
         return ret
 
-    def get_otp(
-        self, current_time=None, do_truncation=True, time_seconds=None, challenge=None
-    ):
+    def get_otp(self, current_time=None, do_truncation=True, time_seconds=None, challenge=None):
         """
         get the next OTP value
 
@@ -579,9 +531,7 @@ class TotpTokenClass(HotpTokenClass):
         otplen = int(self.token.otplen)
         secretHOtp = self.token.get_otpkey()
 
-        hmac2Otp = HmacOtp(
-            secretHOtp, self.get_otp_count(), otplen, self.get_hashlib(self.hashlib)
-        )
+        hmac2Otp = HmacOtp(secretHOtp, self.get_otp_count(), otplen, self.get_hashlib(self.hashlib))
 
         if time_seconds is None:
             time_seconds = time.time()
@@ -605,9 +555,7 @@ class TotpTokenClass(HotpTokenClass):
         return 1, pin, otpval, combined
 
     @log_with(log)
-    def get_multi_otp(
-        self, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None
-    ):
+    def get_multi_otp(self, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None):
         """
         return a dictionary of multiple future OTP values
         of the HOTP/HMAC token
@@ -630,9 +578,7 @@ class TotpTokenClass(HotpTokenClass):
         otplen = int(self.token.otplen)
         secretHOtp = self.token.get_otpkey()
 
-        hmac2Otp = HmacOtp(
-            secretHOtp, self.get_otp_count(), otplen, self.get_hashlib(self.hashlib)
-        )
+        hmac2Otp = HmacOtp(secretHOtp, self.get_otp_count(), otplen, self.get_hashlib(self.hashlib))
 
         if curTime:
             # datetime object provided for simulation
@@ -656,9 +602,7 @@ class TotpTokenClass(HotpTokenClass):
                 otpval = hmac2Otp.generate(counter=counter + i, inc_counter=False)
                 timeCounter = ((counter + i) * self.timestep) + self.timeshift
 
-                val_time = datetime.datetime.fromtimestamp(timeCounter).strftime(
-                    "%Y-%m-%d %H:%M:%S"
-                )
+                val_time = datetime.datetime.fromtimestamp(timeCounter).strftime("%Y-%m-%d %H:%M:%S")
                 otp_dict["otp"][counter + i] = {"otpval": otpval, "time": val_time}
             ret = True
 
@@ -692,9 +636,7 @@ class TotpTokenClass(HotpTokenClass):
         ret = {}
         if not g.logged_in_user:
             return ret
-        (role, username, userrealm, adminuser, adminrealm) = (
-            determine_logged_in_userparams(g.logged_in_user, params)
-        )
+        (role, username, userrealm, adminuser, adminrealm) = determine_logged_in_userparams(g.logged_in_user, params)
         hashlib_pol = Match.generic(
             g,
             scope=role,

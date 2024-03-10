@@ -109,9 +109,7 @@ def generic_challenge_response_reset_pin(wrapped_function, *args, **kwds):
     user_obj = kwds.get("user")
     transaction_id = options.get("transaction_id") or options.get("state")
     if transaction_id:
-        challenges = get_challenges(
-            transaction_id=transaction_id, challenge=CHALLENGE_TYPE.PIN_RESET
-        )
+        challenges = get_challenges(transaction_id=transaction_id, challenge=CHALLENGE_TYPE.PIN_RESET)
         if len(challenges) == 1:
             challenge = challenges[0]
             # check if challenge matches a token and if it is valid
@@ -191,9 +189,7 @@ def generic_challenge_response_reset_pin(wrapped_function, *args, **kwds):
                 token_obj=token_obj,
             ).any()
         ):
-            reply_dict = _create_challenge(
-                token_obj, CHALLENGE_TYPE.PIN_RESET, _("Please enter a new PIN")
-            )
+            reply_dict = _create_challenge(token_obj, CHALLENGE_TYPE.PIN_RESET, _("Please enter a new PIN"))
             return False, reply_dict
 
     return success, reply_dict

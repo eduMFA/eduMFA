@@ -356,9 +356,7 @@ class IdResolver(UserIdResolver):
 
             for r in result.mappings():
                 if userid != "":  # pragma: no cover
-                    raise Exception(
-                        f"More than one user with loginname {LoginName} found!"
-                    )
+                    raise Exception(f"More than one user with loginname {LoginName} found!")
                 user = self._get_user_from_mapped_object(r)
                 userid = convert_column_to_unicode(user["userid"])
         except Exception as exx:  # pragma: no cover
@@ -419,9 +417,7 @@ class IdResolver(UserIdResolver):
         conditions = self._append_where_filter(conditions, self.TABLE, self.where)
         filter_condition = and_(*conditions)
 
-        result = self.session.execute(
-            select(self.TABLE).filter(filter_condition).limit(self.limit)
-        )
+        result = self.session.execute(select(self.TABLE).filter(filter_condition).limit(self.limit))
 
         for r in result.mappings():
             user = self._get_user_from_mapped_object(r)
@@ -449,7 +445,7 @@ class IdResolver(UserIdResolver):
         )
         id_str = "\x00".join(id_parts)
         resolver_id = binascii.hexlify(hashlib.sha1(id_str.encode("utf8")).digest())  # nosec B324 # hash used as unique identifier
-        return "sql." + resolver_id.decode("utf8")
+        return f"sql.{resolver_id.decode('utf8')}"
 
     @staticmethod
     def getResolverClassType():
@@ -514,15 +510,9 @@ class IdResolver(UserIdResolver):
         return self
 
     def _create_engine(self):
-        log.info(
-            f"using the connect string {censor_connect_string(self.connect_string)!s}"
-        )
+        log.info(f"using the connect string {censor_connect_string(self.connect_string)!s}")
         try:
-            log.debug(
-                "using pool_size={0!s}, pool_timeout={1!s}, pool_recycle={2!s}".format(
-                    self.pool_size, self.pool_timeout, self.pool_recycle
-                )
-            )
+            log.debug(f"using pool_size={self.pool_size!s}, pool_timeout={self.pool_timeout!s}, pool_recycle={self.pool_recycle!s}")
             engine = create_engine(
                 self.connect_string,
                 encoding=self.encoding,
@@ -534,9 +524,7 @@ class IdResolver(UserIdResolver):
         except TypeError:
             # The DB Engine/Poolclass might not support the pool_size.
             log.debug("connecting without pool_size.")
-            engine = create_engine(
-                self.connect_string, encoding=self.encoding, convert_unicode=False
-            )
+            engine = create_engine(self.connect_string, encoding=self.encoding, convert_unicode=False)
         return engine
 
     @classmethod
@@ -674,9 +662,7 @@ class IdResolver(UserIdResolver):
         """
         attributes = attributes.copy()
         if "password" in attributes:
-            attributes["password"] = hash_password(
-                attributes["password"], self.password_hash_type
-            )
+            attributes["password"] = hash_password(attributes["password"], self.password_hash_type)
         columns = {}
         for fieldname in attributes:
             if fieldname in self.map:
@@ -731,11 +717,7 @@ class IdResolver(UserIdResolver):
             self.session.commit()
             log.info(f"Updated user attributes for user with uid {uid!s}")
         except Exception as exx:
-            log.error(
-                "Error updating user attributes for user with uid {0!s}: {1!s}".format(
-                    uid, exx
-                )
-            )
+            log.error(f"Error updating user attributes for user with uid {uid!s}: {exx!s}")
             log.debug(f"Error updating attributes {attributes!s}", exc_info=True)
 
         return r
@@ -768,8 +750,6 @@ def hash_password(password, hashtype):
     try:
         password = pw_ctx.handler(hash_type_dict[hashtype]).hash(password)
     except KeyError as _e:  # pragma: no cover
-        raise Exception(
-            f"Unsupported password hashtype '{hashtype!s}'. Use one of {hash_type_dict.keys()!s}."
-        )
+        raise Exception(f"Unsupported password hashtype '{hashtype!s}'. Use one of {hash_type_dict.keys()!s}.")
 
     return password

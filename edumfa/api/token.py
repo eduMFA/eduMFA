@@ -535,9 +535,7 @@ def assign_api():
         err_message = "Token already assigned to another user."
     else:
         err_message = None
-    res = assign_token(
-        serial, user, pin=pin, encrypt_pin=encrypt_pin, err_message=err_message
-    )
+    res = assign_token(serial, user, pin=pin, encrypt_pin=encrypt_pin, err_message=err_message)
     g.audit_object.log({"success": True})
     return send_result(res)
 
@@ -804,9 +802,7 @@ def setrandompin_api(serial=None):
     encrypt_pin = getParam(request.all_data, "encryptpin")
     pin = getParam(request.all_data, "pin")
     if not pin:
-        raise TokenAdminError(
-            "We have an empty PIN. Please check your policy 'otp_pin_set_random'."
-        )
+        raise TokenAdminError("We have an empty PIN. Please check your policy 'otp_pin_set_random'.")
 
     g.audit_object.add_to_log({"action_detail": "otppin, "})
     res = set_pin(serial, pin, user=user, encrypt_pin=encrypt_pin)
@@ -906,43 +902,23 @@ def set_api(serial=None):
         res += set_hashlib(serial, hashlib, user=user)
 
     if max_failcount is not None:
-        g.audit_object.add_to_log(
-            {"action_detail": f"max_failcount={max_failcount!r}, "}
-        )
+        g.audit_object.add_to_log({"action_detail": f"max_failcount={max_failcount!r}, "})
         res += set_max_failcount(serial, max_failcount, user=user)
 
     if count_auth_max is not None:
-        g.audit_object.add_to_log(
-            {"action_detail": f"count_auth_max={count_auth_max!r}, "}
-        )
+        g.audit_object.add_to_log({"action_detail": f"count_auth_max={count_auth_max!r}, "})
         res += set_count_auth(serial, count_auth_max, user=user, max=True)
 
     if count_auth_success_max is not None:
-        g.audit_object.add_to_log(
-            {
-                "action_detail": "count_auth_success_max={0!r}, ".format(
-                    count_auth_success_max
-                )
-            }
-        )
-        res += set_count_auth(
-            serial, count_auth_success_max, user=user, max=True, success=True
-        )
+        g.audit_object.add_to_log({"action_detail": f"count_auth_success_max={count_auth_success_max!r}, "})
+        res += set_count_auth(serial, count_auth_success_max, user=user, max=True, success=True)
 
     if validity_period_end is not None:
-        g.audit_object.add_to_log(
-            {"action_detail": "validity_period_end={0!r}, ".format(validity_period_end)}
-        )
+        g.audit_object.add_to_log({"action_detail": f"validity_period_end={validity_period_end!r}, "})
         res += set_validity_period_end(serial, user, validity_period_end)
 
     if validity_period_start is not None:
-        g.audit_object.add_to_log(
-            {
-                "action_detail": "validity_period_start={0!r}, ".format(
-                    validity_period_start
-                )
-            }
-        )
+        g.audit_object.add_to_log({"action_detail": f"validity_period_start={validity_period_start!r}, "})
         res += set_validity_period_start(serial, user, validity_period_start)
 
     g.audit_object.log({"success": True})
@@ -1017,15 +993,11 @@ def loadtokens_api(filename=None):
         "pskc",
     ]
     file_type = getParam(request.all_data, "type", required)
-    aes_validate_mac = getParam(
-        request.all_data, "pskcValidateMAC", default="check_fail_hard"
-    )
+    aes_validate_mac = getParam(request.all_data, "pskcValidateMAC", default="check_fail_hard")
     aes_psk = getParam(request.all_data, "psk")
     aes_password = getParam(request.all_data, "password")
     if aes_psk and len(aes_psk) != 32:
-        raise TokenAdminError(
-            "The Pre Shared Key must be 128 Bit hex encoded. It must be 32 characters long!"
-        )
+        raise TokenAdminError("The Pre Shared Key must be 128 Bit hex encoded. It must be 32 characters long!")
     trealms = getParam(request.all_data, "tokenrealms") or ""
     tokenrealms = []
     if trealms:
@@ -1056,13 +1028,8 @@ def loadtokens_api(filename=None):
         raise ParameterError("Error loading token file. File empty!")
 
     if file_type not in known_types:
-        log.error(
-            f"Unknown file type: >>{file_type!s}<<. We only know the types: {', '.join(known_types)!s}"
-        )
-        raise TokenAdminError(
-            "Unknown file type: >>%s<<. We only know the types: %s"
-            % (file_type, ", ".join(known_types))
-        )
+        log.error(f"Unknown file type: >>{file_type!s}<<. We only know the types: {', '.join(known_types)!s}")
+        raise TokenAdminError(f"Unknown file type: >>{file_type}<<. We only know the types: {', '.join(known_types)}")
 
     # Decrypt file, if necessary
     if file_contents.startswith("-----BEGIN PGP MESSAGE-----"):
@@ -1095,18 +1062,14 @@ def loadtokens_api(filename=None):
 
     g.audit_object.log(
         {
-            "info": "{0!s}, {1!s} (imported: {2:d})".format(
-                file_type, token_file, len(TOKENS)
-            ),
+            "info": f"{file_type!s}, {token_file!s} (imported: {len(TOKENS):d})",
             "serial": ", ".join(TOKENS),
             "success": True,
         }
     )
     # logTokenNum()
 
-    return send_result(
-        {"n_imported": len(TOKENS), "n_not_imported": len(not_imported_serials)}
-    )
+    return send_result({"n_imported": len(TOKENS), "n_not_imported": len(not_imported_serials)})
 
 
 @token_blueprint.route("/copypin", methods=["POST"])
@@ -1180,9 +1143,7 @@ def lost_api(serial=None):
     if userobj:
         toks = get_tokens(serial=serial, user=userobj)
         if not toks:
-            raise TokenAdminError(
-                "The user {0!r} does not own the token {1!s}".format(userobj, serial)
-            )
+            raise TokenAdminError(f"The user {userobj!r} does not own the token {serial!s}")
 
     options = {"g": g, "clientip": g.client_ip}
     res = lost_token(serial, options=options)
@@ -1231,19 +1192,15 @@ def get_serial_by_otp_api(otp=None):
 
     count = get_tokens(
         tokentype=ttype,
-        serial_wildcard="*{0!s}*".format(serial_substr),
+        serial_wildcard=f"*{serial_substr!s}*",
         assigned=assigned,
         count=True,
     )
     if not count_only:
-        tokenobj_list = get_tokens(
-            tokentype=ttype, serial_wildcard=f"*{serial_substr!s}*", assigned=assigned
-        )
+        tokenobj_list = get_tokens(tokentype=ttype, serial_wildcard=f"*{serial_substr!s}*", assigned=assigned)
         serial = get_serial_by_otp(tokenobj_list, otp=otp, window=window)
 
-    g.audit_object.log(
-        {"success": True, "info": f"get {serial!s} by OTP. {count!s} tokens"}
-    )
+    g.audit_object.log({"success": True, "info": f"get {serial!s} by OTP. {count!s} tokens"})
 
     return send_result({"serial": serial, "count": count})
 

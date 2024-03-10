@@ -106,7 +106,7 @@ def exporter(output, fmt, types, name=None):
         out.update({typ: EXPORT_FUNCTIONS[typ](name=name)})
 
     if out:
-        res = exp_fmt_dict.get(fmt.lower())(out) + "\n"
+        res = f"{exp_fmt_dict.get(fmt.lower())(out)}\n"
         output.write(res)
 
 

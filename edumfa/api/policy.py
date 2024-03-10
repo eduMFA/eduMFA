@@ -226,7 +226,7 @@ def set_policy_api(name=None):
         conditions=conditions,
     )
     log.debug(f"policy {name!s} successfully saved.")
-    string = "setPolicy " + name
+    string = f"setPolicy {name}"
     res[string] = ret
     g.audit_object.log({"success": True})
 
@@ -307,9 +307,7 @@ def get_policy(name=None, export=None):
 
     P = g.policy_object
     if not export:
-        log.debug(
-            f"retrieving policy name: {name!s}, realm: {realm!s}, scope: {scope!s}"
-        )
+        log.debug(f"retrieving policy name: {name!s}, realm: {realm!s}, scope: {scope!s}")
 
         pol = P.list_policies(name=name, realm=realm, scope=scope, active=active)
         ret = send_result(pol)
@@ -443,9 +441,7 @@ def import_policy_api(filename=None):
     g.audit_object.log(
         {
             "success": True,
-            "info": "imported {0:d} policies from file {1!s}".format(
-                policy_num, filename
-            ),
+            "info": f"imported {policy_num:d} policies from file {filename!s}",
         }
     )
 
@@ -595,13 +591,7 @@ def get_policy_defs(scope=None):
 
         # combine static and dynamic policies
         keys = list(static_pol) + list(dynamic_pol)
-        result = {
-            k: dict(
-                list(static_pol.get(k, {}).items())
-                + list(dynamic_pol.get(k, {}).items())
-            )
-            for k in keys
-        }
+        result = {k: dict(list(static_pol.get(k, {}).items()) + list(dynamic_pol.get(k, {}).items())) for k in keys}
 
         if scope:
             result = result.get(scope)

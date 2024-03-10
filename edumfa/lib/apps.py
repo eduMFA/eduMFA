@@ -129,11 +129,7 @@ def create_google_authenticator_url(
 
     base_len = len(f"otpauth://{tokentype!s}/?secret={otpkey!s}&counter=1")
     allowed_label_len = MAX_QRCODE_LEN - base_len
-    log.debug(
-        "we have got {0!s} characters left for the token label".format(
-            str(allowed_label_len)
-        )
-    )
+    log.debug(f"we have got {str(allowed_label_len)!s} characters left for the token label")
     # Deprecated
     label = tokenlabel.replace("<s>", serial).replace("<u>", user).replace("<r>", realm)
     label = label.format(
@@ -205,7 +201,5 @@ def create_oathtoken_url(
     url_label = quote(label)
 
     extra_parameters = _construct_extra_parameters(extra_data)
-    url = "oathtoken:///addToken?name={0!s}&lockdown=true&key={1!s}{2!s}{3!s}".format(
-        url_label, otpkey, timebased, extra_parameters
-    )
+    url = f"oathtoken:///addToken?name={url_label!s}&lockdown=true&key={otpkey!s}{timebased!s}{extra_parameters!s}"
     return url

@@ -139,9 +139,7 @@ def _create_challenge_query(serial=None, transaction_id=None):
         # filter for serial
         if "*" in serial:
             # match with "like"
-            sql_query = sql_query.filter(
-                Challenge.serial.like(serial.replace("*", "%"))
-            )
+            sql_query = sql_query.filter(Challenge.serial.like(serial.replace("*", "%")))
         else:
             # exact match
             sql_query = sql_query.filter(Challenge.serial == serial)
@@ -150,9 +148,7 @@ def _create_challenge_query(serial=None, transaction_id=None):
         # filter for serial
         if "*" in transaction_id:
             # match with "like"
-            sql_query = sql_query.filter(
-                Challenge.transaction_id.like(transaction_id.replace("*", "%"))
-            )
+            sql_query = sql_query.filter(Challenge.transaction_id.like(transaction_id.replace("*", "%")))
         else:
             # exact match
             sql_query = sql_query.filter(Challenge.transaction_id == transaction_id)

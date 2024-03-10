@@ -108,22 +108,16 @@ class PaperTokenClass(HotpTokenClass):
                 SCOPE.ENROLL: {
                     PAPERACTION.PAPERTOKEN_COUNT: {
                         "type": "int",
-                        "desc": _(
-                            "The number of OTP values, which are printed on the paper."
-                        ),
+                        "desc": _("The number of OTP values, which are printed on the paper."),
                     },
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of paper tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of paper tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active paper tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active paper tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }

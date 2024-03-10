@@ -38,9 +38,7 @@ import netaddr
 class HostsMachineResolver(BaseMachineResolver):
     type = "hosts"
 
-    def get_machines(
-        self, machine_id=None, hostname=None, ip=None, any=None, substring=False
-    ):
+    def get_machines(self, machine_id=None, hostname=None, ip=None, any=None, substring=False):
         """
         Return matching machines.
 
@@ -69,12 +67,7 @@ class HostsMachineResolver(BaseMachineResolver):
                 line_ip = netaddr.IPAddress(split_line[0])
                 line_hostname = split_line[1:]
                 # check if machine_id, ip or hostname matches a substring
-                if (
-                    any
-                    and any not in line_id
-                    and len([x for x in line_hostname if any in x]) <= 0
-                    and any not in f"{line_ip!s}"
-                ):
+                if any and any not in line_id and len([x for x in line_hostname if any in x]) <= 0 and any not in f"{line_ip!s}":
                     # "any" was provided but did not match either
                     # hostname, ip or machine_id
                     continue
@@ -106,9 +99,7 @@ class HostsMachineResolver(BaseMachineResolver):
                         # Do not append this machine!
                         continue
 
-                machines.append(
-                    Machine(self.name, line_id, hostname=line_hostname, ip=line_ip)
-                )
+                machines.append(Machine(self.name, line_id, hostname=line_hostname, ip=line_ip))
         finally:
             f.close()
         return machines

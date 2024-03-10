@@ -73,9 +73,7 @@ class to_isodate(FunctionElement):
 @compiles(to_isodate, "oracle")
 @compiles(to_isodate, "postgresql")
 def fn_to_isodate(element, compiler, **kw):
-    return (
-        f"to_char({compiler.process(element.clauses, **kw)}, 'IYYY-MM-DD HH24:MI:SS')"
-    )
+    return f"to_char({compiler.process(element.clauses, **kw)}, 'IYYY-MM-DD HH24:MI:SS')"
 
 
 @compiles(to_isodate, "sqlite")
@@ -87,9 +85,7 @@ def fn_to_isodate(element, compiler, **kw):
 @compiles(to_isodate)
 def fn_to_isodate(element, compiler, **kw):
     # The four percent signs are necessary for two format substitutions
-    return "date_format(%s, '%%%%Y-%%%%m-%%%%d %%%%H:%%%%i:%%%%s')" % compiler.process(
-        element.clauses, **kw
-    )
+    return "date_format(%s, '%%%%Y-%%%%m-%%%%d %%%%H:%%%%i:%%%%s')" % compiler.process(element.clauses, **kw)
 
 
 class Audit(AuditBase):
@@ -135,24 +131,17 @@ class Audit(AuditBase):
         self.sign_object = None
         self.verify_old_sig = self.config.get("EDUMFA_CHECK_OLD_SIGNATURES")
         # Disable the costly checking of private RSA keys when loading them.
-        self.check_private_key = not self.config.get(
-            "EDUMFA_AUDIT_NO_PRIVATE_KEY_CHECK", False
-        )
+        self.check_private_key = not self.config.get("EDUMFA_AUDIT_NO_PRIVATE_KEY_CHECK", False)
         if self.sign_data:
             self.read_keys(
                 self.config.get("EDUMFA_AUDIT_KEY_PUBLIC"),
                 self.config.get("EDUMFA_AUDIT_KEY_PRIVATE"),
             )
-            self.sign_object = Sign(
-                self.private, self.public, check_private_key=self.check_private_key
-            )
+            self.sign_object = Sign(self.private, self.public, check_private_key=self.check_private_key)
         # Read column_length from the config file
         config_column_length = self.config.get("EDUMFA_AUDIT_SQL_COLUMN_LENGTH", {})
         # fill the missing parts with the default from the models
-        self.custom_column_length = {
-            k: v if k not in config_column_length else config_column_length[k]
-            for k, v in column_length.items()
-        }
+        self.custom_column_length = {k: v if k not in config_column_length else config_column_length[k] for k, v in column_length.items()}
         # We can use "sqlaudit" as the key because the SQLAudit connection
         # string is fixed for a running eduMFA instance.
         # In other words, we will not run into any problems with changing connect strings.
@@ -173,15 +162,11 @@ class Audit(AuditBase):
         """
         # an Engine, which the Session will use for connection
         # resources
-        connect_string = self.config.get(
-            "EDUMFA_AUDIT_SQL_URI", self.config.get("SQLALCHEMY_DATABASE_URI")
-        )
+        connect_string = self.config.get("EDUMFA_AUDIT_SQL_URI", self.config.get("SQLALCHEMY_DATABASE_URI"))
         log.debug(f"using the connect string {censor_connect_string(connect_string)!s}")
         # if no specific audit engine options are given, use the default from
         # SQLALCHEMY_ENGINE_OPTIONS or none
-        sqa_options = self.config.get(
-            "EDUMFA_AUDIT_SQL_OPTIONS", self.config.get("SQLALCHEMY_ENGINE_OPTIONS", {})
-        )
+        sqa_options = self.config.get("EDUMFA_AUDIT_SQL_OPTIONS", self.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
         log.debug(f"Using Audit SQLAlchemy engine options: {sqa_options!s}")
         try:
             pool_size = self.config.get("EDUMFA_AUDIT_POOL_SIZE", 20)
@@ -242,9 +227,7 @@ class Audit(AuditBase):
                     if search_key == "success":
                         # "success" is the only integer.
                         search_value = search_value.strip("*")
-                        conditions.append(
-                            getattr(LogEntry, search_key) == int(is_true(search_value))
-                        )
+                        conditions.append(getattr(LogEntry, search_key) == int(is_true(search_value)))
                     else:
                         # All other keys are compared as strings
                         column = getattr(LogEntry, search_key)
@@ -296,9 +279,7 @@ class Audit(AuditBase):
             if self.config.get("EDUMFA_AUDIT_SQL_TRUNCATE"):
                 self._truncate_data()
             if "tokentype" in self.audit_data:
-                log.warning(
-                    f"We have a wrong 'tokentype' key. This should not happen. Fix it!. Error occurs in action: {self.audit_data.get('action')!r}."
-                )
+                log.warning(f"We have a wrong 'tokentype' key. This should not happen. Fix it!. Error occurs in action: {self.audit_data.get('action')!r}.")
                 if not "token_type" in self.audit_data:
                     self.audit_data["token_type"] = self.audit_data.get("tokentype")
             if self.audit_data.get("startdate"):
@@ -360,16 +341,8 @@ class Audit(AuditBase):
         """
         res = False
         try:
-            id_bef = (
-                self.session.query(LogEntry.id)
-                .filter(LogEntry.id == int(audit_id) - 1)
-                .count()
-            )
-            id_aft = (
-                self.session.query(LogEntry.id)
-                .filter(LogEntry.id == int(audit_id) + 1)
-                .count()
-            )
+            id_bef = self.session.query(LogEntry.id).filter(LogEntry.id == int(audit_id) - 1).count()
+            id_aft = self.session.query(LogEntry.id).filter(LogEntry.id == int(audit_id) + 1).count()
             # We may not do a commit!
             # self.session.commit()
             if id_bef and id_aft:
@@ -398,25 +371,22 @@ class Audit(AuditBase):
         :rtype str
         """
         # TODO: Add thread_id. We really should add a versioning to identify which audit data is signed.
-        s = (
-            "id=%s,date=%s,action=%s,succ=%s,serial=%s,t=%s,u=%s,r=%s,adm=%s,ad=%s,i=%s,ps=%s,c=%s,l=%s,cl=%s"
-            % (
-                le.id,
-                le.date,
-                le.action,
-                le.success,
-                le.serial,
-                le.token_type,
-                le.user,
-                le.realm,
-                le.administrator,
-                le.action_detail,
-                le.info,
-                le.edumfa_server,
-                le.client,
-                le.loglevel,
-                le.clearance_level,
-            )
+        s = "id=%s,date=%s,action=%s,succ=%s,serial=%s,t=%s,u=%s,r=%s,adm=%s,ad=%s,i=%s,ps=%s,c=%s,l=%s,cl=%s" % (
+            le.id,
+            le.date,
+            le.action,
+            le.success,
+            le.serial,
+            le.token_type,
+            le.user,
+            le.realm,
+            le.administrator,
+            le.action_detail,
+            le.info,
+            le.edumfa_server,
+            le.client,
+            le.loglevel,
+            le.clearance_level,
         )
         # If we have the new log entries, we also add them for signing and verification.
         if le.startdate:
@@ -465,12 +435,7 @@ class Audit(AuditBase):
         :return: None. It yields results as a generator
         """
         filter_condition = self._create_filter(param, timelimit=timelimit)
-        logentries = (
-            self.session.query(LogEntry)
-            .filter(filter_condition)
-            .order_by(LogEntry.date)
-            .all()
-        )
+        logentries = self.session.query(LogEntry).filter(filter_condition).order_by(LogEntry.date).all()
 
         for le in logentries:
             audit_dict = self.audit_entry_to_dict(le)
@@ -491,9 +456,7 @@ class Audit(AuditBase):
 
         return log_count
 
-    def search(
-        self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None
-    ):
+    def search(self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None):
         """
         This function returns the audit log as a Pagination object.
 
@@ -531,9 +494,7 @@ class Audit(AuditBase):
                 # iteration stops and we return an empty paging_object.
                 # TODO: Check if we can return the other entries in the auditIter
                 #  or some meaningful error for the user.
-                log.warning(
-                    "Could not read audit log entry! Possible database encoding mismatch."
-                )
+                log.warning("Could not read audit log entry! Possible database encoding mismatch.")
                 log.debug(f"{traceback.format_exc()!s}")
 
         return paging_object
@@ -563,21 +524,9 @@ class Audit(AuditBase):
             filter_condition = self._create_filter(search_dict, timelimit=timelimit)
 
             if sortorder == "desc":
-                logentries = (
-                    self.session.query(LogEntry)
-                    .filter(filter_condition)
-                    .order_by(desc(self._get_logentry_attribute("number")))
-                    .limit(limit)
-                    .offset(offset)
-                )
+                logentries = self.session.query(LogEntry).filter(filter_condition).order_by(desc(self._get_logentry_attribute("number"))).limit(limit).offset(offset)
             else:
-                logentries = (
-                    self.session.query(LogEntry)
-                    .filter(filter_condition)
-                    .order_by(asc(self._get_logentry_attribute("number")))
-                    .limit(limit)
-                    .offset(offset)
-                )
+                logentries = self.session.query(LogEntry).filter(filter_condition).order_by(asc(self._get_logentry_attribute("number"))).limit(limit).offset(offset)
 
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
@@ -612,9 +561,7 @@ class Audit(AuditBase):
             except UnicodeDecodeError as _e:
                 # TODO: Unless we trace and eliminate the broken unicode in the
                 #  audit_entry, we will get issues when packing the response.
-                log.warning(
-                    "Could not verify log entry! We get invalid values from the database, please check the encoding."
-                )
+                log.warning("Could not verify log entry! We get invalid values from the database, please check the encoding.")
                 log.debug(f"{traceback.format_exc()!s}")
 
         is_not_missing = self._check_missing(int(audit_entry.id))
@@ -639,11 +586,7 @@ class Audit(AuditBase):
         audit_dict["client"] = audit_entry.client
         audit_dict["log_level"] = audit_entry.loglevel
         audit_dict["clearance_level"] = audit_entry.clearance_level
-        audit_dict["startdate"] = (
-            audit_entry.startdate.isoformat() if audit_entry.startdate else None
-        )
-        audit_dict["duration"] = (
-            audit_entry.duration.total_seconds() if audit_entry.duration else None
-        )
+        audit_dict["startdate"] = audit_entry.startdate.isoformat() if audit_entry.startdate else None
+        audit_dict["duration"] = audit_entry.duration.total_seconds() if audit_entry.duration else None
         audit_dict["thread_id"] = audit_entry.thread_id
         return audit_dict

@@ -109,8 +109,4 @@ def read(counter_name):
     :param counter_name: The name of the counter
     :return: The value of the counter
     """
-    return (
-        db.session.query(func.sum(EventCounter.counter_value))
-        .filter(EventCounter.counter_name == counter_name)
-        .one()[0]
-    )
+    return db.session.query(func.sum(EventCounter.counter_value)).filter(EventCounter.counter_name == counter_name).one()[0]

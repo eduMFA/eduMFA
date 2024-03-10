@@ -63,9 +63,7 @@ class ScriptEventHandler(BaseEventHandler):
     def __init__(self, script_directory=None):
         if not script_directory:
             try:
-                self.script_directory = get_app_config_value(
-                    "EDUMFA_SCRIPT_HANDLER_DIRECTORY", "/etc/edumfa/scripts"
-                )
+                self.script_directory = get_app_config_value("EDUMFA_SCRIPT_HANDLER_DIRECTORY", "/etc/edumfa/scripts")
             except RuntimeError as e:
                 # In case of the tests we are outside of the application context
                 self.script_directory = "tests/testdata/scripts"
@@ -96,18 +94,14 @@ class ScriptEventHandler(BaseEventHandler):
                 "background": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."
-                    ),
+                    "description": _("Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."),
                     "value": [SCRIPT_BACKGROUND, SCRIPT_WAIT],
                 },
                 "raise_error": {
                     "type": "bool",
                     "visibleIf": "background",
                     "visibleValue": SCRIPT_WAIT,
-                    "description": _(
-                        "On script error raise exception in HTTP request."
-                    ),
+                    "description": _("On script error raise exception in HTTP request."),
                 },
                 "sync_to_database": {
                     "type": "bool",
@@ -118,9 +112,7 @@ class ScriptEventHandler(BaseEventHandler):
                 },
                 "serial": {
                     "type": "bool",
-                    "description": _(
-                        "Add '--serial <serial number>' as script parameter."
-                    ),
+                    "description": _("Add '--serial <serial number>' as script parameter."),
                 },
                 "user": {
                     "type": "bool",
@@ -132,15 +124,11 @@ class ScriptEventHandler(BaseEventHandler):
                 },
                 "logged_in_user": {
                     "type": "bool",
-                    "description": _(
-                        "Add the username of the logged in user as script parameter like '--logged_in_user <username>'."
-                    ),
+                    "description": _("Add the username of the logged in user as script parameter like '--logged_in_user <username>'."),
                 },
                 "logged_in_role": {
                     "type": "bool",
-                    "description": _(
-                        "Add the role (either admin or user) of the logged in user as script parameter like '--logged_in_role <role>'."
-                    ),
+                    "description": _("Add the role (either admin or user) of the logged in user as script parameter like '--logged_in_role <role>'."),
                 },
             }
 
@@ -157,7 +145,7 @@ class ScriptEventHandler(BaseEventHandler):
         :return:
         """
         ret = True
-        script_name = self.script_directory + "/" + action
+        script_name = f"{self.script_directory}/{action}"
         proc_args = [script_name]
 
         g = options.get("g")
@@ -172,11 +160,7 @@ class ScriptEventHandler(BaseEventHandler):
         else:
             logged_in_user = {"username": "none", "realm": "none", "role": "none"}
 
-        serial = (
-            request.all_data.get("serial")
-            or content.get("detail", {}).get("serial")
-            or g.audit_object.audit_data.get("serial")
-        )
+        serial = request.all_data.get("serial") or content.get("detail", {}).get("serial") or g.audit_object.audit_data.get("serial")
 
         if is_true(handler_options.get("serial")):
             proc_args.append("--serial")
@@ -205,26 +189,18 @@ class ScriptEventHandler(BaseEventHandler):
                 log.debug(f"Committing current transaction for script {script_name!s}")
                 db.session.commit()
             # Trusted input/no user input: The scripts are created by user root and read from hard disk
-            p = subprocess.Popen(
-                proc_args, cwd=self.script_directory, universal_newlines=True
-            )  # nosec B603
+            p = subprocess.Popen(proc_args, cwd=self.script_directory, universal_newlines=True)  # nosec B603
             if handler_options.get("background") == SCRIPT_WAIT:
                 rcode = p.wait()
 
         except Exception as e:
             log.warning(f"Failed to execute script {script_name!r}: {e!r}")
             log.warning(traceback.format_exc())
-            if handler_options.get("background") == SCRIPT_WAIT and is_true(
-                handler_options.get("raise_error")
-            ):
+            if handler_options.get("background") == SCRIPT_WAIT and is_true(handler_options.get("raise_error")):
                 raise ServerError("Failed to start script.")
 
         if rcode:
-            log.warning(
-                "Script {script!r} failed to execute with error code {error!r}".format(
-                    script=script_name, error=rcode
-                )
-            )
+            log.warning(f"Script {script_name!r} failed to execute with error code {rcode!r}")
             if is_true(handler_options.get("raise_error")):
                 raise ServerError("Error during execution of the script.")
 

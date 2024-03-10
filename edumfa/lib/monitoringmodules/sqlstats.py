@@ -61,9 +61,7 @@ class Monitoring(MonitoringBase):
         """
         # an Engine, which the Session will use for connection
         # resources
-        connect_string = self.config.get(
-            "EDUMFA_MONITORING_SQL_URI", self.config.get("SQLALCHEMY_DATABASE_URI")
-        )
+        connect_string = self.config.get("EDUMFA_MONITORING_SQL_URI", self.config.get("SQLALCHEMY_DATABASE_URI"))
         log.debug(f"using the connect string {censor_connect_string(connect_string)!s}")
         try:
             pool_size = self.config.get("EDUMFA_MONITORING_POOL_SIZE", 20)
@@ -133,11 +131,7 @@ class Monitoring(MonitoringBase):
         """
         keys = []
         try:
-            for monStat in (
-                self.session.query(MonitoringStats)
-                .with_entities(MonitoringStats.stats_key)
-                .distinct()
-            ):
+            for monStat in self.session.query(MonitoringStats).with_entities(MonitoringStats.stats_key).distinct():
                 keys.append(monStat.stats_key)
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
@@ -149,9 +143,7 @@ class Monitoring(MonitoringBase):
             self.session.close()
         return keys
 
-    def get_values(
-        self, stats_key, start_timestamp=None, end_timestamp=None, date_strings=False
-    ):
+    def get_values(self, stats_key, start_timestamp=None, end_timestamp=None, date_strings=False):
         values = []
 
         try:
@@ -162,11 +154,7 @@ class Monitoring(MonitoringBase):
             if end_timestamp:
                 utc_end_timestamp = convert_timestamp_to_utc(end_timestamp)
                 conditions.append(MonitoringStats.timestamp <= utc_end_timestamp)
-            for ms in (
-                self.session.query(MonitoringStats)
-                .filter(and_(*conditions))
-                .order_by(MonitoringStats.timestamp.asc())
-            ):
+            for ms in self.session.query(MonitoringStats).filter(and_(*conditions)).order_by(MonitoringStats.timestamp.asc()):
                 aware_timestamp = ms.timestamp.replace(tzinfo=tzutc())
                 values.append((aware_timestamp, ms.stats_value))
         except Exception as exx:  # pragma: no cover
@@ -183,12 +171,7 @@ class Monitoring(MonitoringBase):
     def get_last_value(self, stats_key):
         val = None
         try:
-            s = (
-                self.session.query(MonitoringStats)
-                .filter(MonitoringStats.stats_key == stats_key)
-                .order_by(MonitoringStats.timestamp.desc())
-                .first()
-            )
+            s = self.session.query(MonitoringStats).filter(MonitoringStats.stats_key == stats_key).order_by(MonitoringStats.timestamp.desc()).first()
             if s:
                 val = s.stats_value
         except Exception as exx:  # pragma: no cover

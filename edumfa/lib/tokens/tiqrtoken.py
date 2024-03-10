@@ -172,16 +172,12 @@ class TiqrTokenClass(OcraTokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of TiQR tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of TiQR tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active TiQR tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active TiQR tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -240,11 +236,7 @@ class TiqrTokenClass(OcraTokenClass):
         session = generate_otpkey()
         # save the session in the token
         self.add_tokeninfo("session", session)
-        tiqrenroll = (
-            "tiqrenroll://{0!s}?action={1!s}&session={2!s}&serial={3!s}".format(
-                enroll_url, API_ACTIONS.METADATA, session, serial
-            )
-        )
+        tiqrenroll = f"tiqrenroll://{enroll_url!s}?action={API_ACTIONS.METADATA!s}&session={session!s}&serial={serial!s}"
 
         response_detail["tiqrenroll"] = {
             "description": _("URL for TiQR enrollment"),
@@ -278,9 +270,7 @@ class TiqrTokenClass(OcraTokenClass):
             token = get_one_token(serial=serial, tokentype="tiqr")
             user_identifier, user_displayname = token.get_user_displayname()
 
-            service_identifier = (
-                get_from_config("tiqr.serviceIdentifier") or "io.edumfa"
-            )
+            service_identifier = get_from_config("tiqr.serviceIdentifier") or "io.edumfa"
             ocrasuite = get_from_config("tiqr.ocrasuite") or OCRA_DEFAULT_SUITE
             service_displayname = get_from_config("tiqr.serviceDisplayname") or "eduMFA"
             reg_server = get_from_config("tiqr.regServer")
@@ -295,9 +285,7 @@ class TiqrTokenClass(OcraTokenClass):
                 "infoUrl": info_url,
                 "authenticationUrl": f"{auth_server!s}",
                 "ocraSuite": ocrasuite,
-                "enrollmentUrl": "{0!s}?action={1!s}&session={2!s}&serial={3!s}".format(
-                    reg_server, API_ACTIONS.ENROLLMENT, session, serial
-                ),
+                "enrollmentUrl": f"{reg_server!s}?action={API_ACTIONS.ENROLLMENT!s}&session={session!s}&serial={serial!s}",
             }
             identity = {"identifier": user_identifier, "displayName": user_displayname}
 
@@ -354,9 +342,7 @@ class TiqrTokenClass(OcraTokenClass):
                     token = get_one_token(serial=challenge.serial)
                     if token.type.lower() == "tiqr":
                         # We found a TiQR token with a valid challenge with the given transaction ID
-                        r = token.verify_response(
-                            challenge=challenge.challenge, passw=passw
-                        )
+                        r = token.verify_response(challenge=challenge.challenge, passw=passw)
                         if r > 0:
                             res = "OK"
                             # Mark the challenge as answered successfully.
@@ -401,7 +387,7 @@ class TiqrTokenClass(OcraTokenClass):
         # Get ValidityTime=120s. Maybe there is a TIQRChallengeValidityTime...
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
-        lookup_for = tokentype.capitalize() + "ChallengeValidityTime"
+        lookup_for = f"{tokentype.capitalize()}ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # We need to set the user ID
@@ -477,9 +463,7 @@ class TiqrTokenClass(OcraTokenClass):
 
         # get the challenges for this transaction ID
         if transaction_id is not None:
-            challengeobject_list = get_challenges(
-                serial=self.token.serial, transaction_id=transaction_id
-            )
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
             for challengeobject in challengeobject_list:
                 # check if we are still in time.
                 if challengeobject.is_valid():

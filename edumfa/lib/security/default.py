@@ -247,9 +247,7 @@ class DefaultSecurityModule(SecurityModule):
         self._id = binascii.hexlify(os.urandom(3))
 
         if "file" not in config:
-            log.error(
-                "No secret file defined. A parameter EDUMFA_ENCFILE is missing in your edumfa.cfg."
-            )
+            log.error("No secret file defined. A parameter EDUMFA_ENCFILE is missing in your edumfa.cfg.")
             raise HSMException("no secret file defined: EDUMFA_ENCFILE!")
 
         # We determine, if the file is encrypted.
@@ -292,9 +290,7 @@ class DefaultSecurityModule(SecurityModule):
             # singleton cache
             password = password or PASSWORD
             if not password:
-                raise HSMException(
-                    "Error decrypting the encryption key. No password provided!"
-                )
+                raise HSMException("Error decrypting the encryption key. No password provided!")
             # Read all keys, decrypt them and return the key for
             # the slot id
             # TODO we assume here, that the file contains the hexlified data
@@ -304,9 +300,7 @@ class DefaultSecurityModule(SecurityModule):
             try:
                 keys = self.password_decrypt(cipher, password)
             except UnicodeDecodeError as e:
-                raise HSMException(
-                    "Error decrypting the encryption key. You probably provided the wrong password."
-                )
+                raise HSMException("Error decrypting the encryption key. You probably provided the wrong password.")
             secret = keys[slot_id * 32 : (slot_id + 1) * 32]
 
         else:
@@ -316,10 +310,7 @@ class DefaultSecurityModule(SecurityModule):
                     secret = f.read(32)
 
             if secret == b"":
-                raise HSMException(
-                    "No secret key defined for index: %s !\nPlease extend your %s !"
-                    % (str(slot_id), self.secFile)
-                )
+                raise HSMException(f"No secret key defined for index: {str(slot_id)} !\nPlease extend your {self.secFile} !")
 
         # cache the result
         self.secrets[slot_id] = secret

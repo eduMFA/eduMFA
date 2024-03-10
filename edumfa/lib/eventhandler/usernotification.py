@@ -124,9 +124,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 },
                 "attach_qrcode": {
                     "type": "bool",
-                    "description": _(
-                        "Send QR-Code image as an attachment (cid URL: token_image)"
-                    ),
+                    "description": _("Send QR-Code image as an attachment (cid URL: token_image)"),
                 },
                 "subject": {
                     "type": "str",
@@ -146,23 +144,21 @@ class UserNotificationEventHandler(BaseEventHandler):
                         NOTIFY_TYPE.EMAIL,
                     ],
                 },
-                "reply_to " + NOTIFY_TYPE.ADMIN_REALM: {
+                f"reply_to {NOTIFY_TYPE.ADMIN_REALM}": {
                     "type": "str",
                     "value": get_app_config_value("SUPERUSER_REALM", []),
                     "visibleIf": "reply_to",
                     "visibleValue": NOTIFY_TYPE.ADMIN_REALM,
                 },
-                "reply_to " + NOTIFY_TYPE.INTERNAL_ADMIN: {
+                f"reply_to {NOTIFY_TYPE.INTERNAL_ADMIN}": {
                     "type": "str",
                     "value": [a.username for a in get_db_admins()],
                     "visibleIf": "reply_to",
                     "visibleValue": NOTIFY_TYPE.INTERNAL_ADMIN,
                 },
-                "reply_to " + NOTIFY_TYPE.EMAIL: {
+                f"reply_to {NOTIFY_TYPE.EMAIL}": {
                     "type": "str",
-                    "description": _(
-                        "Any email address, to which the notification should be sent."
-                    ),
+                    "description": _("Any email address, to which the notification should be sent."),
                     "visibleIf": "reply_to",
                     "visibleValue": NOTIFY_TYPE.EMAIL,
                 },
@@ -183,23 +179,21 @@ class UserNotificationEventHandler(BaseEventHandler):
                         NOTIFY_TYPE.EMAIL,
                     ],
                 },
-                "To " + NOTIFY_TYPE.ADMIN_REALM: {
+                f"To {NOTIFY_TYPE.ADMIN_REALM}": {
                     "type": "str",
                     "value": get_app_config_value("SUPERUSER_REALM", []),
                     "visibleIf": "To",
                     "visibleValue": NOTIFY_TYPE.ADMIN_REALM,
                 },
-                "To " + NOTIFY_TYPE.INTERNAL_ADMIN: {
+                f"To {NOTIFY_TYPE.INTERNAL_ADMIN}": {
                     "type": "str",
                     "value": [a.username for a in get_db_admins()],
                     "visibleIf": "To",
                     "visibleValue": NOTIFY_TYPE.INTERNAL_ADMIN,
                 },
-                "To " + NOTIFY_TYPE.EMAIL: {
+                f"To {NOTIFY_TYPE.EMAIL}": {
                     "type": "str",
-                    "description": _(
-                        "Any email address, to which the notification should be sent."
-                    ),
+                    "description": _("Any email address, to which the notification should be sent."),
                     "visibleIf": "To",
                     "visibleValue": NOTIFY_TYPE.EMAIL,
                 },
@@ -208,9 +202,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 "smsconfig": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "Send the user notification via a predefined SMS gateway."
-                    ),
+                    "description": _("Send the user notification via a predefined SMS gateway."),
                     "value": smsgateways,
                 },
                 "body": {
@@ -229,9 +221,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 "body": {
                     "type": "text",
                     "required": True,
-                    "description": _(
-                        "This is the template content of the new file. Can contain the tags as specified in the documentation."
-                    ),
+                    "description": _("This is the template content of the new file. Can contain the tags as specified in the documentation."),
                 },
                 "filename": {
                     "type": "str",
@@ -270,11 +260,7 @@ class UserNotificationEventHandler(BaseEventHandler):
             logged_in_user = {}
 
         tokenowner = self._get_tokenowner(request)
-        log.debug(
-            "Executing event for action {0!r}, user {1!r}, logged_in_user {2!r}".format(
-                action, tokenowner, logged_in_user
-            )
-        )
+        log.debug(f"Executing event for action {action!r}, user {tokenowner!r}, logged_in_user {logged_in_user!r}")
 
         # Determine recipient
         recipient = None
@@ -287,13 +273,13 @@ class UserNotificationEventHandler(BaseEventHandler):
             reply_to = tokenowner.info.get("email")
 
         elif reply_to_type == NOTIFY_TYPE.INTERNAL_ADMIN:
-            username = handler_options.get("reply_to " + NOTIFY_TYPE.INTERNAL_ADMIN)
+            username = handler_options.get(f"reply_to {NOTIFY_TYPE.INTERNAL_ADMIN}")
             internal_admin = get_db_admin(username)
             reply_to = internal_admin.email if internal_admin else ""
 
         elif reply_to_type == NOTIFY_TYPE.ADMIN_REALM:
             # Adds all email addresses from a specific admin realm to the reply-to-header
-            admin_realm = handler_options.get("reply_to " + NOTIFY_TYPE.ADMIN_REALM)
+            admin_realm = handler_options.get(f"reply_to {NOTIFY_TYPE.ADMIN_REALM}")
             attr = is_attribute_at_all()
             ulist = get_user_list({"realm": admin_realm}, custom_attributes=attr)
             # create a list of all user-emails, if the user has an email
@@ -310,20 +296,16 @@ class UserNotificationEventHandler(BaseEventHandler):
 
             else:
                 # Try to find the user in the specified realm
-                user_obj = User(
-                    logged_in_user.get("username"), logged_in_user.get("realm")
-                )
+                user_obj = User(logged_in_user.get("username"), logged_in_user.get("realm"))
                 if user_obj:
                     reply_to = user_obj.info.get("email") if user_obj else ""
 
         elif reply_to_type == NOTIFY_TYPE.EMAIL:
-            email = handler_options.get("reply_to " + NOTIFY_TYPE.EMAIL, "").split(",")
+            email = handler_options.get(f"reply_to {NOTIFY_TYPE.EMAIL}", "").split(",")
             reply_to = email[0]
 
         else:
-            log.warning(
-                f"Was not able to determine the email for the reply-to header: {handler_def!s}"
-            )
+            log.warning(f"Was not able to determine the email for the reply-to header: {handler_def!s}")
 
         if notify_type == NOTIFY_TYPE.TOKENOWNER and not tokenowner.is_empty():
             recipient = {
@@ -335,7 +317,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 "mobile": tokenowner.info.get("mobile"),
             }
         elif notify_type == NOTIFY_TYPE.INTERNAL_ADMIN:
-            username = handler_options.get("To " + NOTIFY_TYPE.INTERNAL_ADMIN)
+            username = handler_options.get(f"To {NOTIFY_TYPE.INTERNAL_ADMIN}")
             internal_admin = get_db_admin(username)
             recipient = {
                 "givenname": username,
@@ -343,7 +325,7 @@ class UserNotificationEventHandler(BaseEventHandler):
             }
         elif notify_type == NOTIFY_TYPE.ADMIN_REALM:
             # Send emails to all the users in the specified admin realm
-            admin_realm = handler_options.get("To " + NOTIFY_TYPE.ADMIN_REALM)
+            admin_realm = handler_options.get(f"To {NOTIFY_TYPE.ADMIN_REALM}")
             attr = is_attribute_at_all()
             ulist = get_user_list({"realm": admin_realm}, custom_attributes=attr)
             # create a list of all user-emails, if the user has an email
@@ -364,9 +346,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                     }
             else:
                 # Try to find the user in the specified realm
-                user_obj = User(
-                    logged_in_user.get("username"), logged_in_user.get("realm")
-                )
+                user_obj = User(logged_in_user.get("username"), logged_in_user.get("realm"))
                 if user_obj:
                     recipient = {
                         "givenname": user_obj.info.get("givenname"),
@@ -376,12 +356,10 @@ class UserNotificationEventHandler(BaseEventHandler):
                     }
 
         elif notify_type == NOTIFY_TYPE.EMAIL:
-            email = handler_options.get("To " + NOTIFY_TYPE.EMAIL, "").split(",")
+            email = handler_options.get(f"To {NOTIFY_TYPE.EMAIL}", "").split(",")
             recipient = {"email": email}
         else:
-            log.warning(
-                f"Was not able to determine the recipient for the user notification: {handler_def!s}"
-            )
+            log.warning(f"Was not able to determine the recipient for the user notification: {handler_def!s}")
 
         if recipient or action.lower() == "savefile":
             # In case of "savefile" we do not need a recipient
@@ -394,25 +372,14 @@ class UserNotificationEventHandler(BaseEventHandler):
                     with open(filename, "r", encoding="utf-8") as f:
                         body = f.read()
                 except Exception as e:
-                    log.warning(
-                        f"Failed to read email template from file {filename!r}: {e!r}"
-                    )
+                    log.warning(f"Failed to read email template from file {filename!r}: {e!r}")
                     log.debug(f"{traceback.format_exc()!s}")
 
-            subject = (
-                handler_options.get("subject")
-                or "An action was performed on your token."
-            )
-            serial = (
-                request.all_data.get("serial")
-                or content.get("detail", {}).get("serial")
-                or g.audit_object.audit_data.get("serial")
-            )
+            subject = handler_options.get("subject") or "An action was performed on your token."
+            serial = request.all_data.get("serial") or content.get("detail", {}).get("serial") or g.audit_object.audit_data.get("serial")
             registrationcode = content.get("detail", {}).get("registrationcode")
             pin = content.get("detail", {}).get("pin")
-            googleurl_value = (
-                content.get("detail", {}).get("googleurl", {}).get("value")
-            )
+            googleurl_value = content.get("detail", {}).get("googleurl", {}).get("value")
             googleurl_img = content.get("detail", {}).get("googleurl", {}).get("img")
             tokentype = None
             tokendescription = None
@@ -437,8 +404,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 tokentype=tokentype,
                 description=tokendescription,
                 registrationcode=registrationcode,
-                escape_html=action.lower() == "sendmail"
-                and handler_options.get("mimetype", "").lower() == "html",
+                escape_html=action.lower() == "sendmail" and handler_options.get("mimetype", "").lower() == "html",
             )
 
             body = to_unicode(body).format(googleurl_img=googleurl_img, **tags)
@@ -457,9 +423,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                     mail_body.attach(MIMEText(body, mimetype))
                     mail_img = MIMEImage(googleurl.read())
                     mail_img.add_header("Content-ID", "<token_image>")
-                    mail_img.add_header(
-                        "Content-Disposition", f'inline; filename="{serial!s}.png"'
-                    )
+                    mail_img.add_header("Content-Disposition", f'inline; filename="{serial!s}.png"')
                     mail_body.attach(mail_img)
                     body = mail_body
                 try:
@@ -477,9 +441,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 if ret:
                     log.info(f"Sent a notification email to user {recipient}")
                 else:
-                    log.warning(
-                        f"Failed to send a notification email to user {recipient}"
-                    )
+                    log.warning(f"Failed to send a notification email to user {recipient}")
 
             elif action.lower() == "savefile":
                 spooldir = get_app_config_value(
@@ -510,8 +472,6 @@ class UserNotificationEventHandler(BaseEventHandler):
                 if ret:
                     log.info(f"Sent a notification sms to user {recipient}")
                 else:
-                    log.warning(
-                        f"Failed to send a notification email to user {recipient}"
-                    )
+                    log.warning(f"Failed to send a notification email to user {recipient}")
 
         return ret

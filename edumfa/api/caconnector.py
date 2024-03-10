@@ -52,9 +52,7 @@ def get_caconnector_api(name=None):
     returns a json list of the available CA connectors
     """
     g.audit_object.log({"detail": f"{name!s}"})
-    res = get_caconnector_list(
-        filter_caconnector_name=name, return_config=True
-    )  # the endpoint is only accessed by admins
+    res = get_caconnector_list(filter_caconnector_name=name, return_config=True)  # the endpoint is only accessed by admins
     g.audit_object.log({"success": True})
     return send_result(res)
 

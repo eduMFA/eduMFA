@@ -53,9 +53,7 @@ class mTimeOtp(object):
     - s. https://github.com/neush/otpn900/blob/master/src/test_motp.c
     """
 
-    def __init__(
-        self, secObj=None, secPin=None, oldtime=0, digits=6, key=None, pin=None
-    ):
+    def __init__(self, secObj=None, secPin=None, oldtime=0, digits=6, key=None, pin=None):
         """
         constructor for the mOtp class
 
@@ -124,9 +122,7 @@ class mTimeOtp(object):
 
         ## prevent access twice with last motp
         if res <= self.oldtime:
-            log.warning(
-                f"otpvalue {anOtpVal!s} checked once before ({res!r}<={self.oldtime!r})"
-            )
+            log.warning(f"otpvalue {anOtpVal!s} checked once before ({res!r}<={self.oldtime!r})")
             res = -1
         if res == -1:
             msg = "checking motp failed"

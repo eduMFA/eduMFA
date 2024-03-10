@@ -60,9 +60,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
                 "user": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "The user for whom the custom attribute should be set."
-                    ),
+                    "description": _("The user for whom the custom attribute should be set."),
                     "value": [
                         USER_TYPE.TOKENOWNER,
                         USER_TYPE.LOGGED_IN_USER,
@@ -70,9 +68,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
                 },
                 "attrkey": {
                     "type": "str",
-                    "description": _(
-                        "The key of the custom user attribute that should be set."
-                    ),
+                    "description": _("The key of the custom user attribute that should be set."),
                 },
                 "attrvalue": {
                     "type": "str",
@@ -83,9 +79,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
                 "user": {
                     "type": "str",
                     "required": True,
-                    "description": _(
-                        "The user from which the custom attribute should be deleted."
-                    ),
+                    "description": _("The user from which the custom attribute should be deleted."),
                     "value": [
                         USER_TYPE.TOKENOWNER,
                         USER_TYPE.LOGGED_IN_USER,
@@ -93,9 +87,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
                 },
                 "attrkey": {
                     "type": "str",
-                    "description": _(
-                        "The key of the custom user attribute that should be deleted."
-                    ),
+                    "description": _("The key of the custom user attribute that should be deleted."),
                 },
             },
         }
@@ -125,9 +117,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
                 realm=g.logged_in_user.get("realm"),
             )
         else:
-            log.warning(
-                f"Unable to determine the user for handling the custom attribute! action: {action!s}, handler: {handler_def!s}"
-            )
+            log.warning(f"Unable to determine the user for handling the custom attribute! action: {action!s}, handler: {handler_def!s}")
             return False
 
         attrkey = handler_options.get("attrkey")

@@ -100,16 +100,12 @@ class OcraTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of OCRA tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of OCRA tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this maximum number of active OCRA tokens assigned."
-                        ),
+                        "desc": _("The user may only have this maximum number of active OCRA tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                 }
@@ -205,7 +201,7 @@ class OcraTokenClass(TokenClass):
         # Get ValidityTime=120s. Maybe there is a OCRAChallengeValidityTime...
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
-        lookup_for = tokentype.capitalize() + "ChallengeValidityTime"
+        lookup_for = f"{tokentype.capitalize()}ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # Get the OCRASUITE from the token information
@@ -226,17 +222,11 @@ class OcraTokenClass(TokenClass):
             attributes["original_challenge"] = challenge
             attributes["qrcode"] = create_img(challenge)
             if options.get("hashchallenge", "").lower() == "sha256":
-                challenge = hexlify_and_unicode(
-                    hashlib.sha256(to_bytes(challenge)).digest()
-                )
+                challenge = hexlify_and_unicode(hashlib.sha256(to_bytes(challenge)).digest())
             elif options.get("hashchallenge", "").lower() == "sha512":
-                challenge = hexlify_and_unicode(
-                    hashlib.sha512(to_bytes(challenge)).digest()
-                )
+                challenge = hexlify_and_unicode(hashlib.sha512(to_bytes(challenge)).digest())
             elif options.get("hashchallenge"):
-                challenge = hexlify_and_unicode(
-                    hashlib.sha1(to_bytes(challenge)).digest()
-                )  # nosec B324 # ocra definition
+                challenge = hexlify_and_unicode(hashlib.sha1(to_bytes(challenge)).digest())  # nosec B324 # ocra definition
 
         # Create the challenge in the database
         db_challenge = Challenge(

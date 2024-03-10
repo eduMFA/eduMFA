@@ -635,16 +635,12 @@ class WebAuthnTokenClass(TokenClass):
                 SCOPE.AUTH: {
                     ACTION.CHALLENGETEXT: {
                         "type": "str",
-                        "desc": _(
-                            "Use an alternative challenge text for telling the user to confirm with his WebAuthn token."
-                        ),
+                        "desc": _("Use an alternative challenge text for telling the user to confirm with his WebAuthn token."),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                     },
                     WEBAUTHNACTION.ALLOWED_TRANSPORTS: {
                         "type": "str",
-                        "desc": _(
-                            "A list of transports to prefer to communicate with WebAuthn tokens. Default: usb ble nfc internal (All standard transports)"
-                        ),
+                        "desc": _("A list of transports to prefer to communicate with WebAuthn tokens. Default: usb ble nfc internal (All standard transports)"),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                     },
                     WEBAUTHNACTION.TIMEOUT: {
@@ -701,23 +697,17 @@ class WebAuthnTokenClass(TokenClass):
                 SCOPE.ENROLL: {
                     WEBAUTHNACTION.AVOID_DOUBLE_REGISTRATION: {
                         "type": "bool",
-                        "desc": _(
-                            "One webauthn token can not be registered to a user more than once."
-                        ),
+                        "desc": _("One webauthn token can not be registered to a user more than once."),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                     },
                     WEBAUTHNACTION.RELYING_PARTY_NAME: {
                         "type": "str",
-                        "desc": _(
-                            "A human-readable name for the organization rolling out WebAuthn tokens."
-                        ),
+                        "desc": _("A human-readable name for the organization rolling out WebAuthn tokens."),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                     },
                     WEBAUTHNACTION.RELYING_PARTY_ID: {
                         "type": "str",
-                        "desc": _(
-                            "A domain name that is a subset of the respective FQDNs for all the webservices the users should be able to sign in to using WebAuthn tokens."
-                        ),
+                        "desc": _("A domain name that is a subset of the respective FQDNs for all the webservices the users should be able to sign in to using WebAuthn tokens."),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                     },
                     WEBAUTHNACTION.TIMEOUT: {
@@ -730,9 +720,7 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.AUTHENTICATOR_ATTACHMENT: {
                         "type": "str",
-                        "desc": _(
-                            "Whether to limit roll out of WebAuthn tokens to either only platform authenticators, or only cross-platform authenticators. Default: either"
-                        ),
+                        "desc": _("Whether to limit roll out of WebAuthn tokens to either only platform authenticators, or only cross-platform authenticators. Default: either"),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                         "value": ["platform", "cross-platform", "either"],
                     },
@@ -756,9 +744,7 @@ class WebAuthnTokenClass(TokenClass):
                         "type": "str",
                         "desc": _(
                             "Which algorithm are available to use for creating public key credentials for WebAuthn tokens. (Default: [{0!s}], Order: [{1!s}])".format(
-                                ", ".join(
-                                    DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
-                                ),
+                                ", ".join(DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE),
                                 ", ".join(PUBKEY_CRED_ALGORITHMS_ORDER),
                             )
                         ),
@@ -786,9 +772,7 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.REQ: {
                         "type": "str",
-                        "desc": _(
-                            "Only the specified WebAuthn-tokens are allowed to be registered."
-                        ),
+                        "desc": _("Only the specified WebAuthn-tokens are allowed to be registered."),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                     },
                     WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY: {
@@ -799,23 +783,17 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this number of WebAuthn tokens assigned."
-                        ),
+                        "desc": _("The user may only have this number of WebAuthn tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
-                        "desc": _(
-                            "The user may only have this number of active WebAuthn tokens assigned."
-                        ),
+                        "desc": _("The user may only have this number of active WebAuthn tokens assigned."),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.CHALLENGETEXT: {
                         "type": "str",
-                        "desc": _(
-                            "Use an alternate challenge text for telling the user to confirm with his WebAuthn device."
-                        ),
+                        "desc": _("Use an alternate challenge text for telling the user to confirm with his WebAuthn device."),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                     },
                 },
@@ -849,9 +827,7 @@ class WebAuthnTokenClass(TokenClass):
         """
 
         if key not in WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys():
-            raise ValueError(
-                f"key must be one of {', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())!s}"
-            )
+            raise ValueError(f"key must be one of {', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())!s}")
         return WEBAUTHN_TOKEN_SPECIFIC_SETTINGS[key]
 
     @log_with(log)
@@ -867,9 +843,7 @@ class WebAuthnTokenClass(TokenClass):
         self.hKeyRequired = False
 
     def _get_message(self, options):
-        challengetext = getParam(
-            options, f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}", optional
-        )
+        challengetext = getParam(options, f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}", optional)
         return challengetext.format(self.token.description) if challengetext else ""
 
     def _get_webauthn_user(self, user):
@@ -877,13 +851,9 @@ class WebAuthnTokenClass(TokenClass):
             user_id=self.token.serial,
             user_name=user.login,
             user_display_name=str(user),
-            icon_url=IMAGES.get(self.token.description.lower().split()[0], "")
-            if self.token.description
-            else "",
+            icon_url=IMAGES.get(self.token.description.lower().split()[0], "") if self.token.description else "",
             credential_id=self.decrypt_otpkey(),
-            public_key=webauthn_b64_encode(
-                binascii.unhexlify(self.get_tokeninfo(WEBAUTHNINFO.PUB_KEY))
-            ),
+            public_key=webauthn_b64_encode(binascii.unhexlify(self.get_tokeninfo(WEBAUTHNINFO.PUB_KEY))),
             sign_count=self.get_otp_count(),
             rp_id=self.get_tokeninfo(WEBAUTHNINFO.RELYING_PARTY_ID),
         )
@@ -928,49 +898,25 @@ class WebAuthnTokenClass(TokenClass):
             # Set the description in the first enrollment step
             if "description" in param:
                 self.set_description(getParam(param, "description", default=""))
-        elif (
-            reg_data
-            and client_data
-            and self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT
-        ):
+        elif reg_data and client_data and self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
             serial = self.token.serial
-            registration_client_extensions = getParam(
-                param, "registrationclientextensions", optional
-            )
+            registration_client_extensions = getParam(param, "registrationclientextensions", optional)
 
             rp_id = getParam(param, WEBAUTHNACTION.RELYING_PARTY_ID, required)
-            uv_req = getParam(
-                param, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, optional
-            )
-            rk_req = getParam(
-                param, WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY, optional
-            )
-            attestation_level = getParam(
-                param, WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL, required
-            )
+            uv_req = getParam(param, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, optional)
+            rk_req = getParam(param, WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY, optional)
+            attestation_level = getParam(param, WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL, required)
 
             try:
-                http_origin = getParam(
-                    param, "HTTP_ORIGIN", required, allow_empty=False
-                )
+                http_origin = getParam(param, "HTTP_ORIGIN", required, allow_empty=False)
             except ParameterError:
-                raise ValueError(
-                    "The ORIGIN HTTP header must be included, when enrolling a new WebAuthn token."
-                )
+                raise ValueError("The ORIGIN HTTP header must be included, when enrolling a new WebAuthn token.")
 
-            challengeobject_list = [
-                challengeobject
-                for challengeobject in get_challenges(
-                    serial=serial, transaction_id=transaction_id
-                )
-                if challengeobject.is_valid()
-            ]
+            challengeobject_list = [challengeobject for challengeobject in get_challenges(serial=serial, transaction_id=transaction_id) if challengeobject.is_valid()]
 
             # Since we are still enrolling the token, there should be exactly one challenge.
             if not len(challengeobject_list):
-                raise EnrollmentError(
-                    f"The enrollment challenge does not exist or has timed out for {serial!s}"
-                )
+                raise EnrollmentError(f"The enrollment challenge does not exist or has timed out for {serial!s}")
             challengeobject = challengeobject_list[0]
             challenge = binascii.unhexlify(challengeobject.challenge)
 
@@ -985,16 +931,10 @@ class WebAuthnTokenClass(TokenClass):
                     registration_response={
                         "clientData": client_data,
                         "attObj": reg_data,
-                        "registrationClientExtensions": webauthn_b64_decode(
-                            registration_client_extensions
-                        )
-                        if registration_client_extensions
-                        else None,
+                        "registrationClientExtensions": webauthn_b64_decode(registration_client_extensions) if registration_client_extensions else None,
                     },
                     challenge=webauthn_b64_encode(challenge),
-                    attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                        attestation_level
-                    ],
+                    attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[attestation_level],
                     trust_anchor_dir=get_from_config(WEBAUTHNCONFIG.TRUST_ANCHOR_DIR),
                     rk_required=rk_req == RESIDENT_KEY_LEVEL.REQUIRED,
                     uv_required=uv_req == USER_VERIFICATION_LEVEL.REQUIRED,
@@ -1007,35 +947,19 @@ class WebAuthnTokenClass(TokenClass):
                     ]
                 )
             except Exception as e:
-                log.warning(
-                    "Enrollment of {0!s} token failed: {1!s}!".format(
-                        self.get_class_type(), e
-                    )
-                )
-                raise EnrollmentError(
-                    f"Could not enroll {self.get_class_type()!s} token!"
-                )
+                log.warning(f"Enrollment of {self.get_class_type()!s} token failed: {e!s}!")
+                raise EnrollmentError(f"Could not enroll {self.get_class_type()!s} token!")
 
-            self.set_otpkey(
-                hexlify_and_unicode(
-                    webauthn_b64_decode(webauthn_credential.credential_id)
-                )
-            )
+            self.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(webauthn_credential.credential_id)))
             self.set_otp_count(webauthn_credential.sign_count)
             self.add_tokeninfo(
                 WEBAUTHNINFO.PUB_KEY,
-                hexlify_and_unicode(
-                    webauthn_b64_decode(webauthn_credential.public_key)
-                ),
+                hexlify_and_unicode(webauthn_b64_decode(webauthn_credential.public_key)),
             )
             self.add_tokeninfo(WEBAUTHNINFO.ORIGIN, webauthn_credential.origin)
-            self.add_tokeninfo(
-                WEBAUTHNINFO.ATTESTATION_LEVEL, webauthn_credential.attestation_level
-            )
+            self.add_tokeninfo(WEBAUTHNINFO.ATTESTATION_LEVEL, webauthn_credential.attestation_level)
 
-            self.add_tokeninfo(
-                WEBAUTHNINFO.AAGUID, hexlify_and_unicode(webauthn_credential.aaguid)
-            )
+            self.add_tokeninfo(WEBAUTHNINFO.AAGUID, hexlify_and_unicode(webauthn_credential.aaguid))
 
             # Add attestation info.
             if webauthn_credential.attestation_cert:
@@ -1053,19 +977,11 @@ class WebAuthnTokenClass(TokenClass):
                     webauthn_credential.attestation_cert.serial_number,
                 )
 
-                cn = (
-                    webauthn_credential.attestation_cert.subject.get_attributes_for_oid(
-                        x509.NameOID.COMMON_NAME
-                    )
-                )
+                cn = webauthn_credential.attestation_cert.subject.get_attributes_for_oid(x509.NameOID.COMMON_NAME)
                 automatic_description = cn[0].value if len(cn) else None
 
             # Add info to token about whether a resident key/ discoverable credential was enrolled
-            resident_key = (
-                registration_client_extensions
-                and b'{"rk":true}'
-                in webauthn_b64_decode(registration_client_extensions)
-            )
+            resident_key = registration_client_extensions and b'{"rk":true}' in webauthn_b64_decode(registration_client_extensions)
             print(registration_client_extensions)
             if resident_key:
                 self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Yes")
@@ -1076,9 +992,7 @@ class WebAuthnTokenClass(TokenClass):
             # If no description has already been set, set the automatic description or the
             # description given in the 2nd request
             if not self.token.description:
-                self.set_description(
-                    getParam(param, "description", default=automatic_description)
-                )
+                self.set_description(getParam(param, "description", default=automatic_description))
 
             # Delete all challenges. We are still in enrollment, so there
             # *should* be only one, but it can't hurt to be thorough here.
@@ -1088,9 +1002,7 @@ class WebAuthnTokenClass(TokenClass):
             # Reset clientwait rollout_state
             self.token.rollout_state = ""
         else:
-            raise ParameterError(
-                "regdata and or clientdata provided but token not in clientwait rollout_state."
-            )
+            raise ParameterError("regdata and or clientdata provided but token not in clientwait rollout_state.")
 
     @log_with(log)
     def get_init_detail(self, params=None, user=None):
@@ -1115,13 +1027,9 @@ class WebAuthnTokenClass(TokenClass):
             response_detail = TokenClass.get_init_detail(self, params, user)
 
             if not params:
-                raise ValueError(
-                    "Creating a WebAuthn token requires params to be provided"
-                )
+                raise ValueError("Creating a WebAuthn token requires params to be provided")
             if not user:
-                raise ParameterError(
-                    "Failed to create a WebAuthn token.Creating a WebAuthn token requires user to be provided"
-                )
+                raise ParameterError("Failed to create a WebAuthn token.Creating a WebAuthn token requires user to be provided")
 
             # To aid with unit testing a fixed nonce may be passed in.
             nonce = self._get_nonce()
@@ -1138,9 +1046,7 @@ class WebAuthnTokenClass(TokenClass):
             challenge.save()
 
             credential_ids = []
-            if is_true(
-                getParam(params, WEBAUTHNACTION.AVOID_DOUBLE_REGISTRATION, optional)
-            ):
+            if is_true(getParam(params, WEBAUTHNACTION.AVOID_DOUBLE_REGISTRATION, optional)):
                 # Get the other webauthn tokens of the user
                 webauthn_toks = get_tokens(tokentype=self.type, user=self.user)
                 # add their credential ids
@@ -1157,24 +1063,12 @@ class WebAuthnTokenClass(TokenClass):
                 user_name=user.login,
                 user_display_name=str(user),
                 timeout=getParam(params, WEBAUTHNACTION.TIMEOUT, required),
-                attestation=getParam(
-                    params, WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM, required
-                ),
-                user_verification=getParam(
-                    params, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, required
-                ),
-                public_key_credential_algorithms=getParam(
-                    params, WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS, required
-                ),
-                authenticator_attachment=getParam(
-                    params, WEBAUTHNACTION.AUTHENTICATOR_ATTACHMENT, optional
-                ),
-                authenticator_selection_list=getParam(
-                    params, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST, optional
-                ),
-                resident_key=getParam(
-                    params, WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY, optional
-                ),
+                attestation=getParam(params, WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM, required),
+                user_verification=getParam(params, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, required),
+                public_key_credential_algorithms=getParam(params, WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS, required),
+                authenticator_attachment=getParam(params, WEBAUTHNACTION.AUTHENTICATOR_ATTACHMENT, optional),
+                authenticator_selection_list=getParam(params, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST, optional),
+                resident_key=getParam(params, WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY, optional),
                 credential_ids=credential_ids,
             ).registration_dict
 
@@ -1184,36 +1078,20 @@ class WebAuthnTokenClass(TokenClass):
                 "nonce": public_key_credential_creation_options["challenge"],
                 "relyingParty": public_key_credential_creation_options["rp"],
                 "serialNumber": public_key_credential_creation_options["user"]["id"],
-                "pubKeyCredAlgorithms": public_key_credential_creation_options[
-                    "pubKeyCredParams"
-                ],
+                "pubKeyCredAlgorithms": public_key_credential_creation_options["pubKeyCredParams"],
                 "name": public_key_credential_creation_options["user"]["name"],
-                "displayName": public_key_credential_creation_options["user"][
-                    "displayName"
-                ],
+                "displayName": public_key_credential_creation_options["user"]["displayName"],
             }
             if public_key_credential_creation_options.get("authenticatorSelection"):
-                response_detail["webAuthnRegisterRequest"]["authenticatorSelection"] = (
-                    public_key_credential_creation_options["authenticatorSelection"]
-                )
+                response_detail["webAuthnRegisterRequest"]["authenticatorSelection"] = public_key_credential_creation_options["authenticatorSelection"]
             if public_key_credential_creation_options.get("timeout"):
-                response_detail["webAuthnRegisterRequest"]["timeout"] = (
-                    public_key_credential_creation_options["timeout"]
-                )
+                response_detail["webAuthnRegisterRequest"]["timeout"] = public_key_credential_creation_options["timeout"]
             if public_key_credential_creation_options.get("attestation"):
-                response_detail["webAuthnRegisterRequest"]["attestation"] = (
-                    public_key_credential_creation_options["attestation"]
-                )
-            if (public_key_credential_creation_options.get("extensions") or {}).get(
-                "authnSel"
-            ):
-                response_detail["webAuthnRegisterRequest"][
-                    "authenticatorSelectionList"
-                ] = public_key_credential_creation_options["extensions"]["authnSel"]
+                response_detail["webAuthnRegisterRequest"]["attestation"] = public_key_credential_creation_options["attestation"]
+            if (public_key_credential_creation_options.get("extensions") or {}).get("authnSel"):
+                response_detail["webAuthnRegisterRequest"]["authenticatorSelectionList"] = public_key_credential_creation_options["extensions"]["authnSel"]
             if public_key_credential_creation_options.get("excludeCredentials"):
-                response_detail["webAuthnRegisterRequest"]["excludeCredentials"] = (
-                    public_key_credential_creation_options.get("excludeCredentials")
-                )
+                response_detail["webAuthnRegisterRequest"]["excludeCredentials"] = public_key_credential_creation_options.get("excludeCredentials")
 
             self.add_tokeninfo(
                 WEBAUTHNINFO.RELYING_PARTY_ID,
@@ -1227,9 +1105,7 @@ class WebAuthnTokenClass(TokenClass):
         elif self.token.rollout_state == "":
             # This is the second step of the init request. The registration
             # ceremony has been successfully performed.
-            response_detail = {
-                "webAuthnRegisterResponse": {"subject": self.token.description}
-            }
+            response_detail = {"webAuthnRegisterResponse": {"subject": self.token.description}}
 
         else:
             response_detail = {}
@@ -1283,9 +1159,7 @@ class WebAuthnTokenClass(TokenClass):
                 challenge=challenge,
                 webauthn_user=None,
                 transports=None,
-                user_verification_requirement=getParam(
-                    options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, required
-                ),
+                user_verification_requirement=getParam(options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, required),
                 timeout=getParam(options, WEBAUTHNACTION.TIMEOUT, required),
                 is_usernameless_realm=True,
                 rp_id=getParam(options, WEBAUTHNACTION.RELYING_PARTY_ID, required),
@@ -1335,15 +1209,11 @@ class WebAuthnTokenClass(TokenClass):
         """
 
         if not options:
-            raise ValueError(
-                "Creating a WebAuthn challenge requires options to be provided"
-            )
+            raise ValueError("Creating a WebAuthn challenge requires options to be provided")
         try:
             user = self._get_webauthn_user(getParam(options, "user", required))
         except ParameterError:
-            raise ValueError(
-                "When creating a WebAuthn challenge, options must contain user"
-            )
+            raise ValueError("When creating a WebAuthn challenge, options must contain user")
 
         message = self._get_message(options)
 
@@ -1356,9 +1226,7 @@ class WebAuthnTokenClass(TokenClass):
             for c in get_challenges(transaction_id=transactionid):
                 # TODO: this throws an exception if the token does not exists
                 #  but just created a challenge with it...
-                if get_tokens(
-                    serial=c.serial, tokentype=self.get_class_type(), count=True
-                ):
+                if get_tokens(serial=c.serial, tokentype=self.get_class_type(), count=True):
                     challenge = c.challenge
                     break
 
@@ -1383,15 +1251,11 @@ class WebAuthnTokenClass(TokenClass):
             challenge=webauthn_b64_encode(nonce),
             webauthn_user=user,
             transports=getParam(options, WEBAUTHNACTION.ALLOWED_TRANSPORTS, required),
-            user_verification_requirement=getParam(
-                options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, required
-            ),
+            user_verification_requirement=getParam(options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, required),
             timeout=getParam(options, WEBAUTHNACTION.TIMEOUT, required),
         ).assertion_dict
 
-        dataimage = (
-            convert_imagefile_to_dataimage(user.icon_url) if user.icon_url else ""
-        )
+        dataimage = convert_imagefile_to_dataimage(user.icon_url) if user.icon_url else ""
         reply_dict = {
             "attributes": {
                 "webAuthnSignRequest": public_key_credential_request_options,
@@ -1413,13 +1277,9 @@ class WebAuthnTokenClass(TokenClass):
             try:
                 jwt.decode(challenge, current_app.secret_key, algorithms=["HS256"])
             except jwt.DecodeError as err:
-                raise AuthenticationRejectedException(
-                    "Provided response does not contain a challenge issued by this instance"
-                )
+                raise AuthenticationRejectedException("Provided response does not contain a challenge issued by this instance")
             except jwt.ExpiredSignatureError as err:
-                raise AuthenticationRejectedException(
-                    "Provided response does not contain a challenge issued by this instance"
-                )
+                raise AuthenticationRejectedException("Provided response does not contain a challenge issued by this instance")
 
             # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI
             user_handle = getParam(options, "userhandle", required)
@@ -1471,37 +1331,27 @@ class WebAuthnTokenClass(TokenClass):
         :rtype: int
         """
 
-        if is_webauthn_assertion_response(options) and getParam(
-            options, "challenge", optional
-        ):
+        if is_webauthn_assertion_response(options) and getParam(options, "challenge", optional):
             credential_id = getParam(options, "credentialid", required)
             authenticator_data = getParam(options, "authenticatordata", required)
             client_data = getParam(options, "clientdata", required)
             signature_data = getParam(options, "signaturedata", required)
             user_handle = getParam(options, "userhandle", optional)
-            assertion_client_extensions = getParam(
-                options, "assertionclientextensions", optional
-            )
+            assertion_client_extensions = getParam(options, "assertionclientextensions", optional)
 
             try:
                 user = self._get_webauthn_user(getParam(options, "user", required))
             except ParameterError:
-                raise ValueError(
-                    "When performing WebAuthn authorization, options must contain user"
-                )
+                raise ValueError("When performing WebAuthn authorization, options must contain user")
 
-            uv_requirement = getParam(
-                options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, optional
-            )
+            uv_requirement = getParam(options, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, optional)
             uv_req = uv_requirement == USER_VERIFICATION_LEVEL.REQUIRED
 
             challenge = binascii.unhexlify(getParam(options, "challenge", required))
 
             try:
                 try:
-                    http_origin = getParam(
-                        options, "HTTP_ORIGIN", required, allow_empty=False
-                    )
+                    http_origin = getParam(options, "HTTP_ORIGIN", required, allow_empty=False)
                 except ParameterError:
                     raise AuthenticationRejectedException("HTTP Origin header missing.")
 
@@ -1518,11 +1368,7 @@ class WebAuthnTokenClass(TokenClass):
                             "clientData": client_data,
                             "authData": authenticator_data,
                             "signature": signature_data,
-                            "assertionClientExtensions": webauthn_b64_decode(
-                                assertion_client_extensions
-                            )
-                            if assertion_client_extensions
-                            else None,
+                            "assertionClientExtensions": webauthn_b64_decode(assertion_client_extensions) if assertion_client_extensions else None,
                         },
                         challenge=webauthn_b64_encode(challenge),
                         origin=http_origin,
@@ -1532,54 +1378,29 @@ class WebAuthnTokenClass(TokenClass):
                 )
             except AuthenticationRejectedException as e:
                 # The authentication ceremony failed.
-                log.warning(
-                    f"Checking response for token {self.token.serial!s} failed. {e!s}"
-                )
+                log.warning(f"Checking response for token {self.token.serial!s} failed. {e!s}")
                 return -1
 
             # At this point we can check, if the attestation certificate is
             # authorized. If not, we can raise a policy exception.
             if not attestation_certificate_allowed(
                 {
-                    "attestation_issuer": self.get_tokeninfo(
-                        WEBAUTHNINFO.ATTESTATION_ISSUER
-                    ),
-                    "attestation_serial": self.get_tokeninfo(
-                        WEBAUTHNINFO.ATTESTATION_SERIAL
-                    ),
-                    "attestation_subject": self.get_tokeninfo(
-                        WEBAUTHNINFO.ATTESTATION_SUBJECT
-                    ),
+                    "attestation_issuer": self.get_tokeninfo(WEBAUTHNINFO.ATTESTATION_ISSUER),
+                    "attestation_serial": self.get_tokeninfo(WEBAUTHNINFO.ATTESTATION_SERIAL),
+                    "attestation_subject": self.get_tokeninfo(WEBAUTHNINFO.ATTESTATION_SUBJECT),
                 },
                 getParam(options, WEBAUTHNACTION.REQ, optional),
             ):
-                log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate due to policy restriction {1!s}".format(
-                        self.token.serial, WEBAUTHNACTION.REQ
-                    )
-                )
-                raise PolicyError(
-                    "The WebAuthn token is not allowed to authenticate due to a policy restriction."
-                )
+                log.warning(f"The WebAuthn token {self.token.serial!s} is not allowed to authenticate due to policy restriction {WEBAUTHNACTION.REQ!s}")
+                raise PolicyError("The WebAuthn token is not allowed to authenticate due to a policy restriction.")
 
             # Now we need to check, if a whitelist for AAGUIDs exists, and if
             # so, if this device is whitelisted. If not, we again raise a
             # policy exception.
-            allowed_aaguids = getParam(
-                options, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST, optional
-            )
-            if (
-                allowed_aaguids
-                and self.get_tokeninfo(WEBAUTHNINFO.AAGUID) not in allowed_aaguids
-            ):
-                log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate due to policy restriction {1!s}".format(
-                        self.token.serial, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST
-                    )
-                )
-                raise PolicyError(
-                    "The WebAuthn token is not allowed to authenticate due to a policy restriction."
-                )
+            allowed_aaguids = getParam(options, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST, optional)
+            if allowed_aaguids and self.get_tokeninfo(WEBAUTHNINFO.AAGUID) not in allowed_aaguids:
+                log.warning(f"The WebAuthn token {self.token.serial!s} is not allowed to authenticate due to policy restriction {WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST!s}")
+                raise PolicyError("The WebAuthn token is not allowed to authenticate due to a policy restriction.")
 
             # All clear? Nice!
             return self.get_otp_count()
