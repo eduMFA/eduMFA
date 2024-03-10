@@ -37,11 +37,20 @@ audit_cli = AppGroup("audit", help="Manage Audit log")
 
 
 @audit_cli.command("dump")
-@click.option('-t', '--timelimit',
-              help="Limit the dumped audit entries to a certain period (i.e. '5d' or '3h' for the entries from the "
-                   "last five days or three hours. By default all audit entries will be dumped.")
-@click.option('-f', '--filename', type=click.File('w'), default=sys.stdout,
-              help="Name of the 'csv' file to dump the audit entries into. By default write to stdout.")
+@click.option(
+    "-t",
+    "--timelimit",
+    help=(
+        "Limit the dumped audit entries to a certain period (i.e. '5d' or '3h' for the entries from the last five days or three hours. By default all audit entries will be dumped."
+    ),
+)
+@click.option(
+    "-f",
+    "--filename",
+    type=click.File("w"),
+    default=sys.stdout,
+    help="Name of the 'csv' file to dump the audit entries into. By default write to stdout.",
+)
 def dump(filename, timelimit=None):
     """Dump the audit log in csv format."""
     audit = getAudit(current_app.config)
@@ -51,14 +60,34 @@ def dump(filename, timelimit=None):
 
 
 @audit_cli.command("rotate")
-@click.option('-hw', '--highwatermark', type=int, default=10000, show_default=True,
-              help="If entries exceed this value, old entries are deleted.")
-@click.option('-lw', '--lowwatermark', type=int, default=5000, show_default=True,
-              help="Keep this number of entries.")
-@click.option('--age', help="Delete audit entries older than these number of days.")
-@click.option('--config', help="Read config from the specified yaml file.")
-@click.option('--dryrun', is_flag=True, help="Do not actually delete, only show what would be done.")
-@click.option('--chunksize', type=int, help="Delete entries in chunks of the given size to avoid deadlocks")
+@click.option(
+    "-hw",
+    "--highwatermark",
+    type=int,
+    default=10000,
+    show_default=True,
+    help="If entries exceed this value, old entries are deleted.",
+)
+@click.option(
+    "-lw",
+    "--lowwatermark",
+    type=int,
+    default=5000,
+    show_default=True,
+    help="Keep this number of entries.",
+)
+@click.option("--age", help="Delete audit entries older than these number of days.")
+@click.option("--config", help="Read config from the specified yaml file.")
+@click.option(
+    "--dryrun",
+    is_flag=True,
+    help="Do not actually delete, only show what would be done.",
+)
+@click.option(
+    "--chunksize",
+    type=int,
+    help="Delete entries in chunks of the given size to avoid deadlocks",
+)
 def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, chunksize=None):
     """
     Clean the SQL audit log.
@@ -91,14 +120,14 @@ def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, 
     audit_db_uri = current_app.config.get("EDUMFA_AUDIT_SQL_URI", token_db_uri)
     audit_module = current_app.config.get("EDUMFA_AUDIT_MODULE", default_module)
     if audit_module != default_module:
-        raise Exception("We only rotate SQL audit module. You are using %s" % audit_module)
+        raise Exception(f"We only rotate SQL audit module. You are using {audit_module}")
     if config:
         click.echo("Cleaning up with config file.")
     elif age:
         age = int(age)
-        click.echo("Cleaning up with age: {0!s}.".format(age))
+        click.echo(f"Cleaning up with age: {age!s}.")
     else:
-        click.echo("Cleaning up with high: {0!s}, low: {1!s}.".format(highwatermark, lowwatermark))
+        click.echo(f"Cleaning up with high: {highwatermark!s}, low: {lowwatermark!s}.")
 
     engine = create_engine(audit_db_uri)
     # create a configured "Session" class
@@ -106,12 +135,12 @@ def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, 
     # create a Session
     metadata.create_all(engine)
     if config:
-        with open(config, 'r') as f:
+        with open(config, "r") as f:
             yml_config = yaml.safe_load(f)
         auditlogs = session.query(LogEntry).all()
         delete_list = []
         for log in auditlogs:
-            click.echo("investigating log entry {0!s}".format(log.id))
+            click.echo(f"investigating log entry {log.id!s}")
             for rule in yml_config:
                 age = int(rule.get("rotate"))
                 rotate_date = datetime.now() - timedelta(days=age)
@@ -120,12 +149,12 @@ def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, 
                 for key in rule.keys():
                     if key not in ["rotate"]:
                         search_value = rule.get(key)
-                        click.echo(" + searching for {0!r} in {1!s}".format(search_value, getattr(LogEntry, key)))
+                        click.echo(f" + searching for {search_value!r} in {getattr(LogEntry, key)!s}")
                         audit_value = getattr(log, key) or ""
                         m = re.search(search_value, audit_value)
                         if m:
                             # it matches!
-                            click.echo(" + -- found {0!r}".format(audit_value))
+                            click.echo(f" + -- found {audit_value!r}")
                             match = True
                         else:
                             # It does not match, we continue to next rule
@@ -136,27 +165,26 @@ def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, 
                 if match:
                     if log.date < rotate_date:
                         # Delete it!
-                        click.echo(" + Deleting {0!s} due to rule {1!s}".format(log.id, rule))
+                        click.echo(f" + Deleting {log.id!s} due to rule {rule!s}")
                         # Delete it
                         delete_list.append(log.id)
                     # skip all other rules and go to the next log entry
                     break
         if dryrun:
-            click.echo("If you only would let me I would clean up "
-                       "{0!s} entries!".format(len(delete_list)))
+            click.echo(f"If you only would let me I would clean up {len(delete_list)!s} entries!")
         else:
-            click.echo("Cleaning up {0!s} entries.".format(len(delete_list)))
+            click.echo(f"Cleaning up {len(delete_list)!s} entries.")
             delete_matching_rows(session, LogEntry.__table__, LogEntry.id.in_(delete_list), chunksize)
     elif age:
         now = datetime.now() - timedelta(days=age)
-        click.echo("Deleting entries older than {0!s}".format(now))
+        click.echo(f"Deleting entries older than {now!s}")
         criterion = LogEntry.date < now
         if dryrun:
             r = LogEntry.query.filter(criterion).count()
-            click.echo("Would delete {0!s} entries.".format(r))
+            click.echo(f"Would delete {r!s} entries.")
         else:
             r = delete_matching_rows(session, LogEntry.__table__, criterion, chunksize)
-            click.echo("{0!s} entries deleted.".format(r))
+            click.echo(f"{r!s} entries deleted.")
     else:
         count = session.query(LogEntry.id).count()
         last_id = 0
@@ -174,4 +202,4 @@ def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, 
                 r = LogEntry.query.filter(criterion).count()
             else:
                 r = delete_matching_rows(session, LogEntry.__table__, criterion, chunksize)
-            click.echo("{0!s} entries deleted.".format(r))
+            click.echo(f"{r!s} entries deleted.")

@@ -94,9 +94,15 @@ class ScriptsTestCase(unittest.TestCase):
         condition = "always"
         options = {}
         conditions = {"user_type": "admin"}
-        eh1 = EventHandler("event-test", event, handlermodule=handlermodule,
-                           action=action, condition=condition,
-                           options=options, conditions=conditions)
+        eh1 = EventHandler(
+            "event-test",
+            event,
+            handlermodule=handlermodule,
+            action=action,
+            condition=condition,
+            options=options,
+            conditions=conditions,
+        )
         eh1.save()
         events = EventHandler.query.all()
         assert len(events) == 4
@@ -105,7 +111,10 @@ class ScriptsTestCase(unittest.TestCase):
         events = EventHandler.query.all()
         assert len(events) == 4
         assert "Updated" in result.output
-        result = runner.invoke(edumfa_manage, ["event", "import", "-c", "-u", "-f", "tests/testdata/event.conf"])
+        result = runner.invoke(
+            edumfa_manage,
+            ["event", "import", "-c", "-u", "-f", "tests/testdata/event.conf"],
+        )
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 3
@@ -114,7 +123,7 @@ class ScriptsTestCase(unittest.TestCase):
     def test_05_core_commands(self):
         runner = self.app.test_cli_runner()
         dir = tempfile.mkdtemp()
-        path = os.path.join(dir, 'something')
+        path = os.path.join(dir, "something")
         self.app.config.update({"EDUMFA_AUDIT_KEY_PRIVATE": path})
         result = runner.invoke(edumfa_manage, ["create_audit_keys"])
         assert result.exit_code == 0

@@ -24,8 +24,7 @@
 
 import logging
 import datetime
-from edumfa.lib.security.default import (SecurityModule,
-                                              int_list_to_bytestring)
+from edumfa.lib.security.default import SecurityModule, int_list_to_bytestring
 from edumfa.lib.error import HSMException
 from edumfa.lib.crypto import get_alphanum_str
 
@@ -41,12 +40,10 @@ MAX_RETRIES = 5
 try:
     import PyKCS11
 except ImportError:
-    log.info("The python module PyKCS11 is not available. "
-             "So we can not use the PKCS11 security module.")
+    log.info("The python module PyKCS11 is not available. So we can not use the PKCS11 security module.")
 
 
 class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
-
     def __init__(self, config=None):
         """
         Initialize the PKCS11 Security Module.
@@ -75,20 +72,20 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
         label_prefix = config.get("key_label", "eduMFA")
         self.key_labels = {}
         for k in self.mapping:
-            l = config.get(("key_label_{0!s}".format(k)))
-            l = ('{0!s}_{1!s}'.format(label_prefix, k)) if l is None else l
+            l = config.get(f"key_label_{k!s}")
+            l = f"{label_prefix!s}_{k!s}" if l is None else l
             self.key_labels[k] = l
 
-        log.debug("Setting key labels: {0!s}".format(self.key_labels))
+        log.debug(f"Setting key labels: {self.key_labels!s}")
         # convert the slot to int
         self.slot = int(config.get("slot", 1))
-        log.debug("Setting slot: {0!s}".format(self.slot))
+        log.debug(f"Setting slot: {self.slot!s}")
         self.password = config.get("password")
-        log.debug("Setting a password: {0!s}".format(bool(self.password)))
+        log.debug(f"Setting a password: {bool(self.password)!s}")
         self.module = config.get("module")
-        log.debug("Setting the modules: {0!s}".format(self.module))
+        log.debug(f"Setting the modules: {self.module!s}")
         self.max_retries = config.get("max_retries", MAX_RETRIES)
-        log.debug("Setting max retries: {0!s}".format(self.max_retries))
+        log.debug(f"Setting max retries: {self.max_retries!s}")
         self.session = None
         self.session_start_time = datetime.datetime.now()
         self.session_lastused_time = datetime.datetime.now()
@@ -133,35 +130,37 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
 
     def _login(self):
         slotlist = self.pkcs11.getSlotList()
-        log.debug("Found the slots: {0!s}".format(slotlist))
+        log.debug(f"Found the slots: {slotlist!s}")
         if not len(slotlist):
             raise HSMException("No HSM connected. No slots found.")
         if self.slot == -1 and len(slotlist) == 1:
             # Use the first and only slot
             self.slot = slotlist[0]
         if self.slot not in slotlist:
-            raise HSMException("Slot {0:d} not present".format(self.slot))
+            raise HSMException(f"Slot {self.slot:d} not present")
 
         slotinfo = self.pkcs11.getSlotInfo(self.slot)
-        log.debug("Setting up '{}'".format(slotinfo.slotDescription))
+        log.debug(f"Setting up '{slotinfo.slotDescription}'")
 
         # Before starting the session, we log the old session time usage
-        log.debug("Starting new session now. The old session started {0!s} seconds ago.".format(
-            datetime.datetime.now() - self.session_start_time))
-        log.debug("Starting new session now. The old session was used {0!s} seconds ago.".format(
-            datetime.datetime.now() - self.session_lastused_time))
+        log.debug(f"Starting new session now. The old session started {datetime.datetime.now() - self.session_start_time!s} seconds ago.")
+        log.debug(f"Starting new session now. The old session was used {datetime.datetime.now() - self.session_lastused_time!s} seconds ago.")
         # If the HSM is not connected at this point, it will fail
         self.session = self.pkcs11.openSession(slot=self.slot)
         self.session_start_time = datetime.datetime.now()
 
-        log.debug("Logging on to '{}'".format(slotinfo.slotDescription))
+        log.debug(f"Logging on to '{slotinfo.slotDescription}'")
         self.session.login(self.password)
 
         for k in self.mapping:
             label = self.key_labels[k]
-            objs = self.session.findObjects([(PyKCS11.CKA_CLASS, PyKCS11.CKO_SECRET_KEY),
-                                             (PyKCS11.CKA_LABEL, label)])
-            log.debug("Loading '{}' key with label '{}'".format(k, label))
+            objs = self.session.findObjects(
+                [
+                    (PyKCS11.CKA_CLASS, PyKCS11.CKO_SECRET_KEY),
+                    (PyKCS11.CKA_LABEL, label),
+                ]
+            )
+            log.debug(f"Loading '{k}' key with label '{label}'")
             if objs:
                 self.key_handles[self.mapping[k]] = objs[0]
 
@@ -182,7 +181,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                 self.session_lastused_time = datetime.datetime.now()
                 break
             except PyKCS11.PyKCS11Error as exx:
-                log.warning("Generate Random failed: {0!s}".format(exx))
+                log.warning(f"Generate Random failed: {exx!s}")
                 # If we get an CKR_SESSION_HANDLE_INVALID error code, we free
                 # memory, session and handles and retry
                 if exx.value == PyKCS11.CKR_SESSION_HANDLE_INVALID:
@@ -192,8 +191,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                     if retries > self.max_retries:
                         raise HSMException("Failed to generate random number after multiple retries.")
                 else:
-                    raise HSMException("HSM random number generation failed "
-                                       "with {0!s}".format(exx))
+                    raise HSMException(f"HSM random number generation failed with {exx!s}")
 
         # convert the array of the random integers to a string
         return int_list_to_bytestring(r_integers)
@@ -203,7 +201,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
 
         :rtype: bytes
         """
-        log.debug("Encrypting {} bytes with key {}".format(len(data), key_id))
+        log.debug(f"Encrypting {len(data)} bytes with key {key_id}")
         m = PyKCS11.Mechanism(PyKCS11.CKM_AES_CBC_PAD, iv)
         retries = 0
         while True:
@@ -213,7 +211,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                 self.session_lastused_time = datetime.datetime.now()
                 break
             except PyKCS11.PyKCS11Error as exx:
-                log.warning("Encryption failed: {0!s}".format(exx))
+                log.warning(f"Encryption failed: {exx!s}")
                 # If we get an CKR_SESSION_HANDLE_INVALID error code, we free
                 # memory, session and handles and retry
                 if exx.value == PyKCS11.CKR_SESSION_HANDLE_INVALID:
@@ -223,7 +221,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                     if retries > self.max_retries:
                         raise HSMException("Failed to encrypt after multiple retries")
                 else:
-                    raise HSMException("HSM encryption failed with {0!s}".format(exx))
+                    raise HSMException(f"HSM encryption failed with {exx!s}")
 
         return int_list_to_bytestring(r)
 
@@ -235,7 +233,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
         # we keep this for legacy reasons, even though it hasn't worked anyway
         if len(enc_data) == 0:
             return bytes()
-        log.debug("Decrypting {} bytes with key {}".format(len(enc_data), key_id))
+        log.debug(f"Decrypting {len(enc_data)} bytes with key {key_id}")
         m = PyKCS11.Mechanism(PyKCS11.CKM_AES_CBC_PAD, iv)
         start = datetime.datetime.now()
         retries = 0
@@ -246,7 +244,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                 self.session_lastused_time = datetime.datetime.now()
                 break
             except PyKCS11.PyKCS11Error as exx:
-                log.warning("Decryption failed: {0!s}".format(exx))
+                log.warning(f"Decryption failed: {exx!s}")
                 # If we get an CKR_SESSION_HANDLE_INVALID error code, we free
                 # memory, session and handles and retry
                 if exx.value == PyKCS11.CKR_SESSION_HANDLE_INVALID:
@@ -255,14 +253,14 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                     retries += 1
                     if retries > self.max_retries:
                         td = datetime.datetime.now() - start
-                        log.warning("Decryption finally failed: {0!s}. Time taken: {1!s}.".format(exx, td))
+                        log.warning(f"Decryption finally failed: {exx!s}. Time taken: {td!s}.")
                         raise HSMException("Failed to decrypt after multiple retries.")
                 else:
-                    raise HSMException("HSM decrypt failed with {0!s}".format(exx))
+                    raise HSMException(f"HSM decrypt failed with {exx!s}")
 
         if retries > 0:
             td = datetime.datetime.now() - start
-            log.warning("Decryption after {0!s} retries successful. Time taken: {1!s}.".format(retries, td))
+            log.warning(f"Decryption after {retries!s} retries successful. Time taken: {td!s}.")
         return int_list_to_bytestring(r)
 
     def create_keys(self):
@@ -274,18 +272,15 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
         :return: a dictionary of the created key labels
         """
         # We need a new read/write session
-        session = self.pkcs11.openSession(self.slot,
-                                          PyKCS11.CKF_SERIAL_SESSION | PyKCS11.CKF_RW_SESSION)
+        session = self.pkcs11.openSession(self.slot, PyKCS11.CKF_SERIAL_SESSION | PyKCS11.CKF_RW_SESSION)
         # We need to logout, otherwise we get CKR_USER_ALREADY_LOGGED_IN
         session.logout()
         session.login(self.password)
 
-        key_labels = {"token": "",
-                      "config": "",
-                      "value": ""}
+        key_labels = {"token": "", "config": "", "value": ""}
 
         for kl in key_labels.keys():
-            label = "{0!s}_{1!s}".format(kl, get_alphanum_str())
+            label = f"{kl!s}_{get_alphanum_str()!s}"
             aesTemplate = [
                 (PyKCS11.CKA_CLASS, PyKCS11.CKO_SECRET_KEY),
                 (PyKCS11.CKA_KEY_TYPE, PyKCS11.CKK_AES),
@@ -299,7 +294,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                 (PyKCS11.CKA_TOKEN, True),
                 (PyKCS11.CKA_WRAP, True),
                 (PyKCS11.CKA_UNWRAP, True),
-                (PyKCS11.CKA_EXTRACTABLE, False)
+                (PyKCS11.CKA_EXTRACTABLE, False),
             ]
             aesKey = session.generateKey(aesTemplate)
             key_labels[kl] = label
@@ -317,26 +312,23 @@ if __name__ == "__main__":  # pragma: no cover
 
     module = "/usr/local/opt/pkcs11/lib/pkcs11-token.so"
 
-    p = AESHardwareSecurityModule({"module": module, "slot": 2,
-                                   "key_label": "edumfa",
-                                   "password": "12345678"})
+    p = AESHardwareSecurityModule({"module": module, "slot": 2, "key_label": "edumfa", "password": "12345678"})
 
     # password
     password = "topSekr3t" * 16
     crypted = p.encrypt_password(password)
     text = p.decrypt_password(crypted)
-    assert(text == password)  # nosec B101 # This is actually a test
+    assert text == password  # nosec B101 # This is actually a test
     log.info("password encrypt/decrypt test successful")
 
     # pin
     password = "topSekr3t"  # nosec B105 # used for testing
     crypted = p.encrypt_pin(password)
     text = p.decrypt_pin(crypted)
-    assert (text == password)  # nosec B101 # This is actually a test
+    assert text == password  # nosec B101 # This is actually a test
     log.info("pin encrypt/decrypt test successful")
 
-    p = AESHardwareSecurityModule({"module": module, "slot": 2,
-                                   "key_label": "edumfa"})
+    p = AESHardwareSecurityModule({"module": module, "slot": 2, "key_label": "edumfa"})
     p.setup_module({"password": "12345678"})
 
     # random
@@ -346,7 +338,7 @@ if __name__ == "__main__":  # pragma: no cover
 
     # generic encrypt / decrypt
     cipher = p.encrypt(plain, tmp_iv)
-    assert (plain != cipher)  # nosec B101 # This is actually a test
+    assert plain != cipher  # nosec B101 # This is actually a test
     text = p.decrypt(cipher, tmp_iv)
-    assert (text == plain)  # nosec B101 # This is actually a test
+    assert text == plain  # nosec B101 # This is actually a test
     log.info("generic encrypt/decrypt test successful")

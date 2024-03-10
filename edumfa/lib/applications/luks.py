@@ -26,6 +26,7 @@ from edumfa.lib.crypto import geturandom
 from edumfa.lib.token import get_tokens
 from edumfa.lib.policy import TYPE
 import logging
+
 log = logging.getLogger(__name__)
 
 
@@ -37,13 +38,11 @@ class MachineApplication(MachineApplicationBase):
         slot
         partition
     """
+
     application_name = "luks"
 
     @staticmethod
-    def get_authentication_item(token_type,
-                                serial,
-                                challenge=None, options=None,
-                                filter_param=None):
+    def get_authentication_item(token_type, serial, challenge=None, options=None, filter_param=None):
         """
         :param token_type: the type of the token. At the moment
                            we only support yubikeys, tokentype "TOTP".
@@ -75,12 +74,10 @@ class MachineApplication(MachineApplicationBase):
             toks = get_tokens(serial=serial, active=True)
             if len(toks) == 1:
                 # tokenclass is a TimeHmacTokenClass
-                (_r, _p, otp, _c) = toks[0].get_otp(challenge=challenge_hex,
-                                                        do_truncation=False)
+                (_r, _p, otp, _c) = toks[0].get_otp(challenge=challenge_hex, do_truncation=False)
                 ret["response"] = otp
         else:
-            log.info("Token %r, type %r is not supported by "
-                     "LUKS application module" % (serial, token_type))
+            log.info(f"Token {serial!r}, type {token_type!r} is not supported by LUKS application module")
 
         return ret
 
@@ -89,6 +86,7 @@ class MachineApplication(MachineApplicationBase):
         """
         returns a dictionary with a list of required and optional options
         """
-        return {'slot': {'type': TYPE.INT,
-                         'value': [0, 1, 2, 3, 4, 5, 6, 7]},
-                'partition': {'type': TYPE.STRING}}
+        return {
+            "slot": {"type": TYPE.INT, "value": [0, 1, 2, 3, 4, 5, 6, 7]},
+            "partition": {"type": TYPE.STRING},
+        }

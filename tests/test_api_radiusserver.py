@@ -4,6 +4,7 @@ import json
 from . import radiusmock
 from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.radiusserver import delete_radius
+
 DICT_FILE = "tests/testdata/dictionary"
 
 
@@ -16,31 +17,37 @@ class RADIUSServerTestCase(MyApiTestCase):
         # create and list server
 
         # Unauthorized
-        with self.app.test_request_context('/radiusserver/server1',
-                                           method='POST',
-                                           data={"secret": "testing123",
-                                                 "port": "1812",
-                                                 "server": "1.2.3.4",
-                                                 "description": "myServer"}):
+        with self.app.test_request_context(
+            "/radiusserver/server1",
+            method="POST",
+            data={
+                "secret": "testing123",
+                "port": "1812",
+                "server": "1.2.3.4",
+                "description": "myServer",
+            },
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
-        with self.app.test_request_context('/radiusserver/server1',
-                                           method='POST',
-                                           data={"secret": "testing123",
-                                                 "port": "1812",
-                                                 "server": "1.2.3.4",
-                                                 "description": "myServer"},
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/radiusserver/server1",
+            method="POST",
+            data={
+                "secret": "testing123",
+                "port": "1812",
+                "server": "1.2.3.4",
+                "description": "myServer",
+            },
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             self.assertEqual(data.get("result").get("value"), True)
 
         # list servers
-        with self.app.test_request_context('/radiusserver/',
-                                           method='GET',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context("/radiusserver/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -52,16 +59,12 @@ class RADIUSServerTestCase(MyApiTestCase):
             self.assertTrue("secret" not in server1)
 
         # delete server
-        with self.app.test_request_context('/radiusserver/server1',
-                                           method='DELETE',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context("/radiusserver/server1", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
         # list servers, No server left
-        with self.app.test_request_context('/radiusserver/',
-                                           method='GET',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context("/radiusserver/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -73,16 +76,20 @@ class RADIUSServerTestCase(MyApiTestCase):
         set_edumfa_config("radius.dictfile", DICT_FILE)
         radiusmock.setdata(response=radiusmock.AccessAccept)
 
-        with self.app.test_request_context('/radiusserver/test_request',
-                                           method='POST',
-                                           data={"identifier": "someServer",
-                                                 "secret": "secret",
-                                                 "port": "1812",
-                                                 "server": "1.2.3.4",
-                                                 "dictionary": DICT_FILE,
-                                                 "username": "testuser",
-                                                 "password": "testpassword"},
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/radiusserver/test_request",
+            method="POST",
+            data={
+                "identifier": "someServer",
+                "secret": "secret",
+                "port": "1812",
+                "server": "1.2.3.4",
+                "dictionary": DICT_FILE,
+                "username": "testuser",
+                "password": "testpassword",
+            },
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -96,39 +103,47 @@ class RADIUSServerTestCase(MyApiTestCase):
         self.authenticate_selfservice_user()
 
         # User is not allowed to delete a radiusserver
-        with self.app.test_request_context('/radiusserver/server1',
-                                           method='DELETE',
-                                           headers={'Authorization': self.at_user}):
+        with self.app.test_request_context(
+            "/radiusserver/server1",
+            method="DELETE",
+            headers={"Authorization": self.at_user},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
         # User is not allowed to create a radius server
-        with self.app.test_request_context('/radiusserver/server1',
-                                           method='POST',
-                                           data={"secret": "testing123",
-                                                 "port": "1812",
-                                                 "server": "1.2.3.4",
-                                                 "description": "myServer"},
-                                           headers={'Authorization': self.at_user}):
+        with self.app.test_request_context(
+            "/radiusserver/server1",
+            method="POST",
+            data={
+                "secret": "testing123",
+                "port": "1812",
+                "server": "1.2.3.4",
+                "description": "myServer",
+            },
+            headers={"Authorization": self.at_user},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
-        with self.app.test_request_context('/radiusserver/server1',
-                                           method='POST',
-                                           data={"secret": "testing123",
-                                                 "port": "1812",
-                                                 "server": "1.2.3.4",
-                                                 "description": "myServer"},
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/radiusserver/server1",
+            method="POST",
+            data={
+                "secret": "testing123",
+                "port": "1812",
+                "server": "1.2.3.4",
+                "description": "myServer",
+            },
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             self.assertEqual(data.get("result").get("value"), True)
 
         # Users are not allowed to list the radius servers
-        with self.app.test_request_context('/radiusserver/',
-                                           method='GET',
-                                           headers={'Authorization': self.at_user}):
+        with self.app.test_request_context("/radiusserver/", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 401)
             result = res.json.get("result")

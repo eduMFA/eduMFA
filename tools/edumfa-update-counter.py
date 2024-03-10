@@ -59,8 +59,7 @@ def main():
                              'You can specify "-" to read from stdin.',
                         type=argparse.FileType())
     parser.add_argument("-i", "--increase-only",
-                        help="Only update the token counter, if the new counter value "
-                             "is bigger than the existing in the database.",
+                        help="Only update the token counter, if the new counter value is bigger than the existing in the database.",
                         action='store_const', const=True)
     args = parser.parse_args()
 

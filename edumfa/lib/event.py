@@ -26,9 +26,10 @@ from edumfa.lib.config import get_config_object
 from edumfa.lib.utils import fetch_one_resource
 from edumfa.models import EventHandler, EventHandlerOption, db
 from edumfa.lib.audit import getAudit
-from edumfa.lib.utils.export import (register_import, register_export)
+from edumfa.lib.utils.export import register_import, register_export
 import functools
 import logging
+
 log = logging.getLogger(__name__)
 
 AVAILABLE_EVENTS = []
@@ -56,6 +57,7 @@ class event(object):
         :param func: The function that is decorated
         :return: function
         """
+
         @functools.wraps(func)
         def event_wrapper(*args, **kwds):
             # here we have to evaluate the event configuration from the
@@ -63,36 +65,32 @@ class event(object):
             # do Pre-Event Handling
             e_handles = self.g.event_config.get_handled_events(self.eventname, position="pre")
             for e_handler_def in e_handles:
-                log.debug("Pre-Handling event {eventname} with "
-                          "{eventDef}".format(eventname=self.eventname,
-                                              eventDef=e_handler_def))
+                log.debug(f"Pre-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
                 event_handler = get_handler_object(event_handler_name)
                 # The "action is determined by the event configuration
                 # In the options we can pass the mailserver configuration
-                options = {"request": self.request,
-                           "g": self.g,
-                           "handler_def": e_handler_def}
+                options = {
+                    "request": self.request,
+                    "g": self.g,
+                    "handler_def": e_handler_def,
+                }
                 if event_handler.check_condition(options=options):
-                    log.debug("Pre-Handling event {eventname} with options"
-                              "{options}".format(eventname=self.eventname,
-                                                  options=options))
+                    log.debug(f"Pre-Handling event {self.eventname} with options {options}")
                     # create a new audit object for this action
                     event_audit = getAudit(self.g.audit_object.config)
                     # copy all values from the original audit entry
                     event_audit_data = dict(self.g.audit_object.audit_data)
-                    event_audit_data["action"] = "PRE-EVENT {trigger}>>" \
-                                                 "{handler}:{action}".format(
+                    event_audit_data["action"] = "PRE-EVENT {trigger}>>{handler}:{action}".format(
                         trigger=self.eventname,
                         handler=e_handler_def.get("handlermodule"),
-                        action=e_handler_def.get("action"))
-                    event_audit_data["action_detail"] = "{0!s}".format(
-                        e_handler_def.get("options"))
+                        action=e_handler_def.get("action"),
+                    )
+                    event_audit_data["action_detail"] = f"{e_handler_def.get('options')!s}"
                     event_audit_data["info"] = e_handler_def.get("name")
                     event_audit.log(event_audit_data)
 
-                    result = event_handler.do(e_handler_def.get("action"),
-                                               options=options)
+                    result = event_handler.do(e_handler_def.get("action"), options=options)
                     # set audit object to success
                     event_audit.log({"success": result})
                     event_audit.finalize_log()
@@ -102,37 +100,33 @@ class event(object):
             # Post-Event Handling
             e_handles = self.g.event_config.get_handled_events(self.eventname)
             for e_handler_def in e_handles:
-                log.debug("Post-Handling event {eventname} with "
-                          "{eventDef}".format(eventname=self.eventname,
-                                              eventDef=e_handler_def))
+                log.debug(f"Post-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
                 event_handler = get_handler_object(event_handler_name)
                 # The "action is determined by the event configuration
                 # In the options we can pass the mailserver configuration
-                options = {"request": self.request,
-                           "g": self.g,
-                           "response": f_result,
-                           "handler_def": e_handler_def}
+                options = {
+                    "request": self.request,
+                    "g": self.g,
+                    "response": f_result,
+                    "handler_def": e_handler_def,
+                }
                 if event_handler.check_condition(options=options):
-                    log.debug("Post-Handling event {eventname} with options"
-                              "{options}".format(eventname=self.eventname,
-                                                 options=options))
+                    log.debug(f"Post-Handling event {self.eventname} with options {options}")
                     # create a new audit object
                     event_audit = getAudit(self.g.audit_object.config)
                     # copy all values from the original audit entry
                     event_audit_data = dict(self.g.audit_object.audit_data)
-                    event_audit_data["action"] = "POST-EVENT {trigger}>>" \
-                                                 "{handler}:{action}".format(
-                            trigger=self.eventname,
-                            handler=e_handler_def.get("handlermodule"),
-                            action=e_handler_def.get("action"))
-                    event_audit_data["action_detail"] = "{0!s}".format(
-                        e_handler_def.get("options"))
+                    event_audit_data["action"] = "POST-EVENT {trigger}>>{handler}:{action}".format(
+                        trigger=self.eventname,
+                        handler=e_handler_def.get("handlermodule"),
+                        action=e_handler_def.get("action"),
+                    )
+                    event_audit_data["action_detail"] = f"{e_handler_def.get('options')!s}"
                     event_audit_data["info"] = e_handler_def.get("name")
                     event_audit.log(event_audit_data)
 
-                    result = event_handler.do(e_handler_def.get("action"),
-                                               options=options)
+                    result = event_handler.do(e_handler_def.get("action"), options=options)
                     # In case the handler has modified the response
                     f_result = options.get("response")
                     # set audit object to success
@@ -153,18 +147,19 @@ def get_handler_object(handlername):
     :return:
     """
     # TODO: beautify and make this work with several different handlers
-    from edumfa.lib.eventhandler.usernotification import \
-        UserNotificationEventHandler
+    from edumfa.lib.eventhandler.usernotification import UserNotificationEventHandler
     from edumfa.lib.eventhandler.tokenhandler import TokenEventHandler
     from edumfa.lib.eventhandler.scripthandler import ScriptEventHandler
-    from edumfa.lib.eventhandler.federationhandler import \
-        FederationEventHandler
+    from edumfa.lib.eventhandler.federationhandler import FederationEventHandler
     from edumfa.lib.eventhandler.counterhandler import CounterEventHandler
     from edumfa.lib.eventhandler.requestmangler import RequestManglerEventHandler
     from edumfa.lib.eventhandler.responsemangler import ResponseManglerEventHandler
     from edumfa.lib.eventhandler.logginghandler import LoggingEventHandler
-    from edumfa.lib.eventhandler.customuserattributeshandler import CustomUserAttributesHandler
+    from edumfa.lib.eventhandler.customuserattributeshandler import (
+        CustomUserAttributesHandler,
+    )
     from edumfa.lib.eventhandler.webhookeventhandler import WebHookHandler
+
     h_obj = None
     if handlername == "UserNotification":
         h_obj = UserNotificationEventHandler()
@@ -202,9 +197,18 @@ def enable_event(event_id, enable=True):
     return r
 
 
-def set_event(name=None, event=None, handlermodule=None, action=None, conditions=None,
-              ordering=0, options=None, id=None, active=True, position="post"):
-
+def set_event(
+    name=None,
+    event=None,
+    handlermodule=None,
+    action=None,
+    conditions=None,
+    ordering=0,
+    options=None,
+    id=None,
+    active=True,
+    position="post",
+):
     """
     Set an event handling configuration. This writes an entry to the
     database eventhandler.
@@ -239,10 +243,18 @@ def set_event(name=None, event=None, handlermodule=None, action=None, conditions
     conditions = conditions or {}
     if id:
         id = int(id)
-    event = EventHandler(name, event, handlermodule, action,
-                         conditions=conditions, ordering=ordering,
-                         options=options, id=id, active=active,
-                         position=position)
+    event = EventHandler(
+        name,
+        event,
+        handlermodule,
+        action,
+        conditions=conditions,
+        ordering=ordering,
+        options=options,
+        id=id,
+        active=active,
+        position=position,
+    )
     return event.id
 
 
@@ -283,8 +295,7 @@ class EventConfiguration(object):
         :param position: the position of the event definition
         :return:
         """
-        eventlist = [e for e in self.events if (
-            eventname in e.get("event") and e.get("active") and e.get("position") == position)]
+        eventlist = [e for e in self.events if (eventname in e.get("event") and e.get("active") and e.get("position") == position)]
         return eventlist
 
     def get_event(self, eventid):
@@ -303,9 +314,9 @@ class EventConfiguration(object):
             return self.events
 
 
-@register_export('event')
+@register_export("event")
 def export_event(name=None):
-    """ Export given or all event configuration """
+    """Export given or all event configuration"""
     event_cls = EventConfiguration()
     if name:
         return [e for e in event_cls.events if (e.get("name") == name)]
@@ -313,15 +324,14 @@ def export_event(name=None):
         return event_cls.events
 
 
-@register_import('event')
+@register_import("event")
 def import_event(data, name=None):
     """Import policy configuration"""
-    log.debug('Import event config: {0!s}'.format(data))
+    log.debug(f"Import event config: {data!s}")
     for res_data in data:
-        if name and name != res_data.get('name'):
+        if name and name != res_data.get("name"):
             continue
         # condition is apparently not used anymore
         del res_data["condition"]
         rid = set_event(**res_data)
-        log.info('Import of event "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_data['name'], rid))
+        log.info(f"Import of event \"{res_data['name']!s}\" finished, id: {rid!s}")

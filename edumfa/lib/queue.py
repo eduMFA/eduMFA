@@ -47,6 +47,7 @@ class JobCollector(object):
     that collects jobs in eduMFA code and registers them with the job
     queue module when ``create_app`` has been called.
     """
+
     def __init__(self):
         self._jobs = {}
 
@@ -64,7 +65,7 @@ class JobCollector(object):
         :param kwargs: keyword arguments passed to the job queue's ``register_job`` method
         """
         if name in self._jobs:
-            raise RuntimeError("Duplicate jobs: {!r}".format(name))
+            raise RuntimeError(f"Duplicate jobs: {name!r}")
         self._jobs[name] = (func, args, kwargs)
 
     def register_app(self, app):
@@ -80,20 +81,20 @@ class JobCollector(object):
         with app.app_context():
             store = get_app_local_store()
         if "job_queue" in store:
-            raise RuntimeError("App already has a job queue: {!r}".format(store["job_queue"]))
+            raise RuntimeError(f"App already has a job queue: {store['job_queue']!r}")
         try:
             package_name, class_name = app.config[JOB_QUEUE_CLASS].rsplit(".", 1)
             queue_class = get_module_class(package_name, class_name)
         except (ImportError, ValueError) as exx:
-            log.warning("Could not import job queue class {!r}: {!r}".format(app.config[JOB_QUEUE_CLASS], exx))
+            log.warning(f"Could not import job queue class {app.config[JOB_QUEUE_CLASS]!r}: {exx!r}")
             return
         # Extract configuration from app config: All options starting with EDUMFA_JOB_QUEUE_
         options = {}
         for k, v in app.config.items():
             if k.startswith(JOB_QUEUE_OPTION_PREFIX) and k != JOB_QUEUE_CLASS:
-                options[k[len(JOB_QUEUE_OPTION_PREFIX):].lower()] = v
+                options[k[len(JOB_QUEUE_OPTION_PREFIX) :].lower()] = v
         job_queue = queue_class(options)
-        log.info("Created a new job queue: {!r}".format(job_queue))
+        log.info(f"Created a new job queue: {job_queue!r}")
         store["job_queue"] = job_queue
         for name, (func, args, kwargs) in self._jobs.items():
             job_queue.register_job(name, func, *args, **kwargs)
@@ -110,9 +111,11 @@ def job(name, *args, **kwargs):
     Decorator to mark a job to be collected by the job collector.
     All arguments are passed to ``register_job``.
     """
+
     def decorator(f):
         JOB_COLLECTOR.register_job(name, f, args, kwargs)
         return f
+
     return decorator
 
 
@@ -153,7 +156,9 @@ def wrap_job(name, result):
 
     :return: a function
     """
+
     def caller(*args, **kwargs):
         get_job_queue().enqueue(name, args, kwargs)
         return result
+
     return caller

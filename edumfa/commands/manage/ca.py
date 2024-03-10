@@ -23,7 +23,12 @@ import sys
 import click
 from flask.cli import AppGroup
 
-from edumfa.lib.caconnector import get_caconnector_list, save_caconnector, get_caconnector_object, get_caconnector_class
+from edumfa.lib.caconnector import (
+    get_caconnector_list,
+    save_caconnector,
+    get_caconnector_object,
+    get_caconnector_class,
+)
 
 ca_cli = AppGroup("ca", help="Manage Certificate Authorities")
 
@@ -41,9 +46,16 @@ def create_crl(ca, force=False):
 
 
 @ca_cli.command("create", short_help="Create a new CA connector.")
-@click.argument('name', type=str)
-@click.option('-t', '--type', "catype", default="local", help='The type of the new CA', show_default=True)
-def create(name, catype='local'):
+@click.argument("name", type=str)
+@click.option(
+    "-t",
+    "--type",
+    "catype",
+    default="local",
+    help="The type of the new CA",
+    show_default=True,
+)
+def create(name, catype="local"):
     """
     Create a new CA connector. In case of the "localca" also the directory
     structure, the openssl.cnf and the key pair is created.
@@ -56,7 +68,7 @@ def create(name, catype='local'):
         catype = "local"
     click.echo("Warning: Be sure to set the access rights.")
     click.echo("")
-    click.echo("Creating CA connector of type {0!s}.".format(catype))
+    click.echo(f"Creating CA connector of type {catype!s}.")
     ca_class = get_caconnector_class(catype)
     ca_params = ca_class.create_ca(name)
     r = save_caconnector(ca_params)
@@ -76,5 +88,5 @@ def list_ca(verbose=False):
     for ca in lst:
         click.echo(f"{ca.get('connectorname')!s} (type {ca.get('type')!s})")
         if verbose:
-            for (k, v) in ca.get("data").items():
+            for k, v in ca.get("data").items():
                 click.echo(f"\t{k!s:20}: {v!s}")

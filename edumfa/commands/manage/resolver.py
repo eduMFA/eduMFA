@@ -25,7 +25,12 @@ from flask import current_app
 from flask.cli import AppGroup
 
 from edumfa.commands.manage.config import export_cli, import_cli
-from edumfa.commands.manage.helper import conf_export, conf_import, import_conf_resolver, get_conf_resolver
+from edumfa.commands.manage.helper import (
+    conf_export,
+    conf_import,
+    import_conf_resolver,
+    get_conf_resolver,
+)
 
 resolver_cli = AppGroup("resolver", help="Manage resolvers")
 
@@ -34,27 +39,28 @@ resolver_cli = AppGroup("resolver", help="Manage resolvers")
 @click.option("-v", "--verbose", is_flag=True, help="Activate verbose output")
 def list_resolver(verbose: bool = False):
     from edumfa.lib.resolver import get_resolver_list
+
     resolver_list = get_resolver_list()
 
     if not verbose:
-        for (name, resolver) in resolver_list.items():
-            print("{0!s:16} - ({1!s})".format(name, resolver.get("type")))
+        for name, resolver in resolver_list.items():
+            print(f"{name!s:16} - ({resolver.get('type')!s})")
     else:
-        for (name, resolver) in resolver_list.items():
-            print("{0!s:16} - ({1!s})".format(name, resolver.get("type")))
+        for name, resolver in resolver_list.items():
+            print(f"{name!s:16} - ({resolver.get('type')!s})")
             print("." * 32)
             data = resolver.get("data", {})
-            for (k, v) in data.items():
+            for k, v in data.items():
                 if k.lower() in ["bindpw", "password"]:
                     v = "xxxxx"
-                print("{0!s:>24}: {1!r}".format(k, v))
+                print(f"{k!s:>24}: {v!r}")
             print("")
 
 
 @resolver_cli.command("create")
 @click.argument("name", type=str)
 @click.argument("rtype", type=str)
-@click.argument("filename", type=click.File('r'))
+@click.argument("filename", type=click.File("r"))
 def create(name, rtype, filename):
     """
     Create a new resolver with name and type (ldapresolver, sqlresolver).
@@ -67,6 +73,7 @@ def create(name, rtype, filename):
     :return:
     """
     from edumfa.lib.resolver import save_resolver
+
     contents = filename.read()
 
     params = ast.literal_eval(contents)
@@ -84,6 +91,7 @@ def create_internal(name):
     add this resolver to a new real using the command 'edumfa-manage.py realm'.
     """
     from edumfa.lib.resolver import save_resolver
+
     sqluri = current_app.config.get("SQLALCHEMY_DATABASE_URI")
     sqlelements = sqluri.split("/")
     # mysql://user:password@localhost/pi
@@ -97,7 +105,7 @@ def create_internal(name):
     # determine host and user
     hostparts = user_pw_host.split("@")
     if len(hostparts) > 2:
-        click.echo("Invalid database URI: %s" % sqluri)
+        click.echo(f"Invalid database URI: {sqluri}")
         sys.exit(2)
     elif len(hostparts) == 1:
         host = hostparts[0] or "/"
@@ -111,36 +119,62 @@ def create_internal(name):
         elif len(userparts) == 1:
             username = userparts[0]
         else:
-            click.echo("Invalid username and password in database URI: %s" % sqluri)
+            click.echo(f"Invalid username and password in database URI: {sqluri}")
             sys.exit(3)
     # now we can create the resolver
-    params = {'resolver': name, 'type': "sqlresolver", 'Server': host, 'Driver': sql_driver, 'User': username,
-        'Password': password, 'Database': database, 'Table': 'users_' + name, 'Limit': '500', 'Editable': '1',
-        'Map': '{"userid": "id", "username": "username", '
-               '"email":"email", "password": "password", '
-               '"phone":"phone", "mobile":"mobile", "surname":"surname", '
-               '"givenname":"givenname", "description": "description"}'}
+    params = {
+        "resolver": name,
+        "type": "sqlresolver",
+        "Server": host,
+        "Driver": sql_driver,
+        "User": username,
+        "Password": password,
+        "Database": database,
+        "Table": f"users_{name}",
+        "Limit": "500",
+        "Editable": "1",
+        "Map": (
+            '{"userid": "id", "username": "username", '
+            '"email":"email", "password": "password", '
+            '"phone":"phone", "mobile":"mobile", "surname":"surname", '
+            '"givenname":"givenname", "description": "description"}'
+        ),
+    }
     save_resolver(params)
 
     # Now we create the database table
     from sqlalchemy import create_engine
     from sqlalchemy import Table, MetaData, Column
     from sqlalchemy import Integer, String
+
     engine = create_engine(sqluri)
     metadata = MetaData()
-    Table('users_%s' % name, metadata, Column('id', Integer, primary_key=True),
-          Column('username', String(40), unique=True), Column('email', String(80)), Column('password', String(255)),
-          Column('phone', String(40)), Column('mobile', String(40)), Column('surname', String(40)),
-          Column('givenname', String(40)), Column('description', String(255)))
+    Table(
+        f"users_{name}",
+        metadata,
+        Column("id", Integer, primary_key=True),
+        Column("username", String(40), unique=True),
+        Column("email", String(80)),
+        Column("password", String(255)),
+        Column("phone", String(40)),
+        Column("mobile", String(40)),
+        Column("surname", String(40)),
+        Column("givenname", String(40)),
+        Column("description", String(255)),
+    )
     metadata.create_all(engine)
 
 
 @export_cli.command("resolver")
 @click.option("-f", "filename", help="filename to export")
 @click.option("-n", "name", help="resolver to export")
-@click.option("-p", "--print_passwords", "print_passwords", is_flag=True,
-              help="Print the passwords used in the resolver configuration. "
-                   "This will overwrite existing passwords on import.")
+@click.option(
+    "-p",
+    "--print_passwords",
+    "print_passwords",
+    is_flag=True,
+    help="Print the passwords used in the resolver configuration. This will overwrite existing passwords on import.",
+)
 def r_export(filename, name, print_passwords):
     """
     Export the resolver, specified by 'resolver' to a file. If no resolver name

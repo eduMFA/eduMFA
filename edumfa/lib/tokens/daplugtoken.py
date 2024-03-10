@@ -40,22 +40,26 @@ from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.utils import to_bytes, to_unicode
 from edumfa.lib import _
 from edumfa.lib.policy import SCOPE, ACTION, GROUP
+
 optional = True
 required = False
 
 import logging
+
 log = logging.getLogger(__name__)
 
-MAPPING = {"b": "0",
-           "c": "1",
-           "d": "2",
-           "e": "3",
-           "f": "4",
-           "g": "5",
-           "h": "6",
-           "i": "7",
-           "j": "8",
-           "k": "9"}
+MAPPING = {
+    "b": "0",
+    "c": "1",
+    "d": "2",
+    "e": "3",
+    "f": "4",
+    "g": "5",
+    "h": "6",
+    "i": "7",
+    "j": "8",
+    "k": "9",
+}
 
 REVERSE_MAPPING = {v: k for k, v in MAPPING.items()}
 
@@ -90,6 +94,7 @@ class DaplugTokenClass(HotpTokenClass):
     """
     daplug token class implementation
     """
+
     # If the token is enrollable via multichallenge
     is_multichallenge_enrollable = False
 
@@ -103,7 +108,7 @@ class DaplugTokenClass(HotpTokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -116,29 +121,30 @@ class DaplugTokenClass(HotpTokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or string
         """
-        res = {'type': 'daplug',
-               'title': 'Daplug Event Token',
-               'description': _("event based OTP token using "
-                                "the HOTP algorithm"),
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of daplug tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of active daplug tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }}
-               }
+        res = {
+            "type": "daplug",
+            "title": "Daplug Event Token",
+            "description": _("event based OTP token using the HOTP algorithm"),
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of daplug tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of active daplug tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
 
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
@@ -202,24 +208,25 @@ class DaplugTokenClass(HotpTokenClass):
         # returns (1, -1, '755224', '755224-1')
         return res[0], res[1], _digi2daplug(res[2]), res[3]
 
-
     @log_with(log)
-    def get_multi_otp(self, count=0, epoch_start=0, epoch_end=0,
-                        curTime=None, timestamp=None):
-        res = HotpTokenClass.get_multi_otp(self, count=count,
-                                           epoch_start=epoch_start,
-                                           epoch_end=epoch_end,
-                                           curTime=curTime, timestamp=timestamp)
+    def get_multi_otp(self, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None):
+        res = HotpTokenClass.get_multi_otp(
+            self,
+            count=count,
+            epoch_start=epoch_start,
+            epoch_end=epoch_end,
+            curTime=curTime,
+            timestamp=timestamp,
+        )
         #  (True, 'OK', {'otp': {0: '755224', 1: '287082',
         #                        2: '359152', 3: '969429',
         #                        4: '338314'},
         #                'type': 'hotp'})
         # convert the response
-        rdict = {'type': self.get_class_type(),
-                 'otp': {}}
+        rdict = {"type": self.get_class_type(), "otp": {}}
         otp_dict = {}
-        for k, v in res[2].get('otp').items():
-            rdict['otp'][k] = _digi2daplug(v)
+        for k, v in res[2].get("otp").items():
+            rdict["otp"][k] = _digi2daplug(v)
 
         return res[0], res[1], rdict
 
@@ -252,7 +259,7 @@ class DaplugTokenClass(HotpTokenClass):
         # For splitting the value we use 12 characters.
         # For internal calculation we use 6 digits.
         otplen *= 2
-        
+
         if get_prepend_pin():
             pin = passw[0:-otplen]
             otpval = passw[-otplen:]

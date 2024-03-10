@@ -26,8 +26,7 @@ def upgrade():
         sa.UniqueConstraint('identifier')
         )
     except Exception as exx:
-        print("Can not create table 'privacyideaserver'. It probably already "
-              "exists")
+        print("Can not create table 'privacyideaserver'. It probably already exists")
         print (exx)
 
 

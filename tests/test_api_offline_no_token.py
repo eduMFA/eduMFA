@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .base import MyApiTestCase
-from edumfa.lib.user import (User)
+from edumfa.lib.user import User
 from edumfa.lib.token import init_token
 from edumfa.lib.policy import SCOPE, ACTION, set_policy
 from edumfa.lib.machine import attach_token
@@ -21,10 +21,8 @@ class OfflinePassNoTokenTestCase(MyApiTestCase):
         userA = User("shadow", self.realm1, self.resolvername1)
         userB = User("cornelius", self.realm1, self.resolvername1)
         userC = User("usernotoken", self.realm1, self.resolvername1)
-        tokA = init_token({"otpkey": self.otpkey, "serial": "tokA"},
-                          user=userA)
-        tokB = init_token({"otpkey": self.otpkey, "serial": "tokB"},
-                          user=userB)
+        tokA = init_token({"otpkey": self.otpkey, "serial": "tokA"}, user=userA)
+        tokB = init_token({"otpkey": self.otpkey, "serial": "tokB"}, user=userB)
         # attach tokens to offline
         attach_token("tokA", "offline")
         attach_token("tokB", "offline")
@@ -32,11 +30,12 @@ class OfflinePassNoTokenTestCase(MyApiTestCase):
         set_policy(name="pol1", scope=SCOPE.AUTH, action=ACTION.PASSNOTOKEN)
 
         # Validate userB
-        with self.app.test_request_context('/validate/check',
-                                           method='POST',
-                                           data={"user": "cornelius",
-                                                 "pass": self.valid_otp_values[1]},
-                                           environ_base={'REMOTE_ADDR': '192.168.0.2'}):
+        with self.app.test_request_context(
+            "/validate/check",
+            method="POST",
+            data={"user": "cornelius", "pass": self.valid_otp_values[1]},
+            environ_base={"REMOTE_ADDR": "192.168.0.2"},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -55,12 +54,16 @@ class OfflinePassNoTokenTestCase(MyApiTestCase):
             refilltoken = offline[0].get("refilltoken")
 
         # Test refill
-        with self.app.test_request_context('/validate/offlinerefill',
-                                           method='POST',
-                                           data={"serial": serial,
-                                                 "refilltoken": refilltoken,
-                                                 "pass": self.valid_otp_values[3]},
-                                           environ_base={'REMOTE_ADDR': '192.168.0.2'}):
+        with self.app.test_request_context(
+            "/validate/offlinerefill",
+            method="POST",
+            data={
+                "serial": serial,
+                "refilltoken": refilltoken,
+                "pass": self.valid_otp_values[3],
+            },
+            environ_base={"REMOTE_ADDR": "192.168.0.2"},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -71,28 +74,29 @@ class OfflinePassNoTokenTestCase(MyApiTestCase):
             self.assertIn("serial", offline[0])
 
         # PassOnNoToken userC
-        with self.app.test_request_context('/validate/check',
-                                           method='POST',
-                                           data={"user": "usernotoken",
-                                                 "pass": "sthelse"},
-                                           environ_base={'REMOTE_ADDR': '192.168.0.2'}):
+        with self.app.test_request_context(
+            "/validate/check",
+            method="POST",
+            data={"user": "usernotoken", "pass": "sthelse"},
+            environ_base={"REMOTE_ADDR": "192.168.0.2"},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             result = data.get("result")
             self.assertTrue(result.get("value"))
             detail = data.get("detail")
-            self.assertEqual("user has no token, accepted due to 'pol1'",
-                             detail.get("message"))
+            self.assertEqual("user has no token, accepted due to 'pol1'", detail.get("message"))
             # No AuthItems for this user
             self.assertNotIn("auth_items", data)
 
         # Validate userA
-        with self.app.test_request_context('/validate/check',
-                                           method='POST',
-                                           data={"user": "shadow",
-                                                 "pass": self.valid_otp_values[1]},
-                                           environ_base={'REMOTE_ADDR': '192.168.0.2'}):
+        with self.app.test_request_context(
+            "/validate/check",
+            method="POST",
+            data={"user": "shadow", "pass": self.valid_otp_values[1]},
+            environ_base={"REMOTE_ADDR": "192.168.0.2"},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json

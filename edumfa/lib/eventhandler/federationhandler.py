@@ -26,8 +26,7 @@ __doc__ = """This is the event handler module for eduMFA federations.
 Requests can be forwarded to other eduMFA servers.
 """
 from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib.edumfaserver import (get_edumfaservers,
-                                               get_edumfaserver)
+from edumfa.lib.edumfaserver import get_edumfaservers, get_edumfaserver
 from edumfa.lib import _
 from edumfa.lib.utils import is_true
 import json
@@ -43,6 +42,7 @@ class ACTION_TYPE(object):
     """
     Allowed actions
     """
+
     FORWARD = "forward"
 
 
@@ -56,8 +56,7 @@ class FederationEventHandler(BaseEventHandler):
     """
 
     identifier = "Federation"
-    description = "This event handler can forward the request to other " \
-                  "eduMFA servers"
+    description = "This event handler can forward the request to other eduMFA servers"
 
     # TODO: Do we need to change the federation handler this way, that it does only pre-handling?
 
@@ -70,42 +69,32 @@ class FederationEventHandler(BaseEventHandler):
         :return: dict with actions
         """
         pi_servers = [x.config.identifier for x in get_edumfaservers()]
-        actions = {ACTION_TYPE.FORWARD:
-                       {"eduMFA":
-                            {"type": "str",
-                             "required": True,
-                             "value": pi_servers,
-                             "description": _("The remote/child eduMFA "
-                                              "Server.")
-                             },
-                        "realm":
-                            {"type": "str",
-                             "description": _("Change the realm name to a "
-                                              "realm on the child eduMFA "
-                                              "system.")
-                            },
-                        "resolver":
-                            {"type": "str",
-                             "description": _("Change the resolver name to a "
-                                              "resolver on the child "
-                                              "eduMFA system.")
-                            },
-                        "forward_client_ip":
-                            {"type": "bool",
-                             "description": _("Forward the client IP to the "
-                                              "child eduMFA server. "
-                                              "Otherwise this server will "
-                                              "be the client.")
-                            },
-                        "forward_authorization_token":
-                            {"type": "bool",
-                             "description": _("Forward the authorization header. "
-                                              "This allows to also forward request like "
-                                              "token- and system-requests.")
-
-                            }
-                        }
-                   }
+        actions = {
+            ACTION_TYPE.FORWARD: {
+                "eduMFA": {
+                    "type": "str",
+                    "required": True,
+                    "value": pi_servers,
+                    "description": _("The remote/child eduMFA Server."),
+                },
+                "realm": {
+                    "type": "str",
+                    "description": _("Change the realm name to a realm on the child eduMFA system."),
+                },
+                "resolver": {
+                    "type": "str",
+                    "description": _("Change the resolver name to a resolver on the child eduMFA system."),
+                },
+                "forward_client_ip": {
+                    "type": "bool",
+                    "description": _("Forward the client IP to the child eduMFA server. Otherwise this server will be the client."),
+                },
+                "forward_authorization_token": {
+                    "type": "bool",
+                    "description": _("Forward the authorization header. This allows to also forward request like token- and system-requests."),
+                },
+            }
+        }
         return actions
 
     def do(self, action, options=None):
@@ -141,14 +130,14 @@ class FederationEventHandler(BaseEventHandler):
             if handler_options.get("resolver"):
                 data["resolver"] = handler_options.get("resolver")
 
-            log.info("Sending {0} request to {1!r}".format(method, url))
+            log.info(f"Sending {method} request to {url!r}")
             requestor = None
             params = None
             headers = {}
 
             # We need to pass an authorization header if we forward administrative requests
             if is_true(handler_options.get("forward_authorization_token", False)):
-                auth_token = request.headers.get('Authorization')
+                auth_token = request.headers.get("Authorization")
                 headers["Authorization"] = auth_token
 
             if method.upper() == "GET":
@@ -161,8 +150,7 @@ class FederationEventHandler(BaseEventHandler):
                 requestor = requests.delete
 
             if requestor:
-                r = requestor(url, params=params, data=data,
-                              headers=headers, verify=tls)
+                r = requestor(url, params=params, data=data, headers=headers, verify=tls)
                 # convert requests Response to werkzeug Response
                 response_dict = json.loads(r.text)
                 if "detail" in response_dict:
@@ -172,10 +160,9 @@ class FederationEventHandler(BaseEventHandler):
                 # We will modify the response!
                 # We can not use flask.jsonify(response_dict) here, since we
                 # would work outside of application context!
-                options["response"] = current_app.response_class(json.dumps(response_dict),
-                                                                 mimetype="application/json")
+                options["response"] = current_app.response_class(json.dumps(response_dict), mimetype="application/json")
                 options["response"].status_code = r.status_code
             else:
-                log.warning("Unsupported method: {0!r}".format(method))
+                log.warning(f"Unsupported method: {method!r}")
 
         return True

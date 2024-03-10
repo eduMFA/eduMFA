@@ -4,6 +4,7 @@ This test file tests the lib.usercache
 
 The lib.usercache.py only depends on the database model
 """
+
 from contextlib import contextmanager
 
 from mock import patch
@@ -12,12 +13,17 @@ from edumfa.lib.error import UserError
 from tests import ldap3mock
 from tests.test_mock_ldap3 import LDAPDirectory
 from .base import MyTestCase
-from edumfa.lib.resolver import (save_resolver, delete_resolver, get_resolver_object)
-from edumfa.lib.realm import (set_realm, delete_realm)
-from edumfa.lib.user import (User, get_username, create_user)
-from edumfa.lib.usercache import (get_cache_time,
-                                       cache_username, delete_user_cache,
-                                       EXPIRATION_SECONDS, retrieve_latest_entry, is_cache_enabled)
+from edumfa.lib.resolver import save_resolver, delete_resolver, get_resolver_object
+from edumfa.lib.realm import set_realm, delete_realm
+from edumfa.lib.user import User, get_username, create_user
+from edumfa.lib.usercache import (
+    get_cache_time,
+    cache_username,
+    delete_user_cache,
+    EXPIRATION_SECONDS,
+    retrieve_latest_entry,
+    is_cache_enabled,
+)
 from edumfa.lib.config import set_edumfa_config
 from datetime import timedelta
 from datetime import datetime
@@ -28,6 +34,7 @@ class UserCacheTestCase(MyTestCase):
     """
     Test the user on the database level
     """
+
     PWFILE = "tests/testdata/passwd"
     resolvername1 = "resolver1"
     realm1 = "realm1"
@@ -36,30 +43,30 @@ class UserCacheTestCase(MyTestCase):
 
     sql_realm = "sqlrealm"
     sql_resolver = "SQL1"
-    sql_parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testusercache.sqlite",
-                  'Table': 'users',
-                  'Encoding': 'utf8',
-                  'Map': '{ "username": "username", \
-                    "userid" : "id", \
-                    "email" : "email", \
-                    "surname" : "name", \
-                    "givenname" : "givenname", \
-                    "password" : "password", \
-                    "phone": "phone", \
-                    "mobile": "mobile"}',
-                  'resolver': sql_resolver,
-                  'type': 'sqlresolver',
+    sql_parameters = {
+        "Driver": "sqlite",
+        "Server": "/tests/testdata/",
+        "Database": "testusercache.sqlite",
+        "Table": "users",
+        "Encoding": "utf8",
+        "Map": (
+            '{ "username": "username",                     "userid" : "id",                     "email" : "email",                     "surname" : "name",                    '
+            ' "givenname" : "givenname",                     "password" : "password",                     "phone": "phone",                     "mobile": "mobile"}'
+        ),
+        "resolver": sql_resolver,
+        "type": "sqlresolver",
     }
 
     def _create_realm(self):
-
-        rid = save_resolver({"resolver": self.resolvername1,
-                               "type": "passwdresolver",
-                               "fileName": self.PWFILE,
-                               "type.fileName": "string",
-                               "desc.fileName": "The name of the file"})
+        rid = save_resolver(
+            {
+                "resolver": self.resolvername1,
+                "type": "passwdresolver",
+                "fileName": self.PWFILE,
+                "type.fileName": "string",
+                "desc.fileName": "The name of the file",
+            }
+        )
         self.assertTrue(rid > 0, rid)
         added, failed = set_realm(realm=self.realm1, resolvers=[self.resolvername1])
         self.assertTrue(len(added) > 0, added)
@@ -131,8 +138,7 @@ class UserCacheTestCase(MyTestCase):
         self._delete_realm()
 
         # manually re-add the entry from above
-        UserCache(self.username, self.username, self.resolvername1,
-                  self.uid, ts).save()
+        UserCache(self.username, self.username, self.resolvername1, self.uid, ts).save()
 
         # the username is fetched from the cache
         u_name = get_username(self.uid, self.resolvername1)
@@ -172,8 +178,7 @@ class UserCacheTestCase(MyTestCase):
         self._delete_realm()
 
         # manually re-add the entry from above
-        UserCache(self.username, self.username, self.resolvername1,
-                  self.uid, ts).save()
+        UserCache(self.username, self.username, self.resolvername1, self.uid, ts).save()
 
         # the username is fetched from the cache
         u_name = get_username(self.uid, self.resolvername1)
@@ -195,7 +200,6 @@ class UserCacheTestCase(MyTestCase):
         # The `User` class also tries to fetch the UID from the cache
         with self.assertRaises(UserError):
             user3 = User(self.username, self.realm1, self.resolvername1)
-
 
     def test_04_delete_cache(self):
         now = datetime.now()
@@ -264,8 +268,13 @@ class UserCacheTestCase(MyTestCase):
 
         # testing `User()`, but this time we add an already-expired entry to the cache
         self.assertEqual(UserCache.query.count(), 0)
-        UserCache(self.username, self.username,
-                  self.resolvername1, 'fake_uid', datetime.now() - timedelta(weeks=50)).save()
+        UserCache(
+            self.username,
+            self.username,
+            self.resolvername1,
+            "fake_uid",
+            datetime.now() - timedelta(weeks=50),
+        ).save()
         # cache contains an expired entry, uid is read from the resolver (we can verify
         # that the cache entry is indeed not queried as it contains 'fake_uid' instead of the correct uid)
         user = User(self.username, self.realm1, self.resolvername1)
@@ -284,7 +293,13 @@ class UserCacheTestCase(MyTestCase):
         # initially populate the cache with three entries
         timestamp = datetime.now()
         UserCache("hans1", "hans1", self.resolvername1, "uid1", timestamp).save()
-        UserCache("hans2", "hans2", self.resolvername1, "uid2", timestamp - timedelta(weeks=50)).save()
+        UserCache(
+            "hans2",
+            "hans2",
+            self.resolvername1,
+            "uid2",
+            timestamp - timedelta(weeks=50),
+        ).save()
         UserCache("hans3", "hans3", "resolver2", "uid2", timestamp).save()
         self.assertEqual(UserCache.query.count(), 3)
 
@@ -293,12 +308,15 @@ class UserCacheTestCase(MyTestCase):
         self._populate_cache()
         # call save_resolver on resolver1, which should invalidate all entries of "resolver1"
         # (even the expired 'hans2' one)
-        save_resolver({"resolver": self.resolvername1,
-             "type": "passwdresolver",
-             "fileName": self.PWFILE,
-             "type.fileName": "string",
-             "desc.fileName": "Some change"
-        })
+        save_resolver(
+            {
+                "resolver": self.resolvername1,
+                "type": "passwdresolver",
+                "fileName": self.PWFILE,
+                "type.fileName": "string",
+                "desc.fileName": "Some change",
+            }
+        )
         self.assertEqual(UserCache.query.count(), 1)
         # Only hans3 in resolver2 should still be in the cache
         # We can use get_username to ensure it is fetched from the cache
@@ -399,8 +417,8 @@ class UserCacheTestCase(MyTestCase):
         # TODO: Interestingly, if we mock `datetime` here to increase the time by one
         # day, this test works, but a subsequent test (test_ui_certificate) will fail
         # with weird error messages. So we do not use the datetime mock for now.
-        #with self._patch_datetime_now('edumfa.lib.usercache.datetime.datetime') as mock_datetime:
-        with patch('edumfa.lib.usercache.get_cache_time') as mock_get_cache_time:
+        # with self._patch_datetime_now('edumfa.lib.usercache.datetime.datetime') as mock_datetime:
+        with patch("edumfa.lib.usercache.get_cache_time") as mock_get_cache_time:
             # Instead, we just decrease the cache time from 600 to 60 seconds,
             # which causes the entries above to be considered expired
             mock_get_cache_time.return_value = timedelta(seconds=60)
@@ -424,60 +442,57 @@ class UserCacheTestCase(MyTestCase):
         # one realm, two SQL resolvers
         parameters_a = self.sql_parameters.copy()
         # first resolver only contains users with phone numbers
-        parameters_a['Where'] = 'phone LIKE %'
-        parameters_a['resolver'] = 'reso_a'
+        parameters_a["Where"] = "phone LIKE %"
+        parameters_a["resolver"] = "reso_a"
         rid_a = save_resolver(parameters_a)
         self.assertTrue(rid_a > 0, rid_a)
         # second resolver contains all users
         parameters_b = self.sql_parameters.copy()
-        parameters_b['resolver'] = 'reso_b'
+        parameters_b["resolver"] = "reso_b"
         rid_b = save_resolver(parameters_b)
         self.assertTrue(rid_b > 0, rid_b)
 
         # First ask reso_a, then reso_b
-        (added, failed) = set_realm(self.sql_realm, ['reso_a', 'reso_b'], {
-            'reso_a': 1,
-            'reso_b': 2
-        })
+        (added, failed) = set_realm(self.sql_realm, ["reso_a", "reso_b"], {"reso_a": 1, "reso_b": 2})
         self.assertEqual(len(failed), 0)
         self.assertEqual(len(added), 2)
 
         # Now, query the user and populate the cache
         self.assertEqual(UserCache.query.count(), 0)
-        user1 = User('wordpressuser', self.sql_realm)
-        self.assertEqual(user1.uid, '6')
+        user1 = User("wordpressuser", self.sql_realm)
+        self.assertEqual(user1.uid, "6")
         # Assert it was found in reso_b (as it does not have a phone number)!
-        self.assertEqual(user1.resolver, 'reso_b')
-        self.assertEqual(UserCache.query.filter(UserCache.username == 'wordpressuser',
-                                                UserCache.user_id == '6').one().resolver,
-                         'reso_b')
+        self.assertEqual(user1.resolver, "reso_b")
+        self.assertEqual(
+            UserCache.query.filter(UserCache.username == "wordpressuser", UserCache.user_id == "6").one().resolver,
+            "reso_b",
+        )
         # Add a phone number. We do not use the User API to do that to simulate that the change is performed
         # out of privacyIDEA's control. Using `update_user_info` would invalidate the cache, which would be unrealistic.
         info = user1.info
         new_info = info.copy()
-        new_info['phone'] = '123456'
-        get_resolver_object('reso_a').update_user(user1.uid, new_info)
+        new_info["phone"] = "123456"
+        get_resolver_object("reso_a").update_user(user1.uid, new_info)
         # Ensure that the user's association with reso_b is still cached.
-        self.assertEqual(UserCache.query.filter(UserCache.username == 'wordpressuser',
-                                                UserCache.user_id == '6').one().resolver,
-                         'reso_b')
+        self.assertEqual(
+            UserCache.query.filter(UserCache.username == "wordpressuser", UserCache.user_id == "6").one().resolver,
+            "reso_b",
+        )
         # Now, it should be located in reso_a!
-        user2 = User('wordpressuser', self.sql_realm)
-        self.assertEqual(user2.uid, '6')
-        self.assertEqual(user2.resolver, 'reso_a')
+        user2 = User("wordpressuser", self.sql_realm)
+        self.assertEqual(user2.uid, "6")
+        self.assertEqual(user2.resolver, "reso_a")
         # ... but the cache still contains entries for both!
-        resolver_query = UserCache.query.filter(UserCache.username == 'wordpressuser',
-                                                UserCache.user_id == '6').order_by(UserCache.timestamp.desc())
+        resolver_query = UserCache.query.filter(UserCache.username == "wordpressuser", UserCache.user_id == "6").order_by(UserCache.timestamp.desc())
         cached_resolvers = [entry.resolver for entry in resolver_query.all()]
-        self.assertEqual(cached_resolvers, ['reso_a', 'reso_b'])
+        self.assertEqual(cached_resolvers, ["reso_a", "reso_b"])
         # Remove the phone number.
-        get_resolver_object('reso_a').update_user(user1.uid, {'phone': None})
+        get_resolver_object("reso_a").update_user(user1.uid, {"phone": None})
         delete_realm(self.sql_realm)
-        delete_resolver('reso_a')
-        delete_resolver('reso_b')
+        delete_resolver("reso_a")
+        delete_resolver("reso_b")
 
     def test_13_cache_username(self):
-
         self.counter = 0
 
         def get_username(uid, resolver):
@@ -496,39 +511,36 @@ class UserCacheTestCase(MyTestCase):
     def test_99_unset_config(self):
         # Test early exit!
         # Assert that the function `retrieve_latest_entry` is called if the cache is enabled
-        with patch('edumfa.lib.usercache.retrieve_latest_entry') as mock_retrieve:
+        with patch("edumfa.lib.usercache.retrieve_latest_entry") as mock_retrieve:
             mock_retrieve.return_value = None
-            get_username('some-userid', 'resolver1')
+            get_username("some-userid", "resolver1")
             self.assertEqual(mock_retrieve.call_count, 1)
         set_edumfa_config(EXPIRATION_SECONDS, 0)
 
         self.assertFalse(is_cache_enabled())
         # Assert that the function `retrieve_latest_entry` is not called anymore
-        with patch('edumfa.lib.usercache.retrieve_latest_entry') as mock_retrieve:
+        with patch("edumfa.lib.usercache.retrieve_latest_entry") as mock_retrieve:
             mock_retrieve.return_value = None
-            get_username('some-userid', 'resolver1')
+            get_username("some-userid", "resolver1")
             self.assertEqual(mock_retrieve.call_count, 0)
 
 
 class TestUserCacheMultipleLoginAttributes(MyTestCase):
     ldap_realm = "ldaprealm"
     ldap_resolver = "ldap1"
-    ldap_parameters = {'LDAPURI': 'ldap://localhost',
-                       'LDAPBASE': 'o=test',
-                       'BINDDN': 'cn=manager,ou=example,o=test',
-                       'BINDPW': 'ldaptest',
-                       'LOGINNAMEATTRIBUTE': 'cn, email',
-                       'LDAPSEARCHFILTER': '(cn=*)',
-                       'USERINFO': '{"phone" : "telephoneNumber", '
-                                   '"mobile" : "mobile"'
-                                   ', "email" : "email", '
-                                   '"surname" : "sn", '
-                                   '"givenname" : "givenName" }',
-                       'UIDTYPE': 'DN',
-                       'CACHE_TIMEOUT': 0,
-                       'resolver': ldap_resolver,
-                       'type': 'ldapresolver',
-                       }
+    ldap_parameters = {
+        "LDAPURI": "ldap://localhost",
+        "LDAPBASE": "o=test",
+        "BINDDN": "cn=manager,ou=example,o=test",
+        "BINDPW": "ldaptest",
+        "LOGINNAMEATTRIBUTE": "cn, email",
+        "LDAPSEARCHFILTER": "(cn=*)",
+        "USERINFO": '{"phone" : "telephoneNumber", "mobile" : "mobile", "email" : "email", "surname" : "sn", "givenname" : "givenName" }',
+        "UIDTYPE": "DN",
+        "CACHE_TIMEOUT": 0,
+        "resolver": ldap_resolver,
+        "type": "ldapresolver",
+    }
 
     def _create_ldap_realm(self):
         rid = save_resolver(self.ldap_parameters)
@@ -557,7 +569,7 @@ class TestUserCacheMultipleLoginAttributes(MyTestCase):
         ldap3mock.setLDAPDirectory(LDAPDirectory)
         self._create_ldap_realm()
         # Populate the user cache, check its contents
-        user1 = User('alice', self.ldap_realm)
+        user1 = User("alice", self.ldap_realm)
         self.assertEqual(user1.resolver, self.ldap_resolver)
         self.assertEqual(user1.uid, "cn=alice,ou=example,o=test")
         self.assertEqual(user1.login, "alice")
@@ -568,14 +580,14 @@ class TestUserCacheMultipleLoginAttributes(MyTestCase):
         self.assertEqual(entry.username, "alice")
         self.assertEqual(entry.resolver, self.ldap_resolver)
         # query again, user cache does not change
-        user2 = User('alice', self.ldap_realm)
+        user2 = User("alice", self.ldap_realm)
         self.assertEqual(user2.resolver, self.ldap_resolver)
         self.assertEqual(user2.uid, "cn=alice,ou=example,o=test")
         self.assertEqual(user2.login, "alice")
         self.assertEqual(user2.used_login, "alice")
         self.assertEqual(UserCache.query.count(), 1)
         # use secondary login attribute, usercache has a new entry with secondary login attribute
-        user3 = User('alice@test.com', self.ldap_realm)
+        user3 = User("alice@test.com", self.ldap_realm)
         self.assertEqual(user3.resolver, self.ldap_resolver)
         self.assertEqual(user3.uid, "cn=alice,ou=example,o=test")
         self.assertEqual(user3.login, "alice")
@@ -588,7 +600,7 @@ class TestUserCacheMultipleLoginAttributes(MyTestCase):
         self.assertEqual(entry.username, "alice")
         self.assertEqual(entry.resolver, self.ldap_resolver)
         # use secondary login attribute again, login name is fetched correctly
-        user4 = User('alice@test.com', self.ldap_realm)
+        user4 = User("alice@test.com", self.ldap_realm)
         self.assertEqual(user4.resolver, self.ldap_resolver)
         self.assertEqual(user4.uid, "cn=alice,ou=example,o=test")
         self.assertEqual(user4.login, "alice")

@@ -51,12 +51,12 @@ def _get_monitoring():
     """
     store = get_request_local_store()
     # check if the monitoring object is not yet in this request_store
-    if 'monitoring_object' not in store:
+    if "monitoring_object" not in store:
         config = get_app_config()
         monitoring_module = config.get("EDUMFA_MONITORING_MODULE", "edumfa.lib.monitoringmodules.sqlstats")
         monitoring = get_module_class(monitoring_module, "Monitoring")(config)
-        store['monitoring_object'] = monitoring
-    return store.get('monitoring_object')
+        store["monitoring_object"] = monitoring
+    return store.get("monitoring_object")
 
 
 def write_stats(stats_key, stats_value, timestamp=None, reset_values=False):
@@ -128,4 +128,3 @@ def get_last_value(stats_key):
     """
     monitoring_obj = _get_monitoring()
     return monitoring_obj.get_last_value(stats_key)
-

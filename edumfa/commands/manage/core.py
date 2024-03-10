@@ -43,9 +43,18 @@ def test():
     """
     Run all nosetests.
     """
-    call(['nosetests', '-v',
-          '--with-coverage', '--cover-package=edumfa', '--cover-branches',
-          '--cover-erase', '--cover-html', '--cover-html-dir=cover'])
+    call(
+        [
+            "nosetests",
+            "-v",
+            "--with-coverage",
+            "--cover-package=edumfa",
+            "--cover-branches",
+            "--cover-erase",
+            "--cover-html",
+            "--cover-html-dir=cover",
+        ]
+    )
 
 
 @core_cli.command("encrypt_enckey")
@@ -72,8 +81,7 @@ def encrypt_enckey(encfile, password):
 
 
 @core_cli.command("create_enckey")
-@click.option("-e", "--enckey_b64", type=str,
-              help="base64 encoded plain text key")
+@click.option("-e", "--enckey_b64", type=str, help="base64 encoded plain text key")
 def create_enckey(enckey_b64=None):
     """
     If the key of the given configuration does not exist, it will be created.
@@ -103,10 +111,15 @@ def create_enckey(enckey_b64=None):
 
 
 @core_cli.command("create_pgp_keys")
-@click.option("-f", "--force", is_flag=True,
-              help="Overwrite existing PGP keys")
-@click.option("-k", "--keysize", type=int, default=2048, show_default=True,
-              help="Size of the generated PGP keys (in bits)")
+@click.option("-f", "--force", is_flag=True, help="Overwrite existing PGP keys")
+@click.option(
+    "-k",
+    "--keysize",
+    type=int,
+    default=2048,
+    show_default=True,
+    help="Size of the generated PGP keys (in bits)",
+)
 def create_pgp_keys(keysize, force):
     """
     Generate PGP keys to allow encrypted token import.
@@ -115,17 +128,19 @@ def create_pgp_keys(keysize, force):
     gpg = gnupg.GPG(gnupghome=GPG_HOME)
     keys = gpg.list_keys(True)
     if len(keys) and not force:
-        click.echo(
-            "There are already private keys. If you want to generate a new private key, use the parameter --force.")
+        click.echo("There are already private keys. If you want to generate a new private key, use the parameter --force.")
         click.echo(keys)
         sys.exit(1)
-    input_data = gpg.gen_key_input(key_type="RSA", key_length=keysize,
-                                   name_real="eduMFA Server",
-                                   name_comment="Import")
+    input_data = gpg.gen_key_input(
+        key_type="RSA",
+        key_length=keysize,
+        name_real="eduMFA Server",
+        name_comment="Import",
+    )
     inputs = input_data.split("\n")
     if inputs[-2] == "%commit":
-        del (inputs[-1])
-        del (inputs[-1])
+        del inputs[-1]
+        del inputs[-1]
         inputs.append("%no-protection")
         inputs.append("%commit")
         inputs.append("")
@@ -134,8 +149,14 @@ def create_pgp_keys(keysize, force):
 
 
 @core_cli.command("create_audit_keys")
-@click.option("-k", "--keysize", type=int, default=2048, show_default=True,
-              help="Create keys with the given size in bits")
+@click.option(
+    "-k",
+    "--keysize",
+    type=int,
+    default=2048,
+    show_default=True,
+    help="Create keys with the given size in bits",
+)
 def create_audit_keys(keysize):
     """
     Create the RSA signing keys for the audit log.
@@ -146,20 +167,20 @@ def create_audit_keys(keysize):
     if os.path.isfile(filename):
         click.echo(f"The file \n\t{filename}\nalready exist. We do not overwrite it!")
         sys.exit(1)
-    new_key = rsa.generate_private_key(public_exponent=65537,
-                                       key_size=keysize,
-                                       backend=default_backend())
+    new_key = rsa.generate_private_key(public_exponent=65537, key_size=keysize, backend=default_backend())
     priv_pem = new_key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption())
+        encryption_algorithm=serialization.NoEncryption(),
+    )
     with open(filename, "wb") as f:
         f.write(priv_pem)
 
     pub_key = new_key.public_key()
     pub_pem = pub_key.public_bytes(
         encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo)
+        format=serialization.PublicFormat.SubjectPublicKeyInfo,
+    )
     with open(current_app.config.get("EDUMFA_AUDIT_KEY_PUBLIC"), "wb") as f:
         f.write(pub_pem)
 
@@ -170,8 +191,7 @@ def create_audit_keys(keysize):
 
 
 @core_cli.command("create_tables")
-@click.option("-s", "--stamp", is_flag=True,
-              help='Stamp database to current head revision.')
+@click.option("-s", "--stamp", is_flag=True, help="Stamp database to current head revision.")
 def create_tables(stamp=False):
     """
     Initially create the tables in the database. The database must exist
@@ -181,8 +201,7 @@ def create_tables(stamp=False):
     db.create_all()
     if stamp:
         # get the path to the migration directory from the distribution
-        p = [x.locate() for x in importlib_metadata.files('edumfa') if
-             'migrations/env.py' in str(x)]
+        p = [x.locate() for x in importlib_metadata.files("edumfa") if "migrations/env.py" in str(x)]
         migration_dir = os.path.dirname(os.path.abspath(p[0]))
         fm_stamp(directory=migration_dir)
     db.session.commit()
@@ -192,8 +211,12 @@ core_cli.add_command(create_tables, "createdb")
 
 
 @core_cli.command("drop_tables")
-@click.option("-d", "--dropit", type=str,
-              help="If You are sure to drop the tables, pass the parameter \"yes\"")
+@click.option(
+    "-d",
+    "--dropit",
+    type=str,
+    help='If You are sure to drop the tables, pass the parameter "yes"',
+)
 def drop_tables(dropit):
     """
     This drops all the eduMFA database tables.
@@ -210,9 +233,7 @@ def drop_tables(dropit):
         db.reflect()
         table = db.metadata.tables.get(table_name, None)
         if table is not None:
-            db.metadata.drop_all(bind=db.engine,
-                                 tables=[table],
-                                 checkfirst=True)
+            db.metadata.drop_all(bind=db.engine, tables=[table], checkfirst=True)
     else:
         click.echo("Not dropping anything!")
 
@@ -227,14 +248,15 @@ def validate(user, password, realm=None):
     """
     from edumfa.lib.user import get_user_from_param
     from edumfa.lib.token import check_user_pass
+
     try:
         user = get_user_from_param({"user": user, "realm": realm})
         auth, details = check_user_pass(user, password)
-        click.echo("RESULT=%s" % auth)
-        click.echo("DETAILS=%s" % details)
+        click.echo(f"RESULT={auth}")
+        click.echo(f"DETAILS={details}")
     except Exception as exx:
         click.echo("RESULT=Error")
-        click.echo("ERROR=%s" % exx)
+        click.echo(f"ERROR={exx}")
 
 
 @core_cli.command("profile")
@@ -243,8 +265,8 @@ def profile(length=30, profile_dir=None):
     Start the application in profiling mode.
     """
     from werkzeug.middleware.profiler import ProfilerMiddleware
+
     if flask.has_request_context():
         click.echo("WARNING: The app may behave unrealistically during profiling.")
-    current_app.wsgi_app = ProfilerMiddleware(current_app.wsgi_app, restrictions=[length],
-                                              profile_dir=profile_dir)
+    current_app.wsgi_app = ProfilerMiddleware(current_app.wsgi_app, restrictions=[length], profile_dir=profile_dir)
     current_app.run()

@@ -30,8 +30,7 @@ def get_edumfa_uri(config_file):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("-c", "--config", help="eduMFA config file. We only "
-                                               "need the SQLALCHEMY_DATABASE_URI.",
+    parser.add_argument("-c", "--config", help="eduMFA config file. We only need the SQLALCHEMY_DATABASE_URI.",
                         required=True)
     args = parser.parse_args()
 

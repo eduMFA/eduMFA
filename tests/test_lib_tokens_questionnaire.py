@@ -16,10 +16,7 @@ import json
 class QuestionnaireTokenTestCase(MyTestCase):
     serial1 = "QUST1234"
     pin = "test"
-    questions = {"frage1": "antwort1",
-                 "frage2": "antwort2",
-                 "frage3": "antwort3"
-                 }
+    questions = {"frage1": "antwort1", "frage2": "antwort2", "frage3": "antwort3"}
     j_questions = json.dumps(questions)
 
     dumb_questions = {"dumb questiontype": "answer"}
@@ -31,13 +28,16 @@ class QuestionnaireTokenTestCase(MyTestCase):
 
     def test_01_create_token(self):
         set_edumfa_config("question.num_answers", 3)
-        token = init_token({"type": "question",
-                            "pin": self.pin,
-                            "serial": self.serial1,
-                            "user": "cornelius",
-                            "realm": self.realm1,
-                            "questions": self.j_questions
-                            })
+        token = init_token(
+            {
+                "type": "question",
+                "pin": self.pin,
+                "serial": self.serial1,
+                "user": "cornelius",
+                "realm": self.realm1,
+                "questions": self.j_questions,
+            }
+        )
         self.assertEqual(token.type, "question")
 
         prefix = QuestionnaireTokenClass.get_class_prefix()
@@ -67,9 +67,7 @@ class QuestionnaireTokenTestCase(MyTestCase):
         self.assertTrue(question in self.questions)
 
         # Now that we have the question, we can give the answer
-        r = token.check_challenge_response(passw=self.questions[question],
-                                           options={"transaction_id":
-                                                        transactionid})
+        r = token.check_challenge_response(passw=self.questions[question], options={"transaction_id": transactionid})
         self.assertEqual(r, 1)
         token.delete_token()
 
@@ -79,28 +77,32 @@ class QuestionnaireTokenTestCase(MyTestCase):
 
     def test_04_dumb_question(self):
         set_edumfa_config("question.num_answers", 1)
-        token = init_token({"type": "question",
-                            "pin": self.pin,
-                            "serial": "2ndtoken",
-                            "user": "cornelius",
-                            "realm": self.realm1,
-                            "questions": self.j_dumb_questions
-                            })
+        token = init_token(
+            {
+                "type": "question",
+                "pin": self.pin,
+                "serial": "2ndtoken",
+                "user": "cornelius",
+                "realm": self.realm1,
+                "questions": self.j_dumb_questions,
+            }
+        )
         _r, question, _transaction, _none = token.create_challenge()
         self.assertEqual("dumb questiontype", question)
         token.delete_token()
 
     def test_05_unicode_question(self):
-        questions = {'cité': 'Nîmes',
-                     '城市': '北京',
-                     'ciudad': 'Almería'}
+        questions = {"cité": "Nîmes", "城市": "北京", "ciudad": "Almería"}
         set_edumfa_config("question.num_answers", 2)
-        token = init_token({"type": "question",
-                            "pin": self.pin,
-                            "user": "cornelius",
-                            "realm": self.realm1,
-                            "questions": json.dumps(questions)
-                            })
+        token = init_token(
+            {
+                "type": "question",
+                "pin": self.pin,
+                "user": "cornelius",
+                "realm": self.realm1,
+                "questions": json.dumps(questions),
+            }
+        )
         self.assertEqual(token.type, "question")
         r = token.create_challenge()
         self.assertEqual(r[0], True)
@@ -109,20 +111,22 @@ class QuestionnaireTokenTestCase(MyTestCase):
         self.assertTrue(question in questions)
 
         # Now that we have the question, we can give the answer
-        r = token.check_challenge_response(passw=questions[question],
-                                           options={"transaction_id": transactionid})
+        r = token.check_challenge_response(passw=questions[question], options={"transaction_id": transactionid})
         self.assertEqual(r, 1)
         token.delete_token()
 
     def test_06_wrong_answer(self):
-        questions = {'ciudad': 'Almería'}
+        questions = {"ciudad": "Almería"}
         set_edumfa_config("question.num_answers", 1)
-        token = init_token({"type": "question",
-                            "pin": self.pin,
-                            "user": "cornelius",
-                            "realm": self.realm1,
-                            "questions": json.dumps(questions)
-                            })
+        token = init_token(
+            {
+                "type": "question",
+                "pin": self.pin,
+                "user": "cornelius",
+                "realm": self.realm1,
+                "questions": json.dumps(questions),
+            }
+        )
         self.assertEqual(token.type, "question")
         r = token.create_challenge()
         self.assertEqual(r[0], True)
@@ -131,11 +135,9 @@ class QuestionnaireTokenTestCase(MyTestCase):
         self.assertTrue(question in questions)
 
         # What happens if the answer is wrong?
-        r = token.check_challenge_response(passw='Málaga',
-                                           options={"transaction_id": transactionid})
+        r = token.check_challenge_response(passw="Málaga", options={"transaction_id": transactionid})
         self.assertEqual(r, -1)
         # Try to answer again
-        r = token.check_challenge_response(passw='Almería',
-                                           options={"transaction_id": transactionid})
+        r = token.check_challenge_response(passw="Almería", options={"transaction_id": transactionid})
         self.assertEqual(r, 1)
         token.delete_token()

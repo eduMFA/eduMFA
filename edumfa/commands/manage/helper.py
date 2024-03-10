@@ -37,7 +37,7 @@ def conf_import(filename=None, conftype=None):
     import eduMFA configuration from file
     """
     if filename:
-        with open(filename, 'r') as f:
+        with open(filename, "r") as f:
             contents = f.read()
     else:
         filename = "Standard input"
@@ -57,7 +57,7 @@ def conf_import(filename=None, conftype=None):
             conftype_list = list(contents_var.keys())
 
     for conftype in conftype_list:
-        click.echo("Importing {0!s} from {1!s}".format(conftype, filename))
+        click.echo(f"Importing {conftype!s} from {filename!s}")
     return contents_var
 
 
@@ -66,18 +66,19 @@ def conf_export(config, filename=None):
     Export configurations to a file or write them to stdout if no filename is given.
     """
     import pprint
+
     pp = pprint.PrettyPrinter(indent=4)
 
     ret_str = pp.pformat(config)
     if filename:
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             f.write(ret_str)
     if not filename:
         print(ret_str)
 
 
 def get_conf_policy(name=None):
-    """ helper function for conf_export """
+    """helper function for conf_export"""
     pol_cls = PolicyClass()
     return pol_cls.list_policies(name=name)
 
@@ -95,7 +96,7 @@ def import_conf_policy(config_list, cleanup=False, update=False):
         for policy in policies:
             name = policy.get("name")
             r = delete_policy(name)
-            click.echo("Deleted policy {0!s} with result {1!s}".format(name, r))
+            click.echo(f"Deleted policy {name!s} with result {r!s}")
 
     for policy in config_list:
         action_str = "Added"
@@ -103,23 +104,35 @@ def import_conf_policy(config_list, cleanup=False, update=False):
         exists = cls.list_policies(name=name)
         if exists:
             if not update:
-                click.echo("Policy {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(f"Policy {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
-        r = set_policy(name, action=policy.get("action"), active=policy.get("active", True),
-                       adminrealm=policy.get("adminrealm"), adminuser=policy.get("adminuser"),
-                       check_all_resolvers=policy.get("check_all_resolvers", False), client=policy.get("client"),
-                       conditions=policy.get("conditions"), edumfanode=policy.get("edumfanode"),
-                       priority=policy.get("priority"), realm=policy.get("realm"), resolver=policy.get("resolver"),
-                       scope=policy.get("scope"), time=policy.get("time"), user=policy.get("user"))
-        click.echo("{0!s} policy {1!s} with result {2!s}".format(action_str, name, r))
+        r = set_policy(
+            name,
+            action=policy.get("action"),
+            active=policy.get("active", True),
+            adminrealm=policy.get("adminrealm"),
+            adminuser=policy.get("adminuser"),
+            check_all_resolvers=policy.get("check_all_resolvers", False),
+            client=policy.get("client"),
+            conditions=policy.get("conditions"),
+            edumfanode=policy.get("edumfanode"),
+            priority=policy.get("priority"),
+            realm=policy.get("realm"),
+            resolver=policy.get("resolver"),
+            scope=policy.get("scope"),
+            time=policy.get("time"),
+            user=policy.get("user"),
+        )
+        click.echo(f"{action_str!s} policy {name!s} with result {r!s}")
 
 
 # conf export menu
 def get_conf_event(name=None):
-    """ helper function for conf_export """
+    """helper function for conf_export"""
     from edumfa.lib.event import EventConfiguration
+
     event_cls = EventConfiguration()
     if name:
         conf = [e for e in event_cls.events if (e.get("name") == name)]
@@ -133,6 +146,7 @@ def import_conf_event(config_list, cleanup=False, update=False):
     import event configuration from an event list
     """
     from edumfa.lib.event import EventConfiguration
+
     cls = EventConfiguration()
     if cleanup:
         click.echo("Cleanup old events.")
@@ -140,7 +154,7 @@ def import_conf_event(config_list, cleanup=False, update=False):
         for event in events:
             name = event.get("name")
             r = delete_event(event.get("id"))
-            click.echo("Deleted event '{0!s}' with result {1!s}".format(name, r), file=sys.stderr)
+            click.echo(f"Deleted event '{name!s}' with result {r!s}", file=sys.stderr)
 
     for event in config_list:
         action_str = "Added"
@@ -155,14 +169,23 @@ def import_conf_event(config_list, cleanup=False, update=False):
             event_id = None
         if exists:
             if not update:
-                click.echo("Event {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(f"Event {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
-        r = set_event(name, event.get("event"), event.get("handlermodule"), event.get("action"),
-                      conditions=event.get("conditions"), ordering=event.get("ordering"), options=event.get("options"),
-                      active=event.get("active"), position=event.get("position", "post"), id=event_id)
-        click.echo("{0!s} event {1!s} with result {2!s}".format(action_str, name, r))
+        r = set_event(
+            name,
+            event.get("event"),
+            event.get("handlermodule"),
+            event.get("action"),
+            conditions=event.get("conditions"),
+            ordering=event.get("ordering"),
+            options=event.get("options"),
+            active=event.get("active"),
+            position=event.get("position", "post"),
+            id=event_id,
+        )
+        click.echo(f"{action_str!s} event {name!s} with result {r!s}")
 
 
 def import_conf_resolver(config_list, cleanup=False, update=False):
@@ -179,7 +202,7 @@ def import_conf_resolver(config_list, cleanup=False, update=False):
         exists = get_resolver_list(filter_resolver_name=name)
         if exists:
             if not update:
-                click.echo("Resolver {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(f"Resolver {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
@@ -187,15 +210,16 @@ def import_conf_resolver(config_list, cleanup=False, update=False):
         resolvertype = config.get("type")
         data = config.get("data")
         # now we can create the resolver
-        params = {'resolver': name, 'type': resolvertype}
+        params = {"resolver": name, "type": resolvertype}
         for key in data.keys():
             params.update({key: data.get(key)})
         r = save_resolver(params)
-        click.echo("{0!s} resolver {1!s} with result {2!s}".format(action_str, name, r))
+        click.echo(f"{action_str!s} resolver {name!s} with result {r!s}")
 
 
 def get_conf_resolver(name=None, print_passwords=False):
-    """ helper function for conf_export """
+    """helper function for conf_export"""
     from edumfa.lib.resolver import get_resolver_list
+
     resolver_dict = get_resolver_list(filter_resolver_name=name, censor=not print_passwords)
     return list(resolver_dict.values())

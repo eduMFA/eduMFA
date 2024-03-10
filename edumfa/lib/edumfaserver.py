@@ -26,7 +26,7 @@ import logging
 from edumfa.lib.log import log_with
 from edumfa.lib.utils import fetch_one_resource, to_unicode
 from edumfa.lib.error import ConfigAdminError
-from edumfa.lib.utils.export import (register_import, register_export)
+from edumfa.lib.utils.export import register_import, register_export
 import json
 import requests
 
@@ -57,8 +57,15 @@ class eduMFAServer(object):
         """
         self.config = db_edumfaserver_object
 
-    def validate_check(self, user, password, serial=None, realm=None,
-                       transaction_id=None, resolver=None):
+    def validate_check(
+        self,
+        user,
+        password,
+        serial=None,
+        realm=None,
+        transaction_id=None,
+        resolver=None,
+    ):
         """
         Perform an HTTP validate/check request to the remote eduMFA
         Server.
@@ -81,10 +88,12 @@ class eduMFAServer(object):
             data["transaction_id"] = transaction_id
         if resolver:
             data["resolver"] = resolver
-        response = requests.post(self.config.url + "/validate/check",
-                                 data=data,
-                                 verify=self.config.tls,
-                                 timeout=60)
+        response = requests.post(
+            f"{self.config.url}/validate/check",
+            data=data,
+            verify=self.config.tls,
+            timeout=60,
+        )
 
         return response
 
@@ -103,17 +112,15 @@ class eduMFAServer(object):
         :param password: the password/OTP to test
         :return: True or False. If any error occurs, an exception is raised.
         """
-        response = requests.post(config.url + "/validate/check",
-                                 data={"user": quote(user), "pass": quote(password)},
-                                 verify=config.tls,
-                                 timeout=60
-                          )
-        log.debug("Sent request to eduMFA server. status code returned: "
-                  "{0!s}".format(response.status_code))
+        response = requests.post(
+            f"{config.url}/validate/check",
+            data={"user": quote(user), "pass": quote(password)},
+            verify=config.tls,
+            timeout=60,
+        )
+        log.debug(f"Sent request to eduMFA server. status code returned: {response.status_code!s}")
         if response.status_code != 200:
-            log.warning("The request to the remote eduMFA server {0!s} "
-                        "returned a status code: {1!s}".format(config.url,
-                                                               response.status_code))
+            log.warning(f"The request to the remote eduMFA server {config.url!s} returned a status code: {response.status_code!s}")
             return False
 
         j_response = json.loads(to_unicode(response.content))
@@ -126,10 +133,12 @@ def list_edumfaservers(identifier=None, id=None):
     res = {}
     server_list = get_edumfaservers(identifier=identifier, id=id)
     for server in server_list:
-        res[server.config.identifier] = {"id": server.config.id,
-                                         "url": server.config.url,
-                                         "tls": server.config.tls,
-                                         "description": server.config.description}
+        res[server.config.identifier] = {
+            "id": server.config.id,
+            "url": server.config.url,
+            "tls": server.config.tls,
+            "description": server.config.description,
+        }
     return res
 
 
@@ -146,8 +155,7 @@ def get_edumfaserver(identifier=None, id=None):
     """
     server_list = get_edumfaservers(identifier=identifier, id=id)
     if not server_list:
-        raise ConfigAdminError("The specified eduMFA Server configuration "
-                               "does not exist.")
+        raise ConfigAdminError("The specified eduMFA Server configuration does not exist.")
     return server_list[0]
 
 
@@ -155,7 +163,7 @@ def get_edumfaserver(identifier=None, id=None):
 def get_edumfaservers(identifier=None, url=None, id=None):
     """
     This returns a list of all eduMFA Servers matching the criterion.
-    If no identifier or url is provided, it will return a list of all 
+    If no identifier or url is provided, it will return a list of all
     eduMFA server definitions.
 
     :param identifier: The identifier or the name of the eduMFA Server
@@ -204,8 +212,7 @@ def add_edumfaserver(identifier, url=None, tls=True, description=""):
         definition
     :return: The Id of the database object
     """
-    r = eduMFAServerDB(identifier=identifier, url=url, tls=tls,
-                            description=description).save()
+    r = eduMFAServerDB(identifier=identifier, url=url, tls=tls, description=description).save()
     return r
 
 
@@ -220,23 +227,22 @@ def delete_edumfaserver(identifier):
     return fetch_one_resource(eduMFAServerDB, identifier=identifier).delete()
 
 
-@register_export('edumfaserver')
+@register_export("edumfaserver")
 def export_edumfaservers(name=None):
-    """ Export given or all edumfaservers configuration """
+    """Export given or all edumfaservers configuration"""
     # remove the id from the resulting objects
     pids_list = list_edumfaservers(identifier=name)
     for _, pids in pids_list.items():
-        pids.pop('id')
+        pids.pop("id")
     return pids_list
 
 
-@register_import('edumfaserver')
+@register_import("edumfaserver")
 def import_edumfaservers(data, name=None):
     """Import edumfaservers configuration"""
-    log.debug('Import edumfaservers config: {0!s}'.format(data))
+    log.debug(f"Import edumfaservers config: {data!s}")
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         rid = add_edumfaserver(res_name, **res_data)
-        log.info('Import of edumfaservers "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of edumfaservers "{res_name!s}" finished, id: {rid!s}')

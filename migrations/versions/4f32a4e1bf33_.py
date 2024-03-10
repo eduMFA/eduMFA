@@ -509,9 +509,7 @@ def upgrade():
         finalize_config()
         create_new_tables()
     except ProgrammingError as exx:
-        print("An error occurred during upgrade! Maybe You database schema is "
-              "more recent than 2015? If this is the case, please check the "
-              "output if any changes were made to the db and revert them.")
+        print("An error occurred during upgrade! Maybe You database schema is more recent than 2015? If this is the case, please check the output if any changes were made to the db and revert them.")
         print(exx)
 
 

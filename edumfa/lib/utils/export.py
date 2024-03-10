@@ -26,6 +26,7 @@
 This module provides the functionality to register export or import functions
 for separate parts of the eduMFA server configuration.
 """
+
 import sys
 
 EXPORT_FUNCTIONS = {}
@@ -52,19 +53,20 @@ def register_export(name=None):
             def export_events():
                 # implement export functionality here
                 return dict
+    """
 
-"""
     def wrapped(func):
         exp_name = name
         if not exp_name:
-            exp_name = func.__module__.split('.')[-1]
+            exp_name = func.__module__.split(".")[-1]
         if exp_name in EXPORT_FUNCTIONS:
-            print('Exporter function with name \'{0!s}\' already exists! '
-                  'Overwriting {1!s} with {2!s}'.format(exp_name,
-                                                        EXPORT_FUNCTIONS[exp_name],
-                                                        func), file=sys.stderr)
+            print(
+                f"Exporter function with name '{exp_name!s}' already exists! Overwriting {EXPORT_FUNCTIONS[exp_name]!s} with {func!s}",
+                file=sys.stderr,
+            )
         EXPORT_FUNCTIONS[exp_name] = func
         return func
+
     return wrapped
 
 
@@ -93,19 +95,18 @@ def register_import(name=None, prio=99):
             @register_import(prio=10)
             def import_events(dict):
                 # implement import functionality here
-
-"""
+    """
 
     def wrapped(func):
         imp_name = name
         if not imp_name:
-            imp_name = func.__module__.split('.')[-1]
+            imp_name = func.__module__.split(".")[-1]
         if imp_name in IMPORT_FUNCTIONS:
-            print('Importer function with name \'{0!s}\' already exists! '
-                  'Overwriting {1!s} with {2!s}'.format(imp_name,
-                                                        IMPORT_FUNCTIONS[imp_name],
-                                                        func), file=sys.stderr)
-        IMPORT_FUNCTIONS[imp_name] = {'prio': prio,
-                                      'func': func}
+            print(
+                f"Importer function with name '{imp_name!s}' already exists! Overwriting {IMPORT_FUNCTIONS[imp_name]!s} with {func!s}",
+                file=sys.stderr,
+            )
+        IMPORT_FUNCTIONS[imp_name] = {"prio": prio, "func": func}
         return func
+
     return wrapped
