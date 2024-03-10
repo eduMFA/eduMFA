@@ -31,8 +31,16 @@ import click
 import yaml
 from flask.cli import AppGroup
 
-from edumfa.commands.manage.helper import conf_import, conf_export, get_conf_resolver, get_conf_event, get_conf_policy, \
-    import_conf_policy, import_conf_resolver, import_conf_event
+from edumfa.commands.manage.helper import (
+    conf_import,
+    conf_export,
+    get_conf_resolver,
+    get_conf_event,
+    get_conf_policy,
+    import_conf_policy,
+    import_conf_resolver,
+    import_conf_event,
+)
 from edumfa.lib.utils.export import IMPORT_FUNCTIONS, EXPORT_FUNCTIONS
 
 config_cli = AppGroup("config", help="Manage your eduMFA configuration")
@@ -43,51 +51,98 @@ export_cli = AppGroup("export", help="export your eduMFA configuration")
 config_cli.add_command(import_cli)
 config_cli.add_command(export_cli)
 
-exp_fmt_dict = {'python': str, 'json': partial(json.dumps, indent=2), 'yaml': yaml.safe_dump}
-imp_fmt_dict = {'python': ast.literal_eval, 'json': json.loads, 'yaml': yaml.safe_load}
+exp_fmt_dict = {
+    "python": str,
+    "json": partial(json.dumps, indent=2),
+    "yaml": yaml.safe_dump,
+}
+imp_fmt_dict = {"python": ast.literal_eval, "json": json.loads, "yaml": yaml.safe_load}
 
 
 @config_cli.command("exporter")
-@click.option('-o', '--output', type=click.File('w'), default=sys.stdout,
-              help='The filename to export the data to. Write to <stdout> if this argument is not given or is \'-\'.')
-@click.option('-f', '--format', "fmt", default='python', show_default=True,
-              type=click.Choice(exp_fmt_dict.keys(), case_sensitive=False), help='Output format, default is \'python\'')
+@click.option(
+    "-o",
+    "--output",
+    type=click.File("w"),
+    default=sys.stdout,
+    help="The filename to export the data to. Write to <stdout> if this argument is not given or is '-'.",
+)
+@click.option(
+    "-f",
+    "--format",
+    "fmt",
+    default="python",
+    show_default=True,
+    type=click.Choice(exp_fmt_dict.keys(), case_sensitive=False),
+    help="Output format, default is 'python'",
+)
 # TODO: we need to have an eye on the help output, it might get less readable
 #  when more exporter functions are added
-@click.option('-t', '--types', multiple=True, default=['all'], show_default=True,
-              type=click.Choice(['all'] + list(EXPORT_FUNCTIONS.keys()), case_sensitive=False),
-              help=f'The types of configuration to export (can be given multiple times). By default, export all available types. Currently registered exporter types are: {", ".join(["all"] + list(EXPORT_FUNCTIONS.keys()))!s}', )
-@click.option('-n', '--name', help='The name of the configuration object to export (default: export all)')
+@click.option(
+    "-t",
+    "--types",
+    multiple=True,
+    default=["all"],
+    show_default=True,
+    type=click.Choice(["all"] + list(EXPORT_FUNCTIONS.keys()), case_sensitive=False),
+    help=(
+        "The types of configuration to export (can be given multiple times). By default, export all available types. Currently registered exporter types are:"
+        f" {', '.join(['all'] + list(EXPORT_FUNCTIONS.keys()))!s}"
+    ),
+)
+@click.option(
+    "-n",
+    "--name",
+    help="The name of the configuration object to export (default: export all)",
+)
 def exporter(output, fmt, types, name=None):
     """
     Export server configuration using specific or all registered exporter types.
     """
-    exp_types = EXPORT_FUNCTIONS.keys() if 'all' in types else types
+    exp_types = EXPORT_FUNCTIONS.keys() if "all" in types else types
 
     out = {}
     for typ in exp_types:
         out.update({typ: EXPORT_FUNCTIONS[typ](name=name)})
 
     if out:
-        res = exp_fmt_dict.get(fmt.lower())(out) + '\n'
+        res = f"{exp_fmt_dict.get(fmt.lower())(out)}\n"
         output.write(res)
 
 
 @config_cli.command("importer")
-@click.option('-i', '--input', "infile", type=click.File('r'), default=sys.stdin,
-              help='The filename to import the data from. Try to read from <stdin> if this argument is not given.')
-@click.option('-t', '--types', multiple=True, default=['all'], show_default=True,
-              type=click.Choice(['all'] + list(IMPORT_FUNCTIONS.keys()), case_sensitive=False),
-              help=f'The types of configuration to import. By default import all available data if a corresponding '
-                   f'importer type exists. Currently registered importer types '
-                   f'are: {", ".join(["all"] + list(IMPORT_FUNCTIONS.keys()))!s}')
-@click.option('-n', '--name', help='The name of the configuration object to import (default: import all)')
+@click.option(
+    "-i",
+    "--input",
+    "infile",
+    type=click.File("r"),
+    default=sys.stdin,
+    help="The filename to import the data from. Try to read from <stdin> if this argument is not given.",
+)
+@click.option(
+    "-t",
+    "--types",
+    multiple=True,
+    default=["all"],
+    show_default=True,
+    type=click.Choice(["all"] + list(IMPORT_FUNCTIONS.keys()), case_sensitive=False),
+    help=(
+        "The types of configuration to import. By default import all available data if a corresponding "
+        "importer type exists. Currently registered importer types "
+        f"are: {', '.join(['all'] + list(IMPORT_FUNCTIONS.keys()))!s}"
+    ),
+)
+@click.option(
+    "-n",
+    "--name",
+    help="The name of the configuration object to import (default: import all)",
+)
 def importer(infile, types, name=None):
     """
     Import server configuration using specific or all registered importer types.
     """
     data = None
-    imp_types = IMPORT_FUNCTIONS.keys() if 'all' in types else types
+    imp_types = IMPORT_FUNCTIONS.keys() if "all" in types else types
 
     content = infile.read()
 
@@ -98,26 +153,38 @@ def importer(infile, types, name=None):
         except (SyntaxError, json.decoder.JSONDecodeError, yaml.error.YAMLError) as _e:
             continue
     if not data:
-        click.echo('Could not read input format! Accepting: {0!s}.'.format(', '.join(imp_fmt_dict.keys())),
-                   file=sys.stderr)
+        click.echo(
+            f"Could not read input format! Accepting: {', '.join(imp_fmt_dict.keys())!s}.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     # we need to go through the importer functions based on priority
-    for typ, value in sorted(IMPORT_FUNCTIONS.items(), key=lambda x: x[1]['prio']):
+    for typ, value in sorted(IMPORT_FUNCTIONS.items(), key=lambda x: x[1]["prio"]):
         if typ in imp_types:
             if typ in data:
-                click.echo('Importing configuration type "{0!s}".'.format(typ))
-                value['func'](data[typ], name=name)
+                click.echo(f'Importing configuration type "{typ!s}".')
+                value["func"](data[typ], name=name)
 
 
 @import_cli.command("full")
-@click.option("--file", "-f", "file",
-              help="The file to import. It can be a plain python file or a tar.gz archive containing a configuration "
-                   "backup file with a name containing 'edumfa-config-backup'.")
-@click.option("--update", "-u",
-              help="Update the existing configuration. New policies, resolvers and events will also be added.")
-@click.option("--cleanup/--wipe", "-c/-w", "cleanup",
-              help="The configuration on the target machine will be wiped before the import.")
+@click.option(
+    "--file",
+    "-f",
+    "file",
+    help="The file to import. It can be a plain python file or a tar.gz archive containing a configuration backup file with a name containing 'edumfa-config-backup'.",
+)
+@click.option(
+    "--update",
+    "-u",
+    help="Update the existing configuration. New policies, resolvers and events will also be added.",
+)
+@click.option(
+    "--cleanup/--wipe",
+    "-c/-w",
+    "cleanup",
+    help="The configuration on the target machine will be wiped before the import.",
+)
 def import_full_config(file, update, cleanup):
     data = {}
     if file:
@@ -144,22 +211,34 @@ def import_full_config(file, update, cleanup):
 
 
 @export_cli.command("full")
-@click.option("--print_passwords", "-p", "passwords", is_flag=True,
-              help="Print the passwords used in the resolver configuration. This will overwrite existing passwords on import.")
-@click.option("--archive", "-a",
-              help="Compress the created config-backup as tar.gz archive instead of printing to standard out.")
+@click.option(
+    "--print_passwords",
+    "-p",
+    "passwords",
+    is_flag=True,
+    help="Print the passwords used in the resolver configuration. This will overwrite existing passwords on import.",
+)
+@click.option(
+    "--archive",
+    "-a",
+    help="Compress the created config-backup as tar.gz archive instead of printing to standard out.",
+)
 @click.option("--directory", "-d", help="Directory where the backup will be stored.")
 def export_full_config(passwords, archive, directory):
     click.echo("Exporting eduMFA configuration.", file=sys.stderr)
-    data = {"resolver": get_conf_resolver(print_passwords=passwords), "event": get_conf_event(),
-            "policy": get_conf_policy()}
+    data = {
+        "resolver": get_conf_resolver(print_passwords=passwords),
+        "event": get_conf_event(),
+        "policy": get_conf_policy(),
+    }
     if archive or directory:
         from socket import gethostname
+
         DATE = datetime.now().strftime("%Y%m%d-%H%M")
         BASE_NAME = "edumfa-config-backup"
         HOSTNAME = gethostname()
         if not directory:
-            directory = './'
+            directory = "./"
         else:
             call(["mkdir", "-p", directory])
         config_backup_file_base = f"{directory}/{BASE_NAME}-{HOSTNAME}-{DATE}"

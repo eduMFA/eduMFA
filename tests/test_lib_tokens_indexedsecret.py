@@ -3,9 +3,9 @@ This test file tests the lib.tokens.smstoken
 """
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
-from edumfa.lib.resolver import (save_resolver)
-from edumfa.lib.realm import (set_realm)
-from edumfa.lib.user import (User)
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.realm import set_realm
+from edumfa.lib.user import User
 from edumfa.lib.tokens.indexedsecrettoken import IndexedSecretTokenClass, PIIXACTION
 from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION, PolicyClass
 from edumfa.models import Token
@@ -18,6 +18,7 @@ class IndexedSecretTokenTestCase(MyTestCase):
     """
     Test the IndexedSecret Token
     """
+
     email = "tester@edumfa.io"
     otppin = "topsecret"
     resolvername1 = "resolver1"
@@ -32,19 +33,20 @@ class IndexedSecretTokenTestCase(MyTestCase):
     success_body = "ID 12345"
 
     def test_00_create_user_realm(self):
-        rid = save_resolver({"resolver": self.resolvername1,
-                             "type": "passwdresolver",
-                             "fileName": PWFILE})
+        rid = save_resolver(
+            {
+                "resolver": self.resolvername1,
+                "type": "passwdresolver",
+                "fileName": PWFILE,
+            }
+        )
         self.assertTrue(rid > 0, rid)
 
-        (added, failed) = set_realm(self.realm1,
-                                    [self.resolvername1])
+        (added, failed) = set_realm(self.realm1, [self.resolvername1])
         self.assertTrue(len(failed) == 0)
         self.assertTrue(len(added) == 1)
 
-        user = User(login="root",
-                    realm=self.realm1,
-                    resolver=self.resolvername1)
+        user = User(login="root", realm=self.realm1, resolver=self.resolvername1)
 
         user_str = "{0!s}".format(user)
         self.assertTrue(user_str == "<root.resolver1@realm1>", user_str)
@@ -100,9 +102,7 @@ class IndexedSecretTokenTestCase(MyTestCase):
     def test_02_init_token(self):
         # Create the tokenclass via init_token
         my_secret = "mysimplesecret"
-        t = init_token({"type": "indexedsecret",
-                        "otpkey": my_secret,
-                        "serial": "PIIX1234"})
+        t = init_token({"type": "indexedsecret", "otpkey": my_secret, "serial": "PIIX1234"})
         self.assertEqual(t.token.tokentype, "indexedsecret")
         self.assertEqual(t.token.serial, "PIIX1234")
 
@@ -111,13 +111,18 @@ class IndexedSecretTokenTestCase(MyTestCase):
     def test_03_challenge_text_position_count(self):
         # test challenge text and position count
         my_secret = "mysimplesecret"
-        set_policy("pol1", scope=SCOPE.AUTH, action="indexedsecret_{0!s}=5".format(PIIXACTION.COUNT))
-        set_policy("pol2", scope=SCOPE.AUTH,
-                   action="indexedsecret_challenge_text=Hier sind die Positionen: {0!s}")
+        set_policy(
+            "pol1",
+            scope=SCOPE.AUTH,
+            action="indexedsecret_{0!s}=5".format(PIIXACTION.COUNT),
+        )
+        set_policy(
+            "pol2",
+            scope=SCOPE.AUTH,
+            action="indexedsecret_challenge_text=Hier sind die Positionen: {0!s}",
+        )
 
-        t = init_token({"type": "indexedsecret",
-                        "otpkey": my_secret,
-                        "serial": "PIIX1234"})
+        t = init_token({"type": "indexedsecret", "otpkey": my_secret, "serial": "PIIX1234"})
         g = FakeFlaskG()
         g.audit_object = FakeAudit
         g.policy_object = PolicyClass()

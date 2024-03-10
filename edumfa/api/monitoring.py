@@ -25,13 +25,18 @@ This endpoint is used fetch monitoring/statistics data
 
 The code of this module is tested in tests/test_api_monitoring.py
 """
-from flask import (Blueprint, request)
+
+from flask import Blueprint, request
 from edumfa.api.lib.utils import getParam, send_result
 from edumfa.api.lib.prepolicy import prepolicy, check_base_action
 from edumfa.lib.utils import parse_legacy_time
 from edumfa.lib.log import log_with
-from edumfa.lib.monitoringstats import (get_stats_keys, get_values,
-                                   get_last_value, delete_stats)
+from edumfa.lib.monitoringstats import (
+    get_stats_keys,
+    get_values,
+    get_last_value,
+    delete_stats,
+)
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from flask import g
 import logging
@@ -41,11 +46,11 @@ from edumfa.lib.policy import ACTION
 log = logging.getLogger(__name__)
 
 
-monitoring_blueprint = Blueprint('monitoring_blueprint', __name__)
+monitoring_blueprint = Blueprint("monitoring_blueprint", __name__)
 
 
-@monitoring_blueprint.route('/', methods=['GET'])
-@monitoring_blueprint.route('/<stats_key>', methods=['GET'])
+@monitoring_blueprint.route("/", methods=["GET"])
+@monitoring_blueprint.route("/<stats_key>", methods=["GET"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.STATISTICSREAD)
 def get_statistics(stats_key=None):
@@ -76,7 +81,7 @@ def get_statistics(stats_key=None):
         return send_result(values_w_string)
 
 
-@monitoring_blueprint.route('/<stats_key>', methods=['DELETE'])
+@monitoring_blueprint.route("/<stats_key>", methods=["DELETE"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.STATISTICSDELETE)
 def delete_statistics(stats_key):
@@ -103,7 +108,7 @@ def delete_statistics(stats_key):
     return send_result(r)
 
 
-@monitoring_blueprint.route('/<stats_key>/last', methods=['GET'])
+@monitoring_blueprint.route("/<stats_key>/last", methods=["GET"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.STATISTICSREAD)
 def get_statistics_last(stats_key):
@@ -113,4 +118,3 @@ def get_statistics_last(stats_key):
     last_value = get_last_value(stats_key)
     g.audit_object.log({"success": True})
     return send_result(last_value)
-

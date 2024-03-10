@@ -2,13 +2,16 @@
 """
 This test file tests the lib/passwordreset.py
 """
+
 from .base import MyTestCase, FakeFlaskG
 from edumfa.lib.smtpserver import add_smtpserver
 from . import smtpmock
 from edumfa.lib.error import eduMFAError
-from edumfa.lib.passwordreset import (create_recoverycode,
-                                           check_recoverycode,
-                                           is_password_reset)
+from edumfa.lib.passwordreset import (
+    create_recoverycode,
+    check_recoverycode,
+    is_password_reset,
+)
 from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.user import User
 from edumfa.lib.resolver import save_resolver
@@ -19,20 +22,17 @@ from edumfa.lib.policy import ACTION, SCOPE, set_policy, PolicyClass
 class RecoveryTestCase(MyTestCase):
     serial1 = "ser1"
 
-    parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testuser.sqlite",
-                  'Table': 'users',
-                  'Encoding': 'utf8',
-                  'Editable': True,
-                  'Map': '{ "username": "username", \
-                    "userid" : "id", \
-                    "email" : "email", \
-                    "surname" : "name", \
-                    "givenname" : "givenname", \
-                    "password" : "password", \
-                    "phone": "phone", \
-                    "mobile": "mobile"}'
+    parameters = {
+        "Driver": "sqlite",
+        "Server": "/tests/testdata/",
+        "Database": "testuser.sqlite",
+        "Table": "users",
+        "Encoding": "utf8",
+        "Editable": True,
+        "Map": (
+            '{ "username": "username",                     "userid" : "id",                     "email" : "email",                     "surname" : "name",                    '
+            ' "givenname" : "givenname",                     "password" : "password",                     "phone": "phone",                     "mobile": "mobile"}'
+        ),
     }
 
     # add_user, get_user, reset, set_user_identifiers
@@ -45,8 +45,7 @@ class RecoveryTestCase(MyTestCase):
         smtpmock.setdata(response={"user@localhost.localdomain": (200, "OK")})
 
         # missing configuration
-        self.assertRaises(eduMFAError, create_recoverycode,
-                          user=User("cornelius", self.realm1))
+        self.assertRaises(eduMFAError, create_recoverycode, user=User("cornelius", self.realm1))
 
         # recover password with "recovery.identifier"
         r = add_smtpserver(identifier="myserver", server="1.2.3.4")
@@ -76,10 +75,10 @@ class RecoveryTestCase(MyTestCase):
         param["resolver"] = "register"
         param["type"] = "sqlresolver"
         r = save_resolver(param)
-        self. assertTrue(r > 0)
+        self.assertTrue(r > 0)
 
         added, failed = set_realm("register", resolvers=["register"])
-        self.assertTrue(len(added )> 0)
+        self.assertTrue(len(added) > 0)
         self.assertEqual(len(failed), 0)
 
         g = FakeFlaskG()
@@ -109,7 +108,7 @@ class RecoveryTestCase(MyTestCase):
         param["resolver"] = "register"
         param["type"] = "sqlresolver"
         r = save_resolver(param)
-        self. assertTrue(r > 0)
+        self.assertTrue(r > 0)
         # recover password with "recovery.identifier"
         r = add_smtpserver(identifier="myserver", server="1.2.3.4")
         self.assertTrue(r > 0)

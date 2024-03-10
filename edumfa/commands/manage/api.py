@@ -32,13 +32,21 @@ api_cli = AppGroup("api", help="Manage API Keys")
 
 
 @api_cli.command("createtoken")
-@click.option('-r', '--role',
-              help="The role of the API key can either be 'admin' or 'validate' to access the admin API or the validate API.",
-              default=ROLE.ADMIN)
-@click.option('-d', '--days', type=int, help='The number of days the access token should be valid. Defaults to 365.',
-              default=365)
-@click.option('-R', '--realm', help='The realm of the admin. Defaults to "API"', default="API")
-@click.option('-u', '--username', help='The username of the admin.')
+@click.option(
+    "-r",
+    "--role",
+    help="The role of the API key can either be 'admin' or 'validate' to access the admin API or the validate API.",
+    default=ROLE.ADMIN,
+)
+@click.option(
+    "-d",
+    "--days",
+    type=int,
+    help="The number of days the access token should be valid. Defaults to 365.",
+    default=365,
+)
+@click.option("-R", "--realm", help='The realm of the admin. Defaults to "API"', default="API")
+@click.option("-u", "--username", help="The username of the admin.")
 def createtoken(role, days, realm, username):
     """
     Create an API authentication token
@@ -53,10 +61,19 @@ def createtoken(role, days, realm, username):
     authtype = "API"
     validity = timedelta(days=int(days))
     token = jwt.encode(
-        {"username": username, "realm": realm, "nonce": geturandom(hex=True), "role": role, "authtype": authtype,
-            "exp": datetime.utcnow() + validity, "rights": "TODO"}, secret)
-    click.echo("Username:   {0!s}".format(username))
-    click.echo("Realm:      {0!s}".format(realm))
-    click.echo("Role:       {0!s}".format(role))
-    click.echo("Validity:   {0!s} days".format(days))
-    click.echo("Auth-Token: {0!s}".format(token))
+        {
+            "username": username,
+            "realm": realm,
+            "nonce": geturandom(hex=True),
+            "role": role,
+            "authtype": authtype,
+            "exp": datetime.utcnow() + validity,
+            "rights": "TODO",
+        },
+        secret,
+    )
+    click.echo(f"Username:   {username!s}")
+    click.echo(f"Realm:      {realm!s}")
+    click.echo(f"Role:       {role!s}")
+    click.echo(f"Validity:   {days!s} days")
+    click.echo(f"Auth-Token: {token!s}")

@@ -29,7 +29,7 @@ from functools import update_wrapper
 from smtplib import SMTPException
 
 
-Call = namedtuple('Call', ['request', 'response'])
+Call = namedtuple("Call", ["request", "response"])
 
 _wrapper_template = """\
 def wrapper%(signature)s:
@@ -42,22 +42,20 @@ def get_wrapped(func, wrapper_template, evaldict):
     # Preserve the argspec for the wrapped function so that testing
     # tools such as pytest can continue to use their fixture injection.
     args = getargspec(func)
-    values = args.args[-len(args.defaults):] if args.defaults else None
+    values = args.args[-len(args.defaults) :] if args.defaults else None
 
-    is_bound_method = hasattr(func, '__self__')
+    is_bound_method = hasattr(func, "__self__")
     if is_bound_method:
-        args.args = args.args[1:]     # Omit 'self'
-
+        args.args = args.args[1:]  # Omit 'self'
     s = args.args
     if args.varargs:
         s.append(f"*{args.varargs}")
     if args.varkw:
         s.append(f"**{args.varkw}")
-    ctx = {'signature': f'({",".join(s)})', 'funcargs': f'({",".join(s)})'}
-    exec (wrapper_template % ctx, evaldict, evaldict)
+    ctx = {"signature": f'({",".join(s)})', "funcargs": f'({",".join(s)})'}
+    exec(wrapper_template % ctx, evaldict, evaldict)
 
-
-    wrapper = evaldict['wrapper']
+    wrapper = evaldict["wrapper"]
 
     update_wrapper(wrapper, func)
     if is_bound_method:
@@ -84,8 +82,8 @@ class CallList(Sequence, Sized):
     def reset(self):
         self._calls = []
 
-class SmtpMock(object):
 
+class SmtpMock(object):
     def __init__(self):
         self._calls = CallList()
         self.sent_message = None
@@ -99,18 +97,24 @@ class SmtpMock(object):
     def get_smtp_ssl(self):
         return self.smtp_ssl
 
-    def setdata(self, response=None, authenticated=True,
-                config=None, exception=False, support_tls=True):
+    def setdata(
+        self,
+        response=None,
+        authenticated=True,
+        config=None,
+        exception=False,
+        support_tls=True,
+    ):
         if response is None:
-                response = {}
+            response = {}
         config = config or {}
         self.support_tls = support_tls
         self.exception = exception
         self._request_data = {
-            'response': response,
-            'authenticated': authenticated,
-            'config': config,
-            'recipient': config.get("MAILTO")
+            "response": response,
+            "authenticated": authenticated,
+            "config": config,
+            "recipient": config.get("MAILTO"),
         }
 
     def get_sent_message(self):
@@ -128,15 +132,19 @@ class SmtpMock(object):
         self.reset()
 
     def activate(self, func):
-        evaldict = {'smtpmock': self, 'func': func}
+        evaldict = {"smtpmock": self, "func": func}
         return get_wrapped(func, _wrapper_template, evaldict)
 
     def _on_request(self, SMTP_instance, sender, recipient, msg):
         # mangle request packet
         response = self._request_data.get("response")
         if not self._request_data.get("authenticated"):
-            response = {self._request_data.get("recipient"):
-                            (530, "Authorization required (#5.7.1)")}
+            response = {
+                self._request_data.get("recipient"): (
+                    530,
+                    "Authorization required (#5.7.1)",
+                )
+            }
         return response
 
     def _on_login(self, SMTP_instance, username, password):
@@ -147,7 +155,7 @@ class SmtpMock(object):
             response = (535, "authentication failed (#5.7.1)")
         return {self._request_data.get("recipient"): response}
 
-#    def _on_init(self, SMTP_instance, host, port=25, timeout=3):
+    #    def _on_init(self, SMTP_instance, host, port=25, timeout=3):
     def _on_init(self, *args, **kwargs):
         SMTP_instance = args[0]
         host = args[1]
@@ -181,29 +189,26 @@ class SmtpMock(object):
         def unbound_on_send(SMTP, sender, recipient, msg, *a, **kwargs):
             self.sent_message = msg
             return self._on_request(SMTP, sender, recipient, msg, *a, **kwargs)
-        self._patcher = mock.patch('smtplib.SMTP.sendmail',
-                                   unbound_on_send)
+
+        self._patcher = mock.patch("smtplib.SMTP.sendmail", unbound_on_send)
         self._patcher.start()
 
         def unbound_on_login(SMTP, username, password, *a, **kwargs):
             return self._on_login(SMTP, username, password, *a, **kwargs)
 
-        self._patcher2 = mock.patch('smtplib.SMTP.login',
-                                    unbound_on_login)
+        self._patcher2 = mock.patch("smtplib.SMTP.login", unbound_on_login)
         self._patcher2.start()
 
         def unbound_on_init(SMTP, server, *a, **kwargs):
             return self._on_init(SMTP, server, *a, **kwargs)
 
-        self._patcher3 = mock.patch('smtplib.SMTP.__init__',
-                                    unbound_on_init)
+        self._patcher3 = mock.patch("smtplib.SMTP.__init__", unbound_on_init)
         self._patcher3.start()
 
         def unbound_on_debuglevel(SMTP, level, *a, **kwargs):
             return self._on_debuglevel(SMTP, level, *a, **kwargs)
 
-        self._patcher4 = mock.patch('smtplib.SMTP.debuglevel',
-                                    unbound_on_debuglevel)
+        self._patcher4 = mock.patch("smtplib.SMTP.debuglevel", unbound_on_debuglevel)
         self._patcher4.start()
 
         def unbound_on_quit(SMTP, *a, **kwargs):
@@ -212,21 +217,17 @@ class SmtpMock(object):
         def unbound_on_starttls(SMTP, *a, **kwargs):
             return self._on_starttls(SMTP, *a, **kwargs)
 
-        self._patcher5 = mock.patch('smtplib.SMTP.quit',
-                                    unbound_on_quit)
+        self._patcher5 = mock.patch("smtplib.SMTP.quit", unbound_on_quit)
         self._patcher5.start()
 
         def unbound_on_empty(SMTP, *a, **kwargs):
             return None
 
-        self._patcher6 = mock.patch('smtplib.SMTP.ehlo',
-                                    unbound_on_empty)
+        self._patcher6 = mock.patch("smtplib.SMTP.ehlo", unbound_on_empty)
         self._patcher6.start()
-        self._patcher7 = mock.patch('smtplib.SMTP.close',
-                                    unbound_on_empty)
+        self._patcher7 = mock.patch("smtplib.SMTP.close", unbound_on_empty)
         self._patcher7.start()
-        self._patcher8 = mock.patch('smtplib.SMTP.starttls',
-                                    unbound_on_starttls)
+        self._patcher8 = mock.patch("smtplib.SMTP.starttls", unbound_on_starttls)
         self._patcher8.start()
 
     def stop(self):
@@ -243,6 +244,6 @@ class SmtpMock(object):
 # expose default mock namespace
 mock = _default_mock = SmtpMock()
 __all__ = []
-for __attr in (a for a in dir(_default_mock) if not a.startswith('_')):
+for __attr in (a for a in dir(_default_mock) if not a.startswith("_")):
     __all__.append(__attr)
     globals()[__attr] = getattr(_default_mock, __attr)

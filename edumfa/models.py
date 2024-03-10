@@ -32,20 +32,21 @@ from datetime import datetime, timedelta
 from dateutil.tz import tzutc
 from json import loads, dumps
 from flask_sqlalchemy import SQLAlchemy
-from edumfa.lib.crypto import (encrypt,
-                                    encryptPin,
-                                    decryptPin,
-                                    geturandom,
-                                    hash,
-                                    SecretObj,
-                                    get_rand_digit_str)
+from edumfa.lib.crypto import (
+    encrypt,
+    encryptPin,
+    decryptPin,
+    geturandom,
+    hash,
+    SecretObj,
+    get_rand_digit_str,
+)
 from sqlalchemy import and_
 from sqlalchemy.schema import Sequence
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.exc import IntegrityError
 from .lib.log import log_with
-from edumfa.lib.utils import (is_true, convert_column_to_unicode,
-                                   hexlify_and_unicode)
+from edumfa.lib.utils import is_true, convert_column_to_unicode, hexlify_and_unicode
 from edumfa.lib.crypto import pass_hash, verify_pass_hash
 from edumfa.lib.framework import get_app_config_value
 
@@ -98,9 +99,11 @@ def save_config_timestamp(invalidate_config=True):
     if c1:
         c1.Value = datetime.now().strftime("%s")
     else:
-        new_timestamp = Config(EDUMFA_TIMESTAMP,
-                               datetime.now().strftime("%s"),
-                               Description="config timestamp. last changed.")
+        new_timestamp = Config(
+            EDUMFA_TIMESTAMP,
+            datetime.now().strftime("%s"),
+            Description="config timestamp. last changed.",
+        )
         db.session.add(new_timestamp)
     if invalidate_config:
         # We have just modified the config. From now on, the request handling
@@ -109,6 +112,7 @@ def save_config_timestamp(invalidate_config=True):
         # during this request will reload the config from the database and create
         # a new request-local config object, which holds the *new* config.
         from edumfa.lib.config import invalidate_config_object
+
         invalidate_config_object()
 
 
@@ -146,67 +150,49 @@ class Token(MethodsMixin, db.Model):
     The table :py:class:`edumfa.models.TokenInfo` contains additional information
     that is specific to the tokentype.
     """
-    __tablename__ = 'token'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("token_seq"),
-                   primary_key=True,
-                   nullable=False)
-    description = db.Column(db.Unicode(80), default='')
-    serial = db.Column(db.Unicode(40), default='',
-                       unique=True,
-                       nullable=False,
-                       index=True)
-    tokentype = db.Column(db.Unicode(30),
-                          default='HOTP',
-                          index=True)
-    user_pin = db.Column(db.Unicode(512),
-                         default='')  # encrypt
-    user_pin_iv = db.Column(db.Unicode(32),
-                            default='')  # encrypt
-    so_pin = db.Column(db.Unicode(512),
-                       default='')  # encrypt
-    so_pin_iv = db.Column(db.Unicode(32),
-                          default='')  # encrypt
-    pin_seed = db.Column(db.Unicode(32),
-                         default='')
-    otplen = db.Column(db.Integer(),
-                       default=6)
-    pin_hash = db.Column(db.Unicode(512),
-                         default='')  # hashed
-    key_enc = db.Column(db.Unicode(2800),
-                        default='')  # encrypt
-    key_iv = db.Column(db.Unicode(32),
-                       default='')
-    maxfail = db.Column(db.Integer(),
-                        default=10)
-    active = db.Column(db.Boolean(),
-                       nullable=False,
-                       default=True)
-    revoked = db.Column(db.Boolean(),
-                        default=False)
-    locked = db.Column(db.Boolean(),
-                       default=False)
-    failcount = db.Column(db.Integer(),
-                          default=0)
-    count = db.Column(db.Integer(),
-                      default=0)
-    count_window = db.Column(db.Integer(),
-                             default=10)
-    sync_window = db.Column(db.Integer(),
-                            default=1000)
-    rollout_state = db.Column(db.Unicode(10),
-                              default='')
-    info_list = db.relationship('TokenInfo', lazy='select', backref='token')
-    # This creates an attribute "token" in the TokenOwner object
-    owners = db.relationship('TokenOwner', lazy='dynamic', backref='token')
 
-    def __init__(self, serial, tokentype="",
-                 isactive=True, otplen=6,
-                 otpkey="",
-                 userid=None, resolver=None, realm=None,
-                 **kwargs):
+    __tablename__ = "token"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("token_seq"), primary_key=True, nullable=False)
+    description = db.Column(db.Unicode(80), default="")
+    serial = db.Column(db.Unicode(40), default="", unique=True, nullable=False, index=True)
+    tokentype = db.Column(db.Unicode(30), default="HOTP", index=True)
+    user_pin = db.Column(db.Unicode(512), default="")  # encrypt
+    user_pin_iv = db.Column(db.Unicode(32), default="")  # encrypt
+    so_pin = db.Column(db.Unicode(512), default="")  # encrypt
+    so_pin_iv = db.Column(db.Unicode(32), default="")  # encrypt
+    pin_seed = db.Column(db.Unicode(32), default="")
+    otplen = db.Column(db.Integer(), default=6)
+    pin_hash = db.Column(db.Unicode(512), default="")  # hashed
+    key_enc = db.Column(db.Unicode(2800), default="")  # encrypt
+    key_iv = db.Column(db.Unicode(32), default="")
+    maxfail = db.Column(db.Integer(), default=10)
+    active = db.Column(db.Boolean(), nullable=False, default=True)
+    revoked = db.Column(db.Boolean(), default=False)
+    locked = db.Column(db.Boolean(), default=False)
+    failcount = db.Column(db.Integer(), default=0)
+    count = db.Column(db.Integer(), default=0)
+    count_window = db.Column(db.Integer(), default=10)
+    sync_window = db.Column(db.Integer(), default=1000)
+    rollout_state = db.Column(db.Unicode(10), default="")
+    info_list = db.relationship("TokenInfo", lazy="select", backref="token")
+    # This creates an attribute "token" in the TokenOwner object
+    owners = db.relationship("TokenOwner", lazy="dynamic", backref="token")
+
+    def __init__(
+        self,
+        serial,
+        tokentype="",
+        isactive=True,
+        otplen=6,
+        otpkey="",
+        userid=None,
+        resolver=None,
+        realm=None,
+        **kwargs,
+    ):
         super(Token, self).__init__(**kwargs)
-        self.serial = '' + serial
+        self.serial = f"{serial}"
         self.tokentype = tokentype
         self.count = 0
         self.failcount = 0
@@ -239,30 +225,18 @@ class Token(MethodsMixin, db.Model):
     @property
     def first_owner(self):
         return self.owners.first()
-            
+
     @log_with(log)
     def delete(self):
         # some DBs (e.g. DB2) run in deadlock, if the TokenRealm entry
         # is deleted via  key relation, so we delete it explicit
         ret = self.id
-        db.session.query(TokenRealm)\
-                  .filter(TokenRealm.token_id == self.id)\
-                  .delete()
-        db.session.query(TokenOwner)\
-                  .filter(TokenOwner.token_id == self.id)\
-                  .delete()
-        db.session.query(MachineToken)\
-                  .filter(MachineToken.token_id == self.id)\
-                  .delete()
-        db.session.query(Challenge)\
-                  .filter(Challenge.serial == self.serial)\
-                  .delete()
-        db.session.query(TokenInfo)\
-                  .filter(TokenInfo.token_id == self.id)\
-                  .delete()
-        db.session.query(TokenTokengroup)\
-            .filter(TokenTokengroup.token_id == self.id)\
-            .delete()
+        db.session.query(TokenRealm).filter(TokenRealm.token_id == self.id).delete()
+        db.session.query(TokenOwner).filter(TokenOwner.token_id == self.id).delete()
+        db.session.query(MachineToken).filter(MachineToken.token_id == self.id).delete()
+        db.session.query(Challenge).filter(Challenge.serial == self.serial).delete()
+        db.session.query(TokenInfo).filter(TokenInfo.token_id == self.id).delete()
+        db.session.query(TokenTokengroup).filter(TokenTokengroup.token_id == self.id).delete()
         db.session.delete(self)
         db.session.commit()
         return ret
@@ -291,8 +265,7 @@ class Token(MethodsMixin, db.Model):
         self.key_enc = encrypt(otpkey, iv)
         length = len(self.key_enc)
         if length > Token.key_enc.property.columns[0].type.length:
-            log.error("Key {0!s} exceeds database field {1:d}!".format(self.serial,
-                                                                       length))
+            log.error(f"Key {self.serial!s} exceeds database field {length:d}!")
         self.key_iv = hexlify_and_unicode(iv)
         self.count = 0
         if reset_failcount is True:
@@ -311,9 +284,7 @@ class Token(MethodsMixin, db.Model):
         """
         # delete old Tokengroups
         if not add:
-            db.session.query(TokenTokengroup)\
-                      .filter(TokenTokengroup.token_id == self.id)\
-                      .delete()
+            db.session.query(TokenTokengroup).filter(TokenTokengroup.token_id == self.id).delete()
         # add new Tokengroups
         # We must not set the same tokengroup more than once...
         # uniquify: tokengroups -> set(tokengroups)
@@ -322,8 +293,7 @@ class Token(MethodsMixin, db.Model):
             g = Tokengroup.query.filter_by(name=tokengroup).first()
             if g:
                 # Check if TokenTokengroup already exists
-                tg = TokenTokengroup.query.filter_by(token_id=self.id,
-                                                     tokengroup_id=g.id).first()
+                tg = TokenTokengroup.query.filter_by(token_id=self.id, tokengroup_id=g.id).first()
                 if not tg:
                     # If the Tokengroup is not yet attached to the token
                     Tg = TokenTokengroup(token_id=self.id, tokengroup_id=g.id)
@@ -343,9 +313,7 @@ class Token(MethodsMixin, db.Model):
         """
         # delete old TokenRealms
         if not add:
-            db.session.query(TokenRealm)\
-                      .filter(TokenRealm.token_id == self.id)\
-                      .delete()
+            db.session.query(TokenRealm).filter(TokenRealm.token_id == self.id).delete()
         # add new TokenRealms
         # We must not set the same realm more than once...
         # uniquify: realms -> set(realms)
@@ -354,8 +322,7 @@ class Token(MethodsMixin, db.Model):
             r = Realm.query.filter_by(name=realm).first()
             if r:
                 # Check if tokenrealm already exists
-                tr = TokenRealm.query.filter_by(token_id=self.id,
-                                                realm_id=r.id).first()
+                tr = TokenRealm.query.filter_by(token_id=self.id, realm_id=r.id).first()
                 if not tr:
                     # If the realm is not yet attached to the token
                     Tr = TokenRealm(token_id=self.id, realm_id=r.id)
@@ -393,8 +360,8 @@ class Token(MethodsMixin, db.Model):
         return the userPin
         :rtype : the PIN as a secretObject
         """
-        pu = self.user_pin or ''
-        puiv = self.user_pin_iv or ''
+        pu = self.user_pin or ""
+        puiv = self.user_pin_iv or ""
         key = binascii.unhexlify(pu)
         iv = binascii.unhexlify(puiv)
         secret = SecretObj(key, iv)
@@ -427,8 +394,7 @@ class Token(MethodsMixin, db.Model):
         seed_str = self._fix_spaces(self.pin_seed)
         seed = binascii.unhexlify(seed_str)
         hPin = hash(pin, seed)
-        log.debug("hPin: {0!s}, pin: {1!r}, seed: {2!s}".format(hPin, pin,
-                                                                self.pin_seed))
+        log.debug(f"hPin: {hPin!s}, pin: {pin!r}, seed: {self.pin_seed!s}")
         return hPin
 
     @log_with(log)
@@ -447,10 +413,10 @@ class Token(MethodsMixin, db.Model):
             upin = pin
         if hashed is True:
             self.set_hashed_pin(upin)
-            log.debug("setPin(HASH:{0!r})".format(self.pin_hash))
+            log.debug(f"setPin(HASH:{self.pin_hash!r})")
         else:
-            self.pin_hash = "@@" + encryptPin(upin)
-            log.debug("setPin(ENCR:{0!r})".format(self.pin_hash))
+            self.pin_hash = f"@@{encryptPin(upin)}"
+            log.debug(f"setPin(ENCR:{self.pin_hash!r})")
         return self.pin_hash
 
     def check_pin(self, pin):
@@ -461,7 +427,7 @@ class Token(MethodsMixin, db.Model):
                 log.debug("we got an encrypted PIN!")
                 tokenPin = self.pin_hash[2:]
                 decryptTokenPin = decryptPin(tokenPin)
-                if (decryptTokenPin == pin):
+                if decryptTokenPin == pin:
                     res = True
             else:
                 log.debug("we got a hashed PIN!")
@@ -526,39 +492,39 @@ class Token(MethodsMixin, db.Model):
 
     @log_with(log)
     def get_vars(self, save=False):
-        log.debug('get_vars()')
+        log.debug("get_vars()")
         tokenowner = self.first_owner
 
         ret = {}
-        ret['id'] = self.id
-        ret['description'] = self.description
-        ret['serial'] = self.serial
-        ret['tokentype'] = self.tokentype
-        ret['info'] = self.get_info()
+        ret["id"] = self.id
+        ret["description"] = self.description
+        ret["serial"] = self.serial
+        ret["tokentype"] = self.tokentype
+        ret["info"] = self.get_info()
 
-        ret['resolver'] = "" if not tokenowner else tokenowner.resolver
-        ret['user_id'] = "" if not tokenowner else tokenowner.user_id
-        ret['otplen'] = self.otplen
+        ret["resolver"] = "" if not tokenowner else tokenowner.resolver
+        ret["user_id"] = "" if not tokenowner else tokenowner.user_id
+        ret["otplen"] = self.otplen
 
-        ret['maxfail'] = self.maxfail
-        ret['active'] = self.active
-        ret['revoked'] = self.revoked
-        ret['locked'] = self.locked
-        ret['failcount'] = self.failcount
-        ret['count'] = self.count
-        ret['count_window'] = self.count_window
-        ret['sync_window'] = self.sync_window
-        ret['rollout_state'] = self.rollout_state
+        ret["maxfail"] = self.maxfail
+        ret["active"] = self.active
+        ret["revoked"] = self.revoked
+        ret["locked"] = self.locked
+        ret["failcount"] = self.failcount
+        ret["count"] = self.count
+        ret["count_window"] = self.count_window
+        ret["sync_window"] = self.sync_window
+        ret["rollout_state"] = self.rollout_state
         # list of Realm names
         realm_list = []
         for realm_entry in self.realm_list:
             realm_list.append(realm_entry.realm.name)
-        ret['realms'] = realm_list
+        ret["realms"] = realm_list
         # list of tokengroups
         tokengroup_list = []
         for tg_entry in self.tokengroup_list:
             tokengroup_list.append(tg_entry.tokengroup.name)
-        ret['tokengroup'] = tokengroup_list
+        ret["tokengroup"] = tokengroup_list
         return ret
 
     def __str__(self):
@@ -573,10 +539,10 @@ class Token(MethodsMixin, db.Model):
         """
         ldict = {}
         for attr in self.__dict__:
-            key = "{0!r}".format(attr)
-            val = "{0!r}".format(getattr(self, attr))
+            key = f"{attr!r}"
+            val = f"{getattr(self, attr)!r}"
             ldict[key] = val
-        res = "<{0!r} {1!r}>".format(self.__class__, ldict)
+        res = f"<{self.__class__!r} {ldict!r}>"
         return res
 
     def set_info(self, info):
@@ -600,8 +566,7 @@ class Token(MethodsMixin, db.Model):
                 types[".".join(k.split(".")[:-1])] = v
         for k, v in info.items():
             if not k.endswith(".type"):
-                TokenInfo(self.id, k, v,
-                          Type=types.get(k)).save(persistent=False)
+                TokenInfo(self.id, k, v, Type=types.get(k)).save(persistent=False)
         db.session.commit()
 
     def del_info(self, key=None):
@@ -651,7 +616,7 @@ class Token(MethodsMixin, db.Model):
         ret = {}
         for ti in self.info_list:
             if ti.Type:
-                ret[ti.Key + ".type"] = ti.Type
+                ret[f"{ti.Key}.type"] = ti.Type
             ret[ti.Key] = ti.Value
         return ret
 
@@ -675,7 +640,7 @@ class Token(MethodsMixin, db.Model):
         if otpkey is not None:
             secretObj = self.get_otpkey()
             if secretObj.compare(otpkey) is False:
-                log.debug('update token OtpKey - counter reset')
+                log.debug("update token OtpKey - counter reset")
                 self.set_otpkey(otpkey)
 
     def update_token(self, description=None, otpkey=None, pin=None):
@@ -697,23 +662,20 @@ class TokenInfo(MethodsMixin, db.Model):
 
     The tokeninfo is reference by the foreign key to the "token" table.
     """
-    __tablename__ = 'tokeninfo'
-    id = db.Column(db.Integer, Sequence("tokeninfo_seq"), primary_key=True)
-    Key = db.Column(db.Unicode(255),
-                    nullable=False)
-    Value = db.Column(db.UnicodeText(), default='')
-    Type = db.Column(db.Unicode(100), default='')
-    Description = db.Column(db.Unicode(2000), default='')
-    token_id = db.Column(db.Integer(),
-                         db.ForeignKey('token.id'), index=True)
-    __table_args__ = (db.UniqueConstraint('token_id',
-                                          'Key',
-                                          name='tiix_2'),
-                      {'mysql_row_format': 'DYNAMIC'})
 
-    def __init__(self, token_id, Key, Value,
-                 Type= None,
-                 Description=None):
+    __tablename__ = "tokeninfo"
+    id = db.Column(db.Integer, Sequence("tokeninfo_seq"), primary_key=True)
+    Key = db.Column(db.Unicode(255), nullable=False)
+    Value = db.Column(db.UnicodeText(), default="")
+    Type = db.Column(db.Unicode(100), default="")
+    Description = db.Column(db.Unicode(2000), default="")
+    token_id = db.Column(db.Integer(), db.ForeignKey("token.id"), index=True)
+    __table_args__ = (
+        db.UniqueConstraint("token_id", "Key", name="tiix_2"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
+
+    def __init__(self, token_id, Key, Value, Type=None, Description=None):
         """
         Create a new tokeninfo for a given token_id
         """
@@ -724,8 +686,7 @@ class TokenInfo(MethodsMixin, db.Model):
         self.Description = Description
 
     def save(self, persistent=True):
-        ti_func = TokenInfo.query.filter_by(token_id=self.token_id,
-                                            Key=self.Key).first
+        ti_func = TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).first
         ti = ti_func()
         if ti is None:
             # create a new one
@@ -738,10 +699,13 @@ class TokenInfo(MethodsMixin, db.Model):
                 ret = self.id
         else:
             # update
-            TokenInfo.query.filter_by(token_id=self.token_id,
-                                      Key=self.Key).update({'Value': self.Value,
-                                                            'Description': self.Description,
-                                                            'Type': self.Type})
+            TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).update(
+                {
+                    "Value": self.Value,
+                    "Description": self.Description,
+                    "Type": self.Type,
+                }
+            )
             ret = ti.id
         if persistent:
             db.session.commit()
@@ -764,14 +728,15 @@ class CustomUserAttribute(MethodsMixin, db.Model):
           without eduMFA realizing that, this table could pile up
           with remnants of attributes.
     """
-    __tablename__ = 'customuserattribute'
+
+    __tablename__ = "customuserattribute"
     id = db.Column(db.Integer(), Sequence("customuserattribute_seq"), primary_key=True)
-    user_id = db.Column(db.Unicode(320), default='', index=True)
-    resolver = db.Column(db.Unicode(120), default='', index=True)
-    realm_id = db.Column(db.Integer(), db.ForeignKey('realm.id'))
+    user_id = db.Column(db.Unicode(320), default="", index=True)
+    resolver = db.Column(db.Unicode(120), default="", index=True)
+    realm_id = db.Column(db.Integer(), db.ForeignKey("realm.id"))
     Key = db.Column(db.Unicode(255), nullable=False)
-    Value = db.Column(db.UnicodeText(), default='')
-    Type = db.Column(db.Unicode(100), default='')
+    Value = db.Column(db.UnicodeText(), default="")
+    Type = db.Column(db.Unicode(100), default="")
 
     def __init__(self, user_id, resolver, realm_id, Key, Value, Type=None):
         """
@@ -785,10 +750,12 @@ class CustomUserAttribute(MethodsMixin, db.Model):
         self.Type = Type
 
     def save(self, persistent=True):
-        ua = CustomUserAttribute.query.filter_by(user_id=self.user_id,
-                                                 resolver=self.resolver,
-                                                 realm_id=self.realm_id,
-                                                 Key=self.Key).first()
+        ua = CustomUserAttribute.query.filter_by(
+            user_id=self.user_id,
+            resolver=self.resolver,
+            realm_id=self.realm_id,
+            Key=self.Key,
+        ).first()
         if ua is None:
             # create a new one
             db.session.add(self)
@@ -796,11 +763,12 @@ class CustomUserAttribute(MethodsMixin, db.Model):
             ret = self.id
         else:
             # update
-            CustomUserAttribute.query.filter_by(user_id=self.user_id,
-                                                resolver=self.resolver,
-                                                realm_id=self.realm_id,
-                                                Key=self.Key
-                                                ).update({'Value': self.Value, 'Type': self.Type})
+            CustomUserAttribute.query.filter_by(
+                user_id=self.user_id,
+                resolver=self.resolver,
+                realm_id=self.realm_id,
+                Key=self.Key,
+            ).update({"Value": self.Value, "Type": self.Type})
             ret = ua.id
         if persistent:
             db.session.commit()
@@ -822,11 +790,10 @@ class Admin(db.Model):
     :param email: The email address of the admin (not used at the moment)
     :type email: basestring
     """
+
     __tablename__ = "admin"
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    username = db.Column(db.Unicode(120),
-                         primary_key=True,
-                         nullable=False)
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    username = db.Column(db.Unicode(120), primary_key=True, nullable=False)
     password = db.Column(db.Unicode(255))
     email = db.Column(db.Unicode(255))
 
@@ -844,8 +811,7 @@ class Admin(db.Model):
                 update_dict["email"] = self.email
             if self.password:
                 update_dict["password"] = self.password
-            Admin.query.filter_by(username=self.username)\
-                .update(update_dict)
+            Admin.query.filter_by(username=self.username).update(update_dict)
             ret = c.username
         db.session.commit()
         return ret
@@ -862,24 +828,23 @@ class Config(TimestampMethodsMixin, db.Model):
     Additional configuration for realms, resolvers and machine resolvers is
     stored in specific tables.
     """
+
     __tablename__ = "config"
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    Key = db.Column(db.Unicode(255),
-                    primary_key=True,
-                    nullable=False)
-    Value = db.Column(db.Unicode(2000), default='')
-    Type = db.Column(db.Unicode(2000), default='')
-    Description = db.Column(db.Unicode(2000), default='')
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    Key = db.Column(db.Unicode(255), primary_key=True, nullable=False)
+    Value = db.Column(db.Unicode(2000), default="")
+    Type = db.Column(db.Unicode(2000), default="")
+    Description = db.Column(db.Unicode(2000), default="")
 
     @log_with(log)
-    def __init__(self, Key, Value, Type='', Description=''):
+    def __init__(self, Key, Value, Type="", Description=""):
         self.Key = convert_column_to_unicode(Key)
         self.Value = convert_column_to_unicode(Value)
         self.Type = convert_column_to_unicode(Type)
         self.Description = convert_column_to_unicode(Description)
 
     def __str__(self):
-        return "<{0!s} ({1!s})>".format(self.Key, self.Type)
+        return f"<{self.Key!s} ({self.Type!s})>"
 
     def save(self):
         db.session.add(self)
@@ -901,32 +866,25 @@ class Realm(TimestampMethodsMixin, db.Model):
     grouped to realms. This very table contains just contains the names of
     the realms. The linking to resolvers is stored in the table "resolverrealm".
     """
-    __tablename__ = 'realm'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("realm_seq"), primary_key=True,
-                   nullable=False)
-    name = db.Column(db.Unicode(255), default='',
-                     unique=True, nullable=False)
+
+    __tablename__ = "realm"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("realm_seq"), primary_key=True, nullable=False)
+    name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
     default = db.Column(db.Boolean(), default=False)
-    option = db.Column(db.Unicode(40), default='')
-    resolver_list = db.relationship('ResolverRealm',
-                                    lazy='select',
-                                    back_populates='realm')
+    option = db.Column(db.Unicode(40), default="")
+    resolver_list = db.relationship("ResolverRealm", lazy="select", back_populates="realm")
 
     @log_with(log)
     def __init__(self, realm):
         self.name = realm
-        
+
     def delete(self):
         ret = self.id
         # delete all TokenRealm
-        db.session.query(TokenRealm)\
-                  .filter(TokenRealm.realm_id == ret)\
-                  .delete()
+        db.session.query(TokenRealm).filter(TokenRealm.realm_id == ret).delete()
         # delete all ResolverRealms
-        db.session.query(ResolverRealm)\
-                  .filter(ResolverRealm.realm_id == ret)\
-                  .delete()
+        db.session.query(ResolverRealm).filter(ResolverRealm.realm_id == ret).delete()
         # delete the realm
         db.session.delete(self)
         save_config_timestamp()
@@ -940,17 +898,13 @@ class CAConnector(TimestampMethodsMixin, db.Model):
     CA connectors. Each connector has a different configuration, that is
     stored in the table "caconnectorconfig".
     """
-    __tablename__ = 'caconnector'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("caconnector_seq"), primary_key=True,
-                   nullable=False)
-    name = db.Column(db.Unicode(255), default="",
-                     unique=True, nullable=False)
-    catype = db.Column(db.Unicode(255), default="",
-                      nullable=False)
-    caconfig = db.relationship('CAConnectorConfig',
-                               lazy='dynamic',
-                               backref='caconnector')
+
+    __tablename__ = "caconnector"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("caconnector_seq"), primary_key=True, nullable=False)
+    name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
+    catype = db.Column(db.Unicode(255), default="", nullable=False)
+    caconfig = db.relationship("CAConnectorConfig", lazy="dynamic", backref="caconnector")
 
     def __init__(self, name, catype):
         self.name = name
@@ -959,9 +913,7 @@ class CAConnector(TimestampMethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all CAConnectorConfig
-        db.session.query(CAConnectorConfig)\
-                  .filter(CAConnectorConfig.caconnector_id == ret)\
-                  .delete()
+        db.session.query(CAConnectorConfig).filter(CAConnectorConfig.caconnector_id == ret).delete()
         # Delete the CA itself
         db.session.delete(self)
         save_config_timestamp()
@@ -979,38 +931,39 @@ class CAConnectorConfig(db.Model):
 
     The config entries are referenced by the id of the resolver.
     """
-    __tablename__ = 'caconnectorconfig'
-    id = db.Column(db.Integer, Sequence("caconfig_seq"), primary_key=True)
-    caconnector_id = db.Column(db.Integer,
-                            db.ForeignKey('caconnector.id'))
-    Key = db.Column(db.Unicode(255), nullable=False)
-    Value = db.Column(db.Unicode(2000), default='')
-    Type = db.Column(db.Unicode(2000), default='')
-    Description = db.Column(db.Unicode(2000), default='')
-    __table_args__ = (db.UniqueConstraint('caconnector_id',
-                                          'Key',
-                                          name='ccix_2'),
-                      {'mysql_row_format': 'DYNAMIC'})
 
-    def __init__(self, caconnector_id=None,
-                 Key=None, Value=None,
-                 caconnector=None,
-                 Type="", Description=""):
+    __tablename__ = "caconnectorconfig"
+    id = db.Column(db.Integer, Sequence("caconfig_seq"), primary_key=True)
+    caconnector_id = db.Column(db.Integer, db.ForeignKey("caconnector.id"))
+    Key = db.Column(db.Unicode(255), nullable=False)
+    Value = db.Column(db.Unicode(2000), default="")
+    Type = db.Column(db.Unicode(2000), default="")
+    Description = db.Column(db.Unicode(2000), default="")
+    __table_args__ = (
+        db.UniqueConstraint("caconnector_id", "Key", name="ccix_2"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
+
+    def __init__(
+        self,
+        caconnector_id=None,
+        Key=None,
+        Value=None,
+        caconnector=None,
+        Type="",
+        Description="",
+    ):
         if caconnector_id:
             self.caconnector_id = caconnector_id
         elif caconnector:
-            self.caconnector_id = CAConnector.query\
-                                       .filter_by(name=caconnector)\
-                                       .first()\
-                                       .id
+            self.caconnector_id = CAConnector.query.filter_by(name=caconnector).first().id
         self.Key = Key
         self.Value = convert_column_to_unicode(Value)
         self.Type = Type
         self.Description = Description
 
     def save(self):
-        c = CAConnectorConfig.query.filter_by(caconnector_id=self.caconnector_id,
-                                           Key=self.Key).first()
+        c = CAConnectorConfig.query.filter_by(caconnector_id=self.caconnector_id, Key=self.Key).first()
         save_config_timestamp()
         if c is None:
             # create a new one
@@ -1019,12 +972,13 @@ class CAConnectorConfig(db.Model):
             ret = self.id
         else:
             # update
-            CAConnectorConfig.query.filter_by(caconnector_id=self.caconnector_id,
-                                           Key=self.Key
-                                           ).update({'Value': self.Value,
-                                                     'Type': self.Type,
-                                                     'Descrip'
-                                                     'tion': self.Description})
+            CAConnectorConfig.query.filter_by(caconnector_id=self.caconnector_id, Key=self.Key).update(
+                {
+                    "Value": self.Value,
+                    "Type": self.Type,
+                    "Description": self.Description,
+                }
+            )
             ret = c.id
         db.session.commit()
         return ret
@@ -1036,31 +990,24 @@ class Resolver(TimestampMethodsMixin, db.Model):
     Resolvers. As each Resolver can have different required config values the
     configuration of the resolvers is stored in the table "resolverconfig".
     """
-    __tablename__ = 'resolver'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("resolver_seq"), primary_key=True,
-                   nullable=False)
-    name = db.Column(db.Unicode(255), default="",
-                     unique=True, nullable=False)
-    rtype = db.Column(db.Unicode(255), default="",
-                      nullable=False)
+
+    __tablename__ = "resolver"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("resolver_seq"), primary_key=True, nullable=False)
+    name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
+    rtype = db.Column(db.Unicode(255), default="", nullable=False)
     # This creates an attribute "resolver" in the ResolverConfig object
-    config_list = db.relationship('ResolverConfig',
-                                  lazy='select')
-    realm_list = db.relationship('ResolverRealm',
-                                 lazy='select',
-                                 back_populates='resolver')
-    
+    config_list = db.relationship("ResolverConfig", lazy="select")
+    realm_list = db.relationship("ResolverRealm", lazy="select", back_populates="resolver")
+
     def __init__(self, name, rtype):
         self.name = name
         self.rtype = rtype
-        
+
     def delete(self):
         ret = self.id
         # delete all ResolverConfig
-        db.session.query(ResolverConfig)\
-                  .filter(ResolverConfig.resolver_id == ret)\
-                  .delete()
+        db.session.query(ResolverConfig).filter(ResolverConfig.resolver_id == ret).delete()
         # delete the Resolver itself
         db.session.delete(self)
         save_config_timestamp()
@@ -1078,38 +1025,39 @@ class ResolverConfig(TimestampMethodsMixin, db.Model):
 
     The config entries are referenced by the id of the resolver.
     """
-    __tablename__ = 'resolverconfig'
-    id = db.Column(db.Integer, Sequence("resolverconf_seq"), primary_key=True)
-    resolver_id = db.Column(db.Integer,
-                            db.ForeignKey('resolver.id'))
-    Key = db.Column(db.Unicode(255), nullable=False)
-    Value = db.Column(db.Unicode(2000), default='')
-    Type = db.Column(db.Unicode(2000), default='')
-    Description = db.Column(db.Unicode(2000), default='')
-    __table_args__ = (db.UniqueConstraint('resolver_id',
-                                          'Key',
-                                          name='rcix_2'),
-                      {'mysql_row_format': 'DYNAMIC'})
 
-    def __init__(self, resolver_id=None,
-                 Key=None, Value=None,
-                 resolver=None,
-                 Type="", Description=""):
+    __tablename__ = "resolverconfig"
+    id = db.Column(db.Integer, Sequence("resolverconf_seq"), primary_key=True)
+    resolver_id = db.Column(db.Integer, db.ForeignKey("resolver.id"))
+    Key = db.Column(db.Unicode(255), nullable=False)
+    Value = db.Column(db.Unicode(2000), default="")
+    Type = db.Column(db.Unicode(2000), default="")
+    Description = db.Column(db.Unicode(2000), default="")
+    __table_args__ = (
+        db.UniqueConstraint("resolver_id", "Key", name="rcix_2"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
+
+    def __init__(
+        self,
+        resolver_id=None,
+        Key=None,
+        Value=None,
+        resolver=None,
+        Type="",
+        Description="",
+    ):
         if resolver_id:
             self.resolver_id = resolver_id
         elif resolver:
-            self.resolver_id = Resolver.query\
-                                       .filter_by(name=resolver)\
-                                       .first()\
-                                       .id
+            self.resolver_id = Resolver.query.filter_by(name=resolver).first().id
         self.Key = convert_column_to_unicode(Key)
         self.Value = convert_column_to_unicode(Value)
         self.Type = convert_column_to_unicode(Type)
         self.Description = convert_column_to_unicode(Description)
 
     def save(self):
-        c = ResolverConfig.query.filter_by(resolver_id=self.resolver_id,
-                                           Key=self.Key).first()
+        c = ResolverConfig.query.filter_by(resolver_id=self.resolver_id, Key=self.Key).first()
         if c is None:
             # create a new one
             db.session.add(self)
@@ -1117,12 +1065,13 @@ class ResolverConfig(TimestampMethodsMixin, db.Model):
             ret = self.id
         else:
             # update
-            ResolverConfig.query.filter_by(resolver_id=self.resolver_id,
-                                           Key=self.Key
-                                           ).update({'Value': self.Value,
-                                                     'Type': self.Type,
-                                                     'Descrip'
-                                                     'tion': self.Description})
+            ResolverConfig.query.filter_by(resolver_id=self.resolver_id, Key=self.Key).update(
+                {
+                    "Value": self.Value,
+                    "Type": self.Type,
+                    "Description": self.Description,
+                }
+            )
             ret = c.id
         save_config_timestamp()
         db.session.commit()
@@ -1134,28 +1083,29 @@ class ResolverRealm(TimestampMethodsMixin, db.Model):
     This table stores which Resolver is located in which realm
     This is a N:M relation
     """
-    __tablename__ = 'resolverrealm'
+
+    __tablename__ = "resolverrealm"
     id = db.Column(db.Integer, Sequence("resolverrealm_seq"), primary_key=True)
     resolver_id = db.Column(db.Integer, db.ForeignKey("resolver.id"))
     realm_id = db.Column(db.Integer, db.ForeignKey("realm.id"))
     # If there are several resolvers in a realm, the priority is used the
     # find a user first in a resolver with a higher priority (i.e. lower number)
     priority = db.Column(db.Integer)
-    resolver = db.relationship(Resolver,
-                               lazy="joined",
-                               back_populates="realm_list")
-    realm = db.relationship(Realm,
-                            lazy="joined",
-                            back_populates="resolver_list")
-    __table_args__ = (db.UniqueConstraint('resolver_id',
-                                          'realm_id',
-                                          name='rrix_2'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    resolver = db.relationship(Resolver, lazy="joined", back_populates="realm_list")
+    realm = db.relationship(Realm, lazy="joined", back_populates="resolver_list")
+    __table_args__ = (
+        db.UniqueConstraint("resolver_id", "realm_id", name="rrix_2"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
-    def __init__(self, resolver_id=None, realm_id=None,
-                 resolver_name=None,
-                 realm_name=None,
-                 priority=None):
+    def __init__(
+        self,
+        resolver_id=None,
+        realm_id=None,
+        resolver_name=None,
+        realm_name=None,
+        priority=None,
+    ):
         self.resolver_id = None
         self.realm_id = None
         if priority:
@@ -1163,15 +1113,11 @@ class ResolverRealm(TimestampMethodsMixin, db.Model):
         if resolver_id:
             self.resolver_id = resolver_id
         elif resolver_name:
-            self.resolver_id = Resolver.query\
-                                       .filter_by(name=resolver_name)\
-                                       .first().id
+            self.resolver_id = Resolver.query.filter_by(name=resolver_name).first().id
         if realm_id:
             self.realm_id = realm_id
         elif realm_name:
-            self.realm_id = Realm.query\
-                                 .filter_by(name=realm_name)\
-                                 .first().id
+            self.realm_id = Realm.query.filter_by(name=realm_name).first().id
 
 
 class TokenOwner(MethodsMixin, db.Model):
@@ -1179,17 +1125,26 @@ class TokenOwner(MethodsMixin, db.Model):
     This tables stores the owner of a token.
     A token can be assigned to several users.
     """
-    __tablename__ = 'tokenowner'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer(), Sequence("tokenowner_seq"), primary_key=True)
-    token_id = db.Column(db.Integer(), db.ForeignKey('token.id'))
-    resolver = db.Column(db.Unicode(120), default='', index=True)
-    user_id = db.Column(db.Unicode(320), default='', index=True)
-    realm_id = db.Column(db.Integer(), db.ForeignKey('realm.id'))
-    # This creates an attribute "tokenowners" in the realm objects
-    realm = db.relationship('Realm', lazy='joined', backref='tokenowners')
 
-    def __init__(self, token_id=None, serial=None, user_id=None, resolver=None, realm_id=None, realmname=None):
+    __tablename__ = "tokenowner"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer(), Sequence("tokenowner_seq"), primary_key=True)
+    token_id = db.Column(db.Integer(), db.ForeignKey("token.id"))
+    resolver = db.Column(db.Unicode(120), default="", index=True)
+    user_id = db.Column(db.Unicode(320), default="", index=True)
+    realm_id = db.Column(db.Integer(), db.ForeignKey("realm.id"))
+    # This creates an attribute "tokenowners" in the realm objects
+    realm = db.relationship("Realm", lazy="joined", backref="tokenowners")
+
+    def __init__(
+        self,
+        token_id=None,
+        serial=None,
+        user_id=None,
+        resolver=None,
+        realm_id=None,
+        realmname=None,
+    ):
         """
         Create a new token assignment to a user.
 
@@ -1210,13 +1165,15 @@ class TokenOwner(MethodsMixin, db.Model):
             r = Token.query.filter_by(serial=serial).first()
             self.token_id = r.id
         self.resolver = resolver
-        self. user_id = user_id
+        self.user_id = user_id
 
     def save(self, persistent=True):
-        to_func = TokenOwner.query.filter_by(token_id=self.token_id,
-                                             user_id=self.user_id,
-                                             realm_id=self.realm_id,
-                                             resolver=self.resolver).first
+        to_func = TokenOwner.query.filter_by(
+            token_id=self.token_id,
+            user_id=self.user_id,
+            realm_id=self.realm_id,
+            resolver=self.resolver,
+        ).first
         to = to_func()
         if to is None:
             # This very assignment does not exist, yet:
@@ -1242,25 +1199,19 @@ class TokenRealm(MethodsMixin, db.Model):
     realm of the user it is assigned to. But a token can also be put into
     many additional realms.
     """
-    __tablename__ = 'tokenrealm'
-    id = db.Column(db.Integer(), Sequence("tokenrealm_seq"), primary_key=True,
-                   nullable=True)
-    token_id = db.Column(db.Integer(),
-                         db.ForeignKey('token.id'))
-    realm_id = db.Column(db.Integer(),
-                         db.ForeignKey('realm.id'))
+
+    __tablename__ = "tokenrealm"
+    id = db.Column(db.Integer(), Sequence("tokenrealm_seq"), primary_key=True, nullable=True)
+    token_id = db.Column(db.Integer(), db.ForeignKey("token.id"))
+    realm_id = db.Column(db.Integer(), db.ForeignKey("realm.id"))
     # This creates an attribute "realm_list" in the Token object
-    token = db.relationship('Token',
-                            lazy='joined',
-                            backref='realm_list')
+    token = db.relationship("Token", lazy="joined", backref="realm_list")
     # This creates an attribute "token_list" in the Realm object
-    realm = db.relationship('Realm',
-                            lazy='joined',
-                            backref='token_list')
-    __table_args__ = (db.UniqueConstraint('token_id',
-                                          'realm_id',
-                                          name='trix_2'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    realm = db.relationship("Realm", lazy="joined", backref="token_list")
+    __table_args__ = (
+        db.UniqueConstraint("token_id", "realm_id", name="trix_2"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def __init__(self, realm_id=0, token_id=0, realmname=None):
         """
@@ -1268,7 +1219,7 @@ class TokenRealm(MethodsMixin, db.Model):
         :param realm_id: The id of the realm
         :param token_id: The id of the token
         """
-        log.debug("setting realm_id to {0:d}".format(realm_id))
+        log.debug(f"setting realm_id to {realm_id:d}")
         if realmname:
             r = Realm.query.filter_by(name=realmname).first()
             self.realm_id = r.id
@@ -1280,8 +1231,7 @@ class TokenRealm(MethodsMixin, db.Model):
         """
         We only save this, if it does not exist, yet.
         """
-        tr_func = TokenRealm.query.filter_by(realm_id=self.realm_id,
-                                             token_id=self.token_id).first
+        tr_func = TokenRealm.query.filter_by(realm_id=self.realm_id, token_id=self.token_id).first
         tr = tr_func()
         if tr is None:
             # create a new one
@@ -1312,10 +1262,10 @@ class PasswordReset(MethodsMixin, db.Model):
 
     Optional: The email to which the recoverycode was sent, can be stored.
     """
+
     __tablename__ = "passwordreset"
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer(), Sequence("pwreset_seq"), primary_key=True,
-                   nullable=False)
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer(), Sequence("pwreset_seq"), primary_key=True, nullable=False)
     recoverycode = db.Column(db.Unicode(255), nullable=False)
     username = db.Column(db.Unicode(64), nullable=False, index=True)
     realm = db.Column(db.Unicode(64), nullable=False, index=True)
@@ -1325,8 +1275,17 @@ class PasswordReset(MethodsMixin, db.Model):
     expiration = db.Column(db.DateTime)
 
     @log_with(log)
-    def __init__(self, recoverycode, username, realm, resolver="", email=None,
-                 timestamp=None, expiration=None, expiration_seconds=3600):
+    def __init__(
+        self,
+        recoverycode,
+        username,
+        realm,
+        resolver="",
+        email=None,
+        timestamp=None,
+        expiration=None,
+        expiration_seconds=3600,
+    ):
         # The default expiration time is 60 minutes
         self.recoverycode = recoverycode
         self.username = username
@@ -1334,33 +1293,38 @@ class PasswordReset(MethodsMixin, db.Model):
         self.resolver = resolver
         self.email = email
         self.timestamp = timestamp or datetime.now()
-        self.expiration = expiration or datetime.now() + \
-                                        timedelta(seconds=expiration_seconds)
+        self.expiration = expiration or datetime.now() + timedelta(seconds=expiration_seconds)
 
 
 class Challenge(MethodsMixin, db.Model):
     """
     Table for handling of the generic challenges.
     """
+
     __tablename__ = "challenge"
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer(), Sequence("challenge_seq"), primary_key=True,
-                   nullable=False)
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer(), Sequence("challenge_seq"), primary_key=True, nullable=False)
     transaction_id = db.Column(db.Unicode(64), nullable=False, index=True)
-    data = db.Column(db.Unicode(512), default='')
-    challenge = db.Column(db.Unicode(512), default='')
-    session = db.Column(db.Unicode(512), default='', quote=True, name="session")
+    data = db.Column(db.Unicode(512), default="")
+    challenge = db.Column(db.Unicode(512), default="")
+    session = db.Column(db.Unicode(512), default="", quote=True, name="session")
     # The token serial number
-    serial = db.Column(db.Unicode(40), default='', index=True)
+    serial = db.Column(db.Unicode(40), default="", index=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow(), index=True)
     expiration = db.Column(db.DateTime)
     received_count = db.Column(db.Integer(), default=0)
     otp_valid = db.Column(db.Boolean, default=False)
 
     @log_with(log)
-    def __init__(self, serial, transaction_id=None,
-                 challenge='', data='', session='', validitytime=120):
-
+    def __init__(
+        self,
+        serial,
+        transaction_id=None,
+        challenge="",
+        data="",
+        session="",
+        validitytime=120,
+    ):
         self.transaction_id = transaction_id or self.create_transaction_id()
         self.challenge = challenge
         self.serial = serial
@@ -1414,7 +1378,7 @@ class Challenge(MethodsMixin, db.Model):
 
     def set_challenge(self, challenge):
         self.challenge = convert_column_to_unicode(challenge)
-    
+
     def get_challenge(self):
         return self.challenge
 
@@ -1438,7 +1402,7 @@ class Challenge(MethodsMixin, db.Model):
     def get(self, timestamp=False):
         """
         return a dictionary of all vars in the challenge class
-        
+
         :param timestamp: if true, the timestamp will given in a readable
                           format
                           2014-11-29 21:56:43.057293
@@ -1446,24 +1410,24 @@ class Challenge(MethodsMixin, db.Model):
         :return: dict of vars
         """
         descr = {}
-        descr['id'] = self.id
-        descr['transaction_id'] = self.transaction_id
-        descr['challenge'] = self.challenge
-        descr['serial'] = self.serial
-        descr['data'] = self.get_data()
+        descr["id"] = self.id
+        descr["transaction_id"] = self.transaction_id
+        descr["challenge"] = self.challenge
+        descr["serial"] = self.serial
+        descr["data"] = self.get_data()
         if timestamp is True:
-            descr['timestamp'] = "{0!s}".format(self.timestamp)
+            descr["timestamp"] = f"{self.timestamp!s}"
         else:
-            descr['timestamp'] = self.timestamp
-        descr['otp_received'] = self.received_count > 0
-        descr['received_count'] = self.received_count
-        descr['otp_valid'] = self.otp_valid
-        descr['expiration'] = self.expiration
+            descr["timestamp"] = self.timestamp
+        descr["otp_received"] = self.received_count > 0
+        descr["received_count"] = self.received_count
+        descr["otp_valid"] = self.otp_valid
+        descr["expiration"] = self.expiration
         return descr
 
     def __str__(self):
         descr = self.get()
-        return "{0!s}".format(descr)
+        return f"{descr!s}"
 
 
 def cleanup_challenges():
@@ -1475,6 +1439,7 @@ def cleanup_challenges():
     c_now = datetime.utcnow()
     Challenge.query.filter(Challenge.expiration < c_now).delete()
     db.session.commit()
+
 
 # -----------------------------------------------------------------------------
 #
@@ -1494,8 +1459,9 @@ class Policy(TimestampMethodsMixin, db.Model):
      * user actions
      * webui
     """
+
     __tablename__ = "policy"
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("policy_seq"), primary_key=True)
     active = db.Column(db.Boolean, default=True)
     check_all_resolvers = db.Column(db.Boolean, default=False)
@@ -1513,20 +1479,36 @@ class Policy(TimestampMethodsMixin, db.Model):
     # If there are multiple matching policies, choose the one
     # with the lowest priority number. We choose 1 to be the default priotity.
     priority = db.Column(db.Integer, default=1, nullable=False)
-    conditions = db.relationship("PolicyCondition",
-                                 lazy="joined",
-                                 backref="policy",
-                                 order_by="PolicyCondition.id",
-                                 # With these cascade options, we ensure that whenever a Policy object is added
-                                 # to a session, its conditions are also added to the session (save-update, merge).
-                                 # Likewise, whenever a Policy object is deleted, its conditions are also
-                                 # deleted (delete). Conditions without a policy are deleted (delete-orphan).
-                                 cascade="save-update, merge, delete, delete-orphan")
-    
-    def __init__(self, name,
-                 active=True, scope="", action="", realm="", adminrealm="", adminuser="",
-                 resolver="", user="", client="", time="", edumfanode="", priority=1,
-                 check_all_resolvers=False, conditions=None):
+    conditions = db.relationship(
+        "PolicyCondition",
+        lazy="joined",
+        backref="policy",
+        order_by="PolicyCondition.id",
+        # With these cascade options, we ensure that whenever a Policy object is added
+        # to a session, its conditions are also added to the session (save-update, merge).
+        # Likewise, whenever a Policy object is deleted, its conditions are also
+        # deleted (delete). Conditions without a policy are deleted (delete-orphan).
+        cascade="save-update, merge, delete, delete-orphan",
+    )
+
+    def __init__(
+        self,
+        name,
+        active=True,
+        scope="",
+        action="",
+        realm="",
+        adminrealm="",
+        adminuser="",
+        resolver="",
+        user="",
+        client="",
+        time="",
+        edumfanode="",
+        priority=1,
+        check_all_resolvers=False,
+        conditions=None,
+    ):
         if isinstance(active, str):
             active = is_true(active.lower())
         self.name = name
@@ -1556,7 +1538,11 @@ class Policy(TimestampMethodsMixin, db.Model):
         self.conditions = []
         for section, key, comparator, value, active in conditions:
             condition_object = PolicyCondition(
-                section=section, Key=key, comparator=comparator, Value=value, active=active,
+                section=section,
+                Key=key,
+                comparator=comparator,
+                Value=value,
+                active=active,
             )
             self.conditions.append(condition_object)
 
@@ -1578,7 +1564,7 @@ class Policy(TimestampMethodsMixin, db.Model):
         :return: list
         """
         ret = [r.strip() for r in (value or "").split(",")]
-        if ret == ['']:
+        if ret == [""]:
             ret = []
         return ret
 
@@ -1590,22 +1576,23 @@ class Policy(TimestampMethodsMixin, db.Model):
         :return: complete dict or single value
         :rytpe: dict or value
         """
-        d = {"name": self.name,
-             "active": self.active,
-             "scope": self.scope,
-             "realm": self._split_string(self.realm),
-             "adminrealm": self._split_string(self.adminrealm),
-             "adminuser": self._split_string(self.adminuser),
-             "resolver": self._split_string(self.resolver),
-             "edumfanode": self._split_string(self.edumfanode),
-             "check_all_resolvers": self.check_all_resolvers,
-             "user": self._split_string(self.user),
-             "client": self._split_string(self.client),
-             "time": self.time,
-             "conditions": self.get_conditions_tuples(),
-             "priority": self.priority}
-        action_list = [x.strip().split("=", 1) for x in (self.action or "").split(
-            ",")]
+        d = {
+            "name": self.name,
+            "active": self.active,
+            "scope": self.scope,
+            "realm": self._split_string(self.realm),
+            "adminrealm": self._split_string(self.adminrealm),
+            "adminuser": self._split_string(self.adminuser),
+            "resolver": self._split_string(self.resolver),
+            "edumfanode": self._split_string(self.edumfanode),
+            "check_all_resolvers": self.check_all_resolvers,
+            "user": self._split_string(self.user),
+            "client": self._split_string(self.client),
+            "time": self.time,
+            "conditions": self.get_conditions_tuples(),
+            "priority": self.priority,
+        }
+        action_list = [x.strip().split("=", 1) for x in (self.action or "").split(",")]
         action_dict = {}
         for a in action_list:
             if len(a) > 1:
@@ -1624,16 +1611,16 @@ class PolicyCondition(MethodsMixin, db.Model):
     __tablename__ = "policycondition"
 
     id = db.Column(db.Integer, Sequence("policycondition_seq"), primary_key=True)
-    policy_id = db.Column(db.Integer, db.ForeignKey('policy.id'), nullable=False)
+    policy_id = db.Column(db.Integer, db.ForeignKey("policy.id"), nullable=False)
     section = db.Column(db.Unicode(255), nullable=False)
     # We use upper-case "Key" and "Value" to prevent conflicts with databases
     # that do not support "key" or "value" as column names
     Key = db.Column(db.Unicode(255), nullable=False)
-    comparator = db.Column(db.Unicode(255), nullable=False, default='equals')
-    Value = db.Column(db.Unicode(2000), nullable=False, default='')
+    comparator = db.Column(db.Unicode(255), nullable=False, default="equals")
+    Value = db.Column(db.Unicode(2000), nullable=False, default="")
     active = db.Column(db.Boolean, nullable=False, default=True)
 
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
 
     def as_tuple(self):
         """
@@ -1647,6 +1634,7 @@ class PolicyCondition(MethodsMixin, db.Model):
 #  Machines
 #
 
+
 class MachineToken(MethodsMixin, db.Model):
     """
     The MachineToken assigns a Token and an application type to a
@@ -1657,32 +1645,33 @@ class MachineToken(MethodsMixin, db.Model):
 
     This can be an n:m mapping.
     """
-    __tablename__ = 'machinetoken'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer(), Sequence("machinetoken_seq"),
-                   primary_key=True, nullable=False)
-    token_id = db.Column(db.Integer(),
-                         db.ForeignKey('token.id'))
+
+    __tablename__ = "machinetoken"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer(), Sequence("machinetoken_seq"), primary_key=True, nullable=False)
+    token_id = db.Column(db.Integer(), db.ForeignKey("token.id"))
     machineresolver_id = db.Column(db.Integer())
     machine_id = db.Column(db.Unicode(255))
     application = db.Column(db.Unicode(64))
     # This connects the machine with the token and makes the machines visible
     # in the token as "machine_list".
-    token = db.relationship('Token',
-                            lazy='joined',
-                            backref='machine_list')
+    token = db.relationship("Token", lazy="joined", backref="machine_list")
 
     @log_with(log)
-    def __init__(self, machineresolver_id=None,
-                 machineresolver=None, machine_id=None, token_id=None,
-                 serial=None, application=None):
-
+    def __init__(
+        self,
+        machineresolver_id=None,
+        machineresolver=None,
+        machine_id=None,
+        token_id=None,
+        serial=None,
+        application=None,
+    ):
         if machineresolver_id:
             self.machineresolver_id = machineresolver_id
         elif machineresolver:
             # determine the machineresolver_id:
-            self.machineresolver_id = MachineResolver.query.filter(
-                MachineResolver.name == machineresolver).first().id
+            self.machineresolver_id = MachineResolver.query.filter(MachineResolver.name == machineresolver).first().id
         if token_id:
             self.token_id = token_id
         elif serial:
@@ -1693,9 +1682,7 @@ class MachineToken(MethodsMixin, db.Model):
 
     def delete(self):
         ret = self.id
-        db.session.query(MachineTokenOptions) \
-            .filter(MachineTokenOptions.machinetoken_id == self.id) \
-            .delete()
+        db.session.query(MachineTokenOptions).filter(MachineTokenOptions.machinetoken_id == self.id).delete()
         db.session.delete(self)
         save_config_timestamp()
         db.session.commit()
@@ -1769,41 +1756,32 @@ class MachineTokenOptions(db.Model):
     Each Token-Clientmachine-Combination can have several
     options.
     """
-    __tablename__ = 'machinetokenoptions'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer(), Sequence("machtokenopt_seq"),
-                   primary_key=True, nullable=False)
-    machinetoken_id = db.Column(db.Integer(),
-                                db.ForeignKey('machinetoken.id'))
+
+    __tablename__ = "machinetokenoptions"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer(), Sequence("machtokenopt_seq"), primary_key=True, nullable=False)
+    machinetoken_id = db.Column(db.Integer(), db.ForeignKey("machinetoken.id"))
     mt_key = db.Column(db.Unicode(64), nullable=False)
     mt_value = db.Column(db.Unicode(64), nullable=False)
     # This connects the MachineTokenOption with the MachineToken and makes the
     # options visible in the MachineToken as "option_list".
-    machinetoken = db.relationship('MachineToken',
-                                   lazy='joined',
-                                   backref='option_list')
+    machinetoken = db.relationship("MachineToken", lazy="joined", backref="option_list")
 
     def __init__(self, machinetoken_id, key, value):
-        log.debug("setting {0!r} to {1!r} for MachineToken {2!s}".format(key,
-                                                            value,
-                                                            machinetoken_id))
+        log.debug(f"setting {key!r} to {value!r} for MachineToken {machinetoken_id!s}")
         self.machinetoken_id = machinetoken_id
         self.mt_key = convert_column_to_unicode(key)
         self.mt_value = convert_column_to_unicode(value)
 
         # if the combination machinetoken_id / mt_key already exist,
         # we need to update
-        c = MachineTokenOptions.query.filter_by(
-            machinetoken_id=self.machinetoken_id,
-            mt_key=self.mt_key).first()
+        c = MachineTokenOptions.query.filter_by(machinetoken_id=self.machinetoken_id, mt_key=self.mt_key).first()
         if c is None:
             # create a new one
             db.session.add(self)
         else:
             # update
-            MachineTokenOptions.query.filter_by(
-                machinetoken_id=self.machinetoken_id,
-                mt_key=self.mt_key).update({'mt_value': self.mt_value})
+            MachineTokenOptions.query.filter_by(machinetoken_id=self.machinetoken_id, mt_key=self.mt_key).update({"mt_value": self.mt_value})
         db.session.commit()
 
 
@@ -1840,10 +1818,10 @@ class EventHandler(MethodsMixin, db.Model):
     A handler module can be bound to an event with the corresponding
     condition and action.
     """
-    __tablename__ = 'eventhandler'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("eventhandler_seq"), primary_key=True,
-                   nullable=False)
+
+    __tablename__ = "eventhandler"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("eventhandler_seq"), primary_key=True, nullable=False)
     # in fact the name is a description
     name = db.Column(db.Unicode(64), unique=False, nullable=True)
     active = db.Column(db.Boolean, default=True)
@@ -1856,17 +1834,24 @@ class EventHandler(MethodsMixin, db.Model):
     condition = db.Column(db.Unicode(1024), default="")
     action = db.Column(db.Unicode(1024), default="")
     # This creates an attribute "eventhandler" in the EventHandlerOption object
-    options = db.relationship('EventHandlerOption',
-                              lazy='dynamic',
-                              backref='eventhandler')
+    options = db.relationship("EventHandlerOption", lazy="dynamic", backref="eventhandler")
     # This creates an attribute "eventhandler" in the EventHandlerCondition object
-    conditions = db.relationship('EventHandlerCondition',
-                                 lazy='dynamic',
-                                 backref='eventhandler')
+    conditions = db.relationship("EventHandlerCondition", lazy="dynamic", backref="eventhandler")
 
-    def __init__(self, name, event, handlermodule, action, condition="",
-                 ordering=0, options=None, id=None, conditions=None,
-                 active=True, position="post"):
+    def __init__(
+        self,
+        name,
+        event,
+        handlermodule,
+        action,
+        condition="",
+        ordering=0,
+        options=None,
+        id=None,
+        conditions=None,
+        active=True,
+        position="post",
+    ):
         self.name = name
         self.ordering = ordering
         self.event = event
@@ -1887,12 +1872,10 @@ class EventHandler(MethodsMixin, db.Model):
         for k, v in conditions.items():
             EventHandlerCondition(eventhandler_id=self.id, Key=k, Value=v).save()
         # Delete event handler conditions, that ar not used anymore.
-        ev_conditions = EventHandlerCondition.query.filter_by(
-            eventhandler_id=self.id).all()
+        ev_conditions = EventHandlerCondition.query.filter_by(eventhandler_id=self.id).all()
         for cond in ev_conditions:
             if cond.Key not in conditions:
-                EventHandlerCondition.query.filter_by(
-                    eventhandler_id=self.id, Key=cond.Key).delete()
+                EventHandlerCondition.query.filter_by(eventhandler_id=self.id, Key=cond.Key).delete()
                 db.session.commit()
 
     def save(self):
@@ -1901,16 +1884,18 @@ class EventHandler(MethodsMixin, db.Model):
             db.session.add(self)
         else:
             # update
-            EventHandler.query.filter_by(id=self.id).update({
-                "ordering": self.ordering or 0,
-                "position": self.position or "post",
-                "event": self.event,
-                "active": self.active,
-                "name": self.name,
-                "handlermodule": self.handlermodule,
-                "condition": self.condition,
-                "action": self.action
-            })
+            EventHandler.query.filter_by(id=self.id).update(
+                {
+                    "ordering": self.ordering or 0,
+                    "position": self.position or "post",
+                    "event": self.event,
+                    "active": self.active,
+                    "name": self.name,
+                    "handlermodule": self.handlermodule,
+                    "condition": self.condition,
+                    "action": self.action,
+                }
+            )
         save_config_timestamp()
         db.session.commit()
         return self.id
@@ -1918,13 +1903,9 @@ class EventHandler(MethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all EventHandlerOptions
-        db.session.query(EventHandlerOption) \
-            .filter(EventHandlerOption.eventhandler_id == ret) \
-            .delete()
+        db.session.query(EventHandlerOption).filter(EventHandlerOption.eventhandler_id == ret).delete()
         # delete all Conditions
-        db.session.query(EventHandlerCondition) \
-            .filter(EventHandlerCondition.eventhandler_id == ret) \
-            .delete()
+        db.session.query(EventHandlerCondition).filter(EventHandlerCondition.eventhandler_id == ret).delete()
         # delete the event handler itself
         db.session.delete(self)
         save_config_timestamp()
@@ -1938,14 +1919,16 @@ class EventHandler(MethodsMixin, db.Model):
         :return: complete dict
         :rytpe: dict
         """
-        d = {"active": self.active,
-             "name": self.name,
-             "handlermodule": self.handlermodule,
-             "id": self.id,
-             "ordering": self.ordering,
-             "position": self.position or "post",
-             "action": self.action,
-             "condition": self.condition}
+        d = {
+            "active": self.active,
+            "name": self.name,
+            "handlermodule": self.handlermodule,
+            "id": self.id,
+            "ordering": self.ordering,
+            "position": self.position or "post",
+            "action": self.action,
+            "condition": self.condition,
+        }
         event_list = [x.strip() for x in self.event.split(",")]
         d["event"] = event_list
         option_dict = {}
@@ -1964,18 +1947,17 @@ class EventHandlerCondition(db.Model):
     Each EventHandler entry can have additional conditions according to the
     handler module
     """
+
     __tablename__ = "eventhandlercondition"
-    id = db.Column(db.Integer, Sequence("eventhandlercond_seq"),
-                   primary_key=True)
-    eventhandler_id = db.Column(db.Integer,
-                                db.ForeignKey('eventhandler.id'))
+    id = db.Column(db.Integer, Sequence("eventhandlercond_seq"), primary_key=True)
+    eventhandler_id = db.Column(db.Integer, db.ForeignKey("eventhandler.id"))
     Key = db.Column(db.Unicode(255), nullable=False)
-    Value = db.Column(db.Unicode(2000), default='')
-    comparator = db.Column(db.Unicode(255), default='equal')
-    __table_args__ = (db.UniqueConstraint('eventhandler_id',
-                                          'Key',
-                                          name='ehcix_1'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    Value = db.Column(db.Unicode(2000), default="")
+    comparator = db.Column(db.Unicode(255), default="equal")
+    __table_args__ = (
+        db.UniqueConstraint("eventhandler_id", "Key", name="ehcix_1"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def __init__(self, eventhandler_id, Key, Value, comparator="equal"):
         self.eventhandler_id = eventhandler_id
@@ -1985,8 +1967,7 @@ class EventHandlerCondition(db.Model):
         self.save()
 
     def save(self):
-        ehc = EventHandlerCondition.query.filter_by(
-            eventhandler_id=self.eventhandler_id, Key=self.Key).first()
+        ehc = EventHandlerCondition.query.filter_by(eventhandler_id=self.eventhandler_id, Key=self.Key).first()
         if ehc is None:
             # create a new one
             db.session.add(self)
@@ -1994,10 +1975,7 @@ class EventHandlerCondition(db.Model):
             ret = self.id
         else:
             # update
-            EventHandlerCondition.query.filter_by(
-                eventhandler_id=self.eventhandler_id, Key=self.Key) \
-                .update({'Value': self.Value,
-                         'comparator': self.comparator})
+            EventHandlerCondition.query.filter_by(eventhandler_id=self.eventhandler_id, Key=self.Key).update({"Value": self.Value, "comparator": self.comparator})
             ret = ehc.id
         db.session.commit()
         return ret
@@ -2008,19 +1986,18 @@ class EventHandlerOption(db.Model):
     Each EventHandler entry can have additional options according to the
     handler module.
     """
-    __tablename__ = 'eventhandleroption'
-    id = db.Column(db.Integer, Sequence("eventhandleropt_seq"),
-                   primary_key=True)
-    eventhandler_id = db.Column(db.Integer,
-                                db.ForeignKey('eventhandler.id'))
+
+    __tablename__ = "eventhandleroption"
+    id = db.Column(db.Integer, Sequence("eventhandleropt_seq"), primary_key=True)
+    eventhandler_id = db.Column(db.Integer, db.ForeignKey("eventhandler.id"))
     Key = db.Column(db.Unicode(255), nullable=False)
-    Value = db.Column(db.Unicode(2000), default='')
-    Type = db.Column(db.Unicode(2000), default='')
-    Description = db.Column(db.Unicode(2000), default='')
-    __table_args__ = (db.UniqueConstraint('eventhandler_id',
-                                          'Key',
-                                          name='ehoix_1'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    Value = db.Column(db.Unicode(2000), default="")
+    Type = db.Column(db.Unicode(2000), default="")
+    Description = db.Column(db.Unicode(2000), default="")
+    __table_args__ = (
+        db.UniqueConstraint("eventhandler_id", "Key", name="ehoix_1"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def __init__(self, eventhandler_id, Key, Value, Type="", Description=""):
         self.eventhandler_id = eventhandler_id
@@ -2031,8 +2008,7 @@ class EventHandlerOption(db.Model):
         self.save()
 
     def save(self):
-        eho = EventHandlerOption.query.filter_by(
-            eventhandler_id=self.eventhandler_id, Key=self.Key).first()
+        eho = EventHandlerOption.query.filter_by(eventhandler_id=self.eventhandler_id, Key=self.Key).first()
         if eho is None:
             # create a new one
             db.session.add(self)
@@ -2040,11 +2016,13 @@ class EventHandlerOption(db.Model):
             ret = self.id
         else:
             # update
-            EventHandlerOption.query.filter_by(
-                eventhandler_id=self.eventhandler_id, Key=self.Key) \
-                .update({'Value': self.Value,
-                         'Type': self.Type,
-                         'Description': self.Description})
+            EventHandlerOption.query.filter_by(eventhandler_id=self.eventhandler_id, Key=self.Key).update(
+                {
+                    "Value": self.Value,
+                    "Type": self.Type,
+                    "Description": self.Description,
+                }
+            )
             ret = eho.id
         db.session.commit()
         return ret
@@ -2059,17 +2037,13 @@ class MachineResolver(MethodsMixin, db.Model):
     The usual MachineResolver just holds a name and a type and a reference to
     its config
     """
-    __tablename__ = 'machineresolver'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("machineresolver_seq"),
-                   primary_key=True, nullable=False)
-    name = db.Column(db.Unicode(255), default="",
-                     unique=True, nullable=False)
-    rtype = db.Column(db.Unicode(255), default="",
-                      nullable=False)
-    rconfig = db.relationship('MachineResolverConfig',
-                              lazy='dynamic',
-                              backref='machineresolver')
+
+    __tablename__ = "machineresolver"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("machineresolver_seq"), primary_key=True, nullable=False)
+    name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
+    rtype = db.Column(db.Unicode(255), default="", nullable=False)
+    rconfig = db.relationship("MachineResolverConfig", lazy="dynamic", backref="machineresolver")
 
     def __init__(self, name, rtype):
         self.name = name
@@ -2078,9 +2052,7 @@ class MachineResolver(MethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all MachineResolverConfig
-        db.session.query(MachineResolverConfig)\
-                  .filter(MachineResolverConfig.resolver_id == ret)\
-                  .delete()
+        db.session.query(MachineResolverConfig).filter(MachineResolverConfig.resolver_id == ret).delete()
         # delete the MachineResolver itself
         db.session.delete(self)
         db.session.commit()
@@ -2092,37 +2064,39 @@ class MachineResolverConfig(db.Model):
     Each Machine Resolver can have multiple configuration entries.
     The config entries are referenced by the id of the machine resolver
     """
-    __tablename__ = 'machineresolverconfig'
-    id = db.Column(db.Integer, Sequence("machineresolverconf_seq"),
-                   primary_key=True)
-    resolver_id = db.Column(db.Integer,
-                            db.ForeignKey('machineresolver.id'))
-    Key = db.Column(db.Unicode(255), nullable=False)
-    Value = db.Column(db.Unicode(2000), default='')
-    Type = db.Column(db.Unicode(2000), default='')
-    Description = db.Column(db.Unicode(2000), default='')
-    __table_args__ = (db.UniqueConstraint('resolver_id',
-                                          'Key',
-                                          name='mrcix_2'),
-                      {'mysql_row_format': 'DYNAMIC'})
 
-    def __init__(self, resolver_id=None, Key=None, Value=None, resolver=None,
-                 Type="", Description=""):
+    __tablename__ = "machineresolverconfig"
+    id = db.Column(db.Integer, Sequence("machineresolverconf_seq"), primary_key=True)
+    resolver_id = db.Column(db.Integer, db.ForeignKey("machineresolver.id"))
+    Key = db.Column(db.Unicode(255), nullable=False)
+    Value = db.Column(db.Unicode(2000), default="")
+    Type = db.Column(db.Unicode(2000), default="")
+    Description = db.Column(db.Unicode(2000), default="")
+    __table_args__ = (
+        db.UniqueConstraint("resolver_id", "Key", name="mrcix_2"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
+
+    def __init__(
+        self,
+        resolver_id=None,
+        Key=None,
+        Value=None,
+        resolver=None,
+        Type="",
+        Description="",
+    ):
         if resolver_id:
             self.resolver_id = resolver_id
         elif resolver:
-            self.resolver_id = MachineResolver.query\
-                                .filter_by(name=resolver)\
-                                .first()\
-                                .id
+            self.resolver_id = MachineResolver.query.filter_by(name=resolver).first().id
         self.Key = Key
         self.Value = convert_column_to_unicode(Value)
         self.Type = Type
         self.Description = Description
 
     def save(self):
-        c = MachineResolverConfig.query.filter_by(
-            resolver_id=self.resolver_id, Key=self.Key).first()
+        c = MachineResolverConfig.query.filter_by(resolver_id=self.resolver_id, Key=self.Key).first()
         if c is None:
             # create a new one
             db.session.add(self)
@@ -2130,11 +2104,13 @@ class MachineResolverConfig(db.Model):
             ret = self.id
         else:
             # update
-            MachineResolverConfig.query.filter_by(
-                resolver_id=self.resolver_id, Key=self.Key)\
-                .update({'Value': self.Value,
-                         'Type': self.Type,
-                         'Description': self.Description})
+            MachineResolverConfig.query.filter_by(resolver_id=self.resolver_id, Key=self.Key).update(
+                {
+                    "Value": self.Value,
+                    "Type": self.Type,
+                    "Description": self.Description,
+                }
+            )
             ret = c.id
         db.session.commit()
         return ret
@@ -2157,8 +2133,7 @@ def get_machineresolver_id(resolvername):
     :param resolvername:
     :return:
     """
-    mr = MachineResolver.query.filter(MachineResolver.name ==
-                                      resolvername).first()
+    mr = MachineResolver.query.filter(MachineResolver.name == resolvername).first()
     return mr.id
 
 
@@ -2185,10 +2160,14 @@ def get_machinetoken_ids(machine_id, resolver_name, serial, application):
     else:
         resolver_id = None
 
-    mtokens = MachineToken.query.filter(and_(MachineToken.token_id == token_id,
-                                             MachineToken.machineresolver_id == resolver_id,
-                                             MachineToken.machine_id == machine_id,
-                                             MachineToken.application == application)).all()
+    mtokens = MachineToken.query.filter(
+        and_(
+            MachineToken.token_id == token_id,
+            MachineToken.machineresolver_id == resolver_id,
+            MachineToken.machine_id == machine_id,
+            MachineToken.application == application,
+        )
+    ).all()
     if mtokens:
         for mt in mtokens:
             ret.append(mt.id)
@@ -2206,19 +2185,16 @@ class SMSGateway(MethodsMixin, db.Model):
 
     All options and parameters are saved in other tables.
     """
-    __tablename__ = 'smsgateway'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+
+    __tablename__ = "smsgateway"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("smsgateway_seq"), primary_key=True)
     identifier = db.Column(db.Unicode(255), nullable=False, unique=True)
     description = db.Column(db.Unicode(1024), default="")
     providermodule = db.Column(db.Unicode(1024), nullable=False)
-    options = db.relationship('SMSGatewayOption',
-                              lazy='dynamic',
-                              backref='smsgw')
+    options = db.relationship("SMSGatewayOption", lazy="dynamic", backref="smsgw")
 
-    def __init__(self, identifier, providermodule, description=None,
-                 options=None, headers=None):
-
+    def __init__(self, identifier, providermodule, description=None, options=None, headers=None):
         options = options or {}
         headers = headers or {}
         sql = SMSGateway.query.filter_by(identifier=identifier).first()
@@ -2237,8 +2213,7 @@ class SMSGateway(MethodsMixin, db.Model):
                     # iterate through all existing options/headers
                     if key not in vals:
                         # if the option is not contained anymore
-                        SMSGatewayOption.query.filter_by(gateway_id=self.id,
-                                                         Key=key, Type=typ).delete()
+                        SMSGatewayOption.query.filter_by(gateway_id=self.id, Key=key, Type=typ).delete()
         # add the options and headers to the SMS Gateway
         for typ, vals in opts.items():
             for k, v in vals.items():
@@ -2251,11 +2226,13 @@ class SMSGateway(MethodsMixin, db.Model):
             db.session.commit()
         else:
             # update
-            SMSGateway.query.filter_by(id=self.id).update({
-                "identifier": self.identifier,
-                "providermodule": self.providermodule,
-                "description": self.description
-            })
+            SMSGateway.query.filter_by(id=self.id).update(
+                {
+                    "identifier": self.identifier,
+                    "providermodule": self.providermodule,
+                    "description": self.description,
+                }
+            )
             db.session.commit()
         return self.id
 
@@ -2266,9 +2243,7 @@ class SMSGateway(MethodsMixin, db.Model):
         """
         ret = self.id
         # delete all SMSGatewayOptions
-        db.session.query(SMSGatewayOption)\
-                  .filter(SMSGatewayOption.gateway_id == ret)\
-                  .delete()
+        db.session.query(SMSGatewayOption).filter(SMSGatewayOption.gateway_id == ret).delete()
         # delete the SMSGateway itself
         db.session.delete(self)
         db.session.commit()
@@ -2307,12 +2282,14 @@ class SMSGateway(MethodsMixin, db.Model):
         :return: complete dict
         :rytpe: dict
         """
-        d = {"id": self.id,
-             "name": self.identifier,
-             "providermodule": self.providermodule,
-             "description": self.description,
-             "options": self.option_dict,
-             "headers": self.header_dict}
+        d = {
+            "id": self.id,
+            "name": self.identifier,
+            "providermodule": self.providermodule,
+            "description": self.description,
+            "options": self.option_dict,
+            "headers": self.header_dict,
+        }
 
         return d
 
@@ -2321,20 +2298,19 @@ class SMSGatewayOption(MethodsMixin, db.Model):
     """
     This table stores the options, parameters and headers for an SMS Gateway definition.
     """
-    __tablename__ = 'smsgatewayoption'
+
+    __tablename__ = "smsgatewayoption"
     id = db.Column(db.Integer, Sequence("smsgwoption_seq"), primary_key=True)
     Key = db.Column(db.Unicode(255), nullable=False)
-    Value = db.Column(db.UnicodeText(), default='')
-    Type = db.Column(db.Unicode(100), default='option')
-    gateway_id = db.Column(db.Integer(),
-                           db.ForeignKey('smsgateway.id'), index=True)
-    __table_args__ = (db.UniqueConstraint('gateway_id',
-                                          'Key', 'Type',
-                                          name='sgix_1'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    Value = db.Column(db.UnicodeText(), default="")
+    Type = db.Column(db.Unicode(100), default="option")
+    gateway_id = db.Column(db.Integer(), db.ForeignKey("smsgateway.id"), index=True)
+    __table_args__ = (
+        db.UniqueConstraint("gateway_id", "Key", "Type", name="sgix_1"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def __init__(self, gateway_id, Key, Value, Type=None):
-
         """
         Create a new gateway_option for the gateway_id
         """
@@ -2347,8 +2323,7 @@ class SMSGatewayOption(MethodsMixin, db.Model):
     def save(self):
         # See, if there is this option or header for this this gateway
         # The first match takes precedence
-        go = SMSGatewayOption.query.filter_by(gateway_id=self.gateway_id,
-                                               Key=self.Key, Type=self.Type).first()
+        go = SMSGatewayOption.query.filter_by(gateway_id=self.gateway_id, Key=self.Key, Type=self.Type).first()
         if go is None:
             # create a new one
             db.session.add(self)
@@ -2356,10 +2331,7 @@ class SMSGatewayOption(MethodsMixin, db.Model):
             ret = self.id
         else:
             # update
-            SMSGatewayOption.query.filter_by(gateway_id=self.gateway_id,
-                                              Key=self.Key, Type=self.Type
-                                              ).update({'Value': self.Value,
-                                                        'Type': self.Type})
+            SMSGatewayOption.query.filter_by(gateway_id=self.gateway_id, Key=self.Key, Type=self.Type).update({"Value": self.Value, "Type": self.Type})
             ret = go.id
         db.session.commit()
         return ret
@@ -2369,20 +2341,19 @@ class eduMFAServer(MethodsMixin, db.Model):
     """
     This table can store remote eduMFA server definitions
     """
-    __tablename__ = 'edumfaserver'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("edumfaserver_seq"),
-                   primary_key=True)
+
+    __tablename__ = "edumfaserver"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("edumfaserver_seq"), primary_key=True)
     # This is a name to refer to
     identifier = db.Column(db.Unicode(255), nullable=False, unique=True)
     # This is the FQDN or the IP address
     url = db.Column(db.Unicode(255), nullable=False)
     tls = db.Column(db.Boolean, default=False)
-    description = db.Column(db.Unicode(2000), default='')
+    description = db.Column(db.Unicode(2000), default="")
 
     def save(self):
-        pi = eduMFAServer.query.filter(eduMFAServer.identifier ==
-                                            self.identifier).first()
+        pi = eduMFAServer.query.filter(eduMFAServer.identifier == self.identifier).first()
         if pi is None:
             # create a new one
             db.session.add(self)
@@ -2395,8 +2366,7 @@ class eduMFAServer(MethodsMixin, db.Model):
                 values["tls"] = self.tls
             if self.description is not None:
                 values["description"] = self.description
-            eduMFAServer.query.filter(eduMFAServer.identifier ==
-                                           self.identifier).update(values)
+            eduMFAServer.query.filter(eduMFAServer.identifier == self.identifier).update(values)
             ret = pi.id
         db.session.commit()
         return ret
@@ -2419,8 +2389,9 @@ class RADIUSServer(MethodsMixin, db.Model):
     These RADIUS server definition can be used in RADIUS tokens or in a
     radius passthru policy.
     """
-    __tablename__ = 'radiusserver'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+
+    __tablename__ = "radiusserver"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("radiusserver_seq"), primary_key=True)
     # This is a name to refer to
     identifier = db.Column(db.Unicode(255), nullable=False, unique=True)
@@ -2428,9 +2399,8 @@ class RADIUSServer(MethodsMixin, db.Model):
     server = db.Column(db.Unicode(255), nullable=False)
     port = db.Column(db.Integer, default=25)
     secret = db.Column(db.Unicode(255), default="")
-    dictionary = db.Column(db.Unicode(255),
-                           default="/etc/edumfa/dictionary")
-    description = db.Column(db.Unicode(2000), default='')
+    dictionary = db.Column(db.Unicode(255), default="/etc/edumfa/dictionary")
+    description = db.Column(db.Unicode(2000), default="")
     timeout = db.Column(db.Integer, default=5)
     retries = db.Column(db.Integer, default=3)
 
@@ -2439,8 +2409,7 @@ class RADIUSServer(MethodsMixin, db.Model):
         If a RADIUS server with a given name is save, then the existing
         RADIUS server is updated.
         """
-        radius = RADIUSServer.query.filter(RADIUSServer.identifier ==
-                                           self.identifier).first()
+        radius = RADIUSServer.query.filter(RADIUSServer.identifier == self.identifier).first()
         if radius is None:
             # create a new one
             db.session.add(self)
@@ -2461,8 +2430,7 @@ class RADIUSServer(MethodsMixin, db.Model):
                 values["timeout"] = int(self.timeout)
             if self.retries is not None:
                 values["retries"] = int(self.retries)
-            RADIUSServer.query.filter(RADIUSServer.identifier ==
-                                      self.identifier).update(values)
+            RADIUSServer.query.filter(RADIUSServer.identifier == self.identifier).update(values)
             ret = radius.id
         db.session.commit()
         return ret
@@ -2477,9 +2445,10 @@ class SMTPServer(MethodsMixin, db.Model):
     Each Machine Resolver can have multiple configuration entries.
     The config entries are referenced by the id of the machine resolver
     """
-    __tablename__ = 'smtpserver'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("smtpserver_seq"),primary_key=True)
+
+    __tablename__ = "smtpserver"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("smtpserver_seq"), primary_key=True)
     # This is a name to refer to
     identifier = db.Column(db.Unicode(255), nullable=False)
     # This is the FQDN or the IP address
@@ -2489,7 +2458,7 @@ class SMTPServer(MethodsMixin, db.Model):
     password = db.Column(db.Unicode(255), default="")
     sender = db.Column(db.Unicode(255), default="")
     tls = db.Column(db.Boolean, default=False)
-    description = db.Column(db.Unicode(2000), default='')
+    description = db.Column(db.Unicode(2000), default="")
     timeout = db.Column(db.Integer, default=10)
     enqueue_job = db.Column(db.Boolean, nullable=False, default=False)
 
@@ -2512,8 +2481,7 @@ class SMTPServer(MethodsMixin, db.Model):
         }
 
     def save(self):
-        smtp = SMTPServer.query.filter(SMTPServer.identifier ==
-                                       self.identifier).first()
+        smtp = SMTPServer.query.filter(SMTPServer.identifier == self.identifier).first()
         if smtp is None:
             # create a new one
             db.session.add(self)
@@ -2538,8 +2506,7 @@ class SMTPServer(MethodsMixin, db.Model):
                 values["timeout"] = self.timeout
             if self.enqueue_job is not None:
                 values["enqueue_job"] = self.enqueue_job
-            SMTPServer.query.filter(SMTPServer.identifier ==
-                                    self.identifier).update(values)
+            SMTPServer.query.filter(SMTPServer.identifier == self.identifier).update(values)
             ret = smtp.id
         db.session.commit()
         return ret
@@ -2551,24 +2518,25 @@ class ClientApplication(MethodsMixin, db.Model):
     eduMFA.
     This table is filled automatically by authentication requests.
     """
-    __tablename__ = 'clientapplication'
+
+    __tablename__ = "clientapplication"
     id = db.Column(db.Integer, Sequence("clientapp_seq"), primary_key=True)
     ip = db.Column(db.Unicode(255), nullable=False, index=True)
     hostname = db.Column(db.Unicode(255))
     clienttype = db.Column(db.Unicode(255), nullable=False, index=True)
     lastseen = db.Column(db.DateTime, index=True, default=datetime.utcnow())
     node = db.Column(db.Unicode(255), nullable=False)
-    __table_args__ = (db.UniqueConstraint('ip',
-                                          'clienttype',
-                                          'node',
-                                          name='caix'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    __table_args__ = (
+        db.UniqueConstraint("ip", "clienttype", "node", name="caix"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def save(self):
         clientapp = ClientApplication.query.filter(
             ClientApplication.ip == self.ip,
             ClientApplication.clienttype == self.clienttype,
-            ClientApplication.node == self.node).first()
+            ClientApplication.node == self.node,
+        ).first()
         self.lastseen = datetime.now()
         if clientapp is None:
             # create a new one
@@ -2582,20 +2550,20 @@ class ClientApplication(MethodsMixin, db.Model):
         try:
             db.session.commit()
         except IntegrityError as e:  # pragma: no cover
-            log.info('Unable to write ClientApplication entry to db: {0!s}'.format(e))
+            log.info(f"Unable to write ClientApplication entry to db: {e!s}")
             log.debug(traceback.format_exc())
 
     def __repr__(self):
-        return "<ClientApplication [{0!s}][{1!s}:{2!s}] on {3!s}>".format(
-            self.id, self.ip, self.clienttype, self.node)
+        return f"<ClientApplication [{self.id!s}][{self.ip!s}:{self.clienttype!s}] on {self.node!s}>"
 
 
 class Subscription(MethodsMixin, db.Model):
     """
     This table stores the imported subscription files.
     """
-    __tablename__ = 'subscription'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+
+    __tablename__ = "subscription"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("subscription_seq"), primary_key=True)
     application = db.Column(db.Unicode(80), index=True)
     for_name = db.Column(db.Unicode(80), nullable=False)
@@ -2618,8 +2586,7 @@ class Subscription(MethodsMixin, db.Model):
     signature = db.Column(db.Unicode(640))
 
     def save(self):
-        subscription = Subscription.query.filter(
-            Subscription.application == self.application).first()
+        subscription = Subscription.query.filter(Subscription.application == self.application).first()
         if subscription is None:
             # create a new one
             db.session.add(self)
@@ -2628,15 +2595,13 @@ class Subscription(MethodsMixin, db.Model):
         else:
             # update
             values = self.get()
-            Subscription.query.filter(
-                Subscription.id == subscription.id).update(values)
+            Subscription.query.filter(Subscription.id == subscription.id).update(values)
             ret = subscription.id
         db.session.commit()
         return ret
 
     def __repr__(self):
-        return "<Subscription [{0!s}][{1!s}:{2!s}:{3!s}]>".format(
-            self.id, self.application, self.for_name, self.by_name)
+        return f"<Subscription [{self.id!s}][{self.application!s}:{self.for_name!s}:{self.by_name!s}]>"
 
     def get(self):
         """
@@ -2662,15 +2627,16 @@ class EventCounter(db.Model):
     table row. This way, we avoid locking issues that would occur
     if all nodes write to the same table row.
     """
-    __tablename__ = 'eventcounter'
+
+    __tablename__ = "eventcounter"
     id = db.Column(db.Integer, Sequence("eventcounter_seq"), primary_key=True)
     counter_name = db.Column(db.Unicode(80), nullable=False)
     counter_value = db.Column(db.Integer, default=0)
     node = db.Column(db.Unicode(255), nullable=False)
-    __table_args__ = (db.UniqueConstraint('counter_name',
-                                          'node',
-                                          name='evctr_1'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    __table_args__ = (
+        db.UniqueConstraint("counter_name", "node", name="evctr_1"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def __init__(self, name, value=0, node=""):
         self.counter_value = value
@@ -2707,31 +2673,34 @@ class EventCounter(db.Model):
 
 ### Audit
 
-audit_column_length = {"signature": 620,
-                       "action": 50,
-                       "serial": 40,
-                       "token_type": 12,
-                       "user": 20,
-                       "realm": 20,
-                       "resolver": 50,
-                       "administrator": 20,
-                       "action_detail": 50,
-                       "info": 50,
-                       "edumfa_server": 255,
-                       "client": 50,
-                       "loglevel": 12,
-                       "clearance_level": 12,
-                       "thread_id": 20,
-                       "policies": 255}
-AUDIT_TABLE_NAME = 'mfa_audit'
+audit_column_length = {
+    "signature": 620,
+    "action": 50,
+    "serial": 40,
+    "token_type": 12,
+    "user": 20,
+    "realm": 20,
+    "resolver": 50,
+    "administrator": 20,
+    "action_detail": 50,
+    "info": 50,
+    "edumfa_server": 255,
+    "client": 50,
+    "loglevel": 12,
+    "clearance_level": 12,
+    "thread_id": 20,
+    "policies": 255,
+}
+AUDIT_TABLE_NAME = "mfa_audit"
 
 
 class Audit(MethodsMixin, db.Model):
     """
     This class stores the Audit entries
     """
+
     __tablename__ = AUDIT_TABLE_NAME
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("audit_seq"), primary_key=True)
     date = db.Column(db.DateTime, index=True)
     startdate = db.Column(db.DateTime)
@@ -2744,40 +2713,37 @@ class Audit(MethodsMixin, db.Model):
     user = db.Column(db.Unicode(audit_column_length.get("user")), index=True)
     realm = db.Column(db.Unicode(audit_column_length.get("realm")))
     resolver = db.Column(db.Unicode(audit_column_length.get("resolver")))
-    administrator = db.Column(
-        db.Unicode(audit_column_length.get("administrator")))
-    action_detail = db.Column(
-        db.Unicode(audit_column_length.get("action_detail")))
+    administrator = db.Column(db.Unicode(audit_column_length.get("administrator")))
+    action_detail = db.Column(db.Unicode(audit_column_length.get("action_detail")))
     info = db.Column(db.Unicode(audit_column_length.get("info")))
-    edumfa_server = db.Column(
-        db.Unicode(audit_column_length.get("edumfa_server")))
+    edumfa_server = db.Column(db.Unicode(audit_column_length.get("edumfa_server")))
     client = db.Column(db.Unicode(audit_column_length.get("client")))
     loglevel = db.Column(db.Unicode(audit_column_length.get("loglevel")))
-    clearance_level = db.Column(db.Unicode(audit_column_length.get(
-        "clearance_level")))
+    clearance_level = db.Column(db.Unicode(audit_column_length.get("clearance_level")))
     thread_id = db.Column(db.Unicode(audit_column_length.get("thread_id")))
     policies = db.Column(db.Unicode(audit_column_length.get("policies")))
 
-    def __init__(self,
-                 action="",
-                 success=0,
-                 serial="",
-                 token_type="",
-                 user="",
-                 realm="",
-                 resolver="",
-                 administrator="",
-                 action_detail="",
-                 info="",
-                 edumfa_server="",
-                 client="",
-                 loglevel="default",
-                 clearance_level="default",
-                 thread_id="0",
-                 policies="",
-                 startdate=None,
-                 duration=None
-                 ):
+    def __init__(
+        self,
+        action="",
+        success=0,
+        serial="",
+        token_type="",
+        user="",
+        realm="",
+        resolver="",
+        administrator="",
+        action_detail="",
+        info="",
+        edumfa_server="",
+        client="",
+        loglevel="default",
+        clearance_level="default",
+        thread_id="0",
+        policies="",
+        startdate=None,
+        duration=None,
+    ):
         self.signature = ""
         self.date = datetime.now()
         self.startdate = startdate
@@ -2802,14 +2768,15 @@ class Audit(MethodsMixin, db.Model):
 
 ### User Cache
 
+
 class UserCache(MethodsMixin, db.Model):
-    __tablename__ = 'usercache'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+    __tablename__ = "usercache"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("usercache_seq"), primary_key=True)
     username = db.Column(db.Unicode(64), default="", index=True)
     used_login = db.Column(db.Unicode(64), default="", index=True)
-    resolver = db.Column(db.Unicode(120), default='')
-    user_id = db.Column(db.Unicode(320), default='', index=True)
+    resolver = db.Column(db.Unicode(120), default="")
+    user_id = db.Column(db.Unicode(320), default="", index=True)
     timestamp = db.Column(db.DateTime, index=True)
 
     def __init__(self, username, used_login, resolver, user_id, timestamp):
@@ -2821,14 +2788,14 @@ class UserCache(MethodsMixin, db.Model):
 
 
 class AuthCache(MethodsMixin, db.Model):
-    __tablename__ = 'authcache'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+    __tablename__ = "authcache"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("authcache_seq"), primary_key=True)
     first_auth = db.Column(db.DateTime, index=True)
     last_auth = db.Column(db.DateTime, index=True)
     username = db.Column(db.Unicode(64), default="", index=True)
-    resolver = db.Column(db.Unicode(120), default='', index=True)
-    realm = db.Column(db.Unicode(120), default='', index=True)
+    resolver = db.Column(db.Unicode(120), default="", index=True)
+    realm = db.Column(db.Unicode(120), default="", index=True)
     client_ip = db.Column(db.Unicode(40), default="")
     user_agent = db.Column(db.Unicode(120), default="")
     auth_count = db.Column(db.Integer, default=0)
@@ -2836,8 +2803,7 @@ class AuthCache(MethodsMixin, db.Model):
     # binascii.hexlify(hashlib.sha256("secret123456").digest())
     authentication = db.Column(db.Unicode(255), default="")
 
-    def __init__(self, username, realm, resolver, authentication,
-                 first_auth=None, last_auth=None):
+    def __init__(self, username, realm, resolver, authentication, first_auth=None, last_auth=None):
         self.username = username
         self.realm = realm
         self.resolver = resolver
@@ -2848,12 +2814,14 @@ class AuthCache(MethodsMixin, db.Model):
 
 ### Periodic Tasks
 
+
 class PeriodicTask(MethodsMixin, db.Model):
     """
     This class stores tasks that should be run periodically.
     """
-    __tablename__ = 'periodictask'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
+
+    __tablename__ = "periodictask"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("periodictask_seq"), primary_key=True)
     name = db.Column(db.Unicode(64), unique=True, nullable=False)
     active = db.Column(db.Boolean, default=True, nullable=False)
@@ -2863,15 +2831,21 @@ class PeriodicTask(MethodsMixin, db.Model):
     taskmodule = db.Column(db.Unicode(256), nullable=False)
     ordering = db.Column(db.Integer, nullable=False, default=0)
     last_update = db.Column(db.DateTime(False), nullable=False)
-    options = db.relationship('PeriodicTaskOption',
-                              lazy='dynamic',
-                              backref='periodictask')
-    last_runs = db.relationship('PeriodicTaskLastRun',
-                                lazy='dynamic',
-                                backref='periodictask')
+    options = db.relationship("PeriodicTaskOption", lazy="dynamic", backref="periodictask")
+    last_runs = db.relationship("PeriodicTaskLastRun", lazy="dynamic", backref="periodictask")
 
-    def __init__(self, name, active, interval, node_list, taskmodule, ordering, options=None, id=None,
-                 retry_if_failed=True):
+    def __init__(
+        self,
+        name,
+        active,
+        interval,
+        node_list,
+        taskmodule,
+        ordering,
+        options=None,
+        id=None,
+        retry_if_failed=True,
+    ):
         """
         :param name: Unique name of the periodic task as unicode
         :param active: a boolean
@@ -2926,17 +2900,19 @@ class PeriodicTask(MethodsMixin, db.Model):
 
         :return: complete dict
         """
-        return {"id": self.id,
-                "name": self.name,
-                "active": self.active,
-                "interval": self.interval,
-                "nodes": [node.strip() for node in self.nodes.split(",")],
-                "taskmodule": self.taskmodule,
-                "retry_if_failed": self.retry_if_failed,
-                "last_update": self.aware_last_update,
-                "ordering": self.ordering,
-                "options": dict((option.key, option.value) for option in self.options),
-                "last_runs": dict((last_run.node, last_run.aware_timestamp) for last_run in self.last_runs)}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "active": self.active,
+            "interval": self.interval,
+            "nodes": [node.strip() for node in self.nodes.split(",")],
+            "taskmodule": self.taskmodule,
+            "retry_if_failed": self.retry_if_failed,
+            "last_update": self.aware_last_update,
+            "ordering": self.ordering,
+            "options": dict((option.key, option.value) for option in self.options),
+            "last_runs": dict((last_run.node, last_run.aware_timestamp) for last_run in self.last_runs),
+        }
 
     def save(self):
         """
@@ -2950,16 +2926,18 @@ class PeriodicTask(MethodsMixin, db.Model):
             db.session.add(self)
         else:
             # update
-            PeriodicTask.query.filter_by(id=self.id).update({
-                "name": self.name,
-                "active": self.active,
-                "interval": self.interval,
-                "nodes": self.nodes,
-                "taskmodule": self.taskmodule,
-                "ordering": self.ordering,
-                "retry_if_failed": self.retry_if_failed,
-                "last_update": self.last_update,
-            })
+            PeriodicTask.query.filter_by(id=self.id).update(
+                {
+                    "name": self.name,
+                    "active": self.active,
+                    "interval": self.interval,
+                    "nodes": self.nodes,
+                    "taskmodule": self.taskmodule,
+                    "ordering": self.ordering,
+                    "retry_if_failed": self.retry_if_failed,
+                    "last_update": self.last_update,
+                }
+            )
         db.session.commit()
         return self.id
 
@@ -2987,17 +2965,17 @@ class PeriodicTaskOption(db.Model):
     Each PeriodicTask entry can have additional options according to the
     task module.
     """
-    __tablename__ = 'periodictaskoption'
-    id = db.Column(db.Integer, Sequence("periodictaskopt_seq"),
-                   primary_key=True)
-    periodictask_id = db.Column(db.Integer, db.ForeignKey('periodictask.id'))
-    key = db.Column(db.Unicode(255), nullable=False)
-    value = db.Column(db.Unicode(2000), default='')
 
-    __table_args__ = (db.UniqueConstraint('periodictask_id',
-                                          'key',
-                                          name='ptoix_1'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    __tablename__ = "periodictaskoption"
+    id = db.Column(db.Integer, Sequence("periodictaskopt_seq"), primary_key=True)
+    periodictask_id = db.Column(db.Integer, db.ForeignKey("periodictask.id"))
+    key = db.Column(db.Unicode(255), nullable=False)
+    value = db.Column(db.Unicode(2000), default="")
+
+    __table_args__ = (
+        db.UniqueConstraint("periodictask_id", "key", name="ptoix_1"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def __init__(self, periodictask_id, key, value):
         self.periodictask_id = periodictask_id
@@ -3010,18 +2988,18 @@ class PeriodicTaskOption(db.Model):
         Create or update a PeriodicTaskOption entry, depending on the value of ``self.id``
         :return: the entry ID
         """
-        option = PeriodicTaskOption.query.filter_by(
-            periodictask_id=self.periodictask_id, key=self.key
-        ).first()
+        option = PeriodicTaskOption.query.filter_by(periodictask_id=self.periodictask_id, key=self.key).first()
         if option is None:
             # create a new one
             db.session.add(self)
             ret = self.id
         else:
             # update
-            PeriodicTaskOption.query.filter_by(periodictask_id=self.periodictask_id, key=self.key).update({
-                'value': self.value,
-            })
+            PeriodicTaskOption.query.filter_by(periodictask_id=self.periodictask_id, key=self.key).update(
+                {
+                    "value": self.value,
+                }
+            )
             ret = option.id
         db.session.commit()
         return ret
@@ -3031,17 +3009,17 @@ class PeriodicTaskLastRun(db.Model):
     """
     Each PeriodicTask entry stores, for each node, the timestamp of the last successful run.
     """
-    __tablename__ = 'periodictasklastrun'
-    id = db.Column(db.Integer, Sequence("periodictasklastrun_seq"),
-                   primary_key=True)
-    periodictask_id = db.Column(db.Integer, db.ForeignKey('periodictask.id'))
+
+    __tablename__ = "periodictasklastrun"
+    id = db.Column(db.Integer, Sequence("periodictasklastrun_seq"), primary_key=True)
+    periodictask_id = db.Column(db.Integer, db.ForeignKey("periodictask.id"))
     node = db.Column(db.Unicode(255), nullable=False)
     timestamp = db.Column(db.DateTime(False), nullable=False)
 
-    __table_args__ = (db.UniqueConstraint('periodictask_id',
-                                          'node',
-                                          name='ptlrix_1'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    __table_args__ = (
+        db.UniqueConstraint("periodictask_id", "node", name="ptlrix_1"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def __init__(self, periodictask_id, node, timestamp):
         """
@@ -3068,7 +3046,8 @@ class PeriodicTaskLastRun(db.Model):
         :return: the entry id
         """
         last_run = PeriodicTaskLastRun.query.filter_by(
-            periodictask_id=self.periodictask_id, node=self.node,
+            periodictask_id=self.periodictask_id,
+            node=self.node,
         ).first()
         if last_run is None:
             # create a new one
@@ -3076,9 +3055,11 @@ class PeriodicTaskLastRun(db.Model):
             ret = self.id
         else:
             # update
-            PeriodicTaskLastRun.query.filter_by(periodictask_id=self.periodictask_id, node=self.node).update({
-                'timestamp': self.timestamp,
-            })
+            PeriodicTaskLastRun.query.filter_by(periodictask_id=self.periodictask_id, node=self.node).update(
+                {
+                    "timestamp": self.timestamp,
+                }
+            )
             ret = last_run.id
         db.session.commit()
         return ret
@@ -3091,18 +3072,18 @@ class MonitoringStats(MethodsMixin, db.Model):
     This could be used to store time series but also to store current values,
     by simply fetching the last value from the database.
     """
-    __tablename__ = 'monitoringstats'
-    id = db.Column(db.Integer, Sequence("monitoringstats_seq"),
-                   primary_key=True)
+
+    __tablename__ = "monitoringstats"
+    id = db.Column(db.Integer, Sequence("monitoringstats_seq"), primary_key=True)
     # We store this as a naive datetime in UTC
     timestamp = db.Column(db.DateTime(False), nullable=False, index=True)
     stats_key = db.Column(db.Unicode(128), nullable=False)
     stats_value = db.Column(db.Integer, nullable=False, default=0)
 
-    __table_args__ = (db.UniqueConstraint('timestamp',
-                                          'stats_key',
-                                          name='msix_1'),
-                      {'mysql_row_format': 'DYNAMIC'})
+    __table_args__ = (
+        db.UniqueConstraint("timestamp", "stats_key", name="msix_1"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
 
     def __init__(self, timestamp, key, value):
         """
@@ -3117,7 +3098,7 @@ class MonitoringStats(MethodsMixin, db.Model):
         self.timestamp = timestamp
         self.stats_key = key
         self.stats_value = value
-        #self.save()
+        # self.save()
 
 
 class Serviceid(TimestampMethodsMixin, db.Model):
@@ -3126,13 +3107,12 @@ class Serviceid(TimestampMethodsMixin, db.Model):
     describe services like "webservers" or "dbservers" which e.g. request SSH keys
     from the eduMFA system.
     """
-    __tablename__ = 'serviceid'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("serviceid_seq"), primary_key=True,
-                   nullable=False)
-    name = db.Column(db.Unicode(255), default='',
-                     unique=True, nullable=False)
-    Description = db.Column(db.Unicode(2000), default='')
+
+    __tablename__ = "serviceid"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("serviceid_seq"), primary_key=True, nullable=False)
+    name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
+    Description = db.Column(db.Unicode(2000), default="")
 
     @log_with(log)
     def __init__(self, servicename, description=None):
@@ -3145,7 +3125,7 @@ class Serviceid(TimestampMethodsMixin, db.Model):
             return TimestampMethodsMixin.save(self)
         else:
             # update
-            Serviceid.query.filter_by(id=si.id).update({'Description': self.Description})
+            Serviceid.query.filter_by(id=si.id).update({"Description": self.Description})
             ret = si.id
             db.session.commit()
         return ret
@@ -3156,13 +3136,12 @@ class Tokengroup(TimestampMethodsMixin, db.Model):
     The tokengroup table contains the definition of available token groups.
     A token can then be assigned to several of these tokengroups.
     """
-    __tablename__ = 'tokengroup'
-    __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("tokengroup_seq"), primary_key=True,
-                   nullable=False)
-    name = db.Column(db.Unicode(255), default='',
-                     unique=True, nullable=False)
-    Description = db.Column(db.Unicode(2000), default='')
+
+    __tablename__ = "tokengroup"
+    __table_args__ = {"mysql_row_format": "DYNAMIC"}
+    id = db.Column(db.Integer, Sequence("tokengroup_seq"), primary_key=True, nullable=False)
+    name = db.Column(db.Unicode(255), default="", unique=True, nullable=False)
+    Description = db.Column(db.Unicode(2000), default="")
 
     @log_with(log)
     def __init__(self, groupname, description=None):
@@ -3172,9 +3151,7 @@ class Tokengroup(TimestampMethodsMixin, db.Model):
     def delete(self):
         ret = self.id
         # delete all TokenTokenGroup
-        db.session.query(TokenTokengroup)\
-                  .filter(TokenTokengroup.tokengroup_id == ret)\
-                  .delete()
+        db.session.query(TokenTokengroup).filter(TokenTokengroup.tokengroup_id == ret).delete()
         # delete the tokengroup
         db.session.delete(self)
         save_config_timestamp()
@@ -3188,7 +3165,7 @@ class Tokengroup(TimestampMethodsMixin, db.Model):
             return TimestampMethodsMixin.save(self)
         else:
             # update
-            Tokengroup.query.filter_by(id=ti.id).update({'Description': self.Description})
+            Tokengroup.query.filter_by(id=ti.id).update({"Description": self.Description})
             ret = ti.id
             db.session.commit()
         return ret
@@ -3199,25 +3176,19 @@ class TokenTokengroup(TimestampMethodsMixin, db.Model):
     This table stores the assignment of tokens to tokengroups.
     A token can be assigned to several different token groups.
     """
-    __tablename__ = 'tokentokengroup'
-    __table_args__ = (db.UniqueConstraint('token_id',
-                                          'tokengroup_id',
-                                          name='ttgix_2'),
-                      {'mysql_row_format': 'DYNAMIC'})
-    id = db.Column(db.Integer(), Sequence("tokentokengroup_seq"), primary_key=True,
-                   nullable=True)
-    token_id = db.Column(db.Integer(),
-                         db.ForeignKey('token.id'))
-    tokengroup_id = db.Column(db.Integer(),
-                              db.ForeignKey('tokengroup.id'))
+
+    __tablename__ = "tokentokengroup"
+    __table_args__ = (
+        db.UniqueConstraint("token_id", "tokengroup_id", name="ttgix_2"),
+        {"mysql_row_format": "DYNAMIC"},
+    )
+    id = db.Column(db.Integer(), Sequence("tokentokengroup_seq"), primary_key=True, nullable=True)
+    token_id = db.Column(db.Integer(), db.ForeignKey("token.id"))
+    tokengroup_id = db.Column(db.Integer(), db.ForeignKey("tokengroup.id"))
     # This creates an attribute "tokengroup_list" in the Token object
-    token = db.relationship('Token',
-                            lazy='joined',
-                            backref='tokengroup_list')
+    token = db.relationship("Token", lazy="joined", backref="tokengroup_list")
     # This creates an attribute "token_list" in the Tokengroup object
-    tokengroup = db.relationship('Tokengroup',
-                                 lazy='joined',
-                                 backref='token_list')
+    tokengroup = db.relationship("Tokengroup", lazy="joined", backref="token_list")
 
     def __init__(self, tokengroup_id=0, token_id=0, tokengroupname=None):
         """
@@ -3239,8 +3210,7 @@ class TokenTokengroup(TimestampMethodsMixin, db.Model):
         """
         We only save this, if it does not exist, yet.
         """
-        tr_func = TokenTokengroup.query.filter_by(tokengroup_id=self.tokengroup_id,
-                                                  token_id=self.token_id).first
+        tr_func = TokenTokengroup.query.filter_by(tokengroup_id=self.tokengroup_id, token_id=self.token_id).first
         tr = tr_func()
         if tr is None:
             # create a new one

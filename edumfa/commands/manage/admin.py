@@ -21,13 +21,13 @@
 import click
 from flask.cli import AppGroup
 
-from edumfa.lib.auth import (create_db_admin, delete_db_admin, get_db_admins)
+from edumfa.lib.auth import create_db_admin, delete_db_admin, get_db_admins
 
 admin_cli = AppGroup("admin", help="Manage local administrators")
 
 
 @admin_cli.command("add")
-@click.argument('username')
+@click.argument("username")
 @click.option("-e", "--email", "email")
 @click.password_option()
 def add_admin(username: str, email: str, password):
@@ -35,7 +35,7 @@ def add_admin(username: str, email: str, password):
     Register a new administrator in the database.
     """
     create_db_admin(username, email, password)
-    click.echo('Admin {0} was registered successfully.'.format(username))
+    click.echo(f"Admin {username} was registered successfully.")
 
 
 @admin_cli.command("list")
@@ -51,7 +51,7 @@ def list_admin():
 
 
 @admin_cli.command("change")
-@click.argument('username')
+@click.argument("username")
 @click.option("-e", "--email", "email")
 @click.password_option()
 def change_admin(username: str, email: str, password):

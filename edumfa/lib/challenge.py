@@ -54,8 +54,7 @@ def get_challenges(serial=None, transaction_id=None, challenge=None):
 
     if transaction_id is not None:
         # filter for transaction id
-        sql_query = sql_query.filter(Challenge.transaction_id ==
-                                     transaction_id)
+        sql_query = sql_query.filter(Challenge.transaction_id == transaction_id)
 
     if challenge is not None:
         # filter for this challenge
@@ -66,9 +65,14 @@ def get_challenges(serial=None, transaction_id=None, challenge=None):
 
 
 @log_with(log)
-def get_challenges_paginate(serial=None, transaction_id=None,
-                            sortby=Challenge.timestamp,
-                            sortdir="asc", psize=15, page=1):
+def get_challenges_paginate(
+    serial=None,
+    transaction_id=None,
+    sortby=Challenge.timestamp,
+    sortdir="asc",
+    psize=15,
+    page=1,
+):
     """
     This function is used to retrieve a challenge list, that can be displayed in
     the Web UI. It supports pagination.
@@ -89,8 +93,7 @@ def get_challenges_paginate(serial=None, transaction_id=None,
     :return: dict with challenges, prev, next and count
     :rtype: dict
     """
-    sql_query = _create_challenge_query(serial=serial,
-                                        transaction_id=transaction_id)
+    sql_query = _create_challenge_query(serial=serial, transaction_id=transaction_id)
 
     if isinstance(sortby, str):
         # convert the string to a Challenge column
@@ -102,12 +105,11 @@ def get_challenges_paginate(serial=None, transaction_id=None,
     else:
         sql_query = sql_query.order_by(sortby.asc())
 
-    pagination = sql_query.paginate(page=page, per_page=psize,
-                                    error_out=False)
+    pagination = sql_query.paginate(page=page, per_page=psize, error_out=False)
     challenges = pagination.items
     prev = None
     if pagination.has_prev:
-        prev = page-1
+        prev = page - 1
     next = None
     if pagination.has_next:
         next = page + 1
@@ -116,11 +118,13 @@ def get_challenges_paginate(serial=None, transaction_id=None,
         challenge_dict = challenge.get()
         challenge_list.append(challenge_dict)
 
-    ret = {"challenges": challenge_list,
-           "prev": prev,
-           "next": next,
-           "current": page,
-           "count": pagination.total}
+    ret = {
+        "challenges": challenge_list,
+        "prev": prev,
+        "next": next,
+        "current": page,
+        "count": pagination.total,
+    }
     return ret
 
 
@@ -135,8 +139,7 @@ def _create_challenge_query(serial=None, transaction_id=None):
         # filter for serial
         if "*" in serial:
             # match with "like"
-            sql_query = sql_query.filter(Challenge.serial.like(serial.replace(
-                "*", "%")))
+            sql_query = sql_query.filter(Challenge.serial.like(serial.replace("*", "%")))
         else:
             # exact match
             sql_query = sql_query.filter(Challenge.serial == serial)
@@ -145,9 +148,7 @@ def _create_challenge_query(serial=None, transaction_id=None):
         # filter for serial
         if "*" in transaction_id:
             # match with "like"
-            sql_query = sql_query.filter(Challenge.transaction_id.like(
-                transaction_id.replace(
-                "*", "%")))
+            sql_query = sql_query.filter(Challenge.transaction_id.like(transaction_id.replace("*", "%")))
         else:
             # exact match
             sql_query = sql_query.filter(Challenge.transaction_id == transaction_id)

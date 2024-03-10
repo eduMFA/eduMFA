@@ -26,6 +26,7 @@ from edumfa.lib.error import TokenAdminError
 from edumfa.lib.error import ParameterError
 from edumfa.lib import _
 from edumfa.lib.utils import check_serial_valid
+
 log = logging.getLogger(__name__)
 
 
@@ -37,13 +38,13 @@ def check_token_locked(func):
 
     If the token is locked, a TokenAdminError is raised.
     """
+
     @functools.wraps(func)
     def token_locked_wrapper(*args, **kwds):
         # The token object
         token = args[0]
         if token.is_locked():
-            raise TokenAdminError(_("This action is not possible, since the "
-                                    "token is locked"), id=1007)
+            raise TokenAdminError(_("This action is not possible, since the token is locked"), id=1007)
         f_result = func(*args, **kwds)
         return f_result
 
@@ -57,6 +58,7 @@ def check_user_or_serial(func):
     not both parameters are None. Otherwise it will throw an exception
     ParameterError.
     """
+
     @functools.wraps(func)
     def user_or_serial_wrapper(*args, **kwds):
         # If there is no user and serial keyword parameter and if
@@ -64,8 +66,7 @@ def check_user_or_serial(func):
         serial = kwds.get("serial")
         user = kwds.get("user")
         # We have no serial! The serial would be the first arg
-        if (serial is None and (len(args) == 0 or args[0] is None) and
-                (user is None or (user is not None and user.is_empty()))):
+        if serial is None and (len(args) == 0 or args[0] is None) and (user is None or (user is not None and user.is_empty())):
             # We either have an empty User object or None
             raise ParameterError(ParameterError.USER_OR_SERIAL)
 
@@ -84,11 +85,13 @@ class check_user_or_serial_in_request(object):
     If the request does not contain a serial number (serial) or a user
     (user) it will throw a ParameterError.
     """
+
     def __init__(self, request):
         self.request = request
 
     def __call__(self, func):
         from edumfa.lib.tokens.webauthntoken import WebAuthnTokenClass
+
         @functools.wraps(func)
         def check_user_or_serial_in_request_wrapper(*args, **kwds):
             if self.request.full_path.startswith("/validate/triggerchallenge") or self.request.full_path.startswith("/validate/check"):
@@ -118,21 +121,19 @@ def check_copy_serials(func):
     If the serials are not unique or do not exist, we raise an error
     """
     from edumfa.lib.token import get_tokens
+
     @functools.wraps(func)
     def check_serial_wrapper(*args, **kwds):
         tokenobject_list_from = get_tokens(serial=args[0])
         tokenobject_list_to = get_tokens(serial=args[1])
         if len(tokenobject_list_from) != 1:
             log.error("not a unique token to copy from found")
-            raise(TokenAdminError("No unique token to copy from found",
-                                   id=1016))
+            raise (TokenAdminError("No unique token to copy from found", id=1016))
         if len(tokenobject_list_to) != 1:
             log.error("not a unique token to copy to found")
-            raise(TokenAdminError("No unique token to copy to found",
-                                   id=1017))
+            raise (TokenAdminError("No unique token to copy to found", id=1017))
 
         f_result = func(*args, **kwds)
         return f_result
 
     return check_serial_wrapper
-

@@ -26,8 +26,14 @@ authcache_cli = AppGroup("authcache", help="Manage authentication cache")
 
 
 @authcache_cli.command("cleanup")
-@click.option("-m", "--minutes", default=480, show_default=True, type=int,
-              help="Clean up authcache entries older than this number of minutes")
+@click.option(
+    "-m",
+    "--minutes",
+    default=480,
+    show_default=True,
+    type=int,
+    help="Clean up authcache entries older than this number of minutes",
+)
 def authcache_cleanup(minutes: int):
     """
     Remove entries from the authcache.

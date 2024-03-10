@@ -3,6 +3,7 @@
 """
 This file contains the tests for lib/sqlutils.py
 """
+
 from datetime import datetime
 
 from mock import MagicMock
@@ -32,40 +33,45 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
         now = datetime.now()
         stmt_age = DeleteLimit(LogEntry.__table__, LogEntry.date < now)
         with warnings.catch_warnings():
-            warnings.simplefilter('ignore', category=BytesWarning)
-            self.assert_compile(stmt_age,
-                                "DELETE FROM mfa_audit WHERE mfa_audit.id IN "
-                                "(SELECT mfa_audit.id FROM mfa_audit WHERE "
-                                "mfa_audit.date < :date_1 LIMIT :param_1)",
-                                checkparams={"date_1": now, "param_1": 1000},
-                                dialect='default')
+            warnings.simplefilter("ignore", category=BytesWarning)
+            self.assert_compile(
+                stmt_age,
+                "DELETE FROM mfa_audit WHERE mfa_audit.id IN (SELECT mfa_audit.id FROM mfa_audit WHERE mfa_audit.date < :date_1 LIMIT :param_1)",
+                checkparams={"date_1": now, "param_1": 1000},
+                dialect="default",
+            )
         with warnings.catch_warnings():
-            warnings.simplefilter('ignore', category=BytesWarning)
-            self.assert_compile(stmt_age,
-                                "DELETE FROM mfa_audit WHERE mfa_audit.date < %s LIMIT 1000",
-                                checkpositional=(now,),
-                                dialect='mysql')
+            warnings.simplefilter("ignore", category=BytesWarning)
+            self.assert_compile(
+                stmt_age,
+                "DELETE FROM mfa_audit WHERE mfa_audit.date < %s LIMIT 1000",
+                checkpositional=(now,),
+                dialect="mysql",
+            )
 
         stmt_id = DeleteLimit(LogEntry.__table__, LogEntry.id < 1000, 1234)
         with warnings.catch_warnings():
-            warnings.simplefilter('ignore', category=BytesWarning)
-            self.assert_compile(stmt_id,
-                                "DELETE FROM mfa_audit WHERE mfa_audit.id IN "
-                                "(SELECT mfa_audit.id FROM mfa_audit WHERE "
-                                "mfa_audit.id < :id_1 LIMIT :param_1)",
-                                checkparams={"id_1": 1000, "param_1": 1234},
-                                dialect='default')
+            warnings.simplefilter("ignore", category=BytesWarning)
+            self.assert_compile(
+                stmt_id,
+                "DELETE FROM mfa_audit WHERE mfa_audit.id IN (SELECT mfa_audit.id FROM mfa_audit WHERE mfa_audit.id < :id_1 LIMIT :param_1)",
+                checkparams={"id_1": 1000, "param_1": 1234},
+                dialect="default",
+            )
         with warnings.catch_warnings():
-            warnings.simplefilter('ignore', category=BytesWarning)
-            self.assert_compile(stmt_id,
-                                "DELETE FROM mfa_audit WHERE mfa_audit.id < %s LIMIT 1234",
-                                checkpositional=(1000,),
-                                dialect='mysql')
+            warnings.simplefilter("ignore", category=BytesWarning)
+            self.assert_compile(
+                stmt_id,
+                "DELETE FROM mfa_audit WHERE mfa_audit.id < %s LIMIT 1234",
+                checkpositional=(1000,),
+                dialect="mysql",
+            )
 
     def test_03_delete(self):
         session = MagicMock()
 
         fake_results = [1000, 1000, 500]
+
         def fake_execute_delete1(stmt):
             result = MagicMock()
             result.rowcount = fake_results.pop(0)
@@ -79,10 +85,12 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
         self.assertEqual(result, 2500)
 
         session.execute.reset_mock()
+
         def fake_execute_delete2(stmt):
             result = MagicMock()
             result.rowcount = 2500
             return result
+
         session.execute.side_effect = fake_execute_delete2
         # delete in one statement
         result = delete_matching_rows(session, LogEntry.__table__, LogEntry.id < 1234)

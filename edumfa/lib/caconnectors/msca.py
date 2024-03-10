@@ -38,20 +38,29 @@ log = logging.getLogger(__name__)
 try:
     import grpc
     from edumfa.lib.caconnectors.caservice_pb2_grpc import CAServiceStub
-    from edumfa.lib.caconnectors.caservice_pb2 import (GetCAsRequest,
-                                                            GetTemplatesRequest,
-                                                            GetCSRStatusRequest,
-                                                            GetCSRStatusReply,
-                                                            SubmitCSRRequest,
-                                                            GetCertificateRequest,
-                                                            GetCertificateReply)
+    from edumfa.lib.caconnectors.caservice_pb2 import (
+        GetCAsRequest,
+        GetTemplatesRequest,
+        GetCSRStatusRequest,
+        GetCSRStatusReply,
+        SubmitCSRRequest,
+        GetCertificateRequest,
+        GetCertificateReply,
+    )
+
     AvailableCAConnectors.append("edumfa.lib.caconnectors.msca.MSCAConnector")
 except ImportError:  # pragma: no cover
     log.warning("Can not import grpc modules.")
 
 
-CRL_REASONS = ["unspecified", "keyCompromise", "CACompromise",
-               "affiliationChanged", "superseded", "cessationOfOperation"]
+CRL_REASONS = [
+    "unspecified",
+    "keyCompromise",
+    "CACompromise",
+    "affiliationChanged",
+    "superseded",
+    "cessationOfOperation",
+]
 
 TIMEOUT = 3
 
@@ -77,7 +86,9 @@ class CONFIG(object):  # pragma: no cover
         Connect via HTTP Proxy      : {ca.http_proxy}
         CA               : {ca.ca}
         Use SSL          : {ca.use_ssl}
-        """.format(ca=self)
+        """.format(
+            ca=self
+        )
         return s
 
 
@@ -152,19 +163,19 @@ class MSCAConnector(BaseCAConnector):
         if self.use_ssl:
             # Secure connection
             if not (self.ssl_ca_cert and self.ssl_client_cert and self.ssl_client_key):
-                log.error("For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert'"
-                          " and 'ssl_client_key'. The following configuration seems incomplete: "
-                          "({0!s}, {1!s}, {2!s})".format(self.ssl_ca_cert, self.ssl_client_cert,
-                                                         self.ssl_client_key))
-                raise CAError('Incomplete TLS configuration for MSCA worker '
-                              'configuration {0!s}'.format(self.name))
+                log.error(
+                    "For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert' and 'ssl_client_key'. The following configuration seems incomplete: ({0!s}, {1!s}, {2!s})".format(
+                        self.ssl_ca_cert, self.ssl_client_cert, self.ssl_client_key
+                    )
+                )
+                raise CAError(f"Incomplete TLS configuration for MSCA worker configuration {self.name!s}")
             else:
                 # Read all stuff. We need to provide all parameters as PEM encoded byte string
-                with open(self.ssl_ca_cert, 'rb') as f:
+                with open(self.ssl_ca_cert, "rb") as f:
                     ca_cert_pem = f.read()
-                with open(self.ssl_client_cert, 'rb') as f:
+                with open(self.ssl_client_cert, "rb") as f:
                     client_cert_pem = f.read()
-                with open(self.ssl_client_key, 'rb') as f:
+                with open(self.ssl_client_key, "rb") as f:
                     client_key_pem = f.read()
                 try:
                     log.debug("Decrypting client private key with password.")
@@ -176,27 +187,30 @@ class MSCAConnector(BaseCAConnector):
                     client_key_pem = private_key.private_bytes(
                         encoding=serialization.Encoding.PEM,
                         format=serialization.PrivateFormat.TraditionalOpenSSL,
-                        encryption_algorithm=serialization.NoEncryption()
+                        encryption_algorithm=serialization.NoEncryption(),
                     )
                     log.debug("Client private key decrypted.")
                 except ValueError as e:
-                    log.error('Could not decrypt TLS key with given password. '
-                              '({0!s})'.format(e))
-                    raise CAError('Invalid TLS configuration for MSCA worker.')
+                    log.error(f"Could not decrypt TLS key with given password. ({e!s})")
+                    raise CAError("Invalid TLS configuration for MSCA worker.")
                 except TypeError as e:
-                    log.error("Faulty configuration in CA '{0!s}'. "
-                              "Trying to use an encrypted private key "
-                              "without providing a password (or vice versa)! "
-                              "The CA connector will not work! ({1!s})".format(self.name, e))
-                    raise CAError('Invalid TLS configuration for MSCA worker.')
+                    log.error(
+                        f"Faulty configuration in CA '{self.name!s}'. Trying to use an encrypted private key without providing a password (or vice versa)! The CA connector will"
+                        f" not work! ({e!s})"
+                    )
+                    raise CAError("Invalid TLS configuration for MSCA worker.")
 
                 credentials = grpc.ssl_channel_credentials(ca_cert_pem, client_key_pem, client_cert_pem)
-                channel = grpc.secure_channel('{0!s}:{1!s}'.format(self.hostname, self.port),
-                                              credentials,
-                                              options=(('grpc.enable_http_proxy', int(is_true(self.http_proxy))),))
+                channel = grpc.secure_channel(
+                    f"{self.hostname!s}:{self.port!s}",
+                    credentials,
+                    options=(("grpc.enable_http_proxy", int(is_true(self.http_proxy))),),
+                )
         else:
-            channel = grpc.insecure_channel('{0!s}:{1!s}'.format(self.hostname, self.port),
-                                            options=(('grpc.enable_http_proxy', int(is_true(self.http_proxy))),))
+            channel = grpc.insecure_channel(
+                f"{self.hostname!s}:{self.port!s}",
+                options=(("grpc.enable_http_proxy", int(is_true(self.http_proxy))),),
+            )
         try:
             grpc.channel_ready_future(channel).result(timeout=TIMEOUT)
         except grpc.FutureTimeoutError:
@@ -218,22 +232,23 @@ class MSCAConnector(BaseCAConnector):
         :rtype:  dict
         """
         typ = cls.connector_type
-        config = {ATTR.HOSTNAME: 'string',
-                  ATTR.PORT: 'string',
-                  ATTR.HTTP_PROXY: 'string',
-                  ATTR.CA: 'string',
-                  ATTR.USE_SSL: 'bool',
-                  ATTR.SSL_CA_CERT: 'string',
-                  ATTR.SSL_CLIENT_CERT: 'string',
-                  ATTR.SSL_CLIENT_KEY: 'string',
-                  ATTR.SSL_CLIENT_KEY_PASSWORD: 'password'}
+        config = {
+            ATTR.HOSTNAME: "string",
+            ATTR.PORT: "string",
+            ATTR.HTTP_PROXY: "string",
+            ATTR.CA: "string",
+            ATTR.USE_SSL: "bool",
+            ATTR.SSL_CA_CERT: "string",
+            ATTR.SSL_CLIENT_CERT: "string",
+            ATTR.SSL_CLIENT_KEY: "string",
+            ATTR.SSL_CLIENT_KEY_PASSWORD: "password",
+        }
         return {typ: config}
 
     def _check_attributes(self):
         for req_key in [ATTR.HOSTNAME, ATTR.PORT]:
             if req_key not in self.config:
-                raise CAError("required argument '{0!s}' is missing.".format(
-                    req_key))
+                raise CAError(f"required argument '{req_key!s}' is missing.")
 
     def set_config(self, config=None):
         self.config = config or {}
@@ -265,19 +280,17 @@ class MSCAConnector(BaseCAConnector):
         :rtype: (int, X509 or None)
         """
         if self.connection:
-            reply = self.connection.SubmitCSR(SubmitCSRRequest(csr=csr, templateName=options.get("template"),
-                                                               caName=self.ca))
+            reply = self.connection.SubmitCSR(SubmitCSRRequest(csr=csr, templateName=options.get("template"), caName=self.ca))
             if reply.disposition == 3:
                 request_id = reply.requestId
-                log.info("certificate with request ID {0!s} successfully rolled out".format(request_id))
-                certificate = self.connection.GetCertificate(GetCertificateRequest(id=request_id,
-                                                                                   caName=self.ca)).cert
+                log.info(f"certificate with request ID {request_id!s} successfully rolled out")
+                certificate = self.connection.GetCertificate(GetCertificateRequest(id=request_id, caName=self.ca)).cert
                 return request_id, crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
             if reply.disposition == 5:
                 log.info("cert still under submission")
                 raise CSRPending(requestId=reply.requestId)
             else:
-                log.warning("certification request could not be fulfilled! {0!s}".format(reply))
+                log.warning(f"certification request could not be fulfilled! {reply!s}")
                 raise CSRError(description=reply.dispositionMessage)
 
     def revoke_cert(self, certificate, request_id=None, reason=None):
@@ -373,32 +386,38 @@ class MSCAConnector(BaseCAConnector):
             config.hostname = input("Hostname of the eduMFA MS CA worker: ")
             config.port = input("Port of the eduMFA MS CA worker: ")
             config.http_proxy = input("Use HTTP proxy [0/1]: ")
-            dummy_ca = MSCAConnector("dummy", {ATTR.HOSTNAME: config.hostname,
-                                               ATTR.PORT: config.port,
-                                               ATTR.HTTP_PROXY: config.http_proxy})
+            dummy_ca = MSCAConnector(
+                "dummy",
+                {
+                    ATTR.HOSTNAME: config.hostname,
+                    ATTR.PORT: config.port,
+                    ATTR.HTTP_PROXY: config.http_proxy,
+                },
+            )
             # returns a list of machine names\CAnames
             cARequest = GetCAsRequest()
             cAReply = dummy_ca.connection.GetCAs(cARequest)
             cas = [x for x in cAReply.caNames]
             print("Available CAs: \n")
             for c in cas:
-                print("     {0!s}".format(c))
+                print(f"     {c!s}")
             config.ca = input("Choose CA: ".format(config.ca))
             print("=" * 60)
-            print("{0!s}".format(config))
+            print(f"{config!s}")
             answer = input("Is this configuration correct? [y/n] ")
             if answer.lower() == "y":
                 break
 
         # return the configuration to the upper level, so that the CA
         # connector can be created in the database
-        caparms = {"caconnector": name,
-                   "type": "microsoft",
-                   ATTR.HOSTNAME: config.hostname,
-                   ATTR.PORT: config.port,
-                   ATTR.HTTP_PROXY: config.http_proxy,
-                   ATTR.CA: config.ca
-                   }
+        caparms = {
+            "caconnector": name,
+            "type": "microsoft",
+            ATTR.HOSTNAME: config.hostname,
+            ATTR.PORT: config.port,
+            ATTR.HTTP_PROXY: config.http_proxy,
+            ATTR.CA: config.ca,
+        }
         return caparms
 
     def get_specific_options(self):

@@ -28,8 +28,7 @@
 #
 import string
 
-from ...lib.error import (ParameterError,
-                          AuthError, ERROR)
+from ...lib.error import ParameterError, AuthError, ERROR
 from ...lib.log import log_with
 from edumfa.lib import _
 from edumfa.lib.utils import prepare_result, get_version, to_unicode
@@ -41,21 +40,28 @@ import threading
 import re
 from copy import copy
 from urllib.parse import unquote
-from flask import (jsonify,
-                   current_app)
+from flask import jsonify, current_app
 
 log = logging.getLogger(__name__)
 ENCODING = "utf-8"
-TRUSTED_JWT_ALGOS = ["ES256", "ES384", "ES512",
-                     "RS256", "RS384", "RS512",
-                     "PS256", "PS384", "PS512"]
+TRUSTED_JWT_ALGOS = [
+    "ES256",
+    "ES384",
+    "ES512",
+    "RS256",
+    "RS384",
+    "RS512",
+    "PS256",
+    "PS384",
+    "PS512",
+]
 
 # The following user-agents (with versions) do not need extra unquoting
 # TODO: we should probably switch this when we do not do the extra unquote anymore
 NO_UNQUOTE_USER_AGENTS = {
-    'eduMFA-LDAP-Proxy': None,
-    'simpleSAMLphp': None,
-    'eduMFA-cp': None
+    "eduMFA-LDAP-Proxy": None,
+    "simpleSAMLphp": None,
+    "eduMFA-cp": None,
 }
 
 SESSION_KEY_LENGTH = 32
@@ -93,10 +99,10 @@ def getParam(param, key, optional=True, default=None, allow_empty=True, allowed_
     elif default:
         ret = default
     elif not optional:
-        raise ParameterError("Missing parameter: {0!r}".format(key), id=905)
+        raise ParameterError(f"Missing parameter: {key!r}", id=905)
 
     if not allow_empty and ret == "":
-        raise ParameterError("Parameter {0!r} must not be empty".format(key), id=905)
+        raise ParameterError(f"Parameter {key!r} must not be empty", id=905)
 
     if allowed_values and ret not in allowed_values:
         ret = default
@@ -150,16 +156,17 @@ def send_error(errstring, rid=1, context=None, error_code=-311, details=None):
     """
     if details:
         details["threadid"] = threading.current_thread().ident
-    res = {"jsonrpc": "2.0",
-           "detail": details,
-           "result": {"status": False,
-                      "error": {"code": error_code,
-                                "message": errstring}
-                      },
-           "version": get_version(),
-           "id": rid,
-           "time": time.time()
-           }
+    res = {
+        "jsonrpc": "2.0",
+        "detail": details,
+        "result": {
+            "status": False,
+            "error": {"code": error_code, "message": errstring},
+        },
+        "version": get_version(),
+        "id": rid,
+        "time": time.time(),
+    }
 
     ret = jsonify(res)
     return ret
@@ -174,10 +181,10 @@ def send_html(output):
     :return: The generated response
     :rtype: flask.Response
     """
-    return current_app.response_class(output, mimetype='text/html')
+    return current_app.response_class(output, mimetype="text/html")
 
 
-def send_file(output, filename, content_type='text/csv'):
+def send_file(output, filename, content_type="text/csv"):
     """
     Send the output to the client with the "Content-disposition" header to
     declare it as a downloadable file.
@@ -192,12 +199,11 @@ def send_file(output, filename, content_type='text/csv'):
     :return: The generated response
     :rtype: flask.Response
     """
-    headers = {'Content-disposition': 'attachment; filename={0!s}'.format(filename)}
+    headers = {"Content-disposition": f"attachment; filename={filename!s}"}
     return current_app.response_class(output, headers=headers, mimetype=content_type)
 
 
-def send_csv_result(obj, data_key="tokens",
-                    filename="eduMFA-tokendata.csv"):
+def send_csv_result(obj, data_key="tokens", filename="eduMFA-tokendata.csv"):
     """
     returns a CSV document of the input data (like in /token/list)
 
@@ -222,7 +228,7 @@ def send_csv_result(obj, data_key="tokens",
     if data_key in obj and len(obj[data_key]) > 0:
         # Do the header
         for k, _v in obj.get(data_key)[0].items():
-            output += "{0!s}{1!s}{2!s}, ".format(delim, k, delim)
+            output += f"{delim!s}{k!s}{delim!s}, "
         output += "\n"
 
         # Do the data
@@ -232,7 +238,7 @@ def send_csv_result(obj, data_key="tokens",
                     value = val.replace("\n", " ")
                 else:
                     value = val
-                output += "{0!s}{1!s}{2!s}, ".format(delim, value, delim)
+                output += f"{delim!s}{value!s}{delim!s}, "
             output += "\n"
 
     return send_file(output, filename)
@@ -268,9 +274,11 @@ def check_unquote(request, data):
     if not request.user_agent.string:
         return {key: unquote(value) for (key, value) in data.items()}
 
-    ua_match = re.match(r'^(?P<agent>[a-zA-Z0-9_-]+)(/(?P<version>\d+[\d.]*)(\s.*)?)?',
-                        request.user_agent.string)
-    if ua_match and not ua_match.group('agent') in NO_UNQUOTE_USER_AGENTS:
+    ua_match = re.match(
+        r"^(?P<agent>[a-zA-Z0-9_-]+)(/(?P<version>\d+[\d.]*)(\s.*)?)?",
+        request.user_agent.string,
+    )
+    if ua_match and not ua_match.group("agent") in NO_UNQUOTE_USER_AGENTS:
         return {key: unquote(value) for (key, value) in data.items()}
     else:
         return copy(data)
@@ -287,8 +295,7 @@ def get_all_params(request):
     body = request.data
     return_param = {}
     if param:
-        log.debug("Update params in request {0!s} {1!s} with values.".format(request.method,
-                                                                             request.base_url))
+        log.debug(f"Update params in request {request.method!s} {request.base_url!s} with values.")
         # Add the unquoted HTML and form parameters
         return_param = check_unquote(request, request.values)
 
@@ -296,8 +303,7 @@ def get_all_params(request):
         return_param.update(check_unquote(request, request.form))
 
     if request.is_json:
-        log.debug("Update params in request {0!s} {1!s} with JSON data.".format(request.method,
-                                                                                request.base_url))
+        log.debug(f"Update params in request {request.method!s} {request.base_url!s} with JSON data.")
         # Add the original JSON data
         return_param.update(request.json)
     elif body:
@@ -307,11 +313,10 @@ def get_all_params(request):
             for k, v in json_data.items():
                 return_param[k] = v
         except Exception as exx:
-            log.debug("Can not get param: {0!s}".format(exx))
+            log.debug(f"Can not get param: {exx!s}")
 
     if request.view_args:
-        log.debug("Update params in request {0!s} {1!s} with view_args.".format(request.method,
-                                                                                request.base_url))
+        log.debug(f"Update params in request {request.method!s} {request.base_url!s} with view_args.")
         # We add the unquoted view_args
         return_param.update(check_unquote(request, request.view_args))
 
@@ -330,7 +335,7 @@ def get_priority_from_param(param):
     priority = {}
     for k, v in param.items():
         if k.startswith("priority.") and isinstance(v, int):
-            priority[k[len("priority."):]] = int(v)
+            priority[k[len("priority.") :]] = int(v)
     return priority
 
 
@@ -349,14 +354,18 @@ def verify_auth_token(auth_token, required_role=None):
     if required_role is None:
         required_role = ["admin", "user"]
     if auth_token is None:
-        raise AuthError(_("Authentication failure. Missing Authorization header."),
-                        id=ERROR.AUTHENTICATE_AUTH_HEADER)
+        raise AuthError(
+            _("Authentication failure. Missing Authorization header."),
+            id=ERROR.AUTHENTICATE_AUTH_HEADER,
+        )
 
     try:
         headers = jwt.get_unverified_header(auth_token)
     except jwt.DecodeError as err:
-        raise AuthError(_("Authentication failure. Error during decoding your token: {0!s}").format(err),
-                        id=ERROR.AUTHENTICATE_DECODING_ERROR)
+        raise AuthError(
+            _("Authentication failure. Error during decoding your token: {0!s}").format(err),
+            id=ERROR.AUTHENTICATE_DECODING_ERROR,
+        )
     algorithm = headers.get("alg")
     wrong_username = None
     if algorithm in TRUSTED_JWT_ALGOS:
@@ -365,12 +374,13 @@ def verify_auth_token(auth_token, required_role=None):
         for trusted_jwt in trusted_jwts:
             try:
                 if trusted_jwt.get("algorithm") in TRUSTED_JWT_ALGOS:
-                    j = jwt.decode(auth_token,
-                                   trusted_jwt.get("public_key"),
-                                   algorithms=[trusted_jwt.get("algorithm")])
-                    if dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == \
-                            dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
-                        if re.match(trusted_jwt.get("username") + "$", j.get("username")):
+                    j = jwt.decode(
+                        auth_token,
+                        trusted_jwt.get("public_key"),
+                        algorithms=[trusted_jwt.get("algorithm")],
+                    )
+                    if dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
+                        if re.match(f"{trusted_jwt.get('username')}$", j.get("username")):
                             r = j
                             break
                         else:
@@ -381,28 +391,33 @@ def verify_auth_token(auth_token, required_role=None):
                 log.info("A given JWT definition does not match.")
             except jwt.ExpiredSignatureError as err:
                 # We have the correct token. It expired, so we raise an error
-                raise AuthError(_("Authentication failure. Your token has expired: {0!s}").format(err),
-                                id=ERROR.AUTHENTICATE_TOKEN_EXPIRED)
+                raise AuthError(
+                    _("Authentication failure. Your token has expired: {0!s}").format(err),
+                    id=ERROR.AUTHENTICATE_TOKEN_EXPIRED,
+                )
 
     if not r:
         try:
-            r = jwt.decode(auth_token, current_app.secret_key, algorithms=['HS256'])
+            r = jwt.decode(auth_token, current_app.secret_key, algorithms=["HS256"])
         except jwt.DecodeError as err:
-            raise AuthError(_("Authentication failure. Error during decoding your token: {0!s}").format(err),
-                            id=ERROR.AUTHENTICATE_DECODING_ERROR)
+            raise AuthError(
+                _("Authentication failure. Error during decoding your token: {0!s}").format(err),
+                id=ERROR.AUTHENTICATE_DECODING_ERROR,
+            )
         except jwt.ExpiredSignatureError as err:
-            raise AuthError(_("Authentication failure. Your token has expired: {0!s}").format(err),
-                            id=ERROR.AUTHENTICATE_TOKEN_EXPIRED)
+            raise AuthError(
+                _("Authentication failure. Your token has expired: {0!s}").format(err),
+                id=ERROR.AUTHENTICATE_TOKEN_EXPIRED,
+            )
     if wrong_username:
-        raise AuthError(_("Authentication failure. The username {0!s} is not allowed to "
-                          "impersonate via JWT.".format(wrong_username)))
+        raise AuthError(_("Authentication failure. The username {0!s} is not allowed to impersonate via JWT.").format(wrong_username))
     if required_role and r.get("role") not in required_role:
         # If we require a certain role like "admin", but the users role does
         # not match
-        raise AuthError(_("Authentication failure. "
-                          "You do not have the necessary role ({0!s}) to access "
-                          "this resource!").format(required_role),
-                        id=ERROR.AUTHENTICATE_MISSING_RIGHT)
+        raise AuthError(
+            _("Authentication failure. You do not have the necessary role ({0!s}) to access this resource!").format(required_role),
+            id=ERROR.AUTHENTICATE_MISSING_RIGHT,
+        )
     return r
 
 
@@ -413,15 +428,16 @@ def check_policy_name(name):
     :param name: The name of the policy
     :return: Raises a ParameterError in case of an invalid name
     """
-    disallowed_patterns = [("^check$", re.IGNORECASE),
-                           ("^edumfa-update-policy-", re.IGNORECASE)]
+    disallowed_patterns = [
+        ("^check$", re.IGNORECASE),
+        ("^edumfa-update-policy-", re.IGNORECASE),
+    ]
     for disallowed_pattern in disallowed_patterns:
         if re.search(disallowed_pattern[0], name, flags=disallowed_pattern[1]):
             raise ParameterError(_("'{0!s}' is an invalid policy name.").format(name))
 
-    if not re.match(r'^[a-zA-Z0-9_.\- ]*$', name):
-        raise ParameterError(_("The name of the policy may only contain "
-                               "the characters a-zA-Z0-9_. -"))
+    if not re.match(r"^[a-zA-Z0-9_.\- ]*$", name):
+        raise ParameterError(_("The name of the policy may only contain the characters a-zA-Z0-9_. -"))
 
 
 def attestation_certificate_allowed(cert_info, allowed_certs_pols):
@@ -449,7 +465,7 @@ def attestation_certificate_allowed(cert_info, allowed_certs_pols):
     if allowed_certs_pols:
         for allowed_cert in allowed_certs_pols:
             tag, matching, _rest = allowed_cert.split("/", 3)
-            tag_value = cert_info.get("attestation_{0!s}".format(tag))
+            tag_value = cert_info.get(f"attestation_{tag!s}")
             # if we do not get a match, we bail out
             m = re.search(matching, tag_value) if matching and tag_value else None
             if matching and not m:
@@ -477,4 +493,4 @@ def is_fqdn(x):
     :return: Whether the given string may plausibly be a FQDN.
     :rtype: bool
     """
-    return set(string.punctuation).intersection(x).issubset({'-', '.'})
+    return set(string.punctuation).intersection(x).issubset({"-", "."})

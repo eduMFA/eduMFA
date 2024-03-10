@@ -35,10 +35,11 @@ The code is tested in tests/test_lib_smsprovider
 from edumfa.lib.error import ConfigAdminError
 from edumfa.models import SMSGateway, SMSGatewayOption
 from edumfa.lib.utils import fetch_one_resource, get_module_class
-from edumfa.lib.utils.export import (register_import, register_export)
+from edumfa.lib.utils.export import register_import, register_export
 from edumfa.lib import _
 import re
 import logging
+
 log = logging.getLogger(__name__)
 
 
@@ -49,7 +50,8 @@ SMS_PROVIDERS = [
     "edumfa.lib.smsprovider.SmtpSMSProvider.SmtpSMSProvider",
     "edumfa.lib.smsprovider.SmppSMSProvider.SmppSMSProvider",
     "edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider",
-    "edumfa.lib.smsprovider.ScriptSMSProvider.ScriptSMSProvider"]
+    "edumfa.lib.smsprovider.ScriptSMSProvider.ScriptSMSProvider",
+]
 
 
 class SMSError(Exception):
@@ -59,21 +61,20 @@ class SMSError(Exception):
         self.description = description
 
     def __repr__(self):
-        ret = '{0!s}(error_id={1!r}, description={2!r})'.format(type(self).__name__,
-                                                   self.error_id,
-                                                   self.description)
+        ret = f"{type(self).__name__!s}(error_id={self.error_id!r}, description={self.description!r})"
         return ret
 
     def __str__(self):
-        ret = '{0!s}'.format(self.description)
+        ret = f"{self.description!s}"
         return ret
 
 
 class ISMSProvider(object):
-    """ the SMS Provider Interface - BaseClass """
+    """the SMS Provider Interface - BaseClass"""
 
-    regexp_description = _("Regular expression to modify the phone number to make it compatible with provider. "
-                           "For example to remove pluses and slashes enter something like '/[\\+/]//'.")
+    regexp_description = _(
+        "Regular expression to modify the phone number to make it compatible with provider. For example to remove pluses and slashes enter something like '/[\\+/]//'."
+    )
 
     def __init__(self, db_smsprovider_object=None, smsgateway=None):
         """
@@ -139,15 +140,17 @@ class ISMSProvider(object):
 
         :return: dict
         """
-        params = {"options_allowed": False,
-                  "headers_allowed": False,
-                  "parameters": {
-                      "PARAMETER1": {
-                          "required": True,
-                          "description": "Some parameter",
-                          "values": ["allowed value1", "allowed value2"]}
-                  },
-                  }
+        params = {
+            "options_allowed": False,
+            "headers_allowed": False,
+            "parameters": {
+                "PARAMETER1": {
+                    "required": True,
+                    "description": "Some parameter",
+                    "values": ["allowed value1", "allowed value2"],
+                }
+            },
+        }
         return params
 
     @staticmethod
@@ -159,11 +162,9 @@ class ISMSProvider(object):
                 if m:
                     phone = re.sub(m.group(1), m.group(2), phone)
             except re.error:
-                log.warning("Can not mangle phone number. "
-                            "Please check your REGEXP: {0!s}".format(regexp))
+                log.warning(f"Can not mangle phone number. Please check your REGEXP: {regexp!s}")
 
         return phone
-
 
     def load_config(self, config_dict):
         """
@@ -190,22 +191,20 @@ def get_sms_provider_class(packageName, className):
     """
     helper method to load the SMSProvider class from a given
     package in literal:
-    
+
     example:
-    
+
         get_sms_provider_class("HTTPSMSProvider", "SMSProvider")()
-    
+
     check:
         checks, if the submit_message method exists
         if not an error is thrown
-    
+
     """
     return get_module_class(packageName, className, "submit_message")
 
 
-def set_smsgateway(identifier, providermodule=None, description=None,
-                   options=None, headers=None):
-
+def set_smsgateway(identifier, providermodule=None, description=None, options=None, headers=None):
     """
     Set an SMS Gateway configuration
 
@@ -222,9 +221,13 @@ def set_smsgateway(identifier, providermodule=None, description=None,
     :type headers: dict
     :return: The id of the event.
     """
-    smsgateway = SMSGateway(identifier, providermodule,
-                            description=description,
-                            options=options, headers=headers)
+    smsgateway = SMSGateway(
+        identifier,
+        providermodule,
+        description=description,
+        options=options,
+        headers=headers,
+    )
     create_sms_instance(identifier).check_configuration()
     return smsgateway.id
 
@@ -291,7 +294,7 @@ def get_smsgateway(identifier=None, id=None, gwtype=None):
             id = int(id)
             sqlquery = sqlquery.filter_by(id=id)
         except Exception:
-            log.info("We can not filter for smsgateway {0!s}".format(id))
+            log.info(f"We can not filter for smsgateway {id!s}")
     if gwtype:
         sqlquery = sqlquery.filter_by(providermodule=gwtype)
     if identifier:
@@ -312,8 +315,7 @@ def create_sms_instance(identifier):
     """
     gateway_definition = get_smsgateway(identifier)
     if not gateway_definition:
-        raise ConfigAdminError('Could not find gateway definition with '
-                               'identifier "{0!s}"'.format(identifier))
+        raise ConfigAdminError(f'Could not find gateway definition with identifier "{identifier!s}"')
     package_name, class_name = gateway_definition[0].providermodule.rsplit(".", 1)
     sms_klass = get_sms_provider_class(package_name, class_name)
     sms_object = sms_klass(smsgateway=gateway_definition[0])
@@ -350,27 +352,26 @@ def list_smsgateways(identifier=None, id=None, gwtype=None):
     res = {}
     for gw in get_smsgateway(identifier=identifier, id=id, gwtype=gwtype):
         res[gw.identifier] = gw.as_dict()
-        res[gw.identifier].pop('name')
-        res[gw.identifier].pop('id')
+        res[gw.identifier].pop("name")
+        res[gw.identifier].pop("id")
 
     return res
 
 
-@register_export('smsgateway')
+@register_export("smsgateway")
 def export_smsgateway(name=None):
-    """ Export given or all sms gateway configuration """
+    """Export given or all sms gateway configuration"""
     res = list_smsgateways(identifier=name)
 
     return res
 
 
-@register_import('smsgateway')
+@register_import("smsgateway")
 def import_smsgateway(data, name=None):
     """Import sms gateway configuration"""
-    log.debug('Import smsgateway config: {0!s}'.format(data))
+    log.debug(f"Import smsgateway config: {data!s}")
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         rid = set_smsgateway(res_name, **res_data)
-        log.info('Import of smsgateway "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of smsgateway "{res_name!s}" finished, id: {rid!s}')

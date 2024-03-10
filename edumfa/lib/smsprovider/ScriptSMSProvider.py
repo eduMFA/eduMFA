@@ -24,12 +24,13 @@
 __doc__ = """This is the SMSClass to send SMS via a script.
 """
 
-from edumfa.lib.smsprovider.SMSProvider import (ISMSProvider, SMSError)
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
 from edumfa.lib import _
 from edumfa.lib.framework import get_app_config_value
 import subprocess  # nosec B404 # We know what we are doing and only allow trusted scripts
 import logging
 import traceback
+
 log = logging.getLogger(__name__)
 
 
@@ -38,7 +39,6 @@ SCRIPT_WAIT = "wait"
 
 
 class ScriptSMSProvider(ISMSProvider):
-
     def __init__(self, db_smsprovider_object=None, smsgateway=None, directory=None):
         """
         Create a new SMS Provider object fom a DB SMS provider object
@@ -53,8 +53,7 @@ class ScriptSMSProvider(ISMSProvider):
         """
         self.config = db_smsprovider_object or {}
         self.smsgateway = smsgateway
-        self.script_directory = directory or get_app_config_value("EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY",
-                                                                  "/etc/edumfa/scripts")
+        self.script_directory = directory or get_app_config_value("EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY", "/etc/edumfa/scripts")
 
     def submit_message(self, phone, message):
         """
@@ -70,37 +69,39 @@ class ScriptSMSProvider(ISMSProvider):
             raise SMSError(-1, "Missing smsgateway definition!")
 
         phone = self._mangle_phone(phone, self.smsgateway.option_dict)
-        log.debug("submitting message {0!s} to {1!s}".format(message, phone))
+        log.debug(f"submitting message {message!s} to {phone!s}")
 
         script = self.smsgateway.option_dict.get("script")
         background = self.smsgateway.option_dict.get("background")
 
-        script_name = self.script_directory + "/" + script
+        script_name = f"{self.script_directory}/{script}"
         proc_args = [script_name, phone]
 
         # As the message can contain blanks... it is passed via stdin
         rcode = 0
         try:
-            log.info("Starting script {script!r}.".format(script=script_name))
+            log.info(f"Starting script {script_name!r}.")
             # Trusted input/no user input: The scripts are created by user root and read from hard disk
-            p = subprocess.Popen(proc_args, cwd=self.script_directory,   # nosec B603
-                                 universal_newlines=True, stdin=subprocess.PIPE)
+            p = subprocess.Popen(
+                proc_args,
+                cwd=self.script_directory,
+                universal_newlines=True,
+                stdin=subprocess.PIPE,
+            )  # nosec B603
             p.communicate(message)
             if background == SCRIPT_WAIT:
                 rcode = p.wait()
         except Exception as e:
-            log.warning("Failed to execute script {0!r}: {1!r}".format(
-                script_name, e))
+            log.warning(f"Failed to execute script {script_name!r}: {e!r}")
             log.warning(traceback.format_exc())
             if background == SCRIPT_WAIT:
                 raise SMSError(-1, "Failed to start script for sending SMS.")
 
         if rcode:
-            log.warning("Script {script!r} failed to execute with error code {error!r}".format(script=script_name,
-                                                                                               error=rcode))
+            log.warning(f"Script {script_name!r} failed to execute with error code {rcode!r}")
             raise SMSError(-1, "Error during execution of the script.")
         else:
-            log.info("SMS delivered to {0!s}.".format(phone))
+            log.info(f"SMS delivered to {phone!s}.")
 
         return True
 
@@ -113,21 +114,19 @@ class ScriptSMSProvider(ISMSProvider):
 
         :return: dict
         """
-        params = {"options_allowed": False,
-                  "parameters": {
-                      "script": {
-                          "required": True,
-                          "description": _("The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. "
-                                           "Expects phone as the parameter and the message from stdin.")
-                      },
-                      "REGEXP": {
-                          "description": cls.regexp_description
-                      },
-                      "background": {
-                          "required": True,
-                          "description": _("Wait for script to complete or run script in background. This will "
-                                           "either return the HTTP request early or could also block the request."),
-                          "values": [SCRIPT_BACKGROUND, SCRIPT_WAIT]}
-                    }
-                  }
+        params = {
+            "options_allowed": False,
+            "parameters": {
+                "script": {
+                    "required": True,
+                    "description": _("The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects phone as the parameter and the message from stdin."),
+                },
+                "REGEXP": {"description": cls.regexp_description},
+                "background": {
+                    "required": True,
+                    "description": _("Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."),
+                    "values": [SCRIPT_BACKGROUND, SCRIPT_WAIT],
+                },
+            },
+        }
         return params
