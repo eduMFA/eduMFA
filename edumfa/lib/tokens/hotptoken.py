@@ -145,18 +145,15 @@ class HotpTokenClass(TokenClass):
                        },
                        'hotp_2step_clientsize': {
                            'type': 'int',
-                           'desc': _("The size of the OTP seed part contributed "
-                                     "by the client (in bytes)")
+                           'desc': _("The size of the OTP seed part contributed by the client (in bytes)")
                        },
                        'hotp_2step_serversize': {
                            'type': 'int',
-                           'desc': _("The size of the OTP seed part contributed "
-                                     "by the server (in bytes)")
+                           'desc': _("The size of the OTP seed part contributed by the server (in bytes)")
                        },
                        'hotp_2step_difficulty': {
                            'type': 'int',
-                           'desc': _("The difficulty factor used for the OTP "
-                                     "seed generation (should be at least 10000)")
+                           'desc': _("The difficulty factor used for the OTP seed generation (should be at least 10000)")
                        },
                        'hotp_' + ACTION.FORCE_APP_PIN: {
                            'type': 'bool',
@@ -266,8 +263,7 @@ class HotpTokenClass(TokenClass):
                                         user_obj=user,
                                         extra_data=extra_data)
                     response_detail["googleurl"] = {"description":
-                                                    _("URL for google "
-                                                      "Authenticator"),
+                                                    _("URL for google Authenticator"),
                                                     "value": goo_url,
                                                     "img": create_img(goo_url)
                                                     }
@@ -279,15 +275,13 @@ class HotpTokenClass(TokenClass):
                                        serial=self.get_serial(),
                                        tokenlabel=tokenlabel,
                                        extra_data=extra_data)
-                    response_detail["oathurl"] = {"description": _("URL for"
-                                                                   " OATH "
-                                                                   "token"),
+                    response_detail["oathurl"] = {"description": _("URL for OATH token"),
                                                   "value": oath_url,
                                                   "img": create_img(oath_url)
                                                   }
                 except Exception as ex:  # pragma: no cover
-                    log.error("{0!s}".format((traceback.format_exc())))
-                    log.error('failed to set oath or google url: {0!r}'.format(ex))
+                    log.error(f"{traceback.format_exc()!s}")
+                    log.error(f'failed to set oath or google url: {ex!r}')
 
         return response_detail
 
@@ -453,10 +447,10 @@ class HotpTokenClass(TokenClass):
             # we need to do this manually here:
             self.inc_otp_counter(res)
         if res == -1:
-            msg = "otp counter {0!r} was not found".format(otp)
+            msg = f"otp counter {otp!r} was not found"
         else:
-            msg = "otp counter {0!r} was found".format(otp)
-        log.debug("end. {0!r}: res {1!r}".format(msg, res))
+            msg = f"otp counter {otp!r} was found"
+        log.debug(f"end. {msg!r}: res {res!r}")
         return res
 
     @log_with(log)
@@ -473,8 +467,7 @@ class HotpTokenClass(TokenClass):
             previous_otp = self._calc_otp(counter - self.previous_otp_offset)
             res = previous_otp == otp
             if res:
-                log.info("Previous OTP used again. "
-                         "Serial {0!s} with counter {1!s}.".format(self.token.serial, counter))
+                log.info(f"Previous OTP used again. Serial {self.token.serial!s} with counter {counter!s}.")
             return res
         else:
             # The internal counter is 0, the token was not used, yet.
@@ -502,7 +495,7 @@ class HotpTokenClass(TokenClass):
 
         # if _autosync is not enabled
         if autosync is False:
-            log.debug("end. _autosync is not enabled : res {0!r}".format((res)))
+            log.debug(f"end. _autosync is not enabled : res {res!r}")
             return res
 
         info = self.get_tokeninfo()
@@ -574,20 +567,19 @@ class HotpTokenClass(TokenClass):
         counter = hmac2Otp.checkOtp(otp1, syncWindow)
 
         if counter == -1:
-            log.debug("exit. First counter (-1) not found  ret: {0!r}".format((ret)))
+            log.debug(f"exit. First counter (-1) not found  ret: {ret!r}")
             return ret
 
         nextOtp = hmac2Otp.generate(counter + 1)
 
         if nextOtp != otp2:
-            log.debug("exit. Failed to verify second otp: nextOtp: "
-                      "%r != otp2: %r ret: %r" % (nextOtp, otp2, ret))
+            log.debug(f"exit. Failed to verify second otp: nextOtp: {nextOtp!r} != otp2: {otp2!r} ret: {ret!r}")
             return ret
 
         ret = True
         self.inc_otp_counter(counter + 1, reset=True)
 
-        log.debug("end. resync was successful: ret: {0!r}".format((ret)))
+        log.debug(f"end. resync was successful: ret: {ret!r}")
         return ret
 
     @staticmethod
@@ -601,7 +593,7 @@ class HotpTokenClass(TokenClass):
         try:
             timeOut = int(get_from_config("AutoResyncTimeout", 5 * 60))
         except Exception as ex:
-            log.warning("AutoResyncTimeout: value error {0!r} - reset to 5*60".format((ex)))
+            log.warning(f"AutoResyncTimeout: value error {ex!r} - reset to 5*60")
             timeOut = 5 * 60
 
         return timeOut
@@ -627,9 +619,9 @@ class HotpTokenClass(TokenClass):
         pin = self.token.get_pin()
 
         if get_from_config("PrependPin") == "True":
-            combined = "{0!s}{1!s}".format(pin, otpval)
+            combined = f"{pin!s}{otpval!s}"
         else:
-            combined = "{0!s}{1!s}".format(otpval, pin)
+            combined = f"{otpval!s}{pin!s}"
 
         return 1, pin, otpval, combined
 
@@ -661,7 +653,7 @@ class HotpTokenClass(TokenClass):
         secretHOtp = self.token.get_otpkey()
         hmac2Otp = HmacOtp(secretHOtp, self.token.count, otplen,
                            self.get_hashlib(self.hashlib))
-        log.debug("retrieving {0:d} OTP values for token {1!s}".format(count, hmac2Otp))
+        log.debug(f"retrieving {count:d} OTP values for token {hmac2Otp!s}")
 
         if count > 0:
             error = "OK"
@@ -796,7 +788,7 @@ class HotpTokenClass(TokenClass):
         :return: True
         """
         r = self.check_otp(verify)
-        log.debug("Enrollment verified: {0!s}".format(r))
+        log.debug(f"Enrollment verified: {r!s}")
         return r >= 0
 
     @classmethod

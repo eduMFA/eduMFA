@@ -63,7 +63,7 @@ def get_init_tokenlabel_parameters(g, params=None, token_type="hotp", user_objec
 
     # check the force_app_pin policy
     app_pin_pols = Match.user(g, scope=SCOPE.ENROLL,
-                              action='{0!s}_{1!s}'.format(token_type, ACTION.FORCE_APP_PIN),
+                              action=f'{token_type!s}_{ACTION.FORCE_APP_PIN!s}',
                               user_object=user_object).any()
     if app_pin_pols:
         params[ACTION.FORCE_APP_PIN] = True
@@ -90,7 +90,7 @@ def get_pushtoken_add_config(g, params=None, user_obj=None):
     if len(firebase_config) == 1:
         params[PUSH_ACTION.FIREBASE_CONFIG] = list(firebase_config)[0]
     else:
-        raise PolicyError("Missing enrollment policy for push token: {0!s}".format(PUSH_ACTION.FIREBASE_CONFIG))
+        raise PolicyError(f"Missing enrollment policy for push token: {PUSH_ACTION.FIREBASE_CONFIG!s}")
 
     # Get the sslverify definition from the policies
     ssl_verify = Match.user(g, scope=SCOPE.ENROLL, action=PUSH_ACTION.SSL_VERIFY,
@@ -107,7 +107,7 @@ def get_pushtoken_add_config(g, params=None, user_obj=None):
     if len(registration_url) == 1:
         params[PUSH_ACTION.REGISTRATION_URL] = list(registration_url)[0]
     else:
-        raise PolicyError("Missing enrollment policy for push token: {0!s}".format(PUSH_ACTION.REGISTRATION_URL))
+        raise PolicyError(f"Missing enrollment policy for push token: {PUSH_ACTION.REGISTRATION_URL!s}")
     ttl = Match.user(g, scope=SCOPE.ENROLL, action=PUSH_ACTION.TTL,
                      user_object=user_obj if user_obj else None) \
         .action_values(unique=True, allow_white_space_in_action=True)

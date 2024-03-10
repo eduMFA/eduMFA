@@ -113,8 +113,7 @@ class SMTPServerTestCase(MyTestCase):
                  tls=tls)
         r = SMTPServer.test_email(s, recipient,
                                   "Test Email from eduMFA",
-                                  "This is a test email from eduMFA. "
-                                  "The configuration %s is working." % identifier)
+                                  "This is a test email from eduMFA. The configuration %s is working." % identifier)
         self.assertTrue(r)
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
         self.assertEqual(parsed_email.get_content_type(), 'text/plain', parsed_email)
@@ -151,8 +150,7 @@ class SMTPServerTestCase(MyTestCase):
                  tls=tls)
         r = SMTPServer.test_email(s, recipient,
                                   "Test Email from eduMFA",
-                                  "This is a test email from eduMFA. "
-                                  "The configuration %s is working." % identifier)
+                                  "This is a test email from eduMFA. The configuration %s is working." % identifier)
         self.assertTrue(r)
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
         self.assertEqual(parsed_email.get_content_type(), 'text/plain', parsed_email)

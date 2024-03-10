@@ -472,8 +472,7 @@ class SMSTokenTestCase(MyTestCase):
         transactionid = "123456098712"
         set_edumfa_config("sms.providerConfig", "noJSON")
         set_edumfa_config("sms.provider",
-                               "edumfa.lib.smsprovider."
-                               "HttpSMSProvider.HttpSMSProviderWRONG")
+                               "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProviderWRONG")
 
         with mock.patch("logging.Logger.error") as mock_log:
             c = token.create_challenge(transactionid)
@@ -488,8 +487,7 @@ class SMSTokenTestCase(MyTestCase):
 
         with mock.patch("logging.Logger.error") as mock_log:
             set_edumfa_config("sms.provider",
-                                   "edumfa.lib.smsprovider."
-                                   "HttpSMSProvider.HttpSMSProvider")
+                                   "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider")
             c = token.create_challenge(transactionid)
             self.assertFalse(c[0], c)
             self.assertTrue(c[1].startswith("The PIN was correct, but"), c[1])

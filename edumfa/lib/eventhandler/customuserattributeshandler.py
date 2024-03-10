@@ -107,8 +107,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
             user = User(login=g.logged_in_user.get('username'),
                         realm=g.logged_in_user.get('realm'))
         else:
-            log.warning("Unable to determine the user for handling the custom "
-                        "attribute! action: {0!s}, handler: {1!s}".format(action, handler_def))
+            log.warning(f"Unable to determine the user for handling the custom attribute! action: {action!s}, handler: {handler_def!s}")
             return False
 
         attrkey = handler_options.get("attrkey")
@@ -118,7 +117,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
         elif action.lower() == "delete_custom_user_attributes":
             ret = user.delete_attribute(attrkey)
         else:
-            log.warning('Unknown action value: {0!s}'.format(action))
+            log.warning(f'Unknown action value: {action!s}')
             ret = False
 
         return ret

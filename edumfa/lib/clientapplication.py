@@ -53,7 +53,7 @@ def save_clientapplication(ip, clienttype):
     # Check for a valid IP address
     ip = IPAddress(ip)
     # TODO: resolve hostname
-    app = ClientApplication(ip="{0!s}".format(ip),
+    app = ClientApplication(ip=f"{ip!s}",
                             clienttype=clienttype,
                             node=node)
     app.save()
@@ -88,7 +88,7 @@ def get_clientapplication(ip=None, clienttype=None, group_by="clienttype"):
     if ip:
         # Check for a valid IP address
         ip = IPAddress(ip)
-        sql_query = sql_query.filter(ClientApplication.ip == "{0!s}".format(ip))
+        sql_query = sql_query.filter(ClientApplication.ip == f"{ip!s}")
 
     if clienttype:
         sql_query = sql_query.filter(ClientApplication.clienttype == clienttype)

@@ -70,8 +70,7 @@ import time
 log = logging.getLogger(__name__)
 
 DEFAULT_CHALLENGE_TEXT = _("Please confirm the authentication on your mobile device!")
-ERROR_CHALLENGE_TEXT = _("Use the polling feature of your unsupported privacyIDEA Authenticator App"
-                         " to check for a new Login request.")
+ERROR_CHALLENGE_TEXT = _("Use the polling feature of your unsupported privacyIDEA Authenticator App to check for a new Login request.")
 DEFAULT_MOBILE_TEXT = _("Do you want to confirm the login?")
 PRIVATE_KEY_SERVER = "private_key_server"
 PUBLIC_KEY_SERVER = "public_key_server"
@@ -163,9 +162,7 @@ def create_push_token_url(url=None, ttl=10, issuer="eduMFA", serial="mylabel",
     url_issuer = quote(issuer.encode("utf-8"))
     url_url = quote(url.encode("utf-8"))
 
-    return ("otpauth://pipush/{label!s}?"
-            "url={url!s}&ttl={ttl!s}&"
-            "issuer={issuer!s}{extra}".format(label=url_label, issuer=url_issuer,
+    return ("otpauth://pipush/{label!s}?url={url!s}&ttl={ttl!s}&issuer={issuer!s}{extra}".format(label=url_label, issuer=url_issuer,
                                        url=url_url, ttl=ttl,
                                        extra=_construct_extra_parameters(extra_data)))
 
@@ -535,7 +532,7 @@ class PushTokenClass(TokenClass):
         try:
             ts = isoparse(timestamp)
         except (ValueError, TypeError) as _e:
-            log.debug('{0!s}'.format(traceback.format_exc()))
+            log.debug(f'{traceback.format_exc()!s}')
             raise eduMFAError('Could not parse timestamp {0!s}. '
                                    'ISO-Format required.'.format(timestamp))
         td = timedelta(minutes=window)
@@ -546,7 +543,7 @@ class PushTokenClass(TokenClass):
         else:
             now = datetime.utcnow()
         if not (now - td <= ts <= now + td):
-            raise eduMFAError('Timestamp {0!s} not in valid range.'.format(timestamp))
+            raise eduMFAError(f'Timestamp {timestamp!s} not in valid range.')
 
     @classmethod
     def _api_endpoint_post(cls, request_data):
@@ -575,8 +572,7 @@ class PushTokenClass(TokenClass):
                     chals[0].set_otp_status(True)
                     chals[0].save()
             except ResourceNotFoundError:
-                raise ResourceNotFoundError("No token with this serial number "
-                                            "in the rollout state 'clientwait'.")
+                raise ResourceNotFoundError("No token with this serial number in the rollout state 'clientwait'.")
             init_detail_dict = request_data
 
             details = token_obj.get_init_detail(init_detail_dict)
@@ -598,7 +594,7 @@ class PushTokenClass(TokenClass):
                 # There are valid challenges, so we check this signature
                 for chal in challengeobject_list:
                     # verify the signature of the nonce
-                    sign_data = "{0!s}|{1!s}".format(challenge, serial)
+                    sign_data = f"{challenge!s}|{serial!s}"
                     if decline:
                         sign_data += "|decline"
                     try:
@@ -607,7 +603,7 @@ class PushTokenClass(TokenClass):
                                           padding.PKCS1v15(),
                                           hashes.SHA256())
                         # The signature was valid
-                        log.debug("Found matching challenge {0!s}.".format(chal))
+                        log.debug(f"Found matching challenge {chal!s}.")
                         if decline:
                             chal.set_data("challenge_declined")
                         else:
@@ -636,7 +632,7 @@ class PushTokenClass(TokenClass):
                     InvalidSignature, ConfigAdminError, BinasciiError) as e:
                 # to avoid disclosing information we always fail with an invalid
                 # signature error even if the token with the serial could not be found
-                log.debug('{0!s}'.format(traceback.format_exc()))
+                log.debug(f'{traceback.format_exc()!s}')
                 log.info('The following error occurred during the signature '
                          'check: "{0!r}"'.format(e))
                 raise eduMFAError('Could not verify signature!')
@@ -717,7 +713,7 @@ class PushTokenClass(TokenClass):
                 InvalidSignature, ConfigAdminError, BinasciiError) as e:
             # to avoid disclosing information we always fail with an invalid
             # signature error even if the token with the serial could not be found
-            log.debug('{0!s}'.format(traceback.format_exc()))
+            log.debug(f'{traceback.format_exc()!s}')
             log.info('The following error occurred during the signature '
                      'check: "{0!r}"'.format(e))
             raise eduMFAError('Could not verify signature!')
@@ -909,8 +905,7 @@ class PushTokenClass(TokenClass):
                 if is_true(options.get("exception")):
                     raise ValidateError("Failed to submit message to Firebase service.")
         else:
-            log.warning("The token {0!s} has no tokeninfo {1!s}. "
-                        "The message could not be sent.".format(self.token.serial,
+            log.warning("The token {0!s} has no tokeninfo {1!s}. The message could not be sent.".format(self.token.serial,
                                                                  PUSH_ACTION.FIREBASE_CONFIG))
             message += " " + ERROR_CHALLENGE_TEXT
             if is_true(options.get("exception")):

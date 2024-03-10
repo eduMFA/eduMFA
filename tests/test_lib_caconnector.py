@@ -360,8 +360,7 @@ class LocalCATestCase(MyTestCase):
         self.assertEqual("{0!r}".format(cert.get_issuer()),
                          "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
         self.assertEqual("{0!r}".format(cert.get_subject()),
-                         "<X509Name object '/CN=Steve Test"
-                         "/emailAddress=steve@openssl.org'>")
+                         "<X509Name object '/CN=Steve Test/emailAddress=steve@openssl.org'>")
 
     def test_05_templates(self):
         cwd = os.getcwd()
@@ -563,10 +562,7 @@ class MSCATestCase(MyTestCase):
             conf = CONF
             conf[MS_ATTR.USE_SSL] = True
             self.assertRaises(CAError, MSCAConnector, "bCA2", conf)
-            mock_log.assert_any_call("For a secure connection we need 'ssl_ca_cert', "
-                                     "'ssl_client_cert' and 'ssl_client_key'. "
-                                     "The following configuration seems incomplete: "
-                                     "(None, None, None)")
+            mock_log.assert_any_call("For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert' and 'ssl_client_key'. The following configuration seems incomplete: (None, None, None)")
 
     def test_11_ssl_unencrypted_key(self):
         # Create CA connector with an unencrypted private key

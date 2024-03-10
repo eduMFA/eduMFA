@@ -453,8 +453,7 @@ class EmailTokenTestCase(MyTestCase):
         token = EmailTokenClass(db_token)
         c = token.create_challenge(transactionid)
         self.assertFalse(c[0])
-        self.assertTrue("The PIN was correct, but the EMail could not "
-                        "be sent" in c[1])
+        self.assertTrue("The PIN was correct, but the EMail could not be sent" in c[1])
         # test with the parameter exception=1
         self.assertRaises(Exception, token.create_challenge, transactionid, {"exception": "1"})
 

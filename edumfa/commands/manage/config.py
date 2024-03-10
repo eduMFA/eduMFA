@@ -98,7 +98,7 @@ def importer(infile, types, name=None):
         except (SyntaxError, json.decoder.JSONDecodeError, yaml.error.YAMLError) as _e:
             continue
     if not data:
-        click.echo('Could not read input format! Accepting: {0!s}.'.format(', '.join(imp_fmt_dict.keys())),
+        click.echo(f"Could not read input format! Accepting: {', '.join(imp_fmt_dict.keys())!s}.",
                    file=sys.stderr)
         sys.exit(1)
 
@@ -106,14 +106,13 @@ def importer(infile, types, name=None):
     for typ, value in sorted(IMPORT_FUNCTIONS.items(), key=lambda x: x[1]['prio']):
         if typ in imp_types:
             if typ in data:
-                click.echo('Importing configuration type "{0!s}".'.format(typ))
+                click.echo(f'Importing configuration type "{typ!s}".')
                 value['func'](data[typ], name=name)
 
 
 @import_cli.command("full")
 @click.option("--file", "-f", "file",
-              help="The file to import. It can be a plain python file or a tar.gz archive containing a configuration "
-                   "backup file with a name containing 'edumfa-config-backup'.")
+              help="The file to import. It can be a plain python file or a tar.gz archive containing a configuration backup file with a name containing 'edumfa-config-backup'.")
 @click.option("--update", "-u",
               help="Update the existing configuration. New policies, resolvers and events will also be added.")
 @click.option("--cleanup/--wipe", "-c/-w", "cleanup",

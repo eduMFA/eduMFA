@@ -85,12 +85,11 @@ class eduMFAError(Exception):
         try:
             res = pstr % (self.id, self.message)
         except Exception as exx:
-            res = "ERR{0:d}: {1!r}".format(self.id, self.message)
+            res = f"ERR{self.id:d}: {self.message!r}"
         return res
 
     def __repr__(self):
-        ret = '{0!s}(description={1!r}, id={2:d})'.format(type(self).__name__,
-                                             self.message, self.id)
+        ret = f'{type(self).__name__!s}(description={self.message!r}, id={self.id:d})'
         return ret
 
 

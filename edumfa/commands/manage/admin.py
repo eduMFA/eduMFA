@@ -35,7 +35,7 @@ def add_admin(username: str, email: str, password):
     Register a new administrator in the database.
     """
     create_db_admin(username, email, password)
-    click.echo('Admin {0} was registered successfully.'.format(username))
+    click.echo(f'Admin {username} was registered successfully.')
 
 
 @admin_cli.command("list")

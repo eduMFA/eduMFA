@@ -51,8 +51,7 @@ class LdapMachineTestCase(MyTestCase):
 
     mrAD = LdapMachineResolver("myreso",
                                config={"LDAPURI": "ldap://172.16.200.202",
-                                       "LDAPBASE": "dc=edumfa,"
-                                                   "dc=test",
+                                       "LDAPBASE": "dc=edumfa,dc=test",
                                        "BINDDN":
                                            "administrator@edumfa.test",
                                        "BINDPW": "Test1234!",
@@ -108,9 +107,7 @@ class LdapMachineTestCase(MyTestCase):
                                 "dNSHostName", "",
                                 "", "",
                                 substring=True, any="substr")
-        self.assertEqual(filter, "(&(&(objectClass=computer))"
-                                 "(|(objectSid=*substr*)("
-                                 "dNSHostName=*substr*)))")
+        self.assertEqual(filter, "(&(&(objectClass=computer))(|(objectSid=*substr*)(dNSHostName=*substr*)))")
 
 
 

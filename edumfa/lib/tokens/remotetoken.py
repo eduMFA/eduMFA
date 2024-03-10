@@ -177,7 +177,7 @@ class RemoteTokenClass(TokenClass):
         :return: bool
         """
         local_check = is_true(self.get_tokeninfo("remote.local_checkpin"))
-        log.debug(" local checking pin? {0!r}".format(local_check))
+        log.debug(f" local checking pin? {local_check!r}")
 
         return local_check
 
@@ -261,8 +261,7 @@ class RemoteTokenClass(TokenClass):
         remoteResolver = self.get_tokeninfo("remote.resolver") or ""
 
         # here we also need to check for remote.user and so on....
-        log.debug("checking OTP len:%r remotely on server: %r,"
-                  " serial: %r, user: %r" %
+        log.debug("checking OTP len:%r remotely on server: %r, serial: %r, user: %r" %
                   (len(otpval), remoteServer, remoteSerial, remoteUser))
         params = {}
 
@@ -273,15 +272,14 @@ class RemoteTokenClass(TokenClass):
             params['realm'] = remoteRealm
             params['resolver'] = remoteResolver
         else:
-            log.warning("The remote token does neither contain a "
-                        "remote.serial nor a remote.user.")
+            log.warning("The remote token does neither contain a remote.serial nor a remote.user.")
             return otp_count
 
         try:
             if remoteServer:
                 # Deprecated
                 params['pass'] = otpval
-                request_url = "{0!s}{1!s}".format(remoteServer, remotePath)
+                request_url = f"{remoteServer!s}{remotePath!s}"
                 r = requests.post(request_url, data=params, verify=ssl_verify, timeout=60)
             elif pi_server_obj:
                 r = pi_server_obj.validate_check(remoteUser, otpval,
@@ -298,9 +296,8 @@ class RemoteTokenClass(TokenClass):
                     self.add_tokeninfo("last_matching_remote_serial", response.get("detail", {}).get("serial"))
 
         except Exception as exx:  # pragma: no cover
-            log.error("Error getting response from "
-                      "remote Server (%r): %r" % (request_url, exx))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"Error getting response from remote Server ({request_url!r}): {exx!r}")
+            log.debug(f"{traceback.format_exc()!s}")
 
         return otp_count
 

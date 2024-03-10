@@ -78,7 +78,7 @@ def get_cache_time():
     try:
         seconds = int(get_from_config(EXPIRATION_SECONDS, '0'))
     except ValueError:
-        log.info("Non-Integer value stored in system config {0!s}".format(EXPIRATION_SECONDS))
+        log.info(f"Non-Integer value stored in system config {EXPIRATION_SECONDS!s}")
 
     return datetime.timedelta(seconds=seconds)
 
@@ -190,7 +190,7 @@ def cache_username(wrapped_function, userid, resolvername):
     result = retrieve_latest_entry(filter_conditions)
     if result:
         username = result.username
-        log.debug('Found username of {!r}/{!r} in cache: {!r}'.format(userid, resolvername, username))
+        log.debug(f'Found username of {userid!r}/{resolvername!r} in cache: {username!r}')
         return username
     else:
         # record was not found in the cache

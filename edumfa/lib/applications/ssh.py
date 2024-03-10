@@ -87,12 +87,10 @@ class MachineApplication(MachineApplicationBase):
                         if "username" in uInfo:
                             ret["username"] = uInfo.get("username")
                 else:
-                    log.debug("The requested user {0!s} does not match the user "
-                              "option ({0!s}) of the SSH application.".format(
+                    log.debug("The requested user {0!s} does not match the user option ({0!s}) of the SSH application.".format(
                         user_filter, options.get("user")))
         else:
-            log.info("Token {0!r}, type {0!r} is not supported by "
-                     "SSH application module".format(serial, token_type))
+            log.info("Token {0!r}, type {0!r} is not supported by SSH application module".format(serial, token_type))
 
         return ret
 

@@ -211,7 +211,7 @@ class TiqrTokenClass(OcraTokenClass):
         # smartphone needs to contain a userId.
         if not self.user:
             # The user and realms should have already been set in init_token()
-            raise ParameterError("Missing parameter: {0!r}".format("user"), id=905)
+            raise ParameterError("Missing parameter: user", id=905)
 
         ocrasuite = get_from_config("tiqr.ocrasuite") or OCRA_DEFAULT_SUITE
         OCRASuite(ocrasuite)
@@ -226,7 +226,7 @@ class TiqrTokenClass(OcraTokenClass):
         response_detail = TokenClass.get_init_detail(self, params, user)
         params = params or {}
         enroll_url = get_from_config("tiqr.regServer")
-        log.info("using tiqr.regServer for enrollment: {0!s}".format(enroll_url))
+        log.info(f"using tiqr.regServer for enrollment: {enroll_url!s}")
         serial = self.token.serial
         session = generate_otpkey()
         # save the session in the token
@@ -236,8 +236,7 @@ class TiqrTokenClass(OcraTokenClass):
             session, serial)
 
         response_detail["tiqrenroll"] = {"description":
-                                                    _("URL for TiQR "
-                                                      "enrollment"),
+                                                    _("URL for TiQR enrollment"),
                                          "value": tiqrenroll,
                                          "img": create_img(tiqrenroll)}
 
@@ -258,8 +257,7 @@ class TiqrTokenClass(OcraTokenClass):
         action = getParam(params, "action", optional) or \
                  API_ACTIONS.AUTHENTICATION
         if action not in API_ACTIONS.ALLOWED_ACTIONS:
-            raise ParameterError("Allowed actions are {0!s}".format(
-                                 API_ACTIONS.ALLOWED_ACTIONS))
+            raise ParameterError(f"Allowed actions are {API_ACTIONS.ALLOWED_ACTIONS!s}")
 
         if action == API_ACTIONS.METADATA:
             session = getParam(params, "session", required)
@@ -285,7 +283,7 @@ class TiqrTokenClass(OcraTokenClass):
                        "logoUrl": logo_url,
                        "infoUrl": info_url,
                        "authenticationUrl":
-                           "{0!s}".format(auth_server),
+                           f"{auth_server!s}",
                        "ocraSuite": ocrasuite,
                        "enrollmentUrl":
                            "{0!s}?action={1!s}&session={2!s}&serial={3!s}".format(
@@ -365,7 +363,7 @@ class TiqrTokenClass(OcraTokenClass):
                             token.inc_failcount()
                             fail = token.get_failcount()
                             maxfail = token.get_max_failcount()
-                            res = "INVALID_RESPONSE:{0!s}".format(maxfail - fail)
+                            res = f"INVALID_RESPONSE:{maxfail - fail!s}"
                             break
 
             cleanup_challenges()

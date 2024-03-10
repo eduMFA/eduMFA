@@ -71,7 +71,7 @@ def save_caconnector(params):
     sanity_name_check(connector_name)
     # check the type
     if connector_type not in get_caconnector_types():
-        raise Exception("connector type : {0!s} not in {1!s}".format(connector_type, get_caconnector_types()))
+        raise Exception(f"connector type : {connector_type!s} not in {get_caconnector_types()!s}")
 
     # check the name
     connectors = get_caconnector_list(filter_caconnector_name=connector_name)
@@ -81,8 +81,7 @@ def save_caconnector(params):
             # the CA Connector config
             update_connector = True
         else:  # pragma: no cover
-            raise Exception("CA Connector with similar name and other type "
-                            "already exists: %s" % connector_name)
+            raise Exception(f"CA Connector with similar name and other type already exists: {connector_name}")
 
     # create a dictionary for the ResolverConfig
     connector_config = get_caconnector_config_description(connector_type)
@@ -275,7 +274,7 @@ def get_caconnector_object(connector_name):
         c_obj_class = get_caconnector_class(conn.catype)
 
         if c_obj_class is None:
-            log.error("unknown CA connector class {0!s} ".format(connector_name))
+            log.error(f"unknown CA connector class {connector_name!s} ")
         else:
             # create the resolver instance and load the config
             c_obj = c_obj_class(connector_name)
@@ -290,7 +289,7 @@ def get_caconnector_object(connector_name):
                 c_obj.set_config(connector_config)
 
     if not c_obj:
-        log.warning("A CA connector with the name {0!s} could not be found!".format(connector_name))
+        log.warning(f"A CA connector with the name {connector_name!s} could not be found!")
 
     return c_obj
 
@@ -304,7 +303,7 @@ def export_caconnector(name=None):
 @register_import('caconnector')
 def import_caconnector(data, name=None):
     """Import caconnector configuration"""
-    log.debug('Import caconnector config: {0!s}'.format(data))
+    log.debug(f'Import caconnector config: {data!s}')
     for res_data in data:
         if name and name != res_data.get('connectorname'):
             continue

@@ -157,8 +157,8 @@ class PasswordTokenClass(TokenClass):
             # PasswordTokenClass
             del param["genkey"]
             type_prefix = self.get_class_type()
-            length_param = "{0!s}.length".format(type_prefix)
-            contents_param = "{0!s}.contents".format(type_prefix)
+            length_param = f"{type_prefix!s}.length"
+            contents_param = f"{type_prefix!s}.contents"
             if length_param in param:
                 size = param[length_param]
                 del param[length_param]

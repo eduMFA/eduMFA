@@ -118,8 +118,7 @@ class DaplugTokenClass(HotpTokenClass):
         """
         res = {'type': 'daplug',
                'title': 'Daplug Event Token',
-               'description': _("event based OTP token using "
-                                "the HOTP algorithm"),
+               'description': _("event based OTP token using the HOTP algorithm"),
                'policy': {
                    SCOPE.ENROLL: {
                        ACTION.MAXTOKENUSER: {

@@ -32,7 +32,6 @@ class TOTPTokenTestCase(MyTestCase):
     realm2 = "realm2"
     serial1 = "SE123456"
     otpkey = "3132333435363738393031323334353637383930"
-
     """
     47251644    942826
     47251645    063321
@@ -783,9 +782,7 @@ class TOTPTokenTestCase(MyTestCase):
         g.logged_in_user = {"user": "hans",
                             "realm": "default",
                             "role": "user"}
-        set_policy("pol1", scope=SCOPE.USER, action="totp_hashlib=sha256,"
-                                                    "totp_timestep=60,"
-                                                    "totp_otplen=8")
+        set_policy("pol1", scope=SCOPE.USER, action="totp_hashlib=sha256,totp_timestep=60,totp_otplen=8")
         g.policy_object = PolicyClass()
         p = TotpTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")
@@ -797,9 +794,7 @@ class TOTPTokenTestCase(MyTestCase):
         g.logged_in_user = {"user": "admin",
                             "realm": "super",
                             "role": "admin"}
-        set_policy("pol1", scope=SCOPE.ADMIN, action="totp_hashlib=sha512,"
-                                                    "totp_timestep=60,"
-                                                    "totp_otplen=8")
+        set_policy("pol1", scope=SCOPE.ADMIN, action="totp_hashlib=sha512,totp_timestep=60,totp_otplen=8")
         g.policy_object = PolicyClass()
         p = TotpTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")

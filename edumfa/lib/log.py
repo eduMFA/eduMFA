@@ -39,10 +39,7 @@ DEFAULT_LOGGING_CONFIG = {
     "formatters": {
         "detail": {
             "()": "edumfa.lib.log.SecureFormatter",
-            "format": "[%(asctime)s][%(process)d]"
-                      "[%(thread)d][%(levelname)s]"
-                      "[%(name)s:%(lineno)d] "
-                      "%(message)s"
+            "format": "[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s"
         }
     },
     "handlers": {
@@ -182,7 +179,7 @@ class log_with(object):
                         func.__name__, "HIDDEN", "HIDDEN"))
             except Exception as exx:
                 self.logger.error(exx)
-                self.logger.error("Error during logging of function {0}! {1}".format(func.__name__, exx))
+                self.logger.error(f"Error during logging of function {func.__name__}! {exx}")
 
             f_result = func(*args, **kwds)
 
@@ -192,7 +189,7 @@ class log_with(object):
                 else:
                     self.logger.debug(self.EXIT_MESSAGE.format(func.__name__, "HIDDEN"))
             except Exception as exx:
-                self.logger.error("Error during logging of function {0}! {1}".format(func.__name__, exx))
+                self.logger.error(f"Error during logging of function {func.__name__}! {exx}")
             return f_result
 
         return log_wrapper

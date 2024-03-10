@@ -205,10 +205,8 @@ class PolicyTestCase(MyTestCase):
     def test_07_client_policies(self):
         delete_policy(name="pol2a")
         set_policy(name="pol1", scope="s", client="172.16.0.3, 172.16.0.4/24")
-        set_policy(name="pol2", scope="s", client="192.168.0.0/16, "
-                                                  "-192.168.1.1")
-        set_policy(name="pol3", scope="s", client="10.0.0.1, 10.0.0.2, "
-                                                  "10.0.0.3")
+        set_policy(name="pol2", scope="s", client="192.168.0.0/16, -192.168.1.1")
+        set_policy(name="pol3", scope="s", client="10.0.0.1, 10.0.0.2, 10.0.0.3")
         set_policy(name="pol4", scope="s")
 
         # One policy with matching client, one without any clients
@@ -389,8 +387,7 @@ class PolicyTestCase(MyTestCase):
         self.assertTrue("enable" in p, p)
 
     def test_12_get_allowed_tokentypes(self):
-        set_policy(name="tt1", scope=SCOPE.AUTHZ, action="tokentype=hotp "
-                                                         "totp, enroll")
+        set_policy(name="tt1", scope=SCOPE.AUTHZ, action="tokentype=hotp totp, enroll")
         set_policy(name="tt2", scope=SCOPE.AUTHZ, action="tokentype=motp")
 
         P = PolicyClass()

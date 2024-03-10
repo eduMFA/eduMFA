@@ -617,27 +617,22 @@ class WebAuthnTokenClass(TokenClass):
                 SCOPE.AUTH: {
                     ACTION.CHALLENGETEXT: {
                         'type': 'str',
-                        'desc': _("Use an alternative challenge text for telling the user to confirm with his WebAuthn "
-                                  "token."),
+                        'desc': _("Use an alternative challenge text for telling the user to confirm with his WebAuthn token."),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.ALLOWED_TRANSPORTS: {
                         'type': 'str',
-                        'desc': _("A list of transports to prefer to communicate with WebAuthn tokens. "
-                                  "Default: usb ble nfc internal (All standard transports)"),
+                        'desc': _("A list of transports to prefer to communicate with WebAuthn tokens. Default: usb ble nfc internal (All standard transports)"),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.TIMEOUT: {
                         'type': 'int',
-                        'desc': _("The time in seconds the user has to confirm authorization on his WebAuthn token. " 
-                                  "Note: You will want to increase the ChallengeValidityTime along with this. "
-                                  "Default: 60"),
+                        'desc': _("The time in seconds the user has to confirm authorization on his WebAuthn token. Note: You will want to increase the ChallengeValidityTime along with this. Default: 60"),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT: {
                         'type': 'str',
-                        'desc': _("Whether the user's identity should be verified when authenticating with a WebAuthn "
-                                  "token. Default: preferred (verify the user if supported by the token)"),
+                        'desc': _("Whether the user's identity should be verified when authenticating with a WebAuthn token. Default: preferred (verify the user if supported by the token)"),
                         'value': [
                             'required',
                             'preferred',
@@ -647,30 +642,19 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.USERNAMELESS_AUTHN: {
                         'type': 'bool',
-                        'desc': _("Enable username-less authentication, also known as Conditional UI, Conditional "
-                                  "Mediation, or Browser Autofill UI? "
-                                  "Note: This function only works if resident keys are enrolled as WebAuthn tokens and "
-                                  "if the browsers support this feature. "
-                                  "Also, the WebAuthn authentication policies 'challenge_text', 'allowed_transports', "
-                                  "and 'timeout' will be ignored. Policies for the RP_ID and UV can only be enforced "
-                                  "for a whole realm with the option below."),
+                        'desc': _("Enable username-less authentication, also known as Conditional UI, Conditional Mediation, or Browser Autofill UI? Note: This function only works if resident keys are enrolled as WebAuthn tokens and if the browsers support this feature. Also, the WebAuthn authentication policies 'challenge_text', 'allowed_transports', and 'timeout' will be ignored. Policies for the RP_ID and UV can only be enforced for a whole realm with the option below."),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.USERNAMELESS_REALM_POLICY: {
                         'type': 'bool',
-                        'desc': _("Enable the WebAuthn authentication policies for Relying Party ID and User "
-                                  "Verification Requirement realm-wide, i.e for all users in a realm? "
-                                  "Note: This requires username-less authentication to be enabled. The client has to "
-                                  "send its realm via a query parameter in the calls to /validate/triggerchallenge and "
-                                  "/validate/check, e.g. /validate/triggerchallenge?type=webauthn&realm=foo"),
+                        'desc': _("Enable the WebAuthn authentication policies for Relying Party ID and User Verification Requirement realm-wide, i.e for all users in a realm? Note: This requires username-less authentication to be enabled. The client has to send its realm via a query parameter in the calls to /validate/triggerchallenge and /validate/check, e.g. /validate/triggerchallenge?type=webauthn&realm=foo"),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     }
                 },
                 SCOPE.AUTHZ: {
                     WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST: {
                         'type': 'str',
-                        'desc': _("A list of WebAuthn authenticators acceptable for authorization, given as "
-                                  "a space-separated list of AAGUIDs. Per default all authenticators are acceptable."),
+                        'desc': _("A list of WebAuthn authenticators acceptable for authorization, given as a space-separated list of AAGUIDs. Per default all authenticators are acceptable."),
                         'group': GROUP.CONDITIONS,
                     },
                     WEBAUTHNACTION.REQ: {
@@ -692,21 +676,17 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.RELYING_PARTY_ID: {
                         'type': 'str',
-                        'desc': _("A domain name that is a subset of the respective FQDNs for all the webservices the "
-                                  "users should be able to sign in to using WebAuthn tokens."),
+                        'desc': _("A domain name that is a subset of the respective FQDNs for all the webservices the users should be able to sign in to using WebAuthn tokens."),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.TIMEOUT: {
                         'type': 'int',
-                        'desc': _("The time in seconds the user has to confirm enrollment on his WebAuthn token. "
-                                  "Note: You will want to increase the ChallengeValidityTime along with this. "
-                                  "Default: 60"),
+                        'desc': _("The time in seconds the user has to confirm enrollment on his WebAuthn token. Note: You will want to increase the ChallengeValidityTime along with this. Default: 60"),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.AUTHENTICATOR_ATTACHMENT: {
                         'type': 'str',
-                        'desc': _("Whether to limit roll out of WebAuthn tokens to either only platform "
-                                  "authenticators, or only cross-platform authenticators. Default: either"),
+                        'desc': _("Whether to limit roll out of WebAuthn tokens to either only platform authenticators, or only cross-platform authenticators. Default: either"),
                         'group': WEBAUTHNGROUP.WEBAUTHN,
                         'value': [
                             "platform",
@@ -716,14 +696,12 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST: {
                         'type': 'str',
-                        'desc': _("A list of WebAuthn authenticators acceptable for enrollment, given as a "
-                                  "space-separated list of AAGUIDs. Per default all authenticators are acceptable."),
+                        'desc': _("A list of WebAuthn authenticators acceptable for enrollment, given as a space-separated list of AAGUIDs. Per default all authenticators are acceptable."),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT: {
                         'type': 'str',
-                        'desc': _("Whether the user's identity should be verified when rolling out a new WebAuthn "
-                                  "token. Default: preferred (verify the user if supported by the token)"),
+                        'desc': _("Whether the user's identity should be verified when rolling out a new WebAuthn token. Default: preferred (verify the user if supported by the token)"),
                         'group': WEBAUTHNGROUP.WEBAUTHN,
                         'value': [
                             "required",
@@ -733,9 +711,7 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS: {
                         'type': 'str',
-                        'desc': _("Which algorithm are available to use for creating public key "
-                                  "credentials for WebAuthn tokens. (Default: [{0!s}], Order: "
-                                  "[{1!s}])".format(', '.join(DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE),
+                        'desc': _("Which algorithm are available to use for creating public key credentials for WebAuthn tokens. (Default: [{0!s}], Order: [{1!s}])".format(', '.join(DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE),
                                                     ', '.join(PUBKEY_CRED_ALGORITHMS_ORDER))),
                         'group': WEBAUTHNGROUP.WEBAUTHN,
                         'multiple': True,
@@ -743,9 +719,7 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM: {
                         'type': 'str',
-                        'desc': _("Whether to request attestation data when enrolling a new WebAuthn token. "
-                                  "Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
-                                  "Default: direct (ask for non-anonymized attestation data)"),
+                        'desc': _("Whether to request attestation data when enrolling a new WebAuthn token. Note: for u2f_req to work with WebAuthn, this cannot be set to none. Default: direct (ask for non-anonymized attestation data)"),
                         'group': WEBAUTHNGROUP.WEBAUTHN,
                         'value': [
                             "none",
@@ -755,9 +729,7 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL: {
                         'type': 'str',
-                        'desc': _("Whether and how strictly to check authenticator attestation data. "
-                                  "Note: If the attestation form is none, the attestation level needs to also be none. "
-                                  "Default: untrusted (attestation is required, but can be unknown or self-signed)"),
+                        'desc': _("Whether and how strictly to check authenticator attestation data. Note: If the attestation form is none, the attestation level needs to also be none. Default: untrusted (attestation is required, but can be unknown or self-signed)"),
                         'group': WEBAUTHNGROUP.WEBAUTHN,
                         'value': [
                             "none",
@@ -792,8 +764,7 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     ACTION.CHALLENGETEXT: {
                         'type': 'str',
-                        'desc': _("Use an alternate challenge text for telling the "
-                                  "user to confirm with his WebAuthn device."),
+                        'desc': _("Use an alternate challenge text for telling the user to confirm with his WebAuthn device."),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     }
                 }
@@ -827,7 +798,7 @@ class WebAuthnTokenClass(TokenClass):
         """
 
         if key not in WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys():
-            raise ValueError('key must be one of {0!s}'.format(', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())))
+            raise ValueError(f"key must be one of {', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())!s}")
         return WEBAUTHN_TOKEN_SPECIFIC_SETTINGS[key]
 
     @log_with(log)
@@ -843,7 +814,7 @@ class WebAuthnTokenClass(TokenClass):
         self.hKeyRequired = False
 
     def _get_message(self, options):
-        challengetext = getParam(options, "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT), optional)
+        challengetext = getParam(options, f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}", optional)
         return challengetext.format(self.token.description) if challengetext else ''
 
     def _get_webauthn_user(self, user):
@@ -922,7 +893,7 @@ class WebAuthnTokenClass(TokenClass):
             # Since we are still enrolling the token, there should be exactly one challenge.
             if not len(challengeobject_list):
                 raise EnrollmentError(
-                    "The enrollment challenge does not exist or has timed out for {0!s}".format(serial))
+                    f"The enrollment challenge does not exist or has timed out for {serial!s}")
             challengeobject = challengeobject_list[0]
             challenge = binascii.unhexlify(challengeobject.challenge)
 
@@ -954,7 +925,7 @@ class WebAuthnTokenClass(TokenClass):
             except Exception as e:
                 log.warning('Enrollment of {0!s} token failed: '
                             '{1!s}!'.format(self.get_class_type(), e))
-                raise EnrollmentError("Could not enroll {0!s} token!".format(self.get_class_type()))
+                raise EnrollmentError(f"Could not enroll {self.get_class_type()!s} token!")
 
             self.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(webauthn_credential.credential_id)))
             self.set_otp_count(webauthn_credential.sign_count)
@@ -1031,8 +1002,7 @@ class WebAuthnTokenClass(TokenClass):
             if not params:
                 raise ValueError("Creating a WebAuthn token requires params to be provided")
             if not user:
-                raise ParameterError("Failed to create a WebAuthn token."
-                                     "Creating a WebAuthn token requires user to be provided")
+                raise ParameterError("Failed to create a WebAuthn token.Creating a WebAuthn token requires user to be provided")
 
             # To aid with unit testing a fixed nonce may be passed in.
             nonce = self._get_nonce()
@@ -1299,11 +1269,9 @@ class WebAuthnTokenClass(TokenClass):
             try:
                 jwt.decode(challenge, current_app.secret_key, algorithms=['HS256'])
             except jwt.DecodeError as err:
-                raise AuthenticationRejectedException("Provided response does not contain a challenge issued by this "
-                                                      "instance")
+                raise AuthenticationRejectedException("Provided response does not contain a challenge issued by this instance")
             except jwt.ExpiredSignatureError as err:
-                raise AuthenticationRejectedException("Provided response does not contain a challenge issued by this "
-                                                      "instance")
+                raise AuthenticationRejectedException("Provided response does not contain a challenge issued by this instance")
 
             # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI
             user_handle = getParam(options, "userhandle", required)
@@ -1403,7 +1371,7 @@ class WebAuthnTokenClass(TokenClass):
                                    ).verify())
             except AuthenticationRejectedException as e:
                 # The authentication ceremony failed.
-                log.warning("Checking response for token {0!s} failed. {1!s}".format(self.token.serial, e))
+                log.warning(f"Checking response for token {self.token.serial!s} failed. {e!s}")
                 return -1
 
             # At this point we can check, if the attestation certificate is
@@ -1417,10 +1385,8 @@ class WebAuthnTokenClass(TokenClass):
                     getParam(options, WEBAUTHNACTION.REQ, optional)
             ):
                 log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate "
-                    "due to policy restriction {1!s}".format(self.token.serial, WEBAUTHNACTION.REQ))
-                raise PolicyError("The WebAuthn token is not allowed to "
-                                  "authenticate due to a policy restriction.")
+                    "The WebAuthn token {0!s} is not allowed to authenticate due to policy restriction {1!s}".format(self.token.serial, WEBAUTHNACTION.REQ))
+                raise PolicyError("The WebAuthn token is not allowed to authenticate due to a policy restriction.")
 
             # Now we need to check, if a whitelist for AAGUIDs exists, and if
             # so, if this device is whitelisted. If not, we again raise a
@@ -1428,10 +1394,8 @@ class WebAuthnTokenClass(TokenClass):
             allowed_aaguids = getParam(options, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST, optional)
             if allowed_aaguids and self.get_tokeninfo(WEBAUTHNINFO.AAGUID) not in allowed_aaguids:
                 log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate due to policy "
-                    "restriction {1!s}".format(self.token.serial, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST))
-                raise PolicyError("The WebAuthn token is not allowed to "
-                                  "authenticate due to a policy restriction.")
+                    "The WebAuthn token {0!s} is not allowed to authenticate due to policy restriction {1!s}".format(self.token.serial, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST))
+                raise PolicyError("The WebAuthn token is not allowed to authenticate due to a policy restriction.")
 
             # All clear? Nice!
             return self.get_otp_count()

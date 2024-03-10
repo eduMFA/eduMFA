@@ -75,33 +75,23 @@ class FederationEventHandler(BaseEventHandler):
                             {"type": "str",
                              "required": True,
                              "value": pi_servers,
-                             "description": _("The remote/child eduMFA "
-                                              "Server.")
+                             "description": _("The remote/child eduMFA Server.")
                              },
                         "realm":
                             {"type": "str",
-                             "description": _("Change the realm name to a "
-                                              "realm on the child eduMFA "
-                                              "system.")
+                             "description": _("Change the realm name to a realm on the child eduMFA system.")
                             },
                         "resolver":
                             {"type": "str",
-                             "description": _("Change the resolver name to a "
-                                              "resolver on the child "
-                                              "eduMFA system.")
+                             "description": _("Change the resolver name to a resolver on the child eduMFA system.")
                             },
                         "forward_client_ip":
                             {"type": "bool",
-                             "description": _("Forward the client IP to the "
-                                              "child eduMFA server. "
-                                              "Otherwise this server will "
-                                              "be the client.")
+                             "description": _("Forward the client IP to the child eduMFA server. Otherwise this server will be the client.")
                             },
                         "forward_authorization_token":
                             {"type": "bool",
-                             "description": _("Forward the authorization header. "
-                                              "This allows to also forward request like "
-                                              "token- and system-requests.")
+                             "description": _("Forward the authorization header. This allows to also forward request like token- and system-requests.")
 
                             }
                         }
@@ -141,7 +131,7 @@ class FederationEventHandler(BaseEventHandler):
             if handler_options.get("resolver"):
                 data["resolver"] = handler_options.get("resolver")
 
-            log.info("Sending {0} request to {1!r}".format(method, url))
+            log.info(f"Sending {method} request to {url!r}")
             requestor = None
             params = None
             headers = {}
@@ -176,6 +166,6 @@ class FederationEventHandler(BaseEventHandler):
                                                                  mimetype="application/json")
                 options["response"].status_code = r.status_code
             else:
-                log.warning("Unsupported method: {0!r}".format(method))
+                log.warning(f"Unsupported method: {method!r}")
 
         return True

@@ -698,8 +698,7 @@ class HOTPTokenTestCase(MyTestCase):
         g.logged_in_user = {"user": "hans",
                           "realm": "default",
                           "role": "user"}
-        set_policy("pol1", scope=SCOPE.USER, action="hotp_hashlib=sha256,"
-                                                    "hotp_otplen=8")
+        set_policy("pol1", scope=SCOPE.USER, action="hotp_hashlib=sha256,hotp_otplen=8")
         g.policy_object = PolicyClass()
         p = HotpTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")
@@ -709,8 +708,7 @@ class HOTPTokenTestCase(MyTestCase):
         g.logged_in_user = {"user": "admin",
                             "realm": "super",
                             "role": "admin"}
-        set_policy("pol1", scope=SCOPE.ADMIN, action="hotp_hashlib=sha512,"
-                                                     "hotp_otplen=8")
+        set_policy("pol1", scope=SCOPE.ADMIN, action="hotp_hashlib=sha512,hotp_otplen=8")
         g.policy_object = PolicyClass()
         p = HotpTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")

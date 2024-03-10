@@ -125,8 +125,7 @@ class UserNotificationTestCase(MyTestCase):
         self.setUp_user_realms()
 
         r = set_smsgateway(identifier="myGW",
-                           providermodule="edumfa.lib.smsprovider."
-                                          "SmtpSMSProvider.SmtpSMSProvider",
+                           providermodule="edumfa.lib.smsprovider.SmtpSMSProvider.SmtpSMSProvider",
                            options={"SMTPIDENTIFIER": "myserver",
                                     "MAILTO": "test@example.com"})
         self.assertTrue(r > 0)
@@ -402,8 +401,7 @@ class UserNotificationTestCase(MyTestCase):
         resp.data = """{"result": {"value": true}}"""
         r = uhandler.check_condition(
             {"g": {},
-             "handler_def": {"conditions": {"tokenrealm": "realm1,realm2,"
-                                                          "realm3"}},
+             "handler_def": {"conditions": {"tokenrealm": "realm1,realm2,realm3"}},
              "request": req,
              "response": resp
              }

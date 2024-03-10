@@ -108,11 +108,9 @@ class eduMFAServer(object):
                                  verify=config.tls,
                                  timeout=60
                           )
-        log.debug("Sent request to eduMFA server. status code returned: "
-                  "{0!s}".format(response.status_code))
+        log.debug(f"Sent request to eduMFA server. status code returned: {response.status_code!s}")
         if response.status_code != 200:
-            log.warning("The request to the remote eduMFA server {0!s} "
-                        "returned a status code: {1!s}".format(config.url,
+            log.warning("The request to the remote eduMFA server {0!s} returned a status code: {1!s}".format(config.url,
                                                                response.status_code))
             return False
 
@@ -146,8 +144,7 @@ def get_edumfaserver(identifier=None, id=None):
     """
     server_list = get_edumfaservers(identifier=identifier, id=id)
     if not server_list:
-        raise ConfigAdminError("The specified eduMFA Server configuration "
-                               "does not exist.")
+        raise ConfigAdminError("The specified eduMFA Server configuration does not exist.")
     return server_list[0]
 
 
@@ -233,10 +230,9 @@ def export_edumfaservers(name=None):
 @register_import('edumfaserver')
 def import_edumfaservers(data, name=None):
     """Import edumfaservers configuration"""
-    log.debug('Import edumfaservers config: {0!s}'.format(data))
+    log.debug(f'Import edumfaservers config: {data!s}')
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         rid = add_edumfaserver(res_name, **res_data)
-        log.info('Import of edumfaservers "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of edumfaservers "{res_name!s}" finished, id: {rid!s}')

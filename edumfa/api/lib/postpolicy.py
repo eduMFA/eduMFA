@@ -157,8 +157,7 @@ def sign_response(request, response):
         sign_object = Sign(priv_key, public_key=None,
                            check_private_key=check_private_key)
     except (IOError, ValueError, TypeError) as e:
-        log.info('Could not load private key from '
-                 'file {0!s}: {1!r}!'.format(priv_file_name, e))
+        log.info(f'Could not load private key from file {priv_file_name!s}: {e!r}!')
         log.debug(traceback.format_exc())
         return response
 
@@ -212,8 +211,7 @@ def check_tokentype(request, response):
         # If we have tokentype policies, but
         # the tokentype is not allowed, we raise an exception
         g.audit_object.log({"success": False,
-                            'action_detail': "Tokentype {0!r} not allowed for "
-                                             "authentication".format(tokentype)})
+                            'action_detail': f"Tokentype {tokentype!r} not allowed for authentication"})
         raise PolicyError("Tokentype not allowed for authentication!")
     return response
 
@@ -242,8 +240,7 @@ def check_serial(request, response):
                 serial_matches = True
                 break
         if serial_matches is False:
-            g.audit_object.log({"action_detail": "Serial is not allowed for "
-                                                 "authentication!"})
+            g.audit_object.log({"action_detail": "Serial is not allowed for authentication!"})
             raise PolicyError("Serial is not allowed for authentication!")
     return response
 
@@ -273,15 +270,12 @@ def check_tokeninfo(request, response):
                         key, regex, _r = tokeninfo_pol.split("/")
                         value = token_obj.get_tokeninfo(key, "")
                         if re.search(regex, value):
-                            log.debug("Regular expression {0!s} "
-                                      "matches the tokeninfo field {1!s}.".format(regex, key))
+                            log.debug(f"Regular expression {regex!s} matches the tokeninfo field {key!s}.")
                         else:
-                            log.info("Tokeninfo field {0!s} with contents {1!s} "
-                                     "does not match {2!s}".format(key, value, regex))
-                            raise PolicyError("Tokeninfo field {0!s} with contents does not"
-                                              " match regular expression.".format(key))
+                            log.info(f"Tokeninfo field {key!s} with contents {value!s} does not match {regex!s}")
+                            raise PolicyError(f"Tokeninfo field {key!s} with contents does not match regular expression.")
                     except ValueError:
-                        log.warning("invalid tokeinfo policy: {0!s}".format(tokeninfo_pol))
+                        log.warning(f"invalid tokeinfo policy: {tokeninfo_pol!s}")
 
     return response
 
@@ -450,8 +444,7 @@ def save_pin_change(request, response, serial=None):
         # No serial in request, so we look into the response
         serial = response.json.get("detail", {}).get("serial")
     if not serial:
-        log.error("Can not determine serial number. Have no idea of any "
-                  "realm!")
+        log.error("Can not determine serial number. Have no idea of any realm!")
     else:
         # Determine the realm by the serial
         realm = get_realms_of_token(serial, only_first_realm=True)
@@ -826,7 +819,7 @@ def mangle_challenge_response(request, response):
             messages = sorted(set(messages))
             if message[-4:].lower() in ["<ol>", "<ul>"]:
                 for m in messages:
-                    message += "<li>{0!s}</li>\n".format(m)
+                    message += f"<li>{m!s}</li>\n"
             else:
                 message += "\n"
                 message += ", ".join(messages)

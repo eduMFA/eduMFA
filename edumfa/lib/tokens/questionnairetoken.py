@@ -163,8 +163,7 @@ class QuestionnaireTokenClass(TokenClass):
         num_answers = get_from_config("question.num_answers",
                                       DEFAULT_NUM_ANSWERS)
         if len(questions) < int(num_answers):
-            raise TokenAdminError(_("You need to provide at least %s "
-                                    "answers.") % num_answers)
+            raise TokenAdminError(_("You need to provide at least %s answers.") % num_answers)
         # Save all questions and answers and encrypt them
         for question, answer in questions.items():
             self.add_tokeninfo(question, answer, value_type="password")
@@ -225,13 +224,13 @@ class QuestionnaireTokenClass(TokenClass):
                 questions[tinfo.id] = tinfo.Key
         # if all questions are used up, make a new round
         if len(questions) == len(used_questions):
-            log.info("User has only {0!s} questions in his token. Reusing questions now.".format(len(questions)))
+            log.info(f"User has only {len(questions)!s} questions in his token. Reusing questions now.")
             used_questions = []
         # Reduce the allowed questions
         remaining_questions = {k: v for (k, v) in questions.items() if k not in used_questions}
         message_id = secrets.choice(list(remaining_questions))
         message = remaining_questions[message_id]
-        used_questions = (options.get("data", "") + ",{0!s}".format(message_id)).strip(",")
+        used_questions = (options.get("data", "") + f",{message_id!s}").strip(",")
 
         validity = int(get_from_config('DefaultChallengeValidityTime', 120))
         tokentype = self.get_tokentype().lower()
@@ -249,7 +248,7 @@ class QuestionnaireTokenClass(TokenClass):
         db_challenge.save()
         expiry_date = datetime.datetime.now() + \
                       datetime.timedelta(seconds=validity)
-        reply_dict = {'attributes': {'valid_until': "{0!s}".format(expiry_date)}}
+        reply_dict = {'attributes': {'valid_until': f"{expiry_date!s}"}}
         return True, message, db_challenge.transaction_id, reply_dict
 
     def check_answer(self, given_answer, challenge_object):
@@ -271,8 +270,7 @@ class QuestionnaireTokenClass(TokenClass):
         if safe_compare(answer, given_answer):
             res = 1
         else:
-            log.debug("The answer for token {0!s} does not match.".format(
-                      self.get_serial()))
+            log.debug(f"The answer for token {self.get_serial()!s} does not match.")
         return res
 
     @check_token_locked
@@ -340,7 +338,7 @@ class QuestionnaireTokenClass(TokenClass):
                                                              options) or 1)
         if len(challengeobject_list) == 1:
             session = int(challengeobject_list[0].session or "0") + 1
-            options["session"] = "{0!s}".format(session)
+            options["session"] = f"{session!s}"
             # write the used questions to the data field
             options["data"] = challengeobject_list[0].data or ""
             if session < question_number:

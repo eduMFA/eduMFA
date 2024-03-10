@@ -142,14 +142,13 @@ class MotpTokenClass(TokenClass):
                     motp_url = create_motp_url(otpkey,
                                                user.login, user.realm,
                                                serial=self.get_serial())
-                    response_detail["motpurl"] = {"description": _("URL for MOTP "
-                                                                   "token"),
+                    response_detail["motpurl"] = {"description": _("URL for MOTP token"),
                                                   "value": motp_url,
                                                   "img": create_img(motp_url)
                                                   }
                 except Exception as ex:   # pragma: no cover
-                    log.debug("{0!s}".format(traceback.format_exc()))
-                    log.error('failed to set motp url: {0!r}'.format(ex))
+                    log.debug(f"{traceback.format_exc()!s}")
+                    log.error(f'failed to set motp url: {ex!r}')
                     
         return response_detail
 
@@ -217,8 +216,7 @@ class MotpTokenClass(TokenClass):
         res = mtimeOtp.checkOtp(anOtpVal, window, options=options)
 
         if res != -1 and oCount != 0 and res <= oCount:
-            log.warning("a previous OTP value was used again! former "
-                        "tokencounter: %i, presented counter %i" %
+            log.warning("a previous OTP value was used again! former tokencounter: %i, presented counter %i" %
                         (oCount, res))
             res = -1
             return res

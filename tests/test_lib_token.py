@@ -1124,23 +1124,18 @@ class TokenTestCase(MyTestCase):
         # try an unknown realm
         r = check_realm_pass(self.realm2, "assigned" + self.valid_otp_values[2])
         self.assertFalse(r[0])
-        self.assertEqual(r[1].get("message"), "There is no active and assigned "
-                                              "token in this realm")
+        self.assertEqual(r[1].get("message"), "There is no active and assigned token in this realm")
 
         # check for optional parameter exclude/include type
         r = check_realm_pass(self.realm1, 'assigned' + self.valid_otp_values[2],
                              exclude_types='hotp')
         self.assertFalse(r[0])
-        self.assertEqual(r[1].get("message"), "There is no active and assigned "
-                                              "token in this realm, included types: None, "
-                                              "excluded types: hotp")
+        self.assertEqual(r[1].get("message"), "There is no active and assigned token in this realm, included types: None, excluded types: hotp")
 
         r = check_realm_pass(self.realm1, 'assigned' + self.valid_otp_values[2],
                              include_types='totp')
         self.assertFalse(r[0])
-        self.assertEqual(r[1].get("message"), "There is no active and assigned "
-                                              "token in this realm, included types: totp, "
-                                              "excluded types: None")
+        self.assertEqual(r[1].get("message"), "There is no active and assigned token in this realm, included types: totp, excluded types: None")
 
         r = check_realm_pass(self.realm1, 'assigned' + self.valid_otp_values[2],
                              exclude_types='totp')
@@ -1689,8 +1684,7 @@ class TokenFailCounterTestCase(MyTestCase):
         # Authentication must fail, since the failcounter is reached
         res, reply = check_user_pass(user, "test47359152")
         self.assertFalse(res)
-        self.assertEqual(reply.get("message"), "matching 1 tokens, "
-                                               "Failcounter exceeded")
+        self.assertEqual(reply.get("message"), "matching 1 tokens, Failcounter exceeded")
 
         remove_token("test47")
 
@@ -1720,8 +1714,7 @@ class TokenFailCounterTestCase(MyTestCase):
         res, reply = check_user_pass(user, pin + "032819",
                                      options={"initTime": 47251648 * 30})
         self.assertFalse(res)
-        self.assertEqual(reply.get("message"), "matching 1 tokens, "
-                                               "Failcounter exceeded")
+        self.assertEqual(reply.get("message"), "matching 1 tokens, Failcounter exceeded")
 
         remove_token(pin)
 

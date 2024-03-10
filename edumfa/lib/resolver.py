@@ -88,7 +88,7 @@ def save_resolver(params):
     # check the type
     resolvertypes = get_resolver_types()
     if resolvertype not in resolvertypes:
-        raise Exception("resolver type : {0!s} not in {1!s}".format(resolvertype, str(resolvertypes)))
+        raise Exception(f"resolver type : {resolvertype!s} not in {str(resolvertypes)!s}")
 
     # check the name
     resolvers = get_resolver_list(filter_resolver_name=resolvername)
@@ -98,8 +98,7 @@ def save_resolver(params):
             # So we will update this resolver
             update_resolver = True
         else:
-            raise Exception("resolver with similar name and other type already "
-                            "exists: %s" % r_name)
+            raise Exception(f"resolver with similar name and other type already exists: {r_name}")
 
     # create a dictionary for the ResolverConfig
     resolver_config = get_resolver_config_description(resolvertype)
@@ -215,8 +214,7 @@ def delete_resolver(resolvername):
         if reso.realm_list:
             # The resolver is still contained in a realm! We must not delete it
             realmname = reso.realm_list[0].realm.name
-            raise ConfigAdminError("The resolver %r is still contained in "
-                                   "realm %r." % (resolvername, realmname))
+            raise ConfigAdminError(f"The resolver {resolvername!r} is still contained in realm {realmname!r}.")
         reso.delete()
         ret = reso.id
     # Delete resolver object from cache
@@ -318,7 +316,7 @@ def get_resolver_object(resolvername):
     r_obj_class = get_resolver_class(r_type)
 
     if r_obj_class is None:
-        log.error("Can not find resolver with name {0!s} ".format(resolvername))
+        log.error(f"Can not find resolver with name {resolvername!s} ")
         return None
     else:
         store = get_app_local_store()
@@ -373,7 +371,7 @@ def import_resolver(data, name=None):
     #  given data. We could use "pretestresolver() / testconnection()" (which
     #  doesn't check the input) or "loadConfig()" (which also doesn't check the
     #  parameter, at least for LDAP/SQL-resolver).
-    log.debug('Import resolver config: {0!s}'.format(data))
+    log.debug(f'Import resolver config: {data!s}')
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue

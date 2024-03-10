@@ -2153,8 +2153,7 @@ class TokenEventTestCase(MyTestCase):
                    "request": req,
                    "response": resp,
                    "handler_def": {"options": {"key": "pastText",
-                                               "value": "it was {"
-                                                        "current_time}-12h..."}
+                                               "value": "it was {current_time}-12h..."}
                                    }
                    }
 
@@ -2854,8 +2853,7 @@ class WebhookTestCase(MyTestCase):
                            }
                 res = t_handler.do("post_webhook", options=options)
                 self.assertTrue(res)
-                mock_log.assert_any_call("Unable to replace placeholder: ('unknown_tag')!"
-                                         " Please check the webhooks data option.")
+                mock_log.assert_any_call("Unable to replace placeholder: ('unknown_tag')! Please check the webhooks data option.")
                 text = 'A webhook is send to {0!r} with the text: {1!r}'.format(
                     'http://test.com', '{token_serial} {token_owner} {unknown_tag}')
                 mock_info.assert_any_call(text)
@@ -2899,8 +2897,7 @@ class WebhookTestCase(MyTestCase):
                            }
                 res = t_handler.do("post_webhook", options=options)
                 self.assertTrue(res)
-                mock_log.assert_any_call("Unable to replace placeholder: ('token_seril')!"
-                                         " Please check the webhooks data option.")
+                mock_log.assert_any_call("Unable to replace placeholder: ('token_seril')! Please check the webhooks data option.")
                 text = 'A webhook is send to {0!r} with the text: {1!r}'.format(
                     'http://test.com', 'The token serial is {token_seril}')
                 mock_info.assert_any_call(text)

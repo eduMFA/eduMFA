@@ -56,7 +56,7 @@ def create(name, catype='local'):
         catype = "local"
     click.echo("Warning: Be sure to set the access rights.")
     click.echo("")
-    click.echo("Creating CA connector of type {0!s}.".format(catype))
+    click.echo(f"Creating CA connector of type {catype!s}.")
     ca_class = get_caconnector_class(catype)
     ca_params = ca_class.create_ca(name)
     r = save_caconnector(ca_params)

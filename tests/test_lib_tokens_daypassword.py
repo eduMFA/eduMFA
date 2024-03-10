@@ -29,7 +29,6 @@ class DayPasswordTokenTestCase(MyTestCase):
     realm2 = "realm2"
     serial1 = "SE123456"
     otpkey = "3132333435363738393031323334353637383930"
-
     """
     47251644    942826
     47251645    063321
@@ -629,9 +628,7 @@ class DayPasswordTokenTestCase(MyTestCase):
         g.logged_in_user = {"user": "hans",
                             "realm": "default",
                             "role": "user"}
-        set_policy("pol1", scope=SCOPE.USER, action="daypassword_hashlib=sha256,"
-                                                    "daypassword_timestep=60,"
-                                                    "daypassword_otplen=8")
+        set_policy("pol1", scope=SCOPE.USER, action="daypassword_hashlib=sha256,daypassword_timestep=60,daypassword_otplen=8")
         g.policy_object = PolicyClass()
         p = DayPasswordTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")
@@ -643,9 +640,7 @@ class DayPasswordTokenTestCase(MyTestCase):
         g.logged_in_user = {"user": "admin",
                             "realm": "super",
                             "role": "admin"}
-        set_policy("pol1", scope=SCOPE.ADMIN, action="daypassword_hashlib=sha512,"
-                                                     "daypassword_timestep=60,"
-                                                     "daypassword_otplen=8")
+        set_policy("pol1", scope=SCOPE.ADMIN, action="daypassword_hashlib=sha512,daypassword_timestep=60,daypassword_otplen=8")
         g.policy_object = PolicyClass()
         p = DayPasswordTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")

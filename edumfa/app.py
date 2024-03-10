@@ -119,12 +119,11 @@ def create_app(config_name="development",
     :rtype: App object
     """
     if not silent:
-        print("The configuration name is: {0!s}".format(config_name))
+        print(f"The configuration name is: {config_name!s}")
     if os.environ.get(ENV_KEY):
         config_file = os.environ[ENV_KEY]
     if not silent:
-        print("Additional configuration will be read "
-              "from the file {0!s}".format(config_file))
+        print(f"Additional configuration will be read from the file {config_file!s}")
     app = Flask(__name__, static_folder="static",
                 template_folder="static/templates")
     if config_name:
@@ -140,7 +139,7 @@ def create_app(config_name="development",
     except IOError:
         sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
         sys.stderr.write("  WARNING: edumfa create_app has no access\n")
-        sys.stderr.write("  to {0!s}!\n".format(config_file))
+        sys.stderr.write(f"  to {config_file!s}!\n")
         sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
 
     # Try to load the file, that was specified in the environment variable
@@ -201,7 +200,7 @@ def create_app(config_name="development",
             try:
                 log_read_func[cnf_type](log_config_file)
                 if not silent:
-                    print('Read Logging settings from {0!s}'.format(log_config_file))
+                    print(f'Read Logging settings from {log_config_file!s}')
                 have_config = True
                 break
             except Exception as exx:
@@ -216,8 +215,8 @@ def create_app(config_name="development",
         # If there is another logfile in edumfa.cfg we use this.
         logfile = app.config.get("EDUMFA_LOGFILE", '/var/log/edumfa/edumfa.log')
         if not silent:
-            sys.stderr.write("Using EDUMFA_LOGLEVEL {0!s}.\n".format(level))
-            sys.stderr.write("Using EDUMFA_LOGFILE {0!s}.\n".format(logfile))
+            sys.stderr.write(f"Using EDUMFA_LOGLEVEL {level!s}.\n")
+            sys.stderr.write(f"Using EDUMFA_LOGFILE {logfile!s}.\n")
         DEFAULT_LOGGING_CONFIG["handlers"]["file"]["filename"] = logfile
         DEFAULT_LOGGING_CONFIG["handlers"]["file"]["level"] = level
         DEFAULT_LOGGING_CONFIG["loggers"]["edumfa"]["level"] = level
@@ -231,8 +230,6 @@ def create_app(config_name="development",
         with app.app_context():
             init_hsm()
 
-    logging.getLogger(__name__).debug("Reading application from the static "
-                                      "folder {0!s} and the template folder "
-                                      "{1!s}".format(app.static_folder, app.template_folder))
+    logging.getLogger(__name__).debug(f"Reading application from the static folder {app.static_folder!s} and the template folder {app.template_folder!s}")
 
     return app

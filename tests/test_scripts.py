@@ -94,9 +94,7 @@ class ScriptsTestCase(unittest.TestCase):
         condition = "always"
         options = {}
         conditions = {"user_type": "admin"}
-        eh1 = EventHandler("event-test", event, handlermodule=handlermodule,
-                           action=action, condition=condition,
-                           options=options, conditions=conditions)
+        eh1 = EventHandler("event-test", event, handlermodule=handlermodule, action=action, condition=condition, options=options, conditions=conditions)
         eh1.save()
         events = EventHandler.query.all()
         assert len(events) == 4

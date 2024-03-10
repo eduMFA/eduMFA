@@ -60,8 +60,7 @@ def upgrade():
         session.commit()
     except Exception as exx:
         session.rollback()
-        print("Failed to migrate column adminuser in policies due to error in "
-              "policy '{0!s}'.".format(pol_name))
+        print("Failed to migrate column adminuser in policies due to error in policy '{0!s}'.".format(pol_name))
         print(exx)
 
 

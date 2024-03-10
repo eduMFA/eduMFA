@@ -195,8 +195,7 @@ class LibPolicyTestCase(MyTestCase):
                                         options=options)
         self.assertTrue(rv[0])
         self.assertEqual(rv[1].get("message"),
-                         "user does not exist, accepted due "
-                         "to 'pol1'")
+                         "user does not exist, accepted due to 'pol1'")
         delete_policy("pol1")
 
     def test_04a_user_does_not_exist_without_resolver(self):
@@ -221,8 +220,7 @@ class LibPolicyTestCase(MyTestCase):
                                       options=options)
         self.assertTrue(rv[0])
         self.assertEqual(rv[1].get("message"),
-                         "user does not exist, accepted due "
-                         "to 'pol1'")
+                         "user does not exist, accepted due to 'pol1'")
         delete_policy("pol1")
 
     def test_05_user_has_no_tokens(self):
@@ -247,8 +245,7 @@ class LibPolicyTestCase(MyTestCase):
                                       options=options)
         self.assertTrue(rv[0])
         self.assertEqual(rv[1].get("message"),
-                         "user has no token, accepted due to "
-                         "'pol1'")
+                         "user has no token, accepted due to 'pol1'")
         delete_policy("pol1")
 
     @radiusmock.activate
@@ -407,8 +404,7 @@ class LibPolicyTestCase(MyTestCase):
 
         set_policy(name="lost_pol2",
                    scope=SCOPE.ENROLL,
-                   action="%s=%s, %s=%s,"
-                          "%s=%s" % (ACTION.LOSTTOKENPWCONTENTS, "C",
+                   action="%s=%s, %s=%s,%s=%s" % (ACTION.LOSTTOKENPWCONTENTS, "C",
                                      ACTION.LOSTTOKENVALID, 5,
                                      ACTION.LOSTTOKENPWLEN, 3))
         g = FakeFlaskG()

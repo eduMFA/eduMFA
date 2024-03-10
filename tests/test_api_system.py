@@ -50,8 +50,7 @@ class APIConfigTestCase(MyApiTestCase):
             value = res.json['result']['value']
             self.assertEqual(value.get("key1"),
                              "insert",
-                             "This sometimes happens when test database was "
-                             "not empty!")
+                             "This sometimes happens when test database was not empty!")
             self.assertEqual(value.get("key2"), "insert")
             self.assertEqual(value.get("key3"), "insert")
 
@@ -137,8 +136,7 @@ class APIConfigTestCase(MyApiTestCase):
                                                  'resolver': "test",
                                                  'user': ["admin"],
                                                  'time': "",
-                                                 'client': "10.0.0.0/8, "
-                                                           "172.16.200.1",
+                                                 'client': "10.0.0.0/8, 172.16.200.1",
                                                  'active': True},
                                            method='POST',
                                            headers={'Authorization': self.at}):
@@ -632,8 +630,7 @@ class APIConfigTestCase(MyApiTestCase):
             self.assertTrue(len(p2) == 1, p2)
 
         # import empty file
-        with self.app.test_request_context("/policy/import/"
-                                           "policy_empty_file.cfg",
+        with self.app.test_request_context("/policy/import/policy_empty_file.cfg",
                                            method='POST',
                                            data=dict(file=(POLICYEMPTY,
                                                            "policy_empty_file.cfg")),
@@ -650,8 +647,7 @@ class APIConfigTestCase(MyApiTestCase):
                                                  "action": "action1, action2",
                                                  "scope": "scope1",
                                                  "user": "*, -user1",
-                                                 "client": "172.16.0.0/16, "
-                                                           "-172.16.1.1"},
+                                                 "client": "172.16.0.0/16, -172.16.1.1"},
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 400, res)
@@ -662,8 +658,7 @@ class APIConfigTestCase(MyApiTestCase):
                                                  "action": "action1, action2",
                                                  "scope": "scope1",
                                                  "user": "*, -user1",
-                                                 "client": "172.16.0.0/16, "
-                                                           "-172.16.1.1"},
+                                                 "client": "172.16.0.0/16, -172.16.1.1"},
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
@@ -673,8 +668,7 @@ class APIConfigTestCase(MyApiTestCase):
         with self.app.test_request_context('/policy/pol2',
                                            method='POST',
                                            data={"realm": "*",
-                                                 "action": "action3=value, "
-                                                           "action4",
+                                                 "action": "action3=value, action4",
                                                  "scope": "scope1",
                                                  "user": "admin, superuser",
                                                  "client": "172.16.1.1"},

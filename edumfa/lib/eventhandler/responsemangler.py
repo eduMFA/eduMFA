@@ -80,15 +80,13 @@ class ResponseManglerEventHandler(BaseEventHandler):
                        {"JSON pointer":
                             {"type": "str",
                              "required": True,
-                             "description": _("The JSON pointer (key) that should be deleted. Please "
-                                              "specify in the format '/detail/message'.")}
+                             "description": _("The JSON pointer (key) that should be deleted. Please specify in the format '/detail/message'.")}
                         },
                    ACTION_TYPE.SET:
                        {"JSON pointer":
                             {"type": "str",
                              "required": True,
-                             "description": _("The JSON pointer (key) that should be set. "
-                                              "Please specify in the format '/detail/message'.")
+                             "description": _("The JSON pointer (key) that should be set. Please specify in the format '/detail/message'.")
                              },
                         "type":
                             {"type": "str",
@@ -142,10 +140,10 @@ class ResponseManglerEventHandler(BaseEventHandler):
                 elif len(comp) == 3:
                     del (content[comp[0]][comp[1]][comp[2]])
                 else:
-                    log.warning("JSON pointer length of {0!s} not supported.".format(len(comp)))
+                    log.warning(f"JSON pointer length of {len(comp)!s} not supported.")
                 options.get("response").data = json.dumps(content)
             except KeyError:
-                log.warning("Can not delete response JSON Pointer {0!s}.".format(json_pointer))
+                log.warning(f"Can not delete response JSON Pointer {json_pointer!s}.")
         elif action.lower() == ACTION_TYPE.SET:
             try:
                 if type == "integer":
@@ -165,7 +163,7 @@ class ResponseManglerEventHandler(BaseEventHandler):
                 content[comp[0]][comp[1]] = content[comp[0]].get(comp[1]) or {}
                 content[comp[0]][comp[1]][comp[2]] = value
             else:
-                log.warning("JSON pointer of length {0!s} not supported.".format(len(comp)))
+                log.warning(f"JSON pointer of length {len(comp)!s} not supported.")
             options.get("response").data = json.dumps(content)
 
         return ret

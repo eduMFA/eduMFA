@@ -93,10 +93,10 @@ def getParam(param, key, optional=True, default=None, allow_empty=True, allowed_
     elif default:
         ret = default
     elif not optional:
-        raise ParameterError("Missing parameter: {0!r}".format(key), id=905)
+        raise ParameterError(f"Missing parameter: {key!r}", id=905)
 
     if not allow_empty and ret == "":
-        raise ParameterError("Parameter {0!r} must not be empty".format(key), id=905)
+        raise ParameterError(f"Parameter {key!r} must not be empty", id=905)
 
     if allowed_values and ret not in allowed_values:
         ret = default
@@ -192,7 +192,7 @@ def send_file(output, filename, content_type='text/csv'):
     :return: The generated response
     :rtype: flask.Response
     """
-    headers = {'Content-disposition': 'attachment; filename={0!s}'.format(filename)}
+    headers = {'Content-disposition': f'attachment; filename={filename!s}'}
     return current_app.response_class(output, headers=headers, mimetype=content_type)
 
 
@@ -222,7 +222,7 @@ def send_csv_result(obj, data_key="tokens",
     if data_key in obj and len(obj[data_key]) > 0:
         # Do the header
         for k, _v in obj.get(data_key)[0].items():
-            output += "{0!s}{1!s}{2!s}, ".format(delim, k, delim)
+            output += f"{delim!s}{k!s}{delim!s}, "
         output += "\n"
 
         # Do the data
@@ -232,7 +232,7 @@ def send_csv_result(obj, data_key="tokens",
                     value = val.replace("\n", " ")
                 else:
                     value = val
-                output += "{0!s}{1!s}{2!s}, ".format(delim, value, delim)
+                output += f"{delim!s}{value!s}{delim!s}, "
             output += "\n"
 
     return send_file(output, filename)
@@ -307,7 +307,7 @@ def get_all_params(request):
             for k, v in json_data.items():
                 return_param[k] = v
         except Exception as exx:
-            log.debug("Can not get param: {0!s}".format(exx))
+            log.debug(f"Can not get param: {exx!s}")
 
     if request.view_args:
         log.debug("Update params in request {0!s} {1!s} with view_args.".format(request.method,
@@ -395,13 +395,11 @@ def verify_auth_token(auth_token, required_role=None):
                             id=ERROR.AUTHENTICATE_TOKEN_EXPIRED)
     if wrong_username:
         raise AuthError(_("Authentication failure. The username {0!s} is not allowed to "
-                          "impersonate via JWT.".format(wrong_username)))
+                          "impersonate via JWT.").format(wrong_username))
     if required_role and r.get("role") not in required_role:
         # If we require a certain role like "admin", but the users role does
         # not match
-        raise AuthError(_("Authentication failure. "
-                          "You do not have the necessary role ({0!s}) to access "
-                          "this resource!").format(required_role),
+        raise AuthError(_("Authentication failure. You do not have the necessary role ({0!s}) to access this resource!").format(required_role),
                         id=ERROR.AUTHENTICATE_MISSING_RIGHT)
     return r
 
@@ -420,8 +418,7 @@ def check_policy_name(name):
             raise ParameterError(_("'{0!s}' is an invalid policy name.").format(name))
 
     if not re.match(r'^[a-zA-Z0-9_.\- ]*$', name):
-        raise ParameterError(_("The name of the policy may only contain "
-                               "the characters a-zA-Z0-9_. -"))
+        raise ParameterError(_("The name of the policy may only contain the characters a-zA-Z0-9_. -"))
 
 
 def attestation_certificate_allowed(cert_info, allowed_certs_pols):
@@ -449,7 +446,7 @@ def attestation_certificate_allowed(cert_info, allowed_certs_pols):
     if allowed_certs_pols:
         for allowed_cert in allowed_certs_pols:
             tag, matching, _rest = allowed_cert.split("/", 3)
-            tag_value = cert_info.get("attestation_{0!s}".format(tag))
+            tag_value = cert_info.get(f"attestation_{tag!s}")
             # if we do not get a match, we bail out
             m = re.search(matching, tag_value) if matching and tag_value else None
             if matching and not m:

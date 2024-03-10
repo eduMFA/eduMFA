@@ -70,8 +70,7 @@ class SmtpSMSProvider(ISMSProvider):
 
             if not (server and recipient and sender) and not (identifier and \
                     recipient):
-                log.error("incomplete config: %s. MAILTO and (IDENTIFIER or "
-                          "MAILSERVER and MAILSENDER) needed" % self.config)
+                log.error(f"incomplete config: {self.config}. MAILTO and (IDENTIFIER or MAILSERVER and MAILSENDER) needed")
                 raise SMSError(-1, "Incomplete SMS config.")
 
             recipient = recipient.replace(PHONE_TAG, phone)
@@ -80,7 +79,7 @@ class SmtpSMSProvider(ISMSProvider):
             body = body.replace(PHONE_TAG, phone)
             body = body.replace(MSG_TAG, message)
 
-        log.debug("submitting message {0!r} to {1!s}".format(body, phone))
+        log.debug(f"submitting message {body!r} to {phone!s}")
         if identifier:
             r = send_email_identifier(identifier, recipient, subject, body)
         else:
@@ -108,22 +107,17 @@ class SmtpSMSProvider(ISMSProvider):
                   "parameters": {
                       "MAILTO": {
                           "required": True,
-                          "description": "The recipient of the email. "
-                                         "Use tags {phone} and {otp}."},
+                          "description": "The recipient of the email. Use tags {phone} and {otp}."},
                       "SMTPIDENTIFIER": {
                           "required": True,
-                          "description": "Your SMTP configuration, "
-                                         "that should be used to send the "
-                                         "email.",
+                          "description": "Your SMTP configuration, that should be used to send the email.",
                           "values": [
                               provider.config.identifier for
                               provider in get_smtpservers()]},
                       "SUBJECT": {
-                          "description": "The optional subject of the email. "
-                                         "Use tags {phone} and {otp}."},
+                          "description": "The optional subject of the email. Use tags {phone} and {otp}."},
                       "BODY": {
-                          "description": "The optional body of the email. "
-                                         "Use tags {phone} and {otp}.",
+                          "description": "The optional body of the email. Use tags {phone} and {otp}.",
                           "type": "text"},
                       "REGEXP": {
                           "description": cls.regexp_description

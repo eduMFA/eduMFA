@@ -136,7 +136,7 @@ class WebHookHandler(BaseEventHandler):
             user = User(login=g.logged_in_user.get('username'),
                         realm=g.logged_in_user.get('realm'))
         except (UserError, AttributeError) as e:  # pragma: no cover
-            log.info('Could not determine user: {0!s}'.format(e))
+            log.info(f'Could not determine user: {e!s}')
             user = None
 
         if replace:
@@ -170,13 +170,13 @@ class WebHookHandler(BaseEventHandler):
                     log.info(resp.status_code)
                     log.debug(resp)
                 else:
-                    log.warning('Unknown content type value: {0!s}'.format(content_type))
+                    log.warning(f'Unknown content type value: {content_type!s}')
                     ret = False
             # error handling
             except (HTTPError, ConnectionError, RequestException, Timeout) as err:
                 log.warning(err)
                 return False
         else:
-            log.warning('Unknown action value: {0!s}'.format(action))
+            log.warning(f'Unknown action value: {action!s}')
             ret = False
         return ret

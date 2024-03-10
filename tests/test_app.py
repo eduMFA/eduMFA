@@ -64,10 +64,7 @@ class AppTestCase(unittest.TestCase):
             Comparison('logging.handlers.RotatingFileHandler',
                        baseFilename=os.path.join(dirname, 'edumfa.log'),
                        formatter=Comparison('edumfa.lib.log.SecureFormatter',
-                                            _fmt="[%(asctime)s][%(process)d]"
-                                                 "[%(thread)d][%(levelname)s]"
-                                                 "[%(name)s:%(lineno)d] "
-                                                 "%(message)s",
+                                            _fmt="[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s",
                                             partial=True),
                        level=logging.DEBUG,
                        partial=True)
@@ -92,10 +89,7 @@ class AppTestCase(unittest.TestCase):
                 Comparison('logging.handlers.RotatingFileHandler',
                            baseFilename=os.path.join(dirname, 'edumfa.log'),
                            formatter=Comparison('edumfa.lib.log.SecureFormatter',
-                                                _fmt="[%(asctime)s][%(process)d]"
-                                                     "[%(thread)d][%(levelname)s]"
-                                                     "[%(name)s:%(lineno)d] "
-                                                     "%(message)s",
+                                                _fmt="[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s",
                                                 partial=True),
                            level=logging.DEBUG,
                            partial=True)
@@ -106,10 +100,7 @@ class AppTestCase(unittest.TestCase):
                 Comparison('logging.handlers.RotatingFileHandler',
                            baseFilename=os.path.join(dirname, 'audit.log'),
                            formatter=Comparison('edumfa.lib.log.SecureFormatter',
-                                                _fmt="[%(asctime)s][%(process)d]"
-                                                     "[%(thread)d][%(levelname)s]"
-                                                     "[%(name)s:%(lineno)d] "
-                                                     "%(message)s",
+                                                _fmt="[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s",
                                                 partial=True),
                            level=logging.INFO,
                            partial=True)
@@ -127,10 +118,7 @@ class AppTestCase(unittest.TestCase):
                 Comparison('logging.handlers.RotatingFileHandler',
                            baseFilename=os.path.join(dirname, 'edumfa.log'),
                            formatter=Comparison('edumfa.lib.log.SecureFormatter',
-                                                _fmt="[%(asctime)s][%(process)d]"
-                                                     "[%(thread)d][%(levelname)s]"
-                                                     "[%(name)s:%(lineno)d] "
-                                                     "%(message)s",
+                                                _fmt="[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s",
                                                 partial=True),
                            backupCount=5,
                            level=logging.DEBUG,
@@ -160,10 +148,7 @@ class AppTestCase(unittest.TestCase):
                 Comparison('logging.handlers.RotatingFileHandler',
                            baseFilename=os.path.join(dirname, 'edumfa.log'),
                            formatter=Comparison('edumfa.lib.log.SecureFormatter',
-                                                _fmt="[%(asctime)s][%(process)d]"
-                                                     "[%(thread)d][%(levelname)s]"
-                                                     "[%(name)s:%(lineno)d] "
-                                                     "%(message)s",
+                                                _fmt="[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s",
                                                 partial=True),
                            level=logging.INFO,
                            partial=True)

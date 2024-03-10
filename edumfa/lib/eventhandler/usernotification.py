@@ -120,8 +120,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                     "value": ["plain", "html"]},
                 "attach_qrcode": {
                     "type": "bool",
-                    "description": _("Send QR-Code image as an attachment "
-                                     "(cid URL: token_image)")},
+                    "description": _("Send QR-Code image as an attachment (cid URL: token_image)")},
                 "subject": {
                     "type": "str",
                     "required": False,
@@ -151,8 +150,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                         NOTIFY_TYPE.INTERNAL_ADMIN},
                 "reply_to " + NOTIFY_TYPE.EMAIL: {
                     "type": "str",
-                    "description": _("Any email address, to which the notification "
-                                     "should be sent."),
+                    "description": _("Any email address, to which the notification should be sent."),
                     "visibleIf": "reply_to",
                     "visibleValue": NOTIFY_TYPE.EMAIL},
                 "body": {
@@ -183,8 +181,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                         NOTIFY_TYPE.INTERNAL_ADMIN},
                 "To " + NOTIFY_TYPE.EMAIL: {
                     "type": "str",
-                    "description": _("Any email address, to which the notification "
-                                     "should be sent."),
+                    "description": _("Any email address, to which the notification should be sent."),
                     "visibleIf": "To",
                     "visibleValue": NOTIFY_TYPE.EMAIL}
             },
@@ -192,8 +189,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 "smsconfig": {
                     "type": "str",
                     "required": True,
-                    "description": _("Send the user notification via a "
-                                     "predefined SMS gateway."),
+                    "description": _("Send the user notification via a predefined SMS gateway."),
                     "value": smsgateways},
                 "body": {"type": "text",
                          "required": False,
@@ -207,15 +203,11 @@ class UserNotificationEventHandler(BaseEventHandler):
                 "body": {
                     "type": "text",
                     "required": True,
-                    "description": _("This is the template content of "
-                                     "the new file. Can contain the tags "
-                                     "as specified in the documentation.")},
+                    "description": _("This is the template content of the new file. Can contain the tags as specified in the documentation.")},
                 "filename": {
                     "type": "str",
                     "required": True,
-                    "description": _("The filename of the notification. Existing files "
-                                     "are overwritten. The name can contain tags as specified "
-                                     "in the documentation and can also contain the tag {random}.")}
+                    "description": _("The filename of the notification. Existing files are overwritten. The name can contain tags as specified in the documentation and can also contain the tag {random}.")}
             }
         }
         return actions
@@ -245,8 +237,7 @@ class UserNotificationEventHandler(BaseEventHandler):
             logged_in_user = {}
 
         tokenowner = self._get_tokenowner(request)
-        log.debug("Executing event for action {0!r}, user {1!r}, "
-                  "logged_in_user {2!r}".format(action, tokenowner,
+        log.debug("Executing event for action {0!r}, user {1!r}, logged_in_user {2!r}".format(action, tokenowner,
                                                  logged_in_user))
 
         # Determine recipient
@@ -294,8 +285,7 @@ class UserNotificationEventHandler(BaseEventHandler):
             reply_to = email[0]
 
         else:
-            log.warning("Was not able to determine the email for the reply-to "
-                        "header: {0!s}".format(handler_def))
+            log.warning(f"Was not able to determine the email for the reply-to header: {handler_def!s}")
 
         if notify_type == NOTIFY_TYPE.TOKENOWNER and not tokenowner.is_empty():
             recipient = {
@@ -321,7 +311,7 @@ class UserNotificationEventHandler(BaseEventHandler):
             # create a list of all user-emails, if the user has an email
             emails = [u.get("email") for u in ulist if u.get("email")]
             recipient = {
-                "givenname": "admin of realm {0!s}".format(admin_realm),
+                "givenname": f"admin of realm {admin_realm!s}",
                 "email": emails
             }
         elif notify_type == NOTIFY_TYPE.LOGGED_IN_USER:
@@ -353,8 +343,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 "email": email
             }
         else:
-            log.warning("Was not able to determine the recipient for the user "
-                        "notification: {0!s}".format(handler_def))
+            log.warning(f"Was not able to determine the recipient for the user notification: {handler_def!s}")
 
         if recipient or action.lower() == "savefile":
             # In case of "savefile" we do not need a recipient
@@ -367,8 +356,8 @@ class UserNotificationEventHandler(BaseEventHandler):
                     with open(filename, "r", encoding="utf-8") as f:
                         body = f.read()
                 except Exception as e:
-                    log.warning("Failed to read email template from file {0!r}: {1!r}".format(filename, e))
-                    log.debug("{0!s}".format(traceback.format_exc()))
+                    log.warning(f"Failed to read email template from file {filename!r}: {e!r}")
+                    log.debug(f"{traceback.format_exc()!s}")
 
             subject = handler_options.get("subject") or \
                       "An action was performed on your token."
@@ -423,7 +412,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                     mail_img = MIMEImage(googleurl.read())
                     mail_img.add_header('Content-ID', '<token_image>')
                     mail_img.add_header('Content-Disposition',
-                                        'inline; filename="{0!s}.png"'.format(serial))
+                                        f'inline; filename="{serial!s}.png"')
                     mail_body.attach(mail_img)
                     body = mail_body
                 try:
@@ -433,14 +422,12 @@ class UserNotificationEventHandler(BaseEventHandler):
                                                 reply_to=reply_to,
                                                 mimetype=mimetype)
                 except Exception as exx:
-                    log.error("Failed to send email: {0!s}".format(exx))
+                    log.error(f"Failed to send email: {exx!s}")
                     ret = False
                 if ret:
-                    log.info("Sent a notification email to user {0}".format(
-                        recipient))
+                    log.info(f"Sent a notification email to user {recipient}")
                 else:
-                    log.warning("Failed to send a notification email to user "
-                                "{0}".format(recipient))
+                    log.warning(f"Failed to send a notification email to user {recipient}")
 
             elif action.lower() == "savefile":
                 spooldir = get_app_config_value("EDUMFA_NOTIFICATION_HANDLER_SPOOLDIRECTORY",
@@ -450,13 +437,13 @@ class UserNotificationEventHandler(BaseEventHandler):
                 filename = filename.format(random=random, **tags).lstrip(os.path.sep)
                 outfile = os.path.normpath(os.path.join(spooldir, filename))
                 if not outfile.startswith(spooldir):
-                    log.error('Cannot write outside of spooldir {0!s}!'.format(spooldir))
+                    log.error(f'Cannot write outside of spooldir {spooldir!s}!')
                 else:
                     try:
                         with open(outfile, "w") as f:
                             f.write(body)
                     except Exception as err:
-                        log.error("Failed to write notification file: {0!s}".format(err))
+                        log.error(f"Failed to write notification file: {err!s}")
 
             elif action.lower() == "sendsms":
                 smsconfig = handler_options.get("smsconfig")
@@ -464,13 +451,11 @@ class UserNotificationEventHandler(BaseEventHandler):
                 try:
                     ret = send_sms_identifier(smsconfig, userphone, body)
                 except Exception as exx:
-                    log.error("Failed to send sms: {0!s}".format(exx))
+                    log.error(f"Failed to send sms: {exx!s}")
                     ret = False
                 if ret:
-                    log.info("Sent a notification sms to user {0}".format(
-                        recipient))
+                    log.info(f"Sent a notification sms to user {recipient}")
                 else:
-                    log.warning("Failed to send a notification email to user "
-                                "{0}".format(recipient))
+                    log.warning(f"Failed to send a notification email to user {recipient}")
 
         return ret

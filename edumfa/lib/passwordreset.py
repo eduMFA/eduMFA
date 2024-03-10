@@ -93,10 +93,9 @@ def create_recoverycode(user, email=None, expiration_seconds=3600,
                                               user.login, user.realm,
                                               recoverycode))
         if not r:
-            raise eduMFAError("Failed to send email. {0!s}".format(r))
+            raise eduMFAError(f"Failed to send email. {r!s}")
     else:
-        raise ConfigAdminError("Missing configuration "
-                               "recovery.identifier.")
+        raise ConfigAdminError("Missing configuration recovery.identifier.")
     res = True
     return res
 
@@ -116,7 +115,7 @@ def check_recoverycode(user, recoverycode):
     # delete old entries
     r = PasswordReset.query.filter(and_(PasswordReset.expiration <
                                       datetime.now())).delete()
-    log.debug("{0!s} old password recoverycodes deleted.".format(r))
+    log.debug(f"{r!s} old password recoverycodes deleted.")
     sql_query = PasswordReset.query.filter(and_(PasswordReset.username ==
                                             user.login,
                                                 PasswordReset.realm
@@ -124,10 +123,10 @@ def check_recoverycode(user, recoverycode):
     for pwr in sql_query:
         if verify_with_pepper(pwr.recoverycode, recoverycode):
             recoverycode_valid = True
-            log.debug("Found valid recoverycode for user {0!r}".format(user))
+            log.debug(f"Found valid recoverycode for user {user!r}")
             # Delete the recovery code, so that it can only be used once!
             r = pwr.delete()
-            log.debug("{0!s} used password recoverycode deleted.".format(r))
+            log.debug(f"{r!s} used password recoverycode deleted.")
 
     return recoverycode_valid
 
@@ -143,8 +142,8 @@ def is_password_reset(g):
     :return: True or False
     """
     rlist = get_resolver_list(editable=True)
-    log.debug("Number of editable resolvers: {0!s}".format(len(rlist)))
+    log.debug(f"Number of editable resolvers: {len(rlist)!s}")
     pwreset = Match.generic(g, scope=SCOPE.USER,
                             action=ACTION.PASSWORDRESET).allowed(write_to_audit_log=False)
-    log.debug("Password reset allowed via policies: {0!s}".format(pwreset))
+    log.debug(f"Password reset allowed via policies: {pwreset!s}")
     return bool(rlist and pwreset)

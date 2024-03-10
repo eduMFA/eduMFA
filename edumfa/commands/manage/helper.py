@@ -57,7 +57,7 @@ def conf_import(filename=None, conftype=None):
             conftype_list = list(contents_var.keys())
 
     for conftype in conftype_list:
-        click.echo("Importing {0!s} from {1!s}".format(conftype, filename))
+        click.echo(f"Importing {conftype!s} from {filename!s}")
     return contents_var
 
 
@@ -95,7 +95,7 @@ def import_conf_policy(config_list, cleanup=False, update=False):
         for policy in policies:
             name = policy.get("name")
             r = delete_policy(name)
-            click.echo("Deleted policy {0!s} with result {1!s}".format(name, r))
+            click.echo(f"Deleted policy {name!s} with result {r!s}")
 
     for policy in config_list:
         action_str = "Added"
@@ -103,7 +103,7 @@ def import_conf_policy(config_list, cleanup=False, update=False):
         exists = cls.list_policies(name=name)
         if exists:
             if not update:
-                click.echo("Policy {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(f"Policy {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
@@ -113,7 +113,7 @@ def import_conf_policy(config_list, cleanup=False, update=False):
                        conditions=policy.get("conditions"), edumfanode=policy.get("edumfanode"),
                        priority=policy.get("priority"), realm=policy.get("realm"), resolver=policy.get("resolver"),
                        scope=policy.get("scope"), time=policy.get("time"), user=policy.get("user"))
-        click.echo("{0!s} policy {1!s} with result {2!s}".format(action_str, name, r))
+        click.echo(f"{action_str!s} policy {name!s} with result {r!s}")
 
 
 # conf export menu
@@ -140,7 +140,7 @@ def import_conf_event(config_list, cleanup=False, update=False):
         for event in events:
             name = event.get("name")
             r = delete_event(event.get("id"))
-            click.echo("Deleted event '{0!s}' with result {1!s}".format(name, r), file=sys.stderr)
+            click.echo(f"Deleted event '{name!s}' with result {r!s}", file=sys.stderr)
 
     for event in config_list:
         action_str = "Added"
@@ -155,14 +155,14 @@ def import_conf_event(config_list, cleanup=False, update=False):
             event_id = None
         if exists:
             if not update:
-                click.echo("Event {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(f"Event {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
         r = set_event(name, event.get("event"), event.get("handlermodule"), event.get("action"),
                       conditions=event.get("conditions"), ordering=event.get("ordering"), options=event.get("options"),
                       active=event.get("active"), position=event.get("position", "post"), id=event_id)
-        click.echo("{0!s} event {1!s} with result {2!s}".format(action_str, name, r))
+        click.echo(f"{action_str!s} event {name!s} with result {r!s}")
 
 
 def import_conf_resolver(config_list, cleanup=False, update=False):
@@ -179,7 +179,7 @@ def import_conf_resolver(config_list, cleanup=False, update=False):
         exists = get_resolver_list(filter_resolver_name=name)
         if exists:
             if not update:
-                click.echo("Resolver {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(f"Resolver {name!s} exists and -u is not specified, skipping import.")
                 continue
             else:
                 action_str = "Updated"
@@ -191,7 +191,7 @@ def import_conf_resolver(config_list, cleanup=False, update=False):
         for key in data.keys():
             params.update({key: data.get(key)})
         r = save_resolver(params)
-        click.echo("{0!s} resolver {1!s} with result {2!s}".format(action_str, name, r))
+        click.echo(f"{action_str!s} resolver {name!s} with result {r!s}")
 
 
 def get_conf_resolver(name=None, print_passwords=False):

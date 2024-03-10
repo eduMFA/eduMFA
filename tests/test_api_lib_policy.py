@@ -1453,34 +1453,13 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                         "user": []
         }
         set_policy("polAdminA", scope=SCOPE.ADMIN,
-                   action="set, revoke, adduser, enrollSMS, policydelete, "
-                          "policywrite, enrollTIQR, configdelete, machinelist, "
-                          "enrollREMOTE, setpin, resync, unassign, tokenrealms,"
-                          " enrollSPASS, auditlog, enrollPAPER, deleteuser, "
-                          "enrollEMAIL, resolverdelete, enrollMOTP, enrollPW, "
-                          "enrollHOTP, enrollQUESTION, enrollCERTIFICATE, "
-                          "copytokenuser, configwrite, enrollTOTP, "
-                          "enrollREGISTRATION, enrollYUBICO, resolverwrite, "
-                          "updateuser, enable, enrollU2F, "
-                          "manage_machine_tokens, getrandom, userlist, "
-                          "getserial, radiusserver_write, system_documentation,"
-                          " caconnectordelete, caconnectorwrite, disable, "
-                          "mresolverdelete, copytokenpin, enrollRADIUS, "
-                          "smtpserver_write, set_hsm_password, reset, "
-                          "getchallenges, enroll4EYES, enrollYUBIKEY, "
-                          "fetch_authentication_items, enrollDAPLUG, "
-                          "mresolverwrite, losttoken, enrollSSHKEY, "
-                          "importtokens, assign, delete",
+                   action="set, revoke, adduser, enrollSMS, policydelete, policywrite, enrollTIQR, configdelete, machinelist, enrollREMOTE, setpin, resync, unassign, tokenrealms, enrollSPASS, auditlog, enrollPAPER, deleteuser, enrollEMAIL, resolverdelete, enrollMOTP, enrollPW, enrollHOTP, enrollQUESTION, enrollCERTIFICATE, copytokenuser, configwrite, enrollTOTP, enrollREGISTRATION, enrollYUBICO, resolverwrite, updateuser, enable, enrollU2F, manage_machine_tokens, getrandom, userlist, getserial, radiusserver_write, system_documentation, caconnectordelete, caconnectorwrite, disable, mresolverdelete, copytokenpin, enrollRADIUS, smtpserver_write, set_hsm_password, reset, getchallenges, enroll4EYES, enrollYUBIKEY, fetch_authentication_items, enrollDAPLUG, mresolverwrite, losttoken, enrollSSHKEY, importtokens, assign, delete",
                    adminuser="admin[aA]",
                    realm="realmA, realmB",
                    resolver="resolverA, resolverB",
                    )
         set_policy("polAdminB", scope=SCOPE.ADMIN,
-                   action="set, revoke, adduser, resync, unassign, "
-                          "tokenrealms, deleteuser, enrollTOTP, "
-                          "enrollREGISTRATION, updateuser, enable, userlist, "
-                          "getserial, disable, reset, getchallenges, losttoken,"
-                          " assign, delete ",
+                   action="set, revoke, adduser, resync, unassign, tokenrealms, deleteuser, enrollTOTP, enrollREGISTRATION, updateuser, enable, userlist, getserial, disable, reset, getchallenges, losttoken, assign, delete ",
                    realm="realmB",
                    resolver="resolverB",
                    adminuser="adminB")
@@ -1879,9 +1858,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy for the firebase config to use.
         set_policy(name="push_pol",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}=some-fb-config,"
-                          "{1!s}=https://edumfa.io/enroll,"
-                          "{2!s}=10".format(PUSH_ACTION.FIREBASE_CONFIG,
+                   action="{0!s}=some-fb-config,{1!s}=https://edumfa.io/enroll,{2!s}=10".format(PUSH_ACTION.FIREBASE_CONFIG,
                                             PUSH_ACTION.REGISTRATION_URL,
                                             PUSH_ACTION.TTL))
         g.policy_object = PolicyClass()
@@ -3790,8 +3767,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # init a token, that does has no uwser
         self.setUp_user_realms()
         tokenobject = init_token({"serial": "UASSIGN1", "type": "hotp",
-                                  "otpkey": "3132333435363738393031"
-                                            "323334353637383930"},
+                                  "otpkey": "3132333435363738393031323334353637383930"},
                                  tokenrealms=[self.realm1])
 
         user_obj = User("autoassignuser", self.realm1)
@@ -3851,8 +3827,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # init a token, that does has no user
         self.setUp_user_realms()
         tokenobject = init_token({"serial": "UASSIGN2", "type": "hotp",
-                                  "otpkey": "3132333435363738393031"
-                                            "323334353637383930"},
+                                  "otpkey": "3132333435363738393031323334353637383930"},
                                  tokenrealms=[self.realm1])
         user_obj = User("autoassignuser", self.realm1)
         # unassign all tokens from the user autoassignuser
@@ -4500,9 +4475,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
                           "value": False},
                "version": "eduMFA test",
                "id": 1,
-               "detail": {"message": "enter the HOTP from your email, "
-                                     "enter the HOTP from your email, "
-                                     "enter the TOTP from your SMS",
+               "detail": {"message": "enter the HOTP from your email, enter the HOTP from your email, enter the TOTP from your SMS",
                           "messages": ["enter the HOTP from your email",
                                        "enter the HOTP from your email",
                                        "enter the TOTP from your SMS"],

@@ -485,8 +485,7 @@ class AValidateOfflineTestCase(MyApiTestCase):
                                 "type": "hosts",
                                 "filename": HOSTSFILE,
                                 "type.filename": "string",
-                                "desc.filename": "the filename with the "
-                                                 "hosts",
+                                "desc.filename": "the filename with the hosts",
                                 "pw": "secret",
                                 "type.pw": "password"})
         self.assertTrue(mr_obj > 0)
@@ -806,8 +805,7 @@ class ValidateAPITestCase(MyApiTestCase):
             details = res.json.get("detail")
             self.assertTrue(result.get("status") is True, result)
             self.assertTrue(result.get("value") is False, result)
-            self.assertEqual(details.get("message"), "wrong otp value. "
-                                                     "previous otp used again")
+            self.assertEqual(details.get("message"), "wrong otp value. previous otp used again")
 
     def test_05_check_serial_with_no_user(self):
         # Check a token per serial when the token has no user assigned.
@@ -987,8 +985,7 @@ class ValidateAPITestCase(MyApiTestCase):
             result = res.json.get("result")
             detail = res.json.get("detail")
             self.assertEqual(result.get("value"), False)
-            self.assertEqual(detail.get("message"), "matching 1 tokens, "
-                                                    "Failcounter exceeded")
+            self.assertEqual(detail.get("message"), "matching 1 tokens, Failcounter exceeded")
 
     def test_10_saml_check(self):
         # test successful authentication
@@ -1436,8 +1433,7 @@ class ValidateAPITestCase(MyApiTestCase):
             result = res.json.get("result")
             detail = res.json.get("detail")
             self.assertFalse(result.get("value"))
-            self.assertTrue("The PIN was correct, "
-                            "but the SMS could not be sent" in
+            self.assertTrue("The PIN was correct, but the SMS could not be sent" in
                             detail.get("message"))
             transaction_id = detail.get("transaction_id")
 
@@ -2012,8 +2008,7 @@ class ValidateAPITestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
             detail = res.json.get("detail")
             self.assertEqual(detail.get("message"),
-                             "user does not exist, accepted "
-                             "due to 'pass_no'")
+                             "user does not exist, accepted due to 'pass_no'")
 
         # Creating a notification event. The non-existing user must
         # still be able to pass!
@@ -2031,8 +2026,7 @@ class ValidateAPITestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
             detail = res.json.get("detail")
             self.assertEqual(detail.get("message"),
-                             "user does not exist, accepted "
-                             "due to 'pass_no'")
+                             "user does not exist, accepted due to 'pass_no'")
 
         delete_event(eid)
 
@@ -2050,8 +2044,7 @@ class ValidateAPITestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
             detail = res.json.get("detail")
             self.assertEqual(detail.get("message"),
-                             "user has no token, "
-                             "accepted due to 'pass_no'")
+                             "user has no token, accepted due to 'pass_no'")
 
         r = get_tokens(user=User(user, self.realm2), count=True)
         self.assertEqual(r, 1)
@@ -3821,9 +3814,7 @@ class WebAuthn(MyApiTestCase):
 
 class MultiChallege(MyApiTestCase):
 
-    serial = "hotp1"
-
-    """
+    serial = "hotp1""
     for test 3
     """
 

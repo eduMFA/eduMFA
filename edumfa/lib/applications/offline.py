@@ -73,7 +73,7 @@ class MachineApplication(MachineApplicationBase):
         :return: dictionary
         """
         if amount < 0:
-            raise ParameterError("Invalid refill amount: {!r}".format(amount))
+            raise ParameterError(f"Invalid refill amount: {amount!r}")
         (res, err, otp_dict) = token_obj.get_multi_otp(count=amount, counter_index=True)
         otps = otp_dict.get("otp")
         prepend_pin = get_prepend_pin()
@@ -173,8 +173,7 @@ class MachineApplication(MachineApplicationBase):
                         ret["user"] = ret["username"] = uInfo.get("username")
 
         else:
-            log.info("Token %r, type %r is not supported by "
-                     "OFFLINE application module" % (serial, token_type))
+            log.info(f"Token {serial!r}, type {token_type!r} is not supported by OFFLINE application module")
 
         return ret
 

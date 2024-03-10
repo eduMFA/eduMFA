@@ -34,9 +34,7 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=BytesWarning)
             self.assert_compile(stmt_age,
-                                "DELETE FROM mfa_audit WHERE mfa_audit.id IN "
-                                "(SELECT mfa_audit.id FROM mfa_audit WHERE "
-                                "mfa_audit.date < :date_1 LIMIT :param_1)",
+                                "DELETE FROM mfa_audit WHERE mfa_audit.id IN (SELECT mfa_audit.id FROM mfa_audit WHERE mfa_audit.date < :date_1 LIMIT :param_1)",
                                 checkparams={"date_1": now, "param_1": 1000},
                                 dialect='default')
         with warnings.catch_warnings():
@@ -50,9 +48,7 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=BytesWarning)
             self.assert_compile(stmt_id,
-                                "DELETE FROM mfa_audit WHERE mfa_audit.id IN "
-                                "(SELECT mfa_audit.id FROM mfa_audit WHERE "
-                                "mfa_audit.id < :id_1 LIMIT :param_1)",
+                                "DELETE FROM mfa_audit WHERE mfa_audit.id IN (SELECT mfa_audit.id FROM mfa_audit WHERE mfa_audit.id < :id_1 LIMIT :param_1)",
                                 checkparams={"id_1": 1000, "param_1": 1234},
                                 dialect='default')
         with warnings.catch_warnings():

@@ -95,8 +95,7 @@ class ScriptEventHandler(BaseEventHandler):
                 "background": {
                     "type": "str",
                     "required": True,
-                    "description": _("Wait for script to complete or run script in background. This will "
-                                     "either return the HTTP request early or could also block the request."),
+                    "description": _("Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."),
                     "value": [SCRIPT_BACKGROUND, SCRIPT_WAIT]
                 },
                 "raise_error": {
@@ -107,37 +106,27 @@ class ScriptEventHandler(BaseEventHandler):
                 },
                 "sync_to_database": {
                     "type": "bool",
-                    "description": _("Finish current transaction before running "
-                                     "the script. This is useful if changes to "
-                                     "the database should be made available to "
-                                     "the script or the running request.")
+                    "description": _("Finish current transaction before running the script. This is useful if changes to the database should be made available to the script or the running request.")
                 },
                 "serial": {
                     "type": "bool",
-                    "description": _("Add '--serial <serial number>' as script "
-                                     "parameter.")
+                    "description": _("Add '--serial <serial number>' as script parameter.")
                 },
                 "user": {
                     "type": "bool",
-                    "description": _("Add '--user <username>' as script "
-                                     "parameter.")
+                    "description": _("Add '--user <username>' as script parameter.")
                 },
                 "realm": {
                     "type": "bool",
-                    "description": _("Add '--realm <realm>' as script "
-                                     "parameter.")
+                    "description": _("Add '--realm <realm>' as script parameter.")
                 },
                 "logged_in_user": {
                     "type": "bool",
-                    "description": _("Add the username of the logged in user "
-                                     "as script parameter like "
-                                     "'--logged_in_user <username>'.")
+                    "description": _("Add the username of the logged in user as script parameter like '--logged_in_user <username>'.")
                 },
                 "logged_in_role": {
                     "type": "bool",
-                    "description": _("Add the role (either admin or user) of "
-                                     "the logged in user as script parameter "
-                                     "like '--logged_in_role <role>'.")
+                    "description": _("Add the role (either admin or user) of the logged in user as script parameter like '--logged_in_role <role>'.")
                 }
             }
 
@@ -198,10 +187,9 @@ class ScriptEventHandler(BaseEventHandler):
 
         rcode = 0
         try:
-            log.info("Starting script {script!r}.".format(script=script_name))
+            log.info(f"Starting script {script_name!r}.")
             if is_true(handler_options.get('sync_to_database', False)):
-                log.debug('Committing current transaction for script '
-                          '{0!s}'.format(script_name))
+                log.debug(f'Committing current transaction for script {script_name!s}')
                 db.session.commit()
             # Trusted input/no user input: The scripts are created by user root and read from hard disk
             p = subprocess.Popen(proc_args, cwd=self.script_directory, universal_newlines=True)  # nosec B603
@@ -209,8 +197,7 @@ class ScriptEventHandler(BaseEventHandler):
                 rcode = p.wait()
 
         except Exception as e:
-            log.warning("Failed to execute script {0!r}: {1!r}".format(
-                script_name, e))
+            log.warning(f"Failed to execute script {script_name!r}: {e!r}")
             log.warning(traceback.format_exc())
             if handler_options.get("background") == SCRIPT_WAIT and is_true(handler_options.get("raise_error")):
                 raise ServerError("Failed to start script.")

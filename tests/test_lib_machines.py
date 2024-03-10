@@ -74,8 +74,7 @@ class MachineResolverTestCase(MyTestCase):
                                 "type": "hosts",
                                 "filename": HOSTSFILE,
                                 "type.filename": "string",
-                                "desc.filename": "the filename with the "
-                                                  "hosts",
+                                "desc.filename": "the filename with the hosts",
                                 "pw": "secretöö",
                                 "type.pw": "password"})
         self.assertTrue(mr_obj > 0)

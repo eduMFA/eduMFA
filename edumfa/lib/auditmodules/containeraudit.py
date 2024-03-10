@@ -59,7 +59,7 @@ class Audit(AuditBase):
                               for audit_module in write_conf]
         self.read_module = get_module_class(read_conf, "Audit", "log")(config, startdate)
         if not self.read_module.is_readable:
-            log.warning("The specified EDUMFA_AUDIT_CONTAINER_READ {0!s} is not readable.".format(self.read_module))
+            log.warning(f"The specified EDUMFA_AUDIT_CONTAINER_READ {self.read_module!s} is not readable.")
 
     @property
     def has_data(self):

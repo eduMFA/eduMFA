@@ -291,8 +291,7 @@ class Token(MethodsMixin, db.Model):
         self.key_enc = encrypt(otpkey, iv)
         length = len(self.key_enc)
         if length > Token.key_enc.property.columns[0].type.length:
-            log.error("Key {0!s} exceeds database field {1:d}!".format(self.serial,
-                                                                       length))
+            log.error(f"Key {self.serial!s} exceeds database field {length:d}!")
         self.key_iv = hexlify_and_unicode(iv)
         self.count = 0
         if reset_failcount is True:
@@ -427,8 +426,7 @@ class Token(MethodsMixin, db.Model):
         seed_str = self._fix_spaces(self.pin_seed)
         seed = binascii.unhexlify(seed_str)
         hPin = hash(pin, seed)
-        log.debug("hPin: {0!s}, pin: {1!r}, seed: {2!s}".format(hPin, pin,
-                                                                self.pin_seed))
+        log.debug(f"hPin: {hPin!s}, pin: {pin!r}, seed: {self.pin_seed!s}")
         return hPin
 
     @log_with(log)
@@ -447,10 +445,10 @@ class Token(MethodsMixin, db.Model):
             upin = pin
         if hashed is True:
             self.set_hashed_pin(upin)
-            log.debug("setPin(HASH:{0!r})".format(self.pin_hash))
+            log.debug(f"setPin(HASH:{self.pin_hash!r})")
         else:
             self.pin_hash = "@@" + encryptPin(upin)
-            log.debug("setPin(ENCR:{0!r})".format(self.pin_hash))
+            log.debug(f"setPin(ENCR:{self.pin_hash!r})")
         return self.pin_hash
 
     def check_pin(self, pin):
@@ -573,10 +571,10 @@ class Token(MethodsMixin, db.Model):
         """
         ldict = {}
         for attr in self.__dict__:
-            key = "{0!r}".format(attr)
-            val = "{0!r}".format(getattr(self, attr))
+            key = f"{attr!r}"
+            val = f"{getattr(self, attr)!r}"
             ldict[key] = val
-        res = "<{0!r} {1!r}>".format(self.__class__, ldict)
+        res = f"<{self.__class__!r} {ldict!r}>"
         return res
 
     def set_info(self, info):
@@ -879,7 +877,7 @@ class Config(TimestampMethodsMixin, db.Model):
         self.Description = convert_column_to_unicode(Description)
 
     def __str__(self):
-        return "<{0!s} ({1!s})>".format(self.Key, self.Type)
+        return f"<{self.Key!s} ({self.Type!s})>"
 
     def save(self):
         db.session.add(self)
@@ -1268,7 +1266,7 @@ class TokenRealm(MethodsMixin, db.Model):
         :param realm_id: The id of the realm
         :param token_id: The id of the token
         """
-        log.debug("setting realm_id to {0:d}".format(realm_id))
+        log.debug(f"setting realm_id to {realm_id:d}")
         if realmname:
             r = Realm.query.filter_by(name=realmname).first()
             self.realm_id = r.id
@@ -1452,7 +1450,7 @@ class Challenge(MethodsMixin, db.Model):
         descr['serial'] = self.serial
         descr['data'] = self.get_data()
         if timestamp is True:
-            descr['timestamp'] = "{0!s}".format(self.timestamp)
+            descr['timestamp'] = f"{self.timestamp!s}"
         else:
             descr['timestamp'] = self.timestamp
         descr['otp_received'] = self.received_count > 0
@@ -1463,7 +1461,7 @@ class Challenge(MethodsMixin, db.Model):
 
     def __str__(self):
         descr = self.get()
-        return "{0!s}".format(descr)
+        return f"{descr!s}"
 
 
 def cleanup_challenges():
@@ -1784,9 +1782,7 @@ class MachineTokenOptions(db.Model):
                                    backref='option_list')
 
     def __init__(self, machinetoken_id, key, value):
-        log.debug("setting {0!r} to {1!r} for MachineToken {2!s}".format(key,
-                                                            value,
-                                                            machinetoken_id))
+        log.debug(f"setting {key!r} to {value!r} for MachineToken {machinetoken_id!s}")
         self.machinetoken_id = machinetoken_id
         self.mt_key = convert_column_to_unicode(key)
         self.mt_value = convert_column_to_unicode(value)
@@ -2582,7 +2578,7 @@ class ClientApplication(MethodsMixin, db.Model):
         try:
             db.session.commit()
         except IntegrityError as e:  # pragma: no cover
-            log.info('Unable to write ClientApplication entry to db: {0!s}'.format(e))
+            log.info(f'Unable to write ClientApplication entry to db: {e!s}')
             log.debug(traceback.format_exc())
 
     def __repr__(self):

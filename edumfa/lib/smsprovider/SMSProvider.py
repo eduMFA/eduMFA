@@ -65,15 +65,14 @@ class SMSError(Exception):
         return ret
 
     def __str__(self):
-        ret = '{0!s}'.format(self.description)
+        ret = f'{self.description!s}'
         return ret
 
 
 class ISMSProvider(object):
     """ the SMS Provider Interface - BaseClass """
 
-    regexp_description = _("Regular expression to modify the phone number to make it compatible with provider. "
-                           "For example to remove pluses and slashes enter something like '/[\\+/]//'.")
+    regexp_description = _("Regular expression to modify the phone number to make it compatible with provider. For example to remove pluses and slashes enter something like '/[\\+/]//'.")
 
     def __init__(self, db_smsprovider_object=None, smsgateway=None):
         """
@@ -159,8 +158,7 @@ class ISMSProvider(object):
                 if m:
                     phone = re.sub(m.group(1), m.group(2), phone)
             except re.error:
-                log.warning("Can not mangle phone number. "
-                            "Please check your REGEXP: {0!s}".format(regexp))
+                log.warning(f"Can not mangle phone number. Please check your REGEXP: {regexp!s}")
 
         return phone
 
@@ -291,7 +289,7 @@ def get_smsgateway(identifier=None, id=None, gwtype=None):
             id = int(id)
             sqlquery = sqlquery.filter_by(id=id)
         except Exception:
-            log.info("We can not filter for smsgateway {0!s}".format(id))
+            log.info(f"We can not filter for smsgateway {id!s}")
     if gwtype:
         sqlquery = sqlquery.filter_by(providermodule=gwtype)
     if identifier:
@@ -367,10 +365,9 @@ def export_smsgateway(name=None):
 @register_import('smsgateway')
 def import_smsgateway(data, name=None):
     """Import sms gateway configuration"""
-    log.debug('Import smsgateway config: {0!s}'.format(data))
+    log.debug(f'Import smsgateway config: {data!s}')
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         rid = set_smsgateway(res_name, **res_data)
-        log.info('Import of smsgateway "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of smsgateway "{res_name!s}" finished, id: {rid!s}')

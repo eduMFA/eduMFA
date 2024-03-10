@@ -127,14 +127,12 @@ class DayPasswordTokenClass(TotpTokenClass):
                        },
                        ACTION.MAXTOKENUSER: {
                            'type': 'int',
-                           'desc': _("The user may only have this maximum "
-                                     "number of daypassword tokens assigned."),
+                           'desc': _("The user may only have this maximum number of daypassword tokens assigned."),
                            'group': GROUP.TOKEN
                        },
                        ACTION.MAXACTIVETOKENUSER: {
                            'type': 'int',
-                           'desc': _("The user may only have this maximum number "
-                                     "of active daypassword tokens assigned."),
+                           'desc': _("The user may only have this maximum number of active daypassword tokens assigned."),
                            'group': GROUP.TOKEN
                        }
 
@@ -260,10 +258,10 @@ class DayPasswordTokenClass(TotpTokenClass):
             lastauth = self._counter2time(oCount, self.timestep)
             lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
 
-            log.debug("last auth : {0!r}".format(lastauthDt))
-            log.debug("tokentime : {0!r}".format(tokenDt))
-            log.debug("now       : {0!r}".format(nowDt))
-            log.debug("delta     : {0!r}".format((tokentime - inow)))
+            log.debug(f"last auth : {lastauthDt!r}")
+            log.debug(f"tokentime : {tokenDt!r}")
+            log.debug(f"now       : {nowDt!r}")
+            log.debug(f"delta     : {tokentime - inow!r}")
 
         return res
 
@@ -301,9 +299,9 @@ class DayPasswordTokenClass(TotpTokenClass):
                                    challenge=challenge)
 
         pin = self.token.get_pin()
-        combined = "{0!s}{1!s}".format(otpval, pin)
+        combined = f"{otpval!s}{pin!s}"
         if get_from_config("PrependPin") == "True":
-            combined = "{0!s}{1!s}".format(pin, otpval)
+            combined = f"{pin!s}{otpval!s}"
 
         return 1, pin, otpval, combined
 

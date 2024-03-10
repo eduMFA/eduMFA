@@ -86,8 +86,7 @@ class UtilsTestCase(MyTestCase):
         self.assertEqual(r, True)
         r = check_time_in_range("Mon - Fri : 09:00- 17:30", t)
         self.assertEqual(r, True)
-        r = check_time_in_range("Sat-Sun:10:00-15:00, Mon - Fri : 09:00- "
-                                "17:30", t)
+        r = check_time_in_range("Sat-Sun:10:00-15:00, Mon - Fri : 09:00- 17:30", t)
         self.assertEqual(r, True)
 
         # Short time description

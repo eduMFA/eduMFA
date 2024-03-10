@@ -435,8 +435,7 @@ class UserTestCase(MyTestCase):
                          b'<n\xc3\xb6n\xc3\xa4scii.SQL1@sqlrealm>')
         # also check the User object representation
         user_repr = repr(user_object)
-        self.assertEqual("User(login='nönäscii', "
-                         "realm='sqlrealm', resolver='SQL1')",
+        self.assertEqual("User(login='nönäscii', realm='sqlrealm', resolver='SQL1')",
                          user_repr, user_repr)
 
     @ldap3mock.activate

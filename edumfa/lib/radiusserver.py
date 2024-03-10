@@ -91,12 +91,9 @@ class RADIUSServer(object):
         nas_identifier = get_from_config("radius.nas_identifier",
                                          "eduMFA")
         r_dict = config.dictionary or get_from_config("radius.dictfile",
-                                                      "/etc/edumfa/"
-                                                      "dictionary")
-        log.debug("NAS Identifier: %r, "
-                  "Dictionary: %r" % (nas_identifier, r_dict))
-        log.debug("constructing client object "
-                  "with server: %r, port: %r, secret: %r" %
+                                                      "/etc/edumfa/dictionary")
+        log.debug(f"NAS Identifier: {nas_identifier!r}, Dictionary: {r_dict!r}")
+        log.debug("constructing client object with server: %r, port: %r, secret: %r" %
                   (config.server, config.port, config.secret))
 
         srv = Client(server=config.server,
@@ -120,14 +117,12 @@ class RADIUSServer(object):
             response = srv.SendPacket(req)
 
             if response.code == pyrad.packet.AccessAccept:
-                log.info("Radiusserver %s granted "
-                         "access to user %s." % (config.server, user))
+                log.info(f"Radiusserver {config.server} granted access to user {user}.")
                 success = True
             else:
-                log.warning("Radiusserver %s rejected "
-                            "access to user %s." % (config.server, user))
+                log.warning(f"Radiusserver {config.server} rejected access to user {user}.")
         except Timeout:
-            log.warning("Receiving timeout from remote radius server {0!s}".format(config.server))
+            log.warning(f"Receiving timeout from remote radius server {config.server!s}")
 
         return success
 
@@ -144,8 +139,7 @@ def get_radius(identifier):
     """
     server_list = get_radiusservers(identifier=identifier)
     if not server_list:
-        raise ConfigAdminError("The specified RADIUSServer configuration does "
-                               "not exist.")
+        raise ConfigAdminError("The specified RADIUSServer configuration does not exist.")
     return server_list[0]
 
 
@@ -284,11 +278,10 @@ def export_radiusserver(name=None):
 @register_import('radiusserver')
 def import_radiusserver(data, name=None):
     """Import radiusserver configuration"""
-    log.debug('Import radiusserver config: {0!s}'.format(data))
+    log.debug(f'Import radiusserver config: {data!s}')
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         res_data['secret'] = res_data.pop('password')
         rid = add_radius(res_name, **res_data)
-        log.info('Import of smtpserver "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of smtpserver "{res_name!s}" finished, id: {rid!s}')

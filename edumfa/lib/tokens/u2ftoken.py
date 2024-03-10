@@ -139,8 +139,7 @@ Get the challenge
                             "version": "U2F_V2"
                         }
                       },
-        "message": "Please confirm with your U2F token (Yubico U2F EE ...)"
-        "transaction_id": "02235076952647019161"
+        "message": "Please confirm with your U2F token (Yubico U2F EE ...)transaction_id": "02235076952647019161"
       },
       "id": 1,
       "jsonrpc": "2.0",
@@ -250,8 +249,7 @@ class U2fTokenClass(TokenClass):
                    SCOPE.AUTH: {
                        U2FACTION.FACETS: {
                            'type': 'str',
-                           'desc': _("This is a list of FQDN hostnames "
-                                     "trusting the registered U2F tokens.")},
+                           'desc': _("This is a list of FQDN hostnames trusting the registered U2F tokens.")},
                        ACTION.CHALLENGETEXT: {
                            'type': 'str',
                            'desc': _('Use an alternate challenge text for telling the '
@@ -261,16 +259,14 @@ class U2fTokenClass(TokenClass):
                    SCOPE.AUTHZ: {
                        U2FACTION.REQ: {
                            'type': 'str',
-                           'desc': _("Only specified U2F tokens are "
-                                     "authorized."),
+                           'desc': _("Only specified U2F tokens are authorized."),
                            'group': GROUP.CONDITIONS,
                        }
                    },
                    SCOPE.ENROLL: {
                        U2FACTION.REQ: {
                            'type': 'str',
-                           'desc': _("Only specified U2F tokens are allowed "
-                                     "to be registered."),
+                           'desc': _("Only specified U2F tokens are allowed to be registered."),
                            'group': GROUP.TOKEN},
                        U2FACTION.NO_VERIFY_CERT: {
                            'type': 'bool',
@@ -342,7 +338,7 @@ class U2fTokenClass(TokenClass):
             self.add_tokeninfo("pubKey", user_pub_key)
             # add attestation certificate info
             issuer = x509name_to_string(attestation_cert.get_issuer())
-            serial = "{!s}".format(attestation_cert.get_serial_number())
+            serial = f"{attestation_cert.get_serial_number()!s}"
             subject = x509name_to_string(attestation_cert.get_subject())
 
             self.add_tokeninfo("attestation_issuer", issuer)
@@ -369,8 +365,7 @@ class U2fTokenClass(TokenClass):
             app_id = get_from_config("u2f.appId", "").strip("/")
             from edumfa.lib.error import TokenAdminError
             if not app_id:
-                raise TokenAdminError(_("You need to define the appId in the "
-                                        "token config!"))
+                raise TokenAdminError(_("You need to define the appId in the token config!"))
             nonce = url_encode(geturandom(32))
             response_detail = TokenClass.get_init_detail(self, params, user)
             register_request = {"version": U2F_Version,
@@ -548,13 +543,10 @@ class U2fTokenClass(TokenClass):
                         log.warning(
                             "The U2F device {0!s} is not allowed to authenticate due to policy restriction"
                                 .format(self.token.serial))
-                        raise PolicyError("The U2F device is not allowed "
-                                          "to authenticate due to policy "
-                                          "restriction.")
+                        raise PolicyError("The U2F device is not allowed to authenticate due to policy restriction.")
 
                 else:
-                    log.warning("The signature of %s was valid, but contained "
-                                "an old counter." % self.token.serial)
+                    log.warning(f"The signature of {self.token.serial} was valid, but contained an old counter.")
             else:
                 log.warning("Checking response for token {0!s} failed.".format(
                             self.token.serial))
@@ -580,11 +572,10 @@ class U2fTokenClass(TokenClass):
 
         # Read the facets from the policies
         pol_facets = Match.action_only(g, scope=SCOPE.AUTH, action=U2FACTION.FACETS).action_values(unique=False)
-        facet_list = ["https://{0!s}".format(x) for x in pol_facets]
+        facet_list = [f"https://{x!s}" for x in pol_facets]
         facet_list.append(app_id)
 
-        log.debug("Sending facets lists for appId {0!s}: {1!s}".format(app_id,
-                                                             facet_list))
+        log.debug(f"Sending facets lists for appId {app_id!s}: {facet_list!s}")
         res = {"trustedFacets": [{"version": {"major": 1,
                                               "minor": 0},
                                   "ids": facet_list

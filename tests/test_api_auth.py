@@ -772,8 +772,7 @@ class DuplicateUserApiTestCase(MyApiTestCase):
                 # role should be 'user'
                 self.assertEqual('user', result['value']['role'], result)
             # check if we have this log entry
-            mock_log.assert_called_with("A user 'testadmin' exists as local admin and as user "
-                                        "in your default realm!")
+            mock_log.assert_called_with("A user 'testadmin' exists as local admin and as user in your default realm!")
 
         # Check that a wrong/missing password doesn't trigger the warning in the log
         with mock.patch("logging.Logger.warning") as mock_log:

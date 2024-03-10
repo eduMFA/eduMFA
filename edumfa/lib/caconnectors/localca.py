@@ -221,7 +221,7 @@ class CONFIG(object):
         self.validity_cert = 365
         self.crl_days = 30
         self.crl_overlap = 5
-        self.dn = "/CN={0!s}".format(name)
+        self.dn = f"/CN={name!s}"
 
     def __str__(self):
         s = """
@@ -310,8 +310,7 @@ class LocalCAConnector(BaseCAConnector):
     def _check_attributes(self):
         for req_key in [ATTR.CAKEY, ATTR.CACERT]:
             if req_key not in self.config:
-                raise CAError("required argument '{0!s}' is missing.".format(
-                    req_key))
+                raise CAError(f"required argument '{req_key!s}' is missing.")
 
     def set_config(self, config=None):
         self.config = config or {}
@@ -456,9 +455,8 @@ class LocalCAConnector(BaseCAConnector):
                     file_content = content_file.read()
                     content = yaml.safe_load(file_content)
             except EnvironmentError:
-                log.warning("Template file {0!s} for {1!s} not found or "
-                            "not permitted.".format(self.template_file, self.name))
-                log.debug('{0!s}'.format(traceback.format_exc()))
+                log.warning(f"Template file {self.template_file!s} for {self.name!s} not found or not permitted.")
+                log.debug(f'{traceback.format_exc()!s}')
         return content
 
     def revoke_cert(self, certificate, request_id=None, reason=CRL_REASONS[0]):
@@ -526,11 +524,9 @@ class LocalCAConnector(BaseCAConnector):
             next_update = _get_crl_next_update(full_path_crl)
             if datetime.datetime.now() + \
                     datetime.timedelta(days=self.overlap) > next_update:
-                log.info("We checked the overlap period and we need to create "
-                         "the new CRL.")
+                log.info("We checked the overlap period and we need to create the new CRL.")
             else:
-                log.info("No need to create a new CRL, yet. Next Update: "
-                         "{0!s}, overlap: {1!s}".format(next_update,
+                log.info("No need to create a new CRL, yet. Next Update: {0!s}, overlap: {1!s}".format(next_update,
                                                         self.overlap))
                 create_new_crl = False
 
@@ -583,21 +579,18 @@ class LocalCAConnector(BaseCAConnector):
         config = CONFIG(name)
 
         while 1:
-            directory = input("In which directory do you want to create "
-                              "the CA [{0!s}]: ".format(config.directory))
+            directory = input(f"In which directory do you want to create the CA [{config.directory!s}]: ")
             config.directory = directory or config.directory
             if not config.directory.startswith("/"):
                 config.directory = os.path.abspath(config.directory)
 
-            keysize = input("What should be the keysize of the CA (2048/4096/8192)"
-                            "[{0!s}]: ".format(config.keysize))
+            keysize = input(f"What should be the keysize of the CA (2048/4096/8192)[{config.keysize!s}]: ")
             config.keysize = keysize or config.keysize
 
-            validity_ca = input("How many days should the CA be valid ["
-                                "{0!s}]: ".format(config.validity_ca))
+            validity_ca = input(f"How many days should the CA be valid [{config.validity_ca!s}]: ")
             config.validity_ca = validity_ca or config.validity_ca
 
-            dn = input("What is the DN of the CA [{0!s}]: ".format(config.dn))
+            dn = input(f"What is the DN of the CA [{config.dn!s}]: ")
             config.dn = dn or config.dn
             # At the moment we do not use this. This would be written to the
             # templates file.
@@ -605,15 +598,13 @@ class LocalCAConnector(BaseCAConnector):
             #    "What should be the validity period of enrolled certificates in days [{0!s}]: ".format(
             #    config.validity_cert))
             #config.validity_cert = validity_cert or config.validity_cert
-            crl_days = input("How many days should the CRL be valid "
-                             "[{0!s}]: ".format(config.crl_days))
+            crl_days = input(f"How many days should the CRL be valid [{config.crl_days!s}]: ")
             config.crl_days = crl_days or config.crl_days
-            crl_overlap = input("What should be the overlap period of the CRL in days "
-                                "[{0!s}]: ".format(config.crl_overlap))
+            crl_overlap = input(f"What should be the overlap period of the CRL in days [{config.crl_overlap!s}]: ")
             config.crl_overlap = crl_overlap or config.crl_overlap
 
             print("="*60)
-            print("{0!s}".format(config))
+            print(f"{config!s}")
             answer = input("Is this configuration correct? [y/n] ")
             if answer.lower() == "y":
                 break
@@ -635,14 +626,14 @@ class LocalCAConnector(BaseCAConnector):
         caparms = {"caconnector": name,
                    "type": "local",
                    ATTR.WORKING_DIR: config.directory,
-                   ATTR.CACERT: "{0!s}/cacert.pem".format(config.directory),
-                   ATTR.CAKEY: "{0!s}/cakey.pem".format(config.directory),
+                   ATTR.CACERT: f"{config.directory!s}/cacert.pem",
+                   ATTR.CAKEY: f"{config.directory!s}/cakey.pem",
                    ATTR.CERT_DIR: config.directory,
-                   ATTR.CRL: "{0!s}/crl.pem".format(config.directory),
+                   ATTR.CRL: f"{config.directory!s}/crl.pem",
                    ATTR.CSR_DIR: config.directory,
                    ATTR.CRL_VALIDITY_PERIOD: config.crl_days,
                    ATTR.CRL_OVERLAP_PERIOD: config.crl_overlap,
-                   ATTR.OPENSSL_CNF: "{0!s}/openssl.cnf".format(config.directory)
+                   ATTR.OPENSSL_CNF: f"{config.directory!s}/openssl.cnf"
                    }
         return caparms
 
@@ -656,7 +647,7 @@ def _generate_openssl_cnf(config):
     conf_file = OPENSSL_TEMPLATE.format(crl_days=config.crl_days,
                                         ca_days=config.validity_ca)
 
-    f = open("{0!s}/openssl.cnf".format(config.directory), "w")
+    f = open(f"{config.directory!s}/openssl.cnf", "w")
     f.write(conf_file)
     f.close()
 
@@ -668,24 +659,23 @@ def _init_ca(config):
     :return:
     """
     # Write the database
-    f = open("{0!s}/index.txt".format(config.directory), "w")
+    f = open(f"{config.directory!s}/index.txt", "w")
     f.write("")
     f.close()
 
     # Write the serial file
-    f = open("{0!s}/serial".format(config.directory), "w")
+    f = open(f"{config.directory!s}/serial", "w")
     f.write("1000")
     f.close()
 
     # create the privacy key and set accesss rights
-    f = open("{0!s}/cakey.pem".format(config.directory), "w")
+    f = open(f"{config.directory!s}/cakey.pem", "w")
     f.write("")
     f.close()
     import stat
-    os.chmod("{0!s}/cakey.pem".format(config.directory),
+    os.chmod(f"{config.directory!s}/cakey.pem",
              stat.S_IRUSR | stat.S_IWUSR)
-    command = "openssl genrsa -out {0!s}/cakey.pem {1!s}".format(
-        config.directory, config.keysize)
+    command = f"openssl genrsa -out {config.directory!s}/cakey.pem {config.keysize!s}"
     print("Running command...")
     print(command)
     args = shlex.split(command)
@@ -713,5 +703,5 @@ def _init_ca(config):
 
     print("!"*60)
     print("Please check the ownership of the private key")
-    print("{0!s}/cakey.pem".format(config.directory))
+    print(f"{config.directory!s}/cakey.pem")
     print("!" * 60)

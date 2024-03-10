@@ -40,8 +40,7 @@ class SMSTestCase(MyTestCase):
     def test_00_SMSError(self):
         err = SMSError(100, "Some Error")
         text = "{0!r}".format(err)
-        self.assertTrue(text == "SMSError(error_id=100, description='Some "
-                                "Error')", text)
+        self.assertTrue(text == "SMSError(error_id=100, description='Some Error')", text)
 
         text = "{0!s}".format(err)
         self.assertTrue(text == "Some Error", text)

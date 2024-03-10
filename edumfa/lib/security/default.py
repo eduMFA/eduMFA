@@ -91,28 +91,24 @@ class SecurityModule(object):
 
     def setup_module(self, params):
         fname = 'setup_module'
-        log.error("This is the base class. You should implement "
-                  "the method : %s " % (fname,))
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        log.error(f"This is the base class. You should implement the method : {fname} ")
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     ''' base methods '''
     def random(self, length):
         fname = 'random'
-        log.error("This is the base class. You should implement "
-                  "the method : %s " % (fname,))
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        log.error(f"This is the base class. You should implement the method : {fname} ")
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def encrypt(self, data, iv, key_id=TOKEN_KEY):
         fname = 'encrypt'
-        log.error("This is the base class. You should implement "
-                  "the method : %s " % (fname,))
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        log.error(f"This is the base class. You should implement the method : {fname} ")
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def decrypt(self, enc_data, iv, key_id=TOKEN_KEY):
         fname = 'decrypt'
-        log.error("This is the base class. You should implement "
-                  "the method : %s " % (fname,))
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        log.error(f"This is the base class. You should implement the method : {fname} ")
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def decrypt_password(self, crypt_pass):
         """
@@ -224,7 +220,7 @@ class SecurityModule(object):
         :return: Module dependent
         """
         fname = "create_keys"
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
 
 class DefaultSecurityModule(SecurityModule):
@@ -256,8 +252,7 @@ class DefaultSecurityModule(SecurityModule):
         self._id = binascii.hexlify(os.urandom(3))
 
         if "file" not in config:
-            log.error("No secret file defined. A parameter "
-                      "EDUMFA_ENCFILE is missing in your edumfa.cfg.")
+            log.error("No secret file defined. A parameter EDUMFA_ENCFILE is missing in your edumfa.cfg.")
             raise HSMException("no secret file defined: EDUMFA_ENCFILE!")
 
         # We determine, if the file is encrypted.
@@ -300,8 +295,7 @@ class DefaultSecurityModule(SecurityModule):
             # singleton cache
             password = password or PASSWORD
             if not password:
-                raise HSMException("Error decrypting the encryption key. "
-                                   "No password provided!")
+                raise HSMException("Error decrypting the encryption key. No password provided!")
             # Read all keys, decrypt them and return the key for
             # the slot id
             # TODO we assume here, that the file contains the hexlified data
@@ -311,8 +305,7 @@ class DefaultSecurityModule(SecurityModule):
             try:
                 keys = self.password_decrypt(cipher, password)
             except UnicodeDecodeError as e:
-                raise HSMException("Error decrypting the encryption key. You "
-                                   "probably provided the wrong password.")
+                raise HSMException("Error decrypting the encryption key. You probably provided the wrong password.")
             secret = keys[slot_id*32:(slot_id+1)*32]
 
         else:
@@ -322,8 +315,7 @@ class DefaultSecurityModule(SecurityModule):
                     secret = f.read(32)
 
             if secret == b"":
-                raise HSMException("No secret key defined for index: %s !\n"
-                                   "Please extend your %s"" !"
+                raise HSMException("No secret key defined for index: %s !\nPlease extend your %s"" !"
                                    % (str(slot_id), self.secFile))
 
         # cache the result
@@ -432,7 +424,7 @@ class DefaultSecurityModule(SecurityModule):
         cipher = aes_cbc_encrypt(bkey, iv, input_data)
         iv_hex = hexlify_and_unicode(iv)
         cipher_hex = hexlify_and_unicode(cipher)
-        return "{0!s}:{1!s}".format(iv_hex, cipher_hex)
+        return f"{iv_hex!s}:{cipher_hex!s}"
 
     @staticmethod
     def password_decrypt(enc_data, password):

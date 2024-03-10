@@ -219,18 +219,11 @@ class AuditTestCase(MyTestCase):
         # check treatment of policy entries:
         self.Audit.log({"serial": long_serial,
                         "token_type": token_type,
-                        "policies": "Berlin,Hamburg,München,Köln,Frankfurt am Main,"
-                                    "Stuttgart,Düsseldorf,Dortmund,Essen,Leipzig,"
-                                    "Bremen,Dresden,Hannover,Nürnberg,Duisburg,Bochum,"
-                                    "Wuppertal,Bielefeld,Bonn,Münster,Karlsruhe,"
-                                    "Mannheim,Augsburg,Wiesbaden,Gelsenkirchen,Mönchengladbach,"
-                                    "Braunschweig,Kiel,Chemnitz,Aachen,Magdeburg"})
+                        "policies": "Berlin,Hamburg,München,Köln,Frankfurt am Main,Stuttgart,Düsseldorf,Dortmund,Essen,Leipzig,Bremen,Dresden,Hannover,Nürnberg,Duisburg,Bochum,Wuppertal,Bielefeld,Bonn,Münster,Karlsruhe,Mannheim,Augsburg,Wiesbaden,Gelsenkirchen,Mönchengladbach,Braunschweig,Kiel,Chemnitz,Aachen,Magdeburg"})
         self.Audit._truncate_data()
         self.assertTrue(len(self.Audit.audit_data.get("policies")) <= 255)
         # Some cities like Stuttgart and Düsseldorf already get truncated :-)
-        self.assertEqual("Berlin,Hamburg,München,Köln,Frankfu+,Stuttga+,Düsseld+,Dortmund,Essen,Leipzig,Bremen,"
-                         "Dresden,Hannover,Nürnberg,Duisburg,Bochum,Wuppert+,Bielefe+,Bonn,Münster,Karlsru+,"
-                         "Mannheim,Augsburg,Wiesbaden,Gelsenki+,Möncheng+,Braunsch+,Kiel,Chemnitz,Aachen,Magdeburg",
+        self.assertEqual("Berlin,Hamburg,München,Köln,Frankfu+,Stuttga+,Düsseld+,Dortmund,Essen,Leipzig,Bremen,Dresden,Hannover,Nürnberg,Duisburg,Bochum,Wuppert+,Bielefe+,Bonn,Münster,Karlsru+,Mannheim,Augsburg,Wiesbaden,Gelsenki+,Möncheng+,Braunsch+,Kiel,Chemnitz,Aachen,Magdeburg",
                          self.Audit.audit_data.get("policies"))
 
     def test_07_sign_and_verify(self):

@@ -86,7 +86,7 @@ class HttpSMSProvider(ISMSProvider):
             parameter = self._get_parameters(message, phone)
             timeout = self.config.get("TIMEOUT") or 3
 
-        log.debug("submitting message {0!r} to {1!s}".format(message, phone))
+        log.debug(f"submitting message {message!r} to {phone!s}")
 
         if url is None:
             log.warning("can not submit message. URL is missing.")
@@ -124,7 +124,7 @@ class HttpSMSProvider(ISMSProvider):
             params = None
             if json_data:
                 json_param = parameter
-                log.debug("passing JSON data: {0!s}".format(json_param))
+                log.debug(f"passing JSON data: {json_param!s}")
             else:
                 data = parameter
 
@@ -135,10 +135,7 @@ class HttpSMSProvider(ISMSProvider):
                     'url': url,
                     'data': data,
                     'json_param': json_param}
-        log.debug("issuing request with parameters {params} (data: {data}, "
-                  "json: {json_param}), headers {headers}, method {method} and"
-                  "authentication {basic_auth} "
-                  "to url {url}.".format(**log_dict))
+        log.debug("issuing request with parameters {params} (data: {data}, json: {json_param}), headers {headers}, method {method} andauthentication {basic_auth} to url {url}.".format(**log_dict))
         # Todo: drop basic auth if Authorization-Header is given?
         r = requestor(url, params=params, headers=headers,
                       data=data, json=json_param,
@@ -152,8 +149,7 @@ class HttpSMSProvider(ISMSProvider):
         # We assume, that all gateways return with HTTP Status Code 200,
         # 201 or 202
         if r.status_code not in [200, 201, 202]:
-            raise SMSError(r.status_code, "SMS could not be "
-                                          "sent: %s" % r.status_code)
+            raise SMSError(r.status_code, f"SMS could not be sent: {r.status_code}")
         success = self._check_success(r)
         return success
 
@@ -168,7 +164,7 @@ class HttpSMSProvider(ISMSProvider):
         urldata[messageKey] = message
         params = self.config.get('PARAMETER', {})
         urldata.update(params)
-        log.debug("[getParameters] urldata: {0!s}".format(urldata))
+        log.debug(f"[getParameters] urldata: {urldata!s}")
         return urldata
 
     def _check_success(self, response):
@@ -192,20 +188,16 @@ class HttpSMSProvider(ISMSProvider):
                 log.debug("sending sms success")
                 ret = True
             else:
-                log.warning("failed to send sms. Reply %s does not match "
-                            "the RETURN_SUCCESS definition" % reply)
+                log.warning(f"failed to send sms. Reply {reply} does not match the RETURN_SUCCESS definition")
                 raise SMSError(response.status_code,
-                               "We received a none success reply from the "
-                               "SMS Gateway: {0!s} ({1!s})".format(reply,
+                               "We received a none success reply from the SMS Gateway: {0!s} ({1!s})".format(reply,
                                                                    return_success))
 
         elif return_fail:
             if return_fail in reply:
-                log.warning("sending sms failed. %s was not found "
-                            "in %s" % (return_fail, reply))
+                log.warning(f"sending sms failed. {return_fail} was not found in {reply}")
                 raise SMSError(response.status_code,
-                               "We received the predefined error from the "
-                               "SMS Gateway.")
+                               "We received the predefined error from the SMS Gateway.")
             else:
                 log.debug("sending sms success")
                 ret = True
@@ -230,46 +222,32 @@ class HttpSMSProvider(ISMSProvider):
                           "description": _("The base URL of the HTTP Gateway")},
                       "HTTP_METHOD": {
                           "required": True,
-                          "description": _("Should the HTTP Gateway be "
-                                           "connected via an HTTP GET or POST "
-                                           "request."),
+                          "description": _("Should the HTTP Gateway be connected via an HTTP GET or POST request."),
                           "values": ["GET", "POST"]},
                       "RETURN_SUCCESS": {
-                          "description": _("Specify a substring, "
-                                           "that indicates, that the SMS was "
-                                           "delivered successfully.")},
+                          "description": _("Specify a substring, that indicates, that the SMS was delivered successfully.")},
                       "RETURN_FAIL": {
-                          "description": _("Specify a substring, "
-                                           "that indicates, that the SMS "
-                                           "failed to be delivered.")},
+                          "description": _("Specify a substring, that indicates, that the SMS failed to be delivered.")},
                       "USERNAME": {
-                          "description": _("Username in case of basic "
-                                           "authentication.")
+                          "description": _("Username in case of basic authentication.")
                       },
                       "PASSWORD": {
-                          "description": _("Password in case of basic "
-                                           "authentication.")
+                          "description": _("Password in case of basic authentication.")
                       },
                       "CHECK_SSL": {
                           "required": True,
-                          "description": _("Should the SSL certificate be "
-                                           "verified."),
+                          "description": _("Should the SSL certificate be verified."),
                           "values": ["yes", "no"]
                       },
                       "SEND_DATA_AS_JSON": {
                           "required": True,
-                          "description": _("Should the data in a POST Request be sent "
-                                           "as JSON."),
+                          "description": _("Should the data in a POST Request be sent as JSON."),
                           "values": ["yes", "no"]
                       },
                       "REGEXP": {
                           "description": cls.regexp_description
                       },
-                      "PROXY": {"description": _("An optional proxy string. DEPRECATED. Do not use "
-                                                 "this anymore. Rather use HTTP_PROXY for http "
-                                                 "connections and HTTPS_PROXY for https "
-                                                 "connection. The PROXY option will be removed in "
-                                                 "future.")},
+                      "PROXY": {"description": _("An optional proxy string. DEPRECATED. Do not use this anymore. Rather use HTTP_PROXY for http connections and HTTPS_PROXY for https connection. The PROXY option will be removed in future.")},
                       "HTTP_PROXY": {"description": _("Proxy setting for HTTP connections.")},
                       "HTTPS_PROXY": {"description": _("Proxy setting for HTTPS connections.")},
                       "TIMEOUT": {"description": _("The timeout in seconds.")}

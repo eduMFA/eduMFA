@@ -2163,8 +2163,7 @@ class APITokenTestCase(MyApiTestCase):
         # Now create policy for sha256, overwriting the system config
         set_policy(name="init_details",
                    scope=SCOPE.USER,
-                   action="totp_otplen=8,totp_hashlib=sha256,"
-                          "totp_timestep=60,enrollTOTP")
+                   action="totp_otplen=8,totp_hashlib=sha256,totp_timestep=60,enrollTOTP")
 
         with self.app.test_request_context('/token/init',
                                            method='POST',

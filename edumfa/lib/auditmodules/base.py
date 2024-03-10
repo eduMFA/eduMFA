@@ -104,7 +104,7 @@ class Audit(object):  # pragma: no cover
         :type count: int
         :return:
         """
-        self.audit_data['action_detail'] = "tokennum = {0!s}".format(str(count))
+        self.audit_data['action_detail'] = f"tokennum = {str(count)!s}"
 
     @log_with(log)
     def read_keys(self, pub, priv):
@@ -125,7 +125,7 @@ class Audit(object):  # pragma: no cover
             with open(pub, 'rb') as pubkey_file:
                 self.public = pubkey_file.read()
         except Exception as e:
-            log.error("Error reading key file: {0!r})".format(e))
+            log.error(f"Error reading key file: {e!r})")
             log.debug(traceback.format_exc())
             raise e
 

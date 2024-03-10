@@ -138,8 +138,7 @@ def test():
              tls=tls, timeout=timeout, enqueue_job=enqueue_job)
     r = send_or_enqueue_email(s, recipient,
                               "Test Email from eduMFA",
-                              "This is a test email from eduMFA. "
-                              "The configuration {} is working.".format(identifier))
+                              f"This is a test email from eduMFA. The configuration {identifier} is working.")
 
     g.audit_object.log({'success': r > 0,
                         'info':  r})

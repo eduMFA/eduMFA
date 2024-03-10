@@ -91,19 +91,15 @@ class SecurityModuleTestCase(MyTestCase):
     def test_06_password_encrypt_decrypt(self):
         res = DefaultSecurityModule.password_encrypt("secrettext", "password1")
         self.assertTrue(len(res) == len(
-            "80f1833450a74224c32d03fe4161735c"
-            ":c1944e8c0982d5c35992a9b25abad18a2"
-            "8cac15585ed2fbab05bd2b1ea2cc44b"), res)
+            "80f1833450a74224c32d03fe4161735c:c1944e8c0982d5c35992a9b25abad18a28cac15585ed2fbab05bd2b1ea2cc44b"), res)
 
         res = DefaultSecurityModule.password_decrypt(res, "password1")
         self.assertTrue(res == b"secrettext", res)
 
         # encrypt and decrypt binary data like the enckey
         enckey = geturandom(96)
-        cipher = DefaultSecurityModule.password_encrypt(enckey, "top secret "
-                                                                "!!!")
-        clear = DefaultSecurityModule.password_decrypt(cipher, "top secret "
-                                                               "!!!")
+        cipher = DefaultSecurityModule.password_encrypt(enckey, "top secret !!!")
+        clear = DefaultSecurityModule.password_decrypt(cipher, "top secret !!!")
         self.assertTrue(enckey == clear, (enckey, clear))
 
         # encrypt and decrypt binary data like the enckey

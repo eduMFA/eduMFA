@@ -55,8 +55,8 @@ def createtoken(role, days, realm, username):
     token = jwt.encode(
         {"username": username, "realm": realm, "nonce": geturandom(hex=True), "role": role, "authtype": authtype,
             "exp": datetime.utcnow() + validity, "rights": "TODO"}, secret)
-    click.echo("Username:   {0!s}".format(username))
-    click.echo("Realm:      {0!s}".format(realm))
-    click.echo("Role:       {0!s}".format(role))
-    click.echo("Validity:   {0!s} days".format(days))
-    click.echo("Auth-Token: {0!s}".format(token))
+    click.echo(f"Username:   {username!s}")
+    click.echo(f"Realm:      {realm!s}")
+    click.echo(f"Role:       {role!s}")
+    click.echo(f"Validity:   {days!s} days")
+    click.echo(f"Auth-Token: {token!s}")

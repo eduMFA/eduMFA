@@ -211,8 +211,7 @@ class TokenClass(object):
         # prevent to init update a token changing the token owner
         # FIXME: We need to remove this, if we one day want to assign several users to one token
         if self.user and self.user != user:
-            log.info("The token with serial {0!s} is already assigned "
-                     "to user {1!s}. Can not assign to {2!s}.".format(self.token.serial, self.user, user))
+            log.info("The token with serial {0!s} is already assigned to user {1!s}. Can not assign to {2!s}.".format(self.token.serial, self.user, user))
             raise TokenAdminError("This token is already assigned to another user.")
 
         if not self.user:
@@ -289,7 +288,7 @@ class TokenClass(object):
         """
         user_object = self.user
         user_info = user_object.info
-        user_identifier = "{0!s}_{1!s}".format(user_object.login, user_object.realm)
+        user_identifier = f"{user_object.login!s}_{user_object.realm!s}"
         user_displayname = "{0!s} {1!s}".format(user_info.get("givenname", "."),
                                       user_info.get("surname", "."))
         return user_identifier, user_displayname
@@ -514,7 +513,7 @@ class TokenClass(object):
         elif otpkeyformat == "base32check":
             return decode_base32check(otpkey)
         else:
-            raise ParameterError("Unknown OTP key format: {!r}".format(otpkeyformat))
+            raise ParameterError(f"Unknown OTP key format: {otpkeyformat!r}")
 
     def update(self, param, reset_failcount=True):
         """
@@ -557,8 +556,7 @@ class TokenClass(object):
                 self.token.rollout_state = None
             if self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
                 # We do not do 2stepinit in the second step
-                raise ParameterError("2stepinit is only to be used in the "
-                                     "first initialization step.")
+                raise ParameterError("2stepinit is only to be used in the first initialization step.")
             # In a 2-step enrollment, the server always generates a key
             genkey = 1
             # The token is disabled
@@ -1066,7 +1064,7 @@ class TokenClass(object):
             try:
                 d = parse_date_string(end_date)
             except ValueError as _e:
-                log.debug('{0!s}'.format(traceback.format_exc()))
+                log.debug(f'{traceback.format_exc()!s}')
                 raise TokenAdminError('Could not parse validity period end date!')
             self.add_tokeninfo("validity_period_end", d.strftime(DATE_FORMAT))
 
@@ -1099,7 +1097,7 @@ class TokenClass(object):
             try:
                 d = parse_date_string(start_date)
             except ValueError as _e:
-                log.debug('{0!s}'.format(traceback.format_exc()))
+                log.debug(f'{traceback.format_exc()!s}')
                 raise TokenAdminError('Could not parse validity period start date!')
 
             self.add_tokeninfo("validity_period_start", d.strftime(DATE_FORMAT))
@@ -1179,9 +1177,7 @@ class TokenClass(object):
         try:
             timeout = int(get_from_config(FAILCOUNTER_CLEAR_TIMEOUT, 0))
         except Exception as exx:
-            log.warning("Misconfiguration. Error retrieving "
-                        "failcounter_clear_timeout: "
-                        "{0!s}".format(exx))
+            log.warning("Misconfiguration. Error retrieving failcounter_clear_timeout: {0!s}".format(exx))
         if timeout and self.token.failcount == self.get_max_failcount():
             now = datetime.now(tzlocal())
             lastfail = self.get_tokeninfo(FAILCOUNTER_EXCEEDED)
@@ -1275,7 +1271,7 @@ class TokenClass(object):
         else:
             r = True
         if not r:
-            log.info("{0} {1}".format(message_list, self.get_serial()))
+            log.info(f"{message_list} {self.get_serial()}")
         return r
 
     @log_with(log)
@@ -1364,7 +1360,7 @@ class TokenClass(object):
         """
         # The database field is always an integer
         otplen = self.token.otplen
-        log.debug("Splitting the an OTP value of length {0!s} from the password.".format(otplen))
+        log.debug(f"Splitting the an OTP value of length {otplen!s} from the password.")
         pin, otpval = split_pin_pass(passw, otplen, get_prepend_pin())
         # If the provided passw is shorter than the expected otplen, we return the status False
         return len(passw) >= otplen, pin, otpval
@@ -1390,10 +1386,10 @@ class TokenClass(object):
         """
         ldict = {}
         for attr in self.__dict__:
-            key = "{0!r}".format(attr)
-            val = "{0!r}".format(getattr(self, attr))
+            key = f"{attr!r}"
+            val = f"{getattr(self, attr)!r}"
             ldict[key] = val
-        res = "<{0!r} {1!r}>".format(self.__class__, ldict)
+        res = f"<{self.__class__!r} {ldict!r}>"
         return res
 
     def get_init_detail(self, params=None, user=None):
@@ -1425,7 +1421,7 @@ class TokenClass(object):
 
         if otpkey is not None:
             response_detail["otpkey"] = {"description": "OTP seed",
-                                         "value": "seed://{0!s}".format(otpkey),
+                                         "value": f"seed://{otpkey!s}",
                                          "img": create_img(otpkey)}
 
         return response_detail
@@ -1765,15 +1761,13 @@ class TokenClass(object):
         # The last successful authentication of the token
         date_s = self.get_tokeninfo(ACTION.LASTAUTH)
         if date_s:
-            log.debug("Compare the last successful authentication of "
-                      "token %s with policy "
-                      "tdelta %s: %s" % (self.token.serial, tdelta,
+            log.debug("Compare the last successful authentication of token %s with policy tdelta %s: %s" % (self.token.serial, tdelta,
                                          date_s))
             # parse the string from the database
             try:
                 last_success_auth = parse_date_string(date_s)
             except ParserError:
-                log.info("Failed to parse the date in 'last_auth' of token {0!s}.".format(self.token.serial))
+                log.info(f"Failed to parse the date in 'last_auth' of token {self.token.serial!s}.")
                 return False
 
             if not last_success_auth.tzinfo:
@@ -1783,8 +1777,7 @@ class TokenClass(object):
             # The last auth is to far in the past
             if last_success_auth + tdelta < datetime.now(tzlocal()):
                 res = False
-                log.debug("The last successful authentication is too old: "
-                          "{0!s}".format(last_success_auth))
+                log.debug("The last successful authentication is too old: {0!s}".format(last_success_auth))
 
         return res
 
@@ -1809,8 +1802,7 @@ class TokenClass(object):
         :rtype: str
         """
         if len(server_component) <= len(client_component):
-            raise Exception("The server component must be longer than the "
-                            "client component.")
+            raise Exception("The server component must be longer than the client component.")
 
         key = server_component[:-len(client_component)] + client_component
         return key

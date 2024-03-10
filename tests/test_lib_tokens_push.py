@@ -265,9 +265,7 @@ class PushTokenTestCase(MyTestCase):
                                                 .format(serial))
                     # Check that the user was informed about the need to poll
                     detail = res.json.get("detail")
-                    self.assertEqual("Please confirm the authentication on your mobile device! "
-                                     "Use the polling feature of your unsupported privacyIDEA Authenticator App "
-                                     "to check for a new Login request.", detail.get("message"))
+                    self.assertEqual("Please confirm the authentication on your mobile device! Use the polling feature of your unsupported privacyIDEA Authenticator App to check for a new Login request.", detail.get("message"))
 
             # Our ServiceAccountCredentials mock has been called once, because
             # no access token has been fetched before

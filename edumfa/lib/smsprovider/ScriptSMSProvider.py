@@ -70,7 +70,7 @@ class ScriptSMSProvider(ISMSProvider):
             raise SMSError(-1, "Missing smsgateway definition!")
 
         phone = self._mangle_phone(phone, self.smsgateway.option_dict)
-        log.debug("submitting message {0!s} to {1!s}".format(message, phone))
+        log.debug(f"submitting message {message!s} to {phone!s}")
 
         script = self.smsgateway.option_dict.get("script")
         background = self.smsgateway.option_dict.get("background")
@@ -81,7 +81,7 @@ class ScriptSMSProvider(ISMSProvider):
         # As the message can contain blanks... it is passed via stdin
         rcode = 0
         try:
-            log.info("Starting script {script!r}.".format(script=script_name))
+            log.info(f"Starting script {script_name!r}.")
             # Trusted input/no user input: The scripts are created by user root and read from hard disk
             p = subprocess.Popen(proc_args, cwd=self.script_directory,   # nosec B603
                                  universal_newlines=True, stdin=subprocess.PIPE)
@@ -89,8 +89,7 @@ class ScriptSMSProvider(ISMSProvider):
             if background == SCRIPT_WAIT:
                 rcode = p.wait()
         except Exception as e:
-            log.warning("Failed to execute script {0!r}: {1!r}".format(
-                script_name, e))
+            log.warning(f"Failed to execute script {script_name!r}: {e!r}")
             log.warning(traceback.format_exc())
             if background == SCRIPT_WAIT:
                 raise SMSError(-1, "Failed to start script for sending SMS.")
@@ -100,7 +99,7 @@ class ScriptSMSProvider(ISMSProvider):
                                                                                                error=rcode))
             raise SMSError(-1, "Error during execution of the script.")
         else:
-            log.info("SMS delivered to {0!s}.".format(phone))
+            log.info(f"SMS delivered to {phone!s}.")
 
         return True
 
@@ -117,16 +116,14 @@ class ScriptSMSProvider(ISMSProvider):
                   "parameters": {
                       "script": {
                           "required": True,
-                          "description": _("The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. "
-                                           "Expects phone as the parameter and the message from stdin.")
+                          "description": _("The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects phone as the parameter and the message from stdin.")
                       },
                       "REGEXP": {
                           "description": cls.regexp_description
                       },
                       "background": {
                           "required": True,
-                          "description": _("Wait for script to complete or run script in background. This will "
-                                           "either return the HTTP request early or could also block the request."),
+                          "description": _("Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."),
                           "values": [SCRIPT_BACKGROUND, SCRIPT_WAIT]}
                     }
                   }
