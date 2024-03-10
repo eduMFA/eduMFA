@@ -233,7 +233,9 @@ class CONFIG(object):
 
         CRL validity: {ca.crl_days}
         CRL overlap : {ca.crl_overlap}
-        """.format(ca=self)
+        """.format(
+            ca=self
+        )
         return s
 
 
@@ -694,7 +696,9 @@ def _init_ca(config):
     # create the CA certificate
     command = """openssl req -config openssl.cnf -key cakey.pem \
       -new -x509 -days {ca_days!s} -sha256 -extensions v3_ca \
-      -out cacert.pem -subj {ca_dn!s}""".format(ca_days=config.validity_ca, ca_dn=config.dn)
+      -out cacert.pem -subj {ca_dn!s}""".format(
+        ca_days=config.validity_ca, ca_dn=config.dn
+    )
     print("Running command...")
     print(command)
     args = shlex.split(command)

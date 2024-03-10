@@ -398,7 +398,9 @@ otp={otp}
 status={status}
 timestamp={timestamp}
 h={h}
-""".format(**data)
+""".format(
+            **data
+        )
 
         return "plain", response
 

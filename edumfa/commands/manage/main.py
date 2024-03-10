@@ -60,14 +60,18 @@ def create_prod_app():
 )
 def cli():
     """Management script for the eduMFA application."""
-    click.echo(r"""
+    click.echo(
+        r"""
                _       __  __ ______      
               | |     |  \/  |  ____/\    
        ___  __| |_   _| \  / | |__ /  \   
       / _ \/ _` | | | | |\/| |  __/ /\ \  
      |  __/ (_| | |_| | |  | | | / ____ \ 
       \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {0!s:>12}
-    """.format("v{0!s}".format(get_version_number())))
+    """.format(
+            "v{0!s}".format(get_version_number())
+        )
+    )
 
 
 cli.add_command(audit_cli)

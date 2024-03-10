@@ -86,7 +86,9 @@ class CONFIG(object):  # pragma: no cover
         Connect via HTTP Proxy      : {ca.http_proxy}
         CA               : {ca.ca}
         Use SSL          : {ca.use_ssl}
-        """.format(ca=self)
+        """.format(
+            ca=self
+        )
         return s
 
 
@@ -162,8 +164,9 @@ class MSCAConnector(BaseCAConnector):
             # Secure connection
             if not (self.ssl_ca_cert and self.ssl_client_cert and self.ssl_client_key):
                 log.error(
-                    "For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert' and 'ssl_client_key'. The following configuration seems incomplete: ({0!s}, {1!s}, {2!s})"
-                    .format(self.ssl_ca_cert, self.ssl_client_cert, self.ssl_client_key)
+                    "For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert' and 'ssl_client_key'. The following configuration seems incomplete: ({0!s}, {1!s}, {2!s})".format(
+                        self.ssl_ca_cert, self.ssl_client_cert, self.ssl_client_key
+                    )
                 )
                 raise CAError(f"Incomplete TLS configuration for MSCA worker configuration {self.name!s}")
             else:

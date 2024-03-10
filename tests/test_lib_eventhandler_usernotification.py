@@ -1372,7 +1372,9 @@ class UserNotificationTestCase(MyTestCase):
     "time": 1561549651.093083,
     "version": "privacyIDEA 3.0.1.dev2",
     "versionnumber": "3.0.1.dev2"
-}}""".format(PNG_IMAGE, OAUTH_URL)
+}}""".format(
+            PNG_IMAGE, OAUTH_URL
+        )
         options = {
             "g": g,
             "request": req,
@@ -1445,7 +1447,9 @@ class UserNotificationTestCase(MyTestCase):
             "version": "privacyIDEA 3.0.1.dev2",
             "versionnumber": "3.0.1.dev2"
         }}
-        """.format(PNG_IMAGE, OAUTH_URL)
+        """.format(
+            PNG_IMAGE, OAUTH_URL
+        )
         options = {
             "g": g,
             "request": req,
