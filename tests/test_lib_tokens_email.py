@@ -275,9 +275,7 @@ class EmailTokenTestCase(MyTestCase):
     def test_13_check_otp(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = EmailTokenClass(db_token)
-        token.update(
-            {"otpkey": self.otpkey, "pin": "test", "otplen": 6, "email": self.email}
-        )
+        token.update({"otpkey": self.otpkey, "pin": "test", "otplen": 6, "email": self.email})
         # OTP does not exist
         self.assertTrue(token.check_otp_exist("222333") == -1)
         # OTP does exist
@@ -369,9 +367,7 @@ class EmailTokenTestCase(MyTestCase):
         # if the email is a multi-value attribute, the first address should be chosen
         new_user_info = token.user.info.copy()
         new_user_info["email"] = ["email1@example.com", "email2@example.com"]
-        with mock.patch(
-            "edumfa.lib.resolvers.PasswdIdResolver.IdResolver.getUserInfo"
-        ) as mock_user_info:
+        with mock.patch("edumfa.lib.resolvers.PasswdIdResolver.IdResolver.getUserInfo") as mock_user_info:
             mock_user_info.return_value = new_user_info
             self.assertEqual(token._email_address, "email1@example.com")
 
@@ -432,9 +428,7 @@ class EmailTokenTestCase(MyTestCase):
         transactionid = "123456098714"
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = EmailTokenClass(db_token)
-        email_text, mimetype = token._get_email_text_or_subject(
-            options, EMAILACTION.EMAILTEXT
-        )
+        email_text, mimetype = token._get_email_text_or_subject(options, EMAILACTION.EMAILTEXT)
         self.assertTrue("<p>Hello,</p>" in email_text)
         self.assertEqual(mimetype, "html")
         c = token.create_challenge(transactionid, options=options)
@@ -453,9 +447,7 @@ class EmailTokenTestCase(MyTestCase):
         self.assertFalse(c[0])
         self.assertTrue("The PIN was correct, but the EMail could not be sent" in c[1])
         # test with the parameter exception=1
-        self.assertRaises(
-            Exception, token.create_challenge, transactionid, {"exception": "1"}
-        )
+        self.assertRaises(Exception, token.create_challenge, transactionid, {"exception": "1"})
 
     @smtpmock.activate
     def test_21_test_email_config(self):

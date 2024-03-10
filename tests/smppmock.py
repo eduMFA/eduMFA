@@ -144,25 +144,19 @@ class SmppMock(object):
         def unbound_on_transmitter(SMPP, system_id, password):
             return self._on_transmitter(SMPP, system_id, password)
 
-        self._patcher3 = mock.patch(
-            "smpplib.client.Client.bind_transmitter", unbound_on_transmitter
-        )
+        self._patcher3 = mock.patch("smpplib.client.Client.bind_transmitter", unbound_on_transmitter)
         self._patcher3.start()
 
         def unbound_on_send_message(SMPP, *a, **kwargs):
             return self._on_send_message(SMPP, *a, **kwargs)
 
-        self._patcher4 = mock.patch(
-            "smpplib.client.Client.send_message", unbound_on_send_message
-        )
+        self._patcher4 = mock.patch("smpplib.client.Client.send_message", unbound_on_send_message)
         self._patcher4.start()
 
         def unbound_on_disconnect(SMPP):
             return self._on_disconnect(SMPP)
 
-        self._patcher5 = mock.patch(
-            "smpplib.client.Client.disconnect", unbound_on_disconnect
-        )
+        self._patcher5 = mock.patch("smpplib.client.Client.disconnect", unbound_on_disconnect)
         self._patcher5.start()
 
     def stop(self):

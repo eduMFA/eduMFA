@@ -122,10 +122,7 @@ class OCRASuiteTestCase(MyTestCase):
 
 KEY20 = "3132333435363738393031323334353637383930"
 KEY32 = "3132333435363738393031323334353637383930313233343536373839303132"
-KEY64 = (
-    "31323334353637383930313233343536373839303132333435363738393031323334"
-    "353637383930313233343536373839303132333435363738393031323334"
-)
+KEY64 = "31323334353637383930313233343536373839303132333435363738393031323334353637383930313233343536373839303132333435363738393031323334"
 
 
 class OCRATestCase(MyTestCase):
@@ -191,9 +188,7 @@ class OCRATestCase(MyTestCase):
         # test with pin_hash
         for tv in testvectors:
             ocra_object = OCRA(ocrasuite, binascii.unhexlify(KEY32))
-            r = ocra_object.get_response(
-                tv.get("Q"), pin_hash=pin_hash, counter=tv.get("C")
-            )
+            r = ocra_object.get_response(tv.get("Q"), pin_hash=pin_hash, counter=tv.get("C"))
             self.assertEqual(r, tv.get("r"))
 
     def test_04_one_way_chal_with_counter_512(self):
@@ -347,26 +342,18 @@ class OcraTokenTestCase(MyTestCase):
         transaction_id = r[2]
 
         # answer the challenge wrongly using check_challenge_response
-        r = token.check_challenge_response(
-            passw="00065298", options={"transaction_id": transaction_id}
-        )
+        r = token.check_challenge_response(passw="00065298", options={"transaction_id": transaction_id})
         self.assertEqual(r, -1)
 
         # assert there is still one challenge
-        self.assertEqual(
-            len(get_challenges(serial="OCRA1", transaction_id=transaction_id)), 1
-        )
+        self.assertEqual(len(get_challenges(serial="OCRA1", transaction_id=transaction_id)), 1)
 
         # answer the challenge correctly using check_challenge_response
-        r = token.check_challenge_response(
-            passw="90065298", options={"transaction_id": transaction_id}
-        )
+        r = token.check_challenge_response(passw="90065298", options={"transaction_id": transaction_id})
         self.assertTrue(r > 0, r)
 
         # assert there is no challenge anymore
-        self.assertEqual(
-            len(get_challenges(serial="OCRA1", transaction_id=transaction_id)), 0
-        )
+        self.assertEqual(len(get_challenges(serial="OCRA1", transaction_id=transaction_id)), 0)
 
 
 class TiQRTokenTestCase(MyApiTestCase):
@@ -384,9 +371,7 @@ class TiQRTokenTestCase(MyApiTestCase):
         except Exception:
             pass
         pin = "test"
-        token = init_token(
-            {"type": "tiqr", "pin": pin, "serial": "TIQR1"}, User(user, self.realm1)
-        )
+        token = init_token({"type": "tiqr", "pin": pin, "serial": "TIQR1"}, User(user, self.realm1))
         self.assertEqual(token.type, "tiqr")
 
         prefix = TiqrTokenClass.get_class_prefix()
@@ -477,9 +462,7 @@ class TiQRTokenTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/validate/check",
             method="GET",
-            query_string=urlencode(
-                {"user": user.encode("utf-8"), "realm": self.realm1, "pass": pin}
-            ),
+            query_string=urlencode({"user": user.encode("utf-8"), "realm": self.realm1, "pass": pin}),
         ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
@@ -593,9 +576,7 @@ class TiQRTokenTestCase(MyApiTestCase):
             User("selfservice", self.realm1),
         )
         pin = "tiqr"
-        token = init_token(
-            {"type": "tiqr", "pin": pin}, User("selfservice", self.realm1)
-        )
+        token = init_token({"type": "tiqr", "pin": pin}, User("selfservice", self.realm1))
         idetail = token.get_init_detail()
         value = idetail.get("tiqrenroll").get("value")
         # 'tiqrenroll://None?action=metadata&session=b81ecdf74118dcf6fa1cd41d3d4b2fec56c9107f&serial=TiQR000163CB
@@ -661,17 +642,9 @@ class TiQRTokenTestCase(MyApiTestCase):
             transaction_id = detail.get("transaction_id")
             # we've got two challenges with the same transaction ID
             self.assertEqual(len(detail["multi_challenge"]), 2)
-            email_challenge = [
-                challenge
-                for challenge in detail["multi_challenge"]
-                if challenge["type"] == "email"
-            ][0]
+            email_challenge = [challenge for challenge in detail["multi_challenge"] if challenge["type"] == "email"][0]
             self.assertEqual(email_challenge["transaction_id"], transaction_id)
-            tiqr_challenge = [
-                challenge
-                for challenge in detail["multi_challenge"]
-                if challenge["type"] == "tiqr"
-            ][0]
+            tiqr_challenge = [challenge for challenge in detail["multi_challenge"] if challenge["type"] == "tiqr"][0]
             self.assertEqual(tiqr_challenge["transaction_id"], transaction_id)
             image_url = tiqr_challenge.get("attributes").get("value")
             self.assertTrue(image_url.startswith("tiqrauth"))

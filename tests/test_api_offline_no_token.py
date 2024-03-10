@@ -86,9 +86,7 @@ class OfflinePassNoTokenTestCase(MyApiTestCase):
             result = data.get("result")
             self.assertTrue(result.get("value"))
             detail = data.get("detail")
-            self.assertEqual(
-                "user has no token, accepted due to 'pol1'", detail.get("message")
-            )
+            self.assertEqual("user has no token, accepted due to 'pol1'", detail.get("message"))
             # No AuthItems for this user
             self.assertNotIn("auth_items", data)
 

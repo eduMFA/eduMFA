@@ -40,34 +40,22 @@ class SMSTestCase(MyTestCase):
     def test_00_SMSError(self):
         err = SMSError(100, "Some Error")
         text = "{0!r}".format(err)
-        self.assertTrue(
-            text == "SMSError(error_id=100, description='Some Error')", text
-        )
+        self.assertTrue(text == "SMSError(error_id=100, description='Some Error')", text)
 
         text = "{0!s}".format(err)
         self.assertTrue(text == "Some Error", text)
 
     def test_01_get_provider_class(self):
-        _provider = get_sms_provider_class(
-            "edumfa.lib.smsprovider.SipgateSMSProvider", "SipgateSMSProvider"
-        )
+        _provider = get_sms_provider_class("edumfa.lib.smsprovider.SipgateSMSProvider", "SipgateSMSProvider")
 
-        _provider = get_sms_provider_class(
-            "edumfa.lib.smsprovider.HttpSMSProvider", "HttpSMSProvider"
-        )
+        _provider = get_sms_provider_class("edumfa.lib.smsprovider.HttpSMSProvider", "HttpSMSProvider")
 
-        _provider = get_sms_provider_class(
-            "edumfa.lib.smsprovider.SmtpSMSProvider", "SmtpSMSProvider"
-        )
+        _provider = get_sms_provider_class("edumfa.lib.smsprovider.SmtpSMSProvider", "SmtpSMSProvider")
 
-        _provider = get_sms_provider_class(
-            "edumfa.lib.smsprovider.SmppSMSProvider", "SmppSMSProvider"
-        )
+        _provider = get_sms_provider_class("edumfa.lib.smsprovider.SmppSMSProvider", "SmppSMSProvider")
 
         # A non-existing module will raise an error
-        self.assertRaises(
-            Exception, get_sms_provider_class, "DoesNotExist", "DoesNotExist"
-        )
+        self.assertRaises(Exception, get_sms_provider_class, "DoesNotExist", "DoesNotExist")
 
         # Any other arbitrary class will raise an error, since it has not
         # submit_method
@@ -93,9 +81,7 @@ class SMSTestCase(MyTestCase):
         gw = get_smsgateway(id=id)
         self.assertEqual(gw[0].description, "test")
         # update the description
-        set_smsgateway(
-            identifier, provider_module, description="This is a sensible description"
-        )
+        set_smsgateway(identifier, provider_module, description="This is a sensible description")
         gw = get_smsgateway(id=id)
         self.assertEqual(gw[0].description, "This is a sensible description")
 
@@ -153,7 +139,7 @@ class SMSTestCase(MyTestCase):
     def test_03_create_instance_by_identifier(self):
         # SMS gateway definition
         identifier = "myGW"
-        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider" ".HttpSMSProvider"
+        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider"
         id = set_smsgateway(
             identifier,
             provider_module,
@@ -236,9 +222,7 @@ class SmtpSMSTestCase(MyTestCase):
         self.identifier_provider.load_config(self.identifier_config)
 
     def test_01_missing_config(self):
-        self.assertRaises(
-            SMSError, self.missing_provider.submit_message, "1234356", "Hello"
-        )
+        self.assertRaises(SMSError, self.missing_provider.submit_message, "1234356", "Hello")
 
     @smtpmock.activate
     def test_02_simple_config_success(self):
@@ -249,14 +233,10 @@ class SmtpSMSTestCase(MyTestCase):
     @smtpmock.activate
     def test_03_simple_config_fail(self):
         smtpmock.setdata(response={"recp@example.com": (550, "mailbox unavailable")})
-        self.assertRaises(
-            SMSError, self.simple_provider.submit_message, "123456", "Hello"
-        )
+        self.assertRaises(SMSError, self.simple_provider.submit_message, "123456", "Hello")
 
     def test_04_generic_exception(self):
-        self.assertRaises(
-            Exception, self.wrong_provider.submit_message, "123456", "Hello"
-        )
+        self.assertRaises(Exception, self.wrong_provider.submit_message, "123456", "Hello")
 
     @smtpmock.activate
     def test_05_auth_config_success(self):
@@ -267,9 +247,7 @@ class SmtpSMSTestCase(MyTestCase):
     @smtpmock.activate
     def test_06_auth_config_fail(self):
         smtpmock.setdata(response={}, authenticated=False, config=self.auth_config)
-        self.assertRaises(
-            SMSError, self.auth_provider.submit_message, "123456", "Hello"
-        )
+        self.assertRaises(SMSError, self.auth_provider.submit_message, "123456", "Hello")
 
     @smtpmock.activate
     def test_07_identifier_config_success(self):
@@ -286,7 +264,7 @@ class SmtpSMSTestCase(MyTestCase):
         smtpmock.setdata(response={"recp@example.com": (200, "OK")})
 
         identifier = "myMail"
-        provider_module = "edumfa.lib.smsprovider.SmtpSMSProvider" ".SmtpSMSProvider"
+        provider_module = "edumfa.lib.smsprovider.SmtpSMSProvider.SmtpSMSProvider"
         id = set_smsgateway(
             identifier,
             provider_module,
@@ -303,9 +281,7 @@ class SmtpSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = sms.submit_message("123456", "Halo")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Halo", "123456")
-            )
+            log.assert_any_call("submitting message {0!r} to {1!s}".format("Halo", "123456"))
 
     @smtpmock.activate
     def test_09_send_sms_regexp_success(self):
@@ -326,9 +302,7 @@ class SmtpSMSTestCase(MyTestCase):
             # Here we need to send the SMS
             r = self.regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "4912345678")
-            )
+            log.assert_any_call("submitting message {0!r} to {1!s}".format("Hello", "4912345678"))
 
 
 class SipgateSMSTestCase(MyTestCase):
@@ -371,28 +345,20 @@ class SipgateSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "4912345678")
-            )
+            log.assert_any_call("submitting message {0!r} to {1!s}".format("Hello", "4912345678"))
 
     @responses.activate
     def test_08_smsgateway_success(self):
         responses.add(responses.POST, self.url)
         identifier = "mySMS"
-        provider_module = (
-            "edumfa.lib.smsprovider.SipgateSMSProvider" ".SipgateSMSProvider"
-        )
-        id = set_smsgateway(
-            identifier, provider_module, description="test", options=self.config
-        )
+        provider_module = "edumfa.lib.smsprovider.SipgateSMSProvider.SipgateSMSProvider"
+        id = set_smsgateway(identifier, provider_module, description="test", options=self.config)
         self.assertTrue(id > 0)
         sms = create_sms_instance(identifier)
         with mock.patch("logging.Logger.debug") as log:
             r = sms.submit_message("123456", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "123456")
-            )
+            log.assert_any_call("submitting message {0!r} to {1!s}".format("Hello", "123456"))
 
 
 class ScriptSMSTestCase(MyTestCase):
@@ -402,16 +368,10 @@ class ScriptSMSTestCase(MyTestCase):
         # The script does not exist
         identifier = "myScriptSMS"
         config = {"background": SCRIPT_WAIT, "script": "sms-script-does-not-exist.sh"}
-        provider_module = (
-            "edumfa.lib.smsprovider.ScriptSMSProvider" ".ScriptSMSProvider"
-        )
-        id = set_smsgateway(
-            identifier, provider_module, description="test", options=config
-        )
+        provider_module = "edumfa.lib.smsprovider.ScriptSMSProvider.ScriptSMSProvider"
+        id = set_smsgateway(identifier, provider_module, description="test", options=config)
         self.assertTrue(id > 0)
-        sms = ScriptSMSProvider(
-            smsgateway=get_smsgateway(identifier)[0], directory=self.directory
-        )
+        sms = ScriptSMSProvider(smsgateway=get_smsgateway(identifier)[0], directory=self.directory)
         self.assertRaises(SMSError, sms.submit_message, "123456", "Hello")
         delete_smsgateway(identifier)
 
@@ -427,16 +387,10 @@ class ScriptSMSTestCase(MyTestCase):
             "script": "success.sh",
             "REGEXP": "/[+-/. ]//",
         }
-        provider_module = (
-            "edumfa.lib.smsprovider.ScriptSMSProvider" ".ScriptSMSProvider"
-        )
-        id = set_smsgateway(
-            identifier, provider_module, description="test", options=config
-        )
+        provider_module = "edumfa.lib.smsprovider.ScriptSMSProvider.ScriptSMSProvider"
+        id = set_smsgateway(identifier, provider_module, description="test", options=config)
         self.assertTrue(id > 0)
-        sms = ScriptSMSProvider(
-            smsgateway=get_smsgateway(identifier)[0], directory=self.directory
-        )
+        sms = ScriptSMSProvider(smsgateway=get_smsgateway(identifier)[0], directory=self.directory)
         with mock.patch("logging.Logger.info") as log:
             r = sms.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
@@ -447,16 +401,10 @@ class ScriptSMSTestCase(MyTestCase):
         # The script returns a failing rcode
         identifier = "myScriptSMS"
         config = {"background": SCRIPT_WAIT, "script": "fail.sh"}
-        provider_module = (
-            "edumfa.lib.smsprovider.ScriptSMSProvider" ".ScriptSMSProvider"
-        )
-        id = set_smsgateway(
-            identifier, provider_module, description="test", options=config
-        )
+        provider_module = "edumfa.lib.smsprovider.ScriptSMSProvider.ScriptSMSProvider"
+        id = set_smsgateway(identifier, provider_module, description="test", options=config)
         self.assertTrue(id > 0)
-        sms = ScriptSMSProvider(
-            smsgateway=get_smsgateway(identifier)[0], directory=self.directory
-        )
+        sms = ScriptSMSProvider(smsgateway=get_smsgateway(identifier)[0], directory=self.directory)
         self.assertRaises(SMSError, sms.submit_message, "123456", "Hello")
         delete_smsgateway(identifier)
 
@@ -571,17 +519,13 @@ class HttpSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = self.regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "4912345678")
-            )
+            log.assert_any_call("submitting message {0!r} to {1!s}".format("Hello", "4912345678"))
 
     @responses.activate
     def test_02_send_sms_post_fail(self):
         responses.add(responses.POST, self.post_url, body=self.fail_body)
         # Here we need to send the SMS
-        self.assertRaises(
-            SMSError, self.post_provider.submit_message, "123456", "Hello"
-        )
+        self.assertRaises(SMSError, self.post_provider.submit_message, "123456", "Hello")
 
     @responses.activate
     def test_03_send_sms_get_success(self):
@@ -605,16 +549,12 @@ class HttpSMSTestCase(MyTestCase):
     @responses.activate
     def test_06_simple_service_fail(self):
         responses.add(responses.GET, self.simple_url, body="noting", status=401)
-        self.assertRaises(
-            SMSError, self.simple_provider.submit_message, "123456", "Hello"
-        )
+        self.assertRaises(SMSError, self.simple_provider.submit_message, "123456", "Hello")
 
     @responses.activate
     def test_07_missing_fail(self):
         responses.add(responses.GET, self.missing_url)
-        self.assertRaises(
-            SMSError, self.missing_provider.submit_message, "123456", "Hello"
-        )
+        self.assertRaises(SMSError, self.missing_provider.submit_message, "123456", "Hello")
 
     @responses.activate
     def test_08_auth_success(self):
@@ -625,14 +565,12 @@ class HttpSMSTestCase(MyTestCase):
     @responses.activate
     def test_08_auth_fail(self):
         responses.add(responses.GET, self.basic_url, status=401)
-        self.assertRaises(
-            SMSError, self.missing_provider.submit_message, "123456", "Hello"
-        )
+        self.assertRaises(SMSError, self.missing_provider.submit_message, "123456", "Hello")
 
     @responses.activate
     def test_10_new_smsgateway(self):
         identifier = "myGW"
-        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider" ".HttpSMSProvider"
+        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider"
         id = set_smsgateway(
             identifier,
             provider_module,
@@ -668,7 +606,7 @@ class HttpSMSTestCase(MyTestCase):
     @responses.activate
     def test_12_send_sms_post_success_as_json(self):
         identifier = "myGWJSON"
-        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider" ".HttpSMSProvider"
+        provider_module = "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider"
         id = set_smsgateway(
             identifier,
             provider_module,
@@ -697,11 +635,7 @@ class HttpSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as mock_log:
             r = provider.submit_message("123456", "Hello: 7")
             self.assertTrue(r)
-            call = [
-                x[0][0]
-                for x in mock_log.call_args_list
-                if x[0][0].startswith("passing")
-            ][0]
+            call = [x[0][0] for x in mock_log.call_args_list if x[0][0].startswith("passing")][0]
             self.assertRegex(call, r"passing JSON data: {.*Hello: 7.*}", call)
         delete_smsgateway(identifier)
 
@@ -719,14 +653,12 @@ class SmppSMSTestCase(MyTestCase):
         "D_ADDR_NPI": "0x1",
     }
 
-    provider_module = "edumfa.lib.smsprovider.SmppSMSProvider" ".SmppSMSProvider"
+    provider_module = "edumfa.lib.smsprovider.SmppSMSProvider.SmppSMSProvider"
 
     def setUp(self):
         # Use the gateway definition for configuring the provider
         identifier = "mySmppGW"
-        id = set_smsgateway(
-            identifier, self.provider_module, description="test", options=self.config
-        )
+        id = set_smsgateway(identifier, self.provider_module, description="test", options=self.config)
         self.assertTrue(id > 0)
         self.provider = create_sms_instance(identifier=identifier)
         self.assertEqual(type(self.provider), SmppSMSProvider)
@@ -743,17 +675,13 @@ class SmppSMSTestCase(MyTestCase):
         self.assertRaises(SMSError, s.submit_message, "phone", "message")
 
         # No host defined
-        set_smsgateway(
-            "missing_host", self.provider_module, options={"SMSC_PORT": "1234"}
-        )
+        set_smsgateway("missing_host", self.provider_module, options={"SMSC_PORT": "1234"})
         p = create_sms_instance(identifier="missing_host")
         self.assertRaises(SMSError, p.submit_message, "phone", "message")
         delete_smsgateway("missing_host")
 
         # No port defined
-        set_smsgateway(
-            "missing_port", self.provider_module, options={"SMSC_HOST": "1.1.1.1"}
-        )
+        set_smsgateway("missing_port", self.provider_module, options={"SMSC_HOST": "1.1.1.1"})
         p = create_sms_instance(identifier="missing_port")
         self.assertRaises(SMSError, p.submit_message, "phone", "message")
         delete_smsgateway("missing_port")
@@ -805,8 +733,6 @@ class SmppSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "4912345678")
-            )
+            log.assert_any_call("submitting message {0!r} to {1!s}".format("Hello", "4912345678"))
 
         delete_smsgateway(identifier_regexp)

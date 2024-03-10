@@ -22,9 +22,7 @@ class APIMonitoringTestCase(MyApiTestCase):
         write_stats("key1", 4)
 
         # get available stats keys
-        with self.app.test_request_context(
-            "/monitoring/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/monitoring/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(200, res.status_code, res)
             result = res.json.get("result")
@@ -32,9 +30,7 @@ class APIMonitoringTestCase(MyApiTestCase):
             self.assertIn("key2", result.get("value"), result)
 
         # check values of key1
-        with self.app.test_request_context(
-            "/monitoring/key1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/monitoring/key1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -84,9 +80,7 @@ class APIMonitoringTestCase(MyApiTestCase):
             self.assertEqual(result.get("value")[1][1], 4)
 
         # check the last value of key1
-        with self.app.test_request_context(
-            "/monitoring/key1/last", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/monitoring/key1/last", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -110,9 +104,7 @@ class APIMonitoringTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), 3)
 
         # ..and check if there is only one key left!
-        with self.app.test_request_context(
-            "/monitoring/key2", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/monitoring/key2", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")

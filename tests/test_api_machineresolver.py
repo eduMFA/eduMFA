@@ -35,9 +35,7 @@ class APIMachineResolverTestCase(MyApiTestCase):
             self.assertTrue(result["status"] is True, result)
             self.assertTrue(result["value"] == 1, result)
 
-        with self.app.test_request_context(
-            "/machineresolver/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/machineresolver/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -46,9 +44,7 @@ class APIMachineResolverTestCase(MyApiTestCase):
             self.assertTrue("filename" in result["value"]["machineresolver1"]["data"])
 
         # Get a non existing resolver
-        with self.app.test_request_context(
-            "/machineresolver/unknown", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/machineresolver/unknown", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -57,9 +53,7 @@ class APIMachineResolverTestCase(MyApiTestCase):
             self.assertTrue(result["value"] == {}, result)
 
         # this will fetch all resolvers
-        with self.app.test_request_context(
-            "/machineresolver/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/machineresolver/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -134,9 +128,7 @@ class APIMachineResolverTestCase(MyApiTestCase):
             self.assertGreaterEqual(result["value"], 1, result)
             mr_id = result["value"]
 
-        with self.app.test_request_context(
-            "/machineresolver/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/machineresolver/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")

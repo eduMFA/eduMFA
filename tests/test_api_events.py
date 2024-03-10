@@ -32,9 +32,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(res.json["result"]["error"]["code"], 4033, res.json)
 
         # check for automatic redirect on missing trailing slash from flask
-        with self.app.test_request_context(
-            "/event", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             # In test environment this can throw a 301
             self.assertTrue(res.status_code in [301, 308], res)
@@ -47,39 +45,27 @@ class APIEventsTestCase(MyApiTestCase):
             "handlermodule": "UserNotification",
             "conditions": '{"blabla": "yes"}',
         }
-        with self.app.test_request_context(
-            "/event", method="POST", data=param, headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", method="POST", data=param, headers={"Authorization": self.at}):
             # check for policy error with a restrictive admin policy
-            set_policy(
-                name="adm_disable_event", scope=SCOPE.ADMIN, action="configwrite"
-            )
+            set_policy(name="adm_disable_event", scope=SCOPE.ADMIN, action="configwrite")
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 403, res)
             self.assertEqual(res.json["result"]["error"]["code"], 303, res.json)
             delete_policy("adm_disable_event")
 
         # check fo resourceNotFound error
-        with self.app.test_request_context(
-            "/event/enable/1234", method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/enable/1234", method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 404, res)
             self.assertEqual(res.json["result"]["error"]["code"], 601, res.json)
         # And check if the /event request writes a valid (failed) audit entry
-        auditentry = self.find_most_recent_audit_entry(
-            action="POST /event/enable/<eventid>"
-        )
-        self.assertEqual(
-            auditentry["action"], "POST /event/enable/<eventid>", auditentry
-        )
+        auditentry = self.find_most_recent_audit_entry(action="POST /event/enable/<eventid>")
+        self.assertEqual(auditentry["action"], "POST /event/enable/<eventid>", auditentry)
         self.assertEqual(auditentry["success"], 0, auditentry)
 
     def test_01_crud_events(self):
         # list empty events
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -98,9 +84,7 @@ class APIEventsTestCase(MyApiTestCase):
             "handlermodule": "UserNotification",
             "conditions": '{"blabla": "yes"}',
         }
-        with self.app.test_request_context(
-            "/event", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -108,17 +92,13 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), 1)
 
         # check the event
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
             detail = res.json.get("detail")
             self.assertEqual(result.get("value")[0].get("action"), "sendmail")
-            self.assertEqual(
-                result.get("value")[0].get("conditions"), {"blabla": "yes"}
-            )
+            self.assertEqual(result.get("value")[0].get("conditions"), {"blabla": "yes"})
 
         # update event config
         param = {
@@ -129,9 +109,7 @@ class APIEventsTestCase(MyApiTestCase):
             "conditions": '{"always": "yes"}',
             "id": 1,
         }
-        with self.app.test_request_context(
-            "/event", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -139,35 +117,25 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), 1)
 
         # check the event
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
             detail = res.json.get("detail")
             self.assertEqual(result.get("value")[0].get("action"), "sendmail")
-            self.assertEqual(
-                result.get("value")[0].get("conditions"), {"always": "yes"}
-            )
+            self.assertEqual(result.get("value")[0].get("conditions"), {"always": "yes"})
 
         # get one single event
-        with self.app.test_request_context(
-            "/event/1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
             detail = res.json.get("detail")
             self.assertEqual(result.get("value")[0].get("action"), "sendmail")
-            self.assertEqual(
-                result.get("value")[0].get("conditions"), {"always": "yes"}
-            )
+            self.assertEqual(result.get("value")[0].get("conditions"), {"always": "yes"})
 
         # delete event
-        with self.app.test_request_context(
-            "/event/1", method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/1", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -175,9 +143,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), 1)
 
         # list empty events
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -195,9 +161,7 @@ class APIEventsTestCase(MyApiTestCase):
             "option.emailconfig": "themis",
             "option.2": "value2",
         }
-        with self.app.test_request_context(
-            "/event", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -206,9 +170,7 @@ class APIEventsTestCase(MyApiTestCase):
             ev1_id = result.get("value")
 
         # list event with options
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -232,9 +194,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), ev1_id)
 
         # list empty events
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -242,9 +202,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), [])
 
     def test_03_available_events(self):
-        with self.app.test_request_context(
-            "/event/available", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/available", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -254,9 +212,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertTrue("token_unassign" in result.get("value"))
 
     def test_04_handler_modules(self):
-        with self.app.test_request_context(
-            "/event/handlermodules", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/handlermodules", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -276,9 +232,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertTrue("sendsms" in result.get("value"))
             detail = res.json.get("detail")
 
-        with self.app.test_request_context(
-            "/event/actions/Token", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/actions/Token", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -310,9 +264,7 @@ class APIEventsTestCase(MyApiTestCase):
             "option.emailconfig": "themis",
             "option.2": "value2",
         }
-        with self.app.test_request_context(
-            "/event", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -321,9 +273,7 @@ class APIEventsTestCase(MyApiTestCase):
             ev1_id = result.get("value")
 
         # list event with options
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -340,9 +290,7 @@ class APIEventsTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -359,9 +307,7 @@ class APIEventsTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -382,9 +328,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), ev1_id, result)
 
         # list empty events
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -394,9 +338,7 @@ class APIEventsTestCase(MyApiTestCase):
     def test_07_positions(self):
         # test the available Positions
 
-        with self.app.test_request_context(
-            "/event/positions/Token", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/positions/Token", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -412,9 +354,7 @@ class APIEventsTestCase(MyApiTestCase):
             "conditions": '{"blabla": "yes"}',
             "position": "post",
         }
-        with self.app.test_request_context(
-            "/event", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -437,9 +377,7 @@ class APIEventsTestCase(MyApiTestCase):
         # Update event with the position=pre
         param["id"] = ev1_id
         param["position"] = "pre"
-        with self.app.test_request_context(
-            "/event", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -471,9 +409,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), ev1_id, result)
 
         # list empty events
-        with self.app.test_request_context(
-            "/event/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -503,9 +439,7 @@ class APIEventsTestCase(MyApiTestCase):
             "option.dynamic_email": "1",
             "option.additional_params": "{'pin':'1234'}",
         }
-        with self.app.test_request_context(
-            "/event", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/event", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -558,9 +492,7 @@ class APIEventsTestCase(MyApiTestCase):
             result = res.json.get("result")
             detail = res.json.get("detail")
             self.assertEqual(result.get("value").get("count"), 1)
-            self.assertEqual(
-                result.get("value").get("tokens")[0].get("tokentype"), "email"
-            )
+            self.assertEqual(result.get("value").get("tokens")[0].get("tokentype"), "email")
 
 
 class CustomUserAttributeHandlerTestCase(MyApiTestCase):
@@ -597,9 +529,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
 
         # now we attach the token to a user
         tok.add_user(user)
-        with self.app.test_request_context(
-            "/validate/check", data={"user": "cornelius", "pass": "test"}, method="POST"
-        ):
+        with self.app.test_request_context("/validate/check", data={"user": "cornelius", "pass": "test"}, method="POST"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -620,9 +550,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
                 "attrvalue": "bar",
             },
         )
-        with self.app.test_request_context(
-            "/validate/check", data={"user": "cornelius", "pass": "test"}, method="POST"
-        ):
+        with self.app.test_request_context("/validate/check", data={"user": "cornelius", "pass": "test"}, method="POST"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -643,9 +571,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
                 "attrvalue": "baz",
             },
         )
-        with self.app.test_request_context(
-            "/validate/check", data={"user": "cornelius", "pass": "test"}, method="POST"
-        ):
+        with self.app.test_request_context("/validate/check", data={"user": "cornelius", "pass": "test"}, method="POST"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -662,9 +588,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
             conditions={},
             options={"user": USER_TYPE.TOKENOWNER, "attrkey": "foo"},
         )
-        with self.app.test_request_context(
-            "/validate/check", data={"user": "cornelius", "pass": "test"}, method="POST"
-        ):
+        with self.app.test_request_context("/validate/check", data={"user": "cornelius", "pass": "test"}, method="POST"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -679,9 +603,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
         self.assertNotIn("foo", user.attributes, user.attributes)
 
         # get the auth-token for the user
-        with self.app.test_request_context(
-            "/auth", data={"username": "cornelius", "password": "test"}, method="POST"
-        ):
+        with self.app.test_request_context("/auth", data={"username": "cornelius", "password": "test"}, method="POST"):
             res = self.app.full_dispatch_request()
             self.assertEqual(200, res.status_code, res)
             result = res.json.get("result")
@@ -697,9 +619,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
             conditions={},
             options={"user": USER_TYPE.LOGGED_IN_USER, "attrkey": "foo"},
         )
-        with self.app.test_request_context(
-            "/token/", method="GET", headers={"Authorization": user_token}
-        ):
+        with self.app.test_request_context("/token/", method="GET", headers={"Authorization": user_token}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertNotIn("foo", user.attributes, user.attributes)
@@ -707,9 +627,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
         # delete an existing attribute
         user.set_attribute("foo", "bar")
         self.assertIn("foo", user.attributes, user.attributes)
-        with self.app.test_request_context(
-            "/token/", method="GET", headers={"Authorization": user_token}
-        ):
+        with self.app.test_request_context("/token/", method="GET", headers={"Authorization": user_token}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertNotIn("foo", user.attributes, user.attributes)
@@ -728,9 +646,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
                 "attrvalue": "bar",
             },
         )
-        with self.app.test_request_context(
-            "/token/", method="GET", headers={"Authorization": user_token}
-        ):
+        with self.app.test_request_context("/token/", method="GET", headers={"Authorization": user_token}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual("bar", user.attributes["foo"], user.attributes)
@@ -749,9 +665,7 @@ class CustomUserAttributeHandlerTestCase(MyApiTestCase):
                 "attrvalue": "baz",
             },
         )
-        with self.app.test_request_context(
-            "/token/", method="GET", headers={"Authorization": user_token}
-        ):
+        with self.app.test_request_context("/token/", method="GET", headers={"Authorization": user_token}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual("baz", user.attributes["foo"], user.attributes)

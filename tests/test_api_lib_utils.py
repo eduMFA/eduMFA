@@ -40,9 +40,7 @@ class UtilsTestCase(MyApiTestCase):
         )
 
         # check for allowed values
-        v = getParam(
-            {"sslverify": "0"}, "sslverify", allowed_values=["0", "1"], default="1"
-        )
+        v = getParam({"sslverify": "0"}, "sslverify", allowed_values=["0", "1"], default="1")
         self.assertEqual("0", v)
 
         v = getParam(
@@ -66,9 +64,7 @@ class UtilsTestCase(MyApiTestCase):
 
         # some disallowed patterns:
         self.assertRaises(ParameterError, check_policy_name, "Check")
-        self.assertRaises(
-            ParameterError, check_policy_name, "edumfa-update-policy-something"
-        )
+        self.assertRaises(ParameterError, check_policy_name, "edumfa-update-policy-something")
         # Some patterns that work
         check_policy_name("check this out.")
         check_policy_name("my own edumfa-update-policy-something")
@@ -171,9 +167,7 @@ class UtilsTestCase(MyApiTestCase):
             )
             self.assertEqual(r.get("role"), "user")
             # ...but there is an unsupported configuration
-            mock_log.assert_called_once_with(
-                "Unsupported JWT algorithm in EDUMFA_TRUSTED_JWT."
-            )
+            mock_log.assert_called_once_with("Unsupported JWT algorithm in EDUMFA_TRUSTED_JWT.")
 
         # The signature has expired
         expired_token = jwt.encode(
@@ -225,9 +219,7 @@ class UtilsTestCase(MyApiTestCase):
         )
 
         # The authenticated but non-existing user tries for fetch his tokens
-        with self.app.test_request_context(
-            "/token/", method="GET", headers={"Authorization": auth_token}
-        ):
+        with self.app.test_request_context("/token/", method="GET", headers={"Authorization": auth_token}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 400, res)
 
@@ -245,12 +237,8 @@ class UtilsTestCase(MyApiTestCase):
         self.assertTrue(attestation_certificate_allowed({}, {}))
 
         # Policy but no info, return False.
-        self.assertFalse(
-            attestation_certificate_allowed(None, {"subject/.*Yubico.*/": ["WebAuthn"]})
-        )
-        self.assertFalse(
-            attestation_certificate_allowed({}, {"subject/.*Yubico.*/": ["WebAuthn"]})
-        )
+        self.assertFalse(attestation_certificate_allowed(None, {"subject/.*Yubico.*/": ["WebAuthn"]}))
+        self.assertFalse(attestation_certificate_allowed({}, {"subject/.*Yubico.*/": ["WebAuthn"]}))
 
         # Certificate allowed, return True.
         self.assertTrue(
@@ -318,9 +306,7 @@ class UtilsTestCase(MyApiTestCase):
                 res = self.app.full_dispatch_request()
                 self.assertTrue(res.status_code == 200, res)
             # We see the message in the log, that the viewargs was read
-            mock_log.assert_any_call(
-                "Update params in request DELETE http://localhost/token/TTEST with view_args."
-            )
+            mock_log.assert_any_call("Update params in request DELETE http://localhost/token/TTEST with view_args.")
 
         # test json data
         with mock.patch("logging.Logger.debug") as mock_log:
@@ -333,9 +319,7 @@ class UtilsTestCase(MyApiTestCase):
                 res = self.app.full_dispatch_request()
                 self.assertTrue(res.status_code == 200, res)
             # We see the message in the log, that the JSON data was read
-            mock_log.assert_any_call(
-                "Update params in request POST http://localhost/token/init with JSON data."
-            )
+            mock_log.assert_any_call("Update params in request POST http://localhost/token/init with JSON data.")
 
         remove_token(serial)
         # test raw body, which defaults to x-www-form-encoded
@@ -349,9 +333,7 @@ class UtilsTestCase(MyApiTestCase):
                 res = self.app.full_dispatch_request()
                 self.assertTrue(res.status_code == 200, res)
             # We see the message in the log, that the JSON data was read
-            mock_log.assert_any_call(
-                "Update params in request POST http://localhost/token/init with values."
-            )
+            mock_log.assert_any_call("Update params in request POST http://localhost/token/init with values.")
         remove_token(serial)
 
     def test_09_check_unquote(self):
@@ -423,9 +405,7 @@ class UtilsTestCase(MyApiTestCase):
             scope=SCOPE.AUTH,
             action="{0!s}={1!s}".format(ACTION.OTPPIN, "userstore"),
         )
-        init_token(
-            {"type": "spass", "serial": "spass1d"}, user=User("pwpercent", self.realm1)
-        )
+        init_token({"type": "spass", "serial": "spass1d"}, user=User("pwpercent", self.realm1))
         # fist the request fails due to a wrong otp pin
         with self.app.test_request_context(
             "/validate/check",

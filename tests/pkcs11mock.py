@@ -151,9 +151,7 @@ class PKCS11Mock(object):
             error=PyKCS11.CKR_SESSION_HANDLE_INVALID,
         ), self.simulate_failure(
             self.session_mock.encrypt, count, error=PyKCS11.CKR_SESSION_HANDLE_INVALID
-        ), self.simulate_failure(
-            self.session_mock.decrypt, count, error=PyKCS11.CKR_SESSION_HANDLE_INVALID
-        ), self.simulate_failure(self.mock.openSession, count):
+        ), self.simulate_failure(self.session_mock.decrypt, count, error=PyKCS11.CKR_SESSION_HANDLE_INVALID), self.simulate_failure(self.mock.openSession, count):
             yield
 
     def _mock_openSession(self, slot):

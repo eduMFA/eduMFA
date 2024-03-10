@@ -69,9 +69,7 @@ class RadiusTokenTestCase(MyTestCase):
         token = RadiusTokenClass(db_token)
 
         info = token.get_class_info()
-        self.assertTrue(
-            info.get("title") == "RADIUS Token", "{0!s}".format(info.get("title"))
-        )
+        self.assertTrue(info.get("title") == "RADIUS Token", "{0!s}".format(info.get("title")))
 
         info = token.get_class_info("title")
         self.assertTrue(info == "RADIUS Token", info)
@@ -154,9 +152,7 @@ class RadiusTokenTestCase(MyTestCase):
             dictionary=DICT_FILE,
         )
         self.assertTrue(r > 0)
-        token = init_token(
-            {"type": "radius", "radius.identifier": "myserver", "radius.user": "user1"}
-        )
+        token = init_token({"type": "radius", "radius.identifier": "myserver", "radius.user": "user1"})
         r = token.authenticate("radiuspassword")
         self.assertEqual(r[0], True)
         self.assertEqual(r[1], 1)
@@ -250,16 +246,12 @@ class RadiusTokenTestCase(MyTestCase):
         self.assertEqual(chals[0].transaction_id, transaction_id)
 
         # check if this is a response to a previously sent challenge
-        r = token.is_challenge_response(
-            "radiuscode", options={"transaction_id": transaction_id}
-        )
+        r = token.is_challenge_response("radiuscode", options={"transaction_id": transaction_id})
         self.assertTrue(r)
 
         # Now check, if the answer for the challenge is correct
         radiusmock.setdata(response=radiusmock.AccessAccept)
-        r = token.check_challenge_response(
-            passw="radiuscode", options={"transaction_id": transaction_id}
-        )
+        r = token.check_challenge_response(passw="radiuscode", options={"transaction_id": transaction_id})
         self.assertTrue(r)
 
     @radiusmock.activate
@@ -314,23 +306,17 @@ class RadiusTokenTestCase(MyTestCase):
         self.assertEqual(chals[0].transaction_id, transaction_id)
 
         # Checking, if this is the answer attempt to a challenge
-        r = token.is_challenge_response(
-            "some_response", options={"transaction_id": transaction_id}
-        )
+        r = token.is_challenge_response("some_response", options={"transaction_id": transaction_id})
         self.assertTrue(r)
 
         # Check what happens if the RADIUS server rejects the response
         radiusmock.setdata(timeout=False, response=radiusmock.AccessReject)
-        r = token.check_challenge_response(
-            passw="some_response", options={"transaction_id": transaction_id}
-        )
+        r = token.check_challenge_response(passw="some_response", options={"transaction_id": transaction_id})
         self.assertLess(r, 0)
 
         # Now checking the response to the challenge and we issue a RADIUS request
         radiusmock.setdata(timeout=False, response=radiusmock.AccessAccept)
-        r = token.check_challenge_response(
-            passw="some_response", options={"transaction_id": transaction_id}
-        )
+        r = token.check_challenge_response(passw="some_response", options={"transaction_id": transaction_id})
         self.assertGreaterEqual(r, 0)
 
     @radiusmock.activate
@@ -382,9 +368,7 @@ class RadiusTokenTestCase(MyTestCase):
         self.assertEqual(chals[0].transaction_id, transaction_id)
 
         # Checking, if this is the answer attempt to a challenge
-        r = token.is_challenge_response(
-            "some_response", options={"transaction_id": transaction_id}
-        )
+        r = token.is_challenge_response("some_response", options={"transaction_id": transaction_id})
         self.assertTrue(r)
 
         # Now checking the response to the challenge and we issue a RADIUS request
@@ -404,9 +388,7 @@ class RadiusTokenTestCase(MyTestCase):
         # but we get a new Challenge!
         self.assertEqual(opts2.get("radius_result"), radiusmock.AccessChallenge)
         self.assertEqual(opts2.get("radius_state"), state2[0])
-        self.assertEqual(
-            opts2.get("radius_message"), "Please provide even more information."
-        )
+        self.assertEqual(opts2.get("radius_message"), "Please provide even more information.")
         transaction_id2 = opts2.get("transaction_id")
 
         # Finally we send the last auth request

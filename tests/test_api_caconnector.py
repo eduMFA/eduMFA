@@ -13,9 +13,7 @@ from edumfa.lib.error import ERROR
 class CAConnectorTestCase(MyApiTestCase):
     def test_01_fail_without_auth(self):
         # creation fails without auth
-        with self.app.test_request_context(
-            "/caconnector/con1", data={"type": "localca"}, method="POST"
-        ):
+        with self.app.test_request_context("/caconnector/con1", data={"type": "localca"}, method="POST"):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 401)
 
@@ -57,9 +55,7 @@ class CAConnectorTestCase(MyApiTestCase):
         self.assertEqual(ca_list[0].get("data").get("name"), "con1")
 
     def test_04_read_ca_connector(self):
-        with self.app.test_request_context(
-            "/caconnector/", data={}, method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/caconnector/", data={}, method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -84,9 +80,7 @@ class CAConnectorTestCase(MyApiTestCase):
             self.assertTrue(result["status"] is True, result)
             self.assertTrue(result["value"] == 2, result)
 
-        with self.app.test_request_context(
-            "/caconnector/", data={}, method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/caconnector/", data={}, method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -128,9 +122,7 @@ class CAConnectorTestCase(MyApiTestCase):
             self.assertEqual(result.get("value").get("realm"), "realm1")
 
         # Only admins are allowed to access the /caconnector/ endpoints
-        with self.app.test_request_context(
-            "/caconnector/", data={}, method="GET", headers={"Authorization": at_user}
-        ):
+        with self.app.test_request_context("/caconnector/", data={}, method="GET", headers={"Authorization": at_user}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 401)
             result = res.json.get("result")

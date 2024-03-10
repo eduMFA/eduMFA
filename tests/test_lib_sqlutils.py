@@ -79,9 +79,7 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
 
         session.execute.side_effect = fake_execute_delete1
         # delete chunked
-        result = delete_matching_rows(
-            session, LogEntry.__table__, LogEntry.id < 1234, 1000
-        )
+        result = delete_matching_rows(session, LogEntry.__table__, LogEntry.id < 1234, 1000)
         # was called three times to delete 2500 entries
         self.assertEqual(len(session.execute.mock_calls), 3)
         self.assertEqual(result, 2500)

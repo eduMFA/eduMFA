@@ -67,9 +67,7 @@ class ChallengeTestCase(MyTestCase):
         self.assertEqual(len(challenges), 2)
         self.assertEqual(extract_answered_challenges(challenges), [])
         # answer one challenge
-        Challenge.query.filter_by(transaction_id=transaction_id1).update(
-            {"otp_valid": True}
-        )
+        Challenge.query.filter_by(transaction_id=transaction_id1).update({"otp_valid": True})
         db.session.commit()
         # two challenges, one answered challenge
         challenges = get_challenges(serial="CHAL2")

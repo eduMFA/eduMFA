@@ -88,9 +88,7 @@ class RemoteTokenTestCase(MyTestCase):
         token = RemoteTokenClass(db_token)
 
         info = token.get_class_info()
-        self.assertTrue(
-            info.get("title") == "Remote Token", "{0!s}".format(info.get("title"))
-        )
+        self.assertTrue(info.get("title") == "Remote Token", "{0!s}".format(info.get("title")))
 
         info = token.get_class_info("title")
         self.assertTrue(info == "Remote Token", info)
@@ -216,9 +214,7 @@ class RemoteTokenTestCase(MyTestCase):
         db_token = Token.query.filter(Token.serial == self.serial1).first()
         token = RemoteTokenClass(db_token)
         token.set_pin(self.otppin)
-        r = token.check_challenge_response(
-            passw="somePW", options={"transactionid": "1234"}
-        )
+        r = token.check_challenge_response(passw="somePW", options={"transactionid": "1234"})
 
         self.assertTrue(r)
 

@@ -67,9 +67,7 @@ class SMTPServerTestCase(MyTestCase):
         r = server.send_email(["recp@example.com"], "Hallo", "Body")
         self.assertEqual(r, True)
 
-        smtpmock.setdata(
-            response={"recp@example.com": (550, "Message rejected")}, support_tls=False
-        )
+        smtpmock.setdata(response={"recp@example.com": (550, "Message rejected")}, support_tls=False)
         r = server.send_email(["recp@example.com"], "Hallo", "Body")
         self.assertEqual(r, False)
 
@@ -84,9 +82,7 @@ class SMTPServerTestCase(MyTestCase):
         # If we configure TLS but the server does not support this, we raise
         # an error
         smtpmock.setdata(response={"recp@example.com": (200, "OK")}, support_tls=False)
-        self.assertRaises(
-            SMTPException, server.send_email, ["recp@example.com"], "Hallo", "Body"
-        )
+        self.assertRaises(SMTPException, server.send_email, ["recp@example.com"], "Hallo", "Body")
 
         delete_smtpserver("myserver")
 
@@ -124,16 +120,13 @@ class SMTPServerTestCase(MyTestCase):
             s,
             recipient,
             "Test Email from eduMFA",
-            "This is a test email from eduMFA. The configuration %s is working."
-            % identifier,
+            "This is a test email from eduMFA. The configuration %s is working." % identifier,
         )
         self.assertTrue(r)
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
         self.assertEqual(parsed_email.get_content_type(), "text/plain", parsed_email)
         self.assertEqual(parsed_email.get("To"), recipient, parsed_email)
-        self.assertEqual(
-            parsed_email.get("Subject"), "Test Email from eduMFA", parsed_email
-        )
+        self.assertEqual(parsed_email.get("Subject"), "Test Email from eduMFA", parsed_email)
 
         # Now with an already prepared MIME email
         msg = MIMEImage(binascii.a2b_base64(PNG_IMG))
@@ -142,9 +135,7 @@ class SMTPServerTestCase(MyTestCase):
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
         self.assertEqual(parsed_email.get_content_type(), "image/png", parsed_email)
         self.assertEqual(parsed_email.get("To"), recipient, parsed_email)
-        self.assertEqual(
-            parsed_email.get("Subject"), "Test Email with image", parsed_email
-        )
+        self.assertEqual(parsed_email.get("Subject"), "Test Email with image", parsed_email)
         # Check, that the mock SMTP server actually has NOT been configured as SMTP_SSL
         self.assertFalse(smtpmock.get_smtp_ssl())
 
@@ -173,16 +164,13 @@ class SMTPServerTestCase(MyTestCase):
             s,
             recipient,
             "Test Email from eduMFA",
-            "This is a test email from eduMFA. The configuration %s is working."
-            % identifier,
+            "This is a test email from eduMFA. The configuration %s is working." % identifier,
         )
         self.assertTrue(r)
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
         self.assertEqual(parsed_email.get_content_type(), "text/plain", parsed_email)
         self.assertEqual(parsed_email.get("To"), recipient, parsed_email)
-        self.assertEqual(
-            parsed_email.get("Subject"), "Test Email from eduMFA", parsed_email
-        )
+        self.assertEqual(parsed_email.get("Subject"), "Test Email from eduMFA", parsed_email)
 
         # Now with an already prepared MIME email
         msg = MIMEImage(binascii.a2b_base64(PNG_IMG))
@@ -191,9 +179,7 @@ class SMTPServerTestCase(MyTestCase):
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
         self.assertEqual(parsed_email.get_content_type(), "image/png", parsed_email)
         self.assertEqual(parsed_email.get("To"), recipient, parsed_email)
-        self.assertEqual(
-            parsed_email.get("Subject"), "Test Email with image", parsed_email
-        )
+        self.assertEqual(parsed_email.get("Subject"), "Test Email with image", parsed_email)
         # Check, if the mock SMTP server actually has been configured as SMTP_SSL
         self.assertTrue(smtpmock.get_smtp_ssl())
 
@@ -201,9 +187,7 @@ class SMTPServerTestCase(MyTestCase):
 class SMTPServerQueueTestCase(MockQueueTestCase):
     @smtpmock.activate
     def test_01_enqueue_email(self):
-        r = add_smtpserver(
-            identifier="myserver", server="1.2.3.4", tls=False, enqueue_job=True
-        )
+        r = add_smtpserver(identifier="myserver", server="1.2.3.4", tls=False, enqueue_job=True)
         self.assertTrue(r > 0)
 
         server = get_smtpserver("myserver")
@@ -220,9 +204,7 @@ class SMTPServerQueueTestCase(MockQueueTestCase):
         self.assertEqual(args[3], "Body")
 
         # send_email returns True, even if the SMTP server will eventually reject the message
-        smtpmock.setdata(
-            response={"fail@example.com": (550, "Message rejected")}, support_tls=False
-        )
+        smtpmock.setdata(response={"fail@example.com": (550, "Message rejected")}, support_tls=False)
         r = server.send_email(["fail@example.com"], "Hallo", "Body")
         self.assertEqual(r, True)
         self.assertEqual(len(queue.enqueued_jobs), 2)
@@ -245,9 +227,7 @@ class SMTPServerQueueTestCase(MockQueueTestCase):
         r = server.send_email(["recp@example.com"], "Hallo", "Body")
         self.assertEqual(r, True)
 
-        smtpmock.setdata(
-            response={"recp@example.com": (550, "Message rejected")}, support_tls=False
-        )
+        smtpmock.setdata(response={"recp@example.com": (550, "Message rejected")}, support_tls=False)
         r = server.send_email(["recp@example.com"], "Hallo", "Body")
         self.assertEqual(r, False)
 
@@ -262,9 +242,7 @@ class SMTPServerQueueTestCase(MockQueueTestCase):
         # If we configure TLS but the server does not support this, we raise
         # an error
         smtpmock.setdata(response={"recp@example.com": (200, "OK")}, support_tls=False)
-        self.assertRaises(
-            SMTPException, server.send_email, ["recp@example.com"], "Hallo", "Body"
-        )
+        self.assertRaises(SMTPException, server.send_email, ["recp@example.com"], "Hallo", "Body")
 
         # Assert that no
         queue = get_job_queue()

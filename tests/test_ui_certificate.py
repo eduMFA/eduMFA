@@ -43,9 +43,7 @@ class WebUICertificateTestCase(MyTestCase):
             authtoken = result.get("value")
 
         # Check the form
-        with self.app.test_request_context(
-            "/certificate", method="POST", data={"authtoken": authtoken.get("token")}
-        ):
+        with self.app.test_request_context("/certificate", method="POST", data={"authtoken": authtoken.get("token")}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual(res.mimetype, "text/html", res)
@@ -118,15 +116,11 @@ class WebUICertificateTestCase(MyTestCase):
             self.assertTrue(b"data:application/x-x509-user-cert;base64" in res.data)
 
         # Check that missing authentication will result in an error
-        with self.app.test_request_context(
-            "/certificate/enroll", method="POST", data={}
-        ):
+        with self.app.test_request_context("/certificate/enroll", method="POST", data={}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
         # GET-Request will fail, Method not allowed
-        with self.app.test_request_context(
-            "/certificate/enroll", method="GET", data={}
-        ):
+        with self.app.test_request_context("/certificate/enroll", method="GET", data={}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 405, res)

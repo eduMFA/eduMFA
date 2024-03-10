@@ -66,14 +66,9 @@ class SSHApplicationTestCase(MyTestCase):
 
         # Get with no matching user
         with mock.patch("logging.Logger.debug") as mock_log:
-            auth_item = SSHApplication.get_authentication_item(
-                "sshkey", serial, filter_param={"user": "Idefix"}
-            )
+            auth_item = SSHApplication.get_authentication_item("sshkey", serial, filter_param={"user": "Idefix"})
             self.assertFalse(auth_item)
-            mock_log.assert_called_with(
-                "The requested user Idefix does "
-                "not match the user option (Idefix) of the SSH application."
-            )
+            mock_log.assert_called_with("The requested user Idefix does not match the user option (Idefix) of the SSH application.")
 
     def test_03_get_auth_item_unsupported(self):
         # unsupported token type
@@ -103,13 +98,9 @@ class LUKSApplicationTestCase(MyTestCase):
         self.assertIsInstance(auth_item.get("challenge"), str, auth_item)
         self.assertEqual(len(auth_item.get("response")), 40, auth_item)
 
-        auth_item = LUKSApplication.get_authentication_item(
-            "totp", serial, challenge="123456"
-        )
+        auth_item = LUKSApplication.get_authentication_item("totp", serial, challenge="123456")
         self.assertEqual(auth_item.get("challenge"), "123456")
-        self.assertEqual(
-            auth_item.get("response"), "76d624a5fdf8d84f3d19e781f0313e48c1e69165"
-        )
+        self.assertEqual(auth_item.get("response"), "76d624a5fdf8d84f3d19e781f0313e48c1e69165")
 
     def test_03_get_auth_item_unsupported(self):
         # unsupported token type
@@ -175,9 +166,7 @@ class OfflineApplicationTestCase(MyTestCase):
         res = tok.check_otp("378717")  # count = 103
         self.assertEqual(res, 103)
         # check illegal API usage
-        self.assertRaises(
-            ParameterError, OfflineApplication.get_offline_otps, tok, "foo", -1
-        )
+        self.assertRaises(ParameterError, OfflineApplication.get_offline_otps, tok, "foo", -1)
         self.assertEqual(OfflineApplication.get_offline_otps(tok, "foo", 0), {})
 
     def test_03_get_auth_item_unsupported(self):

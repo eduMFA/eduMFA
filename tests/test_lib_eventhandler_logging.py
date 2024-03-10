@@ -86,9 +86,7 @@ class LoggingTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {"name": None, "level": "some_level", "message": None}
-            },
+            "handler_def": {"options": {"name": None, "level": "some_level", "message": None}},
         }
         log_handler = LoggingEventHandler()
         res = log_handler.do("logging", options=options)
@@ -138,13 +136,7 @@ class LoggingTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {
-                    "message": " ".join(
-                        ["{0!s}={{{0!s}}}".format(x) for x in available_tags]
-                    )
-                }
-            },
+            "handler_def": {"options": {"message": " ".join(["{0!s}={{{0!s}}}".format(x) for x in available_tags])}},
         }
         current_utc_time = datetime(2018, 3, 4, 5, 6, 8)
         with mock.patch("edumfa.lib.utils.datetime") as mock_dt:
@@ -157,10 +149,12 @@ class LoggingTestCase(MyTestCase):
                 (
                     "edumfa-eventlogger",
                     "INFO",
-                    "admin=admin realm=super action=/auth serial=testserial "
-                    "url=http://localhost/ user=Cornelius surname=Kölbel "
-                    "givenname=None username=cornelius userrealm=sqliterealm "
-                    "tokentype=spass time=05:06:08 date=2018-03-04 "
-                    "client_ip=None ua_browser=browser ua_string=hello world",
+                    (
+                        "admin=admin realm=super action=/auth serial=testserial "
+                        "url=http://localhost/ user=Cornelius surname=Kölbel "
+                        "givenname=None username=cornelius userrealm=sqliterealm "
+                        "tokentype=spass time=05:06:08 date=2018-03-04 "
+                        "client_ip=None ua_browser=browser ua_string=hello world"
+                    ),
                 )
             )

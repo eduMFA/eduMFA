@@ -48,15 +48,11 @@ class ResolverTestCase(MyTestCase):
         )
         self.assertTrue(rid > 0, rid)
 
-        (added, failed) = set_realm(
-            self.realm1, [self.resolvername1, self.resolvername2]
-        )
+        (added, failed) = set_realm(self.realm1, [self.resolvername1, self.resolvername2])
         self.assertTrue(len(failed) == 0)
         self.assertTrue(len(added) == 2)
 
-        (added, failed) = set_realm(
-            self.realm_dot, [self.resolvername1, self.resolvername2]
-        )
+        (added, failed) = set_realm(self.realm_dot, [self.resolvername1, self.resolvername2])
         self.assertTrue(len(failed) == 0)
         self.assertTrue(len(added) == 2)
 

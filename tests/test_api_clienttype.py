@@ -7,9 +7,7 @@ class APIClienttypeTestCase(MyApiTestCase):
     def test_00_get_client(self):
         save_clientapplication("1.2.3.4", "PAM")
         save_clientapplication("1.2.3.4", "RADIUS")
-        with self.app.test_request_context(
-            "/client/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/client/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             json_response = res.json
@@ -28,9 +26,7 @@ class APIClienttypeTestCase(MyApiTestCase):
             # Some user... does not exist
             self.assertTrue(res.status_code == 400, res)
 
-        with self.app.test_request_context(
-            "/client/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/client/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             json_response = res.json

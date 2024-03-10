@@ -49,14 +49,10 @@ class UserCacheTestCase(MyTestCase):
         "Database": "testusercache.sqlite",
         "Table": "users",
         "Encoding": "utf8",
-        "Map": '{ "username": "username", \
-                    "userid" : "id", \
-                    "email" : "email", \
-                    "surname" : "name", \
-                    "givenname" : "givenname", \
-                    "password" : "password", \
-                    "phone": "phone", \
-                    "mobile": "mobile"}',
+        "Map": (
+            '{ "username": "username",                     "userid" : "id",                     "email" : "email",                     "surname" : "name",                    '
+            ' "givenname" : "givenname",                     "password" : "password",                     "phone": "phone",                     "mobile": "mobile"}'
+        ),
         "resolver": sql_resolver,
         "type": "sqlresolver",
     }
@@ -232,14 +228,10 @@ class UserCacheTestCase(MyTestCase):
     def test_05_multiple_entries(self):
         # two consistent entries
         now = datetime.now()
-        UserCache(
-            "hans1", "hans1", "resolver1", "uid1", now - timedelta(seconds=60)
-        ).save()
+        UserCache("hans1", "hans1", "resolver1", "uid1", now - timedelta(seconds=60)).save()
         UserCache("hans1", "hans1", "resolver1", "uid1", now).save()
 
-        r = UserCache.query.filter(
-            UserCache.username == "hans1", UserCache.resolver == "resolver1"
-        )
+        r = UserCache.query.filter(UserCache.username == "hans1", UserCache.resolver == "resolver1")
         self.assertEqual(r.count(), 2)
 
         u_name = get_username("uid1", "resolver1")
@@ -249,13 +241,9 @@ class UserCacheTestCase(MyTestCase):
 
         # two inconsistent entries: most recent entry (ordered by datetime) wins
         UserCache("hans2", "hans2", "resolver1", "uid1", now).save()
-        UserCache(
-            "hans1", "hans1", "resolver1", "uid1", now - timedelta(seconds=60)
-        ).save()
+        UserCache("hans1", "hans1", "resolver1", "uid1", now - timedelta(seconds=60)).save()
 
-        r = UserCache.query.filter(
-            UserCache.user_id == "uid1", UserCache.resolver == "resolver1"
-        )
+        r = UserCache.query.filter(UserCache.user_id == "uid1", UserCache.resolver == "resolver1")
         self.assertEqual(r.count(), 2)
 
         u_name = get_username("uid1", "resolver1")
@@ -272,9 +260,7 @@ class UserCacheTestCase(MyTestCase):
         u_name = get_username(self.uid, self.resolvername1)
         self.assertEqual(self.username, u_name)
         # it should be part of the cache now
-        r = UserCache.query.filter(
-            UserCache.user_id == self.uid, UserCache.resolver == self.resolvername1
-        ).one()
+        r = UserCache.query.filter(UserCache.user_id == self.uid, UserCache.resolver == self.resolvername1).one()
         self.assertEqual(self.username, r.username)
         # Apart from that, the cache should be empty.
         self.assertEqual(UserCache.query.count(), 1)
@@ -294,10 +280,7 @@ class UserCacheTestCase(MyTestCase):
         user = User(self.username, self.realm1, self.resolvername1)
         self.assertEqual(user.uid, self.uid)
         # a new entry should have been added to the cache now
-        r = retrieve_latest_entry(
-            (UserCache.username == self.username)
-            & (UserCache.resolver == self.resolvername1)
-        )
+        r = retrieve_latest_entry((UserCache.username == self.username) & (UserCache.resolver == self.resolvername1))
         self.assertEqual(self.uid, r.user_id)
         # But the expired entry is also still in the cache
         self.assertEqual(UserCache.query.count(), 2)
@@ -470,9 +453,7 @@ class UserCacheTestCase(MyTestCase):
         self.assertTrue(rid_b > 0, rid_b)
 
         # First ask reso_a, then reso_b
-        (added, failed) = set_realm(
-            self.sql_realm, ["reso_a", "reso_b"], {"reso_a": 1, "reso_b": 2}
-        )
+        (added, failed) = set_realm(self.sql_realm, ["reso_a", "reso_b"], {"reso_a": 1, "reso_b": 2})
         self.assertEqual(len(failed), 0)
         self.assertEqual(len(added), 2)
 
@@ -483,11 +464,7 @@ class UserCacheTestCase(MyTestCase):
         # Assert it was found in reso_b (as it does not have a phone number)!
         self.assertEqual(user1.resolver, "reso_b")
         self.assertEqual(
-            UserCache.query.filter(
-                UserCache.username == "wordpressuser", UserCache.user_id == "6"
-            )
-            .one()
-            .resolver,
+            UserCache.query.filter(UserCache.username == "wordpressuser", UserCache.user_id == "6").one().resolver,
             "reso_b",
         )
         # Add a phone number. We do not use the User API to do that to simulate that the change is performed
@@ -498,11 +475,7 @@ class UserCacheTestCase(MyTestCase):
         get_resolver_object("reso_a").update_user(user1.uid, new_info)
         # Ensure that the user's association with reso_b is still cached.
         self.assertEqual(
-            UserCache.query.filter(
-                UserCache.username == "wordpressuser", UserCache.user_id == "6"
-            )
-            .one()
-            .resolver,
+            UserCache.query.filter(UserCache.username == "wordpressuser", UserCache.user_id == "6").one().resolver,
             "reso_b",
         )
         # Now, it should be located in reso_a!
@@ -510,9 +483,7 @@ class UserCacheTestCase(MyTestCase):
         self.assertEqual(user2.uid, "6")
         self.assertEqual(user2.resolver, "reso_a")
         # ... but the cache still contains entries for both!
-        resolver_query = UserCache.query.filter(
-            UserCache.username == "wordpressuser", UserCache.user_id == "6"
-        ).order_by(UserCache.timestamp.desc())
+        resolver_query = UserCache.query.filter(UserCache.username == "wordpressuser", UserCache.user_id == "6").order_by(UserCache.timestamp.desc())
         cached_resolvers = [entry.resolver for entry in resolver_query.all()]
         self.assertEqual(cached_resolvers, ["reso_a", "reso_b"])
         # Remove the phone number.
@@ -564,11 +535,7 @@ class TestUserCacheMultipleLoginAttributes(MyTestCase):
         "BINDPW": "ldaptest",
         "LOGINNAMEATTRIBUTE": "cn, email",
         "LDAPSEARCHFILTER": "(cn=*)",
-        "USERINFO": '{"phone" : "telephoneNumber", '
-        '"mobile" : "mobile"'
-        ', "email" : "email", '
-        '"surname" : "sn", '
-        '"givenname" : "givenName" }',
+        "USERINFO": '{"phone" : "telephoneNumber", "mobile" : "mobile", "email" : "email", "surname" : "sn", "givenname" : "givenName" }',
         "UIDTYPE": "DN",
         "CACHE_TIMEOUT": 0,
         "resolver": ldap_resolver,
@@ -625,11 +592,7 @@ class TestUserCacheMultipleLoginAttributes(MyTestCase):
         self.assertEqual(user3.uid, "cn=alice,ou=example,o=test")
         self.assertEqual(user3.login, "alice")
         self.assertEqual(user3.used_login, "alice@test.com")
-        entries = (
-            UserCache.query.filter_by(user_id="cn=alice,ou=example,o=test")
-            .order_by(UserCache.id)
-            .all()
-        )
+        entries = UserCache.query.filter_by(user_id="cn=alice,ou=example,o=test").order_by(UserCache.id).all()
         self.assertEqual(len(entries), 2)
         entry = entries[-1]
         self.assertEqual(entry.user_id, user1.uid)
@@ -643,20 +606,12 @@ class TestUserCacheMultipleLoginAttributes(MyTestCase):
         self.assertEqual(user4.login, "alice")
         self.assertEqual(user4.used_login, "alice@test.com")
         # still only two entries in the cache
-        entries = (
-            UserCache.query.filter_by(user_id="cn=alice,ou=example,o=test")
-            .order_by(UserCache.id)
-            .all()
-        )
+        entries = UserCache.query.filter_by(user_id="cn=alice,ou=example,o=test").order_by(UserCache.id).all()
         self.assertEqual(len(entries), 2)
         # get the primary login name
         login_name = get_username("cn=alice,ou=example,o=test", self.ldap_resolver)
         self.assertEqual(login_name, "alice")
         # still only two entries in the cache
-        entries = (
-            UserCache.query.filter_by(user_id="cn=alice,ou=example,o=test")
-            .order_by(UserCache.id)
-            .all()
-        )
+        entries = UserCache.query.filter_by(user_id="cn=alice,ou=example,o=test").order_by(UserCache.id).all()
         self.assertEqual(len(entries), 2)
         self._delete_ldap_realm()

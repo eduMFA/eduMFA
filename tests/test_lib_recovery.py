@@ -29,14 +29,10 @@ class RecoveryTestCase(MyTestCase):
         "Table": "users",
         "Encoding": "utf8",
         "Editable": True,
-        "Map": '{ "username": "username", \
-                    "userid" : "id", \
-                    "email" : "email", \
-                    "surname" : "name", \
-                    "givenname" : "givenname", \
-                    "password" : "password", \
-                    "phone": "phone", \
-                    "mobile": "mobile"}',
+        "Map": (
+            '{ "username": "username",                     "userid" : "id",                     "email" : "email",                     "surname" : "name",                    '
+            ' "givenname" : "givenname",                     "password" : "password",                     "phone": "phone",                     "mobile": "mobile"}'
+        ),
     }
 
     # add_user, get_user, reset, set_user_identifiers
@@ -49,9 +45,7 @@ class RecoveryTestCase(MyTestCase):
         smtpmock.setdata(response={"user@localhost.localdomain": (200, "OK")})
 
         # missing configuration
-        self.assertRaises(
-            eduMFAError, create_recoverycode, user=User("cornelius", self.realm1)
-        )
+        self.assertRaises(eduMFAError, create_recoverycode, user=User("cornelius", self.realm1))
 
         # recover password with "recovery.identifier"
         r = add_smtpserver(identifier="myserver", server="1.2.3.4")

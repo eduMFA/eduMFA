@@ -75,9 +75,7 @@ class SecurityModuleTestCase(MyTestCase):
 
     def test_04_random(self):
         config = current_app.config
-        hsm = DefaultSecurityModule(
-            {"file": config.get("EDUMFA_ENCFILE"), "crypted": True}
-        )
+        hsm = DefaultSecurityModule({"file": config.get("EDUMFA_ENCFILE"), "crypted": True})
         r = hsm.random(20)
         self.assertTrue(len(r) == 20, r)
         self.assertFalse(hsm.is_ready)
@@ -94,17 +92,11 @@ class SecurityModuleTestCase(MyTestCase):
         # check that we can decrypt values with default PKCS7 padding
         iv = b"1234567890abcdef"
         pkcs7_cipher = "98d005d6f87c01f1719199bc3df1beb8"
-        legacy_cipher = (
-            "bbcaff52640f9dc90be1c4e1df8a70b55a1194cc67d155722054317901e3646a"
-        )
-        self.assertEqual(
-            b"Hallo Welt", hsm.decrypt(binascii.unhexlify(pkcs7_cipher), iv)
-        )
+        legacy_cipher = "bbcaff52640f9dc90be1c4e1df8a70b55a1194cc67d155722054317901e3646a"
+        self.assertEqual(b"Hallo Welt", hsm.decrypt(binascii.unhexlify(pkcs7_cipher), iv))
 
         # check that we can decrypt values with legacy padding
-        self.assertEqual(
-            b"Hallo Welt", hsm.decrypt(binascii.unhexlify(legacy_cipher), iv)
-        )
+        self.assertEqual(b"Hallo Welt", hsm.decrypt(binascii.unhexlify(legacy_cipher), iv))
 
         cipher = hsm.encrypt_pin("pin")
         text = hsm.decrypt_pin(cipher)
@@ -117,10 +109,7 @@ class SecurityModuleTestCase(MyTestCase):
     def test_06_password_encrypt_decrypt(self):
         res = DefaultSecurityModule.password_encrypt("secrettext", "password1")
         self.assertTrue(
-            len(res)
-            == len(
-                "80f1833450a74224c32d03fe4161735c:c1944e8c0982d5c35992a9b25abad18a28cac15585ed2fbab05bd2b1ea2cc44b"
-            ),
+            len(res) == len("80f1833450a74224c32d03fe4161735c:c1944e8c0982d5c35992a9b25abad18a28cac15585ed2fbab05bd2b1ea2cc44b"),
             res,
         )
 
@@ -141,9 +130,7 @@ class SecurityModuleTestCase(MyTestCase):
 
     def test_07_encrypted_key_file(self):
         config = current_app.config
-        hsm = DefaultSecurityModule(
-            {"file": config.get("EDUMFA_ENCFILE_ENC"), "crypted": True}
-        )
+        hsm = DefaultSecurityModule({"file": config.get("EDUMFA_ENCFILE_ENC"), "crypted": True})
         # The HSM is not ready, since the file is crypted and we did not
         # provide the password, yet
         self.assertFalse(hsm.is_ready)
@@ -290,12 +277,8 @@ class CryptoTestCase(MyTestCase):
         # check some data generated with 2.23
         s = "passwörd".encode("utf8")
         iv_hex = "cd5245a2875007d30cc049c2e7eca0c5"
-        enc_data_hex = (
-            "7ea55168952b33131077f4249cf9e52b5f2b572214ace13194c436451fe3788c"
-        )
-        self.assertEqual(
-            s, decrypt(binascii.unhexlify(enc_data_hex), binascii.unhexlify(iv_hex))
-        )
+        enc_data_hex = "7ea55168952b33131077f4249cf9e52b5f2b572214ace13194c436451fe3788c"
+        self.assertEqual(s, decrypt(binascii.unhexlify(enc_data_hex), binascii.unhexlify(iv_hex)))
         enc_data_hex = (
             "fb79a04d69e832aec8ffb4bbfe031b3bd28a2840150212d8c819e"
             "362b1711cc389aed70eaf27af53131ea446095da80e88c4caf791"
@@ -380,9 +363,7 @@ class RandomTestCase(MyTestCase):
         self.assertEqual(r, False)
 
     def test_06_test_old_passwords(self):
-        phash = passlib.hash.pbkdf2_sha512.hash(
-            current_app.config.get("EDUMFA_PEPPER", "") + "test"
-        )
+        phash = passlib.hash.pbkdf2_sha512.hash(current_app.config.get("EDUMFA_PEPPER", "") + "test")
         self.assertTrue(phash.startswith("$pbkdf2"))
         r = verify_with_pepper(phash, "test")
         self.assertTrue(r)
@@ -396,14 +377,9 @@ class RandomTestCase(MyTestCase):
         # test requirements, we loop to get some statistics
         default_chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
         for i in range(10):
-            password_req = generate_password(
-                size=3, characters=default_chars, requirements=["AB", "12"]
-            )
+            password_req = generate_password(size=3, characters=default_chars, requirements=["AB", "12"])
             # a character from each requirement must be found
-            self.assertTrue(
-                any(char in "AB" for char in password_req)
-                and any(char in "12" for char in password_req)
-            )
+            self.assertTrue(any(char in "AB" for char in password_req) and any(char in "12" for char in password_req))
             self.assertEqual(len(password_req), 3)
 
         # use letters for base and numbers for requirements
@@ -418,9 +394,7 @@ class RandomTestCase(MyTestCase):
         self.assertEqual(7, sum(c.isalpha() for c in password))
 
         # requirements define the minimum length of a password
-        password = generate_password(
-            size=0, characters="ABC", requirements=["1", "2", "3"]
-        )
+        password = generate_password(size=0, characters="ABC", requirements=["1", "2", "3"])
         self.assertEqual(3, len(password))
 
         # empty characters variable raises an IndexError
@@ -438,9 +412,7 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
 
     def test_01_instantiate(self):
         with PKCS11Mock() as pkcs11:
-            hsm = AESHardwareSecurityModule(
-                {"module": "testmodule", "password": "test123!"}
-            )
+            hsm = AESHardwareSecurityModule({"module": "testmodule", "password": "test123!"})
             self.assertIsNotNone(hsm)
             self.assertTrue(hsm.is_ready)
             self.assertIs(hsm.session, pkcs11.session_mock)
@@ -493,22 +465,16 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
 
             # simulate that encryption succeeds after five tries
             password = "topSekr3t" * 16
-            with pkcs11.simulate_failure(
-                pkcs11.session_mock.encrypt, 5, error=PyKCS11.CKR_SESSION_HANDLE_INVALID
-            ):
+            with pkcs11.simulate_failure(pkcs11.session_mock.encrypt, 5, error=PyKCS11.CKR_SESSION_HANDLE_INVALID):
                 encrypted = hsm.encrypt_password(password)
                 # the session has been opened initially, and five times after that
                 self.assertEqual(pkcs11.mock.openSession.mock_calls, [call(slot=1)] * 6)
 
             # simulate that decryption succeeds after five tries
-            with pkcs11.simulate_failure(
-                pkcs11.session_mock.decrypt, 5, error=PyKCS11.CKR_SESSION_HANDLE_INVALID
-            ):
+            with pkcs11.simulate_failure(pkcs11.session_mock.decrypt, 5, error=PyKCS11.CKR_SESSION_HANDLE_INVALID):
                 self.assertEqual(hsm.decrypt_password(encrypted), password)
                 # the session has been opened initially, five times during encryption, and five times now
-                self.assertEqual(
-                    pkcs11.mock.openSession.mock_calls, [call(slot=1)] * 11
-                )
+                self.assertEqual(pkcs11.mock.openSession.mock_calls, [call(slot=1)] * 11)
 
             # simulate that random generation succeeds after five tries
             with pkcs11.simulate_failure(
@@ -517,9 +483,7 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
                 error=PyKCS11.CKR_SESSION_HANDLE_INVALID,
             ):
                 self.assertEqual(hsm.random(4), b"\x00\x01\x02\x03")
-                self.assertEqual(
-                    pkcs11.mock.openSession.mock_calls, [call(slot=1)] * 16
-                )
+                self.assertEqual(pkcs11.mock.openSession.mock_calls, [call(slot=1)] * 16)
 
     def test_04_fail_encrypt(self):
         with PKCS11Mock() as pkcs11:
@@ -537,17 +501,13 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
 
             # simulate that encryption still fails after five tries
             password = "topSekr3t" * 16
-            with pkcs11.simulate_failure(
-                pkcs11.session_mock.encrypt, 6, error=PyKCS11.CKR_SESSION_HANDLE_INVALID
-            ):
+            with pkcs11.simulate_failure(pkcs11.session_mock.encrypt, 6, error=PyKCS11.CKR_SESSION_HANDLE_INVALID):
                 with self.assertRaises(HSMException):
                     hsm.encrypt_password(password)
                 # the session has been opened initially, and six times after that
                 self.assertEqual(pkcs11.mock.openSession.mock_calls, [call(slot=1)] * 7)
 
-            with pkcs11.simulate_failure(
-                pkcs11.session_mock.encrypt, 1, error=PyKCS11.CKR_ARGUMENTS_BAD
-            ):
+            with pkcs11.simulate_failure(pkcs11.session_mock.encrypt, 1, error=PyKCS11.CKR_ARGUMENTS_BAD):
                 with self.assertRaises(HSMException):
                     hsm.encrypt_password(password)
 
@@ -616,9 +576,7 @@ class AESHardwareSecurityModuleLibLevelTestCase(MyTestCase):
 
     def setUp(self):
         """set up config to load the AES HSM module"""
-        current_app.config["EDUMFA_HSM_MODULE"] = (
-            "edumfa.lib.security.aeshsm.AESHardwareSecurityModule"
-        )
+        current_app.config["EDUMFA_HSM_MODULE"] = "edumfa.lib.security.aeshsm.AESHardwareSecurityModule"
         current_app.config["EDUMFA_HSM_MODULE_MODULE"] = "testmodule"
         current_app.config["EDUMFA_HSM_MODULE_PASSWORD"] = "test123!"
         with self.pkcs11:
@@ -646,9 +604,7 @@ class AESHardwareSecurityModuleLibLevelTestCase(MyTestCase):
             self.assertTrue(hsm.is_ready)
 
             # the HSM disappears
-            generate_random_call_count = (
-                self.pkcs11.session_mock.generateRandom.call_count
-            )
+            generate_random_call_count = self.pkcs11.session_mock.generateRandom.call_count
             open_session_call_count = self.pkcs11.mock.openSession.call_count
             with self.pkcs11.simulate_disconnect(100):
                 with self.assertRaises(PyKCS11Error):
@@ -659,9 +615,7 @@ class AESHardwareSecurityModuleLibLevelTestCase(MyTestCase):
                     generate_random_call_count + 1,
                 )
                 # we have tried to open a new session once
-                self.assertEqual(
-                    self.pkcs11.mock.openSession.call_count, open_session_call_count + 1
-                )
+                self.assertEqual(self.pkcs11.mock.openSession.call_count, open_session_call_count + 1)
 
             # HSM is now defunct
 
@@ -678,9 +632,7 @@ class AESHardwareSecurityModuleLibLevelPasswordTestCase(MyTestCase):
 
     def setUp(self):
         """set up config to load the AES HSM module"""
-        current_app.config["EDUMFA_HSM_MODULE"] = (
-            "edumfa.lib.security.aeshsm.AESHardwareSecurityModule"
-        )
+        current_app.config["EDUMFA_HSM_MODULE"] = "edumfa.lib.security.aeshsm.AESHardwareSecurityModule"
         current_app.config["EDUMFA_HSM_MODULE_MODULE"] = "testmodule"
         # the config misses the password
         with self.pkcs11:
@@ -707,9 +659,7 @@ class SignObjectTestCase(MyTestCase):
         with self.assertRaises(Exception):
             Sign(b"This is not a private key", b"This is not a public key")
         with self.assertRaises(Exception):
-            priv_key = open(
-                current_app.config.get("EDUMFA_AUDIT_KEY_PRIVATE"), "rb"
-            ).read()
+            priv_key = open(current_app.config.get("EDUMFA_AUDIT_KEY_PRIVATE"), "rb").read()
             Sign(private_key=priv_key, public_key=b"Still not a public key")
         # this should work
         priv_key = open(current_app.config.get("EDUMFA_AUDIT_KEY_PRIVATE"), "rb").read()
@@ -779,10 +729,7 @@ class DefaultHashAlgoListTestCase(MyTestCase):
     def test_01_default_hash_algorithm_list(self):
         password = "password"
 
-        pbkdf2_sha512_hash = (
-            "$pbkdf2-sha512$25000$XEvJOcf437tXam1Nydm79w$6eDPlPjRgnJGGK0j8a3to"
-            "SZoSUvwZzcvEj96t7Hg.X/SC822EFaO2iWoHFTUc1NMsX6sgQyQqbjWxGXgRWNzkw"
-        )
+        pbkdf2_sha512_hash = "$pbkdf2-sha512$25000$XEvJOcf437tXam1Nydm79w$6eDPlPjRgnJGGK0j8a3toSZoSUvwZzcvEj96t7Hg.X/SC822EFaO2iWoHFTUc1NMsX6sgQyQqbjWxGXgRWNzkw"
 
         argon2_fail_hash = "$argon2id$v=19$m=102400,t=9,p=8$vZeyFqI0xhiDEIKw1przfg$8FX07S7VpaYae51Oe9Cj7g"
 
@@ -794,9 +741,7 @@ class DefaultHashAlgoListTestCase(MyTestCase):
         # Checks if the password can also be verified with pbkdf2_sha512 from "DEFAULT_HASH_ALGO_LIST".
         self.assertTrue(verify_pass_hash(password, pbkdf2_sha512_hash))
         # Checks if an error message is issued if algorithm is not contain in "EDUMFA_HASH_ALGO_LIST".
-        self.assertRaises(
-            passlib.exc.UnknownHashError, verify_pass_hash, password, "password"
-        )
+        self.assertRaises(passlib.exc.UnknownHashError, verify_pass_hash, password, "password")
         # Checks if a faulty hash is failing.
         self.assertFalse(verify_pass_hash(password, argon2_fail_hash))
 
@@ -811,10 +756,7 @@ class CustomParamsDefaultHashAlgoListTestCase(OverrideConfigTestCase):
     def test_01_default_hash_algorithm_list_with_custom_params(self):
         password = "password"
 
-        pbkdf2_sha512_hash = (
-            "$pbkdf2-sha512$25000$XEvJOcf437tXam1Nydm79w$6eDPlPjRgnJGGK0j8a3to"
-            "SZoSUvwZzcvEj96t7Hg.X/SC822EFaO2iWoHFTUc1NMsX6sgQyQqbjWxGXgRWNzkw"
-        )
+        pbkdf2_sha512_hash = "$pbkdf2-sha512$25000$XEvJOcf437tXam1Nydm79w$6eDPlPjRgnJGGK0j8a3toSZoSUvwZzcvEj96t7Hg.X/SC822EFaO2iWoHFTUc1NMsX6sgQyQqbjWxGXgRWNzkw"
 
         # Checks if the first entry is taken from "DEFAULT_HASH_ALGO_LIST"
         ph = pass_hash(password)
@@ -837,10 +779,7 @@ class CustomHashAlgoListTestCase(OverrideConfigTestCase):
     def test_01_custom_hash_algorithm_list(self):
         password = "password"
 
-        pbkdf2_sha512_hash = (
-            "$pbkdf2-sha512$25000$XEvJOcf437tXam1Nydm79w$6eDPlPjRgnJGGK0j8a3to"
-            "SZoSUvwZzcvEj96t7Hg.X/SC822EFaO2iWoHFTUc1NMsX6sgQyQqbjWxGXgRWNzkw"
-        )
+        pbkdf2_sha512_hash = "$pbkdf2-sha512$25000$XEvJOcf437tXam1Nydm79w$6eDPlPjRgnJGGK0j8a3toSZoSUvwZzcvEj96t7Hg.X/SC822EFaO2iWoHFTUc1NMsX6sgQyQqbjWxGXgRWNzkw"
 
         argon2_hash = "$argon2id$v=19$m=102400,t=9,p=8$vZeyFqI0xhiDEIKw1przfg$8FX07S7VpaYae51Oe9Cj8g"
 
@@ -853,8 +792,6 @@ class CustomHashAlgoListTestCase(OverrideConfigTestCase):
         # Checks if the password can also be verified with argon2".
         self.assertTrue(verify_pass_hash(password, argon2_hash))
         # Checks if an error message is issued if algorithm is not contain in "EDUMFA_HASH_ALGO_LIST".
-        self.assertRaises(
-            passlib.exc.UnknownHashError, verify_pass_hash, password, "password"
-        )
+        self.assertRaises(passlib.exc.UnknownHashError, verify_pass_hash, password, "password")
         # Checks if a faulty hash is failing.
         self.assertFalse(verify_pass_hash(password, argon2_fail_hash))

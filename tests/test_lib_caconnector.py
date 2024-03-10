@@ -221,9 +221,7 @@ class CAConnectorTestCase(MyTestCase):
 
     def test_03_errors(self):
         # unknown type
-        self.assertRaises(
-            Exception, save_caconnector, {"caconnector": "unknown", "type": "unknown"}
-        )
+        self.assertRaises(Exception, save_caconnector, {"caconnector": "unknown", "type": "unknown"})
 
         caobj = get_caconnector_object("not-existing")
         self.assertEqual(caobj, None)
@@ -240,9 +238,7 @@ class LocalCATestCase(MyTestCase):
         super().setUpClass()
 
         # Backup the original index and serial
-        shutil.copyfile(
-            "{0!s}/serial".format(WORKINGDIR), "{0!s}/serial.orig".format(WORKINGDIR)
-        )
+        shutil.copyfile("{0!s}/serial".format(WORKINGDIR), "{0!s}/serial.orig".format(WORKINGDIR))
         shutil.copyfile(
             "{0!s}/index.txt".format(WORKINGDIR),
             "{0!s}/index.txt.orig".format(WORKINGDIR),
@@ -273,9 +269,7 @@ class LocalCATestCase(MyTestCase):
                 print("File {0!s} could not be deleted.".format(f))
 
         # restore backup of index.txt and serial
-        shutil.copyfile(
-            "{0!s}/serial.orig".format(WORKINGDIR), "{0!s}/serial".format(WORKINGDIR)
-        )
+        shutil.copyfile("{0!s}/serial.orig".format(WORKINGDIR), "{0!s}/serial".format(WORKINGDIR))
         shutil.copyfile(
             "{0!s}/index.txt.orig".format(WORKINGDIR),
             "{0!s}/index.txt".format(WORKINGDIR),
@@ -427,9 +421,7 @@ class LocalCATestCase(MyTestCase):
         self.assertTrue("user" in templates)
         self.assertTrue("webserver" in templates)
         self.assertTrue("template3" in templates)
-        _, cert = cacon.sign_request(
-            SPKAC, options={"spkac": 1, "template": "webserver"}
-        )
+        _, cert = cacon.sign_request(SPKAC, options={"spkac": 1, "template": "webserver"})
         expires = to_unicode(cert.get_notAfter())
         import datetime
 
@@ -520,9 +512,7 @@ class MSCATestCase(MyTestCase):
         with mock.patch("logging.Logger.warning") as mock_log:
             self.cacon = MSCAConnector("billsCA", CONF)
             # Although the msca object is created, it still writes a warning to the log for being offline
-            mock_log.assert_called_with(
-                "Worker seems to be offline. No connection could be established!"
-            )
+            mock_log.assert_called_with("Worker seems to be offline. No connection could be established!")
             self.assertEqual(self.cacon.connector_type, "microsoft")
 
         # check the configuration of the CA object
@@ -556,9 +546,7 @@ class MSCATestCase(MyTestCase):
 
     def test_02_test_get_templates(self):
         # Mock the connection to the worker
-        with mock.patch.object(
-            MSCAConnector, "_connect_to_worker"
-        ) as mock_conncect_worker:
+        with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             mock_conncect_worker.return_value = CAServiceMock(
                 CONF,
                 {
@@ -570,9 +558,7 @@ class MSCATestCase(MyTestCase):
             r = MSCAConnector("billsCA", CONF).get_specific_options()
             self.assertIn("available_cas", r)
             available_cas = r.get("available_cas")
-            self.assertIn(
-                "WIN-GG7JP259HMQ.nilsca.com\\nilsca-WIN-GG7JP259HMQ-CA", available_cas
-            )
+            self.assertIn("WIN-GG7JP259HMQ.nilsca.com\\nilsca-WIN-GG7JP259HMQ-CA", available_cas)
             self.assertIn("CA03.nilsca.com\\nilsca-CA03-CA", available_cas)
 
             # Create a connector to CA03
@@ -584,9 +570,7 @@ class MSCATestCase(MyTestCase):
 
     def test_03_test_sign_request(self):
         # Mock the connection to the worker
-        with mock.patch.object(
-            MSCAConnector, "_connect_to_worker"
-        ) as mock_conncect_worker:
+        with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
             mock_conncect_worker.return_value = CAServiceMock(
                 CONF,
@@ -637,9 +621,7 @@ class MSCATestCase(MyTestCase):
             self.assertEqual(4711, request_id)
 
     def test_04_test_pending_request(self):
-        with mock.patch.object(
-            MSCAConnector, "_connect_to_worker"
-        ) as mock_conncect_worker:
+        with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
             mock_conncect_worker.return_value = CAServiceMock(
                 CONF,
@@ -695,9 +677,7 @@ class MSCATestCase(MyTestCase):
         conf[MS_ATTR.USE_SSL] = True
         conf[MS_ATTR.SSL_CA_CERT] = "tests/testdata/msca-connector/ca.pem"
         conf[MS_ATTR.SSL_CLIENT_CERT] = "tests/testdata/msca-connector/privacyidea.pem"
-        conf[MS_ATTR.SSL_CLIENT_KEY] = (
-            "tests/testdata/msca-connector/privacyidea-encrypted.key"
-        )
+        conf[MS_ATTR.SSL_CLIENT_KEY] = "tests/testdata/msca-connector/privacyidea-encrypted.key"
         self.assertRaises(CAError, MSCAConnector, "bCA2", conf)
 
     def test_13_ssl_encrypted_key(self):
@@ -706,9 +686,7 @@ class MSCATestCase(MyTestCase):
         conf[MS_ATTR.USE_SSL] = True
         conf[MS_ATTR.SSL_CA_CERT] = "tests/testdata/msca-connector/ca.pem"
         conf[MS_ATTR.SSL_CLIENT_CERT] = "tests/testdata/msca-connector/privacyidea.pem"
-        conf[MS_ATTR.SSL_CLIENT_KEY] = (
-            "tests/testdata/msca-connector/privacyidea-encrypted.key"
-        )
+        conf[MS_ATTR.SSL_CLIENT_KEY] = "tests/testdata/msca-connector/privacyidea-encrypted.key"
         conf[MS_ATTR.SSL_CLIENT_KEY_PASSWORD] = "test"
         self.cacon = MSCAConnector("bCA2", conf)
 
@@ -718,9 +696,7 @@ class MSCATestCase(MyTestCase):
         conf[MS_ATTR.USE_SSL] = True
         conf[MS_ATTR.SSL_CA_CERT] = "tests/testdata/msca-connector/ca.pem"
         conf[MS_ATTR.SSL_CLIENT_CERT] = "tests/testdata/msca-connector/privacyidea.pem"
-        conf[MS_ATTR.SSL_CLIENT_KEY] = (
-            "tests/testdata/msca-connector/privacyidea-encrypted.key"
-        )
+        conf[MS_ATTR.SSL_CLIENT_KEY] = "tests/testdata/msca-connector/privacyidea-encrypted.key"
         conf[MS_ATTR.SSL_CLIENT_KEY_PASSWORD] = "wrong"
         self.assertRaises(CAError, MSCAConnector, "bCA2", conf)
 

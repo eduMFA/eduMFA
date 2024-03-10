@@ -345,9 +345,7 @@ class CertificateTokenTestCase(MyTestCase):
         self.assertTrue(r)
 
         # Verification against an empty chain, due to misconfiguration fails.
-        r = verify_certificate_path(
-            YUBIKEY_ATTEST, ["tests/testdata/feitian_non_exist"]
-        )
+        r = verify_certificate_path(YUBIKEY_ATTEST, ["tests/testdata/feitian_non_exist"])
         self.assertFalse(r)
 
     def test_01_create_token_from_certificate(self):
@@ -559,9 +557,7 @@ class CertificateTokenTestCase(MyTestCase):
             "{0!r}".format(x509obj.get_issuer()),
             "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
         )
-        self.assertEqual(
-            "{0!r}".format(x509obj.get_subject()), "<X509Name object '/CN=cornelius'>"
-        )
+        self.assertEqual("{0!r}".format(x509obj.get_subject()), "<X509Name object '/CN=cornelius'>")
 
         privatekey = token.get_tokeninfo("privatekey")
         self.assertTrue(privatekey.startswith("-----BEGIN PRIVATE KEY-----"))
@@ -624,9 +620,7 @@ class CertificateTokenTestCase(MyTestCase):
         # If we have no policy, we revert to default
         g.policy_object = PolicyClass()
         p = CertificateTokenClass.get_default_settings(g, params)
-        self.assertEqual(
-            ["/etc/edumfa/trusted_attestation_ca"], p.get(ACTION.TRUSTED_CA_PATH)
-        )
+        self.assertEqual(["/etc/edumfa/trusted_attestation_ca"], p.get(ACTION.TRUSTED_CA_PATH))
 
 
 class MSCACertTestCase(MyTestCase):
@@ -647,9 +641,7 @@ class MSCACertTestCase(MyTestCase):
         "Can not test MSCA. grpc module seems not available.",
     )
     def test_01_msca_certificate_pending_and_enrolled(self):
-        with mock.patch.object(
-            MSCAConnector, "_connect_to_worker"
-        ) as mock_conncect_worker:
+        with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
             mock_conncect_worker.return_value = CAServiceMock(
                 CONF,
@@ -698,9 +690,7 @@ class MSCACertTestCase(MyTestCase):
         "Can not test MSCA. grpc module seems not available.",
     )
     def test_02_msca_certificate_pending_and_denied(self):
-        with mock.patch.object(
-            MSCAConnector, "_connect_to_worker"
-        ) as mock_conncect_worker:
+        with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
             mock_conncect_worker.return_value = CAServiceMock(
                 CONF,
@@ -749,9 +739,7 @@ class MSCACertTestCase(MyTestCase):
         "Can not test MSCA. grpc module seems not available.",
     )
     def test_03_msca_certificate_pending_but_cert_broken_in_edumfa(self):
-        with mock.patch.object(
-            MSCAConnector, "_connect_to_worker"
-        ) as mock_conncect_worker:
+        with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
             mock_conncect_worker.return_value = CAServiceMock(
                 CONF,

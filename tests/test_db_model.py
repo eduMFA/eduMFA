@@ -248,9 +248,7 @@ class TokenModelTestCase(MyTestCase):
         # key too long
         k = os.urandom(1500)
         t2.set_otpkey(k)
-        self.assertGreater(
-            len(t2.key_enc), Token.key_enc.property.columns[0].type.length
-        )
+        self.assertGreater(len(t2.key_enc), Token.key_enc.property.columns[0].type.length)
 
         # SQLite supports writing too long data, all others don't.
         if db.engine.name != "sqlite":
@@ -306,9 +304,7 @@ class TokenModelTestCase(MyTestCase):
         res_conf_id = rc.save()
         self.assertTrue(res_conf_id > 0, res_conf_id)
         # update resolver config
-        rc = ResolverConfig(
-            resolver=resolvername, Key="fileName", Value="/etc/secureusers"
-        )
+        rc = ResolverConfig(resolver=resolvername, Key="fileName", Value="/etc/secureusers")
         res_conf_id2 = rc.save()
         self.assertTrue(res_conf_id2 == res_conf_id, res_conf_id2)
         # delete resolver and its config
@@ -339,9 +335,7 @@ class TokenModelTestCase(MyTestCase):
 
         # add config entries to the CA connector
         CAConnectorConfig(caconnector_id=1, Key="Key1", Value="Value1").save()
-        CAConnectorConfig(
-            caconnector=connector_name, Key="Key2", Value="Value2", Type="password"
-        ).save()
+        CAConnectorConfig(caconnector=connector_name, Key="Key2", Value="Value2", Type="password").save()
         q = CAConnectorConfig.query.filter_by(caconnector_id=1).all()
         self.assertEqual(len(q), 2)
         self.assertEqual(q[0].Value, "Value1")
@@ -391,18 +385,14 @@ class TokenModelTestCase(MyTestCase):
         db_realm.delete()
 
     def test_11_policy(self):
-        p = Policy(
-            "pol1", active="true", scope="selfservice", action="action1", realm="*"
-        )
+        p = Policy("pol1", active="true", scope="selfservice", action="action1", realm="*")
         p.save()
         self.assertTrue(p.action == "action1", p)
         self.assertTrue("action1" in p.get().get("action"), p)
         self.assertTrue("action1" in p.get("action"), p)
         self.assertEqual(p.get()["conditions"], [])
 
-        p2 = Policy(
-            "pol1", active="false", scope="selfservice", action="action1", realm="*"
-        )
+        p2 = Policy("pol1", active="false", scope="selfservice", action="action1", realm="*")
         self.assertFalse(p2.active, p2.active)
 
         # update
@@ -454,9 +444,7 @@ class TokenModelTestCase(MyTestCase):
 
         p3.set_conditions([("userinfo", "type", "==", "baz", True)])
         p3.save()
-        self.assertEqual(
-            p3.get()["conditions"], [("userinfo", "type", "==", "baz", True)]
-        )
+        self.assertEqual(p3.get()["conditions"], [("userinfo", "type", "==", "baz", True)])
         self.assertEqual(len(p3.conditions), 1)
         self.assertEqual(p3.conditions[0].Value, "baz")
         self.assertEqual(PolicyCondition.query.count(), 1)
@@ -464,9 +452,7 @@ class TokenModelTestCase(MyTestCase):
         # Check that the change has been persisted to the database
         p3_reloaded1 = Policy.query.filter_by(name="pol3").one()
         self.assertEqual(p3_reloaded1.get()["edumfanode"], ["edumfanode3"])
-        self.assertEqual(
-            p3_reloaded1.get()["conditions"], [("userinfo", "type", "==", "baz", True)]
-        )
+        self.assertEqual(p3_reloaded1.get()["conditions"], [("userinfo", "type", "==", "baz", True)])
         self.assertEqual(len(p3_reloaded1.conditions), 1)
         self.assertEqual(p3_reloaded1.conditions[0].Value, "baz")
         self.assertEqual(PolicyCondition.query.count(), 1)
@@ -474,9 +460,7 @@ class TokenModelTestCase(MyTestCase):
         p3.set_conditions([])
         p3.save()
         self.assertEqual(p3.get()["conditions"], [])
-        self.assertEqual(
-            Policy.query.filter_by(name="pol3").one().get()["conditions"], []
-        )
+        self.assertEqual(Policy.query.filter_by(name="pol3").one().get()["conditions"], [])
         self.assertEqual(PolicyCondition.query.count(), 0)
 
         # Test policies with adminusers
@@ -514,9 +498,7 @@ class TokenModelTestCase(MyTestCase):
 
         # test with timestamp=True, which results in something like this:
         timestamp = "2014-11-29 21:56:43.057293"
-        self.assertTrue(
-            len(c.get(True).get("timestamp")) == len(timestamp), c.get(True)
-        )
+        self.assertTrue(len(c.get(True).get("timestamp")) == len(timestamp), c.get(True))
         # otp_status
         c.set_otp_status(valid=False)
         self.assertTrue(c.get_otp_status()[0], c.get_otp_status())
@@ -531,9 +513,7 @@ class TokenModelTestCase(MyTestCase):
         mrc_id = mrc.save()
         self.assertTrue(mrc_id > 0, mrc)
         # check that the config entry exist
-        db_mrconf = MachineResolverConfig.query.filter(
-            MachineResolverConfig.resolver_id == mr_id
-        ).first()
+        db_mrconf = MachineResolverConfig.query.filter(MachineResolverConfig.resolver_id == mr_id).first()
         self.assertTrue(db_mrconf is not None)
 
         # add a config value by ID
@@ -543,9 +523,7 @@ class TokenModelTestCase(MyTestCase):
         # update config
         MachineResolverConfig(resolver_id=mr_id, Key="key2", Value="new value").save()
         # check if the value is updated.
-        new_config = MachineResolverConfig.query.filter(
-            MachineResolverConfig.Key == "key2"
-        ).first()
+        new_config = MachineResolverConfig.query.filter(MachineResolverConfig.Key == "key2").first()
         self.assertTrue(new_config.Value == "new value", new_config.Value)
 
         # Connect a machine to a token
@@ -579,16 +557,12 @@ class TokenModelTestCase(MyTestCase):
 
         db_mr = MachineResolver.query.filter(MachineResolver.name == "mr1").first()
         self.assertTrue(db_mr is None)
-        db_mrconf = MachineResolverConfig.query.filter(
-            MachineResolverConfig.resolver_id == mr_id
-        ).first()
+        db_mrconf = MachineResolverConfig.query.filter(MachineResolverConfig.resolver_id == mr_id).first()
         self.assertTrue(db_mrconf is None)
 
     def test_14_save_update_admin(self):
         # create an admin user
-        adminname = Admin(
-            username="admin", password="secret", email="admin@edumfa.io"
-        ).save()
+        adminname = Admin(username="admin", password="secret", email="admin@edumfa.io").save()
         self.assertEqual(adminname, "admin")
         password1 = Admin.query.filter_by(username="admin").first().password
 
@@ -753,9 +727,7 @@ class TokenModelTestCase(MyTestCase):
         with mock.patch("edumfa.models.datetime") as mock_dt:
             mock_dt.now.return_value = current_time
 
-            ClientApplication(
-                ip="1.2.3.4", hostname="host1", clienttype="PAM", node="localnode"
-            ).save()
+            ClientApplication(ip="1.2.3.4", hostname="host1", clienttype="PAM", node="localnode").save()
 
         c = ClientApplication.query.filter(ClientApplication.ip == "1.2.3.4").first()
         self.assertEqual(c.hostname, "host1")
@@ -765,9 +737,7 @@ class TokenModelTestCase(MyTestCase):
 
         self.assertIn("localnode", repr(c))
 
-        ClientApplication(
-            ip="1.2.3.4", hostname="host1", clienttype="PAM", node="localnode"
-        ).save()
+        ClientApplication(ip="1.2.3.4", hostname="host1", clienttype="PAM", node="localnode").save()
         c = ClientApplication.query.filter(ClientApplication.ip == "1.2.3.4").first()
         self.assertGreater(c.lastseen, t1, c)
 
@@ -835,9 +805,7 @@ class TokenModelTestCase(MyTestCase):
         self.assertTrue(find_user)
         self.assertEqual(find_user.user_id, str(user_id))
         self.assertEqual(find_user.resolver, resolver)
-        self.assertEqual(
-            find_user.timestamp, timestamp
-        )  # TODO: Sensible, or might we have a small loss of precision?
+        self.assertEqual(find_user.timestamp, timestamp)  # TODO: Sensible, or might we have a small loss of precision?
 
         # search the user by his used_login
         # search a user in the cache
@@ -906,19 +874,13 @@ class TokenModelTestCase(MyTestCase):
         self.assertEqual(counter6.counter_value, 4)
         self.assertEqual(counter6.node, "othernode")
 
-        counter_value = (
-            db.session.query(func.sum(EventCounter.counter_value))
-            .filter(EventCounter.counter_name == "test_counter")
-            .one()[0]
-        )
+        counter_value = db.session.query(func.sum(EventCounter.counter_value)).filter(EventCounter.counter_name == "test_counter").one()[0]
         self.assertEqual(counter_value, 14)
 
         counters7 = EventCounter.query.filter_by(counter_name="test_counter").all()
         self.assertEqual(len(counters7), 2)
 
-        counter8 = EventCounter.query.filter_by(
-            counter_name="test_counter", node="othernode"
-        )
+        counter8 = EventCounter.query.filter_by(counter_name="test_counter", node="othernode")
         counter8.delete()
 
         counters9 = EventCounter.query.filter_by(counter_name="test_counter").all()
@@ -957,13 +919,9 @@ class TokenModelTestCase(MyTestCase):
             )
 
         self.assertEqual(PeriodicTask.query.filter_by(name="task1").one(), task1)
+        self.assertEqual(PeriodicTask.query.filter_by(name="some other task").one(), task2)
         self.assertEqual(
-            PeriodicTask.query.filter_by(name="some other task").one(), task2
-        )
-        self.assertEqual(
-            PeriodicTaskOption.query.filter_by(periodictask_id=task1.id, key="KEY2")
-            .one()
-            .value,
+            PeriodicTaskOption.query.filter_by(periodictask_id=task1.id, key="KEY2").one().value,
             "True",
         )
         # Values are converted to strings
@@ -1030,9 +988,7 @@ class TokenModelTestCase(MyTestCase):
         )
         # assert all old options are removed
         self.assertEqual(
-            PeriodicTaskOption.query.filter_by(
-                periodictask_id=task1.id, key="key3"
-            ).count(),
+            PeriodicTaskOption.query.filter_by(periodictask_id=task1.id, key="key3").count(),
             0,
         )
         # the second run for localhost
@@ -1069,24 +1025,18 @@ class TokenModelTestCase(MyTestCase):
             {"foo": "bar"},
             id=task1.id,
         )
-        self.assertEqual(
-            PeriodicTaskOption.query.filter_by(periodictask_id=task1.id).count(), 1
-        )
+        self.assertEqual(PeriodicTaskOption.query.filter_by(periodictask_id=task1.id).count(), 1)
         self.assertEqual(
             PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id).one().node,
             "otherhost",
         )
         # naive timestamp in the database
         self.assertEqual(
-            PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id)
-            .one()
-            .timestamp,
+            PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id).one().timestamp,
             datetime(2018, 8, 9, 10, 11, 12, tzinfo=None),
         )
         self.assertEqual(
-            PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id)
-            .one()
-            .aware_timestamp,
+            PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id).one().aware_timestamp,
             datetime(2018, 8, 9, 10, 11, 12, tzinfo=tzutc()),
         )
 
@@ -1131,18 +1081,14 @@ class TokenModelTestCaseDeleting(MyTestCase):
         self.assertEqual(rid, r1.id)
 
         # Get the option
-        rc = ResolverConfig.query.filter_by(
-            Value="this_very_specific_file_try_delete"
-        ).first()
+        rc = ResolverConfig.query.filter_by(Value="this_very_specific_file_try_delete").first()
         self.assertTrue(rc)
         self.assertEqual(rc.resolver_id, rid)
 
         # Now delete the Resolver and check, if there is no config left
         reso = Resolver.query.filter_by(name="try_delete").first()
         reso.delete()
-        rc = ResolverConfig.query.filter_by(
-            Value="this_very_specific_file_try_delete"
-        ).first()
+        rc = ResolverConfig.query.filter_by(Value="this_very_specific_file_try_delete").first()
         self.assertIsNone(rc)
 
 

@@ -7,9 +7,7 @@ from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION
 class APISmsGatewayTestCase(MyApiTestCase):
     def test_01_crud_smsgateway(self):
         # list empty sms gateway definitions
-        with self.app.test_request_context(
-            "/smsgateway/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -27,9 +25,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             "description": "myGateway",
             "option.URL": "http://example.com",
         }
-        with self.app.test_request_context(
-            "/smsgateway", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -37,9 +33,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), 1)
 
         # check the gateway
-        with self.app.test_request_context(
-            "/smsgateway/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -62,9 +56,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             "id": 1,
         }
 
-        with self.app.test_request_context(
-            "/smsgateway", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -72,9 +64,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), 1)
 
         # check the gateway
-        with self.app.test_request_context(
-            "/smsgateway/1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -83,9 +73,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertEqual(sms_gw.get("description"), "new description")
 
         # delete gateway
-        with self.app.test_request_context(
-            "/smsgateway/myGW", method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/myGW", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -93,9 +81,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), 1)
 
         # list empty gateways
-        with self.app.test_request_context(
-            "/smsgateway/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -111,9 +97,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             "option.URL": "http://example.com",
             "header.header1": "headervalue1",
         }
-        with self.app.test_request_context(
-            "/smsgateway", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -125,16 +109,12 @@ class APISmsGatewayTestCase(MyApiTestCase):
         # add header
         param["header.header2"] = "headervalue2"
         param["id"] = smsgw_id
-        with self.app.test_request_context(
-            "/smsgateway", method="POST", data=param, headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway", method="POST", data=param, headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
         # check options and headers
-        with self.app.test_request_context(
-            "/smsgateway/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -172,9 +152,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
 
         # check options
-        with self.app.test_request_context(
-            "/smsgateway/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -185,50 +163,25 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertEqual(sms_gw.get("headers").get("header2"), "headervalue2")
 
     def test_04_sms_provider_modules(self):
-        with self.app.test_request_context(
-            "/smsgateway/providers", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/providers", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             value = res.json.get("result").get("value")
             self.assertEqual(len(value), 7)
-            self.assertTrue(
-                "edumfa.lib.smsprovider.HttpSMSProvider" ".HttpSMSProvider" in value
-            )
-            self.assertTrue(
-                "edumfa.lib.smsprovider.SmtpSMSProvider" ".SmtpSMSProvider" in value
-            )
-            self.assertTrue(
-                "edumfa.lib.smsprovider.SipgateSMSProvider"
-                ".SipgateSMSProvider" in value
-            )
-            self.assertTrue(
-                "edumfa.lib.smsprovider.SmppSMSProvider" ".SmppSMSProvider" in value
-            )
+            self.assertTrue("edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider" in value)
+            self.assertTrue("edumfa.lib.smsprovider.SmtpSMSProvider.SmtpSMSProvider" in value)
+            self.assertTrue("edumfa.lib.smsprovider.SipgateSMSProvider.SipgateSMSProvider" in value)
+            self.assertTrue("edumfa.lib.smsprovider.SmppSMSProvider.SmppSMSProvider" in value)
+            self.assertIn("edumfa.lib.smsprovider.ScriptSMSProvider.ScriptSMSProvider", value)
             self.assertIn(
-                "edumfa.lib.smsprovider.ScriptSMSProvider" ".ScriptSMSProvider", value
-            )
-            self.assertIn(
-                "edumfa.lib.smsprovider.HttpMessageToUidProvider"
-                ".HttpMessageToUidProvider",
+                "edumfa.lib.smsprovider.HttpMessageToUidProvider.HttpMessageToUidProvider",
                 value,
             )
-            http_parameters = value.get(
-                "edumfa.lib.smsprovider." "HttpSMSProvider.HttpSMSProvider"
-            )
-            smtp_parameters = value.get(
-                "edumfa.lib.smsprovider." "SmtpSMSProvider.SmtpSMSProvider"
-            )
-            sipgate_parameters = value.get(
-                "edumfa.lib.smsprovider." "SipgateSMSProvider.SipgateSMSProvider"
-            )
-            smpp_parameters = value.get(
-                "edumfa.lib.smsprovider." "SmppSMSProvider.SmppSMSProvider"
-            )
-            msg2uid_parameters = value.get(
-                "edumfa.lib.smsprovider."
-                "HttpMessageToUidProvider.HttpMessageToUidProvider"
-            )
+            http_parameters = value.get("edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider")
+            smtp_parameters = value.get("edumfa.lib.smsprovider.SmtpSMSProvider.SmtpSMSProvider")
+            sipgate_parameters = value.get("edumfa.lib.smsprovider.SipgateSMSProvider.SipgateSMSProvider")
+            smpp_parameters = value.get("edumfa.lib.smsprovider.SmppSMSProvider.SmppSMSProvider")
+            msg2uid_parameters = value.get("edumfa.lib.smsprovider.HttpMessageToUidProvider.HttpMessageToUidProvider")
             self.assertEqual(http_parameters.get("options_allowed"), True)
             self.assertEqual(smtp_parameters.get("options_allowed"), False)
             self.assertEqual(sipgate_parameters.get("options_allowed"), False)
@@ -237,9 +190,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
             self.assertTrue("PROXY" in http_parameters.get("parameters"))
             self.assertTrue("HTTP_METHOD" in http_parameters.get("parameters"))
             self.assertTrue("URL" in msg2uid_parameters.get("parameters"))
-            self.assertTrue(
-                "UID_TOKENINFO_ATTRIBUTE" in msg2uid_parameters.get("parameters")
-            )
+            self.assertTrue("UID_TOKENINFO_ATTRIBUTE" in msg2uid_parameters.get("parameters"))
             self.assertTrue("POST_CHECK_URL" in msg2uid_parameters.get("parameters"))
 
     def test_05_read_write_policies(self):
@@ -251,26 +202,20 @@ class APISmsGatewayTestCase(MyApiTestCase):
             "description": "myGateway",
             "option.URL": "http://example.com",
         }
-        with self.app.test_request_context(
-            "/smsgateway", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 403, res)
 
         # Now we create a write policy, and we are allowed to write
         set_policy(name="pol_write", scope=SCOPE.ADMIN, action=ACTION.SMSGATEWAYWRITE)
-        with self.app.test_request_context(
-            "/smsgateway", data=param, method="POST", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway", data=param, method="POST", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
         # delete the read policy
         delete_policy("pol_read")
 
-        with self.app.test_request_context(
-            "/smsgateway/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 403, res)
 
@@ -278,8 +223,6 @@ class APISmsGatewayTestCase(MyApiTestCase):
         delete_policy("pol_write")
 
         # and delete sms gateway
-        with self.app.test_request_context(
-            "/smsgateway/myGW", method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/smsgateway/myGW", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)

@@ -384,9 +384,7 @@ class HOTPTokenTestCase(MyTestCase):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = HotpTokenClass(db_token)
         # Failed update: genkey wrong
-        self.assertRaises(
-            Exception, token.update, {"description": "new desc", "genkey": "17"}
-        )
+        self.assertRaises(Exception, token.update, {"description": "new desc", "genkey": "17"})
         # genkey and otpkey used at the same time
         token.update({"otpkey": self.otpkey, "genkey": "1"})
         self.assertTrue(token.token.otplen == 6)
@@ -410,14 +408,10 @@ class HOTPTokenTestCase(MyTestCase):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = HotpTokenClass(db_token)
         transaction_id = "123456789"
-        resp = token.is_challenge_response(
-            User(login="cornelius", realm=self.realm1), "test123456"
-        )
+        resp = token.is_challenge_response(User(login="cornelius", realm=self.realm1), "test123456")
         self.assertFalse(resp, resp)
 
-        C = Challenge(
-            self.serial1, transaction_id=transaction_id, challenge="Who are you?"
-        )
+        C = Challenge(self.serial1, transaction_id=transaction_id, challenge="Who are you?")
         C.save()
         resp = token.is_challenge_response(
             User(login="cornelius", realm=self.realm1),
@@ -502,14 +496,10 @@ class HOTPTokenTestCase(MyTestCase):
         self.assertTrue(r == -1, r)
 
         # create a challenge and match the transaction_id
-        c = Challenge(
-            self.serial1, transaction_id="mytransaction", challenge="Blah, what now?"
-        )
+        c = Challenge(self.serial1, transaction_id="mytransaction", challenge="Blah, what now?")
         # save challenge to the database
         c.save()
-        r = token.check_challenge_response(
-            user=None, passw="123454", options={"state": "mytransaction"}
-        )
+        r = token.check_challenge_response(user=None, passw="123454", options={"state": "mytransaction"})
         # The challenge matches, but the OTP does not match!
         self.assertTrue(r == -1, r)
 
@@ -676,9 +666,7 @@ class HOTPTokenTestCase(MyTestCase):
         delete_policy("pol1")
         # the same should work for an admin user
         g.logged_in_user = {"user": "admin", "realm": "super", "role": "admin"}
-        set_policy(
-            "pol1", scope=SCOPE.ADMIN, action="hotp_hashlib=sha512,hotp_otplen=8"
-        )
+        set_policy("pol1", scope=SCOPE.ADMIN, action="hotp_hashlib=sha512,hotp_otplen=8")
         g.policy_object = PolicyClass()
         p = HotpTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")
@@ -708,9 +696,7 @@ class HOTPTokenTestCase(MyTestCase):
         self.assertEqual(len(client_component), 8)
         self.assertEqual(len(secret), 20)
         # check the secret has been generated according to the specification
-        expected_secret = pbkdf2_hmac(
-            "sha1", binascii.hexlify(server_component), client_component, 10000, 20
-        )
+        expected_secret = pbkdf2_hmac("sha1", binascii.hexlify(server_component), client_component, 10000, 20)
         self.assertEqual(secret, expected_secret)
 
     def test_29_2step_generation_custom(self):
@@ -733,9 +719,7 @@ class HOTPTokenTestCase(MyTestCase):
         # fetch the server component for later tests
         server_component = binascii.unhexlify(token.token.get_otpkey().getKey())
         # too short
-        self.assertRaises(
-            ParameterError, token.update, {"otpkey": binascii.hexlify(b"=" * 8)}
-        )
+        self.assertRaises(ParameterError, token.update, {"otpkey": binascii.hexlify(b"=" * 8)})
         # generate a 12-byte client component
         client_component = b"abcdefghijkl"
         # construct a secret
@@ -792,9 +776,7 @@ class HOTPTokenTestCase(MyTestCase):
                 "Incorrect checksum",
                 token.update,
                 {
-                    "otpkey": b32encode_and_unicode(
-                        b"\x37" + checksum[1:] + client_component
-                    ).strip("="),
+                    "otpkey": b32encode_and_unicode(b"\x37" + checksum[1:] + client_component).strip("="),
                     "otpkeyformat": "base32check",
                 },
             )

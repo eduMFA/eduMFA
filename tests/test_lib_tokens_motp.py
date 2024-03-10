@@ -55,9 +55,7 @@ class MotpTokenTestCase(MyTestCase):
         db_token = Token(self.serial1, tokentype="motp")
         db_token.save()
         token = MotpTokenClass(db_token)
-        token.update(
-            {"otpkey": "909a4d4ba980b2c6", "motppin": self.motppin, "pin": self.otppin}
-        )
+        token.update({"otpkey": "909a4d4ba980b2c6", "motppin": self.motppin, "pin": self.otppin})
         self.assertTrue(token.token.serial == self.serial1, token)
         self.assertTrue(token.token.tokentype == "motp", token.token.tokentype)
         self.assertTrue(token.type == "motp", token)
@@ -118,9 +116,7 @@ class MotpTokenTestCase(MyTestCase):
         self.assertTrue("img" in otpkey, otpkey)
         self.assertTrue("motpurl" in detail, detail)
         motpurl = detail.get("motpurl").get("value")
-        self.assertTrue(
-            motpurl == "motp://edumfa:mylabel?" "secret=11223344556677889900", motpurl
-        )
+        self.assertTrue(motpurl == "motp://edumfa:mylabel?secret=11223344556677889900", motpurl)
         self.assertRaises(Exception, token.set_init_details, "invalid value")
         token.set_init_details({"detail1": "value1"})
         self.assertTrue("detail1" in token.get_init_details(), token.get_init_details())

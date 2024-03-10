@@ -27,9 +27,7 @@ OTPKEY2 = "010fe88d31948c0c2e3258a4b0f7b11956a258ef"
 OTPVALUES2 = ["551536", "703671", "316522", "413789"]
 
 
-def sign_challenge(
-    user_priv_key, app_id, client_data, counter, user_presence_byte=b"\x01"
-):
+def sign_challenge(user_priv_key, app_id, client_data, counter, user_presence_byte=b"\x01"):
     """
     This creates a signature for the U2F data.
     Only used in test scenario
@@ -199,9 +197,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
 
         # In this case we get the automatic description
-        self.assertEqual(
-            get_tokens(serial=serial)[0].token.description, "my description"
-        )
+        self.assertEqual(get_tokens(serial=serial)[0].token.description, "my description")
 
     def test_02_validate(self):
         # assign token to user
@@ -226,9 +222,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(
                 detail.get("message"),
                 detail.get("message"),
-                "Please confirm with your U2F token ({0!s})".format(
-                    "Yubico U2F EE Serial 13831167861"
-                ),
+                "Please confirm with your U2F token ({0!s})".format("Yubico U2F EE Serial 13831167861"),
             )
             attributes = detail.get("attributes")
             u2f_sign_request = attributes.get("u2fSignRequest")
@@ -349,9 +343,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
 
         # create a challenge in the database
-        db_challenge = Challenge(
-            serial, transaction_id=transaction_id, challenge=challenge, data=None
-        )
+        db_challenge = Challenge(serial, transaction_id=transaction_id, challenge=challenge, data=None)
         db_challenge.save()
 
         set_policy(
@@ -432,9 +424,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
 
         # create a challenge in the database
-        db_challenge = Challenge(
-            serial, transaction_id=transaction_id, challenge=challenge, data=None
-        )
+        db_challenge = Challenge(serial, transaction_id=transaction_id, challenge=challenge, data=None)
         db_challenge.save()
 
         set_policy(
@@ -462,8 +452,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(result.get("error").get("code"), ERROR.POLICY)
             self.assertEqual(
                 result.get("error").get("message"),
-                "The U2F device is not allowed to authenticate "
-                "due to policy restriction.",
+                "The U2F device is not allowed to authenticate due to policy restriction.",
             )
 
         delete_policy("u2f01")
@@ -521,8 +510,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(result.get("status"), False)
             self.assertEqual(
                 result.get("error").get("message"),
-                "The U2F device is not allowed to be registered "
-                "due to policy restriction.",
+                "The U2F device is not allowed to be registered due to policy restriction.",
             )
 
         delete_policy("u2f01")

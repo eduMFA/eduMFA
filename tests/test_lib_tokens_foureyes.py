@@ -23,9 +23,7 @@ class FourEyesTokenTestCase(MyTestCase):
         self.assertEqual(r, {"realm2": 1})
 
     def test_02_create_token(self):
-        r = init_token(
-            {"4eyes": "realm1:1,realm2:2", "type": "4eyes", "separator": "|"}
-        )
+        r = init_token({"4eyes": "realm1:1,realm2:2", "type": "4eyes", "separator": "|"})
         self.assertEqual(r.type, "4eyes")
         self.assertEqual(r.get_tokeninfo("4eyes"), "realm1:1,realm2:2")
         self.assertEqual(r.get_tokeninfo("separator"), "|")

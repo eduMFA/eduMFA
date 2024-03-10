@@ -44,9 +44,7 @@ class APIResolverTestCase(MyApiTestCase):
             self.assertEqual(res.json["result"]["value"], 1, res.json)
 
         # check if the resolver was created
-        with self.app.test_request_context(
-            "/resolver/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/resolver/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(b'"fileName": "/etc/passwd"' in res.data, res.data)

@@ -230,9 +230,7 @@ class Connection(object):
                 entry[k] = v[1][0]
             else:
                 self.result["result"] = 2
-                self.result["message"] = (
-                    "Error bad/missing/not implemented" "modify operation: %s" % k[1]
-                )
+                self.result["message"] = "Error bad/missing/not implementedmodify operation: %s" % k[1]
 
         # Place the attributes back into the directory hash
         self.directory[index]["attributes"] = entry
@@ -424,9 +422,7 @@ class Connection(object):
         rel = pyparsing.oneOf("= ~= >= <=")
 
         expr = pyparsing.Forward()
-        atom = pyparsing.Group(lpar + op + expr + rpar) | pyparsing.Combine(
-            lpar + k + rel + v + rpar
-        )
+        atom = pyparsing.Group(lpar + op + expr + rpar) | pyparsing.Combine(lpar + k + rel + v + rpar)
         expr << atom + pyparsing.ZeroOrMore(expr)
 
         return expr
@@ -475,13 +471,9 @@ class Connection(object):
             search_filter = list(search_filter[0])
             for sub_filter in search_filter:
                 if not isinstance(sub_filter, list):
-                    candidates = self.operation.get(sub_filter)(
-                        base, search_filter, candidates
-                    )
+                    candidates = self.operation.get(sub_filter)(base, search_filter, candidates)
                 else:
-                    candidates = self.operation.get(sub_filter[0])(
-                        base, sub_filter, candidates
-                    )
+                    candidates = self.operation.get(sub_filter[0])(base, sub_filter, candidates)
         except IndexError:
             pass
 
@@ -524,27 +516,19 @@ class Connection(object):
             search_filter = list(search_filter[0])
             for sub_filter in search_filter:
                 if not isinstance(sub_filter, list):
-                    candidates = self.operation.get(sub_filter)(
-                        base, search_filter, candidates
-                    )
+                    candidates = self.operation.get(sub_filter)(base, search_filter, candidates)
                 else:
-                    candidates = self.operation.get(sub_filter[0])(
-                        base, sub_filter, candidates
-                    )
+                    candidates = self.operation.get(sub_filter[0])(base, sub_filter, candidates)
         except IndexError:
             pass
 
         for item in this_filter:
             if ">=" in item:
                 k, v = item.split(">=")
-                candidates = Connection._match_greater_than_or_equal(
-                    base, k, v, candidates
-                )
+                candidates = Connection._match_greater_than_or_equal(base, k, v, candidates)
             elif "<=" in item:
                 k, v = item.split("<=")
-                candidates = Connection._match_less_than_or_equal(
-                    base, k, v, candidates
-                )
+                candidates = Connection._match_less_than_or_equal(base, k, v, candidates)
             # Emulate AD functionality, same as "="
             elif "~=" in item:
                 k, v = item.split("~=")
@@ -575,27 +559,19 @@ class Connection(object):
             search_filter = list(search_filter[0])
             for sub_filter in search_filter:
                 if not isinstance(sub_filter, list):
-                    candidates += self.operation.get(sub_filter)(
-                        base, search_filter, candidates
-                    )
+                    candidates += self.operation.get(sub_filter)(base, search_filter, candidates)
                 else:
-                    candidates += self.operation.get(sub_filter[0])(
-                        base, sub_filter, candidates
-                    )
+                    candidates += self.operation.get(sub_filter[0])(base, sub_filter, candidates)
         except IndexError:
             pass
 
         for item in this_filter:
             if ">=" in item:
                 k, v = item.split(">=")
-                candidates += Connection._match_greater_than_or_equal(
-                    base, k, v, self.directory
-                )
+                candidates += Connection._match_greater_than_or_equal(base, k, v, self.directory)
             elif "<=" in item:
                 k, v = item.split("<=")
-                candidates += Connection._match_less_than_or_equal(
-                    base, k, v, self.directory
-                )
+                candidates += Connection._match_less_than_or_equal(base, k, v, self.directory)
             # Emulate AD functionality, same as "="
             elif "~=" in item:
                 k, v = item.split("~=")

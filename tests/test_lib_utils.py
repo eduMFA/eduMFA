@@ -152,9 +152,7 @@ class UtilsTestCase(MyTestCase):
         )
         # 127.0.0.x may rewrite to 10.0.x.x or 10.1.x.x which may rewrite to 10.2.0.x
         self.assertEqual(
-            parse_proxy(
-                "127.0.0.1/24>10.0.0.0/16, 127.0.0.1/24>10.1.0.0/16>10.2.0.0/24"
-            ),
+            parse_proxy("127.0.0.1/24>10.0.0.0/16, 127.0.0.1/24>10.1.0.0/16>10.2.0.0/24"),
             {
                 (IPNetwork("127.0.0.1/24"), IPNetwork("10.0.0.0/16")),
                 (
@@ -166,9 +164,7 @@ class UtilsTestCase(MyTestCase):
         )
 
     def test_04b_check_overrideclient(self):
-        proxy_def = (
-            " 10.0.0.12, 1.2.3.4/16> 192.168.1.0/24, 172.16.0.1 " ">10.0.0.0/8   "
-        )
+        proxy_def = " 10.0.0.12, 1.2.3.4/16> 192.168.1.0/24, 172.16.0.1 >10.0.0.0/8   "
         r = parse_proxy(proxy_def)
 
         self.assertEqual(len(r), 3)
@@ -199,7 +195,7 @@ class UtilsTestCase(MyTestCase):
         )  # 172.16.0.1 may map to 10.1.2.3
 
         # Wrong proxy setting. No commas (issue 526)
-        proxy_def = " 10.0.0.12 1.2.3.4/16> 192.168.1.0/24 172.16.0.1 " ">10.0.0.0/8   "
+        proxy_def = " 10.0.0.12 1.2.3.4/16> 192.168.1.0/24 172.16.0.1 >10.0.0.0/8   "
         self.assertRaises(AddrFormatError, parse_proxy, proxy_def)
         # 10.0.0.12 is not allowed to map because the proxy settings are invalid
         self.assertEqual(
@@ -282,16 +278,12 @@ class UtilsTestCase(MyTestCase):
             "defrealm": {
                 "default": False,
                 "option": "",
-                "resolver": [
-                    {"priority": None, "type": "passwdresolver", "name": "deflocal"}
-                ],
+                "resolver": [{"priority": None, "type": "passwdresolver", "name": "deflocal"}],
             },
             "localsql": {
                 "default": True,
                 "option": "",
-                "resolver": [
-                    {"priority": None, "type": "sqlresolver", "name": "localusers2"}
-                ],
+                "resolver": [{"priority": None, "type": "sqlresolver", "name": "localusers2"}],
             },
         }
         # The policy dictionary contains much more entries, but for us only
@@ -465,9 +457,7 @@ class UtilsTestCase(MyTestCase):
             "bindpw": "secret",
             "type.bindpw": "password",
         }
-        data, types, desc = get_data_from_params(
-            params, ["caconnector", "type"], config_description, "CA connector", "local"
-        )
+        data, types, desc = get_data_from_params(params, ["caconnector", "type"], config_description, "CA connector", "local")
         self.assertEqual(data.get("cakey"), "key")
         self.assertEqual(data.get("bindpw"), "secret")
         self.assertEqual(types.get("bindpw"), "password")
@@ -555,19 +545,11 @@ class UtilsTestCase(MyTestCase):
             )
         )
 
-        self.assertTrue(
-            compare_value_value(
-                "2020-01-15T00:00", "==", datetime(2020, 1, 15).strftime(DATE_FORMAT)
-            )
-        )
+        self.assertTrue(compare_value_value("2020-01-15T00:00", "==", datetime(2020, 1, 15).strftime(DATE_FORMAT)))
         # unexpected result: The date string can not be parsed since dateutil.parser
         # does not understand locale dates. So the strings themselves are compared
         # since parse_date() returns 'None'
-        self.assertTrue(
-            compare_value_value(
-                "16. März 2020", "<", datetime(2020, 3, 15).strftime(DATE_FORMAT)
-            )
-        )
+        self.assertTrue(compare_value_value("16. März 2020", "<", datetime(2020, 3, 15).strftime(DATE_FORMAT)))
 
         # check for unknown comparator
         self.assertRaises(Exception, compare_value_value, 5, "~=", 5)
@@ -634,9 +616,7 @@ class UtilsTestCase(MyTestCase):
             censor_connect_string("sqlite:////home/foo/edumfa/edumfa/data.sqlite"),
             "sqlite:////home/foo/edumfa/edumfa/data.sqlite",
         )
-        self.assertEqual(
-            censor_connect_string("mysql://pi@localhost/pi"), "mysql://pi@localhost/pi"
-        )
+        self.assertEqual(censor_connect_string("mysql://pi@localhost/pi"), "mysql://pi@localhost/pi")
         self.assertEqual(
             censor_connect_string("mysql://pi:kW44sqqWtGYX@localhost/pi"),
             "mysql://pi:***@localhost/pi",
@@ -646,9 +626,7 @@ class UtilsTestCase(MyTestCase):
             "psql+odbc://pi@localhost/pi",
         )
         self.assertEqual(
-            censor_connect_string(
-                "psql+odbc://pi:MySecretPassword123466$@localhost/pi"
-            ),
+            censor_connect_string("psql+odbc://pi:MySecretPassword123466$@localhost/pi"),
             "psql+odbc://pi:***@localhost/pi",
         )
         self.assertEqual(
@@ -660,9 +638,7 @@ class UtilsTestCase(MyTestCase):
             "mysql://knöbel:***@localhost/pi",
         )
         self.assertEqual(
-            censor_connect_string(
-                "oracle+cx_oracle://pi:MySecretPassword1234@localhost:1521/?service_name=my_database"
-            ),
+            censor_connect_string("oracle+cx_oracle://pi:MySecretPassword1234@localhost:1521/?service_name=my_database"),
             "oracle+cx_oracle://pi:***@localhost:1521/?service_name=my_database",
         )
 
@@ -708,24 +684,16 @@ class UtilsTestCase(MyTestCase):
 
         r, c = check_pin_contents("abc", "nc")
         self.assertFalse(r)
-        self.assertEqual(
-            "Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["n"]), c
-        )
+        self.assertEqual("Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["n"]), c)
 
         r, c = check_pin_contents("123", "nc")
         self.assertFalse(r)
-        self.assertEqual(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["c"]), c
-        )
+        self.assertEqual(r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["c"]), c)
 
         r, c = check_pin_contents("123", "ncs")
         self.assertFalse(r)
-        self.assertTrue(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["c"] in c), c
-        )
-        self.assertTrue(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["s"] in c), c
-        )
+        self.assertTrue(r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["c"] in c), c)
+        self.assertTrue(r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["s"] in c), c)
 
         r, c = check_pin_contents("1234", "")
         self.assertFalse(r)
@@ -749,9 +717,7 @@ class UtilsTestCase(MyTestCase):
         self.assertFalse(r)
         self.assertEqual(
             c,
-            "Missing character in PIN: {}{}".format(
-                CHARLIST_CONTENTPOLICY["c"], CHARLIST_CONTENTPOLICY["n"]
-            ),
+            "Missing character in PIN: {}{}".format(CHARLIST_CONTENTPOLICY["c"], CHARLIST_CONTENTPOLICY["n"]),
         )
 
         # check for exclusion
@@ -928,9 +894,7 @@ class UtilsTestCase(MyTestCase):
         self.assertEqual(urlsafe_b64encode_and_unicode("Hallo"), "SGFsbG8=")
         self.assertEqual(urlsafe_b64encode_and_unicode(b"Hallo"), "SGFsbG8=")
         self.assertEqual(urlsafe_b64encode_and_unicode(b"\x00\x01\x02\xab"), "AAECqw==")
-        self.assertEqual(
-            urlsafe_b64encode_and_unicode(b"\xfa\xfb\xfc\xfd\xfe\xff"), "-vv8_f7_"
-        )
+        self.assertEqual(urlsafe_b64encode_and_unicode(b"\xfa\xfb\xfc\xfd\xfe\xff"), "-vv8_f7_")
 
     def test_27_images(self):
         hallo_qr_png = (
@@ -943,23 +907,17 @@ class UtilsTestCase(MyTestCase):
             "a3u8DAuCve59ToR8fwrsa6Xs4wEM96Hulez9PeaM+7CX+n0P+acFF/"
             "aSnBOfcY26l+d7/i1AhQoVqmeqvi4sW6dMYAvIAAAAAElFTkSuQmCC"
         )
-        self.assertEqual(
-            create_img("Hallo"), "data:image/png;base64,{0!s}".format(hallo_qr_png)
-        )
+        self.assertEqual(create_img("Hallo"), "data:image/png;base64,{0!s}".format(hallo_qr_png))
 
     def test_28_yubikey_utils(self):
         self.assertEqual(modhex_encode(b"\x47"), "fi")
         self.assertEqual(modhex_encode(b"\xba\xad\xf0\x0d"), "nlltvcct")
-        self.assertEqual(
-            modhex_encode(binascii.unhexlify("0123456789abcdef")), "cbdefghijklnrtuv"
-        )
+        self.assertEqual(modhex_encode(binascii.unhexlify("0123456789abcdef")), "cbdefghijklnrtuv")
         self.assertEqual(modhex_encode("Hallo"), "fjhbhrhrhv")
         # and the other way around
         self.assertEqual(modhex_decode("fi"), b"\x47")
         self.assertEqual(modhex_decode("nlltvcct"), b"\xba\xad\xf0\x0d")
-        self.assertEqual(
-            modhex_decode("cbdefghijklnrtuv"), binascii.unhexlify("0123456789abcdef")
-        )
+        self.assertEqual(modhex_decode("cbdefghijklnrtuv"), binascii.unhexlify("0123456789abcdef"))
         self.assertEqual(modhex_decode("fjhbhrhrhv"), b"Hallo")
         # fail with invalid modhex
         self.assertRaises((binascii.Error, TypeError), modhex_decode, "nlltvcc")
@@ -978,9 +936,7 @@ class UtilsTestCase(MyTestCase):
         self.assertTrue(found)
 
         # run a test for empty condition
-        found, excluded = check_ip_in_policy(
-            "10.0.1.2", ["10.0.1.0/24", "!10.0.1.2", "", None]
-        )
+        found, excluded = check_ip_in_policy("10.0.1.2", ["10.0.1.0/24", "!10.0.1.2", "", None])
         self.assertTrue(excluded)
         self.assertTrue(found)
 
@@ -1007,9 +963,7 @@ class UtilsTestCase(MyTestCase):
         self.assertEqual(dict1["ua_string"], "<b>hello world</b>")
         self.assertEqual(dict1["action"], "/validate/check")
         self.assertEqual(dict1["recipient_givenname"], "<b>Sömeone</b>")
-        dict2 = create_tag_dict(
-            request=RequestMock(), recipient=recipient, escape_html=True
-        )
+        dict2 = create_tag_dict(request=RequestMock(), recipient=recipient, escape_html=True)
         self.assertEqual(dict2["ua_string"], "&lt;b&gt;hello world&lt;/b&gt;")
         self.assertEqual(dict2["action"], "/validate/check")
         self.assertEqual(dict2["recipient_givenname"], "&lt;b&gt;Sömeone&lt;/b&gt;")
@@ -1030,9 +984,7 @@ class UtilsTestCase(MyTestCase):
         self.assertRaises(Exception, check_serial_valid, "")
 
     def test_33_determine_logged_in_user(self):
-        (role, user, realm, adminuser, adminrealm) = determine_logged_in_userparams(
-            {"role": "user", "username": "hans", "realm": "realm1"}, {}
-        )
+        (role, user, realm, adminuser, adminrealm) = determine_logged_in_userparams({"role": "user", "username": "hans", "realm": "realm1"}, {})
 
         self.assertEqual(role, "user")
         self.assertEqual(user, "hans")
@@ -1063,42 +1015,26 @@ class UtilsTestCase(MyTestCase):
             attr = {"a": "10", "b": "100", "c": "1000"}
             return attr.get(key)
 
-        self.assertTrue(
-            compare_generic_condition("a<100", mock_attribute, "Error {0!s}")
-        )
+        self.assertTrue(compare_generic_condition("a<100", mock_attribute, "Error {0!s}"))
 
-        self.assertTrue(
-            compare_generic_condition("a <100", mock_attribute, "Error {0!s}")
-        )
+        self.assertTrue(compare_generic_condition("a <100", mock_attribute, "Error {0!s}"))
 
-        self.assertTrue(
-            compare_generic_condition("b==100", mock_attribute, "Error {0!s}")
-        )
+        self.assertTrue(compare_generic_condition("b==100", mock_attribute, "Error {0!s}"))
 
         # Wrong condition
-        self.assertFalse(
-            compare_generic_condition("a== 100", mock_attribute, "Error {0!s}")
-        )
+        self.assertFalse(compare_generic_condition("a== 100", mock_attribute, "Error {0!s}"))
 
         # Wrong condition
-        self.assertFalse(
-            compare_generic_condition("b>100", mock_attribute, "Error {0!s}")
-        )
+        self.assertFalse(compare_generic_condition("b>100", mock_attribute, "Error {0!s}"))
 
         # Wrong condition
-        self.assertFalse(
-            compare_generic_condition("c < 500", mock_attribute, "Error {0!s}")
-        )
+        self.assertFalse(compare_generic_condition("c < 500", mock_attribute, "Error {0!s}"))
 
         # Wrong condition
-        self.assertFalse(
-            compare_generic_condition("c <500", mock_attribute, "Error {0!s}")
-        )
+        self.assertFalse(compare_generic_condition("c <500", mock_attribute, "Error {0!s}"))
 
         # Wrong entry, that is not processed
-        self.assertRaises(
-            Exception, compare_generic_condition, "c 500", mock_attribute, "Error {0!s}"
-        )
+        self.assertRaises(Exception, compare_generic_condition, "c 500", mock_attribute, "Error {0!s}")
 
         # Wrong entry, that cannot be processed
         self.assertRaises(

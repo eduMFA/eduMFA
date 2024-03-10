@@ -32,9 +32,7 @@ class ScriptsTestCase(unittest.TestCase):
 
     def test_01_edumfa_admin(self):
         runner = self.app.test_cli_runner()
-        result = runner.invoke(
-            edumfa_manage, ["admin", "add", "Admin-User"], input="Test\nTest"
-        )
+        result = runner.invoke(edumfa_manage, ["admin", "add", "Admin-User"], input="Test\nTest")
         assert result.exit_code == 0
         assert "was registered successfully" in result.output
         result = runner.invoke(edumfa_manage, ["admin", "list"])
@@ -52,9 +50,7 @@ class ScriptsTestCase(unittest.TestCase):
         runner = self.app.test_cli_runner()
         result = runner.invoke(edumfa_manage, ["resolver", "list"])
         assert result.exit_code == 0
-        result = runner.invoke(
-            edumfa_manage, ["resolver", "create_internal", "test-resolver"]
-        )
+        result = runner.invoke(edumfa_manage, ["resolver", "create_internal", "test-resolver"])
         assert result.exit_code == 0
         result = runner.invoke(edumfa_manage, ["resolver", "list"])
         assert result.exit_code == 0
@@ -64,13 +60,9 @@ class ScriptsTestCase(unittest.TestCase):
         runner = self.app.test_cli_runner()
         result = runner.invoke(edumfa_manage, ["realm", "list"])
         assert result.exit_code == 0
-        result = runner.invoke(
-            edumfa_manage, ["resolver", "create_internal", "test-resolver"]
-        )
+        result = runner.invoke(edumfa_manage, ["resolver", "create_internal", "test-resolver"])
         assert result.exit_code == 0
-        result = runner.invoke(
-            edumfa_manage, ["realm", "create", "test-realm", "test-resolver"]
-        )
+        result = runner.invoke(edumfa_manage, ["realm", "create", "test-realm", "test-resolver"])
         assert result.exit_code == 0
         result = runner.invoke(edumfa_manage, ["realm", "delete", "test-realm"])
         assert result.exit_code == 0
@@ -81,22 +73,16 @@ class ScriptsTestCase(unittest.TestCase):
         runner = self.app.test_cli_runner()
         result = runner.invoke(edumfa_manage, ["event", "list"])
         assert result.exit_code == 0
-        result = runner.invoke(
-            edumfa_manage, ["event", "import", "-f", "tests/testdata/event.conf"]
-        )
+        result = runner.invoke(edumfa_manage, ["event", "import", "-f", "tests/testdata/event.conf"])
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 3
-        result = runner.invoke(
-            edumfa_manage, ["event", "e_import", "-f", "tests/testdata/event.conf"]
-        )
+        result = runner.invoke(edumfa_manage, ["event", "e_import", "-f", "tests/testdata/event.conf"])
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 3
         assert "Event reset exists" in result.output
-        result = runner.invoke(
-            edumfa_manage, ["event", "import", "-u", "-f", "tests/testdata/event.conf"]
-        )
+        result = runner.invoke(edumfa_manage, ["event", "import", "-u", "-f", "tests/testdata/event.conf"])
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 3
@@ -120,9 +106,7 @@ class ScriptsTestCase(unittest.TestCase):
         eh1.save()
         events = EventHandler.query.all()
         assert len(events) == 4
-        result = runner.invoke(
-            edumfa_manage, ["event", "import", "-u", "-f", "tests/testdata/event.conf"]
-        )
+        result = runner.invoke(edumfa_manage, ["event", "import", "-u", "-f", "tests/testdata/event.conf"])
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 4

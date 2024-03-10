@@ -370,9 +370,7 @@ class DaplugTokenTestCase(MyTestCase):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = DaplugTokenClass(db_token)
         # Failed update: genkey wrong
-        self.assertRaises(
-            Exception, token.update, {"description": "new desc", "genkey": "17"}
-        )
+        self.assertRaises(Exception, token.update, {"description": "new desc", "genkey": "17"})
         # genkey and otpkey used at the same time
         token.update({"otpkey": self.otpkey, "genkey": "1"})
         self.assertTrue(token.token.otplen == 6)
@@ -395,15 +393,11 @@ class DaplugTokenTestCase(MyTestCase):
     def test_18_challenges(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = DaplugTokenClass(db_token)
-        resp = token.is_challenge_response(
-            User(login="cornelius", realm=self.realm1), "test" + _digi2daplug("123456")
-        )
+        resp = token.is_challenge_response(User(login="cornelius", realm=self.realm1), "test" + _digi2daplug("123456"))
         self.assertFalse(resp, resp)
 
         transaction_id = "123456789"
-        C = Challenge(
-            self.serial1, transaction_id=transaction_id, challenge="Who are you?"
-        )
+        C = Challenge(self.serial1, transaction_id=transaction_id, challenge="Who are you?")
         C.save()
         resp = token.is_challenge_response(
             User(login="cornelius", realm=self.realm1),
@@ -443,13 +437,9 @@ class DaplugTokenTestCase(MyTestCase):
         self.assertTrue(token.check_pin(pin), pin)
         check = token.check_otp(_digi2daplug("755224"), counter=0, window=10)
         self.assertTrue(check == 0, check)
-        self.assertTrue(
-            token.check_otp(_digi2daplug("287082"), counter=1, window=10) == 1
-        )
+        self.assertTrue(token.check_otp(_digi2daplug("287082"), counter=1, window=10) == 1)
         # The 6th counter:
-        self.assertTrue(
-            token.check_otp(_digi2daplug("287922"), counter=2, window=10) == 6
-        )
+        self.assertTrue(token.check_otp(_digi2daplug("287922"), counter=2, window=10) == 6)
         # The tokenclass itself saves the counter to the database
         self.assertTrue(token.token.count == 7, token.token.count)
 
@@ -488,14 +478,10 @@ class DaplugTokenTestCase(MyTestCase):
         self.assertTrue(r == -1, r)
 
         # create a challenge and match the transaction_id
-        c = Challenge(
-            self.serial1, transaction_id="mytransaction", challenge="Blah, what now?"
-        )
+        c = Challenge(self.serial1, transaction_id="mytransaction", challenge="Blah, what now?")
         # save challenge to the database
         c.save()
-        r = token.check_challenge_response(
-            user=None, passw=_digi2daplug("123454"), options={"state": "mytransaction"}
-        )
+        r = token.check_challenge_response(user=None, passw=_digi2daplug("123454"), options={"state": "mytransaction"})
         # The challenge matches, but the OTP does not match!
         self.assertTrue(r == -1, r)
 

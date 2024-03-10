@@ -122,7 +122,7 @@ class LdapMachineTestCase(MyTestCase):
         # (&(&( )( )( ))(|( )( )( )) )
         # so we only test the creation of the ldapsearch string
         filter = LdapMachineResolver._create_ldap_filter(
-            "(" "objectClass=computer)",
+            "(objectClass=computer)",
             "objectSid",
             "",
             "dNSHostName",

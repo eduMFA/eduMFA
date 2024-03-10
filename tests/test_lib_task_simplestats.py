@@ -106,6 +106,4 @@ class TaskSimpleStatsTestCase(MyTestCase):
                     get_values(o)[3][1],
                     msg="Current option: {0}".format(o),
                 )
-        self.assertEqual(
-            simple_results["assigned_tokens"][3], get_values("assigned_tokens")[2][1]
-        )
+        self.assertEqual(simple_results["assigned_tokens"][3], get_values("assigned_tokens")[2][1])

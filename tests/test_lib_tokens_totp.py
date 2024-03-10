@@ -274,9 +274,7 @@ class TOTPTokenTestCase(MyTestCase):
     def test_98_get_otp(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = TotpTokenClass(db_token)
-        token.update(
-            {"otpkey": self.otpkey, "pin": "test", "otplen": 6, "timeShift": 0}
-        )
+        token.update({"otpkey": self.otpkey, "pin": "test", "otplen": 6, "timeShift": 0})
         counter = token._time2counter(time.time(), timeStepping=30)
         otp_now = token._calc_otp(counter)
         otp = token.get_otp()
@@ -345,9 +343,7 @@ class TOTPTokenTestCase(MyTestCase):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = TotpTokenClass(db_token)
         # Failed update: genkey wrong
-        self.assertRaises(
-            Exception, token.update, {"description": "new desc", "genkey": "17"}
-        )
+        self.assertRaises(Exception, token.update, {"description": "new desc", "genkey": "17"})
         # genkey and otpkey used at the same time
         token.update({"otpkey": self.otpkey, "genkey": "1"})
 
@@ -382,15 +378,11 @@ class TOTPTokenTestCase(MyTestCase):
     def test_18_challenges(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = TotpTokenClass(db_token)
-        resp = token.is_challenge_response(
-            User(login="cornelius", realm=self.realm1), "test123456"
-        )
+        resp = token.is_challenge_response(User(login="cornelius", realm=self.realm1), "test123456")
         self.assertFalse(resp, resp)
 
         transaction_id = "123456789"
-        C = Challenge(
-            self.serial1, transaction_id=transaction_id, challenge="Who are you?"
-        )
+        C = Challenge(self.serial1, transaction_id=transaction_id, challenge="Who are you?")
         C.save()
         resp = token.is_challenge_response(
             User(login="cornelius", realm=self.realm1),
@@ -502,14 +494,10 @@ class TOTPTokenTestCase(MyTestCase):
         self.assertTrue(r == -1, r)
 
         # create a challenge and match the transaction_id
-        c = Challenge(
-            self.serial1, transaction_id="mytransaction", challenge="Blah, what now?"
-        )
+        c = Challenge(self.serial1, transaction_id="mytransaction", challenge="Blah, what now?")
         # save challenge to the database
         c.save()
-        r = token.check_challenge_response(
-            user=None, passw="123454", options={"state": "mytransaction"}
-        )
+        r = token.check_challenge_response(user=None, passw="123454", options={"state": "mytransaction"})
         # The challenge matches, but the OTP does not match!
         self.assertTrue(r == -1, r)
 
@@ -554,35 +542,23 @@ class TOTPTokenTestCase(MyTestCase):
         token.token.count = 47251640
         token.set_sync_window(10)
         # counter = 47251649 => otp = 705493, is out of sync
-        r = token.check_otp(
-            anOtpVal="705493", window=30, options={"initTime": 47251644 * 30}
-        )
+        r = token.check_otp(anOtpVal="705493", window=30, options={"initTime": 47251644 * 30})
         self.assertTrue(r == -1, r)
         # counter = 47251650 => otp = 389836, will be autosynced.
-        r = token.check_otp(
-            anOtpVal="589836", window=30, options={"initTime": 47251645 * 30}
-        )
+        r = token.check_otp(anOtpVal="589836", window=30, options={"initTime": 47251645 * 30})
         self.assertTrue(r == 47251650, r)
 
         # counter = 47251640 => otp = 166325 is an old OTP value
         # counter = 47251641 => otp = 432730 is an old OTP value
         # Autoresync with two times the same old OTP value must not work out!
-        r = token.check_otp(
-            anOtpVal="166325", window=30, options={"initTime": 47251644 * 30}
-        )
+        r = token.check_otp(anOtpVal="166325", window=30, options={"initTime": 47251644 * 30})
         self.assertTrue(r == -1, r)
-        r = token.check_otp(
-            anOtpVal="166325", window=30, options={"initTime": 47251645 * 30}
-        )
+        r = token.check_otp(anOtpVal="166325", window=30, options={"initTime": 47251645 * 30})
         self.assertTrue(r == -1, r)
         # Autoresync with two consecutive old OTP values must not work out!
-        r = token.check_otp(
-            anOtpVal="166325", window=30, options={"initTime": 47251644 * 30}
-        )
+        r = token.check_otp(anOtpVal="166325", window=30, options={"initTime": 47251644 * 30})
         self.assertTrue(r == -1, r)
-        r = token.check_otp(
-            anOtpVal="432730", window=30, options={"initTime": 47251645 * 30}
-        )
+        r = token.check_otp(anOtpVal="432730", window=30, options={"initTime": 47251645 * 30})
         self.assertTrue(r == -1, r)
 
         # Autosync with a gap in the next otp value will fail
@@ -590,14 +566,10 @@ class TOTPTokenTestCase(MyTestCase):
         # Just try some bullshit config value
         set_edumfa_config("AutoResyncTimeout", "totally not a number")
         # counter = 47251648 => otp = 032819, is out of sync
-        r = token.check_otp(
-            anOtpVal="032819", window=30, options={"initTime": 47251645 * 30}
-        )
+        r = token.check_otp(anOtpVal="032819", window=30, options={"initTime": 47251645 * 30})
         self.assertTrue(r == -1, r)
         # counter = 47251650 => otp = 589836, will NOT _autosync
-        r = token.check_otp(
-            anOtpVal="589836", window=30, options={"initTime": 47251645 * 30}
-        )
+        r = token.check_otp(anOtpVal="589836", window=30, options={"initTime": 47251645 * 30})
         self.assertTrue(r == -1, r)
 
         # TOTP has no dueDate / AutoResyncTimeout
@@ -607,14 +579,10 @@ class TOTPTokenTestCase(MyTestCase):
         token.token.count = 47251640
         token.set_sync_window(10)
         # counter = 47251649 => otp = 705493, is out of sync
-        r = token.check_otp(
-            anOtpVal="705493", window=30, options={"initTime": 47251644 * 30}
-        )
+        r = token.check_otp(anOtpVal="705493", window=30, options={"initTime": 47251644 * 30})
         self.assertTrue(r == -1, r)
         # counter = 47251650 => otp = 389836, will not get autosynced.
-        r = token.check_otp(
-            anOtpVal="589836", window=30, options={"initTime": 47251645 * 30}
-        )
+        r = token.check_otp(anOtpVal="589836", window=30, options={"initTime": 47251645 * 30})
         self.assertTrue(r == -1, r)
 
     def test_23_resync(self):
@@ -708,11 +676,7 @@ class TOTPTokenTestCase(MyTestCase):
         db_token = Token(serial, tokentype="totp")
         db_token.save()
         token = TotpTokenClass(db_token)
-        token.set_otpkey(
-            binascii.hexlify(
-                b"1234567890123456789012345678901234567890123456789012345678901234"
-            )
-        )
+        token.set_otpkey(binascii.hexlify(b"1234567890123456789012345678901234567890123456789012345678901234"))
         token.set_hashlib("sha512")
         token.set_otplen(8)
         token.save()

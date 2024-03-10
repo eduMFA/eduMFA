@@ -75,9 +75,7 @@ class AppTestCase(unittest.TestCase):
         # the default configuration is 'development'
         dc = config["development"]()
         members = inspect.getmembers(dc, lambda a: not (inspect.isroutine(a)))
-        conf = [
-            m for m in members if not (m[0].startswith("__") and m[0].endswith("__"))
-        ]
+        conf = [m for m in members if not (m[0].startswith("__") and m[0].endswith("__"))]
         self.assertTrue(all(app.config[k] == v for k, v in conf), app)
         # check the correct initialization of the logging
         logger = logging.getLogger("edumfa")
@@ -103,9 +101,7 @@ class AppTestCase(unittest.TestCase):
         app = create_app(config_name="production")
         dc = config["production"]()
         members = inspect.getmembers(dc, lambda a: not (inspect.isroutine(a)))
-        conf = [
-            m for m in members if not (m[0].startswith("__") and m[0].endswith("__"))
-        ]
+        conf = [m for m in members if not (m[0].startswith("__") and m[0].endswith("__"))]
         self.assertTrue(all(app.config[k] == v for k, v in conf), app)
 
     def test_03_logging_config_file(self):

@@ -100,9 +100,7 @@ class TtypePushAPITestCase(MyApiTestCase):
     test /ttype/push
     """
 
-    server_private_key = rsa.generate_private_key(
-        public_exponent=65537, key_size=4096, backend=default_backend()
-    )
+    server_private_key = rsa.generate_private_key(public_exponent=65537, key_size=4096, backend=default_backend())
     server_private_key_pem = to_unicode(
         server_private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
@@ -120,9 +118,7 @@ class TtypePushAPITestCase(MyApiTestCase):
     # We now allow white spaces in the firebase config name
     firebase_config_name = "my firebase config"
 
-    smartphone_private_key = rsa.generate_private_key(
-        public_exponent=65537, key_size=4096, backend=default_backend()
-    )
+    smartphone_private_key = rsa.generate_private_key(public_exponent=65537, key_size=4096, backend=default_backend())
     smartphone_public_key = smartphone_private_key.public_key()
     smartphone_public_key_pem = to_unicode(
         smartphone_public_key.public_bytes(
@@ -131,9 +127,7 @@ class TtypePushAPITestCase(MyApiTestCase):
         )
     )
     # The smartphone sends the public key in URLsafe and without the ----BEGIN header
-    smartphone_public_key_pem_urlsafe = (
-        strip_key(smartphone_public_key_pem).replace("+", "-").replace("/", "_")
-    )
+    smartphone_public_key_pem_urlsafe = strip_key(smartphone_public_key_pem).replace("+", "-").replace("/", "_")
     serial_push = "PIPU001"
 
     def _create_push_token(self):
@@ -269,12 +263,8 @@ class TtypePushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-            parsed_server_pubkey = serialization.load_pem_public_key(
-                to_bytes(augmented_pubkey), default_backend()
-            )
+            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(detail.get("public_key"))
+            parsed_server_pubkey = serialization.load_pem_public_key(to_bytes(augmented_pubkey), default_backend())
             self.assertIsInstance(parsed_server_pubkey, rsa.RSAPublicKey)
             pubkey = detail.get("public_key")
 
@@ -291,16 +281,11 @@ class TtypePushAPITestCase(MyApiTestCase):
             )
             self.assertEqual(tokeninfo.get("firebase_token"), "firebaseT")
             self.assertEqual(
-                tokeninfo.get("public_key_server")
-                .strip()
-                .strip("-BEGIN END RSA PUBLIC KEY-")
-                .strip(),
+                tokeninfo.get("public_key_server").strip().strip("-BEGIN END RSA PUBLIC KEY-").strip(),
                 pubkey,
             )
             # The token should also contain the firebase config
-            self.assertEqual(
-                tokeninfo.get(PUSH_ACTION.FIREBASE_CONFIG), self.firebase_config_name
-            )
+            self.assertEqual(tokeninfo.get(PUSH_ACTION.FIREBASE_CONFIG), self.firebase_config_name)
             # remove the token
             remove_token(serial)
 
@@ -322,10 +307,7 @@ class TtypePushAPITestCase(MyApiTestCase):
         tokenobj.add_user(User("cornelius", self.realm1))
 
         # We mock the ServiceAccountCredentials, since we can not directly contact the Google API
-        with mock.patch(
-            "edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials"
-            ".from_service_account_file"
-        ) as mySA:
+        with mock.patch("edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials.from_service_account_file") as mySA:
             # alternative: side_effect instead of return_value
             mySA.return_value = _create_credential_mock()
 
@@ -352,18 +334,12 @@ class TtypePushAPITestCase(MyApiTestCase):
                     self.assertFalse(result.get("value"))
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
-                    mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
-                    )
+                    mock_log.assert_called_with("Failed to submit message to Firebase service for token {0!s}.".format(serial))
 
         # first create a signature
         ts = datetime.utcnow().isoformat()
         sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
-        sig = self.smartphone_private_key.sign(
-            sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
-        )
+        sig = self.smartphone_private_key.sign(sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256())
         # now check that we receive the challenge when polling
         with self.app.test_request_context(
             "/ttype/push",
@@ -383,11 +359,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             # This is what the smartphone answers.
             # create the signature:
             sign_data = "{0!s}|{1!s}".format(challenge, serial)
-            signature = b32encode_and_unicode(
-                self.smartphone_private_key.sign(
-                    sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
-                )
-            )
+            signature = b32encode_and_unicode(self.smartphone_private_key.sign(sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()))
 
             # Answer the challenge
             with self.app.test_request_context(
@@ -459,12 +431,8 @@ class TtypePushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-            parsed_server_pubkey = serialization.load_pem_public_key(
-                to_bytes(augmented_pubkey), default_backend()
-            )
+            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(detail.get("public_key"))
+            parsed_server_pubkey = serialization.load_pem_public_key(to_bytes(augmented_pubkey), default_backend())
             self.assertIsInstance(parsed_server_pubkey, rsa.RSAPublicKey)
             pubkey = detail.get("public_key")
 
@@ -481,10 +449,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             )
             self.assertEqual(tokeninfo.get("firebase_token"), "")
             self.assertEqual(
-                tokeninfo.get("public_key_server")
-                .strip()
-                .strip("-BEGIN END RSA PUBLIC KEY-")
-                .strip(),
+                tokeninfo.get("public_key_server").strip().strip("-BEGIN END RSA PUBLIC KEY-").strip(),
                 pubkey,
             )
             # The token should also contain the firebase config

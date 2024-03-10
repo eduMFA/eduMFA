@@ -44,9 +44,7 @@ class ConfigTestCase(MyTestCase):
 
     def test_00_get_config(self):
         # set the config
-        set_edumfa_config(
-            key="Hallo", value="What?", typ="string", desc="Some dumb value"
-        )
+        set_edumfa_config(key="Hallo", value="What?", typ="string", desc="Some dumb value")
 
         # get the complete config
         conf = get_from_config()
@@ -98,20 +96,14 @@ class ConfigTestCase(MyTestCase):
 
         # Class dict
         (classes, types) = get_resolver_class_dict()
+        self.assertTrue("edumfa.lib.resolvers.PasswdIdResolver.IdResolver" in classes, classes)
         self.assertTrue(
-            "edumfa.lib.resolvers.PasswdIdResolver" ".IdResolver" in classes, classes
-        )
-        self.assertTrue(
-            classes.get("edumfa.lib.resolvers.PasswdIdResolver.IdResolver")
-            == PWResolver,
+            classes.get("edumfa.lib.resolvers.PasswdIdResolver.IdResolver") == PWResolver,
             classes,
         )
+        self.assertTrue("edumfa.lib.resolvers.PasswdIdResolver.IdResolver" in types, types)
         self.assertTrue(
-            "edumfa.lib.resolvers.PasswdIdResolver" ".IdResolver" in types, types
-        )
-        self.assertTrue(
-            types.get("edumfa.lib.resolvers.PasswdIdResolver" ".IdResolver")
-            == "passwdresolver",
+            types.get("edumfa.lib.resolvers.PasswdIdResolver.IdResolver") == "passwdresolver",
             types,
         )
 
@@ -138,16 +130,12 @@ class ConfigTestCase(MyTestCase):
 
         # get_token_class_dict
         (classes, types) = get_token_class_dict()
-        self.assertTrue(
-            "edumfa.lib.tokens.hotptoken.HotpTokenClass" in classes, classes
-        )
+        self.assertTrue("edumfa.lib.tokens.hotptoken.HotpTokenClass" in classes, classes)
         self.assertTrue(
             classes.get("edumfa.lib.tokens.hotptoken.HotpTokenClass") == HotpTokenClass,
             classes,
         )
-        self.assertTrue(
-            "edumfa.lib.tokens.totptoken.TotpTokenClass" in classes, classes
-        )
+        self.assertTrue("edumfa.lib.tokens.totptoken.TotpTokenClass" in classes, classes)
         self.assertTrue(
             classes.get("edumfa.lib.tokens.totptoken.TotpTokenClass") == TotpTokenClass,
             classes,
@@ -155,12 +143,8 @@ class ConfigTestCase(MyTestCase):
 
         self.assertTrue("edumfa.lib.tokens.hotptoken.HotpTokenClass" in types, types)
         self.assertTrue("edumfa.lib.tokens.totptoken.TotpTokenClass" in types, types)
-        self.assertTrue(
-            types.get("edumfa.lib.tokens.hotptoken" ".HotpTokenClass") == "hotp", types
-        )
-        self.assertTrue(
-            types.get("edumfa.lib.tokens.totptoken" ".TotpTokenClass") == "totp", types
-        )
+        self.assertTrue(types.get("edumfa.lib.tokens.hotptoken.HotpTokenClass") == "hotp", types)
+        self.assertTrue(types.get("edumfa.lib.tokens.totptoken.TotpTokenClass") == "totp", types)
 
         types = get_token_types()
         self.assertTrue("totp" in types, types)
@@ -184,9 +168,7 @@ class ConfigTestCase(MyTestCase):
             (classes, types) = get_token_class_dict()
             self.assertIn("tests.testdata.fancytoken.FancyTokenClass", classes, classes)
             self.assertIn("tests.testdata.fancytoken.FancyTokenClass", types, types)
-            self.assertEqual(
-                types["tests.testdata.fancytoken.FancyTokenClass"], "fancy", types
-            )
+            self.assertEqual(types["tests.testdata.fancytoken.FancyTokenClass"], "fancy", types)
             self.app.config.pop("EDUMFA_TOKEN_MODULES")
 
     def test_03_token_prefix(self):
@@ -201,9 +183,7 @@ class ConfigTestCase(MyTestCase):
         self.assertTrue(prefix.get("hotp") == "OATH", prefix)
 
     def test_04_store_encrypted_values(self):
-        r = set_edumfa_config(
-            "mySecretData", "soho", typ="password", desc="Very important"
-        )
+        r = set_edumfa_config("mySecretData", "soho", typ="password", desc="Very important")
         self.assertTrue(r == "insert", r)
 
         r = get_from_config("mySecretData")
@@ -215,9 +195,7 @@ class ConfigTestCase(MyTestCase):
     def test_05_machine_resolvers(self):
         (classes, types) = get_machine_resolver_class_dict()
         self.assertTrue("hosts" in types.values(), list(types.values()))
-        self.assertTrue(
-            "edumfa.lib.machines.hosts.HostsMachineResolver" in classes, classes
-        )
+        self.assertTrue("edumfa.lib.machines.hosts.HostsMachineResolver" in classes, classes)
 
     def test_06_public_and_admin(self):
         # This tests the new public available config

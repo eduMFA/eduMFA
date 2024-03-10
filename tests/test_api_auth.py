@@ -33,9 +33,7 @@ class AuthApiTestCase(MyApiTestCase):
         # By default, splitAtSign should be true
         set_edumfa_config(SYSCONF.SPLITATSIGN, True)
         self.setUp_user_realms()
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "cornelius", "password": "test"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "cornelius", "password": "test"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -47,9 +45,7 @@ class AuthApiTestCase(MyApiTestCase):
         self.assertEqual(aentry["success"], 1, aentry)
 
         # test failed auth
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "cornelius", "password": "false"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "cornelius", "password": "false"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(401, res.status_code, res)
             result = res.json.get("result")
@@ -159,10 +155,7 @@ class AuthApiTestCase(MyApiTestCase):
                 self.assertEqual(401, res.status_code, res)
                 result = res.json.get("result")
                 self.assertFalse(result.get("status"), result)
-            expected = (
-                "The user User(login='cornelius@unknown', "
-                "realm='realm1', resolver='') exists in NO resolver."
-            )
+            expected = "The user User(login='cornelius@unknown', realm='realm1', resolver='') exists in NO resolver."
             mock_log.assert_called_once_with(expected)
 
         # test with wrong realm parameter and wrong realm added to user
@@ -227,19 +220,14 @@ class AuthApiTestCase(MyApiTestCase):
                     result,
                 )
             # the realm will be split from the login name
-            expected = (
-                "The user User(login='selfservice', "
-                "realm='realm3', resolver='') exists in NO resolver."
-            )
+            expected = "The user User(login='selfservice', realm='realm3', resolver='') exists in NO resolver."
             mock_log.assert_called_once_with(expected)
 
     # And now we do all of the above without the splitAtSign setting
     def test_02_auth_without_split(self):
         set_edumfa_config(SYSCONF.SPLITATSIGN, False)
         self.setUp_user_realms()
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "cornelius", "password": "test"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "cornelius", "password": "test"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -248,9 +236,7 @@ class AuthApiTestCase(MyApiTestCase):
             self.assertEqual("realm1", result["value"]["realm"], result)
 
         # test failed auth wrong password
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "cornelius", "password": "false"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "cornelius", "password": "false"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(401, res.status_code, res)
             result = res.json.get("result")
@@ -263,9 +249,7 @@ class AuthApiTestCase(MyApiTestCase):
             )
 
         # test failed auth no password
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "cornelius"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "cornelius"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(401, res.status_code, res)
             result = res.json.get("result")
@@ -294,10 +278,7 @@ class AuthApiTestCase(MyApiTestCase):
                     result["error"]["message"],
                     result,
                 )
-            expected = (
-                "The user User(login='cornelius@realm1', "
-                "realm='realm1', resolver='') exists in NO resolver."
-            )
+            expected = "The user User(login='cornelius@realm1', realm='realm1', resolver='') exists in NO resolver."
             mock_log.assert_called_once_with(expected)
 
         # test with realm added to user and unknown realm param
@@ -380,10 +361,7 @@ class AuthApiTestCase(MyApiTestCase):
                 self.assertEqual(401, res.status_code, res)
                 result = res.json.get("result")
                 self.assertFalse(result.get("status"), result)
-            expected = (
-                "The user User(login='cornelius@unknown', "
-                "realm='realm1', resolver='') exists in NO resolver."
-            )
+            expected = "The user User(login='cornelius@unknown', realm='realm1', resolver='') exists in NO resolver."
             mock_log.assert_called_once_with(expected)
 
         # test with wrong realm parameter and wrong realm added to user
@@ -425,10 +403,7 @@ class AuthApiTestCase(MyApiTestCase):
                 result = res.json.get("result")
                 self.assertFalse(result.get("status"), result)
                 self.assertEqual(4031, result["error"]["code"], result)
-            expected = (
-                "The user User(login='selfservice@realm3', "
-                "realm='realm1', resolver='') exists in NO resolver."
-            )
+            expected = "The user User(login='selfservice@realm3', realm='realm1', resolver='') exists in NO resolver."
             mock_log.assert_called_once_with(expected)
 
         # and the other way round
@@ -453,10 +428,7 @@ class AuthApiTestCase(MyApiTestCase):
                     result,
                 )
             # the realm will be split from the login name
-            expected = (
-                "The user User(login='selfservice@realm1', "
-                "realm='realm3', resolver='') exists in NO resolver."
-            )
+            expected = "The user User(login='selfservice@realm1', realm='realm3', resolver='') exists in NO resolver."
             mock_log.assert_called_once_with(expected)
 
         set_edumfa_config(SYSCONF.SPLITATSIGN, True)
@@ -464,9 +436,7 @@ class AuthApiTestCase(MyApiTestCase):
     def test_03_admin_auth(self):
         set_edumfa_config(SYSCONF.SPLITATSIGN, True)
         # check that the default admin works
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(200, res.status_code, res)
             result = res.json.get("result")
@@ -494,9 +464,7 @@ class AuthApiTestCase(MyApiTestCase):
 
         # both admin logins should also work with 'splitAtSign' set to False
         set_edumfa_config(SYSCONF.SPLITATSIGN, False)
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(200, res.status_code, res)
             result = res.json.get("result")
@@ -624,9 +592,7 @@ class AuthApiTestCase(MyApiTestCase):
             realm=self.realm1,
             action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.FORCE),
         )
-        with self.app.test_request_context(
-            "/", method="GET", environ_base={"REMOTE_USER": "cornelius@realm1"}
-        ):
+        with self.app.test_request_context("/", method="GET", environ_base={"REMOTE_USER": "cornelius@realm1"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200, res)
             # The login page contains the info about force remote_user, which will hide the
@@ -698,12 +664,7 @@ class AuthApiTestCase(MyApiTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn",'
-            '"phone" : "telephoneNumber", '
-            '"mobile" : "mobile"'
-            ', "email" : "mail", '
-            '"surname" : "sn", '
-            '"givenname" : "givenName" }',
+            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
             "UIDTYPE": "DN",
             "resolver": "ldap1",
             "type": "ldapresolver",
@@ -726,9 +687,7 @@ class AuthApiTestCase(MyApiTestCase):
                 self.assertIn("token", result.get("value"), result)
                 # role should be 'admin'
                 self.assertEqual("admin", result["value"]["role"], result)
-                mock_log.assert_called_once_with(
-                    "Problem resolving user testadmin in realm ldap1: LDAP request failed."
-                )
+                mock_log.assert_called_once_with("Problem resolving user testadmin in realm ldap1: LDAP request failed.")
 
         delete_realm("ldap1")
         delete_resolver("ldap1")
@@ -755,9 +714,7 @@ class AuthApiTestCase(MyApiTestCase):
 
         # while authentication without a realm fails (user "selfservice"
         # doesn't exist in default realm "realm3")
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "selfservice", "password": "test"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "selfservice", "password": "test"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 401, res)
             result = res.json.get("result")
@@ -805,14 +762,10 @@ class AuthApiTestCase(MyApiTestCase):
             self.assertFalse(result.get("status"), result)
             error = result.get("error")
             self.assertEqual(4031, error.get("code"))
-            self.assertEqual(
-                "Authentication failure. Wrong credentials", error.get("message")
-            )
+            self.assertEqual("Authentication failure. Wrong credentials", error.get("message"))
 
         # set a policy to authenticate against eduMFA
-        set_policy(
-            "piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE)
-        )
+        set_policy("piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE))
 
         # user authenticates against eduMFA but user does not exist
         with self.app.test_request_context(
@@ -826,9 +779,7 @@ class AuthApiTestCase(MyApiTestCase):
             self.assertFalse(result.get("status"), result)
             error = result.get("error")
             self.assertEqual(4031, error.get("code"))
-            self.assertEqual(
-                "Authentication failure. Wrong credentials", error.get("message")
-            )
+            self.assertEqual("Authentication failure. Wrong credentials", error.get("message"))
 
         # cleanup
         delete_policy("piLogin")
@@ -931,9 +882,7 @@ class DuplicateUserApiTestCase(MyApiTestCase):
                 # role should be 'user'
                 self.assertEqual("user", result["value"]["role"], result)
             # check if we have this log entry
-            mock_log.assert_called_with(
-                "A user 'testadmin' exists as local admin and as user in your default realm!"
-            )
+            mock_log.assert_called_with("A user 'testadmin' exists as local admin and as user in your default realm!")
 
         # Check that a wrong/missing password doesn't trigger the warning in the log
         with mock.patch("logging.Logger.warning") as mock_log:
@@ -978,13 +927,9 @@ class EventHandlerTest(MyApiTestCase):
         set_default_realm(self.realm1)
 
         # set a policy to authenticate against eduMFA
-        set_policy(
-            "piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE)
-        )
+        set_policy("piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE))
         # set a policy to for otppin=userstore
-        set_policy(
-            "otppin", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN)
-        )
+        set_policy("otppin", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN))
         # Set a policy to do C/R with HOTP tokens
         set_policy(
             "crhotp",
@@ -1015,9 +960,7 @@ class EventHandlerTest(MyApiTestCase):
         remove_token(user=User("someuser", self.realm1))
 
         # user tries to log in with his userstore password and gets a transaction_id
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "someuser", "password": "test"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "someuser", "password": "test"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(200, res.status_code, res)
             result = res.json.get("result")
@@ -1078,16 +1021,12 @@ class EventHandlerTest(MyApiTestCase):
             options={"level": logging.INFO, "message": "User: {user} Event: {action}"},
         )
 
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "someuser", "password": "test"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "someuser", "password": "test"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(200, res.status_code, res)
             result = res.json.get("result")
             self.assertTrue(result.get("status"), result)
 
-        capture.check_present(
-            ("edumfa-eventlogger", "INFO", "User: someuser Event: /auth")
-        )
+        capture.check_present(("edumfa-eventlogger", "INFO", "User: someuser Event: /auth"))
 
         delete_event(eid)

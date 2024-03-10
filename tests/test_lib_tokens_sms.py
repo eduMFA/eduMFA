@@ -296,9 +296,7 @@ class SMSTokenTestCase(MyTestCase):
     def test_13_check_otp(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = SmsTokenClass(db_token)
-        token.update(
-            {"otpkey": self.otpkey, "pin": "test", "otplen": 6, "phone": self.phone1}
-        )
+        token.update({"otpkey": self.otpkey, "pin": "test", "otplen": 6, "phone": self.phone1})
         # OTP does not exist
         self.assertTrue(token.check_otp_exist("222333") == -1)
         # OTP does exist
@@ -356,9 +354,7 @@ class SMSTokenTestCase(MyTestCase):
         self.assertTrue(c[3]["attributes"]["state"], transactionid)
 
         # check for the challenges response
-        r = token.check_challenge_response(
-            passw=otp, options={"transaction_id": transactionid}
-        )
+        r = token.check_challenge_response(passw=otp, options={"transaction_id": transactionid})
         self.assertTrue(r, r)
 
     @responses.activate
@@ -376,9 +372,7 @@ class SMSTokenTestCase(MyTestCase):
         self.assertTrue(c[3]["attributes"]["state"], transactionid)
 
         # check for the challenges response
-        r = token.check_challenge_response(
-            passw=otp, options={"transaction_id": transactionid}
-        )
+        r = token.check_challenge_response(passw=otp, options={"transaction_id": transactionid})
         self.assertTrue(r, r)
 
     @responses.activate
@@ -391,9 +385,7 @@ class SMSTokenTestCase(MyTestCase):
         # if the email is a multi-value attribute, the first address should be chosen
         new_user_info = token.user.info.copy()
         new_user_info["mobile"] = ["1234", "5678"]
-        with mock.patch(
-            "edumfa.lib.resolvers.PasswdIdResolver.IdResolver.getUserInfo"
-        ) as mock_user_info:
+        with mock.patch("edumfa.lib.resolvers.PasswdIdResolver.IdResolver.getUserInfo") as mock_user_info:
             mock_user_info.return_value = new_user_info
             c = token.create_challenge(transactionid)
             self.assertTrue(c[0], c)
@@ -449,9 +441,7 @@ class SMSTokenTestCase(MyTestCase):
         g.audit_object = FakeAudit()
         options = {"g": g}
 
-        r = token.check_otp(
-            self.valid_otp_values[5 + len(smstext_tests)], options=options
-        )
+        r = token.check_otp(self.valid_otp_values[5 + len(smstext_tests)], options=options)
         self.assertTrue(r > 0, r)
 
     @log_capture(level=logging.WARN)
@@ -468,35 +458,25 @@ class SMSTokenTestCase(MyTestCase):
             c = token.create_challenge(transactionid)
             self.assertFalse(c[0], c)
             self.assertTrue(c[1].startswith("The PIN was correct, but"), c[1])
-            expected = (
-                "Failed to load SMSProvider: ImportError"
-                "('edumfa.lib.smsprovider.HttpSMSProvider has no attribute HttpSMSProviderWRONG'"
-            )
+            expected = "Failed to load SMSProvider: ImportError('edumfa.lib.smsprovider.HttpSMSProvider has no attribute HttpSMSProviderWRONG'"
             mock_log.mock_called()
             mocked_str = mock_log
             self.assertTrue(mocked_str.startswith(expected), mocked_str)
         capture.clear()
 
         with mock.patch("logging.Logger.error") as mock_log:
-            set_edumfa_config(
-                "sms.provider", "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider"
-            )
+            set_edumfa_config("sms.provider", "edumfa.lib.smsprovider.HttpSMSProvider.HttpSMSProvider")
             c = token.create_challenge(transactionid)
             self.assertFalse(c[0], c)
             self.assertTrue(c[1].startswith("The PIN was correct, but"), c[1])
-            expected = (
-                "Failed to load sms.providerConfig: "
-                "JSONDecodeError('Expecting value: line 1 column 1 (char 0)')"
-            )
+            expected = "Failed to load sms.providerConfig: JSONDecodeError('Expecting value: line 1 column 1 (char 0)')"
             mock_log.mock_called()
             mocked_str = mock_log
             self.assertTrue(mocked_str.startswith(expected), mocked_str)
         capture.clear()
 
         # test with the parameter exception=1
-        self.assertRaises(
-            Exception, token.create_challenge, transactionid, {"exception": "1"}
-        )
+        self.assertRaises(Exception, token.create_challenge, transactionid, {"exception": "1"})
 
         remove_token(token.get_serial())
 

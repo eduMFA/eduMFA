@@ -17,16 +17,10 @@ from responses import matchers
 
 class eduMFAServerTestCase(MyTestCase):
     def test_01_create_radius(self):
-        r = add_edumfaserver(
-            identifier="myserver", url="https://pi/pi", description="Hallo"
-        )
+        r = add_edumfaserver(identifier="myserver", url="https://pi/pi", description="Hallo")
         self.assertTrue(r > 0)
-        r = add_edumfaserver(
-            identifier="myserver2", url="https://pi2/pi", tls=False, description="Hallo"
-        )
-        r = add_edumfaserver(
-            identifier="myserver3", url="https://pi3/pi", tls=True, description="Hallo"
-        )
+        r = add_edumfaserver(identifier="myserver2", url="https://pi2/pi", tls=False, description="Hallo")
+        r = add_edumfaserver(identifier="myserver3", url="https://pi3/pi", tls=True, description="Hallo")
 
         server_list = get_edumfaservers()
         self.assertTrue(server_list)
@@ -50,9 +44,7 @@ class eduMFAServerTestCase(MyTestCase):
         server = get_edumfaserver("myserver")
         self.assertEqual(server.config.url, "https://pi/pi")
         self.assertFalse(server.config.tls)
-        r = add_edumfaserver(
-            identifier="myserver", url="https://pi/", tls=True, description="Hallo"
-        )
+        r = add_edumfaserver(identifier="myserver", url="https://pi/", tls=True, description="Hallo")
         self.assertTrue(r > 0)
         server = get_edumfaserver("myserver")
         self.assertEqual(server.config.url, "https://pi/")
@@ -149,11 +141,7 @@ class eduMFAServerTestCase(MyTestCase):
             "id": 1
             }""",
             content_type="application/json",
-            match=[
-                matchers.urlencoded_params_matcher(
-                    {"user": "user", "pass": "pw_w_%25123"}
-                )
-            ],
+            match=[matchers.urlencoded_params_matcher({"user": "user", "pass": "pw_w_%25123"})],
         )
         r = add_edumfaserver(identifier="pi4", url="https://edumfa/pi4", tls=False)
         self.assertTrue(r > 0)
@@ -251,11 +239,7 @@ class eduMFAServerTestCase(MyTestCase):
             "id": 1
             }""",
             content_type="application/json",
-            match=[
-                matchers.urlencoded_params_matcher(
-                    {"user": "user", "pass": "pw_w_%25123"}
-                )
-            ],
+            match=[matchers.urlencoded_params_matcher({"user": "user", "pass": "pw_w_%25123"})],
         )
         r = add_edumfaserver(identifier="pi4", url="https://edumfa/pi4", tls=False)
         self.assertTrue(r > 0)

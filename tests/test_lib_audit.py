@@ -132,9 +132,7 @@ class AuditTestCase(MyTestCase):
         # things will sometimes go slower than expected, which will
         # cause the very last assertion to fail.
         with mock.patch("datetime.datetime") as mock_dt:
-            mock_dt.now.return_value = current_timestamp + datetime.timedelta(
-                seconds=2.5
-            )
+            mock_dt.now.return_value = current_timestamp + datetime.timedelta(seconds=2.5)
 
             # get 4 authentications
             r = self.Audit.get_count({"action": "/validate/check"})
@@ -204,9 +202,7 @@ class AuditTestCase(MyTestCase):
         token_type = "12345678901234567890"
         self.Audit.log({"serial": long_serial, "token_type": token_type})
         self.Audit._truncate_data()
-        self.assertEqual(
-            len(self.Audit.audit_data.get("serial")), column_length.get("serial")
-        )
+        self.assertEqual(len(self.Audit.audit_data.get("serial")), column_length.get("serial"))
         self.assertEqual(
             len(self.Audit.audit_data.get("token_type")),
             column_length.get("token_type"),
@@ -223,7 +219,10 @@ class AuditTestCase(MyTestCase):
             {
                 "serial": long_serial,
                 "token_type": token_type,
-                "policies": "Berlin,Hamburg,München,Köln,Frankfurt am Main,Stuttgart,Düsseldorf,Dortmund,Essen,Leipzig,Bremen,Dresden,Hannover,Nürnberg,Duisburg,Bochum,Wuppertal,Bielefeld,Bonn,Münster,Karlsruhe,Mannheim,Augsburg,Wiesbaden,Gelsenkirchen,Mönchengladbach,Braunschweig,Kiel,Chemnitz,Aachen,Magdeburg",
+                "policies": (
+                    "Berlin,Hamburg,München,Köln,Frankfurt am"
+                    " Main,Stuttgart,Düsseldorf,Dortmund,Essen,Leipzig,Bremen,Dresden,Hannover,Nürnberg,Duisburg,Bochum,Wuppertal,Bielefeld,Bonn,Münster,Karlsruhe,Mannheim,Augsburg,Wiesbaden,Gelsenkirchen,Mönchengladbach,Braunschweig,Kiel,Chemnitz,Aachen,Magdeburg"
+                ),
             }
         )
         self.Audit._truncate_data()
@@ -312,27 +311,19 @@ class AuditTestCase(MyTestCase):
         self.assertEqual(audit_log.auditdata[0].get("sig_check"), "FAIL")
 
         # check that SQLALCHEMY_ENGINE_OPTIONS get passed to create_engin()
-        with mock.patch(
-            "edumfa.lib.auditmodules.sqlaudit.create_engine"
-        ) as engine_mock:
+        with mock.patch("edumfa.lib.auditmodules.sqlaudit.create_engine") as engine_mock:
             cfg = self.app.config.copy()
             cfg.update({"SQLALCHEMY_ENGINE_OPTIONS": {"foo": "bar"}})
             _audit = getAudit(cfg)
-            engine_mock.assert_called_once_with(
-                AUDIT_DB, pool_size=20, pool_recycle=600, foo="bar"
-            )
+            engine_mock.assert_called_once_with(AUDIT_DB, pool_size=20, pool_recycle=600, foo="bar")
 
         # check that EDUMFA_AUDIT_SQL_OPTIONS overwrite SQLALCHEMY_ENGINE_OPTIONS
-        with mock.patch(
-            "edumfa.lib.auditmodules.sqlaudit.create_engine"
-        ) as engine_mock:
+        with mock.patch("edumfa.lib.auditmodules.sqlaudit.create_engine") as engine_mock:
             cfg = self.app.config.copy()
             cfg.update({"SQLALCHEMY_ENGINE_OPTIONS": {"foo": "bar", "temp": 100}})
             cfg.update({"EDUMFA_AUDIT_SQL_OPTIONS": {"foo": "baz"}})
             _audit = getAudit(cfg)
-            engine_mock.assert_called_once_with(
-                AUDIT_DB, pool_size=20, pool_recycle=600, foo="baz"
-            )
+            engine_mock.assert_called_once_with(AUDIT_DB, pool_size=20, pool_recycle=600, foo="baz")
 
         # TODO: add new audit entry and check for new style signature
         # remove the audit SQL URI from app config
@@ -380,9 +371,7 @@ class AuditColumnLengthTestCase(OverrideConfigTestCase):
             }
         )
         self.Audit._truncate_data()
-        self.assertEqual(
-            len(self.Audit.audit_data.get("user")), 10, self.Audit.audit_data
-        )
+        self.assertEqual(len(self.Audit.audit_data.get("user")), 10, self.Audit.audit_data)
 
 
 class AuditFileTestCase(OverrideConfigTestCase):
@@ -418,12 +407,8 @@ class AuditFileTestCase(OverrideConfigTestCase):
         # The audit log runs 2 seconds - mocked
         current_utc_time = datetime.datetime(2018, 3, 4, 5, 6, 8)
         startdate_time = datetime.datetime(2018, 3, 4, 5, 6, 6)
-        with mock.patch(
-            "edumfa.lib.auditmodules.loggeraudit.datetime"
-        ) as mock_timestamp:
-            with mock.patch(
-                "edumfa.lib.auditmodules.base.datetime.datetime"
-            ) as mock_startdate:
+        with mock.patch("edumfa.lib.auditmodules.loggeraudit.datetime") as mock_timestamp:
+            with mock.patch("edumfa.lib.auditmodules.base.datetime.datetime") as mock_startdate:
                 mock_timestamp.utcnow.return_value = current_utc_time
                 mock_startdate.now.return_value = startdate_time
                 a = LoggerAudit(config={})
@@ -446,9 +431,7 @@ class AuditFileTestCase(OverrideConfigTestCase):
         current_utc_time = datetime.datetime(2020, 3, 4, 5, 6, 8)
         startdate_time = datetime.datetime(2020, 3, 4, 5, 6, 0)
         with mock.patch("edumfa.lib.auditmodules.loggeraudit.datetime") as mock_dt:
-            with mock.patch(
-                "edumfa.lib.auditmodules.base.datetime.datetime"
-            ) as mock_startdate:
+            with mock.patch("edumfa.lib.auditmodules.base.datetime.datetime") as mock_startdate:
                 mock_dt.utcnow.return_value = current_utc_time
                 mock_startdate.now.return_value = startdate_time
                 a = LoggerAudit(config={"EDUMFA_AUDIT_LOGGER_QUALNAME": "edumfa-audit"})
@@ -458,9 +441,7 @@ class AuditFileTestCase(OverrideConfigTestCase):
                     (
                         "edumfa-audit",
                         "INFO",
-                        '{{"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:08", '
-                        '"policies": "", "startdate": "{startdate}", '
-                        '"timestamp": "{timestamp}"}}'.format(
+                        '{{"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:08", "policies": "", "startdate": "{startdate}", "timestamp": "{timestamp}"}}'.format(
                             timestamp=current_utc_time.isoformat(),
                             startdate=startdate_time.isoformat(),
                         ),
@@ -476,9 +457,7 @@ class ContainerAuditTestCase(OverrideConfigTestCase):
     def test_10_container_audit(self):
         import os
 
-        basedir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), os.path.pardir)
-        )
+        basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
         a = ContainerAudit(
             {
                 "EDUMFA_AUDIT_CONTAINER_WRITE": [
@@ -522,9 +501,7 @@ class ContainerAuditTestCase(OverrideConfigTestCase):
     def test_15_container_audit_check_audit(self):
         import os
 
-        basedir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), os.path.pardir)
-        )
+        basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
         a = ContainerAudit(
             {
                 "EDUMFA_AUDIT_CONTAINER_WRITE": [
@@ -565,9 +542,7 @@ class ContainerAuditTestCase(OverrideConfigTestCase):
         # Test what happens with a non-existing module
         import os
 
-        basedir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), os.path.pardir)
-        )
+        basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
         module_config = {
             "EDUMFA_AUDIT_CONTAINER_WRITE": [
                 "edumfa.lib.auditmodules.doesnotexist",

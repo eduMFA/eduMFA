@@ -25,14 +25,10 @@ class RegisterTestCase(MyApiTestCase):
         "Table": "users",
         "Encoding": "utf8",
         "Editable": True,
-        "Map": '{ "username": "username", \
-                    "userid" : "id", \
-                    "email" : "email", \
-                    "surname" : "name", \
-                    "givenname" : "givenname", \
-                    "password" : "password", \
-                    "phone": "phone", \
-                    "mobile": "mobile"}',
+        "Map": (
+            '{ "username": "username",                     "userid" : "id",                     "email" : "email",                     "surname" : "name",                    '
+            ' "givenname" : "givenname",                     "password" : "password",                     "phone": "phone",                     "mobile": "mobile"}'
+        ),
     }
 
     usernames = ["corneliusReg", "corneliusRegFail"]
@@ -64,9 +60,7 @@ class RegisterTestCase(MyApiTestCase):
         r = set_policy(
             name="pol2",
             scope=SCOPE.REGISTER,
-            action="{0!s}={1!s}, {2!s}={3!s}".format(
-                ACTION.REALM, "register", ACTION.RESOLVER, "register"
-            ),
+            action="{0!s}={1!s}, {2!s}={3!s}".format(ACTION.REALM, "register", ACTION.RESOLVER, "register"),
         )
 
         # Try to register, but missing parameter
@@ -93,9 +87,7 @@ class RegisterTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 400, res)
             data = res.json
-            self.assertEqual(
-                data.get("result").get("error").get("code"), ERROR.REGISTRATION
-            )
+            self.assertEqual(data.get("result").get("error").get("code"), ERROR.REGISTRATION)
             self.assertEqual(
                 data.get("result").get("error").get("message"),
                 "ERR402: No SMTP server configuration specified!",

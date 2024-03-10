@@ -44,23 +44,17 @@ class APIAuthTestCase(MyApiTestCase):
     """
 
     def test_00_missing_username(self):
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
     def test_00_missing_password(self):
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "admin"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "admin"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
     def test_01_get_rights(self):
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -108,9 +102,7 @@ class APIAuthTestCase(MyApiTestCase):
             self.assertTrue(result.get("status"), res.data)
 
         # Check if the /auth request writes the policyname "remote" to the audit entry
-        with self.app.test_request_context(
-            "/audit/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/audit/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             auditentry = res.json.get("result").get("value").get("auditdata")[0]
@@ -169,9 +161,7 @@ class APIAuthTestCase(MyApiTestCase):
             user="testadmin",
         )
 
-        with self.app.test_request_context(
-            "/user/", method="GET", data={}, headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/user/", method="GET", data={}, headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -215,9 +205,7 @@ class APIAuthChallengeResponse(MyApiTestCase):
         delete_policy("webuilog")
 
     def test_01_challenge_response_at_webui(self):
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "selfservice", "password": "pin"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "selfservice", "password": "pin"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -239,9 +227,7 @@ class APIAuthChallengeResponse(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
-            self.assertEqual(
-                data.get("result").get("value").get("username"), "selfservice"
-            )
+            self.assertEqual(data.get("result").get("value").get("username"), "selfservice")
 
     def test_02_auth_chal_resp_multi_token(self):
         # create another token
@@ -258,9 +244,7 @@ class APIAuthChallengeResponse(MyApiTestCase):
             scope=SCOPE.AUTH,
             action="{0!s}={1!s}".format(ACTION.OTPPIN, ACTIONVALUE.USERSTORE),
         )
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "selfservice", "password": "test"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "selfservice", "password": "test"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200, res)
             result = res.json.get("detail")
@@ -272,9 +256,7 @@ class APIAuthChallengeResponse(MyApiTestCase):
 
         # check if we have both serials in the audit log
         ae = self.find_most_recent_audit_entry(action="POST /auth")
-        self.assertTrue(
-            {"hotp1", "hotp2"}.issubset(set(ae.get("serial").split(","))), ae
-        )
+        self.assertTrue({"hotp1", "hotp2"}.issubset(set(ae.get("serial").split(","))), ae)
 
         delete_policy("pol_otppin")
         remove_token("hotp2")
@@ -304,16 +286,12 @@ class APISelfserviceTestCase(MyApiTestCase):
         remove_token(self.foreign_serial)
 
     def test_00_authenticate_admin_fail(self):
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "admin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "admin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
     def test_01_authenticate_admin(self):
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -352,24 +330,18 @@ class APISelfserviceTestCase(MyApiTestCase):
     def test_02_user_allowed_to_get_config(self):
         self.authenticate_selfservice_user()
         # The user is allowed to get the system config
-        with self.app.test_request_context(
-            "/system/", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/system/", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
     def test_02_user_not_allowed(self):
         self.authenticate_selfservice_user()
         # The user is not allowed to write system information
-        with self.app.test_request_context(
-            "/system/setConfig", method="POST", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/system/setConfig", method="POST", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
-        with self.app.test_request_context(
-            "/system/setDefault", method="POST", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/system/setDefault", method="POST", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
@@ -381,40 +353,28 @@ class APISelfserviceTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
-        with self.app.test_request_context(
-            "/system/hsm", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/system/hsm", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
-        with self.app.test_request_context(
-            "/system/hsm", method="POST", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/system/hsm", method="POST", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
-        with self.app.test_request_context(
-            "/token/", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/token/", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
-        with self.app.test_request_context(
-            "/realm/", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/realm/", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
-        with self.app.test_request_context(
-            "/resolver/", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/resolver/", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
         # The user is allowed to get his own information
-        with self.app.test_request_context(
-            "/user/", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/user/", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             response = res.json
@@ -423,9 +383,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertEqual(value[0].get("username"), "selfservice")
 
         # If he wants to see other information, he still sees his own
-        with self.app.test_request_context(
-            "/user/?username=*", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/user/?username=*", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             response = res.json
@@ -433,9 +391,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertEqual(len(value), 1)
             self.assertEqual(value[0].get("username"), "selfservice")
 
-        with self.app.test_request_context(
-            "/audit/", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/audit/", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
@@ -738,9 +694,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertEqual(content["detail"]["user"]["userid"], "1004", content)
 
         # ... but not for internal admins
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             content = res.json
@@ -767,9 +721,7 @@ class APISelfserviceTestCase(MyApiTestCase):
                 ACTION.LOGINMODE: LOGINMODE.EDUMFA,
             },
         )
-        selfservice_token = init_token(
-            {"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1")
-        )
+        selfservice_token = init_token({"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1"))
         # Last authentication was too long ago.
         selfservice_token.add_tokeninfo(ACTION.LASTAUTH, "2016-10-10 10:10:10.000")
         with self.app.test_request_context(
@@ -784,9 +736,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertFalse(result.get("status"), content)
             self.assertIn("long ago", content["detail"]["message"], content)
 
-        selfservice_token.add_tokeninfo(
-            ACTION.LASTAUTH, datetime.datetime.now().strftime(AUTH_DATE_FORMAT)
-        )
+        selfservice_token.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.now().strftime(AUTH_DATE_FORMAT))
 
         # But now it works
         with self.app.test_request_context(
@@ -801,9 +751,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertTrue(result.get("status"), content)
 
         # Authentication still works for internal admins
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             content = res.json
@@ -816,9 +764,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
     def test_11_authz_tokentype(self):
         # Check TOKENTYPE policy action for /auth endpoint
-        spass_token = init_token(
-            {"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1")
-        )
+        spass_token = init_token({"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1"))
         set_policy(
             "pol_loginmode",
             scope=SCOPE.WEBUI,
@@ -867,9 +813,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertTrue(result.get("status"), content)
 
         # Authentication still works for internal admins
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             content = res.json
@@ -882,9 +826,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
     def test_12_authz_tokeninfo(self):
         # Check TOKENINFO policy action for /auth endpoint
-        spass_token = init_token(
-            {"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1")
-        )
+        spass_token = init_token({"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1"))
         set_policy(
             "pol_loginmode",
             scope=SCOPE.WEBUI,
@@ -927,9 +869,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertTrue(result.get("status"), content)
 
         # Authentication still works for internal admins
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             content = res.json
@@ -942,9 +882,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
     def test_13_authz_tokenserial(self):
         # Check SERIAL policy action for /auth endpoint
-        spass_token = init_token(
-            {"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1")
-        )
+        spass_token = init_token({"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1"))
         set_policy(
             "pol_loginmode",
             scope=SCOPE.WEBUI,
@@ -988,9 +926,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertTrue(result.get("status"), content)
 
         # Authentication still works for internal admins
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "testadmin", "password": "testpw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "testadmin", "password": "testpw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             content = res.json
@@ -1004,9 +940,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
     def test_13_authz_no_detail_on_success(self):
         # Check NODETAILSUCCESS policy action for /auth endpoint
-        spass_token = init_token(
-            {"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1")
-        )
+        spass_token = init_token({"type": "spass", "pin": "somepin"}, user=User("selfservice", "realm1"))
         set_policy(
             "pol_loginmode",
             scope=SCOPE.WEBUI,
@@ -1082,16 +1016,12 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 401, res)
 
         # Can not copy pin
-        with self.app.test_request_context(
-            "/token/copypin", method="POST", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/token/copypin", method="POST", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
         # Can not copy user
-        with self.app.test_request_context(
-            "/token/copyuser", method="POST", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/token/copyuser", method="POST", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 401, res)
 
@@ -1125,9 +1055,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             scope=SCOPE.WEBUI,
             action="{0!s}={1!s}".format(ACTION.AUDITPAGESIZE, 20),
         )
-        set_policy(
-            name="webui5", scope=SCOPE.WEBUI, action=ACTION.DELETION_CONFIRMATION
-        )
+        set_policy(name="webui5", scope=SCOPE.WEBUI, action=ACTION.DELETION_CONFIRMATION)
         with self.app.test_request_context(
             "/auth",
             method="POST",
@@ -1294,13 +1222,9 @@ class PolicyConditionsTestCase(MyApiTestCase):
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
             "MULTIVALUEATTRIBUTES": '["groups"]',
-            "USERINFO": '{ "username": "cn",'
-            '"phone" : "telephoneNumber", '
-            '"mobile" : "mobile"'
-            ', "email" : "mail", '
-            '"surname" : "sn", '
-            '"groups": "memberOf", '
-            '"givenname" : "givenName" }',
+            "USERINFO": (
+                '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "groups": "memberOf", "givenname" : "givenName" }'
+            ),
             "UIDTYPE": "DN",
             "resolver": "ldapgroups",
             "type": "ldapresolver",
@@ -1389,28 +1313,20 @@ class PolicyConditionsTestCase(MyApiTestCase):
 
         # check our policies:
         # frank is not allowed to log in, because he is neither admin nor helpdesk
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "frank", "password": "ldaptest"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "frank", "password": "ldaptest"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 403)
             result = res.json.get("result")
             self.assertFalse(result.get("status"))
-            self.assertEqual(
-                result["error"]["message"], "The login for this user is disabled."
-            )
+            self.assertEqual(result["error"]["message"], "The login for this user is disabled.")
 
         # alice is allowed to log in with the userstore password, because he is in the admins group
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "alice", "password": "alicepw"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "alice", "password": "alicepw"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
         # ... but the OTP PIN will not work
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "alice", "password": "pin1"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "alice", "password": "pin1"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 401)
             result = res.json.get("result")
@@ -1418,16 +1334,12 @@ class PolicyConditionsTestCase(MyApiTestCase):
             self.assertIn("Wrong credentials", result["error"]["message"])
 
         # manager can log in with the OTP PIN, because he is in the helpdesk group
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "manager", "password": "pin3"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "manager", "password": "pin3"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
         # ... but the userstore password will not work
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "manager", "password": "ldaptest"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "manager", "password": "ldaptest"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 401)
             result = res.json.get("result")
@@ -1470,9 +1382,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
             self.assertEqual(res.status_code, 200)
 
         # policy error because of conflicting actions
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "manager", "password": "pin3"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "manager", "password": "pin3"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 403)
             result = res.json.get("result")
@@ -1527,9 +1437,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
             self.assertEqual(res.status_code, 200)
 
         # get an auth token for bob, who is an ordinary user
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "bob", "password": "bobpwééé"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "bob", "password": "bobpwééé"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json.get("result")
@@ -1541,9 +1449,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
             self.assertEqual(result["value"]["menus"], ["tokens"])
 
         # get an auth token for manager, who is a helpdesk user
-        with self.app.test_request_context(
-            "/auth", method="POST", data={"username": "manager", "password": "ldaptest"}
-        ):
+        with self.app.test_request_context("/auth", method="POST", data={"username": "manager", "password": "ldaptest"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json.get("result")
@@ -1551,15 +1457,11 @@ class PolicyConditionsTestCase(MyApiTestCase):
             # check the rights and menus for manager
             self.assertEqual(result["value"]["role"], "user")
             # manager may enroll HOTP and TOTP
-            self.assertEqual(
-                set(result["value"]["rights"]), {"enrollHOTP", "enrollTOTP"}
-            )
+            self.assertEqual(set(result["value"]["rights"]), {"enrollHOTP", "enrollTOTP"})
             self.assertEqual(result["value"]["menus"], ["tokens"])
 
         # check the rights of bob
-        with self.app.test_request_context(
-            "/auth/rights", method="GET", headers={"Authorization": bob_token}
-        ):
+        with self.app.test_request_context("/auth/rights", method="GET", headers={"Authorization": bob_token}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json.get("result")
@@ -1587,9 +1489,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
             self.assertEqual(res.status_code, 200)
 
         # check the rights of bob. The TOTP enroll right will basically be there
-        with self.app.test_request_context(
-            "/auth/rights", method="GET", headers={"Authorization": bob_token}
-        ):
+        with self.app.test_request_context("/auth/rights", method="GET", headers={"Authorization": bob_token}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json.get("result")
@@ -1598,9 +1498,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
             self.assertIn("totp", set(result["value"].keys()))
 
         # check the rights of manager
-        with self.app.test_request_context(
-            "/auth/rights", method="GET", headers={"Authorization": manager_token}
-        ):
+        with self.app.test_request_context("/auth/rights", method="GET", headers={"Authorization": manager_token}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json.get("result")
@@ -1634,9 +1532,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
         status_code, result = _try_enroll(bob_token, "spass")
         self.assertEqual(status_code, 403)
         self.assertFalse(result["status"])
-        self.assertIn(
-            "not allowed to enroll this token type", result["error"]["message"]
-        )
+        self.assertIn("not allowed to enroll this token type", result["error"]["message"])
 
         # manager may enroll HOTP ...
         status_code, result = _try_enroll(manager_token, "hotp")
@@ -1650,9 +1546,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
         status_code, result = _try_enroll(manager_token, "spass")
         self.assertEqual(status_code, 403)
         self.assertFalse(result["status"])
-        self.assertIn(
-            "not allowed to enroll this token type", result["error"]["message"]
-        )
+        self.assertIn("not allowed to enroll this token type", result["error"]["message"])
 
         delete_policy("default_enroll")
         delete_policy("helpdesk_enroll")

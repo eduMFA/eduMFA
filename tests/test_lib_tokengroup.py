@@ -44,9 +44,7 @@ class TokenTestCase(MyTestCase):
         r = set_tokengroup("gruppe1", "my other first group")
         self.assertGreaterEqual(r, 1)
 
-        self.assertRaises(
-            eduMFAError, delete_tokengroup, tokengroup_id=(r + 1), name="gruppe1"
-        )
+        self.assertRaises(eduMFAError, delete_tokengroup, tokengroup_id=(r + 1), name="gruppe1")
 
         delete_tokengroup(tokengroup_id=r)
         tg = Tokengroup.query.filter_by(name="gruppe1").all()

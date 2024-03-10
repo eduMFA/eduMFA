@@ -83,9 +83,7 @@ class TwoStepInitTestCase(MyApiTestCase):
 
         client_component = b"VRYSECRT"
         checksum = hashlib.sha1(client_component).digest()[:4]
-        base32check_client_component = b32encode_and_unicode(
-            checksum + client_component
-        ).strip("=")
+        base32check_client_component = b32encode_and_unicode(checksum + client_component).strip("=")
 
         # Try to do a 2stepinit on a second step without rollover parameter will raise an error
         with self.app.test_request_context(
@@ -171,9 +169,7 @@ class TwoStepInitTestCase(MyApiTestCase):
         # Now try to authenticate
         otpkey_bin = binascii.unhexlify(otpkey)
         otp_value = HmacOtp().generate(key=otpkey_bin, counter=1)
-        with self.app.test_request_context(
-            "/validate/check", method="POST", data={"serial": serial, "pass": otp_value}
-        ):
+        with self.app.test_request_context("/validate/check", method="POST", data={"serial": serial, "pass": otp_value}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -181,14 +177,10 @@ class TwoStepInitTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
 
         # Check that the OTP key is what we expected it to be
-        expected_secret = pbkdf2_hmac(
-            "sha1", binascii.hexlify(server_component), client_component, 10000, 20
-        )
+        expected_secret = pbkdf2_hmac("sha1", binascii.hexlify(server_component), client_component, 10000, 20)
         self.assertEqual(otpkey_bin, expected_secret)
 
-        with self.app.test_request_context(
-            "/token/" + serial, method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/token/" + serial, method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
         delete_policy("allow_2step")
@@ -299,9 +291,7 @@ class TwoStepInitTestCase(MyApiTestCase):
         # Now try to authenticate
         otpkey_bin = binascii.unhexlify(otpkey)
         otp_value = HmacOtp().generate(key=otpkey_bin, counter=1)
-        with self.app.test_request_context(
-            "/validate/check", method="POST", data={"serial": serial, "pass": otp_value}
-        ):
+        with self.app.test_request_context("/validate/check", method="POST", data={"serial": serial, "pass": otp_value}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -311,14 +301,10 @@ class TwoStepInitTestCase(MyApiTestCase):
         # Check serversize
         self.assertEqual(len(server_component), 33)
         # Check that the OTP key is what we expected it to be
-        expected_secret = pbkdf2_hmac(
-            "sha1", binascii.hexlify(server_component), client_component, 12345, 20
-        )
+        expected_secret = pbkdf2_hmac("sha1", binascii.hexlify(server_component), client_component, 12345, 20)
         self.assertEqual(otpkey_bin, expected_secret)
 
-        with self.app.test_request_context(
-            "/token/" + serial, method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/token/" + serial, method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
@@ -403,12 +389,8 @@ class TwoStepInitTestCase(MyApiTestCase):
 
         # Now try to authenticate
         otpkey_bin = binascii.unhexlify(otpkey)
-        otp_value = HmacOtp(digits=8, hashfunc=hashlib.sha512).generate(
-            key=otpkey_bin, counter=1
-        )
-        with self.app.test_request_context(
-            "/validate/check", method="POST", data={"serial": serial, "pass": otp_value}
-        ):
+        otp_value = HmacOtp(digits=8, hashfunc=hashlib.sha512).generate(key=otpkey_bin, counter=1)
+        with self.app.test_request_context("/validate/check", method="POST", data={"serial": serial, "pass": otp_value}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -418,14 +400,10 @@ class TwoStepInitTestCase(MyApiTestCase):
         # Check serversize
         self.assertEqual(len(server_component), 5)
         # Check that the OTP key is what we expected it to be
-        expected_secret = pbkdf2_hmac(
-            "sha1", binascii.hexlify(server_component), client_component, 17898, 64
-        )
+        expected_secret = pbkdf2_hmac("sha1", binascii.hexlify(server_component), client_component, 17898, 64)
         self.assertEqual(otpkey_bin, expected_secret)
 
-        with self.app.test_request_context(
-            "/token/" + serial, method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/token/" + serial, method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
@@ -464,9 +442,7 @@ class TwoStepInitTestCase(MyApiTestCase):
 
         # Now try to authenticate
         otp_value = HmacOtp().generate(key=otpkey_bin, counter=1)
-        with self.app.test_request_context(
-            "/validate/check", method="POST", data={"serial": serial, "pass": otp_value}
-        ):
+        with self.app.test_request_context("/validate/check", method="POST", data={"serial": serial, "pass": otp_value}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -506,9 +482,7 @@ class TwoStepInitTestCase(MyApiTestCase):
 
         client_component = b"VRYSECRT"
         checksum = hashlib.sha1(client_component).digest()[:4]
-        base32check_client_component = base64.b32encode(
-            checksum + client_component
-        ).strip(b"=")
+        base32check_client_component = base64.b32encode(checksum + client_component).strip(b"=")
 
         # Try to do a 2stepinit on a second step will raise an error
         with self.app.test_request_context(
@@ -553,9 +527,7 @@ class TwoStepInitTestCase(MyApiTestCase):
             )
 
         # Authentication does not work yet!
-        wrong_otp_value = HmacOtp().generate(
-            key=server_component, counter=int(time.time() // 30)
-        )
+        wrong_otp_value = HmacOtp().generate(key=server_component, counter=int(time.time() // 30))
         with self.app.test_request_context(
             "/validate/check",
             method="POST",
@@ -596,9 +568,7 @@ class TwoStepInitTestCase(MyApiTestCase):
         # Now try to authenticate
         otpkey_bin = binascii.unhexlify(otpkey)
         otp_value = HmacOtp().generate(key=otpkey_bin, counter=int(time.time() // 30))
-        with self.app.test_request_context(
-            "/validate/check", method="POST", data={"serial": serial, "pass": otp_value}
-        ):
+        with self.app.test_request_context("/validate/check", method="POST", data={"serial": serial, "pass": otp_value}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -606,14 +576,10 @@ class TwoStepInitTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
 
         # Check that the OTP key is what we expected it to be
-        expected_secret = pbkdf2_hmac(
-            "sha1", binascii.hexlify(server_component), client_component, 10000, 20
-        )
+        expected_secret = pbkdf2_hmac("sha1", binascii.hexlify(server_component), client_component, 10000, 20)
         self.assertEqual(otpkey_bin, expected_secret)
 
-        with self.app.test_request_context(
-            "/token/" + serial, method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/token/" + serial, method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
         delete_policy("allow_2step")
@@ -663,9 +629,7 @@ class TwoStepInitTestCase(MyApiTestCase):
             self.assertIn("2step_salt=11", google_url)
             self.assertIn("2step_output=64", google_url)
         # Authentication does not work yet!
-        wrong_otp_value = HmacOtp(digits=8, hashfunc=hashlib.sha512).generate(
-            key=server_component, counter=int(time.time() // 60)
-        )
+        wrong_otp_value = HmacOtp(digits=8, hashfunc=hashlib.sha512).generate(key=server_component, counter=int(time.time() // 60))
         with self.app.test_request_context(
             "/validate/check",
             method="POST",
@@ -728,12 +692,8 @@ class TwoStepInitTestCase(MyApiTestCase):
 
         # Now try to authenticate
         otpkey_bin = binascii.unhexlify(otpkey)
-        otp_value = HmacOtp(digits=8, hashfunc=hashlib.sha512).generate(
-            key=otpkey_bin, counter=int(time.time() // 60)
-        )
-        with self.app.test_request_context(
-            "/validate/check", method="POST", data={"serial": serial, "pass": otp_value}
-        ):
+        otp_value = HmacOtp(digits=8, hashfunc=hashlib.sha512).generate(key=otpkey_bin, counter=int(time.time() // 60))
+        with self.app.test_request_context("/validate/check", method="POST", data={"serial": serial, "pass": otp_value}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -743,14 +703,10 @@ class TwoStepInitTestCase(MyApiTestCase):
         # Check serversize
         self.assertEqual(len(server_component), 33)
         # Check that the OTP key is what we expected it to be
-        expected_secret = pbkdf2_hmac(
-            "sha1", binascii.hexlify(server_component), client_component, 12345, 64
-        )
+        expected_secret = pbkdf2_hmac("sha1", binascii.hexlify(server_component), client_component, 12345, 64)
         self.assertEqual(otpkey_bin, expected_secret)
 
-        with self.app.test_request_context(
-            "/token/" + serial, method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/token/" + serial, method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 

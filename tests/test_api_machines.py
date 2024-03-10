@@ -58,9 +58,7 @@ class APIMachinesTestCase(MyApiTestCase):
             self.assertTrue(result["value"] == 1, result)
 
     def test_01_get_machine_list(self):
-        with self.app.test_request_context(
-            "/machine/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/machine/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -72,9 +70,7 @@ class APIMachinesTestCase(MyApiTestCase):
             self.assertTrue("resolver_name" in result["value"][0])
 
     def test_01_get_machine_list_any(self):
-        with self.app.test_request_context(
-            "/machine/?any=192", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/machine/?any=192", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -164,9 +160,7 @@ class APIMachinesTestCase(MyApiTestCase):
 
         # Now detach the offline token. In this case we ignore the machine and resolver.
         with self.app.test_request_context(
-            "/machine/token/{0!s}/{1!s}/{2!s}/offline".format(
-                serial, ANY_MACHINE, NO_RESOLVER
-            ),
+            "/machine/token/{0!s}/{1!s}/{2!s}/offline".format(serial, ANY_MACHINE, NO_RESOLVER),
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -205,9 +199,7 @@ class APIMachinesTestCase(MyApiTestCase):
         # check if the options were set.
         token_obj = get_tokens(serial=serial)[0]
         self.assertEqual(token_obj.token.machine_list[0].application, "luks")
-        self.assertEqual(
-            token_obj.token.machine_list[0].option_list[1].mt_value, "/dev/sdb1"
-        )
+        self.assertEqual(token_obj.token.machine_list[0].option_list[1].mt_value, "/dev/sdb1")
 
         # delete slot!
         with self.app.test_request_context(
@@ -233,9 +225,7 @@ class APIMachinesTestCase(MyApiTestCase):
         self.assertEqual(token_obj.token.machine_list[0].application, "luks")
         # As we deleted the slot, the partition now is the only entry in the
         # list
-        self.assertEqual(
-            token_obj.token.machine_list[0].option_list[0].mt_value, "/dev/sdb1"
-        )
+        self.assertEqual(token_obj.token.machine_list[0].option_list[0].mt_value, "/dev/sdb1")
 
         # Overwrite option
         with self.app.test_request_context(
@@ -261,9 +251,7 @@ class APIMachinesTestCase(MyApiTestCase):
         self.assertEqual(token_obj.token.machine_list[0].application, "luks")
         # As we deleted the slot, the partition now is the only entry in the
         # list
-        self.assertEqual(
-            token_obj.token.machine_list[0].option_list[0].mt_value, "/dev/sda1"
-        )
+        self.assertEqual(token_obj.token.machine_list[0].option_list[0].mt_value, "/dev/sda1")
 
     def test_04_set_options_by_mtid(self):
         serial = "S1"
@@ -312,9 +300,7 @@ class APIMachinesTestCase(MyApiTestCase):
         # check if the options were set.
         token_obj = get_tokens(serial=serial)[0]
         self.assertEqual(token_obj.token.machine_list[1].application, "ssh")
-        self.assertEqual(
-            token_obj.token.machine_list[1].option_list[0].mt_value, "mailserver"
-        )
+        self.assertEqual(token_obj.token.machine_list[1].option_list[0].mt_value, "mailserver")
         # Delete machinetoken
         with self.app.test_request_context(
             "/machine/token/S1/ssh/{}".format(mtid),
@@ -332,9 +318,7 @@ class APIMachinesTestCase(MyApiTestCase):
         self.assertEqual(num_applications, len(token_obj.token.machine_list))
 
     def test_05_list_machinetokens(self):
-        with self.app.test_request_context(
-            "/machine/token?serial=S1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/machine/token?serial=S1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -377,9 +361,7 @@ class APIMachinesTestCase(MyApiTestCase):
 
     def test_10_auth_items_ssh_rsa(self):
         # create an SSH token
-        token_obj = init_token(
-            {"serial": self.serial2, "type": "sshkey", "sshkey": SSHKEY}
-        )
+        token_obj = init_token({"serial": self.serial2, "type": "sshkey", "sshkey": SSHKEY})
         self.assertEqual(token_obj.type, "sshkey")
 
         # Attach the token to the machine "gandalf" with the application SSH
@@ -481,9 +463,7 @@ class APIMachinesTestCase(MyApiTestCase):
     def test_10_auth_items_ssh_rsa_with_service_id(self):
         # Attach with service_id and without IP, but still also support IP
         # create an SSH token
-        token_obj = init_token(
-            {"serial": self.serial2, "type": "sshkey", "sshkey": SSHKEY}
-        )
+        token_obj = init_token({"serial": self.serial2, "type": "sshkey", "sshkey": SSHKEY})
         self.assertEqual(token_obj.type, "sshkey")
 
         # Attach the token to the machine "gandalf" with the application SSH
@@ -575,9 +555,7 @@ class APIMachinesTestCase(MyApiTestCase):
 
     def test_10_auth_items_ssh_ecdsa(self):
         # create an SSH token
-        token_obj = init_token(
-            {"serial": self.serial2, "type": "sshkey", "sshkey": SSHKEY_ecdsa}
-        )
+        token_obj = init_token({"serial": self.serial2, "type": "sshkey", "sshkey": SSHKEY_ecdsa})
         self.assertEqual(token_obj.type, "sshkey")
 
         # Attach the token to the machine "gandalf" with the application SSH
@@ -621,9 +599,7 @@ class APIMachinesTestCase(MyApiTestCase):
 
     def test_11_auth_items_luks(self):
         # create TOTP/Yubikey token
-        token_obj = init_token(
-            {"serial": self.serial3, "type": "totp", "otpkey": "12345678"}
-        )
+        token_obj = init_token({"serial": self.serial3, "type": "totp", "otpkey": "12345678"})
         self.assertEqual(token_obj.type, "totp")
 
         # Attach the token to the machine "gandalf" with the application SSH
@@ -698,9 +674,7 @@ class APIMachinesTestCase(MyApiTestCase):
             response = offline_auth_item.get("response")
             self.assertEqual(len(response), 17)
             self.assertEqual(token_obj.token.count, 17)
-            self.assertTrue(
-                passlib.hash.pbkdf2_sha512.verify("755224", response.get("0"))
-            )
+            self.assertTrue(passlib.hash.pbkdf2_sha512.verify("755224", response.get("0")))
 
         self.assertEqual(token_obj.check_otp("187581"), -1)  # count = 16
         with self.app.test_request_context(
@@ -719,9 +693,7 @@ class APIMachinesTestCase(MyApiTestCase):
             # check, if we got 17 otp values
             response = offline_auth_item.get("response")
             self.assertEqual(len(response), 17)
-            self.assertEqual(
-                token_obj.token.count, 35
-            )  # 17 + 17 + 1, because we consumed 447589
+            self.assertEqual(token_obj.token.count, 35)  # 17 + 17 + 1, because we consumed 447589
             self.assertTrue(
                 passlib.hash.pbkdf2_sha512.verify(
                     "test903435",  # count = 18

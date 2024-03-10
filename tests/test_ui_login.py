@@ -71,18 +71,14 @@ class LoginUITestCase(MyTestCase):
         with self.app.test_request_context("/", method="GET"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
-            self.assertIsNotNone(
-                re.search(r'id="REALMS" value=".*World.*"', to_unicode(res.data)), res
-            )
+            self.assertIsNotNone(re.search(r'id="REALMS" value=".*World.*"', to_unicode(res.data)), res)
 
     def test_04_custom_menu_baseline(self):
         # We provide a non-existing file, so we can not read "eduMFA" in the footer.
         set_policy(
             "custom1",
             scope=SCOPE.WEBUI,
-            action="{0!s}=mytemplates/nonexist_base.html".format(
-                ACTION.CUSTOM_BASELINE
-            ),
+            action="{0!s}=mytemplates/nonexist_base.html".format(ACTION.CUSTOM_BASELINE),
         )
         set_policy(
             "custom2",
@@ -111,9 +107,7 @@ class LoginUITestCase(MyTestCase):
         delete_all_policies()
         # test login when no policies are set
         self.assertEqual(len(PolicyClass().policies), 0, PolicyClass().policies)
-        with self.app.test_request_context(
-            "/", method="GET", environ_base={"REMOTE_USER": "foo"}
-        ):
+        with self.app.test_request_context("/", method="GET", environ_base={"REMOTE_USER": "foo"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(b'<input type=hidden id=REMOTE_USER value="">' in res.data)
@@ -124,14 +118,10 @@ class LoginUITestCase(MyTestCase):
             scope=SCOPE.WEBUI,
             action="{0!s}=allowed".format(ACTION.REMOTE_USER),
         )
-        with self.app.test_request_context(
-            "/", method="GET", environ_base={"REMOTE_USER": "foo"}
-        ):
+        with self.app.test_request_context("/", method="GET", environ_base={"REMOTE_USER": "foo"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
-            self.assertTrue(
-                b'<input type=hidden id=REMOTE_USER value="foo">' in res.data
-            )
+            self.assertTrue(b'<input type=hidden id=REMOTE_USER value="foo">' in res.data)
 
     def test_07_privacy_statement_link(self):
         set_policy(

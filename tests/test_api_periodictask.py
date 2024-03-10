@@ -45,12 +45,8 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         self.assertEqual(data["result"]["value"], [])
 
         # need authorization
-        fake_auth_token = jwt.encode(
-            {"role": "admin"}, key="313233343536", algorithm="HS256"
-        )
-        status_code, data = self.simulate_request(
-            "/periodictask/", method="GET", headers={"Authorization": fake_auth_token}
-        )
+        fake_auth_token = jwt.encode({"role": "admin"}, key="313233343536", algorithm="HS256")
+        status_code, data = self.simulate_request("/periodictask/", method="GET", headers={"Authorization": fake_auth_token})
         self.assertEqual(status_code, 401)
         self.assertFalse(data["result"]["status"])
 
@@ -66,9 +62,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
                 "retry_if_failed": False,
                 "options": '{"something": 123, "else": true}',
             }
-            status_code, data = self.simulate_request(
-                "/periodictask/", method="POST", data=task_dict1
-            )
+            status_code, data = self.simulate_request("/periodictask/", method="POST", data=task_dict1)
             self.assertEqual(status_code, 200)
             self.assertEqual(data["result"]["status"], True)
             ptask_id1 = data["result"]["value"]
@@ -133,9 +127,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         # all result in ERR905
         with self.mock_task_module():
             for invalid_task_dict in invalid_task_dicts:
-                status_code, data = self.simulate_request(
-                    "/periodictask/", method="POST", data=invalid_task_dict
-                )
+                status_code, data = self.simulate_request("/periodictask/", method="POST", data=invalid_task_dict)
                 self.assertEqual(status_code, 400)
                 self.assertFalse(data["result"]["status"])
                 self.assertIn("ERR905", data["result"]["error"]["message"])
@@ -150,9 +142,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
                 "taskmodule": "UnitTest",
                 "ordering": 2,
             }
-            status_code, data = self.simulate_request(
-                "/periodictask/", method="POST", data=task_dict2
-            )
+            status_code, data = self.simulate_request("/periodictask/", method="POST", data=task_dict2)
 
             self.assertEqual(status_code, 200)
             self.assertTrue(data["result"]["status"])
@@ -183,9 +173,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         self.assertEqual(result_dict["options"], {"something": "123", "else": "True"})
 
         # get one
-        status_code, data = self.simulate_request(
-            "/periodictask/{}".format(ptask_id1), method="GET"
-        )
+        status_code, data = self.simulate_request("/periodictask/{}".format(ptask_id1), method="GET")
         self.assertEqual(status_code, 200)
         self.assertEqual(data["result"]["value"]["id"], ptask_id1)
 
@@ -200,9 +188,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         task_dict1["id"] = ptask_id1
         task_dict1["ordering"] = "2"
         with self.mock_task_module():
-            status_code, data = self.simulate_request(
-                "/periodictask/", method="POST", data=task_dict1
-            )
+            status_code, data = self.simulate_request("/periodictask/", method="POST", data=task_dict1)
             self.assertEqual(status_code, 200)
             self.assertTrue(data["result"]["status"])
             self.assertEqual(data["result"]["value"], ptask_id1)
@@ -212,87 +198,59 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         self.assertEqual(status_code, 200)
         self.assertTrue(data["result"]["status"])
         self.assertEqual(len(data["result"]["value"]), 2)
-        self.assertIn(
-            "new name", [task["name"] for task in data["result"]["value"]], data
-        )
-        self.assertIn(
-            "some other task", [task["name"] for task in data["result"]["value"]], data
-        )
+        self.assertIn("new name", [task["name"] for task in data["result"]["value"]], data)
+        self.assertIn("some other task", [task["name"] for task in data["result"]["value"]], data)
 
         # get updated task
-        status_code, data = self.simulate_request(
-            "/periodictask/{}".format(ptask_id1), method="GET"
-        )
+        status_code, data = self.simulate_request("/periodictask/{}".format(ptask_id1), method="GET")
         self.assertEqual(status_code, 200)
         self.assertEqual(data["result"]["value"]["id"], ptask_id1)
         self.assertEqual(data["result"]["value"]["ordering"], 2)
         self.assertEqual(data["result"]["value"]["name"], "new name")
         self.assertEqual(data["result"]["value"]["options"], {"key": "value"})
-        self.assertGreater(
-            parse_timestamp(data["result"]["value"]["last_update"]), last_update
-        )
+        self.assertGreater(parse_timestamp(data["result"]["value"]["last_update"]), last_update)
         last_update = parse_timestamp(data["result"]["value"]["last_update"])
 
         # enable
-        status_code, data = self.simulate_request(
-            "/periodictask/enable/{}".format(ptask_id1), method="POST"
-        )
+        status_code, data = self.simulate_request("/periodictask/enable/{}".format(ptask_id1), method="POST")
         self.assertEqual(status_code, 200)
 
         # get updated task
-        status_code, data = self.simulate_request(
-            "/periodictask/{}".format(ptask_id1), method="GET"
-        )
+        status_code, data = self.simulate_request("/periodictask/{}".format(ptask_id1), method="GET")
         self.assertEqual(status_code, 200)
         self.assertEqual(data["result"]["value"]["name"], "new name")
         self.assertEqual(data["result"]["value"]["active"], True)
-        self.assertGreater(
-            parse_timestamp(data["result"]["value"]["last_update"]), last_update
-        )
+        self.assertGreater(parse_timestamp(data["result"]["value"]["last_update"]), last_update)
         last_update = parse_timestamp(data["result"]["value"]["last_update"])
 
         # disable
-        status_code, data = self.simulate_request(
-            "/periodictask/disable/{}".format(ptask_id1), method="POST"
-        )
+        status_code, data = self.simulate_request("/periodictask/disable/{}".format(ptask_id1), method="POST")
         self.assertEqual(status_code, 200)
 
         # get updated task
-        status_code, data = self.simulate_request(
-            "/periodictask/{}".format(ptask_id1), method="GET"
-        )
+        status_code, data = self.simulate_request("/periodictask/{}".format(ptask_id1), method="GET")
         self.assertEqual(status_code, 200)
         self.assertEqual(data["result"]["value"]["name"], "new name")
         self.assertEqual(data["result"]["value"]["active"], False)
-        self.assertGreater(
-            parse_timestamp(data["result"]["value"]["last_update"]), last_update
-        )
+        self.assertGreater(parse_timestamp(data["result"]["value"]["last_update"]), last_update)
 
         # disable again without effect
-        status_code, data = self.simulate_request(
-            "/periodictask/disable/{}".format(ptask_id1), method="POST"
-        )
+        status_code, data = self.simulate_request("/periodictask/disable/{}".format(ptask_id1), method="POST")
         self.assertEqual(status_code, 200)
 
         # get updated task
-        status_code, data = self.simulate_request(
-            "/periodictask/{}".format(ptask_id1), method="GET"
-        )
+        status_code, data = self.simulate_request("/periodictask/{}".format(ptask_id1), method="GET")
         self.assertEqual(status_code, 200)
         self.assertEqual(data["result"]["value"]["name"], "new name")
         self.assertEqual(data["result"]["value"]["active"], False)
 
         # delete
-        status_code, data = self.simulate_request(
-            "/periodictask/{}".format(ptask_id1), method="DELETE"
-        )
+        status_code, data = self.simulate_request("/periodictask/{}".format(ptask_id1), method="DELETE")
         self.assertEqual(status_code, 200)
         self.assertEqual(data["result"]["value"], ptask_id1)
 
         # get updated task impossible now
-        status_code, data = self.simulate_request(
-            "/periodictask/{}".format(ptask_id1), method="GET"
-        )
+        status_code, data = self.simulate_request("/periodictask/{}".format(ptask_id1), method="GET")
         self.assertEqual(status_code, 404)
         self.assertFalse(data["result"]["status"], False)
 
@@ -303,9 +261,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         self.assertEqual(len(data["result"]["value"]), 1)
 
         # delete the second task as well
-        status_code, data = self.simulate_request(
-            "/periodictask/{}".format(ptask_id2), method="DELETE"
-        )
+        status_code, data = self.simulate_request("/periodictask/{}".format(ptask_id2), method="DELETE")
         self.assertEqual(status_code, 200)
         self.assertEqual(data["result"]["value"], ptask_id2)
 
@@ -317,9 +273,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
 
     def test_02_taskmodules(self):
         with self.mock_task_module() as taskmodule:
-            status_code, data = self.simulate_request(
-                "/periodictask/taskmodules/", method="GET"
-            )
+            status_code, data = self.simulate_request("/periodictask/taskmodules/", method="GET")
             self.assertEqual(status_code, 200)
             self.assertTrue(data["result"]["status"])
             self.assertEqual(data["result"]["value"], ["UnitTest"])
@@ -330,9 +284,7 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
             }
             taskmodule.options = options
 
-            status_code, data = self.simulate_request(
-                "/periodictask/options/UnitTest", method="GET"
-            )
+            status_code, data = self.simulate_request("/periodictask/options/UnitTest", method="GET")
             self.assertEqual(status_code, 200)
             self.assertTrue(data["result"]["status"])
             self.assertEqual(data["result"]["value"], options)

@@ -48,9 +48,7 @@ class MachineTokenTestCase(MyTestCase):
 
     def test_00_setup(self):
         token1 = init_token({"type": "spass", "serial": self.serial})
-        resolver1 = save_resolver(
-            {"name": self.resolvername, "type": "hosts", "filename": HOSTSFILE}
-        )
+        resolver1 = save_resolver({"name": self.resolvername, "type": "hosts", "filename": HOSTSFILE})
         init_token({"type": "hotp", "serial": self.serialHotp, "otpkey": "313233"})
 
     def test_01_attach_token(self):
@@ -64,9 +62,7 @@ class MachineTokenTestCase(MyTestCase):
 
         # problem attaching token with incomplete machine definition (missing
         #  resolver)
-        self.assertRaises(
-            Exception, attach_token, self.serial, "luks", machine_id="192.168.0.1"
-        )
+        self.assertRaises(Exception, attach_token, self.serial, "luks", machine_id="192.168.0.1")
 
     def test_02_detach_token(self):
         detach_token(self.serial, "luks", hostname="gandalf")
@@ -101,9 +97,7 @@ class MachineTokenTestCase(MyTestCase):
             else:
                 self.fail("Unspecified Option! {0!s}".format(option.mt_key))
 
-        r = delete_option(
-            serial=self.serial, application="luks", hostname="gandalf", key="option1"
-        )
+        r = delete_option(serial=self.serial, application="luks", hostname="gandalf", key="option1")
         self.assertEqual(r, 1)
 
         # The options are accessible via the Token!!!
@@ -129,9 +123,7 @@ class MachineTokenTestCase(MyTestCase):
 
     def test_10_auth_items(self):
         # create an SSH token
-        token_obj = init_token(
-            {"serial": self.serial2, "type": "sshkey", "sshkey": sshkey}
-        )
+        token_obj = init_token({"serial": self.serial2, "type": "sshkey", "sshkey": sshkey})
         self.assertEqual(token_obj.type, "sshkey")
 
         # Attach the token to the machine "gandalf" with the application SSH
@@ -210,9 +202,7 @@ class MachineTokenTestCase(MyTestCase):
         self.assertEqual(len(machine_list), 0)
 
     def test_15_detach_ssh_by_service_id(self):
-        token_obj = init_token(
-            {"serial": self.serial2, "type": "sshkey", "sshkey": sshkey}
-        )
+        token_obj = init_token({"serial": self.serial2, "type": "sshkey", "sshkey": sshkey})
         self.assertEqual(token_obj.type, "sshkey")
 
         # Attach the token to the machine "gandalf" with the application SSH

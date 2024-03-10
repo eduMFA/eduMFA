@@ -18,14 +18,10 @@ class APIUsersTestCase(MyApiTestCase):
         "Database": "testuser-api.sqlite",
         "Table": "users",
         "Encoding": "utf8",
-        "Map": '{ "username": "username", \
-                    "userid" : "id", \
-                    "email" : "email", \
-                    "surname" : "name", \
-                    "givenname" : "givenname", \
-                    "password" : "password", \
-                    "phone": "phone", \
-                    "mobile": "mobile"}',
+        "Map": (
+            '{ "username": "username",                     "userid" : "id",                     "email" : "email",                     "surname" : "name",                    '
+            ' "givenname" : "givenname",                     "password" : "password",                     "phone": "phone",                     "mobile": "mobile"}'
+        ),
     }
 
     def _create_user_wordy(self):
@@ -85,9 +81,7 @@ class APIUsersTestCase(MyApiTestCase):
             self.assertTrue(role == "user", result)
 
     def test_00_get_empty_users(self):
-        with self.app.test_request_context(
-            "/user/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/user/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(b'"status": true' in res.data, res.data)
@@ -97,9 +91,7 @@ class APIUsersTestCase(MyApiTestCase):
         # create resolver
         with self.app.test_request_context(
             "/resolver/r1",
-            data=json.dumps(
-                {"resolver": "r1", "type": "passwdresolver", "fileName": PWFILE}
-            ),
+            data=json.dumps({"resolver": "r1", "type": "passwdresolver", "fileName": PWFILE}),
             method="POST",
             headers={"Authorization": self.at},
         ):
@@ -203,9 +195,7 @@ class APIUsersTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/user/",
             method="PUT",
-            query_string=urlencode(
-                {"user": "wordy", "resolver": resolver, "password": "passwort"}
-            ),
+            query_string=urlencode({"user": "wordy", "resolver": resolver, "password": "passwort"}),
             headers={"Authorization": self.at},
         ):
             res = self.app.full_dispatch_request()
@@ -222,9 +212,7 @@ class APIUsersTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/user/",
             method="PUT",
-            query_string=urlencode(
-                {"user": "wordy2", "resolver": resolver, "password": "newPassword"}
-            ),
+            query_string=urlencode({"user": "wordy2", "resolver": resolver, "password": "newPassword"}),
             headers={"Authorization": wordy_auth_token},
         ):
             res = self.app.full_dispatch_request()
@@ -253,9 +241,7 @@ class APIUsersTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/user/",
             method="PUT",
-            query_string=urlencode(
-                {"user": "wordy2", "resolver": resolver, "userid": "7"}
-            ),
+            query_string=urlencode({"user": "wordy2", "resolver": resolver, "userid": "7"}),
             headers={"Authorization": self.at},
         ):
             res = self.app.full_dispatch_request()

@@ -38,16 +38,12 @@ class APIAuditTestCase(MyApiTestCase):
         self.assertTrue(len(added) == 1)
 
     def test_00_get_audit(self):
-        with self.app.test_request_context(
-            "/audit/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/audit/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             json_response = res.json
             self.assertTrue(json_response.get("result").get("status"), res)
-            self.assertTrue(
-                json_response.get("result").get("value").get("current") == 1, res
-            )
+            self.assertTrue(json_response.get("result").get("value").get("current") == 1, res)
             # check that we have all available entries in the audit data
             # create a fake base Audit object to get the available_columns prop
             a = BaseAudit()
@@ -93,9 +89,7 @@ class APIAuditTestCase(MyApiTestCase):
                 mock_dt.now.return_value = t
                 yield
 
-        with self.app.test_request_context(
-            "/audit/test.csv", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/audit/test.csv", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual(res.mimetype, "text/csv", res)
@@ -148,16 +142,12 @@ class APIAuditTestCase(MyApiTestCase):
             self.assertTrue(json_response.get("result").get("status"), res)
             self.assertEqual(json_response.get("result").get("value").get("count"), 2)
 
-        with self.app.test_request_context(
-            "/audit/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/audit/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             json_response = res.json
             self.assertTrue(json_response.get("result").get("status"), res)
-            self.assertGreaterEqual(
-                json_response.get("result").get("value").get("count"), 7
-            )
+            self.assertGreaterEqual(json_response.get("result").get("value").get("count"), 7)
             audit_list = json_response.get("result").get("value").get("auditdata")
             audit_actions = [a for a in audit_list if a.get("action") == "GET /audit/"]
             self.assertGreaterEqual(len(audit_actions), 1)
@@ -175,14 +165,10 @@ class APIAuditTestCase(MyApiTestCase):
             self.assertEqual(json_response.get("result").get("value").get("count"), 3)
 
         # set policy for audit realms
-        set_policy(
-            "audit01", scope=SCOPE.ADMIN, action=ACTION.AUDIT, realm=self.realm1a
-        )
+        set_policy("audit01", scope=SCOPE.ADMIN, action=ACTION.AUDIT, realm=self.realm1a)
 
         # check, that we only see allowed audit realms
-        with self.app.test_request_context(
-            "/audit/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/audit/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             json_response = res.json
@@ -216,9 +202,7 @@ class APIAuditTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
             json_response = res.json
             self.assertTrue(json_response.get("result").get("status"), res)
-            self.assertGreaterEqual(
-                json_response.get("result").get("value").get("count"), 2
-            )
+            self.assertGreaterEqual(json_response.get("result").get("value").get("count"), 2)
 
         with self.app.test_request_context(
             "/audit/",
@@ -230,9 +214,7 @@ class APIAuditTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
             json_response = res.json
             self.assertTrue(json_response.get("result").get("status"), res)
-            self.assertGreaterEqual(
-                json_response.get("result").get("value").get("count"), 3
-            )
+            self.assertGreaterEqual(json_response.get("result").get("value").get("count"), 3)
 
         # set policy: helpdesk users in adminrealm are only allowed to
         # view "realm1A".
@@ -311,9 +293,7 @@ class APIAuditTestCase(MyApiTestCase):
                 self.assertEqual(ad.get("realm"), self.realm1a)
 
         # Now check, that the testadmin (self.at) sees all entries!
-        with self.app.test_request_context(
-            "/audit/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/audit/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             json_response = res.json

@@ -60,10 +60,7 @@ PNG_IMAGE = (
     "c64cKFCxcuXLjw/wX+HzgPbUakdjuaAAAAAElFTkSuQmCC"
 )
 
-OAUTH_URL = (
-    "otpauth://hotp/OATH0001D8B6?secret=GQROHTUPBAK5N6T2HBUK4IP42R56E"
-    "MV3&counter=1&digits=6&issuer=privacyIDEA"
-)
+OAUTH_URL = "otpauth://hotp/OATH0001D8B6?secret=GQROHTUPBAK5N6T2HBUK4IP42R56EMV3&counter=1&digits=6&issuer=privacyIDEA"
 
 
 class UserNotificationTestCase(MyTestCase):
@@ -94,9 +91,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "admin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -141,9 +136,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "admin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -236,9 +229,7 @@ class UserNotificationTestCase(MyTestCase):
         self.assertEqual(r, True)
 
         # check a locked token with maxfail = failcount
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         req.all_data = {"user": "cornelius"}
         resp.data = """{"result": {"value": false},
@@ -295,9 +286,7 @@ class UserNotificationTestCase(MyTestCase):
     def test_06_check_conditions_realm(self):
         uhandler = UserNotificationEventHandler()
         # check a locked token with maxfail = failcount
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
         env = builder.get_environ()
         req = Request(env)
@@ -383,9 +372,7 @@ class UserNotificationTestCase(MyTestCase):
     def test_08_check_conditions_serial(self):
         uhandler = UserNotificationEventHandler()
         # check a serial with regexp
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
         env = builder.get_environ()
         req = Request(env)
@@ -407,13 +394,9 @@ class UserNotificationTestCase(MyTestCase):
     def test_09_check_conditions_tokenrealm(self):
         uhandler = UserNotificationEventHandler()
         # check if tokenrealm is contained
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
-        tok = init_token(
-            {"serial": "oath1234", "type": "spass"}, user=User("cornelius", "realm1")
-        )
+        tok = init_token({"serial": "oath1234", "type": "spass"}, user=User("cornelius", "realm1"))
 
         env = builder.get_environ()
         req = Request(env)
@@ -455,13 +438,9 @@ class UserNotificationTestCase(MyTestCase):
     def test_10_check_conditions_tokentype(self):
         uhandler = UserNotificationEventHandler()
         # check if tokenrealm is contained
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
-        tok = init_token(
-            {"serial": "oath1234", "type": "spass"}, user=User("cornelius", "realm1")
-        )
+        tok = init_token({"serial": "oath1234", "type": "spass"}, user=User("cornelius", "realm1"))
 
         env = builder.get_environ()
         req = Request(env)
@@ -483,13 +462,9 @@ class UserNotificationTestCase(MyTestCase):
     def test_10_check_conditions_token_has_owner(self):
         uhandler = UserNotificationEventHandler()
         # check if tokenrealm is contained
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
-        tok = init_token(
-            {"serial": "oath1234", "type": "spass"}, user=User("cornelius", "realm1")
-        )
+        tok = init_token({"serial": "oath1234", "type": "spass"}, user=User("cornelius", "realm1"))
 
         env = builder.get_environ()
         req = Request(env)
@@ -535,13 +510,9 @@ class UserNotificationTestCase(MyTestCase):
     def test_10_check_conditions_token_validity_period(self):
         uhandler = UserNotificationEventHandler()
         serial = "spass01"
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
-        tok = init_token(
-            {"serial": serial, "type": "spass"}, user=User("cornelius", "realm1")
-        )
+        tok = init_token({"serial": serial, "type": "spass"}, user=User("cornelius", "realm1"))
 
         env = builder.get_environ()
         req = Request(env)
@@ -556,9 +527,7 @@ class UserNotificationTestCase(MyTestCase):
                 "g": {},
                 "request": req,
                 "response": resp,
-                "handler_def": {
-                    "conditions": {CONDITION.TOKEN_VALIDITY_PERIOD: "True"}
-                },
+                "handler_def": {"conditions": {CONDITION.TOKEN_VALIDITY_PERIOD: "True"}},
             }
         )
         self.assertEqual(r, True)
@@ -572,9 +541,7 @@ class UserNotificationTestCase(MyTestCase):
                 "g": {},
                 "request": req,
                 "response": resp,
-                "handler_def": {
-                    "conditions": {CONDITION.TOKEN_VALIDITY_PERIOD: "True"}
-                },
+                "handler_def": {"conditions": {CONDITION.TOKEN_VALIDITY_PERIOD: "True"}},
             }
         )
         self.assertEqual(r, False)
@@ -585,9 +552,7 @@ class UserNotificationTestCase(MyTestCase):
                 "g": {},
                 "request": req,
                 "response": resp,
-                "handler_def": {
-                    "conditions": {CONDITION.TOKEN_VALIDITY_PERIOD: "False"}
-                },
+                "handler_def": {"conditions": {CONDITION.TOKEN_VALIDITY_PERIOD: "False"}},
             }
         )
         self.assertEqual(r, True)
@@ -598,9 +563,7 @@ class UserNotificationTestCase(MyTestCase):
         uhandler = UserNotificationEventHandler()
         serial = "orphaned1"
         # check if tokenrealm is contained
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
         # Assign a non-existing user to the token
         tok = init_token({"serial": serial, "type": "spass"})
@@ -681,9 +644,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "admin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -731,9 +692,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "admin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -785,9 +744,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "admin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -839,9 +796,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "admin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -917,9 +872,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "testadmin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -991,9 +944,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "testadmin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -1052,14 +1003,11 @@ class UserNotificationTestCase(MyTestCase):
             "Table": "users",
             "Encoding": "utf8",
             "Editable": True,
-            "Map": '{ "username": "username", \
-                        "userid" : "id", \
-                        "email" : "email", \
-                        "surname" : "name", \
-                        "givenname" : "givenname", \
-                        "password" : "password", \
-                        "phone": "phone", \
-                        "mobile": "mobile"}',
+            "Map": (
+                '{ "username": "username",                         "userid" : "id",                         "email" : "email",                         "surname" : "name",         '
+                '                "givenname" : "givenname",                         "password" : "password",                         "phone": "phone",                        '
+                ' "mobile": "mobile"}'
+            ),
         }
         r = save_resolver(parameters)
         self.assertTrue(r)
@@ -1127,9 +1075,7 @@ class UserNotificationTestCase(MyTestCase):
         user = User("cornelius", "realm1")
         remove_token(user=user)
         uhandler = UserNotificationEventHandler()
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
         tok = init_token({"serial": "oath1234", "type": "spass"}, user=user)
 
@@ -1203,13 +1149,9 @@ class UserNotificationTestCase(MyTestCase):
         user = User("cornelius", "realm1")
         remove_token(user=user)
         uhandler = UserNotificationEventHandler()
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
-        tok = init_token(
-            {"serial": serial, "type": "spass", "otppin": "spass"}, user=user
-        )
+        tok = init_token({"serial": serial, "type": "spass", "otppin": "spass"}, user=user)
         env = builder.get_environ()
         req = Request(env)
         req.all_data = {"user": "cornelius@realm1", "serial": serial}
@@ -1271,13 +1213,9 @@ class UserNotificationTestCase(MyTestCase):
         user = User("cornelius", "realm1")
         remove_token(user=user)
         uhandler = UserNotificationEventHandler()
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius@realm1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius@realm1"}, headers={})
 
-        tok = init_token(
-            {"serial": serial, "type": "spass", "otppin": "spass"}, user=user
-        )
+        tok = init_token({"serial": serial, "type": "spass", "otppin": "spass"}, user=user)
         # Add last authentication
         tok.add_tokeninfo(ACTION.LASTAUTH, "2016-10-10 10:10:10.000")
         env = builder.get_environ()
@@ -1402,9 +1340,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "admin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -1564,9 +1500,7 @@ class UserNotificationTestCase(MyTestCase):
         g.logged_in_user = {"username": "admin", "role": "admin", "realm": ""}
         g.audit_object = audit_object
 
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -1581,9 +1515,7 @@ class UserNotificationTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {"filename": "test{serial}.txt", "body": "{serial}, {user}"}
-            },
+            "handler_def": {"options": {"filename": "test{serial}.txt", "body": "{serial}, {user}"}},
         }
         # remove leftover file from the last test run, if any
         if os.path.exists("tests/testdata/testOATH123456.txt"):
@@ -1614,9 +1546,7 @@ class UserNotificationTestCase(MyTestCase):
         # Check that an error is written to the logfile
         with mock.patch("logging.Logger.error") as mock_log:
             un_handler.do("savefile", options=options)
-            mock_log.assert_called_once_with(
-                "Cannot write outside of spooldir tests/testdata/!"
-            )
+            mock_log.assert_called_once_with("Cannot write outside of spooldir tests/testdata/!")
 
         # This part only works for a non-root user
         if os.getuid() == 0:
@@ -1627,9 +1557,7 @@ class UserNotificationTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {"filename": "test{serial}.txt", "body": "{serial}, {user}"}
-            },
+            "handler_def": {"options": {"filename": "test{serial}.txt", "body": "{serial}, {user}"}},
         }
 
         # create a file, that is not writable
@@ -1645,8 +1573,6 @@ class UserNotificationTestCase(MyTestCase):
             # ensure log.error was actually called ...
             self.assertIsNotNone(call_args)
             # ... with the right message
-            self.assertTrue(
-                call_args[0][0].startswith("Failed to write notification file:")
-            )
+            self.assertTrue(call_args[0][0].startswith("Failed to write notification file:"))
 
         os.remove("tests/testdata/testOATH123456.txt")

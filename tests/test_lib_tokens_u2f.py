@@ -28,7 +28,9 @@ import base64
 
 REG_DATA = "BQRFnd8XtfZzsTK68VPK64Bcjiog_ZzyYNuzjaaGwpPnSpifxaqQV4_4IMxVlGS3CLoQmNAR41MSMxZHG0dENLRmQGnk4OqRxGRHmUOOLmDkGgdIJycQe79JCERV1gqGnWAOFBg_bH4WFSxZwnX-IMRcl3zW_X442QNrrdFySvXrba4wggIcMIIBBqADAgECAgQ4Zt91MAsGCSqGSIb3DQEBCzAuMSwwKgYDVQQDEyNZdWJpY28gVTJGIFJvb3QgQ0EgU2VyaWFsIDQ1NzIwMDYzMTAgFw0xNDA4MDEwMDAwMDBaGA8yMDUwMDkwNDAwMDAwMFowKzEpMCcGA1UEAwwgWXViaWNvIFUyRiBFRSBTZXJpYWwgMTM4MzExNjc4NjEwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQ3jfx0DHOblHJO09Ujubh2gQZWwT3ob6-uzzjZD1XiyAob_gsw3FOzXefQRblty48r-U-o4LkDFjx_btwuSHtxoxIwEDAOBgorBgEEAYLECgEBBAAwCwYJKoZIhvcNAQELA4IBAQIaR2TKAInPkq24f6hIU45yzD79uzR5KUMEe4IWqTm69METVio0W2FHWXlpeUe85nGqanwGeW7U67G4_WAnGbcd6zz2QumNsdlmb_AebbdPRa95Z8BG1ub_S04JoxQYNLaa8WRlzN7POgqAnAqkmnsZQ_W9Tj2uO9zP3mpxOkkmnqz7P5zt4Lp5xrv7p15hGOIPD5V-ph7tUmiCJsq0LfeRA36X7aXi32Ap0rt_wyfnRef59YYr7SmwaMuXKjbIZSLesscZZTMzXd-uuLb6DbUCasqEVBkGGqTRfAcOmPov1nHUrNDCkOR0obR4PsJG4PiamIfApNeoXGYpGbok6nucMEYCIQC_yerJqB3mnuAJGfbdKuOIx-Flxr-VSQ2nAkUUE_50dQIhAJE2NL1Xs2oVEG4bFzEM86TfS7nkHxad89aYmUrII49V"
 CLIENT_DATA_HASH = "eyJ0eXAiOiJuYXZpZ2F0b3IuaWQuZmluaXNoRW5yb2xsbWVudCIsImNoYWxsZW5nZSI6ImdXbndtYnFSMl9YOE91RFhId0dyQWNmUTBUajN4YTVfZ2RJMjBYcVlsdTg9Iiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiY2lkX3B1YmtleSI6IiJ9"
-KEY_HANDLE_HEX = "61655467367048455a45655a51343475594f51614230676e4a78423776306b4952465857436f61645941345547443973666859564c466e436466346778467958664e6239666a6a5a4132757430584a4b396574747267"
+KEY_HANDLE_HEX = (
+    "61655467367048455a45655a51343475594f51614230676e4a78423776306b4952465857436f61645941345547443973666859564c466e436466346778467958664e6239666a6a5a4132757430584a4b396574747267"
+)
 APP_ID = "http://localhost:5000"
 
 
@@ -66,13 +68,9 @@ class U2FHelperFuncTestCase(MyTestCase):
             app_id_hash,
             "f0e6a6a97042a4f1f1c87f5f7d44315b2d852c2df5c7991cc66241bf7072d1c4",
         )
-        attestation_cert = crypto.load_certificate(
-            crypto.FILETYPE_ASN1, binascii.unhexlify(attestation_cert)
-        )
+        attestation_cert = crypto.load_certificate(crypto.FILETYPE_ASN1, binascii.unhexlify(attestation_cert))
         client_data_str = "".join(cdata_str.split())
-        client_data_hash = hexlify_and_unicode(
-            sha256(to_bytes(client_data_str)).digest()
-        )
+        client_data_hash = hexlify_and_unicode(sha256(to_bytes(client_data_str)).digest())
         self.assertEqual(
             client_data_hash,
             "4142d21c00d94ffb9d504ada8f99b721f4b191ae4e37ca0140f696b6983cfacb",
@@ -93,9 +91,7 @@ class U2FHelperFuncTestCase(MyTestCase):
         self.assertEqual(r, True)
 
     def test_02_parse_reg_date(self):
-        attestation_cert, user_pub_key, key_handle, signature, description = (
-            parse_registration_data(REG_DATA)
-        )
+        attestation_cert, user_pub_key, key_handle, signature, description = parse_registration_data(REG_DATA)
         self.assertEqual(description, "Yubico U2F EE Serial 13831167861")
         self.assertEqual(
             signature,
@@ -217,9 +213,7 @@ class U2FTokenTestCase(MyTestCase):
         res, message, t_id, reply_dict = token.create_challenge()
         attributes = reply_dict.get("attributes")
         self.assertTrue(res)
-        expected_text = _("Please confirm with your U2F token ({0!s})").format(
-            "Yubico U2F EE Serial 13831167861"
-        )
+        expected_text = _("Please confirm with your U2F token ({0!s})").format("Yubico U2F EE Serial 13831167861")
         self.assertEqual(message, expected_text)
         self.assertEqual(len(t_id), 20)
         u2f_sign_request = attributes.get("u2fSignRequest")
@@ -237,9 +231,7 @@ class U2FTokenTestCase(MyTestCase):
     def test_02_parse_regdata(self):
         client_data = "eyJ0eXAiOiJuYXZpZ2F0b3IuaWQuZmluaXNoRW5yb2xsbWVudCIsImNoYWxsZW5nZSI6IlNna3pUekdyYnNVREUyNEJSMV9kUTRYbXJtNTVqU2MzVml3Sm5DRjVmWm8iLCJvcmlnaW4iOiJodHRwczovL2RlbW8ueXViaWNvLmNvbSIsImNpZF9wdWJrZXkiOiJ1bnVzZWQifQ"
         reg_data = "BQT3NET2RTTcgzAiZRW5gkg3TT6mgQBepZl96iMtj-nXU25VdwBXCL1EjWOY-q1M76vT_iX9ebDhkZ1kvosbi3_AQGVopI2hcyIsc8q-KpzerJIZgWtN25bCy6g_hTk_M1khCjQGaiGJFwnk8GIn2OnkNOJRe7V00Q9PBZHn5mFwfFwwggJEMIIBLqADAgECAgRVYr6gMAsGCSqGSIb3DQEBCzAuMSwwKgYDVQQDEyNZdWJpY28gVTJGIFJvb3QgQ0EgU2VyaWFsIDQ1NzIwMDYzMTAgFw0xNDA4MDEwMDAwMDBaGA8yMDUwMDkwNDAwMDAwMFowKjEoMCYGA1UEAwwfWXViaWNvIFUyRiBFRSBTZXJpYWwgMTQzMjUzNDY4ODBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABEszH3c9gUS5mVy-RYVRfhdYOqR2I2lcvoWsSCyAGfLJuUZ64EWw5m8TGy6jJDyR_aYC4xjz_F2NKnq65yvRQwmjOzA5MCIGCSsGAQQBgsQKAgQVMS4zLjYuMS40LjEuNDE0ODIuMS41MBMGCysGAQQBguUcAgEBBAQDAgUgMAsGCSqGSIb3DQEBCwOCAQEArBbZs262s6m3bXWUs09Z9Pc-28n96yk162tFHKv0HSXT5xYU10cmBMpypXjjI-23YARoXwXn0bm-BdtulED6xc_JMqbK-uhSmXcu2wJ4ICA81BQdPutvaizpnjlXgDJjq6uNbsSAp98IStLLp7fW13yUw-vAsWb5YFfK9f46Yx6iakM3YqNvvs9M9EUJYl_VrxBJqnyLx2iaZlnpr13o8NcsKIJRdMUOBqt_ageQg3ttsyq_3LyoNcu7CQ7x8NmeCGm_6eVnZMQjDmwFdymwEN4OxfnM5MkcKCYhjqgIGruWkVHsFnJa8qjZXneVvKoiepuUQyDEJ2GcqvhU2YKY1zBFAiEAqqVKbLnZuWYyzjcsb1YnHEyuk-dmM77Q66iExrj8h2cCIHAvpisjLj-D2KvnZZcIQ_fFjFj9OX5jkfmJ65QVQ9bE"
-        cert, user_pub_key, key_handle, signature, description = (
-            parse_registration_data(reg_data)
-        )
+        cert, user_pub_key, key_handle, signature, description = parse_registration_data(reg_data)
         self.assertEqual(
             user_pub_key,
             "04f73444f64534dc8330226515b98248374d3ea681005ea5997dea232d8fe9d7536e5577005708bd448d6398faad4cefabd3fe25fd79b0e1919d64be8b1b8b7fc0",
@@ -263,9 +255,7 @@ class U2FTokenTestCase(MyTestCase):
 
         # modify signature
         broken_sig = "ff" + signature[2:]
-        with self.assertRaisesRegex(
-            Exception, "Error checking the signature of the registration data."
-        ):
+        with self.assertRaisesRegex(Exception, "Error checking the signature of the registration data."):
             check_registration_data(
                 cert,
                 "https://demo.yubico.com",
@@ -303,9 +293,7 @@ class U2FTokenTestCase(MyTestCase):
             "vKoiepuUQyDEJ2GcqvhU2YKY1zBFAiEAqqVKbLnZuWYyzjcsb1YnHEyuk-"
             "dmM77Q66iExrj8h2cCIHAvpisjLj-D2KvnZZcIQ_fFjFj9OX5jkfmJ65QVQ9bE"
         )
-        with self.assertRaisesRegex(
-            Exception, "The registration data is in a wrong format."
-        ):
+        with self.assertRaisesRegex(Exception, "The registration data is in a wrong format."):
             parse_registration_data(reg_data)
 
 
@@ -350,9 +338,7 @@ class MultipleU2FTokenTestCase(MyTestCase):
 
     def setUp(self):
         self.setUp_user_realms()
-        self.user = User(
-            login="cornelius", resolver=self.resolvername1, realm=self.realm1
-        )
+        self.user = User(login="cornelius", resolver=self.resolvername1, realm=self.realm1)
         set_edumfa_config("u2f.appId", self.app_id)
         # init step 1
         self.token1 = init_token({"type": "u2f"})
@@ -392,9 +378,7 @@ class MultipleU2FTokenTestCase(MyTestCase):
 
     # TODO: also test challenge-response with different tokens (u2f + totp)
     def test_01_multiple_token(self):
-        set_policy(
-            "otppin", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN)
-        )
+        set_policy("otppin", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN))
         res, reply = check_user_pass(self.user, "")
         self.assertFalse(res)
         self.assertIn("transaction_id", reply, reply)
@@ -407,9 +391,7 @@ class MultipleU2FTokenTestCase(MyTestCase):
         chal1 = reply["multi_challenge"][0]
         chal2 = reply["multi_challenge"][1]
         self.assertNotEqual(chal1["serial"], chal2["serial"], reply["multi_challenge"])
-        self.assertEqual(
-            chal1["transaction_id"], chal2["transaction_id"], reply["multi_challenge"]
-        )
+        self.assertEqual(chal1["transaction_id"], chal2["transaction_id"], reply["multi_challenge"])
         # Now make sure that the requests contain the same challenge
         self.assertEqual(
             chal1["attributes"]["u2fSignRequest"]["challenge"],

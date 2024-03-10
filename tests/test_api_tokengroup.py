@@ -18,9 +18,7 @@ class APITokengroupTestCase(MyApiTestCase):
             self.assertGreaterEqual(value, 1)
 
         # get tokengroups
-        with self.app.test_request_context(
-            "/tokengroup/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/tokengroup/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             value = res.json["result"]["value"]
@@ -40,9 +38,7 @@ class APITokengroupTestCase(MyApiTestCase):
             self.assertGreaterEqual(value, 1)
 
         # get all tokengroups
-        with self.app.test_request_context(
-            "/tokengroup/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/tokengroup/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             value = res.json["result"]["value"]
@@ -63,9 +59,7 @@ class APITokengroupTestCase(MyApiTestCase):
             self.assertGreaterEqual(value, 1)
 
         # get 1st group
-        with self.app.test_request_context(
-            "/tokengroup/gruppe1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/tokengroup/gruppe1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             value = res.json["result"]["value"]
@@ -73,18 +67,14 @@ class APITokengroupTestCase(MyApiTestCase):
             self.assertEqual(value["gruppe1"]["description"], "1st group")
 
         # delete 1st group
-        with self.app.test_request_context(
-            "/tokengroup/gruppe1", method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/tokengroup/gruppe1", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             value = res.json["result"]["value"]
             self.assertEqual(value, 1)
 
         # check, that only the 2nd group is available
-        with self.app.test_request_context(
-            "/tokengroup/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/tokengroup/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             value = res.json["result"]["value"]
@@ -93,9 +83,7 @@ class APITokengroupTestCase(MyApiTestCase):
             self.assertIn("gruppe2", value)
 
         # delete 2nd group
-        with self.app.test_request_context(
-            "/tokengroup/gruppe2", method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/tokengroup/gruppe2", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             value = res.json["result"]["value"]

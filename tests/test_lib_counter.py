@@ -119,24 +119,16 @@ class CounterTestCase(MyTestCase):
         self.assertEqual(read("ctrB"), 2)
         # ... and each node has written to its own row
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrA", node="node1")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrA", node="node1").one().counter_value,
             3,
         )
+        self.assertEqual(EventCounter.query.filter_by(counter_name="ctrA", node="node2").all(), [])
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrA", node="node2").all(), []
-        )
-        self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node1")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node1").one().counter_value,
             1,
         )
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node2")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node2").one().counter_value,
             1,
         )
 
@@ -147,15 +139,11 @@ class CounterTestCase(MyTestCase):
 
         self.assertEqual(read("ctrB"), 0)
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node1")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node1").one().counter_value,
             1,
         )
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node2")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node2").one().counter_value,
             -1,
         )
 
@@ -165,15 +153,11 @@ class CounterTestCase(MyTestCase):
 
         self.assertEqual(read("ctrB"), 0)
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node1")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node1").one().counter_value,
             0,
         )
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node2")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node2").one().counter_value,
             0,
         )
 
@@ -185,15 +169,11 @@ class CounterTestCase(MyTestCase):
 
         self.assertEqual(read("ctrB"), -2)
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node1")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node1").one().counter_value,
             -1,
         )
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node2")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node2").one().counter_value,
             -1,
         )
 
@@ -201,14 +181,10 @@ class CounterTestCase(MyTestCase):
         reset("ctrB")
         self.assertEqual(read("ctrB"), 0)
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node1")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node1").one().counter_value,
             0,
         )
         self.assertEqual(
-            EventCounter.query.filter_by(counter_name="ctrB", node="node2")
-            .one()
-            .counter_value,
+            EventCounter.query.filter_by(counter_name="ctrB", node="node2").one().counter_value,
             0,
         )

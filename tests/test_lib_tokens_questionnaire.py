@@ -67,9 +67,7 @@ class QuestionnaireTokenTestCase(MyTestCase):
         self.assertTrue(question in self.questions)
 
         # Now that we have the question, we can give the answer
-        r = token.check_challenge_response(
-            passw=self.questions[question], options={"transaction_id": transactionid}
-        )
+        r = token.check_challenge_response(passw=self.questions[question], options={"transaction_id": transactionid})
         self.assertEqual(r, 1)
         token.delete_token()
 
@@ -113,9 +111,7 @@ class QuestionnaireTokenTestCase(MyTestCase):
         self.assertTrue(question in questions)
 
         # Now that we have the question, we can give the answer
-        r = token.check_challenge_response(
-            passw=questions[question], options={"transaction_id": transactionid}
-        )
+        r = token.check_challenge_response(passw=questions[question], options={"transaction_id": transactionid})
         self.assertEqual(r, 1)
         token.delete_token()
 
@@ -139,13 +135,9 @@ class QuestionnaireTokenTestCase(MyTestCase):
         self.assertTrue(question in questions)
 
         # What happens if the answer is wrong?
-        r = token.check_challenge_response(
-            passw="Málaga", options={"transaction_id": transactionid}
-        )
+        r = token.check_challenge_response(passw="Málaga", options={"transaction_id": transactionid})
         self.assertEqual(r, -1)
         # Try to answer again
-        r = token.check_challenge_response(
-            passw="Almería", options={"transaction_id": transactionid}
-        )
+        r = token.check_challenge_response(passw="Almería", options={"transaction_id": transactionid})
         self.assertEqual(r, 1)
         token.delete_token()

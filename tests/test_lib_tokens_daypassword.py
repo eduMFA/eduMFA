@@ -264,9 +264,7 @@ class DayPasswordTokenTestCase(MyTestCase):
     def test_13_check_otp(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = DayPasswordTokenClass(db_token)
-        token.update(
-            {"otpkey": self.otpkey, "pin": "test", "otplen": 6, "timeStep": "1h"}
-        )
+        token.update({"otpkey": self.otpkey, "pin": "test", "otplen": 6, "timeStep": "1h"})
         token.set_otp_count(470184)  # 2023-08-22T00:05:23+00:00
         self.assertEqual(token.get_tokeninfo("timeStep"), "1h", token.get_tokeninfo())
         with mock.patch("time.time") as MockTime:
@@ -329,9 +327,7 @@ class DayPasswordTokenTestCase(MyTestCase):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = DayPasswordTokenClass(db_token)
         # Failed update: genkey wrong
-        self.assertRaises(
-            Exception, token.update, {"description": "new desc", "genkey": "17"}
-        )
+        self.assertRaises(Exception, token.update, {"description": "new desc", "genkey": "17"})
         # genkey and otpkey used at the same time
         token.update({"otpkey": self.otpkey, "genkey": "1"})
 
@@ -358,15 +354,11 @@ class DayPasswordTokenTestCase(MyTestCase):
     def test_18_challenges(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = DayPasswordTokenClass(db_token)
-        resp = token.is_challenge_response(
-            "test123456", user=User(login="cornelius", realm=self.realm1)
-        )
+        resp = token.is_challenge_response("test123456", user=User(login="cornelius", realm=self.realm1))
         self.assertFalse(resp, resp)
 
         transaction_id = "123456789"
-        chal = Challenge(
-            self.serial1, transaction_id=transaction_id, challenge="Who are you?"
-        )
+        chal = Challenge(self.serial1, transaction_id=transaction_id, challenge="Who are you?")
         chal.save()
         resp = token.is_challenge_response(
             "test123456",
@@ -382,9 +374,7 @@ class DayPasswordTokenTestCase(MyTestCase):
     def test_19_pin_otp_functions(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()
         token = DayPasswordTokenClass(db_token)
-        token.update(
-            {"otpkey": self.otpkey, "pin": "test", "otplen": 6, "timeStep": "1h"}
-        )
+        token.update({"otpkey": self.otpkey, "pin": "test", "otplen": 6, "timeStep": "1h"})
         set_prepend_pin()
         self.assertTrue(token.check_pin("test"))
         # get the OTP value for time at 1692785442 (2023-08-23T10:10:42+00:00)
@@ -449,9 +439,7 @@ class DayPasswordTokenTestCase(MyTestCase):
                 (470225, "554912"),
                 (470226, "756301"),
             ]:
-                self.assertEqual(
-                    res[2].get("otp").get(count).get("otpval"), value, res[2].get("otp")
-                )
+                self.assertEqual(res[2].get("otp").get(count).get("otpval"), value, res[2].get("otp"))
 
         # do some failing otp checks
         token.token.otplen = "invalid otp counter"
@@ -467,14 +455,10 @@ class DayPasswordTokenTestCase(MyTestCase):
         self.assertTrue(r == -1, r)
 
         # create a challenge and match the transaction_id
-        c = Challenge(
-            self.serial1, transaction_id="mytransaction", challenge="Blah, what now?"
-        )
+        c = Challenge(self.serial1, transaction_id="mytransaction", challenge="Blah, what now?")
         # save challenge to the database
         c.save()
-        r = token.check_challenge_response(
-            user=None, passw="123454", options={"state": "mytransaction"}
-        )
+        r = token.check_challenge_response(user=None, passw="123454", options={"state": "mytransaction"})
         # The challenge matches, but the OTP does not match!
         self.assertTrue(r == -1, r)
 
@@ -572,11 +556,7 @@ class DayPasswordTokenTestCase(MyTestCase):
         db_token = Token(serial, tokentype="daypassword")
         db_token.save()
         token = DayPasswordTokenClass(db_token)
-        token.set_otpkey(
-            binascii.hexlify(
-                b"1234567890123456789012345678901234567890123456789012345678901234"
-            )
-        )
+        token.set_otpkey(binascii.hexlify(b"1234567890123456789012345678901234567890123456789012345678901234"))
         token.set_hashlib("sha512")
         token.set_otplen(8)
         token.save()

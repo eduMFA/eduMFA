@@ -611,9 +611,7 @@ class ImportOTPTestCase(MyTestCase):
         self.assertTrue("00040008CFA52" in tokens, tokens)
 
         # fail to import without toplevel TOKENS tag
-        self.assertRaises(
-            TokenImportException, parseSafeNetXML, ALADDINXML_WITHOUT_TOKENS
-        )
+        self.assertRaises(TokenImportException, parseSafeNetXML, ALADDINXML_WITHOUT_TOKENS)
 
     def test_02_import_yubikey(self):
         tokens = parseYubicoCSV(YUBIKEY_CSV)
@@ -650,16 +648,12 @@ class ImportOTPTestCase(MyTestCase):
         self.assertEqual(tokens["PW001"].get("otplen"), "12")
 
         # The secret (password) of the pw token is "123456789012"
-        self.assertEqual(
-            tokens["PW001"].get("otpkey"), hexlify_and_unicode("123456789012")
-        )
+        self.assertEqual(tokens["PW001"].get("otpkey"), hexlify_and_unicode("123456789012"))
 
     def test_04_import_pskc_aes(self):
         # Test default and all tokens are valid
         encryption_key_hex = "12345678901234567890123456789012"
-        tokens, not_imported = parsePSKCdata(
-            XML_PSKC_AES, preshared_key_hex=encryption_key_hex
-        )
+        tokens, not_imported = parsePSKCdata(XML_PSKC_AES, preshared_key_hex=encryption_key_hex)
         self.assertEqual(len(tokens), 1)
         self.assertEqual(len(not_imported), 0)
         self.assertEqual(tokens["987654321"].get("type"), "hotp")
@@ -671,22 +665,14 @@ class ImportOTPTestCase(MyTestCase):
         self.assertEqual(tokens["987654321"].get("description"), "Manufacturer")
 
         # Test 'check_fail_hard' no token parsed
-        xml_wrong_mac = XML_PSKC_AES.replace(
-            "Su+NvtQfmvfJzF6bmQiJqoLRExc=", "Su+NvtQfmvfJzF6XYZiJqoLRExc="
-        )
-        tokens, not_imported = parsePSKCdata(
-            xml_wrong_mac, preshared_key_hex=encryption_key_hex
-        )
+        xml_wrong_mac = XML_PSKC_AES.replace("Su+NvtQfmvfJzF6bmQiJqoLRExc=", "Su+NvtQfmvfJzF6XYZiJqoLRExc=")
+        tokens, not_imported = parsePSKCdata(xml_wrong_mac, preshared_key_hex=encryption_key_hex)
         self.assertEqual(len(tokens), 0)
         self.assertEqual(len(not_imported), 1)
 
         # Test 'no_check' all tokens parsed and no exception
-        xml_wrong_mac = XML_PSKC_AES.replace(
-            "Su+NvtQfmvfJzF6bmQiJqoLRExc=", "Su+NvtQfmvfJzF6XYZiJqoLRExc="
-        )
-        tokens, not_imported = parsePSKCdata(
-            xml_wrong_mac, preshared_key_hex=encryption_key_hex, validate_mac="no_check"
-        )
+        xml_wrong_mac = XML_PSKC_AES.replace("Su+NvtQfmvfJzF6bmQiJqoLRExc=", "Su+NvtQfmvfJzF6XYZiJqoLRExc=")
+        tokens, not_imported = parsePSKCdata(xml_wrong_mac, preshared_key_hex=encryption_key_hex, validate_mac="no_check")
         self.assertEqual(len(tokens), 1)
         self.assertEqual(len(not_imported), 0)
         self.assertEqual(tokens["987654321"].get("type"), "hotp")
@@ -698,9 +684,7 @@ class ImportOTPTestCase(MyTestCase):
         self.assertEqual(tokens["987654321"].get("description"), "Manufacturer")
 
         # Test 'check_fail_soft' no token parsed and no exception
-        xml_wrong_mac = XML_PSKC_AES.replace(
-            "Su+NvtQfmvfJzF6bmQiJqoLRExc=", "Su+NvtQfmvfJzF6XYZiJqoLRExc="
-        )
+        xml_wrong_mac = XML_PSKC_AES.replace("Su+NvtQfmvfJzF6bmQiJqoLRExc=", "Su+NvtQfmvfJzF6XYZiJqoLRExc=")
         tokens, not_imported = parsePSKCdata(
             xml_wrong_mac,
             preshared_key_hex=encryption_key_hex,

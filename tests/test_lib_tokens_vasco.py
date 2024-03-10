@@ -74,9 +74,7 @@ class VascoTokenTest(MyTestCase):
         db_token = Token(self.serial1, tokentype="vasco")
         db_token.save()
         token = VascoTokenClass(db_token)
-        token.update(
-            {"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin}
-        )
+        token.update({"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin})
         self.assertTrue(token.token.serial == self.serial1, token)
         self.assertTrue(token.token.tokentype == "vasco", token.token.tokentype)
         self.assertTrue(token.type == "vasco", token)
@@ -96,12 +94,8 @@ class VascoTokenTest(MyTestCase):
         db_token = Token(self.serial2, tokentype="vasco")
         db_token.save()
         token = VascoTokenClass(db_token)
-        token.update(
-            {"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin}
-        )
-        self.assertRaises(
-            RuntimeError, token.authenticate, "{}123456".format(self.otppin)
-        )
+        token.update({"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin})
+        self.assertRaises(RuntimeError, token.authenticate, "{}123456".format(self.otppin))
         token.delete_token()
 
     @mock_verification(create_mock_failure(1))
@@ -109,9 +103,7 @@ class VascoTokenTest(MyTestCase):
         db_token = Token(self.serial2, tokentype="vasco")
         db_token.save()
         token = VascoTokenClass(db_token)
-        token.update(
-            {"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin}
-        )
+        token.update({"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin})
         r = token.authenticate("{}123456".format(self.otppin))
         self.assertEqual(r[0], True)
         self.assertEqual(r[1], -1)
@@ -137,9 +129,7 @@ class VascoTokenTest(MyTestCase):
         db_token = Token(self.serial2, tokentype="vasco")
         db_token.save()
         token = VascoTokenClass(db_token)
-        token.update(
-            {"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin}
-        )
+        token.update({"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin})
         # wrong PIN, the token secret has not been updated
         r = token.authenticate("WRONG123456".format(self.otppin))
         self.assertEqual(r[0], False)
@@ -164,9 +154,7 @@ class VascoTokenTest(MyTestCase):
         db_token = Token(self.serial2, tokentype="vasco")
         db_token.save()
         token = VascoTokenClass(db_token)
-        token.update(
-            {"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin}
-        )
+        token.update({"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin})
 
         @mock_verification(mock_success)
         def _step1():
@@ -212,9 +200,7 @@ class VascoTokenTest(MyTestCase):
         db_token = Token(self.serial2, tokentype="vasco")
         db_token.save()
         token = VascoTokenClass(db_token)
-        token.update(
-            {"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin}
-        )
+        token.update({"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin})
 
         @mock_verification(create_mock_failure(123))
         def _step1():
@@ -249,18 +235,14 @@ class VascoTokenTest(MyTestCase):
             token.update,
             {"otpkey": hexlify(b"X" * 250).decode("utf-8")},
         )  # wrong length
-        self.assertRaises(
-            ParameterError, token.update, {"otpkey": "X" * 496}
-        )  # not a hex-string
+        self.assertRaises(ParameterError, token.update, {"otpkey": "X" * 496})  # not a hex-string
         token.delete_token()
 
     def test_09_failcount(self):
         db_token = Token(self.serial2, tokentype="vasco")
         db_token.save()
         token = VascoTokenClass(db_token)
-        token.update(
-            {"otpkey": hexlify(b"A" * 248).decode("utf-8"), "pin": self.otppin}
-        )
+        token.update({"otpkey": hexlify(b"A" * 248).decode("utf-8"), "pin": self.otppin})
 
         @mock_verification(create_mock_failure(1))
         def _step1():

@@ -96,36 +96,36 @@ from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
 from edumfa.lib.challenge import get_challenges
 from edumfa.lib.error import PolicyError, ParameterError, EnrollmentError
 
-TRUST_ANCHOR_DIR = "{}/testdata/trusted_attestation_roots".format(
-    os.path.abspath(os.path.dirname(__file__))
-)
+TRUST_ANCHOR_DIR = "{}/testdata/trusted_attestation_roots".format(os.path.abspath(os.path.dirname(__file__)))
 REGISTRATION_RESPONSE_TMPL = {
-    "clientData": b"eyJ0eXBlIjogIndlYmF1dGhuLmNyZWF0ZSIsICJjbGllbnRFeHRlbnNpb25zIjoge30sICJjaGFsbGVu"
-    b"Z2UiOiAiYlB6cFgzaEhRdHNwOWV2eUtZa2FadFZjOVVOMDdQVWRKMjJ2WlVkRHA5NCIsICJvcmlnaW4i"
-    b"OiAiaHR0cHM6Ly93ZWJhdXRobi5pbyJ9",
-    "attObj": b"o2NmbXRoZmlkby11MmZnYXR0U3RtdKJjc2lnWEgwRgIhAI1qbvWibQos_t3zsTU05IXw1Ek3SDApATok"
-    b"09uc4UBwAiEAv0fB_lgb5Ot3zJ691Vje6iQLAtLhJDiA8zDxaGjcE3hjeDVjgVkCUzCCAk8wggE3oAMC"
-    b"AQICBDxoKU0wDQYJKoZIhvcNAQELBQAwLjEsMCoGA1UEAxMjWXViaWNvIFUyRiBSb290IENBIFNlcmlh"
-    b"bCA0NTcyMDA2MzEwIBcNMTQwODAxMDAwMDAwWhgPMjA1MDA5MDQwMDAwMDBaMDExLzAtBgNVBAMMJll1"
-    b"YmljbyBVMkYgRUUgU2VyaWFsIDIzOTI1NzM0ODExMTE3OTAxMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcD"
-    b"QgAEvd9nk9t3lMNQMXHtLE1FStlzZnUaSLql2fm1ajoggXlrTt8rzXuSehSTEPvEaEdv_FeSqX22L6Ao"
-    b"a8ajIAIOY6M7MDkwIgYJKwYBBAGCxAoCBBUxLjMuNi4xLjQuMS40MTQ4Mi4xLjUwEwYLKwYBBAGC5RwC"
-    b"AQEEBAMCBSAwDQYJKoZIhvcNAQELBQADggEBAKrADVEJfuwVpIazebzEg0D4Z9OXLs5qZ_ukcONgxkRZ"
-    b"8K04QtP_CB5x6olTlxsj-SXArQDCRzEYUgbws6kZKfuRt2a1P-EzUiqDWLjRILSr-3_o7yR7ZP_GpiFK"
-    b"wdm-czb94POoGD-TS1IYdfXj94mAr5cKWx4EKjh210uovu_pLdLjc8xkQciUrXzZpPR9rT2k_q9HkZhH"
-    b"U-NaCJzky-PTyDbq0KKnzqVhWtfkSBCGw3ezZkTS-5lrvOKbIa24lfeTgu7FST5OwTPCFn8HcfWZMXMS"
-    b"D_KNU-iBqJdAwTLPPDRoLLvPTl29weCAIh-HUpmBQd0UltcPOrA_LFvAf61oYXV0aERhdGFYwnSm6pIT"
-    b"yZwvdLIkkrMgz0AmKpTBqVCgOX8pJQtghB7wQQAAAAAAAAAAAAAAAAAAAAAAAAAAAECKU1ppjl9gmhHW"
-    b"yDkgHsUvZmhr6oF3_lD3llzLE2SaOSgOGIsIuAQqgp8JQSUu3r_oOaP8RS44dlQjrH-ALfYtpAECAyYh"
-    b"WCAxnqAfESXOYjKUc2WACuXZ3ch0JHxV0VFrrTyjyjIHXCJYIFnx8H87L4bApR4M-hPcV-fHehEOeW-K"
-    b"Cyd0H-WGY8s6",
+    "clientData": (
+        b"eyJ0eXBlIjogIndlYmF1dGhuLmNyZWF0ZSIsICJjbGllbnRFeHRlbnNpb25zIjoge30sICJjaGFsbGVu"
+        b"Z2UiOiAiYlB6cFgzaEhRdHNwOWV2eUtZa2FadFZjOVVOMDdQVWRKMjJ2WlVkRHA5NCIsICJvcmlnaW4i"
+        b"OiAiaHR0cHM6Ly93ZWJhdXRobi5pbyJ9"
+    ),
+    "attObj": (
+        b"o2NmbXRoZmlkby11MmZnYXR0U3RtdKJjc2lnWEgwRgIhAI1qbvWibQos_t3zsTU05IXw1Ek3SDApATok"
+        b"09uc4UBwAiEAv0fB_lgb5Ot3zJ691Vje6iQLAtLhJDiA8zDxaGjcE3hjeDVjgVkCUzCCAk8wggE3oAMC"
+        b"AQICBDxoKU0wDQYJKoZIhvcNAQELBQAwLjEsMCoGA1UEAxMjWXViaWNvIFUyRiBSb290IENBIFNlcmlh"
+        b"bCA0NTcyMDA2MzEwIBcNMTQwODAxMDAwMDAwWhgPMjA1MDA5MDQwMDAwMDBaMDExLzAtBgNVBAMMJll1"
+        b"YmljbyBVMkYgRUUgU2VyaWFsIDIzOTI1NzM0ODExMTE3OTAxMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcD"
+        b"QgAEvd9nk9t3lMNQMXHtLE1FStlzZnUaSLql2fm1ajoggXlrTt8rzXuSehSTEPvEaEdv_FeSqX22L6Ao"
+        b"a8ajIAIOY6M7MDkwIgYJKwYBBAGCxAoCBBUxLjMuNi4xLjQuMS40MTQ4Mi4xLjUwEwYLKwYBBAGC5RwC"
+        b"AQEEBAMCBSAwDQYJKoZIhvcNAQELBQADggEBAKrADVEJfuwVpIazebzEg0D4Z9OXLs5qZ_ukcONgxkRZ"
+        b"8K04QtP_CB5x6olTlxsj-SXArQDCRzEYUgbws6kZKfuRt2a1P-EzUiqDWLjRILSr-3_o7yR7ZP_GpiFK"
+        b"wdm-czb94POoGD-TS1IYdfXj94mAr5cKWx4EKjh210uovu_pLdLjc8xkQciUrXzZpPR9rT2k_q9HkZhH"
+        b"U-NaCJzky-PTyDbq0KKnzqVhWtfkSBCGw3ezZkTS-5lrvOKbIa24lfeTgu7FST5OwTPCFn8HcfWZMXMS"
+        b"D_KNU-iBqJdAwTLPPDRoLLvPTl29weCAIh-HUpmBQd0UltcPOrA_LFvAf61oYXV0aERhdGFYwnSm6pIT"
+        b"yZwvdLIkkrMgz0AmKpTBqVCgOX8pJQtghB7wQQAAAAAAAAAAAAAAAAAAAAAAAAAAAECKU1ppjl9gmhHW"
+        b"yDkgHsUvZmhr6oF3_lD3llzLE2SaOSgOGIsIuAQqgp8JQSUu3r_oOaP8RS44dlQjrH-ALfYtpAECAyYh"
+        b"WCAxnqAfESXOYjKUc2WACuXZ3ch0JHxV0VFrrTyjyjIHXCJYIFnx8H87L4bApR4M-hPcV-fHehEOeW-K"
+        b"Cyd0H-WGY8s6"
+    ),
 }
 ASSERTION_RESPONSE_TMPL = {
     "authData": b"dKbqkhPJnC90siSSsyDPQCYqlMGpUKA5fyklC2CEHvABAAACfQ",
-    "clientData": b"eyJjaGFsbGVuZ2UiOiJlLWctblhhUnhNYWdFaXFUSlN5RDgyUnNFYzVpZl82anlmSkR5OGJOS2x3Iiwi"
-    b"b3JpZ2luIjoiaHR0cHM6Ly93ZWJhdXRobi5pbyIsInR5cGUiOiJ3ZWJhdXRobi5nZXQifQ",
-    "signature": b"MEUCIEp28FzVKneM3U3xVl4ABOXMHq02BBnQ9cOgFDvzfn8VAiEAkytcMIpWDP5PJEIUhDB1uQSz7aZO"
-    b"hdZGYqgRmMOGzd4=",
+    "clientData": b"eyJjaGFsbGVuZ2UiOiJlLWctblhhUnhNYWdFaXFUSlN5RDgyUnNFYzVpZl82anlmSkR5OGJOS2x3Iiwib3JpZ2luIjoiaHR0cHM6Ly93ZWJhdXRobi5pbyIsInR5cGUiOiJ3ZWJhdXRobi5nZXQifQ",
+    "signature": b"MEUCIEp28FzVKneM3U3xVl4ABOXMHq02BBnQ9cOgFDvzfn8VAiEAkytcMIpWDP5PJEIUhDB1uQSz7aZOhdZGYqgRmMOGzd4=",
 }
 ASSERTION_RESPONSE_SIGN_COUNT = 637
 CRED_KEY = {"alg": -7, "type": "public-key"}
@@ -155,28 +155,26 @@ PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE = [
 ]
 ALLOWED_TRANSPORTS = "usb ble nfc"
 CRED_ID = "ilNaaY5fYJoR1sg5IB7FL2Zoa-qBd_5Q95ZcyxNkmjkoDhiLCLgEKoKfCUElLt6_6Dmj_EUuOHZUI6x_gC32LQ"
-PUB_KEY = (
-    "a401020326215820319ea01f1125ce6232947365800ae5d9ddc874247c55d1516bad3ca3ca32075c"
-    "22582059f1f07f3b2f86c0a51e0cfa13dc57e7c77a110e796f8a0b27741fe58663cb3a"
-)
+PUB_KEY = "a401020326215820319ea01f1125ce6232947365800ae5d9ddc874247c55d1516bad3ca3ca32075c22582059f1f07f3b2f86c0a51e0cfa13dc57e7c77a110e796f8a0b27741fe58663cb3a"
 
-URL_DECODE_TEST_STRING = (
-    "MEQCIBxR_Zn2XNp8yp4gVaFWU7xdpdAjkBXpXPphKPrgc_4uAiBAB0oVN-8ryLRfo-koEF5NLn1J\r\n"
-    "Cj8yyeCsp1U7mhR32A"
-)
+URL_DECODE_TEST_STRING = "MEQCIBxR_Zn2XNp8yp4gVaFWU7xdpdAjkBXpXPphKPrgc_4uAiBAB0oVN-8ryLRfo-koEF5NLn1J\r\nCj8yyeCsp1U7mhR32A"
 URL_DECODE_EXPECTED_RESULT = (
     b"0D\x02 \x1cQ\xfd\x99\xf6\\\xda|\xca\x9e U\xa1VS\xbc]\xa5\xd0#\x90\x15\xe9\\\xfaa(\xfa"
     b"\xe0s\xfe.\x02 @\x07J\x157\xef+\xc8\xb4_\xa3\xe9(\x10^M.}I\n?2\xc9\xe0\xac\xa7U;\x9a"
     b"\x14w\xd8"
 )
 NONE_ATTESTATION_REGISTRATION_RESPONSE_TMPL = {
-    "clientData": b"eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiZkszN3hLZGhXSmhVNmQyVEFH"
-    b"VllESEttZHNwb3JsanNSb1daMDlaaVRYTSIsIm9yaWdpbiI6Imh0dHBzOi8vd2ViYXV0aG4uaW8i"
-    b"LCJjcm9zc09yaWdpbiI6ZmFsc2V9",
-    "attObj": b"o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVjEdKbqkhPJnC90siSSsyDPQCYqlMGpUKA5fykl"
-    b"C2CEHvBBAAAAtQAAAAAAAAAAAAAAAAAAAAAAQF8gbz2rT3N24r4ojF9kZKuVY_luj5OkbTYuq-79"
-    b"HUoKy2Gj8cVotKsYQG6zAUGvh2DNRWCplAwAJI93pAqCExOlAQIDJiABIVgg0hC-jd-1sLwL4eqN"
-    b"6u3sGX5D4f7OTrlXkel-HZIZSR8iWCD4DkCLED1CSAhHSZlVak4sdkU8_RFClaObyTJag7hEFg",
+    "clientData": (
+        b"eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiZkszN3hLZGhXSmhVNmQyVEFH"
+        b"VllESEttZHNwb3JsanNSb1daMDlaaVRYTSIsIm9yaWdpbiI6Imh0dHBzOi8vd2ViYXV0aG4uaW8i"
+        b"LCJjcm9zc09yaWdpbiI6ZmFsc2V9"
+    ),
+    "attObj": (
+        b"o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVjEdKbqkhPJnC90siSSsyDPQCYqlMGpUKA5fykl"
+        b"C2CEHvBBAAAAtQAAAAAAAAAAAAAAAAAAAAAAQF8gbz2rT3N24r4ojF9kZKuVY_luj5OkbTYuq-79"
+        b"HUoKy2Gj8cVotKsYQG6zAUGvh2DNRWCplAwAJI93pAqCExOlAQIDJiABIVgg0hC-jd-1sLwL4eqN"
+        b"6u3sGX5D4f7OTrlXkel-HZIZSR8iWCD4DkCLED1CSAhHSZlVak4sdkU8_RFClaObyTJag7hEFg"
+    ),
 }
 NONE_ATTESTATION_REGISTRATION_CHALLENGE = "fK37xKdhWJhU6d2TAGVYDHKmdsporljsRoWZ09ZiTXM"
 NONE_ATTESTATION_USER_NAME = "john.doe"
@@ -185,8 +183,7 @@ NONE_ATTESTATION_USER_ID = b"WAN000136AE"
 NONE_ATTESTATION_ATTESTATION_FORM = "none"
 NONE_ATTESTATION_CRED_ID = "XyBvPatPc3biviiMX2Rkq5Vj-W6Pk6RtNi6r7v0dSgrLYaPxxWi0qxhAbrMBQa-HYM1FYKmUDAAkj3ekCoITEw"
 NONE_ATTESTATION_PUB_KEY = (
-    "a5010203262001215820d210be8ddfb5b0bc0be1ea8deaedec197e43e1fece4eb95791e97e1d9219491f22582"
-    "0f80e408b103d424808474999556a4e2c76453cfd114295a39bc9325a83b84416"
+    "a5010203262001215820d210be8ddfb5b0bc0be1ea8deaedec197e43e1fece4eb95791e97e1d9219491f225820f80e408b103d424808474999556a4e2c76453cfd114295a39bc9325a83b84416"
 )
 
 SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL = {
@@ -196,23 +193,17 @@ SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL = {
 
 SELF_ATTESTATION_REGISTRATION_RESPONSE_BAD_COSE_ALG = {
     "clientData": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["clientData"],
-    "attObj": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][:529]
-    + "y"
-    + SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][530:],
+    "attObj": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][:529] + "y" + SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][530:],
 }
 
 SELF_ATTESTATION_REGISTRATION_RESPONSE_ALG_MISMATCH = {
     "clientData": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["clientData"],
-    "attObj": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][:37]
-    + "2"
-    + SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][38:],
+    "attObj": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][:37] + "2" + SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][38:],
 }
 
 SELF_ATTESTATION_REGISTRATION_RESPONSE_BROKEN_SIG = {
     "clientData": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["clientData"],
-    "attObj": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][:46]
-    + "AA"
-    + SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][48:],
+    "attObj": SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][:46] + "AA" + SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"][48:],
 }
 
 
@@ -221,15 +212,11 @@ class WebAuthnTokenTestCase(MyTestCase):
         self.token.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(CRED_ID)))
         self.token.add_tokeninfo(WEBAUTHNINFO.PUB_KEY, PUB_KEY)
         self.token.add_tokeninfo(WEBAUTHNINFO.RELYING_PARTY_ID, RP_ID)
-        (_, _, _, response_details) = self.token.create_challenge(
-            options=self.challenge_options
-        )
+        (_, _, _, response_details) = self.token.create_challenge(options=self.challenge_options)
         return response_details
 
     def _setup_token(self):
-        with patch(
-            "edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce"
-        ) as mock_nonce:
+        with patch("edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce") as mock_nonce:
             mock_nonce.return_value = webauthn_b64_decode(REGISTRATION_CHALLENGE)
             self.token.get_init_detail(self.init_params, self.user)
         self.token.update(
@@ -250,20 +237,12 @@ class WebAuthnTokenTestCase(MyTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.ENROLL,
-            action=WEBAUTHNACTION.RELYING_PARTY_NAME
-            + "="
-            + RP_NAME
-            + ","
-            + WEBAUTHNACTION.RELYING_PARTY_ID
-            + "="
-            + RP_ID,
+            action=WEBAUTHNACTION.RELYING_PARTY_NAME + "=" + RP_NAME + "," + WEBAUTHNACTION.RELYING_PARTY_ID + "=" + RP_ID,
         )
         set_edumfa_config(WEBAUTHNCONFIG.TRUST_ANCHOR_DIR, TRUST_ANCHOR_DIR)
         set_edumfa_config(WEBAUTHNCONFIG.APP_ID, APP_ID)
 
-        self.user = User(
-            login=USER_NAME, realm=self.realm1, resolver=self.resolvername1
-        )
+        self.user = User(login=USER_NAME, realm=self.realm1, resolver=self.resolvername1)
 
         self.token = init_token({"type": "webauthn", "pin": "1234"}, user=self.user)
 
@@ -299,21 +278,13 @@ class WebAuthnTokenTestCase(MyTestCase):
             self.token.get_init_detail(self.init_params)
 
     def test_02_token_init(self):
-        web_authn_register_request = self.token.get_init_detail(
-            self.init_params, self.user
-        ).get("webAuthnRegisterRequest")
+        web_authn_register_request = self.token.get_init_detail(self.init_params, self.user).get("webAuthnRegisterRequest")
 
-        self.assertEqual(
-            self.token.token.serial, web_authn_register_request.get("serialNumber")
-        )
+        self.assertEqual(self.token.token.serial, web_authn_register_request.get("serialNumber"))
         self.assertIn("id", web_authn_register_request.get("relyingParty"))
         self.assertIn("name", web_authn_register_request.get("relyingParty"))
-        self.assertEqual(
-            RP_ID, web_authn_register_request.get("relyingParty").get("id")
-        )
-        self.assertEqual(
-            RP_NAME, web_authn_register_request.get("relyingParty").get("name")
-        )
+        self.assertEqual(RP_ID, web_authn_register_request.get("relyingParty").get("id"))
+        self.assertEqual(RP_NAME, web_authn_register_request.get("relyingParty").get("name"))
         self.assertIn(
             "alg",
             web_authn_register_request.get("pubKeyCredAlgorithms")[0],
@@ -337,31 +308,15 @@ class WebAuthnTokenTestCase(MyTestCase):
         self.assertEqual(USER_NAME, web_authn_register_request.get("name"))
 
         self.assertEqual(RP_ID, self.token.get_tokeninfo(WEBAUTHNINFO.RELYING_PARTY_ID))
-        self.assertEqual(
-            RP_NAME, self.token.get_tokeninfo(WEBAUTHNINFO.RELYING_PARTY_NAME)
-        )
+        self.assertEqual(RP_NAME, self.token.get_tokeninfo(WEBAUTHNINFO.RELYING_PARTY_NAME))
 
     def test_03_token_update(self):
         self._setup_token()
-        web_authn_registration_response = self.token.get_init_detail().get(
-            "webAuthnRegisterResponse"
-        )
+        web_authn_registration_response = self.token.get_init_detail().get("webAuthnRegisterResponse")
 
-        self.assertTrue(
-            web_authn_registration_response.get("subject").startswith(
-                "Yubico U2F EE Serial"
-            )
-        )
-        self.assertTrue(
-            self.token.get_tokeninfo(WEBAUTHNINFO.ATTESTATION_ISSUER).startswith(
-                "CN=Yubico U2F Root CA Serial"
-            )
-        )
-        self.assertTrue(
-            self.token.get_tokeninfo(WEBAUTHNINFO.ATTESTATION_SUBJECT).startswith(
-                "CN=Yubico U2F EE Serial"
-            )
-        )
+        self.assertTrue(web_authn_registration_response.get("subject").startswith("Yubico U2F EE Serial"))
+        self.assertTrue(self.token.get_tokeninfo(WEBAUTHNINFO.ATTESTATION_ISSUER).startswith("CN=Yubico U2F Root CA Serial"))
+        self.assertTrue(self.token.get_tokeninfo(WEBAUTHNINFO.ATTESTATION_SUBJECT).startswith("CN=Yubico U2F EE Serial"))
         self.assertEqual(CRED_ID, self.token.decrypt_otpkey())
         self.assertEqual(PUB_KEY, self.token.get_tokeninfo(WEBAUTHNINFO.PUB_KEY))
 
@@ -377,24 +332,16 @@ class WebAuthnTokenTestCase(MyTestCase):
 
         # No avoid double registration
         init_params = self.init_params
-        web_authn_register_request = temp_token.get_init_detail(
-            init_params, self.user
-        ).get("webAuthnRegisterRequest")
-        self.assertEqual(
-            temp_token.token.serial, web_authn_register_request.get("serialNumber")
-        )
+        web_authn_register_request = temp_token.get_init_detail(init_params, self.user).get("webAuthnRegisterRequest")
+        self.assertEqual(temp_token.token.serial, web_authn_register_request.get("serialNumber"))
         self.assertNotIn("excludeCredentials", web_authn_register_request)
 
         self._setup_token()
 
         # Set avoid double registration
         init_params[WEBAUTHNACTION.AVOID_DOUBLE_REGISTRATION] = True
-        web_authn_register_request = temp_token.get_init_detail(
-            init_params, self.user
-        ).get("webAuthnRegisterRequest")
-        self.assertEqual(
-            temp_token.token.serial, web_authn_register_request.get("serialNumber")
-        )
+        web_authn_register_request = temp_token.get_init_detail(init_params, self.user).get("webAuthnRegisterRequest")
+        self.assertEqual(temp_token.token.serial, web_authn_register_request.get("serialNumber"))
         # Now the excludeCredentials is contained
         self.assertIn("excludeCredentials", web_authn_register_request)
         temp_token.delete_token()
@@ -406,12 +353,8 @@ class WebAuthnTokenTestCase(MyTestCase):
 
         self.assertEqual(RP_ID, web_authn_sign_request.get("rpId"))
         self.assertEqual(1, len(web_authn_sign_request.get("allowCredentials") or []))
-        self.assertEqual(
-            "public-key", web_authn_sign_request.get("allowCredentials")[0].get("type")
-        )
-        self.assertEqual(
-            CRED_ID, web_authn_sign_request.get("allowCredentials")[0].get("id")
-        )
+        self.assertEqual("public-key", web_authn_sign_request.get("allowCredentials")[0].get("type"))
+        self.assertEqual(CRED_ID, web_authn_sign_request.get("allowCredentials")[0].get("id"))
         self.assertEqual(
             ALLOWED_TRANSPORTS,
             web_authn_sign_request.get("allowCredentials")[0].get("transports"),
@@ -445,9 +388,7 @@ class WebAuthnTokenTestCase(MyTestCase):
                 "clientdata": ASSERTION_RESPONSE_TMPL["clientData"],
                 "signaturedata": ASSERTION_RESPONSE_TMPL["signature"],
                 "user": self.user,
-                "challenge": hexlify_and_unicode(
-                    webauthn_b64_decode(ASSERTION_CHALLENGE)
-                ),
+                "challenge": hexlify_and_unicode(webauthn_b64_decode(ASSERTION_CHALLENGE)),
                 "HTTP_ORIGIN": "",
             },
         )
@@ -456,18 +397,13 @@ class WebAuthnTokenTestCase(MyTestCase):
             (
                 "edumfa.lib.tokens.webauthntoken",
                 "WARNING",
-                "Checking response for token {0!s} failed. HTTP Origin header "
-                "missing.".format(self.token.get_serial()),
+                "Checking response for token {0!s} failed. HTTP Origin header missing.".format(self.token.get_serial()),
             )
         )
 
     def test_07_none_attestation(self):
-        with patch(
-            "edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce"
-        ) as mock_nonce:
-            mock_nonce.return_value = webauthn_b64_decode(
-                NONE_ATTESTATION_REGISTRATION_CHALLENGE
-            )
+        with patch("edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce") as mock_nonce:
+            mock_nonce.return_value = webauthn_b64_decode(NONE_ATTESTATION_REGISTRATION_CHALLENGE)
             self.init_params[WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM] = "none"
             self.user = User(login=NONE_ATTESTATION_USER_NAME)
             self.token.get_init_detail(self.init_params, self.user)
@@ -482,19 +418,13 @@ class WebAuthnTokenTestCase(MyTestCase):
                 "HTTP_ORIGIN": ORIGIN,
             }
         )
-        web_authn_registration_response = self.token.get_init_detail().get(
-            "webAuthnRegisterResponse"
-        )
+        web_authn_registration_response = self.token.get_init_detail().get("webAuthnRegisterResponse")
 
         self.assertEqual(NONE_ATTESTATION_CRED_ID, self.token.decrypt_otpkey())
-        self.assertEqual(
-            NONE_ATTESTATION_PUB_KEY, self.token.get_tokeninfo(WEBAUTHNINFO.PUB_KEY)
-        )
+        self.assertEqual(NONE_ATTESTATION_PUB_KEY, self.token.get_tokeninfo(WEBAUTHNINFO.PUB_KEY))
 
     def test_08_missing_attestation(self):
-        self.init_params["nonce"] = webauthn_b64_decode(
-            NONE_ATTESTATION_REGISTRATION_CHALLENGE
-        )
+        self.init_params["nonce"] = webauthn_b64_decode(NONE_ATTESTATION_REGISTRATION_CHALLENGE)
         self.user = User(login=NONE_ATTESTATION_USER_NAME)
         self.token.get_init_detail(self.init_params, self.user)
 
@@ -504,9 +434,7 @@ class WebAuthnTokenTestCase(MyTestCase):
                     "type": "webauthn",
                     "serial": self.token.token.serial,
                     "regdata": NONE_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"],
-                    "clientdata": NONE_ATTESTATION_REGISTRATION_RESPONSE_TMPL[
-                        "clientData"
-                    ],
+                    "clientdata": NONE_ATTESTATION_REGISTRATION_RESPONSE_TMPL["clientData"],
                     WEBAUTHNACTION.RELYING_PARTY_ID: RP_ID,
                     WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL: ATTESTATION_LEVEL.UNTRUSTED,
                     "HTTP_ORIGIN": ORIGIN,
@@ -542,8 +470,7 @@ class WebAuthnTokenTestCase(MyTestCase):
         }
         self.assertRaisesRegex(
             PolicyError,
-            r"The WebAuthn token is not allowed to authenticate due to a policy "
-            r"restriction.",
+            r"The WebAuthn token is not allowed to authenticate due to a policy " r"restriction.",
             self.token.check_otp,
             **{"otpval": None, "options": options},
         )
@@ -559,13 +486,9 @@ class WebAuthnTokenTestCase(MyTestCase):
                 "clientdata": ASSERTION_RESPONSE_TMPL["clientData"],
                 "signaturedata": ASSERTION_RESPONSE_TMPL["signature"],
                 "user": self.user,
-                "challenge": hexlify_and_unicode(
-                    webauthn_b64_decode(ASSERTION_CHALLENGE)
-                ),
+                "challenge": hexlify_and_unicode(webauthn_b64_decode(ASSERTION_CHALLENGE)),
                 "HTTP_ORIGIN": ORIGIN,
-                WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST: [
-                    "00000000000000000000000000000000"
-                ],
+                WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST: ["00000000000000000000000000000000"],
             },
         )
         self.assertGreaterEqual(res, 0)
@@ -575,8 +498,7 @@ class WebAuthnTokenTestCase(MyTestCase):
         # check token with an invalid aaguid
         self.assertRaisesRegex(
             PolicyError,
-            r"The WebAuthn token is not allowed to authenticate due to a "
-            r"policy restriction.",
+            r"The WebAuthn token is not allowed to authenticate due to a " r"policy restriction.",
             self.token.check_otp,
             **{
                 "otpval": None,
@@ -586,13 +508,9 @@ class WebAuthnTokenTestCase(MyTestCase):
                     "clientdata": ASSERTION_RESPONSE_TMPL["clientData"],
                     "signaturedata": ASSERTION_RESPONSE_TMPL["signature"],
                     "user": self.user,
-                    "challenge": hexlify_and_unicode(
-                        webauthn_b64_decode(ASSERTION_CHALLENGE)
-                    ),
+                    "challenge": hexlify_and_unicode(webauthn_b64_decode(ASSERTION_CHALLENGE)),
                     "HTTP_ORIGIN": ORIGIN,
-                    WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST: [
-                        "ffff0000000000000000000000000000"
-                    ],
+                    WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST: ["ffff0000000000000000000000000000"],
                 },
             },
         )
@@ -606,9 +524,7 @@ class WebAuthnTestCase(unittest.TestCase):
             origin=ORIGIN,
             registration_response=copy(REGISTRATION_RESPONSE_TMPL),
             challenge=REGISTRATION_CHALLENGE,
-            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                ATTESTATION_LEVEL.NONE
-            ],
+            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.NONE],
             trust_anchor_dir=TRUST_ANCHOR_DIR,
             uv_required=False,
             rk_required=False,
@@ -666,9 +582,7 @@ class WebAuthnTestCase(unittest.TestCase):
         self.assertEqual(RP_ID, webauthn_credential.rp_id, webauthn_credential)
         self.assertEqual(ORIGIN, webauthn_credential.origin, webauthn_credential)
         self.assertTrue(webauthn_credential.has_signed_attestation, webauthn_credential)
-        self.assertTrue(
-            webauthn_credential.has_trusted_attestation, webauthn_credential
-        )
+        self.assertTrue(webauthn_credential.has_trusted_attestation, webauthn_credential)
         self.assertEqual(
             str(webauthn_credential),
             "{0!r} ({1!s}, {2!s}, {3!s})".format(CREDENTIAL_ID, RP_ID, ORIGIN, 0),
@@ -681,18 +595,14 @@ class WebAuthnTestCase(unittest.TestCase):
             origin=ORIGIN,
             registration_response=copy(REGISTRATION_RESPONSE_TMPL),
             challenge=REGISTRATION_CHALLENGE,
-            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                ATTESTATION_LEVEL.NONE
-            ],
+            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.NONE],
             uv_required=False,
             expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
         ).verify()
         self.assertEqual(RP_ID, webauthn_credential.rp_id, webauthn_credential)
         self.assertEqual(ORIGIN, webauthn_credential.origin, webauthn_credential)
         self.assertTrue(webauthn_credential.has_signed_attestation, webauthn_credential)
-        self.assertFalse(
-            webauthn_credential.has_trusted_attestation, webauthn_credential
-        )
+        self.assertFalse(webauthn_credential.has_trusted_attestation, webauthn_credential)
 
     def test_02_registration_invalid_user_verification(self):
         registration_response = WebAuthnRegistrationResponse(
@@ -700,17 +610,13 @@ class WebAuthnTestCase(unittest.TestCase):
             origin=ORIGIN,
             registration_response=copy(REGISTRATION_RESPONSE_TMPL),
             challenge=REGISTRATION_CHALLENGE,
-            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                ATTESTATION_LEVEL.UNTRUSTED
-            ],
+            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.UNTRUSTED],
             trust_anchor_dir=TRUST_ANCHOR_DIR,
             uv_required=True,
             expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
         )
 
-        with self.assertRaisesRegex(
-            RegistrationRejectedException, "Malformed request received."
-        ):
+        with self.assertRaisesRegex(RegistrationRejectedException, "Malformed request received."):
             registration_response.verify()
 
     def test_03_validate_assertion(self):
@@ -718,9 +624,7 @@ class WebAuthnTestCase(unittest.TestCase):
         webauthn_user = webauthn_assertion_response.webauthn_user
         self.assertEqual(
             str(webauthn_user),
-            "{0!r} ({1!s}, {2!s}, {3!s})".format(
-                USER_ID, USER_NAME, USER_DISPLAY_NAME, 0
-            ),
+            "{0!r} ({1!s}, {2!s}, {3!s})".format(USER_ID, USER_NAME, USER_DISPLAY_NAME, 0),
             webauthn_user,
         )
         webauthn_assertion_response.verify()
@@ -732,24 +636,18 @@ class WebAuthnTestCase(unittest.TestCase):
             return response
 
         webauthn_assertion_response = self.getAssertionResponse()
-        webauthn_assertion_response.assertion_response = mess_up(
-            webauthn_assertion_response.assertion_response
-        )
+        webauthn_assertion_response.assertion_response = mess_up(webauthn_assertion_response.assertion_response)
 
         with self.assertRaises(AuthenticationRejectedException):
             webauthn_assertion_response.verify()
 
     def test_05_no_user_presence_fail_assertion(self):
         webauthn_assertion_response = self.getAssertionResponse()
-        auth_data = webauthn_b64_decode(
-            webauthn_assertion_response.assertion_response["authData"]
-        )
+        auth_data = webauthn_b64_decode(webauthn_assertion_response.assertion_response["authData"])
         flags = struct.unpack("!B", auth_data[32:33])[0]
         flags = flags & ~AuthenticatorDataFlags.USER_PRESENT
         auth_data = auth_data[:32] + struct.pack("!B", flags) + auth_data[33:]
-        webauthn_assertion_response.assertion_response["authData"] = (
-            webauthn_b64_encode(auth_data)
-        )
+        webauthn_assertion_response.assertion_response["authData"] = webauthn_b64_encode(auth_data)
 
         # FIXME: This *should* fail because UP=0, but will fail anyway later on because the
         #  signature is invalid.
@@ -775,26 +673,18 @@ class WebAuthnTestCase(unittest.TestCase):
 
     def test_06_duplicate_authentication_fail_assertion(self):
         webauthn_assertion_response = self.getAssertionResponse()
-        webauthn_assertion_response.webauthn_user.sign_count = (
-            ASSERTION_RESPONSE_SIGN_COUNT
-        )
+        webauthn_assertion_response.webauthn_user.sign_count = ASSERTION_RESPONSE_SIGN_COUNT
 
-        with self.assertRaisesRegex(
-            AuthenticationRejectedException, "Duplicate authentication detected."
-        ):
+        with self.assertRaisesRegex(AuthenticationRejectedException, "Duplicate authentication detected."):
             webauthn_assertion_response.verify()
         # TODO: we should add a test for a missing sign_count (or 0) but we need
         #  to change the auth data for that.
 
     def test_07_webauthn_b64_decode(self):
-        self.assertEqual(
-            webauthn_b64_decode(URL_DECODE_TEST_STRING), URL_DECODE_EXPECTED_RESULT
-        )
+        self.assertEqual(webauthn_b64_decode(URL_DECODE_TEST_STRING), URL_DECODE_EXPECTED_RESULT)
 
     def test_08_registration_invalid_requirement_level(self):
-        with self.assertRaisesRegex(
-            ValueError, "Illegal attestation_requirement_level."
-        ):
+        with self.assertRaisesRegex(ValueError, "Illegal attestation_requirement_level."):
             WebAuthnRegistrationResponse(
                 rp_id=RP_ID,
                 origin=ORIGIN,
@@ -812,20 +702,14 @@ class WebAuthnTestCase(unittest.TestCase):
             origin="http://localhost:3000",
             registration_response=copy(SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL),
             challenge="AXkXWXPP3gLx8OLlpkJ3aRRhFWntnSENggnjDpBql1ngKol7xWwevUYvrpBDP3LEvdr2EOStOFpGGxnMvXk-Vw",
-            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                ATTESTATION_LEVEL.UNTRUSTED
-            ],
+            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.UNTRUSTED],
             trust_anchor_dir=TRUST_ANCHOR_DIR,
             expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
         ).verify()
         self.assertEqual("localhost", webauthn_credential.rp_id, webauthn_credential)
-        self.assertEqual(
-            "http://localhost:3000", webauthn_credential.origin, webauthn_credential
-        )
+        self.assertEqual("http://localhost:3000", webauthn_credential.origin, webauthn_credential)
         self.assertTrue(webauthn_credential.has_signed_attestation, webauthn_credential)
-        self.assertFalse(
-            webauthn_credential.has_trusted_attestation, webauthn_credential
-        )
+        self.assertFalse(webauthn_credential.has_trusted_attestation, webauthn_credential)
 
     def test_09b_registration_self_Attestation_bad_cose_alg(self):
         self.assertRaises(
@@ -833,13 +717,9 @@ class WebAuthnTestCase(unittest.TestCase):
             WebAuthnRegistrationResponse(
                 rp_id="localhost",
                 origin="http://localhost:3000",
-                registration_response=copy(
-                    SELF_ATTESTATION_REGISTRATION_RESPONSE_BAD_COSE_ALG
-                ),
+                registration_response=copy(SELF_ATTESTATION_REGISTRATION_RESPONSE_BAD_COSE_ALG),
                 challenge="AXkXWXPP3gLx8OLlpkJ3aRRhFWntnSENggnjDpBql1ngKol7xWwevUYvrpBDP3LEvdr2EOStOFpGGxnMvXk-Vw",
-                attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                    ATTESTATION_LEVEL.UNTRUSTED
-                ],
+                attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.UNTRUSTED],
                 trust_anchor_dir=TRUST_ANCHOR_DIR,
                 expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
             ).verify,
@@ -852,13 +732,9 @@ class WebAuthnTestCase(unittest.TestCase):
             WebAuthnRegistrationResponse(
                 rp_id="localhost",
                 origin="http://localhost:3000",
-                registration_response=copy(
-                    SELF_ATTESTATION_REGISTRATION_RESPONSE_ALG_MISMATCH
-                ),
+                registration_response=copy(SELF_ATTESTATION_REGISTRATION_RESPONSE_ALG_MISMATCH),
                 challenge="AXkXWXPP3gLx8OLlpkJ3aRRhFWntnSENggnjDpBql1ngKol7xWwevUYvrpBDP3LEvdr2EOStOFpGGxnMvXk-Vw",
-                attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                    ATTESTATION_LEVEL.UNTRUSTED
-                ],
+                attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.UNTRUSTED],
                 trust_anchor_dir=TRUST_ANCHOR_DIR,
                 expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
             ).verify,
@@ -871,13 +747,9 @@ class WebAuthnTestCase(unittest.TestCase):
             WebAuthnRegistrationResponse(
                 rp_id="localhost",
                 origin="http://localhost:3000",
-                registration_response=copy(
-                    SELF_ATTESTATION_REGISTRATION_RESPONSE_BROKEN_SIG
-                ),
+                registration_response=copy(SELF_ATTESTATION_REGISTRATION_RESPONSE_BROKEN_SIG),
                 challenge="AXkXWXPP3gLx8OLlpkJ3aRRhFWntnSENggnjDpBql1ngKol7xWwevUYvrpBDP3LEvdr2EOStOFpGGxnMvXk-Vw",
-                attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                    ATTESTATION_LEVEL.UNTRUSTED
-                ],
+                attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.UNTRUSTED],
                 trust_anchor_dir=TRUST_ANCHOR_DIR,
                 expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
             ).verify,
@@ -892,9 +764,7 @@ class WebAuthnTestCase(unittest.TestCase):
                 "clientData": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiRlJsMGdqLU1GaGVRLXE0cnZ4U0NNZGpnZ3M3azZRSjVXUFZnSE1wWllfeUpEX3Y5ZUNyMEk3TzFLenFHQmJjME9ic1A0SWFWSkhaZllYbVA0RjFxS2ciLCJvcmlnaW4iOiJodHRwczovL3dlYmF1dGhuLmlvIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfQ",
             },
             challenge="FRl0gj-MFheQ-q4rvxSCMdjggs7k6QJ5WPVgHMpZY_yJD_v9eCr0I7O1KzqGBbc0ObsP4IaVJHZfYXmP4F1qKg",
-            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
-                ATTESTATION_LEVEL.NONE
-            ],
+            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.NONE],
         )
         response.verify()
 
@@ -1018,13 +888,9 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
         self.user = User(login="hans", realm=self.realm1, resolver=self.resolvername1)
         # TODO: extract token enrollment into a local function
         # init token step 1
-        self.token1 = init_token(
-            {"type": "webauthn", "serial": self.serial1}, user=self.user
-        )
+        self.token1 = init_token({"type": "webauthn", "serial": self.serial1}, user=self.user)
         # TODO: use mocking to set nonce
-        with patch(
-            "edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce"
-        ) as mock_nonce:
+        with patch("edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce") as mock_nonce:
             mock_nonce.return_value = webauthn_b64_decode(self.nonce1)
             res = self.token1.get_init_detail(self.init_params, self.user)
         self.assertEqual(self.serial1, res["serial"], res)
@@ -1050,12 +916,8 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
         )
         # enroll the second webauthn token
         # init token step 1
-        self.token2 = init_token(
-            {"type": "webauthn", "serial": self.serial2}, user=self.user
-        )
-        with patch(
-            "edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce"
-        ) as mock_nonce:
+        self.token2 = init_token({"type": "webauthn", "serial": self.serial2}, user=self.user)
+        with patch("edumfa.lib.tokens.webauthntoken.WebAuthnTokenClass._get_nonce") as mock_nonce:
             mock_nonce.return_value = webauthn_b64_decode(self.nonce2)
             res = self.token2.get_init_detail(self.init_params, self.user)
         self.assertEqual(self.serial2, res["serial"], res)
@@ -1086,9 +948,7 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
 
     # TODO: also test challenge-response with different tokens (webauthn + totp)
     def test_01_mulitple_webauthntoken_auth(self):
-        set_policy(
-            "otppin", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN)
-        )
+        set_policy("otppin", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN))
         res, reply = check_user_pass(self.user, "", options=self.auth_options)
         self.assertFalse(res)
         self.assertIn("transaction_id", reply, reply)
@@ -1101,9 +961,7 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
         chal1 = reply["multi_challenge"][0]
         chal2 = reply["multi_challenge"][1]
         self.assertNotEqual(chal1["serial"], chal2["serial"], reply["multi_challenge"])
-        self.assertEqual(
-            chal1["transaction_id"], chal2["transaction_id"], reply["multi_challenge"]
-        )
+        self.assertEqual(chal1["transaction_id"], chal2["transaction_id"], reply["multi_challenge"])
         # Now make sure that the requests contain the same challenge
         self.assertEqual(
             chal1["attributes"]["webAuthnSignRequest"]["challenge"],

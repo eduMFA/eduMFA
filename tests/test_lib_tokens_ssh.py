@@ -39,10 +39,7 @@ class SSHTokenTestCase(MyTestCase):
         "HAyNTYAAABBBHGCdIk0pO1HFr/mF4oLb43ZRyQJ4K7ICLrAhAiQERVa0tUvyY5TE"
         "zurWTqxSMx203rY77t6xnHLZBMPPpv8rk0= cornelius@puck"
     )
-    sshkey_ed25519 = (
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC38dIb3tM6nPrT"
-        "3j1UfsQxOCBbf3JogwsKeVPM893Pi cornelius@puck"
-    )
+    sshkey_ed25519 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC38dIb3tM6nPrT3j1UfsQxOCBbf3JogwsKeVPM893Pi cornelius@puck"
     ecdsa_sk = (
         "sk-ecdsa-sha2-nistp256@openssh.com AAAAInNrLWVjZHNhLXNoYTItbmlz"
         "dHAyNTZAb3BlbnNzaC5jb20AAAAIbmlzdHAyNTYAAABBBOStamg+GO4TSgtoWjc82p"
@@ -73,9 +70,7 @@ class SSHTokenTestCase(MyTestCase):
         self.assertEqual(token.rollout_state, ROLLOUTSTATE.BROKEN)
 
         # An unsupported keytype
-        self.assertRaises(
-            TokenAdminError, token.update, {"sshkey": self.unsupported_keytype}
-        )
+        self.assertRaises(TokenAdminError, token.update, {"sshkey": self.unsupported_keytype})
         self.assertEqual(token.rollout_state, ROLLOUTSTATE.BROKEN)
 
         # Set valid key
@@ -110,9 +105,7 @@ class SSHTokenTestCase(MyTestCase):
         token = SSHkeyTokenClass(db_token)
 
         info = token.get_class_info()
-        self.assertTrue(
-            info.get("title") == "SSHkey Token", "{0!s}".format(info.get("title"))
-        )
+        self.assertTrue(info.get("title") == "SSHkey Token", "{0!s}".format(info.get("title")))
 
         info = token.get_class_info("title")
         self.assertTrue(info == "SSHkey Token", info)

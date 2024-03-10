@@ -192,9 +192,7 @@ class HostsMachineTestCase(MyTestCase):
         machines = self.mreso.get_machines(hostname="gandalf")
         self.assertEqual(len(machines), 1)
 
-        machines = self.mreso.get_machines(
-            hostname="gandalf", ip=netaddr.IPAddress("192.168.0.1")
-        )
+        machines = self.mreso.get_machines(hostname="gandalf", ip=netaddr.IPAddress("192.168.0.1"))
         self.assertEqual(len(machines), 1)
 
         # THere are 3 machines, whose name contains an "n"
@@ -242,6 +240,4 @@ class HostsMachineTestCase(MyTestCase):
 
     def test_05_failing_load_config(self):
         # missing filename
-        self.assertRaises(
-            MachineResolverError, self.mreso.load_config, {"name": "nothing"}
-        )
+        self.assertRaises(MachineResolverError, self.mreso.load_config, {"name": "nothing"})

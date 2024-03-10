@@ -33,9 +33,7 @@ class eduMFAServerTestCase(MyApiTestCase):
             self.assertEqual(data.get("result").get("value"), True)
 
         # list servers
-        with self.app.test_request_context(
-            "/edumfaserver/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/edumfaserver/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -48,23 +46,17 @@ class eduMFAServerTestCase(MyApiTestCase):
         # Listing eduMFA servers as a user is not allowed
         self.setUp_user_realms()
         self.authenticate_selfservice_user()
-        with self.app.test_request_context(
-            "/edumfaserver/", method="GET", headers={"Authorization": self.at_user}
-        ):
+        with self.app.test_request_context("/edumfaserver/", method="GET", headers={"Authorization": self.at_user}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 401)
 
         # delete server
-        with self.app.test_request_context(
-            "/edumfaserver/server1", method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/edumfaserver/server1", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
 
         # list servers, No server left
-        with self.app.test_request_context(
-            "/edumfaserver/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/edumfaserver/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json

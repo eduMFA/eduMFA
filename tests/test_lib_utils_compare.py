@@ -63,9 +63,7 @@ class UtilsCompareTestCase(MyTestCase):
             )
         )
         # supports more advanced regex features
-        self.assertTrue(
-            compare_values("hElLo WoRLd", "matches", "(?i)hello world( and stuff)?")
-        )
+        self.assertTrue(compare_values("hElLo WoRLd", "matches", "(?i)hello world( and stuff)?"))
         # raises errors on invalid patterns
         with self.assertRaises(CompareError):
             compare_values("hello world", "matches", "this is (invalid")
@@ -94,9 +92,7 @@ class UtilsCompareTestCase(MyTestCase):
             ["realm1", "realm2", "realm3"],
         )
         # whitespace before delimiters is not skipped
-        self.assertEqual(
-            parse_comma_separated_string("  realm1  ,realm2"), ["realm1  ", "realm2"]
-        )
+        self.assertEqual(parse_comma_separated_string("  realm1  ,realm2"), ["realm1  ", "realm2"])
         # strings can be quoted
         self.assertEqual(
             parse_comma_separated_string('realm1, "realm2", " realm3"'),
@@ -104,15 +100,11 @@ class UtilsCompareTestCase(MyTestCase):
         )
         # even with commas
         self.assertEqual(
-            parse_comma_separated_string(
-                'realm1, "realm2, with a, strange, name", other stuff'
-            ),
+            parse_comma_separated_string('realm1, "realm2, with a, strange, name", other stuff'),
             ["realm1", "realm2, with a, strange, name", "other stuff"],
         )
         # double quotes can be escaped
-        self.assertEqual(
-            parse_comma_separated_string(r"realm\", realm2"), ['realm"', "realm2"]
-        )
+        self.assertEqual(parse_comma_separated_string(r"realm\", realm2"), ['realm"', "realm2"])
         # error if a string is not properly quoted
         with self.assertRaises(CompareError):
             parse_comma_separated_string('"no')
@@ -120,9 +112,7 @@ class UtilsCompareTestCase(MyTestCase):
         with self.assertRaises(CompareError):
             parse_comma_separated_string("realm1\nrealm2")
         # but we can quote newlines
-        self.assertEqual(
-            parse_comma_separated_string('"realm1\nrealm2"'), ["realm1\nrealm2"]
-        )
+        self.assertEqual(parse_comma_separated_string('"realm1\nrealm2"'), ["realm1\nrealm2"])
 
     def test_06_compare_in(self):
         self.assertTrue(compare_values("hello", "in", "hello"))

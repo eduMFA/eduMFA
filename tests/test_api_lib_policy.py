@@ -196,9 +196,7 @@ tA==
 class PrePolicyDecoratorTestCase(MyApiTestCase):
     def test_01_check_token_action(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -243,14 +241,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.setUp_user_realms()
         # setup realm2
         self.setUp_user_realm2()
-        tokenobject = init_token(
-            {"serial": "POL001", "type": "hotp", "otpkey": "1234567890123456"}
-        )
+        tokenobject = init_token({"serial": "POL001", "type": "hotp", "otpkey": "1234567890123456"})
         r = set_realms("POL001", [self.realm1])
 
-        tokenobject = init_token(
-            {"serial": "POL002", "type": "hotp", "otpkey": "1234567890123456"}
-        )
+        tokenobject = init_token({"serial": "POL002", "type": "hotp", "otpkey": "1234567890123456"})
         r = set_realms("POL002", [self.realm2])
 
         # Token in realm1 can not be deleted
@@ -278,9 +272,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         set_policy(name="pol", scope=SCOPE.ADMIN, action="*", adminrealm="realm1")
         g.policy_object = PolicyClass()
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -301,9 +293,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_02_check_token_init(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -345,9 +335,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_03_check_token_upload(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -381,9 +369,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_04a_check_max_active_token_user(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -468,9 +454,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_04_check_max_token_user(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -578,9 +562,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_05_check_max_token_realm(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -598,9 +580,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         g.policy_object = PolicyClass()
         self.setUp_user_realms()
         # Add the first token into the realm
-        tokenobject = init_token(
-            {"serial": "NEW001", "type": "hotp", "otpkey": "1234567890123456"}
-        )
+        tokenobject = init_token({"serial": "NEW001", "type": "hotp", "otpkey": "1234567890123456"})
         set_realms("NEW001", [self.realm1])
         # check the realm, only one token is in it the policy condition will
         # pass
@@ -609,9 +589,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(check_max_token_realm(req))
 
         # add a second token to the realm
-        tokenobject = init_token(
-            {"serial": "NEW002", "type": "hotp", "otpkey": "1234567890123456"}
-        )
+        tokenobject = init_token({"serial": "NEW002", "type": "hotp", "otpkey": "1234567890123456"})
         set_realms("NEW002", [self.realm1])
         tokenobject_list = get_tokens(realm=self.realm1)
         self.assertTrue(len(tokenobject_list) == 2)
@@ -630,9 +608,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_06_set_realm(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -687,9 +663,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_06_set_tokenlabel(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -744,9 +718,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_07a_init_random_pin(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -770,9 +742,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pinhandling",
             scope=SCOPE.ENROLL,
-            action="{0!s}=edumfa.lib.pinhandling.base.PinHandler".format(
-                ACTION.PINHANDLING
-            ),
+            action="{0!s}=edumfa.lib.pinhandling.base.PinHandler".format(ACTION.PINHANDLING),
         )
         g.policy_object = PolicyClass()
 
@@ -796,9 +766,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_07b_set_random_pin(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -872,9 +840,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         for policy in policies:
             required = ["".join([CHARLIST_CONTENTPOLICY[str] for str in policy[1:]])]
             charlists_dict = generate_charlists_from_pin_policy(policy)
-            self.assertEqual(
-                charlists_dict, {"base": default_chars, "requirements": required}
-            )
+            self.assertEqual(charlists_dict, {"base": default_chars, "requirements": required})
 
         policies = ["-cn", "-c", "-sc"]
         for policy in policies:
@@ -890,9 +856,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         for policy in policies:
             required = [CHARLIST_CONTENTPOLICY[str] for str in policy[:]]
             charlists_dict = generate_charlists_from_pin_policy(policy)
-            self.assertEqual(
-                charlists_dict, {"base": default_chars, "requirements": required}
-            )
+            self.assertEqual(charlists_dict, {"base": default_chars, "requirements": required})
 
         policies = ["[cn]", "[1234567890]", "[[]]", "[ÄÖüß§$@³¬&()|<>€%/\\]"]
         for policy in policies:
@@ -905,9 +869,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_08_encrypt_pin(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -929,9 +891,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_08a_enroll_pin_admin(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -958,9 +918,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "realm": self.realm1,
             "role": "user",
         }
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -985,9 +943,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
     def test_09_pin_policies(self, capture):
         create_realm("home", [self.resolvername1])
         g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1075,9 +1031,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
     def test_09_pin_policies_admin(self, capture):
         create_realm("home", [self.resolvername1])
         g.logged_in_user = {"username": "super", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1165,9 +1119,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
     def test_01b_token_specific_pin_policy(self):
         create_realm("home", [self.resolvername1])
         g.logged_in_user = {"username": "super", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1240,9 +1192,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_10_check_external(self):
         g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         req = Request(env)
         g.policy_object = PolicyClass()
@@ -1253,23 +1203,17 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(r)
 
         # Check success with external function
-        current_app.config["EDUMFA_INIT_CHECK_HOOK"] = (
-            "edumfa.api.lib.prepolicy.mock_success"
-        )
+        current_app.config["EDUMFA_INIT_CHECK_HOOK"] = "edumfa.api.lib.prepolicy.mock_success"
         r = check_external(req)
         self.assertTrue(r)
 
         # Check exception with external function
-        current_app.config["EDUMFA_INIT_CHECK_HOOK"] = (
-            "edumfa.api.lib.prepolicy.mock_fail"
-        )
+        current_app.config["EDUMFA_INIT_CHECK_HOOK"] = "edumfa.api.lib.prepolicy.mock_fail"
         self.assertRaises(Exception, check_external, req)
 
     def test_11_api_key_required(self):
         g.logged_in_user = {}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1317,9 +1261,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_12_mangle(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1363,9 +1305,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("mangle2")
 
     def test_13_remote_user(self):
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1424,9 +1364,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_14_required_email(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1460,9 +1398,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(r)
 
     def test_15_reset_password(self):
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius", "realm": self.realm1}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius", "realm": self.realm1}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1470,9 +1406,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req = Request(env)
         # Set a mangle policy to change the username
         # and only use the last 4 characters of the username
-        set_policy(
-            name="recover", scope=SCOPE.USER, action="{0!s}".format(ACTION.RESYNC)
-        )
+        set_policy(name="recover", scope=SCOPE.USER, action="{0!s}".format(ACTION.RESYNC))
         g.policy_object = PolicyClass()
         req.all_data = {"user": "cornelius", "realm": self.realm1}
         # There is a user policy without password reset, so an exception is
@@ -1512,7 +1446,14 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "polAdminA",
             scope=SCOPE.ADMIN,
-            action="set, revoke, adduser, enrollSMS, policydelete, policywrite, enrollTIQR, configdelete, machinelist, enrollREMOTE, setpin, resync, unassign, tokenrealms, enrollSPASS, auditlog, enrollPAPER, deleteuser, enrollEMAIL, resolverdelete, enrollMOTP, enrollPW, enrollHOTP, enrollQUESTION, enrollCERTIFICATE, copytokenuser, configwrite, enrollTOTP, enrollREGISTRATION, enrollYUBICO, resolverwrite, updateuser, enable, enrollU2F, manage_machine_tokens, getrandom, userlist, getserial, radiusserver_write, system_documentation, caconnectordelete, caconnectorwrite, disable, mresolverdelete, copytokenpin, enrollRADIUS, smtpserver_write, set_hsm_password, reset, getchallenges, enroll4EYES, enrollYUBIKEY, fetch_authentication_items, enrollDAPLUG, mresolverwrite, losttoken, enrollSSHKEY, importtokens, assign, delete",
+            action=(
+                "set, revoke, adduser, enrollSMS, policydelete, policywrite, enrollTIQR, configdelete, machinelist, enrollREMOTE, setpin, resync, unassign, tokenrealms,"
+                " enrollSPASS, auditlog, enrollPAPER, deleteuser, enrollEMAIL, resolverdelete, enrollMOTP, enrollPW, enrollHOTP, enrollQUESTION, enrollCERTIFICATE, copytokenuser,"
+                " configwrite, enrollTOTP, enrollREGISTRATION, enrollYUBICO, resolverwrite, updateuser, enable, enrollU2F, manage_machine_tokens, getrandom, userlist, getserial,"
+                " radiusserver_write, system_documentation, caconnectordelete, caconnectorwrite, disable, mresolverdelete, copytokenpin, enrollRADIUS, smtpserver_write,"
+                " set_hsm_password, reset, getchallenges, enroll4EYES, enrollYUBIKEY, fetch_authentication_items, enrollDAPLUG, mresolverwrite, losttoken, enrollSSHKEY,"
+                " importtokens, assign, delete"
+            ),
             adminuser="admin[aA]",
             realm="realmA, realmB",
             resolver="resolverA, resolverB",
@@ -1520,7 +1461,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "polAdminB",
             scope=SCOPE.ADMIN,
-            action="set, revoke, adduser, resync, unassign, tokenrealms, deleteuser, enrollTOTP, enrollREGISTRATION, updateuser, enable, userlist, getserial, disable, reset, getchallenges, losttoken, assign, delete ",
+            action=(
+                "set, revoke, adduser, resync, unassign, tokenrealms, deleteuser, enrollTOTP, enrollREGISTRATION, updateuser, enable, userlist, getserial, disable, reset,"
+                " getchallenges, losttoken, assign, delete "
+            ),
             realm="realmB",
             resolver="resolverB",
             adminuser="adminB",
@@ -1536,14 +1480,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         r = check_base_action(req, action=ACTION.ADDUSER)
         self.assertEqual(r, True)
         # But admin b is not allowed to policywrite
-        self.assertRaises(
-            PolicyError, check_base_action, req, action=ACTION.POLICYWRITE
-        )
+        self.assertRaises(PolicyError, check_base_action, req, action=ACTION.POLICYWRITE)
         # Test AdminC: is not allowed to do anything
         g.logged_in_user = {"username": "adminC", "role": "admin", "realm": ""}
-        self.assertRaises(
-            PolicyError, check_base_action, req, action=ACTION.POLICYWRITE
-        )
+        self.assertRaises(PolicyError, check_base_action, req, action=ACTION.POLICYWRITE)
         delete_policy("polAdminA")
         delete_policy("polAdminB")
 
@@ -1587,9 +1527,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # Set a mangle policy to change the username
         # and only use the last 4 characters of the username
-        set_policy(
-            name="a_age", scope=SCOPE.ADMIN, action="{0!s}=1d".format(ACTION.AUDIT_AGE)
-        )
+        set_policy(name="a_age", scope=SCOPE.ADMIN, action="{0!s}=1d".format(ACTION.AUDIT_AGE))
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -1798,9 +1736,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         from edumfa.lib.tokens.u2ftoken import U2FACTION
 
         g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1824,12 +1760,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_01_sms_identifier(self):
         # every admin is allowed to enroll sms token with gw1 or gw2
-        set_policy(
-            "sms1", scope=SCOPE.ADMIN, action="{0!s}=gw1 gw2".format(SMSACTION.GATEWAYS)
-        )
-        set_policy(
-            "sms2", scope=SCOPE.ADMIN, action="{0!s}=gw3".format(SMSACTION.GATEWAYS)
-        )
+        set_policy("sms1", scope=SCOPE.ADMIN, action="{0!s}=gw1 gw2".format(SMSACTION.GATEWAYS))
+        set_policy("sms2", scope=SCOPE.ADMIN, action="{0!s}=gw3".format(SMSACTION.GATEWAYS))
 
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
         builder = EnvironBuilder(method="POST", data={"serial": "SMS1234"}, headers={})
@@ -1848,9 +1780,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertRaises(PolicyError, sms_identifiers, req)
 
         # Users are allowed to choose gw4
-        set_policy(
-            "sms1", scope=SCOPE.USER, action="{0!s}=gw4".format(SMSACTION.GATEWAYS)
-        )
+        set_policy("sms1", scope=SCOPE.USER, action="{0!s}=gw4".format(SMSACTION.GATEWAYS))
 
         g.logged_in_user = {"username": "root", "realm": "", "role": "user"}
         builder = EnvironBuilder(method="POST", data={"serial": "SMS1234"}, headers={})
@@ -1872,9 +1802,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         from edumfa.lib.tokens.pushtoken import PUSH_ACTION
 
         g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1901,12 +1829,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         g.policy_object = PolicyClass()
         req.all_data = {"type": "push"}
         pushtoken_add_config(req, "init")
-        self.assertEqual(
-            req.all_data.get(PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config"
-        )
-        self.assertEqual(
-            req.all_data.get(PUSH_ACTION.REGISTRATION_URL), "https://edumfa.io/enroll"
-        )
+        self.assertEqual(req.all_data.get(PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
+        self.assertEqual(req.all_data.get(PUSH_ACTION.REGISTRATION_URL), "https://edumfa.io/enroll")
         self.assertEqual("10", req.all_data.get(PUSH_ACTION.TTL))
         self.assertEqual("1", req.all_data.get(PUSH_ACTION.SSL_VERIFY))
 
@@ -1925,9 +1849,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         g.policy_object = PolicyClass()
         req.all_data = {"type": "push"}
         pushtoken_add_config(req, "init")
-        self.assertEqual(
-            req.all_data.get(PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config"
-        )
+        self.assertEqual(req.all_data.get(PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
         self.assertEqual("0", req.all_data.get(PUSH_ACTION.SSL_VERIFY))
 
         # finally delete policy
@@ -1962,9 +1884,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # Cornelius is allowed to enroll TOTP
         g.logged_in_user = {"username": "cornelius", "realm": realm, "role": "user"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -1982,9 +1902,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # Corny is allowed to enroll HOTP
         g.logged_in_user = {"username": "corny", "realm": realm, "role": "user"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -2029,9 +1947,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(req.all_data.get(PUSH_ACTION.WAIT), False)
 
         # Now we use the policy, to set the push_wait seconds
-        set_policy(
-            name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(PUSH_ACTION.WAIT)
-        )
+        set_policy(name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(PUSH_ACTION.WAIT))
         req.all_data = {}
         g.policy_object = PolicyClass()
         pushtoken_wait(req, None)
@@ -2050,9 +1966,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(req.all_data.get(PUSH_ACTION.WAIT), False)
 
         # But even with a policy, the function still sets PUSH_ACTION.WAIT to False
-        set_policy(
-            name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(PUSH_ACTION.WAIT)
-        )
+        set_policy(name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(PUSH_ACTION.WAIT))
         req = RequestMock()
         req.all_data = {"push_wait": "120"}
         pushtoken_disable_wait(req, None)
@@ -2076,17 +1990,13 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
         # Admin1 is allowed to list all realms
-        set_policy(
-            name="pol-all-realms", scope=SCOPE.ADMIN, action="tokenlist", user="admin1"
-        )
+        set_policy(name="pol-all-realms", scope=SCOPE.ADMIN, action="tokenlist", user="admin1")
 
         # Admin1 is allowed to only init, not list
         set_policy(name="pol-only-init", scope=SCOPE.ADMIN)
 
         g.policy_object = PolicyClass()
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -2175,9 +2085,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             set(DEFAULT_ALLOWED_TRANSPORTS.split()),
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             DEFAULT_CHALLENGE_TEXT_AUTH,
         )
 
@@ -2190,9 +2098,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             set(DEFAULT_ALLOWED_TRANSPORTS.split()),
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             DEFAULT_CHALLENGE_TEXT_AUTH,
         )
 
@@ -2202,9 +2108,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         webauthntoken_auth(request, None)
         self.assertEqual(request.all_data.get(WEBAUTHNACTION.ALLOWED_TRANSPORTS), None)
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             None,
         )
 
@@ -2214,15 +2118,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.AUTH,
-            action=WEBAUTHNACTION.ALLOWED_TRANSPORTS
-            + "="
-            + allowed_transports
-            + ","
-            + WebAuthnTokenClass.get_class_type()
-            + "_"
-            + ACTION.CHALLENGETEXT
-            + "="
-            + challengetext,
+            action=WEBAUTHNACTION.ALLOWED_TRANSPORTS + "=" + allowed_transports + "," + WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT + "=" + challengetext,
         )
         request = RequestMock()
         request.all_data = {"user": "foo"}
@@ -2232,9 +2128,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             set(allowed_transports.split()),
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             challengetext,
         )
 
@@ -2254,9 +2148,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             set(DEFAULT_ALLOWED_TRANSPORTS.split()),
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             DEFAULT_CHALLENGE_TEXT_AUTH,
         )
 
@@ -2273,9 +2165,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             set(DEFAULT_ALLOWED_TRANSPORTS.split()),
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             DEFAULT_CHALLENGE_TEXT_AUTH,
         )
 
@@ -2285,9 +2175,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         webauthntoken_auth(request, None)
         self.assertEqual(request.all_data.get(WEBAUTHNACTION.ALLOWED_TRANSPORTS), None)
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             None,
         )
 
@@ -2297,15 +2185,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.AUTH,
-            action=WEBAUTHNACTION.ALLOWED_TRANSPORTS
-            + "="
-            + allowed_transports
-            + ","
-            + WebAuthnTokenClass.get_class_type()
-            + "_"
-            + ACTION.CHALLENGETEXT
-            + "="
-            + challengetext,
+            action=WEBAUTHNACTION.ALLOWED_TRANSPORTS + "=" + allowed_transports + "," + WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT + "=" + challengetext,
         )
         request = RequestMock()
         request.all_data = {"user": "foo", "pass": "1234"}
@@ -2315,9 +2195,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             set(allowed_transports.split()),
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             challengetext,
         )
 
@@ -2337,9 +2215,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             set(DEFAULT_ALLOWED_TRANSPORTS.split()),
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             DEFAULT_CHALLENGE_TEXT_AUTH,
         )
 
@@ -2349,15 +2225,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.AUTH,
-            action=WEBAUTHNACTION.ALLOWED_TRANSPORTS
-            + "="
-            + allowed_transports
-            + ","
-            + WebAuthnTokenClass.get_class_type()
-            + "_"
-            + ACTION.CHALLENGETEXT
-            + "="
-            + challengetext,
+            action=WEBAUTHNACTION.ALLOWED_TRANSPORTS + "=" + allowed_transports + "," + WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT + "=" + challengetext,
         )
         request = RequestMock()
         request.all_data = {"username": "foo", "password": "1234"}
@@ -2367,9 +2235,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             set(allowed_transports.split()),
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             challengetext,
         )
 
@@ -2486,14 +2352,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn1",
             scope=SCOPE.ENROLL,
-            action=WEBAUTHNACTION.RELYING_PARTY_ID
-            + "="
-            + "https://"
-            + rp_id
-            + ","
-            + WEBAUTHNACTION.RELYING_PARTY_NAME
-            + "="
-            + rp_name,
+            action=WEBAUTHNACTION.RELYING_PARTY_ID + "=" + "https://" + rp_id + "," + WEBAUTHNACTION.RELYING_PARTY_NAME + "=" + rp_name,
         )
         request = RequestMock()
         request.all_data = {"type": WebAuthnTokenClass.get_class_type()}
@@ -2514,13 +2373,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn1",
             scope=SCOPE.ENROLL,
-            action=WEBAUTHNACTION.RELYING_PARTY_ID
-            + "="
-            + rp_id
-            + ","
-            + WEBAUTHNACTION.RELYING_PARTY_NAME
-            + "="
-            + rp_name,
+            action=WEBAUTHNACTION.RELYING_PARTY_ID + "=" + rp_id + "," + WEBAUTHNACTION.RELYING_PARTY_NAME + "=" + rp_name,
         )
 
         # Normal request
@@ -2528,19 +2381,11 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.all_data = {"type": WebAuthnTokenClass.get_class_type()}
         webauthntoken_enroll(request, None)
         self.assertEqual(request.all_data.get(WEBAUTHNACTION.RELYING_PARTY_ID), rp_id)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.RELYING_PARTY_NAME), rp_name
-        )
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTACHMENT), None
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.RELYING_PARTY_NAME), rp_name)
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTACHMENT), None)
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS),
-            [
-                PUBLIC_KEY_CREDENTIAL_ALGORITHMS[x]
-                for x in PUBKEY_CRED_ALGORITHMS_ORDER
-                if x in DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
-            ],
+            [PUBLIC_KEY_CREDENTIAL_ALGORITHMS[x] for x in PUBKEY_CRED_ALGORITHMS_ORDER if x in DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE],
         )
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL),
@@ -2551,9 +2396,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             DEFAULT_AUTHENTICATOR_ATTESTATION_FORM,
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             DEFAULT_CHALLENGE_TEXT_ENROLL,
         )
 
@@ -2563,22 +2406,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         webauthntoken_enroll(request, None)
         (self.assertEqual(request.all_data.get(WEBAUTHNACTION.RELYING_PARTY_ID), None),)
         self.assertEqual(request.all_data.get(WEBAUTHNACTION.RELYING_PARTY_NAME), None)
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTACHMENT), None)
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS), None)
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL), None)
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM), None)
         self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTACHMENT), None
-        )
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS), None
-        )
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL), None
-        )
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM), None
-        )
-        self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             None,
         )
 
@@ -2622,11 +2455,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS),
-            [
-                PUBLIC_KEY_CREDENTIAL_ALGORITHMS[
-                    public_key_credential_algorithm_preference
-                ]
-            ],
+            [PUBLIC_KEY_CREDENTIAL_ALGORITHMS[public_key_credential_algorithm_preference]],
         )
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL),
@@ -2637,9 +2466,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             authenticator_attestation_form,
         )
         self.assertEqual(
-            request.all_data.get(
-                WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT
-            ),
+            request.all_data.get(WebAuthnTokenClass.get_class_type() + "_" + ACTION.CHALLENGETEXT),
             challengetext,
         )
 
@@ -2681,16 +2508,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.all_data = {"type": WebAuthnTokenClass.get_class_type()}
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000)
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT),
             DEFAULT_USER_VERIFICATION_REQUIREMENT,
         )
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST), None
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST), None)
         self.assertEqual(request.all_data.get("HTTP_ORIGIN"), ORIGIN)
 
         # Not a WebAuthn token
@@ -2699,12 +2522,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
         self.assertEqual(request.all_data.get(WEBAUTHNACTION.TIMEOUT), None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT), None
-        )
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST), None
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT), None)
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST), None)
         self.assertEqual(request.all_data.get("HTTP_ORIGIN"), None)
 
         # With policies
@@ -2764,9 +2583,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.all_data = {"user": "foo"}
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000)
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT),
             DEFAULT_USER_VERIFICATION_REQUIREMENT,
@@ -2778,9 +2595,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.all_data = {"serial": WebAuthnTokenClass.get_class_prefix() + "123"}
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000)
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT),
             DEFAULT_USER_VERIFICATION_REQUIREMENT,
@@ -2793,9 +2608,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
         self.assertEqual(request.all_data.get(WEBAUTHNACTION.TIMEOUT), None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT), None
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT), None)
         self.assertEqual(request.all_data.get("HTTP_ORIGIN"), None)
 
         # With policies
@@ -2804,13 +2617,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.AUTH,
-            action=WEBAUTHNACTION.TIMEOUT
-            + "="
-            + str(timeout)
-            + ","
-            + WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT
-            + "="
-            + user_verification_requirement,
+            action=WEBAUTHNACTION.TIMEOUT + "=" + str(timeout) + "," + WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT + "=" + user_verification_requirement,
         )
         request = Request(env)
         request.all_data = {"user": "foo"}
@@ -2834,9 +2641,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.all_data = {"username": "foo", "password": "1234"}
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000)
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT),
             DEFAULT_USER_VERIFICATION_REQUIREMENT,
@@ -2849,13 +2654,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.AUTH,
-            action=WEBAUTHNACTION.TIMEOUT
-            + "="
-            + str(timeout)
-            + ","
-            + WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT
-            + "="
-            + user_verification_requirement,
+            action=WEBAUTHNACTION.TIMEOUT + "=" + str(timeout) + "," + WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT + "=" + user_verification_requirement,
         )
         request = RequestMock()
         request.all_data = {"username": "foo", "password": "1234"}
@@ -2886,9 +2685,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         }
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST), None
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST), None)
         self.assertEqual(request.all_data.get("HTTP_ORIGIN"), ORIGIN)
 
         # With policies
@@ -2896,9 +2693,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.AUTHZ,
-            action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST
-            + "="
-            + authenticator_selection_list,
+            action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST + "=" + authenticator_selection_list,
         )
         request = Request(env)
         request.all_data = {
@@ -2929,9 +2724,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         request.all_data = {"user": "foo", "pass": "1234"}
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.TIMEOUT), DEFAULT_TIMEOUT * 1000)
         self.assertEqual(
             request.all_data.get(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT),
             DEFAULT_USER_VERIFICATION_REQUIREMENT,
@@ -2944,13 +2737,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.AUTH,
-            action=WEBAUTHNACTION.TIMEOUT
-            + "="
-            + str(timeout)
-            + ","
-            + WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT
-            + "="
-            + user_verification_requirement,
+            action=WEBAUTHNACTION.TIMEOUT + "=" + str(timeout) + "," + WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT + "=" + user_verification_requirement,
         )
         request = RequestMock()
         request.all_data = {"user": "foo", "pass": "1234"}
@@ -2982,9 +2769,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         }
         request.environ = {"HTTP_ORIGIN": ORIGIN}
         webauthntoken_request(request, None)
-        self.assertEqual(
-            request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST), None
-        )
+        self.assertEqual(request.all_data.get(WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST), None)
         self.assertEqual(request.all_data.get("HTTP_ORIGIN"), ORIGIN)
 
         # With policies
@@ -2992,9 +2777,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.AUTHZ,
-            action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST
-            + "="
-            + authenticator_selection_list,
+            action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST + "=" + authenticator_selection_list,
         )
         request = Request(env)
         request.all_data = {
@@ -3043,8 +2826,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
         self.assertRaisesRegex(
             PolicyError,
-            "The WebAuthn token is not allowed to be registered "
-            "due to a policy restriction.",
+            "The WebAuthn token is not allowed to be registered due to a policy restriction.",
             webauthntoken_allowed,
             request,
             None,
@@ -3105,9 +2887,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.ENROLL,
-            action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST
-            + "="
-            + authenticator_selection_list,
+            action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST + "=" + authenticator_selection_list,
         )
 
         with self.assertRaises(PolicyError):
@@ -3156,9 +2936,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                ACTION.REQUIRE_ATTESTATION, REQUIRE_ACTIONS.REQUIRE_AND_VERIFY
-            ),
+            action="{0!s}={1!s}".format(ACTION.REQUIRE_ATTESTATION, REQUIRE_ACTIONS.REQUIRE_AND_VERIFY),
         )
         g.policy_object = PolicyClass()
 
@@ -3171,9 +2949,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_36_init_registrationcode_length_contents(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"type": "registration"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"type": "registration"}, headers={})
         env = builder.get_environ()
         req = Request(env)
 
@@ -3207,9 +2983,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_37_init_password_length_contents(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"type": "password", "genkey": 1}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"type": "password", "genkey": 1}, headers={})
         env = builder.get_environ()
         req = Request(env)
 
@@ -3256,9 +3030,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_40_custom_user_attributes(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"type": "registration"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"type": "registration"}, headers={})
         env = builder.get_environ()
         req = Request(env)
         req.User = User("cornelius", self.realm1)
@@ -3332,9 +3104,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "set_custom_attr",
             scope=SCOPE.ADMIN,
-            action="{0!s}=:department: finance devel :color: * :*: 1 2 ".format(
-                ACTION.SET_USER_ATTRIBUTES
-            ),
+            action="{0!s}=:department: finance devel :color: * :*: 1 2 ".format(ACTION.SET_USER_ATTRIBUTES),
         )
         # Allow to set to finance
         check_custom_user_attributes(req, "set")
@@ -3409,9 +3179,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_50_enroll_ca_connector(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"type": "certificate", "genkey": 1}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"type": "certificate", "genkey": 1}, headers={})
         env = builder.get_environ()
         req = Request(env)
 
@@ -3444,16 +3212,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="sub1",
             scope=SCOPE.ENROLL,
-            action="{0!s}=email".format(
-                CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT
-            ),
+            action="{0!s}=email".format(CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT),
         )
         set_policy(
             name="sub2",
             scope=SCOPE.ENROLL,
-            action="{0!s}=email realm".format(
-                CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT
-            ),
+            action="{0!s}=email realm".format(CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT),
         )
         # request, that matches the policy
         req.all_data = {
@@ -3497,9 +3261,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("sub2")
 
     def test_60_increase_failcounter_on_challenge(self):
-        builder = EnvironBuilder(
-            method="POST", data={"user": "hans", "pass": "123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "hans", "pass": "123456"}, headers={})
         env = builder.get_environ()
         req = Request(env)
         req.User = User()
@@ -3570,9 +3332,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 class PostPolicyDecoratorTestCase(MyApiTestCase):
     def test_01_check_tokentype(self):
         # http://werkzeug.pocoo.org/docs/0.10/test/#environment-building
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -3594,9 +3354,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         resp = jsonify(res)
 
         # Set a policy, that does not allow the tokentype
-        set_policy(
-            name="pol1", scope=SCOPE.AUTHZ, action="tokentype=hotp", client="10.0.0.0/8"
-        )
+        set_policy(name="pol1", scope=SCOPE.AUTHZ, action="tokentype=hotp", client="10.0.0.0/8")
         g.policy_object = PolicyClass()
 
         # The token type SPASS is not allowed on this client, so an exception
@@ -3622,9 +3380,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
     def test_01_check_undetermined_tokentype(self):
         # If there is a tokentype policy but the type can not be
         # determined, authentication fails.
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "OATH123456"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -3642,9 +3398,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         resp = jsonify(res)
 
         # Set a policy, that does not allow the tokentype
-        set_policy(
-            name="pol1", scope=SCOPE.AUTHZ, action="tokentype=hotp", client="10.0.0.0/8"
-        )
+        set_policy(name="pol1", scope=SCOPE.AUTHZ, action="tokentype=hotp", client="10.0.0.0/8")
         g.policy_object = PolicyClass()
 
         # The token type can not be determined, so an exception
@@ -3720,9 +3474,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
     def test_02_check_serial(self):
         # http://werkzeug.pocoo.org/docs/0.10/test/#environment-building
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "HOTP123435"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "HOTP123435"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -3743,9 +3495,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         resp = jsonify(res)
 
         # Set a policy, that does not allow the tokentype
-        set_policy(
-            name="pol1", scope=SCOPE.AUTHZ, action="serial=TOTP", client="10.0.0.0/8"
-        )
+        set_policy(name="pol1", scope=SCOPE.AUTHZ, action="serial=TOTP", client="10.0.0.0/8")
         g.policy_object = PolicyClass()
 
         # The token serial HOTP is not allowed on this client, so an exception
@@ -3754,9 +3504,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
         # A policy, that allows the token spass
         # Set a policy, that does not allow the tokentype
-        set_policy(
-            name="pol1", scope=SCOPE.AUTHZ, action="serial=HOTP", client="10.0.0.0/8"
-        )
+        set_policy(name="pol1", scope=SCOPE.AUTHZ, action="serial=HOTP", client="10.0.0.0/8")
         g.policy_object = PolicyClass()
 
         # The token type SPASS is not allowed on this client, so an exception
@@ -3766,9 +3514,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(jresult.get("result").get("value"))
 
     def test_03_no_detail_on_success(self):
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "HOTP123435"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "HOTP123435"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -3803,9 +3549,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("pol2")
 
     def test_04_no_detail_on_fail(self):
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "HOTP123435"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"serial": "HOTP123435"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -3859,9 +3603,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("pol2")
 
     def test_04_add_user_in_response(self):
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius", "pass": "test"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius", "pass": "test"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -4099,15 +3841,11 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(jresult.get("detail").get("otplen"), 6)
 
         # authenticate with 287082 a second time will fail
-        res, dict = check_user_pass(
-            User("autoassignuser", self.realm1), "password287082"
-        )
+        res, dict = check_user_pass(User("autoassignuser", self.realm1), "password287082")
         self.assertFalse(res)
 
         # authenticate with the next OTP 359152 will succeed
-        res, dict = check_user_pass(
-            User("autoassignuser", self.realm1), "password359152"
-        )
+        res, dict = check_user_pass(User("autoassignuser", self.realm1), "password359152")
         self.assertTrue(res)
 
         delete_policy("pol2")
@@ -4127,9 +3865,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         )
 
         # Set the Machine and MachineToken
-        resolver1 = save_resolver(
-            {"name": "reso1", "type": "hosts", "filename": HOSTSFILE}
-        )
+        resolver1 = save_resolver({"name": "reso1", "type": "hosts", "filename": HOSTSFILE})
 
         mt = attach_token(serial, "offline", hostname="gandalf")
         self.assertEqual(mt.token.serial, serial)
@@ -4243,9 +3979,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         resp = jsonify(res)
         from edumfa.lib.crypto import Sign
 
-        sign_object = Sign(
-            private_key=None, public_key=open("tests/testdata/public.pem", "rb").read()
-        )
+        sign_object = Sign(private_key=None, public_key=open("tests/testdata/public.pem", "rb").read())
 
         # check that we don't sign if 'EDUMFA_NO_RESPONSE_SIGN' is set
         current_app.config["EDUMFA_NO_RESPONSE_SIGN"] = True
@@ -4296,9 +4030,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
         self.assertEqual(jresult.get("result").get("value").get("token_wizard"), False)
-        self.assertEqual(
-            jresult.get("result").get("value").get("logout_redirect_url"), "", jresult
-        )
+        self.assertEqual(jresult.get("result").get("value").get("logout_redirect_url"), "", jresult)
 
         # Set a policy. User has not token, so "token_wizard" will be True
         set_policy(name="pol_wizard", scope=SCOPE.WEBUI, action=ACTION.TOKENWIZARD)
@@ -4317,27 +4049,19 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("pol_wizard")
 
         # check if the dialog_no_token will not be displayed
-        self.assertEqual(
-            jresult.get("result").get("value").get("dialog_no_token"), False
-        )
+        self.assertEqual(jresult.get("result").get("value").get("dialog_no_token"), False)
 
         # Now set a policy and check again
         set_policy(name="pol_dialog", scope=SCOPE.WEBUI, action=ACTION.DIALOG_NO_TOKEN)
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
-        self.assertEqual(
-            jresult.get("result").get("value").get(ACTION.DIALOG_NO_TOKEN), True
-        )
+        self.assertEqual(jresult.get("result").get("value").get(ACTION.DIALOG_NO_TOKEN), True)
         delete_policy("pol_dialog")
 
         # Set a policy for the QR codes
-        set_policy(
-            name="pol_qr1", scope=SCOPE.WEBUI, action=ACTION.SHOW_ANDROID_AUTHENTICATOR
-        )
-        set_policy(
-            name="pol_qr2", scope=SCOPE.WEBUI, action=ACTION.SHOW_IOS_AUTHENTICATOR
-        )
+        set_policy(name="pol_qr1", scope=SCOPE.WEBUI, action=ACTION.SHOW_ANDROID_AUTHENTICATOR)
+        set_policy(name="pol_qr2", scope=SCOPE.WEBUI, action=ACTION.SHOW_IOS_AUTHENTICATOR)
         set_policy(
             name="pol_qr3",
             scope=SCOPE.WEBUI,
@@ -4349,41 +4073,45 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
         self.assertEqual(
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG"
-            "aAQAAAAAefbjOAAACFElEQVR42u1cS07FMBCL6AFypHd1jtQDVJrX"
-            "zD+FBbBDdhZPbVpviOV4nClDfj8+B0EEEUQQQQQRRFCAho/jnpnrd"
-            "uozHyJnXL4U9DH+MAj6HyBnhK60nIeRwVd/3eaD9h4ZgcCI0ylwa8"
-            "TlUiByX4371qkyDjICkBF9w1Bu1AMyAlMjljKYKKw5lQxqBLSPaLQ"
-            "wy1lz9BFAjMhaw/3k84e1BhgjtqHy4BbidhTH15KVfz0QjSgpaJKh"
-            "FFhmwhwFGYGiEUqGWauvMZXWoe4s7RXuGjjO8so8wm+DKmtuHOLJB"
-            "BkBU31GhWHG4fzecpIRQM7ysoVXjTBaZBRhOabuKWQEjkaMEWTY5S"
-            "FpYfUHGQGiES2anCEZLdTevQUZAVF91pFG5lISkuHegj4CSiO2Q29"
-            "94LrhWwc1Aq/WeAQQVpHqeByTkxEIu0Zrmupp1ONwnBqBoxHRHVNd"
-            "EVF4imyRBRmBkke4vWxXmVXRR0DWGrrwIlsbXb4SvTP0EVjOsrfaZ"
-            "mDVfqgRUIwojfBWqao/PMUe9BFozrL3R+QpaM1NdtWBOcstnNqPPW"
-            "tjISOgnGULsK8UhTjheJ2DPgJp1+gpdjXL2DuvarwjI5CcZX6oE/0"
-            "RfSfxrYOMgGNEbg4+V19usGMGVyOaZ2hf9dBHQPqIOPss95CbCPMI"
-            "zFqjjRlt+y4ZzCwR8wj+PxaCCCKIIIIIIuinoDczovv0cx3r0AAAA"
-            "ABJRU5ErkJggg==",
+            (
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG"
+                "aAQAAAAAefbjOAAACFElEQVR42u1cS07FMBCL6AFypHd1jtQDVJrX"
+                "zD+FBbBDdhZPbVpviOV4nClDfj8+B0EEEUQQQQQRRFCAho/jnpnrd"
+                "uozHyJnXL4U9DH+MAj6HyBnhK60nIeRwVd/3eaD9h4ZgcCI0ylwa8"
+                "TlUiByX4371qkyDjICkBF9w1Bu1AMyAlMjljKYKKw5lQxqBLSPaLQ"
+                "wy1lz9BFAjMhaw/3k84e1BhgjtqHy4BbidhTH15KVfz0QjSgpaJKh"
+                "FFhmwhwFGYGiEUqGWauvMZXWoe4s7RXuGjjO8so8wm+DKmtuHOLJB"
+                "BkBU31GhWHG4fzecpIRQM7ysoVXjTBaZBRhOabuKWQEjkaMEWTY5S"
+                "FpYfUHGQGiES2anCEZLdTevQUZAVF91pFG5lISkuHegj4CSiO2Q29"
+                "94LrhWwc1Aq/WeAQQVpHqeByTkxEIu0Zrmupp1ONwnBqBoxHRHVNd"
+                "EVF4imyRBRmBkke4vWxXmVXRR0DWGrrwIlsbXb4SvTP0EVjOsrfaZ"
+                "mDVfqgRUIwojfBWqao/PMUe9BFozrL3R+QpaM1NdtWBOcstnNqPPW"
+                "tjISOgnGULsK8UhTjheJ2DPgJp1+gpdjXL2DuvarwjI5CcZX6oE/0"
+                "RfSfxrYOMgGNEbg4+V19usGMGVyOaZ2hf9dBHQPqIOPss95CbCPMI"
+                "zFqjjRlt+y4ZzCwR8wj+PxaCCCKIIIIIIuinoDczovv0cx3r0AAAA"
+                "ABJRU5ErkJggg=="
+            ),
             jresult.get("result").get("value").get("qr_image_android"),
         )
         self.assertEqual(
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG"
-            "aAQAAAAAefbjOAAACC0lEQVR42u2cUW7DMAxDheUAPlKvniPlAAa8"
-            "xpYtufnZ9jfw5aPo0vCnJiSSUmft99dpgAABAgQIECBAE2R+He/31"
-            "9Hsdd3vWh133/fmA68O+rI/XID+B8gZ0U86keHy0zcr/kF6DkYoMK"
-            "JTIB189YpzljZY0isIjNBjxDh4K3fDKLluwAjVGnGmNhE6Akbo6oh"
-            "eHm6CuORER2gyYnmN0SEeL3gNMUZsfrTfq1NWlPp8hG9PpEaMUnBT"
-            "4FwvQ0ykP2GERo04h2ystpmLWS08uqJrSNWIY9IiEqotvaRG6NWIu"
-            "NxrdDM69KQXDxihoyw/E6qWk4keXA4fCiNUasTQjqtKbJ4zBVboCB"
-            "kdMccX3ib2SZf3FHSEECNGZtm2uDLNPtEReoy43Guk/pF1RLU8D+X"
-            "bU1CWeciV+kfoCKcFjBBSlpFBeQCxzEWZwSU1QkdHeAblGnMbhcba"
-            "DIzQ6Rqbdtw2ZjyhQkfoeY3H5tTkwfAf6Ag997m8xiRDziPQEWru0"
-            "+ec0T+SI229Rhg6QowR3hz63bL5j3692KrTUpYx9sz7Ebb2bf0DGC"
-            "FSI9Lpxy7dGnflBRoYIaQs2xVrMzOrWg7DDB0hqCOO3YdWy/0DryH"
-            "MiLSTT2apzgiz+DlXVhTDgsIIOR0xzcVMJmJZhjxC1GtEFHGuuUZ/"
-            "jl1szTyC/8cCCBAgQIAAAfop6Bt9aCglBgbq7QAAAABJRU5ErkJgg"
-            "g==",
+            (
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG"
+                "aAQAAAAAefbjOAAACC0lEQVR42u2cUW7DMAxDheUAPlKvniPlAAa8"
+                "xpYtufnZ9jfw5aPo0vCnJiSSUmft99dpgAABAgQIECBAE2R+He/31"
+                "9Hsdd3vWh133/fmA68O+rI/XID+B8gZ0U86keHy0zcr/kF6DkYoMK"
+                "JTIB189YpzljZY0isIjNBjxDh4K3fDKLluwAjVGnGmNhE6Akbo6oh"
+                "eHm6CuORER2gyYnmN0SEeL3gNMUZsfrTfq1NWlPp8hG9PpEaMUnBT"
+                "4FwvQ0ykP2GERo04h2ystpmLWS08uqJrSNWIY9IiEqotvaRG6NWIu"
+                "NxrdDM69KQXDxihoyw/E6qWk4keXA4fCiNUasTQjqtKbJ4zBVboCB"
+                "kdMccX3ib2SZf3FHSEECNGZtm2uDLNPtEReoy43Guk/pF1RLU8D+X"
+                "bU1CWeciV+kfoCKcFjBBSlpFBeQCxzEWZwSU1QkdHeAblGnMbhcba"
+                "DIzQ6Rqbdtw2ZjyhQkfoeY3H5tTkwfAf6Ag997m8xiRDziPQEWru0"
+                "+ec0T+SI229Rhg6QowR3hz63bL5j3692KrTUpYx9sz7Ebb2bf0DGC"
+                "FSI9Lpxy7dGnflBRoYIaQs2xVrMzOrWg7DDB0hqCOO3YdWy/0DryH"
+                "MiLSTT2apzgiz+DlXVhTDgsIIOR0xzcVMJmJZhjxC1GtEFHGuuUZ/"
+                "jl1szTyC/8cCCBAgQIAAAfop6Bt9aCglBgbq7QAAAABJRU5ErkJgg"
+                "g=="
+            ),
             jresult.get("result").get("value").get("qr_image_ios"),
         )
         qr_image_custom = jresult.get("result").get("value").get("qr_image_custom")
@@ -4421,9 +4149,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
         # Check that the force_attribute indicator is set to "1"
-        self.assertEqual(
-            1, jresult.get("result").get("value").get("indexedsecret_force_attribute")
-        )
+        self.assertEqual(1, jresult.get("result").get("value").get("indexedsecret_force_attribute"))
         delete_policy("pol_indexed_force")
 
         # Test if the logout_redirect URL is set
@@ -4469,9 +4195,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
-        self.assertEqual(
-            jresult.get("result").get("value").get(ACTION.TOKENPAGESIZE), 15
-        )
+        self.assertEqual(jresult.get("result").get("value").get(ACTION.TOKENPAGESIZE), 15)
 
         # Set a policy. User has not token, so "token_wizard" will be True
         set_policy(
@@ -4483,9 +4207,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
-        self.assertEqual(
-            jresult.get("result").get("value").get(ACTION.TOKENPAGESIZE), 177
-        )
+        self.assertEqual(jresult.get("result").get("value").get(ACTION.TOKENPAGESIZE), 177)
 
         # Now we change the policy pol_pagesize this way, that it is only valid for the user "root"
         set_policy(
@@ -4499,9 +4221,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
-        self.assertEqual(
-            jresult.get("result").get("value").get(ACTION.TOKENPAGESIZE), 15
-        )
+        self.assertEqual(jresult.get("result").get("value").get(ACTION.TOKENPAGESIZE), 15)
 
         delete_policy("pol_pagesize")
 
@@ -4531,14 +4251,10 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
-        self.assertEqual(
-            jresult.get("result").get("value").get("admin_dashboard"), False
-        )
+        self.assertEqual(jresult.get("result").get("value").get("admin_dashboard"), False)
 
         # Set a policy. Admin can see the dashboard
-        set_policy(
-            name="pol_dashboard", scope=SCOPE.WEBUI, action=ACTION.ADMIN_DASHBOARD
-        )
+        set_policy(name="pol_dashboard", scope=SCOPE.WEBUI, action=ACTION.ADMIN_DASHBOARD)
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
@@ -4548,9 +4264,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
     def test_16_init_token_defaults(self):
         g.logged_in_user = {"username": "cornelius", "realm": "", "role": "user"}
-        builder = EnvironBuilder(
-            method="POST", data={"type": "totp", "genkey": "1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"type": "totp", "genkey": "1"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -4577,14 +4291,10 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("pol1")
 
         # check that it works in admin scope as well
-        set_policy(
-            name="pol1", scope=SCOPE.ADMIN, action="hotp_otplen=8,hotp_hashlib=sha512"
-        )
+        set_policy(name="pol1", scope=SCOPE.ADMIN, action="hotp_otplen=8,hotp_hashlib=sha512")
         g.policy_object = PolicyClass()
         g.logged_in_user = {"username": "admin", "realm": "super", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"type": "hotp", "genkey": "1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"type": "hotp", "genkey": "1"}, headers={})
         env = builder.get_environ()
         req = Request(env)
         # request, that matches the policy
@@ -4599,9 +4309,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
     def test_17_pin_change(self):
         g.logged_in_user = {"username": "admin", "realm": "", "role": "admin"}
-        builder = EnvironBuilder(
-            method="POST", data={"type": "totp", "genkey": "1"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"type": "totp", "genkey": "1"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -4633,9 +4341,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         resp = jsonify(res)
 
         # the token itself
-        token = init_token(
-            {"serial": "changePIN1", "type": "spass"}, tokenrealms=[self.realm1]
-        )
+        token = init_token({"serial": "changePIN1", "type": "spass"}, tokenrealms=[self.realm1])
         save_pin_change(req, resp)
         ti = token.get_tokeninfo("next_pin_change")
         ndate = datetime.now(tzlocal()).strftime(DATE_FORMAT)
@@ -4661,9 +4367,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         }
         resp = jsonify(res)
 
-        token = init_token(
-            {"type": "spass", "serial": "changePIN2"}, tokenrealms=[self.realm1]
-        )
+        token = init_token({"type": "spass", "serial": "changePIN2"}, tokenrealms=[self.realm1])
 
         save_pin_change(req, resp)
         ti = token.get_tokeninfo("next_pin_change")
@@ -4695,9 +4399,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
     def test_18_challenge_text_header(self):
         # This looks like a validate/check request, that triggers a challenge
-        builder = EnvironBuilder(
-            method="POST", data={"user": "hans", "pass": "pin"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "hans", "pass": "pin"}, headers={})
 
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
@@ -4709,9 +4411,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_header",
             scope=SCOPE.AUTH,
-            action="{0!s}=These are your options:<ul>".format(
-                ACTION.CHALLENGETEXT_HEADER
-            ),
+            action="{0!s}=These are your options:<ul>".format(ACTION.CHALLENGETEXT_HEADER),
         )
         # Set a policy for the footer
         set_policy(
@@ -4771,9 +4471,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
     def test_19_is_authorized(self):
         # Test authz authorized policy
-        builder = EnvironBuilder(
-            method="POST", data={"user": "cornelius", "pass": "test123123"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "cornelius", "pass": "test123123"}, headers={})
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         env["REMOTE_ADDR"] = "10.0.0.1"
@@ -4832,9 +4530,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
     def test_20_verify_enrollment(self):
         # Test verify enrollment policy
         serial = "HOTP123456"
-        tok = init_token(
-            {"serial": serial, "type": "hotp", "otpkey": "31323334353637383040"}
-        )
+        tok = init_token({"serial": serial, "type": "hotp", "otpkey": "31323334353637383040"})
         builder = EnvironBuilder(
             method="POST",
             data={"user": "cornelius", "genkey": 1, "type": "hotp"},

@@ -47,14 +47,10 @@ class UserTestCase(MyTestCase):
         "Database": "testuser.sqlite",
         "Table": "users",
         "Encoding": "utf8",
-        "Map": '{ "username": "username", \
-                    "userid" : "id", \
-                    "email" : "email", \
-                    "surname" : "name", \
-                    "givenname" : "givenname", \
-                    "password" : "password", \
-                    "phone": "phone", \
-                    "mobile": "mobile"}',
+        "Map": (
+            '{ "username": "username",                     "userid" : "id",                     "email" : "email",                     "surname" : "name",                    '
+            ' "givenname" : "givenname",                     "password" : "password",                     "phone": "phone",                     "mobile": "mobile"}'
+        ),
     }
 
     def test_00_create_user(self):
@@ -125,15 +121,11 @@ class UserTestCase(MyTestCase):
         self.assertTrue(len(userlist) > 10, userlist)
 
         # users from one realm
-        userlist = get_user_list(
-            {"realm": self.realm1, "username": "root", "resolver": self.resolvername2}
-        )
+        userlist = get_user_list({"realm": self.realm1, "username": "root", "resolver": self.resolvername2})
         self.assertTrue(len(userlist) == 1, userlist)
 
         # get the list with user
-        userlist = get_user_list(
-            user=User(login="root", resolver=self.resolvername1, realm=self.realm1)
-        )
+        userlist = get_user_list(user=User(login="root", resolver=self.resolvername1, realm=self.realm1))
         self.assertTrue(len(userlist) > 10, userlist)
 
         # users with email
@@ -200,9 +192,7 @@ class UserTestCase(MyTestCase):
         self.assertTrue(user.login == "", user)
         self.assertTrue(user.resolver == "", user.resolver)
 
-        user = get_user_from_param(
-            {"user": "cornelius", "resolver": self.resolvername1}
-        )
+        user = get_user_from_param({"user": "cornelius", "resolver": self.resolvername1})
         self.assertTrue(user.realm == self.realm1, user)
 
         # create a realm, where cornelius is in two resolvers!
@@ -215,9 +205,7 @@ class UserTestCase(MyTestCase):
         )
         self.assertTrue(rid > 0, rid)
 
-        (added, failed) = set_realm(
-            self.realm2, [self.resolvername1, self.resolvername3]
-        )
+        (added, failed) = set_realm(self.realm2, [self.resolvername1, self.resolvername3])
         self.assertTrue(len(failed) == 0)
         self.assertTrue(len(added) == 2)
 
@@ -274,21 +262,13 @@ class UserTestCase(MyTestCase):
         self.assertTrue(len(failed) == 0)
         self.assertTrue(len(added) == 1)
 
-        self.assertTrue(
-            User(login="cornelius", realm="passwordrealm").check_password("test")
-        )
-        self.assertFalse(
-            User(login="cornelius", realm="passwordrealm").check_password("wrong")
-        )
-        self.assertFalse(
-            User(login="unknownuser", realm="passwordrealm").check_password("wrong")
-        )
+        self.assertTrue(User(login="cornelius", realm="passwordrealm").check_password("test"))
+        self.assertFalse(User(login="cornelius", realm="passwordrealm").check_password("wrong"))
+        self.assertFalse(User(login="unknownuser", realm="passwordrealm").check_password("wrong"))
 
         # test cornelius@realm2, since he is located in more than one
         # resolver.
-        self.assertEqual(
-            User(login="cornelius", realm="realm2").check_password("test"), None
-        )
+        self.assertEqual(User(login="cornelius", realm="realm2").check_password("test"), None)
 
     def test_11_get_search_fields(self):
         user = User(login="cornelius", realm=self.realm1)
@@ -302,15 +282,9 @@ class UserTestCase(MyTestCase):
         # Test the priority of resolvers.
         # we create resolvers with the same user in it. Depending on the
         # priority we either get the one or the other user.
-        save_resolver(
-            {"resolver": "double1", "type": "passwdresolver", "fileName": PWFILE}
-        )
-        save_resolver(
-            {"resolver": "double2", "type": "passwdresolver", "fileName": PWFILE}
-        )
-        save_resolver(
-            {"resolver": "double3", "type": "passwdresolver", "fileName": PWFILE}
-        )
+        save_resolver({"resolver": "double1", "type": "passwdresolver", "fileName": PWFILE})
+        save_resolver({"resolver": "double2", "type": "passwdresolver", "fileName": PWFILE})
+        save_resolver({"resolver": "double3", "type": "passwdresolver", "fileName": PWFILE})
 
         (added, failed) = set_realm(
             "double",
@@ -375,9 +349,7 @@ class UserTestCase(MyTestCase):
         self.assertEqual(len(added), 1)
 
         # Create the user
-        uid = create_user(
-            resolver, {"username": "achmed3", "givenname": "achmed"}, password="secret"
-        )
+        uid = create_user(resolver, {"username": "achmed3", "givenname": "achmed"}, password="secret")
         self.assertTrue(uid > 6)
 
         user = User("achmed3", realm=realm)
@@ -392,12 +364,8 @@ class UserTestCase(MyTestCase):
         self.assertTrue(root.exist())
 
     def test_16_ordered_resolver(self):
-        rid = save_resolver(
-            {"resolver": "resolver2", "type": "passwdresolver", "fileName": PWFILE}
-        )
-        rid = save_resolver(
-            {"resolver": "reso4", "type": "passwdresolver", "fileName": PWFILE}
-        )
+        rid = save_resolver({"resolver": "resolver2", "type": "passwdresolver", "fileName": PWFILE})
+        rid = save_resolver({"resolver": "reso4", "type": "passwdresolver", "fileName": PWFILE})
 
         (added, failed) = set_realm(
             "sort_realm",
@@ -433,16 +401,12 @@ class UserTestCase(MyTestCase):
 
         # check non-ascii password of non-ascii user
         self.assertFalse(User(login="nönäscii", realm=realm).check_password("wrong"))
-        self.assertTrue(
-            User(login="nönäscii", realm=realm).check_password("sömepassword")
-        )
+        self.assertTrue(User(login="nönäscii", realm=realm).check_password("sömepassword"))
 
         # check proper unicode() and str() handling
         user_object = User(login="nönäscii", realm=realm)
         self.assertEqual(str(user_object), "<nönäscii.SQL1@sqlrealm>")
-        self.assertEqual(
-            str(user_object).encode("utf8"), b"<n\xc3\xb6n\xc3\xa4scii.SQL1@sqlrealm>"
-        )
+        self.assertEqual(str(user_object).encode("utf8"), b"<n\xc3\xb6n\xc3\xa4scii.SQL1@sqlrealm>")
         # also check the User object representation
         user_repr = repr(user_object)
         self.assertEqual(
@@ -461,12 +425,7 @@ class UserTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(|(cn=*))",  # we use this weird search filter to get a unique resolver ID
-            "USERINFO": '{ "username": "cn",'
-            '"phone" : "telephoneNumber", '
-            '"mobile" : "mobile"'
-            ', "email" : "mail", '
-            '"surname" : "sn", '
-            '"givenname" : "givenName" }',
+            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
             "UIDTYPE": "objectGUID",
             "NOREFERRALS": True,
             "CACHE_TIMEOUT": 0,
@@ -503,12 +462,7 @@ class UserTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(|(cn=*))",  # we use this weird search filter to get a unique resolver ID
-            "USERINFO": '{ "username": "cn",'
-            '"phone" : "telephoneNumber", '
-            '"mobile" : "mobile"'
-            ', "email" : "mail", '
-            '"surname" : "sn", '
-            '"givenname" : "givenName" }',
+            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
             "UIDTYPE": "objectGUID",
             "NOREFERRALS": True,
             "CACHE_TIMEOUT": 0,

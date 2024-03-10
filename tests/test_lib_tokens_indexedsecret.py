@@ -82,27 +82,19 @@ class IndexedSecretTokenTestCase(MyTestCase):
         password_list = [my_secret[x - 1] for x in attribute.get("random_positions")]
         password = "".join(password_list)
         # Wrong transaction_id
-        r = token.check_challenge_response(
-            passw=password, options={"transaction_id": "wrong"}
-        )
+        r = token.check_challenge_response(passw=password, options={"transaction_id": "wrong"})
         self.assertEqual(-1, r)
 
         # wrong password - wrong length
-        r = token.check_challenge_response(
-            passw="wrong", options={"transaction_id": transaction_id}
-        )
+        r = token.check_challenge_response(passw="wrong", options={"transaction_id": transaction_id})
         self.assertEqual(-1, r)
 
         # wrong password - wrong contents
-        r = token.check_challenge_response(
-            passw="XX", options={"transaction_id": transaction_id}
-        )
+        r = token.check_challenge_response(passw="XX", options={"transaction_id": transaction_id})
         self.assertEqual(-1, r)
 
         # Successful authentication, we can also pass the transaction_id in the state.
-        r = token.check_challenge_response(
-            passw=password, options={"state": transaction_id}
-        )
+        r = token.check_challenge_response(passw=password, options={"state": transaction_id})
         self.assertEqual(1, r)
 
         db_token.delete()
@@ -110,9 +102,7 @@ class IndexedSecretTokenTestCase(MyTestCase):
     def test_02_init_token(self):
         # Create the tokenclass via init_token
         my_secret = "mysimplesecret"
-        t = init_token(
-            {"type": "indexedsecret", "otpkey": my_secret, "serial": "PIIX1234"}
-        )
+        t = init_token({"type": "indexedsecret", "otpkey": my_secret, "serial": "PIIX1234"})
         self.assertEqual(t.token.tokentype, "indexedsecret")
         self.assertEqual(t.token.serial, "PIIX1234")
 
@@ -132,9 +122,7 @@ class IndexedSecretTokenTestCase(MyTestCase):
             action="indexedsecret_challenge_text=Hier sind die Positionen: {0!s}",
         )
 
-        t = init_token(
-            {"type": "indexedsecret", "otpkey": my_secret, "serial": "PIIX1234"}
-        )
+        t = init_token({"type": "indexedsecret", "otpkey": my_secret, "serial": "PIIX1234"})
         g = FakeFlaskG()
         g.audit_object = FakeAudit
         g.policy_object = PolicyClass()
@@ -149,9 +137,7 @@ class IndexedSecretTokenTestCase(MyTestCase):
         # The password has length 5, due to the pol2
         self.assertEqual(5, len(password))
         # Successful auth
-        r = t.check_challenge_response(
-            passw=password, options={"transaction_id": transaction_id}
-        )
+        r = t.check_challenge_response(passw=password, options={"transaction_id": transaction_id})
         self.assertEqual(1, r)
 
         delete_policy("pol1")

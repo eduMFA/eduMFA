@@ -25,9 +25,7 @@ class AppsTestCase(MyTestCase):
         )
 
         r = create_oathtoken_url("12345678")
-        self.assertEqual(
-            r, "oathtoken:///addToken?name=mylabel&lockdown=true&key=12345678"
-        )
+        self.assertEqual(r, "oathtoken:///addToken?name=mylabel&lockdown=true&key=12345678")
         r = create_oathtoken_url("12345678", type="totp")
         self.assertEqual(
             r,
@@ -50,9 +48,7 @@ class AppsTestCase(MyTestCase):
 
         r = create_oathtoken_url("12345678", type="totp", extra_data=extra_data)
         self.assertTrue(
-            r.startswith(
-                "oathtoken:///addToken?name=mylabel&lockdown=true&key=12345678&timeBased=true"
-            ),
+            r.startswith("oathtoken:///addToken?name=mylabel&lockdown=true&key=12345678&timeBased=true"),
             r,
         )
         self.assertIn("&somekey=somevalue", r)

@@ -204,14 +204,10 @@ class SQLResolverTestCase(MyTestCase):
         "Database": "testuser.sqlite",
         "Table": "users",
         "Encoding": "utf8",
-        "Map": '{ "username": "username", \
-                    "userid" : "id", \
-                    "email" : "email", \
-                    "surname" : "name", \
-                    "givenname" : "givenname", \
-                    "password" : "password", \
-                    "phone": "phone", \
-                    "mobile": "mobile"}',
+        "Map": (
+            '{ "username": "username",                     "userid" : "id",                     "email" : "email",                     "surname" : "name",                    '
+            ' "givenname" : "givenname",                     "password" : "password",                     "phone": "phone",                     "mobile": "mobile"}'
+        ),
     }
 
     def test_00_delete_achmeds(self):
@@ -348,11 +344,7 @@ class SQLResolverTestCase(MyTestCase):
         self.assertTrue(y.checkPass(uid, "passw0rd"))
         self.assertFalse(y.checkPass(uid, "password"))
         # check that we actually store SSHA256
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed"))
-            .first()
-            .password
-        )
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed")).first().password
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
 
         # we assume here the uid is of type int
@@ -361,11 +353,7 @@ class SQLResolverTestCase(MyTestCase):
 
         r = y.update_user(uid, {"username": "achmed2", "password": "test"})
         # check that we actually store SSHA256
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
         uname = y.getUsername(uid)
         self.assertEqual(uname, "achmed2")
@@ -457,19 +445,11 @@ class SQLResolverTestCase(MyTestCase):
         self.assertTrue(y.checkPass(uid, "passw0rd"))
         self.assertFalse(y.checkPass(uid, "password"))
         # check that we actually store SSHA256 at first
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed"))
-            .first()
-            .password
-        )
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed")).first().password
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
 
         self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test"}))
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
         self.assertEqual(y.getUsername(uid), "achmed2")
         self.assertTrue(y.checkPass(uid, "test"))
@@ -479,14 +459,8 @@ class SQLResolverTestCase(MyTestCase):
         parameters["Password_Hash_Type"] = "SSHA512"
         y.loadConfig(parameters)
 
-        self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test2"})
-        )
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test2"}))
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("{SSHA512}"), stored_password)
         self.assertTrue(y.checkPass(uid, "test2"))
         self.assertFalse(y.checkPass(uid, "test"))
@@ -494,14 +468,8 @@ class SQLResolverTestCase(MyTestCase):
         # PHPASS
         parameters["Password_Hash_Type"] = "PHPASS"
         y.loadConfig(parameters)
-        self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test3"})
-        )
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test3"}))
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("$P$"), stored_password)
         self.assertTrue(y.checkPass(uid, "test3"))
         self.assertFalse(y.checkPass(uid, "test"))
@@ -509,14 +477,8 @@ class SQLResolverTestCase(MyTestCase):
         # SHA
         parameters["Password_Hash_Type"] = "SHA"
         y.loadConfig(parameters)
-        self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test4"})
-        )
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test4"}))
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("{SHA}"), stored_password)
         self.assertTrue(y.checkPass(uid, "test4"))
         self.assertFalse(y.checkPass(uid, "test"))
@@ -524,14 +486,8 @@ class SQLResolverTestCase(MyTestCase):
         # SSHA
         parameters["Password_Hash_Type"] = "SSHA"
         y.loadConfig(parameters)
-        self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test5"})
-        )
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test5"}))
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("{SSHA}"), stored_password)
         self.assertTrue(y.checkPass(uid, "test5"))
         self.assertFalse(y.checkPass(uid, "test"))
@@ -539,14 +495,8 @@ class SQLResolverTestCase(MyTestCase):
         # SHA256CRYPT
         parameters["Password_Hash_Type"] = "SHA256CRYPT"
         y.loadConfig(parameters)
-        self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test6"})
-        )
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test6"}))
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("$5$rounds="), stored_password)
         self.assertTrue(y.checkPass(uid, "test6"))
         self.assertFalse(y.checkPass(uid, "test"))
@@ -554,14 +504,8 @@ class SQLResolverTestCase(MyTestCase):
         # SHA512CRYPT
         parameters["Password_Hash_Type"] = "SHA512CRYPT"
         y.loadConfig(parameters)
-        self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test7"})
-        )
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test7"}))
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("$6$rounds="), stored_password)
         self.assertTrue(y.checkPass(uid, "test7"))
         self.assertFalse(y.checkPass(uid, "test"))
@@ -569,14 +513,8 @@ class SQLResolverTestCase(MyTestCase):
         # MD5CRYPT
         parameters["Password_Hash_Type"] = "MD5CRYPT"
         y.loadConfig(parameters)
-        self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test8"})
-        )
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
-            .first()
-            .password
-        )
+        self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test8"}))
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2")).first().password
         self.assertTrue(stored_password.startswith("$1$"), stored_password)
         self.assertTrue(y.checkPass(uid, "test8"))
         self.assertFalse(y.checkPass(uid, "test"))
@@ -585,9 +523,7 @@ class SQLResolverTestCase(MyTestCase):
         parameters["Password_Hash_Type"] = "UNKNOWN"
         y.loadConfig(parameters)
         with mock.patch("logging.Logger.error") as mock_log:
-            self.assertFalse(
-                y.update_user(uid, {"username": "achmed2", "password": "test9"})
-            )
+            self.assertFalse(y.update_user(uid, {"username": "achmed2", "password": "test9"}))
             expected = (
                 "Error updating user attributes for user with uid 14: "
                 "Unsupported password hashtype 'UNKNOWN'. Use one of "
@@ -620,11 +556,7 @@ class SQLResolverTestCase(MyTestCase):
         self.assertTrue(y.checkPass(uid, "foo"))
         self.assertFalse(y.checkPass(uid, "bar"))
         # check that we actually store SSHA265 now since it is the default
-        stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "hans"))
-            .first()
-            .password
-        )
+        stored_password = y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "hans")).first().password
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
 
         y.delete_user(uid)
@@ -998,9 +930,7 @@ class LDAPResolverTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn", "phone": "telephoneNumber", '
-            '"mobile" : "mobile", "email": "mail", '
-            '"surname" : "sn", "givenname": "givenName" }',
+            "USERINFO": '{ "username": "cn", "phone": "telephoneNumber", "mobile" : "mobile", "email": "mail", "surname" : "sn", "givenname": "givenName" }',
             "UIDTYPE": "DN",
         }
         success, desc = pretestresolver("ldapresolver", params)
@@ -1031,12 +961,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "DN",
             }
         )
@@ -1069,9 +994,7 @@ class LDAPResolverTestCase(MyTestCase):
         # user list with searchResRef entries
         # we are mocking the mock here
         original_search = y.l.extend.standard.paged_search
-        with mock.patch.object(
-            ldap3mock.Connection.Extend.Standard, "paged_search"
-        ) as mock_search:
+        with mock.patch.object(ldap3mock.Connection.Extend.Standard, "paged_search") as mock_search:
 
             def _search_with_ref(*args, **kwargs):
                 results = original_search(*args, **kwargs)
@@ -1108,11 +1031,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "email", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "phone" : "telephoneNumber", "mobile" : "mobile", "email" : "email", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "DN",
             }
         )
@@ -1145,11 +1064,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "email",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "email", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "phone" : "telephoneNumber", "mobile" : "mobile", "email" : "email", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "DN",
             }
         )
@@ -1182,12 +1097,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "unknownType",
                 "CACHE_TIMEOUT": 0,
             }
@@ -1223,12 +1133,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "oid",
                 "CACHE_TIMEOUT": 0,
             }
@@ -1279,12 +1184,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "oid",
                 "CACHE_TIMEOUT": 0,
             }
@@ -1305,12 +1205,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
                 "BINDDN": "",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "oid",
                 "CACHE_TIMEOUT": 0,
             }
@@ -1332,12 +1227,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "wrongpw",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "oid",
                 "CACHE_TIMEOUT": 0,
             }
@@ -1359,12 +1249,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "AUTHTYPE": "unknown",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "oid",
                 "CACHE_TIMEOUT": 0,
             }
@@ -1408,9 +1293,7 @@ class LDAPResolverTestCase(MyTestCase):
         timeout = 5
         urilist = "ldap://themis"
         strategy = "FIRST"
-        server_pool = LDAPResolver.create_serverpool(
-            urilist, timeout, strategy=strategy
-        )
+        server_pool = LDAPResolver.create_serverpool(urilist, timeout, strategy=strategy)
         self.assertEqual(len(server_pool), 1)
         self.assertEqual(server_pool.active, SERVERPOOL_ROUNDS)
         self.assertEqual(server_pool.exhaust, SERVERPOOL_SKIP)
@@ -1429,18 +1312,14 @@ class LDAPResolverTestCase(MyTestCase):
         self.assertEqual(server_pool.servers[1].name, "ldaps://server2:636")
 
         urilist = "ldap://themis, ldaps://server2"
-        server_pool = LDAPResolver.create_serverpool(
-            urilist, timeout, rounds=5, exhaust=60
-        )
+        server_pool = LDAPResolver.create_serverpool(urilist, timeout, rounds=5, exhaust=60)
         self.assertEqual(len(server_pool), 2)
         self.assertEqual(server_pool.active, 5)
         self.assertEqual(server_pool.exhaust, 60)
         self.assertEqual(server_pool.strategy, "ROUND_ROBIN")
 
         urilist = "ldap://themis, ldaps://server2"
-        server_pool = LDAPResolver.create_serverpool(
-            urilist, timeout, rounds=5, exhaust=60, pool_cls=LockingServerPool
-        )
+        server_pool = LDAPResolver.create_serverpool(urilist, timeout, rounds=5, exhaust=60, pool_cls=LockingServerPool)
         self.assertIs(type(server_pool), LockingServerPool)
         self.assertEqual(len(server_pool), 2)
         self.assertEqual(server_pool.active, 5)
@@ -1459,12 +1338,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "oid",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 0,
@@ -1492,13 +1366,9 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber",'
-                '"mobile" : "mobile",'
-                '"password" : "userPassword",'
-                '"email" : "mail",'
-                '"surname" : "sn",'
-                '"givenname" : "givenName" }',
+                "USERINFO": (
+                    '{ "username": "cn","phone" : "telephoneNumber","mobile" : "mobile","password" : "userPassword","email" : "mail","surname" : "sn","givenname" : "givenName" }'
+                ),
                 "UIDTYPE": "objectGUID",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 0,
@@ -1528,13 +1398,9 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber",'
-                '"mobile" : "mobile",'
-                '"password" : "userPassword",'
-                '"email" : "mail",'
-                '"surname" : "sn",'
-                '"givenname" : "givenName" }',
+                "USERINFO": (
+                    '{ "username": "cn","phone" : "telephoneNumber","mobile" : "mobile","password" : "userPassword","email" : "mail","surname" : "sn","givenname" : "givenName" }'
+                ),
                 "UIDTYPE": "objectGUID",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 0,
@@ -1576,13 +1442,15 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName",'
-                '"additionalAttr": "homeDirectory" }',
+                "USERINFO": (
+                    '{ "username": "cn",'
+                    '"phone" : "telephoneNumber", '
+                    '"mobile" : "mobile"'
+                    ', "email" : "mail", '
+                    '"surname" : "sn", '
+                    '"givenname" : "givenName",'
+                    '"additionalAttr": "homeDirectory" }'
+                ),
                 "UIDTYPE": "DN",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 0,
@@ -1605,13 +1473,15 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName", '
-                '"accountExpires": "accountExpires" }',
+                "USERINFO": (
+                    '{ "username": "cn",'
+                    '"phone" : "telephoneNumber", '
+                    '"mobile" : "mobile"'
+                    ', "email" : "mail", '
+                    '"surname" : "sn", '
+                    '"givenname" : "givenName", '
+                    '"accountExpires": "accountExpires" }'
+                ),
                 "UIDTYPE": "DN",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 0,
@@ -1634,14 +1504,16 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile",'
-                '"email" : "email",'
-                '"password" : "userPassword",'
-                '"surname" : "sn", '
-                '"givenname" : "givenName", '
-                '"accountExpires": "accountExpires" }',
+                "USERINFO": (
+                    '{ "username": "cn",'
+                    '"phone" : "telephoneNumber", '
+                    '"mobile" : "mobile",'
+                    '"email" : "email",'
+                    '"password" : "userPassword",'
+                    '"surname" : "sn", '
+                    '"givenname" : "givenName", '
+                    '"accountExpires": "accountExpires" }'
+                ),
                 "OBJECT_CLASSES": classes,
                 "DN_TEMPLATE": "cn=<username>,ou=example,o=test",
                 "UIDTYPE": "DN",
@@ -1721,15 +1593,17 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile",'
-                '"email" : "email",'
-                '"userid" : "objectGUID",'
-                '"password" : "userPassword",'
-                '"surname" : "sn", '
-                '"givenname" : "givenName", '
-                '"accountExpires": "accountExpires" }',
+                "USERINFO": (
+                    '{ "username": "cn",'
+                    '"phone" : "telephoneNumber", '
+                    '"mobile" : "mobile",'
+                    '"email" : "email",'
+                    '"userid" : "objectGUID",'
+                    '"password" : "userPassword",'
+                    '"surname" : "sn", '
+                    '"givenname" : "givenName", '
+                    '"accountExpires": "accountExpires" }'
+                ),
                 "UIDTYPE": "objectGUID",
                 "DN_TEMPLATE": "cn=<username>,ou=example,o=test",
                 "OBJECT_CLASSES": classes,
@@ -1774,12 +1648,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "objectGUID",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 0,
@@ -1810,12 +1679,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "objectGUID",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 120,
@@ -1836,11 +1700,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "objectGUID",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 120,
@@ -1866,12 +1726,7 @@ class LDAPResolverTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn",'
-            '"phone" : "telephoneNumber", '
-            '"mobile" : "mobile"'
-            ', "email" : "mail", '
-            '"surname" : "sn", '
-            '"givenname" : "givenName" }',
+            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
             "UIDTYPE": "unknownType",
             "CACHE_TIMEOUT": 0,
             "START_TLS": "1",
@@ -1900,12 +1755,7 @@ class LDAPResolverTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn",'
-            '"phone" : "telephoneNumber", '
-            '"mobile" : "mobile"'
-            ', "email" : "mail", '
-            '"surname" : "sn", '
-            '"givenname" : "givenName" }',
+            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
             "UIDTYPE": "unknownType",
             "CACHE_TIMEOUT": 0,
             "TLS_VERIFY": "1",
@@ -1921,11 +1771,7 @@ class LDAPResolverTestCase(MyTestCase):
             ldap3_tls_config = kwargs["tls"].__str__()
             self.assertIn("protocol: 2", ldap3_tls_config)
             self.assertIn("CA certificates file: present", ldap3_tls_config)
-            self.assertTrue(
-                "verify mode: VerifyMode.CERT_REQUIRED" in ldap3_tls_config
-                or "verify mode: 2" in ldap3_tls_config
-                or "verify mode: True" in ldap3_tls_config
-            )
+            self.assertTrue("verify mode: VerifyMode.CERT_REQUIRED" in ldap3_tls_config or "verify mode: 2" in ldap3_tls_config or "verify mode: True" in ldap3_tls_config)
 
     def test_24b_tls_options(self):
         @ldap3mock.activate
@@ -1981,12 +1827,7 @@ class LDAPResolverTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn",'
-            '"phone" : "telephoneNumber", '
-            '"mobile" : "mobile"'
-            ', "email" : "mail", '
-            '"surname" : "sn", '
-            '"givenname" : "givenName" }',
+            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
             "UIDTYPE": "unknownType",
             "CACHE_TIMEOUT": 0,
             "TLS_CA_FILE": "/unknown/path/to/ca_certs.crt",
@@ -2018,12 +1859,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "DN",
             }
         )
@@ -2075,12 +1911,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "DN",
             }
         )
@@ -2132,11 +1963,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn, email",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "email", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{"phone" : "telephoneNumber", "mobile" : "mobile", "email" : "email", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "DN",
             }
         )
@@ -2165,12 +1992,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn, email",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "email", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName",'
-                '"piAttr": "someAttr"}',
+                "USERINFO": '{"phone" : "telephoneNumber", "mobile" : "mobile", "email" : "email", "surname" : "sn", "givenname" : "givenName","piAttr": "someAttr"}',
                 "UIDTYPE": "DN",
                 "MULTIVALUEATTRIBUTES": "['piAttr']",
             }
@@ -2199,12 +2021,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn, email",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "email", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName",'
-                '"piAttr": "someAttr"}',
+                "USERINFO": '{"phone" : "telephoneNumber", "mobile" : "mobile", "email" : "email", "surname" : "sn", "givenname" : "givenName","piAttr": "someAttr"}',
                 "UIDTYPE": "DN",
                 "SIZELIMIT": "3",
             }
@@ -2215,9 +2032,7 @@ class LDAPResolverTestCase(MyTestCase):
 
         # We imitate ldap3 2.4.1 and raise an exception without having returned any entries
         original_search = y.l.extend.standard.paged_search
-        with mock.patch.object(
-            ldap3mock.Connection.Extend.Standard, "paged_search"
-        ) as mock_search:
+        with mock.patch.object(ldap3mock.Connection.Extend.Standard, "paged_search") as mock_search:
 
             def _search_with_exception(*args, **kwargs):
                 results = original_search(*args, **kwargs)
@@ -2235,9 +2050,7 @@ class LDAPResolverTestCase(MyTestCase):
         # We imitate a hypothetical later ldap3 version and raise an exception *after having returned all entries*!
         # As ``getUserList`` stops consuming the generator after the size limit has been reached, we can only
         # test this using testconnection.
-        with mock.patch.object(
-            ldap3mock.Connection.Extend.Standard, "paged_search", autospec=True
-        ) as mock_search:
+        with mock.patch.object(ldap3mock.Connection.Extend.Standard, "paged_search", autospec=True) as mock_search:
             # This is essentially a reimplementation of ``paged_search``
             def _search_with_exception(self, **kwargs):
                 self.connection.search(
@@ -2264,12 +2077,7 @@ class LDAPResolverTestCase(MyTestCase):
                     "BINDPW": "ldaptest",
                     "LOGINNAMEATTRIBUTE": "cn",
                     "LDAPSEARCHFILTER": "(cn=*)",
-                    "USERINFO": '{ "username": "cn",'
-                    '"phone" : "telephoneNumber", '
-                    '"mobile" : "mobile"'
-                    ', "email" : "mail", '
-                    '"surname" : "sn", '
-                    '"givenname" : "givenName" }',
+                    "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                     "UIDTYPE": "oid",
                     "CACHE_TIMEOUT": 0,
                     "SIZELIMIT": "1",
@@ -2300,15 +2108,17 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn,objectGUID, email",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile",'
-                '"email" : "email",'
-                '"userid" : "objectGUID",'
-                '"password" : "userPassword",'
-                '"surname" : "sn", '
-                '"givenname" : "givenName", '
-                '"accountExpires": "accountExpires" }',
+                "USERINFO": (
+                    '{ "username": "cn",'
+                    '"phone" : "telephoneNumber", '
+                    '"mobile" : "mobile",'
+                    '"email" : "email",'
+                    '"userid" : "objectGUID",'
+                    '"password" : "userPassword",'
+                    '"surname" : "sn", '
+                    '"givenname" : "givenName", '
+                    '"accountExpires": "accountExpires" }'
+                ),
                 "UIDTYPE": "objectGUID",
                 "DN_TEMPLATE": "cn=<username>,ou=example,o=test",
                 "OBJECT_CLASSES": classes,
@@ -2338,15 +2148,17 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "objectGUID",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile",'
-                '"email" : "email",'
-                '"userid" : "objectGUID",'
-                '"password" : "userPassword",'
-                '"surname" : "sn", '
-                '"givenname" : "givenName", '
-                '"accountExpires": "accountExpires" }',
+                "USERINFO": (
+                    '{ "username": "cn",'
+                    '"phone" : "telephoneNumber", '
+                    '"mobile" : "mobile",'
+                    '"email" : "email",'
+                    '"userid" : "objectGUID",'
+                    '"password" : "userPassword",'
+                    '"surname" : "sn", '
+                    '"givenname" : "givenName", '
+                    '"accountExpires": "accountExpires" }'
+                ),
                 "UIDTYPE": "objectGUID",
                 "DN_TEMPLATE": "cn=<username>,ou=example,o=test",
                 "OBJECT_CLASSES": classes,
@@ -2377,12 +2189,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(&(cn=*))",  # we use this weird search filter to get a unique resolver ID
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "objectGUID",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": cache_timeout,
@@ -2408,12 +2215,8 @@ class LDAPResolverTestCase(MyTestCase):
             wraps=datetime.datetime,
         ) as mock_datetime:
             # we now live CACHE_TIMEOUT + 2 seconds in the future
-            mock_datetime.now.return_value = now + datetime.timedelta(
-                seconds=cache_timeout + 2
-            )
-            with mock.patch.object(
-                ldap3mock.Connection, "search", wraps=y.l.search
-            ) as mock_search:
+            mock_datetime.now.return_value = now + datetime.timedelta(seconds=cache_timeout + 2)
+            with mock.patch.object(ldap3mock.Connection, "search", wraps=y.l.search) as mock_search:
                 bob_id3 = y.getUserId("bob")
                 self.assertEqual(bob_id, bob_id3)
                 mock_search.assert_called_once()
@@ -2431,13 +2234,9 @@ class LDAPResolverTestCase(MyTestCase):
             "edumfa.lib.resolvers.LDAPIdResolver.datetime.datetime",
             wraps=datetime.datetime,
         ) as mock_datetime:
-            mock_datetime.now.return_value = now + datetime.timedelta(
-                seconds=2 * (cache_timeout + 2)
-            )
+            mock_datetime.now.return_value = now + datetime.timedelta(seconds=2 * (cache_timeout + 2))
             manager_id = y.getUserId("manager")
-        self.assertEqual(
-            list(CACHE[y.getResolverId()]["getUserId"].keys()), ["manager"]
-        )
+        self.assertEqual(list(CACHE[y.getResolverId()]["getUserId"].keys()), ["manager"])
 
     @ldap3mock.activate
     def test_33_cache_disabled(self):
@@ -2453,12 +2252,7 @@ class LDAPResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(|(cn=*))",  # we use this weird search filter to get a unique resolver ID
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "objectGUID",
                 "NOREFERRALS": True,
                 "CACHE_TIMEOUT": 0,
@@ -2472,9 +2266,7 @@ class LDAPResolverTestCase(MyTestCase):
         # assert the cache does not contain this entry
         self.assertNotIn(y.getResolverId(), CACHE)
         # assert subsequent requests query the directory
-        with mock.patch.object(
-            ldap3mock.Connection, "search", wraps=y.l.search
-        ) as mock_search:
+        with mock.patch.object(ldap3mock.Connection, "search", wraps=y.l.search) as mock_search:
             bob_id2 = y.getUserId("bob")
             self.assertEqual(bob_id, bob_id2)
             mock_search.assert_called_once()
@@ -2489,9 +2281,7 @@ class LDAPResolverTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn", "phone": "telephoneNumber", '
-            '"mobile" : "mobile", "email": "mail", '
-            '"surname" : "sn", "givenname": "givenName" }',
+            "USERINFO": '{ "username": "cn", "phone": "telephoneNumber", "mobile" : "mobile", "email": "mail", "surname" : "sn", "givenname": "givenName" }',
             "UIDTYPE": "DN",
         }
         success, desc = pretestresolver("ldapresolver", params)
@@ -2523,9 +2313,7 @@ class LDAPResolverTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn", "phone": "telephoneNumber", '
-            '"mobile" : "mobile", "email": "mail", '
-            '"surname" : "sn", "givenname": "givenName" }',
+            "USERINFO": '{ "username": "cn", "phone": "telephoneNumber", "mobile" : "mobile", "email": "mail", "surname" : "sn", "givenname": "givenName" }',
             "UIDTYPE": "DN",
             "CACHE_TIMEOUT": "0",  # to disable the per-process cache
             "resolver": "testpool",
@@ -2696,9 +2484,7 @@ class ResolverTestCase(MyTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", '
-            '"mobile" : "mobile", "email" : "mail", '
-            '"surname" : "sn", "givenname" : "givenName" }',
+            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
             "UIDTYPE": "DN",
             "EDITABLE": True,
             "CACHE_TIMEOUT": 0,
@@ -2880,12 +2666,7 @@ class ResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"mobile" : "mobile"'
-                ', "email" : "mail", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "DN",
                 "CACHE_TIMEOUT": 0,
             }
@@ -2910,10 +2691,7 @@ class ResolverTestCase(MyTestCase):
                 "BINDPW": "ldaptest",
                 "LOGINNAMEATTRIBUTE": "cn",
                 "LDAPSEARCHFILTER": "(cn=*)",
-                "USERINFO": '{ "username": "cn",'
-                '"phone" : "telephoneNumber", '
-                '"surname" : "sn", '
-                '"givenname" : "givenName" }',
+                "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "surname" : "sn", "givenname" : "givenName" }',
                 "UIDTYPE": "DN",
                 "CACHE_TIMEOUT": 0,
             }
@@ -2927,13 +2705,9 @@ class ResolverTestCase(MyTestCase):
 
     def test_14_censor_resolver(self):
         reso_list = get_resolver_list()
-        self.assertEqual(
-            reso_list.get("myLDAPres").get("data").get("BINDPW"), "ldaptest"
-        )
+        self.assertEqual(reso_list.get("myLDAPres").get("data").get("BINDPW"), "ldaptest")
         reso_list = get_resolver_list(censor=True)
-        self.assertEqual(
-            reso_list.get("myLDAPres").get("data").get("BINDPW"), "__CENSORED__"
-        )
+        self.assertEqual(reso_list.get("myLDAPres").get("data").get("BINDPW"), "__CENSORED__")
 
     def test_15_try_to_delete_used_resolver(self):
         rid = save_resolver(

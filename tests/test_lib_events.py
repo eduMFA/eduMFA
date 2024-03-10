@@ -435,9 +435,7 @@ class BaseEventHandlerTestCase(MyTestCase):
         r = uhandler.check_condition(
             {
                 "g": {},
-                "handler_def": {
-                    "conditions": {CONDITION.TOKENINFO: "myDate > {now}-2h"}
-                },
+                "handler_def": {"conditions": {CONDITION.TOKENINFO: "myDate > {now}-2h"}},
                 "request": req,
                 "response": resp,
             }
@@ -513,9 +511,7 @@ class BaseEventHandlerTestCase(MyTestCase):
         r = uhandler.check_condition(
             {
                 "g": {},
-                "handler_def": {
-                    "conditions": {CONDITION.DETAIL_ERROR_MESSAGE: "does not exist$"}
-                },
+                "handler_def": {"conditions": {CONDITION.DETAIL_ERROR_MESSAGE: "does not exist$"}},
                 "request": req,
                 "response": resp,
             }
@@ -525,9 +521,7 @@ class BaseEventHandlerTestCase(MyTestCase):
         r = uhandler.check_condition(
             {
                 "g": {},
-                "handler_def": {
-                    "conditions": {CONDITION.DETAIL_ERROR_MESSAGE: "^does not exist"}
-                },
+                "handler_def": {"conditions": {CONDITION.DETAIL_ERROR_MESSAGE: "^does not exist"}},
                 "request": req,
                 "response": resp,
             }
@@ -569,9 +563,7 @@ class BaseEventHandlerTestCase(MyTestCase):
         r = uhandler.check_condition(
             {
                 "g": g,
-                "handler_def": {
-                    "conditions": {CONDITION.CLIENT_IP: "10.0.0.0/24, !10.0.0.1"}
-                },
+                "handler_def": {"conditions": {CONDITION.CLIENT_IP: "10.0.0.0/24, !10.0.0.1"}},
                 "request": req,
                 "response": resp,
             }
@@ -682,9 +674,7 @@ class BaseEventHandlerTestCase(MyTestCase):
         r = uhandler.check_condition(
             {
                 "g": {},
-                "handler_def": {
-                    "conditions": {CONDITION.COUNTER: "myNonExistingCounter>3"}
-                },
+                "handler_def": {"conditions": {CONDITION.COUNTER: "myNonExistingCounter>3"}},
                 "request": req,
                 "response": resp,
             }
@@ -694,9 +684,7 @@ class BaseEventHandlerTestCase(MyTestCase):
         r = uhandler.check_condition(
             {
                 "g": {},
-                "handler_def": {
-                    "conditions": {CONDITION.COUNTER: "myNonExistingCounter<3"}
-                },
+                "handler_def": {"conditions": {CONDITION.COUNTER: "myNonExistingCounter<3"}},
                 "request": req,
                 "response": resp,
             }
@@ -906,9 +894,7 @@ class FederationEventTestCase(MyTestCase):
 
         # An authentication request for user root with a password, which does
         #  not exist on the local eduMFA system
-        builder = EnvironBuilder(
-            method="POST", data={"user": "root", "pass": "lakjsiqdf"}, headers={}
-        )
+        builder = EnvironBuilder(method="POST", data={"user": "root", "pass": "lakjsiqdf"}, headers={})
         env = builder.get_environ()
         env["REMOTE_ADDR"] = "10.0.0.1"
         g.client_ip = env["REMOTE_ADDR"]
@@ -952,14 +938,10 @@ class FederationEventTestCase(MyTestCase):
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         response = options.get("response").json
-        self.assertEqual(
-            response.get("detail").get("origin"), "https://remote/validate/check"
-        )
+        self.assertEqual(response.get("detail").get("origin"), "https://remote/validate/check")
 
         # The same with a GET Request
-        builder = EnvironBuilder(
-            method="GET", data={"user": "root", "pass": "lakjsiqdf"}, headers={}
-        )
+        builder = EnvironBuilder(method="GET", data={"user": "root", "pass": "lakjsiqdf"}, headers={})
         env = builder.get_environ()
         env["REMOTE_ADDR"] = "10.0.0.1"
         g.client_ip = env["REMOTE_ADDR"]
@@ -998,9 +980,7 @@ class FederationEventTestCase(MyTestCase):
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         response = options.get("response").json
-        self.assertEqual(
-            response.get("detail").get("origin"), "https://remote/validate/check"
-        )
+        self.assertEqual(response.get("detail").get("origin"), "https://remote/validate/check")
 
         # The same with a DELETE Request
         builder = EnvironBuilder(method="DELETE", headers={})
@@ -1042,14 +1022,10 @@ class FederationEventTestCase(MyTestCase):
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         response = options.get("response").json
-        self.assertEqual(
-            response.get("detail").get("origin"), "https://remote/token/serial"
-        )
+        self.assertEqual(response.get("detail").get("origin"), "https://remote/token/serial")
 
         # The same with an unsupported Request method
-        builder = EnvironBuilder(
-            method="PUT", data={"user": "root", "pass": "lakjsiqdf"}, headers={}
-        )
+        builder = EnvironBuilder(method="PUT", data={"user": "root", "pass": "lakjsiqdf"}, headers={})
         env = builder.get_environ()
         env["REMOTE_ADDR"] = "10.0.0.1"
         g.client_ip = env["REMOTE_ADDR"]
@@ -1117,9 +1093,7 @@ class FederationEventTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {"forward_authorization_token": True, "eduMFA": "remotePI"}
-            },
+            "handler_def": {"options": {"forward_authorization_token": True, "eduMFA": "remotePI"}},
         }
         f_handler = FederationEventHandler()
         from edumfa.lib.eventhandler.federationhandler import ACTION_TYPE
@@ -1146,9 +1120,7 @@ class FederationEventTestCase(MyTestCase):
         res = f_handler.do(ACTION_TYPE.FORWARD, options=options)
         self.assertTrue(res)
         response = options.get("response").json
-        self.assertEqual(
-            response.get("detail").get("origin"), "https://remote/token/init"
-        )
+        self.assertEqual(response.get("detail").get("origin"), "https://remote/token/init")
 
 
 class RequestManglerTestCase(MyTestCase):
@@ -1363,9 +1335,7 @@ class ResponseManglerTestCase(MyTestCase):
         resp = Response(mimetype="application/json")
 
         # delete JSON pointer with two components
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1379,9 +1349,7 @@ class ResponseManglerTestCase(MyTestCase):
         self.assertNotIn("message", resp.json["detail"])
 
         # delete JSON pointer with one component
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1424,9 +1392,7 @@ class ResponseManglerTestCase(MyTestCase):
         self.assertIn("result", resp.json)
 
         # Invalid JSON pointer will cause a log warning but will not change the response
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1469,9 +1435,7 @@ class ResponseManglerTestCase(MyTestCase):
         resp = Response(mimetype="application/json")
 
         # add JSON pointer with one component
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1490,9 +1454,7 @@ class ResponseManglerTestCase(MyTestCase):
         self.assertEqual(resp.json["something"], "special")
 
         # add JSON pointer with two components
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1511,9 +1473,7 @@ class ResponseManglerTestCase(MyTestCase):
         self.assertEqual(resp.json["detail"]["something"], "special")
 
         # change JSON pointer with two components
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1532,9 +1492,7 @@ class ResponseManglerTestCase(MyTestCase):
         self.assertEqual(resp.json["detail"]["message"], "special")
 
         # add the components, that do not yet exist
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1553,9 +1511,7 @@ class ResponseManglerTestCase(MyTestCase):
         self.assertEqual(resp.json["comp1"]["comp2"]["comp3"], True)
 
         # JSON pointer with more than 3 components not supported
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1574,9 +1530,7 @@ class ResponseManglerTestCase(MyTestCase):
         self.assertNotIn("comp1", resp.json)
 
         # Wrong type declaration
-        resp.data = (
-            """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
-        )
+        resp.data = """{"result": {"value": true}, "detail": {"message": "Du", "error": 1}}"""
         options = {
             "g": g,
             "request": req,
@@ -1728,9 +1682,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -1898,9 +1850,7 @@ class TokenEventTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {"tokentype": "motp", "user": "1", "motppin": "1234"}
-            },
+            "handler_def": {"options": {"tokentype": "motp", "user": "1", "motppin": "1234"}},
         }
 
         t_handler = TokenEventHandler()
@@ -1917,9 +1867,7 @@ class TokenEventTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {"tokentype": "sms", "user": "1", "dynamic_phone": "1"}
-            },
+            "handler_def": {"options": {"tokentype": "sms", "user": "1", "dynamic_phone": "1"}},
         }
 
         t_handler = TokenEventHandler()
@@ -1937,9 +1885,7 @@ class TokenEventTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {"tokentype": "email", "user": "1", "dynamic_email": "1"}
-            },
+            "handler_def": {"options": {"tokentype": "email", "user": "1", "dynamic_email": "1"}},
         }
 
         t_handler = TokenEventHandler()
@@ -2001,9 +1947,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -2063,9 +2007,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -2115,9 +2057,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -2162,9 +2102,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -2208,9 +2146,7 @@ class TokenEventTestCase(MyTestCase):
             "g": g,
             "request": req,
             "response": resp,
-            "handler_def": {
-                "options": {"key": "pastText", "value": "it was {current_time}-12h..."}
-            },
+            "handler_def": {"options": {"key": "pastText", "value": "it was {current_time}-12h..."}},
         }
 
         t_handler = TokenEventHandler()
@@ -2259,9 +2195,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -2317,9 +2251,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -2368,9 +2300,7 @@ class TokenEventTestCase(MyTestCase):
         # setup realms
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -2419,9 +2349,7 @@ class TokenEventTestCase(MyTestCase):
 
         set_tokengroup("group1")
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         t = get_tokens(serial="SPASS01")
         uid = t[0].get_user_id()
         self.assertEqual(uid, "1000")
@@ -2575,9 +2503,7 @@ class CustomUserAttributesTestCase(MyTestCase):
         # Setup realm and user
         self.setUp_user_realms()
 
-        init_token(
-            {"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1)
-        )
+        init_token({"serial": "SPASS01", "type": "spass"}, User("cornelius", self.realm1))
         g = FakeFlaskG()
         builder = EnvironBuilder(method="POST", data={"serial": "SPASS01"}, headers={})
 
@@ -2705,9 +2631,7 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = "A webhook is send to {0!r} with the text: {1!r}".format(
-                "http://test.com", "This is a test"
-            )
+            text = "A webhook is send to {0!r} with the text: {1!r}".format("http://test.com", "This is a test")
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
 
@@ -2723,9 +2647,7 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = "A webhook is send to {0!r} with the text: {1!r}".format(
-                "http://test.com", "This is a test"
-            )
+            text = "A webhook is send to {0!r} with the text: {1!r}".format("http://test.com", "This is a test")
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
 
@@ -2848,9 +2770,7 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = "A webhook is send to {0!r} with the text: {1!r}".format(
-                "http://test.com", "This is hans from realm realm1"
-            )
+            text = "A webhook is send to {0!r} with the text: {1!r}".format("http://test.com", "This is hans from realm realm1")
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
 
@@ -2866,9 +2786,7 @@ class WebhookTestCase(MyTestCase):
                     User("cornelius", self.realm1),
                 )
                 g = FakeFlaskG()
-                builder = EnvironBuilder(
-                    method="POST", data={"serial": "SPASS01"}, headers={}
-                )
+                builder = EnvironBuilder(method="POST", data={"serial": "SPASS01"}, headers={})
 
                 env = builder.get_environ()
                 env["REMOTE_ADDR"] = "10.0.0.1"
@@ -2892,12 +2810,8 @@ class WebhookTestCase(MyTestCase):
                 }
                 res = t_handler.do("post_webhook", options=options)
                 self.assertTrue(res)
-                mock_log.assert_any_call(
-                    "Unable to replace placeholder: ('unknown_tag')! Please check the webhooks data option."
-                )
-                text = "A webhook is send to {0!r} with the text: {1!r}".format(
-                    "http://test.com", "{token_serial} {token_owner} {unknown_tag}"
-                )
+                mock_log.assert_any_call("Unable to replace placeholder: ('unknown_tag')! Please check the webhooks data option.")
+                text = "A webhook is send to {0!r} with the text: {1!r}".format("http://test.com", "{token_serial} {token_owner} {unknown_tag}")
                 mock_info.assert_any_call(text)
                 mock_info.assert_called_with(200)
 
@@ -2913,9 +2827,7 @@ class WebhookTestCase(MyTestCase):
                     User("cornelius", self.realm1),
                 )
                 g = FakeFlaskG()
-                builder = EnvironBuilder(
-                    method="POST", data={"serial": "SPASS01"}, headers={}
-                )
+                builder = EnvironBuilder(method="POST", data={"serial": "SPASS01"}, headers={})
 
                 env = builder.get_environ()
                 env["REMOTE_ADDR"] = "10.0.0.1"
@@ -2939,11 +2851,7 @@ class WebhookTestCase(MyTestCase):
                 }
                 res = t_handler.do("post_webhook", options=options)
                 self.assertTrue(res)
-                mock_log.assert_any_call(
-                    "Unable to replace placeholder: ('token_seril')! Please check the webhooks data option."
-                )
-                text = "A webhook is send to {0!r} with the text: {1!r}".format(
-                    "http://test.com", "The token serial is {token_seril}"
-                )
+                mock_log.assert_any_call("Unable to replace placeholder: ('token_seril')! Please check the webhooks data option.")
+                text = "A webhook is send to {0!r} with the text: {1!r}".format("http://test.com", "The token serial is {token_seril}")
                 mock_info.assert_any_call(text)
                 mock_info.assert_called_with(200)

@@ -34,9 +34,7 @@ class PushAPITestCase(MyApiTestCase):
     test the api.validate endpoints
     """
 
-    server_private_key = rsa.generate_private_key(
-        public_exponent=65537, key_size=4096, backend=default_backend()
-    )
+    server_private_key = rsa.generate_private_key(public_exponent=65537, key_size=4096, backend=default_backend())
     server_private_key_pem = to_unicode(
         server_private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
@@ -54,9 +52,7 @@ class PushAPITestCase(MyApiTestCase):
     # We now allow white spaces in the firebase config name
     firebase_config_name = "my firebase config"
 
-    smartphone_private_key = rsa.generate_private_key(
-        public_exponent=65537, key_size=4096, backend=default_backend()
-    )
+    smartphone_private_key = rsa.generate_private_key(public_exponent=65537, key_size=4096, backend=default_backend())
     smartphone_public_key = smartphone_private_key.public_key()
     smartphone_public_key_pem = to_unicode(
         smartphone_public_key.public_bytes(
@@ -65,9 +61,7 @@ class PushAPITestCase(MyApiTestCase):
         )
     )
     # The smartphone sends the public key in URLsafe and without the ----BEGIN header
-    smartphone_public_key_pem_urlsafe = (
-        strip_key(smartphone_public_key_pem).replace("+", "-").replace("/", "_")
-    )
+    smartphone_public_key_pem_urlsafe = strip_key(smartphone_public_key_pem).replace("+", "-").replace("/", "_")
     serial_push = "PIPU001"
 
     def test_00_create_realms(self):
@@ -84,9 +78,7 @@ class PushAPITestCase(MyApiTestCase):
         the push token is not evaluated anymore.
         """
         # set policy
-        set_policy(
-            "push1", action="{0!s}=20".format(PUSH_ACTION.WAIT), scope=SCOPE.AUTH
-        )
+        set_policy("push1", action="{0!s}=20".format(PUSH_ACTION.WAIT), scope=SCOPE.AUTH)
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
@@ -152,12 +144,8 @@ class PushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-            parsed_server_pubkey = serialization.load_pem_public_key(
-                to_bytes(augmented_pubkey), default_backend()
-            )
+            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(detail.get("public_key"))
+            parsed_server_pubkey = serialization.load_pem_public_key(to_bytes(augmented_pubkey), default_backend())
             self.assertIsInstance(parsed_server_pubkey, RSAPublicKey)
             pubkey = detail.get("public_key")
 
@@ -174,16 +162,11 @@ class PushAPITestCase(MyApiTestCase):
             )
             self.assertEqual(tokeninfo.get("firebase_token"), "firebaseT")
             self.assertEqual(
-                tokeninfo.get("public_key_server")
-                .strip()
-                .strip("-BEGIN END RSA PUBLIC KEY-")
-                .strip(),
+                tokeninfo.get("public_key_server").strip().strip("-BEGIN END RSA PUBLIC KEY-").strip(),
                 pubkey,
             )
             # The token should also contain the firebase config
-            self.assertEqual(
-                tokeninfo.get(PUSH_ACTION.FIREBASE_CONFIG), self.firebase_config_name
-            )
+            self.assertEqual(tokeninfo.get(PUSH_ACTION.FIREBASE_CONFIG), self.firebase_config_name)
 
         # create spass token for user
         init_token(
@@ -225,9 +208,7 @@ class PushAPITestCase(MyApiTestCase):
         The PIN will only trigger the HOTP, push will not wait, since it is disabled.
         """
         # set policy
-        set_policy(
-            "push1", action="{0!s}=20".format(PUSH_ACTION.WAIT), scope=SCOPE.AUTH
-        )
+        set_policy("push1", action="{0!s}=20".format(PUSH_ACTION.WAIT), scope=SCOPE.AUTH)
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
@@ -296,12 +277,8 @@ class PushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-            parsed_server_pubkey = serialization.load_pem_public_key(
-                to_bytes(augmented_pubkey), default_backend()
-            )
+            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(detail.get("public_key"))
+            parsed_server_pubkey = serialization.load_pem_public_key(to_bytes(augmented_pubkey), default_backend())
             self.assertIsInstance(parsed_server_pubkey, RSAPublicKey)
             pubkey = detail.get("public_key")
 
@@ -318,16 +295,11 @@ class PushAPITestCase(MyApiTestCase):
             )
             self.assertEqual(tokeninfo.get("firebase_token"), "firebaseT")
             self.assertEqual(
-                tokeninfo.get("public_key_server")
-                .strip()
-                .strip("-BEGIN END RSA PUBLIC KEY-")
-                .strip(),
+                tokeninfo.get("public_key_server").strip().strip("-BEGIN END RSA PUBLIC KEY-").strip(),
                 pubkey,
             )
             # The token should also contain the firebase config
-            self.assertEqual(
-                tokeninfo.get(PUSH_ACTION.FIREBASE_CONFIG), self.firebase_config_name
-            )
+            self.assertEqual(tokeninfo.get(PUSH_ACTION.FIREBASE_CONFIG), self.firebase_config_name)
 
         # create HOTP token for user
         init_token(
@@ -457,12 +429,7 @@ class PushAPITestCase(MyApiTestCase):
             "BINDPW": "ldaptest",
             "LOGINNAMEATTRIBUTE": "cn",
             "LDAPSEARCHFILTER": "(cn=*)",
-            "USERINFO": '{ "username": "cn",'
-            '"phone" : "telephoneNumber", '
-            '"mobile" : "mobile"'
-            ', "email" : "mail", '
-            '"surname" : "sn", '
-            '"givenname" : "givenName" }',
+            "USERINFO": '{ "username": "cn","phone" : "telephoneNumber", "mobile" : "mobile", "email" : "mail", "surname" : "sn", "givenname" : "givenName" }',
             "UIDTYPE": "DN",
             "resolver": "catchall",
             "type": "ldapresolver",
@@ -479,9 +446,7 @@ class PushAPITestCase(MyApiTestCase):
         set_policy("pol_passthru", scope=SCOPE.AUTH, action=ACTION.PASSTHRU)
 
         # 2. authenticate user via passthru
-        with self.app.test_request_context(
-            "/validate/check", method="POST", data={"user": "alice", "pass": "alicepw"}
-        ):
+        with self.app.test_request_context("/validate/check", method="POST", data={"user": "alice", "pass": "alicepw"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -519,9 +484,7 @@ class PushAPITestCase(MyApiTestCase):
         )
         self.assertTrue(r > 0)
         # Now we should get an authentication Challenge
-        with self.app.test_request_context(
-            "/validate/check", method="POST", data={"user": "alice", "pass": "alicepw"}
-        ):
+        with self.app.test_request_context("/validate/check", method="POST", data={"user": "alice", "pass": "alicepw"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(200, res.status_code)
             result = res.json.get("result")
@@ -537,9 +500,7 @@ class PushAPITestCase(MyApiTestCase):
             # Get image and client_mode
             self.assertEqual(CLIENTMODE.POLL, detail.get("client_mode"))
             # Check, that multi_challenge is also contained.
-            self.assertEqual(
-                CLIENTMODE.POLL, detail.get("multi_challenge")[0].get("client_mode")
-            )
+            self.assertEqual(CLIENTMODE.POLL, detail.get("multi_challenge")[0].get("client_mode"))
             self.assertIn("image", detail)
             serial = detail.get("serial")
 
@@ -576,12 +537,8 @@ class PushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-            parsed_server_pubkey = serialization.load_pem_public_key(
-                to_bytes(augmented_pubkey), default_backend()
-            )
+            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(detail.get("public_key"))
+            parsed_server_pubkey = serialization.load_pem_public_key(to_bytes(augmented_pubkey), default_backend())
             self.assertIsInstance(parsed_server_pubkey, RSAPublicKey)
             pubkey = detail.get("public_key")
 
@@ -598,16 +555,11 @@ class PushAPITestCase(MyApiTestCase):
             )
             self.assertEqual(tokeninfo.get("firebase_token"), "firebaseT")
             self.assertEqual(
-                tokeninfo.get("public_key_server")
-                .strip()
-                .strip("-BEGIN END RSA PUBLIC KEY-")
-                .strip(),
+                tokeninfo.get("public_key_server").strip().strip("-BEGIN END RSA PUBLIC KEY-").strip(),
                 pubkey,
             )
             # The token should also contain the firebase config
-            self.assertEqual(
-                tokeninfo.get(PUSH_ACTION.FIREBASE_CONFIG), self.firebase_config_name
-            )
+            self.assertEqual(tokeninfo.get(PUSH_ACTION.FIREBASE_CONFIG), self.firebase_config_name)
 
         # The Application polls, if the token is readily enrolled
         with self.app.test_request_context(

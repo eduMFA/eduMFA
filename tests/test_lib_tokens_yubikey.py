@@ -116,15 +116,12 @@ class YubikeyTokenTestCase(MyTestCase):
         self.assertEqual(db_token.failcount, 1)
 
         # check an otp value, that does not match a token
-        r, opt = YubikeyTokenClass.check_yubikey_pass(
-            "fcebeeejedecebegfcniufvgvjturjgvinhebbbertjnihit"
-        )
+        r, opt = YubikeyTokenClass.check_yubikey_pass("fcebeeejedecebegfcniufvgvjturjgvinhebbbertjnihit")
         self.assertFalse(r)
         # self.assertTrue(opt.get("action_detail") ==
         #                "The serial UBAM@1382015 could not be found!", opt)
         self.assertTrue(
-            opt.get("action_detail")
-            == "The prefix fcebeeejedecebeg could not be found!",
+            opt.get("action_detail") == "The prefix fcebeeejedecebeg could not be found!",
             opt,
         )
 
@@ -149,9 +146,7 @@ class YubikeyTokenTestCase(MyTestCase):
         # will fail
         r, opt = YubikeyTokenClass.check_yubikey_pass(self.further_otps[2])
         self.assertFalse(r)
-        self.assertTrue(
-            opt.get("message") == "matching 1 tokens, Failcounter exceeded", opt
-        )
+        self.assertTrue(opt.get("message") == "matching 1 tokens, Failcounter exceeded", opt)
         # check failcounter
         self.assertEqual(db_token.failcount, 5)
         token.set_failcount(old_failcounter)

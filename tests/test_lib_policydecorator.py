@@ -103,9 +103,7 @@ class LibPolicyTestCase(MyTestCase):
         self.assertTrue(r)
 
         # NONE with some pin -> fail
-        r = auth_otppin(
-            self.fake_check_otp, None, "some pin", options=options, user=my_user
-        )
+        r = auth_otppin(self.fake_check_otp, None, "some pin", options=options, user=my_user)
         self.assertFalse(r)
 
         delete_policy("pol1")
@@ -120,21 +118,15 @@ class LibPolicyTestCase(MyTestCase):
         g.audit_object = FakeAudit()
         options = {"g": g}
 
-        r = auth_otppin(
-            self.fake_check_otp, None, "FAKE", options=options, user=my_user
-        )
+        r = auth_otppin(self.fake_check_otp, None, "FAKE", options=options, user=my_user)
         self.assertTrue(r)
-        r = auth_otppin(
-            self.fake_check_otp, None, "Wrong Pin", options=options, user=my_user
-        )
+        r = auth_otppin(self.fake_check_otp, None, "Wrong Pin", options=options, user=my_user)
         self.assertFalse(r)
         delete_policy("pol1")
 
     def test_02_userstore_password(self):
         # create a realm, where cornelius has a password test
-        rid = save_resolver(
-            {"resolver": "myreso", "type": "passwdresolver", "fileName": PWFILE2}
-        )
+        rid = save_resolver({"resolver": "myreso", "type": "passwdresolver", "fileName": PWFILE2})
         self.assertTrue(rid > 0, rid)
 
         (added, failed) = set_realm("r1", ["myreso"])
@@ -196,9 +188,7 @@ class LibPolicyTestCase(MyTestCase):
 
         # Wrong password
         # Not identified by the user but by the token owner
-        r = auth_otppin(
-            self.fake_check_otp, token, "WrongPW", options=options, user=None
-        )
+        r = auth_otppin(self.fake_check_otp, token, "WrongPW", options=options, user=None)
         self.assertFalse(r)
 
         # Correct password from userstore: "test"
@@ -213,9 +203,7 @@ class LibPolicyTestCase(MyTestCase):
         passw = "wrongPW"
         options = {}
         # A non-existing user will fail to authenticate without a policy
-        self.assertRaises(
-            UserError, auth_user_does_not_exist, check_user_pass, user, passw, options
-        )
+        self.assertRaises(UserError, auth_user_does_not_exist, check_user_pass, user, passw, options)
 
         # Now we set a policy, that a non existing user will authenticate
         set_policy(name="pol1", scope=SCOPE.AUTH, action=ACTION.PASSNOUSER)
@@ -225,9 +213,7 @@ class LibPolicyTestCase(MyTestCase):
         options = {"g": g}
         rv = auth_user_does_not_exist(check_user_pass, user, passw, options=options)
         self.assertTrue(rv[0])
-        self.assertEqual(
-            rv[1].get("message"), "user does not exist, accepted due to 'pol1'"
-        )
+        self.assertEqual(rv[1].get("message"), "user does not exist, accepted due to 'pol1'")
         delete_policy("pol1")
 
     def test_04a_user_does_not_exist_without_resolver(self):
@@ -252,9 +238,7 @@ class LibPolicyTestCase(MyTestCase):
         options = {"g": g}
         rv = auth_user_does_not_exist(check_user_pass, user, passw, options=options)
         self.assertTrue(rv[0])
-        self.assertEqual(
-            rv[1].get("message"), "user does not exist, accepted due to 'pol1'"
-        )
+        self.assertEqual(rv[1].get("message"), "user does not exist, accepted due to 'pol1'")
         delete_policy("pol1")
 
     def test_05_user_has_no_tokens(self):
@@ -274,9 +258,7 @@ class LibPolicyTestCase(MyTestCase):
         options = {"g": g}
         rv = auth_user_has_no_token(check_user_pass, user, passw, options=options)
         self.assertTrue(rv[0])
-        self.assertEqual(
-            rv[1].get("message"), "user has no token, accepted due to 'pol1'"
-        )
+        self.assertEqual(rv[1].get("message"), "user has no token, accepted due to 'pol1'")
         delete_policy("pol1")
 
     @radiusmock.activate
@@ -330,9 +312,7 @@ class LibPolicyTestCase(MyTestCase):
         options = {"g": g}
         rv = auth_user_passthru(check_user_pass, user, passw, options=options)
         self.assertTrue(rv[0])
-        self.assertEqual(
-            rv[1].get("message"), "against RADIUS server radiusconfig1 due to 'pol1'"
-        )
+        self.assertEqual(rv[1].get("message"), "against RADIUS server radiusconfig1 due to 'pol1'")
 
         # Now assign a token to the user. If the user has a token and the
         # passthru policy is set, the user must not be able to authenticate
@@ -348,14 +328,10 @@ class LibPolicyTestCase(MyTestCase):
     def test_07_login_mode(self):
         # a realm: cornelius@r1: PW: test
 
-        def check_webui_user_userstore(
-            user_obj, password, options=None, superuser_realms=None, check_otp=False
-        ):
+        def check_webui_user_userstore(user_obj, password, options=None, superuser_realms=None, check_otp=False):
             self.assertEqual(check_otp, False)
 
-        def check_webui_user_edumfa(
-            user_obj, password, options=None, superuser_realms=None, check_otp=False
-        ):
+        def check_webui_user_edumfa(user_obj, password, options=None, superuser_realms=None, check_otp=False):
             self.assertEqual(check_otp, True)
 
         user_obj = User("cornelius", "r1")
@@ -529,14 +505,10 @@ class LibPolicyTestCase(MyTestCase):
 
         token = get_tokens(serial=serial)[0]
         # Set a very old last_auth
-        token.add_tokeninfo(
-            ACTION.LASTAUTH, datetime.datetime.utcnow() - datetime.timedelta(days=2)
-        )
+        token.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.utcnow() - datetime.timedelta(days=2))
         rv = auth_lastauth(fake_auth, user, pin, options)
         self.assertEqual(rv[0], False)
-        self.assertTrue(
-            "The last successful authentication was" in rv[1].get("message"), rv[1]
-        )
+        self.assertTrue("The last successful authentication was" in rv[1].get("message"), rv[1])
 
         remove_token(serial)
         delete_policy("pol_lastauth")
@@ -593,9 +565,7 @@ class LibPolicyTestCase(MyTestCase):
 
         # user in reso002 fails with any PIN, since policy pol1 matches
         # for him
-        r = auth_otppin(
-            self.fake_check_otp, None, "anyPIN", options=options, user=my_user_2
-        )
+        r = auth_otppin(self.fake_check_otp, None, "anyPIN", options=options, user=my_user_2)
         self.assertFalse(r)
 
         delete_policy("pol1")
@@ -646,9 +616,7 @@ class LibPolicyTestCase(MyTestCase):
             first_auth=datetime.datetime.utcnow() - timedelta(hours=3),
             last_auth=datetime.datetime.utcnow() - timedelta(minutes=1),
         ).save()
-        r = auth_cache(
-            fake_check_user_pass, User(username, realm), password, options=options
-        )
+        r = auth_cache(fake_check_user_pass, User(username, realm), password, options=options)
         self.assertTrue(r[0])
         self.assertEqual(r[1].get("message"), "Authenticated by AuthCache.")
 
@@ -663,9 +631,7 @@ class LibPolicyTestCase(MyTestCase):
             first_auth=datetime.datetime.utcnow() - timedelta(hours=5),
             last_auth=datetime.datetime.utcnow() - timedelta(minutes=1),
         ).save()
-        r = auth_cache(
-            fake_check_user_pass, User(username, realm), password, options=options
-        )
+        r = auth_cache(fake_check_user_pass, User(username, realm), password, options=options)
         self.assertTrue(r[0])
         self.assertEqual(r[1].get("message"), "Fake Authentication")
 
@@ -680,9 +646,7 @@ class LibPolicyTestCase(MyTestCase):
             first_auth=datetime.datetime.utcnow() - timedelta(hours=1),
             last_auth=datetime.datetime.utcnow() - timedelta(minutes=10),
         ).save()
-        r = auth_cache(
-            fake_check_user_pass, User(username, realm), password, options=options
-        )
+        r = auth_cache(fake_check_user_pass, User(username, realm), password, options=options)
         self.assertTrue(r[0])
         self.assertEqual(r[1].get("message"), "Fake Authentication")
 
@@ -710,9 +674,7 @@ class LibPolicyTestCase(MyTestCase):
             first_auth=datetime.datetime.utcnow() - timedelta(hours=2),
             last_auth=datetime.datetime.utcnow() - timedelta(hours=1),
         ).save()
-        r = auth_cache(
-            fake_check_user_pass, User(username, realm), password, options=options
-        )
+        r = auth_cache(fake_check_user_pass, User(username, realm), password, options=options)
         self.assertTrue(r[0])
         self.assertEqual(r[1].get("message"), "Authenticated by AuthCache.")
 
@@ -730,25 +692,17 @@ class LibPolicyTestCase(MyTestCase):
         g.audit_object = FakeAudit()
         options = {"g": g}
 
-        AuthCache(
-            username, realm, resolver, pwd_hash, first_auth=datetime.datetime.utcnow()
-        ).save()
+        AuthCache(username, realm, resolver, pwd_hash, first_auth=datetime.datetime.utcnow()).save()
 
-        r = auth_cache(
-            fake_check_user_pass, User(username, realm), password, options=options
-        )
+        r = auth_cache(fake_check_user_pass, User(username, realm), password, options=options)
         self.assertTrue(r[0])
         self.assertEqual("Authenticated by AuthCache.", r[1].get("message"))
 
-        r = auth_cache(
-            fake_check_user_pass, User(username, realm), password, options=options
-        )
+        r = auth_cache(fake_check_user_pass, User(username, realm), password, options=options)
         self.assertTrue(r[0])
         self.assertEqual("Authenticated by AuthCache.", r[1].get("message"))
 
-        r = auth_cache(
-            fake_check_user_pass, User(username, realm), password, options=options
-        )
+        r = auth_cache(fake_check_user_pass, User(username, realm), password, options=options)
         self.assertTrue(r[0])
         self.assertEqual("Fake Authentication", r[1].get("message"))
 
@@ -776,9 +730,7 @@ class LibPolicyTestCase(MyTestCase):
             first_auth=datetime.datetime.utcnow() - timedelta(seconds=55),
         ).save()
 
-        r = auth_cache(
-            fake_check_user_pass, User(username, realm), password, options=options
-        )
+        r = auth_cache(fake_check_user_pass, User(username, realm), password, options=options)
         self.assertTrue(r[0])
         self.assertEqual(r[1].get("message"), "Fake Authentication")
 
@@ -838,9 +790,7 @@ class LibPolicyTestCase(MyTestCase):
 
         rv = auth_user_passthru(check_user_pass, user, passw, options=options)
         self.assertTrue(rv[0])
-        self.assertEqual(
-            rv[1].get("message"), "against RADIUS server radiusconfig1 due to 'pol2'"
-        )
+        self.assertEqual(rv[1].get("message"), "against RADIUS server radiusconfig1 due to 'pol2'")
 
         # Lower pol2 priority
         set_policy(name="pol2", priority=3)
@@ -912,21 +862,15 @@ class LibPolicyTestCase(MyTestCase):
         self.assertTrue(r)
 
         # NONE with some pin -> fail
-        r = auth_otppin(
-            self.fake_check_otp, None, "some pin", options=options, user=my_user
-        )
+        r = auth_otppin(self.fake_check_otp, None, "some pin", options=options, user=my_user)
         self.assertFalse(r)
 
         # increase pol2 priority
         set_policy(name="pol2", priority=1)
 
-        r = auth_otppin(
-            self.fake_check_otp, None, "FAKE", options=options, user=my_user
-        )
+        r = auth_otppin(self.fake_check_otp, None, "FAKE", options=options, user=my_user)
         self.assertTrue(r)
-        r = auth_otppin(
-            self.fake_check_otp, None, "Wrong Pin", options=options, user=my_user
-        )
+        r = auth_otppin(self.fake_check_otp, None, "Wrong Pin", options=options, user=my_user)
         self.assertFalse(r)
         delete_policy("pol1")
         delete_policy("pol2")
@@ -1018,15 +962,11 @@ class LibPolicyTestCase(MyTestCase):
 
         rv = auth_user_passthru(check_user_pass, user, passw, options=options)
         self.assertTrue(rv[0])
-        self.assertTrue(
-            "against RADIUS server radiusconfig1 due to 'pol1'" in rv[1].get("message")
-        )
+        self.assertTrue("against RADIUS server radiusconfig1 due to 'pol1'" in rv[1].get("message"))
         self.assertTrue("autoassigned TOKMATCH" in rv[1].get("message"))
 
         # Check if the token is assigned and can authenticate
-        r = check_user_pass(
-            User("cornelius", "r1"), "test{0!s}".format(self.valid_otp_values[2])
-        )
+        r = check_user_pass(User("cornelius", "r1"), "test{0!s}".format(self.valid_otp_values[2]))
         self.assertTrue(r[0])
         self.assertEqual(r[1].get("serial"), "TOKMATCH")
 

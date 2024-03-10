@@ -68,14 +68,10 @@ class TanTokenTestCase(MyTestCase):
         self.assertEqual(r, -1)
 
     def test_05_import(self):
-        params = TanTokenClass.get_import_csv(
-            ["se1", "121212", "tan", "tan1 tan2  tan3    tan4    tan5"]
-        )
+        params = TanTokenClass.get_import_csv(["se1", "121212", "tan", "tan1 tan2  tan3    tan4    tan5"])
         self.assertEqual(params.get("serial"), "se1")
         self.assertEqual(params.get("type"), "tan")
-        self.assertEqual(
-            params.get("tans").split(), ["tan1", "tan2", "tan3", "tan4", "tan5"]
-        )
+        self.assertEqual(params.get("tans").split(), ["tan1", "tan2", "tan3", "tan4", "tan5"])
 
         # test init token
         tok = init_token(params)

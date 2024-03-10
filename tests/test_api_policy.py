@@ -13,9 +13,7 @@ from edumfa.lib.token import remove_token
 
 class APIPolicyTestCase(MyApiTestCase):
     def test_00_get_policy(self):
-        with self.app.test_request_context(
-            "/policy/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -23,9 +21,7 @@ class APIPolicyTestCase(MyApiTestCase):
 
         # test the policy export
         # first without policies (this used to fail due to an index error)
-        with self.app.test_request_context(
-            "/policy/export/pols.txt", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/export/pols.txt", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual(res.mimetype, "text/plain", res)
@@ -38,9 +34,7 @@ class APIPolicyTestCase(MyApiTestCase):
             action=ACTION.HIDE_WELCOME,
             client="10.1.2.3",
         )
-        with self.app.test_request_context(
-            "/policy/export/pols.txt", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/export/pols.txt", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual(res.mimetype, "text/plain", res)
@@ -66,14 +60,10 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             result = data.get("result")
-            self.assertTrue(
-                "setPolicy pol1" in result.get("value"), result.get("value")
-            )
+            self.assertTrue("setPolicy pol1" in result.get("value"), result.get("value"))
 
         # get the policies and see if check_all_resolvers and priority are set
-        with self.app.test_request_context(
-            "/policy/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -84,9 +74,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertEqual(pol1.get("priority"), 3)
 
         # get active policies
-        with self.app.test_request_context(
-            "/policy/?active=true", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/?active=true", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -113,14 +101,10 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             result = data.get("result")
-            self.assertTrue(
-                "setPolicy pol1" in result.get("value"), result.get("value")
-            )
+            self.assertTrue("setPolicy pol1" in result.get("value"), result.get("value"))
 
         # get the policies and see if check_all_resolvers and priority are set
-        with self.app.test_request_context(
-            "/policy/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -149,14 +133,10 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             result = data.get("result")
-            self.assertTrue(
-                "setPolicy poledumfanode" in result.get("value"), result.get("value")
-            )
+            self.assertTrue("setPolicy poledumfanode" in result.get("value"), result.get("value"))
 
         # get the policies and see if the edumfanode was set
-        with self.app.test_request_context(
-            "/policy/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -189,9 +169,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertEqual(res.status_code, 200)
 
         # get the policy and check its conditions
-        with self.app.test_request_context(
-            "/policy/cond1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/cond1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -200,12 +178,8 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertEqual(cond1["realm"], ["realm1"])
             self.assertEqual(len(cond1["conditions"]), 3)
             # order of conditions is not guaranteed
-            self.assertIn(
-                ["userinfo", "groups", "contains", "group1", True], cond1["conditions"]
-            )
-            self.assertIn(
-                ["userinfo", "type", "equals", "secure", False], cond1["conditions"]
-            )
+            self.assertIn(["userinfo", "groups", "contains", "group1", True], cond1["conditions"])
+            self.assertIn(["userinfo", "type", "equals", "secure", False], cond1["conditions"])
             self.assertIn(
                 ["HTTP header", "Origin", "equals", "https://localhost", True],
                 cond1["conditions"],
@@ -227,9 +201,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertEqual(res.status_code, 200)
 
         # get the policy and check its conditions
-        with self.app.test_request_context(
-            "/policy/cond1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/cond1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -238,12 +210,8 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertEqual(cond1["realm"], ["realm2"])
             self.assertEqual(len(cond1["conditions"]), 3)
             # order of conditions is not guaranteed
-            self.assertIn(
-                ["userinfo", "groups", "contains", "group1", True], cond1["conditions"]
-            )
-            self.assertIn(
-                ["userinfo", "type", "equals", "secure", False], cond1["conditions"]
-            )
+            self.assertIn(["userinfo", "groups", "contains", "group1", True], cond1["conditions"])
+            self.assertIn(["userinfo", "type", "equals", "secure", False], cond1["conditions"])
             self.assertIn(
                 ["HTTP header", "Origin", "equals", "https://localhost", True],
                 cond1["conditions"],
@@ -266,9 +234,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertEqual(res.status_code, 200)
 
         # get the policy and check its conditions
-        with self.app.test_request_context(
-            "/policy/cond1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/cond1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -277,9 +243,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertEqual(cond1["realm"], ["realm2"])
             self.assertEqual(len(cond1["conditions"]), 1)
             # order of conditions is not guaranteed
-            self.assertIn(
-                ["userinfo", "type", "equals", "secure", True], cond1["conditions"]
-            )
+            self.assertIn(["userinfo", "type", "equals", "secure", True], cond1["conditions"])
 
         # test some invalid conditions
         # no 5-tuples
@@ -360,9 +324,7 @@ class APIPolicyTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
-        with self.app.test_request_context(
-            "/policy/cond1", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/cond1", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             self.assertTrue(res.json["result"]["status"], res.json)
@@ -372,9 +334,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertEqual(cond1["conditions"], [])
 
         # delete policy
-        with self.app.test_request_context(
-            "/policy/cond1", method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/cond1", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
 
@@ -396,14 +356,10 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             result = data.get("result")
-            self.assertTrue(
-                "setPolicy pol1adminuser" in result.get("value"), result.get("value")
-            )
+            self.assertTrue("setPolicy pol1adminuser" in result.get("value"), result.get("value"))
 
         # Get the policies
-        with self.app.test_request_context(
-            "/policy/", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -433,9 +389,7 @@ class APIPolicyTestCase(MyApiTestCase):
             )
 
         # Delete the policy
-        with self.app.test_request_context(
-            "/policy/pol1adminuser", method="DELETE", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/pol1adminuser", method="DELETE", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -444,9 +398,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertTrue(status)
 
     def test_04_policy_defs(self):
-        with self.app.test_request_context(
-            "/policy/defs/conditions", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/defs/conditions", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -457,9 +409,7 @@ class APIPolicyTestCase(MyApiTestCase):
             self.assertIn("comparators", value)
             self.assertIn("sections", value)
 
-        with self.app.test_request_context(
-            "/policy/defs/edumfanodes", method="GET", headers={"Authorization": self.at}
-        ):
+        with self.app.test_request_context("/policy/defs/edumfanodes", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
