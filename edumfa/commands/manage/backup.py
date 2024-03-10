@@ -87,7 +87,9 @@ def restore(backup_file: str):
     if enckey_contained:
         click.echo("Also restoring encryption key 'enckey'")
     else:
-        click.echo("NO FILE 'enckey' CONTAINED! BE SURE TO RESTORE THE ENCRYPTION KEY MANUALLY!")
+        click.echo(
+            "NO FILE 'enckey' CONTAINED! BE SURE TO RESTORE THE ENCRYPTION KEY MANUALLY!"
+        )
     click.echo(f"Restoring to {config_file!s} with data from {sqlfile!s}")
 
     call(["tar", "-zxf", backup_file, "-C", "/"])
@@ -105,7 +107,7 @@ def restore(backup_file: str):
         sys.exit(2)
     sqltype = sqluri.split(":")[0]
     if sqltype == "sqlite":
-        productive_file = sqluri[len("sqlite:///"):]
+        productive_file = sqluri[len("sqlite:///") :]
         click.echo(f"Restore SQLite {productive_file}")
         call(["cp", sqlfile, productive_file])
         os.unlink(sqlfile)
@@ -119,8 +121,16 @@ def restore(backup_file: str):
         _write_mysql_defaults(defaults_file, username, password)
         # Rewriting database
         click.echo("Restoring database.")
-        call("mysql --defaults-file=%s -h %s %s < %s" % (
-            shlex_quote(defaults_file), shlex_quote(hostname), shlex_quote(database), shlex_quote(sqlfile)), shell=True)
+        call(
+            "mysql --defaults-file=%s -h %s %s < %s"
+            % (
+                shlex_quote(defaults_file),
+                shlex_quote(hostname),
+                shlex_quote(database),
+                shlex_quote(sqlfile),
+            ),
+            shell=True,
+        )
         os.unlink(sqlfile)
     else:
         click.echo(f"unsupported SQL syntax: {sqltype}")
@@ -128,13 +138,34 @@ def restore(backup_file: str):
 
 
 @backup_cli.command("create")
-@click.option("-d", "--directory", "target_dir", type=click.Path(file_okay=False, writable=True),
-              default="/var/lib/edumfa/backup/", show_default=True, help="Path to the backup directory")
-@click.option("-c", "--config_dir", help="Path to eduMFA config directory",
-              type=click.Path(exists=True, file_okay=False, writable=True), default="/etc/edumfa/", show_default=True)
-@click.option("-r", "--radius_dir", help="Path to FreeRADIUS config directory",
-              type=click.Path(exists=True, file_okay=False, readable=True), default=None, show_default=True)
-@click.option("-e", "--enckey", is_flag=True, help="Add the encryption key to the backup")
+@click.option(
+    "-d",
+    "--directory",
+    "target_dir",
+    type=click.Path(file_okay=False, writable=True),
+    default="/var/lib/edumfa/backup/",
+    show_default=True,
+    help="Path to the backup directory",
+)
+@click.option(
+    "-c",
+    "--config_dir",
+    help="Path to eduMFA config directory",
+    type=click.Path(exists=True, file_okay=False, writable=True),
+    default="/etc/edumfa/",
+    show_default=True,
+)
+@click.option(
+    "-r",
+    "--radius_dir",
+    help="Path to FreeRADIUS config directory",
+    type=click.Path(exists=True, file_okay=False, readable=True),
+    default=None,
+    show_default=True,
+)
+@click.option(
+    "-e", "--enckey", is_flag=True, help="Add the encryption key to the backup"
+)
 def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = False):
     """
     Create a new backup of the database and the configuration. The default
@@ -164,7 +195,7 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
     sqltype = parsed_sqluri.drivername
 
     if sqltype == "sqlite":
-        productive_file = sqluri[len("sqlite:///"):]
+        productive_file = sqluri[len("sqlite:///") :]
         click.echo(f"Backup SQLite {productive_file}")
         sqlfile = f"{target_dir}/db-{DATE}.sqlite"
         call(["cp", productive_file, sqlfile])
@@ -175,10 +206,15 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
         database = parsed_sqluri.database
         defaults_file = f"{config_dir!s}/mysql.cnf"
         _write_mysql_defaults(defaults_file, username, password)
-        cmd = ['mysqldump', f'--defaults-file={shlex_quote(defaults_file)!s}', '-h', shlex_quote(hostname)]
+        cmd = [
+            "mysqldump",
+            f"--defaults-file={shlex_quote(defaults_file)!s}",
+            "-h",
+            shlex_quote(hostname),
+        ]
         if parsed_sqluri.port:
-            cmd.extend(['-P', str(parsed_sqluri.port)])
-        cmd.extend(['-B', shlex_quote(database), '-r', shlex_quote(sqlfile)])
+            cmd.extend(["-P", str(parsed_sqluri.port)])
+        cmd.extend(["-B", shlex_quote(database), "-r", shlex_quote(sqlfile)])
         call(cmd, shell=False)
     else:
         click.echo(f"unsupported SQL syntax: {sqltype}")

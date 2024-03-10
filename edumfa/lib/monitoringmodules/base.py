@@ -29,12 +29,12 @@ A monitoring module needs to provide the possibility to write new data,
 return all available keys, return the last data. 
 """
 import logging
+
 log = logging.getLogger(__name__)
 from edumfa.lib.log import log_with
 
 
 class Monitoring(object):
-
     def __init__(self, config=None):
         pass
 
@@ -94,7 +94,3 @@ class Monitoring(object):
         :return: None
         """
         pass
-
-
-
-

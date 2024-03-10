@@ -53,7 +53,6 @@ class QUESTACTION(object):
 
 
 class QuestionnaireTokenClass(TokenClass):
-
     """
     This is a Questionnaire Token. The token stores a list of questions and
     answers in the tokeninfo database table. The answers are encrypted.
@@ -82,7 +81,7 @@ class QuestionnaireTokenClass(TokenClass):
 
     @classmethod
     @log_with(log)
-    def get_class_info(cls, key=None, ret='all'):
+    def get_class_info(cls, key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -93,43 +92,49 @@ class QuestionnaireTokenClass(TokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or scalar
         """
-        res = {'type': cls.get_class_type(),
-               'title': 'Questionnaire Token',
-               'description': _('Questionnaire: Enroll Questions for the '
-                                'user.'),
-               'init': {},
-               'config': {},
-               'user':  ['enroll'],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin", "user"],
-               'policy': {
-                   SCOPE.AUTH: {
-                       QUESTACTION.NUM_QUESTIONS: {
-                           'type': 'int',
-                           'desc': _("The user has to answer this number of questions during authentication."),
-                           'group': GROUP.TOKEN,
-                           'value': list(range(1, 31))
-                       }
-                   },
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of questionaire tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of active questionaire tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               },
-               }
+        res = {
+            "type": cls.get_class_type(),
+            "title": "Questionnaire Token",
+            "description": _("Questionnaire: Enroll Questions for the user."),
+            "init": {},
+            "config": {},
+            "user": ["enroll"],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin", "user"],
+            "policy": {
+                SCOPE.AUTH: {
+                    QUESTACTION.NUM_QUESTIONS: {
+                        "type": "int",
+                        "desc": _(
+                            "The user has to answer this number of questions during authentication."
+                        ),
+                        "group": GROUP.TOKEN,
+                        "value": list(range(1, 31)),
+                    }
+                },
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of questionaire tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of active questionaire tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                },
+            },
+        }
 
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
@@ -160,10 +165,11 @@ class QuestionnaireTokenClass(TokenClass):
         except TypeError:
             # Obviously we have a dict...
             questions = j_questions
-        num_answers = get_from_config("question.num_answers",
-                                      DEFAULT_NUM_ANSWERS)
+        num_answers = get_from_config("question.num_answers", DEFAULT_NUM_ANSWERS)
         if len(questions) < int(num_answers):
-            raise TokenAdminError(_("You need to provide at least %s answers.") % num_answers)
+            raise TokenAdminError(
+                _("You need to provide at least %s answers.") % num_answers
+            )
         # Save all questions and answers and encrypt them
         for question, answer in questions.items():
             self.add_tokeninfo(question, answer, value_type="password")
@@ -216,7 +222,9 @@ class QuestionnaireTokenClass(TokenClass):
         questions = {}
 
         # Get an integer list of the already used questions
-        used_questions = [int(x) for x in options.get("data", "").split(",") if options.get("data")]
+        used_questions = [
+            int(x) for x in options.get("data", "").split(",") if options.get("data")
+        ]
         # Fill the questions of the token
         for tinfo in self.token.info_list:
             if tinfo.Type == "password":
@@ -224,31 +232,36 @@ class QuestionnaireTokenClass(TokenClass):
                 questions[tinfo.id] = tinfo.Key
         # if all questions are used up, make a new round
         if len(questions) == len(used_questions):
-            log.info(f"User has only {len(questions)!s} questions in his token. Reusing questions now.")
+            log.info(
+                f"User has only {len(questions)!s} questions in his token. Reusing questions now."
+            )
             used_questions = []
         # Reduce the allowed questions
-        remaining_questions = {k: v for (k, v) in questions.items() if k not in used_questions}
+        remaining_questions = {
+            k: v for (k, v) in questions.items() if k not in used_questions
+        }
         message_id = secrets.choice(list(remaining_questions))
         message = remaining_questions[message_id]
         used_questions = (options.get("data", "") + f",{message_id!s}").strip(",")
 
-        validity = int(get_from_config('DefaultChallengeValidityTime', 120))
+        validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
         # Maybe there is a QUESTIONChallengeValidityTime...
-        lookup_for = tokentype.capitalize() + 'ChallengeValidityTime'
+        lookup_for = tokentype.capitalize() + "ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # Create the challenge in the database
-        db_challenge = Challenge(self.token.serial,
-                                 transaction_id=transactionid,
-                                 data=used_questions,
-                                 session=options.get("session"),
-                                 challenge=message,
-                                 validitytime=validity)
+        db_challenge = Challenge(
+            self.token.serial,
+            transaction_id=transactionid,
+            data=used_questions,
+            session=options.get("session"),
+            challenge=message,
+            validitytime=validity,
+        )
         db_challenge.save()
-        expiry_date = datetime.datetime.now() + \
-                      datetime.timedelta(seconds=validity)
-        reply_dict = {'attributes': {'valid_until': f"{expiry_date!s}"}}
+        expiry_date = datetime.datetime.now() + datetime.timedelta(seconds=validity)
+        reply_dict = {"attributes": {"valid_until": f"{expiry_date!s}"}}
         return True, message, db_challenge.transaction_id, reply_dict
 
     def check_answer(self, given_answer, challenge_object):
@@ -295,14 +308,15 @@ class QuestionnaireTokenClass(TokenClass):
         r_success = -1
 
         # fetch the transaction_id
-        transaction_id = options.get('transaction_id')
+        transaction_id = options.get("transaction_id")
         if transaction_id is None:
-            transaction_id = options.get('state')
+            transaction_id = options.get("state")
 
         # get the challenges for this transaction ID
         if transaction_id is not None:
-            challengeobject_list = get_challenges(serial=self.token.serial,
-                                                  transaction_id=transaction_id)
+            challengeobject_list = get_challenges(
+                serial=self.token.serial, transaction_id=transaction_id
+            )
 
             for challengeobject in challengeobject_list:
                 if challengeobject.is_valid():
@@ -329,13 +343,18 @@ class QuestionnaireTokenClass(TokenClass):
         :param options: Options dict
         :return: True, if further challenge is required.
         """
-        transaction_id = options.get('transaction_id')
-        challengeobject_list = get_challenges(serial=self.token.serial,
-                                              transaction_id=transaction_id)
-        question_number = int(get_action_values_from_options(SCOPE.AUTH,
-                                                             "{0!s}_{1!s}".format(self.get_class_type(),
-                                                                                  QUESTACTION.NUM_QUESTIONS),
-                                                             options) or 1)
+        transaction_id = options.get("transaction_id")
+        challengeobject_list = get_challenges(
+            serial=self.token.serial, transaction_id=transaction_id
+        )
+        question_number = int(
+            get_action_values_from_options(
+                SCOPE.AUTH,
+                "{0!s}_{1!s}".format(self.get_class_type(), QUESTACTION.NUM_QUESTIONS),
+                options,
+            )
+            or 1
+        )
         if len(challengeobject_list) == 1:
             session = int(challengeobject_list[0].session or "0") + 1
             options["session"] = f"{session!s}"

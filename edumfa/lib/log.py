@@ -25,12 +25,13 @@
 #
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#  
+#
 from logging import Formatter
 import string
 import logging
 import functools
 from copy import deepcopy
+
 log = logging.getLogger(__name__)
 
 
@@ -39,7 +40,7 @@ DEFAULT_LOGGING_CONFIG = {
     "formatters": {
         "detail": {
             "()": "edumfa.lib.log.SecureFormatter",
-            "format": "[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s"
+            "format": "[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s",
         }
     },
     "handlers": {
@@ -49,18 +50,16 @@ DEFAULT_LOGGING_CONFIG = {
             "backupCount": 5,
             "maxBytes": 10000000,
             "level": logging.DEBUG,
-            "filename": "edumfa.log"
+            "filename": "edumfa.log",
         }
     },
-    "loggers": {"edumfa": {"handlers": ["file"],
-                                "qualname": "edumfa",
-                                "level": logging.INFO}
-                }
+    "loggers": {
+        "edumfa": {"handlers": ["file"], "qualname": "edumfa", "level": logging.INFO}
+    },
 }
 
 
 class SecureFormatter(Formatter):
-
     def format(self, record):
         message = super(SecureFormatter, self).format(record)
         secured = False
@@ -70,7 +69,7 @@ class SecureFormatter(Formatter):
             if c in string.printable:
                 s += c
             else:
-                s += '.'
+                s += "."
                 secured = True
 
         if secured:
@@ -84,13 +83,20 @@ class log_with(object):
     Logging decorator that allows you to log with a
     specific logger.
     """
-    # Customize these messages
-    ENTRY_MESSAGE = 'Entering {0} with arguments {1} and keywords {2}'
-    EXIT_MESSAGE = 'Exiting {0} with result {1}'
 
-    def __init__(self, logger=None, log_entry=True, log_exit=True,
-                 hide_args=None, hide_kwargs=None,
-                 hide_args_keywords=None):
+    # Customize these messages
+    ENTRY_MESSAGE = "Entering {0} with arguments {1} and keywords {2}"
+    EXIT_MESSAGE = "Exiting {0} with result {1}"
+
+    def __init__(
+        self,
+        logger=None,
+        log_entry=True,
+        log_exit=True,
+        hide_args=None,
+        hide_kwargs=None,
+        hide_args_keywords=None,
+    ):
         """
         Write the parameters and the result of the function to the log.
 
@@ -146,8 +152,7 @@ class log_with(object):
 
             log_args = args
             log_kwds = kwds
-            if self.hide_args or self.hide_kwargs or \
-                    self.hide_args_keywords:
+            if self.hide_args or self.hide_kwargs or self.hide_args_keywords:
                 try:
                     level = self.logger.getEffectiveLevel()
                     # Check if we should not do the password logging.
@@ -172,14 +177,18 @@ class log_with(object):
                     log_kwds = {}
             try:
                 if self.log_entry:
-                    self.logger.debug(self.ENTRY_MESSAGE.format(
-                        func.__name__, log_args, log_kwds))
+                    self.logger.debug(
+                        self.ENTRY_MESSAGE.format(func.__name__, log_args, log_kwds)
+                    )
                 else:
-                    self.logger.debug(self.ENTRY_MESSAGE.format(
-                        func.__name__, "HIDDEN", "HIDDEN"))
+                    self.logger.debug(
+                        self.ENTRY_MESSAGE.format(func.__name__, "HIDDEN", "HIDDEN")
+                    )
             except Exception as exx:
                 self.logger.error(exx)
-                self.logger.error(f"Error during logging of function {func.__name__}! {exx}")
+                self.logger.error(
+                    f"Error during logging of function {func.__name__}! {exx}"
+                )
 
             f_result = func(*args, **kwds)
 
@@ -189,7 +198,9 @@ class log_with(object):
                 else:
                     self.logger.debug(self.EXIT_MESSAGE.format(func.__name__, "HIDDEN"))
             except Exception as exx:
-                self.logger.error(f"Error during logging of function {func.__name__}! {exx}")
+                self.logger.error(
+                    f"Error during logging of function {func.__name__}! {exx}"
+                )
             return f_result
 
         return log_wrapper

@@ -24,12 +24,13 @@
 __doc__ = """This is the SMSClass to send SMS via a script.
 """
 
-from edumfa.lib.smsprovider.SMSProvider import (ISMSProvider, SMSError)
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
 from edumfa.lib import _
 from edumfa.lib.framework import get_app_config_value
 import subprocess  # nosec B404 # We know what we are doing and only allow trusted scripts
 import logging
 import traceback
+
 log = logging.getLogger(__name__)
 
 
@@ -38,7 +39,6 @@ SCRIPT_WAIT = "wait"
 
 
 class ScriptSMSProvider(ISMSProvider):
-
     def __init__(self, db_smsprovider_object=None, smsgateway=None, directory=None):
         """
         Create a new SMS Provider object fom a DB SMS provider object
@@ -53,8 +53,9 @@ class ScriptSMSProvider(ISMSProvider):
         """
         self.config = db_smsprovider_object or {}
         self.smsgateway = smsgateway
-        self.script_directory = directory or get_app_config_value("EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY",
-                                                                  "/etc/edumfa/scripts")
+        self.script_directory = directory or get_app_config_value(
+            "EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY", "/etc/edumfa/scripts"
+        )
 
     def submit_message(self, phone, message):
         """
@@ -83,8 +84,12 @@ class ScriptSMSProvider(ISMSProvider):
         try:
             log.info(f"Starting script {script_name!r}.")
             # Trusted input/no user input: The scripts are created by user root and read from hard disk
-            p = subprocess.Popen(proc_args, cwd=self.script_directory,   # nosec B603
-                                 universal_newlines=True, stdin=subprocess.PIPE)
+            p = subprocess.Popen(
+                proc_args,
+                cwd=self.script_directory,
+                universal_newlines=True,
+                stdin=subprocess.PIPE,
+            )  # nosec B603
             p.communicate(message)
             if background == SCRIPT_WAIT:
                 rcode = p.wait()
@@ -95,8 +100,11 @@ class ScriptSMSProvider(ISMSProvider):
                 raise SMSError(-1, "Failed to start script for sending SMS.")
 
         if rcode:
-            log.warning("Script {script!r} failed to execute with error code {error!r}".format(script=script_name,
-                                                                                               error=rcode))
+            log.warning(
+                "Script {script!r} failed to execute with error code {error!r}".format(
+                    script=script_name, error=rcode
+                )
+            )
             raise SMSError(-1, "Error during execution of the script.")
         else:
             log.info(f"SMS delivered to {phone!s}.")
@@ -112,19 +120,23 @@ class ScriptSMSProvider(ISMSProvider):
 
         :return: dict
         """
-        params = {"options_allowed": False,
-                  "parameters": {
-                      "script": {
-                          "required": True,
-                          "description": _("The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects phone as the parameter and the message from stdin.")
-                      },
-                      "REGEXP": {
-                          "description": cls.regexp_description
-                      },
-                      "background": {
-                          "required": True,
-                          "description": _("Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."),
-                          "values": [SCRIPT_BACKGROUND, SCRIPT_WAIT]}
-                    }
-                  }
+        params = {
+            "options_allowed": False,
+            "parameters": {
+                "script": {
+                    "required": True,
+                    "description": _(
+                        "The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects phone as the parameter and the message from stdin."
+                    ),
+                },
+                "REGEXP": {"description": cls.regexp_description},
+                "background": {
+                    "required": True,
+                    "description": _(
+                        "Wait for script to complete or run script in background. This will either return the HTTP request early or could also block the request."
+                    ),
+                    "values": [SCRIPT_BACKGROUND, SCRIPT_WAIT],
+                },
+            },
+        }
         return params

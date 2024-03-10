@@ -16,6 +16,7 @@ class ACTION_TYPE(object):
     """
     Allowed actions
     """
+
     SET_CUSTOM_USER_ATTRIBUTES = "set_custom_user_attributes"
     DELETE_CUSTOM_USER_ATTRIBUTES = "delete_custom_user_attributes"
 
@@ -24,6 +25,7 @@ class USER_TYPE(object):
     """
     Allowed user types
     """
+
     TOKENOWNER = "tokenowner"
     LOGGED_IN_USER = "logged_in_user"
 
@@ -56,33 +58,47 @@ class CustomUserAttributesHandler(BaseEventHandler):
         actions = {
             ACTION_TYPE.SET_CUSTOM_USER_ATTRIBUTES: {
                 "user": {
-                    'type': 'str',
-                    'required': True,
-                    'description': _('The user for whom the custom attribute should be set.'),
+                    "type": "str",
+                    "required": True,
+                    "description": _(
+                        "The user for whom the custom attribute should be set."
+                    ),
                     "value": [
                         USER_TYPE.TOKENOWNER,
                         USER_TYPE.LOGGED_IN_USER,
-                    ]},
+                    ],
+                },
                 "attrkey": {
-                    'type': 'str',
-                    'description': _('The key of the custom user attribute that should be set.')},
+                    "type": "str",
+                    "description": _(
+                        "The key of the custom user attribute that should be set."
+                    ),
+                },
                 "attrvalue": {
-                    'type': 'str',
-                    'description': _('The value of the custom user attribute.')}
+                    "type": "str",
+                    "description": _("The value of the custom user attribute."),
+                },
             },
             ACTION_TYPE.DELETE_CUSTOM_USER_ATTRIBUTES: {
                 "user": {
-                    'type': 'str',
-                    'required': True,
-                    'description': _('The user from which the custom attribute should be deleted.'),
+                    "type": "str",
+                    "required": True,
+                    "description": _(
+                        "The user from which the custom attribute should be deleted."
+                    ),
                     "value": [
                         USER_TYPE.TOKENOWNER,
                         USER_TYPE.LOGGED_IN_USER,
-                    ]},
+                    ],
+                },
                 "attrkey": {
-                    'type': 'str',
-                    'description': _('The key of the custom user attribute that should be deleted.')}
-        }}
+                    "type": "str",
+                    "description": _(
+                        "The key of the custom user attribute that should be deleted."
+                    ),
+                },
+            },
+        }
         return actions
 
     def do(self, action, options=None):
@@ -103,11 +119,15 @@ class CustomUserAttributesHandler(BaseEventHandler):
         tokenowner = self._get_tokenowner(request)
         if user_type == USER_TYPE.TOKENOWNER and not tokenowner.is_empty():
             user = tokenowner
-        elif user_type == USER_TYPE.LOGGED_IN_USER and hasattr(g, 'logged_in_user'):
-            user = User(login=g.logged_in_user.get('username'),
-                        realm=g.logged_in_user.get('realm'))
+        elif user_type == USER_TYPE.LOGGED_IN_USER and hasattr(g, "logged_in_user"):
+            user = User(
+                login=g.logged_in_user.get("username"),
+                realm=g.logged_in_user.get("realm"),
+            )
         else:
-            log.warning(f"Unable to determine the user for handling the custom attribute! action: {action!s}, handler: {handler_def!s}")
+            log.warning(
+                f"Unable to determine the user for handling the custom attribute! action: {action!s}, handler: {handler_def!s}"
+            )
             return False
 
         attrkey = handler_options.get("attrkey")
@@ -117,7 +137,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
         elif action.lower() == "delete_custom_user_attributes":
             ret = user.delete_attribute(attrkey)
         else:
-            log.warning(f'Unknown action value: {action!s}')
+            log.warning(f"Unknown action value: {action!s}")
             ret = False
 
         return ret

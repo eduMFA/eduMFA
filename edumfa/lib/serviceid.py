@@ -57,8 +57,11 @@ def delete_serviceid(name=None, sid=None):
     if sid:
         if si:
             if si.id != sid:
-                raise eduMFAError('ID of the serviceid with name {0!s} does not '
-                                       'match given ID ({1:d}).'.format(name, sid))
+                raise eduMFAError(
+                    "ID of the serviceid with name {0!s} does not match given ID ({1:d}).".format(
+                        name, sid
+                    )
+                )
         else:
             si = fetch_one_resource(Serviceid, id=sid)
     if si:
@@ -66,7 +69,9 @@ def delete_serviceid(name=None, sid=None):
         si.delete()
         db.session.commit()
     else:
-        raise ResourceNotFoundError("You need to specify either a ID or name of a serviceid.")
+        raise ResourceNotFoundError(
+            "You need to specify either a ID or name of a serviceid."
+        )
 
 
 def get_serviceids(name=None, id=None):

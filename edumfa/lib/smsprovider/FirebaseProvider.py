@@ -26,7 +26,7 @@ Firebase Cloud Messaging Service.
 This provider is used for the push token and can be used for SMS tokens.
 """
 
-from edumfa.lib.smsprovider.SMSProvider import (ISMSProvider)
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider
 from edumfa.lib.error import ConfigAdminError
 from edumfa.lib.framework import get_app_local_store
 from edumfa.lib import _
@@ -36,13 +36,15 @@ from google.auth.transport.requests import AuthorizedSession
 import json
 import time
 
-FIREBASE_URL_SEND = 'https://fcm.googleapis.com/v1/projects/{0!s}/messages:send'
-SCOPES = ['https://www.googleapis.com/auth/cloud-platform',
-          'https://www.googleapis.com/auth/datastore',
-          'https://www.googleapis.com/auth/devstorage.read_write',
-          'https://www.googleapis.com/auth/firebase',
-          'https://www.googleapis.com/auth/identitytoolkit',
-          'https://www.googleapis.com/auth/userinfo.email']
+FIREBASE_URL_SEND = "https://fcm.googleapis.com/v1/projects/{0!s}/messages:send"
+SCOPES = [
+    "https://www.googleapis.com/auth/cloud-platform",
+    "https://www.googleapis.com/auth/datastore",
+    "https://www.googleapis.com/auth/devstorage.read_write",
+    "https://www.googleapis.com/auth/firebase",
+    "https://www.googleapis.com/auth/identitytoolkit",
+    "https://www.googleapis.com/auth/userinfo.email",
+]
 
 log = logging.getLogger(__name__)
 
@@ -63,20 +65,31 @@ def get_firebase_access_token(config_file_name):
         # initialize the firebase_token in the app_store as dict
         app_store[fbt] = {}
 
-    if not isinstance(app_store[fbt].get(config_file_name), service_account.Credentials) or \
-            app_store[fbt].get(config_file_name).expired:
+    if (
+        not isinstance(
+            app_store[fbt].get(config_file_name), service_account.Credentials
+        )
+        or app_store[fbt].get(config_file_name).expired
+    ):
         # If the type of the config is not of class Credentials or if the token
         # has expired we get new scoped access token credentials
-        credentials = service_account.Credentials.from_service_account_file(config_file_name,
-                                                                            scopes=SCOPES)
+        credentials = service_account.Credentials.from_service_account_file(
+            config_file_name, scopes=SCOPES
+        )
 
-        log.debug(f"Fetching a new access_token for {config_file_name!r} from firebase...")
+        log.debug(
+            f"Fetching a new access_token for {config_file_name!r} from firebase..."
+        )
         # We do not use a lock here: The worst that could happen is that two threads
         # fetch new auth tokens concurrently. In this case, one of them wins and
         # is written to the dictionary.
         app_store[fbt][config_file_name] = credentials
-        readable_time = credentials.expiry.isoformat() if credentials.expiry else 'Never'
-        log.debug(f"Setting the expiration for {config_file_name!r} of the new access_token to {readable_time!s}.")
+        readable_time = (
+            credentials.expiry.isoformat() if credentials.expiry else "Never"
+        )
+        log.debug(
+            f"Setting the expiration for {config_file_name!r} of the new access_token to {readable_time!s}."
+        )
 
     return app_store[fbt][config_file_name]
 
@@ -89,7 +102,6 @@ class FIREBASE_CONFIG:
 
 
 class FirebaseProvider(ISMSProvider):
-
     def __init__(self, db_smsprovider_object=None, smsgateway=None):
         ISMSProvider.__init__(self, db_smsprovider_object, smsgateway)
         self.access_token_info = None
@@ -108,57 +120,62 @@ class FirebaseProvider(ISMSProvider):
         """
         res = False
 
-        credentials = get_firebase_access_token(self.smsgateway.option_dict.get(
-            FIREBASE_CONFIG.JSON_CONFIG))
+        credentials = get_firebase_access_token(
+            self.smsgateway.option_dict.get(FIREBASE_CONFIG.JSON_CONFIG)
+        )
 
         authed_session = AuthorizedSession(credentials)
 
         headers = {
-            'Content-Type': 'application/json; UTF-8',
+            "Content-Type": "application/json; UTF-8",
         }
         fcm_message = {
             "message": {
-                        "data": data,
-                        "token": firebase_token,
-                        "notification": {
-                            "title": data.get("title"),
-                            "body": data.get("question")
+                "data": data,
+                "token": firebase_token,
+                "notification": {
+                    "title": data.get("title"),
+                    "body": data.get("question"),
+                },
+                "android": {
+                    "priority": "HIGH",
+                    "ttl": "120s",
+                    "fcm_options": {"analytics_label": "AndroidPushToken"},
+                },
+                "apns": {
+                    "headers": {
+                        "apns-priority": "10",
+                        "apns-push-type": "alert",
+                        "apns-collapse-id": "privacyidea.pushtoken",
+                        "apns-expiration": str(int(time.time()) + 120),
+                    },
+                    "payload": {
+                        "aps": {
+                            "alert": {
+                                "title": data.get("title"),
+                                "body": data.get("question"),
+                            },
+                            "sound": "default",
+                            "category": "PUSH_AUTHENTICATION",
                         },
-                        "android": {
-                                    "priority": "HIGH",
-                                    "ttl": "120s",
-                                    "fcm_options": {"analytics_label": "AndroidPushToken"}
-                                   },
-                        "apns": {
-                                 "headers": {
-                                             "apns-priority": "10",
-                                             "apns-push-type": "alert",
-                                             "apns-collapse-id": "privacyidea.pushtoken",
-                                             "apns-expiration": str(int(time.time()) + 120)
-                                            },
-                                 "payload": {
-                                             "aps": {
-                                                     "alert": {
-                                                               "title": data.get("title"),
-                                                               "body": data.get("question"),
-                                                              },
-                                                     "sound": "default",
-                                                     "category": "PUSH_AUTHENTICATION"
-                                                    },
-                                            },
-                                 "fcm_options": {"analytics_label": "iOSPushToken"}
-                                }
-                       }
+                    },
+                    "fcm_options": {"analytics_label": "iOSPushToken"},
+                },
             }
+        }
 
         proxies = {}
         if self.smsgateway.option_dict.get(FIREBASE_CONFIG.HTTPS_PROXY):
-            proxies["https"] = self.smsgateway.option_dict.get(FIREBASE_CONFIG.HTTPS_PROXY)
+            proxies["https"] = self.smsgateway.option_dict.get(
+                FIREBASE_CONFIG.HTTPS_PROXY
+            )
         a = self.smsgateway.option_dict.get(FIREBASE_CONFIG.JSON_CONFIG)
         with open(a) as f:
             server_config = json.load(f)
         url = FIREBASE_URL_SEND.format(server_config["project_id"])
-        resp = authed_session.post(url, data=json.dumps(fcm_message), headers=headers, proxies=proxies)
+        resp = authed_session.post(
+            url, data=json.dumps(fcm_message), headers=headers, proxies=proxies
+        )
 
         if resp.status_code == 200:
             log.debug("Message sent successfully to Firebase service.")
@@ -180,11 +197,14 @@ class FirebaseProvider(ISMSProvider):
             server_config = json.load(f)
         if server_config:
             if server_config.get("type") != "service_account":
-                raise ConfigAdminError(description="The JSON file is not a valid firebase credentials file.")
+                raise ConfigAdminError(
+                    description="The JSON file is not a valid firebase credentials file."
+                )
 
         else:
-            raise ConfigAdminError(description="Please check your configuration. Can not load JSON file.")
-
+            raise ConfigAdminError(
+                description="Please check your configuration. Can not load JSON file."
+            )
 
     @classmethod
     def parameters(cls):
@@ -195,17 +215,22 @@ class FirebaseProvider(ISMSProvider):
 
         :return: dict
         """
-        params = {"options_allowed": False,
-                  "headers_allowed": False,
-                  "parameters": {
-                      FIREBASE_CONFIG.JSON_CONFIG: {
-                          "required": True,
-                          "description": _("The filename of the JSON config file, that allows eduMFA to talk to the Firebase REST API.")
-                      },
-                      FIREBASE_CONFIG.HTTPS_PROXY: {
-                          "required": False,
-                          "description": _("Proxy setting for HTTPS connections to googleapis.com.")
-                      }
-                  }
-                  }
+        params = {
+            "options_allowed": False,
+            "headers_allowed": False,
+            "parameters": {
+                FIREBASE_CONFIG.JSON_CONFIG: {
+                    "required": True,
+                    "description": _(
+                        "The filename of the JSON config file, that allows eduMFA to talk to the Firebase REST API."
+                    ),
+                },
+                FIREBASE_CONFIG.HTTPS_PROXY: {
+                    "required": False,
+                    "description": _(
+                        "Proxy setting for HTTPS connections to googleapis.com."
+                    ),
+                },
+            },
+        }
         return params

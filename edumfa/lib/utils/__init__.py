@@ -25,6 +25,7 @@ This is the library with base functions for eduMFA.
 
 This module is tested in tests/test_lib_utils.py
 """
+
 import os
 
 import logging
@@ -57,9 +58,11 @@ BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 ALLOWED_SERIAL = r"^[0-9a-zA-Z\-_]+$"
 
 # character lists for the identifiers in the pin content policy
-CHARLIST_CONTENTPOLICY = {"c": string.ascii_letters, # characters
-                          "n": string.digits,        # numbers
-                          "s": string.punctuation}   # special
+CHARLIST_CONTENTPOLICY = {
+    "c": string.ascii_letters,
+    "n": string.digits,
+    "s": string.punctuation,
+}  # characters  # numbers  # special
 
 
 def check_time_in_range(time_range, check_time=None):
@@ -84,19 +87,13 @@ def check_time_in_range(time_range, check_time=None):
     :return: True, if time is within time_range.
     """
     time_match = False
-    dow_index = {"mon": 1,
-                 "tue": 2,
-                 "wed": 3,
-                 "thu": 4,
-                 "fri": 5,
-                 "sat": 6,
-                 "sun": 7}
+    dow_index = {"mon": 1, "tue": 2, "wed": 3, "thu": 4, "fri": 5, "sat": 6, "sun": 7}
 
     check_time = check_time or datetime.now()
     check_day = check_time.isoweekday()
     check_hour = dt_time(check_time.hour, check_time.minute)
     # remove whitespaces
-    time_range = ''.join(time_range.split())
+    time_range = "".join(time_range.split())
     # split into list of time ranges
     time_ranges = time_range.split(",")
     try:
@@ -121,9 +118,10 @@ def check_time_in_range(time_range, check_time=None):
                 time_end = dt_time(te[0])
 
             # check the day and the time
-            if (dow_index.get(dow_start) <= check_day <= dow_index.get(dow_end)
-                    and
-                    time_start <= check_hour <= time_end):
+            if (
+                dow_index.get(dow_start) <= check_day <= dow_index.get(dow_end)
+                and time_start <= check_hour <= time_end
+            ):
                 time_match = True
     except ValueError:
         log.error("Wrong time range format: <dow>-<dow>:<hh:mm>-<hh:mm>")
@@ -144,7 +142,7 @@ def to_utf8(password):
     if password:
         try:
             # If the password exists in unicode we encode it to utf-8
-            password = password.encode('utf8')
+            password = password.encode("utf8")
         except (UnicodeDecodeError, AttributeError) as _exx:
             # In case the password is already an encoded string, we fail to
             # encode it again...
@@ -183,7 +181,7 @@ def to_bytes(s):
     if isinstance(s, bytes):
         return s
     elif isinstance(s, str):
-        return s.encode('utf8')
+        return s.encode("utf8")
     # TODO: warning? Exception?
     return s
 
@@ -213,7 +211,7 @@ def hexlify_and_unicode(s):
     :rtype: str
     """
 
-    res = binascii.hexlify(to_bytes(s)).decode('utf-8')
+    res = binascii.hexlify(to_bytes(s)).decode("utf-8")
     return res
 
 
@@ -227,7 +225,7 @@ def b32encode_and_unicode(s):
     :return: base32-encoded string converted to unicode
     :rtype: str
     """
-    res = base64.b32encode(to_bytes(s)).decode('utf-8')
+    res = base64.b32encode(to_bytes(s)).decode("utf-8")
     return res
 
 
@@ -241,7 +239,7 @@ def b64encode_and_unicode(s):
     :return: base64-encoded string converted to unicode
     :rtype: str
     """
-    res = base64.b64encode(to_bytes(s)).decode('utf-8')
+    res = base64.b64encode(to_bytes(s)).decode("utf-8")
     return res
 
 
@@ -255,7 +253,7 @@ def urlsafe_b64encode_and_unicode(s):
     :return: base64-encoded string converted to unicode
     :rtype: str
     """
-    res = base64.urlsafe_b64encode(to_bytes(s)).decode('utf-8')
+    res = base64.urlsafe_b64encode(to_bytes(s)).decode("utf-8")
     return res
 
 
@@ -276,8 +274,8 @@ def create_img(data, scale=10):
 #
 # Modhex calculations for Yubikey
 #
-hexHexChars = '0123456789abcdef'
-modHexChars = 'cbdefghijklnrtuv'
+hexHexChars = "0123456789abcdef"
+modHexChars = "cbdefghijklnrtuv"
 
 hex2ModDict = dict(zip(hexHexChars, modHexChars))
 mod2HexDict = dict(zip(modHexChars, hexHexChars))
@@ -291,7 +289,7 @@ def modhex_encode(s):
     :return: the encoded string
     :rtype: str
     """
-    return ''.join([hex2ModDict[c] for c in hexlify_and_unicode(s)])
+    return "".join([hex2ModDict[c] for c in hexlify_and_unicode(s)])
 
 
 def modhex_decode(m):
@@ -302,7 +300,7 @@ def modhex_decode(m):
     :return: decoded data
     :rtype: bytes
     """
-    return binascii.unhexlify(''.join([mod2HexDict[c] for c in m]))
+    return binascii.unhexlify("".join([mod2HexDict[c] for c in m]))
 
 
 def checksum(msg):
@@ -315,9 +313,9 @@ def checksum(msg):
     :return: crc16 checksum of msg
     :rtype: int
     """
-    crc = 0xffff
+    crc = 0xFFFF
     for b in msg:
-        crc = crc ^ (b & 0xff)
+        crc = crc ^ (b & 0xFF)
         for _j in range(0, 8):
             n = crc & 1
             crc = crc >> 1
@@ -373,12 +371,13 @@ def sanity_name_check(name, name_exp=r"^[A-Za-z0-9_\-\.]+$"):
     :return: True, otherwise raises an exception
     """
     if re.match(name_exp, name) is None:
-        raise Exception("non conformant characters in the name: %r (not in %s)" % (name, name_exp))
+        raise Exception(
+            "non conformant characters in the name: %r (not in %s)" % (name, name_exp)
+        )
     return True
 
 
-def get_data_from_params(params, exclude_params, config_description, module,
-                         type):
+def get_data_from_params(params, exclude_params, config_description, module, type):
     """
     This is a helper function that parses the parameters when creating
     resolvers or CA connectors.
@@ -405,18 +404,22 @@ def get_data_from_params(params, exclude_params, config_description, module,
     data = {}
     for k in params:
         if k not in exclude_params:
-            if k.startswith('type.') is True:
-                key = k[len('type.'):]
+            if k.startswith("type.") is True:
+                key = k[len("type.") :]
                 types[key] = params.get(k)
-            elif k.startswith('desc.') is True:
-                key = k[len('desc.'):]
+            elif k.startswith("desc.") is True:
+                key = k[len("desc.") :]
                 desc[key] = params.get(k)
             else:
                 data[k] = params.get(k)
                 if k in config_description:
                     types[k] = config_description.get(k)
                 else:
-                    log.warning("the passed key '{0!s}' is not a parameter for the {1!s} type '{2!s}'".format(k, module, type))
+                    log.warning(
+                        "the passed key '{0!s}' is not a parameter for the {1!s} type '{2!s}'".format(
+                            k, module, type
+                        )
+                    )
 
     # Check that there is no type or desc without the data itself.
     # i.e. if there is a type.BindPW=password, then there must be a
@@ -492,7 +495,7 @@ def parse_date(date_string):
     if date_string.startswith("+"):
         # We are using an offset
         delta_specifier = date_string[-1].lower()
-        if delta_specifier not in 'mhd':
+        if delta_specifier not in "mhd":
             return datetime.now(tzlocal()) + timedelta()
         delta_amount = int(date_string[1:-1])
         if delta_specifier == "m":
@@ -510,8 +513,7 @@ def parse_date(date_string):
         # We only do dayfirst, if the datestring really starts with a 01/
         # If it stars with a year 2017/... we do NOT dayfirst.
         # See https://github.com/dateutil/dateutil/issues/457
-        d = parse_date_string(date_string,
-                              dayfirst=re.match(r"^\d\d[/.]", date_string))
+        d = parse_date_string(date_string, dayfirst=re.match(r"^\d\d[/.]", date_string))
     except ValueError:
         log.debug(f"Dateformat {date_string!s} could not be parsed")
 
@@ -584,7 +586,11 @@ def check_proxy(path_to_client, proxy_settings):
     try:
         proxy_dict = parse_proxy(proxy_settings)
     except AddrFormatError:
-        log.error("Error parsing the OverrideAuthorizationClient setting: {0!s}! The IP addresses need to be comma separated. Fix this. The client IP will not be mapped!".format(proxy_settings))
+        log.error(
+            "Error parsing the OverrideAuthorizationClient setting: {0!s}! The IP addresses need to be comma separated. Fix this. The client IP will not be mapped!".format(
+                proxy_settings
+            )
+        )
         log.debug(f"{traceback.format_exc()!s}")
         return path_to_client[0]
 
@@ -602,8 +608,11 @@ def check_proxy(path_to_client, proxy_settings):
     #   as the proxy path does not match completely because 10.2.3.4 is not allowed to map to 192.168.1.1.
     # After having processed all paths in the proxy settings, we return the "deepest" IP from ``path_to_client`` that
     # is allowed according to any proxy path of the proxy settings.
-    log.debug("Determining the mapped IP from {!r} given the proxy settings {!r} ...".format(
-        path_to_client, proxy_settings))
+    log.debug(
+        "Determining the mapped IP from {!r} given the proxy settings {!r} ...".format(
+            path_to_client, proxy_settings
+        )
+    )
     max_idx = 0
     for proxy_path in proxy_dict:
         log.debug(f"Proxy path: {proxy_path!r}")
@@ -615,11 +624,15 @@ def check_proxy(path_to_client, proxy_settings):
         current_max_idx = 0
         # If len(path_to_client) > len(proxy_path), ``zip`` cuts the lists to the same length.
         # Hence, we ignore any additional proxy hops that the client may send, which is what we want.
-        for idx, (proxy_path_ip, client_path_ip) in enumerate(zip(proxy_path, path_to_client)):
+        for idx, (proxy_path_ip, client_path_ip) in enumerate(
+            zip(proxy_path, path_to_client)
+        ):
             # We check if the network in the proxy path contains the IP from path_to_client.
             if client_path_ip not in proxy_path_ip:
                 # If not, the current proxy path does not match and we do not have to keep checking it.
-                log.debug(f"... ignored because {client_path_ip!r} is not in subnet {proxy_path_ip!r}")
+                log.debug(
+                    f"... ignored because {client_path_ip!r} is not in subnet {proxy_path_ip!r}"
+                )
                 break
             else:
                 current_max_idx = idx
@@ -627,7 +640,9 @@ def check_proxy(path_to_client, proxy_settings):
             # This branch is only executed if we did *not* break out of the loop. This means that the proxy path
             # completely matches the path to client, so the mapped client IP is a viable candidate.
             if current_max_idx >= max_idx:
-                log.debug(f"... setting new candidate for client IP: {path_to_client[current_max_idx]!r}")
+                log.debug(
+                    f"... setting new candidate for client IP: {path_to_client[current_max_idx]!r}"
+                )
             max_idx = max(max_idx, current_max_idx)
 
     log.debug(f"Determined mapped client IP: {path_to_client[max_idx]!r}")
@@ -665,15 +680,19 @@ def get_client_ip(request, proxy_settings):
             path_to_client = [request.remote_addr]
         else:
             # This is the case if a X-Forwarded-For header is provided.
-            path_to_client = [request.remote_addr] + list(reversed(request.access_route))
+            path_to_client = [request.remote_addr] + list(
+                reversed(request.access_route)
+            )
         # A possible ``client`` parameter is appended to the *end* of the path to client.
-        if (not hasattr(request, "blueprint") or
-            request.blueprint in ["validate_blueprint", "ttype_blueprint",
-                                  "jwtauth"]) \
-                and "client" in request.all_data:
+        if (
+            not hasattr(request, "blueprint")
+            or request.blueprint in ["validate_blueprint", "ttype_blueprint", "jwtauth"]
+        ) and "client" in request.all_data:
             path_to_client.append(request.all_data["client"])
         # We now refer to ``check_proxy`` to extract the mapped IP from ``path_to_client``.
-        return str(check_proxy([IPAddress(ip) for ip in path_to_client], proxy_settings))
+        return str(
+            check_proxy([IPAddress(ip) for ip in path_to_client], proxy_settings)
+        )
     else:
         # If no proxy settings are defined, we do not map any IPs anyway.
         return request.remote_addr
@@ -694,7 +713,7 @@ def check_ip_in_policy(client_ip, policy):
     # Remove empty strings from the list
     policy = list(filter(None, policy))
     for ipdef in policy:
-        if ipdef[0] in ['-', '!']:
+        if ipdef[0] in ["-", "!"]:
             # exclude the client?
             if IPAddress(client_ip) in IPNetwork(ipdef[1:]):
                 log.debug(f"the client {client_ip!s} is excluded by {ipdef!s}")
@@ -716,7 +735,7 @@ def reload_db(timestamp, db_ts):
 
     :return: bool
     """
-    internal_timestamp = ''
+    internal_timestamp = ""
     if timestamp:
         internal_timestamp = timestamp.strftime("%s")
     rdb = False
@@ -848,11 +867,11 @@ def compare_value_value(value1, comparator, value2):
         return value1 > value2
     elif comparator == "<":
         return value1 < value2
-    elif comparator in ['>=', '=>']:
+    elif comparator in [">=", "=>"]:
         return value1 >= value2
-    elif comparator in ['<=', '=<']:
+    elif comparator in ["<=", "=<"]:
         return value1 <= value2
-    elif comparator == '!=':
+    elif comparator == "!=":
         return value1 != value2
     else:
         raise Exception(f"Unknown comparator: {comparator!s}")
@@ -896,7 +915,7 @@ def int_to_hex(serial):
     """
     serial_hex = hex(int(serial)).upper()
     serial_hex = serial_hex.split("X")[1]
-    if len(serial_hex)%2 != 0:
+    if len(serial_hex) % 2 != 0:
         serial_hex = "0" + serial_hex
     return serial_hex
 
@@ -906,10 +925,10 @@ def parse_legacy_time(ts, return_date=False):
     The new timestrings are of the format YYYY-MM-DDThh:mm+oooo.
     They contain the timezone offset!
 
-    Old legacy time strings are of format DD/MM/YY hh:mm without time zone 
+    Old legacy time strings are of format DD/MM/YY hh:mm without time zone
     offset.
 
-    This function parses string and returns the new formatted time string 
+    This function parses string and returns the new formatted time string
     including the timezone offset.
 
     :param ts:
@@ -917,12 +936,13 @@ def parse_legacy_time(ts, return_date=False):
     :return:
     """
     from edumfa.lib.tokenclass import DATE_FORMAT
+
     d = parse_date_string(ts)
     if not d.tzinfo:
         # we need to reparse the string
-        d = parse_date_string(ts,
-                              dayfirst=re.match(r"^\d\d[/\.]", ts)).replace(
-                                  tzinfo=tzlocal())
+        d = parse_date_string(ts, dayfirst=re.match(r"^\d\d[/\.]", ts)).replace(
+            tzinfo=tzlocal()
+        )
     if return_date:
         return d
     else:
@@ -947,7 +967,7 @@ def parse_timedelta(s):
         raise TypeError(f"Unsupported timedelta {s!r}")
     count = int(m.group(2))
     if m.group(1) == "-":
-        count = - count
+        count = -count
     if m.group(3) == "s":
         seconds = count
     elif m.group(3) == "m":
@@ -1045,7 +1065,7 @@ def convert_column_to_unicode(value):
     if value is None or isinstance(value, str):
         return value
     elif isinstance(value, bytes):
-        return value.decode('utf8')
+        return value.decode("utf8")
     else:
         return str(value)
 
@@ -1084,7 +1104,9 @@ def fetch_one_resource(table, **query):
     try:
         return table.query.filter_by(**query).one()
     except sqlalchemy.orm.exc.NoResultFound:
-        raise ResourceNotFoundError(f"The requested {table.__name__!s} could not be found.")
+        raise ResourceNotFoundError(
+            f"The requested {table.__name__!s} could not be found."
+        )
 
 
 def truncate_comma_list(data, max_len):
@@ -1130,7 +1152,7 @@ def generate_charlists_from_pin_policy(policy):
     """
 
     # regexp to check for pin content policy string validity
-    VALID_POLICY_REGEXP = re.compile(r'^[+-]*[cns]+$|^\[.*\]+$')
+    VALID_POLICY_REGEXP = re.compile(r"^[+-]*[cns]+$|^\[.*\]+$")
 
     # default: full character list
     base_characters = "".join(CHARLIST_CONTENTPOLICY.values())
@@ -1196,7 +1218,7 @@ def check_pin_contents(pin, policy):
 
     # check requirements
     for str in charlists_dict["requirements"]:
-        if not re.search(re.compile('[' + re.escape(str) + ']'), pin):
+        if not re.search(re.compile("[" + re.escape(str) + "]"), pin):
             ret = False
             comment.append(f"Missing character in PIN: {str!s}")
 
@@ -1228,7 +1250,11 @@ def get_module_class(package_name, class_name, check_method=None):
     klass = getattr(mod, class_name)
     log.debug(f"klass: {klass!s}")
     if check_method and not hasattr(klass, check_method):
-        raise NameError("Class AttributeError: {0}.{1} instance has no attribute '{2}'".format(package_name, class_name, check_method))
+        raise NameError(
+            "Class AttributeError: {0}.{1} instance has no attribute '{2}'".format(
+                package_name, class_name, check_method
+            )
+        )
     return klass
 
 
@@ -1267,13 +1293,14 @@ def prepare_result(obj, rid=1, details=None):
     :return: json rendered sting result
     :rtype: string
     """
-    res = {"jsonrpc": "2.0",
-           "result": {"status": True,
-                      "value": obj},
-           "version": get_version(),
-           "versionnumber": get_version_number(),
-           "id": rid,
-           "time": time.time()}
+    res = {
+        "jsonrpc": "2.0",
+        "result": {"status": True, "value": obj},
+        "version": get_version(),
+        "versionnumber": get_version_number(),
+        "id": rid,
+        "time": time.time(),
+    }
 
     if details is not None and len(details) > 0:
         details["threadid"] = threading.current_thread().ident
@@ -1310,31 +1337,39 @@ def split_pin_pass(passw, otplen, prependpin):
     if prependpin:
         pin = passw[0:-otplen]
         otpval = passw[-otplen:]
-        log.debug("PIN prepended. PIN length is {0!s}, OTP length is {0!s}.".format(len(pin),
-                                                                                    len(otpval)))
+        log.debug(
+            "PIN prepended. PIN length is {0!s}, OTP length is {0!s}.".format(
+                len(pin), len(otpval)
+            )
+        )
     else:
         pin = passw[otplen:]
         otpval = passw[0:otplen]
-        log.debug("PIN appended. PIN length is {0!s}, OTP length is {0!s}.".format(len(pin),
-                                                                                   len(otpval)))
+        log.debug(
+            "PIN appended. PIN length is {0!s}, OTP length is {0!s}.".format(
+                len(pin), len(otpval)
+            )
+        )
     return pin, otpval
 
 
-def create_tag_dict(logged_in_user=None,
-                    request=None,
-                    serial=None,
-                    tokenowner=None,
-                    tokentype=None,
-                    description=None,
-                    recipient=None,
-                    registrationcode=None,
-                    googleurl_value=None,
-                    client_ip=None,
-                    pin=None,
-                    challenge=None,
-                    result_value=None,
-                    result_status=None,
-                    escape_html=False):
+def create_tag_dict(
+    logged_in_user=None,
+    request=None,
+    serial=None,
+    tokenowner=None,
+    tokentype=None,
+    description=None,
+    recipient=None,
+    registrationcode=None,
+    googleurl_value=None,
+    client_ip=None,
+    pin=None,
+    challenge=None,
+    result_value=None,
+    result_status=None,
+    escape_html=False,
+):
     """
     This helper function creates a dictionary with tags to be used in sending emails
     either with email tokens or within the notification handler
@@ -1361,35 +1396,43 @@ def create_tag_dict(logged_in_user=None,
     time = datetime.now().strftime("%H:%M:%S")
     date = datetime.now().strftime("%Y-%m-%d")
     recipient = recipient or {}
-    tags = dict(admin=logged_in_user.get("username") if logged_in_user else "",
-                realm=logged_in_user.get("realm") if logged_in_user else "",
-                action=request.path if request else "",
-                serial=serial,
-                url=request.url_root if request else "",
-                user=tokenowner.info.get("givenname") if tokenowner else "",
-                surname=tokenowner.info.get("surname") if tokenowner else "",
-                givenname=recipient.get("givenname"),
-                username=tokenowner.login if tokenowner else "",
-                userrealm=tokenowner.realm if tokenowner else "",
-                tokentype=tokentype,
-                description=description,
-                registrationcode=registrationcode,
-                recipient_givenname=recipient.get("givenname"),
-                recipient_surname=recipient.get("surname"),
-                googleurl_value=googleurl_value,
-                time=time,
-                date=date,
-                client_ip=client_ip,
-                pin=pin,
-                ua_browser=request.user_agent.browser if request else "",
-                ua_string=request.user_agent.string if request else "",
-                challenge=challenge if challenge else "",
-                result_value=result_value if result_value else "",
-                result_status=result_status if result_status else "",
-                request_value=request.all_data.get("value") if request and hasattr(request,'all_data')
-                                                               and request.all_data.get("value") is not None else "",
-                token_realms=request.all_data.get("realms") if request and hasattr(request,'all_data')
-                                                               and request.all_data.get("realms") is not None else "")
+    tags = dict(
+        admin=logged_in_user.get("username") if logged_in_user else "",
+        realm=logged_in_user.get("realm") if logged_in_user else "",
+        action=request.path if request else "",
+        serial=serial,
+        url=request.url_root if request else "",
+        user=tokenowner.info.get("givenname") if tokenowner else "",
+        surname=tokenowner.info.get("surname") if tokenowner else "",
+        givenname=recipient.get("givenname"),
+        username=tokenowner.login if tokenowner else "",
+        userrealm=tokenowner.realm if tokenowner else "",
+        tokentype=tokentype,
+        description=description,
+        registrationcode=registrationcode,
+        recipient_givenname=recipient.get("givenname"),
+        recipient_surname=recipient.get("surname"),
+        googleurl_value=googleurl_value,
+        time=time,
+        date=date,
+        client_ip=client_ip,
+        pin=pin,
+        ua_browser=request.user_agent.browser if request else "",
+        ua_string=request.user_agent.string if request else "",
+        challenge=challenge if challenge else "",
+        result_value=result_value if result_value else "",
+        result_status=result_status if result_status else "",
+        request_value=request.all_data.get("value")
+        if request
+        and hasattr(request, "all_data")
+        and request.all_data.get("value") is not None
+        else "",
+        token_realms=request.all_data.get("realms")
+        if request
+        and hasattr(request, "all_data")
+        and request.all_data.get("realms") is not None
+        else "",
+    )
     if escape_html:
         escaped_tags = {}
         for key, value in tags.items():
@@ -1408,7 +1451,9 @@ def check_serial_valid(serial):
     :return: True or Exception
     """
     if not re.match(ALLOWED_SERIAL, serial):
-        raise ParameterError(f"Invalid serial number. Must comply to {ALLOWED_SERIAL!s}.")
+        raise ParameterError(
+            f"Invalid serial number. Must comply to {ALLOWED_SERIAL!s}."
+        )
     return True
 
 
@@ -1488,7 +1533,9 @@ def parse_string_to_dict(s, split_char=":"):
     return d
 
 
-def replace_function_event_handler(text, token_serial=None, tokenowner=None, logged_in_user=None):
+def replace_function_event_handler(
+    text, token_serial=None, tokenowner=None, logged_in_user=None
+):
     if logged_in_user is not None:
         login = logged_in_user.login
         realm = logged_in_user.realm
@@ -1517,12 +1564,14 @@ def replace_function_event_handler(text, token_serial=None, tokenowner=None, log
             "surname": surname,
             "token_owner": givenname,
             "user_realm": userrealm,
-            "token_serial": token_serial
+            "token_serial": token_serial,
         }
         new_text = text.format(**attributes)
         return new_text
-    except(ValueError, KeyError) as err:
-        log.warning(f"Unable to replace placeholder: ({err!s})! Please check the webhooks data option.")
+    except (ValueError, KeyError) as err:
+        log.warning(
+            f"Unable to replace placeholder: ({err!s})! Please check the webhooks data option."
+        )
         return text
 
 
