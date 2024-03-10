@@ -63,6 +63,8 @@ flask-versioned==0.9.4.post20101221
     # via edumfa (setup.py)
 google-auth==2.17.0
     # via edumfa (setup.py)
+grpcio==1.62.1
+    # via edumfa (setup.py)
 huey==2.4.5
     # via edumfa (setup.py)
 idna==3.4
@@ -93,6 +95,8 @@ netaddr==0.8.0
     #   edumfa (setup.py)
     #   pyrad
 passlib==1.7.4
+    # via edumfa (setup.py)
+psycopg2-binary==2.9.9
     # via edumfa (setup.py)
 pyasn1==0.4.8
     # via
