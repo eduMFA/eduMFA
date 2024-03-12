@@ -28,15 +28,3 @@ Description: 2FA system. This is a meta package to install edumfa with apache2
  eduMFA: identity, multifactor authentication, authorization.
  This is the package that installs all requirements to run eduMFA in the
  Apache2 Webserver.
-
-
-#Package: edumfa-mysql
-#Architecture: all
-#Depends: ${misc:Depends}, edumfa (=${binary:Version}), mysql-server|mariadb-server, mysql-client|mariadb-client
-#Conflicts: nginx, nginx-full, edumfa-nginx, edumfa-apache2
-#Description: 2FA system. eduMFA application and MySQL configuration
-# eduMFA: identity, multifactor authentication, authorization.
-# This package installs eduMFA application and the MySQL database
-# to run eduMFA. You still need a webserver.
-
-

@@ -1,7 +1,0 @@
-deploy/debian/edumfa.cfg                            etc/edumfa/
-deploy/debian/openssl.cnf			etc/edumfa/CA
-
-# radius client
-deploy/edumfa/dictionary                   etc/edumfa/
-
-
