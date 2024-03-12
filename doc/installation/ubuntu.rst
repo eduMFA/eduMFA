@@ -116,15 +116,15 @@ Clone the repository and navigate to the project directory::
    git clone https://github.com/eduMFA/eduMFA.git
    cd eduMFA
 
-Choose the package you want to build based on your requirements. Use one of the following commands::
+Choose the package you want to build based on your requirements. Use one of the following commands. This one for the core package::
 
     cp -r deploy/ubuntu debian
 
-or::
+or for apache2 and nginx package::
 
-    cp -r deploy/ubuntu-server debian
+    cp -r deploy/ubuntu-server debian  # for
 
-or::
+or for radius package::
 
     cp -r deploy/ubuntu-radius debian
 
