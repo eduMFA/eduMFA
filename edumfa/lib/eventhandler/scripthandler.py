@@ -24,7 +24,7 @@
 #
 __doc__ = """This is the event handler module for calling external scripts.
 You can put any script in the directory specified in
-PI_SCRIPT_HANDLER_DIRECTORY and call this script in any event.
+EDUMFA_SCRIPT_HANDLER_DIRECTORY and call this script in any event.
 
 The scripts can take parameters like
 * serial

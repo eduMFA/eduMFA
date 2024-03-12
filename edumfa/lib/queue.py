@@ -70,7 +70,7 @@ class JobCollector(object):
     def register_app(self, app):
         """
         Create an instance of a ``BaseQueue`` subclass according to the app config's
-        ``PI_JOB_QUEUE_CLASS`` option and store it in the ``job_queue`` config.
+        ``EDUMFA_JOB_QUEUE_CLASS`` option and store it in the ``job_queue`` config.
         Register all collected jobs with this application.
         This instance is shared between threads!
         This function should only be called once per process.
