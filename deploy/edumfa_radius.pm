@@ -1,6 +1,6 @@
 #
 #    eduMFA FreeRADIUS plugin
-#    2022-03-01 eduMFA <edumfa-dev@listserv.dfn.de>
+#    2024-03-01 eduMFA <edumfa-dev@listserv.dfn.de>
 #               Initial release
 #
 #    Copyright (C) 2010 - 2014 LSE Leading Security Experts GmbH
