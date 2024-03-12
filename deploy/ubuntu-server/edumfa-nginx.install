@@ -1,6 +1,4 @@
 deploy/edumfa/edumfa.cfg                            etc/edumfa/
-deploy/edumfa/openssl.cnf			etc/edumfa/CA
-deploy/edumfa/eduMFA.pem		etc/edumfa/
 
 # radius client
 deploy/edumfa/dictionary			etc/edumfa/
