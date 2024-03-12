@@ -5,10 +5,7 @@ Ubuntu Packages
 
 .. index:: ubuntu
 
-There are ready made packages for Ubuntu.
-
-For recent releases of eduMFA starting from version 1.0 a repository is
-available which provides packages for 20.04LTS and 22.04LTS [#ubuntu]_.
+There are ready made packages for Ubuntu 20.04LTS and 22.04LTS.
 
 .. note:: The packages ``edumfa-apache2`` and ``edumfa-nginx`` assume
    that you want to run a eduMFA system. These packages deactivate all
@@ -101,8 +98,6 @@ To install this module run::
 For further details see :ref:`rlm_perl`.
 
 .. rubric:: Footnotes
-
-.. [#ubuntu] Starting with eduMFA 1.0 Ubuntu 20.04 and 22.04 packages are available.
 
 
 Building your own Packages
