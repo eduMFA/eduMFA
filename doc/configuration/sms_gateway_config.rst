@@ -248,7 +248,7 @@ content from the Sipgate gateway.
 SMPP Provider
 ~~~~~~~~~~~~~
 
-The SMPP provider was added in eduMFA 2.22. It uses an SMS Center via the SMPP protocol to
+The SMPP provider uses an SMS Center via the SMPP protocol to
 deliver SMS to the users.
 
 You need to specify the **SMSC_HOST** and **SMSC_PORT** to talk to the SMS center.
@@ -301,7 +301,7 @@ The *Script provider* calls a script which can take care of sending the SMS.
 The script takes the phone number as the only parameter. The message is expected at stdin.
 
 Scripts are located in the directory ``/etc/edumfa/scripts/``. You can change this default
-location by setting the value in ``PI_SCRIPT_SMSPROVIDER_DIRECTORY`` in :ref:`cfgfile`.
+location by setting the value in ``EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY`` in :ref:`cfgfile`.
 
 In the configuration of the Script provider you can set two attributes.
 

@@ -1,4 +1,4 @@
-.. _pimanage:
+.. _edumfa-manage:
 
 The edumfa-manage Script
 ====================

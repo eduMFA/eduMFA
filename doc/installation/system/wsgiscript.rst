@@ -59,7 +59,7 @@ Each config file can define its own
  * logging configuration
  * ...
 
-To create the new database you need :ref:`pimanage`. The *edumfa-manage* command
+To create the new database you need :ref:`edumfa-manage`. The *edumfa-manage* command
 reads the configuration from */etc/edumfa/edumfa.cfg* by default.
 
 If you want to use another instance with another config file, you need to set

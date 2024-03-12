@@ -2188,7 +2188,7 @@ msgid ""
 "call. Expects phone as the parameter and the message from stdin."
 msgstr ""
 "Das Skript, das aus dem Skripte-Verzeichnis "
-"PI_SCRIPT_SMSPROVIDER_DIRECTORY aufgerufen werden soll. Dieses Skript "
+"EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY aufgerufen werden soll. Dieses Skript "
 "erhält die Telefonnummer als Parameter und die Nachricht über Stdin."
 
 #: lib/smsprovider/SmppSMSProvider.py:128

@@ -32,7 +32,7 @@ In addition you can encrypt this encryption key with an additional password.
 In this case, you need to enter the password each time the eduMFA server
 is restarted and the password for decrypting the *enckey* is kept in memory.
 
-:ref:`pimanage` contains the instruction how to encrypt the *enckey*
+:ref:`edumfa-manage` contains the instruction how to encrypt the *enckey*
 
 After starting the server, you can check, if the encryption key is accessible.
 To do so run::
@@ -66,7 +66,7 @@ This module uses three keys, similarly to the content of
 To activate this module add the following to the configuration file
 (:ref:`cfgfile`)::
 
-   EDUMFA_HSM_MODULE = "eduMFA.lib.security.aeshsm.AESHardwareSecurityModule"
+   EDUMFA_HSM_MODULE = "edumfa.lib.security.aeshsm.AESHardwareSecurityModule"
 
 Additional attributes are
 
@@ -118,7 +118,7 @@ to decrypt the encryption key. After that the encryption key is kept in memory d
 
 To activate this module add the following to :ref:`cfgfile`::
 
-    EDUMFA_HSM_MODULE = "eduMFA.lib.security.encryptkey.EncryptKeyHardwareSecurityModule"
+    EDUMFA_HSM_MODULE = "edumfa.lib.security.encryptkey.EncryptKeyHardwareSecurityModule"
 
 Further attributes are
 ``EDUMFA_HSM_MODULE_MODULE`` which takes the pkcs11 library. This is the fully
@@ -146,7 +146,7 @@ and ``EDUMFA_HSM_MODULE_ENCFILE`` which specifies the encrypted encryption key.
 
 You could e.g. use a Yubikey this way::
 
-    EDUMFA_HSM_MODULE = "eduMFA.lib.security.encryptkey.EncryptKeyHardwareSecurityModule"
+    EDUMFA_HSM_MODULE = "edumfa.lib.security.encryptkey.EncryptKeyHardwareSecurityModule"
     EDUMFA_HSM_MODULE_MODULE = "/usr/lib/libykcs11.so"
     EDUMFA_HSM_MODULE_SLOTNAME = "Yubico YubiKey"
     EDUMFA_HSM_MODULE_KEYLABEL = 'Private key for PIV Authentication'

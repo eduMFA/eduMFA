@@ -33,7 +33,7 @@ database. Thus at the beginning of the request eduMFA reads the timestamp from
 the database.
 
 You can configure how often the timestamp should be read using the edumfa.cfg
-variable ``PI_CHECK_RELOAD_CONFIG``. You can set this to seconds. If you use this
+variable ``EDUMFA_CHECK_RELOAD_CONFIG``. You can set this to seconds. If you use this
 config value to set values higher than 0, you will improve your performance.
 But: other processes or instances will learn later about configuration changes
 which might lead to unexpected behavior.
@@ -71,10 +71,10 @@ The eduMFA Response
 
 By default, eduMFA signs every JSON-Response with the private key in
 ``EDUMFA_AUDIT_KEY_PRIVATE``. To improve the performance when loading the private
-key the config entry ``PI_RESPONSE_NO_PRIVATE_KEY_CHECK`` can be set to ``True``.
+key the config entry ``EDUMFA_RESPONSE_NO_PRIVATE_KEY_CHECK`` can be set to ``True``.
 
 The signing of the response can be disabled completely by setting
-``PI_NO_RESPONSE_SIGN`` to ``True``.
+``EDUMFA_NO_RESPONSE_SIGN`` to ``True``.
 
 Logging
 ~~~~~~~

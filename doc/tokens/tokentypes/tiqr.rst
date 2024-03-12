@@ -5,7 +5,6 @@ TiQR
 
 .. index:: TiQR, OCRA
 
-Starting with version 2.6 eduMFA supports the TiQR token.
 The TiQR token is a smartphone token, that can be used to login by only
 scanning a QR code.
 

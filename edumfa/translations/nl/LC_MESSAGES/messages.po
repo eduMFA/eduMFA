@@ -2148,7 +2148,7 @@ msgid ""
 "The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to "
 "call. Expects phone as the parameter and the message from stdin."
 msgstr ""
-"Het aan te roepen script in de map PI_SCRIPT_SMSPROVIDER_DIRECTORY. "
+"Het aan te roepen script in de map EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY. "
 "Verwacht telefoon als parameter en het bericht van stdin."
 
 #: lib/smsprovider/SmppSMSProvider.py:128

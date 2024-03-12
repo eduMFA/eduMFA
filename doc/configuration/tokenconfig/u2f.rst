@@ -32,9 +32,9 @@ server.
 But if you also want to use the U2F token with other applications, you need
 to specify the AppId like this::
 
-   https://eduMFA.example.com/pi-url/ttype/u2f
+   https://eduMFA.example.com/edumfa-url/ttype/u2f
 
-*pi-url* is the path, if you are running the eduMFA instance in a sub
+*edumfa-url* is the path, if you are running the eduMFA instance in a sub
 folder.
 
 */ttype/u2f* is the endpoint that returns a trusted facets list.
@@ -56,7 +56,7 @@ do so you need to do the following steps:
 
 1. Configure the AppId to reflect your eduMFA server::
 
-      https://pi.your-network.com/ttype/u2f
+      https://edumfa.your-network.com/ttype/u2f
 
    Adding the path */ttype/u2f* is crucial. Otherwise eduMFA will not
    return the trusted facets.
@@ -67,9 +67,9 @@ do so you need to do the following steps:
       saml.your-network.com otherapp.your-network.com vpn.your-network.com
 
    .. note:: The eduMFA plugin for simpleSAMLphp supports U2F with
-      eduMFA starting with version 2.8.
+      eduMFA.
 
-3. Now register a U2F token on ``https://pi.your-network.com``. Due to the trusted
+3. Now register a U2F token on ``https://edumfa.your-network.com``. Due to the trusted
    facets you will also be able to use this U2F token on the other hosts.
 
 4. Now got to ``https://saml.your-network.com`` and you will be able to authenticate

@@ -264,8 +264,6 @@ Sometimes this can be too time consuming. You can use this policy to change
 the behaviour that the administrator needs to press *enter* to trigger the
 search.
 
-(Since eduMFA 2.17)
-
 user_details
 ~~~~~~~~~~~~
 
@@ -292,8 +290,6 @@ This will only work with a valid subscription of eduMFA Enterprise Edition.
 
 If you want to adapt the eduMFA look and feel even more, read :ref:`customize`.
 
-(Since eduMFA 2.21)
-
 .. index:: Customize menu
 .. _webui_custom_menu:
 
@@ -313,8 +309,6 @@ This will only work with a valid subscription of eduMFA Enterprise Edition.
 
 If you want to adapt the eduMFA look and feel even more, read :ref:`customize`.
 
-(Since eduMFA 2.21)
-
 hide_buttons
 ~~~~~~~~~~~~
 
@@ -322,8 +316,6 @@ type: ``bool``
 
 Buttons for actions that a user is not allowed to perform, are hidden instead of
 being disabled.
-
-(Since eduMFA 3.0)
 
 deletion_confirmation
 ~~~~~~~~~~~~~~~~~~~~~
@@ -333,8 +325,6 @@ type: ``bool``
 To avoid careless deletion of important configurations, this policy can be
 activated. After activation, an additional confirmation for the deletion is
 requested for policies, events, mresolvers, resolvers and periodic-tasks.
-
-(Since eduMFA 3.9)
 
 token_rollover
 ~~~~~~~~~~~~~~
@@ -348,8 +338,6 @@ new token secret for the displayed token.
 This e.g. enables a user to transfer a softtoken to a new device while keeping the
 token number restricted to 1.
 
-(Since eduMFA 3.6)
-
 login_text
 ~~~~~~~~~~
 
@@ -359,9 +347,7 @@ This way the text "Please sign in" on the login dialog can be changed. Since the
 also depend on the IP address of the client, you can also choose different login texts depending
 on from where a user tries to log in.
 
-(Since eduMFA 3.0)
-
-show_android_eduMFA_authenticator
+show_android_privacyidea_authenticator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 type: ``bool``
@@ -370,9 +356,7 @@ If this policy is activated, the enrollment page for HOTP, TOTP and Push tokens
 will contain a QR code, that leads the user to the Google Play Store where he can
 directly install the unsupported privacyIDEA Authenticator App for Android devices.
 
-(Since eduMFA 3.3)
-
-show_ios_eduMFA_authenticator
+show_ios_privacyidea_authenticator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 type: ``bool``
@@ -380,8 +364,6 @@ type: ``bool``
 If this policy is activated, the enrollment page for HOTP, TOTP and Push tokens
 will contain a QR code, that leads the user to the Apple App Store where he can
 directly install the unsupported privacyIDEA Authenticator App for iOS devices.
-
-(Since eduMFA 3.3)
 
 show_custom_authenticator
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -402,8 +384,6 @@ where the user is taken to, e.g.
 
 Other scenarios are possible.
 
-(Since eduMFA 3.3)
-
 show_node
 ~~~~~~~~~
 
@@ -414,8 +394,6 @@ corner next to the logo.
 
 This is useful, if you have a lot of different eduMFA nodes in a redundant setup or if you have
 test instances and productive instances. This way you can easily distinguish the different instances.
-
-(Since eduMFA 3.5)
 
 show_seed
 ~~~~~~~~~
@@ -434,8 +412,6 @@ with the value of the given user attribute.
 
 For more details of this token type see :ref:`indexedsecret_token`.
 
-(Since eduMFA 3.3)
-
 .. index:: admin dashboard, dashboard
 
 .. _webui_admin_dashboard:
@@ -449,8 +425,6 @@ If this policy is activated, the static dashboard can be accessed by administrat
 It is displayed as a starting page in the WebUI and contains information about
 token numbers, authentication requests, recent administrative changes, policies,
 event handlers and subscriptions.
-
-(Since eduMFA 3.4)
 
 dialog_no_token
 ~~~~~~~~~~~~~~~

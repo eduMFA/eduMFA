@@ -5,15 +5,27 @@ Job Queue
 
 .. index:: job queue, task queue, queue
 
-eduMFA workflows often entail some time-consuming tasks, such as sending mails or SMS or saving usage statistics. Executing such tasks during the handling of API requests negatively affects performance. Starting with version 3.0, eduMFA allows to delegate certain tasks to external worker processes by using a job queue.
+eduMFA workflows often entail some time-consuming tasks, such as sending mails or SMS or saving usage statistics.
+Executing such tasks during the handling of API requests negatively affects performance.
+eduMFA allows to delegate certain tasks to external worker processes by using a job queue.
 
-As an example, assume that eduMFA receives an authentication request by a user with an email token (see :ref:`email_token`) via HTTP. eduMFA will send a one-time password via E-Mail. In order to do so, it communicates with a SMTP server. Normally, eduMFA handles all communication during the processing of the original authentication request, which increases the response time for the HTTP request, especially if the SMTP server is at a remote location.
+As an example, assume that eduMFA receives an authentication request by a user with an email token
+(see :ref:`email_token`) via HTTP.
+eduMFA will send a one-time password via E-Mail. In order to do so, it communicates with a SMTP server.
+Normally, eduMFA handles all communication during the processing of the original authentication request,
+which increases the response time for the HTTP request, especially if the SMTP server is at a remote location.
 
-A job queue can help to reduce the response time as follows. Instead of communicating with the SMTP server during request handling, eduMFA stores a so-called *job* in a job queue which says "Send an E-Mail to xyz@example.com with content '...'". eduMFA does not wait for the E-Mail to be actually sent, but already sends an HTTP response. An external *worker process* then retrieves the job from the queue and actually sends the corresponding E-Mail.
+A job queue can help to reduce the response time as follows. Instead of communicating with the SMTP server during request handling,
+eduMFA stores a so-called *job* in a job queue which says "Send an E-Mail to xyz@example.com with content '...'".
+eduMFA does not wait for the E-Mail to be actually sent, but already sends an HTTP response.
+An external *worker process* then retrieves the job from the queue and actually sends the corresponding E-Mail.
 
-Using a job queue may improve the performance of your eduMFA server in case of a flaky connection to the SMTP server. Authentication requests that send E-Mails are then handled faster (because the eduMFA server does not actually communicate with the SMTP server), which means that the corresponding web server worker thread can handle the next request faster.
+Using a job queue may improve the performance of your eduMFA server in case of a flaky connection to the SMTP server.
+Authentication requests that send E-Mails are then handled faster (because the eduMFA server does not actually
+communicate with the SMTP server), which means that the corresponding web server worker thread can handle the next request faster.
 
-eduMFA 3.0 implements a job queue based on `huey`_ which uses a `Redis`_ server to store jobs. As of version 3.0, eduMFA allows to offload sending mails to the queue. Other jobs will be implemented in future versions.
+eduMFA implements a job queue based on `huey`_ which uses a `Redis`_ server to store jobs.
+eduMFA allows to offload sending mails to the queue. Other jobs will be implemented in future versions.
 
 Configuration
 -------------
@@ -26,7 +38,7 @@ After a server restart, you will be able to instruct individual SMTP servers to 
 
 Note that you need to run a `Redis`_ server which is reachable for the eduMFA server. By default, huey assumes a locally running Redis server. You can use a configuration option to provide a different URL (`see here <https://redis-py.readthedocs.io/en/latest/#redis.ConnectionPool.from_url>`_ for information on the URL format)::
 
-	PI_JOB_QUEUE_URL = 'redis://somehost'
+	EDUMFA_JOB_QUEUE_URL = 'redis://somehost'
 
 In addition to the eduMFA server, you will have to run a worker process which fetches jobs from the queue and executes them. You can start it as follows::
 

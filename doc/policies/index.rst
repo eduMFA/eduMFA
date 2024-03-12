@@ -121,8 +121,6 @@ Each policy can contain the following attributes:
 
 **eduMFA Node**
 
-  (added in eduMFA 3.4)
-
   If you have a redundant setup requests can hit different dedicated nodes of
   your eduMFA cluster. If you want a policy to only be valid for certain
   eduMFA Nodes, you can set a list of allowed nodes.
@@ -133,8 +131,6 @@ Each policy can contain the following attributes:
   The nodes are configured in edumfa.cfg. See :ref:`cfgfile`.
 
 **time**
-
-  (added in eduMFA 2.12)
 
   In the time field of a policy you can define a list of time ranges. A time
   range can consist of day of weeks (*dow*) and of times in 24h format.
@@ -156,8 +152,6 @@ Each policy can contain the following attributes:
 
 **priority**
 
-  (added in eduMFA 2.23)
-
   The priority field of policies contains a positive number and defaults to 1.
   In case of policy conflicts, policies with a lower priority number take precedence.
 
@@ -175,8 +169,6 @@ Each policy can contain the following attributes:
 
 
 **additional conditions**
-
-  (added in eduMFA 3.1)
 
   Using conditions, you can specify more advanced rules that determine whether
   a policy is valid for a request.

@@ -24,7 +24,7 @@ WebUI.
    role.
 
 .. note:: Use this carefully. Imagine you defined a resolver to a specific
-   group in your Active Directory to be the pricacyIDEA admins. Then the Active
+   group in your Active Directory to be the eduMFA admins. Then the Active
    Directory domain admins can
    simply add users to be administrator in eduMFA.
 

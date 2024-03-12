@@ -17,7 +17,7 @@ Dashboard
 
 .. index:: dashboard
 
-Starting with version 3.4, eduMFA includes a basic dashboard, which can be enabled
+eduMFA includes a basic dashboard, which can be enabled
 by the WebUI policy :ref:`webui_admin_dashboard`. The dashboard will be displayed as a starting page
 for administrators and contains information about token numbers, authentication requests,
 recent administrative changes, policies, event handlers and subscriptions. It uses the usual
@@ -135,7 +135,6 @@ Components
 
 .. index:: Components
 
-Starting with eduMFA 2.15 you can see eduMFA components in the Web UI.
 eduMFA collects authenticating clients with their User Agent. Usually
 this is a type like *PAM*, *FreeRADIUS*, *Wordpress*, *OwnCloud*, ...
 For more information, you may read on :ref:`application_plugins`.
@@ -145,4 +144,4 @@ are connected to your network.
 .. figure:: images/componentsview.png
    :width: 500
 
-   *The Components display client applications and subscriptions*
+   *The Components display client applications*

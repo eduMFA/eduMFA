@@ -63,7 +63,7 @@ The translation in eduMFA is very flexible (see :ref:`translation`).
 But if you change the templates the normal translation with PO files can
 get a bit tricky.
 
-Starting with eduMFA 3.0.1 you can use the scope variable
+You can use the scope variable
 ``browserLanguage`` in your custom templates.
 
 You can print the browser language like this ``{{ browserLanguage }}``.
@@ -164,7 +164,7 @@ in the ``edumfa.cfg`` config file.
 Page title
 ~~~~~~~~~~
 
-You can configure the page title by setting ``PI_PAGE_TITLE`` in the
+You can configure the page title by setting ``EDUMFA_PAGE_TITLE`` in the
 ``edumfa.cfg`` file.
 
 Menu
@@ -213,9 +213,9 @@ New token classes
 
 You can add new token types to eduMFA by writing your own Python token class.
 A token class in eduMFA is
-inherited from ``eduMFA.lib.tokenclass.TokenClass``. You can either inherit from
+inherited from ``edumfa.lib.tokenclass.TokenClass``. You can either inherit from
 this base class directly or from another token class. E.g. the *TOTP* token class is inherited from
-*HOTP*. Take a look in the directory *eduMFA/lib/tokens/* to get an idea of token classes.
+*HOTP*. Take a look in the directory *edumfa/lib/tokens/* to get an idea of token classes.
 
 A token class can have many different methods which you can find in the base class ``TokenClass``.
 Depending on the token type you are going to implement, you will need to implement several of these.
@@ -230,9 +230,9 @@ You can install your new Python module, wherever you want to like ``myproject.co
 If these tokens need additional enrollment data in the UI, you can specify
 two templates, that are displayed during enrollment and after the token
 is enrolled. These HTML templates need to be located at
-``eduMFA/static/components/token/views/token.enroll.<tokentype>.html``
+``edumfa/static/components/token/views/token.enroll.<tokentype>.html``
 and
-``eduMFA/static/components/token/views/token.enrolled.<tokentype>.html``.
+``edumfa/static/components/token/views/token.enrolled.<tokentype>.html``.
 
 .. Note:: In this example the python module ``myproject.cooltoken`` should
    contain a class ``CoolTokenClass``. The tokentype of this token, should

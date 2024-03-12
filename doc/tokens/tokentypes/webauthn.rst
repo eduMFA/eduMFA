@@ -5,7 +5,7 @@ WebAuthn
 
 .. index:: WebAuth, FIDO2
 
-Starting with version 3.4 eduMFA supports WebAuthn tokens. The
+eduMFA supports WebAuthn tokens. The
 administrator or the user himself can register a WebAuthn device and use this
 WebAuthn token to login to the eduMFA WebUI or to authenticate against
 applications.

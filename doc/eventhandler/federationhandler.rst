@@ -61,6 +61,6 @@ can not think of, yet.
 Code
 ~~~~
 
-.. automodule:: eduMFA.lib.eventhandler.federationhandler
+.. automodule:: edumfa.lib.eventhandler.federationhandler
    :members:
    :undoc-members:
