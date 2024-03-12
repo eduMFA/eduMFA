@@ -135,7 +135,7 @@ or::
 
 Update the Linux distribution version in the changelog file. For example, for Ubuntu 22.04 LTS jammy::
 
-    sed -i 's/{{VERSION}}/jammy/g' debian/changelog
+    sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
 
 Install build dependencies and build the package::
 

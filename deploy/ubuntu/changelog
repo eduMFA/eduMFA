@@ -1,4 +1,4 @@
-edumfa (1.0.0{{VERSION}}) {{VERSION}}; urgency=medium
+edumfa (1.0.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   Fixes:
   * Initial release
