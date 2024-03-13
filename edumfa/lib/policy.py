@@ -763,7 +763,7 @@ class PolicyClass(object):
                                 include_policy = False
                                 break
                         elif section == CONDITION_SECTION.HTTP_ENVIRONMENT:
-                            if not self._policy_matches_request_environ_condition(policy, key, comparator, unset, value, unset, 
+                            if not self._policy_matches_request_environ_condition(policy, key, comparator, value, unset, 
                                                                                  request_headers):
                                 include_policy = False
                                 break
@@ -806,7 +806,7 @@ class PolicyClass(object):
                               " is not available".format(policy["name"], key))
 
     @staticmethod
-    def _policy_matches_request_header_condition(policy, key, comparator, value, request_headers):
+    def _policy_matches_request_header_condition(policy, key, comparator, value, unset, request_headers):
         """
         :param request_headers: Request Header object
         :type request_headers: Can be accessed using .get()
@@ -835,7 +835,7 @@ class PolicyClass(object):
                               " is not available".format(policy["name"], key))
 
     @staticmethod
-    def _policy_matches_token_condition(policy, key, comparator, value, unet, db_token):
+    def _policy_matches_token_condition(policy, key, comparator, value, unset, db_token):
         """
         This extended policy checks for token attributes, which are existing columns in
         the token DB table.
