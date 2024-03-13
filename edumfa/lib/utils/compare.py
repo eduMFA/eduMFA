@@ -208,6 +208,21 @@ COMPARATOR_DESCRIPTIONS = {
 }
 
 
+#: This class enumerates all available options on how to react if a value is not set.
+class UNSET(object):
+    EXCEPTION = "exception"
+    FALSE = "false"
+    TRUE = "true"
+
+
+#: This dictionary connects options to their human-readable (and translated) descriptions.
+UNSET_DESCRIPTIONS = {
+    UNSET.EXCEPTION: _("return true if the value is not set"),
+    UNSET.FALSE: _("return false if the value is not set"),
+    UNSET.TRUE: _("throw an exception if the value is not set"),
+}
+
+
 def compare_values(left, comparator, right):
     """
     Compare two values according to ``comparator`` and return either True or False.
