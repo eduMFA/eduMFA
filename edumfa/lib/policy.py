@@ -316,6 +316,7 @@ class ACTION(object):
     SERVICEID_DELETE = "serviceid_delete"
     PREFERREDCLIENTMODE = "preferred_client_mode"
     REQUIRE_DESCRIPTION = "require_description"
+    TOKEN_ASK_DELETE = "token_ask_delete"
 
 
 class TYPE(object):
@@ -2547,6 +2548,11 @@ def get_static_policy_definitions(scope=None):
                 'desc': _("This action adds a QR code in the enrollment page for "
                           "HOTP, TOTP and Push tokens, that lead to this given URL."),
                 'group': 'QR Codes'
+            },
+            ACTION.TOKEN_ASK_DELETE: {
+                'type': 'str',
+                'desc': _('This is a whitespace separated list of tokentypes, '
+                          'for which a the deletion has to be confirmed. '),
             }
         }
 

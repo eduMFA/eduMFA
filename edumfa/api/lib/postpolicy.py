@@ -548,6 +548,8 @@ def get_webui_settings(request, response):
                                              user=loginname, realm=realm).any())
         token_rollover = Match.generic(g, scope=SCOPE.WEBUI, action=ACTION.TOKENROLLOVER,
                                        user=loginname, realm=realm).action_values(unique=False)
+        token_ask_delete = Match.generic(g, scope=SCOPE.WEBUI, action=ACTION.TOKEN_ASK_DELETE,
+                                       user=loginname, realm=realm).action_values(unique=False)
         token_wizard = False
         dialog_no_token = False
         if role == ROLE.USER:
@@ -659,6 +661,7 @@ def get_webui_settings(request, response):
         content["result"]["value"]["qr_image_custom"] = qr_image_custom
         content["result"]["value"]["logout_redirect_url"] = logout_redirect_url
         content["result"]["value"]["require_description"] = require_description
+        content["result"]["value"]["token_ask_delete"] = token_ask_delete
         response.set_data(json.dumps(content))
     return response
 
