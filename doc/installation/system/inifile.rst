@@ -34,8 +34,8 @@ The file should contain the following contents::
    # This is used to encrypt the token data and token passwords
    EDUMFA_ENCFILE = '/etc/edumfa/enckey'
    # This is used to sign the audit log
-   EDUMFA_AUDIT_KEY_PRIVATE = '/home/cornelius/src/eduMFA/private.pem'
-   EDUMFA_AUDIT_KEY_PUBLIC = '/home/cornelius/src/eduMFA/public.pem'
+   EDUMFA_AUDIT_KEY_PRIVATE = '/etc/edumfa/private.pem'
+   EDUMFA_AUDIT_KEY_PUBLIC = '/etc/edumfa/public.pem'
    # EDUMFA_AUDIT_MODULE = <python audit module>
    # EDUMFA_AUDIT_SQL_URI = <special audit log DB uri>
    # Options passed to the Audit DB engine (supersedes SQLALCHEMY_ENGINE_OPTIONS)

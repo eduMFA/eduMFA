@@ -7,10 +7,10 @@ The WSGI Script
 
 Apache2 and Nginx are using a WSGI script to start the application.
 
-This script is usually located at ``/etc/edumfa/eduMFAapp.py`` or
-``/etc/edumfa/eduMFAapp.wsgi`` and has the following contents:
+This script is usually located at ``/etc/edumfa/edumfaapp.py`` or
+``/etc/edumfa/edumfaapp.wsgi`` and has the following contents:
 
-.. literalinclude:: ../../../deploy/apache/eduMFAapp.wsgi
+.. literalinclude:: ../../../deploy/apache/edumfaapp.wsgi
     :language: python
 
 In the ``create_app``-call you can also select another config file.
@@ -23,9 +23,9 @@ least::
 
   <VirtualHost _default_:443>
       ...
-      WSGIScriptAlias /      /etc/edumfa/eduMFAapp.wsgi
-      WSGIDaemonProcess eduMFA processes=1 threads=15 display-name=%{GROUP} user=eduMFA
-      WSGIProcessGroup eduMFA
+      WSGIScriptAlias /      /etc/edumfa/edumfaapp.wsgi
+      WSGIDaemonProcess edumfa processes=1 threads=15 display-name=%{GROUP} user=edumfa
+      WSGIProcessGroup edumfa
       WSGIApplicationGroup %{GLOBAL}
       WSGIPassAuthorization On
       ...
