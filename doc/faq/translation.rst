@@ -16,7 +16,7 @@ This is the most important part you can do: Add words and sentences in your lang
 Translations into German are provided by NetKnights while all other languages
 are community translated with a fallback to English.
 
-With the parameter ``PI_TRANSLATION_WARNING`` in :ref:`cfgfile` a prefix can be
+With the parameter ``EDUMFA_TRANSLATION_WARNING`` in :ref:`cfgfile` a prefix can be
 set to be displayed in front of every string, that is not translated to the
 language your browser is using.
 

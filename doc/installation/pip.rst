@@ -42,13 +42,13 @@ versions of dependencies are not always tested and might cause problems.
 If you want to achieve a deterministic installation, you can now install the pinned and tested
 versions of the dependencies::
 
-  pip install -r lib/eduMFA/requirements.txt
+  pip install -r lib/edumfa/requirements.txt
 
 It would even be safer to install the pinned dependencies *before* installing eduMFA.
-So if you e.g. know that you are going to install version 3.6 you can run::
+So if you e.g. know that you are going to install version 1.2.0 you can run::
 
-    pip install -r https://raw.githubusercontent.com/eduMFA/eduMFA/v3.6/requirements.txt
-    pip install eduMFA==3.6
+    pip install -r https://raw.githubusercontent.com/eduMFA/eduMFA/v1.2.0/requirements.txt
+    pip install edumfa==1.2.0
 
 .. _pip_configuration:
 
@@ -100,7 +100,7 @@ To create the database tables execute::
 Stamping the database to the current database schema version is important for
 the update process later::
 
-    edumfa-manage db stamp head -d /opt/eduMFA/lib/eduMFA/migrations/
+    edumfa-manage db stamp head -d /opt/edumfa/lib/edumfa/migrations/
 
 After creating a local administrative user with::
 

@@ -223,6 +223,6 @@ Code
 ~~~~
 
 
-.. automodule:: eduMFA.lib.eventhandler.tokenhandler
+.. automodule:: edumfa.lib.eventhandler.tokenhandler
    :members:
    :undoc-members:

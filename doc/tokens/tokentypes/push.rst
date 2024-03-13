@@ -137,8 +137,8 @@ of the eduMFA server.
 The eduMFA server verifies the response and marks this authentication
 request as successfully answered.
 
-In some cases the push notification does not reach the smartphone. Since
-version 3.4 the smartphone can also poll for active challenges.
+In some cases the push notification does not reach the smartphone.
+The smartphone can also poll for active challenges.
 
 Login to application
 ....................

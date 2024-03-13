@@ -259,8 +259,6 @@ password_reset
 
 type: bool
 
-Introduced in version 2.10.
-
 If the user is located in an editable user store, this policy can define, if
 the user is allowed to perform a password reset. During the password reset an
 email with a link to reset the password is sent to the user.
@@ -295,8 +293,6 @@ Usually an SMS token sends the SMS via the SMS gateway that is defined system
 wide in the token settings.
 This policy takes a blank separated list of configured SMS gateways.
 It allows the user to define an individual SMS gateway during token enrollment.
-
-New in version 3.0.
 
 .. _hotp-hashlib:
 .. _totp-hashlib:
@@ -355,8 +351,6 @@ The user does not see the value and can not change the value.
 
 For more details of this token type see :ref:`indexedsecret_token`.
 
-New in version 3.3.
-
 .. _user_trusted_attestation_CA:
 
 certificate_trusted_Attestation_CA_path
@@ -373,9 +367,6 @@ at the first position and the consecutive intermediate certificates.
 An additional enrollment policy :ref:`require_attestation`, if an attestation certificate
 is required.
 
-New in version 3.5.
-
-
 .. _user_set_custom_user_attributes:
 
 set_custom_user_attributes
@@ -390,8 +381,6 @@ It uses the same setting as the admin policy :ref:`admin_set_custom_user_attribu
    can overwrite existing attributes from the user store. If policies, depending on user attributes
    are defined, then the user would be able to change the matching of the policies.
    Use with CAUTION!
-
-New in version 3.6
 
 .. _user_delete_custom_user_attributes:
 
@@ -408,5 +397,3 @@ It uses the same setting as the admin policy :ref:`admin_delete_custom_user_attr
    If policies, depending on user attributes
    are defined, then the user would be able to change the matching of the policies.
    Use with CAUTION!
-
-New in version 3.6

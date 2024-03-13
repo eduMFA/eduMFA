@@ -115,11 +115,11 @@ class Audit(AuditBase):
     * ``EDUMFA_AUDIT_POOL_RECYCLE``
     * ``EDUMFA_AUDIT_SQL_TRUNCATE``
     * ``EDUMFA_AUDIT_NO_SIGN``
-    * ``PI_CHECK_OLD_SIGNATURES``
+    * ``EDUMFA_CHECK_OLD_SIGNATURES``
 
     You can use ``EDUMFA_AUDIT_NO_SIGN = True`` to avoid signing of the audit log.
 
-    If ``PI_CHECK_OLD_SIGNATURES = True`` old style signatures (text-book RSA) will
+    If ``EDUMFA_CHECK_OLD_SIGNATURES = True`` old style signatures (text-book RSA) will
     be checked as well, otherwise they will be marked as ``FAIL``.
     """
 

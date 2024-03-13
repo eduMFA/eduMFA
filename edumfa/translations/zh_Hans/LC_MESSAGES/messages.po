@@ -1848,7 +1848,7 @@ msgstr "用于修改电话号码以使其与提供程序兼容的正则表达式
 msgid ""
 "The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to "
 "call. Expects phone as the parameter and the message from stdin."
-msgstr "脚本目录PI_SCRIPT_SMSPROVIDER_DIRECTORY中要调用的脚本。期望将phone作为参数，并接收来自stdin的消息。"
+msgstr "脚本目录EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY中要调用的脚本。期望将phone作为参数，并接收来自stdin的消息。"
 
 #: lib/smsprovider/SmppSMSProvider.py:128
 msgid "SMSC Host IP"

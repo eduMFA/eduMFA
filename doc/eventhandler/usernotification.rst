@@ -118,9 +118,9 @@ savefile
 The *savefile* action saves a file to a spool directory.
 Each time the event handler is triggered a new file is saved.
 
-In the ``edumfa.cfg`` file you can use the setting ``PI_NOTIFICATION_HANDLER_SPOOLDIRECTORY``
+In the ``edumfa.cfg`` file you can use the setting ``EDUMFA_NOTIFICATION_HANDLER_SPOOLDIRECTORY``
 to configure a spool directory, where the notification files will be written.
-The default file location is ``/var/lib/eduMFA/notifications/``.
+The default file location is ``/var/lib/edumfa/notifications/``.
 The directory needs to be writable for the user *eduMFA*.
 
 **filename**
@@ -178,7 +178,7 @@ Code
 ~~~~
 
 
-.. automodule:: eduMFA.lib.eventhandler.usernotification
+.. automodule:: edumfa.lib.eventhandler.usernotification
    :members:
    :undoc-members:
 

@@ -14,7 +14,7 @@ API :ref:`rest_token`, :ref:`rest_system`, :ref:`rest_realm` and
 Admin policies are implemented as decorators in :ref:`code_policy` and
 :ref:`policy_decorators`.
 
-Starting with eduMFA 2.4 admin policies can also store a field "admin
+Admin policies can also store a field "admin
 realm". This is used, if you define realms to be superuser realms. See
 :ref:`cfgfile` for information how to do this. Read :ref:`faq_admins` for
 more information on the admin realms.
@@ -788,8 +788,6 @@ user without having specified the PIN of the SMS token.
 The usual setup that one administrative account has only this single policy
 and is only used for triggering challenges.
 
-New in version 2.17.
-
 .. _admin_policy_2step:
 .. _hotp-2step:
 .. _totp-2step:
@@ -822,8 +820,6 @@ Force the admin to enroll HOTP/TOTP Tokens with the specified hashlib.
 The corresponding input selector will be disabled in the web UI.
 Possible values are *sha1*, *sha256* and *sha512*, default is *sha1*.
 
-New in 3.2
-
 .. _hotp-otplen:
 .. _totp-otplen:
 
@@ -836,8 +832,6 @@ Force the admin to enroll HOTP/TOTP Tokens with the specified otp length.
 The corresponding input selector will be disabled in the web UI.
 Possible values are *6* or *8*, default is *6*.
 
-New in 3.2
-
 totp_timestep
 ~~~~~~~~~~~~~
 
@@ -846,8 +840,6 @@ type: int
 Enforce the timestep of the time-based OTP token.
 A corresponding input selection will be disabled/hidden in the web UI.
 Possible values are *30* or *60*, default is *30*.
-
-New in 3.2
 
 system_documentation
 ~~~~~~~~~~~~~~~~~~~~
@@ -868,8 +860,6 @@ wide in the token settings.
 This policy takes a blank-separated list of configured SMS gateways.
 It allows the administrator to define an individual SMS gateway during token enrollment.
 
-New in version 3.0.
-
 indexedsecret_force_attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -880,8 +870,6 @@ user attribute is set as the secret.
 The admin does not know the secret and can not change the secret.
 
 For more details of this token type see :ref:`indexedsecret_token`.
-
-New in version 3.3.
 
 .. _admin_trusted_attestation_CA:
 
@@ -899,16 +887,12 @@ at the first position and the consecutive intermediate certificates.
 An additional enrollment policy :ref:`require_attestation`, if an attestation certificate
 is required.
 
-New in version 3.5.
-
 .. _admin_set_custom_user_attributes:
 
 set_custom_user_attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 type: string
-
-New in version 3.6
 
 This policy defines which additional attributes an administrator is allowed to set.
 It can also define, to which value the admin is allowed to set such attribute.
@@ -954,8 +938,6 @@ the attributes "department" of the corresponding users.
 
 .. note:: If this policy is not set, the admin is not allowed to delete any
    custom user attributes.
-
-New in version 3.6
 
 .. _admin_machinelist:
 

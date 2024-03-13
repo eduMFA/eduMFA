@@ -17,26 +17,26 @@ GPG Encryption
 
 .. index:: GPG encryption, Encrypted Seed File
 
-Starting with eduMFA 2.14 you can import GPG encrypted seed files.
+You can import GPG encrypted seed files.
 All files mentioned below can be encrypted this way.
 
 eduMFA needs its own GPG key. You may create one like this::
 
-    mkdir /etc/eduMFA/gpg
-    GNUPGHOME=/etc/eduMFA/gpg gpg --gen-key
+    mkdir /etc/edumfa/gpg
+    GNUPGHOME=/etc/edumfa/gpg gpg --gen-key
 
-Then make sure, that the directory /etc/eduMFA/gpg is *chown 700* for
+Then make sure, that the directory /etc/edumfa/gpg is *chown 700* for
 the user *eduMFA*.
 
 Now you can export the public key and hand it to your token vendor::
 
-   GNUPGHOME=/etc/eduMFA/gpg gpg -a --export <keyid>
+   GNUPGHOME=/etc/edumfa/gpg gpg -a --export <keyid>
 
 Now the token vendor can send the seed file GPG encrypted. You do not need to
 decrypt the file and store the decrypted file on a network folder. Just
 import the GPG encrypted file to eduMFA!
 
-.. note:: Using the key *PI_GNUPG_HOME* in edumfa.cfg you can change the default
+.. note:: Using the key *EDUMFA_GNUPG_HOME* in edumfa.cfg you can change the default
    above mentioned *GNUPGHOME* directory.
 
 .. note:: eduMFA imports an ASCII armored file. The file needs to be

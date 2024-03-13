@@ -3,7 +3,7 @@
 Day Password Token
 -------------------
 
-Starting with version 3.9 eduMFA supports a password token with arbitrary time periods.
+eduMFA supports a password token with arbitrary time periods.
 
 The day password token is a modification of the :ref:`totp_token`. The difference between the
 :ref:`totp_token` and the day password token is, that the OTP value of the day password token can be used more

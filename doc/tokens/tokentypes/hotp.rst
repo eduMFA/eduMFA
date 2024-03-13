@@ -52,9 +52,8 @@ Experiences
 
 The above mentioned hardware tokens are known to play well with eduMFA.
 In theory all OATH/HOTP tokens should work well with eduMFA. However,
-there are good experiences with Smartdisplayer OTP cards [#smartdisplayer]_ and
-Feitian C200 [#feitian]_
-tokens.
+there are good experiences with Smartdisplayer OTP cards and
+Feitian C200 tokens.
 
 Software tokens
 ~~~~~~~~~~~~~~~
@@ -100,6 +99,3 @@ algoriothm**.
 After enrolling the token, the QR-Code, containing the secret seed, is
 displayed, so that you can scan this with your smartphone and import it to
 your app.
-
-.. [#smartdisplayer] https://netknights.it/en/produkte/smartdisplayer/
-.. [#feitian] https://netknights.it/en/produkte/oath-hotptotp/

@@ -60,7 +60,7 @@ class NullEngineRegistry(BaseEngineRegistry):
     Consequently, engines are not shared among threads and
     no pooling is implemented.
 
-    It can be activated by setting ``PI_ENGINE_REGISTRY_CLASS`` to "null".
+    It can be activated by setting ``EDUMFA_ENGINE_REGISTRY_CLASS`` to "null".
     """
     def get_engine(self, key, creator):
         return creator()
@@ -70,7 +70,7 @@ class SharedEngineRegistry(BaseEngineRegistry):
     """
     A registry which holds a dictionary mapping a key to an SQLAlchemy engine.
 
-    It can be activated by setting ``PI_ENGINE_REGISTRY_CLASS`` to "shared".
+    It can be activated by setting ``EDUMFA_ENGINE_REGISTRY_CLASS`` to "shared".
     """
     def __init__(self):
         BaseEngineRegistry.__init__(self)
@@ -99,7 +99,7 @@ def get_registry():
     """
     Return the ``EngineRegistry`` object associated with the current application.
     If there is no such object yet, create one and write it to the app-local store.
-    This respects the ``PI_ENGINE_REGISTRY_CLASS`` config option.
+    This respects the ``EDUMFA_ENGINE_REGISTRY_CLASS`` config option.
     :return: an ``EngineRegistry`` object
     """
     # This function will be called concurrently by multiple threads.

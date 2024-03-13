@@ -5,8 +5,6 @@
 Event Handler
 =============
 
-Added in version 2.12.
-
 What is the difference between :ref:`policies` and event handlers?
 
 Policies are used to define the behaviour of the system. With policies you
@@ -49,14 +47,11 @@ Pre and Post Handling
 
 .. index:: Pre Handling, Post Handling
 
-Added in Version 2.23.
-
 With most event handlers you can decide if you want the action to be taken before the actual event or
 after the actual event. I.e. if all conditions would trigger certain actions the action is either triggered
 before (*pre*) the API request is processed or after (*post*) the request is processed.
 
-Up to version 2.22 all actions where triggered after the request.
-In this case additional information from the response is available. E.g. if a user successfully authenticated the
+If an action is triggered after the request additional information from the response is available. E.g. if a user successfully authenticated the
 event will know the serial number of the token, which the user used to authenticate.
 
 If the action is triggered before the API request is processed, the event can not know if the authentication request
@@ -100,8 +95,6 @@ Conditions
 ----------
 
 .. index:: Event Handler, conditions
-
-Added in version 2.14
 
 An event handler module may also contain conditions. Only if all conditions
 are fulfilled, the action is triggered. Conditions are defined in the class

@@ -40,39 +40,13 @@ Local CA Connector
 
 The local CA connector calls a local openSSL configuration.
 
-Starting with eduMFA version 2.12 an example *openssl.cnf* is provided in
-*/etc/eduMFA/CA/openssl.cnf*.
-
-.. note:: This configuration and also this
-   description is ment to be as an example. When setting up a productive CA, you
+.. note:: This description is meant to be as an example. When setting up a productive CA, you
    should ask a PKI consultant for assistance.
 
-Manual Setup
-............
+Setup
+.....
 
-1. Modify the parameters in the file */etc/eduMFA/CA/openssl.cnf* according
-   to your needs.
-
-2. Create your CA certificate::
-
-       openssl req -days 1500 -new -x509 -keyout /etc/eduMFA/CA/ca.key \
-                   -out /etc/eduMFA/CA/ca.crt \
-                   -config /etc/eduMFA/CA/openssl.cnf
-
-       chmod 0600 /etc/eduMFA/CA/ca.key
-       touch /etc/eduMFA/CA/index.txt
-       echo 01 > /etc/eduMFA/CA/serial
-       chown -R eduMFA /etc/eduMFA/CA
-
-3. Now set up a local CA connector within eduMFA with the directory
-   */etc/eduMFA/CA* and the files accordingly.
-
-Easy Setup
-..........
-
-Starting with eduMFA version 2.18 it gets easier to setup local CAs.
-
-You can use the :ref:`pimanage` tool to setup a new CA like this::
+You can use the :ref:`edumfa-manage` tool to setup a new CA like this::
 
    edumfa-manage ca create myCA
 
@@ -93,12 +67,10 @@ revoked and a CRL is created.
    validity period of 30 days. I.e. you need to create the CRL on a regular
    basis. You can use openssl to do so or the edumfa-manage command.
 
-Starting with version 2.18 the edumfa-manage command has an additional
-sub-command ``ca``::
 
     edumfa-manage ca list
 
-which lists all configured *CA connectors*. You can use the ``-v`` switch to get more
+lists all configured *CA connectors*. You can use the ``-v`` switch to get more
 information.
 
 You can create a new CRL with the command::
@@ -109,7 +81,7 @@ This command will check the *overlap period* and only create a new CRL if it
 is necessary. If you want to force the creation of the CRL, you can use the
 switch *-f*.
 
-For more information on edumfa-manage see :ref:`pimanage`.
+For more information on edumfa-manage see :ref:`edumfa-manage`.
 
 Templates
 .........
@@ -229,7 +201,7 @@ Basic setup from the command line
 
 Of course the MS CA Connector can be configured in the eduMFA Web UI.
 For quick setup, you can also configure a connector at the command line using
-:ref:`pimanage` like this::
+:ref:`edumfa-manage` like this::
 
     edumfa-manage ca create -t microsoft <name-of-connector>
 

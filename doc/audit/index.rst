@@ -14,7 +14,7 @@ WebUI.
 
 eduMFA comes with a default SQL audit module (see :ref:`code_audit`).
 
-Starting with version 3.2 eduMFA also provides a :ref:`logger_audit` and
+eduMFA also provides a :ref:`logger_audit` and
 a :ref:`container_audit` which can be used to send eduMFA audit log messages
 to services like splunk or logstash.
 
@@ -33,8 +33,7 @@ The ``sqlaudit`` module writes audit entries to an SQL database.
 For performance reasons the audit module does not remove old audit entries
 during the logging process.
 
-But you can set up a cron job to clean up old audit entries. Since version
-2.19 audit entries can be either cleaned up based on the number of entries or
+But you can set up a cron job to clean up old audit entries. Audit entries can be either cleaned up based on the number of entries or
 based on on the age. Cleaning based on the age takes precedence.
 
 Cleaning based on the number of entries:

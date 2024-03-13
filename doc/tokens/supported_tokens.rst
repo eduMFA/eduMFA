@@ -56,7 +56,7 @@ Smartphone Apps
 
 .. index:: Software Tokens
 
-.. _eduMFA_authenticator:
+.. _privacyidea_authenticator:
 
 **privacyIDEA Authenticator**. Our own privacyIDEA Authenticator is based
 on the concept of the Google Authenticator and works with the usual QR Code key URI

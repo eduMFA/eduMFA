@@ -37,7 +37,7 @@ When you have added all configuration data, most UIs of the UserIdResolvers have
 button "Test resolver", so that you can test your configuration before saving
 it.
 
-Starting with eduMFA 2.4 resolvers can be editable, i.e. you can edit
+Resolvers can be editable, i.e. you can edit
 the users in the user store. Read more about this at :ref:`manage_users`.
 
 .. note:: Using the authentication policy ``otppin=userstore`` users can
@@ -57,12 +57,12 @@ Flatfile resolvers read files like ``/etc/passwd``.
 .. note:: The file ``/etc/passwd`` does not contain the unix password.
    Thus, if you create a flatfile resolver from this file the functionality
    with ``otppin=userstore`` is not available. You can create a flatfile with
-   passwords using the tool ``eduMFA-create-pwidresolver-user`` which is
-   usually found in ``/opt/eduMFA/bin/``.
+   passwords using the tool ``edumfa-create-pwidresolver-user`` which is
+   usually found in ``/opt/edumfa/bin/``.
 
 Create a flat file like this::
 
-   eduMFA-create-pwidresolver-user -u user2 -i 1002 >> /your/flat/file
+   edumfa-create-pwidresolver-user -u user2 -i 1002 >> /your/flat/file
 
 
 .. _ldap_resolver:
@@ -101,7 +101,7 @@ This will create LDAP requests to
 TLS Version
 """""""""""
 
-When using TLS, you may specify the TLS version to use. Starting from version 3.6, eduMFA offers
+When using TLS, you may specify the TLS version to use. eduMFA offers
 TLS v1.3 by default.
 
 
@@ -112,7 +112,7 @@ When using TLS with LDAP, you can tell eduMFA to verify the certificate. The acc
 checkbox is visible in the WebUI if the target URL starts with *ldaps* or when using STARTTLS.
 
 You can specify a file with the trusted CA certificate, that signed the
-TLS certificate. The default CA filename is */etc/eduMFA/ldap-ca.crt*
+TLS certificate. The default CA filename is */etc/edumfa/ldap-ca.crt*
 and can contain a list of base64 encoded CA certificates.
 eduMFA will use the CA file if specified. If you leave the field empty
 it will also try the system certificate store (*/etc/ssl/certs/ca-certificates.crt*
@@ -151,7 +151,7 @@ strategy to select a LDAP server from the pool. If the current server is not rea
 from the pool and will be re-inserted after the number of seconds specified in the *skip timeout*.
 If the pool is empty after a round, a timeout is added before the next round is started.
 The ldap3 module defaults system wide to 10 seconds before starting the next round.
-This timeout can be changed by setting ``PI_LDAP_POOLING_LOOP_TIMEOUT`` to an
+This timeout can be changed by setting ``EDUMFA_LDAP_POOLING_LOOP_TIMEOUT`` to an
 integer in seconds in the :ref:`cfgfile`.
 If no reachable server could be found after the number of rounds specified in the *retry rounds*,
 the request fails.
@@ -165,7 +165,7 @@ which a LDAP server from the pool is down for extended periods of time.
 Modifying users
 """""""""""""""
 
-Starting with eduMFA 2.12, you can define the LDAP resolver as editable.
+You can define the LDAP resolver as editable.
 I.e. you can create and modify users from within eduMFA.
 
 There are two additional configuration parameters for this case.
@@ -272,7 +272,7 @@ in the attribute mapping for Microsoft Active Directories. You can then call
 the user listing API with the parameter ``accountExpires=1`` and you will only
 see expired accounts.
 
-This functionality is used with the script *eduMFA-expired-users*.
+This functionality is used with the script *edumfa-expired-users*.
 
 .. _sql_resolver:
 
@@ -342,7 +342,7 @@ The ``poolSize`` and ``poolTimeout`` determine the pooling behaviour. The
 pool. The ``poolTimeout`` (default 10) specifies how long the application
 waits to get a connection from the pool.
 
-.. note:: The pooling parameters only have an effect if the ``PI_ENGINE_REGISTRY_CLASS``
+.. note:: The pooling parameters only have an effect if the ``EDUMFA_ENGINE_REGISTRY_CLASS``
    config option is set to ``"shared"`` (see :ref:`engine-registry`).
    If you then have several SQL resolvers with the same connection and pooling settings,
    they will use the same shared connection pool.
@@ -392,7 +392,7 @@ HTTP resolver
 
 .. index:: HTTP resolver, resolver, api, http
 
-Starting with version 3.4 the HTTP resolver is available to retrieve user information from any kind
+The HTTP resolver can be used to retrieve user information from any kind
 of web service API. eduMFA issues a request to the target service and expects a JSON object in return.
 The configuration of the HTTP resolver sets the details of the request in the ``Request Mapping`` as well as the
 mapping of the obtained information as a ``Response Mapping``.
@@ -452,7 +452,7 @@ eduMFA does not implement local user management by design and relies on UserIdRe
 connect to external user stores instead. Consequently, eduMFA queries user stores quite frequently,
 e.g. to resolve a login name to a user ID while processing an authentication request, which
 may introduce a significant slowdown.
-In order to optimize the response time of authentication requests, eduMFA 2.19 introduces the *user cache*
+In order to optimize the response time of authentication requests, eduMFA provides a *user cache*
 which is located in the local database. It can be enabled in the system configuration (see :ref:`user_cache_timeout`).
 
 A user cache entry stores the association of a login name in a specific UserIdResolver with a specific
@@ -466,7 +466,7 @@ tokens, the user will still be able to authenticate during the expiration timeou
 user ID will not be noticed by eduMFA until the corresponding cache entry expires.
 
 Expired cache entries are *not* deleted from the user cache table automatically. Instead, the tool
-``eduMFA-usercache-cleanup`` should be used to delete expired cache entries from the database,
+``edumfa-usercache-cleanup`` should be used to delete expired cache entries from the database,
 e.g. in a cronjob.
 
 However, cache entries are removed at some defined events:

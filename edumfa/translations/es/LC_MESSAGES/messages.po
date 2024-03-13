@@ -2162,7 +2162,7 @@ msgid ""
 "call. Expects phone as the parameter and the message from stdin."
 msgstr ""
 "Script que se ejecutará en el directorio de scripts: "
-"PI_SCRIPT_SMSPROVIDER_DIRECTORY. Espera \"teléfono\" como parámetro y el "
+"EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY. Espera \"teléfono\" como parámetro y el "
 "mensaje desde \"stdin\"."
 
 #: lib/smsprovider/SmppSMSProvider.py:128
