@@ -9,7 +9,7 @@ Package: edumfa
 Architecture: amd64
 Replaces: python-privacyidea
 Breaks: python-privacyidea
-Conflicts: edumfa-venv, edumfa-appliance (<= 2.1)
+Conflicts: privacyidea-*
 Pre-Depends: dpkg (>= 1.16.1), python3-minimal, ${misc:Pre-Depends}
 Depends: ${python:Depends}, ${misc:Depends}, python3-virtualenv
 X-Python-Version: >= 3.5
