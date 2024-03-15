@@ -17,21 +17,21 @@ jobs:
       - name: Build core package
         run: |
           mv deploy/ubuntu debian
-          sed -i 's/{{VERSION}}/jammy/g' debian/changelog
+          sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b --source-option=-Sa
           rm -r debian
       - name: Build server packages
         run: |
           mv deploy/ubuntu-server debian
-          sed -i 's/{{VERSION}}/jammy/g' debian/changelog
+          sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Build radius packages
         run: |
           mv deploy/ubuntu-radius debian
-          sed -i 's/{{VERSION}}/jammy/g' debian/changelog
+          sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
@@ -58,21 +58,21 @@ jobs:
       - name: Build core package
         run: |
           mv deploy/ubuntu debian
-          sed -i 's/{{VERSION}}/focal/g' debian/changelog
+          sed -i 's/{{CODENAME}}/focal/g' debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Build server packages
         run: |
           mv deploy/ubuntu-server debian
-          sed -i 's/{{VERSION}}/focal/g' debian/changelog
+          sed -i 's/{{CODENAME}}/focal/g' debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Build radius packages
         run: |
           mv deploy/ubuntu-radius debian
-          sed -i 's/{{VERSION}}/focal/g' debian/changelog
+          sed -i 's/{{CODENAME}}/focal/g' debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
