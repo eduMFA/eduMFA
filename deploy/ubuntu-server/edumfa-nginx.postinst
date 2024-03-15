@@ -148,7 +148,7 @@ case "$1" in
         if [ -z "$2" ]; then
 		# We are in the install step
 		# So we stamp the DB
-		/opt/privacyidea/bin/edumfa-manage db stamp -d $MIGRATIONSDIR head
+		/opt/edumfa/bin/edumfa-manage db stamp -d $MIGRATIONSDIR head
 	else
 		# We are in an update step
 		update_db

@@ -140,22 +140,22 @@ create_gpg() {
 	mkdir -p /etc/edumfa/gpg
 	rngd -r /dev/urandom
 	/opt/edumfa/bin/edumfa-manage create_pgp_keys || true
-	chown -R $USERNAME /etc/privacyidea/gpg
+	chown -R $USERNAME /etc/edumfa/gpg
 	killall -9 rngd
 }
 
 
 set_path() {
 	# Allow edumfa-manage to be called from everywhere
-	ln -sf /opt/privacyidea/bin/edumfa-manage /usr/bin/
-	ln -sf /opt/privacyidea/bin/privacyidea-diag /usr/bin/
-	ln -sf /opt/privacyidea/bin/privacyidea-token-janitor /usr/bin/
+	ln -sf /opt/edumfa/bin/edumfa-manage /usr/bin/
+	ln -sf /opt/edumfa/bin/edumfa-diag /usr/bin/
+	ln -sf /opt/edumfa/bin/edumfa-token-janitor /usr/bin/
 }
 
 case "$1" in
 
   configure)
-	export PATH=$PATH:/opt/privacyidea/bin
+	export PATH=$PATH:/opt/edumfa/bin
 	create_user
 	adapt_edumfa_cfg
 	create_database	
@@ -168,7 +168,7 @@ case "$1" in
 		# We are in the install step
 		# So we stamp the DB
 		touch /tmp/edumfa-install
-		/opt/privacyidea/bin/edumfa-manage db stamp -d /opt/privacyidea/lib/privacyidea/migrations/ head
+		/opt/edumfa/bin/edumfa-manage db stamp -d /opt/edumfa/lib/edumfa/migrations/ head
 	else
 		# We are in an update step
 		touch /tmp/edumfa-upgrade
