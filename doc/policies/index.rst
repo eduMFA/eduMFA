@@ -32,7 +32,7 @@ The logic of the policies in the scopes is additive.
 
    *Policy Definition*
 
-Starting with eduMFA 2.5 you can use policy templates to ease the setup.
+You can use policy templates to ease the setup.
 
 .. toctree::
    :maxdepth: 1
@@ -86,8 +86,8 @@ Each policy can contain the following attributes:
 
   If this field is left blank, this policy is valid for all resolvers.
 
-  .. note:: Starting with version 2.17 you can use the parameter
-     ``check_all_resolvers``. This is *Check all possible resolvers*
+  .. note:: You can use the parameter ``check_all_resolvers``.
+     This is *Check all possible resolvers*
      *of a user to match the resolver in this policy* in the Web UI.
 
      Assume a user *user@realm1* is contained in *resolver1* and *resolver2*

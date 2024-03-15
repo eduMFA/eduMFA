@@ -17,19 +17,19 @@ You first need to install a package for creating a python `virtual environment
 
 Now you can setup the virtual environment for eduMFA like this::
 
-  virtualenv /opt/eduMFA
+  virtualenv /opt/edumfa
 
-  cd /opt/eduMFA
+  cd /opt/edumfa
   source bin/activate
 
 .. note::
     Some distributions still ship Python 2.7 as the system python. If you want
     to use Python 3 you can create the virtual environment like this:
-    `virtualenv -p /usr/bin/python3 /opt/eduMFA`
+    `virtualenv -p /usr/bin/python3 /opt/edumfa`
 
 Now you are within the python virtual environment and you can run::
 
-  pip install eduMFA
+  pip install edumfa
 
 in order to install the latest eduMFA version from
 `PyPI <https://pypi.org/project/eduMFA>`_.
@@ -69,9 +69,9 @@ In order for eduMFA to use the database, a database user with the
 appropriate privileges is needed.
 The following SQL commands will create the database as well as a user in `MySQL`::
 
-    CREATE DATABASE pi;
-    CREATE USER "pi"@"localhost" IDENTIFIED BY "<dbsecret>";
-    GRANT ALL PRIVILEGES ON pi.* TO "pi"@"localhost";
+    CREATE DATABASE edumfa;
+    CREATE USER "edumfa"@"localhost" IDENTIFIED BY "<dbsecret>";
+    GRANT ALL PRIVILEGES ON edumfa.* TO "edumfa"@"localhost";
 
 You must then add the database name, user and password to your `edumfa.cfg`. See
 :ref:`cfgfile` for more information on the configuration.
@@ -123,12 +123,9 @@ is needed.
 
 Setup and configuration of a webserver can be a complex procedure depending on
 several parameter (host OS, SSL, internal network structure, ...).
-Some example configuration can be found in the NetKnights GitHub
-repositories [#nkgh]_. More on the WSGI setup for eduMFA can be found in
-:ref:`wsgiscript`.
+More on the WSGI setup for eduMFA can be found in :ref:`wsgiscript`.
 
 
 .. rubric:: Footnotes
 
 .. [#sqlaDialects] https://docs.sqlalchemy.org/en/14/dialects/index.html
-.. [#nkgh] https://github.com/NetKnights-GmbH/ubuntu/tree/master/deploy

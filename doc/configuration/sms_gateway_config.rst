@@ -18,10 +18,8 @@ There are different providers (gateways) to deliver SMS.
 Firebase Provider
 ~~~~~~~~~~~~~~~~~
 
-The Firebase provider was added in eduMFA 3.0. It sends notifications
+The Firebase provider sends notifications
 via the Google Firebase service and this is used for the :ref:`push_token`.
-For an exemplary configuration, you may have a look on the articles on the
-eduMFA community website `tagged with push token <https://www.eduMFA.org/tag/push-token/>`_.
 
 **JSON config file**
 
@@ -31,7 +29,7 @@ eduMFA community website `tagged with push token <https://www.eduMFA.org/tag/pus
 
 
 You can get the necessary *JSON config file*, from your Firebase console.
-The default PUSH authenticator App (privacyIDEA Authenticator) which you can
+The unsupported PUSH authenticator App (privacyIDEA Authenticator) which you can
 find in Google Play Store and Apple App Store uses a Firebase project, that is
 managed by the company NetKnights.
 You need to get an SLA to receive a JSON config file for accessing the project.

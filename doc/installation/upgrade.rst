@@ -24,7 +24,7 @@ Instructions for packaged versions on Ubuntu are found in :ref:`upgrade_packaged
 Upgrading a pip installation
 ............................
 
-If you install eduMFA into a python virtualenv like */opt/eduMFA*,
+If you install eduMFA into a python virtualenv like */opt/edumfa*,
 you can follow this basic upgrade process.
 
 First you might want to backup your program directory:

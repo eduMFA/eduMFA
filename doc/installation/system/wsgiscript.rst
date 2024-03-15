@@ -43,10 +43,10 @@ which again reference different config files with different database definitions
 
 To run further Apache instances add additional lines in your Apache config::
 
-    WSGIScriptAlias /instance1 /etc/eduMFA1/eduMFAapp.wsgi
-    WSGIScriptAlias /instance2 /etc/eduMFA2/eduMFAapp.wsgi
-    WSGIScriptAlias /instance3 /etc/eduMFA3/eduMFAapp.wsgi
-    WSGIScriptAlias /instance4 /etc/eduMFA4/eduMFAapp.wsgi
+    WSGIScriptAlias /instance1 /etc/edumfa1/edumfaapp.wsgi
+    WSGIScriptAlias /instance2 /etc/edumfa2/edumfaapp.wsgi
+    WSGIScriptAlias /instance3 /etc/edumfa3/edumfaapp.wsgi
+    WSGIScriptAlias /instance4 /etc/edumfa4/edumfaapp.wsgi
 
 It is a good idea to create a subdirectory in */etc* for each instance.
 Each wsgi script needs to point to the corresponding config file *edumfa.cfg*.
@@ -65,6 +65,6 @@ reads the configuration from */etc/edumfa/edumfa.cfg* by default.
 If you want to use another instance with another config file, you need to set
 an environment variable and create the database like this::
 
-   EDUMFA_CONFIGFILE=/etc/eduMFA3/edumfa.cfg edumfa-manage create_tables
+   EDUMFA_CONFIGFILE=/etc/edumfa3/edumfa.cfg edumfa-manage create_tables
 
 This way you can use *edumfa-manage* for each instance.

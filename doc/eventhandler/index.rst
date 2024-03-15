@@ -296,7 +296,7 @@ automatically. Valid compares are::
 
 "myValue" and "myTokenInfoField" being any possible tokeninfo fields.
 
-Starting with version 2.20 you can also compare dates in the isoformat like
+You can also compare dates in the isoformat like
 that::
 
     myValue > 2017-10-12T10:00+0200

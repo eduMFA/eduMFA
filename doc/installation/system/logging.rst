@@ -29,7 +29,7 @@ in :ref:`cfgfile` like this::
 
    EDUMFA_LOGCONFIG = "/path/to/logging.yml"
 
-Since Version 3.3 the logging configuration can be written in YAML [#yaml]_.
+The logging configuration can be written in YAML [#yaml]_.
 Such a YAML based configuration could look like this:
 
 .. code-block:: yaml
@@ -48,7 +48,7 @@ Such a YAML based configuration could look like this:
         toaddrs:
         - admin1@example.com
         - admin2@example.com
-        subject: PI Error
+        subject: eduMFA Error
         formatter: detail
         level: ERROR
       file:
@@ -99,7 +99,7 @@ The old `python logging config file format <https://docs.python.org/3/library/lo
    level=ERROR
    formatter=detail
    args=('mail.example.com', 'eduMFA@example.com', ['admin1@example.com',\
-      'admin2@example.com'], 'PI Error')
+      'admin2@example.com'], 'eduMFA Error')
 
    [handler_file]
    # Rollover the logfile at midnight

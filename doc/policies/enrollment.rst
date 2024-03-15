@@ -385,10 +385,8 @@ They control the key generation during the 2step token enrollment (see :ref:`2st
 The ``serversize`` is the optional size (in bytes) of the server's key part.
 The ``clientsize`` is the size (in bytes) of the smartphone's key part.
 The ``difficulty`` is a parameter for the key generation.
-In the implementation in version 2.21 PBKDF2 is used. In this case the ``difficulty``
+In the implementation PBKDF2 is used. In this case the ``difficulty``
 specifies the number of rounds.
-
-This is new in version 2.21.
 
 .. _force_app_pin:
 .. _hotp-force-app-pin:

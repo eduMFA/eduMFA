@@ -118,8 +118,7 @@ Date with time:
   * 23.12.2016 9:30
   * 23.12.2016 23:20
 
-Starting with version 2.19 we recommend setting the fixed time in the ISO
-8601 corresponding time format
+We recommend setting the fixed time in the ISO 8601 corresponding time format
 
   * 2016-12-23T15:30+0600
 
