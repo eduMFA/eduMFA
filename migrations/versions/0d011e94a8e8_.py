@@ -9,7 +9,7 @@ from sqlalchemy import orm
 from alembic import op, context
 import sqlalchemy as sa
 
-from edumfa.models import Policy
+from edumfa.models import Policy, SMSGateway
 
 # revision identifiers, used by Alembic.
 revision = '0d011e94a8e8'
@@ -73,6 +73,17 @@ def upgrade():
         print("Failed to update admin policy!")
         print(e)
 
+    session = orm.Session(bind=bind)
+    try:
+        for row in session.query(SMSGateway).filter(SMSGateway.providermodule.like("privacyidea.lib.%")):
+            row.providermodule = row.providermodule.replace("privacyidea.lib.", "edumfa.lib.")
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print("Failed to update SmsGateway providermodules!")
+        print(e)
+
+
 
 def downgrade():
     try:
@@ -125,4 +136,14 @@ def downgrade():
     except Exception as e:
         session.rollback()
         print("Failed to update admin policy!")
+        print(e)
+
+    session = orm.Session(bind=bind)
+    try:
+        for row in session.query(SMSGateway).filter(SMSGateway.providermodule.like("edumfa.lib.%")):
+            row.providermodule = row.providermodule.replace("edumfa.lib.", "privacyidea.lib.")
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print("Failed to update SmsGateway providermodules!")
         print(e)
