@@ -244,9 +244,8 @@ If this policy is activated the web UI will display a realm dropdown box.
 Of course this policy can not filter for users or realms, since the
 user is not known at this moment.
 
-The type of this action was changed to "string" in version 2.16. You can set
-a space separated list of realm names. Only these realm names are displayed in
-the dropdown box.
+You can set a space separated list of realm names. Only these realm names are
+displayed in the dropdown box.
 
 .. note:: The realm names in the policy are not checked, if they really exist!
 
@@ -283,8 +282,6 @@ The administrator can replace the file ``templates/baseline.html`` with another 
 This way he can change the links to e.g. internal documentation or ticketing systems.
 The new file could be called ``mytemplates/mybase.html``.
 
-This will only work with a valid subscription of eduMFA Enterprise Edition.
-
 .. note:: This policy is evaluated before login. So any realm or user setting will have no
    effect. But you can specify different baselines for different client IP addresses.
 
@@ -301,8 +298,6 @@ type: ``string``
 The administrator can replace the file ``templates/menu.html`` with another template.
 This way he can change the links to e.g. internal documentation or ticketing systems.
 The new file could be called ``mytemplates/mymenu.html``.
-
-This will only work with a valid subscription of eduMFA Enterprise Edition.
 
 .. note:: This policy is evaluated before login. So any realm or user setting will have no
    effect. But you can specify different menus for different client IP addresses.

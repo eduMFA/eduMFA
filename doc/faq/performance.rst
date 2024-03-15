@@ -24,7 +24,7 @@ highest performance.
 Config caching
 ~~~~~~~~~~~~~~
 
-Starting with eduMFA 2.15 eduMFA uses a Cache per instance and process to
+eduMFA uses a Cache per instance and process to
 cache system configuration, resolver, realm and policies.
 
 As the configuration might have been changed in the database by another process

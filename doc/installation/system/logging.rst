@@ -29,7 +29,7 @@ in :ref:`cfgfile` like this::
 
    EDUMFA_LOGCONFIG = "/path/to/logging.yml"
 
-Since Version 3.3 the logging configuration can be written in YAML [#yaml]_.
+The logging configuration can be written in YAML [#yaml]_.
 Such a YAML based configuration could look like this:
 
 .. code-block:: yaml

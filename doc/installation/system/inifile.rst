@@ -259,7 +259,7 @@ public key can sign a JWT, that can impersonate as the *userA* in resolver
 
 .. note:: The ``username`` can be a regular expression like ".*".
    This way you could allow a private signing key to impersonate every
-   user in a realm. (Starting with version 3.3)
+   user in a realm.
 
 A JWT can be created like this::
 

@@ -37,7 +37,7 @@ is restarted and the password for decrypting the *enckey* is kept in memory.
 After starting the server, you can check, if the encryption key is accessible.
 To do so run::
 
-    eduMFA -U <yourserver> --admin=<youradmin> securitymodule
+    edumfa -U <yourserver> --admin=<youradmin> securitymodule
 
 The output will contain ``"is_ready": True`` to signal that the encryption
 key is operational.
@@ -46,7 +46,7 @@ If it is not yet operational, you need to pass the password to the
 eduMFA server to decrypt the encryption key.
 To do so run::
 
-    eduMFA -U <yourserver> --admin=<youradmin> securitymodule  \
+    edumfa -U <yourserver> --admin=<youradmin> securitymodule  \
     --module=default
 
 .. note:: If the security module is not operational yet, you might get an
@@ -176,7 +176,7 @@ and add the parameter `init_hsm`::
 Moreover, you need to add the `WSGIImportScript` statement to your Apache2 configuration::
 
     WSGIApplicationGroup %{GLOBAL}
-    WSGIImportScript /etc/edumfa/eduMFAapp.wsgi process-group=eduMFA application-group=%{GLOBAL}
+    WSGIImportScript /etc/edumfa/edumfaapp.wsgi process-group=eduMFA application-group=%{GLOBAL}
 
 .. note:: Please note, that this security module uses a lock file, to handle concurrent access to the HSM.
    In certain cases of errors the log file could remain and not cleaned up.

@@ -191,7 +191,7 @@ Resolver settings
 The ``LoginName attribute`` is the attribute that holds the login name. It
 can be changed to your needs.
 
-Starting with version 2.20 you can provide a list of attributes in
+You can provide a list of attributes in
 ``LoginName Attribute`` like::
 
     sAMAccountName, userPrincipalName

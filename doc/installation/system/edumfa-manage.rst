@@ -60,7 +60,7 @@ Backup and Restore
 You can create a backup which will be save to */var/lib/edumfa/backup/*.
 
 The backup will contain the database dump and the complete directory
-*/etc/eduMFA*. You may choose if you want to add the encryption key to
+*/etc/edumfa*. You may choose if you want to add the encryption key to
 the backup or not.
 
 .. warning:: If the backup includes the database dump and the encryption key
