@@ -5,9 +5,6 @@ SMTP server configuration
 
 .. index:: SMTP server
 
-Starting with eduMFA 2.10 you can define SMTP server configurations.
-:ref:`rest_smtpserver`.
-
 An SMTP server configuration contains the
 
    * server as FQDN or IP address,

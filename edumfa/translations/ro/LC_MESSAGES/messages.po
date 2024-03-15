@@ -1855,7 +1855,7 @@ msgid ""
 "The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to "
 "call. Expects phone as the parameter and the message from stdin."
 msgstr ""
-"Scriptul din directorul de script PI_SCRIPT_SMSPROVIDER_DIRECTORY de "
+"Scriptul din directorul de script EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY de "
 "apelat. Se așteaptă telefonul ca parametru și mesajul de la stdin."
 
 #: lib/smsprovider/SmppSMSProvider.py:128

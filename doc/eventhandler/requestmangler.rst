@@ -88,6 +88,6 @@ Code
 ~~~~
 
 
-.. automodule:: eduMFA.lib.eventhandler.requestmangler
+.. automodule:: edumfa.lib.eventhandler.requestmangler
    :members:
    :undoc-members:

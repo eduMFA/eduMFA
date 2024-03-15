@@ -1341,6 +1341,8 @@ def create_tag_dict(logged_in_user=None,
                     client_ip=None,
                     pin=None,
                     challenge=None,
+                    result_value=None,
+                    result_status=None,
                     escape_html=False):
     """
     This helper function creates a dictionary with tags to be used in sending emails
@@ -1360,6 +1362,8 @@ def create_tag_dict(logged_in_user=None,
     :param client_ip: The IP of the client
     :param pin: The PIN of a token
     :param challenge: The challenge data
+    :param result_value: The result value from the response
+    :param result_status: The result status from the response
     :param escape_html: Whether the values for the tags should be html escaped
     :return: The tag dictionary
     """
@@ -1388,7 +1392,13 @@ def create_tag_dict(logged_in_user=None,
                 pin=pin,
                 ua_browser=request.user_agent.browser if request else "",
                 ua_string=request.user_agent.string if request else "",
-                challenge=challenge if challenge else "")
+                challenge=challenge if challenge else "",
+                result_value=result_value if result_value else "",
+                result_status=result_status if result_status else "",
+                request_value=request.all_data.get("value") if request and hasattr(request,'all_data')
+                                                               and request.all_data.get("value") is not None else "",
+                token_realms=request.all_data.get("realms") if request and hasattr(request,'all_data')
+                                                               and request.all_data.get("realms") is not None else "")
     if escape_html:
         escaped_tags = {}
         for key, value in tags.items():

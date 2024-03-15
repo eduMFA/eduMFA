@@ -35,7 +35,7 @@ typical deployment of push tokens interact reference the following diagram.
       database LDAP
     }
     card "2nd Factor" {
-      node eduMFA as PI
+      node eduMFA as EM
       file "User Resolver" as Users
     }
   }
@@ -60,14 +60,14 @@ typical deployment of push tokens interact reference the following diagram.
 
   Client --> IDP : Request Auth
   IDP -- LDAP
-  IDP -- PI
+  IDP -- EM
 
-  PI -- Users
+  EM -- Users
 
-  PI --> Firebase : Push Token
+  EM --> Firebase : Push Token
   Firebase --> APN
   APN --> iPhone
-  iPhone --> PI : Confirm Token
+  iPhone --> EM : Confirm Token
 
 To allow eduMFA to send push notifications, a Firebase service
 needs to be configured. To do so see :ref:`firebase_provider`.
@@ -137,8 +137,8 @@ of the eduMFA server.
 The eduMFA server verifies the response and marks this authentication
 request as successfully answered.
 
-In some cases the push notification does not reach the smartphone. Since
-version 3.4 the smartphone can also poll for active challenges.
+In some cases the push notification does not reach the smartphone.
+The smartphone can also poll for active challenges.
 
 Login to application
 ....................

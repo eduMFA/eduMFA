@@ -47,6 +47,6 @@ Code
 ~~~~
 
 
-.. automodule:: eduMFA.lib.eventhandler.responsemangler
+.. automodule:: edumfa.lib.eventhandler.responsemangler
    :members:
    :undoc-members:

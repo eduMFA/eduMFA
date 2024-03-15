@@ -14,7 +14,7 @@ some clues.
 You can define the location of the logfile using the key ``EDUMFA_LOGFILE``.
 Usually it is set to::
 
-   EDUMFA_LOGFILE = "/var/log/eduMFA/eduMFA.log"
+   EDUMFA_LOGFILE = "/var/log/edumfa/edumfa.log"
 
 .. _advanced_logging:
 
@@ -22,14 +22,14 @@ Advanced Logging
 ~~~~~~~~~~~~~~~~
 
 You can also define a more detailed logging by specifying a
-log configuration file. By default the file is ``/etc/eduMFA/logging.cfg``.
+log configuration file. By default the file is ``/etc/edumfa/logging.cfg``.
 
 You can change the location of the logging configuration file
 in :ref:`cfgfile` like this::
 
    EDUMFA_LOGCONFIG = "/path/to/logging.yml"
 
-Since Version 3.3 the logging configuration can be written in YAML [#yaml]_.
+The logging configuration can be written in YAML [#yaml]_.
 Such a YAML based configuration could look like this:
 
 .. code-block:: yaml
@@ -37,7 +37,7 @@ Such a YAML based configuration could look like this:
     version: 1
     formatters:
       detail:
-        class: eduMFA.lib.log.SecureFormatter
+        class: edumfa.lib.log.SecureFormatter
         format: '[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s'
 
     handlers:
@@ -48,7 +48,7 @@ Such a YAML based configuration could look like this:
         toaddrs:
         - admin1@example.com
         - admin2@example.com
-        subject: PI Error
+        subject: eduMFA Error
         formatter: detail
         level: ERROR
       file:
@@ -58,7 +58,7 @@ Such a YAML based configuration could look like this:
         maxBytes: 1000000
         formatter: detail
         level: INFO
-        filename: /var/log/eduMFA/eduMFA.log
+        filename: /var/log/edumfa/edumfa.log
       syslog:
         class: logging.handlers.SysLogHandler
         address: ('192.168.1.110', 514)
@@ -91,7 +91,7 @@ The old `python logging config file format <https://docs.python.org/3/library/lo
    keys=file,mail
 
    [formatter_detail]
-   class=eduMFA.lib.log.SecureFormatter
+   class=edumfa.lib.log.SecureFormatter
    format=[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s
 
    [handler_mail]
@@ -99,7 +99,7 @@ The old `python logging config file format <https://docs.python.org/3/library/lo
    level=ERROR
    formatter=detail
    args=('mail.example.com', 'eduMFA@example.com', ['admin1@example.com',\
-      'admin2@example.com'], 'PI Error')
+      'admin2@example.com'], 'eduMFA Error')
 
    [handler_file]
    # Rollover the logfile at midnight
@@ -108,7 +108,7 @@ The old `python logging config file format <https://docs.python.org/3/library/lo
    maxBytes=10000000
    formatter=detail
    level=DEBUG
-   args=('/var/log/eduMFA/eduMFA.log',)
+   args=('/var/log/edumfa/edumfa.log',)
 
    [loggers]
    keys=root,eduMFA

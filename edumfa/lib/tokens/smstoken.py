@@ -68,6 +68,7 @@ keylen = {'sha1': 20,
 
 class SMSACTION(object):
     SMSTEXT = "smstext"
+    SMSPOSTCHECKTEXT = "smspostchecktext"
     SMSAUTO = "smsautosend"
     GATEWAYS = "sms_gateways"
 
@@ -197,6 +198,11 @@ class SmsTokenClass(HotpTokenClass):
                             'desc': _('The text that will be send via SMS for '
                                       'an SMS token. Use tags like {otp} and {serial} '
                                       'as parameters.')},
+                       SMSACTION.SMSPOSTCHECKTEXT: {
+                           'type': 'str',
+                           'desc': _('The message that will be submitted for '
+                                     'an SMS token on post check action. Use '
+                                     'tags like {otp} and {serial} as parameters.')},
                         SMSACTION.SMSAUTO: {
                             'type': 'bool',
                             'desc': _('If set, a new SMS OTP will be sent '
@@ -373,13 +379,20 @@ class SmsTokenClass(HotpTokenClass):
             if safe_compare(options.get("data"), anOtpVal):
                 # We authenticate from the saved challenge
                 ret = 1
-        if ret >= 0 and self._get_auto_sms(options):
-            # get message template from user specific policies
-            message = self._get_sms_text(options)
-            self.inc_otp_counter(ret, reset=False)
-            success, message = self._send_sms(message=message, options=options)
-            log.debug("AutoSMS: send new SMS: {0!s}".format(success))
-            log.debug("AutoSMS: {0!r}".format(message))
+        if ret >= 0:
+            if self._get_auto_sms(options):
+                # get message template from user specific policies
+                message = self._get_sms_text(options)
+                self.inc_otp_counter(ret, reset=False)
+                success, message = self._send_sms(message=message, options=options)
+                log.debug("AutoSMS: send new SMS: {0!s}".format(success))
+                log.debug("AutoSMS: {0!r}".format(message))
+            else:
+                # post check action on success unless AutoSMS is on
+                options['smstoken_post_check'] = 1
+                message = self._get_sms_text(options)
+                self._send_sms(message=message, options=options)
+
         return ret
 
     @log_with(log)
@@ -470,8 +483,12 @@ class SmsTokenClass(HotpTokenClass):
                 log.warning("Token {0!s} does not have a phone number!".format(self.token.serial))
             destination = phone
 
-        log.debug("submitMessage: {0!r}, to {1!r}".format(message, destination))
-        ret = sms.submit_message(destination, message)
+        if options.get('smstoken_post_check'):
+            log.debug("submitPostCheck: {0!r}, to {1!r}".format(message, destination))
+            ret = sms.submit_post_check(destination, message)
+        else:
+            log.debug("submitMessage: {0!r}, to {1!r}".format(message, destination))
+            ret = sms.submit_message(destination, message)
         return ret, message
 
     @staticmethod
@@ -535,9 +552,14 @@ class SmsTokenClass(HotpTokenClass):
         g = options.get("g")
         user_object = options.get("user")
         if g:
-            messages = Match.user(g, scope=SCOPE.AUTH, action=SMSACTION.SMSTEXT,
-                                  user_object=user_object if user_object else None).action_values(
-                allow_white_space_in_action=True, unique=True)
+            if options.get('smstoken_post_check'):
+                messages = Match.user(g, scope=SCOPE.AUTH, action=SMSACTION.SMSPOSTCHECKTEXT,
+                                      user_object=user_object if user_object else None).action_values(
+                    allow_white_space_in_action=True, unique=True)
+            else:
+                messages = Match.user(g, scope=SCOPE.AUTH, action=SMSACTION.SMSTEXT,
+                                      user_object=user_object if user_object else None).action_values(
+                    allow_white_space_in_action=True, unique=True)
             if len(messages) == 1:
                 message = list(messages)[0]
 

@@ -43,7 +43,7 @@ This PIN hashing is performed in *lib.crypto:hash*.
 Administrator Passwords
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-eduMFA can manage internal administrators using :ref:`pimanage`.
+eduMFA can manage internal administrators using :ref:`edumfa-manage`.
 Internal administrators are stored in the database table *Admin*.
 
 The password is stored using Argon2 (9 rounds) with an additional pepper.

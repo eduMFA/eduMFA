@@ -5,7 +5,7 @@ Certificate Token
 
 .. index:: certificates, client certificates, request, CSR, CA, attestation
 
-Starting with version 2.3 eduMFA supports certificates. A user can
+eduMFA supports certificates. A user can
 
 * submit a certificate signing request (including an attestation certificate),
 * upload a certificate or

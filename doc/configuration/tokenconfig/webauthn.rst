@@ -36,7 +36,7 @@ The ID of the relying party must be a fully-qualified domain name. Every web-ser
 where the WebAuthn token should be used needs to be reachable under a domain name
 which is a superset (i.e. a subdomain) of this ID.
 This means that a WebAuthn token enrolled with a relying party ID of ``example.com``
-may be used to sign in to ``eduMFA.example.com`` and ``owncloud.example.com``.
+may be used to sign in to ``edumfa.example.com`` and ``owncloud.example.com``.
 However, this token will not be able to sign in to a service under ``example.de``, or any
 other webservice that is not hosted on a subdomain of ``example.com``.
 

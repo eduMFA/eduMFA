@@ -1,8 +1,8 @@
 eduMFA
 ===========
 
-.. image:: https://codecov.io/gh/eduMFA/eduMFA/coverage.svg?branch=master
-    :target: https://codecov.io/gh/eduMFA/eduMFA?branch=master
+.. image:: https://codecov.io/gh/eduMFA/eduMFA/coverage.svg?branch=main
+    :target: https://codecov.io/gh/eduMFA/eduMFA?branch=main
 
 .. image:: https://img.shields.io/pypi/v/eduMFA.svg
     :alt: Latest Version
@@ -16,9 +16,9 @@ eduMFA
     :alt: License
     :target: https://pypi.python.org/pypi/edumfa/
     
-.. image:: https://readthedocs.org/projects/edumfa/badge/?version=master
+.. image:: https://readthedocs.org/projects/edumfa/badge/?version=latest
     :alt: Documentation
-    :target: http://edumfa.readthedocs.org/en/master/
+    :target: http://edumfa.readthedocs.org/en/latest/
 
     
 eduMFA is an open solution for strong two-factor authentication like

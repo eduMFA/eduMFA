@@ -35,8 +35,7 @@ Experiences
 ...........
 
 The Google Authenticator and the FreeOTP token can be enrolled easily in
-TOTP mode using
-the QR-Code enrollment Feature.
+TOTP mode using the QR-Code enrollment Feature.
 
 The Google Authenticator is available for iOS, Android and Blackberry devices.
 

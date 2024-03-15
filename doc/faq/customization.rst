@@ -30,14 +30,14 @@ Follow these basic steps:
 
 1. Create a new location, where you will keep your modifications safe from updates.
    You should create a directory like
-   */etc/eduMFA/customization/* and put your modified views in there.
+   */etc/edumfa/customization/* and put your modified views in there.
 
 2. Activate the rewrite rules in your web server.
    E.g. in the Apache configuration you can add entries like::
 
     RewriteEngine On
     RewriteRule "/static/components/login/views/login.html"  \
-         "/etc/eduMFA/customization/mylogin.html"
+         "/etc/edumfa/customization/mylogin.html"
 
    and apply all required changes to the file *mylogin.html*.
 
@@ -47,8 +47,8 @@ Follow these basic steps:
        template file exists in the customization tree::
 
         RewriteEngine on
-        RewriteCond /etc/eduMFA/customization/%{REQUEST_URI} -f
-        RewriteRule "^(.*)$" "/etc/eduMFA/customization/%{REQUEST_URI}"
+        RewriteCond /etc/edumfa/customization/%{REQUEST_URI} -f
+        RewriteRule "^(.*)$" "/etc/edumfa/customization/%{REQUEST_URI}"
 
 3. Now activate ``mod_rewrite`` and reload apache2.
 
@@ -63,7 +63,7 @@ The translation in eduMFA is very flexible (see :ref:`translation`).
 But if you change the templates the normal translation with PO files can
 get a bit tricky.
 
-Starting with eduMFA 3.0.1 you can use the scope variable
+You can use the scope variable
 ``browserLanguage`` in your custom templates.
 
 You can print the browser language like this ``{{ browserLanguage }}``.
@@ -94,15 +94,15 @@ You can create your own CSS file to adapt the look and feel of the Web UI.
 The default CSS is the bootstrap CSS theme. Using ``EDUMFA_CSS`` in ``edumfa.cfg`` you can specify
 the URL of your own CSS file.
 The default CSS file url is */static/contrib/css/bootstrap-theme.css*.
-The file in the file system is located at *eduMFA/static/contrib/css*.
-You might add a directory *eduMFA/static/custom/css/* and add your CSS
+The file in the file system is located at *edumfa/static/contrib/css*.
+You might add a directory *edumfa/static/custom/css/* and add your CSS
 file there.
 
 The CSS you specify here adds to the already existing styles. Thus a convenient way for
 using this setting is to help you distinguish different eduMFA instances like "testing", "acceptances"
 and "production" or different nodes in a redundant setup.
 
-You can create a simple CSS file *[..]/eduMFA/static/custom/css/testing.css* like::
+You can create a simple CSS file *[..]/edumfa/static/custom/css/testing.css* like::
 
     body {
         background-color: green;
@@ -121,7 +121,7 @@ Again you can also use the Apache rewrite module to replace the original css fil
 
     RewriteEngine On
     RewriteRule "/static/contrib/css/bootstrap-theme.css"  \
-         "/etc/eduMFA/customization/my.css"
+         "/etc/edumfa/customization/my.css"
 
 
 A good stating point might be the themes at http://bootswatch.com.
@@ -151,7 +151,7 @@ do it like this::
 Logo
 ~~~~
 
-The default logo is located at ``eduMFA/static/css/eduMFA1.png``.
+The default logo is located at ``edumfa/static/css/eduMFA1.png``.
 If you want to use your own logo, you can put your file "mylogo.png" just
 in the same folder and set
 
@@ -164,7 +164,7 @@ in the ``edumfa.cfg`` config file.
 Page title
 ~~~~~~~~~~
 
-You can configure the page title by setting ``PI_PAGE_TITLE`` in the
+You can configure the page title by setting ``EDUMFA_PAGE_TITLE`` in the
 ``edumfa.cfg`` file.
 
 Menu
@@ -213,9 +213,9 @@ New token classes
 
 You can add new token types to eduMFA by writing your own Python token class.
 A token class in eduMFA is
-inherited from ``eduMFA.lib.tokenclass.TokenClass``. You can either inherit from
+inherited from ``edumfa.lib.tokenclass.TokenClass``. You can either inherit from
 this base class directly or from another token class. E.g. the *TOTP* token class is inherited from
-*HOTP*. Take a look in the directory *eduMFA/lib/tokens/* to get an idea of token classes.
+*HOTP*. Take a look in the directory *edumfa/lib/tokens/* to get an idea of token classes.
 
 A token class can have many different methods which you can find in the base class ``TokenClass``.
 Depending on the token type you are going to implement, you will need to implement several of these.
@@ -230,9 +230,9 @@ You can install your new Python module, wherever you want to like ``myproject.co
 If these tokens need additional enrollment data in the UI, you can specify
 two templates, that are displayed during enrollment and after the token
 is enrolled. These HTML templates need to be located at
-``eduMFA/static/components/token/views/token.enroll.<tokentype>.html``
+``edumfa/static/components/token/views/token.enroll.<tokentype>.html``
 and
-``eduMFA/static/components/token/views/token.enrolled.<tokentype>.html``.
+``edumfa/static/components/token/views/token.enrolled.<tokentype>.html``.
 
 .. Note:: In this example the python module ``myproject.cooltoken`` should
    contain a class ``CoolTokenClass``. The tokentype of this token, should

@@ -65,7 +65,7 @@ A good example for the ``token.enrolled.paper.bottom.html`` is::
     </p>
 
 .. note:: You can change the directory *static/customize* to a URL that fits
-   your needs the best by defining a variable `PI_CUSTOMIZATION` in the file
+   your needs the best by defining a variable `EDUMFA_CUSTOMIZATION` in the file
    *edumfa.cfg*. This way you can put all modifications in one place apart from
    the original code.
 

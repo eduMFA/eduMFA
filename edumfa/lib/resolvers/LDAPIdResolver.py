@@ -1270,7 +1270,7 @@ class IdResolver (UserIdResolver):
     @staticmethod
     def create_connection(authtype=None, server=None, user=None,
                           password=None, auto_bind=ldap3.AUTO_BIND_NONE,
-                          client_strategy=ldap3.SYNC,
+                          client_strategy=ldap3.RESTARTABLE,
                           check_names=True,
                           auto_referrals=False,
                           receive_timeout=5,

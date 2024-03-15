@@ -31,7 +31,7 @@ The module is tested in tests/test_lib_eventhandler_logging.py
 """
 from edumfa.lib.eventhandler.base import BaseEventHandler
 from edumfa.lib.token import get_tokens
-from edumfa.lib.utils import create_tag_dict, to_unicode
+from edumfa.lib.utils import create_tag_dict, to_unicode, is_true
 from edumfa.lib import _
 import logging
 
@@ -136,6 +136,13 @@ class LoggingEventHandler(BaseEventHandler):
             serial = (request.all_data.get("serial")
                       or content.get("detail", {}).get("serial")
                       or g.audit_object.audit_data.get("serial"))
+            result_value = None
+            if content.get("result", {}).get("value") != None:
+                result_value = str(content.get("result", {}).get("value"))
+            result_status = None
+            if content.get("result", {}).get("status") != None:
+                result_status = str(content.get("result", {}).get("status"))
+
             if serial:
                 tokens = get_tokens(serial=serial)
                 if tokens:
@@ -149,7 +156,9 @@ class LoggingEventHandler(BaseEventHandler):
                                    client_ip=g.client_ip,
                                    tokenowner=tokenowner,
                                    serial=serial,
-                                   tokentype=tokentype)
+                                   tokentype=tokentype,
+                                   result_value=result_value,
+                                   result_status=result_status)
 
             logger_name = handler_options.get('name', DEFAULT_LOGGER_NAME)
             log_action = logging.getLogger(logger_name)

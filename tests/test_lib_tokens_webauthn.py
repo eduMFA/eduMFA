@@ -753,6 +753,19 @@ class WebAuthnTestCase(unittest.TestCase):
                 expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS
             ).verify)
 
+    def test_10_permit_windows_hello(self):
+        response = WebAuthnRegistrationResponse(
+            rp_id=RP_ID,
+            origin=ORIGIN,
+            registration_response={
+                "attObj": "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVjCdKbqkhPJnC90siSSsyDPQCYqlMGpUKA5fyklC2CEHvDFAAAAAwAAAAAAAAAAAAAAAAAAAAAAMJSS-0ZA_uV6Po7tD-8uB6-wnQzx8Q5rLDI8U8LkwIXkIhpWaHHZSdWW3d0fTIfGGKUBAgMmIAEhWCCUkvtGQP7lej6O7Q_vuY4nzFFn9JoyQdQfBA6Kh_EfrCJYIJ2CIUz7uSmIeytjIfmz7MgfQc_lHW9Fy8_FA2Vtx0peoWtjcmVkUHJvdGVjdAM",
+                "clientData": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiRlJsMGdqLU1GaGVRLXE0cnZ4U0NNZGpnZ3M3azZRSjVXUFZnSE1wWllfeUpEX3Y5ZUNyMEk3TzFLenFHQmJjME9ic1A0SWFWSkhaZllYbVA0RjFxS2ciLCJvcmlnaW4iOiJodHRwczovL3dlYmF1dGhuLmlvIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfQ",
+            },
+            challenge="FRl0gj-MFheQ-q4rvxSCMdjggs7k6QJ5WPVgHMpZY_yJD_v9eCr0I7O1KzqGBbc0ObsP4IaVJHZfYXmP4F1qKg",
+            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[ATTESTATION_LEVEL.NONE],
+        )
+        response.verify()
+
     # Info: This currently leads to unwanted enrollment errors due to inconsistent Webauthn implementations.
     #       Therefore, it is commented for now.
     #

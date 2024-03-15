@@ -5,7 +5,7 @@ OCRA
 
 .. index:: OCRA
 
-Starting with version 2.20 eduMFA supports common OCRA tokens.
+eduMFA supports common OCRA tokens.
 OCRA tokens can not be enrolled via the UI but need to be imported via a seed
 file.
 The OATH CSV seed file would look like this::

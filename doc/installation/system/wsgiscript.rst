@@ -7,10 +7,10 @@ The WSGI Script
 
 Apache2 and Nginx are using a WSGI script to start the application.
 
-This script is usually located at ``/etc/eduMFA/eduMFAapp.py`` or
-``/etc/eduMFA/eduMFAapp.wsgi`` and has the following contents:
+This script is usually located at ``/etc/edumfa/edumfaapp.py`` or
+``/etc/edumfa/edumfaapp.wsgi`` and has the following contents:
 
-.. literalinclude:: ../../../deploy/apache/eduMFAapp.wsgi
+.. literalinclude:: ../../../deploy/apache/edumfaapp.wsgi
     :language: python
 
 In the ``create_app``-call you can also select another config file.
@@ -23,9 +23,9 @@ least::
 
   <VirtualHost _default_:443>
       ...
-      WSGIScriptAlias /      /etc/eduMFA/eduMFAapp.wsgi
-      WSGIDaemonProcess eduMFA processes=1 threads=15 display-name=%{GROUP} user=eduMFA
-      WSGIProcessGroup eduMFA
+      WSGIScriptAlias /      /etc/edumfa/edumfaapp.wsgi
+      WSGIDaemonProcess edumfa processes=1 threads=15 display-name=%{GROUP} user=edumfa
+      WSGIProcessGroup edumfa
       WSGIApplicationGroup %{GLOBAL}
       WSGIPassAuthorization On
       ...
@@ -43,10 +43,10 @@ which again reference different config files with different database definitions
 
 To run further Apache instances add additional lines in your Apache config::
 
-    WSGIScriptAlias /instance1 /etc/eduMFA1/eduMFAapp.wsgi
-    WSGIScriptAlias /instance2 /etc/eduMFA2/eduMFAapp.wsgi
-    WSGIScriptAlias /instance3 /etc/eduMFA3/eduMFAapp.wsgi
-    WSGIScriptAlias /instance4 /etc/eduMFA4/eduMFAapp.wsgi
+    WSGIScriptAlias /instance1 /etc/edumfa1/edumfaapp.wsgi
+    WSGIScriptAlias /instance2 /etc/edumfa2/edumfaapp.wsgi
+    WSGIScriptAlias /instance3 /etc/edumfa3/edumfaapp.wsgi
+    WSGIScriptAlias /instance4 /etc/edumfa4/edumfaapp.wsgi
 
 It is a good idea to create a subdirectory in */etc* for each instance.
 Each wsgi script needs to point to the corresponding config file *edumfa.cfg*.
@@ -59,12 +59,12 @@ Each config file can define its own
  * logging configuration
  * ...
 
-To create the new database you need :ref:`pimanage`. The *edumfa-manage* command
-reads the configuration from */etc/eduMFA/edumfa.cfg* by default.
+To create the new database you need :ref:`edumfa-manage`. The *edumfa-manage* command
+reads the configuration from */etc/edumfa/edumfa.cfg* by default.
 
 If you want to use another instance with another config file, you need to set
 an environment variable and create the database like this::
 
-   eduMFA_CONFIGFILE=/etc/eduMFA3/edumfa.cfg edumfa-manage create_tables
+   EDUMFA_CONFIGFILE=/etc/edumfa3/edumfa.cfg edumfa-manage create_tables
 
 This way you can use *edumfa-manage* for each instance.

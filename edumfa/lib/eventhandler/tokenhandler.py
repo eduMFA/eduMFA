@@ -421,7 +421,8 @@ class TokenEventHandler(BaseEventHandler):
                 else:
                     serials = [serial]
                 for serial in serials:
-                    log.info("{0!s} for token {1!s}".format(action, serial))
+                    if action.lower() != ACTION_TYPE.SET_TOKENINFO:
+                        log.info("{0!s} for token {1!s}".format(action, serial))
                     if action.lower() == ACTION_TYPE.SET_TOKENREALM:
                         realm = handler_options.get("realm")
                         only_realm = is_true(handler_options.get("only_realm"))
@@ -481,6 +482,16 @@ class TokenEventHandler(BaseEventHandler):
                                           realm=realm,
                                           ua_browser=request.user_agent.browser,
                                           ua_string=request.user_agent.string))
+                        log.info("set tokeninfo for token {0!s} - {1!s}: {2!s}".format(
+                            serial, handler_options.get("key"),
+                                      tokeninfo.format(
+                                          current_time=s_now,
+                                          now=s_now,
+                                          client_ip=g.client_ip,
+                                          username=username,
+                                          realm=realm,
+                                          ua_browser=request.user_agent.browser,
+                                          ua_string=request.user_agent.string)))
                     elif action.lower() == ACTION_TYPE.DELETE_TOKENINFO:
                         delete_tokeninfo(serial, handler_options.get("key"))
                     elif action.lower() == ACTION_TYPE.SET_VALIDITY:
@@ -553,9 +564,9 @@ class TokenEventHandler(BaseEventHandler):
                                         " Token serial: {!0s}".format(serial))
 
 
-                else:
-                    log.info("Action {0!s} requires serial number. But no serial "
-                             "number could be found in request {1!s}.".format(action, request))
+            else:
+                log.info("Action {0!s} requires serial number. But no serial "
+                         "number could be found in request {1!s}.".format(action, request))
 
         if action.lower() == ACTION_TYPE.INIT:
             log.info("Initializing new token")

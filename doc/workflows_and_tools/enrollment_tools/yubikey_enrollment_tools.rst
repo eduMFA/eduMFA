@@ -14,36 +14,6 @@ Yubikey with eduMFA.
 If not using the :ref:`yubico_token` mode, the Yubikey has to be initialized/configured
 which creates a new secret on the device that has to be imported to eduMFA.
 
-eduMFA ships tools to (mass-)enroll Yubikeys in AES mode (Yubikey Token) or HOTP mode (HOTP Token).
-
-.. _eduMFAadm_enrollment:
-
-eduMFA CLI tool
-~~~~~~~~~~~~~~~~~~~~
-
-.. index:: eduMFAadm, admin tool
-
-For Linux Clients, there is the ``eduMFA`` command line
-client [#eduMFAadm]_, to initialize the Yubikeys. You can use the mass enrollment, which
-eases the process of initializing a whole bunch of tokens.
-
-Run the command like this::
-
-   eduMFA -U https://your.eduMFA.server -a admin token \
-   yubikey_mass_enroll --yubimode YUBICO
-
-This command initializes the device and creates a new token with the
-AES secret and prefix in eduMFA. You can enroll Yubikeys
-in HOTP mode by using the option ``--yubimode HOTP`` which is also the default.
-You can choose the slot with ``--yubislot``. For further help call
-``eduMFA yubikey_mass_enroll`` with the ``--help`` option and refer to
-the documentation of the tool [#eduMFAadmdocs]_.
-
-You can also use ``yubikey_mass_enroll`` with the option ``--filename`` to
-write the token configuration to the specified file, which can be imported
-later via the eduMFA WebUI at Select Tokens -> Import Tokens.
-There, select :ref:`import_oath_csv` and the file you just created.
-
 .. _ykpersgui:
 
 Yubikey Personalization GUI
@@ -51,7 +21,7 @@ Yubikey Personalization GUI
 
 .. index:: Yubikey, Yubikey personalization GUI, Yubikey personalization tool
 
-You can also initialize the Yubikey with the official Yubico personalization GUI
+You can initialize the Yubikey with the official Yubico personalization GUI
 [#ykpers]_ and use the obtained secret to enroll the Yubikey with eduMFA.
 For both AES (Yubico OTP) and OATH-HOTP mode, there are two possibilities to initialize
 the Yubikey with eduMFA.
@@ -134,7 +104,5 @@ output format (see :ref:`import`).
 
 .. rubric:: Footnotes
 
-.. [#eduMFAadm] https://github.com/eduMFA/eduMFAadm/
-.. [#eduMFAadmdocs] https://github.com/eduMFA/eduMFAadm/blob/master/doc/index.rst
 .. [#ykpers] https://www.yubico.com/products/services-software/download/yubikey-personalization-tools/
 .. [#ykotp] https://developers.yubico.com/OTP/OTPs_Explained.html
