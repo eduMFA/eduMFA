@@ -48,7 +48,7 @@ Such a YAML based configuration could look like this:
         toaddrs:
         - admin1@example.com
         - admin2@example.com
-        subject: PI Error
+        subject: eduMFA Error
         formatter: detail
         level: ERROR
       file:
@@ -99,7 +99,7 @@ The old `python logging config file format <https://docs.python.org/3/library/lo
    level=ERROR
    formatter=detail
    args=('mail.example.com', 'eduMFA@example.com', ['admin1@example.com',\
-      'admin2@example.com'], 'PI Error')
+      'admin2@example.com'], 'eduMFA Error')
 
    [handler_file]
    # Rollover the logfile at midnight

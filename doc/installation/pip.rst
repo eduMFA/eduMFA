@@ -25,11 +25,11 @@ Now you can setup the virtual environment for eduMFA like this::
 .. note::
     Some distributions still ship Python 2.7 as the system python. If you want
     to use Python 3 you can create the virtual environment like this:
-    `virtualenv -p /usr/bin/python3 /opt/eduMFA`
+    `virtualenv -p /usr/bin/python3 /opt/edumfa`
 
 Now you are within the python virtual environment and you can run::
 
-  pip install eduMFA
+  pip install edumfa
 
 in order to install the latest eduMFA version from
 `PyPI <https://pypi.org/project/eduMFA>`_.
@@ -69,9 +69,9 @@ In order for eduMFA to use the database, a database user with the
 appropriate privileges is needed.
 The following SQL commands will create the database as well as a user in `MySQL`::
 
-    CREATE DATABASE pi;
+    CREATE DATABASE edumfa;
     CREATE USER "edumfa"@"localhost" IDENTIFIED BY "<dbsecret>";
-    GRANT ALL PRIVILEGES ON pi.* TO "edumfa"@"localhost";
+    GRANT ALL PRIVILEGES ON edumfa.* TO "edumfa"@"localhost";
 
 You must then add the database name, user and password to your `edumfa.cfg`. See
 :ref:`cfgfile` for more information on the configuration.
