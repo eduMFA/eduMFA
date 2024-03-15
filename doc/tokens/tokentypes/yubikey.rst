@@ -28,7 +28,7 @@ validation URL. Some tools (e.g. Kolab 2FA) let the
 user/admin change the API host, but not the rest of
 the URL. To redirect the API URL to eduMFA's endpoint
 ``/ttype/yubikey``, you'll need to enable the following two
-lines in ``/etc/apache2/site-enabled/eduMFA.conf``::
+lines in ``/etc/apache2/site-enabled/edumfa.conf``::
 
     RewriteEngine  on
     RewriteRule    "^/wsapi/2.0/verify"  "/ttype/yubikey" [PT]

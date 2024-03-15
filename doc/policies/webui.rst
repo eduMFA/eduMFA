@@ -75,7 +75,7 @@ can only login with the REMOTE_USER from the browser.
 
 You can use this policy to enable Single-Sign-On and integration into Kerberos
 or Active Directory. Add the following template into you apache configuration
-in /etc/apache2/sites-available/eduMFA.conf::
+in /etc/apache2/sites-available/edumfa.conf::
 
         <Directory />
                 # For Apache 2.4 you need to set this:
