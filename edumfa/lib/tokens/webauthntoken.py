@@ -51,6 +51,8 @@ from edumfa.lib.policy import SCOPE, GROUP, ACTION
 from edumfa.lib.user import User
 from edumfa.lib.utils import hexlify_and_unicode, is_true, to_unicode, convert_imagefile_to_dataimage
 from flask import current_app
+import datetime
+from dateutil.tz import tzlocal
 
 __doc__ = """
 WebAuthn  is the Web Authentication API specified by the FIDO Alliance.
@@ -1325,6 +1327,9 @@ class WebAuthnTokenClass(TokenClass):
                 reply_dict["message"] = "Username-less authentication worked!"
                 reply_dict["serial"] = token.token.serial
                 reply_dict["type"] = token.token.tokentype
+                token.add_tokeninfo(ACTION.LASTAUTH,
+                                    datetime.datetime.now(tzlocal()))
+                token.inc_count_auth_success()
                 if count != -1:
                     return True, reply_dict
                 else:
