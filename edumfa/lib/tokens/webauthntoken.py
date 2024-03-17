@@ -1327,10 +1327,10 @@ class WebAuthnTokenClass(TokenClass):
                 reply_dict["message"] = "Username-less authentication worked!"
                 reply_dict["serial"] = token.token.serial
                 reply_dict["type"] = token.token.tokentype
-                token.add_tokeninfo(ACTION.LASTAUTH,
-                                    datetime.datetime.now(tzlocal()))
-                token.inc_count_auth_success()
                 if count != -1:
+                    token.add_tokeninfo(ACTION.LASTAUTH,
+                                        datetime.datetime.now(tzlocal()))
+                    token.inc_count_auth_success()
                     return True, reply_dict
                 else:
                     return False, reply_dict
