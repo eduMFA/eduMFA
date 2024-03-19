@@ -282,6 +282,8 @@ def _get_tokenlist(last_auth, assigned, active, tokeninfo_key,
         if not user_realm:
             user_realm = get_default_realm()
         user_obj = User(login=user_login, realm=user_realm)
+        if not user_obj.exist():
+            sys.exit('User {0!s} does not exist. Please check username and realm.'.format(user_obj))
 
     if chunksize is not None:
         iterable = get_tokens_paginated_generator(tokentype=tokentype,
