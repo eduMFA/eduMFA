@@ -29,7 +29,7 @@ a glimpse in the connection to your user store, you could as well in a first
 step *mark* the orphaned tokens. A day later you could run the script again
 and delete those tokens, which are (still) *orphaned* and *marked*.
 
-You can also filter for token attributes and attribute values.
+The token janitor script can also filter for token attributes and attribute values.
 It is also possible to check just for the existence or not-existence of a
 certain tokeninfo-value.
 
@@ -41,6 +41,10 @@ With the token-janitor you have the possibility to search for tokens in differen
 You can find tokens by providing filter parameters. Note, that you can combine as many filter
 parameters as you want to. This way you can reduce the set of found tokens.
 Several filter parameters allow to search with regular expressions.
+
+The parameters ``tokentype`` and ``username`` are exact matches and will be applied before any other filters. This means
+that only tokens of given tokentype and username will be processed.
+If neither of those two parameters is given all tokens will be processed and checked against other filters.
 
 Actions will then be performed only on this reduced set.
 
@@ -129,6 +133,23 @@ Example::
 
     edumfa-token-janitor find --serial '^UBOM.*'
 
+Username
+******
+
+Searches through all tokens and returns the ones belonging to the given username.
+The username should contain the realm in the format ``user@realm``. If no realm is given the default realm is used.
+
+Example::
+
+    eduMFA-token-janitor find --username testuser@testrealm
+
+Return all tokens belonging to the user ``testuser`` in the realm ``testrealm``.
+
+Example::
+
+    eduMFA-token-janitor find --username testuser
+
+Return all tokens belonging to the user ``testuser`` in the default realm.
 
 Tokentype
 *********
