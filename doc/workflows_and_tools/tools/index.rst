@@ -15,21 +15,21 @@ eduMFA-token-janitor
 
 .. index:: orphaned tokens
 
-Starting with version 2.19 eduMFA comes with a token janitor script.
+eduMFA comes with a token janitor script.
 This script can find orphaned tokens, unused tokens or tokens of specific
 type, description or token info.
 
 It can unassign, delete or disable those tokens, it can set additional
 tokeninfo or descriptions and perform other tasks on the found tokens.
 
-Starting with version 3.4 it can also set the tokenrealms of the found tokens.
+It can also set the tokenrealms of the found tokens.
 
 If you are unsure to directly delete orphaned tokens, because there might be
 a glimpse in the connection to your user store, you could as well in a first
 step *mark* the orphaned tokens. A day later you could run the script again
 and delete those tokens, which are (still) *orphaned* and *marked*.
 
-With version 3.7 it can also filter for token attributes and attribute values.
+The token janitor script can also filter for token attributes and attribute values.
 It is also possible to check just for the existence or not-existence of a
 certain tokeninfo-value.
 
