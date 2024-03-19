@@ -5,7 +5,7 @@ Manage Users
 
 .. index:: Edit User, Change User Password, Add User
 
-Since version 2.4 eduMFA allows you to edit users in the configured
+eduMFA allows you to edit users in the configured
 resolvers. At the moment this is possible for SQL resolvers.
 
 In the resolver definition you need to check the new checkbox **Edit user

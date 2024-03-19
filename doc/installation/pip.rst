@@ -17,19 +17,19 @@ You first need to install a package for creating a python `virtual environment
 
 Now you can setup the virtual environment for eduMFA like this::
 
-  virtualenv /opt/eduMFA
+  virtualenv /opt/edumfa
 
-  cd /opt/eduMFA
+  cd /opt/edumfa
   source bin/activate
 
 .. note::
     Some distributions still ship Python 2.7 as the system python. If you want
     to use Python 3 you can create the virtual environment like this:
-    `virtualenv -p /usr/bin/python3 /opt/eduMFA`
+    `virtualenv -p /usr/bin/python3 /opt/edumfa`
 
 Now you are within the python virtual environment and you can run::
 
-  pip install eduMFA
+  pip install edumfa
 
 in order to install the latest eduMFA version from
 `PyPI <https://pypi.org/project/eduMFA>`_.
@@ -42,13 +42,13 @@ versions of dependencies are not always tested and might cause problems.
 If you want to achieve a deterministic installation, you can now install the pinned and tested
 versions of the dependencies::
 
-  pip install -r lib/eduMFA/requirements.txt
+  pip install -r lib/edumfa/requirements.txt
 
 It would even be safer to install the pinned dependencies *before* installing eduMFA.
-So if you e.g. know that you are going to install version 3.6 you can run::
+So if you e.g. know that you are going to install version 1.2.0 you can run::
 
-    pip install -r https://raw.githubusercontent.com/eduMFA/eduMFA/v3.6/requirements.txt
-    pip install eduMFA==3.6
+    pip install -r https://raw.githubusercontent.com/eduMFA/eduMFA/v1.2.0/requirements.txt
+    pip install edumfa==1.2.0
 
 .. _pip_configuration:
 
@@ -69,9 +69,9 @@ In order for eduMFA to use the database, a database user with the
 appropriate privileges is needed.
 The following SQL commands will create the database as well as a user in `MySQL`::
 
-    CREATE DATABASE pi;
-    CREATE USER "pi"@"localhost" IDENTIFIED BY "<dbsecret>";
-    GRANT ALL PRIVILEGES ON pi.* TO "pi"@"localhost";
+    CREATE DATABASE edumfa;
+    CREATE USER "edumfa"@"localhost" IDENTIFIED BY "<dbsecret>";
+    GRANT ALL PRIVILEGES ON edumfa.* TO "edumfa"@"localhost";
 
 You must then add the database name, user and password to your `edumfa.cfg`. See
 :ref:`cfgfile` for more information on the configuration.
@@ -100,7 +100,7 @@ To create the database tables execute::
 Stamping the database to the current database schema version is important for
 the update process later::
 
-    edumfa-manage db stamp head -d /opt/eduMFA/lib/eduMFA/migrations/
+    edumfa-manage db stamp head -d /opt/edumfa/lib/edumfa/migrations/
 
 After creating a local administrative user with::
 
@@ -123,12 +123,9 @@ is needed.
 
 Setup and configuration of a webserver can be a complex procedure depending on
 several parameter (host OS, SSL, internal network structure, ...).
-Some example configuration can be found in the NetKnights GitHub
-repositories [#nkgh]_. More on the WSGI setup for eduMFA can be found in
-:ref:`wsgiscript`.
+More on the WSGI setup for eduMFA can be found in :ref:`wsgiscript`.
 
 
 .. rubric:: Footnotes
 
 .. [#sqlaDialects] https://docs.sqlalchemy.org/en/14/dialects/index.html
-.. [#nkgh] https://github.com/NetKnights-GmbH/ubuntu/tree/master/deploy

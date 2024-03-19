@@ -34,8 +34,7 @@ RADIUS PASSTHRU policy migration strategy
 Configure your application like your VPN to authenticate against the
 eduMFA RADIUS server and not against the old deprecated RADIUS server.
 
-Starting with eduMFA 2.11 the :ref:`passthru_policy` policy was enhanced. You
-can define a system wide RADIUS server. Then you can create a
+You can define a system wide RADIUS server. Then you can create a
 *authentication* policy with the passthru action pointing to this RADIUS
 server. This means that - as long as a user trying to authenticate - has not
 token assigned, all authentication request with this very username and the

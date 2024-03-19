@@ -166,7 +166,7 @@ type: string
 If the ``otp_pin_random`` policy is defined, you can use this policy to
 define, what should happen with the random pin.
 The action value take the class of a PinHandler like
-``eduMFA.lib.pinhandling.base.PinHandler``.
+``edumfa.lib.pinhandling.base.PinHandler``.
 The base PinHandler just logs the PIN to the log file. You can add classes to
 send the PIN via EMail or print it in a letter.
 
@@ -191,7 +191,7 @@ trigger the change of the PIN using the API */token/setpin*. See
 .. note:: If the application does not honour the "pin_change" attribute, then
    the user can still authenticate with his old PIN.
 
-.. note:: Starting with version 3.4 eduMFA also allows to force the user to change
+.. note:: eduMFA also allows to force the user to change
    the PIN in such a case using the policy :ref:`policy_change_pin_via_validate`.
 
 .. _policy_change_pin_every:
@@ -385,10 +385,8 @@ They control the key generation during the 2step token enrollment (see :ref:`2st
 The ``serversize`` is the optional size (in bytes) of the server's key part.
 The ``clientsize`` is the size (in bytes) of the smartphone's key part.
 The ``difficulty`` is a parameter for the key generation.
-In the implementation in version 2.21 PBKDF2 is used. In this case the ``difficulty``
+In the implementation PBKDF2 is used. In this case the ``difficulty``
 specifies the number of rounds.
-
-This is new in version 2.21.
 
 .. _force_app_pin:
 .. _hotp-force-app-pin:
@@ -406,8 +404,6 @@ to force the user to protect the token with a PIN.
 .. note:: This only works with the unsupported privacyIDEA Authenticator.
    This policy has no effect, if the QR code is scanned with other smartphone apps.
 
-This is new in version 3.1.
-
 
 .. _policy_firebase_config:
 
@@ -423,9 +419,7 @@ The administrator can create several connections to the Firebase service
 This way even different Firebase configurations could be
 used depending on the user's realm or the IP address.
 
-This is new in version 3.0.
-
-Starting with version 3.6, if the push token is supposed to run in poll-only mode,
+If the push token is supposed to run in poll-only mode,
 then the entry "poll only" can be selected instead of a firebase configuration.
 In this mode, neither the eduMFA server nor the smartphone app will connect to Google
 Firebase during enrollment or authentication.

@@ -46,22 +46,22 @@ you can modify the text here::
    static/customize/views/includes/token.enroll.post.bottom.html
 
 .. note:: You can change the directory static/customize to a URL that fits
-   your needs the best by defining a variable PI_CUSTOMIZATION in the file
+   your needs the best by defining a variable EDUMFA_CUSTOMIZATION in the file
    edumfa.cfg. This way you can put all modifications in one place apart from the
    original code.
 
 Example
 ~~~~~~~
 
-Your eduMFA system is running in the URL sub path ``/pi``.
-The files could be addressed via a path component ``mydesign`` (in this case ``pi/mydesign``).
-Thus the WebUI will look for the files in the URL path ``/pi/mydesign/views/includes/``.
+Your eduMFA system is running in the URL sub path ``/edumfa``.
+The files could be addressed via a path component ``mydesign`` (in this case ``edumfa/mydesign``).
+Thus the WebUI will look for the files in the URL path ``/edumfa/mydesign/views/includes/``.
 
 So you set in ``edumfa.cfg``::
 
-    PI_CUSTOMIZATION = "/mydesign"
+    EDUMFA_CUSTOMIZATION = "/mydesign"
 
-Your customized files are located in ``/etc/eduMFA/customize/views/includes/``.
-In the Apache webserver you need to map ``/pi/mydesign`` to ``/etc/eduMFA/customize``::
+Your customized files are located in ``/etc/edumfa/customize/views/includes/``.
+In the Apache webserver you need to map ``/edumfa/mydesign`` to ``/etc/edumfa/customize``::
 
-    Alias /pi/mydesign /etc/eduMFA/customize
+    Alias /edumfa/mydesign /etc/edumfa/customize

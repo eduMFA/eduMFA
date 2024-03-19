@@ -57,7 +57,7 @@ The paper token expects:
 Cascading Style Sheets
 ----------------------
 
-CSS customization can be enabled using the ``PI_CUSTOM_CSS``-setting in ``edumfa.cfg`` and expects a file called
+CSS customization can be enabled using the ``EDUMFA_CUSTOM_CSS``-setting in ``edumfa.cfg`` and expects a file called
 ``custom.css`` in the sub directory ``css``.
 
 **Example**

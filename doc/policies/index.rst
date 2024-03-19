@@ -32,7 +32,7 @@ The logic of the policies in the scopes is additive.
 
    *Policy Definition*
 
-Starting with eduMFA 2.5 you can use policy templates to ease the setup.
+You can use policy templates to ease the setup.
 
 .. toctree::
    :maxdepth: 1
@@ -86,8 +86,8 @@ Each policy can contain the following attributes:
 
   If this field is left blank, this policy is valid for all resolvers.
 
-  .. note:: Starting with version 2.17 you can use the parameter
-     ``check_all_resolvers``. This is *Check all possible resolvers*
+  .. note:: You can use the parameter ``check_all_resolvers``.
+     This is *Check all possible resolvers*
      *of a user to match the resolver in this policy* in the Web UI.
 
      Assume a user *user@realm1* is contained in *resolver1* and *resolver2*
@@ -121,8 +121,6 @@ Each policy can contain the following attributes:
 
 **eduMFA Node**
 
-  (added in eduMFA 3.4)
-
   If you have a redundant setup requests can hit different dedicated nodes of
   your eduMFA cluster. If you want a policy to only be valid for certain
   eduMFA Nodes, you can set a list of allowed nodes.
@@ -133,8 +131,6 @@ Each policy can contain the following attributes:
   The nodes are configured in edumfa.cfg. See :ref:`cfgfile`.
 
 **time**
-
-  (added in eduMFA 2.12)
 
   In the time field of a policy you can define a list of time ranges. A time
   range can consist of day of weeks (*dow*) and of times in 24h format.
@@ -156,8 +152,6 @@ Each policy can contain the following attributes:
 
 **priority**
 
-  (added in eduMFA 2.23)
-
   The priority field of policies contains a positive number and defaults to 1.
   In case of policy conflicts, policies with a lower priority number take precedence.
 
@@ -175,8 +169,6 @@ Each policy can contain the following attributes:
 
 
 **additional conditions**
-
-  (added in eduMFA 3.1)
 
   Using conditions, you can specify more advanced rules that determine whether
   a policy is valid for a request.

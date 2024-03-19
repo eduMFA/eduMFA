@@ -981,16 +981,19 @@ class WebAuthnTokenClass(TokenClass):
                 cn = webauthn_credential.attestation_cert.subject.get_attributes_for_oid(x509.NameOID.COMMON_NAME)
                 automatic_description = cn[0].value if len(cn) else None
 
-            # Add info to token about whether a resident key/ discoverable credential was enrolled
-            resident_key = registration_client_extensions and b'{"rk":true}' in \
-                webauthn_b64_decode(registration_client_extensions)
-            print(registration_client_extensions)
-            if resident_key:
-                self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Yes")
-                automatic_description = "Passkey (Webauthn Resident Key)"
-            else:
-                self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Not enough info")
-
+            if registration_client_extensions:
+                try:
+                    extensions = json.loads(webauthn_b64_decode(registration_client_extensions))
+                    # Add info to token about whether a resident key/ discoverable credential was enrolled
+                    resident_key = 'rk' in extensions and (extensions['rk'] or extensions['rk'] == 'true')
+                    if resident_key:
+                        self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Yes")
+                        automatic_description = "Passkey (Webauthn Resident Key)"
+                    else:
+                        self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Not enough info")
+                except Exception as e:
+                    log.warning('Could not parse registrationClientExtensions: {0!s}'.format(e))
+                    
             # If no description has already been set, set the automatic description or the
             # description given in the 2nd request
             if not self.token.description:

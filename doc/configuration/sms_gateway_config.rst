@@ -18,10 +18,8 @@ There are different providers (gateways) to deliver SMS.
 Firebase Provider
 ~~~~~~~~~~~~~~~~~
 
-The Firebase provider was added in eduMFA 3.0. It sends notifications
+The Firebase provider sends notifications
 via the Google Firebase service and this is used for the :ref:`push_token`.
-For an exemplary configuration, you may have a look on the articles on the
-eduMFA community website `tagged with push token <https://www.eduMFA.org/tag/push-token/>`_.
 
 **JSON config file**
 
@@ -31,7 +29,7 @@ eduMFA community website `tagged with push token <https://www.eduMFA.org/tag/pus
 
 
 You can get the necessary *JSON config file*, from your Firebase console.
-The default PUSH authenticator App (privacyIDEA Authenticator) which you can
+The unsupported PUSH authenticator App (privacyIDEA Authenticator) which you can
 find in Google Play Store and Apple App Store uses a Firebase project, that is
 managed by the company NetKnights.
 You need to get an SLA to receive a JSON config file for accessing the project.
@@ -180,6 +178,40 @@ Set the additional **options** as POST parameters:
  * Body: {otp}
  * To: {phone}
 
+HTTP Message To Uid Provider
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. index:: HTTP Message To Uid Provider
+
+The HTTP message to uid provider is an extension of the HTTP SMS Provider
+and can be used to send HTTP POST or GET request to a uid instead of a
+phone number.
+It has all the parameters of the **HTTP Provider** above and the following
+additional parameters:
+
+
+**UID_TOKENINFO_ATTRIBUTE**
+
+  If this parameter is set, read the uid from this tokeninfo attribute.
+  This is useful for verification of the token when it is not assigned
+  to a user initially.
+
+**POST_CHECK_URL**
+
+  When set, call this URL after validate/check.
+  Can be used to clear an OTP message from a device after it was entered.
+  The **POST_CHECK_URL** will be called with the same parameters as the
+  **URL**.
+
+The uid can be set as an additional **option** to be passed as HTTP
+parameter, it contains the uid of the user the token is assigned to
+or the value of the tokeninfo attribute when **UID_TOKENINFO_ATTRIBUTE**
+is set.
+
+ * user: {uid}
+ * text: Your OTP value is {otp}.
+
+See **HTTP provider** for more examples.
 
 Sipgate provider
 ~~~~~~~~~~~~~~~~
@@ -214,7 +246,7 @@ content from the Sipgate gateway.
 SMPP Provider
 ~~~~~~~~~~~~~
 
-The SMPP provider was added in eduMFA 2.22. It uses an SMS Center via the SMPP protocol to
+The SMPP provider uses an SMS Center via the SMPP protocol to
 deliver SMS to the users.
 
 You need to specify the **SMSC_HOST** and **SMSC_PORT** to talk to the SMS center.
@@ -266,8 +298,8 @@ Script provider
 The *Script provider* calls a script which can take care of sending the SMS.
 The script takes the phone number as the only parameter. The message is expected at stdin.
 
-Scripts are located in the directory ``/etc/eduMFA/scripts/``. You can change this default
-location by setting the value in ``PI_SCRIPT_SMSPROVIDER_DIRECTORY`` in :ref:`cfgfile`.
+Scripts are located in the directory ``/etc/edumfa/scripts/``. You can change this default
+location by setting the value in ``EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY`` in :ref:`cfgfile`.
 
 In the configuration of the Script provider you can set two attributes.
 

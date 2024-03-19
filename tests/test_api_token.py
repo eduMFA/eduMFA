@@ -2951,6 +2951,90 @@ class APITokenTestCase(MyApiTestCase):
 
         delete_policy("require_description")
 
+    def test_43_modify_tokeninfo_bulk(self):
+        self._create_temp_token("INF001")
+        # Set three tokeninfo values
+        with self.app.test_request_context('/token/info/INF001',
+                                           method="POST",
+                                           data={"info": '{"key1": "value 1", "key2": "value 2", "key3": "value 3"}'},
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            self.assertTrue(result.get("value"), result)
+
+        # check if values are now in tokeninfo
+        with self.app.test_request_context('/token/',
+                                           method="GET",
+                                           query_string=urlencode(
+                                               {"serial": "INF001"}),
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            value = result.get("value")
+            token = value.get("tokens")[0]
+            self.assertTrue(value.get("count") == 1, result)
+
+            tokeninfo = token.get("info")
+            test_dict = {'key1': 'value 1', 'key2': 'value 2', 'key3' : 'value 3'}
+            try:
+                self.assertTrue(test_dict.viewitems() <= tokeninfo.viewitems())
+            except AttributeError:
+                self.assertTrue(test_dict.items() <= tokeninfo.items())
+
+        # Overwrite an existing tokeninfo value and delete an entry
+        with self.app.test_request_context('/token/info/INF001',
+                                           method="POST",
+                                           data={"info": '{"key1": "value 1", "key2": null, "key3": "value 3 new"}'},
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            self.assertTrue(result.get("value"), result)
+
+        # Delete a non-existing tokeninfo key
+        with self.app.test_request_context('/token/info/INF001',
+                                           method="POST",
+                                           data={"info": '{"keynonexistent": null}'},
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            self.assertTrue(result.get("value"), result)
+
+        # Check that the tokeninfo is correct
+        with self.app.test_request_context('/token/',
+                                           method="GET",
+                                           query_string=urlencode(
+                                               {"serial": "INF001"}),
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            value = result.get("value")
+            token = value.get("tokens")[0]
+            self.assertTrue(value.get("count") == 1, result)
+
+            tokeninfo = token.get("info")
+            test_dict = {'key1': 'value 1', 'key3': 'value 3 new'}
+            try:
+                self.assertTrue(test_dict.viewitems() <= tokeninfo.viewitems())
+            except AttributeError:
+                self.assertTrue(test_dict.items() <= tokeninfo.items())
+                self.assertNotIn('key2', tokeninfo)
+
+        # Try to modify with an unknown serial
+        with self.app.test_request_context('/token/info/UNKNOWN',
+                                           method="POST",
+                                           data={"info": '{"key1": "value 1", "key2": "value 2"}'},
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 404)
+            result = res.json.get("result")
+            self.assertFalse(result.get("status"))
+
+
 
 class API00TokenPerformance(MyApiTestCase):
 

@@ -3,7 +3,7 @@
 Extended Policy Conditions
 --------------------------
 
-Since eduMFA 3.1, *extended policy conditions* allow to define more advanced rules
+*extended policy conditions* allow to define more advanced rules
 for policy matching, i.e. for determining which policies are valid for a
 specific request.
 

@@ -157,11 +157,11 @@ This is the text that is sent via SMS to the user trying to
 authenticate with an SMS token. This can contain the tags *<otp>* and *<serial>*.
 Texts containing whitespaces must be enclosed in single quotes.
 
-Starting with version 2.20 you can use the tag *{challenge}*. This will add
+You can use the tag *{challenge}*. This will add
 the challenge data that was passed in the first authentication request in the
 challenge parameter. This could contain banking transaction data.
 
-Starting with version 3.6 the `smstext` can contain a lot more tags similar to the
+The `smstext` can contain a lot more tags similar to the
 policy :ref:`emailtext`:
 
   * {otp} or *<otp>* the One-Time-Password
@@ -232,14 +232,14 @@ The text can contain the following tags, that will be filled:
   * {time} the current server time in the format HH:MM:SS.
   * {date} the current server date in the format YYYY-MM-DD
 
-Starting with version 2.20 you can use the tag *{challenge}*. This will add
+You can also use the tag *{challenge}*. This will add
 the challenge data that was passed in the first authentication request in the
 challenge parameter. This could contain banking transaction data.
 
 Default: *<otp>*
 
 You can also provide the filename to an email template. The filename must be prefixed with
-``file:`` like ``file:/etc/eduMFA/emailtemplate.html``. The template is
+``file:`` like ``file:/etc/edumfa/emailtemplate.html``. The template is
 an HTML file.
 
 .. note:: If a message text is supplied directly, the email is sent as plain text.

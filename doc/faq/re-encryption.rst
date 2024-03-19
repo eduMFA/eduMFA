@@ -25,7 +25,7 @@ of the tokens and also the tokeninfos of the tokens.
 
 You need to handle this file with care!
 
-    eduMFA-token-janitor find --action export --yaml my-tokens.yaml
+    edumfa-token-janitor find --action export --yaml my-tokens.yaml
 
 Check for error messages written to stderr!
 
@@ -37,7 +37,7 @@ Note, that the new eduMFA system actually has to contain the tokens!
 
 Use the update command to to store the secret OTP keys with the new encryption mechanism.
 
-    eduMFA-token-janitor updatetokens --yaml my-tokens.yaml
+    edumfa-token-janitor updatetokens --yaml my-tokens.yaml
 
 Check for error messages written to stderr!
 

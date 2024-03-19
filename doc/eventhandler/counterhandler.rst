@@ -28,7 +28,7 @@ This action decreases the counter in the database table ``eventcounter``.
 If the counter does not exists, it will be created and decreased.
 
   .. note::  This action will not decrease the counter beyond zero unless the option
-    :ref:`pi_doc_eventhandler_counter` is enabled.
+    :ref:`edumfa_doc_eventhandler_counter` is enabled.
 
 reset_counter
 .............
@@ -45,7 +45,7 @@ counter_name
 This is the name of the counter in the database.
 You can have as many counters in as many event handlers as you like.
 
-.. _pi_doc_eventhandler_counter:
+.. _edumfa_doc_eventhandler_counter:
 
 allow_negative_values
 .....................

@@ -5,7 +5,7 @@ Four Eyes
 
 .. index:: Four Eyes, 4 Eyes, Two Man
 
-Starting with version 2.6 eduMFA supports 4 Eyes Token. This is a meta
+This is a meta
 token, that can be used to define, that two or more token must be used to
 authenticate. This way, you can set up a "two man rule".
 
@@ -75,7 +75,7 @@ In case of a failed authentication the response looks like this::
 Using Challenge Response mode
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Starting with version 3.5 it is also possible to use the 4eyes token in
+It is also possible to use the 4eyes token in
 multi challenge-response mode.
 This way in the first authentication response the users will either enter the
 OTP PIN of the 4eyes token or (if the 4eyes token has no PIN) enter the first

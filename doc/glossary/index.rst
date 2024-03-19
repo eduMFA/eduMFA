@@ -143,7 +143,7 @@ Glossary
 
         eduMFA comes with a default SQL audit module (see :ref:`audit`).
 
-        Starting with version 3.2 eduMFA also provides a :ref:`logger_audit` and
+        eduMFA also provides a :ref:`logger_audit` and
         a :ref:`container_audit` which can be used to send eduMFA audit log messages
         to services like splunk or logstash.
 
@@ -356,7 +356,7 @@ Glossary
            simply add users to be administrator in eduMFA.
 
         You define the administrative realms in the config file ``edumfa.cfg``, which is
-        usually located at ``/etc/eduMFA/edumfa.cfg``::
+        usually located at ``/etc/edumfa/edumfa.cfg``::
 
            SUPERUSER_REALM = ["adminrealm1", "super", "boss"]
 
@@ -392,7 +392,7 @@ Glossary
         * Programmatically via a call to /validate/triggerchallenge
 
    Extended Policy Conditions
-        Since eduMFA 3.1, :ref:`policy_conditions` allow to define more advanced rules
+        :ref:`policy_conditions` allow to define more advanced rules
         for policy matching, i.e. for determining which policies are valid for a
         specific request.
 

@@ -5,8 +5,6 @@ VASCO
 
 .. index:: VASCO
 
-Starting with version 2.22 eduMFA supports VASCO tokens.
-
 VASCO OTP tokens are a proprietary OTP token. You can import
 the VASCO blobs from a CSV file or you the administrator can enroll
 a single VASCO token.

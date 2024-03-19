@@ -5,7 +5,6 @@ U2F
 
 .. index:: U2F, FIDO
 
-Starting with version 2.7 eduMFA supports U2F tokens.
 The administrator or the user himself can register a U2F device and use this
 U2F token to login to the eduMFA web UI or to authenticate at
 applications.

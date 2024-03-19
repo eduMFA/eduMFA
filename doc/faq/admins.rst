@@ -24,12 +24,12 @@ WebUI.
    role.
 
 .. note:: Use this carefully. Imagine you defined a resolver to a specific
-   group in your Active Directory to be the pricacyIDEA admins. Then the Active
+   group in your Active Directory to be the eduMFA admins. Then the Active
    Directory domain admins can
    simply add users to be administrator in eduMFA.
 
 You define the administrative realms in the config file ``edumfa.cfg``, which is
-usually located at ``/etc/eduMFA/edumfa.cfg``::
+usually located at ``/etc/edumfa/edumfa.cfg``::
 
    SUPERUSER_REALM = ["adminrealm1", "super", "boss"]
 

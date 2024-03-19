@@ -5,8 +5,7 @@ Two Step Enrollment
 
 .. index:: privacyIDEA Authenticator, twostep, 2step
 
-Starting with version 2.21 eduMFA allows to enroll smartphone based tokens in a
-2step enrollment.
+eduMFA allows to enroll smartphone based tokens in a 2step enrollment.
 
 With the rise of the smartphones and the fact that every user has a smartphone, carries it
 with him all the time and cares about it a lot, using the smartphone for authentication

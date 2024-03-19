@@ -47,3 +47,4 @@ The latest migration will rename several columns and tables from privacyIDEA rel
     * Replace all occurences of `login_mode=privacyIDEA` in `policy.action` with `login_mode=eduMFA`
     * Replace all occurences of `privacyideaserver_read` in `policy.action` with `edumfaserver_read`
     * Replace all occurences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
+    * Replace all occurences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`

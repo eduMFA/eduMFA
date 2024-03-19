@@ -1852,7 +1852,7 @@ msgstr "正則表達式，用於修改電話號碼以使其與提供程式相容
 msgid ""
 "The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to "
 "call. Expects phone as the parameter and the message from stdin."
-msgstr "腳本目錄中的腳本PI_SCRIPT_SMSPROVIDER_DIRECTORY調用。期望電話作為參數和來自 stdin 的消息。"
+msgstr "腳本目錄中的腳本EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY調用。期望電話作為參數和來自 stdin 的消息。"
 
 #: lib/smsprovider/SmppSMSProvider.py:128
 msgid "SMSC Host IP"
