@@ -1,4 +1,3 @@
-
 .. _install_ubuntu:
 
 Ubuntu Packages
@@ -6,14 +5,7 @@ Ubuntu Packages
 
 .. index:: ubuntu
 
-There are ready made packages for Ubuntu.
-
-Packages of older releases of eduMFA up to version 2.23 are available for
-Ubuntu 14.04 LTS and Ubuntu 16.04 LTS from a public ppa repository [#ppa]_.
-Using these is deprecated.
-
-For recent releases of eduMFA starting from version 3.0 a repository is
-available which provides packages for Ubuntu 18.04 LTS, 20.04LTS and 22.04LTS [#ubuntu]_.
+There are ready made packages for Ubuntu 20.04LTS and 22.04LTS.
 
 .. note:: The packages ``edumfa-apache2`` and ``edumfa-nginx`` assume
    that you want to run a eduMFA system. These packages deactivate all
@@ -24,10 +16,10 @@ available which provides packages for Ubuntu 18.04 LTS, 20.04LTS and 22.04LTS [#
 
 Read about the upgrading process in :ref:`upgrade_packaged`.
 
-Installing eduMFA 3.0 or higher
+Installing eduMFA 1.0 or higher
 ....................................
 
-Before installing eduMFA 3.0 or upgrading to 3.0 you need to add the repository.
+Before installing eduMFA 1.0 or upgrading to 1.0 you need to add the repository.
 
 .. _add_ubuntu_repository:
 
@@ -36,54 +28,46 @@ Add repository
 
 The packages are digitally signed. First you need to download the signing key::
 
-   wget https://lancelot.netknights.it/NetKnights-Release.asc
+   wget https://identity.fu-berlin.de/downloads/edumfa/eduMFA-Release.asc
 
 Then you can verify the fingerprint::
 
-   gpg --import --import-options show-only --with-fingerprint NetKnights-Release.asc
+   gpg --import --import-options show-only --with-fingerprint eduMFA-Release.asc
 
 The fingerprint of the key is::
 
-   pub 4096R/AE250082 2017-05-16 NetKnights GmbH <release@netknights.it>
-   Key fingerprint = 0940 4ABB EDB3 586D EDE4 AD22 00F7 0D62 AE25 0082
+   pub rsa4096 2024-02-29 FUDIS - eduMFA APT Signing Key <fudis@fu-berlin.de>
+   Key fingerprint = 0578 E752 4B98 4E58 9847  139B ED01 69DB F5CD C377
 
-On Ubuntu 18.04LTS and 20.04LTS you can now add the signing key to your system::
+On 20.04LTS you can now add the signing key to your system::
 
-   apt-key add NetKnights-Release.asc
+   apt-key add eduMFA-Release.asc
 
 On Ubuntu 22.04LTS you can add the signing key by::
 
-   mv NetKnights-Release.asc /etc/apt/trusted.gpg.d/
+   mv eduMFA-Release.asc /etc/apt/trusted.gpg.d/
 
-Now you need to add the repository for your release (either bionic/18.04LTS, focal/20.04LTS or jammy/22.04LTS)
+Now you need to add the repository for your release (focal/20.04LTS or jammy/22.04LTS)
 
 You can do this by running the command::
 
-   add-apt-repository http://lancelot.netknights.it/community/bionic/stable
+   add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy
 
 or::
 
-   add-apt-repository http://lancelot.netknights.it/community/focal/stable
-
-or::
-
-   add-apt-repository http://lancelot.netknights.it/community/jammy/stable
+   add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal
 
 As an alternative you can add the repo in a dedicated file. Create a new
 file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the
 following contents::
 
-   deb http://lancelot.netknights.it/community/bionic/stable bionic main
+   deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy jammy main
 
 or::
 
-   deb http://lancelot.netknights.it/community/focal/stable focal main
+   deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal focal main
 
-or::
-
-   deb http://lancelot.netknights.it/community/jammy/stable jammy main
-
-Installation of eduMFA 3.x
+Installation of eduMFA 1.x
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After having added the repositories, run::
@@ -109,15 +93,48 @@ eduMFA server. This module plugs into FreeRADIUS. The FreeRADIUS does not
 have to run on the same machine as eduMFA.
 To install this module run::
 
-   apt-get install eduMFA-radius
+   apt-get install edumfa-radius
 
 For further details see :ref:`rlm_perl`.
 
 .. rubric:: Footnotes
 
-.. [#ppa] https://launchpad.net/~eduMFA
-.. [#ubuntu] Starting with eduMFA 2.15 Ubuntu 16.04 packages are
-   provided. Starting with eduMFA 3.0 Ubuntu 16.04 and 18.04 packages
-   are provided, Ubuntu 14.04 packages are dropped.
-   Starting with eduMFA 3.5 Ubuntu 20.04 packages are available.
-   Starting with eduMFA 3.8 Ubuntu 22.04 packages are available, Ubuntu 16.04 packages are dropped.
+
+Building your own Packages
+...........................
+To build custom packages from the source code, follow these steps meticulously:
+
+Ensure you have the necessary build tools by executing the following command::
+
+   sudo apt install build-essential debhelper devscripts equivs
+
+Install [dh-virtualenv](https://github.com/spotify/dh-virtualenv) by referring to their official documentation
+for installation instructions: [dh-virtualenv Docs](https://dh-virtualenv.readthedocs.io/en/latest/tutorial.html#step-1-install-dh-virtualenv)
+
+Clone the repository and navigate to the project directory::
+
+   git clone https://github.com/eduMFA/eduMFA.git
+   cd eduMFA
+
+Choose the package you want to build based on your requirements. Use one of the following commands. This one for the core package::
+
+    cp -r deploy/ubuntu debian
+
+or for apache2 and nginx package::
+
+    cp -r deploy/ubuntu-server debian  # for
+
+or for radius package::
+
+    cp -r deploy/ubuntu-radius debian
+
+Update the Linux distribution version in the changelog file. For example, for Ubuntu 22.04 LTS jammy::
+
+    sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
+
+Install build dependencies and build the package::
+
+   sudo mk-build-deps -ri
+   dpkg-buildpackage -us -uc -b
+
+By following these steps, you can successfully build a package from source.
