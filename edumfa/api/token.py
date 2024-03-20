@@ -162,6 +162,7 @@ def init():
                             hex or base32check (see :ref:`2step_enrollment`)
     :jsonparam rollover: Set this to 1 or true to indicate, that you want to rollover a token.
                     This is mandatory to rollover tokens, that are in the clientwait state.
+    :jsonparam dict info: dictionary with key value pairs which will be set as tokeninfo.
 
     :return: a json result with a boolean "result": true
 
@@ -1214,7 +1215,7 @@ def modify_tokeninfo_api(serial):
     with the same key are overwritten, keys with null value are deleted
 
     :jsonparam dict info: dictionary with key value pairs. keys with null value are deleted. always make sure not to
-    : include keys with null value by accident!
+    include keys with null value by accident!
     :param serial: the serial number/identifier of the token
     :return: returns value=True in case at least one token matching the serial could be found
     :rtype: bool

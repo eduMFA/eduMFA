@@ -2951,7 +2951,7 @@ class APITokenTestCase(MyApiTestCase):
 
         delete_policy("require_description")
 
-    def test_43_modify_tokeninfo_bulk(self):
+    def test_51_modify_tokeninfo_bulk(self):
         self._create_temp_token("INF001")
         # Set three tokeninfo values
         with self.app.test_request_context('/token/info/INF001',
@@ -3034,6 +3034,47 @@ class APITokenTestCase(MyApiTestCase):
             result = res.json.get("result")
             self.assertFalse(result.get("status"))
 
+    def test_52_init_token_with_tokeninfo(self):
+        with self.app.test_request_context('/token/init',
+                                           method='POST',
+                                           data={"type": "HOTP",
+                                                 "otpkey": self.otpkey,
+                                                 "pin": "1234",
+                                                 "user": "cornelius",
+                                                 "realm": self.realm1,
+                                                 "info": '{"key1": "value 1", "key2": "value 2", "key3": "value 3"}'},
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            self.assertTrue(res.status_code == 200, res)
+            result = data.get("result")
+            detail = data.get("detail")
+            self.assertTrue(result.get("status"), result)
+            self.assertTrue(result.get("value"), result)
+            self.assertTrue("value" in detail.get("googleurl"), detail)
+            serial = detail.get("serial")
+            self.assertTrue("OATH" in serial, detail)
+
+        with self.app.test_request_context('/token/',
+                                           method="GET",
+                                           query_string=urlencode(
+                                               {"serial": serial}),
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            value = result.get("value")
+            token = value.get("tokens")[0]
+            self.assertTrue(value.get("count") == 1, result)
+
+            tokeninfo = token.get("info")
+            test_dict = {'key1': 'value 1', 'key2': 'value 2', 'key3' : 'value 3'}
+            try:
+                self.assertTrue(test_dict.viewitems() <= tokeninfo.viewitems())
+            except AttributeError:
+                self.assertTrue(test_dict.items() <= tokeninfo.items())
+
+        remove_token(serial)
 
 
 class API00TokenPerformance(MyApiTestCase):

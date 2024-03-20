@@ -33,7 +33,7 @@ tokenclass implementations like lib.tokens.hotptoken)
 
 This is the middleware/glue between the HTTP API and the database
 """
-
+import json
 import traceback
 import string
 import datetime
@@ -1054,6 +1054,8 @@ def init_token(param, user=None, tokenrealms=None,
     if user and user.realm:
         realms.append(user.realm)
 
+
+
     try:
         # Save the token to the database
         if token_count == 0:
@@ -1090,6 +1092,18 @@ def init_token(param, user=None, tokenrealms=None,
     # In all other cases it is set in the update method of the tokenclass.
     if tokenkind:
         tokenobject.add_tokeninfo("tokenkind", tokenkind)
+
+    #Set tokeninfo from info dict
+    tokeninfo = param.get("info")
+    if tokeninfo:
+        if type(tokeninfo) is not dict:
+            tokeninfo = json.loads(tokeninfo)
+        if type(tokeninfo) is not dict:
+            raise ParameterError("Parameter 'info' must be a list of key, value pairs (dictionary). but is of type {0!r}", type(tokeninfo))
+        else:
+            for key, value in tokeninfo.items():
+                if value:
+                    tokenobject.add_tokeninfo(key, value)
 
     # Set the validity period
     validity_period_start = param.get("validity_period_start")
