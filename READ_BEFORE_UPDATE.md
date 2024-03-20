@@ -1,5 +1,21 @@
 # Update Notes
 
+## eduMFA 1.4.0
+
+* ci: fix branch names by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/22
+* docs: start fixing incorrect camel case by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/25
+* docs: cleanup old refs and fix path names by @j-hoff in https://github.com/eduMFA/eduMFA/pull/28
+* docs: use fu repo by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/33
+* docs: add docu for new sms provider "Http Message To Uid Provider" by @j-hoff in https://github.com/eduMFA/eduMFA/pull/21
+* feat: smstoken: add configurable URL which is called after check, extend test by @j-hoff in https://github.com/eduMFA/eduMFA/pull/18
+* feat: make result value available in logginghandler, verbosely log set tokeninfo by @j-hoff in https://github.com/eduMFA/eduMFA/pull/19
+* feat: new API endpoint POST /info/<serial> to bulk modify tokeninfo by @j-hoff in https://github.com/eduMFA/eduMFA/pull/20
+* feat: token janitor find by user by @pmainz in https://github.com/eduMFA/eduMFA/pull/32
+* fix: make ldap connections persistent and restartable by @j-hoff in https://github.com/eduMFA/eduMFA/pull/16
+* fix: wrong indentation caused false "Action .. requires serial number" line by @j-hoff in https://github.com/eduMFA/eduMFA/pull/17
+* fix: improve handling of resident keys by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/26
+* fix: rename provider module names in DB on migration by @j-hoff in https://github.com/eduMFA/eduMFA/pull/29
+
 ## eduMFA 1.3.0
 
 * Fixed handling Windows Hello passkeys
@@ -47,3 +63,4 @@ The latest migration will rename several columns and tables from privacyIDEA rel
     * Replace all occurences of `login_mode=privacyIDEA` in `policy.action` with `login_mode=eduMFA`
     * Replace all occurences of `privacyideaserver_read` in `policy.action` with `edumfaserver_read`
     * Replace all occurences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
+    * Replace all occurences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
