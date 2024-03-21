@@ -1054,8 +1054,6 @@ def init_token(param, user=None, tokenrealms=None,
     if user and user.realm:
         realms.append(user.realm)
 
-
-
     try:
         # Save the token to the database
         if token_count == 0:
@@ -1093,7 +1091,7 @@ def init_token(param, user=None, tokenrealms=None,
     if tokenkind:
         tokenobject.add_tokeninfo("tokenkind", tokenkind)
 
-    #Set tokeninfo from info dict
+    # Set tokeninfo from info dict
     tokeninfo = param.get("info")
     if tokeninfo:
         if type(tokeninfo) is not dict:
