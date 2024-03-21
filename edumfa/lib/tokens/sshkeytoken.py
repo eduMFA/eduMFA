@@ -66,7 +66,7 @@ class SSHkeyTokenClass(TokenClass):
         return "sshkey"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "SSHK"
 
     @staticmethod

@@ -102,7 +102,7 @@ class FourEyesTokenClass(TokenClass):
         return "4eyes"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         """
         return the token type prefix
         """

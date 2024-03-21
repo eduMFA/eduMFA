@@ -167,7 +167,7 @@ class SmsTokenClass(HotpTokenClass):
         return "sms"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "PISM"
 
     @staticmethod

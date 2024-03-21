@@ -600,7 +600,7 @@ class WebAuthnTokenClass(TokenClass):
         return "webauthn"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         """
         Return the prefix, that is used as a prefix for the serial numbers.
 

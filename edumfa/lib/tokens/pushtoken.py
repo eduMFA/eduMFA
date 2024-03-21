@@ -80,7 +80,8 @@ import time
 log = logging.getLogger(__name__)
 
 DEFAULT_CHALLENGE_TEXT = _("Please confirm the authentication on your mobile device!")
-ERROR_CHALLENGE_TEXT = _("Use the polling feature of your unsupported privacyIDEA Authenticator App to check for a new Login request.")
+ERROR_CHALLENGE_TEXT = _(
+    "Use the polling feature of your unsupported privacyIDEA Authenticator App to check for a new Login request.")
 DEFAULT_MOBILE_TEXT = _("Do you want to confirm the login?")
 PRIVATE_KEY_SERVER = "private_key_server"
 PUBLIC_KEY_SERVER = "public_key_server"
@@ -101,6 +102,7 @@ class PUSH_ACTION(object):
     REGISTRATION_URL = "push_registration_url"
     TTL = "push_ttl"
     MOBILE_TEXT = "push_text_on_mobile"
+    VERSION = "push_version"
     MOBILE_TITLE = "push_title_on_mobile"
     SSL_VERIFY = "push_ssl_verify"
     WAIT = "push_wait"
@@ -111,6 +113,11 @@ class PushAllowPolling(object):
     ALLOW = "allow"
     DENY = "deny"
     TOKEN = "token"  # nosec B105 # key name
+
+
+class PushVersions(object):
+    EDUMFA = "edumfa"
+    PRIVACYIDEA = "pi"
 
 
 def strip_key(key):
@@ -132,15 +139,16 @@ def strip_key(key):
 
 @log_with(log)
 def create_push_token_url(
-    url=None,
-    ttl=10,
-    issuer="eduMFA",
-    serial="mylabel",
-    tokenlabel="<s>",
-    user_obj=None,
-    extra_data=None,
-    user=None,
-    realm=None,
+        url=None,
+        ttl=10,
+        issuer="eduMFA",
+        serial="mylabel",
+        tokenlabel="<s>",
+        user_obj=None,
+        extra_data=None,
+        user=None,
+        realm=None,
+        version="edumfa",
 ):
     """
 
@@ -187,13 +195,24 @@ def create_push_token_url(
     url_issuer = quote(issuer.encode("utf-8"))
     url_url = quote(url.encode("utf-8"))
 
-    return "otpauth://pipush/{label!s}?url={url!s}&ttl={ttl!s}&issuer={issuer!s}{extra}".format(
-        label=url_label,
-        issuer=url_issuer,
-        url=url_url,
-        ttl=ttl,
-        extra=_construct_extra_parameters(extra_data),
-    )
+    if version == "pi":
+        return "otpauth://pipush/{label!s}?url={url!s}&ttl={ttl!s}&issuer={issuer!s}{extra}".format(
+            label=url_label,
+            issuer=url_issuer,
+            url=url_url,
+            ttl=ttl,
+            extra=_construct_extra_parameters(extra_data),
+        )
+    else:
+        # Note: We only care about the edumfa-push protocol but don't mind the host part of the url.
+        # We cannot omit the host part, because its case insensitive, therefore labels were all lower case.
+        return "edumfa-push://edumfa-push/{label!s}?url={url!s}&ttl={ttl!s}&issuer={issuer!s}{extra}".format(
+            label=url_label,
+            issuer=url_issuer,
+            url=url_url,
+            ttl=ttl,
+            extra=_construct_extra_parameters(extra_data),
+        )
 
 
 def _build_smartphone_data(serial, challenge, registration_url, pem_privkey, options):
@@ -211,7 +230,8 @@ def _build_smartphone_data(serial, challenge, registration_url, pem_privkey, opt
     """
     sslverify = get_action_values_from_options(SCOPE.AUTH, PUSH_ACTION.SSL_VERIFY, options) or "1"
     sslverify = getParam({"sslverify": sslverify}, "sslverify", allowed_values=["0", "1"], default="1")
-    message_on_mobile = get_action_values_from_options(SCOPE.AUTH, PUSH_ACTION.MOBILE_TEXT, options) or DEFAULT_MOBILE_TEXT
+    message_on_mobile = get_action_values_from_options(SCOPE.AUTH, PUSH_ACTION.MOBILE_TEXT,
+                                                       options) or DEFAULT_MOBILE_TEXT
     title = get_action_values_from_options(SCOPE.AUTH, PUSH_ACTION.MOBILE_TITLE, options) or "eduMFA"
     smartphone_data = {
         "nonce": challenge,
@@ -309,8 +329,9 @@ class PushTokenClass(TokenClass):
         return "push"
 
     @staticmethod
-    def get_class_prefix():
-        return "PIPU"
+    def get_class_prefix(params=None):
+        version = params.get("version") or "edumfa"
+        return "EDUP" if version == "edumfa" else "PIPU"
 
     @staticmethod
     def get_class_info(key=None, ret="all"):
@@ -344,8 +365,10 @@ class PushTokenClass(TokenClass):
                         "required": True,
                         "type": "str",
                         "group": "PUSH",
-                        "desc": _("The URL the Push App should contact in the second enrollment step. Usually it is the endpoint /ttype/push of the eduMFA server."),
+                        "desc": _(
+                            "The URL the Push App should contact in the second enrollment step. Usually it is the endpoint /ttype/push of the eduMFA server."),
                     },
+
                     PUSH_ACTION.TTL: {
                         "type": "int",
                         "group": "PUSH",
@@ -374,6 +397,16 @@ class PushTokenClass(TokenClass):
                     },
                 },
                 SCOPE.AUTH: {
+                    PUSH_ACTION.VERSION: {
+                        "type": "str",
+                        "desc": _("Configure the push token version"),
+                        "group": "PUSH",
+                        "value": [
+                            PushVersions.EDUMFA,
+                            PushVersions.PRIVACYIDEA,
+                        ],
+                        "default": PushVersions.EDUMFA,
+                    },
                     PUSH_ACTION.MOBILE_TEXT: {
                         "type": "str",
                         "desc": _("The question the user sees on his mobile phone."),
@@ -392,7 +425,8 @@ class PushTokenClass(TokenClass):
                     },
                     PUSH_ACTION.WAIT: {
                         "type": "int",
-                        "desc": _("Wait for number of seconds for the user to confirm the challenge in the first request."),
+                        "desc": _(
+                            "Wait for number of seconds for the user to confirm the challenge in the first request."),
                         "group": "PUSH",
                     },
                     PUSH_ACTION.ALLOW_POLLING: {
@@ -476,6 +510,7 @@ class PushTokenClass(TokenClass):
             self.add_tokeninfo("enrollment_credential", geturandom(20, hex=True))
             # We also store the Firebase config, that was used during the enrollment.
             self.add_tokeninfo(PUSH_ACTION.FIREBASE_CONFIG, param.get(PUSH_ACTION.FIREBASE_CONFIG))
+            self.add_tokeninfo(PUSH_ACTION.VERSION, param.get(PUSH_ACTION.VERSION))
         else:
             raise ParameterError("Invalid Parameters. Either provide (genkey) or (serial, fbtoken, pubkey).")
 
@@ -667,12 +702,12 @@ class PushTokenClass(TokenClass):
                 tok.add_tokeninfo("firebase_token", request_data["new_fb_token"])
                 result = True
             except (
-                ResourceNotFoundError,
-                ParameterError,
-                TypeError,
-                InvalidSignature,
-                ConfigAdminError,
-                BinasciiError,
+                    ResourceNotFoundError,
+                    ParameterError,
+                    TypeError,
+                    InvalidSignature,
+                    ConfigAdminError,
+                    BinasciiError,
             ) as e:
                 # to avoid disclosing information we always fail with an invalid
                 # signature error even if the token with the serial could not be found
@@ -697,7 +732,8 @@ class PushTokenClass(TokenClass):
         :rtype: bool
         """
         # By default we allow polling if the policy is not set.
-        allow_polling = get_action_values_from_options(SCOPE.AUTH, PUSH_ACTION.ALLOW_POLLING, options={"g": g}) or PushAllowPolling.ALLOW
+        allow_polling = get_action_values_from_options(SCOPE.AUTH, PUSH_ACTION.ALLOW_POLLING,
+                                                       options={"g": g}) or PushAllowPolling.ALLOW
         if allow_polling == PushAllowPolling.DENY:
             raise PolicyError("Polling not allowed!")
         serial = getParam(request_data, "serial", optional=False)
@@ -731,7 +767,8 @@ class PushTokenClass(TokenClass):
             # we need the private server key to sign the smartphone data
             pem_privkey = tok.get_tokeninfo(PRIVATE_KEY_SERVER)
             # We need the registration URL for the challenge
-            registration_url = get_action_values_from_options(SCOPE.ENROLL, PUSH_ACTION.REGISTRATION_URL, options={"g": g})
+            registration_url = get_action_values_from_options(SCOPE.ENROLL, PUSH_ACTION.REGISTRATION_URL,
+                                                              options={"g": g})
             if not registration_url:
                 raise ResourceNotFoundError(
                     f"There is no registration_url defined for the  pushtoken {serial!s}. You need to define a push_registration_url in an enrollment policy."
@@ -750,11 +787,11 @@ class PushTokenClass(TokenClass):
             # return the challenges as a list in the result value
             result = challenges
         except (
-            ResourceNotFoundError,
-            ParameterError,
-            InvalidSignature,
-            ConfigAdminError,
-            BinasciiError,
+                ResourceNotFoundError,
+                ParameterError,
+                InvalidSignature,
+                ConfigAdminError,
+                BinasciiError,
         ) as e:
             # to avoid disclosing information we always fail with an invalid
             # signature error even if the token with the serial could not be found
@@ -905,7 +942,8 @@ class PushTokenClass(TokenClass):
                 if fb_identifier != POLL_ONLY:
                     # We only push to Firebase if this tokens does NOT POLL_ONLY.
                     fb_gateway = create_sms_instance(fb_identifier)
-                    registration_url = get_action_values_from_options(SCOPE.ENROLL, PUSH_ACTION.REGISTRATION_URL, options=options)
+                    registration_url = get_action_values_from_options(SCOPE.ENROLL, PUSH_ACTION.REGISTRATION_URL,
+                                                                      options=options)
                     pem_privkey = self.get_tokeninfo(PRIVATE_KEY_SERVER)
                     smartphone_data = _build_smartphone_data(
                         self.token.serial,
@@ -919,8 +957,10 @@ class PushTokenClass(TokenClass):
             # Create the challenge in the challenge table if either the message
             # was successfully submitted to the Firebase API or if polling is
             # allowed in general or for this specific token.
-            allow_polling = get_action_values_from_options(SCOPE.AUTH, PUSH_ACTION.ALLOW_POLLING, options=options) or PushAllowPolling.ALLOW
-            if (allow_polling == PushAllowPolling.ALLOW or (allow_polling == PushAllowPolling.TOKEN and is_true(self.get_tokeninfo(POLLING_ALLOWED, default="True")))) or res:
+            allow_polling = get_action_values_from_options(SCOPE.AUTH, PUSH_ACTION.ALLOW_POLLING,
+                                                           options=options) or PushAllowPolling.ALLOW
+            if (allow_polling == PushAllowPolling.ALLOW or (allow_polling == PushAllowPolling.TOKEN and is_true(
+                    self.get_tokeninfo(POLLING_ALLOWED, default="True")))) or res:
                 validity = int(get_from_config("DefaultChallengeValidityTime", 120))
                 tokentype = self.get_tokentype().lower()
                 # Maybe there is a PushChallengeValidityTime...
@@ -947,7 +987,8 @@ class PushTokenClass(TokenClass):
                 if is_true(options.get("exception")):
                     raise ValidateError("Failed to submit message to Firebase service.")
         else:
-            log.warning(f"The token {self.token.serial!s} has no tokeninfo {PUSH_ACTION.FIREBASE_CONFIG!s}. The message could not be sent.")
+            log.warning(
+                f"The token {self.token.serial!s} has no tokeninfo {PUSH_ACTION.FIREBASE_CONFIG!s}. The message could not be sent.")
             message += f" {ERROR_CHALLENGE_TEXT}"
             if is_true(options.get("exception")):
                 raise ValidateError("The token has no tokeninfo. Can not send via Firebase service.")

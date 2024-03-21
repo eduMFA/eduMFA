@@ -17,5 +17,5 @@ class FancyTokenClass(TokenClass):
         return "fancy"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "PIFA"

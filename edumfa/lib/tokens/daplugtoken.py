@@ -103,7 +103,7 @@ class DaplugTokenClass(HotpTokenClass):
         return "daplug"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "DPLG"
 
     @staticmethod

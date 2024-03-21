@@ -528,7 +528,7 @@ def get_token_types():
 
 
 # @cache.cached(key_prefix="prefix")
-def get_token_prefix(tokentype=None, default=None):
+def get_token_prefix(tokentype=None, default=None, params=None):
     """
     Return the token prefix for a tokentype as it is defined in the
     tokenclass. If no tokentype is specified, we return a dictionary
@@ -537,12 +537,14 @@ def get_token_prefix(tokentype=None, default=None):
     :type tokentype: basestring
     :param default: If the tokentype is not found, we return default
     :type default: basestring
+    :param params: Request params
+    :type params: object
     :return: the prefix of the tokentype or the dict with all prefixes
     :rtype: string or dict
     """
     prefix_dict = {}
     for tokenclass in get_token_classes():
-        prefix_dict[tokenclass.get_class_type()] = tokenclass.get_class_prefix()
+        prefix_dict[tokenclass.get_class_type()] = tokenclass.get_class_prefix(params)
 
     if tokentype:
         ret = prefix_dict.get(tokentype, default)

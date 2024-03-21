@@ -76,7 +76,7 @@ class YubicoTokenClass(TokenClass):
         return "yubico"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "UBCM"
 
     @staticmethod

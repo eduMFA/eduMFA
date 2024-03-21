@@ -61,7 +61,7 @@ class ApplicationSpecificPasswordTokenClass(PasswordTokenClass):
         return "applspec"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "ASPW"
 
     @staticmethod

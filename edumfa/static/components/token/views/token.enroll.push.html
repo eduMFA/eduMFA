@@ -8,5 +8,13 @@
     to eduMFA.
 </p>
 
+
+<div class="form-group">
+    <label for="version" translate>Version</label>
+    <select class="form-control"
+           ng-model="form.version">
+            <option value="{{ v.id }}" ng-repeat="v in push_versions">{{ v.display }}</option>
+    </select>
+</div>
 <ng-include src="instanceUrl + '/static/components/token/views/token.display.apps.html'">
 </ng-include>

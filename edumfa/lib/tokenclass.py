@@ -200,7 +200,7 @@ class TokenClass(object):
         return {}
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "UNK"
 
     def get_type(self):

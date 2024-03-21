@@ -982,18 +982,20 @@ def get_serial_by_otp(token_list, otp="", window=10):
 
 
 @log_with(log)
-def gen_serial(tokentype=None, prefix=None):
+def gen_serial(tokentype=None, params=None):
     """
     generate a serial for a given tokentype
 
     :param tokentype: the token type prefix is done by a lookup on the tokens
     :type tokentype: str
-    :param prefix: A prefix to the serial number
-    :type prefix: str
+    :param params: the request parameter
+    :type params: object
     :return: serial number
     :rtype: str
     """
     serial_len = int(get_from_config("SerialLength") or 8)
+
+    prefix = params.get("prefix")
 
     def _gen_serial(_prefix, _tokennum):
         h_serial = ""
@@ -1006,7 +1008,7 @@ def gen_serial(tokentype=None, prefix=None):
     if not tokentype:
         tokentype = "PIUN"
     if not prefix:
-        prefix = get_token_prefix(tokentype.lower(), tokentype.upper())
+        prefix = get_token_prefix(tokentype.lower(), tokentype.upper(), params)
 
     # now search the number of tokens of tokenytype in the token database
     tokennum = Token.query.filter(Token.tokentype == tokentype).count()
@@ -1103,7 +1105,7 @@ def init_token(param, user=None, tokenrealms=None, tokenkind=None):
     tokenobject = None
 
     tokentype = param.get("type") or "hotp"
-    serial = param.get("serial") or gen_serial(tokentype, param.get("prefix"))
+    serial = param.get("serial") or gen_serial(tokentype, param)
     check_serial_valid(serial)
     realms = []
 

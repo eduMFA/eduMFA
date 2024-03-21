@@ -201,6 +201,17 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
         service_ids: {}
     };
 
+    $scope.push_versions = [
+        {
+            "id": "edumfa",
+            "display": "eduMFA",
+        },
+        {
+            "id": "pi",
+            "display": "privacyIDEA",
+        },
+    ];
+
     $scope.loadAvailableServiceIDs = function () {
         ConfigFactory.getServiceid("", function (data) {
             serviceids = data.result.value;
@@ -276,6 +287,9 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
                 $scope.form.otplen = $scope.old_otplen;
                 delete $scope.old_otplen;
             }
+        }
+        if ($scope.form.type === "push") {
+            $scope.form.version = "edumfa";
         }
 
         $scope.preset_indexedsecret();

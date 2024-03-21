@@ -126,7 +126,7 @@ class EmailTokenClass(HotpTokenClass):
         return "email"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "PIEM"
 
     @staticmethod

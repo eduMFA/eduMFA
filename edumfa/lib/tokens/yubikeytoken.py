@@ -132,7 +132,7 @@ class YubikeyTokenClass(TokenClass):
         return "yubikey"
 
     @staticmethod
-    def get_class_prefix():
+    def get_class_prefix(params=None):
         return "UBAM"
 
     @staticmethod
