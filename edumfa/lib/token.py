@@ -995,7 +995,8 @@ def init_token(param, user=None, tokenrealms=None,
             {
                 "serial": ..., (optional)
                 "type": ...., (optional, default=hotp)
-                "otpkey": ...
+                "otpkey": ...,
+                "info": ... (optional)
             }
 
     :type param: dict
@@ -1054,6 +1055,14 @@ def init_token(param, user=None, tokenrealms=None,
     if user and user.realm:
         realms.append(user.realm)
 
+    # Check tokeninfo parameter
+    tokeninfo = param.get("info")
+    if tokeninfo:
+        if type(tokeninfo) is not dict:
+            tokeninfo = json.loads(tokeninfo)
+        if type(tokeninfo) is not dict:
+            raise ParameterError("Parameter 'info' must be a string representation of a json object (key-value pairs) or a python dict. but is of type {0!r}", type(tokeninfo))
+
     try:
         # Save the token to the database
         if token_count == 0:
@@ -1091,17 +1100,11 @@ def init_token(param, user=None, tokenrealms=None,
     if tokenkind:
         tokenobject.add_tokeninfo("tokenkind", tokenkind)
 
-    # Set tokeninfo from info dict
-    tokeninfo = param.get("info")
+    # Set tokeninfo
     if tokeninfo:
-        if type(tokeninfo) is not dict:
-            tokeninfo = json.loads(tokeninfo)
-        if type(tokeninfo) is not dict:
-            raise ParameterError("Parameter 'info' must be a list of key, value pairs (dictionary). but is of type {0!r}", type(tokeninfo))
-        else:
-            for key, value in tokeninfo.items():
-                if value:
-                    tokenobject.add_tokeninfo(key, value)
+        for key, value in tokeninfo.items():
+            if value:
+                tokenobject.add_tokeninfo(key, value)
 
     # Set the validity period
     validity_period_start = param.get("validity_period_start")

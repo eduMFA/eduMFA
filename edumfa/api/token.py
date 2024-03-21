@@ -162,7 +162,7 @@ def init():
                             hex or base32check (see :ref:`2step_enrollment`)
     :jsonparam rollover: Set this to 1 or true to indicate, that you want to rollover a token.
                     This is mandatory to rollover tokens, that are in the clientwait state.
-    :jsonparam dict info: dictionary with key value pairs which will be set as tokeninfo.
+    :jsonparam info: string representation of a json object whose key-value pairs will be set as tokeninfo.
 
     :return: a json result with a boolean "result": true
 
