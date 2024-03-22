@@ -320,6 +320,11 @@ class TokenTestCase(MyTestCase):
         self.assertRaises(TokenAdminError, init_token, {"otpkey": "1234",
                                                         "type": "never_know"})
 
+        # try to create invalid tokeninfo
+        self.assertRaises(ParameterError, init_token, {"otpkey": "1234",
+                                                        "type": "totp",
+                                                        "info": "[1,2,3,4]"})
+
         # try to create the same token with another type
         self.assertRaises(TokenAdminError, init_token, {"otpkey": "1234",
                                                         "serial": "NEW001",
