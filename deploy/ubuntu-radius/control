@@ -1,0 +1,15 @@
+Source: edumfa-radius
+Maintainer: eduMFA <edumfa-dev@listserv.dfn.de>
+Section: net
+Priority: optional
+Build-Depends: debhelper (>= 7.4.3)
+Standards-Version: 4.1.4
+
+
+Package: edumfa-radius
+Architecture: all
+Depends: ${misc:Depends}, libwww-perl, libconfig-inifiles-perl, libdata-dump-perl, libtry-tiny-perl, freeradius, libjson-perl, liblwp-protocol-https-perl, liburi-encode-perl
+Description: FreeRADIUS module for eduMFA, OTP authentication
+ This is a perl script, that is used in FreeRADIUS rlm_perl
+ to forward the authentication request from the RADIUS server
+ to eduMFA.

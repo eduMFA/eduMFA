@@ -1,0 +1,30 @@
+Source: edumfa-server
+Maintainer: eduMFA <edumfa-dev@listserv.dfn.de>
+Section: net
+Priority: optional
+Build-Depends: debhelper (>= 7.4.3)
+Standards-Version: 3.9.5
+
+
+Package: edumfa-nginx
+Architecture: all
+#Depends: ${misc:Depends}, edumfa (=${binary:Version}), nginx-full, uwsgi,
+Depends: ${misc:Depends}, edumfa (>=1.0), nginx-full, uwsgi,
+ uwsgi-plugin-python3, mysql-server|mariadb-server, mysql-client|mariadb-client
+Conflicts: apache2, edumfa-apache2, uwsgi-plugin-python
+Description: 2FA system. This is a meta package to install edumfa with nginx
+ eduMFA: identity, multifactor authentication, authorization.
+ This is the package that install all requirements to run eduMFA in the
+ nginx webserver.
+
+
+Package: edumfa-apache2
+Architecture: all
+#Depends: ${misc:Depends}, edumfa (=${binary:Version}), apache2,
+Depends: ${misc:Depends}, edumfa (>=1.0), apache2,
+ mysql-server|mariadb-server, mysql-client|mariadb-client, libapache2-mod-wsgi-py3, rng-tools
+Conflicts: nginx, nginx-full, edumfa-nginx, libapache2-mod-wsgi
+Description: 2FA system. This is a meta package to install edumfa with apache2
+ eduMFA: identity, multifactor authentication, authorization.
+ This is the package that installs all requirements to run eduMFA in the
+ Apache2 Webserver.

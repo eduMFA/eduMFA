@@ -1,7 +1,8 @@
 <uwsgi>
-    <plugin>python</plugin>
+    <plugin>python3</plugin>
     <socket>/run/uwsgi/app/edumfa/edumfa.socket</socket>
     <chdir>/etc/edumfa/</chdir>
+    <venv>/opt/edumfa/</venv>
     <module>edumfaapp</module>
     <master/>
     <processes>4</processes>
@@ -10,6 +11,7 @@
     <cpu-affinity>1</cpu-affinity>
     <stats>/tmp/stats.socket</stats>
     <max-requests>2000</max-requests>
+    <buffer-size>8192</buffer-size>
     <limit-as>1024</limit-as>
     <reload-on-as>368</reload-on-as>
     <reload-on-rss>192</reload-on-rss>
@@ -19,3 +21,4 @@
     <gid>www-data</gid>
     <vacuum/>
 </uwsgi>
+

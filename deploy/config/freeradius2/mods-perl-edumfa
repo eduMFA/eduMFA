@@ -1,0 +1,3 @@
+perl perl-edumfa {
+    module = /usr/share/edumfa/freeradius/edumfa_radius.pm
+}

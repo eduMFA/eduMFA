@@ -1,0 +1,26 @@
+Source: edumfa
+Maintainer: eduMFA <edumfa-dev@listserv.dfn.de>
+Section: python
+Priority: optional
+Build-Depends: python3-all (>= 3.5), debhelper (>= 7.4.3), dh-virtualenv (>= 0.11), quilt, virtualenv, lsb-release, git
+Standards-Version: 3.9.5
+
+Package: edumfa
+Architecture: amd64
+Replaces: python-privacyidea
+Breaks: python-privacyidea
+Conflicts: privacyidea-venv, privacyidea-appliance
+Pre-Depends: dpkg (>= 1.16.1), python3-minimal, ${misc:Pre-Depends}
+Depends: ${python:Depends}, ${misc:Depends}, python3-virtualenv
+X-Python-Version: >= 3.5
+Description: two-factor authentication system e.g. for OTP devices
+ eduMFA: identity, multifactor authentication, authorization.
+ This package contains the python module for eduMFA. If you want
+ to run it in a productive webserver you might want to install
+ edumfa-nginx or edumfa-apache2.
+ eduMFA is an open solution for strong two-factor authentication.
+ eduMFA aims to not bind you to any decision of the authentication protocol
+ or it does not dictate you where your user information should be stored.
+ This is achieved by its totally modular architecture.
+ eduMFA is not only open as far as its modular architecture is concerned.
+ But eduMFA is completely licensed under the AGPLv3.

@@ -1,0 +1,44 @@
+authorize {
+    preprocess
+    perl-edumfa
+    if (ok || updated) {
+        update control {
+            Auth-Type := Perl
+        }
+    }
+    digest
+    suffix
+    ntdomain
+    expiration
+    logintime
+    pap
+}
+
+authenticate {
+    Auth-Type Perl {
+        perl-edumfa
+    }
+    digest
+    unix
+}
+
+preacct {
+    suffix
+    files
+}
+
+accounting {
+    detail
+}
+
+session {
+}
+
+post-auth {
+}
+
+pre-proxy {
+}
+
+post-proxy {
+}
