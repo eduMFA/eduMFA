@@ -331,8 +331,12 @@ class PushTokenClass(TokenClass):
     @staticmethod
     def get_class_prefix(params=None):
         version = params.get("version") if params else None
-        version_with_default  = version or "edumfa"
-        return "EDUP" if version_with_default == "edumfa" else "PIPU"
+        version_with_default = version or "pi"
+
+        return {
+            "pi": "PIPU",
+            "edumfa": "EDUP",
+        }[version_with_default]
 
     @staticmethod
     def get_class_info(key=None, ret="all"):
