@@ -134,7 +134,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertEqual(token.token.serial, self.serial1)
         self.assertEqual(token.token.tokentype, "push")
         self.assertEqual(token.type, "push")
-        class_prefix = token.get_class_prefix()
+        class_prefix = token.get_class_prefix({"version": "pi"})
         self.assertEqual(class_prefix, "PIPU")
         self.assertEqual(token.get_class_type(), "push")
 
