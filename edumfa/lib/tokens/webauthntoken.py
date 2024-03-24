@@ -800,7 +800,7 @@ class WebAuthnTokenClass(TokenClass):
                     WEBAUTHNACTION.TOKENLABEL: {
                         'type': 'str',
                         'desc': _("The label for a new enrolled Passkey token. "
-                                "Possible tags are <code>{user}</code>, <code>{username}</code>,  <code>{realm}</code>, "
+                                "Possible tags are <code>{user}</code>, <code>{realm}</code>, "
                                 "<code>{serial}</code>, <code>{givenname}</code> and <code>{surname}</code>."),
                         'group': WEBAUTHNGROUP.WEBAUTHN},
                 }
@@ -1066,12 +1066,11 @@ class WebAuthnTokenClass(TokenClass):
                         credential_id = tok.decrypt_otpkey()
                         credential_ids.append(credential_id)
             
-            tokenlabel = params.get(WEBAUTHNACTION.TOKENLABEL, "{givenname} {surname} ({username})")
-            label = tokenlabel.replace("<s>", self.token.serial).replace("<u>", user).replace("<r>", self.user.realm)
-            label = label.format(serial=self.token.serial, user=user, realm=self.user.realm,
+            tokenlabel = params.get(WEBAUTHNACTION.TOKENLABEL, "{givenname} {surname} ({user})")
+            label = tokenlabel.replace("<s>", self.token.serial).replace("<u>", self.user.login).replace("<r>", self.user.realm)
+            label = label.format(serial=self.token.serial, user=self.user.login, realm=self.user.realm,
                                  givenname=self.user.info.get("givenname", ""),
-                                 surname=self.user.info.get("surname", ""),
-                                 username=self.user.login)
+                                 surname=self.user.info.get("surname", ""))
 
             public_key_credential_creation_options = WebAuthnMakeCredentialOptions(
                 challenge=webauthn_b64_encode(nonce),
