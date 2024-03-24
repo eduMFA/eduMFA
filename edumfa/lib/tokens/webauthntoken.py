@@ -526,6 +526,7 @@ class WEBAUTHNACTION(object):
     AUTHENTICATOR_RESIDENT_KEY = 'webauthn_resident_key'
     USERNAMELESS_AUTHN = 'webauthn_usernameless_authn'
     USERNAMELESS_REALM_POLICY = 'webauthn_usernameless_realm_policy'
+    TOKENLABEL = 'webauthn_tokenlabel'
     REQ = 'webauthn_req'
     AVOID_DOUBLE_REGISTRATION = 'webauthn_avoid_double_registration'
 
@@ -795,7 +796,13 @@ class WebAuthnTokenClass(TokenClass):
                         'desc': _("Use an alternate challenge text for telling the "
                                   "user to confirm with his WebAuthn device."),
                         'group': WEBAUTHNGROUP.WEBAUTHN
-                    }
+                    },
+                    WEBAUTHNACTION.TOKENLABEL: {
+                        'type': 'str',
+                        'desc': _("The label for a new enrolled Passkey token. "
+                                "Possible tags are <code>{user}</code>, <code>{username}</code>,  <code>{realm}</code>, "
+                                "<code>{serial}</code>, <code>{givenname}</code> and <code>{surname}</code>."),
+                        'group': WEBAUTHNGROUP.WEBAUTHN},
                 }
             }
         }
@@ -1058,6 +1065,13 @@ class WebAuthnTokenClass(TokenClass):
                     if tok.token.rollout_state != ROLLOUTSTATE.CLIENTWAIT:
                         credential_id = tok.decrypt_otpkey()
                         credential_ids.append(credential_id)
+            
+            tokenlabel = params.get(WEBAUTHNACTION.TOKENLABEL, "{givenname} {surname} ({username})")
+            label = tokenlabel.replace("<s>", self.token.serial).replace("<u>", user).replace("<r>", self.user.realm)
+            label = label.format(serial=self.token.serial, user=user, realm=self.user.realm,
+                                 givenname=self.user.info.get("givenname", ""),
+                                 surname=self.user.info.get("surname", ""),
+                                 username=self.user.login)
 
             public_key_credential_creation_options = WebAuthnMakeCredentialOptions(
                 challenge=webauthn_b64_encode(nonce),
@@ -1069,7 +1083,7 @@ class WebAuthnTokenClass(TokenClass):
                                required),
                 user_id=self.token.serial,
                 user_name=user.login,
-                user_display_name=str(user),
+                user_display_name=label,
                 timeout=getParam(params,
                                  WEBAUTHNACTION.TIMEOUT,
                                  required),
