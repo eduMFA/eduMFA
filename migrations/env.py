@@ -30,7 +30,7 @@ def set_database_url(config):
             parsed_url = parsed_url.update_query_dict({"charset": "utf8"})
             # We need to quote the password in case it contains special chars
             parsed_url = parsed_url.set(password=quote(parsed_url.password))
-            url = str(parsed_url)
+            url = parsed_url.render_as_string(hide_password=False)
     except Exception as exx:
         print(u"Attempted to set charset=utf8 on connection, but failed: {}".format(exx))
     # set_main_option() requires escaped "%" signs in the string
