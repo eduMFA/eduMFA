@@ -30,6 +30,7 @@ import logging
 from edumfa.lib.log import log_with
 from edumfa.lib.policy import Match, SCOPE, ACTION
 from edumfa.lib.error import PolicyError
+from edumfa.lib.tokens.webauthntoken import WEBAUTHNACTION
 
 log = logging.getLogger(__name__)
 
@@ -50,6 +51,12 @@ def get_init_tokenlabel_parameters(g, params=None, token_type="hotp", user_objec
     if len(label_pols) == 1:
         # The policy was set, so we need to set the tokenlabel in the request.
         params[ACTION.TOKENLABEL] = list(label_pols)[0]
+
+    label_pols = Match.user(g, scope=SCOPE.ENROLL, action=WEBAUTHNACTION.TOKENLABEL,
+                            user_object=user_object).action_values(unique=True, allow_white_space_in_action=True)
+    if len(label_pols) == 1:
+        # The policy was set, so we need to set the tokenlabel in the request.
+        params[WEBAUTHNACTION.TOKENLABEL] = list(label_pols)[0]
 
     issuer_pols = Match.user(g, scope=SCOPE.ENROLL, action=ACTION.TOKENISSUER,
                              user_object=user_object).action_values(unique=True, allow_white_space_in_action=True)
