@@ -177,12 +177,14 @@ def importer(infile, types, name=None):
 @click.option(
     "--update",
     "-u",
+    is_flag=True,
     help="Update the existing configuration. New policies, resolvers and events will also be added.",
 )
 @click.option(
     "--cleanup/--wipe",
     "-c/-w",
     "cleanup",
+    is_flag=True,
     help="The configuration on the target machine will be wiped before the import.",
 )
 def import_full_config(file, update, cleanup):
