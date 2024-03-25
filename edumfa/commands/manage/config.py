@@ -111,13 +111,25 @@ def importer(infile, types, name=None):
 
 
 @import_cli.command("full")
-@click.option("--file", "-f", "file",
-              help="The file to import. It can be a plain python file or a tar.gz archive containing a configuration "
-                   "backup file with a name containing 'edumfa-config-backup'.")
-@click.option("--update", "-u",
-              help="Update the existing configuration. New policies, resolvers and events will also be added.")
-@click.option("--cleanup/--wipe", "-c/-w", "cleanup",
-              help="The configuration on the target machine will be wiped before the import.")
+@click.option(
+    "--file",
+    "-f",
+    "file",
+    help="The file to import. It can be a plain python file or a tar.gz archive containing a configuration backup file with a name containing 'edumfa-config-backup'.",
+)
+@click.option(
+    "--update",
+    "-u",
+    is_flag=True,
+    help="Update the existing configuration. New policies, resolvers and events will also be added.",
+)
+@click.option(
+    "--cleanup/--wipe",
+    "-c/-w",
+    "cleanup",
+    is_flag=True,
+    help="The configuration on the target machine will be wiped before the import.",
+)
 def import_full_config(file, update, cleanup):
     data = {}
     if file:
