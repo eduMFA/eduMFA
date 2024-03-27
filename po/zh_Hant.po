@@ -1319,7 +1319,7 @@ msgstr "到期"
 
 #: edumfa/static/components/token/views/token.enroll.html:77
 #, fuzzy
-msgid "Extended Atttributes"
+msgid "Extended Attributes"
 msgstr "擴展屬性"
 
 #: edumfa/static/components/token/views/token.details.html:95

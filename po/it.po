@@ -1331,7 +1331,7 @@ msgstr "Scadenza"
 
 #: edumfa/static/components/token/views/token.enroll.html:77
 #, fuzzy
-msgid "Extended Atttributes"
+msgid "Extended Attributes"
 msgstr "Attributi estesi"
 
 #: edumfa/static/components/token/views/token.details.html:95
