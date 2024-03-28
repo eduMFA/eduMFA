@@ -991,7 +991,7 @@ class WebAuthnTokenClass(TokenClass):
 
                 cn = webauthn_credential.attestation_cert.subject.get_attributes_for_oid(x509.NameOID.COMMON_NAME)
                 automatic_description = cn[0].value if len(cn) else None
-
+            log.debug(f"Got client extensions from registration: {registration_client_extensions!s}")
             if registration_client_extensions:
                 try:
                     extensions = json.loads(webauthn_b64_decode(registration_client_extensions))
