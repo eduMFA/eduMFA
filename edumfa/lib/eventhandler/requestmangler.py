@@ -25,15 +25,25 @@
 __doc__ = """This is the event handler module modifying request parameters.
 """
 from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib.token import (get_token_types, set_validity_period_end,
-                                   set_validity_period_start)
+from edumfa.lib.token import (
+    get_token_types,
+    set_validity_period_end,
+    set_validity_period_start,
+)
 from edumfa.lib.realm import get_realms
-from edumfa.lib.token import (set_realms, remove_token, enable_token,
-                                   unassign_token, init_token, set_description,
-                                   set_count_window, add_tokeninfo,
-                                   set_failcounter, delete_tokeninfo)
-from edumfa.lib.utils import (parse_date, is_true,
-                                   parse_time_offset_from_now)
+from edumfa.lib.token import (
+    set_realms,
+    remove_token,
+    enable_token,
+    unassign_token,
+    init_token,
+    set_description,
+    set_count_window,
+    add_tokeninfo,
+    set_failcounter,
+    delete_tokeninfo,
+)
+from edumfa.lib.utils import parse_date, is_true, parse_time_offset_from_now
 from edumfa.lib.tokenclass import DATE_FORMAT, AUTH_DATE_FORMAT
 from edumfa.lib import _
 import json
@@ -51,6 +61,7 @@ class ACTION_TYPE(object):
     """
     Allowed actions
     """
+
     SET = "set"
     DELETE = "delete"
 
@@ -95,35 +106,35 @@ class RequestManglerEventHandler(BaseEventHandler):
 
         :return: dict with actions
         """
-        actions = {ACTION_TYPE.DELETE:
-                       {"parameter":
-                            {"type": "str",
-                             "required": True,
-                             "description": _("The parameter that should be deleted.")}
-                        },
-                   ACTION_TYPE.SET:
-                       {"parameter":
-                            {"type": "str",
-                             "required": True,
-                             "description": _("The parameter that should be added or modified.")
-                             },
-                        "value":
-                            {"type": "str",
-                             "required": True,
-                             "description": _("The new value of the parameter. Can contain tags like {0}, {1} for "
-                                              "the matched sub strings.")
-                            },
-                        "match_parameter":
-                            {"type": "str",
-                             "description": _("The parameter, that should match some values.")
-                            },
-                        "match_pattern":
-                            {"type": "str",
-                             "description": _("The value of the match_parameter. It can contain a regular "
-                                              "expression and '()' to transfer values to the new parameter.")
-                            }
-                        }
-                   }
+        actions = {
+            ACTION_TYPE.DELETE: {
+                "parameter": {
+                    "type": "str",
+                    "required": True,
+                    "description": _("The parameter that should be deleted."),
+                }
+            },
+            ACTION_TYPE.SET: {
+                "parameter": {
+                    "type": "str",
+                    "required": True,
+                    "description": _("The parameter that should be added or modified."),
+                },
+                "value": {
+                    "type": "str",
+                    "required": True,
+                    "description": _("The new value of the parameter. Can contain tags like {0}, {1} for the matched sub strings."),
+                },
+                "match_parameter": {
+                    "type": "str",
+                    "description": _("The parameter, that should match some values."),
+                },
+                "match_pattern": {
+                    "type": "str",
+                    "description": _("The value of the match_parameter. It can contain a regular expression and '()' to transfer values to the new parameter."),
+                },
+            },
+        }
         return actions
 
     def do(self, action, options=None):
@@ -145,7 +156,7 @@ class RequestManglerEventHandler(BaseEventHandler):
         if parameter:
             if action.lower() == ACTION_TYPE.DELETE:
                 if parameter in request.all_data:
-                    del(request.all_data[parameter])
+                    del request.all_data[parameter]
             elif action.lower() == ACTION_TYPE.SET:
                 value = handler_options.get("value")
                 match_parameter = handler_options.get("match_parameter")
@@ -161,16 +172,18 @@ class RequestManglerEventHandler(BaseEventHandler):
                         """
                         Note: Beware user supplied  format-string like "match_pattern", it can
                         be dangerous: http://lucumr.pocoo.org/2016/12/29/careful-with-str-format/
-                        but in our case it is fine because no objects are involved, as m.groups() 
+                        but in our case it is fine because no objects are involved, as m.groups()
                         always returns a tuple of strings
                         """
-                        m = re.match("^" + match_pattern + "$", request.all_data.get(match_parameter))
+                        m = re.match(
+                            f"^{match_pattern}$",
+                            request.all_data.get(match_parameter),
+                        )
                         if m:
                             # Now we set the new value with the matching tuple
                             try:
                                 request.all_data[parameter] = value.format(*m.groups())
                             except IndexError:
-                                log.warning("The number of found tags ({0!r}) "
-                                            "do not match the required number ({1!r}).".format(m.groups(), value))
+                                log.warning(f"The number of found tags ({m.groups()!r}) do not match the required number ({value!r}).")
 
         return ret

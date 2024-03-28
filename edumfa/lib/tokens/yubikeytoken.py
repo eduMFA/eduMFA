@@ -47,8 +47,13 @@ import logging
 from edumfa.lib.log import log_with
 from edumfa.lib.policydecorators import challenge_response_allowed
 from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.utils import (modhex_decode, hexlify_and_unicode, checksum,
-                                   to_bytes, b64encode_and_unicode)
+from edumfa.lib.utils import (
+    modhex_decode,
+    hexlify_and_unicode,
+    checksum,
+    to_bytes,
+    b64encode_and_unicode,
+)
 import binascii
 from edumfa.lib.decorators import check_token_locked
 from edumfa.api.lib.utils import getParam
@@ -80,12 +85,12 @@ def yubico_api_signature(data, api_key):
     :return: base64 encoded signature
     """
     r = dict(data)
-    if 'h' in r:
-        del r['h']
+    if "h" in r:
+        del r["h"]
     keys = sorted(r.keys())
     data_string = ""
     for key in keys:
-        data_string += "{0!s}={1!s}&".format(key, r.get(key))
+        data_string += f"{key!s}={r.get(key)!s}&"
     data_string = data_string.strip("&")
     api_key_bin = base64.b64decode(api_key)
     # generate the signature
@@ -108,7 +113,7 @@ def yubico_check_api_signature(data, api_key, signature=None):
     :return: base64 encoded signature
     """
     if not signature:
-        signature = data.get('h')
+        signature = data.get("h")
     return signature == yubico_api_signature(data, api_key)
 
 
@@ -122,7 +127,6 @@ class YubikeyTokenClass(TokenClass):
         self.set_type("yubikey")
         self.hKeyRequired = True
 
-
     @staticmethod
     def get_class_type():
         return "yubikey"
@@ -133,7 +137,7 @@ class YubikeyTokenClass(TokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -147,39 +151,37 @@ class YubikeyTokenClass(TokenClass):
         :rtype: s.o.
 
         """
-        res = {'type': 'yubikey',
-               'title': 'Yubikey in AES mode',
-               'description': _('Yubikey AES mode: One Time Passwords with '
-                                'Yubikey.'),
-               'user': ['enroll'],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin", "user"],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of Yubikey tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _(
-                               "The user may only have this maximum number of active Yubikey tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       'yubikey_access_code': {
-                           'type': 'str',
-                           'desc': _("The Yubikey access code can be read by an enrollment client to "
-                                     "initialize Yubikeys.")
-                       },
-                   }
-               }
+        res = {
+            "type": "yubikey",
+            "title": "Yubikey in AES mode",
+            "description": _("Yubikey AES mode: One Time Passwords with Yubikey."),
+            "user": ["enroll"],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin", "user"],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of Yubikey tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of active Yubikey tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                    "yubikey_access_code": {
+                        "type": "str",
+                        "desc": _("The Yubikey access code can be read by an enrollment client to initialize Yubikeys."),
+                    },
+                }
+            },
         }
 
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
@@ -225,7 +227,6 @@ class YubikeyTokenClass(TokenClass):
             trigger_challenge = True
 
         return trigger_challenge
-
 
     @log_with(log)
     @check_token_locked
@@ -282,14 +283,14 @@ class YubikeyTokenClass(TokenClass):
         # residual
         # of 0xf0b8 (see Yubikey-Manual - Chapter 6: Implementation details).
         crc16 = checksum(msg_bin)
-        log.debug("calculated checksum (61624): {0!r}".format(crc16))
-        if crc16 != 0xf0b8:  # pragma: no cover
-            log.warning("CRC checksum for token {0!r} failed".format(serial))
+        log.debug(f"calculated checksum (61624): {crc16!r}")
+        if crc16 != 0xF0B8:  # pragma: no cover
+            log.warning(f"CRC checksum for token {serial!r} failed")
             return -3
 
         uid = msg_hex[0:12]
-        log.debug("uid: {0!r}".format(uid))
-        log.debug("prefix: {0!r}".format(yubi_prefix))
+        log.debug(f"uid: {uid!r}")
+        log.debug(f"prefix: {yubi_prefix!r}")
         # usage_counter can go from 1 – 0x7fff
         usage_counter = msg_hex[12:16]
         timestamp = msg_hex[16:22]
@@ -297,36 +298,34 @@ class YubikeyTokenClass(TokenClass):
         session_counter = msg_hex[22:24]
         random = msg_hex[24:28]
         crc = msg_hex[28:]
-        log.debug("decrypted: usage_count: {0!r}, session_count: {1!r}".format(usage_counter, session_counter))
+        log.debug(f"decrypted: usage_count: {usage_counter!r}, session_count: {session_counter!r}")
 
         # create the counter as integer
         # Note: The usage counter is stored LSB!
 
         count_hex = usage_counter[2:4] + usage_counter[0:2] + session_counter
         count_int = int(count_hex, 16)
-        log.debug('decrypted counter: {0!r}'.format(count_int))
+        log.debug(f"decrypted counter: {count_int!r}")
 
         tokenid = self.get_tokeninfo("yubikey.tokenid")
         if not tokenid:
-            log.debug("Got no tokenid for {0!r}. Setting to {1!r}.".format(serial, uid))
+            log.debug(f"Got no tokenid for {serial!r}. Setting to {uid!r}.")
             tokenid = uid
             self.add_tokeninfo("yubikey.tokenid", tokenid)
 
         prefix = self.get_tokeninfo("yubikey.prefix")
         if not prefix:
-            log.debug("Got no prefix for {0!r}. Setting to {1!r}.".format(serial, yubi_prefix))
+            log.debug(f"Got no prefix for {serial!r}. Setting to {yubi_prefix!r}.")
             self.add_tokeninfo("yubikey.prefix", yubi_prefix)
 
         if tokenid != uid:
             # wrong token!
-            log.warning("The wrong token was presented for %r. "
-                        "Got %r, expected %r."
-                        % (serial, uid, tokenid))
+            log.warning(f"The wrong token was presented for {serial!r}. Got {uid!r}, expected {tokenid!r}.")
             return -2
 
         # TODO: We also could check the timestamp
         # see http://www.yubico.com/wp-content/uploads/2013/04/YubiKey-Manual-v3_1.pdf
-        log.debug('compare counter to database counter: {0!r}'.format(self.token.count))
+        log.debug(f"compare counter to database counter: {self.token.count!r}")
         if count_int >= self.token.count:
             res = count_int
             # on success we save the used counter
@@ -342,7 +341,7 @@ class YubikeyTokenClass(TokenClass):
         :param api_id: The base64 encoded API ID
         :return: the base64 encoded API Key or None
         """
-        api_key = get_from_config("yubikey.apiid.{0!s}".format(api_id))
+        api_key = get_from_config(f"yubikey.apiid.{api_id!s}")
         return api_key
 
     @classmethod
@@ -375,27 +374,23 @@ class YubikeyTokenClass(TokenClass):
         status = "MISSING_PARAMETER"
 
         timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ%f")
-        data = {'otp': otp,
-                'nonce': nonce,
-                'status': status,
-                'timestamp': timestamp}
+        data = {"otp": otp, "nonce": nonce, "status": status, "timestamp": timestamp}
 
         api_key = cls._get_api_key(id)
         if api_key is None:
-            data['status'] = "NO_SUCH_CLIENT"
-            data['h'] = ""
+            data["status"] = "NO_SUCH_CLIENT"
+            data["h"] = ""
         elif otp and id and nonce:
-            if signature and not yubico_check_api_signature(request.all_data,
-                                                            api_key, signature):
+            if signature and not yubico_check_api_signature(request.all_data, api_key, signature):
                 # yubico server don't send nonce and otp back. Do we want that?
-                data['status'] = "BAD_SIGNATURE"
+                data["status"] = "BAD_SIGNATURE"
             else:
                 res, opt = cls.check_yubikey_pass(otp)
                 if res:
-                    data['status'] = "OK"
+                    data["status"] = "OK"
                 else:
                     # Do we want REPLAYED_OTP too?
-                    data['status'] = "BAD_OTP"
+                    data["status"] = "BAD_OTP"
 
             data["h"] = yubico_api_signature(data, api_key)
         response = """nonce={nonce}
@@ -403,7 +398,9 @@ otp={otp}
 status={status}
 timestamp={timestamp}
 h={h}
-""".format(**data)
+""".format(
+            **data
+        )
 
         return "plain", response
 
@@ -440,26 +437,23 @@ h={h}
         if prefix[:2] != "vv" and prefix[:2] != "cc":
             try:
                 # Keep the backward compatibility
-                serialnum = "UBAM" + modhex_decode(prefix)
+                serialnum = f"UBAM{modhex_decode(prefix)}"
                 for i in range(1, 3):
-                    s = "{0!s}_{1!s}".format(serialnum, i)
-                    toks = get_tokens(serial=s, tokentype='yubikey')
+                    s = f"{serialnum!s}_{i!s}"
+                    toks = get_tokens(serial=s, tokentype="yubikey")
                     token_list.extend(toks)
             except TypeError as exx:  # pragma: no cover
-                log.error("Failed to convert serialnumber: {0!r}".format(exx))
+                log.error(f"Failed to convert serialnumber: {exx!r}")
 
         # Now, we see, if the prefix matches the new version
         if not token_list:
             # If we did not find the token via the serial number, we also
             # search for the yubikey.prefix in the tokeninfo.
-            token_candidate_list = get_tokens(tokentype='yubikey',
-                                              tokeninfo={"yubikey.prefix":
-                                                             prefix})
+            token_candidate_list = get_tokens(tokentype="yubikey", tokeninfo={"yubikey.prefix": prefix})
             token_list.extend(token_candidate_list)
 
         if not token_list:
-            opt['action_detail'] = ("The prefix {0!s} could not be found!".format(
-                                    prefix))
+            opt["action_detail"] = f"The prefix {prefix!s} could not be found!"
             return res, opt
 
         (res, opt) = check_token_list(token_list, passw, allow_reset_all_tokens=True)

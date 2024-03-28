@@ -76,7 +76,7 @@ class OcraTokenClass(TokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -87,34 +87,35 @@ class OcraTokenClass(TokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or scalar
         """
-        res = {'type': 'ocra',
-               'title': 'OCRA Token',
-               'description': _('OCRA: Enroll an OCRA token.'),
-               'init': {},
-               'config': {},
-               #'user':  ['enroll'],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': [],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of OCRA tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of active OCRA tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               },
-               }
+        res = {
+            "type": "ocra",
+            "title": "OCRA Token",
+            "description": _("OCRA: Enroll an OCRA token."),
+            "init": {},
+            "config": {},
+            #'user':  ['enroll'],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": [],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of OCRA tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of active OCRA tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
 
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
@@ -194,13 +195,13 @@ class OcraTokenClass(TokenClass):
         additional challenge ``reply_dict``, which are displayed in the JSON challenges response.
         """
         options = options or {}
-        message = 'Please answer the challenge'
+        message = "Please answer the challenge"
         attributes = {}
 
         # Get ValidityTime=120s. Maybe there is a OCRAChallengeValidityTime...
-        validity = int(get_from_config('DefaultChallengeValidityTime', 120))
+        validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
-        lookup_for = tokentype.capitalize() + 'ChallengeValidityTime'
+        lookup_for = f"{tokentype.capitalize()}ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # Get the OCRASUITE from the token information
@@ -217,8 +218,7 @@ class OcraTokenClass(TokenClass):
         else:
             # Add a random challenge
             if options.get("addrandomchallenge"):
-                challenge += get_alphanum_str(int(options.get(
-                    "addrandomchallenge")))
+                challenge += get_alphanum_str(int(options.get("addrandomchallenge")))
             attributes["original_challenge"] = challenge
             attributes["qrcode"] = create_img(challenge)
             if options.get("hashchallenge", "").lower() == "sha256":
@@ -229,12 +229,14 @@ class OcraTokenClass(TokenClass):
                 challenge = hexlify_and_unicode(hashlib.sha1(to_bytes(challenge)).digest())  # nosec B324 # ocra definition
 
         # Create the challenge in the database
-        db_challenge = Challenge(self.token.serial,
-                                 transaction_id=None,
-                                 challenge=challenge,
-                                 data=None,
-                                 session=None,
-                                 validitytime=validity)
+        db_challenge = Challenge(
+            self.token.serial,
+            transaction_id=None,
+            challenge=challenge,
+            data=None,
+            session=None,
+            validitytime=validity,
+        )
         db_challenge.save()
 
         attributes["challenge"] = challenge
@@ -273,7 +275,7 @@ class OcraTokenClass(TokenClass):
         :param options: dictionary that *must* contain "challenge"
         :return: >=0 if the challenge matches, -1 otherwise
         """
-        return self.verify_response(otpval, options['challenge'])
+        return self.verify_response(otpval, options["challenge"])
 
     @staticmethod
     def get_import_csv(l):

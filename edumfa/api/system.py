@@ -34,25 +34,29 @@ This is the REST API for system calls to create and read system configuration.
 The code of this module is tested in tests/test_api_system.py
 """
 
-from flask import (Blueprint,
-                   request)
-from .lib.utils import (getParam,
-                        getLowerParams,
-                        optional,
-                        required,
-                        send_result, send_file)
+from flask import Blueprint, request
+from .lib.utils import (
+    getParam,
+    getLowerParams,
+    optional,
+    required,
+    send_result,
+    send_file,
+)
 from ..lib.log import log_with
 from ..lib.radiusserver import get_radiusservers
 from ..lib.caconnector import get_caconnector_list
-from ..lib.config import (get_token_class,
-                          set_edumfa_config,
-                          delete_edumfa_config,
-                          get_from_config)
+from ..lib.config import (
+    get_token_class,
+    set_edumfa_config,
+    delete_edumfa_config,
+    get_from_config,
+)
 from ..api.lib.prepolicy import prepolicy, check_base_action
 from ..lib.error import ParameterError
 
 from .auth import admin_required
-from flask import (g, current_app, render_template)
+from flask import g, current_app, render_template
 import logging
 import json
 import datetime
@@ -70,10 +74,10 @@ from edumfa.lib.utils import hexlify_and_unicode, b64encode_and_unicode
 log = logging.getLogger(__name__)
 
 
-system_blueprint = Blueprint('system_blueprint', __name__)
+system_blueprint = Blueprint("system_blueprint", __name__)
 
 
-@system_blueprint.route('/documentation', methods=['GET'])
+@system_blueprint.route("/documentation", methods=["GET"])
 @admin_required
 @prepolicy(check_base_action, request, ACTION.CONFIGDOCUMENTATION)
 def get_config_documentation():
@@ -88,28 +92,32 @@ def get_config_documentation():
     realms = get_realms()
     policies = P.list_policies()
     admins = get_db_admins()
-    context = {"system": socket.getfqdn(socket.gethostname()),
-               "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
-               "systemconfig": config,
-               "appconfig": current_app.config,
-               "resolverconfig": resolvers,
-               "realmconfig": realms,
-               "policyconfig": policies,
-               "admins": admins}
+    context = {
+        "system": socket.getfqdn(socket.gethostname()),
+        "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "systemconfig": config,
+        "appconfig": current_app.config,
+        "resolverconfig": resolvers,
+        "realmconfig": realms,
+        "policyconfig": policies,
+        "admins": admins,
+    }
 
     g.audit_object.log({"success": True})
     # Three or more line breaks will be changed to two.
-    return send_file(re.sub("\n{3,}", "\n\n", render_template("documentation.rst",
-                                                              context=context)),
-                     'documentation.rst', content_type='text/plain')
+    return send_file(
+        re.sub("\n{3,}", "\n\n", render_template("documentation.rst", context=context)),
+        "documentation.rst",
+        content_type="text/plain",
+    )
 
 
-@system_blueprint.route('/gpgkeys', methods=['GET'])
+@system_blueprint.route("/gpgkeys", methods=["GET"])
 def get_gpg_keys():
     """
     Returns the GPG keys in the config directory specified by EDUMFA_GNUPG_HOME.
-    
-    :return: A json list of the public GPG keys 
+
+    :return: A json list of the public GPG keys
     """
     GPG = GPGImport(current_app.config)
     keys = GPG.get_publickeys()
@@ -117,8 +125,8 @@ def get_gpg_keys():
     return send_result(keys)
 
 
-@system_blueprint.route('/<key>', methods=['GET'])
-@system_blueprint.route('/', methods=['GET'])
+@system_blueprint.route("/<key>", methods=["GET"])
+@system_blueprint.route("/", methods=["GET"])
 def get_config(key=None):
     """
     This endpoint either returns all config entries or only the value of the
@@ -137,12 +145,11 @@ def get_config(key=None):
     else:
         result = get_from_config(key, role=g.logged_in_user.get("role"))
 
-    g.audit_object.log({"success": True,
-                        "info": key})
+    g.audit_object.log({"success": True, "info": key})
     return send_result(result)
 
 
-@system_blueprint.route('/setConfig', methods=['POST'])
+@system_blueprint.route("/setConfig", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, ACTION.SYSTEMWRITE)
 def set_config():
@@ -198,16 +205,16 @@ def set_config():
         if key.split(".")[-1] not in ["type", "desc"]:
             # Only store base values, not type or desc
             value = getParam(param, key, optional)
-            typ = getParam(param, key + ".type", optional)
-            desc = getParam(param, key + ".desc", optional)
+            typ = getParam(param, f"{key}.type", optional)
+            desc = getParam(param, f"{key}.desc", optional)
             res = set_edumfa_config(key, value, typ, desc)
             result[key] = res
-            g.audit_object.add_to_log({"info": "{0!s}={1!s}, ".format(key, value)})
+            g.audit_object.add_to_log({"info": f"{key!s}={value!s}, "})
     g.audit_object.log({"success": True})
     return send_result(result)
 
 
-@system_blueprint.route('/setDefault', methods=['POST'])
+@system_blueprint.route("/setDefault", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, ACTION.SYSTEMWRITE)
 def set_default():
@@ -228,13 +235,15 @@ def set_default():
     :return: a json result with a boolean "result": true
 
     """
-    keys = ["DefaultMaxFailCount",
-            "DefaultSyncWindow",
-            "DefaultCountWindow",
-            "DefaultOtpLen",
-            "DefaultResetFailCount"]
-    
-    description = "parameters are: {0!s}".format(", ".join(keys))
+    keys = [
+        "DefaultMaxFailCount",
+        "DefaultSyncWindow",
+        "DefaultCountWindow",
+        "DefaultOtpLen",
+        "DefaultResetFailCount",
+    ]
+
+    description = f"parameters are: {', '.join(keys)!s}"
     param = getLowerParams(request.all_data)
     result = {}
     for k in keys:
@@ -243,18 +252,16 @@ def set_default():
             res = set_edumfa_config(k, value)
             result[k] = res
             g.audit_object.log({"success": True})
-            g.audit_object.add_to_log({"info": "{0!s}={1!s}, ".format(k, value)})
+            g.audit_object.add_to_log({"info": f"{k!s}={value!s}, "})
 
     if not result:
-        log.warning("Failed saving config. Could not find any "
-                    "known parameter. %s"
-                    % description)
-        raise ParameterError("Usage: {0!s}".format(description), id=77)
-    
+        log.warning(f"Failed saving config. Could not find any known parameter. {description}")
+        raise ParameterError(f"Usage: {description!s}", id=77)
+
     return send_result(result)
 
 
-@system_blueprint.route('/<key>', methods=['DELETE'])
+@system_blueprint.route("/<key>", methods=["DELETE"])
 @admin_required
 @prepolicy(check_base_action, request, ACTION.SYSTEMDELETE)
 @log_with(log)
@@ -269,12 +276,11 @@ def delete_config(key=None):
     if not key:
         raise ParameterError("You need to provide the config key to delete.")
     res = delete_edumfa_config(key)
-    g.audit_object.log({'success': res,
-                        'info': key})
+    g.audit_object.log({"success": res, "info": key})
     return send_result(res)
 
 
-@system_blueprint.route('/hsm', methods=['POST'])
+@system_blueprint.route("/hsm", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, ACTION.SETHSM)
 @log_with(log)
@@ -285,11 +291,11 @@ def set_security_module():
     password = getParam(request.all_data, "password", required)
     is_ready = set_hsm_password(password)
     res = {"is_ready": is_ready}
-    g.audit_object.log({'success': res})
+    g.audit_object.log({"success": res})
     return send_result(res)
 
 
-@system_blueprint.route('/hsm', methods=['GET'])
+@system_blueprint.route("/hsm", methods=["GET"])
 @admin_required
 @log_with(log)
 def get_security_module():
@@ -299,11 +305,11 @@ def get_security_module():
     hsm = get_hsm(require_ready=False)
     is_ready = hsm.is_ready
     res = {"is_ready": is_ready}
-    g.audit_object.log({'success': res})
+    g.audit_object.log({"success": res})
     return send_result(res)
 
 
-@system_blueprint.route('/random', methods=['GET'])
+@system_blueprint.route("/random", methods=["GET"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.GETRANDOM)
 @log_with(log)
@@ -330,11 +336,11 @@ def rand():
     else:
         res = hexlify_and_unicode(r)
 
-    g.audit_object.log({'success': res})
+    g.audit_object.log({"success": res})
     return send_result(res)
 
 
-@system_blueprint.route('/test/<tokentype>', methods=['POST'])
+@system_blueprint.route("/test/<tokentype>", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.SYSTEMWRITE)
 @log_with(log)
@@ -344,12 +350,11 @@ def test(tokentype=None):
     """
     tokenc = get_token_class(tokentype)
     res, description = tokenc.test_config(request.all_data)
-    g.audit_object.log({"success": 1,
-                        "token_type": tokentype})
+    g.audit_object.log({"success": 1, "token_type": tokentype})
     return send_result(res, details={"message": description})
 
 
-@system_blueprint.route('/names/radius', methods=['GET'])
+@system_blueprint.route("/names/radius", methods=["GET"])
 @prepolicy(check_base_action, request, action="enrollRADIUS")
 def list_radius_servers():
     """
@@ -358,11 +363,11 @@ def list_radius_servers():
     """
     server_list = get_radiusservers()
     res = [server.config.identifier for server in server_list]
-    g.audit_object.log({'success': True})
+    g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@system_blueprint.route('/names/caconnector', methods=['GET'])
+@system_blueprint.route("/names/caconnector", methods=["GET"])
 @prepolicy(check_base_action, request, action="enrollCERTIFICATE")
 def list_ca_connectors():
     """

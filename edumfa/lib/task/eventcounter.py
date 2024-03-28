@@ -44,20 +44,17 @@ class EventCounterTask(BaseTask):
             "event_counter": {
                 "type": "str",
                 "description": _("The name of the event counter to read."),
-                "required": True
+                "required": True,
             },
             "stats_key": {
                 "type": "str",
-                "description": _("The name of the stats key to write to the MonitoringStats "
-                                 "table."),
-                "required": True
+                "description": _("The name of the stats key to write to the MonitoringStats table."),
+                "required": True,
             },
             "reset_event_counter": {
                 "type": "bool",
-                "description": _("Whether to reset the event_counter, if it is read and written "
-                                 "to the MonitoringStats table.")
-            }
-
+                "description": _("Whether to reset the event_counter, if it is read and written to the MonitoringStats table."),
+            },
         }
 
     def do(self, params):
@@ -71,10 +68,8 @@ class EventCounterTask(BaseTask):
 
         # now write the current value of the counter
         if counter_value is None:
-            log.warning("Trying to create statistics of a counter_value '{0}', "
-                        "that does not exist.".format(event_counter))
+            log.warning(f"Trying to create statistics of a counter_value '{event_counter}', that does not exist.")
         else:
             write_stats(stats_key, counter_value)
 
         return True
-

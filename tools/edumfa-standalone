@@ -53,11 +53,45 @@ import sqlalchemy
 import sys
 import warnings
 
-from flask_script import Manager, Server
 from tempfile import NamedTemporaryFile
+
+from click import get_current_context
 
 from edumfa.app import create_app
 from edumfa.lib.security.default import DefaultSecurityModule
+import click
+from flask.cli import FlaskGroup, pass_script_info
+from flask import current_app
+
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+
+def create_prod_app(*args, **kwargs):
+    ctx = get_current_context(silent=True)
+    if ctx:
+        script_info = ctx.obj
+        instance = script_info.instance
+    elif kwargs.get("instance"):
+        # Production server, e.g., gunincorn 
+        # We don't have access to the current context, so must
+        # read kwargs instead.
+        instance = kwargs["instance"]
+    config_file = os.path.abspath(os.path.join(instance, 'edumfa.cfg'))
+    app = create_app("production", config_file=config_file, silent=True, script=True)
+    app.instance_directory = instance
+    return app
+
+
+@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
+             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
+@click.option('-i', '--instance', 'instance', required=False,
+              default=os.path.expanduser('~/.edumfa'),
+              help='Location of the eduMFA instance (defaults to ~/.edumfa)')
+@pass_script_info
+def cli(script_info, instance):
+    script_info.instance = instance
+    pass
+
 
 warnings.simplefilter("ignore", category=sqlalchemy.exc.SAWarning)
 
@@ -92,46 +126,22 @@ def invoke_edumfa_config(commandline, edumfa_cfg):
     subprocess.check_call(['edumfa-manage'] + commandline, env=environment)
 
 
-def _app_factory(instance):
-    """
-    Create a Flask app object with the given eduMFA standalone instance.
-    """
-    config_file = os.path.abspath(os.path.join(instance, 'edumfa.cfg'))
-    app = create_app(config_name='production', config_file=config_file, silent=True)
-    app.instance_directory = instance
-    return app
-
-
 def require_instance(f):
     """
     Decorator that marks commands that require an already set-up instance directory
     """
+
     @wraps(f)
     def deco(*args, **kwargs):
-        config_file = os.path.join(manager.app.instance_directory, 'edumfa.cfg')
+        config_file = os.path.join(current_app.instance_directory, 'edumfa.cfg')
         if not os.path.exists(config_file):
             raise RuntimeError("{!r} does not exist! Create a new instance using"
                                " ``edumfa-standalone create``.".format(config_file))
         return f(*args, **kwargs)
+
     return deco
 
 
-class Configure(Server):
-    help = description = "Run a local webserver to configure eduMFA"
-
-    @require_instance
-    def __call__(self, *args, **kwargs):
-        Server.__call__(self, *args, **kwargs)
-
-    def run(self):
-        pass
-
-
-manager = Manager(_app_factory, with_default_commands=False, description=__doc__)
-manager.add_command("configure", Configure())
-manager.add_option('-i', '--instance', dest='instance', required=False,
-                   default=os.path.expanduser('~/.edumfa'),
-                   help='Location of the eduMFA instance (defaults to ~/.edumfa)')
 
 
 def read_credentials(fobj):
@@ -198,12 +208,12 @@ def yesno(question, default):
                              '': default})
 
 
-@manager.command
+@cli.command("create")
 def create():
     """ Create a new eduMFA instance """
-    instance_dir = os.path.abspath(manager.app.instance_directory)
-    if os.path.exists(manager.app.instance_directory):
-        print("Instance at {!s} exists already! Aborting.".format(manager.app.instance_directory))
+    instance_dir = os.path.abspath(current_app.instance_directory)
+    if os.path.exists(current_app.instance_directory):
+        print("Instance at {!s} exists already! Aborting.".format(current_app.instance_directory))
     else:
         try:
             os.makedirs(instance_dir)
@@ -250,7 +260,7 @@ def create():
                     with NamedTemporaryFile(delete=False) as f:
                         f.write('{"fileName": "/etc/passwd"}')
                     invoke_edumfa_config(['resolver', 'create', 'defresolver', 'passwdresolver',
-                                      f.name], edumfa_cfg)
+                                          f.name], edumfa_cfg)
                     os.unlink(f.name)
                 invoke_edumfa_config(['realm', 'create', 'defrealm', 'defresolver'], edumfa_cfg)
 
@@ -265,7 +275,19 @@ def create():
             raise e
 
 
-@manager.option('-r', '--response', dest='show_response', action='store_true',
+@cli.command("configure")
+def configure():
+    """
+    Run a local webserver to configure eduMFA
+    """
+    # By default, it is prevented to run the Flask server using the CLI. We simply tell the Flask app that is not
+    # started by the CLI ;-)
+    os.environ.update({"FLASK_RUN_FROM_CLI": "false"})
+    current_app.run()
+
+
+@cli.command("check")
+@click.option('-r', '--response', 'show_response', is_flag=True,
                 help='Print the JSON response of eduMFA to standard output')
 @require_instance
 def check(show_response=False):
@@ -281,9 +303,9 @@ def check(show_response=False):
     user, password = read_credentials(sys.stdin)
     exitcode = 255
     try:
-        with manager.app.test_request_context('/validate/check', method='POST',
+        with current_app.test_request_context('/validate/check', method='POST',
                                               data={'user': user, 'pass': password}):
-            response = manager.app.full_dispatch_request()
+            response = current_app.full_dispatch_request()
             data = json.loads(response.data)
             result = data['result']
             if result['value'] is True:
@@ -298,4 +320,4 @@ def check(show_response=False):
 
 
 if __name__ == '__main__':
-    manager.run()
+    cli()

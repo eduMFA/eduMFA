@@ -82,7 +82,7 @@ class TanTokenClass(PaperTokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -93,41 +93,39 @@ class TanTokenClass(PaperTokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or scalar
         """
-        res = {'type': 'tan',
-               'title': 'TAN Token',
-               'description': 'TAN: TANs printed on a sheet '
-                              'of paper.',
-               'init': {},
-               'config': {},
-               'user':  ['enroll'],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin", "user"],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       TANACTION.TANTOKEN_COUNT: {
-                           "type": "int",
-                           "desc": _("The number of OTP values, which are "
-                                     "printed on the paper.")
-                       },
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of TAN tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _(
-                               "The user may only have this maximum number of active TAN tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               }
-               }
+        res = {
+            "type": "tan",
+            "title": "TAN Token",
+            "description": "TAN: TANs printed on a sheet of paper.",
+            "init": {},
+            "config": {},
+            "user": ["enroll"],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin", "user"],
+            "policy": {
+                SCOPE.ENROLL: {
+                    TANACTION.TANTOKEN_COUNT: {
+                        "type": "int",
+                        "desc": _("The number of OTP values, which are printed on the paper."),
+                    },
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of TAN tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of active TAN tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
 
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
@@ -153,8 +151,7 @@ class TanTokenClass(PaperTokenClass):
             salt = geturandom(SALT_LENGTH, hex=True)
             # Now we add all TANs to the tokeninfo of this token.
             hashed_tan = hash(tanvalue, salt)
-            self.add_tokeninfo("tan.tan{0!s}".format(tankey),
-                               "{0}:{1}".format(salt, hashed_tan))
+            self.add_tokeninfo(f"tan.tan{tankey!s}", f"{salt}:{hashed_tan}")
 
     def check_otp(self, anOtpVal, counter=None, window=None, options=None):
         """

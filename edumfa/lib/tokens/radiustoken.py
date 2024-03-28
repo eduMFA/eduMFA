@@ -79,7 +79,7 @@ class RadiusTokenClass(RemoteTokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -90,34 +90,33 @@ class RadiusTokenClass(RemoteTokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or string
         """
-        res = {'type': 'radius',
-               'title': 'RADIUS Token',
-               'description': _('RADIUS: Forward authentication request to a '
-                                'RADIUS server.'),
-               'user': ['enroll'],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin", "user"],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of RADIUS tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _(
-                               "The user may only have this maximum number of active RADIUS tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               },
-               }
+        res = {
+            "type": "radius",
+            "title": "RADIUS Token",
+            "description": _("RADIUS: Forward authentication request to a RADIUS server."),
+            "user": ["enroll"],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin", "user"],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of RADIUS tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of active RADIUS tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
 
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
 
         return ret
@@ -134,8 +133,7 @@ class RadiusTokenClass(RemoteTokenClass):
             self.add_tokeninfo("radius.server", radiusServer)
             radius_secret = getParam(param, "radius.secret", optional=required)
             self.token.set_otpkey(hexlify_and_unicode(radius_secret))
-            system_settings = getParam(param, "radius.system_settings",
-                                       default=False)
+            system_settings = getParam(param, "radius.system_settings", default=False)
             self.add_tokeninfo("radius.system_settings", system_settings)
 
             if not (radiusServer or radius_secret) and not system_settings:
@@ -182,9 +180,9 @@ class RadiusTokenClass(RemoteTokenClass):
             return res
 
         else:
-            state = options.get('radius_state')
+            state = options.get("radius_state")
             # The pin is checked remotely
-            res = options.get('radius_result')
+            res = options.get("radius_result")
             if res is None:
                 res = self._check_radius(passw, options=options, radius_state=state)
 
@@ -212,16 +210,18 @@ class RadiusTokenClass(RemoteTokenClass):
         """
         if options is None:
             options = {}
-        message = options.get('radius_message') or "Enter your RADIUS tokencode:"
-        state = hexlify_and_unicode(options.get('radius_state') or b'')
-        reply_dict = {'attributes': {'state': transactionid}}
-        validity = int(get_from_config('DefaultChallengeValidityTime', 120))
+        message = options.get("radius_message") or "Enter your RADIUS tokencode:"
+        state = hexlify_and_unicode(options.get("radius_state") or b"")
+        reply_dict = {"attributes": {"state": transactionid}}
+        validity = int(get_from_config("DefaultChallengeValidityTime", 120))
 
-        db_challenge = Challenge(self.token.serial,
-                                 transaction_id=transactionid,
-                                 data=state,
-                                 challenge=message,
-                                 validitytime=validity)
+        db_challenge = Challenge(
+            self.token.serial,
+            transaction_id=transactionid,
+            data=state,
+            challenge=message,
+            validitytime=validity,
+        )
         db_challenge.save()
         self.challenge_janitor()
         return True, message, db_challenge.transaction_id, reply_dict
@@ -253,17 +253,16 @@ class RadiusTokenClass(RemoteTokenClass):
 
         # clear the radius_result since this is the first function called in the chain
         # this value will be utilized to ensure we do not _check_radius more than once in the loop
-        options.update({'radius_result': None})
+        options.update({"radius_result": None})
 
         # fetch the transaction_id
-        transaction_id = options.get('transaction_id')
+        transaction_id = options.get("transaction_id")
         if transaction_id is None:
-            transaction_id = options.get('state')
+            transaction_id = options.get("state")
 
         if transaction_id:
             # get the challenges for this transaction ID
-            challengeobject_list = get_challenges(serial=self.token.serial,
-                                                  transaction_id=transaction_id)
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
 
             for challengeobject in challengeobject_list:
                 if challengeobject.is_valid():
@@ -295,12 +294,11 @@ class RadiusTokenClass(RemoteTokenClass):
         otp_counter = -1
 
         # fetch the transaction_id
-        transaction_id = options.get('transaction_id') or options.get('state')
+        transaction_id = options.get("transaction_id") or options.get("state")
 
         # get the challenges for this transaction ID
         if transaction_id is not None:
-            challengeobject_list = get_challenges(serial=self.token.serial,
-                                                  transaction_id=transaction_id)
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
 
             for challengeobject in challengeobject_list:
                 if challengeobject.is_valid():
@@ -339,7 +337,7 @@ class RadiusTokenClass(RemoteTokenClass):
         :return: bool
         """
         local_check = is_true(self.get_tokeninfo("radius.local_checkpin"))
-        log.debug("local checking pin? {0!r}".format(local_check))
+        log.debug(f"local checking pin? {local_check!r}")
 
         return local_check
 
@@ -390,15 +388,14 @@ class RadiusTokenClass(RemoteTokenClass):
 
         # should we check the pin locally?
         if self.check_pin_local:
-            (_res, pin, otpval) = self.split_pin_pass(passw, user,
-                                                      options=options)
+            (_res, pin, otpval) = self.split_pin_pass(passw, user, options=options)
 
             if not self.check_pin(pin, user=user, options=options):
-                return False, -1, {'message': "Wrong PIN"}
+                return False, -1, {"message": "Wrong PIN"}
 
         # attempt to retrieve saved state/result
-        state = options.get('radius_state')
-        result = options.get('radius_result')
+        state = options.get("radius_state")
+        result = options.get("radius_result")
         if result is None:
             radius_response = self._check_radius(otpval, options=options, radius_state=state)
         else:
@@ -456,7 +453,7 @@ class RadiusTokenClass(RemoteTokenClass):
             radius_server_object = get_radius(radius_identifier)
             radius_server = radius_server_object.config.server
             radius_port = radius_server_object.config.port
-            radius_server = "{0!s}:{1!s}".format(radius_server, radius_port)
+            radius_server = f"{radius_server!s}:{radius_port!s}"
             radius_secret = radius_server_object.get_secret()
             radius_dictionary = radius_server_object.config.dictionary
             radius_timeout = int(radius_server_object.config.timeout or 10)
@@ -473,9 +470,7 @@ class RadiusTokenClass(RemoteTokenClass):
             radius_secret = binascii.unhexlify(secret.getKey())
 
         # here we also need to check for radius.user
-        log.debug("checking OTP len:{0!s} on radius server: "
-                  "{1!s}, user: {2!r}".format(len(otpval), radius_server,
-                                               radius_user))
+        log.debug(f"checking OTP len:{len(otpval)!s} on radius server: {radius_server!s}, user: {radius_user!r}")
 
         try:
             # pyrad does not allow to set timeout and retries.
@@ -483,46 +478,44 @@ class RadiusTokenClass(RemoteTokenClass):
 
             # TODO: At the moment we support only one radius server.
             # No round robin.
-            server = radius_server.split(':')
+            server = radius_server.split(":")
             r_server = server[0]
             r_authport = 1812
             if len(server) >= 2:
                 r_authport = int(server[1])
-            nas_identifier = get_from_config("radius.nas_identifier",
-                                             "eduMFA")
+            nas_identifier = get_from_config("radius.nas_identifier", "eduMFA")
             if not radius_dictionary:
-                radius_dictionary = get_from_config("radius.dictfile",
-                                                    "/etc/edumfa/dictionary")
-            log.debug("NAS Identifier: %r, "
-                      "Dictionary: %r" % (nas_identifier, radius_dictionary))
-            log.debug("constructing client object "
-                      "with server: %r, port: %r, secret: %r" %
-                      (r_server, r_authport, to_unicode(radius_secret)))
+                radius_dictionary = get_from_config("radius.dictfile", "/etc/edumfa/dictionary")
+            log.debug(f"NAS Identifier: {nas_identifier!r}, Dictionary: {radius_dictionary!r}")
+            log.debug(f"constructing client object with server: {r_server!r}, port: {r_authport!r}, secret: {to_unicode(radius_secret)!r}")
 
-            srv = Client(server=r_server,
-                         authport=r_authport,
-                         secret=to_bytes(radius_secret),
-                         dict=Dictionary(radius_dictionary))
+            srv = Client(
+                server=r_server,
+                authport=r_authport,
+                secret=to_bytes(radius_secret),
+                dict=Dictionary(radius_dictionary),
+            )
 
             # Set retries and timeout of the client
             srv.timeout = radius_timeout
             srv.retries = radius_retries
 
-            req = srv.CreateAuthPacket(code=pyrad.packet.AccessRequest,
-                                       User_Name=radius_user.encode('utf-8'),
-                                       NAS_Identifier=nas_identifier.encode('ascii'))
+            req = srv.CreateAuthPacket(
+                code=pyrad.packet.AccessRequest,
+                User_Name=radius_user.encode("utf-8"),
+                NAS_Identifier=nas_identifier.encode("ascii"),
+            )
 
             req["User-Password"] = req.PwCrypt(otpval)
 
             if radius_state:
                 req["State"] = radius_state
-                log.info("Sending saved challenge to radius server: {0!r} ".format(radius_state))
+                log.info(f"Sending saved challenge to radius server: {radius_state!r} ")
 
             try:
                 response = srv.SendPacket(req)
             except Timeout:
-                log.warning("The remote RADIUS server {0!s} timeout out for user {1!s}.".format(
-                    r_server, radius_user))
+                log.warning(f"The remote RADIUS server {r_server!s} timeout out for user {radius_user!s}.")
                 return AccessReject
 
             # handle the RADIUS challenge
@@ -535,24 +528,22 @@ class RadiusTokenClass(RemoteTokenClass):
 
                 result = AccessChallenge
             elif response.code == pyrad.packet.AccessAccept:
-                radius_state = '<SUCCESS>'
-                radius_message = 'RADIUS authentication succeeded'
-                log.info("RADIUS server {0!s} granted "
-                         "access to user {1!s}.".format(r_server, radius_user))
+                radius_state = "<SUCCESS>"
+                radius_message = "RADIUS authentication succeeded"
+                log.info(f"RADIUS server {r_server!s} granted access to user {radius_user!s}.")
                 result = AccessAccept
             else:
-                radius_state = '<REJECTED>'
-                radius_message = 'RADIUS authentication failed'
-                log.debug('radius response code {0!s}'.format(response.code))
-                log.info("Radiusserver {0!s} "
-                         "rejected access to user {1!s}.".format(r_server, radius_user))
+                radius_state = "<REJECTED>"
+                radius_message = "RADIUS authentication failed"
+                log.debug(f"radius response code {response.code!s}")
+                log.info(f"Radiusserver {r_server!s} rejected access to user {radius_user!s}.")
                 result = AccessReject
 
         except Exception as ex:  # pragma: no cover
-            log.error("Error contacting radius Server: {0!r}".format((ex)))
-            log.info("{0!s}".format(traceback.format_exc()))
+            log.error(f"Error contacting radius Server: {ex!r}")
+            log.info(f"{traceback.format_exc()!s}")
 
-        options.update({'radius_result': result})
-        options.update({'radius_state': radius_state})
-        options.update({'radius_message': radius_message})
+        options.update({"radius_result": result})
+        options.update({"radius_state": radius_state})
+        options.update({"radius_message": radius_message})
         return result

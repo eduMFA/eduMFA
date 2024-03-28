@@ -29,6 +29,7 @@ In order to add a new comparator:
  2) implement a comparison function and add it to COMPARATOR_FUNCTIONS
  3) add a description of the comparator to COMPARATOR_DESCRIPTIONS
 """
+
 import csv
 import logging
 import re
@@ -44,11 +45,12 @@ class CompareError(Exception):
     Signals that an error occurred when carrying out a comparison.
     The error message is not presented to the user, but written to the logfile.
     """
+
     def __init__(self, message):
         self.message = message
 
     def __repr__(self):
-        return "CompareError({!r})".format(self.message)
+        return f"CompareError({self.message!r})"
 
 
 def parse_comma_separated_string(input_string):
@@ -62,7 +64,13 @@ def parse_comma_separated_string(input_string):
     """
     # We use Python's csv module because it supports quoted values
     try:
-        reader = csv.reader([input_string], strict=True, skipinitialspace=True, doublequote=False, escapechar="\\")
+        reader = csv.reader(
+            [input_string],
+            strict=True,
+            skipinitialspace=True,
+            doublequote=False,
+            escapechar="\\",
+        )
         rows = list(reader)
     except csv.Error as exx:
         raise CompareError("Malformed comma-separated value: {!r}".format(input_string, exx))
@@ -101,7 +109,7 @@ def _compare_contains(left, comparator, right):
     if isinstance(left, list):
         return right in left
     else:
-        raise CompareError("Left value must be a list, not {!r}".format(type(left)))
+        raise CompareError(f"Left value must be a list, not {type(left)!r}")
 
 
 def _compare_matches(left, comparator, right):
@@ -115,14 +123,14 @@ def _compare_matches(left, comparator, right):
     """
     try:
         # check for regex modes
-        m = re.match(r'^(\(\?[a-zA-Z]+\))(.+)$', right)
+        m = re.match(r"^(\(\?[a-zA-Z]+\))(.+)$", right)
         if m and len(m.groups()) == 2:
-            regex = m.group(1) + r'^' + m.group(2) + r'$'
+            regex = f"{m.group(1)}^{m.group(2)}$"
         else:
             regex = r"^" + right + r"$"
         return re.match(regex, left) is not None
     except re.error as e:
-        raise CompareError("Error during matching: {!r}".format(e))
+        raise CompareError(f"Error during matching: {e!r}")
 
 
 def _compare_in(left, comparator, right):
@@ -143,9 +151,11 @@ def negate(func):
     :param func: a comparison function taking three arguments
     :return: a comparison function taking three arguments
     """
+
     @wraps(func)
     def negated(left, comparator, right):
         return not func(left, comparator, right)
+
     return negated
 
 
@@ -174,18 +184,14 @@ class COMPARATORS(object):
 COMPARATOR_FUNCTIONS = {
     COMPARATORS.EQUALS: _compare_equality,
     COMPARATORS.NOT_EQUALS: negate(_compare_equality),
-
     COMPARATORS.CONTAINS: _compare_contains,
     COMPARATORS.NOT_CONTAINS: negate(_compare_contains),
-
     COMPARATORS.MATCHES: _compare_matches,
     COMPARATORS.NOT_MATCHES: negate(_compare_matches),
-
     COMPARATORS.IN: _compare_in,
     COMPARATORS.NOT_IN: negate(_compare_in),
-
     COMPARATORS.SMALLER: _compare_smaller,
-    COMPARATORS.BIGGER: _compare_bigger
+    COMPARATORS.BIGGER: _compare_bigger,
 }
 
 
@@ -193,18 +199,14 @@ COMPARATOR_FUNCTIONS = {
 COMPARATOR_DESCRIPTIONS = {
     COMPARATORS.CONTAINS: _("true if the value of the left attribute contains the right value"),
     COMPARATORS.NOT_CONTAINS: _("false if the value of the left attribute contains the right value"),
-
     COMPARATORS.EQUALS: _("true if the value of the left attribute equals the right value"),
     COMPARATORS.NOT_EQUALS: _("false if the value of the left attribute equals the right value"),
-
     COMPARATORS.MATCHES: _("true if the value of the left attribute completely matches the given regular expression pattern on the right"),
     COMPARATORS.NOT_MATCHES: _("false if the value of the left attribute completely matches the given regular expression pattern on the right"),
-
     COMPARATORS.IN: _("true if the value of the left attribute is contained in the comma-separated values on the right"),
     COMPARATORS.NOT_IN: _("false if the value of the left attribute is contained in the comma-separated values on the right"),
-
     COMPARATORS.SMALLER: _("true if the integer value of the left attribute is smaller than the right integer value"),
-    COMPARATORS.BIGGER: _("true if the integer value of the left attribute is bigger than the right integer value")
+    COMPARATORS.BIGGER: _("true if the integer value of the left attribute is bigger than the right integer value"),
 }
 
 
@@ -220,4 +222,4 @@ def compare_values(left, comparator, right):
     if comparator in COMPARATOR_FUNCTIONS:
         return COMPARATOR_FUNCTIONS[comparator](left, comparator, right)
     else:
-        raise CompareError("Invalid comparator: {!r}".format(comparator))
+        raise CompareError(f"Invalid comparator: {comparator!r}")

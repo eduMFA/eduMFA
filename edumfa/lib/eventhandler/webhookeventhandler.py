@@ -42,6 +42,7 @@ class CONTENT_TYPE(object):
     """
     Allowed type off content
     """
+
     JSON = "json"
     URLENCODED = "urlendcode"
 
@@ -50,6 +51,7 @@ class ACTION_TYPE(object):
     """
     Allowed actions
     """
+
     POST_WEBHOOK = "post_webhook"
 
 
@@ -79,31 +81,31 @@ class WebHookHandler(BaseEventHandler):
         :return: dict with actions
         """
         # The event handler has just one action. Maybe we can  hide action select for the clarity of the UI
-        actions = {ACTION_TYPE.POST_WEBHOOK: {
-            "URL": {
-                "type": "str",
-                "required": True,
-                "description": _("The URL the WebHook is posted to")
-            },
-            "content_type": {
-                "type": "str",
-                "required": True,
-                "description": _("The encoding that is sent to the WebHook, for example json"),
-                "value": [
-                    CONTENT_TYPE.JSON,
-                    CONTENT_TYPE.URLENCODED]
-            },
-            "replace": {
-                "type": "bool",
-                "required": True,
-                "description": _("You can replace placeholder like {logged_in_user}")
-            },
-            "data": {
-                "type": "str",
-                "required": True,
-                "description": _("The data posted in the WebHook")
+        actions = {
+            ACTION_TYPE.POST_WEBHOOK: {
+                "URL": {
+                    "type": "str",
+                    "required": True,
+                    "description": _("The URL the WebHook is posted to"),
+                },
+                "content_type": {
+                    "type": "str",
+                    "required": True,
+                    "description": _("The encoding that is sent to the WebHook, for example json"),
+                    "value": [CONTENT_TYPE.JSON, CONTENT_TYPE.URLENCODED],
+                },
+                "replace": {
+                    "type": "bool",
+                    "required": True,
+                    "description": _("You can replace placeholder like {logged_in_user}"),
+                },
+                "data": {
+                    "type": "str",
+                    "required": True,
+                    "description": _("The data posted in the WebHook"),
+                },
             }
-        }}
+        }
         return actions
 
     def do(self, action, options=None):
@@ -129,19 +131,25 @@ class WebHookHandler(BaseEventHandler):
         tokenowner = None
 
         if request is not None:
-            token_serial = request.all_data.get('serial')
+            token_serial = request.all_data.get("serial")
             tokenowner = self._get_tokenowner(request)
 
         try:
-            user = User(login=g.logged_in_user.get('username'),
-                        realm=g.logged_in_user.get('realm'))
+            user = User(
+                login=g.logged_in_user.get("username"),
+                realm=g.logged_in_user.get("realm"),
+            )
         except (UserError, AttributeError) as e:  # pragma: no cover
-            log.info('Could not determine user: {0!s}'.format(e))
+            log.info(f"Could not determine user: {e!s}")
             user = None
 
         if replace:
-            webhook_text = replace_function_event_handler(webhook_text, token_serial=token_serial,
-                                                          tokenowner=tokenowner, logged_in_user=user)
+            webhook_text = replace_function_event_handler(
+                webhook_text,
+                token_serial=token_serial,
+                tokenowner=tokenowner,
+                logged_in_user=user,
+            )
 
         if action.lower() == ACTION_TYPE.POST_WEBHOOK:
             try:
@@ -150,10 +158,13 @@ class WebHookHandler(BaseEventHandler):
                     This is the main function where the webhook is sent.
                     Documentation of the requests function is found her docs.python-requests.org
                     """
-                    log.info('A webhook is send to {0!r} with the text: {1!r}'.format(
-                        webhook_url, webhook_text))
-                    resp = requests.post(webhook_url, data=json.dumps(webhook_text),
-                                         headers={'Content-Type': content_type}, timeout=TIMEOUT)
+                    log.info(f"A webhook is send to {webhook_url!r} with the text: {webhook_text!r}")
+                    resp = requests.post(
+                        webhook_url,
+                        data=json.dumps(webhook_text),
+                        headers={"Content-Type": content_type},
+                        timeout=TIMEOUT,
+                    )
                     # all answers will be logged in the debug. The HTTP response code will be shown in the audit too
                     log.info(resp.status_code)
                     log.debug(resp)
@@ -162,21 +173,24 @@ class WebHookHandler(BaseEventHandler):
                     This is the main function where the webhook is sent.
                     Documentation of the requests function is found her docs.python-requests.org
                     """
-                    log.info('A webhook is send to {0!r} with the text: {1!r}'.format(
-                        webhook_url, webhook_text))
-                    resp = requests.post(webhook_url, webhook_text,
-                                         headers={'Content-Type': content_type}, timeout=TIMEOUT)
+                    log.info(f"A webhook is send to {webhook_url!r} with the text: {webhook_text!r}")
+                    resp = requests.post(
+                        webhook_url,
+                        webhook_text,
+                        headers={"Content-Type": content_type},
+                        timeout=TIMEOUT,
+                    )
                     # all answers will be logged in the debug. The HTTP response code will be shown in the audit too
                     log.info(resp.status_code)
                     log.debug(resp)
                 else:
-                    log.warning('Unknown content type value: {0!s}'.format(content_type))
+                    log.warning(f"Unknown content type value: {content_type!s}")
                     ret = False
             # error handling
             except (HTTPError, ConnectionError, RequestException, Timeout) as err:
                 log.warning(err)
                 return False
         else:
-            log.warning('Unknown action value: {0!s}'.format(action))
+            log.warning(f"Unknown action value: {action!s}")
             ret = False
         return ret

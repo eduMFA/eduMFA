@@ -1,9 +1,9 @@
-FROM python:3.10-slim-bookworm
+FROM python:3.12-slim-bookworm
 COPY . .
 RUN python -m pip install build --user && \
     python -m build --sdist --wheel --outdir dist/
 
-FROM python:3.10-slim-bookworm
+FROM python:3.12-slim-bookworm
 
 COPY --from=0 /dist/*.whl /dist/
 

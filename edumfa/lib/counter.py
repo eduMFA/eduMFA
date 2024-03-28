@@ -26,6 +26,7 @@
 """
 This module is used to modify counters in the database
 """
+
 from sqlalchemy import func
 
 from edumfa.lib.config import get_edumfa_node
@@ -55,7 +56,7 @@ def _reset_counter_on_all_nodes(counter_name):
     regardless of the node column.
     :param counter_name:  The name/identifier of the counter
     """
-    EventCounter.query.filter_by(counter_name=counter_name).update({'counter_value': 0})
+    EventCounter.query.filter_by(counter_name=counter_name).update({"counter_value": 0})
     db.session.commit()
 
 
@@ -108,5 +109,4 @@ def read(counter_name):
     :param counter_name: The name of the counter
     :return: The value of the counter
     """
-    return db.session.query(func.sum(EventCounter.counter_value))\
-        .filter(EventCounter.counter_name == counter_name).one()[0]
+    return db.session.query(func.sum(EventCounter.counter_value)).filter(EventCounter.counter_name == counter_name).one()[0]

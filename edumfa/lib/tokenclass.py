@@ -31,7 +31,7 @@ This is the Token Base class, which is inherited by all token types.
 It depends on lib.user and lib.config.
 
 The token object also contains a database token object as self.token.
-The token object runs the self.update() method during the initialization 
+The token object runs the self.update() method during the initialization
 process in the API /token/init.
 
 The update method takes a dictionary. Some of the following parameters:
@@ -42,45 +42,54 @@ genkey      -> genkey=1 : eduMFA generates an OTPKey, creates the token
 2stepinit   -> Will do a two step rollout.
                eduMFA creates the first part of the OTPKey, sends it
                to the client and the clients needs to send back the second part.
-               
-In case of 2stepinit the key is generated from the server_component and the 
+
+In case of 2stepinit the key is generated from the server_component and the
 client_component using the TokenClass method generate_symmetric_key.
 This method is supposed to be overwritten by the corresponding token classes.
 """
+
 import logging
 import hashlib
 import traceback
 from datetime import datetime, timedelta
 
-from .error import (TokenAdminError,
-                    ParameterError)
+from .error import TokenAdminError, ParameterError
 
 from ..api.lib.utils import getParam
 from .log import log_with
 
-from .config import (get_from_config, get_prepend_pin)
-from .user import (User,
-                   get_username)
-from ..models import (TokenOwner, TokenTokengroup, Tokengroup, Challenge, cleanup_challenges)
+from .config import get_from_config, get_prepend_pin
+from .user import User, get_username
+from ..models import (
+    TokenOwner,
+    TokenTokengroup,
+    Tokengroup,
+    Challenge,
+    cleanup_challenges,
+)
 from .challenge import get_challenges
-from edumfa.lib.crypto import (encryptPassword, decryptPassword,
-                                    generate_otpkey)
+from edumfa.lib.crypto import encryptPassword, decryptPassword, generate_otpkey
 from .policydecorators import libpolicy, auth_otppin, challenge_response_allowed
 from .decorators import check_token_locked
 from dateutil.parser import parse as parse_date_string, ParserError
 from dateutil.tz import tzlocal, tzutc
-from edumfa.lib.utils import (is_true, decode_base32check,
-                                   to_unicode, create_img, parse_timedelta,
-                                   parse_legacy_time, split_pin_pass)
+from edumfa.lib.utils import (
+    is_true,
+    decode_base32check,
+    to_unicode,
+    create_img,
+    parse_timedelta,
+    parse_legacy_time,
+    split_pin_pass,
+)
 from edumfa.lib import _
-from edumfa.lib.policy import (get_action_values_from_options, SCOPE, ACTION)
+from edumfa.lib.policy import get_action_values_from_options, SCOPE, ACTION
 from base64 import b32encode
 from binascii import unhexlify
 
 
-
-#DATE_FORMAT = "%d/%m/%y %H:%M"
-DATE_FORMAT = '%Y-%m-%dT%H:%M%z'
+# DATE_FORMAT = "%d/%m/%y %H:%M"
+DATE_FORMAT = "%Y-%m-%dT%H:%M%z"
 # LASTAUTH is utcnow()
 AUTH_DATE_FORMAT = "%Y-%m-%d %H:%M:%S.%f%z"
 optional = True
@@ -105,10 +114,10 @@ class TOKENKIND(object):
 
 
 class AUTHENTICATIONMODE(object):
-    AUTHENTICATE = 'authenticate'
-    CHALLENGE = 'challenge'
+    AUTHENTICATE = "authenticate"
+    CHALLENGE = "challenge"
     # If the challenge is answered out of band
-    OUTOFBAND = 'outofband'
+    OUTOFBAND = "outofband"
 
 
 class CLIENTMODE(object):
@@ -116,26 +125,26 @@ class CLIENTMODE(object):
     This informs eduMFA clients how to
     handle challenge-responses
     """
-    INTERACTIVE = 'interactive'
-    POLL = 'poll'
-    U2F = 'u2f'
-    WEBAUTHN = 'webauthn'
 
-    
+    INTERACTIVE = "interactive"
+    POLL = "poll"
+    U2F = "u2f"
+    WEBAUTHN = "webauthn"
+
+
 class ROLLOUTSTATE(object):
-    CLIENTWAIT = 'clientwait'
+    CLIENTWAIT = "clientwait"
     # The rollout is pending in the backend, like CSRs that need to be approved
-    PENDING = 'pending'
+    PENDING = "pending"
     # This means the user needs to authenticate to verify that the token was successfully enrolled.
-    VERIFYPENDING = 'verify'
-    ENROLLED = 'enrolled'
-    BROKEN = 'broken'
-    FAILED = 'failed'
-    DENIED = 'denied'
+    VERIFYPENDING = "verify"
+    ENROLLED = "enrolled"
+    BROKEN = "broken"
+    FAILED = "failed"
+    DENIED = "denied"
 
 
 class TokenClass(object):
-
     # Class properties
     using_pin = True
     hKeyRequired = False
@@ -146,12 +155,11 @@ class TokenClass(object):
     # If the token is enrollable via multichallenge
     is_multichallenge_enrollable = False
 
-
     @log_with(log)
     def __init__(self, db_token):
         """
         Create a new token object.
-        
+
         :param db_token: A database token object
         :type db_token: Token
         :return: A TokenClass object
@@ -171,11 +179,11 @@ class TokenClass(object):
         """
         Set the tokentype in this object and
         also in the underlying database-Token-object.
-        
+
         :param tokentype: The type of the token like HOTP or TOTP
         :type tokentype: string
         """
-        tokentype = '' + tokentype
+        tokentype = f"{tokentype}"
         self.type = tokentype
         self.token.tokentype = tokentype
 
@@ -188,7 +196,7 @@ class TokenClass(object):
         return None
 
     @staticmethod
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         return {}
 
     @staticmethod
@@ -202,7 +210,7 @@ class TokenClass(object):
     def add_user(self, user, report=None):
         """
         Set the user attributes (uid, resolvername, resolvertype) of a token.
-        
+
         :param user: a User() object, consisting of loginname and realm
         :param report: tbdf.
         :return: None
@@ -211,15 +219,17 @@ class TokenClass(object):
         # prevent to init update a token changing the token owner
         # FIXME: We need to remove this, if we one day want to assign several users to one token
         if self.user and self.user != user:
-            log.info("The token with serial {0!s} is already assigned "
-                     "to user {1!s}. Can not assign to {2!s}.".format(self.token.serial, self.user, user))
+            log.info(f"The token with serial {self.token.serial!s} is already assigned to user {self.user!s}. Can not assign to {user!s}.")
             raise TokenAdminError("This token is already assigned to another user.")
 
         if not self.user:
             # If the tokenowner is not set yet, set it / avoid setting the same tokenowner multiple times
-            r = TokenOwner(token_id=self.token.id,
-                           user_id=uid, resolver=resolvername,
-                           realmname=user.realm).save()
+            r = TokenOwner(
+                token_id=self.token.id,
+                user_id=uid,
+                resolver=resolvername,
+                realmname=user.realm,
+            ).save()
         # set the tokenrealm
         self.set_realms([user.realm])
 
@@ -235,9 +245,11 @@ class TokenClass(object):
         """
         if not tokengroup and not tokengroup_id:
             raise ParameterError("You either need to specify a tokengroup name or id.")
-        r = TokenTokengroup(token_id=self.token.id,
-                            tokengroup_id=tokengroup_id,
-                            tokengroupname=tokengroup).save()
+        r = TokenTokengroup(
+            token_id=self.token.id,
+            tokengroup_id=tokengroup_id,
+            tokengroupname=tokengroup,
+        ).save()
         return r > 0
 
     @property
@@ -253,16 +265,18 @@ class TokenClass(object):
         tokenowner = self.token.first_owner
         if tokenowner:
             username = get_username(tokenowner.user_id, tokenowner.resolver)
-            user_object = User(login=username,
-                               resolver=tokenowner.resolver,
-                               realm=tokenowner.realm.name)
+            user_object = User(
+                login=username,
+                resolver=tokenowner.resolver,
+                realm=tokenowner.realm.name,
+            )
         return user_object
 
     def is_orphaned(self):
         """
         Return True if the token is orphaned.
-        
-        An orphaned token means, that it has a user assigned, but the user 
+
+        An orphaned token means, that it has a user assigned, but the user
         does not exist in the user store (anymore)
 
         :return: True / False
@@ -289,9 +303,8 @@ class TokenClass(object):
         """
         user_object = self.user
         user_info = user_object.info
-        user_identifier = "{0!s}_{1!s}".format(user_object.login, user_object.realm)
-        user_displayname = "{0!s} {1!s}".format(user_info.get("givenname", "."),
-                                      user_info.get("surname", "."))
+        user_identifier = f"{user_object.login!s}_{user_object.realm!s}"
+        user_displayname = f"{user_info.get('givenname', '.')!s} {user_info.get('surname', '.')!s}"
         return user_identifier, user_displayname
 
     @check_token_locked
@@ -361,7 +374,7 @@ class TokenClass(object):
         """
         add_info = {key: value}
         if value_type:
-            add_info[key + ".type"] = value_type
+            add_info[f"{key}.type"] = value_type
             if value_type == "password":
                 # encrypt the value
                 add_info[key] = encryptPassword(value)
@@ -399,13 +412,12 @@ class TokenClass(object):
         The default token does not support getting the otp value
         will return a tuple of four values
         a negative value is a failure.
-        
+
         :return: something like:  (1, pin, otpval, combined)
         """
         return -2, 0, 0, 0
 
-    def get_multi_otp(self, count=0, epoch_start=0, epoch_end=0,
-                      curTime=None, timestamp=None):
+    def get_multi_otp(self, count=0, epoch_start=0, epoch_end=0, curTime=None, timestamp=None):
         """
         This returns a dictionary of multiple future OTP values of a token.
 
@@ -482,14 +494,13 @@ class TokenClass(object):
         otp_counter = -1
         reply = None
 
-        (res, pin, otpval) = self.split_pin_pass(passw, user=user,
-                                                 options=options)
+        (res, pin, otpval) = self.split_pin_pass(passw, user=user, options=options)
         if res:
             # If the otpvalue is too short, we do not check the PIN at all, since res is False
             pin_match = self.check_pin(pin, user=user, options=options)
             if pin_match is True:
                 otp_counter = self.check_otp(otpval, options=options)
-                #self.set_otp_count(otp_counter)
+                # self.set_otp_count(otp_counter)
 
         return pin_match, otp_counter, reply
 
@@ -514,12 +525,12 @@ class TokenClass(object):
         elif otpkeyformat == "base32check":
             return decode_base32check(otpkey)
         else:
-            raise ParameterError("Unknown OTP key format: {!r}".format(otpkeyformat))
+            raise ParameterError(f"Unknown OTP key format: {otpkeyformat!r}")
 
     def update(self, param, reset_failcount=True):
         """
         Update the token object
-        
+
         :param param: a dictionary with different params like keysize,
                       description, genkey, otpkey, pin
         :type: param: dict
@@ -557,21 +568,21 @@ class TokenClass(object):
                 self.token.rollout_state = None
             if self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
                 # We do not do 2stepinit in the second step
-                raise ParameterError("2stepinit is only to be used in the "
-                                     "first initialization step.")
+                raise ParameterError("2stepinit is only to be used in the first initialization step.")
             # In a 2-step enrollment, the server always generates a key
             genkey = 1
             # The token is disabled
             self.token.active = False
 
-
-        #if genkey not in [0, 1]:
+        # if genkey not in [0, 1]:
         #    raise ParameterError("TokenClass supports only genkey in  range ["
         #                         "0,1] : %r" % genkey)
 
         if genkey and otpKey is not None:
-            raise ParameterError('[ParameterError] You may either specify '
-                                 'genkey or otpkey, but not both!', id=344)
+            raise ParameterError(
+                "[ParameterError] You may either specify genkey or otpkey, but not both!",
+                id=344,
+            )
 
         if otpKey is None and genkey:
             otpKey = self._genOtpKey_(key_size)
@@ -586,12 +597,10 @@ class TokenClass(object):
                 # generate the new key
                 server_component = to_unicode(self.token.get_otpkey().getKey())
                 client_component = otpKey
-                otpKey = self.generate_symmetric_key(server_component,
-                                                     client_component,
-                                                     param)
+                otpKey = self.generate_symmetric_key(server_component, client_component, param)
                 self.token.rollout_state = ""
                 self.token.active = True
-            self.add_init_details('otpkey', otpKey)
+            self.add_init_details("otpkey", otpKey)
             self.token.set_otpkey(otpKey, reset_failcount=reset_failcount)
 
         if twostep_init:
@@ -606,13 +615,13 @@ class TokenClass(object):
                 storeHashed = False
             self.token.set_pin(pin, storeHashed)
 
-        otplen = getParam(param, 'otplen', optional)
+        otplen = getParam(param, "otplen", optional)
         if otplen is not None:
             self.set_otplen(otplen)
 
         # Add parameters starting with the tokentype-name to the tokeninfo:
         for p in param.keys():
-            if p.startswith(self.type + "."):
+            if p.startswith(f"{self.type}."):
                 self.add_tokeninfo(p, getParam(param, p))
 
         # The base class will be a software tokenkind
@@ -621,12 +630,12 @@ class TokenClass(object):
         return
 
     def _genOtpKey_(self, otpkeylen=None):
-        '''
+        """
         private method, to create an otpkey
-        '''
+        """
         if otpkeylen is None:
-            if hasattr(self, 'otpkeylen'):
-                otpkeylen = getattr(self, 'otpkeylen')
+            if hasattr(self, "otpkeylen"):
+                otpkeylen = getattr(self, "otpkeylen")
             else:
                 otpkeylen = 20
         return generate_otpkey(otpkeylen)
@@ -635,11 +644,11 @@ class TokenClass(object):
     def set_description(self, description):
         """
         Set the description on the database level
-        
+
         :param description: description of the token
         :type description: string
         """
-        self.token.set_description('' + description)
+        self.token.set_description(f"{description}")
         return
 
     def set_defaults(self):
@@ -647,13 +656,11 @@ class TokenClass(object):
         Set the default values on the database level
         """
         self.token.otplen = int(get_from_config("DefaultOtpLen") or 6)
-        self.token.count_window = int(get_from_config("DefaultCountWindow")
-                                      or 10)
+        self.token.count_window = int(get_from_config("DefaultCountWindow") or 10)
         self.token.maxfail = int(get_from_config("DefaultMaxFailCount") or 10)
-        self.token.sync_window = int(get_from_config("DefaultSyncWindow")
-                                     or 1000)
+        self.token.sync_window = int(get_from_config("DefaultSyncWindow") or 1000)
 
-        self.token.tokentype = '' + self.type
+        self.token.tokentype = f"{self.type}"
         return
 
     def delete_token(self):
@@ -754,7 +761,7 @@ class TokenClass(object):
         :type add: boolean
         """
         self.token.set_realms(realms, add=add)
-        
+
     def get_realms(self):
         """
         Return a list of realms the token is assigned to
@@ -763,10 +770,10 @@ class TokenClass(object):
         :rtype: list
         """
         return self.token.get_realms()
-        
+
     def get_serial(self):
         return self.token.serial
-    
+
     def get_tokentype(self):
         return self.token.tokentype
 
@@ -864,15 +871,13 @@ class TokenClass(object):
     @check_token_locked
     def inc_failcount(self):
         if self.token.failcount < self.token.maxfail:
-            self.token.failcount = (self.token.failcount + 1)
+            self.token.failcount = self.token.failcount + 1
             if self.token.failcount == self.token.maxfail:
-                self.add_tokeninfo(FAILCOUNTER_EXCEEDED,
-                                   datetime.now(tzlocal()).strftime(
-                                       DATE_FORMAT))
+                self.add_tokeninfo(FAILCOUNTER_EXCEEDED, datetime.now(tzlocal()).strftime(DATE_FORMAT))
         try:
             self.token.save()
         except:  # pragma: no cover
-            log.error('update failed')
+            log.error("update failed")
             raise TokenAdminError("Token Fail Counter update failed", id=1106)
         return self.token.failcount
 
@@ -941,7 +946,7 @@ class TokenClass(object):
         tokeninfo = self.token.get_info()
         if key:
             ret = tokeninfo.get(key, default)
-            if tokeninfo.get(key + ".type") == "password":
+            if tokeninfo.get(f"{key}.type") == "password":
                 # we need to decrypt the return value
                 ret = decryptPassword(ret)
         else:
@@ -1066,8 +1071,8 @@ class TokenClass(object):
             try:
                 d = parse_date_string(end_date)
             except ValueError as _e:
-                log.debug('{0!s}'.format(traceback.format_exc()))
-                raise TokenAdminError('Could not parse validity period end date!')
+                log.debug(f"{traceback.format_exc()!s}")
+                raise TokenAdminError("Could not parse validity period end date!")
             self.add_tokeninfo("validity_period_end", d.strftime(DATE_FORMAT))
 
     def get_validity_period_start(self):
@@ -1099,8 +1104,8 @@ class TokenClass(object):
             try:
                 d = parse_date_string(start_date)
             except ValueError as _e:
-                log.debug('{0!s}'.format(traceback.format_exc()))
-                raise TokenAdminError('Could not parse validity period start date!')
+                log.debug(f"{traceback.format_exc()!s}")
+                raise TokenAdminError("Could not parse validity period start date!")
 
             self.add_tokeninfo("validity_period_start", d.strftime(DATE_FORMAT))
 
@@ -1146,8 +1151,12 @@ class TokenClass(object):
         succcess_counter += 1
         auth_counter = self.get_count_auth()
         auth_counter += 1
-        self.token.set_info({"count_auth_success": int(succcess_counter),
-                             "count_auth": int(auth_counter)})
+        self.token.set_info(
+            {
+                "count_auth_success": int(succcess_counter),
+                "count_auth": int(auth_counter),
+            }
+        )
         return succcess_counter
 
     @check_token_locked
@@ -1179,9 +1188,7 @@ class TokenClass(object):
         try:
             timeout = int(get_from_config(FAILCOUNTER_CLEAR_TIMEOUT, 0))
         except Exception as exx:
-            log.warning("Misconfiguration. Error retrieving "
-                        "failcounter_clear_timeout: "
-                        "{0!s}".format(exx))
+            log.warning(f"Misconfiguration. Error retrieving failcounter_clear_timeout: {exx!s}")
         if timeout and self.token.failcount == self.get_max_failcount():
             now = datetime.now(tzlocal())
             lastfail = self.get_tokeninfo(FAILCOUNTER_EXCEEDED)
@@ -1207,7 +1214,7 @@ class TokenClass(object):
         This function checks the count_auth and the count_auth_success.
         If the counters are less or equal than the maximum allowed counters
         it returns True. Otherwise False.
-        
+
         :return: success if the counter is less than max
         :rtype: bool
         """
@@ -1270,12 +1277,15 @@ class TokenClass(object):
             message_list.append("Failcounter exceeded")
         elif not self.check_validity_period():
             message_list.append("Outside validity period")
-        elif self.rollout_state in [ROLLOUTSTATE.CLIENTWAIT, ROLLOUTSTATE.VERIFYPENDING]:
+        elif self.rollout_state in [
+            ROLLOUTSTATE.CLIENTWAIT,
+            ROLLOUTSTATE.VERIFYPENDING,
+        ]:
             message_list.append("Token is not yet enrolled")
         else:
             r = True
         if not r:
-            log.info("{0} {1}".format(message_list, self.get_serial()))
+            log.info(f"{message_list} {self.get_serial()}")
         return r
 
     @log_with(log)
@@ -1305,8 +1315,7 @@ class TokenClass(object):
         if reset is True and get_from_config("DefaultResetFailCount") == "True":
             reset_counter = True
 
-        if (reset_counter and self.token.active and self.token.failcount <
-            self.token.maxfail):
+        if reset_counter and self.token.active and self.token.failcount < self.token.maxfail:
             self.set_failcount(0)
 
         # make DB persistent immediately, to avoid the re-usage of the counter
@@ -1318,7 +1327,7 @@ class TokenClass(object):
         checks if the given OTP value is/are values of this very token.
         This is used to autoassign and to determine the serial number of
         a token.
-        
+
         :param otp: the OTP value
         :param window: The look ahead window
         :type window: int
@@ -1364,7 +1373,7 @@ class TokenClass(object):
         """
         # The database field is always an integer
         otplen = self.token.otplen
-        log.debug("Splitting the an OTP value of length {0!s} from the password.".format(otplen))
+        log.debug(f"Splitting the an OTP value of length {otplen!s} from the password.")
         pin, otpval = split_pin_pass(passw, otplen, get_prepend_pin())
         # If the provided passw is shorter than the expected otplen, we return the status False
         return len(passw) >= otplen, pin, otpval
@@ -1390,10 +1399,10 @@ class TokenClass(object):
         """
         ldict = {}
         for attr in self.__dict__:
-            key = "{0!r}".format(attr)
-            val = "{0!r}".format(getattr(self, attr))
+            key = f"{attr!r}"
+            val = f"{getattr(self, attr)!r}"
             ldict[key] = val
-        res = "<{0!r} {1!r}>".format(self.__class__, ldict)
+        res = f"<{self.__class__!r} {ldict!r}>"
         return res
 
     def get_init_detail(self, params=None, user=None):
@@ -1405,7 +1414,7 @@ class TokenClass(object):
         get_init_detail returns additional information after an admin/init
         like the QR code of an HOTP/TOTP token.
         Can be anything else.
-        
+
         :param params: The request params during token creation token/init
         :type params: dict
         :param user: the user, token owner
@@ -1417,16 +1426,18 @@ class TokenClass(object):
 
         init_details = self.get_init_details()
         response_detail.update(init_details)
-        response_detail['serial'] = self.get_serial()
+        response_detail["serial"] = self.get_serial()
 
         otpkey = None
-        if 'otpkey' in init_details:
-            otpkey = init_details.get('otpkey')
+        if "otpkey" in init_details:
+            otpkey = init_details.get("otpkey")
 
         if otpkey is not None:
-            response_detail["otpkey"] = {"description": "OTP seed",
-                                         "value": "seed://{0!s}".format(otpkey),
-                                         "img": create_img(otpkey)}
+            response_detail["otpkey"] = {
+                "description": "OTP seed",
+                "value": f"seed://{otpkey!s}",
+                "img": create_img(otpkey),
+            }
 
         return response_detail
 
@@ -1561,14 +1572,13 @@ class TokenClass(object):
         otp_counter = -1
 
         # fetch the transaction_id
-        transaction_id = options.get('transaction_id')
+        transaction_id = options.get("transaction_id")
         if transaction_id is None:
-            transaction_id = options.get('state')
+            transaction_id = options.get("state")
 
         # get the challenges for this transaction ID
         if transaction_id is not None:
-            challengeobject_list = get_challenges(serial=self.token.serial,
-                                                  transaction_id=transaction_id)
+            challengeobject_list = get_challenges(serial=self.token.serial, transaction_id=transaction_id)
 
             for challengeobject in challengeobject_list:
                 if challengeobject.is_valid():
@@ -1639,25 +1649,25 @@ class TokenClass(object):
         additional challenge ``reply_dict``, which are displayed in the JSON challenges response.
         """
         options = options or {}
-        message = get_action_values_from_options(SCOPE.AUTH,
-                                                 ACTION.CHALLENGETEXT,
-                                                 options) or _('please enter otp: ')
+        message = get_action_values_from_options(SCOPE.AUTH, ACTION.CHALLENGETEXT, options) or _("please enter otp: ")
         data = None
         reply_dict = {}
 
-        validity = int(get_from_config('DefaultChallengeValidityTime', 120))
+        validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
         # Maybe there is a HotpChallengeValidityTime...
-        lookup_for = tokentype.capitalize() + 'ChallengeValidityTime'
+        lookup_for = f"{tokentype.capitalize()}ChallengeValidityTime"
         validity = int(get_from_config(lookup_for, validity))
 
         # Create the challenge in the database
-        db_challenge = Challenge(self.token.serial,
-                                 transaction_id=transactionid,
-                                 challenge=options.get("challenge"),
-                                 data=data,
-                                 session=options.get("session"),
-                                 validitytime=validity)
+        db_challenge = Challenge(
+            self.token.serial,
+            transaction_id=transactionid,
+            challenge=options.get("challenge"),
+            data=data,
+            session=options.get("session"),
+            validitytime=validity,
+        )
         db_challenge.save()
         self.challenge_janitor()
         return True, message, db_challenge.transaction_id, reply_dict
@@ -1690,8 +1700,7 @@ class TokenClass(object):
         :param g: The Flask global object g
         :return: Flask Response or text
         """
-        raise ParameterError("{0!s} does not support the API endpoint".format(
-                             cls.get_tokentype()))
+        raise ParameterError(f"{cls.get_tokentype()!s} does not support the API endpoint")
 
     @staticmethod
     def test_config(params=None):
@@ -1765,15 +1774,12 @@ class TokenClass(object):
         # The last successful authentication of the token
         date_s = self.get_tokeninfo(ACTION.LASTAUTH)
         if date_s:
-            log.debug("Compare the last successful authentication of "
-                      "token %s with policy "
-                      "tdelta %s: %s" % (self.token.serial, tdelta,
-                                         date_s))
+            log.debug(f"Compare the last successful authentication of token {self.token.serial} with policy tdelta {tdelta}: {date_s}")
             # parse the string from the database
             try:
                 last_success_auth = parse_date_string(date_s)
             except ParserError:
-                log.info("Failed to parse the date in 'last_auth' of token {0!s}.".format(self.token.serial))
+                log.info(f"Failed to parse the date in 'last_auth' of token {self.token.serial!s}.")
                 return False
 
             if not last_success_auth.tzinfo:
@@ -1783,36 +1789,33 @@ class TokenClass(object):
             # The last auth is to far in the past
             if last_success_auth + tdelta < datetime.now(tzlocal()):
                 res = False
-                log.debug("The last successful authentication is too old: "
-                          "{0!s}".format(last_success_auth))
+                log.debug(f"The last successful authentication is too old: {last_success_auth!s}")
 
         return res
 
-    def generate_symmetric_key(self, server_component, client_component,
-                               options=None):
+    def generate_symmetric_key(self, server_component, client_component, options=None):
         """
-        This method generates a symmetric key, from a server component and a 
-        client component. 
+        This method generates a symmetric key, from a server component and a
+        client component.
         This key generation could be based on HMAC, KDF or even Diffie-Hellman.
-        
-        The basic key-generation is simply replacing the last n byte of the 
+
+        The basic key-generation is simply replacing the last n byte of the
         server component with bytes of the client component.
-                
+
         :param server_component: The component usually generated by privacyIDEA.
                                  This is a hex string
         :type server_component: str
         :param client_component: The component usually generated by the
             client (e.g. smartphone). This is a hex string.
         :type client_component: str
-        :param options: 
+        :param options:
         :return: the new generated key as hex string
         :rtype: str
         """
         if len(server_component) <= len(client_component):
-            raise Exception("The server component must be longer than the "
-                            "client component.")
+            raise Exception("The server component must be longer than the client component.")
 
-        key = server_component[:-len(client_component)] + client_component
+        key = server_component[: -len(client_component)] + client_component
         return key
 
     @staticmethod
@@ -1838,10 +1841,12 @@ class TokenClass(object):
         else:
             hashlib = "sha1"
 
-        params = {"serial": l[0].strip(),
-                  "hashlib": hashlib,
-                  "otpkey": key,
-                  "type": l[2].strip()}
+        params = {
+            "serial": l[0].strip(),
+            "hashlib": hashlib,
+            "otpkey": key,
+            "type": l[2].strip(),
+        }
 
         # get OTP len
         if len(l) >= 4:
@@ -1923,7 +1928,7 @@ class TokenClass(object):
             "active": self.is_active(),
             "revoked": self.token.revoked,
             "locked": self.token.locked,
-            "rollout_state": self.token.rollout_state
+            "rollout_state": self.token.rollout_state,
         }
         if b32:
             token_dict["otpkey"] = b32encode(unhexlify(token_dict.get("otpkey")))

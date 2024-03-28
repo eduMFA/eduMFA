@@ -36,7 +36,7 @@ You also have to provide the configuration parameters for the referenced audit m
 """
 
 import logging
-from edumfa.lib.auditmodules.base import (Audit as AuditBase)
+from edumfa.lib.auditmodules.base import Audit as AuditBase
 from edumfa.lib.utils import get_module_class
 
 
@@ -52,14 +52,13 @@ class Audit(AuditBase):
     def __init__(self, config=None, startdate=None):
         super(Audit, self).__init__(config, startdate)
         self.name = "containeraudit"
-        write_conf = self.config.get('EDUMFA_AUDIT_CONTAINER_WRITE')
-        read_conf = self.config.get('EDUMFA_AUDIT_CONTAINER_READ')
+        write_conf = self.config.get("EDUMFA_AUDIT_CONTAINER_WRITE")
+        read_conf = self.config.get("EDUMFA_AUDIT_CONTAINER_READ")
         # Initialize all modules
-        self.write_modules = [get_module_class(audit_module, "Audit", "log")(config, startdate)
-                              for audit_module in write_conf]
+        self.write_modules = [get_module_class(audit_module, "Audit", "log")(config, startdate) for audit_module in write_conf]
         self.read_module = get_module_class(read_conf, "Audit", "log")(config, startdate)
         if not self.read_module.is_readable:
-            log.warning("The specified EDUMFA_AUDIT_CONTAINER_READ {0!s} is not readable.".format(self.read_module))
+            log.warning(f"The specified EDUMFA_AUDIT_CONTAINER_READ {self.read_module!s} is not readable.")
 
     @property
     def has_data(self):
@@ -86,13 +85,17 @@ class Audit(AuditBase):
         for module in self.write_modules:
             module.add_policy(policyname)
 
-    def search(self, search_dict, page_size=15, page=1, sortorder="asc",
-               timelimit=None):
+    def search(self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None):
         """
         Call the search method for the one readable module
         """
-        return self.read_module.search(search_dict, page_size=page_size, page=page,
-                                       sortorder=sortorder, timelimit=timelimit)
+        return self.read_module.search(
+            search_dict,
+            page_size=page_size,
+            page=page,
+            sortorder=sortorder,
+            timelimit=timelimit,
+        )
 
     def get_count(self, search_dict, timedelta=None, success=None):
         """
@@ -104,8 +107,7 @@ class Audit(AuditBase):
         """
         Call the csv_generator method for the one readable module
         """
-        return self.read_module.csv_generator(param=param, user=user,
-                                              timelimit=timelimit)
+        return self.read_module.csv_generator(param=param, user=user, timelimit=timelimit)
 
     def get_total(self, param, AND=True, display_error=True, timelimit=None):
         """

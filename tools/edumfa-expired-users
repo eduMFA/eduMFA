@@ -75,31 +75,31 @@ __version__ = "0.1"
 from edumfa.lib.user import get_user_list, User
 from edumfa.lib.token import get_tokens, remove_token, unassign_token
 from edumfa.app import create_app
-from flask_script import Manager
 import datetime
 import re
+import click
+from flask.cli import FlaskGroup
+from flask import current_app as app
 
-# If set to None, this condition does not match
-# Otherwise you may use a regular expression to match the serial numbers
-DELETE_SERIAL = None
-UNASSIGN_SERIAL = ".*"
-# You do not need to change this
-ATTRIBUTE_NAME = "accountExpires"
-
-#############################
-# Do not change this
-# one second contains 10^9 nano seconds. -> contains 10^7 100-nanoseconds
-MULTIPLYER = 10 ** 7
-MS_AD_START = datetime.datetime(1601, 1, 1)
-
-app = create_app(config_name='production', silent=True)
-manager = Manager(app)
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 
-@manager.command
-def expire(realm=None, attribute_name=ATTRIBUTE_NAME,
-           delete_serial=DELETE_SERIAL, unassign_serial=UNASSIGN_SERIAL,
-           noaction=False):
+def create_prod_app():
+    return create_app("production", silent=True, script=True)
+
+
+@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
+             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
+def cli():
+    pass
+
+@cli.command()
+@click.option('--realm', help='The realm which should be checked')
+@click.option('--attribute_name', default='accountExpires', help='The attribute name that contains the expiration date')
+@click.option('--delete_serial', help='Regular expression to match the serial numbers of tokens to be deleted')
+@click.option('--unassign_serial', default='.*', help='Regular expression to match the serial numbers of tokens to be unassigned')
+@click.option('--noaction', is_flag=True, help='If set, the script will only show which accounts have expired, but do nothing')
+def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
     """
     This searches for expired Users in the specified realm.
     The attributeName should contain an integer like that in Microsoft(R)
@@ -119,7 +119,6 @@ def expire(realm=None, attribute_name=ATTRIBUTE_NAME,
     if realm:
         params["realm"] = realm
     users = get_user_list(params)
-
     for user in users:
         username = user.get("username")
         account_expires = user.get(attribute_name)
@@ -135,13 +134,11 @@ def expire(realm=None, attribute_name=ATTRIBUTE_NAME,
                 # values like 9223372036854775807 do not expire
                 print("%s does not expire." % username)
                 continue
-
             print("= User %s has an expiration date." % username)
             print("== UTC now : %s" % utc_now)
             print("== expires : %s" % exp_date)
             if exp_date <= utc_now:
                 print("=== Account %s has expired." % username)
-
                 user = User(username, realm=realm)
                 tokens = get_tokens(user=user)
                 if not tokens:
@@ -157,7 +154,6 @@ def expire(realm=None, attribute_name=ATTRIBUTE_NAME,
                                 print("=== Unassigning token %s" %
                                       token.token.serial)
                                 unassign_token(token.token.serial)
-
                     if delete_serial:
                         m = re.search(delete_serial, token.token.serial)
                         if m:
@@ -169,7 +165,5 @@ def expire(realm=None, attribute_name=ATTRIBUTE_NAME,
                                       token.token.serial)
                                 remove_token(token.token.serial)
 
-
 if __name__ == '__main__':
-    print()
-    manager.run()
+    cli()

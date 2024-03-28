@@ -55,7 +55,6 @@ log = logging.getLogger(__name__)
 
 
 class LdapMachineResolver(BaseMachineResolver):
-
     type = "ldap"
 
     def __init__(self, name, config=None):
@@ -66,14 +65,15 @@ class LdapMachineResolver(BaseMachineResolver):
 
     def _bind(self):
         if not self.i_am_bound:
-            server_pool = IdResolver.create_serverpool(self.uri, self.timeout,
-                                                       tls_context=self.tls_context)
-            self.l = IdResolver.create_connection(authtype=self.authtype,
-                                                  server=server_pool,
-                                                  user=self.binddn,
-                                                  password=self.bindpw,
-                                                  auto_referrals=not self.noreferrals,
-                                                  start_tls=self.start_tls)
+            server_pool = IdResolver.create_serverpool(self.uri, self.timeout, tls_context=self.tls_context)
+            self.l = IdResolver.create_connection(
+                authtype=self.authtype,
+                server=server_pool,
+                user=self.binddn,
+                password=self.bindpw,
+                auto_referrals=not self.noreferrals,
+                start_tls=self.start_tls,
+            )
             if not self.l.bind():
                 raise Exception("Wrong credentials")
             self.i_am_bound = True
@@ -86,49 +86,54 @@ class LdapMachineResolver(BaseMachineResolver):
             entry = entries.get(entry_attribute)
         return entry
 
-
     @staticmethod
-    def _create_ldap_filter(search_filter,
-                            id_attribute, machine_id,
-                            hostname_attribute, hostname,
-                            ip_attribute, ip, substring=False, any=False):
-        filter = "(&" + search_filter
+    def _create_ldap_filter(
+        search_filter,
+        id_attribute,
+        machine_id,
+        hostname_attribute,
+        hostname,
+        ip_attribute,
+        ip,
+        substring=False,
+        any=False,
+    ):
+        filter = f"(&{search_filter}"
 
         if not any:
             if id_attribute.lower() != "dn" and machine_id:
                 if substring:
-                    filter += "({0!s}=*{1!s}*)".format(id_attribute, machine_id)
+                    filter += f"({id_attribute!s}=*{machine_id!s}*)"
                 else:
-                    filter += "({0!s}={1!s})".format(id_attribute, machine_id)
+                    filter += f"({id_attribute!s}={machine_id!s})"
             if hostname:
                 if substring:
-                    filter += "({0!s}=*{1!s}*)".format(hostname_attribute, hostname)
+                    filter += f"({hostname_attribute!s}=*{hostname!s}*)"
                 else:
-                    filter += "({0!s}={1!s})".format(hostname_attribute, hostname)
+                    filter += f"({hostname_attribute!s}={hostname!s})"
             if ip:
                 if substring:
-                    filter += "({0!s}=*{1!s}*)".format(ip_attribute, ip)
+                    filter += f"({ip_attribute!s}=*{ip!s}*)"
                 else:
-                    filter += "({0!s}={1!s})".format(ip_attribute, ip)
+                    filter += f"({ip_attribute!s}={ip!s})"
         filter += ")"
         if any:
             # Now we need to extend the search filter
             # like this  (& (&(....)) (|(ip=...)(host=...)) )
             any_filter = "(|"
             if id_attribute:
-                any_filter += "({0!s}=*{1!s}*)".format(id_attribute, any)
+                any_filter += f"({id_attribute!s}=*{any!s}*)"
             if hostname_attribute:
-                any_filter += "({0!s}=*{1!s}*)".format(hostname_attribute, any)
+                any_filter += f"({hostname_attribute!s}=*{any!s}*)"
             if ip_attribute:
-                any_filter += "({0!s}=*{1!s}*)".format(ip_attribute, any)
+                any_filter += f"({ip_attribute!s}=*{any!s}*)"
             any_filter += ")"
 
-            filter = "(&{0!s}{1!s})".format(filter, any_filter)
+            filter = f"(&{filter!s}{any_filter!s})"
 
         return filter
 
-    def get_machines(self, machine_id=None, hostname=None, ip=None, any=None,
-                     substring=False):
+    def get_machines(self, machine_id=None, hostname=None, ip=None, any=None, substring=False):
         """
         Return matching machines.
 
@@ -152,24 +157,34 @@ class LdapMachineResolver(BaseMachineResolver):
             attributes.append(self.hostname_attribute)
 
         # do the filter depending on the searchDict
-        filter = self._create_ldap_filter(self.search_filter,
-                                          self.id_attribute, machine_id,
-                                          self.hostname_attribute, hostname,
-                                          self.ip_attribute, ip,
-                                          substring, any)
+        filter = self._create_ldap_filter(
+            self.search_filter,
+            self.id_attribute,
+            machine_id,
+            self.hostname_attribute,
+            hostname,
+            self.ip_attribute,
+            ip,
+            substring,
+            any,
+        )
 
         if self.id_attribute.lower() == "dn" and machine_id:
-            self.l.search(search_base=machine_id,
-                          search_scope=ldap3.BASE,
-                          search_filter=filter,
-                          attributes=attributes,
-                          paged_size=self.sizelimit)
+            self.l.search(
+                search_base=machine_id,
+                search_scope=ldap3.BASE,
+                search_filter=filter,
+                attributes=attributes,
+                paged_size=self.sizelimit,
+            )
         else:
-            self.l.search(search_base=self.basedn,
-                          search_scope=ldap3.SUBTREE,
-                          search_filter=filter,
-                          attributes=attributes,
-                          paged_size=self.sizelimit)
+            self.l.search(
+                search_base=self.basedn,
+                search_scope=ldap3.SUBTREE,
+                search_filter=filter,
+                attributes=attributes,
+                paged_size=self.sizelimit,
+            )
 
         # returns a list of dictionaries
         for entry in self.l.response:
@@ -181,28 +196,31 @@ class LdapMachineResolver(BaseMachineResolver):
                     machine = {}
 
                     if self.id_attribute.lower() == "dn":
-                        machine['machineid'] = dn
+                        machine["machineid"] = dn
                     else:
-                        machine['machineid'] = self._get_entry(self.id_attribute, attributes)
+                        machine["machineid"] = self._get_entry(self.id_attribute, attributes)
 
-                    machine['hostname'] = self._get_entry(self.hostname_attribute, attributes)
-                    machine['ip'] = self._get_entry(self.ip_attribute, attributes)
+                    machine["hostname"] = self._get_entry(self.hostname_attribute, attributes)
+                    machine["ip"] = self._get_entry(self.ip_attribute, attributes)
 
-                    if machine['ip']:
-                        machine['ip'] = netaddr.IPAddress(machine['ip'])
+                    if machine["ip"]:
+                        machine["ip"] = netaddr.IPAddress(machine["ip"])
 
-                    machines.append(Machine(self.name,
-                                            machine['machineid'],
-                                            hostname=machine['hostname'],
-                                            ip=machine['ip']))
+                    machines.append(
+                        Machine(
+                            self.name,
+                            machine["machineid"],
+                            hostname=machine["hostname"],
+                            ip=machine["ip"],
+                        )
+                    )
             except Exception as exx:  # pragma: no cover
-                log.error("Error during fetching LDAP objects: {0!r}".format(exx))
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.error(f"Error during fetching LDAP objects: {exx!r}")
+                log.debug(f"{traceback.format_exc()!s}")
 
         return machines
 
     def get_machine_id(self, hostname=None, ip=None):
-
         """
         Returns the machine id for a given hostname or IP address.
 
@@ -220,8 +238,7 @@ class LdapMachineResolver(BaseMachineResolver):
         machine_id = None
         machines = self.get_machines(hostname=hostname, ip=ip)
         if len(machines) > 1:
-            raise Exception("More than one machine found in LDAP resolver {0!s}".format(
-                            self.name))
+            raise Exception(f"More than one machine found in LDAP resolver {self.name!s}")
 
         if len(machines) == 1:
             machine_id = machines[0].id
@@ -255,43 +272,47 @@ class LdapMachineResolver(BaseMachineResolver):
         self.hostname_attribute = config.get("HOSTNAMEATTRIBUTE")
         self.id_attribute = config.get("IDATTRIBUTE", "DN")
         self.ip_attribute = config.get("IPATTRIBUTE")
-        self.search_filter = config.get("SEARCHFILTER",
-                                        "(objectClass=computer)")
+        self.search_filter = config.get("SEARCHFILTER", "(objectClass=computer)")
 
         self.noreferrals = is_true(config.get("NOREFERRALS", False))
         self.authtype = config.get("AUTHTYPE", AUTHTYPE.SIMPLE)
         self.start_tls = is_true(config.get("START_TLS", False))
         self.tls_verify = is_true(config.get("TLS_VERIFY", False))
         self.tls_ca_file = config.get("TLS_CA_FILE") or DEFAULT_CA_FILE
-        if self.tls_verify and (self.uri.lower().startswith("ldaps") or
-                                    self.start_tls):
-            self.tls_context = Tls(validate=ssl.CERT_REQUIRED,
-                                   version=ssl.PROTOCOL_TLSv1,
-                                   ca_certs_file=self.tls_ca_file)
+        if self.tls_verify and (self.uri.lower().startswith("ldaps") or self.start_tls):
+            self.tls_context = Tls(
+                validate=ssl.CERT_REQUIRED,
+                version=ssl.PROTOCOL_TLSv1,
+                ca_certs_file=self.tls_ca_file,
+            )
         else:
             self.tls_context = None
 
     @classmethod
     def get_config_description(cls):
-        description = {cls.type: {"config": {"LDAPURI": "string",
-                                             "LDAPBASE": "string",
-                                             "BINDDN": "string",
-                                             "BINDPW": "password",
-                                             "TIMEOUT": "int",
-                                             "SIZELIMIT": "int",
-                                             "HOSTNAMEATTRIBUTE": "string",
-                                             "IDATTRIBUTE": "string",
-                                             "IPATTRIBUTE": "string",
-                                             "SEARCHFILTER": "string",
-                                             "NOREFERRALS": "bool",
-                                             "AUTHTYPE": "string",
-                                             "TLS_VERIFY": "bool",
-                                             "TLS_CA_FILE": "string",
-                                             "START_TLS": "bool"
-                                             }}}
+        description = {
+            cls.type: {
+                "config": {
+                    "LDAPURI": "string",
+                    "LDAPBASE": "string",
+                    "BINDDN": "string",
+                    "BINDPW": "password",
+                    "TIMEOUT": "int",
+                    "SIZELIMIT": "int",
+                    "HOSTNAMEATTRIBUTE": "string",
+                    "IDATTRIBUTE": "string",
+                    "IPATTRIBUTE": "string",
+                    "SEARCHFILTER": "string",
+                    "NOREFERRALS": "bool",
+                    "AUTHTYPE": "string",
+                    "TLS_VERIFY": "bool",
+                    "TLS_CA_FILE": "string",
+                    "START_TLS": "bool",
+                }
+            }
+        }
 
         return description
-
 
     @staticmethod
     def testconnection(params):
@@ -303,47 +324,42 @@ class LdapMachineResolver(BaseMachineResolver):
         """
         success = False
         ldap_uri = params.get("LDAPURI")
-        if is_true(params.get("TLS_VERIFY")) \
-                and (ldap_uri.lower().startswith("ldaps") or
-                                    params.get("START_TLS")):
+        if is_true(params.get("TLS_VERIFY")) and (ldap_uri.lower().startswith("ldaps") or params.get("START_TLS")):
             tls_ca_file = params.get("TLS_CA_FILE") or DEFAULT_CA_FILE
-            tls_context = Tls(validate=ssl.CERT_REQUIRED,
-                              version=ssl.PROTOCOL_TLSv1,
-                              ca_certs_file=tls_ca_file)
+            tls_context = Tls(
+                validate=ssl.CERT_REQUIRED,
+                version=ssl.PROTOCOL_TLSv1,
+                ca_certs_file=tls_ca_file,
+            )
         else:
             tls_context = None
         try:
-            server_pool = IdResolver.create_serverpool(ldap_uri,
-                                                       float(params.get(
-                                                        "TIMEOUT", 5)),
-                                                       tls_context=tls_context)
-            l = IdResolver.create_connection(authtype=\
-                                                 params.get("AUTHTYPE",
-                                                            AUTHTYPE.SIMPLE),
-                                             server=server_pool,
-                                             user=params.get("BINDDN"),
-                                             password=params.get("BINDPW"),
-                                             auto_referrals=not params.get(
-                                                 "NOREFERRALS"),
-                                             start_tls=params.get("START_TLS", False))
+            server_pool = IdResolver.create_serverpool(ldap_uri, float(params.get("TIMEOUT", 5)), tls_context=tls_context)
+            l = IdResolver.create_connection(
+                authtype=params.get("AUTHTYPE", AUTHTYPE.SIMPLE),
+                server=server_pool,
+                user=params.get("BINDDN"),
+                password=params.get("BINDPW"),
+                auto_referrals=not params.get("NOREFERRALS"),
+                start_tls=params.get("START_TLS", False),
+            )
             if not l.bind():
                 raise Exception("Wrong credentials")
             # search for users...
-            l.search(search_base=params["LDAPBASE"],
-                     search_scope=ldap3.SUBTREE,
-                     search_filter="(&" + params["SEARCHFILTER"] + ")",
-                     attributes=[ params["HOSTNAMEATTRIBUTE"] ])
+            l.search(
+                search_base=params["LDAPBASE"],
+                search_scope=ldap3.SUBTREE,
+                search_filter=f"(&{params['SEARCHFILTER']})",
+                attributes=[params["HOSTNAMEATTRIBUTE"]],
+            )
 
-            count = len([x for x in l.response if x.get("type") ==
-                         "searchResEntry"])
-            desc = _("Your LDAP config seems to be OK, %i machine objects "
-                     "found.")\
-                % count
+            count = len([x for x in l.response if x.get("type") == "searchResEntry"])
+            desc = _("Your LDAP config seems to be OK, %i machine objects found.") % count
 
             l.unbind()
             success = True
 
         except Exception as e:
-            desc = "{0!r}".format(e)
+            desc = f"{e!r}"
 
         return success, desc

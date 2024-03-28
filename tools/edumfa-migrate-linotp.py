@@ -395,8 +395,7 @@ def migrate(config_obj):
                 # Map the LinOTP-Resolver to the PI-Resolver
                 resolver = config_obj.ASSIGNMENTS.get("resolver").get(linotp_resolver)
                 if not resolver and linotp_resolver:
-                    warnings.append("No mapping defined for the LinOTP "
-                                    "resolver: {0!s}".format(linotp_resolver))
+                    warnings.append("No mapping defined for the LinOTP resolver: {0!s}".format(linotp_resolver))
                 resolver_type = resolver_type
                 user_id = r['LinOtpUserid']
                 if config_obj.ASSIGNMENTS.get("convert_endian"):
@@ -497,8 +496,7 @@ def migrate(config_obj):
             if resolver and user_id:
                 realm = config_obj.ASSIGNMENTS.get("realm").get(resolver)
                 realm_id = realm_id_map.get(realm)
-                print("Assigning token {} for resolver {} to realm_id {} "
-                      "(realm {})".format(token_id, resolver, realm_id, realm))
+                print("Assigning token {} for resolver {} to realm_id {} (realm {})".format(token_id, resolver, realm_id, realm))
                 tokenrealm_values.append(dict(token_id=token_id,
                                               realm_id=realm_id))
 

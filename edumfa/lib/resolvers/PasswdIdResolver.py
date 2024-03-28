@@ -27,11 +27,11 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-  Description:  This file is part of the eduMFA service
-                This module implements the communication interface
-                for resolvin user info to the /etc/passwd user base
+Description:  This file is part of the eduMFA service
+              This module implements the communication interface
+              for resolvin user info to the /etc/passwd user base
 
-  Dependencies: -
+Dependencies: -
 """
 
 import re
@@ -51,33 +51,41 @@ def tokenise(r):
     def _(s):
         ret = None
         st = s.strip()
-        m = re.match("^" + r, st)
+        m = re.match(f"^{r}", st)
         if m:
-            ret = (st[:m.end()].strip(), st[m.end():].strip())
+            ret = (st[: m.end()].strip(), st[m.end() :].strip())
         return ret
+
     return _
 
 
-class IdResolver (UserIdResolver):
+class IdResolver(UserIdResolver):
+    fields = {
+        "username": 1,
+        "userid": 1,
+        "description": 0,
+        "phone": 0,
+        "mobile": 0,
+        "email": 0,
+        "givenname": 0,
+        "surname": 0,
+        "gender": 0,
+    }
 
-    fields = {"username": 1, "userid": 1,
-              "description": 0,
-              "phone": 0, "mobile": 0, "email": 0,
-              "givenname": 0, "surname": 0, "gender": 0
-              }
+    searchFields = {
+        "username": "text",
+        "userid": "numeric",
+        "description": "text",
+        "email": "text",
+    }
 
-    searchFields = {"username": "text",
-                    "userid": "numeric",
-                    "description": "text",
-                    "email": "text"
-                    }
-
-    sF = {"username": 0,
-          "cryptpass": 1,
-          "userid": 2,
-          "description": 4,
-          "email": 4,
-          }
+    sF = {
+        "username": 0,
+        "cryptpass": 1,
+        "userid": 2,
+        "description": 4,
+        "email": 4,
+    }
 
     @staticmethod
     def setup(config=None, cache_dir=None):
@@ -110,7 +118,6 @@ class IdResolver (UserIdResolver):
         self.emailDict = {}
 
     def loadFile(self):
-
         """
         Loads the data of the file initially.
         if the self.fileName is empty, it loads /etc/passwd.
@@ -120,8 +127,7 @@ class IdResolver (UserIdResolver):
         if self.fileName == "":
             self.fileName = "/etc/passwd"
 
-        log.info('loading users from file {0!s} from within {1!r}'.format(self.fileName,
-                                                                os.getcwd()))
+        log.info(f"loading users from file {self.fileName!s} from within {os.getcwd()!r}")
         with codecs.open(self.fileName, "r", ENCODING) as fileHandle:
             ID = self.sF["userid"]
             NAME = self.sF["username"]
@@ -149,7 +155,7 @@ class IdResolver (UserIdResolver):
                 # store surname, givenname and phones
                 descriptions = fields[DESCRIPTION].split(",")
                 name = descriptions[0]
-                names = name.split(' ', 1)
+                names = name.split(" ", 1)
                 self.givennameDict[fields[ID]] = names[0]
                 self.surnameDict[fields[ID]] = ""
                 self.officePhoneDict[fields[ID]] = ""
@@ -163,7 +169,7 @@ class IdResolver (UserIdResolver):
                 if len(descriptions) >= 5:
                     for field in descriptions[4:]:
                         # very basic e-mail regex
-                        email_match = re.search(r'.+@.+\..+', field)
+                        email_match = re.search(r".+@.+\..+", field)
                         if email_match:
                             self.emailDict[fields[ID]] = email_match.group(0)
 
@@ -186,25 +192,24 @@ class IdResolver (UserIdResolver):
         :return: True or False
         :rtype: bool
         """
-        log.info("checking password for user uid {0!s}".format(uid))
+        log.info(f"checking password for user uid {uid!s}")
         cryptedpasswd = self.passDict[uid]
-        log.debug("We found the encrypted pass {0!s} for uid {1!s}".format(cryptedpasswd, uid))
+        log.debug(f"We found the encrypted pass {cryptedpasswd!s} for uid {uid!s}")
         if cryptedpasswd:
-            if cryptedpasswd in ['x', '*']:
+            if cryptedpasswd in ["x", "*"]:
                 err = "Sorry, currently no support for shadow passwords"
-                log.error("{0!s}".format(err))
+                log.error(f"{err!s}")
                 raise NotImplementedError(err)
             cp = crypt.crypt(password, cryptedpasswd)
-            log.debug("encrypted pass is {0!s}".format(cp))
+            log.debug(f"encrypted pass is {cp!s}")
             if crypt.crypt(password, cryptedpasswd) == cryptedpasswd:
-                log.info("successfully authenticated user uid {0!s}".format(uid))
+                log.info(f"successfully authenticated user uid {uid!s}")
                 return True
             else:
-                log.warning("user uid {0!s} failed to authenticate".format(uid))
+                log.warning(f"user uid {uid!s} failed to authenticate")
                 return False
         else:
-            log.warning("Failed to verify password. No encrypted password "
-                        "found in file")
+            log.warning("Failed to verify password. No encrypted password found in file")
             return False
 
     def getUserInfo(self, userId, no_passwd=False):
@@ -227,22 +232,22 @@ class IdResolver (UserIdResolver):
                 index = self.sF[key]
                 ret[key] = fields[index]
 
-            ret['givenname'] = self.givennameDict.get(userId)
-            ret['surname'] = self.surnameDict.get(userId)
-            ret['phone'] = self.homePhoneDict.get(userId)
-            ret['mobile'] = self.officePhoneDict.get(userId)
-            ret['email'] = self.emailDict.get(userId)
+            ret["givenname"] = self.givennameDict.get(userId)
+            ret["surname"] = self.surnameDict.get(userId)
+            ret["phone"] = self.homePhoneDict.get(userId)
+            ret["mobile"] = self.officePhoneDict.get(userId)
+            ret["email"] = self.emailDict.get(userId)
 
         return ret
 
     def getUsername(self, userId):
-        '''
+        """
         Returns the username/loginname for a given userid
         :param userid: The userid in this resolver
         :type userid: string
         :return: username
         :rtype: str
-        '''
+        """
         fields = self.descDict.get(userId)
         index = self.sF["username"]
         return fields[index]
@@ -277,8 +282,7 @@ class IdResolver (UserIdResolver):
             for search in searchDict:
                 pattern = searchDict[search]
 
-                log.debug("searching for %s:%s",
-                          search, pattern)
+                log.debug("searching for %s:%s", search, pattern)
 
         return self.searchFields
 
@@ -296,7 +300,6 @@ class IdResolver (UserIdResolver):
             ok = True
 
             for search in searchDict:
-
                 if search not in self.searchFields:
                     ok = False
                     break
@@ -437,9 +440,9 @@ class IdResolver (UserIdResolver):
 
         return ret
 
-#############################################################
-# server info methods
-#############################################################
+    #############################################################
+    # server info methods
+    #############################################################
     def getResolverId(self):
         """
         return the resolver identifier string, which in fact is
@@ -449,7 +452,7 @@ class IdResolver (UserIdResolver):
 
     @staticmethod
     def getResolverClassType():
-        return 'passwdresolver'
+        return "passwdresolver"
 
     @staticmethod
     def getResolverType():
@@ -457,18 +460,18 @@ class IdResolver (UserIdResolver):
 
     @classmethod
     def getResolverClassDescriptor(cls):
-        '''
+        """
         return the descriptor of the resolver, which is
         - the class name and
         - the config description
 
         :return: resolver description dict
         :rtype:  dict
-        '''
+        """
         descriptor = {}
         typ = cls.getResolverClassType()
-        descriptor['clazz'] = "useridresolver.PasswdIdResolver.IdResolver"
-        descriptor['config'] = {'fileName': 'string'}
+        descriptor["clazz"] = "useridresolver.PasswdIdResolver.IdResolver"
+        descriptor["config"] = {"fileName": "string"}
         return {typ: descriptor}
 
     @staticmethod
@@ -476,11 +479,11 @@ class IdResolver (UserIdResolver):
         return IdResolver.getResolverClassDescriptor()
 
     def loadConfig(self, config):
-        """ loadConfig(configDict)
-            The UserIdResolver could be configured
-            from the pylons app config - here
-            this could be the passwd file ,
-            whether it is /etc/passwd or /etc/shadow
+        """loadConfig(configDict)
+        The UserIdResolver could be configured
+        from the pylons app config - here
+        this could be the passwd file ,
+        whether it is /etc/passwd or /etc/shadow
         """
         self.fileName = config.get("fileName", config.get("filename"))
         self.loadFile()

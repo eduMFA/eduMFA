@@ -28,8 +28,7 @@ Other html code is dynamically loaded via angularJS and located in
 """
 __author__ = "Cornelius Kölbel <cornelius@privacyidea.org>"
 
-from flask import (Blueprint, render_template, request,
-                   current_app, g)
+from flask import Blueprint, render_template, request, current_app, g
 from edumfa.api.lib.utils import send_html
 from edumfa.api.lib.prepolicy import is_remote_user_allowed
 from edumfa.lib.framework import get_app_config_value
@@ -44,9 +43,9 @@ from edumfa.lib.queue import has_job_queue
 
 DEFAULT_THEME = "/static/contrib/css/bootstrap-theme.css"
 # note: the comment in the following line allows to include it in the docs
-DEFAULT_LANGUAGE_LIST = ['en', 'de', 'nl', 'zh_Hant', 'fr', 'es', 'tr', 'cs', 'it']  #:
+DEFAULT_LANGUAGE_LIST = ["en", "de", "nl", "zh_Hant", "fr", "es", "tr", "cs", "it"]  #:
 
-login_blueprint = Blueprint('login_blueprint', __name__)
+login_blueprint = Blueprint("login_blueprint", __name__)
 
 
 def get_accepted_language(req):
@@ -59,6 +58,7 @@ def get_accepted_language(req):
     # (The best match wins)
     return req.accept_languages.best_match(pi_lang_list, default=pi_lang_list[0])
 
+
 @login_blueprint.before_request
 def before_request():
     """
@@ -70,7 +70,7 @@ def before_request():
     g.client_ip = get_client_ip(request, get_from_config(SYSCONF.OVERRIDECLIENT))
 
 
-@login_blueprint.route('/', methods=['GET'])
+@login_blueprint.route("/", methods=["GET"])
 def single_page_application():
     instance = request.script_root
     if instance == "/":
@@ -84,12 +84,11 @@ def single_page_application():
 
     # The default theme. We can change this later
     theme = current_app.config.get("EDUMFA_CSS", DEFAULT_THEME)
-    theme = theme.strip('/')
+    theme = theme.strip("/")
     # Get further customizations
-    customization = current_app.config.get("EDUMFA_CUSTOMIZATION",
-                                           "/static/customize/")
-    customization = customization.strip('/')
-    custom_css = customization + "/css/custom.css" if current_app.config.get("EDUMFA_CUSTOM_CSS") else ""
+    customization = current_app.config.get("EDUMFA_CUSTOMIZATION", "/static/customize/")
+    customization = customization.strip("/")
+    custom_css = f"{customization}/css/custom.css" if current_app.config.get("EDUMFA_CUSTOM_CSS") else ""
     # Enrollment-Wizard:
     #    EDUMFA_CUSTOMIZATION/views/includes/token.enroll.pre.top.html
     #    EDUMFA_CUSTOMIZATION/views/includes/token.enroll.pre.bottom.html
@@ -111,14 +110,11 @@ def single_page_application():
         request.all_data = {}
     # Depending on displaying the realm dropdown, we fill realms or not.
     realms = ""
-    realm_dropdown = Match.action_only(g, scope=SCOPE.WEBUI, action=ACTION.REALMDROPDOWN) \
-        .policies(write_to_audit_log=False)
-    show_node = get_edumfa_node() \
-        if Match.generic(g, scope=SCOPE.WEBUI, action=ACTION.SHOW_NODE).any(write_to_audit_log=False) else ""
+    realm_dropdown = Match.action_only(g, scope=SCOPE.WEBUI, action=ACTION.REALMDROPDOWN).policies(write_to_audit_log=False)
+    show_node = get_edumfa_node() if Match.generic(g, scope=SCOPE.WEBUI, action=ACTION.SHOW_NODE).any(write_to_audit_log=False) else ""
     if realm_dropdown:
         try:
-            realm_dropdown_values = Match.action_only(g, scope=SCOPE.WEBUI, action=ACTION.REALMDROPDOWN) \
-                .action_values(unique=False, write_to_audit_log=False)
+            realm_dropdown_values = Match.action_only(g, scope=SCOPE.WEBUI, action=ACTION.REALMDROPDOWN).action_values(unique=False, write_to_audit_log=False)
             # Use the realms from the policy.
             realms = ",".join(realm_dropdown_values)
         except AttributeError as _e:
@@ -142,59 +138,55 @@ def single_page_application():
     # Use policies to determine the customization of menu
     # and baseline. get_action_values returns an array!
     sub_state = subscription_status()
-    customization_menu_file = Match.action_only(g, action=ACTION.CUSTOM_MENU,
-                                                scope=SCOPE.WEBUI) \
-        .action_values(unique=True, allow_white_space_in_action=True, write_to_audit_log=False)
-    if len(customization_menu_file) and list(customization_menu_file)[0] \
-            and sub_state not in [1, 2]:
+    customization_menu_file = Match.action_only(g, action=ACTION.CUSTOM_MENU, scope=SCOPE.WEBUI).action_values(
+        unique=True, allow_white_space_in_action=True, write_to_audit_log=False
+    )
+    if len(customization_menu_file) and list(customization_menu_file)[0] and sub_state not in [1, 2]:
         customization_menu_file = list(customization_menu_file)[0]
     else:
         customization_menu_file = "templates/menu.html"
-    customization_baseline_file = Match.action_only(g, action=ACTION.CUSTOM_BASELINE,
-                                                    scope=SCOPE.WEBUI) \
-        .action_values(unique=True, allow_white_space_in_action=True, write_to_audit_log=False)
-    if len(customization_baseline_file) and list(customization_baseline_file)[0] \
-            and sub_state not in [1, 2]:
+    customization_baseline_file = Match.action_only(g, action=ACTION.CUSTOM_BASELINE, scope=SCOPE.WEBUI).action_values(
+        unique=True, allow_white_space_in_action=True, write_to_audit_log=False
+    )
+    if len(customization_baseline_file) and list(customization_baseline_file)[0] and sub_state not in [1, 2]:
         customization_baseline_file = list(customization_baseline_file)[0]
     else:
         customization_baseline_file = "templates/baseline.html"
 
-    login_text = Match.action_only(g, action=ACTION.LOGIN_TEXT, scope=SCOPE.WEBUI) \
-        .action_values(unique=True, allow_white_space_in_action=True, write_to_audit_log=False)
+    login_text = Match.action_only(g, action=ACTION.LOGIN_TEXT, scope=SCOPE.WEBUI).action_values(unique=True, allow_white_space_in_action=True, write_to_audit_log=False)
     if len(login_text) and list(login_text)[0] and sub_state not in [1, 2]:
         login_text = list(login_text)[0]
     else:
         login_text = ""
 
-    gdpr_link = Match.action_only(g, action=ACTION.GDPR_LINK, scope=SCOPE.WEBUI) \
-        .action_values(unique=True, allow_white_space_in_action=True, write_to_audit_log=False)
+    gdpr_link = Match.action_only(g, action=ACTION.GDPR_LINK, scope=SCOPE.WEBUI).action_values(unique=True, allow_white_space_in_action=True, write_to_audit_log=False)
     if len(gdpr_link) and list(gdpr_link)[0] and sub_state not in [1, 2]:
         gdpr_link = list(gdpr_link)[0]
     else:
         gdpr_link = ""
 
     render_context = {
-        'instance': instance,
-        'backendUrl': backend_url,
-        'browser_lang': browser_lang,
-        'remote_user': remote_user,
-        'force_remote_user': force_remote_user,
-        'theme': theme,
-        'translation_warning': translation_warning,
-        'password_reset': password_reset,
-        'hsm_ready': hsm_ready,
-        'has_job_queue': str(has_job_queue()),
-        'customization': customization,
-        'custom_css': custom_css,
-        'customization_menu_file': customization_menu_file,
-        'customization_baseline_file': customization_baseline_file,
-        'realms': realms,
-        'show_node': show_node,
-        'external_links': external_links,
-        'login_text': login_text,
-        'gdpr_link': gdpr_link,
-        'logo': logo,
-        'page_title': page_title
+        "instance": instance,
+        "backendUrl": backend_url,
+        "browser_lang": browser_lang,
+        "remote_user": remote_user,
+        "force_remote_user": force_remote_user,
+        "theme": theme,
+        "translation_warning": translation_warning,
+        "password_reset": password_reset,
+        "hsm_ready": hsm_ready,
+        "has_job_queue": str(has_job_queue()),
+        "customization": customization,
+        "custom_css": custom_css,
+        "customization_menu_file": customization_menu_file,
+        "customization_baseline_file": customization_baseline_file,
+        "realms": realms,
+        "show_node": show_node,
+        "external_links": external_links,
+        "login_text": login_text,
+        "gdpr_link": gdpr_link,
+        "logo": logo,
+        "page_title": page_title,
     }
 
     index_page = current_app.config.get("EDUMFA_INDEX_HTML") or "index.html"

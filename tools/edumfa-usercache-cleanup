@@ -40,11 +40,22 @@ This script deletes expired entries from the user cache.
 __version__ = "0.1"
 
 from edumfa.app import create_app
-from flask_script import Manager
+import click
+from edumfa.lib.usercache import create_filter, get_cache_time
+from edumfa.models import UserCache, db
+from edumfa.app import create_app
+from flask.cli import FlaskGroup
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
-app = create_app(config_name='production', silent=True)
-manager = Manager(app)
 
+def create_prod_app():
+    return create_app("production", silent=True, script=True)
+
+
+@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
+             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
+def cli():
+    pass
 
 def _get_expired_entries():
     """
@@ -53,12 +64,9 @@ def _get_expired_entries():
     filter_condition = create_filter(expired=True)
     return UserCache.query.filter(filter_condition).order_by(UserCache.timestamp.desc()).all()
 
-
-LIST_FORMAT = '{:<5} {:<10} {:<10} {:<30} {:<10}'
-
-
-@manager.command
-def delete(noaction=False):
+@cli.command()
+@click.option('--noaction', is_flag=True, help="List expired cache entries without deleting them.")
+def delete(noaction):
     """
     Delete all cache entries that are considered expired according to the
     UserCacheExpiration configuration setting.
@@ -72,9 +80,9 @@ def delete(noaction=False):
         print('Expired entries:')
         entries = _get_expired_entries()
         if entries:
-            print(LIST_FORMAT.format('id', 'username', 'resolver', 'timestamp', 'user id'))
+            print('{:<5} {:<10} {:<10} {:<30} {:<10}'.format('id', 'username', 'resolver', 'timestamp', 'user id'))
         for entry in entries:
-            print(LIST_FORMAT.format(entry.id,
+            print('{:<5} {:<10} {:<10} {:<30} {:<10}'.format(entry.id,
                                      entry.username,
                                      entry.resolver,
                                      entry.timestamp.isoformat(),
@@ -89,6 +97,5 @@ def delete(noaction=False):
         else:
             print("'--noaction' was passed, not doing anything.")
 
-
 if __name__ == '__main__':
-    manager.run()
+    cli()

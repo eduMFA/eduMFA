@@ -59,8 +59,8 @@ def _construct_extra_parameters(extra_data):
     for key, value in extra_data.items():
         encoded_key = quote(to_byte_string(key))
         encoded_value = quote(to_byte_string(value))
-        extra_data_list.append('{key}={value}'.format(key=encoded_key, value=encoded_value))
-    return ('&' if extra_data_list else '') + '&'.join(extra_data_list)
+        extra_data_list.append(f"{encoded_key}={encoded_value}")
+    return ("&" if extra_data_list else "") + "&".join(extra_data_list)
 
 
 @log_with(log)
@@ -68,31 +68,39 @@ def create_motp_url(key, user=None, realm=None, serial=""):
     """
     This creates the motp url as described at
     http://huseynov.com/index.php?post=motp-vs-google-authenticator-and-a-new-otp-app
-    
+
     The format is:
     motp://SecureSite:alice@wonder.land?secret=JBSWY3DPEHPK3PXP
     """
     # For Token2 the OTPKEY is hexencoded, not base32!
     otpkey = key
     # TODO: Migration: Policy
-    #Policy = PolicyClass(request, config, c,
+    # Policy = PolicyClass(request, config, c,
     #                     get_edumfa_config())
     # label = Policy.get_tokenlabel(user, realm, serial)
     label = "mylabel"
     allowed_label_len = 20
     label = label[0:allowed_label_len]
     url_label = quote(label)
-    
-    return "motp://edumfa:{0!s}?secret={1!s}".format(url_label, otpkey)
+
+    return f"motp://edumfa:{url_label!s}?secret={otpkey!s}"
 
 
 @log_with(log)
-def create_google_authenticator_url(key=None, user=None,
-                                    realm=None, tokentype="hotp", period=30,
-                                    serial="mylabel", tokenlabel="<s>",
-                                    hash_algo="SHA1", digits="6",
-                                    issuer="eduMFA", user_obj=None,
-                                    extra_data=None):
+def create_google_authenticator_url(
+    key=None,
+    user=None,
+    realm=None,
+    tokentype="hotp",
+    period=30,
+    serial="mylabel",
+    tokenlabel="<s>",
+    hash_algo="SHA1",
+    digits="6",
+    issuer="eduMFA",
+    user_obj=None,
+    extra_data=None,
+):
     """
     This creates the google authenticator URL.
     This url may only be 119 characters long.
@@ -117,56 +125,70 @@ def create_google_authenticator_url(key=None, user=None,
 
     key_bin = binascii.unhexlify(key)
     # also strip the padding =, as it will get problems with the google app.
-    otpkey = b32encode_and_unicode(key_bin).strip('=')
+    otpkey = b32encode_and_unicode(key_bin).strip("=")
 
-    base_len = len("otpauth://{0!s}/?secret={1!s}&counter=1".format(tokentype, otpkey))
+    base_len = len(f"otpauth://{tokentype!s}/?secret={otpkey!s}&counter=1")
     allowed_label_len = MAX_QRCODE_LEN - base_len
-    log.debug("we have got {0!s} characters left for the token label".format(
-              str(allowed_label_len)))
+    log.debug(f"we have got {str(allowed_label_len)!s} characters left for the token label")
     # Deprecated
-    label = tokenlabel.replace("<s>",
-                               serial).replace("<u>",
-                                               user).replace("<r>", realm)
-    label = label.format(serial=serial, user=user, realm=realm,
-                         givenname=user_obj.info.get("givenname", ""),
-                         surname=user_obj.info.get("surname", ""))
+    label = tokenlabel.replace("<s>", serial).replace("<u>", user).replace("<r>", realm)
+    label = label.format(
+        serial=serial,
+        user=user,
+        realm=realm,
+        givenname=user_obj.info.get("givenname", ""),
+        surname=user_obj.info.get("surname", ""),
+    )
 
-    issuer = issuer.format(serial=serial, user=user, realm=realm,
-                           givenname=user_obj.info.get("givenname", ""),
-                           surname=user_obj.info.get("surname", ""))
+    issuer = issuer.format(
+        serial=serial,
+        user=user,
+        realm=realm,
+        givenname=user_obj.info.get("givenname", ""),
+        surname=user_obj.info.get("surname", ""),
+    )
 
     label = label[0:allowed_label_len]
     url_label = quote(label.encode("utf-8"))
     url_issuer = quote(issuer.encode("utf-8"))
 
     if hash_algo.lower() != "sha1":
-        hash_algo = "algorithm={0!s}&".format(hash_algo)
+        hash_algo = f"algorithm={hash_algo!s}&"
     else:
         # If the hash_algo is SHA1, we do not add it to the QR code to keep
         # the QR code simpler
         hash_algo = ""
 
     if tokentype.lower() == "totp":
-        period = "period={0!s}&".format(period)
+        period = f"period={period!s}&"
     elif tokentype.lower() == "daypassword":
-        period = "period={0!s}&".format(parse_time_sec_int(period))
+        period = f"period={parse_time_sec_int(period)!s}&"
     else:
         period = ""
 
-    return ("otpauth://{tokentype!s}/{label!s}?secret={secret!s}&"
-            "{counter!s}{hash!s}{period!s}"
-            "digits={digits!s}&"
-            "issuer={issuer!s}{extra}".format(tokentype=tokentype,
-                                       label=url_label, secret=otpkey,
-                                       hash=hash_algo, period=period,
-                                       digits=digits, issuer=url_issuer,
-                                       counter=counter,
-                                       extra=_construct_extra_parameters(extra_data)))
+    return "otpauth://{tokentype!s}/{label!s}?secret={secret!s}&{counter!s}{hash!s}{period!s}digits={digits!s}&issuer={issuer!s}{extra}".format(
+        tokentype=tokentype,
+        label=url_label,
+        secret=otpkey,
+        hash=hash_algo,
+        period=period,
+        digits=digits,
+        issuer=url_issuer,
+        counter=counter,
+        extra=_construct_extra_parameters(extra_data),
+    )
+
 
 @log_with(log)
-def create_oathtoken_url(otpkey=None, user=None, realm=None,
-                         type="hotp", serial="mylabel", tokenlabel="<s>",
-                         extra_data=None):
+def create_oathtoken_url(
+    otpkey=None,
+    user=None,
+    realm=None,
+    type="hotp",
+    serial="mylabel",
+    tokenlabel="<s>",
+    extra_data=None,
+):
     timebased = ""
     if "totp" == type.lower():
         timebased = "&timeBased=true"
@@ -175,17 +197,9 @@ def create_oathtoken_url(otpkey=None, user=None, realm=None,
     user = user or ""
     extra_data = extra_data or {}
 
-    label = tokenlabel.replace("<s>",
-                               serial).replace("<u>",
-                                               user).replace("<r>", realm)
+    label = tokenlabel.replace("<s>", serial).replace("<u>", user).replace("<r>", realm)
     url_label = quote(label)
 
     extra_parameters = _construct_extra_parameters(extra_data)
-    url = "oathtoken:///addToken?name={0!s}&lockdown=true&key={1!s}{2!s}{3!s}".format(
-                                                                  url_label,
-                                                                  otpkey,
-                                                                  timebased,
-                                                                  extra_parameters
-                                                                  )
+    url = f"oathtoken:///addToken?name={url_label!s}&lockdown=true&key={otpkey!s}{timebased!s}{extra_parameters!s}"
     return url
-

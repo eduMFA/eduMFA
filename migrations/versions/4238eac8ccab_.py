@@ -47,8 +47,7 @@ def upgrade():
         op.drop_column('usercache', 'expiration')
         op.drop_index('ix_usercache_expiration', table_name='usercache')
     except Exception as exx:
-        print ("## Unnecessary columns in table usercache obviously do not "
-               "exist anymore.")
+        print ("## Unnecessary columns in table usercache obviously do not exist anymore.")
         print (exx)
 
 

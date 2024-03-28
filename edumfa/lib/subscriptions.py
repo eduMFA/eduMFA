@@ -63,6 +63,7 @@ def get_users_with_active_tokens():
     :rtype: int
     """
     from edumfa.models import Token, TokenOwner
+
     sql_query = TokenOwner.query.with_entities(TokenOwner.resolver, TokenOwner.user_id)
     sql_query = sql_query.filter(Token.active == True).filter(Token.id == TokenOwner.token_id).distinct()
     return sql_query.count()
@@ -183,7 +184,7 @@ class CheckSubscription(object):
         def check_subscription_wrapper(*args, **kwds):
             request = self.request
             ua = request.user_agent
-            ua_str = "{0!s}".format(ua) or "unknown"
+            ua_str = f"{ua!s}" or "unknown"
             application = ua_str.split()[0]
             check_subscription(application)
             f_result = func(*args, **kwds)

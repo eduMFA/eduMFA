@@ -41,8 +41,10 @@ from edumfa.lib.crypto import geturandom
 from edumfa.lib.config import get_from_config
 from edumfa.lib.log import log_with
 from edumfa.lib.tokenclass import TokenClass, TOKENKIND
-from edumfa.lib.tokens.yubikeytoken import (yubico_check_api_signature,
-                                                 yubico_api_signature)
+from edumfa.lib.tokens.yubikeytoken import (
+    yubico_check_api_signature,
+    yubico_api_signature,
+)
 from urllib.parse import urlencode
 from edumfa.lib import _
 from edumfa.lib.policy import SCOPE, ACTION, GROUP
@@ -64,7 +66,6 @@ log = logging.getLogger(__name__)
 
 
 class YubicoTokenClass(TokenClass):
-
     def __init__(self, db_token):
         TokenClass.__init__(self, db_token)
         self.set_type("yubico")
@@ -80,7 +81,7 @@ class YubicoTokenClass(TokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         :param key: subsection identifier
         :type key: string
@@ -89,48 +90,47 @@ class YubicoTokenClass(TokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or string
         """
-        res = {'type': 'yubico',
-               'title': 'Yubico Token',
-               'description': _('Yubikey Cloud mode: Forward authentication '
-                                'request to YubiCloud.'),
-               'user':  ['enroll'],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin", "user"],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of Yubico tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _(
-                               "The user may only have this maximum number of active Yubico tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               },
-               }
+        res = {
+            "type": "yubico",
+            "title": "Yubico Token",
+            "description": _("Yubikey Cloud mode: Forward authentication request to YubiCloud."),
+            "user": ["enroll"],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin", "user"],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of Yubico tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _("The user may only have this maximum number of active Yubico tokens assigned."),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
 
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
     def update(self, param):
         tokenid = getParam(param, "yubico.tokenid", required)
         if len(tokenid) < YUBICO_LEN_ID:
-            log.error("The tokenid needs to be {0:d} characters long!".format(YUBICO_LEN_ID))
-            raise Exception("The Yubikey token ID needs to be {0:d} characters long!".format(YUBICO_LEN_ID))
+            log.error(f"The tokenid needs to be {YUBICO_LEN_ID:d} characters long!")
+            raise Exception(f"The Yubikey token ID needs to be {YUBICO_LEN_ID:d} characters long!")
 
         if len(tokenid) > YUBICO_LEN_ID:
             tokenid = tokenid[:YUBICO_LEN_ID]
         self.tokenid = tokenid
         # overwrite the maybe wrong length given at the command line
-        param['otplen'] = 44
+        param["otplen"] = 44
         TokenClass.update(self, param)
         self.add_tokeninfo("yubico.tokenid", self.tokenid)
         self.add_tokeninfo("tokenkind", TOKENKIND.HARDWARE)
@@ -150,34 +150,25 @@ class YubicoTokenClass(TokenClass):
 
         if apiKey == DEFAULT_API_KEY or apiId == DEFAULT_CLIENT_ID:
             log.warning("Usage of default apiKey or apiId not recommended!")
-            log.warning("Please register your own apiKey and apiId at "
-                        "yubico website!")
-            log.warning("Configure of apiKey and apiId at the "
-                        "edumfa manage config menu!")
+            log.warning("Please register your own apiKey and apiId at yubico website!")
+            log.warning("Configure of apiKey and apiId at the edumfa manage config menu!")
 
         tokenid = self.get_tokeninfo("yubico.tokenid")
         if len(anOtpVal) < 12:
-            log.warning("The otpval is too short: {0!r}".format(anOtpVal))
+            log.warning(f"The otpval is too short: {anOtpVal!r}")
         elif anOtpVal[:12] != tokenid:
-            log.warning("The tokenid in the OTP value does not match "
-                        "the assigned token!")
+            log.warning("The tokenid in the OTP value does not match the assigned token!")
         else:
             nonce = geturandom(20, hex=True)
-            p = {'nonce': nonce,
-                 'otp': anOtpVal,
-                 'id': apiId}
+            p = {"nonce": nonce, "otp": anOtpVal, "id": apiId}
             # Also send the signature to the yubico server
             p["h"] = yubico_api_signature(p, apiKey)
 
             try:
                 if do_yubico_post:
-                    r = requests.post(yubico_url,
-                                      data=p,
-                                      timeout=60)
+                    r = requests.post(yubico_url, data=p, timeout=60)
                 else:
-                    r = requests.get(yubico_url,
-                                     params=urlencode(p),
-                                     timeout=60)
+                    r = requests.get(yubico_url, params=urlencode(p), timeout=60)
 
                 if r.status_code == requests.codes.ok:
                     response = r.text
@@ -192,13 +183,10 @@ class YubicoTokenClass(TokenClass):
                     signature_valid = yubico_check_api_signature(data, apiKey)
 
                     if not signature_valid:
-                        log.error("The hash of the return from the yubico "
-                                  "authentication server ({0!s}) "
-                                  "does not match the data!".format(yubico_url))
+                        log.error(f"The hash of the return from the yubico authentication server ({yubico_url!s}) does not match the data!")
 
                     if nonce != return_nonce:
-                        log.error("The returned nonce does not match "
-                                  "the sent nonce!")
+                        log.error("The returned nonce does not match the sent nonce!")
 
                     if result == "OK":
                         res = 1
@@ -208,11 +196,10 @@ class YubicoTokenClass(TokenClass):
                     else:
                         # possible results are listed here:
                         # https://github.com/Yubico/yubikey-val/wiki/ValidationProtocolV20
-                        log.warning("failed with {0!r}".format(result))
+                        log.warning(f"failed with {result!r}")
 
             except Exception as ex:
-                log.error("Error getting response from Yubico Cloud Server"
-                          " (%r): %r" % (yubico_url, ex))
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.error(f"Error getting response from Yubico Cloud Server ({yubico_url!r}): {ex!r}")
+                log.debug(f"{traceback.format_exc()!s}")
 
         return res

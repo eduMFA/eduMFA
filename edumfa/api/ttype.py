@@ -33,10 +33,10 @@ the core API.
 The TiQR Token uses this API to implement its special functionalities. See
 :ref:`code_tiqr_token`.
 """
+
 import threading
 
-from flask import (Blueprint,
-                   request)
+from flask import Blueprint, request
 from .lib.utils import getParam
 from ..lib.framework import get_app_config_value
 from ..lib.log import log_with
@@ -46,15 +46,20 @@ from edumfa.api.lib.utils import get_all_params
 from edumfa.lib.error import ParameterError
 from edumfa.lib.policy import PolicyClass
 from edumfa.lib.audit import getAudit
-from edumfa.lib.config import (get_token_class, get_from_config,
-                                    SYSCONF, ensure_no_config_object, get_edumfa_node)
+from edumfa.lib.config import (
+    get_token_class,
+    get_from_config,
+    SYSCONF,
+    ensure_no_config_object,
+    get_edumfa_node,
+)
 from edumfa.lib.user import get_user_from_param
 from edumfa.lib.utils import get_client_ip
 import json
 
 log = logging.getLogger(__name__)
 
-ttype_blueprint = Blueprint('ttype_blueprint', __name__)
+ttype_blueprint = Blueprint("ttype_blueprint", __name__)
 
 
 @ttype_blueprint.before_request
@@ -72,20 +77,23 @@ def before_request():
     g.policy_object = PolicyClass()
     g.audit_object = getAudit(current_app.config)
     # access_route contains the ip adresses of all clients, hops and proxies.
-    g.client_ip = get_client_ip(request,
-                                get_from_config(SYSCONF.OVERRIDECLIENT))
+    g.client_ip = get_client_ip(request, get_from_config(SYSCONF.OVERRIDECLIENT))
     g.serial = getParam(request.all_data, "serial") or None
-    g.audit_object.log({"success": False,
-                        "action_detail": "",
-                        "client": g.client_ip,
-                        "client_user_agent": request.user_agent.browser,
-                        "edumfa_server": edumfa_server,
-                        "action": "{0!s} {1!s}".format(request.method, request.url_rule),
-                        "thread_id": "{0!s}".format(threading.current_thread().ident),
-                        "info": ""})
+    g.audit_object.log(
+        {
+            "success": False,
+            "action_detail": "",
+            "client": g.client_ip,
+            "client_user_agent": request.user_agent.browser,
+            "edumfa_server": edumfa_server,
+            "action": f"{request.method!s} {request.url_rule!s}",
+            "thread_id": f"{threading.current_thread().ident!s}",
+            "info": "",
+        }
+    )
 
 
-@ttype_blueprint.route('/<ttype>', methods=['POST', 'GET'])
+@ttype_blueprint.route("/<ttype>", methods=["POST", "GET"])
 @log_with(log)
 def token(ttype=None):
     """
@@ -97,23 +105,25 @@ def token(ttype=None):
     """
     tokenc = get_token_class(ttype)
     if tokenc is None:
-        log.error("Invalid tokentype provided. ttype: {}".format(ttype.lower()))
-        raise ParameterError("Invalid tokentype provided. ttype: {}".format(ttype.lower()))
+        log.error(f"Invalid tokentype provided. ttype: {ttype.lower()}")
+        raise ParameterError(f"Invalid tokentype provided. ttype: {ttype.lower()}")
     res = tokenc.api_endpoint(request, g)
     serial = getParam(request.all_data, "serial")
     user = get_user_from_param(request.all_data)
-    g.audit_object.log({"success": 1,
-                        "user": user.login,
-                        "realm": user.realm,
-                        "serial": serial,
-                        "token_type": ttype})
+    g.audit_object.log(
+        {
+            "success": 1,
+            "user": user.login,
+            "realm": user.realm,
+            "serial": serial,
+            "token_type": ttype,
+        }
+    )
     if res[0] == "json":
         return jsonify(res[1])
     elif res[0] in ["html", "plain"]:
-        return current_app.response_class(res[1], mimetype="text/{0!s}".format(res[0]))
+        return current_app.response_class(res[1], mimetype=f"text/{res[0]!s}")
     elif len(res) == 2:
-        return current_app.response_class(json.dumps(res[1]),
-                                          mimetype="application/{0!s}".format(res[0]))
+        return current_app.response_class(json.dumps(res[1]), mimetype=f"application/{res[0]!s}")
     else:
-        return current_app.response_class(res[1], mimetype="application/octet-binary",
-                                          headers=res[2])
+        return current_app.response_class(res[1], mimetype="application/octet-binary", headers=res[2])

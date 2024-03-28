@@ -26,37 +26,37 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-'''
+"""
 These are the library functions to create, modify and delete realms in the
 database. It depends on the lib.resolver.
 
 It is independent of any user or token libraries and can be tested standalone
 in tests/test_lib_realm.py
-'''
-from ..models import (Realm,
-                      ResolverRealm,
-                      Resolver, db, save_config_timestamp)
+"""
+
+from ..models import Realm, ResolverRealm, Resolver, db, save_config_timestamp
 from .log import log_with
 from edumfa.lib.config import get_config_object
 import logging
 from edumfa.lib.utils import sanity_name_check, fetch_one_resource, is_true
-from edumfa.lib.utils.export import (register_import, register_export)
+from edumfa.lib.utils.export import register_import, register_export
+
 log = logging.getLogger(__name__)
 
 
 @log_with(log)
-#@cache.memoize(10)
+# @cache.memoize(10)
 def get_realms(realmname=None):
-    '''
+    """
     either return all defined realms or a specific realm
-    
+
     :param realmname: the realm, that is of interestet, if ==""
                       all realms are returned
     :type realmname: string
 
     :return: a dict with realm description like
     :rtype: dict
-    '''
+    """
     config_object = get_config_object()
     realms = config_object.realm
     if realmname:
@@ -67,7 +67,7 @@ def get_realms(realmname=None):
     return realms
 
 
-#@cache.memoize(10)
+# @cache.memoize(10)
 def get_realm(realmname):
     """
     :param realmname:
@@ -92,10 +92,10 @@ def get_realm_id(realmname):
 def realm_is_defined(realm):
     """
     check, if a realm already exists or not
-    
+
     :param realm: the realm, that should be verified
     :type  realm: string
-    
+
     :return: found or not found
     :rtype: boolean
     """
@@ -111,10 +111,10 @@ def set_default_realm(default_realm=None):
     """
     set the default realm attribute.
     If the realm name is empty, the default realm is cleared.
-        
+
     :param defaultRealm: the default realm name
     :type  defualtRealm: string
-    
+
     :return: success or not
     :rtype: boolean
     """
@@ -133,12 +133,12 @@ def set_default_realm(default_realm=None):
 
 
 @log_with(log)
-#@cache.memoize(10)
+# @cache.memoize(10)
 def get_default_realm():
     """
     return the default realm
     - lookup in the config for the DefaultRealm key
-    
+
     @return: the realm name
     @rtype : string
     """
@@ -151,13 +151,13 @@ def delete_realm(realmname):
     delete the realm from the Database Table with the given name
     If, after deleting this realm, there is only one realm left,
     the remaining realm is set the default realm.
-    
+
     :param realmname: the to be deleted realm
     :type  realmname: string
     """
     # Check if there is a default realm
     defRealm = get_default_realm()
-    hadDefRealmBefore = (defRealm != "")
+    hadDefRealmBefore = defRealm != ""
 
     ret = fetch_one_resource(Realm, name=realmname).delete()
 
@@ -182,13 +182,13 @@ def set_realm(realm, resolvers=None, priority=None):
     If the realm does not exist, it is created.
     If the realm exists, the old resolvers are removed and the new ones
     are added.
-    
+
     :param realm: an existing or a new realm
     :param resolvers: names of resolvers
     :type resolvers: list
     :param priority: The priority of the resolvers in the realm
     :type priority: dict, with resolver names as keys
-    
+
     :return: tuple of lists of added resolvers and resolvers, that could
              not be added
     """
@@ -209,20 +209,19 @@ def set_realm(realm, resolvers=None, priority=None):
         R = Realm(realm)
         R.save()
         realm_created = True
-        
+
     if not realm_created:
         # delete old resolvers
         oldResos = ResolverRealm.query.filter_by(realm_id=R.id)
         for oldReso in oldResos:
             oldReso.delete()
-        
+
     # assign the resolvers
     for reso_name in resolvers:
         reso_name = reso_name.strip()
         Reso = Resolver.query.filter_by(name=reso_name).first()
         if Reso:
-            ResolverRealm(Reso.id, R.id,
-                          priority=priority.get(reso_name)).save()
+            ResolverRealm(Reso.id, R.id, priority=priority.get(reso_name)).save()
             added.append(reso_name)
         else:
             failed.append(reso_name)
@@ -237,7 +236,7 @@ def set_realm(realm, resolvers=None, priority=None):
     return added, failed
 
 
-@register_export('realm')
+@register_export("realm")
 def export_realms(name=None):
     """
     Export given realm configuration or all realms
@@ -245,7 +244,7 @@ def export_realms(name=None):
     return get_realms(realmname=name)
 
 
-@register_import('realm')
+@register_import("realm")
 def import_realms(data, name=None):
     """
     Import given realm configurations
@@ -253,14 +252,15 @@ def import_realms(data, name=None):
     # TODO: the set_realm() function always creates the realm in the DB even if
     #  the associated resolver are not available. So the realms must be imported
     #  *after* the resolver.
-    log.debug('Import realm config: {0!s}'.format(data))
+    log.debug(f"Import realm config: {data!s}")
     for realm, r_config in data.items():
         if name and name != realm:
             continue
         added, failed = set_realm(
-            realm, resolvers=[r['name'] for r in r_config['resolver']],
-            priority={r['name']: r['priority'] for r in r_config['resolver']})
-        if is_true(r_config['default']):
+            realm,
+            resolvers=[r["name"] for r in r_config["resolver"]],
+            priority={r["name"]: r["priority"] for r in r_config["resolver"]},
+        )
+        if is_true(r_config["default"]):
             set_default_realm(realm)
-        log.info('realm: {0!s:<15} resolver added: {1!s} '
-                 'failed: {2!s}'.format(realm, added, failed))
+        log.info(f"realm: {realm!s:<15} resolver added: {added!s} failed: {failed!s}")

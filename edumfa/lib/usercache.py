@@ -59,6 +59,7 @@ class user_cache(object):
         :param wrapped_function: The function, that is decorated.
         :return: None
         """
+
         @functools.wraps(wrapped_function)
         def cache_wrapper(*args, **kwds):
             if is_cache_enabled():
@@ -76,9 +77,9 @@ def get_cache_time():
     """
     seconds = 0
     try:
-        seconds = int(get_from_config(EXPIRATION_SECONDS, '0'))
+        seconds = int(get_from_config(EXPIRATION_SECONDS, "0"))
     except ValueError:
-        log.info("Non-Integer value stored in system config {0!s}".format(EXPIRATION_SECONDS))
+        log.info(f"Non-Integer value stored in system config {EXPIRATION_SECONDS!s}")
 
     return datetime.timedelta(seconds=seconds)
 
@@ -103,13 +104,10 @@ def delete_user_cache(resolver=None, username=None, expired=None):
     :return: number of deleted entries
     :rtype: int
     """
-    filter_condition = create_filter(username=username, resolver=resolver,
-                                     expired=expired)
+    filter_condition = create_filter(username=username, resolver=resolver, expired=expired)
     rowcount = db.session.query(UserCache).filter(filter_condition).delete()
     db.session.commit()
-    log.info('Deleted {} entries from the user cache (resolver={!r}, username={!r}, expired={!r})'.format(
-        rowcount, resolver, username, expired
-    ))
+    log.info(f"Deleted {rowcount} entries from the user cache (resolver={resolver!r}, username={username!r}, expired={expired!r})")
     return rowcount
 
 
@@ -126,8 +124,7 @@ def add_to_cache(username, used_login, resolver, user_id):
     if is_cache_enabled():
         timestamp = datetime.datetime.now()
         record = UserCache(username, used_login, resolver, user_id, timestamp)
-        log.debug('Adding record to cache: ({!r}, {!r}, {!r}, {!r}, {!r})'.format(
-            username, used_login, resolver, user_id, timestamp))
+        log.debug(f"Adding record to cache: ({username!r}, {used_login!r}, {resolver!r}, {user_id!r}, {timestamp!r})")
         record.save()
 
 
@@ -140,8 +137,7 @@ def retrieve_latest_entry(filter_condition):
     return UserCache.query.filter(filter_condition).order_by(UserCache.timestamp.desc()).first()
 
 
-def create_filter(username=None, used_login=None, resolver=None,
-                  user_id=None, expired=False):
+def create_filter(username=None, used_login=None, resolver=None, user_id=None, expired=False):
     """
     Build and return a SQLAlchemy query that searches the UserCache cache for a combination
     of username, resolver and user ID. This also takes the expiration time into account.
@@ -159,8 +155,7 @@ def create_filter(username=None, used_login=None, resolver=None,
     conditions = []
     if expired:
         cache_time = get_cache_time()
-        conditions.append(
-            UserCache.timestamp < datetime.datetime.now() - cache_time)
+        conditions.append(UserCache.timestamp < datetime.datetime.now() - cache_time)
     elif expired is False:
         cache_time = get_cache_time()
         conditions.append(UserCache.timestamp >= datetime.datetime.now() - cache_time)
@@ -185,12 +180,11 @@ def cache_username(wrapped_function, userid, resolvername):
     """
 
     # try to fetch the record from the UserCache
-    filter_conditions = create_filter(user_id=userid,
-                                      resolver=resolvername)
+    filter_conditions = create_filter(user_id=userid, resolver=resolvername)
     result = retrieve_latest_entry(filter_conditions)
     if result:
         username = result.username
-        log.debug('Found username of {!r}/{!r} in cache: {!r}'.format(userid, resolvername, username))
+        log.debug(f"Found username of {userid!r}/{resolvername!r} in cache: {username!r}")
         return username
     else:
         # record was not found in the cache
@@ -245,4 +239,3 @@ def user_init(wrapped_function, self):
     if self.login and self.resolver and self.uid and self.used_login:
         # We only cache complete sets!
         add_to_cache(self.login, self.used_login, self.resolver, self.uid)
-

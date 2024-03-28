@@ -8,11 +8,8 @@ from .base import MyApiTestCase
 
 
 class APIApplicationsResolverTestCase(MyApiTestCase):
-
     def test_get_applications(self):
-        with self.app.test_request_context('/application/',
-                                           method='GET',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context("/application/", method="GET", headers={"Authorization": self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")

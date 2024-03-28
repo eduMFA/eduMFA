@@ -8,8 +8,12 @@ from edumfa.lib.caconnector import save_caconnector
 from edumfa.lib.token import get_tokens, remove_token
 from edumfa.lib.error import ParameterError, eduMFAError
 from edumfa.lib.utils import int_to_hex
-from edumfa.lib.tokens.certificatetoken import (parse_chainfile, verify_certificate_path, ACTION,
-                                                     CertificateTokenClass)
+from edumfa.lib.tokens.certificatetoken import (
+    parse_chainfile,
+    verify_certificate_path,
+    ACTION,
+    CertificateTokenClass,
+)
 from edumfa.lib.policy import set_policy, delete_policy, PolicyClass, SCOPE
 import os
 import unittest
@@ -17,8 +21,15 @@ import mock
 from OpenSSL import crypto
 from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
 from edumfa.lib.caconnectors.msca import MSCAConnector
-from .mscamock import (MyTemplateReply, MyCAReply, MyCSRReply,
-                       MyCertReply, MyCertificateReply, MyCSRStatusReply, CAServiceMock)
+from .mscamock import (
+    MyTemplateReply,
+    MyCAReply,
+    MyCSRReply,
+    MyCertReply,
+    MyCertificateReply,
+    MyCSRStatusReply,
+    CAServiceMock,
+)
 from edumfa.lib.caconnectors.msca import ATTR as MS_ATTR
 from edumfa.lib.token import init_token
 from edumfa.lib.tokenclass import ROLLOUTSTATE
@@ -263,8 +274,10 @@ TdIfRtrzkM5Zw/U/p2/LWzbe/fCkqSC6SheI+/FDR7Bjz7xNxIZHonk=
 # Mock for certificate from MSCA
 MY_CA_NAME = "192.168.47.11"
 
-MOCK_AVAILABLE_CAS = ['WIN-GG7JP259HMQ.nilsca.com\\nilsca-WIN-GG7JP259HMQ-CA',
-                      'CA03.nilsca.com\\nilsca-CA03-CA']
+MOCK_AVAILABLE_CAS = [
+    "WIN-GG7JP259HMQ.nilsca.com\\nilsca-WIN-GG7JP259HMQ-CA",
+    "CA03.nilsca.com\\nilsca-CA03-CA",
+]
 MOCK_CA_TEMPLATES = ["User", "SmartcardLogon", "ApprovalRequired"]
 
 MOCK_USER_CERT = """-----BEGIN CERTIFICATE-----
@@ -304,14 +317,15 @@ WYx05kOaYFFvb1u8ub+qSExyHGX9Lh6w32RCoM8kJP7F6YCepKJRboka1/BY3GbF
 -----END CERTIFICATE-----"""
 
 
-CONF = {MS_ATTR.HOSTNAME: MY_CA_NAME,
-        MS_ATTR.PORT: 50061,
-        MS_ATTR.HTTP_PROXY: "0",
-        MS_ATTR.CA: "CA03.nilsca.com\\nilsca-CA03-CA"}
+CONF = {
+    MS_ATTR.HOSTNAME: MY_CA_NAME,
+    MS_ATTR.PORT: 50061,
+    MS_ATTR.HTTP_PROXY: "0",
+    MS_ATTR.CA: "CA03.nilsca.com\\nilsca-CA03-CA",
+}
 
 
 class CertificateTokenTestCase(MyTestCase):
-
     serial1 = "CRT0001"
     serial2 = "CRT0002"
     serial3 = "CRT0003"
@@ -324,8 +338,10 @@ class CertificateTokenTestCase(MyTestCase):
 
     def test_002_verify(self):
         # Verify an attestation certificate against trusted CA chain path.
-        r = verify_certificate_path(YUBIKEY_ATTEST, ["tests/testdata/attestation",
-                                                     "tests/testdata/feitian_non_exist"])
+        r = verify_certificate_path(
+            YUBIKEY_ATTEST,
+            ["tests/testdata/attestation", "tests/testdata/feitian_non_exist"],
+        )
         self.assertTrue(r)
 
         # Verification against an empty chain, due to misconfiguration fails.
@@ -340,8 +356,7 @@ class CertificateTokenTestCase(MyTestCase):
         # just upload a ready certificate
         token.update({"certificate": CERT})
         self.assertTrue(token.token.serial == self.serial1, token)
-        self.assertTrue(token.token.tokentype == "certificate",
-                        token.token.tokentype)
+        self.assertTrue(token.token.tokentype == "certificate", token.token.tokentype)
         self.assertTrue(token.type == "certificate", token)
         class_prefix = token.get_class_prefix()
         self.assertTrue(class_prefix == "CRT", class_prefix)
@@ -353,25 +368,27 @@ class CertificateTokenTestCase(MyTestCase):
     def test_02_create_token_from_request(self):
         cwd = os.getcwd()
         # setup ca connector
-        r = save_caconnector({"cakey": CAKEY,
-                              "cacert": CACERT,
-                              "type": "local",
-                              "caconnector": "localCA",
-                              "openssl.cnf": OPENSSLCNF,
-                              "CSRDir": "",
-                              "CertificateDir": "",
-                              "WorkingDir": cwd + "/" + WORKINGDIR})
+        r = save_caconnector(
+            {
+                "cakey": CAKEY,
+                "cacert": CACERT,
+                "type": "local",
+                "caconnector": "localCA",
+                "openssl.cnf": OPENSSLCNF,
+                "CSRDir": "",
+                "CertificateDir": "",
+                "WorkingDir": cwd + "/" + WORKINGDIR,
+            }
+        )
 
         db_token = Token(self.serial2, tokentype="certificate")
         db_token.save()
         token = CertificateTokenClass(db_token)
 
         # just upload a ready certificate
-        token.update({"ca": "localCA",
-                      "request": REQUEST})
+        token.update({"ca": "localCA", "request": REQUEST})
         self.assertTrue(token.token.serial == self.serial2, token)
-        self.assertTrue(token.token.tokentype == "certificate",
-                        token.token.tokentype)
+        self.assertTrue(token.token.tokentype == "certificate", token.token.tokentype)
         self.assertTrue(token.type == "certificate", token)
         class_prefix = token.get_class_prefix()
         self.assertTrue(class_prefix == "CRT", class_prefix)
@@ -381,71 +398,87 @@ class CertificateTokenTestCase(MyTestCase):
         certificate = detail.get("certificate")
         # At each testrun, the certificate might get another serial number!
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=requester.localdomain'>")
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_issuer()),
+            "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
+        )
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_subject()),
+            "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=requester.localdomain'>",
+        )
 
         # Test, if the certificate is also completely stored in the tokeninfo
         # and if we can retrieve it from the tokeninfo
         token = get_tokens(serial=self.serial2)[0]
         certificate = token.get_tokeninfo("certificate")
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=requester.localdomain'>")
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_issuer()),
+            "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
+        )
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_subject()),
+            "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=requester.localdomain'>",
+        )
         remove_token(self.serial2)
 
     def test_02a_fail_request_with_attestation(self):
         cwd = os.getcwd()
         # setup ca connector
-        r = save_caconnector({"cakey": CAKEY,
-                              "cacert": CACERT,
-                              "type": "local",
-                              "caconnector": "localCA",
-                              "openssl.cnf": OPENSSLCNF,
-                              "CSRDir": "",
-                              "CertificateDir": "",
-                              "WorkingDir": cwd + "/" + WORKINGDIR})
+        r = save_caconnector(
+            {
+                "cakey": CAKEY,
+                "cacert": CACERT,
+                "type": "local",
+                "caconnector": "localCA",
+                "openssl.cnf": OPENSSLCNF,
+                "CSRDir": "",
+                "CertificateDir": "",
+                "WorkingDir": cwd + "/" + WORKINGDIR,
+            }
+        )
 
         db_token = Token(self.serial2, tokentype="certificate")
         db_token.save()
         token = CertificateTokenClass(db_token)
 
         # A cert request will fail, since the attestation certificate does not match
-        self.assertRaises(eduMFAError,
-                          token.update,
-                          {"ca": "localCA",
-                           "attestation": BOGUS_ATTESTATION,
-                           "request": REQUEST})
+        self.assertRaises(
+            eduMFAError,
+            token.update,
+            {"ca": "localCA", "attestation": BOGUS_ATTESTATION, "request": REQUEST},
+        )
         remove_token(self.serial2)
 
     def test_02b_success_request_with_attestation(self):
         cwd = os.getcwd()
         # setup ca connector
-        r = save_caconnector({"cakey": CAKEY,
-                              "cacert": CACERT,
-                              "type": "local",
-                              "caconnector": "localCA",
-                              "openssl.cnf": OPENSSLCNF,
-                              "CSRDir": "",
-                              "CertificateDir": "",
-                              "WorkingDir": cwd + "/" + WORKINGDIR})
+        r = save_caconnector(
+            {
+                "cakey": CAKEY,
+                "cacert": CACERT,
+                "type": "local",
+                "caconnector": "localCA",
+                "openssl.cnf": OPENSSLCNF,
+                "CSRDir": "",
+                "CertificateDir": "",
+                "WorkingDir": cwd + "/" + WORKINGDIR,
+            }
+        )
 
         db_token = Token(self.serial2, tokentype="certificate")
         db_token.save()
         token = CertificateTokenClass(db_token)
 
         # The cert request will success with a valid attestation certificate
-        token.update({"ca": "localCA",
-                      "attestation": YUBIKEY_ATTEST,
-                      "request": YUBIKEY_CSR,
-                      ACTION.TRUSTED_CA_PATH: ["tests/testdata/attestation/"]})
+        token.update(
+            {
+                "ca": "localCA",
+                "attestation": YUBIKEY_ATTEST,
+                "request": YUBIKEY_CSR,
+                ACTION.TRUSTED_CA_PATH: ["tests/testdata/attestation/"],
+            }
+        )
         class_prefix = token.get_class_prefix()
         self.assertTrue(class_prefix == "CRT", class_prefix)
         self.assertTrue(token.get_class_type() == "certificate", token)
@@ -454,11 +487,14 @@ class CertificateTokenTestCase(MyTestCase):
         certificate = detail.get("certificate")
         # At each testrun, the certificate might get another serial number!
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/CN=cn=cornelius'>")
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_issuer()),
+            "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
+        )
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_subject()),
+            "<X509Name object '/CN=cn=cornelius'>",
+        )
         remove_token(self.serial2)
 
     def test_03_class_methods(self):
@@ -475,25 +511,27 @@ class CertificateTokenTestCase(MyTestCase):
         self.setUp_user_realms()
         cwd = os.getcwd()
         # setup ca connector
-        r = save_caconnector({"cakey": CAKEY,
-                              "cacert": CACERT,
-                              "type": "local",
-                              "caconnector": "localCA",
-                              "openssl.cnf": OPENSSLCNF,
-                              "CSRDir": "",
-                              "CertificateDir": "",
-                              "WorkingDir": cwd + "/" + WORKINGDIR})
+        r = save_caconnector(
+            {
+                "cakey": CAKEY,
+                "cacert": CACERT,
+                "type": "local",
+                "caconnector": "localCA",
+                "openssl.cnf": OPENSSLCNF,
+                "CSRDir": "",
+                "CertificateDir": "",
+                "WorkingDir": cwd + "/" + WORKINGDIR,
+            }
+        )
 
         db_token = Token(self.serial3, tokentype="certificate")
         db_token.save()
         token = CertificateTokenClass(db_token)
 
         # missing user
-        self.assertRaises(ParameterError,
-                          token.update, {"ca": "localCA", "genkey": 1})
+        self.assertRaises(ParameterError, token.update, {"ca": "localCA", "genkey": 1})
 
-        token.update({"ca": "localCA", "genkey": 1,
-                      "user": "cornelius"})
+        token.update({"ca": "localCA", "genkey": 1, "user": "cornelius"})
         self.assertEqual(token.token.serial, self.serial3)
         self.assertEqual(token.token.tokentype, "certificate")
         self.assertEqual(token.type, "certificate")
@@ -502,9 +540,10 @@ class CertificateTokenTestCase(MyTestCase):
         certificate = detail.get("certificate")
         # At each testrun, the certificate might get another serial number!
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_issuer()),
+            "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
+        )
         # No Email Address in the subject!
         subject = x509obj.get_subject()
         self.assertEqual("{0!s}".format(subject), "<X509Name object '/CN=cornelius'>")
@@ -514,9 +553,10 @@ class CertificateTokenTestCase(MyTestCase):
         token = get_tokens(serial=self.serial3)[0]
         certificate = token.get_tokeninfo("certificate")
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_issuer()),
+            "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
+        )
         self.assertEqual("{0!r}".format(x509obj.get_subject()), "<X509Name object '/CN=cornelius'>")
 
         privatekey = token.get_tokeninfo("privatekey")
@@ -534,14 +574,21 @@ class CertificateTokenTestCase(MyTestCase):
         db_token = Token(self.serial3, tokentype="certificate")
         db_token.save()
         token = CertificateTokenClass(db_token)
-        token.update({"ca": "localCA", "genkey": 1,
-                      "subject_components": ["email", "realm"],
-                      "user": "cornelius"})
+        token.update(
+            {
+                "ca": "localCA",
+                "genkey": 1,
+                "subject_components": ["email", "realm"],
+                "user": "cornelius",
+            }
+        )
         detail = token.get_init_detail()
         certificate = detail.get("certificate")
         x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/OU=realm1/CN=cornelius/emailAddress=user@localhost.localdomain'>")
+        self.assertEqual(
+            "{0!r}".format(x509obj.get_subject()),
+            "<X509Name object '/OU=realm1/CN=cornelius/emailAddress=user@localhost.localdomain'>",
+        )
         remove_token(self.serial3)
 
     def test_05_get_default_settings(self):
@@ -549,38 +596,38 @@ class CertificateTokenTestCase(MyTestCase):
         g = FakeFlaskG()
         g.audit_object = FakeAudit()
         # trusted path for a user
-        g.logged_in_user = {"user": "hans",
-                            "realm": "default",
-                            "role": "user"}
-        set_policy("pol1", scope=SCOPE.USER,
-                   action="{0!s}=tests/testdata/attestation/".format(ACTION.TRUSTED_CA_PATH))
+        g.logged_in_user = {"user": "hans", "realm": "default", "role": "user"}
+        set_policy(
+            "pol1",
+            scope=SCOPE.USER,
+            action="{0!s}=tests/testdata/attestation/".format(ACTION.TRUSTED_CA_PATH),
+        )
         g.policy_object = PolicyClass()
         p = CertificateTokenClass.get_default_settings(g, params)
-        self.assertEqual(["tests/testdata/attestation/"],
-                         p.get(ACTION.TRUSTED_CA_PATH))
+        self.assertEqual(["tests/testdata/attestation/"], p.get(ACTION.TRUSTED_CA_PATH))
         delete_policy("pol1")
         # the same should work for an admin user
-        g.logged_in_user = {"user": "admin",
-                            "realm": "super",
-                            "role": "admin"}
-        set_policy("pol1", scope=SCOPE.ADMIN,
-                   action="{0!s}=tests/testdata/attestation/".format(ACTION.TRUSTED_CA_PATH))
+        g.logged_in_user = {"user": "admin", "realm": "super", "role": "admin"}
+        set_policy(
+            "pol1",
+            scope=SCOPE.ADMIN,
+            action="{0!s}=tests/testdata/attestation/".format(ACTION.TRUSTED_CA_PATH),
+        )
         g.policy_object = PolicyClass()
         p = CertificateTokenClass.get_default_settings(g, params)
-        self.assertEqual(["tests/testdata/attestation/"],
-                         p.get(ACTION.TRUSTED_CA_PATH))
+        self.assertEqual(["tests/testdata/attestation/"], p.get(ACTION.TRUSTED_CA_PATH))
         delete_policy("pol1")
         # If we have no policy, we revert to default
         g.policy_object = PolicyClass()
         p = CertificateTokenClass.get_default_settings(g, params)
-        self.assertEqual(["/etc/edumfa/trusted_attestation_ca"],
-                         p.get(ACTION.TRUSTED_CA_PATH))
+        self.assertEqual(["/etc/edumfa/trusted_attestation_ca"], p.get(ACTION.TRUSTED_CA_PATH))
 
 
 class MSCACertTestCase(MyTestCase):
-
-    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
-                         "Can not test MSCA. grpc module seems not available.")
+    @unittest.skipUnless(
+        "edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+        "Can not test MSCA. grpc module seems not available.",
+    )
     def test_00_setup(self):
         self.setUp_user_realms()
         # setup ca connector
@@ -589,24 +636,34 @@ class MSCACertTestCase(MyTestCase):
         r = save_caconnector(CONF)
         self.assertEqual(r, 1)
 
-    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
-                         "Can not test MSCA. grpc module seems not available.")
+    @unittest.skipUnless(
+        "edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+        "Can not test MSCA. grpc module seems not available.",
+    )
     def test_01_msca_certificate_pending_and_enrolled(self):
         with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
-            mock_conncect_worker.return_value = CAServiceMock(CONF,
-                                                              {"available_cas": MOCK_AVAILABLE_CAS,
-                                                               "ca_templates": MOCK_CA_TEMPLATES,
-                                                               "csr_disposition": 5,
-                                                               "certificate": CERTIFICATE})
+            mock_conncect_worker.return_value = CAServiceMock(
+                CONF,
+                {
+                    "available_cas": MOCK_AVAILABLE_CAS,
+                    "ca_templates": MOCK_CA_TEMPLATES,
+                    "csr_disposition": 5,
+                    "certificate": CERTIFICATE,
+                },
+            )
             # Issue a cert request to billCA for a ApprovalRequired Token.
-            cert_tok = init_token({"type": "certificate",
-                                   "ca": "billCA",
-                                   "template": "ApprovalRequired",
-                                   "genkey": 1,
-                                   "user": "cornelius",
-                                   "realm": self.realm1
-                                   }, User("cornelius", self.realm1))
+            cert_tok = init_token(
+                {
+                    "type": "certificate",
+                    "ca": "billCA",
+                    "template": "ApprovalRequired",
+                    "genkey": 1,
+                    "user": "cornelius",
+                    "realm": self.realm1,
+                },
+                User("cornelius", self.realm1),
+            )
             self.assertEqual("certificate", cert_tok.type)
             self.assertEqual(ROLLOUTSTATE.PENDING, cert_tok.rollout_state)
 
@@ -628,24 +685,34 @@ class MSCACertTestCase(MyTestCase):
             self.assertEqual(-1, r)
             self.assertEqual(ROLLOUTSTATE.ENROLLED, cert_tok.rollout_state)
 
-    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
-                         "Can not test MSCA. grpc module seems not available.")
+    @unittest.skipUnless(
+        "edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+        "Can not test MSCA. grpc module seems not available.",
+    )
     def test_02_msca_certificate_pending_and_denied(self):
         with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
-            mock_conncect_worker.return_value = CAServiceMock(CONF,
-                                                              {"available_cas": MOCK_AVAILABLE_CAS,
-                                                               "ca_templates": MOCK_CA_TEMPLATES,
-                                                               "csr_disposition": 5,
-                                                               "certificate": CERTIFICATE})
+            mock_conncect_worker.return_value = CAServiceMock(
+                CONF,
+                {
+                    "available_cas": MOCK_AVAILABLE_CAS,
+                    "ca_templates": MOCK_CA_TEMPLATES,
+                    "csr_disposition": 5,
+                    "certificate": CERTIFICATE,
+                },
+            )
             # Issue a cert request to billCA for a ApprovalRequired Token.
-            cert_tok = init_token({"type": "certificate",
-                                   "ca": "billCA",
-                                   "template": "ApprovalRequired",
-                                   "genkey": 1,
-                                   "user": "cornelius",
-                                   "realm": self.realm1
-                                   }, User("cornelius", self.realm1))
+            cert_tok = init_token(
+                {
+                    "type": "certificate",
+                    "ca": "billCA",
+                    "template": "ApprovalRequired",
+                    "genkey": 1,
+                    "user": "cornelius",
+                    "realm": self.realm1,
+                },
+                User("cornelius", self.realm1),
+            )
             self.assertEqual("certificate", cert_tok.type)
             self.assertEqual(ROLLOUTSTATE.PENDING, cert_tok.rollout_state)
 
@@ -667,24 +734,34 @@ class MSCACertTestCase(MyTestCase):
             self.assertEqual(-1, r)
             self.assertEqual(ROLLOUTSTATE.DENIED, cert_tok.rollout_state)
 
-    @unittest.skipUnless("edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
-                         "Can not test MSCA. grpc module seems not available.")
+    @unittest.skipUnless(
+        "edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+        "Can not test MSCA. grpc module seems not available.",
+    )
     def test_03_msca_certificate_pending_but_cert_broken_in_edumfa(self):
         with mock.patch.object(MSCAConnector, "_connect_to_worker") as mock_conncect_worker:
             # Mock the CA to simulate a Pending Request - disposition 5
-            mock_conncect_worker.return_value = CAServiceMock(CONF,
-                                                              {"available_cas": MOCK_AVAILABLE_CAS,
-                                                               "ca_templates": MOCK_CA_TEMPLATES,
-                                                               "csr_disposition": 5,
-                                                               "certificate": CERTIFICATE})
+            mock_conncect_worker.return_value = CAServiceMock(
+                CONF,
+                {
+                    "available_cas": MOCK_AVAILABLE_CAS,
+                    "ca_templates": MOCK_CA_TEMPLATES,
+                    "csr_disposition": 5,
+                    "certificate": CERTIFICATE,
+                },
+            )
             # Issue a cert request to billCA for a ApprovalRequired Token.
-            cert_tok = init_token({"type": "certificate",
-                                   "ca": "billCA",
-                                   "template": "ApprovalRequired",
-                                   "genkey": 1,
-                                   "user": "cornelius",
-                                   "realm": self.realm1
-                                   }, User("cornelius", self.realm1))
+            cert_tok = init_token(
+                {
+                    "type": "certificate",
+                    "ca": "billCA",
+                    "template": "ApprovalRequired",
+                    "genkey": 1,
+                    "user": "cornelius",
+                    "realm": self.realm1,
+                },
+                User("cornelius", self.realm1),
+            )
             self.assertEqual("certificate", cert_tok.type)
             self.assertEqual(ROLLOUTSTATE.PENDING, cert_tok.rollout_state)
 

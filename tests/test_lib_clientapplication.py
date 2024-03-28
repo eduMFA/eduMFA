@@ -1,20 +1,21 @@
 """
 This test file tests the lib.clientapplicaton.py
 """
+
 import mock
 from datetime import datetime, timedelta
 from contextlib import contextmanager
 
 from edumfa.models import ClientApplication
 from .base import MyTestCase
-from edumfa.lib.clientapplication import (get_clientapplication,
-                                               save_clientapplication)
+from edumfa.lib.clientapplication import get_clientapplication, save_clientapplication
 
 
 class ClientApplicationTestCase(MyTestCase):
     """
     Test the ClientApplication functions
     """
+
     def test_01_save_and_get(self):
         save_clientapplication("1.2.3.4", "PAM")
         save_clientapplication("1.2.3.4", "RADIUS")
@@ -46,14 +47,14 @@ class ClientApplicationTestCase(MyTestCase):
     def test_02_multiple_nodes(self):
         @contextmanager
         def _set_node(node):
-            """ context manager that sets the current node name """
+            """context manager that sets the current node name"""
             with mock.patch("edumfa.lib.clientapplication.get_edumfa_node") as mock_node:
                 mock_node.return_value = node
                 yield
 
         @contextmanager
         def _fake_time(t):
-            """ context manager that fakes the current time that is written to the ``lastseen`` column """
+            """context manager that fakes the current time that is written to the ``lastseen`` column"""
             with mock.patch("edumfa.models.datetime") as mock_dt:
                 mock_dt.now.return_value = t
                 yield
@@ -123,5 +124,3 @@ class ClientApplicationTestCase(MyTestCase):
         self.assertIn({"clienttype": "PAM", "hostname": None, "lastseen": t2}, apps["1.2.3.4"])
         self.assertIn({"clienttype": "RADIUS", "hostname": None, "lastseen": t2}, apps["1.2.3.4"])
         self.assertEqual(apps["2.3.4.5"], [{"clienttype": "PAM", "hostname": None, "lastseen": t1}])
-
-

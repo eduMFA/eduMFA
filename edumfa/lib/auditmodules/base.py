@@ -26,7 +26,7 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-__doc__="""This is the BaseClass for audit trails
+__doc__ = """This is the BaseClass for audit trails
 
 The audit is supposed to work like this. First we need to create an audit
 object. E.g. this can be done in the before_request:
@@ -59,6 +59,7 @@ class Paginate(object):
     """
     This is a pagination object, that is used for searching audit trails.
     """
+
     def __init__(self):
         # The audit data
         self.auditdata = []
@@ -71,10 +72,9 @@ class Paginate(object):
         self.page = 1
         # the total entry numbers
         self.total = 0
-    
+
 
 class Audit(object):  # pragma: no cover
-
     is_readable = False
 
     def __init__(self, config=None, startdate=None):
@@ -89,7 +89,7 @@ class Audit(object):  # pragma: no cover
         :return: Audit object
         """
         self.name = "AuditBase"
-        self.audit_data = {'startdate': startdate or datetime.datetime.now()}
+        self.audit_data = {"startdate": startdate or datetime.datetime.now()}
         self.config = config or {}
         self.private = ""
         self.public = ""
@@ -104,7 +104,7 @@ class Audit(object):  # pragma: no cover
         :type count: int
         :return:
         """
-        self.audit_data['action_detail'] = "tokennum = {0!s}".format(str(count))
+        self.audit_data["action_detail"] = f"tokennum = {str(count)!s}"
 
     @log_with(log)
     def read_keys(self, pub, priv):
@@ -122,10 +122,10 @@ class Audit(object):  # pragma: no cover
         try:
             with open(priv, "rb") as privkey_file:
                 self.private = privkey_file.read()
-            with open(pub, 'rb') as pubkey_file:
+            with open(pub, "rb") as pubkey_file:
                 self.public = pubkey_file.read()
         except Exception as e:
-            log.error("Error reading key file: {0!r})".format(e))
+            log.error(f"Error reading key file: {e!r})")
             log.debug(traceback.format_exc())
             raise e
 
@@ -134,11 +134,30 @@ class Audit(object):  # pragma: no cover
 
     @property
     def available_audit_columns(self):
-        return ['number', 'action', 'success', 'serial', 'date', 'startdate',
-                'duration', 'token_type', 'user', 'realm', 'administrator',
-                'action_detail', 'info', 'edumfa_server', 'client',
-                'log_level', 'policies', 'clearance_level', 'sig_check',
-                'missing_line', 'resolver', 'thread_id']
+        return [
+            "number",
+            "action",
+            "success",
+            "serial",
+            "date",
+            "startdate",
+            "duration",
+            "token_type",
+            "user",
+            "realm",
+            "administrator",
+            "action_detail",
+            "info",
+            "edumfa_server",
+            "client",
+            "log_level",
+            "policies",
+            "clearance_level",
+            "sig_check",
+            "missing_line",
+            "resolver",
+            "thread_id",
+        ]
 
     def get_total(self, param, AND=True, display_error=True, timelimit=None):
         """
@@ -217,15 +236,14 @@ class Audit(object):  # pragma: no cover
         """
         pass
 
-#    def set(self):
-#        """
-#        This function could be used to set certain things like the signing key.
-#        But maybe it should only be read from edumfa.cfg?
-#        """
-#        pass
+    #    def set(self):
+    #        """
+    #        This function could be used to set certain things like the signing key.
+    #        But maybe it should only be read from edumfa.cfg?
+    #        """
+    #        pass
 
-    def search(self, search_dict, page_size=15, page=1, sortorder="asc",
-               timelimit=None):
+    def search(self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None):
         """
         This function is used to search audit events.
 
@@ -253,8 +271,15 @@ class Audit(object):  # pragma: no cover
         """
         pass
 
-    def search_query(self, search_dict, page_size=15, page=1, sortorder="asc",
-                     sortname="number", timelimit=None):
+    def search_query(
+        self,
+        search_dict,
+        page_size=15,
+        page=1,
+        sortorder="asc",
+        sortname="number",
+        timelimit=None,
+    ):
         """
         This function returns the audit log as an iterator on the result
         """
