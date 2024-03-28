@@ -1326,7 +1326,7 @@ msgstr "Son"
 
 #: edumfa/static/components/token/views/token.enroll.html:77
 #, fuzzy
-msgid "Extended Atttributes"
+msgid "Extended Attributes"
 msgstr "Genişletilmiş özellikler"
 
 #: edumfa/static/components/token/views/token.details.html:95

@@ -1268,7 +1268,7 @@ msgstr "Expirace"
 
 #: edumfa/static/components/token/views/token.enroll.html:77
 #, fuzzy
-msgid "Extended Atttributes"
+msgid "Extended Attributes"
 msgstr "Rozšířené nastavení"
 
 #: edumfa/static/components/token/views/token.details.html:95
