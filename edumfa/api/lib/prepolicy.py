@@ -46,6 +46,7 @@ from edumfa.lib.error import (
 from flask import g, current_app
 from edumfa.lib.policy import SCOPE, ACTION, REMOTE_USER
 from edumfa.lib.policy import Match, check_pin
+from edumfa.lib.tokens.pushtoken import PUSH_ACTION
 from edumfa.lib.user import get_user_from_param, get_default_realm, split_user, User
 from edumfa.lib.token import (
     get_tokens,
@@ -109,7 +110,6 @@ from edumfa.lib.tokens.webauthntoken import (
 )
 from edumfa.lib.tokens.u2ftoken import U2FACTION, parse_registration_data
 from edumfa.lib.tokens.u2f import x509name_to_string
-from edumfa.lib.tokens.pushtoken import PUSH_ACTION
 from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
 
 log = logging.getLogger(__name__)

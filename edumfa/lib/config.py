@@ -110,7 +110,8 @@ class SharedConfigClass(object):
         :return:
         """
         check_reload_config = get_app_config_value("EDUMFA_CHECK_RELOAD_CONFIG", 0)
-        if not self.timestamp or self.timestamp + datetime.timedelta(seconds=check_reload_config) < datetime.datetime.now():
+        if not self.timestamp or self.timestamp + datetime.timedelta(
+                seconds=check_reload_config) < datetime.datetime.now():
             db_ts = Config.query.filter_by(Key=EDUMFA_TIMESTAMP).first()
             if reload_db(self.timestamp, db_ts):
                 log.debug("Reloading shared config from database")
@@ -236,15 +237,15 @@ class LocalConfigClass(object):
     """
 
     def __init__(
-        self,
-        config,
-        resolver,
-        realm,
-        default_realm,
-        policies,
-        events,
-        caconnectors,
-        timestamp,
+            self,
+            config,
+            resolver,
+            realm,
+            default_realm,
+            policies,
+            events,
+            caconnectors,
+            timestamp,
     ):
         self.config = config
         self.resolver = resolver
@@ -773,6 +774,7 @@ def get_token_list():
     module_list.add("edumfa.lib.tokens.pushtoken")
     module_list.add("edumfa.lib.tokens.indexedsecrettoken")
     module_list.add("edumfa.lib.tokens.webauthntoken")
+    module_list.add("edumfa.lib.tokens.edumfaapplicationtoken")
 
     # Dynamic token modules
     dynamic_token_modules = get_app_config_value("EDUMFA_TOKEN_MODULES")
