@@ -2181,7 +2181,7 @@ def create_challenge_without_token(reply_dict, options=None):
         challenge_info["transaction_id"] = transaction_id
         challenge_info["serial"] = ""
         challenge_info["type"] = ""
-        challenge_info["client_mode"] = False
+        challenge_info["client_mode"] = "webauthn"
         challenge_info["message"] = message
         reply_dict.update(challenge_info)
         reply_dict["multi_challenge"].append(challenge_info)
