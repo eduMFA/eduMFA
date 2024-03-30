@@ -90,7 +90,7 @@ def upgrade():
     try:
         print(" * Replacing providernames for smsgateways")
         for row in session.query(SMSGateway).filter(SMSGateway.providermodule.like("privacyidea.lib.%")):
-            print(f' ** Replacing providername for {row.identifier} ({row.id}) with provider {row.providername}')
+            print(f' ** Replacing providername for {row.identifier} ({row.id}) with provider {row.providermodule}')
             row.providermodule = row.providermodule.replace("privacyidea.lib.", "edumfa.lib.")
         session.commit()
     except Exception as e:
