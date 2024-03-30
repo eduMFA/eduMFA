@@ -187,7 +187,14 @@ def importer(infile, types, name=None):
     is_flag=True,
     help="The configuration on the target machine will be wiped before the import.",
 )
-def import_full_config(file, update, cleanup):
+@click.option(
+    "--purge",
+    "-p",
+    "purge",
+    is_flag=True,
+    help="Purge not existing items and keep old (update can be enabled using -u).",
+)
+def import_full_config(file, cleanup, update, purge):
     data = {}
     if file:
         if os.path.isfile(file):
@@ -207,9 +214,9 @@ def import_full_config(file, update, cleanup):
                 data = conf_import(filename=file)
     else:
         data = conf_import()
-    import_conf_event(data["event"], update, cleanup)
-    import_conf_resolver(data["resolver"], update, cleanup)
-    import_conf_policy(data["policy"], update, cleanup)
+    import_conf_event(data["event"], cleanup=cleanup, update=update, purge=purge)
+    import_conf_resolver(data["resolver"], cleanup=cleanup, update=update, purge=purge)
+    import_conf_policy(data["policy"], cleanup=cleanup, update=update, purge=purge)
 
 
 @export_cli.command("full")

@@ -93,14 +93,21 @@ def p_export(filename, name):
 @click.option("-f", "filename", help="filename to import", required=True)
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
 @click.option("-u", "update", help="update configuration during import", is_flag=True)
-def p_import(filename, cleanup, update):
+@click.option(
+    "--purge",
+    "-p",
+    "purge",
+    is_flag=True,
+    help="Purge not existing items and keep old (update can be enabled using -u).",
+)
+def p_import(filename, cleanup, update, purge):
     """
     Import the policies from a file.
     If 'cleanup' is specified the existing policies are deleted before the
     policies from the file are imported.
     """
     data = conf_import(conftype="policy", filename=filename)
-    import_conf_policy(data["policy"], cleanup, update)
+    import_conf_policy(data["policy"], cleanup=cleanup, update=update, purge=purge)
 
 
 @policy_cli.command("create")

@@ -189,7 +189,14 @@ def r_export(filename, name, print_passwords):
 @click.option("-f", "filename", help="filename to import", required=True)
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
 @click.option("-u", "update", help="update configuration during import", is_flag=True)
-def r_import(filename, cleanup, update):
+@click.option(
+    "--purge",
+    "-p",
+    "purge",
+    is_flag=True,
+    help="Purge not existing items and keep old (update can be enabled using -u).",
+)
+def r_import(filename, cleanup, update, purge):
     """
     Import the resolvers from a json file. Existing resolvers are skipped by default.
     If 'update' is specified the configuration of any existing resolver is updated.
@@ -197,7 +204,7 @@ def r_import(filename, cleanup, update):
     """
     # Todo: Support the cleanup option to remove all resolvers which do not exist in the imported file
     data = conf_import(conftype="resolver", filename=filename)
-    import_conf_resolver(data["resolver"], cleanup=cleanup, update=update)
+    import_conf_resolver(data["resolver"], cleanup=cleanup, update=update, purge=purge)
 
 
 resolver_cli.add_command(r_export, "r_export")

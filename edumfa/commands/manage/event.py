@@ -108,14 +108,21 @@ def e_export(filename, name):
 @click.option("-f", "filename", help="filename to import", required=True)
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
 @click.option("-u", "update", help="update configuration during import", is_flag=True)
-def e_import(filename, cleanup, update):
+@click.option(
+    "--purge",
+    "-p",
+    "purge",
+    is_flag=True,
+    help="Purge not existing items and keep old (update can be enabled using -u).",
+)
+def e_import(filename, cleanup, update, purge):
     """
     Import the events from a file.
     If 'cleanup' is specified the existing events are deleted before the
     events from the file are imported.
     """
     data = conf_import(conftype="event", filename=filename)
-    import_conf_event(data["event"], cleanup, update)
+    import_conf_event(data["event"], cleanup=cleanup, update=update, purge=purge)
 
 
 event_cli.add_command(e_export, "e_export")
