@@ -79,7 +79,7 @@ def get_conf_policy(name=None):
     return pol_cls.list_policies(name=name)
 
 
-def import_conf_policy(config_list, cleanup=False, update=False):
+def import_conf_policy(config_list, cleanup=False, update=False, purge=False):
     """
     import policy configuration from a policy list
     """
@@ -92,7 +92,21 @@ def import_conf_policy(config_list, cleanup=False, update=False):
         for policy in policies:
             name = policy.get("name")
             r = delete_policy(name)
-            click.echo("Deleted policy {0!s} with result {1!s}".format(name, r))
+            click.echo(f"Deleted policy {name!s} with result {r!s}")
+    if purge:
+        if cleanup:
+            click.echo("Cleanup was performed before - nothing to purge here.")
+        else:
+            stored_names = [x.get("name") for x in cls.list_policies()]
+            import_names = [x.get("name") for x in config_list]
+
+            for stored in stored_names:
+                if stored not in import_names:
+                    try:
+                        r = delete_policy(stored)
+                        click.echo(f"Purged policy {stored!s} with result {r!s}")
+                    except Exception as ex:
+                        click.echo(f"Purged policy {stored!s} failed with error {ex}")
 
     for policy in config_list:
         action_str = "Added"
@@ -125,7 +139,7 @@ def get_conf_event(name=None):
     return conf
 
 
-def import_conf_event(config_list, cleanup=False, update=False):
+def import_conf_event(config_list, cleanup=False, update=False, purge=False):
     """
     import event configuration from an event list
     """
@@ -138,6 +152,22 @@ def import_conf_event(config_list, cleanup=False, update=False):
             name = event.get("name")
             r = delete_event(event.get("id"))
             click.echo("Deleted event '{0!s}' with result {1!s}".format(name, r), file=sys.stderr)
+
+    if purge:
+        if cleanup:
+            click.echo("Cleanup was performed before - nothing to purge here.")
+        else:
+            events = cls.events
+            stored_names = [x.get("name") for x in events]
+            import_names = [x.get("name") for x in config_list]
+
+            for stored in stored_names:
+                if stored not in import_names:
+                    try:
+                        r = delete_event([e for e in cls.events if (stored == e.get("name"))][0].get("id"))
+                        click.echo(f"Purged event {stored!s} with result {r!s}")
+                    except Exception as ex:
+                        click.echo(f"Purged event {stored!s} failed with error {ex}")
 
     for event in config_list:
         action_str = "Added"
@@ -162,12 +192,12 @@ def import_conf_event(config_list, cleanup=False, update=False):
         click.echo("{0!s} event {1!s} with result {2!s}".format(action_str, name, r))
 
 
-def import_conf_resolver(config_list, cleanup=False, update=False):
+def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
     """
     import resolver configuration from a resolver list
     """
-    if cleanup:
-        print("No cleanup for resolvers implemented")
+    if cleanup or purge:
+        click.echo("No cleanup or purge for resolvers implemented")
 
     for config in config_list:
         action_str = "Added"
