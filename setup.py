@@ -107,7 +107,8 @@ setup(
     url='https://www.edumfa.io',
     keywords='OTP, two factor authentication, management, security',
     python_requires='>=3.8',
-    packages=find_packages(),
+    packages=find_packages(exclude=["edumfa/static", "edumfa/translations"]),
+    package_data={'': ['edumfa/static/*', 'edumfa/translations/*']},
     scripts=get_scripts("tools"),
     entry_points={
         'console_scripts': [
@@ -133,7 +134,6 @@ setup(
         'kerberos': ['gssapi>=1.7.0']
     },
     install_requires=install_requires,
-    include_package_data=True,
     data_files=[
         ('etc/edumfa/', ['deploy/apache/edumfaapp.wsgi', 'deploy/edumfa/dictionary']),
         ('share/man/man1', get_man_pages("tools")),
