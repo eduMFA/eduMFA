@@ -82,9 +82,6 @@ jobs:
       run: |
         pip freeze
         python -b -m pytest -v --cov=edumfa --cov-report=xml tests/
-      env:
-        # silence some deprecation warnings
-        PYTHONWARNINGS: "ignore:the imp module is deprecated in favour of importlib:DeprecationWarning,ignore:Please use assertRegex instead:DeprecationWarning"
 
     - name: Codecov upload
       if: ${{ steps.pytest_run.outcome == 'success' }}
