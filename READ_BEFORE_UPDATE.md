@@ -1,5 +1,19 @@
 # Update Notes
 
+## Unreleased
+
+> [!CAUTION]
+> This release drops support for Python 3.6 and Python 3.7. 
+> 
+> Both versions are deprecated and no longer supported by eduMFA. In favor of major dependency upgrades and supporting Python 3.11 and 3.12 the outdated versions are removed! 
+
+### Internal changes:
+
+* Introduce style linting using `black`
+* Several (major) dependency upgrades
+* Rework CLI tools and drop `Flask-Script`
+
+
 ## eduMFA 1.4.0
 
 * ci: fix branch names by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/22
