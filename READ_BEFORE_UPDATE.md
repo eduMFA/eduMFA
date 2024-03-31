@@ -33,6 +33,18 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.0.0
+
+> [!CAUTION]
+> This release drops support for Python 3.6 and Python 3.7. 
+> 
+> Both versions are deprecated and no longer supported by eduMFA. In favor of major dependency upgrades and supporting Python 3.11 and 3.12 the outdated versions are removed! 
+
+### Internal changes:
+
+* chore: Several (major) dependency upgrades
+* chore: Rework CLI tools and drop `Flask-Script`
+
 ## eduMFA 1.5.1
 
 * fix: correct location of venv for ubuntu packages by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/47

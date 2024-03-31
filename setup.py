@@ -4,7 +4,7 @@ import os
 import stat
 import sys
 
-VERSION = "1.5.1"
+VERSION = "2.0.0"
 
 # Taken from kennethreitz/requests/setup.py
 package_directory = os.path.realpath(os.path.dirname(__file__))
