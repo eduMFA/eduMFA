@@ -49,7 +49,11 @@ from edumfa.lib.utils import (parse_timedelta, is_true, generate_charlists_from_
 from edumfa.lib.crypto import generate_password
 from edumfa.lib.auth import ROLE
 from edumfa.api.lib.utils import getParam, attestation_certificate_allowed, is_fqdn
-from edumfa.api.lib.policyhelper import get_init_tokenlabel_parameters, get_pushtoken_add_config
+from edumfa.api.lib.policyhelper import (
+    get_init_tokenlabel_parameters,
+    get_pushtoken_add_config,
+    get_legacypushtoken_add_config,
+)
 from edumfa.lib.clientapplication import save_clientapplication
 from edumfa.lib.config import (get_token_class)
 from edumfa.lib.tokenclass import ROLLOUTSTATE
@@ -81,7 +85,7 @@ from edumfa.lib.tokens.webauthntoken import (WEBAUTHNACTION,
                                                   is_webauthn_assertion_response)
 from edumfa.lib.tokens.u2ftoken import (U2FACTION, parse_registration_data)
 from edumfa.lib.tokens.u2f import x509name_to_string
-from edumfa.lib.tokens.pushtoken import PUSH_ACTION
+from edumfa.lib.tokens.pushtoken import PushTokenClass
 from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
 
 log = logging.getLogger(__name__)
@@ -1437,7 +1441,7 @@ def pushtoken_disable_wait(request, action):
     :param action:
     :return:
     """
-    request.all_data[PUSH_ACTION.WAIT] = False
+    request.all_data[PushTokenClass.PUSH_ACTION.WAIT] = False
 
 
 def pushtoken_wait(request, action):
@@ -1450,14 +1454,16 @@ def pushtoken_wait(request, action):
     :return:
     """
     user_object = request.User
-    waiting = Match.user(g, scope=SCOPE.AUTH, action=PUSH_ACTION.WAIT,
-                         user_object=user_object if user_object else None)\
-        .action_values(unique=True, allow_white_space_in_action=True)
+    waiting = Match.user(
+        g,
+        scope=SCOPE.AUTH,
+        action=PushTokenClass.PUSH_ACTION.WAIT,
+        user_object=user_object if user_object else None,
+    ).action_values(unique=True, allow_white_space_in_action=True)
     if len(waiting) >= 1:
-        request.all_data[PUSH_ACTION.WAIT] = int(list(waiting)[0])
+        request.all_data[PushTokenClass.PUSH_ACTION.WAIT] = int(list(waiting)[0])
     else:
-        request.all_data[PUSH_ACTION.WAIT] = False
-
+        request.all_data[PushTokenClass.PUSH_ACTION.WAIT] = False
 
 def pushtoken_add_config(request, action):
     """
@@ -1471,8 +1477,10 @@ def pushtoken_add_config(request, action):
     :return:
     """
     ttype = request.all_data.get("type")
-    if ttype and ttype.lower() == "push":
+    if ttype and ttype.lower() == "edupush":
         request.all_data = get_pushtoken_add_config(g, request.all_data, request.User)
+    elif ttype and ttype.lower() == "push":
+        request.all_data = get_legacypushtoken_add_config(g, request.all_data, request.User)
 
 
 def u2ftoken_verify_cert(request, action):
