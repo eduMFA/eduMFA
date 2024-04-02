@@ -1,3 +1,15 @@
+edumfa (1.5.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * feat: api: set tokeninfo on init by 
+  * feat: add ubuntu packages 
+  * feat: log passkey usage 
+  * feat: allow customization of passkey label 
+  * feat: more detailed logging for eduMFA migration script 
+  * fix: add missing flask-migrate logging 
+  * fixed typo: Atttributes -> Attributes 
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Tue, 02 Apr 2024 07:00:00 +0100
+
 edumfa (1.4.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   * feat: smstoken: add configurable URL which is called after check, extend test

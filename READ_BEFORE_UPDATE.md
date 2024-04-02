@@ -1,5 +1,15 @@
 # Update Notes
 
+## eduMFA 1.5.0
+
+* feat: api: set tokeninfo on init by @j-hoff in https://github.com/eduMFA/eduMFA/pull/36
+* feat: add ubuntu packages by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/13
+* feat: log passkey usage by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/30
+* feat: allow customization of passkey label by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/42
+* feat: more detailed logging for eduMFA migration script by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/44
+* fix: add missing flask-migrate logging by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/41
+* fixed typo: Atttributes -> Attributes by @linuxrrze in https://github.com/eduMFA/eduMFA/pull/43
+
 ## eduMFA 1.4.0
 
 * ci: fix branch names by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/22
