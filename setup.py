@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, find_namespace_packages
 import os
 import stat
 import sys
@@ -107,8 +107,11 @@ setup(
     url='https://www.edumfa.io',
     keywords='OTP, two factor authentication, management, security',
     python_requires='>=3.8',
-    packages=find_packages(exclude=["edumfa/static", "edumfa/translations"]),
-    package_data={'': ['edumfa/static/*', 'edumfa/translations/*']},
+    packages=find_namespace_packages(),
+    package_data={
+        'edumfa.translations': ["*", "**/*"],
+        'edumfa.static': ["*", "**/*"],
+    },
     scripts=get_scripts("tools"),
     entry_points={
         'console_scripts': [

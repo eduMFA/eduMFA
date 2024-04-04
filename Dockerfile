@@ -1,11 +1,12 @@
 FROM python:3.12-slim-bookworm
+WORKDIR /tmp
 COPY . .
 RUN python -m pip install build --user && \
     python -m build --sdist --wheel --outdir dist/
 
 FROM python:3.12-slim-bookworm
 
-COPY --from=0 /dist/*.whl /dist/
+COPY --from=0 /tmp/dist/*.whl /dist/
 
 RUN python -m pip install /dist/*.whl && pip install gunicorn && mkdir -p /opt/edumfa/user-scripts
 COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
