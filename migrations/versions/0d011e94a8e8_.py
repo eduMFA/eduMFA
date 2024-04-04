@@ -62,7 +62,7 @@ def upgrade():
     session = orm.Session(bind=bind)
     try:
         print(" * Replacing login_mode=privacyIDEA with login_mode=eduMFA")
-        for row in session.query(Policy).filter(Policy.action.like("login_mode=privacyIDEA")):
+        for row in session.query(Policy).filter(Policy.action.like("%login_mode=privacyIDEA%")):
             print(f' ** Replacing login_mode in policy {row.name} (id: {row.id}) with existing action {row.action}')
             row.action = row.action.replace("login_mode=privacyIDEA", "login_mode=eduMFA")
         session.commit()
@@ -74,10 +74,10 @@ def upgrade():
     session = orm.Session(bind=bind)
     try:
         print(" * Replacing privacyideaserver_read and privacyideaserver_write policies ")
-        for row in session.query(Policy).filter(Policy.action.like("privacyideaserver_read")):
+        for row in session.query(Policy).filter(Policy.action.like("%privacyideaserver_read%")):
             print(f' ** Replacing policy for {row.name} ({row.id}) with action {row.action}')
             row.action = row.action.replace("privacyideaserver_read", "edumfaserver_read")
-        for row in session.query(Policy).filter(Policy.action.like("privacyideaserver_write")):
+        for row in session.query(Policy).filter(Policy.action.like("%privacyideaserver_write%")):
             print(f' ** Replacing policy for {row.name} ({row.id}) with action {row.action}')
             row.action = row.action.replace("privacyideaserver_write", "edumfaserver_write")
         session.commit()
@@ -133,7 +133,7 @@ def downgrade():
     bind = op.get_bind()
     session = orm.Session(bind=bind)
     try:
-        for row in session.query(Policy).filter(Policy.action.like("login_mode=eduMFA")):
+        for row in session.query(Policy).filter(Policy.action.like("%login_mode=eduMFA%")):
             row.action = row.action.replace("login_mode=eduMFA", "login_mode=privacyIDEA")
         session.commit()
     except Exception as e:
@@ -143,9 +143,9 @@ def downgrade():
 
     session = orm.Session(bind=bind)
     try:
-        for row in session.query(Policy).filter(Policy.action.like("edumfaserver_read")):
+        for row in session.query(Policy).filter(Policy.action.like("%edumfaserver_read%")):
             row.action = row.action.replace("edumfaserver_read", "privacyideaserver_read")
-        for row in session.query(Policy).filter(Policy.action.like("edumfaserver_write")):
+        for row in session.query(Policy).filter(Policy.action.like("%edumfaserver_write%")):
             row.action = row.action.replace("edumfaserver_write", "privacyideaserver_write")
         session.commit()
     except Exception as e:
