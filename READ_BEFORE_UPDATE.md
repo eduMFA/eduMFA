@@ -1,5 +1,11 @@
 # Update Notes
 
+## eduMFA 1.5.1
+
+* fix: correct location of venv for ubuntu packages by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/47
+* fix: ignore revoked, disabled webauthn tokens for passkey auth by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/50
+* fix: correct handling of login mode by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/48
+
 ## eduMFA 1.5.0
 
 * feat: api: set tokeninfo on init by @j-hoff in https://github.com/eduMFA/eduMFA/pull/36
