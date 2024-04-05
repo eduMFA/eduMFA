@@ -12,20 +12,20 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst.pgsql  ]; then
 fi
 
 unset_sites () {
-    if [ ! "upgrade" = "$1" ]; then
-        rm -f /etc/apache2/sites-enabled/edumfa.conf
-        rm -f /etc/apache2/sites-enabled/edumfa-venv.conf
-    fi
+  if [ ! "upgrade" = "$1" ]; then
+    rm -f /etc/apache2/sites-enabled/edumfa.conf
+    rm -f /etc/apache2/sites-enabled/edumfa-venv.conf
+  fi
 }
 
-unset_sites $1
+unset_sites "$1"
 
 # Remove the symbolic link to edumfa-manage
 if [ -L /usr/local/bin/edumfa-manage ]; then
-    rm -f /usr/local/bin/edumfa-manage
-    rm -f /usr/bin/edumfa-manage
-    rm -f /usr/bin/edumfa-diag
-    rm -f /usr/bin/edumfa-token-janitor
+  rm -f /usr/local/bin/edumfa-manage
+  rm -f /usr/bin/edumfa-manage
+  rm -f /usr/bin/edumfa-diag
+  rm -f /usr/bin/edumfa-token-janitor
 fi
 
 #DEBHELPER#
