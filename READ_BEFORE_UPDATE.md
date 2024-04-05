@@ -14,7 +14,7 @@
 * feat: allow customization of passkey label by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/42
 * feat: more detailed logging for eduMFA migration script by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/44
 * fix: add missing flask-migrate logging by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/41
-* fixed typo: Atttributes -> Attributes by @linuxrrze in https://github.com/eduMFA/eduMFA/pull/43
+* fixed typo: Attributes -> Attributes by @linuxrrze in https://github.com/eduMFA/eduMFA/pull/43
 
 ## eduMFA 1.4.0
 
@@ -88,7 +88,7 @@
         * In case of MariaDB: Rename the sequence `privacyideaserver_seq` to `edumfaserver_seq`
         * Rename the column `mfa_audit.privacyidea_server` to `mfa_audit.edumfa_server`
         * Rename the column `policy.pinode` to `policy.edumfanode`
-        * Replace all occurences of `login_mode=privacyIDEA` in `policy.action` with `login_mode=eduMFA`
-        * Replace all occurences of `privacyideaserver_read` in `policy.action` with `edumfaserver_read`
-        * Replace all occurences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
-        * Replace all occurences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
+        * Replace all occurrences of `login_mode=privacyIDEA` in `policy.action` with `login_mode=eduMFA`
+        * Replace all occurrences of `privacyideaserver_read` in `policy.action` with `edumfaserver_read`
+        * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
+        * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
