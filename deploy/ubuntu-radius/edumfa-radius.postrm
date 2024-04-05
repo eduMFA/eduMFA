@@ -3,14 +3,14 @@
 set -e
 
 case "$1" in
-    purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-        rm -f /etc/freeradius/3.0/mods-enabled/mods-perl-edumfa
-        rm -f /etc/freeradius/3.0/sites-enabled/edumfa
-        ;;
-
-    *)
-        echo "postrm called with unknown argument \`$1'" >&2
-        exit 0
+  purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    rm -f /etc/freeradius/3.0/mods-enabled/mods-perl-edumfa
+    rm -f /etc/freeradius/3.0/sites-enabled/edumfa
+  ;;
+  
+  *)
+    echo "postrm called with unknown argument \`$1'" >&2
+    exit 0
 esac
 
 #DEBHELPER#
