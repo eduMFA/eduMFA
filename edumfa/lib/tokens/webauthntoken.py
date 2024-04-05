@@ -1325,7 +1325,7 @@ class WebAuthnTokenClass(TokenClass):
 
             # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI
             user_handle = getParam(options, "userhandle", required)
-            token = get_tokens_from_serial_or_user(serial=user_handle, user=None)[0]
+            token = get_tokens_from_serial_or_user(serial=user_handle, user=None, active=True, revoked=False, locked=False)[0]
             reply_dict = {}
             if token is None:
                 return False, reply_dict
