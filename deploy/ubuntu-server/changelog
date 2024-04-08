@@ -10,13 +10,13 @@ edumfa-server (1.4.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   * update version number
 
- -- eduMFA <edumfa-dev@listserv.dfn.de>  Tue, 19 Mar 2024 38:57:00 +0100
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Tue, 19 Mar 2024 12:00:00 +0100
 
 edumfa-server (1.3.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   * update version number
 
- -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 4 Mar 2024 38:34:00 +0100
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 4 Mar 2024 12:00:00 +0100
 
 edumfa-server (1.2.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
