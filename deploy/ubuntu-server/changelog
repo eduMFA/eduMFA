@@ -1,3 +1,29 @@
+edumfa-server (1.5.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * update version number
+  * improved script code quality and consistency
+  * fix migration from privacyidea
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Tue, 02 Apr 2024 07:00:00 +0100
+
+edumfa-server (1.4.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * update version number
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Tue, 19 Mar 2024 38:57:00 +0100
+
+edumfa-server (1.3.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * update version number
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 4 Mar 2024 38:34:00 +0100
+
+edumfa-server (1.2.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * update version number
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Fri, 1 Mar 2024 13:46:00 +0100
+
 edumfa-server (1.0.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   * Initial release
