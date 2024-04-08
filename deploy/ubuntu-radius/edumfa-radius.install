@@ -1,4 +1,4 @@
-deploy/edumfa_radius.pm	          /usr/share/edumfa/freeradius
-deploy/config/freeradius3/edumfa	/etc/freeradius/3.0/sites-available
+deploy/edumfa_radius.pm	                    /usr/share/edumfa/freeradius
+deploy/config/freeradius3/edumfa	        /etc/freeradius/3.0/sites-available
 deploy/config/freeradius3/mods-perl-edumfa  /etc/freeradius/3.0/mods-available
-deploy/rlm_perl.ini		                /etc/edumfa
+deploy/rlm_perl.ini		                    /etc/edumfa
