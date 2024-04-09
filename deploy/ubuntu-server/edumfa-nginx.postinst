@@ -36,7 +36,6 @@ create_files() {
   mkdir -p /etc/edumfa/scripts
   touch /var/log/edumfa/edumfa.log
   /opt/edumfa/bin/edumfa-manage create_enckey || true
-  /opt/edumfa/bin/edumfa-manage create_tables || true
   /opt/edumfa/bin/edumfa-manage create_audit_keys || true
   chown -R "$USERNAME" /var/log/edumfa
   chown -R "$USERNAME" /var/lib/edumfa
@@ -109,6 +108,7 @@ create_database() {
     mysql -u "$USER" --password="$PASSWORD" -e "grant all privileges on edumfa.* to 'edumfa'@'localhost';"
     echo "SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:$NPW@localhost/edumfa?charset=utf8'" >> /etc/edumfa/edumfa.cfg
     echo "DB created"
+    /opt/edumfa/bin/edumfa-manage create_tables
     return 1
   fi
 }
@@ -141,9 +141,9 @@ case "$1" in
     set_path
     create_user
     adapt_edumfa_cfg
+    create_files
     db_created=$(create_database)
     enable_nginx_uwsgi
-    create_files
     create_certificate
     if [ "$db_created" ]; then
       # We've created the DB, so we stamp the DB
