@@ -107,7 +107,7 @@ create_database() {
     mysql -u "$USER" --password="$PASSWORD" -e "grant all privileges on edumfa.* to 'edumfa'@'localhost';"
     echo "SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:$NPW@localhost/edumfa?charset=utf8'" >> /etc/edumfa/edumfa.cfg
     echo "DB created"
-    /opt/edumfa/bin/edumfa-manage create_tables
+    /opt/edumfa/bin/edumfa-manage create_tables || true
     return 1
   fi
 }
