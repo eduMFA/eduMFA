@@ -22,18 +22,13 @@
 * docs: start fixing incorrect camel case by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/25
 * docs: cleanup old refs and fix path names by @j-hoff in https://github.com/eduMFA/eduMFA/pull/28
 * docs: use fu repo by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/33
-* docs: add docu for new sms provider "Http Message To Uid Provider" by @j-hoff
-  in https://github.com/eduMFA/eduMFA/pull/21
-* feat: smstoken: add configurable URL which is called after check, extend test by @j-hoff
-  in https://github.com/eduMFA/eduMFA/pull/18
-* feat: make result value available in logginghandler, verbosely log set tokeninfo by @j-hoff
-  in https://github.com/eduMFA/eduMFA/pull/19
-* feat: new API endpoint POST /info/<serial> to bulk modify tokeninfo by @j-hoff
-  in https://github.com/eduMFA/eduMFA/pull/20
+* docs: add docu for new sms provider "Http Message To Uid Provider" by @j-hoff in https://github.com/eduMFA/eduMFA/pull/21
+* feat: smstoken: add configurable URL which is called after check, extend test by @j-hoff in https://github.com/eduMFA/eduMFA/pull/18
+* feat: make result value available in logginghandler, verbosely log set tokeninfo by @j-hoff in https://github.com/eduMFA/eduMFA/pull/19
+* feat: new API endpoint POST /info/<serial> to bulk modify tokeninfo by @j-hoff in https://github.com/eduMFA/eduMFA/pull/20
 * feat: token janitor find by user by @pmainz in https://github.com/eduMFA/eduMFA/pull/32
 * fix: make ldap connections persistent and restartable by @j-hoff in https://github.com/eduMFA/eduMFA/pull/16
-* fix: wrong indentation caused false "Action .. requires serial number" line by @j-hoff
-  in https://github.com/eduMFA/eduMFA/pull/17
+* fix: wrong indentation caused false "Action .. requires serial number" line by @j-hoff in https://github.com/eduMFA/eduMFA/pull/17
 * fix: improve handling of resident keys by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/26
 * fix: rename provider module names in DB on migration by @j-hoff in https://github.com/eduMFA/eduMFA/pull/29
 
@@ -51,14 +46,6 @@
 
 * Only bugfix release for CI actions no functional changes
 
-## eduMFA 1.0.0
-
-* Add option to enroll passkeys
-* Add option to include description in user notifications
-* Add containers as release artifacts
-* Add option to filter the user_token_number on a given range instead of constant
-* Add option to use the `Remote-User` header behind a reverse proxy
-
 ### Migrating from privacyIDEA 3.9.2 to eduMFA 1.0.0
 
 > [!CAUTION]
@@ -74,15 +61,10 @@
     * Update the log file path to `/var/log/edumfa/edumfa.log`
 * Install eduMFA (e.g. using Container, PIP or the `.deb` Package)
     * When using the `.deb` package, make sure to not overwrite the existing configuration file
-    * When using the server `.deb` package (`edumfa-apache2`, `edumfa-nginx`), all following steps will be performed
-      automatically
-* Check your `crontab`, `systemd` services for the usage of `pi-manage` or any other privacyIDEA script and replace it
-  with `edumfa-manage`
-* Check your `Apache2` or `nginx` configurations for usage of the `privacyideaapp.wsgi` and replace it
-  with `edumfaapp.wsgi` and fix all required paths
-* Execute the database migration using `edumfa-schema-upgrade` located in the `/opt/edumfa/bin`. You also need to
-  provide the migration dir `/opt/edumfa/lib/edumfa/migrations`. The latest migration will rename several columns and
-  tables from privacyIDEA related names to eduMFA
+    * When using the server `.deb` package (`edumfa-apache2`, `edumfa-nginx`), all following steps will be performed automatically
+* Check your `crontab`, `systemd` services for the usage of `pi-manage` or any other privacyIDEA script and replace it with `edumfa-manage`
+* Check your `Apache2` or `nginx` configurations for usage of the `privacyideaapp.wsgi` and replace it with `edumfaapp.wsgi` and fix all required paths
+* Execute the database migration using `edumfa-schema-upgrade` located in the `/opt/edumfa/bin`. You also need to provide the migration dir `/opt/edumfa/lib/edumfa/migrations`. The latest migration will rename several columns and tables from privacyIDEA related names to eduMFA
     * In case of an error executing this migration you also can perform the required migrations using SQL
         * Rename the table `pidea_audit` to `mfa_audit`
         * Rename the table `privacyideaserver` to `edumfaserver`
@@ -94,3 +76,13 @@
         * Replace all occurrences of `privacyideaserver_read` in `policy.action` with `edumfaserver_read`
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
+
+## eduMFA 1.0.0
+
+* Add option to enroll passkeys
+* Add option to include description in user notifications
+* Add containers as release artifacts
+* Add option to filter the user_token_number on a given range instead of constant
+* Add option to use the `Remote-User` header behind a reverse proxy
+
+
