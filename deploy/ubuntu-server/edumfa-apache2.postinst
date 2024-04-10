@@ -17,6 +17,7 @@ CERTDAYS=1095
 CERTKEYSIZE=4096
 MIGRATIONSDIR=/opt/edumfa/lib/edumfa/migrations/
 MYSQLFIX=/etc/mysql/conf.d/edumfa-maxkeylengthfix.cnf
+DB_CREATED=0
 
 if test -f /etc/default/edumfa; then
   . /etc/default/edumfa
@@ -108,7 +109,7 @@ create_database() {
     echo "SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:$NPW@localhost/edumfa?charset=utf8'" >> /etc/edumfa/edumfa.cfg
     echo "DB created"
     /opt/edumfa/bin/edumfa-manage create_tables || true
-    return 1
+    DB_CREATED=1
   fi
 }
 
@@ -156,12 +157,12 @@ case "$1" in
     create_user
     adapt_edumfa_cfg
     create_files
-    db_created=$(create_database)
+    create_database
     enable_apache
     create_certificate
     #update-rc.d apache2 defaults
     service apache2 restart
-    if [ "$db_created" ]; then
+    if [ "$DB_CREATED" ]; then
       # We've created the DB, so we stamp the DB
       touch /tmp/edumfa-install
       /opt/edumfa/bin/edumfa-manage db stamp -d $MIGRATIONSDIR head
