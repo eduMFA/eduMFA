@@ -16,8 +16,8 @@ activate_perl() {
 }
 
 activate_site() {
-	rm -f /etc/freeradius/3.0/sites-enabled/* || true
-	ln -s /etc/freeradius/3.0/sites-available/edumfa /etc/freeradius/3.0/sites-enabled/
+  rm -f /etc/freeradius/3.0/sites-enabled/* || true
+  ln -s /etc/freeradius/3.0/sites-available/edumfa /etc/freeradius/3.0/sites-enabled/
 }
 
 deactivate_eap() {
@@ -28,24 +28,24 @@ deactivate_eap() {
 }
 
 case "$1" in
-
+  
   configure)
-  activate_perl
-	activate_site
-  deactivate_eap
-  systemctl enable freeradius
-  systemctl restart freeradius
+    activate_perl
+    activate_site
+    deactivate_eap
+    systemctl enable freeradius
+    systemctl restart freeradius
   ;;
-
+  
   abort-upgrade|abort-remove|abort-deconfigure)
     exit 0
   ;;
-
+  
   *)
     echo "postinst called with unknown argument \`$1'" >&2
     exit 1
   ;;
-
+  
 esac
 
 

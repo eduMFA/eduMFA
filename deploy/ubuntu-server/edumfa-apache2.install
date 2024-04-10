@@ -1,12 +1,12 @@
-deploy/edumfa/edumfa.cfg                            etc/edumfa/
-deploy/apache/edumfaapp.wsgi               etc/edumfa/
+deploy/edumfa/edumfa.cfg                        etc/edumfa/
+deploy/apache/edumfaapp.wsgi                    etc/edumfa/
 
 # radius client
-deploy/edumfa/dictionary			etc/edumfa/
+deploy/edumfa/dictionary                        etc/edumfa/
 
 # apache config
-deploy/apache/sites-available/edumfa.conf	etc/apache2/sites-available/
-deploy/apache/sites-available/edumfa-venv.conf	etc/apache2/sites-available/
+deploy/apache/sites-available/edumfa.conf       etc/apache2/sites-available/
+deploy/apache/sites-available/edumfa-venv.conf  etc/apache2/sites-available/
 
 # Crontab
-deploy/crontab/edumfa			etc/cron.d/
+deploy/crontab/edumfa			                etc/cron.d/

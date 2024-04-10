@@ -108,8 +108,8 @@ Ensure you have the necessary build tools by executing the following command::
 
    sudo apt install build-essential debhelper devscripts equivs
 
-Install [dh-virtualenv](https://github.com/spotify/dh-virtualenv) by referring to their official documentation
-for installation instructions: [dh-virtualenv Docs](https://dh-virtualenv.readthedocs.io/en/latest/tutorial.html#step-1-install-dh-virtualenv)
+Install `dh-virtualenv <https://github.com/spotify/dh-virtualenv/>`_ by referring to their official documentation
+for installation instructions: `dh-virtualenv Docs <https://dh-virtualenv.readthedocs.io/en/latest/tutorial.html#step-1-install-dh-virtualenv>`_.
 
 Clone the repository and navigate to the project directory::
 
@@ -122,7 +122,7 @@ Choose the package you want to build based on your requirements. Use one of the 
 
 or for apache2 and nginx package::
 
-    cp -r deploy/ubuntu-server debian  # for
+    cp -r deploy/ubuntu-server debian
 
 or for radius package::
 

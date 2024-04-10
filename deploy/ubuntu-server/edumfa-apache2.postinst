@@ -15,180 +15,175 @@ fi
 USERNAME=edumfa
 CERTDAYS=1095
 CERTKEYSIZE=4096
+MIGRATIONSDIR=/opt/edumfa/lib/edumfa/migrations/
 MYSQLFIX=/etc/mysql/conf.d/edumfa-maxkeylengthfix.cnf
+DB_CREATED=0
 
 if test -f /etc/default/edumfa; then
-    . /etc/default/edumfa
-    # If the daemon user was changed,
-    # we set other access rights
-    USERNAME=$USER
+  . /etc/default/edumfa
+  # If the daemon user was changed,
+  # we set other access rights
+  USERNAME=$USER
 fi
 
 
 create_user() {
-        useradd -r $USERNAME -m || true
+  useradd -r "$USERNAME" -m || true
 }
 
 create_files() {
-        mkdir -p /var/log/edumfa
-        mkdir -p /var/lib/edumfa
-	mkdir -p /etc/edumfa/scripts
-        touch /var/log/edumfa/edumfa.log
-        /opt/edumfa/bin/edumfa-manage create_enckey || true > /dev/null
-        /opt/edumfa/bin/edumfa-manage create_tables || true > /dev/null
-	#/opt/edumfa/bin/edumfa-manage createdb || true > /dev/null
-        /opt/edumfa/bin/edumfa-manage create_audit_keys || true > /dev/null
-        chown -R $USERNAME /var/log/edumfa
-        chown -R $USERNAME /var/lib/edumfa
-        chown -R $USERNAME /etc/edumfa
-        chmod 600 /etc/edumfa/enckey
-        chmod 600 /etc/edumfa/private.pem
-	# we need to change access right, otherwise each local user could call
-	# edumfa-manage
-	chgrp root /etc/edumfa/edumfa.cfg
-	chmod 640 /etc/edumfa/edumfa.cfg
+  mkdir -p /var/log/edumfa
+  mkdir -p /var/lib/edumfa
+  mkdir -p /etc/edumfa/scripts
+  touch /var/log/edumfa/edumfa.log
+  /opt/edumfa/bin/edumfa-manage create_enckey || true
+  /opt/edumfa/bin/edumfa-manage create_audit_keys || true
+  chown -R "$USERNAME" /var/log/edumfa
+  chown -R "$USERNAME" /var/lib/edumfa
+  chown -R "$USERNAME" /etc/edumfa
+  chmod 600 /etc/edumfa/enckey
+  chmod 600 /etc/edumfa/private.pem
+  # we need to change access right, otherwise each local user could call edumfa-manage
+  chgrp root /etc/edumfa/edumfa.cfg
+  chmod 640 /etc/edumfa/edumfa.cfg
 }
 
 create_certificate() {
-if [ ! -e /etc/edumfa/server.pem ]; then
-        # This is the certificate when running with paster...
-        cd /etc/edumfa
-        openssl genrsa -out server.key $CERTKEYSIZE
-        openssl req -new -key server.key -out server.csr -subj "/CN=edumfa"
-        openssl x509 -req -days $CERTDAYS -in server.csr -signkey server.key -out server.crt
-        cat server.crt server.key > server.pem
-        rm -f server.crt server.key
-        chown edumfa server.pem
-        chmod 400 server.pem
-fi
-
-if [ ! -e /etc/ssl/certs/edumfaserver.pem ]; then
-        # This is the certificate when running with apache or nginx
-        KEY=/etc/ssl/private/edumfaserver.key
-        CSR=`mktemp`
-        CERT=/etc/ssl/certs/edumfaserver.pem
-        openssl genrsa -out $KEY $CERTKEYSIZE
-        openssl req -new -key $KEY -out $CSR -subj "/CN=`hostname`"
-        openssl x509 -req -days $CERTDAYS -in $CSR -signkey $KEY -out $CERT
-        rm -f $CSR
-        chmod 400 $KEY
-fi
+  if [ ! -e /etc/edumfa/server.pem ]; then
+    # This is the certificate when running with paster...
+    cd /etc/edumfa
+    openssl genrsa -out server.key $CERTKEYSIZE
+    openssl req -new -key server.key -out server.csr -subj "/CN=edumfa"
+    openssl x509 -req -days $CERTDAYS -in server.csr -signkey server.key -out server.crt
+    cat server.crt server.key > server.pem
+    rm -f server.crt server.key
+    chown edumfa server.pem
+    chmod 400 server.pem
+  fi
+  
+  if [ ! -e /etc/ssl/certs/edumfaserver.pem ]; then
+    # This is the certificate when running with apache or nginx
+    KEY=/etc/ssl/private/edumfaserver.key
+    CSR=$(mktemp)
+    CERT=/etc/ssl/certs/edumfaserver.pem
+    openssl genrsa -out $KEY $CERTKEYSIZE
+    openssl req -new -key $KEY -out "$CSR" -subj "/CN=$(hostname)"
+    openssl x509 -req -days $CERTDAYS -in "$CSR" -signkey $KEY -out $CERT
+    rm -f "$CSR"
+    chmod 400 $KEY
+  fi
 }
 
 adapt_edumfa_cfg() {
-	if [ -z "$(grep '^EDUMFA_PEPPER' /etc/edumfa/edumfa.cfg)" ]; then
-	    # PEPPER does not exist, yet
-	    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
-	    echo "EDUMFA_PEPPER = '$PEPPER'" >> /etc/edumfa/edumfa.cfg
-	fi
-	if [ -z "$(grep '^SECRET_KEY' /etc/edumfa/edumfa.cfg)" ]; then
-	    # SECRET_KEY does not exist, yet
-	    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
-	    echo "SECRET_KEY = '$SECRET'" >> /etc/edumfa/edumfa.cfg
-	fi
-	if [ -n "$(grep '^SQLALCHEMY_DATABASE_URI\s*=\s*.mysql:.*$' /etc/edumfa/edumfa.cfg)" ]; then
-	    #  We found an old mysql config file
-	    sed -i -e s/"\(^SQLALCHEMY_DATABASE_URI\s*=\s*.\)mysql:\(.*\)$"/"\1mysql+pymysql:\2"/g /etc/edumfa/edumfa.cfg
-	    echo "# The SQLALCHEMY_DATABASE_URI was updated during the update to eduMFA 3.2" >> /etc/edumfa/edumfa.cfg
-	fi
-
+  if ! grep -q '^EDUMFA_PEPPER' /etc/edumfa/edumfa.cfg; then
+    # PEPPER does not exist, yet
+    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+    echo "EDUMFA_PEPPER = '$PEPPER'" >> /etc/edumfa/edumfa.cfg
+  fi
+  if ! grep -q '^SECRET_KEY' /etc/edumfa/edumfa.cfg; then
+    # SECRET_KEY does not exist, yet
+    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+    echo "SECRET_KEY = '$SECRET'" >> /etc/edumfa/edumfa.cfg
+  fi
+  if ! grep -q '^SQLALCHEMY_DATABASE_URI\s*=\s*.mysql:.*$' /etc/edumfa/edumfa.cfg; then
+    #  We found an old mysql config file
+    sed -i -e 's/\(^SQLALCHEMY_DATABASE_URI\s*=\s*.\)mysql:\(.*\)$/\1mysql+pymysql:\2/g' /etc/edumfa/edumfa.cfg
+    echo "# The SQLALCHEMY_DATABASE_URI was updated during the update to eduMFA 3.2" >> /etc/edumfa/edumfa.cfg
+  fi
 }
 
 create_database() {
   # Create the file with the MySQL Barracuda fix, if it does not exist
   if [ ! -f $MYSQLFIX ]; then
-    printf "[mariadb]\ninnodb_large_prefix=on\ninnodb_file_format=Barracuda\n" > /etc/mysql/conf.d/edumfa-maxkeylengthfix.cnf
+    printf "[mariadb]\ninnodb_large_prefix=on\ninnodb_file_format=Barracuda\n" > $MYSQLFIX
     systemctl restart mysql
   fi
-
-	# create the MYSQL database
-	if [ !$(grep "^SQLALCHEMY_DATABASE_URI" /etc/edumfa/edumfa.cfg || true) ]; then
-	    USER=$(grep "^user" /etc/mysql/debian.cnf | sort -u | awk '{print $3}')
-	    PASSWORD=$(grep "^password" /etc/mysql/debian.cnf | sort -u | awk '{print $3}')
-	    NPW="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c12)"
-	    mysql -u $USER --password=$PASSWORD -e "create database edumfa;" || true
-            mysql -u $USER --password=$PASSWORD -e "create user 'edumfa'@'localhost' IDENTIFIED BY '$NPW';"
-            mysql -u $USER --password=$PASSWORD -e "grant all privileges on edumfa.* to 'edumfa'@'localhost';"
-            echo "SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:$NPW@localhost/edumfa?charset=utf8'" >> /etc/edumfa/edumfa.cfg
-            echo "DB created"
-        fi
+  # create the MYSQL database
+  if [ ! "$(grep "^SQLALCHEMY_DATABASE_URI" /etc/edumfa/edumfa.cfg || true)" ]; then
+    USER=$(grep "^user" /etc/mysql/debian.cnf | sort -u | awk '{print $3}')
+    PASSWORD=$(grep "^password" /etc/mysql/debian.cnf | sort -u | awk '{print $3}')
+    NPW="$(tr -dc A-Za-z0-9_ < /dev/urandom | head -c12)"
+    mysql -u "$USER" --password="$PASSWORD" -e "create database edumfa;" || true
+    mysql -u "$USER" --password="$PASSWORD" -e "create user 'edumfa'@'localhost' IDENTIFIED BY '$NPW';"
+    mysql -u "$USER" --password="$PASSWORD" -e "grant all privileges on edumfa.* to 'edumfa'@'localhost';"
+    echo "SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:$NPW@localhost/edumfa?charset=utf8'" >> /etc/edumfa/edumfa.cfg
+    echo "DB created"
+    /opt/edumfa/bin/edumfa-manage create_tables || true
+    DB_CREATED=1
+  fi
 }
 
 enable_apache() {
-    a2enmod wsgi headers ssl rewrite
-    if [ ! -h /etc/apache2/sites-enabled/edumfa.conf ]; then
-        rm -f /etc/apache2/sites-enabled/*
-        a2ensite edumfa
-        ln -s /etc/ssl/certs/edumfaserver.pem /etc/ssl/certs/edumfa-bundle.crt || true
-        ln -s /etc/ssl/private/edumfaserver.key /etc/ssl/private/edumfa.key || true
-    fi
-    if [ ! -h /etc/apache2/sites-enabled/edumfa-venv.conf ]; then
-	a2ensite edumfa-venv
-    fi
+  a2enmod wsgi headers ssl rewrite
+  if [ ! -h /etc/apache2/sites-enabled/edumfa.conf ]; then
+    rm -f /etc/apache2/sites-enabled/*
+    a2ensite edumfa
+    ln -s /etc/ssl/certs/edumfaserver.pem /etc/ssl/certs/edumfa-bundle.crt || true
+    ln -s /etc/ssl/private/edumfaserver.key /etc/ssl/private/edumfa.key || true
+  fi
+  if [ ! -h /etc/apache2/sites-enabled/edumfa-venv.conf ]; then
+    a2ensite edumfa-venv
+  fi
 }
 
 update_db() {
-	# Upgrade the database
-	/opt/edumfa/bin/edumfa-schema-upgrade /opt/edumfa/lib/edumfa/migrations > /dev/null
+  # Upgrade the database
+  /opt/edumfa/bin/edumfa-schema-upgrade $MIGRATIONSDIR
 }
 
 create_gpg() {
-    if [ "jammy" = $(lsb_release -cs) ] && [ -n $(pgrep rngd) ]; then
-        echo "killing rngd process..."
-        killall -9 rngd || true
-    fi
-	mkdir -p /etc/edumfa/gpg
-	rngd -r /dev/urandom
-	/opt/edumfa/bin/edumfa-manage create_pgp_keys || true
-	chown -R $USERNAME /etc/edumfa/gpg
-	killall -9 rngd
+  if [ "jammy" = "$(lsb_release -cs)" ] && [ -n "$(pgrep rngd)" ]; then
+    echo "killing rngd process..."
+    killall -9 rngd || true
+  fi
+  mkdir -p /etc/edumfa/gpg
+  rngd -r /dev/urandom
+  /opt/edumfa/bin/edumfa-manage create_pgp_keys || true
+  chown -R "$USERNAME" /etc/edumfa/gpg
+  killall -9 rngd
 }
 
 
 set_path() {
-	# Allow edumfa-manage to be called from everywhere
-	ln -sf /opt/edumfa/bin/edumfa-manage /usr/bin/
-	ln -sf /opt/edumfa/bin/edumfa-diag /usr/bin/
-	ln -sf /opt/edumfa/bin/edumfa-token-janitor /usr/bin/
+  # Allow edumfa-manage to be called from everywhere
+  ln -sf /opt/edumfa/bin/edumfa-manage /usr/bin/
+  ln -sf /opt/edumfa/bin/edumfa-diag /usr/bin/
+  ln -sf /opt/edumfa/bin/edumfa-token-janitor /usr/bin/
 }
 
 case "$1" in
-
   configure)
-	export PATH=$PATH:/opt/edumfa/bin
-	create_user
-	adapt_edumfa_cfg
-	create_database	
-	enable_apache
-	create_files
-	create_certificate
-	#update-rc.d apache2 defaults
-	service apache2 restart
-	if [ -z "$2" ]; then
-		# We are in the install step
-		# So we stamp the DB
-		touch /tmp/edumfa-install
-		/opt/edumfa/bin/edumfa-manage db stamp -d /opt/edumfa/lib/edumfa/migrations/ head
-	else
-		# We are in an update step
-		touch /tmp/edumfa-upgrade
-		update_db
-	fi
-	create_gpg
-	set_path
+    export PATH=$PATH:/opt/edumfa/bin
+    create_user
+    adapt_edumfa_cfg
+    create_files
+    create_database
+    enable_apache
+    create_certificate
+    #update-rc.d apache2 defaults
+    service apache2 restart
+    if [ "$DB_CREATED" ]; then
+      # We've created the DB, so we stamp the DB
+      touch /tmp/edumfa-install
+      /opt/edumfa/bin/edumfa-manage db stamp -d $MIGRATIONSDIR head
+    else
+      # The DB was already created, so a update might be necessary
+      touch /tmp/edumfa-upgrade
+      update_db
+    fi
+    create_gpg
+    set_path
   ;;
-
+  
   abort-upgrade|abort-remove|abort-deconfigure)
     exit 0
   ;;
-
+  
   *)
     echo "postinst called with unknown argument \`$1'" >&2
     exit 1
   ;;
-
 esac
-
 
 #DEBHELPER#
 

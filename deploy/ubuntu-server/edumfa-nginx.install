@@ -1,14 +1,13 @@
-deploy/edumfa/edumfa.cfg                            etc/edumfa/
+deploy/edumfa/edumfa.cfg                etc/edumfa/
 
 # radius client
-deploy/edumfa/dictionary			etc/edumfa/
+deploy/edumfa/dictionary			    etc/edumfa/
 
-deploy/nginx/edumfaapp.py			etc/edumfa/
+deploy/nginx/edumfaapp.py			    etc/edumfa/
 
 # uwsgi and nginx config
-
-deploy/nginx/sites-available/edumfa	etc/nginx/sites-available/
-deploy/uwsgi/apps-available/edumfa.xml	etc/uwsgi/apps-available/
+deploy/nginx/sites-available/edumfa     etc/nginx/sites-available/
+deploy/uwsgi/apps-available/edumfa.xml  etc/uwsgi/apps-available/
 
 # Crontab
-deploy/crontab/edumfa			etc/cron.d/
+deploy/crontab/edumfa			        etc/cron.d/

@@ -12,16 +12,18 @@ if [ -f /usr/share/dbconfig-common/dpkg/postinst.pgsql  ]; then
 fi
 
 unset_sites () {
-	rm -f /etc/nginx/sites-enabled/edumfa
-	rm -f /etc/uwsgi/apps-enabled/edumfa.xml
+  rm -f /etc/nginx/sites-enabled/edumfa
+  rm -f /etc/uwsgi/apps-enabled/edumfa.xml
 }
-
 
 unset_sites
 
 # Remove the symbolic link to edumfa-manage
 if [ -L /usr/local/bin/edumfa-manage ]; then
-    rm /usr/local/bin/edumfa-manage
+  rm -f /usr/local/bin/edumfa-manage
+  rm -f /usr/bin/edumfa-manage
+  rm -f /usr/bin/edumfa-diag
+  rm -f /usr/bin/edumfa-token-janitor
 fi
 
 #DEBHELPER#
