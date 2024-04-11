@@ -7,9 +7,9 @@
      the database.
 >  * Ensure that you use the latest supported privacyIDEA version 3.9.2 and then upgrade to eduMFA
 > 
-> These migration steps are applicable for the versions 1.0.0 to 1.5.1
+> These migration steps are applicable for all versions released up to now
 
-* Uninstall privacyIDEA and stop your nginx or `Apache2` or `nginx` service
+* Uninstall privacyIDEA and stop your `Apache2` or `nginx` service
 * Move/Copy all configurations from `/etc/privacyidea/` to `/etc/edumfa/`
     * The config file needs to be renamed from `pi.cfg` to `edumfa.cfg`
     * Rename/Replace `PI_` in the configuration file with `EDUMFA_` (e.g. `PI_ENCFILE` changes to `EDUMFA_ENCFILE`)
