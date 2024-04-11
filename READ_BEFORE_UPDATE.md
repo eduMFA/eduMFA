@@ -17,7 +17,7 @@
     * Update the log file path to `/var/log/edumfa/edumfa.log`
 * Install eduMFA (e.g. using Container, PIP or the `.deb` Package)
     * When using the `.deb` package, make sure to not overwrite the existing configuration file
-    * When using the server `.deb` package (`edumfa-apache2`, `edumfa-nginx`), all following steps will be performed automatically
+    * When using the server `.deb` package (`edumfa-apache2`, `edumfa-nginx`), the database migration will be executed automatically. Additionally the web server configuration and a cron entry will be installed.
 * Check your `crontab`, `systemd` services for the usage of `pi-manage` or any other privacyIDEA script and replace it with `edumfa-manage`
 * Check your `Apache2` or `nginx` configurations for usage of the `privacyideaapp.wsgi` and replace it with `edumfaapp.wsgi` and fix all required paths
 * Execute the database migration using `edumfa-schema-upgrade` located in the `/opt/edumfa/bin`. You also need to provide the migration dir `/opt/edumfa/lib/edumfa/migrations`. The latest migration will rename several columns and tables from privacyIDEA related names to eduMFA
