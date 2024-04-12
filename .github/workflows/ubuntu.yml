@@ -1,5 +1,6 @@
 name: Ubuntu
 on:
+  push:
   release:
     types: [released]
 
@@ -41,6 +42,8 @@ jobs:
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        # Only upload if it is a release
+        if: github.event_name == 'release'
         run: |
           for deb_file in $(ls ../*.deb); do
             curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy/"
@@ -84,6 +87,8 @@ jobs:
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        # Only upload if it is a release
+        if: github.event_name == 'release'
         run: |
           for deb_file in $(ls ../*.deb); do
             curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal/"
