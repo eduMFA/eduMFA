@@ -94,24 +94,24 @@ TWOSTEP_DEFAULT_DIFFICULTY = 10000
 log = logging.getLogger(__name__)
 
 
-class CHALLENGE_SESSION(object):
+class CHALLENGE_SESSION:
     ENROLLMENT = "enrollment"
 
 
-class TOKENKIND(object):
+class TOKENKIND:
     SOFTWARE = "software"
     HARDWARE = "hardware"
     VIRTUAL = "virtual"
 
 
-class AUTHENTICATIONMODE(object):
+class AUTHENTICATIONMODE:
     AUTHENTICATE = 'authenticate'
     CHALLENGE = 'challenge'
     # If the challenge is answered out of band
     OUTOFBAND = 'outofband'
 
 
-class CLIENTMODE(object):
+class CLIENTMODE:
     """
     This informs eduMFA clients how to
     handle challenge-responses
@@ -122,7 +122,7 @@ class CLIENTMODE(object):
     WEBAUTHN = 'webauthn'
 
     
-class ROLLOUTSTATE(object):
+class ROLLOUTSTATE:
     CLIENTWAIT = 'clientwait'
     # The rollout is pending in the backend, like CSRs that need to be approved
     PENDING = 'pending'
@@ -134,7 +134,7 @@ class ROLLOUTSTATE(object):
     DENIED = 'denied'
 
 
-class TokenClass(object):
+class TokenClass:
 
     # Class properties
     using_pin = True

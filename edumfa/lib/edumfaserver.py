@@ -42,7 +42,7 @@ This module is tested in tests/test_lib_edumfaserver.py
 log = logging.getLogger(__name__)
 
 
-class eduMFAServer(object):
+class eduMFAServer:
     """
     eduMFA Server object with configuration. The eduMFA Server object
     contains a test functionality so that the configuration can be tested.

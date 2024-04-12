@@ -82,7 +82,7 @@ class SecureFormatter(Formatter):
         return s
 
 
-class log_with(object):
+class log_with:
     """
     Logging decorator that allows you to log with a
     specific logger.

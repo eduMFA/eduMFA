@@ -70,7 +70,7 @@ def int_list_to_bytestring(int_list):  # pragma: no cover
     return b"".join([bytes((i, )) for i in int_list])
 
 
-class SecurityModule(object):
+class SecurityModule:
     TOKEN_KEY = 0
     CONFIG_KEY = 1
     VALUE_KEY = 2

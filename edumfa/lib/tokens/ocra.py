@@ -44,7 +44,7 @@ SHA_FUNC = {"SHA1": sha1,
             "SHA512": sha512}
 
 
-class OCRASuite(object):
+class OCRASuite:
 
     def __init__(self, ocrasuite):
         """
@@ -199,7 +199,7 @@ class OCRASuite(object):
         return ret
 
 
-class OCRA(object):
+class OCRA:
 
     def __init__(self, ocrasuite, key=None, security_object=None):
         """

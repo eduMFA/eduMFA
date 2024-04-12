@@ -34,7 +34,7 @@ log = logging.getLogger(__name__)
 EXPIRATION_SECONDS = "UserCacheExpiration"
 
 
-class user_cache(object):
+class user_cache:
     """
     This is the decorator wrapper to call a specific resolver function to
     allow user caching.

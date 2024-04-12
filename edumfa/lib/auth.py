@@ -33,7 +33,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class ROLE(object):
+class ROLE:
     ADMIN = "admin"
     USER = "user"
     VALIDATE = "validate"

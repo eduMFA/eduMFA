@@ -48,7 +48,7 @@ required = False
 DEFAULT_NUM_ANSWERS = 5
 
 
-class QUESTACTION(object):
+class QUESTACTION:
     NUM_QUESTIONS = "number"
 
 

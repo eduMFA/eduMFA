@@ -38,7 +38,7 @@ DEFAULT_COUNT = 100
 SALT_LENGTH = 4
 
 
-class TANACTION(object):
+class TANACTION:
     TANTOKEN_COUNT = "tantoken_count"
 
 

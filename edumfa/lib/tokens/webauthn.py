@@ -95,7 +95,7 @@ DEFAULT_AUTHENTICATOR_EXTENSIONS = {"credProtect": None}
 log = logging.getLogger(__name__)
 
 
-class COSE_PUBLIC_KEY(object):
+class COSE_PUBLIC_KEY:
     """
     The indices of the various parameters in a COSE-formatted public key.
     """
@@ -107,7 +107,7 @@ class COSE_PUBLIC_KEY(object):
     N = -1
 
 
-class ATTESTATION_TYPE(object):
+class ATTESTATION_TYPE:
     """
     Attestation types known to this implementation.
     """
@@ -127,7 +127,7 @@ SUPPORTED_ATTESTATION_TYPES = (
 )
 
 
-class ATTESTATION_FORMAT(object):
+class ATTESTATION_FORMAT:
     """
     Attestation format identifiers as registered in the IANA WebAuthn attestation statement format identifiers registry.
     """
@@ -161,7 +161,7 @@ REGISTERED_ATTESTATION_FORMATS = (
 )
 
 
-class CLIENT_DATA_TYPE(object):
+class CLIENT_DATA_TYPE:
     """
     Client data types used by this implementation.
     """
@@ -176,7 +176,7 @@ SUPPORTED_CLIENT_DATA_TYPES = (
 )
 
 
-class COSE_ALGORITHM(object):
+class COSE_ALGORITHM:
     """
     IANA-assigned identifiers of supported COSE algorithms.
     """
@@ -194,7 +194,7 @@ SUPPORTED_COSE_ALGORITHMS = (
 )
 
 
-class ATTESTATION_FORM(object):
+class ATTESTATION_FORM:
     """
     The different forms of attestation.
     """
@@ -211,7 +211,7 @@ ATTESTATION_FORMS = (
 )
 
 
-class USER_VERIFICATION_LEVEL(object):
+class USER_VERIFICATION_LEVEL:
     """
     The different levels of user verification.
     """
@@ -228,7 +228,7 @@ USER_VERIFICATION_LEVELS = (
 )
 
 
-class ATTESTATION_LEVEL(object):
+class ATTESTATION_LEVEL:
     """
     The different levels of attestation requirement.
     """
@@ -268,7 +268,7 @@ ATTESTATION_REQUIREMENT_LEVELS = (
 )
 
 
-class AUTHENTICATOR_ATTACHMENT_TYPE(object):
+class AUTHENTICATOR_ATTACHMENT_TYPE:
     """
     The different types of authenticator attachment.
     """
@@ -283,7 +283,7 @@ AUTHENTICATOR_ATTACHMENT_TYPES = (
 )
 
 
-class TRANSPORT(object):
+class TRANSPORT:
     """
     The standard transports.
     """
@@ -301,7 +301,7 @@ TRANSPORTS = (
     TRANSPORT.INTERNAL,
 )
 
-class RESIDENT_KEY_LEVEL(object):
+class RESIDENT_KEY_LEVEL:
     """
     The different resident key levels
     """
@@ -315,7 +315,7 @@ RESIDENT_KEY_LEVELS = (
     RESIDENT_KEY_LEVEL.PREFERRED
 )
 
-class USERNAMELESS_AUTHN(object):
+class USERNAMELESS_AUTHN:
     """
     Whether to allow username-less authentication.
     """
@@ -327,7 +327,7 @@ USERNAMELESS_AUTHNS = (
     USERNAMELESS_AUTHN.DISABLED
 )
 
-class USERNAMELESS_REALM_POLICY(object):
+class USERNAMELESS_REALM_POLICY:
     """
     Whether to enable realm-specific policies in username-less authentication scenarios.
     """
@@ -371,7 +371,7 @@ class WebAuthnUserDataMissing(Exception):
     pass
 
 
-class AuthenticatorDataFlags(object):
+class AuthenticatorDataFlags:
     """
     Authenticator data flags:
 
@@ -432,7 +432,7 @@ class AuthenticatorDataFlags(object):
         return (self.flags & self.EXTENSION_DATA_INCLUDED) == self.EXTENSION_DATA_INCLUDED
 
 
-class WebAuthnMakeCredentialOptions(object):
+class WebAuthnMakeCredentialOptions:
     """
     Generate the options passed to navigator.credentials.create()
     """
@@ -604,7 +604,7 @@ class WebAuthnMakeCredentialOptions(object):
         return json.dumps(self.registration_dict)
 
 
-class WebAuthnAssertionOptions(object):
+class WebAuthnAssertionOptions:
     """
     Generate the options passed to navigator.credentials.get()
     """
@@ -725,7 +725,7 @@ class WebAuthnAssertionOptions(object):
         return json.dumps(self.assertion_dict)
 
 
-class WebAuthnUser(object):
+class WebAuthnUser:
     """
     A single WebAuthn user credential.
     """
@@ -783,7 +783,7 @@ class WebAuthnUser(object):
                                           self.user_display_name, self.sign_count)
 
 
-class WebAuthnCredential(object):
+class WebAuthnCredential:
     """
     A single WebAuthn credential.
     """
@@ -856,7 +856,7 @@ class WebAuthnCredential(object):
                                           self.origin, self.sign_count)
 
 
-class WebAuthnRegistrationResponse(object):
+class WebAuthnRegistrationResponse:
     """
     The WebAuthn registration response containing all information needed to verify the registration ceremony.
     """
@@ -1597,7 +1597,7 @@ class WebAuthnRegistrationResponse(object):
             raise RegistrationRejectedException('Registration rejected. Error: {}'.format(e))
 
 
-class WebAuthnAssertionResponse(object):
+class WebAuthnAssertionResponse:
     """
     The WebAuthn assertion response containing all information needed to verify the authentication ceremony.
     """

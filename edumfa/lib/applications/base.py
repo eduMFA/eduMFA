@@ -75,7 +75,7 @@ def get_machine_application_class_dict():
     return ret
 
 
-class MachineApplication(object):
+class MachineApplication:
 
     application_name = "base"
     '''If bulk_call is false, the administrator may

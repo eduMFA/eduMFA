@@ -71,7 +71,7 @@ def fake_decrypt(data):
     return [(c - 1) % 256 for c in data]
 
 
-class PKCS11Mock(object):
+class PKCS11Mock:
     """
     Mock helper to simulate a HSM. Usage::
 

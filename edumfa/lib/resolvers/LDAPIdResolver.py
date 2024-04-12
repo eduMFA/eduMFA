@@ -260,7 +260,7 @@ def cache(func):
     return cache_wrapper
 
 
-class AUTHTYPE(object):
+class AUTHTYPE:
     SIMPLE = "Simple"
     SASL_DIGEST_MD5 = "SASL Digest-MD5"
     NTLM = "NTLM"

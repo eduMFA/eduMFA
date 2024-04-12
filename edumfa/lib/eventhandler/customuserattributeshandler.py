@@ -12,7 +12,7 @@ from edumfa.lib.user import User
 log = logging.getLogger(__name__)
 
 
-class ACTION_TYPE(object):
+class ACTION_TYPE:
     """
     Allowed actions
     """
@@ -20,7 +20,7 @@ class ACTION_TYPE(object):
     DELETE_CUSTOM_USER_ATTRIBUTES = "delete_custom_user_attributes"
 
 
-class USER_TYPE(object):
+class USER_TYPE:
     """
     Allowed user types
     """

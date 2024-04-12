@@ -212,7 +212,7 @@ def _get_crl_next_update(filename):
     return dt
 
 
-class CONFIG(object):
+class CONFIG:
 
     def __init__(self, name):
         self.directory = "./ca"
@@ -238,7 +238,7 @@ class CONFIG(object):
         return s
 
 
-class ATTR(object):
+class ATTR:
     __doc__ = """This is the list Attributes of the Local CA."""
     CAKEY = "cakey"
     CACERT = "cacert"

@@ -56,7 +56,7 @@ class CallList(Sequence, Sized):
         self._calls = []
 
 
-class SmppMock(object):
+class SmppMock:
 
     def __init__(self):
         self._calls = CallList()

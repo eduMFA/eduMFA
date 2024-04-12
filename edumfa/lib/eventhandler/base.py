@@ -50,7 +50,7 @@ from edumfa.lib.tokenclass import DATE_FORMAT
 log = logging.getLogger(__name__)
 
 
-class CONDITION(object):
+class CONDITION:
     """
     Possible conditions
     """
@@ -79,7 +79,7 @@ class CONDITION(object):
     ROLLOUT_STATE = "rollout_state"
 
 
-class GROUP(object):
+class GROUP:
     """
     These are the event handler groups. The conditions
     will be grouped in the UI.
@@ -90,7 +90,7 @@ class GROUP(object):
     COUNTER = "counter"
 
 
-class BaseEventHandler(object):
+class BaseEventHandler:
     """
     An Eventhandler needs to return a list of actions, which it can handle.
 

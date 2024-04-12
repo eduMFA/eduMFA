@@ -69,7 +69,7 @@ class SMSError(Exception):
         return ret
 
 
-class ISMSProvider(object):
+class ISMSProvider:
     """ the SMS Provider Interface - BaseClass """
 
     regexp_description = _("Regular expression to modify the phone number to make it compatible with provider. "

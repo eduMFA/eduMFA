@@ -55,7 +55,7 @@ from edumfa.models import CustomUserAttribute, db
 log = logging.getLogger(__name__)
 
 
-class User(object):
+class User:
     """
     The user has the attributes
       login, realm and resolver.

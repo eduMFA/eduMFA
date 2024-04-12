@@ -2018,7 +2018,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_24b_push_disable_wait_policy(self):
         # We send a fake push_wait that is not in the policies
-        class RequestMock(object):
+        class RequestMock:
             pass
         req = RequestMock()
         req.all_data = {"push_wait": "120"}
@@ -2131,7 +2131,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("Indexed")
 
     def test_26a_webauthn_auth_validate_triggerchallenge(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         # Normal request
@@ -2194,7 +2194,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_26b_webauthn_auth_validate_check(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
         # Normal request
         request = RequestMock()
@@ -2262,7 +2262,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_26c_webauthn_auth_auth(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         # Normal request
@@ -2305,7 +2305,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_27a_webauthn_authz_validate_check(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         # Normal request
@@ -2418,7 +2418,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_28_webauthn_enroll(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         rp_id = RP_ID
@@ -2754,7 +2754,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_29c_webauthn_request_auth_authn(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         # Normal request
@@ -2859,7 +2859,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_29e_webauthn_request_validate_check_authn(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         # Normal request
@@ -3002,7 +3002,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_31_webauthn_disallowed_req(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         allowed_certs = "subject/.*Frobnicate.*/"
@@ -3030,7 +3030,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
 
     def test_32_webauthn_allowed_aaguid(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         request = RequestMock()
@@ -3043,7 +3043,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(webauthntoken_allowed(request, None))
 
     def test_33_webauthn_disallowed_aaguid(self):
-        class RequestMock(object):
+        class RequestMock:
             pass
 
         authenticator_selection_list = 'foo bar baz'

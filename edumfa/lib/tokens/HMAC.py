@@ -48,7 +48,7 @@ from edumfa.lib.crypto import safe_compare
 log = logging.getLogger(__name__)
 
 
-class HmacOtp(object):
+class HmacOtp:
 
     def __init__(self, secObj=None, counter=0, digits=6, hashfunc=sha1):
         self.secretObj = secObj

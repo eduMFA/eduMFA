@@ -129,7 +129,7 @@ DEFAULT_IOS_APP_URL = "https://apps.apple.com/us/app/privacyidea-authenticator/i
 DEFAULT_PREFERRED_CLIENT_MODE_LIST = ['interactive', 'webauthn', 'poll', 'u2f']
 
 
-class SCOPE(object):
+class SCOPE:
     __doc__ = """This is the list of the allowed scopes that can be used in
     policy definitions.
     """
@@ -143,7 +143,7 @@ class SCOPE(object):
     REGISTER = "register"
 
 
-class ACTION(object):
+class ACTION:
     __doc__ = """This is the list of usual actions."""
     ADMIN_DASHBOARD = "admin_dashboard"
     ASSIGN = "assign"
@@ -318,18 +318,18 @@ class ACTION(object):
     REQUIRE_DESCRIPTION = "require_description"
 
 
-class TYPE(object):
+class TYPE:
     INT = "int"
     STRING = "str"
     BOOL = "bool"
 
 
-class AUTHORIZED(object):
+class AUTHORIZED:
     ALLOW = "grant_access"
     DENY = "deny_access"
 
 
-class GROUP(object):
+class GROUP:
     __doc__ = """These are the allowed policy action groups. The policies
     will be grouped in the UI."""
     TOOLS = "tools"
@@ -347,7 +347,7 @@ class GROUP(object):
     SERVICEID = "service ID"
 
 
-class MAIN_MENU(object):
+class MAIN_MENU:
     __doc__ = """These are the allowed top level menu items. These are used
     to toggle the visibility of the menu items depending on the rights of the
     user"""
@@ -359,21 +359,21 @@ class MAIN_MENU(object):
     COMPONENTS = "components"
 
 
-class LOGINMODE(object):
+class LOGINMODE:
     __doc__ = """This is the list of possible values for the login mode."""
     USERSTORE = "userstore"
     EDUMFA = "eduMFA"
     DISABLE = "disable"
 
 
-class REMOTE_USER(object):
+class REMOTE_USER:
     __doc__ = """The list of possible values for the remote_user policy."""
     DISABLE = "disable"
     ACTIVE = "allowed"
     FORCE = "force"
 
 
-class ACTIONVALUE(object):
+class ACTIONVALUE:
     __doc__ = """This is a list of usual action values for e.g. policy
     action-values like otppin."""
     TOKENPIN = "tokenpin"
@@ -382,19 +382,19 @@ class ACTIONVALUE(object):
     NONE = "none"
 
 
-class AUTOASSIGNVALUE(object):
+class AUTOASSIGNVALUE:
     __doc__ = """This is the possible values for autoassign"""
     USERSTORE = "userstore"
     NONE = "any_pin"
 
 
-class TIMEOUT_ACTION(object):
+class TIMEOUT_ACTION:
     __doc__ = """This is a list of actions values for idle users"""
     LOGOUT = "logout"
     LOCKSCREEN = 'lockscreen'
 
 
-class CONDITION_SECTION(object):
+class CONDITION_SECTION:
     __doc__ = """This is a list of available sections for conditions of policies """
     USERINFO = "userinfo"
     TOKENINFO = "tokeninfo"
@@ -403,14 +403,14 @@ class CONDITION_SECTION(object):
     HTTP_ENVIRONMENT = "HTTP Environment"
 
 
-class CONDITION_CHECK(object):
+class CONDITION_CHECK:
     __doc__ = """The available check methods for extended conditions"""
     DO_NOT_CHECK_AT_ALL = 1
     ONLY_CHECK_USERINFO = [CONDITION_SECTION.USERINFO]
     CHECK_AND_RAISE_EXCEPTION_ON_MISSING = None
 
 
-class PolicyClass(object):
+class PolicyClass:
     """
     A policy object can be used to query the current set of policies.
     The policy object itself does not store any policies.
@@ -2619,7 +2619,7 @@ class MatchingError(ServerError):
     pass
 
 
-class Match(object):
+class Match:
     """
     This class provides a high-level API for policy matching.
 

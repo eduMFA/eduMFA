@@ -53,7 +53,7 @@ DEFAULT_CHALLENGE_TEXT = _("Please enter the positions {0!s} from your secret.")
 DEFAULT_POSITION_COUNT = 2
 
 
-class PIIXACTION(object):
+class PIIXACTION:
     COUNT = "count"
     PRESET_ATTRIBUTE = "preset_attribute"
     FORCE_ATTRIBUTE = "force_attribute"

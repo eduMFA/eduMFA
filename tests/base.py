@@ -19,7 +19,7 @@ PWFILE = "tests/testdata/passwords"
 PWFILE2 = "tests/testdata/passwd"
 
 
-class FakeFlaskG(object):
+class FakeFlaskG:
     policy_object = None
     logged_in_user = {}
     audit_object = None

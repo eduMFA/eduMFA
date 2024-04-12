@@ -70,7 +70,7 @@ DEFAULT_POLICY_TEMPLATE_URL = "https://raw.githubusercontent.com/edumfa/" \
                               "policy-templates/main/templates/"
 
 
-class postpolicy(object):
+class postpolicy:
     """
     Decorator that allows one to call a specific function after the decorated
     function.
@@ -104,7 +104,7 @@ class postpolicy(object):
         return policy_wrapper
 
 
-class postrequest(object):
+class postrequest:
     """
     Decorator that is supposed to be used with after_request.
     """

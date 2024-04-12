@@ -45,7 +45,7 @@ log = logging.getLogger(__name__)
 SEED_LENGTH = 16
 
 
-class CHALLENGE_TYPE(object):
+class CHALLENGE_TYPE:
     PIN_RESET = "generic_pin_reset"
     RESYNC = "generic_resync"
 

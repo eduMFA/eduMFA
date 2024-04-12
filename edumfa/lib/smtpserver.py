@@ -49,7 +49,7 @@ TIMEOUT = 10
 SEND_EMAIL_JOB_NAME = "smtpserver.send_email"
 
 
-class SMTPServer(object):
+class SMTPServer:
     """
     SMTP Object that holds a SMTP Database Object but can also send emails.
     """

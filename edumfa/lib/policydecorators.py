@@ -42,7 +42,7 @@ from edumfa.lib.radiusserver import get_radius
 log = logging.getLogger(__name__)
 
 
-class libpolicy(object):
+class libpolicy:
     """
     This is the decorator wrapper to call a specific function before a
     library call in contrast to prepolicy and postpolicy, which are to be

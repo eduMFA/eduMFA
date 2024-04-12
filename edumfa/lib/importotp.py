@@ -581,7 +581,7 @@ def parsePSKCdata(xml_data,
     return tokens, not_imported_serials
 
 
-class GPGImport(object):
+class GPGImport:
     """
     This class is used to decrypt GPG encrypted import files.
 

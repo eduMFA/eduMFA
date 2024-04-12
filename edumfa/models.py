@@ -80,7 +80,7 @@ def increment_by_zero(element, compiler, **kw):  # pragma: no cover
     return text
 
 
-class MethodsMixin(object):
+class MethodsMixin:
     """
     This class mixes in some common Class table functions like
     delete and save
@@ -122,7 +122,7 @@ def save_config_timestamp(invalidate_config=True):
         invalidate_config_object()
 
 
-class TimestampMethodsMixin(object):
+class TimestampMethodsMixin:
     """
     This class mixes in the table functions including update of the timestamp
     """

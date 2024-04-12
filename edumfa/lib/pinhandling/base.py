@@ -34,7 +34,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class PinHandler(object):
+class PinHandler:
     """
     A PinHandler Class is responsible for handling the OTP PIN during
     enrollment.

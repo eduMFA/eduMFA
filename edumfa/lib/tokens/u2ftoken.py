@@ -194,7 +194,7 @@ optional = True
 required = False
 
 
-class U2FACTION(object):
+class U2FACTION:
     FACETS = "u2f_facets"
     REQ = "u2f_req"
     NO_VERIFY_CERT = "u2f_no_verify_certificate"

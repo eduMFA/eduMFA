@@ -47,7 +47,7 @@ from edumfa.lib.log import log_with
 log = logging.getLogger(__name__)
 
 
-class mTimeOtp(object):
+class mTimeOtp:
     '''
     implements the motp timebased check_otp
     - s. https://github.com/neush/otpn900/blob/master/src/test_motp.c

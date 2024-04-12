@@ -59,7 +59,7 @@ class CallList(Sequence, Sized):
         self._calls = []
 
 
-class RadiusMock(object):
+class RadiusMock:
 
     def __init__(self):
         self._calls = CallList()

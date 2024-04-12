@@ -85,7 +85,7 @@ FAILED_TO_DECRYPT_PASSWORD = "FAILED TO DECRYPT PASSWORD!"  # nosec B105 # place
 log = logging.getLogger(__name__)
 
 
-class SecretObj(object):
+class SecretObj:
     def __init__(self, val, iv, preserve=True):
         self.val = val
         self.iv = iv
@@ -503,7 +503,7 @@ def geturandom(length=20, hex=False):
 # some random functions based on geturandom #################################
 
 
-class urandom(object):
+class urandom:
 
     precision = 12
 
@@ -681,7 +681,7 @@ def _slow_rsa_verify_raw(key, sig, msg):
     return msg == pow(sig, pn.e, pn.n)
 
 
-class Sign(object):
+class Sign:
     """
     Signing class that is used to sign Audit Entries and to sign API responses.
     """

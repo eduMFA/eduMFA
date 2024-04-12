@@ -32,7 +32,7 @@ This module is tested in tests/test_lib_caconnector.py
 AvailableCAConnectors = []
 
 
-class BaseCAConnector(object):
+class BaseCAConnector:
     def revoke_cert(self, certificate, request_id=None, reason=None):
         """
         Revoke the specified certificate. At this point only the database

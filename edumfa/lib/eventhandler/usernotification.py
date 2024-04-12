@@ -64,7 +64,7 @@ To check your tokens you may login to the Web UI:
 """
 
 
-class NOTIFY_TYPE(object):
+class NOTIFY_TYPE:
     """
     Allowed token owner
     """
