@@ -35,7 +35,7 @@ JOB_QUEUE_CLASS = "EDUMFA_JOB_QUEUE_CLASS"
 JOB_QUEUE_OPTION_PREFIX = "EDUMFA_JOB_QUEUE_"
 
 
-class JobCollector(object):
+class JobCollector:
     """
     For most third-party job queue modules, the jobs are discovered by tracking all
     functions decorated with a ``@job`` decorator. However, in order

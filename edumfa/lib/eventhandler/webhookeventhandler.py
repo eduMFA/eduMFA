@@ -38,7 +38,7 @@ log = logging.getLogger(__name__)
 TIMEOUT = 10
 
 
-class CONTENT_TYPE(object):
+class CONTENT_TYPE:
     """
     Allowed type off content
     """
@@ -46,7 +46,7 @@ class CONTENT_TYPE(object):
     URLENCODED = "urlendcode"
 
 
-class ACTION_TYPE(object):
+class ACTION_TYPE:
     """
     Allowed actions
     """

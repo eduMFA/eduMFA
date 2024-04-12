@@ -168,7 +168,7 @@ def check_signature(subscription):
     return True
 
 
-class CheckSubscription(object):
+class CheckSubscription:
     """
     Decorator to decorate an API request and check if the subscription is valid.
     For this, we evaluate the requesting client.

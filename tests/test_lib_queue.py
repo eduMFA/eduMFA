@@ -16,7 +16,7 @@ from edumfa.lib.queues.base import QueueError
 from .base import OverrideConfigTestCase, MyTestCase
 
 
-class TestSender(object):
+class TestSender:
     """ defined in order to be able to mock the ``send_mail`` function in tests """
     def send_mail(*args, **kwargs):
         pass

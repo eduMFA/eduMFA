@@ -51,7 +51,7 @@ class PasswordTokenClass(TokenClass):
     default_length = DEFAULT_LENGTH
     default_contents = DEFAULT_CONTENTS
 
-    class SecretPassword(object):
+    class SecretPassword:
 
         def __init__(self, secObj):
             self.secretObject = secObj

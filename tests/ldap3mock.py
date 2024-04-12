@@ -76,11 +76,11 @@ class CallList(Sequence, Sized):
         self._calls = []
 
 
-class Connection(object):
+class Connection:
 
-    class Extend(object):
+    class Extend:
 
-        class Standard(object):
+        class Standard:
 
             def __init__(self, connection):
                 self.connection = connection
@@ -638,7 +638,7 @@ class Connection(object):
         return True
 
 
-class Ldap3Mock(object):
+class Ldap3Mock:
 
     def __init__(self):
         self._calls = CallList()

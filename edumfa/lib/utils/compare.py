@@ -152,7 +152,7 @@ def negate(func):
 #: This class enumerates all available comparators.
 #: In order to add a comparator to this module, add a suitable member to COMPARATORS
 #: and suitable entries to COMPARATOR_FUNCTIONS and COMPARATOR_DESCRIPTIONS.
-class COMPARATORS(object):
+class COMPARATORS:
     EQUALS = "equals"
     NOT_EQUALS = "!equals"
 

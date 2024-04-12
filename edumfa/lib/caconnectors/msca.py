@@ -56,7 +56,7 @@ CRL_REASONS = ["unspecified", "keyCompromise", "CACompromise",
 TIMEOUT = 3
 
 
-class CONFIG(object):  # pragma: no cover
+class CONFIG:  # pragma: no cover
     # Only needed for command line creation
 
     def __init__(self, name):
@@ -81,7 +81,7 @@ class CONFIG(object):  # pragma: no cover
         return s
 
 
-class ATTR(object):
+class ATTR:
     __doc__ = """This is the list Attributes of the Microsoft CA connector."""
     HOSTNAME = "hostname"
     PORT = "port"

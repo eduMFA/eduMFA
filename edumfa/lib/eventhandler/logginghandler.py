@@ -38,7 +38,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class LOGGING_LEVEL(object):
+class LOGGING_LEVEL:
     """
     Allowed logging levels
     """

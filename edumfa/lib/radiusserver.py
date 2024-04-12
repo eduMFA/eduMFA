@@ -47,7 +47,7 @@ This module is tested in tests/test_lib_radiusserver.py
 log = logging.getLogger(__name__)
 
 
-class RADIUSServer(object):
+class RADIUSServer:
     """
     RADIUS Server object with configuration. The RADIUS Server object
     contains a test functionality so that the configuration can be tested.

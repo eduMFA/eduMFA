@@ -109,7 +109,7 @@ required = False
 OCRA_DEFAULT_SUITE = "OCRA-1:HOTP-SHA1-6:QN10"
 
 
-class API_ACTIONS(object):
+class API_ACTIONS:
     METADATA = "metadata"
     ENROLLMENT = "enrollment"
     AUTHENTICATION = "authentication"

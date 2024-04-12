@@ -39,7 +39,7 @@ from edumfa.lib.framework import get_app_local_store, get_app_config_value
 log = logging.getLogger(__name__)
 
 
-class BaseEngineRegistry(object):
+class BaseEngineRegistry:
     """
     Abstract base class for engine registries.
     """

@@ -55,7 +55,7 @@ import datetime
 log = logging.getLogger(__name__)
 
 
-class Paginate(object):
+class Paginate:
     """
     This is a pagination object, that is used for searching audit trails.
     """
@@ -73,7 +73,7 @@ class Paginate(object):
         self.total = 0
     
 
-class Audit(object):  # pragma: no cover
+class Audit:  # pragma: no cover
 
     is_readable = False
 

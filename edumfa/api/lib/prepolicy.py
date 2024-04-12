@@ -90,7 +90,7 @@ optional = True
 required = False
 
 
-class prepolicy(object):
+class prepolicy:
     """
     This is the decorator wrapper to call a specific function before an API
     call.

@@ -38,7 +38,7 @@ def _random_password(size):
     return "".join(passwd)
 
 
-class Config(object):
+class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     # SQL_ALCHEMY_DATABASE_URI = "mysql://privacyidea:XmbSrlqy5d4IS08zjz"
     # "GG5HTt40Cpf5@localhost/privacyidea"

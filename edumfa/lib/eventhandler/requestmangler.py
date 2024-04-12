@@ -47,7 +47,7 @@ from dateutil.tz import tzlocal
 log = logging.getLogger(__name__)
 
 
-class ACTION_TYPE(object):
+class ACTION_TYPE:
     """
     Allowed actions
     """

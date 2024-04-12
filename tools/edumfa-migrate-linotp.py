@@ -99,7 +99,7 @@ UUID_MATCH_PATTERN = "^([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA
 UUID_REPLACE_PATTERN = "\\4\\3\\2\\1-\\6\\5-\\8\\7-\\9\\10-\\11\\12\\13\\14\\15\\16"
 
 
-class Config(object):
+class Config:
 
     def __init__(self, config_file):
         with open(config_file, "r") as f:

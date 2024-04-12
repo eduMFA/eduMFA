@@ -34,7 +34,7 @@ log = logging.getLogger(__name__)
 AVAILABLE_EVENTS = []
 
 
-class event(object):
+class event:
     """
     This is the event decorator that calls the event handler in the handler
     module. This event decorator can be used at any API call
@@ -257,7 +257,7 @@ def delete_event(event_id):
     return fetch_one_resource(EventHandler, id=event_id).delete()
 
 
-class EventConfiguration(object):
+class EventConfiguration:
     """
     This class is supposed to contain the event handling configuration during
     the Request.

@@ -494,7 +494,7 @@ optional = True
 required = False
 
 
-class WEBAUTHNCONFIG(object):
+class WEBAUTHNCONFIG:
     """
     Config options defined for WebAuthn
     """
@@ -510,7 +510,7 @@ WEBAUTHN_TOKEN_SPECIFIC_SETTINGS = {
 }
 
 
-class WEBAUTHNACTION(object):
+class WEBAUTHNACTION:
     """
     Policy actions defined for WebAuthn
     """
@@ -533,7 +533,7 @@ class WEBAUTHNACTION(object):
     AVOID_DOUBLE_REGISTRATION = 'webauthn_avoid_double_registration'
 
 
-class WEBAUTHNINFO(object):
+class WEBAUTHNINFO:
     """
     Token info fields used by WebAuthn
     """
@@ -550,7 +550,7 @@ class WEBAUTHNINFO(object):
     RESIDENT_KEY = "resident_key"
 
 
-class WEBAUTHNGROUP(object):
+class WEBAUTHNGROUP:
     """
     Categories used to group WebAuthn token actions.
     """

@@ -87,7 +87,7 @@ UPDATE_FB_TOKEN_WINDOW = 5
 POLL_ONLY = "poll only"
 
 
-class PUSH_ACTION(object):
+class PUSH_ACTION:
     FIREBASE_CONFIG = "push_firebase_configuration"
     REGISTRATION_URL = "push_registration_url"
     TTL = "push_ttl"
@@ -98,7 +98,7 @@ class PUSH_ACTION(object):
     ALLOW_POLLING = "push_allow_polling"
 
 
-class PushAllowPolling(object):
+class PushAllowPolling:
     ALLOW = 'allow'
     DENY = 'deny'
     TOKEN = 'token'  # nosec B105 # key name

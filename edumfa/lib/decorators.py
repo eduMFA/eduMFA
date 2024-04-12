@@ -78,7 +78,7 @@ def check_user_or_serial(func):
     return user_or_serial_wrapper
 
 
-class check_user_or_serial_in_request(object):
+class check_user_or_serial_in_request:
     """
     Decorator to check user and serial in a request.
     If the request does not contain a serial number (serial) or a user

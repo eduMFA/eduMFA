@@ -53,7 +53,7 @@ class CallList(Sequence, Sized):
         self._calls = []
 
 
-class Redis(object):
+class Redis:
 
     def __init__(self):
         self.dictionary = {}
@@ -69,7 +69,7 @@ class Redis(object):
         self.dictionary = data
 
 
-class RedisMock(object):
+class RedisMock:
 
     def __init__(self):
         self._calls = CallList()

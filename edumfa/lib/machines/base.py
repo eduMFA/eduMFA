@@ -30,7 +30,7 @@ This file is tested in tests/test_lib_machines.py
 import netaddr
 
 
-class Machine(object):
+class Machine:
 
     """
     The Machine object is returned by the resolver for a given machine_id.
@@ -100,7 +100,7 @@ class MachineResolverError(Exception):
     pass
 
 
-class BaseMachineResolver(object):
+class BaseMachineResolver:
 
     type = "base"
 

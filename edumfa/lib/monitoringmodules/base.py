@@ -33,7 +33,7 @@ log = logging.getLogger(__name__)
 from edumfa.lib.log import log_with
 
 
-class Monitoring(object):
+class Monitoring:
 
     def __init__(self, config=None):
         pass

@@ -84,7 +84,7 @@ class CallList(Sequence, Sized):
     def reset(self):
         self._calls = []
 
-class SmtpMock(object):
+class SmtpMock:
 
     def __init__(self):
         self._calls = CallList()

@@ -62,7 +62,7 @@ this = sys.modules[__name__]
 this.config = {}
 
 
-class SharedConfigClass(object):
+class SharedConfigClass:
     """
     A shared config class object is shared between threads and is supposed
     to store the current configuration with resolvers, realms, policies
@@ -198,7 +198,7 @@ class SharedConfigClass(object):
         return self._clone()
 
 
-class LocalConfigClass(object):
+class LocalConfigClass:
     """
     The Config_Object will contain all database configuration of system
     config, resolvers, realms, policies and event handler definitions.
@@ -270,7 +270,7 @@ class LocalConfigClass(object):
         return r_config
 
 
-class SYSCONF(object):
+class SYSCONF:
     __doc__ = """This is a list of system config attributes"""
     OVERRIDECLIENT = "OverrideAuthorizationClient"
     PREPENDPIN = "PrependPin"

@@ -1205,7 +1205,7 @@ class PolicyTestCase(MyTestCase):
                                ("userinfo", "groups", "contains", "b", True)])
         P = PolicyClass()
 
-        class MockUser(object):
+        class MockUser:
             login = 'login'
             realm = 'realm'
             resolver = 'resolver'
@@ -1268,7 +1268,7 @@ class PolicyTestCase(MyTestCase):
     def test_30_filter_by_conditions_errors(self):
         P = PolicyClass()
 
-        class MockUser(object):
+        class MockUser:
             login = 'login'
             realm = 'realm'
             resolver = 'resolver'
@@ -1383,7 +1383,7 @@ class PolicyTestCase(MyTestCase):
 
         P = PolicyClass()
 
-        class MockUser(object):
+        class MockUser:
             login = 'login'
             realm = 'realm'
             resolver = 'resolver'
@@ -1426,7 +1426,7 @@ class PolicyTestCase(MyTestCase):
 
         P = PolicyClass()
 
-        class MockUser(object):
+        class MockUser:
             login = 'login'
             realm = 'realm'
             resolver = 'resolver'
@@ -1478,7 +1478,7 @@ class PolicyTestCase(MyTestCase):
 
     def test_33_get_allowed_attributes(self):
 
-        class MockUser(object):
+        class MockUser:
             login = 'login'
             realm = 'realm'
             resolver = 'resolver'

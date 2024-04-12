@@ -60,7 +60,7 @@ from dateutil.tz import tzlocal
 log = logging.getLogger(__name__)
 
 
-class ACTION_TYPE(object):
+class ACTION_TYPE:
     """
     Allowed actions
     """
@@ -83,13 +83,13 @@ class ACTION_TYPE(object):
     REMOVE_TOKENGROUP = "remove tokengroup"
     ATTACH_APPLICATION = "attach application"
 
-class TOKEN_APPLICATIONS(object):
+class TOKEN_APPLICATIONS:
     SSH = "ssh"
     OFFLINE = "offline"
     LUKS = "luks"
 
 
-class VALIDITY(object):
+class VALIDITY:
     """
     Allowed validity options
     """

@@ -65,7 +65,7 @@ class ACTION(BASE_ACTION):
     CERTIFICATE_REQUEST_SUBJECT_COMPONENT = "certificate_request_subject_component"
 
 
-class REQUIRE_ACTIONS(object):
+class REQUIRE_ACTIONS:
     IGNORE = "ignore"
     VERIFY = "verify"
     REQUIRE_AND_VERIFY = "require_and_verify"

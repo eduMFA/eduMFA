@@ -1606,7 +1606,7 @@ class TokenTestCase(MyTestCase):
 
     def test_59_weigh_token_types(self):
 
-        class dummy_token(object):
+        class dummy_token:
             def __init__(self, type):
                 self.type = type
         self.assertEqual(1000, weigh_token_type(dummy_token("push")))
