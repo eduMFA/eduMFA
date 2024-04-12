@@ -44,7 +44,7 @@ cryptography==42.0.5
     #   pyopenssl
 defusedxml==0.7.1
     # via edumfa (setup.py)
-flask==3.0.2
+flask==3.0.3
     # via
     #   edumfa (setup.py)
     #   flask-babel
