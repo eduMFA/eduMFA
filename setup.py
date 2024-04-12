@@ -4,7 +4,7 @@ import os
 import stat
 import sys
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"
 
 # Taken from kennethreitz/requests/setup.py
 package_directory = os.path.realpath(os.path.dirname(__file__))
@@ -55,7 +55,6 @@ install_requires = [
     "lxml>=5.0.0",
     "netaddr>=0.7.12",
     "passlib[bcrypt]>=1.7.0",
-    "psycopg2-binary>=2.9.9",
     "pyOpenSSL>=24",
     "pydash>=4.7.4",
     "pyrad>=2.0",
@@ -133,6 +132,7 @@ setup(
             "responses>=0.9.0",
             "testfixtures>=6.14.2"
         ],
+        'postgres': ['psycopg2>=2.9.9'],
         'hsm': ['PyKCS11>=1.5.10'],
         'kerberos': ['gssapi>=1.7.0']
     },

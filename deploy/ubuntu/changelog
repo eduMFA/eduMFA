@@ -1,7 +1,15 @@
+edumfa (2.0.1{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * chore: switch to psycopg2 instead of psycopg2-binary
+  * fix: correct sequence creation for galera
+  * ci: build ubuntu packages always (only upload on release)
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Fri, 12 Apr 2024 12:01:00 +0200
+
 edumfa (2.0.0{{CODENAME}}) {{CODENAME}}; urgency=medium
  
- * chore: Several (major) dependency upgrades
- * chore: Rework CLI tools and drop `Flask-Script` 
+  * chore: Several (major) dependency upgrades
+  * chore: Rework CLI tools and drop `Flask-Script` 
 
  -- eduMFA <edumfa-dev@listserv.dfn.de>  Fri, 12 Apr 2024 12:00:00 +0200
 
