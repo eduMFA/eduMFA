@@ -96,8 +96,6 @@ netaddr==0.8.0
     #   pyrad
 passlib==1.7.4
     # via edumfa (setup.py)
-psycopg2-binary==2.9.9
-    # via edumfa (setup.py)
 pyasn1==0.4.8
     # via
     #   ldap3
