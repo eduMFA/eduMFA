@@ -10,7 +10,7 @@ argon2-cffi==21.3.0
     # via edumfa (setup.py)
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
-async-timeout==4.0.2
+async-timeout==4.0.3
     # via redis
 babel==2.14.0
     # via flask-babel
