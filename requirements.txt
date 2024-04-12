@@ -53,7 +53,7 @@ flask==3.0.2
     #   flask-versioned
 flask-babel==4.0.0
     # via edumfa (setup.py)
-flask-migrate==4.0.5
+flask-migrate==4.0.7
     # via edumfa (setup.py)
 flask-sqlalchemy==3.0.5
     # via
