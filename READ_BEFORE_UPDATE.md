@@ -33,6 +33,12 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.0.1
+
+  * chore: switch to psycopg2 instead of psycopg2-binary
+  * fix: correct sequence creation for galera
+  * ci: build ubuntu packages always (only upload on release)
+
 ## eduMFA 2.0.0
 
 > [!CAUTION]
