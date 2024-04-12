@@ -140,7 +140,7 @@ six==1.16.0
     #   pyrad
     #   python-dateutil
     #   smpplib
-smpplib==2.2.2
+smpplib==2.2.3
     # via edumfa (setup.py)
 soupsieve==2.4
     # via beautifulsoup4
