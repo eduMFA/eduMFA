@@ -10,7 +10,7 @@ snowballstemmer==2.2.0
 Sphinx==4.5.0
 sphinxcontrib-applehelp==1.0.4
 sphinxcontrib-devhelp==1.0.2
-sphinxcontrib-htmlhelp==2.0.1
+sphinxcontrib-htmlhelp==2.0.5
 sphinxcontrib-httpdomain==1.8.1
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-plantuml==0.25
