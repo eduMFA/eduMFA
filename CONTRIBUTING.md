@@ -173,7 +173,7 @@ moved to the state *Done*.
 
 ##### ``main`` branch
 
-Our ``master`` branch represents the current development state and, as a
+Our ``main`` branch represents the current development state and, as a
 consequence, may be unstable. Features are usually added there.
 
 ##### Stable branches
@@ -182,12 +182,12 @@ For each minor version ``X.Y`` (e.g. 2.23, 3.0, ...), we create a *stable
 branch* called ``branch-X.Y``, e.g.
 [``branch-3.0``](https://github.com/eduMFA/eduMFA/tree/branch-3.0).
 Hotfixes for stable versions are usually added to the stable branches. Stable
-branches are then merged back into the master branch.
+branches are then merged back into the main branch.
 
 ##### Local Branches and Pull Requests
 
 We do not directly work on the ``main`` branch or the stable branches.
-Instead, we locally create new branches, diverging either from ``master`` or a
+Instead, we locally create new branches, diverging either from ``main`` or a
 stable branch. These branches are called ``123/some-shortname``, where ``123``
 refers to an issue number, and ``some-shortname`` is a short description of the
 changes. If we are done developing a bugfix, a feature, or a reasonable part of
