@@ -61,8 +61,7 @@ Setup
 =====
 
 For setting up the system to *run* it, please read install instructions 
-at `edumfa.readthedocs.io <http://edumfa.readthedocs.io/en/latest/installation/index
-.html>`_.
+at `edumfa.readthedocs.io <http://edumfa.readthedocs.io/en/latest/installation/index.html>`_.
 
 If you want to setup a development environment start like this::
 
@@ -98,8 +97,7 @@ submodules, by running::
 Running it
 ==========
 
-First You need to create a `config-file <https://edumfa.readthedocs
-.io/en/latest/installation/system/inifile.html>`_.
+First You need to create a `config-file <https://edumfa.readthedocs.io/en/latest/installation/system/inifile.html>`_.
 
 Then create the database tables and the encryption key::
 
@@ -124,7 +122,7 @@ Run it::
 
     ./edumfa-manage runserver
 
-Now you can connect to http://localhost:5000 with your browser and login
+Now you can connect to ``http://localhost:5000`` with your browser and login
 as administrator.
 
 Run tests
@@ -145,7 +143,7 @@ if you are not a developer.
 If you found a security vulnerability please report it to us using the reporting form provided by GitHub
 
 You can find detailed information about contributing here:
-https://github.com/eduMFA/eduMFA/blob/master/CONTRIBUTING.md
+https://github.com/eduMFA/eduMFA/blob/main/CONTRIBUTING.md
 
 Code structure
 ==============
