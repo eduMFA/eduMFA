@@ -30,7 +30,7 @@ cffi==1.15.1
     # via
     #   argon2-cffi-bindings
     #   cryptography
-charset-normalizer==3.1.0
+charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via flask
