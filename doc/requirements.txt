@@ -1,12 +1,12 @@
 -r ../requirements.txt
 furo==2024.1.29
-docutils==0.20.1
+docutils==0.21.1
 imagesize==1.4.1
-packaging==21.3
+packaging==24.0
 pyenchant==3.2.2
 Pygments==2.17.2
 snowballstemmer==2.2.0
-Sphinx==7.2.6 
+Sphinx==7.3.7
 sphinxcontrib-applehelp==1.0.8
 sphinxcontrib-devhelp==1.0.6
 sphinxcontrib-htmlhelp==2.0.5
