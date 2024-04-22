@@ -3,7 +3,6 @@ furo==2024.1.29
 docutils==0.20.1
 imagesize==1.4.1
 packaging==21.3
-Pallets-Sphinx-Themes==2.1.1
 pyenchant==3.2.2
 Pygments==2.15.0
 snowballstemmer==2.2.0
