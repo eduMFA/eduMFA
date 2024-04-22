@@ -4,7 +4,7 @@ docutils==0.20.1
 imagesize==1.4.1
 packaging==21.3
 pyenchant==3.2.2
-Pygments==2.15.0
+Pygments==2.17.2
 snowballstemmer==2.2.0
 Sphinx==7.2.6 
 sphinxcontrib-applehelp==1.0.8
