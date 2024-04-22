@@ -1,5 +1,5 @@
 -r ../requirements.txt
-alabaster==0.7.13
+furo==2024.1.29
 docutils==0.20.1
 imagesize==1.4.1
 packaging==21.3
