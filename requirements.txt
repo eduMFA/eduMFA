@@ -83,7 +83,7 @@ lxml==5.1.0
     # via
     #   beautifulsoup4
     #   edumfa (setup.py)
-mako==1.2.4
+mako==1.3.3
     # via alembic
 markupsafe==2.1.5
     # via
