@@ -147,13 +147,13 @@ def list_tasks():
                                         **ptask))
 
 
-@cli.command()
+@cli.command("run_scheduled")
 @click.option("-d", "--dryrun",
               is_flag=True,
               help="Do not run any tasks, only show what would be done")
 @click.option("-n", "--node", "node_string",
               help="Override the node name (read from eduMFA config by default)")
-@click.option("-c", "--cron",
+@click.option("-c", "--cron", "cron_mode",
               is_flag=True,
               help="Run in 'cron mode', i.e. do not write to stdout, but write errors to stderr")
 def run_scheduled(node_string=None, dryrun=False, cron_mode=False):
