@@ -22,7 +22,7 @@ import re
 import sys
 from datetime import datetime
 from shlex import quote as shlex_quote
-from subprocess import Popen, PIPE, call
+from subprocess import Popen, PIPE, call, run
 from urllib.parse import urlparse
 
 import click
@@ -33,6 +33,8 @@ from flask.cli import AppGroup
 backup_cli = AppGroup("backup", help="Perform backup operations")
 
 MYSQL_DIALECTS = ["mysql", "pymysql", "mysql+pymysql", "mariadb+pymysql"]
+PSQL_DIALECTS = ["postgresql+psycopg", "postgresql+psycopg2", "postgresql+pg8000",
+                 "postgresql+asyncpg", "postgresql+psycopg2cffi"]
 
 
 def _write_mysql_defaults(filename, username, password):
@@ -122,6 +124,13 @@ def restore(backup_file: str):
         call("mysql --defaults-file=%s -h %s %s < %s" % (
             shlex_quote(defaults_file), shlex_quote(hostname), shlex_quote(database), shlex_quote(sqlfile)), shell=True)
         os.unlink(sqlfile)
+    elif sqltype in PSQL_DIALECTS:
+        parsed_sqluri = sqlalchemy.engine.url.make_url(sqluri)
+        env = os.environ.copy()
+        env["PGPASSWORD"] = parsed_sqluri.password
+        cmd = ['psql', '-U', parsed_sqluri.username, '-d', parsed_sqluri.database,
+               '-h', parsed_sqluri.host, '-f', sqlfile]
+        run(cmd, env=env)
     else:
         click.echo("unsupported SQL syntax: %s" % sqltype)
         sys.exit(2)
@@ -180,6 +189,12 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
             cmd.extend(['-P', str(parsed_sqluri.port)])
         cmd.extend(['-B', shlex_quote(database), '-r', shlex_quote(sqlfile)])
         call(cmd, shell=False)
+    elif sqltype in PSQL_DIALECTS:
+        env = os.environ.copy()
+        env["PGPASSWORD"] = parsed_sqluri.password
+        cmd = ['pg_dump', '-U', parsed_sqluri.username, '-d', parsed_sqluri.database,
+               '-h', parsed_sqluri.host, '-f', sqlfile]
+        run(cmd, env=env)
     else:
         click.echo(f"unsupported SQL syntax: {sqltype}")
         sys.exit(2)
