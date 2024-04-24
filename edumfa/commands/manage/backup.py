@@ -23,7 +23,6 @@ import sys
 from datetime import datetime
 from shlex import quote as shlex_quote
 from subprocess import Popen, PIPE, call, run
-from urllib.parse import urlparse
 
 import click
 import sqlalchemy
