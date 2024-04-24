@@ -110,7 +110,7 @@ def restore(backup_file: str):
         call(["cp", sqlfile, productive_file])
         os.unlink(sqlfile)
     elif sqltype in MYSQL_DIALECTS:
-        parsed_sqluri = sqlalchemy.make_url(sqluri)
+        parsed_sqluri = sqlalchemy.engine.url.make_url(sqluri)
         username = parsed_sqluri.username
         password = parsed_sqluri.password
         hostname = parsed_sqluri.host
@@ -160,7 +160,7 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
     backup_file = "%s/%s-%s.tgz" % (target_dir, BASE_NAME, DATE)
 
     sqluri = current_app.config.get("SQLALCHEMY_DATABASE_URI")
-    parsed_sqluri = sqlalchemy.make_url(sqluri)
+    parsed_sqluri = sqlalchemy.engine.url.make_url(sqluri)
     sqltype = parsed_sqluri.drivername
 
     if sqltype == "sqlite":
