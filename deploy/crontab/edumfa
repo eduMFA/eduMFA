@@ -2,4 +2,4 @@
 */5 * * * *	edumfa	/opt/edumfa/bin/edumfa-cron run_scheduled -c
 
 # Audit rotation example: once a week at 00:00 on Sunday
-#0 0 * * 0	edumfa	/opt/edumfa/bin/edumfa-manage audit rotate_audit --age 360
+#0 0 * * 0	edumfa	/opt/edumfa/bin/edumfa-manage rotate_audit --age 360
