@@ -7,6 +7,7 @@ This test file tests the modules:
  lib.smsprovider.smtpsmsprovider
  lib.smsprovider.smppsmsprovider
  lib.smsprovider.scriptsmsprovider
+ lib.smsprovider.httpmessagetouidprovider
 """
 
 from .base import MyTestCase
@@ -16,6 +17,7 @@ from edumfa.lib.smsprovider.SipgateSMSProvider import URL
 from edumfa.lib.smsprovider.SmtpSMSProvider import SmtpSMSProvider
 from edumfa.lib.smsprovider.SmppSMSProvider import SmppSMSProvider
 from edumfa.lib.smsprovider.ScriptSMSProvider import ScriptSMSProvider, SCRIPT_WAIT
+from edumfa.lib.smsprovider.HttpMessageToUidProvider import HttpMessageToUidProvider
 from edumfa.lib.smsprovider.SMSProvider import (SMSError,
                                                      get_sms_provider_class,
                                                      set_smsgateway,
@@ -63,6 +65,10 @@ class SMSTestCase(MyTestCase):
             "edumfa.lib.smsprovider.SmppSMSProvider",
             "SmppSMSProvider")
 
+        _provider =get_sms_provider_class(
+            "edumfa.lib.smsprovider.HttpMessageToUidProvider",
+            "HttpMessageToUidProvider")
+
         # A non-existing module will raise an error
         self.assertRaises(Exception,
                           get_sms_provider_class,
@@ -98,15 +104,19 @@ class SMSTestCase(MyTestCase):
         set_smsgateway(identifier, provider_module,
                        options={"HTTP_METHOD": "POST",
                                 "URL": "example.com",
-                                "IDENTICAL_KEY": "new option"},
+                                "IDENTICAL_KEY": "new option",
+                                "HTTP_PROXY": "myhttpproxy.example",
+                                "HTTPS_PROXY": "myhttpsproxy.example"},
                        headers={"Authorization": "ValueChanged",
                                 "IDENTICAL_KEY": "new header",
                                 "URL": "URL_in_headers"})
         gw = get_smsgateway(id=id)
-        self.assertEqual(len(gw[0].option_dict), 3)
+        self.assertEqual(len(gw[0].option_dict), 5)
         self.assertEqual(gw[0].option_dict.get("HTTP_METHOD"), "POST")
         self.assertEqual(gw[0].option_dict.get("URL"), "example.com")
         self.assertEqual(gw[0].option_dict.get("IDENTICAL_KEY"), "new option")
+        self.assertEqual(gw[0].option_dict.get("HTTP_PROXY"), "myhttpproxy.example")
+        self.assertEqual(gw[0].option_dict.get("HTTPS_PROXY"), "myhttpsproxy.example")
         self.assertEqual(gw[0].header_dict.get("Authorization"), "ValueChanged")
         self.assertEqual(gw[0].header_dict.get("BANANA"), None)
         self.assertEqual(gw[0].header_dict.get("IDENTICAL_KEY"), "new header")
@@ -115,7 +125,7 @@ class SMSTestCase(MyTestCase):
         # delete a single option
         r = delete_smsgateway_option(id, "URL")
         gw = get_smsgateway(id=id)
-        self.assertEqual(len(gw[0].option_dict), 2)
+        self.assertEqual(len(gw[0].option_dict), 4)
         self.assertEqual(gw[0].option_dict.get("HTTP_METHOD"), "POST")
         self.assertEqual(gw[0].option_dict.get("URL"), None)
         self.assertEqual(gw[0].option_dict.get("IDENTICAL_KEY"), "new option")
@@ -224,6 +234,9 @@ class SmtpSMSTestCase(MyTestCase):
 
     @smtpmock.activate
     def test_02_simple_config_success(self):
+        params = self.simple_provider.parameters()
+        self.assertFalse(params.get("options_allowed"))
+        self.assertIn("MAILTO", params.get("parameters"))
         smtpmock.setdata(response={"recp@example.com": (200, "OK")})
         r = self.simple_provider.submit_message("123456", "Hello")
         self.assertTrue(r)
@@ -312,6 +325,11 @@ class SipgateSMSTestCase(MyTestCase):
     def setUp(self):
         self.provider = SipgateSMSProvider()
         self.provider.load_config(self.config)
+
+    def test_00_config(self):
+        params = self.provider.parameters()
+        self.assertFalse(params.get("options_allowed"))
+        self.assertIn("REGEXP", params.get("parameters"))
 
     @responses.activate
     def test_01_success(self):
@@ -435,7 +453,8 @@ class HttpSMSTestCase(MyTestCase):
                    "SMS_TEXT_KEY": "text",
                    "SMS_PHONENUMBER_KEY": "destination",
                    "HTTP_Method": "POST",
-                   "PROXY": "http://username:password@your-proxy:8080",
+                   "HTTP_PROXY": "http://username:password@your-proxy:8080",
+                   "HTTPS_PROXY": "https://username:password@your-proxy:8080",
                    "RETURN_SUCCESS": "ID"
     }
 
@@ -447,7 +466,8 @@ class HttpSMSTestCase(MyTestCase):
                      "SMS_TEXT_KEY": "text",
                      "SMS_PHONENUMBER_KEY": "destination",
                      "HTTP_Method": "POST",
-                     "PROXY": "http://username:password@your-proxy:8080",
+                     "HTTP_PROXY": "http://username:password@your-proxy:8080",
+                     "HTTPS_PROXY": "https://username:password@your-proxy:8080",
                      "RETURN_SUCCESS": "ID",
                      "REGEXP": "/[+-/. ]//"
                      }
@@ -767,3 +787,201 @@ class SmppSMSTestCase(MyTestCase):
             log.assert_any_call("submitting message {0!r} to {1!s}".format("Hello", "4912345678"))
 
         delete_smsgateway(identifier_regexp)
+
+class HttpMessageToUidTestCase(MyTestCase):
+
+    url = "http://somegateway.com/send_api.cgi"
+    config = {"URL": url,
+               "PARAMETER": {"from": "0170111111",
+                             "password": "yoursecret",
+                             "sender": "name",
+                             "account": "company_ltd"},
+               "SMS_TEXT_KEY": "text",
+               "SMS_PHONENUMBER_KEY": "destination",
+               "HTTP_Method": "POST",
+               "HTTP_PROXY": "http://username:password@your-proxy:8080",
+               "HTTPS_PROXY": "https://username:password@your-proxy:8080",
+               "RETURN_SUCCESS": "ID",
+               "UID_TOKENINFO_ATTRIBUTE": "recipient_uid",
+               "POST_CHECK_URL": url
+               }
+
+    get_url = "http://api.clickatell.com/http/sendmsg"
+    config_get = {"URL": get_url,
+              "PARAMETER": {"user": "username",
+                            "password": "askme",
+                            "api_id": "12980436"},
+              "SMS_TEXT_KEY": "text",
+              "SMS_PHONENUMBER_KEY": "to",
+              "HTTP_Method": "GET",
+              "PROXY": "http://user:pass@1.2.3.4:8080",
+              "RETURN_FAIL": "Failed"
+              }
+
+    missing_url = "http://some.missing.url"
+    config_missing = {"PARAMETER": {"user": "username",
+                                    "password": "askme",
+                                    "api_id": "12980436"}
+                      }
+
+    basic_url = "https://fitz:sosecret@secret.gateway/some/path"
+    config_basicauth = {"URL": basic_url,
+                    "PARAMETER": {"user": "username",
+                                  "password": "askme",
+                                  "api_id": "12980436"}
+                    }
+
+    success_body = "ID 12345"
+    fail_body = "Failed"
+
+    def setUp(self):
+        self.provider = HttpMessageToUidProvider()
+        self.provider.load_config(self.config)
+
+        self.get_provider = HttpMessageToUidProvider()
+        self.get_provider.load_config(self.config_get)
+
+        self.missing_provider = HttpMessageToUidProvider()
+        self.missing_provider.load_config(self.config_missing)
+
+        self.auth_provider = HttpMessageToUidProvider()
+        self.auth_provider.load_config(self.config_basicauth)
+
+    def test_00_config(self):
+        self.assertTrue(self.provider.send_to_uid())
+        params = self.provider.parameters()
+        self.assertTrue(params.get("options_allowed"))
+        self.assertIn("UID_TOKENINFO_ATTRIBUTE", params.get("parameters"))
+
+    @responses.activate
+    def test_01_success(self):
+        responses.add(responses.POST,
+                      self.url,
+                      body=self.success_body)
+        # Here we need to send the SMS
+        r = self.provider.submit_message("testuser", "Hello")
+        self.assertTrue(r)
+
+    @responses.activate
+    def test_02_fail(self):
+        responses.add(responses.POST,
+                      self.url,
+                      body=self.fail_body)
+        # Here we need to send the SMS
+        self.assertRaises(SMSError, self.provider.submit_message,
+                          "testuser", "Hello")
+
+    @responses.activate
+    def test_03_code_fail(self):
+        responses.add(responses.POST,
+                      self.url,
+                      status=401)
+        # Here we need to send the SMS
+        self.assertRaises(SMSError, self.provider.submit_message,
+                          "testuser", "Hello")
+
+    @responses.activate
+    def test_04_postcheck_success(self):
+        responses.add(responses.POST,
+                      self.url,
+                      body=self.success_body)
+        # Here we need to send the SMS
+        r = self.provider.submit_post_check("testuser", "Hello")
+        self.assertTrue(r)
+
+    @responses.activate
+    def test_05_send_sms_get_success(self):
+        responses.add(responses.GET,
+                      self.get_url,
+                      body=self.success_body)
+        # Here we need to send the SMS
+        r = self.get_provider.submit_message("testuser", "Hello")
+        self.assertTrue(r)
+
+    @responses.activate
+    def test_06_send_sms_get_fail(self):
+        responses.add(responses.GET,
+                      self.get_url,
+                      body=self.fail_body)
+        # Here we need to send the SMS
+        self.assertRaises(SMSError, self.get_provider.submit_message,
+                          "testuser", "Hello")
+
+    @responses.activate
+    def test_07_missing_fail(self):
+        responses.add(responses.GET,
+                      self.missing_url)
+        self.assertRaises(SMSError, self.missing_provider.submit_message,
+                          "testuser", "Hello")
+
+    @responses.activate
+    def test_08_auth_success(self):
+        responses.add(responses.GET,
+                      self.basic_url)
+        r = self.auth_provider.submit_message("testuser", "Hello")
+        self.assertTrue(r)
+
+    @responses.activate
+    def test_08_auth_fail(self):
+        responses.add(responses.GET,
+                      self.basic_url,
+                      status=401)
+        self.assertRaises(SMSError, self.missing_provider.submit_message,
+                          "testuser", "Hello")
+
+    @responses.activate
+    def test_10_new_smsgateway(self):
+        identifier = "myGW"
+        provider_module = "edumfa.lib.smsprovider.HttpMessageToUidProvider" \
+                          ".HttpMessageToUidProvider"
+        id = set_smsgateway(identifier, provider_module, description="test",
+                            options={"HTTP_METHOD": "POST",
+                                     "URL": "http://example.com",
+                                     "SEND_DATA_AS_JSON": "no",
+                                     "RETURN_SUCCESS": "ID",
+                                     "text": "{otp}"},
+                            headers={"Authorization": "QWERTZ"})
+        self.assertTrue(id > 0)
+
+        sms = create_sms_instance(identifier)
+
+        responses.add(responses.POST,
+                      "http://example.com",
+                      body=self.success_body)
+        # Here we need to send the SMS
+        r = sms.submit_message("testuser", "Hello")
+        self.assertTrue(r)
+
+        delete_smsgateway(identifier)
+
+
+    @responses.activate
+    def test_11_send_sms_post_success_as_json(self):
+        identifier = "myGWJSON"
+        provider_module = "edumfa.lib.smsprovider.HttpMessageToUidProvider" \
+                          ".HttpMessageToUidProvider"
+        id = set_smsgateway(identifier, provider_module, description="test",
+                            options={"HTTP_METHOD": "POST",
+                                     "URL": "http://some.other.service",
+                                     "RETURN_SUCCESS": "ID",
+                                     "SEND_DATA_AS_JSON": "yes",
+                                     "text": "{otp}"},
+                            headers={"Authorization": "QWERTZ"})
+        self.assertTrue(id > 0)
+        provider = create_sms_instance(identifier=identifier)
+
+        # also check that the parameters are sent as json
+        responses.add(responses.POST,
+                      "http://some.other.service",
+                      body=self.success_body,
+                      match=[
+                          json_params_matcher({"text": 'Hello: 7'})
+                      ],)
+        # Here we need to send the SMS
+        with mock.patch("logging.Logger.debug") as mock_log:
+            r = provider.submit_message("testuser", 'Hello: 7')
+            self.assertTrue(r)
+            call = [x[0][0] for x in mock_log.call_args_list if x[0][0].startswith('passing')][0]
+            self.assertRegex(call, r'passing JSON data: {.*Hello: 7.*}', call)
+            r = provider.submit_post_check("testuser", 'Hello: 7')
+        delete_smsgateway(identifier)
