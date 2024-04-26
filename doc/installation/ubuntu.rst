@@ -40,6 +40,7 @@ The fingerprint of the key is::
    Key fingerprint = 0578 E752 4B98 4E58 9847  139B ED01 69DB F5CD C377
 
 You now need to add the signing key to your system. The following instructions
+
 .. tab:: Ubuntu 22.04LTS
 
     .. code-block:: bash
@@ -131,21 +132,21 @@ Clone the repository and navigate to the project directory::
    git clone https://github.com/eduMFA/eduMFA.git
    cd eduMFA
 
-Choose the package you want to build based on your requirements. Use one of the following commands:
+Choose the packages you want to build based on your requirements. Use one of the following commands:
 
-.. tab:: eduMFA package
+.. tab:: edumfa
 
     .. code-block:: bash
 
         cp -r deploy/ubuntu debian
 
-.. tab:: eduMFA-apache2 and eduMFA-nginx package
+.. tab:: edumfa-apache2 and edumfa-nginx
 
     .. code-block:: bash
 
         cp -r deploy/ubuntu-server debian
 
-.. tab:: eduMFA-radius package
+.. tab:: edumfa-radius
 
     .. code-block:: bash
 
