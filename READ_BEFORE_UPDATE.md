@@ -33,11 +33,54 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.0.2
+
+* chore: Configure Renovate by @renovate in https://github.com/eduMFA/eduMFA/pull/7
+* chore: do not inherit from `object` by @aburch in https://github.com/eduMFA/eduMFA/pull/61
+* chore: fix doc dependencies by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/80
+* docs: update documentation (no corresponding issue) by @Thaoden in https://github.com/eduMFA/eduMFA/pull/87
+* fix: migration for apache and nginx packages by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/88
+* fix: print logo to stderr by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/89
+* fix: correct audit log rotation example in crontab by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/103
+* fix: correct cronjob by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/102
+* test: add missing sms provider tests by @j-hoff in https://github.com/eduMFA/eduMFA/pull/109
+* feat: add support for PostgreSQL in backup script by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/10
+* docs: change docs theme to furo + upgrade docs dependencies by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/908
+* chore(deps): update dependency pytz to v2024 by @renovate in https://github.com/eduMFA/eduMFA/pull/107
+* chore(deps): update dependency pydash to v8 by @renovate in https://github.com/eduMFA/eduMFA/pull/106
+* chore(deps): update dependency netaddr to v0.10.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/111
+* chore(deps): update dependency babel to v2.14.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/67
+* chore(deps): update dependency alembic to v1.13.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/66
+* chore(deps): update dependency werkzeug to v3.0.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/65
+* chore(deps): update dependency sqlalchemy to v1.4.52 by @renovate in https://github.com/eduMFA/eduMFA/pull/64
+* chore(deps): update dependency flask-migrate to v4.0.7 by @renovate in https://github.com/eduMFA/eduMFA/pull/63
+* chore(deps): update softprops/action-gh-release action to v2 by @renovate in https://github.com/eduMFA/eduMFA/pull/60
+* chore(deps): update dependency idna to v3.7 [security] by @renovate in https://github.com/eduMFA/eduMFA/pull/55
+* chore(deps): update actions/checkout action to v4 by @renovate in https://github.com/eduMFA/eduMFA/pull/58
+* chore(deps): update dependency flask to v3.0.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/62
+* chore(deps): update dependency async-timeout to v4.0.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/68
+* chore(deps): update dependency smpplib to v2.2.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/73
+* chore(deps): update dependency cachetools to v5.3.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/69
+* chore(deps): update dependency sphinxcontrib-qthelp to v1.0.7 by @renovate in https://github.com/eduMFA/eduMFA/pull/77
+* chore(deps): update dependency sphinxcontrib-htmlhelp to v2.0.5 by @renovate in https://github.com/eduMFA/eduMFA/pull/76
+* chore(deps): update dependency sphinxcontrib-applehelp to v1.0.8 by @renovate in https://github.com/eduMFA/eduMFA/pull/74
+* chore(deps): update dependency sphinxcontrib-devhelp to v1.0.6 by @renovate in https://github.com/eduMFA/eduMFA/pull/75
+* chore(deps): update dependency croniter to v1.4.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/86
+* chore(deps): update dependency charset-normalizer to v3.3.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/85
+* chore(deps): update dependency cffi to v1.16.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/84
+* chore(deps): update dependency cbor2 to v5.6.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/82
+* chore(deps): update dependency bcrypt to v4.1.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/79
+* chore(deps): update dependency responses to v0.25.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/101
+* chore(deps): update dependency redis to v4.6.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/100
+* chore(deps): update dependency pykcs11 to v1.5.15 by @renovate in https://github.com/eduMFA/eduMFA/pull/71
+* chore(deps): update dependency lxml to v5.2.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/94
+* chore(deps): update dependency pyjwt to v2.8.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/96
+
 ## eduMFA 2.0.1
 
-  * chore: switch to psycopg2 instead of psycopg2-binary
-  * fix: correct sequence creation for galera
-  * ci: build ubuntu packages always (only upload on release)
+* chore: switch to psycopg2 instead of psycopg2-binary
+* fix: correct sequence creation for galera
+* ci: build ubuntu packages always (only upload on release)
 
 ## eduMFA 2.0.0
 
