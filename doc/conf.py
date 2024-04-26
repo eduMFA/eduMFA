@@ -58,7 +58,8 @@ sys.path.insert(0, os.path.abspath('../edumfa'))
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.imgmath', 'sphinx.ext.viewcode',
               'sphinxcontrib.autohttp.flask', 'sphinxcontrib.plantuml',
-              'sphinxcontrib.spelling', 'sphinx.ext.todo', 'sphinx_copybutton']
+              'sphinxcontrib.spelling', 'sphinx.ext.todo', 'sphinx_copybutton'
+              'sphinx_inline_tabs']
 http_index_ignore_prefixes = ['/token']
 
 # Add any paths that contain templates here, relative to this directory.

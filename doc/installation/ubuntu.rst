@@ -39,33 +39,48 @@ The fingerprint of the key is::
    pub rsa4096 2024-02-29 FUDIS - eduMFA APT Signing Key <fudis@fu-berlin.de>
    Key fingerprint = 0578 E752 4B98 4E58 9847  139B ED01 69DB F5CD C377
 
-On 20.04LTS you can now add the signing key to your system::
+You now need to add the signing key to your system. The following instructions
+.. tab:: Ubuntu 22.04LTS
 
-   apt-key add eduMFA-Release.asc
+    .. code-block:: bash
 
-On Ubuntu 22.04LTS you can add the signing key by::
+        mv eduMFA-Release.asc /etc/apt/trusted.gpg.d/eduMFA-Release.asc
 
-   mv eduMFA-Release.asc /etc/apt/trusted.gpg.d/
+.. tab:: Ubuntu 20.04LTS
 
-Now you need to add the repository for your release (focal/20.04LTS or jammy/22.04LTS)
+    .. code-block:: bash
 
-You can do this by running the command::
+        apt-key add eduMFA-Release.asc
 
-   add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy
+Now you need to add the repository for your release (focal/20.04LTS or jammy/22.04LTS) You can do this by running the command:
 
-or::
+.. tab:: Ubuntu 22.04LTS
 
-   add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal
+    .. code-block:: bash
+
+        add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy
+
+.. tab:: Ubuntu 20.04LTS
+
+    .. code-block:: bash
+
+        add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal
 
 As an alternative you can add the repo in a dedicated file. Create a new
-file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the
-following contents::
+file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the following contents:
 
-   deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy jammy main
+.. tab:: Ubuntu 22.04LTS
 
-or::
+    .. code-block:: bash
 
-   deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal focal main
+        deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy jammy main
+
+.. tab:: Ubuntu 20.04LTS
+
+    .. code-block:: bash
+
+        deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal focal main
+
 
 Installation of eduMFA 1.x
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -116,21 +131,39 @@ Clone the repository and navigate to the project directory::
    git clone https://github.com/eduMFA/eduMFA.git
    cd eduMFA
 
-Choose the package you want to build based on your requirements. Use one of the following commands. This one for the core package::
+Choose the package you want to build based on your requirements. Use one of the following commands:
 
-    cp -r deploy/ubuntu debian
+.. tab:: eduMFA package
 
-or for apache2 and nginx package::
+    .. code-block:: bash
 
-    cp -r deploy/ubuntu-server debian
+        cp -r deploy/ubuntu debian
 
-or for radius package::
+.. tab:: eduMFA-apache2 and eduMFA-nginx package
 
-    cp -r deploy/ubuntu-radius debian
+    .. code-block:: bash
 
-Update the Linux distribution version in the changelog file. For example, for Ubuntu 22.04 LTS jammy::
+        cp -r deploy/ubuntu-server debian
 
-    sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
+.. tab:: eduMFA-radius package
+
+    .. code-block:: bash
+
+        cp -r deploy/ubuntu-radius debian
+
+Update the Linux distribution version in the changelog file:
+
+.. tab:: Ubuntu 22.04LTS
+
+    .. code-block:: bash
+
+        sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
+
+.. tab:: Ubuntu 20.04LTS
+
+    .. code-block:: bash
+
+        sed -i 's/{{CODENAME}}/focal/g' debian/changelog
 
 Install build dependencies and build the package::
 
