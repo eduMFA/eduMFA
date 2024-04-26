@@ -1,19 +1,20 @@
 -r ../requirements.txt
-alabaster==0.7.13
-docutils==0.20.1
+furo==2024.1.29
+docutils==0.21.1
 imagesize==1.4.1
-packaging==21.3
-Pallets-Sphinx-Themes==2.1.1
+packaging==24.0
 pyenchant==3.2.2
-Pygments==2.15.0
+Pygments==2.17.2
 snowballstemmer==2.2.0
-Sphinx==7.2.6 
+Sphinx==7.3.7
 sphinxcontrib-applehelp==1.0.8
 sphinxcontrib-devhelp==1.0.6
 sphinxcontrib-htmlhelp==2.0.5
 sphinxcontrib-httpdomain==1.8.1
 sphinxcontrib-jsmath==1.0.1
-sphinxcontrib-plantuml==0.25
+sphinxcontrib-plantuml==0.26
 sphinxcontrib-qthelp==1.0.7
 sphinxcontrib-serializinghtml==1.1.10 
 sphinxcontrib-spelling==8.0.0
+sphinx-copybutton==0.5.2
+sphinx-inline-tabs==2023.4.21

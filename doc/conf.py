@@ -58,8 +58,8 @@ sys.path.insert(0, os.path.abspath('../edumfa'))
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.imgmath', 'sphinx.ext.viewcode',
               'sphinxcontrib.autohttp.flask', 'sphinxcontrib.plantuml',
-              'sphinxcontrib.spelling', 'sphinx.ext.todo',
-              'pallets_sphinx_themes']
+              'sphinxcontrib.spelling', 'sphinx.ext.todo', 'sphinx_copybutton',
+              'sphinx_inline_tabs']
 http_index_ignore_prefixes = ['/token']
 
 # Add any paths that contain templates here, relative to this directory.
@@ -121,12 +121,15 @@ autoclass_content = 'both'
 #html_theme = 'sphinxdoc'
 #html_theme = 'sphinx_rtd_theme'
 #html_theme = 'agogo'
-html_theme = 'flask'
+html_theme = 'furo'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+    "light_logo": "images/edumfa-logo.png",
+    "dark_logo": "images/edumfa-logo-dark.png",
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = ['_themes/flask-sphinx-themes']
@@ -141,12 +144,12 @@ html_theme = 'flask'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "images/eduMFA-logo.png"
+# html_logo = "images/edumfa-logo.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "images/eduMFA-icon.png"
+html_favicon = "_static/images/edumfa-icon.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
