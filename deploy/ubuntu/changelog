@@ -1,3 +1,48 @@
+edumfa (2.0.2{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * chore: Configure Renovate
+  * chore: do not inherit from `object`
+  * chore: fix doc dependencies
+  * Update documentation (no corresponding issue)
+  * Fix migration for apache and nginx packages
+  * fix: print logo to stderr
+  * fix: correct audit log rotation example in crontab
+  * fix: correct cronjob
+  * test: add missing sms provider tests
+  * feat: add support for PostgreSQL in backup script
+  * Change docs theme to furo + upgrade docs dependencies
+  * chore(deps): update dependency babel to v2.14.0
+  * chore(deps): update dependency alembic to v1.13.1
+  * chore(deps): update dependency werkzeug to v3.0.2
+  * chore(deps): update dependency sqlalchemy to v1.4.52
+  * chore(deps): update dependency flask-migrate to v4.0.7
+  * chore(deps): update softprops/action-gh-release action to v2
+  * chore(deps): update dependency idna to v3.7 [security]
+  * chore(deps): update actions/checkout action to v4
+  * chore(deps): update dependency flask to v3.0.3
+  * chore(deps): update dependency async-timeout to v4.0.3
+  * chore(deps): update dependency smpplib to v2.2.3
+  * chore(deps): update dependency cachetools to v5.3.3
+  * chore(deps): update dependency sphinxcontrib-qthelp to v1.0.7
+  * chore(deps): update dependency sphinxcontrib-htmlhelp to v2.0.5
+  * chore(deps): update dependency sphinxcontrib-applehelp to v1.0.8
+  * chore(deps): update dependency sphinxcontrib-devhelp to v1.0.6
+  * chore(deps): update dependency croniter to v1.4.1
+  * chore(deps): update dependency charset-normalizer to v3.3.2
+  * chore(deps): update dependency cffi to v1.16.0
+  * chore(deps): update dependency cbor2 to v5.6.3
+  * chore(deps): update dependency bcrypt to v4.1.2
+  * chore(deps): update dependency responses to v0.25.0
+  * chore(deps): update dependency redis to v4.6.0
+  * chore(deps): update dependency pykcs11 to v1.5.15
+  * chore(deps): update dependency lxml to v5.2.1
+  * chore(deps): update dependency pyjwt to v2.8.0
+  * chore(deps): update dependency pytz to v2024
+  * chore(deps): update dependency pydash to v8
+  * chore(deps): update dependency netaddr to v0.10.1
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Fri, 26 Apr 2024 13:01:00 +0200
+
 edumfa (2.0.1{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   * chore: switch to psycopg2 instead of psycopg2-binary
