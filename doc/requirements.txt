@@ -16,3 +16,4 @@ sphinxcontrib-plantuml==0.26
 sphinxcontrib-qthelp==1.0.7
 sphinxcontrib-serializinghtml==1.1.10 
 sphinxcontrib-spelling==8.0.0
+sphinx-copybutton==0.5.2
