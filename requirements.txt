@@ -96,7 +96,7 @@ netaddr==0.10.1
     #   pyrad
 passlib==1.7.4
     # via edumfa (setup.py)
-pyasn1==0.4.8
+pyasn1==0.6.0
     # via
     #   ldap3
     #   pyasn1-modules
