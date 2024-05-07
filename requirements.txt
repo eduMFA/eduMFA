@@ -6,7 +6,7 @@
 #
 alembic==1.13.1
     # via flask-migrate
-argon2-cffi==21.3.0
+argon2-cffi==23.1.0
     # via edumfa (setup.py)
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
