@@ -131,7 +131,7 @@ requests==2.31.0
     # via edumfa (setup.py)
 rsa==4.9
     # via google-auth
-segno==1.5.2
+segno==1.6.1
     # via edumfa (setup.py)
 six==1.16.0
     # via
