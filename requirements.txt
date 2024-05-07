@@ -142,7 +142,7 @@ six==1.16.0
     #   smpplib
 smpplib==2.2.3
     # via edumfa (setup.py)
-soupsieve==2.4
+soupsieve==2.5
     # via beautifulsoup4
 sqlalchemy==1.4.52
     # via
