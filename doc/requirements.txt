@@ -1,6 +1,6 @@
 -r ../requirements.txt
 furo==2024.1.29
-docutils==0.21.1
+docutils==0.21.2
 imagesize==1.4.1
 packaging==24.0
 pyenchant==3.2.2
