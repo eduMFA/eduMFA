@@ -115,7 +115,7 @@ pyopenssl==24.0.0
     # via edumfa (setup.py)
 pyrad==2.4
     # via edumfa (setup.py)
-python-dateutil==2.8.2
+python-dateutil==2.9.0.post0
     # via
     #   croniter
     #   edumfa (setup.py)
