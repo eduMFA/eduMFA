@@ -631,7 +631,7 @@ class IdResolver (UserIdResolver):
         r = self.session.execute(insert(self.TABLE).values(**kwargs))
         self.session.commit()
         # Return the UID of the new object
-        return r.inserted_primary_key[self.map.get("userid")]
+        return r.inserted_primary_key._asdict()[self.map.get("userid")]
 
     def prepare_attributes_for_db(self, attributes):
         """
