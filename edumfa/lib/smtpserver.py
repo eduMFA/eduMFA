@@ -105,6 +105,8 @@ class SMTPServer:
         msg['To'] = ",".join(recipient)
         msg['Date'] = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
         msg['Reply-To'] = reply_to
+        msg['Precedence'] = "bulk"
+        msg['Auto-Submitted'] = "auto-generated"
 
         srv = config['server']
         # urllib looks for a '//' to identify the host in the string. If it is
