@@ -109,7 +109,7 @@ pydash==8.0.1
     # via edumfa (setup.py)
 pyjwt==2.8.0
     # via edumfa (setup.py)
-pymysql==1.1.0
+pymysql==1.1.1
     # via edumfa (setup.py)
 pyopenssl==24.0.0
     # via edumfa (setup.py)
@@ -127,7 +127,7 @@ pyyaml==6.0.1
     # via edumfa (setup.py)
 redis==4.6.0
     # via huey
-requests==2.31.0
+requests==2.32.2
     # via edumfa (setup.py)
 rsa==4.9
     # via google-auth
