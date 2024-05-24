@@ -109,7 +109,7 @@ def p_import(filename, cleanup, update, purge):
 @click.argument("name")
 @click.argument("scope")
 @click.argument("action")
-@click.option("-f", help="filename to import", required=False, type=click.File('r'))
+@click.option("-f", "filename", help="filename to import", required=False, type=click.File('r'))
 def create(name, scope, action, filename):
     """
     create a new policy. 'FILENAME' must contain a dictionary and its content
