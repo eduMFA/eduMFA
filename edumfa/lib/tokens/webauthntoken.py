@@ -632,7 +632,7 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.TIMEOUT: {
                         'type': 'int',
-                        'desc': _("The time in seconds the user has to confirm authorization on his WebAuthn token. " 
+                        'desc': _("The time in seconds the user has to confirm authorization on his WebAuthn token. "
                                   "Note: You will want to increase the ChallengeValidityTime along with this. "
                                   "Default: 60"),
                         'group': WEBAUTHNGROUP.WEBAUTHN
@@ -650,22 +650,20 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.USERNAMELESS_AUTHN: {
                         'type': 'bool',
-                        'desc': _("Enable username-less authentication, also known as Conditional UI, Conditional "
-                                  "Mediation, or Browser Autofill UI? "
-                                  "Note: This function only works if resident keys are enrolled as WebAuthn tokens and "
-                                  "if the browsers support this feature. "
-                                  "Also, the WebAuthn authentication policies 'challenge_text', 'allowed_transports', "
-                                  "and 'timeout' will be ignored. Policies for the RP_ID and UV can only be enforced "
-                                  "for a whole realm with the option below."),
+                        'desc': _("Whether usernameless authentication via the Passkeys Autofill UI, also known as "
+                                  "Conditional Mediation, should be enabled. "
+                                  "Note: This function is only available if passkeys (resident keys) are enrolled and "
+                                  "if the browser supports Conditional Mediation. "
+                                  "Other WebAuthn authentication policies will be ignored if this option is enabled. "),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.USERNAMELESS_REALM_POLICY: {
                         'type': 'bool',
-                        'desc': _("Enable the WebAuthn authentication policies for Relying Party ID and User "
-                                  "Verification Requirement realm-wide, i.e for all users in a realm? "
-                                  "Note: This requires username-less authentication to be enabled. The client has to "
-                                  "send its realm via a query parameter in the calls to /validate/triggerchallenge and "
-                                  "/validate/check, e.g. /validate/triggerchallenge?type=webauthn&realm=foo"),
+                        'desc': _("Whether to enforce the WebAuthn authentication policies for the relying party ID "
+                                  "and the user verification requirement realm-wide, i.e., for all users in a realm? "
+                                  "Note: This requires usernameless authentication to be enabled. Also, the option "
+                                  "has to be set in the fudiscr plugin so the realm is sent to the API endpoints via a "
+                                  "query parameter, e.g., /validate/triggerchallenge?type=webauthn&realm=userless"),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     }
                 },
@@ -775,7 +773,7 @@ class WebAuthnTokenClass(TokenClass):
                     },
                     WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY: {
                         'type': 'str',
-                        'desc': _("Whether a resident key shall be requested or not"),
+                        'desc': _("Whether to request a resident key. Note: Passkeys are always resident keys."),
                         'group': WEBAUTHNGROUP.WEBAUTHN,
                         'value': [
                             "discouraged",
@@ -1002,7 +1000,7 @@ class WebAuthnTokenClass(TokenClass):
                         self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Not enough info")
                 except Exception as e:
                     log.warning('Could not parse registrationClientExtensions: {0!s}'.format(e))
-                    
+
             # If no description has already been set, set the automatic description or the
             # description given in the 2nd request
             if not self.token.description:
