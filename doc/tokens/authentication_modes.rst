@@ -71,11 +71,8 @@ modes in more detail.
 ``authenticate`` mode
 ---------------------
 
-.. uml::
-  :width: 500
-
-  Service -> eduMFA: POST /validate/check
-  Service <-- eduMFA
+.. figure:: images/auth_mode_authenticate.png
+  :width: 250
 
 The *Service* is an application that is protected with a second factor by eduMFA.
 
@@ -96,27 +93,8 @@ The *Service* is an application that is protected with a second factor by eduMFA
 ``challenge`` mode
 ------------------
 
-.. uml::
-  :width: 500
-
-  alt with pin
-
-    Service -> eduMFA: POST /validate/check
-    Service <-- eduMFA: transaction_id
-
-  else without pin
-
-    Service -> eduMFA: POST /validate/triggerchallenge
-    Service <-- eduMFA: transaction_id
-
-  end
-
-  eduMFA -> "SMS Gateway": OTP
-
-  ...User enters OTP from SMS...
-
-  Service -> eduMFA: POST /validate/check
-  Service <-- eduMFA
+.. figure:: images/auth_mode_challenge.png
+  :width: 450
 
 * The plugin triggers a challenge, for example via the
   ``/validate/triggerchallenge`` endpoint:
@@ -155,42 +133,8 @@ The *Service* is an application that is protected with a second factor by eduMFA
 ``outofband`` mode
 ------------------
 
-.. uml::
-  :width: 500
-
-  alt with pin
-
-    Service -> eduMFA: POST /validate/check
-    Service <-- eduMFA: transaction_id
-
-  else without pin
-
-    Service -> eduMFA: POST /validate/triggerchallenge
-    Service <-- eduMFA: transaction_id
-
-  end
-
-  eduMFA -> Firebase: PUSH Notification
-  Firebase -> Phone: PUSH Notification
-
-  loop until confirmed
-
-    Service -> eduMFA: GET /validate/polltransaction
-    Service <-- eduMFA: false
-
-  end
-
-  ...User confirms sign in on phone...
-
-  Phone -> eduMFA: POST /ttype/push
-
-  Service -> eduMFA: GET /validate/polltransaction
-  Service <-- eduMFA: true
-
-  |||
-
-  Service -> eduMFA: POST /validate/check
-  Service <-- eduMFA
+.. figure:: images/auth_mode_outofband.png
+  :width: 550
 
 * The plugin triggers a challenge, for example via the
   ``/validate/triggerchallenge`` endpoint:
