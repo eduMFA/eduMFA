@@ -33,6 +33,50 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.0.3
+
+* fix: redirect filename arg for policy creation by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/158
+* chore(deps): update dependency werkzeug to v3.0.3 [security] by @renovate in https://github.com/eduMFA/eduMFA/pull/117
+* chore(deps): update dependency jinja2 to v3.1.4 [security] by @renovate in https://github.com/eduMFA/eduMFA/pull/116
+* chore(deps): update dependency pymysql to v1.1.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/97
+* chore(deps): update dependency pyasn1-modules to v0.4.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/113
+* chore(deps): update dependency certifi to v2023.11.17 by @renovate in https://github.com/eduMFA/eduMFA/pull/83
+* chore(deps): update dependency python-gnupg to v0.5.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/72
+* chore(deps): update dependency mako to v1.3.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/95
+* chore(deps): update dependency grpcio to v1.63.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/92
+* chore(deps): update dependency certifi to v2024 by @renovate in https://github.com/eduMFA/eduMFA/pull/122
+* chore(deps): update dependency importlib-metadata to v6.11.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/121
+* chore(deps): update dependency babel to v2.15.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/120
+* chore(deps): update dependency bcrypt to v4.1.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/118
+* chore(deps): update dependency cryptography to v42.0.7 by @renovate in https://github.com/eduMFA/eduMFA/pull/119
+* chore(deps): update dependency setuptools to v69.5.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/126
+* chore(deps): update dependency blinker to v1.8.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/125
+* chore(deps): update dependency pydash to v8.0.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/124
+* chore(deps): update dependency docutils to v0.21.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/127
+* chore(deps): update dependency furo to v2024.5.6 by @renovate in https://github.com/eduMFA/eduMFA/pull/128
+* chore(deps): update dependency itsdangerous to v2.2.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/133
+* chore(deps): update dependency huey to v2.5.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/132
+* chore(deps): update dependency croniter to v2 by @renovate in https://github.com/eduMFA/eduMFA/pull/131
+* chore(deps): update dependency argon2-cffi to v23 by @renovate in https://github.com/eduMFA/eduMFA/pull/130
+* chore(deps): update dependency pycparser to v2.22 by @renovate in https://github.com/eduMFA/eduMFA/pull/135
+* chore(deps): update dependency mock to v5.1.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/134
+* chore(deps): update dependency pygments to v2.18.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/136
+* chore(deps): update dependency segno to v1.6.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/139
+* chore(deps): update dependency soupsieve to v2.5 by @renovate in https://github.com/eduMFA/eduMFA/pull/140
+* chore(deps): update dependency testfixtures to v7.2.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/142
+* chore(deps): update dependency python-dateutil to v2.9.0.post0 by @renovate in https://github.com/eduMFA/eduMFA/pull/138
+* chore(deps): update dependency google-auth to v2.29.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/129
+* chore(deps): update dependency pytest to v7.4.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/137
+* chore(deps): update dependency zipp to v3.18.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/144
+* chore(deps): update dependency typing-extensions to v4.11.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/143
+* chore(deps): update dependency sphinxcontrib-plantuml to v0.29 by @renovate in https://github.com/eduMFA/eduMFA/pull/141
+* feat: add email headers to prevent auto-replies by @j-hoff in https://github.com/eduMFA/eduMFA/pull/152
+* chore(deps): update dependency pymysql to v1.1.1 [security] by @renovate in https://github.com/eduMFA/eduMFA/pull/155
+* chore(deps): bump requests from 2.31.0 to 2.32.2 in the pip group across 1 directory by @dependabot in https://github.com/eduMFA/eduMFA/pull/156
+* chore: upgrade dependencies by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/157
+* docs: get rid of plantuml dep by replacing uml with prerendered png by @j-hoff in https://github.com/eduMFA/eduMFA/pull/160
+
+
 ## eduMFA 2.0.2
 
 * chore: Configure Renovate by @renovate in https://github.com/eduMFA/eduMFA/pull/7
