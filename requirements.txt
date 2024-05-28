@@ -90,7 +90,7 @@ markupsafe==2.1.5
     #   jinja2
     #   mako
     #   werkzeug
-netaddr==0.10.1
+netaddr==1.3.0
     # via
     #   edumfa (setup.py)
     #   pyrad
