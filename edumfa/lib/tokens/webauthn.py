@@ -422,7 +422,7 @@ class AuthenticatorDataFlags:
         :rtype: bool
         """
 
-        return (self.flags & self.BACKUP_STATE) == self.BACKUP_STATE
+        return (self.flags & self.BACKUP_ELIGIBILITY) == self.BACKUP_ELIGIBILITY
 
     @property
     def backed_up(self):
@@ -431,7 +431,7 @@ class AuthenticatorDataFlags:
         :rtype: bool
         """
 
-        return (self.flags & self.BACKUP_ELIGIBILITY) == self.BACKUP_ELIGIBILITY
+        return (self.flags & self.BACKUP_STATE) == self.BACKUP_STATE
 
     @property
     def attestation_data_included(self):
