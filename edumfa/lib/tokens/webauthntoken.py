@@ -42,7 +42,7 @@ from edumfa.lib.tokens.webauthn import (COSE_ALGORITHM, webauthn_b64_encode, Web
                                              ATTESTATION_REQUIREMENT_LEVEL, webauthn_b64_decode,
                                              WebAuthnMakeCredentialOptions, WebAuthnAssertionOptions, WebAuthnUser,
                                              WebAuthnAssertionResponse, AuthenticationRejectedException,
-                                             USER_VERIFICATION_LEVEL, RESIDENT_KEY_LEVEL)
+                                             USER_VERIFICATION_LEVEL, RESIDENT_KEY_LEVEL, AuthenticatorDataFlags)
 from edumfa.lib.tokens.u2ftoken import IMAGES
 from edumfa.lib.log import log_with
 import logging
@@ -548,6 +548,8 @@ class WEBAUTHNINFO:
     RELYING_PARTY_ID = "relying_party_id"
     RELYING_PARTY_NAME = "relying_party_name"
     RESIDENT_KEY = "resident_key"
+    BACKUP_ELIGIBLE = "backup-eligible"
+    BACKUP_STATE = "backed-up"
 
 
 class WEBAUTHNGROUP:
@@ -994,12 +996,29 @@ class WebAuthnTokenClass(TokenClass):
                     # Add info to token about whether a resident key/ discoverable credential was enrolled
                     resident_key = 'rk' in extensions and (extensions['rk'] or extensions['rk'] == 'true')
                     if resident_key:
-                        self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Yes")
-                        automatic_description = "Passkey (Webauthn Resident Key)"
+                        self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "yes")
+                        automatic_description = "Passkey (WebAuthn Discoverable Credential)"
                     else:
-                        self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "Not enough info")
+                        self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "not enough info")
                 except Exception as e:
                     log.warning('Could not parse registrationClientExtensions: {0!s}'.format(e))
+
+            # Some authenticators do not set the resident key extension.
+            # However, backup-eligible keys are always passkeys, i.e., resident keys.
+            att_obj = WebAuthnRegistrationResponse.parse_attestation_object(reg_data)
+            authenticator_data = att_obj.get('authData')
+            if authenticator_data:
+                if AuthenticatorDataFlags(authenticator_data).backup_eligible:
+                    self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "yes")
+                    self.add_tokeninfo(WEBAUTHNINFO.BACKUP_ELIGIBLE, "yes")
+                    automatic_description = "Syncable Passkey (WebAuthn Multi-Device Credential)"
+                else:
+                    self.add_tokeninfo(WEBAUTHNINFO.BACKUP_ELIGIBLE, "no")
+                if AuthenticatorDataFlags(authenticator_data).backed_up:
+                    self.add_tokeninfo(WEBAUTHNINFO.BACKUP_STATE, "yes")
+                    automatic_description = "Synced Passkey (WebAuthn Multi-Device Credential)"
+                else:
+                    self.add_tokeninfo(WEBAUTHNINFO.BACKUP_STATE, "no")
 
             # If no description has already been set, set the automatic description or the
             # description given in the 2nd request
