@@ -127,7 +127,7 @@ pyyaml==6.0.1
     # via edumfa (setup.py)
 redis==5.0.5
     # via huey
-requests==2.32.2
+requests==2.32.3
     # via edumfa (setup.py)
 rsa==4.9
     # via google-auth
