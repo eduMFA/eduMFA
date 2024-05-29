@@ -380,6 +380,8 @@ class AuthenticatorDataFlags:
 
     USER_PRESENT = 1 << 0
     USER_VERIFIED = 1 << 2
+    BACKUP_ELIGIBILITY = 1 << 3
+    BACKUP_STATE = 1 << 4
     ATTESTATION_DATA_INCLUDED = 1 << 6
     EXTENSION_DATA_INCLUDED = 1 << 7
 
@@ -412,6 +414,24 @@ class AuthenticatorDataFlags:
         """
 
         return (self.flags & self.USER_VERIFIED) == self.USER_VERIFIED
+
+    @property
+    def backup_eligible(self):
+        """
+        :return: Whether the public key credential source is backup eligible.
+        :rtype: bool
+        """
+
+        return (self.flags & self.BACKUP_ELIGIBILITY) == self.BACKUP_ELIGIBILITY
+
+    @property
+    def backed_up(self):
+        """
+        :return: Whether the public key credential source is currently backed up.
+        :rtype: bool
+        """
+
+        return (self.flags & self.BACKUP_STATE) == self.BACKUP_STATE
 
     @property
     def attestation_data_included(self):
