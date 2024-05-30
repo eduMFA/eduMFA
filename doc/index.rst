@@ -57,7 +57,7 @@ Table of Contents
 
 If you are missing any information or descriptions
 file an issue at `github <https://github.com/eduMFA/eduMFA/issues>`_ (which would be the preferred way),
-or drop a note to edufma(@)listserv.dfn.de.
+or drop a note to edumfa(@)listserv.dfn.de.
 
 This will help us a lot to improve documentation to your needs.
 
