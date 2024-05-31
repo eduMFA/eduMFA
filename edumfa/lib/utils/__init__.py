@@ -29,6 +29,8 @@ import os
 
 import logging
 from importlib import import_module
+from urllib.parse import unquote
+
 import binascii
 import base64
 import sqlalchemy
@@ -1078,7 +1080,7 @@ def censor_connect_string(connect_string):
     """
     try:
         parsed = sqlalchemy.engine.url.make_url(connect_string)
-        return parsed.__repr__()
+        return unquote(parsed.__repr__())
     except Exception:
         return "<error when censoring connect string>"
 
