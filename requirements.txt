@@ -63,7 +63,7 @@ flask-versioned==0.9.4.post20101221
     # via edumfa (setup.py)
 google-auth==2.29.0
     # via edumfa (setup.py)
-grpcio==1.63.0
+grpcio==1.64.1
     # via edumfa (setup.py)
 huey==2.5.0
     # via edumfa (setup.py)
