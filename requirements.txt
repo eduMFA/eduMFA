@@ -22,7 +22,7 @@ blinker==1.8.2
     # via flask
 cachetools==5.3.3
     # via google-auth
-cbor2==5.6.3
+cbor2==5.6.4
     # via edumfa (setup.py)
 certifi==2024.2.2
     # via requests
