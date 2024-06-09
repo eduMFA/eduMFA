@@ -1,4 +1,4 @@
 testfixtures==7.2.2
 pytest==8.2.2
 mock==5.1.0
-responses==0.25.0
+responses==0.25.2
