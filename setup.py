@@ -53,7 +53,7 @@ install_requires = [
     "importlib_metadata>=6.11.0",
     "ldap3>=2.9.1",
     "lxml>=5.0.0",
-    "netaddr>=0.10.1",
+    "netaddr==1.3.0",
     "passlib[bcrypt]>=1.7.0",
     "pyOpenSSL>=24",
     "pydash>=8.0.1",
