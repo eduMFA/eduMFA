@@ -37,6 +37,8 @@ from edumfa.lib.user import get_user_from_param
 from edumfa.lib.utils import determine_logged_in_userparams
 from OpenSSL import crypto
 from cryptography.x509 import load_pem_x509_certificate, load_pem_x509_csr
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.serialization import PrivateFormat, load_pem_private_key, pkcs12
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import padding
 from edumfa.lib.decorators import check_token_locked
@@ -553,17 +555,22 @@ class CertificateTokenClass(TokenClass):
         """
         certificate = self.get_tokeninfo("certificate")
         privatekey = self.get_tokeninfo("privatekey")
-        pkcs12 = crypto.PKCS12()
-        pkcs12.set_certificate(crypto.load_certificate(
-            crypto.FILETYPE_PEM, certificate))
-        pkcs12.set_privatekey(crypto.load_privatekey(crypto.FILETYPE_PEM,
-                                                     privatekey))
         # TODO define a random passphrase and hand it to the user
         passphrase = self.token.get_pin()
         if passphrase == -1:
             passphrase = ""  # nosec B105 # defaults to empty passphrase
-        pkcs12_bin = pkcs12.export(passphrase=passphrase.encode('utf8'))
-        return pkcs12_bin
+
+        cert = load_pem_x509_certificate(str.encode(certificate))
+        key = load_pem_private_key(str.encode(privatekey), None)
+        encryption = (
+            PrivateFormat.PKCS12.encryption_builder().
+            kdf_rounds(50000).
+            key_cert_algorithm(pkcs12.PBES.PBESv1SHA1And3KeyTripleDESCBC).
+            hmac_hash(hashes.SHA1()).build(passphrase.encode('utf8'))
+        )
+        p12 = pkcs12.serialize_key_and_certificates(None, key, cert, None, encryption)
+
+        return p12
 
     def get_as_dict(self):
         """

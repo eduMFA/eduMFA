@@ -1748,6 +1748,7 @@ class APITokenTestCase(MyApiTestCase):
                                            data={"type": "certificate",
                                                  "genkey": "1",
                                                  "user": "cornelius",
+                                                 "pin": "pin",
                                                  "realm": self.realm1,
                                                  "ca": "localCA"},
                                            method="POST",
