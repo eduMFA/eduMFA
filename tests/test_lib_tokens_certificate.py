@@ -492,7 +492,7 @@ class CertificateTokenTestCase(MyTestCase):
         self.assertRaises(ParameterError,
                           token.update, {"ca": "localCA", "genkey": 1})
 
-        token.update({"ca": "localCA", "genkey": 1,
+        token.update({"ca": "localCA", "genkey": 1, "pin": "pin",
                       "user": "cornelius"})
         self.assertEqual(token.token.serial, self.serial3)
         self.assertEqual(token.token.tokentype, "certificate")
