@@ -125,7 +125,7 @@ pytz==2024.1
     # via flask-babel
 pyyaml==6.0.1
     # via edumfa (setup.py)
-redis==5.0.5
+redis==5.0.7
     # via huey
 requests==2.32.3
     # via edumfa (setup.py)
