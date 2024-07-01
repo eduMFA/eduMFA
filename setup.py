@@ -47,7 +47,7 @@ install_requires = [
     "croniter==2.0.5",
     "cryptography==42.0.8",
     "defusedxml==0.7.1",
-    "google-auth==2.30.0",
+    "google-auth==2.31.0",
     "grpcio==1.64.1",
     "huey[redis]==2.5.1",
     "importlib_metadata==8.0.0",
