@@ -2154,7 +2154,7 @@ def weigh_token_type(token_obj):
     :return: weight of the tokentype
     :rtype: int
     """
-    if token_obj.type.upper() == "PUSH":
+    if "PUSH" in token_obj.type.upper():
         return 1000
     else:
         return ord(token_obj.type[0])

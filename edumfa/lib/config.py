@@ -738,6 +738,7 @@ def get_token_list():
     module_list.add("edumfa.lib.tokens.vascotoken")
     module_list.add("edumfa.lib.tokens.tantoken")
     module_list.add("edumfa.lib.tokens.pushtoken")
+    module_list.add("edumfa.lib.tokens.legacypushtoken")
     module_list.add("edumfa.lib.tokens.indexedsecrettoken")
     module_list.add("edumfa.lib.tokens.webauthntoken")
 
