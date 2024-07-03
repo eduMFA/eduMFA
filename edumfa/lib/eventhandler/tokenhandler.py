@@ -32,6 +32,8 @@ You can attach token actions like enable, disable, delete, unassign,... of the
  * all disabled tokens
  * ...
 """
+
+from edumfa.api.lib.utils import getParam
 from edumfa.lib.eventhandler.base import BaseEventHandler
 from edumfa.lib.machine import attach_token
 from edumfa.lib.token import (get_token_types, set_validity_period_end,
@@ -564,7 +566,7 @@ class TokenEventHandler(BaseEventHandler):
                                         " Token serial: {!0s}".format(serial))
 
 
-            else:
+            elif not getParam(request.all_data, "webauthn_usernameless_authn"):
                 log.info("Action {0!s} requires serial number. But no serial "
                          "number could be found in request {1!s}.".format(action, request))
 
