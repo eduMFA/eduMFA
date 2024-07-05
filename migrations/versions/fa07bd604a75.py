@@ -11,8 +11,9 @@ revision = 'fa07bd604a75'
 down_revision = '3ba618f6b820'
 
 from edumfa.lib.smsprovider.SMSProvider import get_smsgateway, delete_smsgateway_option
-from edumfa.lib.tokens.pushtoken import GWTYPE, PUSH_ACTION
+from edumfa.lib.tokens.pushtoken import GWTYPE, PushTokenClass
 from edumfa.lib.policy import PolicyClass, set_policy, SCOPE
+
 
 
 def upgrade():
@@ -22,13 +23,13 @@ def upgrade():
     # 2. Check which policy contains this Firebase Config
     P = PolicyClass()
     pols = P.list_policies(scope=SCOPE.ENROLL,
-                           action="{0!s}".format(PUSH_ACTION.FIREBASE_CONFIG))
+                           action="{0!s}".format(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG))
 
     # iterate through all enrollment policies
     for pol in pols:
         # Check for all firebase gateways, if this policy needs to be modified
         for fbgw in fb_gateways:
-            if pol.get("action").get(PUSH_ACTION.FIREBASE_CONFIG) == fbgw.identifier:
+            if pol.get("action").get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG) == fbgw.identifier:
                 print("Modifying policy {0!s}".format(pol.get("name")))
                 # This is an enrollment policy, that references this very firebase config
                 # 3. Add the push_registration_url and ttl to this policy

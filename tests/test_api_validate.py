@@ -9,7 +9,7 @@ from edumfa.lib.tokens.webauthntoken import WEBAUTHNACTION
 from edumfa.lib.utils import to_unicode
 from urllib.parse import urlencode, quote
 import json
-from edumfa.lib.tokens.pushtoken import PUSH_ACTION, strip_key
+from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
 from edumfa.lib.utils import hexlify_and_unicode
 from .base import MyApiTestCase
 from edumfa.lib.user import (User)
@@ -4045,16 +4045,16 @@ class MultiChallege(MyApiTestCase):
         from edumfa.lib.tokens.pushtoken import POLL_ONLY
         set_policy("push2", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                       PUSH_ACTION.FIREBASE_CONFIG, POLL_ONLY,
-                       PUSH_ACTION.REGISTRATION_URL, REGISTRATION_URL,
-                       PUSH_ACTION.TTL, TTL))
+                       PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, POLL_ONLY,
+                       PushTokenClass.PUSH_ACTION.REGISTRATION_URL, REGISTRATION_URL,
+                       PushTokenClass.PUSH_ACTION.TTL, TTL))
 
         pin = "otppin"
         # create push token for user with PIN
         # 1st step
         with self.app.test_request_context('/token/init',
                                            method='POST',
-                                           data={"type": "push",
+                                           data={"type": "edupush",
                                                  "pin": pin,
                                                  "user": "selfservice",
                                                  "realm": self.realm1,
@@ -4068,7 +4068,7 @@ class MultiChallege(MyApiTestCase):
             enrollment_credential = detail.get("enrollment_credential")
 
         # 2nd step: as performed by the smartphone
-        with self.app.test_request_context('/ttype/push',
+        with self.app.test_request_context('/ttype/edupush',
                                            method='POST',
                                            data={"enrollment_credential": enrollment_credential,
                                                  "serial": serial,

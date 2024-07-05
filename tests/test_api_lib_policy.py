@@ -7,6 +7,8 @@ The api.lib.policy.py depends on lib.policy and on flask!
 import json
 import logging
 from testfixtures import log_capture
+
+from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.webauthn import (webauthn_b64_decode, AUTHENTICATOR_ATTACHMENT_TYPE,
                                              ATTESTATION_LEVEL, ATTESTATION_FORM,
                                              USER_VERIFICATION_LEVEL)
@@ -27,31 +29,31 @@ from edumfa.lib.policy import (set_policy, delete_policy, enable_policy,
                                     PolicyClass, SCOPE, ACTION, REMOTE_USER,
                                     AUTOASSIGNVALUE, AUTHORIZED)
 from edumfa.api.lib.prepolicy import (check_token_upload,
-                                           check_base_action, check_token_init,
-                                           check_max_token_user,
-                                           check_anonymous_user,
-                                           check_max_token_realm, set_realm,
-                                           init_tokenlabel, init_random_pin, set_random_pin,
-                                           init_token_defaults, _generate_pin_from_policy,
-                                           encrypt_pin, check_otp_pin,
-                                           enroll_pin,
-                                           init_token_length_contents,
-                                           check_external, api_key_required,
-                                           mangle, is_remote_user_allowed,
-                                           required_email, auditlog_age, hide_audit_columns,
-                                           papertoken_count, allowed_audit_realm,
-                                           u2ftoken_verify_cert,
-                                           tantoken_count, sms_identifiers,
-                                           pushtoken_add_config, pushtoken_wait,
-                                           indexedsecret_force_attribute,
-                                           check_admin_tokenlist, pushtoken_disable_wait,
-                                           webauthntoken_auth, webauthntoken_authz,
-                                           webauthntoken_enroll, webauthntoken_request,
-                                           webauthntoken_allowed, check_application_tokentype,
-                                           required_piv_attestation, check_custom_user_attributes,
-                                           hide_tokeninfo, init_ca_template, init_ca_connector,
-                                           init_subject_components, increase_failcounter_on_challenge,
-                                           require_description)
+                                      check_base_action, check_token_init,
+                                      check_max_token_user,
+                                      check_anonymous_user,
+                                      check_max_token_realm, set_realm,
+                                      init_tokenlabel, init_random_pin, set_random_pin,
+                                      init_token_defaults, _generate_pin_from_policy,
+                                      encrypt_pin, check_otp_pin,
+                                      enroll_pin,
+                                      init_token_length_contents,
+                                      check_external, api_key_required,
+                                      mangle, is_remote_user_allowed,
+                                      required_email, auditlog_age, hide_audit_columns,
+                                      papertoken_count, allowed_audit_realm,
+                                      u2ftoken_verify_cert,
+                                      tantoken_count, sms_identifiers,
+                                      pushtoken_add_config,
+                                      indexedsecret_force_attribute,
+                                      check_admin_tokenlist,
+                                      webauthntoken_auth, webauthntoken_authz,
+                                      webauthntoken_enroll, webauthntoken_request,
+                                      webauthntoken_allowed, check_application_tokentype,
+                                      required_piv_attestation, check_custom_user_attributes,
+                                      hide_tokeninfo, init_ca_template, init_ca_connector,
+                                      init_subject_components, increase_failcounter_on_challenge,
+                                      require_description, pushtoken_wait, pushtoken_disable_wait, legacypushtoken_wait)
 from edumfa.lib.realm import set_realm as create_realm
 from edumfa.lib.realm import delete_realm
 from edumfa.api.lib.postpolicy import (check_serial, check_tokentype,
@@ -71,7 +73,7 @@ from edumfa.lib.user import User
 from edumfa.lib.tokens.papertoken import PAPERACTION
 from edumfa.lib.tokens.tantoken import TANACTION
 from edumfa.lib.tokens.smstoken import SMSACTION
-from edumfa.lib.tokens.pushtoken import PUSH_ACTION
+from edumfa.lib.tokens.pushtoken import PushTokenClass
 from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
 from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
 from edumfa.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
@@ -1852,8 +1854,70 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         delete_policy("sms1")
 
-    def test_22_push_firebase_config(self):
-        from edumfa.lib.tokens.pushtoken import PUSH_ACTION
+    def test_22a_push_firebase_config(self):
+        g.logged_in_user = {"username": "user1",
+                            "realm": "",
+                            "role": "user"}
+        builder = EnvironBuilder(method='POST',
+                                 data={'serial': "OATH123456"},
+                                 headers={})
+        env = builder.get_environ()
+        # Set the remote address so that we can filter for it
+        env["REMOTE_ADDR"] = "10.0.0.1"
+        g.client_ip = env["REMOTE_ADDR"]
+        req = Request(env)
+        req.User = User()
+        req.all_data = {
+            "type": "edupush"}
+        # In this case we have no firebase config. We will raise an exception
+        self.assertRaises(PolicyError, pushtoken_add_config, req, "init")
+        # if we have a non existing firebase config, we will raise an exception
+        req.all_data = {
+            "type": "edupush",
+            PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: "non-existing"}
+        self.assertRaises(PolicyError, pushtoken_add_config, req, "init")
+
+        # Set a policy for the firebase config to use.
+        set_policy(name="push_pol",
+                   scope=SCOPE.ENROLL,
+                   action="{0!s}=some-fb-config,"
+                          "{1!s}=https://edumfa.io/enroll,"
+                          "{2!s}=10".format(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+                                            PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+                                            PushTokenClass.PUSH_ACTION.TTL))
+        g.policy_object = PolicyClass()
+        req.all_data = {
+            "type": "edupush"}
+        pushtoken_add_config(req, "init")
+        self.assertEqual(req.all_data.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
+        self.assertEqual(req.all_data.get(PushTokenClass.PUSH_ACTION.REGISTRATION_URL), "https://edumfa.io/enroll")
+        self.assertEqual("10", req.all_data.get(PushTokenClass.PUSH_ACTION.TTL))
+        self.assertEqual("1", req.all_data.get(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
+
+        # the request tries to inject a rogue value, but we assure sslverify=1
+        g.policy_object = PolicyClass()
+        req.all_data = {
+            "type": "edupush",
+            "sslverify": "rogue"}
+        pushtoken_add_config(req, "init")
+        self.assertEqual("1", req.all_data.get(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
+
+        # set sslverify="0"
+        set_policy(name="push_pol2",
+                   scope=SCOPE.ENROLL,
+                   action="{0!s}=0".format(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
+        g.policy_object = PolicyClass()
+        req.all_data = {
+            "type": "edupush"}
+        pushtoken_add_config(req, "init")
+        self.assertEqual(req.all_data.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
+        self.assertEqual("0", req.all_data.get(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
+
+        # finally delete policy
+        delete_policy("push_pol")
+        delete_policy("push_pol2")
+
+    def test_22b_push_firebase_config(self):
         g.logged_in_user = {"username": "user1",
                             "realm": "",
                             "role": "user"}
@@ -1873,7 +1937,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # if we have a non existing firebase config, we will raise an exception
         req.all_data = {
             "type": "push",
-            PUSH_ACTION.FIREBASE_CONFIG: "non-existing"}
+            LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: "non-existing"}
         self.assertRaises(PolicyError, pushtoken_add_config, req, "init")
 
         # Set a policy for the firebase config to use.
@@ -1881,17 +1945,17 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                    scope=SCOPE.ENROLL,
                    action="{0!s}=some-fb-config,"
                           "{1!s}=https://edumfa.io/enroll,"
-                          "{2!s}=10".format(PUSH_ACTION.FIREBASE_CONFIG,
-                                            PUSH_ACTION.REGISTRATION_URL,
-                                            PUSH_ACTION.TTL))
+                          "{2!s}=10".format(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+                                            LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+                                            LegacyPushTokenClass.PUSH_ACTION.TTL))
         g.policy_object = PolicyClass()
         req.all_data = {
             "type": "push"}
         pushtoken_add_config(req, "init")
-        self.assertEqual(req.all_data.get(PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
-        self.assertEqual(req.all_data.get(PUSH_ACTION.REGISTRATION_URL), "https://edumfa.io/enroll")
-        self.assertEqual("10", req.all_data.get(PUSH_ACTION.TTL))
-        self.assertEqual("1", req.all_data.get(PUSH_ACTION.SSL_VERIFY))
+        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
+        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL), "https://edumfa.io/enroll")
+        self.assertEqual("10", req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.TTL))
+        self.assertEqual("1", req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY))
 
         # the request tries to inject a rogue value, but we assure sslverify=1
         g.policy_object = PolicyClass()
@@ -1899,22 +1963,23 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "type": "push",
             "sslverify": "rogue"}
         pushtoken_add_config(req, "init")
-        self.assertEqual("1", req.all_data.get(PUSH_ACTION.SSL_VERIFY))
+        self.assertEqual("1", req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY))
 
         # set sslverify="0"
         set_policy(name="push_pol2",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}=0".format(PUSH_ACTION.SSL_VERIFY))
+                   action="{0!s}=0".format(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY))
         g.policy_object = PolicyClass()
         req.all_data = {
             "type": "push"}
         pushtoken_add_config(req, "init")
-        self.assertEqual(req.all_data.get(PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
-        self.assertEqual("0", req.all_data.get(PUSH_ACTION.SSL_VERIFY))
+        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG), "some-fb-config")
+        self.assertEqual("0", req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY))
 
         # finally delete policy
         delete_policy("push_pol")
         delete_policy("push_pol2")
+
 
     def test_23_enroll_different_tokentypes_in_different_resolvers(self):
         # One realm has different resolvers.
@@ -2004,15 +2069,15 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req.User = User()
         req.all_data = {"push_wait": "120"}
         g.policy_object = PolicyClass()
-        pushtoken_wait(req, None)
-        self.assertEqual(req.all_data.get(PUSH_ACTION.WAIT), False)
+        legacypushtoken_wait(req, None)
+        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), False)
 
         # Now we use the policy, to set the push_wait seconds
-        set_policy(name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(PUSH_ACTION.WAIT))
+        set_policy(name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(LegacyPushTokenClass.PUSH_ACTION.WAIT))
         req.all_data = {}
         g.policy_object = PolicyClass()
-        pushtoken_wait(req, None)
-        self.assertEqual(req.all_data.get(PUSH_ACTION.WAIT), 10)
+        legacypushtoken_wait(req, None)
+        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), 10)
 
         delete_policy("push1")
 
@@ -2023,14 +2088,14 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req = RequestMock()
         req.all_data = {"push_wait": "120"}
         pushtoken_disable_wait(req, None)
-        self.assertEqual(req.all_data.get(PUSH_ACTION.WAIT), False)
+        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), False)
 
-        # But even with a policy, the function still sets PUSH_ACTION.WAIT to False
-        set_policy(name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(PUSH_ACTION.WAIT))
+        # But even with a policy, the function still sets PushTokenClass.PUSH_ACTION.WAIT to False
+        set_policy(name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(LegacyPushTokenClass.PUSH_ACTION.WAIT))
         req = RequestMock()
         req.all_data = {"push_wait": "120"}
         pushtoken_disable_wait(req, None)
-        self.assertEqual(req.all_data.get(PUSH_ACTION.WAIT), False)
+        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), False)
 
         delete_policy("push1")
 
