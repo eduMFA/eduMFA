@@ -1,3 +1,44 @@
+edumfa (2.1.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * fix: corrected typo in e-mail address
+  * feat: handle passkey AuthenticatorDataFlags 
+  * feat: ignore event handler in case of passkey auth
+  * feat: add edumfa-push token type
+  * chore(deps): update dependency pytest to v8
+  * chore(deps): update dependency redis to v5
+  * chore(deps): update dependency zipp to v3.19.0
+  * chore(deps): update dependency mako to v1.3.5
+  * chore(deps): update dependency lxml to v5.2.2
+  * chore(deps): update dependency pykcs11 to v1.5.16
+  * chore(deps): update dependency flask-sqlalchemy to v3.1.1
+  * chore(deps): update dependency cryptography to v42.0.8
+  * chore(deps): update dependency cbor2 to v5.6.4
+  * chore(deps): update dependency pytest to v8.2.2
+  * chore(deps): update dependency redis to v5.0.5
+  * chore(deps): update dependency grpcio to v1.64.1
+  * chore(deps): update dependency huey to v2.5.1
+  * chore(deps): update dependency requests to v2.32.3
+  * chore: test dependencies
+  * chore(deps): update dependency urllib3 to v2.2.2 [security]
+  * chore(deps): update docker/build-push-action action to v6
+  * chore(deps): update dependency zipp to v3.19.2
+  * chore(deps): update dependency certifi to v2024.6.2
+  * chore(deps): update dependency packaging to v24.1
+  * chore(deps): update dependency netaddr to v1
+  * chore(deps): update dependency pyasn1 to v0.6.0
+  * chore(deps): update dependency alembic to v1.13.2
+  * chore(deps): update dependency sqlalchemy to v2.0.31
+  * chore(deps): update dependency redis to v5.0.7
+  * chore(deps): update dependency google-auth to v2.30.0
+  * chore(deps): update dependency typing-extensions to v4.12.2
+  * chore(deps): update dependency importlib-metadata to v8
+  * chore(deps): update dependency gssapi to v1.8.3
+  * chore(deps): pin dependencies
+  * chore(deps): update dependency google-auth to v2.31.0
+  * chore(deps): update dependency certifi to v2024.7.4
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Fri, 05 Jul 2024 12:01:00 +0200
+
 edumfa (2.0.3{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   * fix: redirect filename arg for policy creation 
