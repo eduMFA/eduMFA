@@ -33,6 +33,46 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.1.0
+
+* fix: corrected typo in e-mail address by @st-hofmann in https://github.com/eduMFA/eduMFA/pull/171
+* feat: handle passkey AuthenticatorDataFlags  by @ekupris in https://github.com/eduMFA/eduMFA/pull/161
+* feat: ignore event handler in case of passkey auth by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/199
+* feat: add edumfa-push token type by @johannwagner in https://github.com/eduMFA/eduMFA/pull/104
+* chore(deps): update dependency pytest to v8 by @renovate in https://github.com/eduMFA/eduMFA/pull/148
+* chore(deps): update dependency redis to v5 by @renovate in https://github.com/eduMFA/eduMFA/pull/149
+* chore(deps): update dependency zipp to v3.19.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/169
+* chore(deps): update dependency mako to v1.3.5 by @renovate in https://github.com/eduMFA/eduMFA/pull/166
+* chore(deps): update dependency lxml to v5.2.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/165
+* chore(deps): update dependency pykcs11 to v1.5.16 by @renovate in https://github.com/eduMFA/eduMFA/pull/167
+* chore(deps): update dependency flask-sqlalchemy to v3.1.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/110
+* chore(deps): update dependency cryptography to v42.0.8 by @renovate in https://github.com/eduMFA/eduMFA/pull/173
+* chore(deps): update dependency cbor2 to v5.6.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/172
+* chore(deps): update dependency pytest to v8.2.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/175
+* chore(deps): update dependency redis to v5.0.5 by @renovate in https://github.com/eduMFA/eduMFA/pull/176
+* chore(deps): update dependency grpcio to v1.64.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/170
+* chore(deps): update dependency huey to v2.5.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/174
+* chore(deps): update dependency requests to v2.32.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/168
+* chore: test dependencies by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/182
+* chore(deps): update dependency urllib3 to v2.2.2 [security] by @renovate in https://github.com/eduMFA/eduMFA/pull/186
+* chore(deps): update docker/build-push-action action to v6 by @renovate in https://github.com/eduMFA/eduMFA/pull/188
+* chore(deps): update dependency zipp to v3.19.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/178
+* chore(deps): update dependency certifi to v2024.6.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/179
+* chore(deps): update dependency packaging to v24.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/183
+* chore(deps): update dependency netaddr to v1 by @renovate in https://github.com/eduMFA/eduMFA/pull/147
+* chore(deps): update dependency pyasn1 to v0.6.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/112
+* chore(deps): update dependency alembic to v1.13.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/195
+* chore(deps): update dependency sqlalchemy to v2.0.31 by @renovate in https://github.com/eduMFA/eduMFA/pull/190
+* chore(deps): update dependency redis to v5.0.7 by @renovate in https://github.com/eduMFA/eduMFA/pull/189
+* chore(deps): update dependency google-auth to v2.30.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/181
+* chore(deps): update dependency typing-extensions to v4.12.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/191
+* chore(deps): update dependency importlib-metadata to v8 by @renovate in https://github.com/eduMFA/eduMFA/pull/194
+* chore(deps): update dependency gssapi to v1.8.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/70
+* chore(deps): pin dependencies by @renovate in https://github.com/eduMFA/eduMFA/pull/196
+* chore(deps): update dependency google-auth to v2.31.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/198
+* chore(deps): update dependency certifi to v2024.7.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/200
+
+
 ## eduMFA 2.0.3
 
 * fix: redirect filename arg for policy creation by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/158
