@@ -121,7 +121,7 @@ setup(
     extras_require={
         'doc': [
             "Pallets-Sphinx-Themes==2.1.3",
-            "Sphinx==7.3.7",
+            "Sphinx==7.4.0",
             "sphinxcontrib-httpdomain==1.8.1",
             "sphinxcontrib-plantuml==0.30",
             "sphinxcontrib-spelling==8.0.0"
