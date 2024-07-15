@@ -132,6 +132,12 @@ class RADIUSServerTestCase(MyTestCase):
         r = RADIUSServer.request(radius.config, "user", "password")
         self.assertEqual(r, True)
 
+        radiusmock.setdata(response=radiusmock.AccessAccept, ma=True,
+                           broken_ma=True)
+        radius = get_radius("myserver")
+        r = RADIUSServer.request(radius.config, "user", "password")
+        self.assertEqual(r, False)
+
         radiusmock.setdata(response=radiusmock.AccessAccept, ma=True)
         r = add_radius(identifier="myserver2", server="1.2.3.4",
                        secret="testing123", dictionary=DICT_FILE,
