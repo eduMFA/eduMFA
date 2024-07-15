@@ -2328,8 +2328,8 @@ msgid ""
 "link</a> on your\n"
 "            smartphone."
 msgstr ""
-"Bitte scannen Sie den QR-Code mit der eingeschränkt unterstützten "
-"PrivacyIDEA Authenticator-App oder klicken Sie <a href=\"{{ enrolledToken."
+"Bitte scannen Sie den QR-Code mit der "
+"eduMFA Authenticator-App oder klicken Sie <a href=\"{{ enrolledToken."
 "pushurl.value }}\">den Link</a> auf Ihrem Smartphone."
 
 #: edumfa/static/components/token/views/token.enrolled.push.html:9
