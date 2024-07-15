@@ -69,7 +69,7 @@ class RadiusMock:
         self._request_data = {}
         self._calls.reset()
 
-    def setdata(self, server=None, rpacket=None, response=AccessReject, response_data=None, timeout=False, ma=False):
+    def setdata(self, server=None, rpacket=None, response=AccessReject, response_data=None, timeout=False, ma=False, broken_ma=False):
         self._request_data = {
             'server': server,
             'packet': rpacket,
@@ -78,6 +78,7 @@ class RadiusMock:
             'timeout': timeout
         }
         self.message_authenticator = ma
+        self.broken_ma = broken_ma
 
     @property
     def calls(self):
@@ -123,7 +124,8 @@ class RadiusMock:
             if not ("Message-Authenticator" in pkt and pkt.verify_message_authenticator()):
                 raise Timeout()
             reply.add_message_authenticator()
-            reply._refresh_message_authenticator()
+            if not self.broken_ma:
+                reply._refresh_message_authenticator()
 
         return reply
 
