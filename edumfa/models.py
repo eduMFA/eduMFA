@@ -2425,6 +2425,7 @@ class RADIUSServer(MethodsMixin, db.Model):
     * a secret
     * timeout in seconds (default 5)
     * retries (default 3)
+    * Enforcement of the Message-Authenticator attribute
 
     These RADIUS server definition can be used in RADIUS tokens or in a
     radius passthru policy.
@@ -2443,6 +2444,7 @@ class RADIUSServer(MethodsMixin, db.Model):
     description = db.Column(db.Unicode(2000), default='')
     timeout = db.Column(db.Integer, default=5)
     retries = db.Column(db.Integer, default=3)
+    enforce_ma = db.Column(db.Boolean(), default=False)
 
     def save(self):
         """
@@ -2471,6 +2473,8 @@ class RADIUSServer(MethodsMixin, db.Model):
                 values["timeout"] = int(self.timeout)
             if self.retries is not None:
                 values["retries"] = int(self.retries)
+            if self.enforce_ma is not None:
+                values["enforce_ma"] = self.enforce_ma
             RADIUSServer.query.filter(RADIUSServer.identifier ==
                                       self.identifier).update(values)
             ret = radius.id

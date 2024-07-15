@@ -69,7 +69,7 @@ class RadiusMock:
         self._request_data = {}
         self._calls.reset()
 
-    def setdata(self, server=None, rpacket=None, response=AccessReject, response_data=None, timeout=False):
+    def setdata(self, server=None, rpacket=None, response=AccessReject, response_data=None, timeout=False, ma=False):
         self._request_data = {
             'server': server,
             'packet': rpacket,
@@ -77,6 +77,7 @@ class RadiusMock:
             'response_data': response_data or {},
             'timeout': timeout
         }
+        self.message_authenticator = ma
 
     @property
     def calls(self):
@@ -116,6 +117,14 @@ class RadiusMock:
             raise Timeout()
         reply = pkt.CreateReply(**self._request_data.get("response_data"))
         reply.code = self._request_data.get("response", AccessReject)
+        if self.message_authenticator:
+            # Server is supposed to ignore packets
+            # with broken or non M-A
+            if not ("Message-Authenticator" in pkt and pkt.verify_message_authenticator()):
+                raise Timeout()
+            reply.add_message_authenticator()
+            reply._refresh_message_authenticator()
+
         return reply
 
     def start(self):

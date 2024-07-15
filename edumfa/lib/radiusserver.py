@@ -77,6 +77,7 @@ class RADIUSServer:
         * config.secret
         * config.retries
         * config.timeout
+        * config.enforce_ma
 
         :param config: The RADIUS configuration
         :type config: RADIUSServer Database Model
@@ -110,14 +111,30 @@ class RADIUSServer:
         if config.retries:
             srv.retries = config.retries
 
+        
         req = srv.CreateAuthPacket(code=pyrad.packet.AccessRequest,
-                                   User_Name=user.encode('utf-8'),
-                                   NAS_Identifier=nas_identifier.encode('ascii'))
+                                    User_Name=user.encode('utf-8'),
+                                    NAS_Identifier=nas_identifier.encode('ascii'))
+        if config.enforce_ma:
+            req.add_message_authenticator()
 
         # PwCrypt encodes unicode strings to UTF-8
         req["User-Password"] = req.PwCrypt(password)
         try:
             response = srv.SendPacket(req)
+            if config.enforce_ma:
+                # verify_message_authenticator() raised a generic exception
+                # if M-A attribute is missing .. check for it before!
+                if "Message-Authenticator" in response:
+                    success = response.verify_message_authenticator()
+                    if not success:
+                        log.info("Radiusserver %s sent broken"
+                                 "Message-Authenticator" % (config.server))
+                        return False
+                else:
+                    log.info("Radiusserver %s sent no "
+                             "Message-Authenticator" % (config.server))
+                    return False
 
             if response.code == pyrad.packet.AccessAccept:
                 log.info("Radiusserver %s granted "
@@ -192,14 +209,15 @@ def list_radiusservers(identifier=None, server=None):
                                          "description": server.config.description,
                                          "password": decrypted_password,
                                          "timeout": server.config.timeout,
-                                         "retries": server.config.retries}
+                                         "retries": server.config.retries,
+                                         "enforce_ma": server.config.enforce_ma}
 
     return res
 
 
 @log_with(log)
 def add_radius(identifier, server=None, secret=None, port=1812, description="",
-               dictionary='/etc/edumfa/dictionary', retries=3, timeout=5):
+               dictionary='/etc/edumfa/dictionary', retries=3, timeout=5, enforce_ma=False):
     """
     This adds a RADIUS server to the RADIUSServer database table.
 
@@ -219,6 +237,8 @@ def add_radius(identifier, server=None, secret=None, port=1812, description="",
     :param description: Human readable description of the RADIUS server
         definition
     :param dictionary: The RADIUS dictionary
+    :param enforce_ma: Enforce usage and check of Message-Authenticator
+    :type enforce_ma: boolean
     :return: The Id of the database object
     """
     cryptedSecret = encryptPassword(secret)
@@ -228,13 +248,13 @@ def add_radius(identifier, server=None, secret=None, port=1812, description="",
     r = RADIUSServerDB(identifier=identifier, server=server, port=port,
                        secret=cryptedSecret, description=description,
                        dictionary=dictionary,
-                       retries=retries, timeout=timeout).save()
+                       retries=retries, timeout=timeout, enforce_ma=enforce_ma).save()
     return r
 
 
 @log_with(log)
 def test_radius(identifier, server, secret, user, password, port=1812, description="",
-               dictionary='/etc/edumfa/dictionary', retries=3, timeout=5):
+               dictionary='/etc/edumfa/dictionary', retries=3, timeout=5, enforce_ma=False):
     """
     This tests a RADIUS server configuration by sending an access request.
 
@@ -251,6 +271,8 @@ def test_radius(identifier, server, secret, user, password, port=1812, descripti
     :param description: Human readable description of the RADIUS server
         definition
     :param dictionary: The RADIUS dictionary
+    :param enforce_ma: Enforce usage and check of Message-Authenticator
+    :type enforce_ma: boolean
     :return: The result of the access request
     """
     cryptedSecret = encryptPassword(secret)
@@ -260,7 +282,7 @@ def test_radius(identifier, server, secret, user, password, port=1812, descripti
     s = RADIUSServerDB(identifier=identifier, server=server, port=port,
                        secret=cryptedSecret, dictionary=dictionary,
                        retries=retries, timeout=timeout,
-                       description=description)
+                       description=description, enforce_ma=enforce_ma)
     return RADIUSServer.request(s, user, password)
 
 
@@ -290,5 +312,5 @@ def import_radiusserver(data, name=None):
             continue
         res_data['secret'] = res_data.pop('password')
         rid = add_radius(res_name, **res_data)
-        log.info('Import of smtpserver "{0!s}" finished,'
+        log.info('Import of radiusserver "{0!s}" finished,'
                  ' id: {1!s}'.format(res_name, rid))

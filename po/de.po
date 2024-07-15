@@ -890,7 +890,7 @@ msgstr "Benutzer löschen"
 #: edumfa/static/components/config/views/config.events.list.html:13
 #: edumfa/static/components/config/views/config.periodictasks.details.html:32
 #: edumfa/static/components/config/views/config.periodictasks.list.html:8
-#: edumfa/static/components/config/views/config.radius.edit.html:88
+#: edumfa/static/components/config/views/config.radius.edit.html:102
 #: edumfa/static/components/config/views/config.radius.list.html:8
 #: edumfa/static/components/config/views/config.serviceid.edit.html:28
 #: edumfa/static/components/config/views/config.serviceid.list.html:10
@@ -929,7 +929,7 @@ msgstr ""
 msgid "Details for user {{ username }} in realm"
 msgstr "Details zum Benutzer {{ username }} in Realm"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:79
+#: edumfa/static/components/config/views/config.radius.edit.html:93
 #: edumfa/static/components/config/views/config.radius.list.html:7
 msgid "Dictionary"
 msgstr "Wörterbuch"
@@ -1178,6 +1178,14 @@ msgstr "Enddatum vor dem Startdatum!"
 msgid "Endpoint (URL)"
 msgstr "Endpunkt (URL)"
 
+#: edumfa/static/components/config/views/config.radius.edit.html:67
+msgid "Enforce Message-Authenticator"
+msgstr ""
+
+#: edumfa/static/components/config/views/config.radius.edit.html:75
+msgid "Enforce usage of Message-Authenticator attribute"
+msgstr ""
+
 #: edumfa/static/components/user/views/user.details.html:189
 msgid "Enroll New Token"
 msgstr "Neuen Token ausrollen"
@@ -1373,6 +1381,7 @@ msgstr ""
 "Damit Yubico-Token richtig funktionieren, müssen Sie die <a ui-sref=\"config."
 "tokens({tokentype:'yubico'})\">Yubico-Token Konfiguration</a> setzen!"
 
+#: edumfa/static/components/token/views/token.enroll.edupush.html:6
 #: edumfa/static/components/token/views/token.enroll.push.html:6
 msgid ""
 "For the enrollment process and for the authentication process your "
@@ -1765,6 +1774,7 @@ msgstr "Info"
 msgid "Interval"
 msgstr "Intervall"
 
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:22
 #: edumfa/static/components/token/views/token.enrolled.push.html:22
 msgid "It will send the missing registration data to the configured endpoint."
 msgstr ""
@@ -2230,7 +2240,7 @@ msgid "Parameters"
 msgstr "Parameter"
 
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:57
-#: edumfa/static/components/config/views/config.radius.edit.html:105
+#: edumfa/static/components/config/views/config.radius.edit.html:119
 #: edumfa/static/components/config/views/config.resolvers.sql.html:79
 #: edumfa/static/components/config/views/config.smtp.edit.html:86
 #: edumfa/static/components/dialogs/views/dialog.lock.html:20
@@ -2289,6 +2299,7 @@ msgstr ""
 msgid "Please confirm with one of these tokens:"
 msgstr "Bitte bestätigen Sie mit einem dieser Token:"
 
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:4
 #: edumfa/static/components/token/views/token.enrolled.push.html:4
 msgid ""
 "Please note, that your smartphone needs internet access during the "
@@ -2308,6 +2319,18 @@ msgstr ""
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:23
 msgid "Please provide the base URL of the eduMFA server."
 msgstr "Geben Sie die Basis-URL des eduMFA Servers an."
+
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:9
+#, fuzzy
+msgid ""
+"Please scan the QR code with the eduMFA Authenticator App\n"
+"            or click <a href=\"{{ enrolledToken.pushurl.value }}\">this "
+"link</a> on your\n"
+"            smartphone."
+msgstr ""
+"Bitte scannen Sie den QR-Code mit der eingeschränkt unterstützten "
+"PrivacyIDEA Authenticator-App oder klicken Sie <a href=\"{{ enrolledToken."
+"pushurl.value }}\">den Link</a> auf Ihrem Smartphone."
 
 #: edumfa/static/components/token/views/token.enrolled.push.html:9
 msgid ""
@@ -2817,7 +2840,7 @@ msgstr "Optionen speichern"
 msgid "Save Policy"
 msgstr "Richtlinie speichern"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:120
+#: edumfa/static/components/config/views/config.radius.edit.html:134
 msgid "Save RADIUS server"
 msgstr "RADIUS-Server speichern"
 
@@ -2890,7 +2913,7 @@ msgstr "Suchfilter"
 msgid "Searching token..."
 msgstr "Suche Token..."
 
-#: edumfa/static/components/config/views/config.radius.edit.html:68
+#: edumfa/static/components/config/views/config.radius.edit.html:82
 #: edumfa/static/components/config/views/config.resolvers.scim.html:62
 #: edumfa/static/components/token/views/token.enroll.indexedsecret.html:11
 msgid "Secret"
@@ -2962,7 +2985,7 @@ msgstr "Sende Test-Email"
 msgid "Send mail from job queue"
 msgstr "Sende Email über die Job-Queue"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:111
+#: edumfa/static/components/config/views/config.radius.edit.html:125
 msgid "Send test RADIUS request"
 msgstr "RADIUS-Anfrage senden"
 
@@ -4547,7 +4570,7 @@ msgstr "Ausrollen mit Zwei-Schritt und der privacyIDEA Authenticator App"
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:51
 #: edumfa/static/components/config/views/config.policies.details.html:212
 #: edumfa/static/components/config/views/config.policies.list.html:24
-#: edumfa/static/components/config/views/config.radius.edit.html:99
+#: edumfa/static/components/config/views/config.radius.edit.html:113
 #: edumfa/static/templates/menu.html:62
 msgid "User"
 msgstr "Benutzer"
@@ -4686,6 +4709,7 @@ msgstr "Willkommen"
 msgid "Where statement"
 msgstr "WHERE-Ausdruck"
 
+#: edumfa/static/components/token/views/token.enroll.edupush.html:1
 #: edumfa/static/components/token/views/token.enroll.push.html:1
 msgid ""
 "With the PUSH token eduMFA sends a notification to your registered "
@@ -4877,6 +4901,7 @@ msgstr ""
 "{{ pin_change_serial }} ändern."
 
 #: edumfa/static/components/token/views/token.enrolled.daypassword.html:43
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:19
 #: edumfa/static/components/token/views/token.enrolled.hotp.html:43
 #: edumfa/static/components/token/views/token.enrolled.push.html:19
 #: edumfa/static/components/token/views/token.enrolled.totp.html:43

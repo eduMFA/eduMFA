@@ -890,7 +890,7 @@ msgstr "Borrar usuario"
 #: edumfa/static/components/config/views/config.events.list.html:13
 #: edumfa/static/components/config/views/config.periodictasks.details.html:32
 #: edumfa/static/components/config/views/config.periodictasks.list.html:8
-#: edumfa/static/components/config/views/config.radius.edit.html:88
+#: edumfa/static/components/config/views/config.radius.edit.html:102
 #: edumfa/static/components/config/views/config.radius.list.html:8
 #: edumfa/static/components/config/views/config.serviceid.edit.html:28
 #: edumfa/static/components/config/views/config.serviceid.list.html:10
@@ -929,7 +929,7 @@ msgstr ""
 msgid "Details for user {{ username }} in realm"
 msgstr "Detalles del usuario {{username}} en el Dominio"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:79
+#: edumfa/static/components/config/views/config.radius.edit.html:93
 #: edumfa/static/components/config/views/config.radius.list.html:7
 msgid "Dictionary"
 msgstr "Diccionario"
@@ -1185,6 +1185,14 @@ msgstr "¡Fecha de finalización antes de la fecha de inicio!"
 msgid "Endpoint (URL)"
 msgstr "Endpoint (URL)"
 
+#: edumfa/static/components/config/views/config.radius.edit.html:67
+msgid "Enforce Message-Authenticator"
+msgstr ""
+
+#: edumfa/static/components/config/views/config.radius.edit.html:75
+msgid "Enforce usage of Message-Authenticator attribute"
+msgstr ""
+
 #: edumfa/static/components/user/views/user.details.html:189
 msgid "Enroll New Token"
 msgstr "Inscribir nuevo token"
@@ -1385,6 +1393,7 @@ msgstr ""
 "ui-sref=\"config.tokens({tokentype:'yubico'})\"> Configuración de Token "
 "Yubico</a>."
 
+#: edumfa/static/components/token/views/token.enroll.edupush.html:6
 #: edumfa/static/components/token/views/token.enroll.push.html:6
 msgid ""
 "For the enrollment process and for the authentication process your "
@@ -1777,6 +1786,7 @@ msgstr "Info"
 msgid "Interval"
 msgstr "Intervalo"
 
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:22
 #: edumfa/static/components/token/views/token.enrolled.push.html:22
 msgid "It will send the missing registration data to the configured endpoint."
 msgstr "Enviará los datos de registro que faltan al \"endpoint\" configurado."
@@ -2247,7 +2257,7 @@ msgid "Parameters"
 msgstr "Parámetros"
 
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:57
-#: edumfa/static/components/config/views/config.radius.edit.html:105
+#: edumfa/static/components/config/views/config.radius.edit.html:119
 #: edumfa/static/components/config/views/config.resolvers.sql.html:79
 #: edumfa/static/components/config/views/config.smtp.edit.html:86
 #: edumfa/static/components/dialogs/views/dialog.lock.html:20
@@ -2305,6 +2315,7 @@ msgstr "Responda al menos {{num_answers}} de las siguientes preguntas."
 msgid "Please confirm with one of these tokens:"
 msgstr "Confirme con uno de estos tokens:"
 
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:4
 #: edumfa/static/components/token/views/token.enrolled.push.html:4
 msgid ""
 "Please note, that your smartphone needs internet access during the "
@@ -2322,6 +2333,18 @@ msgstr "Pase la clave pública y la huella digital al proveedor del token."
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:23
 msgid "Please provide the base URL of the eduMFA server."
 msgstr "Proporcione la URL base del servidor de eduMFA."
+
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:9
+#, fuzzy
+msgid ""
+"Please scan the QR code with the eduMFA Authenticator App\n"
+"            or click <a href=\"{{ enrolledToken.pushurl.value }}\">this "
+"link</a> on your\n"
+"            smartphone."
+msgstr ""
+"Escanee el código QR con la aplicación privacyIDEA Authenticator o haga clic "
+"en <a href=\"{{ enrolledToken.pushurl.value }}\"> este enlace </a> en su "
+"Smartphone."
 
 #: edumfa/static/components/token/views/token.enrolled.push.html:9
 msgid ""
@@ -2826,7 +2849,7 @@ msgstr "Guardar Opciones"
 msgid "Save Policy"
 msgstr "Crear política"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:120
+#: edumfa/static/components/config/views/config.radius.edit.html:134
 msgid "Save RADIUS server"
 msgstr "Guardar Servidor RADIUS"
 
@@ -2900,7 +2923,7 @@ msgstr "Filtro de búsqueda"
 msgid "Searching token..."
 msgstr "Buscando token..."
 
-#: edumfa/static/components/config/views/config.radius.edit.html:68
+#: edumfa/static/components/config/views/config.radius.edit.html:82
 #: edumfa/static/components/config/views/config.resolvers.scim.html:62
 #: edumfa/static/components/token/views/token.enroll.indexedsecret.html:11
 msgid "Secret"
@@ -2973,7 +2996,7 @@ msgstr "Envia correo electrónico de prueba"
 msgid "Send mail from job queue"
 msgstr "Enviar correo desde la cola de trabajos"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:111
+#: edumfa/static/components/config/views/config.radius.edit.html:125
 msgid "Send test RADIUS request"
 msgstr "Enviar solicitud de prueba RADIUS"
 
@@ -4345,7 +4368,7 @@ msgstr ""
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:51
 #: edumfa/static/components/config/views/config.policies.details.html:212
 #: edumfa/static/components/config/views/config.policies.list.html:24
-#: edumfa/static/components/config/views/config.radius.edit.html:99
+#: edumfa/static/components/config/views/config.radius.edit.html:113
 #: edumfa/static/templates/menu.html:62
 msgid "User"
 msgstr ""
@@ -4483,6 +4506,7 @@ msgstr ""
 msgid "Where statement"
 msgstr ""
 
+#: edumfa/static/components/token/views/token.enroll.edupush.html:1
 #: edumfa/static/components/token/views/token.enroll.push.html:1
 msgid ""
 "With the PUSH token eduMFA sends a notification to your registered "
@@ -4630,6 +4654,7 @@ msgid ""
 msgstr ""
 
 #: edumfa/static/components/token/views/token.enrolled.daypassword.html:43
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:19
 #: edumfa/static/components/token/views/token.enrolled.hotp.html:43
 #: edumfa/static/components/token/views/token.enrolled.push.html:19
 #: edumfa/static/components/token/views/token.enrolled.totp.html:43

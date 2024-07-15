@@ -920,7 +920,7 @@ msgstr "Kullanıcıyı sil"
 #: edumfa/static/components/config/views/config.events.list.html:13
 #: edumfa/static/components/config/views/config.periodictasks.details.html:32
 #: edumfa/static/components/config/views/config.periodictasks.list.html:8
-#: edumfa/static/components/config/views/config.radius.edit.html:88
+#: edumfa/static/components/config/views/config.radius.edit.html:102
 #: edumfa/static/components/config/views/config.radius.list.html:8
 #: edumfa/static/components/config/views/config.serviceid.edit.html:28
 #: edumfa/static/components/config/views/config.serviceid.list.html:10
@@ -959,7 +959,7 @@ msgstr ""
 msgid "Details for user {{ username }} in realm"
 msgstr "URM'de {{username}} kullanıcısı için detaylar"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:79
+#: edumfa/static/components/config/views/config.radius.edit.html:93
 #: edumfa/static/components/config/views/config.radius.list.html:7
 msgid "Dictionary"
 msgstr "Sözlük"
@@ -1221,6 +1221,14 @@ msgstr "Başlangıç tarihinden önce bitiş tarihi!"
 msgid "Endpoint (URL)"
 msgstr "Son nokta (URL)"
 
+#: edumfa/static/components/config/views/config.radius.edit.html:67
+msgid "Enforce Message-Authenticator"
+msgstr ""
+
+#: edumfa/static/components/config/views/config.radius.edit.html:75
+msgid "Enforce usage of Message-Authenticator attribute"
+msgstr ""
+
 #: edumfa/static/components/user/views/user.details.html:189
 msgid "Enroll New Token"
 msgstr "Yeni jeton kayıt"
@@ -1418,6 +1426,7 @@ msgstr ""
 "    <a ui-sref=\"config.tokens( instokentyyype:'yubico' ___ '' \"> Yubico "
 "Token Config </a>!"
 
+#: edumfa/static/components/token/views/token.enroll.edupush.html:6
 #: edumfa/static/components/token/views/token.enroll.push.html:6
 msgid ""
 "For the enrollment process and for the authentication process your "
@@ -1814,6 +1823,7 @@ msgstr "Bilgi"
 msgid "Interval"
 msgstr "Aralık"
 
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:22
 #: edumfa/static/components/token/views/token.enrolled.push.html:22
 msgid "It will send the missing registration data to the configured endpoint."
 msgstr "Eksik kayıt verilerini yapılandırılmış bitiş noktasına gönderir."
@@ -2291,7 +2301,7 @@ msgid "Parameters"
 msgstr "Parametreler"
 
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:57
-#: edumfa/static/components/config/views/config.radius.edit.html:105
+#: edumfa/static/components/config/views/config.radius.edit.html:119
 #: edumfa/static/components/config/views/config.resolvers.sql.html:79
 #: edumfa/static/components/config/views/config.smtp.edit.html:86
 #: edumfa/static/components/dialogs/views/dialog.lock.html:20
@@ -2349,6 +2359,7 @@ msgstr "Lütfen aşağıdaki soruların en azından {{num_Aswers}} cevabını ve
 msgid "Please confirm with one of these tokens:"
 msgstr "Lütfen bu belirteçlerden biriyle onaylayın:"
 
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:4
 #: edumfa/static/components/token/views/token.enrolled.push.html:4
 msgid ""
 "Please note, that your smartphone needs internet access during the "
@@ -2368,6 +2379,18 @@ msgstr ""
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:23
 msgid "Please provide the base URL of the eduMFA server."
 msgstr "Lütfen eduMFA sunucusunun temel URL'sini sağlayın."
+
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:9
+#, fuzzy
+msgid ""
+"Please scan the QR code with the eduMFA Authenticator App\n"
+"            or click <a href=\"{{ enrolledToken.pushurl.value }}\">this "
+"link</a> on your\n"
+"            smartphone."
+msgstr ""
+"Lütfen QR kodunu privacyIDEA Authenticator uygulamasıyla tarayın\n"
+"            Veya <a href=\" {enolledtoken.pushurl.value}} \"> Bu link </a>\n"
+"            akıllı telefon."
 
 #: edumfa/static/components/token/views/token.enrolled.push.html:9
 msgid ""
@@ -2876,7 +2899,7 @@ msgstr "Seçenekleri Kaydet"
 msgid "Save Policy"
 msgstr "Politikadan Kaydet"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:120
+#: edumfa/static/components/config/views/config.radius.edit.html:134
 msgid "Save RADIUS server"
 msgstr "RADIUS Sunucusu Kaydet"
 
@@ -2950,7 +2973,7 @@ msgstr "Arama filtresi"
 msgid "Searching token..."
 msgstr "Tokekar Arama ..."
 
-#: edumfa/static/components/config/views/config.radius.edit.html:68
+#: edumfa/static/components/config/views/config.radius.edit.html:82
 #: edumfa/static/components/config/views/config.resolvers.scim.html:62
 #: edumfa/static/components/token/views/token.enroll.indexedsecret.html:11
 msgid "Secret"
@@ -3024,7 +3047,7 @@ msgstr "Test E-postası Gönder"
 msgid "Send mail from job queue"
 msgstr "İş kuyruğundan posta gönder"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:111
+#: edumfa/static/components/config/views/config.radius.edit.html:125
 msgid "Send test RADIUS request"
 msgstr "Test yarıçapı isteği gönder"
 
@@ -4663,7 +4686,7 @@ msgstr "privacyIDEA Authenticator uygulamasıyla iki adımlı kayıt kullanın"
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:51
 #: edumfa/static/components/config/views/config.policies.details.html:212
 #: edumfa/static/components/config/views/config.policies.list.html:24
-#: edumfa/static/components/config/views/config.radius.edit.html:99
+#: edumfa/static/components/config/views/config.radius.edit.html:113
 #: edumfa/static/templates/menu.html:62
 msgid "User"
 msgstr "Kullanıcı"
@@ -4804,6 +4827,7 @@ msgstr "Hoş geldin"
 msgid "Where statement"
 msgstr "Nerede ifade"
 
+#: edumfa/static/components/token/views/token.enroll.edupush.html:1
 #: edumfa/static/components/token/views/token.enroll.push.html:1
 msgid ""
 "With the PUSH token eduMFA sends a notification to your registered "
@@ -5002,6 +5026,7 @@ msgstr ""
 "                jeton için {{pin_change_serial}}."
 
 #: edumfa/static/components/token/views/token.enrolled.daypassword.html:43
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:19
 #: edumfa/static/components/token/views/token.enrolled.hotp.html:43
 #: edumfa/static/components/token/views/token.enrolled.push.html:19
 #: edumfa/static/components/token/views/token.enrolled.totp.html:43

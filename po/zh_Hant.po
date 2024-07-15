@@ -911,7 +911,7 @@ msgstr "刪除使用者"
 #: edumfa/static/components/config/views/config.events.list.html:13
 #: edumfa/static/components/config/views/config.periodictasks.details.html:32
 #: edumfa/static/components/config/views/config.periodictasks.list.html:8
-#: edumfa/static/components/config/views/config.radius.edit.html:88
+#: edumfa/static/components/config/views/config.radius.edit.html:102
 #: edumfa/static/components/config/views/config.radius.list.html:8
 #: edumfa/static/components/config/views/config.serviceid.edit.html:28
 #: edumfa/static/components/config/views/config.serviceid.list.html:10
@@ -950,7 +950,7 @@ msgstr ""
 msgid "Details for user {{ username }} in realm"
 msgstr "領域中使用者 {{ 使用者名 }} 的詳細資訊"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:79
+#: edumfa/static/components/config/views/config.radius.edit.html:93
 #: edumfa/static/components/config/views/config.radius.list.html:7
 msgid "Dictionary"
 msgstr "字典"
@@ -1211,6 +1211,14 @@ msgstr "結束日期在開始日期之前！"
 msgid "Endpoint (URL)"
 msgstr "端點 (URL)"
 
+#: edumfa/static/components/config/views/config.radius.edit.html:67
+msgid "Enforce Message-Authenticator"
+msgstr ""
+
+#: edumfa/static/components/config/views/config.radius.edit.html:75
+msgid "Enforce usage of Message-Authenticator attribute"
+msgstr ""
+
 #: edumfa/static/components/user/views/user.details.html:189
 msgid "Enroll New Token"
 msgstr "註冊新令牌"
@@ -1410,6 +1418,7 @@ msgstr ""
 "為了使Yubico令牌正常工作，您需要設置\n"
 "    <a ui-sref=\"config.tokens({tokentype:'yubico'})\">Yubico 令牌配置</a>！"
 
+#: edumfa/static/components/token/views/token.enroll.edupush.html:6
 #: edumfa/static/components/token/views/token.enroll.push.html:6
 #, fuzzy
 msgid ""
@@ -1802,6 +1811,7 @@ msgstr "資訊"
 msgid "Interval"
 msgstr "間隔"
 
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:22
 #: edumfa/static/components/token/views/token.enrolled.push.html:22
 msgid "It will send the missing registration data to the configured endpoint."
 msgstr "它會將缺少的註冊數據發送到配置的終結點。"
@@ -2287,7 +2297,7 @@ msgid "Parameters"
 msgstr "參數"
 
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:57
-#: edumfa/static/components/config/views/config.radius.edit.html:105
+#: edumfa/static/components/config/views/config.radius.edit.html:119
 #: edumfa/static/components/config/views/config.resolvers.sql.html:79
 #: edumfa/static/components/config/views/config.smtp.edit.html:86
 #: edumfa/static/components/dialogs/views/dialog.lock.html:20
@@ -2346,6 +2356,7 @@ msgstr "請至少回答以下問題中的 {{ num_answers }}。"
 msgid "Please confirm with one of these tokens:"
 msgstr "請使用以下令牌之一進行確認："
 
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:4
 #: edumfa/static/components/token/views/token.enrolled.push.html:4
 msgid ""
 "Please note, that your smartphone needs internet access during the "
@@ -2364,6 +2375,17 @@ msgstr ""
 #, fuzzy
 msgid "Please provide the base URL of the eduMFA server."
 msgstr "請提供eduMFA 伺服器的基本URL。"
+
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:9
+#, fuzzy
+msgid ""
+"Please scan the QR code with the eduMFA Authenticator App\n"
+"            or click <a href=\"{{ enrolledToken.pushurl.value }}\">this "
+"link</a> on your\n"
+"            smartphone."
+msgstr ""
+"請使用eduMFA身份驗證器應用掃描二維碼並輸入\n"
+"            下面生成的代碼。"
 
 #: edumfa/static/components/token/views/token.enrolled.push.html:9
 #, fuzzy
@@ -2876,7 +2898,7 @@ msgstr "保存選項"
 msgid "Save Policy"
 msgstr "創建策略"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:120
+#: edumfa/static/components/config/views/config.radius.edit.html:134
 msgid "Save RADIUS server"
 msgstr "保存 RADIUS 伺服器"
 
@@ -2952,7 +2974,7 @@ msgstr "搜索過濾器"
 msgid "Searching token..."
 msgstr "搜尋令牌..."
 
-#: edumfa/static/components/config/views/config.radius.edit.html:68
+#: edumfa/static/components/config/views/config.radius.edit.html:82
 #: edumfa/static/components/config/views/config.resolvers.scim.html:62
 #: edumfa/static/components/token/views/token.enroll.indexedsecret.html:11
 msgid "Secret"
@@ -3025,7 +3047,7 @@ msgstr "發送測試電子郵件"
 msgid "Send mail from job queue"
 msgstr "從作業佇列發送郵件"
 
-#: edumfa/static/components/config/views/config.radius.edit.html:111
+#: edumfa/static/components/config/views/config.radius.edit.html:125
 msgid "Send test RADIUS request"
 msgstr "發送測試 RADIUS 請求"
 
@@ -4649,7 +4671,7 @@ msgstr "通過privacyIDEA Authenticator App使用兩步註冊"
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:51
 #: edumfa/static/components/config/views/config.policies.details.html:212
 #: edumfa/static/components/config/views/config.policies.list.html:24
-#: edumfa/static/components/config/views/config.radius.edit.html:99
+#: edumfa/static/components/config/views/config.radius.edit.html:113
 #: edumfa/static/templates/menu.html:62
 msgid "User"
 msgstr "使用者"
@@ -4790,6 +4812,7 @@ msgstr "歡迎"
 msgid "Where statement"
 msgstr "其中聲明"
 
+#: edumfa/static/components/token/views/token.enroll.edupush.html:1
 #: edumfa/static/components/token/views/token.enroll.push.html:1
 msgid ""
 "With the PUSH token eduMFA sends a notification to your registered "
@@ -4974,6 +4997,7 @@ msgstr ""
 "                對於令牌 {{ pin_change_serial }}。"
 
 #: edumfa/static/components/token/views/token.enrolled.daypassword.html:43
+#: edumfa/static/components/token/views/token.enrolled.edupush.html:19
 #: edumfa/static/components/token/views/token.enrolled.hotp.html:43
 #: edumfa/static/components/token/views/token.enrolled.push.html:19
 #: edumfa/static/components/token/views/token.enrolled.totp.html:43

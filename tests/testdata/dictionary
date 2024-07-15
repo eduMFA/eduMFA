@@ -5,6 +5,9 @@
 #
 #	$Id$
 #
+# M-A has to be first item as pyrad uses an OrderedDict
+# and CVE-2024-3596
+ATTRIBUTE   Message-Authenticator   80  string
 ATTRIBUTE	User-Name				1	string
 ATTRIBUTE	User-Password				2	string encrypt=1
 ATTRIBUTE	CHAP-Password				3	octets
