@@ -66,13 +66,14 @@ def create(identifier=None):
     secret = getParam(param, "secret", required)
     retries = int(getParam(param, "retries", default=3))
     timeout = int(getParam(param, "timeout", default=5))
+    enforce_ma = bool(getParam(param, "enforce_ma", default=False))
     description = getParam(param, "description", default="")
     dictionary = getParam(param, "dictionary",
                           default="/etc/edumfa/dictionary")
 
     r = add_radius(identifier, server, secret, port=port,
                    description=description, dictionary=dictionary,
-                   retries=retries, timeout=timeout)
+                   retries=retries, timeout=timeout, enforce_ma=enforce_ma)
 
     g.audit_object.log({'success': r > 0,
                         'info':  r})
@@ -125,13 +126,15 @@ def test():
     secret = getParam(param, "secret", required)
     retries = int(getParam(param, "retries", default=3))
     timeout = int(getParam(param, "timeout", default=5))
+    enforce_ma = bool(getParam(param, "enforce_ma", default=False))
     user = getParam(param, "username", required)
     password = getParam(param, "password", required)
     dictionary = getParam(param, "dictionary",
                           default="/etc/edumfa/dictionary")
 
     r = test_radius(identifier, server, secret, user, password, port=port,
-                    dictionary=dictionary, retries=retries, timeout=timeout)
+                    dictionary=dictionary, retries=retries, timeout=timeout,
+                    enforce_ma=enforce_ma)
     g.audit_object.log({'success': r > 0,
                         'info':  r})
     return send_result(r > 0)

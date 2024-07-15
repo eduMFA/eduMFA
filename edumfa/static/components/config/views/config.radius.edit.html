@@ -63,6 +63,20 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <label for="enforce_ma"
+            class="col-sm-3 control-label" translate>
+            Enforce Message-Authenticator
+        </label>
+        <div class="col-sm-9">
+            <input name="enforce_ma" id="enforce_ma"
+                   ng-model="params.enforce_ma"
+                   type="checkbox"/>
+            <p class="help-block" translate>
+                Enforce usage of Message-Authenticator attribute
+            </p>
+        </div>
+    </div>
 
     <div class="form-group">
         <label for="secret" class="col-sm-3 control-label"
@@ -125,4 +139,3 @@
     </div>
 
 </form>
-

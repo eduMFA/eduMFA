@@ -69,7 +69,7 @@ class RADIUSServerTestCase(MyApiTestCase):
             self.assertEqual(len(server_list), 0)
 
     @radiusmock.activate
-    def test_02_send_test_email(self):
+    def test_02_send_test_request(self):
         set_edumfa_config("radius.dictfile", DICT_FILE)
         radiusmock.setdata(response=radiusmock.AccessAccept)
 
