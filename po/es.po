@@ -2342,7 +2342,7 @@ msgid ""
 "link</a> on your\n"
 "            smartphone."
 msgstr ""
-"Escanee el código QR con la aplicación privacyIDEA Authenticator o haga clic "
+"Escanee el código QR con la aplicación eduMFA Authenticator o haga clic "
 "en <a href=\"{{ enrolledToken.pushurl.value }}\"> este enlace </a> en su "
 "Smartphone."
 

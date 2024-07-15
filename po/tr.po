@@ -2388,7 +2388,7 @@ msgid ""
 "link</a> on your\n"
 "            smartphone."
 msgstr ""
-"Lütfen QR kodunu privacyIDEA Authenticator uygulamasıyla tarayın\n"
+"Lütfen QR kodunu eduMFA Authenticator uygulamasıyla tarayın\n"
 "            Veya <a href=\" {enolledtoken.pushurl.value}} \"> Bu link </a>\n"
 "            akıllı telefon."
 
