@@ -33,6 +33,26 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.2.0 
+
+> [!CAUTION]
+> **This release fixes a possible security vulnerability.**
+>
+> eduMFA prior version 2.2.0 was also affected by [blastRADIUS](https://www.blastradius.fail/) ([CVE-2024-3596](https://nvd.nist.gov/vuln/detail/CVE-2024-3596)). In case you are using the RADIUS Token we strongly recommend you to upgrade to version 2.2.0. 
+>
+> Please note that this upgrade requires a database migration and you must replace the radius dictionary used by eduMFA! Beside these changes you should enable the `Message Authenticator` option introduced in the UI in case your RADIUS server supports this option.
+> 
+> Thanks a lot to @Janfred for the hint and @sklemer1 for the fix!
+
+### Further changes
+* chore(deps): update dependency google-auth to v2.32.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/203
+* chore(deps): update dependency sphinx to v7.4.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/206
+* chore(deps): update dependency setuptools to v70 [security] by @renovate in https://github.com/eduMFA/eduMFA/pull/209
+* chore(deps): update dependency setuptools to v70.3.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/192
+* chore(deps): update dependency croniter to v2.0.7 by @renovate in https://github.com/eduMFA/eduMFA/pull/213
+* chore(deps): update dependency cachetools to v5.4.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/210
+* chore(deps): update dependency sphinx to v7.4.5 by @renovate in https://github.com/eduMFA/eduMFA/pull/207
+
 ## eduMFA 2.1.0
 
 * fix: corrected typo in e-mail address by @st-hofmann in https://github.com/eduMFA/eduMFA/pull/171
