@@ -98,9 +98,9 @@ def before_request():
                         "client": g.client_ip,
                         "client_user_agent": request.user_agent.browser,
                         "edumfa_server": edumfa_server,
-                        "action": "{0!s} {1!s}".format(request.method, request.url_rule),
+                        "action": f"{request.method!s} {request.url_rule!s}",
                         "action_detail": "",
-                        "thread_id": "{0!s}".format(threading.current_thread().ident),
+                        "thread_id": f"{threading.current_thread().ident!s}",
                         "info": ""})
 
     username = getParam(request.all_data, "username")
@@ -115,8 +115,8 @@ def before_request():
             request.User = User(loginname, realm)
         except Exception as e:
             request.User = None
-            log.warning("Problem resolving user {0!s} in realm {1!s}: {2!s}.".format(loginname, realm, e))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.warning(f"Problem resolving user {loginname!s} in realm {realm!s}: {e!s}.")
+            log.debug(f"{traceback.format_exc()!s}")
 
 
 @jwtauth.route('', methods=['POST'])
@@ -215,7 +215,7 @@ def get_auth_token():
 
     # the realm parameter has precedence! Check if it exists
     if realm_param and not realm_is_defined(realm_param):
-        raise AuthError(_("Authentication failure. Unknown realm: {0!s}.".format(realm_param)),
+        raise AuthError(_(f"Authentication failure. Unknown realm: {realm_param!s}."),
                         id=ERROR.AUTHENTICATE_WRONG_CREDENTIALS)
 
     if username is None:
@@ -284,7 +284,7 @@ def get_auth_token():
     elif verify_db_admin(username, password):
         role = ROLE.ADMIN
         admin_auth = True
-        log.info("Local admin '{0!s}' successfully logged in.".format(username))
+        log.info(f"Local admin '{username!s}' successfully logged in.")
         # This admin is not in the default realm!
         realm = ""
         user_obj = User()

@@ -38,16 +38,16 @@ def list_resolver(verbose: bool = False):
 
     if not verbose:
         for (name, resolver) in resolver_list.items():
-            print("{0!s:16} - ({1!s})".format(name, resolver.get("type")))
+            print(f"{name!s:16} - ({resolver.get('type')!s})")
     else:
         for (name, resolver) in resolver_list.items():
-            print("{0!s:16} - ({1!s})".format(name, resolver.get("type")))
+            print(f"{name!s:16} - ({resolver.get('type')!s})")
             print("." * 32)
             data = resolver.get("data", {})
             for (k, v) in data.items():
                 if k.lower() in ["bindpw", "password"]:
                     v = "xxxxx"
-                print("{0!s:>24}: {1!r}".format(k, v))
+                print(f"{k!s:>24}: {v!r}")
             print("")
 
 
@@ -97,7 +97,7 @@ def create_internal(name):
     # determine host and user
     hostparts = user_pw_host.split("@")
     if len(hostparts) > 2:
-        click.echo("Invalid database URI: %s" % sqluri)
+        click.echo(f"Invalid database URI: {sqluri}")
         sys.exit(2)
     elif len(hostparts) == 1:
         host = hostparts[0] or "/"
@@ -111,7 +111,7 @@ def create_internal(name):
         elif len(userparts) == 1:
             username = userparts[0]
         else:
-            click.echo("Invalid username and password in database URI: %s" % sqluri)
+            click.echo(f"Invalid username and password in database URI: {sqluri}")
             sys.exit(3)
     # now we can create the resolver
     params = {'resolver': name, 'type': "sqlresolver", 'Server': host, 'Driver': sql_driver, 'User': username,
@@ -128,7 +128,7 @@ def create_internal(name):
     from sqlalchemy import Integer, String
     engine = create_engine(sqluri)
     metadata = MetaData()
-    Table('users_%s' % name, metadata, Column('id', Integer, primary_key=True),
+    Table(f'users_{name}', metadata, Column('id', Integer, primary_key=True),
           Column('username', String(40), unique=True), Column('email', String(80)), Column('password', String(255)),
           Column('phone', String(40)), Column('mobile', String(40)), Column('surname', String(40)),
           Column('givenname', String(40)), Column('description', String(255)))

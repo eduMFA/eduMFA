@@ -94,7 +94,7 @@ def verify_certificate_path(certificate, trusted_ca_paths):
                     verify_certificate(to_byte_string(certificate), chain)
                     return True
                 except Exception as exx:
-                    log.debug("Can not verify attestation certificate against chain {0!s}.".format(chain))
+                    log.debug(f"Can not verify attestation certificate against chain {chain!s}.")
         else:
             log.warning("The configured attestation CA directory does not exist.")
     return False
@@ -249,7 +249,7 @@ class CertificateTokenClass(TokenClass):
         try:
             self._update_rollout_state()
         except Exception as e:
-            log.warning("Failed to check for pending update. {0!s}".format(e))
+            log.warning(f"Failed to check for pending update. {e!s}")
 
     @staticmethod
     def get_class_type():
@@ -396,17 +396,17 @@ class CertificateTokenClass(TokenClass):
                 # TODO: Later we need to make the status CA dependent. Different CAs could return
                 # different codes. So each CA Connector needs a mapper for its specific codes.
                 if status in [3, 4]:  # issued or "issued out of band"
-                    log.info("The certificate {0!s} has been issued by the CA.".format(self.token.serial))
+                    log.info(f"The certificate {self.token.serial!s} has been issued by the CA.")
                     certificate = cacon.get_issued_certificate(request_id)
                     # Update the rollout state
                     self.token.rollout_state = ROLLOUTSTATE.ENROLLED
                     self.add_tokeninfo("certificate", certificate)
                 elif status == 2:  # denied
-                    log.warning("The certificate {0!s} has been denied by the CA.".format(self.token.serial))
+                    log.warning(f"The certificate {self.token.serial!s} has been denied by the CA.")
                     self.token.rollout_state = ROLLOUTSTATE.DENIED
                     self.token.save()
                 else:
-                    log.info("The certificate {0!s} is still pending.".format(self.token.serial))
+                    log.info(f"The certificate {self.token.serial!s} is still pending.")
             else:
                 log.warning("The certificate token in rollout_state pending, but either the CA ({0!s}) "
                             "or the requestId ({1!s}) is missing.".format(ca, request_id))
@@ -456,7 +456,7 @@ class CertificateTokenClass(TokenClass):
                                                            param.get(ACTION.TRUSTED_CA_PATH))
                     except Exception as exx:
                         # We could have file system errors during verification.
-                        log.debug("{0!s}".format(traceback.format_exc()))
+                        log.debug(f"{traceback.format_exc()!s}")
                         verified = False
 
                     if not verified:
@@ -543,7 +543,7 @@ class CertificateTokenClass(TokenClass):
             try:
                 response_detail["pkcs12"] = b64encode_and_unicode(self._create_pkcs12_bin())
             except Exception:
-                log.warning("Can not create PKCS12 for token {0!s}.".format(self.token.serial))
+                log.warning(f"Can not create PKCS12 for token {self.token.serial!s}.")
 
         return response_detail
 
@@ -589,7 +589,7 @@ class CertificateTokenClass(TokenClass):
             try:
                 token_dict["info"]["pkcs12"] = b64encode_and_unicode(self._create_pkcs12_bin())
             except Exception:
-                log.warning("Can not create PKCS12 for token {0!s}.".format(self.token.serial))
+                log.warning(f"Can not create PKCS12 for token {self.token.serial!s}.")
 
         return token_dict
 
@@ -629,11 +629,10 @@ class CertificateTokenClass(TokenClass):
         ca_obj = get_caconnector_object(ca_specifier)
         revoked = ca_obj.revoke_cert(certificate_pem,
                                      request_id=ti.get(REQUEST_ID))
-        log.info("Certificate {0!s} revoked on CA {1!s}.".format(revoked,
-                                                                 ca_specifier))
+        log.info(f"Certificate {revoked!s} revoked on CA {ca_specifier!s}.")
 
         # call CAConnector.create_crl()
         crl = ca_obj.create_crl()
-        log.info("CRL {0!s} created.".format(crl))
+        log.info(f"CRL {crl!s} created.")
 
         return revoked

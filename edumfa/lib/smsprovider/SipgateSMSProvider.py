@@ -83,7 +83,7 @@ class SipgateSMSProvider(ISMSProvider):
             protocol = proxy.split(":")[0]
             proxies = {protocol: proxy}
 
-        log.debug("submitting message {0!r} to {1!s}".format(message, phone))
+        log.debug(f"submitting message {message!r} to {phone!s}")
         r = requests.post(URL,
                           data=REQUEST_XML % (phone.strip().strip("+"),
                                               message),
@@ -92,12 +92,11 @@ class SipgateSMSProvider(ISMSProvider):
                           proxies=proxies,
                           timeout=60)
 
-        log.debug("SMS submitted: {0!s}".format(r.status_code))
-        log.debug("response content: {0!s}".format(r.text))
+        log.debug(f"SMS submitted: {r.status_code!s}")
+        log.debug(f"response content: {r.text!s}")
 
         if r.status_code != 200:
-            raise SMSError(r.status_code, "SMS could not be "
-                                          "sent: %s" % r.status_code)
+            raise SMSError(r.status_code, f"SMS could not be sent: {r.status_code}")
         return True
 
     @classmethod

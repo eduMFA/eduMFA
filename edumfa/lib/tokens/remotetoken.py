@@ -177,7 +177,7 @@ class RemoteTokenClass(TokenClass):
         :return: bool
         """
         local_check = is_true(self.get_tokeninfo("remote.local_checkpin"))
-        log.debug(" local checking pin? {0!r}".format(local_check))
+        log.debug(f" local checking pin? {local_check!r}")
 
         return local_check
 
@@ -281,7 +281,7 @@ class RemoteTokenClass(TokenClass):
             if remoteServer:
                 # Deprecated
                 params['pass'] = otpval
-                request_url = "{0!s}{1!s}".format(remoteServer, remotePath)
+                request_url = f"{remoteServer!s}{remotePath!s}"
                 r = requests.post(request_url, data=params, verify=ssl_verify, timeout=60)
             elif pi_server_obj:
                 r = pi_server_obj.validate_check(remoteUser, otpval,
@@ -300,7 +300,7 @@ class RemoteTokenClass(TokenClass):
         except Exception as exx:  # pragma: no cover
             log.error("Error getting response from "
                       "remote Server (%r): %r" % (request_url, exx))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.debug(f"{traceback.format_exc()!s}")
 
         return otp_count
 

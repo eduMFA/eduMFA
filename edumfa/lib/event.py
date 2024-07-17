@@ -63,9 +63,7 @@ class event:
             # do Pre-Event Handling
             e_handles = self.g.event_config.get_handled_events(self.eventname, position="pre")
             for e_handler_def in e_handles:
-                log.debug("Pre-Handling event {eventname} with "
-                          "{eventDef}".format(eventname=self.eventname,
-                                              eventDef=e_handler_def))
+                log.debug(f"Pre-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
                 event_handler = get_handler_object(event_handler_name)
                 # The "action is determined by the event configuration
@@ -102,9 +100,7 @@ class event:
             # Post-Event Handling
             e_handles = self.g.event_config.get_handled_events(self.eventname)
             for e_handler_def in e_handles:
-                log.debug("Post-Handling event {eventname} with "
-                          "{eventDef}".format(eventname=self.eventname,
-                                              eventDef=e_handler_def))
+                log.debug(f"Post-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
                 event_handler = get_handler_object(event_handler_name)
                 # The "action is determined by the event configuration
@@ -316,12 +312,11 @@ def export_event(name=None):
 @register_import('event')
 def import_event(data, name=None):
     """Import policy configuration"""
-    log.debug('Import event config: {0!s}'.format(data))
+    log.debug(f'Import event config: {data!s}')
     for res_data in data:
         if name and name != res_data.get('name'):
             continue
         # condition is apparently not used anymore
         del res_data["condition"]
         rid = set_event(**res_data)
-        log.info('Import of event "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_data['name'], rid))
+        log.info(f"Import of event \"{res_data['name']!s}\" finished, id: {rid!s}")

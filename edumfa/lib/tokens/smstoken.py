@@ -321,7 +321,7 @@ class SmsTokenClass(HotpTokenClass):
 
         if self.is_active() is True:
             counter = self.get_otp_count()
-            log.debug("counter={0!r}".format(counter))
+            log.debug(f"counter={counter!r}")
             # At this point we must not bail out in case of an
             # Gateway error, since checkPIN is successful. A bail
             # out would cancel the checking of the other tokens
@@ -348,15 +348,15 @@ class SmsTokenClass(HotpTokenClass):
             except Exception as e:
                 info = _("The PIN was correct, but the "
                          "SMS could not be sent!")
-                log.warning(info + " ({0!r})".format(e))
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.warning(info + f" ({e!r})")
+                log.debug(f"{traceback.format_exc()!s}")
                 return_message = info
                 if is_true(options.get("exception")):
                     raise Exception(info)
 
         expiry_date = datetime.datetime.now() + \
                                     datetime.timedelta(seconds=validity)
-        reply_dict['attributes']['valid_until'] = "{0!s}".format(expiry_date)
+        reply_dict['attributes']['valid_until'] = f"{expiry_date!s}"
 
         return success, return_message, transactionid, reply_dict
 
@@ -385,8 +385,8 @@ class SmsTokenClass(HotpTokenClass):
                 message = self._get_sms_text(options)
                 self.inc_otp_counter(ret, reset=False)
                 success, message = self._send_sms(message=message, options=options)
-                log.debug("AutoSMS: send new SMS: {0!s}".format(success))
-                log.debug("AutoSMS: {0!r}".format(message))
+                log.debug(f"AutoSMS: send new SMS: {success!s}")
+                log.debug(f"AutoSMS: {message!r}")
             else:
                 # post check action on success unless AutoSMS is on
                 options['smstoken_post_check'] = 1
@@ -436,26 +436,25 @@ class SmsTokenClass(HotpTokenClass):
         else:
             # Old style
             (SMSProvider, SMSProviderClass) = self._get_sms_provider()
-            log.debug("smsprovider: {0!s}, class: {1!s}".format(SMSProvider,
-                                                      SMSProviderClass))
+            log.debug(f"smsprovider: {SMSProvider!s}, class: {SMSProviderClass!s}")
 
             try:
                 sms = get_sms_provider_class(SMSProvider, SMSProviderClass)()
             except Exception as exc:
-                log.error("Failed to load SMSProvider: {0!r}".format(exc))
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.error(f"Failed to load SMSProvider: {exc!r}")
+                log.debug(f"{traceback.format_exc()!s}")
                 raise exc
 
             try:
                 # now we need the config from the env
-                log.debug("loading SMS configuration for class {0!s}".format(sms))
+                log.debug(f"loading SMS configuration for class {sms!s}")
                 config = self._get_sms_provider_config()
-                log.debug("config: {0!r}".format(config))
+                log.debug(f"config: {config!r}")
                 sms.load_config(config)
             except Exception as exc:
-                log.error("Failed to load sms.providerConfig: {0!r}".format(exc))
-                log.debug("{0!s}".format(traceback.format_exc()))
-                raise Exception("Failed to load sms.providerConfig: {0!r}".format(exc))
+                log.error(f"Failed to load sms.providerConfig: {exc!r}")
+                log.debug(f"{traceback.format_exc()!s}")
+                raise Exception(f"Failed to load sms.providerConfig: {exc!r}")
 
         if sms.send_to_uid():
             uid = None
@@ -469,7 +468,7 @@ class SmsTokenClass(HotpTokenClass):
                 if uid_attribute_name:
                     uid = self.get_tokeninfo(uid_attribute_name)
             if not uid:
-                log.warning("Token {0!s} does not have a uid!".format(self.token.serial))
+                log.warning(f"Token {self.token.serial!s} does not have a uid!")
             destination = uid
         else:
             if is_true(self.get_tokeninfo("dynamic_phone")):
@@ -480,14 +479,14 @@ class SmsTokenClass(HotpTokenClass):
             else:
                 phone = self.get_tokeninfo("phone")
             if not phone:  # pragma: no cover
-                log.warning("Token {0!s} does not have a phone number!".format(self.token.serial))
+                log.warning(f"Token {self.token.serial!s} does not have a phone number!")
             destination = phone
 
         if options.get('smstoken_post_check'):
-            log.debug("submitPostCheck: {0!r}, to {1!r}".format(message, destination))
+            log.debug(f"submitPostCheck: {message!r}, to {destination!r}")
             ret = sms.submit_post_check(destination, message)
         else:
-            log.debug("submitMessage: {0!r}, to {1!r}".format(message, destination))
+            log.debug(f"submitMessage: {message!r}, to {destination!r}")
             ret = sms.submit_message(destination, message)
         return ret, message
 
@@ -531,7 +530,7 @@ class SmsTokenClass(HotpTokenClass):
         try:
             timeout = int(get_from_config("sms.providerTimeout", 5 * 60))
         except Exception as ex:  # pragma: no cover
-            log.warning("SMSProviderTimeout: value error {0!r} - reset to 5*60".format((ex)))
+            log.warning(f"SMSProviderTimeout: value error {ex!r} - reset to 5*60")
             timeout = 5 * 60
         return timeout
 

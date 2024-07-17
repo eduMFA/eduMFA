@@ -183,7 +183,7 @@ class HTTPResolver(UserIdResolver):
             success = True
         except Exception as e:
             success = False
-            desc = "failed: {0!s}".format(e)
+            desc = f"failed: {e!s}"
         return success, desc
 
     #
@@ -213,7 +213,7 @@ class HTTPResolver(UserIdResolver):
             # verify if error response mapping is a subset of the json http response
             if all([x in jsonHTTPResponse.items() for x in errorResponse.items()]):
                 log.error(jsonHTTPResponse)
-                raise Exception('Received an error while searching for user: %s' % userid)
+                raise Exception(f'Received an error while searching for user: {userid}')
 
         # Create mapped response with response mapping resolver input
         response = {}

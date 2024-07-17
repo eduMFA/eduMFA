@@ -125,9 +125,9 @@ def parseOATHcsv(csv):
     m = re.match(r"^#\s*version:\s*(\d+)", csv_array[0])
     if m:
         version = m.group(1)
-        log.debug("the file is version {0}.".format(version))
+        log.debug(f"the file is version {version}.")
 
-    log.debug("the file contains {0:d} lines.".format(len(csv_array)))
+    log.debug(f"the file contains {len(csv_array):d} lines.")
     for line in csv_array:
         # Do not parse comment lines
         if line.startswith("#"):
@@ -150,7 +150,7 @@ def parseOATHcsv(csv):
         serial = l[0].strip()
         if len(serial) > 0:
             if len(l) < 2:
-                log.error("the line {0!s} did not contain a hotp key".format(line))
+                log.error(f"the line {line!s} did not contain a hotp key")
                 continue
 
             # ttype
@@ -162,7 +162,7 @@ def parseOATHcsv(csv):
 
             tok_class = get_token_class(ttype)
             params = tok_class.get_import_csv(l)
-            log.debug("read the line {0!s}".format(params))
+            log.debug(f"read the line {params!s}")
 
             params["user"] = user
             TOKENS[serial] = params
@@ -218,7 +218,7 @@ def parseYubicoCSV(csv):
     TOKENS = {}
     csv_array = csv.split('\n')
 
-    log.debug("the file contains {0:d} tokens.".format(len(csv_array)))
+    log.debug(f"the file contains {len(csv_array):d} tokens.")
     for line in csv_array:
         l = line.split(',')
         serial = ""
@@ -240,7 +240,7 @@ def parseYubicoCSV(csv):
                 if public_id == "":
                     # Usually a "static password" does not have a public ID!
                     # So we would bail out here for static passwords.
-                    log.warning("No public ID in line {0!r}".format(line))
+                    log.warning(f"No public ID in line {line!r}")
                     continue
 
                 serial_int = int(binascii.hexlify(modhex_decode(public_id)),
@@ -249,7 +249,7 @@ def parseYubicoCSV(csv):
                 if typ.lower() == "yubico otp":
                     ttype = "yubikey"
                     otplen = 32 + len(public_id)
-                    serial = "UBAM{0:08d}_{1!s}".format(serial_int, slot)
+                    serial = f"UBAM{serial_int:08d}_{slot!s}"
                     TOKENS[serial] = {'type': ttype,
                                       'otpkey': key,
                                       'otplen': otplen,
@@ -266,7 +266,7 @@ def parseYubicoCSV(csv):
                     '''
                     ttype = "hotp"
                     otplen = 6
-                    serial = "UBOM{0:08d}_{1!s}".format(serial_int, slot)
+                    serial = f"UBOM{serial_int:08d}_{slot!s}"
                     TOKENS[serial] = {'type': ttype,
                                       'otpkey': key,
                                       'otplen': otplen,
@@ -286,12 +286,12 @@ def parseYubicoCSV(csv):
                 if l[2].strip() == "0":
                     # HOTP
                     typ = "hotp"
-                    serial = "UBOM{0!s}_{1!s}".format(serial, slot)
+                    serial = f"UBOM{serial!s}_{slot!s}"
                     otplen = 6
                 elif l[2].strip() == "":
                     # Static
                     typ = "pw"
-                    serial = "UBSM{0!s}_{1!s}".format(serial, slot)
+                    serial = f"UBSM{serial!s}_{slot!s}"
                     key = _create_static_password(key)
                     otplen = len(key)
                     log.warning("We can not enroll a static mode, since we do"
@@ -301,7 +301,7 @@ def parseYubicoCSV(csv):
                 else:
                     # Yubico
                     typ = "yubikey"
-                    serial = "UBAM{0!s}_{1!s}".format(serial, slot)
+                    serial = f"UBAM{serial!s}_{slot!s}"
                     public_id = l[1].strip()
                     otplen = 32 + len(public_id)
                 TOKENS[serial] = {'type': typ,
@@ -310,7 +310,7 @@ def parseYubicoCSV(csv):
                                   'description': public_id
                                   }
         else:
-            log.warning("the line {0!r} did not contain a enough values".format(line))
+            log.warning(f"the line {line!r} did not contain a enough values")
             continue
 
     return TOKENS
@@ -331,7 +331,7 @@ def parseSafeNetXML(xml):
         elem_tokencontainer = etree.fromstring(xml)
     except etree.ParseError as e:
         log.debug(traceback.format_exc())
-        raise TokenImportException('Could not parse XML data: {0!s}'.format(e))
+        raise TokenImportException(f'Could not parse XML data: {e!s}')
 
     if getTagName(elem_tokencontainer) != "Tokens":
         raise TokenImportException("No toplevel element Tokens")
@@ -343,7 +343,7 @@ def parseSafeNetXML(xml):
         DESCRIPTION = None
         if getTagName(elem_token) == "Token":
             SERIAL = elem_token.get("serial")
-            log.debug("Found token with serial {0!s}".format(SERIAL))
+            log.debug(f"Found token with serial {SERIAL!s}")
             for elem_tdata in list(elem_token):
                 tag = getTagName(elem_tdata)
                 if "ProductName" == tag:
@@ -373,8 +373,7 @@ def parseSafeNetXML(xml):
                                       'hashlib': hashlib
                                       }
                 else:
-                    log.error("Found token {0!s} without a element 'Seed'".format(
-                              SERIAL))
+                    log.error(f"Found token {SERIAL!s} without a element 'Seed'")
 
     return TOKENS
 
@@ -477,7 +476,7 @@ def parsePSKCdata(xml_data,
         try:
             token["description"] = key_package.deviceinfo.manufacturer.string
         except Exception as exx:
-            log.debug("Can not get manufacturer string {0!s}".format(exx))
+            log.debug(f"Can not get manufacturer string {exx!s}")
 
         algo = key["algorithm"]
         serial = key["id"]
@@ -491,12 +490,12 @@ def parsePSKCdata(xml_data,
             serial_split = serial.split(":")
             serial_no = serial_split[0]
             slot = serial_split[1]
-            serial = "{!s}{!s}_{!s}".format(yubi_mapping[algo][1], serial_no, slot)
+            serial = f"{yubi_mapping[algo][1]!s}{serial_no!s}_{slot!s}"
         else:
             try:
                 serial = key_package.deviceinfo.serialno.string.strip()
             except Exception as exx:
-                log.debug("Can not get serial string from device info {0!s}".format(exx))
+                log.debug(f"Can not get serial string from device info {exx!s}")
             t_type = algo.split(":")[-1].lower()
 
         token["type"] = t_type
@@ -511,7 +510,7 @@ def parsePSKCdata(xml_data,
         if parameters.suite and parameters.suite.string:
             hash_lib = parameters.suite.string.lower()
         else:
-            log.warning("No hashlib defined, falling back to default {}.".format(hash_lib))
+            log.warning(f"No hashlib defined, falling back to default {hash_lib}.")
 
         token["hashlib"] = hash_lib
 
@@ -559,7 +558,7 @@ def parsePSKCdata(xml_data,
                         continue
 
         except Exception as exx:
-            log.error("Failed to import tokendata: {0!s}".format(exx))
+            log.error(f"Failed to import tokendata: {exx!s}")
             log.debug(traceback.format_exc())
             raise TokenImportException("Failed to import tokendata. Wrong "
                                   "encryption key? %s" % exx)
@@ -599,7 +598,7 @@ class GPGImport:
             self.gpg = gnupg.GPG(gnupghome=self.gnupg_home)
             self.private_keys = self.gpg.list_keys(True)
         else:
-            log.warning("Directory {} does not exists!".format(self.gnupg_home))
+            log.warning(f"Directory {self.gnupg_home} does not exists!")
 
 
 
@@ -616,7 +615,7 @@ class GPGImport:
             keys = self.gpg.list_keys(secret=True)
         else:
             keys = []
-            log.warning("Directory {} does not exists!".format(self.gnupg_home))
+            log.warning(f"Directory {self.gnupg_home} does not exists!")
 
         for key in keys:
             ascii_armored_public_key = self.gpg.export_keys(key.get("keyid"))
@@ -640,8 +639,7 @@ class GPGImport:
         decrypted = self.gpg.decrypt(message=input_data)
 
         if not decrypted.ok:
-            log.error("Decrpytion failed: {0!s}. {1!s}".format(
-                decrypted.status, decrypted.stderr))
+            log.error(f"Decrpytion failed: {decrypted.status!s}. {decrypted.stderr!s}")
             raise Exception(decrypted.stderr)
 
         return to_unicode(decrypted.data)
@@ -765,7 +763,7 @@ def export_pskc(tokenobj_list, psk=None):
             soup.macmethod.insert_after(kp2)
             number_of_exported_tokens += 1
         except Exception as e:
-            log.warning("Failed to export the token {0!s}: {1!s}".format(serial, e))
+            log.warning(f"Failed to export the token {serial!s}: {e!s}")
             tb = traceback.format_exc()
             log.debug(tb)
 

@@ -129,19 +129,17 @@ def parse_registration_data(reg_data, verify_cert=True):
                                            attestation_cert))
     # TODO: Check the issuer of the certificate
     issuer = attestation_cert.get_issuer()
-    log.debug("The attestation certificate is signed by {0!r}".format(issuer))
+    log.debug(f"The attestation certificate is signed by {issuer!r}")
     not_after = to_unicode(attestation_cert.get_notAfter())
     not_before = to_unicode(attestation_cert.get_notBefore())
-    log.debug("The attestation certificate "
-              "is valid from %s to %s" % (not_before, not_after))
+    log.debug(f"The attestation certificate is valid from {not_before} to {not_after}")
     start_time = time.strptime(not_before, "%Y%m%d%H%M%SZ")
     end_time = time.strptime(not_after, "%Y%m%d%H%M%SZ")
     # check the validity period of the certificate
     if verify_cert:
         if start_time > time.localtime() or \
                         end_time < time.localtime():  #pragma no cover
-            log.error("The certificate is not valid. {0!s} -> {1!s}".format(not_before,
-                                                                  not_after))
+            log.error(f"The certificate is not valid. {not_before!s} -> {not_after!s}")
             raise Exception("The time of the attestation certificate is not "
                             "valid.")
 
@@ -150,7 +148,7 @@ def parse_registration_data(reg_data, verify_cert=True):
     subj_list = subj_x509name.get_components()
     description = ""
     cdump = to_unicode(crypto.dump_certificate(crypto.FILETYPE_PEM, attestation_cert))
-    log.debug("This attestation certificate registered: {0!s}".format(cdump))
+    log.debug(f"This attestation certificate registered: {cdump!s}")
 
     for component in subj_list:
         # each component is a tuple. We are looking for CN
@@ -241,10 +239,10 @@ def check_response(user_pub_key, app_id, client_data, signature,
         vkey.verify(signature_bin, input_data, ec.ECDSA(hashes.SHA256()))
     except (ValueError, TypeError) as e:
         log.error("Could not load application specific public key!")
-        log.debug('{0!s}'.format(e))
+        log.debug(f'{e!s}')
         res = False
     except InvalidSignature:
-        log.error("Bad signature for app_id {0!s}".format(app_id))
+        log.error(f"Bad signature for app_id {app_id!s}")
         res = False
     return res
 
@@ -257,4 +255,4 @@ def x509name_to_string(x509name):
     :return:
     """
     components = x509name.get_components()
-    return ",".join(["{0}={1}".format(to_unicode(c[0]), to_unicode(c[1])) for c in components])
+    return ",".join([f"{to_unicode(c[0])}={to_unicode(c[1])}" for c in components])

@@ -80,7 +80,7 @@ class SmtpSMSProvider(ISMSProvider):
             body = body.replace(PHONE_TAG, phone)
             body = body.replace(MSG_TAG, message)
 
-        log.debug("submitting message {0!r} to {1!s}".format(body, phone))
+        log.debug(f"submitting message {body!r} to {phone!s}")
         if identifier:
             r = send_email_identifier(identifier, recipient, subject, body)
         else:

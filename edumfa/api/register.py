@@ -165,14 +165,14 @@ def register_post():
         "Your eduMFA registration",
         body.format(regkey=registration_key))
     if not email_sent:
-        log.warning("Failed to send registration email to {0!r}".format(email))
+        log.warning(f"Failed to send registration email to {email!r}")
         # delete registration token
         token.delete_token()
         # delete user
         user.delete()
         raise RegistrationError("Failed to send email!")
 
-    log.debug("Registration email sent to {0!r}".format(email))
+    log.debug(f"Registration email sent to {email!r}")
 
     g.audit_object.log({"success": email_sent})
     return send_result(email_sent)

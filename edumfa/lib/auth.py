@@ -84,7 +84,7 @@ def get_db_admin(username):
 
 
 def delete_db_admin(username):
-    print("Deleting admin {0!s}".format(username))
+    print(f"Deleting admin {username!s}")
     fetch_one_resource(Admin, username=username).delete()
 
 
@@ -127,7 +127,7 @@ def check_webui_user(user_obj,
             if check:
                 user_auth = True
         except Exception as e:
-            log.debug("Error authenticating user against eduMFA: {0!r}".format(e))
+            log.debug(f"Error authenticating user against eduMFA: {e!r}")
     else:
         # check the password of the user against the userstore
         if user_obj.check_password(password):

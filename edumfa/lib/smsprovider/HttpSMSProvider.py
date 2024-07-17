@@ -86,7 +86,7 @@ class HttpSMSProvider(ISMSProvider):
             parameter = self._get_parameters(message, phone)
             timeout = self.config.get("TIMEOUT") or 3
 
-        log.debug("submitting message {0!r} to {1!s}".format(message, phone))
+        log.debug(f"submitting message {message!r} to {phone!s}")
 
         if url is None:
             log.warning("can not submit message. URL is missing.")
@@ -124,7 +124,7 @@ class HttpSMSProvider(ISMSProvider):
             params = None
             if json_data:
                 json_param = parameter
-                log.debug("passing JSON data: {0!s}".format(json_param))
+                log.debug(f"passing JSON data: {json_param!s}")
             else:
                 data = parameter
 
@@ -152,8 +152,7 @@ class HttpSMSProvider(ISMSProvider):
         # We assume, that all gateways return with HTTP Status Code 200,
         # 201 or 202
         if r.status_code not in [200, 201, 202]:
-            raise SMSError(r.status_code, "SMS could not be "
-                                          "sent: %s" % r.status_code)
+            raise SMSError(r.status_code, f"SMS could not be sent: {r.status_code}")
         success = self._check_success(r)
         return success
 
@@ -168,7 +167,7 @@ class HttpSMSProvider(ISMSProvider):
         urldata[messageKey] = message
         params = self.config.get('PARAMETER', {})
         urldata.update(params)
-        log.debug("[getParameters] urldata: {0!s}".format(urldata))
+        log.debug(f"[getParameters] urldata: {urldata!s}")
         return urldata
 
     def _check_success(self, response):

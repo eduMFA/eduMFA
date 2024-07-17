@@ -93,26 +93,26 @@ class SecurityModule:
         fname = 'setup_module'
         log.error("This is the base class. You should implement "
                   "the method : %s " % (fname,))
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     ''' base methods '''
     def random(self, length):
         fname = 'random'
         log.error("This is the base class. You should implement "
                   "the method : %s " % (fname,))
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def encrypt(self, data, iv, key_id=TOKEN_KEY):
         fname = 'encrypt'
         log.error("This is the base class. You should implement "
                   "the method : %s " % (fname,))
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def decrypt(self, enc_data, iv, key_id=TOKEN_KEY):
         fname = 'decrypt'
         log.error("This is the base class. You should implement "
                   "the method : %s " % (fname,))
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def decrypt_password(self, crypt_pass):
         """
@@ -224,7 +224,7 @@ class SecurityModule:
         :return: Module dependent
         """
         fname = "create_keys"
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        raise NotImplementedError(f"Should have been implemented {fname!s}")
 
 
 class DefaultSecurityModule(SecurityModule):
@@ -432,7 +432,7 @@ class DefaultSecurityModule(SecurityModule):
         cipher = aes_cbc_encrypt(bkey, iv, input_data)
         iv_hex = hexlify_and_unicode(iv)
         cipher_hex = hexlify_and_unicode(cipher)
-        return "{0!s}:{1!s}".format(iv_hex, cipher_hex)
+        return f"{iv_hex!s}:{cipher_hex!s}"
 
     @staticmethod
     def password_decrypt(enc_data, password):

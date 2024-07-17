@@ -148,8 +148,8 @@ class MotpTokenClass(TokenClass):
                                                   "img": create_img(motp_url)
                                                   }
                 except Exception as ex:   # pragma: no cover
-                    log.debug("{0!s}".format(traceback.format_exc()))
-                    log.error('failed to set motp url: {0!r}'.format(ex))
+                    log.debug(f"{traceback.format_exc()!s}")
+                    log.error(f'failed to set motp url: {ex!r}')
                     
         return response_detail
 

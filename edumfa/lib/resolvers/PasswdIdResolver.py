@@ -186,21 +186,21 @@ class IdResolver (UserIdResolver):
         :return: True or False
         :rtype: bool
         """
-        log.info("checking password for user uid {0!s}".format(uid))
+        log.info(f"checking password for user uid {uid!s}")
         cryptedpasswd = self.passDict[uid]
-        log.debug("We found the encrypted pass {0!s} for uid {1!s}".format(cryptedpasswd, uid))
+        log.debug(f"We found the encrypted pass {cryptedpasswd!s} for uid {uid!s}")
         if cryptedpasswd:
             if cryptedpasswd in ['x', '*']:
                 err = "Sorry, currently no support for shadow passwords"
-                log.error("{0!s}".format(err))
+                log.error(f"{err!s}")
                 raise NotImplementedError(err)
             cp = crypt.crypt(password, cryptedpasswd)
-            log.debug("encrypted pass is {0!s}".format(cp))
+            log.debug(f"encrypted pass is {cp!s}")
             if crypt.crypt(password, cryptedpasswd) == cryptedpasswd:
-                log.info("successfully authenticated user uid {0!s}".format(uid))
+                log.info(f"successfully authenticated user uid {uid!s}")
                 return True
             else:
-                log.warning("user uid {0!s} failed to authenticate".format(uid))
+                log.warning(f"user uid {uid!s} failed to authenticate")
                 return False
         else:
             log.warning("Failed to verify password. No encrypted password "

@@ -364,13 +364,13 @@ class TotpTokenClass(HotpTokenClass):
             lastauth = self._counter2time(oCount, self.timestep)
             lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
 
-            log.debug("last auth : {0!r}".format(lastauthDt))
-            log.debug("tokentime : {0!r}".format(tokenDt))
-            log.debug("now       : {0!r}".format(nowDt))
-            log.debug("delta     : {0!r}".format((tokentime - inow)))
+            log.debug(f"last auth : {lastauthDt!r}")
+            log.debug(f"tokentime : {tokenDt!r}")
+            log.debug(f"now       : {nowDt!r}")
+            log.debug(f"delta     : {tokentime - inow!r}")
 
             new_shift = (tokentime - inow)
-            log.debug("the counter {0!r} matched. New shift: {1!r}".format(res, new_shift))
+            log.debug(f"the counter {res!r} matched. New shift: {new_shift!r}")
             self.add_tokeninfo('timeShift', new_shift)
         return res
 
@@ -403,7 +403,7 @@ class TotpTokenClass(HotpTokenClass):
 
         # check if the otpval is valid in the sync scope
         res = hmac2Otp.checkOtp(anOtpVal, syncWindow, symetric=True)
-        log.debug("found otpval {0!r} in syncwindow ({1!r}): {2!r}".format(anOtpVal, syncWindow, res))
+        log.debug(f"found otpval {anOtpVal!r} in syncwindow ({syncWindow!r}): {res!r}")
 
         if res != -1:
             # if former is defined
@@ -411,16 +411,16 @@ class TotpTokenClass(HotpTokenClass):
                 # check if this is consecutive
                 otp1c = int(info.get("otp1c"))
                 otp2c = res
-                log.debug("otp1c: {0!r}, otp2c: {1!r}".format(otp1c, otp2c))
+                log.debug(f"otp1c: {otp1c!r}, otp2c: {otp2c!r}")
                 if (otp1c + 1) != otp2c:
-                    log.debug("Autoresync failed for token {0!s}. OTP values too far apart.".format(self.token.serial))
+                    log.debug(f"Autoresync failed for token {self.token.serial!s}. OTP values too far apart.")
                     res = -1
                 elif otp2c <= self.token.count:
                     # The resync was done with previous (old) OTP values
-                    log.debug("Autoresync failed for token {0!s}. Previous OTP values used.".format(self.token.serial))
+                    log.debug(f"Autoresync failed for token {self.token.serial!s}. Previous OTP values used.")
                     res = -1
                 else:
-                    log.info("Autoresync successful for token {0!s}.".format(self.token.serial))
+                    log.info(f"Autoresync successful for token {self.token.serial!s}.")
                     server_time = time.time()
                     counter = self._time2counter(server_time, self.timestep)
 
@@ -433,7 +433,7 @@ class TotpTokenClass(HotpTokenClass):
                 self.set_tokeninfo(info)
 
             else:
-                log.debug("setting otp1c: {0!s}".format(res))
+                log.debug(f"setting otp1c: {res!s}")
                 info["otp1c"] = res
                 self.set_tokeninfo(info)
                 res = -1
@@ -460,7 +460,7 @@ class TotpTokenClass(HotpTokenClass):
         otplen = int(self.token.otplen)
         secretHOtp = self.token.get_otpkey()
 
-        log.debug("timestep: {0!r}, syncWindow: {1!r}, timeShift: {2!r}".format(self.timestep, self.timewindow, self.timeshift))
+        log.debug(f"timestep: {self.timestep!r}, syncWindow: {self.timewindow!r}, timeShift: {self.timeshift!r}")
 
         initTime = int(options.get('initTime', -1))
         if initTime != -1:
@@ -469,33 +469,33 @@ class TotpTokenClass(HotpTokenClass):
             server_time = time.time() + self.timeshift
 
         counter = self._time2counter(server_time, self.timestep)
-        log.debug("counter (current time): {0:d}".format(counter))
+        log.debug(f"counter (current time): {counter:d}")
 
         oCount = self.get_otp_count()
 
-        log.debug("tokenCounter: {0!r}".format(oCount))
+        log.debug(f"tokenCounter: {oCount!r}")
         sync_window = self.get_sync_window()
-        log.debug("now checking window {0!s}, timeStepping {1!s}".format(sync_window, self.timestep))
+        log.debug(f"now checking window {sync_window!s}, timeStepping {self.timestep!s}")
         # check 2nd value
         hmac2Otp = HmacOtp(secretHOtp,
                            counter,
                            otplen,
                            self.get_hashlib(self.hashlib))
-        log.debug("{0!s} in otpkey: {1!s} ".format(otp2, secretHOtp))
+        log.debug(f"{otp2!s} in otpkey: {secretHOtp!s} ")
         res2 = hmac2Otp.checkOtp(otp2,
                                  int(sync_window),
                                  symetric=True)  # TEST -remove the 10
-        log.debug("res 2: {0!r}".format(res2))
+        log.debug(f"res 2: {res2!r}")
         # check 1st value
         hmac2Otp = HmacOtp(secretHOtp,
                            counter - 1,
                            otplen,
                            self.get_hashlib(self.hashlib))
-        log.debug("{0!s} in otpkey: {1!s} ".format(otp1, secretHOtp))
+        log.debug(f"{otp1!s} in otpkey: {secretHOtp!s} ")
         res1 = hmac2Otp.checkOtp(otp1,
                                  int(sync_window),
                                  symetric=True)  # TEST -remove the 10
-        log.debug("res 1: {0!r}".format(res1))
+        log.debug(f"res 1: {res1!r}")
 
         if res1 < oCount:
             # A previous OTP value was used again!
@@ -510,7 +510,7 @@ class TotpTokenClass(HotpTokenClass):
             tokentime = (res2 + 0.5) * self.timestep
             currenttime = server_time - self.timeshift
             new_shift = (tokentime - currenttime)
-            log.debug("the counters {0!r} and {1!r} matched. New shift: {2!r}".format(res1, res2, new_shift))
+            log.debug(f"the counters {res1!r} and {res2!r} matched. New shift: {new_shift!r}")
             self.add_tokeninfo('timeShift', new_shift)
 
             # The OTP value that was used for resync must not be used again!
@@ -523,7 +523,7 @@ class TotpTokenClass(HotpTokenClass):
         else:
             msg = "resync was not successful"
 
-        log.debug("end. {0!s}: ret: {1!r}".format(msg, ret))
+        log.debug(f"end. {msg!s}: ret: {ret!r}")
         return ret
 
     def get_otp(self, current_time=None, do_truncation=True,
@@ -561,9 +561,9 @@ class TotpTokenClass(HotpTokenClass):
                                    challenge=challenge)
 
         pin = self.token.get_pin()
-        combined = "{0!s}{1!s}".format(otpval, pin)
+        combined = f"{otpval!s}{pin!s}"
         if get_from_config("PrependPin") == "True":
-            combined = "{0!s}{1!s}".format(pin, otpval)
+            combined = f"{pin!s}{otpval!s}"
 
         return 1, pin, otpval, combined
 

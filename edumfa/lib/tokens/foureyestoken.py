@@ -173,7 +173,7 @@ class FourEyesTokenClass(TokenClass):
         if type(realms) is dict:
             for realmname, v in realms.items():
                 if v.get("selected"):
-                    realms_string += "{0!s}:{1!s},".format(realmname, v.get("count"))
+                    realms_string += f"{realmname!s}:{v.get('count')!s},"
             if realms_string[-1] == ',':
                 realms_string = realms_string[:-1]
         else:
@@ -278,7 +278,7 @@ class FourEyesTokenClass(TokenClass):
                     else:
                         used_tokens[realm] = [serial]
                     options["data"] = used_tokens
-                    log.debug("Partially authenticated with token {0!s}.".format(serial))
+                    log.debug(f"Partially authenticated with token {serial!s}.")
                     r_success = 1
                     break
         return r_success
@@ -374,7 +374,7 @@ class FourEyesTokenClass(TokenClass):
             remaining_realms = self._get_remaining_realms(options.get("data", {}))
             if remaining_realms:
                 options["data"] = json.dumps(options.get("data", {}))
-                options["message"] = "Remaining tokens: {0!s}".format(remaining_realms)
+                options["message"] = f"Remaining tokens: {remaining_realms!s}"
                 return True
         return False
 
@@ -471,7 +471,7 @@ class FourEyesTokenClass(TokenClass):
         db_challenge.save()
         expiry_date = datetime.datetime.now() + \
                       datetime.timedelta(seconds=validity)
-        reply_dict = {'attributes': {'valid_until': "{0!s}".format(expiry_date)}}
+        reply_dict = {'attributes': {'valid_until': f"{expiry_date!s}"}}
         return True, message, db_challenge.transaction_id, reply_dict
 
     def is_challenge_request(self, passw, user=None, options=None):

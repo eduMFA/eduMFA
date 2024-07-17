@@ -663,7 +663,7 @@ class PushTokenClass(TokenClass):
         try:
             ts = isoparse(timestamp)
         except (ValueError, TypeError) as _e:
-            log.debug('{0!s}'.format(traceback.format_exc()))
+            log.debug(f'{traceback.format_exc()!s}')
             raise eduMFAError('Could not parse timestamp {0!s}. '
                                    'ISO-Format required.'.format(timestamp))
         td = timedelta(minutes=window)
@@ -674,7 +674,7 @@ class PushTokenClass(TokenClass):
         else:
             now = datetime.utcnow()
         if not (now - td <= ts <= now + td):
-            raise eduMFAError('Timestamp {0!s} not in valid range.'.format(timestamp))
+            raise eduMFAError(f'Timestamp {timestamp!s} not in valid range.')
 
     @classmethod
     def _api_endpoint_post(cls, request_data):
@@ -728,7 +728,7 @@ class PushTokenClass(TokenClass):
                 # There are valid challenges, so we check this signature
                 for chal in challengeobject_list:
                     # verify the signature of the nonce
-                    sign_data = "{0!s}|{1!s}".format(challenge, serial)
+                    sign_data = f"{challenge!s}|{serial!s}"
                     if decline:
                         sign_data += "|decline"
                     try:
@@ -737,7 +737,7 @@ class PushTokenClass(TokenClass):
                                           padding.PKCS1v15(),
                                           hashes.SHA256())
                         # The signature was valid
-                        log.debug("Found matching challenge {0!s}.".format(chal))
+                        log.debug(f"Found matching challenge {chal!s}.")
                         if decline:
                             chal.set_data("challenge_declined")
                         else:
@@ -766,7 +766,7 @@ class PushTokenClass(TokenClass):
                     InvalidSignature, ConfigAdminError, BinasciiError) as e:
                 # to avoid disclosing information we always fail with an invalid
                 # signature error even if the token with the serial could not be found
-                log.debug('{0!s}'.format(traceback.format_exc()))
+                log.debug(f'{traceback.format_exc()!s}')
                 log.info('The following error occurred during the signature '
                          'check: "{0!r}"'.format(e))
                 raise eduMFAError('Could not verify signature!')
@@ -843,7 +843,7 @@ class PushTokenClass(TokenClass):
                 InvalidSignature, ConfigAdminError, BinasciiError) as e:
             # to avoid disclosing information we always fail with an invalid
             # signature error even if the token with the serial could not be found
-            log.debug('{0!s}'.format(traceback.format_exc()))
+            log.debug(f'{traceback.format_exc()!s}')
             log.info('The following error occurred during the signature '
                      'check: "{0!r}"'.format(e))
             raise eduMFAError('Could not verify signature!')

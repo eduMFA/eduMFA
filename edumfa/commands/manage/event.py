@@ -36,7 +36,7 @@ def list_events():
     from edumfa.lib.event import EventConfiguration
     conf = EventConfiguration()
     events = conf.events
-    click.echo("{0:7} {4:4} {1:30}\t{2:20}\t{3}".format("Active", "Name", "Module", "Action", "ID"))
+    click.echo(f"{'Active':7} {'ID':4} {'Name':30}\t{'Module':20}\tAction")
     click.echo(90 * "=")
     for event in events:
         click.echo("[{0!s:>5}] {4:4} {1:30}\t{2:20}\t{3}".format(event.get("active"), event.get("name")[0:30],

@@ -339,7 +339,7 @@ class RadiusTokenClass(RemoteTokenClass):
         :return: bool
         """
         local_check = is_true(self.get_tokeninfo("radius.local_checkpin"))
-        log.debug("local checking pin? {0!r}".format(local_check))
+        log.debug(f"local checking pin? {local_check!r}")
 
         return local_check
 
@@ -456,7 +456,7 @@ class RadiusTokenClass(RemoteTokenClass):
             radius_server_object = get_radius(radius_identifier)
             radius_server = radius_server_object.config.server
             radius_port = radius_server_object.config.port
-            radius_server = "{0!s}:{1!s}".format(radius_server, radius_port)
+            radius_server = f"{radius_server!s}:{radius_port!s}"
             radius_secret = radius_server_object.get_secret()
             radius_dictionary = radius_server_object.config.dictionary
             radius_timeout = int(radius_server_object.config.timeout or 10)
@@ -516,7 +516,7 @@ class RadiusTokenClass(RemoteTokenClass):
 
             if radius_state:
                 req["State"] = radius_state
-                log.info("Sending saved challenge to radius server: {0!r} ".format(radius_state))
+                log.info(f"Sending saved challenge to radius server: {radius_state!r} ")
 
             try:
                 response = srv.SendPacket(req)
@@ -543,14 +543,14 @@ class RadiusTokenClass(RemoteTokenClass):
             else:
                 radius_state = '<REJECTED>'
                 radius_message = 'RADIUS authentication failed'
-                log.debug('radius response code {0!s}'.format(response.code))
+                log.debug(f'radius response code {response.code!s}')
                 log.info("Radiusserver {0!s} "
                          "rejected access to user {1!s}.".format(r_server, radius_user))
                 result = AccessReject
 
         except Exception as ex:  # pragma: no cover
-            log.error("Error contacting radius Server: {0!r}".format((ex)))
-            log.info("{0!s}".format(traceback.format_exc()))
+            log.error(f"Error contacting radius Server: {ex!r}")
+            log.info(f"{traceback.format_exc()!s}")
 
         options.update({'radius_result': result})
         options.update({'radius_state': radius_state})

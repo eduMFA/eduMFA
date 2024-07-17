@@ -40,7 +40,7 @@ def list_policies():
     click.echo("Active \t Name \t Scope")
     click.echo(40 * "=")
     for policy in policies:
-        click.echo("%s \t %s \t %s" % (policy.get("active"), policy.get("name"), policy.get("scope")))
+        click.echo(f"{policy.get('active')} \t {policy.get('name')} \t {policy.get('scope')}")
 
 
 @policy_cli.command("enable")
@@ -127,16 +127,16 @@ def create(name, scope, action, filename):
 
             if params.get("name") and params.get("name") != name:
                 click.echo(
-                    "Found name '{0!s}' in file, will use that instead of '{1!s}'.".format(params.get("name"), name))
+                    f"Found name '{params.get('name')!s}' in file, will use that instead of '{name!s}'.")
             else:
-                click.echo("name not defined in file, will use the cli value {0!s}.".format(name))
+                click.echo(f"name not defined in file, will use the cli value {name!s}.")
                 params["name"] = name
 
             if params.get("scope") and params.get("scope") != scope:
                 click.echo(
-                    "Found scope '{0!s}' in file, will use that instead of '{1!s}'.".format(params.get("scope"), scope))
+                    f"Found scope '{params.get('scope')!s}' in file, will use that instead of '{scope!s}'.")
             else:
-                click.echo("scope not defined in file, will use the cli value {0!s}.".format(scope))
+                click.echo(f"scope not defined in file, will use the cli value {scope!s}.")
                 params["scope"] = scope
 
             if params.get("action") and params.get("action") != action:
@@ -144,7 +144,7 @@ def create(name, scope, action, filename):
                     "Found action in file: '{0!s}', will use that instead of: '{1!s}'.".format(params.get("action"),
                                                                                                action))
             else:
-                click.echo("action not defined in file, will use the cli value {0!s}.".format(action))
+                click.echo(f"action not defined in file, will use the cli value {action!s}.")
                 params["action"] = action
 
             r = set_policy(params.get("name"), scope=params.get("scope"), action=params.get("action"),
@@ -155,7 +155,7 @@ def create(name, scope, action, filename):
             return r
 
         except Exception as _e:
-            click.echo("Unexpected error: {0!s}".format(sys.exc_info()[1]))
+            click.echo(f"Unexpected error: {sys.exc_info()[1]!s}")
 
     else:
         r = set_policy(name, scope, action)

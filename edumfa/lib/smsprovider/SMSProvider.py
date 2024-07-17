@@ -65,7 +65,7 @@ class SMSError(Exception):
         return ret
 
     def __str__(self):
-        ret = '{0!s}'.format(self.description)
+        ret = f'{self.description!s}'
         return ret
 
 
@@ -291,7 +291,7 @@ def get_smsgateway(identifier=None, id=None, gwtype=None):
             id = int(id)
             sqlquery = sqlquery.filter_by(id=id)
         except Exception:
-            log.info("We can not filter for smsgateway {0!s}".format(id))
+            log.info(f"We can not filter for smsgateway {id!s}")
     if gwtype:
         sqlquery = sqlquery.filter_by(providermodule=gwtype)
     if identifier:
@@ -367,10 +367,9 @@ def export_smsgateway(name=None):
 @register_import('smsgateway')
 def import_smsgateway(data, name=None):
     """Import sms gateway configuration"""
-    log.debug('Import smsgateway config: {0!s}'.format(data))
+    log.debug(f'Import smsgateway config: {data!s}')
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         rid = set_smsgateway(res_name, **res_data)
-        log.info('Import of smsgateway "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of smsgateway "{res_name!s}" finished, id: {rid!s}')

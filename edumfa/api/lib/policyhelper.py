@@ -70,7 +70,7 @@ def get_init_tokenlabel_parameters(g, params=None, token_type="hotp", user_objec
 
     # check the force_app_pin policy
     app_pin_pols = Match.user(g, scope=SCOPE.ENROLL,
-                              action='{0!s}_{1!s}'.format(token_type, ACTION.FORCE_APP_PIN),
+                              action=f'{token_type!s}_{ACTION.FORCE_APP_PIN!s}',
                               user_object=user_object).any()
     if app_pin_pols:
         params[ACTION.FORCE_APP_PIN] = True

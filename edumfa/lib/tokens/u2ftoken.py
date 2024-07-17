@@ -342,7 +342,7 @@ class U2fTokenClass(TokenClass):
             self.add_tokeninfo("pubKey", user_pub_key)
             # add attestation certificate info
             issuer = x509name_to_string(attestation_cert.get_issuer())
-            serial = "{!s}".format(attestation_cert.get_serial_number())
+            serial = f"{attestation_cert.get_serial_number()!s}"
             subject = x509name_to_string(attestation_cert.get_subject())
 
             self.add_tokeninfo("attestation_issuer", issuer)
@@ -580,11 +580,10 @@ class U2fTokenClass(TokenClass):
 
         # Read the facets from the policies
         pol_facets = Match.action_only(g, scope=SCOPE.AUTH, action=U2FACTION.FACETS).action_values(unique=False)
-        facet_list = ["https://{0!s}".format(x) for x in pol_facets]
+        facet_list = [f"https://{x!s}" for x in pol_facets]
         facet_list.append(app_id)
 
-        log.debug("Sending facets lists for appId {0!s}: {1!s}".format(app_id,
-                                                             facet_list))
+        log.debug(f"Sending facets lists for appId {app_id!s}: {facet_list!s}")
         res = {"trustedFacets": [{"version": {"major": 1,
                                               "minor": 0},
                                   "ids": facet_list

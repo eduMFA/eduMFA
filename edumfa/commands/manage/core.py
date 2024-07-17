@@ -230,11 +230,11 @@ def validate(user, password, realm=None):
     try:
         user = get_user_from_param({"user": user, "realm": realm})
         auth, details = check_user_pass(user, password)
-        click.echo("RESULT=%s" % auth)
-        click.echo("DETAILS=%s" % details)
+        click.echo(f"RESULT={auth}")
+        click.echo(f"DETAILS={details}")
     except Exception as exx:
         click.echo("RESULT=Error")
-        click.echo("ERROR=%s" % exx)
+        click.echo(f"ERROR={exx}")
 
 
 @core_cli.command("profile")

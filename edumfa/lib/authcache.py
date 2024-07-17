@@ -82,7 +82,7 @@ def delete_from_cache(username, realm, resolver, password, last_valid_cache_time
                 delete_entry = True
 
         except ValueError:
-            log.debug("Old (non-argon2) authcache entry for user {0!s}@{1!s}.".format(username, realm))
+            log.debug(f"Old (non-argon2) authcache entry for user {username!s}@{realm!s}.")
             # Also delete old entries
             delete_entry = True
         if delete_entry:
@@ -144,7 +144,7 @@ def verify_in_cache(username, realm, resolver, password, first_auth=None, last_a
         try:
             result = argon2.verify(password, cached_auth.authentication)
         except ValueError:
-            log.debug("Old (non-argon2) authcache entry for user {0!s}@{1!s}.".format(username, realm))
+            log.debug(f"Old (non-argon2) authcache entry for user {username!s}@{realm!s}.")
             result = False
 
         if result and max_auths > 0:

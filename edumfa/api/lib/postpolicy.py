@@ -157,8 +157,7 @@ def sign_response(request, response):
         sign_object = Sign(priv_key, public_key=None,
                            check_private_key=check_private_key)
     except (IOError, ValueError, TypeError) as e:
-        log.info('Could not load private key from '
-                 'file {0!s}: {1!r}!'.format(priv_file_name, e))
+        log.info(f'Could not load private key from file {priv_file_name!s}: {e!r}!')
         log.debug(traceback.format_exc())
         return response
 
@@ -281,7 +280,7 @@ def check_tokeninfo(request, response):
                             raise PolicyError("Tokeninfo field {0!s} with contents does not"
                                               " match regular expression.".format(key))
                     except ValueError:
-                        log.warning("invalid tokeinfo policy: {0!s}".format(tokeninfo_pol))
+                        log.warning(f"invalid tokeinfo policy: {tokeninfo_pol!s}")
 
     return response
 
@@ -826,7 +825,7 @@ def mangle_challenge_response(request, response):
             messages = sorted(set(messages))
             if message[-4:].lower() in ["<ol>", "<ul>"]:
                 for m in messages:
-                    message += "<li>{0!s}</li>\n".format(m)
+                    message += f"<li>{m!s}</li>\n"
             else:
                 message += "\n"
                 message += ", ".join(messages)

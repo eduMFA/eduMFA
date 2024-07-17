@@ -219,7 +219,7 @@ class IndexedSecretTokenClass(TokenClass):
                 raise ValidateError("The indexedsecret token has an empty secret and "
                                     "can not be used for authentication.")
             random_positions = [urandom.randint(1, secret_length) for _x in range(0, position_count)]
-            position_str = ",".join(["{0!s}".format(x) for x in random_positions])
+            position_str = ",".join([f"{x!s}" for x in random_positions])
             attributes["random_positions"] = random_positions
 
             db_challenge = Challenge(self.token.serial,
@@ -234,7 +234,7 @@ class IndexedSecretTokenClass(TokenClass):
 
         expiry_date = datetime.datetime.now() + \
                                     datetime.timedelta(seconds=validity)
-        attributes['valid_until'] = "{0!s}".format(expiry_date)
+        attributes['valid_until'] = f"{expiry_date!s}"
         reply_dict = {"attributes": attributes}
 
         return True, return_message, transactionid, reply_dict
@@ -336,7 +336,7 @@ class IndexedSecretTokenClass(TokenClass):
                                                                 options) or DEFAULT_POSITION_COUNT)
             if len(challengeobject_list) == 1:
                 session = int(challengeobject_list[0].session or "0") + 1
-                options["session"] = "{0!s}".format(session)
+                options["session"] = f"{session!s}"
                 if session < position_count:
                     return True
 
@@ -374,5 +374,5 @@ class IndexedSecretTokenClass(TokenClass):
         transaction_id = chals[0].transaction_id
         r = self.check_challenge_response(passw=verify,
                                           options={"transaction_id": transaction_id})
-        log.debug("Enrollment verified: {0!s}".format(r))
+        log.debug(f"Enrollment verified: {r!s}")
         return r >= 0

@@ -48,7 +48,7 @@ class CompareError(Exception):
         self.message = message
 
     def __repr__(self):
-        return "CompareError({!r})".format(self.message)
+        return f"CompareError({self.message!r})"
 
 
 def parse_comma_separated_string(input_string):
@@ -101,7 +101,7 @@ def _compare_contains(left, comparator, right):
     if isinstance(left, list):
         return right in left
     else:
-        raise CompareError("Left value must be a list, not {!r}".format(type(left)))
+        raise CompareError(f"Left value must be a list, not {type(left)!r}")
 
 
 def _compare_matches(left, comparator, right):
@@ -122,7 +122,7 @@ def _compare_matches(left, comparator, right):
             regex = r"^" + right + r"$"
         return re.match(regex, left) is not None
     except re.error as e:
-        raise CompareError("Error during matching: {!r}".format(e))
+        raise CompareError(f"Error during matching: {e!r}")
 
 
 def _compare_in(left, comparator, right):
@@ -220,4 +220,4 @@ def compare_values(left, comparator, right):
     if comparator in COMPARATOR_FUNCTIONS:
         return COMPARATOR_FUNCTIONS[comparator](left, comparator, right)
     else:
-        raise CompareError("Invalid comparator: {!r}".format(comparator))
+        raise CompareError(f"Invalid comparator: {comparator!r}")

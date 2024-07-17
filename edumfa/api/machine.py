@@ -118,7 +118,7 @@ def list_machines_api():
     # so we need to convert the Machine Object to dict
     machines = [mobject.get_dict() for mobject in machines]
     g.audit_object.log({'success': True,
-                        'info': "hostname: {0!s}, ip: {1!s}".format(hostname, ip)})
+                        'info': f"hostname: {hostname!s}, ip: {ip!s}"})
 
     return send_result(machines)
 
@@ -177,8 +177,7 @@ def attach_token_api():
                              options=options)
 
     g.audit_object.log({'success': True,
-                        'info': "serial: {0!s}, application: {1!s}".format(serial,
-                                                                 application)})
+                        'info': f"serial: {serial!s}, application: {application!s}"})
 
     return send_result(mt_object.id)
 
@@ -217,8 +216,7 @@ def detach_token_api(serial, machineid=None, resolver=None, application=None, mt
                      machine_id=machineid, resolver_name=resolver, mtid=mtid)
 
     g.audit_object.log({'success': True,
-                        'info': "serial: {0!s}, application: {1!s}".format(serial,
-                                                                 application)})
+                        'info': f"serial: {serial!s}, application: {application!s}"})
 
     return send_result(r)
 
@@ -289,8 +287,7 @@ def list_machinetokens_api():
         res.sort(key=lambda x: x.get("options", {}).get(sortby, ""), reverse=sortdir == "desc")
 
     g.audit_object.log({'success': True,
-                        'info': "serial: {0!s}, hostname: {1!s}".format(serial,
-                                                              hostname)})
+                        'info': f"serial: {serial!s}, hostname: {hostname!s}"})
     return send_result(res)
 
 
@@ -348,8 +345,7 @@ def set_option_api():
                           key=k)
 
     g.audit_object.log({'success': True,
-                        'info': "serial: {0!s}, application: {1!s}".format(serial,
-                                                                 application)})
+                        'info': f"serial: {serial!s}, application: {application!s}"})
 
     return send_result({"added": o_add, "deleted": o_del})
 
@@ -411,7 +407,6 @@ def get_auth_items_api(application=None):
                          application=application, challenge=challenge,
                          filter_param=filter_param)
     g.audit_object.log({'success': True,
-                        'info': "host: {0!s}, application: {1!s}".format(hostname,
-                                                               application)})
+                        'info': f"host: {hostname!s}, application: {application!s}"})
     return send_result(ret)
 

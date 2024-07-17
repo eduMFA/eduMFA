@@ -183,7 +183,7 @@ class CheckSubscription:
         def check_subscription_wrapper(*args, **kwds):
             request = self.request
             ua = request.user_agent
-            ua_str = "{0!s}".format(ua) or "unknown"
+            ua_str = f"{ua!s}" or "unknown"
             application = ua_str.split()[0]
             check_subscription(application)
             f_result = func(*args, **kwds)

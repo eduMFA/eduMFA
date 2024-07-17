@@ -257,7 +257,7 @@ class IdResolver (UserIdResolver):
 
         # translate lower case hash identifier to uppercase
         database_pw = re.sub(r'^{([a-z0-9]+)}',
-                             lambda match: '{{{}}}'.format(match.group(1).upper()),
+                             lambda match: f'{{{match.group(1).upper()}}}',
                              database_pw)
 
         try:
@@ -288,10 +288,10 @@ class IdResolver (UserIdResolver):
 
             for r in result.mappings():
                 if userinfo:  # pragma: no cover
-                    raise Exception("More than one user with userid {0!s} found!".format(userId))
+                    raise Exception(f"More than one user with userid {userId!s} found!")
                 userinfo = self._get_user_from_mapped_object(r)
         except Exception as exx:  # pragma: no cover
-            log.error("Could not get the user information: {0!r}".format(exx))
+            log.error(f"Could not get the user information: {exx!r}")
 
         return userinfo
 
@@ -345,7 +345,7 @@ class IdResolver (UserIdResolver):
                 user = self._get_user_from_mapped_object(r)
                 userid = convert_column_to_unicode(user["userid"])
         except Exception as exx:    # pragma: no cover
-            log.error("Could not get the user ID: {0!r}".format(exx))
+            log.error(f"Could not get the user ID: {exx!r}")
 
         return userid
 
@@ -361,8 +361,8 @@ class IdResolver (UserIdResolver):
             if self.map.get("userid") in ro:
                 user["id"] = ro[self.map.get("userid")]
         except UnicodeEncodeError:  # pragma: no cover
-            log.error("Failed to convert user: {0!r}".format(ro))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"Failed to convert user: {ro!r}")
+            log.debug(f"{traceback.format_exc()!s}")
 
         for key in self.map.keys():
             try:
@@ -378,8 +378,8 @@ class IdResolver (UserIdResolver):
 
             except UnicodeDecodeError:  # pragma: no cover
                 user[key] = "decoding_error"
-                log.error("Failed to convert user: {0!r}".format(ro))
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.error(f"Failed to convert user: {ro!r}")
+                log.debug(f"{traceback.format_exc()!s}")
 
         return user
 
@@ -551,11 +551,11 @@ class IdResolver (UserIdResolver):
         password = "" # nosec B105 # default parameter
         conParams = ""
         if param.get("Port"):
-            port = ":{0!s}".format(param.get("Port"))
+            port = f":{param.get('Port')!s}"
         if param.get("Password"):
-            password = ":{0!s}".format(param.get("Password"))
+            password = f":{param.get('Password')!s}"
         if param.get("conParams"):
-            conParams = "?{0!s}".format(param.get("conParams"))
+            conParams = f"?{param.get('conParams')!s}"
         connect_string = "{0!s}://{1!s}{2!s}{3!s}{4!s}{5!s}/{6!s}{7!s}".format(param.get("Driver") or "",
                                                    param.get("User") or "",
                                                    password,
@@ -587,7 +587,7 @@ class IdResolver (UserIdResolver):
         num = -1
 
         connect_string = cls._create_connect_string(param)
-        log.info("using the connect string {0!s}".format(censor_connect_string(connect_string)))
+        log.info(f"using the connect string {censor_connect_string(connect_string)!s}")
         engine = create_engine(connect_string)
         # create a configured "Session" class
         session = scoped_session(sessionmaker(bind=engine))()
@@ -599,9 +599,9 @@ class IdResolver (UserIdResolver):
             result = session.query(TABLE).filter(filter_condition).count()
 
             num = result
-            desc = "Found {0:d} users.".format(num)
+            desc = f"Found {num:d} users."
         except Exception as exx:
-            desc = "failed to retrieve users: {0!s}".format(exx)
+            desc = f"failed to retrieve users: {exx!s}"
         finally:
             # We do not want any leftover DB connection, so we first need to close
             # the session such that the DB connection gets returned to the pool (it
@@ -627,7 +627,7 @@ class IdResolver (UserIdResolver):
         attributes = attributes or {}
         # TODO: add try/except
         kwargs = self.prepare_attributes_for_db(attributes)
-        log.info("Insert new user with attributes {0!s}".format(kwargs))
+        log.info(f"Insert new user with attributes {kwargs!s}")
         r = self.session.execute(insert(self.TABLE).values(**kwargs))
         self.session.commit()
         # Return the UID of the new object
@@ -671,9 +671,9 @@ class IdResolver (UserIdResolver):
             filter_condition = and_(*conditions)
             self.session.execute(delete(self.TABLE).where(filter_condition))
             self.session.commit()
-            log.info('Deleted user with uid: {0!s}'.format(uid))
+            log.info(f'Deleted user with uid: {uid!s}')
         except Exception as exx:
-            log.error("Error deleting user: {0!s}".format(exx))
+            log.error(f"Error deleting user: {exx!s}")
             res = False
         return res
 
@@ -700,11 +700,11 @@ class IdResolver (UserIdResolver):
             kwargs = {self.map.get("userid"): uid}
             r = self.session.query(self.TABLE).filter_by(**kwargs).update(params)
             self.session.commit()
-            log.info('Updated user attributes for user with uid {0!s}'.format(uid))
+            log.info(f'Updated user attributes for user with uid {uid!s}')
         except Exception as exx:
             log.error('Error updating user attributes for user with uid {0!s}: '
                       '{1!s}'.format(uid, exx))
-            log.debug('Error updating attributes {0!s}'.format(attributes), exc_info=True)
+            log.debug(f'Error updating attributes {attributes!s}', exc_info=True)
 
         return r
 

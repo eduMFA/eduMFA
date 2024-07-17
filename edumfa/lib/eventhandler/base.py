@@ -613,6 +613,5 @@ class BaseEventHandler:
         :type options: dict
         :return:
         """
-        log.info("In fact we are doing nothing, be we presume we are doing"
-                 "{0!s}".format(action))
+        log.info(f"In fact we are doing nothing, be we presume we are doing{action!s}")
         return True

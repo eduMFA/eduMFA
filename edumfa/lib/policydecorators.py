@@ -103,7 +103,7 @@ def challenge_response_allowed(func):
             allowed_tokentypes_dict = Match.user(g, scope=SCOPE.AUTH,
                                                  action=ACTION.CHALLENGERESPONSE, user_object=user_object)\
                 .action_values(unique=False, write_to_audit_log=False)
-            log.debug("Found these allowed tokentypes: {0!s}".format(list(allowed_tokentypes_dict)))
+            log.debug(f"Found these allowed tokentypes: {list(allowed_tokentypes_dict)!s}")
             allowed_tokentypes_dict = {k.lower(): v for k, v in allowed_tokentypes_dict.items()}
             token = token.get_tokentype().lower()
             chal_resp_found = False
@@ -305,12 +305,12 @@ def auth_user_passthru(wrapped_function, user_object, passw, options=None):
                                     # and the unassigned token already was contained in the user's realm
                                     assign_token(serial=token_obj.token.serial,
                                                  user=user_object, pin=pin)
-                                    messages.append("autoassigned {0!s}".format(token_obj.token.serial))
+                                    messages.append(f"autoassigned {token_obj.token.serial!s}")
                                     break
 
                         else:
-                            log.warning("Wrong value in passthru_assign policy: {0!s}".format(passthru_assign))
-                    messages.append("against RADIUS server {!s} due to '{!s}'".format(pass_thru_action, policy_name))
+                            log.warning(f"Wrong value in passthru_assign policy: {passthru_assign!s}")
+                    messages.append(f"against RADIUS server {pass_thru_action!s} due to '{policy_name!s}'")
                     return True, {'message': ",".join(messages)}
 
     # If nothing else returned, we return the wrapped function
@@ -630,8 +630,7 @@ def reset_all_user_tokens(wrapped_function, *args, **kwds):
         reset_all = Match.user(g, scope=SCOPE.AUTH, action=ACTION.RESETALLTOKENS,
                                user_object=token_owner if token_owner else None).policies()
         if reset_all:
-            log.debug("Reset failcounter of all tokens of {0!s}".format(
-                token_owner))
+            log.debug(f"Reset failcounter of all tokens of {token_owner!s}")
             for tok_obj_reset in toks_avail:
                 try:
                     tok_obj_reset.reset()

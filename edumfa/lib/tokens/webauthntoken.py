@@ -836,7 +836,7 @@ class WebAuthnTokenClass(TokenClass):
         """
 
         if key not in WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys():
-            raise ValueError('key must be one of {0!s}'.format(', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())))
+            raise ValueError(f"key must be one of {', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())!s}")
         return WEBAUTHN_TOKEN_SPECIFIC_SETTINGS[key]
 
     @log_with(log)
@@ -852,7 +852,7 @@ class WebAuthnTokenClass(TokenClass):
         self.hKeyRequired = False
 
     def _get_message(self, options):
-        challengetext = getParam(options, "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT), optional)
+        challengetext = getParam(options, f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}", optional)
         return challengetext.format(self.token.description) if challengetext else ''
 
     def _get_webauthn_user(self, user):
@@ -931,7 +931,7 @@ class WebAuthnTokenClass(TokenClass):
             # Since we are still enrolling the token, there should be exactly one challenge.
             if not len(challengeobject_list):
                 raise EnrollmentError(
-                    "The enrollment challenge does not exist or has timed out for {0!s}".format(serial))
+                    f"The enrollment challenge does not exist or has timed out for {serial!s}")
             challengeobject = challengeobject_list[0]
             challenge = binascii.unhexlify(challengeobject.challenge)
 
@@ -963,7 +963,7 @@ class WebAuthnTokenClass(TokenClass):
             except Exception as e:
                 log.warning('Enrollment of {0!s} token failed: '
                             '{1!s}!'.format(self.get_class_type(), e))
-                raise EnrollmentError("Could not enroll {0!s} token!".format(self.get_class_type()))
+                raise EnrollmentError(f"Could not enroll {self.get_class_type()!s} token!")
 
             self.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(webauthn_credential.credential_id)))
             self.set_otp_count(webauthn_credential.sign_count)
@@ -1001,7 +1001,7 @@ class WebAuthnTokenClass(TokenClass):
                     else:
                         self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "not enough info")
                 except Exception as e:
-                    log.warning('Could not parse registrationClientExtensions: {0!s}'.format(e))
+                    log.warning(f'Could not parse registrationClientExtensions: {e!s}')
 
             # Some authenticators do not set the resident key extension.
             # However, backup-eligible keys are always passkeys, i.e., resident keys.
@@ -1441,7 +1441,7 @@ class WebAuthnTokenClass(TokenClass):
                                    ).verify())
             except AuthenticationRejectedException as e:
                 # The authentication ceremony failed.
-                log.warning("Checking response for token {0!s} failed. {1!s}".format(self.token.serial, e))
+                log.warning(f"Checking response for token {self.token.serial!s} failed. {e!s}")
                 return -1
 
             # At this point we can check, if the attestation certificate is

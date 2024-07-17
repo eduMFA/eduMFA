@@ -118,7 +118,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
         elif action.lower() == "delete_custom_user_attributes":
             ret = user.delete_attribute(attrkey)
         else:
-            log.warning('Unknown action value: {0!s}'.format(action))
+            log.warning(f'Unknown action value: {action!s}')
             ret = False
 
         return ret

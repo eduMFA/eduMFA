@@ -191,11 +191,11 @@ class MSCAConnector(BaseCAConnector):
                     raise CAError('Invalid TLS configuration for MSCA worker.')
 
                 credentials = grpc.ssl_channel_credentials(ca_cert_pem, client_key_pem, client_cert_pem)
-                channel = grpc.secure_channel('{0!s}:{1!s}'.format(self.hostname, self.port),
+                channel = grpc.secure_channel(f'{self.hostname!s}:{self.port!s}',
                                               credentials,
                                               options=(('grpc.enable_http_proxy', int(is_true(self.http_proxy))),))
         else:
-            channel = grpc.insecure_channel('{0!s}:{1!s}'.format(self.hostname, self.port),
+            channel = grpc.insecure_channel(f'{self.hostname!s}:{self.port!s}',
                                             options=(('grpc.enable_http_proxy', int(is_true(self.http_proxy))),))
         try:
             grpc.channel_ready_future(channel).result(timeout=TIMEOUT)
@@ -232,8 +232,7 @@ class MSCAConnector(BaseCAConnector):
     def _check_attributes(self):
         for req_key in [ATTR.HOSTNAME, ATTR.PORT]:
             if req_key not in self.config:
-                raise CAError("required argument '{0!s}' is missing.".format(
-                    req_key))
+                raise CAError(f"required argument '{req_key!s}' is missing.")
 
     def set_config(self, config=None):
         self.config = config or {}
@@ -269,7 +268,7 @@ class MSCAConnector(BaseCAConnector):
                                                                caName=self.ca))
             if reply.disposition == 3:
                 request_id = reply.requestId
-                log.info("certificate with request ID {0!s} successfully rolled out".format(request_id))
+                log.info(f"certificate with request ID {request_id!s} successfully rolled out")
                 certificate = self.connection.GetCertificate(GetCertificateRequest(id=request_id,
                                                                                    caName=self.ca)).cert
                 return request_id, crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
@@ -277,7 +276,7 @@ class MSCAConnector(BaseCAConnector):
                 log.info("cert still under submission")
                 raise CSRPending(requestId=reply.requestId)
             else:
-                log.warning("certification request could not be fulfilled! {0!s}".format(reply))
+                log.warning(f"certification request could not be fulfilled! {reply!s}")
                 raise CSRError(description=reply.dispositionMessage)
 
     def revoke_cert(self, certificate, request_id=None, reason=None):
@@ -382,10 +381,10 @@ class MSCAConnector(BaseCAConnector):
             cas = [x for x in cAReply.caNames]
             print("Available CAs: \n")
             for c in cas:
-                print("     {0!s}".format(c))
+                print(f"     {c!s}")
             config.ca = input("Choose CA: ".format(config.ca))
             print("=" * 60)
-            print("{0!s}".format(config))
+            print(f"{config!s}")
             answer = input("Is this configuration correct? [y/n] ")
             if answer.lower() == "y":
                 break

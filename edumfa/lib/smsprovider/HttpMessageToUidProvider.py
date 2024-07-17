@@ -94,7 +94,7 @@ class HttpMessageToUidProvider(ISMSProvider):
             parameter = self._get_parameters(message, uid)
             timeout = self.config.get("TIMEOUT") or 3
 
-        log.debug("submitting message {0!r} to {1!s}".format(message, uid))
+        log.debug(f"submitting message {message!r} to {uid!s}")
 
         if not url:
             if postcheck:
@@ -131,7 +131,7 @@ class HttpMessageToUidProvider(ISMSProvider):
             params = None
             if json_data:
                 json_param = parameter
-                log.debug("passing JSON data: {0!s}".format(json_param))
+                log.debug(f"passing JSON data: {json_param!s}")
             else:
                 data = parameter
 
@@ -175,7 +175,7 @@ class HttpMessageToUidProvider(ISMSProvider):
         urldata[messageKey] = message
         params = self.config.get('PARAMETER', {})
         urldata.update(params)
-        log.debug("[getParameters] urldata: {0!s}".format(urldata))
+        log.debug(f"[getParameters] urldata: {urldata!s}")
         return urldata
 
     def _check_success(self, response):

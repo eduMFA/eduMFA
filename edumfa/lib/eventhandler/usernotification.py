@@ -321,7 +321,7 @@ class UserNotificationEventHandler(BaseEventHandler):
             # create a list of all user-emails, if the user has an email
             emails = [u.get("email") for u in ulist if u.get("email")]
             recipient = {
-                "givenname": "admin of realm {0!s}".format(admin_realm),
+                "givenname": f"admin of realm {admin_realm!s}",
                 "email": emails
             }
         elif notify_type == NOTIFY_TYPE.LOGGED_IN_USER:
@@ -367,8 +367,8 @@ class UserNotificationEventHandler(BaseEventHandler):
                     with open(filename, "r", encoding="utf-8") as f:
                         body = f.read()
                 except Exception as e:
-                    log.warning("Failed to read email template from file {0!r}: {1!r}".format(filename, e))
-                    log.debug("{0!s}".format(traceback.format_exc()))
+                    log.warning(f"Failed to read email template from file {filename!r}: {e!r}")
+                    log.debug(f"{traceback.format_exc()!s}")
 
             subject = handler_options.get("subject") or \
                       "An action was performed on your token."
@@ -423,7 +423,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                     mail_img = MIMEImage(googleurl.read())
                     mail_img.add_header('Content-ID', '<token_image>')
                     mail_img.add_header('Content-Disposition',
-                                        'inline; filename="{0!s}.png"'.format(serial))
+                                        f'inline; filename="{serial!s}.png"')
                     mail_body.attach(mail_img)
                     body = mail_body
                 try:
@@ -433,11 +433,10 @@ class UserNotificationEventHandler(BaseEventHandler):
                                                 reply_to=reply_to,
                                                 mimetype=mimetype)
                 except Exception as exx:
-                    log.error("Failed to send email: {0!s}".format(exx))
+                    log.error(f"Failed to send email: {exx!s}")
                     ret = False
                 if ret:
-                    log.info("Sent a notification email to user {0}".format(
-                        recipient))
+                    log.info(f"Sent a notification email to user {recipient}")
                 else:
                     log.warning("Failed to send a notification email to user "
                                 "{0}".format(recipient))
@@ -450,13 +449,13 @@ class UserNotificationEventHandler(BaseEventHandler):
                 filename = filename.format(random=random, **tags).lstrip(os.path.sep)
                 outfile = os.path.normpath(os.path.join(spooldir, filename))
                 if not outfile.startswith(spooldir):
-                    log.error('Cannot write outside of spooldir {0!s}!'.format(spooldir))
+                    log.error(f'Cannot write outside of spooldir {spooldir!s}!')
                 else:
                     try:
                         with open(outfile, "w") as f:
                             f.write(body)
                     except Exception as err:
-                        log.error("Failed to write notification file: {0!s}".format(err))
+                        log.error(f"Failed to write notification file: {err!s}")
 
             elif action.lower() == "sendsms":
                 smsconfig = handler_options.get("smsconfig")
@@ -464,11 +463,10 @@ class UserNotificationEventHandler(BaseEventHandler):
                 try:
                     ret = send_sms_identifier(smsconfig, userphone, body)
                 except Exception as exx:
-                    log.error("Failed to send sms: {0!s}".format(exx))
+                    log.error(f"Failed to send sms: {exx!s}")
                     ret = False
                 if ret:
-                    log.info("Sent a notification sms to user {0}".format(
-                        recipient))
+                    log.info(f"Sent a notification sms to user {recipient}")
                 else:
                     log.warning("Failed to send a notification email to user "
                                 "{0}".format(recipient))

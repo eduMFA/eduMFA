@@ -129,7 +129,7 @@ def check_time_in_range(time_range, check_time=None):
                 time_match = True
     except ValueError:
         log.error("Wrong time range format: <dow>-<dow>:<hh:mm>-<hh:mm>")
-        log.debug("{0!s}".format(traceback.format_exc()))
+        log.debug(f"{traceback.format_exc()!s}")
 
     return time_match
 
@@ -150,7 +150,7 @@ def to_utf8(password):
         except (UnicodeDecodeError, AttributeError) as _exx:
             # In case the password is already an encoded string, we fail to
             # encode it again...
-            log.debug("Failed to convert password: {0!s}".format(type(password)))
+            log.debug(f"Failed to convert password: {type(password)!s}")
     return password
 
 
@@ -433,8 +433,7 @@ def get_data_from_params(params, exclude_params, config_description, module,
         if t not in data:
             _missing = True
     if _missing:
-        raise Exception("type or description without necessary data!"
-                        " {0!s}".format(params))
+        raise Exception(f"type or description without necessary data! {params!s}")
 
     return data, types, desc
 
@@ -518,7 +517,7 @@ def parse_date(date_string):
         d = parse_date_string(date_string,
                               dayfirst=re.match(r"^\d\d[/.]", date_string))
     except ValueError:
-        log.debug("Dateformat {0!s} could not be parsed".format(date_string))
+        log.debug(f"Dateformat {date_string!s} could not be parsed")
 
     return d
 
@@ -592,7 +591,7 @@ def check_proxy(path_to_client, proxy_settings):
         log.error("Error parsing the OverrideAuthorizationClient setting: "
                   "{0!s}! The IP addresses need to be comma separated. Fix "
                   "this. The client IP will not be mapped!".format(proxy_settings))
-        log.debug("{0!s}".format(traceback.format_exc()))
+        log.debug(f"{traceback.format_exc()!s}")
         return path_to_client[0]
 
     # We extract the IP from ``path_to_client`` that should be considered the "real" client IP by eduMFA.
@@ -613,7 +612,7 @@ def check_proxy(path_to_client, proxy_settings):
         path_to_client, proxy_settings))
     max_idx = 0
     for proxy_path in proxy_dict:
-        log.debug("Proxy path: {!r}".format(proxy_path))
+        log.debug(f"Proxy path: {proxy_path!r}")
         # If the proxy path contains more subnets than the path to the client, we already know that it cannot match.
         if len(proxy_path) > len(path_to_client):
             log.debug("... ignored because it is longer than the path to the client")
@@ -626,7 +625,7 @@ def check_proxy(path_to_client, proxy_settings):
             # We check if the network in the proxy path contains the IP from path_to_client.
             if client_path_ip not in proxy_path_ip:
                 # If not, the current proxy path does not match and we do not have to keep checking it.
-                log.debug("... ignored because {!r} is not in subnet {!r}".format(client_path_ip, proxy_path_ip))
+                log.debug(f"... ignored because {client_path_ip!r} is not in subnet {proxy_path_ip!r}")
                 break
             else:
                 current_max_idx = idx
@@ -634,10 +633,10 @@ def check_proxy(path_to_client, proxy_settings):
             # This branch is only executed if we did *not* break out of the loop. This means that the proxy path
             # completely matches the path to client, so the mapped client IP is a viable candidate.
             if current_max_idx >= max_idx:
-                log.debug("... setting new candidate for client IP: {!r}".format(path_to_client[current_max_idx]))
+                log.debug(f"... setting new candidate for client IP: {path_to_client[current_max_idx]!r}")
             max_idx = max(max_idx, current_max_idx)
 
-    log.debug("Determined mapped client IP: {!r}".format(path_to_client[max_idx]))
+    log.debug(f"Determined mapped client IP: {path_to_client[max_idx]!r}")
     return path_to_client[max_idx]
 
 
@@ -704,7 +703,7 @@ def check_ip_in_policy(client_ip, policy):
         if ipdef[0] in ['-', '!']:
             # exclude the client?
             if IPAddress(client_ip) in IPNetwork(ipdef[1:]):
-                log.debug("the client {0!s} is excluded by {1!s}".format(client_ip, ipdef))
+                log.debug(f"the client {client_ip!s} is excluded by {ipdef!s}")
                 client_excluded = True
         elif IPAddress(client_ip) in IPNetwork(ipdef):
             client_found = True
@@ -811,7 +810,7 @@ def compare_condition(condition, value):
             return value == int(condition)
 
     except ValueError:
-        log.warning("Invalid condition {0!s}. Needs to contain an integer.".format(condition))
+        log.warning(f"Invalid condition {condition!s}. Needs to contain an integer.")
         return False
 
 
@@ -865,7 +864,7 @@ def compare_value_value(value1, comparator, value2):
     elif comparator == '!=':
         return value1 != value2
     else:
-        raise Exception("Unknown comparator: {0!s}".format(comparator))
+        raise Exception(f"Unknown comparator: {comparator!s}")
 
 
 def compare_generic_condition(cond, key_method, warning):
@@ -887,7 +886,7 @@ def compare_generic_condition(cond, key_method, warning):
             break
     if value:
         res = compare_value_value(key_method(key), comparator, value)
-        log.debug("Comparing {0!s} {1!s} {2!s} with result {3!s}.".format(key, comparator, value, res))
+        log.debug(f"Comparing {key!s} {comparator!s} {value!s} with result {res!s}.")
         return res
     else:
         # There is a condition, but we do not know it!
@@ -953,7 +952,7 @@ def parse_timedelta(s):
     days = 0
     m = re.match(r"\s*([+-]?)\s*(\d+)\s*([smhdy])\s*$", s)
     if not m:
-        log.warning("Unsupported timedelta: {0!r}".format(s))
+        log.warning(f"Unsupported timedelta: {s!r}")
         raise TypeError(f"Unsupported timedelta {s!r}")
     count = int(m.group(2))
     if m.group(1) == "-":
@@ -1094,7 +1093,7 @@ def fetch_one_resource(table, **query):
     try:
         return table.query.filter_by(**query).one()
     except sqlalchemy.orm.exc.NoResultFound:
-        raise ResourceNotFoundError("The requested {!s} could not be found.".format(table.__name__))
+        raise ResourceNotFoundError(f"The requested {table.__name__!s} could not be found.")
 
 
 def truncate_comma_list(data, max_len):
@@ -1114,7 +1113,7 @@ def truncate_comma_list(data, max_len):
     if len(data) >= max_len:
         r = ",".join(data)[:max_len]
         # Also mark this string
-        r = "{0!s}+".format(r[:-1])
+        r = f"{r[:-1]!s}+"
         return r
 
     while len(",".join(data)) > max_len:
@@ -1123,7 +1122,7 @@ def truncate_comma_list(data, max_len):
         for d in data:
             if d == longest:
                 # Shorten the longest and mark with "+"
-                d = "{0!s}+".format(d[:-2])
+                d = f"{d[:-2]!s}+"
             new_data.append(d)
         data = new_data
     return ",".join(data)
@@ -1206,9 +1205,9 @@ def check_pin_contents(pin, policy):
 
     # check requirements
     for str in charlists_dict["requirements"]:
-        if not re.search(re.compile('[' + re.escape(str) + ']'), pin):
+        if not re.search(re.compile(f'[{re.escape(str)}]'), pin):
             ret = False
-            comment.append("Missing character in PIN: {0!s}".format(str))
+            comment.append(f"Missing character in PIN: {str!s}")
 
     return ret, ",".join(comment)
 
@@ -1234,9 +1233,9 @@ def get_module_class(package_name, class_name, check_method=None):
     """
     mod = import_module(package_name)
     if not hasattr(mod, class_name):
-        raise ImportError("{0} has no attribute {1}".format(package_name, class_name))
+        raise ImportError(f"{package_name} has no attribute {class_name}")
     klass = getattr(mod, class_name)
-    log.debug("klass: {0!s}".format(klass))
+    log.debug(f"klass: {klass!s}")
     if check_method and not hasattr(klass, check_method):
         raise NameError("Class AttributeError: {0}.{1} "
                         "instance has no attribute '{2}'".format(package_name, class_name, check_method))
@@ -1261,7 +1260,7 @@ def get_version():
     self-service portal.
     """
     version = get_version_number()
-    return "eduMFA {0!s}".format(version)
+    return f"eduMFA {version!s}"
 
 
 def prepare_result(obj, rid=1, details=None):
@@ -1419,7 +1418,7 @@ def check_serial_valid(serial):
     :return: True or Exception
     """
     if not re.match(ALLOWED_SERIAL, serial):
-        raise ParameterError("Invalid serial number. Must comply to {0!s}.".format(ALLOWED_SERIAL))
+        raise ParameterError(f"Invalid serial number. Must comply to {ALLOWED_SERIAL!s}.")
     return True
 
 
@@ -1452,7 +1451,7 @@ def determine_logged_in_userparams(logged_in_user, params):
     elif role == "user":
         pass
     else:
-        raise PolicyError("Unknown role: {}".format(role))
+        raise PolicyError(f"Unknown role: {role}")
 
     return role, username, realm, admin_user, admin_realm
 
@@ -1533,7 +1532,7 @@ def replace_function_event_handler(text, token_serial=None, tokenowner=None, log
         new_text = text.format(**attributes)
         return new_text
     except(ValueError, KeyError) as err:
-        log.warning("Unable to replace placeholder: ({0!s})! Please check the webhooks data option.".format(err))
+        log.warning(f"Unable to replace placeholder: ({err!s})! Please check the webhooks data option.")
         return text
 
 
@@ -1548,12 +1547,12 @@ def convert_imagefile_to_dataimage(imagepath):
     try:
         mime, _ = mimetypes.guess_type(imagepath)
         if not mime:
-            log.warning("Unknown file type in file {0!s}.".format(imagepath))
+            log.warning(f"Unknown file type in file {imagepath!s}.")
             return ""
         with open(imagepath, "rb") as f:
             data = f.read()
             data64 = base64.b64encode(data)
-        return "data:{0!s};base64,{1!s}".format(mime, to_unicode(data64))
+        return f"data:{mime!s};base64,{to_unicode(data64)!s}"
     except FileNotFoundError:
-        log.warning("The file {0!s} could not be found.".format(imagepath))
+        log.warning(f"The file {imagepath!s} could not be found.")
         return ""

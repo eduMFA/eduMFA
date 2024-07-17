@@ -165,7 +165,7 @@ class SSHkeyTokenClass(TokenClass):
         key_comment = ti.get("ssh_comment")
         # get the ssh key directly, otherwise it will not be decrypted
         sshkey = self.get_tokeninfo("ssh_key")
-        r = "{0!s} {1!s}".format(key_type, sshkey)
+        r = f"{key_type!s} {sshkey!s}"
         if key_comment:
             r += " " + key_comment
         return r

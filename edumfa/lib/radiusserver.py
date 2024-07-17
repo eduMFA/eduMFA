@@ -94,8 +94,7 @@ class RADIUSServer:
         r_dict = config.dictionary or get_from_config("radius.dictfile",
                                                       "/etc/edumfa/"
                                                       "dictionary")
-        log.debug("NAS Identifier: %r, "
-                  "Dictionary: %r" % (nas_identifier, r_dict))
+        log.debug(f"NAS Identifier: {nas_identifier!r}, Dictionary: {r_dict!r}")
         log.debug("constructing client object "
                   "with server: %r, port: %r, secret: %r" %
                   (config.server, config.port, config.secret))
@@ -144,7 +143,7 @@ class RADIUSServer:
                 log.warning("Radiusserver %s rejected "
                             "access to user %s." % (config.server, user))
         except Timeout:
-            log.warning("Receiving timeout from remote radius server {0!s}".format(config.server))
+            log.warning(f"Receiving timeout from remote radius server {config.server!s}")
 
         return success
 
@@ -306,11 +305,10 @@ def export_radiusserver(name=None):
 @register_import('radiusserver')
 def import_radiusserver(data, name=None):
     """Import radiusserver configuration"""
-    log.debug('Import radiusserver config: {0!s}'.format(data))
+    log.debug(f'Import radiusserver config: {data!s}')
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         res_data['secret'] = res_data.pop('password')
         rid = add_radius(res_name, **res_data)
-        log.info('Import of radiusserver "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of radiusserver "{res_name!s}" finished, id: {rid!s}')

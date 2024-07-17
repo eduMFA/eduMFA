@@ -82,7 +82,7 @@ class OCRASuite:
         self.sha = hotp_sha_trunc[1]
         self.truncation = int(hotp_sha_trunc[2])
         if hotp != "HOTP":
-            raise Exception("Only HOTP is allowed. You specified {0!s}".format(hotp))
+            raise Exception(f"Only HOTP is allowed. You specified {hotp!s}")
         if self.sha not in ["SHA1", "SHA256", "SHA512"]:
             raise Exception("Only SHA1, SHA256 or SHA512 is allowed. You "
                             "specified %s" % self.sha)
@@ -255,12 +255,11 @@ class OCRA:
                 counter = struct.pack('>Q', int(counter))
                 data_input += counter
             else:
-                raise Exception("The ocrasuite {0!s} requires a counter".format(
-                                self.ocrasuite))
+                raise Exception(f"The ocrasuite {self.ocrasuite!s} requires a counter")
         # Check for Question
         if self.ocrasuite_obj.challenge_type == "QN":
             # question contains only numeric values
-            hex_q = '{0:x}'.format(int(question))
+            hex_q = f'{int(question):x}'
             hex_q += '0' * (len(hex_q) % 2)
             bin_q = binascii.unhexlify(hex_q)
             bin_q += b'\x00' * (128-len(bin_q))
@@ -285,12 +284,10 @@ class OCRA:
                     to_bytes(pin)).digest()
                 data_input += pin_hash
             else:
-                raise Exception("The ocrasuite {0!s} requires a PIN!".format(
-                                self.ocrasuite))
+                raise Exception(f"The ocrasuite {self.ocrasuite!s} requires a PIN!")
         elif self.ocrasuite_obj.signature_type == "T":
             if not timesteps:
-                raise Exception("The ocrasuite {0!s} requires timesteps".format(
-                                self.ocrasuite))
+                raise Exception(f"The ocrasuite {self.ocrasuite!s} requires timesteps")
             # In case of Time
             timesteps = int(timesteps, 16)
             timesteps = struct.pack('>Q', int(timesteps))

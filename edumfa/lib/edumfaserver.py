@@ -233,10 +233,9 @@ def export_edumfaservers(name=None):
 @register_import('edumfaserver')
 def import_edumfaservers(data, name=None):
     """Import edumfaservers configuration"""
-    log.debug('Import edumfaservers config: {0!s}'.format(data))
+    log.debug(f'Import edumfaservers config: {data!s}')
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         rid = add_edumfaserver(res_name, **res_data)
-        log.info('Import of edumfaservers "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of edumfaservers "{res_name!s}" finished, id: {rid!s}')

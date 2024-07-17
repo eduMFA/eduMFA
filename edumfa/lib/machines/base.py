@@ -86,9 +86,9 @@ class Machine:
         """
         ip = self.ip
         if type(self.ip) == list:
-            ip = ["{0!s}".format(i) for i in ip]
+            ip = [f"{i!s}" for i in ip]
         elif type(self.ip) == netaddr.IPAddress:
-            ip = "{0!s}".format(ip)
+            ip = f"{ip!s}"
 
         d = {"hostname": self.hostname,
              "ip": ip,
