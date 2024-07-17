@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edumfa"
+version = "2.2.0"
+requires-python = ">=3.8"
+authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
+description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
+readme = { file = "README.rst", content-type = "text/x-rst" }
+license = { file = "LICENSE" }
+keywords = ["OTP", "two factor authentication", "management", "security"]
+classifiers = [
+    "Framework :: Flask",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python",
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Internet",
+    "Topic :: Security",
+    "Topic :: System :: Systems Administration :: Authentication/Directory",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+dynamic = ["dependencies"]
+
+[project.urls]
+Homepage = "https://edumfa.io/"
+Documentation = "https://edumfa.readthedocs.io/en/v2.1.0/"
+Repository = "https://github.com/eduMFA/eduMFA.git"
+Issues = "https://github.com/eduMFA/eduMFA/issues"
+
+[project.optional-dependencies]
+docs = [
+    "furo==2024.5.6",
+    "docutils==0.21.2",
+    "imagesize==1.4.1",
+    "packaging==24.1",
+    "pyenchant==3.2.2",
+    "Pygments==2.18.0",
+    "snowballstemmer==2.2.0",
+    "Sphinx==7.4.5",
+    "sphinxcontrib-applehelp==1.0.8",
+    "sphinxcontrib-devhelp==1.0.6",
+    "sphinxcontrib-htmlhelp==2.0.5",
+    "sphinxcontrib-httpdomain==1.8.1",
+    "sphinxcontrib-jsmath==1.0.1",
+    "sphinxcontrib-qthelp==1.0.7",
+    "sphinxcontrib-serializinghtml==1.1.10",
+    "sphinxcontrib-spelling==8.0.0",
+    "sphinx-copybutton==0.5.2",
+    "sphinx-inline-tabs==2023.4.21",
+]
+test = [
+    "mock==5.1.0",
+    "pytest==8.2.2",
+    "pytest-cov==5.0.0",
+    "responses==0.25.3",
+    "testfixtures==8.3.0"
+]
+postgres = ["psycopg2==2.9.9"]
+hsm = ["PyKCS11==1.5.16"]
+kerberos = ["gssapi==1.8.3"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = "requirements.txt" }
+
+[project.entry-points.console-scripts]
+edumfa-manage = "edumfa.commands.manage.main:cli"
+
+[tool.setuptools]
+packages = [
+    "edumfa",
+    "edumfa.translations",
+    "edumfa.static",
+]
+include-package-data = true
