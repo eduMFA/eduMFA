@@ -114,7 +114,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             self.assertEqual(value[2]["application"], "ssh")
 
         # Get tokens for service_id self.serviceID1
-        with self.app.test_request_context('/machine/token?service_id={0!s}'.format(self.serviceID1),
+        with self.app.test_request_context(f'/machine/token?service_id={self.serviceID1!s}',
                                            method='GET',
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
@@ -128,7 +128,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             self.assertEqual(value[0].get("serial"), self.serial1)
 
         # Get token for service_id self.serviceID2
-        with self.app.test_request_context('/machine/token?service_id={0!s}'.format(self.serviceID2),
+        with self.app.test_request_context(f'/machine/token?service_id={self.serviceID2!s}',
                                            method='GET',
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
@@ -160,7 +160,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             self.assertEqual(value[0].get("serial"), self.serial1)
 
         # Get token for service_id self.serviceID2 and the correct application
-        with self.app.test_request_context('/machine/token?service_id={0!s}&application=ssh'.format(self.serviceID2),
+        with self.app.test_request_context(f'/machine/token?service_id={self.serviceID2!s}&application=ssh',
                                            method='GET',
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
@@ -178,7 +178,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the wrong application
         with self.app.test_request_context(
-                '/machine/token?service_id={0!s}&application=openssh'.format(self.serviceID2),
+                f'/machine/token?service_id={self.serviceID2!s}&application=openssh',
                 method='GET',
                 headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
@@ -206,7 +206,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the application=ssh and the user=root
         with self.app.test_request_context(
-                '/machine/token?service_id={0!s}&application=ssh&user=root'.format(self.serviceID2),
+                f'/machine/token?service_id={self.serviceID2!s}&application=ssh&user=root',
                 method='GET',
                 headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
@@ -224,7 +224,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the application=ssh and the user=admin
         with self.app.test_request_context(
-                '/machine/token?service_id={0!s}&application=ssh&user=admin'.format(self.serviceID2),
+                f'/machine/token?service_id={self.serviceID2!s}&application=ssh&user=admin',
                 method='GET',
                 headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()

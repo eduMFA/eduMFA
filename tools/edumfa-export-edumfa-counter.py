@@ -48,7 +48,7 @@ def main():
     result = edumfa_engine.execute(s)
 
     for r in result:
-        print("{0!s}, {1!s}".format(r.serial, r.count))
+        print(f"{r.serial!s}, {r.count!s}")
 
 
 if __name__ == '__main__':

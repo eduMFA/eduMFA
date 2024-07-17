@@ -40,10 +40,10 @@ def read_counter_file(import_file):
     for line in import_file.readlines():
         try:
             serial, counter = [v.strip() for v in line.split(",")]
-            update_list.append(("{0!s}".format(serial), int(counter)))
+            update_list.append((f"{serial!s}", int(counter)))
         except ValueError as ve:
             # If there is a line, that does not comply
-            sys.stderr.write("Failed to parse line: {0!s}\n".format(line))
+            sys.stderr.write(f"Failed to parse line: {line!s}\n")
 
     return update_list
 
@@ -74,7 +74,7 @@ def main():
     edumfa_engine = create_engine(SQL_URI)
     edumfa_session = sessionmaker(bind=edumfa_engine)()
 
-    print("Starting updating {0!s} counters:".format(len(counters)))
+    print(f"Starting updating {len(counters)!s} counters:")
     updated = 0
     not_found = 0
     processed = 0
@@ -85,7 +85,7 @@ def main():
             if r and r.count >= count[1]:
                 # The counter in the database is bigger
                 continue
-        sys.stdout.write("\r {0!s}: {1!s}     ".format(processed, count[0]))
+        sys.stdout.write(f"\r {processed!s}: {count[0]!s}     ")
         r = edumfa_session.query(Token).filter_by(serial=count[0]).update({"count": count[1]})
         if r > 0:
             # r==0, if the token was not found!
@@ -98,9 +98,9 @@ def main():
     edumfa_session.commit()
 
     print()
-    print("{0!s:6} tokens processed.".format(processed))
-    print("{0!s:6} counters updated.".format(updated))
-    print("{0!s:6} tokens not found.".format(not_found))
+    print(f"{processed!s:6} tokens processed.")
+    print(f"{updated!s:6} counters updated.")
+    print(f"{not_found!s:6} tokens not found.")
 
 
 if __name__ == '__main__':

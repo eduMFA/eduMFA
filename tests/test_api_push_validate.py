@@ -75,7 +75,7 @@ class PushAPITestCase(MyApiTestCase):
         the push token is not evaluated anymore.
         """
         # set policy
-        set_policy("push1", action="{0!s}=20".format(LegacyPushTokenClass.PUSH_ACTION.WAIT), scope=SCOPE.AUTH)
+        set_policy("push1", action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT!s}=20", scope=SCOPE.AUTH)
         set_policy("push2", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
                        LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name,
@@ -183,12 +183,12 @@ class PushAPITestCase(MyApiTestCase):
         The PIN will only trigger the HOTP, push will not wait, since it is disabled.
         """
         # set policy
-        set_policy("push1", action="{0!s}=20".format(LegacyPushTokenClass.PUSH_ACTION.WAIT), scope=SCOPE.AUTH)
+        set_policy("push1", action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT!s}=20", scope=SCOPE.AUTH)
         set_policy("push2", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s}".format(
                        LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name,
                        LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL, self.REGISTRATION_URL))
-        set_policy("chalresp", action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE), scope=SCOPE.AUTH)
+        set_policy("chalresp", action=f"{ACTION.CHALLENGERESPONSE!s}=hotp", scope=SCOPE.AUTH)
         # Create push config
         r = set_smsgateway(self.firebase_config_name,
                            'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
@@ -396,7 +396,7 @@ class PushAPITestCase(MyApiTestCase):
 
         # Set Policy scope:auth, action:enroll_via_multichallenge=push
         set_policy("pol_multienroll", scope=SCOPE.AUTH,
-                   action="{0!s}=push".format(ACTION.ENROLL_VIA_MULTICHALLENGE))
+                   action=f"{ACTION.ENROLL_VIA_MULTICHALLENGE!s}=push")
         # Set Policy scope:enrollment, action:push_config
         set_policy("pol_push2", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s},{6!s}={7!s}".format(
@@ -557,7 +557,7 @@ class EduPushAPITestCase(MyApiTestCase):
         the push token is not evaluated anymore.
         """
         # set policy
-        set_policy("push1", action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT), scope=SCOPE.AUTH)
+        set_policy("push1", action=f"{PushTokenClass.PUSH_ACTION.WAIT!s}=20", scope=SCOPE.AUTH)
         set_policy("push2", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
                        PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name,
@@ -665,12 +665,12 @@ class EduPushAPITestCase(MyApiTestCase):
         The PIN will only trigger the HOTP, push will not wait, since it is disabled.
         """
         # set policy
-        set_policy("push1", action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT), scope=SCOPE.AUTH)
+        set_policy("push1", action=f"{PushTokenClass.PUSH_ACTION.WAIT!s}=20", scope=SCOPE.AUTH)
         set_policy("push2", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s}".format(
                        PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name,
                        PushTokenClass.PUSH_ACTION.REGISTRATION_URL, self.REGISTRATION_URL))
-        set_policy("chalresp", action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE), scope=SCOPE.AUTH)
+        set_policy("chalresp", action=f"{ACTION.CHALLENGERESPONSE!s}=hotp", scope=SCOPE.AUTH)
         # Create push config
         r = set_smsgateway(self.firebase_config_name,
                            'edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider',
@@ -878,7 +878,7 @@ class EduPushAPITestCase(MyApiTestCase):
 
         # Set Policy scope:auth, action:enroll_via_multichallenge=push
         set_policy("pol_multienroll", scope=SCOPE.AUTH,
-                   action="{0!s}=edupush".format(ACTION.ENROLL_VIA_MULTICHALLENGE))
+                   action=f"{ACTION.ENROLL_VIA_MULTICHALLENGE!s}=edupush")
         # Set Policy scope:enrollment, action:push_config
         set_policy("pol_push2", scope=SCOPE.ENROLL,
                    action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s},{6!s}={7!s}".format(

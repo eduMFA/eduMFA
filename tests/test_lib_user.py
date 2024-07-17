@@ -66,14 +66,14 @@ class UserTestCase(MyTestCase):
                     realm=self.realm1,
                     resolver=self.resolvername1)
         
-        user_str = "{0!s}".format(user)
+        user_str = f"{user!s}"
         self.assertTrue(user_str == "<root.resolver1@realm1>", user_str)
         self.assertIsInstance(str(user), str)
         
         self.assertFalse(user.is_empty())
         self.assertTrue(User().is_empty())
         
-        user_repr = "{0!r}".format(user)
+        user_repr = f"{user!r}"
         expected = "User(login='root', realm='realm1', resolver='resolver1')"
         self.assertTrue(user_repr == expected, user_repr)
         
@@ -214,7 +214,7 @@ class UserTestCase(MyTestCase):
         param = {"user": "cornelius",
                  "realm": self.realm2}
         user = get_user_from_param(param)
-        self.assertEqual("{0!s}".format(user), "<cornelius.resolver1@realm2>")
+        self.assertEqual(f"{user!s}", "<cornelius.resolver1@realm2>")
 
         # test with splitAtSign set to False
         set_edumfa_config("splitAtSign", False)

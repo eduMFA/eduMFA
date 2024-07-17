@@ -223,7 +223,7 @@ class APIEventsTestCase(MyApiTestCase):
                              "themis")
 
         # delete event
-        with self.app.test_request_context('/event/{0!s}'.format(ev1_id),
+        with self.app.test_request_context(f'/event/{ev1_id!s}',
                                            method='DELETE',
                                            headers={
                                                'Authorization': self.at}):
@@ -335,7 +335,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(event_list[0].get("active"), True)
 
         # disable event
-        with self.app.test_request_context('/event/disable/{0!s}'.format(ev1_id),
+        with self.app.test_request_context(f'/event/disable/{ev1_id!s}',
                                            method='POST',
                                            headers={
                                                'Authorization': self.at}):
@@ -354,7 +354,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(event_list[0].get("active"), False)
 
         # Enable event
-        with self.app.test_request_context('/event/enable/{0!s}'.format(ev1_id),
+        with self.app.test_request_context(f'/event/enable/{ev1_id!s}',
                                            method='POST',
                                            headers={
                                                'Authorization': self.at}):
@@ -373,7 +373,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(event_list[0].get("active"), True)
 
         # delete event
-        with self.app.test_request_context('/event/{0!s}'.format(ev1_id),
+        with self.app.test_request_context(f'/event/{ev1_id!s}',
                                            method='DELETE',
                                            headers={
                                                'Authorization': self.at}):
@@ -426,7 +426,7 @@ class APIEventsTestCase(MyApiTestCase):
             ev1_id = result.get('value')
 
         # check the event
-        with self.app.test_request_context('/event/{0!s}'.format(ev1_id),
+        with self.app.test_request_context(f'/event/{ev1_id!s}',
                                            method='GET',
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
@@ -449,7 +449,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), ev1_id, result)
 
         # check the event
-        with self.app.test_request_context('/event/{0!s}'.format(ev1_id),
+        with self.app.test_request_context(f'/event/{ev1_id!s}',
                                            method='GET',
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
@@ -459,7 +459,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(result.get("value")[0].get("position"), "pre")
 
         # delete event
-        with self.app.test_request_context('/event/{0!s}'.format(ev1_id),
+        with self.app.test_request_context(f'/event/{ev1_id!s}',
                                            method='DELETE',
                                            headers={
                                                'Authorization': self.at}):

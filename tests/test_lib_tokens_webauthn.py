@@ -83,7 +83,7 @@ from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
 from edumfa.lib.challenge import get_challenges
 from edumfa.lib.error import PolicyError, ParameterError, EnrollmentError
 
-TRUST_ANCHOR_DIR = "{}/testdata/trusted_attestation_roots".format(os.path.abspath(os.path.dirname(__file__)))
+TRUST_ANCHOR_DIR = f"{os.path.abspath(os.path.dirname(__file__))}/testdata/trusted_attestation_roots"
 REGISTRATION_RESPONSE_TMPL = {
     'clientData': b'eyJ0eXBlIjogIndlYmF1dGhuLmNyZWF0ZSIsICJjbGllbnRFeHRlbnNpb25zIjoge30sICJjaGFsbGVu'
                   b'Z2UiOiAiYlB6cFgzaEhRdHNwOWV2eUtZa2FadFZjOVVOMDdQVWRKMjJ2WlVkRHA5NCIsICJvcmlnaW4i'
@@ -584,8 +584,7 @@ class WebAuthnTestCase(unittest.TestCase):
         self.assertTrue(webauthn_credential.has_signed_attestation, webauthn_credential)
         self.assertTrue(webauthn_credential.has_trusted_attestation, webauthn_credential)
         self.assertEqual(str(webauthn_credential),
-                         '{0!r} ({1!s}, {2!s}, {3!s})'.format(CREDENTIAL_ID,
-                                                              RP_ID, ORIGIN, 0),
+                         f'{CREDENTIAL_ID!r} ({RP_ID!s}, {ORIGIN!s}, {0!s})',
                          webauthn_credential)
 
     def test_01b_validate_untrusted_registration(self):
@@ -623,8 +622,7 @@ class WebAuthnTestCase(unittest.TestCase):
         webauthn_assertion_response = self.getAssertionResponse()
         webauthn_user = webauthn_assertion_response.webauthn_user
         self.assertEqual(str(webauthn_user),
-                         '{0!r} ({1!s}, {2!s}, {3!s})'.format(USER_ID, USER_NAME,
-                                                              USER_DISPLAY_NAME, 0),
+                         f'{USER_ID!r} ({USER_NAME!s}, {USER_DISPLAY_NAME!s}, {0!s})',
                          webauthn_user)
         webauthn_assertion_response.verify()
 
@@ -927,7 +925,7 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
 
     # TODO: also test challenge-response with different tokens (webauthn + totp)
     def test_01_mulitple_webauthntoken_auth(self):
-        set_policy("otppin", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN))
+        set_policy("otppin", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=none")
         res, reply = check_user_pass(self.user, '', options=self.auth_options)
         self.assertFalse(res)
         self.assertIn('transaction_id', reply, reply)

@@ -225,14 +225,14 @@ class LocalCATestCase(MyTestCase):
         super().setUpClass()
 
         # Backup the original index and serial
-        shutil.copyfile("{0!s}/serial".format(WORKINGDIR),
-                        "{0!s}/serial.orig".format(WORKINGDIR))
-        shutil.copyfile("{0!s}/index.txt".format(WORKINGDIR),
-                        "{0!s}/index.txt.orig".format(WORKINGDIR))
+        shutil.copyfile(f"{WORKINGDIR!s}/serial",
+                        f"{WORKINGDIR!s}/serial.orig")
+        shutil.copyfile(f"{WORKINGDIR!s}/index.txt",
+                        f"{WORKINGDIR!s}/index.txt.orig")
 
     @classmethod
     def tearDownClass(cls):
-        filelist = glob.glob("{0!s}/100*.pem".format(WORKINGDIR))
+        filelist = glob.glob(f"{WORKINGDIR!s}/100*.pem")
         for f in filelist:
             os.remove(f)
 
@@ -248,17 +248,17 @@ class LocalCATestCase(MyTestCase):
                  "Steve_Test.txt"]
         for f in FILES:
             try:
-                os.remove("{0!s}/{1!s}".format(WORKINGDIR, f))
+                os.remove(f"{WORKINGDIR!s}/{f!s}")
             except OSError:
-                print("File {0!s} could not be deleted.".format(f))
+                print(f"File {f!s} could not be deleted.")
 
         # restore backup of index.txt and serial
-        shutil.copyfile("{0!s}/serial.orig".format(WORKINGDIR),
-                        "{0!s}/serial".format(WORKINGDIR))
-        shutil.copyfile("{0!s}/index.txt.orig".format(WORKINGDIR),
-                        "{0!s}/index.txt".format(WORKINGDIR))
-        os.remove("{0!s}/serial.orig".format(WORKINGDIR))
-        os.remove("{0!s}/index.txt.orig".format(WORKINGDIR))
+        shutil.copyfile(f"{WORKINGDIR!s}/serial.orig",
+                        f"{WORKINGDIR!s}/serial")
+        shutil.copyfile(f"{WORKINGDIR!s}/index.txt.orig",
+                        f"{WORKINGDIR!s}/index.txt")
+        os.remove(f"{WORKINGDIR!s}/serial.orig")
+        os.remove(f"{WORKINGDIR!s}/index.txt.orig")
         # call parent
         super().tearDownClass()
 
@@ -290,9 +290,9 @@ class LocalCATestCase(MyTestCase):
                                        "WorkingDir": cwd + "/" + WORKINGDIR})
         serial = cert.get_serial_number()
 
-        self.assertEqual("{0!r}".format(cert.get_issuer()),
+        self.assertEqual(f"{cert.get_issuer()!r}",
                          "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(cert.get_subject()),
+        self.assertEqual(f"{cert.get_subject()!r}",
                          "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=requester.localdomain'>")
 
         # Fail to revoke certificate due to non-existing-reasing
@@ -343,9 +343,9 @@ class LocalCATestCase(MyTestCase):
                                   "WorkingDir": cwd + "/" + WORKINGDIR})
 
         _, cert = cacon.sign_request(REQUEST_USER)
-        self.assertEqual("{0!r}".format(cert.get_issuer()),
+        self.assertEqual(f"{cert.get_issuer()!r}",
                          "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(cert.get_subject()),
+        self.assertEqual(f"{cert.get_subject()!r}",
                          "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=usercert'>")
 
     def test_04_sign_SPKAC_request(self):
@@ -357,9 +357,9 @@ class LocalCATestCase(MyTestCase):
                                   "WorkingDir": cwd + "/" + WORKINGDIR})
 
         _, cert = cacon.sign_request(SPKAC, options={"spkac": 1})
-        self.assertEqual("{0!r}".format(cert.get_issuer()),
+        self.assertEqual(f"{cert.get_issuer()!r}",
                          "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(cert.get_subject()),
+        self.assertEqual(f"{cert.get_subject()!r}",
                          "<X509Name object '/CN=Steve Test"
                          "/emailAddress=steve@openssl.org'>")
 
@@ -615,13 +615,13 @@ class CreateLocalCATestCase(MyTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        filelist = glob.glob("{0!s}2/*".format(WORKINGDIR))
+        filelist = glob.glob(f"{WORKINGDIR!s}2/*")
         for f in filelist:
             try:
                 os.remove(f)
             except OSError:
-                print("Error deleting file {0!s}.".format(f))
-        os.rmdir("{0!s}2".format(WORKINGDIR))
+                print(f"Error deleting file {f!s}.")
+        os.rmdir(f"{WORKINGDIR!s}2")
         super().tearDownClass()
 
     def test_01_create_ca(self):

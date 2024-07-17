@@ -313,7 +313,7 @@ class APIAuditTestCase(MyApiTestCase):
 
         user_authorization = None
         with self.app.test_request_context('/auth',
-                                           method='POST', data={'username': 'selfservice@{0!s}'.format(self.realm1a),
+                                           method='POST', data={'username': f'selfservice@{self.realm1a!s}',
                                                                 'password': 'test'}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)

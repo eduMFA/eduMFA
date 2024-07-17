@@ -51,7 +51,7 @@ def wrapper%(signature)s:
 
 
 def _convert_objectGUID(item):
-    item = uuid.UUID("{{{0!s}}}".format(item)).bytes_le
+    item = uuid.UUID(f"{{{item!s}}}").bytes_le
     item = escape_bytes(item)
     return item
 
@@ -159,7 +159,7 @@ class Connection:
             self.result["description"] = "failure"
             self.result["result"] = 68
             self.result["message"] = \
-                    "Error entryAlreadyExists for {0}".format(dn)
+                    f"Error entryAlreadyExists for {dn}"
             return False
 
         # Add the user entry to the directory
@@ -187,7 +187,7 @@ class Connection:
             # If we get here the user doesn't exist so continue
             self.result["description"] = "failure"
             self.result["result"] = 32
-            self.result["message"] = "Error no such object: {0}".format(dn)
+            self.result["message"] = f"Error no such object: {dn}"
             return False
 
         # Delete the entry object for the user
@@ -215,7 +215,7 @@ class Connection:
             # If we get here the user doesn't exist so continue
             self.result["description"] = "failure"
             self.result["result"] = 32
-            self.result["message"] = "Error no such object: {0!s}".format(dn)
+            self.result["message"] = f"Error no such object: {dn!s}"
             return False
 
         # extract the hash we are interested in
@@ -310,7 +310,7 @@ class Connection:
             match_using_regex = True
             #regex = check_escape(value)
             regex = value.replace('*', '.*')
-            regex = "^{0}$".format(regex)
+            regex = f"^{regex}$"
 
         for entry in candidates:
             dn = to_unicode(entry.get("dn"))
@@ -350,7 +350,7 @@ class Connection:
                         values_from_directory = values_from_directory.decode(
                             "utf-8")
                     elif type(values_from_directory) == int:
-                        values_from_directory = "{0!s}".format(values_from_directory)
+                        values_from_directory = f"{values_from_directory!s}"
                     if value == values_from_directory:
                         entry["type"] = "searchResEntry"
                         matches.append(entry)
@@ -366,7 +366,7 @@ class Connection:
             match_using_regex = True
             #regex = check_escape(value)
             regex = value.replace('*', '.*')
-            regex = "^{0}$".format(regex)
+            regex = f"^{regex}$"
 
         for entry in candidates:
             found = False
@@ -624,7 +624,7 @@ class Connection:
             s_filter = expr.parseString(search_filter).asList()[0]
         except pyparsing.ParseBaseException as exx:
             # Just for debugging purposes
-            s = "{!s}".format(exx)
+            s = f"{exx!s}"
 
         for item in s_filter:
             if item[0] in self.operation:

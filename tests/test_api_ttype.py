@@ -297,7 +297,7 @@ class TtypePushAPITestCase(MyApiTestCase):
 
         # first create a signature
         ts = datetime.utcnow().isoformat()
-        sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
+        sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
                                                hashes.SHA256())
@@ -319,7 +319,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             challenge = chall["nonce"]
             # This is what the smartphone answers.
             # create the signature:
-            sign_data = "{0!s}|{1!s}".format(challenge, serial)
+            sign_data = f"{challenge!s}|{serial!s}"
             signature = b32encode_and_unicode(
                 self.smartphone_private_key.sign(sign_data.encode("utf-8"),
                                                  padding.PKCS1v15(),
@@ -616,7 +616,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
 
         # first create a signature
         ts = datetime.utcnow().isoformat()
-        sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
+        sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
                                                hashes.SHA256())
@@ -638,7 +638,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             challenge = chall["nonce"]
             # This is what the smartphone answers.
             # create the signature:
-            sign_data = "{0!s}|{1!s}".format(challenge, serial)
+            sign_data = f"{challenge!s}|{serial!s}"
             signature = b32encode_and_unicode(
                 self.smartphone_private_key.sign(sign_data.encode("utf-8"),
                                                  padding.PKCS1v15(),

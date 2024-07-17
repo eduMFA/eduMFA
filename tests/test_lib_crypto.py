@@ -677,7 +677,7 @@ class SignObjectTestCase(MyTestCase):
         # now test a broken signature
         data = 'short text'
         sig = so.sign(data)
-        sig_broken = sig[:-1] + '{:x}'.format((int(sig[-1], 16) + 1) % 16)
+        sig_broken = sig[:-1] + f'{(int(sig[-1], 16) + 1) % 16:x}'
         self.assertFalse(so.verify(data, sig_broken))
 
         # test with non hex string

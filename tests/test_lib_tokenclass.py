@@ -51,13 +51,13 @@ class TokenBaseTestCase(MyTestCase):
                     realm=self.realm1,
                     resolver=self.resolvername1)
 
-        user_str = "{0!s}".format(user)
+        user_str = f"{user!s}"
         self.assertTrue(user_str == "<root.resolver1@realm1>", user_str)
 
         self.assertFalse(user.is_empty())
         self.assertTrue(User().is_empty())
 
-        user_repr = "{0!r}".format(user)
+        user_repr = f"{user!r}"
         expected = "User(login='root', realm='realm1', resolver='resolver1')"
         self.assertTrue(user_repr == expected, user_repr)
 
@@ -79,7 +79,7 @@ class TokenBaseTestCase(MyTestCase):
         token.save()
 
         info = token.get_class_info()
-        self.assertTrue(info == {}, "{0!s}".format(info))
+        self.assertTrue(info == {}, f"{info!s}")
 
     def test_02_set_user(self):
         db_token = Token.query.filter_by(serial=self.serial1).first()

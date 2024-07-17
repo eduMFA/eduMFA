@@ -210,7 +210,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual("u2f", multi_challenge[0].get("client_mode"))
             self.assertEqual(len(transaction_id), len('01350277175811850842'))
             self.assertEqual(detail.get("message"), detail.get("message"),
-                             "Please confirm with your U2F token ({0!s})".format("Yubico U2F EE Serial 13831167861"))
+                             "Please confirm with your U2F token (Yubico U2F EE Serial 13831167861)")
             attributes = detail.get("attributes")
             u2f_sign_request = attributes.get("u2fSignRequest")
             self.assertTrue("appId" in u2f_sign_request)
@@ -265,7 +265,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertTrue("trustedFacets" in data)
 
         set_policy(name="facet1", scope=SCOPE.AUTH,
-                   action="{0!s}=host1 host2 host3".format(U2FACTION.FACETS))
+                   action=f"{U2FACTION.FACETS!s}=host1 host2 host3")
 
         with self.app.test_request_context('/ttype/u2f',
                                            method='GET'):
@@ -330,7 +330,7 @@ class APIU2fTestCase(MyApiTestCase):
         db_challenge.save()
 
         set_policy(name="u2f01", scope=SCOPE.AUTHZ,
-                   action="{0!s}=issuer/.*Yubico.*/".format(U2FACTION.REQ) )
+                   action=f"{U2FACTION.REQ!s}=issuer/.*Yubico.*/" )
 
         # Successful C/R authentication
         with self.app.test_request_context('/validate/check',
@@ -403,7 +403,7 @@ class APIU2fTestCase(MyApiTestCase):
         db_challenge.save()
 
         set_policy(name="u2f01", scope=SCOPE.AUTHZ,
-                   action="{0!s}=issuer/.*Plugup.*/".format(U2FACTION.REQ))
+                   action=f"{U2FACTION.REQ!s}=issuer/.*Plugup.*/")
 
         # Successful C/R authentication
         with self.app.test_request_context('/validate/check',
@@ -454,7 +454,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(result.get("value"), True)
 
         set_policy(name="u2f01", scope=SCOPE.ENROLL,
-                   action="{0!s}=issuer/.*Plugup.*/".format(U2FACTION.REQ))
+                   action=f"{U2FACTION.REQ!s}=issuer/.*Plugup.*/")
 
         # Init step 2
         with self.app.test_request_context('/token/init',

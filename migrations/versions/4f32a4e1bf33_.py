@@ -267,7 +267,7 @@ def create_update_token_table():
             elif reso[3] == "SQLIdResolver":
                 resolvertype = "sqlresolver"
             else:
-                print("Error: Unknown resolvertype: {0!s}".format(reso[3]))
+                print(f"Error: Unknown resolvertype: {reso[3]!s}")
                 resolvertype = "FIXME"
         if ot.privacyIDEATokenType.lower() == "hmac":
             tokentype = "hotp"
@@ -327,7 +327,7 @@ def create_resolver_config():
 
     # Read Passwd resolver like privacyidea.passwdresolver.*.name
     for resolvertype in ["passwdresolver", "ldapresolver", "sqlresolver"]:
-        print("processing {0!s}".format(resolvertype))
+        print(f"processing {resolvertype!s}")
         resolvers = {}
         configs = session.query(Config_old).filter(
             Config_old.Key.like("privacyidea." + resolvertype + ".%"))
@@ -409,7 +409,7 @@ def create_realms():
         realmname = realm.Key.split(".")[-1]
         print(realmname)
         resolver_list = [x.split(".")[-1] for x in realm.Value.split(",")]
-        print("   with resolvers: {0!s}".format(resolver_list))
+        print(f"   with resolvers: {resolver_list!s}")
         for resolvername in resolver_list:
             try:
                 res_id = session.query(Resolver).\

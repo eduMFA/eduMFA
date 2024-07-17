@@ -150,7 +150,7 @@ class PolicyTestCase(MyTestCase):
         self.assertTrue(len(policies) == 2, policies)
         # find policies with user admin
         policies = P.match_policies(scope="admin", adminuser="admin")
-        self.assertTrue(len(policies) == 1, "{0!s}".format(len(policies)))
+        self.assertTrue(len(policies) == 1, f"{len(policies)!s}")
         # find policies with resolver2 and authorization. THe result should
         # be pol2 and pol2a
         policies = P.match_policies(resolver="resolver2", scope=SCOPE.AUTHZ)
@@ -824,7 +824,7 @@ class PolicyTestCase(MyTestCase):
         user = User(login="cornelius",
                     realm="realm1")
         # The user, that is created, is cornelius.reso1@realm1
-        user_str = "{0!s}".format(user)
+        user_str = f"{user!s}"
         self.assertEqual(user_str, "<cornelius.reso1@realm1>")
         # But the user "cornelius" is also contained in other resolves in
         # this realm
@@ -836,10 +836,10 @@ class PolicyTestCase(MyTestCase):
         # define a policy with the wrong resolver
         p = set_policy(name="checkAll", scope=SCOPE.AUTHZ, realm="realm1",
                        resolver="resoX",
-                       action="{0}=totp".format(ACTION.TOKENTYPE))
+                       action=f"{ACTION.TOKENTYPE}=totp")
         self.assertTrue(p > 0)
         p = set_policy(name="catchAll", scope=SCOPE.AUTHZ, realm="realm1",
-                       action="{0}=totp".format(ACTION.TOKENTYPE))
+                       action=f"{ACTION.TOKENTYPE}=totp")
         self.assertTrue(p > 0)
         P = PolicyClass()
         pols = P.match_policies(scope=SCOPE.AUTHZ, realm=user.realm,
@@ -849,7 +849,7 @@ class PolicyTestCase(MyTestCase):
         # Now we change the policy, so that it uses check_all_resolver, i.e.
         p = set_policy(name="checkAll", scope=SCOPE.AUTHZ, realm="realm1",
                        resolver="resoX", check_all_resolvers=True,
-                       action="{0}=totp".format(ACTION.TOKENTYPE))
+                       action=f"{ACTION.TOKENTYPE}=totp")
         self.assertTrue(p > 0)
         P = PolicyClass()
         pols = P.match_policies(scope=SCOPE.AUTHZ, realm=user.realm,
@@ -985,7 +985,7 @@ class PolicyTestCase(MyTestCase):
         options = {"g": g,
                    "user": User("cornelius", self.realm1)}
 
-        set_policy("chaltext", scope=SCOPE.AUTH, action="{0!s}=Wo du wolle?".format(ACTION.CHALLENGETEXT))
+        set_policy("chaltext", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGETEXT!s}=Wo du wolle?")
         g.policy_object = PolicyClass()
 
         val = get_action_values_from_options(SCOPE.AUTH, ACTION.CHALLENGETEXT, options)
@@ -995,9 +995,9 @@ class PolicyTestCase(MyTestCase):
 
     def test_25_get_action_values(self):
         # We test action values with different priority and values!
-        set_policy("act1", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN), priority=1)
-        set_policy("act2", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN), priority=1)
-        set_policy("act3", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN), priority=3)
+        set_policy("act1", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore", priority=1)
+        set_policy("act2", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore", priority=1)
+        set_policy("act3", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=none", priority=3)
 
         # Now we should get the userstore action value. Both policies act1 and act2 have the unique value
         # with prioritoy 1
@@ -1040,13 +1040,13 @@ class PolicyTestCase(MyTestCase):
         nonascii = User(login="nönäscii", realm="realm1")
         selfservice = User(login="selfservice", realm="realm1")
         whoopsie = User(login="whoopsie", realm="realm2")
-        set_policy("act1", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("act1", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                    user="cornelius, nönäscii")
-        set_policy("act2", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("act2", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                    resolver="reso1")
-        set_policy("act3", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN),
+        set_policy("act3", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=none",
                    realm="realm1")
-        set_policy("act4", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN),
+        set_policy("act4", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=none",
                    user="nönäscii", realm="realm1")
 
         P = PolicyClass()
@@ -1099,7 +1099,7 @@ class PolicyTestCase(MyTestCase):
             P.get_action_values(action=ACTION.OTPPIN, scope=SCOPE.AUTH,
                                 user_object=cornelius, user="selfservice")
 
-        set_policy("act5", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN))
+        set_policy("act5", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=none")
 
         P = PolicyClass()
         # If we pass an empty user object, only policies without user match
@@ -1147,14 +1147,14 @@ class PolicyTestCase(MyTestCase):
         delete_all_policies()
         self.assertEqual(policy_object.match_policies(), [])
         # Now, add a policy and check if the policies have been reloaded
-        set_policy("act1", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN), priority=1)
+        set_policy("act1", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore", priority=1)
         self.assertEqual([p["name"] for p in policy_object.match_policies()], ["act1"])
         self.assertEqual(policy_object.match_policies()[0]["priority"], 1)
         # Update the policy and check if the policies have been reloaded
-        set_policy("act1", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN), priority=2)
+        set_policy("act1", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore", priority=2)
         self.assertEqual(policy_object.match_policies()[0]["priority"], 2)
         # Add a second policy, check
-        set_policy("act2", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN), priority=3)
+        set_policy("act2", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=none", priority=3)
         self.assertEqual([p["name"] for p in policy_object.match_policies()], ["act1", "act2"])
         # Delete a policy, check
         delete_policy("act1")
@@ -1172,7 +1172,7 @@ class PolicyTestCase(MyTestCase):
         self.assertEqual(len(added), 1)
 
         # Set policy with conditions
-        set_policy("act1", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("act1", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                    conditions=[("userinfo", "type", "equals", "verysecure", True)])
 
         P = PolicyClass()
@@ -1198,9 +1198,9 @@ class PolicyTestCase(MyTestCase):
         def _names(policies):
             return set(p['name'] for p in policies)
 
-        set_policy("verysecure", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("verysecure", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                    conditions=[("userinfo", "type", "equals", "verysecure", True)])
-        set_policy("notverysecure", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("notverysecure", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                    conditions=[("userinfo", "type", "equals", "notverysecure", True),
                                ("userinfo", "groups", "contains", "b", True)])
         P = PolicyClass()
@@ -1249,7 +1249,7 @@ class PolicyTestCase(MyTestCase):
             delete_policy(policy)
 
         # Policy with initially inactive condition
-        set_policy("extremelysecure", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("extremelysecure", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                    conditions=[("userinfo", "type", "equals", "notverysecure", False)])
 
         # user1 matches, because the condition on type is inactive
@@ -1279,21 +1279,21 @@ class PolicyTestCase(MyTestCase):
         # Various error cases:
 
         # an unknown section in the condition
-        set_policy("unknownsection", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("unknownsection", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                     conditions=[("somesection", "bla", "equals", "verysecure", True)])
         with self.assertRaisesRegex(PolicyError, r".*unknown section.*"):
             P.match_policies(user_object=user1)
         delete_policy("unknownsection")
 
         # ... but the error does not occur if the condition is inactive
-        set_policy("unknownsection", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("unknownsection", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                     conditions=[("somesection", "bla", "equals", "verysecure", False)])
         all_policies = P.list_policies()
         self.assertEqual(P.match_policies(user_object=user1), all_policies)
         delete_policy("unknownsection")
 
         # an unknown key in the condition
-        set_policy("unknownkey", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("unknownkey", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                     conditions=[("userinfo", "bla", "equals", "verysecure", True)])
         with self.assertRaisesRegex(PolicyError, r".*Unknown key.*"):
             P.match_policies(user_object=user1)
@@ -1303,7 +1303,7 @@ class PolicyTestCase(MyTestCase):
         user4 = MockUser()
         user4.info = {"type": "notverysecure", "number": 5}
 
-        set_policy("error", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN),
+        set_policy("error", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore",
                    conditions=[("userinfo", "number", "contains", "b", True)])
         with self.assertRaisesRegex(PolicyError, r".*Invalid comparison.*"):
             P.match_policies(user_object=user4)
@@ -1493,16 +1493,16 @@ class PolicyTestCase(MyTestCase):
         self.assertEqual({"set": {}, "delete": []}, d)
 
         set_policy("custom_attr", scope=SCOPE.ADMIN,
-                   action="{0!s}=:hello: one two".format(ACTION.SET_USER_ATTRIBUTES))
+                   action=f"{ACTION.SET_USER_ATTRIBUTES!s}=:hello: one two")
         set_policy("custom_attr2", scope=SCOPE.ADMIN,
-                   action="{0!s}=:hello2: * :hello: three".format(ACTION.SET_USER_ATTRIBUTES))
+                   action=f"{ACTION.SET_USER_ATTRIBUTES!s}=:hello2: * :hello: three")
         set_policy("custom_attr3", scope=SCOPE.ADMIN,
-                   action="{0!s}=:*: on off".format(ACTION.SET_USER_ATTRIBUTES))
+                   action=f"{ACTION.SET_USER_ATTRIBUTES!s}=:*: on off")
         set_policy("custom_attr4", scope=SCOPE.ADMIN,
-                   action="{0!s}=*".format(ACTION.DELETE_USER_ATTRIBUTES))
+                   action=f"{ACTION.DELETE_USER_ATTRIBUTES!s}=*")
         # Also check, that a double entry "one" only appears once
         set_policy("custom_attr5", scope=SCOPE.ADMIN,
-                   action="{0!s}=:hello: one".format(ACTION.SET_USER_ATTRIBUTES))
+                   action=f"{ACTION.SET_USER_ATTRIBUTES!s}=:hello: one")
         g.policy_object = PolicyClass()
 
         d = get_allowed_custom_attributes(g, user)

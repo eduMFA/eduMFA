@@ -105,7 +105,7 @@ def main():
     result = conn_linotp.execute(s)
 
     for r in result:
-        print("{0!s}, {1!s}".format(r.LinOtpTokenSerialnumber, r.LinOtpCount))
+        print(f"{r.LinOtpTokenSerialnumber!s}, {r.LinOtpCount!s}")
 
 
 if __name__ == '__main__':

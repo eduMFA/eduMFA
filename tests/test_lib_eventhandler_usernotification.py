@@ -1367,13 +1367,13 @@ class UserNotificationTestCase(MyTestCase):
                         "user": "cornelius"}
         req.User = User("cornelius", self.realm1)
         resp = Response()
-        resp.data = """
+        resp.data = f"""
 {{
     "detail": {{
         "googleurl": {{
             "description": "URL for google Authenticator",
-            "img": "{0!s}",
-            "value": "{1!s}"
+            "img": "{PNG_IMAGE!s}",
+            "value": "{OAUTH_URL!s}"
         }},
         "rollout_state": "",
         "serial": "OATH0001D8B6",
@@ -1389,7 +1389,7 @@ class UserNotificationTestCase(MyTestCase):
     "time": 1561549651.093083,
     "version": "privacyIDEA 3.0.1.dev2",
     "versionnumber": "3.0.1.dev2"
-}}""".format(PNG_IMAGE, OAUTH_URL)
+}}"""
         options = {"g": g,
                    "request": req,
                    "response": resp,
@@ -1406,7 +1406,7 @@ class UserNotificationTestCase(MyTestCase):
         payload = to_unicode(parsed_email.get_payload(decode=True))
         self.assertEqual(parsed_email.get_content_type(), "text/html")
         # Check that the base64-encoded image does not get mangled
-        self.assertEqual(payload, "<img src='{0!s}' />".format(PNG_IMAGE))
+        self.assertEqual(payload, f"<img src='{PNG_IMAGE!s}' />")
 
     @smtpmock.activate
     def test_21_sendmail_attachment(self):
@@ -1440,12 +1440,12 @@ class UserNotificationTestCase(MyTestCase):
                         "user": "cornelius"}
         req.User = User("cornelius", self.realm1)
         resp = Response()
-        resp.data = """{{
+        resp.data = f"""{{
             "detail": {{
                 "googleurl": {{
                     "description": "URL for google Authenticator",
-                    "img": "{0!s}",
-                    "value": "{1!s}"
+                    "img": "{PNG_IMAGE!s}",
+                    "value": "{OAUTH_URL!s}"
                 }},
                 "rollout_state": "",
                 "serial": "OATH0001D8B6",
@@ -1462,7 +1462,7 @@ class UserNotificationTestCase(MyTestCase):
             "version": "privacyIDEA 3.0.1.dev2",
             "versionnumber": "3.0.1.dev2"
         }}
-        """.format(PNG_IMAGE, OAUTH_URL)
+        """
         options = {"g": g,
                    "request": req,
                    "response": resp,

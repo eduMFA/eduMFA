@@ -32,24 +32,24 @@ for line in content:
     try:
         secret = binascii.hexlify(base64.b32decode(secret))
     except (TypeError, binascii.Error):
-        sys.stderr.write("Error converting secret of serial {0}.\n".format(serial))
+        sys.stderr.write(f"Error converting secret of serial {serial}.\n")
         continue
 
-    print("{0}, {1}".format(serial, secret.decode('utf8')), end='')
+    print(f"{serial}, {secret.decode('utf8')}", end='')
 
     if args.type:
-        print(", {0}".format(args.type), end='')
+        print(f", {args.type}", end='')
     elif len(values) > 2:
-        print(", {0}".format(values[2]), end='')
+        print(f", {values[2]}", end='')
 
     if args.digits:
-        print(", {0}".format(args.digits), end='')
+        print(f", {args.digits}", end='')
     elif len(values) > 3:
-        print(", {0}".format(values[3]), end='')
+        print(f", {values[3]}", end='')
 
     if args.timestep:
-        print(", {0}".format(args.timestep), end='')
+        print(f", {args.timestep}", end='')
     elif len(values) > 4:
-        print(", {0}".format(values[4]), end='')
+        print(f", {values[4]}", end='')
 
     print()

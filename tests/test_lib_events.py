@@ -746,7 +746,7 @@ class ScriptEventTestCase(MyTestCase):
 
         script_name = "ls.sh"
         d = os.getcwd()
-        d = "{0!s}/tests/testdata/scripts/".format(d)
+        d = f"{d!s}/tests/testdata/scripts/"
         t_handler = ScriptEventHandler(script_directory=d)
         res = t_handler.do(script_name, options=options)
         self.assertTrue(res)
@@ -791,7 +791,7 @@ class ScriptEventTestCase(MyTestCase):
 
         script_name = "fail.sh"
         d = os.getcwd()
-        d = "{0!s}/tests/testdata/scripts/".format(d)
+        d = f"{d!s}/tests/testdata/scripts/"
         t_handler = ScriptEventHandler(script_directory=d)
         self.assertRaises(Exception, t_handler.do, script_name, options=options)
 
@@ -826,7 +826,7 @@ class ScriptEventTestCase(MyTestCase):
 
         script_name = "ls.sh"
         d = os.getcwd()
-        d = "{0!s}/tests/testdata/scripts/".format(d)
+        d = f"{d!s}/tests/testdata/scripts/"
         t_handler = ScriptEventHandler(script_directory=d)
         # first check that the db session is not synced by default
         with mock.patch('edumfa.lib.eventhandler.scripthandler.db') as mdb:
@@ -2663,8 +2663,7 @@ class WebhookTestCase(MyTestCase):
                        }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = 'A webhook is send to {0!r} with the text: {1!r}'.format(
-                'http://test.com', 'This is a test')
+            text = 'A webhook is send to http://test.com with the text: This is a test'
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
 
@@ -2681,8 +2680,7 @@ class WebhookTestCase(MyTestCase):
                        }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = 'A webhook is send to {0!r} with the text: {1!r}'.format(
-                'http://test.com', 'This is a test')
+            text = 'A webhook is send to http://test.com with the text: This is a test'
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
 

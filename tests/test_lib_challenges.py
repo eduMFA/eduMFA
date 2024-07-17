@@ -21,7 +21,7 @@ class ChallengeTestCase(MyTestCase):
     def test_01_challenge(self):
 
         set_policy("chalresp", scope=SCOPE.AUTHZ,
-                   action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+                   action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
         token = init_token({"genkey": 1, "serial": "CHAL1", "pin": "pin"})
         from edumfa.lib.token import check_serial_pass
         r = check_serial_pass(token.token.serial, "pin")

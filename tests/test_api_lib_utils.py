@@ -226,7 +226,7 @@ class UtilsTestCase(MyApiTestCase):
         init_token(params)
         # Test viewargs
         with mock.patch("logging.Logger.debug") as mock_log:
-            with self.app.test_request_context('/token/{0!s}'.format(serial),
+            with self.app.test_request_context(f'/token/{serial!s}',
                                                method='DELETE',
                                                headers={"Authorization": self.at}):
                 res = self.app.full_dispatch_request()
@@ -317,7 +317,7 @@ class UtilsTestCase(MyApiTestCase):
         # now check the /validate/check endpoint
         set_policy(name="otppin",
                    scope=SCOPE.AUTH,
-                   action="{0!s}={1!s}".format(ACTION.OTPPIN, "userstore"))
+                   action=f"{ACTION.OTPPIN!s}=userstore")
         init_token({"type": "spass", "serial": "spass1d"},
                    user=User("pwpercent", self.realm1))
         # fist the request fails due to a wrong otp pin

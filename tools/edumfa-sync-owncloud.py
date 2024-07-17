@@ -78,7 +78,7 @@ def sync_owncloud(config_obj):
     oc_engine = create_engine(config_obj.OWNCLOUD_URI)
     edumfa_engine = create_engine(config_obj.EDUMFA_URI)
 
-    print("Creating table {0!s}, if it does not exist.".format(config_obj.LOCAL_TABLE))
+    print(f"Creating table {config_obj.LOCAL_TABLE!s}, if it does not exist.")
     metadata.create_all(edumfa_engine)
 
     conn_oc = oc_engine.connect()
@@ -95,7 +95,7 @@ def sync_owncloud(config_obj):
             try:
                 conn.execute(table.insert(), values[chunk:chunk + chunk_size])
             except Exception as err:
-                t = 'Failed to insert chunk: {0!s}'.format(err)
+                t = f'Failed to insert chunk: {err!s}'
                 warnings.append(t)
                 print(t)
 
@@ -129,7 +129,7 @@ def sync_owncloud(config_obj):
             # Check if the entry is the same
             if r == edumfa_users[r.id]:
                 # The values are the same
-                print("Entry {0!s}/{1!s} unchanged.".format(r.id, r.user_id))
+                print(f"Entry {r.id!s}/{r.user_id!s} unchanged.")
                 unchanged += 1
             else:
                 # add to update
@@ -142,10 +142,10 @@ def sync_owncloud(config_obj):
     edumfa_users_delete = edumfa_users
 
     print("Processing...")
-    print("{0!s} new entries.".format(len(edumfa_users_insert)))
-    print("{0!s} unchanged entries.".format(unchanged))
-    print("{0!s} updated entries.".format(len(edumfa_users_update)))
-    print("{0!s} removed entries.".format(len(edumfa_users_delete)))
+    print(f"{len(edumfa_users_insert)!s} new entries.")
+    print(f"{unchanged!s} unchanged entries.")
+    print(f"{len(edumfa_users_update)!s} updated entries.")
+    print(f"{len(edumfa_users_delete)!s} removed entries.")
 
     if len(edumfa_users_insert):
         print("Inserting new entries.")
@@ -200,7 +200,7 @@ def main():
         elif o in ("-c", "--config"):
             config_file = a
         else:
-            print("Unknown parameter: {0!s}".format(o))
+            print(f"Unknown parameter: {o!s}")
             sys.exit(3)
 
     if config_file:

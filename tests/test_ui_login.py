@@ -61,7 +61,7 @@ class LoginUITestCase(MyTestCase):
 
     def test_03_realm_dropdown(self):
         set_policy("realmdrop", scope=SCOPE.WEBUI,
-                   action="{0!s}=Hello World".format(ACTION.REALMDROPDOWN))
+                   action=f"{ACTION.REALMDROPDOWN!s}=Hello World")
         with self.app.test_request_context('/', method='GET'):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
@@ -71,9 +71,9 @@ class LoginUITestCase(MyTestCase):
     def test_04_custom_menu_baseline(self):
         # We provide a non-existing file, so we can not read "eduMFA" in the footer.
         set_policy("custom1", scope=SCOPE.WEBUI,
-                   action="{0!s}=mytemplates/nonexist_base.html".format(ACTION.CUSTOM_BASELINE))
+                   action=f"{ACTION.CUSTOM_BASELINE!s}=mytemplates/nonexist_base.html")
         set_policy("custom2", scope=SCOPE.WEBUI,
-                   action="{0!s}=mytemplates/nonexist_menu.html".format(ACTION.CUSTOM_MENU))
+                   action=f"{ACTION.CUSTOM_MENU!s}=mytemplates/nonexist_menu.html")
 
         with self.app.test_request_context('/',
                                            method='GET'):
@@ -84,7 +84,7 @@ class LoginUITestCase(MyTestCase):
 
     def test_05_custom_login_text(self):
         set_policy("logtext", scope=SCOPE.WEBUI,
-                   action="{0!s}=Go for it!".format(ACTION.LOGIN_TEXT))
+                   action=f"{ACTION.LOGIN_TEXT!s}=Go for it!")
         with self.app.test_request_context('/',
                                            method='GET'):
             res = self.app.full_dispatch_request()
@@ -104,7 +104,7 @@ class LoginUITestCase(MyTestCase):
 
         # test login with remote_user policy set
         set_policy("remote_user", scope=SCOPE.WEBUI,
-                   action="{0!s}=allowed".format(ACTION.REMOTE_USER))
+                   action=f"{ACTION.REMOTE_USER!s}=allowed")
         with self.app.test_request_context('/',
                                            method='GET',
                                            environ_base={'REMOTE_USER': 'foo'}):
@@ -114,7 +114,7 @@ class LoginUITestCase(MyTestCase):
 
     def test_07_privacy_statement_link(self):
         set_policy("gdpr_link", scope=SCOPE.WEBUI,
-                   action="{0!s}=https://edumfa.io/".format(ACTION.GDPR_LINK))
+                   action=f"{ACTION.GDPR_LINK!s}=https://edumfa.io/")
         with self.app.test_request_context('/',
                                            method='GET'):
             res = self.app.full_dispatch_request()

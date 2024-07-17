@@ -160,7 +160,7 @@ def dict_without_keys(d, keys):
 
 
 def migrate(config_obj):
-    print("Re-Encryption token data: {0!s}".format(config_obj.REENCRYPT))
+    print(f"Re-Encryption token data: {config_obj.REENCRYPT!s}")
 
     # This maps the resolver types. You must not change this!
     resolver_map = {"LDAPIdResolver": "ldapresolver",
@@ -334,7 +334,7 @@ def migrate(config_obj):
             try:
                 conn.execute(table.insert(), values[chunk:chunk+chunk_size])
             except Exception as err:
-                t = 'Failed to insert chunk: {0!s}'.format(err)
+                t = f'Failed to insert chunk: {err!s}'
                 warnings.append(t)
                 print(t)
 
@@ -358,8 +358,8 @@ def migrate(config_obj):
         for r in result:
             resolver_id_map[r["name"]] = r["id"]
 
-        print("Realm-Map: {}".format(realm_id_map))
-        print("Resolver-Map: {}".format(resolver_id_map))
+        print(f"Realm-Map: {realm_id_map}")
+        print(f"Resolver-Map: {resolver_id_map}")
 
     # Process Tokens
 
@@ -370,7 +370,7 @@ def migrate(config_obj):
         i = 0
         for r in result:
             i = i + 1
-            print("processing token #{1!s}: {0!s}".format(r["LinOtpTokenSerialnumber"], i))
+            print(f"processing token #{i!s}: {r['LinOtpTokenSerialnumber']!s}")
             # Adapt type
             ttype = r["LinOtpTokenType"]
             if ttype.lower() == "hmac":
@@ -400,9 +400,9 @@ def migrate(config_obj):
                 resolver_type = resolver_type
                 user_id = r['LinOtpUserid']
                 if config_obj.ASSIGNMENTS.get("convert_endian"):
-                    print(" +--- converting UUID {0!s}".format(user_id))
+                    print(f" +--- converting UUID {user_id!s}")
                     user_id = re.sub(UUID_MATCH_PATTERN, UUID_REPLACE_PATTERN, user_id)
-                    print("  +-- to              {0!s}".format(user_id))
+                    print(f"  +-- to              {user_id!s}")
             else:
                 user_pin = None
                 user_pin_iv = None
@@ -450,7 +450,7 @@ def migrate(config_obj):
                         serial=r["LinOtpTokenSerialnumber"],
                         Key=k, Value=v,
                         token_id=r["LinOtpTokenId"]))
-                    print(" +--- processing tokeninfo {0!s}".format(k))
+                    print(f" +--- processing tokeninfo {k!s}")
                 if config_obj.NEW_TOKENINFO:
                     print(" +--- processing new tokeninfo")
                     for k, v in config_obj.NEW_TOKENINFO.items():
@@ -460,7 +460,7 @@ def migrate(config_obj):
                             token_id=r["LinOtpTokenId"]))
 
         print()
-        print("Adding {} tokens...".format(len(token_values)))
+        print(f"Adding {len(token_values)} tokens...")
         # Insert into database without the user_id
         insert_chunks(conn_pi, token_table,
                       [dict_without_keys(d, ["user_id", "resolver"]) for d in token_values],
@@ -483,7 +483,7 @@ def migrate(config_obj):
                 ti["token_id"] = token_serial_id_map[ti["serial"]]
                 del ti["serial"]
 
-            print("Adding {} token infos...".format(len(tokeninfo_values)))
+            print(f"Adding {len(tokeninfo_values)} token infos...")
             insert_chunks(conn_pi, tokeninfo_table, tokeninfo_values,
                           config_obj.INSERT_CHUNK_SIZE, "tokeninfo records")
 
@@ -516,11 +516,11 @@ def migrate(config_obj):
                         tokenrealm_values.append(dict(token_id=token_id,
                                                       realm_id=realm_id))
 
-        print("Adding {} tokenrealms...".format(len(tokenrealm_values)))
+        print(f"Adding {len(tokenrealm_values)} tokenrealms...")
         insert_chunks(conn_pi, tokenrealm_table, tokenrealm_values,
                       config_obj.INSERT_CHUNK_SIZE, record_name="tokenrealm records")
 
-        print("Adding {} tokenowners...".format(len(tokenowner_values)))
+        print(f"Adding {len(tokenowner_values)} tokenowners...")
         insert_chunks(conn_pi, tokenowner_table, tokenowner_values,
                       config_obj.INSERT_CHUNK_SIZE, record_name="tokenowner records")
 
@@ -568,7 +568,7 @@ def main():
         elif o in ("-c", "--config"):
             config_file = a
         else:
-            print("Unknown parameter: {0!s}".format(o))
+            print(f"Unknown parameter: {o!s}")
             sys.exit(3)
 
     if config_file:

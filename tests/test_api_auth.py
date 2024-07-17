@@ -451,7 +451,7 @@ class AuthApiTestCase(MyApiTestCase):
 
         # now check that with a disabled remote_user policy the login fails
         set_policy(name="remote", scope=SCOPE.WEBUI,
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.DISABLE))
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.DISABLE!s}")
         with self.app.test_request_context('/auth',
                                            method='POST',
                                            data={"username": "cornelius"},
@@ -470,7 +470,7 @@ class AuthApiTestCase(MyApiTestCase):
 
         # And now check that with an enabled remote_user policy the login succeeds
         set_policy(name="remote", scope=SCOPE.WEBUI,
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE))
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.ACTIVE!s}")
         with self.app.test_request_context('/auth',
                                            method='POST',
                                            data={"username": "cornelius"},
@@ -487,7 +487,7 @@ class AuthApiTestCase(MyApiTestCase):
 
         # check that a remote user with "@" works as well
         set_policy(name="remote", scope=SCOPE.WEBUI, realm=self.realm1,
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE))
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.ACTIVE!s}")
         with self.app.test_request_context('/auth',
                                            method='POST',
                                            data={"username": "cornelius@realm1"},
@@ -505,7 +505,7 @@ class AuthApiTestCase(MyApiTestCase):
         # check that the policy remote_user=force passes the necessary hidden tag to the
         # login window
         set_policy(name="remote", scope=SCOPE.WEBUI, realm=self.realm1,
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.FORCE))
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.FORCE!s}")
         with self.app.test_request_context('/',
                                            method='GET',
                                            environ_base={"REMOTE_USER": "cornelius@realm1"}):
@@ -517,7 +517,7 @@ class AuthApiTestCase(MyApiTestCase):
 
         # bind the remote user policy to an unknown realm
         set_policy(name="remote", scope=SCOPE.WEBUI, realm='unknown',
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE))
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.ACTIVE!s}")
         with self.app.test_request_context('/auth',
                                            method='POST',
                                            data={"username": "cornelius@realm1"},
@@ -533,7 +533,7 @@ class AuthApiTestCase(MyApiTestCase):
 
         # check split@sign is working correctly
         set_policy(name="remote", scope=SCOPE.WEBUI, realm=self.realm1,
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE))
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.ACTIVE!s}")
         set_edumfa_config(SYSCONF.SPLITATSIGN, False)
         with self.app.test_request_context('/auth',
                                            method='POST',
@@ -666,7 +666,7 @@ class AuthApiTestCase(MyApiTestCase):
             self.assertEqual("Authentication failure. Wrong credentials", error.get("message"))
 
         # set a policy to authenticate against eduMFA
-        set_policy("piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE))
+        set_policy("piLogin", scope=SCOPE.WEBUI, action=f"{ACTION.LOGINMODE!s}=eduMFA")
 
         # user authenticates against eduMFA but user does not exist
         with self.app.test_request_context('/auth',
@@ -812,11 +812,11 @@ class EventHandlerTest(MyApiTestCase):
         set_default_realm(self.realm1)
 
         # set a policy to authenticate against eduMFA
-        set_policy("piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE))
+        set_policy("piLogin", scope=SCOPE.WEBUI, action=f"{ACTION.LOGINMODE!s}=eduMFA")
         # set a policy to for otppin=userstore
-        set_policy("otppin", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN))
+        set_policy("otppin", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=userstore")
         # Set a policy to do C/R with HOTP tokens
-        set_policy("crhotp", scope=SCOPE.AUTH, action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+        set_policy("crhotp", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
 
         # Create an event handler, that creates HOTP token on /auth with default OTP key
         eid = set_event("createtoken", event=["auth"], handlermodule="Token",

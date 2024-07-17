@@ -515,7 +515,7 @@ class PushTokenTestCase(MyTestCase):
                 # In two seconds we need to run an update on the challenge table.
                 Timer(2, self.mark_challenge_as_accepted).start()
 
-                set_policy("push1", scope=SCOPE.AUTH, action="{0!s}=20".format(LegacyPushTokenClass.PUSH_ACTION.WAIT))
+                set_policy("push1", scope=SCOPE.AUTH, action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT!s}=20")
                 # Send the first authentication request to trigger the challenge
                 with self.app.test_request_context('/validate/check',
                                                    method='POST',
@@ -548,7 +548,7 @@ class PushTokenTestCase(MyTestCase):
                           body="""{}""",
                           content_type="application/json")
 
-            set_policy("push1", scope=SCOPE.AUTH, action="{0!s}=1".format(LegacyPushTokenClass.PUSH_ACTION.WAIT))
+            set_policy("push1", scope=SCOPE.AUTH, action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT!s}=1")
             # Send the first authentication request to trigger the challenge
             with self.app.test_request_context('/validate/check',
                                                method='POST',
@@ -638,13 +638,13 @@ class PushTokenTestCase(MyTestCase):
 
         # This is what the smartphone answers.
         # create the signature:
-        sign_data = "{0!s}|{1!s}".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge!s}|{tokenobj.token.serial!s}"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
                                              hashes.SHA256()))
         # Try an invalid signature first
-        wrong_sign_data = "{}|{}".format(challenge, tokenobj.token.serial[1:])
+        wrong_sign_data = f"{challenge}|{tokenobj.token.serial[1:]}"
         wrong_signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(wrong_sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
@@ -662,7 +662,7 @@ class PushTokenTestCase(MyTestCase):
 
         # Correct signature, wrong challenge
         wrong_challenge = b32encode_and_unicode(geturandom())
-        wrong_sign_data = "{}|{}".format(wrong_challenge, tokenobj.token.serial)
+        wrong_sign_data = f"{wrong_challenge}|{tokenobj.token.serial}"
         wrong_signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(wrong_sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
@@ -692,7 +692,7 @@ class PushTokenTestCase(MyTestCase):
         wrong_key = rsa.generate_private_key(public_exponent=65537,
                                              key_size=4096,
                                              backend=default_backend())
-        wrong_sign_data = "{}|{}".format(challenge, tokenobj.token.serial)
+        wrong_sign_data = f"{challenge}|{tokenobj.token.serial}"
         wrong_signature = b32encode_and_unicode(
             wrong_key.sign(wrong_sign_data.encode("utf-8"),
                            padding.PKCS1v15(),
@@ -790,7 +790,7 @@ class PushTokenTestCase(MyTestCase):
                                               transaction_id=transaction_id)
         challenge = challengeobject_list[0].challenge
 
-        sign_data = "{0!s}|{1!s}|decline".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge!s}|{tokenobj.token.serial!s}|decline"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
@@ -859,9 +859,9 @@ class PushTokenTestCase(MyTestCase):
 
         # Set a loginmode policy
         set_policy("webui", scope=SCOPE.WEBUI,
-                   action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA))
+                   action=f"{ACTION.LOGINMODE}={LOGINMODE.EDUMFA}")
         # Set a PUSH_WAIT action which will be ignored by eduMFA
-        set_policy("push1", scope=SCOPE.AUTH, action="{0!s}=20".format(LegacyPushTokenClass.PUSH_ACTION.WAIT))
+        set_policy("push1", scope=SCOPE.AUTH, action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT!s}=20")
         with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                         '.from_service_account_file') as mySA:
             # alternative: side_effect instead of return_value
@@ -895,7 +895,7 @@ class PushTokenTestCase(MyTestCase):
         challenge = challengeobject_list[0].challenge
         # This is what the smartphone answers.
         # create the signature:
-        sign_data = "{0!s}|{1!s}".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge!s}|{tokenobj.token.serial!s}"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
@@ -1150,7 +1150,7 @@ class PushTokenTestCase(MyTestCase):
         # create a poll request
         # first create a signature
         ts = timestamp.isoformat()
-        sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
+        sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
                                                hashes.SHA256())
@@ -1314,7 +1314,7 @@ class PushTokenTestCase(MyTestCase):
                                    LegacyPushTokenClass.api_endpoint, req, g)
 
         # check for a wrongly created signature (inverted timestamp, serial)
-        sign_string2 = "{timestamp}|{serial}".format(serial=serial, timestamp=ts)
+        sign_string2 = f"{ts}|{serial}"
         sig_fail2 = self.smartphone_private_key.sign(sign_string2.encode('utf8'),
                                                      padding.PKCS1v15(),
                                                      hashes.SHA256())
@@ -1821,7 +1821,7 @@ class EduPushTokenTestCase(MyTestCase):
                 # In two seconds we need to run an update on the challenge table.
                 Timer(2, self.mark_challenge_as_accepted).start()
 
-                set_policy("push1", scope=SCOPE.AUTH, action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT))
+                set_policy("push1", scope=SCOPE.AUTH, action=f"{PushTokenClass.PUSH_ACTION.WAIT!s}=20")
                 # Send the first authentication request to trigger the challenge
                 with self.app.test_request_context('/validate/check',
                                                    method='POST',
@@ -1854,7 +1854,7 @@ class EduPushTokenTestCase(MyTestCase):
                           body="""{}""",
                           content_type="application/json")
 
-            set_policy("push1", scope=SCOPE.AUTH, action="{0!s}=1".format(PushTokenClass.PUSH_ACTION.WAIT))
+            set_policy("push1", scope=SCOPE.AUTH, action=f"{PushTokenClass.PUSH_ACTION.WAIT!s}=1")
             # Send the first authentication request to trigger the challenge
             with self.app.test_request_context('/validate/check',
                                                method='POST',
@@ -1944,13 +1944,13 @@ class EduPushTokenTestCase(MyTestCase):
 
         # This is what the smartphone answers.
         # create the signature:
-        sign_data = "{0!s}|{1!s}".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge!s}|{tokenobj.token.serial!s}"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
                                              hashes.SHA256()))
         # Try an invalid signature first
-        wrong_sign_data = "{}|{}".format(challenge, tokenobj.token.serial[1:])
+        wrong_sign_data = f"{challenge}|{tokenobj.token.serial[1:]}"
         wrong_signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(wrong_sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
@@ -1968,7 +1968,7 @@ class EduPushTokenTestCase(MyTestCase):
 
         # Correct signature, wrong challenge
         wrong_challenge = b32encode_and_unicode(geturandom())
-        wrong_sign_data = "{}|{}".format(wrong_challenge, tokenobj.token.serial)
+        wrong_sign_data = f"{wrong_challenge}|{tokenobj.token.serial}"
         wrong_signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(wrong_sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
@@ -1998,7 +1998,7 @@ class EduPushTokenTestCase(MyTestCase):
         wrong_key = rsa.generate_private_key(public_exponent=65537,
                                              key_size=4096,
                                              backend=default_backend())
-        wrong_sign_data = "{}|{}".format(challenge, tokenobj.token.serial)
+        wrong_sign_data = f"{challenge}|{tokenobj.token.serial}"
         wrong_signature = b32encode_and_unicode(
             wrong_key.sign(wrong_sign_data.encode("utf-8"),
                            padding.PKCS1v15(),
@@ -2096,7 +2096,7 @@ class EduPushTokenTestCase(MyTestCase):
                                               transaction_id=transaction_id)
         challenge = challengeobject_list[0].challenge
 
-        sign_data = "{0!s}|{1!s}|decline".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge!s}|{tokenobj.token.serial!s}|decline"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
@@ -2165,9 +2165,9 @@ class EduPushTokenTestCase(MyTestCase):
 
         # Set a loginmode policy
         set_policy("webui", scope=SCOPE.WEBUI,
-                   action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA))
+                   action=f"{ACTION.LOGINMODE}={LOGINMODE.EDUMFA}")
         # Set a PUSH_WAIT action which will be ignored by eduMFA
-        set_policy("push1", scope=SCOPE.AUTH, action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT))
+        set_policy("push1", scope=SCOPE.AUTH, action=f"{PushTokenClass.PUSH_ACTION.WAIT!s}=20")
         with mock.patch('edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials'
                         '.from_service_account_file') as mySA:
             # alternative: side_effect instead of return_value
@@ -2201,7 +2201,7 @@ class EduPushTokenTestCase(MyTestCase):
         challenge = challengeobject_list[0].challenge
         # This is what the smartphone answers.
         # create the signature:
-        sign_data = "{0!s}|{1!s}".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge!s}|{tokenobj.token.serial!s}"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(sign_data.encode("utf-8"),
                                              padding.PKCS1v15(),
@@ -2456,7 +2456,7 @@ class EduPushTokenTestCase(MyTestCase):
         # create a poll request
         # first create a signature
         ts = timestamp.isoformat()
-        sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
+        sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
                                                hashes.SHA256())
@@ -2620,7 +2620,7 @@ class EduPushTokenTestCase(MyTestCase):
                                    PushTokenClass.api_endpoint, req, g)
 
         # check for a wrongly created signature (inverted timestamp, serial)
-        sign_string2 = "{timestamp}|{serial}".format(serial=serial, timestamp=ts)
+        sign_string2 = f"{ts}|{serial}"
         sig_fail2 = self.smartphone_private_key.sign(sign_string2.encode('utf8'),
                                                      padding.PKCS1v15(),
                                                      hashes.SHA256())

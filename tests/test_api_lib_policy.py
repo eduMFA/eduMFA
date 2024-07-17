@@ -308,7 +308,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy, that does allow the action
         set_policy(name="pol1",
                    scope=SCOPE.ADMIN,
-                   action="enrollTOTP, enrollHOTP, {0!s}".format(ACTION.IMPORT),
+                   action=f"enrollTOTP, enrollHOTP, {ACTION.IMPORT!s}",
                    client="10.0.0.0/8")
         g.policy_object = PolicyClass()
 
@@ -344,7 +344,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy, that allows one active token per user
         set_policy(name="pol1",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.MAXACTIVETOKENUSER, 1))
+                   action=f"{ACTION.MAXACTIVETOKENUSER!s}={1!s}")
         g.policy_object = PolicyClass()
         # The user has one token, everything is fine.
         self.setUp_user_realms()
@@ -382,7 +382,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy to limit active HOTP tokens to 1
         set_policy(name="pol1",
                    scope=SCOPE.ENROLL,
-                   action="hotp_{0!s}={1!s}".format(ACTION.MAXACTIVETOKENUSER, 1))
+                   action=f"hotp_{ACTION.MAXACTIVETOKENUSER!s}={1!s}")
         # we try to enroll a new HOTP token, this would fail.
         req.all_data = {"user": "cornelius",
                         "realm": self.realm1,
@@ -446,7 +446,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy, that allows two tokens per user
         set_policy(name="pol1",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.MAXTOKENUSER, 2))
+                   action=f"{ACTION.MAXTOKENUSER!s}={2!s}")
         g.policy_object = PolicyClass()
         # The user has one token, everything is fine.
         self.setUp_user_realms()
@@ -485,7 +485,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # are two policies matching for the user and the maximum is 12.
         set_policy(name="pol_max_12",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.MAXTOKENUSER, 12))
+                   action=f"{ACTION.MAXTOKENUSER!s}={12!s}")
         g.policy_object = PolicyClass()
         # new check_max_token_user should not raise an error!
         self.assertTrue(check_max_token_user(req))
@@ -507,7 +507,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Now we set a policy specifically for HOTP tokens:
         set_policy(name="pol2",
                    scope=SCOPE.ENROLL,
-                   action="hotp_{0!s}={1!s}".format(ACTION.MAXTOKENUSER, 2))
+                   action=f"hotp_{ACTION.MAXTOKENUSER!s}={2!s}")
         g.policy_object = PolicyClass()
         # and fail to enroll a new token
         req.all_data = {"user": "cornelius",
@@ -581,7 +581,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(len(tokenobject_list) == 2)
 
         # request with a user object, not with a realm
-        req.all_data = {"user": "cornelius@{0!s}".format(self.realm1)}
+        req.all_data = {"user": f"cornelius@{self.realm1!s}"}
 
         # Now a new policy check will fail, since there are already two
         # tokens in the realm
@@ -609,7 +609,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy, that allows two tokens per realm
         set_policy(name="pol1",
                    scope=SCOPE.AUTHZ,
-                   action="{0!s}={1!s}".format(ACTION.SETREALM, self.realm1),
+                   action=f"{ACTION.SETREALM!s}={self.realm1!s}",
                    realm="somerealm")
         g.policy_object = PolicyClass()
 
@@ -636,7 +636,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         #  we get an exception
         set_policy(name="pol2",
                    scope=SCOPE.AUTHZ,
-                   action="{0!s}={1!s}".format(ACTION.SETREALM, "ConflictRealm"),
+                   action=f"{ACTION.SETREALM!s}=ConflictRealm",
                    realm="somerealm")
         g.policy_object = PolicyClass()
         # This request will trigger two policies with different realms to set
@@ -664,10 +664,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy that defines the tokenlabel
         set_policy(name="pol1",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.TOKENLABEL, "<u>@<r>"))
+                   action=f"{ACTION.TOKENLABEL!s}=<u>@<r>")
         set_policy(name="pol2",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.TOKENISSUER, "myPI"))
+                   action=f"{ACTION.TOKENISSUER!s}=myPI")
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -685,7 +685,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # reset the request data and start again with force_app_pin policy
         set_policy(name="pol3",
                    scope=SCOPE.ENROLL,
-                   action="hotp_{0!s}=True".format(ACTION.FORCE_APP_PIN))
+                   action=f"hotp_{ACTION.FORCE_APP_PIN!s}=True")
         req.all_data = {"user": "cornelius",
                         "realm": "home"}
         init_tokenlabel(req)
@@ -724,10 +724,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         size_policy = 12
         set_policy(name="pinsize",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.OTPPINRANDOM, size_policy))
+                   action=f"{ACTION.OTPPINRANDOM!s}={size_policy!s}")
         set_policy(name="pincontent",
                    scope=SCOPE.ADMIN,
-                   action="{0!s}={1!s}".format(ACTION.OTPPINCONTENTS, contents_policy))
+                   action=f"{ACTION.OTPPINCONTENTS!s}={contents_policy!s}")
         set_policy(name="pinhandling",
                    scope=SCOPE.ENROLL,
                    action="{0!s}=edumfa.lib.pinhandling.base.PinHandler".format(
@@ -773,10 +773,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         size_policy = 12
         set_policy(name="pinsize",
                    scope=SCOPE.ADMIN,
-                   action="{0!s}={1!s}".format(ACTION.OTPPINSETRANDOM, size_policy))
+                   action=f"{ACTION.OTPPINSETRANDOM!s}={size_policy!s}")
         set_policy(name="pincontent",
                    scope=SCOPE.ADMIN,
-                   action="{0!s}={1!s}".format(ACTION.OTPPINCONTENTS, contents_policy))
+                   action=f"{ACTION.OTPPINCONTENTS!s}={contents_policy!s}")
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -1286,7 +1286,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # and only use the last 4 characters of the username
         set_policy(name="mangle1",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=user/.*(.{{4}}$)/\\1/".format(ACTION.MANGLE))
+                   action=f"{ACTION.MANGLE!s}=user/.*(.{{4}}$)/\\1/")
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -1300,7 +1300,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a mangle policy to remove blanks from realm name
         set_policy(name="mangle2",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=realm/\\s//".format(ACTION.MANGLE))
+                   action=f"{ACTION.MANGLE!s}=realm/\\s//")
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -1327,7 +1327,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # A user, for whom the login via REMOTE_USER is allowed.
         set_policy(name="ruser",
                    scope=SCOPE.WEBUI,
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE))
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.ACTIVE!s}")
 
         r = is_remote_user_allowed(req)
         self.assertEqual(REMOTE_USER.ACTIVE, r)
@@ -1336,7 +1336,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Only allowed for user "super", but REMOTE_USER=admin
         set_policy(name="ruser",
                    scope=SCOPE.WEBUI,
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE),
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.ACTIVE!s}",
                    user="super")
 
         r = is_remote_user_allowed(req)
@@ -1358,7 +1358,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Now set the remote force policy
         set_policy(name="ruser",
                    scope=SCOPE.WEBUI,
-                   action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.FORCE),
+                   action=f"{ACTION.REMOTE_USER!s}={REMOTE_USER.FORCE!s}",
                    user="super")
         self.assertEqual(REMOTE_USER.FORCE, is_remote_user_allowed(req))
 
@@ -1419,7 +1419,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # and only use the last 4 characters of the username
         set_policy(name="recover",
                    scope=SCOPE.USER,
-                   action="{0!s}".format(ACTION.RESYNC))
+                   action=f"{ACTION.RESYNC!s}")
         g.policy_object = PolicyClass()
         req.all_data = {"user": "cornelius", "realm": self.realm1}
         # There is a user policy without password reset, so an exception is
@@ -1430,7 +1430,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # The password reset is allowed
         set_policy(name="recover",
                    scope=SCOPE.USER,
-                   action="{0!s}".format(ACTION.PASSWORDRESET))
+                   action=f"{ACTION.PASSWORDRESET!s}")
         g.policy_object = PolicyClass()
         r = check_anonymous_user(req, ACTION.PASSWORDRESET)
         self.assertEqual(r, True)
@@ -1560,7 +1560,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # and only use the last 4 characters of the username
         set_policy(name="a_age",
                    scope=SCOPE.ADMIN,
-                   action="{0!s}=1d".format(ACTION.AUDIT_AGE))
+                   action=f"{ACTION.AUDIT_AGE!s}=1d")
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -1583,7 +1583,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # set a policy to hide the "serial" and the "action" columns in the audit response
         set_policy(name="hide_audit_columns_admin",
                    scope=SCOPE.ADMIN,
-                   action="{0!s}=serial action".format(ACTION.HIDE_AUDIT_COLUMNS))
+                   action=f"{ACTION.HIDE_AUDIT_COLUMNS!s}=serial action")
         g.logged_in_user = {"username": "admin1",
                             "realm": "",
                             "role": "admin"}
@@ -1600,7 +1600,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # set a policy to hide the "number" and the "realm" columns in the audit response
         set_policy(name="hide_audit_columns_user",
                    scope=SCOPE.USER,
-                   action="{0!s}=number realm".format(ACTION.HIDE_AUDIT_COLUMNS))
+                   action=f"{ACTION.HIDE_AUDIT_COLUMNS!s}=number realm")
         g.logged_in_user = {"username": "user1",
                             "realm": "",
                             "role": "user"}
@@ -1624,7 +1624,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # set a policy to hide the "tokenkind" and the "unknown" tokeninfo values
         set_policy(name="hide_tokeninfo_admin",
                    scope=SCOPE.ADMIN,
-                   action="{0!s}=tokenkind unknown".format(ACTION.HIDE_TOKENINFO))
+                   action=f"{ACTION.HIDE_TOKENINFO!s}=tokenkind unknown")
         g.logged_in_user = {"username": "admin1",
                             "realm": "",
                             "role": "admin"}
@@ -1648,7 +1648,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # set a policy to hide the "tokenkind" and the "unknown" entries from the tokeninfo
         set_policy(name="hide_tokeninfo_user",
                    scope=SCOPE.USER,
-                   action="{0!s}=tokenkind unknown".format(ACTION.HIDE_TOKENINFO))
+                   action=f"{ACTION.HIDE_TOKENINFO!s}=tokenkind unknown")
         g.logged_in_user = {"username": "user1",
                             "realm": "",
                             "role": "user"}
@@ -1683,7 +1683,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req = Request(env)
         set_policy(name="paperpol",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}=10".format(PAPERACTION.PAPERTOKEN_COUNT))
+                   action=f"{PAPERACTION.PAPERTOKEN_COUNT!s}=10")
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -1709,7 +1709,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req = Request(env)
         set_policy(name="tanpol",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}=10".format(TANACTION.TANTOKEN_COUNT))
+                   action=f"{TANACTION.TANTOKEN_COUNT!s}=10")
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -1808,8 +1808,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_01_sms_identifier(self):
         # every admin is allowed to enroll sms token with gw1 or gw2
-        set_policy("sms1", scope=SCOPE.ADMIN, action="{0!s}=gw1 gw2".format(SMSACTION.GATEWAYS))
-        set_policy("sms2", scope=SCOPE.ADMIN, action="{0!s}=gw3".format(SMSACTION.GATEWAYS))
+        set_policy("sms1", scope=SCOPE.ADMIN, action=f"{SMSACTION.GATEWAYS!s}=gw1 gw2")
+        set_policy("sms2", scope=SCOPE.ADMIN, action=f"{SMSACTION.GATEWAYS!s}=gw3")
 
         g.logged_in_user = {"username": "admin1",
                             "realm": "",
@@ -1832,7 +1832,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertRaises(PolicyError, sms_identifiers, req)
 
         # Users are allowed to choose gw4
-        set_policy("sms1", scope=SCOPE.USER, action="{0!s}=gw4".format(SMSACTION.GATEWAYS))
+        set_policy("sms1", scope=SCOPE.USER, action=f"{SMSACTION.GATEWAYS!s}=gw4")
 
         g.logged_in_user = {"username": "root",
                             "realm": "",
@@ -1905,7 +1905,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # set sslverify="0"
         set_policy(name="push_pol2",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}=0".format(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
+                   action=f"{PushTokenClass.PUSH_ACTION.SSL_VERIFY!s}=0")
         g.policy_object = PolicyClass()
         req.all_data = {
             "type": "edupush"}
@@ -1968,7 +1968,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # set sslverify="0"
         set_policy(name="push_pol2",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}=0".format(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY))
+                   action=f"{LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY!s}=0")
         g.policy_object = PolicyClass()
         req.all_data = {
             "type": "push"}
@@ -2073,7 +2073,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), False)
 
         # Now we use the policy, to set the push_wait seconds
-        set_policy(name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(LegacyPushTokenClass.PUSH_ACTION.WAIT))
+        set_policy(name="push1", scope=SCOPE.AUTH, action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT!s}=10")
         req.all_data = {}
         g.policy_object = PolicyClass()
         legacypushtoken_wait(req, None)
@@ -2091,7 +2091,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), False)
 
         # But even with a policy, the function still sets PushTokenClass.PUSH_ACTION.WAIT to False
-        set_policy(name="push1", scope=SCOPE.AUTH, action="{0!s}=10".format(LegacyPushTokenClass.PUSH_ACTION.WAIT))
+        set_policy(name="push1", scope=SCOPE.AUTH, action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT!s}=10")
         req = RequestMock()
         req.all_data = {"push_wait": "120"}
         pushtoken_disable_wait(req, None)
@@ -2185,7 +2185,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # Now we use the policy, to set the otpkey
         set_policy(name="Indexed", scope=SCOPE.USER,
-                   action="indexedsecret_{0!s}=username".format(PIIXACTION.FORCE_ATTRIBUTE))
+                   action=f"indexedsecret_{PIIXACTION.FORCE_ATTRIBUTE!s}=username")
         req.all_data = {"type": "indexedsecret"}
         g.policy_object = PolicyClass()
         indexedsecret_force_attribute(req, None)
@@ -3180,7 +3180,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy, that the application is allowed to specify tokentype
         set_policy(name="pol1",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.REQUIRE_ATTESTATION, REQUIRE_ACTIONS.REQUIRE_AND_VERIFY))
+                   action=f"{ACTION.REQUIRE_ATTESTATION!s}={REQUIRE_ACTIONS.REQUIRE_AND_VERIFY!s}")
         g.policy_object = PolicyClass()
 
         # provide an empty attestation
@@ -3211,10 +3211,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # now create a policy for the length of the registration code
         set_policy(name="reg_length",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.REGISTRATIONCODE_LENGTH, 6))
+                   action=f"{ACTION.REGISTRATIONCODE_LENGTH!s}={6!s}")
         set_policy(name="reg_contents",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.REGISTRATIONCODE_CONTENTS, "+n"))
+                   action=f"{ACTION.REGISTRATIONCODE_CONTENTS!s}=+n")
         # request, that matches the policy
         req.all_data = {"user": "cornelius", "realm": "home", "type": "registration"}
         init_token_length_contents(req)
@@ -3246,10 +3246,10 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # now create a policy for the length of the registration code
         set_policy(name="pw_length",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.PASSWORD_LENGTH, 6))
+                   action=f"{ACTION.PASSWORD_LENGTH!s}={6!s}")
         set_policy(name="pw_contents",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.PASSWORD_CONTENTS, "+n"))
+                   action=f"{ACTION.PASSWORD_CONTENTS!s}=+n")
         # request, that matches the policy
         req.all_data = {"user": "cornelius", "realm": "home", "type": "pw"}
         init_token_length_contents(req)
@@ -3285,7 +3285,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # set to allow deleting the department
         set_policy("set_custom_attr", scope=SCOPE.ADMIN,
-                   action="{0!s}=department sth".format(ACTION.DELETE_USER_ATTRIBUTES))
+                   action=f"{ACTION.DELETE_USER_ATTRIBUTES!s}=department sth")
         req.all_data = {"user": "cornelius", "realm": self.realm1, "attrkey": "department"}
         check_custom_user_attributes(req, "delete")
 
@@ -3295,13 +3295,13 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # Allow to delete diffkey
         set_policy("set_custom_attr2", scope=SCOPE.ADMIN,
-                   action="{0!s}=difkey".format(ACTION.DELETE_USER_ATTRIBUTES))
+                   action=f"{ACTION.DELETE_USER_ATTRIBUTES!s}=difkey")
         req.all_data = {"user": "cornelius", "realm": self.realm1, "attrkey": "difkey"}
         check_custom_user_attributes(req, "delete")
 
         # Now we set the policy to allow to delete any attribute
         set_policy("set_custom_attr2", scope=SCOPE.ADMIN,
-                   action="{0!s}=*".format(ACTION.DELETE_USER_ATTRIBUTES))
+                   action=f"{ACTION.DELETE_USER_ATTRIBUTES!s}=*")
         req.all_data = {"user": "cornelius", "realm": self.realm1, "attrkey": "department"}
         check_custom_user_attributes(req, "delete")
         req.all_data = {"user": "cornelius", "realm": self.realm1, "attrkey": "anykey"}
@@ -3315,7 +3315,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
                         "key": "department", "value": "finance"}
         self.assertRaises(PolicyError, check_custom_user_attributes, req, "set")
         set_policy("set_custom_attr", scope=SCOPE.ADMIN,
-                   action="{0!s}=:department: finance devel :color: * :*: 1 2 ".format(ACTION.SET_USER_ATTRIBUTES))
+                   action=f"{ACTION.SET_USER_ATTRIBUTES!s}=:department: finance devel :color: * :*: 1 2 ")
         # Allow to set to finance
         check_custom_user_attributes(req, "set")
         req.all_data = {"user": "cornelius", "realm": self.realm1,
@@ -3347,7 +3347,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # Now you can set any key to any value
         set_policy("set_custom_attr2", scope=SCOPE.ADMIN,
-                   action="{0!s}=:*: *".format(ACTION.SET_USER_ATTRIBUTES))
+                   action=f"{ACTION.SET_USER_ATTRIBUTES!s}=:*: *")
         req.all_data = {"user": "cornelius", "realm": self.realm1,
                         "key": "size", "value": "3"}
         check_custom_user_attributes(req, "set")
@@ -3458,7 +3458,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # Set policy
         set_policy(name="require_description",
                    scope=SCOPE.ENROLL,
-                   action=["{0!s}=hotp".format(ACTION.REQUIRE_DESCRIPTION)])
+                   action=[f"{ACTION.REQUIRE_DESCRIPTION!s}=hotp"])
         req = Request(env)
         req.User = User("cornelius")
 
@@ -3890,7 +3890,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # to "any_pin"
         set_policy(name="pol2",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.AUTOASSIGN, AUTOASSIGNVALUE.NONE),
+                   action=f"{ACTION.AUTOASSIGN!s}={AUTOASSIGNVALUE.NONE!s}",
                                      client="10.0.0.0/8")
         g.policy_object = PolicyClass()
 
@@ -3950,8 +3950,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # to "userstore"
         set_policy(name="pol2",
                    scope=SCOPE.ENROLL,
-                   action="{0!s}={1!s}".format(ACTION.AUTOASSIGN,
-                                     AUTOASSIGNVALUE.USERSTORE),
+                   action=f"{ACTION.AUTOASSIGN!s}={AUTOASSIGNVALUE.USERSTORE!s}",
                                      client="10.0.0.0/8")
         g.policy_object = PolicyClass()
 
@@ -4199,7 +4198,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(name="pol_qr1", scope=SCOPE.WEBUI, action=ACTION.SHOW_ANDROID_AUTHENTICATOR)
         set_policy(name="pol_qr2", scope=SCOPE.WEBUI, action=ACTION.SHOW_IOS_AUTHENTICATOR)
         set_policy(name="pol_qr3", scope=SCOPE.WEBUI,
-                   action="{0!s}=https://edumfa.io".format(ACTION.SHOW_CUSTOM_AUTHENTICATOR))
+                   action=f"{ACTION.SHOW_CUSTOM_AUTHENTICATOR!s}=https://edumfa.io")
 
         custom_url = create_img("https://edumfa.io")
         g.policy_object = PolicyClass()
@@ -4249,7 +4248,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
         # Test if the webui gets the information about the preset attribute for indexedsecret token
         set_policy(name="pol_indexed1", scope=SCOPE.WEBUI,
-                   action="indexedsecret_{0!s}=preattr".format(PIIXACTION.PRESET_ATTRIBUTE))
+                   action=f"indexedsecret_{PIIXACTION.PRESET_ATTRIBUTE!s}=preattr")
 
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
@@ -4261,7 +4260,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
         # Test if the webui gets the information, that a normal user has force_attribute
         set_policy(name="pol_indexed_force", scope=SCOPE.USER,
-                   action="indexedsecret_{0!s}=force".format(PIIXACTION.FORCE_ATTRIBUTE))
+                   action=f"indexedsecret_{PIIXACTION.FORCE_ATTRIBUTE!s}=force")
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
@@ -4272,7 +4271,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # Test if the logout_redirect URL is set
         redir_uri = 'https://redirect.to'
         set_policy(name="pol_logout_redirect", scope=SCOPE.WEBUI,
-                   action="{0!s}={1!s}".format(ACTION.LOGOUT_REDIRECT, redir_uri))
+                   action=f"{ACTION.LOGOUT_REDIRECT!s}={redir_uri!s}")
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
@@ -4315,7 +4314,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(name="pol_pagesize",
                    scope=SCOPE.WEBUI,
                    realm=self.realm1,
-                   action="{0!s}=177".format(ACTION.TOKENPAGESIZE))
+                   action=f"{ACTION.TOKENPAGESIZE!s}=177")
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
@@ -4327,7 +4326,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
                    scope=SCOPE.WEBUI,
                    realm=self.realm1,
                    user="root",
-                   action="{0!s}=177".format(ACTION.TOKENPAGESIZE))
+                   action=f"{ACTION.TOKENPAGESIZE!s}=177")
         # This way the user "cornelius" gets the default pagesize again
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
@@ -4520,7 +4519,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
         # change PIN every day. The next_pin_change will be
         set_policy(name="pol2", scope=SCOPE.ENROLL,
-                   action="{0!s}=1d".format(ACTION.CHANGE_PIN_EVERY))
+                   action=f"{ACTION.CHANGE_PIN_EVERY!s}=1d")
         g.policy_object = PolicyClass()
         save_pin_change(req, resp)
         ti = token.get_tokeninfo("next_pin_change")
@@ -4547,11 +4546,11 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # Set a policy for the header
         set_policy(name="pol_header",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=These are your options:<ul>".format(ACTION.CHALLENGETEXT_HEADER))
+                   action=f"{ACTION.CHALLENGETEXT_HEADER!s}=These are your options:<ul>")
         # Set a policy for the footer
         set_policy(name="pol_footer",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=Happy authenticating!".format(ACTION.CHALLENGETEXT_FOOTER))
+                   action=f"{ACTION.CHALLENGETEXT_FOOTER!s}=Happy authenticating!")
         g.policy_object = PolicyClass()
 
         req.all_data = {
@@ -4581,7 +4580,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # We do no html list
         set_policy(name="pol_header",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=These are your options:".format(ACTION.CHALLENGETEXT_HEADER))
+                   action=f"{ACTION.CHALLENGETEXT_HEADER!s}=These are your options:")
         g.policy_object = PolicyClass()
         resp = jsonify(res)
 
@@ -4623,7 +4622,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(resp, new_resp)
 
         # Define a generic policy, that denies the request
-        set_policy("auth01", scope=SCOPE.AUTHZ, action="{0!s}={1!s}".format(ACTION.AUTHORIZED, AUTHORIZED.DENY),
+        set_policy("auth01", scope=SCOPE.AUTHZ, action=f"{ACTION.AUTHORIZED!s}={AUTHORIZED.DENY!s}",
                    priority=2)
         g.policy_object = PolicyClass()
 
@@ -4631,7 +4630,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         self.assertRaises(ValidateError, is_authorized, req, resp)
 
         # Now we set a 2nd policy with a higher priority
-        set_policy("auth02", scope=SCOPE.AUTHZ, action="{0!s}={1!s}".format(ACTION.AUTHORIZED, AUTHORIZED.ALLOW),
+        set_policy("auth02", scope=SCOPE.AUTHZ, action=f"{ACTION.AUTHORIZED!s}={AUTHORIZED.ALLOW!s}",
                    priority=1, client="10.0.0.0/8")
         g.policy_object = PolicyClass()
 
@@ -4678,7 +4677,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(resp, new_resp)
 
         # Define a verify enrollment policy
-        set_policy("verify_toks", scope=SCOPE.ENROLL, action="{0!s}=hotp".format(ACTION.VERIFY_ENROLLMENT))
+        set_policy("verify_toks", scope=SCOPE.ENROLL, action=f"{ACTION.VERIFY_ENROLLMENT!s}=hotp")
         g.policy_object = PolicyClass()
 
         new_resp = check_verify_enrollment(req, resp)

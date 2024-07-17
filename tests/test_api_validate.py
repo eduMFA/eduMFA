@@ -214,7 +214,7 @@ class AuthorizationPolicyTestCase(MyApiTestCase):
         r = init_token({"type": "spass", "pin": "spass"}, user=User(
             login="frank", realm="ldaprealm"))
         self.assertTrue(r)
-        self.assertEqual("{0!s}".format(r.user), "<frank.catchall@ldaprealm>")
+        self.assertEqual(f"{r.user!s}", "<frank.catchall@ldaprealm>")
 
         with self.app.test_request_context('/validate/check',
                                            method='POST',
@@ -290,7 +290,7 @@ class AuthorizationPolicyTestCase(MyApiTestCase):
 
         set_policy(name="pol_setrealm_01",
                    scope=SCOPE.AUTHZ,
-                   action="{0!s}={1!s}".format(ACTION.SETREALM, self.realm1))
+                   action=f"{ACTION.SETREALM!s}={self.realm1!s}")
 
         # Successfully test the token
         with self.app.test_request_context('/validate/check',
@@ -309,9 +309,9 @@ class AuthorizationPolicyTestCase(MyApiTestCase):
 
     def test_05_is_authorized(self):
         set_policy(name="auth01", scope=SCOPE.AUTHZ, priority=2,
-                   action="{0!s}={1!s}".format(ACTION.AUTHORIZED, AUTHORIZED.DENY))
+                   action=f"{ACTION.AUTHORIZED!s}={AUTHORIZED.DENY!s}")
         set_policy(name="auth02", scope=SCOPE.AUTHZ, user="frank", priority=1,
-                   action="{0!s}={1!s}".format(ACTION.AUTHORIZED, AUTHORIZED.ALLOW))
+                   action=f"{ACTION.AUTHORIZED!s}={AUTHORIZED.ALLOW!s}")
 
         # The user frank actually has a spass token and is authorized to authenticate by policy auth02
         with self.app.test_request_context('/validate/check',
@@ -1724,7 +1724,7 @@ class ValidateAPITestCase(MyApiTestCase):
         # set policy for timelimit
         set_policy(name="pol_time1",
                    scope=SCOPE.AUTHZ,
-                   action="{0!s}=2/20s".format(ACTION.AUTHMAXSUCCESS))
+                   action=f"{ACTION.AUTHMAXSUCCESS!s}=2/20s")
 
         for i in [1, 2]:
             with self.app.test_request_context('/validate/check',
@@ -1759,7 +1759,7 @@ class ValidateAPITestCase(MyApiTestCase):
         # set policy for timelimit
         set_policy(name="pol_time1",
                    scope=SCOPE.AUTHZ,
-                   action="{0!s}=2/20s".format(ACTION.AUTHMAXFAIL))
+                   action=f"{ACTION.AUTHMAXFAIL!s}=2/20s")
 
         for i in [1, 2]:
             with self.app.test_request_context('/validate/check',
@@ -1899,7 +1899,7 @@ class ValidateAPITestCase(MyApiTestCase):
         # user disableduser, realm: self.realm2, passwd: superSecret
         set_policy(name="disabled",
                    scope=SCOPE.AUTH,
-                   action="{0!s}={1!s}".format(ACTION.OTPPIN, "userstore"))
+                   action=f"{ACTION.OTPPIN!s}=userstore")
         # enroll two tokens
         r = init_token({"type": "spass", "serial": "spass1d"},
                        user=User("disableduser", self.realm2))
@@ -1945,7 +1945,7 @@ class ValidateAPITestCase(MyApiTestCase):
         user = "lockeduser"
         set_policy(name="locked",
                    scope=SCOPE.AUTH,
-                   action="{0!s}={1!s}".format(ACTION.OTPPIN, "tokenpin"))
+                   action=f"{ACTION.OTPPIN!s}=tokenpin")
         r = init_token({"type": "spass", "serial": "spass1l",
                         "pin": "locked"},
                        user=User(user, self.realm2))
@@ -1978,8 +1978,7 @@ class ValidateAPITestCase(MyApiTestCase):
         serial = "t23"
         set_policy(name="pass_no",
                    scope=SCOPE.AUTH,
-                   action="{0!s},{1!s}".format(ACTION.PASSNOTOKEN,
-                                               ACTION.PASSNOUSER))
+                   action=f"{ACTION.PASSNOTOKEN!s},{ACTION.PASSNOUSER!s}")
 
         r = init_token({"type": "spass", "serial": serial,
                         "pin": pin}, user=User(user, self.realm2))
@@ -2205,9 +2204,9 @@ class ValidateAPITestCase(MyApiTestCase):
         self.assertTrue(r)
 
         set_policy("emailtext", scope=SCOPE.AUTH,
-                   action="{0!s}=Dein <otp>".format(EMAILACTION.EMAILTEXT))
+                   action=f"{EMAILACTION.EMAILTEXT!s}=Dein <otp>")
         set_policy("emailsubject", scope=SCOPE.AUTH,
-                   action="{0!s}=Dein OTP".format(EMAILACTION.EMAILSUBJECT))
+                   action=f"{EMAILACTION.EMAILSUBJECT!s}=Dein OTP")
 
         # Trigger challenge for serial number
         with self.app.test_request_context('/validate/triggerchallenge',
@@ -2536,7 +2535,7 @@ class ValidateAPITestCase(MyApiTestCase):
 
         # policy only allows HOTP.
         set_policy("onlyHOTP", scope=SCOPE.AUTHZ,
-                   action="{0!s}=hotp".format(ACTION.TOKENTYPE))
+                   action=f"{ACTION.TOKENTYPE!s}=hotp")
 
         # He can not authenticate with the spass token!
         with self.app.test_request_context('/validate/check',
@@ -2553,7 +2552,7 @@ class ValidateAPITestCase(MyApiTestCase):
 
         # Define a passthru policy
         set_policy("passthru", scope=SCOPE.AUTH,
-                   action="{0!s}=userstore".format(ACTION.PASSTHRU))
+                   action=f"{ACTION.PASSTHRU!s}=userstore")
 
         # A user with a passthru policy can authenticate, since he has not tokentype
         with self.app.test_request_context('/validate/check',
@@ -2597,8 +2596,8 @@ class ValidateAPITestCase(MyApiTestCase):
                     "email": "hallo@example.com",
                     "pin": "email"}, user)
 
-        set_policy("chalsms", SCOPE.AUTH, "sms_{0!s}=check your sms".format(ACTION.CHALLENGETEXT))
-        set_policy("chalemail", SCOPE.AUTH, "email_{0!s}=check your email".format(ACTION.CHALLENGETEXT))
+        set_policy("chalsms", SCOPE.AUTH, f"sms_{ACTION.CHALLENGETEXT!s}=check your sms")
+        set_policy("chalemail", SCOPE.AUTH, f"email_{ACTION.CHALLENGETEXT!s}=check your email")
 
         # Challenge Response with email
         with self.app.test_request_context('/validate/check',
@@ -2775,7 +2774,7 @@ class ValidateAPITestCase(MyApiTestCase):
     def test_33_auth_cache(self):
         init_token({"otpkey": self.otpkey},
                    user=User("cornelius", self.realm1))
-        set_policy(name="authcache", action="{0!s}=4m".format(ACTION.AUTH_CACHE), scope=SCOPE.AUTH)
+        set_policy(name="authcache", action=f"{ACTION.AUTH_CACHE!s}=4m", scope=SCOPE.AUTH)
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user": "cornelius",
@@ -2906,7 +2905,7 @@ class ValidateAPITestCase(MyApiTestCase):
                        user=User("cornelius", self.realm1))
         # Hotp and totp are allowed for trigger challenge
         set_policy(name="pol_chalresp", scope=SCOPE.AUTH,
-                   action="{0!s}=hot totp".format(ACTION.CHALLENGERESPONSE))
+                   action=f"{ACTION.CHALLENGERESPONSE!s}=hot totp")
 
         # trigger a challenge for both tokens
         with self.app.test_request_context('/validate/triggerchallenge',
@@ -2956,10 +2955,10 @@ class ValidateAPITestCase(MyApiTestCase):
                    tokenkind="software", user=User("cornelius", self.realm1))
         init_token({"type": "spass", "serial": "hardwareToken", "pin": "hardware1"},
                    tokenkind="hardware", user=User("cornelius", self.realm1))
-        set_policy(name="always_deny_access", action="{0!s}=deny_access".format(ACTION.AUTHORIZED),
+        set_policy(name="always_deny_access", action=f"{ACTION.AUTHORIZED!s}=deny_access",
                    scope=SCOPE.AUTHZ, priority=100)
         # policy to allow tokens, condition is deactivated. All tokens will be authorized
-        set_policy(name="allow_hardware_tokens", action="{0!s}=grant_access".format(ACTION.AUTHORIZED),
+        set_policy(name="allow_hardware_tokens", action=f"{ACTION.AUTHORIZED!s}=grant_access",
                    scope=SCOPE.AUTHZ, priority=1,
                    conditions=[("tokeninfo", "tokenkind", "equals", "hardware", False)])
 
@@ -3251,7 +3250,7 @@ class RegistrationAndPasswordToken(MyApiTestCase):
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": quote("test{0!s}".format(password))}):
+                                                 "pass": quote(f"test{password!s}")}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -3310,7 +3309,7 @@ class RegistrationAndPasswordToken(MyApiTestCase):
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": quote("test{0!s}".format(password))}):
+                                                 "pass": quote(f"test{password!s}")}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -3323,7 +3322,7 @@ class RegistrationAndPasswordToken(MyApiTestCase):
                                            method='POST',
                                            data={"user": "cornelius",
                                                  "service_id": "wrong",
-                                                 "pass": quote("test{0!s}".format(password))}):
+                                                 "pass": quote(f"test{password!s}")}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -3336,7 +3335,7 @@ class RegistrationAndPasswordToken(MyApiTestCase):
                                            method='POST',
                                            data={"user": "cornelius",
                                                  "service_id": "thunderbird",
-                                                 "pass": quote("test{0!s}".format(password))}):
+                                                 "pass": quote(f"test{password!s}")}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
@@ -3595,7 +3594,7 @@ class WebAuthn(MyApiTestCase):
         set_policy("allow_usernameless_policy", scope=SCOPE.AUTH, action=WEBAUTHNACTION.USERNAMELESS_REALM_POLICY)
 
         # set realm-wide policy
-        set_policy("realm_timeout_policy", scope=SCOPE.AUTH, action="{0!s}=42".format(WEBAUTHNACTION.TIMEOUT),
+        set_policy("realm_timeout_policy", scope=SCOPE.AUTH, action=f"{WEBAUTHNACTION.TIMEOUT!s}=42",
                    realm="foo-realm")
 
         # Run challenge request against /validate/triggerchallenge?type=webauthn&foo-realm without user
@@ -3629,10 +3628,10 @@ class WebAuthn(MyApiTestCase):
         set_policy("allow_usernameless_policy", scope=SCOPE.AUTH, action=WEBAUTHNACTION.USERNAMELESS_REALM_POLICY)
 
         # set realm-wide policy
-        set_policy("realm_timeout_policy", scope=SCOPE.AUTH, action="{0!s}=42".format(WEBAUTHNACTION.TIMEOUT),
+        set_policy("realm_timeout_policy", scope=SCOPE.AUTH, action=f"{WEBAUTHNACTION.TIMEOUT!s}=42",
                    realm=self.realm1)
         set_policy(name="pol_chalresp", scope=SCOPE.AUTH,
-                   action="{0!s}=hotp totp".format(ACTION.CHALLENGERESPONSE))
+                   action=f"{ACTION.CHALLENGERESPONSE!s}=hotp totp")
         with self.app.test_request_context('/validate/triggerchallenge',
                                            method='POST',
                                            data={"user": self.username},
@@ -3756,7 +3755,7 @@ class WebAuthn(MyApiTestCase):
             self.assertTrue(data.get("result").get("status"))
             self.assertTrue(data.get("result").get("value"))
         # We need a policy for HOTP trigger challenge
-        set_policy(name="trigpol", scope=SCOPE.AUTH, action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+        set_policy(name="trigpol", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
         # Check if the challenge is triggered for the HOTP token
         with self.app.test_request_context('/validate/check',
                                            method='POST',
@@ -3860,7 +3859,7 @@ class MultiChallege(MyApiTestCase):
         # Create policy change pin on first use
         set_policy("first_use", scope=SCOPE.ENROLL, action=ACTION.CHANGE_PIN_FIRST_USE)
         set_policy("via_validate", scope=SCOPE.AUTH, action=ACTION.CHANGE_PIN_VIA_VALIDATE)
-        set_policy("hotp_chalresp", scope=SCOPE.AUTH, action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+        set_policy("hotp_chalresp", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
 
         with self.app.test_request_context('/token/init', method='POST',
                                            data={"user": "cornelius", "pin": "test",
@@ -3921,7 +3920,7 @@ class MultiChallege(MyApiTestCase):
         # Now try to authenticate with the "newpin"
         with self.app.test_request_context('/validate/check', method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": "newpin{0!s}".format(self.valid_otp_values[2])}):
+                                                 "pass": f"newpin{self.valid_otp_values[2]!s}"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json['result']
@@ -3937,7 +3936,7 @@ class MultiChallege(MyApiTestCase):
         # Create policy change pin on first use
         set_policy("first_use", scope=SCOPE.ENROLL, action=ACTION.CHANGE_PIN_FIRST_USE)
         set_policy("via_validate", scope=SCOPE.AUTH, action=ACTION.CHANGE_PIN_VIA_VALIDATE)
-        set_policy("hotp_chalresp", scope=SCOPE.AUTH, action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+        set_policy("hotp_chalresp", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
 
         with self.app.test_request_context('/token/init', method='POST',
                                            data={"user": "cornelius", "pin": "test",
@@ -3951,7 +3950,7 @@ class MultiChallege(MyApiTestCase):
         # 1st authentication creates a PIN change challenge via challenge response
         with self.app.test_request_context('/validate/check', method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": "test{0!s}".format(self.valid_otp_values[1])}):
+                                                 "pass": f"test{self.valid_otp_values[1]!s}"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json['result']
@@ -3987,7 +3986,7 @@ class MultiChallege(MyApiTestCase):
         # Now try to authenticate with the "newpin"
         with self.app.test_request_context('/validate/check', method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": "newpin{0!s}".format(self.valid_otp_values[2])}):
+                                                 "pass": f"newpin{self.valid_otp_values[2]!s}"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json['result']
@@ -4003,10 +4002,10 @@ class MultiChallege(MyApiTestCase):
         # Create policy change pin on first use
         set_policy("first_use", scope=SCOPE.ENROLL, action=ACTION.CHANGE_PIN_FIRST_USE)
         set_policy("via_validate", scope=SCOPE.AUTH, action=ACTION.CHANGE_PIN_VIA_VALIDATE)
-        set_policy("hotp_chalresp", scope=SCOPE.AUTH, action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+        set_policy("hotp_chalresp", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
         challenge_header = "Choose one: <ul>"
         set_policy("challenge_header", scope=SCOPE.AUTH,
-                   action="{0!s}={1!s}".format(ACTION.CHALLENGETEXT_HEADER, challenge_header))
+                   action=f"{ACTION.CHALLENGETEXT_HEADER!s}={challenge_header!s}")
 
         with self.app.test_request_context('/token/init', method='POST',
                                            data={"user": "cornelius", "pin": "test",
@@ -4020,7 +4019,7 @@ class MultiChallege(MyApiTestCase):
         # 1st authentication creates a PIN change challenge via challenge response
         with self.app.test_request_context('/validate/check', method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": "test{0!s}".format(self.valid_otp_values[1])}):
+                                                 "pass": f"test{self.valid_otp_values[1]!s}"}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json['result']
@@ -4028,7 +4027,7 @@ class MultiChallege(MyApiTestCase):
             details = res.json['detail']
             transaction_id = details.get("transaction_id")
             # check that the challenge header is contained in the message
-            self.assertEqual("{0!s}<li>Please enter a new PIN</li>\n".format(challenge_header),
+            self.assertEqual(f"{challenge_header!s}<li>Please enter a new PIN</li>\n",
                              details.get("message"))
 
         remove_token(self.serial)
@@ -4182,7 +4181,7 @@ class AChallengeResponse(MyApiTestCase):
         Token("hotp1", "hotp", otpkey=self.otpkey, userid=1004, resolver=self.resolvername1,
               realm=self.realm1).save()
         # Define HOTP token to be challenge response
-        set_policy(name="pol_cr", scope=SCOPE.AUTH, action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+        set_policy(name="pol_cr", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
         set_pin(self.serial, "pin")
 
         with self.app.test_request_context('/validate/check',
@@ -4645,15 +4644,15 @@ class AChallengeResponse(MyApiTestCase):
         # challenge response request with both tokens.
         set_policy(name="pol_header",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=These are your options:<ul>".format(ACTION.CHALLENGETEXT_HEADER))
+                   action=f"{ACTION.CHALLENGETEXT_HEADER!s}=These are your options:<ul>")
         # Set a policy for the footer
         set_policy(name="pol_footer",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=</ul>.<b>Authenticate Now!</b>".format(ACTION.CHALLENGETEXT_FOOTER))
+                   action=f"{ACTION.CHALLENGETEXT_FOOTER!s}=</ul>.<b>Authenticate Now!</b>")
         # make HOTP a challenge response token
         set_policy(name="pol_hotp",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+                   action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
 
         init_token({"serial": "tok1",
                     "otpkey": self.otpkey,
@@ -4686,7 +4685,7 @@ class AChallengeResponse(MyApiTestCase):
         # make HOTP a challenge response token
         set_policy(name="pol_hotp",
                    scope=SCOPE.AUTH,
-                   action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+                   action=f"{ACTION.CHALLENGERESPONSE!s}=hotp")
         init_token({"serial": "tok1",
                     "otpkey": self.otpkey,
                     "pin": "pin"}, user=User("cornelius", self.realm1))
@@ -4770,7 +4769,7 @@ class AChallengeResponse(MyApiTestCase):
                        user=User("cornelius", self.realm1))
         self.assertTrue(r)
 
-        set_policy("chalresp", scope=SCOPE.AUTHZ, action="{0!s}=hotp".format(ACTION.TRIGGERCHALLENGE))
+        set_policy("chalresp", scope=SCOPE.AUTHZ, action=f"{ACTION.TRIGGERCHALLENGE!s}=hotp")
 
         with self.app.test_request_context('/validate/triggerchallenge',
                                            method='POST',
@@ -4962,7 +4961,7 @@ class AChallengeResponse(MyApiTestCase):
 
         # but audit log contains both serials and the user
         entry = self.find_most_recent_audit_entry(action="*/validate/polltransaction*")
-        self.assertEqual(entry["action_detail"], "transaction_id: {}".format(transaction_id))
+        self.assertEqual(entry["action_detail"], f"transaction_id: {transaction_id}")
         self.assertEqual(entry["info"], "status: pending")
         self.assertIn("tok1", entry["serial"])
         self.assertIn("tok2", entry["serial"])
@@ -4981,7 +4980,7 @@ class AChallengeResponse(MyApiTestCase):
 
         # and the audit log contains no serials and the user
         entry = self.find_most_recent_audit_entry(action="*/validate/polltransaction*")
-        self.assertEqual(entry["action_detail"], "transaction_id: {}".format(old_transaction_id))
+        self.assertEqual(entry["action_detail"], f"transaction_id: {old_transaction_id}")
         self.assertEqual(entry["info"], "status: pending")
         self.assertEqual(entry["serial"], None)
         self.assertFalse(entry["success"])
@@ -4999,7 +4998,7 @@ class AChallengeResponse(MyApiTestCase):
             self.assertTrue(res.json["result"]["value"])
 
         entry = self.find_most_recent_audit_entry(action="*/validate/polltransaction*")
-        self.assertEqual(entry["action_detail"], "transaction_id: {}".format(transaction_id))
+        self.assertEqual(entry["action_detail"], f"transaction_id: {transaction_id}")
         self.assertEqual(entry["info"], "status: accept")
         # tok2 is not written to the audit log
         self.assertEqual(entry["serial"], "tok1")
@@ -5009,7 +5008,7 @@ class AChallengeResponse(MyApiTestCase):
         self.assertEqual(entry["realm"], self.realm1)
 
         # polling the transaction again gives the same result, even with the more REST-y endpoint
-        with self.app.test_request_context("/validate/polltransaction/{}".format(transaction_id), method="GET",
+        with self.app.test_request_context(f"/validate/polltransaction/{transaction_id}", method="GET",
                                            data={}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
@@ -5020,7 +5019,7 @@ class AChallengeResponse(MyApiTestCase):
         remove_token("tok2")
 
         # polling the transaction now gives false
-        with self.app.test_request_context("/validate/polltransaction/{}".format(transaction_id), method="GET",
+        with self.app.test_request_context(f"/validate/polltransaction/{transaction_id}", method="GET",
                                            data={"transaction_id": transaction_id}):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
@@ -5468,8 +5467,8 @@ class TriggeredPoliciesTestCase(MyApiTestCase):
         self.setUp_user_realms()
 
     def test_00_two_policies(self):
-        set_policy("otppin", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN))
-        set_policy("lastauth", scope=SCOPE.AUTHZ, action="{0!s}=1s".format(ACTION.LASTAUTH))
+        set_policy("otppin", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN!s}=none")
+        set_policy("lastauth", scope=SCOPE.AUTHZ, action=f"{ACTION.LASTAUTH!s}=1s")
 
         # Create a Spass token
         tok = init_token({"serial": "triggtoken", "type": "spass"})
@@ -5584,11 +5583,11 @@ class MultiChallengeEnrollTest(MyApiTestCase):
 
         # Set enroll policy
         set_policy("pol_multienroll", scope=SCOPE.AUTH,
-                   action="{0!s}=hotp".format(ACTION.ENROLL_VIA_MULTICHALLENGE))
+                   action=f"{ACTION.ENROLL_VIA_MULTICHALLENGE!s}=hotp")
 
         # Set force_app_pin
         set_policy("pol_forcepin", scope=SCOPE.ENROLL,
-                   action="hotp_{0!s}=True".format(ACTION.FORCE_APP_PIN))
+                   action=f"hotp_{ACTION.FORCE_APP_PIN!s}=True")
         # Now we should get an authentication Challenge
         with self.app.test_request_context('/validate/check',
                                            method='POST',
@@ -5670,7 +5669,7 @@ class MultiChallengeEnrollTest(MyApiTestCase):
 
         # Set enroll policy
         set_policy("pol_multienroll", scope=SCOPE.AUTH,
-                   action="{0!s}=totp".format(ACTION.ENROLL_VIA_MULTICHALLENGE))
+                   action=f"{ACTION.ENROLL_VIA_MULTICHALLENGE!s}=totp")
         # Now we should get an authentication Challenge
         with self.app.test_request_context('/validate/check',
                                            method='POST',
@@ -5756,7 +5755,7 @@ class MultiChallengeEnrollTest(MyApiTestCase):
 
         # Set Policy scope:auth, action:enroll_via_multichallenge=email
         set_policy("pol_multienroll", scope=SCOPE.AUTH,
-                   action="{0!s}=email".format(ACTION.ENROLL_VIA_MULTICHALLENGE))
+                   action=f"{ACTION.ENROLL_VIA_MULTICHALLENGE!s}=email")
         # Now we should get an authentication Challenge
         with self.app.test_request_context('/validate/check',
                                            method='POST',
@@ -5844,7 +5843,7 @@ class MultiChallengeEnrollTest(MyApiTestCase):
 
         # Set Policy scope:auth, action:enroll_via_multichallenge=email
         set_policy("pol_multienroll", scope=SCOPE.AUTH,
-                   action="{0!s}=sms".format(ACTION.ENROLL_VIA_MULTICHALLENGE))
+                   action=f"{ACTION.ENROLL_VIA_MULTICHALLENGE!s}=sms")
         # Now we should get an authentication Challenge
         with self.app.test_request_context('/validate/check',
                                            method='POST',
@@ -5950,7 +5949,7 @@ class ValidateShortPasswordTestCase(MyApiTestCase):
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": "{0!s}{1!s}".format(pin, self.valid_otp_values[0])}):
+                                                 "pass": f"{pin!s}{self.valid_otp_values[0]!s}"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -5962,7 +5961,7 @@ class ValidateShortPasswordTestCase(MyApiTestCase):
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": "{0!s}{1!s}".format(pin, self.valid_yubi_otps[0])}):
+                                                 "pass": f"{pin!s}{self.valid_yubi_otps[0]!s}"}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
