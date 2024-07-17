@@ -5,20 +5,22 @@ This file tests the web UI Login
 
 implementation is contained webui/login.py
 """
+import re
+
 import flask_babel as babel
 
-from .base import MyTestCase, MyApiTestCase
+from edumfa.app import create_app
 from edumfa.lib.policy import (
-    set_policy,
-    SCOPE,
     ACTION,
+    SCOPE,
     PolicyClass,
     delete_all_policies,
+    set_policy,
 )
 from edumfa.lib.utils import to_unicode
-import re
-from edumfa.app import create_app
 from edumfa.models import db, save_config_timestamp
+
+from .base import MyApiTestCase, MyTestCase
 
 
 class AlternativeWebUI(MyTestCase):

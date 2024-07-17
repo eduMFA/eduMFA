@@ -17,21 +17,22 @@ from werkzeug.test import EnvironBuilder
 from edumfa.app import PiResponseClass as Response
 from edumfa.lib.eventhandler.base import CONDITION
 from edumfa.lib.eventhandler.usernotification import (
-    UserNotificationEventHandler,
     NOTIFY_TYPE,
+    UserNotificationEventHandler,
 )
 from edumfa.lib.policy import ACTION
-from edumfa.lib.realm import set_realm, delete_realm
-from edumfa.lib.resolver import save_resolver, delete_resolver
+from edumfa.lib.realm import delete_realm, set_realm
+from edumfa.lib.resolver import delete_resolver, save_resolver
 from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
 from edumfa.lib.smtpserver import add_smtpserver
-from edumfa.lib.token import init_token, unassign_token, remove_token
+from edumfa.lib.token import init_token, remove_token, unassign_token
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.user import User, create_user
 from edumfa.lib.utils import to_unicode
 from edumfa.models import TokenOwner
+
 from . import smtpmock
-from .base import MyTestCase, FakeFlaskG, FakeAudit
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 PNG_IMAGE = (
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeoAAAHqAQAAAADjFj"

@@ -22,7 +22,7 @@ import sys
 import click
 from flask.cli import AppGroup
 
-from edumfa.commands.manage.config import import_cli, export_cli
+from edumfa.commands.manage.config import export_cli, import_cli
 from edumfa.commands.manage.helper import (
     conf_export,
     conf_import,

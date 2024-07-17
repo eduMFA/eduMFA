@@ -13,11 +13,11 @@ getTokens4UserOrSerial
 gettokensoftype
 getToken....
 """
-from .base import MyTestCase
-from edumfa.lib.error import eduMFAError, ResourceNotFoundError
-
-from edumfa.lib.tokengroup import set_tokengroup, delete_tokengroup, get_tokengroups
+from edumfa.lib.error import ResourceNotFoundError, eduMFAError
+from edumfa.lib.tokengroup import delete_tokengroup, get_tokengroups, set_tokengroup
 from edumfa.models import Tokengroup
+
+from .base import MyTestCase
 
 
 class TokenTestCase(MyTestCase):

@@ -27,10 +27,12 @@ __doc__ = """This module provides sending SMS via sipgate
 
 The code is tested in tests/test_lib_smsprovider
 """
-from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
-from edumfa.lib import _
 import logging
+
 import requests
+
+from edumfa.lib import _
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
 
 log = logging.getLogger(__name__)
 

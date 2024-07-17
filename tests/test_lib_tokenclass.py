@@ -4,19 +4,22 @@ This test file tests the lib.tokenclass
 The lib.tokenclass depends on the DB model and lib.user
 """
 
-from .base import MyTestCase, FakeFlaskG
-from edumfa.lib.resolver import save_resolver, delete_resolver
-from edumfa.lib.realm import set_realm, delete_realm
-from edumfa.lib.user import User
-from edumfa.lib.policy import ACTION
-from edumfa.lib.tokenclass import TokenClass, DATE_FORMAT
-from edumfa.lib.config import set_edumfa_config, delete_edumfa_config
-from edumfa.lib.crypto import geturandom
-from edumfa.lib.utils import hexlify_and_unicode, to_unicode
-from edumfa.lib.error import TokenAdminError
-from edumfa.models import Token, Config, Challenge
 import datetime
+
 from dateutil.tz import tzlocal
+
+from edumfa.lib.config import delete_edumfa_config, set_edumfa_config
+from edumfa.lib.crypto import geturandom
+from edumfa.lib.error import TokenAdminError
+from edumfa.lib.policy import ACTION
+from edumfa.lib.realm import delete_realm, set_realm
+from edumfa.lib.resolver import delete_resolver, save_resolver
+from edumfa.lib.tokenclass import DATE_FORMAT, TokenClass
+from edumfa.lib.user import User
+from edumfa.lib.utils import hexlify_and_unicode, to_unicode
+from edumfa.models import Challenge, Config, Token
+
+from .base import FakeFlaskG, MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 
@@ -847,8 +850,8 @@ class TokenBaseTestCase(MyTestCase):
 
     def test_40_failcounter_exceeded(self):
         from edumfa.lib.tokenclass import (
-            FAILCOUNTER_EXCEEDED,
             FAILCOUNTER_CLEAR_TIMEOUT,
+            FAILCOUNTER_EXCEEDED,
         )
 
         db_token = Token("failcounter", tokentype="spass")

@@ -22,53 +22,53 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-import os
-import os.path
 import logging
 import logging.config
+import os
+import os.path
 import sys
+
 import yaml
-from flask import Flask, request, Response
+from flask import Flask, Response, request
 from flask_babel import Babel
 from flask_migrate import Migrate
 from flaskext.versioned import Versioned
 
 # we need this import to add the before/after request function to the blueprints
 import edumfa.api.before_after
-from edumfa.api.validate import validate_blueprint
-from edumfa.api.token import token_blueprint
-from edumfa.api.system import system_blueprint
-from edumfa.api.resolver import resolver_blueprint
-from edumfa.api.realm import realm_blueprint
-from edumfa.api.realm import defaultrealm_blueprint
-from edumfa.api.policy import policy_blueprint
-from edumfa.api.user import user_blueprint
-from edumfa.api.audit import audit_blueprint
 from edumfa.api.application import application_blueprint
-from edumfa.api.caconnector import caconnector_blueprint
-from edumfa.api.register import register_blueprint
+from edumfa.api.audit import audit_blueprint
 from edumfa.api.auth import jwtauth
-from edumfa.webui.login import login_blueprint, get_accepted_language
-from edumfa.webui.certificate import cert_blueprint
-from edumfa.api.machineresolver import machineresolver_blueprint
-from edumfa.api.machine import machine_blueprint
-from edumfa.api.ttype import ttype_blueprint
-from edumfa.api.smtpserver import smtpserver_blueprint
-from edumfa.api.radiusserver import radiusserver_blueprint
-from edumfa.api.periodictask import periodictask_blueprint
-from edumfa.api.edumfaserver import edumfaserver_blueprint
-from edumfa.api.recover import recover_blueprint
-from edumfa.api.event import eventhandling_blueprint
-from edumfa.api.smsgateway import smsgateway_blueprint
+from edumfa.api.caconnector import caconnector_blueprint
 from edumfa.api.clienttype import client_blueprint
+from edumfa.api.edumfaserver import edumfaserver_blueprint
+from edumfa.api.event import eventhandling_blueprint
+from edumfa.api.machine import machine_blueprint
+from edumfa.api.machineresolver import machineresolver_blueprint
 from edumfa.api.monitoring import monitoring_blueprint
-from edumfa.api.tokengroup import tokengroup_blueprint
+from edumfa.api.periodictask import periodictask_blueprint
+from edumfa.api.policy import policy_blueprint
+from edumfa.api.radiusserver import radiusserver_blueprint
+from edumfa.api.realm import defaultrealm_blueprint, realm_blueprint
+from edumfa.api.recover import recover_blueprint
+from edumfa.api.register import register_blueprint
+from edumfa.api.resolver import resolver_blueprint
 from edumfa.api.serviceid import serviceid_blueprint
-from edumfa.lib import queue
-from edumfa.lib.log import DEFAULT_LOGGING_CONFIG
+from edumfa.api.smsgateway import smsgateway_blueprint
+from edumfa.api.smtpserver import smtpserver_blueprint
+from edumfa.api.system import system_blueprint
+from edumfa.api.token import token_blueprint
+from edumfa.api.tokengroup import tokengroup_blueprint
+from edumfa.api.ttype import ttype_blueprint
+from edumfa.api.user import user_blueprint
+from edumfa.api.validate import validate_blueprint
 from edumfa.config import config
-from edumfa.models import db
+from edumfa.lib import queue
 from edumfa.lib.crypto import init_hsm
+from edumfa.lib.log import DEFAULT_LOGGING_CONFIG
+from edumfa.models import db
+from edumfa.webui.certificate import cert_blueprint
+from edumfa.webui.login import get_accepted_language, login_blueprint
 
 ENV_KEY = "EDUMFA_CONFIGFILE"
 

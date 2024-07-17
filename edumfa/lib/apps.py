@@ -36,12 +36,11 @@ This only depends on the ConfigPolicy.
 
 import binascii
 import logging
-
 from urllib.parse import quote
 
 from edumfa.lib.log import log_with
 from edumfa.lib.user import User
-from edumfa.lib.utils import to_byte_string, b32encode_and_unicode, parse_time_sec_int
+from edumfa.lib.utils import b32encode_and_unicode, parse_time_sec_int, to_byte_string
 
 log = logging.getLogger(__name__)
 MAX_QRCODE_LEN = 180

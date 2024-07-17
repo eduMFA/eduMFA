@@ -35,16 +35,17 @@ webservice!
 """
 
 import logging
-from .log import log_with
-from ..models import MachineResolver, MachineResolverConfig
-from ..api.lib.utils import required
-from ..api.lib.utils import getParam
-from sqlalchemy import func
-from .crypto import encryptPassword, decryptPassword
-from edumfa.lib.config import get_machine_resolver_class_dict
-from edumfa.lib.utils import sanity_name_check, get_data_from_params, fetch_one_resource
-from edumfa.lib.utils.export import register_import, register_export
 
+from sqlalchemy import func
+
+from edumfa.lib.config import get_machine_resolver_class_dict
+from edumfa.lib.utils import fetch_one_resource, get_data_from_params, sanity_name_check
+from edumfa.lib.utils.export import register_export, register_import
+
+from ..api.lib.utils import getParam, required
+from ..models import MachineResolver, MachineResolverConfig
+from .crypto import decryptPassword, encryptPassword
+from .log import log_with
 
 log = logging.getLogger(__name__)
 

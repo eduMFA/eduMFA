@@ -3,13 +3,13 @@
 This tests the file lib.apps, which contains functions to create
 the URLs for the smartphone enrollment
 """
-from .base import MyTestCase
-
 from edumfa.lib.apps import (
     create_google_authenticator_url,
     create_motp_url,
     create_oathtoken_url,
 )
+
+from .base import MyTestCase
 
 
 class AppsTestCase(MyTestCase):

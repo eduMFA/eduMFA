@@ -36,9 +36,9 @@ You also have to provide the configuration parameters for the referenced audit m
 """
 
 import logging
+
 from edumfa.lib.auditmodules.base import Audit as AuditBase
 from edumfa.lib.utils import get_module_class
-
 
 log = logging.getLogger(__name__)
 

@@ -23,30 +23,30 @@ This implementation is for the Microsoft CA via our middleware.
 This module is tested in tests/test_lib_caconnector.py
 """
 
-from edumfa.lib.error import CAError
-from edumfa.lib.caconnectors.baseca import BaseCAConnector, AvailableCAConnectors
-from OpenSSL import crypto
 import logging
 import traceback
-from edumfa.lib.utils import is_true
-from edumfa.lib.error import CSRError, CSRPending
-from edumfa.lib.utils import to_bytes
-from cryptography.hazmat.primitives import serialization
 
+from cryptography.hazmat.primitives import serialization
+from OpenSSL import crypto
+
+from edumfa.lib.caconnectors.baseca import AvailableCAConnectors, BaseCAConnector
+from edumfa.lib.error import CAError, CSRError, CSRPending
+from edumfa.lib.utils import is_true, to_bytes
 
 log = logging.getLogger(__name__)
 try:
     import grpc
-    from edumfa.lib.caconnectors.caservice_pb2_grpc import CAServiceStub
+
     from edumfa.lib.caconnectors.caservice_pb2 import (
         GetCAsRequest,
-        GetTemplatesRequest,
-        GetCSRStatusRequest,
-        GetCSRStatusReply,
-        SubmitCSRRequest,
-        GetCertificateRequest,
         GetCertificateReply,
+        GetCertificateRequest,
+        GetCSRStatusReply,
+        GetCSRStatusRequest,
+        GetTemplatesRequest,
+        SubmitCSRRequest,
     )
+    from edumfa.lib.caconnectors.caservice_pb2_grpc import CAServiceStub
 
     AvailableCAConnectors.append("edumfa.lib.caconnectors.msca.MSCAConnector")
 except ImportError:  # pragma: no cover

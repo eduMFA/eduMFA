@@ -5,17 +5,19 @@ This file tests:
 
 lib/eventhandler/logging.py
 """
-from mock import mock
 from datetime import datetime
-from werkzeug.test import EnvironBuilder
-from flask import Request
-from testfixtures import log_capture
 
-from edumfa.lib.token import init_token
+from flask import Request
+from mock import mock
+from testfixtures import log_capture
+from werkzeug.test import EnvironBuilder
+
 from edumfa.app import PiResponseClass as Response
 from edumfa.lib.eventhandler.logginghandler import LoggingEventHandler
+from edumfa.lib.token import init_token
 from edumfa.lib.user import User
-from .base import MyTestCase, FakeFlaskG, FakeAudit
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 
 class LoggingTestCase(MyTestCase):

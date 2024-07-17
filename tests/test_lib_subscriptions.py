@@ -2,13 +2,14 @@
 This test file tests the lib.subscriptions.py
 """
 
-from .base import MyTestCase
 from edumfa.lib.subscriptions import (
-    save_subscription,
+    check_subscription,
     get_subscription,
     raise_exception_probability,
-    check_subscription,
+    save_subscription,
 )
+
+from .base import MyTestCase
 
 # 100 users
 SUBSCRIPTION1 = {

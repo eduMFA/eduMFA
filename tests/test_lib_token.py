@@ -13,98 +13,101 @@ getTokens4UserOrSerial
 gettokensoftype
 getToken....
 """
-from .base import MyTestCase, FakeAudit, FakeFlaskG
-from edumfa.lib.user import User
-from edumfa.lib.tokenclass import (
-    TokenClass,
-    TOKENKIND,
-    FAILCOUNTER_EXCEEDED,
-    FAILCOUNTER_CLEAR_TIMEOUT,
-)
-from edumfa.lib.token import weigh_token_type
-from edumfa.lib.tokens.totptoken import TotpTokenClass
-from edumfa.models import db, Token, Challenge, TokenRealm
-from edumfa.lib.config import (
-    set_edumfa_config,
-    get_token_types,
-    delete_edumfa_config,
-    SYSCONF,
-)
-from edumfa.lib.policy import set_policy, SCOPE, ACTION, PolicyClass, delete_policy
-from edumfa.lib.utils import b32encode_and_unicode, hexlify_and_unicode
-from edumfa.lib.error import PolicyError
-import datetime
-from dateutil import parser
-import hashlib
 import binascii
+import datetime
+import hashlib
 import warnings
+
+from dateutil import parser
+from dateutil.tz import tzlocal
+
+from edumfa.lib.config import (
+    SYSCONF,
+    delete_edumfa_config,
+    get_token_types,
+    set_edumfa_config,
+)
+from edumfa.lib.error import (
+    ParameterError,
+    PolicyError,
+    ResourceNotFoundError,
+    TokenAdminError,
+    eduMFAError,
+)
+from edumfa.lib.policy import ACTION, SCOPE, PolicyClass, delete_policy, set_policy
 from edumfa.lib.token import (
-    create_tokenclass_object,
-    get_tokens,
-    list_tokengroups,
-    get_token_type,
-    check_serial,
-    get_num_tokens_in_realm,
-    get_realms_of_token,
-    token_exist,
-    get_token_owner,
-    is_token_owner,
-    get_tokenclass_info,
-    get_tokens_in_resolver,
-    get_otp,
-    get_token_by_otp,
-    get_serial_by_otp,
-    gen_serial,
-    init_token,
-    remove_token,
-    set_realms,
-    set_defaults,
-    assign_token,
-    unassign_token,
-    resync_token,
-    reset_token,
-    set_pin,
-    set_pin_user,
-    set_pin_so,
-    enable_token,
-    is_token_active,
-    set_hashlib,
-    set_otplen,
-    set_count_auth,
     add_tokeninfo,
-    set_sync_window,
-    set_count_window,
-    set_description,
-    get_multi_otp,
-    set_max_failcount,
+    assign_token,
+    assign_tokengroup,
+    check_realm_pass,
+    check_serial,
+    check_serial_pass,
+    check_token_list,
+    check_user_pass,
     copy_token_pin,
     copy_token_user,
-    lost_token,
-    check_token_list,
-    check_serial_pass,
-    check_realm_pass,
-    check_user_pass,
+    create_tokenclass_object,
+    delete_tokeninfo,
+    enable_token,
+    gen_serial,
     get_dynamic_policy_definitions,
+    get_multi_otp,
+    get_num_tokens_in_realm,
+    get_one_token,
+    get_otp,
+    get_realms_of_token,
+    get_serial_by_otp,
+    get_token_by_otp,
+    get_token_owner,
+    get_token_type,
+    get_tokenclass_info,
+    get_tokens,
+    get_tokens_from_serial_or_user,
+    get_tokens_in_resolver,
     get_tokens_paginate,
+    get_tokens_paginated_generator,
+    import_token,
+    init_token,
+    is_token_active,
+    is_token_owner,
+    list_tokengroups,
+    lost_token,
+    remove_token,
+    reset_token,
+    resync_token,
+    set_count_auth,
+    set_count_window,
+    set_defaults,
+    set_description,
+    set_hashlib,
+    set_max_failcount,
+    set_otplen,
+    set_pin,
+    set_pin_so,
+    set_pin_user,
+    set_realms,
+    set_sync_window,
     set_validity_period_end,
     set_validity_period_start,
-    delete_tokeninfo,
-    import_token,
-    get_one_token,
-    get_tokens_from_serial_or_user,
-    get_tokens_paginated_generator,
-    assign_tokengroup,
+    token_exist,
+    unassign_token,
     unassign_tokengroup,
+    weigh_token_type,
 )
-from edumfa.lib.tokengroup import set_tokengroup, delete_tokengroup
-from edumfa.lib.error import (
-    TokenAdminError,
-    ParameterError,
-    eduMFAError,
-    ResourceNotFoundError,
+from edumfa.lib.tokenclass import (
+    DATE_FORMAT,
+    FAILCOUNTER_CLEAR_TIMEOUT,
+    FAILCOUNTER_EXCEEDED,
+    TOKENKIND,
+    TokenClass,
 )
-from edumfa.lib.tokenclass import DATE_FORMAT
-from dateutil.tz import tzlocal
+from edumfa.lib.tokengroup import delete_tokengroup, set_tokengroup
+from edumfa.lib.tokens.totptoken import TotpTokenClass
+from edumfa.lib.user import User
+from edumfa.lib.utils import b32encode_and_unicode, hexlify_and_unicode
+from edumfa.models import Challenge, Token, TokenRealm, db
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 OTPKEY = "3132333435363738393031323334353637383930"
@@ -1762,7 +1765,7 @@ class TokenTestCase(MyTestCase):
 
     def test_57b_registration_token_no_auth_counter(self):
         # Test, that a registration token is deleted even if no_auth_counter is used.
-        from edumfa.lib.config import set_edumfa_config, delete_edumfa_config
+        from edumfa.lib.config import delete_edumfa_config, set_edumfa_config
 
         set_edumfa_config("no_auth_counter", 1)
         tok = init_token({"type": "registration"})
@@ -1970,8 +1973,9 @@ class TokenFailCounterTestCase(MyTestCase):
         remove_token(pin2)
 
     def test_04_reset_all_failcounters(self):
-        from edumfa.lib.policy import set_policy, PolicyClass, SCOPE, ACTION
         from flask import g
+
+        from edumfa.lib.policy import ACTION, SCOPE, PolicyClass, set_policy
 
         set_policy("reset_all", scope=SCOPE.AUTH, action=ACTION.RESETALLTOKENS)
 

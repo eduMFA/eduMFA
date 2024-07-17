@@ -25,15 +25,16 @@ import binascii
 __doc__ = """This is the implementation of the VASCO token"""
 
 import logging
+
 from edumfa.api.lib.utils import getParam
-from edumfa.lib.utils import is_true
+from edumfa.lib import _
 from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.error import ParameterError
 from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
 from edumfa.lib.tokenclass import TokenClass
 from edumfa.lib.tokens.vasco import vasco_otp_check
-from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.utils import is_true
 
 optional = True
 required = False

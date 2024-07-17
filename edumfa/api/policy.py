@@ -32,41 +32,40 @@
 __doc__ = """
 The code of this module is tested in tests/test_api_system.py
 """
-from flask import Blueprint, request
-from .lib.utils import (
-    getParam,
-    getLowerParams,
-    optional,
-    required,
-    send_result,
-    check_policy_name,
-    send_file,
-)
-from ..lib.log import log_with
-from ..lib.policy import (
-    set_policy,
-    ACTION,
-    export_policies,
-    import_policies,
-    delete_policy,
-    get_static_policy_definitions,
-    enable_policy,
-    get_policy_condition_sections,
-    get_policy_condition_comparators,
-    Match,
-)
-from ..lib.token import get_dynamic_policy_definitions
-from ..lib.error import ParameterError
-from edumfa.lib.utils import to_unicode, is_true
-from edumfa.lib.config import get_edumfa_nodes
-from ..api.lib.prepolicy import prepolicy, check_base_action
-
-from flask import g
-from werkzeug.datastructures import FileStorage
+import logging
 from cgi import FieldStorage
 
-import logging
+from flask import Blueprint, g, request
+from werkzeug.datastructures import FileStorage
 
+from edumfa.lib.config import get_edumfa_nodes
+from edumfa.lib.utils import is_true, to_unicode
+
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.error import ParameterError
+from ..lib.log import log_with
+from ..lib.policy import (
+    ACTION,
+    Match,
+    delete_policy,
+    enable_policy,
+    export_policies,
+    get_policy_condition_comparators,
+    get_policy_condition_sections,
+    get_static_policy_definitions,
+    import_policies,
+    set_policy,
+)
+from ..lib.token import get_dynamic_policy_definitions
+from .lib.utils import (
+    check_policy_name,
+    getLowerParams,
+    getParam,
+    optional,
+    required,
+    send_file,
+    send_result,
+)
 
 log = logging.getLogger(__name__)
 

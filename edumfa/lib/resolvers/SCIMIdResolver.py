@@ -31,15 +31,17 @@ __doc__ = """This is the resolver to find users in a SCIM service.
 The file is tested in tests/test_lib_resolver.py
 """
 
+import base64
 import logging
 import traceback
+from urllib.parse import urlencode
+
+import requests
+import yaml
+
+from edumfa.lib.utils import convert_column_to_unicode, to_bytes, to_unicode
 
 from .UserIdResolver import UserIdResolver
-import yaml
-import requests
-import base64
-from urllib.parse import urlencode
-from edumfa.lib.utils import to_bytes, to_unicode, convert_column_to_unicode
 
 log = logging.getLogger(__name__)
 

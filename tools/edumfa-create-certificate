@@ -3,10 +3,9 @@
 
 import os
 import sys
-from getopt import getopt, GetoptError
-from subprocess import call
+from getopt import GetoptError, getopt
 from shlex import quote as shlex_quote
-
+from subprocess import call
 
 __version__ = '0.1'
 CONFIG_FILE = "/etc/apache2/sites-available/privacyidea"

@@ -22,7 +22,7 @@ import re
 import sys
 from datetime import datetime
 from shlex import quote as shlex_quote
-from subprocess import Popen, PIPE, call, run
+from subprocess import PIPE, Popen, call, run
 
 import click
 import sqlalchemy

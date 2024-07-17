@@ -33,68 +33,67 @@ tokenclass implementations like lib.tokens.hotptoken)
 
 This is the middleware/glue between the HTTP API and the database
 """
-import json
-import traceback
-import string
 import datetime
-import os
+import json
 import logging
+import os
+import string
+import traceback
 
+from dateutil.tz import tzlocal
 from sqlalchemy import and_, func
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.expression import FunctionElement
-from edumfa.lib.error import (
-    TokenAdminError,
-    ParameterError,
-    eduMFAError,
-    ResourceNotFoundError,
-)
-from edumfa.lib.decorators import check_user_or_serial, check_copy_serials
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.utils import is_true, BASE58, hexlify_and_unicode, check_serial_valid
-from edumfa.lib.crypto import generate_password
-from edumfa.lib.log import log_with
-from edumfa.models import (
-    Token,
-    Realm,
-    TokenRealm,
-    Challenge,
-    MachineToken,
-    TokenInfo,
-    TokenOwner,
-    TokenTokengroup,
-    Tokengroup,
-)
-from edumfa.lib.config import (
-    get_token_class,
-    get_token_prefix,
-    get_token_types,
-    get_from_config,
-    get_inc_fail_count_on_false_pin,
-    SYSCONF,
-)
-from edumfa.lib.user import User
+
 from edumfa.lib import _
-from edumfa.lib.realm import realm_is_defined
-from edumfa.lib.resolver import get_resolver_object
-from edumfa.lib.policydecorators import (
-    libpolicy,
-    auth_user_does_not_exist,
-    auth_user_has_no_token,
-    auth_user_passthru,
-    auth_user_timelimit,
-    auth_lastauth,
-    auth_cache,
-    config_lost_token,
-    reset_all_user_tokens,
-)
 from edumfa.lib.challengeresponsedecorators import (
     generic_challenge_response_reset_pin,
     generic_challenge_response_resync,
 )
-from edumfa.lib.tokenclass import DATE_FORMAT
-from edumfa.lib.tokenclass import TOKENKIND
-from dateutil.tz import tzlocal
+from edumfa.lib.config import (
+    SYSCONF,
+    get_from_config,
+    get_inc_fail_count_on_false_pin,
+    get_token_class,
+    get_token_prefix,
+    get_token_types,
+)
+from edumfa.lib.crypto import generate_password
+from edumfa.lib.decorators import check_copy_serials, check_user_or_serial
+from edumfa.lib.error import (
+    ParameterError,
+    ResourceNotFoundError,
+    TokenAdminError,
+    eduMFAError,
+)
+from edumfa.lib.log import log_with
+from edumfa.lib.policydecorators import (
+    auth_cache,
+    auth_lastauth,
+    auth_user_does_not_exist,
+    auth_user_has_no_token,
+    auth_user_passthru,
+    auth_user_timelimit,
+    config_lost_token,
+    libpolicy,
+    reset_all_user_tokens,
+)
+from edumfa.lib.realm import realm_is_defined
+from edumfa.lib.resolver import get_resolver_object
+from edumfa.lib.tokenclass import DATE_FORMAT, TOKENKIND, TokenClass
+from edumfa.lib.user import User
+from edumfa.lib.utils import BASE58, check_serial_valid, hexlify_and_unicode, is_true
+from edumfa.models import (
+    Challenge,
+    MachineToken,
+    Realm,
+    Token,
+    Tokengroup,
+    TokenInfo,
+    TokenOwner,
+    TokenRealm,
+    TokenTokengroup,
+)
 
 log = logging.getLogger(__name__)
 
@@ -2671,7 +2670,7 @@ def get_dynamic_policy_definitions(scope=None):
         this scope.
     :return: The policy definition for the token or only for the scope.
     """
-    from edumfa.lib.policy import SCOPE, MAIN_MENU, GROUP
+    from edumfa.lib.policy import GROUP, MAIN_MENU, SCOPE
 
     pol = {
         SCOPE.ADMIN: {},

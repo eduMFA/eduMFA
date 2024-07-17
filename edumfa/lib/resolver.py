@@ -36,21 +36,22 @@ config.py, so this can be tested standalone without realms, tokens and
 webservice!
 """
 
+import copy
 import logging
 
-from .log import log_with
-from .config import get_resolver_types, get_resolver_classes, get_config_object
-from edumfa.lib.usercache import delete_user_cache
-from edumfa.lib.framework import get_app_local_store
-from ..models import Resolver, ResolverConfig
-from ..api.lib.utils import required
-from ..api.lib.utils import getParam
-from .error import ConfigAdminError
 from sqlalchemy import func
+
+from edumfa.lib.framework import get_app_local_store
+from edumfa.lib.usercache import delete_user_cache
+from edumfa.lib.utils import get_data_from_params, is_true, sanity_name_check
+from edumfa.lib.utils.export import register_export, register_import
+
+from ..api.lib.utils import getParam, required
+from ..models import Resolver, ResolverConfig
+from .config import get_config_object, get_resolver_classes, get_resolver_types
 from .crypto import encryptPassword
-from edumfa.lib.utils import sanity_name_check, get_data_from_params, is_true
-from edumfa.lib.utils.export import register_import, register_export
-import copy
+from .error import ConfigAdminError
+from .log import log_with
 
 CENSORED = "__CENSORED__"
 log = logging.getLogger(__name__)

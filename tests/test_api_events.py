@@ -1,13 +1,14 @@
 import json
 
-from edumfa.lib.event import set_event, delete_event
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.event import delete_event, set_event
 from edumfa.lib.eventhandler.customuserattributeshandler import ACTION_TYPE, USER_TYPE
-from edumfa.lib.policy import SCOPE, set_policy, delete_policy
+from edumfa.lib.policy import SCOPE, delete_policy, set_policy
 from edumfa.lib.token import init_token, remove_token
 from edumfa.lib.user import User
-from .base import MyApiTestCase
+
 from . import smtpmock
-from edumfa.lib.config import set_edumfa_config
+from .base import MyApiTestCase
 
 # TODO: this should be imported from lib.event when available
 HANDLERS = [

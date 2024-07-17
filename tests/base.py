@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+
 import mock
 from sqlalchemy.orm.session import close_all_sessions
 
 from edumfa.app import create_app
 from edumfa.config import TestingConfig
-from edumfa.models import db, save_config_timestamp
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
-from edumfa.lib.auth import create_db_admin
 from edumfa.lib.auditmodules.base import Audit
+from edumfa.lib.auth import create_db_admin
 from edumfa.lib.lifecycle import call_finalizers
-
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.user import User
+from edumfa.models import db, save_config_timestamp
 
 PWFILE = "tests/testdata/passwords"
 PWFILE2 = "tests/testdata/passwd"

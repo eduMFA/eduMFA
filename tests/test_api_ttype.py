@@ -1,31 +1,33 @@
 # -*- coding: utf-8 -*-
-from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
-from .base import MyApiTestCase
-from edumfa.lib.user import User
-from edumfa.lib.config import set_edumfa_config
-from edumfa.lib.token import get_tokens, init_token, remove_token
-from edumfa.lib.policy import SCOPE, set_policy, delete_policy
-from edumfa.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
-from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from edumfa.lib.utils import to_bytes, to_unicode
-from edumfa.lib.tokens.pushtoken import (
-    PushTokenClass,
-    strip_key,
-    PUBLIC_KEY_SMARTPHONE,
-    PRIVATE_KEY_SERVER,
-    PUBLIC_KEY_SERVER,
-    POLL_ONLY,
-)
-from edumfa.lib.utils import b32encode_and_unicode
-from datetime import datetime, timedelta
-from pytz import utc
 from base64 import b32decode, b32encode
+from datetime import datetime, timedelta
+
 import mock
 import responses
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from google.oauth2 import service_account
+from pytz import utc
+
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.policy import SCOPE, delete_policy, set_policy
+from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
+from edumfa.lib.smsprovider.SMSProvider import delete_smsgateway, set_smsgateway
+from edumfa.lib.token import get_tokens, init_token, remove_token
+from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+from edumfa.lib.tokens.pushtoken import (
+    POLL_ONLY,
+    PRIVATE_KEY_SERVER,
+    PUBLIC_KEY_SERVER,
+    PUBLIC_KEY_SMARTPHONE,
+    PushTokenClass,
+    strip_key,
+)
+from edumfa.lib.user import User
+from edumfa.lib.utils import b32encode_and_unicode, to_bytes, to_unicode
+
+from .base import MyApiTestCase
 from .test_lib_tokens_push import _create_credential_mock
 
 PWFILE = "tests/testdata/passwords"

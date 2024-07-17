@@ -29,42 +29,42 @@ The code is tested in tests/test_lib_config
 """
 
 import copy
-import sys
-import logging
+import datetime
+import importlib
 import inspect
+import logging
+import sys
 import threading
 import traceback
 
-from .log import log_with
-from ..models import (
-    Config,
-    db,
-    Resolver,
-    Realm,
-    EDUMFA_TIMESTAMP,
-    save_config_timestamp,
-    Policy,
-    EventHandler,
-    CAConnector,
-)
 from edumfa.lib.framework import (
-    get_request_local_store,
     get_app_config_value,
     get_app_local_store,
+    get_request_local_store,
 )
 from edumfa.lib.utils import to_list
-from edumfa.lib.utils.export import register_import, register_export
-from .crypto import encryptPassword
-from .crypto import decryptPassword
-from .resolvers.UserIdResolver import UserIdResolver
-from .machines.base import BaseMachineResolver
-from .caconnectors.baseca import BaseCAConnector
+from edumfa.lib.utils.export import register_export, register_import
+
+from ..models import (
+    EDUMFA_TIMESTAMP,
+    CAConnector,
+    Config,
+    EventHandler,
+    Policy,
+    Realm,
+    Resolver,
+    db,
+    save_config_timestamp,
+)
 
 # We need these imports to return the list of CA connector types. Bummer: New import for each new Class anyway.
 from .caconnectors import localca, msca
-from .utils import reload_db, is_true
-import importlib
-import datetime
+from .caconnectors.baseca import BaseCAConnector
+from .crypto import decryptPassword, encryptPassword
+from .log import log_with
+from .machines.base import BaseMachineResolver
+from .resolvers.UserIdResolver import UserIdResolver
+from .utils import is_true, reload_db
 
 log = logging.getLogger(__name__)
 

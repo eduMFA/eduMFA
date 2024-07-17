@@ -7,8 +7,8 @@
 This script reads the .google_authenticator files from all users in their
 home directories and compiles an import file.
 """
-import binascii
 import base64
+import binascii
 import os
 import sys
 

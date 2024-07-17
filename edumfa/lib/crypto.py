@@ -38,39 +38,36 @@ calling function handle the data.
 
 This lib.crypto is tested in tests/test_lib_crypto.py
 """
-import hmac
-import logging
-from hashlib import sha256
-import secrets
-import random
-import string
+import base64
 import binascii
 import ctypes
-
-import base64
+import hmac
+import logging
+import random
+import secrets
+import string
 import traceback
-from passlib.context import CryptContext
-from edumfa.lib.log import log_with
-from edumfa.lib.error import HSMException, ParameterError
-from edumfa.lib.framework import (
-    get_app_local_store,
-    get_app_config_value,
-    get_app_config,
-)
-from edumfa.lib.utils import (
-    to_unicode,
-    to_bytes,
-    hexlify_and_unicode,
-    b64encode_and_unicode,
-)
+from hashlib import sha256
 
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes, padding, serialization
+from cryptography.hazmat.primitives.asymmetric import padding as asym_padding, rsa
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding as asym_padding
+from passlib.context import CryptContext
+
+from edumfa.lib.error import HSMException, ParameterError
+from edumfa.lib.framework import (
+    get_app_config,
+    get_app_config_value,
+    get_app_local_store,
+)
+from edumfa.lib.log import log_with
+from edumfa.lib.utils import (
+    b64encode_and_unicode,
+    hexlify_and_unicode,
+    to_bytes,
+    to_unicode,
+)
 
 
 def safe_compare(a, b):

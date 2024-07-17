@@ -1,62 +1,60 @@
 # -*- coding: utf-8 -*-
+import datetime
+import json
 import logging
-from testfixtures import log_capture
+import time
+from urllib.parse import quote, urlencode
+
+import mock
+import responses
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
+from passlib.hash import argon2
+from testfixtures import Replace, log_capture, test_datetime
 
-from edumfa.lib.tokens.webauthntoken import WEBAUTHNACTION
-from edumfa.lib.utils import to_unicode
-from urllib.parse import urlencode, quote
-import json
-from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
-from edumfa.lib.utils import hexlify_and_unicode
-from .base import MyApiTestCase
-from edumfa.lib.user import User
-from edumfa.lib.tokens.totptoken import HotpTokenClass
-from edumfa.lib.tokens.yubikeytoken import YubikeyTokenClass
-from edumfa.lib.tokens.registrationtoken import RegistrationTokenClass
-from edumfa.lib.tokenclass import DATE_FORMAT
-from edumfa.models import Token, Policy, Challenge, AuthCache, db, TokenOwner
+from edumfa.lib import _
 from edumfa.lib.authcache import _hash_password
+from edumfa.lib.challenge import get_challenges
 from edumfa.lib.config import (
-    set_edumfa_config,
-    get_inc_fail_count_on_false_pin,
     delete_edumfa_config,
+    get_inc_fail_count_on_false_pin,
+    set_edumfa_config,
 )
+from edumfa.lib.error import ERROR
+from edumfa.lib.event import delete_event, set_event
+from edumfa.lib.policy import ACTION, AUTHORIZED, SCOPE, delete_policy, set_policy
+from edumfa.lib.radiusserver import add_radius
+from edumfa.lib.realm import delete_realm, set_default_realm, set_realm
+from edumfa.lib.resolver import delete_resolver, get_resolver_list, save_resolver
+from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
 from edumfa.lib.token import (
+    enable_token,
+    get_one_token,
     get_tokens,
     init_token,
     remove_token,
     reset_token,
-    enable_token,
     revoke_token,
     set_pin,
-    get_one_token,
 )
-from edumfa.lib.policy import SCOPE, ACTION, set_policy, delete_policy, AUTHORIZED
-from edumfa.lib.event import set_event
-from edumfa.lib.event import delete_event
-from edumfa.lib.error import ERROR
-from edumfa.lib.resolver import save_resolver, get_resolver_list, delete_resolver
-from edumfa.lib.realm import set_realm, set_default_realm, delete_realm
-from edumfa.lib.radiusserver import add_radius
-from edumfa.lib.challenge import get_challenges
-from edumfa.lib.tokens.webauthn import webauthn_b64_decode
-from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH as DEFAULT_LENGTH_REG
+from edumfa.lib.tokenclass import CLIENTMODE, DATE_FORMAT, ROLLOUTSTATE
 from edumfa.lib.tokens.passwordtoken import DEFAULT_LENGTH as DEFAULT_LENGTH_PW
-from edumfa.lib.tokenclass import ROLLOUTSTATE, CLIENTMODE
-from edumfa.lib import _
-from passlib.hash import argon2
-from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
+from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
+from edumfa.lib.tokens.registrationtoken import (
+    DEFAULT_LENGTH as DEFAULT_LENGTH_REG,
+    RegistrationTokenClass,
+)
+from edumfa.lib.tokens.totptoken import HotpTokenClass
+from edumfa.lib.tokens.webauthn import webauthn_b64_decode
+from edumfa.lib.tokens.webauthntoken import WEBAUTHNACTION
+from edumfa.lib.tokens.yubikeytoken import YubikeyTokenClass
+from edumfa.lib.user import User
+from edumfa.lib.utils import hexlify_and_unicode, to_unicode
+from edumfa.models import AuthCache, Challenge, Policy, Token, TokenOwner, db
 
-from testfixtures import Replace, test_datetime
-import datetime
-import time
-import responses
-import mock
-from . import smtpmock, ldap3mock, radiusmock
-
+from . import ldap3mock, radiusmock, smtpmock
+from .base import MyApiTestCase
 
 PWFILE = "tests/testdata/passwords"
 HOSTSFILE = "tests/testdata/hosts"
@@ -549,7 +547,7 @@ class AValidateOfflineTestCase(MyApiTestCase):
         # tokenobj = get_tokens(self.serials[0])[0]
         from edumfa.lib.applications.offline import REFILLTOKEN_LENGTH
         from edumfa.lib.machine import attach_token, detach_token
-        from edumfa.lib.machineresolver import save_resolver, delete_resolver
+        from edumfa.lib.machineresolver import delete_resolver, save_resolver
 
         mr_obj = save_resolver(
             {
@@ -2373,8 +2371,8 @@ class ValidateAPITestCase(MyApiTestCase):
 
     @responses.activate
     def test_24_trigger_challenge(self):
-        from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
         from edumfa.lib.config import set_edumfa_config
+        from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
 
         setup_sms_gateway()
 

@@ -1,50 +1,49 @@
 # -*- coding: utf-8 -*-
-from .base import MyApiTestCase, PWFILE2
+import codecs
+import datetime
 import json
 import os
-import datetime
-import codecs
+import unittest
+from urllib.parse import quote, urlencode
+
+import mock
+from dateutil.tz import tzlocal
 from mock import mock
+
+from edumfa.lib import _
+from edumfa.lib.caconnector import save_caconnector
+from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
+from edumfa.lib.caconnectors.msca import ATTR as MS_ATTR, MSCAConnector
+from edumfa.lib.config import delete_edumfa_config, set_edumfa_config
+from edumfa.lib.event import EventConfiguration, delete_event, set_event
 from edumfa.lib.policy import (
-    set_policy,
-    delete_policy,
-    SCOPE,
     ACTION,
-    enable_policy,
+    SCOPE,
     PolicyClass,
+    delete_policy,
+    enable_policy,
+    set_policy,
 )
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
 from edumfa.lib.token import (
+    add_tokeninfo,
+    assign_token,
+    check_serial_pass,
+    enable_token,
+    get_realms_of_token,
     get_tokens,
+    get_tokens_from_serial_or_user,
     init_token,
     remove_token,
-    get_tokens_from_serial_or_user,
-    enable_token,
-    check_serial_pass,
-    get_realms_of_token,
-    assign_token,
     token_exist,
-    add_tokeninfo,
 )
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
-from edumfa.lib.event import set_event, delete_event, EventConfiguration
-from edumfa.lib.caconnector import save_caconnector
-from urllib.parse import urlencode, quote
-from edumfa.lib.tokenclass import DATE_FORMAT
-from edumfa.lib.tokenclass import ROLLOUTSTATE
+from edumfa.lib.tokenclass import DATE_FORMAT, ROLLOUTSTATE
 from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
-from edumfa.lib.config import set_edumfa_config, delete_edumfa_config
-from dateutil.tz import tzlocal
-from edumfa.lib import _
-import os
-import unittest
-import mock
-from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
-from edumfa.lib.caconnectors.msca import MSCAConnector
+from edumfa.lib.user import User
+
+from .base import PWFILE2, MyApiTestCase
 from .mscamock import CAServiceMock
-from edumfa.lib.caconnectors.msca import ATTR as MS_ATTR
-from edumfa.lib.token import init_token
 
 # Mock for certificate from MSCA
 MY_CA_NAME = "192.168.47.11"
@@ -476,10 +475,10 @@ class APIAttestationTestCase(MyApiTestCase):
     def test_01_enroll_certificate(self):
         # Enroll a certificate without a policy
         from .test_lib_tokens_certificate import (
-            YUBIKEY_CSR,
+            ACTION,
             BOGUS_ATTESTATION,
             YUBIKEY_ATTEST,
-            ACTION,
+            YUBIKEY_CSR,
         )
 
         # A bogus attestation certificate will fail!

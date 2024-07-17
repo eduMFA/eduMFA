@@ -5,19 +5,19 @@ This test file tests the lib.importotp
 """
 import pytest
 
-from .base import MyTestCase
-from edumfa.lib.importotp import (
-    parseOATHcsv,
-    parseYubicoCSV,
-    parseSafeNetXML,
-    parsePSKCdata,
-    GPGImport,
-)
 from edumfa.lib.error import TokenImportException
-from edumfa.lib.token import remove_token
-from edumfa.lib.token import init_token
-from edumfa.lib.importotp import export_pskc
+from edumfa.lib.importotp import (
+    GPGImport,
+    export_pskc,
+    parseOATHcsv,
+    parsePSKCdata,
+    parseSafeNetXML,
+    parseYubicoCSV,
+)
+from edumfa.lib.token import init_token, remove_token
 from edumfa.lib.utils import hexlify_and_unicode
+
+from .base import MyTestCase
 
 XML_PSKC_PASSWORD_PREFIX = """<?xml version="1.0" encoding="UTF-8"?>
   <KeyContainer

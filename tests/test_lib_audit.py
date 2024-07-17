@@ -10,14 +10,15 @@ import types
 
 import sqlalchemy.engine
 from mock import mock
+from testfixtures import log_capture
 
 from edumfa.config import TestingConfig
 from edumfa.lib.audit import getAudit, search
 from edumfa.lib.auditmodules.containeraudit import Audit as ContainerAudit
 from edumfa.lib.auditmodules.loggeraudit import Audit as LoggerAudit
 from edumfa.lib.auditmodules.sqlaudit import column_length
+
 from .base import MyTestCase, OverrideConfigTestCase
-from testfixtures import log_capture
 
 PUBLIC = "tests/testdata/public.pem"
 PRIVATE = "tests/testdata/private.pem"

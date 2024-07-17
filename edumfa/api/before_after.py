@@ -27,63 +27,63 @@ Flask endpoints.
 It also contains the error handlers.
 """
 
-from .lib.utils import send_error, get_all_params
-from ..lib.framework import get_app_config_value
-from ..lib.user import get_user_from_param
+import datetime
 import logging
-from .lib.utils import getParam
-from flask import request, g
+import threading
+
+from flask import current_app, g, request
+
+from edumfa.api.auth import admin_required, jwtauth, user_required
+from edumfa.api.lib.postpolicy import postrequest, sign_response
+from edumfa.api.ttype import ttype_blueprint
+from edumfa.api.validate import validate_blueprint
 from edumfa.lib.audit import getAudit
-from flask import current_app
-from edumfa.lib.policy import PolicyClass
-from edumfa.lib.event import EventConfiguration
-from edumfa.lib.lifecycle import call_finalizers
-from edumfa.api.auth import user_required, admin_required, jwtauth
 from edumfa.lib.config import (
-    get_from_config,
     SYSCONF,
     ensure_no_config_object,
     get_edumfa_node,
+    get_from_config,
 )
-from edumfa.lib.token import get_token_type, get_token_owner
-from edumfa.api.ttype import ttype_blueprint
-from edumfa.api.validate import validate_blueprint
-from .resolver import resolver_blueprint
-from .policy import policy_blueprint
-from .realm import realm_blueprint
-from .realm import defaultrealm_blueprint
-from .user import user_blueprint
-from .audit import audit_blueprint
-from .machineresolver import machineresolver_blueprint
-from .machine import machine_blueprint
-from .application import application_blueprint
-from .caconnector import caconnector_blueprint
-from .token import token_blueprint
-from .system import system_blueprint
-from .smtpserver import smtpserver_blueprint
-from .radiusserver import radiusserver_blueprint
-from .periodictask import periodictask_blueprint
-from .edumfaserver import edumfaserver_blueprint
-from .recover import recover_blueprint
-from .register import register_blueprint
-from .event import eventhandling_blueprint
-from .smsgateway import smsgateway_blueprint
-from .clienttype import client_blueprint
-from .monitoring import monitoring_blueprint
-from .tokengroup import tokengroup_blueprint
-from .serviceid import serviceid_blueprint
-from edumfa.api.lib.postpolicy import postrequest, sign_response
+from edumfa.lib.event import EventConfiguration
+from edumfa.lib.lifecycle import call_finalizers
+from edumfa.lib.policy import PolicyClass
+from edumfa.lib.token import get_token_owner, get_token_type
+from edumfa.lib.user import User
+from edumfa.lib.utils import get_client_ip
+
 from ..lib.error import (
-    eduMFAError,
     AuthError,
-    UserError,
     PolicyError,
     ResourceNotFoundError,
+    UserError,
+    eduMFAError,
 )
-from edumfa.lib.utils import get_client_ip
-from edumfa.lib.user import User
-import datetime
-import threading
+from ..lib.framework import get_app_config_value
+from ..lib.user import get_user_from_param
+from .application import application_blueprint
+from .audit import audit_blueprint
+from .caconnector import caconnector_blueprint
+from .clienttype import client_blueprint
+from .edumfaserver import edumfaserver_blueprint
+from .event import eventhandling_blueprint
+from .lib.utils import get_all_params, getParam, send_error
+from .machine import machine_blueprint
+from .machineresolver import machineresolver_blueprint
+from .monitoring import monitoring_blueprint
+from .periodictask import periodictask_blueprint
+from .policy import policy_blueprint
+from .radiusserver import radiusserver_blueprint
+from .realm import defaultrealm_blueprint, realm_blueprint
+from .recover import recover_blueprint
+from .register import register_blueprint
+from .resolver import resolver_blueprint
+from .serviceid import serviceid_blueprint
+from .smsgateway import smsgateway_blueprint
+from .smtpserver import smtpserver_blueprint
+from .system import system_blueprint
+from .token import token_blueprint
+from .tokengroup import tokengroup_blueprint
+from .user import user_blueprint
 
 log = logging.getLogger(__name__)
 

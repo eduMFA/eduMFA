@@ -14,9 +14,8 @@ values of the tokens in the new eduMFA installation.
 
 
 import argparse
-from sqlalchemy import create_engine
-from sqlalchemy import Table, MetaData, Column
-from sqlalchemy import Integer, Unicode, Boolean
+
+from sqlalchemy import Boolean, Column, Integer, MetaData, Table, Unicode, create_engine
 from sqlalchemy.sql import select
 
 metadata = MetaData()

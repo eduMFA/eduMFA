@@ -62,39 +62,41 @@ import os
 import struct
 import unittest
 from copy import copy
+
 from mock import patch
 from testfixtures import log_capture
-from edumfa.lib.user import User
 
+from edumfa.lib.challenge import get_challenges
 from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.error import EnrollmentError, ParameterError, PolicyError
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+from edumfa.lib.token import check_user_pass, init_token, remove_token
 from edumfa.lib.tokens.webauthn import (
+    ATTESTATION_LEVEL,
+    ATTESTATION_REQUIREMENT_LEVEL,
     COSE_ALGORITHM,
-    RegistrationRejectedException,
-    WebAuthnMakeCredentialOptions,
     AuthenticationRejectedException,
+    AuthenticatorDataFlags,
+    RegistrationRejectedException,
+    WebAuthnAssertionResponse,
+    WebAuthnMakeCredentialOptions,
+    WebAuthnRegistrationResponse,
+    WebAuthnUser,
     webauthn_b64_decode,
     webauthn_b64_encode,
-    WebAuthnRegistrationResponse,
-    ATTESTATION_REQUIREMENT_LEVEL,
-    ATTESTATION_LEVEL,
-    AuthenticatorDataFlags,
-    WebAuthnAssertionResponse,
-    WebAuthnUser,
 )
-from edumfa.lib.utils import hexlify_and_unicode
-from .base import MyTestCase
 from edumfa.lib.tokens.webauthntoken import (
-    WebAuthnTokenClass,
-    WEBAUTHNACTION,
-    WEBAUTHNCONFIG,
     DEFAULT_AUTHENTICATOR_ATTESTATION_FORM,
     DEFAULT_USER_VERIFICATION_REQUIREMENT,
+    WEBAUTHNACTION,
+    WEBAUTHNCONFIG,
     WEBAUTHNINFO,
+    WebAuthnTokenClass,
 )
-from edumfa.lib.token import init_token, check_user_pass, remove_token
-from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
-from edumfa.lib.challenge import get_challenges
-from edumfa.lib.error import PolicyError, ParameterError, EnrollmentError
+from edumfa.lib.user import User
+from edumfa.lib.utils import hexlify_and_unicode
+
+from .base import MyTestCase
 
 TRUST_ANCHOR_DIR = (
     f"{os.path.abspath(os.path.dirname(__file__))}/testdata/trusted_attestation_roots"

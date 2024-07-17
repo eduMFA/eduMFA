@@ -31,12 +31,13 @@ The OCRA class is tested in tests/test_lib_tokens_tiqr.py
 
 # TODO: Mutual Challenges Response not implemented, yet.
 
-from edumfa.lib.crypto import geturandom, get_rand_digit_str, get_alphanum_str
-from edumfa.lib.tokens.HMAC import HmacOtp
-from edumfa.lib.utils import to_bytes
-from hashlib import sha1, sha256, sha512
 import binascii
 import struct
+from hashlib import sha1, sha256, sha512
+
+from edumfa.lib.crypto import get_alphanum_str, get_rand_digit_str, geturandom
+from edumfa.lib.tokens.HMAC import HmacOtp
+from edumfa.lib.utils import to_bytes
 
 SHA_FUNC = {"SHA1": sha1, "SHA256": sha256, "SHA512": sha512}
 

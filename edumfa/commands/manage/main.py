@@ -21,24 +21,24 @@
 import click
 from flask.cli import FlaskGroup, run_command
 
-from edumfa.commands.manage.authcache import authcache_cli
-from edumfa.commands.manage.ca import ca_cli
-from edumfa.commands.manage.hsm import hsm_cli
-from edumfa.commands.manage.config import config_cli
-from edumfa.commands.manage.core import (
-    drop_tables,
-    create_tables,
-    create_pgp_keys,
-    create_audit_keys,
-    encrypt_enckey,
-    create_enckey,
-)
 from edumfa.app import create_app
 from edumfa.commands.manage.admin import admin_cli
 from edumfa.commands.manage.api import api_cli
-from edumfa.commands.manage.audit import rotate_audit, audit_cli
+from edumfa.commands.manage.audit import audit_cli, rotate_audit
+from edumfa.commands.manage.authcache import authcache_cli
 from edumfa.commands.manage.backup import backup_cli
+from edumfa.commands.manage.ca import ca_cli
+from edumfa.commands.manage.config import config_cli
+from edumfa.commands.manage.core import (
+    create_audit_keys,
+    create_enckey,
+    create_pgp_keys,
+    create_tables,
+    drop_tables,
+    encrypt_enckey,
+)
 from edumfa.commands.manage.event import event_cli
+from edumfa.commands.manage.hsm import hsm_cli
 from edumfa.commands.manage.policy import policy_cli
 from edumfa.commands.manage.realm import realm_cli
 from edumfa.commands.manage.resolver import resolver_cli

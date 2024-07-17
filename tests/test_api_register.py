@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
-from .base import MyApiTestCase
-from edumfa.lib.policy import SCOPE, ACTION, set_policy
-from edumfa.lib.resolvers.SQLIdResolver import IdResolver as SQLResolver
 import json
-from edumfa.lib.smtpserver import add_smtpserver
-from . import smtpmock
+
 from edumfa.lib.config import set_edumfa_config
-from edumfa.lib.passwordreset import create_recoverycode
-from edumfa.lib.user import User
 from edumfa.lib.error import ERROR
+from edumfa.lib.passwordreset import create_recoverycode
+from edumfa.lib.policy import ACTION, SCOPE, set_policy
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.resolvers.SQLIdResolver import IdResolver as SQLResolver
+from edumfa.lib.smtpserver import add_smtpserver
+from edumfa.lib.user import User
+
+from . import smtpmock
+from .base import MyApiTestCase
 
 
 class RegisterTestCase(MyApiTestCase):

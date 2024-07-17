@@ -3,25 +3,26 @@ This test file tests the applications definitions standalone
 lib/applications/*
 """
 
-from edumfa.lib.error import ParameterError
-from .base import MyTestCase
-from edumfa.lib.applications import MachineApplicationBase
-from edumfa.lib.applications.ssh import MachineApplication as SSHApplication
-from edumfa.lib.applications.luks import MachineApplication as LUKSApplication
-from edumfa.lib.applications.offline import (
-    MachineApplication as OfflineApplication,
-    REFILLTOKEN_LENGTH,
-)
+import mock
+import passlib.hash
+
 from edumfa.lib.applications import (
+    MachineApplicationBase,
+    get_application_types,
     get_auth_item,
     is_application_allow_bulk_call,
-    get_application_types,
 )
-from edumfa.lib.token import init_token, get_tokens
+from edumfa.lib.applications.luks import MachineApplication as LUKSApplication
+from edumfa.lib.applications.offline import (
+    REFILLTOKEN_LENGTH,
+    MachineApplication as OfflineApplication,
+)
+from edumfa.lib.applications.ssh import MachineApplication as SSHApplication
+from edumfa.lib.error import ParameterError
+from edumfa.lib.token import get_tokens, init_token
 from edumfa.lib.user import User
-import passlib.hash
-import mock
 
+from .base import MyTestCase
 
 SSHKEY = (
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDO1rx377"

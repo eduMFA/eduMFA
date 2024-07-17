@@ -3,11 +3,13 @@ This testcase is used to test the REST API  in api/caconnector.py
 to create, update, delete CA connectors.
 """
 
-from .base import MyApiTestCase
 import json
+
 from edumfa.lib.caconnector import get_caconnector_list, save_caconnector
-from edumfa.lib.policy import set_policy, SCOPE, ACTION
 from edumfa.lib.error import ERROR
+from edumfa.lib.policy import ACTION, SCOPE, set_policy
+
+from .base import MyApiTestCase
 
 
 class CAConnectorTestCase(MyApiTestCase):

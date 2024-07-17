@@ -21,22 +21,23 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import re
-from OpenSSL import crypto
-import binascii
-from hashlib import sha256
 import base64
+import binascii
 import logging
-import time
+import re
 import struct
-from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives import hashes
+import time
+from hashlib import sha256
+
 from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec
+from OpenSSL import crypto
 
 from edumfa.lib.utils import (
+    hexlify_and_unicode,
     to_bytes,
     to_unicode,
-    hexlify_and_unicode,
     urlsafe_b64encode_and_unicode,
 )
 

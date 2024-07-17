@@ -8,21 +8,22 @@ import logging
 
 from testfixtures import log_capture
 
-from .base import MyTestCase
-from edumfa.lib.resolver import save_resolver, delete_resolver
 from edumfa.lib.config import set_edumfa_config
-from edumfa.lib.realm import set_realm, delete_realm
+from edumfa.lib.realm import delete_realm, set_realm
+from edumfa.lib.resolver import delete_resolver, save_resolver
 from edumfa.lib.user import (
     User,
-    create_user,
-    get_username,
-    get_user_list,
-    split_user,
-    get_user_from_param,
     UserError,
+    create_user,
+    get_user_from_param,
+    get_user_list,
+    get_username,
+    log as user_log,
+    split_user,
 )
-from edumfa.lib.user import log as user_log
+
 from . import ldap3mock
+from .base import MyTestCase
 from .test_lib_resolver import LDAPDirectory_small
 
 PWFILE = "tests/testdata/passwd"

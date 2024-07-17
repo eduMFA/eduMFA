@@ -3,11 +3,11 @@ This test file tests the lib.tokens.passwordtoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
-from edumfa.lib.tokens.registrationtoken import RegistrationTokenClass
 from edumfa.lib.token import init_token
+from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH, RegistrationTokenClass
 from edumfa.models import Token
-from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH
+
+from .base import MyTestCase
 
 
 class RegistrationTokenTestCase(MyTestCase):

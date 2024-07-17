@@ -27,17 +27,19 @@ The code is tested in tests/test_lib_caconnector.py.
 """
 
 import logging
-from .log import log_with
-from .config import get_caconnector_types, get_caconnector_class_dict
-from ..models import CAConnector, CAConnectorConfig
-from ..api.lib.utils import required
-from ..api.lib.utils import getParam
-from .error import CAError, CSRError, CSRPending
+
 from sqlalchemy import func
-from .crypto import encryptPassword, decryptPassword
-from edumfa.lib.utils import sanity_name_check, get_data_from_params, fetch_one_resource
-from edumfa.lib.utils.export import register_import, register_export
+
 from edumfa.lib.config import get_config_object
+from edumfa.lib.utils import fetch_one_resource, get_data_from_params, sanity_name_check
+from edumfa.lib.utils.export import register_export, register_import
+
+from ..api.lib.utils import getParam, required
+from ..models import CAConnector, CAConnectorConfig
+from .config import get_caconnector_class_dict, get_caconnector_types
+from .crypto import decryptPassword, encryptPassword
+from .error import CAError, CSRError, CSRPending
+from .log import log_with
 
 log = logging.getLogger(__name__)
 

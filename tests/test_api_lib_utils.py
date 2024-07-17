@@ -2,26 +2,27 @@
 """
 This tests the file api.lib.utils
 """
-from .base import MyApiTestCase
-
-from edumfa.api.lib.utils import (
-    getParam,
-    check_policy_name,
-    verify_auth_token,
-    is_fqdn,
-    attestation_certificate_allowed,
-    get_priority_from_param,
-)
-from edumfa.lib.policy import ACTION, SCOPE, set_policy, delete_policy
-from edumfa.lib.user import User
-from edumfa.lib.error import ParameterError
-import jwt
-import mock
 import datetime
 import warnings
 from urllib.parse import quote
-from edumfa.lib.error import AuthError
+
+import jwt
+import mock
+
+from edumfa.api.lib.utils import (
+    attestation_certificate_allowed,
+    check_policy_name,
+    get_priority_from_param,
+    getParam,
+    is_fqdn,
+    verify_auth_token,
+)
+from edumfa.lib.error import AuthError, ParameterError
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.user import User
+
+from .base import MyApiTestCase
 
 
 class UtilsTestCase(MyApiTestCase):

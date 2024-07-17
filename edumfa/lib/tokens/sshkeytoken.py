@@ -28,12 +28,13 @@ The code is tested in tests/test_lib_tokens_ssh
 """
 
 import logging
-from edumfa.lib import _
+
 from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
 from edumfa.lib.error import TokenAdminError
 from edumfa.lib.log import log_with
-from edumfa.lib.tokenclass import TokenClass, ROLLOUTSTATE, AUTHENTICATIONMODE
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, ROLLOUTSTATE, TokenClass
 
 log = logging.getLogger(__name__)
 

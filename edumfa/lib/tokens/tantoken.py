@@ -26,12 +26,13 @@ It depends on the DB model, and the lib.tokenclass.
 """
 
 import logging
-from edumfa.lib.log import log_with
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.tokens.papertoken import PaperTokenClass
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+
 from edumfa.lib import _
 from edumfa.lib.crypto import geturandom, hash
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.tokens.papertoken import PaperTokenClass
 
 log = logging.getLogger(__name__)
 DEFAULT_COUNT = 100

@@ -33,12 +33,14 @@ database. It depends on the lib.resolver.
 It is independent of any user or token libraries and can be tested standalone
 in tests/test_lib_realm.py
 """
-from ..models import Realm, ResolverRealm, Resolver, db, save_config_timestamp
-from .log import log_with
-from edumfa.lib.config import get_config_object
 import logging
-from edumfa.lib.utils import sanity_name_check, fetch_one_resource, is_true
-from edumfa.lib.utils.export import register_import, register_export
+
+from edumfa.lib.config import get_config_object
+from edumfa.lib.utils import fetch_one_resource, is_true, sanity_name_check
+from edumfa.lib.utils.export import register_export, register_import
+
+from ..models import Realm, Resolver, ResolverRealm, db, save_config_timestamp
+from .log import log_with
 
 log = logging.getLogger(__name__)
 

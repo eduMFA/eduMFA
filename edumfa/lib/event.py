@@ -22,13 +22,14 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.lib.config import get_config_object
-from edumfa.lib.utils import fetch_one_resource
-from edumfa.models import EventHandler, EventHandlerOption, db
-from edumfa.lib.audit import getAudit
-from edumfa.lib.utils.export import register_import, register_export
 import functools
 import logging
+
+from edumfa.lib.audit import getAudit
+from edumfa.lib.config import get_config_object
+from edumfa.lib.utils import fetch_one_resource
+from edumfa.lib.utils.export import register_export, register_import
+from edumfa.models import EventHandler, EventHandlerOption, db
 
 log = logging.getLogger(__name__)
 
@@ -169,17 +170,17 @@ def get_handler_object(handlername):
     :return:
     """
     # TODO: beautify and make this work with several different handlers
-    from edumfa.lib.eventhandler.usernotification import UserNotificationEventHandler
-    from edumfa.lib.eventhandler.tokenhandler import TokenEventHandler
-    from edumfa.lib.eventhandler.scripthandler import ScriptEventHandler
-    from edumfa.lib.eventhandler.federationhandler import FederationEventHandler
     from edumfa.lib.eventhandler.counterhandler import CounterEventHandler
-    from edumfa.lib.eventhandler.requestmangler import RequestManglerEventHandler
-    from edumfa.lib.eventhandler.responsemangler import ResponseManglerEventHandler
-    from edumfa.lib.eventhandler.logginghandler import LoggingEventHandler
     from edumfa.lib.eventhandler.customuserattributeshandler import (
         CustomUserAttributesHandler,
     )
+    from edumfa.lib.eventhandler.federationhandler import FederationEventHandler
+    from edumfa.lib.eventhandler.logginghandler import LoggingEventHandler
+    from edumfa.lib.eventhandler.requestmangler import RequestManglerEventHandler
+    from edumfa.lib.eventhandler.responsemangler import ResponseManglerEventHandler
+    from edumfa.lib.eventhandler.scripthandler import ScriptEventHandler
+    from edumfa.lib.eventhandler.tokenhandler import TokenEventHandler
+    from edumfa.lib.eventhandler.usernotification import UserNotificationEventHandler
     from edumfa.lib.eventhandler.webhookeventhandler import WebHookHandler
 
     h_obj = None

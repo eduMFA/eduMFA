@@ -3,12 +3,15 @@ This test file tests the lib.tokens.yubicotoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
-from edumfa.lib.tokens.yubicotoken import YubicoTokenClass, YUBICO_URL
-from edumfa.models import Token
-import responses
 import json
+
+import responses
+
 from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.tokens.yubicotoken import YUBICO_URL, YubicoTokenClass
+from edumfa.models import Token
+
+from .base import MyTestCase
 
 
 class YubicoTokenTestCase(MyTestCase):

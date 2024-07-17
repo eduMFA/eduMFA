@@ -29,27 +29,29 @@ The event handler module is bound to an event together with
 * an action
 * optional options ;-)
 """
+import datetime
+import logging
+import re
+
+from dateutil.tz import tzlocal
+
 from edumfa.lib import _
+from edumfa.lib.auth import ROLE
 from edumfa.lib.config import get_token_types
+from edumfa.lib.counter import read as counter_read
 from edumfa.lib.realm import get_realms
 from edumfa.lib.resolver import get_resolver_list
-from edumfa.lib.auth import ROLE
 from edumfa.lib.token import get_token_owner, get_tokens
-from edumfa.lib.user import User, UserError
-from edumfa.lib.counter import read as counter_read
-from edumfa.lib.utils import (
-    compare_condition,
-    compare_value_value,
-    compare_generic_condition,
-    parse_time_offset_from_now,
-    is_true,
-    check_ip_in_policy,
-)
-import datetime
-from dateutil.tz import tzlocal
-import re
-import logging
 from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.user import User, UserError
+from edumfa.lib.utils import (
+    check_ip_in_policy,
+    compare_condition,
+    compare_generic_condition,
+    compare_value_value,
+    is_true,
+    parse_time_offset_from_now,
+)
 
 log = logging.getLogger(__name__)
 

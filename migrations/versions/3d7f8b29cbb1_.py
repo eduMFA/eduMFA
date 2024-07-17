@@ -10,13 +10,13 @@ Create Date: 2019-07-04 22:37:53.594962
 revision = "3d7f8b29cbb1"
 down_revision = "dceb6cd3c41e"
 
-from alembic import op
 import sqlalchemy as sa
-
-from sqlalchemy.ext.declarative import declarative_base
+from alembic import op
 from sqlalchemy import orm
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import Sequence
-from edumfa.lib.policy import SCOPE, ACTION
+
+from edumfa.lib.policy import ACTION, SCOPE
 
 Base = declarative_base()
 

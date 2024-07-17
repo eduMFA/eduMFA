@@ -18,14 +18,16 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.lib.applications import MachineApplicationBase
-from edumfa.lib.crypto import geturandom
-from edumfa.lib.error import ValidateError, ParameterError
 import logging
+
 from passlib.hash import pbkdf2_sha512
-from edumfa.lib.token import get_tokens
+
+from edumfa.lib.applications import MachineApplicationBase
 from edumfa.lib.config import get_prepend_pin
+from edumfa.lib.crypto import geturandom
+from edumfa.lib.error import ParameterError, ValidateError
 from edumfa.lib.policy import TYPE
+from edumfa.lib.token import get_tokens
 
 log = logging.getLogger(__name__)
 ROUNDS = 6549

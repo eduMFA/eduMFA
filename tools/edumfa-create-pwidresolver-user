@@ -16,11 +16,11 @@
 
 """
 
-import sys
-from getopt import getopt, GetoptError
-import getpass
 import crypt
+import getpass
 import random
+import sys
+from getopt import GetoptError, getopt
 
 __version__ = '0.1'
 

@@ -39,12 +39,13 @@ This script deletes expired entries from the user cache.
 """
 __version__ = "0.1"
 
-from edumfa.app import create_app
 import click
+from flask.cli import FlaskGroup
+
+from edumfa.app import create_app
 from edumfa.lib.usercache import create_filter, get_cache_time
 from edumfa.models import UserCache, db
-from edumfa.app import create_app
-from flask.cli import FlaskGroup
+
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 

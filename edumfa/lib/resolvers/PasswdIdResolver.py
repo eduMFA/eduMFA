@@ -34,13 +34,14 @@
   Dependencies: -
 """
 
-import re
-import os
-import logging
-import crypt
 import codecs
+import crypt
+import logging
+import os
+import re
 
-from edumfa.lib.utils import to_bytes, convert_column_to_unicode
+from edumfa.lib.utils import convert_column_to_unicode, to_bytes
+
 from .UserIdResolver import UserIdResolver
 
 log = logging.getLogger(__name__)

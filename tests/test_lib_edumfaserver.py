@@ -2,17 +2,19 @@
 This test file tests the lib/edumfaserver.py
 """
 
-from .base import MyTestCase
-from edumfa.lib.error import ConfigAdminError
+import responses
+from responses import matchers
+
 from edumfa.lib.edumfaserver import (
     add_edumfaserver,
     delete_edumfaserver,
+    eduMFAServer,
     get_edumfaserver,
     get_edumfaservers,
-    eduMFAServer,
 )
-import responses
-from responses import matchers
+from edumfa.lib.error import ConfigAdminError
+
+from .base import MyTestCase
 
 
 class eduMFAServerTestCase(MyTestCase):

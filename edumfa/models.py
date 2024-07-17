@@ -28,27 +28,30 @@ import binascii
 import logging
 import traceback
 from datetime import datetime, timedelta
+from json import dumps, loads
 
 from dateutil.tz import tzutc
-from json import loads, dumps
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.schema import CreateSequence, Sequence
+
 from edumfa.lib.crypto import (
+    SecretObj,
+    decryptPin,
     encrypt,
     encryptPin,
-    decryptPin,
+    get_rand_digit_str,
     geturandom,
     hash,
-    SecretObj,
-    get_rand_digit_str,
+    pass_hash,
+    verify_pass_hash,
 )
-from sqlalchemy import and_
-from sqlalchemy.schema import Sequence, CreateSequence
-from sqlalchemy.ext.compiler import compiles
-from sqlalchemy.exc import IntegrityError
-from .lib.log import log_with
-from edumfa.lib.utils import is_true, convert_column_to_unicode, hexlify_and_unicode
-from edumfa.lib.crypto import pass_hash, verify_pass_hash
 from edumfa.lib.framework import get_app_config_value
+from edumfa.lib.utils import convert_column_to_unicode, hexlify_and_unicode, is_true
+
+from .lib.log import log_with
 
 log = logging.getLogger(__name__)
 

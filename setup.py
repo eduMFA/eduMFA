@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from setuptools import setup, find_packages, find_namespace_packages
 import os
 import stat
 import sys
+
+from setuptools import find_namespace_packages, find_packages, setup
 
 VERSION = "2.2.0"
 

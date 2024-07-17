@@ -15,14 +15,12 @@ You can update counters like
 
 edumfa-export-linotp-counter.py -c MIGRATION/linotp.ini  | ./tools/edumfa-update-counter.py -c /etc/edumfa/edumfa.cfg -i -
 """
-from sqlalchemy.orm import sessionmaker
-
 import argparse
 import sys
-from sqlalchemy import create_engine
-from sqlalchemy import MetaData, Column
-from sqlalchemy import Integer, Unicode, Boolean
+
+from sqlalchemy import Boolean, Column, Integer, MetaData, Unicode, create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 metadata = MetaData()

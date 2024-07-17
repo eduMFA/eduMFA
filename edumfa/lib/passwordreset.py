@@ -20,18 +20,19 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.models import PasswordReset
-from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper, generate_password
 import logging
-from edumfa.lib.log import log_with
-from edumfa.lib.error import UserError, eduMFAError, ConfigAdminError
-from edumfa.lib.smtpserver import send_email_identifier
-from edumfa.lib.config import get_from_config
-from edumfa.lib.resolver import get_resolver_list
-from edumfa.lib.policy import ACTION, SCOPE, Match
-from sqlalchemy import and_
 from datetime import datetime
 
+from sqlalchemy import and_
+
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import generate_password, hash_with_pepper, verify_with_pepper
+from edumfa.lib.error import ConfigAdminError, UserError, eduMFAError
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, SCOPE, Match
+from edumfa.lib.resolver import get_resolver_list
+from edumfa.lib.smtpserver import send_email_identifier
+from edumfa.models import PasswordReset
 
 __doc__ = """
 This is the library for creating a recovery code for password reset.

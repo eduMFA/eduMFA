@@ -1,8 +1,9 @@
+from logging.config import fileConfig
+from urllib.parse import quote
+
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 from sqlalchemy.engine.url import make_url
-from logging.config import fileConfig
-from urllib.parse import quote
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

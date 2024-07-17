@@ -28,11 +28,9 @@ This file is tested in tests/test_lib_machines.py in the class
 HostsMachineTestCase
 """
 
-from .base import Machine
-from .base import BaseMachineResolver
-from .base import MachineResolverError
-
 import netaddr
+
+from .base import BaseMachineResolver, Machine, MachineResolverError
 
 
 class HostsMachineResolver(BaseMachineResolver):

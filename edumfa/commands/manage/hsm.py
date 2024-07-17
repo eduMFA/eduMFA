@@ -18,10 +18,10 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import click
-
-from edumfa.lib.crypto import create_hsm_object
 from flask import current_app
 from flask.cli import AppGroup
+
+from edumfa.lib.crypto import create_hsm_object
 
 hsm_cli = AppGroup("hsm", help="Manage hardware security modules")
 

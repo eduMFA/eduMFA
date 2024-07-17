@@ -28,24 +28,24 @@ This module is tested in tests/test_api_periodictask.py"""
 import json
 import logging
 
-from flask import Blueprint, g, request, current_app
+from flask import Blueprint, current_app, g, request
 
+from edumfa.api.lib.prepolicy import check_base_action, prepolicy
+from edumfa.api.lib.utils import getParam, send_result
 from edumfa.lib.config import get_edumfa_nodes
-from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
-from edumfa.api.lib.prepolicy import prepolicy, check_base_action
-from edumfa.api.lib.utils import send_result, getParam
 from edumfa.lib.error import ParameterError
-from edumfa.lib.policy import ACTION
 from edumfa.lib.log import log_with
 from edumfa.lib.periodictask import (
-    get_periodic_tasks,
-    set_periodic_task,
     delete_periodic_task,
     enable_periodic_task,
-    get_periodic_task_by_id,
-    get_taskmodule,
     get_available_taskmodules,
+    get_periodic_task_by_id,
+    get_periodic_tasks,
+    get_taskmodule,
+    set_periodic_task,
 )
+from edumfa.lib.policy import ACTION
+from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.lib.utils import is_true
 
 log = logging.getLogger(__name__)

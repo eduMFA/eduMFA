@@ -21,9 +21,9 @@ import ast
 import sys
 
 import click
-from edumfa.lib.policy import set_policy, delete_policy, PolicyClass
 
-from edumfa.lib.event import set_event, delete_event
+from edumfa.lib.event import delete_event, set_event
+from edumfa.lib.policy import PolicyClass, delete_policy, set_policy
 from edumfa.lib.resolver import get_resolver_list, save_resolver
 
 DEFAULT_CONFTYPE_LIST = ("policy", "resolver", "event")

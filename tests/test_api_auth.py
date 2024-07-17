@@ -2,27 +2,28 @@
 """ Test for the '/auth' API-endpoint """
 import logging
 
-from testfixtures import log_capture
-from .base import MyApiTestCase, OverrideConfigTestCase
 import mock
-from edumfa.lib.config import set_edumfa_config, SYSCONF
-from edumfa.lib.policy import set_policy, SCOPE, ACTION, REMOTE_USER, delete_policy
+from testfixtures import log_capture
+
+from edumfa.config import TestingConfig
 from edumfa.lib.auth import create_db_admin
-from edumfa.lib.resolver import save_resolver, delete_resolver
+from edumfa.lib.config import SYSCONF, set_edumfa_config
+from edumfa.lib.event import delete_event, set_event
+from edumfa.lib.eventhandler.base import CONDITION
+from edumfa.lib.policy import ACTION, REMOTE_USER, SCOPE, delete_policy, set_policy
 from edumfa.lib.realm import (
-    set_realm,
-    set_default_realm,
     delete_realm,
     get_default_realm,
+    set_default_realm,
+    set_realm,
 )
-from edumfa.lib.event import set_event, delete_event
-from edumfa.lib.eventhandler.base import CONDITION
+from edumfa.lib.resolver import delete_resolver, save_resolver
 from edumfa.lib.token import get_tokens, remove_token
 from edumfa.lib.user import User
 from edumfa.lib.utils import to_unicode
-from edumfa.config import TestingConfig
-from . import ldap3mock
 
+from . import ldap3mock
+from .base import MyApiTestCase, OverrideConfigTestCase
 
 PWFILE = "tests/testdata/passwd-duplicate-name"
 

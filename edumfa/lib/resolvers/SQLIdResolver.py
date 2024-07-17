@@ -28,41 +28,38 @@ __doc__ = """This is the resolver to find users in SQL databases.
 The file is tested in tests/test_lib_resolver.py
 """
 
-import logging
-import yaml
 import binascii
+import hashlib
+import logging
 import re
+import traceback
 
-from edumfa.lib.resolvers.UserIdResolver import UserIdResolver
-
+import passlib.exc as exc
+import passlib.utils.handlers as uh
+import yaml
+from passlib.context import CryptContext
+from passlib.handlers.ldap_digests import _SaltedBase64DigestHelper
+from passlib.registry import register_crypt_handler
+from passlib.utils import h64, to_unicode
+from passlib.utils.compat import uascii_to_str, unicode as pl_unicode
 from sqlalchemy import (
     Integer,
-    cast,
-    String,
     MetaData,
+    String,
     Table,
     and_,
+    cast,
     create_engine,
-    select,
-    insert,
     delete,
+    insert,
+    select,
 )
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import scoped_session, sessionmaker
 
-import traceback
-import hashlib
-from edumfa.lib.pooling import get_engine
 from edumfa.lib.lifecycle import register_finalizer
-from edumfa.lib.utils import is_true, censor_connect_string, convert_column_to_unicode
-from passlib.context import CryptContext
-from passlib.utils import h64
-from passlib.utils.compat import uascii_to_str
-from passlib.utils.compat import unicode as pl_unicode
-from passlib.utils import to_unicode
-import passlib.utils.handlers as uh
-import passlib.exc as exc
-from passlib.registry import register_crypt_handler
-from passlib.handlers.ldap_digests import _SaltedBase64DigestHelper
+from edumfa.lib.pooling import get_engine
+from edumfa.lib.resolvers.UserIdResolver import UserIdResolver
+from edumfa.lib.utils import censor_connect_string, convert_column_to_unicode, is_true
 
 
 class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no cover

@@ -22,21 +22,25 @@ This script is meant to be invoked periodically by the system cron daemon.
 It runs periodic tasks that are specified in the database.
 """
 __version__ = "0.1"
+import json
 import sys
 import warnings
-import json
 from datetime import datetime
 
+import click
 import dateutil
+from flask import current_app as app
+from flask.cli import FlaskGroup
+
 from edumfa.app import create_app
 from edumfa.lib.config import get_edumfa_node
-from edumfa.lib.periodictask import (get_scheduled_periodic_tasks,
-                                     execute_task, get_periodic_tasks,
-                                     get_periodic_task_by_name,
-                                     set_periodic_task_last_run)
-import click
-from flask.cli import FlaskGroup
-from flask import current_app as app
+from edumfa.lib.periodictask import (
+    execute_task,
+    get_periodic_task_by_name,
+    get_periodic_tasks,
+    get_scheduled_periodic_tasks,
+    set_periodic_task_last_run,
+)
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 

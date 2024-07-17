@@ -12,14 +12,13 @@ Run this script in a cron job. It will read the users from ownCloud and
 * update changed users
 * remove deleted users
 """
-from sqlalchemy import create_engine
-from sqlalchemy.sql import select
-from sqlalchemy.schema import ForeignKey
-from sqlalchemy import Table, MetaData, Column, Integer, Unicode
-import sys
-import json
 import getopt
+import json
+import sys
 
+from sqlalchemy import Column, Integer, MetaData, Table, Unicode, create_engine
+from sqlalchemy.schema import ForeignKey
+from sqlalchemy.sql import select
 
 EXAMPLE_CONFIG_FILE = """{
     "SQL": {

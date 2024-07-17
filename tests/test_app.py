@@ -2,15 +2,17 @@
 """
 This testfile tests the basic app functionality of the privacyIDEA app
 """
-import os
-import unittest
-import flask
 import inspect
 import logging
+import os
+import unittest
+
+import flask
 import mock
 from testfixtures import Comparison, compare
-from edumfa.app import create_app, PiResponseClass
-from edumfa.config import config, TestingConfig
+
+from edumfa.app import PiResponseClass, create_app
+from edumfa.config import TestingConfig, config
 
 dirname = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 

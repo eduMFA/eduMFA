@@ -25,9 +25,10 @@ The postAddSerialToG decorator is tested in the ValidateAPITestCase.
 """
 
 
-import logging
-from flask import g
 import functools
+import logging
+
+from flask import g
 
 log = logging.getLogger(__name__)
 

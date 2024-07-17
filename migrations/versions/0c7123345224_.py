@@ -10,9 +10,8 @@ Create Date: 2019-09-06 13:27:12.020779
 revision = "0c7123345224"
 down_revision = "d756b34061ff"
 
-from alembic import op
 import sqlalchemy as sa
-from sqlalchemy import orm
+from alembic import op
 
 from edumfa.lib.config import get_edumfa_node
 

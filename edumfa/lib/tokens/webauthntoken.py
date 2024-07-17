@@ -24,50 +24,50 @@
 #
 
 import binascii
+import datetime
 import json
+import logging
 
 import jwt
-from OpenSSL import crypto
 from cryptography import x509
+from dateutil.tz import tzlocal
+from flask import current_app
+from OpenSSL import crypto
 
-from edumfa.api.lib.utils import getParam, attestation_certificate_allowed
+from edumfa.api.lib.utils import attestation_certificate_allowed, getParam
+from edumfa.lib import _
 from edumfa.lib.challenge import get_challenges
 from edumfa.lib.config import get_from_config
 from edumfa.lib.crypto import geturandom
 from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.error import ParameterError, EnrollmentError, PolicyError
-from edumfa.lib.token import get_tokens, get_tokens_from_serial_or_user
-from edumfa.lib.tokenclass import TokenClass, CLIENTMODE, ROLLOUTSTATE
-from edumfa.lib.tokens.webauthn import (
-    COSE_ALGORITHM,
-    webauthn_b64_encode,
-    WebAuthnRegistrationResponse,
-    ATTESTATION_REQUIREMENT_LEVEL,
-    webauthn_b64_decode,
-    WebAuthnMakeCredentialOptions,
-    WebAuthnAssertionOptions,
-    WebAuthnUser,
-    WebAuthnAssertionResponse,
-    AuthenticationRejectedException,
-    USER_VERIFICATION_LEVEL,
-    RESIDENT_KEY_LEVEL,
-    AuthenticatorDataFlags,
-)
-from edumfa.lib.tokens.u2ftoken import IMAGES
+from edumfa.lib.error import EnrollmentError, ParameterError, PolicyError
 from edumfa.lib.log import log_with
-import logging
-from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, GROUP, ACTION
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.token import get_tokens, get_tokens_from_serial_or_user
+from edumfa.lib.tokenclass import CLIENTMODE, ROLLOUTSTATE, TokenClass
+from edumfa.lib.tokens.u2ftoken import IMAGES
+from edumfa.lib.tokens.webauthn import (
+    ATTESTATION_REQUIREMENT_LEVEL,
+    COSE_ALGORITHM,
+    RESIDENT_KEY_LEVEL,
+    USER_VERIFICATION_LEVEL,
+    AuthenticationRejectedException,
+    AuthenticatorDataFlags,
+    WebAuthnAssertionOptions,
+    WebAuthnAssertionResponse,
+    WebAuthnMakeCredentialOptions,
+    WebAuthnRegistrationResponse,
+    WebAuthnUser,
+    webauthn_b64_decode,
+    webauthn_b64_encode,
+)
 from edumfa.lib.user import User
 from edumfa.lib.utils import (
+    convert_imagefile_to_dataimage,
     hexlify_and_unicode,
     is_true,
     to_unicode,
-    convert_imagefile_to_dataimage,
 )
-from flask import current_app
-import datetime
-from dateutil.tz import tzlocal
 
 __doc__ = """
 WebAuthn  is the Web Authentication API specified by the FIDO Alliance.

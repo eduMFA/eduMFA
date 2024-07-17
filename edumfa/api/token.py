@@ -31,105 +31,107 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from flask import Blueprint, request, g, current_app
-from ..lib.log import log_with
-from .lib.utils import optional, send_result, send_csv_result, required, getParam
-from ..lib.user import get_user_from_param
-from ..lib.token import (
-    init_token,
-    get_tokens_paginate,
-    assign_token,
-    unassign_token,
-    remove_token,
-    enable_token,
-    revoke_token,
-    reset_token,
-    resync_token,
-    set_pin_so,
-    set_pin_user,
-    set_pin,
-    set_description,
-    set_count_window,
-    set_sync_window,
-    set_count_auth,
-    set_hashlib,
-    set_max_failcount,
-    set_realms,
-    copy_token_user,
-    copy_token_pin,
-    lost_token,
-    get_serial_by_otp,
-    get_tokens,
-    set_validity_period_end,
-    set_validity_period_start,
-    add_tokeninfo,
-    delete_tokeninfo,
-    import_token,
-    assign_tokengroup,
-    unassign_tokengroup,
-    set_tokengroups,
-)
-from werkzeug.datastructures import FileStorage
-from cgi import FieldStorage
-from edumfa.lib.error import ParameterError, TokenAdminError
-from edumfa.lib.importotp import (
-    parseOATHcsv,
-    parseSafeNetXML,
-    parseYubicoCSV,
-    parsePSKCdata,
-    GPGImport,
-)
+import json
 import logging
-from edumfa.lib.utils import to_unicode
-from edumfa.lib.policy import ACTION
-from edumfa.lib.challenge import get_challenges_paginate
-from edumfa.api.lib.prepolicy import (
-    prepolicy,
-    check_base_action,
-    check_token_init,
-    check_token_upload,
-    check_max_token_user,
-    check_max_token_realm,
-    init_tokenlabel,
-    init_random_pin,
-    init_token_length_contents,
-    set_random_pin,
-    encrypt_pin,
-    check_otp_pin,
-    check_external,
-    init_token_defaults,
-    enroll_pin,
-    papertoken_count,
-    tantoken_count,
-    u2ftoken_allowed,
-    u2ftoken_verify_cert,
-    twostep_enrollment_activation,
-    twostep_enrollment_parameters,
-    sms_identifiers,
-    pushtoken_add_config,
-    check_admin_tokenlist,
-    verify_enrollment,
-    indexedsecret_force_attribute,
-    check_admin_tokenlist,
-    webauthntoken_enroll,
-    webauthntoken_allowed,
-    webauthntoken_request,
-    required_piv_attestation,
-    hide_tokeninfo,
-    init_ca_connector,
-    init_ca_template,
-    init_subject_components,
-    require_description,
-)
+from cgi import FieldStorage
+
+from flask import Blueprint, current_app, g, request
+from werkzeug.datastructures import FileStorage
+
+from edumfa.api.auth import admin_required
 from edumfa.api.lib.postpolicy import (
-    save_pin_change,
     check_verify_enrollment,
     postpolicy,
+    save_pin_change,
 )
+from edumfa.api.lib.prepolicy import (
+    check_admin_tokenlist,
+    check_base_action,
+    check_external,
+    check_max_token_realm,
+    check_max_token_user,
+    check_otp_pin,
+    check_token_init,
+    check_token_upload,
+    encrypt_pin,
+    enroll_pin,
+    hide_tokeninfo,
+    indexedsecret_force_attribute,
+    init_ca_connector,
+    init_ca_template,
+    init_random_pin,
+    init_subject_components,
+    init_token_defaults,
+    init_token_length_contents,
+    init_tokenlabel,
+    papertoken_count,
+    prepolicy,
+    pushtoken_add_config,
+    require_description,
+    required_piv_attestation,
+    set_random_pin,
+    sms_identifiers,
+    tantoken_count,
+    twostep_enrollment_activation,
+    twostep_enrollment_parameters,
+    u2ftoken_allowed,
+    u2ftoken_verify_cert,
+    verify_enrollment,
+    webauthntoken_allowed,
+    webauthntoken_enroll,
+    webauthntoken_request,
+)
+from edumfa.lib.challenge import get_challenges_paginate
+from edumfa.lib.error import ParameterError, TokenAdminError
 from edumfa.lib.event import event
-from edumfa.api.auth import admin_required
+from edumfa.lib.importotp import (
+    GPGImport,
+    parseOATHcsv,
+    parsePSKCdata,
+    parseSafeNetXML,
+    parseYubicoCSV,
+)
+from edumfa.lib.policy import ACTION
 from edumfa.lib.subscriptions import CheckSubscription
-import json
+from edumfa.lib.utils import to_unicode
+
+from ..lib.log import log_with
+from ..lib.token import (
+    add_tokeninfo,
+    assign_token,
+    assign_tokengroup,
+    copy_token_pin,
+    copy_token_user,
+    delete_tokeninfo,
+    enable_token,
+    get_serial_by_otp,
+    get_tokens,
+    get_tokens_paginate,
+    import_token,
+    init_token,
+    lost_token,
+    remove_token,
+    reset_token,
+    resync_token,
+    revoke_token,
+    set_count_auth,
+    set_count_window,
+    set_description,
+    set_hashlib,
+    set_max_failcount,
+    set_pin,
+    set_pin_so,
+    set_pin_user,
+    set_realms,
+    set_sync_window,
+    set_tokengroups,
+    set_validity_period_end,
+    set_validity_period_start,
+    unassign_token,
+    unassign_tokengroup,
+)
+from ..lib.user import get_user_from_param
+from .lib.utils import getParam, optional, required, send_csv_result, send_result
 
 token_blueprint = Blueprint("token_blueprint", __name__)
 log = logging.getLogger(__name__)

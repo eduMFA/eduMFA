@@ -4,9 +4,12 @@ This test file tests the test.ldap3mock
 """
 
 import unittest
+
 import ldap3
-from . import ldap3mock
+
 from edumfa.lib.resolvers.LDAPIdResolver import trim_objectGUID
+
+from . import ldap3mock
 
 objectGUIDs = [
     "039b36ef-e7c0-42f3-9bf9-ca6a6c0d4d31",

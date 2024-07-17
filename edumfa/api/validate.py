@@ -51,82 +51,79 @@ In case if authenticating a serial number:
 
 """
 
+import json
+import logging
 import threading
 
-from flask import Blueprint, request, g, current_app
-from edumfa.lib.user import get_user_from_param, log_used_user
-from .lib.utils import send_result, getParam
-from ..lib.decorators import check_user_or_serial_in_request
-from .lib.utils import required
-from edumfa.lib.error import ParameterError
-from edumfa.lib.token import (
-    check_user_pass,
-    check_serial_pass,
-    check_otp,
-    create_challenges_from_tokens,
-    create_challenge_without_token,
-    get_one_token,
-)
-from edumfa.lib.utils import is_true
-from edumfa.api.lib.utils import get_all_params
-from edumfa.lib.config import (
-    return_saml_attributes,
-    get_from_config,
-    return_saml_attributes_on_fail,
-    SYSCONF,
-    ensure_no_config_object,
-    get_edumfa_node,
-)
-from edumfa.lib.audit import getAudit
+from flask import Blueprint, current_app, g, request
+
+from edumfa.api.auth import admin_required
 from edumfa.api.lib.decorators import add_serial_from_response_to_g
+from edumfa.api.lib.postpolicy import (
+    add_user_detail_to_response,
+    autoassign,
+    check_serial,
+    check_tokeninfo,
+    check_tokentype,
+    construct_radius_response,
+    is_authorized,
+    mangle_challenge_response,
+    multichallenge_enroll_via_validate,
+    no_detail_on_fail,
+    no_detail_on_success,
+    offline_info,
+    postpolicy,
+    preferred_client_mode,
+)
 from edumfa.api.lib.prepolicy import (
-    prepolicy,
-    set_realm,
     api_key_required,
-    mangle,
-    save_client_application_type,
+    check_application_tokentype,
     check_base_action,
+    increase_failcounter_on_challenge,
+    legacypushtoken_wait,
+    mangle,
+    prepolicy,
     pushtoken_wait,
+    save_client_application_type,
+    set_realm,
     webauthntoken_auth,
     webauthntoken_authz,
     webauthntoken_request,
-    check_application_tokentype,
-    increase_failcounter_on_challenge,
-    legacypushtoken_wait,
 )
-from edumfa.api.lib.postpolicy import (
-    postpolicy,
-    check_tokentype,
-    check_serial,
-    check_tokeninfo,
-    no_detail_on_fail,
-    no_detail_on_success,
-    autoassign,
-    offline_info,
-    add_user_detail_to_response,
-    construct_radius_response,
-    mangle_challenge_response,
-    is_authorized,
-    multichallenge_enroll_via_validate,
-    preferred_client_mode,
-)
-from edumfa.lib.policy import PolicyClass
-from edumfa.lib.event import EventConfiguration
-import logging
-from edumfa.api.register import register_blueprint
+from edumfa.api.lib.utils import get_all_params
 from edumfa.api.recover import recover_blueprint
-from edumfa.lib.utils import get_client_ip
-from edumfa.lib.event import event
-from edumfa.lib.challenge import get_challenges, extract_answered_challenges
-from edumfa.lib.subscriptions import CheckSubscription
-from edumfa.api.auth import admin_required
-from edumfa.lib.policy import ACTION
-from edumfa.lib.token import get_tokens
-from edumfa.lib.machine import list_machine_tokens
+from edumfa.api.register import register_blueprint
 from edumfa.lib.applications.offline import MachineApplication
-import json
+from edumfa.lib.audit import getAudit
+from edumfa.lib.challenge import extract_answered_challenges, get_challenges
+from edumfa.lib.config import (
+    SYSCONF,
+    ensure_no_config_object,
+    get_edumfa_node,
+    get_from_config,
+    return_saml_attributes,
+    return_saml_attributes_on_fail,
+)
+from edumfa.lib.error import ParameterError
+from edumfa.lib.event import EventConfiguration, event
+from edumfa.lib.machine import list_machine_tokens
+from edumfa.lib.policy import ACTION, PolicyClass
+from edumfa.lib.subscriptions import CheckSubscription
+from edumfa.lib.token import (
+    check_otp,
+    check_serial_pass,
+    check_user_pass,
+    create_challenge_without_token,
+    create_challenges_from_tokens,
+    get_one_token,
+    get_tokens,
+)
+from edumfa.lib.user import get_user_from_param, log_used_user
+from edumfa.lib.utils import get_client_ip, is_true
 
+from ..lib.decorators import check_user_or_serial_in_request
 from ..lib.framework import get_app_config_value
+from .lib.utils import getParam, required, send_result
 
 log = logging.getLogger(__name__)
 

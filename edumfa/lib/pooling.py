@@ -34,7 +34,7 @@ This module is tested in tests/test_lib_pooling.py.
 import logging
 from threading import Lock
 
-from edumfa.lib.framework import get_app_local_store, get_app_config_value
+from edumfa.lib.framework import get_app_config_value, get_app_local_store
 
 log = logging.getLogger(__name__)
 

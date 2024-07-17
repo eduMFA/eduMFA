@@ -31,20 +31,20 @@
 """
 The code of this module is tested in tests/test_api_system.py
 """
-from flask import Blueprint, request
-from .lib.utils import getParam, optional, required, send_result
-from ..lib.log import log_with
-from ..lib.resolver import (
-    get_resolver_list,
-    save_resolver,
-    delete_resolver,
-    pretestresolver,
-)
-from flask import g
 import logging
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from ..lib.policy import ACTION
 
+from flask import Blueprint, g, request
+
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.log import log_with
+from ..lib.policy import ACTION
+from ..lib.resolver import (
+    delete_resolver,
+    get_resolver_list,
+    pretestresolver,
+    save_resolver,
+)
+from .lib.utils import getParam, optional, required, send_result
 
 log = logging.getLogger(__name__)
 

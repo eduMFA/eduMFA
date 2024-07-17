@@ -20,15 +20,14 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+import datetime
 import functools
-
 import logging
 
-import datetime
+from sqlalchemy import and_
 
 from edumfa.lib.config import get_from_config
 from edumfa.models import UserCache, db
-from sqlalchemy import and_
 
 log = logging.getLogger(__name__)
 EXPIRATION_SECONDS = "UserCacheExpiration"

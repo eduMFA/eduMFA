@@ -36,23 +36,28 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from dateutil import parser
-from dateutil.tz import tzlocal, tzutc
-
-from edumfa.lib.policy import ACTION
-from edumfa.lib.utils import parse_legacy_time, to_unicode
-from edumfa.lib.importotp import export_pskc
-from edumfa.lib.token import (get_tokens, remove_token, enable_token,
-                            unassign_token, import_token,
-                            get_tokens_paginated_generator)
-from edumfa.lib.user import User, split_user
-from edumfa.lib.realm import get_default_realm
-from edumfa.models import Token
-from edumfa.app import create_app
 import re
 import sys
-from yaml import safe_dump as yaml_safe_dump
-from yaml import safe_load as yaml_safe_load
+
+from dateutil import parser
+from dateutil.tz import tzlocal, tzutc
+from yaml import safe_dump as yaml_safe_dump, safe_load as yaml_safe_load
+
+from edumfa.app import create_app
+from edumfa.lib.importotp import export_pskc
+from edumfa.lib.policy import ACTION
+from edumfa.lib.realm import get_default_realm
+from edumfa.lib.token import (
+    enable_token,
+    get_tokens,
+    get_tokens_paginated_generator,
+    import_token,
+    remove_token,
+    unassign_token,
+)
+from edumfa.lib.user import User, split_user
+from edumfa.lib.utils import parse_legacy_time, to_unicode
+from edumfa.models import Token
 
 __version__ = "0.1"
 
@@ -114,8 +119,8 @@ Actions:
 """.format("|".join(ALLOWED_ACTIONS))
 
 import click
-from flask.cli import FlaskGroup
 from flask import current_app as app
+from flask.cli import FlaskGroup
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 

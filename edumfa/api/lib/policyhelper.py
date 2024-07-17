@@ -27,9 +27,10 @@ Like policies, that are supposed to read and pass parameters during enrollment o
 """
 
 import logging
-from edumfa.lib.log import log_with
-from edumfa.lib.policy import Match, SCOPE, ACTION
+
 from edumfa.lib.error import PolicyError
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, SCOPE, Match
 from edumfa.lib.tokens.webauthntoken import WEBAUTHNACTION
 
 log = logging.getLogger(__name__)

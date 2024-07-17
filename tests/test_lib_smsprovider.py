@@ -9,33 +9,34 @@ This test file tests the modules:
  lib.smsprovider.httpmessagetouidprovider
 """
 
-from .base import MyTestCase
-from edumfa.lib.smsprovider.HttpSMSProvider import HttpSMSProvider
-from edumfa.lib.smsprovider.SipgateSMSProvider import SipgateSMSProvider
-from edumfa.lib.smsprovider.SipgateSMSProvider import URL
-from edumfa.lib.smsprovider.SmtpSMSProvider import SmtpSMSProvider
-from edumfa.lib.smsprovider.SmppSMSProvider import SmppSMSProvider
-from edumfa.lib.smsprovider.ScriptSMSProvider import ScriptSMSProvider, SCRIPT_WAIT
-from edumfa.lib.smsprovider.HttpMessageToUidProvider import HttpMessageToUidProvider
-from edumfa.lib.smsprovider.SMSProvider import (
-    SMSError,
-    get_sms_provider_class,
-    set_smsgateway,
-    get_smsgateway,
-    delete_smsgateway,
-    delete_smsgateway_option,
-    delete_smsgateway_header,
-    delete_smsgateway_key_generic,
-    create_sms_instance,
-)
-from edumfa.lib.smsprovider.SMSProvider import ISMSProvider
-from edumfa.lib.smtpserver import add_smtpserver
+import os
+
+import mock
 import responses
 from responses import json_params_matcher
-import os
-from . import smtpmock
-from . import smppmock
-import mock
+
+from edumfa.lib.smsprovider.HttpMessageToUidProvider import HttpMessageToUidProvider
+from edumfa.lib.smsprovider.HttpSMSProvider import HttpSMSProvider
+from edumfa.lib.smsprovider.ScriptSMSProvider import SCRIPT_WAIT, ScriptSMSProvider
+from edumfa.lib.smsprovider.SipgateSMSProvider import URL, SipgateSMSProvider
+from edumfa.lib.smsprovider.SmppSMSProvider import SmppSMSProvider
+from edumfa.lib.smsprovider.SMSProvider import (
+    ISMSProvider,
+    SMSError,
+    create_sms_instance,
+    delete_smsgateway,
+    delete_smsgateway_header,
+    delete_smsgateway_key_generic,
+    delete_smsgateway_option,
+    get_sms_provider_class,
+    get_smsgateway,
+    set_smsgateway,
+)
+from edumfa.lib.smsprovider.SmtpSMSProvider import SmtpSMSProvider
+from edumfa.lib.smtpserver import add_smtpserver
+
+from . import smppmock, smtpmock
+from .base import MyTestCase
 
 
 class SMSTestCase(MyTestCase):

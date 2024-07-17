@@ -32,16 +32,16 @@ import yaml
 from flask.cli import AppGroup
 
 from edumfa.commands.manage.helper import (
-    conf_import,
     conf_export,
-    get_conf_resolver,
+    conf_import,
     get_conf_event,
     get_conf_policy,
+    get_conf_resolver,
+    import_conf_event,
     import_conf_policy,
     import_conf_resolver,
-    import_conf_event,
 )
-from edumfa.lib.utils.export import IMPORT_FUNCTIONS, EXPORT_FUNCTIONS
+from edumfa.lib.utils.export import EXPORT_FUNCTIONS, IMPORT_FUNCTIONS
 
 config_cli = AppGroup("config", help="Manage your eduMFA configuration")
 

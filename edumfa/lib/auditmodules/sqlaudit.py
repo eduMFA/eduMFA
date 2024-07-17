@@ -38,24 +38,22 @@ If the EDUMFA_AUDIT_SQL_URI is omitted the Audit data is written to the
 token database.
 """
 
+import datetime
 import logging
+import traceback
 from collections import OrderedDict
+
+from sqlalchemy import MetaData, String, and_, asc, cast, create_engine, desc, or_
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.sql.expression import FunctionElement
+
 from edumfa.lib.auditmodules.base import Audit as AuditBase, Paginate
 from edumfa.lib.crypto import Sign
-from edumfa.lib.pooling import get_engine
-from edumfa.lib.utils import censor_connect_string
 from edumfa.lib.lifecycle import register_finalizer
-from edumfa.lib.utils import truncate_comma_list, is_true
-from sqlalchemy import MetaData, cast, String
-from sqlalchemy import asc, desc, and_, or_
-from sqlalchemy.sql.expression import FunctionElement
-from sqlalchemy.ext.compiler import compiles
-import datetime
-import traceback
-from edumfa.models import audit_column_length as column_length
-from edumfa.models import Audit as LogEntry
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
+from edumfa.lib.pooling import get_engine
+from edumfa.lib.utils import censor_connect_string, is_true, truncate_comma_list
+from edumfa.models import Audit as LogEntry, audit_column_length as column_length
 
 log = logging.getLogger(__name__)
 

@@ -27,12 +27,12 @@ This file contains the definition of the application specific password token cla
 """
 
 import logging
-from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
-from edumfa.lib.log import log_with
-from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
-from edumfa.api.lib.utils import getParam
 
+from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
 
 TOKENINFO_KEY = "service_id"
 

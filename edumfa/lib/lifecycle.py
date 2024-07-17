@@ -21,6 +21,7 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import logging
+
 from edumfa.lib.framework import get_request_local_store
 
 log = logging.getLogger(__name__)

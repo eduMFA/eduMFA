@@ -50,8 +50,6 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-from typing import Dict
-
 import binascii
 import codecs
 import hashlib
@@ -59,25 +57,26 @@ import json
 import logging
 import os
 import struct
+from typing import Dict
 
 import cbor2
 import cryptography.x509
-from OpenSSL import crypto
 from cryptography import x509
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import constant_time
 from cryptography.hazmat.primitives.asymmetric.ec import (
-    EllipticCurvePublicNumbers,
-    SECP256R1,
     ECDSA,
+    SECP256R1,
+    EllipticCurvePublicNumbers,
 )
-from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15, PSS, MGF1
+from cryptography.hazmat.primitives.asymmetric.padding import MGF1, PSS, PKCS1v15
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
-from cryptography.hazmat.primitives.hashes import SHA256, SHA1
+from cryptography.hazmat.primitives.hashes import SHA1, SHA256
 from cryptography.x509 import load_der_x509_certificate
+from OpenSSL import crypto
 
-from edumfa.lib.tokens.u2f import url_encode, url_decode
+from edumfa.lib.tokens.u2f import url_decode, url_encode
 from edumfa.lib.utils import to_bytes, to_unicode
 
 __doc__ = """

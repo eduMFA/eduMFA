@@ -26,11 +26,11 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from logging import Formatter
-import string
-import logging
 import functools
+import logging
+import string
 from copy import deepcopy
+from logging import Formatter
 
 log = logging.getLogger(__name__)
 

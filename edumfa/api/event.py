@@ -29,18 +29,19 @@ Configuration. Event handling configuration is stored in the database table
 
 The code of this module is tested in tests/test_api_events.py
 """
-from flask import Blueprint, request
-from .lib.utils import getParam, send_result
-from ..lib.log import log_with
-from ..lib.event import set_event, delete_event, enable_event
-from flask import g
+import json
 import logging
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from ..lib.policy import ACTION
+
+from flask import Blueprint, g, request
+
 from edumfa.lib.event import AVAILABLE_EVENTS, get_handler_object
 from edumfa.lib.utils import is_true
-import json
 
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.event import delete_event, enable_event, set_event
+from ..lib.log import log_with
+from ..lib.policy import ACTION
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 

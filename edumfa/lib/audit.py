@@ -52,7 +52,7 @@ from collections import OrderedDict
 
 log = logging.getLogger(__name__)
 from edumfa.lib.log import log_with
-from edumfa.lib.utils import parse_timedelta, get_module_class
+from edumfa.lib.utils import get_module_class, parse_timedelta
 
 
 @log_with(log, log_entry=False)

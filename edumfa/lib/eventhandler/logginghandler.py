@@ -29,11 +29,12 @@ It can be bound to each event and can perform the action:
 
 The module is tested in tests/test_lib_eventhandler_logging.py
 """
+import logging
+
+from edumfa.lib import _
 from edumfa.lib.eventhandler.base import BaseEventHandler
 from edumfa.lib.token import get_tokens
-from edumfa.lib.utils import create_tag_dict, to_unicode, is_true
-from edumfa.lib import _
-import logging
+from edumfa.lib.utils import create_tag_dict, is_true, to_unicode
 
 log = logging.getLogger(__name__)
 
