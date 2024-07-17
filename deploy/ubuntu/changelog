@@ -1,3 +1,16 @@
+edumfa (2.2.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+ 
+  * chore(deps): update dependency google-auth to v2.32.0
+  * chore(deps): update dependency sphinx to v7.4.0
+  * chore(deps): update dependency setuptools to v70 [security]
+  * chore(deps): update dependency setuptools to v70.3.0
+  * chore(deps): update dependency croniter to v2.0.7 
+  * chore(deps): update dependency cachetools to v5.4.0 
+  * chore(deps): update dependency sphinx to v7.4.5
+  * RADIUS: add support to enforce Message-Authenticator
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Wed, 17 Jul 2024 08:00:00 +0200
+
 edumfa (2.1.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   * fix: corrected typo in e-mail address
