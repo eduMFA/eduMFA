@@ -36,11 +36,11 @@
 ## eduMFA 2.2.0 
 
 > [!CAUTION]
-> **This release fixes a possible security vulnerabilty.**
+> **This release fixes a possible security vulnerability.**
 >
 > eduMFA prior version 2.2.0 was also affected by [blastRADIUS](https://www.blastradius.fail/) ([CVE-2024-3596](https://nvd.nist.gov/vuln/detail/CVE-2024-3596)). In case you are using the RADIUS Token we strongly recommend you to upgrade to version 2.2.0. 
 >
-> Please note that this upgrade requires a database migration and you must replace the radius dictonary used by eduMFA! Beside these changes you should enable the `Message Authenticator` option introduced in the UI in case your RADIUS server supports this option.
+> Please note that this upgrade requires a database migration and you must replace the radius dictionary used by eduMFA! Beside these changes you should enable the `Message Authenticator` option introduced in the UI in case your RADIUS server supports this option.
 > 
 > Thanks a lot to @Janfred for the hint and @sklemer1 for the fix!
 
