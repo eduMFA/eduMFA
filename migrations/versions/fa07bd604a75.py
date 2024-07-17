@@ -7,13 +7,12 @@ Create Date: 2021-05-18 23:29:59.273457
 """
 
 # revision identifiers, used by Alembic.
-revision = 'fa07bd604a75'
-down_revision = '3ba618f6b820'
+revision = "fa07bd604a75"
+down_revision = "3ba618f6b820"
 
 from edumfa.lib.smsprovider.SMSProvider import get_smsgateway, delete_smsgateway_option
 from edumfa.lib.tokens.pushtoken import GWTYPE, PushTokenClass
 from edumfa.lib.policy import PolicyClass, set_policy, SCOPE
-
 
 
 def upgrade():
@@ -22,14 +21,18 @@ def upgrade():
     print(fb_gateways)
     # 2. Check which policy contains this Firebase Config
     P = PolicyClass()
-    pols = P.list_policies(scope=SCOPE.ENROLL,
-                           action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG!s}")
+    pols = P.list_policies(
+        scope=SCOPE.ENROLL, action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG!s}"
+    )
 
     # iterate through all enrollment policies
     for pol in pols:
         # Check for all firebase gateways, if this policy needs to be modified
         for fbgw in fb_gateways:
-            if pol.get("action").get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG) == fbgw.identifier:
+            if (
+                pol.get("action").get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG)
+                == fbgw.identifier
+            ):
                 print(f"Modifying policy {pol.get('name')!s}")
                 # This is an enrollment policy, that references this very firebase config
                 # 3. Add the push_registration_url and ttl to this policy
@@ -45,11 +48,13 @@ def upgrade():
                     action[PUSH_ACTION.REGISTRATION_URL] = registration_url
                 if ttl:
                     action[PUSH_ACTION.TTL] = ttl
-                r = set_policy(name=pol.get("name"),
-                               scope=SCOPE.ENROLL,
-                               active=pol.get("active"),
-                               check_all_resolvers=pol.get("check_all_resolvers"),
-                               action=action)
+                r = set_policy(
+                    name=pol.get("name"),
+                    scope=SCOPE.ENROLL,
+                    active=pol.get("active"),
+                    check_all_resolvers=pol.get("check_all_resolvers"),
+                    action=action,
+                )
                 print(f"+- Updated policy {pol.get('name')!s}: {r!s}")
                 # 4. Delete push_registration_url and ttl from the Firebase Config
                 #    Note: If we had a firebase config, that would not be used in a policy,
