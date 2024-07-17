@@ -46,32 +46,39 @@ def get_init_tokenlabel_parameters(g, params=None, token_type="hotp", user_objec
     :return: modified request parameters
     """
     params = params or {}
-    label_pols = Match.user(g, scope=SCOPE.ENROLL, action=ACTION.TOKENLABEL,
-                            user_object=user_object).action_values(unique=True, allow_white_space_in_action=True)
+    label_pols = Match.user(
+        g, scope=SCOPE.ENROLL, action=ACTION.TOKENLABEL, user_object=user_object
+    ).action_values(unique=True, allow_white_space_in_action=True)
     if len(label_pols) == 1:
         # The policy was set, so we need to set the tokenlabel in the request.
         params[ACTION.TOKENLABEL] = list(label_pols)[0]
 
-    label_pols = Match.user(g, scope=SCOPE.ENROLL, action=WEBAUTHNACTION.TOKENLABEL,
-                            user_object=user_object).action_values(unique=True, allow_white_space_in_action=True)
+    label_pols = Match.user(
+        g, scope=SCOPE.ENROLL, action=WEBAUTHNACTION.TOKENLABEL, user_object=user_object
+    ).action_values(unique=True, allow_white_space_in_action=True)
     if len(label_pols) == 1:
         # The policy was set, so we need to set the tokenlabel in the request.
         params[WEBAUTHNACTION.TOKENLABEL] = list(label_pols)[0]
 
-    issuer_pols = Match.user(g, scope=SCOPE.ENROLL, action=ACTION.TOKENISSUER,
-                             user_object=user_object).action_values(unique=True, allow_white_space_in_action=True)
+    issuer_pols = Match.user(
+        g, scope=SCOPE.ENROLL, action=ACTION.TOKENISSUER, user_object=user_object
+    ).action_values(unique=True, allow_white_space_in_action=True)
     if len(issuer_pols) == 1:
         params[ACTION.TOKENISSUER] = list(issuer_pols)[0]
 
-    imageurl_pols = Match.user(g, scope=SCOPE.ENROLL, action=ACTION.APPIMAGEURL,
-                               user_object=user_object).action_values(unique=True, allow_white_space_in_action=True)
+    imageurl_pols = Match.user(
+        g, scope=SCOPE.ENROLL, action=ACTION.APPIMAGEURL, user_object=user_object
+    ).action_values(unique=True, allow_white_space_in_action=True)
     if len(imageurl_pols) == 1:
         params[ACTION.APPIMAGEURL] = list(imageurl_pols)[0]
 
     # check the force_app_pin policy
-    app_pin_pols = Match.user(g, scope=SCOPE.ENROLL,
-                              action=f'{token_type!s}_{ACTION.FORCE_APP_PIN!s}',
-                              user_object=user_object).any()
+    app_pin_pols = Match.user(
+        g,
+        scope=SCOPE.ENROLL,
+        action=f"{token_type!s}_{ACTION.FORCE_APP_PIN!s}",
+        user_object=user_object,
+    ).any()
     if app_pin_pols:
         params[ACTION.FORCE_APP_PIN] = True
 
@@ -100,7 +107,9 @@ def get_pushtoken_add_config(g, params=None, user_obj=None):
     if len(firebase_config) == 1:
         params[PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG] = list(firebase_config)[0]
     else:
-        raise PolicyError(f"Missing enrollment policy for push token: {PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG!s}")
+        raise PolicyError(
+            f"Missing enrollment policy for push token: {PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG!s}"
+        )
 
     # Get the sslverify definition from the policies
     ssl_verify = Match.user(
@@ -124,7 +133,9 @@ def get_pushtoken_add_config(g, params=None, user_obj=None):
     if len(registration_url) == 1:
         params[PushTokenClass.PUSH_ACTION.REGISTRATION_URL] = list(registration_url)[0]
     else:
-        raise PolicyError(f"Missing enrollment policy for push token: {PushTokenClass.PUSH_ACTION.REGISTRATION_URL!s}")
+        raise PolicyError(
+            f"Missing enrollment policy for push token: {PushTokenClass.PUSH_ACTION.REGISTRATION_URL!s}"
+        )
     ttl = Match.user(
         g,
         scope=SCOPE.ENROLL,
@@ -158,9 +169,13 @@ def get_legacypushtoken_add_config(g, params=None, user_obj=None):
         user_object=user_obj if user_obj else None,
     ).action_values(unique=True, allow_white_space_in_action=True)
     if len(firebase_config) == 1:
-        params[LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG] = list(firebase_config)[0]
+        params[LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG] = list(
+            firebase_config
+        )[0]
     else:
-        raise PolicyError(f"Missing enrollment policy for push token: {LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG!s}")
+        raise PolicyError(
+            f"Missing enrollment policy for push token: {LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG!s}"
+        )
 
     # Get the sslverify definition from the policies
     ssl_verify = Match.user(
@@ -182,9 +197,13 @@ def get_legacypushtoken_add_config(g, params=None, user_obj=None):
         user_object=user_obj if user_obj else None,
     ).action_values(unique=True, allow_white_space_in_action=True)
     if len(registration_url) == 1:
-        params[LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL] = list(registration_url)[0]
+        params[LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL] = list(
+            registration_url
+        )[0]
     else:
-        raise PolicyError(f"Missing enrollment policy for push token: {LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL!s}")
+        raise PolicyError(
+            f"Missing enrollment policy for push token: {LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL!s}"
+        )
     ttl = Match.user(
         g,
         scope=SCOPE.ENROLL,

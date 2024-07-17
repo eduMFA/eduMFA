@@ -23,7 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-__doc__="""This module provides sending SMS via sipgate
+__doc__ = """This module provides sending SMS via sipgate
 
 The code is tested in tests/test_lib_smsprovider
 """
@@ -31,10 +31,11 @@ from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
 from edumfa.lib import _
 import logging
 import requests
+
 log = logging.getLogger(__name__)
 
 
-REQUEST_XML='''<?xml version="1.0" encoding="UTF-8"?>
+REQUEST_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <methodCall>
 <methodName>samurai.SessionInitiate</methodName>
 <params>
@@ -57,7 +58,7 @@ REQUEST_XML='''<?xml version="1.0" encoding="UTF-8"?>
 </value>
 </param>
 </params>
-</methodCall>'''
+</methodCall>"""
 
 URL = "https://samurai.sipgate.net/RPC2"
 
@@ -77,20 +78,21 @@ class SipgateSMSProvider(ISMSProvider):
         else:
             username = self.config.get("USERNAME")
             password = self.config.get("PASSWORD")
-            proxy = self.config.get('PROXY')
+            proxy = self.config.get("PROXY")
         proxies = None
         if proxy:
             protocol = proxy.split(":")[0]
             proxies = {protocol: proxy}
 
         log.debug(f"submitting message {message!r} to {phone!s}")
-        r = requests.post(URL,
-                          data=REQUEST_XML % (phone.strip().strip("+"),
-                                              message),
-                          headers={'content-type': 'text/xml'},
-                          auth=(username, password),
-                          proxies=proxies,
-                          timeout=60)
+        r = requests.post(
+            URL,
+            data=REQUEST_XML % (phone.strip().strip("+"), message),
+            headers={"content-type": "text/xml"},
+            auth=(username, password),
+            proxies=proxies,
+            timeout=60,
+        )
 
         log.debug(f"SMS submitted: {r.status_code!s}")
         log.debug(f"response content: {r.text!s}")
@@ -109,21 +111,15 @@ class SipgateSMSProvider(ISMSProvider):
         :return: dict
         """
         from edumfa.lib.smtpserver import get_smtpservers
-        params = {"options_allowed": False,
-                  "headers_allowed": False,
-                  "parameters": {
-                      "USERNAME": {
-                          "required": True,
-                          "description": "The sipgate username."},
-                      "PASSWORD": {
-                          "required": True,
-                          "description": "The sipgate password."},
-                      "PROXY": {
-                          "description": "An optional proxy URI."
-                      },
-                      "REGEXP": {
-                          "description": cls.regexp_description
-                      }
-                  }
-                  }
+
+        params = {
+            "options_allowed": False,
+            "headers_allowed": False,
+            "parameters": {
+                "USERNAME": {"required": True, "description": "The sipgate username."},
+                "PASSWORD": {"required": True, "description": "The sipgate password."},
+                "PROXY": {"description": "An optional proxy URI."},
+                "REGEXP": {"description": cls.regexp_description},
+            },
+        }
         return params

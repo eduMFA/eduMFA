@@ -35,16 +35,25 @@ import re
 
 from edumfa.lib.resolvers.UserIdResolver import UserIdResolver
 
-from sqlalchemy import (Integer, cast, String, MetaData, Table, and_,
-                        create_engine, select, insert, delete)
+from sqlalchemy import (
+    Integer,
+    cast,
+    String,
+    MetaData,
+    Table,
+    and_,
+    create_engine,
+    select,
+    insert,
+    delete,
+)
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 import traceback
 import hashlib
 from edumfa.lib.pooling import get_engine
 from edumfa.lib.lifecycle import register_finalizer
-from edumfa.lib.utils import (is_true, censor_connect_string,
-                                   convert_column_to_unicode)
+from edumfa.lib.utils import is_true, censor_connect_string, convert_column_to_unicode
 from passlib.context import CryptContext
 from passlib.utils import h64
 from passlib.utils.compat import uascii_to_str
@@ -60,6 +69,7 @@ class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no 
     """This class implements the PHPass Portable Hash (Drupal version), and follows the
     :ref:`password-hash-api`.
     """
+
     name = "phpass_drupal"
     setting_kwds = ("salt", "rounds")
     checksum_chars = uh.HASH64_CHARS
@@ -73,7 +83,7 @@ class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no 
     max_rounds = 30
     rounds_cost = "log2"
 
-    ident = '$S$'
+    ident = "$S$"
 
     @classmethod
     def from_string(cls, hash):
@@ -89,10 +99,12 @@ class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no 
         )
 
     def to_string(self):
-        hash = "%s%s%s%s" % (self.ident,
-                              h64.encode_int6(self.rounds).decode("ascii"),
-                              self.salt,
-                              self.checksum or '')
+        hash = "%s%s%s%s" % (
+            self.ident,
+            h64.encode_int6(self.rounds).decode("ascii"),
+            self.salt,
+            self.checksum or "",
+        )
         return uascii_to_str(hash)
 
     def _calc_checksum(self, secret):
@@ -104,12 +116,12 @@ class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no 
         while r < real_rounds:
             result = hashlib.sha512(result + secret).digest()
             r += 1
-        return h64.encode_bytes(result).decode("ascii")[:self.checksum_size]
+        return h64.encode_bytes(result).decode("ascii")[: self.checksum_size]
 
 
 class ldap_salted_sha256_pi(_SaltedBase64DigestHelper):
-    name = 'ldap_salted_sha256_pi'
-    ident = '{SSHA256}'
+    name = "ldap_salted_sha256_pi"
+    ident = "{SSHA256}"
     checksum_size = 32
     # passlib sets the max_salt_size for SSHA256 to 16:
     # <https://foss.heptapod.net/python-libs/passlib/-/blob/branch/stable/passlib/handlers/ldap_digests.py#L71>
@@ -126,45 +138,50 @@ register_crypt_handler(ldap_salted_sha256_pi)
 
 
 # The list of supported password hash types for verification (passlib handler)
-pw_ctx = CryptContext(schemes=['phpass',
-                               'phpass_drupal',
-                               'ldap_salted_sha1',
-                               'ldap_salted_sha256_pi',
-                               'ldap_salted_sha512',
-                               'ldap_sha1',
-                               'md5_crypt',
-                               'bcrypt',
-                               'sha512_crypt',
-                               'sha256_crypt',
-                               'hex_sha256',
-                               ])
+pw_ctx = CryptContext(
+    schemes=[
+        "phpass",
+        "phpass_drupal",
+        "ldap_salted_sha1",
+        "ldap_salted_sha256_pi",
+        "ldap_salted_sha512",
+        "ldap_sha1",
+        "md5_crypt",
+        "bcrypt",
+        "sha512_crypt",
+        "sha256_crypt",
+        "hex_sha256",
+    ]
+)
 
 # List of supported password hash types for hash generation (name to passlib handler id)
-hash_type_dict = {"PHPASS": 'phpass',
-                  "SHA": 'ldap_sha1',
-                  "SSHA": 'ldap_salted_sha1',
-                  "SSHA256": 'ldap_salted_sha256_pi',
-                  "SSHA512": 'ldap_salted_sha512',
-                  "OTRS": 'hex_sha256',
-                  "SHA256CRYPT": 'sha256_crypt',
-                  "SHA512CRYPT": 'sha512_crypt',
-                  "MD5CRYPT": 'md5_crypt',
-                  }
+hash_type_dict = {
+    "PHPASS": "phpass",
+    "SHA": "ldap_sha1",
+    "SSHA": "ldap_salted_sha1",
+    "SSHA256": "ldap_salted_sha256_pi",
+    "SSHA512": "ldap_salted_sha512",
+    "OTRS": "hex_sha256",
+    "SHA256CRYPT": "sha256_crypt",
+    "SHA512CRYPT": "sha512_crypt",
+    "MD5CRYPT": "md5_crypt",
+}
 
 log = logging.getLogger(__name__)
 
 
-class IdResolver (UserIdResolver):
+class IdResolver(UserIdResolver):
 
-    searchFields = {"username": "text",
-                    "userid": "numeric",
-                    "phone": "text",
-                    "mobile": "text",
-                    "surname": "text",
-                    "givenname": "text",
-                    "email": "text",
-                    "description": "text",
-                    }
+    searchFields = {
+        "username": "text",
+        "userid": "numeric",
+        "phone": "text",
+        "mobile": "text",
+        "surname": "text",
+        "givenname": "text",
+        "email": "text",
+        "description": "text",
+    }
 
     # If the resolver could be configured editable
     updateable = True
@@ -188,7 +205,7 @@ class IdResolver (UserIdResolver):
         self.port = 0
         self.limit = 100
         self.user = ""
-        self.password = "" # nosec B105 # default parameter
+        self.password = ""  # nosec B105 # default parameter
         self.table = ""
         self.TABLE = None
         self.map = {}
@@ -219,7 +236,7 @@ class IdResolver (UserIdResolver):
         :return: list of filter conditions
         """
         if where:
-            parts = re.split(' and ', where, flags=re.IGNORECASE)
+            parts = re.split(" and ", where, flags=re.IGNORECASE)
             for part in parts:
                 # this might result in errors if the
                 # administrator enters nonsense
@@ -253,12 +270,14 @@ class IdResolver (UserIdResolver):
         database_pw = userinfo.get("password", "XXXXXXX")
 
         # remove owncloud hash format identifier (currently only version 1)
-        database_pw = re.sub(r'^1\|', '', database_pw)
+        database_pw = re.sub(r"^1\|", "", database_pw)
 
         # translate lower case hash identifier to uppercase
-        database_pw = re.sub(r'^{([a-z0-9]+)}',
-                             lambda match: f'{{{match.group(1).upper()}}}',
-                             database_pw)
+        database_pw = re.sub(
+            r"^{([a-z0-9]+)}",
+            lambda match: f"{{{match.group(1).upper()}}}",
+            database_pw,
+        )
 
         try:
             res = pw_ctx.verify(password, database_pw)
@@ -281,8 +300,7 @@ class IdResolver (UserIdResolver):
 
         try:
             conditions = [self._get_userid_filter(userId)]
-            conditions = self._append_where_filter(conditions, self.TABLE,
-                                                   self.where)
+            conditions = self._append_where_filter(conditions, self.TABLE, self.where)
             filter_condition = and_(*conditions)
             result = self.session.execute(select(self.TABLE).filter(filter_condition))
 
@@ -316,7 +334,7 @@ class IdResolver (UserIdResolver):
         :rtype: string
         """
         info = self.getUserInfo(userId)
-        return info.get('username', "")
+        return info.get("username", "")
 
     def getUserId(self, LoginName):
         """
@@ -333,18 +351,18 @@ class IdResolver (UserIdResolver):
             conditions = []
             column = self.map.get("username")
             conditions.append(self.TABLE.columns[column].like(LoginName))
-            conditions = self._append_where_filter(conditions, self.TABLE,
-                                                   self.where)
+            conditions = self._append_where_filter(conditions, self.TABLE, self.where)
             filter_condition = and_(*conditions)
             result = self.session.execute(select(self.TABLE).filter(filter_condition))
 
             for r in result.mappings():
-                if userid != "":    # pragma: no cover
-                    raise Exception("More than one user with loginname"
-                                    " %s found!" % LoginName)
+                if userid != "":  # pragma: no cover
+                    raise Exception(
+                        "More than one user with loginname" " %s found!" % LoginName
+                    )
                 user = self._get_user_from_mapped_object(r)
                 userid = convert_column_to_unicode(user["userid"])
-        except Exception as exx:    # pragma: no cover
+        except Exception as exx:  # pragma: no cover
             log.error(f"Could not get the user ID: {exx!r}")
 
         return userid
@@ -368,7 +386,7 @@ class IdResolver (UserIdResolver):
             try:
                 raw_value = ro.get(self.map.get(key))
                 if raw_value:
-                    if key == 'userid':
+                    if key == "userid":
                         val = convert_column_to_unicode(raw_value)
                     elif isinstance(raw_value, bytes):
                         val = raw_value.decode(self.encoding)
@@ -399,13 +417,12 @@ class IdResolver (UserIdResolver):
             value = value.replace("*", "%")
             conditions.append(self.TABLE.columns[column].like(value))
 
-        conditions = self._append_where_filter(conditions, self.TABLE,
-                                               self.where)
+        conditions = self._append_where_filter(conditions, self.TABLE, self.where)
         filter_condition = and_(*conditions)
 
-        result = self.session.execute(select(self.TABLE).
-                                      filter(filter_condition).
-                                      limit(self.limit))
+        result = self.session.execute(
+            select(self.TABLE).filter(filter_condition).limit(self.limit)
+        )
 
         for r in result.mappings():
             user = self._get_user_from_mapped_object(r)
@@ -425,17 +442,21 @@ class IdResolver (UserIdResolver):
         """
         # Take the following parts, join them with the NULL byte and return
         # the hexlified SHA-1 digest
-        id_parts = (self.connect_string,
-                    str(self.pool_size),
-                    str(self.pool_recycle),
-                    str(self.pool_timeout))
+        id_parts = (
+            self.connect_string,
+            str(self.pool_size),
+            str(self.pool_recycle),
+            str(self.pool_timeout),
+        )
         id_str = "\x00".join(id_parts)
-        resolver_id = binascii.hexlify(hashlib.sha1(id_str.encode('utf8')).digest())  # nosec B324 # hash used as unique identifier
-        return "sql." + resolver_id.decode('utf8')
+        resolver_id = binascii.hexlify(
+            hashlib.sha1(id_str.encode("utf8")).digest()
+        )  # nosec B324 # hash used as unique identifier
+        return "sql." + resolver_id.decode("utf8")
 
     @staticmethod
     def getResolverClassType():
-        return 'sqlresolver'
+        return "sqlresolver"
 
     @staticmethod
     def getResolverType():
@@ -448,37 +469,39 @@ class IdResolver (UserIdResolver):
         :param config: The configuration from the Config Table
         :type config: dict
         """
-        self.server = config.get('Server', "")
-        self.driver = config.get('Driver', "")
-        self.database = config.get('Database', "")
+        self.server = config.get("Server", "")
+        self.driver = config.get("Driver", "")
+        self.database = config.get("Database", "")
         self.resolverId = self.database
-        self.port = config.get('Port', "")
-        self.limit = config.get('Limit', 100)
-        self.user = config.get('User', "")
-        self.password = config.get('Password', "")
-        self.table = config.get('Table', "")
+        self.port = config.get("Port", "")
+        self.limit = config.get("Limit", 100)
+        self.user = config.get("User", "")
+        self.password = config.get("Password", "")
+        self.table = config.get("Table", "")
         self._editable = config.get("Editable", False)
         self.password_hash_type = config.get("Password_Hash_Type", "SSHA256")
-        usermap = config.get('Map', {})
+        usermap = config.get("Map", {})
         self.map = yaml.safe_load(usermap)
         self.reverse_map = {v: k for k, v in self.map.items()}
-        self.where = config.get('Where', "")
-        self.encoding = str(config.get('Encoding') or "latin1")
-        self.conParams = config.get('conParams', "")
-        self.pool_size = int(config.get('poolSize') or 5)
-        self.pool_timeout = int(config.get('poolTimeout') or 10)
+        self.where = config.get("Where", "")
+        self.encoding = str(config.get("Encoding") or "latin1")
+        self.conParams = config.get("conParams", "")
+        self.pool_size = int(config.get("poolSize") or 5)
+        self.pool_timeout = int(config.get("poolTimeout") or 10)
         # recycle SQL connections after 2 hours by default
         # (necessary for MySQL servers, which terminate idle connections after some hours)
-        self.pool_recycle = int(config.get('poolRecycle') or 7200)
+        self.pool_recycle = int(config.get("poolRecycle") or 7200)
 
         # create the connect-string like
-        params = {'Port': self.port,
-                  'Password': self.password,
-                  'conParams': self.conParams,
-                  'Driver': self.driver,
-                  'User': self.user,
-                  'Server': self.server,
-                  'Database': self.database}
+        params = {
+            "Port": self.port,
+            "Password": self.password,
+            "conParams": self.conParams,
+            "Driver": self.driver,
+            "User": self.user,
+            "Server": self.server,
+            "Database": self.database,
+        }
         self.connect_string = self._create_connect_string(params)
 
         # get an engine from the engine registry, using self.getResolverId() as the key,
@@ -494,45 +517,54 @@ class IdResolver (UserIdResolver):
         return self
 
     def _create_engine(self):
-        log.info("using the connect string "
-                 "{0!s}".format(censor_connect_string(self.connect_string)))
+        log.info(
+            "using the connect string "
+            "{0!s}".format(censor_connect_string(self.connect_string))
+        )
         try:
-            log.debug("using pool_size={0!s}, pool_timeout={1!s}, pool_recycle={2!s}".format(
-                self.pool_size, self.pool_timeout, self.pool_recycle))
-            engine = create_engine(self.connect_string,
-                                   pool_size=self.pool_size,
-                                   pool_recycle=self.pool_recycle,
-                                   pool_timeout=self.pool_timeout)
+            log.debug(
+                "using pool_size={0!s}, pool_timeout={1!s}, pool_recycle={2!s}".format(
+                    self.pool_size, self.pool_timeout, self.pool_recycle
+                )
+            )
+            engine = create_engine(
+                self.connect_string,
+                pool_size=self.pool_size,
+                pool_recycle=self.pool_recycle,
+                pool_timeout=self.pool_timeout,
+            )
         except TypeError:
             # The DB Engine/Poolclass might not support the pool_size.
             log.debug("connecting without pool_size.")
-            engine = create_engine(self.connect_string,
-                                   encoding=self.encoding,
-                                   convert_unicode=False)
+            engine = create_engine(
+                self.connect_string, encoding=self.encoding, convert_unicode=False
+            )
         return engine
 
     @classmethod
     def getResolverClassDescriptor(cls):
         descriptor = {}
         typ = cls.getResolverType()
-        descriptor['clazz'] = "useridresolver.SQLIdResolver.IdResolver"
-        descriptor['config'] = {'Server': 'string',
-                                'Driver': 'string',
-                                'Database': 'string',
-                                'User': 'string',
-                                'Password': 'password',
-                                'Password_Hash_Type': 'string',
-                                'Port': 'int',
-                                'Limit': 'int',
-                                'Table': 'string',
-                                'Map': 'string',
-                                'Where': 'string',
-                                'Editable': 'int',
-                                'poolTimeout': 'int',
-                                'poolSize': 'int',
-                                'poolRecycle': 'int',
-                                'Encoding': 'string',
-                                'conParams': 'string'}
+        descriptor["clazz"] = "useridresolver.SQLIdResolver.IdResolver"
+        descriptor["config"] = {
+            "Server": "string",
+            "Driver": "string",
+            "Database": "string",
+            "User": "string",
+            "Password": "password",
+            "Password_Hash_Type": "string",
+            "Port": "int",
+            "Limit": "int",
+            "Table": "string",
+            "Map": "string",
+            "Where": "string",
+            "Editable": "int",
+            "poolTimeout": "int",
+            "poolSize": "int",
+            "poolRecycle": "int",
+            "Encoding": "string",
+            "conParams": "string",
+        }
         return {typ: descriptor}
 
     @staticmethod
@@ -548,7 +580,7 @@ class IdResolver (UserIdResolver):
         Server, Database
         """
         port = ""
-        password = "" # nosec B105 # default parameter
+        password = ""  # nosec B105 # default parameter
         conParams = ""
         if param.get("Port"):
             port = f":{param.get('Port')!s}"
@@ -556,16 +588,16 @@ class IdResolver (UserIdResolver):
             password = f":{param.get('Password')!s}"
         if param.get("conParams"):
             conParams = f"?{param.get('conParams')!s}"
-        connect_string = "{0!s}://{1!s}{2!s}{3!s}{4!s}{5!s}/{6!s}{7!s}".format(param.get("Driver") or "",
-                                                   param.get("User") or "",
-                                                   password,
-                                                   "@" if (param.get("User")
-                                                           or
-                                                           password) else "",
-                                                   param.get("Server") or "",
-                                                   port,
-                                                   param.get("Database") or "",
-                                                   conParams)
+        connect_string = "{0!s}://{1!s}{2!s}{3!s}{4!s}{5!s}/{6!s}{7!s}".format(
+            param.get("Driver") or "",
+            param.get("User") or "",
+            password,
+            "@" if (param.get("User") or password) else "",
+            param.get("Server") or "",
+            port,
+            param.get("Database") or "",
+            conParams,
+        )
         return connect_string
 
     @classmethod
@@ -593,8 +625,7 @@ class IdResolver (UserIdResolver):
         session = scoped_session(sessionmaker(bind=engine))()
         try:
             TABLE = Table(param.get("Table"), MetaData(), autoload_with=engine)
-            conditions = cls._append_where_filter([], TABLE,
-                                                  param.get("Where"))
+            conditions = cls._append_where_filter([], TABLE, param.get("Where"))
             filter_condition = and_(*conditions)
             result = session.query(TABLE).filter(filter_condition).count()
 
@@ -645,8 +676,9 @@ class IdResolver (UserIdResolver):
         """
         attributes = attributes.copy()
         if "password" in attributes:
-            attributes["password"] = hash_password(attributes["password"],
-                                                   self.password_hash_type)
+            attributes["password"] = hash_password(
+                attributes["password"], self.password_hash_type
+            )
         columns = {}
         for fieldname in attributes:
             if fieldname in self.map:
@@ -666,12 +698,11 @@ class IdResolver (UserIdResolver):
         res = True
         try:
             conditions = [self._get_userid_filter(uid)]
-            conditions = self._append_where_filter(conditions, self.TABLE,
-                                                   self.where)
+            conditions = self._append_where_filter(conditions, self.TABLE, self.where)
             filter_condition = and_(*conditions)
             self.session.execute(delete(self.TABLE).where(filter_condition))
             self.session.commit()
-            log.info(f'Deleted user with uid: {uid!s}')
+            log.info(f"Deleted user with uid: {uid!s}")
         except Exception as exx:
             log.error(f"Error deleting user: {exx!s}")
             res = False
@@ -700,11 +731,13 @@ class IdResolver (UserIdResolver):
             kwargs = {self.map.get("userid"): uid}
             r = self.session.query(self.TABLE).filter_by(**kwargs).update(params)
             self.session.commit()
-            log.info(f'Updated user attributes for user with uid {uid!s}')
+            log.info(f"Updated user attributes for user with uid {uid!s}")
         except Exception as exx:
-            log.error('Error updating user attributes for user with uid {0!s}: '
-                      '{1!s}'.format(uid, exx))
-            log.debug(f'Error updating attributes {attributes!s}', exc_info=True)
+            log.error(
+                "Error updating user attributes for user with uid {0!s}: "
+                "{1!s}".format(uid, exx)
+            )
+            log.debug(f"Error updating attributes {attributes!s}", exc_info=True)
 
         return r
 
@@ -736,7 +769,9 @@ def hash_password(password, hashtype):
     try:
         password = pw_ctx.handler(hash_type_dict[hashtype]).hash(password)
     except KeyError as _e:  # pragma: no cover
-        raise Exception("Unsupported password hashtype '{0!s}'. "
-                        "Use one of {1!s}.".format(hashtype, hash_type_dict.keys()))
+        raise Exception(
+            "Unsupported password hashtype '{0!s}'. "
+            "Use one of {1!s}.".format(hashtype, hash_type_dict.keys())
+        )
 
     return password

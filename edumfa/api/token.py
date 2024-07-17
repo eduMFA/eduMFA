@@ -31,61 +31,107 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from flask import (Blueprint, request, g, current_app)
+from flask import Blueprint, request, g, current_app
 from ..lib.log import log_with
 from .lib.utils import optional, send_result, send_csv_result, required, getParam
 from ..lib.user import get_user_from_param
-from ..lib.token import (init_token, get_tokens_paginate, assign_token,
-                         unassign_token, remove_token, enable_token,
-                         revoke_token,
-                         reset_token, resync_token, set_pin_so, set_pin_user,
-                         set_pin, set_description, set_count_window,
-                         set_sync_window, set_count_auth,
-                         set_hashlib, set_max_failcount, set_realms,
-                         copy_token_user, copy_token_pin, lost_token,
-                         get_serial_by_otp, get_tokens,
-                         set_validity_period_end, set_validity_period_start, add_tokeninfo,
-                         delete_tokeninfo, import_token,
-                         assign_tokengroup, unassign_tokengroup, set_tokengroups)
+from ..lib.token import (
+    init_token,
+    get_tokens_paginate,
+    assign_token,
+    unassign_token,
+    remove_token,
+    enable_token,
+    revoke_token,
+    reset_token,
+    resync_token,
+    set_pin_so,
+    set_pin_user,
+    set_pin,
+    set_description,
+    set_count_window,
+    set_sync_window,
+    set_count_auth,
+    set_hashlib,
+    set_max_failcount,
+    set_realms,
+    copy_token_user,
+    copy_token_pin,
+    lost_token,
+    get_serial_by_otp,
+    get_tokens,
+    set_validity_period_end,
+    set_validity_period_start,
+    add_tokeninfo,
+    delete_tokeninfo,
+    import_token,
+    assign_tokengroup,
+    unassign_tokengroup,
+    set_tokengroups,
+)
 from werkzeug.datastructures import FileStorage
 from cgi import FieldStorage
-from edumfa.lib.error import (ParameterError, TokenAdminError)
-from edumfa.lib.importotp import (parseOATHcsv, parseSafeNetXML,
-                                       parseYubicoCSV, parsePSKCdata, GPGImport)
+from edumfa.lib.error import ParameterError, TokenAdminError
+from edumfa.lib.importotp import (
+    parseOATHcsv,
+    parseSafeNetXML,
+    parseYubicoCSV,
+    parsePSKCdata,
+    GPGImport,
+)
 import logging
 from edumfa.lib.utils import to_unicode
 from edumfa.lib.policy import ACTION
 from edumfa.lib.challenge import get_challenges_paginate
-from edumfa.api.lib.prepolicy import (prepolicy, check_base_action,
-                                           check_token_init, check_token_upload,
-                                           check_max_token_user,
-                                           check_max_token_realm,
-                                           init_tokenlabel, init_random_pin,
-                                           init_token_length_contents,
-                                           set_random_pin,
-                                           encrypt_pin, check_otp_pin,
-                                           check_external, init_token_defaults,
-                                           enroll_pin, papertoken_count,
-                                           tantoken_count,
-                                           u2ftoken_allowed, u2ftoken_verify_cert,
-                                           twostep_enrollment_activation,
-                                           twostep_enrollment_parameters,
-                                           sms_identifiers, pushtoken_add_config,
-                                           check_admin_tokenlist,
-                                           verify_enrollment,
-                                           indexedsecret_force_attribute,
-                                           check_admin_tokenlist, webauthntoken_enroll, webauthntoken_allowed,
-                                           webauthntoken_request, required_piv_attestation,
-                                           hide_tokeninfo, init_ca_connector, init_ca_template,
-                                           init_subject_components, require_description)
-from edumfa.api.lib.postpolicy import (save_pin_change, check_verify_enrollment,
-                                            postpolicy)
+from edumfa.api.lib.prepolicy import (
+    prepolicy,
+    check_base_action,
+    check_token_init,
+    check_token_upload,
+    check_max_token_user,
+    check_max_token_realm,
+    init_tokenlabel,
+    init_random_pin,
+    init_token_length_contents,
+    set_random_pin,
+    encrypt_pin,
+    check_otp_pin,
+    check_external,
+    init_token_defaults,
+    enroll_pin,
+    papertoken_count,
+    tantoken_count,
+    u2ftoken_allowed,
+    u2ftoken_verify_cert,
+    twostep_enrollment_activation,
+    twostep_enrollment_parameters,
+    sms_identifiers,
+    pushtoken_add_config,
+    check_admin_tokenlist,
+    verify_enrollment,
+    indexedsecret_force_attribute,
+    check_admin_tokenlist,
+    webauthntoken_enroll,
+    webauthntoken_allowed,
+    webauthntoken_request,
+    required_piv_attestation,
+    hide_tokeninfo,
+    init_ca_connector,
+    init_ca_template,
+    init_subject_components,
+    require_description,
+)
+from edumfa.api.lib.postpolicy import (
+    save_pin_change,
+    check_verify_enrollment,
+    postpolicy,
+)
 from edumfa.lib.event import event
 from edumfa.api.auth import admin_required
 from edumfa.lib.subscriptions import CheckSubscription
 import json
 
-token_blueprint = Blueprint('token_blueprint', __name__)
+token_blueprint = Blueprint("token_blueprint", __name__)
 log = logging.getLogger(__name__)
 
 __doc__ = """
@@ -101,7 +147,7 @@ To see how to authenticate read :ref:`rest_auth`.
 """
 
 
-@token_blueprint.route('/init', methods=['POST'])
+@token_blueprint.route("/init", methods=["POST"])
 @prepolicy(check_max_token_realm, request)
 @prepolicy(require_description, request)
 @prepolicy(check_max_token_user, request)
@@ -204,40 +250,40 @@ def init():
               },
               "version": "eduMFA unknown"
             }
-            
+
     **2 Step Enrollment**
-    
-    Some tokens might need a 2 step initialization process like a smartphone 
-    app. This way you can create a shared secret from a part generated by 
+
+    Some tokens might need a 2 step initialization process like a smartphone
+    app. This way you can create a shared secret from a part generated by
     the eduMFA server and from a second part generated by the smartphone
     app/client.
-    
+
     The first API call would be
-    
+
        .. sourcecode:: http
-       
+
            POST /token/init
-           
+
            2stepinit=1
-           
-    The response would contain the otpkey generated by the server and the 
-    serial number of the token. At this point, the token is deactivated and 
-    marked as being in an enrollment state. The client 
-    would also generated a component of the key and send his component to the 
+
+    The response would contain the otpkey generated by the server and the
+    serial number of the token. At this point, the token is deactivated and
+    marked as being in an enrollment state. The client
+    would also generated a component of the key and send his component to the
     eduMFA server:
-     
+
     The second API call would be
-    
+
        .. sourcecode:: http
-           
+
            POST /token/init
-           
+
            serial=<serial from the previous response>
            otpkey=<key part generated by the client>
-    
-    Each tokenclass can define its own way to generate the secret key by 
+
+    Each tokenclass can define its own way to generate the secret key by
     overwriting the method ``generate_symmetric_key``. The
-    Base Tokenclass contains an extremely simple way by concatenating the 
+    Base Tokenclass contains an extremely simple way by concatenating the
     two parts. See
     :func:`~edumfa.lib.tokenclass.TokenClass.generate_symmetric_key`
 
@@ -284,9 +330,7 @@ def init():
     #    tokenrealm = res['realms']
 
     user = request.User
-    tokenobject = init_token(param,
-                             user,
-                             tokenrealms=tokenrealms)
+    tokenobject = init_token(param, user, tokenrealms=tokenrealms)
 
     if tokenobject:
         g.audit_object.log({"success": True})
@@ -295,10 +339,14 @@ def init():
         init_details = tokenobject.get_init_detail(param, user)
         response_details.update(init_details)
 
-    g.audit_object.log({'user': user.login,
-                        'realm': user.realm,
-                        'serial': tokenobject.token.serial,
-                        'token_type': tokenobject.token.tokentype})
+    g.audit_object.log(
+        {
+            "user": user.login,
+            "realm": user.realm,
+            "serial": tokenobject.token.serial,
+            "token_type": tokenobject.token.tokentype,
+        }
+    )
 
     # logTokenNum()
 
@@ -309,7 +357,7 @@ def init():
     #    log.debug("setting random pin for token with serial "
     #              "%s and user: %s" % (serial, user))
     #    setPin(newpin, None, serial)
-        
+
     # finally we render the info as qr immage, if the qr parameter
     # is provided and if the token supports this
     # if 'qr' in param and tokenobject is not None:
@@ -323,8 +371,8 @@ def init():
     return send_result(True, details=response_details)
 
 
-@token_blueprint.route('/challenges/', methods=['GET'])
-@token_blueprint.route('/challenges/<serial>', methods=['GET'])
+@token_blueprint.route("/challenges/", methods=["GET"])
+@token_blueprint.route("/challenges/<serial>", methods=["GET"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.GETCHALLENGES)
 @event("token_getchallenges", request, g)
@@ -351,14 +399,19 @@ def get_challenges_api(serial=None):
     psize = int(getParam(param, "pagesize", optional, default=15))
     transaction_id = getParam(param, "transaction_id", optional)
     g.audit_object.log({"serial": serial})
-    challenges = get_challenges_paginate(serial=serial, sortby=sort,
-                                         transaction_id=transaction_id,
-                                         sortdir=sdir, page=page, psize=psize)
+    challenges = get_challenges_paginate(
+        serial=serial,
+        sortby=sort,
+        transaction_id=transaction_id,
+        sortdir=sdir,
+        page=page,
+        psize=psize,
+    )
     g.audit_object.log({"success": True})
     return send_result(challenges)
 
 
-@token_blueprint.route('/', methods=['GET'])
+@token_blueprint.route("/", methods=["GET"])
 @prepolicy(check_admin_tokenlist, request)
 @prepolicy(hide_tokeninfo, request)
 @event("token_list", request, g)
@@ -423,22 +476,31 @@ def list_api():
     # allowed_realms determines, which realms the admin would be allowed to see
     # In certain cases like for users, we do not have allowed_realms
     allowed_realms = getattr(request, "pi_allowed_realms", None)
-    g.audit_object.log({'info': f"realm: {allowed_realms!s}"})
+    g.audit_object.log({"info": f"realm: {allowed_realms!s}"})
 
     # get hide_tokeninfo setting from all_data
-    hidden_tokeninfo = getParam(request.all_data, 'hidden_tokeninfo', default=None)
+    hidden_tokeninfo = getParam(request.all_data, "hidden_tokeninfo", default=None)
 
     # get list of tokens as a dictionary
-    tokens = get_tokens_paginate(serial=serial, realm=realm, page=page,
-                                 user=user, assigned=assigned, psize=psize,
-                                 active=active, sortby=sort, sortdir=sdir,
-                                 tokentype=tokentype,
-                                 resolver=resolver,
-                                 description=description,
-                                 userid=userid, allowed_realms=allowed_realms,
-                                 tokeninfo=tokeninfo,
-                                 rollout_state=rollout_state,
-                                 hidden_tokeninfo=hidden_tokeninfo)
+    tokens = get_tokens_paginate(
+        serial=serial,
+        realm=realm,
+        page=page,
+        user=user,
+        assigned=assigned,
+        psize=psize,
+        active=active,
+        sortby=sort,
+        sortdir=sdir,
+        tokentype=tokentype,
+        resolver=resolver,
+        description=description,
+        userid=userid,
+        allowed_realms=allowed_realms,
+        tokeninfo=tokeninfo,
+        rollout_state=rollout_state,
+        hidden_tokeninfo=hidden_tokeninfo,
+    )
     g.audit_object.log({"success": True})
     if output_format == "csv":
         return send_csv_result(tokens)
@@ -446,7 +508,7 @@ def list_api():
         return send_result(tokens)
 
 
-@token_blueprint.route('/assign', methods=['POST'])
+@token_blueprint.route("/assign", methods=["POST"])
 @prepolicy(check_max_token_realm, request)
 @prepolicy(check_max_token_user, request)
 @prepolicy(check_base_action, request, action=ACTION.ASSIGN)
@@ -474,12 +536,14 @@ def assign_api():
         err_message = "Token already assigned to another user."
     else:
         err_message = None
-    res = assign_token(serial, user, pin=pin, encrypt_pin=encrypt_pin, err_message=err_message)
+    res = assign_token(
+        serial, user, pin=pin, encrypt_pin=encrypt_pin, err_message=err_message
+    )
     g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@token_blueprint.route('/unassign', methods=['POST'])
+@token_blueprint.route("/unassign", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.UNASSIGN)
 @event("token_unassign", request, g)
 @log_with(log)
@@ -501,8 +565,8 @@ def unassign_api():
     return send_result(res)
 
 
-@token_blueprint.route('/revoke', methods=['POST'])
-@token_blueprint.route('/revoke/<serial>', methods=['POST'])
+@token_blueprint.route("/revoke", methods=["POST"])
+@token_blueprint.route("/revoke/<serial>", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.REVOKE)
 @event("token_revoke", request, g)
 @log_with(log)
@@ -532,9 +596,8 @@ def revoke_api(serial=None):
     return send_result(res)
 
 
-
-@token_blueprint.route('/enable', methods=['POST'])
-@token_blueprint.route('/enable/<serial>', methods=['POST'])
+@token_blueprint.route("/enable", methods=["POST"])
+@token_blueprint.route("/enable/<serial>", methods=["POST"])
 @prepolicy(check_max_token_user, request)
 @prepolicy(check_base_action, request, action=ACTION.ENABLE)
 @event("token_enable", request, g)
@@ -561,8 +624,8 @@ def enable_api(serial=None):
     return send_result(res)
 
 
-@token_blueprint.route('/disable', methods=['POST'])
-@token_blueprint.route('/disable/<serial>', methods=['POST'])
+@token_blueprint.route("/disable", methods=["POST"])
+@token_blueprint.route("/disable/<serial>", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.DISABLE)
 @event("token_disable", request, g)
 @log_with(log)
@@ -591,8 +654,7 @@ def disable_api(serial=None):
     return send_result(res)
 
 
-
-@token_blueprint.route('/<serial>', methods=['DELETE'])
+@token_blueprint.route("/<serial>", methods=["DELETE"])
 @prepolicy(check_base_action, request, action=ACTION.DELETE)
 @event("token_delete", request, g)
 @log_with(log)
@@ -614,8 +676,8 @@ def delete_api(serial):
     return send_result(res)
 
 
-@token_blueprint.route('/reset', methods=['POST'])
-@token_blueprint.route('/reset/<serial>', methods=['POST'])
+@token_blueprint.route("/reset", methods=["POST"])
+@token_blueprint.route("/reset/<serial>", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.RESET)
 @event("token_reset", request, g)
 @log_with(log)
@@ -639,8 +701,8 @@ def reset_api(serial=None):
     return send_result(res)
 
 
-@token_blueprint.route('/resync', methods=['POST'])
-@token_blueprint.route('/resync/<serial>', methods=['POST'])
+@token_blueprint.route("/resync", methods=["POST"])
+@token_blueprint.route("/resync/<serial>", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.RESYNC)
 @event("token_resync", request, g)
 @log_with(log)
@@ -666,8 +728,8 @@ def resync_api(serial=None):
     return send_result(res)
 
 
-@token_blueprint.route('/setpin', methods=['POST'])
-@token_blueprint.route('/setpin/<serial>', methods=['POST'])
+@token_blueprint.route("/setpin", methods=["POST"])
+@token_blueprint.route("/setpin/<serial>", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.SETPIN)
 @prepolicy(encrypt_pin, request)
 @prepolicy(check_otp_pin, request, action=ACTION.SETPIN)
@@ -701,23 +763,23 @@ def setpin_api(serial=None):
 
     res = 0
     if userpin is not None:
-        g.audit_object.add_to_log({'action_detail': "userpin, "})
+        g.audit_object.add_to_log({"action_detail": "userpin, "})
         res += set_pin_user(serial, userpin, user=user)
 
     if sopin is not None:
-        g.audit_object.add_to_log({'action_detail': "sopin, "})
+        g.audit_object.add_to_log({"action_detail": "sopin, "})
         res += set_pin_so(serial, sopin, user=user)
 
     if otppin is not None:
-        g.audit_object.add_to_log({'action_detail': "otppin, "})
+        g.audit_object.add_to_log({"action_detail": "otppin, "})
         res += set_pin(serial, otppin, user=user, encrypt_pin=encrypt_pin)
 
     g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@token_blueprint.route('/setrandompin', methods=['POST'])
-@token_blueprint.route('/setrandompin/<serial>', methods=['POST'])
+@token_blueprint.route("/setrandompin", methods=["POST"])
+@token_blueprint.route("/setrandompin/<serial>", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.SETRANDOMPIN)
 @prepolicy(set_random_pin, request)
 @prepolicy(encrypt_pin, request)
@@ -743,16 +805,18 @@ def setrandompin_api(serial=None):
     encrypt_pin = getParam(request.all_data, "encryptpin")
     pin = getParam(request.all_data, "pin")
     if not pin:
-        raise TokenAdminError("We have an empty PIN. Please check your policy 'otp_pin_set_random'.")
+        raise TokenAdminError(
+            "We have an empty PIN. Please check your policy 'otp_pin_set_random'."
+        )
 
-    g.audit_object.add_to_log({'action_detail': "otppin, "})
+    g.audit_object.add_to_log({"action_detail": "otppin, "})
     res = set_pin(serial, pin, user=user, encrypt_pin=encrypt_pin)
     g.audit_object.log({"success": True})
     return send_result(res, details={"pin": pin})
 
 
-@token_blueprint.route('/description', methods=['POST'])
-@token_blueprint.route('/description/<serial>', methods=['POST'])
+@token_blueprint.route("/description", methods=["POST"])
+@token_blueprint.route("/description/<serial>", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.SETDESCRIPTION)
 @event("token_set", request, g)
 @log_with(log)
@@ -770,14 +834,14 @@ def set_description_api(serial=None):
         serial = getParam(request.all_data, "serial", required)
     g.audit_object.log({"serial": serial})
     description = getParam(request.all_data, "description", optional=required)
-    g.audit_object.add_to_log({'action_detail': f"description={description!r}"})
+    g.audit_object.add_to_log({"action_detail": f"description={description!r}"})
     res = set_description(serial, description, user=user)
     g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@token_blueprint.route('/set', methods=['POST'])
-@token_blueprint.route('/set/<serial>', methods=['POST'])
+@token_blueprint.route("/set", methods=["POST"])
+@token_blueprint.route("/set/<serial>", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.SET)
 @event("token_set", request, g)
@@ -799,7 +863,7 @@ def set_api(serial=None):
 
     The token is identified by the unique serial number or by the token owner.
     In the later case all tokens of the owner will be modified.
-    
+
     The validity period needs to be provided in the format
     YYYY-MM-DDThh:mm+oooo
 
@@ -827,56 +891,68 @@ def set_api(serial=None):
     res = 0
 
     if description is not None:
-        g.audit_object.add_to_log({'action_detail': f"description={description!r}, "})
+        g.audit_object.add_to_log({"action_detail": f"description={description!r}, "})
         res += set_description(serial, description, user=user)
 
     if count_window is not None:
-        g.audit_object.add_to_log({'action_detail': "count_window=%r, "
-                                                    "" % count_window})
+        g.audit_object.add_to_log(
+            {"action_detail": "count_window=%r, " "" % count_window}
+        )
         res += set_count_window(serial, count_window, user=user)
 
     if sync_window is not None:
-        g.audit_object.add_to_log({'action_detail': f"sync_window={sync_window!r}, "})
+        g.audit_object.add_to_log({"action_detail": f"sync_window={sync_window!r}, "})
         res += set_sync_window(serial, sync_window, user=user)
 
     if hashlib is not None:
-        g.audit_object.add_to_log({'action_detail': f"hashlib={hashlib!r}, "})
+        g.audit_object.add_to_log({"action_detail": f"hashlib={hashlib!r}, "})
         res += set_hashlib(serial, hashlib, user=user)
 
     if max_failcount is not None:
-        g.audit_object.add_to_log({'action_detail': "max_failcount=%r, "
-                                                    "" % max_failcount})
+        g.audit_object.add_to_log(
+            {"action_detail": "max_failcount=%r, " "" % max_failcount}
+        )
         res += set_max_failcount(serial, max_failcount, user=user)
 
     if count_auth_max is not None:
-        g.audit_object.add_to_log({'action_detail': "count_auth_max=%r, "
-                                                    "" % count_auth_max})
+        g.audit_object.add_to_log(
+            {"action_detail": "count_auth_max=%r, " "" % count_auth_max}
+        )
         res += set_count_auth(serial, count_auth_max, user=user, max=True)
 
     if count_auth_success_max is not None:
-        g.audit_object.add_to_log({'action_detail':
-                                       "count_auth_success_max={0!r}, ".format(
-                                       count_auth_success_max)})
-        res += set_count_auth(serial, count_auth_success_max, user=user,
-                              max=True, success=True)
+        g.audit_object.add_to_log(
+            {
+                "action_detail": "count_auth_success_max={0!r}, ".format(
+                    count_auth_success_max
+                )
+            }
+        )
+        res += set_count_auth(
+            serial, count_auth_success_max, user=user, max=True, success=True
+        )
 
     if validity_period_end is not None:
-        g.audit_object.add_to_log({'action_detail':
-                                       "validity_period_end={0!r}, ".format(
-                                       validity_period_end)})
+        g.audit_object.add_to_log(
+            {"action_detail": "validity_period_end={0!r}, ".format(validity_period_end)}
+        )
         res += set_validity_period_end(serial, user, validity_period_end)
 
     if validity_period_start is not None:
-        g.audit_object.add_to_log({'action_detail':
-                                       "validity_period_start={0!r}, ".format(
-                                       validity_period_start)})
+        g.audit_object.add_to_log(
+            {
+                "action_detail": "validity_period_start={0!r}, ".format(
+                    validity_period_start
+                )
+            }
+        )
         res += set_validity_period_start(serial, user, validity_period_start)
 
     g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@token_blueprint.route('/realm/<serial>', methods=['POST'])
+@token_blueprint.route("/realm/<serial>", methods=["POST"])
 @admin_required
 @log_with(log)
 @prepolicy(check_max_token_realm, request)
@@ -910,7 +986,7 @@ def tokenrealm_api(serial=None):
     return send_result(True)
 
 
-@token_blueprint.route('/load/<filename>', methods=['POST'])
+@token_blueprint.route("/load/<filename>", methods=["POST"])
 @admin_required
 @log_with(log)
 @prepolicy(check_token_upload, request)
@@ -935,15 +1011,25 @@ def loadtokens_api(filename=None):
     """
     if not filename:
         filename = getParam(request.all_data, "filename", required)
-    known_types = ['aladdin-xml', 'oathcsv', "OATH CSV", 'yubikeycsv',
-                   'Yubikey CSV', 'pskc']
+    known_types = [
+        "aladdin-xml",
+        "oathcsv",
+        "OATH CSV",
+        "yubikeycsv",
+        "Yubikey CSV",
+        "pskc",
+    ]
     file_type = getParam(request.all_data, "type", required)
-    aes_validate_mac = getParam(request.all_data, "pskcValidateMAC", default='check_fail_hard')
+    aes_validate_mac = getParam(
+        request.all_data, "pskcValidateMAC", default="check_fail_hard"
+    )
     aes_psk = getParam(request.all_data, "psk")
     aes_password = getParam(request.all_data, "password")
     if aes_psk and len(aes_psk) != 32:
-        raise TokenAdminError("The Pre Shared Key must be 128 Bit hex "
-                              "encoded. It must be 32 characters long!")
+        raise TokenAdminError(
+            "The Pre Shared Key must be 128 Bit hex "
+            "encoded. It must be 32 characters long!"
+        )
     trealms = getParam(request.all_data, "tokenrealms") or ""
     tokenrealms = []
     if trealms:
@@ -951,7 +1037,7 @@ def loadtokens_api(filename=None):
 
     not_imported_serials = []
     TOKENS = {}
-    token_file = request.files['file']
+    token_file = request.files["file"]
     file_contents = ""
     # In case of form post requests, it is a "instance" of FieldStorage
     # i.e. the Filename is selected in the browser and the data is
@@ -974,10 +1060,13 @@ def loadtokens_api(filename=None):
         raise ParameterError("Error loading token file. File empty!")
 
     if file_type not in known_types:
-        log.error(f"Unknown file type: >>{file_type!s}<<. We only know the types: {', '.join(known_types)!s}")
-        raise TokenAdminError("Unknown file type: >>%s<<. We only know the "
-                              "types: %s" % (file_type,
-                                             ', '.join(known_types)))
+        log.error(
+            f"Unknown file type: >>{file_type!s}<<. We only know the types: {', '.join(known_types)!s}"
+        )
+        raise TokenAdminError(
+            "Unknown file type: >>%s<<. We only know the "
+            "types: %s" % (file_type, ", ".join(known_types))
+        )
 
     # Decrypt file, if necessary
     if file_contents.startswith("-----BEGIN PGP MESSAGE-----"):
@@ -992,8 +1081,12 @@ def loadtokens_api(filename=None):
     elif file_type in ["yubikeycsv", "Yubikey CSV"]:
         TOKENS = parseYubicoCSV(file_contents)
     elif file_type in ["pskc"]:
-        TOKENS, not_imported_serials = parsePSKCdata(file_contents, preshared_key_hex=aes_psk,
-                                                   password=aes_password, validate_mac=aes_validate_mac)
+        TOKENS, not_imported_serials = parsePSKCdata(
+            file_contents,
+            preshared_key_hex=aes_psk,
+            password=aes_password,
+            validate_mac=aes_validate_mac,
+        )
 
     # Now import the Tokens from the dictionary
     ret = ""
@@ -1002,21 +1095,25 @@ def loadtokens_api(filename=None):
 
         log.info(f"initialize token. serial: {serial!s}, realm: {tokenrealms!s}")
 
-        import_token(serial,
-                     TOKENS[serial],
-                     tokenrealms=tokenrealms)
+        import_token(serial, TOKENS[serial], tokenrealms=tokenrealms)
 
-    g.audit_object.log({'info': "{0!s}, {1!s} (imported: {2:d})".format(file_type,
-                                                           token_file,
-                                                           len(TOKENS)),
-                        'serial': ', '.join(TOKENS),
-                        'success': True})
+    g.audit_object.log(
+        {
+            "info": "{0!s}, {1!s} (imported: {2:d})".format(
+                file_type, token_file, len(TOKENS)
+            ),
+            "serial": ", ".join(TOKENS),
+            "success": True,
+        }
+    )
     # logTokenNum()
 
-    return send_result({'n_imported': len(TOKENS), 'n_not_imported': len(not_imported_serials)})
+    return send_result(
+        {"n_imported": len(TOKENS), "n_not_imported": len(not_imported_serials)}
+    )
 
 
-@token_blueprint.route('/copypin', methods=['POST'])
+@token_blueprint.route("/copypin", methods=["POST"])
 @admin_required
 @log_with(log)
 @prepolicy(check_base_action, request, action=ACTION.COPYTOKENPIN)
@@ -1039,7 +1136,7 @@ def copypin_api():
     return send_result(res)
 
 
-@token_blueprint.route('/copyuser', methods=['POST'])
+@token_blueprint.route("/copyuser", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.COPYTOKENUSER)
 @event("token_copyuser", request, g)
@@ -1062,7 +1159,7 @@ def copyuser_api():
     return send_result(res)
 
 
-@token_blueprint.route('/lost/<serial>', methods=['POST'])
+@token_blueprint.route("/lost/<serial>", methods=["POST"])
 @prepolicy(check_base_action, request, action=ACTION.LOSTTOKEN)
 @event("token_lost", request, g)
 @log_with(log)
@@ -1087,18 +1184,18 @@ def lost_api(serial=None):
     if userobj:
         toks = get_tokens(serial=serial, user=userobj)
         if not toks:
-            raise TokenAdminError("The user {0!r} does not own the token {1!s}".format(
-                userobj, serial))
+            raise TokenAdminError(
+                "The user {0!r} does not own the token {1!s}".format(userobj, serial)
+            )
 
-    options = {"g": g,
-               "clientip": g.client_ip}
+    options = {"g": g, "clientip": g.client_ip}
     res = lost_token(serial, options=options)
 
     g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@token_blueprint.route('/getserial/<otp>', methods=['GET'])
+@token_blueprint.route("/getserial/<otp>", methods=["GET"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.GETSERIAL)
 @event("token_getserial", request, g)
@@ -1136,22 +1233,26 @@ def get_serial_by_otp_api(otp=None):
     if assigned_param:
         assigned = True
 
-    count = get_tokens(tokentype=ttype, serial_wildcard="*{0!s}*".format(
-            serial_substr), assigned=assigned, count=True)
+    count = get_tokens(
+        tokentype=ttype,
+        serial_wildcard="*{0!s}*".format(serial_substr),
+        assigned=assigned,
+        count=True,
+    )
     if not count_only:
-        tokenobj_list = get_tokens(tokentype=ttype,
-                                   serial_wildcard=f"*{serial_substr!s}*",
-                                   assigned=assigned)
+        tokenobj_list = get_tokens(
+            tokentype=ttype, serial_wildcard=f"*{serial_substr!s}*", assigned=assigned
+        )
         serial = get_serial_by_otp(tokenobj_list, otp=otp, window=window)
 
-    g.audit_object.log({"success": True,
-                        "info": f"get {serial!s} by OTP. {count!s} tokens"})
+    g.audit_object.log(
+        {"success": True, "info": f"get {serial!s} by OTP. {count!s} tokens"}
+    )
 
-    return send_result({"serial": serial,
-                        "count": count})
+    return send_result({"serial": serial, "count": count})
 
 
-@token_blueprint.route('/info/<serial>/<key>', methods=['POST'])
+@token_blueprint.route("/info/<serial>/<key>", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.SETTOKENINFO)
 @event("token_info", request, g)
@@ -1176,7 +1277,7 @@ def set_tokeninfo_api(serial, key):
     return send_result(success)
 
 
-@token_blueprint.route('/info/<serial>/<key>', methods=['DELETE'])
+@token_blueprint.route("/info/<serial>/<key>", methods=["DELETE"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.SETTOKENINFO)
 @event("token_info", request, g)
@@ -1198,7 +1299,7 @@ def delete_tokeninfo_api(serial, key):
     return send_result(success)
 
 
-@token_blueprint.route('/info/<serial>', methods=['POST'])
+@token_blueprint.route("/info/<serial>", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, action=ACTION.SETTOKENINFO)
 @event("token_info", request, g)
@@ -1219,7 +1320,10 @@ def modify_tokeninfo_api(serial):
     if type(tokeninfo) is not dict:
         tokeninfo = json.loads(tokeninfo)
     if type(tokeninfo) is not dict:
-        raise ParameterError("Parameter 'info' must be a list of key, value pairs (dictionary). but is of type {0!r}", type(tokeninfo))
+        raise ParameterError(
+            "Parameter 'info' must be a list of key, value pairs (dictionary). but is of type {0!r}",
+            type(tokeninfo),
+        )
     else:
         g.audit_object.log({"serial": serial})
         for key, value in tokeninfo.items():
@@ -1233,8 +1337,8 @@ def modify_tokeninfo_api(serial):
     return send_result(success)
 
 
-@token_blueprint.route('/group/<serial>/<groupname>', methods=['POST'])
-@token_blueprint.route('/group/<serial>', methods=['POST'])
+@token_blueprint.route("/group/<serial>/<groupname>", methods=["POST"])
+@token_blueprint.route("/group/<serial>", methods=["POST"])
 @admin_required
 @prepolicy(check_base_action, request, ACTION.TOKENGROUPS)
 @event("token_assign_group", request, g)
@@ -1255,7 +1359,7 @@ def assign_tokengroup_api(serial, groupname=None):
     """
     g.audit_object.log({"serial": serial})
     if groupname:
-        g.audit_object.add_to_log({'action_detail': groupname})
+        g.audit_object.add_to_log({"action_detail": groupname})
         assign_tokengroup(serial, tokengroup=groupname)
     else:
         groups = getParam(request.all_data, "groups", required)
@@ -1263,13 +1367,13 @@ def assign_tokengroup_api(serial, groupname=None):
             group_list = groups
         else:
             group_list = [r.strip() for r in groups.split(",")]
-        g.audit_object.add_to_log({'action_detail': ",".join(group_list)})
+        g.audit_object.add_to_log({"action_detail": ",".join(group_list)})
         set_tokengroups(serial, group_list)
     g.audit_object.log({"success": True})
     return send_result(1)
 
 
-@token_blueprint.route('/group/<serial>/<groupname>', methods=['DELETE'])
+@token_blueprint.route("/group/<serial>/<groupname>", methods=["DELETE"])
 @admin_required
 @prepolicy(check_base_action, request, ACTION.TOKENGROUPS)
 @event("token_unassign_group", request, g)
@@ -1283,7 +1387,7 @@ def unassign_tokengroup_api(serial, groupname):
     :return:
     :rtype: json object
     """
-    g.audit_object.add_to_log({'action_detail': groupname})
+    g.audit_object.add_to_log({"action_detail": groupname})
     unassign_tokengroup(serial, tokengroup=groupname)
-    g.audit_object.add_to_log({'success': True})
+    g.audit_object.add_to_log({"success": True})
     return send_result(1)

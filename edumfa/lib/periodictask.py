@@ -37,7 +37,7 @@ from edumfa.lib.task.eventcounter import EventCounterTask
 from edumfa.lib.task.simplestats import SimpleStatsTask
 from edumfa.models import PeriodicTask
 from edumfa.lib.framework import get_app_config
-from edumfa.lib.utils.export import (register_import, register_export)
+from edumfa.lib.utils.export import register_import, register_export
 
 log = logging.getLogger(__name__)
 
@@ -94,9 +94,17 @@ def calculate_next_timestamp(ptask, node, interval_tzinfo=None):
     return next_timestamp.astimezone(tzutc())
 
 
-def set_periodic_task(name=None, interval=None, nodes=None, taskmodule=None,
-                      ordering=0, options=None, active=True, id=None,
-                      retry_if_failed=True):
+def set_periodic_task(
+    name=None,
+    interval=None,
+    nodes=None,
+    taskmodule=None,
+    ordering=0,
+    options=None,
+    active=True,
+    id=None,
+    retry_if_failed=True,
+):
     """
     Set a periodic task configuration. If ``id`` is None, this creates a new database entry.
     Otherwise, an existing entry is overwritten. We actually ensure that such
@@ -135,8 +143,17 @@ def set_periodic_task(name=None, interval=None, nodes=None, taskmodule=None,
     if id is not None:
         # This will throw a ParameterError if there is no such entry
         get_periodic_task_by_id(id)
-    periodic_task = PeriodicTask(name, active, interval, nodes, taskmodule,
-                                 ordering, options, id, retry_if_failed)
+    periodic_task = PeriodicTask(
+        name,
+        active,
+        interval,
+        nodes,
+        taskmodule,
+        ordering,
+        options,
+        id,
+        retry_if_failed,
+    )
     return periodic_task.id
 
 
@@ -198,7 +215,9 @@ def get_periodic_task_by_name(name):
     """
     periodic_tasks = get_periodic_tasks(name)
     if len(periodic_tasks) != 1:
-        raise ResourceNotFoundError(f"The periodic task with unique name {name!r} does not exist")
+        raise ResourceNotFoundError(
+            f"The periodic task with unique name {name!r} does not exist"
+        )
     return periodic_tasks[0]
 
 
@@ -258,13 +277,17 @@ def get_scheduled_periodic_tasks(node, current_timestamp=None, interval_tzinfo=N
     if current_timestamp is None:
         current_timestamp = datetime.now(tzutc())
     if current_timestamp.tzinfo is None:
-        raise ParameterError(f"expected timezone-aware datetime, got {current_timestamp!r}")
+        raise ParameterError(
+            f"expected timezone-aware datetime, got {current_timestamp!r}"
+        )
     scheduled_ptasks = []
     log.debug(f"Collecting periodic tasks to run at {current_timestamp.isoformat()!s}")
     for ptask in active_ptasks:
         try:
             next_timestamp = calculate_next_timestamp(ptask, node, interval_tzinfo)
-            log.debug(f"Next scheduled run of {ptask['name']!r}: {next_timestamp.isoformat()!s}")
+            log.debug(
+                f"Next scheduled run of {ptask['name']!r}: {next_timestamp.isoformat()!s}"
+            )
             if next_timestamp <= current_timestamp:
                 log.debug(f"Scheduling periodic task {ptask['name']!r}")
                 scheduled_ptasks.append(ptask)
@@ -286,27 +309,29 @@ def execute_task(taskmodule, params):
     return module.do(params)
 
 
-@register_export('periodictask')
+@register_export("periodictask")
 def export_periodictask(name=None):
-    """ Export given or all machineresolver configuration """
+    """Export given or all machineresolver configuration"""
     periodictask_list = get_periodic_tasks(name=name)
     # last_update is not required for import, but used here for completeness
     for task in periodictask_list:
-        last_update = task.get('last_update')
-        task['last_update'] = last_update.strftime(DATE_FORMAT)
+        last_update = task.get("last_update")
+        task["last_update"] = last_update.strftime(DATE_FORMAT)
 
     return periodictask_list
 
 
-@register_import('periodictask')
+@register_import("periodictask")
 def import_periodictask(data, name=None):
     """Import periodictask configuration"""
-    log.debug(f'Import periodictask config: {data!s}')
+    log.debug(f"Import periodictask config: {data!s}")
     for res_data in data:
-        if name and name != res_data.get('name'):
+        if name and name != res_data.get("name"):
             continue
-        res_data.pop('last_update')
-        res_data.pop('last_runs')
+        res_data.pop("last_update")
+        res_data.pop("last_runs")
         rid = set_periodic_task(**res_data)
-        log.info('Import of periodictask "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_data['name'], rid))
+        log.info(
+            'Import of periodictask "{0!s}" finished,'
+            " id: {1!s}".format(res_data["name"], rid)
+        )

@@ -63,8 +63,13 @@ def get_users_with_active_tokens():
     :rtype: int
     """
     from edumfa.models import Token, TokenOwner
+
     sql_query = TokenOwner.query.with_entities(TokenOwner.resolver, TokenOwner.user_id)
-    sql_query = sql_query.filter(Token.active == True).filter(Token.id == TokenOwner.token_id).distinct()
+    sql_query = (
+        sql_query.filter(Token.active == True)
+        .filter(Token.id == TokenOwner.token_id)
+        .distinct()
+    )
     return sql_query.count()
 
 

@@ -33,8 +33,12 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes
 from cryptography.exceptions import InvalidSignature
 
-from edumfa.lib.utils import (to_bytes, to_unicode, hexlify_and_unicode,
-                                   urlsafe_b64encode_and_unicode)
+from edumfa.lib.utils import (
+    to_bytes,
+    to_unicode,
+    hexlify_and_unicode,
+    urlsafe_b64encode_and_unicode,
+)
 
 __doc__ = """Helper functions for U2F protocol according to
 https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html
@@ -56,7 +60,7 @@ def url_decode(url):
     """
     # remove all non base64 characters (newline, CR) from the string before
     # calculating the padding length
-    pad_len = -len(re.sub('[^A-Za-z0-9-_+/]+', '', to_unicode(url))) % 4
+    pad_len = -len(re.sub("[^A-Za-z0-9-_+/]+", "", to_unicode(url))) % 4
 
     padding = pad_len * "="
     res = base64.urlsafe_b64decode(to_bytes(url) + to_bytes(padding))
@@ -87,7 +91,7 @@ def parse_response_data(resp_data):
         signature(bytearray)
     """
     resp_data_bin = binascii.unhexlify(resp_data)
-    user_presence = bytes((resp_data_bin[0], ))
+    user_presence = bytes((resp_data_bin[0],))
     signature = resp_data_bin[5:]
     counter = struct.unpack(">L", resp_data_bin[1:5])[0]
     return user_presence, counter, signature
@@ -115,18 +119,17 @@ def parse_registration_data(reg_data, verify_cert=True):
     reg_data_bin = url_decode(reg_data)
     reserved_byte_value = reg_data_bin[0]  # must be 5
     if reserved_byte_value != 5:
-        raise Exception("The registration data is in a wrong format. It must "
-                        "start with 0x05")
+        raise Exception(
+            "The registration data is in a wrong format. It must " "start with 0x05"
+        )
     user_pub_key = reg_data_bin[1:66]
     key_handle_len = reg_data_bin[66]
     # We need to save the key handle
-    key_handle = reg_data_bin[67:67+key_handle_len]
+    key_handle = reg_data_bin[67 : 67 + key_handle_len]
 
-    certificate = reg_data_bin[67+key_handle_len:]
-    attestation_cert = crypto.load_certificate(crypto.FILETYPE_ASN1,
-                                               certificate)
-    cert_len = len(crypto.dump_certificate(crypto.FILETYPE_ASN1,
-                                           attestation_cert))
+    certificate = reg_data_bin[67 + key_handle_len :]
+    attestation_cert = crypto.load_certificate(crypto.FILETYPE_ASN1, certificate)
+    cert_len = len(crypto.dump_certificate(crypto.FILETYPE_ASN1, attestation_cert))
     # TODO: Check the issuer of the certificate
     issuer = attestation_cert.get_issuer()
     log.debug(f"The attestation certificate is signed by {issuer!r}")
@@ -137,11 +140,11 @@ def parse_registration_data(reg_data, verify_cert=True):
     end_time = time.strptime(not_after, "%Y%m%d%H%M%SZ")
     # check the validity period of the certificate
     if verify_cert:
-        if start_time > time.localtime() or \
-                        end_time < time.localtime():  #pragma no cover
+        if (
+            start_time > time.localtime() or end_time < time.localtime()
+        ):  # pragma no cover
             log.error(f"The certificate is not valid. {not_before!s} -> {not_after!s}")
-            raise Exception("The time of the attestation certificate is not "
-                            "valid.")
+            raise Exception("The time of the attestation certificate is not " "valid.")
 
     # Get the subject as description
     subj_x509name = attestation_cert.get_subject()
@@ -156,15 +159,19 @@ def parse_registration_data(reg_data, verify_cert=True):
             description = to_unicode(component[1])
             break
 
-    signature = reg_data_bin[67+key_handle_len+cert_len:]
-    return (attestation_cert, hexlify_and_unicode(user_pub_key),
-            hexlify_and_unicode(key_handle), hexlify_and_unicode(signature),
-            description)
+    signature = reg_data_bin[67 + key_handle_len + cert_len :]
+    return (
+        attestation_cert,
+        hexlify_and_unicode(user_pub_key),
+        hexlify_and_unicode(key_handle),
+        hexlify_and_unicode(signature),
+        description,
+    )
 
 
-def check_registration_data(attestation_cert, app_id,
-                            client_data, user_pub_key,
-                            key_handle, signature):
+def check_registration_data(
+    attestation_cert, app_id, client_data, user_pub_key, key_handle, signature
+):
     """
     See example in fido spec
     https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html#registration-example
@@ -187,21 +194,27 @@ def check_registration_data(attestation_cert, app_id,
     """
     app_id_hash = sha256(to_bytes(app_id)).digest()
     client_data_hash = sha256(to_bytes(client_data)).digest()
-    reg_data = b'\x00' + app_id_hash + client_data_hash \
-               + binascii.unhexlify(key_handle) + binascii.unhexlify(user_pub_key)
+    reg_data = (
+        b"\x00"
+        + app_id_hash
+        + client_data_hash
+        + binascii.unhexlify(key_handle)
+        + binascii.unhexlify(user_pub_key)
+    )
     try:
-        crypto.verify(attestation_cert,
-                      binascii.unhexlify(signature),
-                      reg_data,
-                      "sha256")
+        crypto.verify(
+            attestation_cert, binascii.unhexlify(signature), reg_data, "sha256"
+        )
     except Exception as exx:
-        raise Exception("Error checking the signature of the registration "
-                        "data. %s" % exx)
+        raise Exception(
+            "Error checking the signature of the registration " "data. %s" % exx
+        )
     return True
 
 
-def check_response(user_pub_key, app_id, client_data, signature,
-                   counter, user_presence_byte=b'\x01'):
+def check_response(
+    user_pub_key, app_id, client_data, signature, counter, user_presence_byte=b"\x01"
+):
     """
     Check the ECDSA Signature with the given pubkey.
     The signed data is constructed from
@@ -234,12 +247,13 @@ def check_response(user_pub_key, app_id, client_data, signature,
     input_data = app_id_hash + user_presence_byte + counter_bin + client_data_hash
 
     try:
-        vkey = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(),
-                                                            user_pub_key_bin)
+        vkey = ec.EllipticCurvePublicKey.from_encoded_point(
+            ec.SECP256R1(), user_pub_key_bin
+        )
         vkey.verify(signature_bin, input_data, ec.ECDSA(hashes.SHA256()))
     except (ValueError, TypeError) as e:
         log.error("Could not load application specific public key!")
-        log.debug(f'{e!s}')
+        log.debug(f"{e!s}")
         res = False
     except InvalidSignature:
         log.error(f"Bad signature for app_id {app_id!s}")

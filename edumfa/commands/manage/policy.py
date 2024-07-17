@@ -24,7 +24,12 @@ import click
 from flask.cli import AppGroup
 
 from edumfa.commands.manage.config import import_cli, export_cli
-from edumfa.commands.manage.helper import conf_export, conf_import, import_conf_policy, get_conf_policy
+from edumfa.commands.manage.helper import (
+    conf_export,
+    conf_import,
+    import_conf_policy,
+    get_conf_policy,
+)
 from edumfa.lib.policy import PolicyClass, delete_policy, set_policy, enable_policy
 
 policy_cli = AppGroup("policy", help="Manage policies")
@@ -40,7 +45,9 @@ def list_policies():
     click.echo("Active \t Name \t Scope")
     click.echo(40 * "=")
     for policy in policies:
-        click.echo(f"{policy.get('active')} \t {policy.get('name')} \t {policy.get('scope')}")
+        click.echo(
+            f"{policy.get('active')} \t {policy.get('name')} \t {policy.get('scope')}"
+        )
 
 
 @policy_cli.command("enable")
@@ -109,7 +116,9 @@ def p_import(filename, cleanup, update, purge):
 @click.argument("name")
 @click.argument("scope")
 @click.argument("action")
-@click.option("-f", "filename", help="filename to import", required=False, type=click.File('r'))
+@click.option(
+    "-f", "filename", help="filename to import", required=False, type=click.File("r")
+)
 def create(name, scope, action, filename):
     """
     create a new policy. 'FILENAME' must contain a dictionary and its content
@@ -127,31 +136,50 @@ def create(name, scope, action, filename):
 
             if params.get("name") and params.get("name") != name:
                 click.echo(
-                    f"Found name '{params.get('name')!s}' in file, will use that instead of '{name!s}'.")
+                    f"Found name '{params.get('name')!s}' in file, will use that instead of '{name!s}'."
+                )
             else:
-                click.echo(f"name not defined in file, will use the cli value {name!s}.")
+                click.echo(
+                    f"name not defined in file, will use the cli value {name!s}."
+                )
                 params["name"] = name
 
             if params.get("scope") and params.get("scope") != scope:
                 click.echo(
-                    f"Found scope '{params.get('scope')!s}' in file, will use that instead of '{scope!s}'.")
+                    f"Found scope '{params.get('scope')!s}' in file, will use that instead of '{scope!s}'."
+                )
             else:
-                click.echo(f"scope not defined in file, will use the cli value {scope!s}.")
+                click.echo(
+                    f"scope not defined in file, will use the cli value {scope!s}."
+                )
                 params["scope"] = scope
 
             if params.get("action") and params.get("action") != action:
                 click.echo(
-                    "Found action in file: '{0!s}', will use that instead of: '{1!s}'.".format(params.get("action"),
-                                                                                               action))
+                    "Found action in file: '{0!s}', will use that instead of: '{1!s}'.".format(
+                        params.get("action"), action
+                    )
+                )
             else:
-                click.echo(f"action not defined in file, will use the cli value {action!s}.")
+                click.echo(
+                    f"action not defined in file, will use the cli value {action!s}."
+                )
                 params["action"] = action
 
-            r = set_policy(params.get("name"), scope=params.get("scope"), action=params.get("action"),
-                           realm=params.get("realm"), resolver=params.get("resolver"), user=params.get("user"),
-                           time=params.get("time"), client=params.get("client"), active=params.get("active", True),
-                           adminrealm=params.get("adminrealm"), adminuser=params.get("adminuser"),
-                           check_all_resolvers=params.get("check_all_resolvers", False))
+            r = set_policy(
+                params.get("name"),
+                scope=params.get("scope"),
+                action=params.get("action"),
+                realm=params.get("realm"),
+                resolver=params.get("resolver"),
+                user=params.get("user"),
+                time=params.get("time"),
+                client=params.get("client"),
+                active=params.get("active", True),
+                adminrealm=params.get("adminrealm"),
+                adminuser=params.get("adminuser"),
+                check_all_resolvers=params.get("check_all_resolvers", False),
+            )
             return r
 
         except Exception as _e:
