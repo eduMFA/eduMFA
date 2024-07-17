@@ -15,7 +15,7 @@ def get_file_contents(file_path):
     content = ""
     try:
         full_path = os.path.join(package_directory, file_path)
-        content = open(full_path, 'r').read()
+        content = open(full_path, "r").read()
     except:
         print(f"### could not open file {file_path!r}", file=sys.stderr)
     return content
@@ -98,52 +98,58 @@ def get_scripts(dir):
 
 
 setup(
-    name='edumfa',
+    name="edumfa",
     version=VERSION,
-    description='eduMFA: identity, multifactor authentication (OTP), authorization, audit',
-    author='edumfa.io',
-    license='AGPLv3',
-    author_email='edumfa@listserv.dfn.de',
-    url='https://www.edumfa.io',
-    keywords='OTP, two factor authentication, management, security',
-    python_requires='>=3.8',
+    description="eduMFA: identity, multifactor authentication (OTP), authorization, audit",
+    author="edumfa.io",
+    license="AGPLv3",
+    author_email="edumfa@listserv.dfn.de",
+    url="https://www.edumfa.io",
+    keywords="OTP, two factor authentication, management, security",
+    python_requires=">=3.8",
     packages=find_namespace_packages(),
     package_data={
-        'edumfa.translations': ["*", "**/*"],
-        'edumfa.static': ["*", "**/*"],
+        "edumfa.translations": ["*", "**/*"],
+        "edumfa.static": ["*", "**/*"],
     },
     scripts=get_scripts("tools"),
     entry_points={
-        'console_scripts': [
-            'edumfa-manage = edumfa.commands.manage.main:cli'
-        ]
+        "console_scripts": ["edumfa-manage = edumfa.commands.manage.main:cli"]
     },
     extras_require={
-        'doc': [
+        "doc": [
             "Pallets-Sphinx-Themes==2.1.3",
             "Sphinx==7.4.5",
             "sphinxcontrib-httpdomain==1.8.1",
             "sphinxcontrib-plantuml==0.30",
-            "sphinxcontrib-spelling==8.0.0"
+            "sphinxcontrib-spelling==8.0.0",
         ],
-        'test': [
+        "test": [
             "mock==5.1.0",
             "pytest==8.2.2",
             "pytest-cov==5.0.0",
             "responses==0.25.3",
-            "testfixtures==8.3.0"
+            "testfixtures==8.3.0",
         ],
-        'postgres': ['psycopg2==2.9.9'],
-        'hsm': ['PyKCS11==1.5.16'],
-        'kerberos': ['gssapi==1.8.3']
+        "postgres": ["psycopg2==2.9.9"],
+        "hsm": ["PyKCS11==1.5.16"],
+        "kerberos": ["gssapi==1.8.3"],
     },
     install_requires=install_requires,
     data_files=[
-        ('etc/edumfa/', ['deploy/apache/edumfaapp.wsgi', 'deploy/edumfa/dictionary']),
-        ('share/man/man1', get_man_pages("tools")),
-        ('lib/edumfa/migrations', ["migrations/alembic.ini", "migrations/env.py", "migrations/README", "migrations/script.py.mako"]),
-        ('lib/edumfa/migrations/versions', get_file_list("migrations/versions/")),
-        ('lib/edumfa/', ['requirements.txt'])
+        ("etc/edumfa/", ["deploy/apache/edumfaapp.wsgi", "deploy/edumfa/dictionary"]),
+        ("share/man/man1", get_man_pages("tools")),
+        (
+            "lib/edumfa/migrations",
+            [
+                "migrations/alembic.ini",
+                "migrations/env.py",
+                "migrations/README",
+                "migrations/script.py.mako",
+            ],
+        ),
+        ("lib/edumfa/migrations/versions", get_file_list("migrations/versions/")),
+        ("lib/edumfa/", ["requirements.txt"]),
     ],
     classifiers=[
         "Framework :: Flask",
@@ -153,14 +159,14 @@ setup(
         "Topic :: Internet",
         "Topic :: Security",
         "Topic :: System :: Systems Administration :: Authentication/Directory",
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12'
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
     zip_safe=False,
-    long_description=get_file_contents('README.rst')
+    long_description=get_file_contents("README.rst"),
 )

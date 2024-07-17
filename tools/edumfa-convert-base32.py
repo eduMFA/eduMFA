@@ -12,9 +12,12 @@ import base64
 
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('file', help='The CSV file with the base32 secrets.'
-                                 'You can specify "-" to read from stdin.',
-                    type=argparse.FileType())
+parser.add_argument(
+    "file",
+    help="The CSV file with the base32 secrets."
+    'You can specify "-" to read from stdin.',
+    type=argparse.FileType(),
+)
 parser.add_argument("-t", "--type", help="The token type (like TOTP)")
 parser.add_argument("-d", "--digits", help="The number of digits")
 parser.add_argument("-s", "--timestep", help="The timestep (like 30 or 60)")
@@ -35,21 +38,21 @@ for line in content:
         sys.stderr.write(f"Error converting secret of serial {serial}.\n")
         continue
 
-    print(f"{serial}, {secret.decode('utf8')}", end='')
+    print(f"{serial}, {secret.decode('utf8')}", end="")
 
     if args.type:
-        print(f", {args.type}", end='')
+        print(f", {args.type}", end="")
     elif len(values) > 2:
-        print(f", {values[2]}", end='')
+        print(f", {values[2]}", end="")
 
     if args.digits:
-        print(f", {args.digits}", end='')
+        print(f", {args.digits}", end="")
     elif len(values) > 3:
-        print(f", {values[3]}", end='')
+        print(f", {values[3]}", end="")
 
     if args.timestep:
-        print(f", {args.timestep}", end='')
+        print(f", {args.timestep}", end="")
     elif len(values) > 4:
-        print(f", {values[4]}", end='')
+        print(f", {values[4]}", end="")
 
     print()
