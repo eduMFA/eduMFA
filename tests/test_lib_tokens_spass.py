@@ -14,7 +14,7 @@ class SpassTokenTestCase(MyTestCase):
     serial1 = "ser1"
 
     # add_user, get_user, reset, set_user_identifiers
-    
+
     def test_01_create_token(self):
         db_token = Token(self.serial1, tokentype="spass")
         db_token.save()

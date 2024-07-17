@@ -40,8 +40,7 @@ class TokenTestCase(MyTestCase):
         r = set_serviceid("webserver", "other machines")
         self.assertGreaterEqual(r, 1)
 
-        self.assertRaises(eduMFAError,
-                          delete_serviceid, sid=(r + 1), name=WEBSERVER)
+        self.assertRaises(eduMFAError, delete_serviceid, sid=(r + 1), name=WEBSERVER)
 
         delete_serviceid(sid=r)
         si = Serviceid.query.filter_by(name=WEBSERVER).all()

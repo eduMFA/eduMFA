@@ -2,6 +2,7 @@
 This testcase is used to test the REST API  in api/machines.py
 to fetch machine information and to attach token to machines
 """
+
 import passlib
 
 from edumfa.lib.user import User
@@ -9,27 +10,31 @@ from .base import MyApiTestCase
 import json
 from edumfa.lib.token import init_token, get_tokens, remove_token
 from edumfa.lib.machine import attach_token, detach_token, ANY_MACHINE, NO_RESOLVER
-from edumfa.lib.policy import (set_policy, delete_policy, ACTION, SCOPE)
+from edumfa.lib.policy import set_policy, delete_policy, ACTION, SCOPE
 
 HOSTSFILE = "tests/testdata/hosts"
 
-SSHKEY = "ssh-rsa " \
-         "AAAAB3NzaC1yc2EAAAADAQABAAACAQDJy0rLoxqc8SsY8DVAFijMsQyCv" \
-         "hBu4K40hdZOacXK4O6OgnacnSKN56MP6pzz2+4svzvDzwvkFsvf34pbsgD" \
-         "F67PPSCsimmjEQjf0UfamBKh0cl181CbPYsph3UTBOCgHh3FFDXBduPK4DQz" \
-         "EVQpmqe80h+lsvQ81qPYagbRW6fpd0uWn9H7a/qiLQZsiKLL07HGB+NwWue4os" \
-         "0r9s4qxeG76K6QM7nZKyC0KRAz7CjAf+0X7YzCOu2pzyxVdj/T+KArFcMmq8V" \
-         "dz24mhcFFXTzU3wveas1A9rwamYWB+Spuohh/OrK3wDsrryStKQv7yofgnPMs" \
-         "TdaL7XxyQVPCmh2jVl5ro9BPIjTXsre9EUxZYFVr3EIECRDNWy3xEnUHk7Rzs" \
-         "734Rp6XxGSzcSLSju8/MBzUVe35iXfXDRcqTcoA0700pIb1ANYrPUO8Up05v4" \
-         "EjIyBeU61b4ilJ3PNcEVld6FHwP3Z7F068ef4DXEC/d7pibrp4Up61WYQIXV/" \
-         "utDt3NDg/Zf3iqoYcJNM/zIZx2j1kQQwqtnbGqxJMrL6LtClmeWteR4420uZx" \
-         "afLE9AtAL4nnMPuubC87L0wJ88un9teza/N02KJMHy01Yz3iJKt3Ou9eV6kqO" \
-         "ei3kvLs5dXmriTHp6g9whtnN6/Liv9SzZPJTs8YfThi34Wccrw== " \
-         "NetKnights GmbH"
-SSHKEY_ecdsa = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd" \
-               "HAyNTYAAABBBHGCdIk0pO1HFr/mF4oLb43ZRyQJ4K7ICLrAhAiQERVa0tUvyY5TE" \
-               "zurWTqxSMx203rY77t6xnHLZBMPPpv8rk0= cornelius@puck"
+SSHKEY = (
+    "ssh-rsa "
+    "AAAAB3NzaC1yc2EAAAADAQABAAACAQDJy0rLoxqc8SsY8DVAFijMsQyCv"
+    "hBu4K40hdZOacXK4O6OgnacnSKN56MP6pzz2+4svzvDzwvkFsvf34pbsgD"
+    "F67PPSCsimmjEQjf0UfamBKh0cl181CbPYsph3UTBOCgHh3FFDXBduPK4DQz"
+    "EVQpmqe80h+lsvQ81qPYagbRW6fpd0uWn9H7a/qiLQZsiKLL07HGB+NwWue4os"
+    "0r9s4qxeG76K6QM7nZKyC0KRAz7CjAf+0X7YzCOu2pzyxVdj/T+KArFcMmq8V"
+    "dz24mhcFFXTzU3wveas1A9rwamYWB+Spuohh/OrK3wDsrryStKQv7yofgnPMs"
+    "TdaL7XxyQVPCmh2jVl5ro9BPIjTXsre9EUxZYFVr3EIECRDNWy3xEnUHk7Rzs"
+    "734Rp6XxGSzcSLSju8/MBzUVe35iXfXDRcqTcoA0700pIb1ANYrPUO8Up05v4"
+    "EjIyBeU61b4ilJ3PNcEVld6FHwP3Z7F068ef4DXEC/d7pibrp4Up61WYQIXV/"
+    "utDt3NDg/Zf3iqoYcJNM/zIZx2j1kQQwqtnbGqxJMrL6LtClmeWteR4420uZx"
+    "afLE9AtAL4nnMPuubC87L0wJ88un9teza/N02KJMHy01Yz3iJKt3Ou9eV6kqO"
+    "ei3kvLs5dXmriTHp6g9whtnN6/Liv9SzZPJTs8YfThi34Wccrw== "
+    "NetKnights GmbH"
+)
+SSHKEY_ecdsa = (
+    "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzd"
+    "HAyNTYAAABBBHGCdIk0pO1HFr/mF4oLb43ZRyQJ4K7ICLrAhAiQERVa0tUvyY5TE"
+    "zurWTqxSMx203rY77t6xnHLZBMPPpv8rk0= cornelius@puck"
+)
 OTPKEY = "3132333435363738393031323334353637383930"
 
 
@@ -42,11 +47,13 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
     def test_01_create_sshkeys(self):
         # create two tokens
-        token_obj = init_token({"serial": self.serial1, "type": "sshkey",
-                                "sshkey": SSHKEY})
+        token_obj = init_token(
+            {"serial": self.serial1, "type": "sshkey", "sshkey": SSHKEY}
+        )
         self.assertEqual(token_obj.type, "sshkey")
-        token_obj = init_token({"serial": self.serial2, "type": "sshkey",
-                                "sshkey": SSHKEY_ecdsa})
+        token_obj = init_token(
+            {"serial": self.serial2, "type": "sshkey", "sshkey": SSHKEY_ecdsa}
+        )
         self.assertEqual(token_obj.type, "sshkey")
 
     def test_02_attach_tokens(self):
@@ -54,13 +61,17 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
         # * S1: webserver and mailserver
         # * S2: only mailserver
         # Attach token S1 to webserver
-        with self.app.test_request_context('/machine/token',
-                                           method='POST',
-                                           data={"serial": self.serial1,
-                                                 "application": "ssh",
-                                                 "user": "root",
-                                                 "service_id": self.serviceID1},
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/machine/token",
+            method="POST",
+            data={
+                "serial": self.serial1,
+                "application": "ssh",
+                "user": "root",
+                "service_id": self.serviceID1,
+            },
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -69,13 +80,17 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             mtid = result.get("value")
 
         # Attach S1 to mailserver
-        with self.app.test_request_context('/machine/token',
-                                           method='POST',
-                                           data={"serial": self.serial1,
-                                                 "application": "ssh",
-                                                 "user": "root",
-                                                 "service_id": self.serviceID2},
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/machine/token",
+            method="POST",
+            data={
+                "serial": self.serial1,
+                "application": "ssh",
+                "user": "root",
+                "service_id": self.serviceID2,
+            },
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -84,13 +99,17 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             mtid = result.get("value")
 
         # Attach S2 to mailserver
-        with self.app.test_request_context('/machine/token',
-                                           method='POST',
-                                           data={"serial": self.serial2,
-                                                 "application": "ssh",
-                                                 "user": "root",
-                                                 "service_id": self.serviceID2},
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/machine/token",
+            method="POST",
+            data={
+                "serial": self.serial2,
+                "application": "ssh",
+                "user": "root",
+                "service_id": self.serviceID2,
+            },
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -100,9 +119,9 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
     def test_03_get_service_ids(self):
         # Get all machinetokens
-        with self.app.test_request_context('/machine/token',
-                                           method='GET',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/machine/token", method="GET", headers={"Authorization": self.at}
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -114,9 +133,11 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             self.assertEqual(value[2]["application"], "ssh")
 
         # Get tokens for service_id self.serviceID1
-        with self.app.test_request_context(f'/machine/token?service_id={self.serviceID1!s}',
-                                           method='GET',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            f"/machine/token?service_id={self.serviceID1!s}",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -128,9 +149,11 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             self.assertEqual(value[0].get("serial"), self.serial1)
 
         # Get token for service_id self.serviceID2
-        with self.app.test_request_context(f'/machine/token?service_id={self.serviceID2!s}',
-                                           method='GET',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            f"/machine/token?service_id={self.serviceID2!s}",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -145,10 +168,13 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             self.assertEqual(value[1].get("serial"), self.serial2)
 
         # combine filter and get service_id self.serviceID2 for serial1
-        with self.app.test_request_context('/machine/token?service_id={0!s}&serial={1!s}'.format(
-                self.serviceID2, self.serial1),
-                                           method='GET',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/machine/token?service_id={0!s}&serial={1!s}".format(
+                self.serviceID2, self.serial1
+            ),
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -160,9 +186,11 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             self.assertEqual(value[0].get("serial"), self.serial1)
 
         # Get token for service_id self.serviceID2 and the correct application
-        with self.app.test_request_context(f'/machine/token?service_id={self.serviceID2!s}&application=ssh',
-                                           method='GET',
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            f"/machine/token?service_id={self.serviceID2!s}&application=ssh",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -178,9 +206,10 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the wrong application
         with self.app.test_request_context(
-                f'/machine/token?service_id={self.serviceID2!s}&application=openssh',
-                method='GET',
-                headers={'Authorization': self.at}):
+            f"/machine/token?service_id={self.serviceID2!s}&application=openssh",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -190,13 +219,17 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
     def test_04_get_service_id_for_different_users(self):
         # Add another SSH key for user admin to self.serviceID2
-        with self.app.test_request_context('/machine/token',
-                                           method='POST',
-                                           data={"serial": self.serial1,
-                                                 "application": "ssh",
-                                                 "user": "admin",
-                                                 "service_id": self.serviceID2},
-                                           headers={'Authorization': self.at}):
+        with self.app.test_request_context(
+            "/machine/token",
+            method="POST",
+            data={
+                "serial": self.serial1,
+                "application": "ssh",
+                "user": "admin",
+                "service_id": self.serviceID2,
+            },
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -206,9 +239,10 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the application=ssh and the user=root
         with self.app.test_request_context(
-                f'/machine/token?service_id={self.serviceID2!s}&application=ssh&user=root',
-                method='GET',
-                headers={'Authorization': self.at}):
+            f"/machine/token?service_id={self.serviceID2!s}&application=ssh&user=root",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -224,9 +258,10 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the application=ssh and the user=admin
         with self.app.test_request_context(
-                f'/machine/token?service_id={self.serviceID2!s}&application=ssh&user=admin',
-                method='GET',
-                headers={'Authorization': self.at}):
+            f"/machine/token?service_id={self.serviceID2!s}&application=ssh&user=admin",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -241,9 +276,10 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Find all tokens attached to a *server
         with self.app.test_request_context(
-                '/machine/token?service_id=*server*&application=ssh',
-                method='GET',
-                headers={'Authorization': self.at}):
+            "/machine/token?service_id=*server*&application=ssh",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -254,9 +290,10 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Find all tokens attached to the user *root*
         with self.app.test_request_context(
-                '/machine/token?application=ssh&user=*oot',
-                method='GET',
-                headers={'Authorization': self.at}):
+            "/machine/token?application=ssh&user=*oot",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -268,9 +305,10 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Find all tokens attached to the user *adm*
         with self.app.test_request_context(
-                '/machine/token?application=ssh&user=*adm*',
-                method='GET',
-                headers={'Authorization': self.at}):
+            "/machine/token?application=ssh&user=*adm*",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -282,9 +320,10 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Filter vor *KEY1
         with self.app.test_request_context(
-                '/machine/token?application=ssh&serial=*KEY1',
-                method='GET',
-                headers={'Authorization': self.at}):
+            "/machine/token?application=ssh&serial=*KEY1",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
@@ -298,9 +337,10 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # sort by service_id
         with self.app.test_request_context(
-                '/machine/token?application=ssh&serial=*KEY1&sortby=service_id',
-                method='GET',
-                headers={'Authorization': self.at}):
+            "/machine/token?application=ssh&serial=*KEY1&sortby=service_id",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
