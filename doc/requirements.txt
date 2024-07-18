@@ -1,5 +1,5 @@
 -r ../requirements.txt
-furo==2024.5.6
+furo==2024.7.18
 docutils==0.21.2
 imagesize==1.4.1
 packaging==24.1
