@@ -442,9 +442,7 @@ def import_policy_api(filename=None):
     g.audit_object.log(
         {
             "success": True,
-            "info": "imported {0:d} policies from file {1!s}".format(
-                policy_num, filename
-            ),
+            "info": f"imported {policy_num:d} policies from file {filename!s}",
         }
     )
 
@@ -545,8 +543,7 @@ def check_policy_api():
     g.audit_object.log(
         {
             "success": True,
-            "action_detail": "action = %s, realm = %s, scope = "
-            "%s" % (action, realm, scope),
+            "action_detail": f"action = {action}, realm = {realm}, scope = {scope}",
         }
     )
 

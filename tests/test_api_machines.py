@@ -167,9 +167,7 @@ class APIMachinesTestCase(MyApiTestCase):
 
         # Now detach the offline token. In this case we ignore the machine and resolver.
         with self.app.test_request_context(
-            "/machine/token/{0!s}/{1!s}/{2!s}/offline".format(
-                serial, ANY_MACHINE, NO_RESOLVER
-            ),
+            f"/machine/token/{serial!s}/{ANY_MACHINE!s}/{NO_RESOLVER!s}/offline",
             method="DELETE",
             headers={"Authorization": self.at},
         ):

@@ -898,7 +898,7 @@ def set_api(serial=None):
 
     if count_window is not None:
         g.audit_object.add_to_log(
-            {"action_detail": "count_window=%r, " "" % count_window}
+            {"action_detail": f"count_window={count_window!r}, "}
         )
         res += set_count_window(serial, count_window, user=user)
 
@@ -912,23 +912,19 @@ def set_api(serial=None):
 
     if max_failcount is not None:
         g.audit_object.add_to_log(
-            {"action_detail": "max_failcount=%r, " "" % max_failcount}
+            {"action_detail": f"max_failcount={max_failcount!r}, "}
         )
         res += set_max_failcount(serial, max_failcount, user=user)
 
     if count_auth_max is not None:
         g.audit_object.add_to_log(
-            {"action_detail": "count_auth_max=%r, " "" % count_auth_max}
+            {"action_detail": f"count_auth_max={count_auth_max!r}, "}
         )
         res += set_count_auth(serial, count_auth_max, user=user, max=True)
 
     if count_auth_success_max is not None:
         g.audit_object.add_to_log(
-            {
-                "action_detail": "count_auth_success_max={0!r}, ".format(
-                    count_auth_success_max
-                )
-            }
+            {"action_detail": f"count_auth_success_max={count_auth_success_max!r}, "}
         )
         res += set_count_auth(
             serial, count_auth_success_max, user=user, max=True, success=True
@@ -936,16 +932,14 @@ def set_api(serial=None):
 
     if validity_period_end is not None:
         g.audit_object.add_to_log(
-            {"action_detail": "validity_period_end={0!r}, ".format(validity_period_end)}
+            {"action_detail": f"validity_period_end={validity_period_end!r}, "}
         )
         res += set_validity_period_end(serial, user, validity_period_end)
 
     if validity_period_start is not None:
         g.audit_object.add_to_log(
             {
-                "action_detail": "validity_period_start={0!r}, ".format(
-                    validity_period_start
-                )
+                "action_detail": f"validity_period_start={validity_period_start!r}, "
             }
         )
         res += set_validity_period_start(serial, user, validity_period_start)
@@ -1101,9 +1095,7 @@ def loadtokens_api(filename=None):
 
     g.audit_object.log(
         {
-            "info": "{0!s}, {1!s} (imported: {2:d})".format(
-                file_type, token_file, len(TOKENS)
-            ),
+            "info": f"{file_type}, {token_file} (imported: {len(TOKENS):d})",
             "serial": ", ".join(TOKENS),
             "success": True,
         }
@@ -1187,7 +1179,7 @@ def lost_api(serial=None):
         toks = get_tokens(serial=serial, user=userobj)
         if not toks:
             raise TokenAdminError(
-                "The user {0!r} does not own the token {1!s}".format(userobj, serial)
+                f"The user {userobj!r} does not own the token {serial}"
             )
 
     options = {"g": g, "clientip": g.client_ip}
@@ -1237,7 +1229,7 @@ def get_serial_by_otp_api(otp=None):
 
     count = get_tokens(
         tokentype=ttype,
-        serial_wildcard="*{0!s}*".format(serial_substr),
+        serial_wildcard=f"*{serial_substr}*",
         assigned=assigned,
         count=True,
     )

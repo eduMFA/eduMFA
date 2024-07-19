@@ -88,7 +88,7 @@ class OCRASuite:
             raise Exception(f"Only HOTP is allowed. You specified {hotp!s}")
         if self.sha not in ["SHA1", "SHA256", "SHA512"]:
             raise Exception(
-                "Only SHA1, SHA256 or SHA512 is allowed. You " "specified %s" % self.sha
+                f"Only SHA1, SHA256 or SHA512 is allowed. You specified {self.sha}"
             )
         if self.truncation not in [0, 4, 5, 6, 7, 8, 9, 10]:
             raise Exception(

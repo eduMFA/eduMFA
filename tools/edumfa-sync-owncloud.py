@@ -206,7 +206,7 @@ def sync_owncloud(config_obj):
 
 def usage():
     print(
-        """
+        f"""
 edumfa-sync-owncloud.py --generate-example-config [--config <config file>]
 
     --generate-example-config, -g   Output an example config file.
@@ -216,9 +216,7 @@ edumfa-sync-owncloud.py --generate-example-config [--config <config file>]
     --config, -c <file>             The config file, that contains the complete
                                     configuration.
 
-{0!s}""".format(
-            __doc__
-        )
+{__doc__!s}"""
     )
 
 

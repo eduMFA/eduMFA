@@ -304,6 +304,5 @@ def import_machineresolver(data, name=None):
         res_data.update(res_data.pop("data"))
         rid = save_resolver(res_data)
         log.info(
-            'Import of caconnector "{0!s}" finished,'
-            " id: {1!s}".format(res_data["name"], rid)
+            f"Import of caconnector \"{res_data['name']!s}\" finished, id: {rid!s}"
         )

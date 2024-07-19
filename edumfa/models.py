@@ -2690,9 +2690,7 @@ class ClientApplication(MethodsMixin, db.Model):
             log.debug(traceback.format_exc())
 
     def __repr__(self):
-        return "<ClientApplication [{0!s}][{1!s}:{2!s}] on {3!s}>".format(
-            self.id, self.ip, self.clienttype, self.node
-        )
+        return f"<ClientApplication [{self.id}][{self.ip}:{self.clienttype}] on {self.node}>"
 
 
 class Subscription(MethodsMixin, db.Model):
@@ -2741,9 +2739,7 @@ class Subscription(MethodsMixin, db.Model):
         return ret
 
     def __repr__(self):
-        return "<Subscription [{0!s}][{1!s}:{2!s}:{3!s}]>".format(
-            self.id, self.application, self.for_name, self.by_name
-        )
+        return f"<Subscription [{self.id}][{self.application}:{self.for_name}:{self.by_name}]>"
 
     def get(self):
         """

@@ -130,9 +130,7 @@ class IdResolver(UserIdResolver):
             self.fileName = "/etc/passwd"
 
         log.info(
-            "loading users from file {0!s} from within {1!r}".format(
-                self.fileName, os.getcwd()
-            )
+            f"loading users from file {self.fileName!s} from within {os.getcwd()!r}"
         )
         with codecs.open(self.fileName, "r", ENCODING) as fileHandle:
             ID = self.sF["userid"]

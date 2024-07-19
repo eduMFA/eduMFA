@@ -217,7 +217,7 @@ class IndexedSecretTokenClass(TokenClass):
         return_message = (
             get_action_values_from_options(
                 SCOPE.AUTH,
-                "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+                f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}",
                 options,
             )
             or DEFAULT_CHALLENGE_TEXT
@@ -230,7 +230,7 @@ class IndexedSecretTokenClass(TokenClass):
             position_count = int(
                 get_action_values_from_options(
                     SCOPE.AUTH,
-                    "{0!s}_{1!s}".format(self.get_class_type(), PIIXACTION.COUNT),
+                    f"{self.get_class_type()!s}_{PIIXACTION.COUNT!s}",
                     options,
                 )
                 or DEFAULT_POSITION_COUNT
@@ -371,7 +371,7 @@ class IndexedSecretTokenClass(TokenClass):
             position_count = int(
                 get_action_values_from_options(
                     SCOPE.AUTH,
-                    "{0!s}_{1!s}".format(self.get_class_type(), PIIXACTION.COUNT),
+                    f"{self.get_class_type()!s}_{PIIXACTION.COUNT!s}",
                     options,
                 )
                 or DEFAULT_POSITION_COUNT

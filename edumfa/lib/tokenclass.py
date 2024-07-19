@@ -1730,7 +1730,7 @@ class TokenClass:
         :return: Flask Response or text
         """
         raise ParameterError(
-            "{0!s} does not support the API endpoint".format(cls.get_tokentype())
+            f"{cls.get_tokentype()!s} does not support the API endpoint"
         )
 
     @staticmethod

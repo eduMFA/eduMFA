@@ -171,9 +171,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # combine filter and get service_id self.serviceID2 for serial1
         with self.app.test_request_context(
-            "/machine/token?service_id={0!s}&serial={1!s}".format(
-                self.serviceID2, self.serial1
-            ),
+            f"/machine/token?service_id={self.serviceID2!s}&serial={self.serial1!s}",
             method="GET",
             headers={"Authorization": self.at},
         ):

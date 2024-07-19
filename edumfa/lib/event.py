@@ -80,8 +80,7 @@ class event:
                 }
                 if event_handler.check_condition(options=options):
                     log.debug(
-                        "Pre-Handling event {eventname} with options"
-                        "{options}".format(eventname=self.eventname, options=options)
+                        f"Pre-Handling event {self.eventname} with options{options}"
                     )
                     # create a new audit object for this action
                     event_audit = getAudit(self.g.audit_object.config)
@@ -126,8 +125,7 @@ class event:
                 }
                 if event_handler.check_condition(options=options):
                     log.debug(
-                        "Post-Handling event {eventname} with options"
-                        "{options}".format(eventname=self.eventname, options=options)
+                        f"Post-Handling event {self.eventname} with options{options}"
                     )
                     # create a new audit object
                     event_audit = getAudit(self.g.audit_object.config)

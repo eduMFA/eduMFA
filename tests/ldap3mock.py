@@ -237,7 +237,7 @@ class Connection:
             else:
                 self.result["result"] = 2
                 self.result["message"] = (
-                    "Error bad/missing/not implemented" "modify operation: %s" % k[1]
+                    f"Error bad/missing/not implementedmodify operation: {k[1]}"
                 )
 
         # Place the attributes back into the directory hash

@@ -238,8 +238,7 @@ def check_tokentype(request, response):
         g.audit_object.log(
             {
                 "success": False,
-                "action_detail": "Tokentype {0!r} not allowed for "
-                "authentication".format(tokentype),
+                "action_detail": f"Tokentype {tokentype!r} not allowed for authentication",
             }
         )
         raise PolicyError("Tokentype not allowed for authentication!")

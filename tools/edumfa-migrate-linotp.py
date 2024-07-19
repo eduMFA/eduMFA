@@ -582,7 +582,7 @@ def migrate(config_obj):
 
 def usage():
     print(
-        """
+        f"""
 edumfa-migrate-linotp.py --generate-example-config [--config <config file>]
 
     --generate-example-config, -g   Output an example config file. 
@@ -592,10 +592,8 @@ edumfa-migrate-linotp.py --generate-example-config [--config <config file>]
     --config, -c <file>             The config file, that contains the complete
                                     configuration.
 
-{0!s}
-""".format(
-            __doc__
-        )
+{__doc__!s}
+"""
     )
 
 

@@ -207,7 +207,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                         )
                 else:
                     raise HSMException(
-                        "HSM random number generation failed " "with {0!s}".format(exx)
+                        f"HSM random number generation failed with {exx!s}"
                     )
 
         # convert the array of the random integers to a string

@@ -298,7 +298,7 @@ def auth_user_passthru(wrapped_function, user_object, passw, options=None):
                 # Now we need to check the userstore password
                 if user_object.check_password(passw):
                     return True, {
-                        "message": "against userstore due to '{!s}'".format(policy_name)
+                        "message": f"against userstore due to '{policy_name!s}'"
                     }
             else:
                 # We are doing RADIUS passthru
@@ -468,8 +468,7 @@ def auth_user_timelimit(wrapped_function, user_object, passw, options=None):
                 if succ_c + succ_auth_c >= policy_count:
                     res = False
                     reply_dict["message"] = (
-                        "Only %s successful "
-                        "authentications per %s" % (policy_count, tdelta)
+                        f"Only {policy_count} successful authentications per {tdelta}"
                     )
 
     return res, reply_dict

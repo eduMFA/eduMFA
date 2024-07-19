@@ -385,7 +385,7 @@ class APIPolicyTestCase(MyApiTestCase):
             "/policy/pol1adminuser",
             method="POST",
             data={
-                "action": "{0!s}, {1!s}".format(ACTION.POLICYDELETE, ACTION.POLICYREAD),
+                "action": f"{ACTION.POLICYDELETE!s}, {ACTION.POLICYREAD!s}",
                 "scope": SCOPE.ADMIN,
                 "realm": "",
                 "adminuser": "testadmin",

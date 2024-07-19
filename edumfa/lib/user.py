@@ -143,8 +143,7 @@ class User:
             return False
         if (self.resolver != other.resolver) or (self.realm != other.realm):
             log.info(
-                "Users are not in the same resolver and realm: "
-                "{0!s} != {1!s}.".format(self, other)
+                f"Users are not in the same resolver and realm: {self!s} != {other!s}."
             )
             return False
         if self.uid and other.uid:
@@ -261,8 +260,7 @@ class User:
                 return True
             else:
                 log.debug(
-                    "user {0!r} not found"
-                    " in resolver {1!r}".format(self.login, resolvername)
+                    f"user {self.login!r} not found in resolver {resolvername!r}"
                 )
                 return False
 
@@ -441,8 +439,7 @@ class User:
         success = None
         try:
             log.info(
-                "User %r from realm %r tries to "
-                "authenticate" % (self.login, self.realm)
+                f"User {self.login!r} from realm {self.realm!r} tries to authenticate"
             )
             res = self._get_resolvers()
             # Now we know, the resolvers of this user and we can verify the

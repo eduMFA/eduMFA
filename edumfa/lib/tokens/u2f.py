@@ -208,7 +208,7 @@ def check_registration_data(
         )
     except Exception as exx:
         raise Exception(
-            "Error checking the signature of the registration " "data. %s" % exx
+            f"Error checking the signature of the registration data. {exx}"
         )
     return True
 

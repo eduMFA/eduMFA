@@ -333,8 +333,7 @@ class RemoteTokenClass(TokenClass):
 
         except Exception as exx:  # pragma: no cover
             log.error(
-                "Error getting response from "
-                "remote Server (%r): %r" % (request_url, exx)
+                f"Error getting response from remote Server ({request_url!r}): {exx!r}"
             )
             log.debug(f"{traceback.format_exc()!s}")
 

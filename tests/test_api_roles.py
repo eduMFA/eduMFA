@@ -88,7 +88,7 @@ class APIAuthTestCase(MyApiTestCase):
         set_policy(
             name="remote",
             scope=SCOPE.WEBUI,
-            action="{0!s}=allowed".format(ACTION.REMOTE_USER),
+            action=f"{ACTION.REMOTE_USER!s}=allowed",
         )
 
         # Admin remote user
@@ -1105,22 +1105,22 @@ class APISelfserviceTestCase(MyApiTestCase):
         set_policy(
             name="webui1",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.TOKENPAGESIZE, 20),
+            action=f"{ACTION.TOKENPAGESIZE!s}={20!s}",
         )
         set_policy(
             name="webui2",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.USERPAGESIZE, 20),
+            action=f"{ACTION.USERPAGESIZE!s}={20!s}",
         )
         set_policy(
             name="webui3",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.LOGOUTTIME, 200),
+            action=f"{ACTION.LOGOUTTIME!s}={200!s}",
         )
         set_policy(
             name="webui4",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.AUDITPAGESIZE, 20),
+            action=f"{ACTION.AUDITPAGESIZE!s}={20!s}",
         )
         set_policy(
             name="webui5", scope=SCOPE.WEBUI, action=ACTION.DELETION_CONFIRMATION

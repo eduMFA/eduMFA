@@ -129,9 +129,7 @@ def create_google_authenticator_url(
     base_len = len(f"otpauth://{tokentype!s}/?secret={otpkey!s}&counter=1")
     allowed_label_len = MAX_QRCODE_LEN - base_len
     log.debug(
-        "we have got {0!s} characters left for the token label".format(
-            str(allowed_label_len)
-        )
+        f"we have got {str(allowed_label_len)!s} characters left for the token label"
     )
     # Deprecated
     label = tokenlabel.replace("<s>", serial).replace("<u>", user).replace("<r>", realm)

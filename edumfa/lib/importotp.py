@@ -593,7 +593,7 @@ def parsePSKCdata(
             log.error(f"Failed to import tokendata: {exx!s}")
             log.debug(traceback.format_exc())
             raise TokenImportException(
-                "Failed to import tokendata. Wrong " "encryption key? %s" % exx
+                f"Failed to import tokendata. Wrong encryption key? {exx}"
             )
 
         if token["type"] in ["hotp", "totp"] and key.data.counter:
@@ -698,7 +698,7 @@ def export_pskc(tokenobj_list, psk=None):
 
     # define the header
     soup = BeautifulSoup(
-        """<KeyContainer Version="1.0"
+        f"""<KeyContainer Version="1.0"
      xmlns="urn:ietf:params:xml:ns:keyprov:pskc"
      xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
      xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
@@ -714,9 +714,7 @@ def export_pskc(tokenobj_list, psk=None):
              </xenc:CipherData>
          </MACKey>
      </MACMethod>
-""".format(
-            encrypted_mackey=encrypted_mackey
-        ),
+""",
         "html.parser",
     )
 

@@ -235,9 +235,9 @@ def create_app(
             init_hsm()
 
     logging.getLogger(__name__).debug(
-        "Reading application from the static "
-        "folder {0!s} and the template folder "
-        "{1!s}".format(app.static_folder, app.template_folder)
+        f"Reading application from the static "
+        f"folder {app.static_folder!s} and the template folder "
+        f"{app.template_folder!s}"
     )
 
     return app

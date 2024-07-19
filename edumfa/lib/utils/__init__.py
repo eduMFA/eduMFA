@@ -373,8 +373,7 @@ def sanity_name_check(name, name_exp=r"^[A-Za-z0-9_\-\.]+$"):
     """
     if re.match(name_exp, name) is None:
         raise Exception(
-            "non conformant characters in the name"
-            ": %r (not in %s)" % (name, name_exp)
+            f"non conformant characters in the name: {name!r} (not in {name_exp})"
         )
     return True
 

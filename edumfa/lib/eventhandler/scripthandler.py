@@ -229,9 +229,7 @@ class ScriptEventHandler(BaseEventHandler):
 
         if rcode:
             log.warning(
-                "Script {script!r} failed to execute with error code {error!r}".format(
-                    script=script_name, error=rcode
-                )
+                f"Script {script_name!r} failed to execute with error code {rcode!r}"
             )
             if is_true(handler_options.get("raise_error")):
                 raise ServerError("Error during execution of the script.")

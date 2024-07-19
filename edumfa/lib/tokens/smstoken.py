@@ -335,7 +335,7 @@ class SmsTokenClass(HotpTokenClass):
         options = options or {}
         return_message = get_action_values_from_options(
             SCOPE.AUTH,
-            "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+            f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}",
             options,
         ) or _("Enter the OTP from the SMS:")
         reply_dict = {"attributes": {"state": transactionid}}

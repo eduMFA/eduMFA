@@ -247,7 +247,7 @@ class LdapMachineResolver(BaseMachineResolver):
         machines = self.get_machines(hostname=hostname, ip=ip)
         if len(machines) > 1:
             raise Exception(
-                "More than one machine found in LDAP resolver {0!s}".format(self.name)
+                f"More than one machine found in LDAP resolver {self.name!s}"
             )
 
         if len(machines) == 1:

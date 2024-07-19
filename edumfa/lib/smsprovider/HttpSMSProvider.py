@@ -158,9 +158,7 @@ class HttpSMSProvider(ISMSProvider):
             proxies=proxies,
         )
         log.debug(
-            "queued SMS on the HTTP gateway. status code returned: {0!s}".format(
-                r.status_code
-            )
+            f"queued SMS on the HTTP gateway. status code returned: {r.status_code!s}"
         )
 
         # We assume, that all gateways return with HTTP Status Code 200,
@@ -218,8 +216,7 @@ class HttpSMSProvider(ISMSProvider):
         elif return_fail:
             if return_fail in reply:
                 log.warning(
-                    "sending sms failed. %s was not found "
-                    "in %s" % (return_fail, reply)
+                    f"sending sms failed. {return_fail} was not found in {reply}"
                 )
                 raise SMSError(
                     response.status_code,

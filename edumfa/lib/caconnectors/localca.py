@@ -643,8 +643,7 @@ class LocalCAConnector(BaseCAConnector):
             config.keysize = keysize or config.keysize
 
             validity_ca = input(
-                "How many days should the CA be valid ["
-                "{0!s}]: ".format(config.validity_ca)
+                f"How many days should the CA be valid [{config.validity_ca!s}]: "
             )
             config.validity_ca = validity_ca or config.validity_ca
 
@@ -657,8 +656,7 @@ class LocalCAConnector(BaseCAConnector):
             #    config.validity_cert))
             # config.validity_cert = validity_cert or config.validity_cert
             crl_days = input(
-                "How many days should the CRL be valid "
-                "[{0!s}]: ".format(config.crl_days)
+                f"How many days should the CRL be valid [{config.crl_days!s}]: "
             )
             config.crl_days = crl_days or config.crl_days
             crl_overlap = input(

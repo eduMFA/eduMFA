@@ -1043,8 +1043,7 @@ class WebAuthnTokenClass(TokenClass):
                 )
             except Exception as e:
                 log.warning(
-                    "Enrollment of {0!s} token failed: "
-                    "{1!s}!".format(self.get_class_type(), e)
+                    f"Enrollment of {self.get_class_type()!s} token failed: {e!s}!"
                 )
                 raise EnrollmentError(
                     f"Could not enroll {self.get_class_type()!s} token!"

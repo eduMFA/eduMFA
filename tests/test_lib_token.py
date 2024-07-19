@@ -836,7 +836,7 @@ class TokenTestCase(MyTestCase):
         set_policy(
             "check_token_list_CR",
             scope=SCOPE.AUTH,
-            action="{0!s}=HOTP".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE!s}=HOTP",
         )
 
         hotp_tokenobject.add_tokeninfo(
@@ -1308,7 +1308,7 @@ class TokenTestCase(MyTestCase):
         set_policy(
             "test48",
             scope=SCOPE.AUTH,
-            action="{0!s}=HOTP".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE!s}=HOTP",
         )
         r, r_dict = check_token_list([token_a, token_b], pin, user)
         self.assertFalse(r)
@@ -1369,7 +1369,7 @@ class TokenTestCase(MyTestCase):
         set_policy(
             "test49",
             scope=SCOPE.AUTH,
-            action="{0!s}=HOTP".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE!s}=HOTP",
         )
         # both tokens will be a valid challenge response token!
         r, r_dict = check_token_list([token_a, token_b], pin, user)

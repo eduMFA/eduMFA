@@ -981,8 +981,7 @@ def get_token_by_otp(token_list, otp="", window=10):
             # A flaw in a single token should not stop privacyidea from finding
             # the right token
             log.warning(
-                "error in calculating OTP for token {0!s}: "
-                "{1!s}".format(token.token.serial, err)
+                f"error in calculating OTP for token {token.token.serial!s}: {err!s}"
             )
 
     if len(result_list) == 1:

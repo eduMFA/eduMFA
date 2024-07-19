@@ -489,8 +489,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                     log.info(f"Sent a notification email to user {recipient}")
                 else:
                     log.warning(
-                        "Failed to send a notification email to user "
-                        "{0}".format(recipient)
+                        f"Failed to send a notification email to user {recipient}"
                     )
 
             elif action.lower() == "savefile":
@@ -523,8 +522,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                     log.info(f"Sent a notification sms to user {recipient}")
                 else:
                     log.warning(
-                        "Failed to send a notification email to user "
-                        "{0}".format(recipient)
+                        f"Failed to send a notification email to user {recipient}"
                     )
 
         return ret

@@ -1344,10 +1344,8 @@ def check_base_action(request=None, action=None, anonymous=False):
     :return: True otherwise raises an Exception
     """
     ERROR = {
-        "user": "User actions are defined, but the action %s is not "
-        "allowed!" % action,
-        "admin": "Admin actions are defined, but the action %s is not "
-        "allowed!" % action,
+        "user": f"User actions are defined, but the action {action} is not allowed!",
+        "admin": f"Admin actions are defined, but the action {action} is not allowed!",
     }
     params = request.all_data
     user_object = request.User

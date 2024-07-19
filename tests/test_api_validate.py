@@ -2537,7 +2537,7 @@ class ValidateAPITestCase(MyApiTestCase):
         set_policy(
             "test49",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE!s}=hotp",
         )
         # both tokens will be a valid challenge response token!
 
@@ -2615,7 +2615,7 @@ class ValidateAPITestCase(MyApiTestCase):
         set_policy(
             "test48",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE!s}=hotp",
         )
         # both tokens will be a valid challenge response token!
 
@@ -2720,7 +2720,7 @@ class ValidateAPITestCase(MyApiTestCase):
         set_policy(
             "test48",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE!s}=hotp",
         )
         # both tokens will be a valid challenge response token!
 
@@ -4795,7 +4795,7 @@ class MultiChallege(MyApiTestCase):
         set_policy(
             "test49",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE!s}=hotp",
         )
 
         with self.app.test_request_context(
@@ -4828,15 +4828,13 @@ class MultiChallege(MyApiTestCase):
         set_policy(
             "test49",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE!s}=hotp",
         )
         # both tokens will be a valid challenge response token!
         set_policy(
             "test",
             scope=SCOPE.AUTH,
-            action="{0!s}=wrong, falsch, Chigau, sbagliato".format(
-                ACTION.PREFERREDCLIENTMODE
-            ),
+            action=f"{ACTION.PREFERREDCLIENTMODE!s}=wrong, falsch, Chigau, sbagliato",
         )
 
         with self.app.test_request_context(

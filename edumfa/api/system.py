@@ -256,8 +256,7 @@ def set_default():
 
     if not result:
         log.warning(
-            "Failed saving config. Could not find any "
-            "known parameter. %s" % description
+            f"Failed saving config. Could not find any known parameter. {description}"
         )
         raise ParameterError(f"Usage: {description!s}", id=77)
 

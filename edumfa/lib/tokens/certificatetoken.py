@@ -690,9 +690,7 @@ class CertificateTokenClass(TokenClass):
         ti = self.get_tokeninfo()
         ca_specifier = ti.get("CA")
         log.debug(
-            "Revoking certificate {0!s} on CA {1!s}.".format(
-                self.token.serial, ca_specifier
-            )
+            f"Revoking certificate {self.token.serial!s} on CA {ca_specifier!s}."
         )
         certificate_pem = ti.get("certificate")
 

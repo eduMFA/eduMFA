@@ -765,9 +765,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pinhandling",
             scope=SCOPE.ENROLL,
-            action="{0!s}=edumfa.lib.pinhandling.base.PinHandler".format(
-                ACTION.PINHANDLING
-            ),
+            action=f"{ACTION.PINHANDLING!s}=edumfa.lib.pinhandling.base.PinHandler",
         )
         g.policy_object = PolicyClass()
 

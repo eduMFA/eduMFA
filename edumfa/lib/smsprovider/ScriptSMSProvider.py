@@ -103,9 +103,7 @@ class ScriptSMSProvider(ISMSProvider):
 
         if rcode:
             log.warning(
-                "Script {script!r} failed to execute with error code {error!r}".format(
-                    script=script_name, error=rcode
-                )
+                f"Script {script_name!r} failed to execute with error code {rcode!r}"
             )
             raise SMSError(-1, "Error during execution of the script.")
         else:

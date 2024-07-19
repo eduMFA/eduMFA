@@ -100,8 +100,7 @@ def save_resolver(params):
             update_resolver = True
         else:
             raise Exception(
-                "resolver with similar name and other type already "
-                "exists: %s" % r_name
+                f"resolver with similar name and other type already exists: {r_name}"
             )
 
     # create a dictionary for the ResolverConfig
@@ -400,6 +399,5 @@ def import_resolver(data, name=None):
         # TODO: we have no information if a new resolver was created or an
         #  existing resolver updated. We would need to enhance "save_resolver()".
         log.info(
-            'Import of resolver "{0!s}" finished,'
-            " id: {1!s}".format(res_data["resolver"], rid)
+            f"Import of resolver \"{res_data['resolver']!s}\" finished, id: {rid!s}"
         )

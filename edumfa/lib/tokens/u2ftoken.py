@@ -478,7 +478,7 @@ class U2fTokenClass(TokenClass):
         options = options or {}
         message = get_action_values_from_options(
             SCOPE.AUTH,
-            "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+            f"{self.get_class_type()!s}_{ACTION.CHALLENGETEXT!s}",
             options,
         ) or _("Please confirm with your U2F token ({0!s})").format(
             self.token.description
@@ -629,9 +629,7 @@ class U2fTokenClass(TokenClass):
                     )
             else:
                 log.warning(
-                    "Checking response for token {0!s} failed.".format(
-                        self.token.serial
-                    )
+                    f"Checking response for token {self.token.serial!s} failed."
                 )
 
         return ret

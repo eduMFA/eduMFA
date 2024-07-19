@@ -790,8 +790,7 @@ class PushTokenClass(TokenClass):
         except (ValueError, TypeError) as _e:
             log.debug(f"{traceback.format_exc()!s}")
             raise eduMFAError(
-                "Could not parse timestamp {0!s}. "
-                "ISO-Format required.".format(timestamp)
+                f"Could not parse timestamp {timestamp!s}. ISO-Format required."
             )
         td = timedelta(minutes=window)
         # We don't know if the passed timestamp is timezone aware. If no
@@ -1014,8 +1013,7 @@ class PushTokenClass(TokenClass):
             # signature error even if the token with the serial could not be found
             log.debug(f"{traceback.format_exc()!s}")
             log.info(
-                "The following error occurred during the signature "
-                'check: "{0!r}"'.format(e)
+                f"The following error occurred during the signature check: \"{e!r}\""
             )
             raise eduMFAError("Could not verify signature!")
 

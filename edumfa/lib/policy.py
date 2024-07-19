@@ -620,9 +620,7 @@ class PolicyClass:
 
             reduced_policies = new_policies
             log.debug(
-                "Policies after matching resolver={1!s}: {0!s}".format(
-                    reduced_policies, resolver
-                )
+                f"Policies after matching resolver={resolver!s}: {reduced_policies!s}"
             )
 
         # Match the eduMFA node
@@ -671,9 +669,7 @@ class PolicyClass:
                     new_policies.append(policy)
             reduced_policies = new_policies
             log.debug(
-                "Policies after matching client={1!s}: {0!s}".format(
-                    reduced_policies, client
-                )
+                f"Policies after matching client={client!s}: {reduced_policies!s}"
             )
 
         if sort_by_priority:

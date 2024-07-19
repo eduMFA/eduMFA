@@ -173,7 +173,7 @@ class HttpMessageToUidProvider(ISMSProvider):
         # 201 or 202
         if r.status_code not in [200, 201, 202]:
             raise SMSError(
-                r.status_code, "message could not be " "sent: %s" % r.status_code
+                r.status_code, f"message could not be sent: {r.status_code}"
             )
         success = self._check_success(r)
         return success
@@ -226,8 +226,7 @@ class HttpMessageToUidProvider(ISMSProvider):
         elif return_fail:
             if return_fail in reply:
                 log.warning(
-                    "sending message failed. %s was not found "
-                    "in %s" % (return_fail, reply)
+                    f"sending message failed. {return_fail} was not found in {reply}"
                 )
                 raise SMSError(
                     response.status_code,

@@ -351,7 +351,7 @@ class QuestionnaireTokenClass(TokenClass):
         question_number = int(
             get_action_values_from_options(
                 SCOPE.AUTH,
-                "{0!s}_{1!s}".format(self.get_class_type(), QUESTACTION.NUM_QUESTIONS),
+                f"{self.get_class_type()!s}_{QUESTACTION.NUM_QUESTIONS!s}",
                 options,
             )
             or 1

@@ -107,7 +107,7 @@ def get_hostname(ip):
     machines = get_machines(ip=ip)
     if len(machines) > 1:
         raise Exception(
-            "Can not get unique ID for IP=%r. " "More than one machine found." % ip
+            f"Can not get unique ID for IP={ip!r}. More than one machine found."
         )
     if len(machines) == 1:
         # There is only one machine in the list and we get its ID

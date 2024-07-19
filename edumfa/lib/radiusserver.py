@@ -142,21 +142,18 @@ class RADIUSServer:
                         return False
                 else:
                     log.info(
-                        "Radiusserver %s sent no "
-                        "Message-Authenticator" % (config.server)
+                        f"Radiusserver {config.server} sent no Message-Authenticator"
                     )
                     return False
 
             if response.code == pyrad.packet.AccessAccept:
                 log.info(
-                    "Radiusserver %s granted "
-                    "access to user %s." % (config.server, user)
+                    f"Radiusserver {config.server} granted access to user {user}."
                 )
                 success = True
             else:
                 log.warning(
-                    "Radiusserver %s rejected "
-                    "access to user %s." % (config.server, user)
+                    f"Radiusserver {config.server} rejected access to user {user}."
                 )
         except Timeout:
             log.warning(

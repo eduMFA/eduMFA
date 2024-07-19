@@ -1383,8 +1383,7 @@ class WebAuthnRegistrationResponse:
                     raise RegistrationRejectedException("Invalid signature received.")
                 except NotImplementedError:  # pragma: no cover
                     log.warning(
-                        "Unsupported algorithm ({0!s}) for signature "
-                        "verification".format(alg)
+                        f"Unsupported algorithm ({alg!s}) for signature verification"
                     )
                     # We do not support this algorithm. Treat as none attestation, if acceptable.
                     if none_attestation_permitted:
@@ -1397,7 +1396,7 @@ class WebAuthnRegistrationResponse:
                         )
                     else:
                         raise RegistrationRejectedException(
-                            "Unsupported algorithm " "({0!s}).".format(alg)
+                            f"Unsupported algorithm ({alg!s})."
                         )
                 return (
                     ATTESTATION_TYPE.SELF_ATTESTATION,
@@ -2142,8 +2141,7 @@ def _get_trust_anchors(attestation_type, attestation_fmt, trust_anchor_dir):
                         trust_anchors.append(pem)
                 except Exception as e:
                     log.info(
-                        "Could not load certificate {0!s}: "
-                        "{1!s}".format(trust_anchor_path, e)
+                        f"Could not load certificate {trust_anchor_path!s}: {e!s}"
                     )
     else:
         log.debug(f"Trust anchor directory ({trust_anchor_dir!s}) not available.")

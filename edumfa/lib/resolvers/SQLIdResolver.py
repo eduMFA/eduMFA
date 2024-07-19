@@ -355,7 +355,7 @@ class IdResolver(UserIdResolver):
             for r in result.mappings():
                 if userid != "":  # pragma: no cover
                     raise Exception(
-                        "More than one user with loginname" " %s found!" % LoginName
+                        f"More than one user with loginname {LoginName} found!"
                     )
                 user = self._get_user_from_mapped_object(r)
                 userid = convert_column_to_unicode(user["userid"])
@@ -515,8 +515,7 @@ class IdResolver(UserIdResolver):
 
     def _create_engine(self):
         log.info(
-            "using the connect string "
-            "{0!s}".format(censor_connect_string(self.connect_string))
+            f"using the connect string {censor_connect_string(self.connect_string)!s}"
         )
         try:
             log.debug(
@@ -731,8 +730,7 @@ class IdResolver(UserIdResolver):
             log.info(f"Updated user attributes for user with uid {uid!s}")
         except Exception as exx:
             log.error(
-                "Error updating user attributes for user with uid {0!s}: "
-                "{1!s}".format(uid, exx)
+                f"Error updating user attributes for user with uid {uid!s}: {exx!s}"
             )
             log.debug(f"Error updating attributes {attributes!s}", exc_info=True)
 
