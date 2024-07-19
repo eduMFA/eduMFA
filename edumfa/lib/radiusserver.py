@@ -147,9 +147,7 @@ class RADIUSServer:
                     return False
 
             if response.code == pyrad.packet.AccessAccept:
-                log.info(
-                    f"Radiusserver {config.server} granted access to user {user}."
-                )
+                log.info(f"Radiusserver {config.server} granted access to user {user}.")
                 success = True
             else:
                 log.warning(

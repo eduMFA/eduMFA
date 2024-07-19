@@ -196,9 +196,7 @@ class MSCAConnector(BaseCAConnector):
                     )
                     log.debug("Client private key decrypted.")
                 except ValueError as e:
-                    log.error(
-                        f"Could not decrypt TLS key with given password. ({e!s})"
-                    )
+                    log.error(f"Could not decrypt TLS key with given password. ({e!s})")
                     raise CAError("Invalid TLS configuration for MSCA worker.")
                 except TypeError as e:
                     log.error(

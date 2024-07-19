@@ -172,9 +172,7 @@ class HttpMessageToUidProvider(ISMSProvider):
         # We assume, that all gateways return with HTTP Status Code 200,
         # 201 or 202
         if r.status_code not in [200, 201, 202]:
-            raise SMSError(
-                r.status_code, f"message could not be sent: {r.status_code}"
-            )
+            raise SMSError(r.status_code, f"message could not be sent: {r.status_code}")
         success = self._check_success(r)
         return success
 

@@ -897,9 +897,7 @@ def set_api(serial=None):
         res += set_description(serial, description, user=user)
 
     if count_window is not None:
-        g.audit_object.add_to_log(
-            {"action_detail": f"count_window={count_window!r}, "}
-        )
+        g.audit_object.add_to_log({"action_detail": f"count_window={count_window!r}, "})
         res += set_count_window(serial, count_window, user=user)
 
     if sync_window is not None:
@@ -938,9 +936,7 @@ def set_api(serial=None):
 
     if validity_period_start is not None:
         g.audit_object.add_to_log(
-            {
-                "action_detail": f"validity_period_start={validity_period_start!r}, "
-            }
+            {"action_detail": f"validity_period_start={validity_period_start!r}, "}
         )
         res += set_validity_period_start(serial, user, validity_period_start)
 

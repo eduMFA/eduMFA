@@ -207,9 +207,7 @@ def check_registration_data(
             attestation_cert, binascii.unhexlify(signature), reg_data, "sha256"
         )
     except Exception as exx:
-        raise Exception(
-            f"Error checking the signature of the registration data. {exx}"
-        )
+        raise Exception(f"Error checking the signature of the registration data. {exx}")
     return True
 
 

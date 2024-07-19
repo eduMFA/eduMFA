@@ -267,9 +267,7 @@ class TiqrTokenClass(OcraTokenClass):
         params = request.all_data
         action = getParam(params, "action", optional) or API_ACTIONS.AUTHENTICATION
         if action not in API_ACTIONS.ALLOWED_ACTIONS:
-            raise ParameterError(
-                f"Allowed actions are {API_ACTIONS.ALLOWED_ACTIONS!s}"
-            )
+            raise ParameterError(f"Allowed actions are {API_ACTIONS.ALLOWED_ACTIONS!s}")
 
         if action == API_ACTIONS.METADATA:
             session = getParam(params, "session", required)

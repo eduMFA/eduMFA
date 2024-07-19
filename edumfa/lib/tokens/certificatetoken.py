@@ -689,9 +689,7 @@ class CertificateTokenClass(TokenClass):
         # determine the CA and its connector.
         ti = self.get_tokeninfo()
         ca_specifier = ti.get("CA")
-        log.debug(
-            f"Revoking certificate {self.token.serial!s} on CA {ca_specifier!s}."
-        )
+        log.debug(f"Revoking certificate {self.token.serial!s} on CA {ca_specifier!s}.")
         certificate_pem = ti.get("certificate")
 
         # call CAConnector.revoke_cert()

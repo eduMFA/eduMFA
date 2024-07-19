@@ -259,9 +259,7 @@ class User:
                 # We do not need to search other resolvers!
                 return True
             else:
-                log.debug(
-                    f"user {self.login!r} not found in resolver {resolvername!r}"
-                )
+                log.debug(f"user {self.login!r} not found in resolver {resolvername!r}")
                 return False
 
     def get_user_identifiers(self):

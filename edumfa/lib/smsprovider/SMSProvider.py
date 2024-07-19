@@ -327,7 +327,7 @@ def create_sms_instance(identifier):
     gateway_definition = get_smsgateway(identifier)
     if not gateway_definition:
         raise ConfigAdminError(
-            f"Could not find gateway definition with identifier \"{identifier!s}\""
+            f'Could not find gateway definition with identifier "{identifier!s}"'
         )
     package_name, class_name = gateway_definition[0].providermodule.rsplit(".", 1)
     sms_klass = get_sms_provider_class(package_name, class_name)

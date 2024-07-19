@@ -85,32 +85,24 @@ class SecurityModule:
 
     def setup_module(self, params):
         fname = "setup_module"
-        log.error(
-            f"This is the base class. You should implement the method : {fname} "
-        )
+        log.error(f"This is the base class. You should implement the method : {fname} ")
         raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     """ base methods """
 
     def random(self, length):
         fname = "random"
-        log.error(
-            f"This is the base class. You should implement the method : {fname} "
-        )
+        log.error(f"This is the base class. You should implement the method : {fname} ")
         raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def encrypt(self, data, iv, key_id=TOKEN_KEY):
         fname = "encrypt"
-        log.error(
-            f"This is the base class. You should implement the method : {fname} "
-        )
+        log.error(f"This is the base class. You should implement the method : {fname} ")
         raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def decrypt(self, enc_data, iv, key_id=TOKEN_KEY):
         fname = "decrypt"
-        log.error(
-            f"This is the base class. You should implement the method : {fname} "
-        )
+        log.error(f"This is the base class. You should implement the method : {fname} ")
         raise NotImplementedError(f"Should have been implemented {fname!s}")
 
     def decrypt_password(self, crypt_pass):
