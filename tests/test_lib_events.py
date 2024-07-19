@@ -48,7 +48,6 @@ from edumfa.lib.eventhandler.tokenhandler import (
 )
 from edumfa.lib.eventhandler.usernotification import UserNotificationEventHandler
 from edumfa.lib.eventhandler.webhookeventhandler import (
-    ACTION_TYPE,
     CONTENT_TYPE,
     WebHookHandler,
 )
