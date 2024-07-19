@@ -6,64 +6,66 @@ This file contains the event handlers tests. It tests:
 lib/eventhandler/usernotification.py (one event handler module)
 lib/event.py (the decorator)
 """
+import os
+from collections import OrderedDict
+from datetime import datetime, timedelta
+
+import mock
 import requests.exceptions
 import responses
-import os
-import mock
+from dateutil.parser import parse as parse_date_string
+from dateutil.tz import tzlocal
+from flask import Request
+from mock import MagicMock, patch
+from werkzeug.test import EnvironBuilder
 
-from mock import patch, MagicMock
-from edumfa.lib.eventhandler.customuserattributeshandler import (
-    CustomUserAttributesHandler,
-    ACTION_TYPE as CUAH_ACTION_TYPE,
-)
-from edumfa.lib.eventhandler.customuserattributeshandler import USER_TYPE
-from edumfa.lib.eventhandler.webhookeventhandler import (
-    ACTION_TYPE,
-    WebHookHandler,
-    CONTENT_TYPE,
-)
-from edumfa.lib.eventhandler.usernotification import UserNotificationEventHandler
-from edumfa.lib.machine import list_token_machines
-from .base import MyTestCase, FakeFlaskG, FakeAudit
+from edumfa.app import PiResponseClass as Response
 from edumfa.lib.config import get_config_object
-from edumfa.lib.eventhandler.tokenhandler import (
-    TokenEventHandler,
-    ACTION_TYPE,
-    VALIDITY,
+from edumfa.lib.counter import increase as counter_increase
+from edumfa.lib.error import ResourceNotFoundError
+from edumfa.lib.event import (
+    EventConfiguration,
+    delete_event,
+    enable_event,
+    get_handler_object,
+    set_event,
 )
-from edumfa.lib.eventhandler.scripthandler import ScriptEventHandler, SCRIPT_WAIT
+from edumfa.lib.eventhandler.base import CONDITION, BaseEventHandler
 from edumfa.lib.eventhandler.counterhandler import CounterEventHandler
-from edumfa.lib.eventhandler.responsemangler import ResponseManglerEventHandler
-from edumfa.models import EventCounter
+from edumfa.lib.eventhandler.customuserattributeshandler import (
+    ACTION_TYPE as CUAH_ACTION_TYPE,
+    USER_TYPE,
+    CustomUserAttributesHandler,
+)
 from edumfa.lib.eventhandler.federationhandler import FederationEventHandler
 from edumfa.lib.eventhandler.requestmangler import RequestManglerEventHandler
-from edumfa.lib.eventhandler.base import BaseEventHandler, CONDITION
-from edumfa.lib.counter import increase as counter_increase
-from flask import Request
-from werkzeug.test import EnvironBuilder
-from edumfa.lib.event import (
-    delete_event,
-    set_event,
-    EventConfiguration,
-    get_handler_object,
-    enable_event,
+from edumfa.lib.eventhandler.responsemangler import ResponseManglerEventHandler
+from edumfa.lib.eventhandler.scripthandler import SCRIPT_WAIT, ScriptEventHandler
+from edumfa.lib.eventhandler.tokenhandler import (
+    ACTION_TYPE,
+    VALIDITY,
+    TokenEventHandler,
 )
+from edumfa.lib.eventhandler.usernotification import UserNotificationEventHandler
+from edumfa.lib.eventhandler.webhookeventhandler import (
+    ACTION_TYPE,
+    CONTENT_TYPE,
+    WebHookHandler,
+)
+from edumfa.lib.machine import list_token_machines
 from edumfa.lib.token import (
-    init_token,
-    remove_token,
+    add_tokeninfo,
     get_realms_of_token,
     get_tokens,
-    add_tokeninfo,
+    init_token,
+    remove_token,
 )
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.user import User
-from edumfa.lib.error import ResourceNotFoundError
 from edumfa.lib.utils import is_true
-from datetime import datetime, timedelta
-from dateutil.parser import parse as parse_date_string
-from dateutil.tz import tzlocal
-from edumfa.app import PiResponseClass as Response
-from collections import OrderedDict
+from edumfa.models import EventCounter
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 
 class EventHandlerLibTestCase(MyTestCase):
