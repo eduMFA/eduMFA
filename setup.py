@@ -55,7 +55,7 @@ install_requires = [
     "lxml==5.2.2",
     "netaddr==1.3.0",
     "passlib[bcrypt]==1.7.4",
-    "pyOpenSSL==24.1.0",
+    "pyOpenSSL==24.2.1",
     "pydash==8.0.1",
     "pyrad==2.4",
     "python-dateutil==2.9.0.post0",
