@@ -105,7 +105,7 @@ pyasn1-modules==0.4.0
     # via google-auth
 pycparser==2.22
     # via cffi
-pydash==8.0.1
+pydash==8.0.2
     # via edumfa (setup.py)
 pyjwt==2.8.0
     # via edumfa (setup.py)
