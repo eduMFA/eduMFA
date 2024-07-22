@@ -2722,7 +2722,9 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = "A webhook is send to http://test.com with the text: This is a test"
+            text = (
+                "A webhook is send to 'http://test.com' with the text: 'This is a test'"
+            )
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
 
@@ -2738,7 +2740,9 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = "A webhook is send to http://test.com with the text: This is a test"
+            text = (
+                "A webhook is send to 'http://test.com' with the text: 'This is a test'"
+            )
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
 
