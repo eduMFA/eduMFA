@@ -208,7 +208,6 @@ class SMSTestCase(MyTestCase):
 
 
 class SmtpSMSTestCase(MyTestCase):
-
     missing_config = {"MAILSERVER": "localhost:25"}
 
     simple_config = {
@@ -320,7 +319,7 @@ class SmtpSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = sms.submit_message("123456", "Halo")
             self.assertTrue(r)
-            log.assert_any_call("submitting message Halo to 123456")
+            log.assert_any_call("submitting message 'Halo' to 123456")
 
     @smtpmock.activate
     def test_09_send_sms_regexp_success(self):
@@ -341,11 +340,10 @@ class SmtpSMSTestCase(MyTestCase):
             # Here we need to send the SMS
             r = self.regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call("submitting message Hello to 4912345678")
+            log.assert_any_call("submitting message 'Hello' to 4912345678")
 
 
 class SipgateSMSTestCase(MyTestCase):
-
     url = URL
     config = {
         "USERNAME": "user",
@@ -390,7 +388,7 @@ class SipgateSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call("submitting message Hello to 4912345678")
+            log.assert_any_call("submitting message 'Hello' to 4912345678")
 
     @responses.activate
     def test_08_smsgateway_success(self):
@@ -407,11 +405,10 @@ class SipgateSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = sms.submit_message("123456", "Hello")
             self.assertTrue(r)
-            log.assert_any_call("submitting message Hello to 123456")
+            log.assert_any_call("submitting message 'Hello' to 123456")
 
 
 class ScriptSMSTestCase(MyTestCase):
-
     directory = f"{os.getcwd()!s}/tests/testdata/scripts/"
 
     def test_01_fail_no_script(self):
@@ -485,7 +482,6 @@ class ScriptSMSTestCase(MyTestCase):
 
 
 class HttpSMSTestCase(MyTestCase):
-
     post_url = "http://smsgateway.com/sms_send_api.cgi"
     config_post = {
         "URL": post_url,
@@ -590,7 +586,7 @@ class HttpSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = self.regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call("submitting message Hello to 4912345678")
+            log.assert_any_call("submitting message 'Hello' to 4912345678")
 
     @responses.activate
     def test_02_send_sms_post_fail(self):
@@ -724,7 +720,6 @@ class HttpSMSTestCase(MyTestCase):
 
 
 class SmppSMSTestCase(MyTestCase):
-
     config = {
         "SMSC_HOST": "192.168.1.1",
         "SMSC_PORT": "1234",
@@ -823,13 +818,12 @@ class SmppSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call("submitting message Hello to 4912345678")
+            log.assert_any_call("submitting message 'Hello' to 4912345678")
 
         delete_smsgateway(identifier_regexp)
 
 
 class HttpMessageToUidTestCase(MyTestCase):
-
     url = "http://somegateway.com/send_api.cgi"
     config = {
         "URL": url,
