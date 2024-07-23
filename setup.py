@@ -46,11 +46,22 @@ def get_scripts(dir):
 
 setup(
     scripts=get_scripts("tools"),
+    entry_points={
+        "console_scripts": ["edumfa-manage = edumfa.commands.manage.main:cli"]
+    },
     data_files=[
-        ('etc/edumfa/', ['deploy/apache/edumfaapp.wsgi', 'deploy/edumfa/dictionary']),
-        ('share/man/man1', get_man_pages("tools")),
-        ('lib/edumfa/migrations', ["migrations/alembic.ini", "migrations/env.py", "migrations/README", "migrations/script.py.mako"]),
-        ('lib/edumfa/migrations/versions', get_file_list("migrations/versions/")),
-        ('lib/edumfa/', ['requirements.txt'])
+        ("etc/edumfa/", ["deploy/apache/edumfaapp.wsgi", "deploy/edumfa/dictionary"]),
+        ("share/man/man1", get_man_pages("tools")),
+        (
+            "lib/edumfa/migrations",
+            [
+                "migrations/alembic.ini",
+                "migrations/env.py",
+                "migrations/README",
+                "migrations/script.py.mako",
+            ],
+        ),
+        ("lib/edumfa/migrations/versions", get_file_list("migrations/versions/")),
+        ("lib/edumfa/", ["requirements.txt"]),
     ],
 )
