@@ -50,7 +50,7 @@ install_requires = [
     "google-auth==2.32.0",
     "grpcio==1.65.1",
     "huey[redis]==2.5.1",
-    "importlib_metadata==8.0.0",
+    "importlib_metadata==8.1.0",
     "ldap3==2.9.1",
     "lxml==5.2.2",
     "netaddr==1.3.0",
