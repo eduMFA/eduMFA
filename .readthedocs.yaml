@@ -21,7 +21,10 @@ sphinx:
 # Install the pinned dependencies for the documentation building process.
 python:
   install:
-    - requirements: doc/requirements.txt
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
 
 # This is not currently needed, it is included so documentation will not break, if functionality is moved into
 # submodules.

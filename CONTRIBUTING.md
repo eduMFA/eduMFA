@@ -28,7 +28,7 @@ https://github.com/eduMFA/eduMFA/issues
 The source code is pretty well documented. The main documentation resides in the
 `doc`-subfolder and can be build with:
 ```
-pip install -r doc/requirements.txt
+pip install .[docs]
 cd doc/ && make html
 ```
 This also pulls the API-documentation from the source code.
