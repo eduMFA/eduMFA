@@ -1,18 +1,18 @@
 -r ../requirements.txt
-furo==2024.5.6
+furo==2024.7.18
 docutils==0.21.2
 imagesize==1.4.1
 packaging==24.1
 pyenchant==3.2.2
 Pygments==2.18.0
 snowballstemmer==2.2.0
-Sphinx==7.4.5
+Sphinx==7.4.7
 sphinxcontrib-applehelp==1.0.8
 sphinxcontrib-devhelp==1.0.6
-sphinxcontrib-htmlhelp==2.0.5
+sphinxcontrib-htmlhelp==2.0.6
 sphinxcontrib-httpdomain==1.8.1
 sphinxcontrib-jsmath==1.0.1
-sphinxcontrib-qthelp==1.0.7
+sphinxcontrib-qthelp==1.0.8
 sphinxcontrib-serializinghtml==1.1.10 
 sphinxcontrib-spelling==8.0.0
 sphinx-copybutton==0.5.2
