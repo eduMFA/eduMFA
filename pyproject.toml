@@ -57,11 +57,20 @@ docs = [
     "sphinx-inline-tabs==2023.4.21",
 ]
 test = [
+    "attrs==23.2.0",
+    "coverage==7.5.3",
+    "exceptiongroup==1.1.1",
+    "iniconfig==2.0.0",
     "mock==5.1.0",
-    "pytest==8.3.1",
+    "packaging==24.0",
+    "pluggy==1.5.0",
+    "pyparsing==3.1.2",
+    "pytest==8.2.2",
     "pytest-cov==5.0.0",
-    "responses==0.25.3",
-    "testfixtures==8.3.0"
+    "responses==0.25.2",
+    "testfixtures==8.3.0",
+    "tomli==2.0.1",
+    "types-PyYAML==6.0.12.9",
 ]
 postgres = ["psycopg2==2.9.9"]
 hsm = ["PyKCS11==1.5.16"]
