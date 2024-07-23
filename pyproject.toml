@@ -73,10 +73,9 @@ dependencies = { file = "requirements.txt" }
 [project.entry-points.console-scripts]
 edumfa-manage = "edumfa.commands.manage.main:cli"
 
-[tool.setuptools]
-packages = [
-    "edumfa",
-    "edumfa.translations",
-    "edumfa.static",
-]
-include-package-data = true
+[tool.setuptools.packages.find]
+include = ["edumfa", "edumfa.*"]
+
+[tool.setuptools.package-data]
+"edumfa.translations" = ["*", "**/*"]
+"edumfa.static" = ["*", "**/*"]
