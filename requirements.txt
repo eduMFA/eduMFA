@@ -36,7 +36,7 @@ click==8.1.7
     # via flask
 configobj==5.0.8
     # via edumfa (setup.py)
-croniter==2.0.7
+croniter==3.0.0
     # via edumfa (setup.py)
 cryptography==42.0.8
     # via
@@ -69,7 +69,7 @@ huey==2.5.1
     # via edumfa (setup.py)
 idna==3.7
     # via requests
-importlib-metadata==8.0.0
+importlib-metadata==8.1.0
     # via edumfa (setup.py)
 itsdangerous==2.2.0
     # via flask
@@ -163,5 +163,5 @@ zipp==3.19.2
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==70.3.0
+setuptools==71.1.0
     # via flask-versioned
