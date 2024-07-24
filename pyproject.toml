@@ -83,8 +83,7 @@ edumfa-manage = "edumfa.commands.manage.main:cli"
 dependencies = { file = "requirements.txt" }
 
 [tool.setuptools.packages.find]
-include = ["edumfa", "edumfa.*"]
+include = ["edumfa*"]
 
 [tool.setuptools.package-data]
-"edumfa.translations" = ["*", "**/*"]
-"edumfa.static" = ["*", "**/*"]
+"edumfa" = ["translations/**/*", "static/**/*"]
