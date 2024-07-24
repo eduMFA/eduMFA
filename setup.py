@@ -46,9 +46,6 @@ def get_scripts(dir):
 
 setup(
     scripts=get_scripts("tools"),
-    entry_points={
-        "console_scripts": ["edumfa-manage = edumfa.commands.manage.main:cli"]
-    },
     data_files=[
         ("etc/edumfa/", ["deploy/apache/edumfaapp.wsgi", "deploy/edumfa/dictionary"]),
         ("share/man/man1", get_man_pages("tools")),
