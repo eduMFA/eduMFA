@@ -44,7 +44,7 @@ install_requires = [
     "beautifulsoup4[lxml]==4.12.3",
     "cbor2==5.6.4",
     "configobj==5.0.8",
-    "croniter==2.0.7",
+    "croniter==3.0.0",
     "cryptography==42.0.8",
     "defusedxml==0.7.1",
     "google-auth==2.32.0",
