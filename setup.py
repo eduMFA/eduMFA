@@ -128,7 +128,7 @@ setup(
         ],
         'test': [
             "mock==5.1.0",
-            "pytest==8.3.1",
+            "pytest==8.3.2",
             "pytest-cov==5.0.0",
             "responses==0.25.3",
             "testfixtures==8.3.0"
