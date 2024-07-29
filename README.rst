@@ -69,14 +69,14 @@ If you want to setup a development environment start like this::
     cd edumfa
     virtualenv venv
     source venv/bin/activate
-    pip install -r requirements.txt
+    pip install .
     
 .. _testing_env:
 
 You may additionally want to set up your environment for testing, by adding the
 additional dependencies::
 
-    pip install -r tests/requirements.txt
+    pip install -r .[test]
 
 
 Getting and updating submodules
