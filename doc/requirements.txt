@@ -7,7 +7,7 @@ pyenchant==3.2.2
 Pygments==2.18.0
 snowballstemmer==2.2.0
 Sphinx==7.4.7
-sphinxcontrib-applehelp==1.0.8
+sphinxcontrib-applehelp==2.0.0
 sphinxcontrib-devhelp==1.0.6
 sphinxcontrib-htmlhelp==2.0.6
 sphinxcontrib-httpdomain==1.8.1
