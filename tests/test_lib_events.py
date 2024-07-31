@@ -47,10 +47,7 @@ from edumfa.lib.eventhandler.tokenhandler import (
     TokenEventHandler,
 )
 from edumfa.lib.eventhandler.usernotification import UserNotificationEventHandler
-from edumfa.lib.eventhandler.webhookeventhandler import (
-    CONTENT_TYPE,
-    WebHookHandler,
-)
+from edumfa.lib.eventhandler.webhookeventhandler import CONTENT_TYPE, WebHookHandler
 from edumfa.lib.machine import list_token_machines
 from edumfa.lib.token import (
     add_tokeninfo,
