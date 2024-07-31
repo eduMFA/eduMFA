@@ -154,7 +154,7 @@ def create_google_authenticator_url(
     url_issuer = quote(issuer.encode("utf-8"))
 
     if hash_algo.lower() != "sha1":
-        hash_algo = f"algorithm={hash_algo!s}&"
+        hash_algo = f"algorithm={hash_algo.upper()}&"
     else:
         # If the hash_algo is SHA1, we do not add it to the QR code to keep
         # the QR code simpler
