@@ -59,7 +59,7 @@ docs = [
 test = [
     "attrs==23.2.0",
     "coverage==7.6.0",
-    "exceptiongroup==1.1.1",
+    "exceptiongroup==1.2.2",
     "iniconfig==2.0.0",
     "mock==5.1.0",
     "packaging==24.1",
