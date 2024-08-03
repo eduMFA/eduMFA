@@ -57,7 +57,7 @@ docs = [
     "sphinx-inline-tabs==2023.4.21",
 ]
 test = [
-    "attrs==23.2.0",
+    "attrs==24.1.0",
     "coverage==7.6.0",
     "exceptiongroup==1.2.2",
     "iniconfig==2.0.0",
