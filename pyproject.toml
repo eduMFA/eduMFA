@@ -87,3 +87,8 @@ include = ["edumfa*"]
 
 [tool.setuptools.package-data]
 "edumfa" = ["translations/**/*", "static/**/*"]
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+combine_star = true

@@ -9,12 +9,12 @@ class FancyTokenClass(TokenClass):
     def __init__(self, db_token):
         TokenClass.__init__(self, db_token)
         self.set_type("fancy")
-        self.mode = ['authenticate']
+        self.mode = ["authenticate"]
         self.hKeyRequired = False
 
     @staticmethod
     def get_class_type():
-        return 'fancy'
+        return "fancy"
 
     @staticmethod
     def get_class_prefix():
