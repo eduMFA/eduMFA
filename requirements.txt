@@ -12,7 +12,7 @@ argon2-cffi-bindings==21.2.0
     # via argon2-cffi
 async-timeout==4.0.3
     # via redis
-babel==2.15.0
+babel==2.16.0
     # via flask-babel
 bcrypt==4.2.0
     # via passlib
