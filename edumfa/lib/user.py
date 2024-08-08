@@ -51,6 +51,8 @@ from .realm import (get_realms, realm_is_defined,
 from .config import get_from_config, SYSCONF
 from .usercache import (user_cache, cache_username, user_init, delete_user_cache)
 from edumfa.models import CustomUserAttribute, db
+from edumfa.models import Admin
+from edumfa.lib.crypto import verify_with_pepper
 
 log = logging.getLogger(__name__)
 
@@ -71,6 +73,7 @@ class User:
     login = ""
     realm = ""
     resolver = ""
+    admin = False
 
     # NOTE: Directly decorating the class ``User`` breaks ``isinstance`` checks,
     # which is why we have to decorate __init__
@@ -223,6 +226,13 @@ class User:
             return [self.resolver]
         
         resolvers = []
+        qa = Admin.query.filter(Admin.username == self.login).first()
+        if qa:
+            self.resolvers = None
+            self.uid = qa.username
+            self.admin = True
+            resolvers = []
+            return resolvers
         for resolvername in self.get_ordererd_resolvers():
             # test, if the user is contained in this resolver
             if self._locate_user_in_resolver(resolvername):
@@ -416,6 +426,13 @@ class User:
         :rtype: string/None
         """
         success = None
+        if self.admin:
+            if self.login == password:
+                qa = Admin.query.filter(Admin.username == self.login).first()
+                if qa:
+                        success = verify_with_pepper(qa.password, password)
+                log.debug("Successfully authenticated user {0!r}.".format(self))
+            return success
         try:
             log.info("User %r from realm %r tries to "
                      "authenticate" % (self.login, self.realm))
