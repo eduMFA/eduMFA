@@ -150,11 +150,13 @@ def import_full_config(file, cleanup, update, purge):
                 tar.extractall(members=tarinfo_objects)
                 tar.close()
                 for tarinfo in tarinfo_objects:
-                    data = conf_import(filename=tarinfo.name)
+                    with open(tarinfo.name) as f:
+                        data = conf_import(file=f)
                     # cleanup extracted files
                     os.remove(tarinfo.name)
             else:
-                data = conf_import(filename=file)
+                with open(file) as f:
+                    data = conf_import(file=f)
     else:
         data = conf_import()
     import_conf_event(data["event"], cleanup=cleanup, update=update, purge=purge)

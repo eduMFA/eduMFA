@@ -152,7 +152,7 @@ def r_export(filename, name, print_passwords):
 
 
 @import_cli.command("resolver")
-@click.option("-f", "filename", help="filename to import", required=True)
+@click.option("-f", "filename", help="filename to import", required=True, type=click.File('r'))
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
 @click.option("-u", "update", help="update configuration during import", is_flag=True)
 @click.option(
@@ -169,7 +169,7 @@ def r_import(filename, cleanup, update, purge):
     Values given as __CENSORED__ (like e.g. passwords) are not touched during the update.
     """
     # Todo: Support the cleanup option to remove all resolvers which do not exist in the imported file
-    data = conf_import(conftype="resolver", filename=filename)
+    data = conf_import(conftype="resolver", file=filename)
     import_conf_resolver(data["resolver"], cleanup=cleanup, update=update, purge=purge)
 
 

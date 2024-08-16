@@ -89,7 +89,7 @@ def e_export(filename, name):
 
 
 @import_cli.command("event")
-@click.option("-f", "filename", help="filename to import", required=True)
+@click.option("-f", "filename", help="filename to import", required=True, type=click.File('r'))
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
 @click.option("-u", "update", help="update configuration during import", is_flag=True)
 @click.option(
@@ -105,7 +105,7 @@ def e_import(filename, cleanup, update, purge):
     If 'cleanup' is specified the existing events are deleted before the
     events from the file are imported.
     """
-    data = conf_import(conftype="event", filename=filename)
+    data = conf_import(conftype="event", file=filename)
     import_conf_event(data["event"], cleanup=cleanup, update=update, purge=purge)
 
 
