@@ -1264,7 +1264,7 @@ msgstr "Verifica della registrazione non riuscita."
 msgid "Enter OTP + PIN to check the token."
 msgstr "Inserisci OTP + PIN per verificare il token."
 
-#: edumfa/static/components/token/views/token.enroll.totp.html:44
+#: edumfa/static/components/token/views/token.enroll.totp.html:42
 #: edumfa/static/components/token/views/token.enroll.yubikey.html:36
 msgid "Enter OTP key..."
 msgstr "Inserisci la chiave OTP ..."
@@ -1445,9 +1445,9 @@ msgstr ""
 "smartphone ha bisogno di una connessione internet\n"
 "    a eduMFA."
 
-#: edumfa/static/components/token/views/token.enroll.hotp.html:20
+#: edumfa/static/components/token/views/token.enroll.hotp.html:18
 #: edumfa/static/components/token/views/token.enroll.motp.html:11
-#: edumfa/static/components/token/views/token.enroll.totp.html:20
+#: edumfa/static/components/token/views/token.enroll.totp.html:18
 msgid "Generate OTP Key on the Server"
 msgstr "Generare la chiave OTP sul server"
 
@@ -1521,8 +1521,8 @@ msgid "Hardware"
 msgstr "Hardware"
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:61
-#: edumfa/static/components/token/views/token.enroll.hotp.html:62
-#: edumfa/static/components/token/views/token.enroll.totp.html:71
+#: edumfa/static/components/token/views/token.enroll.hotp.html:60
+#: edumfa/static/components/token/views/token.enroll.totp.html:69
 msgid "Hash algorithm"
 msgstr "Algoritmo di hash"
 
@@ -2189,9 +2189,9 @@ msgid "OK"
 msgstr "OK"
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:27
-#: edumfa/static/components/token/views/token.enroll.hotp.html:40
+#: edumfa/static/components/token/views/token.enroll.hotp.html:38
 #: edumfa/static/components/token/views/token.enroll.motp.html:23
-#: edumfa/static/components/token/views/token.enroll.totp.html:40
+#: edumfa/static/components/token/views/token.enroll.totp.html:38
 #: edumfa/static/components/token/views/token.enroll.yubikey.html:30
 msgid "OTP Key"
 msgstr "Chiave OTP"
@@ -2209,8 +2209,8 @@ msgstr "I PIN dell'OTP non corrispondono!"
 msgid "OTP Value"
 msgstr "Valore dell'OTP"
 
-#: edumfa/static/components/token/views/token.enroll.hotp.html:49
-#: edumfa/static/components/token/views/token.enroll.totp.html:49
+#: edumfa/static/components/token/views/token.enroll.hotp.html:47
+#: edumfa/static/components/token/views/token.enroll.totp.html:47
 #: edumfa/static/components/token/views/token.enroll.yubikey.html:41
 msgid "OTP length"
 msgstr "Lunghezza dell'OTP"
@@ -2404,8 +2404,7 @@ msgid ""
 "link</a> on your\n"
 "            smartphone."
 msgstr ""
-"Eseguire la scansione del codice QR con l'applicazione eduMFA "
-"Authenticator\n"
+"Eseguire la scansione del codice QR con l'applicazione eduMFA Authenticator\n"
 "            o fare clic su <a href=\"{{ enrolledToken.pushurl."
 "value }}\">questo link</a> sul vostro\n"
 "            smartphone."
@@ -3203,15 +3202,15 @@ msgid "Software"
 msgstr "Software"
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:42
-#: edumfa/static/components/token/views/token.enroll.hotp.html:55
-#: edumfa/static/components/token/views/token.enroll.totp.html:55
+#: edumfa/static/components/token/views/token.enroll.hotp.html:53
+#: edumfa/static/components/token/views/token.enroll.totp.html:53
 #, fuzzy
 msgid "Some Authenticator Apps only support an OTP length of 6."
 msgstr "Google Authenticator supporta solo una lunghezza OTP di 6."
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:67
-#: edumfa/static/components/token/views/token.enroll.hotp.html:68
-#: edumfa/static/components/token/views/token.enroll.totp.html:77
+#: edumfa/static/components/token/views/token.enroll.hotp.html:66
+#: edumfa/static/components/token/views/token.enroll.totp.html:75
 #, fuzzy
 msgid "Some Authenticator Apps only support the SHA1 algorithm."
 msgstr "Google Authenticator supporta solo l'algoritmo SHA1."
@@ -3435,12 +3434,11 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The HOTP token is an event based token. You can paste a secret key or\n"
-"    have the server generate the secret and scan the QR code with a\n"
-"    smartphone app turning your\n"
-"    smartphone into an authentication device. You can also use other\n"
-"    authenticator apps like Google Authenticator. But note, that these\n"
-"    might have limitations in the supported hash algorithms or other "
-"parameters."
+"    have the server generate the secret and scan the QR code with an "
+"Authenticator\n"
+"    App turning your smartphone into an authentication device.\n"
+"    But note, that some Apps might have limitations in the supported hash "
+"algorithms or other parameters."
 msgstr ""
 "Il token HOTP è un token basato sugli eventi. È possibile incollare una "
 "chiave segreta\n"
@@ -3613,13 +3611,11 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The TOTP token is a time based token. You can paste a secret key or\n"
-"    have the server generate the secret and scan the QR code with a\n"
-"    smartphone app turning your\n"
-"    smartphone into an authentication device. You can also use other\n"
-"    authenticator apps like Google Authenticator, Microsoft Authenticator, "
-"Authy or FreeOTP. But note, that these\n"
-"    might have limitations in the supported hash algorithms or other "
-"parameters."
+"    have the server generate the secret and scan the QR code with an "
+"Authenticator\n"
+"    App turning your smartphone into an authentication device.\n"
+"    But note, that some Apps might have limitations in the supported hash "
+"algorithms or other parameters."
 msgstr ""
 "Il token TOTP è un token basato sul tempo. Puoi incollare una chiave segreta "
 "o\n"
@@ -4032,8 +4028,8 @@ msgstr ""
 "       <a ui-sref=\"token.details({tokenSerial:lostResult.serial})\">\n"
 "        {{ lostResult.serial }}</a>."
 
-#: edumfa/static/components/token/views/token.enroll.hotp.html:24
-#: edumfa/static/components/token/views/token.enroll.totp.html:24
+#: edumfa/static/components/token/views/token.enroll.hotp.html:22
+#: edumfa/static/components/token/views/token.enroll.totp.html:22
 msgid ""
 "The server will create the OTP key\n"
 "            and a QR Code\n"
@@ -4504,7 +4500,7 @@ msgid "Timeout while waiting for signing response."
 msgstr "Timeout in attesa di firmare la risposta."
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:48
-#: edumfa/static/components/token/views/token.enroll.totp.html:61
+#: edumfa/static/components/token/views/token.enroll.totp.html:59
 msgid "Timestep"
 msgstr "Intervallo temporale"
 
@@ -4543,14 +4539,14 @@ msgstr "Tipo di token"
 #: edumfa/static/components/token/views/token.enroll.certificate.html:6
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:10
 #: edumfa/static/components/token/views/token.enroll.email.html:5
-#: edumfa/static/components/token/views/token.enroll.hotp.html:14
+#: edumfa/static/components/token/views/token.enroll.hotp.html:12
 #: edumfa/static/components/token/views/token.enroll.indexedsecret.html:8
 #: edumfa/static/components/token/views/token.enroll.motp.html:7
 #: edumfa/static/components/token/views/token.enroll.radius.html:7
 #: edumfa/static/components/token/views/token.enroll.remote.html:7
 #: edumfa/static/components/token/views/token.enroll.sms.html:5
 #: edumfa/static/components/token/views/token.enroll.sshkey.html:6
-#: edumfa/static/components/token/views/token.enroll.totp.html:14
+#: edumfa/static/components/token/views/token.enroll.totp.html:12
 #: edumfa/static/components/token/views/token.enroll.vasco.html:6
 #: edumfa/static/components/token/views/token.enroll.yubico.html:6
 #: edumfa/static/components/token/views/token.enroll.yubikey.html:16
@@ -4720,8 +4716,8 @@ msgstr "Usa STARTTLS su una connessione LDAP, di solito sulla porta 389."
 msgid "Use StartTLS"
 msgstr "Usa StartTLS"
 
-#: edumfa/static/components/token/views/token.enroll.hotp.html:37
-#: edumfa/static/components/token/views/token.enroll.totp.html:37
+#: edumfa/static/components/token/views/token.enroll.hotp.html:35
+#: edumfa/static/components/token/views/token.enroll.totp.html:35
 msgid "Use two-step enrollment with the privacyIDEA Authenticator App"
 msgstr ""
 "Utilizza la registrazione in due passaggi con l'app privacyIDEA Authenticator"
