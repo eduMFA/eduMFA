@@ -1,21 +1,17 @@
-.. _push_token:
+.. _edupush_token:
 
-Push Token (Legacy)
+eduPush Token
 ----------
 
-.. index:: Push Token, Firebase service
+.. index:: eduPush Token, Firebase service
 
-The push token uses the *unsupported privacyIDEA Authenticator* app. You can get it
+The edupush token uses the *eduMFA Authenticator* app. You can get it
 from `Google Play Store`_ or `Apple App Store`_.
 
-.. _Google Play Store: https://play.google.com/store/apps/details?id=it.netknights.piauthenticator
-.. _Apple App Store: https://apps.apple.com/us/app/privacyidea-authenticator/id1445401301
+.. _Google Play Store: https://play.google.com/store/apps/details?id=io.edumfa.authenticator
+.. _Apple App Store: https://apps.apple.com/app/edumfa-authenticator/id6479982721
 
-.. warning::
-    The push token type is deprecated and will be removed in the future. We strongly recommend using the
-    :ref:`edupush_token` token type instead.
-
-The token type *push* sends a cryptographic challenge via the
+The token type *edupush* sends a cryptographic challenge via the
 Google Firebase service to the smartphone of the user. This push
 notification is displayed on the smartphone of the user with a text
 that tells the user that he or somebody else requests to login to a
@@ -42,13 +38,13 @@ Configuration
 The minimum necessary configuration is an ``enrollment`` policy
 :ref:`policy_firebase_config`.
 
-With the ``authentication`` policies :ref:`policy_push_text_on_mobile`
+With the ``authentication`` policies :ref:`policy_edupush_text_on_mobile`
 and :ref:`policy_push_title_on_mobile` you can define
 the contents of the push notification.
 
 If you want to use push tokens with legacy applications that are not yet set up to be compatible with out-of-band
-tokens, you can set the ``authentication`` policy :ref:`policy_push_wait`. Please note, that setting this policy can
-interfere with other tokentypes and will impact performance, as detailed in the documentation for ``push_wait``.
+tokens, you can set the ``authentication`` policy :ref:`policy_edupush_wait`. Please note, that setting this policy can
+interfere with other tokentypes and will impact performance, as detailed in the documentation for ``edupush_wait``.
 
 Enrollment
 ~~~~~~~~~~
@@ -59,7 +55,7 @@ Step 1
 ......
 
 The user scans a QR code. This QR code contains the
-basic information for the push token and a enrollment URL, to which
+basic information for the edupush token and a enrollment URL, to which
 the smartphone should respond in the enrollment process.
 
 The smartphone stores this data and creates a new key pair.
