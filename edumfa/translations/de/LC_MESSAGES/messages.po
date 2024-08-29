@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-29 11:10+0200\n"
-"PO-Revision-Date: 2024-08-29 11:10+0200\n"
+"POT-Creation-Date: 2024-08-29 11:24+0200\n"
+"PO-Revision-Date: 2024-08-29 11:24+0200\n"
 "Last-Translator: Paul Lettich <paul.lettich@netknights.it>\n"
 "Language: de\n"
 "Language-Team: German <https://hosted.weblate.org/projects/edumfa/edumfa-"
@@ -1169,14 +1169,13 @@ msgid ""
 msgstr "Die Benutzer ID und den Benutzer-Resolver in der Tokenliste anzeigen."
 
 #: lib/policy.py:2463
-#, fuzzy
 msgid ""
 "The URL of a repository, where the policy templates can be found.  "
 "(Default https://raw.githubusercontent.com/eduMFA/policy-"
 "templates/main/templates/)"
 msgstr ""
-"Die URL der Policy-Templates. (Default https: "
-"//raw.githubusercontent.com/ edumfa/policy-templates /master/templates/)"
+"Die URL der Policy-Templates. (Default https://raw.githubusercontent.com/"
+" edumfa/policy-templates/master/templates/)"
 
 #: lib/policy.py:2470
 msgid ""
@@ -1255,7 +1254,6 @@ msgstr ""
 "angezeigt."
 
 #: lib/policy.py:2528
-#, fuzzy
 msgid ""
 "If this is checked, the eduMFA Node name will be displayed in the menu "
 "bar."
@@ -1349,7 +1347,6 @@ msgid "The requested token could not be found."
 msgstr "Der gesuchte Token wurde nicht gefunden."
 
 #: lib/token.py:548
-#, fuzzy
 msgid "More than one matching token was found."
 msgstr "Es wurde mehr als ein passender Token gefunden."
 
@@ -2218,7 +2215,6 @@ msgstr ""
 "Schrägstriche zu entfernen."
 
 #: lib/smsprovider/ScriptSMSProvider.py:120
-#, fuzzy
 msgid ""
 "The script in script directory EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to "
 "call. Expects phone as the parameter and the message from stdin."
@@ -2401,9 +2397,10 @@ msgstr ""
 "zugewiesen haben."
 
 #: lib/tokens/daypasswordtoken.py:40
-#, fuzzy
 msgid "Specify the time step of the DayPassword token. For example: \"24h\""
-msgstr "Geben Sie den Zeitschritt für das DayPassword-Token an."
+msgstr ""
+"Geben Sie den Zeitschritt für das DayPassword-Token an. Zum Beispiel: "
+"\"24h\""
 
 #: lib/tokens/daypasswordtoken.py:88
 msgid ""
@@ -2715,13 +2712,12 @@ msgid "Please confirm the authentication on your mobile device!"
 msgstr "Bitte bestätigen Sie die Anmeldung auf Ihrem Mobilgerät!"
 
 #: lib/tokens/pushtoken.py:73
-#, fuzzy
 msgid ""
 "Use the polling feature of your unsupported privacyIDEA Authenticator App"
 " to check for a new Login request."
 msgstr ""
-"Verwenden Sie die Polling-Funktion Ihrer privacyIDEA Authenticator App, "
-"um nach einer neuen Anmeldeanfrage zu suchen."
+"Verwenden Sie die Polling-Funktion Ihrer nicht unterstützten privacyIDEA "
+"Authenticator App, um nach einer neuen Anmeldeanfrage zu suchen."
 
 #: lib/tokens/pushtoken.py:75
 msgid "Do you want to confirm the login?"
@@ -2732,14 +2728,13 @@ msgid "The configuration of your Firebase application."
 msgstr "Die Konfiguration der Firebase Anwendung."
 
 #: lib/tokens/pushtoken.py:330
-#, fuzzy
 msgid ""
 "The URL the Push App should contact in the second enrollment step. "
 "Usually it is the endpoint /ttype/edupush of the eduMFA server."
 msgstr ""
 "Die URL für den zweiten Ausrollschritt. Diese URL ruft das Smartphone "
 "auf, nachdem der Benutzer den QR-Code gescannt hat. Üblicherweise ist das"
-" der Endpunkt /ttype/push des eduMFA Servers."
+" der Endpunkt /ttype/edupush des eduMFA Servers."
 
 #: lib/tokens/pushtoken.py:335
 msgid ""
@@ -3285,6 +3280,8 @@ msgid ""
 "Whether to request a resident key. Note: Passkeys are always resident "
 "keys."
 msgstr ""
+"Ob ein \"Resident Key\" angefordert werden soll. Bemerkung: Passkeys sind"
+" immer \"Resident Keys\""
 
 #: lib/tokens/webauthntoken.py:788
 msgid "The user may only have this number of WebAuthn tokens assigned."
@@ -3307,13 +3304,12 @@ msgstr ""
 "die Anmeldung mit einem WebAuthn Gerät zu bestätigen."
 
 #: lib/tokens/webauthntoken.py:804
-#, fuzzy
 msgid ""
 "The label for a new enrolled Passkey token. Possible tags are "
 "<code>{user}</code>, <code>{realm}</code>, <code>{serial}</code>, "
 "<code>{givenname}</code> and <code>{surname}</code>."
 msgstr ""
-"Die Bezeichnung für ein neu ausgerolltes Smartphone-Token. Mögliche "
+"Die Bezeichnung für ein neu ausgerolltes Passkey Token. Mögliche "
 "Platzhalter sind <code>{user}</code>, <code>{realm}</code>, "
 "<code>{serial}</code>, <code>{givenname}</code> und "
 "<code>{surname}</code>."
