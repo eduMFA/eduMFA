@@ -29,11 +29,11 @@ via the Google Firebase service and this is used for :ref:`edupush_token` and :r
 
 
 You can get the necessary *JSON config file*, from your Firebase console.
-The Push authenticator App (eduMFA Authenticator) which you can find in Google Play Store and
+The eduPUSH authenticator App (eduMFA Authenticator) which you can find in Google Play Store and
 Apple App Store uses a Firebase project, that is managed by the GWDG.
 You need to get in touch trough support@gwdg.de with them, to receive a JSON config file for accessing the project.
 
-When using the the legacy Push token type, please refer to the privacyIDEA documentation. However we don't recommend or support using it anymore.
+When using the the legacy PUSH token type, please refer to the privacyIDEA documentation. However we don't recommend or support using it anymore.
 
 
 HTTP provider

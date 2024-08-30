@@ -1,11 +1,11 @@
 .. _edupush_token:
 
-eduPush Token
+eduPUSH Token
 ----------
 
 .. index:: eduPush Token, Firebase service
 
-The edupush token uses the *eduMFA Authenticator* app. You can get it
+The eduPUSH token uses the *eduMFA Authenticator* app. You can get it
 from `Google Play Store`_ or `Apple App Store`_.
 
 .. _Google Play Store: https://play.google.com/store/apps/details?id=io.edumfa.authenticator
@@ -20,17 +20,17 @@ The smartphone sends a cryptographically signed response to the
 eduMFA server and the login request gets marked as confirmed
 in the eduMFA server. The application checks for this mark and
 logs the user in automatically. For an example of how the components in a
-typical deployment of push tokens interact reference the following diagram.
+typical deployment of eduPUSH tokens interact reference the following diagram.
 
 .. figure:: images/tokentype_push.png
   :width: 500
 
-  *A typical push token deployment*
+  *A typical eduPUSH token deployment*
 
 To allow eduMFA to send push notifications, a Firebase service
 needs to be configured. To do so see :ref:`firebase_provider`.
 
-The PUSH token implements the :ref:`outofband mode <authentication_mode_outofband>`.
+The eduPUSH token implements the :ref:`outofband mode <authentication_mode_outofband>`.
 
 Configuration
 ~~~~~~~~~~~~~
@@ -38,24 +38,24 @@ Configuration
 The minimum necessary configuration is an ``enrollment`` policy
 :ref:`policy_firebase_config`.
 
-With the ``authentication`` policies :ref:`policy_edupush_text_on_mobile`
+With the ``authentication`` policies :ref:`policy_push_text_on_mobile`
 and :ref:`policy_push_title_on_mobile` you can define
 the contents of the push notification.
 
-If you want to use push tokens with legacy applications that are not yet set up to be compatible with out-of-band
-tokens, you can set the ``authentication`` policy :ref:`policy_edupush_wait`. Please note, that setting this policy can
-interfere with other tokentypes and will impact performance, as detailed in the documentation for ``edupush_wait``.
+If you want to use eduPUSH tokens with legacy applications that are not yet set up to be compatible with out-of-band
+tokens, you can set the ``authentication`` policy :ref:`policy_push_wait`. Please note, that setting this policy can
+interfere with other token types and will impact performance, as detailed in the documentation for ``edupush_wait``.
 
 Enrollment
 ~~~~~~~~~~
 
-The enrollment of the push token happens in two steps.
+The enrollment of the eduPUSH token happens in two steps.
 
 Step 1
 ......
 
 The user scans a QR code. This QR code contains the
-basic information for the edupush token and a enrollment URL, to which
+basic information for the eduPUSH token and a enrollment URL, to which
 the smartphone should respond in the enrollment process.
 
 The smartphone stores this data and creates a new key pair.

@@ -1,18 +1,18 @@
 .. _push_token:
 
-Push Token (Legacy)
+Legacy PUSH Token
 ----------
 
 .. index:: Push Token, Firebase service
 
-The push token uses the *unsupported privacyIDEA Authenticator* app. You can get it
+The legacy PUSH token uses the *unsupported privacyIDEA Authenticator* app. You can get it
 from `Google Play Store`_ or `Apple App Store`_.
 
 .. _Google Play Store: https://play.google.com/store/apps/details?id=it.netknights.piauthenticator
 .. _Apple App Store: https://apps.apple.com/us/app/privacyidea-authenticator/id1445401301
 
 .. warning::
-    The push token type is deprecated and will be removed in the future. We strongly recommend using the
+    The legacy PUSH token type is deprecated and will be removed in the future. We strongly recommend using the
     :ref:`edupush_token` token type instead.
 
 The token type *push* sends a cryptographic challenge via the
@@ -24,17 +24,17 @@ The smartphone sends a cryptographically signed response to the
 eduMFA server and the login request gets marked as confirmed
 in the eduMFA server. The application checks for this mark and
 logs the user in automatically. For an example of how the components in a
-typical deployment of push tokens interact reference the following diagram.
+typical deployment of legacy PUSH tokens interact reference the following diagram.
 
 .. figure:: images/tokentype_push.png
   :width: 500
 
-  *A typical push token deployment*
+  *A typical legacy PUSH token deployment*
 
 To allow eduMFA to send push notifications, a Firebase service
 needs to be configured. To do so see :ref:`firebase_provider`.
 
-The PUSH token implements the :ref:`outofband mode <authentication_mode_outofband>`.
+The legacy PUSH token implements the :ref:`outofband mode <authentication_mode_outofband>`.
 
 Configuration
 ~~~~~~~~~~~~~
@@ -46,20 +46,20 @@ With the ``authentication`` policies :ref:`policy_push_text_on_mobile`
 and :ref:`policy_push_title_on_mobile` you can define
 the contents of the push notification.
 
-If you want to use push tokens with legacy applications that are not yet set up to be compatible with out-of-band
+If you want to use legacy PUSH tokens with legacy applications that are not yet set up to be compatible with out-of-band
 tokens, you can set the ``authentication`` policy :ref:`policy_push_wait`. Please note, that setting this policy can
 interfere with other tokentypes and will impact performance, as detailed in the documentation for ``push_wait``.
 
 Enrollment
 ~~~~~~~~~~
 
-The enrollment of the push token happens in two steps.
+The enrollment of the legacy PUSH token happens in two steps.
 
 Step 1
 ......
 
 The user scans a QR code. This QR code contains the
-basic information for the push token and a enrollment URL, to which
+basic information for the legacy PUSH token and a enrollment URL, to which
 the smartphone should respond in the enrollment process.
 
 The smartphone stores this data and creates a new key pair.
