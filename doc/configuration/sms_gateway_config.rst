@@ -19,7 +19,7 @@ Firebase Provider
 ~~~~~~~~~~~~~~~~~
 
 The Firebase provider sends notifications
-via the Google Firebase service and this is used for the :ref:`push_token`.
+via the Google Firebase service and this is used for :ref:`edupush_token` and :ref:`push_token`.
 
 **JSON config file**
 
@@ -29,10 +29,11 @@ via the Google Firebase service and this is used for the :ref:`push_token`.
 
 
 You can get the necessary *JSON config file*, from your Firebase console.
-The unsupported PUSH authenticator App (privacyIDEA Authenticator) which you can
-find in Google Play Store and Apple App Store uses a Firebase project, that is
-managed by the company NetKnights.
-You need to get an SLA to receive a JSON config file for accessing the project.
+The eduPUSH authenticator App (eduMFA Authenticator) which you can find in Google Play Store and
+Apple App Store uses a Firebase project, that is managed by the GWDG.
+You need to get in touch trough support@gwdg.de with them, to receive a JSON config file for accessing the project.
+
+When using the the legacy PUSH token type, please refer to the privacyIDEA documentation. However we don't recommend or support using it anymore.
 
 
 HTTP provider

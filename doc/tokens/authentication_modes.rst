@@ -53,7 +53,7 @@ Here are examples for the flows:
   The "client_mode" is either set to ``webauthn`` or ``u2f`` so that the plugin
   can handle the cryptographic challenge accordingly.
 * The PUSH and TiQR token types implement the ``outofband`` mode.
-  With a PUSH token, the authentication step also consists of two steps:
+  With PUSH tokens, the authentication step also consists of two steps:
   In a first step, the user triggers a challenge. eduMFA pushes the
   challenge to the user's smartphone app. In a second step, the user approves
   the challenge on their phone, and the app responds to the challenge by

@@ -62,7 +62,7 @@ Smartphone Apps
 on the concept of the Google Authenticator and works with the usual QR Code key URI
 enrollment. But on top it also allows for a more secure
 enrollment process (See :ref:`2step_enrollment`).
-It can be used for :ref:`hotp_token`, :ref:`totp_token` and :ref:`push_token`.
+It can be used for :ref:`hotp_token`, :ref:`totp_token`, :ref:`edupush_token` and :ref:`push_token`.
 
 **Google Authenticator**. The Google Authenticator is working well in
 :ref:`hotp_token`
