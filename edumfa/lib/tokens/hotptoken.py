@@ -160,7 +160,7 @@ class HotpTokenClass(TokenClass):
                        },
                        'hotp_' + ACTION.FORCE_APP_PIN: {
                            'type': 'bool',
-                           'desc': _('Enforce setting an app pin for the eduMFA '
+                           'desc': _('Enforce setting an app pin for the privacyIDEA '
                                      'Authenticator App')
                        }
                    },
