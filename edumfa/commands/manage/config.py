@@ -186,7 +186,8 @@ def export_full_config(passwords, archive, directory):
         config_backup_file_base = f"{directory}/{BASE_NAME}-{HOSTNAME}-{DATE}"
         config_backup_file = f"{config_backup_file_base}.py"
 
-        conf_export(data, filename=config_backup_file)
+        with open(config_backup_file) as f:
+            conf_export(data, f)
         if archive:
             config_backup_archive = f"{config_backup_file_base}.tar.gz"
             tar = tarfile.open(config_backup_archive, "w:gz")
@@ -196,4 +197,4 @@ def export_full_config(passwords, archive, directory):
             if tarfile.is_tarfile(config_backup_archive):
                 os.remove(config_backup_file)
     else:
-        conf_export(data, filename=None)
+        conf_export(data, sys.stdout)

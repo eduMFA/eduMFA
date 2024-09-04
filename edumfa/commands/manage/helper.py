@@ -56,7 +56,7 @@ def conf_import(file=None, conftype=None):
     return contents_var
 
 
-def conf_export(config, filename=None):
+def conf_export(config, file):
     """
     Export configurations to a file or write them to stdout if no filename is given.
     """
@@ -64,11 +64,7 @@ def conf_export(config, filename=None):
     pp = pprint.PrettyPrinter(indent=4)
 
     ret_str = pp.pformat(config)
-    if filename:
-        with open(filename, 'w') as f:
-            f.write(ret_str)
-    if not filename:
-        print(ret_str)
+    file.write(ret_str)
 
 
 def get_conf_policy(name=None):

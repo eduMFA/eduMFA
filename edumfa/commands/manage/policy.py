@@ -74,14 +74,14 @@ def delete(name):
 
 
 @export_cli.command("policy")
-@click.option("-f", "filename", help="filename to export")
+@click.option("-f", "filename", type=click.File('w'), default=sys.stdout, help="filename to export")
 @click.option("-n", "name", help="policy to export")
 def p_export(filename, name):
     """
     Export the specified policy or all policies to a file.
     If the filename is omitted, the policies are written to stdout.
     """
-    conf_export({"policy": get_conf_policy(name)}, filename=filename)
+    conf_export({"policy": get_conf_policy(name)}, filename)
 
 
 @import_cli.command("policy")
