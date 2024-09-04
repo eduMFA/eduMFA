@@ -612,7 +612,7 @@ class WebAuthnTokenClass(TokenClass):
         res = {
             'type': 'webauthn',
             'title': 'WebAuthn Token',
-            'description': 'WebAuthn: Enroll a Web Authentication token.',
+            'description': _('WebAuthn: Enroll a Web Authentication token.'),
             'init': {},
             'config': {},
             'user': ['enroll'],

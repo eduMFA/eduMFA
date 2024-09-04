@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-29 11:10+0200\n"
+"POT-Creation-Date: 2024-09-04 17:01+0200\n"
 "PO-Revision-Date: 2022-12-10 13:47+0000\n"
 "Last-Translator: Eric <hamburger1024@duck.com>\n"
 "Language: zh_Hans\n"
@@ -2619,6 +2619,10 @@ msgstr "请使用您的WebAuthn令牌（{0！s}）进行确认"
 #: lib/tokens/webauthntoken.py:481
 msgid "Please confirm with your WebAuthn token"
 msgstr "请使用您的WebAuthn令牌进行确认"
+
+#: lib/tokens/webauthntoken.py:615
+msgid "WebAuthn: Enroll a Web Authentication token."
+msgstr "WebAuthn：注册WebAuthn令牌。"
 
 #: lib/tokens/webauthntoken.py:625
 msgid ""

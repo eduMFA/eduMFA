@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-29 11:10+0200\n"
+"POT-Creation-Date: 2024-09-04 17:01+0200\n"
 "PO-Revision-Date: 2021-12-31 19:53+0000\n"
 "Last-Translator: Michael Yang <pcgames99@gmail.com>\n"
 "Language: zh_Hant\n"
@@ -2621,6 +2621,10 @@ msgstr "請使用您的 WebAuthn 令牌 ({0!s}) 進行確認"
 #: lib/tokens/webauthntoken.py:481
 msgid "Please confirm with your WebAuthn token"
 msgstr "請使用您的 WebAuthn 令牌進行確認"
+
+#: lib/tokens/webauthntoken.py:615
+msgid "WebAuthn: Enroll a Web Authentication token."
+msgstr "WebAuthn：註冊 WebAuthn 令牌。"
 
 #: lib/tokens/webauthntoken.py:625
 msgid ""
