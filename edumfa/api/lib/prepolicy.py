@@ -1922,7 +1922,7 @@ def webauthntoken_auth(request, action):
     # passive and will just pull values from policies and add them to properly
     # prefixed fields in the request data, this is not a problem.
 
-    if not request.all_data.get("type") \
+    if (not request.all_data.get("type") or request.all_data.get("type").lower() == WebAuthnTokenClass.get_class_type()) \
             and not is_webauthn_assertion_response(request.all_data) \
             and ('serial' not in request.all_data
                  or request.all_data['serial'].startswith(WebAuthnTokenClass.get_class_prefix())):
