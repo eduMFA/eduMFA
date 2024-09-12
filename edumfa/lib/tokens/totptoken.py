@@ -188,7 +188,7 @@ class TotpTokenClass(HotpTokenClass):
                     + ACTION.FORCE_APP_PIN: {
                         "type": "bool",
                         "desc": _(
-                            "Enforce setting an app pin for the eduMFA "
+                            "Enforce setting an app pin for the privacyIDEA "
                             "Authenticator App"
                         ),
                     },

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-02-29 11:21+0100\n"
+"POT-Creation-Date: 2024-08-29 11:10+0200\n"
 "PO-Revision-Date: 2023-05-18 16:53+0000\n"
 "Last-Translator: Koen Roggemans <koen@roggemans.net>\n"
 "Language: nl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.12.1\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: api/auth.py:218
 msgid "Authentication failure. Unknown realm: {0!s}."
@@ -27,33 +27,33 @@ msgstr "Authenticatie mislukt. Onbekende realm: {0!s}."
 msgid "Authentication failure. Missing Username"
 msgstr "Authenticatie mislukt. Ontbrekende gebruikersnaam"
 
-#: api/auth.py:343
+#: api/auth.py:346
 msgid "Authentication failure. Wrong credentials"
 msgstr "Authenticatie mislukt. Foute aanmeldgegevens"
 
-#: api/lib/prepolicy.py:2211
+#: api/lib/prepolicy.py:2365
 #, fuzzy
 msgid "Missing description for {} token."
 msgstr "De nieuwe beschrijving van het token."
 
-#: api/lib/prepolicy.py:2212
+#: api/lib/prepolicy.py:2366
 #, fuzzy
 msgid "Description required for {} token."
 msgstr "De nieuwe beschrijving van het token."
 
-#: api/lib/utils.py:349
+#: api/lib/utils.py:352
 msgid "Authentication failure. Missing Authorization header."
 msgstr "Authenticatie mislukt. Ontbrekende autorisatie-header."
 
-#: api/lib/utils.py:355 api/lib/utils.py:388
+#: api/lib/utils.py:358 api/lib/utils.py:391
 msgid "Authentication failure. Error during decoding your token: {0!s}"
 msgstr "Authenticatie mislukt. Fout tijdens het decoderen van je token: {0!s}"
 
-#: api/lib/utils.py:381 api/lib/utils.py:391
+#: api/lib/utils.py:384 api/lib/utils.py:394
 msgid "Authentication failure. Your token has expired: {0!s}"
 msgstr "Authenticatie mislukt. Je token is vervallen: {0!s}"
 
-#: api/lib/utils.py:395
+#: api/lib/utils.py:398
 msgid ""
 "Authentication failure. The username {0!s} is not allowed to impersonate "
 "via JWT."
@@ -61,7 +61,7 @@ msgstr ""
 "Authenticatie mislukt. De gebruikersnaam {0!s} is mag zich niet "
 "verpersoonlijken via JWT."
 
-#: api/lib/utils.py:399
+#: api/lib/utils.py:402
 msgid ""
 "Authentication failure. You do not have the necessary role ({0!s}) to "
 "access this resource!"
@@ -69,11 +69,11 @@ msgstr ""
 "Authenticatie mislukt. Je hebt niet de juiste rol {0!s} om toegang te "
 "krijgen tot deze bron!"
 
-#: api/lib/utils.py:417
+#: api/lib/utils.py:420
 msgid "'{0!s}' is an invalid policy name."
 msgstr "'{0!s}' is een ongeldige beleidsnaam."
 
-#: api/lib/utils.py:420
+#: api/lib/utils.py:423
 msgid "The name of the policy may only contain the characters a-zA-Z0-9_. -"
 msgstr "De naam van het beleid mag alleen de tekens a-zA-Z0-9_.- bevatten"
 
@@ -89,19 +89,19 @@ msgstr "Geef een nieuwe PIN"
 msgid "To resync your token, please enter the next OTP value"
 msgstr "Geef de volgende OTP-waarde om je token opnieuw te synchroniseren"
 
-#: lib/decorators.py:45 lib/token.py:2175
+#: lib/decorators.py:45 lib/token.py:2213
 msgid "This action is not possible, since the token is locked"
 msgstr "Deze actie is niet mogelijk omdat het token geblokkeerd is"
 
-#: lib/decorators.py:96
+#: lib/decorators.py:103
 msgid "You need to specify a serial or a user."
 msgstr "Je moet een serienummer of een gebruiker opgeven."
 
-#: lib/decorators.py:98
+#: lib/decorators.py:105
 msgid "Invalid serial number."
 msgstr "Ongeldig serienummer."
 
-#: lib/decorators.py:100
+#: lib/decorators.py:107
 msgid "Invalid user."
 msgstr "Ongeldige gebruiker."
 
@@ -1309,7 +1309,7 @@ msgstr ""
 "Het beleid komt enkel overeen als aan bepaalde voorwaarden van de HTTP-"
 "omgeving voldaan is."
 
-#: lib/radiusserver.py:226 lib/radiusserver.py:258
+#: lib/radiusserver.py:246 lib/radiusserver.py:280
 msgid "The RADIUS secret is too long"
 msgstr "Het RADIUS-geheim is te lang"
 
@@ -1321,16 +1321,16 @@ msgstr "create_tokenclass_object mislukt:  {0!r}"
 msgid "I can only create SQL filters from tokeninfo of length 1."
 msgstr "Ik kan enkel SQL-filters maken van tokeninfo met lengte 1."
 
-#: lib/token.py:544
+#: lib/token.py:543
 msgid "The requested token could not be found."
 msgstr "Het gevraagde token kon niet gevonden worden."
 
-#: lib/token.py:549
+#: lib/token.py:548
 #, fuzzy
 msgid "More than one matching token was found."
 msgstr "Er werd meer dan één passend token gevonden."
 
-#: lib/token.py:863
+#: lib/token.py:862
 msgid "multiple tokens are matching this OTP value!"
 msgstr "meerdere tokens komen overeen met deze OTP-waade!"
 
@@ -1342,35 +1342,35 @@ msgstr "init token mislukt: onbekend tokentype {0!r}"
 msgid "initToken failed: {0!s}"
 msgstr "intiToken mislukt: {0!s}"
 
-#: lib/token.py:1204
+#: lib/token.py:1218
 msgid "Token already assigned to user {0!r}"
 msgstr "Aantal tokens die aan gebruiker {0!r} toegewezen zijn"
 
-#: lib/token.py:1218
+#: lib/token.py:1232
 msgid "Token assign failed for {0!r}/{1!s} : {2!r}"
 msgstr "Token toewijzen mislukt voor {0!r}/{1!s} : {2!r}"
 
-#: lib/token.py:1246
+#: lib/token.py:1260
 msgid "Token unassign failed for {0!r}/{1!r}: {2!r}"
 msgstr "Token niet meer toewijzen mislukt voor {0!r}/{1!s} : {2!r}"
 
-#: lib/token.py:1322
+#: lib/token.py:1336
 msgid "Parameter user must not be a string: {0!r}"
 msgstr "Parameter mag geen string zin: {0!r}"
 
-#: lib/token.py:1861
+#: lib/token.py:1875
 msgid "You can only define a lost token for an assigned token."
 msgstr "Je kunt enkel een toegewezen token als verloren markeren."
 
-#: lib/token.py:1887
+#: lib/token.py:1901
 msgid "temporary replacement for {0!s}"
 msgstr "tijdelijke vervanging voor {0!s}"
 
-#: lib/token.py:1943
+#: lib/token.py:1957
 msgid "There is no active and assigned token in this realm"
 msgstr "Er is geen actief en toegewezen token voor dit realm"
 
-#: lib/token.py:1955
+#: lib/token.py:1969
 msgid ""
 "There is no active and assigned token in this realm, included types: "
 "{0!s}, excluded types: {1!s}"
@@ -1378,71 +1378,71 @@ msgstr ""
 "Er is geen actief en toegewezen token voor dit realm, inbegrepen types: "
 "{0!s}, uitgesloten types: {1!s}"
 
-#: lib/token.py:2009
+#: lib/token.py:2023
 msgid "OTP verification failed."
 msgstr "OTP-verificatie mislukt."
 
-#: lib/token.py:2042
+#: lib/token.py:2056
 msgid "The user has no tokens assigned"
 msgstr "De gebruiker heeft geen toegewezen token"
 
-#: lib/token.py:2257
+#: lib/token.py:2295
 msgid "matching {0:d} tokens"
 msgstr "komt overeen met {0:d} tokens"
 
-#: lib/token.py:2309
+#: lib/token.py:2347
 msgid "Challenge matches, but token is not fit for challenge"
 msgstr "Challenge komt overeen, maar token is niet geschikt voor challenge"
 
-#: lib/token.py:2319
+#: lib/token.py:2357
 msgid "Found matching challenge"
 msgstr "Passende challenge gevonden"
 
-#: lib/token.py:2361
+#: lib/token.py:2399
 msgid "Response did not match the challenge."
 msgstr "Antwoord kwam niet overeen met de challenge."
 
-#: lib/token.py:2363
+#: lib/token.py:2401
 msgid "Response did not match for {0!s} tokens."
 msgstr "Antwoord kwam niet overeen voor {0!s} tokens."
 
-#: lib/token.py:2371
+#: lib/token.py:2409
 msgid "No active challenge response token found"
 msgstr "Geen actief challenge response token gevonden"
 
-#: lib/token.py:2387
+#: lib/token.py:2425
 msgid "wrong otp value"
 msgstr "verkeerde otp-waarde"
 
-#: lib/token.py:2394
+#: lib/token.py:2432
 msgid ". previous otp used again"
 msgstr ". vorige otp opnieuw gebruikt"
 
-#: lib/token.py:2408
+#: lib/token.py:2446
 msgid "wrong otp pin"
 msgstr "foute otp pin"
 
-#: lib/token.py:2416
+#: lib/token.py:2454
 msgid "No suitable token found for authentication."
 msgstr ""
 
-#: lib/token.py:2441
+#: lib/token.py:2479
 msgid "Admin is allowed to initialize {0!s} tokens."
 msgstr "Admin mag {0!s} tokens initialiseren."
 
-#: lib/token.py:2449
+#: lib/token.py:2487
 msgid "The user is allowed to enroll a {0!s} token."
 msgstr "De gebruiker mag een {0!s} token registreren."
 
-#: lib/token.py:2480
+#: lib/token.py:2518
 msgid "Set the maximum allowed PIN length of the {0!s} token."
 msgstr "Stl de maximaal toegestane PIN-lengte in voor een {0!s} token."
 
-#: lib/token.py:2487
+#: lib/token.py:2525
 msgid "Set the minimum required PIN length of the {0!s} token."
 msgstr "Stl de minimaal vereiste PIN-lengte in voor een {0!s} token."
 
-#: lib/token.py:2493
+#: lib/token.py:2531
 msgid ""
 "Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
@@ -1450,7 +1450,7 @@ msgstr ""
 "Specificeer de vereiste PIN-inhoud van het {0!s} token. (c)letters, "
 "(n)cijfers, (s)speciale tekens, (o)andere. [+/-]!"
 
-#: lib/token.py:2538 lib/token.py:2554
+#: lib/token.py:2576 lib/token.py:2592
 msgid "The tokengroup does not exist."
 msgstr "De token-groep bestaat niet."
 
@@ -1538,13 +1538,13 @@ msgstr ""
 "expressie."
 
 #: lib/eventhandler/base.py:233
-#, fuzzy
-msgid "Action is triggered, if the user has this number of tokens assigned."
+msgid ""
+"This condition checks whether or not the number of tokens assigned to the"
+" user meets a certain condition.Valid conditions are '>2', '<=10', '=0', "
+"'==3', '!=1', for example"
 msgstr ""
-"Actie wordt gestart als de serienummer overeenkomt met deze reguliere "
-"expressie."
 
-#: lib/eventhandler/base.py:239
+#: lib/eventhandler/base.py:241
 msgid ""
 "Action is triggered, if the counter of the token equals this setting. Can"
 " also be '>100' or '<99' for no exact match."
@@ -1552,7 +1552,7 @@ msgstr ""
 "Actie wordt gestart als de teller van het token gelijk is aan deze "
 "instelling. Kan ook '>100' of '<99' zijn voor geen exacte overeenkomst."
 
-#: lib/eventhandler/base.py:246
+#: lib/eventhandler/base.py:248
 msgid ""
 "Action is triggered, if the last authentication of the token is older "
 "than 7h, 10d or 1y."
@@ -1560,7 +1560,7 @@ msgstr ""
 "Actie wordt gestart als de laaste authenticatie van het token ouder is "
 "dan 7h, 10d of 1y."
 
-#: lib/eventhandler/base.py:252
+#: lib/eventhandler/base.py:254
 msgid ""
 "This can be '>100', '<99', or '=100', to trigger the action, if the "
 "tokeninfo field 'count_auth' is bigger than 100, less than 99 or exactly "
@@ -1570,7 +1570,7 @@ msgstr ""
 "token-infoveld 'count_auth' groter is dan 100, kleiner is dan 99 of exact"
 " 100."
 
-#: lib/eventhandler/base.py:259
+#: lib/eventhandler/base.py:261
 msgid ""
 "This can be '>100', '<99', or '=100', to trigger the action, if the "
 "tokeninfo field 'count_auth_success' is bigger than 100, less than 99 or "
@@ -1580,7 +1580,7 @@ msgstr ""
 "token-infoveld 'count_auth_success' groter is dan 100, kleiner is dan 99 "
 "of exact 100."
 
-#: lib/eventhandler/base.py:267
+#: lib/eventhandler/base.py:269
 msgid ""
 "This can be '>100', '<99', or '=100', to trigger the action, if the "
 "difference between the tokeninfo field 'count_auth' and "
@@ -1590,7 +1590,7 @@ msgstr ""
 "verschil tussen het token-infoveld 'count_auth' en 'count_auth_success' "
 "groter is dan 100, kleiner is dan 99 of exact 100."
 
-#: lib/eventhandler/base.py:275
+#: lib/eventhandler/base.py:277
 msgid ""
 "This can be '>9', '<9', or '=10', to trigger the action, if the "
 "failcounter of a token matches this value. Note that the failcounter "
@@ -1600,7 +1600,7 @@ msgstr ""
 "mislukte aanmeldteller of een token overeenkomt met deze waarde. Merk op "
 "dat de mislukt-teller stopt met tellen als de maximale waarde is bereikt."
 
-#: lib/eventhandler/base.py:283
+#: lib/eventhandler/base.py:285
 msgid ""
 "This condition can check any arbitrary tokeninfo field. You need to enter"
 " something like '<fieldname> == <fieldvalue>', '<fieldname> > "
@@ -1610,7 +1610,7 @@ msgstr ""
 "iets ingeven zoals '<fieldname> == <fieldvalue>', '<fieldname> > "
 "<fieldvalue>' or '<fieldname> < <fieldvalue>'."
 
-#: lib/eventhandler/base.py:291
+#: lib/eventhandler/base.py:293
 msgid ""
 "This condition can check the value of an arbitrary event counter and "
 "compare it like 'myCounter == 1000', 'myCounter > 1000' or 'myCounter < "
@@ -1620,7 +1620,7 @@ msgstr ""
 "controleren en vergelijken, zoals 'myCounter == 1000', 'myCounter > 1000'"
 " or 'myCounter < 1000'."
 
-#: lib/eventhandler/base.py:298
+#: lib/eventhandler/base.py:300
 msgid ""
 "Here you can enter a regular expression. The condition only applies if "
 "the regular expression matches the detail->error->message in the "
@@ -1630,7 +1630,7 @@ msgstr ""
 "toepassing als de reguliere expressie overeenkomt met het "
 "detail->error->message in het antwoord."
 
-#: lib/eventhandler/base.py:305
+#: lib/eventhandler/base.py:307
 msgid ""
 "Here you can enter a regular expression. The condition only applies if "
 "the regular expression matches the detail->message in the response."
@@ -1639,7 +1639,7 @@ msgstr ""
 "toepassing als de reguliere expressie overeenkomt met het detail->message"
 " in het antwoord."
 
-#: lib/eventhandler/base.py:312
+#: lib/eventhandler/base.py:314
 msgid "Trigger the action, if the client IP matches."
 msgstr "Start de actie als het cliënt IP-adres overeenkomt."
 
@@ -1824,11 +1824,11 @@ msgstr ""
 "Voeg de rol (admin of user) van de aangemelde gebruiker toe als script "
 "parameter, zoals '--logged_in_role <role>'."
 
-#: lib/eventhandler/tokenhandler.py:133
+#: lib/eventhandler/tokenhandler.py:135
 msgid "set a new realm of the token"
 msgstr "stel een nieuwe realm voor het token in"
 
-#: lib/eventhandler/tokenhandler.py:137
+#: lib/eventhandler/tokenhandler.py:139
 #, fuzzy
 msgid ""
 "The new realm will be the only realm of the token. I.e. all other realms "
@@ -1839,43 +1839,43 @@ msgstr ""
 " zullen van dit token verwijderd worden. Anders zal de realm toegevoegd "
 "worden aan het token."
 
-#: lib/eventhandler/tokenhandler.py:152
+#: lib/eventhandler/tokenhandler.py:154
 msgid "set the PIN of the token to a random PIN of this length."
 msgstr "stel de PIN van het token in als een willekeurige PIN van deze lengte."
 
-#: lib/eventhandler/tokenhandler.py:159
+#: lib/eventhandler/tokenhandler.py:161
 msgid "Token type to create"
 msgstr "Te maken token-type"
 
-#: lib/eventhandler/tokenhandler.py:164
+#: lib/eventhandler/tokenhandler.py:166
 msgid "Assign token to user in request or to tokenowner."
 msgstr "Wijs een toeken toe aan de gebruiker in de vraag of aan de token eigenaar."
 
-#: lib/eventhandler/tokenhandler.py:169
+#: lib/eventhandler/tokenhandler.py:171
 msgid "Set the realm of the newly created token."
 msgstr "Stel de realm in van het nieuw gemaakt token."
 
-#: lib/eventhandler/tokenhandler.py:176
+#: lib/eventhandler/tokenhandler.py:178
 msgid "Dynamically read the mobile number from the user store."
 msgstr "Lees het mobiele nummer dynamisch van de gebruikersopslag."
 
-#: lib/eventhandler/tokenhandler.py:183
+#: lib/eventhandler/tokenhandler.py:185
 msgid "Dynamically read the email address from the user store."
 msgstr "Lees het e-mailadres dynamisch van de gebruikersopslag."
 
-#: lib/eventhandler/tokenhandler.py:190
+#: lib/eventhandler/tokenhandler.py:192
 msgid "Use a specific SMTP server configuration for this token."
 msgstr "Gebruik een specifieke SMTP-serverconfiguratie voor dit token."
 
-#: lib/eventhandler/tokenhandler.py:197
+#: lib/eventhandler/tokenhandler.py:199
 msgid "Use a specific SMS gateway configuration for this token."
 msgstr "Gebruik een specifieke SMS-gateway-configuratie voor dit token."
 
-#: lib/eventhandler/tokenhandler.py:202
+#: lib/eventhandler/tokenhandler.py:204
 msgid "A dictionary of additional init parameters."
 msgstr "Een woordenlijst met bijkomende init parameters."
 
-#: lib/eventhandler/tokenhandler.py:208
+#: lib/eventhandler/tokenhandler.py:210
 msgid ""
 "Set the MOTP PIN of the MOTP token during enrollment. This is a required "
 "value for enrolling MOTP tokens."
@@ -1883,11 +1883,11 @@ msgstr ""
 "Stel de MOTP PIN van het MOTP token in tijdens de aanmelding. Dis is een "
 "vereiste waarde voor het registreren van MOTP tokens."
 
-#: lib/eventhandler/tokenhandler.py:217
+#: lib/eventhandler/tokenhandler.py:219
 msgid "The new description of the token."
 msgstr "De nieuwe beschrijving van het token."
 
-#: lib/eventhandler/tokenhandler.py:224
+#: lib/eventhandler/tokenhandler.py:226
 msgid ""
 "The token will be valid starting at the given date. Can be a fixed date "
 "or an offset like +10m, +24h, +7d."
@@ -1895,7 +1895,7 @@ msgstr ""
 "Het token zal geldig zijn vanaf het opgegeven tijdstip. Kan een vast "
 "tijdstip zijn of een afwijking van bijvoorbeeld +10m; +24h, +7d."
 
-#: lib/eventhandler/tokenhandler.py:231
+#: lib/eventhandler/tokenhandler.py:233
 msgid ""
 "The token will be valid until the given date. Can be a fixed date or an "
 "offset like +10m, +24h, +7d."
@@ -1903,15 +1903,15 @@ msgstr ""
 "Het token zal geldig zijn tot het opgegeven tijdstip.Kan een vast "
 "tijdstip zijn of een afwijking van bijvoorbeeld +10m; +24h, +7d."
 
-#: lib/eventhandler/tokenhandler.py:244
+#: lib/eventhandler/tokenhandler.py:246
 msgid "Set the new count window of the token."
 msgstr "Stel het nieuwe telvenster van het token in."
 
-#: lib/eventhandler/tokenhandler.py:254
+#: lib/eventhandler/tokenhandler.py:256
 msgid "Set the failcounter of the token."
 msgstr "Stel de teller voor mislukte aanmeldingen met dit token in."
 
-#: lib/eventhandler/tokenhandler.py:264
+#: lib/eventhandler/tokenhandler.py:266
 msgid ""
 "Increase or decrease the fail counter of the token. Values of +n, -n with"
 " n being an integer are accepted."
@@ -1919,50 +1919,50 @@ msgstr ""
 "Verhoog of verlaag de mislukte aanmeldingenteller voor het tonen. Waarden"
 " van +n of -n waarbij n een geheel getal is, worden aanvaard."
 
-#: lib/eventhandler/tokenhandler.py:274
+#: lib/eventhandler/tokenhandler.py:276
 msgid "Set the maximum failcounter of the token."
 msgstr "Stel het maximaal aantal mislukte pogingen voor dit token in."
 
-#: lib/eventhandler/tokenhandler.py:282
+#: lib/eventhandler/tokenhandler.py:284
 msgid "Set this tokeninfo key."
 msgstr "Stel deze token-infosleutel in."
 
-#: lib/eventhandler/tokenhandler.py:287
+#: lib/eventhandler/tokenhandler.py:289
 #, fuzzy
 msgid "Set the above key to this value."
 msgstr "Stel bovenstaande sleutel in met deze waarde."
 
-#: lib/eventhandler/tokenhandler.py:296
+#: lib/eventhandler/tokenhandler.py:298
 msgid "Delete this tokeninfo key."
 msgstr "Verwijder deze token-infosleutel."
 
-#: lib/eventhandler/tokenhandler.py:304
+#: lib/eventhandler/tokenhandler.py:306
 msgid "Add a tokengroup to the token."
 msgstr "Voeg een token-groep toe aan het token."
 
-#: lib/eventhandler/tokenhandler.py:313
+#: lib/eventhandler/tokenhandler.py:315
 msgid "Remove a tokengroup from the token."
 msgstr "Verwijder een token-groep van het token."
 
-#: lib/eventhandler/tokenhandler.py:322
+#: lib/eventhandler/tokenhandler.py:324
 msgid "The ID of the machine you want to attach the token to"
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:328
+#: lib/eventhandler/tokenhandler.py:330
 msgid "Set the service_id for an SSH application."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:336
+#: lib/eventhandler/tokenhandler.py:338
 msgid ""
 "Set a token application like 'offline' or 'SSH'. Note: Not all tokens "
 "work well with all applications!"
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:345
+#: lib/eventhandler/tokenhandler.py:347
 msgid "The number of offline OTP values available"
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:353
+#: lib/eventhandler/tokenhandler.py:355
 msgid "The number of rounds for password hashing"
 msgstr ""
 
@@ -2047,7 +2047,7 @@ msgstr "De gegevens gepost in de webhook"
 msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr "Jouw LDAP-configuratie lijkt OK, %i machine-objecten gevonden."
 
-#: lib/resolvers/LDAPIdResolver.py:1104
+#: lib/resolvers/LDAPIdResolver.py:1109
 msgid ""
 "Your LDAP config found {0!s} user objects, but only {1!s} with the "
 "specified uidtype"
@@ -2055,7 +2055,7 @@ msgstr ""
 "Jouw LDAP-configuratie vond{0!s} gebruikers, maar slechts {1!s} met het "
 "opgegeven uid-type"
 
-#: lib/resolvers/LDAPIdResolver.py:1107
+#: lib/resolvers/LDAPIdResolver.py:1112
 msgid "Your LDAP config seems to be OK, {0!s} user objects found."
 msgstr "Jouw LDAP-configuratie lijkt OK, {0!s} gebruikers gevonden."
 
@@ -2071,15 +2071,79 @@ msgstr ""
 msgid "Proxy setting for HTTPS connections to googleapis.com."
 msgstr "Proxy-instellingen voor HTTPS-verbindingen naar googleapis.com."
 
+#: lib/smsprovider/HttpMessageToUidProvider.py:237
 #: lib/smsprovider/HttpSMSProvider.py:230
 msgid "The base URL of the HTTP Gateway"
 msgstr "De basis-URL van de HTTP Gateay"
 
+#: lib/smsprovider/HttpMessageToUidProvider.py:240
 #: lib/smsprovider/HttpSMSProvider.py:233
 msgid "Should the HTTP Gateway be connected via an HTTP GET or POST request."
 msgstr ""
 "Moet de HTTP Gateway geconnecteerd worden via een HTTP GET of POST "
 "request."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:245
+#, fuzzy
+msgid ""
+"Specify a substring, that indicates, that the message was delivered "
+"successfully."
+msgstr "Geef een substring op die aangeeft dat de SMS met succes afgeleverd was."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:249
+#, fuzzy
+msgid ""
+"Specify a substring, that indicates, that the message failed to be "
+"delivered."
+msgstr ""
+"Geef een substring op die aangeeft dat de SMS niet met succes afgeleverd "
+"was."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:253
+#: lib/smsprovider/HttpSMSProvider.py:246
+msgid "Username in case of basic authentication."
+msgstr "Gebruikersnaam bij basis authenticatie."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:257
+#: lib/smsprovider/HttpSMSProvider.py:250
+msgid "Password in case of basic authentication."
+msgstr "Wachtwoord bij basis authenticatie."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:262
+#: lib/smsprovider/HttpSMSProvider.py:255
+msgid "Should the SSL certificate be verified."
+msgstr "Moet het SSL-certificaat geverifieerd worden."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:268
+#: lib/smsprovider/HttpSMSProvider.py:261
+msgid "Should the data in a POST Request be sent as JSON."
+msgstr "Moeten de gegevens in een POST-request als JSON verstuurd worden."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:272
+#: lib/smsprovider/HttpSMSProvider.py:273
+msgid "Proxy setting for HTTP connections."
+msgstr "Proxy-instelling voor HTTP-verbindingen."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:273
+#: lib/smsprovider/HttpSMSProvider.py:274
+msgid "Proxy setting for HTTPS connections."
+msgstr "Proxy-instelling voor HTTPS-verbindingen."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:274
+#: lib/smsprovider/HttpSMSProvider.py:275
+msgid "The timeout in seconds."
+msgstr "De time-out in seconden."
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:275
+msgid ""
+"If the token is not assigned to a user, use this attribute from "
+"token_info as a fallback."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:276
+#, fuzzy
+msgid "The URL for the post check action"
+msgstr "De URL van de webhook is gepost naar"
 
 #: lib/smsprovider/HttpSMSProvider.py:238
 msgid ""
@@ -2093,22 +2157,6 @@ msgstr ""
 "Geef een substring op die aangeeft dat de SMS niet met succes afgeleverd "
 "was."
 
-#: lib/smsprovider/HttpSMSProvider.py:246
-msgid "Username in case of basic authentication."
-msgstr "Gebruikersnaam bij basis authenticatie."
-
-#: lib/smsprovider/HttpSMSProvider.py:250
-msgid "Password in case of basic authentication."
-msgstr "Wachtwoord bij basis authenticatie."
-
-#: lib/smsprovider/HttpSMSProvider.py:255
-msgid "Should the SSL certificate be verified."
-msgstr "Moet het SSL-certificaat geverifieerd worden."
-
-#: lib/smsprovider/HttpSMSProvider.py:261
-msgid "Should the data in a POST Request be sent as JSON."
-msgstr "Moeten de gegevens in een POST-request als JSON verstuurd worden."
-
 #: lib/smsprovider/HttpSMSProvider.py:268
 msgid ""
 "An optional proxy string. DEPRECATED. Do not use this anymore. Rather use"
@@ -2119,19 +2167,7 @@ msgstr ""
 "eerder HTTP_PROXY voor http-connecties en HTTPS_PROXY voor https-"
 "connecties. De PROXY-opties zal later verwijderd worden."
 
-#: lib/smsprovider/HttpSMSProvider.py:273
-msgid "Proxy setting for HTTP connections."
-msgstr "Proxy-instelling voor HTTP-verbindingen."
-
-#: lib/smsprovider/HttpSMSProvider.py:274
-msgid "Proxy setting for HTTPS connections."
-msgstr "Proxy-instelling voor HTTPS-verbindingen."
-
-#: lib/smsprovider/HttpSMSProvider.py:275
-msgid "The timeout in seconds."
-msgstr "De time-out in seconden."
-
-#: lib/smsprovider/SMSProvider.py:74
+#: lib/smsprovider/SMSProvider.py:75
 #, fuzzy
 msgid ""
 "Regular expression to modify the phone number to make it compatible with "
@@ -2251,17 +2287,17 @@ msgstr ""
 "De gebruiker mag slechts dit maximaal aantal actieve wachtwoord-tokens "
 "toegewezen hebben."
 
-#: lib/tokens/certificatetoken.py:275
+#: lib/tokens/certificatetoken.py:277
 msgid "Certificate: Enroll an x509 Certificate Token."
 msgstr "Certificaat: een x509 certificaat-token registreren."
 
-#: lib/tokens/certificatetoken.py:286
+#: lib/tokens/certificatetoken.py:288
 msgid "The user may only have this maximum number of certificates assigned."
 msgstr ""
 "De gebruiker mag slechts dit maximaal aantal certificaten toegewezen "
 "hebben."
 
-#: lib/tokens/certificatetoken.py:291
+#: lib/tokens/certificatetoken.py:293
 msgid ""
 "The user may only have this maximum number of active certificates "
 "assigned."
@@ -2269,7 +2305,7 @@ msgstr ""
 "De gebruiker mag slechts dit maximaal aantal actieve certificaten "
 "toegewezen hebben."
 
-#: lib/tokens/certificatetoken.py:296
+#: lib/tokens/certificatetoken.py:298
 msgid ""
 "Enrolling a certificate token can require an attestation certificate. "
 "(Default: ignore)"
@@ -2277,19 +2313,19 @@ msgstr ""
 "Het registreren van een certificaat-token kan een attest-certificaat "
 "vereisten. (Standaard: negeer)"
 
-#: lib/tokens/certificatetoken.py:305
+#: lib/tokens/certificatetoken.py:307
 msgid "The CA connector that should be used during certificate enrollment."
 msgstr ""
 "De CA connector die gebruikt zou moeten worden gedurende een aanmelding "
 "met certificaat."
 
-#: lib/tokens/certificatetoken.py:311
+#: lib/tokens/certificatetoken.py:313
 msgid "The template that should be used to issue a certificate."
 msgstr ""
 "Het sjabloon dat gebruikt zou moeten worden om een certificaat uit te "
 "reiken."
 
-#: lib/tokens/certificatetoken.py:316
+#: lib/tokens/certificatetoken.py:318
 msgid ""
 "This takes a space separated list of elements to be added to the subject."
 " Can be 'email' and 'realm'."
@@ -2297,7 +2333,7 @@ msgstr ""
 "Dit gebruikt een spatie-gescheiden lijst met elementen die aan het "
 "onderwerp toegevoegd worden. Kan 'email' en 'realm' zijn."
 
-#: lib/tokens/certificatetoken.py:324 lib/tokens/certificatetoken.py:331
+#: lib/tokens/certificatetoken.py:326 lib/tokens/certificatetoken.py:333
 msgid "The directory containing attestation certificate chains."
 msgstr "De map waarin de attest certificaat-chain zich bevindt."
 
@@ -2330,7 +2366,8 @@ msgid ""
 "possibility to use the OTP more than once."
 msgstr ""
 
-#: lib/tokens/daypasswordtoken.py:125
+#: lib/tokens/daypasswordtoken.py:125 lib/tokens/hotptoken.py:163
+#: lib/tokens/totptoken.py:160
 #, fuzzy
 msgid "Enforce setting an app pin for the privacyIDEA Authenticator App"
 msgstr "Een app-pin instellen verplichten voor de privacyIDEA Authenticator App"
@@ -2504,11 +2541,6 @@ msgstr ""
 "De moeilijkheidsgraad die voor de OTP seed-generatie gebruikt werd (moet "
 "minstens 10000 zijn)"
 
-#: lib/tokens/hotptoken.py:163 lib/tokens/totptoken.py:160
-#, fuzzy
-msgid "Enforce setting an app pin for the eduMFA Authenticator App"
-msgstr "Een app-pin instellen verplichten voor de privacyIDEA Authenticator App"
-
 #: lib/tokens/hotptoken.py:269
 msgid "URL for google Authenticator"
 msgstr "URL voor de Google Authenticator"
@@ -2517,7 +2549,7 @@ msgstr "URL voor de Google Authenticator"
 msgid "URL for OATH token"
 msgstr "URL voor OATH-token"
 
-#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1049
+#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1175
 msgid "Please scan the QR code!"
 msgstr "Scan de QR-code!"
 
@@ -2662,28 +2694,21 @@ msgstr ""
 msgid "Do you want to confirm the login?"
 msgstr "Wil je de aanmelding bevestigen?"
 
-#: lib/tokens/pushtoken.py:301
-msgid "PUSH Token"
-msgstr "PUSH-token"
-
-#: lib/tokens/pushtoken.py:303
-msgid "PUSH: Send a push notification to a smartphone."
-msgstr "PUSH: stuur een push-melding naar een smartphone."
-
-#: lib/tokens/pushtoken.py:311
+#: lib/tokens/pushtoken.py:322
 msgid "The configuration of your Firebase application."
 msgstr "De configuratie van je Firebase-applicatie."
 
-#: lib/tokens/pushtoken.py:319
+#: lib/tokens/pushtoken.py:330
+#, fuzzy
 msgid ""
 "The URL the Push App should contact in the second enrollment step. "
-"Usually it is the endpoint /ttype/push of the eduMFA server."
+"Usually it is the endpoint /ttype/edupush of the eduMFA server."
 msgstr ""
 "De URL die de Push App moet contacteren tijdens de tweede "
 "registratiestap. Gewoonlijk is dit enpoint/ttype/push van de eduMFA-"
 "server."
 
-#: lib/tokens/pushtoken.py:325
+#: lib/tokens/pushtoken.py:335
 msgid ""
 "The second enrollment step must be completed within this time (in "
 "minutes)."
@@ -2691,41 +2716,41 @@ msgstr ""
 "De tweede registratiestap moet voltooid worden binnen deze tijd (in "
 "minuten)."
 
-#: lib/tokens/pushtoken.py:329
+#: lib/tokens/pushtoken.py:339
 msgid "The smartphone needs to verify SSL during the enrollment. (default 1)"
 msgstr "De smartphone moet SSL verifiëren tijdens de registratie. (standaard 1)"
 
-#: lib/tokens/pushtoken.py:335
+#: lib/tokens/pushtoken.py:345
 msgid "The user may only have this maximum number of Push tokens assigned."
 msgstr ""
 "De gebruiker mag slechts dit maximaal aantal PUSH-tokens toegewezen "
 "hebben."
 
-#: lib/tokens/pushtoken.py:340
+#: lib/tokens/pushtoken.py:350
 msgid "The user may only have this maximum number of active Push tokens assigned."
 msgstr ""
 "De gebruiker mag slechts dit maximaal aantal actieve PUSH-tokens "
 "toegewezen hebben."
 
-#: lib/tokens/pushtoken.py:346
+#: lib/tokens/pushtoken.py:356
 msgid "Require to unlock the Smartphone before Push requests can be accepted"
 msgstr ""
 "Smartphone moet ongeblokkeeerd zijn voor Push-aanvragen aanvaard kunnen "
 "worden"
 
-#: lib/tokens/pushtoken.py:352
+#: lib/tokens/pushtoken.py:362
 msgid "The question the user sees on his mobile phone."
 msgstr "De vraag die de gebruiker op zijn mobiele telefoon ziet."
 
-#: lib/tokens/pushtoken.py:357
+#: lib/tokens/pushtoken.py:367
 msgid "The title of the notification, the user sees on his mobile phone."
 msgstr "De titel van de melding die de gebruiker ziet op zijn mobiele telefoon."
 
-#: lib/tokens/pushtoken.py:362
+#: lib/tokens/pushtoken.py:372
 msgid "The smartphone needs to verify SSL during authentication. (default 1)"
 msgstr "De smartphne moet SSL verifiëren tijdens de authenticatie. (standaard 1)"
 
-#: lib/tokens/pushtoken.py:368
+#: lib/tokens/pushtoken.py:378
 msgid ""
 "Wait for number of seconds for the user to confirm the challenge in the "
 "first request."
@@ -2733,13 +2758,13 @@ msgstr ""
 "Wacht een aantal seconden om de gebruiker de challenge te laten "
 "bevestigen in de eerste aanvraag."
 
-#: lib/tokens/pushtoken.py:374
+#: lib/tokens/pushtoken.py:383
 msgid "Configure whether to allow push tokens to poll for challenges"
 msgstr ""
 "Configureer of het toegestaan is om push tokens te laten vragen naar "
 "challenges"
 
-#: lib/tokens/pushtoken.py:509
+#: lib/tokens/pushtoken.py:637
 msgid "URL for eduMFA Push Token"
 msgstr "URL voor eduMFA Push Token"
 
@@ -2832,17 +2857,17 @@ msgstr ""
 "De gebruiker mag slechts dit maximaal aantal actieve externe tokens "
 "toegewezen hebben."
 
-#: lib/tokens/smstoken.py:186
+#: lib/tokens/smstoken.py:187
 msgid "SMS Token"
 msgstr "SMS token"
 
-#: lib/tokens/smstoken.py:188
+#: lib/tokens/smstoken.py:189
 msgid "SMS: Send a One Time Password to the users mobile phone."
 msgstr ""
 "SMS: stuur een one time password naar de mobiele telefoon van de "
 "gebruikers."
 
-#: lib/tokens/smstoken.py:197
+#: lib/tokens/smstoken.py:198
 msgid ""
 "The text that will be send via SMS for an SMS token. Use tags like {otp} "
 "and {serial} as parameters."
@@ -2850,7 +2875,16 @@ msgstr ""
 "De tekst die verstuurd zal worden via SMS voor een SMS-token. Gebruik "
 "{otp}> en {serial} als parameters."
 
-#: lib/tokens/smstoken.py:202
+#: lib/tokens/smstoken.py:203
+#, fuzzy
+msgid ""
+"The message that will be submitted for an SMS token on post check action."
+" Use tags like {otp} and {serial} as parameters."
+msgstr ""
+"De tekst die verstuurd zal worden via SMS voor een SMS-token. Gebruik "
+"{otp}> en {serial} als parameters."
+
+#: lib/tokens/smstoken.py:208
 msgid ""
 "If set, a new SMS OTP will be sent after successful authentication with "
 "one SMS OTP."
@@ -2858,7 +2892,7 @@ msgstr ""
 "Indien ingesteld zal een nieuw SMS OTP gestuurd worden na een gelukte "
 "authenticatie met één SMS OTP."
 
-#: lib/tokens/smstoken.py:207
+#: lib/tokens/smstoken.py:213
 msgid ""
 "Use an alternate challenge text for telling the user to enter the code "
 "from the SMS."
@@ -2866,33 +2900,33 @@ msgstr ""
 "Gebruik een alternatieve challenge tekst om te gebruiker te vertellen dat"
 " hij de code van de SMS moet ingeven."
 
-#: lib/tokens/smstoken.py:215
+#: lib/tokens/smstoken.py:221
 msgid "Choose the gateways the administrator is allowed to set."
 msgstr "Kies de gateways die de beheerder mag instellen."
 
-#: lib/tokens/smstoken.py:223
+#: lib/tokens/smstoken.py:229
 msgid "Choose the gateways the user is allowed to set."
 msgstr "Kies de gateways die de gebruiker mag instellen."
 
-#: lib/tokens/smstoken.py:230
+#: lib/tokens/smstoken.py:236
 msgid "The user may only have this maximum number of SMS tokens assigned."
 msgstr "De gebruiker mag slechts dit maximaal aantal SMS-tokens toegewezen hebben."
 
-#: lib/tokens/smstoken.py:235
+#: lib/tokens/smstoken.py:241
 msgid "The user may only have this maximum number of active SMS tokens assigned."
 msgstr ""
 "De gebruiker mag slechts dit maximaal aantal actieve SMS-tokens "
 "toegewezen hebben."
 
-#: lib/tokens/smstoken.py:312
+#: lib/tokens/smstoken.py:318
 msgid "Enter the OTP from the SMS:"
 msgstr "Geeft het OTP van de SMS:"
 
-#: lib/tokens/smstoken.py:343
+#: lib/tokens/smstoken.py:349
 msgid "The PIN was correct, but the SMS could not be sent!"
 msgstr "De PIN-code was juist, maar de SMS kon niet verzonden worden!"
 
-#: lib/tokens/smstoken.py:591
+#: lib/tokens/smstoken.py:631
 msgid "Please enter your new phone number!"
 msgstr "Geef je nieuwe telefoonnummer!"
 
@@ -3034,19 +3068,27 @@ msgstr ""
 "De gebruiker mag slechts dit maximaal aantal actieve VASCO-tokens "
 "toegewezen hebben."
 
-#: lib/tokens/webauthntoken.py:462
+#: lib/tokens/webauthntoken.py:467
 msgid "Generic WebAuthn Token"
 msgstr "Generiek WebAuthn token"
 
-#: lib/tokens/webauthntoken.py:472
+#: lib/tokens/webauthntoken.py:480
 msgid "Please confirm with your WebAuthn token ({0!s})"
 msgstr "Bevestig met je WebAuthn-token ({0!s})"
 
-#: lib/tokens/webauthntoken.py:473
+#: lib/tokens/webauthntoken.py:481
 msgid "Please confirm with your WebAuthn token"
 msgstr "Bevestig met je WebAuthn-token"
 
-#: lib/tokens/webauthntoken.py:610
+#: lib/tokens/webauthntoken.py:625
+msgid ""
+"Use an alternative challenge text for telling the user to confirm with "
+"his WebAuthn token."
+msgstr ""
+"Gebruik een alternatieve challenge tekst om de gebruiker te vragen te "
+"bevestigen met zijn WebAuthn-token."
+
+#: lib/tokens/webauthntoken.py:631
 msgid ""
 "A list of transports to prefer to communicate with WebAuthn tokens. "
 "Default: usb ble nfc internal (All standard transports)"
@@ -3054,7 +3096,7 @@ msgstr ""
 "Een lijst met vookeursverbindingen om te communiceren met WebAuthn "
 "tokens. Standaard: usb ble nfc internal (alle standaardverbindingen)"
 
-#: lib/tokens/webauthntoken.py:615
+#: lib/tokens/webauthntoken.py:637
 msgid ""
 "The time in seconds the user has to confirm authorization on his WebAuthn"
 " token. Note: You will want to increase the ChallengeValidityTime along "
@@ -3064,7 +3106,7 @@ msgstr ""
 "bevestigen op zijn WebAuthn token. Opmerking: je met de "
 "ChallengeValidityTime gelijktijdig hiermee aanpassen. Standaard: 60"
 
-#: lib/tokens/webauthntoken.py:621
+#: lib/tokens/webauthntoken.py:644
 msgid ""
 "Whether the user's identity should be verified when authenticating with a"
 " WebAuthn token. Default: preferred (verify the user if supported by the "
@@ -3074,15 +3116,26 @@ msgstr ""
 "authenticeert met een WebAuthn-token. Standaard: bij voorkeur (verifieer "
 "de gebruiker indien dit ondersteund wordt door het token)"
 
-#: lib/tokens/webauthntoken.py:631
+#: lib/tokens/webauthntoken.py:655
 msgid ""
-"Use an alternative challenge text for telling the user to confirm with "
-"his WebAuthn token."
+"Whether usernameless authentication via the Passkeys Autofill UI, also "
+"known as Conditional Mediation, should be enabled. Note: This function is"
+" only available if passkeys (resident keys) are enrolled and if the "
+"browser supports Conditional Mediation. Other WebAuthn authentication "
+"policies will be ignored if this option is enabled. "
 msgstr ""
-"Gebruik een alternatieve challenge tekst om de gebruiker te vragen te "
-"bevestigen met zijn WebAuthn-token."
 
-#: lib/tokens/webauthntoken.py:638
+#: lib/tokens/webauthntoken.py:664
+msgid ""
+"Whether to enforce the WebAuthn authentication policies for the relying "
+"party ID and the user verification requirement realm-wide, i.e., for all "
+"users in a realm? Note: This requires usernameless authentication to be "
+"enabled. Also, the option has to be set in the fudiscr plugin so the "
+"realm is sent to the API endpoints via a query parameter, e.g., "
+"/validate/triggerchallenge?type=webauthn&realm=userless"
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:675
 msgid ""
 "A list of WebAuthn authenticators acceptable for authorization, given as "
 "a space-separated list of AAGUIDs. Per default all authenticators are "
@@ -3092,22 +3145,22 @@ msgstr ""
 "authorisatie, ingegeven als een spatie gescheiden lijst met AAGUID's. "
 "Standaard worden alle authenticators aanvaard."
 
-#: lib/tokens/webauthntoken.py:644
+#: lib/tokens/webauthntoken.py:681
 msgid "Only the specified WebAuthn-tokens are authorized."
 msgstr "Enkel de opgegeven WebAuthn-tokens worden aanvaard."
 
-#: lib/tokens/webauthntoken.py:651
+#: lib/tokens/webauthntoken.py:688
 msgid "One webauthn token can not be registered to a user more than once."
 msgstr ""
 "Een webauthn-token kan slechts één keer aan een gebruiker toegewezen "
 "worden."
 
-#: lib/tokens/webauthntoken.py:656
+#: lib/tokens/webauthntoken.py:693
 #, fuzzy
 msgid "A human-readable name for the organization rolling out WebAuthn tokens."
 msgstr "Een leesbare naam voor de organisatie die WebAuthn-tokens uitrolt."
 
-#: lib/tokens/webauthntoken.py:661
+#: lib/tokens/webauthntoken.py:698
 msgid ""
 "A domain name that is a subset of the respective FQDNs for all the "
 "webservices the users should be able to sign in to using WebAuthn tokens."
@@ -3116,7 +3169,7 @@ msgstr ""
 " de gebruikers zouden moeten kunnen aanmelden om WebAuthn-tokens te "
 "gebruiken."
 
-#: lib/tokens/webauthntoken.py:667
+#: lib/tokens/webauthntoken.py:704
 msgid ""
 "The time in seconds the user has to confirm enrollment on his WebAuthn "
 "token. Note: You will want to increase the ChallengeValidityTime along "
@@ -3126,7 +3179,7 @@ msgstr ""
 "bevestigen op zijn WebAuthn token. Opmerking: je met de "
 "ChallengeValidityTime gelijktijdig hiermee aanpassen. Standaard: 60"
 
-#: lib/tokens/webauthntoken.py:674
+#: lib/tokens/webauthntoken.py:711
 msgid ""
 "Whether to limit roll out of WebAuthn tokens to either only platform "
 "authenticators, or only cross-platform authenticators. Default: either"
@@ -3134,7 +3187,7 @@ msgstr ""
 "Moet de uitrol van WebAutn-tokens beperkt worden tot uitsluitend platform"
 " authenticators of enkel cross-platform authenticators. Standaard: beide"
 
-#: lib/tokens/webauthntoken.py:685
+#: lib/tokens/webauthntoken.py:722
 msgid ""
 "A list of WebAuthn authenticators acceptable for enrollment, given as a "
 "space-separated list of AAGUIDs. Per default all authenticators are "
@@ -3144,7 +3197,7 @@ msgstr ""
 "registratie, ingegeven als een spatie gescheiden lijst met AAGUID's. "
 "Standaard worden alle authenticators aanvaard."
 
-#: lib/tokens/webauthntoken.py:691
+#: lib/tokens/webauthntoken.py:728
 msgid ""
 "Whether the user's identity should be verified when rolling out a new "
 "WebAuthn token. Default: preferred (verify the user if supported by the "
@@ -3154,7 +3207,7 @@ msgstr ""
 "uitrollen van een nieuw WebAuthn-token. Standaard: bij voorkeur "
 "(verifieer de gebruiker als dit ondersteund wordt door het token)"
 
-#: lib/tokens/webauthntoken.py:705
+#: lib/tokens/webauthntoken.py:742
 #, fuzzy
 msgid ""
 "Which algorithm are available to use for creating public key credentials "
@@ -3163,7 +3216,7 @@ msgstr ""
 "Welke algoritmen kunnen gebruikt worden voor het maken van publieke "
 "sleutel-waarden voor WebAuthn tokens. (Standaard: [{0!s}], Order: [{1!s}]"
 
-#: lib/tokens/webauthntoken.py:712
+#: lib/tokens/webauthntoken.py:749
 msgid ""
 "Whether to request attestation data when enrolling a new WebAuthn token. "
 "Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
@@ -3174,7 +3227,7 @@ msgstr ""
 " dit niet op geen gezet worden. Standaard: rechtstreeks (vraag voor niet "
 "geanonimiseerde attesteringsgegevens)"
 
-#: lib/tokens/webauthntoken.py:724
+#: lib/tokens/webauthntoken.py:761
 msgid ""
 "Whether and how strictly to check authenticator attestation data. Note: "
 "If the attestation form is none, the attestation level needs to also be "
@@ -3186,29 +3239,42 @@ msgstr ""
 "dan moet het attesteringsniveau ook geen zijn. Standaard: niet vertrouwd "
 "(attestering is vereist, maar kan onbekend of zelf getekend zijn)"
 
-#: lib/tokens/webauthntoken.py:736
+#: lib/tokens/webauthntoken.py:773
 msgid "Only the specified WebAuthn-tokens are allowed to be registered."
 msgstr "Enkel de opgegeven WebAuthn-tokens mogen geregistreerd worden."
 
-#: lib/tokens/webauthntoken.py:741
+#: lib/tokens/webauthntoken.py:778
+msgid ""
+"Whether to request a resident key. Note: Passkeys are always resident "
+"keys."
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:788
 msgid "The user may only have this number of WebAuthn tokens assigned."
 msgstr ""
 "De gebruiker mag slechts dit maximaal aantal WebAuthn -tokens toegewezen "
 "hebben."
 
-#: lib/tokens/webauthntoken.py:746
+#: lib/tokens/webauthntoken.py:793
 msgid "The user may only have this number of active WebAuthn tokens assigned."
 msgstr ""
 "De gebruiker mag slechts dit maximaal aantal actieve WebAuthn-tokens "
 "toegewezen hebben."
 
-#: lib/tokens/webauthntoken.py:751
+#: lib/tokens/webauthntoken.py:798
 msgid ""
 "Use an alternate challenge text for telling the user to confirm with his "
 "WebAuthn device."
 msgstr ""
 "Gebruik een alternatieve challenge tekst om aan te geven dat de gebruiker"
 " moet bevestigen met zijn WebAuthn-toestel."
+
+#: lib/tokens/webauthntoken.py:804
+msgid ""
+"The label for a new enrolled Passkey token. Possible tags are "
+"<code>{user}</code>, <code>{realm}</code>, <code>{serial}</code>, "
+"<code>{givenname}</code> and <code>{surname}</code>."
+msgstr ""
 
 #: lib/tokens/yubicotoken.py:94
 msgid "Yubikey Cloud mode: Forward authentication request to YubiCloud."
@@ -3452,9 +3518,8 @@ msgstr ""
 
 #~ msgid "Action is triggered, if the user has this number of tokens assigned."
 #~ msgstr ""
-#~ "Actie wordt gestart als de gebruiker "
-#~ "dit aantal tokens toegewezen gekregen "
-#~ "heeft."
+#~ "Actie wordt gestart als de serienummer"
+#~ " overeenkomt met deze reguliere expressie."
 
 #~ msgid ""
 #~ "This condition checks whether or not "
@@ -3487,3 +3552,13 @@ msgstr ""
 #~ "of a phone number as message "
 #~ "destination."
 #~ msgstr ""
+
+#~ msgid "Enforce setting an app pin for the eduMFA Authenticator App"
+#~ msgstr "Een app-pin instellen verplichten voor de privacyIDEA Authenticator App"
+
+#~ msgid "PUSH Token"
+#~ msgstr "PUSH-token"
+
+#~ msgid "PUSH: Send a push notification to a smartphone."
+#~ msgstr "PUSH: stuur een push-melding naar een smartphone."
+

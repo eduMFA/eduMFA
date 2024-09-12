@@ -347,7 +347,7 @@ show_android_privacyidea_authenticator
 
 type: ``bool``
 
-If this policy is activated, the enrollment page for HOTP, TOTP and Push tokens
+If this policy is activated, the enrollment page for HOTP, TOTP and PUSH tokens
 will contain a QR code, that leads the user to the Google Play Store where he can
 directly install the unsupported privacyIDEA Authenticator App for Android devices.
 
@@ -356,7 +356,7 @@ show_ios_privacyidea_authenticator
 
 type: ``bool``
 
-If this policy is activated, the enrollment page for HOTP, TOTP and Push tokens
+If this policy is activated, the enrollment page for HOTP, TOTP and PUSH tokens
 will contain a QR code, that leads the user to the Apple App Store where he can
 directly install the unsupported privacyIDEA Authenticator App for iOS devices.
 

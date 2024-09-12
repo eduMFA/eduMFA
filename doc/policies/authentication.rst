@@ -374,7 +374,7 @@ type: string
 
 This policy allows the rollout of tokens during the authentication via `/validate/check`.
 
-The policy action can take one of the followig token types: `hotp`, `totp`, `push`, `email`, `sms`.
+The policy action can take one of the following token types: `hotp`, `totp`, `edupush`, `push`, `email`, `sms`.
 
 The clients and plugins should make use of this policy in a transparent way and using multiple consecutive
 challenges.
@@ -409,10 +409,10 @@ have to enter the OTP value sent via email or text message.
 
 **PUSH**
 
-After the fist successful authentication step the user is presented a QR code for push token
+After the fist successful authentication step the user is presented a QR code for PUSH
 enrollment. The user needs to scan the QR code with an Authenticator App.
 If the token is successfully enrolled, the user is logged in without any further interaction.
-Since the successful enrollment of the Push token already verifies the presence of the user's smartphone,
+Since the successful enrollment of the PUSH token already verifies the presence of the user's smartphone,
 there is no additional authentication step anymore during enrollment.
 
 .. note:: Enrolling multiple token types one after another is not supported. It is currently possible to
@@ -517,7 +517,7 @@ dependent on the clients IP address and the user agent.
 
 .. _policy_push_text_on_mobile:
 
-push_text_on_mobile
+edupush_text_on_mobile, push_text_on_mobile
 ~~~~~~~~~~~~~~~~~~~
 
 .. index:: push token, Firebase service
@@ -525,13 +525,13 @@ push_text_on_mobile
 type: string
 
 This is the text that should be displayed on the push notification
-during the login process with a :ref:`push_token`.
+during the login process with a :ref:`edupush_token` or :ref:`push_token`.
 You can choose different texts for different users or IP addresses.
 This way you could customize push notifications for different applications.
 
 .. _policy_push_title_on_mobile:
 
-push_title_on_mobile
+edupush_title_on_mobile, push_title_on_mobile
 ~~~~~~~~~~~~~~~~~~~~
 
 .. index:: push token, Firebase service
@@ -540,11 +540,11 @@ type: string
 
 This is the title of the push notification that is displayed
 on the user's smartphone during the login process with
-a :ref:`push_token`.
+a :ref:`edupush_token` or :ref:`push_token`.
 
 .. _policy_push_wait:
 
-push_wait
+edupush_wait, push_wait
 ~~~~~~~~~
 
 .. index:: push token, push direct authentication
@@ -552,11 +552,11 @@ push_wait
 type: int
 
 This can be set to a number of seconds. If this is set, the authentication
-with a push token is only performed via one request to ``/validate/check``.
+with a PUSH token is only performed via one request to ``/validate/check``.
 The HTTP request to ``/validate/check`` will wait up to this number of
-seconds and check, if the push challenge was confirmed by the user.
+seconds and check, if the PUSH challenge was confirmed by the user.
 
-This way push tokens can be used with any non-push-capable applications.
+This way PUSH tokens can be used with any non-push-capable applications.
 
 Sensible numbers might be 10 or 20 seconds.
 
@@ -572,26 +572,26 @@ Sensible numbers might be 10 or 20 seconds.
 
 .. _policy_auth_push_allow_poll:
 
-push_allow_polling
+edupush_allow_polling, push_allow_polling
 ~~~~~~~~~~~~~~~~~~
 
 .. index:: push token
 
 type: string
 
-This policy configures if push tokens are allowed to poll the server for open
-challenges (e.g. when the the third-party push service is unavailable or
+This policy configures if PUSH tokens are allowed to poll the server for open
+challenges (e.g. when the the third-party PUSH service is unavailable or
 unreliable).
 
 The following options are available:
 
 ``allow``
 
-    *Allow* push tokens to poll for challenges.
+    *Allow* PUSH tokens to poll for challenges.
 
 ``deny``
 
-    *Deny* push tokens to poll for challenges. This basically returns a ``403``
+    *Deny* PUSH tokens to poll for challenges. This basically returns a ``403``
     error when requesting the poll endpoint.
 
 ``token``
@@ -605,13 +605,13 @@ The default is to ``allow`` polling
 
 .. _policy_push_ssl_verify_auth:
 
-push_ssl_verify
+edupush_ssl_verify, push_ssl_verify
 ~~~~~~~~~~~~~~~
 
 type: int
 
 The smartphone needs to verify the SSL certificate of the eduMFA server during
-the authentication with push tokens. By default, the verification is enabled. To disable
+the authentication with PUSH tokens. By default, the verification is enabled. To disable
 verification during enrollment, see :ref:`policy_push_ssl_verify_enrollment`.
 
 .. _policy_challenge_text:

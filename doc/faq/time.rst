@@ -16,9 +16,9 @@ might not work at all.
 If the time of your system is drifting, TOTP tokens, that once worked could stop working if the time drift gets
 to big to quick.
 
-Push tokens use the time during enrollment, for synchronization and for the poll functionality.
-To avoid replay attacks the Push tokens send a timestamp during the poll request. If you system is off only by a few
-minutes, the poll mechanism of Push tokens will not work.
+PUSH tokens use the time during enrollment, for synchronization and for the poll functionality.
+To avoid replay attacks these tokens send a timestamp during the poll request. If you system is off only by a few
+minutes, the poll mechanism of these tokens will not work.
 
 System and Logs
 ~~~~~~~~~~~~~~~

@@ -1,8 +1,8 @@
 .. _code_push_token:
 
-Push Token
+Legacy PUSH Token
 ~~~~~~~~~~
 
-.. autoclass:: edumfa.lib.tokens.pushtoken.PushTokenClass
+.. autoclass:: edumfa.lib.tokens.legacypushtoken.LegacyPushTokenClass
    :members:
    :undoc-members:

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-08-16 15:57+0000\n"
+"PO-Revision-Date: 2024-08-29 11:00+0200\n"
 "Last-Translator: Paul Lettich <paul.lettich@netknights.it>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/edumfa/edumfa-"
 "webui/de/>\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Poedit 3.4\n"
 
 #: edumfa/static/components/token/views/token.enrolled.paper.html:22
 #: edumfa/static/components/token/views/token.enrolled.paper.html:24
@@ -1217,7 +1217,7 @@ msgstr "Die Überprüfung des Rollouts ist fehlgeschlagen."
 msgid "Enter OTP + PIN to check the token."
 msgstr "OTP und PIN eingeben, um den Token zu prüfen."
 
-#: edumfa/static/components/token/views/token.enroll.totp.html:44
+#: edumfa/static/components/token/views/token.enroll.totp.html:42
 #: edumfa/static/components/token/views/token.enroll.yubikey.html:36
 msgid "Enter OTP key..."
 msgstr "OTP Schlüssel eingeben..."
@@ -1391,9 +1391,9 @@ msgstr ""
 "Für den Initialisierungsprozess und auch während der Anmeldung benötigt Ihr "
 "Smartphone eine Netzwerkverbindung, um eduMFA zu erreichen."
 
-#: edumfa/static/components/token/views/token.enroll.hotp.html:20
+#: edumfa/static/components/token/views/token.enroll.hotp.html:18
 #: edumfa/static/components/token/views/token.enroll.motp.html:11
-#: edumfa/static/components/token/views/token.enroll.totp.html:20
+#: edumfa/static/components/token/views/token.enroll.totp.html:18
 msgid "Generate OTP Key on the Server"
 msgstr "OTP-Schlüssel auf dem Server erzeugen"
 
@@ -1467,8 +1467,8 @@ msgid "Hardware"
 msgstr "Hardware"
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:61
-#: edumfa/static/components/token/views/token.enroll.hotp.html:62
-#: edumfa/static/components/token/views/token.enroll.totp.html:71
+#: edumfa/static/components/token/views/token.enroll.hotp.html:60
+#: edumfa/static/components/token/views/token.enroll.totp.html:69
 msgid "Hash algorithm"
 msgstr "Hash-Algorithmus"
 
@@ -2116,9 +2116,9 @@ msgid "OK"
 msgstr "OK"
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:27
-#: edumfa/static/components/token/views/token.enroll.hotp.html:40
+#: edumfa/static/components/token/views/token.enroll.hotp.html:38
 #: edumfa/static/components/token/views/token.enroll.motp.html:23
-#: edumfa/static/components/token/views/token.enroll.totp.html:40
+#: edumfa/static/components/token/views/token.enroll.totp.html:38
 #: edumfa/static/components/token/views/token.enroll.yubikey.html:30
 msgid "OTP Key"
 msgstr "OTP-Schlüssel"
@@ -2136,8 +2136,8 @@ msgstr "Die OTP-PINs sind nicht gleich!"
 msgid "OTP Value"
 msgstr "OTP-Wert"
 
-#: edumfa/static/components/token/views/token.enroll.hotp.html:49
-#: edumfa/static/components/token/views/token.enroll.totp.html:49
+#: edumfa/static/components/token/views/token.enroll.hotp.html:47
+#: edumfa/static/components/token/views/token.enroll.totp.html:47
 #: edumfa/static/components/token/views/token.enroll.yubikey.html:41
 msgid "OTP length"
 msgstr "OTP-Länge"
@@ -2328,9 +2328,9 @@ msgid ""
 "link</a> on your\n"
 "            smartphone."
 msgstr ""
-"Bitte scannen Sie den QR-Code mit der "
-"eduMFA Authenticator-App oder klicken Sie <a href=\"{{ enrolledToken."
-"pushurl.value }}\">den Link</a> auf Ihrem Smartphone."
+"Bitte scannen Sie den QR-Code mit der eduMFA Authenticator-App oder klicken "
+"Sie <a href=\"{{ enrolledToken.pushurl.value }}\">den Link</a> auf Ihrem "
+"Smartphone."
 
 #: edumfa/static/components/token/views/token.enrolled.push.html:9
 msgid ""
@@ -3127,14 +3127,14 @@ msgid "Software"
 msgstr "Software"
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:42
-#: edumfa/static/components/token/views/token.enroll.hotp.html:55
-#: edumfa/static/components/token/views/token.enroll.totp.html:55
+#: edumfa/static/components/token/views/token.enroll.hotp.html:53
+#: edumfa/static/components/token/views/token.enroll.totp.html:53
 msgid "Some Authenticator Apps only support an OTP length of 6."
 msgstr "Einige Authenticator-Apps unterstützen lediglich OTPs der Länge 6."
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:67
-#: edumfa/static/components/token/views/token.enroll.hotp.html:68
-#: edumfa/static/components/token/views/token.enroll.totp.html:77
+#: edumfa/static/components/token/views/token.enroll.hotp.html:66
+#: edumfa/static/components/token/views/token.enroll.totp.html:75
 msgid "Some Authenticator Apps only support the SHA1 algorithm."
 msgstr "Einige Authenticator-Apps unterstützen lediglich den SHA1-Algorithmus."
 
@@ -3350,21 +3350,21 @@ msgstr ""
 "    4226 beschrieben</a>."
 
 #: edumfa/static/components/token/views/token.enroll.hotp.html:1
-#, fuzzy
 msgid ""
 "The HOTP token is an event based token. You can paste a secret key or\n"
-"    have the server generate the secret and scan the QR code with a\n"
-"    smartphone app turning your\n"
-"    smartphone into an authentication device. You can also use other\n"
-"    authenticator apps like Google Authenticator. But note, that these\n"
-"    might have limitations in the supported hash algorithms or other "
-"parameters."
+"    have the server generate the secret and scan the QR code with an "
+"Authenticator\n"
+"    App turning your smartphone into an authentication device.\n"
+"    But note, that some Apps might have limitations in the supported hash "
+"algorithms or other parameters."
 msgstr ""
 "Der HOTP-Token ist ein ereignis-basierte Token. Sie können den geheimen OTP-"
-"Schlüssel hier einfügen oder den Server einen Schlüssel generieren lassen. "
-"Diesen können Sie in Ihre Smartphone-App (z.B. dem eduMFA-Authenticator) "
-"importieren, indem Sie den QR-Code scannen. Beachten Sie, dass andere "
-"Authenticator-Apps möglicherweise nicht alle Parameter unterstützen."
+"Schlüssel hier einfügen\n"
+"    oder den Server einen Schlüssel generieren lassen.\n"
+"    Diesen können Sie in Ihre Authenticator-App importieren, indem Sie den "
+"QR-Code scannen.\n"
+"    Beachten Sie, dass nicht alle Authenticator-Apps möglicherweise alle "
+"Parameter unterstützen."
 
 #: edumfa/static/components/login/views/login.html:94
 msgid ""
@@ -3518,21 +3518,21 @@ msgstr ""
 "href=\"https://tools.ietf.org/html/rfc6238\">RFC 6238</a> beschrieben."
 
 #: edumfa/static/components/token/views/token.enroll.totp.html:1
-#, fuzzy
 msgid ""
 "The TOTP token is a time based token. You can paste a secret key or\n"
-"    have the server generate the secret and scan the QR code with a\n"
-"    smartphone app turning your\n"
-"    smartphone into an authentication device. You can also use other\n"
-"    authenticator apps like Google Authenticator, Microsoft Authenticator, "
-"Authy or FreeOTP. But note, that these\n"
-"    might have limitations in the supported hash algorithms or other "
-"parameters."
+"    have the server generate the secret and scan the QR code with an "
+"Authenticator\n"
+"    App turning your smartphone into an authentication device.\n"
+"    But note, that some Apps might have limitations in the supported hash "
+"algorithms or other parameters."
 msgstr ""
-"Der TOTP-Token ist ein zeit-basierter Token. Diesen können Sie in Ihre "
-"Smartphone-App (z.B. dem eduMFA-Authenticator) importieren, indem Sie den QR-"
-"Code scannen. Beachten Sie, dass andere Authenticator-Apps möglicherweise "
-"nicht alle Parameter unterstützen."
+"Der TOTP-Token ist ein zeit-basierter Token. Sie können den geheimen "
+"Schlüssel hier einfügen\n"
+"    oder den Server einen Schlüssel generieren lassen.\n"
+"    Diesen können Sie in Ihre Authenticator-App importieren, indem Sie den "
+"QR-Code scannen.\n"
+"    Beachten Sie, dass nicht alle Authenticator-Apps möglicherweise alle "
+"Parameter unterstützen."
 
 #: edumfa/static/components/config/views/config.token.tiqr.html:2
 msgid ""
@@ -3928,8 +3928,8 @@ msgstr ""
 "Die Seriennummer des neuen Tokens ist <a ui-sref=\"token."
 "details({tokenSerial:lostResult.serial})\">{{ lostResult.serial }}</a>."
 
-#: edumfa/static/components/token/views/token.enroll.hotp.html:24
-#: edumfa/static/components/token/views/token.enroll.totp.html:24
+#: edumfa/static/components/token/views/token.enroll.hotp.html:22
+#: edumfa/static/components/token/views/token.enroll.totp.html:22
 msgid ""
 "The server will create the OTP key\n"
 "            and a QR Code\n"
@@ -4355,7 +4355,7 @@ msgid "Timeout while waiting for signing response."
 msgstr "Timeout. Warte vergeblich auf die Antwort."
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:48
-#: edumfa/static/components/token/views/token.enroll.totp.html:61
+#: edumfa/static/components/token/views/token.enroll.totp.html:59
 msgid "Timestep"
 msgstr "Zeitschritt"
 
@@ -4390,14 +4390,14 @@ msgstr "Tokentyp"
 #: edumfa/static/components/token/views/token.enroll.certificate.html:6
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:10
 #: edumfa/static/components/token/views/token.enroll.email.html:5
-#: edumfa/static/components/token/views/token.enroll.hotp.html:14
+#: edumfa/static/components/token/views/token.enroll.hotp.html:12
 #: edumfa/static/components/token/views/token.enroll.indexedsecret.html:8
 #: edumfa/static/components/token/views/token.enroll.motp.html:7
 #: edumfa/static/components/token/views/token.enroll.radius.html:7
 #: edumfa/static/components/token/views/token.enroll.remote.html:7
 #: edumfa/static/components/token/views/token.enroll.sms.html:5
 #: edumfa/static/components/token/views/token.enroll.sshkey.html:6
-#: edumfa/static/components/token/views/token.enroll.totp.html:14
+#: edumfa/static/components/token/views/token.enroll.totp.html:12
 #: edumfa/static/components/token/views/token.enroll.vasco.html:6
 #: edumfa/static/components/token/views/token.enroll.yubico.html:6
 #: edumfa/static/components/token/views/token.enroll.yubikey.html:16
@@ -4562,8 +4562,8 @@ msgstr "STARTTLS mit einer LDAP-Verbindung auf Port 389 benutzen."
 msgid "Use StartTLS"
 msgstr "StartTLS verwenden"
 
-#: edumfa/static/components/token/views/token.enroll.hotp.html:37
-#: edumfa/static/components/token/views/token.enroll.totp.html:37
+#: edumfa/static/components/token/views/token.enroll.hotp.html:35
+#: edumfa/static/components/token/views/token.enroll.totp.html:35
 msgid "Use two-step enrollment with the privacyIDEA Authenticator App"
 msgstr "Ausrollen mit Zwei-Schritt und der privacyIDEA Authenticator App"
 
