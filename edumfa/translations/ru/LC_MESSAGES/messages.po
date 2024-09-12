@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-02-29 11:21+0100\n"
+"POT-Creation-Date: 2024-08-29 11:10+0200\n"
 "PO-Revision-Date: 2022-06-30 21:19+0000\n"
 "Last-Translator: Aleksandr Sokolov <saanchos@gmail.com>\n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.12.1\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: api/auth.py:218
 msgid "Authentication failure. Unknown realm: {0!s}."
@@ -28,31 +28,31 @@ msgstr "Ошибка аутентификации. Неизвестная обл
 msgid "Authentication failure. Missing Username"
 msgstr "Ошибка аутентификации. Отсутствует имя пользователя"
 
-#: api/auth.py:343
+#: api/auth.py:346
 msgid "Authentication failure. Wrong credentials"
 msgstr "Ошибка аутентификации. Неверная пара, логин и пароль"
 
-#: api/lib/prepolicy.py:2211
+#: api/lib/prepolicy.py:2365
 msgid "Missing description for {} token."
 msgstr ""
 
-#: api/lib/prepolicy.py:2212
+#: api/lib/prepolicy.py:2366
 msgid "Description required for {} token."
 msgstr ""
 
-#: api/lib/utils.py:349
+#: api/lib/utils.py:352
 msgid "Authentication failure. Missing Authorization header."
 msgstr "Ошибка аутентификации. Отсутствует Authorization header."
 
-#: api/lib/utils.py:355 api/lib/utils.py:388
+#: api/lib/utils.py:358 api/lib/utils.py:391
 msgid "Authentication failure. Error during decoding your token: {0!s}"
 msgstr "Ошибка аутентификации. Ошибка при декодирование токена: {0!s}"
 
-#: api/lib/utils.py:381 api/lib/utils.py:391
+#: api/lib/utils.py:384 api/lib/utils.py:394
 msgid "Authentication failure. Your token has expired: {0!s}"
 msgstr "Ошибка аутентификации. Ваш токен истек: {0!s}"
 
-#: api/lib/utils.py:395
+#: api/lib/utils.py:398
 msgid ""
 "Authentication failure. The username {0!s} is not allowed to impersonate "
 "via JWT."
@@ -60,7 +60,7 @@ msgstr ""
 "Ошибка аутентификации. Недопустимое Имя пользователя {0!s} , для "
 "использования имперсонализации, через токен JWT."
 
-#: api/lib/utils.py:399
+#: api/lib/utils.py:402
 msgid ""
 "Authentication failure. You do not have the necessary role ({0!s}) to "
 "access this resource!"
@@ -68,11 +68,11 @@ msgstr ""
 "Ошибка аутентификации. У вас отсутствует необходимая роль ({0!s}) для "
 "доступа к данному ресурсу!"
 
-#: api/lib/utils.py:417
+#: api/lib/utils.py:420
 msgid "'{0!s}' is an invalid policy name."
 msgstr "'{0!s}' недопустимое имя политики."
 
-#: api/lib/utils.py:420
+#: api/lib/utils.py:423
 msgid "The name of the policy may only contain the characters a-zA-Z0-9_. -"
 msgstr "Имя политики может содержать только символы: a-zA-Z0-9_. -"
 
@@ -90,19 +90,19 @@ msgstr ""
 "Пожалуйста введите указанное значение OTP , чтобы выполнить повторную "
 "синхронизацию токена"
 
-#: lib/decorators.py:45 lib/token.py:2175
+#: lib/decorators.py:45 lib/token.py:2213
 msgid "This action is not possible, since the token is locked"
 msgstr "Действие невозможно, так как Токен заблокирован"
 
-#: lib/decorators.py:96
+#: lib/decorators.py:103
 msgid "You need to specify a serial or a user."
 msgstr "Вам необходимо указать серийный номер Токена или Имя пользователя."
 
-#: lib/decorators.py:98
+#: lib/decorators.py:105
 msgid "Invalid serial number."
 msgstr "Неверный серийный номер Токена."
 
-#: lib/decorators.py:100
+#: lib/decorators.py:107
 msgid "Invalid user."
 msgstr "Неверное имя пользователя."
 
@@ -1193,7 +1193,7 @@ msgid ""
 " fulfilled."
 msgstr ""
 
-#: lib/radiusserver.py:226 lib/radiusserver.py:258
+#: lib/radiusserver.py:246 lib/radiusserver.py:280
 msgid "The RADIUS secret is too long"
 msgstr ""
 
@@ -1205,15 +1205,15 @@ msgstr ""
 msgid "I can only create SQL filters from tokeninfo of length 1."
 msgstr ""
 
-#: lib/token.py:544
+#: lib/token.py:543
 msgid "The requested token could not be found."
 msgstr ""
 
-#: lib/token.py:549
+#: lib/token.py:548
 msgid "More than one matching token was found."
 msgstr ""
 
-#: lib/token.py:863
+#: lib/token.py:862
 msgid "multiple tokens are matching this OTP value!"
 msgstr ""
 
@@ -1225,112 +1225,112 @@ msgstr ""
 msgid "initToken failed: {0!s}"
 msgstr ""
 
-#: lib/token.py:1204
+#: lib/token.py:1218
 msgid "Token already assigned to user {0!r}"
 msgstr ""
 
-#: lib/token.py:1218
+#: lib/token.py:1232
 msgid "Token assign failed for {0!r}/{1!s} : {2!r}"
 msgstr ""
 
-#: lib/token.py:1246
+#: lib/token.py:1260
 msgid "Token unassign failed for {0!r}/{1!r}: {2!r}"
 msgstr ""
 
-#: lib/token.py:1322
+#: lib/token.py:1336
 msgid "Parameter user must not be a string: {0!r}"
 msgstr ""
 
-#: lib/token.py:1861
+#: lib/token.py:1875
 msgid "You can only define a lost token for an assigned token."
 msgstr ""
 
-#: lib/token.py:1887
+#: lib/token.py:1901
 msgid "temporary replacement for {0!s}"
 msgstr ""
 
-#: lib/token.py:1943
+#: lib/token.py:1957
 msgid "There is no active and assigned token in this realm"
 msgstr ""
 
-#: lib/token.py:1955
+#: lib/token.py:1969
 msgid ""
 "There is no active and assigned token in this realm, included types: "
 "{0!s}, excluded types: {1!s}"
 msgstr ""
 
-#: lib/token.py:2009
+#: lib/token.py:2023
 msgid "OTP verification failed."
 msgstr ""
 
-#: lib/token.py:2042
+#: lib/token.py:2056
 msgid "The user has no tokens assigned"
 msgstr ""
 
-#: lib/token.py:2257
+#: lib/token.py:2295
 msgid "matching {0:d} tokens"
 msgstr ""
 
-#: lib/token.py:2309
+#: lib/token.py:2347
 msgid "Challenge matches, but token is not fit for challenge"
 msgstr ""
 
-#: lib/token.py:2319
+#: lib/token.py:2357
 msgid "Found matching challenge"
 msgstr ""
 
-#: lib/token.py:2361
+#: lib/token.py:2399
 msgid "Response did not match the challenge."
 msgstr ""
 
-#: lib/token.py:2363
+#: lib/token.py:2401
 msgid "Response did not match for {0!s} tokens."
 msgstr ""
 
-#: lib/token.py:2371
+#: lib/token.py:2409
 msgid "No active challenge response token found"
 msgstr ""
 
-#: lib/token.py:2387
+#: lib/token.py:2425
 msgid "wrong otp value"
 msgstr ""
 
-#: lib/token.py:2394
+#: lib/token.py:2432
 msgid ". previous otp used again"
 msgstr ""
 
-#: lib/token.py:2408
+#: lib/token.py:2446
 msgid "wrong otp pin"
 msgstr ""
 
-#: lib/token.py:2416
+#: lib/token.py:2454
 msgid "No suitable token found for authentication."
 msgstr ""
 
-#: lib/token.py:2441
+#: lib/token.py:2479
 #, fuzzy
 msgid "Admin is allowed to initialize {0!s} tokens."
 msgstr "Администратору разрешено перечислять токены."
 
-#: lib/token.py:2449
+#: lib/token.py:2487
 msgid "The user is allowed to enroll a {0!s} token."
 msgstr "Пользователю разрешено сформировать {0!s} токен."
 
-#: lib/token.py:2480
+#: lib/token.py:2518
 msgid "Set the maximum allowed PIN length of the {0!s} token."
 msgstr ""
 
-#: lib/token.py:2487
+#: lib/token.py:2525
 msgid "Set the minimum required PIN length of the {0!s} token."
 msgstr ""
 
-#: lib/token.py:2493
+#: lib/token.py:2531
 msgid ""
 "Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
 msgstr ""
 
-#: lib/token.py:2538 lib/token.py:2554
+#: lib/token.py:2576 lib/token.py:2592
 msgid "The tokengroup does not exist."
 msgstr ""
 
@@ -1411,80 +1411,80 @@ msgid "Action is triggered, if the serial matches this regular expression."
 msgstr ""
 
 #: lib/eventhandler/base.py:233
-#, fuzzy
-msgid "Action is triggered, if the user has this number of tokens assigned."
+msgid ""
+"This condition checks whether or not the number of tokens assigned to the"
+" user meets a certain condition.Valid conditions are '>2', '<=10', '=0', "
+"'==3', '!=1', for example"
 msgstr ""
-"Пользователь может иметь только такое максимальное количество бумажных "
-"токенов."
 
-#: lib/eventhandler/base.py:239
+#: lib/eventhandler/base.py:241
 msgid ""
 "Action is triggered, if the counter of the token equals this setting. Can"
 " also be '>100' or '<99' for no exact match."
 msgstr ""
 
-#: lib/eventhandler/base.py:246
+#: lib/eventhandler/base.py:248
 msgid ""
 "Action is triggered, if the last authentication of the token is older "
 "than 7h, 10d or 1y."
 msgstr ""
 
-#: lib/eventhandler/base.py:252
+#: lib/eventhandler/base.py:254
 msgid ""
 "This can be '>100', '<99', or '=100', to trigger the action, if the "
 "tokeninfo field 'count_auth' is bigger than 100, less than 99 or exactly "
 "100."
 msgstr ""
 
-#: lib/eventhandler/base.py:259
+#: lib/eventhandler/base.py:261
 msgid ""
 "This can be '>100', '<99', or '=100', to trigger the action, if the "
 "tokeninfo field 'count_auth_success' is bigger than 100, less than 99 or "
 "exactly 100."
 msgstr ""
 
-#: lib/eventhandler/base.py:267
+#: lib/eventhandler/base.py:269
 msgid ""
 "This can be '>100', '<99', or '=100', to trigger the action, if the "
 "difference between the tokeninfo field 'count_auth' and "
 "'count_auth_success is bigger than 100, less than 99 or exactly 100."
 msgstr ""
 
-#: lib/eventhandler/base.py:275
+#: lib/eventhandler/base.py:277
 msgid ""
 "This can be '>9', '<9', or '=10', to trigger the action, if the "
 "failcounter of a token matches this value. Note that the failcounter "
 "stops increasing, if the max_failcount is reached."
 msgstr ""
 
-#: lib/eventhandler/base.py:283
+#: lib/eventhandler/base.py:285
 msgid ""
 "This condition can check any arbitrary tokeninfo field. You need to enter"
 " something like '<fieldname> == <fieldvalue>', '<fieldname> > "
 "<fieldvalue>' or '<fieldname> < <fieldvalue>'."
 msgstr ""
 
-#: lib/eventhandler/base.py:291
+#: lib/eventhandler/base.py:293
 msgid ""
 "This condition can check the value of an arbitrary event counter and "
 "compare it like 'myCounter == 1000', 'myCounter > 1000' or 'myCounter < "
 "1000'."
 msgstr ""
 
-#: lib/eventhandler/base.py:298
+#: lib/eventhandler/base.py:300
 msgid ""
 "Here you can enter a regular expression. The condition only applies if "
 "the regular expression matches the detail->error->message in the "
 "response."
 msgstr ""
 
-#: lib/eventhandler/base.py:305
+#: lib/eventhandler/base.py:307
 msgid ""
 "Here you can enter a regular expression. The condition only applies if "
 "the regular expression matches the detail->message in the response."
 msgstr ""
 
-#: lib/eventhandler/base.py:312
+#: lib/eventhandler/base.py:314
 msgid "Trigger the action, if the client IP matches."
 msgstr ""
 
@@ -1639,132 +1639,132 @@ msgid ""
 "parameter like '--logged_in_role <role>'."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:133
+#: lib/eventhandler/tokenhandler.py:135
 msgid "set a new realm of the token"
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:137
+#: lib/eventhandler/tokenhandler.py:139
 msgid ""
 "The new realm will be the only realm of the token. I.e. all other realms "
 "will be removed from this token. If disabled, the realm will be added to "
 "the token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:152
+#: lib/eventhandler/tokenhandler.py:154
 msgid "set the PIN of the token to a random PIN of this length."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:159
+#: lib/eventhandler/tokenhandler.py:161
 msgid "Token type to create"
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:164
+#: lib/eventhandler/tokenhandler.py:166
 msgid "Assign token to user in request or to tokenowner."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:169
+#: lib/eventhandler/tokenhandler.py:171
 msgid "Set the realm of the newly created token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:176
+#: lib/eventhandler/tokenhandler.py:178
 msgid "Dynamically read the mobile number from the user store."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:183
+#: lib/eventhandler/tokenhandler.py:185
 msgid "Dynamically read the email address from the user store."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:190
+#: lib/eventhandler/tokenhandler.py:192
 msgid "Use a specific SMTP server configuration for this token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:197
+#: lib/eventhandler/tokenhandler.py:199
 msgid "Use a specific SMS gateway configuration for this token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:202
+#: lib/eventhandler/tokenhandler.py:204
 msgid "A dictionary of additional init parameters."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:208
+#: lib/eventhandler/tokenhandler.py:210
 msgid ""
 "Set the MOTP PIN of the MOTP token during enrollment. This is a required "
 "value for enrolling MOTP tokens."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:217
+#: lib/eventhandler/tokenhandler.py:219
 msgid "The new description of the token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:224
+#: lib/eventhandler/tokenhandler.py:226
 msgid ""
 "The token will be valid starting at the given date. Can be a fixed date "
 "or an offset like +10m, +24h, +7d."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:231
+#: lib/eventhandler/tokenhandler.py:233
 msgid ""
 "The token will be valid until the given date. Can be a fixed date or an "
 "offset like +10m, +24h, +7d."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:244
+#: lib/eventhandler/tokenhandler.py:246
 msgid "Set the new count window of the token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:254
+#: lib/eventhandler/tokenhandler.py:256
 msgid "Set the failcounter of the token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:264
+#: lib/eventhandler/tokenhandler.py:266
 msgid ""
 "Increase or decrease the fail counter of the token. Values of +n, -n with"
 " n being an integer are accepted."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:274
+#: lib/eventhandler/tokenhandler.py:276
 msgid "Set the maximum failcounter of the token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:282
+#: lib/eventhandler/tokenhandler.py:284
 msgid "Set this tokeninfo key."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:287
+#: lib/eventhandler/tokenhandler.py:289
 msgid "Set the above key to this value."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:296
+#: lib/eventhandler/tokenhandler.py:298
 msgid "Delete this tokeninfo key."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:304
+#: lib/eventhandler/tokenhandler.py:306
 msgid "Add a tokengroup to the token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:313
+#: lib/eventhandler/tokenhandler.py:315
 msgid "Remove a tokengroup from the token."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:322
+#: lib/eventhandler/tokenhandler.py:324
 msgid "The ID of the machine you want to attach the token to"
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:328
+#: lib/eventhandler/tokenhandler.py:330
 msgid "Set the service_id for an SSH application."
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:336
+#: lib/eventhandler/tokenhandler.py:338
 msgid ""
 "Set a token application like 'offline' or 'SSH'. Note: Not all tokens "
 "work well with all applications!"
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:345
+#: lib/eventhandler/tokenhandler.py:347
 msgid "The number of offline OTP values available"
 msgstr ""
 
-#: lib/eventhandler/tokenhandler.py:353
+#: lib/eventhandler/tokenhandler.py:355
 msgid "The number of rounds for password hashing"
 msgstr ""
 
@@ -1844,13 +1844,13 @@ msgstr ""
 msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr ""
 
-#: lib/resolvers/LDAPIdResolver.py:1104
+#: lib/resolvers/LDAPIdResolver.py:1109
 msgid ""
 "Your LDAP config found {0!s} user objects, but only {1!s} with the "
 "specified uidtype"
 msgstr ""
 
-#: lib/resolvers/LDAPIdResolver.py:1107
+#: lib/resolvers/LDAPIdResolver.py:1112
 msgid "Your LDAP config seems to be OK, {0!s} user objects found."
 msgstr ""
 
@@ -1864,12 +1864,71 @@ msgstr ""
 msgid "Proxy setting for HTTPS connections to googleapis.com."
 msgstr ""
 
+#: lib/smsprovider/HttpMessageToUidProvider.py:237
 #: lib/smsprovider/HttpSMSProvider.py:230
 msgid "The base URL of the HTTP Gateway"
 msgstr ""
 
+#: lib/smsprovider/HttpMessageToUidProvider.py:240
 #: lib/smsprovider/HttpSMSProvider.py:233
 msgid "Should the HTTP Gateway be connected via an HTTP GET or POST request."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:245
+msgid ""
+"Specify a substring, that indicates, that the message was delivered "
+"successfully."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:249
+msgid ""
+"Specify a substring, that indicates, that the message failed to be "
+"delivered."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:253
+#: lib/smsprovider/HttpSMSProvider.py:246
+msgid "Username in case of basic authentication."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:257
+#: lib/smsprovider/HttpSMSProvider.py:250
+msgid "Password in case of basic authentication."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:262
+#: lib/smsprovider/HttpSMSProvider.py:255
+msgid "Should the SSL certificate be verified."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:268
+#: lib/smsprovider/HttpSMSProvider.py:261
+msgid "Should the data in a POST Request be sent as JSON."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:272
+#: lib/smsprovider/HttpSMSProvider.py:273
+msgid "Proxy setting for HTTP connections."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:273
+#: lib/smsprovider/HttpSMSProvider.py:274
+msgid "Proxy setting for HTTPS connections."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:274
+#: lib/smsprovider/HttpSMSProvider.py:275
+msgid "The timeout in seconds."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:275
+msgid ""
+"If the token is not assigned to a user, use this attribute from "
+"token_info as a fallback."
+msgstr ""
+
+#: lib/smsprovider/HttpMessageToUidProvider.py:276
+msgid "The URL for the post check action"
 msgstr ""
 
 #: lib/smsprovider/HttpSMSProvider.py:238
@@ -1882,22 +1941,6 @@ msgstr ""
 msgid "Specify a substring, that indicates, that the SMS failed to be delivered."
 msgstr ""
 
-#: lib/smsprovider/HttpSMSProvider.py:246
-msgid "Username in case of basic authentication."
-msgstr ""
-
-#: lib/smsprovider/HttpSMSProvider.py:250
-msgid "Password in case of basic authentication."
-msgstr ""
-
-#: lib/smsprovider/HttpSMSProvider.py:255
-msgid "Should the SSL certificate be verified."
-msgstr ""
-
-#: lib/smsprovider/HttpSMSProvider.py:261
-msgid "Should the data in a POST Request be sent as JSON."
-msgstr ""
-
 #: lib/smsprovider/HttpSMSProvider.py:268
 msgid ""
 "An optional proxy string. DEPRECATED. Do not use this anymore. Rather use"
@@ -1905,19 +1948,7 @@ msgid ""
 "The PROXY option will be removed in future."
 msgstr ""
 
-#: lib/smsprovider/HttpSMSProvider.py:273
-msgid "Proxy setting for HTTP connections."
-msgstr ""
-
-#: lib/smsprovider/HttpSMSProvider.py:274
-msgid "Proxy setting for HTTPS connections."
-msgstr ""
-
-#: lib/smsprovider/HttpSMSProvider.py:275
-msgid "The timeout in seconds."
-msgstr ""
-
-#: lib/smsprovider/SMSProvider.py:74
+#: lib/smsprovider/SMSProvider.py:75
 msgid ""
 "Regular expression to modify the phone number to make it compatible with "
 "provider. For example to remove pluses and slashes enter something like "
@@ -2028,41 +2059,41 @@ msgstr ""
 "Пользователь может иметь только такое максимальное количество активных "
 "бумажных токенов."
 
-#: lib/tokens/certificatetoken.py:275
+#: lib/tokens/certificatetoken.py:277
 msgid "Certificate: Enroll an x509 Certificate Token."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:286
+#: lib/tokens/certificatetoken.py:288
 msgid "The user may only have this maximum number of certificates assigned."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:291
+#: lib/tokens/certificatetoken.py:293
 msgid ""
 "The user may only have this maximum number of active certificates "
 "assigned."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:296
+#: lib/tokens/certificatetoken.py:298
 msgid ""
 "Enrolling a certificate token can require an attestation certificate. "
 "(Default: ignore)"
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:305
+#: lib/tokens/certificatetoken.py:307
 msgid "The CA connector that should be used during certificate enrollment."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:311
+#: lib/tokens/certificatetoken.py:313
 msgid "The template that should be used to issue a certificate."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:316
+#: lib/tokens/certificatetoken.py:318
 msgid ""
 "This takes a space separated list of elements to be added to the subject."
 " Can be 'email' and 'realm'."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:324 lib/tokens/certificatetoken.py:331
+#: lib/tokens/certificatetoken.py:326 lib/tokens/certificatetoken.py:333
 msgid "The directory containing attestation certificate chains."
 msgstr ""
 
@@ -2091,7 +2122,8 @@ msgid ""
 "possibility to use the OTP more than once."
 msgstr ""
 
-#: lib/tokens/daypasswordtoken.py:125
+#: lib/tokens/daypasswordtoken.py:125 lib/tokens/hotptoken.py:163
+#: lib/tokens/totptoken.py:160
 msgid "Enforce setting an app pin for the privacyIDEA Authenticator App"
 msgstr ""
 
@@ -2230,10 +2262,6 @@ msgid ""
 "least 10000)"
 msgstr ""
 
-#: lib/tokens/hotptoken.py:163 lib/tokens/totptoken.py:160
-msgid "Enforce setting an app pin for the eduMFA Authenticator App"
-msgstr ""
-
 #: lib/tokens/hotptoken.py:269
 msgid "URL for google Authenticator"
 msgstr ""
@@ -2242,7 +2270,7 @@ msgstr ""
 msgid "URL for OATH token"
 msgstr ""
 
-#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1049
+#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1175
 msgid "Please scan the QR code!"
 msgstr "Пожалуйста отсканируйте QR-код"
 
@@ -2360,69 +2388,61 @@ msgstr ""
 msgid "Do you want to confirm the login?"
 msgstr "Подтверждаете вход?"
 
-#: lib/tokens/pushtoken.py:301
-msgid "PUSH Token"
-msgstr ""
-
-#: lib/tokens/pushtoken.py:303
-msgid "PUSH: Send a push notification to a smartphone."
-msgstr ""
-
-#: lib/tokens/pushtoken.py:311
+#: lib/tokens/pushtoken.py:322
 msgid "The configuration of your Firebase application."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:319
+#: lib/tokens/pushtoken.py:330
 msgid ""
 "The URL the Push App should contact in the second enrollment step. "
-"Usually it is the endpoint /ttype/push of the eduMFA server."
+"Usually it is the endpoint /ttype/edupush of the eduMFA server."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:325
+#: lib/tokens/pushtoken.py:335
 msgid ""
 "The second enrollment step must be completed within this time (in "
 "minutes)."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:329
+#: lib/tokens/pushtoken.py:339
 msgid "The smartphone needs to verify SSL during the enrollment. (default 1)"
 msgstr ""
 
-#: lib/tokens/pushtoken.py:335
+#: lib/tokens/pushtoken.py:345
 msgid "The user may only have this maximum number of Push tokens assigned."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:340
+#: lib/tokens/pushtoken.py:350
 msgid "The user may only have this maximum number of active Push tokens assigned."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:346
+#: lib/tokens/pushtoken.py:356
 msgid "Require to unlock the Smartphone before Push requests can be accepted"
 msgstr ""
 
-#: lib/tokens/pushtoken.py:352
+#: lib/tokens/pushtoken.py:362
 msgid "The question the user sees on his mobile phone."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:357
+#: lib/tokens/pushtoken.py:367
 msgid "The title of the notification, the user sees on his mobile phone."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:362
+#: lib/tokens/pushtoken.py:372
 msgid "The smartphone needs to verify SSL during authentication. (default 1)"
 msgstr ""
 
-#: lib/tokens/pushtoken.py:368
+#: lib/tokens/pushtoken.py:378
 msgid ""
 "Wait for number of seconds for the user to confirm the challenge in the "
 "first request."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:374
+#: lib/tokens/pushtoken.py:383
 msgid "Configure whether to allow push tokens to poll for challenges"
 msgstr ""
 
-#: lib/tokens/pushtoken.py:509
+#: lib/tokens/pushtoken.py:637
 msgid "URL for eduMFA Push Token"
 msgstr ""
 
@@ -2497,57 +2517,63 @@ msgid ""
 "assigned."
 msgstr ""
 
-#: lib/tokens/smstoken.py:186
+#: lib/tokens/smstoken.py:187
 msgid "SMS Token"
 msgstr ""
 
-#: lib/tokens/smstoken.py:188
+#: lib/tokens/smstoken.py:189
 msgid "SMS: Send a One Time Password to the users mobile phone."
 msgstr ""
 
-#: lib/tokens/smstoken.py:197
+#: lib/tokens/smstoken.py:198
 msgid ""
 "The text that will be send via SMS for an SMS token. Use tags like {otp} "
 "and {serial} as parameters."
 msgstr ""
 
-#: lib/tokens/smstoken.py:202
+#: lib/tokens/smstoken.py:203
+msgid ""
+"The message that will be submitted for an SMS token on post check action."
+" Use tags like {otp} and {serial} as parameters."
+msgstr ""
+
+#: lib/tokens/smstoken.py:208
 msgid ""
 "If set, a new SMS OTP will be sent after successful authentication with "
 "one SMS OTP."
 msgstr ""
 
-#: lib/tokens/smstoken.py:207
+#: lib/tokens/smstoken.py:213
 msgid ""
 "Use an alternate challenge text for telling the user to enter the code "
 "from the SMS."
 msgstr ""
 
-#: lib/tokens/smstoken.py:215
+#: lib/tokens/smstoken.py:221
 msgid "Choose the gateways the administrator is allowed to set."
 msgstr ""
 
-#: lib/tokens/smstoken.py:223
+#: lib/tokens/smstoken.py:229
 msgid "Choose the gateways the user is allowed to set."
 msgstr ""
 
-#: lib/tokens/smstoken.py:230
+#: lib/tokens/smstoken.py:236
 msgid "The user may only have this maximum number of SMS tokens assigned."
 msgstr ""
 
-#: lib/tokens/smstoken.py:235
+#: lib/tokens/smstoken.py:241
 msgid "The user may only have this maximum number of active SMS tokens assigned."
 msgstr ""
 
-#: lib/tokens/smstoken.py:312
+#: lib/tokens/smstoken.py:318
 msgid "Enter the OTP from the SMS:"
 msgstr ""
 
-#: lib/tokens/smstoken.py:343
+#: lib/tokens/smstoken.py:349
 msgid "The PIN was correct, but the SMS could not be sent!"
 msgstr ""
 
-#: lib/tokens/smstoken.py:591
+#: lib/tokens/smstoken.py:631
 msgid "Please enter your new phone number!"
 msgstr ""
 
@@ -2665,110 +2691,129 @@ msgid ""
 "assigned."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:462
+#: lib/tokens/webauthntoken.py:467
 msgid "Generic WebAuthn Token"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:472
+#: lib/tokens/webauthntoken.py:480
 msgid "Please confirm with your WebAuthn token ({0!s})"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:473
+#: lib/tokens/webauthntoken.py:481
 msgid "Please confirm with your WebAuthn token"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:610
+#: lib/tokens/webauthntoken.py:625
+msgid ""
+"Use an alternative challenge text for telling the user to confirm with "
+"his WebAuthn token."
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:631
 msgid ""
 "A list of transports to prefer to communicate with WebAuthn tokens. "
 "Default: usb ble nfc internal (All standard transports)"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:615
+#: lib/tokens/webauthntoken.py:637
 msgid ""
 "The time in seconds the user has to confirm authorization on his WebAuthn"
 " token. Note: You will want to increase the ChallengeValidityTime along "
 "with this. Default: 60"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:621
+#: lib/tokens/webauthntoken.py:644
 msgid ""
 "Whether the user's identity should be verified when authenticating with a"
 " WebAuthn token. Default: preferred (verify the user if supported by the "
 "token)"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:631
+#: lib/tokens/webauthntoken.py:655
 msgid ""
-"Use an alternative challenge text for telling the user to confirm with "
-"his WebAuthn token."
+"Whether usernameless authentication via the Passkeys Autofill UI, also "
+"known as Conditional Mediation, should be enabled. Note: This function is"
+" only available if passkeys (resident keys) are enrolled and if the "
+"browser supports Conditional Mediation. Other WebAuthn authentication "
+"policies will be ignored if this option is enabled. "
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:638
+#: lib/tokens/webauthntoken.py:664
+msgid ""
+"Whether to enforce the WebAuthn authentication policies for the relying "
+"party ID and the user verification requirement realm-wide, i.e., for all "
+"users in a realm? Note: This requires usernameless authentication to be "
+"enabled. Also, the option has to be set in the fudiscr plugin so the "
+"realm is sent to the API endpoints via a query parameter, e.g., "
+"/validate/triggerchallenge?type=webauthn&realm=userless"
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:675
 msgid ""
 "A list of WebAuthn authenticators acceptable for authorization, given as "
 "a space-separated list of AAGUIDs. Per default all authenticators are "
 "acceptable."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:644
+#: lib/tokens/webauthntoken.py:681
 msgid "Only the specified WebAuthn-tokens are authorized."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:651
+#: lib/tokens/webauthntoken.py:688
 msgid "One webauthn token can not be registered to a user more than once."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:656
+#: lib/tokens/webauthntoken.py:693
 msgid "A human-readable name for the organization rolling out WebAuthn tokens."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:661
+#: lib/tokens/webauthntoken.py:698
 msgid ""
 "A domain name that is a subset of the respective FQDNs for all the "
 "webservices the users should be able to sign in to using WebAuthn tokens."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:667
+#: lib/tokens/webauthntoken.py:704
 msgid ""
 "The time in seconds the user has to confirm enrollment on his WebAuthn "
 "token. Note: You will want to increase the ChallengeValidityTime along "
 "with this. Default: 60"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:674
+#: lib/tokens/webauthntoken.py:711
 msgid ""
 "Whether to limit roll out of WebAuthn tokens to either only platform "
 "authenticators, or only cross-platform authenticators. Default: either"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:685
+#: lib/tokens/webauthntoken.py:722
 msgid ""
 "A list of WebAuthn authenticators acceptable for enrollment, given as a "
 "space-separated list of AAGUIDs. Per default all authenticators are "
 "acceptable."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:691
+#: lib/tokens/webauthntoken.py:728
 msgid ""
 "Whether the user's identity should be verified when rolling out a new "
 "WebAuthn token. Default: preferred (verify the user if supported by the "
 "token)"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:705
+#: lib/tokens/webauthntoken.py:742
 msgid ""
 "Which algorithm are available to use for creating public key credentials "
 "for WebAuthn tokens. (Default: [{0!s}], Order: [{1!s}])"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:712
+#: lib/tokens/webauthntoken.py:749
 msgid ""
 "Whether to request attestation data when enrolling a new WebAuthn token. "
 "Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
 "Default: direct (ask for non-anonymized attestation data)"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:724
+#: lib/tokens/webauthntoken.py:761
 msgid ""
 "Whether and how strictly to check authenticator attestation data. Note: "
 "If the attestation form is none, the attestation level needs to also be "
@@ -2776,22 +2821,35 @@ msgid ""
 "self-signed)"
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:736
+#: lib/tokens/webauthntoken.py:773
 msgid "Only the specified WebAuthn-tokens are allowed to be registered."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:741
+#: lib/tokens/webauthntoken.py:778
+msgid ""
+"Whether to request a resident key. Note: Passkeys are always resident "
+"keys."
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:788
 msgid "The user may only have this number of WebAuthn tokens assigned."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:746
+#: lib/tokens/webauthntoken.py:793
 msgid "The user may only have this number of active WebAuthn tokens assigned."
 msgstr ""
 
-#: lib/tokens/webauthntoken.py:751
+#: lib/tokens/webauthntoken.py:798
 msgid ""
 "Use an alternate challenge text for telling the user to confirm with his "
 "WebAuthn device."
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:804
+msgid ""
+"The label for a new enrolled Passkey token. Possible tags are "
+"<code>{user}</code>, <code>{realm}</code>, <code>{serial}</code>, "
+"<code>{givenname}</code> and <code>{surname}</code>."
 msgstr ""
 
 #: lib/tokens/yubicotoken.py:94
@@ -2911,11 +2969,13 @@ msgstr ""
 
 #~ msgid "Action is triggered, if the user has this number of tokens assigned."
 #~ msgstr ""
+#~ "Пользователь может иметь только такое "
+#~ "максимальное количество бумажных токенов."
 
 #~ msgid ""
 #~ "The script in script directory "
-#~ "EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects "
-#~ "phone as the parameter and the "
+#~ "EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects"
+#~ " phone as the parameter and the "
 #~ "message from stdin."
 #~ msgstr ""
 
@@ -2931,3 +2991,20 @@ msgstr ""
 #~ "privacyIDEA Authenticator App to check "
 #~ "for a new Login request."
 #~ msgstr ""
+
+#~ msgid "Enforce setting an app pin for the eduMFA Authenticator App"
+#~ msgstr ""
+
+#~ msgid "PUSH Token"
+#~ msgstr ""
+
+#~ msgid "PUSH: Send a push notification to a smartphone."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The URL the Push App should "
+#~ "contact in the second enrollment step."
+#~ " Usually it is the endpoint "
+#~ "/ttype/push of the eduMFA server."
+#~ msgstr ""
+

@@ -407,36 +407,36 @@ to force the user to protect the token with a PIN.
 
 .. _policy_firebase_config:
 
-push_firebase_configuration
+edupush_firebase_configuration, push_firebase_configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 type: string
 
-For enrolling a :ref:`push_token`, the administrator can select which
+For enrolling a :ref:`edupush_token` or :ref:`push_token`, the administrator can select which
 Firebase configuration should be used.
 The administrator can create several connections to the Firebase service
 (see :ref:`firebase_provider`).
 This way even different Firebase configurations could be
 used depending on the user's realm or the IP address.
 
-If the push token is supposed to run in poll-only mode,
+If the PUSH token is supposed to run in poll-only mode,
 then the entry "poll only" can be selected instead of a firebase configuration.
 In this mode, neither the eduMFA server nor the smartphone app will connect to Google
 Firebase during enrollment or authentication.
 Note, that you also need to set the authentication policy
 :ref:`policy_auth_push_allow_poll` to allow the push token to poll for challenges.
 
-push_registration_url
+edupush_registration_url, push_registration_url
 ~~~~~~~~~~~~~~~~~~~~~
 
 type: string
 
-This is the URL of your eduMFA server, which the push App should
+This is the URL of your eduMFA server, which the PUSH App should
 connect to for the second registration step.
-This URL usually ends with ``/ttype/push``. Note, that the smartphone app
+This URL usually ends with ``/ttype/edupush`` for eduPUSH and ``/ttype/push`` legacy PUSH. Note, that the smartphone app
 may connect to a different eduMFA URL than the URL of the eduMFA Web UI.
 
-push_ttl
+edupush_ttl, push_ttl
 ~~~~~~~~
 
 This is the time (in minutes) how long the eduMFA server
@@ -446,13 +446,13 @@ could take some time to happen.
 
 .. _policy_push_ssl_verify_enrollment:
 
-push_ssl_verify
+edupush_ssl_verify, push_ssl_verify
 ~~~~~~~~~~~~~~~
 
 type: int
 
 The smartphone needs to verify the SSL certificate of the eduMFA server during
-the enrollment of push tokens. By default, the verification is enabled. To disable
+the enrollment of PUSH tokens. By default, the verification is enabled. To disable
 verification during authentication, see :ref:`policy_push_ssl_verify_auth`.
 
 .. _policy_verify_enrollment:
