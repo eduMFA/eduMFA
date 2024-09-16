@@ -144,7 +144,7 @@ smpplib==2.2.3
     # via edumfa (setup.py)
 soupsieve==2.6
     # via beautifulsoup4
-sqlalchemy==2.0.32
+sqlalchemy==2.0.35
     # via
     #   alembic
     #   edumfa (setup.py)
