@@ -70,7 +70,7 @@ test = [
     "responses==0.25.3",
     "testfixtures==8.3.0",
     "tomli==2.0.1",
-    "types-PyYAML==6.0.12.20240808",
+    "types-PyYAML==6.0.12.20240917",
 ]
 postgres = ["psycopg2==2.9.9"]
 hsm = ["PyKCS11==1.5.16"]
