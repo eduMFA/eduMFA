@@ -163,6 +163,7 @@ def init():
     :jsonparam rollover: Set this to 1 or true to indicate, that you want to rollover a token.
                     This is mandatory to rollover tokens, that are in the clientwait state.
     :jsonparam info: string representation of a json object whose key-value pairs will be set as tokeninfo.
+    :jsonparam webauthn_tyoe: String representing a webauthn type (resident, non-resident)
 
     :return: a json result with a boolean "result": true
 
