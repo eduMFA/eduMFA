@@ -67,7 +67,7 @@ grpcio==1.66.1
     # via edumfa (setup.py)
 huey==2.5.1
     # via edumfa (setup.py)
-idna==3.8
+idna==3.10
     # via requests
 importlib-metadata==8.5.0
     # via edumfa (setup.py)
