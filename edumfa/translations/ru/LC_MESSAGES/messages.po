@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-08-29 11:10+0200\n"
+"POT-Creation-Date: 2024-09-04 17:01+0200\n"
 "PO-Revision-Date: 2022-06-30 21:19+0000\n"
 "Last-Translator: Aleksandr Sokolov <saanchos@gmail.com>\n"
 "Language: ru\n"
@@ -2701,6 +2701,10 @@ msgstr ""
 
 #: lib/tokens/webauthntoken.py:481
 msgid "Please confirm with your WebAuthn token"
+msgstr ""
+
+#: lib/tokens/webauthntoken.py:615
+msgid "WebAuthn: Enroll a Web Authentication token."
 msgstr ""
 
 #: lib/tokens/webauthntoken.py:625

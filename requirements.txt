@@ -26,7 +26,7 @@ cbor2==5.6.4
     # via edumfa (setup.py)
 certifi==2024.8.30
     # via requests
-cffi==1.17.0
+cffi==1.17.1
     # via
     #   argon2-cffi-bindings
     #   cryptography
@@ -67,9 +67,9 @@ grpcio==1.66.1
     # via edumfa (setup.py)
 huey==2.5.1
     # via edumfa (setup.py)
-idna==3.8
+idna==3.10
     # via requests
-importlib-metadata==8.4.0
+importlib-metadata==8.5.0
     # via edumfa (setup.py)
 itsdangerous==2.2.0
     # via flask
@@ -96,12 +96,12 @@ netaddr==1.3.0
     #   pyrad
 passlib==1.7.4
     # via edumfa (setup.py)
-pyasn1==0.6.0
+pyasn1==0.6.1
     # via
     #   ldap3
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.4.0
+pyasn1-modules==0.4.1
     # via google-auth
 pycparser==2.22
     # via cffi
@@ -121,7 +121,7 @@ python-dateutil==2.9.0.post0
     #   edumfa (setup.py)
 python-gnupg==0.5.2
     # via edumfa (setup.py)
-pytz==2024.1
+pytz==2024.2
     # via flask-babel
 pyyaml==6.0.2
     # via edumfa (setup.py)
@@ -144,7 +144,7 @@ smpplib==2.2.3
     # via edumfa (setup.py)
 soupsieve==2.6
     # via beautifulsoup4
-sqlalchemy==2.0.32
+sqlalchemy==2.0.35
     # via
     #   alembic
     #   edumfa (setup.py)
@@ -153,15 +153,15 @@ typing-extensions==4.12.2
     # via
     #   alembic
     #   edumfa (setup.py)
-urllib3==2.2.2
+urllib3==2.2.3
     # via
     #   edumfa (setup.py)
     #   requests
 werkzeug==3.0.4
     # via flask
-zipp==3.20.1
+zipp==3.20.2
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==74.1.0
+setuptools==75.1.0
     # via flask-versioned
