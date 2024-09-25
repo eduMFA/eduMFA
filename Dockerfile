@@ -1,20 +1,28 @@
-FROM python:3.12-slim-bookworm
+FROM python:3.12-slim-bookworm AS builder
 WORKDIR /tmp
 COPY . .
-RUN python -m pip install build --user && \
+RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 FROM python:3.12-slim-bookworm
 
-COPY --from=0 /tmp/dist/*.whl /dist/
+LABEL maintainer="eduMFA <edumfa-dev@listserv.dfn.de>"
+LABEL version="2.2.0"
+LABEL description="EduMFA application Docker image"
 
-RUN apt update && apt install -y curl libpq-dev gcc && \
-    pip install psycopg2 && \
-    apt purge -y gcc && apt -y autoremove && \
+# Copy the wheel file from the builder stage
+COPY --from=builder /tmp/dist/*.whl /dist/
+
+
+RUN apt-get update &&  \
+    apt-get install -y curl libpq-dev gcc && \
+    pip install --no-cache-dir psycopg2 && \
+    apt-get purge -y gcc &&  \
+    apt-get -y autoremove && \
     apt-get clean  && \
     rm -rf /var/lib/apt/lists/*
-    
-RUN python -m pip install /dist/*.whl && pip install gunicorn && mkdir -p /opt/edumfa/user-scripts
+
+# Copy necessary files
 COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
 COPY ./deploy/logging.cfg /etc/edumfa/logging.cfg
 COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
@@ -22,5 +30,10 @@ COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
 
 EXPOSE 8000
 WORKDIR /opt/edumfa
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/edumfa:$PATH"
 
 CMD ["./docker-setup.sh"]
