@@ -29,16 +29,14 @@ from edumfa.lib.resolver import get_resolver_list, save_resolver
 DEFAULT_CONFTYPE_LIST = ("policy", "resolver", "event")
 
 
-def conf_import(filename=None, conftype=None):
+def conf_import(file=None, conftype=None):
     """
     import eduMFA configuration from file
     """
-    if filename:
-        with open(filename, 'r') as f:
-            contents = f.read()
-    else:
-        filename = "Standard input"
-        contents = sys.stdin.read()
+    if file is None:
+        file = sys.stdin
+
+    contents = file.read()
 
     contents_var = ast.literal_eval(contents)
 
@@ -54,11 +52,11 @@ def conf_import(filename=None, conftype=None):
             conftype_list = list(contents_var.keys())
 
     for conftype in conftype_list:
-        click.echo("Importing {0!s} from {1!s}".format(conftype, filename))
+        click.echo("Importing {0!s} from {1!s}".format(conftype, file.name))
     return contents_var
 
 
-def conf_export(config, filename=None):
+def conf_export(config, file):
     """
     Export configurations to a file or write them to stdout if no filename is given.
     """
@@ -66,11 +64,7 @@ def conf_export(config, filename=None):
     pp = pprint.PrettyPrinter(indent=4)
 
     ret_str = pp.pformat(config)
-    if filename:
-        with open(filename, 'w') as f:
-            f.write(ret_str)
-    if not filename:
-        print(ret_str)
+    file.write(ret_str)
 
 
 def get_conf_policy(name=None):

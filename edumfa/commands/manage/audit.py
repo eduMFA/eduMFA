@@ -56,7 +56,7 @@ def dump(filename, timelimit=None):
 @click.option('-lw', '--lowwatermark', type=int, default=5000, show_default=True,
               help="Keep this number of entries.")
 @click.option('--age', help="Delete audit entries older than these number of days.")
-@click.option('--config', help="Read config from the specified yaml file.")
+@click.option('--config', type=click.File('r'), help="Read config from the specified yaml file.")
 @click.option('--dryrun', is_flag=True, help="Do not actually delete, only show what would be done.")
 @click.option('--chunksize', type=int, help="Delete entries in chunks of the given size to avoid deadlocks")
 def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, chunksize=None):
@@ -106,8 +106,7 @@ def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, 
     # create a Session
     metadata.create_all(engine)
     if config:
-        with open(config, 'r') as f:
-            yml_config = yaml.safe_load(f)
+        yml_config = yaml.safe_load(config)
         auditlogs = session.query(LogEntry).all()
         delete_list = []
         for log in auditlogs:
