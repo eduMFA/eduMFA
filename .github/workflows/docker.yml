@@ -57,8 +57,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
-          cache-from: type=gha,scope=${{ github.workflow }}
-          cache-to: type=gha,scope=${{ github.workflow }},mode=max
+          #cache-from: type=gha,scope=${{ github.workflow }}
+          #cache-to: type=gha,scope=${{ github.workflow }},mode=max
           outputs: |
             type=image,name=target,
             annotation-index.org.opencontainers.image.title=eduMFA,
