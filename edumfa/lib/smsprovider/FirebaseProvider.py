@@ -28,7 +28,7 @@ This provider is used for the push token and can be used for SMS tokens.
 
 from edumfa.lib.smsprovider.SMSProvider import (ISMSProvider)
 from edumfa.lib.error import ConfigAdminError
-from edumfa.lib.framework import get_app_local_store
+from edumfa.lib.framework import get_app_local_store, get_app_config_value
 from edumfa.lib import _
 import logging
 from google.oauth2 import service_account
@@ -159,7 +159,11 @@ class FirebaseProvider(ISMSProvider):
         with open(a) as f:
             server_config = json.load(f)
         url = FIREBASE_URL_SEND.format(server_config["project_id"])
-        resp = authed_session.post(url, data=json.dumps(fcm_message), headers=headers, proxies=proxies)
+        timeout = get_app_config_value("EDUMFA_PUSH_TIMEOUT", -1)
+        kwargs = {}
+        if timeout > 0:
+            kwargs["timeout"] = timeout
+        resp = authed_session.post(url, data=json.dumps(fcm_message), headers=headers, proxies=proxies, **kwargs)
 
         if resp.status_code == 200:
             log.debug("Message sent successfully to Firebase service.")
@@ -185,7 +189,6 @@ class FirebaseProvider(ISMSProvider):
 
         else:
             raise ConfigAdminError(description="Please check your configuration. Can not load JSON file.")
-
 
     @classmethod
     def parameters(cls):
