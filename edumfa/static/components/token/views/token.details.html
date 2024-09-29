@@ -155,6 +155,7 @@
             hide-buttons="{{ hide_buttons }}"
             set-right="{{ checkRight('set') }}"
             token-key="description"
+            input-pattern="^.{0,80}$"
             callback-cancel="get()"
             callback="set(key, value)"
             logged-in-user="loggedInUser"></tr>
@@ -168,6 +169,7 @@
             set-right="{{ checkRight('setdescription') }}"
             editable-as-user = true
             token-key="description"
+            input-pattern="^.{0,80}$"
             callback-cancel="get()"
             callback="setdescription(value)"
             logged-in-user="loggedInUser"></tr>
@@ -180,6 +182,7 @@
             set-right="{{ checkRight('setdescription') }}"
             editable-as-user = true
             token-key="description"
+            input-pattern="^.{0,80}$"
             callback-cancel="get()"
             callback="setdescription(value)"
             logged-in-user="loggedInUser"></tr>
