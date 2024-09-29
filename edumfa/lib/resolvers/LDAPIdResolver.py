@@ -1021,7 +1021,8 @@ class IdResolver (UserIdResolver):
                                 'SERVERPOOL_SKIP': 'int',
                                 'SERVERPOOL_PERSISTENT': 'bool',
                                 'OBJECT_CLASSES': 'string',
-                                'DN_TEMPLATE': 'string'}
+                                'DN_TEMPLATE': 'string',
+                                'MULTIVALUEATTRIBUTES': 'string'}
         return {typ: descriptor}
 
     @classmethod
