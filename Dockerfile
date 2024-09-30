@@ -5,11 +5,6 @@ RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 FROM python:3.12-slim-bookworm
-
-LABEL maintainer="eduMFA <edumfa-dev@listserv.dfn.de>"
-LABEL version="2.2.0"
-LABEL description="EduMFA application Docker image"
-
 # Copy the wheel file from the builder stage
 COPY --from=builder /tmp/dist/*.whl /dist/
 

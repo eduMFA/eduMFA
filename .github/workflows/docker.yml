@@ -59,9 +59,3 @@ jobs:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha,scope=${{ github.workflow }}
           cache-to: type=gha,scope=${{ github.workflow }},mode=max
-          outputs: >
-            type=image,name=target,
-            annotation-index.org.opencontainers.image.title=eduMFA,
-            annotation-index.org.opencontainers.image.description=Multi-factor authentication with a focus on use in the university environment,
-            annotation-index.org.opencontainers.image.licenses=AGPL-3.0 License,
-            annotation-index.org.opencontainers.image.source=https://github.com/eduMFA/eduMFA
