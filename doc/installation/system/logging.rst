@@ -61,7 +61,7 @@ Such a YAML based configuration could look like this:
         filename: /var/log/edumfa/edumfa.log
       syslog:
         class: logging.handlers.SysLogHandler
-        address: ('192.168.1.110', 514)
+        address: ['192.168.1.110', 514]
         formatter: detail
         level: INFO
 
@@ -73,10 +73,10 @@ Such a YAML based configuration could look like this:
         - mail
         level: INFO
 
-    root:
-      handlers:
-      - syslog
-      level: WARNING
+      root:
+        handlers:
+        - syslog
+        level: WARNING
 
 Different handlers can be used to send log messages to log-aggregators like
 splunk [#splunk]_ or logstash [#logstash]_.
