@@ -63,7 +63,8 @@ from edumfa.lib.challenge import get_challenges
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import padding, ec
+from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
 from cryptography.exceptions import InvalidSignature
 import time
 
@@ -732,10 +733,7 @@ class PushTokenClass(TokenClass):
                     if decline:
                         sign_data += "|decline"
                     try:
-                        pubkey_obj.verify(b32decode(signature),
-                                          sign_data.encode("utf8"),
-                                          padding.PKCS1v15(),
-                                          hashes.SHA256())
+                        cls.verify_signature(pubkey_obj, sign_data, signature)
                         # The signature was valid
                         log.debug("Found matching challenge {0!s}.".format(chal))
                         if decline:
@@ -755,10 +753,7 @@ class PushTokenClass(TokenClass):
                 tok = get_one_token(serial=serial, tokentype=cls.get_class_type())
                 pubkey_obj = _build_verify_object(tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE))
                 sign_data = "{new_fb_token}|{serial}|{timestamp}".format(**request_data)
-                pubkey_obj.verify(b32decode(signature),
-                                  sign_data.encode("utf8"),
-                                  padding.PKCS1v15(),
-                                  hashes.SHA256())
+                cls.verify_signature(pubkey_obj, sign_data, signature)
                 # If the timestamp and signature are valid we update the token
                 tok.add_tokeninfo('firebase_token', request_data['new_fb_token'])
                 result = True
@@ -774,6 +769,18 @@ class PushTokenClass(TokenClass):
             raise ParameterError("Missing parameters!")
 
         return result, details
+
+    @classmethod
+    def verify_signature(cls, pubkey_obj, sign_data, signature):
+        if isinstance(pubkey_obj, EllipticCurvePublicKey):
+            pubkey_obj.verify(b32decode(signature),
+                              sign_data.encode("utf8"),
+                              ec.ECDSA(hashes.SHA256()))
+        else:
+            pubkey_obj.verify(b32decode(signature),
+                              sign_data.encode("utf8"),
+                              padding.PKCS1v15(),
+                              hashes.SHA256())
 
     @classmethod
     def _api_endpoint_get(cls, g, request_data):
@@ -813,10 +820,8 @@ class PushTokenClass(TokenClass):
 
             pubkey_obj = _build_verify_object(tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE))
             sign_data = "{serial}|{timestamp}".format(**request_data)
-            pubkey_obj.verify(b32decode(signature),
-                              sign_data.encode("utf8"),
-                              padding.PKCS1v15(),
-                              hashes.SHA256())
+            # Check if pubkey_obj is a EllipticCurvePublicKey 
+            cls.verify_signature(pubkey_obj, sign_data, signature)
             # The signature was valid now check for an open challenge
             # we need the private server key to sign the smartphone data
             pem_privkey = tok.get_tokeninfo(PRIVATE_KEY_SERVER)
