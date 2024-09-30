@@ -10,7 +10,7 @@ COPY --from=builder /tmp/dist/*.whl /dist/
 
 
 RUN apt-get update &&  \
-    apt-get install --no-install-recommends -y curl libpq-dev gcc && \
+    apt-get install -y curl libpq-dev gcc && \
     pip install --no-cache-dir psycopg2 && \
     apt-get purge -y gcc &&  \
     apt-get -y autoremove && \
