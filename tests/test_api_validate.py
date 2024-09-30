@@ -3818,6 +3818,37 @@ class WebAuthn(MyApiTestCase):
         remove_token("hotpX1")
         remove_token(self.serial)
 
+    def test_21_validate_webauthn_triggerchallenge(self):
+        from edumfa.lib.tokens.webauthntoken import DEFAULT_ALLOWED_TRANSPORTS
+        self.test_02_enroll_token()
+
+        # set realm-wide policy
+        set_policy("realm_timeout_policy", scope=SCOPE.AUTH, action="{0!s}=42".format(WEBAUTHNACTION.TIMEOUT),
+                   realm=self.realm1)
+
+        set_policy(name="pol_application_tokentype",
+                   scope=SCOPE.AUTHZ,
+                   action=ACTION.APPLICATION_TOKENTYPE)
+
+        with self.app.test_request_context('/validate/triggerchallenge',
+                                           method='POST',
+                                           data={"type": "webauthn", "user": self.username, "realm": self.realm1},
+                                           headers={"Host": "pi.example.com",
+                                                    "authorization": self.at,
+                                                    "Origin": "https://pi.example.com"}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            self.assertEqual(1, len(data.get("detail").get("multi_challenge")))
+            self.assertTrue("transaction_id" in data.get("detail"))
+            for token in data.get("detail").get("multi_challenge"):
+                for credential in token.get("attributes").get("webAuthnSignRequest").get("allowCredentials"):
+                    self.assertTrue((set(DEFAULT_ALLOWED_TRANSPORTS.split()) ^ set(credential.get("transports"))) == set())
+            self.assertEqual(self.serial, data.get("detail").get("serial"))
+
+        remove_token(self.serial)
+        delete_policy("realm_timeout_policy")
+        delete_policy("pol_application_tokentype")
+
 
 class MultiChallege(MyApiTestCase):
 
