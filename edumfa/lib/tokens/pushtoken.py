@@ -742,7 +742,7 @@ class PushTokenClass(TokenClass):
                             chal.set_data("challenge_declined")
                         else:
                             chal.set_otp_status(True)
-                            chal.save()
+                        chal.save()
                         result = True
                     except InvalidSignature as _e:
                         pass
@@ -831,6 +831,8 @@ class PushTokenClass(TokenClass):
             challengeobject_list = get_challenges(serial=serial)
             for chal in challengeobject_list:
                 # check if the challenge is active and not already answered
+                if chal.get_data() == "challenge_declined":
+                    continue
                 _cnt, answered = chal.get_otp_status()
                 if not answered and chal.is_valid():
                     # then return the necessary smartphone data to answer
