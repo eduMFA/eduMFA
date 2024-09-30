@@ -36,6 +36,7 @@
                    autocomplete="new-password"
                    placeholder="{{ 'Some nice words...'|translate }}"
                    ng-model="form.description"
+                   ng-pattern="/^.{0,80}$/"
                    ng-required="require_description.includes(form.type)" />
         </div>
 
