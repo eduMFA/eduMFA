@@ -2132,7 +2132,11 @@ def webauthntoken_auth(request, action):
     # prefixed fields in the request data, this is not a problem.
 
     if (
-        not request.all_data.get("type")
+        (
+            not request.all_data.get("type")
+            or request.all_data.get("type").lower()
+            == WebAuthnTokenClass.get_class_type()
+        )
         and not is_webauthn_assertion_response(request.all_data)
         and (
             "serial" not in request.all_data

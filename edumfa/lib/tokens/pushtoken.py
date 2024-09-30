@@ -39,7 +39,8 @@ from urllib.parse import quote
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import ec, padding
+from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
 from dateutil.parser import isoparse
 from pytz import utc
 
@@ -71,14 +72,6 @@ from edumfa.lib.tokenclass import (
     TokenClass,
 )
 from edumfa.lib.user import User
-from edumfa.lib.utils import (
-    b32encode_and_unicode,
-    create_img,
-    is_true,
-    prepare_result,
-    to_bytes,
-)
-from edumfa.models import Challenge, db
 
 log = logging.getLogger(__name__)
 
@@ -866,19 +859,14 @@ class PushTokenClass(TokenClass):
                     if decline:
                         sign_data += "|decline"
                     try:
-                        pubkey_obj.verify(
-                            b32decode(signature),
-                            sign_data.encode("utf8"),
-                            padding.PKCS1v15(),
-                            hashes.SHA256(),
-                        )
+                        cls.verify_signature(pubkey_obj, sign_data, signature)
                         # The signature was valid
                         log.debug(f"Found matching challenge {chal!s}.")
                         if decline:
                             chal.set_data("challenge_declined")
                         else:
                             chal.set_otp_status(True)
-                            chal.save()
+                        chal.save()
                         result = True
                     except InvalidSignature as _e:
                         pass
@@ -893,12 +881,7 @@ class PushTokenClass(TokenClass):
                     tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
                 )
                 sign_data = "{new_fb_token}|{serial}|{timestamp}".format(**request_data)
-                pubkey_obj.verify(
-                    b32decode(signature),
-                    sign_data.encode("utf8"),
-                    padding.PKCS1v15(),
-                    hashes.SHA256(),
-                )
+                cls.verify_signature(pubkey_obj, sign_data, signature)
                 # If the timestamp and signature are valid we update the token
                 tok.add_tokeninfo("firebase_token", request_data["new_fb_token"])
                 result = True
@@ -922,6 +905,22 @@ class PushTokenClass(TokenClass):
             raise ParameterError("Missing parameters!")
 
         return result, details
+
+    @classmethod
+    def verify_signature(cls, pubkey_obj, sign_data, signature):
+        if isinstance(pubkey_obj, EllipticCurvePublicKey):
+            pubkey_obj.verify(
+                b32decode(signature),
+                sign_data.encode("utf8"),
+                ec.ECDSA(hashes.SHA256()),
+            )
+        else:
+            pubkey_obj.verify(
+                b32decode(signature),
+                sign_data.encode("utf8"),
+                padding.PKCS1v15(),
+                hashes.SHA256(),
+            )
 
     @classmethod
     def _api_endpoint_get(cls, g, request_data):
@@ -968,12 +967,8 @@ class PushTokenClass(TokenClass):
 
             pubkey_obj = _build_verify_object(tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE))
             sign_data = "{serial}|{timestamp}".format(**request_data)
-            pubkey_obj.verify(
-                b32decode(signature),
-                sign_data.encode("utf8"),
-                padding.PKCS1v15(),
-                hashes.SHA256(),
-            )
+            # Check if pubkey_obj is a EllipticCurvePublicKey
+            cls.verify_signature(pubkey_obj, sign_data, signature)
             # The signature was valid now check for an open challenge
             # we need the private server key to sign the smartphone data
             pem_privkey = tok.get_tokeninfo(PRIVATE_KEY_SERVER)
@@ -992,6 +987,8 @@ class PushTokenClass(TokenClass):
             challengeobject_list = get_challenges(serial=serial)
             for chal in challengeobject_list:
                 # check if the challenge is active and not already answered
+                if chal.get_data() == "challenge_declined":
+                    continue
                 _cnt, answered = chal.get_otp_status()
                 if not answered and chal.is_valid():
                     # then return the necessary smartphone data to answer

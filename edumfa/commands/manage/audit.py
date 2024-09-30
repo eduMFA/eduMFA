@@ -76,7 +76,9 @@ def dump(filename, timelimit=None):
     help="Keep this number of entries.",
 )
 @click.option("--age", help="Delete audit entries older than these number of days.")
-@click.option("--config", help="Read config from the specified yaml file.")
+@click.option(
+    "--config", type=click.File("r"), help="Read config from the specified yaml file."
+)
 @click.option(
     "--dryrun",
     is_flag=True,
@@ -138,8 +140,7 @@ def rotate_audit(
     # create a Session
     metadata.create_all(engine)
     if config:
-        with open(config, "r") as f:
-            yml_config = yaml.safe_load(f)
+        yml_config = yaml.safe_load(config)
         auditlogs = session.query(LogEntry).all()
         delete_list = []
         for log in auditlogs:

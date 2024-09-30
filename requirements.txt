@@ -4,7 +4,7 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements.txt --strip-extras
 #
-alembic==1.13.2
+alembic==1.13.3
     # via flask-migrate
 argon2-cffi==23.1.0
     # via edumfa (setup.py)
@@ -34,7 +34,7 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via flask
-configobj==5.0.8
+configobj==5.0.9
     # via edumfa (setup.py)
 croniter==3.0.3
     # via edumfa (setup.py)
@@ -61,11 +61,11 @@ flask-sqlalchemy==3.1.1
     #   flask-migrate
 flask-versioned==0.9.4.post20101221
     # via edumfa (setup.py)
-google-auth==2.34.0
+google-auth==2.35.0
     # via edumfa (setup.py)
-grpcio==1.66.1
+grpcio==1.66.2
     # via edumfa (setup.py)
-huey==2.5.1
+huey==2.5.2
     # via edumfa (setup.py)
 idna==3.10
     # via requests
@@ -119,13 +119,13 @@ python-dateutil==2.9.0.post0
     # via
     #   croniter
     #   edumfa (setup.py)
-python-gnupg==0.5.2
+python-gnupg==0.5.3
     # via edumfa (setup.py)
 pytz==2024.2
     # via flask-babel
 pyyaml==6.0.2
     # via edumfa (setup.py)
-redis==5.0.8
+redis==5.1.0
     # via huey
 requests==2.32.3
     # via edumfa (setup.py)
