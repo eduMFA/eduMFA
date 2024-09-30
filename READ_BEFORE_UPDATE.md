@@ -33,6 +33,75 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.3.0
+
+* Add documentation for Docker images + optimize Dockerfile by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/328
+* Add support for Ubuntu 24.04LTS images by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/290
+* chore(deps): update dependency alembic to v1.13.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/326
+* chore(deps): update dependency attrs to v24.2.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/268
+* chore(deps): update dependency babel to v2.16.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/273
+* chore(deps): update dependency bcrypt to v4.2.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/228
+* chore(deps): update dependency cachetools to v5.5.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/282
+* chore(deps): update dependency certifi to v2024.8.30 by @renovate in https://github.com/eduMFA/eduMFA/pull/298
+* chore(deps): update dependency cffi to v1.17.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/306
+* chore(deps): update dependency configobj to v5.0.9 by @renovate in https://github.com/eduMFA/eduMFA/pull/325
+* chore(deps): update dependency croniter to v3.0.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/237
+* chore(deps): update dependency docs/sphinx to v8 by @renovate in https://github.com/eduMFA/eduMFA/pull/253
+* chore(deps): update dependency docs/sphinxcontrib-applehelp to v2 by @renovate in https://github.com/eduMFA/eduMFA/pull/254
+* chore(deps): update dependency docs/sphinxcontrib-devhelp to v2 by @renovate in https://github.com/eduMFA/eduMFA/pull/255
+* chore(deps): update dependency docs/sphinxcontrib-htmlhelp to v2.1.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/247
+* chore(deps): update dependency docs/sphinxcontrib-qthelp to v2 by @renovate in https://github.com/eduMFA/eduMFA/pull/256
+* chore(deps): update dependency docs/sphinxcontrib-serializinghtml to v2 by @renovate in https://github.com/eduMFA/eduMFA/pull/259
+* chore(deps): update dependency furo to v2024.8.6 by @renovate in https://github.com/eduMFA/eduMFA/pull/267
+* chore(deps): update dependency google-auth to v2.35.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/323
+* chore(deps): update dependency grpcio to v1.66.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/336
+* chore(deps): update dependency huey to v2.5.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/329
+* chore(deps): update dependency idna to v3.8 by @renovate in https://github.com/eduMFA/eduMFA/pull/291
+* chore(deps): update dependency importlib_metadata to v8.2.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/233
+* chore(deps): update dependency lxml to v5.3.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/274
+* chore(deps): update dependency pyasn1 to v0.6.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/308
+* chore(deps): update dependency pyasn1-modules to v0.4.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/309
+* chore(deps): update dependency pydash to v8.0.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/227
+* chore(deps): update dependency pyjwt to v2.9.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/260
+* chore(deps): update dependency pyopenssl to v24.2.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/224
+* chore(deps): update dependency pyparsing to v3.1.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/292
+* chore(deps): update dependency pytest to v8.3.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/307
+* chore(deps): update dependency python-gnupg to v0.5.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/324
+* chore(deps): update dependency pytz to v2024.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/310
+* chore(deps): update dependency pyyaml to v6.0.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/270
+* chore(deps): update dependency redis to v5.1.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/335
+* chore(deps): update dependency setuptools to v75 by @renovate in https://github.com/eduMFA/eduMFA/pull/319
+* chore(deps): update dependency soupsieve to v2.6 by @renovate in https://github.com/eduMFA/eduMFA/pull/280
+* chore(deps): update dependency sphinx to v7.4.7 by @renovate in https://github.com/eduMFA/eduMFA/pull/222
+* chore(deps): update dependency sphinxcontrib-htmlhelp to v2.0.6 by @renovate in https://github.com/eduMFA/eduMFA/pull/220
+* chore(deps): update dependency sphinxcontrib-qthelp to v1.0.8 by @renovate in https://github.com/eduMFA/eduMFA/pull/221
+* chore(deps): update dependency sqlalchemy to v2.0.35 by @renovate in https://github.com/eduMFA/eduMFA/pull/302
+* chore(deps): update dependency test/attrs to v24 by @renovate in https://github.com/eduMFA/eduMFA/pull/263
+* chore(deps): update dependency test/coverage to v7.6.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/264
+* chore(deps): update dependency test/exceptiongroup to v1.2.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/250
+* chore(deps): update dependency test/packaging to v24.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/251
+* chore(deps): update dependency test/pytest to v8.3.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/252
+* chore(deps): update dependency test/responses to v0.25.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/245
+* chore(deps): update dependency test/types-pyyaml to v6.0.12.20240724 by @renovate in https://github.com/eduMFA/eduMFA/pull/246
+* chore(deps): update dependency types-pyyaml to v6.0.12.20240917 by @renovate in https://github.com/eduMFA/eduMFA/pull/316
+* chore(deps): update dependency urllib3 to v2.2.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/313
+* chore(deps): update dependency werkzeug to v3.0.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/286
+* chore(deps): update dependency zipp to v3.20.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/317
+* chore: migrate static metadata to `pyproject.toml` by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/218
+* docs: correct syslog documentation by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/341
+* docs: document eduPUSH type and deprecate Push Token Type by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/294
+* feat: change import filename arguments to type click.File by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/289
+* feat: permit handling ecdsa for pushtokens by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/340
+* fix: TOTP and HOTP help strings by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/288
+* fix: add missing MULTIVALUEATTRIBUTES parameter to LDAPIdResolver by @QcFe in https://github.com/eduMFA/eduMFA/pull/315
+* fix: append webauthn policy information to `type=webauthn` triggerchallenges by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/314
+* fix: handle to long description input by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/337
+* fix: make webauthn token description a translatable string by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/305
+* fix: only push docker images on default branch or releases by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/299
+* fix: output totp algorithm uppercase by @siggdev in https://github.com/eduMFA/eduMFA/pull/235
+* fix: store declined sessions correctly and prevent polling of declined requests by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/339
+* fix: regenerate translations.js by @Johnnynator in https://github.com/eduMFA/eduMFA/pull/321
+
 ## eduMFA 2.2.0 
 
 > [!CAUTION]

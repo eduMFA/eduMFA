@@ -1,3 +1,74 @@
+edumfa (2.3.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+  * Add documentation for Docker images + optimize Dockerfile
+  * Add support for Ubuntu 24.04LTS images 
+  * chore(deps): update dependency alembic to v1.13.3 
+  * chore(deps): update dependency attrs to v24.2.0 
+  * chore(deps): update dependency babel to v2.16.0 
+  * chore(deps): update dependency bcrypt to v4.2.0 
+  * chore(deps): update dependency cachetools to v5.5.0 
+  * chore(deps): update dependency certifi to v2024.8.30 
+  * chore(deps): update dependency cffi to v1.17.1 
+  * chore(deps): update dependency configobj to v5.0.9 
+  * chore(deps): update dependency croniter to v3.0.3 
+  * chore(deps): update dependency docs/sphinx to v8 
+  * chore(deps): update dependency docs/sphinxcontrib-applehelp to v2 
+  * chore(deps): update dependency docs/sphinxcontrib-devhelp to v2 
+  * chore(deps): update dependency docs/sphinxcontrib-htmlhelp to v2.1.0 
+  * chore(deps): update dependency docs/sphinxcontrib-qthelp to v2 
+  * chore(deps): update dependency docs/sphinxcontrib-serializinghtml to v2 
+  * chore(deps): update dependency furo to v2024.8.6 
+  * chore(deps): update dependency google-auth to v2.35.0 
+  * chore(deps): update dependency grpcio to v1.66.2 
+  * chore(deps): update dependency huey to v2.5.2 
+  * chore(deps): update dependency idna to v3.8 
+  * chore(deps): update dependency importlib_metadata to v8.2.0 
+  * chore(deps): update dependency lxml to v5.3.0 
+  * chore(deps): update dependency pyasn1 to v0.6.1 
+  * chore(deps): update dependency pyasn1-modules to v0.4.1 
+  * chore(deps): update dependency pydash to v8.0.3 
+  * chore(deps): update dependency pyjwt to v2.9.0 
+  * chore(deps): update dependency pyopenssl to v24.2.1 
+  * chore(deps): update dependency pyparsing to v3.1.4 
+  * chore(deps): update dependency pytest to v8.3.3 
+  * chore(deps): update dependency python-gnupg to v0.5.3 
+  * chore(deps): update dependency pytz to v2024.2 
+  * chore(deps): update dependency pyyaml to v6.0.2 
+  * chore(deps): update dependency redis to v5.1.0 
+  * chore(deps): update dependency setuptools to v75 
+  * chore(deps): update dependency soupsieve to v2.6 
+  * chore(deps): update dependency sphinx to v7.4.7 
+  * chore(deps): update dependency sphinxcontrib-htmlhelp to v2.0.6 
+  * chore(deps): update dependency sphinxcontrib-qthelp to v1.0.8 
+  * chore(deps): update dependency sqlalchemy to v2.0.35 
+  * chore(deps): update dependency test/attrs to v24 
+  * chore(deps): update dependency test/coverage to v7.6.1 
+  * chore(deps): update dependency test/exceptiongroup to v1.2.2 
+  * chore(deps): update dependency test/packaging to v24.1 
+  * chore(deps): update dependency test/pytest to v8.3.2 
+  * chore(deps): update dependency test/responses to v0.25.3 
+  * chore(deps): update dependency test/types-pyyaml to v6.0.12.20240724 
+  * chore(deps): update dependency types-pyyaml to v6.0.12.20240917 
+  * chore(deps): update dependency urllib3 to v2.2.3 
+  * chore(deps): update dependency werkzeug to v3.0.4 
+  * chore(deps): update dependency zipp to v3.20.2 
+  * chore: migrate static metadata to `pyproject.toml` 
+  * docs: correct syslog documentation 
+  * docs: document eduPUSH type and deprecate Push Token Type 
+  * feat: change import filename arguments to type click.File 
+  * feat: permit handling ecdsa for pushtokens 
+  * fix: TOTP and HOTP help strings 
+  * fix: add missing MULTIVALUEATTRIBUTES parameter to LDAPIdResolver 
+  * fix: append webauthn policy information to `type=webauthn` triggerchallenges 
+  * fix: handle to long description input 
+  * fix: make webauthn token description a translatable string 
+  * fix: only push docker images on default branch or releases 
+  * fix: output totp algorithm uppercase 
+  * fix: store declined sessions correctly and prevent polling of declined requests 
+  * fix: regenerate translations.js 
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 30 Sep 2024 15:00:00 +0200
+
 edumfa (2.2.0{{CODENAME}}) {{CODENAME}}; urgency=medium
  
   * chore(deps): update dependency google-auth to v2.32.0
