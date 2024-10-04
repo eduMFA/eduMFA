@@ -38,7 +38,7 @@ configobj==5.0.9
     # via edumfa (setup.py)
 croniter==3.0.3
     # via edumfa (setup.py)
-cryptography==42.0.8
+cryptography==43.0.1
     # via
     #   edumfa (setup.py)
     #   pyopenssl
