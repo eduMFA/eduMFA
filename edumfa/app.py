@@ -31,7 +31,6 @@ import yaml
 from flask import Flask, request, Response
 from flask_babel import Babel
 from flask_migrate import Migrate
-from flaskext.versioned import Versioned
 
 # we need this import to add the before/after request function to the blueprints
 import edumfa.api.before_after
@@ -129,9 +128,6 @@ def create_app(config_name="development",
                 template_folder="static/templates")
     if config_name:
         app.config.from_object(config[config_name])
-
-    # Set up flask-versioned
-    versioned = Versioned(app, format='%(path)s?v=%(version)s')
 
     try:
         # Try to load the given config_file.
