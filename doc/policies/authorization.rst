@@ -75,7 +75,7 @@ application_tokentype
 
 type: bool
 
-.. warning:: Deprected since 2.4.0
+.. warning:: Deprecated since 2.4.0
    
    This policy does not apply any more. Every application can now define its requested tokentype.
 
