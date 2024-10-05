@@ -469,7 +469,7 @@ myApp.directive("piPolicyConditions", ["instanceUrl", "versioningSuffixProvider"
         restrict: 'E',
         scope: {
             // We need a bidirectional binding because we modify the conditions.
-            // The conditions are a list of 5-element lists.
+            // The conditions are a list of 6-element lists.
             policyConditions: "=conditions",
             // We only need a one-directional binding, because we will never change the definitions
             conditionDefs: "=defs"
@@ -501,7 +501,7 @@ myApp.directive("piPolicyConditions", ["instanceUrl", "versioningSuffixProvider"
             // Called when the user clicks on the "add condition" button.
             // Adds a condition with default values
             scope.addCondition = function () {
-                scope.policyConditions.push(["userinfo", "", "equals", "", false]);
+                scope.policyConditions.push(["userinfo", "", "equals", "", false, "exception"]);
                 scope.editIndex = scope.policyConditions.length - 1;
             };
         },
