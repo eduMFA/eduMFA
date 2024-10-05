@@ -2920,11 +2920,11 @@ class ValidateAPITestCase(MyApiTestCase):
         # check, that both challenges were triggered, although
         # the application tried to trigger only hotp
         triggered_serials = [item['serial'] for item in detail.get("multi_challenge")]
-        self.assertTrue("tok_totp" in triggered_serials)
+        self.assertTrue("tok_hotp" in triggered_serials)
 
         # check that both serials appear in the audit log
         ae = self.find_most_recent_audit_entry(action='POST /validate/triggerchallenge')
-        self.assertTrue({"tok_totp"}.issubset(set(ae.get('serial').split(','))), ae)
+        self.assertTrue({"tok_hotp"}.issubset(set(ae.get("serial").split(","))), ae)
 
         # Trigger another challenge for HOTP
         with self.app.test_request_context('/validate/triggerchallenge',
