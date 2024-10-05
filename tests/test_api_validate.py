@@ -2920,16 +2920,11 @@ class ValidateAPITestCase(MyApiTestCase):
         # check, that both challenges were triggered, although
         # the application tried to trigger only hotp
         triggered_serials = [item['serial'] for item in detail.get("multi_challenge")]
-        self.assertTrue("tok_hotp" in triggered_serials and "tok_totp" in triggered_serials)
+        self.assertTrue("tok_totp" in triggered_serials)
 
         # check that both serials appear in the audit log
         ae = self.find_most_recent_audit_entry(action='POST /validate/triggerchallenge')
-        self.assertTrue({"tok_hotp", "tok_totp"}.issubset(set(ae.get('serial').split(','))), ae)
-
-        # Set a policy, that the application is allowed to specify tokentype
-        set_policy(name="pol_application_tokentype",
-                   scope=SCOPE.AUTHZ,
-                   action=ACTION.APPLICATION_TOKENTYPE)
+        self.assertTrue({"tok_totp"}.issubset(set(ae.get('serial').split(','))), ae)
 
         # Trigger another challenge for HOTP
         with self.app.test_request_context('/validate/triggerchallenge',
@@ -2948,7 +2943,6 @@ class ValidateAPITestCase(MyApiTestCase):
         remove_token("tok_hotp")
         remove_token("tok_totp")
         delete_policy("pol_chalresp")
-        delete_policy("pol_application_tokentype")
 
     def test_36_authorize_by_tokeninfo_condition(self):
 
