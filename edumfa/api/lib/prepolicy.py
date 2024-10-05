@@ -323,44 +323,6 @@ def check_otp_pin(request=None, action=None):
     return True
 
 
-def check_application_tokentype(request=None, action=None):
-    """
-    This pre policy checks if the request is allowed to specify the tokentype.
-    If the policy is not set, a possibly set parameter "type" is removed
-    from the request.
-
-    Check ACTION.APPLICATION_TOKENTYPE
-
-    This decorator should wrap
-        /validate/check, /validate/samlcheck and /validate/triggerchallenge.
-
-    :param request: The request that is intercepted during the API call
-    :type request: Request Object
-    :param action: An optional Action
-    :type action: basestring
-    :returns: Always true. Modified the parameter request
-    """
-    application_allowed = Match.generic(g, scope=SCOPE.AUTHZ,
-                                        action=ACTION.APPLICATION_TOKENTYPE,
-                                        user_object=request.User,
-                                        active=True).any()
-
-    # if the application is not allowed, we remove the tokentype
-    if not application_allowed and "type" in request.all_data:
-        # We need the tokentype to be present in usernameless authentication
-        is_usernameless = Match.generic(g, scope=SCOPE.AUTH,
-                                        action=WEBAUTHNACTION.USERNAMELESS_AUTHN,
-                                        user_object=None,
-                                        active=True).any()
-        if "user" not in request.all_data and "serial" not in request.all_data and is_usernameless:
-            return True
-        log.info("Removing parameter 'type' from request, "
-                 "since application is not allowed to authenticate by token type.")
-        del request.all_data["type"]
-
-    return True
-
-
 def sms_identifiers(request=None, action=None):
     """
     This is a token specific wrapper for sms tokens
