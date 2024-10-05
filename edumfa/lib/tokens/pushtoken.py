@@ -1003,7 +1003,17 @@ class PushTokenClass(TokenClass):
                         pem_privkey,
                         options,
                     )
-                    res = fb_gateway.submit_message(self.get_tokeninfo("firebase_token"), smartphone_data)
+                    try:
+                        res = fb_gateway.submit_message(self.get_tokeninfo("firebase_token"), smartphone_data)
+                    except TimeoutError as e:
+                        # Use other string format!
+                        log.warning(f"Timeout error submitting push token {self.token.serial}!")
+                        return (
+                            False,
+                            f"Timeout error submitting push token {self.token.serial}!",
+                            transactionid,
+                            {},
+                        )
 
             # Create the challenge in the challenge table if either the message
             # was successfully submitted to the Firebase API or if polling is
