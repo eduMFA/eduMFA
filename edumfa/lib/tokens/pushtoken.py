@@ -36,6 +36,8 @@ from pytz import utc
 from dateutil.parser import isoparse
 import traceback
 
+from requests import ConnectTimeout
+
 from edumfa.api.lib.utils import getParam
 from edumfa.api.lib.policyhelper import get_pushtoken_add_config
 from edumfa.lib.token import get_one_token, init_token
@@ -1005,7 +1007,7 @@ class PushTokenClass(TokenClass):
                     )
                     try:
                         res = fb_gateway.submit_message(self.get_tokeninfo("firebase_token"), smartphone_data)
-                    except TimeoutError as e:
+                    except ConnectTimeout as e:
                         # Use other string format!
                         log.warning(f"Timeout error submitting push token {self.token.serial}!")
                         return (
