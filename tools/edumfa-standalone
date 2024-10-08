@@ -47,21 +47,19 @@ import os
 import shutil
 import string
 import subprocess
-from functools import wraps
-
-import sqlalchemy
 import sys
 import warnings
-
+from functools import wraps
 from tempfile import NamedTemporaryFile
 
+import click
+import sqlalchemy
 from click import get_current_context
+from flask import current_app
+from flask.cli import FlaskGroup, pass_script_info
 
 from edumfa.app import create_app
 from edumfa.lib.security.default import DefaultSecurityModule
-import click
-from flask.cli import FlaskGroup, pass_script_info
-from flask import current_app
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 

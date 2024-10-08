@@ -21,23 +21,24 @@
 #
 __doc__ = """The tokengroup endpoint allows administrators to manage tokengroup definitions.
 """
-from flask import (Blueprint, request)
-from .lib.utils import (getParam, send_result)
-from ..lib.log import log_with
-from edumfa.lib.tokengroup import get_tokengroups, set_tokengroup, delete_tokengroup
+import logging
+
+from flask import Blueprint, g, request
+
+from edumfa.api.lib.prepolicy import check_base_action, prepolicy
 from edumfa.lib.event import event
 from edumfa.lib.policy import ACTION
-from edumfa.api.lib.prepolicy import prepolicy, check_base_action
+from edumfa.lib.tokengroup import delete_tokengroup, get_tokengroups, set_tokengroup
 
-from flask import g
-import logging
+from ..lib.log import log_with
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 
-tokengroup_blueprint = Blueprint('tokengroup_blueprint', __name__)
+tokengroup_blueprint = Blueprint("tokengroup_blueprint", __name__)
 
 
-@tokengroup_blueprint.route('/<groupname>', methods=['POST'])
+@tokengroup_blueprint.route("/<groupname>", methods=["POST"])
 @prepolicy(check_base_action, request, ACTION.TOKENGROUP_ADD)
 @event("tokengroup_add", request, g)
 @log_with(log)
@@ -89,12 +90,12 @@ def set_tokengroup_api(groupname):
 
     r = set_tokengroup(groupname, description)
 
-    g.audit_object.log({'success': r > 0, 'info':  groupname})
+    g.audit_object.log({"success": r > 0, "info": groupname})
     return send_result(r)
 
 
-@tokengroup_blueprint.route('/<groupname>', methods=['GET'])
-@tokengroup_blueprint.route('/', methods=['GET'])
+@tokengroup_blueprint.route("/<groupname>", methods=["GET"])
+@tokengroup_blueprint.route("/", methods=["GET"])
 @prepolicy(check_base_action, request, ACTION.TOKENGROUP_LIST)
 @event("tokengroup_list", request, g)
 @log_with(log)
@@ -139,13 +140,12 @@ def get_tokengroup_api(groupname=None):
     g.audit_object.log({"success": True})
     r_tokengroups = {}
     for tg in tgs:
-        r_tokengroups[tg.name] = {"description": tg.Description,
-                                  "id": tg.id}
+        r_tokengroups[tg.name] = {"description": tg.Description, "id": tg.id}
 
     return send_result(r_tokengroups)
 
 
-@tokengroup_blueprint.route('/<groupname>', methods=['DELETE'])
+@tokengroup_blueprint.route("/<groupname>", methods=["DELETE"])
 @prepolicy(check_base_action, request, ACTION.TOKENGROUP_DELETE)
 @event("tokengroup_delete", request, g)
 @log_with(log)
@@ -184,7 +184,6 @@ def delete_tokengroup_api(groupname=None):
 
     """
     ret = delete_tokengroup(groupname)
-    g.audit_object.log({"success": True,
-                        "info": groupname})
+    g.audit_object.log({"success": True, "info": groupname})
 
     return send_result(1)

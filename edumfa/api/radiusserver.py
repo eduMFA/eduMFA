@@ -28,25 +28,28 @@ like RADIUS-Token or RADIUS-passthru policies.
 
 The code of this module is tested in tests/test_api_radiusserver.py
 """
-from flask import (Blueprint, request)
-from .lib.utils import (getParam,
-                        required,
-                        send_result)
+import logging
+
+from flask import Blueprint, g, request
+
+from edumfa.lib.radiusserver import (
+    add_radius,
+    delete_radius,
+    list_radiusservers,
+    test_radius,
+)
+
+from ..api.lib.prepolicy import check_base_action, prepolicy
 from ..lib.log import log_with
 from ..lib.policy import ACTION
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from flask import g
-import logging
-from edumfa.lib.radiusserver import (add_radius, list_radiusservers,
-                                          delete_radius, test_radius)
-
+from .lib.utils import getParam, required, send_result
 
 log = logging.getLogger(__name__)
 
-radiusserver_blueprint = Blueprint('radiusserver_blueprint', __name__)
+radiusserver_blueprint = Blueprint("radiusserver_blueprint", __name__)
 
 
-@radiusserver_blueprint.route('/<identifier>', methods=['POST'])
+@radiusserver_blueprint.route("/<identifier>", methods=["POST"])
 @prepolicy(check_base_action, request, ACTION.RADIUSSERVERWRITE)
 @log_with(log)
 def create(identifier=None):
@@ -68,19 +71,25 @@ def create(identifier=None):
     timeout = int(getParam(param, "timeout", default=5))
     enforce_ma = bool(getParam(param, "enforce_ma", default=False))
     description = getParam(param, "description", default="")
-    dictionary = getParam(param, "dictionary",
-                          default="/etc/edumfa/dictionary")
+    dictionary = getParam(param, "dictionary", default="/etc/edumfa/dictionary")
 
-    r = add_radius(identifier, server, secret, port=port,
-                   description=description, dictionary=dictionary,
-                   retries=retries, timeout=timeout, enforce_ma=enforce_ma)
+    r = add_radius(
+        identifier,
+        server,
+        secret,
+        port=port,
+        description=description,
+        dictionary=dictionary,
+        retries=retries,
+        timeout=timeout,
+        enforce_ma=enforce_ma,
+    )
 
-    g.audit_object.log({'success': r > 0,
-                        'info':  r})
+    g.audit_object.log({"success": r > 0, "info": r})
     return send_result(r > 0)
 
 
-@radiusserver_blueprint.route('/', methods=['GET'])
+@radiusserver_blueprint.route("/", methods=["GET"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.RADIUSSERVERREAD)
 def list_radius():
@@ -91,11 +100,11 @@ def list_radius():
     # We do not add the secret!
     for identifier, data in res.items():
         data.pop("password")
-    g.audit_object.log({'success': True})
+    g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@radiusserver_blueprint.route('/<identifier>', methods=['DELETE'])
+@radiusserver_blueprint.route("/<identifier>", methods=["DELETE"])
 @prepolicy(check_base_action, request, ACTION.RADIUSSERVERWRITE)
 @log_with(log)
 def delete_server(identifier=None):
@@ -106,12 +115,11 @@ def delete_server(identifier=None):
     """
     r = delete_radius(identifier)
 
-    g.audit_object.log({'success': r > 0,
-                        'info':  r})
+    g.audit_object.log({"success": r > 0, "info": r})
     return send_result(r > 0)
 
 
-@radiusserver_blueprint.route('/test_request', methods=['POST'])
+@radiusserver_blueprint.route("/test_request", methods=["POST"])
 @prepolicy(check_base_action, request, ACTION.RADIUSSERVERWRITE)
 @log_with(log)
 def test():
@@ -129,12 +137,19 @@ def test():
     enforce_ma = bool(getParam(param, "enforce_ma", default=False))
     user = getParam(param, "username", required)
     password = getParam(param, "password", required)
-    dictionary = getParam(param, "dictionary",
-                          default="/etc/edumfa/dictionary")
+    dictionary = getParam(param, "dictionary", default="/etc/edumfa/dictionary")
 
-    r = test_radius(identifier, server, secret, user, password, port=port,
-                    dictionary=dictionary, retries=retries, timeout=timeout,
-                    enforce_ma=enforce_ma)
-    g.audit_object.log({'success': r > 0,
-                        'info':  r})
+    r = test_radius(
+        identifier,
+        server,
+        secret,
+        user,
+        password,
+        port=port,
+        dictionary=dictionary,
+        retries=retries,
+        timeout=timeout,
+        enforce_ma=enforce_ma,
+    )
+    g.audit_object.log({"success": r > 0, "info": r})
     return send_result(r > 0)
