@@ -49,7 +49,7 @@ from edumfa.api.lib.prepolicy import (check_token_upload,
                                       check_admin_tokenlist,
                                       webauthntoken_auth, webauthntoken_authz,
                                       webauthntoken_enroll, webauthntoken_request,
-                                      webauthntoken_allowed, check_application_tokentype,
+                                      webauthntoken_allowed,
                                       required_piv_attestation, check_custom_user_attributes,
                                       hide_tokeninfo, init_ca_template, init_ca_connector,
                                       init_subject_components, increase_failcounter_on_challenge,
@@ -3134,37 +3134,6 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             scope=SCOPE.ENROLL,
             action=''
         )
-
-    def test_34_application_tokentype(self):
-        builder = EnvironBuilder(method='POST',
-                                 data={'user': "cornelius"},
-                                 headers={})
-        env = builder.get_environ()
-        # Set the remote address so that we can filter for it
-        env["REMOTE_ADDR"] = "10.0.0.1"
-        g.client_ip = env["REMOTE_ADDR"]
-        req = Request(env)
-
-        # Set a policy, that the application is allowed to specify tokentype
-        set_policy(name="pol1",
-                   scope=SCOPE.AUTHZ,
-                   action=ACTION.APPLICATION_TOKENTYPE)
-        g.policy_object = PolicyClass()
-
-        # check for
-        req.all_data = {"type": "tokentype"}
-        req.User = User("cornelius", self.realm1)
-        check_application_tokentype(req)
-        # Check for the tokentype
-        self.assertEqual(req.all_data.get("type"), "tokentype")
-
-        # delete the policy, then the application is not allowed to specify the tokentype
-        delete_policy("pol1")
-        g.policy_object = PolicyClass()
-
-        check_application_tokentype(req)
-        # Check that the tokentype was removed
-        self.assertEqual(req.all_data.get("type"), None)
 
     def test_35_require_piv_attestation(self):
         from edumfa.lib.tokens.certificatetoken import ACTION, REQUIRE_ACTIONS

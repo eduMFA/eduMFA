@@ -75,6 +75,10 @@ application_tokentype
 
 type: bool
 
+.. warning:: Deprecated since 2.4.0
+   
+   This policy does not apply any more. Every application can now define its requested tokentype.
+
 If this policy is set, an application may add a parameter ``type`` as
 tokentype in the authentication request like ``validate/check``, ``validate/samlcheck``
 or ``validate/triggerchallenge``.

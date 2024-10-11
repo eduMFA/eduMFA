@@ -2292,10 +2292,7 @@ def get_static_policy_definitions(scope=None):
             },
             ACTION.APPLICATION_TOKENTYPE: {
                 'type': 'bool',
-                'desc': _("Allow the application to choose which token types should be used "
-                          "for authentication. Application may set the parameter 'type' in "
-                          "the request. Works with validate/check, validate/samlcheck and "
-                          "validate/triggerchallenge.")
+                'desc': _("<b>DEPRECATED:</b> This policy does not apply any more. Every application is allowed to set the requested tokentype.")
             },
             ACTION.AUTHMAXSUCCESS: {
                 'type': 'str',
