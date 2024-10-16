@@ -38,7 +38,6 @@ from edumfa.api.lib.prepolicy import (
     auditlog_age,
     check_admin_tokenlist,
     check_anonymous_user,
-    check_application_tokentype,
     check_base_action,
     check_custom_user_attributes,
     check_external,
@@ -81,7 +80,6 @@ from edumfa.api.lib.prepolicy import (
     webauthntoken_enroll,
     webauthntoken_request,
 )
-from edumfa.lib.auth import ROLE
 from edumfa.lib.config import SYSCONF, set_edumfa_config
 from edumfa.lib.error import PolicyError, RegistrationError, ValidateError
 from edumfa.lib.machine import attach_token
@@ -3200,33 +3198,6 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             webauthntoken_allowed(request, None)
 
         set_policy(name="WebAuthn", scope=SCOPE.ENROLL, action="")
-
-    def test_34_application_tokentype(self):
-        builder = EnvironBuilder(method="POST", data={"user": "cornelius"}, headers={})
-        env = builder.get_environ()
-        # Set the remote address so that we can filter for it
-        env["REMOTE_ADDR"] = "10.0.0.1"
-        g.client_ip = env["REMOTE_ADDR"]
-        req = Request(env)
-
-        # Set a policy, that the application is allowed to specify tokentype
-        set_policy(name="pol1", scope=SCOPE.AUTHZ, action=ACTION.APPLICATION_TOKENTYPE)
-        g.policy_object = PolicyClass()
-
-        # check for
-        req.all_data = {"type": "tokentype"}
-        req.User = User("cornelius", self.realm1)
-        check_application_tokentype(req)
-        # Check for the tokentype
-        self.assertEqual(req.all_data.get("type"), "tokentype")
-
-        # delete the policy, then the application is not allowed to specify the tokentype
-        delete_policy("pol1")
-        g.policy_object = PolicyClass()
-
-        check_application_tokentype(req)
-        # Check that the tokentype was removed
-        self.assertEqual(req.all_data.get("type"), None)
 
     def test_35_require_piv_attestation(self):
         from edumfa.lib.tokens.certificatetoken import ACTION, REQUIRE_ACTIONS

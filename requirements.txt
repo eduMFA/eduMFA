@@ -22,7 +22,7 @@ blinker==1.8.2
     # via flask
 cachetools==5.5.0
     # via google-auth
-cbor2==5.6.4
+cbor2==5.6.5
     # via edumfa (setup.py)
 certifi==2024.8.30
     # via requests
@@ -30,7 +30,7 @@ cffi==1.17.1
     # via
     #   argon2-cffi-bindings
     #   cryptography
-charset-normalizer==3.3.2
+charset-normalizer==3.4.0
     # via requests
 click==8.1.7
     # via flask
@@ -59,8 +59,6 @@ flask-sqlalchemy==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-migrate
-flask-versioned==0.9.4.post20101221
-    # via edumfa (setup.py)
 google-auth==2.35.0
     # via edumfa (setup.py)
 grpcio==1.66.2
