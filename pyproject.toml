@@ -92,5 +92,6 @@ include = ["edumfa*"]
 profile = "black"
 combine_as_imports = true
 combine_star = true
+src_paths = ["edumfa/", "tests/", "migrations/versions/", "tools/"]
 extend_skip = ["test_lib_crypto.py"]
 
