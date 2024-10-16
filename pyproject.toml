@@ -36,6 +36,7 @@ Repository = "https://github.com/eduMFA/eduMFA.git"
 Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
+dev = ["black", "isort", "pre-commit"]
 docs = [
     "furo==2024.8.6",
     "docutils==0.21.2",
