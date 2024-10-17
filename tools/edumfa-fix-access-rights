@@ -3,9 +3,9 @@
 
 __version__ = '0.1'
 import sys
-from getopt import getopt, GetoptError
-from subprocess import call
+from getopt import GetoptError, getopt
 from shlex import quote as shlex_quote
+from subprocess import call
 
 
 def usage():

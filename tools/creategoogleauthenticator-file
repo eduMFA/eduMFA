@@ -6,11 +6,11 @@
 """
 This script creates a .google-authenticator file from the given hex seed
 """
-import binascii
 import base64
-import sys
+import binascii
 import random
 import string
+import sys
 
 
 def main():

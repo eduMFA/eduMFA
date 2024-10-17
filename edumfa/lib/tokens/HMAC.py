@@ -28,22 +28,20 @@
 #
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#  
+#
 """
   Description:  HOTP basic functions
 """
-  
+
+import binascii
 import hmac
 import logging
 import struct
-import binascii
-
 from hashlib import sha1
 
-from edumfa.lib.utils import hexlify_and_unicode
-from edumfa.lib.log import log_with
 from edumfa.lib.crypto import safe_compare
-
+from edumfa.lib.log import log_with
+from edumfa.lib.utils import hexlify_and_unicode
 
 log = logging.getLogger(__name__)
 
@@ -56,10 +54,7 @@ class HmacOtp:
         self.digits = digits
         self.hashfunc = hashfunc
 
-    def hmac(self,
-             counter=None,
-             key=None,
-             challenge=None):
+    def hmac(self, counter=None, key=None, challenge=None):
         """
 
         :param counter:
@@ -88,21 +83,23 @@ class HmacOtp:
         return dig
 
     def truncate(self, digest):
-        offset = digest[-1] & 0x0f
+        offset = digest[-1] & 0x0F
 
-        binary = (digest[offset + 0] & 0x7f) << 24
-        binary |= (digest[offset + 1] & 0xff) << 16
-        binary |= (digest[offset + 2] & 0xff) << 8
-        binary |= (digest[offset + 3] & 0xff)
+        binary = (digest[offset + 0] & 0x7F) << 24
+        binary |= (digest[offset + 1] & 0xFF) << 16
+        binary |= (digest[offset + 2] & 0xFF) << 8
+        binary |= digest[offset + 3] & 0xFF
 
-        return binary % (10 ** self.digits)
+        return binary % (10**self.digits)
 
-    def generate(self,
-                 counter=None,
-                 inc_counter=True,
-                 key=None,
-                 do_truncation=True,
-                 challenge=None):
+    def generate(
+        self,
+        counter=None,
+        inc_counter=True,
+        key=None,
+        do_truncation=True,
+        challenge=None,
+    ):
         """
 
         :param counter:
@@ -126,7 +123,7 @@ class HmacOtp:
             sotp = (self.digits - len(otp)) * "0" + otp
         else:
             sotp = hexlify_and_unicode(hmac)
-            
+
         if inc_counter:
             self.counter = counter + 1
         return sotp
@@ -151,10 +148,10 @@ class HmacOtp:
             start = 0 if (start < 0) else start
             end = self.counter + (window)
 
-        log.debug("OTP range counter: {0!r} - {1!r}".format(start, end))
+        log.debug(f"OTP range counter: {start!r} - {end!r}")
         for c in range(start, end):
             otpval = self.generate(c)
-            #log.debug("calculating counter {0!r}".format(c))
+            # log.debug("calculating counter {0!r}".format(c))
 
             if safe_compare(otpval, anOtpVal):
                 res = c

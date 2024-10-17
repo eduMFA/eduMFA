@@ -25,9 +25,10 @@ The postAddSerialToG decorator is tested in the ValidateAPITestCase.
 """
 
 
-import logging
-from flask import g
 import functools
+import logging
+
+from flask import g
 
 log = logging.getLogger(__name__)
 
@@ -37,6 +38,7 @@ def add_serial_from_response_to_g(wrapped_function):
     This decorator checks for the serial in the response and adds it to the
     flask g object.
     """
+
     @functools.wraps(wrapped_function)
     def function_wrapper(*args, **kwds):
         response = wrapped_function(*args, **kwds)
