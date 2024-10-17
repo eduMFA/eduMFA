@@ -74,7 +74,7 @@ test = [
     "types-PyYAML==6.0.12.20240917",
 ]
 postgres = ["psycopg2==2.9.10"]
-hsm = ["PyKCS11==1.5.16"]
+hsm = ["PyKCS11==1.5.17"]
 kerberos = ["gssapi==1.9.0"]
 
 [project.scripts]
