@@ -68,24 +68,22 @@ def upgrade():
     session = orm.Session(bind=bind)
     if (
         session.query(Policy.id)
-        .filter(Policy.scope == f"{SCOPE.ADMIN!s}", Policy.active.is_(True))
+        .filter(Policy.scope == SCOPE.ADMIN, Policy.active.is_(True))
         .all()
     ):
         # add policy if it does not exist yet
         if session.query(Policy.id).filter_by(name=POLICYNAME).first() is None:
             tokenlist_pol = Policy(
                 name=POLICYNAME,
-                scope=f"{SCOPE.ADMIN!s}",
-                action=f"{ACTION.TOKENLIST!s}",
+                scope=SCOPE.ADMIN,
+                action=ACTION.TOKENLIST,
             )
             session.add(tokenlist_pol)
-            print(f"Added '{ACTION.TOKENLIST!s}' action for admin policies.")
+            print(f"Added '{ACTION.TOKENLIST}' action for admin policies.")
         else:
             print(f"Policy {POLICYNAME} already exists.")
     else:
-        print(
-            f"No admin policy active. No need to create '{ACTION.TOKENLIST!s}' action."
-        )
+        print(f"No admin policy active. No need to create '{ACTION.TOKENLIST}' action.")
 
     try:
         session.commit()
@@ -98,5 +96,5 @@ def downgrade():
     # Delete the policy, if it still exists
     bind = op.get_bind()
     session = orm.Session(bind=bind)
-    session.query(Policy).filter(Policy.name == f"{POLICYNAME!s}").delete()
+    session.query(Policy).filter(Policy.name == POLICYNAME).delete()
     session.commit()

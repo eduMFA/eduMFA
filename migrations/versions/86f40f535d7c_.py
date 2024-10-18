@@ -25,9 +25,9 @@ def upgrade():
     ]
     for k, v in index_data:
         try:
-            op.create_index(op.f(f"ix_{k!s}_{v!s}"), k, [v])
+            op.create_index(op.f(f"ix_{k}_{v}"), k, [v])
         except Exception as exx:
-            print(f"Could not add index for column {v!s} in table {k!s}.")
+            print(f"Could not add index for column {v} in table {k}.")
             print(exx)
 
 

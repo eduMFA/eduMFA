@@ -161,8 +161,8 @@ def before_request():
             "client": g.client_ip,
             "client_user_agent": request.user_agent.browser,
             "edumfa_server": edumfa_server,
-            "action": f"{request.method!s} {request.url_rule!s}",
-            "thread_id": f"{threading.current_thread().ident!s}",
+            "action": f"{request.method} {request.url_rule}",
+            "thread_id": f"{threading.current_thread().ident}",
             "info": "",
         }
     )

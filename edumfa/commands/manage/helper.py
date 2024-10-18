@@ -52,7 +52,7 @@ def conf_import(file=None, conftype=None):
             conftype_list = list(contents_var.keys())
 
     for conftype in conftype_list:
-        click.echo("Importing {0!s} from {1!s}".format(conftype, file.name))
+        click.echo(f"Importing {conftype} from {file.name}")
     return contents_var
 
 

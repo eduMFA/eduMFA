@@ -35,41 +35,41 @@ def upgrade():
     bind = op.get_bind()
     session = orm.Session(bind=bind)
 
-    regex = re.compile(f"^{old_policy_action!s}")
+    regex = re.compile(f"^{old_policy_action}")
     try:
         for row in session.query(Policy).filter(
-            Policy.action.like(f"%{old_policy_action!s}%")
+            Policy.action.like(f"%{old_policy_action}%")
         ):
             # get the current setting
             pol_actions = [x.strip() for x in row.action.split(",")]
             for pol_action in filter(regex.match, pol_actions):
                 cred_algs = cred_alg_map[pol_action.split("=")[1]]
                 pol_actions.remove(pol_action)
-                pol_actions.append(f"{new_policy_action!s}={cred_algs!s}")
+                pol_actions.append(f"{new_policy_action}={cred_algs}")
             row.action = ", ".join(pol_actions)
         session.commit()
     except Exception as e:
         session.rollback()
-        print(f"Error updating the enrollment policy {old_policy_action!s}: {e!s}")
+        print(f"Error updating the enrollment policy {old_policy_action}: {e}")
 
 
 def downgrade():
     # for the downgrade we just use the "ecdsa_preferred" setting
     bind = op.get_bind()
     session = orm.Session(bind=bind)
-    regex = re.compile(f"^{new_policy_action!s}")
+    regex = re.compile(f"^{new_policy_action}")
     try:
         for row in session.query(Policy).filter(
-            Policy.action.like(f"%{new_policy_action!s}%")
+            Policy.action.like(f"%{new_policy_action}%")
         ):
             # get the current setting
             pol_actions = [x.strip() for x in row.action.split(",")]
             for pol_action in filter(regex.match, pol_actions):
                 pol_actions.remove(pol_action)
-                pol_actions.append(f"{old_policy_action!s}=ecdsa_preferred")
+                pol_actions.append(f"{old_policy_action}=ecdsa_preferred")
             row.action = ", ".join(pol_actions)
         session.commit()
     except Exception as e:
         session.rollback()
-        print(f"Error downgrading the enrollment policy {new_policy_action!s}: {e!s}")
+        print(f"Error downgrading the enrollment policy {new_policy_action}: {e}")
     pass

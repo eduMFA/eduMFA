@@ -549,7 +549,7 @@ class WebAuthnMakeCredentialOptions:
         attestation = str(attestation).lower()
         if attestation not in ATTESTATION_FORMS:
             raise ValueError(
-                f"Attestation string must be one of {', '.join(ATTESTATION_FORMS)!s}"
+                f"Attestation string must be one of {', '.join(ATTESTATION_FORMS)}"
             )
         self.attestation = attestation
 
@@ -557,7 +557,7 @@ class WebAuthnMakeCredentialOptions:
             user_verification = str(user_verification).lower()
             if user_verification not in USER_VERIFICATION_LEVELS:
                 raise ValueError(
-                    f"user_verification must be one of {', '.join(USER_VERIFICATION_LEVELS)!s}"
+                    f"user_verification must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
         self.user_verification = user_verification
 
@@ -565,7 +565,7 @@ class WebAuthnMakeCredentialOptions:
             authenticator_attachment = str(authenticator_attachment).lower()
             if authenticator_attachment not in AUTHENTICATOR_ATTACHMENT_TYPES:
                 raise ValueError(
-                    f"authenticator_attachment must be one of {', '.join(AUTHENTICATOR_ATTACHMENT_TYPES)!s}"
+                    f"authenticator_attachment must be one of {', '.join(AUTHENTICATOR_ATTACHMENT_TYPES)}"
                 )
         self.authenticator_attachment = authenticator_attachment
 
@@ -573,7 +573,7 @@ class WebAuthnMakeCredentialOptions:
             resident_key = str(resident_key).lower()
             if resident_key not in RESIDENT_KEY_LEVELS:
                 raise ValueError(
-                    f"resident_key must be one of {', '.join(RESIDENT_KEY_LEVELS)!s}"
+                    f"resident_key must be one of {', '.join(RESIDENT_KEY_LEVELS)}"
                 )
         self.resident_key = resident_key
 
@@ -716,7 +716,7 @@ class WebAuthnAssertionOptions:
             ).lower()
             if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
                 raise ValueError(
-                    f"user_verification_requirement must be one of {', '.join(USER_VERIFICATION_LEVELS)!s}"
+                    f"user_verification_requirement must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
         else:
             if is_usernameless_realm:
@@ -730,9 +730,7 @@ class WebAuthnAssertionOptions:
                 ).lower()
                 if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
                     raise ValueError(
-                        "user_verification_requirement must be one of {0!s}".format(
-                            ", ".join(USER_VERIFICATION_LEVELS)
-                        )
+                        f"user_verification_requirement must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                     )
             if rp_id:
                 self.rp_id = rp_id
@@ -892,7 +890,7 @@ class WebAuthnCredential:
         attestation_level = str(attestation_level).lower()
         if attestation_level not in ATTESTATION_LEVELS:
             raise ValueError(
-                f"Attestation level must be one of {', '.join(ATTESTATION_LEVELS)!s}"
+                f"Attestation level must be one of {', '.join(ATTESTATION_LEVELS)}"
             )
         self.attestation_level = attestation_level
 
@@ -1368,9 +1366,8 @@ class WebAuthnRegistrationResponse:
                     raise RegistrationRejectedException(str(e))
                 if alg != public_key_alg:
                     raise RegistrationRejectedException(
-                        "credentialPublicKey algorithm {0!s} does "
-                        "not match algorithm from attestation "
-                        "statement {1!s}".format(public_key_alg, alg)
+                        f"credentialPublicKey algorithm {public_key_alg} does "
+                        f"not match algorithm from attestation statement {alg}"
                     )
                 # Step 2:
                 # Verify that sig is a valid signature over the concatenation of authenticatorData
@@ -1383,7 +1380,7 @@ class WebAuthnRegistrationResponse:
                     raise RegistrationRejectedException("Invalid signature received.")
                 except NotImplementedError:  # pragma: no cover
                     log.warning(
-                        f"Unsupported algorithm ({alg!s}) for signature verification"
+                        f"Unsupported algorithm ({alg}) for signature verification"
                     )
                     # We do not support this algorithm. Treat as none attestation, if acceptable.
                     if none_attestation_permitted:
@@ -1396,7 +1393,7 @@ class WebAuthnRegistrationResponse:
                         )
                     else:
                         raise RegistrationRejectedException(
-                            f"Unsupported algorithm ({alg!s})."
+                            f"Unsupported algorithm ({alg})."
                         )
                 return (
                     ATTESTATION_TYPE.SELF_ATTESTATION,
@@ -1414,7 +1411,7 @@ class WebAuthnRegistrationResponse:
                     )
                 else:
                     raise RegistrationRejectedException(
-                        f"Unsupported authenticator attestation format ({fmt!s})!"
+                        f"Unsupported authenticator attestation format ({fmt})!"
                     )
 
             # Treat as none attestation.
@@ -2093,7 +2090,7 @@ def _load_cose_public_key(key_bytes):
 
         return alg, RSAPublicNumbers(e, n).public_key(backend=default_backend())
     else:
-        log.warning(f"Unsupported webAuthn COSE algorithm: {alg!s}")
+        log.warning(f"Unsupported webAuthn COSE algorithm: {alg}")
         raise COSEKeyException("Unsupported algorithm.")
 
 
@@ -2121,8 +2118,7 @@ def _get_trust_anchors(attestation_type, attestation_fmt, trust_anchor_dir):
         or attestation_fmt not in SUPPORTED_ATTESTATION_FORMATS
     ):
         log.debug(
-            "Unsupported attestation type ({0!s}) or attestation format "
-            "({1!s}).".format(attestation_type, attestation_fmt)
+            f"Unsupported attestation type ({attestation_type}) or attestation format ({attestation_fmt})."
         )
         return []
 
@@ -2140,9 +2136,9 @@ def _get_trust_anchors(attestation_type, attestation_fmt, trust_anchor_dir):
                         )
                         trust_anchors.append(pem)
                 except Exception as e:
-                    log.info(f"Could not load certificate {trust_anchor_path!s}: {e!s}")
+                    log.info(f"Could not load certificate {trust_anchor_path}: {e}")
     else:
-        log.debug(f"Trust anchor directory ({trust_anchor_dir!s}) not available.")
+        log.debug(f"Trust anchor directory ({trust_anchor_dir}) not available.")
 
     return trust_anchors
 

@@ -284,7 +284,7 @@ class Token(MethodsMixin, db.Model):
         self.key_enc = encrypt(otpkey, iv)
         length = len(self.key_enc)
         if length > Token.key_enc.property.columns[0].type.length:
-            log.error(f"Key {self.serial!s} exceeds database field {length:d}!")
+            log.error(f"Key {self.serial} exceeds database field {length:d}!")
         self.key_iv = hexlify_and_unicode(iv)
         self.count = 0
         if reset_failcount is True:
@@ -417,7 +417,7 @@ class Token(MethodsMixin, db.Model):
         seed_str = self._fix_spaces(self.pin_seed)
         seed = binascii.unhexlify(seed_str)
         hPin = hash(pin, seed)
-        log.debug(f"hPin: {hPin!s}, pin: {pin!r}, seed: {self.pin_seed!s}")
+        log.debug(f"hPin: {hPin}, pin: {pin!r}, seed: {self.pin_seed}")
         return hPin
 
     @log_with(log)
@@ -869,7 +869,7 @@ class Config(TimestampMethodsMixin, db.Model):
         self.Description = convert_column_to_unicode(Description)
 
     def __str__(self):
-        return f"<{self.Key!s} ({self.Type!s})>"
+        return f"<{self.Key} ({self.Type})>"
 
     def save(self):
         db.session.add(self)
@@ -1476,7 +1476,7 @@ class Challenge(MethodsMixin, db.Model):
         descr["serial"] = self.serial
         descr["data"] = self.get_data()
         if timestamp is True:
-            descr["timestamp"] = f"{self.timestamp!s}"
+            descr["timestamp"] = str(self.timestamp)
         else:
             descr["timestamp"] = self.timestamp
         descr["otp_received"] = self.received_count > 0
@@ -1487,7 +1487,7 @@ class Challenge(MethodsMixin, db.Model):
 
     def __str__(self):
         descr = self.get()
-        return f"{descr!s}"
+        return str(descr)
 
 
 def cleanup_challenges():
@@ -1839,7 +1839,7 @@ class MachineTokenOptions(db.Model):
     machinetoken = db.relationship("MachineToken", lazy="joined", backref="option_list")
 
     def __init__(self, machinetoken_id, key, value):
-        log.debug(f"setting {key!r} to {value!r} for MachineToken {machinetoken_id!s}")
+        log.debug(f"setting {key!r} to {value!r} for MachineToken {machinetoken_id}")
         self.machinetoken_id = machinetoken_id
         self.mt_key = convert_column_to_unicode(key)
         self.mt_value = convert_column_to_unicode(value)

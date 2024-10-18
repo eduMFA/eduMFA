@@ -4382,7 +4382,7 @@ class WebAuthn(MyApiTestCase):
         set_policy(
             "realm_timeout_policy",
             scope=SCOPE.AUTH,
-            action="{0!s}=42".format(WEBAUTHNACTION.TIMEOUT),
+            action=f"{WEBAUTHNACTION.TIMEOUT}=42",
             realm=self.realm1,
         )
 
