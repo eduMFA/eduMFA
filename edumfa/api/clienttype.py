@@ -22,26 +22,27 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-__doc__="""This is the audit REST API that can be used to retrieve the
+__doc__ = """This is the audit REST API that can be used to retrieve the
 eduMFA authentication clients, which used eduMFA to authenticate.
 
   GET /clients
 """
-from flask import (Blueprint, request)
-from .lib.utils import (send_result, getParam)
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from ..api.auth import admin_required
-from ..lib.policy import ACTION
-from flask import g
 import logging
+
+from flask import Blueprint, g, request
+
+from ..api.auth import admin_required
+from ..api.lib.prepolicy import check_base_action, prepolicy
 from ..lib.clientapplication import get_clientapplication
+from ..lib.policy import ACTION
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 
-client_blueprint = Blueprint('client_blueprint', __name__)
+client_blueprint = Blueprint("client_blueprint", __name__)
 
 
-@client_blueprint.route('/', methods=['GET'])
+@client_blueprint.route("/", methods=["GET"])
 @prepolicy(check_base_action, request, ACTION.CLIENTTYPE)
 def get_clients():
     """
@@ -75,6 +76,6 @@ def get_clients():
         }
     """
     clients = get_clientapplication()
-    g.audit_object.log({'success': True})
-    
+    g.audit_object.log({"success": True})
+
     return send_result(clients)

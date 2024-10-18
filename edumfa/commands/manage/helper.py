@@ -21,9 +21,9 @@ import ast
 import sys
 
 import click
-from edumfa.lib.policy import set_policy, delete_policy, PolicyClass
 
-from edumfa.lib.event import set_event, delete_event
+from edumfa.lib.event import delete_event, set_event
+from edumfa.lib.policy import PolicyClass, delete_policy, set_policy
 from edumfa.lib.resolver import get_resolver_list, save_resolver
 
 DEFAULT_CONFTYPE_LIST = ("policy", "resolver", "event")
@@ -52,7 +52,7 @@ def conf_import(file=None, conftype=None):
             conftype_list = list(contents_var.keys())
 
     for conftype in conftype_list:
-        click.echo("Importing {0!s} from {1!s}".format(conftype, file.name))
+        click.echo(f"Importing {conftype} from {file.name}")
     return contents_var
 
 
@@ -61,6 +61,7 @@ def conf_export(config, file):
     Export configurations to a file or write them to stdout if no filename is given.
     """
     import pprint
+
     pp = pprint.PrettyPrinter(indent=4)
 
     ret_str = pp.pformat(config)
@@ -68,7 +69,7 @@ def conf_export(config, file):
 
 
 def get_conf_policy(name=None):
-    """ helper function for conf_export """
+    """helper function for conf_export"""
     pol_cls = PolicyClass()
     return pol_cls.list_policies(name=name)
 
@@ -108,23 +109,37 @@ def import_conf_policy(config_list, cleanup=False, update=False, purge=False):
         exists = cls.list_policies(name=name)
         if exists:
             if not update:
-                click.echo("Policy {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(
+                    f"Policy {name!s} exists and -u is not specified, skipping import."
+                )
                 continue
             else:
                 action_str = "Updated"
-        r = set_policy(name, action=policy.get("action"), active=policy.get("active", True),
-                       adminrealm=policy.get("adminrealm"), adminuser=policy.get("adminuser"),
-                       check_all_resolvers=policy.get("check_all_resolvers", False), client=policy.get("client"),
-                       conditions=policy.get("conditions"), edumfanode=policy.get("edumfanode"),
-                       priority=policy.get("priority"), realm=policy.get("realm"), resolver=policy.get("resolver"),
-                       scope=policy.get("scope"), time=policy.get("time"), user=policy.get("user"))
-        click.echo("{0!s} policy {1!s} with result {2!s}".format(action_str, name, r))
+        r = set_policy(
+            name,
+            action=policy.get("action"),
+            active=policy.get("active", True),
+            adminrealm=policy.get("adminrealm"),
+            adminuser=policy.get("adminuser"),
+            check_all_resolvers=policy.get("check_all_resolvers", False),
+            client=policy.get("client"),
+            conditions=policy.get("conditions"),
+            edumfanode=policy.get("edumfanode"),
+            priority=policy.get("priority"),
+            realm=policy.get("realm"),
+            resolver=policy.get("resolver"),
+            scope=policy.get("scope"),
+            time=policy.get("time"),
+            user=policy.get("user"),
+        )
+        click.echo(f"{action_str!s} policy {name!s} with result {r!s}")
 
 
 # conf export menu
 def get_conf_event(name=None):
-    """ helper function for conf_export """
+    """helper function for conf_export"""
     from edumfa.lib.event import EventConfiguration
+
     event_cls = EventConfiguration()
     if name:
         conf = [e for e in event_cls.events if (e.get("name") == name)]
@@ -138,6 +153,7 @@ def import_conf_event(config_list, cleanup=False, update=False, purge=False):
     import event configuration from an event list
     """
     from edumfa.lib.event import EventConfiguration
+
     cls = EventConfiguration()
     if cleanup:
         click.echo("Cleanup old events.")
@@ -145,7 +161,7 @@ def import_conf_event(config_list, cleanup=False, update=False, purge=False):
         for event in events:
             name = event.get("name")
             r = delete_event(event.get("id"))
-            click.echo("Deleted event '{0!s}' with result {1!s}".format(name, r), file=sys.stderr)
+            click.echo(f"Deleted event '{name!s}' with result {r!s}", file=sys.stderr)
 
     if purge:
         if cleanup:
@@ -158,7 +174,11 @@ def import_conf_event(config_list, cleanup=False, update=False, purge=False):
             for stored in stored_names:
                 if stored not in import_names:
                     try:
-                        r = delete_event([e for e in cls.events if (stored == e.get("name"))][0].get("id"))
+                        r = delete_event(
+                            [e for e in cls.events if (stored == e.get("name"))][0].get(
+                                "id"
+                            )
+                        )
                         click.echo(f"Purged event {stored!s} with result {r!s}")
                     except Exception as ex:
                         click.echo(f"Purged event {stored!s} failed with error {ex}")
@@ -176,14 +196,25 @@ def import_conf_event(config_list, cleanup=False, update=False, purge=False):
             event_id = None
         if exists:
             if not update:
-                click.echo("Event {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(
+                    f"Event {name!s} exists and -u is not specified, skipping import."
+                )
                 continue
             else:
                 action_str = "Updated"
-        r = set_event(name, event.get("event"), event.get("handlermodule"), event.get("action"),
-                      conditions=event.get("conditions"), ordering=event.get("ordering"), options=event.get("options"),
-                      active=event.get("active"), position=event.get("position", "post"), id=event_id)
-        click.echo("{0!s} event {1!s} with result {2!s}".format(action_str, name, r))
+        r = set_event(
+            name,
+            event.get("event"),
+            event.get("handlermodule"),
+            event.get("action"),
+            conditions=event.get("conditions"),
+            ordering=event.get("ordering"),
+            options=event.get("options"),
+            active=event.get("active"),
+            position=event.get("position", "post"),
+            id=event_id,
+        )
+        click.echo(f"{action_str!s} event {name!s} with result {r!s}")
 
 
 def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
@@ -200,7 +231,9 @@ def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
         exists = get_resolver_list(filter_resolver_name=name)
         if exists:
             if not update:
-                click.echo("Resolver {0!s} exists and -u is not specified, skipping import.".format(name))
+                click.echo(
+                    f"Resolver {name!s} exists and -u is not specified, skipping import."
+                )
                 continue
             else:
                 action_str = "Updated"
@@ -208,15 +241,18 @@ def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
         resolvertype = config.get("type")
         data = config.get("data")
         # now we can create the resolver
-        params = {'resolver': name, 'type': resolvertype}
+        params = {"resolver": name, "type": resolvertype}
         for key in data.keys():
             params.update({key: data.get(key)})
         r = save_resolver(params)
-        click.echo("{0!s} resolver {1!s} with result {2!s}".format(action_str, name, r))
+        click.echo(f"{action_str!s} resolver {name!s} with result {r!s}")
 
 
 def get_conf_resolver(name=None, print_passwords=False):
-    """ helper function for conf_export """
+    """helper function for conf_export"""
     from edumfa.lib.resolver import get_resolver_list
-    resolver_dict = get_resolver_list(filter_resolver_name=name, censor=not print_passwords)
+
+    resolver_dict = get_resolver_list(
+        filter_resolver_name=name, censor=not print_passwords
+    )
     return list(resolver_dict.values())
