@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import eduMFA.lib.caconnectors.caservice_pb2 as caservice__pb2
+import edumfa.lib.caconnectors.caservice_pb2 as caservice__pb2
 
 
 class CAServiceStub:
