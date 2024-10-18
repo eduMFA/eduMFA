@@ -72,6 +72,14 @@ from edumfa.lib.tokenclass import (
     TokenClass,
 )
 from edumfa.lib.user import User
+from edumfa.lib.utils import (
+    b32encode_and_unicode,
+    create_img,
+    is_true,
+    prepare_result,
+    to_bytes,
+)
+from edumfa.models import Challenge, db
 
 log = logging.getLogger(__name__)
 

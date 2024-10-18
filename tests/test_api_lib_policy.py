@@ -80,6 +80,7 @@ from edumfa.api.lib.prepolicy import (
     webauthntoken_enroll,
     webauthntoken_request,
 )
+from edumfa.lib.auth import ROLE
 from edumfa.lib.config import SYSCONF, set_edumfa_config
 from edumfa.lib.error import PolicyError, RegistrationError, ValidateError
 from edumfa.lib.machine import attach_token
