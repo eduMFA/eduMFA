@@ -89,6 +89,8 @@ from edumfa.api.lib.prepolicy import (
     webauthntoken_authz,
     webauthntoken_request,
 )
+from edumfa.api.lib.utils import get_all_params
+from edumfa.api.recover import recover_blueprint
 from edumfa.api.register import register_blueprint
 from edumfa.lib.applications.offline import MachineApplication
 from edumfa.lib.audit import getAudit
