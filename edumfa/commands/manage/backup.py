@@ -190,7 +190,27 @@ def restore(backup_file: str):
 @click.option(
     "-e", "--enckey", is_flag=True, help="Add the encryption key to the backup"
 )
-def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = False):
+@click.option(
+    "-l",
+    "--lock_table_strategy",
+    type=click.Choice(["LAT", "ST", "SLT"], case_sensitive=False),
+    help="""
+                Set the strategy for how to lock tables (only needed for mariadb galera cluster).
+                Options are:\n
+                LAT: Lock ALL tables in ALL databases! (not recommended for productive instances or
+                if the cluster has more databases than just edumfa; requires at least RELOAD privilege);\n
+                ST: Single transaction (only for InnoDB);\n
+                SLT: Skip lock tables (may lead to inconsistent dumps)
+                """,
+    default=None,
+)
+def create(
+    target_dir: str,
+    config_dir: str,
+    radius_dir=None,
+    enckey: bool = False,
+    lock_table_strategy: str = None,
+):
     """
     Create a new backup of the database and the configuration. The default
     does not include the encryption key. Use the 'enckey' option to also
@@ -199,6 +219,11 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
 
     If you want to also include the RADIUS configuration into the backup
     specify a directory using 'radius_directory'.
+
+    MariaDB Galera cluster currently does not support the LOCK TABLE option
+    causing the backup to fail. Therefore when using galera a different lock
+    table strategy needs to be set via the '-l' option.
+    Please read option documentation and choose your option carefully!
     """
     CONF_DIR = config_dir
     DATE = datetime.now().strftime("%Y%m%d-%H%M")
@@ -239,6 +264,13 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
         if parsed_sqluri.port:
             cmd.extend(["-P", str(parsed_sqluri.port)])
         cmd.extend(["-B", shlex_quote(database), "-r", shlex_quote(sqlfile)])
+        if lock_table_strategy:
+            if lock_table_strategy.upper() == "LAT":
+                cmd.append("--lock-all-tables")
+            elif lock_table_strategy.upper() == "ST":
+                cmd.append("--single-transaction")
+            elif lock_table_strategy.upper() == "SLT":
+                cmd.append("--skip-lock-tables")
         call(cmd, shell=False)
     elif sqltype in PSQL_DIALECTS:
         env = os.environ.copy()
