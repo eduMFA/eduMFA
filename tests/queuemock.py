@@ -21,10 +21,9 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from edumfa.lib.queue import get_job_queue
 from edumfa.config import TestingConfig
+from edumfa.lib.queue import get_job_queue
 from edumfa.lib.queues.base import BaseQueue, QueueError
-
 from tests.base import OverrideConfigTestCase
 
 
@@ -32,6 +31,7 @@ class FakeQueue(BaseQueue):
     """
     A queue class that keeps track of enqueued jobs, for usage in unit tests.
     """
+
     def __init__(self, options):
         BaseQueue.__init__(self, options)
         self._jobs = {}
@@ -46,12 +46,12 @@ class FakeQueue(BaseQueue):
 
     def register_job(self, name, func):
         if name in self._jobs:
-            raise QueueError("Job {!r} already exists".format(name))
+            raise QueueError(f"Job {name!r} already exists")
         self._jobs[name] = func
 
     def enqueue(self, name, args, kwargs):
         if name not in self._jobs:
-            raise QueueError("Unknown job: {!r}".format(name))
+            raise QueueError(f"Unknown job: {name!r}")
         self.enqueued_jobs.append((name, args, kwargs))
         self._jobs[name](*args, **kwargs)
 
@@ -66,6 +66,7 @@ class MockQueueTestCase(OverrideConfigTestCase):
 
     The ``enqueued_jobs`` attribute is reset for each test case.
     """
+
     class Config(TestingConfig):
         EDUMFA_JOB_QUEUE_CLASS = "tests.queuemock.FakeQueue"
 

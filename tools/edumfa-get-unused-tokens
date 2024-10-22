@@ -48,12 +48,13 @@ You can call the script like this:
 """
 __version__ = "0.1"
 
-from edumfa.lib.token import get_tokens, remove_token, enable_token
-from edumfa.lib.policy import ACTION
-from edumfa.app import create_app
 import click
-from flask.cli import FlaskGroup
 from flask import current_app as app
+from flask.cli import FlaskGroup
+
+from edumfa.app import create_app
+from edumfa.lib.policy import ACTION
+from edumfa.lib.token import enable_token, get_tokens, remove_token
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 

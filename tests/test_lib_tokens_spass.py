@@ -3,9 +3,10 @@ This test file tests the lib.tokens.spasstoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
 from edumfa.lib.tokens.spasstoken import SpassTokenClass
 from edumfa.models import Token
+
+from .base import MyTestCase
 
 
 class SpassTokenTestCase(MyTestCase):
@@ -14,7 +15,7 @@ class SpassTokenTestCase(MyTestCase):
     serial1 = "ser1"
 
     # add_user, get_user, reset, set_user_identifiers
-    
+
     def test_01_create_token(self):
         db_token = Token(self.serial1, tokentype="spass")
         db_token.save()
