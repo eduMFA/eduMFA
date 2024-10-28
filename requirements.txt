@@ -36,7 +36,7 @@ click==8.1.7
     # via flask
 configobj==5.0.9
     # via edumfa (setup.py)
-croniter==3.0.3
+croniter==4.0.0
     # via edumfa (setup.py)
 cryptography==43.0.3
     # via
