@@ -618,6 +618,11 @@ class PushTokenClass(TokenClass):
             extra_data["serial"] = self.get_serial()
             extra_data["sslverify"] = sslverify
 
+            if user:
+               extra_data['user']=user.login
+            if params.get('realm'):
+               extra_data['realm'] = params.get('realm')
+               
             # enforce App pin
             if params.get(ACTION.FORCE_APP_PIN):
                 extra_data.update({'pin': True})
