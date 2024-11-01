@@ -33,7 +33,7 @@ jobs:
         run: |
           mv deploy/ubuntu debian
           if [ "${{ matrix.os }}" == "ubuntu-20.04" ]; then
-            sed -i "s/python3-all/python3.9/g" debian/changelog
+            sed -i "s/python3-all/python3.9/g" debian/control
           fi
           sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
