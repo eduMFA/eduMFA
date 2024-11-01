@@ -10,7 +10,7 @@ argon2-cffi==23.1.0
     # via edumfa (setup.py)
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
-async-timeout==4.0.3
+async-timeout==5.0.0
     # via redis
 babel==2.16.0
     # via flask-babel
@@ -36,7 +36,7 @@ click==8.1.7
     # via flask
 configobj==5.0.9
     # via edumfa (setup.py)
-croniter==3.0.3
+croniter==5.0.1
     # via edumfa (setup.py)
 cryptography==43.0.3
     # via
@@ -61,7 +61,7 @@ flask-sqlalchemy==3.1.1
     #   flask-migrate
 google-auth==2.35.0
     # via edumfa (setup.py)
-grpcio==1.67.0
+grpcio==1.67.1
     # via edumfa (setup.py)
 huey==2.5.2
     # via edumfa (setup.py)
@@ -123,7 +123,7 @@ pytz==2024.2
     # via flask-babel
 pyyaml==6.0.2
     # via edumfa (setup.py)
-redis==5.1.1
+redis==5.2.0
     # via huey
 requests==2.32.3
     # via edumfa (setup.py)
@@ -155,11 +155,12 @@ urllib3==2.2.3
     # via
     #   edumfa (setup.py)
     #   requests
-werkzeug==3.0.4
+werkzeug==3.0.6; python_version<'3.9'
+werkzeug==3.1.0; python_version>='3.9'
     # via flask
 zipp==3.20.2
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==75.2.0
+setuptools==75.3.0
     # via flask-versioned

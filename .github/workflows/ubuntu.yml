@@ -5,14 +5,26 @@ on:
     types: [released]
 
 jobs:
-  build-noble:
-    name: Ubuntu 24.04 LTS build
-    runs-on: ubuntu-24.04
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            codename: noble
+          - os: ubuntu-22.04
+            codename: jammy
+          - os: ubuntu-20.04
+            codename: focal
+    name: Build for ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install dependencies
         run: |
+          if [ "${{ matrix.os }}" == "ubuntu-20.04" ]; then
+            sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+          fi
           sudo apt update
           sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
       - name: Build core package
@@ -20,120 +32,30 @@ jobs:
           DH_VIRTUALENV_INSTALL_ROOT: /opt
         run: |
           mv deploy/ubuntu debian
-          sed -i 's/{{CODENAME}}/noble/g' debian/changelog
+          sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b --source-option=-Sa
           rm -r debian
-      - name: Build server packages
+      - name: Build server package
         run: |
           mv deploy/ubuntu-server debian
-          sed -i 's/{{CODENAME}}/noble/g' debian/changelog
+          sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
-      - name: Build radius packages
+      - name: Build radius package
         run: |
           mv deploy/ubuntu-radius debian
-          sed -i 's/{{CODENAME}}/noble/g' debian/changelog
+          sed -i 's/{{CODENAME}}/${{ matrix.codename }}/g' debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Upload packages to Nexus
+        if: github.event_name == 'release'
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        # Only upload if it is a release
-        if: github.event_name == 'release'
         run: |
           for deb_file in $(ls ../*.deb); do
-            curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-noble/"
-          done
-
-  build-jammy:
-    name: Ubuntu 22.04 LTS build
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
-      - name: Build core package
-        env:
-          DH_VIRTUALENV_INSTALL_ROOT: /opt
-        run: |
-          mv deploy/ubuntu debian
-          sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
-          sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b --source-option=-Sa
-          rm -r debian
-      - name: Build server packages
-        run: |
-          mv deploy/ubuntu-server debian
-          sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
-          sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b
-          rm -r debian
-      - name: Build radius packages
-        run: |
-          mv deploy/ubuntu-radius debian
-          sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
-          sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b
-          rm -r debian
-      - name: Upload packages to Nexus
-        env:
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        # Only upload if it is a release
-        if: github.event_name == 'release'
-        run: |
-          for deb_file in $(ls ../*.deb); do
-            curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy/"
-          done
-
-  build-focal:
-    name: Ubuntu 20.04 LTS build
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
-          sudo apt update
-          sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
-      - name: Build core package
-        env:
-          DH_VIRTUALENV_INSTALL_ROOT: /opt
-        run: |
-          mv deploy/ubuntu debian
-          sed -i 's/{{CODENAME}}/focal/g' debian/changelog
-          sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b
-          rm -r debian
-      - name: Build server packages
-        run: |
-          mv deploy/ubuntu-server debian
-          sed -i 's/{{CODENAME}}/focal/g' debian/changelog
-          sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b
-          rm -r debian
-      - name: Build radius packages
-        run: |
-          mv deploy/ubuntu-radius debian
-          sed -i 's/{{CODENAME}}/focal/g' debian/changelog
-          sudo mk-build-deps -ri
-          dpkg-buildpackage -us -uc -b
-          rm -r debian
-      - name: Upload packages to Nexus
-        env:
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-        # Only upload if it is a release
-        if: github.event_name == 'release'
-        run: |
-          for deb_file in $(ls ../*.deb); do
-            curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal/"
+            curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-${{ matrix.codename }}/"
           done
