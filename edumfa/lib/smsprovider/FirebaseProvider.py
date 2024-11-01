@@ -144,18 +144,14 @@ class FirebaseProvider(ISMSProvider):
                                                                "body": data.get("question"),
                                                               },
                                                      "sound": "default",
-                                                     "category": "PUSH_AUTHENTICATION"
+                                                     "category": "PUSH_AUTHENTICATION",
+                                                     "content-available" : 1
                                                     },
                                             },
                                  "fcm_options": {"analytics_label": "iOSPushToken"}
                                 }
                        }
             }
-        
-        # This option is removed from the data as it's onlt usefil on the "aps" payload
-        if "content-available" in data and data['content-available']:
-            fcm_message["message"]["apns"]["payload"]["aps"]["content-available"] = 1
-            del fcm_message["message"]["data"]["content-available"]
 
         proxies = {}
         if self.smsgateway.option_dict.get(FIREBASE_CONFIG.HTTPS_PROXY):
