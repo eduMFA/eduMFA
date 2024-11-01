@@ -7,3 +7,4 @@ python_test:
   - 'edumfa-manage'
   - 'requirements.txt'
   - 'setup.py'
+  - 'pyproject.toml'

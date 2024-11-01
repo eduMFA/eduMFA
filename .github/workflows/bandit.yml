@@ -25,6 +25,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate          
+          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
       - name: Bandit Scan
         uses: shundor/python-bandit-scan@v1.0
         with: # optional arguments

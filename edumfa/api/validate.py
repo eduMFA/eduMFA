@@ -73,7 +73,7 @@ from edumfa.api.lib.prepolicy import (prepolicy, set_realm,
                                            api_key_required, mangle,
                                            save_client_application_type,
                                            check_base_action, pushtoken_wait, webauthntoken_auth, webauthntoken_authz,
-                                           webauthntoken_request, check_application_tokentype,
+                                           webauthntoken_request,
                                            increase_failcounter_on_challenge, legacypushtoken_wait)
 from edumfa.api.lib.postpolicy import (postpolicy,
                                             check_tokentype, check_serial,
@@ -203,7 +203,6 @@ def offlinerefill():
 @postpolicy(check_serial, request=request)
 @postpolicy(autoassign, request=request)
 @add_serial_from_response_to_g
-@prepolicy(check_application_tokentype, request=request)
 @prepolicy(pushtoken_wait, request=request)
 @prepolicy(legacypushtoken_wait, request=request)
 @prepolicy(set_realm, request=request)
@@ -239,7 +238,7 @@ def check():
     :param realm: The realm of the user, who tries to authenticate. If the
         realm is omitted, the user is looked up in the default realm.
     :param type: The tokentype of the tokens, that are taken into account during
-        authentication. Requires the *authz* policy :ref:`application_tokentype_policy`.
+        authentication.
         It is ignored when a distinct serial is given.
     :param pass: The password, that consists of the OTP PIN and the OTP value.
     :param otponly: If set to 1, only the OTP value is verified. This is used
@@ -447,7 +446,6 @@ def check():
 @postpolicy(preferred_client_mode, request=request)
 @add_serial_from_response_to_g
 @check_user_or_serial_in_request(request)
-@prepolicy(check_application_tokentype, request=request)
 @prepolicy(increase_failcounter_on_challenge, request=request)
 @prepolicy(check_base_action, request, action=ACTION.TRIGGERCHALLENGE)
 @prepolicy(webauthntoken_request, request=request)
@@ -468,7 +466,7 @@ def trigger_challenge():
         realm is omitted, the user is looked up in the default realm.
     :param serial: The serial number of the token.
     :param type: The tokentype of the tokens, that are taken into account during
-        authentication. Requires authz policy application_tokentype.
+        authentication.
         Is ignored when a distinct serial is given.
 
     :return: a json result with a "result" of the number of matching
