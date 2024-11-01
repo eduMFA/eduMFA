@@ -32,6 +32,9 @@ jobs:
           DH_VIRTUALENV_INSTALL_ROOT: /opt
         run: |
           mv deploy/ubuntu debian
+          if [ "${{ matrix.os }}" == "ubuntu-20.04" ]; then
+            sed -i "s/python3-all/python3.9/g" debian/changelog
+          fi
           sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b --source-option=-Sa
