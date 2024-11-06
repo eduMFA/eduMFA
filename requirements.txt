@@ -4,7 +4,7 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements.txt --strip-extras
 #
-alembic==1.13.3
+alembic==1.14.0
     # via flask-migrate
 argon2-cffi==23.1.0
     # via edumfa (setup.py)
@@ -103,7 +103,7 @@ pyasn1-modules==0.4.1
     # via google-auth
 pycparser==2.22
     # via cffi
-pydash==8.0.3
+pydash==8.0.4
     # via edumfa (setup.py)
 pyjwt==2.9.0
     # via edumfa (setup.py)
