@@ -36,6 +36,7 @@ returns -1.
 
 import logging
 import datetime
+from edumfa.lib.config import get_from_config
 from edumfa.lib.tokenclass import TokenClass, AUTHENTICATIONMODE
 from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
 from edumfa.lib.crypto import urandom, safe_compare
@@ -210,7 +211,7 @@ class IndexedSecretTokenClass(TokenClass):
                                                                 options) or DEFAULT_POSITION_COUNT)
 
         attributes = {'state': transactionid}
-        validity = 120
+        validity = int(get_from_config('DefaultChallengeValidityTime', 120))
 
         if self.is_active() is True:
             # We need to get a number of random positions from the secret string
