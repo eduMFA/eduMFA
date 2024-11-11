@@ -163,5 +163,5 @@ zipp==3.20.2
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==75.3.0
+setuptools==75.4.0
     # via flask-versioned
