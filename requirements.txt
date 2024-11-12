@@ -18,7 +18,7 @@ bcrypt==4.2.0
     # via passlib
 beautifulsoup4==4.12.3
     # via edumfa (setup.py)
-blinker==1.8.2; python_version<'3.9'
+blinker==1.9.0; python_version<'3.9'
 blinker==1.9.0; python_version>='3.9'
     # via flask
 cachetools==5.5.0
