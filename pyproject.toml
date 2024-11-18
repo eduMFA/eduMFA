@@ -59,7 +59,7 @@ docs = [
 test = [
     "attrs==24.2.0",
     "coverage==7.6.1; python_version<'3.9'",
-    "coverage==7.6.5; python_version>='3.9'",
+    "coverage==7.6.7; python_version>='3.9'",
     "exceptiongroup==1.2.2",
     "iniconfig==2.0.0",
     "mock==5.1.0",
