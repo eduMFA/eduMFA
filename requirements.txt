@@ -44,7 +44,8 @@ cryptography==43.0.3
     #   pyopenssl
 defusedxml==0.7.1
     # via edumfa (setup.py)
-flask==3.0.3
+flask==3.0.3; python_version<'3.9'
+flask==3.1.0; python_version>='3.9'
     # via
     #   edumfa (setup.py)
     #   flask-babel
@@ -61,7 +62,7 @@ flask-sqlalchemy==3.1.1
     #   flask-migrate
 google-auth==2.36.0
     # via edumfa (setup.py)
-grpcio==1.67.1
+grpcio==1.68.0
     # via edumfa (setup.py)
 huey==2.5.2
     # via edumfa (setup.py)
@@ -105,7 +106,8 @@ pycparser==2.22
     # via cffi
 pydash==8.0.4
     # via edumfa (setup.py)
-pyjwt==2.9.0
+pyjwt==2.9.0; python_version<'3.9'
+pyjwt==2.10.0; python_version>='3.9'
     # via edumfa (setup.py)
 pymysql==1.1.1
     # via edumfa (setup.py)
@@ -161,5 +163,5 @@ zipp==3.21.0
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==75.4.0
+setuptools==75.5.0
     # via flask-versioned
