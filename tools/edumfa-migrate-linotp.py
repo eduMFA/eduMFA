@@ -45,7 +45,7 @@ The NEW_TOKENINFO section can set any arbitrary tokeninfo for the
 migrated tokens.
 """
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.sql import select
 from sqlalchemy.schema import ForeignKey, Sequence
 from sqlalchemy import (Table, MetaData, Column, Integer, Unicode, Boolean,
@@ -318,12 +318,13 @@ def migrate(config_obj):
     edumfa_engine = create_engine(config_obj.EDUMFA_URI)
 
     linotp_session = sessionmaker(bind=linotp_engine)()
-    edumfa_session = sessionmaker(bind=edumfa_engine)()
+    edumfa_session = Session(edumfa_engine)
+    edumfa_session.begin()
 
     conn_linotp = linotp_engine.connect()
     conn_pi = edumfa_engine.connect()
 
-    def insert_chunks(conn, table, values, chunk_size=100000, record_name="records"):
+    def insert_chunks(sess, conn, table, values, chunk_size=100000, record_name="records"):
         """
         Split **values** into chunks of size **chunk_size** and insert them sequentially.
         """
@@ -332,7 +333,8 @@ def migrate(config_obj):
             print('Insert {} {} to {} ...'.format(record_name, chunk,
                                                   min(chunk + chunk_size, values_length) - 1))
             try:
-                conn.execute(table.insert(), values[chunk:chunk+chunk_size])
+                sess.execute(table.insert(), values[chunk:chunk+chunk_size])
+                sess.commit()
             except Exception as err:
                 t = 'Failed to insert chunk: {0!s}'.format(err)
                 warnings.append(t)
@@ -348,14 +350,14 @@ def migrate(config_obj):
 
     # Process Assignments in table "tokenrealm"
     if config_obj.MIGRATE.get("assignments"):
-        s = select([realm_table])
+        s = select(realm_table)
         result = conn_pi.execute(s)
-        for r in result:
+        for r in result.mappings():
             realm_id_map[r["name"]] = r["id"]
 
-        s = select([resolver_table])
+        s = select(resolver_table)
         result = conn_pi.execute(s)
-        for r in result:
+        for r in result.mappings():
             resolver_id_map[r["name"]] = r["id"]
 
         print("Realm-Map: {}".format(realm_id_map))
@@ -364,11 +366,11 @@ def migrate(config_obj):
     # Process Tokens
 
     if config_obj.MIGRATE.get("tokens"):
-        s = select([linotp_token_table])
+        s = select(linotp_token_table)
         result = conn_linotp.execute(s)
 
         i = 0
-        for r in result:
+        for r in result.mappings():
             i = i + 1
             print("processing token #{1!s}: {0!s}".format(r["LinOtpTokenSerialnumber"], i))
             # Adapt type
@@ -412,7 +414,7 @@ def migrate(config_obj):
 
             key_enc = r['LinOtpKeyEnc']
             key_iv = r['LinOtpKeyIV']
-            if config_obj.REENCRYPT:
+            if config_obj.REENCRYPT and key_enc != "" and key_iv != "":
                 print(" +--- reencrypting token...")
                 key_enc, key_iv = reencrypt(key_enc, key_iv,
                                             config_obj.LINOTP_ENC_KEY,
@@ -462,15 +464,15 @@ def migrate(config_obj):
         print()
         print("Adding {} tokens...".format(len(token_values)))
         # Insert into database without the user_id
-        insert_chunks(conn_pi, token_table,
+        insert_chunks(edumfa_session, conn_pi, token_table,
                       [dict_without_keys(d, ["user_id", "resolver"]) for d in token_values],
                       config_obj.INSERT_CHUNK_SIZE, record_name="token records")
 
         # fetch the new token_id's in eduMFA and write them to the
         # token serial id map.
-        s = select([token_table])
+        s = select(token_table)
         result = conn_pi.execute(s)
-        for r in result:
+        for r in result.mappings():
             token_serial_id_map[r["serial"]] = r["id"]
 
         # rewrite the id's in the token_values list
@@ -484,7 +486,7 @@ def migrate(config_obj):
                 del ti["serial"]
 
             print("Adding {} token infos...".format(len(tokeninfo_values)))
-            insert_chunks(conn_pi, tokeninfo_table, tokeninfo_values,
+            insert_chunks(edumfa_session, conn_pi, tokeninfo_table, tokeninfo_values,
                           config_obj.INSERT_CHUNK_SIZE, "tokeninfo records")
 
     if config_obj.MIGRATE.get("assignments"):
@@ -517,12 +519,14 @@ def migrate(config_obj):
                                                       realm_id=realm_id))
 
         print("Adding {} tokenrealms...".format(len(tokenrealm_values)))
-        insert_chunks(conn_pi, tokenrealm_table, tokenrealm_values,
+        insert_chunks(edumfa_session, conn_pi, tokenrealm_table, tokenrealm_values,
                       config_obj.INSERT_CHUNK_SIZE, record_name="tokenrealm records")
 
         print("Adding {} tokenowners...".format(len(tokenowner_values)))
-        insert_chunks(conn_pi, tokenowner_table, tokenowner_values,
+        insert_chunks(edumfa_session, conn_pi, tokenowner_table, tokenowner_values,
                       config_obj.INSERT_CHUNK_SIZE, record_name="tokenowner records")
+    
+    edumfa_session.close()
 
     if warnings:
         print("We need to inform you about the following WARNINGS:")
