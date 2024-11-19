@@ -14,7 +14,7 @@ async-timeout==5.0.1
     # via redis
 babel==2.16.0
     # via flask-babel
-bcrypt==4.2.0
+bcrypt==4.2.1
     # via passlib
 beautifulsoup4==4.12.3
     # via edumfa (setup.py)
