@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -164,9 +163,7 @@ def create(name, scope, action, filename):
 
             if params.get("action") and params.get("action") != action:
                 click.echo(
-                    "Found action in file: '{0!s}', will use that instead of: '{1!s}'.".format(
-                        params.get("action"), action
-                    )
+                    f"Found action in file: '{params.get('action')}', will use that instead of: '{action}'."
                 )
             else:
                 click.echo(

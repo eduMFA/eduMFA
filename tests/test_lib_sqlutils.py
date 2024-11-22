@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
-
 """
 This file contains the tests for lib/sqlutils.py
 """
+
 import warnings
 from datetime import datetime
+from unittest.mock import MagicMock
 
-from mock import MagicMock
 from sqlalchemy.testing import AssertsCompiledSQL
 
 from edumfa.lib.sqlutils import DeleteLimit, delete_matching_rows

@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
-
 """
 This file tests:
 
 lib/eventhandler/logging.py
 """
+
 from datetime import datetime
+from unittest import mock
 
 from flask import Request
-from mock import mock
 from testfixtures import log_capture
 from werkzeug.test import EnvironBuilder
 

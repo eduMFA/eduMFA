@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -62,8 +61,8 @@ import os
 import struct
 import unittest
 from copy import copy
+from unittest.mock import patch
 
-from mock import patch
 from testfixtures import log_capture
 
 from edumfa.lib.challenge import get_challenges
@@ -475,8 +474,7 @@ class WebAuthnTokenTestCase(MyTestCase):
             (
                 "edumfa.lib.tokens.webauthntoken",
                 "WARNING",
-                "Checking response for token {0!s} failed. HTTP Origin header "
-                "missing.".format(self.token.get_serial()),
+                f"Checking response for token {self.token.get_serial()} failed. HTTP Origin header missing.",
             )
         )
 
@@ -1024,12 +1022,8 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                WEBAUTHNACTION.RELYING_PARTY_NAME,
-                self.rp_name,
-                WEBAUTHNACTION.RELYING_PARTY_ID,
-                self.rp_id,
-            ),
+            action=f"{WEBAUTHNACTION.RELYING_PARTY_NAME}={self.rp_name},"
+            f"{WEBAUTHNACTION.RELYING_PARTY_ID}={self.rp_id}",
         )
         set_edumfa_config(WEBAUTHNCONFIG.APP_ID, self.app_id)
         self.user = User(login="hans", realm=self.realm1, resolver=self.resolvername1)

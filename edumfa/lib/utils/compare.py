@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -72,9 +71,7 @@ def parse_comma_separated_string(input_string):
         )
         rows = list(reader)
     except csv.Error as exx:
-        raise CompareError(
-            "Malformed comma-separated value: {!r}".format(input_string, exx)
-        )
+        raise CompareError(f"Malformed comma-separated value: {input_string!r}")
     return rows[0]
 
 

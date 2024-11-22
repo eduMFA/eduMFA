@@ -1,15 +1,15 @@
-# -*- coding: utf-8 -*-
 """
 This tests the files
   lib/audit.py and
   lib/auditmodules/sqlaudit.py
 """
+
 import datetime
 import os
 import types
+from unittest import mock
 
 import sqlalchemy.engine
-from mock import mock
 from testfixtures import log_capture
 
 from edumfa.config import TestingConfig

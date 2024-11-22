@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import unittest
+from unittest import mock
 
-import mock
 from sqlalchemy.orm.session import close_all_sessions
 
 from edumfa.app import create_app
@@ -281,5 +279,5 @@ class MyApiTestCase(MyTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(MyApiTestCase, cls).setUpClass()
+        super().setUpClass()
         cls.cls_auth(cls.app)

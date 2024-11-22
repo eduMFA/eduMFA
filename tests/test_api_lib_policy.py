@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the api.lib.policy.py
 
 The api.lib.policy.py depends on lib.policy and on flask!
 """
+
 import json
 import logging
 from datetime import datetime, timedelta
@@ -990,14 +990,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.USER,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
         )
         g.policy_object = PolicyClass()
 
@@ -1080,14 +1073,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
             realm="home",
         )
         g.policy_object = PolicyClass()
@@ -1170,14 +1156,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
             realm="home",
         )
 
@@ -1185,14 +1164,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                "spass_otp_pin_maxlength",
-                "11",
-                "spass_otp_pin_minlength",
-                "8",
-                "spass_otp_pin_contents",
-                "n",
-            ),
+            action=f"spass_otp_pin_maxlength=11,spass_otp_pin_minlength=8,spass_otp_pin_contents=n",
             realm="home",
         )
         g.policy_object = PolicyClass()
@@ -1427,7 +1399,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="email1",
             scope=SCOPE.REGISTER,
-            action=r"{0!s}=/.*@mydomain\..*".format(ACTION.REQUIREDEMAIL),
+            action=rf"{ACTION.REQUIREDEMAIL!s}=/.*@mydomain\..*",
         )
         g.policy_object = PolicyClass()
         # request, that matches the policy
@@ -1888,13 +1860,9 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="push_pol",
             scope=SCOPE.ENROLL,
-            action="{0!s}=some-fb-config,"
-            "{1!s}=https://edumfa.io/enroll,"
-            "{2!s}=10".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}=some-fb-config,"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}=https://edumfa.io/enroll,"
+            f"{PushTokenClass.PUSH_ACTION.TTL}=10",
         )
         g.policy_object = PolicyClass()
         req.all_data = {"type": "edupush"}
@@ -1960,13 +1928,9 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="push_pol",
             scope=SCOPE.ENROLL,
-            action="{0!s}=some-fb-config,"
-            "{1!s}=https://edumfa.io/enroll,"
-            "{2!s}=10".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}=some-fb-config,"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}=https://edumfa.io/enroll,"
+            f"{LegacyPushTokenClass.PUSH_ACTION.TTL}=10",
         )
         g.policy_object = PolicyClass()
         req.all_data = {"type": "push"}
@@ -3488,26 +3452,17 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="ca",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                CERTIFICATE_ACTION.CA_CONNECTOR,
-                "caconnector",
-                CERTIFICATE_ACTION.CERTIFICATE_TEMPLATE,
-                "catemplate",
-            ),
+            action=f"{CERTIFICATE_ACTION.CA_CONNECTOR}=caconnector,{CERTIFICATE_ACTION.CERTIFICATE_TEMPLATE}=catemplate",
         )
         set_policy(
             name="sub1",
             scope=SCOPE.ENROLL,
-            action="{0!s}=email".format(
-                CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT
-            ),
+            action=f"{CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT}=email",
         )
         set_policy(
             name="sub2",
             scope=SCOPE.ENROLL,
-            action="{0!s}=email realm".format(
-                CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT
-            ),
+            action=f"{CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT}=email realm",
         )
         # request, that matches the policy
         req.all_data = {

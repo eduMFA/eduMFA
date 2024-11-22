@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 from base64 import b32decode, b32encode
 from datetime import datetime, timedelta
+from unittest import mock
 
-import mock
 import responses
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
@@ -187,14 +186,9 @@ class TtypePushAPITestCase(MyApiTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
 
         # 1st step
@@ -359,9 +353,7 @@ class TtypePushAPITestCase(MyApiTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
 
         # first create a signature
@@ -413,16 +405,10 @@ class TtypePushAPITestCase(MyApiTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                POLL_ONLY,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={POLL_ONLY},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
 
         # 1st step
@@ -598,14 +584,9 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
 
         # 1st step
@@ -770,9 +751,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
 
         # first create a signature
@@ -824,14 +803,9 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                POLL_ONLY,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={POLL_ONLY},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
 
         # 1st step

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -699,7 +698,7 @@ class WebAuthnAssertionOptions:
                 if not user.rp_id:
                     raise ValueError("user must have a rp_id.")
 
-            if len(set([u.rp_id for u in self.webauthn_users])) != 1:
+            if len({u.rp_id for u in self.webauthn_users}) != 1:
                 raise ValueError("all users must have the same rp_id.")
             self.rp_id = self.webauthn_users[0].rp_id
 

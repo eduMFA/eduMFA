@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -54,7 +53,7 @@ class HTTPResolver(UserIdResolver):
     }
 
     def __init__(self):
-        super(HTTPResolver, self).__init__()
+        super().__init__()
         self.config = {}
 
     @staticmethod

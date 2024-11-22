@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 2017-12-27 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 
@@ -20,8 +19,8 @@ limitations under the License.
 
 from collections import namedtuple
 from collections.abc import Sequence, Sized
+from unittest.mock import Mock
 
-from mock import Mock
 from smpplib.exceptions import ConnectionError
 
 from .smtpmock import get_wrapped
@@ -127,7 +126,7 @@ class SmppMock:
         return SubmitSMMock
 
     def start(self):
-        import mock
+        from unittest import mock
 
         def unbound_on_init(SMPP, host, port):
             return self._on_init(SMPP, host, port)

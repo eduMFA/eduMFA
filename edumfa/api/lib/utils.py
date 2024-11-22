@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -300,9 +299,7 @@ def get_all_params(request):
     return_param = {}
     if param:
         log.debug(
-            "Update params in request {0!s} {1!s} with values.".format(
-                request.method, request.base_url
-            )
+            f"Update params in request {request.method} {request.base_url} with values."
         )
         # Add the unquoted HTML and form parameters
         return_param = check_unquote(request, request.values)
@@ -312,9 +309,7 @@ def get_all_params(request):
 
     if request.is_json:
         log.debug(
-            "Update params in request {0!s} {1!s} with JSON data.".format(
-                request.method, request.base_url
-            )
+            f"Update params in request {request.method} {request.base_url} with JSON data."
         )
         # Add the original JSON data
         return_param.update(request.json)
@@ -329,9 +324,7 @@ def get_all_params(request):
 
     if request.view_args:
         log.debug(
-            "Update params in request {0!s} {1!s} with view_args.".format(
-                request.method, request.base_url
-            )
+            f"Update params in request {request.method} {request.base_url} with view_args."
         )
         # We add the unquoted view_args
         return_param.update(check_unquote(request, request.view_args))
@@ -397,11 +390,9 @@ def verify_auth_token(auth_token, required_role=None):
                         trusted_jwt.get("public_key"),
                         algorithms=[trusted_jwt.get("algorithm")],
                     )
-                    if dict(
-                        (k, j.get(k)) for k in ("role", "resolver", "realm")
-                    ) == dict(
-                        (k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")
-                    ):
+                    if {k: j.get(k) for k in ("role", "resolver", "realm")} == {
+                        k: trusted_jwt.get(k) for k in ("role", "resolver", "realm")
+                    }:
                         if re.match(
                             trusted_jwt.get("username") + "$", j.get("username")
                         ):
@@ -440,8 +431,9 @@ def verify_auth_token(auth_token, required_role=None):
     if wrong_username:
         raise AuthError(
             _(
-                "Authentication failure. The username {0!s} is not allowed to "
-                "impersonate via JWT.".format(wrong_username)
+                "Authentication failure. The username {username} is not allowed to impersonate via JWT.".format(
+                    username=wrong_username
+                )
             )
         )
     if required_role and r.get("role") not in required_role:

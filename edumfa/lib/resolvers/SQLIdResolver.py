@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -96,12 +95,7 @@ class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no 
         )
 
     def to_string(self):
-        hash = "%s%s%s%s" % (
-            self.ident,
-            h64.encode_int6(self.rounds).decode("ascii"),
-            self.salt,
-            self.checksum or "",
-        )
+        hash = f"{self.ident}{h64.encode_int6(self.rounds).decode('ascii')}{self.salt}{self.checksum or ''}"
         return uascii_to_str(hash)
 
     def _calc_checksum(self, secret):
@@ -519,9 +513,7 @@ class IdResolver(UserIdResolver):
         )
         try:
             log.debug(
-                "using pool_size={0!s}, pool_timeout={1!s}, pool_recycle={2!s}".format(
-                    self.pool_size, self.pool_timeout, self.pool_recycle
-                )
+                f"using pool_size={self.pool_size}, pool_timeout={self.pool_timeout}, pool_recycle={self.pool_recycle}"
             )
             engine = create_engine(
                 self.connect_string,
@@ -584,15 +576,9 @@ class IdResolver(UserIdResolver):
             password = f":{param.get('Password')!s}"
         if param.get("conParams"):
             conParams = f"?{param.get('conParams')!s}"
-        connect_string = "{0!s}://{1!s}{2!s}{3!s}{4!s}{5!s}/{6!s}{7!s}".format(
-            param.get("Driver") or "",
-            param.get("User") or "",
-            password,
-            "@" if (param.get("User") or password) else "",
-            param.get("Server") or "",
-            port,
-            param.get("Database") or "",
-            conParams,
+        connect_string = (
+            f"{param.get('Driver') or ''}://{param.get('User') or ''}{password}{'@' if (param.get('User') or password) else ''}"
+            f"{param.get('Server') or ''}{port}/{param.get('Database') or ''}{conParams}"
         )
         return connect_string
 
@@ -765,8 +751,7 @@ def hash_password(password, hashtype):
         password = pw_ctx.handler(hash_type_dict[hashtype]).hash(password)
     except KeyError as _e:  # pragma: no cover
         raise Exception(
-            "Unsupported password hashtype '{0!s}'. "
-            "Use one of {1!s}.".format(hashtype, hash_type_dict.keys())
+            f"Unsupported password hashtype '{hashtype}'. Use one of {hash_type_dict.keys()}."
         )
 
     return password

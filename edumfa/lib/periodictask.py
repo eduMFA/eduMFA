@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -43,7 +42,7 @@ log = logging.getLogger(__name__)
 
 TASK_CLASSES = [EventCounterTask, SimpleStatsTask]
 #: TASK_MODULES maps task module identifiers to subclasses of BaseTask
-TASK_MODULES = dict((cls.identifier, cls) for cls in TASK_CLASSES)
+TASK_MODULES = {cls.identifier: cls for cls in TASK_CLASSES}
 
 
 def get_available_taskmodules():

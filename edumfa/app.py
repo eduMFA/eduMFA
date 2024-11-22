@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -135,7 +134,7 @@ def create_app(
         # Try to load the given config_file.
         # If it does not exist, just ignore it.
         app.config.from_pyfile(config_file, silent=True)
-    except IOError:
+    except OSError:
         sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
         sys.stderr.write("  WARNING: edumfa create_app has no access\n")
         sys.stderr.write(f"  to {config_file}!\n")
@@ -187,9 +186,7 @@ def create_app(
 
     # Setup logging
     log_read_func = {
-        "yaml": lambda x: logging.config.dictConfig(
-            yaml.safe_load(open(x, "r").read())
-        ),
+        "yaml": lambda x: logging.config.dictConfig(yaml.safe_load(open(x).read())),
         "cfg": lambda x: logging.config.fileConfig(x),
     }
     have_config = False

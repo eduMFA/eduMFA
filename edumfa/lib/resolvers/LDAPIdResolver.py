@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -203,8 +202,7 @@ def ignore_sizelimit_exception(conn, generator):
                 # in ``conn.response``. If that is the case, we assume the generator works correctly
                 # and *all* of ``conn.response`` have been yielded already.
                 if last_entry is None or last_entry not in conn.response:
-                    for entry in conn.response:
-                        yield entry
+                    yield from conn.response
                 break
             else:
                 raise
@@ -460,8 +458,7 @@ class IdResolver(UserIdResolver):
                     # in some weird cases we sometimes get a byte-array here
                     # which resembles an uuid. So we just convert it to one...
                     log.warning(
-                        "Found a byte-array as uid ({0!s}), trying to "
-                        "convert it to a UUID. ({1!s})".format(binascii.hexlify(uid), e)
+                        f"Found a byte-array as uid ({binascii.hexlify(uid)}), trying to convert it to a UUID. ({e})"
                     )
                     log.debug(traceback.format_exc())
                     uid = str(uuid.UUID(bytes_le=uid))
@@ -638,8 +635,7 @@ class IdResolver(UserIdResolver):
                             ret[map_k] = ldap_v.strip("{").strip("}")
                         else:
                             raise Exception(
-                                "The LDAP returns an objectGUID, "
-                                "that is no string: {0!s}".format(type(ldap_v))
+                                f"The LDAP returns an objectGUID,  that is no string: {type(ldap_v)}"
                             )
                     elif (
                         type(ldap_v) == list and map_k not in self.multivalueattributes
@@ -755,12 +751,7 @@ class IdResolver(UserIdResolver):
                 comperator = ">="
                 if searchDict[search_key] in ["1", 1]:
                     comperator = "<="
-                filter += "(&({0!s}{1!s}{2!s})(!({3!s}=0)))".format(
-                    self.userinfo[search_key],
-                    comperator,
-                    get_ad_timestamp_now(),
-                    self.userinfo[search_key],
-                )
+                filter += f"(&({self.userinfo[search_key]}{comperator}{get_ad_timestamp_now()})(!({self.userinfo[search_key]}=0)))"
             else:
                 filter += f"({self.userinfo[search_key]!s}={searchDict[search_key]!s})"
         filter += ")"
@@ -802,7 +793,7 @@ class IdResolver(UserIdResolver):
         :return: the id of the resolver
         :rtype: str
         """
-        s = "{0!s}{1!s}{2!s}{3!s}".format(
+        s = "{!s}{!s}{!s}{!s}".format(
             self.uri,
             self.basedn,
             self.searchfilter,
@@ -1373,8 +1364,7 @@ class IdResolver(UserIdResolver):
 
         if self.l.result.get("result") != 0:
             log.error(
-                "Error during update of user {0!r}: "
-                "{1!r}".format(uid, self.l.result.get("message"))
+                f'Error during update of user {uid!r}: {self.l.result.get("message")!r}'
             )
             return False
 

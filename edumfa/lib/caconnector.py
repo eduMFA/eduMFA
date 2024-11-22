@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -333,8 +332,7 @@ def import_caconnector(data, name=None):
         res_data.update(res_data.pop("data"))
         rid = save_caconnector(res_data)
         log.info(
-            'Import of caconnector "{0!s}" finished,'
-            " id: {1!s}".format(res_data["caconnector"], rid)
+            f'Import of caconnector "{res_data["caconnector"]}" finished,  id: {rid}'
         )
 
 

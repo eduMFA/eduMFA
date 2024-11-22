@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib.resolver and all
 the resolvers under it:
@@ -14,9 +13,9 @@ import datetime
 import json
 import ssl
 import uuid
+from unittest import mock
 
 import ldap3
-import mock
 import pytest
 import responses
 from ldap3.core.exceptions import LDAPOperationResult
@@ -1079,8 +1078,7 @@ class LDAPResolverTestCase(MyTestCase):
             def _search_with_ref(*args, **kwargs):
                 results = original_search(*args, **kwargs)
                 # paged_search returns an iterator
-                for result in results:
-                    yield result
+                yield from results
                 yield {"type": "searchResRef", "foo": "bar"}
 
             mock_search.side_effect = _search_with_ref
@@ -2035,7 +2033,7 @@ class LDAPResolverTestCase(MyTestCase):
         result = y.getUserList({"username": "*"})
         self.assertEqual(len(result), len(LDAPDirectory))
 
-        user = "kölbel".encode("utf8")
+        user = "kölbel".encode()
         user_id = y.getUserId(user)
         self.assertEqual(user_id, "cn=kölbel,ou=example,o=test")
 

@@ -1,4 +1,3 @@
-# coding: utf-8
 import json
 from urllib.parse import urlencode
 
@@ -75,7 +74,7 @@ class APIUsersTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/auth",
             method="POST",
-            data={"username": "wordy@{0!s}".format("sqlrealm"), "password": password},
+            data={"username": "wordy@sqlrealm", "password": password},
         ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
@@ -115,7 +114,7 @@ class APIUsersTestCase(MyApiTestCase):
         realm = "realm1"
         resolvers = "r1, r2"
         with self.app.test_request_context(
-            "/realm/{0!s}".format(realm),
+            f"/realm/{realm}",
             data={"resolvers": resolvers},
             method="POST",
             headers={"Authorization": self.at},
@@ -240,7 +239,7 @@ class APIUsersTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/auth",
             method="POST",
-            data={"username": "wordy@{0!s}".format(realm), "password": "newPassword"},
+            data={"username": f"wordy@{realm}", "password": "newPassword"},
         ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
@@ -268,7 +267,7 @@ class APIUsersTestCase(MyApiTestCase):
 
         # Delete the users
         with self.app.test_request_context(
-            "/user/{0!s}/{1!s}".format(resolver, "wordy2"),
+            f"/user/{resolver}/wordy2",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -278,7 +277,7 @@ class APIUsersTestCase(MyApiTestCase):
             self.assertTrue(result.get("value"))
 
         with self.app.test_request_context(
-            "/user/{0!s}/{1!s}".format(resolver, "wordy"),
+            f"/user/{resolver}/wordy",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -326,7 +325,7 @@ class APIUsersTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/user/",
             method="GET",
-            query_string=urlencode({"username": "wördy".encode("utf-8")}),
+            query_string=urlencode({"username": "wördy".encode()}),
             headers={"Authorization": self.at},
         ):
             res = self.app.full_dispatch_request()
@@ -341,7 +340,7 @@ class APIUsersTestCase(MyApiTestCase):
             method="PUT",
             query_string=urlencode(
                 {
-                    "user": "wördy".encode("utf-8"),
+                    "user": "wördy".encode(),
                     "resolver": resolver,
                     "password": "passwort",
                 }
@@ -358,7 +357,7 @@ class APIUsersTestCase(MyApiTestCase):
             "/auth",
             method="POST",
             data={
-                "username": "wördy@{0!s}".format(realm).encode("utf-8"),
+                "username": f"wördy@{realm}".encode("utf-8"),
                 "password": "passwort",
             },
         ):
@@ -379,7 +378,7 @@ class APIUsersTestCase(MyApiTestCase):
             method="PUT",
             query_string=urlencode(
                 {
-                    "user": "wördy2".encode("utf-8"),
+                    "user": "wördy2".encode(),
                     "resolver": resolver,
                     "password": "newPassword",
                 }
@@ -397,7 +396,7 @@ class APIUsersTestCase(MyApiTestCase):
             "/auth",
             method="POST",
             data={
-                "username": "wördy@{0!s}".format(realm).encode("utf-8"),
+                "username": f"wördy@{realm}".encode("utf-8"),
                 "password": "newPassword",
             },
         ):
@@ -413,7 +412,7 @@ class APIUsersTestCase(MyApiTestCase):
 
         # Delete the users
         with self.app.test_request_context(
-            "/user/{0!s}/{1!s}".format(resolver, "wördy"),
+            f"/user/{resolver}/wördy",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -448,7 +447,7 @@ class APIUsersTestCase(MyApiTestCase):
         set_policy(
             "custom_attr",
             scope=SCOPE.ADMIN,
-            action="{0!s}=:*:*".format(ACTION.SET_USER_ATTRIBUTES),
+            action=f"{ACTION.SET_USER_ATTRIBUTES}=:*:*",
         )
 
         # Check that the user has not attribute
@@ -584,7 +583,7 @@ class APIUsersTestCase(MyApiTestCase):
         set_policy(
             "custom_attr",
             scope=SCOPE.ADMIN,
-            action="{0!s}=*".format(ACTION.DELETE_USER_ATTRIBUTES),
+            action=f"{ACTION.DELETE_USER_ATTRIBUTES}=*",
         )
         with self.app.test_request_context(
             "/user/attribute/newattribute/cornelius/realm1",
@@ -628,22 +627,22 @@ class APIUsersTestCase(MyApiTestCase):
         set_policy(
             "custom_attr",
             scope=SCOPE.ADMIN,
-            action="{0!s}=:hello: one two".format(ACTION.SET_USER_ATTRIBUTES),
+            action=f"{ACTION.SET_USER_ATTRIBUTES}=:hello: one two",
         )
         set_policy(
             "custom_attr2",
             scope=SCOPE.ADMIN,
-            action="{0!s}=:hello2: * :hello: three".format(ACTION.SET_USER_ATTRIBUTES),
+            action=f"{ACTION.SET_USER_ATTRIBUTES}=:hello2: * :hello: three",
         )
         set_policy(
             "custom_attr3",
             scope=SCOPE.ADMIN,
-            action="{0!s}=:*: on off".format(ACTION.SET_USER_ATTRIBUTES),
+            action=f"{ACTION.SET_USER_ATTRIBUTES}=:*: on off",
         )
         set_policy(
             "custom_attr4",
             scope=SCOPE.ADMIN,
-            action="{0!s}=*".format(ACTION.DELETE_USER_ATTRIBUTES),
+            action=f"{ACTION.DELETE_USER_ATTRIBUTES}=*",
         )
         with self.app.test_request_context(
             "/user/editable_attributes/",

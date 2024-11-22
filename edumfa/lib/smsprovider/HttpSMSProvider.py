@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -209,8 +208,7 @@ class HttpSMSProvider(ISMSProvider):
                 )
                 raise SMSError(
                     response.status_code,
-                    "We received a none success reply from the "
-                    "SMS Gateway: {0!s} ({1!s})".format(reply, return_success),
+                    f"We received a none success reply from the SMS Gateway: {reply} ({return_success})",
                 )
 
         elif return_fail:

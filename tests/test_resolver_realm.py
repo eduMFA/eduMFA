@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import json
 
 from edumfa.models import Resolver, ResolverConfig, db

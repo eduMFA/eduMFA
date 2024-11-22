@@ -3,8 +3,8 @@ This test file tests the lib.tokens.smstoken
 """
 
 import datetime
+from unittest import mock
 
-import mock
 from dateutil.tz import tzlocal
 
 from edumfa.lib import _

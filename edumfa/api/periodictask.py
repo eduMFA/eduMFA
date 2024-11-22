@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -62,10 +61,10 @@ def convert_datetimes_to_string(ptask):
     """
     ptask = ptask.copy()
     ptask["last_update"] = ptask["last_update"].strftime(AUTH_DATE_FORMAT)
-    ptask["last_runs"] = dict(
-        (node, timestamp.strftime(AUTH_DATE_FORMAT))
+    ptask["last_runs"] = {
+        node: timestamp.strftime(AUTH_DATE_FORMAT)
         for node, timestamp in ptask["last_runs"].items()
-    )
+    }
     return ptask
 
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 #  2020-06-13 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #  2019-10-04 Cornelius Kölbel <cornelius.koelbel@netknights.it>
@@ -112,7 +111,7 @@ UUID_REPLACE_PATTERN = "\\4\\3\\2\\1-\\6\\5-\\8\\7-\\9\\10-\\11\\12\\13\\14\\15\
 class Config:
 
     def __init__(self, config_file):
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             contents = f.read()
         config = json.loads(contents)
         self.ASSIGNMENTS = config.get("ASSIGNMENTS")
@@ -406,8 +405,7 @@ def migrate(config_obj):
                 resolver = config_obj.ASSIGNMENTS.get("resolver").get(linotp_resolver)
                 if not resolver and linotp_resolver:
                     warnings.append(
-                        "No mapping defined for the LinOTP "
-                        "resolver: {0!s}".format(linotp_resolver)
+                        f"No mapping defined for the LinOTP resolver: {linotp_resolver}"
                     )
                 resolver_type = resolver_type
                 user_id = r["LinOtpUserid"]

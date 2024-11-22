@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -102,7 +101,7 @@ def restore(backup_file: str):
 
     call(["tar", "-zxf", backup_file, "-C", "/"])
     print(60 * "=")
-    with open(config_file, "r") as f:
+    with open(config_file) as f:
         # Determine the SQLAlchemy URI
         for line in f:
             if re.search("^SQLALCHEMY_DATABASE_URI", line):

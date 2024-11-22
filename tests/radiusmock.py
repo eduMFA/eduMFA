@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 2019-08-15 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 2017-10-30 Cornelius Kölbel <cornelius.koelbel@netknights.it>
@@ -140,7 +139,7 @@ class RadiusMock:
         return reply
 
     def start(self):
-        import mock
+        from unittest import mock
 
         def unbound_on_send(Client, pkt, *a, **kwargs):
             return self._on_request(Client, pkt, *a, **kwargs)

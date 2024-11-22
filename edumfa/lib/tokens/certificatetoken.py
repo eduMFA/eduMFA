@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -454,8 +453,8 @@ class CertificateTokenClass(TokenClass):
                     log.info(f"The certificate {self.token.serial!s} is still pending.")
             else:
                 log.warning(
-                    "The certificate token in rollout_state pending, but either the CA ({0!s}) "
-                    "or the requestId ({1!s}) is missing.".format(ca, request_id)
+                    f"The certificate token in rollout_state pending, but either the CA ({ca}) "
+                    f"or the requestId ({request_id}) is missing."
                 )
         return status
 

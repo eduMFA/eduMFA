@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -201,9 +200,7 @@ class YubicoTokenClass(TokenClass):
 
                     if not signature_valid:
                         log.error(
-                            "The hash of the return from the yubico "
-                            "authentication server ({0!s}) "
-                            "does not match the data!".format(yubico_url)
+                            f"The hash of the return from the yubico authentication server ({yubico_url}) does not match the data!"
                         )
 
                     if nonce != return_nonce:

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -231,21 +230,13 @@ class SmsTokenClass(HotpTokenClass):
                 SCOPE.ADMIN: {
                     SMSACTION.GATEWAYS: {
                         "type": "str",
-                        "desc": "{0!s} ({1!s})".format(
-                            _(
-                                "Choose the gateways the administrator is allowed to set."
-                            ),
-                            " ".join(sms_gateways),
-                        ),
+                        "desc": f"{_('Choose the gateways the administrator is allowed to set.')} ({' '.join(sms_gateways)})",
                     }
                 },
                 SCOPE.USER: {
                     SMSACTION.GATEWAYS: {
                         "type": "str",
-                        "desc": "{0!s} ({1!s})".format(
-                            _("Choose the gateways the user is allowed to set."),
-                            " ".join(sms_gateways),
-                        ),
+                        "desc": f"{_('Choose the gateways the user is allowed to set.')} ({' '.join(sms_gateways)})",
                     }
                 },
                 SCOPE.ENROLL: {
@@ -437,7 +428,7 @@ class SmsTokenClass(HotpTokenClass):
         serial = self.get_serial()
         User = options.get("user")
 
-        log.debug(r"sending SMS with template text: {0!s}".format(message))
+        log.debug(rf"sending SMS with template text: {message}")
         message = message.replace("<otp>", otp)
         message = message.replace("<serial>", serial)
         tags = create_tag_dict(

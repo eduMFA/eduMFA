@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 2020-09-07 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 2017-04-26 Friedrich Weber <friedrich.weber@netknights.it>
@@ -676,7 +675,7 @@ class Ldap3Mock:
 
     def _load_data(self, directory):
         try:
-            with open(directory, "r") as f:
+            with open(directory) as f:
                 data = f.read()
                 return literal_eval(data)
         except OSError as e:
@@ -750,7 +749,7 @@ class Ldap3Mock:
         return self.con_obj
 
     def start(self):
-        import mock
+        from unittest import mock
 
         def unbound_on_Server(host, port, use_ssl, connect_timeout, *a, **kwargs):
             return self._on_Server(host, port, use_ssl, connect_timeout, *a, **kwargs)

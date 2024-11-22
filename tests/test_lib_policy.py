@@ -1,11 +1,12 @@
-# coding: utf-8
 """
 This test file tests the lib.policy.py
 
 The lib.policy.py only depends on the database model.
 """
+
+from unittest import mock
+
 import dateutil
-import mock
 
 from edumfa.lib.auth import ROLE
 from edumfa.lib.error import ParameterError
@@ -1185,7 +1186,7 @@ class PolicyTestCase(MyTestCase):
 
         P = PolicyClass()
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=cornelius)),
+            {p["name"] for p in P.match_policies(user_object=cornelius)},
             {"act1", "act2", "act3"},
         )
         r = P.get_action_values(
@@ -1197,7 +1198,7 @@ class PolicyTestCase(MyTestCase):
         self.assertEqual(["act3"], r["none"], r)
 
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=nonascii)),
+            {p["name"] for p in P.match_policies(user_object=nonascii)},
             {"act1", "act2", "act3", "act4"},
         )
         r = P.get_action_values(
@@ -1209,7 +1210,7 @@ class PolicyTestCase(MyTestCase):
         self.assertEqual({"act3", "act4"}, set(r["none"]), r)
 
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=selfservice)),
+            {p["name"] for p in P.match_policies(user_object=selfservice)},
             {"act2", "act3"},
         )
         self.assertEqual(
@@ -1220,7 +1221,7 @@ class PolicyTestCase(MyTestCase):
         )
 
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=whoopsie)), set()
+            {p["name"] for p in P.match_policies(user_object=whoopsie)}, set()
         )
         self.assertEqual(
             P.get_action_values(
@@ -1230,7 +1231,7 @@ class PolicyTestCase(MyTestCase):
         )
 
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=None)),
+            {p["name"] for p in P.match_policies(user_object=None)},
             {"act1", "act2", "act3", "act4"},
         )
         r = P.get_action_values(
@@ -1242,7 +1243,7 @@ class PolicyTestCase(MyTestCase):
         self.assertEqual({"act3", "act4"}, set(r["none"]), r)
 
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=User())), set()
+            {p["name"] for p in P.match_policies(user_object=User())}, set()
         )
         self.assertEqual(
             P.get_action_values(
@@ -1267,7 +1268,7 @@ class PolicyTestCase(MyTestCase):
         P = PolicyClass()
         # If we pass an empty user object, only policies without user match
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=User())), {"act5"}
+            {p["name"] for p in P.match_policies(user_object=User())}, {"act5"}
         )
         self.assertEqual(
             P.get_action_values(
@@ -1277,7 +1278,7 @@ class PolicyTestCase(MyTestCase):
         )
         # If we pass None as the user object, all policies match
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=None)),
+            {p["name"] for p in P.match_policies(user_object=None)},
             {"act1", "act2", "act3", "act4", "act5"},
         )
         r = P.get_action_values(
@@ -1290,27 +1291,27 @@ class PolicyTestCase(MyTestCase):
 
         # if we pass user_obj ornelius, we only get 4 policies
         self.assertEqual(
-            set(p["name"] for p in P.match_policies(user_object=cornelius)),
+            {p["name"] for p in P.match_policies(user_object=cornelius)},
             {"act1", "act2", "act3", "act5"},
         )
         # Provide a user object and parameters
         self.assertEqual(
-            set(
+            {
                 p["name"]
                 for p in P.match_policies(
                     user_object=cornelius, user="cornelius", realm="realm1"
                 )
-            ),
+            },
             {"act1", "act2", "act3", "act5"},
         )
         # For some reason pass the same user_obj and parameters, but realm in upper case
         self.assertEqual(
-            set(
+            {
                 p["name"]
                 for p in P.match_policies(
                     user_object=cornelius, user="cornelius", realm="REALM1"
                 )
-            ),
+            },
             {"act1", "act2", "act3", "act5"},
         )
 
@@ -1401,7 +1402,7 @@ class PolicyTestCase(MyTestCase):
 
     def test_29_filter_by_conditions(self):
         def _names(policies):
-            return set(p["name"] for p in policies)
+            return {p["name"] for p in policies}
 
         set_policy(
             "verysecure",
@@ -1583,7 +1584,7 @@ class PolicyTestCase(MyTestCase):
         )
         self.assertEqual(
             {"import_node1"},
-            set(p["name"] for p in pols),
+            {p["name"] for p in pols},
         )
         # Not allowed to import on edumfanode 2
         pols = P.match_policies(
@@ -1592,12 +1593,12 @@ class PolicyTestCase(MyTestCase):
             action=ACTION.IMPORT,
             edumfanode="edumfanode2",
         )
-        self.assertEqual(set(), set(p["name"] for p in pols))
+        self.assertEqual(set(), {p["name"] for p in pols})
         # not allowed to delete on any node
         pols = P.match_policies(
             scope=SCOPE.ADMIN, adminuser="import_admin", action=ACTION.DELETE
         )
-        self.assertEqual(set(), set(p["name"] for p in pols))
+        self.assertEqual(set(), {p["name"] for p in pols})
 
         # Check what the user "delete_admin" is allowerd to do
         pols = P.match_policies(
@@ -1606,7 +1607,7 @@ class PolicyTestCase(MyTestCase):
             action=ACTION.IMPORT,
             edumfanode="edumfanode1",
         )
-        self.assertEqual({"import_node1"}, set(p["name"] for p in pols))
+        self.assertEqual({"import_node1"}, {p["name"] for p in pols})
         # Not allowed to import on edumfanode 2
         pols = P.match_policies(
             scope=SCOPE.ADMIN,
@@ -1614,7 +1615,7 @@ class PolicyTestCase(MyTestCase):
             action=ACTION.IMPORT,
             edumfanode="edumfanode2",
         )
-        self.assertEqual(set(), set(p["name"] for p in pols))
+        self.assertEqual(set(), {p["name"] for p in pols})
         # Allowed to delete on node 1 and node 2
         pols = P.match_policies(
             scope=SCOPE.ADMIN,
@@ -1622,14 +1623,14 @@ class PolicyTestCase(MyTestCase):
             action=ACTION.DELETE,
             edumfanode="edumfanode1",
         )
-        self.assertEqual(set({"delete_node2"}), set(p["name"] for p in pols))
+        self.assertEqual(set({"delete_node2"}), {p["name"] for p in pols})
         pols = P.match_policies(
             scope=SCOPE.ADMIN,
             adminuser="delete_admin",
             action=ACTION.DELETE,
             edumfanode="edumfanode2",
         )
-        self.assertEqual(set({"delete_node2"}), set(p["name"] for p in pols))
+        self.assertEqual(set({"delete_node2"}), {p["name"] for p in pols})
 
         # Check what the user "enable_admin" is allowed to do
         pols = P.match_policies(
@@ -1638,14 +1639,14 @@ class PolicyTestCase(MyTestCase):
             action=ACTION.ENABLE,
             edumfanode="edumfanode1",
         )
-        self.assertEqual({"enable"}, set(p["name"] for p in pols))
+        self.assertEqual({"enable"}, {p["name"] for p in pols})
         pols = P.match_policies(
             scope=SCOPE.ADMIN,
             adminuser="enable_admin",
             action=ACTION.ENABLE,
             edumfanode="edumfanode2",
         )
-        self.assertEqual({"enable"}, set(p["name"] for p in pols))
+        self.assertEqual({"enable"}, {p["name"] for p in pols})
 
         # Now check the Match-Object, which uses the edumfanode from the config: In testing environment it is "Node1".
         g = FakeFlaskG()
@@ -1655,12 +1656,12 @@ class PolicyTestCase(MyTestCase):
         g.logged_in_user = {"username": "delete_admin", "role": ROLE.ADMIN, "realm": ""}
         pols = Match.admin(g, "delete", None).policies()
         # There is is no policy for Node1 for the "delete_admin
-        self.assertEqual(set(), set(p["name"] for p in pols))
+        self.assertEqual(set(), {p["name"] for p in pols})
 
         g.logged_in_user = {"username": "enable_admin", "role": ROLE.ADMIN, "realm": ""}
         pols = Match.admin(g, "enable", None).policies()
         # The "enable_admin" is allowed to enable on all nodes, so also on "Node1"
-        self.assertEqual({"enable"}, set(p["name"] for p in pols))
+        self.assertEqual({"enable"}, {p["name"] for p in pols})
 
         delete_policy("import_node1")
         delete_policy("delete_node2")
@@ -1668,7 +1669,7 @@ class PolicyTestCase(MyTestCase):
 
     def test_31_filter_by_conditions_tokeninfo(self):
         def _names(policies):
-            return set(p["name"] for p in policies)
+            return {p["name"] for p in policies}
 
         from edumfa.lib.tokenclass import TokenClass
         from edumfa.models import Token
@@ -1723,7 +1724,7 @@ class PolicyTestCase(MyTestCase):
 
     def test_32_filter_by_conditions_token(self):
         def _names(policies):
-            return set(p["name"] for p in policies)
+            return {p["name"] for p in policies}
 
         from edumfa.lib.tokenclass import TokenClass
         from edumfa.models import Token
@@ -1910,7 +1911,7 @@ class PolicyMatchTestCase(MyTestCase):
         )
 
     def check_names(self, policies, names):
-        self.assertEqual(set(p["name"] for p in policies), set(names))
+        self.assertEqual({p["name"] for p in policies}, set(names))
 
     def test_01_action_only(self):
         g = FakeFlaskG()

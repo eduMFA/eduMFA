@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -279,8 +278,7 @@ class FourEyesTokenClass(TokenClass):
                 # check that not the same token is used again
                 if serial in used_tokens.get(realm, []):
                     log.info(
-                        "The same token {0!s} was already used. "
-                        "You can not use a token twice.".format(serial)
+                        f"The same token {serial} was already used. You can not use a token twice."
                     )
                 else:
                     # Add the serial to the used tokens.
@@ -332,9 +330,7 @@ class FourEyesTokenClass(TokenClass):
 
             if len(found_serials[realm]) < required_realms[realm]:
                 reply = {
-                    "foureyes": "Only found {0:d} tokens in realm {1!s}".format(
-                        len(found_serials[realm]), realm
-                    )
+                    "foureyes": f"Only found {len(found_serials[realm]):d} tokens in realm {realm}"
                 }
                 otp_counter = -1
                 break
@@ -472,10 +468,7 @@ class FourEyesTokenClass(TokenClass):
         used_tokens = json.loads(options.get("data", json.dumps({})))
         remaining_realms = self._get_remaining_realms(used_tokens)
         if remaining_realms:
-            message = (
-                "Please authenticate with another token from "
-                "either realm: {0!s}.".format(", ".join(remaining_realms))
-            )
+            message = f'Please authenticate with another token from either realm: {", ".join(remaining_realms)}.'
 
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()

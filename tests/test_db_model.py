@@ -1,9 +1,8 @@
-# coding: utf-8
 import os
 from datetime import datetime, timedelta
+from unittest import mock
 
 from dateutil.tz import tzutc
-from mock import mock
 from sqlalchemy import func
 
 from edumfa.models import (

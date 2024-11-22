@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -23,8 +22,7 @@
 Mock module for testing the handling of hardware security modules
 """
 import sys
-
-import mock
+from unittest import mock
 
 try:
     import PyKCS11

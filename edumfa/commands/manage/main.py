@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -67,9 +66,9 @@ def cli():
        ___  __| |_   _| \  / | |__ /  \   
       / _ \/ _` | | | | |\/| |  __/ /\ \  
      |  __/ (_| | |_| | |  | | | / ____ \ 
-      \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {0!s:>12}
+      \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {!s:>12}
     """.format(
-            "v{0!s}".format(get_version_number())
+            f"v{get_version_number()}"
         ),
         err=True,
     )

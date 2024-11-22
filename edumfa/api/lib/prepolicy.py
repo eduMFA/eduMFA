@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -213,8 +212,7 @@ def set_random_pin(request=None, action=None):
     if len(pin_pols) == 0:
         # We do this to avoid that an admin sets a random PIN manually!
         raise TokenAdminError(
-            "You need to specify a policy '{0!s}' in scope "
-            "{1!s}.".format(ACTION.OTPPINSETRANDOM, role)
+            f"You need to specify a policy '{ACTION.OTPPINSETRANDOM}' in scope {role}."
         )
     elif len(pin_pols) == 1:
         # check pin contents policy per token type, otherwise fall back
@@ -229,10 +227,8 @@ def set_random_pin(request=None, action=None):
 
         if len(pol_contents) == 1:
             log.info(
-                "Creating random OTP PIN with length {0!s} "
-                "matching the contents policy {1!s}".format(
-                    list(pin_pols)[0], list(pol_contents)[0]
-                )
+                f"Creating random OTP PIN with length {list(pin_pols)[0]} "
+                f"matching the contents policy {list(pol_contents)[0]}"
             )
             # generate a pin which matches the contents requirement
             r = _generate_pin_from_policy(
@@ -274,10 +270,8 @@ def init_random_pin(request=None, action=None):
 
         if len(pol_contents) == 1:
             log.info(
-                "Creating random OTP PIN with length {0!s} "
-                "matching the contents policy {1!s}".format(
-                    list(pin_pols)[0], list(pol_contents)[0]
-                )
+                f"Creating random OTP PIN with length {list(pin_pols)[0]} "
+                f"matching the contents policy {list(pol_contents)[0]}"
             )
             # generate a pin which matches the contents requirement
             r = _generate_pin_from_policy(
@@ -1652,8 +1646,7 @@ def u2ftoken_verify_cert(request, action):
             request.all_data["u2f.verify_cert"] = False
 
         log.debug(
-            "Should we not verify the attestation certificate? "
-            "Policies: {0!s}".format(do_not_verify_the_cert)
+            f"Should we not verify the attestation certificate? Policies: {do_not_verify_the_cert}"
         )
     return True
 
@@ -1700,9 +1693,7 @@ def u2ftoken_allowed(request, action):
             attestation_cert, allowed_certs_pols
         ):
             log.warning(
-                "The U2F device {0!s} is not "
-                "allowed to be registered due to policy "
-                "restriction".format(serial)
+                f"The U2F device {serial} is not allowed to be registered due to policy restriction"
             )
             raise PolicyError(
                 "The U2F device is not allowed "
@@ -1901,10 +1892,8 @@ def webauthntoken_request(request, action):
                 )
                 if user_verification_requirement not in USER_VERIFICATION_LEVELS:
                     raise PolicyError(
-                        "{0!s} must be one of {1!s}".format(
-                            WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                            ", ".join(USER_VERIFICATION_LEVELS),
-                        )
+                        f"{WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT} must "
+                        f"be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                     )
 
                 request.all_data[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] = (
@@ -1918,11 +1907,11 @@ def webauthntoken_request(request, action):
                     action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST,
                     user_object=request.User if hasattr(request, "User") else None,
                 ).action_values(unique=False, allow_white_space_in_action=True)
-                allowed_aaguids = set(
+                allowed_aaguids = {
                     aaguid
                     for allowed_aaguid_pol in allowed_aaguids_pols
                     for aaguid in allowed_aaguid_pol.split()
-                )
+                }
 
                 if allowed_aaguids:
                     request.all_data[WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST] = (
@@ -1942,14 +1931,10 @@ def webauthntoken_request(request, action):
                 # The RP ID is a domain name and thus may not contain any punctuation except '-' and '.'.
                 if not is_fqdn(rp_id):
                     log.warning(
-                        "Illegal value for {0!s} (must be a domain name): {1!s}".format(
-                            WEBAUTHNACTION.RELYING_PARTY_ID, rp_id
-                        )
+                        f"Illegal value for {WEBAUTHNACTION.RELYING_PARTY_ID} (must be a domain name): {rp_id}"
                     )
                     raise PolicyError(
-                        "Illegal value for {0!s} (must be a domain name).".format(
-                            WEBAUTHNACTION.RELYING_PARTY_ID
-                        )
+                        f"Illegal value for {WEBAUTHNACTION.RELYING_PARTY_ID} (must be a domain name)."
                     )
 
                 request.all_data[WEBAUTHNACTION.RELYING_PARTY_ID] = rp_id
@@ -1980,10 +1965,7 @@ def webauthntoken_request(request, action):
                 )
                 if user_verification_requirement not in USER_VERIFICATION_LEVELS:
                     raise PolicyError(
-                        "{0!s} must be one of {1!s}".format(
-                            WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                            ", ".join(USER_VERIFICATION_LEVELS),
-                        )
+                        f"{WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT} must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                     )
 
                 request.all_data[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] = (
@@ -2032,11 +2014,11 @@ def webauthntoken_authz(request, action):
             action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST,
             user_object=request.User if hasattr(request, "User") else None,
         ).action_values(unique=False, allow_white_space_in_action=True)
-        allowed_aaguids = set(
+        allowed_aaguids = {
             aaguid
             for allowed_aaguid_pol in allowed_aaguids_pols
             for aaguid in allowed_aaguid_pol.split()
-        )
+        }
 
         if allowed_aaguids:
             request.all_data[WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST] = list(
@@ -2103,7 +2085,7 @@ def webauthntoken_auth(request, action):
                 request.User if (hasattr(request, "User") and request.User) else None
             ),
         ).action_values(unique=False, allow_white_space_in_action=True)
-        allowed_transports = set(
+        allowed_transports = {
             transport
             for allowed_transports_policy in (
                 list(allowed_transports_policies)
@@ -2111,7 +2093,7 @@ def webauthntoken_auth(request, action):
                 else [DEFAULT_ALLOWED_TRANSPORTS]
             )
             for transport in allowed_transports_policy.split()
-        )
+        }
 
         challengetext_policies = Match.user(
             g,
@@ -2203,14 +2185,10 @@ def webauthntoken_enroll(request, action):
         # The RP ID is a domain name and thus may not contain any punctuation except '-' and '.'.
         if not is_fqdn(rp_id):
             log.warning(
-                "Illegal value for {0!s} (must be a domain name): {1!s}".format(
-                    WEBAUTHNACTION.RELYING_PARTY_ID, rp_id
-                )
+                f"Illegal value for {WEBAUTHNACTION.RELYING_PARTY_ID} (must be a domain name): {rp_id}"
             )
             raise PolicyError(
-                "Illegal value for {0!s} (must be a domain name).".format(
-                    WEBAUTHNACTION.RELYING_PARTY_ID
-                )
+                "Illegal value for {WEBAUTHNACTION.RELYING_PARTY_ID} (must be a domain name)."
             )
 
         authenticator_attachment_policies = Match.user(
@@ -2246,10 +2224,8 @@ def webauthntoken_enroll(request, action):
             ]
         ):
             raise PolicyError(
-                "{0!s} must be one of {1!s}".format(
-                    WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
-                    ", ".join(PUBLIC_KEY_CREDENTIAL_ALGORITHMS.keys()),
-                )
+                f"{WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS} "
+                f"must be one of {', '.join(PUBLIC_KEY_CREDENTIAL_ALGORITHMS.keys())}"
             )
 
         authenticator_attestation_level_policies = Match.user(
@@ -2265,10 +2241,7 @@ def webauthntoken_enroll(request, action):
         )
         if authenticator_attestation_level not in ATTESTATION_LEVELS:
             raise PolicyError(
-                "{0!s} must be one of {1!s}".format(
-                    WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL,
-                    ", ".join(ATTESTATION_LEVELS),
-                )
+                f"{WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL} must be one of {', '.join(ATTESTATION_LEVELS)}"
             )
 
         authenticator_attestation_form_policies = Match.user(
@@ -2284,10 +2257,7 @@ def webauthntoken_enroll(request, action):
         )
         if authenticator_attestation_form not in ATTESTATION_FORMS:
             raise PolicyError(
-                "{0!s} must be one of {1!s}".format(
-                    WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM,
-                    ", ".join(ATTESTATION_FORMS),
-                )
+                f"{WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM} must be one of {", ".join(ATTESTATION_FORMS)}"
             )
         authenticator_resident_key_levels = Match.user(
             g,
@@ -2302,10 +2272,7 @@ def webauthntoken_enroll(request, action):
         )
         if authenticator_resident_key not in RESIDENT_KEY_LEVELS:
             raise PolicyError(
-                "{0!s} must be one of {1!s}".format(
-                    WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY,
-                    ", ".join(RESIDENT_KEY_LEVELS),
-                )
+                f"{WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY} must be one of {', '.join(RESIDENT_KEY_LEVELS)}"
             )
         challengetext_policies = Match.user(
             g,
@@ -2418,11 +2385,11 @@ def webauthntoken_allowed(request, action):
             action=WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST,
             user_object=request.User if hasattr(request, "User") else None,
         ).action_values(unique=False, allow_white_space_in_action=True)
-        allowed_aaguids = set(
+        allowed_aaguids = {
             aaguid
             for allowed_aaguid_pol in allowed_aaguids_pols
             for aaguid in allowed_aaguid_pol.split()
-        )
+        }
 
         # attestation_cert is of type X509. If you get a warning from your IDE
         # here, it is because your IDE mistakenly assumes it to be of type PKey,
@@ -2436,9 +2403,7 @@ def webauthntoken_allowed(request, action):
             attestation_cert, allowed_certs_pols
         ):
             log.warning(
-                "The WebAuthn token {0!s} is not allowed to be registered due to policy restriction {1!s}".format(
-                    serial, WEBAUTHNACTION.REQ
-                )
+                f"The WebAuthn token {serial} is not allowed to be registered due to policy restriction {WEBAUTHNACTION.REQ}"
             )
             raise PolicyError(
                 "The WebAuthn token is not allowed to be registered due to a policy restriction."
@@ -2448,9 +2413,8 @@ def webauthntoken_allowed(request, action):
             allowed_aaguid.replace("-", "") for allowed_aaguid in allowed_aaguids
         ]:
             log.warning(
-                "The WebAuthn token {0!s} is not allowed to be registered due to policy restriction {1!s}".format(
-                    serial, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST
-                )
+                f"The WebAuthn token {serial} is not allowed to be registered due to "
+                f"policy restriction {WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST}"
             )
             raise PolicyError(
                 "The WebAuthn token is not allowed to be registered due to a policy restriction."

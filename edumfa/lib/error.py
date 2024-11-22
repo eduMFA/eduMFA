@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -105,9 +104,7 @@ class SubscriptionError(eduMFAError):
         return self.__repr__()
 
     def __repr__(self):
-        ret = "{0!s}({1!r}, application={2!s})".format(
-            type(self).__name__, self.message, self.application
-        )
+        ret = f"{type(self).__name__}({self.message!r}, application={self.application})"
         return ret
 
 

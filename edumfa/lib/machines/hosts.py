@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -54,7 +53,7 @@ class HostsMachineResolver(BaseMachineResolver):
         """
         machines = []
 
-        f = open(self.filename, "r")
+        f = open(self.filename)
         try:
             for line in f:
                 split_line = line.split()

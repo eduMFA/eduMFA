@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib.serviceid methods.
 
 This tests the token functions on an interface level
 """
+
 from edumfa.lib.error import ResourceNotFoundError, eduMFAError
 from edumfa.lib.serviceid import delete_serviceid, get_serviceids, set_serviceid
 from edumfa.models import Serviceid

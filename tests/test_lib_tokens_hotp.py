@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
 This test file tests the lib.tokenclass
 
 The lib.tokenclass depends on the DB model and lib.user
 """
+
 import binascii
 import datetime
 import hashlib

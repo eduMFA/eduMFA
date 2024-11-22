@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -478,13 +477,12 @@ class LocalCAConnector(BaseCAConnector):
         content = {}
         if self.template_file:
             try:
-                with open(self.template_file, "r") as content_file:
+                with open(self.template_file) as content_file:
                     file_content = content_file.read()
                     content = yaml.safe_load(file_content)
-            except EnvironmentError:
+            except OSError:
                 log.warning(
-                    "Template file {0!s} for {1!s} not found or "
-                    "not permitted.".format(self.template_file, self.name)
+                    f"Template file {self.template_file} for {self.name} not found or not permitted."
                 )
                 log.debug(f"{traceback.format_exc()!s}")
         return content
@@ -569,8 +567,7 @@ class LocalCAConnector(BaseCAConnector):
                 )
             else:
                 log.info(
-                    "No need to create a new CRL, yet. Next Update: "
-                    "{0!s}, overlap: {1!s}".format(next_update, self.overlap)
+                    f"No need to create a new CRL, yet. Next Update: {next_update}, overlap: {self.overlap}"
                 )
                 create_new_crl = False
 
@@ -629,16 +626,14 @@ class LocalCAConnector(BaseCAConnector):
 
         while 1:
             directory = input(
-                "In which directory do you want to create "
-                "the CA [{0!s}]: ".format(config.directory)
+                f"In which directory do you want to create the CA [{config.directory}]: "
             )
             config.directory = directory or config.directory
             if not config.directory.startswith("/"):
                 config.directory = os.path.abspath(config.directory)
 
             keysize = input(
-                "What should be the keysize of the CA (2048/4096/8192)"
-                "[{0!s}]: ".format(config.keysize)
+                f"What should be the keysize of the CA (2048/4096/8192) [{config.keysize}]: "
             )
             config.keysize = keysize or config.keysize
 
@@ -660,8 +655,7 @@ class LocalCAConnector(BaseCAConnector):
             )
             config.crl_days = crl_days or config.crl_days
             crl_overlap = input(
-                "What should be the overlap period of the CRL in days "
-                "[{0!s}]: ".format(config.crl_overlap)
+                f"What should be the overlap period of the CRL in days [{config.crl_overlap}]: "
             )
             config.crl_overlap = crl_overlap or config.crl_overlap
 

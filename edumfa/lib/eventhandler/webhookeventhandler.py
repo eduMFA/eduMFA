@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -164,9 +163,7 @@ class WebHookHandler(BaseEventHandler):
                     Documentation of the requests function is found her docs.python-requests.org
                     """
                     log.info(
-                        "A webhook is send to {0!r} with the text: {1!r}".format(
-                            webhook_url, webhook_text
-                        )
+                        f"A webhook is send to {webhook_url!r} with the text: {webhook_text!r}"
                     )
                     resp = requests.post(
                         webhook_url,
@@ -183,9 +180,7 @@ class WebHookHandler(BaseEventHandler):
                     Documentation of the requests function is found her docs.python-requests.org
                     """
                     log.info(
-                        "A webhook is send to {0!r} with the text: {1!r}".format(
-                            webhook_url, webhook_text
-                        )
+                        f"A webhook is send to {webhook_url!r} with the text: {webhook_text!r}"
                     )
                     resp = requests.post(
                         webhook_url,

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -1085,14 +1084,10 @@ def import_config(data, name=None):
         )
         res[key] = r
     log.info(
-        "Added configuration: {0!s}".format(
-            ", ".join([k for k, v in res.items() if v == "insert"])
-        )
+        f'Added configuration: {", ".join([k for k, v in res.items() if v == "insert"])}'
     )
     log.info(
-        "Updated configuration: {0!s}".format(
-            ", ".join([k for k, v in res.items() if v == "update"])
-        )
+        f'Updated configuration: {", ".join([k for k, v in res.items() if v == "update"])}'
     )
 
 

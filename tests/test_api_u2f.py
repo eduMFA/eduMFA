@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import binascii
 import struct
 from hashlib import sha256

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -50,7 +49,7 @@ class Audit(AuditBase):
     """
 
     def __init__(self, config=None, startdate=None):
-        super(Audit, self).__init__(config, startdate)
+        super().__init__(config, startdate)
         self.name = "containeraudit"
         write_conf = self.config.get("EDUMFA_AUDIT_CONTAINER_WRITE")
         read_conf = self.config.get("EDUMFA_AUDIT_CONTAINER_READ")

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -191,10 +190,7 @@ class RequestManglerEventHandler(BaseEventHandler):
                                 request.all_data[parameter] = value.format(*m.groups())
                             except IndexError:
                                 log.warning(
-                                    "The number of found tags ({0!r}) "
-                                    "do not match the required number ({1!r}).".format(
-                                        m.groups(), value
-                                    )
+                                    f"The number of found tags ({m.groups()}) do not match the required number ({value})."
                                 )
 
         return ret

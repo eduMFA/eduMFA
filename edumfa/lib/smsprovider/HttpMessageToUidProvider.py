@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -164,9 +163,7 @@ class HttpMessageToUidProvider(ISMSProvider):
             proxies=proxies,
         )
         log.debug(
-            "sent message to the HTTP gateway. status code returned: {0!s}".format(
-                r.status_code
-            )
+            f"sent message to the HTTP gateway. status code returned: {r.status_code}"
         )
 
         # We assume, that all gateways return with HTTP Status Code 200,
@@ -218,7 +215,7 @@ class HttpMessageToUidProvider(ISMSProvider):
                 raise SMSError(
                     response.status_code,
                     "We received a none success reply from the "
-                    "Message Gateway: {0!s} ({1!s})".format(reply, return_success),
+                    "Message Gateway: {!s} ({!s})".format(reply, return_success),
                 )
 
         elif return_fail:

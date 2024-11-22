@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
 This file tests the web UI for creating certificate requests
 
 implementation is contained webui/certificate.py
 """
+
 import json
 import os
 

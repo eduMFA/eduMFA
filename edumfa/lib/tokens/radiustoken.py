@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -485,8 +484,7 @@ class RadiusTokenClass(RemoteTokenClass):
 
         # here we also need to check for radius.user
         log.debug(
-            "checking OTP len:{0!s} on radius server: "
-            "{1!s}, user: {2!r}".format(len(otpval), radius_server, radius_user)
+            f"checking OTP len:{len(otpval)} on radius server: {radius_server}, user: {radius_user!r}"
         )
 
         try:
@@ -542,9 +540,7 @@ class RadiusTokenClass(RemoteTokenClass):
                 response = srv.SendPacket(req)
             except Timeout:
                 log.warning(
-                    "The remote RADIUS server {0!s} timeout out for user {1!s}.".format(
-                        r_server, radius_user
-                    )
+                    "The remote RADIUS server {r_server} timeout out for user {radius_user}."
                 )
                 return AccessReject
 
@@ -561,8 +557,7 @@ class RadiusTokenClass(RemoteTokenClass):
                 radius_state = "<SUCCESS>"
                 radius_message = "RADIUS authentication succeeded"
                 log.info(
-                    "RADIUS server {0!s} granted "
-                    "access to user {1!s}.".format(r_server, radius_user)
+                    f"RADIUS server {r_server} granted access to user {radius_user}."
                 )
                 result = AccessAccept
             else:
@@ -570,8 +565,7 @@ class RadiusTokenClass(RemoteTokenClass):
                 radius_message = "RADIUS authentication failed"
                 log.debug(f"radius response code {response.code!s}")
                 log.info(
-                    "Radiusserver {0!s} "
-                    "rejected access to user {1!s}.".format(r_server, radius_user)
+                    f"Radiusserver {r_server} rejected access to user {radius_user}."
                 )
                 result = AccessReject
 

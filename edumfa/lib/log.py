@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -65,7 +64,7 @@ DEFAULT_LOGGING_CONFIG = {
 class SecureFormatter(Formatter):
 
     def format(self, record):
-        message = super(SecureFormatter, self).format(record)
+        message = super().format(record)
         secured = False
 
         s = ""

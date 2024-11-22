@@ -1,7 +1,7 @@
-# coding: utf-8
 """
 This test file tests the lib/radiusserver.py
 """
+
 from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.error import ConfigAdminError, eduMFAError
 from edumfa.lib.radiusserver import (

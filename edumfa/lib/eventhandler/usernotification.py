@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -281,8 +280,7 @@ class UserNotificationEventHandler(BaseEventHandler):
 
         tokenowner = self._get_tokenowner(request)
         log.debug(
-            "Executing event for action {0!r}, user {1!r}, "
-            "logged_in_user {2!r}".format(action, tokenowner, logged_in_user)
+            f"Executing event for action {action!r}, user {tokenowner!r}, logged_in_user {logged_in_user!r}"
         )
 
         # Determine recipient
@@ -331,8 +329,7 @@ class UserNotificationEventHandler(BaseEventHandler):
 
         else:
             log.warning(
-                "Was not able to determine the email for the reply-to "
-                "header: {0!s}".format(handler_def)
+                f"Was not able to determine the email for the reply-to header: {handler_def}"
             )
 
         if notify_type == NOTIFY_TYPE.TOKENOWNER and not tokenowner.is_empty():
@@ -390,8 +387,7 @@ class UserNotificationEventHandler(BaseEventHandler):
             recipient = {"email": email}
         else:
             log.warning(
-                "Was not able to determine the recipient for the user "
-                "notification: {0!s}".format(handler_def)
+                f"Was not able to determine the recipient for the user notification: {handler_def}"
             )
 
         if recipient or action.lower() == "savefile":
@@ -402,7 +398,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                 # We read the template from the file.
                 filename = body[5:]
                 try:
-                    with open(filename, "r", encoding="utf-8") as f:
+                    with open(filename, encoding="utf-8") as f:
                         body = f.read()
                 except Exception as e:
                     log.warning(

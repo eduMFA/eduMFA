@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -80,8 +79,7 @@ def save_resolver(params):
     (class_dict, type_dict) = get_machine_resolver_class_dict()
     if resolvertype not in type_dict.values():
         raise Exception(
-            "machine resolver type : {0!s} "
-            "not in {1!s}".format(resolvertype, list(type_dict.values()))
+            f"machine resolver type : {resolvertype} not in {list(type_dict.values())}"
         )
 
     # check the name

@@ -5,8 +5,7 @@ This depends on lib.tokenclass
 
 import functools
 from binascii import hexlify
-
-import mock
+from unittest import mock
 
 from edumfa.lib.error import ParameterError
 from edumfa.lib.token import check_serial_pass
@@ -117,7 +116,7 @@ class VascoTokenTest(MyTestCase):
         key = token.token.get_otpkey().getKey()
         self.assertEqual(key, b"X" * 24 + b"Y" * 224)
         # wrong PIN, the token secret has not been updated
-        r = token.authenticate("WRONG123456".format(self.otppin))
+        r = token.authenticate("WRONG123456")
         self.assertEqual(r[0], False)
         self.assertEqual(r[1], -1)
         key = token.token.get_otpkey().getKey()
@@ -139,7 +138,7 @@ class VascoTokenTest(MyTestCase):
             {"otpkey": hexlify(b"X" * 248).decode("utf-8"), "pin": self.otppin}
         )
         # wrong PIN, the token secret has not been updated
-        r = token.authenticate("WRONG123456".format(self.otppin))
+        r = token.authenticate("WRONG123456")
         self.assertEqual(r[0], False)
         self.assertEqual(r[1], -1)
         key = token.token.get_otpkey().getKey()

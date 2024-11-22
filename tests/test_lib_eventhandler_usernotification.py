@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
-
 """
 This file tests:
 
 lib/eventhandler/usernotification.py
 """
+
 import email
 import os
 from datetime import datetime, timedelta
+from unittest import mock
 
-import mock
 from dateutil.tz import tzlocal
 from flask import Request
 from werkzeug.test import EnvironBuilder

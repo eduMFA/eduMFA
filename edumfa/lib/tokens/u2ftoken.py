@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -612,9 +611,7 @@ class U2fTokenClass(TokenClass):
                         ).action_values(unique=False),
                     ):
                         log.warning(
-                            "The U2F device {0!s} is not allowed to authenticate due to policy restriction".format(
-                                self.token.serial
-                            )
+                            f"The U2F device {self.token.serial} is not allowed to authenticate due to policy restriction"
                         )
                         raise PolicyError(
                             "The U2F device is not allowed "

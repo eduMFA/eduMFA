@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -164,15 +163,12 @@ class MSCAConnector(BaseCAConnector):
             # Secure connection
             if not (self.ssl_ca_cert and self.ssl_client_cert and self.ssl_client_key):
                 log.error(
-                    "For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert'"
-                    " and 'ssl_client_key'. The following configuration seems incomplete: "
-                    "({0!s}, {1!s}, {2!s})".format(
-                        self.ssl_ca_cert, self.ssl_client_cert, self.ssl_client_key
-                    )
+                    f"For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert'"
+                    f" and 'ssl_client_key'. The following configuration seems incomplete: "
+                    f"({self.ssl_ca_cert}, {self.ssl_client_cert}, {self.ssl_client_key})"
                 )
                 raise CAError(
-                    "Incomplete TLS configuration for MSCA worker "
-                    "configuration {0!s}".format(self.name)
+                    f"Incomplete TLS configuration for MSCA worker configuration {self.name}"
                 )
             else:
                 # Read all stuff. We need to provide all parameters as PEM encoded byte string
@@ -200,10 +196,10 @@ class MSCAConnector(BaseCAConnector):
                     raise CAError("Invalid TLS configuration for MSCA worker.")
                 except TypeError as e:
                     log.error(
-                        "Faulty configuration in CA '{0!s}'. "
-                        "Trying to use an encrypted private key "
-                        "without providing a password (or vice versa)! "
-                        "The CA connector will not work! ({1!s})".format(self.name, e)
+                        f"Faulty configuration in CA '{self.name}'. "
+                        f"Trying to use an encrypted private key "
+                        f"without providing a password (or vice versa)! "
+                        f"The CA connector will not work! ({e})"
                     )
                     raise CAError("Invalid TLS configuration for MSCA worker.")
 
@@ -424,7 +420,7 @@ class MSCAConnector(BaseCAConnector):
             print("Available CAs: \n")
             for c in cas:
                 print(f"     {c!s}")
-            config.ca = input("Choose CA: ".format(config.ca))
+            config.ca = input(f"Choose CA: ")
             print("=" * 60)
             print(f"{config!s}")
             answer = input("Is this configuration correct? [y/n] ")

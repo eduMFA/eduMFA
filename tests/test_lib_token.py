@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib.token methods.
 
@@ -13,6 +12,7 @@ getTokens4UserOrSerial
 gettokensoftype
 getToken....
 """
+
 import binascii
 import datetime
 import hashlib
@@ -1735,7 +1735,7 @@ class TokenTestCase(MyTestCase):
         self.assertEqual(len(lists5), 1)
         self.assertEqual(len(lists5[0]), 6)
         self.assertEqual(
-            set([t.token.id for t in all_matching_tokens]), set(flatten_tokens(lists1))
+            {t.token.id for t in all_matching_tokens}, set(flatten_tokens(lists1))
         )
         self.assertEqual(flatten_tokens(lists1), flatten_tokens(lists2))
         self.assertEqual(flatten_tokens(lists2), flatten_tokens(lists3))
@@ -1746,14 +1746,14 @@ class TokenTestCase(MyTestCase):
         self.assertEqual(lists6, [])
 
     def test_56_get_tokens_paginated_generator_removal(self):
-        all_serials = set(t.token.serial for t in get_tokens(serial_wildcard="S*"))
+        all_serials = {t.token.serial for t in get_tokens(serial_wildcard="S*")}
         # Test proper behavior if a matching token is deleted while paginating
         gen = get_tokens_paginated_generator(serial_wildcard="S*", psize=3)
         list1 = next(gen)
         remove_token(list1[0].token.serial)
         list2 = next(gen)
         # Check that we did not miss any tokens
-        self.assertEqual(set(t.token.serial for t in list1 + list2), all_serials)
+        self.assertEqual({t.token.serial for t in list1 + list2}, all_serials)
 
     def test_57a_check_invalid_serial(self):
         # This is an invalid serial, which will trigger an exception

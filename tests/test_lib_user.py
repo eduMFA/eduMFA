@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib.user
 
 The lib.user.py only depends on the database model
 """
+
 import logging
 
 from testfixtures import log_capture

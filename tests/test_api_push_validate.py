@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -99,14 +98,9 @@ class PushAPITestCase(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -243,12 +237,8 @@ class PushAPITestCase(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
         set_policy(
             "chalresp", action=f"{ACTION.CHALLENGERESPONSE!s}=hotp", scope=SCOPE.AUTH
@@ -393,12 +383,8 @@ class PushAPITestCase(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -510,16 +496,10 @@ class PushAPITestCase(MyApiTestCase):
         set_policy(
             "pol_push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s},{6!s}={7!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY,
-                1,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY}=1,"
+            f"{LegacyPushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -719,14 +699,9 @@ class EduPushAPITestCase(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -861,12 +836,8 @@ class EduPushAPITestCase(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
         set_policy(
             "chalresp", action=f"{ACTION.CHALLENGERESPONSE!s}=hotp", scope=SCOPE.AUTH
@@ -1011,12 +982,8 @@ class EduPushAPITestCase(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -1128,16 +1095,10 @@ class EduPushAPITestCase(MyApiTestCase):
         set_policy(
             "pol_push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s},{6!s}={7!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.SSL_VERIFY,
-                1,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},"
+            f"{PushTokenClass.PUSH_ACTION.SSL_VERIFY}=1,"
+            f"{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # Create push config
         r = set_smsgateway(

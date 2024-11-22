@@ -1,8 +1,8 @@
-# coding: utf-8
 """
 This test file tests the lib.importotp
 
 """
+
 import pytest
 
 from edumfa.lib.error import TokenImportException

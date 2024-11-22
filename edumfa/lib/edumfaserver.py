@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -121,13 +120,12 @@ class eduMFAServer:
             timeout=60,
         )
         log.debug(
-            "Sent request to eduMFA server. status code returned: "
-            "{0!s}".format(response.status_code)
+            f"Sent request to eduMFA server. status code returned: {response.status_code}"
         )
         if response.status_code != 200:
             log.warning(
-                "The request to the remote eduMFA server {0!s} "
-                "returned a status code: {1!s}".format(config.url, response.status_code)
+                f"The request to the remote eduMFA server {config.url} "
+                f"returned a status code: {response.status_code}"
             )
             return False
 

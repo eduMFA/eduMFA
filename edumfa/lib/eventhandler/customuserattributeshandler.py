@@ -127,7 +127,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
         else:
             log.warning(
                 "Unable to determine the user for handling the custom "
-                "attribute! action: {0!s}, handler: {1!s}".format(action, handler_def)
+                "attribute! action: {!s}, handler: {!s}".format(action, handler_def)
             )
             return False
 

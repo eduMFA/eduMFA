@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -381,8 +380,8 @@ class BaseEventHandler:
                     user = User()
                     # This can happen for orphaned tokens.
                     log.info(
-                        "Could not determine tokenowner for {0!s}. Maybe the "
-                        "user does not exist anymore.".format(serial)
+                        f"Could not determine tokenowner for {serial}. "
+                        f"Maybe the user does not exist anymore."
                     )
                     log.debug(exx)
             # If the user does not exist, we set an empty user
@@ -565,8 +564,7 @@ class BaseEventHandler:
                     res = True
                 else:
                     log.debug(
-                        "Condition token_has_owner for token {0!r} "
-                        "not fulfilled.".format(token_obj)
+                        f"Condition token_has_owner for token {token_obj!r} not fulfilled."
                     )
                     return False
 
@@ -579,8 +577,7 @@ class BaseEventHandler:
                     res = True
                 else:
                     log.debug(
-                        "Condition token_is_orphaned for token {0!r} not "
-                        "fulfilled.".format(token_obj)
+                        f"Condition token_is_orphaned for token {token_obj!r} not fulfilled."
                     )
                     return False
 

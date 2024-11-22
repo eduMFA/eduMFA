@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 __doc__ = """
 This test file tests the modules:
  lib.smsprovider.httpsmsprovider
@@ -10,8 +9,8 @@ This test file tests the modules:
 """
 
 import os
+from unittest import mock
 
-import mock
 import responses
 from responses import json_params_matcher
 

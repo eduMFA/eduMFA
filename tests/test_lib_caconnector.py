@@ -8,10 +8,10 @@ import os
 import shutil
 import unittest
 from io import StringIO
+from unittest import mock
+from unittest.mock import patch
 
-import mock
 import OpenSSL.crypto
-from mock import patch
 from OpenSSL import crypto
 
 from edumfa.lib.caconnector import (

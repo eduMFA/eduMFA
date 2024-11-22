@@ -565,7 +565,7 @@ class APIEventsTestCase(MyApiTestCase):
 
 class CustomUserAttributeHandlerTestCase(MyApiTestCase):
     def setUp(self):
-        super(CustomUserAttributeHandlerTestCase, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def test_01_user_attribute_with_handler_tokenowner(self):

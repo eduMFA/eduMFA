@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -206,7 +205,7 @@ class Token(MethodsMixin, db.Model):
         realm=None,
         **kwargs,
     ):
-        super(Token, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.serial = "" + serial
         self.tokentype = tokentype
         self.count = 0
@@ -3056,10 +3055,10 @@ class PeriodicTask(MethodsMixin, db.Model):
             "retry_if_failed": self.retry_if_failed,
             "last_update": self.aware_last_update,
             "ordering": self.ordering,
-            "options": dict((option.key, option.value) for option in self.options),
-            "last_runs": dict(
-                (last_run.node, last_run.aware_timestamp) for last_run in self.last_runs
-            ),
+            "options": {option.key: option.value for option in self.options},
+            "last_runs": {
+                last_run.node: last_run.aware_timestamp for last_run in self.last_runs
+            },
         }
 
     def save(self):

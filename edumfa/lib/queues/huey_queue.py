@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-#
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.

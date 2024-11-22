@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -62,9 +61,7 @@ class SMSError(Exception):
         self.description = description
 
     def __repr__(self):
-        ret = "{0!s}(error_id={1!r}, description={2!r})".format(
-            type(self).__name__, self.error_id, self.description
-        )
+        ret = f"{ type(self).__name__}(error_id={self.error_id!r}, description={self.description!r})"
         return ret
 
     def __str__(self):
@@ -167,8 +164,7 @@ class ISMSProvider:
                     phone = re.sub(m.group(1), m.group(2), phone)
             except re.error:
                 log.warning(
-                    "Can not mangle phone number. "
-                    "Please check your REGEXP: {0!s}".format(regexp)
+                    f"Can not mangle phone number. Please check your REGEXP: {regexp}"
                 )
 
         return phone

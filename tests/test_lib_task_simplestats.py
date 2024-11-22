@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 """
 This tests the files
   lib/task/simplestats.py
 """
+
 from flask import current_app
 
 from edumfa.lib.monitoringstats import get_values

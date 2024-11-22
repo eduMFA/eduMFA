@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -157,9 +156,7 @@ class SMTPServer:
             if res_id != 200 and res_text != "OK":
                 success = False
                 log.error(
-                    "Failed to send email to {0!r}: {1!r}, {2!r}".format(
-                        one_recipient, res_id, res_text
-                    )
+                    f"Failed to send email to {one_recipient!r}: {res_id!r}, {res_text!r}"
                 )
         mail.quit()
         log.debug("I am done sending your email.")

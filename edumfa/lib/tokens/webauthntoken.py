@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -773,8 +772,8 @@ class WebAuthnTokenClass(TokenClass):
                         "type": "str",
                         "desc": _(
                             "Which algorithm are available to use for creating public key "
-                            "credentials for WebAuthn tokens. (Default: [{0!s}], Order: "
-                            "[{1!s}])".format(
+                            "credentials for WebAuthn tokens. (Default: [{!s}], Order: "
+                            "[{!s}])".format(
                                 ", ".join(
                                     DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
                                 ),
@@ -1641,8 +1640,8 @@ class WebAuthnTokenClass(TokenClass):
                 getParam(options, WEBAUTHNACTION.REQ, optional),
             ):
                 log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate "
-                    "due to policy restriction {1!s}".format(
+                    "The WebAuthn token {!s} is not allowed to authenticate "
+                    "due to policy restriction {!s}".format(
                         self.token.serial, WEBAUTHNACTION.REQ
                     )
                 )
@@ -1662,8 +1661,8 @@ class WebAuthnTokenClass(TokenClass):
                 and self.get_tokeninfo(WEBAUTHNINFO.AAGUID) not in allowed_aaguids
             ):
                 log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate due to policy "
-                    "restriction {1!s}".format(
+                    "The WebAuthn token {!s} is not allowed to authenticate due to policy "
+                    "restriction {!s}".format(
                         self.token.serial, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST
                     )
                 )

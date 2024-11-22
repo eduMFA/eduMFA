@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -179,7 +178,7 @@ def rotate_audit(
         if dryrun:
             click.echo(
                 "If you only would let me I would clean up "
-                "{0!s} entries!".format(len(delete_list))
+                "{!s} entries!".format(len(delete_list))
             )
         else:
             click.echo(f"Cleaning up {len(delete_list)!s} entries.")

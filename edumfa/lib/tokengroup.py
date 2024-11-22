@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -58,8 +57,7 @@ def delete_tokengroup(name=None, tokengroup_id=None):
         if tg:
             if tg.id != tokengroup_id:
                 raise eduMFAError(
-                    "ID of tokengroup with name {0!s} does not "
-                    "match given ID ({1:d}).".format(name, tokengroup_id)
+                    f"ID of tokengroup with name {name} does not match given ID ({tokengroup_id:d})."
                 )
         else:
             tg = fetch_one_resource(Tokengroup, id=tokengroup_id)
@@ -67,8 +65,7 @@ def delete_tokengroup(name=None, tokengroup_id=None):
         tok_count = TokenTokengroup.query.filter_by(tokengroup_id=tg.id).count()
         if tok_count > 0:
             raise eduMFAError(
-                "The tokengroup with name {0!s} still has "
-                "{1:d} tokens assigned.".format(tg.name, tok_count)
+                f"The tokengroup with name {tg.name} still has {tok_count:d} tokens assigned."
             )
         tg.delete()
         db.session.commit()

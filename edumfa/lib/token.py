@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -2032,9 +2031,7 @@ def lost_token(
         log.warning(f"{err!s}")
         raise TokenAdminError(err, id=2012)
 
-    character_pool = "{0!s}{1!s}{2!s}".format(
-        string.ascii_lowercase, string.ascii_uppercase, string.digits
-    )
+    character_pool = f"{string.ascii_lowercase}{string.ascii_uppercase}{string.digits}"
     if contents != "":
         character_pool = ""
         if "c" in contents:
@@ -2407,9 +2404,7 @@ def check_token_list(
             # Avoid a SQL query triggered by ``tokenobject.user`` in case
             # the log level is not DEBUG
             log.debug(
-                "Found user with loginId {0!r}: {1!r}".format(
-                    tokenobject.user, tokenobject.get_serial()
-                )
+                f"Found user with loginId {tokenobject.user!r}: {tokenobject.get_serial()!r}"
             )
 
         if tokenobject.is_challenge_response(passw, user=user, options=options):
@@ -2536,10 +2531,7 @@ def check_token_list(
                     )
                     reply_dict["message"] = ". ".join(messages)
                     log.info(
-                        "Received a valid response to a "
-                        "challenge for a non-fit token {0!s}. {1!s}".format(
-                            tokenobject.token.serial, reply_dict["message"]
-                        )
+                        f"Received a valid response to a challenge for a non-fit token {tokenobject.token.serial}. {reply_dict['message']}"
                     )
                 else:
                     # Challenge matches, token is active and token is fit for challenge

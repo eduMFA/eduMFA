@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 This tests the module lib.utils.compare
 """
+
 from edumfa.lib.utils.compare import (
     CompareError,
     compare_values,

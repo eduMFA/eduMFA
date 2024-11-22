@@ -4,8 +4,8 @@ This test file tests the lib.tokens.smstoken
 
 import datetime
 import logging
+from unittest import mock
 
-import mock
 import responses
 from testfixtures import log_capture
 

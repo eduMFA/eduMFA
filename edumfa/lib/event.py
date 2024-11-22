@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -94,7 +93,7 @@ class event:
                             action=e_handler_def.get("action"),
                         )
                     )
-                    event_audit_data["action_detail"] = "{0!s}".format(
+                    event_audit_data["action_detail"] = str(
                         e_handler_def.get("options")
                     )
                     event_audit_data["info"] = e_handler_def.get("name")
@@ -139,7 +138,7 @@ class event:
                             action=e_handler_def.get("action"),
                         )
                     )
-                    event_audit_data["action_detail"] = "{0!s}".format(
+                    event_audit_data["action_detail"] = str(
                         e_handler_def.get("options")
                     )
                     event_audit_data["info"] = e_handler_def.get("name")

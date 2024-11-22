@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import json
 import time
 from base64 import b32decode, b32encode
 from datetime import datetime, timedelta
 from threading import Timer
+from unittest import mock
 
-import mock
 import responses
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
@@ -286,10 +285,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         token_obj = self._create_push_token()
         remove_token(token_obj.get_serial())
@@ -308,14 +304,9 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -356,9 +347,7 @@ class PushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
                     # Check that the user was informed about the need to poll
                     detail = res.json.get("detail")
@@ -413,10 +402,7 @@ class PushTokenTestCase(MyTestCase):
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action="{0!s}={1!s}".format(
-                    LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING,
-                    PushAllowPolling.DENY,
-                ),
+                action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
             )
 
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -433,19 +419,14 @@ class PushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
             self.assertEqual(len(get_challenges(serial=tokenobj.token.serial)), 0)
             # disallow polling the specific token through a policy
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action="{0!s}={1!s}".format(
-                    LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING,
-                    PushAllowPolling.TOKEN,
-                ),
+                action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
             )
             tokenobj.add_tokeninfo(POLLING_ALLOWED, False)
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -462,9 +443,7 @@ class PushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
             self.assertEqual(len(get_challenges(serial=tokenobj.token.serial)), 0)
 
@@ -530,10 +509,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_config",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -1223,8 +1199,7 @@ class PushTokenTestCase(MyTestCase):
         timestamp_fmt = "broken_timestamp_010203"
         self.assertRaisesRegex(
             eduMFAError,
-            r"Could not parse timestamp {0!s}. ISO-Format "
-            r"required.".format(timestamp_fmt),
+            rf"Could not parse timestamp {timestamp_fmt}. ISO-Format required.",
             LegacyPushTokenClass._check_timestamp_in_range,
             timestamp_fmt,
             10,
@@ -1236,12 +1211,12 @@ class PushTokenTestCase(MyTestCase):
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
             LegacyPushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
+        timestamp_iso = timestamp.isoformat().replace("+", r"\+")
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
-                r"Timestamp {0!s} not in valid "
-                r"range.".format(timestamp.isoformat().replace("+", r"\+")),
+                rf"Timestamp {timestamp_iso} not in valid range.",
                 LegacyPushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
                 8,
@@ -1250,8 +1225,7 @@ class PushTokenTestCase(MyTestCase):
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
-                r"Timestamp {0!s} not in valid "
-                r"range.".format(timestamp.isoformat().replace("+", r"\+")),
+                rf"Timestamp {timestamp_iso} not in valid range.",
                 LegacyPushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
                 8,
@@ -1477,14 +1451,9 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},"
+            f"{LegacyPushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         g.policy_object = PolicyClass()
         # set up the Firebase Gateway
@@ -1584,9 +1553,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.DENY
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
         )
         with mock.patch("edumfa.models.datetime") as mock_dt1, mock.patch(
             "edumfa.lib.tokens.pushtoken.datetime"
@@ -1607,9 +1574,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.TOKEN
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
         )
         # If no tokeninfo is set, allow polling
         with mock.patch("edumfa.models.datetime") as mock_dt1, mock.patch(
@@ -1659,9 +1624,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.ALLOW
-            ),
+            action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.ALLOW}",
         )
         with mock.patch("edumfa.models.datetime") as mock_dt1, mock.patch(
             "edumfa.lib.tokens.pushtoken.datetime"
@@ -2030,9 +1993,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         token_obj = self._create_push_token()
         remove_token(token_obj.get_serial())
@@ -2051,14 +2012,9 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},"
+            f"{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -2099,9 +2055,7 @@ class EduPushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
                     # Check that the user was informed about the need to poll
                     detail = res.json.get("detail")
@@ -2156,9 +2110,7 @@ class EduPushTokenTestCase(MyTestCase):
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action="{0!s}={1!s}".format(
-                    PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.DENY
-                ),
+                action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
             )
 
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -2175,18 +2127,14 @@ class EduPushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
             self.assertEqual(len(get_challenges(serial=tokenobj.token.serial)), 0)
             # disallow polling the specific token through a policy
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action="{0!s}={1!s}".format(
-                    PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.TOKEN
-                ),
+                action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
             )
             tokenobj.add_tokeninfo(POLLING_ALLOWED, False)
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -2203,9 +2151,7 @@ class EduPushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
             self.assertEqual(len(get_challenges(serial=tokenobj.token.serial)), 0)
 
@@ -2271,9 +2217,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push_config",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -2961,8 +2905,7 @@ class EduPushTokenTestCase(MyTestCase):
         timestamp_fmt = "broken_timestamp_010203"
         self.assertRaisesRegex(
             eduMFAError,
-            r"Could not parse timestamp {0!s}. ISO-Format "
-            r"required.".format(timestamp_fmt),
+            rf"Could not parse timestamp {timestamp_fmt}. ISO-Format required.",
             PushTokenClass._check_timestamp_in_range,
             timestamp_fmt,
             10,
@@ -2974,12 +2917,12 @@ class EduPushTokenTestCase(MyTestCase):
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
+        timestamp_iso = timestamp.isoformat().replace("+", r"\+")
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
-                r"Timestamp {0!s} not in valid "
-                r"range.".format(timestamp.isoformat().replace("+", r"\+")),
+                rf"Timestamp {timestamp_iso} not in valid range.",
                 PushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
                 8,
@@ -2988,8 +2931,7 @@ class EduPushTokenTestCase(MyTestCase):
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
-                r"Timestamp {0!s} not in valid "
-                r"range.".format(timestamp.isoformat().replace("+", r"\+")),
+                rf"Timestamp {timestamp_iso} not in valid range.",
                 PushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
                 8,
@@ -3211,14 +3153,9 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},"
+            f"{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         g.policy_object = PolicyClass()
         # set up the Firebase Gateway
@@ -3318,9 +3255,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.DENY
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
         )
         with mock.patch("edumfa.models.datetime") as mock_dt1, mock.patch(
             "edumfa.lib.tokens.pushtoken.datetime"
@@ -3341,9 +3276,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.TOKEN
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
         )
         # If no tokeninfo is set, allow polling
         with mock.patch("edumfa.models.datetime") as mock_dt1, mock.patch(
@@ -3393,9 +3326,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.ALLOW
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.ALLOW}",
         )
         with mock.patch("edumfa.models.datetime") as mock_dt1, mock.patch(
             "edumfa.lib.tokens.pushtoken.datetime"

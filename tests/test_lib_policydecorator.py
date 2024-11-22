@@ -240,12 +240,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0}, {1}, {2}, {3}=none".format(
-                ACTION.RESETALLTOKENS,
-                ACTION.PASSNOUSER,
-                ACTION.PASSNOTOKEN,
-                ACTION.OTPPIN,
-            ),
+            action=f"{ACTION.RESETALLTOKENS}, {ACTION.PASSNOUSER}, {ACTION.PASSNOTOKEN}, {ACTION.OTPPIN}=none",
             realm=self.realm1,
         )
         g = FakeFlaskG()

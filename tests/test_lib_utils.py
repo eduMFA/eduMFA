@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 This tests the package lib.utils
 """
+
 import binascii
 from datetime import datetime, timedelta
 

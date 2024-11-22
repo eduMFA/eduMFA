@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -254,12 +253,10 @@ def detach_token(
         # Delete MachineTokenOptions
         for mt in mts:
             if mt.get("application") == application and (
-                (
-                    not machine_id
-                    or machine_id == mt.get("machine_id")
-                    and (not hostname or hostname == mt.get("hostname"))
-                    and (not resolver_name or resolver_name == mt.get("resolver"))
-                )
+                not machine_id
+                or machine_id == mt.get("machine_id")
+                and (not hostname or hostname == mt.get("hostname"))
+                and (not resolver_name or resolver_name == mt.get("resolver"))
             ):
                 delete_mt = True
                 for key, value in filter_params.items():

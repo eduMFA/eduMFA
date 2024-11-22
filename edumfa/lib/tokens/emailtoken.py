@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -406,7 +405,7 @@ class EmailTokenClass(HotpTokenClass):
         if message.startswith("file:"):
             # We read the template from the file.
             try:
-                with open(message[5:], "r") as f:
+                with open(message[5:]) as f:
                     message = f.read()
                     mimetype = "html"
             except Exception as e:  # pragma: no cover

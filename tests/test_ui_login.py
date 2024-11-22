@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
 This file tests the web UI Login
 
 implementation is contained webui/login.py
 """
+
 import re
 
 import flask_babel as babel

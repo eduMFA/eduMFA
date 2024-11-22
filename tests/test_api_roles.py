@@ -1,10 +1,10 @@
-# coding: utf-8
 """
 This file tests the authentication of admin users and normal user (
 selfservice) on the REST API.
 
 implementation is contained in api/auth.py, api/token.py api/audit.py
 """
+
 import datetime
 import json
 
@@ -263,7 +263,7 @@ class APIAuthChallengeResponse(MyApiTestCase):
             self.assertTrue("multi_challenge" in result, result)
             self.assertEqual(
                 {"hotp1", "hotp2"},
-                set([x["serial"] for x in result.get("multi_challenge")]),
+                {x["serial"] for x in result.get("multi_challenge")},
             )
 
         # check if we have both serials in the audit log

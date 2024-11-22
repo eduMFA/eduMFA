@@ -4,8 +4,8 @@ This test file tests the lib.tokens.certificatetoken
 
 import os
 import unittest
+from unittest import mock
 
-import mock
 from OpenSSL import crypto
 
 from edumfa.lib.caconnector import save_caconnector

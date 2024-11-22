@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from edumfa.lib.policy import (
     ACTION,
     CONDITION_SECTION,

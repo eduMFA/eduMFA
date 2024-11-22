@@ -1,8 +1,8 @@
-# coding: utf-8
 """
 This test file tests the lib.tokens.sshkeytoken
 This depends on lib.tokenclass
 """
+
 from edumfa.lib.error import TokenAdminError
 from edumfa.lib.tokenclass import ROLLOUTSTATE
 from edumfa.lib.tokens.sshkeytoken import SSHkeyTokenClass

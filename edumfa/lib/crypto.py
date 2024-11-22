@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -806,8 +805,7 @@ class Sign:
                     r = _slow_rsa_verify_raw(self.public, int(signature), int_s)
                 else:
                     log.debug(
-                        "Could not verify old style signature {0!s} "
-                        "for data {1:s}".format(signature, s)
+                        f"Could not verify old style signature {signature} for data {s:s}"
                     )
         except Exception:
             log.error(f"Failed to verify signature: {s!r}")

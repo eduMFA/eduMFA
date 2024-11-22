@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import datetime
 import json
 import logging
 import time
+from unittest import mock
 from urllib.parse import quote, urlencode
 
-import mock
 import responses
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
@@ -2347,12 +2346,7 @@ class ValidateAPITestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0}, {1}, {2}, {3}=none".format(
-                ACTION.RESETALLTOKENS,
-                ACTION.PASSNOUSER,
-                ACTION.PASSNOTOKEN,
-                ACTION.OTPPIN,
-            ),
+            action=f"{ACTION.RESETALLTOKENS}, {ACTION.PASSNOUSER}, {ACTION.PASSNOTOKEN}, {ACTION.OTPPIN}=none",
             realm=self.realm1,
         )
         # Check that the non existing user MisterX is allowed to authenticate
@@ -3421,7 +3415,7 @@ class ValidateAPITestCase(MyApiTestCase):
 class RegistrationValidity(MyApiTestCase):
 
     def setUp(self):
-        super(RegistrationValidity, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def test_00_registrationtoken_with_validity_period(self):
@@ -4742,14 +4736,9 @@ class MultiChallege(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                POLL_ONLY,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={POLL_ONLY},"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},"
+            f"{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
 
         pin = "otppin"
@@ -4801,9 +4790,8 @@ class MultiChallege(MyApiTestCase):
         set_policy(
             "test49",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp totp, {1!s}=  poll   u2f   webauthn ".format(
-                ACTION.CHALLENGERESPONSE, ACTION.PREFERREDCLIENTMODE
-            ),
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp totp, "
+            f"{ACTION.PREFERREDCLIENTMODE}=  poll   u2f   webauthn ",
         )
 
         # authenticate with PIN to trigger challenge-response
@@ -6526,7 +6514,7 @@ class AChallengeResponse(MyApiTestCase):
 class TriggeredPoliciesTestCase(MyApiTestCase):
 
     def setUp(self):
-        super(TriggeredPoliciesTestCase, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def test_00_two_policies(self):
@@ -6604,7 +6592,7 @@ class MultiChallengeEnrollTest(MyApiTestCase):
     # Note: Testing the enrollment of the push token is done in test_api_push_validate.py
 
     def setUp(self):
-        super(MultiChallengeEnrollTest, self).setUp()
+        super().setUp()
 
         ldap3mock.setLDAPDirectory(LDAPDirectory)
         params = {

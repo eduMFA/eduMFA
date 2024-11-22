@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -127,7 +126,7 @@ class Audit(AuditBase):
     is_readable = True
 
     def __init__(self, config=None, startdate=None):
-        super(Audit, self).__init__(config, startdate)
+        super().__init__(config, startdate)
         self.name = "sqlaudit"
         self.sign_data = not self.config.get("EDUMFA_AUDIT_NO_SIGN")
         self.sign_object = None
@@ -295,10 +294,8 @@ class Audit(AuditBase):
                 self._truncate_data()
             if "tokentype" in self.audit_data:
                 log.warning(
-                    "We have a wrong 'tokentype' key. This should not happen. Fix it!. "
-                    "Error occurs in action: {0!r}.".format(
-                        self.audit_data.get("action")
-                    )
+                    f"We have a wrong 'tokentype' key. This should not happen. Fix it!. "
+                    f"Error occurs in action: {self.audit_data.get('action')!r}."
                 )
                 if not "token_type" in self.audit_data:
                     self.audit_data["token_type"] = self.audit_data.get("tokentype")

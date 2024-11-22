@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -219,10 +218,7 @@ class TokenClass:
         # FIXME: We need to remove this, if we one day want to assign several users to one token
         if self.user and self.user != user:
             log.info(
-                "The token with serial {0!s} is already assigned "
-                "to user {1!s}. Can not assign to {2!s}.".format(
-                    self.token.serial, self.user, user
-                )
+                f"The token with serial {self.token.serial} is already assigned to user {self.user}. Can not assign to {user}."
             )
             raise TokenAdminError("This token is already assigned to another user.")
 
@@ -308,8 +304,8 @@ class TokenClass:
         user_object = self.user
         user_info = user_object.info
         user_identifier = f"{user_object.login!s}_{user_object.realm!s}"
-        user_displayname = "{0!s} {1!s}".format(
-            user_info.get("givenname", "."), user_info.get("surname", ".")
+        user_displayname = (
+            f"{user_info.get('givenname', '.')} {user_info.get('surname', '.')}"
         )
         return user_identifier, user_displayname
 
@@ -1204,9 +1200,7 @@ class TokenClass:
             timeout = int(get_from_config(FAILCOUNTER_CLEAR_TIMEOUT, 0))
         except Exception as exx:
             log.warning(
-                "Misconfiguration. Error retrieving "
-                "failcounter_clear_timeout: "
-                "{0!s}".format(exx)
+                f"Misconfiguration. Error retrieving failcounter_clear_timeout: {exx}"
             )
         if timeout and self.token.failcount == self.get_max_failcount():
             now = datetime.now(tzlocal())
@@ -1827,8 +1821,7 @@ class TokenClass:
             if last_success_auth + tdelta < datetime.now(tzlocal()):
                 res = False
                 log.debug(
-                    "The last successful authentication is too old: "
-                    "{0!s}".format(last_success_auth)
+                    f"The last successful authentication is too old: {last_success_auth}"
                 )
 
         return res

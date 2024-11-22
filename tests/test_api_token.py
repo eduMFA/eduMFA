@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
 import codecs
 import datetime
 import json
 import os
 import unittest
+from unittest import mock
 from urllib.parse import quote, urlencode
 
-import mock
 from dateutil.tz import tzlocal
-from mock import mock
 
 from edumfa.lib import _
 from edumfa.lib.caconnector import save_caconnector
@@ -563,7 +561,7 @@ class APIAttestationTestCase(MyApiTestCase):
 class APITokenTestCase(MyApiTestCase):
 
     def setUp(self):
-        super(APITokenTestCase, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def _create_temp_token(self, serial):
@@ -2879,9 +2877,7 @@ class APITokenTestCase(MyApiTestCase):
         set_policy(
             name="hide_tokeninfo_admin",
             scope=SCOPE.ADMIN,
-            action="{0!s}=tokenkind unknown, {1!s}".format(
-                ACTION.HIDE_TOKENINFO, ACTION.TOKENLIST
-            ),
+            action=f"{ACTION.HIDE_TOKENINFO}=tokenkind unknown, {ACTION.TOKENLIST}",
         )
         t = init_token({"genkey": 1}, tokenkind="testing")
         add_tokeninfo(t.token.serial, "blabla", value="SomeValue")
@@ -3983,7 +3979,7 @@ class APIDetermine_User_from_Serial_for_Policies(MyApiTestCase):
 class APIRolloutState(MyApiTestCase):
 
     def setUp(self):
-        super(APIRolloutState, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def test_01_enroll_two_tokens(self):
@@ -4190,7 +4186,7 @@ class APIMSCACertTestCase(MyApiTestCase):
 class APITokengroupTestCase(MyApiTestCase):
 
     def setUp(self):
-        super(APITokengroupTestCase, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def test_01_add_tokengroups(self):

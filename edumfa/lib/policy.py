@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -747,11 +746,8 @@ class PolicyClass:
             ):
                 tb_str = "".join(traceback.format_stack())
                 log.warning(
-                    "Cannot pass user_object as well as user, resolver, realm "
-                    "in policy {0!s}. "
-                    "{1!s} - {2!s}@{3!s} in resolver {4!s}".format(
-                        (name, scope, action), user_object, user, realm, resolver
-                    )
+                    f"Cannot pass user_object as well as user, resolver, realm in policy "
+                    f"{(name, scope, action)}. {user_object} - {user}@{realm} in resolver {resolver}"
                 )
                 log.warning(f"Possible programming error: {tb_str!s}")
                 raise ParameterError(

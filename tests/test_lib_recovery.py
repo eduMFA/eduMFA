@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib/passwordreset.py
 """
+
 from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.error import eduMFAError
 from edumfa.lib.passwordreset import (

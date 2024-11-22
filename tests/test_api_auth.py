@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 """ Test for the '/auth' API-endpoint """
-import logging
 
-import mock
+import logging
+from unittest import mock
+
 from testfixtures import log_capture
 
 from edumfa.config import TestingConfig

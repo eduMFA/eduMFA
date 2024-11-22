@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -265,10 +264,7 @@ def _build_verify_object(pubkey_pem):
     # The public key of the smartphone was probably sent as urlsafe:
     pubkey_pem = pubkey_pem.replace("-", "+").replace("_", "/")
     # The public key was sent without any header
-    pubkey_pem = (
-        "-----BEGIN PUBLIC KEY-----\n{0!s}\n-----END PUBLIC "
-        "KEY-----".format(pubkey_pem.strip().replace(" ", "+"))
-    )
+    pubkey_pem = f"-----BEGIN PUBLIC KEY-----\n{pubkey_pem.strip().replace(' ', '+')}\n-----END PUBLIC KEY-----"
 
     return serialization.load_pem_public_key(to_bytes(pubkey_pem), default_backend())
 
@@ -314,7 +310,7 @@ class PushTokenClass(TokenClass):
     # If the token is enrollable via multichallenge
     is_multichallenge_enrollable = True
 
-    class PUSH_ACTION(object):
+    class PUSH_ACTION:
         FIREBASE_CONFIG = "edupush_firebase_configuration"
         REGISTRATION_URL = "edupush_registration_url"
         TTL = "edupush_ttl"
@@ -905,8 +901,7 @@ class PushTokenClass(TokenClass):
                 # signature error even if the token with the serial could not be found
                 log.debug(f"{traceback.format_exc()!s}")
                 log.info(
-                    "The following error occurred during the signature "
-                    'check: "{0!r}"'.format(e)
+                    f'The following error occurred during the signature check: "{e!r}"'
                 )
                 raise eduMFAError("Could not verify signature!")
         else:
@@ -968,8 +963,7 @@ class PushTokenClass(TokenClass):
             if allow_polling == PushAllowPolling.TOKEN:
                 if not is_true(tok.get_tokeninfo(POLLING_ALLOWED, default="True")):
                     log.debug(
-                        "Polling not allowed for pushtoken {0!s} due to "
-                        "tokeninfo.".format(serial)
+                        "Polling not allowed for pushtoken {serial} due to tokeninfo."
                     )
                     raise PolicyError("Polling not allowed!")
 
@@ -986,9 +980,8 @@ class PushTokenClass(TokenClass):
             )
             if not registration_url:
                 raise ResourceNotFoundError(
-                    "There is no registration_url defined for the "
-                    " pushtoken {0!s}. You need to define a push_registration_url "
-                    "in an enrollment policy.".format(serial)
+                    f"There is no registration_url defined for the pushtoken {serial}. "
+                    f"You need to define a push_registration_url in an enrollment policy."
                 )
             options = {"g": g}
             challenges = []
@@ -1111,8 +1104,7 @@ class PushTokenClass(TokenClass):
             result = cls._api_endpoint_get(g, request.all_data)
         else:
             raise eduMFAError(
-                "Method {0!s} not allowed in 'api_endpoint' "
-                "for push token.".format(request.method)
+                f"Method {request.method} not allowed in 'api_endpoint' for push token."
             )
 
         return "json", prepare_result(result, details=details)
@@ -1224,9 +1216,7 @@ class PushTokenClass(TokenClass):
             # If sending the Push message failed, we log a warning
             if not res:
                 log.warning(
-                    "Failed to submit message to Firebase service for token {0!s}.".format(
-                        self.token.serial
-                    )
+                    f"Failed to submit message to Firebase service for token {self.token.serial}."
                 )
                 message += " " + ERROR_CHALLENGE_TEXT
                 if is_true(options.get("exception")):

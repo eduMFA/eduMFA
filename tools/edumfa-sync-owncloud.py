@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 #  2020-04-28 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #             Read tables oc_accounts and oc_users from owncloud
@@ -33,7 +32,7 @@ EXAMPLE_CONFIG_FILE = """{
 class Config:
 
     def __init__(self, config_file):
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             contents = f.read()
         config = json.loads(contents)
         self.OWNCLOUD_URI = config.get("SQL").get("OWNCLOUD_URI")

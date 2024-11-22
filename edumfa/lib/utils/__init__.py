@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -98,7 +97,7 @@ def check_time_in_range(time_range, check_time=None):
     try:
         for tr in time_ranges:
             # tr is something like: Mon-Tue:09:30-17:30
-            dow, t = [x.lower() for x in tr.split(":", 1)]
+            dow, t = (x.lower() for x in tr.split(":", 1))
             if "-" in dow:
                 dow_start, dow_end = dow.split("-")
             else:
@@ -417,8 +416,8 @@ def get_data_from_params(params, exclude_params, config_description, module, typ
                     types[k] = config_description.get(k)
                 else:
                     log.warning(
-                        "the passed key '{0!s}' is not a parameter for "
-                        "the {1!s} type '{2!s}'".format(k, module, type)
+                        "the passed key '{!s}' is not a parameter for "
+                        "the {!s} type '{!s}'".format(k, module, type)
                     )
 
     # Check that there is no type or desc without the data itself.
@@ -588,7 +587,7 @@ def check_proxy(path_to_client, proxy_settings):
     except AddrFormatError:
         log.error(
             "Error parsing the OverrideAuthorizationClient setting: "
-            "{0!s}! The IP addresses need to be comma separated. Fix "
+            "{!s}! The IP addresses need to be comma separated. Fix "
             "this. The client IP will not be mapped!".format(proxy_settings)
         )
         log.debug(f"{traceback.format_exc()!s}")
@@ -892,7 +891,7 @@ def compare_generic_condition(cond, key_method, warning):
     key = value = None
     for comparator in ["==", ">", "<"]:
         if len(cond.split(comparator)) == 2:
-            key, value = [x.strip() for x in cond.split(comparator)]
+            key, value = (x.strip() for x in cond.split(comparator))
             break
     if value:
         res = compare_value_value(key_method(key), comparator, value)
@@ -1251,8 +1250,8 @@ def get_module_class(package_name, class_name, check_method=None):
     log.debug(f"klass: {klass!s}")
     if check_method and not hasattr(klass, check_method):
         raise NameError(
-            "Class AttributeError: {0}.{1} "
-            "instance has no attribute '{2}'".format(
+            "Class AttributeError: {}.{} "
+            "instance has no attribute '{}'".format(
                 package_name, class_name, check_method
             )
         )

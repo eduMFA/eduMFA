@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 2016-01-20 Cornelius Kölbel <cornelius@privacyidea.org>
 2015-01-30 Cornelius Kölbel <cornelius@privacyidea.org>
@@ -183,7 +182,7 @@ class SmtpMock:
         return None
 
     def start(self):
-        import mock
+        from unittest import mock
 
         def unbound_on_send(SMTP, sender, recipient, msg, *a, **kwargs):
             self.sent_message = msg

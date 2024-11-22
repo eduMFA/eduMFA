@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib.token methods.
 
@@ -13,6 +12,7 @@ getTokens4UserOrSerial
 gettokensoftype
 getToken....
 """
+
 from edumfa.lib.error import ResourceNotFoundError, eduMFAError
 from edumfa.lib.tokengroup import delete_tokengroup, get_tokengroups, set_tokengroup
 from edumfa.models import Tokengroup

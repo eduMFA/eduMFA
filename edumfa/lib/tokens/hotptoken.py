@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License: AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -512,10 +511,7 @@ class HotpTokenClass(TokenClass):
             res = previous_otp == otp
             if res:
                 log.info(
-                    "Previous OTP used again. "
-                    "Serial {0!s} with counter {1!s}.".format(
-                        self.token.serial, counter
-                    )
+                    f"Previous OTP used again. Serial {self.token.serial} with counter {counter}."
                 )
             return res
         else:

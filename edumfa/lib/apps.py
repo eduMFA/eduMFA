@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -207,7 +206,7 @@ def create_oathtoken_url(
     url_label = quote(label)
 
     extra_parameters = _construct_extra_parameters(extra_data)
-    url = "oathtoken:///addToken?name={0!s}&lockdown=true&key={1!s}{2!s}{3!s}".format(
+    url = "oathtoken:///addToken?name={!s}&lockdown=true&key={!s}{!s}{!s}".format(
         url_label, otpkey, timebased, extra_parameters
     )
     return url

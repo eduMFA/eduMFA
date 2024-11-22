@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -175,9 +174,7 @@ class User:
         return ret
 
     def __repr__(self):
-        ret = "User(login={0!r}, realm={1!r}, resolver={2!r})".format(
-            self.login, self.realm, self.resolver
-        )
+        ret = f"User(login={self.login!r}, realm={self.realm!r}, resolver={self.resolver!r})"
         return ret
 
     def __bool__(self):
@@ -378,8 +375,7 @@ class User:
                     return phone[index]
                 else:
                     log.warning(
-                        "userobject ({0!r}) has not that much "
-                        "phone numbers ({1!r} of {2!r}).".format(self, index, phone)
+                        f"userobject ({self!r}) has not that much phone numbers ({index!r} of {phone!r})."
                     )
                     return ""
             else:
@@ -502,8 +498,7 @@ class User:
         success = False
         try:
             log.info(
-                "User info for user {0!r}@{1!r} about to "
-                "be updated.".format(self.login, self.realm)
+                f"User info for user {self.login!r}@{self.realm!r} about to be updated."
             )
             res = self._get_resolvers()
             # Now we know, the resolvers of this user and we can update the

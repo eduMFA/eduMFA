@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 #
 #  2018-05-27 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #
@@ -72,8 +71,8 @@ def read_counter_file(import_file):
     update_list = []
     for line in import_file.readlines():
         try:
-            serial, counter = [v.strip() for v in line.split(",")]
-            update_list.append((f"{serial!s}", int(counter)))
+            serial, counter = (v.strip() for v in line.split(","))
+            update_list.append((f"{serial}", int(counter)))
         except ValueError as ve:
             # If there is a line, that does not comply
             sys.stderr.write(f"Failed to parse line: {line!s}\n")

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -149,12 +148,12 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
 
         # Before starting the session, we log the old session time usage
         log.debug(
-            "Starting new session now. The old session started {0!s} seconds ago.".format(
+            "Starting new session now. The old session started {!s} seconds ago.".format(
                 datetime.datetime.now() - self.session_start_time
             )
         )
         log.debug(
-            "Starting new session now. The old session was used {0!s} seconds ago.".format(
+            "Starting new session now. The old session was used {!s} seconds ago.".format(
                 datetime.datetime.now() - self.session_lastused_time
             )
         )
@@ -249,7 +248,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
         """
         # we keep this for legacy reasons, even though it hasn't worked anyway
         if len(enc_data) == 0:
-            return bytes()
+            return b""
         log.debug(f"Decrypting {len(enc_data)} bytes with key {key_id}")
         m = PyKCS11.Mechanism(PyKCS11.CKM_AES_CBC_PAD, iv)
         start = datetime.datetime.now()

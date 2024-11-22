@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -79,9 +78,7 @@ class MachineApplication(MachineApplicationBase):
                     # We just return the ssh public key, so that
                     # it can be included into authorized keys.
                     log.info(
-                        "Using SSH key {0!s} for SSH user {1!s}".format(
-                            tokclass.token.serial, options.get("user")
-                        )
+                        f"Using SSH key {tokclass.token.serial} for SSH user {options.get('user')}"
                     )
                     ret["sshkey"] = tokclass.get_sshkey()
                     # We return the username if the token is assigned to a

@@ -5,9 +5,9 @@ This tests api/periodictask.py
 """
 
 from contextlib import contextmanager
+from unittest import mock
 
 import jwt
-import mock
 from dateutil.parser import parse as parse_timestamp
 
 from edumfa.lib.periodictask import TASK_MODULES
@@ -342,4 +342,4 @@ class APIPeriodicTasksTestCase(MyApiTestCase):
         status_code, data = self.simulate_request("/periodictask/nodes/", method="GET")
         self.assertEqual(status_code, 200)
         self.assertTrue(data["result"]["status"])
-        self.assertEqual(set(data["result"]["value"]), set(["Node2", "Node1"]))
+        self.assertEqual(set(data["result"]["value"]), {"Node2", "Node1"})
