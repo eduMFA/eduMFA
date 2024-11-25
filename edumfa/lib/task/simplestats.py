@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -22,13 +21,13 @@
 #
 import logging
 
-from edumfa.lib.utils import is_true
-from edumfa.lib.tokenclass import TOKENKIND
-from edumfa.lib.token import get_tokens
+from edumfa.lib import _
 from edumfa.lib.monitoringstats import write_stats
 from edumfa.lib.subscriptions import get_users_with_active_tokens
 from edumfa.lib.task.base import BaseTask
-from edumfa.lib import _
+from edumfa.lib.token import get_tokens
+from edumfa.lib.tokenclass import TOKENKIND
+from edumfa.lib.utils import is_true
 
 __doc__ = """This is a statistics task which collects simple statistics from the database.
 If You want to add more statistic points, simply add them to the options method and add a
@@ -47,23 +46,29 @@ class SimpleStatsTask(BaseTask):
         return {
             "total_tokens": {
                 "type": "bool",
-                "description": _("Total number of tokens")},
+                "description": _("Total number of tokens"),
+            },
             "hardware_tokens": {
                 "type": "bool",
-                "description": _("Total number of hardware tokens")},
+                "description": _("Total number of hardware tokens"),
+            },
             "software_tokens": {
                 "type": "bool",
-                "description": _("Total number of software tokens")},
+                "description": _("Total number of software tokens"),
+            },
             "unassigned_hardware_tokens": {
                 "type": "bool",
-                "description": _("Number of hardware tokens not assigned to a user")},
+                "description": _("Number of hardware tokens not assigned to a user"),
+            },
             "assigned_tokens": {
                 "type": "bool",
-                "description": _("Number of tokens assigned to users")},
+                "description": _("Number of tokens assigned to users"),
+            },
             "user_with_token": {
                 "type": "bool",
-                "description": _("Number of users with tokens assigned")}
-            }
+                "description": _("Number of users with tokens assigned"),
+            },
+        }
 
     @property
     def _user_with_token(self):
@@ -75,15 +80,17 @@ class SimpleStatsTask(BaseTask):
 
     @property
     def _hardware_tokens(self):
-        return get_tokens(count=True, tokeninfo={'tokenkind': TOKENKIND.HARDWARE})
+        return get_tokens(count=True, tokeninfo={"tokenkind": TOKENKIND.HARDWARE})
 
     @property
     def _software_tokens(self):
-        return get_tokens(count=True, tokeninfo={'tokenkind': TOKENKIND.SOFTWARE})
+        return get_tokens(count=True, tokeninfo={"tokenkind": TOKENKIND.SOFTWARE})
 
     @property
     def _unassigned_hardware_tokens(self):
-        return get_tokens(count=True, tokeninfo={'tokenkind': 'hardware'}, assigned=False)
+        return get_tokens(
+            count=True, tokeninfo={"tokenkind": "hardware"}, assigned=False
+        )
 
     @property
     def _assigned_tokens(self):
@@ -92,7 +99,7 @@ class SimpleStatsTask(BaseTask):
     def do(self, params):
         for opt in self.options.keys():
             if is_true(params.get(opt)):
-                log.debug("Got param {0}".format(opt))
-                write_stats(opt, getattr(self, '_' + opt))
+                log.debug(f"Got param {opt}")
+                write_stats(opt, getattr(self, "_" + opt))
 
         return True

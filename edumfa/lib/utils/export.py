@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -53,18 +52,21 @@ def register_export(name=None):
                 # implement export functionality here
                 return dict
 
-"""
+    """
+
     def wrapped(func):
         exp_name = name
         if not exp_name:
-            exp_name = func.__module__.split('.')[-1]
+            exp_name = func.__module__.split(".")[-1]
         if exp_name in EXPORT_FUNCTIONS:
-            print('Exporter function with name \'{0!s}\' already exists! '
-                  'Overwriting {1!s} with {2!s}'.format(exp_name,
-                                                        EXPORT_FUNCTIONS[exp_name],
-                                                        func), file=sys.stderr)
+            print(
+                "Exporter function with name '{exp_name}' already exists! "
+                "Overwriting {EXPORT_FUNCTIONS[exp_name]} with {func}",
+                file=sys.stderr,
+            )
         EXPORT_FUNCTIONS[exp_name] = func
         return func
+
     return wrapped
 
 
@@ -94,18 +96,19 @@ def register_import(name=None, prio=99):
             def import_events(dict):
                 # implement import functionality here
 
-"""
+    """
 
     def wrapped(func):
         imp_name = name
         if not imp_name:
-            imp_name = func.__module__.split('.')[-1]
+            imp_name = func.__module__.split(".")[-1]
         if imp_name in IMPORT_FUNCTIONS:
-            print('Importer function with name \'{0!s}\' already exists! '
-                  'Overwriting {1!s} with {2!s}'.format(imp_name,
-                                                        IMPORT_FUNCTIONS[imp_name],
-                                                        func), file=sys.stderr)
-        IMPORT_FUNCTIONS[imp_name] = {'prio': prio,
-                                      'func': func}
+            print(
+                f"Importer function with name '{imp_name}' already exists! "
+                f"Overwriting {IMPORT_FUNCTIONS[imp_name]} with {func}",
+                file=sys.stderr,
+            )
+        IMPORT_FUNCTIONS[imp_name] = {"prio": prio, "func": func}
         return func
+
     return wrapped

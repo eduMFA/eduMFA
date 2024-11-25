@@ -36,6 +36,7 @@ Repository = "https://github.com/eduMFA/eduMFA.git"
 Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
+dev = ["black", "isort", "pre-commit"]
 docs = [
     "furo==2024.8.6",
     "docutils==0.21.2",
@@ -90,3 +91,11 @@ include = ["edumfa*"]
 
 [tool.setuptools.package-data]
 "edumfa" = ["translations/**/*", "static/**/*"]
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+combine_star = true
+src_paths = ["edumfa/", "tests/", "migrations/versions/", "tools/"]
+extend_skip = ["test_lib_crypto.py"]
+

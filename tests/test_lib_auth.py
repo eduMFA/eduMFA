@@ -3,12 +3,18 @@ This tests the files
   lib/auth.py and
 """
 
-from .base import MyTestCase
-from edumfa.lib.auth import (create_db_admin, verify_db_admin,
-                             delete_db_admin,
-                             check_webui_user, db_admin_exist)
-from edumfa.lib.user import User
 from flask import current_app
+
+from edumfa.lib.auth import (
+    check_webui_user,
+    create_db_admin,
+    db_admin_exist,
+    delete_db_admin,
+    verify_db_admin,
+)
+from edumfa.lib.user import User
+
+from .base import MyTestCase
 
 
 class AuthTestCase(MyTestCase):

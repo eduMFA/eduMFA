@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -25,7 +24,9 @@ These are the applications that can be assigned to machines in eduMFA.
 
 An application must be inherited from the MachineApplicationBase class.
 """
-from .base import MachineApplication as MachineApplicationBase
-from .base import get_auth_item
-from .base import is_application_allow_bulk_call
-from .base import get_application_types
+from .base import (
+    MachineApplication as MachineApplicationBase,
+    get_application_types,
+    get_auth_item,
+    is_application_allow_bulk_call,
+)

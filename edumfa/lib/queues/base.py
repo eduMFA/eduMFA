@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -38,6 +37,7 @@ class BaseQueue:
     Currently, the queue only supports fire-and-forget jobs, i.e.
     jobs without any return value.
     """
+
     def __init__(self, options):
         self.options = options
 
@@ -60,4 +60,3 @@ class BaseQueue:
         :return: None
         """
         raise NotImplementedError()
-

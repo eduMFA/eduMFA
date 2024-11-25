@@ -47,10 +47,11 @@ You can call the script like this:
 __version__ = "0.1"
 
 import click
-from edumfa.lib.token import get_tokens, get_serial_by_otp
-from edumfa.app import create_app
-from flask.cli import FlaskGroup
 from flask import current_app as app
+from flask.cli import FlaskGroup
+
+from edumfa.app import create_app
+from edumfa.lib.token import get_serial_by_otp, get_tokens
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 

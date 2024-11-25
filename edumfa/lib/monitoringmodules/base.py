@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -29,6 +28,7 @@ A monitoring module needs to provide the possibility to write new data,
 return all available keys, return the last data. 
 """
 import logging
+
 log = logging.getLogger(__name__)
 from edumfa.lib.log import log_with
 
@@ -94,7 +94,3 @@ class Monitoring:
         :return: None
         """
         pass
-
-
-
-

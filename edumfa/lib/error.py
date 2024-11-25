@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -25,13 +24,15 @@
 #
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#    
+#
 """
 contains Errors and Exceptions
 """
 
-from edumfa.lib import _
 import logging
+
+from edumfa.lib import _
+
 log = logging.getLogger(__name__)
 
 
@@ -80,17 +81,15 @@ class eduMFAError(Exception):
         if isinstance(self.message, str):
             pstr = "ERR%d: %s"
 
-
         ### if we have here unicode, we might fail with conversion error
         try:
             res = pstr % (self.id, self.message)
         except Exception as exx:
-            res = "ERR{0:d}: {1!r}".format(self.id, self.message)
+            res = f"ERR{self.id:d}: {self.message!r}"
         return res
 
     def __repr__(self):
-        ret = '{0!s}(description={1!r}, id={2:d})'.format(type(self).__name__,
-                                             self.message, self.id)
+        ret = f"{type(self).__name__!s}(description={self.message!r}, id={self.id:d})"
         return ret
 
 
@@ -105,8 +104,7 @@ class SubscriptionError(eduMFAError):
         return self.__repr__()
 
     def __repr__(self):
-        ret = '{0!s}({1!r}, application={2!s})'.format(type(
-            self).__name__, self.message, self.application)
+        ret = f"{type(self).__name__}({self.message!r}, application={self.application})"
         return ret
 
 
@@ -167,7 +165,9 @@ class CSRError(CAError):
 
 
 class CSRPending(CAError):
-    def __init__(self, description="CSR pending", id=ERROR.CA_CSR_PENDING, requestId=None):
+    def __init__(
+        self, description="CSR pending", id=ERROR.CA_CSR_PENDING, requestId=None
+    ):
         eduMFAError.__init__(self, description=description, id=id)
         self.requestId = requestId
 
@@ -193,7 +193,7 @@ class SelfserviceException(eduMFAError):
 
 
 class ParameterError(eduMFAError):
-    USER_OR_SERIAL = _('You either need to provide user or serial')
+    USER_OR_SERIAL = _("You either need to provide user or serial")
 
     def __init__(self, description="unspecified parameter error!", id=ERROR.PARAMETER):
         eduMFAError.__init__(self, description=description, id=id)

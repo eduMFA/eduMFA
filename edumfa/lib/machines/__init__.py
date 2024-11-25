@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -20,11 +19,10 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-__doc__ = '''
+__doc__ = """
 Machine Resolvers are used to find machines in directories like LDAP, Active
 Directory or the /etc/hosts file.
 
 Machines can then be used to assign applications and tokens to those machines.
-'''
+"""
 from .base import BaseMachineResolver
-

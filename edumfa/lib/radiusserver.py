@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -20,20 +19,24 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.models import RADIUSServer as RADIUSServerDB
-from edumfa.lib.crypto import (decryptPassword, encryptPassword,
-                                    FAILED_TO_DECRYPT_PASSWORD)
-from edumfa.lib.config import get_from_config
 import logging
-from edumfa.lib.log import log_with
-from edumfa.lib.error import ConfigAdminError, eduMFAError
+
 import pyrad.packet
-from pyrad.client import Client
-from pyrad.client import Timeout
+from pyrad.client import Client, Timeout
 from pyrad.dictionary import Dictionary
+
 from edumfa.lib import _
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import (
+    FAILED_TO_DECRYPT_PASSWORD,
+    decryptPassword,
+    encryptPassword,
+)
+from edumfa.lib.error import ConfigAdminError, eduMFAError
+from edumfa.lib.log import log_with
 from edumfa.lib.utils import fetch_one_resource, to_bytes
-from edumfa.lib.utils.export import (register_import, register_export)
+from edumfa.lib.utils.export import register_export, register_import
+from edumfa.models import RADIUSServer as RADIUSServerDB
 
 __doc__ = """
 This is the library for creating, listing and deleting RADIUS server objects in
@@ -89,21 +92,23 @@ class RADIUSServer:
         """
         success = False
 
-        nas_identifier = get_from_config("radius.nas_identifier",
-                                         "eduMFA")
-        r_dict = config.dictionary or get_from_config("radius.dictfile",
-                                                      "/etc/edumfa/"
-                                                      "dictionary")
-        log.debug("NAS Identifier: %r, "
-                  "Dictionary: %r" % (nas_identifier, r_dict))
-        log.debug("constructing client object "
-                  "with server: %r, port: %r, secret: %r" %
-                  (config.server, config.port, config.secret))
+        nas_identifier = get_from_config("radius.nas_identifier", "eduMFA")
+        r_dict = config.dictionary or get_from_config(
+            "radius.dictfile", "/etc/edumfa/" "dictionary"
+        )
+        log.debug(f"NAS Identifier: {nas_identifier!r}, Dictionary: {r_dict!r}")
+        log.debug(
+            "constructing client object "
+            "with server: %r, port: %r, secret: %r"
+            % (config.server, config.port, config.secret)
+        )
 
-        srv = Client(server=config.server,
-                     authport=config.port,
-                     secret=to_bytes(decryptPassword(config.secret)),
-                     dict=Dictionary(r_dict))
+        srv = Client(
+            server=config.server,
+            authport=config.port,
+            secret=to_bytes(decryptPassword(config.secret)),
+            dict=Dictionary(r_dict),
+        )
 
         # Set retries and timeout of the client
         if config.timeout:
@@ -111,10 +116,11 @@ class RADIUSServer:
         if config.retries:
             srv.retries = config.retries
 
-        
-        req = srv.CreateAuthPacket(code=pyrad.packet.AccessRequest,
-                                    User_Name=user.encode('utf-8'),
-                                    NAS_Identifier=nas_identifier.encode('ascii'))
+        req = srv.CreateAuthPacket(
+            code=pyrad.packet.AccessRequest,
+            User_Name=user.encode("utf-8"),
+            NAS_Identifier=nas_identifier.encode("ascii"),
+        )
         if config.enforce_ma:
             req.add_message_authenticator()
 
@@ -128,23 +134,28 @@ class RADIUSServer:
                 if "Message-Authenticator" in response:
                     success = response.verify_message_authenticator()
                     if not success:
-                        log.info("Radiusserver %s sent broken"
-                                 "Message-Authenticator" % (config.server))
+                        log.info(
+                            "Radiusserver %s sent broken"
+                            "Message-Authenticator" % (config.server)
+                        )
                         return False
                 else:
-                    log.info("Radiusserver %s sent no "
-                             "Message-Authenticator" % (config.server))
+                    log.info(
+                        f"Radiusserver {config.server} sent no Message-Authenticator"
+                    )
                     return False
 
             if response.code == pyrad.packet.AccessAccept:
-                log.info("Radiusserver %s granted "
-                         "access to user %s." % (config.server, user))
+                log.info(f"Radiusserver {config.server} granted access to user {user}.")
                 success = True
             else:
-                log.warning("Radiusserver %s rejected "
-                            "access to user %s." % (config.server, user))
+                log.warning(
+                    f"Radiusserver {config.server} rejected access to user {user}."
+                )
         except Timeout:
-            log.warning("Receiving timeout from remote radius server {0!s}".format(config.server))
+            log.warning(
+                f"Receiving timeout from remote radius server {config.server!s}"
+            )
 
         return success
 
@@ -161,8 +172,9 @@ def get_radius(identifier):
     """
     server_list = get_radiusservers(identifier=identifier)
     if not server_list:
-        raise ConfigAdminError("The specified RADIUSServer configuration does "
-                               "not exist.")
+        raise ConfigAdminError(
+            "The specified RADIUSServer configuration does " "not exist."
+        )
     return server_list[0]
 
 
@@ -194,6 +206,7 @@ def get_radiusservers(identifier=None, server=None):
 
     return res
 
+
 @log_with(log)
 def list_radiusservers(identifier=None, server=None):
     res = {}
@@ -203,21 +216,32 @@ def list_radiusservers(identifier=None, server=None):
         # If the database contains garbage, use the empty password as fallback
         if decrypted_password == FAILED_TO_DECRYPT_PASSWORD:
             decrypted_password = ""  # nosec B105 # Reset password in case of error
-        res[server.config.identifier] = {"server": server.config.server,
-                                         "port": server.config.port,
-                                         "dictionary": server.config.dictionary,
-                                         "description": server.config.description,
-                                         "password": decrypted_password,
-                                         "timeout": server.config.timeout,
-                                         "retries": server.config.retries,
-                                         "enforce_ma": server.config.enforce_ma}
+        res[server.config.identifier] = {
+            "server": server.config.server,
+            "port": server.config.port,
+            "dictionary": server.config.dictionary,
+            "description": server.config.description,
+            "password": decrypted_password,
+            "timeout": server.config.timeout,
+            "retries": server.config.retries,
+            "enforce_ma": server.config.enforce_ma,
+        }
 
     return res
 
 
 @log_with(log)
-def add_radius(identifier, server=None, secret=None, port=1812, description="",
-               dictionary='/etc/edumfa/dictionary', retries=3, timeout=5, enforce_ma=False):
+def add_radius(
+    identifier,
+    server=None,
+    secret=None,
+    port=1812,
+    description="",
+    dictionary="/etc/edumfa/dictionary",
+    retries=3,
+    timeout=5,
+    enforce_ma=False,
+):
     """
     This adds a RADIUS server to the RADIUSServer database table.
 
@@ -243,18 +267,35 @@ def add_radius(identifier, server=None, secret=None, port=1812, description="",
     """
     cryptedSecret = encryptPassword(secret)
     if len(cryptedSecret) > 255:
-        raise eduMFAError(description=_("The RADIUS secret is too long"),
-                               id=2234)
-    r = RADIUSServerDB(identifier=identifier, server=server, port=port,
-                       secret=cryptedSecret, description=description,
-                       dictionary=dictionary,
-                       retries=retries, timeout=timeout, enforce_ma=enforce_ma).save()
+        raise eduMFAError(description=_("The RADIUS secret is too long"), id=2234)
+    r = RADIUSServerDB(
+        identifier=identifier,
+        server=server,
+        port=port,
+        secret=cryptedSecret,
+        description=description,
+        dictionary=dictionary,
+        retries=retries,
+        timeout=timeout,
+        enforce_ma=enforce_ma,
+    ).save()
     return r
 
 
 @log_with(log)
-def test_radius(identifier, server, secret, user, password, port=1812, description="",
-               dictionary='/etc/edumfa/dictionary', retries=3, timeout=5, enforce_ma=False):
+def test_radius(
+    identifier,
+    server,
+    secret,
+    user,
+    password,
+    port=1812,
+    description="",
+    dictionary="/etc/edumfa/dictionary",
+    retries=3,
+    timeout=5,
+    enforce_ma=False,
+):
     """
     This tests a RADIUS server configuration by sending an access request.
 
@@ -277,12 +318,18 @@ def test_radius(identifier, server, secret, user, password, port=1812, descripti
     """
     cryptedSecret = encryptPassword(secret)
     if len(cryptedSecret) > 255:
-        raise eduMFAError(description=_("The RADIUS secret is too long"),
-                               id=2234)
-    s = RADIUSServerDB(identifier=identifier, server=server, port=port,
-                       secret=cryptedSecret, dictionary=dictionary,
-                       retries=retries, timeout=timeout,
-                       description=description, enforce_ma=enforce_ma)
+        raise eduMFAError(description=_("The RADIUS secret is too long"), id=2234)
+    s = RADIUSServerDB(
+        identifier=identifier,
+        server=server,
+        port=port,
+        secret=cryptedSecret,
+        dictionary=dictionary,
+        retries=retries,
+        timeout=timeout,
+        description=description,
+        enforce_ma=enforce_ma,
+    )
     return RADIUSServer.request(s, user, password)
 
 
@@ -297,20 +344,19 @@ def delete_radius(identifier):
     return fetch_one_resource(RADIUSServerDB, identifier=identifier).delete()
 
 
-@register_export('radiusserver')
+@register_export("radiusserver")
 def export_radiusserver(name=None):
-    """ Export given or all radiusserver configuration """
+    """Export given or all radiusserver configuration"""
     return list_radiusservers(identifier=name)
 
 
-@register_import('radiusserver')
+@register_import("radiusserver")
 def import_radiusserver(data, name=None):
     """Import radiusserver configuration"""
-    log.debug('Import radiusserver config: {0!s}'.format(data))
+    log.debug(f"Import radiusserver config: {data!s}")
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
-        res_data['secret'] = res_data.pop('password')
+        res_data["secret"] = res_data.pop("password")
         rid = add_radius(res_name, **res_data)
-        log.info('Import of radiusserver "{0!s}" finished,'
-                 ' id: {1!s}'.format(res_name, rid))
+        log.info(f'Import of radiusserver "{res_name!s}" finished, id: {rid!s}')

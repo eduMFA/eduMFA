@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -55,7 +54,7 @@ def _reset_counter_on_all_nodes(counter_name):
     regardless of the node column.
     :param counter_name:  The name/identifier of the counter
     """
-    EventCounter.query.filter_by(counter_name=counter_name).update({'counter_value': 0})
+    EventCounter.query.filter_by(counter_name=counter_name).update({"counter_value": 0})
     db.session.commit()
 
 
@@ -108,5 +107,8 @@ def read(counter_name):
     :param counter_name: The name of the counter
     :return: The value of the counter
     """
-    return db.session.query(func.sum(EventCounter.counter_value))\
-        .filter(EventCounter.counter_name == counter_name).one()[0]
+    return (
+        db.session.query(func.sum(EventCounter.counter_value))
+        .filter(EventCounter.counter_name == counter_name)
+        .one()[0]
+    )

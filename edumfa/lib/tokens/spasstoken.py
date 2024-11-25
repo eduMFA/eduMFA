@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -26,7 +25,7 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-__doc__="""This is the implementation of the simple pass token.
+__doc__ = """This is the implementation of the simple pass token.
 The simple pass token always returns TRUE as far as the checkOTP is concerned.
 Thus a user with a simple pass token can authenticate by just providing the
 OTP PIN of the token.
@@ -35,11 +34,12 @@ This code is tested in tests/test_lib_tokens_spass
 """
 
 import logging
+
 from edumfa.lib import _
-from edumfa.lib.log import log_with
-from edumfa.lib.tokenclass import TokenClass, AUTHENTICATIONMODE
 from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, TokenClass
 
 optional = True
 required = False
@@ -53,6 +53,7 @@ class SpassTokenClass(TokenClass):
     It does have no OTP component. The OTP checking will always
     succeed. Of course, an OTP PIN can be used.
     """
+
     mode = [AUTHENTICATIONMODE.AUTHENTICATE]
 
     def __init__(self, db_token):
@@ -69,7 +70,7 @@ class SpassTokenClass(TokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
         Is used by lib.token.get_token_info
@@ -81,44 +82,48 @@ class SpassTokenClass(TokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict
         """
-        res = {'type' :'spass',
-               'title' :'Simple Pass Token',
-               'description': _('SPass: Simple Pass token. Static passwords.'),
-               'config': {},
-               'user': ['enroll'],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin", "user"],
-               # SPASS token can have specific PIN policies in the scopes
-               # admin and user
-               'pin_scopes': [SCOPE.ADMIN, SCOPE.USER],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of SPASS tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _(
-                               "The user may only have this maximum number of active SPASS tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               }
-               }
+        res = {
+            "type": "spass",
+            "title": "Simple Pass Token",
+            "description": _("SPass: Simple Pass token. Static passwords."),
+            "config": {},
+            "user": ["enroll"],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin", "user"],
+            # SPASS token can have specific PIN policies in the scopes
+            # admin and user
+            "pin_scopes": [SCOPE.ADMIN, SCOPE.USER],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of SPASS tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of active SPASS tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
 
         # do we need to define the lost token policies here...
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
     def update(self, param):
-        if 'otpkey' not in param:
-            param['genkey'] = 1
+        if "otpkey" not in param:
+            param["genkey"] = 1
 
         TokenClass.update(self, param)
 
@@ -156,4 +161,3 @@ class SpassTokenClass(TokenClass):
         if pin_match is True:
             otp_count = 0
         return pin_match, otp_count, None
-

@@ -6,10 +6,11 @@
 #
 __version__ = '0.2'
 
-import sys
-from getopt import getopt, GetoptError
-import ldap3
 import getpass
+import sys
+from getopt import GetoptError, getopt
+
+import ldap3
 
 # Objectclass for OpenLDAP
 #OBJECT_CLASSES = ['top', "posixAccount", 'inetOrgPerson']

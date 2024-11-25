@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -18,10 +17,10 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import click
-
-from edumfa.lib.crypto import create_hsm_object
 from flask import current_app
 from flask.cli import AppGroup
+
+from edumfa.lib.crypto import create_hsm_object
 
 hsm_cli = AppGroup("hsm", help="Manage hardware security modules")
 
@@ -37,6 +36,6 @@ def create_keys():
     hsm_object = create_hsm_object(current_app.config)
     r = hsm_object.create_keys()
     click.echo("Please add the following to your edumfa.cfg:")
-    click.echo("EDUMFA_HSM_MODULE_KEY_LABEL_TOKEN = '{0}'".format(r.get("token")))
-    click.echo("EDUMFA_HSM_MODULE_KEY_LABEL_CONFIG = '{0}'".format(r.get("config")))
-    click.echo("EDUMFA_HSM_MODULE_KEY_LABEL_VALUE = '{0}'".format(r.get("value")))
+    click.echo(f"EDUMFA_HSM_MODULE_KEY_LABEL_TOKEN = '{r.get('token')}'")
+    click.echo(f"EDUMFA_HSM_MODULE_KEY_LABEL_CONFIG = '{r.get('config')}'")
+    click.echo(f"EDUMFA_HSM_MODULE_KEY_LABEL_VALUE = '{r.get('value')}'")

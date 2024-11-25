@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -58,10 +57,11 @@ args=('/var/log/edumfa/audit.log',)
 
 """
 
-import logging
 import json
-from edumfa.lib.auditmodules.base import (Audit as AuditBase)
+import logging
 from datetime import datetime
+
+from edumfa.lib.auditmodules.base import Audit as AuditBase
 
 
 class Audit(AuditBase):
@@ -73,9 +73,9 @@ class Audit(AuditBase):
     """
 
     def __init__(self, config=None, startdate=None):
-        super(Audit, self).__init__(config, startdate)
+        super().__init__(config, startdate)
         self.name = "loggeraudit"
-        self.qualname = self.config.get('EDUMFA_AUDIT_LOGGER_QUALNAME', __name__)
+        self.qualname = self.config.get("EDUMFA_AUDIT_LOGGER_QUALNAME", __name__)
         self.logger = logging.getLogger(self.qualname)
 
     def finalize_log(self):
@@ -87,7 +87,7 @@ class Audit(AuditBase):
         self.audit_data["timestamp"] = datetime.utcnow().isoformat()
         if self.audit_data.get("startdate"):
             duration = datetime.utcnow() - self.audit_data.get("startdate")
-            self.audit_data["duration"] = "{0!s}".format(duration)
+            self.audit_data["duration"] = f"{duration!s}"
             self.audit_data["startdate"] = self.audit_data.get("startdate").isoformat()
-        self.logger.info("{0!s}".format(json.dumps(self.audit_data, sort_keys=True)))
+        self.logger.info(f"{json.dumps(self.audit_data, sort_keys=True)!s}")
         self.audit_data = {}

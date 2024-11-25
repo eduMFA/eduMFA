@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import base64
 import getpass
@@ -23,10 +22,10 @@ def get_hash(passwd, salt):
     {SSHA}Uau5Y2B43vv4iNhFenx2+FyPEUx0ZXN0
 
     """
-    h = hashlib.sha1(passwd.encode('utf8') + salt).digest()
-    return '{SSHA}' + base64.b64encode(h + salt).decode('utf8')
+    h = hashlib.sha1(passwd.encode("utf8") + salt).digest()
+    return "{SSHA}" + base64.b64encode(h + salt).decode("utf8")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     salt = os.urandom(8)  # edit the length as you see fit
     print(get_hash(getpass.getpass(), salt))

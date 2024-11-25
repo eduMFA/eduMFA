@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -28,11 +27,11 @@ and send it back to the authentication endpoint.
 This code is tested in tests/test_lib_tokens_push
 """
 
-from edumfa.api.lib.policyhelper import get_legacypushtoken_add_config
-from edumfa.lib.tokens.pushtoken import PushTokenClass
-from edumfa.lib.tokenclass import TokenClass
-
 import logging
+
+from edumfa.api.lib.policyhelper import get_legacypushtoken_add_config
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.tokens.pushtoken import PushTokenClass
 
 log = logging.getLogger(__name__)
 
@@ -97,7 +96,7 @@ class LegacyPushTokenClass(PushTokenClass):
     def get_push_url_prefix():
         return "otpauth://pipush"
 
-    class PUSH_ACTION(object):
+    class PUSH_ACTION:
         FIREBASE_CONFIG = "push_firebase_configuration"
         REGISTRATION_URL = "push_registration_url"
         TTL = "push_ttl"

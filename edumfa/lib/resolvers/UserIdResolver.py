@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -43,11 +42,17 @@ Defines the rough interface for a UserId Resolver
 
 class UserIdResolver:
 
-    fields = {"username": 1, "userid": 1,
-              "description": 0,
-              "phone": 0, "mobile": 0, "email": 0,
-              "givenname": 0, "surname": 0, "gender": 0
-              }
+    fields = {
+        "username": 1,
+        "userid": 1,
+        "description": 0,
+        "phone": 0,
+        "mobile": 0,
+        "email": 0,
+        "givenname": 0,
+        "surname": 0,
+        "gender": 0,
+    }
     name = ""
     id = "baseid"
 
@@ -65,7 +70,7 @@ class UserIdResolver:
         """
         provide the resolver type for registration
         """
-        return 'UserIdResolver'
+        return "UserIdResolver"
 
     @staticmethod
     def getResolverType():
@@ -75,7 +80,7 @@ class UserIdResolver:
         :return: returns the string 'ldapresolver'
         :rtype:  string
         """
-        return 'UserIdResolver'
+        return "UserIdResolver"
 
     @classmethod
     def getResolverClassDescriptor(cls):
@@ -89,8 +94,8 @@ class UserIdResolver:
         """
         descriptor = {}
         typ = cls.getResolverClassType()
-        descriptor['clazz'] = "useridresolver.UserIdResolver"
-        descriptor['config'] = {}
+        descriptor["clazz"] = "useridresolver.UserIdResolver"
+        descriptor["config"] = {}
         return {typ: descriptor}
 
     @staticmethod

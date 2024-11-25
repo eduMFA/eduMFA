@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -27,12 +26,12 @@ This file contains the definition of the application specific password token cla
 """
 
 import logging
-from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
-from edumfa.lib.log import log_with
-from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
-from edumfa.api.lib.utils import getParam
 
+from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
 
 TOKENINFO_KEY = "service_id"
 
@@ -47,9 +46,10 @@ class ApplicationSpecificPasswordTokenClass(PasswordTokenClass):
     This static password is tied to a certain application or service,
     making it an application specific password.
     """
+
     # We use an easier length of 23 for password tokens
     default_length = 23
-    default_contents = 'cn'
+    default_contents = "cn"
 
     def __init__(self, aToken):
         PasswordTokenClass.__init__(self, aToken)
@@ -65,7 +65,7 @@ class ApplicationSpecificPasswordTokenClass(PasswordTokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -76,38 +76,45 @@ class ApplicationSpecificPasswordTokenClass(PasswordTokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or scalar
         """
-        res = {'type': 'applspec',
-               'title': 'Application Specific Password Token',
-               'description': _('Application Specific Password: A token with a fixed password. Can be used '
-                                'for certain applications or services.'),
-               'init': {},
-               'config': {},
-               'user':  ["enroll"],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin", "user"],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of application specific "
-                                     "password tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of active application specific"
-                                     " password tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               },
-               }
+        res = {
+            "type": "applspec",
+            "title": "Application Specific Password Token",
+            "description": _(
+                "Application Specific Password: A token with a fixed password. Can be used "
+                "for certain applications or services."
+            ),
+            "init": {},
+            "config": {},
+            "user": ["enroll"],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin", "user"],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of application specific "
+                            "password tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of active application specific"
+                            " password tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
         # I don't think we need to define the lost token policies here...
 
         if key:
             ret = res.get(key)
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
@@ -143,10 +150,10 @@ class ApplicationSpecificPasswordTokenClass(PasswordTokenClass):
         """
         service_id = options.get(TOKENINFO_KEY)
         if not service_id:
-            log.debug("The request has no {0!s}.".format(TOKENINFO_KEY))
+            log.debug(f"The request has no {TOKENINFO_KEY!s}.")
             return False
         if not self.service_id:
             # A token could be missing the service_id
-            log.debug("The token has no {0!s}.".format(TOKENINFO_KEY))
+            log.debug(f"The token has no {TOKENINFO_KEY!s}.")
             return False
         return self.service_id.lower() == service_id.lower()

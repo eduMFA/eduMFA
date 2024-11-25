@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -23,7 +22,7 @@
 Mock module for testing the handling of hardware security modules
 """
 import sys
-import mock
+from unittest import mock
 
 try:
     import PyKCS11
@@ -33,9 +32,13 @@ except ImportError:
         def __init__(self, value):
             self.value = value
 
-
-    MOCK_CONSTANTS = ['CKA_CLASS', 'CKO_SECRET_KEY', 'CKA_LABEL', 'CKR_SLOT_ID_INVALID', 'CKR_DEVICE_ERROR']
-
+    MOCK_CONSTANTS = [
+        "CKA_CLASS",
+        "CKO_SECRET_KEY",
+        "CKA_LABEL",
+        "CKR_SLOT_ID_INVALID",
+        "CKR_DEVICE_ERROR",
+    ]
 
     def _setup_module_mock():
         module = mock.MagicMock()
@@ -45,12 +48,12 @@ except ImportError:
             setattr(module, name, object())
         return module
 
-
     PyKCS11 = _setup_module_mock()
-    sys.modules['PyKCS11'] = PyKCS11
+    sys.modules["PyKCS11"] = PyKCS11
+
+from contextlib import contextmanager
 
 from PyKCS11 import PyKCS11Error
-from contextlib import contextmanager
 
 SLOT_IDS = [1, 2, 3]
 
@@ -84,6 +87,7 @@ class PKCS11Mock:
     ``fake_encrypt`` and ``fake_decrypt``. Generated random
     values are just "\x00\x01\x02...".
     """
+
     def __init__(self, default_mocks=True):
         self.mock = mock.MagicMock()
         self.lowlevel_mock = mock.MagicMock()
@@ -95,7 +99,7 @@ class PKCS11Mock:
         if slot not in SLOT_IDS:
             raise PyKCS11Error(PyKCS11.CKR_SLOT_ID_INVALID)
         slot_info = PyKCS11.CK_SLOT_INFO()
-        slot_info.slotDescription = "slot {!s} description".format(slot)
+        slot_info.slotDescription = f"slot {slot!s} description"
         return slot_info
 
     @contextmanager
@@ -140,13 +144,17 @@ class PKCS11Mock:
         This is just a shortcut for calling ``simulate_failure`` on ``generateRandom``, ``encrypt``,
         ``decrypt`` and ``openSession``.
         """
-        with self.simulate_failure(self.session_mock.generateRandom, count,
-                                   error=PyKCS11.CKR_SESSION_HANDLE_INVALID), \
-                self.simulate_failure(self.session_mock.encrypt, count,
-                                      error=PyKCS11.CKR_SESSION_HANDLE_INVALID), \
-                self.simulate_failure(self.session_mock.decrypt, count,
-                                      error=PyKCS11.CKR_SESSION_HANDLE_INVALID), \
-                self.simulate_failure(self.mock.openSession, count):
+        with self.simulate_failure(
+            self.session_mock.generateRandom,
+            count,
+            error=PyKCS11.CKR_SESSION_HANDLE_INVALID,
+        ), self.simulate_failure(
+            self.session_mock.encrypt, count, error=PyKCS11.CKR_SESSION_HANDLE_INVALID
+        ), self.simulate_failure(
+            self.session_mock.decrypt, count, error=PyKCS11.CKR_SESSION_HANDLE_INVALID
+        ), self.simulate_failure(
+            self.mock.openSession, count
+        ):
             yield
 
     def _mock_openSession(self, slot):
@@ -188,7 +196,7 @@ class PKCS11Mock:
         self.stop()
 
     def start(self):
-        self._patcher = mock.patch('PyKCS11.PyKCS11Lib', return_value=self.mock)
+        self._patcher = mock.patch("PyKCS11.PyKCS11Lib", return_value=self.mock)
         self._patcher.start()
         self.mock.lib = self.lowlevel_mock
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -27,8 +26,8 @@ It depends on the models.py
 
 import logging
 
+from edumfa.lib.error import ResourceNotFoundError, eduMFAError
 from edumfa.lib.utils import fetch_one_resource
-from edumfa.lib.error import eduMFAError, ResourceNotFoundError
 from edumfa.models import Serviceid, db
 
 log = logging.getLogger(__name__)
@@ -57,8 +56,9 @@ def delete_serviceid(name=None, sid=None):
     if sid:
         if si:
             if si.id != sid:
-                raise eduMFAError('ID of the serviceid with name {0!s} does not '
-                                       'match given ID ({1:d}).'.format(name, sid))
+                raise eduMFAError(
+                    f"ID of the serviceid with name {name} does not match given ID ({sid:d})."
+                )
         else:
             si = fetch_one_resource(Serviceid, id=sid)
     if si:
@@ -66,7 +66,9 @@ def delete_serviceid(name=None, sid=None):
         si.delete()
         db.session.commit()
     else:
-        raise ResourceNotFoundError("You need to specify either a ID or name of a serviceid.")
+        raise ResourceNotFoundError(
+            "You need to specify either a ID or name of a serviceid."
+        )
 
 
 def get_serviceids(name=None, id=None):
