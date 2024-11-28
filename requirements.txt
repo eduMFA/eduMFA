@@ -108,8 +108,8 @@ pycparser==2.22
     # via cffi
 pydash==8.0.4
     # via edumfa (setup.py)
-pyjwt==2.9.0; python_version<'3.9'
-pyjwt==2.10.0; python_version>='3.9'
+pyjwt==2.10.1; python_version<'3.9'
+pyjwt==2.10.1; python_version>='3.9'
     # via edumfa (setup.py)
 pymysql==1.1.1
     # via edumfa (setup.py)
