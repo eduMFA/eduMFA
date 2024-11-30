@@ -14,7 +14,7 @@ async-timeout==5.0.1
     # via redis
 babel==2.16.0
     # via flask-babel
-bcrypt==4.2.0
+bcrypt==4.2.1
     # via passlib
 beautifulsoup4==4.12.3
     # via edumfa (setup.py)
@@ -107,7 +107,7 @@ pycparser==2.22
 pydash==8.0.4
     # via edumfa (setup.py)
 pyjwt==2.9.0; python_version<'3.9'
-pyjwt==2.10.0; python_version>='3.9'
+pyjwt==2.10.1; python_version>='3.9'
     # via edumfa (setup.py)
 pymysql==1.1.1
     # via edumfa (setup.py)
@@ -163,5 +163,5 @@ zipp==3.21.0
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==75.5.0
+setuptools==75.6.0
     # via flask-versioned
