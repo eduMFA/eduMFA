@@ -54,6 +54,7 @@ import passlib.utils.handlers as uh
 import passlib.exc as exc
 from passlib.registry import register_crypt_handler
 from passlib.handlers.ldap_digests import _SaltedBase64DigestHelper
+from urllib.parse import quote
 
 
 class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no cover
@@ -549,15 +550,18 @@ class IdResolver (UserIdResolver):
         """
         port = ""
         password = "" # nosec B105 # default parameter
+        user = ""
         conParams = ""
         if param.get("Port"):
             port = ":{0!s}".format(param.get("Port"))
         if param.get("Password"):
-            password = ":{0!s}".format(param.get("Password"))
+            password = ":{0!s}".format(quote(param.get("Password"), safe=''))
+        if param.get("User"):
+            user = quote(param.get("User"), safe='')
         if param.get("conParams"):
             conParams = "?{0!s}".format(param.get("conParams"))
         connect_string = "{0!s}://{1!s}{2!s}{3!s}{4!s}{5!s}/{6!s}{7!s}".format(param.get("Driver") or "",
-                                                   param.get("User") or "",
+                                                   user,
                                                    password,
                                                    "@" if (param.get("User")
                                                            or

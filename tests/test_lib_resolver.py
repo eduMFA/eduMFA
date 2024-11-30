@@ -560,6 +560,17 @@ class SQLResolverTestCase(MyTestCase):
         user = "cornelius"
         user_info = y.getUserInfo(user)
         self.assertEqual(user_info.get("userid"), "cornelius")
+    
+    def test_09_create_connect_string(self):
+        match = 'mariadb+pysql://testuser%3A%2F%40:testpassword%3A%2F%40@testserver:3306/testdb:/@'
+        parameters = {'Driver': 'mariadb+pysql',
+                    'Server': 'testserver',
+                    'Database': "testdb:/@",
+                    'User': 'testuser:/@',
+                    'Password': 'testpassword:/@',
+                    'Port': '3306'}
+        connect_string = SQLResolver._create_connect_string(parameters)
+        self.assertEqual(connect_string, match)
 
     def test_99_testconnection_fail(self):
         y = SQLResolver()
