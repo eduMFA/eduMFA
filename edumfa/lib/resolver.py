@@ -220,7 +220,7 @@ def delete_resolver(resolvername, force=False):
             raise ConfigAdminError("The resolver %r is still contained in "
                                    "realm %r." % (resolvername, realmname))
         elif reso.realm_list and force:
-            # The resolver is still contained in a realm! We must not delete it
+            # The resolver is still contained in a realm! We must delete the link
             ResolverRealm.query.filter_by(resolver_id=reso.id).delete()
             
         reso.delete()
