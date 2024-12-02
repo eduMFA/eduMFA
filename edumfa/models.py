@@ -1354,7 +1354,7 @@ class Challenge(MethodsMixin, db.Model):
     """
     __tablename__ = "challenge"
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer(), Sequence("challenge_seq"), primary_key=True,
+    id = db.Column(db.BigInteger, Sequence("challenge_seq"), primary_key=True,
                    nullable=False)
     transaction_id = db.Column(db.Unicode(64), nullable=False, index=True)
     data = db.Column(db.Unicode(512), default='')
@@ -2746,7 +2746,7 @@ class Audit(MethodsMixin, db.Model):
     """
     __tablename__ = AUDIT_TABLE_NAME
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("audit_seq"), primary_key=True)
+    id = db.Column(db.BigInteger, Sequence("audit_seq"), primary_key=True)
     date = db.Column(db.DateTime, index=True)
     startdate = db.Column(db.DateTime)
     duration = db.Column(db.Interval(second_precision=6))
