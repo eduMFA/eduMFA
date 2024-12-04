@@ -489,6 +489,7 @@ myApp.controller("tokenConfigController", ["$scope", "$location", "$rootScope",
     $scope.nextQuestion = 0;
     $scope.formInit = {
         totpSteps: ["30", "60"],
+        totpUseTimeShift: true,
         hashlibs: ["sha1", "sha256", "sha512"],
         smsProviders: [$scope.defaultSMSProvider,
         "edumfa.lib.smsprovider.SipgateSMSProvider.SipgateSMSProvider",
@@ -504,6 +505,7 @@ myApp.controller("tokenConfigController", ["$scope", "$location", "$rootScope",
             // Default inits
             $scope.form['totp.timeStep'] = $scope.form['totp.timeStep'] || "30";
             $scope.form['totp.hashlib'] = $scope.form['totp.hashlib'] || "sha1";
+            $scope.form['totp.useTimeShift'] = $scope.form['totp.useTimeShift'] || true;
             $scope.form['hotp.hashlib'] = $scope.form['hotp.hashlib'] || "sha1";
             // RADIUS
             $scope.form['radius.secret.type'] = "password";
