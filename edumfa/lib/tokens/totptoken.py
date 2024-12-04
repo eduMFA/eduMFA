@@ -336,7 +336,7 @@ class TotpTokenClass(HotpTokenClass):
             server_time = int(initTime)
         else:
             server_time = time.time()
-            if self.useTimeshift():
+            if self.useTimeshift:
                 server_time += self.timeshift
 
         # If we have a counter from the parameter list
@@ -372,7 +372,7 @@ class TotpTokenClass(HotpTokenClass):
 
             # here we calculate the new drift/shift between the server time
             # and the tokentime
-            if self.useTimeshift():
+            if self.useTimeshift:
                 tokentime = self._counter2time(res, self.timestep)
                 tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
 
@@ -417,7 +417,7 @@ class TotpTokenClass(HotpTokenClass):
         if autosync is False:
             return res
 
-        if not self.useTimeshift():
+        if not self.useTimeshift:
             return res
 
         info = self.get_tokeninfo()
@@ -575,7 +575,7 @@ class TotpTokenClass(HotpTokenClass):
         if current_time:
             time_seconds = self._time2float(current_time)
 
-        if self.useTimeshift():
+        if self.useTimeshift:
             time_seconds += self.timeshift
         # we don't need to round here as we have already float
         counter = self._time2counter(time_seconds, self.timestep)
@@ -629,7 +629,7 @@ class TotpTokenClass(HotpTokenClass):
             # use the current server time
             tCounter = self._time2float(datetime.datetime.now())
 
-        if self.useTimeshift():
+        if self.useTimeshift:
             tCounter -= self.timeshift
         # we don't need to round here as we have alread float
         counter = self._time2counter(tCounter, self.timestep)
@@ -643,7 +643,7 @@ class TotpTokenClass(HotpTokenClass):
                 otpval = hmac2Otp.generate(counter=counter + i,
                                            inc_counter=False)
                 timeCounter = (counter + i) * self.timestep
-                if self.useTimeshift():
+                if self.useTimeshift:
                     timeCounter += self.timeshift
 
                 val_time = datetime.datetime.\
