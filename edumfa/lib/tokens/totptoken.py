@@ -202,11 +202,13 @@ class TotpTokenClass(HotpTokenClass):
         # we support various hashlib methods, but only on create
         # which is effectively set in the update
         hashlibStr = param.get("hashlib", self.hashlib)
+        useTimeShift = param.get("useTimeShift", self.useTimeshift)
 
         self.add_tokeninfo("timeWindow", timeWindow)
         self.add_tokeninfo("timeShift", timeShift)
         self.add_tokeninfo("timeStep", timeStep)
         self.add_tokeninfo("hashlib", hashlibStr)
+        self.add_tokeninfo("useTimeShift", useTimeShift)
 
     @property
     def timestep(self):
@@ -230,6 +232,10 @@ class TotpTokenClass(HotpTokenClass):
     def timeshift(self):
         shift = float(self.get_tokeninfo("timeShift") or 0)
         return shift
+
+    def useTimeshift(self):
+        useShift = bool(self.get_tokeninfo("useTimeShift") or False)
+        return useShift
 
     @log_with(log)
     def check_otp_exist(self, otp, window=None, options=None, symetric=True,
@@ -321,7 +327,9 @@ class TotpTokenClass(HotpTokenClass):
         if initTime != -1:
             server_time = int(initTime)
         else:
-            server_time = time.time() + self.timeshift
+            server_time = time.time()
+        if self.useTimeshift():
+            server_time += self.timeshift
 
         # If we have a counter from the parameter list
         if not counter:
@@ -356,22 +364,25 @@ class TotpTokenClass(HotpTokenClass):
 
             # here we calculate the new drift/shift between the server time
             # and the tokentime
-            tokentime = self._counter2time(res, self.timestep)
-            tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
+            if self.useTimeshift():
+                tokentime = self._counter2time(res, self.timestep)
+                tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
 
-            nowDt = datetime.datetime.fromtimestamp(inow / 1.0)
+                nowDt = datetime.datetime.fromtimestamp(inow / 1.0)
 
-            lastauth = self._counter2time(oCount, self.timestep)
-            lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
+                lastauth = self._counter2time(oCount, self.timestep)
+                lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
 
-            log.debug("last auth : {0!r}".format(lastauthDt))
-            log.debug("tokentime : {0!r}".format(tokenDt))
-            log.debug("now       : {0!r}".format(nowDt))
-            log.debug("delta     : {0!r}".format((tokentime - inow)))
+                log.debug("last auth : {0!r}".format(lastauthDt))
+                log.debug("tokentime : {0!r}".format(tokenDt))
+                log.debug("now       : {0!r}".format(nowDt))
+                log.debug("delta     : {0!r}".format((tokentime - inow)))
 
-            new_shift = (tokentime - inow)
-            log.debug("the counter {0!r} matched. New shift: {1!r}".format(res, new_shift))
-            self.add_tokeninfo('timeShift', new_shift)
+                new_shift = (tokentime - inow)
+                log.debug("the counter {0!r} matched. New shift: {1!r}".format(res, new_shift))
+                self.add_tokeninfo('timeShift', new_shift)
+            else:
+                log.debug("the counter {0!r} matched.".format(res))
         return res
 
     @log_with(log)
