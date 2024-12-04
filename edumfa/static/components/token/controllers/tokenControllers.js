@@ -251,7 +251,7 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
             // preset TOTP hashlib
             $scope.form.hashlib = $scope.systemDefault['totp.hashlib'] || 'sha1';
             $scope.form.timeStep = parseInt($scope.systemDefault['totp.timeStep'] || '30');
-            $scope.form.timeStep = bool($scope.systemDefault['totp.useTimeShift'] || False);
+            $scope.form.timeStep = bool($scope.systemDefault['totp.useTimeShift'] || True);
         } else if ($scope.form.type === "daypassword") {
             // preset DayPassword hashlib
             $scope.form.hashlib = $scope.systemDefault['daypassword.hashlib'] || 'sha1';
