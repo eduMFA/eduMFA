@@ -199,6 +199,8 @@ class TotpTokenClass(HotpTokenClass):
         timeStep = param.get("timeStep", self.timestep)
         timeWindow = param.get("timeWindow", self.timewindow)
         timeShift = param.get("timeShift", self.timeshift)
+        if not timeShift:
+            timeShift = 0
         # we support various hashlib methods, but only on create
         # which is effectively set in the update
         hashlibStr = param.get("hashlib", self.hashlib)
@@ -233,10 +235,15 @@ class TotpTokenClass(HotpTokenClass):
         shift = float(self.get_tokeninfo("timeShift") or 0)
         return shift
 
+    @property
     def useTimeshift(self):
-        useShift =  bool(self.get_tokeninfo("useTimeShift") or
-                        get_from_config("totp.useTimeShift") or False)
-        return useShift
+        useShift = self.get_tokeninfo("useTimeShift")
+        if useShift is None:
+            useShift = get_from_config("totp.useTimeShift", default=True)
+        if useShift or useShift in ["True", "true"]:
+            return True
+        else:
+            return False
 
     @log_with(log)
     def check_otp_exist(self, otp, window=None, options=None, symetric=True,
