@@ -239,8 +239,9 @@ class TotpTokenClass(HotpTokenClass):
     def useTimeshift(self):
         useShift = self.get_tokeninfo("useTimeShift")
         if useShift is None:
-            useShift = get_from_config("totp.useTimeShift", default=True)
-        if useShift or useShift in ["True", "true"]:
+            useShift = get_from_config("totp.useTimeShift", default=True, return_bool=True)
+            return useShift
+        if useShift in ["True", "true"]:
             return True
         else:
             return False
