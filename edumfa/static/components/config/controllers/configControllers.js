@@ -505,7 +505,7 @@ myApp.controller("tokenConfigController", ["$scope", "$location", "$rootScope",
             // Default inits
             $scope.form['totp.timeStep'] = $scope.form['totp.timeStep'] || "30";
             $scope.form['totp.hashlib'] = $scope.form['totp.hashlib'] || "sha1";
-            $scope.form['totp.useTimeShift'] = $scope.form['totp.useTimeShift'] || true;
+            $scope.form['totp.useTimeShift'] = $scope.isChecked($scope.form['totp.useTimeShift']) || true;
             $scope.form['hotp.hashlib'] = $scope.form['hotp.hashlib'] || "sha1";
             // RADIUS
             $scope.form['radius.secret.type'] = "password";
