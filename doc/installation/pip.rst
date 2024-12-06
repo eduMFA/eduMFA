@@ -9,7 +9,7 @@ You can install eduMFA usually on any Linux distribution in a python
 virtual environment. This way you keep all eduMFA code in one defined
 subdirectory.
 
-eduMFA currently runs with Python 3.6 to 3.10. Other
+eduMFA currently runs with Python 3.8 to 3.12. Other
 versions either do not work or are not tested.
 
 You first need to install a package for creating a python `virtual environment
