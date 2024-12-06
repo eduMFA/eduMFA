@@ -19,8 +19,12 @@
 import sys
 from getopt import getopt, GetoptError
 import getpass
-import crypt
-import random
+
+# Python 3.13 dropped crypt package, so we need to import crypt_r
+if sys.version_info >= (3, 13):
+    import crypt_r as crypt
+else:
+    import crypt
 
 __version__ = '0.1'
 
