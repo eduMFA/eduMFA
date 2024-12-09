@@ -539,7 +539,7 @@ class IdResolver (UserIdResolver):
     @staticmethod
     def getResolverDescriptor():
         return IdResolver.getResolverClassDescriptor()
-
+    
     @staticmethod
     def _create_connect_string(param):
         """
@@ -548,29 +548,19 @@ class IdResolver (UserIdResolver):
         Port, Password, conParams, Driver, User,
         Server, Database
         """
-        port = ""
-        password = "" # nosec B105 # default parameter
-        user = ""
-        conParams = ""
-        if param.get("Port"):
-            port = ":{0!s}".format(param.get("Port"))
-        if param.get("Password"):
-            password = ":{0!s}".format(quote(param.get("Password"), safe=''))
-        if param.get("User"):
-            user = quote(param.get("User"), safe='')
-        if param.get("conParams"):
-            conParams = "?{0!s}".format(param.get("conParams"))
-        connect_string = "{0!s}://{1!s}{2!s}{3!s}{4!s}{5!s}/{6!s}{7!s}".format(param.get("Driver") or "",
-                                                   user,
-                                                   password,
-                                                   "@" if (param.get("User")
-                                                           or
-                                                           password) else "",
-                                                   param.get("Server") or "",
-                                                   port,
-                                                   param.get("Database") or "",
-                                                   conParams)
-        return connect_string
+        scheme = param.get("Driver") or ""
+        user = quote(param.get("User") or "", safe='')
+        password = quote(param.get("Password") or "", safe='')
+        server = param.get("Server") or ""
+        port = param.get("Port") or ""
+        database = param.get("Database") or ""
+        conparams = urlencode(json.loads(param.get("conParams") or "{}"), safe='')
+        credentials = "%s:%s" % (user, password) if user and password else user
+        server = "%s:%s" % (server, port) if server and port else server
+        server = "%s@%s" % (credentials, server) if credentials and server else server
+        database = "/%s" % (database) if database else ""
+        conparams = "?%s" % (conparams) if conparams else ""
+        return "%s://%s%s%s" % (scheme, server, database, conparams)
 
     @classmethod
     def testconnection(cls, param):
