@@ -41,8 +41,4 @@ networks:
 
 volumes:
   edumfa-config:
-    name: edumfa-config
-    driver: local
   mariadb-data:
-    name: mariadb-data
-    driver: local
