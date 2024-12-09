@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "edumfa"
-version = "2.4.0"
+version = "2.5.0"
 requires-python = ">=3.9"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
@@ -64,7 +64,7 @@ test = [
     "packaging==24.2",
     "pluggy==1.5.0",
     "pyparsing==3.2.0",
-    "pytest==8.3.3",
+    "pytest==8.3.4",
     "pytest-cov==6.0.0",
     "responses==0.25.3",
     "testfixtures==8.3.0",

@@ -38,6 +38,8 @@ webservice!
 
 import logging
 
+from edumfa.models import ResolverRealm
+
 from .log import log_with
 from .config import (get_resolver_types, get_resolver_classes, get_config_object)
 from edumfa.lib.usercache import delete_user_cache
@@ -198,7 +200,7 @@ def get_resolver_list(filter_resolver_type=None,
 
 
 @log_with(log)
-def delete_resolver(resolvername):
+def delete_resolver(resolvername, force=False):
     """
     delete a resolver and all related ResolverConfig entries
     If there was no resolver, that could be deleted, it returns -1
@@ -212,11 +214,15 @@ def delete_resolver(resolvername):
 
     reso = Resolver.query.filter_by(name=resolvername).first()
     if reso:
-        if reso.realm_list:
+        if reso.realm_list and not force:
             # The resolver is still contained in a realm! We must not delete it
             realmname = reso.realm_list[0].realm.name
             raise ConfigAdminError("The resolver %r is still contained in "
                                    "realm %r." % (resolvername, realmname))
+        elif reso.realm_list and force:
+            # The resolver is still contained in a realm! We must delete the link
+            ResolverRealm.query.filter_by(resolver_id=reso.id).delete()
+            
         reso.delete()
         ret = reso.id
     # Delete resolver object from cache
