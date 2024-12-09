@@ -11,7 +11,7 @@ from edumfa.lib.utils import (parse_timelimit,
                                    get_data_from_params, parse_legacy_time,
                                    int_to_hex, compare_value_value,
                                    compare_generic_condition,
-                                   parse_time_offset_from_now, censor_connect_string,
+                                   parse_time_offset_from_now,
                                    parse_timedelta, to_unicode,
                                    parse_int, convert_column_to_unicode,
                                    truncate_comma_list, check_pin_contents, CHARLIST_CONTENTPOLICY,
@@ -529,24 +529,6 @@ class UtilsTestCase(MyTestCase):
         self.assertEqual(convert_column_to_unicode(False), "False")
         self.assertEqual(convert_column_to_unicode(b"yes"), "yes")
         self.assertEqual(convert_column_to_unicode("yes"), "yes")
-
-    def test_18_censor_connect_string(self):
-        self.assertEqual(censor_connect_string("sqlite:////home/foo/edumfa/edumfa/data.sqlite"),
-                         "sqlite:////home/foo/edumfa/edumfa/data.sqlite")
-        self.assertEqual(censor_connect_string("mysql://pi@localhost/pi"),
-                         "mysql://pi@localhost/pi")
-        self.assertEqual(censor_connect_string("mysql://pi:kW44sqqWtGYX@localhost/pi"),
-                         "mysql://pi:***@localhost/pi")
-        self.assertEqual(censor_connect_string("psql+odbc://pi@localhost/pi"),
-                         "psql+odbc://pi@localhost/pi")
-        self.assertEqual(censor_connect_string("psql+odbc://pi:MySecretPassword123466$@localhost/pi"),
-                         "psql+odbc://pi:***@localhost/pi")
-        self.assertEqual(censor_connect_string("mysql://pi:kW44s%40%40qqWtGYX@localhost/pi"),
-                         "mysql://pi:***@localhost/pi")
-        self.assertEqual(censor_connect_string("mysql://knöbel:föö@localhost/pi"),
-                         "mysql://knöbel:***@localhost/pi")
-        self.assertEqual(censor_connect_string("oracle+cx_oracle://pi:MySecretPassword1234@localhost:1521/?service_name=my_database"),
-                         "oracle+cx_oracle://pi:***@localhost:1521/?service_name=my_database")
 
     def test_19_truncate_comma_list(self):
         r = truncate_comma_list("123456,234567,345678", 19)
