@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir /dist/*.whl &&  \
 
 # Copy necessary files
 COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
-COPY ./deploy/logging.cfg /etc/edumfa/logging.cfg
+COPY ./deploy/docker/logging.cfg /etc/edumfa/logging.cfg
 COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
 
 # Create directory for user scripts
