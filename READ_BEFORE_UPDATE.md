@@ -33,6 +33,28 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.5.0
+
+> [!CAUTION]
+> 
+>  * This will be the last version supporting Python 3.8. The next release won't be released any more for Python 3.8
+>  * Due to some overflows in the tables `challenge` and `mfa_audit` we changed the column type to BigInt. In general this should work using the migration but could fail in some complex cluster scenarios.
+> 
+
+* fix: repair linotp migrationscript by @cyber-simon in https://github.com/eduMFA/eduMFA/pull/433
+* fix: stamp db before migration in docker by @fbmei in https://github.com/eduMFA/eduMFA/pull/448
+* fix: increase column sizes by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/461
+* fix: discard last run for periodictask export by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/452
+* feat: add functionality to purge resolvers on import by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/457
+* docs: remove link to weblate by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/454
+* docs: fix python versions by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/468
+* docs: better docs for docker & default logging by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/459
+* fix(deps): update dependency pytest to v8.3.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/455
+* chore(deps): update dependency grpcio to v1.68.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/458
+* chore(deps): update dependency six to v1.17.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/466
+* chore(deps): update dependency redis to v5.2.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/467
+* chore(deps): update dependency mako to v1.3.8 by @renovate in https://github.com/eduMFA/eduMFA/pull/470
+
 ## eduMFA 2.4.0
 
 * Add different lock-table-options for backups with galera by @pmainz in https://github.com/eduMFA/eduMFA/pull/370
