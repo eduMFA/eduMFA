@@ -37,11 +37,17 @@
 import re
 import os
 import logging
-import crypt
+import sys
 import codecs
 
 from edumfa.lib.utils import to_bytes, convert_column_to_unicode
 from .UserIdResolver import UserIdResolver
+
+# Python 3.13 dropped crypt package, so we need to import crypt_r
+if sys.version_info >= (3, 13):
+    import crypt_r as crypt
+else:
+    import crypt
 
 log = logging.getLogger(__name__)
 ENCODING = "utf-8"

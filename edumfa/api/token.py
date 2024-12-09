@@ -48,7 +48,6 @@ from ..lib.token import (init_token, get_tokens_paginate, assign_token,
                          delete_tokeninfo, import_token,
                          assign_tokengroup, unassign_tokengroup, set_tokengroups)
 from werkzeug.datastructures import FileStorage
-from cgi import FieldStorage
 from edumfa.lib.error import (ParameterError, TokenAdminError)
 from edumfa.lib.importotp import (parseOATHcsv, parseSafeNetXML,
                                        parseYubicoCSV, parsePSKCdata, GPGImport)
@@ -955,16 +954,7 @@ def loadtokens_api(filename=None):
     not_imported_serials = []
     TOKENS = {}
     token_file = request.files['file']
-    file_contents = ""
-    # In case of form post requests, it is a "instance" of FieldStorage
-    # i.e. the Filename is selected in the browser and the data is
-    # transferred
-    # in an iframe. see: http://jquery.malsup.com/form/#sample4
-    #
-    if type(token_file) == FieldStorage:  # pragma: no cover
-        log.debug("Field storage file: %s", token_file)
-        file_contents = token_file.value
-    elif type(token_file) == FileStorage:
+    if type(token_file) == FileStorage:
         log.debug("Werkzeug File storage file: %s", token_file)
         file_contents = token_file.read()
     else:  # pragma: no cover

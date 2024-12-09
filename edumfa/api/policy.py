@@ -54,7 +54,6 @@ from ..api.lib.prepolicy import prepolicy, check_base_action
 
 from flask import g
 from werkzeug.datastructures import FileStorage
-from cgi import FieldStorage
 
 import logging
 
@@ -392,16 +391,7 @@ def import_policy_api(filename=None):
 
     """
     policy_file = request.files['file']
-    file_contents = ""
-    # In case of form post requests, it is a "instance" of FieldStorage
-    # i.e. the Filename is selected in the browser and the data is
-    # transferred
-    # in an iframe. see: http://jquery.malsup.com/form/#sample4
-    #
-    if type(policy_file) == FieldStorage:  # pragma: no cover
-        log.debug("Field storage file: %s", policy_file)
-        file_contents = policy_file.value
-    elif type(policy_file) == FileStorage:
+    if type(policy_file) == FileStorage:
         log.debug("Werkzeug File storage file: %s", policy_file)
         file_contents = policy_file.read()
     else:  # pragma: no cover
