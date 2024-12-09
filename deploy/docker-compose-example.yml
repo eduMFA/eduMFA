@@ -26,7 +26,7 @@ services:
       - ./docker-example/edumfa-setup.sh:/opt/edumfa/user-scripts/01-setup.sh:ro
       - ./docker-example/edumfa-config.conf:/opt/edumfa/policy.conf:ro
       - ./docker-example/edumfa.cfg:/opt/edumfa/edumfa.cfg:ro
-      - edumfa-data:/etc/edumfa/:rw
+      - edumfa-config:/etc/edumfa/:rw
     environment:
       - EDUMFA_CONFIGFILE=/opt/edumfa/edumfa.cfg
       - EDUMFA_ADMIN_USER=admin
@@ -40,9 +40,9 @@ networks:
     driver: bridge
 
 volumes:
-  edumfa-data:
-    name: edumfa-data
+  edumfa-config:
+    name: edumfa-config
     driver: local
   mariadb-data:
-    name: edumfa-data
+    name: mariadb-data
     driver: local

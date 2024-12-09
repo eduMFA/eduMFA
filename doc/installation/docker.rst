@@ -63,7 +63,7 @@ For production you should replace the passwords and secrets with your own values
          ports:
             - "8000:8000"
          volumes:
-            - edumfa-data:/etc/edumfa
+            - edumfa-config:/etc/edumfa
             - /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg
          environment:
             - EDUMFA_ADMIN_USER=admin
@@ -72,7 +72,7 @@ For production you should replace the passwords and secrets with your own values
             - mariadb
 
    volumes:
-      edumfa-data:
+      edumfa-config:
       maria-data:
 
 To start eduMFA using Docker Compose, run:
@@ -116,9 +116,9 @@ To persist data between container restarts, you can mount a volume for the datab
 
 .. code-block:: bash
 
-   docker run -d -p 8000:8000  -v /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg -v edumfa_data:/etc/edumfa --name edumfa ghcr.io/edumfa/edumfa:latest
+   docker run -d -p 8000:8000  -v /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg -v edumfa-config:/etc/edumfa --name edumfa ghcr.io/edumfa/edumfa:latest
 
-This will create a named volume `edumfa_data` that will persist your eduMFA data. This volume will contain the encryption key and the audit key.
+This will create a named volume `edumfa-config` that will persist your eduMFA configuration. This volume will contain the encryption key and the audit key.
 
 Depending on your own configuration and your individual setup you may need to adjust the paths.
 
@@ -132,4 +132,4 @@ To update eduMFA to a newer version, pull the latest image and recreate the cont
    docker pull ghcr.io/edumfa/edumfa:latest
    docker stop edumfa
    docker rm edumfa
-   docker run -d -p 8000:8000  -v /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg -v edumfa_data:/etc/edumfa --name edumfa ghcr.io/edumfa/edumfa:latest
+   docker run -d -p 8000:8000  -v /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg -v edumfa-config:/etc/edumfa --name edumfa ghcr.io/edumfa/edumfa:latest
