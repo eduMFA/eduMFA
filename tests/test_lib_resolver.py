@@ -152,8 +152,8 @@ class SQLResolverTestCase(MyTestCase):
     """
     num_users = 13
     parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testuser.sqlite",
+                  'Server': '',
+                  'Database': "tests/testdata/testuser.sqlite",
                   'Table': 'users',
                   'Encoding': 'utf8',
                   'Map': '{ "username": "username", \
@@ -537,7 +537,7 @@ class SQLResolverTestCase(MyTestCase):
 
         y = SQLResolver()
         param3 = self.parameters.copy()
-        param3["Server"] = '/tests/../tests/testdata/'
+        param3["Database"] = 'tests/../tests/testdata/testuser.sqlite'
         y.loadConfig(param3)
         rid3 = y.getResolverId()
 
@@ -560,17 +560,6 @@ class SQLResolverTestCase(MyTestCase):
         user = "cornelius"
         user_info = y.getUserInfo(user)
         self.assertEqual(user_info.get("userid"), "cornelius")
-    
-    def test_09_create_connect_string(self):
-        match = 'mariadb+pysql://testuser%3A%2F%40:testpassword%3A%2F%40@testserver:3306/testdb:/@'
-        parameters = {'Driver': 'mariadb+pysql',
-                    'Server': 'testserver',
-                    'Database': "testdb:/@",
-                    'User': 'testuser:/@',
-                    'Password': 'testpassword:/@',
-                    'Port': '3306'}
-        connect_string = SQLResolver._create_connect_string(parameters)
-        self.assertEqual(connect_string, match)
 
     def test_99_testconnection_fail(self):
         y = SQLResolver()

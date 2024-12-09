@@ -43,7 +43,6 @@ from collections import OrderedDict
 from edumfa.lib.auditmodules.base import (Audit as AuditBase, Paginate)
 from edumfa.lib.crypto import Sign
 from edumfa.lib.pooling import get_engine
-from edumfa.lib.utils import censor_connect_string
 from edumfa.lib.lifecycle import register_finalizer
 from edumfa.lib.utils import truncate_comma_list, is_true
 from sqlalchemy import MetaData, cast, String
@@ -162,9 +161,9 @@ class Audit(AuditBase):
         """
         # an Engine, which the Session will use for connection
         # resources
-        connect_string = self.config.get("EDUMFA_AUDIT_SQL_URI", self.config.get(
+        connect_url = self.config.get("EDUMFA_AUDIT_SQL_URI", self.config.get(
             "SQLALCHEMY_DATABASE_URI"))
-        log.debug("using the connect string {0!s}".format(censor_connect_string(connect_string)))
+        log.debug("using the connect string {0!s}".format(str(connect_url)))
         # if no specific audit engine options are given, use the default from
         # SQLALCHEMY_ENGINE_OPTIONS or none
         sqa_options = self.config.get("EDUMFA_AUDIT_SQL_OPTIONS",
@@ -173,14 +172,14 @@ class Audit(AuditBase):
         try:
             pool_size = self.config.get("EDUMFA_AUDIT_POOL_SIZE", 20)
             engine = create_engine(
-                connect_string,
+                connect_url,
                 pool_size=pool_size,
                 pool_recycle=self.config.get("EDUMFA_AUDIT_POOL_RECYCLE", 600),
                 **sqa_options)
             log.debug("Using SQL pool size of {}".format(pool_size))
         except TypeError:
             # SQLite does not support pool_size
-            engine = create_engine(connect_string, **sqa_options)
+            engine = create_engine(connect_url, **sqa_options)
             log.debug("Using no SQL pool_size.")
         return engine
 
