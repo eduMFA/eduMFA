@@ -37,8 +37,8 @@ class UserCacheTestCase(MyTestCase):
     sql_realm = "sqlrealm"
     sql_resolver = "SQL1"
     sql_parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testusercache.sqlite",
+                  'Server': '',
+                  'Database': "tests/testdata/testusercache.sqlite",
                   'Table': 'users',
                   'Encoding': 'utf8',
                   'Map': '{ "username": "username", \

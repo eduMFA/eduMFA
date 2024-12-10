@@ -37,8 +37,8 @@ class UserTestCase(MyTestCase):
     realm2 = "realm2"
 
     parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testuser.sqlite",
+                  'Server': '',
+                  'Database': "tests/testdata/testuser.sqlite",
                   'Table': 'users',
                   'Encoding': 'utf8',
                   'Map': '{ "username": "username", \
