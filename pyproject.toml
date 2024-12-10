@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "edumfa"
-version = "2.4.0"
-requires-python = ">=3.8"
+version = "2.5.0"
+requires-python = ">=3.9"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
 readme = { file = "README.rst", content-type = "text/x-rst" }
@@ -21,7 +21,6 @@ classifiers = [
     "Topic :: System :: Systems Administration :: Authentication/Directory",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -58,18 +57,15 @@ docs = [
 ]
 test = [
     "attrs==24.2.0",
-    "coverage==7.6.1; python_version<'3.9'",
-    "coverage==7.6.8; python_version>='3.9'",
+    "coverage==7.6.9",
     "exceptiongroup==1.2.2",
     "iniconfig==2.0.0",
     "mock==5.1.0",
     "packaging==24.2",
     "pluggy==1.5.0",
-    "pyparsing==3.1.4; python_version<'3.9'",
-    "pyparsing==3.2.0; python_version>='3.9'",
-    "pytest==8.3.3",
-    "pytest-cov==5.0.0; python_version<'3.9'",
-    "pytest-cov==6.0.0; python_version>='3.9'",
+    "pyparsing==3.2.0",
+    "pytest==8.3.4",
+    "pytest-cov==6.0.0",
     "responses==0.25.3",
     "testfixtures==8.3.0",
     "tomli==2.2.1",
