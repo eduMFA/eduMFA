@@ -32,9 +32,11 @@ edumfa-manage db upgrade -d /usr/local/lib/edumfa/migrations
 echo "Creating Admin"
 edumfa-manage admin add $EDUMFA_ADMIN_USER -p $EDUMFA_ADMIN_PASS
 
-echo "Executing User-Scripts"
 # Execute user scripts
-bash /opt/edumfa/user-scripts/*.sh
+if [ "$(ls -A /opt/edumfa/user-scripts/)" ]; then
+    echo "Executing User-Scripts"
+    bash /opt/edumfa/user-scripts/*.sh
+fi
 
 echo "Starting Server"
 gunicorn --bind 0.0.0.0:8000 --workers 4 app
