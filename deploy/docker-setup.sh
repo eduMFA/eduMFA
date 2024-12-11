@@ -33,7 +33,7 @@ echo "Creating Admin"
 edumfa-manage admin add $EDUMFA_ADMIN_USER -p $EDUMFA_ADMIN_PASS
 
 # Execute user scripts
-if [ "$(ls -A /opt/edumfa/user-scripts/)" ]; then
+if compgen -G "/opt/edumfa/user-scripts/*.sh" > /dev/null; then
     echo "Executing User-Scripts"
     bash /opt/edumfa/user-scripts/*.sh
 fi
