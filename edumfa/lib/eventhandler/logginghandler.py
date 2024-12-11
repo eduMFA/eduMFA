@@ -147,9 +147,11 @@ class LoggingEventHandler(BaseEventHandler):
                 tokens = get_tokens(serial=serial)
                 if tokens:
                     tokentype = tokens[0].get_tokentype()
-            else:
-                token_objects = get_tokens(user=tokenowner)
+            elif tokenowner:
+                token_objects = get_tokens(user=tokenowner, active=True)
                 serial = ','.join([tok.get_serial() for tok in token_objects])
+            else:
+                serial = 'N/A'
 
             tags = create_tag_dict(logged_in_user=logged_in_user,
                                    request=request,

@@ -159,9 +159,12 @@ def import_full_config(file, cleanup, update, purge):
                     data = conf_import(file=f)
     else:
         data = conf_import()
-    import_conf_event(data["event"], cleanup=cleanup, update=update, purge=purge)
-    import_conf_resolver(data["resolver"], cleanup=cleanup, update=update, purge=purge)
-    import_conf_policy(data["policy"], cleanup=cleanup, update=update, purge=purge)
+    if 'event' in data:
+        import_conf_event(data["event"], cleanup=cleanup, update=update, purge=purge)
+    if 'resolver' in data:
+        import_conf_resolver(data["resolver"], cleanup=cleanup, update=update, purge=purge)
+    if 'policy' in data:
+        import_conf_policy(data["policy"], cleanup=cleanup, update=update, purge=purge)
 
 
 @export_cli.command("full")

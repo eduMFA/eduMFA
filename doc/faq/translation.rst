@@ -7,10 +7,6 @@ The web UI can be translated into different languages. The system determines
 the preferred language of your browser and translates the web UI and server
 responses accordingly.
 
-We are using weblate to allow the community to participate in translation.
-
-You can go to `hosted.weblate.org <https://hosted.weblate.org/engage/eduMFA/>`_
-and check, which languages need support.
 This is the most important part you can do: Add words and sentences in your language!
 
 Translations into German are provided by eduMFA while all other languages

@@ -17,6 +17,14 @@ fi
 # Create DB
 echo "Creating DB"
 edumfa-manage createdb
+
+# Check and stamp DB
+STAMP=$(edumfa-manage db current -d /usr/local/lib/edumfa/migrations 2>/dev/null)
+if [[ -z "${STAMP//Running online/}" ]]; then
+  edumfa-manage db stamp head -d /usr/local/lib/edumfa/migrations
+fi
+
+# Upgrading DB
 echo "Upgrading Database"
 edumfa-manage db upgrade -d /usr/local/lib/edumfa/migrations
 

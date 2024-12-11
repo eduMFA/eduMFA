@@ -294,6 +294,7 @@ def export_periodictask(name=None):
     for task in periodictask_list:
         last_update = task.get('last_update')
         task['last_update'] = last_update.strftime(DATE_FORMAT)
+        task['last_runs'] = {}
 
     return periodictask_list
 

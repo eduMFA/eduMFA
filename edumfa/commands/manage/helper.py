@@ -190,9 +190,16 @@ def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
     """
     import resolver configuration from a resolver list
     """
-    if cleanup or purge:
-        click.echo("No cleanup or purge for resolvers implemented")
-
+    if cleanup:
+        click.echo("Cleanup old resolvers not implemented right now.")
+    if purge:
+        from edumfa.lib.resolver import delete_resolver
+        for resolver in get_resolver_list():
+            name = resolver
+            if name not in [r.get("resolvername") for r in config_list]:
+                r = delete_resolver(name, force=True)
+                click.echo("Purged resolver '{0!s}' with result {1!s}".format(name, r))
+        
     for config in config_list:
         action_str = "Added"
 

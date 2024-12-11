@@ -485,7 +485,7 @@ class IdResolver (UserIdResolver):
         # which involves the connect-string and the pool settings.
         self.engine = get_engine(self.getResolverId(), self._create_engine)
         # We use ``scoped_session``.
-        self.session = scoped_session(sessionmaker(bind=self.engine))()
+        self.session = scoped_session(sessionmaker(bind=self.engine))
         # Session should be closed on teardown
         register_finalizer(self.session.close)
         self.session._model_changes = {}

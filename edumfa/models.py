@@ -43,6 +43,8 @@ from sqlalchemy import and_
 from sqlalchemy.schema import Sequence, CreateSequence
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import BigInteger
+from sqlalchemy.dialects import postgresql, mysql, sqlite
 from .lib.log import log_with
 from edumfa.lib.utils import (is_true, convert_column_to_unicode,
                                    hexlify_and_unicode)
@@ -60,6 +62,8 @@ log = logging.getLogger(__name__)
 implicit_returning = True
 EDUMFA_TIMESTAMP = "__timestamp__"
 SAFE_STORE = "EDUMFA_DB_SAFE_STORE"
+
+BigIntegerType = BigInteger().with_variant(postgresql.BIGINT(), 'postgresql').with_variant(mysql.BIGINT(), 'mysql').with_variant(sqlite.INTEGER(), 'sqlite')
 
 db = SQLAlchemy()
 
@@ -1354,7 +1358,7 @@ class Challenge(MethodsMixin, db.Model):
     """
     __tablename__ = "challenge"
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer(), Sequence("challenge_seq"), primary_key=True,
+    id = db.Column(BigIntegerType, Sequence("challenge_seq"), primary_key=True,
                    nullable=False)
     transaction_id = db.Column(db.Unicode(64), nullable=False, index=True)
     data = db.Column(db.Unicode(512), default='')
@@ -2746,7 +2750,7 @@ class Audit(MethodsMixin, db.Model):
     """
     __tablename__ = AUDIT_TABLE_NAME
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
-    id = db.Column(db.Integer, Sequence("audit_seq"), primary_key=True)
+    id = db.Column(BigIntegerType, Sequence("audit_seq"), primary_key=True)
     date = db.Column(db.DateTime, index=True)
     startdate = db.Column(db.DateTime)
     duration = db.Column(db.Interval(second_precision=6))
