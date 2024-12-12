@@ -58,6 +58,12 @@ For production you should replace the passwords and secrets with your own values
             - MARIADB_USER=edumfa
             - MARIADB_PASSWORD=pass
             - MARIADB_ROOT_PASSWORD=pass
+         healthcheck:
+           test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+           start_period: 10s
+           interval: 10s
+           timeout: 5s
+           retries: 3
       edumfa:
          image: ghcr.io/edumfa/edumfa:latest
          ports:
@@ -69,7 +75,8 @@ For production you should replace the passwords and secrets with your own values
             - EDUMFA_ADMIN_USER=admin
             - EDUMFA_ADMIN_PASS=Passwort123
          depends_on:
-            - mariadb
+            mariadb:
+               condition: service_healthy
 
    volumes:
       edumfa-config:
