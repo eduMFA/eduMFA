@@ -45,31 +45,37 @@ For production you should replace the passwords and secrets with your own values
 
 .. code-block:: yaml
 
-   version: '3'
    services:
-      mariadb:
-         image: docker.io/mariadb:lts-jammy
-         restart: always
-         volumes:
-            - maria-data:/var/lib/mysql:rw
-         environment:
-            - MARIADB_PORT_NUMBER=3306
-            - MARIADB_DATABASE=edumfa
-            - MARIADB_USER=edumfa
-            - MARIADB_PASSWORD=pass
-            - MARIADB_ROOT_PASSWORD=pass
-      edumfa:
-         image: ghcr.io/edumfa/edumfa:latest
-         ports:
-            - "8000:8000"
-         volumes:
-            - edumfa-config:/etc/edumfa
-            - /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg
-         environment:
-            - EDUMFA_ADMIN_USER=admin
-            - EDUMFA_ADMIN_PASS=Passwort123
-         depends_on:
-            - mariadb
+     mariadb:
+       image: docker.io/mariadb:lts-jammy
+       restart: always
+       volumes:
+         - maria-data:/var/lib/mysql:rw
+       environment:
+         - MARIADB_PORT_NUMBER=3306
+         - MARIADB_DATABASE=edumfa
+         - MARIADB_USER=edumfa
+         - MARIADB_PASSWORD=pass
+         - MARIADB_ROOT_PASSWORD=pass
+       healthcheck:
+         test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+         start_period: 10s
+         interval: 10s
+         timeout: 5s
+         retries: 3
+     edumfa:
+       image: ghcr.io/edumfa/edumfa:latest
+       ports:
+         - "8000:8000"
+       volumes:
+         - edumfa-config:/etc/edumfa
+         - /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg
+       environment:
+         - EDUMFA_ADMIN_USER=admin
+         - EDUMFA_ADMIN_PASS=Passwort123
+       depends_on:
+         mariadb:
+           condition: service_healthy
 
    volumes:
       edumfa-config:
