@@ -45,7 +45,6 @@ For production you should replace the passwords and secrets with your own values
 
 .. code-block:: yaml
 
-   version: '3'
    services:
      mariadb:
        image: docker.io/mariadb:lts-jammy
