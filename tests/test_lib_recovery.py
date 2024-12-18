@@ -20,8 +20,8 @@ class RecoveryTestCase(MyTestCase):
     serial1 = "ser1"
 
     parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testuser.sqlite",
+                  'Server': '',
+                  'Database': "tests/testdata/testuser.sqlite",
                   'Table': 'users',
                   'Encoding': 'utf8',
                   'Editable': True,

@@ -1071,20 +1071,6 @@ def convert_timestamp_to_utc(timestamp):
     return timestamp.astimezone(tzutc()).replace(tzinfo=None)
 
 
-def censor_connect_string(connect_string):
-    """
-    Take a SQLAlchemy connect string and return a sanitized version
-    that can be written to the log without disclosing the password.
-    The password is replaced with "***".
-    In case any error occurs, return "<error when censoring connect string>"
-    """
-    try:
-        parsed = sqlalchemy.engine.url.make_url(connect_string)
-        return unquote(parsed.__repr__())
-    except Exception:
-        return "<error when censoring connect string>"
-
-
 def fetch_one_resource(table, **query):
     """
     Given an SQLAlchemy table and query keywords, fetch exactly one result and return it.
