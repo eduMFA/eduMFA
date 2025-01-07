@@ -32,6 +32,7 @@ from edumfa.lib.policy import Match
 from edumfa.lib.error import PolicyError, eduMFAError
 import functools
 from edumfa.lib.policy import ACTION, SCOPE, ACTIONVALUE, LOGINMODE
+from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.lib.user import User
 from edumfa.lib.utils import parse_timelimit, parse_timedelta, split_pin_pass
 from edumfa.lib.authcache import verify_in_cache, add_to_cache
@@ -463,7 +464,7 @@ def auth_lastauth(wrapped_function, user_or_serial, passw, options=None):
             # set the last successful authentication, if res still true
             if res:
                 token.add_tokeninfo(ACTION.LASTAUTH,
-                                    datetime.datetime.now(tzlocal()))
+                                    datetime.datetime.now(tzlocal()).strftime(AUTH_DATE_FORMAT))
 
     return res, reply_dict
 
