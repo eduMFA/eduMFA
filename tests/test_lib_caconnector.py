@@ -16,6 +16,8 @@ from mock import patch
 from edumfa.lib.caconnectors.localca import LocalCAConnector, ATTR
 from edumfa.lib.caconnectors.msca import MSCAConnector, ATTR as MS_ATTR
 from OpenSSL import crypto
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
 from edumfa.lib.utils import int_to_hex, to_unicode
 from edumfa.lib.error import CAError, CSRError, CSRPending
 from edumfa.lib.caconnector import (get_caconnector_list,
@@ -308,17 +310,17 @@ class LocalCATestCase(MyTestCase):
         self.assertEqual(r, "crl.pem")
         # Check if the serial number is contained in the CRL!
         filename = os.path.join(cwd, WORKINGDIR, "crl.pem")
-        f = open(filename)
-        buff = f.read()
-        f.close()
-        crl = crypto.load_crl(crypto.FILETYPE_PEM, buff)
-        revoked_certs = crl.get_revoked()
         found_revoked_cert = False
-        for revoked_cert in revoked_certs:
-            s = to_unicode(revoked_cert.get_serial())
-            if s == serial_hex:
-                found_revoked_cert = True
-                break
+        with open(filename, "rb") as crl_file:
+            crl_data = crl_file.read()
+            crl = x509.load_pem_x509_crl(crl_data, backend=default_backend())
+            for revoked_cert in crl:
+                s = int_to_hex(revoked_cert.serial_number)
+                print(s)
+                print(serial_hex)
+                if s == serial_hex:
+                    found_revoked_cert = True
+                    break
         self.assertTrue(found_revoked_cert)
 
         # Create the CRL and check the overlap period. But no need to create

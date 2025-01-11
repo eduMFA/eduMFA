@@ -29,7 +29,7 @@ import base64
 import logging
 import time
 import struct
-from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric import ec, rsa
 from cryptography.hazmat.primitives import hashes
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes
@@ -202,11 +202,17 @@ def check_registration_data(attestation_cert, app_id,
             public_key_bytes,
             backend=default_backend()
         )
-
-        public_key_cryptography.verify(signature=binascii.unhexlify(signature),
-                        data=reg_date,
+        if isinstance(public_key_cryptography, ec.EllipticCurvePublicKey):
+            public_key_cryptography.verify(signature=binascii.unhexlify(signature),
+                        data=reg_data,
+                        signature_algorithm=ec.ECDSA(hashes.SHA256()))    # Ensure this matches the hash used for signing
+        elif isinstance(public_key_cryptography, rsa.RSAPublicKey):
+            public_key_cryptography.verify(signature=binascii.unhexlify(signature),
+                        data=reg_data,
                         padding=padding.PKCS1v15(),  # Ensure this matches the scheme used for signing
                         algorithm=hashes.SHA256())    # Ensure this matches the hash used for signing
+        else:
+            raise Exception("Unknown keytype")
     except Exception as exx:
         raise Exception("Error checking the signature of the registration "
                         "data. %s" % exx)
