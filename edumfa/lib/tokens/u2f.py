@@ -32,6 +32,10 @@ import struct
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes
 from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 
 from edumfa.lib.utils import (to_bytes, to_unicode, hexlify_and_unicode,
                                    urlsafe_b64encode_and_unicode)
@@ -192,10 +196,17 @@ def check_registration_data(attestation_cert, app_id,
     reg_data = b'\x00' + app_id_hash + client_data_hash \
                + binascii.unhexlify(key_handle) + binascii.unhexlify(user_pub_key)
     try:
-        crypto.verify(attestation_cert,
-                      binascii.unhexlify(signature),
-                      reg_data,
-                      "sha256")
+        public_key = attestation_cert.get_pubkey()
+        public_key_bytes = crypto.dump_publickey(crypto.FILETYPE_PEM, public_key)
+        public_key_cryptography = serialization.load_pem_public_key(
+            public_key_bytes,
+            backend=default_backend()
+        )
+
+        public_key_cryptography.verify(signature=binascii.unhexlify(signature),
+                        data=reg_date,
+                        padding=padding.PKCS1v15(),  # Ensure this matches the scheme used for signing
+                        algorithm=hashes.SHA256())    # Ensure this matches the hash used for signing
     except Exception as exx:
         raise Exception("Error checking the signature of the registration "
                         "data. %s" % exx)
