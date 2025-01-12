@@ -36,7 +36,7 @@ def _hash_password(password):
 
 def add_to_cache(username, realm, resolver, password):
     # Can not store timezone aware timestamps!
-    first_auth = datetime.datetime.utcnow()
+    first_auth = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
     auth_hash = _hash_password(password)
     record = AuthCache(username, realm, resolver, auth_hash, first_auth, first_auth)
     log.debug('Adding record to auth cache: ({!r}, {!r}, {!r}, {!r})'.format(
@@ -46,7 +46,7 @@ def add_to_cache(username, realm, resolver, password):
 
 
 def update_cache(cache_id):
-    last_auth = datetime.datetime.utcnow()
+    last_auth = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
     db.session.query(AuthCache).filter(
         AuthCache.id == cache_id).update({"last_auth": last_auth,
                                           AuthCache.auth_count: AuthCache.auth_count + 1})
@@ -101,7 +101,7 @@ def cleanup(minutes):
     :type minutes: int
     :return:
     """
-    cleanuptime = datetime.datetime.utcnow() - datetime.timedelta(minutes=minutes)
+    cleanuptime = datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(minutes=minutes)
     r = db.session.query(AuthCache).filter(AuthCache.last_auth < cleanuptime).delete()
     db.session.commit()
     return r

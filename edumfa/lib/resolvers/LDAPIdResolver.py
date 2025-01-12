@@ -139,7 +139,7 @@ def get_ad_timestamp_now():
     :return: time
     :rtype: int
     """
-    utc_now = datetime.datetime.utcnow()
+    utc_now = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
     elapsed_time = utc_now - MS_AD_START
     total_seconds = elapsed_time.total_seconds()
     # convert this to (100 nanoseconds)

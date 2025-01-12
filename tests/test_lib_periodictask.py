@@ -350,7 +350,7 @@ class BasePeriodicTaskTestCase(MyTestCase):
         # at 08:00 on wednesdays
         current_utc_time = parse_timestamp("2018-05-31 05:08:00")
         with mock.patch('edumfa.models.datetime') as mock_dt:
-            mock_dt.utcnow.return_value = current_utc_time
+            mock_dt.now.return_value = current_utc_time
             task2 = set_periodic_task("task two", "0 8 * * WED", ["edumfanode2", "edumfanode3"], "some.task.module", 1, {
                 "key1": "value",
                 "key2": "foo"
@@ -431,7 +431,7 @@ class BasePeriodicTaskTestCase(MyTestCase):
 
         # Enable task2, now we also have to run it on edumfanode2 and edumfanode3
         with mock.patch('edumfa.models.datetime') as mock_dt:
-            mock_dt.utcnow.return_value = current_utc_time
+            mock_dt.now.return_value = current_utc_time
             enable_periodic_task(task2)
 
         scheduled = get_scheduled_periodic_tasks("edumfanode1", current_timestamp, tzinfo)

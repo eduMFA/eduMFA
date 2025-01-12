@@ -5,7 +5,7 @@ from edumfa.lib.user import (User)
 from edumfa.lib.config import (set_edumfa_config)
 from edumfa.lib.token import (get_tokens, init_token, remove_token)
 from edumfa.lib.policy import (SCOPE, set_policy, delete_policy)
-from edumfa.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
+from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
 from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
@@ -17,12 +17,10 @@ from edumfa.lib.tokens.pushtoken import (PushTokenClass,
                                          PUBLIC_KEY_SERVER,
                                          POLL_ONLY)
 from edumfa.lib.utils import b32encode_and_unicode
-from datetime import datetime, timedelta
-from pytz import utc
-from base64 import b32decode, b32encode
+from datetime import datetime, UTC
+from base64 import b32encode
 import mock
 import responses
-from google.oauth2 import service_account
 from .test_lib_tokens_push import _create_credential_mock
 
 PWFILE = "tests/testdata/passwords"
@@ -296,7 +294,7 @@ class TtypePushAPITestCase(MyApiTestCase):
                                                 .format(serial))
 
         # first create a signature
-        ts = datetime.utcnow().isoformat()
+        ts = datetime.now(UTC).replace(tzinfo=None).isoformat()
         sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
@@ -615,7 +613,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                                                 .format(serial))
 
         # first create a signature
-        ts = datetime.utcnow().isoformat()
+        ts = datetime.now(UTC).replace(tzinfo=None).isoformat()
         sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),

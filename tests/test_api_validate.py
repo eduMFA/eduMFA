@@ -5399,11 +5399,20 @@ class AChallengeResponse(MyApiTestCase):
         # If we wait long enough, the challenge has expired,
         # while the HOTP value 287082 in itself would still be valid.
         # However, the authentication with the expired transaction_id has to fail
-        new_utcnow = datetime.datetime.utcnow().replace(tzinfo=None) + datetime.timedelta(minutes=12)
+        new_utcnow = datetime.datetime.now(datetime.UTC).replace(tzinfo=None) + datetime.timedelta(minutes=12)
         new_now = datetime.datetime.now().replace(tzinfo=None) + datetime.timedelta(minutes=12)
+
+        def side(*args, **kwargs):
+            if len(args) == 0:
+                return new_now
+            elif len(args) == 1 and args[0] == None:
+                return new_now
+            elif len(args) == 1 and args[0] == datetime.UTC:
+                return new_utcnow
+            raise Exception("Test")
+
         with mock.patch('edumfa.models.datetime') as mock_datetime:
-            mock_datetime.utcnow.return_value = new_utcnow
-            mock_datetime.now.return_value = new_now
+            mock_datetime.now.side_effect = side
             with self.app.test_request_context('/validate/check',
                                                method='POST',
                                                data={"user": user, "realm": self.realm2,

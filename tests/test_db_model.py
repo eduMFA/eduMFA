@@ -23,8 +23,7 @@ from edumfa.models import (Token,
                                 Tokengroup, TokenTokengroup, Serviceid)
 from .base import MyTestCase
 from dateutil.tz import tzutc
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta, UTC
 
 
 class TokenModelTestCase(MyTestCase):
@@ -861,7 +860,7 @@ class TokenModelTestCase(MyTestCase):
     def test_26_periodictask(self):
         current_utc_time = datetime(2018, 3, 4, 5, 6, 8)
         with mock.patch('edumfa.models.datetime') as mock_dt:
-            mock_dt.utcnow.return_value = current_utc_time
+            mock_dt.now.return_value = current_utc_time
 
             task1 = PeriodicTask("task1", False, "0 5 * * *", ["localhost"], "some.module", 2, {
                 "key1": "value2",
@@ -902,7 +901,7 @@ class TokenModelTestCase(MyTestCase):
         # assert we can update the task
         later_utc_time = current_utc_time + timedelta(seconds=1)
         with mock.patch('edumfa.models.datetime') as mock_dt:
-            mock_dt.utcnow.return_value = later_utc_time
+            mock_dt.now.return_value = later_utc_time
             PeriodicTask("task one", True, "0 8 * * *", ["localhost", "otherhost"], "some.module", 3, {
                 "KEY2": "value number 2",
                 "key 4": 1234
@@ -973,7 +972,7 @@ class TokenModelTestCase(MyTestCase):
         # Simple test to write data to the monitoring stats table
         key1 = "user_count"
         key2 = "successful_auth"
-        utcnow = datetime.utcnow()
+        utcnow = datetime.now(UTC).replace(tzinfo=None)
         MonitoringStats(utcnow - timedelta(seconds=1), key1, 15).save()
         MonitoringStats(utcnow, key1, 21).save()
         MonitoringStats(utcnow, key2, 123).save()

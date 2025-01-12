@@ -289,9 +289,9 @@ class TotpTokenClass(HotpTokenClass):
                 return curtime.timestamp()
             else:
                 # curtime is naive
-                return curtime.replace(tzinfo=datetime.timezone.utc).timestamp()
+                return curtime.replace(tzinfo=datetime.timezone.utc).replace(tzinfo=None).timestamp()
         # return the current timestamp
-        return datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
+        return datetime.datetime.now(tz=datetime.timezone.utc).replace(tzinfo=None).timestamp()
 
     @check_token_locked
     def check_otp(self, anOtpVal, counter=None, window=None, options=None):

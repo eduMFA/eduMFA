@@ -398,36 +398,54 @@ class AuditFileTestCase(OverrideConfigTestCase):
         # The audit log runs 2 seconds - mocked
         current_utc_time = datetime.datetime(2018, 3, 4, 5, 6, 8)
         startdate_time = datetime.datetime(2018, 3, 4, 5, 6, 6)
+
+        def side(*args, **kwargs):
+            if len(args) == 0:
+                return startdate_time
+            elif len(args) == 1 and args[0] == None:
+                return startdate_time
+            else:
+                return current_utc_time
+
         with mock.patch('edumfa.lib.auditmodules.loggeraudit.datetime') as mock_timestamp:
             with mock.patch('edumfa.lib.auditmodules.base.datetime.datetime') as mock_startdate:
-                mock_timestamp.utcnow.return_value = current_utc_time
-                mock_startdate.now.return_value = startdate_time
+                mock_timestamp.now.side_effect = side
+                mock_startdate.now.side_effect = side
                 a = LoggerAudit(config={})
                 a.log({"action": "No EDUMFA_AUDIT_LOGGER_QUALNAME given"})
                 a.finalize_log()
                 capture.check_present(
                     ('edumfa.lib.auditmodules.loggeraudit', 'INFO',
-                     '{{"action": "No EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:02", '
-                     '"policies": "", "startdate": "{startdate}", '
-                     '"timestamp": "{timestamp}"}}'.format(timestamp=current_utc_time.isoformat(),
-                                                           startdate=startdate_time.isoformat())))
+                        '{{"action": "No EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:02", '
+                        '"policies": "", "startdate": "{startdate}", '
+                        '"timestamp": "{timestamp}"}}'.format(timestamp=current_utc_time.isoformat(),
+                                                            startdate=startdate_time.isoformat())))
 
         # Now change the qualname to 'edumfa-audit'
         current_utc_time = datetime.datetime(2020, 3, 4, 5, 6, 8)
         startdate_time = datetime.datetime(2020, 3, 4, 5, 6, 0)
+
+        def side(*args, **kwargs):
+            if len(args) == 0:
+                return startdate_time
+            elif len(args) == 1 and args[0] == None:
+                return startdate_time
+            else:
+                return current_utc_time
         with mock.patch('edumfa.lib.auditmodules.loggeraudit.datetime') as mock_dt:
+            
             with mock.patch('edumfa.lib.auditmodules.base.datetime.datetime') as mock_startdate:
-                mock_dt.utcnow.return_value = current_utc_time
-                mock_startdate.now.return_value = startdate_time
+                mock_dt.now.side_effect = side
+                mock_startdate.now.side_effect = side
                 a = LoggerAudit(config={"EDUMFA_AUDIT_LOGGER_QUALNAME": "edumfa-audit"})
                 a.log({"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given"})
                 a.finalize_log()
                 capture.check_present(
                     ('edumfa-audit', 'INFO',
-                     '{{"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:08", '
-                     '"policies": "", "startdate": "{startdate}", '
-                     '"timestamp": "{timestamp}"}}'.format(timestamp=current_utc_time.isoformat(),
-                                                           startdate=startdate_time.isoformat())))
+                        '{{"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:08", '
+                        '"policies": "", "startdate": "{startdate}", '
+                        '"timestamp": "{timestamp}"}}'.format(timestamp=current_utc_time.isoformat(),
+                                                            startdate=startdate_time.isoformat())))
 
 
 class ContainerAuditTestCase(OverrideConfigTestCase):

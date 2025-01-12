@@ -44,8 +44,7 @@ from flask import (Blueprint,
                    g)
 import jwt
 from functools import wraps
-from datetime import (datetime,
-                      timedelta)
+from datetime import datetime, timedelta, UTC
 from edumfa.lib.error import AuthError, ERROR
 from edumfa.lib.crypto import geturandom, init_hsm
 from edumfa.lib.audit import getAudit
@@ -377,7 +376,7 @@ def get_auth_token():
                         "nonce": nonce,
                         "role": role,
                         "authtype": authtype,
-                        "exp": datetime.utcnow() + validity,
+                        "exp": datetime.now(UTC).replace(tzinfo=None) + validity,
                         "rights": rights},
                        secret, algorithm='HS256')
 
