@@ -27,8 +27,9 @@ import binascii
 import json
 
 import jwt
-from OpenSSL import crypto
 from cryptography import x509
+
+from flask import g, current_app
 
 from edumfa.api.lib.utils import getParam, attestation_certificate_allowed
 from edumfa.lib.challenge import get_challenges
@@ -38,7 +39,7 @@ from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.error import ParameterError, EnrollmentError, PolicyError
 from edumfa.lib.token import get_tokens, get_tokens_from_serial_or_user
 from edumfa.lib.tokenclass import TokenClass, CLIENTMODE, ROLLOUTSTATE
-from edumfa.lib.tokens.webauthn import (COSE_ALGORITHM, webauthn_b64_encode, WebAuthnRegistrationResponse,
+from edumfa.lib.tokens.webauthn import (COSE_ALGORITHM, USER_VERIFICATION_LEVELS, webauthn_b64_encode, WebAuthnRegistrationResponse,
                                              ATTESTATION_REQUIREMENT_LEVEL, webauthn_b64_decode,
                                              WebAuthnMakeCredentialOptions, WebAuthnAssertionOptions, WebAuthnUser,
                                              WebAuthnAssertionResponse, AuthenticationRejectedException,
@@ -47,8 +48,7 @@ from edumfa.lib.tokens.u2ftoken import IMAGES
 from edumfa.lib.log import log_with
 import logging
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, GROUP, ACTION
-from edumfa.lib.user import User
+from edumfa.lib.policy import SCOPE, GROUP, ACTION, Match
 from edumfa.lib.utils import hexlify_and_unicode, is_true, to_unicode, convert_imagefile_to_dataimage
 from flask import current_app
 import datetime
@@ -1346,6 +1346,17 @@ class WebAuthnTokenClass(TokenClass):
             reply_dict = {}
             if token is None:
                 return False, reply_dict
+            user_verification_requirement_policies = Match.user(g,
+                    scope=SCOPE.AUTH,
+                    action=WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
+                    user_object=token.user,
+                ).action_values(unique=True)
+            user_verification_requirement = list(user_verification_requirement_policies)[0] \
+                if user_verification_requirement_policies else DEFAULT_USER_VERIFICATION_REQUIREMENT
+            if user_verification_requirement not in USER_VERIFICATION_LEVELS:
+                raise PolicyError("{0!s} must be one of {1!s}".format(WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, ", ".join(USER_VERIFICATION_LEVELS)))
+
+            options[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] = user_verification_requirement
             options['user'] = token.user
             options['challenge'] = hexlify_and_unicode(challenge)
             try:
