@@ -150,8 +150,7 @@ class Audit(AuditBase):
         # create a configured "Session" class. ``scoped_session`` is not
         # necessary because we do not share session objects among threads.
         # We use it anyway as a safety measure.
-        Session = scoped_session(sessionmaker(bind=self.engine))
-        self.session = Session()
+        self.session = scoped_session(sessionmaker(bind=self.engine))
         # Ensure that the connection gets returned to the pool when the request has
         # been handled. This may close an already-closed session, but this is not a problem.
         register_finalizer(self._finalize_session)

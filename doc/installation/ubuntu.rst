@@ -170,7 +170,7 @@ Choose the packages you want to build based on your requirements. Use one of the
 
         cp -r deploy/ubuntu-radius debian
 
-Update the Linux distribution version in the changelog file:
+Update the Linux distribution version in the changelog file. For Ubuntu 24.04LTS, you must also force the use of Python3.9.
 
 .. tab:: Ubuntu 24.04LTS
 
@@ -189,6 +189,8 @@ Update the Linux distribution version in the changelog file:
     .. code-block:: bash
 
         sed -i 's/{{CODENAME}}/focal/g' debian/changelog
+        sed -i "s/python3-all/python3.9/g" debian/control
+        sed -i "s/python3/python3.9/g" debian/rules
 
 Install build dependencies and build the package::
 
