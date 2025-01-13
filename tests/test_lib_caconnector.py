@@ -316,8 +316,6 @@ class LocalCATestCase(MyTestCase):
             crl = x509.load_pem_x509_crl(crl_data, backend=default_backend())
             for revoked_cert in crl:
                 s = int_to_hex(revoked_cert.serial_number)
-                print(s)
-                print(serial_hex)
                 if s == serial_hex:
                     found_revoked_cert = True
                     break
