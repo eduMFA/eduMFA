@@ -63,7 +63,6 @@ CHARLIST_CONTENTPOLICY = {"c": string.ascii_letters, # characters
                           "n": string.digits,        # numbers
                           "s": string.punctuation}   # special
 
-LAST_AUTH_FORMAT = "%Y-%m-%d %H:%M:%S.%f%:z"
 
 def check_time_in_range(time_range, check_time=None):
     """
