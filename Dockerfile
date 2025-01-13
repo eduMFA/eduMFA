@@ -1,12 +1,12 @@
 # Build stage
-FROM python:3.12-slim-bookworm AS builder
+FROM python:3.13-slim-bookworm AS builder
 WORKDIR /tmp
 COPY . .
 RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 # Final stage
-FROM python:3.12-slim-bookworm
+FROM python:3.13-slim-bookworm
 
 # Install system dependencies
 RUN apt-get update && \
