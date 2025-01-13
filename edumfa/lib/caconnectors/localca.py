@@ -195,8 +195,8 @@ def _get_crl_next_update(filename):
     :param filename:
     :return:
     """
-    with open(filename, "rb") as crl:
-        crl_data = crl.read()
+    with open(filename, "rb") as crl_file:
+        crl_data = crl_file.read()
         crl = x509.load_pem_x509_crl(crl_data, backend=default_backend())
         return crl.next_update        
 
