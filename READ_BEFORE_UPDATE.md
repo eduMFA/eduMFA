@@ -42,7 +42,6 @@
 
 * chore: add support for python 3.13 by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/357
 * chore: drop support for Python 3.8 by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/384
-* Remove specific package version definitions for Python 3.8 by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/503
 * fix: add check to exec user scripts only if scripts are available by @fbmei in https://github.com/eduMFA/eduMFA/pull/474
 * fix: extract uv requirement per token by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/501
 * fix: use format string for last auth timestamp by @j-hoff in https://github.com/eduMFA/eduMFA/pull/494
