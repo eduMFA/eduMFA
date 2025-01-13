@@ -2,6 +2,7 @@ edumfa (2.6.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
   * chore: add support for python 3.13 by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/357
   * chore: drop support for Python 3.8 by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/384
+  * docs: add healthcheck for Mariadb by @johanneskastl in https://github.com/eduMFA/eduMFA/pull/476
   * fix: add check to exec user scripts only if scripts are available by @fbmei in https://github.com/eduMFA/eduMFA/pull/474
   * fix: extract uv requirement per token by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/501
   * fix: use format string for last auth timestamp by @j-hoff in https://github.com/eduMFA/eduMFA/pull/494
@@ -20,7 +21,6 @@ edumfa (2.6.0{{CODENAME}}) {{CODENAME}}; urgency=medium
   * chore(deps): update dependency sqlalchemy to v2.0.37 by @renovate in https://github.com/eduMFA/eduMFA/pull/498
   * chore(deps): update dependency urllib3 to v2.3.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/484
   * chore(deps): update python docker tag to v3.13 by @renovate in https://github.com/eduMFA/eduMFA/pull/355
-  * doc/installation/docker.rst: add healthcheck for Mariadb by @johanneskastl in https://github.com/eduMFA/eduMFA/pull/476
   * fix(deps): update dependency attrs to v24.3.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/478
   * fix(deps): update dependency coverage to v7.6.10 by @renovate in https://github.com/eduMFA/eduMFA/pull/487
   * fix(deps): update dependency pygments to v2.19.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/493
@@ -29,7 +29,7 @@ edumfa (2.6.0{{CODENAME}}) {{CODENAME}}; urgency=medium
   * fix(deps): update dependency sphinxcontrib-spelling to v8.0.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/480
   * fix(deps): update dependency types-pyyaml to v6.0.12.20241230 by @renovate in https://github.com/eduMFA/eduMFA/pull/488
 
- -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 13 Jan 2025 14:40:00 +0100
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 13 Jan 2025 17:00:00 +0100
 
 edumfa (2.5.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 

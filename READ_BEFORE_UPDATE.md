@@ -42,6 +42,7 @@
 
 * chore: add support for python 3.13 by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/357
 * chore: drop support for Python 3.8 by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/384
+* docs: add healthcheck for Mariadb by @johanneskastl in https://github.com/eduMFA/eduMFA/pull/476
 * fix: add check to exec user scripts only if scripts are available by @fbmei in https://github.com/eduMFA/eduMFA/pull/474
 * fix: extract uv requirement per token by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/501
 * fix: use format string for last auth timestamp by @j-hoff in https://github.com/eduMFA/eduMFA/pull/494
@@ -60,7 +61,6 @@
 * chore(deps): update dependency sqlalchemy to v2.0.37 by @renovate in https://github.com/eduMFA/eduMFA/pull/498
 * chore(deps): update dependency urllib3 to v2.3.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/484
 * chore(deps): update python docker tag to v3.13 by @renovate in https://github.com/eduMFA/eduMFA/pull/355
-* doc/installation/docker.rst: add healthcheck for Mariadb by @johanneskastl in https://github.com/eduMFA/eduMFA/pull/476
 * fix(deps): update dependency attrs to v24.3.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/478
 * fix(deps): update dependency coverage to v7.6.10 by @renovate in https://github.com/eduMFA/eduMFA/pull/487
 * fix(deps): update dependency pygments to v2.19.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/493
