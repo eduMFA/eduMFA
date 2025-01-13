@@ -33,6 +33,10 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.6.1
+
+* revert: fix: use format string for last auth timestamp by @j-hoff in https://github.com/eduMFA/eduMFA/pull/505
+
 ## eduMFA 2.6.0
 
 > [!CAUTION]
