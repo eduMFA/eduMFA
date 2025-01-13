@@ -31,6 +31,8 @@ from edumfa.lib.error import CAError
 from edumfa.lib.utils import int_to_hex, to_unicode
 from edumfa.lib.caconnectors.baseca import BaseCAConnector, AvailableCAConnectors
 from OpenSSL import crypto
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
 from subprocess import Popen, PIPE  # nosec B404
 import yaml
 import datetime
@@ -193,23 +195,10 @@ def _get_crl_next_update(filename):
     :param filename:
     :return:
     """
-    dt = None
-    f = open(filename)
-    crl_buff = f.read()
-    f.close()
-    crl_obj = crypto.load_crl(crypto.FILETYPE_PEM, crl_buff)
-    # Get "Next Update" of CRL
-    # Unfortunately pyOpenSSL does not support this. so we dump the
-    # CRL and parse the text :-/
-    # We do not want to add dependency to pyasn1
-    crl_text = to_unicode(crypto.dump_crl(crypto.FILETYPE_TEXT, crl_obj))
-    for line in crl_text.split("\n"):
-        if "Next Update: " in line:
-            key, value = line.split(":", 1)
-            date = value.strip()
-            dt = datetime.datetime.strptime(date, "%b %d %X %Y %Z")
-            break
-    return dt
+    with open(filename, "rb") as crl_file:
+        crl_data = crl_file.read()
+        crl = x509.load_pem_x509_crl(crl_data, backend=default_backend())
+        return crl.next_update        
 
 
 class CONFIG:
