@@ -477,6 +477,11 @@ class LibPolicyTestCase(MyTestCase):
         self.assertEqual(rv[0], True)
 
         token = get_tokens(serial=serial)[0]
+
+        # make sure last_auth tokeninfo is in expected ISO 8601 format
+        tokeninfo = token.token.get_info()
+        self.assertRegex(tokeninfo['last_auth'],r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6}([+-]\d{2}:\d{2})?$')
+
         # Set a very old last_auth
         token.add_tokeninfo(ACTION.LASTAUTH,
                             datetime.datetime.utcnow()-datetime.timedelta(days=2))

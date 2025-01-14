@@ -1370,7 +1370,7 @@ class WebAuthnTokenClass(TokenClass):
                 reply_dict["type"] = token.token.tokentype
                 if count != -1:
                     token.add_tokeninfo(ACTION.LASTAUTH,
-                                        datetime.datetime.now(tzlocal()))
+                                        datetime.datetime.now(tzlocal()).isoformat(sep=' ', timespec='microseconds'))
                     token.inc_count_auth_success()
                     return True, reply_dict
                 else:
