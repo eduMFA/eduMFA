@@ -463,7 +463,7 @@ def auth_lastauth(wrapped_function, user_or_serial, passw, options=None):
             # set the last successful authentication, if res still true
             if res:
                 token.add_tokeninfo(ACTION.LASTAUTH,
-                                    datetime.datetime.now(tzlocal()))
+                                    datetime.datetime.now(tzlocal()).isoformat(sep=' ', timespec='microseconds'))
 
     return res, reply_dict
 
