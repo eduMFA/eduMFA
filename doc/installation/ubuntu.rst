@@ -101,7 +101,7 @@ file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the following conten
         deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal focal main
 
 
-Installation of eduMFA 1.x
+Installation of eduMFA 1.x or higher
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After having added the repositories, run::
