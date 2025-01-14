@@ -28,6 +28,7 @@ The functions of this module are tested in tests/test_lib_policy_decorator.py
 """
 import logging
 import re
+import sys
 from edumfa.lib.policy import Match
 from edumfa.lib.error import PolicyError, eduMFAError
 import functools

@@ -27,6 +27,7 @@ import binascii
 import json
 
 import jwt
+import sys
 from cryptography import x509
 
 from flask import g, current_app
