@@ -1370,7 +1370,7 @@ class WebAuthnTokenClass(TokenClass):
                 reply_dict["serial"] = token.token.serial
                 reply_dict["type"] = token.token.tokentype
                 if count != -1:
-                    if sys.version >= (3, 12):
+                    if sys.version_info >= (3, 12):
                         token.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.now(tzlocal()).strftime(LAST_AUTH_FORMAT))
                     else:
                         token.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.now(tzlocal()))
