@@ -49,7 +49,7 @@ from edumfa.lib.log import log_with
 import logging
 from edumfa.lib import _
 from edumfa.lib.policy import SCOPE, GROUP, ACTION, Match
-from edumfa.lib.utils import hexlify_and_unicode, is_true, to_unicode, convert_imagefile_to_dataimage
+from edumfa.lib.utils import hexlify_and_unicode, is_true, to_unicode, convert_imagefile_to_dataimage, LAST_AUTH_FORMAT
 from flask import current_app
 import datetime
 from dateutil.tz import tzlocal
@@ -1369,8 +1369,10 @@ class WebAuthnTokenClass(TokenClass):
                 reply_dict["serial"] = token.token.serial
                 reply_dict["type"] = token.token.tokentype
                 if count != -1:
-                    token.add_tokeninfo(ACTION.LASTAUTH,
-                                        datetime.datetime.now(tzlocal()))
+                    if sys.version >= (3, 12):
+                        token.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.now(tzlocal()).strftime(LAST_AUTH_FORMAT))
+                    else:
+                        token.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.now(tzlocal()))
                     token.inc_count_auth_success()
                     return True, reply_dict
                 else:
