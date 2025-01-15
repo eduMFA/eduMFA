@@ -114,7 +114,7 @@ def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
         have expired, but do nothing.
     :return:
     """
-    utc_now = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
+    utc_now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
     params = {"accountExpires": "1"}
     if realm:
         params["realm"] = realm

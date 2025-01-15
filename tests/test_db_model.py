@@ -23,7 +23,7 @@ from edumfa.models import (Token,
                                 Tokengroup, TokenTokengroup, Serviceid)
 from .base import MyTestCase
 from dateutil.tz import tzutc
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 
 
 class TokenModelTestCase(MyTestCase):
@@ -972,7 +972,7 @@ class TokenModelTestCase(MyTestCase):
         # Simple test to write data to the monitoring stats table
         key1 = "user_count"
         key2 = "successful_auth"
-        utcnow = datetime.now(UTC).replace(tzinfo=None)
+        utcnow = datetime.now(timezone.utc).replace(tzinfo=None)
         MonitoringStats(utcnow - timedelta(seconds=1), key1, 15).save()
         MonitoringStats(utcnow, key1, 21).save()
         MonitoringStats(utcnow, key2, 123).save()

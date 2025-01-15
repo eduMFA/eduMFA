@@ -44,7 +44,7 @@ from flask import (Blueprint,
                    g)
 import jwt
 from functools import wraps
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 from edumfa.lib.error import AuthError, ERROR
 from edumfa.lib.crypto import geturandom, init_hsm
 from edumfa.lib.audit import getAudit
@@ -371,14 +371,19 @@ def get_auth_token():
     # What is the log level?
     log_level = current_app.config.get("EDUMFA_LOGLEVEL", 30)
 
-    token = jwt.encode({"username": loginname,
-                        "realm": realm,
-                        "nonce": nonce,
-                        "role": role,
-                        "authtype": authtype,
-                        "exp": datetime.now(UTC).replace(tzinfo=None) + validity,
-                        "rights": rights},
-                       secret, algorithm='HS256')
+    token = jwt.encode(
+        {
+            "username": loginname,
+            "realm": realm,
+            "nonce": nonce,
+            "role": role,
+            "authtype": authtype,
+            "exp": datetime.now(timezone.utc).replace(tzinfo=None) + validity,
+            "rights": rights,
+        },
+        secret,
+        algorithm="HS256",
+    )
 
     # set the logged-in user for post-policies and post-events
     g.logged_in_user = {"username": loginname,

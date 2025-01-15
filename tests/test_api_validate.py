@@ -5399,7 +5399,7 @@ class AChallengeResponse(MyApiTestCase):
         # If we wait long enough, the challenge has expired,
         # while the HOTP value 287082 in itself would still be valid.
         # However, the authentication with the expired transaction_id has to fail
-        new_utcnow = datetime.datetime.now(datetime.UTC).replace(tzinfo=None) + datetime.timedelta(minutes=12)
+        new_utcnow = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) + datetime.timedelta(minutes=12)
         new_now = datetime.datetime.now().replace(tzinfo=None) + datetime.timedelta(minutes=12)
 
         def side(*args, **kwargs):
@@ -5407,7 +5407,7 @@ class AChallengeResponse(MyApiTestCase):
                 return new_now
             elif len(args) == 1 and args[0] == None:
                 return new_now
-            elif len(args) == 1 and args[0] == datetime.UTC:
+            elif len(args) == 1 and args[0] == datetime.timezone.utc:
                 return new_utcnow
             raise Exception("Test")
 

@@ -24,7 +24,7 @@ class AuthCacheTestCase(MyTestCase):
     resolver = "resolver"
 
     def test_01_write_update_delete_cache(self):
-        teststart = datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
+        teststart = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
 
         r = add_to_cache(self.username, self.realm, self.resolver, self.password)
 
@@ -63,8 +63,8 @@ class AuthCacheTestCase(MyTestCase):
         auth_count1 = auth.auth_count
         self.assertEqual(0, auth_count1)
 
-        first_auth = datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(hours=4)
-        last_auth = datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(minutes=5)
+        first_auth = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(hours=4)
+        last_auth = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(minutes=5)
 
         r = verify_in_cache(self.username, self.realm, self.resolver,
                             self.password, first_auth=first_auth,
@@ -86,16 +86,16 @@ class AuthCacheTestCase(MyTestCase):
     def test_03_delete_old_entries(self):
         # Create a VERY old authcache entry
         AuthCache("grandpa", self.realm, self.resolver, _hash_password(self.password),
-                  first_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+                  first_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                       days=10),
-                  last_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+                  last_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                       days=2)).save()
 
         r = verify_in_cache(
             "grandpa", self.realm, self.resolver,
             self.password,
-            first_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(hours=4),
-            last_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+            first_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(hours=4),
+            last_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                 minutes=5))
         # Verification for grandpa fails.
         self.assertFalse(r)
@@ -108,14 +108,14 @@ class AuthCacheTestCase(MyTestCase):
         r = cleanup(100000000)
         # Create some entries:
         AuthCache("grandpa", self.realm, self.resolver, _hash_password(self.password),
-                  first_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+                  first_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                       days=10),
-                  last_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+                  last_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                       days=2)).save()
         AuthCache("grandpa", self.realm, self.resolver, _hash_password(self.password),
-                  first_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+                  first_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                       minutes=10),
-                  last_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+                  last_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                       minutes=2)).save()
 
         # Now we delete entries, that are older than 20 minutes. Only the 2 days old
@@ -129,9 +129,9 @@ class AuthCacheTestCase(MyTestCase):
         r = cleanup(100000000)
         # Add an entry with an old password hash
         AuthCache("grandpa", self.realm, self.resolver, hash("old password", seed=""),
-                  first_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+                  first_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                       minutes=10),
-                  last_auth=datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - datetime.timedelta(
+                  last_auth=datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - datetime.timedelta(
                       minutes=2)).save()
 
         r = verify_in_cache("grandpa", self.realm, self.resolver, "old password")

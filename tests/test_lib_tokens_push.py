@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Request
 from werkzeug.test import EnvironBuilder
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, UTC, timezone
 from pytz import utc
 
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
@@ -1039,7 +1039,7 @@ class PushTokenTestCase(MyTestCase):
         # check for timestamp of wrong type
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.now(UTC).replace(tzinfo=None),
+                        'timestamp': datetime.now(timezone.utc).replace(tzinfo=None),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp .*\. ISO-Format required.',
@@ -1048,7 +1048,7 @@ class PushTokenTestCase(MyTestCase):
         # check for timezone unaware timestamp (we assume UTC then)
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.now(UTC).replace(tzinfo=None).isoformat(),
+                        'timestamp': datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',
@@ -1335,7 +1335,7 @@ class PushTokenTestCase(MyTestCase):
         serial2 = tok2.get_serial()
         # we shouldn't run into the signature check here
         req.all_data = {'serial': serial2,
-                        'timestamp': datetime.now(UTC).replace(tzinfo=None).isoformat(),
+                        'timestamp': datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
                         'signature': b32encode(b"signature not needed")}
         # poll for challenges
         self.assertRaisesRegex(eduMFAError,
@@ -2345,7 +2345,7 @@ class EduPushTokenTestCase(MyTestCase):
         # check for timestamp of wrong type
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.now(UTC).replace(tzinfo=None),
+                        'timestamp': datetime.now(timezone.utc).replace(tzinfo=None),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp .*\. ISO-Format required.',
@@ -2354,7 +2354,7 @@ class EduPushTokenTestCase(MyTestCase):
         # check for timezone unaware timestamp (we assume UTC then)
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.now(UTC).replace(tzinfo=None).isoformat(),
+                        'timestamp': datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',
@@ -2641,7 +2641,7 @@ class EduPushTokenTestCase(MyTestCase):
         serial2 = tok2.get_serial()
         # we shouldn't run into the signature check here
         req.all_data = {'serial': serial2,
-                        'timestamp': datetime.now(UTC).replace(tzinfo=None).isoformat(),
+                        'timestamp': datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
                         'signature': b32encode(b"signature not needed")}
         # poll for challenges
         self.assertRaisesRegex(eduMFAError,

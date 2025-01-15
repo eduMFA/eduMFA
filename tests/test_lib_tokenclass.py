@@ -802,7 +802,7 @@ class TokenBaseTestCase(MyTestCase):
         # Old time format
         # lastauth_alt = datetime.datetime.utcnow().isoformat()
         token_obj.add_tokeninfo(ACTION.LASTAUTH,
-                                datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - tdelta)
+                                datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - tdelta)
         r = token_obj.check_last_auth_newer("10h")
         self.assertFalse(r)
         r = token_obj.check_last_auth_newer("2d")

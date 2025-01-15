@@ -145,7 +145,7 @@ def auth_cache(wrapped_function, user_object, passw, options=None):
 
             # determine first_auth from policy!
             first_offset = parse_timedelta(auth_times[0])
-            first_auth = datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - first_offset
+            first_auth = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - first_offset
             last_auth = first_auth  # Default if no last auth exists
             max_auths = 0  # Default value, 0 has no effect on verification
 
@@ -156,7 +156,7 @@ def auth_cache(wrapped_function, user_object, passw, options=None):
                 else:
                     # Determine last_auth delta from policy
                     last_offset = parse_timedelta(auth_times[1])
-                    last_auth = datetime.datetime.now(datetime.UTC).replace(tzinfo=None) - last_offset
+                    last_auth = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None) - last_offset
 
             result = verify_in_cache(user_object.login, user_object.realm,
                                      user_object.resolver, passw,

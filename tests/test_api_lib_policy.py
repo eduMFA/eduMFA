@@ -86,7 +86,7 @@ from edumfa.lib.machine import attach_token
 from edumfa.lib.auth import ROLE
 import jwt
 from passlib.hash import pbkdf2_sha512
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 from dateutil.tz import tzlocal
 from edumfa.lib.tokenclass import DATE_FORMAT
 from .test_lib_tokens_webauthn import (ALLOWED_TRANSPORTS, CRED_ID, ASSERTION_RESPONSE_TMPL,
@@ -1253,7 +1253,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # A request with an API key succeeds
         secret = current_app.config.get("SECRET_KEY")
         token = jwt.encode({"role": ROLE.VALIDATE,
-                            "exp": datetime.now(UTC).replace(tzinfo=None) + timedelta(hours=1)},
+                            "exp": datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)},
                             secret)
         req.headers = {"Authorization": token}
         r = api_key_required(req)
@@ -1262,7 +1262,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # A request with a valid Admin Token does not succeed
         token = jwt.encode({"role": ROLE.ADMIN,
                             "username": "admin",
-                            "exp": datetime.now(UTC).replace(tzinfo=None) + timedelta(hours=1)},
+                            "exp": datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)},
                             secret)
         req.headers = {"Authorization": token}
         self.assertRaises(PolicyError, api_key_required, req)

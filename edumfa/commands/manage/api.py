@@ -18,7 +18,7 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import sys
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 
 import click
 import jwt
@@ -53,8 +53,17 @@ def createtoken(role, days, realm, username):
     authtype = "API"
     validity = timedelta(days=int(days))
     token = jwt.encode(
-        {"username": username, "realm": realm, "nonce": geturandom(hex=True), "role": role, "authtype": authtype,
-            "exp": datetime.now(UTC).replace(tzinfo=None) + validity, "rights": "TODO"}, secret)
+        {
+            "username": username,
+            "realm": realm,
+            "nonce": geturandom(hex=True),
+            "role": role,
+            "authtype": authtype,
+            "exp": datetime.now(timezone.utc).replace(tzinfo=None) + validity,
+            "rights": "TODO",
+        },
+        secret,
+    )
     click.echo("Username:   {0!s}".format(username))
     click.echo("Realm:      {0!s}".format(realm))
     click.echo("Role:       {0!s}".format(role))

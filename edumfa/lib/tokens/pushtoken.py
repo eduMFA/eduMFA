@@ -31,7 +31,7 @@ This code is tested in tests/test_lib_tokens_push
 from base64 import b32decode
 from binascii import Error as BinasciiError
 from urllib.parse import quote
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 from pytz import utc
 from dateutil.parser import isoparse
 import traceback
@@ -673,7 +673,7 @@ class PushTokenClass(TokenClass):
         if ts.tzinfo:
             now = datetime.now(utc)
         else:
-            now = datetime.now(UTC).replace(tzinfo=None)
+            now = datetime.now(timezone.utc).replace(tzinfo=None)
         if not (now - td <= ts <= now + td):
             raise eduMFAError('Timestamp {0!s} not in valid range.'.format(timestamp))
 

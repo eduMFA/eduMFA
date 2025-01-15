@@ -27,7 +27,7 @@
 import binascii
 import logging
 import traceback
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 
 from dateutil.tz import tzutc
 from json import loads, dumps
@@ -1366,7 +1366,7 @@ class Challenge(MethodsMixin, db.Model):
     session = db.Column(db.Unicode(512), default='', quote=True, name="session")
     # The token serial number
     serial = db.Column(db.Unicode(40), default='', index=True)
-    timestamp = db.Column(db.DateTime, default=datetime.now(UTC).replace(tzinfo=None), index=True)
+    timestamp = db.Column(db.DateTime, default=datetime.now(timezone.utc).replace(tzinfo=None), index=True)
     expiration = db.Column(db.DateTime)
     received_count = db.Column(db.Integer(), default=0)
     otp_valid = db.Column(db.Boolean, default=False)
@@ -1379,11 +1379,11 @@ class Challenge(MethodsMixin, db.Model):
         self.challenge = challenge
         self.serial = serial
         self.data = data
-        self.timestamp = datetime.now(UTC).replace(tzinfo=None)
+        self.timestamp = datetime.now(timezone.utc).replace(tzinfo=None)
         self.session = session
         self.received_count = 0
         self.otp_valid = False
-        self.expiration = datetime.now(UTC).replace(tzinfo=None) + timedelta(seconds=validitytime)
+        self.expiration = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(seconds=validitytime)
 
     @staticmethod
     def create_transaction_id(length=20):
@@ -1396,7 +1396,7 @@ class Challenge(MethodsMixin, db.Model):
         :rtype: bool
         """
         ret = False
-        c_now = datetime.now(UTC).replace(tzinfo=None)
+        c_now = datetime.now(timezone.utc).replace(tzinfo=None)
         if self.timestamp <= c_now < self.expiration:
             ret = True
         return ret
@@ -1428,7 +1428,7 @@ class Challenge(MethodsMixin, db.Model):
 
     def set_challenge(self, challenge):
         self.challenge = convert_column_to_unicode(challenge)
-    
+
     def get_challenge(self):
         return self.challenge
 
@@ -1486,7 +1486,7 @@ def cleanup_challenges():
 
     :return: None
     """
-    c_now = datetime.now(UTC).replace(tzinfo=None)
+    c_now = datetime.now(timezone.utc).replace(tzinfo=None)
     Challenge.query.filter(Challenge.expiration < c_now).delete()
     db.session.commit()
 
@@ -2574,7 +2574,9 @@ class ClientApplication(MethodsMixin, db.Model):
     ip = db.Column(db.Unicode(255), nullable=False, index=True)
     hostname = db.Column(db.Unicode(255))
     clienttype = db.Column(db.Unicode(255), nullable=False, index=True)
-    lastseen = db.Column(db.DateTime, index=True, default=datetime.now(UTC).replace(tzinfo=None))
+    lastseen = db.Column(
+        db.DateTime, index=True, default=datetime.now(timezone.utc).replace(tzinfo=None)
+    )
     node = db.Column(db.Unicode(255), nullable=False)
     __table_args__ = (db.UniqueConstraint('ip',
                                           'clienttype',
@@ -2860,7 +2862,11 @@ class AuthCache(MethodsMixin, db.Model):
         self.realm = realm
         self.resolver = resolver
         self.authentication = authentication
-        self.first_auth = first_auth if first_auth else datetime.now(UTC).replace(tzinfo=None)
+        self.first_auth = (
+            first_auth
+            if first_auth
+            else datetime.now(timezone.utc).replace(tzinfo=None)
+        )
         self.last_auth = last_auth if last_auth else self.first_auth
 
 
@@ -2962,7 +2968,7 @@ class PeriodicTask(MethodsMixin, db.Model):
         Set ``last_update`` to the current time.
         :return: the entry ID
         """
-        self.last_update = datetime.now(UTC).replace(tzinfo=None)
+        self.last_update = datetime.now(timezone.utc).replace(tzinfo=None)
         if self.id is None:
             # create a new one
             db.session.add(self)

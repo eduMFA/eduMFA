@@ -126,7 +126,7 @@ class UtilsTestCase(MyApiTestCase):
 
         # The signature has expired
         expired_token = jwt.encode(payload={"role": "admin",
-                                            "exp": datetime.datetime.now(datetime.UTC).replace(tzinfo=None)-datetime.timedelta(seconds=1000)},
+                                            "exp": datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)-datetime.timedelta(seconds=1000)},
                                    key=key,
                                    algorithm="RS256")
         self.assertRaises(AuthError, verify_auth_token, auth_token=expired_token, required_role="admin")
