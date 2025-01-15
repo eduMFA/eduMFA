@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Request
 from werkzeug.test import EnvironBuilder
-from datetime import datetime, timedelta, UTC, timezone
+from datetime import datetime, timedelta, timezone
 from pytz import utc
 
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
