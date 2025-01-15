@@ -62,7 +62,10 @@ import struct
 
 import cbor2
 import cryptography.x509
-from OpenSSL import crypto
+try:
+    from OpenSSL import crypto
+except AttributeError as e:
+    pass
 from cryptography import x509
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
