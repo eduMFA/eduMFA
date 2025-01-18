@@ -376,6 +376,9 @@ def verify_auth_token(auth_token, required_role=None):
                                     trusted_jwt.get("public_key"),
                                     algorithms=[trusted_jwt.get("algorithm")])
                     
+                    if "claim" in trusted_jwt and trusted_jwt.get("claim") in j:
+                        j["username"] = j[trusted_jwt.get("claim")]
+
                     if dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == \
                             dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
                         if re.match(trusted_jwt.get("username") + "$", j.get("username")):
