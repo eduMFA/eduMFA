@@ -164,8 +164,10 @@ class RegistrationTokenClass(PasswordTokenClass):
         :type param: dict
         :return: None
         """
-        # We always generate the registration code, so we need to set this parameter
-        param["genkey"] = 1
+        # If neither genkey or otpkey is given we always generate the key
+        if 'genkey' not in param and 'otpkey' not in param:
+            param['genkey'] = 1
+
         PasswordTokenClass.update(self, param)
 
     @log_with(log, log_entry=False)
