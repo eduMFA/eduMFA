@@ -226,7 +226,7 @@ registration.length
 type: int
 
 This is the length of the generated registration codes. This has no effect if
-the registration code is manually set via "optkey" parameter.
+the registration code is manually set via "otpkey" parameter.
 
 registration.contents
 ~~~~~~~~~~~~~~~~~~~~~
@@ -236,7 +236,7 @@ type: string
 contents: cns
 
 This defines what characters the registrationcodes should contain. This has no effect if
-the registration code is manually set via "optkey" parameter.
+the registration code is manually set via "otpkey" parameter.
 
 This takes the same values like the admin policy :ref:`admin_policies_otp_pin_contents`.
 
