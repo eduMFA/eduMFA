@@ -49,7 +49,6 @@ class RegistrationTokenTestCase(MyTestCase):
         registrationcode = init_detail.get("registrationcode")
         # the registrationcode should now equal the otpkey-param
         self.assertEqual("test_registration_key", registrationcode)
-        self.assertTrue(int(registrationcode))
 
     def test_02_class_methods(self):
         db_token = Token.query.filter(Token.serial == self.serial1).first()
