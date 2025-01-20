@@ -3146,40 +3146,29 @@ class RegistrationAndPasswordToken(MyApiTestCase):
             data = res.json
             self.assertEqual("ACCEPT", data.get("result").get("authentication"), (data, regcode))
 
-        # create a reg token, where the otpkey is ignored
+        # create a reg token, where the otpkey is set
         with self.app.test_request_context('/token/init',
                                            method='POST',
                                            data={'user': 'cornelius',
                                                  'type': 'registration',
-                                                 'otpkey': "hallo"},
+                                                 'otpkey': 'hallo'},
                                            headers={'Authorization': self.at}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             detail = data.get("detail")
             regcode = detail.get("registrationcode")
-            self.assertEqual(DEFAULT_LENGTH_REG, len(regcode))
-            self.assertNotEqual("hallo", regcode)
+            self.assertEqual("hallo", regcode)
 
         # now check the authentication
         with self.app.test_request_context('/validate/check',
                                            method='POST',
                                            data={"user": "cornelius",
-                                                 "pass": quote(regcode)}):
+                                                 "pass": 'hallo'}):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             data = res.json
             self.assertEqual("ACCEPT", data.get("result").get("authentication"), (data, regcode))
-
-        # The registration code was generated. The passed otpkey was NOT used.
-        with self.app.test_request_context('/validate/check',
-                                           method='POST',
-                                           data={"user": "cornelius",
-                                                 "pass": "hallo"}):
-            res = self.app.full_dispatch_request()
-            self.assertTrue(res.status_code == 200, res)
-            data = res.json
-            self.assertEqual("REJECT", data.get("result").get("authentication"), data)
 
     def test_01_password_tokens(self):
         # The password token requires either an otpkey or genkey
