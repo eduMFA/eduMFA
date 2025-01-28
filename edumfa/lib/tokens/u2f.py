@@ -101,7 +101,7 @@ def parse_registration_data(reg_data, verify_cert=True):
     returns the parsed registration data in a tuple
     attestation_cert, user_pub_key, key_handle, signature, description
 
-     * attestation_cert is a x509 object
+     * attestation_cert is a Certificate object
      * user_pub_key is a hex string
      * key_handle is a hex string
      * signature is a hex string

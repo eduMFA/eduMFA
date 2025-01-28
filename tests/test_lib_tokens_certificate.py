@@ -3,6 +3,7 @@ This test file tests the lib.tokens.certificatetoken
 """
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
+from cryptography import x509
 from edumfa.models import Token
 from edumfa.lib.caconnector import save_caconnector
 from edumfa.lib.token import get_tokens, remove_token
@@ -14,7 +15,6 @@ from edumfa.lib.policy import set_policy, delete_policy, PolicyClass, SCOPE
 import os
 import unittest
 import mock
-from OpenSSL import crypto
 from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
 from edumfa.lib.caconnectors.msca import MSCAConnector
 from .mscamock import (MyTemplateReply, MyCAReply, MyCSRReply,
@@ -380,25 +380,25 @@ class CertificateTokenTestCase(MyTestCase):
         detail = token.get_init_detail()
         certificate = detail.get("certificate")
         # At each testrun, the certificate might get another serial number!
-        x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=requester.localdomain'>")
+        x509obj = x509.load_pem_x509_certificate(certificate.encode())
+        self.assertEqual("{0!r}".format(x509obj.issuer),
+                         "<Name(C=DE,ST=Bavaria,"
+                         "O=eduMFA,CN=eduMFA Test-CA)>")
+        self.assertEqual("{0!r}".format(x509obj.subject),
+                         "<Name(C=DE,ST=Bavaria,"
+                         "O=eduMFA,CN=requester.localdomain)>")
 
         # Test, if the certificate is also completely stored in the tokeninfo
         # and if we can retrieve it from the tokeninfo
         token = get_tokens(serial=self.serial2)[0]
         certificate = token.get_tokeninfo("certificate")
-        x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=requester.localdomain'>")
+        x509obj = x509.load_pem_x509_certificate(certificate.encode())
+        self.assertEqual("{0!r}".format(x509obj.issuer),
+                         "<Name(C=DE,ST=Bavaria,"
+                         "O=eduMFA,CN=eduMFA Test-CA)>")
+        self.assertEqual("{0!r}".format(x509obj.subject),
+                         "<Name(C=DE,ST=Bavaria,"
+                         "O=eduMFA,CN=requester.localdomain)>")
         remove_token(self.serial2)
 
     def test_02a_fail_request_with_attestation(self):
@@ -453,12 +453,12 @@ class CertificateTokenTestCase(MyTestCase):
         detail = token.get_init_detail()
         certificate = detail.get("certificate")
         # At each testrun, the certificate might get another serial number!
-        x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/CN=cn=cornelius'>")
+        x509obj = x509.load_pem_x509_certificate(certificate.encode())
+        self.assertEqual("{0!r}".format(x509obj.issuer),
+                         "<Name(C=DE,ST=Bavaria,"
+                         "O=eduMFA,CN=eduMFA Test-CA)>")
+        self.assertEqual("{0!r}".format(x509obj.subject),
+                         "<Name(CN=cn=cornelius)>")
         remove_token(self.serial2)
 
     def test_03_class_methods(self):
@@ -501,23 +501,23 @@ class CertificateTokenTestCase(MyTestCase):
         detail = token.get_init_detail()
         certificate = detail.get("certificate")
         # At each testrun, the certificate might get another serial number!
-        x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
+        x509obj = x509.load_pem_x509_certificate(certificate.encode())
+        self.assertEqual("{0!r}".format(x509obj.issuer),
+                         "<Name(C=DE,ST=Bavaria,"
+                         "O=eduMFA,CN=eduMFA Test-CA)>")
         # No Email Address in the subject!
-        subject = x509obj.get_subject()
-        self.assertEqual("{0!s}".format(subject), "<X509Name object '/CN=cornelius'>")
+        subject = x509obj.subject
+        self.assertEqual("{0!s}".format(subject), "<Name(CN=cornelius)>")
 
         # Test, if the certificate is also completely stored in the tokeninfo
         # and if we can retrieve it from the tokeninfo
         token = get_tokens(serial=self.serial3)[0]
         certificate = token.get_tokeninfo("certificate")
-        x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria"
-                         "/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(x509obj.get_subject()), "<X509Name object '/CN=cornelius'>")
+        x509obj = x509.load_pem_x509_certificate(certificate.encode())
+        self.assertEqual("{0!r}".format(x509obj.issuer),
+                         "<Name(C=DE,ST=Bavaria,"
+                         "O=eduMFA,CN=eduMFA Test-CA)>")
+        self.assertEqual("{0!r}".format(x509obj.subject), "<Name(CN=cornelius)>")
 
         privatekey = token.get_tokeninfo("privatekey")
         self.assertTrue(privatekey.startswith("-----BEGIN PRIVATE KEY-----"))
@@ -527,7 +527,7 @@ class CertificateTokenTestCase(MyTestCase):
 
         # revoke the token
         r = token.revoke()
-        self.assertEqual(r, int_to_hex(x509obj.get_serial_number()))
+        self.assertEqual(r, int_to_hex(x509obj.serial_number))
         remove_token(self.serial3)
 
         # Now create a new token again and also check for subjects with email and realm
@@ -539,9 +539,9 @@ class CertificateTokenTestCase(MyTestCase):
                       "user": "cornelius"})
         detail = token.get_init_detail()
         certificate = detail.get("certificate")
-        x509obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        self.assertEqual("{0!r}".format(x509obj.get_subject()),
-                         "<X509Name object '/OU=realm1/CN=cornelius/emailAddress=user@localhost.localdomain'>")
+        x509obj = x509.load_pem_x509_certificate(certificate.encode())
+        self.assertEqual("{0!r}".format(x509obj.subject),
+                         "<Name(CN=cornelius,1.2.840.113549.1.9.1=user@localhost.localdomain,1.2.840.113549.1.9.1=realm1)>")
         remove_token(self.serial3)
 
     def test_05_get_default_settings(self):

@@ -382,10 +382,11 @@ class LocalCAConnector(BaseCAConnector):
             csr_filename = common_name + ".txt"
             certificate_filename = common_name + ".der"
         else:
-            csr_filename = self._filename_from_x509(csr.subject,
+            csr_obj = x509.load_pem_x509_csr(csr.encode())
+            csr_filename = self._filename_from_x509(csr_obj.subject,
                                                     file_extension="req")
             certificate_filename = self._filename_from_x509(
-                csr.subject, file_extension="pem")
+                csr_obj.subject, file_extension="pem")
             #csr_extensions = csr_obj.get_extensions()
         csr_filename = csr_filename.replace(" ", "_")
         certificate_filename = certificate_filename.replace(" ", "_")

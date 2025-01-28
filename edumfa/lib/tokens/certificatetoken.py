@@ -510,7 +510,7 @@ class CertificateTokenClass(TokenClass):
             # r = req.sign(key, "sha256")
             # csr = to_unicode(crypto.dump_certificate_request(crypto.FILETYPE_PEM, req))
             try:
-                request_id, certificate_obj = cacon.sign_request(csr, options={"template": template_name})
+                request_id, certificate_obj = cacon.sign_request(csr.public_bytes(Encoding.PEM).decode("utf-8"), options={"template": template_name})
                 certificate = certificate_obj.public_bytes(Encoding.PEM)
             except CSRError:
                 # Mark the token as broken
