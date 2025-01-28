@@ -34,7 +34,6 @@ The functions of this module are tested in tests/test_api_lib_policy.py
 
 import logging
 
-from OpenSSL import crypto
 from edumfa.lib import _
 from edumfa.lib.error import PolicyError, RegistrationError, TokenAdminError, ResourceNotFoundError, ParameterError
 from flask import g, current_app
@@ -2144,7 +2143,8 @@ def webauthntoken_allowed(request, action):
                                                                       att_stmt=att_obj.get('attStmt'),
                                                                       auth_data=att_obj.get('authData'))
 
-        attestation_cert = crypto.X509.from_cryptography(trust_path[0]) if trust_path else None
+        attestation_cert = trust_path[0] if trust_path else None
+
         allowed_certs_pols = Match\
             .user(g,
                   scope=SCOPE.ENROLL,
@@ -2165,14 +2165,6 @@ def webauthntoken_allowed(request, action):
             for aaguid in allowed_aaguid_pol.split()
         )
 
-        # attestation_cert is of type X509. If you get a warning from your IDE
-        # here, it is because your IDE mistakenly assumes it to be of type PKey,
-        # due to a bug in pyOpenSSL 18.0.0. This bug is – however – purely
-        # cosmetic (a wrongly hinted return type in X509.from_cryptography()),
-        # and can be safely ignored.
-        #
-        # See also:
-        # https://github.com/pyca/pyopenssl/commit/4121e2555d07bbba501ac237408a0eea1b41f467
         if allowed_certs_pols and not _attestation_certificate_allowed(attestation_cert, allowed_certs_pols):
             log.warning(
                 "The WebAuthn token {0!s} is not allowed to be registered due to policy restriction {1!s}"
@@ -2205,7 +2197,7 @@ def _attestation_certificate_allowed(attestation_cert, allowed_certs_pols):
     from the token info, containing just the issuer, serial and subject.
 
     :param attestation_cert: The attestation certificate.
-    :type attestation_cert: OpenSSL.crypto.X509 or None
+    :type attestation_cert: cryptography.x509.Certificate or None
     :param allowed_certs_pols: The policies restricting enrollment, or authorization.
     :type allowed_certs_pols: dict or None
     :return: Whether the token should be allowed to complete enrollment, or authorization, based on its attestation.
@@ -2213,9 +2205,9 @@ def _attestation_certificate_allowed(attestation_cert, allowed_certs_pols):
     """
 
     cert_info = {
-        "attestation_issuer": x509name_to_string(attestation_cert.get_issuer()),
-        "attestation_serial": "{!s}".format(attestation_cert.get_serial_number()),
-        "attestation_subject": x509name_to_string(attestation_cert.get_subject())
+        "attestation_issuer": x509name_to_string(attestation_cert.issuer),
+        "attestation_serial": "{!s}".format(attestation_cert.serial_number),
+        "attestation_subject": x509name_to_string(attestation_cert.subject)
     } \
         if attestation_cert \
         else None

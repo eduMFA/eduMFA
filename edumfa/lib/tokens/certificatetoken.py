@@ -35,10 +35,12 @@ from edumfa.api.lib.utils import getParam
 from edumfa.lib.caconnector import get_caconnector_object, get_caconnector_list
 from edumfa.lib.user import get_user_from_param
 from edumfa.lib.utils import determine_logged_in_userparams
-from OpenSSL import crypto
+from cryptography import x509
 from cryptography.x509 import load_pem_x509_certificate, load_pem_x509_csr
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.serialization import PrivateFormat, load_pem_private_key, pkcs12
+from cryptography.x509.oid import NameOID
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.serialization import load_pem_private_key, pkcs12, PrivateFormat, Encoding
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import padding
 from edumfa.lib.decorators import check_token_locked
@@ -465,11 +467,11 @@ class CertificateTokenClass(TokenClass):
                             raise eduMFAError("Failed to verify certificate chain of attestation certificate.")
 
             # During the initialization process, we need to create the certificate
-            request_id, x509object = cacon.sign_request(request,
+            request_id, certificate_obj = cacon.sign_request(request,
                                                         options={"spkac": spkac,
                                                                  "template": template_name})
-            certificate = crypto.dump_certificate(crypto.FILETYPE_PEM,
-                                                  x509object)
+            certificate = certificate_obj.public_bytes(Encoding.PEM)
+
         elif generate:
             """
             Create the certificate on behalf of another user. Now we need to create 
@@ -480,16 +482,23 @@ class CertificateTokenClass(TokenClass):
             """
             user = get_user_from_param(param, optionalOrRequired=required)
             keysize = getParam(param, "keysize", optional, 2048)
-            key = crypto.PKey()
-            key.generate_key(crypto.TYPE_RSA, keysize)
-            req = crypto.X509Req()
-            req.get_subject().CN = user.login
+            private_key = rsa.generate_private_key(
+                public_exponent=65537,
+                key_size=keysize,
+            )
+
             # Add components to subject
+            name_attributes = [x509.NameAttribute(NameOID.COMMON_NAME, user.login)]
             if subject_components:
                 if "email" in subject_components and user.info.get("email"):
-                    req.get_subject().emailAddress = user.info.get("email")
+                    name_attributes.append(x509.NameAttribute(NameOID.EMAIL_ADDRESS, user.info.get("email")))
                 if "realm" in subject_components:
-                    req.get_subject().organizationalUnitName = user.realm
+                    name_attributes.append(x509.NameAttribute(NameOID.EMAIL_ADDRESS, user.realm))
+
+            csr = x509.CertificateSigningRequestBuilder().subject_name(
+                x509.Name(name_attributes)
+            ).sign(private_key,hashes.SHA256())
+
             # TODO: Add Country, Organization
             """
             req.get_subject().countryName = 'xxx'
@@ -497,12 +506,12 @@ class CertificateTokenClass(TokenClass):
             req.get_subject().localityName = 'xxx'
             req.get_subject().organizationName = 'xxx'
             """
-            req.set_pubkey(key)
-            r = req.sign(key, "sha256")
-            csr = to_unicode(crypto.dump_certificate_request(crypto.FILETYPE_PEM, req))
+            # req.set_pubkey(key)
+            # r = req.sign(key, "sha256")
+            # csr = to_unicode(crypto.dump_certificate_request(crypto.FILETYPE_PEM, req))
             try:
-                request_id, x509object = cacon.sign_request(csr, options={"template": template_name})
-                certificate = crypto.dump_certificate(crypto.FILETYPE_PEM, x509object)
+                request_id, certificate_obj = cacon.sign_request(csr, options={"template": template_name})
+                certificate = certificate_obj.public_bytes(Encoding.PEM)
             except CSRError:
                 # Mark the token as broken
                 self.token.rollout_state = ROLLOUTSTATE.FAILED
@@ -514,7 +523,11 @@ class CertificateTokenClass(TokenClass):
                     request_id = e.requestId
             finally:
                 # Save the private key to the encrypted key field of the token
-                s = crypto.dump_privatekey(crypto.FILETYPE_PEM, key)
+                s = private_key.private_bytes(
+                    encoding=Encoding.PEM,
+                    format=PrivateFormat.PKCS8,
+                    encryption_algorithm=serialization.NoEncryption()
+                )
                 self.add_tokeninfo("privatekey", s, value_type="password")
 
         if "pin" in param:

@@ -25,7 +25,7 @@ This module is tested in tests/test_lib_caconnector.py
 
 from edumfa.lib.error import CAError
 from edumfa.lib.caconnectors.baseca import BaseCAConnector, AvailableCAConnectors
-from OpenSSL import crypto
+from cryptography import x509
 import logging
 import traceback
 from edumfa.lib.utils import is_true
@@ -272,7 +272,7 @@ class MSCAConnector(BaseCAConnector):
                 log.info("certificate with request ID {0!s} successfully rolled out".format(request_id))
                 certificate = self.connection.GetCertificate(GetCertificateRequest(id=request_id,
                                                                                    caName=self.ca)).cert
-                return request_id, crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
+                return request_id, x509.load_pem_x509_certificate(certificate)
             if reply.disposition == 5:
                 log.info("cert still under submission")
                 raise CSRPending(requestId=reply.requestId)

@@ -61,8 +61,6 @@ import os
 import struct
 
 import cbor2
-import cryptography.x509
-from OpenSSL import crypto
 from cryptography import x509
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
@@ -2004,7 +2002,7 @@ def _get_trust_anchors(attestation_type, attestation_fmt, trust_anchor_dir):
                 try:
                     with open(trust_anchor_path, 'rb') as f:
                         pem_data = f.read().strip()
-                        pem = cryptography.x509.load_pem_x509_certificate(pem_data.strip())
+                        pem = x509.load_pem_x509_certificate(pem_data.strip())
                         trust_anchors.append(pem)
                 except Exception as e:
                     log.info('Could not load certificate {0!s}: '
@@ -2021,15 +2019,13 @@ def _is_trusted_x509_attestation_cert(trust_path, trust_anchors):
 
     # TODO: this could be a certificate chain. We should treat it as such
     attestation_cert = trust_path[0]
-    store = crypto.X509Store()
-    # Since the certificates are in pyca.cryptography format, we need to convert
-    # them to the OpenSSL.crypto format
-    for i in trust_anchors:
-        store.add_cert(crypto.X509.from_cryptography(i))
-    store_ctx = crypto.X509StoreContext(store, crypto.X509.from_cryptography(attestation_cert))
+    store = x509.verification.Store(trust_anchors)
+
+    builder = x509.verification.PolicyBuilder().store(store)
+    verifier = builder.build_client_verifier()
 
     try:
-        store_ctx.verify_certificate()
+        verifier.verify(attestation_cert,[])
         return True
     except Exception as e:
         log.info('Unable to verify certificate: {}'.format(e))

@@ -290,12 +290,12 @@ class LocalCATestCase(MyTestCase):
                                       {"CSRDir": "",
                                        "CertificateDir": "",
                                        "WorkingDir": cwd + "/" + WORKINGDIR})
-        serial = cert.get_serial_number()
+        serial = cert.serial_number
 
-        self.assertEqual("{0!r}".format(cert.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(cert.get_subject()),
-                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=requester.localdomain'>")
+        self.assertEqual("{0!r}".format(cert.issuer),
+                         "<Name(C=DE,ST=Bavaria,O=eduMFA,CN=eduMFA Test-CA)>")
+        self.assertEqual("{0!r}".format(cert.subject),
+                         "<Name(C=DE,ST=Bavaria,O=eduMFA,CN=requester.localdomain)>")
 
         # Fail to revoke certificate due to non-existing-reasing
         self.assertRaises(CAError, cacon.revoke_cert, cert, reason="$(rm -fr)")
@@ -343,10 +343,10 @@ class LocalCATestCase(MyTestCase):
                                   "WorkingDir": cwd + "/" + WORKINGDIR})
 
         _, cert = cacon.sign_request(REQUEST_USER)
-        self.assertEqual("{0!r}".format(cert.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(cert.get_subject()),
-                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=usercert'>")
+        self.assertEqual("{0!r}".format(cert.issuer),
+                         "<Name(C=DE,ST=Bavaria,O=eduMFA,CN=eduMFA Test-CA)>")
+        self.assertEqual("{0!r}".format(cert.subject),
+                         "<Name(C=DE,ST=Bavaria,O=eduMFA,CN=usercert)>")
 
     def test_04_sign_SPKAC_request(self):
         cwd = os.getcwd()
@@ -357,11 +357,11 @@ class LocalCATestCase(MyTestCase):
                                   "WorkingDir": cwd + "/" + WORKINGDIR})
 
         _, cert = cacon.sign_request(SPKAC, options={"spkac": 1})
-        self.assertEqual("{0!r}".format(cert.get_issuer()),
-                         "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>")
-        self.assertEqual("{0!r}".format(cert.get_subject()),
-                         "<X509Name object '/CN=Steve Test"
-                         "/emailAddress=steve@openssl.org'>")
+        self.assertEqual("{0!r}".format(cert.issuer),
+                         "<Name(C=DE,ST=Bavaria,O=eduMFA,CN=eduMFA Test-CA)>")
+        self.assertEqual("{0!r}".format(cert.subject),
+                         "<Name(CN=Steve Test,"
+                         "1.2.840.113549.1.9.1=steve@openssl.org)>")
 
     def test_05_templates(self):
         cwd = os.getcwd()
@@ -377,10 +377,9 @@ class LocalCATestCase(MyTestCase):
         self.assertTrue("template3" in templates)
         _, cert = cacon.sign_request(SPKAC, options={"spkac": 1,
                                                      "template": "webserver"})
-        expires = to_unicode(cert.get_notAfter())
+        expires = cert.not_valid_after
         import datetime
-        dt = datetime.datetime.strptime(expires, "%Y%m%d%H%M%SZ")
-        ddiff = dt - datetime.datetime.now()
+        ddiff = expires - datetime.datetime.now()
         # The certificate is signed for 750 days
         self.assertTrue(ddiff.days > 740, ddiff.days)
         self.assertTrue(ddiff.days < 760, ddiff.days)

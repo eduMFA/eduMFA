@@ -3,6 +3,7 @@ This test file tests the lib.tokens.u2ftoken
 This depends on lib.tokenclass
 """
 from .base import MyTestCase
+from cryptography import x509
 from edumfa.lib.tokens.u2ftoken import U2fTokenClass
 from edumfa.lib.tokens.u2f import (check_registration_data,
                                         parse_registration_data, url_decode,
@@ -17,7 +18,6 @@ from edumfa.lib.error import TokenAdminError
 from edumfa.lib import _
 import binascii
 from hashlib import sha256
-from OpenSSL import crypto
 import base64
 
 
@@ -58,8 +58,7 @@ class U2FHelperFuncTestCase(MyTestCase):
         app_id_hash = hexlify_and_unicode(sha256(to_bytes(my_app_id)).digest())
         self.assertEqual(app_id_hash,
                          "f0e6a6a97042a4f1f1c87f5f7d44315b2d852c2df5c7991cc66241bf7072d1c4")
-        attestation_cert = crypto.load_certificate(crypto.FILETYPE_ASN1,
-                                                   binascii.unhexlify(attestation_cert))
+        attestation_cert = x509.load_der_x509_certificate(binascii.unhexlify(attestation_cert))
         client_data_str = ''.join(cdata_str.split())
         client_data_hash = hexlify_and_unicode(sha256(to_bytes(client_data_str)).digest())
         self.assertEqual(client_data_hash,

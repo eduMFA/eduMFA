@@ -30,7 +30,6 @@ This module is tested in tests/test_lib_caconnector.py
 from edumfa.lib.error import CAError
 from edumfa.lib.utils import int_to_hex, to_unicode
 from edumfa.lib.caconnectors.baseca import BaseCAConnector, AvailableCAConnectors
-from OpenSSL import crypto
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from subprocess import Popen, PIPE  # nosec B404
@@ -320,15 +319,14 @@ class LocalCAConnector(BaseCAConnector):
     def _filename_from_x509(x509_name, file_extension="pem"):
         """
         return a filename from the subject from an x509 object
-        :param x509_name: The X509Name object
-        :type x509_name: X509Name object
+        :param x509_name: The x509.Name object
+        :type x509_name: cryptography.x509.Name object
         :param file_extension:
         :type file_extension: str
         :return: filename
         :rtype: str
         """
-        name_components = x509_name.get_components()
-        filename = "_".join([to_unicode(value) for (key, value) in name_components])
+        filename = x509_name.rfc4514_string().replace(' ', '_')
         return '.'.join([filename, file_extension])
 
     def sign_request(self, csr, options=None):
@@ -349,7 +347,7 @@ class LocalCAConnector(BaseCAConnector):
             template or spkac=1
         :type options: dict
         :return: Returns a return value (0) and the certificate object
-        :rtype: (int, X509)
+        :rtype: (int, x509.Certificate)
         """
         # Sign the certificate for one year
         options = options or {}
@@ -384,11 +382,10 @@ class LocalCAConnector(BaseCAConnector):
             csr_filename = common_name + ".txt"
             certificate_filename = common_name + ".der"
         else:
-            csr_obj = crypto.load_certificate_request(crypto.FILETYPE_PEM, csr)
-            csr_filename = self._filename_from_x509(csr_obj.get_subject(),
+            csr_filename = self._filename_from_x509(csr.subject,
                                                     file_extension="req")
             certificate_filename = self._filename_from_x509(
-                csr_obj.get_subject(), file_extension="pem")
+                csr.subject, file_extension="pem")
             #csr_extensions = csr_obj.get_extensions()
         csr_filename = csr_filename.replace(" ", "_")
         certificate_filename = certificate_filename.replace(" ", "_")
@@ -425,10 +422,9 @@ class LocalCAConnector(BaseCAConnector):
 
         # We return the cert_obj.
         if spkac:
-            filetype = crypto.FILETYPE_ASN1
+            cert_obj = x509.load_der_x509_certificate(certificate)
         else:
-            filetype = crypto.FILETYPE_PEM
-        cert_obj = crypto.load_certificate(filetype, certificate)
+            cert_obj = x509.load_pem_x509_certificate(certificate)
         return 0, cert_obj
 
     def get_templates(self):
@@ -464,15 +460,15 @@ class LocalCAConnector(BaseCAConnector):
             an error is raised.
         """
         if isinstance(certificate, str):
-            cert_obj = crypto.load_certificate(crypto.FILETYPE_PEM, certificate)
-        elif type(certificate) == crypto.X509:
+            cert_obj = x509.load_pem_x509_certificate(certificate.encode())
+        elif type(certificate) == x509.Certificate:
             cert_obj = certificate
         else:
             raise CAError("Certificate in unsupported format")
         if reason not in CRL_REASONS:
             raise CAError("Unsupported revoke reason")
 
-        serial = cert_obj.get_serial_number()
+        serial = cert_obj.serial_number
         serial_hex = int_to_hex(serial)
         filename = serial_hex + ".pem"
         cmd = CA_REVOKE.format(cakey=self.cakey, cacert=self.cacert,

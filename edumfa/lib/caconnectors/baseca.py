@@ -39,7 +39,7 @@ class BaseCAConnector:
         index.txt is updated.
 
         :param certificate: The certificate to revoke
-        :type certificate: Either takes X509 object or a PEM encoded
+        :type certificate: Either takes Certificate object or a PEM encoded
             certificate (string)
         :param request_id: The Id of the certificate in the certificate authority
         :type request_id: int
@@ -68,7 +68,7 @@ class BaseCAConnector:
             template or spkac=1
         :type options: dict
         :return: Returns a return value and the certificate
-        :rtype: (int, x509)
+        :rtype: (int, x509.Certificate)
         """
         pass
 

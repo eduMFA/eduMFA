@@ -22,20 +22,19 @@
 #
 
 import re
-from OpenSSL import crypto
 import binascii
 from hashlib import sha256
 import base64
 import logging
 import time
 import struct
-from cryptography.hazmat.primitives.asymmetric import ec, rsa
-from cryptography.hazmat.primitives import hashes
+from cryptography import x509
 from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec, rsa, padding
+from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+from cryptography.x509.oid import NameOID
 
 from edumfa.lib.utils import (to_bytes, to_unicode, hexlify_and_unicode,
                                    urlsafe_b64encode_and_unicode)
@@ -127,40 +126,35 @@ def parse_registration_data(reg_data, verify_cert=True):
     key_handle = reg_data_bin[67:67+key_handle_len]
 
     certificate = reg_data_bin[67+key_handle_len:]
-    attestation_cert = crypto.load_certificate(crypto.FILETYPE_ASN1,
-                                               certificate)
-    cert_len = len(crypto.dump_certificate(crypto.FILETYPE_ASN1,
-                                           attestation_cert))
+    attestation_cert = x509.load_der_x509_certificate(certificate)
+    cert_len = len(attestation_cert.public_bytes(serialization.Encoding.DER))
     # TODO: Check the issuer of the certificate
-    issuer = attestation_cert.get_issuer()
+    issuer = attestation_cert.issuer
     log.debug("The attestation certificate is signed by {0!r}".format(issuer))
-    not_after = to_unicode(attestation_cert.get_notAfter())
-    not_before = to_unicode(attestation_cert.get_notBefore())
+    not_after = attestation_cert.not_valid_after
+    not_before = attestation_cert.not_valid_before
     log.debug("The attestation certificate "
               "is valid from %s to %s" % (not_before, not_after))
-    start_time = time.strptime(not_before, "%Y%m%d%H%M%SZ")
-    end_time = time.strptime(not_after, "%Y%m%d%H%M%SZ")
     # check the validity period of the certificate
     if verify_cert:
-        if start_time > time.localtime() or \
-                        end_time < time.localtime():  #pragma no cover
+        if not_before > time.localtime() or \
+                        not_after < time.localtime():  #pragma no cover
             log.error("The certificate is not valid. {0!s} -> {1!s}".format(not_before,
                                                                   not_after))
             raise Exception("The time of the attestation certificate is not "
                             "valid.")
 
     # Get the subject as description
-    subj_x509name = attestation_cert.get_subject()
-    subj_list = subj_x509name.get_components()
+    subj_x509name = attestation_cert.subject
+    # subj_list = subj_x509name.rfc4514_string()
     description = ""
-    cdump = to_unicode(crypto.dump_certificate(crypto.FILETYPE_PEM, attestation_cert))
+    cdump = attestation_cert.public_bytes(serialization.Encoding.PEM)
     log.debug("This attestation certificate registered: {0!s}".format(cdump))
 
-    for component in subj_list:
-        # each component is a tuple. We are looking for CN
-        if component[0].upper() == b"CN":
-            description = to_unicode(component[1])
-            break
+    cn_attributes = subj_x509name.get_attributes_for_oid(NameOID.COMMON_NAME)
+    if cn_attributes:
+        description = cn_attributes[0].value
+
 
     signature = reg_data_bin[67+key_handle_len+cert_len:]
     return (attestation_cert, hexlify_and_unicode(user_pub_key),
@@ -178,7 +172,7 @@ def check_registration_data(attestation_cert, app_id,
     In case of signature error an exception is raised
 
     :param attestation_cert: The Attestation cert of the FIDO device
-    :type attestation_cert: x509 Object
+    :type attestation_cert: Certificate Object
     :param app_id: The appId
     :type app_id: str
     :param client_data: The ClientData
@@ -196,8 +190,8 @@ def check_registration_data(attestation_cert, app_id,
     reg_data = b'\x00' + app_id_hash + client_data_hash \
                + binascii.unhexlify(key_handle) + binascii.unhexlify(user_pub_key)
     try:
-        public_key = attestation_cert.get_pubkey()
-        public_key_bytes = crypto.dump_publickey(crypto.FILETYPE_PEM, public_key)
+        public_key = attestation_cert.public_key()
+        public_key_bytes = public_key.public_bytes(Encoding.PEM, PublicFormat.SubjectPublicKeyInfo)
         public_key_cryptography = serialization.load_pem_public_key(
             public_key_bytes,
             backend=default_backend()
@@ -271,7 +265,7 @@ def x509name_to_string(x509name):
     converts a X509Name to a string as in a DN
 
     :param x509name: The X509Name object
+    :type x509name: cryptography.x509.Name
     :return:
     """
-    components = x509name.get_components()
-    return ",".join(["{0}={1}".format(to_unicode(c[0]), to_unicode(c[1])) for c in components])
+    return x509name.rfc4514_string()
