@@ -30,7 +30,10 @@ This module is tested in tests/test_lib_caconnector.py
 from edumfa.lib.error import CAError
 from edumfa.lib.utils import int_to_hex, to_unicode
 from edumfa.lib.caconnectors.baseca import BaseCAConnector, AvailableCAConnectors
-from OpenSSL import crypto
+try:
+    from OpenSSL import crypto
+except AttributeError as e:
+    pass
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from subprocess import Popen, PIPE  # nosec B404
