@@ -35,7 +35,10 @@ from edumfa.api.lib.utils import getParam
 from edumfa.lib.caconnector import get_caconnector_object, get_caconnector_list
 from edumfa.lib.user import get_user_from_param
 from edumfa.lib.utils import determine_logged_in_userparams
-from OpenSSL import crypto
+try:
+    from OpenSSL import crypto
+except AttributeError as e:
+    pass
 from cryptography.x509 import load_pem_x509_certificate, load_pem_x509_csr
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import PrivateFormat, load_pem_private_key, pkcs12

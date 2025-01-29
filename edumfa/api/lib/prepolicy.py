@@ -33,8 +33,10 @@ The functions of this module are tested in tests/test_api_lib_policy.py
 """
 
 import logging
-
-from OpenSSL import crypto
+try:
+    from OpenSSL import crypto
+except AttributeError as e:
+    pass
 from edumfa.lib import _
 from edumfa.lib.error import PolicyError, RegistrationError, TokenAdminError, ResourceNotFoundError, ParameterError
 from flask import g, current_app

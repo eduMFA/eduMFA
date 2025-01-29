@@ -22,7 +22,10 @@
 #
 
 import re
-from OpenSSL import crypto
+try:
+    from OpenSSL import crypto
+except AttributeError as e:
+    pass
 import binascii
 from hashlib import sha256
 import base64
