@@ -121,7 +121,7 @@ python-dateutil==2.9.0.post0
     #   edumfa (setup.py)
 python-gnupg==0.5.4
     # via edumfa (setup.py)
-pytz==2024.2
+pytz==2025.1
     # via flask-babel
 pyyaml==6.0.2
     # via edumfa (setup.py)
