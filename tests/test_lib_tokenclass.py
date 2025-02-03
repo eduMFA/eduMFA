@@ -784,6 +784,12 @@ class TokenBaseTestCase(MyTestCase):
         token_obj = TokenClass(db_token)
         orph = token_obj.is_orphaned()
         self.assertTrue(orph)
+        #testing for exception_default=True
+        orph = token_obj.is_orphaned(exception_default=True)
+        self.assertTrue(orph)
+        #testing for exception_default=False
+        orph = token_obj.is_orphaned(exception_default=False)
+        self.assertFalse(orph)
         # clean up token
         token_obj.delete_token()
 
