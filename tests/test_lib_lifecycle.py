@@ -25,7 +25,7 @@ class LifecycleTestCase(MyTestCase):
         finalizer3.assert_not_called()
         register_finalizer(finalizer3)
         call_finalizers()
-        self.assertEqual(finalizer1.call_count,2)
+        self.assertEqual(finalizer1.call_count, 2)
         self.assertEqual(finalizer2.call_count, 2)
         finalizer3.assert_called_once()
 
@@ -50,7 +50,7 @@ class LifecycleTestCase(MyTestCase):
             res = self.app.full_dispatch_request()
             result = res.json.get("result")
             self.assertTrue(result.get("status"))
-        self.assertEqual(finalizer1.call_count,2)
+        self.assertEqual(finalizer1.call_count, 2)
         self.assertEqual(finalizer2.call_count, 2)
 
     def test_03_finalizer_error(self):
