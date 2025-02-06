@@ -487,7 +487,7 @@ class IdResolver (UserIdResolver):
         # We use ``scoped_session``.
         self.session = scoped_session(sessionmaker(bind=self.engine))
         # Session should be closed on teardown
-        register_finalizer(self.session.close)
+        register_finalizer(self.session.remove)
         self.session._model_changes = {}
         self.TABLE = Table(self.table, MetaData(), autoload_with=self.engine)
 

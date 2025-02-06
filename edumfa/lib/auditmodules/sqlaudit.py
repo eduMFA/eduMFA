@@ -186,8 +186,7 @@ class Audit(AuditBase):
 
     def _finalize_session(self):
         """ Close current session and dispose connections of db engine"""
-        self.session.close()
-        self.engine.dispose()
+        self.session.remove()
 
     def _truncate_data(self):
         """

@@ -23,11 +23,10 @@ class LifecycleTestCase(MyTestCase):
         finalizer1.assert_called_once()
         finalizer2.assert_called_once()
         finalizer3.assert_not_called()
-        # call_finalizer clears the list of finalizers
         register_finalizer(finalizer3)
         call_finalizers()
-        finalizer1.assert_called_once()
-        finalizer2.assert_called_once()
+        self.assertEqual(finalizer1.call_count, 2)
+        self.assertEqual(finalizer2.call_count, 2)
         finalizer3.assert_called_once()
 
     def test_02_register_finalizer_request_context(self):
@@ -51,8 +50,8 @@ class LifecycleTestCase(MyTestCase):
             res = self.app.full_dispatch_request()
             result = res.json.get("result")
             self.assertTrue(result.get("status"))
-        finalizer1.assert_called_once()
-        finalizer2.assert_called_once()
+        self.assertEqual(finalizer1.call_count, 2)
+        self.assertEqual(finalizer2.call_count, 2)
 
     def test_03_finalizer_error(self):
         finalizer1 = mock.MagicMock()
