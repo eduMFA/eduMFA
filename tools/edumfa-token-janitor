@@ -473,7 +473,7 @@ def export_user_data(token_list, attributes=None):
 @click.option('--active', help='True|False|None')
 @click.option('--orphaned',
               help='Whether the token is an orphaned token. Set to 1')
-@click.option('--orphan_exception_value', default=True, type=bool,
+@click.option('--orphan_exception_value', default=False, type=bool,
               help='If an exception occures during orphan check use this value.')
 @click.option('--b32', is_flag=True,
               help='In case of exporting found tokens to CSV the seed is written base32 encoded instead of hex.')
