@@ -1,3 +1,36 @@
+edumfa (2.7.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+ * docs: fix some version strings by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/509
+ * feat: use fixed format for last_auth timestamp in tokeninfo by @j-hoff in https://github.com/eduMFA/eduMFA/pull/510
+ * docs: Fix pip command to install test deps by @j-hoff in https://github.com/eduMFA/eduMFA/pull/513
+ * Add support for Crowdin localization by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/515
+ * ci: add docs in ci by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/512
+ * registration codes can be explicitly set via otpkey parameter by @pmainz in https://github.com/eduMFA/eduMFA/pull/520
+ * fix session handling by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/531
+ * feat: add option to define error behavior on orphan by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/533
+ * fix: correct extraction of credProps by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/542
+ * fixed config parameter translation warning by @pmainz in https://github.com/eduMFA/eduMFA/pull/529
+ * chore(deps): update dependency alembic to v1.14.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/519
+ * chore(deps): update dependency babel to v2.17.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/530
+ * chore(deps): update dependency beautifulsoup4 to v4.13.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/534
+ * chore(deps): update dependency cachetools to v5.5.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/522
+ * chore(deps): update dependency certifi to v2025 by @renovate in https://github.com/eduMFA/eduMFA/pull/527
+ * chore(deps): update dependency cryptography to v44.0.1 [security] by @renovate in https://github.com/eduMFA/eduMFA/pull/541
+ * chore(deps): update dependency google-auth to v2.38.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/523
+ * chore(deps): update dependency grpcio to v1.70.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/524
+ * chore(deps): update dependency importlib-metadata to v8.6.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/521
+ * chore(deps): update dependency lxml to v5.3.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/538
+ * chore(deps): update dependency mako to v1.3.9 by @renovate in https://github.com/eduMFA/eduMFA/pull/535
+ * chore(deps): update dependency pydash to v8.0.5 - autoclosed by @renovate in https://github.com/eduMFA/eduMFA/pull/517
+ * chore(deps): update dependency pytz to v2025 by @renovate in https://github.com/eduMFA/eduMFA/pull/528
+ * chore(deps): update dependency smpplib to v2.2.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/518
+ * chore(deps): update dependency sqlalchemy to v2.0.38 by @renovate in https://github.com/eduMFA/eduMFA/pull/536
+ * fix(deps): update dependency attrs to v25 by @renovate in https://github.com/eduMFA/eduMFA/pull/526
+ * fix(deps): update dependency coverage to v7.6.12 by @renovate in https://github.com/eduMFA/eduMFA/pull/540
+ * fix(deps): update dependency responses to v0.25.6 by @renovate in https://github.com/eduMFA/eduMFA/pull/507
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Thu, 13 Feb 2025 12:00:00 +0100
+
 edumfa (2.6.1{{CODENAME}}) {{CODENAME}}; urgency=medium
 
  * revert: fix: use format string for last auth timestamp by @j-hoff in https://github.com/eduMFA/eduMFA/pull/505
