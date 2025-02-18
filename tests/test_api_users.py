@@ -14,8 +14,8 @@ PWFILE = "tests/testdata/passwd"
 class APIUsersTestCase(MyApiTestCase):
 
     parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testuser-api.sqlite",
+                  'Server': '',
+                  'Database': "tests/testdata/testuser-api.sqlite",
                   'Table': 'users',
                   'Encoding': 'utf8',
                   'Map': '{ "username": "username", \
