@@ -63,6 +63,17 @@
             ng-options="timestep for timestep in formInit.timesteps"></select>
     seconds.
 </div>
+<div class="form-group"
+     ng-hide="checkRight('totp_timeshift')">
+    <label for="use_timeshift" translate>Use Timeshift</label>
+    <select class="form-control" id="use_timeshift"
+            ng-model="form.timeShift"
+            name="use_timeshift"
+            ng-options="timeshift for timeshift in formInit.timeshift"></select>
+    <p class="help-block" translate>
+        Set to 'True' or 'False' to override setting in Token Config.
+    </p>
+</div>
 
 <div class="form-group"
     ng-hide="checkRight('totp_hashlib')">
