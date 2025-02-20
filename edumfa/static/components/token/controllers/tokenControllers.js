@@ -177,7 +177,7 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
     // These are values that are also sent to the backend!
     $scope.form = {
         timeStep: 30,
-        timeShift: "default",
+        useTimeShift: "default",
         otplen: 6,
         genkey: true,
         type: $scope.default_tokentype,
@@ -197,7 +197,7 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
     $scope.formInit = {
         tokenTypes: {},  // will be set later with response from server
         timesteps: [30, 60],
-        timeShift: ["default", "True", "False"],
+        useTimeShift: ["default", "True", "False"],
         otplens: [6, 8],
         hashlibs: ["sha1", "sha256", "sha512"],
         service_ids: {}
@@ -253,7 +253,7 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
             // preset TOTP hashlib
             $scope.form.hashlib = $scope.systemDefault['totp.hashlib'] || 'sha1';
             $scope.form.timeStep = parseInt($scope.systemDefault['totp.timeStep'] || '30');
-            $scope.form.useTimeShift = $scope.systemDefault['totp.timeshift'] || 'default';;
+            $scope.form.useTimeShift = 'default';
         } else if ($scope.form.type === "daypassword") {
             // preset DayPassword hashlib
             $scope.form.hashlib = $scope.systemDefault['daypassword.hashlib'] || 'sha1';

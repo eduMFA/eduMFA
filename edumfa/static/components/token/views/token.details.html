@@ -283,6 +283,17 @@
                           </span>
                         </p>
                     </div>
+                    <div class="form-group" ng-show="token.tokentype == 'totp'">
+                        <label for="use_timeshift"
+                               translate>Use Timeshift
+                        </label>
+                        <input ng-model="use_timeshift"
+                               class="form-control"
+                               name="use_timeshift"
+                               id="use_timeshift"
+                               type="text"
+                               placeholder="default">
+                    </div>
                 </div>
             </td>
             <td>
