@@ -287,12 +287,14 @@
                         <label for="use_timeshift"
                                translate>Use Timeshift
                         </label>
-                        <input ng-model="use_timeshift"
-                               class="form-control"
-                               name="use_timeshift"
-                               id="use_timeshift"
-                               type="text"
-                               placeholder="default">
+                        <select class="form-control" id="use_timeshift"
+                                ng-model="use_timeshift"
+                                name="use_timeshift"
+                                ng-options="timeshift for timeshift in tokenInfoFormInit.useTimeShift">
+                        </select>
+                        <p class="help-block" translate>
+                            Set to 'True' or 'False' to override setting in Token Config.
+                        </p>
                     </div>
                 </div>
             </td>

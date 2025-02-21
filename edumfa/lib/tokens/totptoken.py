@@ -210,7 +210,8 @@ class TotpTokenClass(HotpTokenClass):
         self.add_tokeninfo("timeShift", timeShift)
         self.add_tokeninfo("timeStep", timeStep)
         self.add_tokeninfo("hashlib", hashlibStr)
-        self.add_tokeninfo("useTimeShift", useTimeShift)
+        if useTimeShift != "default":
+            self.add_tokeninfo("useTimeShift", useTimeShift)
 
     @property
     def timestep(self):
