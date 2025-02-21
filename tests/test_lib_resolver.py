@@ -152,8 +152,8 @@ class SQLResolverTestCase(MyTestCase):
     """
     num_users = 13
     parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testuser.sqlite",
+                  'Server': '',
+                  'Database': "tests/testdata/testuser.sqlite",
                   'Table': 'users',
                   'Encoding': 'utf8',
                   'Map': '{ "username": "username", \
@@ -537,7 +537,7 @@ class SQLResolverTestCase(MyTestCase):
 
         y = SQLResolver()
         param3 = self.parameters.copy()
-        param3["Server"] = '/tests/../tests/testdata/'
+        param3["Database"] = 'tests/../tests/testdata/testuser.sqlite'
         y.loadConfig(param3)
         rid3 = y.getResolverId()
 

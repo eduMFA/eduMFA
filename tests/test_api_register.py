@@ -18,8 +18,8 @@ class RegisterTestCase(MyApiTestCase):
     test the api.register and api.recover endpoints
     """
     parameters = {'Driver': 'sqlite',
-                  'Server': '/tests/testdata/',
-                  'Database': "testuser.sqlite",
+                  'Server': '',
+                  'Database': "tests/testdata/testuser.sqlite",
                   'Table': 'users',
                   'Encoding': 'utf8',
                   'Editable': True,

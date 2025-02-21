@@ -43,8 +43,7 @@ import traceback
 import hashlib
 from edumfa.lib.pooling import get_engine
 from edumfa.lib.lifecycle import register_finalizer
-from edumfa.lib.utils import (is_true, censor_connect_string,
-                                   convert_column_to_unicode)
+from edumfa.lib.utils import (is_true, convert_column_to_unicode)
 from passlib.context import CryptContext
 from passlib.utils import h64
 from passlib.utils.compat import uascii_to_str
@@ -54,6 +53,8 @@ import passlib.utils.handlers as uh
 import passlib.exc as exc
 from passlib.registry import register_crypt_handler
 from passlib.handlers.ldap_digests import _SaltedBase64DigestHelper
+from sqlalchemy import URL
+import json
 
 
 class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no cover
@@ -196,7 +197,7 @@ class IdResolver (UserIdResolver):
         self.where = ""
         self.encoding = ""
         self.conParams = ""
-        self.connect_string = ""
+        self.connect_url = None
         self.session = None
         self.pool_size = 10
         self.pool_timeout = 120
@@ -425,7 +426,7 @@ class IdResolver (UserIdResolver):
         """
         # Take the following parts, join them with the NULL byte and return
         # the hexlified SHA-1 digest
-        id_parts = (self.connect_string,
+        id_parts = (str(self.connect_url),
                     str(self.pool_size),
                     str(self.pool_recycle),
                     str(self.pool_timeout))
@@ -479,7 +480,7 @@ class IdResolver (UserIdResolver):
                   'User': self.user,
                   'Server': self.server,
                   'Database': self.database}
-        self.connect_string = self._create_connect_string(params)
+        self.connect_url = self._create_connect_url(params)
 
         # get an engine from the engine registry, using self.getResolverId() as the key,
         # which involves the connect-string and the pool settings.
@@ -494,19 +495,19 @@ class IdResolver (UserIdResolver):
         return self
 
     def _create_engine(self):
-        log.info("using the connect string "
-                 "{0!s}".format(censor_connect_string(self.connect_string)))
+        log.info("using the connect url "
+                 "{0!s}".format(str(self.connect_url)))
         try:
             log.debug("using pool_size={0!s}, pool_timeout={1!s}, pool_recycle={2!s}".format(
                 self.pool_size, self.pool_timeout, self.pool_recycle))
-            engine = create_engine(self.connect_string,
+            engine = create_engine(self.connect_url,
                                    pool_size=self.pool_size,
                                    pool_recycle=self.pool_recycle,
                                    pool_timeout=self.pool_timeout)
         except TypeError:
             # The DB Engine/Poolclass might not support the pool_size.
             log.debug("connecting without pool_size.")
-            engine = create_engine(self.connect_string,
+            engine = create_engine(self.connect_url,
                                    encoding=self.encoding,
                                    convert_unicode=False)
         return engine
@@ -538,35 +539,24 @@ class IdResolver (UserIdResolver):
     @staticmethod
     def getResolverDescriptor():
         return IdResolver.getResolverClassDescriptor()
-
+    
     @staticmethod
-    def _create_connect_string(param):
+    def _create_connect_url(param):
         """
         create the connect-string.
 
         Port, Password, conParams, Driver, User,
         Server, Database
         """
-        port = ""
-        password = "" # nosec B105 # default parameter
-        conParams = ""
-        if param.get("Port"):
-            port = ":{0!s}".format(param.get("Port"))
-        if param.get("Password"):
-            password = ":{0!s}".format(param.get("Password"))
-        if param.get("conParams"):
-            conParams = "?{0!s}".format(param.get("conParams"))
-        connect_string = "{0!s}://{1!s}{2!s}{3!s}{4!s}{5!s}/{6!s}{7!s}".format(param.get("Driver") or "",
-                                                   param.get("User") or "",
-                                                   password,
-                                                   "@" if (param.get("User")
-                                                           or
-                                                           password) else "",
-                                                   param.get("Server") or "",
-                                                   port,
-                                                   param.get("Database") or "",
-                                                   conParams)
-        return connect_string
+        parameters = {}
+        if param.get("Driver"): parameters["drivername"] = param.get("Driver") 
+        if param.get("User"): parameters["username"] = param.get("User")
+        if param.get("Password"): parameters["password"] = param.get("Password")
+        if param.get("Server"): parameters["host"] = param.get("Server")
+        if param.get("Port"): parameters["port"] = int(param.get("Port"))
+        if param.get("Database"): parameters["database"] = param.get("Database")
+        if param.get("conParams"): parameters["query"] = json.loads(param.get("conParams"))
+        return URL.create(**parameters)
 
     @classmethod
     def testconnection(cls, param):
@@ -586,9 +576,9 @@ class IdResolver (UserIdResolver):
         """
         num = -1
 
-        connect_string = cls._create_connect_string(param)
-        log.info("using the connect string {0!s}".format(censor_connect_string(connect_string)))
-        engine = create_engine(connect_string)
+        connect_url = cls._create_connect_url(param)
+        log.info("using the connect string {0!s}".format(str(connect_url)))
+        engine = create_engine(connect_url)
         # create a configured "Session" class
         session = scoped_session(sessionmaker(bind=engine))()
         try:

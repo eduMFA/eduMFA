@@ -25,7 +25,7 @@ __doc__ = """This module writes statistics data to the SQL database table "monit
 import logging
 from edumfa.lib.monitoringmodules.base import Monitoring as MonitoringBase
 from edumfa.lib.pooling import get_engine
-from edumfa.lib.utils import censor_connect_string, convert_timestamp_to_utc
+from edumfa.lib.utils import convert_timestamp_to_utc
 from edumfa.lib.lifecycle import register_finalizer
 from sqlalchemy import MetaData
 from sqlalchemy import and_
@@ -64,7 +64,7 @@ class Monitoring(MonitoringBase):
         # resources
         connect_string = self.config.get("EDUMFA_MONITORING_SQL_URI", self.config.get(
             "SQLALCHEMY_DATABASE_URI"))
-        log.debug("using the connect string {0!s}".format(censor_connect_string(connect_string)))
+        log.debug("using the connect string {0!s}".format(str(connect_string)))
         try:
             pool_size = self.config.get("EDUMFA_MONITORING_POOL_SIZE", 20)
             engine = create_engine(
