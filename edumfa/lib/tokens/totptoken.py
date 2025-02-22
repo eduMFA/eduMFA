@@ -204,7 +204,7 @@ class TotpTokenClass(HotpTokenClass):
         # we support various hashlib methods, but only on create
         # which is effectively set in the update
         hashlibStr = param.get("hashlib", self.hashlib)
-        useTimeShift = param.get("useTimeShift", self.useTimeShift)
+        useTimeShift = param.get("useTimeShift", "default")
 
         self.add_tokeninfo("timeWindow", timeWindow)
         self.add_tokeninfo("timeShift", timeShift)
@@ -237,7 +237,7 @@ class TotpTokenClass(HotpTokenClass):
         return shift
 
     @property
-    def useTimeShift(self):
+    def is_timeshift_enabled(self):
         useShift = self.get_tokeninfo("useTimeShift")
         if useShift is None:
             useShift = get_from_config("totp.useTimeShift", default=True, return_bool=True)
@@ -337,7 +337,7 @@ class TotpTokenClass(HotpTokenClass):
             server_time = int(initTime)
         else:
             server_time = time.time()
-            if self.useTimeShift:
+            if self.is_timeshift_enabled:
                 server_time += self.timeshift
 
         # If we have a counter from the parameter list
@@ -373,7 +373,7 @@ class TotpTokenClass(HotpTokenClass):
 
             # here we calculate the new drift/shift between the server time
             # and the tokentime
-            if self.useTimeShift:
+            if self.is_timeshift_enabled:
                 tokentime = self._counter2time(res, self.timestep)
                 tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
 
@@ -418,7 +418,7 @@ class TotpTokenClass(HotpTokenClass):
         if autosync is False:
             return res
 
-        if not self.useTimeShift:
+        if not self.is_timeshift_enabled:
             return res
 
         info = self.get_tokeninfo()
@@ -576,7 +576,7 @@ class TotpTokenClass(HotpTokenClass):
         if current_time:
             time_seconds = self._time2float(current_time)
 
-        if self.useTimeShift:
+        if self.is_timeshift_enabled:
             time_seconds += self.timeshift
         # we don't need to round here as we have already float
         counter = self._time2counter(time_seconds, self.timestep)
@@ -630,7 +630,7 @@ class TotpTokenClass(HotpTokenClass):
             # use the current server time
             tCounter = self._time2float(datetime.datetime.now())
 
-        if self.useTimeShift:
+        if self.is_timeshift_enabled:
             tCounter -= self.timeshift
         # we don't need to round here as we have alread float
         counter = self._time2counter(tCounter, self.timestep)
@@ -644,7 +644,7 @@ class TotpTokenClass(HotpTokenClass):
                 otpval = hmac2Otp.generate(counter=counter + i,
                                            inc_counter=False)
                 timeCounter = (counter + i) * self.timestep
-                if self.useTimeShift:
+                if self.is_timeshift_enabled:
                     timeCounter += self.timeshift
 
                 val_time = datetime.datetime.\
