@@ -3077,6 +3077,84 @@ class APITokenTestCase(MyApiTestCase):
 
         remove_token(serial)
 
+    def test_53_init_set_totp_token_use_timeshift(self):
+        with self.app.test_request_context('/token/init',
+                                           method='POST',
+                                           data={"type": "totp",
+                                                 "otpkey": self.otpkey,
+                                                 "pin": "1234",
+                                                 "user": "cornelius",
+                                                 "realm": self.realm1,
+                                                 "useTimeShift": True},
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            data = res.json
+            self.assertTrue(res.status_code == 200, res)
+            result = data.get("result")
+            detail = data.get("detail")
+            self.assertTrue(result.get("status"), result)
+            self.assertTrue(result.get("value"), result)
+            serial = detail.get("serial")
+
+        with self.app.test_request_context('/token/',
+                                           method="GET",
+                                           query_string=urlencode(
+                                               {"serial": serial}),
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            value = result.get("value")
+            token = value.get("tokens")[0]
+            self.assertTrue(value.get("count") == 1, result)
+
+            tokeninfo = token.get("info")
+            test_dict = {'useTimeShift': 'True'}
+            self.assertTrue(test_dict.items() <= tokeninfo.items())
+
+        with self.app.test_request_context("/token/set/" + serial,
+                                               method="POST",
+                                               data={"use_timeshift": "default"},
+                                               headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+
+        with self.app.test_request_context('/token/',
+                                           method="GET",
+                                           query_string=urlencode(
+                                               {"serial": serial}),
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            value = result.get("value")
+            token = value.get("tokens")[0]
+            tokeninfo = token.get("info")
+            self.assertFalse("useTimeShift" in tokeninfo.keys())
+
+        with self.app.test_request_context("/token/set/" + serial,
+                                           method="POST",
+                                           data={"use_timeshift": False},
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+
+        with self.app.test_request_context('/token/',
+                                           method="GET",
+                                           query_string=urlencode(
+                                               {"serial": serial}),
+                                           headers={'Authorization': self.at}):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            result = res.json.get("result")
+            value = result.get("value")
+            token = value.get("tokens")[0]
+            tokeninfo = token.get("info")
+            self.assertTrue("useTimeShift" in tokeninfo.keys())
+            self.assertEqual(tokeninfo.get("useTimeShift"), "False")
+
+        remove_token(serial)
+
 
 class API00TokenPerformance(MyApiTestCase):
 
