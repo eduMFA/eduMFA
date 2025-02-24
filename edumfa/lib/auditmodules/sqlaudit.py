@@ -45,7 +45,7 @@ from edumfa.lib.crypto import Sign
 from edumfa.lib.framework import get_app_config_value, get_app_local_store
 from edumfa.lib.pooling import DEFAULT_REGISTRY_CLASS_NAME, REGISTRY_CONFIG_NAME, get_engine
 from edumfa.lib.utils import censor_connect_string
-from edumfa.lib.lifecycle import register_finalizer
+from edumfa.lib.lifecycle import register_finalizer, register_request_finalizer
 from edumfa.lib.utils import truncate_comma_list, is_true
 from sqlalchemy import MetaData
 from sqlalchemy import asc, desc, and_, or_
@@ -149,8 +149,9 @@ class Audit(AuditBase):
         if registry_class_name == "null":
             self.engine = self._create_engine()
             self.session = scoped_session(sessionmaker(bind=self.engine))
-            register_finalizer(self._finalize_session)
-            register_finalizer(self.engine.dispose)
+            # We create a new session for every request -> Destroy it after the request -> Register them as request based finalizer
+            register_request_finalizer(self.session.close)
+            register_request_finalizer(self.engine.dispose)
         else:
             # We can use "sqlaudit" as the key because the SQLAudit connection
             # string is fixed for a running eduMFA instance.
@@ -164,7 +165,7 @@ class Audit(AuditBase):
                 store['sqlaudit.session'] = self.session
                 # Ensure that the connection gets returned to the pool when the request has
                 # been handled. This may close an already-closed session, but this is not a problem.
-                register_finalizer(self._finalize_session)
+                register_finalizer(self.session.close)
             else:
                 self.session = store['sqlaudit.session']
         self.session._model_changes = {}
@@ -196,10 +197,6 @@ class Audit(AuditBase):
             engine = create_engine(connect_string, **sqa_options)
             log.debug("Using no SQL pool_size.")
         return engine
-
-    def _finalize_session(self):
-        """ Close current session and dispose connections of db engine"""
-        self.session.remove()
 
     def _truncate_data(self):
         """
