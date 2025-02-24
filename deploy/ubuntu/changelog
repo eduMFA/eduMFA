@@ -1,3 +1,11 @@
+edumfa (2.7.1{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+* fix: correct session leak in sqlaudit module by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/547
+* chore(deps): update dependency cachetools to v5.5.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/545
+* fix(deps): update dependency sphinx to v8.2.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/544
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 24 Feb 2025 15:00:00 +0100
+
 edumfa (2.7.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
  * docs: fix some version strings by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/509
