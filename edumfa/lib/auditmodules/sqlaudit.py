@@ -42,11 +42,12 @@ import logging
 from collections import OrderedDict
 from edumfa.lib.auditmodules.base import (Audit as AuditBase, Paginate)
 from edumfa.lib.crypto import Sign
-from edumfa.lib.pooling import get_engine
+from edumfa.lib.framework import get_app_config_value, get_app_local_store
+from edumfa.lib.pooling import DEFAULT_REGISTRY_CLASS_NAME, REGISTRY_CONFIG_NAME, get_engine
 from edumfa.lib.utils import censor_connect_string
 from edumfa.lib.lifecycle import register_finalizer
 from edumfa.lib.utils import truncate_comma_list, is_true
-from sqlalchemy import MetaData, cast, String
+from sqlalchemy import MetaData
 from sqlalchemy import asc, desc, and_, or_
 from sqlalchemy.sql.expression import FunctionElement
 from sqlalchemy.ext.compiler import compiles
@@ -143,17 +144,29 @@ class Audit(AuditBase):
         # fill the missing parts with the default from the models
         self.custom_column_length = {k: (v if k not in config_column_length else config_column_length[k])
                                      for k, v in column_length.items()}
-        # We can use "sqlaudit" as the key because the SQLAudit connection
-        # string is fixed for a running eduMFA instance.
-        # In other words, we will not run into any problems with changing connect strings.
-        self.engine = get_engine(self.name, self._create_engine)
-        # create a configured "Session" class. ``scoped_session`` is not
-        # necessary because we do not share session objects among threads.
-        # We use it anyway as a safety measure.
-        self.session = scoped_session(sessionmaker(bind=self.engine))
-        # Ensure that the connection gets returned to the pool when the request has
-        # been handled. This may close an already-closed session, but this is not a problem.
-        register_finalizer(self._finalize_session)
+        store = get_app_local_store()
+        registry_class_name = get_app_config_value(REGISTRY_CONFIG_NAME, DEFAULT_REGISTRY_CLASS_NAME)
+        if registry_class_name == "null":
+            self.engine = self._create_engine()
+            self.session = scoped_session(sessionmaker(bind=self.engine))
+            register_finalizer(self._finalize_session)
+            register_finalizer(self.engine.dispose)
+        else:
+            # We can use "sqlaudit" as the key because the SQLAudit connection
+            # string is fixed for a running eduMFA instance.
+            # In other words, we will not run into any problems with changing connect strings.
+            self.engine = get_engine(self.name, self._create_engine)
+            if 'sqlaudit.session' not in store:                
+                # create a configured "Session" class. ``scoped_session`` is not
+                # necessary because we do not share session objects among threads.
+                # We use it anyway as a safety measure.
+                self.session = scoped_session(sessionmaker(bind=self.engine))
+                store['sqlaudit.session'] = self.session
+                # Ensure that the connection gets returned to the pool when the request has
+                # been handled. This may close an already-closed session, but this is not a problem.
+                register_finalizer(self._finalize_session)
+            else:
+                self.session = store['sqlaudit.session']
         self.session._model_changes = {}
 
     def _create_engine(self):
