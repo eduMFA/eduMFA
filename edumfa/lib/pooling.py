@@ -93,7 +93,7 @@ ENGINE_REGISTRY_CLASSES = {
     "shared": SharedEngineRegistry,
 }
 DEFAULT_REGISTRY_CLASS_NAME = "null"
-
+REGISTRY_CONFIG_NAME = "EDUMFA_ENGINE_REGISTRY_CLASS"
 
 def get_registry():
     """
@@ -113,7 +113,7 @@ def get_registry():
         return app_store["engine_registry"]
     except KeyError:
         # create a new engine registry of the appropriate class
-        registry_class_name = get_app_config_value("EDUMFA_ENGINE_REGISTRY_CLASS", DEFAULT_REGISTRY_CLASS_NAME)
+        registry_class_name = get_app_config_value(REGISTRY_CONFIG_NAME, DEFAULT_REGISTRY_CLASS_NAME)
         if registry_class_name not in ENGINE_REGISTRY_CLASSES:
             log.warning("Unknown engine registry class: {!r}".format(registry_class_name))
             registry_class_name = DEFAULT_REGISTRY_CLASS_NAME

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "edumfa"
-version = "2.6.1"
+version = "2.7.0"
 requires-python = ">=3.9"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
@@ -44,7 +44,7 @@ docs = [
     "pyenchant==3.2.2",
     "Pygments==2.19.1",
     "snowballstemmer==2.2.0",
-    "Sphinx==8.1.3",
+    "Sphinx==8.2.0",
     "sphinxcontrib-applehelp==2.0.0",
     "sphinxcontrib-devhelp==2.0.0",
     "sphinxcontrib-htmlhelp==2.1.0",

@@ -994,12 +994,14 @@ class WebAuthnTokenClass(TokenClass):
                 try:
                     extensions = json.loads(webauthn_b64_decode(registration_client_extensions))
                     # Add info to token about whether a resident key/ discoverable credential was enrolled
-                    resident_key = 'rk' in extensions and (extensions['rk'] or extensions['rk'] == 'true')
-                    if resident_key:
-                        self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "yes")
-                        automatic_description = "Passkey (WebAuthn Discoverable Credential)"
-                    else:
-                        self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "not enough info")
+                    if 'credProps' in extensions:
+                        credProps = extensions['credProps']
+                        resident_key = 'rk' in credProps and (credProps['rk'] or credProps['rk'] == 'true')
+                        if resident_key:
+                            self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "yes")
+                            automatic_description = "Passkey (WebAuthn Discoverable Credential)"
+                        else:
+                            self.add_tokeninfo(WEBAUTHNINFO.RESIDENT_KEY, "not enough info")
                 except Exception as e:
                     log.warning('Could not parse registrationClientExtensions: {0!s}'.format(e))
 
