@@ -61,7 +61,7 @@ test = [
     "coverage==7.6.12",
     "exceptiongroup==1.2.2",
     "iniconfig==2.0.0",
-    "mock==5.1.0",
+    "mock==5.2.0",
     "packaging==24.2",
     "pluggy==1.5.0",
     "pyparsing==3.2.1",
