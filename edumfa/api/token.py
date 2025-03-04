@@ -41,7 +41,7 @@ from ..lib.token import (init_token, get_tokens_paginate, assign_token,
                          reset_token, resync_token, set_pin_so, set_pin_user,
                          set_pin, set_description, set_count_window,
                          set_sync_window, set_count_auth,
-                         set_hashlib, set_max_failcount, set_realms,
+                         set_hashlib, set_max_failcount, set_realms, set_use_timeshift,
                          copy_token_user, copy_token_pin, lost_token,
                          get_serial_by_otp, get_tokens,
                          set_validity_period_end, set_validity_period_start, add_tokeninfo,
@@ -795,6 +795,7 @@ def set_api(serial=None):
         * max_failcount
         * validity_period_start
         * validity_period_end
+        * use_timeshift
 
     The token is identified by the unique serial number or by the token owner.
     In the later case all tokens of the owner will be modified.
@@ -822,6 +823,7 @@ def set_api(serial=None):
     count_auth_success_max = getParam(request.all_data, "count_auth_success_max")
     validity_period_start = getParam(request.all_data, "validity_period_start")
     validity_period_end = getParam(request.all_data, "validity_period_end")
+    use_timeshift = getParam(request.all_data, "use_timeshift")
 
     res = 0
 
@@ -873,6 +875,11 @@ def set_api(serial=None):
                                        "validity_period_start={0!r}, ".format(
                                        validity_period_start)})
         res += set_validity_period_start(serial, user, validity_period_start)
+
+    if use_timeshift is not None:
+        g.audit_object.add_to_log({'action_detail': "use_timeshift=%r, "
+                                                    "" % use_timeshift})
+        set_use_timeshift(serial, use_timeshift)
 
     g.audit_object.log({"success": True})
     return send_result(res)
