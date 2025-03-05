@@ -73,6 +73,9 @@ myApp.controller("tokenDetailController", ['$scope', 'TokenFactory',
     $scope.pin1 = $scope.pin2 = "";
     $scope.testTokenPlaceholder = gettextCatalog.getString('Enter PIN and OTP to check the' +
         ' token.');
+    $scope.tokenInfoFormInit = {
+       useTimeShift: ["default", "True", "False"]
+    }
     ConfigFactory.getSystemConfig(function(data) {
         prepend = data.result.value.PrependPin;
         //debug: console.log(prepend);
@@ -205,6 +208,7 @@ myApp.controller("tokenDetailController", ['$scope', 'TokenFactory',
     $scope.startEditTokenInfo = function() {
         $scope.validity_period_start = string_to_date_object($scope.token.info.validity_period_start);
         $scope.validity_period_end = string_to_date_object($scope.token.info.validity_period_end);
+        $scope.use_timeshift = $scope.token.info.useTimeShift;
         $scope.editTokenInfo = 1;
     };
 
@@ -215,7 +219,8 @@ myApp.controller("tokenDetailController", ['$scope', 'TokenFactory',
             {count_auth_max: $scope.max_auth_count,
              count_auth_success_max: $scope.max_success_auth_count,
              validity_period_end: end,
-             validity_period_start: start},
+             validity_period_start: start,
+             use_timeshift: $scope.use_timeshift},
             $scope.get);
         $scope.editTokenInfo = 0;
     };
