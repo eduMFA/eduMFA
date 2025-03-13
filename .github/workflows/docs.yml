@@ -19,7 +19,7 @@ jobs:
       - name: Setup Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12.9"
+          python-version: "3.13.2"
           cache: "pip"
 
       - name: Install Dependencies and Package
