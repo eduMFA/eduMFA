@@ -250,7 +250,9 @@ users and roles using the parameter ``EDUMFA_TRUSTED_JWT``::
                       "role": "user",
                       "realm": "realm1",
                       "username": "userA",
-                      "resolver": "resolverX"}]
+                      "resolver": "resolverX",
+                      "aud": "edumfa",
+                      "claim": "eduPersonPrincipalName"}]
 
 
 This entry means, that the private key, that corresponds to the given
