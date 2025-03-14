@@ -810,3 +810,59 @@ class TOTPTokenTestCase(MyTestCase):
         p = TotpTokenClass.get_default_settings(g, params)
         self.assertEqual(p, {})
         delete_policy("pol1")
+
+    @mock.patch('time.time', mock.MagicMock(return_value=47251644 * 30))
+    def test_28_timeshift(self):
+        db_token = Token.query.filter_by(serial=self.serial1).first()
+        set_edumfa_config("totp.useTimeShift", False)
+        token = TotpTokenClass(db_token)
+        token.update({"otpkey": self.otpkey})
+        token.add_tokeninfo("timeShift", 42)
+
+        check = token.check_otp("942826", counter=47251644)
+        # The OTP 942826 is of counter 47251644
+        # timeShift is not updated
+        self.assertTrue(check == 47251644, check)
+        ts = float(token.get_tokeninfo("timeShift"))
+        self.assertEqual(ts, 42)
+
+        check = token.check_otp("306773", counter=47251645)
+        # The OTP 306773 is of counter 47251646, but it matches also.
+        # timeShift is not updated
+        self.assertTrue(check == 47251646, check)
+        ts = float(token.get_tokeninfo("timeShift"))
+        self.assertEqual(ts, 42)
+
+        token.add_tokeninfo("useTimeShift", "True")
+        check = token.check_otp("722053", counter=47251646)
+        # The OTP 722053 is of counter 47251647, but it matches also.
+        # timeShift is now updated to 90 seconds (3 * 30)
+        self.assertTrue(check == 47251647, check)
+        ts = float(token.get_tokeninfo("timeShift"))
+        self.assertEqual(ts, 90)
+
+        token.del_tokeninfo("useTimeShift")
+
+        set_edumfa_config("totp.useTimeShift", True)
+
+        check = token.check_otp("032819", counter=47251648)
+        # The OTP 032819 is of counter 47251648
+        # timeShift is updated to 120 (4 * 30)
+        self.assertTrue(check == 47251648, check)
+        ts = float(token.get_tokeninfo("timeShift"))
+        self.assertEqual(ts, 120)
+
+        check = token.check_otp("705493", counter=47251648)
+        # The OTP 705493 is of counter 47251649, but it matches also.
+        # timeShift is updated to 150 (5*30)
+        self.assertTrue(check == 47251649, check)
+        ts = float(token.get_tokeninfo("timeShift"))
+        self.assertEqual(ts, 150)
+
+        token.add_tokeninfo("useTimeShift", "False")
+        check = token.check_otp("589836", counter=47251649)
+        # The OTP 589836 is of counter 47251650, but it matches also.
+        # timeShift is not updated
+        self.assertTrue(check == 47251650, check)
+        ts = float(token.get_tokeninfo("timeShift"))
+        self.assertEqual(ts, 150)
