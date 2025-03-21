@@ -199,14 +199,19 @@ class TotpTokenClass(HotpTokenClass):
         timeStep = param.get("timeStep", self.timestep)
         timeWindow = param.get("timeWindow", self.timewindow)
         timeShift = param.get("timeShift", self.timeshift)
+        if not timeShift:
+            timeShift = 0
         # we support various hashlib methods, but only on create
         # which is effectively set in the update
         hashlibStr = param.get("hashlib", self.hashlib)
+        useTimeShift = param.get("useTimeShift", "default")
 
         self.add_tokeninfo("timeWindow", timeWindow)
         self.add_tokeninfo("timeShift", timeShift)
         self.add_tokeninfo("timeStep", timeStep)
         self.add_tokeninfo("hashlib", hashlibStr)
+        if useTimeShift != "default":
+            self.add_tokeninfo("useTimeShift", useTimeShift)
 
     @property
     def timestep(self):
@@ -230,6 +235,16 @@ class TotpTokenClass(HotpTokenClass):
     def timeshift(self):
         shift = float(self.get_tokeninfo("timeShift") or 0)
         return shift
+
+    @property
+    def is_timeshift_enabled(self):
+        useShift = self.get_tokeninfo("useTimeShift")
+        if useShift is None:
+            useShift = get_from_config("totp.useTimeShift", default=True, return_bool=True)
+        if useShift in ["True", "true", "1", 1, True]:
+            return True
+        else:
+            return False
 
     @log_with(log)
     def check_otp_exist(self, otp, window=None, options=None, symetric=True,
@@ -321,7 +336,9 @@ class TotpTokenClass(HotpTokenClass):
         if initTime != -1:
             server_time = int(initTime)
         else:
-            server_time = time.time() + self.timeshift
+            server_time = time.time()
+            if self.is_timeshift_enabled:
+                server_time += self.timeshift
 
         # If we have a counter from the parameter list
         if not counter:
@@ -356,22 +373,25 @@ class TotpTokenClass(HotpTokenClass):
 
             # here we calculate the new drift/shift between the server time
             # and the tokentime
-            tokentime = self._counter2time(res, self.timestep)
-            tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
+            if self.is_timeshift_enabled:
+                tokentime = self._counter2time(res, self.timestep)
+                tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
 
-            nowDt = datetime.datetime.fromtimestamp(inow / 1.0)
+                nowDt = datetime.datetime.fromtimestamp(inow / 1.0)
 
-            lastauth = self._counter2time(oCount, self.timestep)
-            lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
+                lastauth = self._counter2time(oCount, self.timestep)
+                lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
 
-            log.debug("last auth : {0!r}".format(lastauthDt))
-            log.debug("tokentime : {0!r}".format(tokenDt))
-            log.debug("now       : {0!r}".format(nowDt))
-            log.debug("delta     : {0!r}".format((tokentime - inow)))
+                log.debug("last auth : {0!r}".format(lastauthDt))
+                log.debug("tokentime : {0!r}".format(tokenDt))
+                log.debug("now       : {0!r}".format(nowDt))
+                log.debug("delta     : {0!r}".format((tokentime - inow)))
 
-            new_shift = (tokentime - inow)
-            log.debug("the counter {0!r} matched. New shift: {1!r}".format(res, new_shift))
-            self.add_tokeninfo('timeShift', new_shift)
+                new_shift = (tokentime - inow)
+                log.debug("the counter {0!r} matched. New shift: {1!r}".format(res, new_shift))
+                self.add_tokeninfo('timeShift', new_shift)
+            else:
+                log.debug("the counter {0!r} matched.".format(res))
         return res
 
     @log_with(log)
@@ -396,6 +416,9 @@ class TotpTokenClass(HotpTokenClass):
         autosync = get_from_config("AutoResync", False, return_bool=True)
         # if _autosync is not enabled: do nothing
         if autosync is False:
+            return res
+
+        if not self.is_timeshift_enabled:
             return res
 
         info = self.get_tokeninfo()
@@ -553,8 +576,10 @@ class TotpTokenClass(HotpTokenClass):
         if current_time:
             time_seconds = self._time2float(current_time)
 
+        if self.is_timeshift_enabled:
+            time_seconds += self.timeshift
         # we don't need to round here as we have already float
-        counter = self._time2counter(time_seconds + self.timeshift, self.timestep)
+        counter = self._time2counter(time_seconds, self.timestep)
         otpval = hmac2Otp.generate(counter=counter,
                                    inc_counter=False,
                                    do_truncation=do_truncation,
@@ -605,8 +630,10 @@ class TotpTokenClass(HotpTokenClass):
             # use the current server time
             tCounter = self._time2float(datetime.datetime.now())
 
+        if self.is_timeshift_enabled:
+            tCounter -= self.timeshift
         # we don't need to round here as we have alread float
-        counter = self._time2counter(tCounter - self.timeshift, self.timestep)
+        counter = self._time2counter(tCounter, self.timestep)
 
         otp_dict["shift"] = self.timeshift
         otp_dict["timeStepping"] = self.timeshift
@@ -616,7 +643,9 @@ class TotpTokenClass(HotpTokenClass):
             for i in range(0, count):
                 otpval = hmac2Otp.generate(counter=counter + i,
                                            inc_counter=False)
-                timeCounter = ((counter + i) * self.timestep) + self.timeshift
+                timeCounter = (counter + i) * self.timestep
+                if self.is_timeshift_enabled:
+                    timeCounter += self.timeshift
 
                 val_time = datetime.datetime.\
                     fromtimestamp(timeCounter).strftime("%Y-%m-%d %H:%M:%S")
@@ -630,6 +659,7 @@ class TotpTokenClass(HotpTokenClass):
     def get_setting_type(key):
         settings = {"totp.hashlib": "public",
                     "totp.timeStep": "public",
+                    "totp.useTimeShift": "public",
                     "totp.timeWindow": "public"}
         return settings.get(key, "")
 
