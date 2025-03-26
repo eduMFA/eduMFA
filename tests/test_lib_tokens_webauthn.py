@@ -58,6 +58,7 @@ This file tests the lib.tokens.webauthntoken, along with lib.tokens.webauthn.
 This depends on lib.tokenclass
 """
 
+import base64
 import os
 import struct
 import unittest
@@ -67,8 +68,8 @@ from testfixtures import log_capture
 from edumfa.lib.user import User
 
 from edumfa.lib.config import set_edumfa_config
-from edumfa.lib.tokens.webauthn import (COSE_ALGORITHM, RegistrationRejectedException,
-                                             WebAuthnMakeCredentialOptions, AuthenticationRejectedException,
+from edumfa.lib.tokens.webauthn import (COSE_ALGORITHM, DEFAULT_CLIENT_EXTENSIONS, RegistrationRejectedException,
+                                             WebAuthnMakeCredentialOptions, AuthenticationRejectedException, _verify_client_extensions,
                                              webauthn_b64_decode, webauthn_b64_encode,
                                              WebAuthnRegistrationResponse, ATTESTATION_REQUIREMENT_LEVEL,
                                              ATTESTATION_LEVEL, AuthenticatorDataFlags, WebAuthnAssertionResponse,
@@ -283,6 +284,11 @@ class WebAuthnTokenTestCase(MyTestCase):
             self.token.get_init_detail()
         with self.assertRaises(ParameterError):
             self.token.get_init_detail(self.init_params)
+
+
+    def test_01b_prf_extension(self):
+       self.assertTrue( _verify_client_extensions(webauthn_b64_decode("eyJwcmYiOnsiZW5hYmxlZCI6dHJ1ZX19"), DEFAULT_CLIENT_EXTENSIONS))
+
 
     def test_02_token_init(self):
         web_authn_register_request = self\
