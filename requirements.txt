@@ -149,7 +149,7 @@ sqlalchemy==2.0.39
     #   alembic
     #   edumfa (setup.py)
     #   flask-sqlalchemy
-typing-extensions==4.12.2
+typing-extensions==4.13.0
     # via
     #   alembic
     #   edumfa (setup.py)
