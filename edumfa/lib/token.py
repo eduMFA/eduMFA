@@ -1113,6 +1113,10 @@ def init_token(param, user=None, tokenrealms=None,
     if validity_period_start:
         tokenobject.set_validity_period_start(validity_period_start)
 
+    use_timeshift = param.get("useTimeShift")
+    if use_timeshift is not None and use_timeshift != "default":
+        tokenobject.add_tokeninfo("useTimeShift", use_timeshift)
+
     # Safe the token object to make sure all changes are persisted in the db
     tokenobject.save()
     return tokenobject
@@ -2609,3 +2613,23 @@ def list_tokengroups(tokengroup=None):
         tgs = TokenTokengroup.query.all()
 
     return tgs
+
+@log_with(log)
+def set_use_timeshift(serial, use_timeshift=""):
+    """
+    Set the value for use_timeshift in the tokeninfo.
+    Can be "True" or "False"
+
+    :param serial: The serial number of the token (exact)
+    :type serial: basestring
+    :param use_timeshift: True or False to override Token Config and enable/disable timeshift feature
+    :type use_timeshift: basestring
+    :return: None
+    """
+
+    tokenobject = get_one_token(serial=serial)
+    if use_timeshift == "default":
+        tokenobject.del_tokeninfo("useTimeShift")
+    else:
+        tokenobject.add_tokeninfo("useTimeShift", use_timeshift)
+    tokenobject.save()
