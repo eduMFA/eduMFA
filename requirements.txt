@@ -101,7 +101,7 @@ pyasn1==0.6.1
     #   ldap3
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.4.1
+pyasn1-modules==0.4.2
     # via google-auth
 pycparser==2.22
     # via cffi
