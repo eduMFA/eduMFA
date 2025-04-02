@@ -389,6 +389,9 @@ def check():
         g.audit_object.log({"info": log_used_user(user, details.get("message")),
                             "success": success,
                             "serial": serials,
+                            "user": user.login,
+                            "resolver": user.resolver,
+                            "realm": user.realm,
                             "token_type": details.get("type")})
         return send_result(result, rid=2, details=details)
 
