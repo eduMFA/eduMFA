@@ -302,7 +302,7 @@ class Audit(AuditBase):
             else:
                 duration = None
             # We wan't to reduce the passkey events a bit...
-            if self.config.get("EDUMFA_REDUCE_AUDIT") == "1" or str(self.config.get("EDUMFA_REDUCE_AUDIT")).lower() == "true":                
+            if self.config.get("EDUMFA_REDUCE_SQLAUDIT") == "1" or str(self.config.get("EDUMFA_REDUCE_SQLAUDIT")).lower() == "true":                
                 if (self.audit_data.get("action") == "POST /validate/triggerchallenge" or \
                     "PRE-EVENT" in self.audit_data.get("action") or \
                     "POST-EVENT" in self.audit_data.get("action")) and \
