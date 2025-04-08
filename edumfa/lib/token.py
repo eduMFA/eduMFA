@@ -2687,7 +2687,7 @@ def check_token_list(
     elif invalid_token_list:
         # There were only tokens, that did not match the OTP value and
         # not even the PIN.
-        # Depending of IncFailCountOnFalsePin, we increase the failcounter.
+        # Depending on IncFailCountOnFalsePin, we increase the failcounter.
         reply_dict["message"] = _("wrong otp pin")
         if get_inc_fail_count_on_false_pin():
             for tokenobject in invalid_token_list:
@@ -2701,13 +2701,13 @@ def check_token_list(
     return res, reply_dict
 
 
-def get_dynamic_policy_definitions(scope=None):
+def get_dynamic_policy_definitions(scope: str = None) -> dict:
     """
     This returns the dynamic policy definitions that come with the new loaded
     token classes.
 
     :param scope: an optional scope parameter. Only return the policies of
-        this scope.
+        this scope. If the scope is not defined, an empty dictionary is returned.
     :return: The policy definition for the token or only for the scope.
     """
     from edumfa.lib.policy import GROUP, MAIN_MENU, SCOPE
@@ -2792,11 +2792,14 @@ def get_dynamic_policy_definitions(scope=None):
                 "group": GROUP.PIN,
             }
 
-    # return sub section, if scope is defined
-    # make sure that scope is in the policy key
-    # e.g. scope='_' is undefined and would break
-    if scope and scope in pol:
-        pol = pol[scope]
+    # return subsection, if scope is defined
+    # return empty dict for invalid scopes
+    if scope:
+        if scope not in pol:
+            log.debug(
+                f"Scope '{scope}' is not defined in the dynamic policy definitions."
+            )
+        pol = pol.get(scope, {})
 
     return pol
 
