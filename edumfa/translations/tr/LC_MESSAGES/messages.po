@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-09-04 17:01+0200\n"
+"POT-Creation-Date: 2025-04-11 07:44+0200\n"
 "PO-Revision-Date: 2022-12-14 20:50+0000\n"
 "Last-Translator: Paul Lettich <paul.lettich@netknights.it>\n"
 "Language: tr\n"
@@ -31,12 +31,12 @@ msgstr "Kimlik doğrulama hatası. Kullanıcı Adı Eksik"
 msgid "Authentication failure. Wrong credentials"
 msgstr "Kimlik doğrulama hatası. Yanlış kimlik bilgileri"
 
-#: api/lib/prepolicy.py:2365
+#: api/lib/prepolicy.py:2329
 #, fuzzy
 msgid "Missing description for {} token."
 msgstr "Belirteç'in yeni açıklaması."
 
-#: api/lib/prepolicy.py:2366
+#: api/lib/prepolicy.py:2330
 #, fuzzy
 msgid "Description required for {} token."
 msgstr "Belirteç'in yeni açıklaması."
@@ -89,7 +89,7 @@ msgstr "Lütfen yeni bir PIN girin"
 msgid "To resync your token, please enter the next OTP value"
 msgstr "Tokeninizi yeniden senkronize etmek için lütfen sonraki OTP değerini girin"
 
-#: lib/decorators.py:45 lib/token.py:2213
+#: lib/decorators.py:45 lib/token.py:2217
 msgid "This action is not possible, since the token is locked"
 msgstr "Belirteç kilitli olduğundan bu eylem mümkün değildir"
 
@@ -752,14 +752,18 @@ msgid "The length of the validity for the temporary token (in days)."
 msgstr "Geçici belirteç için geçerliliğin uzunluğu (günlerde)."
 
 #: lib/policy.py:2155
-msgid "Set the length of registration codes."
+#, fuzzy
+msgid ""
+"Set the length of registration codes. Only takes effect when key is "
+"generated."
 msgstr "Kayıt kodlarının uzunluğunu ayarlayın."
 
 #: lib/policy.py:2159
+#, fuzzy
 msgid ""
-"Specify the required contents of the registration code. (c)haracters, "
-"(n)umeric, (s)pecial. Use modifiers +/- or a list of allowed characters "
-"[1234567890]"
+"Specify the required contents of the registration code. Only takes effect"
+" when key is generated. (c)haracters, (n)umeric, (s)pecial. Use modifiers"
+" +/- or a list of allowed characters [1234567890]"
 msgstr ""
 "Kayıt kodunun gerekli içeriğini belirtin. (c) haracters, (n) hakem, (ler)"
 " özgü. Değiştiricileri +/- veya izin verilen karakterlerin bir listesini "
@@ -937,17 +941,11 @@ msgstr ""
 
 #: lib/policy.py:2295
 msgid ""
-"Allow the application to choose which token types should be used for "
-"authentication. Application may set the parameter 'type' in the request. "
-"Works with validate/check, validate/samlcheck and "
-"validate/triggerchallenge."
+"<b>DEPRECATED:</b> This policy does not apply any more. Every application"
+" is allowed to set the requested tokentype."
 msgstr ""
-"Uygulamanın kimlik doğrulama için hangi belirteç türlerinin kullanılması "
-"gerektiğini seçmesine izin verin. Uygulama, 'Tür' parametresini istek "
-"üzerine ayarlayabilir. Doğrulama / Kontrol Et, Doğrula / SamlCheck / "
-"TriggerChallenge ile çalışır."
 
-#: lib/policy.py:2302
+#: lib/policy.py:2299
 msgid ""
 "You can specify how many successful authentication requests a user is "
 "allowed to do in a given time. Specify like 1/5s, 2/10m, 10/1h - s, m, h "
@@ -957,7 +955,7 @@ msgstr ""
 "doğrulamasına izin verileceğini belirleyebilirsiniz. 1 / 5S, 2 / 10M, 10 "
 "/ 1H - S, M, H ikinci, dakika ve saat gibi belirtin."
 
-#: lib/policy.py:2310
+#: lib/policy.py:2307
 msgid ""
 "You can specify how many failed authentication requests a user is allowed"
 " to do in a given time. Specify like 1/5s, 2/10m, 10/1h - s, m, h being "
@@ -967,7 +965,7 @@ msgstr ""
 "belirleyebilirsiniz. 1 / 5S, 2 / 10M, 10 / 1H - S, M, H ikinci, dakika ve"
 " saat gibi belirtin."
 
-#: lib/policy.py:2318
+#: lib/policy.py:2315
 msgid ""
 "You can specify in which time frame the user needs to authenticate again "
 "with this token. If the user authenticates later, authentication will "
@@ -978,11 +976,11 @@ msgstr ""
 "daha sonra doğrularsa, kimlik doğrulama başarısız olur. 30H, 7D veya 1Y "
 "gibi belirtin."
 
-#: lib/policy.py:2326
+#: lib/policy.py:2323
 msgid "The user will only be authenticated with this very tokentype."
 msgstr "Kullanıcı yalnızca bu çok TokenType ile doğrulanacaktır."
 
-#: lib/policy.py:2333
+#: lib/policy.py:2330
 msgid ""
 "The user will only be authenticated if the serial number of the token "
 "matches this regexp."
@@ -993,7 +991,7 @@ msgstr ""
 # | msgid ""
 # | "The user will only be authenticated if the tokeninfo field matches the "
 # | "regexp. key/&lt;regexp&gt;/"
-#: lib/policy.py:2339
+#: lib/policy.py:2336
 #, fuzzy
 msgid ""
 "The user will only be authenticated if the tokeninfo field matches the "
@@ -1002,7 +1000,7 @@ msgstr ""
 "Kullanıcı yalnızca TokenInfo alanı Regexp ile eşleşiyorsa, "
 "doğrulanacaktır. Anahtar/&lt;regexp&gt;/"
 
-#: lib/policy.py:2346
+#: lib/policy.py:2343
 msgid ""
 "The Realm of the user is set to this very realm. This is important if the"
 " user is not contained in the default realm and can not pass his realm."
@@ -1010,7 +1008,7 @@ msgstr ""
 "Kullanıcının alemi bu çok bölgeye ayarlanmıştır. Kullanıcı varsayılan "
 "bölgede bulunmazsa ve kendi alanını geçemezse önemlidir."
 
-#: lib/policy.py:2353
+#: lib/policy.py:2350
 msgid ""
 "In case of successful authentication additional no detail information "
 "will be returned."
@@ -1018,7 +1016,7 @@ msgstr ""
 "Başarılı bir kimlik doğrulaması durumunda ilave daha ayrıntılı bilgi iade"
 " edilmez."
 
-#: lib/policy.py:2359
+#: lib/policy.py:2356
 msgid ""
 "In case of failed authentication additional no detail information will be"
 " returned."
@@ -1026,7 +1024,7 @@ msgstr ""
 "Başarısız olan kimlik doğrulaması durumunda ilave daha ayrıntılı bilgi "
 "iade edilmez."
 
-#: lib/policy.py:2365
+#: lib/policy.py:2362
 msgid ""
 "In case of successful authentication user data will be added in the "
 "detail branch of the authentication response."
@@ -1034,7 +1032,7 @@ msgstr ""
 "Başarılı kimlik doğrulama durumunda, kimlik doğrulama tepkisinin detaylı "
 "dalı içine kullanıcı verileri eklenecektir."
 
-#: lib/policy.py:2372
+#: lib/policy.py:2369
 msgid ""
 "In case of successful authentication the user resolver and realm will be "
 "added in the detail branch of the authentication response."
@@ -1042,7 +1040,7 @@ msgstr ""
 "Başarılı bir kimlik doğrulaması durumunda, kullanıcı çözücü ve alem, "
 "kimlik doğrulama tepkisinin detay şubesine eklenecektir."
 
-#: lib/policy.py:2379
+#: lib/policy.py:2376
 msgid ""
 "The sending of an API Auth Key is required duringauthentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
@@ -1050,7 +1048,7 @@ msgstr ""
 "Bir API Auth anahtarının gönderilmesi gereklidir. Bu, / Doğrulama / "
 "Kontrol Etme arayüzüne karşı Rogue Doğrulama isteklerini önler."
 
-#: lib/policy.py:2389
+#: lib/policy.py:2386
 msgid ""
 "If set, administrators will see a dashboard as start screen when logging "
 "in to eduMFA WebUI."
@@ -1058,7 +1056,7 @@ msgstr ""
 "Ayarlandıysa, Administrators, PrivaciDea WebUI'ye giriş yaparken bir "
 "gösterge tablosunu başlatır."
 
-#: lib/policy.py:2394
+#: lib/policy.py:2391
 msgid ""
 "If set to \"eduMFA\" the users and admins need to authenticate against "
 "eduMFA when they log in to the Web UI. Defaults to \"userstore\"."
@@ -1067,7 +1065,7 @@ msgstr ""
 "UI'sine giriş yaparken GriAcyIDEA'ya karşı kimlik doğrulaması gerekir. "
 "Varsayılan olarak \"userstore\"."
 
-#: lib/policy.py:2403
+#: lib/policy.py:2400
 msgid ""
 "An alternative text to display on the WebUI login dialog instead of "
 "\"Please sign in\"."
@@ -1075,7 +1073,7 @@ msgstr ""
 "\"Lütfen oturum aç\" yerine WebUI giriş iletişim kutusunda görüntülenecek"
 " alternatif bir metin."
 
-#: lib/policy.py:2407
+#: lib/policy.py:2404
 msgid ""
 "When searching in the user list, the search will only performed when "
 "pressing enter."
@@ -1083,7 +1081,7 @@ msgstr ""
 "Kullanıcı listesinde arama yaparken, arama yalnızca ENTER tuşuna "
 "basıldığında gerçekleştirilir."
 
-#: lib/policy.py:2412
+#: lib/policy.py:2409
 msgid ""
 "The action taken when a user is idle beyond the logout_time limit. "
 "Defaults to \"lockscreen\"."
@@ -1091,7 +1089,7 @@ msgstr ""
 "Bir kullanıcı Logout_Time sınırının ötesinde boşta olduğunda alınan "
 "işlem. Varsayılanlar \"Lockscreen\"."
 
-#: lib/policy.py:2420
+#: lib/policy.py:2417
 msgid ""
 "The REMOTE_USER set by the webserver can be used to login to eduMFA or it"
 " will be ignored. Defaults to \"disable\"."
@@ -1100,7 +1098,7 @@ msgstr ""
 "yapmak için kullanılabilir veya göz ardı edilecektir. Varsayılanlar "
 "\"Devre Dışı Bırak\"."
 
-#: lib/policy.py:2426
+#: lib/policy.py:2423
 msgid ""
 "Set the time in seconds after which the user will be logged out from the "
 "WebUI. Default: 120"
@@ -1108,41 +1106,41 @@ msgstr ""
 "Kullanıcının WebUI'den çıkış yapacağı saniye içinde saati ayarlayın. "
 "Varsayılan: 120"
 
-#: lib/policy.py:2431
+#: lib/policy.py:2428
 msgid "Set how many tokens should be displayed in the token view on one page."
 msgstr "Bir sayfadaki Token görünümünde kaç belirteç gösterilmelidir."
 
-#: lib/policy.py:2436
+#: lib/policy.py:2433
 msgid "Set how many users should be displayed in the user view on one page."
 msgstr ""
 "Kullanıcı görünümünde bir sayfada kaç kullanıcı görüntüleneceğini "
 "belirleyin."
 
-#: lib/policy.py:2441
+#: lib/policy.py:2438
 msgid ""
 "Set how many audit entries should be displayed in the audit view on one "
 "page."
 msgstr ""
 
-#: lib/policy.py:2446
+#: lib/policy.py:2443
 msgid "Use your own html template for the web UI menu."
 msgstr "Web UI menüsü için kendi HTML şablonunuzu kullanın."
 
-#: lib/policy.py:2450
+#: lib/policy.py:2447
 msgid "Use your own html template for the web UI baseline/footer."
 msgstr "Web UI Temel / Altbilgisi için kendi HTML şablonunuzu kullanın."
 
-#: lib/policy.py:2454
+#: lib/policy.py:2451
 msgid "Link your privacy statement to be displayed in the baseline/footer."
 msgstr "Gizlilik bildiriminizi temel / altbilgide görüntülenecek şekilde bağlayın."
 
-#: lib/policy.py:2458
+#: lib/policy.py:2455
 msgid ""
 "Whether the user ID and the resolver should be displayed in the token "
 "list."
 msgstr "Kullanıcı kimliğinin ve çözümleyici belirteç listesinde gösterilmelidir."
 
-#: lib/policy.py:2463
+#: lib/policy.py:2460
 #, fuzzy
 msgid ""
 "The URL of a repository, where the policy templates can be found.  "
@@ -1153,19 +1151,19 @@ msgstr ""
 " //raw.githubusercontent.com/ PrivaciDiDea / Politika-şablonlar / Master "
 "/ Şablonlar /)"
 
-#: lib/policy.py:2470
+#: lib/policy.py:2467
 msgid ""
 "The URL of an SSO provider for redirect at logout.(The URL must start "
 "with http:// or https://)"
 msgstr ""
 
-#: lib/policy.py:2475
+#: lib/policy.py:2472
 msgid "As long as a user has no token, he will only see a token wizard in the UI."
 msgstr ""
 "Bir kullanıcının belirteci olmadığı sürece, yalnızca UI'de bir belirteç "
 "sihirbazı görecektir."
 
-#: lib/policy.py:2480
+#: lib/policy.py:2477
 msgid ""
 "The tokenwizard will be displayed in the token menu, even if the user "
 "already has a token."
@@ -1173,7 +1171,7 @@ msgstr ""
 "Kullanıcı zaten bir belirteci olsa bile TokenWizard belirteç menüsünde "
 "gösterilecektir."
 
-#: lib/policy.py:2485
+#: lib/policy.py:2482
 msgid ""
 "This is a whitespace separated list of tokentypes, for which a rollover "
 "button is displayed in the token details."
@@ -1181,17 +1179,17 @@ msgstr ""
 "Bu, bir rollover düğmesinin belirteç ayrıntılarında görüntülendiği bir "
 "boşluk ayrılmış TOKENTYPES listesidir."
 
-#: lib/policy.py:2492
+#: lib/policy.py:2489
 msgid "The welcome dialog will be displayed if the user has no tokens assigned."
 msgstr ""
 "Kullanıcının belirsiz bir şekilde atanması yoksa, karşılama iletişim "
 "kutusu görüntülenecektir."
 
-#: lib/policy.py:2496
+#: lib/policy.py:2493
 msgid "This is the default token type in the token enrollment dialog."
 msgstr "Bu, Token kayıt iletişim kutusundaki varsayılan belirteç türüdür."
 
-#: lib/policy.py:2502
+#: lib/policy.py:2499
 msgid ""
 "A list of realm names, which are displayed in a drop down menu in the "
 "WebUI login screen. Realms are separated by white spaces."
@@ -1199,7 +1197,7 @@ msgstr ""
 "WebUI giriş ekranında bir açılır menüde görüntülenen bir bölge adlarının "
 "bir listesi. Alemler beyaz boşluklarla ayrılır."
 
-#: lib/policy.py:2508
+#: lib/policy.py:2505
 msgid ""
 "If this checked, the administrator will not see the welcome dialog "
 "anymore."
@@ -1207,7 +1205,7 @@ msgstr ""
 "Bu kontrol edilirse, yönetici artık karşılama iletişim kutusunu "
 "görmeyecek."
 
-#: lib/policy.py:2513
+#: lib/policy.py:2510
 msgid ""
 "Per default disabled actions result in disabled buttons. When checking "
 "this action, buttons of disabled actions are hidden."
@@ -1215,24 +1213,24 @@ msgstr ""
 "Varsayılan olarak devre dışı bırakılmış işlemler Engelli düğmelerine son "
 "verir. Bu işlemi kontrol ederken, engelli eylemlerin düğmeleri gizlenir."
 
-#: lib/policy.py:2518
+#: lib/policy.py:2515
 msgid ""
 "If this is checked, there will be a confirmation prompt when deleting "
 "policies, events, mresolver, resolver or periodic tasks!"
 msgstr ""
 
-#: lib/policy.py:2523
+#: lib/policy.py:2520
 msgid "If this is checked, the seed will be displayed as text during enrollment."
 msgstr "Bu kontrol edilirse, tohum kayıt sırasında metin olarak gösterilecektir."
 
-#: lib/policy.py:2528
+#: lib/policy.py:2525
 #, fuzzy
 msgid ""
 "If this is checked, the eduMFA Node name will be displayed in the menu "
 "bar."
 msgstr "Bu kontrol edilirse, eduMFA düğümü adı menü çubuğunda görüntülenir."
 
-#: lib/policy.py:2533
+#: lib/policy.py:2530
 #, fuzzy
 msgid ""
 "If this is checked, the enrollment page for HOTP, TOTP and Push tokens "
@@ -1243,7 +1241,7 @@ msgstr ""
 "Google Play Store'daki eduMFA kimlik doğrulamasına yol açan bir QR kodu "
 "içerecektir."
 
-#: lib/policy.py:2540
+#: lib/policy.py:2537
 #, fuzzy
 msgid ""
 "If this is checked, the enrollment page for HOTP, TOTP and Push tokens "
@@ -1254,7 +1252,7 @@ msgstr ""
 "IOS App Store'daki PrivaciDIDEA kimlik doğrulamasına yol açan bir QR kodu"
 " içerecektir."
 
-#: lib/policy.py:2547
+#: lib/policy.py:2544
 msgid ""
 "This action adds a QR code in the enrollment page for HOTP, TOTP and Push"
 " tokens, that lead to this given URL."
@@ -1262,7 +1260,7 @@ msgstr ""
 "Bu eylem, HISP, TOTP ve PUSH DOKENS için kayıt sayfasında, bu URL'ye yol "
 "açan bir QR kodu ekler."
 
-#: lib/policy.py:2592
+#: lib/policy.py:2589
 msgid ""
 "The policy only matches if certain conditions on the user info are "
 "fulfilled."
@@ -1270,7 +1268,7 @@ msgstr ""
 "Politika yalnızca kullanıcı bilgisi üzerindeki belirli koşullar yerine "
 "getirildiğinde eşleşir."
 
-#: lib/policy.py:2595
+#: lib/policy.py:2592
 msgid ""
 "The policy only matches if certain conditions of the token attributes are"
 " fulfilled."
@@ -1278,7 +1276,7 @@ msgstr ""
 "Politika, yalnızca belirteç özelliklerinin bazı koşulları yerine "
 "getirildiğinde eşleşir."
 
-#: lib/policy.py:2598
+#: lib/policy.py:2595
 msgid ""
 "The policy only matches if certain conditions on the token info are "
 "fulfilled."
@@ -1286,7 +1284,7 @@ msgstr ""
 "Politika yalnızca belirteç bilgisi üzerindeki bazı koşullar yerine "
 "getirildiğinde eşleşir."
 
-#: lib/policy.py:2601
+#: lib/policy.py:2598
 msgid ""
 "The policy only matches if certain conditions on the HTTP Request header "
 "are fulfilled."
@@ -1294,7 +1292,7 @@ msgstr ""
 "Politika yalnızca HTTP istek başlığındaki bazı koşullar yerine "
 "getirildiğinde sadece eşleşir."
 
-#: lib/policy.py:2604
+#: lib/policy.py:2601
 msgid ""
 "The policy only matches if certain conditions on the HTTP Environment are"
 " fulfilled."
@@ -1334,106 +1332,106 @@ msgstr ""
 msgid "initToken failed: {0!s}"
 msgstr ""
 
-#: lib/token.py:1218
+#: lib/token.py:1222
 msgid "Token already assigned to user {0!r}"
 msgstr ""
 
-#: lib/token.py:1232
+#: lib/token.py:1236
 msgid "Token assign failed for {0!r}/{1!s} : {2!r}"
 msgstr ""
 
-#: lib/token.py:1260
+#: lib/token.py:1264
 msgid "Token unassign failed for {0!r}/{1!r}: {2!r}"
 msgstr ""
 
-#: lib/token.py:1336
+#: lib/token.py:1340
 msgid "Parameter user must not be a string: {0!r}"
 msgstr ""
 
-#: lib/token.py:1875
+#: lib/token.py:1879
 msgid "You can only define a lost token for an assigned token."
 msgstr ""
 
-#: lib/token.py:1901
+#: lib/token.py:1905
 msgid "temporary replacement for {0!s}"
 msgstr ""
 
-#: lib/token.py:1957
+#: lib/token.py:1961
 msgid "There is no active and assigned token in this realm"
 msgstr ""
 
-#: lib/token.py:1969
+#: lib/token.py:1973
 msgid ""
 "There is no active and assigned token in this realm, included types: "
 "{0!s}, excluded types: {1!s}"
 msgstr ""
 
-#: lib/token.py:2023
+#: lib/token.py:2027
 msgid "OTP verification failed."
 msgstr ""
 
-#: lib/token.py:2056
+#: lib/token.py:2060
 msgid "The user has no tokens assigned"
 msgstr ""
 
-#: lib/token.py:2295
+#: lib/token.py:2299
 msgid "matching {0:d} tokens"
 msgstr ""
 
-#: lib/token.py:2347
+#: lib/token.py:2351
 msgid "Challenge matches, but token is not fit for challenge"
 msgstr ""
 
-#: lib/token.py:2357
+#: lib/token.py:2361
 msgid "Found matching challenge"
 msgstr ""
 
-#: lib/token.py:2399
+#: lib/token.py:2403
 msgid "Response did not match the challenge."
 msgstr ""
 
-#: lib/token.py:2401
+#: lib/token.py:2405
 msgid "Response did not match for {0!s} tokens."
 msgstr ""
 
-#: lib/token.py:2409
+#: lib/token.py:2413
 msgid "No active challenge response token found"
 msgstr ""
 
-#: lib/token.py:2425
+#: lib/token.py:2429
 msgid "wrong otp value"
 msgstr ""
 
-#: lib/token.py:2432
+#: lib/token.py:2436
 msgid ". previous otp used again"
 msgstr ""
 
-#: lib/token.py:2446
+#: lib/token.py:2450
 msgid "wrong otp pin"
 msgstr ""
 
-#: lib/token.py:2454
+#: lib/token.py:2458
 msgid "No suitable token found for authentication."
 msgstr ""
 
-#: lib/token.py:2479
+#: lib/token.py:2483
 #, fuzzy
 msgid "Admin is allowed to initialize {0!s} tokens."
 msgstr "Yönetici'nin {0!s} belirteçlerini inalitalize etmesine izin verilir."
 
-#: lib/token.py:2487
+#: lib/token.py:2491
 msgid "The user is allowed to enroll a {0!s} token."
 msgstr "Kullanıcının {0!s} belirtecini kaydetmesine izin verilir."
 
-#: lib/token.py:2518
+#: lib/token.py:2522
 msgid "Set the maximum allowed PIN length of the {0!s} token."
 msgstr "{0!s} belirtecinin izin verilen maksimum pim uzunluğunu ayarlayın."
 
-#: lib/token.py:2525
+#: lib/token.py:2529
 msgid "Set the minimum required PIN length of the {0!s} token."
 msgstr "{0!s} belirtecinin gerekli olan minimum pin uzunluğunu ayarlayın."
 
-#: lib/token.py:2531
+#: lib/token.py:2535
 msgid ""
 "Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
@@ -1441,7 +1439,7 @@ msgstr ""
 "{0!s} belirtecinin gerekli pim içeriğini belirtir. (c) haracters, (n) "
 "hakem, (ler) cezalandırıcı, (0) bu. [+/-]!"
 
-#: lib/token.py:2576 lib/token.py:2592
+#: lib/token.py:2580 lib/token.py:2596
 msgid "The tokengroup does not exist."
 msgstr ""
 
@@ -2024,7 +2022,7 @@ msgstr ""
 msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr "LDAP yapılandırmanız iyi görünüyor,%i makine nesneleri bulundu."
 
-#: lib/resolvers/LDAPIdResolver.py:1109
+#: lib/resolvers/LDAPIdResolver.py:1110
 msgid ""
 "Your LDAP config found {0!s} user objects, but only {1!s} with the "
 "specified uidtype"
@@ -2032,7 +2030,7 @@ msgstr ""
 "LDAP yapılandırmanız {0!s} kullanıcı nesneleri, ancak yalnızca {1!s} "
 "belirtilen uidtype ile bulundu."
 
-#: lib/resolvers/LDAPIdResolver.py:1112
+#: lib/resolvers/LDAPIdResolver.py:1113
 msgid "Your LDAP config seems to be OK, {0!s} user objects found."
 msgstr "LDAP yapılandırmanız iyi görünüyor, {0!s} Kullanıcı nesneleri bulundu."
 
@@ -2253,21 +2251,21 @@ msgid ""
 " password tokens assigned."
 msgstr "Kullanıcı, yalnızca bu maksimum aktif şifre belirteçlerini atanmıştır."
 
-#: lib/tokens/certificatetoken.py:277
+#: lib/tokens/certificatetoken.py:280
 msgid "Certificate: Enroll an x509 Certificate Token."
 msgstr "Sertifika: X509 sertifika belirteci kaydolun."
 
-#: lib/tokens/certificatetoken.py:288
+#: lib/tokens/certificatetoken.py:291
 msgid "The user may only have this maximum number of certificates assigned."
 msgstr "Kullanıcı, yalnızca bu maksimum sertifika sayısına sahip olabilir."
 
-#: lib/tokens/certificatetoken.py:293
+#: lib/tokens/certificatetoken.py:296
 msgid ""
 "The user may only have this maximum number of active certificates "
 "assigned."
 msgstr "Kullanıcı yalnızca bu maksimum aktif sertifika sayısına sahip olabilir."
 
-#: lib/tokens/certificatetoken.py:298
+#: lib/tokens/certificatetoken.py:301
 msgid ""
 "Enrolling a certificate token can require an attestation certificate. "
 "(Default: ignore)"
@@ -2275,21 +2273,21 @@ msgstr ""
 "Sertifika belirteci kaydetmek, bir onay sertifikası gerektirebilir. "
 "(Varsayılan: Yoksay)"
 
-#: lib/tokens/certificatetoken.py:307
+#: lib/tokens/certificatetoken.py:310
 msgid "The CA connector that should be used during certificate enrollment."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:313
+#: lib/tokens/certificatetoken.py:316
 msgid "The template that should be used to issue a certificate."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:318
+#: lib/tokens/certificatetoken.py:321
 msgid ""
 "This takes a space separated list of elements to be added to the subject."
 " Can be 'email' and 'realm'."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:326 lib/tokens/certificatetoken.py:333
+#: lib/tokens/certificatetoken.py:329 lib/tokens/certificatetoken.py:336
 msgid "The directory containing attestation certificate chains."
 msgstr "Bildirim sertifikası zincirleri içeren dizin."
 
@@ -2489,25 +2487,25 @@ msgstr "Google Authenticator için URL"
 msgid "URL for OATH token"
 msgstr "Yemin Jetonu için URL"
 
-#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1175
+#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1182
 msgid "Please scan the QR code!"
 msgstr "Lütfen QR kodunu tarayın"
 
-#: lib/tokens/indexedsecrettoken.py:52
+#: lib/tokens/indexedsecrettoken.py:53
 msgid "Please enter the positions {0!s} from your secret."
 msgstr "Lütfen {0!s} konumunu sırınızdan girin."
 
-#: lib/tokens/indexedsecrettoken.py:101
+#: lib/tokens/indexedsecrettoken.py:102
 msgid "Indexed Secret Token"
 msgstr "Endeksli gizli belirteç"
 
-#: lib/tokens/indexedsecrettoken.py:103
+#: lib/tokens/indexedsecrettoken.py:104
 msgid "IndexedSecret: Request certain positions of a shared secret from the user."
 msgstr ""
 "IndexedSecret: Kullanıcıdan paylaşılan bir sıranın belirli konumlarını "
 "isteyin."
 
-#: lib/tokens/indexedsecrettoken.py:110
+#: lib/tokens/indexedsecrettoken.py:111
 msgid ""
 "Use an alternate challenge text for telling the user which positions of "
 "the secret he should enter."
@@ -2515,19 +2513,19 @@ msgstr ""
 "Kullanıcıya sıranın hangi pozisyonlarını girmesi gerektiğini söylemek "
 "için alternatif bir meydan okuma metni kullanın."
 
-#: lib/tokens/indexedsecrettoken.py:116
+#: lib/tokens/indexedsecrettoken.py:117
 msgid "Number of necessary positions to be answered by the user."
 msgstr "Kullanıcı tarafından cevaplanacak gerekli pozisyonların sayısı."
 
-#: lib/tokens/indexedsecrettoken.py:123
+#: lib/tokens/indexedsecrettoken.py:124
 msgid "Preset the enrollment with the value of the given attribute."
 msgstr "Kaydı verilen özniteliğin değeri ile önceden ayarlayın."
 
-#: lib/tokens/indexedsecrettoken.py:130 lib/tokens/indexedsecrettoken.py:137
+#: lib/tokens/indexedsecrettoken.py:131 lib/tokens/indexedsecrettoken.py:138
 msgid "The attribute whose value should be force set during enrollment."
 msgstr "Değeri kayıt sırasında ayarlanmış olan nitelik."
 
-#: lib/tokens/indexedsecrettoken.py:144
+#: lib/tokens/indexedsecrettoken.py:145
 msgid ""
 "The user may only have this maximum number of indexed secret tokens "
 "assigned."
@@ -2535,7 +2533,7 @@ msgstr ""
 "Kullanıcı yalnızca bu maksimum dizinlenmiş gizli belirteç atanmış "
 "sayısına sahip olabilir."
 
-#: lib/tokens/indexedsecrettoken.py:149
+#: lib/tokens/indexedsecrettoken.py:150
 msgid ""
 "The user may only have this maximum number of active indexed secret "
 "tokens assigned."
@@ -2605,11 +2603,11 @@ msgid ""
 "assigned."
 msgstr "Kullanıcı, yalnızca bu maksimum aktif şifre belirteçlerini atanmıştır."
 
-#: lib/tokens/pushtoken.py:72
+#: lib/tokens/pushtoken.py:73
 msgid "Please confirm the authentication on your mobile device!"
 msgstr "Lütfen mobil cihazınızdaki kimlik doğrulamasını onaylayın!"
 
-#: lib/tokens/pushtoken.py:73
+#: lib/tokens/pushtoken.py:74
 #, fuzzy
 msgid ""
 "Use the polling feature of your unsupported privacyIDEA Authenticator App"
@@ -2618,15 +2616,15 @@ msgstr ""
 "Yeni bir giriş talebini kontrol etmek için eduMFA doğrulama uygulamanızın"
 " yoklama özelliğini kullanın."
 
-#: lib/tokens/pushtoken.py:75
+#: lib/tokens/pushtoken.py:76
 msgid "Do you want to confirm the login?"
 msgstr "Girişi onaylamak ister misiniz?"
 
-#: lib/tokens/pushtoken.py:322
+#: lib/tokens/pushtoken.py:323
 msgid "The configuration of your Firebase application."
 msgstr "FireBase uygulamanızın yapılandırması."
 
-#: lib/tokens/pushtoken.py:330
+#: lib/tokens/pushtoken.py:331
 #, fuzzy
 msgid ""
 "The URL the Push App should contact in the second enrollment step. "
@@ -2635,59 +2633,59 @@ msgstr ""
 "ARLL, İkinci Kayıt Adımında İkinci Kayıt Adımında temasa geçmelidir. "
 "Genellikle ENDPOINT / TTYPE / PRICYIDEA sunucusunun basılmasıdır."
 
-#: lib/tokens/pushtoken.py:335
+#: lib/tokens/pushtoken.py:336
 msgid ""
 "The second enrollment step must be completed within this time (in "
 "minutes)."
 msgstr "İkinci kayıt adım bu süre içinde tamamlanmalıdır (dakikalar içinde)."
 
-#: lib/tokens/pushtoken.py:339
+#: lib/tokens/pushtoken.py:340
 msgid "The smartphone needs to verify SSL during the enrollment. (default 1)"
 msgstr ""
 "Akıllı telefonun kayıt sırasında SSL'yi doğrulaması gerekir. (Varsayılan "
 "1)"
 
-#: lib/tokens/pushtoken.py:345
+#: lib/tokens/pushtoken.py:346
 msgid "The user may only have this maximum number of Push tokens assigned."
 msgstr ""
 "Kullanıcı yalnızca bu maksimum itme sayısının atandığı sayısına sahip "
 "olabilir."
 
-#: lib/tokens/pushtoken.py:350
+#: lib/tokens/pushtoken.py:351
 msgid "The user may only have this maximum number of active Push tokens assigned."
 msgstr ""
 "Kullanıcı yalnızca bu maksimum aktif push belirteç atanmış sayısına sahip"
 " olabilir."
 
-#: lib/tokens/pushtoken.py:356
+#: lib/tokens/pushtoken.py:357
 msgid "Require to unlock the Smartphone before Push requests can be accepted"
 msgstr ""
 
-#: lib/tokens/pushtoken.py:362
+#: lib/tokens/pushtoken.py:363
 msgid "The question the user sees on his mobile phone."
 msgstr "Kullanıcının cep telefonunu gördüğü soru."
 
-#: lib/tokens/pushtoken.py:367
+#: lib/tokens/pushtoken.py:368
 msgid "The title of the notification, the user sees on his mobile phone."
 msgstr "Bildirimin başlığı, kullanıcı cep telefonunu görür."
 
-#: lib/tokens/pushtoken.py:372
+#: lib/tokens/pushtoken.py:373
 msgid "The smartphone needs to verify SSL during authentication. (default 1)"
 msgstr ""
 "Akıllı telefonun kimlik doğrulaması sırasında SSL'yi doğrulaması gerekir."
 " (Varsayılan 1)"
 
-#: lib/tokens/pushtoken.py:378
+#: lib/tokens/pushtoken.py:379
 msgid ""
 "Wait for number of seconds for the user to confirm the challenge in the "
 "first request."
 msgstr "Kullanıcının ilk talepte meydan okumayı onaylaması için saniye bekleyin."
 
-#: lib/tokens/pushtoken.py:383
+#: lib/tokens/pushtoken.py:384
 msgid "Configure whether to allow push tokens to poll for challenges"
 msgstr "İtme belirteçlerinin zorluklar için ankete izin vermeyi yapılandırın"
 
-#: lib/tokens/pushtoken.py:637
+#: lib/tokens/pushtoken.py:638
 msgid "URL for eduMFA Push Token"
 msgstr "eduMFA Push Token için URL"
 
@@ -3000,9 +2998,10 @@ msgstr ""
 "bir meydan okuma metni kullanın."
 
 #: lib/tokens/webauthntoken.py:631
+#, fuzzy
 msgid ""
 "A list of transports to prefer to communicate with WebAuthn tokens. "
-"Default: usb ble nfc internal (All standard transports)"
+"Default: usb ble nfc internal hybrid (All standard transports)"
 msgstr ""
 "WebAuthn belirteçleriyle iletişim kurmayı tercih edecek taşıma listesi. "
 "Varsayılan: USB BLE NFC Dahili (tüm standart taşımalar)"
@@ -3398,4 +3397,19 @@ msgstr ""
 
 #~ msgid "PUSH: Send a push notification to a smartphone."
 #~ msgstr "PUSH: Bir akıllı telefona bir push bildirimi gönderin."
+
+#~ msgid ""
+#~ "Allow the application to choose which"
+#~ " token types should be used for "
+#~ "authentication. Application may set the "
+#~ "parameter 'type' in the request. Works"
+#~ " with validate/check, validate/samlcheck and "
+#~ "validate/triggerchallenge."
+#~ msgstr ""
+#~ "Uygulamanın kimlik doğrulama için hangi "
+#~ "belirteç türlerinin kullanılması gerektiğini "
+#~ "seçmesine izin verin. Uygulama, 'Tür' "
+#~ "parametresini istek üzerine ayarlayabilir. "
+#~ "Doğrulama / Kontrol Et, Doğrula / "
+#~ "SamlCheck / TriggerChallenge ile çalışır."
 

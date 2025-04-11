@@ -295,6 +295,7 @@ class TRANSPORT:
     BLE = 'ble'
     NFC = 'nfc'
     INTERNAL = 'internal'
+    HYBRID = 'hybrid'
 
 
 TRANSPORTS = (
@@ -302,6 +303,7 @@ TRANSPORTS = (
     TRANSPORT.BLE,
     TRANSPORT.NFC,
     TRANSPORT.INTERNAL,
+    TRANSPORT.HYBRID
 )
 
 class RESIDENT_KEY_LEVEL:
