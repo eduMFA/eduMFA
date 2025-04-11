@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-09-04 17:01+0200\n"
+"POT-Creation-Date: 2025-04-11 07:44+0200\n"
 "PO-Revision-Date: 2021-12-31 19:53+0000\n"
 "Last-Translator: Michael Yang <pcgames99@gmail.com>\n"
 "Language: zh_Hant\n"
@@ -31,12 +31,12 @@ msgstr "身份驗證失敗。缺少使用者名"
 msgid "Authentication failure. Wrong credentials"
 msgstr "身份驗證失敗。憑據錯誤"
 
-#: api/lib/prepolicy.py:2365
+#: api/lib/prepolicy.py:2329
 #, fuzzy
 msgid "Missing description for {} token."
 msgstr "令牌的新說明。"
 
-#: api/lib/prepolicy.py:2366
+#: api/lib/prepolicy.py:2330
 #, fuzzy
 msgid "Description required for {} token."
 msgstr "令牌的新說明。"
@@ -85,7 +85,7 @@ msgstr "請輸入新的 PIN 碼"
 msgid "To resync your token, please enter the next OTP value"
 msgstr ""
 
-#: lib/decorators.py:45 lib/token.py:2213
+#: lib/decorators.py:45 lib/token.py:2217
 msgid "This action is not possible, since the token is locked"
 msgstr "此操作是不可能的，因為令牌已鎖定"
 
@@ -672,14 +672,18 @@ msgid "The length of the validity for the temporary token (in days)."
 msgstr "臨時令牌的有效期長度（以天為單位）。"
 
 #: lib/policy.py:2155
-msgid "Set the length of registration codes."
+#, fuzzy
+msgid ""
+"Set the length of registration codes. Only takes effect when key is "
+"generated."
 msgstr "設置註冊碼的長度。"
 
 #: lib/policy.py:2159
+#, fuzzy
 msgid ""
-"Specify the required contents of the registration code. (c)haracters, "
-"(n)umeric, (s)pecial. Use modifiers +/- or a list of allowed characters "
-"[1234567890]"
+"Specify the required contents of the registration code. Only takes effect"
+" when key is generated. (c)haracters, (n)umeric, (s)pecial. Use modifiers"
+" +/- or a list of allowed characters [1234567890]"
 msgstr "指定註冊碼所需的內容。 (c) 字符，(n) 數字，(s) 特殊。使用修飾符 +/- 或允許的字符列表 [1234567890]"
 
 #: lib/policy.py:2168
@@ -816,38 +820,36 @@ msgstr "允許使用者進行身份驗證（預設）。如果設置為'{0!s}'�
 
 #: lib/policy.py:2295
 msgid ""
-"Allow the application to choose which token types should be used for "
-"authentication. Application may set the parameter 'type' in the request. "
-"Works with validate/check, validate/samlcheck and "
-"validate/triggerchallenge."
-msgstr "允許應用程式選擇應用於身份驗證的令牌類型。應用程式可以在請求中設置參數「type」。使用驗證/檢查，驗證/samlcheck和驗證/觸發挑戰。"
+"<b>DEPRECATED:</b> This policy does not apply any more. Every application"
+" is allowed to set the requested tokentype."
+msgstr ""
 
-#: lib/policy.py:2302
+#: lib/policy.py:2299
 msgid ""
 "You can specify how many successful authentication requests a user is "
 "allowed to do in a given time. Specify like 1/5s, 2/10m, 10/1h - s, m, h "
 "being second, minute and hour."
 msgstr "您可以指定在給定時間內允許使用者執行多少個成功的身份驗證請求。指定 1/5 秒、2/10 分鐘、10/1 小時 - 秒、分、小時為秒、分鐘和小時。"
 
-#: lib/policy.py:2310
+#: lib/policy.py:2307
 msgid ""
 "You can specify how many failed authentication requests a user is allowed"
 " to do in a given time. Specify like 1/5s, 2/10m, 10/1h - s, m, h being "
 "second, minute and hour."
 msgstr "您可以指定在給定時間內允許使用者執行多少個失敗的身份驗證請求。指定 1/5 秒、2/10 分鐘、10/1 小時 - 秒、分、小時為秒、分鐘和小時。"
 
-#: lib/policy.py:2318
+#: lib/policy.py:2315
 msgid ""
 "You can specify in which time frame the user needs to authenticate again "
 "with this token. If the user authenticates later, authentication will "
 "fail. Specify like 30h, 7d or 1y."
 msgstr "您可以指定使用者需要使用此權杖再次進行身份驗證的時間範圍。如果使用者稍後進行身份驗證，則身份驗證將失敗。指定類似 30小時、7天 或 1年。"
 
-#: lib/policy.py:2326
+#: lib/policy.py:2323
 msgid "The user will only be authenticated with this very tokentype."
 msgstr "使用者將僅使用此令牌類型進行身份驗證。"
 
-#: lib/policy.py:2333
+#: lib/policy.py:2330
 msgid ""
 "The user will only be authenticated if the serial number of the token "
 "matches this regexp."
@@ -856,124 +858,124 @@ msgstr "僅當令牌的序列號與此正則表達式匹配時，才會對用戶
 # | msgid ""
 # | "The user will only be authenticated if the tokeninfo field matches the "
 # | "regexp. key/&lt;regexp&gt;/"
-#: lib/policy.py:2339
+#: lib/policy.py:2336
 #, fuzzy
 msgid ""
 "The user will only be authenticated if the tokeninfo field matches the "
 "regexp (key/&lt;regexp&gt;/)."
 msgstr "僅當 tokeninfo 字段與正則表示式匹配時，才會對用戶進行身份驗證。Key/&lt;regexp&gt;/"
 
-#: lib/policy.py:2346
+#: lib/policy.py:2343
 msgid ""
 "The Realm of the user is set to this very realm. This is important if the"
 " user is not contained in the default realm and can not pass his realm."
 msgstr "使用者的「領域」被設置為此領域。如果使用者不包含在默認領域中並且無法通過其領域，這一點很重要。"
 
-#: lib/policy.py:2353
+#: lib/policy.py:2350
 msgid ""
 "In case of successful authentication additional no detail information "
 "will be returned."
 msgstr "如果身份驗證成功，則不會返回其他詳細資訊。"
 
-#: lib/policy.py:2359
+#: lib/policy.py:2356
 msgid ""
 "In case of failed authentication additional no detail information will be"
 " returned."
 msgstr "如果身份驗證失敗，則不會返回任何詳細資訊。"
 
-#: lib/policy.py:2365
+#: lib/policy.py:2362
 msgid ""
 "In case of successful authentication user data will be added in the "
 "detail branch of the authentication response."
 msgstr "如果身份驗證成功，用戶數據將添加到身份驗證回應的詳細資訊分支中。"
 
-#: lib/policy.py:2372
+#: lib/policy.py:2369
 msgid ""
 "In case of successful authentication the user resolver and realm will be "
 "added in the detail branch of the authentication response."
 msgstr "如果認證成功，使用者解析程式和領域將添加到認證回應的詳細資訊分支中。"
 
-#: lib/policy.py:2379
+#: lib/policy.py:2376
 msgid ""
 "The sending of an API Auth Key is required duringauthentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
 msgstr "在身份驗證期間需要發送 API 身份驗證金鑰。這樣可以避免針對 /validate/check 介面的惡意身份驗證請求。"
 
-#: lib/policy.py:2389
+#: lib/policy.py:2386
 msgid ""
 "If set, administrators will see a dashboard as start screen when logging "
 "in to eduMFA WebUI."
 msgstr "如果設置，管理員在登錄到 eduMFA WebUI 時將看到一個儀錶板作為開始螢幕。"
 
-#: lib/policy.py:2394
+#: lib/policy.py:2391
 msgid ""
 "If set to \"eduMFA\" the users and admins need to authenticate against "
 "eduMFA when they log in to the Web UI. Defaults to \"userstore\"."
 msgstr "如果設置為\"eduMFA\"，則使用者和管理員在登錄到 Web UI 時需要針對 eduMFA 進行身份驗證。默認為「用戶存儲」。。"
 
-#: lib/policy.py:2403
+#: lib/policy.py:2400
 msgid ""
 "An alternative text to display on the WebUI login dialog instead of "
 "\"Please sign in\"."
 msgstr "要在 WebUI 登錄對話框中顯示的替代文字，而不是「請登錄」。"
 
-#: lib/policy.py:2407
+#: lib/policy.py:2404
 msgid ""
 "When searching in the user list, the search will only performed when "
 "pressing enter."
 msgstr "在使用者清單中搜索時，只有在按 Enter 鍵時才會執行搜索。"
 
-#: lib/policy.py:2412
+#: lib/policy.py:2409
 msgid ""
 "The action taken when a user is idle beyond the logout_time limit. "
 "Defaults to \"lockscreen\"."
 msgstr "當用戶處於空閒狀態超過logout_time限制時執行的操作。默認為「鎖屏」。。"
 
-#: lib/policy.py:2420
+#: lib/policy.py:2417
 msgid ""
 "The REMOTE_USER set by the webserver can be used to login to eduMFA or it"
 " will be ignored. Defaults to \"disable\"."
 msgstr "Web伺服器設置的REMOTE_USER可用於登錄到eduMFA，否則將被忽略。默認為「禁用」。"
 
-#: lib/policy.py:2426
+#: lib/policy.py:2423
 msgid ""
 "Set the time in seconds after which the user will be logged out from the "
 "WebUI. Default: 120"
 msgstr "設置時間（以秒為單位），在此時間之後，使用者將從 WebUI 註銷。默認值：120"
 
-#: lib/policy.py:2431
+#: lib/policy.py:2428
 msgid "Set how many tokens should be displayed in the token view on one page."
 msgstr "設置應在一個頁面上的令牌檢視中顯示多少個令牌。"
 
-#: lib/policy.py:2436
+#: lib/policy.py:2433
 msgid "Set how many users should be displayed in the user view on one page."
 msgstr "設置應在一個頁面上的用戶檢視中顯示多少個使用者。"
 
-#: lib/policy.py:2441
+#: lib/policy.py:2438
 msgid ""
 "Set how many audit entries should be displayed in the audit view on one "
 "page."
 msgstr ""
 
-#: lib/policy.py:2446
+#: lib/policy.py:2443
 msgid "Use your own html template for the web UI menu."
 msgstr "將您自己的 html 範本用於 Web UI 功能表。"
 
-#: lib/policy.py:2450
+#: lib/policy.py:2447
 msgid "Use your own html template for the web UI baseline/footer."
 msgstr "將您自己的 html 範本用於 Web UI 基線/頁腳。"
 
-#: lib/policy.py:2454
+#: lib/policy.py:2451
 msgid "Link your privacy statement to be displayed in the baseline/footer."
 msgstr "連結您的隱私聲明以顯示在基線/頁腳中。"
 
-#: lib/policy.py:2458
+#: lib/policy.py:2455
 msgid ""
 "Whether the user ID and the resolver should be displayed in the token "
 "list."
 msgstr "使用者ID和解析程式是否應顯示在令牌清單中。"
 
-#: lib/policy.py:2463
+#: lib/policy.py:2460
 #, fuzzy
 msgid ""
 "The URL of a repository, where the policy templates can be found.  "
@@ -983,72 +985,72 @@ msgstr ""
 "存儲庫的 URL，可在其中找到策略範本。 （默認 https: //raw.githubusercontent.com/ edumfa"
 "/policy-templates /master/templates/）"
 
-#: lib/policy.py:2470
+#: lib/policy.py:2467
 msgid ""
 "The URL of an SSO provider for redirect at logout.(The URL must start "
 "with http:// or https://)"
 msgstr ""
 
-#: lib/policy.py:2475
+#: lib/policy.py:2472
 msgid "As long as a user has no token, he will only see a token wizard in the UI."
 msgstr "只要用戶沒有令牌，他就只會在UI中看到令牌精靈。"
 
-#: lib/policy.py:2480
+#: lib/policy.py:2477
 msgid ""
 "The tokenwizard will be displayed in the token menu, even if the user "
 "already has a token."
 msgstr "令牌精靈將顯示在令牌功能表中，即使使用者已有令牌也是如此。"
 
-#: lib/policy.py:2485
+#: lib/policy.py:2482
 msgid ""
 "This is a whitespace separated list of tokentypes, for which a rollover "
 "button is displayed in the token details."
 msgstr "這是一個以空格分隔的令牌類型清單，令牌詳細資訊中會顯示一個翻轉按鈕。"
 
-#: lib/policy.py:2492
+#: lib/policy.py:2489
 msgid "The welcome dialog will be displayed if the user has no tokens assigned."
 msgstr "如果使用者未分配令牌，將顯示歡迎對話方塊。"
 
-#: lib/policy.py:2496
+#: lib/policy.py:2493
 msgid "This is the default token type in the token enrollment dialog."
 msgstr "這是令牌註冊對話框中的預設令牌類型。"
 
-#: lib/policy.py:2502
+#: lib/policy.py:2499
 msgid ""
 "A list of realm names, which are displayed in a drop down menu in the "
 "WebUI login screen. Realms are separated by white spaces."
 msgstr "領域名稱清單，這些名稱顯示在 WebUI 登錄螢幕的下拉功能表中。領域由空格分隔。"
 
-#: lib/policy.py:2508
+#: lib/policy.py:2505
 msgid ""
 "If this checked, the administrator will not see the welcome dialog "
 "anymore."
 msgstr "如果選取此選項，管理員將不再看到歡迎對話框。"
 
-#: lib/policy.py:2513
+#: lib/policy.py:2510
 msgid ""
 "Per default disabled actions result in disabled buttons. When checking "
 "this action, buttons of disabled actions are hidden."
 msgstr "默認情況下，禁用的操作會導致禁用的按鈕。選取此操作時，禁用操作的按鈕將被隱藏。"
 
-#: lib/policy.py:2518
+#: lib/policy.py:2515
 msgid ""
 "If this is checked, there will be a confirmation prompt when deleting "
 "policies, events, mresolver, resolver or periodic tasks!"
 msgstr ""
 
-#: lib/policy.py:2523
+#: lib/policy.py:2520
 msgid "If this is checked, the seed will be displayed as text during enrollment."
 msgstr "如果選取此選項，種子將在註冊期間顯示為文字。"
 
-#: lib/policy.py:2528
+#: lib/policy.py:2525
 #, fuzzy
 msgid ""
 "If this is checked, the eduMFA Node name will be displayed in the menu "
 "bar."
 msgstr "如果選取此選項，則eduMFA節點名稱將顯示在功能表欄中。"
 
-#: lib/policy.py:2533
+#: lib/policy.py:2530
 #, fuzzy
 msgid ""
 "If this is checked, the enrollment page for HOTP, TOTP and Push tokens "
@@ -1058,7 +1060,7 @@ msgstr ""
 "如果選取此選項，則 HOTP、TOTP 和 Push 令牌的註冊頁面將包含一個 QR 碼，該 QR 碼將指向 Google Play "
 "商店中的eduMFA身份驗證器。"
 
-#: lib/policy.py:2540
+#: lib/policy.py:2537
 #, fuzzy
 msgid ""
 "If this is checked, the enrollment page for HOTP, TOTP and Push tokens "
@@ -1068,37 +1070,37 @@ msgstr ""
 "如果選取此選項，HOTP、TOTP 和 Push 令牌的註冊頁面將包含一個 QR 碼，該 QR 碼將指向 iOS App Store 中的 "
 "eduMFA 身份驗證器。"
 
-#: lib/policy.py:2547
+#: lib/policy.py:2544
 msgid ""
 "This action adds a QR code in the enrollment page for HOTP, TOTP and Push"
 " tokens, that lead to this given URL."
 msgstr "此操作將在 HOTP、TOTP 和推送令牌的註冊頁面中添加一個 QR 碼，該代碼將指向此給定 URL。"
 
-#: lib/policy.py:2592
+#: lib/policy.py:2589
 msgid ""
 "The policy only matches if certain conditions on the user info are "
 "fulfilled."
 msgstr "僅當滿足使用者資訊的某些條件時，策略才匹配。"
 
-#: lib/policy.py:2595
+#: lib/policy.py:2592
 msgid ""
 "The policy only matches if certain conditions of the token attributes are"
 " fulfilled."
 msgstr "僅當滿足令牌屬性的某些條件時，策略才匹配。"
 
-#: lib/policy.py:2598
+#: lib/policy.py:2595
 msgid ""
 "The policy only matches if certain conditions on the token info are "
 "fulfilled."
 msgstr "僅當滿足令牌資訊上的某些條件時，策略才匹配。"
 
-#: lib/policy.py:2601
+#: lib/policy.py:2598
 msgid ""
 "The policy only matches if certain conditions on the HTTP Request header "
 "are fulfilled."
 msgstr "僅當滿足 HTTP 請求標頭上的某些條件時，該策略才匹配。"
 
-#: lib/policy.py:2604
+#: lib/policy.py:2601
 msgid ""
 "The policy only matches if certain conditions on the HTTP Environment are"
 " fulfilled."
@@ -1136,112 +1138,112 @@ msgstr ""
 msgid "initToken failed: {0!s}"
 msgstr ""
 
-#: lib/token.py:1218
+#: lib/token.py:1222
 msgid "Token already assigned to user {0!r}"
 msgstr ""
 
-#: lib/token.py:1232
+#: lib/token.py:1236
 msgid "Token assign failed for {0!r}/{1!s} : {2!r}"
 msgstr ""
 
-#: lib/token.py:1260
+#: lib/token.py:1264
 msgid "Token unassign failed for {0!r}/{1!r}: {2!r}"
 msgstr ""
 
-#: lib/token.py:1336
+#: lib/token.py:1340
 msgid "Parameter user must not be a string: {0!r}"
 msgstr ""
 
-#: lib/token.py:1875
+#: lib/token.py:1879
 msgid "You can only define a lost token for an assigned token."
 msgstr ""
 
-#: lib/token.py:1901
+#: lib/token.py:1905
 msgid "temporary replacement for {0!s}"
 msgstr ""
 
-#: lib/token.py:1957
+#: lib/token.py:1961
 msgid "There is no active and assigned token in this realm"
 msgstr ""
 
-#: lib/token.py:1969
+#: lib/token.py:1973
 msgid ""
 "There is no active and assigned token in this realm, included types: "
 "{0!s}, excluded types: {1!s}"
 msgstr ""
 
-#: lib/token.py:2023
+#: lib/token.py:2027
 msgid "OTP verification failed."
 msgstr ""
 
-#: lib/token.py:2056
+#: lib/token.py:2060
 msgid "The user has no tokens assigned"
 msgstr ""
 
-#: lib/token.py:2295
+#: lib/token.py:2299
 msgid "matching {0:d} tokens"
 msgstr ""
 
-#: lib/token.py:2347
+#: lib/token.py:2351
 msgid "Challenge matches, but token is not fit for challenge"
 msgstr ""
 
-#: lib/token.py:2357
+#: lib/token.py:2361
 msgid "Found matching challenge"
 msgstr ""
 
-#: lib/token.py:2399
+#: lib/token.py:2403
 msgid "Response did not match the challenge."
 msgstr ""
 
-#: lib/token.py:2401
+#: lib/token.py:2405
 msgid "Response did not match for {0!s} tokens."
 msgstr ""
 
-#: lib/token.py:2409
+#: lib/token.py:2413
 msgid "No active challenge response token found"
 msgstr ""
 
-#: lib/token.py:2425
+#: lib/token.py:2429
 msgid "wrong otp value"
 msgstr ""
 
-#: lib/token.py:2432
+#: lib/token.py:2436
 msgid ". previous otp used again"
 msgstr ""
 
-#: lib/token.py:2446
+#: lib/token.py:2450
 msgid "wrong otp pin"
 msgstr ""
 
-#: lib/token.py:2454
+#: lib/token.py:2458
 msgid "No suitable token found for authentication."
 msgstr ""
 
-#: lib/token.py:2479
+#: lib/token.py:2483
 #, fuzzy
 msgid "Admin is allowed to initialize {0!s} tokens."
 msgstr "允許管理員初始化{0!s}令牌。"
 
-#: lib/token.py:2487
+#: lib/token.py:2491
 msgid "The user is allowed to enroll a {0!s} token."
 msgstr "允許用戶註冊{0!s}令牌。"
 
-#: lib/token.py:2518
+#: lib/token.py:2522
 msgid "Set the maximum allowed PIN length of the {0!s} token."
 msgstr "設置{0!s}令牌允許的最大 PIN 長度。"
 
-#: lib/token.py:2525
+#: lib/token.py:2529
 msgid "Set the minimum required PIN length of the {0!s} token."
 msgstr "設置{0!s}令牌所需的最小 PIN 長度。"
 
-#: lib/token.py:2531
+#: lib/token.py:2535
 msgid ""
 "Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
 msgstr "指定 {0!s} 令牌所需的 PIN 內容。 (c) 字符、(n) 數字、(s) 特殊、(o) 其他。 [+/-]！"
 
-#: lib/token.py:2576 lib/token.py:2592
+#: lib/token.py:2580 lib/token.py:2596
 msgid "The tokengroup does not exist."
 msgstr ""
 
@@ -1768,13 +1770,13 @@ msgstr ""
 msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr "您的LDAP配置似乎正常，%i 機器物件已找到。"
 
-#: lib/resolvers/LDAPIdResolver.py:1109
+#: lib/resolvers/LDAPIdResolver.py:1110
 msgid ""
 "Your LDAP config found {0!s} user objects, but only {1!s} with the "
 "specified uidtype"
 msgstr "您的 LDAP 配置找到了 {0!s} 個用戶物件，但只有 {1!s} 具有指定的 uidtype"
 
-#: lib/resolvers/LDAPIdResolver.py:1112
+#: lib/resolvers/LDAPIdResolver.py:1113
 msgid "Your LDAP config seems to be OK, {0!s} user objects found."
 msgstr "您的LDAP配置似乎正常，找到 {0!s} 個用戶物件。"
 
@@ -1983,41 +1985,41 @@ msgid ""
 " password tokens assigned."
 msgstr "使用者只能分配此最大數量的活動密碼令牌。"
 
-#: lib/tokens/certificatetoken.py:277
+#: lib/tokens/certificatetoken.py:280
 msgid "Certificate: Enroll an x509 Certificate Token."
 msgstr "證書：註冊 x509 證書令牌。"
 
-#: lib/tokens/certificatetoken.py:288
+#: lib/tokens/certificatetoken.py:291
 msgid "The user may only have this maximum number of certificates assigned."
 msgstr "使用者只能分配此最大數量的證書。"
 
-#: lib/tokens/certificatetoken.py:293
+#: lib/tokens/certificatetoken.py:296
 msgid ""
 "The user may only have this maximum number of active certificates "
 "assigned."
 msgstr "使用者只能分配此最大數量的活動證書。"
 
-#: lib/tokens/certificatetoken.py:298
+#: lib/tokens/certificatetoken.py:301
 msgid ""
 "Enrolling a certificate token can require an attestation certificate. "
 "(Default: ignore)"
 msgstr "註冊證書令牌可能需要證明證書。（預設值：忽略）"
 
-#: lib/tokens/certificatetoken.py:307
+#: lib/tokens/certificatetoken.py:310
 msgid "The CA connector that should be used during certificate enrollment."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:313
+#: lib/tokens/certificatetoken.py:316
 msgid "The template that should be used to issue a certificate."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:318
+#: lib/tokens/certificatetoken.py:321
 msgid ""
 "This takes a space separated list of elements to be added to the subject."
 " Can be 'email' and 'realm'."
 msgstr ""
 
-#: lib/tokens/certificatetoken.py:326 lib/tokens/certificatetoken.py:333
+#: lib/tokens/certificatetoken.py:329 lib/tokens/certificatetoken.py:336
 msgid "The directory containing attestation certificate chains."
 msgstr "包含證明證書鏈的目錄。"
 
@@ -2191,47 +2193,47 @@ msgstr "谷歌身份驗證器的網址"
 msgid "URL for OATH token"
 msgstr "OATH 令牌的網址"
 
-#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1175
+#: lib/tokens/hotptoken.py:814 lib/tokens/pushtoken.py:1182
 msgid "Please scan the QR code!"
 msgstr "請掃描二維碼"
 
-#: lib/tokens/indexedsecrettoken.py:52
+#: lib/tokens/indexedsecrettoken.py:53
 msgid "Please enter the positions {0!s} from your secret."
 msgstr "請輸入您的金鑰中的 {0!s} 位置。"
 
-#: lib/tokens/indexedsecrettoken.py:101
+#: lib/tokens/indexedsecrettoken.py:102
 msgid "Indexed Secret Token"
 msgstr "索引秘密令牌"
 
-#: lib/tokens/indexedsecrettoken.py:103
+#: lib/tokens/indexedsecrettoken.py:104
 msgid "IndexedSecret: Request certain positions of a shared secret from the user."
 msgstr "已編入索引的機密：向使用者請求共享機密的某些位置。"
 
-#: lib/tokens/indexedsecrettoken.py:110
+#: lib/tokens/indexedsecrettoken.py:111
 msgid ""
 "Use an alternate challenge text for telling the user which positions of "
 "the secret he should enter."
 msgstr "使用備用質詢文本告訴使用者他應輸入機密的哪個位置。"
 
-#: lib/tokens/indexedsecrettoken.py:116
+#: lib/tokens/indexedsecrettoken.py:117
 msgid "Number of necessary positions to be answered by the user."
 msgstr "使用者需要回答的必要位置的數量。"
 
-#: lib/tokens/indexedsecrettoken.py:123
+#: lib/tokens/indexedsecrettoken.py:124
 msgid "Preset the enrollment with the value of the given attribute."
 msgstr "使用給定屬性的值預設註冊。"
 
-#: lib/tokens/indexedsecrettoken.py:130 lib/tokens/indexedsecrettoken.py:137
+#: lib/tokens/indexedsecrettoken.py:131 lib/tokens/indexedsecrettoken.py:138
 msgid "The attribute whose value should be force set during enrollment."
 msgstr "在註冊期間應強制設置其值的屬性。"
 
-#: lib/tokens/indexedsecrettoken.py:144
+#: lib/tokens/indexedsecrettoken.py:145
 msgid ""
 "The user may only have this maximum number of indexed secret tokens "
 "assigned."
 msgstr "使用者只能分配此最大數量的索引機密令牌。"
 
-#: lib/tokens/indexedsecrettoken.py:149
+#: lib/tokens/indexedsecrettoken.py:150
 msgid ""
 "The user may only have this maximum number of active indexed secret "
 "tokens assigned."
@@ -2291,76 +2293,76 @@ msgid ""
 "assigned."
 msgstr "使用者只能分配此最大數量的活動密碼令牌。"
 
-#: lib/tokens/pushtoken.py:72
+#: lib/tokens/pushtoken.py:73
 msgid "Please confirm the authentication on your mobile device!"
 msgstr "請在您的行動裝置上確認身份驗證！"
 
-#: lib/tokens/pushtoken.py:73
+#: lib/tokens/pushtoken.py:74
 msgid ""
 "Use the polling feature of your unsupported privacyIDEA Authenticator App"
 " to check for a new Login request."
 msgstr ""
 
-#: lib/tokens/pushtoken.py:75
+#: lib/tokens/pushtoken.py:76
 msgid "Do you want to confirm the login?"
 msgstr "是否要確認登錄？"
 
-#: lib/tokens/pushtoken.py:322
+#: lib/tokens/pushtoken.py:323
 msgid "The configuration of your Firebase application."
 msgstr "您的 Firebase 應用的配置。"
 
-#: lib/tokens/pushtoken.py:330
+#: lib/tokens/pushtoken.py:331
 #, fuzzy
 msgid ""
 "The URL the Push App should contact in the second enrollment step. "
 "Usually it is the endpoint /ttype/edupush of the eduMFA server."
 msgstr "推送應用在第二個註冊步驟中應聯繫的URL。通常它是eduMFA伺服器的端點/ttype/push。"
 
-#: lib/tokens/pushtoken.py:335
+#: lib/tokens/pushtoken.py:336
 msgid ""
 "The second enrollment step must be completed within this time (in "
 "minutes)."
 msgstr "第二個註冊步驟必須在此時間內完成（以分鐘為單位）。"
 
-#: lib/tokens/pushtoken.py:339
+#: lib/tokens/pushtoken.py:340
 msgid "The smartphone needs to verify SSL during the enrollment. (default 1)"
 msgstr "智能手機需要在註冊期間驗證 SSL。（預設值 1）"
 
-#: lib/tokens/pushtoken.py:345
+#: lib/tokens/pushtoken.py:346
 msgid "The user may only have this maximum number of Push tokens assigned."
 msgstr "使用者只能分配此最大數量的推送令牌。"
 
-#: lib/tokens/pushtoken.py:350
+#: lib/tokens/pushtoken.py:351
 msgid "The user may only have this maximum number of active Push tokens assigned."
 msgstr "使用者只能分配此最大數量的活動推送令牌。"
 
-#: lib/tokens/pushtoken.py:356
+#: lib/tokens/pushtoken.py:357
 msgid "Require to unlock the Smartphone before Push requests can be accepted"
 msgstr ""
 
-#: lib/tokens/pushtoken.py:362
+#: lib/tokens/pushtoken.py:363
 msgid "The question the user sees on his mobile phone."
 msgstr "用戶在行動電話上看到的問題。"
 
-#: lib/tokens/pushtoken.py:367
+#: lib/tokens/pushtoken.py:368
 msgid "The title of the notification, the user sees on his mobile phone."
 msgstr "使用者在其行動電話上看到的通知的標題。"
 
-#: lib/tokens/pushtoken.py:372
+#: lib/tokens/pushtoken.py:373
 msgid "The smartphone needs to verify SSL during authentication. (default 1)"
 msgstr "智能手機需要在身份驗證期間驗證 SSL。（預設值 1）"
 
-#: lib/tokens/pushtoken.py:378
+#: lib/tokens/pushtoken.py:379
 msgid ""
 "Wait for number of seconds for the user to confirm the challenge in the "
 "first request."
 msgstr "等待秒數，以便使用者在第一個請求中確認質詢。"
 
-#: lib/tokens/pushtoken.py:383
+#: lib/tokens/pushtoken.py:384
 msgid "Configure whether to allow push tokens to poll for challenges"
 msgstr "配置是否允許推送令牌輪詢質詢"
 
-#: lib/tokens/pushtoken.py:637
+#: lib/tokens/pushtoken.py:638
 msgid "URL for eduMFA Push Token"
 msgstr "eduMFA 推送令牌的URL"
 
@@ -2633,9 +2635,10 @@ msgid ""
 msgstr "使用替代質詢文本告訴使用者使用其WebAuthn令牌進行確認。"
 
 #: lib/tokens/webauthntoken.py:631
+#, fuzzy
 msgid ""
 "A list of transports to prefer to communicate with WebAuthn tokens. "
-"Default: usb ble nfc internal (All standard transports)"
+"Default: usb ble nfc internal hybrid (All standard transports)"
 msgstr "首選與 WebAuthn 令牌通信的傳輸清單。預設值：usb ble nfc 內部（所有標準傳輸）"
 
 #: lib/tokens/webauthntoken.py:637
@@ -2969,4 +2972,13 @@ msgstr "如果左側屬性的整數值大於右側整數值，則為 true"
 
 #~ msgid "PUSH: Send a push notification to a smartphone."
 #~ msgstr "推送：向智慧手機發送推送通知。"
+
+#~ msgid ""
+#~ "Allow the application to choose which"
+#~ " token types should be used for "
+#~ "authentication. Application may set the "
+#~ "parameter 'type' in the request. Works"
+#~ " with validate/check, validate/samlcheck and "
+#~ "validate/triggerchallenge."
+#~ msgstr "允許應用程式選擇應用於身份驗證的令牌類型。應用程式可以在請求中設置參數「type」。使用驗證/檢查，驗證/samlcheck和驗證/觸發挑戰。"
 
