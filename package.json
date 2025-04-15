@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "grunt-angular-gettext": "^2.5.3",
-    "grunt-cli": "^1.5.0",
-    "grunt-init": "^0.3.2"
+    "grunt-angular-gettext": "2.5.3",
+    "grunt-cli": "1.5.0",
+    "grunt-init": "0.3.2"
   }
 }
