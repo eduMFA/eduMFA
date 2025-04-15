@@ -93,7 +93,7 @@ DEFAULT_CLIENT_EXTENSIONS = {'appid': None, 'credProps': {'rk': None}, 'prf': No
 
 # Default authenticator extensions
 #
-DEFAULT_AUTHENTICATOR_EXTENSIONS = {"credProtect": None}
+DEFAULT_AUTHENTICATOR_EXTENSIONS = {"credProtect": None, 'hmac-secret': None}
 
 log = logging.getLogger(__name__)
 
