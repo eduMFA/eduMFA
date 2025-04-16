@@ -910,6 +910,6 @@ def check_verify_enrollment(request, response):
     elif len(tokenobj_list) == 0:
         log.warning("Token serial {0!s} not found in database.".format(serial))
     else:
-        log.warning("No distinct token object found in enrollment response for serial {0:s}!".format(serial))
+        log.warning("No distinct token object found in enrollment response for serial {0!s}!".format(serial))
 
     return response
