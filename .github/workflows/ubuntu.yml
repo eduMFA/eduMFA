@@ -14,17 +14,12 @@ jobs:
             codename: noble
           - os: ubuntu-22.04
             codename: jammy
-          - os: ubuntu-20.04
-            codename: focal
     name: Build for ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install dependencies
         run: |
-          if [ "${{ matrix.os }}" == "ubuntu-20.04" ]; then
-            sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
-          fi
           sudo apt update
           sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
       - name: Build core package
@@ -32,10 +27,6 @@ jobs:
           DH_VIRTUALENV_INSTALL_ROOT: /opt
         run: |
           mv deploy/ubuntu debian
-          if [ "${{ matrix.os }}" == "ubuntu-20.04" ]; then
-            sed -i "s/python3-all/python3.9/g" debian/control
-            sed -i "s/python3/python3.9/g" debian/rules
-          fi
           sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b --source-option=-Sa
