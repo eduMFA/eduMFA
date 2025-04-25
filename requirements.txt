@@ -63,7 +63,7 @@ flask-sqlalchemy==3.1.1
     #   flask-migrate
 google-auth==2.39.0
     # via edumfa (setup.py)
-grpcio==1.71.0
+grpcio==1.72.0
     # via edumfa (setup.py)
 huey==2.5.3
     # via edumfa (setup.py)
