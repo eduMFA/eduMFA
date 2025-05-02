@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "edumfa"
 version = "2.7.2"
-requires-python = ">=3.9"
+requires-python = "==3.13.3"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
 readme = { file = "README.rst", content-type = "text/x-rst" }
