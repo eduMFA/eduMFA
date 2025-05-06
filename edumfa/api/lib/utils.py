@@ -379,13 +379,22 @@ def verify_auth_token(auth_token, required_role=None):
                     if "claim" in trusted_jwt and trusted_jwt.get("claim") in j:
                         j["username"] = j[trusted_jwt.get("claim")]
 
-                    if dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == \
-                            dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
-                        if re.match(trusted_jwt.get("username") + "$", j.get("username")):
+                    
+                    log.info("JWT decoded: {0!s}".format(j))
+                    if re.match(trusted_jwt.get("username") + "$", j.get("username")):
+                        if "static_data" in trusted_jwt:
+                            j["role"] = trusted_jwt.get("role")
+                            j["realm"] = trusted_jwt.get("realm")
+                            j["resolver"] = trusted_jwt.get("resolver")
                             r = j
-                            break
-                        else:
-                            r = wrong_username = j.get("username")
+                        elif dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == \
+                            dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
+                            r = j
+                        log.info("JWT is trusted. {0!s}".format(r))
+                        break
+                    else:
+                        r = wrong_username = j.get("username")
+                        log.info("The username {0!s} is not allowed to impersonate via JWT.".format(wrong_username))
                 else:
                     log.warning("Unsupported JWT algorithm in EDUMFA_TRUSTED_JWT.")
             except jwt.DecodeError as _e:
