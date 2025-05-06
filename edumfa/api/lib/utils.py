@@ -365,16 +365,35 @@ def verify_auth_token(auth_token, required_role=None):
         for trusted_jwt in trusted_jwts:
             try:
                 if trusted_jwt.get("algorithm") in TRUSTED_JWT_ALGOS:
-                    j = jwt.decode(auth_token,
-                                   trusted_jwt.get("public_key"),
-                                   algorithms=[trusted_jwt.get("algorithm")])
-                    if dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == \
-                            dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
-                        if re.match(trusted_jwt.get("username") + "$", j.get("username")):
+                    if "aud" in trusted_jwt:
+                        # The audience must match
+                        j = jwt.decode(auth_token,
+                                       trusted_jwt.get("public_key"),
+                                       algorithms=[trusted_jwt.get("algorithm")],
+                                       audience=trusted_jwt.get("aud"))
+                    else: 
+                        j = jwt.decode(auth_token,
+                                    trusted_jwt.get("public_key"),
+                                    algorithms=[trusted_jwt.get("algorithm")])
+                    
+                    if "claim" in trusted_jwt and trusted_jwt.get("claim") in j:
+                        j["username"] = j[trusted_jwt.get("claim")]
+                    
+                    log.debug("JWT decoded: {0!s}".format(j))
+                    if re.match(trusted_jwt.get("username") + "$", j.get("username")):
+                        if "static_data" in trusted_jwt:
+                            j["role"] = trusted_jwt.get("role")
+                            j["realm"] = trusted_jwt.get("realm")
+                            j["resolver"] = trusted_jwt.get("resolver")
                             r = j
-                            break
-                        else:
-                            r = wrong_username = j.get("username")
+                            log.debug("JWT is trusted. {0!s}".format(r))
+                        elif dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == \
+                            dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
+                            r = j
+                            log.debug("JWT is trusted. {0!s}".format(r))
+                        break
+                    else:
+                        wrong_username = j.get("username")
                 else:
                     log.warning("Unsupported JWT algorithm in EDUMFA_TRUSTED_JWT.")
             except jwt.DecodeError as _e:
@@ -384,7 +403,7 @@ def verify_auth_token(auth_token, required_role=None):
                 raise AuthError(_("Authentication failure. Your token has expired: {0!s}").format(err),
                                 id=ERROR.AUTHENTICATE_TOKEN_EXPIRED)
 
-    if not r:
+    if not wrong_username and not r:
         try:
             r = jwt.decode(auth_token, current_app.secret_key, algorithms=['HS256'])
         except jwt.DecodeError as err:
@@ -393,7 +412,7 @@ def verify_auth_token(auth_token, required_role=None):
         except jwt.ExpiredSignatureError as err:
             raise AuthError(_("Authentication failure. Your token has expired: {0!s}").format(err),
                             id=ERROR.AUTHENTICATE_TOKEN_EXPIRED)
-    if wrong_username:
+    if wrong_username and not r:
         raise AuthError(_("Authentication failure. The username {0!s} is not allowed to "
                           "impersonate via JWT.".format(wrong_username)))
     if required_role and r.get("role") not in required_role:
