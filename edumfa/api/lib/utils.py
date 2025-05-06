@@ -386,10 +386,11 @@ def verify_auth_token(auth_token, required_role=None):
                             j["realm"] = trusted_jwt.get("realm")
                             j["resolver"] = trusted_jwt.get("resolver")
                             r = j
+                            log.debug("JWT is trusted. {0!s}".format(r))
                         elif dict((k, j.get(k)) for k in ("role", "resolver", "realm")) == \
                             dict((k, trusted_jwt.get(k)) for k in ("role", "resolver", "realm")):
                             r = j
-                        log.info("JWT is trusted. {0!s}".format(r))
+                            log.debug("JWT is trusted. {0!s}".format(r))
                         break
                     else:
                         wrong_username = j.get("username")
