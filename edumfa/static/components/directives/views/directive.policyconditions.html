@@ -7,6 +7,7 @@
             <th translate>Key</th>
             <th translate>Comparator</th>
             <th translate>Value</th>
+            <th translate>If Unset</th>
         </tr>
         </thead>
         <tr ng-repeat="condition in policyConditions">
@@ -48,6 +49,16 @@
                <span ng-show="editIndex != $index"><code>{{ condition[3] }}</code></span>
                <span ng-show="editIndex == $index">
                    <input type="text" ng-model="condition[3]" class="form-control" />
+               </span>
+           </td>
+	   <td>
+               <span ng-show="editIndex != $index"><code>{{ condition[5] }}</code></span>
+               <span ng-show="editIndex == $index">
+		   <select ng-model="condition[5]" class="form-control">
+                       <option ng-repeat="(key, value) in conditionDefs.unsetOptions"
+                               ng-value="key"
+                               title="{{ value.description }}">{{ key }}</option>
+                   </select>
                </span>
            </td>
            <td style="text-align: right;">
