@@ -50,7 +50,6 @@
 * feat: reduce/optimize audit logging by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/590
 * feat: rename property (`EDUMFA_REDUCE_SQLAUDIT`)  by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/594
 * feat: start adding audience check by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/511
-
 * chore(deps): update dependency alembic to v1.15.2 - autoclosed by @renovate in https://github.com/eduMFA/eduMFA/pull/586
 * chore(deps): update dependency beautifulsoup4 to v4.13.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/605
 * chore(deps): update dependency certifi to v2025.4.26 by @renovate in https://github.com/eduMFA/eduMFA/pull/618
