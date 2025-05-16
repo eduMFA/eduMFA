@@ -46,7 +46,7 @@ crypt-r==3.13.1; python_version == "3.13" and sys_platform == "linux"
     # via edumfa (setup.py)
 defusedxml==0.7.1
     # via edumfa (setup.py)
-flask==3.1.0
+flask==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-babel
