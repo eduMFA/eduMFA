@@ -6,7 +6,7 @@
 #
 alembic==1.16.1
     # via flask-migrate
-argon2-cffi==23.1.0
+argon2-cffi==25.1.0
     # via edumfa (setup.py)
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
@@ -38,7 +38,7 @@ configobj==5.0.9
     # via edumfa (setup.py)
 croniter==6.0.0
     # via edumfa (setup.py)
-cryptography==44.0.3
+cryptography==45.0.4
     # via
     #   edumfa (setup.py)
     #   pyopenssl
@@ -61,9 +61,9 @@ flask-sqlalchemy==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-migrate
-google-auth==2.40.2
+google-auth==2.40.3
     # via edumfa (setup.py)
-grpcio==1.71.0
+grpcio==1.73.0
     # via edumfa (setup.py)
 huey==2.5.3
     # via edumfa (setup.py)
@@ -111,7 +111,7 @@ pyjwt==2.10.1
     # via edumfa (setup.py)
 pymysql==1.1.1
     # via edumfa (setup.py)
-pyopenssl==25.0.0
+pyopenssl==25.1.0
     # via edumfa (setup.py)
 pyrad==2.4
     # via edumfa (setup.py)
@@ -125,9 +125,9 @@ pytz==2025.2
     # via flask-babel
 pyyaml==6.0.2
     # via edumfa (setup.py)
-redis==6.1.0
+redis==6.2.0
     # via huey
-requests==2.32.3
+requests==2.32.4
     # via edumfa (setup.py)
 rsa==4.9.1
     # via google-auth
@@ -149,7 +149,7 @@ sqlalchemy==2.0.41
     #   alembic
     #   edumfa (setup.py)
     #   flask-sqlalchemy
-typing-extensions==4.13.2
+typing-extensions==4.14.0
     # via
     #   alembic
     #   edumfa (setup.py)
@@ -159,9 +159,9 @@ urllib3==2.4.0
     #   requests
 werkzeug==3.1.3
     # via flask
-zipp==3.21.0
+zipp==3.23.0
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==80.8.0
+setuptools==80.9.0
     # via flask-versioned
