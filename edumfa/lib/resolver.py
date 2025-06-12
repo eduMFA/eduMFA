@@ -133,6 +133,10 @@ def save_resolver(params):
                        Type=types.get(key, ""),
                        Description=desc.get(key, "")).save()
 
+    # Delete exiting connections
+    store = get_app_local_store()
+    if "resolver_objects" in store:
+        store["resolver_objects"].pop(resolvername, None)
     # Remove corresponding entries from the user cache
     delete_user_cache(resolver=resolvername)
 
