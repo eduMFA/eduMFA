@@ -1079,6 +1079,9 @@ myApp.controller("LdapResolverController", ["$scope", "ConfigFactory", "$state",
         ConfigFactory.setResolver($scope.resolvername, $scope.params, function (data) {
             $scope.set_result = data.result.value;
             $scope.getResolvers();
+            // As we don't know whether resolvername already exists, just show
+            // the pop-up each time to keep things simple.
+            $scope.ldapRestartDialog();
             $state.go("config.resolvers.list");
         });
     };
