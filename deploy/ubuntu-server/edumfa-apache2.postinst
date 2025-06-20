@@ -131,19 +131,6 @@ update_db() {
   /opt/edumfa/bin/edumfa-schema-upgrade $MIGRATIONSDIR
 }
 
-create_gpg() {
-  if [ "jammy" = "$(lsb_release -cs)" ] && [ -n "$(pgrep rngd)" ]; then
-    echo "killing rngd process..."
-    killall -9 rngd || true
-  fi
-  mkdir -p /etc/edumfa/gpg
-  rngd -r /dev/urandom
-  /opt/edumfa/bin/edumfa-manage create_pgp_keys || true
-  chown -R "$USERNAME" /etc/edumfa/gpg
-  killall -9 rngd
-}
-
-
 set_path() {
   # Allow edumfa-manage to be called from everywhere
   ln -sf /opt/edumfa/bin/edumfa-manage /usr/bin/
@@ -171,7 +158,6 @@ case "$1" in
       touch /tmp/edumfa-upgrade
       update_db
     fi
-    create_gpg
     set_path
   ;;
   
