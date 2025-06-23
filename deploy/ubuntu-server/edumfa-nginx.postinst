@@ -118,7 +118,6 @@ create_certificate() {
     chmod 400 server.pem
   fi
   
-  # Rest of the function remains unchanged
   if [ ! -e /etc/ssl/certs/edumfaserver.pem ]; then
     # This is the certificate when running with apache or nginx
     KEY=/etc/ssl/private/edumfaserver.key
