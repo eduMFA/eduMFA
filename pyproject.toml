@@ -42,7 +42,7 @@ docs = [
     "imagesize==1.4.1",
     "packaging==25.0",
     "pyenchant==3.2.2",
-    "Pygments==2.19.1",
+    "Pygments==2.19.2",
     "snowballstemmer==3.0.1",
     "Sphinx==8.2.3",
     "sphinxcontrib-applehelp==2.0.0",
