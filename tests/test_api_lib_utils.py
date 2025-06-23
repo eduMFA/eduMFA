@@ -18,6 +18,7 @@ import warnings
 from urllib.parse import quote
 from edumfa.lib.error import AuthError
 from edumfa.lib.token import init_token, remove_token
+from edumfa.config import pubtest_key
 
 
 class UtilsTestCase(MyApiTestCase):
@@ -142,6 +143,7 @@ class UtilsTestCase(MyApiTestCase):
             verify_auth_token(auth_token=auth_token,
                               required_role="user")
             mock_log.assert_any_call("A given JWT definition does not match.")
+
 
     def test_04_check_jwt_username_in_audit(self):
         # Here we check, if the username from the trusted JWT appears in the audit log.
@@ -371,3 +373,80 @@ class UtilsTestCase(MyApiTestCase):
         remove_token(serial='spass1d')
         delete_policy('otppin')
         # TODO: check if unquoting of url-params (view-args) should be considered as well
+
+    def test_10_verify_auth_token_aud(self):
+        self.app.config['EDUMFA_TRUSTED_JWT'] = [{"public_key": pubtest_key,
+                       "algorithm": "RS256",
+                       "role": "user",
+                       "realm": "realm1",
+                       "aud": "edumfa-test",
+                       "username": "userA",
+                       "resolver": "resolverX"}]
+
+        # create a jwt with a trusted private key
+        with open("tests/testdata/jwt_sign.key", "r") as f:
+            key = f.read()
+
+        auth_token = jwt.encode(payload={"role": "user",
+                                             "username": "userA",
+                                             "realm": "realm1",
+                                             "aud": "edumfa-test",
+                                             "resolver": "resolverX"},
+                                    key=key,
+                                    algorithm="RS256")
+        r = verify_auth_token(auth_token=auth_token,
+                                  required_role="user")
+        self.assertEqual(r.get("realm"), "realm1")
+        self.assertEqual(r.get("username"), "userA")
+        self.assertEqual(r.get("resolver"), "resolverX", )
+        self.assertEqual(r.get("role"), "user")
+        auth_token = jwt.encode(payload={"role": "user",
+                                             "username": "userA",
+                                             "realm": "realm1",
+                                             "aud": "edumfa",
+                                             "resolver": "resolverX"},
+                                    key=key,
+                                    algorithm="RS256")
+        self.assertRaisesRegex(
+                jwt.InvalidAudienceError,
+                "Audience doesn't match",
+                verify_auth_token, auth_token=auth_token, required_role="user")
+        
+        self.app.config['EDUMFA_TRUSTED_JWT'] = [{"public_key": pubtest_key,
+                       "algorithm": "RS256",
+                       "role": "user",
+                       "realm": "realm",
+                       "aud": "edumfa-test",
+                       "username": "userA",
+                       "resolver": "resolver",
+                       "static_data": "true"}]
+        auth_token = jwt.encode(payload={"username": "userA",
+                                             "aud": "edumfa-test",},
+                                    key=key,
+                                    algorithm="RS256")
+        r = verify_auth_token(auth_token=auth_token,
+                                  required_role="user")
+        self.assertEqual(r.get("realm"), "realm")
+        self.assertEqual(r.get("username"), "userA")
+        self.assertEqual(r.get("resolver"), "resolver", )
+        self.assertEqual(r.get("role"), "user")
+
+        self.app.config['EDUMFA_TRUSTED_JWT'] = [{"public_key": pubtest_key,
+                       "algorithm": "RS256",
+                       "role": "user",
+                       "realm": "realm",
+                       "aud": "edumfa-test",
+                       "username": "userA",
+                       "resolver": "resolver",
+                       "static_data": "true",
+                       "claim": "sub"}]
+        auth_token = jwt.encode(payload={"sub": "userA",
+                                             "aud": "edumfa-test",},
+                                    key=key,
+                                    algorithm="RS256")
+        r = verify_auth_token(auth_token=auth_token,
+                                  required_role="user")
+        self.assertEqual(r.get("realm"), "realm")
+        self.assertEqual(r.get("username"), "userA")
+        self.assertEqual(r.get("resolver"), "resolver", )
+        self.assertEqual(r.get("role"), "user")

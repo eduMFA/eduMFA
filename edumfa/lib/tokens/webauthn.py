@@ -89,11 +89,11 @@ This file is tested in tests/test_lib_tokens_webauthn.py
 
 # Default client extensions
 #
-DEFAULT_CLIENT_EXTENSIONS = {'appid': None, 'credProps': {'rk': None} }
+DEFAULT_CLIENT_EXTENSIONS = {'appid': None, 'credProps': {'rk': None}, 'prf': None}
 
 # Default authenticator extensions
 #
-DEFAULT_AUTHENTICATOR_EXTENSIONS = {"credProtect": None}
+DEFAULT_AUTHENTICATOR_EXTENSIONS = {"credProtect": None, 'hmac-secret': None}
 
 log = logging.getLogger(__name__)
 
@@ -295,6 +295,7 @@ class TRANSPORT:
     BLE = 'ble'
     NFC = 'nfc'
     INTERNAL = 'internal'
+    HYBRID = 'hybrid'
 
 
 TRANSPORTS = (
@@ -302,6 +303,7 @@ TRANSPORTS = (
     TRANSPORT.BLE,
     TRANSPORT.NFC,
     TRANSPORT.INTERNAL,
+    TRANSPORT.HYBRID
 )
 
 class RESIDENT_KEY_LEVEL:
@@ -1466,12 +1468,12 @@ class WebAuthnRegistrationResponse:
             # of "are as expected" is specific to the Relying Party and which
             # extensions are in use.
             if not _verify_authenticator_extensions(auth_data, self.expected_registration_authenticator_extensions):
-                raise RegistrationRejectedException('Unable to verify authenticator extensions.')
+                raise RegistrationRejectedException('Unable to verify authenticator extensions. {}'.format(WebAuthnRegistrationResponse.get_extensions(auth_data)))
             if not _verify_client_extensions(
                 self.registration_response.get('registrationClientExtensions'),
                 self.expected_registration_client_extensions
             ):
-                raise RegistrationRejectedException('Unable to verify client extensions.')
+                raise RegistrationRejectedException('Unable to verify client extensions. {}'.format(self.registration_response.get("registrationClientExtensions")))
 
             # Step 12b.
             #
@@ -1811,7 +1813,7 @@ class WebAuthnAssertionResponse:
                 self.assertion_response.get('assertionClientExtensions'),
                 self.expected_assertion_client_extensions
             ):
-                raise AuthenticationRejectedException('Unable to verify client extensions.')
+                raise AuthenticationRejectedException('Unable to verify client extensions. {}'.format(self.assertion_response.get('assertionClientExtensions')))
 
             # Step 15.
             #

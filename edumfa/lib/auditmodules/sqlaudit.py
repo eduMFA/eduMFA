@@ -42,11 +42,12 @@ import logging
 from collections import OrderedDict
 from edumfa.lib.auditmodules.base import (Audit as AuditBase, Paginate)
 from edumfa.lib.crypto import Sign
-from edumfa.lib.pooling import get_engine
+from edumfa.lib.framework import get_app_config_value, get_app_local_store
+from edumfa.lib.pooling import DEFAULT_REGISTRY_CLASS_NAME, REGISTRY_CONFIG_NAME, get_engine
 from edumfa.lib.utils import censor_connect_string
-from edumfa.lib.lifecycle import register_finalizer
+from edumfa.lib.lifecycle import register_finalizer, register_request_finalizer
 from edumfa.lib.utils import truncate_comma_list, is_true
-from sqlalchemy import MetaData, cast, String
+from sqlalchemy import MetaData
 from sqlalchemy import asc, desc, and_, or_
 from sqlalchemy.sql.expression import FunctionElement
 from sqlalchemy.ext.compiler import compiles
@@ -143,17 +144,30 @@ class Audit(AuditBase):
         # fill the missing parts with the default from the models
         self.custom_column_length = {k: (v if k not in config_column_length else config_column_length[k])
                                      for k, v in column_length.items()}
-        # We can use "sqlaudit" as the key because the SQLAudit connection
-        # string is fixed for a running eduMFA instance.
-        # In other words, we will not run into any problems with changing connect strings.
-        self.engine = get_engine(self.name, self._create_engine)
-        # create a configured "Session" class. ``scoped_session`` is not
-        # necessary because we do not share session objects among threads.
-        # We use it anyway as a safety measure.
-        self.session = scoped_session(sessionmaker(bind=self.engine))
-        # Ensure that the connection gets returned to the pool when the request has
-        # been handled. This may close an already-closed session, but this is not a problem.
-        register_finalizer(self._finalize_session)
+        store = get_app_local_store()
+        registry_class_name = get_app_config_value(REGISTRY_CONFIG_NAME, DEFAULT_REGISTRY_CLASS_NAME)
+        if registry_class_name == "null":
+            self.engine = self._create_engine()
+            self.session = scoped_session(sessionmaker(bind=self.engine))
+            # We create a new session for every request -> Destroy it after the request -> Register them as request based finalizer
+            register_request_finalizer(self.session.close)
+            register_request_finalizer(self.engine.dispose)
+        else:
+            # We can use "sqlaudit" as the key because the SQLAudit connection
+            # string is fixed for a running eduMFA instance.
+            # In other words, we will not run into any problems with changing connect strings.
+            self.engine = get_engine(self.name, self._create_engine)
+            if 'sqlaudit.session' not in store:                
+                # create a configured "Session" class. ``scoped_session`` is not
+                # necessary because we do not share session objects among threads.
+                # We use it anyway as a safety measure.
+                self.session = scoped_session(sessionmaker(bind=self.engine))
+                store['sqlaudit.session'] = self.session
+                # Ensure that the connection gets returned to the pool when the request has
+                # been handled. This may close an already-closed session, but this is not a problem.
+                register_finalizer(self.session.close)
+            else:
+                self.session = store['sqlaudit.session']
         self.session._model_changes = {}
 
     def _create_engine(self):
@@ -183,10 +197,6 @@ class Audit(AuditBase):
             engine = create_engine(connect_string, **sqa_options)
             log.debug("Using no SQL pool_size.")
         return engine
-
-    def _finalize_session(self):
-        """ Close current session and dispose connections of db engine"""
-        self.session.remove()
 
     def _truncate_data(self):
         """
@@ -291,6 +301,15 @@ class Audit(AuditBase):
                 duration = datetime.datetime.now() - self.audit_data.get("startdate")
             else:
                 duration = None
+            # We wan't to reduce the passkey events a bit...
+            if self.config.get("EDUMFA_REDUCE_SQLAUDIT") == "1" or str(self.config.get("EDUMFA_REDUCE_SQLAUDIT")).lower() == "true":                
+                if (self.audit_data.get("action") == "POST /validate/triggerchallenge" or \
+                    "PRE-EVENT" in self.audit_data.get("action") or \
+                    "POST-EVENT" in self.audit_data.get("action")) and \
+                    self.audit_data.get("serial") == None and self.audit_data.get("user") == None:
+                    self.session.close()                    
+                    self.audit_data = {}
+                    return
             le = LogEntry(action=self.audit_data.get("action"),
                           success=int(self.audit_data.get("success", 0)),
                           serial=self.audit_data.get("serial"),

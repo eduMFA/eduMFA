@@ -489,6 +489,7 @@ myApp.controller("tokenConfigController", ["$scope", "$location", "$rootScope",
     $scope.nextQuestion = 0;
     $scope.formInit = {
         totpSteps: ["30", "60"],
+        totpUseTimeShift: true,
         hashlibs: ["sha1", "sha256", "sha512"],
         smsProviders: [$scope.defaultSMSProvider,
         "edumfa.lib.smsprovider.SipgateSMSProvider.SipgateSMSProvider",
@@ -514,6 +515,7 @@ myApp.controller("tokenConfigController", ["$scope", "$location", "$rootScope",
             $scope.form['email.password.type'] = "password";
             // We need to convert the values to bools - otherwise we have
             // problems when unchecking a checked checkbox
+            $scope.form['totp.useTimeShift'] = $scope.isChecked($scope.form['totp.useTimeShift']);
             $scope.form['email.tls'] = $scope.isChecked($scope.form['email.tls']);
             $scope.form['remote.verify_ssl_certificate'] = $scope.isChecked($scope.form['remote.verify_ssl_certificate']);
             angular.forEach($scope.form, function(value, key){

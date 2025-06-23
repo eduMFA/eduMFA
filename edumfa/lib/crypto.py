@@ -93,8 +93,7 @@ class SecretObj:
         self.preserve = preserve
 
     def getKey(self):
-        log.info('Requesting secret key '
-                 '- verify the usage scope and zero + free ')
+        log.debug('Requesting secret key - verify the usage scope and zero + free ')
         return decrypt(self.val, self.iv)
 
     def getPin(self):

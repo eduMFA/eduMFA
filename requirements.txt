@@ -4,9 +4,9 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements.txt --strip-extras
 #
-alembic==1.14.1
+alembic==1.16.2
     # via flask-migrate
-argon2-cffi==23.1.0
+argon2-cffi==25.1.0
     # via edumfa (setup.py)
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
@@ -14,9 +14,9 @@ async-timeout==5.0.1
     # via redis
 babel==2.17.0
     # via flask-babel
-bcrypt==4.2.1
+bcrypt==4.3.0
     # via passlib
-beautifulsoup4==4.13.3
+beautifulsoup4==4.13.4
     # via edumfa (setup.py)
 blinker==1.9.0
     # via flask
@@ -24,13 +24,13 @@ cachetools==5.5.2
     # via google-auth
 cbor2==5.6.5
     # via edumfa (setup.py)
-certifi==2025.1.31
+certifi==2025.6.15
     # via requests
 cffi==1.17.1
     # via
     #   argon2-cffi-bindings
     #   cryptography
-charset-normalizer==3.4.1
+charset-normalizer==3.4.2
     # via requests
 click==8.1.8
     # via flask
@@ -38,7 +38,7 @@ configobj==5.0.9
     # via edumfa (setup.py)
 croniter==6.0.0
     # via edumfa (setup.py)
-cryptography==44.0.1
+cryptography==45.0.4
     # via
     #   edumfa (setup.py)
     #   pyopenssl
@@ -46,7 +46,7 @@ crypt-r==3.13.1; python_version == "3.13" and sys_platform == "linux"
     # via edumfa (setup.py)
 defusedxml==0.7.1
     # via edumfa (setup.py)
-flask==3.1.0
+flask==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-babel
@@ -61,29 +61,29 @@ flask-sqlalchemy==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-migrate
-google-auth==2.38.0
+google-auth==2.40.3
     # via edumfa (setup.py)
-grpcio==1.70.0
+grpcio==1.73.0
     # via edumfa (setup.py)
-huey==2.5.2
+huey==2.5.3
     # via edumfa (setup.py)
 idna==3.10
     # via requests
-importlib-metadata==8.6.1
+importlib-metadata==8.7.0
     # via edumfa (setup.py)
 itsdangerous==2.2.0
     # via flask
-jinja2==3.1.5
+jinja2==3.1.6
     # via
     #   flask
     #   flask-babel
 ldap3==2.9.1
     # via edumfa (setup.py)
-lxml==5.3.1
+lxml==5.4.0
     # via
     #   beautifulsoup4
     #   edumfa (setup.py)
-mako==1.3.9
+mako==1.3.10
     # via alembic
 markupsafe==3.0.2
     # via
@@ -101,7 +101,7 @@ pyasn1==0.6.1
     #   ldap3
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.4.1
+pyasn1-modules==0.4.2
     # via google-auth
 pycparser==2.22
     # via cffi
@@ -111,7 +111,7 @@ pyjwt==2.10.1
     # via edumfa (setup.py)
 pymysql==1.1.1
     # via edumfa (setup.py)
-pyopenssl==25.0.0
+pyopenssl==25.1.0
     # via edumfa (setup.py)
 pyrad==2.4
     # via edumfa (setup.py)
@@ -121,17 +121,17 @@ python-dateutil==2.9.0.post0
     #   edumfa (setup.py)
 python-gnupg==0.5.4
     # via edumfa (setup.py)
-pytz==2025.1
+pytz==2025.2
     # via flask-babel
 pyyaml==6.0.2
     # via edumfa (setup.py)
-redis==5.2.1
+redis==6.2.0
     # via huey
-requests==2.32.3
+requests==2.32.4
     # via edumfa (setup.py)
-rsa==4.9
+rsa==4.9.1
     # via google-auth
-segno==1.6.1
+segno==1.6.6
     # via edumfa (setup.py)
 six==1.17.0
     # via
@@ -142,26 +142,26 @@ six==1.17.0
     #   smpplib
 smpplib==2.2.4
     # via edumfa (setup.py)
-soupsieve==2.6
+soupsieve==2.7
     # via beautifulsoup4
-sqlalchemy==2.0.38
+sqlalchemy==2.0.41
     # via
     #   alembic
     #   edumfa (setup.py)
     #   flask-sqlalchemy
-typing-extensions==4.12.2
+typing-extensions==4.14.0
     # via
     #   alembic
     #   edumfa (setup.py)
-urllib3==2.3.0
+urllib3==2.5.0
     # via
     #   edumfa (setup.py)
     #   requests
 werkzeug==3.1.3
     # via flask
-zipp==3.21.0
+zipp==3.23.0
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==75.8.0
+setuptools==80.9.0
     # via flask-versioned

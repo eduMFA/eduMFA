@@ -1,3 +1,76 @@
+edumfa (2.8.0{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+* chore: Drop support for ubuntu focal by @Luc1412 in https://github.com/eduMFA/eduMFA/pull/613
+* ci: allow manual trigger for docker ci action by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/608
+* feat: add hybrid transport for webauthn by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/599
+* feat: decrease log level for crypto usage by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/603
+* feat: disable timeshift by @j-hoff in https://github.com/eduMFA/eduMFA/pull/465
+* feat: handle hmac-extension by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/602
+* feat: improve policy logging by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/604
+* feat: reduce/optimize audit logging by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/590
+* feat: rename property (`EDUMFA_REDUCE_SQLAUDIT`)  by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/594
+* feat: start adding audience check by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/511
+* chore(deps): update dependency alembic to v1.15.2 - autoclosed by @renovate in https://github.com/eduMFA/eduMFA/pull/586
+* chore(deps): update dependency beautifulsoup4 to v4.13.4 by @renovate in https://github.com/eduMFA/eduMFA/pull/605
+* chore(deps): update dependency certifi to v2025.4.26 by @renovate in https://github.com/eduMFA/eduMFA/pull/618
+* chore(deps): update dependency charset-normalizer to v3.4.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/625
+* chore(deps): update dependency cryptography to v44.0.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/626
+* chore(deps): update dependency google-auth to v2.40.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/629
+* chore(deps): update dependency importlib-metadata to v8.7.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/619
+* chore(deps): update dependency lxml to v5.4.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/614
+* chore(deps): update dependency mako to v1.3.10 by @renovate in https://github.com/eduMFA/eduMFA/pull/596
+* chore(deps): update dependency pyasn1-modules to v0.4.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/585
+* chore(deps): update dependency redis to v6 by @renovate in https://github.com/eduMFA/eduMFA/pull/624
+* chore(deps): update dependency rsa to v4.9.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/606
+* chore(deps): update dependency setuptools to v80.3.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/627
+* chore(deps): update dependency soupsieve to v2.7 by @renovate in https://github.com/eduMFA/eduMFA/pull/612
+* chore(deps): update dependency sqlalchemy to v2.0.40 by @renovate in https://github.com/eduMFA/eduMFA/pull/584
+* chore(deps): update dependency typing-extensions to v4.13.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/597
+* chore(deps): update dependency urllib3 to v2.4.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/598
+* fix(deps): pin dependencies by @renovate in https://github.com/eduMFA/eduMFA/pull/601
+* fix(deps): update dependency coverage to v7.8.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/587
+* fix(deps): update dependency packaging to v25 by @renovate in https://github.com/eduMFA/eduMFA/pull/609
+* fix(deps): update dependency pytest-cov to v6.1.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/592
+* fix(deps): update dependency types-pyyaml to v6.0.12.20250402 by @renovate in https://github.com/eduMFA/eduMFA/pull/589
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Wed, 07 May 2025 14:00:00 +0200
+
+edumfa (2.7.2{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+* chore: fix read the docs spec by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/581
+* feat: add handling of prf extension by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/582
+* chore(deps): pin dependencies by @renovate in https://github.com/eduMFA/eduMFA/pull/564
+* chore(deps): update dependency alembic to v1.15.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/558
+* chore(deps): update dependency bcrypt to v4.3.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/553
+* chore(deps): update dependency cryptography to v44.0.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/554
+* chore(deps): update dependency grpcio to v1.71.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/563
+* chore(deps): update dependency huey to v2.5.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/572
+* chore(deps): update dependency jinja2 to v3.1.6 [security] by @renovate in https://github.com/eduMFA/eduMFA/pull/560
+* chore(deps): update dependency pytz to v2025.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/578
+* chore(deps): update dependency segno to v1.6.6 by @renovate in https://github.com/eduMFA/eduMFA/pull/566
+* chore(deps): update dependency setuptools to v78 by @renovate in https://github.com/eduMFA/eduMFA/pull/577
+* chore(deps): update dependency sqlalchemy to v2.0.39 by @renovate in https://github.com/eduMFA/eduMFA/pull/567
+* chore(deps): update dependency typing-extensions to v4.13.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/580
+* fix(deps): update dependency attrs to v25.3.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/569
+* fix(deps): update dependency coverage to v7.7.1 by @renovate in https://github.com/eduMFA/eduMFA/pull/575
+* fix(deps): update dependency iniconfig to v2.1.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/573
+* fix(deps): update dependency mock to v5.2.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/557
+* fix(deps): update dependency pyparsing to v3.2.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/576
+* fix(deps): update dependency pytest to v8.3.5 by @renovate in https://github.com/eduMFA/eduMFA/pull/555
+* fix(deps): update dependency responses to v0.25.7 by @renovate in https://github.com/eduMFA/eduMFA/pull/565
+* fix(deps): update dependency sphinx to v8.2.3 by @renovate in https://github.com/eduMFA/eduMFA/pull/556
+* fix(deps): update dependency types-pyyaml to v6.0.12.20250326 by @renovate in https://github.com/eduMFA/eduMFA/pull/579
+ 
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Thu, 27 Mar 2025 10:00:00 +0100
+
+edumfa (2.7.1{{CODENAME}}) {{CODENAME}}; urgency=medium
+
+* fix: correct session leak in sqlaudit module by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/547
+* chore(deps): update dependency cachetools to v5.5.2 by @renovate in https://github.com/eduMFA/eduMFA/pull/545
+* fix(deps): update dependency sphinx to v8.2.0 by @renovate in https://github.com/eduMFA/eduMFA/pull/544
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Tue, 25 Feb 2025 11:00:00 +0100
+
 edumfa (2.7.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
  * docs: fix some version strings by @fritterhoff in https://github.com/eduMFA/eduMFA/pull/509

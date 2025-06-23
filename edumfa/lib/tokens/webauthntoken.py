@@ -467,7 +467,7 @@ IMAGES = IMAGES
 DEFAULT_DESCRIPTION = _('Generic WebAuthn Token')
 
 # Policy defaults
-DEFAULT_ALLOWED_TRANSPORTS = "usb ble nfc internal"
+DEFAULT_ALLOWED_TRANSPORTS = "usb ble nfc internal hybrid"
 DEFAULT_TIMEOUT = 60
 DEFAULT_USER_VERIFICATION_REQUIREMENT = 'preferred'
 DEFAULT_AUTHENTICATOR_ATTACHMENT = 'either'
@@ -629,7 +629,7 @@ class WebAuthnTokenClass(TokenClass):
                     WEBAUTHNACTION.ALLOWED_TRANSPORTS: {
                         'type': 'str',
                         'desc': _("A list of transports to prefer to communicate with WebAuthn tokens. "
-                                  "Default: usb ble nfc internal (All standard transports)"),
+                                  "Default: usb ble nfc internal hybrid (All standard transports)"),
                         'group': WEBAUTHNGROUP.WEBAUTHN
                     },
                     WEBAUTHNACTION.TIMEOUT: {
