@@ -91,6 +91,10 @@ create_files() {
   chown -R "$USERNAME" "$LOG_DIR"
   chown -R "$USERNAME" /var/lib/edumfa
   chown -R "$USERNAME" /etc/edumfa
+
+  chown "$USERNAME" "$ENCKEY_PATH"
+  chown "$USERNAME" "$AUDIT_KEY_PRIVATE"
+  chown "$USERNAME" "$AUDIT_KEY_PUBLIC"
   
   chmod 600 "$ENCKEY_PATH"
   chmod 600 "$AUDIT_KEY_PRIVATE"
