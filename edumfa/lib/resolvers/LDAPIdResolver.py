@@ -31,6 +31,7 @@ The file is tested in tests/test_lib_resolver.py
 """
 
 import logging
+from datetime import datetime, timezone, timedelta
 
 import yaml
 import threading
@@ -52,7 +53,6 @@ from passlib.hash import ldap_salted_sha1
 import hashlib
 import binascii
 from edumfa.lib.framework import get_app_local_store, get_app_config_value
-import datetime
 
 from edumfa.lib import _
 from edumfa.lib.utils import (is_true, to_bytes, to_unicode,
@@ -85,7 +85,7 @@ SERVERPOOL_STRATEGY = "ROUND_ROBIN"
 
 # 1 sec == 10^9 nano secs == 10^7 * (100 nano secs)
 MS_AD_MULTIPLYER = 10 ** 7
-MS_AD_START = datetime.datetime(1601, 1, 1)
+MS_AD_START = datetime(1601, 1, 1)
 
 if os.path.isfile("/etc/edumfa/ldap-ca.crt"):
     DEFAULT_CA_FILE = "/etc/edumfa/ldap-ca.crt"
@@ -139,7 +139,7 @@ def get_ad_timestamp_now():
     :return: time
     :rtype: int
     """
-    utc_now = datetime.datetime.utcnow()
+    utc_now = datetime.now(tz=timezone.utc)
     elapsed_time = utc_now - MS_AD_START
     total_seconds = elapsed_time.total_seconds()
     # convert this to (100 nanoseconds)
@@ -216,8 +216,8 @@ def cache(func):
         if self.cache_timeout > 0:
             # If it does not exist, create the node for this instance
             resolver_id = self.getResolverId()
-            now = datetime.datetime.now()
-            tdelta = datetime.timedelta(seconds=self.cache_timeout)
+            now = datetime.now()
+            tdelta = timedelta(seconds=self.cache_timeout)
             if not resolver_id in CACHE:
                 CACHE[resolver_id] = {"getUserId": {},
                                       "getUserInfo": {},

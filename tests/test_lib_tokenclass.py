@@ -3,6 +3,8 @@ This test file tests the lib.tokenclass
 
 The lib.tokenclass depends on the DB model and lib.user
 """
+from datetime import timedelta, datetime, timezone
+
 from .base import MyTestCase, FakeFlaskG
 from edumfa.lib.resolver import (save_resolver, delete_resolver)
 from edumfa.lib.realm import (set_realm, delete_realm)
@@ -17,7 +19,6 @@ from edumfa.lib.error import TokenAdminError
 from edumfa.models import (Token,
                                 Config,
                                 Challenge)
-import datetime
 from dateutil.tz import tzlocal
 
 PWFILE = "tests/testdata/passwords"
@@ -341,33 +342,33 @@ class TokenBaseTestCase(MyTestCase):
 
         # check validity period
         # +5 days
-        end_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(5)
+        end_date = datetime.now(tzlocal()) + timedelta(5)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # - 5 days
-        start_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(5)
+        start_date = datetime.now(tzlocal()) - timedelta(5)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertTrue(token.check_validity_period())
 
         # check before start date
         # +5 days
-        end_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(5)
+        end_date = datetime.now(tzlocal()) + timedelta(5)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # + 2 days
-        start_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(2)
+        start_date = datetime.now(tzlocal()) + timedelta(2)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertFalse(token.check_validity_period())
 
         # check after enddate
         # -1 day
-        end_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(1)
+        end_date = datetime.now(tzlocal()) - timedelta(1)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # - 10 days
-        start_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(10)
+        start_date = datetime.now(tzlocal()) - timedelta(10)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertFalse(token.check_validity_period())
@@ -388,8 +389,8 @@ class TokenBaseTestCase(MyTestCase):
         self.assertTrue(s.startswith("2017-04-11T22:00"), s)
 
         # old date format has problems with check_validity_date
-        start_date = datetime.datetime.now() - datetime.timedelta(days=15)
-        end_date = datetime.datetime.now() + datetime.timedelta(days=15)
+        start_date = datetime.now() - timedelta(days=15)
+        end_date = datetime.now() + timedelta(days=15)
         start = start_date.strftime("%d/%m/%Y")
         end = end_date.strftime("%d/%m/%Y")
         # Need to write the old format to the database
@@ -797,18 +798,19 @@ class TokenBaseTestCase(MyTestCase):
         db_token = Token("lastauth001", tokentype="spass", userid=1000)
         db_token.save()
         token_obj = TokenClass(db_token)
-        tdelta = datetime.timedelta(days=1)
-        token_obj.add_tokeninfo(ACTION.LASTAUTH,
-                                datetime.datetime.now(tzlocal())-tdelta)
+        tdelta = timedelta(days=1)
+        token_obj.add_tokeninfo(ACTION.LASTAUTH, datetime.now(tzlocal()) - tdelta)
         r = token_obj.check_last_auth_newer("10h")
         self.assertFalse(r)
         r = token_obj.check_last_auth_newer("2d")
         self.assertTrue(r)
 
         # Old time format
-        # lastauth_alt = datetime.datetime.utcnow().isoformat()
-        token_obj.add_tokeninfo(ACTION.LASTAUTH,
-                                datetime.datetime.utcnow() - tdelta)
+        # lastauth_alt = datetime.datetime.now(tz=datetime.timezone.utc)).isoformat()
+        token_obj.add_tokeninfo(
+            ACTION.LASTAUTH,
+            datetime.now(tz=timezone.utc) - tdelta
+        )
         r = token_obj.check_last_auth_newer("10h")
         self.assertFalse(r)
         r = token_obj.check_last_auth_newer("2d")

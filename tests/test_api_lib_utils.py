@@ -126,10 +126,14 @@ class UtilsTestCase(MyApiTestCase):
             mock_log.assert_called_once_with("Unsupported JWT algorithm in EDUMFA_TRUSTED_JWT.")
 
         # The signature has expired
-        expired_token = jwt.encode(payload={"role": "admin",
-                                            "exp": datetime.datetime.utcnow()-datetime.timedelta(seconds=1000)},
-                                   key=key,
-                                   algorithm="RS256")
+        expired_token = jwt.encode(
+            payload={
+                "role": "admin",
+                "exp": datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(seconds=1000)
+            },
+            key=key,
+            algorithm="RS256"
+        )
         self.assertRaises(AuthError, verify_auth_token, auth_token=expired_token, required_role="admin")
 
         # The signature does not match

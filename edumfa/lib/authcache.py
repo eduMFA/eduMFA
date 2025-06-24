@@ -20,10 +20,11 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+from datetime import datetime, timezone, timedelta
+
 from ..models import AuthCache, db
 from sqlalchemy import and_
 from passlib.hash import argon2
-import datetime
 import logging
 
 ROUNDS = 9
@@ -36,7 +37,7 @@ def _hash_password(password):
 
 def add_to_cache(username, realm, resolver, password):
     # Can not store timezone aware timestamps!
-    first_auth = datetime.datetime.utcnow()
+    first_auth = datetime.now(tz=timezone.utc)
     auth_hash = _hash_password(password)
     record = AuthCache(username, realm, resolver, auth_hash, first_auth, first_auth)
     log.debug('Adding record to auth cache: ({!r}, {!r}, {!r}, {!r})'.format(
@@ -46,7 +47,7 @@ def add_to_cache(username, realm, resolver, password):
 
 
 def update_cache(cache_id):
-    last_auth = datetime.datetime.utcnow()
+    last_auth = datetime.now(tz=timezone.utc)
     db.session.query(AuthCache).filter(
         AuthCache.id == cache_id).update({"last_auth": last_auth,
                                           AuthCache.auth_count: AuthCache.auth_count + 1})
@@ -101,8 +102,8 @@ def cleanup(minutes):
     :type minutes: int
     :return:
     """
-    cleanuptime = datetime.datetime.utcnow() - datetime.timedelta(minutes=minutes)
-    r = db.session.query(AuthCache).filter(AuthCache.last_auth < cleanuptime).delete()
+    cleanup_time = datetime.now(tz=timezone.utc) - timedelta(minutes=minutes)
+    r = db.session.query(AuthCache).filter(AuthCache.last_auth < cleanup_time).delete()
     db.session.commit()
     return r
 

@@ -22,9 +22,7 @@ from edumfa.models import (Token,
                                 PeriodicTaskOption, MonitoringStats, PolicyCondition, db,
                                 Tokengroup, TokenTokengroup, Serviceid)
 from .base import MyTestCase
-from dateutil.tz import tzutc
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timezone, timedelta
 
 
 class TokenModelTestCase(MyTestCase):
@@ -884,7 +882,7 @@ class TokenModelTestCase(MyTestCase):
             "active": False,
             "interval": "0 5 * * *",
             # we get a timezone-aware datetime here
-            "last_update": current_utc_time.replace(tzinfo=tzutc()),
+            "last_update": current_utc_time.replace(tzinfo=timezone.utc),
             "nodes": ["localhost"],
             "taskmodule": "some.module",
             "ordering": 2,
@@ -910,47 +908,49 @@ class TokenModelTestCase(MyTestCase):
         # the first run for otherhost
         task1.set_last_run("otherhost", datetime(2018, 8, 9, 10, 11, 12))
         result = PeriodicTask.query.filter_by(name="task one").one().get()
-        self.assertEqual(result,
-                         {
-                             "id": task1.id,
-                             "active": True,
-                             "name": "task one",
-                             "interval": "0 8 * * *",
-                             "last_update": later_utc_time.replace(tzinfo=tzutc()),
-                             "nodes": ["localhost", "otherhost"],
-                             "taskmodule": "some.module",
-                             "ordering": 3,
-                             "options": {"KEY2": "value number 2",
-                                         "key 4": "1234"},
-                             'retry_if_failed': True,
-                             "last_runs": {
-                                 "localhost": datetime(2018, 3, 4, 5, 6, 7, tzinfo=tzutc()),
-                                 "otherhost": datetime(2018, 8, 9, 10, 11, 12, tzinfo=tzutc()),
-                             }
-                         })
+        self.assertEqual(
+            result,
+            {
+                "id": task1.id,
+                "active": True,
+                "name": "task one",
+                "interval": "0 8 * * *",
+                "last_update": later_utc_time.replace(tzinfo=timezone.utc),
+                "nodes": ["localhost", "otherhost"],
+                "taskmodule": "some.module",
+                "ordering": 3,
+                "options": {"KEY2": "value number 2", "key 4": "1234"},
+                'retry_if_failed': True,
+                "last_runs": {
+                    "localhost": datetime(2018, 3, 4, 5, 6, 7, tzinfo=timezone.utc),
+                    "otherhost": datetime(2018, 8, 9, 10, 11, 12, tzinfo=timezone.utc),
+                }
+            }
+        )
         # assert all old options are removed
         self.assertEqual(PeriodicTaskOption.query.filter_by(periodictask_id=task1.id, key="key3").count(), 0)
         # the second run for localhost
         task1.set_last_run("localhost", datetime(2018, 3, 4, 5, 6, 8))
         result = PeriodicTask.query.filter_by(name="task one").one().get()
-        self.assertEqual(result,
-                         {
-                             "id": task1.id,
-                             "active": True,
-                             "name": "task one",
-                             "interval": "0 8 * * *",
-                             "last_update": later_utc_time.replace(tzinfo=tzutc()),
-                             "nodes": ["localhost", "otherhost"],
-                             "taskmodule": "some.module",
-                             "ordering": 3,
-                             "options": {"KEY2": "value number 2",
-                                         "key 4": "1234"},
-                             'retry_if_failed': True,
-                             "last_runs": {
-                                 "localhost": datetime(2018, 3, 4, 5, 6, 8, tzinfo=tzutc()),
-                                 "otherhost": datetime(2018, 8, 9, 10, 11, 12, tzinfo=tzutc()),
-                             }
-                         })
+        self.assertEqual(
+            result,
+            {
+                "id": task1.id,
+                "active": True,
+                "name": "task one",
+                "interval": "0 8 * * *",
+                "last_update": later_utc_time.replace(tzinfo=timezone.utc),
+                "nodes": ["localhost", "otherhost"],
+                "taskmodule": "some.module",
+                "ordering": 3,
+                "options": {"KEY2": "value number 2", "key 4": "1234"},
+                'retry_if_failed': True,
+                "last_runs": {
+                    "localhost": datetime(2018, 3, 4, 5, 6, 8, tzinfo=timezone.utc),
+                    "otherhost": datetime(2018, 8, 9, 10, 11, 12, tzinfo=timezone.utc),
+                }
+            }
+        )
 
         # remove "localhost", assert the last run is removed
         PeriodicTask("task one", True, "0 8 * * *", ["otherhost"], "some.module", 4, {"foo": "bar"}, id=task1.id)
@@ -960,7 +960,7 @@ class TokenModelTestCase(MyTestCase):
         self.assertEqual(PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id).one().timestamp,
                          datetime(2018, 8, 9, 10, 11, 12, tzinfo=None))
         self.assertEqual(PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id).one().aware_timestamp,
-                         datetime(2018, 8, 9, 10, 11, 12, tzinfo=tzutc()))
+                         datetime(2018, 8, 9, 10, 11, 12, tzinfo=timezone.utc))
 
         # remove the tasks, everything is removed
         task1.delete()
@@ -973,10 +973,10 @@ class TokenModelTestCase(MyTestCase):
         # Simple test to write data to the monitoring stats table
         key1 = "user_count"
         key2 = "successful_auth"
-        utcnow = datetime.utcnow()
-        MonitoringStats(utcnow - timedelta(seconds=1), key1, 15).save()
-        MonitoringStats(utcnow, key1, 21).save()
-        MonitoringStats(utcnow, key2, 123).save()
+        now = datetime.now(tz=timezone.utc)
+        MonitoringStats(now - timedelta(seconds=1), key1, 15).save()
+        MonitoringStats(now, key1, 21).save()
+        MonitoringStats(now, key2, 123).save()
 
         self.assertEqual(MonitoringStats.query.filter_by(stats_key=key1).count(), 2)
         self.assertEqual(MonitoringStats.query.filter_by(stats_key=key2).count(), 1)

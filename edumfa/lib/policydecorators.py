@@ -28,6 +28,8 @@ The functions of this module are tested in tests/test_lib_policy_decorator.py
 """
 import logging
 import re
+from datetime import datetime, timezone
+
 from edumfa.lib.policy import Match
 from edumfa.lib.error import PolicyError, eduMFAError
 import functools
@@ -35,7 +37,6 @@ from edumfa.lib.policy import ACTION, SCOPE, ACTIONVALUE, LOGINMODE
 from edumfa.lib.user import User
 from edumfa.lib.utils import parse_timelimit, parse_timedelta, split_pin_pass
 from edumfa.lib.authcache import verify_in_cache, add_to_cache
-import datetime
 from dateutil.tz import tzlocal
 from edumfa.lib.radiusserver import get_radius
 
@@ -145,7 +146,7 @@ def auth_cache(wrapped_function, user_object, passw, options=None):
 
             # determine first_auth from policy!
             first_offset = parse_timedelta(auth_times[0])
-            first_auth = datetime.datetime.utcnow() - first_offset
+            first_auth = datetime.now(tz=timezone.utc) - first_offset
             last_auth = first_auth  # Default if no last auth exists
             max_auths = 0  # Default value, 0 has no effect on verification
 
@@ -156,7 +157,7 @@ def auth_cache(wrapped_function, user_object, passw, options=None):
                 else:
                     # Determine last_auth delta from policy
                     last_offset = parse_timedelta(auth_times[1])
-                    last_auth = datetime.datetime.utcnow() - last_offset
+                    last_auth = datetime.now(tz=timezone.utc) - last_offset
 
             result = verify_in_cache(user_object.login, user_object.realm,
                                      user_object.resolver, passw,
@@ -463,7 +464,7 @@ def auth_lastauth(wrapped_function, user_or_serial, passw, options=None):
             # set the last successful authentication, if res still true
             if res:
                 token.add_tokeninfo(ACTION.LASTAUTH,
-                                    datetime.datetime.now(tzlocal()).isoformat(sep=' ', timespec='microseconds'))
+                                    datetime.now(tzlocal()).isoformat(sep=' ', timespec='microseconds'))
 
     return res, reply_dict
 

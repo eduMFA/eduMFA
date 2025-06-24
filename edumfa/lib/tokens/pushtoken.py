@@ -31,9 +31,7 @@ This code is tested in tests/test_lib_tokens_push
 from base64 import b32decode
 from binascii import Error as BinasciiError
 from urllib.parse import quote
-from datetime import datetime, timedelta
-from pytz import utc
-from dateutil.parser import isoparse
+from datetime import datetime, timedelta, timezone
 import traceback
 
 from edumfa.api.lib.utils import getParam
@@ -662,18 +660,13 @@ class PushTokenClass(TokenClass):
         :type window: int
         """
         try:
-            ts = isoparse(timestamp)
+            ts = datetime.fromisoformat(timestamp)
         except (ValueError, TypeError) as _e:
             log.debug('{0!s}'.format(traceback.format_exc()))
             raise eduMFAError('Could not parse timestamp {0!s}. '
                                    'ISO-Format required.'.format(timestamp))
         td = timedelta(minutes=window)
-        # We don't know if the passed timestamp is timezone aware. If no
-        # timezone is passed, we assume UTC
-        if ts.tzinfo:
-            now = datetime.now(utc)
-        else:
-            now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         if not (now - td <= ts <= now + td):
             raise eduMFAError('Timestamp {0!s} not in valid range.'.format(timestamp))
 

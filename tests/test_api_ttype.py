@@ -17,8 +17,7 @@ from edumfa.lib.tokens.pushtoken import (PushTokenClass,
                                          PUBLIC_KEY_SERVER,
                                          POLL_ONLY)
 from edumfa.lib.utils import b32encode_and_unicode
-from datetime import datetime, timedelta
-from pytz import utc
+from datetime import datetime, timezone
 from base64 import b32decode, b32encode
 import mock
 import responses
@@ -296,7 +295,7 @@ class TtypePushAPITestCase(MyApiTestCase):
                                                 .format(serial))
 
         # first create a signature
-        ts = datetime.utcnow().isoformat()
+        ts = datetime.now(tz=timezone.utc).isoformat()
         sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
@@ -615,7 +614,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                                                 .format(serial))
 
         # first create a signature
-        ts = datetime.utcnow().isoformat()
+        ts = datetime.now(tz=timezone.utc).isoformat()
         sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
