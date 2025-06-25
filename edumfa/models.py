@@ -1335,8 +1335,8 @@ class PasswordReset(MethodsMixin, db.Model):
     realm = db.Column(db.Unicode(64), nullable=False, index=True)
     resolver = db.Column(db.Unicode(64))
     email = db.Column(db.Unicode(255))
-    timestamp = db.Column(db.DateTime, default=datetime.now())
-    expiration = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    expiration = db.Column(db.DateTime(timezone=True))
 
     @log_with(log)
     def __init__(self, recoverycode, username, realm, resolver="", email=None,
@@ -1366,8 +1366,8 @@ class Challenge(MethodsMixin, db.Model):
     session = db.Column(db.Unicode(512), default='', quote=True, name="session")
     # The token serial number
     serial = db.Column(db.Unicode(40), default='', index=True)
-    timestamp = db.Column(db.DateTime, default=datetime.now(tz=timezone.utc), index=True)
-    expiration = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
+    expiration = db.Column(db.DateTime(timezone=True))
     received_count = db.Column(db.Integer(), default=0)
     otp_valid = db.Column(db.Boolean, default=False)
 
@@ -2574,7 +2574,7 @@ class ClientApplication(MethodsMixin, db.Model):
     ip = db.Column(db.Unicode(255), nullable=False, index=True)
     hostname = db.Column(db.Unicode(255))
     clienttype = db.Column(db.Unicode(255), nullable=False, index=True)
-    lastseen = db.Column(db.DateTime, index=True, default=datetime.now(tz=timezone.utc))
+    lastseen = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
     node = db.Column(db.Unicode(255), nullable=False)
     __table_args__ = (db.UniqueConstraint('ip',
                                           'clienttype',
@@ -2627,8 +2627,8 @@ class Subscription(MethodsMixin, db.Model):
     by_address = db.Column(db.Unicode(128))
     by_phone = db.Column(db.Unicode(50))
     by_url = db.Column(db.Unicode(80))
-    date_from = db.Column(db.DateTime)
-    date_till = db.Column(db.DateTime)
+    date_from = db.Column(db.DateTime(timezone=True))
+    date_till = db.Column(db.DateTime(timezone=True))
     num_users = db.Column(db.Integer)
     num_tokens = db.Column(db.Integer)
     num_clients = db.Column(db.Integer)
@@ -2751,8 +2751,8 @@ class Audit(MethodsMixin, db.Model):
     __tablename__ = AUDIT_TABLE_NAME
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
     id = db.Column(BigIntegerType, Sequence("audit_seq"), primary_key=True)
-    date = db.Column(db.DateTime, index=True)
-    startdate = db.Column(db.DateTime)
+    date = db.Column(db.DateTime(timezone=True), index=True)
+    startdate = db.Column(db.DateTime(timezone=True))
     duration = db.Column(db.Interval(second_precision=6))
     signature = db.Column(db.Unicode(audit_column_length.get("signature")))
     action = db.Column(db.Unicode(audit_column_length.get("action")))
@@ -2828,7 +2828,7 @@ class UserCache(MethodsMixin, db.Model):
     used_login = db.Column(db.Unicode(64), default="", index=True)
     resolver = db.Column(db.Unicode(120), default='')
     user_id = db.Column(db.Unicode(320), default='', index=True)
-    timestamp = db.Column(db.DateTime, index=True)
+    timestamp = db.Column(db.DateTime(timezone=True), index=True)
 
     def __init__(self, username, used_login, resolver, user_id, timestamp):
         self.username = username
@@ -2842,8 +2842,8 @@ class AuthCache(MethodsMixin, db.Model):
     __tablename__ = 'authcache'
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
     id = db.Column(db.Integer, Sequence("authcache_seq"), primary_key=True)
-    first_auth = db.Column(db.DateTime, index=True)
-    last_auth = db.Column(db.DateTime, index=True)
+    first_auth = db.Column(db.DateTime(timezone=True), index=True)
+    last_auth = db.Column(db.DateTime(timezone=True), index=True)
     username = db.Column(db.Unicode(64), default="", index=True)
     resolver = db.Column(db.Unicode(120), default='', index=True)
     realm = db.Column(db.Unicode(120), default='', index=True)
@@ -2880,7 +2880,7 @@ class PeriodicTask(MethodsMixin, db.Model):
     nodes = db.Column(db.Unicode(256), nullable=False)
     taskmodule = db.Column(db.Unicode(256), nullable=False)
     ordering = db.Column(db.Integer, nullable=False, default=0)
-    last_update = db.Column(db.DateTime(False), nullable=False)
+    last_update = db.Column(db.DateTime(timezone=True), nullable=False)
     options = db.relationship('PeriodicTaskOption',
                               lazy='dynamic',
                               backref='periodictask')
@@ -3054,7 +3054,7 @@ class PeriodicTaskLastRun(db.Model):
                    primary_key=True)
     periodictask_id = db.Column(db.Integer, db.ForeignKey('periodictask.id'))
     node = db.Column(db.Unicode(255), nullable=False)
-    timestamp = db.Column(db.DateTime(False), nullable=False)
+    timestamp = db.Column(db.DateTime(timezone=True), nullable=False)
 
     __table_args__ = (db.UniqueConstraint('periodictask_id',
                                           'node',
@@ -3113,7 +3113,7 @@ class MonitoringStats(MethodsMixin, db.Model):
     id = db.Column(db.Integer, Sequence("monitoringstats_seq"),
                    primary_key=True)
     # We store this as a naive datetime in UTC
-    timestamp = db.Column(db.DateTime(False), nullable=False, index=True)
+    timestamp = db.Column(db.DateTime(timezone=True), nullable=False, index=True)
     stats_key = db.Column(db.Unicode(128), nullable=False)
     stats_value = db.Column(db.Integer, nullable=False, default=0)
 
