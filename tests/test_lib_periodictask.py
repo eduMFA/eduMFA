@@ -4,10 +4,10 @@ This file contains the tests for periodic tasks.
 In particular, this tests
 lib/periodictask.py
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from dateutil.parser import parse as parse_timestamp
-from dateutil.tz import gettz, tzutc
+from dateutil.tz import gettz
 from mock import mock
 
 from edumfa.lib.error import ServerError, ParameterError, ResourceNotFoundError
@@ -21,9 +21,6 @@ from .base import MyTestCase
 
 class BasePeriodicTaskTestCase(MyTestCase):
     def test_01_calculate_next_timestamp_utc(self):
-        # The easy case: calculate everything in UTC
-        tzinfo = tzutc()
-
         # every day at 08:00
         task1 = {
             "id": 1,
@@ -41,13 +38,19 @@ class BasePeriodicTaskTestCase(MyTestCase):
             }
         }
 
-        self.assertEqual(calculate_next_timestamp(task1, "foo", tzinfo),
-                         parse_timestamp("2018-06-26 08:00 UTC"))
-        self.assertEqual(calculate_next_timestamp(task1, "bar", tzinfo),
-                         parse_timestamp("2018-06-24 08:00 UTC"))
+        self.assertEqual(
+            calculate_next_timestamp(task1, "foo", timezone.utc),
+            parse_timestamp("2018-06-26 08:00 UTC")
+        )
+        self.assertEqual(
+            calculate_next_timestamp(task1, "bar", timezone.utc),
+            parse_timestamp("2018-06-24 08:00 UTC")
+        )
         # the next run of baz is calculated based on last_update
-        self.assertEqual(calculate_next_timestamp(task1, "baz", tzinfo),
-                         parse_timestamp("2018-06-23 08:00 UTC"))
+        self.assertEqual(
+            calculate_next_timestamp(task1, "baz", timezone.utc),
+            parse_timestamp("2018-06-23 08:00 UTC")
+        )
 
         # no last run recorded
         task1b = {

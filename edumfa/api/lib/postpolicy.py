@@ -30,9 +30,10 @@ Wrapping the functions in a decorator class enables easy modular testing.
 
 The functions of this module are tested in tests/test_api_lib_policy.py
 """
-import datetime
 import logging
 import traceback
+from datetime import datetime
+
 from edumfa.lib.error import PolicyError, ValidateError
 from flask import g, current_app, make_response
 from edumfa.lib.policy import SCOPE, ACTION, AUTOASSIGNVALUE, AUTHORIZED
@@ -382,7 +383,7 @@ def add_user_detail_to_response(request, response):
         ui = request.User.info.copy()
         ui["password"] = ""  # nosec B105 # Hide a potential password
         for key, value in ui.items():
-            if type(value) == datetime.datetime:
+            if type(value) == datetime:
                 ui[key] = str(value)
         content.setdefault("detail", {})["user"] = ui
         g.audit_object.add_policy([p.get("name") for p in detail_pol])

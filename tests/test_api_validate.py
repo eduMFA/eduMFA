@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
+from datetime import timezone, timedelta, datetime
+
 from testfixtures import log_capture
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
@@ -42,7 +44,6 @@ from passlib.hash import argon2
 from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
 
 from testfixtures import Replace, test_datetime
-import datetime
 import time
 import responses
 import mock
@@ -1350,9 +1351,10 @@ class ValidateAPITestCase(MyApiTestCase):
         pol.save()
 
         # create the challenge by authenticating with the OTP PIN
-        with Replace('edumfa.models.datetime',
-                     test_datetime(2020, 6, 13, 1, 2, 3,
-                                   tzinfo=datetime.timezone(datetime.timedelta(hours=+5)))):
+        with Replace(
+                'edumfa.models.datetime',
+                test_datetime(2020, 6, 13, 1, 2, 3, tzinfo=timezone(timedelta(hours=+5)))
+        ):
             with self.app.test_request_context('/validate/check',
                                                method='POST',
                                                data={"user": "cornelius",
@@ -1370,7 +1372,7 @@ class ValidateAPITestCase(MyApiTestCase):
         # The transaction should not be removed by the janitor
         with Replace('edumfa.models.datetime',
                      test_datetime(2020, 6, 13, 1, 2, 4,
-                                   tzinfo=datetime.timezone(datetime.timedelta(hours=+6)))):
+                                   tzinfo=timezone(timedelta(hours=+6)))):
             with self.app.test_request_context('/validate/check',
                                                method='POST',
                                                data={"user": "cornelius",
@@ -1384,7 +1386,7 @@ class ValidateAPITestCase(MyApiTestCase):
         # send the OTP value while being an hour too late (timezone -1)
         with Replace('edumfa.models.datetime',
                      test_datetime(2020, 6, 13, 1, 2, 4,
-                                   tzinfo=datetime.timezone(datetime.timedelta(hours=+1)))):
+                                   tzinfo=timezone(timedelta(hours=+1)))):
             with self.app.test_request_context('/validate/check',
                                                method='POST',
                                                data={"user": "cornelius",
@@ -3072,7 +3074,7 @@ class RegistrationValidity(MyApiTestCase):
         password = r.init_details.get("otpkey")
 
         # The enddate is 17 minutes in the past
-        end_date = datetime.datetime.now() - datetime.timedelta(minutes=17)
+        end_date = datetime.now() - timedelta(minutes=17)
         end_date_str = end_date.strftime(DATE_FORMAT)
         r.set_validity_period_end(end_date_str)
         # now check if authentication fails
@@ -4924,9 +4926,9 @@ class AChallengeResponse(MyApiTestCase):
         # add a really old expired challenge for tok1
         old_transaction_id = "1111111111"
         old_challenge = Challenge(serial="tok1", transaction_id=old_transaction_id, challenge="")
-        old_challenge_timestamp = datetime.datetime.now() - datetime.timedelta(days=3)
+        old_challenge_timestamp = datetime.now() - timedelta(days=3)
         old_challenge.timestamp = old_challenge_timestamp
-        old_challenge.expiration = old_challenge_timestamp + datetime.timedelta(minutes=120)
+        old_challenge.expiration = old_challenge_timestamp + timedelta(minutes=120)
         old_challenge.save()
 
         # Check behavior of the polltransaction endpoint
@@ -5388,8 +5390,8 @@ class AChallengeResponse(MyApiTestCase):
         # If we wait long enough, the challenge has expired,
         # while the HOTP value 287082 in itself would still be valid.
         # However, the authentication with the expired transaction_id has to fail
-        new_utcnow = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=12)
-        new_now = datetime.datetime.now().replace(tzinfo=None) + datetime.timedelta(minutes=12)
+        new_utcnow = datetime.now(tz=timezone.utc) + timedelta(minutes=12)
+        new_now = datetime.now().replace(tzinfo=None) + timedelta(minutes=12)
         with mock.patch('edumfa.models.datetime') as mock_datetime:
             mock_datetime.utcnow.return_value = new_utcnow
             mock_datetime.now.return_value = new_now

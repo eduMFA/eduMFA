@@ -25,11 +25,11 @@ __doc__ = """This module provides functions to manage periodic tasks in the data
 to determine their next scheduled running time and to run them."""
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from edumfa.lib.tokenclass import DATE_FORMAT
 
 from croniter import croniter
-from dateutil.tz import tzutc, tzlocal
+from dateutil.tz import tzlocal
 
 from edumfa.lib.error import ParameterError, ResourceNotFoundError
 from edumfa.lib.utils import fetch_one_resource, parse_date
@@ -91,7 +91,7 @@ def calculate_next_timestamp(ptask, node, interval_tzinfo=None):
     iterator = croniter(ptask["interval"], local_timestamp)
     next_timestamp = iterator.get_next(datetime)
     # This will again be a timezone-aware datetime, but we return a timezone-aware UTC timestamp
-    return next_timestamp.astimezone(tzutc())
+    return next_timestamp.astimezone(timezone.utc)
 
 
 def set_periodic_task(name=None, interval=None, nodes=None, taskmodule=None,
@@ -234,7 +234,7 @@ def set_periodic_task_last_run(ptask_id, node, last_run_timestamp):
     :type last_run_timestamp: timezone-aware datetime object
     """
     periodic_task = _get_periodic_task_entry(ptask_id)
-    utc_last_run = last_run_timestamp.astimezone(tzutc()).replace(tzinfo=None)
+    utc_last_run = last_run_timestamp.astimezone(timezone.utc).replace(tzinfo=None)
     periodic_task.set_last_run(node, utc_last_run)
 
 
@@ -256,7 +256,7 @@ def get_scheduled_periodic_tasks(node, current_timestamp=None, interval_tzinfo=N
     """
     active_ptasks = get_periodic_tasks(node=node, active=True)
     if current_timestamp is None:
-        current_timestamp = datetime.now(tzutc())
+        current_timestamp = datetime.now(timezone.utc)
     if current_timestamp.tzinfo is None:
         raise ParameterError("expected timezone-aware datetime, got {!r}".format(current_timestamp))
     scheduled_ptasks = []

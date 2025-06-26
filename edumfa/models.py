@@ -29,7 +29,6 @@ import logging
 import traceback
 from datetime import datetime, timedelta, timezone
 
-from dateutil.tz import tzutc
 from json import loads, dumps
 from flask_sqlalchemy import SQLAlchemy
 from edumfa.lib.crypto import (encrypt,
@@ -2935,7 +2934,7 @@ class PeriodicTask(MethodsMixin, db.Model):
         """
         Return self.last_update with attached UTC tzinfo
         """
-        return self.last_update.replace(tzinfo=tzutc())
+        return self.last_update.replace(tzinfo=timezone.utc)
 
     def get(self):
         """
@@ -3078,7 +3077,7 @@ class PeriodicTaskLastRun(db.Model):
         """
         Return self.timestamp with attached UTC tzinfo
         """
-        return self.timestamp.replace(tzinfo=tzutc())
+        return self.timestamp.replace(tzinfo=timezone.utc)
 
     def save(self):
         """

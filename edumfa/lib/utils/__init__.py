@@ -36,10 +36,10 @@ import base64
 import sqlalchemy
 import string
 import re
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from datetime import time as dt_time
 from dateutil.parser import parse as parse_date_string
-from dateutil.tz import tzlocal, tzutc
+from dateutil.tz import tzlocal
 from netaddr import IPAddress, IPNetwork, AddrFormatError
 import hashlib
 import traceback
@@ -1068,7 +1068,7 @@ def convert_timestamp_to_utc(timestamp):
     :type timestamp: timezone-aware datetime object
     :return: timezone-naive datetime object
     """
-    return timestamp.astimezone(tzutc()).replace(tzinfo=None)
+    return timestamp.astimezone(timezone.utc).replace(tzinfo=None)
 
 
 def censor_connect_string(connect_string):

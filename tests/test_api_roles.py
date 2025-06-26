@@ -5,8 +5,8 @@ selfservice) on the REST API.
 
 implementation is contained in api/auth.py, api/token.py api/audit.py
 """
-import datetime
 import json
+from datetime import datetime
 
 from . import ldap3mock
 from .test_api_validate import LDAPDirectory
@@ -732,7 +732,7 @@ class APISelfserviceTestCase(MyApiTestCase):
             self.assertFalse(result.get("status"), content)
             self.assertIn("long ago", content["detail"]["message"], content)
 
-        selfservice_token.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.now().strftime(AUTH_DATE_FORMAT))
+        selfservice_token.add_tokeninfo(ACTION.LASTAUTH, datetime.now().strftime(AUTH_DATE_FORMAT))
 
         # But now it works
         with self.app.test_request_context('/auth',

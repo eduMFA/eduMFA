@@ -56,7 +56,8 @@ The code is tested in tests/test_lib_tokens_email
 
 import logging
 import traceback
-import datetime
+from datetime import datetime, timedelta
+
 from edumfa.lib.tokens.smstoken import HotpTokenClass
 from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
 from edumfa.lib.tokenclass import CHALLENGE_SESSION, AUTHENTICATIONMODE
@@ -310,8 +311,7 @@ class EmailTokenClass(HotpTokenClass):
                 if is_true(options.get("exception")):
                     raise Exception(info)
 
-        expiry_date = datetime.datetime.now() + \
-                                    datetime.timedelta(seconds=validity)
+        expiry_date = datetime.now() + timedelta(seconds=validity)
         reply_dict['attributes']['valid_until'] = "{0!s}".format(expiry_date)
 
         return success, return_message, transactionid, reply_dict

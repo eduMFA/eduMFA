@@ -33,6 +33,8 @@ You can attach token actions like enable, disable, delete, unassign,... of the
  * ...
 """
 
+from datetime import datetime
+
 from edumfa.api.lib.utils import getParam
 from edumfa.lib.eventhandler.base import BaseEventHandler
 from edumfa.lib.machine import attach_token
@@ -54,7 +56,6 @@ from edumfa.lib.smsprovider.SMSProvider import get_smsgateway
 from edumfa.lib.tokengroup import get_tokengroups
 from edumfa.lib import _
 import logging
-import datetime
 import yaml
 import json
 from dateutil.tz import tzlocal
@@ -451,8 +452,7 @@ class TokenEventHandler(BaseEventHandler):
                     elif action.lower() == ACTION_TYPE.SET_DESCRIPTION:
                         description = handler_options.get("description") or ""
                         description, td = parse_time_offset_from_now(description)
-                        s_now = (datetime.datetime.now(tzlocal()) + td).strftime(
-                            AUTH_DATE_FORMAT)
+                        s_now = (datetime.now(tzlocal()) + td).strftime(AUTH_DATE_FORMAT)
                         set_description(serial,
                                         description.format(
                                             current_time=s_now,
@@ -467,8 +467,7 @@ class TokenEventHandler(BaseEventHandler):
                     elif action.lower() == ACTION_TYPE.SET_TOKENINFO:
                         tokeninfo = handler_options.get("value") or ""
                         tokeninfo, td = parse_time_offset_from_now(tokeninfo)
-                        s_now = (datetime.datetime.now(tzlocal()) + td).strftime(
-                            AUTH_DATE_FORMAT)
+                        s_now = (datetime.now(tzlocal()) + td).strftime(AUTH_DATE_FORMAT)
                         try:
                             username = request.User.loginname
                             realm = request.User.realm

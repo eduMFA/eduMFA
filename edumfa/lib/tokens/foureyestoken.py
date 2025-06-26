@@ -31,6 +31,8 @@ and the splitting sign.
 The code is tested in tests/test_lib_tokens_4eyes.
 """
 import logging
+from datetime import datetime, timedelta
+
 from edumfa.api.lib.utils import getParam
 from edumfa.lib.config import get_from_config
 from edumfa.lib.log import log_with
@@ -42,7 +44,6 @@ from edumfa.lib import _
 from edumfa.lib.policy import ACTION, SCOPE, GROUP, get_action_values_from_options
 from edumfa.lib.challenge import get_challenges, Challenge
 import json
-import datetime
 
 log = logging.getLogger(__name__)
 optional = True
@@ -469,8 +470,7 @@ class FourEyesTokenClass(TokenClass):
                                  challenge=message,
                                  validitytime=validity)
         db_challenge.save()
-        expiry_date = datetime.datetime.now() + \
-                      datetime.timedelta(seconds=validity)
+        expiry_date = datetime.now() + timedelta(seconds=validity)
         reply_dict = {'attributes': {'valid_until': "{0!s}".format(expiry_date)}}
         return True, message, db_challenge.transaction_id, reply_dict
 

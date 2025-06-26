@@ -50,7 +50,7 @@ This method is supposed to be overwritten by the corresponding token classes.
 import logging
 import hashlib
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from .error import (TokenAdminError,
                     ParameterError)
@@ -68,7 +68,7 @@ from edumfa.lib.crypto import (encryptPassword, decryptPassword,
 from .policydecorators import libpolicy, auth_otppin, challenge_response_allowed
 from .decorators import check_token_locked
 from dateutil.parser import parse as parse_date_string, ParserError
-from dateutil.tz import tzlocal, tzutc
+from dateutil.tz import tzlocal
 from edumfa.lib.utils import (is_true, decode_base32check,
                                    to_unicode, create_img, parse_timedelta,
                                    parse_legacy_time, split_pin_pass)
@@ -1779,7 +1779,7 @@ class TokenClass:
             if not last_success_auth.tzinfo:
                 # the date string has no timezone, default timezone is UTC
                 # We need to set the timezone manually
-                last_success_auth = last_success_auth.replace(tzinfo=tzutc())
+                last_success_auth = last_success_auth.replace(tzinfo=timezone.utc)
             # The last auth is to far in the past
             if last_success_auth + tdelta < datetime.now(tzlocal()):
                 res = False

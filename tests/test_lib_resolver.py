@@ -8,6 +8,7 @@ lib.resolvers.ldapresolver
 
 The lib.resolver.py only depends on the database model.
 """
+from datetime import timedelta, datetime
 
 PWFILE = "tests/testdata/passwords"
 from .base import MyTestCase
@@ -17,7 +18,6 @@ from ldap3.core.results import RESULT_SIZE_LIMIT_EXCEEDED
 import mock
 import ldap3
 import responses
-import datetime
 import uuid
 import pytest
 import json
@@ -2080,11 +2080,10 @@ class LDAPResolverTestCase(MyTestCase):
             mock_search.assert_not_called()
         self.assertIn('bob', CACHE[y.getResolverId()]['getUserId'])
         # assert requests later than CACHE_TIMEOUT seconds query the directory again
-        now = datetime.datetime.now()
-        with mock.patch('edumfa.lib.resolvers.LDAPIdResolver.datetime.datetime',
-                        wraps=datetime.datetime) as mock_datetime:
+        now = datetime.now()
+        with mock.patch('edumfa.lib.resolvers.LDAPIdResolver.datetime.datetime', wraps=datetime) as mock_datetime:
             # we now live CACHE_TIMEOUT + 2 seconds in the future
-            mock_datetime.now.return_value = now + datetime.timedelta(seconds=cache_timeout + 2)
+            mock_datetime.now.return_value = now + timedelta(seconds=cache_timeout + 2)
             with mock.patch.object(ldap3mock.Connection, 'search', wraps=y.l.search) as mock_search:
                 bob_id3 = y.getUserId('bob')
                 self.assertEqual(bob_id, bob_id3)
@@ -2092,12 +2091,12 @@ class LDAPResolverTestCase(MyTestCase):
         # assert the cache contains this entry, with the updated timestamp
         self.assertEqual(CACHE[y.getResolverId()]['getUserId']['bob'],
                          {'value': bob_id,
-                          'timestamp': now + datetime.timedelta(seconds=cache_timeout + 2)})
+                          'timestamp': now + timedelta(seconds=cache_timeout + 2)})
         # we now go 2 * (CACHE_TIMEOUT + 2) seconds to the future and query for someone else's user ID.
         # This will cause bob's cache entry to be evicted.
         with mock.patch('edumfa.lib.resolvers.LDAPIdResolver.datetime.datetime',
-                        wraps=datetime.datetime) as mock_datetime:
-            mock_datetime.now.return_value = now + datetime.timedelta(seconds=2 * (cache_timeout + 2))
+                        wraps=datetime) as mock_datetime:
+            mock_datetime.now.return_value = now + timedelta(seconds=2 * (cache_timeout + 2))
             manager_id = y.getUserId('manager')
         self.assertEqual(list(CACHE[y.getResolverId()]['getUserId'].keys()), ['manager'])
 
