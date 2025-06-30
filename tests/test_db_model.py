@@ -3,6 +3,7 @@ from mock import mock
 import os
 from sqlalchemy import func
 
+from edumfa.lib.utils import utcnow
 from edumfa.models import (Token,
                                 Resolver,
                                 ResolverRealm,
@@ -973,7 +974,7 @@ class TokenModelTestCase(MyTestCase):
         # Simple test to write data to the monitoring stats table
         key1 = "user_count"
         key2 = "successful_auth"
-        now = datetime.now(tz=timezone.utc)
+        now = utcnow()
         MonitoringStats(now - timedelta(seconds=1), key1, 15).save()
         MonitoringStats(now, key1, 21).save()
         MonitoringStats(now, key2, 123).save()

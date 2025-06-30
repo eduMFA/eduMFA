@@ -8,7 +8,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
 from edumfa.lib.tokens.webauthntoken import WEBAUTHNACTION
-from edumfa.lib.utils import to_unicode
+from edumfa.lib.utils import to_unicode, utcnow
 from urllib.parse import urlencode, quote
 import json
 from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
@@ -5390,7 +5390,7 @@ class AChallengeResponse(MyApiTestCase):
         # If we wait long enough, the challenge has expired,
         # while the HOTP value 287082 in itself would still be valid.
         # However, the authentication with the expired transaction_id has to fail
-        new_utcnow = datetime.now(tz=timezone.utc) + timedelta(minutes=12)
+        new_utcnow = utcnow() + timedelta(minutes=12)
         new_now = datetime.now().replace(tzinfo=None) + timedelta(minutes=12)
         with mock.patch('edumfa.models.datetime') as mock_datetime:
             mock_datetime.utcnow.return_value = new_utcnow

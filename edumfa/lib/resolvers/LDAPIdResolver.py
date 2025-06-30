@@ -31,7 +31,7 @@ The file is tested in tests/test_lib_resolver.py
 """
 
 import logging
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 
 import yaml
 import threading
@@ -55,8 +55,9 @@ import binascii
 from edumfa.lib.framework import get_app_local_store, get_app_config_value
 
 from edumfa.lib import _
-from edumfa.lib.utils import (is_true, to_bytes, to_unicode,
-                                   convert_column_to_unicode)
+from edumfa.lib.utils import (
+    is_true, to_bytes, to_unicode, convert_column_to_unicode, utcnow
+)
 from edumfa.lib.error import eduMFAError
 import uuid
 from ldap3.utils.conv import escape_bytes
@@ -139,7 +140,7 @@ def get_ad_timestamp_now():
     :return: time
     :rtype: int
     """
-    utc_now = datetime.now(tz=timezone.utc)
+    utc_now = utcnow()
     elapsed_time = utc_now - MS_AD_START
     total_seconds = elapsed_time.total_seconds()
     # convert this to (100 nanoseconds)

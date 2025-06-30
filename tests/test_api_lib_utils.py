@@ -2,8 +2,9 @@
 """
 This tests the file api.lib.utils
 """
-from datetime import datetime, timezone, timedelta
+from datetime import timedelta
 
+from edumfa.lib.utils import utcnow
 from .base import MyApiTestCase
 
 from edumfa.api.lib.utils import (getParam,
@@ -130,7 +131,7 @@ class UtilsTestCase(MyApiTestCase):
         expired_token = jwt.encode(
             payload={
                 "role": "admin",
-                "exp": datetime.now(tz=timezone.utc) - timedelta(seconds=1000)
+                "exp": utcnow() - timedelta(seconds=1000)
             },
             key=key,
             algorithm="RS256"

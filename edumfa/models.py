@@ -45,8 +45,9 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import BigInteger
 from sqlalchemy.dialects import postgresql, mysql, sqlite
 from .lib.log import log_with
-from edumfa.lib.utils import (is_true, convert_column_to_unicode,
-                                   hexlify_and_unicode)
+from edumfa.lib.utils import (
+    is_true, convert_column_to_unicode, hexlify_and_unicode, utcnow
+)
 from edumfa.lib.crypto import pass_hash, verify_pass_hash
 from edumfa.lib.framework import get_app_config_value
 
@@ -1334,7 +1335,7 @@ class PasswordReset(MethodsMixin, db.Model):
     realm = db.Column(db.Unicode(64), nullable=False, index=True)
     resolver = db.Column(db.Unicode(64))
     email = db.Column(db.Unicode(255))
-    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: utcnow())
     expiration = db.Column(db.DateTime(timezone=True))
 
     @log_with(log)
@@ -1365,7 +1366,7 @@ class Challenge(MethodsMixin, db.Model):
     session = db.Column(db.Unicode(512), default='', quote=True, name="session")
     # The token serial number
     serial = db.Column(db.Unicode(40), default='', index=True)
-    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: utcnow(), index=True)
     expiration = db.Column(db.DateTime(timezone=True))
     received_count = db.Column(db.Integer(), default=0)
     otp_valid = db.Column(db.Boolean, default=False)
@@ -1378,11 +1379,11 @@ class Challenge(MethodsMixin, db.Model):
         self.challenge = challenge
         self.serial = serial
         self.data = data
-        self.timestamp = datetime.now(tz=timezone.utc)
+        self.timestamp = utcnow()
         self.session = session
         self.received_count = 0
         self.otp_valid = False
-        self.expiration = datetime.now(tz=timezone.utc) + timedelta(seconds=validitytime)
+        self.expiration = utcnow() + timedelta(seconds=validitytime)
 
     @staticmethod
     def create_transaction_id(length=20):
@@ -1395,7 +1396,7 @@ class Challenge(MethodsMixin, db.Model):
         :rtype: bool
         """
         ret = False
-        c_now = datetime.now(tz=timezone.utc)
+        c_now = utcnow()
         if self.timestamp <= c_now < self.expiration:
             ret = True
         return ret
@@ -1485,7 +1486,7 @@ def cleanup_challenges():
 
     :return: None
     """
-    c_now = datetime.now(tz=timezone.utc)
+    c_now = utcnow()
     Challenge.query.filter(Challenge.expiration < c_now).delete()
     db.session.commit()
 
@@ -2573,7 +2574,7 @@ class ClientApplication(MethodsMixin, db.Model):
     ip = db.Column(db.Unicode(255), nullable=False, index=True)
     hostname = db.Column(db.Unicode(255))
     clienttype = db.Column(db.Unicode(255), nullable=False, index=True)
-    lastseen = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
+    lastseen = db.Column(db.DateTime(timezone=True), default=lambda: utcnow(), index=True)
     node = db.Column(db.Unicode(255), nullable=False)
     __table_args__ = (db.UniqueConstraint('ip',
                                           'clienttype',
@@ -2859,7 +2860,7 @@ class AuthCache(MethodsMixin, db.Model):
         self.realm = realm
         self.resolver = resolver
         self.authentication = authentication
-        self.first_auth = first_auth if first_auth else datetime.now(tz=timezone.utc)
+        self.first_auth = first_auth if first_auth else utcnow()
         self.last_auth = last_auth if last_auth else self.first_auth
 
 
@@ -2961,7 +2962,7 @@ class PeriodicTask(MethodsMixin, db.Model):
         Set ``last_update`` to the current time.
         :return: the entry ID
         """
-        self.last_update = datetime.now(tz=timezone.utc)
+        self.last_update = utcnow()
         if self.id is None:
             # create a new one
             db.session.add(self)

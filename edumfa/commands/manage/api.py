@@ -18,7 +18,7 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 
 import click
 import jwt
@@ -27,6 +27,7 @@ from flask.cli import AppGroup
 
 from edumfa.lib.auth import ROLE
 from edumfa.lib.crypto import geturandom
+from edumfa.lib.utils import utcnow
 
 api_cli = AppGroup("api", help="Manage API Keys")
 
@@ -54,12 +55,12 @@ def createtoken(role, days, realm, username):
     validity = timedelta(days=int(days))
     token = jwt.encode(
         {
-            "username": username, 
-            "realm": realm, 
-            "nonce": geturandom(hex=True), 
-            "role": role, 
+            "username": username,
+            "realm": realm,
+            "nonce": geturandom(hex=True),
+            "role": role,
             "authtype": authtype,
-            "exp": datetime.now(tz=timezone.utc) + validity, 
+            "exp": utcnow() + validity,
             "rights": "TODO"
         },
         secret

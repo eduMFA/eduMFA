@@ -1071,6 +1071,13 @@ def convert_timestamp_to_utc(timestamp):
     return timestamp.astimezone(timezone.utc).replace(tzinfo=None)
 
 
+def utcnow():
+    """
+    Returns the current UTC time as a timezone-aware datetime object.
+    """
+    return datetime.now(tz=timezone.utc)
+
+
 def censor_connect_string(connect_string):
     """
     Take a SQLAlchemy connect string and return a sanitized version

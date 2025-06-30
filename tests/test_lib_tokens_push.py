@@ -20,7 +20,7 @@ from edumfa.lib.crypto import geturandom
 from edumfa.models import Token, Challenge
 from edumfa.lib.policy import (SCOPE, set_policy, delete_policy, ACTION,
                                     LOGINMODE, PolicyClass)
-from edumfa.lib.utils import to_bytes, b32encode_and_unicode, to_unicode
+from edumfa.lib.utils import to_bytes, b32encode_and_unicode, to_unicode, utcnow
 from edumfa.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
 from edumfa.lib.error import ConfigAdminError
 from base64 import b32decode, b32encode
@@ -1038,7 +1038,7 @@ class PushTokenTestCase(MyTestCase):
         # check for timestamp of wrong type
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.now(tz=timezone.utc),
+                        'timestamp': utcnow(),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp .*\. ISO-Format required.',
@@ -1047,7 +1047,7 @@ class PushTokenTestCase(MyTestCase):
         # check for timezone unaware timestamp (we assume UTC then)
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.now(tz=timezone.utc).isoformat(),
+                        'timestamp': utcnow().isoformat(),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',
@@ -1334,7 +1334,7 @@ class PushTokenTestCase(MyTestCase):
         serial2 = tok2.get_serial()
         # we shouldn't run into the signature check here
         req.all_data = {'serial': serial2,
-                        'timestamp': datetime.now(tz=timezone.utc).isoformat(),
+                        'timestamp': utcnow().isoformat(),
                         'signature': b32encode(b"signature not needed")}
         # poll for challenges
         self.assertRaisesRegex(eduMFAError,
@@ -2344,7 +2344,7 @@ class EduPushTokenTestCase(MyTestCase):
         # check for timestamp of wrong type
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.now(tz=timezone.utc),
+                        'timestamp': utcnow(),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp .*\. ISO-Format required.',
@@ -2353,7 +2353,7 @@ class EduPushTokenTestCase(MyTestCase):
         # check for timezone unaware timestamp (we assume UTC then)
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.now(tz=timezone.utc).isoformat(),
+                        'timestamp': utcnow().isoformat(),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',
@@ -2640,7 +2640,7 @@ class EduPushTokenTestCase(MyTestCase):
         serial2 = tok2.get_serial()
         # we shouldn't run into the signature check here
         req.all_data = {'serial': serial2,
-                        'timestamp': datetime.now(tz=timezone.utc).isoformat(),
+                        'timestamp': utcnow().isoformat(),
                         'signature': b32encode(b"signature not needed")}
         # poll for challenges
         self.assertRaisesRegex(eduMFAError,

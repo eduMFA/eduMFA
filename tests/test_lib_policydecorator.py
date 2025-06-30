@@ -3,6 +3,8 @@ This test file tests the lib.policy.py
 
 The lib.policy.py only depends on the database model.
 """
+from edumfa.lib.utils import utcnow
+
 PWFILE2 = "tests/testdata/passwords"
 DICT_FILE = "tests/testdata/dictionary"
 
@@ -33,7 +35,7 @@ import binascii
 import hashlib
 from edumfa.models import AuthCache
 from edumfa.lib.authcache import delete_from_cache, _hash_password
-from datetime import timedelta, datetime, timezone
+from datetime import timedelta
 
 
 def _check_policy_name(polname, policies):
@@ -482,7 +484,7 @@ class LibPolicyTestCase(MyTestCase):
         self.assertRegex(tokeninfo['last_auth'],r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6}([+-]\d{2}:\d{2})?$')
 
         # Set a very old last_auth
-        token.add_tokeninfo(ACTION.LASTAUTH, datetime.now(tz=timezone.utc)-timedelta(days=2))
+        token.add_tokeninfo(ACTION.LASTAUTH, utcnow()-timedelta(days=2))
         rv = auth_lastauth(fake_auth, user, pin, options)
         self.assertEqual(rv[0], False)
         self.assertTrue("The last successful authentication was" in
@@ -574,8 +576,8 @@ class LibPolicyTestCase(MyTestCase):
         # This successfully authenticates against the authcache
         # We have an authentication, that is within the policy timeout
         AuthCache(username, realm, resolver, pwd_hash,
-                  first_auth=datetime.now(tz=timezone.utc) - timedelta(hours=3),
-                  last_auth=datetime.now(tz=timezone.utc) - timedelta(minutes=1)).save()
+                  first_auth=utcnow() - timedelta(hours=3),
+                  last_auth=utcnow() - timedelta(minutes=1)).save()
         r = auth_cache(fake_check_user_pass, User(username, realm),
                        password, options=options)
         self.assertTrue(r[0])
@@ -585,8 +587,8 @@ class LibPolicyTestCase(MyTestCase):
         # since the authcache first_auth is too old.
         delete_from_cache(username, realm, resolver, password)
         AuthCache(username, realm, resolver, pwd_hash,
-                  first_auth=datetime.now(tz=timezone.utc) - timedelta(hours=5),
-                  last_auth=datetime.now(tz=timezone.utc) - timedelta(minutes=1)).save()
+                  first_auth=utcnow() - timedelta(hours=5),
+                  last_auth=utcnow() - timedelta(minutes=1)).save()
         r = auth_cache(fake_check_user_pass, User(username, realm),
                        password, options=options)
         self.assertTrue(r[0])
@@ -596,8 +598,8 @@ class LibPolicyTestCase(MyTestCase):
         # the last_auth is too old = 10 minutes.
         delete_from_cache(username, realm, resolver, password)
         AuthCache(username, realm, resolver, pwd_hash,
-                  first_auth=datetime.now(tz=timezone.utc) - timedelta(hours=1),
-                  last_auth=datetime.now(tz=timezone.utc) - timedelta(minutes=10)).save()
+                  first_auth=utcnow() - timedelta(hours=1),
+                  last_auth=utcnow() - timedelta(minutes=10)).save()
         r = auth_cache(fake_check_user_pass, User(username, realm),
                        password, options=options)
         self.assertTrue(r[0])
@@ -618,8 +620,8 @@ class LibPolicyTestCase(MyTestCase):
 
         delete_from_cache(username, realm, resolver, password)
         AuthCache(username, realm, resolver, pwd_hash,
-                  first_auth=datetime.now(tz=timezone.utc) - timedelta(hours=2),
-                  last_auth=datetime.now(tz=timezone.utc) - timedelta(hours=1)).save()
+                  first_auth=utcnow() - timedelta(hours=2),
+                  last_auth=utcnow() - timedelta(hours=1)).save()
         r = auth_cache(fake_check_user_pass, User(username, realm),
                        password, options=options)
         self.assertTrue(r[0])
@@ -637,8 +639,7 @@ class LibPolicyTestCase(MyTestCase):
         g.audit_object = FakeAudit()
         options = {"g": g}
 
-        AuthCache(username, realm, resolver, pwd_hash,
-                  first_auth=datetime.now(tz=timezone.utc)).save()
+        AuthCache(username, realm, resolver, pwd_hash, first_auth=utcnow()).save()
 
         r = auth_cache(fake_check_user_pass, User(username, realm),
                        password, options=options)
@@ -670,7 +671,7 @@ class LibPolicyTestCase(MyTestCase):
         options = {"g": g}
 
         AuthCache(username, realm, resolver, pwd_hash,
-                  first_auth=datetime.now(tz=timezone.utc) - timedelta(seconds=55)).save()
+                  first_auth=utcnow() - timedelta(seconds=55)).save()
 
         r = auth_cache(fake_check_user_pass, User(username, realm),
                        password, options=options)

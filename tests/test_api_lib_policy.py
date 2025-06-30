@@ -21,7 +21,7 @@ from edumfa.lib.tokens.webauthntoken import (WEBAUTHNACTION, DEFAULT_ALLOWED_TRA
                                                   DEFAULT_CHALLENGE_TEXT_ENROLL, DEFAULT_TIMEOUT,
                                                   DEFAULT_USER_VERIFICATION_REQUIREMENT,
                                                   PUBKEY_CRED_ALGORITHMS_ORDER)
-from edumfa.lib.utils import hexlify_and_unicode
+from edumfa.lib.utils import hexlify_and_unicode, utcnow
 from edumfa.lib.config import set_edumfa_config, SYSCONF
 from .base import (MyApiTestCase)
 
@@ -1254,7 +1254,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         secret = current_app.config.get("SECRET_KEY")
         token = jwt.encode({
             "role": ROLE.VALIDATE,
-            "exp": datetime.now(tz=timezone.utc) + timedelta(hours=1)
+            "exp": utcnow() + timedelta(hours=1)
         }, secret
     )
         req.headers = {"Authorization": token}
@@ -1266,7 +1266,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             {
                 "role": ROLE.ADMIN,
                 "username": "admin",
-                "exp": datetime.now(tz=timezone.utc) + timedelta(hours=1)
+                "exp": utcnow() + timedelta(hours=1)
             }, 
             secret
         )

@@ -3,7 +3,7 @@ This test file tests the lib.tokenclass
 
 The lib.tokenclass depends on the DB model and lib.user
 """
-from datetime import timedelta, datetime, timezone
+from datetime import timedelta, datetime
 
 from .base import MyTestCase, FakeFlaskG
 from edumfa.lib.resolver import (save_resolver, delete_resolver)
@@ -14,7 +14,7 @@ from edumfa.lib.tokenclass import (TokenClass, DATE_FORMAT)
 from edumfa.lib.config import (set_edumfa_config,
                                     delete_edumfa_config)
 from edumfa.lib.crypto import geturandom
-from edumfa.lib.utils import hexlify_and_unicode, to_unicode
+from edumfa.lib.utils import hexlify_and_unicode, to_unicode, utcnow
 from edumfa.lib.error import TokenAdminError
 from edumfa.models import (Token,
                                 Config,
@@ -809,7 +809,7 @@ class TokenBaseTestCase(MyTestCase):
         # lastauth_alt = datetime.datetime.now(tz=datetime.timezone.utc)).isoformat()
         token_obj.add_tokeninfo(
             ACTION.LASTAUTH,
-            datetime.now(tz=timezone.utc) - tdelta
+            utcnow() - tdelta
         )
         r = token_obj.check_last_auth_newer("10h")
         self.assertFalse(r)

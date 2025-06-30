@@ -31,13 +31,13 @@ This code is tested in tests/test_lib_tokens_push
 from base64 import b32decode
 from binascii import Error as BinasciiError
 from urllib.parse import quote
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import traceback
 
 from edumfa.api.lib.utils import getParam
 from edumfa.api.lib.policyhelper import get_pushtoken_add_config
 from edumfa.lib.token import get_one_token, init_token
-from edumfa.lib.utils import prepare_result, to_bytes, is_true
+from edumfa.lib.utils import prepare_result, to_bytes, is_true, utcnow
 from edumfa.lib.error import (ResourceNotFoundError, ValidateError,
                                    eduMFAError, ConfigAdminError, PolicyError)
 
@@ -666,7 +666,7 @@ class PushTokenClass(TokenClass):
             raise eduMFAError('Could not parse timestamp {0!s}. '
                                    'ISO-Format required.'.format(timestamp))
         td = timedelta(minutes=window)
-        now = datetime.now(timezone.utc)
+        now = utcnow()
         if not (now - td <= ts <= now + td):
             raise eduMFAError('Timestamp {0!s} not in valid range.'.format(timestamp))
 

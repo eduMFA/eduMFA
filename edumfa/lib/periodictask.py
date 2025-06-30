@@ -32,7 +32,7 @@ from croniter import croniter
 from dateutil.tz import tzlocal
 
 from edumfa.lib.error import ParameterError, ResourceNotFoundError
-from edumfa.lib.utils import fetch_one_resource, parse_date
+from edumfa.lib.utils import fetch_one_resource, utcnow
 from edumfa.lib.task.eventcounter import EventCounterTask
 from edumfa.lib.task.simplestats import SimpleStatsTask
 from edumfa.models import PeriodicTask
@@ -256,7 +256,7 @@ def get_scheduled_periodic_tasks(node, current_timestamp=None, interval_tzinfo=N
     """
     active_ptasks = get_periodic_tasks(node=node, active=True)
     if current_timestamp is None:
-        current_timestamp = datetime.now(timezone.utc)
+        current_timestamp = utcnow()
     if current_timestamp.tzinfo is None:
         raise ParameterError("expected timezone-aware datetime, got {!r}".format(current_timestamp))
     scheduled_ptasks = []
