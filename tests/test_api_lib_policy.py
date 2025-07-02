@@ -21,7 +21,7 @@ from edumfa.lib.tokens.webauthntoken import (WEBAUTHNACTION, DEFAULT_ALLOWED_TRA
                                                   DEFAULT_CHALLENGE_TEXT_ENROLL, DEFAULT_TIMEOUT,
                                                   DEFAULT_USER_VERIFICATION_REQUIREMENT,
                                                   PUBKEY_CRED_ALGORITHMS_ORDER)
-from edumfa.lib.utils import hexlify_and_unicode
+from edumfa.lib.utils import hexlify_and_unicode, utcnow
 from edumfa.lib.config import set_edumfa_config, SYSCONF
 from .base import (MyApiTestCase)
 
@@ -86,7 +86,7 @@ from edumfa.lib.machine import attach_token
 from edumfa.lib.auth import ROLE
 import jwt
 from passlib.hash import pbkdf2_sha512
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil.tz import tzlocal
 from edumfa.lib.tokenclass import DATE_FORMAT
 from .test_lib_tokens_webauthn import (ALLOWED_TRANSPORTS, CRED_ID, ASSERTION_RESPONSE_TMPL,
@@ -1252,18 +1252,24 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # A request with an API key succeeds
         secret = current_app.config.get("SECRET_KEY")
-        token = jwt.encode({"role": ROLE.VALIDATE,
-                            "exp": datetime.utcnow() + timedelta(hours=1)},
-                            secret)
+        token = jwt.encode({
+            "role": ROLE.VALIDATE,
+            "exp": utcnow() + timedelta(hours=1)
+        }, secret
+    )
         req.headers = {"Authorization": token}
         r = api_key_required(req)
         self.assertTrue(r)
 
         # A request with a valid Admin Token does not succeed
-        token = jwt.encode({"role": ROLE.ADMIN,
-                            "username": "admin",
-                            "exp": datetime.utcnow() + timedelta(hours=1)},
-                            secret)
+        token = jwt.encode(
+            {
+                "role": ROLE.ADMIN,
+                "username": "admin",
+                "exp": utcnow() + timedelta(hours=1)
+            }, 
+            secret
+        )
         req.headers = {"Authorization": token}
         self.assertRaises(PolicyError, api_key_required, req)
 

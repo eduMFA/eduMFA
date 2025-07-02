@@ -35,7 +35,8 @@ TOTP is defined in https://tools.ietf.org/html/rfc6238
 """
 import logging
 import time
-import datetime
+from datetime import timezone, datetime
+
 from edumfa.lib.tokens.HMAC import HmacOtp
 from edumfa.lib.config import get_from_config
 from edumfa.lib.log import log_with
@@ -43,7 +44,7 @@ from edumfa.lib.tokenclass import TokenClass
 from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.policy import ACTION, SCOPE, GROUP, Match
-from edumfa.lib.utils import determine_logged_in_userparams
+from edumfa.lib.utils import determine_logged_in_userparams, utcnow
 from edumfa.lib import _
 
 optional = True
@@ -304,9 +305,9 @@ class TotpTokenClass(HotpTokenClass):
                 return curtime.timestamp()
             else:
                 # curtime is naive
-                return curtime.replace(tzinfo=datetime.timezone.utc).timestamp()
+                return curtime.replace(tzinfo=timezone.utc).timestamp()
         # return the current timestamp
-        return datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
+        return utcnow().timestamp()
 
     @check_token_locked
     def check_otp(self, anOtpVal, counter=None, window=None, options=None):

@@ -35,7 +35,8 @@ returns -1.
 """
 
 import logging
-import datetime
+from datetime import datetime, timedelta
+
 from edumfa.lib.config import get_from_config
 from edumfa.lib.tokenclass import TokenClass, AUTHENTICATIONMODE
 from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
@@ -233,8 +234,7 @@ class IndexedSecretTokenClass(TokenClass):
             transactionid = transactionid or db_challenge.transaction_id
             return_message = return_message.format(position_str)
 
-        expiry_date = datetime.datetime.now() + \
-                                    datetime.timedelta(seconds=validity)
+        expiry_date = datetime.now() + timedelta(seconds=validity)
         attributes['valid_until'] = "{0!s}".format(expiry_date)
         reply_dict = {"attributes": attributes}
 

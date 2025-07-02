@@ -23,6 +23,8 @@
 __doc__ = """This module writes statistics data to the SQL database table "monitoringstats".
 """
 import logging
+from datetime import timezone
+
 from edumfa.lib.monitoringmodules.base import Monitoring as MonitoringBase
 from edumfa.lib.pooling import get_engine
 from edumfa.lib.utils import censor_connect_string, convert_timestamp_to_utc
@@ -33,7 +35,6 @@ from edumfa.models import MonitoringStats
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 import traceback
-from dateutil.tz import tzutc
 
 log = logging.getLogger(__name__)
 
@@ -153,7 +154,7 @@ class Monitoring(MonitoringBase):
                 conditions.append(MonitoringStats.timestamp <= utc_end_timestamp)
             for ms in self.session.query(MonitoringStats).filter(and_(*conditions)). \
                     order_by(MonitoringStats.timestamp.asc()):
-                aware_timestamp = ms.timestamp.replace(tzinfo=tzutc())
+                aware_timestamp = ms.timestamp.replace(tzinfo=timezone.utc)
                 values.append((aware_timestamp, ms.stats_value))
         except Exception as exx:  # pragma: no cover
             log.error("exception {0!r}".format(exx))

@@ -114,7 +114,6 @@ from edumfa.lib.user import User
 from edumfa.lib import _
 from netaddr import AddrFormatError
 from edumfa.lib.error import eduMFAError
-import datetime
 import re
 import ast
 import traceback

@@ -4,9 +4,9 @@ This tests the files
   lib/audit.py and
   lib/auditmodules/sqlaudit.py
 """
-import datetime
 import os
 import types
+from datetime import timedelta, datetime
 
 import sqlalchemy.engine
 from mock import mock
@@ -104,8 +104,7 @@ class AuditTestCase(MyTestCase):
         self.assertTrue(audit_log.total == 1, audit_log.total)
 
         # Search audit entries one minute in the future
-        audit_log = self.Audit.search({}, timelimit=datetime.timedelta(
-            minutes=-1))
+        audit_log = self.Audit.search({}, timelimit=timedelta(minutes=-1))
         self.assertEqual(len(audit_log.auditdata), 0)
 
     def test_02_get_count(self):
@@ -123,11 +122,11 @@ class AuditTestCase(MyTestCase):
         self.Audit.finalize_log()
 
         # remember the current time for later
-        current_timestamp = datetime.datetime.now()
+        current_timestamp = datetime.now()
 
         # create a new audit log entry 2 seconds after the previous ones
         with mock.patch('edumfa.models.datetime') as mock_dt:
-            mock_dt.now.return_value = current_timestamp + datetime.timedelta(seconds=2)
+            mock_dt.now.return_value = current_timestamp + timedelta(seconds=2)
             self.Audit.log({"action": "/validate/check",
                             "success": True})
             self.Audit.finalize_log()
@@ -137,7 +136,7 @@ class AuditTestCase(MyTestCase):
         # things will sometimes go slower than expected, which will
         # cause the very last assertion to fail.
         with mock.patch('datetime.datetime') as mock_dt:
-            mock_dt.now.return_value = current_timestamp + datetime.timedelta(seconds=2.5)
+            mock_dt.now.return_value = current_timestamp + timedelta(seconds=2.5)
 
             # get 4 authentications
             r = self.Audit.get_count({"action": "/validate/check"})
@@ -148,8 +147,9 @@ class AuditTestCase(MyTestCase):
             self.assertEqual(r, 1)
 
             # get one authentication during the last second
-            r = self.Audit.get_count({"action": "/validate/check"}, success=True,
-                                     timedelta=datetime.timedelta(seconds=1))
+            r = self.Audit.get_count(
+                {"action": "/validate/check"}, success=True, timedelta=timedelta(seconds=1)
+            )
             self.assertEqual(r, 1)
 
     def test_03_lib_search(self):
@@ -396,8 +396,8 @@ class AuditFileTestCase(OverrideConfigTestCase):
     def test_30_logger_audit_qualname(self, capture):
         # Check that the default qualname is 'edumfa.lib.auditmodules.loggeraudit'
         # The audit log runs 2 seconds - mocked
-        current_utc_time = datetime.datetime(2018, 3, 4, 5, 6, 8)
-        startdate_time = datetime.datetime(2018, 3, 4, 5, 6, 6)
+        current_utc_time = datetime(2018, 3, 4, 5, 6, 8)
+        startdate_time = datetime(2018, 3, 4, 5, 6, 6)
         with mock.patch('edumfa.lib.auditmodules.loggeraudit.datetime') as mock_timestamp:
             with mock.patch('edumfa.lib.auditmodules.base.datetime.datetime') as mock_startdate:
                 mock_timestamp.utcnow.return_value = current_utc_time
@@ -413,8 +413,8 @@ class AuditFileTestCase(OverrideConfigTestCase):
                                                            startdate=startdate_time.isoformat())))
 
         # Now change the qualname to 'edumfa-audit'
-        current_utc_time = datetime.datetime(2020, 3, 4, 5, 6, 8)
-        startdate_time = datetime.datetime(2020, 3, 4, 5, 6, 0)
+        current_utc_time = datetime(2020, 3, 4, 5, 6, 8)
+        startdate_time = datetime(2020, 3, 4, 5, 6, 0)
         with mock.patch('edumfa.lib.auditmodules.loggeraudit.datetime') as mock_dt:
             with mock.patch('edumfa.lib.auditmodules.base.datetime.datetime') as mock_startdate:
                 mock_dt.utcnow.return_value = current_utc_time

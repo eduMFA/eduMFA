@@ -378,9 +378,9 @@ class LocalCATestCase(MyTestCase):
         _, cert = cacon.sign_request(SPKAC, options={"spkac": 1,
                                                      "template": "webserver"})
         expires = to_unicode(cert.get_notAfter())
-        import datetime
-        dt = datetime.datetime.strptime(expires, "%Y%m%d%H%M%SZ")
-        ddiff = dt - datetime.datetime.now()
+        from datetime import datetime
+        dt = datetime.strptime(expires, "%Y%m%d%H%M%SZ")
+        ddiff = dt - datetime.now()
         # The certificate is signed for 750 days
         self.assertTrue(ddiff.days > 740, ddiff.days)
         self.assertTrue(ddiff.days < 760, ddiff.days)

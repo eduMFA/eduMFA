@@ -2,6 +2,9 @@
 """
 This tests the file api.lib.utils
 """
+from datetime import timedelta
+
+from edumfa.lib.utils import utcnow
 from .base import MyApiTestCase
 
 from edumfa.api.lib.utils import (getParam,
@@ -13,7 +16,6 @@ from edumfa.lib.user import User
 from edumfa.lib.error import ParameterError
 import jwt
 import mock
-import datetime
 import warnings
 from urllib.parse import quote
 from edumfa.lib.error import AuthError
@@ -126,10 +128,14 @@ class UtilsTestCase(MyApiTestCase):
             mock_log.assert_called_once_with("Unsupported JWT algorithm in EDUMFA_TRUSTED_JWT.")
 
         # The signature has expired
-        expired_token = jwt.encode(payload={"role": "admin",
-                                            "exp": datetime.datetime.utcnow()-datetime.timedelta(seconds=1000)},
-                                   key=key,
-                                   algorithm="RS256")
+        expired_token = jwt.encode(
+            payload={
+                "role": "admin",
+                "exp": utcnow() - timedelta(seconds=1000)
+            },
+            key=key,
+            algorithm="RS256"
+        )
         self.assertRaises(AuthError, verify_auth_token, auth_token=expired_token, required_role="admin")
 
         # The signature does not match

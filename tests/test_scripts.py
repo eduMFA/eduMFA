@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import os
 import tempfile
 import unittest
+from datetime import datetime, timedelta
 
 from edumfa.app import create_app
 from edumfa.commands.manage.main import cli as edumfa_manage
@@ -252,7 +252,7 @@ class ScriptsTestCase(unittest.TestCase):
         LogEntry.query.delete()
 
         l = LogEntry()
-        l.date = datetime.datetime.now() - datetime.timedelta(days=365)
+        l.date = datetime.now() - timedelta(days=365)
         l.save()
         assert len(LogEntry.query.all()) == 1
         result = runner.invoke(edumfa_manage, ["audit", "rotate", "--age", "30"])

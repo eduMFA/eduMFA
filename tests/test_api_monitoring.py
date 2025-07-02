@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from .base import MyApiTestCase
 from edumfa.lib.monitoringstats import write_stats
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.models import db
-import datetime
 
 
 class APIMonitoringTestCase(MyApiTestCase):
@@ -16,7 +16,7 @@ class APIMonitoringTestCase(MyApiTestCase):
         write_stats("key1", 1)
         write_stats("key2", 50)
         write_stats("key1", 2)
-        ts = datetime.datetime.now().isoformat()
+        ts = datetime.now().isoformat()
 
         write_stats("key2", 60)
         write_stats("key1", 3)
@@ -96,7 +96,7 @@ class APIMonitoringTestCase(MyApiTestCase):
 
     def test_02_delete_stats(self):
 
-        ts = datetime.datetime.now()
+        ts = datetime.now()
         write_stats("key2", 60)
 
         # Now we delete some keys (the three old ones)
