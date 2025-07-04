@@ -28,7 +28,7 @@ This provider is used for the push token and can be used for SMS tokens.
 
 from edumfa.lib.smsprovider.SMSProvider import (ISMSProvider)
 from edumfa.lib.error import ConfigAdminError
-from edumfa.lib.framework import get_app_local_store
+from edumfa.lib.framework import get_app_config_value, get_app_local_store
 from edumfa.lib import _
 import logging
 from google.oauth2 import service_account
@@ -159,7 +159,26 @@ class FirebaseProvider(ISMSProvider):
         with open(a) as f:
             server_config = json.load(f)
         url = FIREBASE_URL_SEND.format(server_config["project_id"])
-        resp = authed_session.post(url, data=json.dumps(fcm_message), headers=headers, proxies=proxies)
+        try:
+            FIREBASE_CONNECT_TIMEOUT = float(get_app_config_value("FIREBASE_CONNECT_TIMEOUT"))
+            if FIREBASE_CONNECT_TIMEOUT is None or not isinstance(FIREBASE_CONNECT_TIMEOUT, float):
+                FIREBASE_CONNECT_TIMEOUT = 1.1
+
+            FIREBASE_READ_TIMEOUT = float(get_app_config_value("FIREBASE_READ_TIMEOUT"))
+            if FIREBASE_READ_TIMEOUT is None or not isinstance(FIREBASE_READ_TIMEOUT, float):
+                FIREBASE_READ_TIMEOUT = 3
+
+            log.debug(f"FIREBASE_CONNECT_TIMEOUT: {FIREBASE_CONNECT_TIMEOUT}")
+            log.debug(f"FIREBASE_READ_TIMEOUT: {FIREBASE_READ_TIMEOUT}")
+            resp = authed_session.post(url, data=json.dumps(fcm_message), headers=headers, proxies=proxies, timeout=(FIREBASE_CONNECT_TIMEOUT,FIREBASE_READ_TIMEOUT))
+            if resp.status_code == 200:
+                log.debug("Message sent successfully to Firebase service.")
+                res = True
+            else:
+                log.warning("Failed to send message to firebase service: {0!s}".format(resp.text))
+
+        except Exception as e:
+            log.warning(f"An unexpected error occurred in Firebase.py: {e}")
 
         if resp.status_code == 200:
             log.debug("Message sent successfully to Firebase service.")
