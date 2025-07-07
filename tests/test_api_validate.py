@@ -3074,7 +3074,7 @@ class RegistrationValidity(MyApiTestCase):
         password = r.init_details.get("otpkey")
 
         # The enddate is 17 minutes in the past
-        end_date = datetime.now() - timedelta(minutes=17)
+        end_date = utcnow() - timedelta(minutes=17)
         end_date_str = end_date.strftime(DATE_FORMAT)
         r.set_validity_period_end(end_date_str)
         # now check if authentication fails
@@ -4926,7 +4926,7 @@ class AChallengeResponse(MyApiTestCase):
         # add a really old expired challenge for tok1
         old_transaction_id = "1111111111"
         old_challenge = Challenge(serial="tok1", transaction_id=old_transaction_id, challenge="")
-        old_challenge_timestamp = datetime.now() - timedelta(days=3)
+        old_challenge_timestamp = utcnow() - timedelta(days=3)
         old_challenge.timestamp = old_challenge_timestamp
         old_challenge.expiration = old_challenge_timestamp + timedelta(minutes=120)
         old_challenge.save()
@@ -5391,7 +5391,7 @@ class AChallengeResponse(MyApiTestCase):
         # while the HOTP value 287082 in itself would still be valid.
         # However, the authentication with the expired transaction_id has to fail
         new_utcnow = utcnow() + timedelta(minutes=12)
-        new_now = datetime.now().replace(tzinfo=None) + timedelta(minutes=12)
+        new_now = utcnow().replace(tzinfo=None) + timedelta(minutes=12)
         with mock.patch('edumfa.models.datetime') as mock_datetime:
             mock_datetime.utcnow.return_value = new_utcnow
             mock_datetime.now.return_value = new_now

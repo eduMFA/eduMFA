@@ -110,11 +110,13 @@ def save_config_timestamp(invalidate_config=True):
     """
     c1 = Config.query.filter_by(Key=EDUMFA_TIMESTAMP).first()
     if c1:
-        c1.Value = datetime.now().strftime("%s")
+        c1.Value = utcnow().strftime("%s")
     else:
-        new_timestamp = Config(EDUMFA_TIMESTAMP,
-                               datetime.now().strftime("%s"),
-                               Description="config timestamp. last changed.")
+        new_timestamp = Config(
+            EDUMFA_TIMESTAMP,
+            utcnow().strftime("%s"),
+            Description="config timestamp. last changed."
+        )
         db.session.add(new_timestamp)
     if invalidate_config:
         # We have just modified the config. From now on, the request handling
@@ -1347,9 +1349,8 @@ class PasswordReset(MethodsMixin, db.Model):
         self.realm = realm
         self.resolver = resolver
         self.email = email
-        self.timestamp = timestamp or datetime.now()
-        self.expiration = expiration or datetime.now() + \
-                                        timedelta(seconds=expiration_seconds)
+        self.timestamp = timestamp or utcnow()
+        self.expiration = expiration or utcnow() + timedelta(seconds=expiration_seconds)
 
 
 class Challenge(MethodsMixin, db.Model):
@@ -2587,7 +2588,7 @@ class ClientApplication(MethodsMixin, db.Model):
             ClientApplication.ip == self.ip,
             ClientApplication.clienttype == self.clienttype,
             ClientApplication.node == self.node).first()
-        self.lastseen = datetime.now()
+        self.lastseen = utcnow()
         if clientapp is None:
             # create a new one
             db.session.add(self)
@@ -2797,7 +2798,7 @@ class Audit(MethodsMixin, db.Model):
                  duration=None
                  ):
         self.signature = ""
-        self.date = datetime.now()
+        self.date = utcnow()
         self.startdate = startdate
         self.duration = duration
         self.action = convert_column_to_unicode(action)

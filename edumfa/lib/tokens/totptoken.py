@@ -376,12 +376,12 @@ class TotpTokenClass(HotpTokenClass):
             # and the tokentime
             if self.is_timeshift_enabled:
                 tokentime = self._counter2time(res, self.timestep)
-                tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
+                tokenDt = datetime.fromtimestamp(tokentime / 1.0)
 
-                nowDt = datetime.datetime.fromtimestamp(inow / 1.0)
+                nowDt = datetime.fromtimestamp(inow / 1.0)
 
                 lastauth = self._counter2time(oCount, self.timestep)
-                lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
+                lastauthDt = datetime.fromtimestamp(lastauth / 1.0)
 
                 log.debug("last auth : {0!r}".format(lastauthDt))
                 log.debug("tokentime : {0!r}".format(tokenDt))
@@ -629,7 +629,7 @@ class TotpTokenClass(HotpTokenClass):
             tCounter = int(timestamp)
         else:
             # use the current server time
-            tCounter = self._time2float(datetime.datetime.now())
+            tCounter = self._time2float(utcnow())
 
         if self.is_timeshift_enabled:
             tCounter -= self.timeshift
@@ -648,8 +648,7 @@ class TotpTokenClass(HotpTokenClass):
                 if self.is_timeshift_enabled:
                     timeCounter += self.timeshift
 
-                val_time = datetime.datetime.\
-                    fromtimestamp(timeCounter).strftime("%Y-%m-%d %H:%M:%S")
+                val_time = datetime.fromtimestamp(timeCounter).strftime("%Y-%m-%d %H:%M:%S")
                 otp_dict["otp"][counter + i] = {'otpval': otpval,
                                                 'time': val_time}
             ret = True

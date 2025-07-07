@@ -28,16 +28,14 @@ The functions of this module are tested in tests/test_lib_policy_decorator.py
 """
 import logging
 import re
-from datetime import datetime
 
 from edumfa.lib.policy import Match
 from edumfa.lib.error import PolicyError, eduMFAError
 import functools
 from edumfa.lib.policy import ACTION, SCOPE, ACTIONVALUE, LOGINMODE
 from edumfa.lib.user import User
-from edumfa.lib.utils import parse_timelimit, parse_timedelta, split_pin_pass, utcnow
+from edumfa.lib.utils import parse_timelimit, parse_timedelta, split_pin_pass, utcnow, localnow
 from edumfa.lib.authcache import verify_in_cache, add_to_cache
-from dateutil.tz import tzlocal
 from edumfa.lib.radiusserver import get_radius
 
 log = logging.getLogger(__name__)
@@ -463,8 +461,7 @@ def auth_lastauth(wrapped_function, user_or_serial, passw, options=None):
 
             # set the last successful authentication, if res still true
             if res:
-                token.add_tokeninfo(ACTION.LASTAUTH,
-                                    datetime.now(tzlocal()).isoformat(sep=' ', timespec='microseconds'))
+                token.add_tokeninfo(ACTION.LASTAUTH, localnow().isoformat(sep=' ', timespec='microseconds'))
 
     return res, reply_dict
 

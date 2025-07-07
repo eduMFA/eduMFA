@@ -19,7 +19,7 @@
 #
 import re
 import sys
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import click
 import yaml
@@ -31,7 +31,7 @@ from sqlalchemy.orm import sessionmaker
 from edumfa.lib.audit import getAudit
 from edumfa.lib.auditmodules.sqlaudit import LogEntry
 from edumfa.lib.sqlutils import delete_matching_rows
-from edumfa.lib.utils import parse_timedelta
+from edumfa.lib.utils import parse_timedelta, utcnow
 
 audit_cli = AppGroup("audit", help="Manage Audit log")
 
@@ -113,7 +113,7 @@ def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, 
             click.echo("investigating log entry {0!s}".format(log.id))
             for rule in yml_config:
                 age = int(rule.get("rotate"))
-                rotate_date = datetime.now() - timedelta(days=age)
+                rotate_date = utcnow() - timedelta(days=age)
 
                 match = False
                 for key in rule.keys():
@@ -147,7 +147,7 @@ def rotate_audit(highwatermark, lowwatermark, age=0, config=None, dryrun=False, 
             click.echo("Cleaning up {0!s} entries.".format(len(delete_list)))
             delete_matching_rows(session, LogEntry.__table__, LogEntry.id.in_(delete_list), chunksize)
     elif age:
-        now = datetime.now() - timedelta(days=age)
+        now = utcnow() - timedelta(days=age)
         click.echo("Deleting entries older than {0!s}".format(now))
         criterion = LogEntry.date < now
         if dryrun:

@@ -217,7 +217,7 @@ def cache(func):
         if self.cache_timeout > 0:
             # If it does not exist, create the node for this instance
             resolver_id = self.getResolverId()
-            now = datetime.now()
+            now = utcnow()
             tdelta = timedelta(seconds=self.cache_timeout)
             if not resolver_id in CACHE:
                 CACHE[resolver_id] = {"getUserId": {},

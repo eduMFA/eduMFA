@@ -29,9 +29,6 @@ The event handler module is bound to an event together with
 * an action
 * optional options ;-)
 """
-
-from datetime import datetime
-
 from edumfa.lib import _
 from edumfa.lib.config import get_token_types
 from edumfa.lib.realm import get_realms
@@ -41,10 +38,9 @@ from edumfa.lib.token import get_token_owner, get_tokens
 from edumfa.lib.user import User, UserError
 from edumfa.lib.counter import read as counter_read
 from edumfa.lib.utils import (compare_condition, compare_value_value,
-                                   compare_generic_condition,
-                                   parse_time_offset_from_now, is_true,
-                                   check_ip_in_policy)
-from dateutil.tz import tzlocal
+                              compare_generic_condition,
+                              parse_time_offset_from_now, is_true,
+                              check_ip_in_policy, localnow)
 import re
 import logging
 from edumfa.lib.tokenclass import DATE_FORMAT
@@ -589,7 +585,7 @@ class BaseEventHandler:
                 cond = conditions.get(CONDITION.TOKENINFO)
                 # replace {now} in condition
                 cond, td = parse_time_offset_from_now(cond)
-                s_now = (datetime.now(tzlocal()) + td).strftime(DATE_FORMAT)
+                s_now = (localnow() + td).strftime(DATE_FORMAT)
                 cond = cond.format(now=s_now)
                 if not compare_generic_condition(cond,
                                                  token_obj.get_tokeninfo,

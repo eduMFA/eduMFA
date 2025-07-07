@@ -1,12 +1,12 @@
 # coding: utf-8
+from edumfa.lib.utils import localnow
 from edumfa.models import MonitoringStats, db
 from edumfa.lib.monitoringstats import (write_stats, delete_stats,
                                              get_stats_keys, get_values,
                                              get_last_value)
 
 from .base import MyTestCase
-from dateutil.tz import tzlocal
-from datetime import timedelta, datetime, timezone
+from datetime import timedelta, timezone
 
 
 class TokenModelTestCase(MyTestCase):
@@ -30,7 +30,7 @@ class TokenModelTestCase(MyTestCase):
 
     def test_02_delete_stats(self):
         key1 = "otherkey"
-        now = datetime.now(tzlocal())
+        now = localnow()
         write_stats(key1, 12, timestamp=now- timedelta(days=1))
         write_stats(key1, 13, timestamp=now)
         write_stats(key1, 14, timestamp=now + timedelta(days=1))
@@ -83,7 +83,7 @@ class TokenModelTestCase(MyTestCase):
         for k in keys:
             delete_stats(k)
 
-        ts = datetime.now(tzlocal())
+        ts = localnow()
         write_stats("key1", 1, timestamp=ts - timedelta(minutes=10))
         write_stats("key1", 2, timestamp=ts - timedelta(minutes=9))
         write_stats("key1", 3, timestamp=ts - timedelta(minutes=8))

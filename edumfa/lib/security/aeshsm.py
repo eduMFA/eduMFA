@@ -23,7 +23,6 @@
 #
 
 import logging
-from datetime import datetime
 
 from edumfa.lib.security.default import (SecurityModule,
                                               int_list_to_bytestring)
@@ -34,6 +33,8 @@ __doc__ = """
 This is a PKCS11 Security module that encrypts and decrypts the data on a
 HSM that is connected via PKCS11. This alternate version relies on AES keys.
 """
+
+from edumfa.lib.utils import utcnow
 
 log = logging.getLogger(__name__)
 
@@ -91,8 +92,8 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
         self.max_retries = config.get("max_retries", MAX_RETRIES)
         log.debug("Setting max retries: {0!s}".format(self.max_retries))
         self.session = None
-        self.session_start_time = datetime.now()
-        self.session_lastused_time = datetime.now()
+        self.session_start_time = utcnow()
+        self.session_lastused_time = utcnow()
         self.key_handles = {}
 
         self.initialize_hsm()
@@ -148,14 +149,14 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
 
         # Before starting the session, we log the old session time usage
         log.debug("Starting new session now. The old session started {0!s} seconds ago.".format(
-            datetime.now() - self.session_start_time)
+            utcnow() - self.session_start_time)
         )
         log.debug("Starting new session now. The old session was used {0!s} seconds ago.".format(
-            datetime.now() - self.session_lastused_time)
+            utcnow() - self.session_lastused_time)
         )
         # If the HSM is not connected at this point, it will fail
         self.session = self.pkcs11.openSession(slot=self.slot)
-        self.session_start_time = datetime.now()
+        self.session_start_time = utcnow()
 
         log.debug("Logging on to '{}'".format(slotinfo.slotDescription))
         self.session.login(self.password)
@@ -182,7 +183,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
         while True:
             try:
                 r_integers = self.session.generateRandom(length)
-                self.session_lastused_time = datetime.now()
+                self.session_lastused_time = utcnow()
                 break
             except PyKCS11.PyKCS11Error as exx:
                 log.warning("Generate Random failed: {0!s}".format(exx))
@@ -213,7 +214,7 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
             try:
                 k = self.key_handles[key_id]
                 r = self.session.encrypt(k, bytes(data), m)
-                self.session_lastused_time = datetime.now()
+                self.session_lastused_time = utcnow()
                 break
             except PyKCS11.PyKCS11Error as exx:
                 log.warning("Encryption failed: {0!s}".format(exx))
@@ -240,13 +241,13 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
             return bytes()
         log.debug("Decrypting {} bytes with key {}".format(len(enc_data), key_id))
         m = PyKCS11.Mechanism(PyKCS11.CKM_AES_CBC_PAD, iv)
-        start = datetime.now()
+        start = utcnow()
         retries = 0
         while True:
             try:
                 k = self.key_handles[key_id]
                 r = self.session.decrypt(k, bytes(enc_data), m)
-                self.session_lastused_time = datetime.now()
+                self.session_lastused_time = utcnow()
                 break
             except PyKCS11.PyKCS11Error as exx:
                 log.warning("Decryption failed: {0!s}".format(exx))
@@ -257,14 +258,14 @@ class AESHardwareSecurityModule(SecurityModule):  # pragma: no cover
                     self.initialize_hsm()
                     retries += 1
                     if retries > self.max_retries:
-                        td = datetime.now() - start
+                        td = utcnow() - start
                         log.warning("Decryption finally failed: {0!s}. Time taken: {1!s}.".format(exx, td))
                         raise HSMException("Failed to decrypt after multiple retries.")
                 else:
                     raise HSMException("HSM decrypt failed with {0!s}".format(exx))
 
         if retries > 0:
-            td = datetime.now() - start
+            td = utcnow() - start
             log.warning("Decryption after {0!s} retries successful. Time taken: {1!s}.".format(retries, td))
         return int_list_to_bytestring(r)
 

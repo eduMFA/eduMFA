@@ -27,7 +27,7 @@ from edumfa.lib.config import (set_edumfa_config, get_token_types,
                                     delete_edumfa_config, SYSCONF)
 from edumfa.lib.policy import (set_policy, SCOPE, ACTION, PolicyClass,
                                     delete_policy)
-from edumfa.lib.utils import b32encode_and_unicode, hexlify_and_unicode
+from edumfa.lib.utils import b32encode_and_unicode, hexlify_and_unicode, localnow
 from edumfa.lib.error import PolicyError
 from dateutil import parser
 import hashlib
@@ -669,7 +669,7 @@ class TokenTestCase(MyTestCase):
             lost_token("doesnotexist")
         validity = 10
         r = lost_token(serial1)
-        end_date = datetime.now(tzlocal()) + timedelta(days=validity)
+        end_date = localnow() + timedelta(days=validity)
         """
         r = {'end_date': '16/12/14 23:59',
              'pin': True, 'valid_to': 'xxxx', 'init': True, 'disable': 1,
@@ -1825,7 +1825,7 @@ class TokenFailCounterTestCase(MyTestCase):
         tok.token.count = 10
         tok.set_pin("hotppin")
         tok.set_failcount(10)
-        exceeded_timestamp = datetime.now(tzlocal()) - timedelta(minutes=1)
+        exceeded_timestamp = localnow() - timedelta(minutes=1)
         tok.add_tokeninfo(FAILCOUNTER_EXCEEDED, exceeded_timestamp.strftime(DATE_FORMAT))
 
         # OTP value #11
@@ -1853,7 +1853,7 @@ class TokenFailCounterTestCase(MyTestCase):
 
         # Now we set the failoucnter and the exceeded time.
         tok.set_failcount(10)
-        exceeded_timestamp = datetime.now(tzlocal()) - timedelta(minutes=1)
+        exceeded_timestamp = localnow() - timedelta(minutes=1)
         tok.add_tokeninfo(FAILCOUNTER_EXCEEDED, exceeded_timestamp.strftime(DATE_FORMAT))
         set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
 
@@ -1880,7 +1880,7 @@ class TokenFailCounterTestCase(MyTestCase):
         tok.token.count = 10
         tok.set_pin("hotppin")
         tok.set_failcount(10)
-        exceeded_timestamp = datetime.now(tzlocal()) - timedelta(minutes=1)
+        exceeded_timestamp = localnow() - timedelta(minutes=1)
         tok.add_tokeninfo(FAILCOUNTER_EXCEEDED, exceeded_timestamp.strftime(DATE_FORMAT))
 
         # by default, correct PIN + wrong OTP value does not reset the failcounter

@@ -37,7 +37,7 @@ from edumfa.lib.resolver import (save_resolver,
                                       CENSORED)
 from edumfa.lib.realm import (set_realm, delete_realm)
 from edumfa.models import ResolverConfig
-from edumfa.lib.utils import to_bytes, to_unicode
+from edumfa.lib.utils import to_bytes, to_unicode, utcnow
 from requests import HTTPError
 
 objectGUIDs = [
@@ -2080,7 +2080,7 @@ class LDAPResolverTestCase(MyTestCase):
             mock_search.assert_not_called()
         self.assertIn('bob', CACHE[y.getResolverId()]['getUserId'])
         # assert requests later than CACHE_TIMEOUT seconds query the directory again
-        now = datetime.now()
+        now = utcnow()
         with mock.patch('edumfa.lib.resolvers.LDAPIdResolver.datetime.datetime', wraps=datetime) as mock_datetime:
             # we now live CACHE_TIMEOUT + 2 seconds in the future
             mock_datetime.now.return_value = now + timedelta(seconds=cache_timeout + 2)

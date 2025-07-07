@@ -604,9 +604,7 @@ class TokenModelTestCase(MyTestCase):
         self.assertEqual(s2, None)
 
     def test_18_add_and_delete_password_reset(self):
-        p1 = PasswordReset("recoverycode", "cornelius",
-                           "realm", expiration=datetime.now() + timedelta(
-                seconds=120))
+        p1 = PasswordReset("recoverycode", "cornelius", "realm", expiration=utcnow() + timedelta(seconds=120))
         p1.save()
         p2 = PasswordReset.query.filter_by(username="cornelius",
                                            realm="realm").first()
@@ -757,7 +755,7 @@ class TokenModelTestCase(MyTestCase):
         user_id = 1
         # we don't need a timestamp with microseconds here, the MySQL DATETIME
         # type doesn't support it out of the box anyway
-        timestamp = datetime.now().replace(microsecond=0)
+        timestamp = utcnow().replace(microsecond=0)
 
         # create a user in the cache
         cached_user = UserCache(username, username, resolver, user_id, timestamp)

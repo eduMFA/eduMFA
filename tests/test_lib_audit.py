@@ -16,6 +16,7 @@ from edumfa.lib.audit import getAudit, search
 from edumfa.lib.auditmodules.containeraudit import Audit as ContainerAudit
 from edumfa.lib.auditmodules.loggeraudit import Audit as LoggerAudit
 from edumfa.lib.auditmodules.sqlaudit import column_length
+from edumfa.lib.utils import utcnow
 from .base import MyTestCase, OverrideConfigTestCase
 from testfixtures import log_capture
 
@@ -122,7 +123,7 @@ class AuditTestCase(MyTestCase):
         self.Audit.finalize_log()
 
         # remember the current time for later
-        current_timestamp = datetime.now()
+        current_timestamp = utcnow()
 
         # create a new audit log entry 2 seconds after the previous ones
         with mock.patch('edumfa.models.datetime') as mock_dt:

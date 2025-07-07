@@ -26,7 +26,7 @@ user is asked one of these questions and can respond with the corresponding
 answer.
 """
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from edumfa.api.lib.utils import getParam
 from edumfa.lib.config import get_from_config
@@ -34,6 +34,8 @@ from edumfa.lib.tokenclass import TokenClass
 from edumfa.lib.log import log_with
 from edumfa.lib.error import TokenAdminError
 import logging
+
+from edumfa.lib.utils import utcnow
 from edumfa.models import Challenge
 from edumfa.lib.challenge import get_challenges
 from edumfa.lib import _
@@ -248,7 +250,7 @@ class QuestionnaireTokenClass(TokenClass):
                                  challenge=message,
                                  validitytime=validity)
         db_challenge.save()
-        expiry_date = datetime.now() + timedelta(seconds=validity)
+        expiry_date = utcnow() + timedelta(seconds=validity)
         reply_dict = {'attributes': {'valid_until': "{0!s}".format(expiry_date)}}
         return True, message, db_challenge.transaction_id, reply_dict
 

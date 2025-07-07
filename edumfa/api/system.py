@@ -34,8 +34,6 @@ This is the REST API for system calls to create and read system configuration.
 The code of this module is tested in tests/test_api_system.py
 """
 
-from datetime import datetime
-
 from flask import (Blueprint,
                    request)
 from .lib.utils import (getParam,
@@ -65,8 +63,7 @@ from edumfa.lib.policy import PolicyClass, ACTION
 from edumfa.lib.auth import get_db_admins
 from edumfa.lib.crypto import geturandom, set_hsm_password, get_hsm
 from edumfa.lib.importotp import GPGImport
-from edumfa.lib.utils import hexlify_and_unicode, b64encode_and_unicode
-
+from edumfa.lib.utils import hexlify_and_unicode, b64encode_and_unicode, localnow
 
 log = logging.getLogger(__name__)
 
@@ -90,7 +87,7 @@ def get_config_documentation():
     policies = P.list_policies()
     admins = get_db_admins()
     context = {"system": socket.getfqdn(socket.gethostname()),
-               "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+               "date": localnow().strftime("%Y-%m-%d %H:%M"),
                "systemconfig": config,
                "appconfig": current_app.config,
                "resolverconfig": resolvers,

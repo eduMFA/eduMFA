@@ -23,7 +23,6 @@ import os
 import re
 import sys
 import tarfile
-from datetime import datetime
 from functools import partial
 from subprocess import call
 
@@ -33,6 +32,7 @@ from flask.cli import AppGroup
 
 from edumfa.commands.manage.helper import conf_import, conf_export, get_conf_resolver, get_conf_event, get_conf_policy, \
     import_conf_policy, import_conf_resolver, import_conf_event
+from edumfa.lib.utils import utcnow
 from edumfa.lib.utils.export import IMPORT_FUNCTIONS, EXPORT_FUNCTIONS
 
 config_cli = AppGroup("config", help="Manage your eduMFA configuration")
@@ -179,7 +179,7 @@ def export_full_config(passwords, archive, directory):
             "policy": get_conf_policy()}
     if archive or directory:
         from socket import gethostname
-        DATE = datetime.now().strftime("%Y%m%d-%H%M")
+        DATE = utcnow().strftime("%Y%m%d-%H%M")
         BASE_NAME = "edumfa-config-backup"
         HOSTNAME = gethostname()
         if not directory:

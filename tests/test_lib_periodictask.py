@@ -4,7 +4,7 @@ This file contains the tests for periodic tasks.
 In particular, this tests
 lib/periodictask.py
 """
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta, timezone
 
 from dateutil.parser import parse as parse_timestamp
 from dateutil.tz import gettz

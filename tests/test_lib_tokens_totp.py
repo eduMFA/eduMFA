@@ -5,6 +5,7 @@ The lib.tokenclass depends on the DB model and lib.user
 """
 from datetime import datetime
 
+from edumfa.lib.utils import utcnow
 from .base import MyTestCase, FakeAudit, FakeFlaskG
 from edumfa.lib.resolver import (save_resolver)
 from edumfa.lib.realm import (set_realm)
@@ -513,7 +514,7 @@ class TOTPTokenTestCase(MyTestCase):
         ret, _, dct = token.get_multi_otp(1)
         self.assertTrue(ret)
         self.assertGreater(list(dct["otp"].keys())[0], 47251648)
-        ret, _, dct = token.get_multi_otp(1, curTime=datetime.now())
+        ret, _, dct = token.get_multi_otp(1, curTime=utcnow())
         self.assertTrue(ret)
         self.assertGreater(list(dct["otp"].keys())[0], 47251648)
 

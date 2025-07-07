@@ -40,10 +40,9 @@ from edumfa.lib.token import (init_token, remove_token, get_realms_of_token, get
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.user import User
 from edumfa.lib.error import ResourceNotFoundError
-from edumfa.lib.utils import is_true
-from datetime import datetime, timedelta
+from edumfa.lib.utils import is_true, localnow
+from datetime import timedelta
 from dateutil.parser import parse as parse_date_string
-from dateutil.tz import tzlocal
 from edumfa.app import PiResponseClass as Response
 from collections import OrderedDict
 
@@ -391,10 +390,7 @@ class BaseEventHandlerTestCase(MyTestCase):
         self.assertTrue(r)
 
         # myDate is one hour in the future
-        tok.add_tokeninfo("myDate",
-                          (datetime.now(tzlocal())
-                           + timedelta(hours=1)
-                           ).strftime(DATE_FORMAT))
+        tok.add_tokeninfo("myDate",  (localnow() + timedelta(hours=1)).strftime(DATE_FORMAT))
         r = uhandler.check_condition(
             {"g": {},
              "handler_def": {"conditions": {CONDITION.TOKENINFO:
@@ -2043,9 +2039,9 @@ class TokenEventTestCase(MyTestCase):
         start = t[0].get_validity_period_start()
         d_end = parse_date_string(end)
         d_start = parse_date_string(start)
-        self.assertTrue(datetime.now(tzlocal()) + timedelta(minutes=9) < d_start)
-        self.assertTrue(datetime.now(tzlocal()) + timedelta(days=9) < d_end)
-        self.assertTrue(datetime.now(tzlocal()) + timedelta(days=11) > d_end)
+        self.assertTrue(localnow() + timedelta(minutes=9) < d_start)
+        self.assertTrue(localnow() + timedelta(days=9) < d_end)
+        self.assertTrue(localnow() + timedelta(days=11) > d_end)
 
         remove_token("SPASS01")
 

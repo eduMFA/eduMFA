@@ -1915,7 +1915,7 @@ class APITokenTestCase(MyApiTestCase):
         set_policy(name="admin_time", scope=SCOPE.ADMIN,
                    action="enrollSPASS",
                    time="Sun: 0-23:59")
-        tn = datetime.now()
+        tn = utcnow()
         dow = tn.isoweekday()
         P = PolicyClass()
         all_admin_policies = P.list_policies()
@@ -1972,7 +1972,7 @@ class APITokenTestCase(MyApiTestCase):
         set_policy("firstuse", scope=SCOPE.ENROLL,
                    action=ACTION.CHANGE_PIN_FIRST_USE)
 
-        current_time = datetime.now(tzlocal())
+        current_time = localnow()
         with mock.patch('edumfa.lib.tokenclass.datetime') as mock_dt:
             mock_dt.now.return_value = current_time
             with self.app.test_request_context('/token/init',
@@ -1997,7 +1997,7 @@ class APITokenTestCase(MyApiTestCase):
         ti = token.get_tokeninfo("next_pin_change")
         self.assertEqual(ti, None)
         # Now we set the PIN
-        current_time = datetime.now(tzlocal())
+        current_time = localnow()
         with mock.patch('edumfa.lib.tokenclass.datetime') as mock_dt:
             mock_dt.now.return_value = current_time
             with self.app.test_request_context('/token/setpin/SP001',
