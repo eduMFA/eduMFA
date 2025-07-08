@@ -173,20 +173,15 @@ class FirebaseProvider(ISMSProvider):
             resp = authed_session.post(url, data=json.dumps(fcm_message), headers=headers, proxies=proxies, timeout=(FIREBASE_CONNECT_TIMEOUT,FIREBASE_READ_TIMEOUT))
             if resp.status_code == 200:
                 log.debug("Message sent successfully to Firebase service.")
-                res = True
+                return True
             else:
                 log.warning("Failed to send message to firebase service: {0!s}".format(resp.text))
+                return False
 
         except Exception as e:
             log.warning(f"An unexpected error occurred in Firebase.py: {e}")
+            return False
 
-        if resp.status_code == 200:
-            log.debug("Message sent successfully to Firebase service.")
-            res = True
-        else:
-            log.warning("Failed to send message to firebase service: {0!s}".format(resp.text))
-
-        return res
 
     def check_configuration(self):
         """
