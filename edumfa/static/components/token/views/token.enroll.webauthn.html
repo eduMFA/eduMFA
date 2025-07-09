@@ -3,3 +3,13 @@
     Alliance. You can register this token with any webservice and with
     as many web services you wish to.
 </p>
+<!-- ng-hide="checkRight('webauthn_user_select')-->
+<div class="form-group">
+    <fieldset>
+        <input type="radio" name="webauthntype" value="resident" id="resident" ng-model="form.webauthntype"/>
+	<label for="resident" translate>Passkey</label>
+
+        <input type="radio" name="webauthntype" value="non-resident" id="non-resident" ng-model="form.webauthntype"/>
+	<label for="non-resident" translate>Generic WebAuthn</label>
+    </fieldset>
+</div>
