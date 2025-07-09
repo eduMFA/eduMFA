@@ -640,6 +640,10 @@ angular.module("eduMfaApp")
         $scope.$broadcast("piReload");
     };
 
+    $scope.ldapRestartDialog = function() {
+        $("#dialogLdapRestart").modal();
+    };
+
 }]);
 
 angular.module("eduMfaApp")
