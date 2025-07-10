@@ -4,7 +4,7 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements.txt --strip-extras
 #
-alembic==1.16.3
+alembic==1.16.4
     # via flask-migrate
 argon2-cffi==25.1.0
     # via edumfa (setup.py)
