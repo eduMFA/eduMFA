@@ -36,10 +36,9 @@ import base64
 import sqlalchemy
 import string
 import re
-from datetime import timedelta, datetime
-from datetime import time as dt_time
+from datetime import timedelta, datetime, time as dt_time, timezone
 from dateutil.parser import parse as parse_date_string
-from dateutil.tz import tzlocal, tzutc
+from dateutil.tz import tzlocal
 from netaddr import IPAddress, IPNetwork, AddrFormatError
 import hashlib
 import traceback
@@ -94,7 +93,7 @@ def check_time_in_range(time_range, check_time=None):
                  "sat": 6,
                  "sun": 7}
 
-    check_time = check_time or datetime.now()
+    check_time = check_time or utcnow()
     check_day = check_time.isoweekday()
     check_hour = dt_time(check_time.hour, check_time.minute)
     # remove whitespaces
@@ -493,12 +492,12 @@ def parse_date(date_string):
     """
     date_string = date_string.strip()
     if date_string == "":
-        return datetime.now(tzlocal())
+        return localnow()
     if date_string.startswith("+"):
         # We are using an offset
         delta_specifier = date_string[-1].lower()
         if delta_specifier not in 'mhd':
-            return datetime.now(tzlocal()) + timedelta()
+            return localnow() + timedelta()
         delta_amount = int(date_string[1:-1])
         if delta_specifier == "m":
             td = timedelta(minutes=delta_amount)
@@ -507,7 +506,7 @@ def parse_date(date_string):
         else:
             # delta_specifier must be "d"
             td = timedelta(days=delta_amount)
-        return datetime.now(tzlocal()) + td
+        return localnow() + td
 
     # check 2016/12/23, 23.12.2016 and including hour and minutes.
     d = None
@@ -1068,7 +1067,21 @@ def convert_timestamp_to_utc(timestamp):
     :type timestamp: timezone-aware datetime object
     :return: timezone-naive datetime object
     """
-    return timestamp.astimezone(tzutc()).replace(tzinfo=None)
+    return timestamp.astimezone(timezone.utc).replace(tzinfo=None)
+
+
+def utcnow():
+    """
+    Returns the current UTC time as a timezone-aware datetime object.
+    """
+    return datetime.now(tz=timezone.utc)
+
+
+def localnow():
+    """
+    Returns the current local time as a timezone-aware datetime object.
+    """
+    return datetime.now(tz=tzlocal())
 
 
 def censor_connect_string(connect_string):
@@ -1369,8 +1382,8 @@ def create_tag_dict(logged_in_user=None,
     :param escape_html: Whether the values for the tags should be html escaped
     :return: The tag dictionary
     """
-    time = datetime.now().strftime("%H:%M:%S")
-    date = datetime.now().strftime("%Y-%m-%d")
+    time = utcnow().strftime("%H:%M:%S")
+    date = utcnow().strftime("%Y-%m-%d")
     recipient = recipient or {}
     tags = dict(admin=logged_in_user.get("username") if logged_in_user else "",
                 realm=logged_in_user.get("realm") if logged_in_user else "",

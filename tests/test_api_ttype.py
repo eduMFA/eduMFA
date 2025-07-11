@@ -10,15 +10,13 @@ from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from edumfa.lib.utils import to_bytes, to_unicode
+from edumfa.lib.utils import to_bytes, to_unicode, utcnow
 from edumfa.lib.tokens.pushtoken import (PushTokenClass,
                                          strip_key,
                                          PUBLIC_KEY_SMARTPHONE, PRIVATE_KEY_SERVER,
                                          PUBLIC_KEY_SERVER,
                                          POLL_ONLY)
 from edumfa.lib.utils import b32encode_and_unicode
-from datetime import datetime, timedelta
-from pytz import utc
 from base64 import b32decode, b32encode
 import mock
 import responses
@@ -296,7 +294,7 @@ class TtypePushAPITestCase(MyApiTestCase):
                                                 .format(serial))
 
         # first create a signature
-        ts = datetime.utcnow().isoformat()
+        ts = utcnow().isoformat()
         sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
@@ -615,7 +613,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                                                 .format(serial))
 
         # first create a signature
-        ts = datetime.utcnow().isoformat()
+        ts = utcnow().isoformat()
         sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
         sig = self.smartphone_private_key.sign(sign_string.encode('utf8'),
                                                padding.PKCS1v15(),
