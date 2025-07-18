@@ -1173,7 +1173,7 @@ msgid ""
 "templates/main/templates/)"
 msgstr ""
 "Die URL der Policy-Templates. (Default https://raw.githubusercontent.com/"
-" edumfa/policy-templates/master/templates/)"
+"edumfa/policy-templates/master/templates/)"
 
 #: lib/policy.py:2467
 msgid ""

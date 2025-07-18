@@ -1147,9 +1147,8 @@ msgid ""
 "(Default https://raw.githubusercontent.com/eduMFA/policy-"
 "templates/main/templates/)"
 msgstr ""
-"Politika şablonlarının bulunabileceği bir depo URL'si. (Varsayılan https:"
-" //raw.githubusercontent.com/ PrivaciDiDea / Politika-şablonlar / Master "
-"/ Şablonlar /)"
+"Politika şablonlarının bulunabileceği bir depo URL'si.  (Varsayılan "
+"https://raw.githubusercontent.com/eduMFA/policy-templates/main/templates/"
 
 #: lib/policy.py:2467
 msgid ""
