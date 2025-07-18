@@ -979,8 +979,8 @@ msgid ""
 "(Default https://raw.githubusercontent.com/eduMFA/policy-"
 "templates/main/templates/)"
 msgstr ""
-"可以在其中找到策略模板的存储库的URL。  （默认https：//raw.githubusercontent.com/ edumfa / "
-"policy-templates / master / templates /）"
+"可以在其中找到策略模板的存储库的URL。  （默认https：//raw.githubusercontent.com/edumfa/"
+"policy-templates/master/templates/）"
 
 #: lib/policy.py:2467
 msgid ""

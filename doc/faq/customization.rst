@@ -23,7 +23,7 @@ All HTML views are contained in::
 
     static/components/<component>/views/<view>.html
 
-You can find them on `GitHub <https://github.com/eduMFA/eduMFA/tree/master/eduMFA/static>`_
+You can find them on `GitHub <https://github.com/eduMFA/eduMFA/tree/main/edumfa/static>`_
 or at the according location in your installation.
 
 Follow these basic steps:

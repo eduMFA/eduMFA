@@ -528,6 +528,17 @@ the entity whose web applications the WebAuthn tokens are used for.
     an overview of all the settings required for the use of WebAuthn, see
     :ref:`webauthn_otp_token`.
 
+.. _policy_webauthn_enroll_resident_key
+
+webauthn_resident_key
+~~~~~~~~~~~~~~~~~~~~~
+
+type: string
+
+Whether to request a resident key to be created.
+
+.. note:: Passkeys are always resident keys.
+
 .. _policy_webauthn_enroll_timeout:
 
 webauthn_timeout
@@ -702,7 +713,7 @@ by an unknown certificate.
     :ref:`webauthn_otp_token` for details.
 
 .. note:: If this is set to `untrusted`, a manipulated token could send a
-    self-signed attestation message with modified a modified AAGUID and faked
+    self-signed attestation message with a modified AAGUID and faked
     certificate fields in order to bypass :ref:`policy_webauthn_enroll_req` and
     :ref:`policy_webauthn_enroll_authenticator_selection_list`, or
     :ref:`policy_webauthn_authz_req` and

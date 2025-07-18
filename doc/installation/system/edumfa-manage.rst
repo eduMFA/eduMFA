@@ -57,7 +57,7 @@ Backup and Restore
 
 .. index:: Backup, Restore
 
-You can create a backup which will be save to */var/lib/edumfa/backup/*.
+You can create a backup which will be saved to */var/lib/edumfa/backup/*.
 
 The backup will contain the database dump and the complete directory
 */etc/edumfa*. You may choose if you want to add the encryption key to

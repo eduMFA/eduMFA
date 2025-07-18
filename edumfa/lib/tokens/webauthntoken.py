@@ -70,7 +70,7 @@ WebAuthn tokens can be either
  * registered by the users themselves.
 
 Be aware that WebAuthn tokens can only be used if the eduMFA server and
-the applicaedumfations and services the user needs to access all reside under the
+the applications and services the user needs to access all reside under the
 same domain or subdomains thereof.
 
 This means a WebAuthn token registered by mfa.mycompany.com can be
@@ -146,7 +146,7 @@ and a message to display to the user. It will also contain some additional optio
 regarding timeout, which authenticators are acceptable, and what key types are
 acceptable to the server.
 
-With the received data You need to call the javascript function
+With the received data you need to call this javascript function:
 
 .. sourcecode:: javascript
 
