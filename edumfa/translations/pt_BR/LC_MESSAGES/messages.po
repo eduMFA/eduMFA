@@ -1135,8 +1135,8 @@ msgid ""
 "templates/main/templates/)"
 msgstr ""
 "A URL de um repositório, onde os modelos de políticas podem ser "
-"encontrados.  (https predefinidos: //raw.githubusercontent.com/ edumfa"
-"/policy-templates /master/templates/)"
+"encontrados.  (predefinidos https://raw.githubusercontent.com/edumfa"
+"/policy-templates/master/templates/)"
 
 #: lib/policy.py:2467
 msgid ""

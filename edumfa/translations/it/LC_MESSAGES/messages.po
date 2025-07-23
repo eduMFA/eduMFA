@@ -2985,7 +2985,7 @@ msgstr ""
 #~ "The URL of a repository, where the"
 #~ " policy templates can be found.  "
 #~ "(Default https: //raw.githubusercontent.com/ edumfa"
-#~ "/policy-templates /master/templates/)"
+#~ "/policy-templates/master/templates/)"
 #~ msgstr ""
 
 #~ msgid ""
