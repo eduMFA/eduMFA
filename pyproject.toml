@@ -37,7 +37,7 @@ Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
 docs = [
-    "furo==2024.8.6",
+    "furo==2025.7.19",
     "docutils==0.21.2",
     "imagesize==1.4.1",
     "packaging==25.0",
