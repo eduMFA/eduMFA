@@ -94,6 +94,7 @@ it in two steps:
 
     type=webauthn
     user=<username>
+    webauthntype=<webauthnType>
 
 The request returns:
 
@@ -910,6 +911,7 @@ class WebAuthnTokenClass(TokenClass):
         elif reg_data and client_data and self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
             serial = self.token.serial
             registration_client_extensions = getParam(param, "registrationclientextensions", optional)
+            webauthn_requested_type = getParam(param, "webauthntype", optional)
 
             rp_id = getParam(param, WEBAUTHNACTION.RELYING_PARTY_ID, required)
             uv_req = getParam(param, WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT, optional)
@@ -1093,6 +1095,21 @@ class WebAuthnTokenClass(TokenClass):
                                  givenname=self.user.info.get("givenname", ""),
                                  surname=self.user.info.get("surname", ""))
 
+            webauthn_type=getParam(params, "webauthntype", optional)
+            resident_key=getParam(params,
+                                  WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY,
+                                  optional)
+            if webauthn_type == "resident":
+                if resident_key == "discouraged":
+                    raise ParameterError("resident key requested when AUTHENTICATOR_RESIDENT_KEY is set to discouraged.")
+                else:
+                    resident_key = "required"
+            elif webauthn_type == "non-resident":
+                if resident_key == "required":
+                    raise ParameterError("non-resident key requested when AUTHENTICATOR_RESIDENT_KEY is set to required.")
+                else:
+                    resident_key = "discouraged"
+
             public_key_credential_creation_options = WebAuthnMakeCredentialOptions(
                 challenge=webauthn_b64_encode(nonce),
                 rp_name=getParam(params,
@@ -1122,9 +1139,7 @@ class WebAuthnTokenClass(TokenClass):
                 authenticator_selection_list=getParam(params,
                                                       WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST,
                                                       optional),
-                resident_key=getParam(params,
-                                      WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY,
-                                      optional),
+                resident_key=resident_key,
                 credential_ids=credential_ids
             ).registration_dict
 
