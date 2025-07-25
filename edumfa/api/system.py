@@ -55,7 +55,6 @@ from .auth import admin_required
 from flask import (g, current_app, render_template)
 import logging
 import json
-import datetime
 import re
 import socket
 from edumfa.lib.resolver import get_resolver_list
@@ -64,8 +63,7 @@ from edumfa.lib.policy import PolicyClass, ACTION
 from edumfa.lib.auth import get_db_admins
 from edumfa.lib.crypto import geturandom, set_hsm_password, get_hsm
 from edumfa.lib.importotp import GPGImport
-from edumfa.lib.utils import hexlify_and_unicode, b64encode_and_unicode
-
+from edumfa.lib.utils import hexlify_and_unicode, b64encode_and_unicode, localnow
 
 log = logging.getLogger(__name__)
 
@@ -89,7 +87,7 @@ def get_config_documentation():
     policies = P.list_policies()
     admins = get_db_admins()
     context = {"system": socket.getfqdn(socket.gethostname()),
-               "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+               "date": localnow().strftime("%Y-%m-%d %H:%M"),
                "systemconfig": config,
                "appconfig": current_app.config,
                "resolverconfig": resolvers,

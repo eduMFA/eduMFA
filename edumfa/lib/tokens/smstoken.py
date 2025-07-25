@@ -34,12 +34,12 @@ The Gateways are defined in the SMSProvider Modules.
 This code is tested in tests/test_lib_tokens_sms
 """
 
-import datetime
 import traceback
+from datetime import timedelta
 
 from edumfa.api.lib.utils import getParam
 from edumfa.api.lib.utils import required, optional
-from edumfa.lib.utils import is_true, create_tag_dict
+from edumfa.lib.utils import is_true, create_tag_dict, utcnow
 
 from edumfa.lib.config import get_from_config
 from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
@@ -354,8 +354,7 @@ class SmsTokenClass(HotpTokenClass):
                 if is_true(options.get("exception")):
                     raise Exception(info)
 
-        expiry_date = datetime.datetime.now() + \
-                                    datetime.timedelta(seconds=validity)
+        expiry_date = utcnow() + timedelta(seconds=validity)
         reply_dict['attributes']['valid_until'] = "{0!s}".format(expiry_date)
 
         return success, return_message, transactionid, reply_dict

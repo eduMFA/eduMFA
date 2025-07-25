@@ -20,7 +20,6 @@
 import os
 import re
 import sys
-from datetime import datetime
 from shlex import quote as shlex_quote
 from subprocess import Popen, PIPE, call, run
 
@@ -28,6 +27,8 @@ import click
 import sqlalchemy
 from flask import current_app
 from flask.cli import AppGroup
+
+from edumfa.lib.utils import utcnow
 
 backup_cli = AppGroup("backup", help="Perform backup operations")
 
@@ -169,7 +170,7 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
     Please read option documentation and choose your option carefully!
     """
     CONF_DIR = config_dir
-    DATE = datetime.now().strftime("%Y%m%d-%H%M")
+    DATE = utcnow().strftime("%Y%m%d-%H%M")
     BASE_NAME = "eduMFA-backup"
 
     target_dir = os.path.abspath(target_dir)

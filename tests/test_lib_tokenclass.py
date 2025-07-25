@@ -3,6 +3,8 @@ This test file tests the lib.tokenclass
 
 The lib.tokenclass depends on the DB model and lib.user
 """
+from datetime import timedelta, datetime
+
 from .base import MyTestCase, FakeFlaskG
 from edumfa.lib.resolver import (save_resolver, delete_resolver)
 from edumfa.lib.realm import (set_realm, delete_realm)
@@ -12,12 +14,11 @@ from edumfa.lib.tokenclass import (TokenClass, DATE_FORMAT)
 from edumfa.lib.config import (set_edumfa_config,
                                     delete_edumfa_config)
 from edumfa.lib.crypto import geturandom
-from edumfa.lib.utils import hexlify_and_unicode, to_unicode
+from edumfa.lib.utils import hexlify_and_unicode, to_unicode, utcnow, localnow
 from edumfa.lib.error import TokenAdminError
 from edumfa.models import (Token,
                                 Config,
                                 Challenge)
-import datetime
 from dateutil.tz import tzlocal
 
 PWFILE = "tests/testdata/passwords"
@@ -325,7 +326,7 @@ class TokenBaseTestCase(MyTestCase):
         self.assertTrue(token.check_validity_period())
 
         # try the same for the validity period start
-        start_date_5d = datetime.datetime.now(tzlocal()) + datetime.timedelta(5)
+        start_date_5d = localnow() + timedelta(5)
         token.set_validity_period_start(start_date_5d.strftime(DATE_FORMAT))
         self.assertFalse(token.check_validity_period())
         token.set_validity_period_start('')
@@ -341,33 +342,33 @@ class TokenBaseTestCase(MyTestCase):
 
         # check validity period
         # +5 days
-        end_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(5)
+        end_date = localnow() + timedelta(5)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # - 5 days
-        start_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(5)
+        start_date = localnow() - timedelta(5)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertTrue(token.check_validity_period())
 
         # check before start date
         # +5 days
-        end_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(5)
+        end_date = localnow() + timedelta(5)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # + 2 days
-        start_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(2)
+        start_date = localnow() + timedelta(2)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertFalse(token.check_validity_period())
 
         # check after enddate
         # -1 day
-        end_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(1)
+        end_date = localnow() - timedelta(1)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # - 10 days
-        start_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(10)
+        start_date = localnow() - timedelta(10)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertFalse(token.check_validity_period())
@@ -388,8 +389,8 @@ class TokenBaseTestCase(MyTestCase):
         self.assertTrue(s.startswith("2017-04-11T22:00"), s)
 
         # old date format has problems with check_validity_date
-        start_date = datetime.datetime.now() - datetime.timedelta(days=15)
-        end_date = datetime.datetime.now() + datetime.timedelta(days=15)
+        start_date = utcnow() - timedelta(days=15)
+        end_date = utcnow() + timedelta(days=15)
         start = start_date.strftime("%d/%m/%Y")
         end = end_date.strftime("%d/%m/%Y")
         # Need to write the old format to the database
@@ -707,15 +708,11 @@ class TokenBaseTestCase(MyTestCase):
         token = TokenClass(db_token)
         token.set_next_pin_change("12d")
         r = token.get_tokeninfo("next_pin_change")
-        self.assertLessEqual(datetime.datetime.strptime(r, DATE_FORMAT),
-                             datetime.datetime.now(tzlocal()) + datetime.timedelta(days=12),
-                             r)
+        self.assertLessEqual(datetime.strptime(r, DATE_FORMAT), localnow() + timedelta(days=12), r)
 
         token.set_next_pin_change("12d", password=True)
         r = token.get_tokeninfo("next_password_change")
-        self.assertLessEqual(datetime.datetime.strptime(r, DATE_FORMAT),
-                             datetime.datetime.now(tzlocal()) + datetime.timedelta(days=12),
-                             r)
+        self.assertLessEqual(datetime.strptime(r, DATE_FORMAT), localnow() + timedelta(days=12), r)
         # The password must not be changed
         r = token.is_pin_change(password=True)
         self.assertFalse(r)
@@ -797,18 +794,19 @@ class TokenBaseTestCase(MyTestCase):
         db_token = Token("lastauth001", tokentype="spass", userid=1000)
         db_token.save()
         token_obj = TokenClass(db_token)
-        tdelta = datetime.timedelta(days=1)
-        token_obj.add_tokeninfo(ACTION.LASTAUTH,
-                                datetime.datetime.now(tzlocal())-tdelta)
+        tdelta = timedelta(days=1)
+        token_obj.add_tokeninfo(ACTION.LASTAUTH, localnow() - tdelta)
         r = token_obj.check_last_auth_newer("10h")
         self.assertFalse(r)
         r = token_obj.check_last_auth_newer("2d")
         self.assertTrue(r)
 
         # Old time format
-        # lastauth_alt = datetime.datetime.utcnow().isoformat()
-        token_obj.add_tokeninfo(ACTION.LASTAUTH,
-                                datetime.datetime.utcnow() - tdelta)
+        # lastauth_alt = datetime.now(tz=timezone.utc)).isoformat()
+        token_obj.add_tokeninfo(
+            ACTION.LASTAUTH,
+            utcnow() - tdelta
+        )
         r = token_obj.check_last_auth_newer("10h")
         self.assertFalse(r)
         r = token_obj.check_last_auth_newer("2d")
@@ -870,7 +868,7 @@ class TokenBaseTestCase(MyTestCase):
         token_obj = TokenClass(db_token)
         for i in range(0, 11):
             token_obj.inc_failcount()
-        now = datetime.datetime.now(tzlocal()).strftime(DATE_FORMAT)
+        now = localnow().strftime(DATE_FORMAT)
         # Now the FAILCOUNTER_EXCEEDED is set
         ti = token_obj.get_tokeninfo(FAILCOUNTER_EXCEEDED)
         # We only compare the date
@@ -885,8 +883,7 @@ class TokenBaseTestCase(MyTestCase):
         # Now check with failcounter clear, with timeout 5 minutes
         set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 5)
         token_obj.set_failcount(10)
-        failed_recently = (datetime.datetime.now(tzlocal()) -
-                           datetime.timedelta(minutes=3)).strftime(DATE_FORMAT)
+        failed_recently = (localnow() - timedelta(minutes=3)).strftime(DATE_FORMAT)
         token_obj.add_tokeninfo(FAILCOUNTER_EXCEEDED, failed_recently)
 
         r = token_obj.check_reset_failcount()
