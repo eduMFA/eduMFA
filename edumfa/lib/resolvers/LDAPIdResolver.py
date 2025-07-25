@@ -753,6 +753,7 @@ class IdResolver (UserIdResolver):
         :rtype: str
         """
         s = "{0!s}{1!s}{2!s}{3!s}".format(self.uri, self.basedn,
+                                          self.binddn,
                                           self.searchfilter,
                                           sorted(self.userinfo.items(), key=itemgetter(0)))
         r = binascii.hexlify(hashlib.sha1(s.encode("utf-8")).digest())  # nosec B324 # hash used as unique identifier
