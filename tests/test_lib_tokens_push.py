@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Request
 from werkzeug.test import EnvironBuilder
-from datetime import datetime, timedelta
-from pytz import utc
+from datetime import datetime, timedelta, timezone
 
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from .base import MyTestCase, FakeFlaskG
@@ -21,7 +20,7 @@ from edumfa.lib.crypto import geturandom
 from edumfa.models import Token, Challenge
 from edumfa.lib.policy import (SCOPE, set_policy, delete_policy, ACTION,
                                     LOGINMODE, PolicyClass)
-from edumfa.lib.utils import to_bytes, b32encode_and_unicode, to_unicode
+from edumfa.lib.utils import to_bytes, b32encode_and_unicode, to_unicode, utcnow
 from edumfa.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
 from edumfa.lib.error import ConfigAdminError
 from base64 import b32decode, b32encode
@@ -944,7 +943,7 @@ class PushTokenTestCase(MyTestCase):
                                r'Could not parse timestamp {0!s}. ISO-Format '
                                r'required.'.format(timestamp_fmt),
                                LegacyPushTokenClass._check_timestamp_in_range, timestamp_fmt, 10)
-        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=utc)
+        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=timezone.utc)
         with mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             LegacyPushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
@@ -1009,20 +1008,22 @@ class PushTokenTestCase(MyTestCase):
 
         # check for invalid timestamp (recent but too early)
         req = Request(builder.get_environ())
-        req.all_data = {'serial': 'SPASS01',
-                        'timestamp': (datetime.now(utc)
-                                      - timedelta(minutes=2)).isoformat(),
-                        'signature': 'unknown'}
+        req.all_data = {
+            'serial': 'SPASS01',
+            'timestamp': (utcnow() - timedelta(minutes=2)).isoformat(),
+            'signature': 'unknown'
+        }
         self.assertRaisesRegex(eduMFAError,
                                r'Timestamp .* not in valid range.',
                                LegacyPushTokenClass.api_endpoint, req, g)
 
         # check for invalid timestamp (recent but too late)
         req = Request(builder.get_environ())
-        req.all_data = {'serial': 'SPASS01',
-                        'timestamp': (datetime.now(utc)
-                                      + timedelta(minutes=2)).isoformat(),
-                        'signature': 'unknown'}
+        req.all_data = {
+            'serial': 'SPASS01',
+            'timestamp': (utcnow() + timedelta(minutes=2)).isoformat(),
+            'signature': 'unknown'
+        }
         self.assertRaisesRegex(eduMFAError,
                                r'Timestamp .* not in valid range.',
                                LegacyPushTokenClass.api_endpoint, req, g)
@@ -1038,18 +1039,22 @@ class PushTokenTestCase(MyTestCase):
 
         # check for timestamp of wrong type
         req = Request(builder.get_environ())
-        req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.utcnow(),
-                        'signature': 'unknown'}
+        req.all_data = {
+            'serial': 'SPASS01',
+            'timestamp': utcnow(),
+            'signature': 'unknown'
+        }
         self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp .*\. ISO-Format required.',
                                LegacyPushTokenClass.api_endpoint, req, g)
 
         # check for timezone unaware timestamp (we assume UTC then)
         req = Request(builder.get_environ())
-        req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.utcnow().isoformat(),
-                        'signature': 'unknown'}
+        req.all_data = {
+            'serial': 'SPASS01',
+            'timestamp': utcnow().isoformat(),
+            'signature': 'unknown'
+        }
         self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',
                                LegacyPushTokenClass.api_endpoint, req, g)
@@ -1091,9 +1096,11 @@ class PushTokenTestCase(MyTestCase):
         self.assertEqual(tok.token.get('rollout_state'), 'enrolled', tok)
         self.assertEqual(tok.get_tokeninfo('firebase_token'), 'firebasetoken1', tok)
 
-        req_data = {'new_fb_token': 'firebasetoken2',
-                    'serial': serial,
-                    'timestamp': datetime.now(tz=utc).isoformat()}
+        req_data = {
+            'new_fb_token': 'firebasetoken2',
+            'serial': serial,
+            'timestamp': datetime.now(tz=timezone.utc).isoformat()
+        }    
 
         # now we perform the firebase token update with a broken signature
         builder = EnvironBuilder(method='POST',
@@ -1145,7 +1152,7 @@ class PushTokenTestCase(MyTestCase):
         serial = tok.get_serial()
 
         # this is the default timestamp for polling in this test
-        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=utc)
+        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=timezone.utc)
 
         # create a poll request
         # first create a signature
@@ -1335,7 +1342,7 @@ class PushTokenTestCase(MyTestCase):
         serial2 = tok2.get_serial()
         # we shouldn't run into the signature check here
         req.all_data = {'serial': serial2,
-                        'timestamp': datetime.utcnow().isoformat(),
+                        'timestamp': utcnow().isoformat(),
                         'signature': b32encode(b"signature not needed")}
         # poll for challenges
         self.assertRaisesRegex(eduMFAError,
@@ -2250,7 +2257,7 @@ class EduPushTokenTestCase(MyTestCase):
                                r'Could not parse timestamp {0!s}. ISO-Format '
                                r'required.'.format(timestamp_fmt),
                                PushTokenClass._check_timestamp_in_range, timestamp_fmt, 10)
-        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=utc)
+        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=timezone.utc)
         with mock.patch('edumfa.lib.tokens.pushtoken.datetime') as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
@@ -2315,20 +2322,22 @@ class EduPushTokenTestCase(MyTestCase):
 
         # check for invalid timestamp (recent but too early)
         req = Request(builder.get_environ())
-        req.all_data = {'serial': 'SPASS01',
-                        'timestamp': (datetime.now(utc)
-                                      - timedelta(minutes=2)).isoformat(),
-                        'signature': 'unknown'}
+        req.all_data = {
+            'serial': 'SPASS01',
+            'timestamp': (utcnow() - timedelta(minutes=2)).isoformat(),
+            'signature': 'unknown'
+        }
         self.assertRaisesRegex(eduMFAError,
                                r'Timestamp .* not in valid range.',
                                PushTokenClass.api_endpoint, req, g)
 
         # check for invalid timestamp (recent but too late)
         req = Request(builder.get_environ())
-        req.all_data = {'serial': 'SPASS01',
-                        'timestamp': (datetime.now(utc)
-                                      + timedelta(minutes=2)).isoformat(),
-                        'signature': 'unknown'}
+        req.all_data = {
+            'serial': 'SPASS01',
+            'timestamp': (utcnow() + timedelta(minutes=2)).isoformat(),
+            'signature': 'unknown'
+        }
         self.assertRaisesRegex(eduMFAError,
                                r'Timestamp .* not in valid range.',
                                PushTokenClass.api_endpoint, req, g)
@@ -2344,9 +2353,11 @@ class EduPushTokenTestCase(MyTestCase):
 
         # check for timestamp of wrong type
         req = Request(builder.get_environ())
-        req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.utcnow(),
-                        'signature': 'unknown'}
+        req.all_data = {
+            'serial': 'SPASS01',
+            'timestamp': utcnow(),
+            'signature': 'unknown'
+        }
         self.assertRaisesRegex(eduMFAError,
                                r'Could not parse timestamp .*\. ISO-Format required.',
                                PushTokenClass.api_endpoint, req, g)
@@ -2354,7 +2365,7 @@ class EduPushTokenTestCase(MyTestCase):
         # check for timezone unaware timestamp (we assume UTC then)
         req = Request(builder.get_environ())
         req.all_data = {'serial': 'SPASS01',
-                        'timestamp': datetime.utcnow().isoformat(),
+                        'timestamp': utcnow().isoformat(),
                         'signature': 'unknown'}
         self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',
@@ -2397,9 +2408,11 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertEqual(tok.token.get('rollout_state'), 'enrolled', tok)
         self.assertEqual(tok.get_tokeninfo('firebase_token'), 'firebasetoken1', tok)
 
-        req_data = {'new_fb_token': 'firebasetoken2',
-                    'serial': serial,
-                    'timestamp': datetime.now(tz=utc).isoformat()}
+        req_data = {
+            'new_fb_token': 'firebasetoken2',
+            'serial': serial,
+            'timestamp': datetime.now(tz=timezone.utc).isoformat()
+        }
 
         # now we perform the firebase token update with a broken signature
         builder = EnvironBuilder(method='POST',
@@ -2451,7 +2464,7 @@ class EduPushTokenTestCase(MyTestCase):
         serial = tok.get_serial()
 
         # this is the default timestamp for polling in this test
-        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=utc)
+        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=timezone.utc)
 
         # create a poll request
         # first create a signature
@@ -2640,9 +2653,11 @@ class EduPushTokenTestCase(MyTestCase):
         tok2 = init_token(param={'type': 'hotp', 'genkey': 1})
         serial2 = tok2.get_serial()
         # we shouldn't run into the signature check here
-        req.all_data = {'serial': serial2,
-                        'timestamp': datetime.utcnow().isoformat(),
-                        'signature': b32encode(b"signature not needed")}
+        req.all_data = {
+            'serial': serial2,
+            'timestamp': utcnow().isoformat(),
+            'signature': b32encode(b"signature not needed")
+        }
         # poll for challenges
         self.assertRaisesRegex(eduMFAError,
                                r'Could not verify signature!',

@@ -5,30 +5,30 @@ This tests the package lib.utils
 from .base import MyTestCase
 
 from edumfa.lib.utils import (parse_timelimit,
-                                   check_time_in_range, parse_proxy,
-                                   check_proxy, reduce_realms, is_true,
-                                   parse_date, compare_condition,
-                                   get_data_from_params, parse_legacy_time,
-                                   int_to_hex, compare_value_value,
-                                   compare_generic_condition,
-                                   parse_time_offset_from_now, censor_connect_string,
-                                   parse_timedelta, to_unicode,
-                                   parse_int, convert_column_to_unicode,
-                                   truncate_comma_list, check_pin_contents, CHARLIST_CONTENTPOLICY,
-                                   get_module_class, decode_base32check,
-                                   get_client_ip, sanity_name_check, to_utf8,
-                                   to_byte_string, hexlify_and_unicode,
-                                   b32encode_and_unicode, to_bytes,
-                                   b64encode_and_unicode, create_img,
-                                   convert_timestamp_to_utc, modhex_encode,
-                                   modhex_decode, checksum, urlsafe_b64encode_and_unicode,
-                                   check_ip_in_policy, split_pin_pass, create_tag_dict,
-                                   check_serial_valid, determine_logged_in_userparams,
-                                   to_list, parse_string_to_dict, convert_imagefile_to_dataimage)
+                              check_time_in_range, parse_proxy,
+                              check_proxy, reduce_realms, is_true,
+                              parse_date, compare_condition,
+                              get_data_from_params, parse_legacy_time,
+                              int_to_hex, compare_value_value,
+                              compare_generic_condition,
+                              parse_time_offset_from_now, censor_connect_string,
+                              parse_timedelta, to_unicode,
+                              parse_int, convert_column_to_unicode,
+                              truncate_comma_list, check_pin_contents, CHARLIST_CONTENTPOLICY,
+                              get_module_class, decode_base32check,
+                              get_client_ip, sanity_name_check, to_utf8,
+                              to_byte_string, hexlify_and_unicode,
+                              b32encode_and_unicode, to_bytes,
+                              b64encode_and_unicode, create_img,
+                              convert_timestamp_to_utc, modhex_encode,
+                              modhex_decode, checksum, urlsafe_b64encode_and_unicode,
+                              check_ip_in_policy, split_pin_pass, create_tag_dict,
+                              check_serial_valid, determine_logged_in_userparams,
+                              to_list, parse_string_to_dict, convert_imagefile_to_dataimage, localnow)
 from edumfa.lib.crypto import generate_password
 from datetime import timedelta, datetime
 from netaddr import IPAddress, IPNetwork, AddrFormatError
-from dateutil.tz import tzlocal, tzoffset, gettz
+from dateutil.tz import tzoffset, gettz
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.error import PolicyError
 import binascii
@@ -276,22 +276,22 @@ class UtilsTestCase(MyTestCase):
 
     def test_07_parse_date(self):
         d = parse_date("+12m")
-        self.assertTrue(datetime.now(tzlocal()) < d)
+        self.assertTrue(localnow() < d)
 
         d = parse_date(" +12m ")
-        self.assertTrue(datetime.now(tzlocal()) < d)
+        self.assertTrue(localnow() < d)
 
         d = parse_date(" +12H ")
-        self.assertTrue(datetime.now(tzlocal()) + timedelta(hours=11) < d)
+        self.assertTrue(localnow() + timedelta(hours=11) < d)
 
         d = parse_date(" +12d ")
-        self.assertTrue(datetime.now(tzlocal()) + timedelta(days=11) < d)
+        self.assertTrue(localnow() + timedelta(days=11) < d)
 
         d = parse_date("+5")
-        self.assertTrue(datetime.now(tzlocal()) >= d)
+        self.assertTrue(localnow() >= d)
 
         d = parse_date("")
-        self.assertTrue(datetime.now(tzlocal()) >= d)
+        self.assertTrue(localnow() >= d)
 
         self.assertIsNone(parse_date("-2g"))
 
@@ -447,20 +447,17 @@ class UtilsTestCase(MyTestCase):
         self.assertFalse(compare_value_value(10, '<=', '9'))
 
         # compare dates
-        self.assertTrue(compare_value_value(
-                        datetime.now(tzlocal()).strftime(DATE_FORMAT), ">",
-                        "2017-01-01T10:00+0200"))
-        self.assertFalse(compare_value_value(
-            datetime.now(tzlocal()).strftime(DATE_FORMAT), "<",
-            "2017-01-01T10:00+0200"))
+        self.assertTrue(compare_value_value(localnow().strftime(DATE_FORMAT), ">", "2017-01-01T10:00+0200"))
+        self.assertFalse(compare_value_value(localnow().strftime(DATE_FORMAT), "<", "2017-01-01T10:00+0200"))
         # The timestamp in 10 hours is bigger than the current time
         self.assertTrue(compare_value_value(
-            (datetime.now(tzlocal()) + timedelta(hours=10)).strftime(DATE_FORMAT),
-            ">", datetime.now(tzlocal()).strftime(DATE_FORMAT)))
+            (localnow() + timedelta(hours=10)).strftime(DATE_FORMAT),
+            ">",
+            localnow().strftime(DATE_FORMAT)
+        ))
 
         self.assertTrue(compare_value_value('+3h', '>', ''))
-        self.assertFalse(compare_value_value('2017/04/20 11:30+0200', '>',
-                                             datetime.now(tzlocal()).strftime(DATE_FORMAT)))
+        self.assertFalse(compare_value_value('2017/04/20 11:30+0200', '>', localnow().strftime(DATE_FORMAT)))
 
         self.assertTrue(compare_value_value('2020-01-15T00:00', '==',
                                             datetime(2020, 1, 15).strftime(DATE_FORMAT)))

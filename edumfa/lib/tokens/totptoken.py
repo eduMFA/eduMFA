@@ -35,7 +35,8 @@ TOTP is defined in https://tools.ietf.org/html/rfc6238
 """
 import logging
 import time
-import datetime
+from datetime import timezone, datetime
+
 from edumfa.lib.tokens.HMAC import HmacOtp
 from edumfa.lib.config import get_from_config
 from edumfa.lib.log import log_with
@@ -43,7 +44,7 @@ from edumfa.lib.tokenclass import TokenClass
 from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.policy import ACTION, SCOPE, GROUP, Match
-from edumfa.lib.utils import determine_logged_in_userparams
+from edumfa.lib.utils import determine_logged_in_userparams, utcnow
 from edumfa.lib import _
 
 optional = True
@@ -304,9 +305,9 @@ class TotpTokenClass(HotpTokenClass):
                 return curtime.timestamp()
             else:
                 # curtime is naive
-                return curtime.replace(tzinfo=datetime.timezone.utc).timestamp()
+                return curtime.replace(tzinfo=timezone.utc).timestamp()
         # return the current timestamp
-        return datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
+        return utcnow().timestamp()
 
     @check_token_locked
     def check_otp(self, anOtpVal, counter=None, window=None, options=None):
@@ -375,12 +376,12 @@ class TotpTokenClass(HotpTokenClass):
             # and the tokentime
             if self.is_timeshift_enabled:
                 tokentime = self._counter2time(res, self.timestep)
-                tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
+                tokenDt = datetime.fromtimestamp(tokentime / 1.0)
 
-                nowDt = datetime.datetime.fromtimestamp(inow / 1.0)
+                nowDt = datetime.fromtimestamp(inow / 1.0)
 
                 lastauth = self._counter2time(oCount, self.timestep)
-                lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
+                lastauthDt = datetime.fromtimestamp(lastauth / 1.0)
 
                 log.debug("last auth : {0!r}".format(lastauthDt))
                 log.debug("tokentime : {0!r}".format(tokenDt))
@@ -628,7 +629,7 @@ class TotpTokenClass(HotpTokenClass):
             tCounter = int(timestamp)
         else:
             # use the current server time
-            tCounter = self._time2float(datetime.datetime.now())
+            tCounter = self._time2float(utcnow())
 
         if self.is_timeshift_enabled:
             tCounter -= self.timeshift
@@ -647,8 +648,7 @@ class TotpTokenClass(HotpTokenClass):
                 if self.is_timeshift_enabled:
                     timeCounter += self.timeshift
 
-                val_time = datetime.datetime.\
-                    fromtimestamp(timeCounter).strftime("%Y-%m-%d %H:%M:%S")
+                val_time = datetime.fromtimestamp(timeCounter).strftime("%Y-%m-%d %H:%M:%S")
                 otp_dict["otp"][counter + i] = {'otpval': otpval,
                                                 'time': val_time}
             ret = True

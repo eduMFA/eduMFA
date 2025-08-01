@@ -28,7 +28,6 @@ The code is tested in tests/test_lib_clientapplication.py.
 
 from sqlalchemy import func
 import logging
-import datetime
 from .log import log_with
 from ..models import ClientApplication, Subscription, db
 from edumfa.lib.config import get_edumfa_node

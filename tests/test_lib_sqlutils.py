@@ -3,12 +3,11 @@
 """
 This file contains the tests for lib/sqlutils.py
 """
-from datetime import datetime
-
 from mock import MagicMock
 import warnings
 from sqlalchemy.testing import AssertsCompiledSQL
 from edumfa.lib.sqlutils import DeleteLimit, delete_matching_rows
+from edumfa.lib.utils import utcnow
 from edumfa.models import Audit as LogEntry
 from .base import MyTestCase
 
@@ -29,7 +28,7 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
             DeleteLimit(LogEntry.__table__, LogEntry.id < 100, -10)
 
     def test_02_compile_delete_limit(self):
-        now = datetime.now()
+        now = utcnow()
         stmt_age = DeleteLimit(LogEntry.__table__, LogEntry.date < now)
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', category=BytesWarning)
