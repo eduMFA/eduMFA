@@ -160,13 +160,9 @@ class FirebaseProvider(ISMSProvider):
             server_config = json.load(f)
         url = FIREBASE_URL_SEND.format(server_config["project_id"])
         try:
-            FIREBASE_CONNECT_TIMEOUT = float(get_app_config_value("FIREBASE_CONNECT_TIMEOUT"))
-            if FIREBASE_CONNECT_TIMEOUT is None or not isinstance(FIREBASE_CONNECT_TIMEOUT, float):
-                FIREBASE_CONNECT_TIMEOUT = 1.1
+            FIREBASE_CONNECT_TIMEOUT = float(get_app_config_value("FIREBASE_CONNECT_TIMEOUT", default=1.1))
 
-            FIREBASE_READ_TIMEOUT = float(get_app_config_value("FIREBASE_READ_TIMEOUT"))
-            if FIREBASE_READ_TIMEOUT is None or not isinstance(FIREBASE_READ_TIMEOUT, float):
-                FIREBASE_READ_TIMEOUT = 3
+            FIREBASE_READ_TIMEOUT = float(get_app_config_value("FIREBASE_READ_TIMEOUT", default=3))
 
             log.debug(f"FIREBASE_CONNECT_TIMEOUT: {FIREBASE_CONNECT_TIMEOUT}")
             log.debug(f"FIREBASE_READ_TIMEOUT: {FIREBASE_READ_TIMEOUT}")
