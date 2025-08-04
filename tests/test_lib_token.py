@@ -13,6 +13,8 @@ getTokens4UserOrSerial
 gettokensoftype
 getToken....
 """
+from datetime import datetime, timedelta
+
 from .base import MyTestCase, FakeAudit, FakeFlaskG
 from edumfa.lib.user import (User)
 from edumfa.lib.tokenclass import (TokenClass, TOKENKIND,
@@ -25,9 +27,8 @@ from edumfa.lib.config import (set_edumfa_config, get_token_types,
                                     delete_edumfa_config, SYSCONF)
 from edumfa.lib.policy import (set_policy, SCOPE, ACTION, PolicyClass,
                                     delete_policy)
-from edumfa.lib.utils import b32encode_and_unicode, hexlify_and_unicode
+from edumfa.lib.utils import b32encode_and_unicode, hexlify_and_unicode, localnow
 from edumfa.lib.error import PolicyError
-import datetime
 from dateutil import parser
 import hashlib
 import binascii
@@ -261,7 +262,7 @@ class TokenTestCase(MyTestCase):
         otp = get_otp("hotptoken")
         self.assertTrue(otp[2] == "755224", otp)
         otp = get_otp(self.serials[0],
-                      current_time=datetime.datetime(2014, 12, 4, 12, 0))
+                      current_time=datetime(2014, 12, 4, 12, 0))
         self.assertTrue(otp[2] == "938938", otp)
         # the serial does not exist
         with self.assertRaises(ResourceNotFoundError):
@@ -668,7 +669,7 @@ class TokenTestCase(MyTestCase):
             lost_token("doesnotexist")
         validity = 10
         r = lost_token(serial1)
-        end_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(days=validity)
+        end_date = localnow() + timedelta(days=validity)
         """
         r = {'end_date': '16/12/14 23:59',
              'pin': True, 'valid_to': 'xxxx', 'init': True, 'disable': 1,
@@ -774,8 +775,8 @@ class TokenTestCase(MyTestCase):
         set_policy("check_token_list_CR", scope=SCOPE.AUTH, action="{0!s}=HOTP".format(
             ACTION.CHALLENGERESPONSE))
 
-        hotp_tokenobject.add_tokeninfo("next_pin_change", "{0!s}".format(datetime.datetime(2019, 1, 7, 0, 0)))
-        hotp_tokenobject.add_tokeninfo("next_password_change", "{0!s}".format(datetime.datetime(2019, 1, 7, 0, 0)))
+        hotp_tokenobject.add_tokeninfo("next_pin_change", "{0!s}".format(datetime(2019, 1, 7, 0, 0)))
+        hotp_tokenobject.add_tokeninfo("next_password_change", "{0!s}".format(datetime(2019, 1, 7, 0, 0)))
 
         # Now the HOTP is a valid C/R token
         res, reply = check_token_list(tokenobject_list, "hotppin")
@@ -1824,7 +1825,7 @@ class TokenFailCounterTestCase(MyTestCase):
         tok.token.count = 10
         tok.set_pin("hotppin")
         tok.set_failcount(10)
-        exceeded_timestamp = datetime.datetime.now(tzlocal()) - datetime.timedelta(minutes=1)
+        exceeded_timestamp = localnow() - timedelta(minutes=1)
         tok.add_tokeninfo(FAILCOUNTER_EXCEEDED, exceeded_timestamp.strftime(DATE_FORMAT))
 
         # OTP value #11
@@ -1852,7 +1853,7 @@ class TokenFailCounterTestCase(MyTestCase):
 
         # Now we set the failoucnter and the exceeded time.
         tok.set_failcount(10)
-        exceeded_timestamp = datetime.datetime.now(tzlocal()) - datetime.timedelta(minutes=1)
+        exceeded_timestamp = localnow() - timedelta(minutes=1)
         tok.add_tokeninfo(FAILCOUNTER_EXCEEDED, exceeded_timestamp.strftime(DATE_FORMAT))
         set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
 
@@ -1879,7 +1880,7 @@ class TokenFailCounterTestCase(MyTestCase):
         tok.token.count = 10
         tok.set_pin("hotppin")
         tok.set_failcount(10)
-        exceeded_timestamp = datetime.datetime.now(tzlocal()) - datetime.timedelta(minutes=1)
+        exceeded_timestamp = localnow() - timedelta(minutes=1)
         tok.add_tokeninfo(FAILCOUNTER_EXCEEDED, exceeded_timestamp.strftime(DATE_FORMAT))
 
         # by default, correct PIN + wrong OTP value does not reset the failcounter

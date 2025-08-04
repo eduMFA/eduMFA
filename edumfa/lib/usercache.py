@@ -23,10 +23,10 @@
 import functools
 
 import logging
-
-import datetime
+from datetime import timedelta
 
 from edumfa.lib.config import get_from_config
+from edumfa.lib.utils import utcnow
 from edumfa.models import UserCache, db
 from sqlalchemy import and_
 
@@ -80,7 +80,7 @@ def get_cache_time():
     except ValueError:
         log.info("Non-Integer value stored in system config {0!s}".format(EXPIRATION_SECONDS))
 
-    return datetime.timedelta(seconds=seconds)
+    return timedelta(seconds=seconds)
 
 
 def is_cache_enabled():
@@ -124,7 +124,7 @@ def add_to_cache(username, used_login, resolver, user_id):
     :param user_id: ID of the user in its resolver
     """
     if is_cache_enabled():
-        timestamp = datetime.datetime.now()
+        timestamp = utcnow()
         record = UserCache(username, used_login, resolver, user_id, timestamp)
         log.debug('Adding record to cache: ({!r}, {!r}, {!r}, {!r}, {!r})'.format(
             username, used_login, resolver, user_id, timestamp))
@@ -159,11 +159,10 @@ def create_filter(username=None, used_login=None, resolver=None,
     conditions = []
     if expired:
         cache_time = get_cache_time()
-        conditions.append(
-            UserCache.timestamp < datetime.datetime.now() - cache_time)
+        conditions.append(UserCache.timestamp < utcnow() - cache_time)
     elif expired is False:
         cache_time = get_cache_time()
-        conditions.append(UserCache.timestamp >= datetime.datetime.now() - cache_time)
+        conditions.append(UserCache.timestamp >= utcnow() - cache_time)
 
     if username:
         conditions.append(UserCache.username == username)

@@ -7,10 +7,9 @@ lib/eventhandler/usernotification.py
 """
 import email
 import os
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import mock
-from dateutil.tz import tzlocal
 from flask import Request
 from werkzeug.test import EnvironBuilder
 
@@ -26,7 +25,7 @@ from edumfa.lib.smtpserver import add_smtpserver
 from edumfa.lib.token import init_token, unassign_token, remove_token
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.user import User, create_user
-from edumfa.lib.utils import to_unicode
+from edumfa.lib.utils import to_unicode, localnow
 from edumfa.models import TokenOwner
 from . import smtpmock
 from .base import MyTestCase, FakeFlaskG, FakeAudit
@@ -537,7 +536,7 @@ class UserNotificationTestCase(MyTestCase):
         self.assertEqual(r, True)
 
         # token is outside validity period
-        end_date = datetime.now(tzlocal()) - timedelta(1)
+        end_date = localnow() - timedelta(1)
         end = end_date.strftime(DATE_FORMAT)
         tok.set_validity_period_end(end)
         r = uhandler.check_condition(
