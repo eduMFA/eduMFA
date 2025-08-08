@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+from typing import List
 from edumfa.lib.policy import LOGINMODE
 from edumfa.models import Admin
 from edumfa.lib.token import check_user_pass
@@ -39,7 +40,7 @@ class ROLE:
     VALIDATE = "validate"
 
 
-def verify_db_admin(username, password):
+def verify_db_admin(username, password) -> bool:
     """
     This function is used to verify the username and the password against the
     database table "Admin".
@@ -74,12 +75,12 @@ def create_db_admin(username: str, email: str = None, password=None):
     user.save()
 
 
-def get_db_admins():
+def get_db_admins() -> List[Admin]:
     admins = Admin.query.all()
     return admins
 
 
-def get_db_admin(username):
+def get_db_admin(username) -> Admin | None:
     return Admin.query.filter(Admin.username == username).first()
 
 

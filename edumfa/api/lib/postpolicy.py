@@ -34,6 +34,7 @@ The functions of this module are tested in tests/test_api_lib_policy.py
 import datetime
 import logging
 import traceback
+from typing import Callable, ParamSpec, TypeVar
 from edumfa.lib.error import PolicyError, ValidateError
 from flask import g, current_app, make_response
 from edumfa.lib.policy import SCOPE, ACTION, AUTOASSIGNVALUE, AUTHORIZED
@@ -76,6 +77,9 @@ DEFAULT_POLICY_TEMPLATE_URL = (
     "https://raw.githubusercontent.com/edumfa/policy-templates/main/templates/"
 )
 
+P = ParamSpec("P")
+R = TypeVar("R")
+
 
 class postpolicy:
     """
@@ -94,21 +98,21 @@ class postpolicy:
         self.request = request
         self.function = function
 
-    def __call__(self, wrapped_function):
+    def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
         """
         This decorates the given function. The postpolicy decorator is ment
         for API functions on the API level.
         The wrapped_function should return a response object.
 
-        :param wrapped_function: The function, that is decorated.
-        :type wrapped_function: API function
+        :param func: The function, that is decorated.
+        :type func: API function
         :return: Response object
         """
 
-        @functools.wraps(wrapped_function)
-        def policy_wrapper(*args, **kwds):
-            response = wrapped_function(*args, **kwds)
-            return self.function(self.request, response, *args, **kwds)
+        @functools.wraps(func)
+        def policy_wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+            response = func(*args, **kwargs)
+            return self.function(self.request, response, *args, **kwargs)
 
         return policy_wrapper
 
@@ -128,10 +132,10 @@ class postrequest:
         self.request = request
         self.function = function
 
-    def __call__(self, wrapped_function):
-        @functools.wraps(wrapped_function)
-        def policy_wrapper(*args, **kwds):
-            response = wrapped_function(*args, **kwds)
+    def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
+        @functools.wraps(func)
+        def policy_wrapper(*args: P.args, **kwds: P.kwargs) -> R:
+            response = func(*args, **kwds)
             return self.function(self.request, response, **kwds)
 
         return policy_wrapper

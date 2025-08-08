@@ -33,6 +33,7 @@ The functions of this module are tested in tests/test_api_lib_policy.py
 """
 
 import logging
+from typing import Callable, ParamSpec, TypeVar
 
 try:
     from OpenSSL import crypto
@@ -122,6 +123,9 @@ log = logging.getLogger(__name__)
 optional = True
 required = False
 
+P = ParamSpec("P")
+R = TypeVar("R")
+
 
 class prepolicy:
     """
@@ -143,7 +147,7 @@ class prepolicy:
         self.request = request
         self.function = function
 
-    def __call__(self, wrapped_function):
+    def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
         """
         This decorates the given function. The prepolicy decorator is ment
         for API functions on the API level.
@@ -152,15 +156,15 @@ class prepolicy:
 
         The decorator function can modify the request data.
 
-        :param wrapped_function: The function, that is decorated.
-        :type wrapped_function: API function
+        :param func: The function, that is decorated.
+        :type func: API function
         :return: None
         """
 
-        @functools.wraps(wrapped_function)
+        @functools.wraps(func)
         def policy_wrapper(*args, **kwds):
             self.function(request=self.request, action=self.action)
-            return wrapped_function(*args, **kwds)
+            return func(*args, **kwds)
 
         return policy_wrapper
 

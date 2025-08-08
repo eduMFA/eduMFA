@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+from typing import Callable, ParamSpec, TypeVar
 from edumfa.lib.config import get_config_object
 from edumfa.lib.utils import fetch_one_resource
 from edumfa.models import EventHandler, EventHandlerOption, db
@@ -33,6 +34,9 @@ import logging
 log = logging.getLogger(__name__)
 
 AVAILABLE_EVENTS = []
+
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 class event:
@@ -48,7 +52,7 @@ class event:
         self.request = request
         self.g = g
 
-    def __call__(self, func):
+    def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
         """
         Returns a wrapper that wraps func.
         The wrapper will evaluate the event handling definitions and call the
