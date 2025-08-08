@@ -834,7 +834,8 @@ class LDAPResolverTestCase(MyTestCase):
         self.assertTrue(user_id == "cn=bob,ou=example,o=test", user_id)
 
         rid = y.getResolverId()
-        self.assertTrue(rid == "035fbc6272907bc79a2c036b5bf9665ca921d558", rid)
+
+        self.assertTrue(rid == "ldap.6b19559ae3a3f62f47d0ed24c0bee3323b588ece", rid)
 
         rtype = y.getResolverType()
         self.assertTrue(rtype == "ldapresolver", rtype)
@@ -904,7 +905,7 @@ class LDAPResolverTestCase(MyTestCase):
         self.assertEqual("cn=bob,ou=example,o=test", user_id)
 
         rid = y.getResolverId()
-        self.assertEqual('2a92363e3f9da66321d9ff71b3cd0c464e990b02', rid)
+        self.assertEqual("ldap.b1caed1f4914cc4a6007064df2c3e72e4f55ae2d", rid)
 
         rtype = y.getResolverType()
         self.assertTrue(rtype == "ldapresolver", rtype)
@@ -945,7 +946,6 @@ class LDAPResolverTestCase(MyTestCase):
         res = y.checkPass(user_id, "wrong pw")
         self.assertFalse(res)
 
-
     @ldap3mock.activate
     def test_01_broken_uidtype(self):
         # checkPass with wrong UIDtype
@@ -971,7 +971,7 @@ class LDAPResolverTestCase(MyTestCase):
         self.assertEqual(len(result), len(LDAPDirectory))
 
         rid = y.getResolverId()
-        self.assertTrue(rid == "035fbc6272907bc79a2c036b5bf9665ca921d558", rid)
+        self.assertTrue(rid == "ldap.6b19559ae3a3f62f47d0ed24c0bee3323b588ece", rid)
 
         rtype = y.getResolverType()
         self.assertTrue(rtype == "ldapresolver", rtype)
@@ -1013,7 +1013,7 @@ class LDAPResolverTestCase(MyTestCase):
         self.assertTrue(user_id == "3", "{0!s}".format(user_id))
 
         rid = y.getResolverId()
-        self.assertTrue(rid == "035fbc6272907bc79a2c036b5bf9665ca921d558", rid)
+        self.assertTrue(rid == "ldap.6b19559ae3a3f62f47d0ed24c0bee3323b588ece", rid)
 
         rtype = y.getResolverType()
         self.assertTrue(rtype == "ldapresolver", rtype)
@@ -1748,7 +1748,7 @@ class LDAPResolverTestCase(MyTestCase):
         self.assertEqual(user_id, "cn=kölbel,ou=example,o=test")
 
         rid = y.getResolverId()
-        self.assertTrue(rid == "035fbc6272907bc79a2c036b5bf9665ca921d558", rid)
+        self.assertTrue(rid == "ldap.6b19559ae3a3f62f47d0ed24c0bee3323b588ece", rid)
 
         rtype = y.getResolverType()
         self.assertTrue(rtype == "ldapresolver", rtype)
@@ -1802,7 +1802,7 @@ class LDAPResolverTestCase(MyTestCase):
         self.assertEqual(user_id, "cn=kölbel,ou=example,o=test")
 
         rid = y.getResolverId()
-        self.assertTrue(rid == "035fbc6272907bc79a2c036b5bf9665ca921d558", rid)
+        self.assertTrue(rid == "ldap.6b19559ae3a3f62f47d0ed24c0bee3323b588ece", rid)
 
         rtype = y.getResolverType()
         self.assertTrue(rtype == "ldapresolver", rtype)
@@ -2221,6 +2221,45 @@ class LDAPResolverTestCase(MyTestCase):
         with mock.patch('ldap3.ServerPool.get_current_server') as mock_method:
             pool.get_current_server(None)
             mock_method.assert_called_once()
+
+    @ldap3mock.activate
+    def test_37_resolver_id_binddn_differs(self):
+        ldap3mock.setLDAPDirectory(LDAPDirectory)
+        y = LDAPResolver()
+        y.loadConfig({'LDAPURI': 'ldap://localhost',
+                      'LDAPBASE': 'o=test',
+                      'BINDDN': 'cn=manager1,ou=example,o=test',
+                      'BINDPW': 'ldaptest',
+                      'LOGINNAMEATTRIBUTE': 'cn',
+                      'LDAPSEARCHFILTER': '(cn=*)',
+                      'USERINFO': '{ "phone" : "telephoneNumber", '
+                                  '"mobile" : "mobile"'
+                                  ', "email" : "email", '
+                                  '"surname" : "sn", '
+                                  '"givenname" : "givenName" }',
+                      'UIDTYPE': 'DN',
+        })
+
+        rid1 = y.getResolverId()
+        self.assertEqual('ldap.3ed0e42d36182f5f57d097e0ac85b54c99cbe6e3', rid1)
+
+        y.loadConfig({'LDAPURI': 'ldap://localhost',
+                      'LDAPBASE': 'o=test',
+                      'BINDDN': 'cn=manager2,ou=example,o=test',
+                      'BINDPW': 'ldaptest',
+                      'LOGINNAMEATTRIBUTE': 'cn',
+                      'LDAPSEARCHFILTER': '(cn=*)',
+                      'USERINFO': '{ "phone" : "telephoneNumber", '
+                                  '"mobile" : "mobile"'
+                                  ', "email" : "email", '
+                                  '"surname" : "sn", '
+                                  '"givenname" : "givenName" }',
+                      'UIDTYPE': 'DN',
+        })
+
+        rid2 = y.getResolverId()
+        self.assertEqual('ldap.2410a3ae3d7b0957440f3d4994ef569b9bf37d2c', rid2)
+        self.assertNotEqual(rid1, rid2)
 
 class BaseResolverTestCase(MyTestCase):
 
