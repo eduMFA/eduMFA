@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from typing import List
+from typing import List, Union
 from edumfa.lib.policy import LOGINMODE
 from edumfa.models import Admin
 from edumfa.lib.token import check_user_pass
@@ -80,7 +80,7 @@ def get_db_admins() -> List[Admin]:
     return admins
 
 
-def get_db_admin(username) -> Admin | None:
+def get_db_admin(username) -> Union[Admin, None]:
     return Admin.query.filter(Admin.username == username).first()
 
 
