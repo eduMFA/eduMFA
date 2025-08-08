@@ -18,14 +18,14 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import click
 import jwt
 from flask import current_app
 from flask.cli import AppGroup
 
-from edumfa.lib.auth import ROLE
+from edumfa.lib.auth import ROLE, get_db_admins
 from edumfa.lib.crypto import geturandom
 
 api_cli = AppGroup("api", help="Manage API Keys")
@@ -39,7 +39,9 @@ api_cli = AppGroup("api", help="Manage API Keys")
               default=365)
 @click.option('-R', '--realm', help='The realm of the admin. Defaults to "API"', default="API")
 @click.option('-u', '--username', help='The username of the admin.')
-def createtoken(role, days, realm, username):
+@click.option('-f', '--force', is_flag=True,
+              help='Force the creation of the token, even if the username does not exists.')
+def createtoken(role, days, realm, username, force=False):
     """
     Create an API authentication token
     for administrative or validate use.
@@ -48,13 +50,19 @@ def createtoken(role, days, realm, username):
     if role not in ["admin", "validate"]:
         click.echo("ERROR: The role must be 'admin' or 'validate'!")
         sys.exit(1)
+    admins = [x.username for x in get_db_admins()]
     username = username or geturandom(hex=True)
+    if username not in admins and not force:        
+        click.echo("ERROR: The username '{0!s}' does not exist in the database!".format(username))
+        click.echo("ERROR: Use the --force option to create a token for a non-existing username.")        
+        sys.exit(1)       
+    
     secret = current_app.config.get("SECRET_KEY")
     authtype = "API"
     validity = timedelta(days=int(days))
     token = jwt.encode(
         {"username": username, "realm": realm, "nonce": geturandom(hex=True), "role": role, "authtype": authtype,
-            "exp": datetime.utcnow() + validity, "rights": "TODO"}, secret)
+            "exp": datetime.now(timezone.utc) + validity, "rights": "TODO"}, secret)
     click.echo("Username:   {0!s}".format(username))
     click.echo("Realm:      {0!s}".format(realm))
     click.echo("Role:       {0!s}".format(role))
