@@ -33,8 +33,13 @@ The functions of this module are tested in tests/test_api_lib_policy.py
 """
 
 import logging
-from typing import Callable, ParamSpec, TypeVar
+import sys
+from typing import Callable
 
+if sys.version_info >= (3, 10):
+    from typing import ParamSpec, TypeVar
+else:
+    from typing_extensions import ParamSpec, TypeVar
 try:
     from OpenSSL import crypto
 except AttributeError as e:

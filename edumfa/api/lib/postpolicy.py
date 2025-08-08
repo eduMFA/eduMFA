@@ -34,7 +34,13 @@ The functions of this module are tested in tests/test_api_lib_policy.py
 import datetime
 import logging
 import traceback
-from typing import Callable, ParamSpec, TypeVar
+import sys
+from typing import Callable
+
+if sys.version_info >= (3, 10):
+    from typing import ParamSpec, TypeVar
+else:
+    from typing_extensions import ParamSpec, TypeVar
 from edumfa.lib.error import PolicyError, ValidateError
 from flask import g, current_app, make_response
 from edumfa.lib.policy import SCOPE, ACTION, AUTOASSIGNVALUE, AUTHORIZED

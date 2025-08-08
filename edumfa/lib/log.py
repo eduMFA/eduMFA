@@ -31,8 +31,13 @@ import string
 import logging
 import functools
 from copy import deepcopy
-from typing import Callable, ParamSpec, TypeVar
+import sys
+from typing import Callable
 
+if sys.version_info >= (3, 10):
+    from typing import ParamSpec, TypeVar
+else:
+    from typing_extensions import ParamSpec, TypeVar
 log = logging.getLogger(__name__)
 
 
