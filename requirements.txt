@@ -8,7 +8,7 @@ alembic==1.16.4
     # via flask-migrate
 argon2-cffi==25.1.0
     # via edumfa (setup.py)
-argon2-cffi-bindings==21.2.0
+argon2-cffi-bindings==25.1.0
     # via argon2-cffi
 async-timeout==5.0.1
     # via redis
