@@ -144,7 +144,9 @@ class FirebaseProvider(ISMSProvider):
                                                                "body": data.get("question"),
                                                               },
                                                      "sound": "default",
-                                                     "category": "PUSH_AUTHENTICATION"
+                                                     "category": "PUSH_AUTHENTICATION",
+                                                     "content-available" : 1,
+                                                     "interruption-level":"time-sensitive"
                                                     },
                                             },
                                  "fcm_options": {"analytics_label": "iOSPushToken"}
