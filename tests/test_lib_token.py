@@ -32,6 +32,7 @@ from edumfa.lib.error import (
     PolicyError,
     ResourceNotFoundError,
     TokenAdminError,
+    UserError,
     eduMFAError,
 )
 from edumfa.lib.policy import ACTION, SCOPE, PolicyClass, delete_policy, set_policy
@@ -154,7 +155,7 @@ class TokenTestCase(MyTestCase):
         db_token.delete()
 
     def test_02_get_tokens(self):
-        # get All tokens
+        # get all tokens
         tokenobject_list = get_tokens()
         # Check if these are valid tokentypes
         self.assertTrue(len(tokenobject_list) > 0, tokenobject_list)
@@ -225,6 +226,10 @@ class TokenTestCase(MyTestCase):
         self.assertRaises(
             eduMFAError, get_tokens, tokeninfo={"key1": "value1", "key2": "value2"}
         )
+
+        # get tokens for a user with an invalid realm
+        user = User("test", realm="deleted")
+        self.assertRaises(ResourceNotFoundError, get_tokens, user=user)
 
         # wildcard matches do not work for the ``serial`` parameter
         tokenobject_list = get_tokens(serial="hotptoke*")
@@ -499,6 +504,17 @@ class TokenTestCase(MyTestCase):
         r = unassign_token(serial)
         self.assertTrue(r)
         self.assertEqual(tokenobject.token.first_owner, None)
+
+        # assign invalid user
+        self.assertRaises(
+            UserError, assign_token, serial, User("invalid", realm=self.realm2)
+        )
+        self.assertRaises(
+            ResourceNotFoundError,
+            assign_token,
+            serial,
+            User("hans", realm="invalid", resolver=self.resolvername1),
+        )
 
         remove_token(serial)
         # assign or unassign a token, that does not exist

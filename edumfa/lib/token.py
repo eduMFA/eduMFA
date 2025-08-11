@@ -286,6 +286,14 @@ def _create_token_query(
 
     if user is not None and not user.is_empty():
         # filter for the rest of the user.
+        if user.realm:
+            realm_db = Realm.query.filter(
+                func.lower(Realm.name) == user.realm.lower()
+            ).first()
+            if realm_db:
+                sql_query = sql_query.filter(TokenOwner.realm_id == realm_db.id)
+            else:
+                raise ResourceNotFoundError(f"Realm '{user.realm}' does not exist.")
         if user.resolver:
             sql_query = sql_query.filter(TokenOwner.token_id == Token.id)
             sql_query = sql_query.filter(TokenOwner.resolver == user.resolver)

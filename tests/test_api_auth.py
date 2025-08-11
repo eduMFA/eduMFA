@@ -18,9 +18,10 @@ from edumfa.lib.realm import (
     set_realm,
 )
 from edumfa.lib.resolver import delete_resolver, save_resolver
-from edumfa.lib.token import get_tokens, remove_token
+from edumfa.lib.token import get_tokens, init_token, remove_token
 from edumfa.lib.user import User
 from edumfa.lib.utils import to_unicode
+from edumfa.models import Realm
 
 from . import ldap3mock
 from .base import MyApiTestCase, OverrideConfigTestCase
@@ -832,6 +833,90 @@ class AuthApiTestCase(MyApiTestCase):
         delete_policy("piLogin")
         delete_realm(self.realm1)
         delete_resolver(self.resolvername1)
+
+    def test_10_auth_with_deleted_realm(self):
+        self.setUp_user_realms()
+        self.setUp_user_realm3()
+        set_default_realm(self.realm3)
+        # User exist in realm1 (default realm) and realm3
+        user = User("cornelius", self.realm1)
+        token = init_token({"type": "spass", "pin": "1234"}, user=user)
+        user_realm1 = User("hans", self.realm1)
+        token_realm1 = init_token({"type": "spass", "pin": "1234"}, user=user_realm1)
+
+        set_policy(
+            name="pi-login", scope=SCOPE.WEBUI, action=f"{ACTION.LOGINMODE}=eduMFA"
+        )
+
+        # successful authentication
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={"username": user.login, "realm": user.realm, "password": "1234"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(200, res.status_code, res.json)
+
+        # Delete realm of user
+        Realm.query.filter_by(name=self.realm1).first().delete()
+
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={"username": user.login, "realm": user.realm, "password": "1234"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(401, res.status_code, res.json)
+            error = res.json.get("result").get("error")
+            self.assertEqual(4031, error.get("code"), error)
+            self.assertEqual(
+                f"Authentication failure. Unknown realm: {user.realm}.",
+                error.get("message"),
+                error,
+            )
+
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={
+                "username": user.login,
+                "realm": user.realm,
+                "resolver": user.resolver,
+                "password": "1234",
+            },
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(401, res.status_code, res.json)
+            error = res.json.get("result").get("error")
+            self.assertEqual(4031, error.get("code"), error)
+            self.assertEqual(
+                f"Authentication failure. Unknown realm: {user.realm}.",
+                error.get("message"),
+                error,
+            )
+
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={
+                "username": user.login,
+                "resolver": user.resolver,
+                "password": "1234",
+            },
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(401, res.status_code, res.json)
+            error = res.json.get("result").get("error")
+            self.assertEqual(4031, error.get("code"), error)
+            self.assertEqual(
+                f"Authentication failure. Wrong credentials",
+                error.get("message"),
+                error,
+            )
+
+        token.delete_token()
+        token_realm1.delete_token()
+        delete_policy("pi-login")
 
 
 class AdminFromUserstore(OverrideConfigTestCase):

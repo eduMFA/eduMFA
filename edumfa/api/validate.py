@@ -102,7 +102,7 @@ from edumfa.lib.config import (
     return_saml_attributes,
     return_saml_attributes_on_fail,
 )
-from edumfa.lib.error import ParameterError
+from edumfa.lib.error import ParameterError, ResourceNotFoundError
 from edumfa.lib.event import EventConfiguration, event
 from edumfa.lib.machine import list_machine_tokens
 from edumfa.lib.policy import ACTION, PolicyClass
@@ -449,7 +449,11 @@ def check():
     if serial:
         if user:
             # check if the given token belongs to the user
-            if not get_tokens(user=user, serial=serial, count=True):
+            try:
+                tokens = get_tokens(user=user, serial=serial, count=True)
+            except ResourceNotFoundError:
+                tokens = []
+            if not tokens:
                 raise ParameterError("Given serial does not belong to given user!")
         if not otp_only:
             success, details = check_serial_pass(serial, password, options=options)
