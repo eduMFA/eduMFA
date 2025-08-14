@@ -18,10 +18,12 @@ from sqlalchemy.dialects import postgresql, mysql, sqlite
 BigIntegerType = BigInteger().with_variant(postgresql.BIGINT(), 'postgresql').with_variant(mysql.BIGINT(), 'mysql').with_variant(sqlite.INTEGER(), 'sqlite')
 
 def upgrade():
+    print("Setting mfa_audit.id to bigint")
     op.alter_column('mfa_audit', 'id',
                    existing_type=sa.Integer(),
                    type_=BigIntegerType,
                    existing_nullable=False)
+    print("Setting challenge.id to bigint")
     op.alter_column('challenge', 'id',
                    existing_type=sa.Integer(),
                    type_=BigIntegerType,
@@ -30,10 +32,12 @@ def upgrade():
 
 
 def downgrade():
+    print("Resetting mfa_audit.id to int")
     op.alter_column('mfa_audit', 'id',
                    existing_type=BigIntegerType,
                    type_=sa.Integer(),
                    existing_nullable=False)
+    print("Resetting challenge.id to int")
     op.alter_column('challenge', 'id',
                    existing_type=BigIntegerType,
                    type_=sa.Integer(),
