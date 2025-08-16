@@ -76,7 +76,7 @@ from edumfa.lib import _
 from edumfa.lib.policy import (get_action_values_from_options, SCOPE, ACTION)
 from base64 import b32encode
 from binascii import unhexlify
-
+import os
 
 
 #DATE_FORMAT = "%d/%m/%y %H:%M"
@@ -863,6 +863,9 @@ class TokenClass:
 
     @check_token_locked
     def inc_failcount(self):
+        if os.environ.get("EDUMFA_NO_FAILCOUNT", None):
+            # This is a rollout without working recovery scenario for locked out users
+            return 0
         if self.token.failcount < self.token.maxfail:
             self.token.failcount = (self.token.failcount + 1)
             if self.token.failcount == self.token.maxfail:
