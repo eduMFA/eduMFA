@@ -35,14 +35,15 @@ returns -1.
 """
 
 import logging
-import datetime
+from datetime import timedelta
+
 from edumfa.lib.config import get_from_config
 from edumfa.lib.tokenclass import TokenClass, AUTHENTICATIONMODE
 from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
 from edumfa.lib.crypto import urandom, safe_compare
 from edumfa.lib.log import log_with
 from edumfa.lib import _
-from edumfa.lib.utils import to_unicode
+from edumfa.lib.utils import to_unicode, utcnow
 from edumfa.lib.challenge import get_challenges
 from edumfa.models import Challenge
 from edumfa.lib.decorators import check_token_locked
@@ -233,8 +234,7 @@ class IndexedSecretTokenClass(TokenClass):
             transactionid = transactionid or db_challenge.transaction_id
             return_message = return_message.format(position_str)
 
-        expiry_date = datetime.datetime.now() + \
-                                    datetime.timedelta(seconds=validity)
+        expiry_date = utcnow() + timedelta(seconds=validity)
         attributes['valid_until'] = "{0!s}".format(expiry_date)
         reply_dict = {"attributes": attributes}
 

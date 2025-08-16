@@ -28,11 +28,9 @@ database table "monitoringstats". This can be arbitrary data for time series of
 This module is tested in tests/test_lib_monitoringstats.py
 """
 import logging
-from dateutil.tz import tzlocal
 from edumfa.lib.log import log_with
-from edumfa.lib.utils import get_module_class
+from edumfa.lib.utils import get_module_class, localnow
 from edumfa.lib.framework import get_app_config, get_request_local_store
-import datetime
 
 log = logging.getLogger(__name__)
 
@@ -72,7 +70,7 @@ def write_stats(stats_key, stats_value, timestamp=None, reset_values=False):
     :param reset_values: Whether old entries should be deleted
     :return: id of the database entry
     """
-    timestamp = timestamp or datetime.datetime.now(tzlocal())
+    timestamp = timestamp or localnow()
     monitoring_obj = _get_monitoring()
     monitoring_obj.add_value(stats_key, stats_value, timestamp, reset_values)
 

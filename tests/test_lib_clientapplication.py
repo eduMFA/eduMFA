@@ -2,9 +2,10 @@
 This test file tests the lib.clientapplicaton.py
 """
 import mock
-from datetime import datetime, timedelta
+from datetime import timedelta
 from contextlib import contextmanager
 
+from edumfa.lib.utils import utcnow
 from edumfa.models import ClientApplication
 from .base import MyTestCase
 from edumfa.lib.clientapplication import (get_clientapplication,
@@ -40,8 +41,8 @@ class ClientApplicationTestCase(MyTestCase):
         self.assertEqual(len(r), 4)
         self.assertEqual(r["OTRS"][0]["ip"], "1.2.3.4")
         self.assertEqual(r["PAM"][0]["ip"], "1.2.3.4")
-        self.assertTrue(r["RADIUS"][0]["lastseen"] < datetime.now())
-        self.assertTrue(r["SAML"][0]["lastseen"] < datetime.now())
+        self.assertTrue(r["RADIUS"][0]["lastseen"] < utcnow())
+        self.assertTrue(r["SAML"][0]["lastseen"] < utcnow())
 
     def test_02_multiple_nodes(self):
         @contextmanager
@@ -62,7 +63,7 @@ class ClientApplicationTestCase(MyTestCase):
         ClientApplication.query.delete()
 
         # create some fake timestamps
-        t1 = datetime.now()
+        t1 = utcnow()
         t2 = t1 + timedelta(minutes=5)
         t3 = t2 + timedelta(minutes=5)
 
