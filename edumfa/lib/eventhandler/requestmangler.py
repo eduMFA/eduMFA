@@ -39,7 +39,6 @@ from edumfa.lib import _
 import json
 import logging
 import re
-import datetime
 import yaml
 from dateutil.parser import parse as parse_date_string
 from dateutil.tz import tzlocal

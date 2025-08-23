@@ -36,9 +36,9 @@ This is the middleware/glue between the HTTP API and the database
 import json
 import traceback
 import string
-import datetime
 import os
 import logging
+from datetime import datetime, timedelta
 
 from sqlalchemy import (and_, func)
 from sqlalchemy.ext.compiler import compiles
@@ -49,7 +49,7 @@ from edumfa.lib.error import (TokenAdminError,
 from edumfa.lib.decorators import (check_user_or_serial,
                                         check_copy_serials)
 from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.utils import is_true, BASE58, hexlify_and_unicode, check_serial_valid
+from edumfa.lib.utils import is_true, BASE58, hexlify_and_unicode, check_serial_valid, localnow
 from edumfa.lib.crypto import generate_password
 from edumfa.lib.log import log_with
 from edumfa.models import (Token, Realm, TokenRealm, Challenge,
@@ -1911,8 +1911,7 @@ def lost_token(serial, new_serial=None, password=None,
         res['pin'] = copy_token_pin(serial, new_serial)
 
         # set validity period
-        end_date = (datetime.datetime.now(tzlocal())
-                    + datetime.timedelta(days=validity)).strftime(DATE_FORMAT)
+        end_date = (localnow() + timedelta(days=validity)).strftime(DATE_FORMAT)
         tokenobject_list = get_tokens(serial=new_serial)
         for tokenobject in tokenobject_list:
             tokenobject.set_validity_period_end(end_date)

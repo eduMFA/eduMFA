@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+from edumfa.lib.utils import utcnow
 from edumfa.models import PasswordReset
 from edumfa.lib.crypto import (hash_with_pepper, verify_with_pepper,
                                     generate_password)
@@ -31,7 +32,6 @@ from edumfa.lib.config import get_from_config
 from edumfa.lib.resolver import get_resolver_list
 from edumfa.lib.policy import ACTION, SCOPE, Match
 from sqlalchemy import and_
-from datetime import datetime
 
 
 __doc__ = """
@@ -114,8 +114,7 @@ def check_recoverycode(user, recoverycode):
     """
     recoverycode_valid = False
     # delete old entries
-    r = PasswordReset.query.filter(and_(PasswordReset.expiration <
-                                      datetime.now())).delete()
+    r = PasswordReset.query.filter(and_(PasswordReset.expiration < utcnow())).delete()
     log.debug("{0!s} old password recoverycodes deleted.".format(r))
     sql_query = PasswordReset.query.filter(and_(PasswordReset.username ==
                                             user.login,
