@@ -33,7 +33,7 @@ jobs:
     name: 'Run tests with Python'
     needs: pre_check
     if: needs.pre_check.outputs.run_tests == 'true' && !(github.actor == 'dependabot[bot]' && github.event_name == 'push')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       # don't cancel running matrix tests when one test fails
       fail-fast: false
@@ -50,6 +50,9 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        allow-prereleases: true
+        cache: pip
+        cache-dependency-path: pyproject.toml
 
     - name: Cache pip installation
       uses: actions/cache@v4
