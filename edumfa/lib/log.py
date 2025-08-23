@@ -66,13 +66,11 @@ DEFAULT_LOGGING_CONFIG = {
             "handlers": ["file"],
             "qualname": "edumfa",
             "level": logging.INFO,
-            "propagate": 0
         },
         "alembic": {
             "handlers": ["console"],
             "qualname": "alembic",
             "level": logging.INFO,
-            "propagate": 0
         },
     }
 }
