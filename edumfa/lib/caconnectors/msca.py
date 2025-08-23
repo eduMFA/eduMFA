@@ -49,8 +49,8 @@ try:
                                                             GetCertificateRequest,
                                                             GetCertificateReply)
     AvailableCAConnectors.append("edumfa.lib.caconnectors.msca.MSCAConnector")
-except ImportError:  # pragma: no cover
-    log.warning("Can not import grpc modules.")
+except ImportError as e:  # pragma: no cover
+    log.warning("Can not import grpc modules - %s", e)
 
 
 CRL_REASONS = ["unspecified", "keyCompromise", "CACompromise",
