@@ -44,11 +44,8 @@ from edumfa.lib.utils import convert_column_to_unicode, to_bytes
 
 from .UserIdResolver import UserIdResolver
 
-# Python 3.13 dropped crypt package, so we need to import crypt_r
-if sys.version_info >= (3, 13):
-    import crypt_r as crypt
-else:
-    import crypt
+# Python 3.13 dropped crypt package, so we need to migrate to passlib
+from passlib.hash import des_crypt, md5_crypt, sha256_crypt, sha512_crypt
 
 log = logging.getLogger(__name__)
 ENCODING = "utf-8"
@@ -213,9 +210,7 @@ class IdResolver(UserIdResolver):
                 err = "Sorry, currently no support for shadow passwords"
                 log.error("{0!s}".format(err))
                 raise NotImplementedError(err)
-            cp = crypt.crypt(password, cryptedpasswd)
-            log.debug("encrypted pass is {0!s}".format(cp))
-            if crypt.crypt(password, cryptedpasswd) == cryptedpasswd:
+            if des_crypt.verify(password, cryptedpasswd) or md5_crypt.verify(password, cryptedpasswd) or sha256_crypt.verify(password, cryptedpasswd) or sha512_crypt.verify(password, cryptedpasswd):
                 log.info("successfully authenticated user uid {0!s}".format(uid))
                 return True
             else:
