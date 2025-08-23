@@ -1347,6 +1347,10 @@ class WebAuthnTokenClass(TokenClass):
             token = get_tokens_from_serial_or_user(serial=user_handle, user=None, active=True, revoked=False, locked=False)[0]
             reply_dict = {}
             if token is None:
+                log.warning("Passkey {0!s} not found.".format(user_handle))
+                return False, reply_dict            
+            if token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
+                log.warning("Passkey {0!s} is in clientwait state. Can not be used for authentication!".format(token.token.serial))
                 return False, reply_dict
             user_verification_requirement_policies = Match.user(g,
                     scope=SCOPE.AUTH,
@@ -1367,7 +1371,7 @@ class WebAuthnTokenClass(TokenClass):
                                       "realm": token.user.realm,
                                       "resolver": token.user.resolver
                                       }
-                reply_dict["message"] = "Username-less authentication worked!"
+                reply_dict["message"] = "Passkey authentication worked!"
                 reply_dict["serial"] = token.token.serial
                 reply_dict["type"] = token.token.tokentype
                 if count != -1:
