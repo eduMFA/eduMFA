@@ -119,7 +119,7 @@ python-dateutil==2.9.0.post0
     # via
     #   croniter
     #   edumfa (setup.py)
-python-gnupg==0.5.4
+python-gnupg==0.5.5
     # via edumfa (setup.py)
 pytz==2025.2
     # via flask-babel
