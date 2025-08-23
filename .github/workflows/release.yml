@@ -15,7 +15,7 @@ jobs:
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           # clone submodules as well
           submodules: 'recursive'
