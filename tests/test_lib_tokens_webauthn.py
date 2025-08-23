@@ -216,7 +216,7 @@ SELF_ATTESTATION_REGISTRATION_RESPONSE_BROKEN_SIG = {
 class WebAuthnTokenTestCase(MyTestCase):
 
     def _create_challenge(self):
-        self.token.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(CRED_ID)))
+        self.token.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(CRED_ID)), encrypted=False)
         self.token.add_tokeninfo(WEBAUTHNINFO.PUB_KEY, PUB_KEY)
         self.token.add_tokeninfo(WEBAUTHNINFO.RELYING_PARTY_ID, RP_ID)
         (_, _, _, response_details) = self.token.create_challenge(options=self.challenge_options)

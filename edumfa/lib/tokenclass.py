@@ -780,7 +780,7 @@ class TokenClass:
 
     @check_token_locked
     def set_otpkey(self, otpKey, encrypted=True):
-        self.token.set_otpkey(otpKey, encrypted)
+        self.token.set_otpkey(otpKey, encrypted=encrypted)
 
     @check_token_locked
     def set_otplen(self, otplen):
