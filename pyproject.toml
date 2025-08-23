@@ -67,7 +67,7 @@ test = [
     "pyparsing==3.2.3",
     "pytest==8.4.1",
     "pytest-cov==6.2.1",
-    "responses==0.25.7",
+    "responses==0.25.8",
     "testfixtures==8.3.0",
     "tomli==2.2.1",
     "types-PyYAML==6.0.12.20250516",
