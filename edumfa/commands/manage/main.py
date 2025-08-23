@@ -48,16 +48,18 @@ def create_prod_app():
 
 @click.group(cls=FlaskGroup, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
              epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
-def cli():
+@click.option('--quiet', '-q', is_flag=True, help="Run the command without output.")
+def cli(quiet):
     """Management script for the eduMFA application."""
-    click.echo(r"""
-               _       __  __ ______      
-              | |     |  \/  |  ____/\    
-       ___  __| |_   _| \  / | |__ /  \   
-      / _ \/ _` | | | | |\/| |  __/ /\ \  
-     |  __/ (_| | |_| | |  | | | / ____ \ 
-      \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {0!s:>12}
-    """.format('v{0!s}'.format(get_version_number())), err=True)
+    if not quiet:
+        click.echo(r"""
+                _       __  __ ______      
+                | |     |  \/  |  ____/\    
+        ___  __| |_   _| \  / | |__ /  \   
+        / _ \/ _` | | | | |\/| |  __/ /\ \  
+        |  __/ (_| | |_| | |  | | | / ____ \ 
+        \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {0!s:>12}
+        """.format('v{0!s}'.format(get_version_number())), err=True)
 
 
 cli.add_command(audit_cli)
