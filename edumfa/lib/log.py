@@ -74,10 +74,6 @@ DEFAULT_LOGGING_CONFIG = {
             "level": logging.INFO,
             "propagate": 0
         },
-        "root": {
-            "handlers": ["console"],
-            "level": logging.WARN,
-        }
     }
 }
 
