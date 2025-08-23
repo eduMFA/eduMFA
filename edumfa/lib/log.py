@@ -46,6 +46,12 @@ DEFAULT_LOGGING_CONFIG = {
         }
     },
     "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "stream": "ext://sys.stdout",
+            "formatter": "detail",
+            "level": "INFO",
+        },
         "file": {
             "formatter": "detail",
             "class": "logging.handlers.RotatingFileHandler",
@@ -55,10 +61,24 @@ DEFAULT_LOGGING_CONFIG = {
             "filename": "edumfa.log"
         }
     },
-    "loggers": {"edumfa": {"handlers": ["file"],
-                                "qualname": "edumfa",
-                                "level": logging.INFO}
-                }
+    "loggers": {
+        "edumfa": {
+            "handlers": ["file"],
+            "qualname": "edumfa",
+            "level": logging.INFO,
+            "propagate": 0
+        },
+        "alembic": {
+            "handlers": ["console"],
+            "qualname": "alembic",
+            "level": logging.INFO,
+            "propagate": 0
+        },
+        "root": {
+            "handlers": ["console"],
+            "level": logging.WARN,
+        }
+    }
 }
 
 
