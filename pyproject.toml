@@ -75,6 +75,10 @@ test = [
 postgres = ["psycopg2==2.9.10"]
 hsm = ["PyKCS11==1.5.18"]
 kerberos = ["gssapi==1.9.0"]
+grpc = [
+    "protobuf==6.32.0",
+    "google==3.0.0",
+]
 
 [project.scripts]
 edumfa-manage = "edumfa.commands.manage.main:cli"
