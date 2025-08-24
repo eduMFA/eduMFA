@@ -881,7 +881,7 @@ class WebAuthnTokenClass(TokenClass):
         :rtype: basestring
         """
 
-        return webauthn_b64_encode(binascii.unhexlify(self.token.get_otpkey().getKey()))
+        return webauthn_b64_encode(binascii.unhexlify(self.token.get_otpkey(encrypted=False).getKey()))
 
     def update(self, param, reset_failcount=True):
         """
@@ -965,7 +965,7 @@ class WebAuthnTokenClass(TokenClass):
                             '{1!s}!'.format(self.get_class_type(), e))
                 raise EnrollmentError("Could not enroll {0!s} token!".format(self.get_class_type()))
 
-            self.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(webauthn_credential.credential_id)))
+            self.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(webauthn_credential.credential_id)), encrypted=False)
             self.set_otp_count(webauthn_credential.sign_count)
             self.add_tokeninfo(WEBAUTHNINFO.PUB_KEY,
                                hexlify_and_unicode(webauthn_b64_decode(webauthn_credential.public_key)))
