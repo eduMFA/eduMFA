@@ -43,11 +43,10 @@ import codecs
 from edumfa.lib.utils import to_bytes, convert_column_to_unicode
 from .UserIdResolver import UserIdResolver
 
-# Python 3.13 dropped crypt package, so we need to import crypt_r
-if sys.version_info >= (3, 13):
-    import crypt_r as crypt
-else:
-    import crypt
+# Python 3.13 dropped crypt package, so we need to migrate to passlib
+from passlib.handlers.sha2_crypt import sha256_crypt, sha512_crypt
+from passlib.handlers.md5_crypt import md5_crypt
+from passlib.handlers.des_crypt import des_crypt
 
 log = logging.getLogger(__name__)
 ENCODING = "utf-8"
@@ -200,14 +199,36 @@ class IdResolver (UserIdResolver):
                 err = "Sorry, currently no support for shadow passwords"
                 log.error("{0!s}".format(err))
                 raise NotImplementedError(err)
-            cp = crypt.crypt(password, cryptedpasswd)
-            log.debug("encrypted pass is {0!s}".format(cp))
-            if crypt.crypt(password, cryptedpasswd) == cryptedpasswd:
-                log.info("successfully authenticated user uid {0!s}".format(uid))
-                return True
-            else:
-                log.warning("user uid {0!s} failed to authenticate".format(uid))
-                return False
+            try:
+                if des_crypt.verify(password, cryptedpasswd):
+                    log.info("successfully authenticated user uid {0!s}".format(uid))
+                    return True
+            except ValueError as e:
+                pass
+
+            try:
+                if md5_crypt.verify(password, cryptedpasswd):
+                    log.info("successfully authenticated user uid {0!s}".format(uid))
+                    return True
+            except ValueError as e:
+                pass
+
+            try:
+                if sha256_crypt.verify(password, cryptedpasswd):
+                    log.info("successfully authenticated user uid {0!s}".format(uid))
+                    return True
+            except ValueError as e:
+                pass
+
+            try:
+                if sha512_crypt.verify(password, cryptedpasswd):
+                    log.info("successfully authenticated user uid {0!s}".format(uid))
+                    return True
+            except ValueError as e:
+                pass
+
+            log.warning("user uid {0!s} failed to authenticate".format(uid))
+            return False
         else:
             log.warning("Failed to verify password. No encrypted password "
                         "found in file")
