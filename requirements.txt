@@ -109,7 +109,7 @@ pydash==8.0.5
     # via edumfa (setup.py)
 pyjwt==2.10.1
     # via edumfa (setup.py)
-pymysql==1.1.1
+pymysql==1.1.2
     # via edumfa (setup.py)
 pyopenssl==25.1.0
     # via edumfa (setup.py)
