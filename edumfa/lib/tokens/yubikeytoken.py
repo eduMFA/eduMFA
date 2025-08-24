@@ -254,6 +254,7 @@ class YubikeyTokenClass(TokenClass):
         -1 if the OTP is old (counter < stored counter)
         -2 if the private_uid sent in the OTP is wrong (different from the one stored with the token)
         -3 if the CRC verification fails
+        -4 if decoding fails
         :rtype: int
 
         """
@@ -272,8 +273,11 @@ class YubikeyTokenClass(TokenClass):
         except KeyError:
             # The OTP value is no yubikey aes otp value and can not be decoded
             return -4
-
-        msg_bin = secret.aes_ecb_decrypt(otp_bin)
+        try:
+            msg_bin = secret.aes_ecb_decrypt(otp_bin)
+        except binascii.Error as e:
+            log.warning("handling token response for token {0} failed ({1})".format(serial, e))
+            return -4
         msg_hex = hexlify_and_unicode(msg_bin)
 
         # The checksum is a CRC-16 (16-bit ISO 13239 1st complement) that
