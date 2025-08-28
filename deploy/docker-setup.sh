@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-# MariaDB needs a second
-sleep 5
-
 # Create enckey if doesn't exist yet
 if [ ! -f /etc/edumfa/enckey ]; then
   edumfa-manage create_enckey
@@ -16,7 +13,11 @@ fi
 
 # Create DB
 echo "Creating DB"
-edumfa-manage createdb
+until edumfa-manage create_tables
+do
+    echo "Cannot connect to database. Trying again..."
+    sleep 3
+done
 
 # Check and stamp DB
 STAMP=$(edumfa-manage db current -d /usr/local/lib/edumfa/migrations 2>/dev/null)
