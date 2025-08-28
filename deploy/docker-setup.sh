@@ -1,6 +1,10 @@
 #!/usr/bin/bash
 set -e
 
+GEN_PWD="$(openssl rand -base64 42)"
+EDUMFA_ADMIN_USER="${EDUMFA_ADMIN_USER:-admin}"
+EDUMFA_ADMIN_PASS="${EDUMFA_ADMIN_PASS:-$GEN_PWD}"
+
 # Create enckey if doesn't exist yet
 if [ ! -f /etc/edumfa/enckey ]; then
   edumfa-manage create_enckey
@@ -39,6 +43,12 @@ for script in /opt/edumfa/user-scripts/*.sh; do
   echo "Executing user script $script..."
   bash $script || true
 done
+
+echo "
+    You can login with the following credentials:
+    username: $EDUMFA_ADMIN_USER
+    password: $EDUMFA_ADMIN_PASS
+"
 
 echo "Starting Server"
 gunicorn --bind 0.0.0.0:8000 --workers 4 app
