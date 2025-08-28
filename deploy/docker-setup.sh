@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 set -e
 
 # Create enckey if doesn't exist yet
@@ -27,17 +27,18 @@ fi
 
 # Upgrading DB
 echo "Upgrading Database"
-edumfa-manage db upgrade -d /usr/local/lib/edumfa/migrations
+edumfa-schema-upgrade /usr/local/lib/edumfa/migrations --skipstamp
 
 # Create admin user
 echo "Creating Admin"
-edumfa-manage admin add $EDUMFA_ADMIN_USER -p $EDUMFA_ADMIN_PASS
+edumfa-manage admin add "$EDUMFA_ADMIN_USER" -p "$EDUMFA_ADMIN_PASS"
 
 # Execute user scripts
-if compgen -G "/opt/edumfa/user-scripts/*.sh" > /dev/null; then
-    echo "Executing User-Scripts"
-    bash /opt/edumfa/user-scripts/*.sh
-fi
+shopt -s nullglob
+for script in /opt/edumfa/user-scripts/*.sh; do
+  echo "Executing user script $script..."
+  bash $script || true
+done
 
 echo "Starting Server"
 gunicorn --bind 0.0.0.0:8000 --workers 4 app
