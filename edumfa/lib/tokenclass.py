@@ -779,8 +779,8 @@ class TokenClass:
         self.token.set_user_pin(userPin)
 
     @check_token_locked
-    def set_otpkey(self, otpKey):
-        self.token.set_otpkey(otpKey)
+    def set_otpkey(self, otpKey, encrypted=True):
+        self.token.set_otpkey(otpKey, encrypted=encrypted)
 
     @check_token_locked
     def set_otplen(self, otplen):
