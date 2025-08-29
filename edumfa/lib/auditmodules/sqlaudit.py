@@ -40,18 +40,18 @@ token database.
 
 import logging
 from collections import OrderedDict
+
 from edumfa.lib.auditmodules.base import (Audit as AuditBase, Paginate)
 from edumfa.lib.crypto import Sign
 from edumfa.lib.framework import get_app_config_value, get_app_local_store
 from edumfa.lib.pooling import DEFAULT_REGISTRY_CLASS_NAME, REGISTRY_CONFIG_NAME, get_engine
-from edumfa.lib.utils import censor_connect_string
+from edumfa.lib.utils import censor_connect_string, utcnow
 from edumfa.lib.lifecycle import register_finalizer, register_request_finalizer
 from edumfa.lib.utils import truncate_comma_list, is_true
 from sqlalchemy import MetaData
 from sqlalchemy import asc, desc, and_, or_
 from sqlalchemy.sql.expression import FunctionElement
 from sqlalchemy.ext.compiler import compiles
-import datetime
 import traceback
 from edumfa.models import audit_column_length as column_length
 from edumfa.models import Audit as LogEntry
@@ -257,8 +257,7 @@ class Audit(AuditBase):
                     log.debug("Not a valid searchkey: {0!s}".format(exx))
 
         if timelimit:
-            conditions.append(LogEntry.date >= datetime.datetime.now() -
-                              timelimit)
+            conditions.append(LogEntry.date >= utcnow() - timelimit)
         # Combine them with or to a BooleanClauseList
         filter_condition = and_(*conditions)
         return filter_condition
@@ -298,7 +297,7 @@ class Audit(AuditBase):
                 if not "token_type" in self.audit_data:
                     self.audit_data["token_type"] = self.audit_data.get("tokentype")
             if self.audit_data.get("startdate"):
-                duration = datetime.datetime.now() - self.audit_data.get("startdate")
+                duration = utcnow() - self.audit_data.get("startdate")
             else:
                 duration = None
             # We wan't to reduce the passkey events a bit...
@@ -474,8 +473,7 @@ class Audit(AuditBase):
             conditions.append(LogEntry.success == int(is_true(success)))
 
         if timedelta is not None:
-            conditions.append(LogEntry.date >= datetime.datetime.now() -
-                              timedelta)
+            conditions.append(LogEntry.date >= utcnow() - timedelta)
 
         filter_condition = and_(*conditions)
         log_count = self.session.query(LogEntry).filter(filter_condition).count()

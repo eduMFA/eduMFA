@@ -14,7 +14,6 @@ from edumfa.models import (Token, Config, Challenge)
 from edumfa.lib.config import (set_edumfa_config, set_prepend_pin)
 from edumfa.lib.policy import set_policy, SCOPE, PolicyClass
 from edumfa.lib import _
-import datetime
 import mock
 import responses
 from testfixtures import log_capture

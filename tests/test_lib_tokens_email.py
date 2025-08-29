@@ -1,12 +1,13 @@
 """
 This test file tests the lib.tokens.smstoken
 """
+from datetime import timedelta
 
 from .base import MyTestCase, FakeFlaskG, FakeAudit
 from edumfa.lib.resolver import (save_resolver)
 from edumfa.lib.realm import (set_realm)
 from edumfa.lib.user import (User)
-from edumfa.lib.utils import is_true
+from edumfa.lib.utils import is_true, localnow
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.tokens.emailtoken import EmailTokenClass, EMAILACTION
 from edumfa.models import (Token, Config, Challenge)
@@ -15,8 +16,6 @@ from edumfa.lib.config import (set_edumfa_config, set_prepend_pin,
 from edumfa.lib.policy import set_policy, SCOPE, PolicyClass
 from edumfa.lib.smtpserver import add_smtpserver, delete_smtpserver
 from edumfa.lib import _
-import datetime
-from dateutil.tz import tzlocal
 from . import smtpmock
 import mock
 
@@ -233,33 +232,33 @@ class EmailTokenTestCase(MyTestCase):
 
         # check validity period
         # +5 days
-        end_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(5)
+        end_date = localnow() + timedelta(5)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # - 5 days
-        start_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(5)
+        start_date = localnow() - timedelta(5)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertTrue(token.check_validity_period())
 
         # check before start date
         # +5 days
-        end_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(5)
+        end_date = localnow() + timedelta(5)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # + 2 days
-        start_date = datetime.datetime.now(tzlocal()) + datetime.timedelta(2)
+        start_date = localnow() + timedelta(2)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertFalse(token.check_validity_period())
 
         # check after enddate
         # -1 day
-        end_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(1)
+        end_date = localnow() - timedelta(1)
         end = end_date.strftime(DATE_FORMAT)
         token.set_validity_period_end(end)
         # - 10 days
-        start_date = datetime.datetime.now(tzlocal()) - datetime.timedelta(10)
+        start_date = localnow() - timedelta(10)
         start = start_date.strftime(DATE_FORMAT)
         token.set_validity_period_start(start)
         self.assertFalse(token.check_validity_period())

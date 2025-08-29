@@ -49,9 +49,8 @@ from edumfa.lib.log import log_with
 import logging
 from edumfa.lib import _
 from edumfa.lib.policy import SCOPE, GROUP, ACTION, Match
-from edumfa.lib.utils import hexlify_and_unicode, is_true, to_unicode, convert_imagefile_to_dataimage
+from edumfa.lib.utils import hexlify_and_unicode, is_true, to_unicode, convert_imagefile_to_dataimage, localnow
 from flask import current_app
-import datetime
 from dateutil.tz import tzlocal
 
 __doc__ = """
@@ -1371,8 +1370,7 @@ class WebAuthnTokenClass(TokenClass):
                 reply_dict["serial"] = token.token.serial
                 reply_dict["type"] = token.token.tokentype
                 if count != -1:
-                    token.add_tokeninfo(ACTION.LASTAUTH,
-                                        datetime.datetime.now(tzlocal()).isoformat(sep=' ', timespec='microseconds'))
+                    token.add_tokeninfo(ACTION.LASTAUTH, localnow().isoformat(sep=' ', timespec='microseconds'))
                     token.inc_count_auth_success()
                     return True, reply_dict
                 else:

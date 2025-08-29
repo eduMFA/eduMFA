@@ -1,13 +1,12 @@
 # coding: utf-8
+from edumfa.lib.utils import localnow
 from edumfa.models import MonitoringStats, db
 from edumfa.lib.monitoringstats import (write_stats, delete_stats,
                                              get_stats_keys, get_values,
                                              get_last_value)
 
 from .base import MyTestCase
-import datetime
-from dateutil.tz import tzlocal, tzutc
-from datetime import timedelta
+from datetime import timedelta, timezone
 
 
 class TokenModelTestCase(MyTestCase):
@@ -31,7 +30,7 @@ class TokenModelTestCase(MyTestCase):
 
     def test_02_delete_stats(self):
         key1 = "otherkey"
-        now = datetime.datetime.now(tzlocal())
+        now = localnow()
         write_stats(key1, 12, timestamp=now- timedelta(days=1))
         write_stats(key1, 13, timestamp=now)
         write_stats(key1, 14, timestamp=now + timedelta(days=1))
@@ -84,7 +83,7 @@ class TokenModelTestCase(MyTestCase):
         for k in keys:
             delete_stats(k)
 
-        ts = datetime.datetime.now(tzlocal())
+        ts = localnow()
         write_stats("key1", 1, timestamp=ts - timedelta(minutes=10))
         write_stats("key1", 2, timestamp=ts - timedelta(minutes=9))
         write_stats("key1", 3, timestamp=ts - timedelta(minutes=8))
@@ -111,7 +110,7 @@ class TokenModelTestCase(MyTestCase):
         self.assertEqual([entry[1] for entry in r], [3, 4, 5, 6, 7])
         # Assert it is the correct time, and timezone-aware UTC
         self.assertEqual(r[0][0], ts - timedelta(minutes=8))
-        self.assertEqual(r[0][0].tzinfo, tzutc())
+        self.assertEqual(r[0][0].tzinfo, timezone.utc)
         self.assertEqual(r[-1][0], ts - timedelta(minutes=4))
 
         r = get_values("key1",

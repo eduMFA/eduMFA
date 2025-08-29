@@ -47,17 +47,15 @@ from edumfa.lib.token import (set_realms, remove_token, enable_token,
                                    get_one_token, set_max_failcount,
                                    assign_tokengroup, unassign_tokengroup)
 from edumfa.lib.utils import (parse_date, is_true,
-                                   parse_time_offset_from_now)
+                              parse_time_offset_from_now, localnow)
 from edumfa.lib.tokenclass import DATE_FORMAT, AUTH_DATE_FORMAT
 from edumfa.lib.smtpserver import get_smtpservers
 from edumfa.lib.smsprovider.SMSProvider import get_smsgateway
 from edumfa.lib.tokengroup import get_tokengroups
 from edumfa.lib import _
 import logging
-import datetime
 import yaml
 import json
-from dateutil.tz import tzlocal
 
 log = logging.getLogger(__name__)
 
@@ -451,8 +449,7 @@ class TokenEventHandler(BaseEventHandler):
                     elif action.lower() == ACTION_TYPE.SET_DESCRIPTION:
                         description = handler_options.get("description") or ""
                         description, td = parse_time_offset_from_now(description)
-                        s_now = (datetime.datetime.now(tzlocal()) + td).strftime(
-                            AUTH_DATE_FORMAT)
+                        s_now = (localnow() + td).strftime(AUTH_DATE_FORMAT)
                         set_description(serial,
                                         description.format(
                                             current_time=s_now,
@@ -467,8 +464,7 @@ class TokenEventHandler(BaseEventHandler):
                     elif action.lower() == ACTION_TYPE.SET_TOKENINFO:
                         tokeninfo = handler_options.get("value") or ""
                         tokeninfo, td = parse_time_offset_from_now(tokeninfo)
-                        s_now = (datetime.datetime.now(tzlocal()) + td).strftime(
-                            AUTH_DATE_FORMAT)
+                        s_now = (localnow() + td).strftime(AUTH_DATE_FORMAT)
                         try:
                             username = request.User.loginname
                             realm = request.User.realm

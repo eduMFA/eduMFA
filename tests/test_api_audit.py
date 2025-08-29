@@ -2,8 +2,9 @@
 
 import mock
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import timedelta
 
+from edumfa.lib.utils import utcnow
 from .base import MyApiTestCase
 from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
 from edumfa.models import Audit
@@ -98,7 +99,7 @@ class APIAuditTestCase(MyApiTestCase):
             self.assertGreater(len(list(res.response)), 1)
 
         # add an audit entry which happened 10 minutes ago
-        with _fake_time(datetime.now() - timedelta(minutes=10)):
+        with _fake_time(utcnow() - timedelta(minutes=10)):
             Audit(action="enroll", success=1, realm="foo").save()
         # now request all audit entries from the last 5 minutes
         with self.app.test_request_context('/audit/test.csv',

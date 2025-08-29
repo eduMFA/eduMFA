@@ -19,7 +19,8 @@
 #
 import logging
 import time
-import datetime
+from datetime import datetime
+
 from edumfa.lib.tokens.HMAC import HmacOtp
 from edumfa.lib.config import get_from_config
 from edumfa.lib.log import log_with
@@ -253,12 +254,12 @@ class DayPasswordTokenClass(TotpTokenClass):
             # here we calculate the new drift/shift between the server time
             # and the tokentime
             tokentime = self._counter2time(res, self.timestep)
-            tokenDt = datetime.datetime.fromtimestamp(tokentime / 1.0)
+            tokenDt = datetime.fromtimestamp(tokentime / 1.0)
 
-            nowDt = datetime.datetime.fromtimestamp(inow / 1.0)
+            nowDt = datetime.fromtimestamp(inow / 1.0)
 
             lastauth = self._counter2time(oCount, self.timestep)
-            lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
+            lastauthDt = datetime.fromtimestamp(lastauth / 1.0)
 
             log.debug("last auth : {0!r}".format(lastauthDt))
             log.debug("tokentime : {0!r}".format(tokenDt))
@@ -319,7 +320,7 @@ class DayPasswordTokenClass(TotpTokenClass):
         :param epoch_start: not implemented
         :param epoch_end: not implemented
         :param curTime: Simulate the servertime
-        :type curTime: datetime.datetime
+        :type curTime: datetime
         :param timestamp: Simulate the servertime
         :type timestamp: epoch time
         :return: tuple of status: boolean, error: text and the OTP dictionary
@@ -354,8 +355,7 @@ class DayPasswordTokenClass(TotpTokenClass):
                                            inc_counter=False)
                 timeCounter = (counter + i) * self.timestep
 
-                val_time = datetime.datetime. \
-                    fromtimestamp(timeCounter).strftime("%Y-%m-%d %H:%M:%S")
+                val_time = datetime.fromtimestamp(timeCounter).strftime("%Y-%m-%d %H:%M:%S")
                 otp_dict["otp"][counter + i] = {'otpval': otpval,
                                                 'time': val_time}
             ret = True

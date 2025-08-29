@@ -44,15 +44,15 @@ This code is tested in tests/test_lib_tokens_yubikey.py
 """
 
 import logging
+
 from edumfa.lib.log import log_with
 from edumfa.lib.policydecorators import challenge_response_allowed
 from edumfa.lib.tokenclass import TokenClass
 from edumfa.lib.utils import (modhex_decode, hexlify_and_unicode, checksum,
-                                   to_bytes, b64encode_and_unicode)
+                              to_bytes, b64encode_and_unicode, utcnow)
 import binascii
 from edumfa.lib.decorators import check_token_locked
 from edumfa.api.lib.utils import getParam
-import datetime
 import base64
 import hmac
 from hashlib import sha1
@@ -374,7 +374,7 @@ class YubikeyTokenClass(TokenClass):
         signature = getParam(request.all_data, "h")
         status = "MISSING_PARAMETER"
 
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ%f")
+        timestamp = utcnow().strftime("%Y-%m-%dT%H:%M:%SZ%f")
         data = {'otp': otp,
                 'nonce': nonce,
                 'status': status,

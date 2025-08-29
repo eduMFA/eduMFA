@@ -34,12 +34,13 @@ import logging
 import inspect
 import threading
 import traceback
+from datetime import timedelta
 
 from .log import log_with
 from ..models import (Config, db, Resolver, Realm, EDUMFA_TIMESTAMP,
                       save_config_timestamp, Policy, EventHandler, CAConnector)
 from edumfa.lib.framework import get_request_local_store, get_app_config_value, get_app_local_store
-from edumfa.lib.utils import to_list
+from edumfa.lib.utils import to_list, utcnow
 from edumfa.lib.utils.export import (register_import, register_export)
 from .crypto import encryptPassword
 from .crypto import decryptPassword
@@ -50,7 +51,6 @@ from .caconnectors.baseca import BaseCAConnector
 from .caconnectors import localca, msca
 from .utils import reload_db, is_true
 import importlib
-import datetime
 
 log = logging.getLogger(__name__)
 
@@ -96,7 +96,7 @@ class SharedConfigClass:
         """
         check_reload_config = get_app_config_value("EDUMFA_CHECK_RELOAD_CONFIG", 0)
         if not self.timestamp or \
-            self.timestamp + datetime.timedelta(seconds=check_reload_config) < datetime.datetime.now():
+            self.timestamp + timedelta(seconds=check_reload_config) < utcnow():
             db_ts = Config.query.filter_by(Key=EDUMFA_TIMESTAMP).first()
             if reload_db(self.timestamp, db_ts):
                 log.debug("Reloading shared config from database")
@@ -161,7 +161,7 @@ class SharedConfigClass:
                         log.error(exx)
 
                 # Finally, set the current timestamp
-                timestamp = datetime.datetime.now()
+                timestamp = utcnow()
                 with self._config_lock:
                     self.config = config
                     self.resolver = resolverconfig

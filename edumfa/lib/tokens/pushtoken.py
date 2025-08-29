@@ -32,14 +32,12 @@ from base64 import b32decode
 from binascii import Error as BinasciiError
 from urllib.parse import quote
 from datetime import datetime, timedelta
-from pytz import utc
-from dateutil.parser import isoparse
 import traceback
 
 from edumfa.api.lib.utils import getParam
 from edumfa.api.lib.policyhelper import get_pushtoken_add_config
 from edumfa.lib.token import get_one_token, init_token
-from edumfa.lib.utils import prepare_result, to_bytes, is_true
+from edumfa.lib.utils import prepare_result, to_bytes, is_true, utcnow
 from edumfa.lib.error import (ResourceNotFoundError, ValidateError,
                                    eduMFAError, ConfigAdminError, PolicyError)
 
@@ -662,18 +660,13 @@ class PushTokenClass(TokenClass):
         :type window: int
         """
         try:
-            ts = isoparse(timestamp)
+            ts = datetime.fromisoformat(timestamp)
         except (ValueError, TypeError) as _e:
             log.debug('{0!s}'.format(traceback.format_exc()))
             raise eduMFAError('Could not parse timestamp {0!s}. '
                                    'ISO-Format required.'.format(timestamp))
         td = timedelta(minutes=window)
-        # We don't know if the passed timestamp is timezone aware. If no
-        # timezone is passed, we assume UTC
-        if ts.tzinfo:
-            now = datetime.now(utc)
-        else:
-            now = datetime.utcnow()
+        now = utcnow()
         if not (now - td <= ts <= now + td):
             raise eduMFAError('Timestamp {0!s} not in valid range.'.format(timestamp))
 

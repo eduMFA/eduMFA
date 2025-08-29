@@ -18,7 +18,7 @@ from edumfa.lib.caconnectors.msca import MSCAConnector, ATTR as MS_ATTR
 from OpenSSL import crypto
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
-from edumfa.lib.utils import int_to_hex, to_unicode
+from edumfa.lib.utils import int_to_hex, to_unicode, utcnow
 from edumfa.lib.error import CAError, CSRError, CSRPending
 from edumfa.lib.caconnector import (get_caconnector_list,
                                          get_caconnector_class,
@@ -378,9 +378,9 @@ class LocalCATestCase(MyTestCase):
         _, cert = cacon.sign_request(SPKAC, options={"spkac": 1,
                                                      "template": "webserver"})
         expires = to_unicode(cert.get_notAfter())
-        import datetime
-        dt = datetime.datetime.strptime(expires, "%Y%m%d%H%M%SZ")
-        ddiff = dt - datetime.datetime.now()
+        from datetime import datetime
+        dt = datetime.strptime(expires, "%Y%m%d%H%M%SZ")
+        ddiff = dt - utcnow()
         # The certificate is signed for 750 days
         self.assertTrue(ddiff.days > 740, ddiff.days)
         self.assertTrue(ddiff.days < 760, ddiff.days)

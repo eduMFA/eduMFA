@@ -50,7 +50,7 @@ This method is supposed to be overwritten by the corresponding token classes.
 import logging
 import hashlib
 import traceback
-from datetime import datetime, timedelta
+from datetime import timedelta, timezone
 
 from .error import (TokenAdminError,
                     ParameterError)
@@ -68,10 +68,9 @@ from edumfa.lib.crypto import (encryptPassword, decryptPassword,
 from .policydecorators import libpolicy, auth_otppin, challenge_response_allowed
 from .decorators import check_token_locked
 from dateutil.parser import parse as parse_date_string, ParserError
-from dateutil.tz import tzlocal, tzutc
 from edumfa.lib.utils import (is_true, decode_base32check,
-                                   to_unicode, create_img, parse_timedelta,
-                                   parse_legacy_time, split_pin_pass)
+                              to_unicode, create_img, parse_timedelta,
+                              parse_legacy_time, split_pin_pass, localnow)
 from edumfa.lib import _
 from edumfa.lib.policy import (get_action_values_from_options, SCOPE, ACTION)
 from base64 import b32encode
@@ -866,9 +865,7 @@ class TokenClass:
         if self.token.failcount < self.token.maxfail:
             self.token.failcount = (self.token.failcount + 1)
             if self.token.failcount == self.token.maxfail:
-                self.add_tokeninfo(FAILCOUNTER_EXCEEDED,
-                                   datetime.now(tzlocal()).strftime(
-                                       DATE_FORMAT))
+                self.add_tokeninfo(FAILCOUNTER_EXCEEDED, localnow().strftime(DATE_FORMAT))
         try:
             self.token.save()
         except:  # pragma: no cover
@@ -1118,7 +1115,7 @@ class TokenClass:
         key = "next_pin_change"
         if password:
             key = "next_password_change"
-        new_date = datetime.now(tzlocal()) + timedelta(days=days)
+        new_date = localnow() + timedelta(days=days)
         self.add_tokeninfo(key, new_date.strftime(DATE_FORMAT))
 
     def is_pin_change(self, password=False):
@@ -1134,7 +1131,7 @@ class TokenClass:
             key = "next_password_change"
         sdate = self.get_tokeninfo(key)
         date_change = parse_date_string(parse_legacy_time(sdate))
-        return datetime.now(tzlocal()) > date_change
+        return localnow() > date_change
 
     @check_token_locked
     def inc_count_auth_success(self):
@@ -1183,7 +1180,7 @@ class TokenClass:
                         "failcounter_clear_timeout: "
                         "{0!s}".format(exx))
         if timeout and self.token.failcount == self.get_max_failcount():
-            now = datetime.now(tzlocal())
+            now = localnow()
             lastfail = self.get_tokeninfo(FAILCOUNTER_EXCEEDED)
             if lastfail is not None:
                 failcounter_exceeded = parse_legacy_time(lastfail, return_date=True)
@@ -1225,7 +1222,7 @@ class TokenClass:
 
     def check_validity_period(self):
         """
-        This checks if the datetime.now() is within the validity
+        This checks if the utcnow() is within the validity
         period of the token.
 
         :return: success
@@ -1236,12 +1233,12 @@ class TokenClass:
 
         if start:
             dt_start = parse_legacy_time(start, return_date=True)
-            if dt_start > datetime.now(tzlocal()):
+            if dt_start > localnow():
                 return False
 
         if end:
             dt_end = parse_legacy_time(end, return_date=True)
-            if dt_end < datetime.now(tzlocal()):
+            if dt_end < localnow():
                 return False
 
         return True
@@ -1779,9 +1776,9 @@ class TokenClass:
             if not last_success_auth.tzinfo:
                 # the date string has no timezone, default timezone is UTC
                 # We need to set the timezone manually
-                last_success_auth = last_success_auth.replace(tzinfo=tzutc())
+                last_success_auth = last_success_auth.replace(tzinfo=timezone.utc)
             # The last auth is to far in the past
-            if last_success_auth + tdelta < datetime.now(tzlocal()):
+            if last_success_auth + tdelta < localnow():
                 res = False
                 log.debug("The last successful authentication is too old: "
                           "{0!s}".format(last_success_auth))

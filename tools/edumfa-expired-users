@@ -72,14 +72,17 @@ expect.
 """
 __version__ = "0.1"
 
+from datetime import timedelta
+
 from edumfa.lib.user import get_user_list, User
 from edumfa.lib.token import get_tokens, remove_token, unassign_token
 from edumfa.app import create_app
-import datetime
 import re
 import click
 from flask.cli import FlaskGroup
 from flask import current_app as app
+
+from edumfa.lib.utils import utcnow
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -114,7 +117,7 @@ def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
         have expired, but do nothing.
     :return:
     """
-    utc_now = datetime.datetime.utcnow()
+    utc_now = utcnow()
     params = {"accountExpires": "1"}
     if realm:
         params["realm"] = realm
@@ -127,7 +130,7 @@ def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
                 # 0 -> account never expires
                 print("%s does not expire." % username)
                 continue
-            td = datetime.timedelta(seconds=(int(account_expires) / MULTIPLYER))
+            td = timedelta(seconds=(int(account_expires) / MULTIPLYER))
             try:
                 exp_date = MS_AD_START + td
             except OverflowError:

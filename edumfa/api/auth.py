@@ -44,8 +44,7 @@ from flask import (Blueprint,
                    g)
 import jwt
 from functools import wraps
-from datetime import (datetime,
-                      timedelta)
+from datetime import timedelta
 from edumfa.lib.error import AuthError, ERROR
 from edumfa.lib.crypto import geturandom, init_hsm
 from edumfa.lib.audit import getAudit
@@ -63,7 +62,7 @@ from edumfa.api.lib.prepolicy import (is_remote_user_allowed, prepolicy,
                                            webauthntoken_auth, increase_failcounter_on_challenge)
 from edumfa.api.lib.utils import (send_result, get_all_params,
                                        verify_auth_token, getParam)
-from edumfa.lib.utils import get_client_ip, hexlify_and_unicode, to_unicode
+from edumfa.lib.utils import get_client_ip, hexlify_and_unicode, to_unicode, utcnow
 from edumfa.lib.config import get_from_config, SYSCONF, ensure_no_config_object, get_edumfa_node
 from edumfa.lib.event import event, EventConfiguration
 from edumfa.lib import _
@@ -372,14 +371,19 @@ def get_auth_token():
     # What is the log level?
     log_level = current_app.config.get("EDUMFA_LOGLEVEL", 30)
 
-    token = jwt.encode({"username": loginname,
-                        "realm": realm,
-                        "nonce": nonce,
-                        "role": role,
-                        "authtype": authtype,
-                        "exp": datetime.utcnow() + validity,
-                        "rights": rights},
-                       secret, algorithm='HS256')
+    token = jwt.encode(
+        {
+            "username": loginname,
+            "realm": realm,
+            "nonce": nonce,
+            "role": role,
+            "authtype": authtype,
+            "exp": utcnow() + validity,
+            "rights": rights
+        },
+        secret,
+        algorithm='HS256'
+    )
 
     # set the logged-in user for post-policies and post-events
     g.logged_in_user = {"username": loginname,

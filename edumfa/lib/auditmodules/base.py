@@ -49,8 +49,10 @@ storage.
 
 import logging
 import traceback
+from datetime import datetime
+
 from edumfa.lib.log import log_with
-import datetime
+from edumfa.lib.utils import utcnow
 
 log = logging.getLogger(__name__)
 
@@ -89,7 +91,7 @@ class Audit:  # pragma: no cover
         :return: Audit object
         """
         self.name = "AuditBase"
-        self.audit_data = {'startdate': startdate or datetime.datetime.now()}
+        self.audit_data = {'startdate': startdate or utcnow()}
         self.config = config or {}
         self.private = ""
         self.public = ""

@@ -3,8 +3,9 @@ This test file tests the lib.tokenclass
 
 The lib.tokenclass depends on the DB model and lib.user
 """
-PWFILE = "tests/testdata/passwords"
+from datetime import datetime
 
+from edumfa.lib.utils import utcnow
 from .base import MyTestCase, FakeAudit, FakeFlaskG
 from edumfa.lib.resolver import (save_resolver)
 from edumfa.lib.realm import (set_realm)
@@ -16,9 +17,10 @@ from edumfa.models import (Token,
                                  Config,
                                  Challenge)
 from edumfa.lib.config import (set_edumfa_config, set_prepend_pin)
-import datetime
 import binascii
 import time
+
+PWFILE = "tests/testdata/passwords"
 
 
 class TOTPTokenTestCase(MyTestCase):
@@ -483,8 +485,7 @@ class TOTPTokenTestCase(MyTestCase):
         self.assertTrue(47251644 in res[2].get("otp"), res[2].get("otp"))
 
         # Simulate the server time
-        res = token.get_multi_otp(count=5, curTime=datetime.datetime(2014,
-                                                                     12,12))
+        res = token.get_multi_otp(count=5, curTime=datetime(2014, 12,12))
         self.assertTrue(res[0], res)
         self.assertTrue(res[1] == "OK", res)
         self.assertTrue(len(res[2].get("otp")) == 5, res[2].get("otp"))
@@ -513,7 +514,7 @@ class TOTPTokenTestCase(MyTestCase):
         ret, _, dct = token.get_multi_otp(1)
         self.assertTrue(ret)
         self.assertGreater(list(dct["otp"].keys())[0], 47251648)
-        ret, _, dct = token.get_multi_otp(1, curTime=datetime.datetime.now())
+        ret, _, dct = token.get_multi_otp(1, curTime=utcnow())
         self.assertTrue(ret)
         self.assertGreater(list(dct["otp"].keys())[0], 47251648)
 

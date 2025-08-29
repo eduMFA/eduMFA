@@ -21,7 +21,7 @@ from edumfa.lib.tokens.webauthntoken import (WEBAUTHNACTION, DEFAULT_ALLOWED_TRA
                                                   DEFAULT_CHALLENGE_TEXT_ENROLL, DEFAULT_TIMEOUT,
                                                   DEFAULT_USER_VERIFICATION_REQUIREMENT,
                                                   PUBKEY_CRED_ALGORITHMS_ORDER)
-from edumfa.lib.utils import hexlify_and_unicode
+from edumfa.lib.utils import hexlify_and_unicode, utcnow, localnow
 from edumfa.lib.config import set_edumfa_config, SYSCONF
 from .base import (MyApiTestCase)
 
@@ -86,8 +86,7 @@ from edumfa.lib.machine import attach_token
 from edumfa.lib.auth import ROLE
 import jwt
 from passlib.hash import pbkdf2_sha512
-from datetime import datetime, timedelta
-from dateutil.tz import tzlocal
+from datetime import timedelta
 from edumfa.lib.tokenclass import DATE_FORMAT
 from .test_lib_tokens_webauthn import (ALLOWED_TRANSPORTS, CRED_ID, ASSERTION_RESPONSE_TMPL,
                                        ASSERTION_CHALLENGE, RP_ID, RP_NAME, ORIGIN,
@@ -1252,18 +1251,24 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # A request with an API key succeeds
         secret = current_app.config.get("SECRET_KEY")
-        token = jwt.encode({"role": ROLE.VALIDATE,
-                            "exp": datetime.utcnow() + timedelta(hours=1)},
-                            secret)
+        token = jwt.encode({
+            "role": ROLE.VALIDATE,
+            "exp": utcnow() + timedelta(hours=1)
+        }, secret
+    )
         req.headers = {"Authorization": token}
         r = api_key_required(req)
         self.assertTrue(r)
 
         # A request with a valid Admin Token does not succeed
-        token = jwt.encode({"role": ROLE.ADMIN,
-                            "username": "admin",
-                            "exp": datetime.utcnow() + timedelta(hours=1)},
-                            secret)
+        token = jwt.encode(
+            {
+                "role": ROLE.ADMIN,
+                "username": "admin",
+                "exp": utcnow() + timedelta(hours=1)
+            }, 
+            secret
+        )
         req.headers = {"Authorization": token}
         self.assertRaises(PolicyError, api_key_required, req)
 
@@ -4448,7 +4453,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
                             "type": "spass"}, tokenrealms=[self.realm1])
         save_pin_change(req, resp)
         ti = token.get_tokeninfo("next_pin_change")
-        ndate = datetime.now(tzlocal()).strftime(DATE_FORMAT)
+        ndate = localnow().strftime(DATE_FORMAT)
         self.assertEqual(ti, ndate)
 
         #
@@ -4475,7 +4480,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
         save_pin_change(req, resp)
         ti = token.get_tokeninfo("next_pin_change")
-        ndate = datetime.now(tzlocal()).strftime(DATE_FORMAT)
+        ndate = localnow().strftime(DATE_FORMAT)
         self.assertTrue(ti, ndate)
 
         # Now the user changes the PIN. Afterwards the next_pin_change is empty
@@ -4493,7 +4498,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         g.policy_object = PolicyClass()
         save_pin_change(req, resp)
         ti = token.get_tokeninfo("next_pin_change")
-        ndate = (datetime.now(tzlocal()) + timedelta(1)).strftime(DATE_FORMAT)
+        ndate = (localnow() + timedelta(1)).strftime(DATE_FORMAT)
         self.assertTrue(ti, ndate)
 
         # finally delete policy

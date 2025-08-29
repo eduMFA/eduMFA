@@ -9,6 +9,7 @@ from contextlib import contextmanager
 from mock import patch
 
 from edumfa.lib.error import UserError
+from edumfa.lib.utils import utcnow
 from tests import ldap3mock
 from tests.test_mock_ldap3 import LDAPDirectory
 from .base import MyTestCase
@@ -19,8 +20,7 @@ from edumfa.lib.usercache import (get_cache_time,
                                        cache_username, delete_user_cache,
                                        EXPIRATION_SECONDS, retrieve_latest_entry, is_cache_enabled)
 from edumfa.lib.config import set_edumfa_config
-from datetime import timedelta
-from datetime import datetime
+from datetime import datetime, timedelta
 from edumfa.models import UserCache
 
 
@@ -96,7 +96,7 @@ class UserCacheTestCase(MyTestCase):
         uid = "1"
 
         expiration_delta = get_cache_time()
-        r = UserCache(username, username, resolver, uid, datetime.now()).save()
+        r = UserCache(username, username, resolver, uid, utcnow()).save()
         u_name = get_username(uid, resolver)
         self.assertEqual(u_name, username)
 
@@ -198,7 +198,7 @@ class UserCacheTestCase(MyTestCase):
 
 
     def test_04_delete_cache(self):
-        now = datetime.now()
+        now = utcnow()
         UserCache("hans1", "hans1", "resolver1", "uid1", now).save()
         UserCache("hans2", "hans1", "resolver2", "uid2", now).save()
 
@@ -223,7 +223,7 @@ class UserCacheTestCase(MyTestCase):
 
     def test_05_multiple_entries(self):
         # two consistent entries
-        now = datetime.now()
+        now = utcnow()
         UserCache("hans1", "hans1", "resolver1", "uid1", now - timedelta(seconds=60)).save()
         UserCache("hans1", "hans1", "resolver1", "uid1", now).save()
 
@@ -265,7 +265,7 @@ class UserCacheTestCase(MyTestCase):
         # testing `User()`, but this time we add an already-expired entry to the cache
         self.assertEqual(UserCache.query.count(), 0)
         UserCache(self.username, self.username,
-                  self.resolvername1, 'fake_uid', datetime.now() - timedelta(weeks=50)).save()
+                  self.resolvername1, 'fake_uid', utcnow() - timedelta(weeks=50)).save()
         # cache contains an expired entry, uid is read from the resolver (we can verify
         # that the cache entry is indeed not queried as it contains 'fake_uid' instead of the correct uid)
         user = User(self.username, self.realm1, self.resolvername1)
@@ -282,7 +282,7 @@ class UserCacheTestCase(MyTestCase):
     def _populate_cache(self):
         self.assertEqual(UserCache.query.count(), 0)
         # initially populate the cache with three entries
-        timestamp = datetime.now()
+        timestamp = utcnow()
         UserCache("hans1", "hans1", self.resolvername1, "uid1", timestamp).save()
         UserCache("hans2", "hans2", self.resolvername1, "uid2", timestamp - timedelta(weeks=50)).save()
         UserCache("hans3", "hans3", "resolver2", "uid2", timestamp).save()
@@ -377,7 +377,7 @@ class UserCacheTestCase(MyTestCase):
     @contextmanager
     def _patch_datetime_now(self, target, delta=timedelta(days=1)):
         with patch(target) as mock_datetime:
-            mock_datetime.now.side_effect = lambda: datetime.now() + delta
+            mock_datetime.now.side_effect = lambda: utcnow() + delta
             mock_datetime.side_effect = lambda *args, **kw: datetime(*args, **kw)
             yield mock_datetime
 
@@ -386,7 +386,7 @@ class UserCacheTestCase(MyTestCase):
         r = delete_user_cache()
         self.assertTrue(r >= 0)
         # populate the cache with artificial, somewhat "old", but still relevant data
-        timestamp = datetime.now() - timedelta(seconds=300)
+        timestamp = utcnow() - timedelta(seconds=300)
         UserCache("hans1", "hans1", "resolver1", "uid1", timestamp).save()
         UserCache("hans2", "hans2", "resolver1", "uid2", timestamp).save()
         # check that the cache is indeed queried
@@ -411,7 +411,7 @@ class UserCacheTestCase(MyTestCase):
                 User("hans2", "realm1", "resolver1")
             self.assertEqual(get_username("uid3", "resolver1"), "")
             # We add another, "current" entry
-            UserCache("hans4", "hans4", "resolver1", "uid4", datetime.now()).save()
+            UserCache("hans4", "hans4", "resolver1", "uid4", utcnow()).save()
             self.assertEqual(UserCache.query.count(), 3)
             # we now remove old entries, only the newest remains
             delete_user_cache(expired=True)

@@ -27,9 +27,8 @@
 import binascii
 import logging
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
-from dateutil.tz import tzutc
 from json import loads, dumps
 from flask_sqlalchemy import SQLAlchemy
 from edumfa.lib.crypto import (encrypt,
@@ -46,8 +45,9 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import BigInteger
 from sqlalchemy.dialects import postgresql, mysql, sqlite
 from .lib.log import log_with
-from edumfa.lib.utils import (is_true, convert_column_to_unicode,
-                                   hexlify_and_unicode)
+from edumfa.lib.utils import (
+    is_true, convert_column_to_unicode, hexlify_and_unicode, utcnow
+)
 from edumfa.lib.crypto import pass_hash, verify_pass_hash
 from edumfa.lib.framework import get_app_config_value
 
@@ -110,11 +110,13 @@ def save_config_timestamp(invalidate_config=True):
     """
     c1 = Config.query.filter_by(Key=EDUMFA_TIMESTAMP).first()
     if c1:
-        c1.Value = datetime.now().strftime("%s")
+        c1.Value = utcnow().strftime("%s")
     else:
-        new_timestamp = Config(EDUMFA_TIMESTAMP,
-                               datetime.now().strftime("%s"),
-                               Description="config timestamp. last changed.")
+        new_timestamp = Config(
+            EDUMFA_TIMESTAMP,
+            utcnow().strftime("%s"),
+            Description="config timestamp. last changed."
+        )
         db.session.add(new_timestamp)
     if invalidate_config:
         # We have just modified the config. From now on, the request handling
@@ -1335,8 +1337,8 @@ class PasswordReset(MethodsMixin, db.Model):
     realm = db.Column(db.Unicode(64), nullable=False, index=True)
     resolver = db.Column(db.Unicode(64))
     email = db.Column(db.Unicode(255))
-    timestamp = db.Column(db.DateTime, default=datetime.now())
-    expiration = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: utcnow())
+    expiration = db.Column(db.DateTime(timezone=True))
 
     @log_with(log)
     def __init__(self, recoverycode, username, realm, resolver="", email=None,
@@ -1347,9 +1349,8 @@ class PasswordReset(MethodsMixin, db.Model):
         self.realm = realm
         self.resolver = resolver
         self.email = email
-        self.timestamp = timestamp or datetime.now()
-        self.expiration = expiration or datetime.now() + \
-                                        timedelta(seconds=expiration_seconds)
+        self.timestamp = timestamp or utcnow()
+        self.expiration = expiration or utcnow() + timedelta(seconds=expiration_seconds)
 
 
 class Challenge(MethodsMixin, db.Model):
@@ -1366,8 +1367,8 @@ class Challenge(MethodsMixin, db.Model):
     session = db.Column(db.Unicode(512), default='', quote=True, name="session")
     # The token serial number
     serial = db.Column(db.Unicode(40), default='', index=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow(), index=True)
-    expiration = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime(timezone=True), default=lambda: utcnow(), index=True)
+    expiration = db.Column(db.DateTime(timezone=True))
     received_count = db.Column(db.Integer(), default=0)
     otp_valid = db.Column(db.Boolean, default=False)
 
@@ -1379,11 +1380,11 @@ class Challenge(MethodsMixin, db.Model):
         self.challenge = challenge
         self.serial = serial
         self.data = data
-        self.timestamp = datetime.utcnow()
+        self.timestamp = utcnow()
         self.session = session
         self.received_count = 0
         self.otp_valid = False
-        self.expiration = datetime.utcnow() + timedelta(seconds=validitytime)
+        self.expiration = utcnow() + timedelta(seconds=validitytime)
 
     @staticmethod
     def create_transaction_id(length=20):
@@ -1396,7 +1397,7 @@ class Challenge(MethodsMixin, db.Model):
         :rtype: bool
         """
         ret = False
-        c_now = datetime.utcnow()
+        c_now = utcnow()
         if self.timestamp <= c_now < self.expiration:
             ret = True
         return ret
@@ -1486,7 +1487,7 @@ def cleanup_challenges():
 
     :return: None
     """
-    c_now = datetime.utcnow()
+    c_now = utcnow()
     Challenge.query.filter(Challenge.expiration < c_now).delete()
     db.session.commit()
 
@@ -2574,7 +2575,7 @@ class ClientApplication(MethodsMixin, db.Model):
     ip = db.Column(db.Unicode(255), nullable=False, index=True)
     hostname = db.Column(db.Unicode(255))
     clienttype = db.Column(db.Unicode(255), nullable=False, index=True)
-    lastseen = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    lastseen = db.Column(db.DateTime(timezone=True), default=lambda: utcnow(), index=True)
     node = db.Column(db.Unicode(255), nullable=False)
     __table_args__ = (db.UniqueConstraint('ip',
                                           'clienttype',
@@ -2587,7 +2588,7 @@ class ClientApplication(MethodsMixin, db.Model):
             ClientApplication.ip == self.ip,
             ClientApplication.clienttype == self.clienttype,
             ClientApplication.node == self.node).first()
-        self.lastseen = datetime.now()
+        self.lastseen = utcnow()
         if clientapp is None:
             # create a new one
             db.session.add(self)
@@ -2627,8 +2628,8 @@ class Subscription(MethodsMixin, db.Model):
     by_address = db.Column(db.Unicode(128))
     by_phone = db.Column(db.Unicode(50))
     by_url = db.Column(db.Unicode(80))
-    date_from = db.Column(db.DateTime)
-    date_till = db.Column(db.DateTime)
+    date_from = db.Column(db.DateTime(timezone=True))
+    date_till = db.Column(db.DateTime(timezone=True))
     num_users = db.Column(db.Integer)
     num_tokens = db.Column(db.Integer)
     num_clients = db.Column(db.Integer)
@@ -2751,8 +2752,8 @@ class Audit(MethodsMixin, db.Model):
     __tablename__ = AUDIT_TABLE_NAME
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
     id = db.Column(BigIntegerType, Sequence("audit_seq"), primary_key=True)
-    date = db.Column(db.DateTime, index=True)
-    startdate = db.Column(db.DateTime)
+    date = db.Column(db.DateTime(timezone=True), index=True)
+    startdate = db.Column(db.DateTime(timezone=True))
     duration = db.Column(db.Interval(second_precision=6))
     signature = db.Column(db.Unicode(audit_column_length.get("signature")))
     action = db.Column(db.Unicode(audit_column_length.get("action")))
@@ -2797,7 +2798,7 @@ class Audit(MethodsMixin, db.Model):
                  duration=None
                  ):
         self.signature = ""
-        self.date = datetime.now()
+        self.date = utcnow()
         self.startdate = startdate
         self.duration = duration
         self.action = convert_column_to_unicode(action)
@@ -2828,7 +2829,7 @@ class UserCache(MethodsMixin, db.Model):
     used_login = db.Column(db.Unicode(64), default="", index=True)
     resolver = db.Column(db.Unicode(120), default='')
     user_id = db.Column(db.Unicode(320), default='', index=True)
-    timestamp = db.Column(db.DateTime, index=True)
+    timestamp = db.Column(db.DateTime(timezone=True), index=True)
 
     def __init__(self, username, used_login, resolver, user_id, timestamp):
         self.username = username
@@ -2842,8 +2843,8 @@ class AuthCache(MethodsMixin, db.Model):
     __tablename__ = 'authcache'
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
     id = db.Column(db.Integer, Sequence("authcache_seq"), primary_key=True)
-    first_auth = db.Column(db.DateTime, index=True)
-    last_auth = db.Column(db.DateTime, index=True)
+    first_auth = db.Column(db.DateTime(timezone=True), index=True)
+    last_auth = db.Column(db.DateTime(timezone=True), index=True)
     username = db.Column(db.Unicode(64), default="", index=True)
     resolver = db.Column(db.Unicode(120), default='', index=True)
     realm = db.Column(db.Unicode(120), default='', index=True)
@@ -2860,7 +2861,7 @@ class AuthCache(MethodsMixin, db.Model):
         self.realm = realm
         self.resolver = resolver
         self.authentication = authentication
-        self.first_auth = first_auth if first_auth else datetime.utcnow()
+        self.first_auth = first_auth if first_auth else utcnow()
         self.last_auth = last_auth if last_auth else self.first_auth
 
 
@@ -2880,7 +2881,7 @@ class PeriodicTask(MethodsMixin, db.Model):
     nodes = db.Column(db.Unicode(256), nullable=False)
     taskmodule = db.Column(db.Unicode(256), nullable=False)
     ordering = db.Column(db.Integer, nullable=False, default=0)
-    last_update = db.Column(db.DateTime(False), nullable=False)
+    last_update = db.Column(db.DateTime(timezone=True), nullable=False)
     options = db.relationship('PeriodicTaskOption',
                               lazy='dynamic',
                               backref='periodictask')
@@ -2935,7 +2936,7 @@ class PeriodicTask(MethodsMixin, db.Model):
         """
         Return self.last_update with attached UTC tzinfo
         """
-        return self.last_update.replace(tzinfo=tzutc())
+        return self.last_update.replace(tzinfo=timezone.utc)
 
     def get(self):
         """
@@ -2962,7 +2963,7 @@ class PeriodicTask(MethodsMixin, db.Model):
         Set ``last_update`` to the current time.
         :return: the entry ID
         """
-        self.last_update = datetime.utcnow()
+        self.last_update = utcnow()
         if self.id is None:
             # create a new one
             db.session.add(self)
@@ -3054,7 +3055,7 @@ class PeriodicTaskLastRun(db.Model):
                    primary_key=True)
     periodictask_id = db.Column(db.Integer, db.ForeignKey('periodictask.id'))
     node = db.Column(db.Unicode(255), nullable=False)
-    timestamp = db.Column(db.DateTime(False), nullable=False)
+    timestamp = db.Column(db.DateTime(timezone=True), nullable=False)
 
     __table_args__ = (db.UniqueConstraint('periodictask_id',
                                           'node',
@@ -3078,7 +3079,7 @@ class PeriodicTaskLastRun(db.Model):
         """
         Return self.timestamp with attached UTC tzinfo
         """
-        return self.timestamp.replace(tzinfo=tzutc())
+        return self.timestamp.replace(tzinfo=timezone.utc)
 
     def save(self):
         """
@@ -3113,7 +3114,7 @@ class MonitoringStats(MethodsMixin, db.Model):
     id = db.Column(db.Integer, Sequence("monitoringstats_seq"),
                    primary_key=True)
     # We store this as a naive datetime in UTC
-    timestamp = db.Column(db.DateTime(False), nullable=False, index=True)
+    timestamp = db.Column(db.DateTime(timezone=True), nullable=False, index=True)
     stats_key = db.Column(db.Unicode(128), nullable=False)
     stats_value = db.Column(db.Integer, nullable=False, default=0)
 

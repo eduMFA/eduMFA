@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import os
 import tempfile
 import unittest
+from datetime import timedelta
 
 from edumfa.app import create_app
 from edumfa.commands.manage.main import cli as edumfa_manage
+from edumfa.lib.utils import utcnow
 from edumfa.models import db, EventHandler, Policy
 from edumfa.lib.auditmodules.sqlaudit import LogEntry
 
@@ -252,7 +253,7 @@ class ScriptsTestCase(unittest.TestCase):
         LogEntry.query.delete()
 
         l = LogEntry()
-        l.date = datetime.datetime.now() - datetime.timedelta(days=365)
+        l.date = utcnow() - timedelta(days=365)
         l.save()
         assert len(LogEntry.query.all()) == 1
         result = runner.invoke(edumfa_manage, ["audit", "rotate", "--age", "30"])

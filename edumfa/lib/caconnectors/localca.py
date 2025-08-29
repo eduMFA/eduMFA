@@ -27,8 +27,11 @@ In this first implementation it is only a local certificate authority.
 
 This module is tested in tests/test_lib_caconnector.py
 """
+
+from datetime import timedelta
+
 from edumfa.lib.error import CAError
-from edumfa.lib.utils import int_to_hex, to_unicode
+from edumfa.lib.utils import int_to_hex, to_unicode, utcnow
 from edumfa.lib.caconnectors.baseca import BaseCAConnector, AvailableCAConnectors
 try:
     from OpenSSL import crypto
@@ -38,7 +41,6 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from subprocess import Popen, PIPE  # nosec B404
 import yaml
-import datetime
 import shlex
 import re
 import logging
@@ -516,8 +518,7 @@ class LocalCAConnector(BaseCAConnector):
             else:
                 full_path_crl = workingdir + "/" + crl
             next_update = _get_crl_next_update(full_path_crl)
-            if datetime.datetime.now() + \
-                    datetime.timedelta(days=self.overlap) > next_update:
+            if utcnow() + timedelta(days=self.overlap) > next_update:
                 log.info("We checked the overlap period and we need to create "
                          "the new CRL.")
             else:
