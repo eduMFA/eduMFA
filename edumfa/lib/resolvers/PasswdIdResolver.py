@@ -43,7 +43,6 @@ import codecs
 from edumfa.lib.utils import to_bytes, convert_column_to_unicode
 from .UserIdResolver import UserIdResolver
 
-# Python 3.13 dropped crypt package, so we need to migrate to passlib
 from passlib.handlers.sha2_crypt import sha256_crypt, sha512_crypt
 from passlib.handlers.md5_crypt import md5_crypt
 from passlib.handlers.des_crypt import des_crypt
