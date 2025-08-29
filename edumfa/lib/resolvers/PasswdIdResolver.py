@@ -212,34 +212,14 @@ class IdResolver(UserIdResolver):
                 err = "Sorry, currently no support for shadow passwords"
                 log.error("{0!s}".format(err))
                 raise NotImplementedError(err)
-            try:
-                if des_crypt.verify(password, cryptedpasswd):
-                    log.info("successfully authenticated user uid {0!s}".format(uid))
-                    return True
-            except ValueError as e:
-                pass
-
-            try:
-                if md5_crypt.verify(password, cryptedpasswd):
-                    log.info("successfully authenticated user uid {0!s}".format(uid))
-                    return True
-            except ValueError as e:
-                pass
-
-            try:
-                if sha256_crypt.verify(password, cryptedpasswd):
-                    log.info("successfully authenticated user uid {0!s}".format(uid))
-                    return True
-            except ValueError as e:
-                pass
-
-            try:
-                if sha512_crypt.verify(password, cryptedpasswd):
-                    log.info("successfully authenticated user uid {0!s}".format(uid))
-                    return True
-            except ValueError as e:
-                pass
-
+            handlers = [des_crypt, md5_crypt, sha256_crypt, sha512_crypt]
+            for handler in handlers:
+                try:
+                    if handler.verify(password, cryptedpasswd):
+                        log.info("successfully authenticated user uid {0!s}".format(uid))
+                        return True
+                except ValueError:
+                    continue
             log.warning("user uid {0!s} failed to authenticate".format(uid))
             return False
         else:
