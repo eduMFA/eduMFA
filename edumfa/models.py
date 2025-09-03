@@ -42,7 +42,7 @@ from edumfa.lib.crypto import (encrypt,
 from sqlalchemy import and_
 from sqlalchemy.schema import Sequence, CreateSequence
 from sqlalchemy.ext.compiler import compiles
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import OperationalError, IntegrityError
 from sqlalchemy import BigInteger
 from sqlalchemy.dialects import postgresql, mysql, sqlite
 from .lib.log import log_with
@@ -1490,8 +1490,8 @@ def cleanup_challenges():
     try:
         Challenge.query.filter(Challenge.expiration < c_now).delete()
         db.session.commit()
-    except Exception as e:
-        log.warning("Error in cleanup_challenges: {0!s}".format(e))        
+    except (OperationalError, IntegrityError) as e:
+        log.warning("Error in cleanup_challenges: {0!s}".format(e))
 
 # -----------------------------------------------------------------------------
 #
@@ -2596,7 +2596,7 @@ class ClientApplication(MethodsMixin, db.Model):
             try:
                 db.session.add(self)
                 db.session.commit()
-            except Exception as e:  # pragma: no cover
+            except (OperationalError, IntegrityError) as e:
                 log.warning('Unable to write ClientApplication entry to db: {0!s}'.format(e))
         else:
             # update
@@ -2606,7 +2606,7 @@ class ClientApplication(MethodsMixin, db.Model):
             try:
                 ClientApplication.query.filter(ClientApplication.id == clientapp.id).update(values)
                 db.session.commit()
-            except Exception as e:
+            except (OperationalError, IntegrityError) as e:
                 log.warning("Unable to update ClientApplication entry: {0!s}".format(e))
 
     def __repr__(self):
