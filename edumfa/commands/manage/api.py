@@ -18,7 +18,7 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 import click
 import jwt
@@ -40,7 +40,7 @@ api_cli = AppGroup("api", help="Manage API Keys")
 @click.option('-R', '--realm', help='The realm of the admin. Defaults to "API"', default="API")
 @click.option('-u', '--username', help='The username of the admin.')
 @click.option('-f', '--force', is_flag=True,
-              help='Force the creation of the token, even if the username does not exists.')
+              help='Force the creation of the token even if the username does not exists.')
 def createtoken(role, days, realm, username, force=False):
     """
     Create an API authentication token
@@ -54,9 +54,9 @@ def createtoken(role, days, realm, username, force=False):
     username = username or geturandom(hex=True)
     if username not in admins and not force:        
         click.echo("ERROR: The username '{0!s}' does not exist in the database!".format(username))
-        click.echo("ERROR: Use the --force option to create a token for a non-existing username.")        
-        sys.exit(1)       
-    
+        click.echo("ERROR: Use the --force option to create a token for a non-existing admin user '{0!s}'.".format(username))
+        sys.exit(1)
+
     secret = current_app.config.get("SECRET_KEY")
     authtype = "API"
     validity = timedelta(days=int(days))
