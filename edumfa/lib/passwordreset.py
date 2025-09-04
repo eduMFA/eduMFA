@@ -21,8 +21,7 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 from edumfa.models import PasswordReset
-from edumfa.lib.crypto import (hash_with_pepper, verify_with_pepper,
-                                    generate_password)
+from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper, generate_password
 import logging
 from edumfa.lib.log import log_with
 from edumfa.lib.error import UserError, eduMFAError, ConfigAdminError
@@ -55,8 +54,9 @@ To reset your user password please visit the link
 
 
 @log_with(log)
-def create_recoverycode(user, email=None, expiration_seconds=3600,
-                        recoverycode=None, base_url=""):
+def create_recoverycode(
+    user, email=None, expiration_seconds=3600, recoverycode=None, base_url=""
+):
     """
     Create and send a password recovery code
 
@@ -72,9 +72,12 @@ def create_recoverycode(user, email=None, expiration_seconds=3600,
     hash_code = hash_with_pepper(recoverycode)
     # send this recoverycode
     #
-    pwreset = PasswordReset(hash_code, username=user.login,
-                            realm=user.realm,
-                            expiration_seconds=expiration_seconds)
+    pwreset = PasswordReset(
+        hash_code,
+        username=user.login,
+        realm=user.realm,
+        expiration_seconds=expiration_seconds,
+    )
     pwreset.save()
 
     res = False
@@ -87,16 +90,16 @@ def create_recoverycode(user, email=None, expiration_seconds=3600,
     identifier = get_from_config("recovery.identifier")
     if identifier:
         # send email
-        r = send_email_identifier(identifier, user_email,
-                                  "Your password reset",
-                                  BODY.format(base_url,
-                                              user.login, user.realm,
-                                              recoverycode))
+        r = send_email_identifier(
+            identifier,
+            user_email,
+            "Your password reset",
+            BODY.format(base_url, user.login, user.realm, recoverycode),
+        )
         if not r:
             raise eduMFAError("Failed to send email. {0!s}".format(r))
     else:
-        raise ConfigAdminError("Missing configuration "
-                               "recovery.identifier.")
+        raise ConfigAdminError("Missing configuration recovery.identifier.")
     res = True
     return res
 
@@ -114,13 +117,13 @@ def check_recoverycode(user, recoverycode):
     """
     recoverycode_valid = False
     # delete old entries
-    r = PasswordReset.query.filter(and_(PasswordReset.expiration <
-                                      datetime.now())).delete()
+    r = PasswordReset.query.filter(
+        and_(PasswordReset.expiration < datetime.now())
+    ).delete()
     log.debug("{0!s} old password recoverycodes deleted.".format(r))
-    sql_query = PasswordReset.query.filter(and_(PasswordReset.username ==
-                                            user.login,
-                                                PasswordReset.realm
-                                                == user.realm))
+    sql_query = PasswordReset.query.filter(
+        and_(PasswordReset.username == user.login, PasswordReset.realm == user.realm)
+    )
     for pwr in sql_query:
         if verify_with_pepper(pwr.recoverycode, recoverycode):
             recoverycode_valid = True
@@ -144,7 +147,8 @@ def is_password_reset(g):
     """
     rlist = get_resolver_list(editable=True)
     log.debug("Number of editable resolvers: {0!s}".format(len(rlist)))
-    pwreset = Match.generic(g, scope=SCOPE.USER,
-                            action=ACTION.PASSWORDRESET).allowed(write_to_audit_log=False)
+    pwreset = Match.generic(g, scope=SCOPE.USER, action=ACTION.PASSWORDRESET).allowed(
+        write_to_audit_log=False
+    )
     log.debug("Password reset allowed via policies: {0!s}".format(pwreset))
     return bool(rlist and pwreset)
