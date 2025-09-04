@@ -40,7 +40,7 @@ api_cli = AppGroup("api", help="Manage API Keys")
 @click.option('-R', '--realm', help='The realm of the admin. Defaults to "API"', default="API")
 @click.option('-u', '--username', help='The username of the admin.')
 @click.option('-f', '--force', is_flag=True,
-              help='Force the creation of the token even if the username does not exists.')
+              help='Force the creation of the token even if the admin user does not exist.')
 def createtoken(role, days, realm, username, force=False):
     """
     Create an API authentication token
