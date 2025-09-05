@@ -15,7 +15,7 @@ Run this script in a cron job. It will read the users from ownCloud and
 from sqlalchemy import create_engine
 from sqlalchemy.sql import select
 from sqlalchemy.schema import ForeignKey
-from sqlalchemy import (Table, MetaData, Column, Integer, Unicode)
+from sqlalchemy import Table, MetaData, Column, Integer, Unicode
 import sys
 import json
 import getopt
@@ -32,7 +32,6 @@ EXAMPLE_CONFIG_FILE = """{
 
 
 class Config:
-
     def __init__(self, config_file):
         with open(config_file, "r") as f:
             contents = f.read()
@@ -44,36 +43,41 @@ class Config:
 
 
 def sync_owncloud(config_obj):
-
     metadata = MetaData()
 
-    user_table = Table(config_obj.LOCAL_TABLE, metadata,
-                       Column("id", Integer, primary_key=True, nullable=False),
-                       Column("email", Unicode(255), nullable=True),
-                       Column("user_id", Unicode(255), nullable=False, unique=True),
-                       Column("lower_user_id", Unicode(255), nullable=False, unique=True),
-                       Column("display_name", Unicode(255)),
-                       Column("backend", Unicode(64)),
-                       Column("last_login", Integer, default=0),
-                       Column("state", Integer, default=0),
-                       Column("password", Unicode(255), nullable=False)
-                       )
+    user_table = Table(
+        config_obj.LOCAL_TABLE,
+        metadata,
+        Column("id", Integer, primary_key=True, nullable=False),
+        Column("email", Unicode(255), nullable=True),
+        Column("user_id", Unicode(255), nullable=False, unique=True),
+        Column("lower_user_id", Unicode(255), nullable=False, unique=True),
+        Column("display_name", Unicode(255)),
+        Column("backend", Unicode(64)),
+        Column("last_login", Integer, default=0),
+        Column("state", Integer, default=0),
+        Column("password", Unicode(255), nullable=False),
+    )
 
-    oc_accounts_table = Table("oc_accounts", metadata,
-                              Column("id", Integer, primary_key=True, nullable=False),
-                              Column("email", Unicode(255), nullable=True),
-                              Column("user_id", Unicode(255), nullable=False, unique=True),
-                              Column("lower_user_id", Unicode(255), nullable=False, unique=True),
-                              Column("display_name", Unicode(255)),
-                              Column("backend", Unicode(64)),
-                              Column("last_login", Integer, default=0),
-                              Column("state", Integer, default=0)
-                              )
+    oc_accounts_table = Table(
+        "oc_accounts",
+        metadata,
+        Column("id", Integer, primary_key=True, nullable=False),
+        Column("email", Unicode(255), nullable=True),
+        Column("user_id", Unicode(255), nullable=False, unique=True),
+        Column("lower_user_id", Unicode(255), nullable=False, unique=True),
+        Column("display_name", Unicode(255)),
+        Column("backend", Unicode(64)),
+        Column("last_login", Integer, default=0),
+        Column("state", Integer, default=0),
+    )
 
-    oc_users_table = Table("oc_users", metadata,
-                           Column("uid", Unicode(255), ForeignKey("oc_accounts.user_id")),
-                           Column("password", Unicode(255), nullable=False)
-                           )
+    oc_users_table = Table(
+        "oc_users",
+        metadata,
+        Column("uid", Unicode(255), ForeignKey("oc_accounts.user_id")),
+        Column("password", Unicode(255), nullable=False),
+    )
 
     oc_engine = create_engine(config_obj.OWNCLOUD_URI)
     edumfa_engine = create_engine(config_obj.EDUMFA_URI)
@@ -90,19 +94,25 @@ def sync_owncloud(config_obj):
         """
         values_length = len(values)
         for chunk in range(0, values_length, chunk_size):
-            print('Insert records {} to {} ...'.format(chunk, min(chunk + chunk_size,
-                                                                  values_length) - 1))
+            print(
+                "Insert records {} to {} ...".format(
+                    chunk, min(chunk + chunk_size, values_length) - 1
+                )
+            )
             try:
-                conn.execute(table.insert(), values[chunk:chunk + chunk_size])
+                conn.execute(table.insert(), values[chunk : chunk + chunk_size])
             except Exception as err:
-                t = 'Failed to insert chunk: {0!s}'.format(err)
+                t = "Failed to insert chunk: {0!s}".format(err)
                 warnings.append(t)
                 print(t)
 
     warnings = []
 
     s = select([oc_accounts_table, oc_users_table.c.password]).select_from(
-        oc_accounts_table.join(oc_users_table, oc_users_table.c.uid == oc_accounts_table.c.user_id))
+        oc_accounts_table.join(
+            oc_users_table, oc_users_table.c.uid == oc_accounts_table.c.user_id
+        )
+    )
 
     owncloud_source = conn_oc.execute(s)
 
@@ -121,9 +131,19 @@ def sync_owncloud(config_obj):
     for r in owncloud_source:
         if r.id not in edumfa_users.keys():
             # This is a new entry
-            edumfa_users_insert.append(dict(id=r.id, email=r.email, user_id=r.user_id,
-                                        lower_user_id=r.lower_user_id, display_name=r.display_name, password=r.password,
-                                        backend=r.backend, last_login=r.last_login, state=r.state))
+            edumfa_users_insert.append(
+                dict(
+                    id=r.id,
+                    email=r.email,
+                    user_id=r.user_id,
+                    lower_user_id=r.lower_user_id,
+                    display_name=r.display_name,
+                    password=r.password,
+                    backend=r.backend,
+                    last_login=r.last_login,
+                    state=r.state,
+                )
+            )
         else:
             # This is an existing entry
             # Check if the entry is the same
@@ -133,11 +153,21 @@ def sync_owncloud(config_obj):
                 unchanged += 1
             else:
                 # add to update
-                edumfa_users_update.append(dict(id=r.id, email=r.email, user_id=r.user_id,
-                                        lower_user_id=r.lower_user_id, display_name=r.display_name, password=r.password,
-                                        backend=r.backend, last_login=r.last_login, state=r.state))
+                edumfa_users_update.append(
+                    dict(
+                        id=r.id,
+                        email=r.email,
+                        user_id=r.user_id,
+                        lower_user_id=r.lower_user_id,
+                        display_name=r.display_name,
+                        password=r.password,
+                        backend=r.backend,
+                        last_login=r.last_login,
+                        state=r.state,
+                    )
+                )
             # Delete entry from the eduMFA user list
-            del(edumfa_users[r.id])
+            del edumfa_users[r.id]
 
     edumfa_users_delete = edumfa_users
 
@@ -149,12 +179,16 @@ def sync_owncloud(config_obj):
 
     if len(edumfa_users_insert):
         print("Inserting new entries.")
-        insert_chunks(conn_pi, user_table, edumfa_users_insert, config_obj.INSERT_CHUNK_SIZE)
+        insert_chunks(
+            conn_pi, user_table, edumfa_users_insert, config_obj.INSERT_CHUNK_SIZE
+        )
 
     if len(edumfa_users_update):
         print("Updating entries.")
         for upd in edumfa_users_update:
-            stmt = user_table.update().where(user_table.c.id == upd.get("id")).values(upd)
+            stmt = (
+                user_table.update().where(user_table.c.id == upd.get("id")).values(upd)
+            )
             conn_pi.execute(stmt)
 
     if len(edumfa_users_delete):
@@ -170,7 +204,8 @@ def sync_owncloud(config_obj):
 
 
 def usage():
-    print("""
+    print(
+        """
 edumfa-sync-owncloud.py --generate-example-config [--config <config file>]
 
     --generate-example-config, -g   Output an example config file.
@@ -180,12 +215,15 @@ edumfa-sync-owncloud.py --generate-example-config [--config <config file>]
     --config, -c <file>             The config file, that contains the complete
                                     configuration.
 
-{0!s}""".format(__doc__))
+{0!s}""".format(__doc__)
+    )
 
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "gc:", ["generate-example-config", "config="])
+        opts, args = getopt.getopt(
+            sys.argv[1:], "gc:", ["generate-example-config", "config="]
+        )
     except getopt.GetoptError as e:
         print(str(e))
         sys.exit(1)
@@ -214,5 +252,5 @@ def main():
             sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

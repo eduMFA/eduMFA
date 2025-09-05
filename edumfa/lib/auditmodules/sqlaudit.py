@@ -40,10 +40,14 @@ token database.
 
 import logging
 from collections import OrderedDict
-from edumfa.lib.auditmodules.base import (Audit as AuditBase, Paginate)
+from edumfa.lib.auditmodules.base import Audit as AuditBase, Paginate
 from edumfa.lib.crypto import Sign
 from edumfa.lib.framework import get_app_config_value, get_app_local_store
-from edumfa.lib.pooling import DEFAULT_REGISTRY_CLASS_NAME, REGISTRY_CONFIG_NAME, get_engine
+from edumfa.lib.pooling import (
+    DEFAULT_REGISTRY_CLASS_NAME,
+    REGISTRY_CONFIG_NAME,
+    get_engine,
+)
 from edumfa.lib.utils import censor_connect_string
 from edumfa.lib.lifecycle import register_finalizer, register_request_finalizer
 from edumfa.lib.utils import truncate_comma_list, is_true
@@ -67,17 +71,19 @@ metadata = MetaData()
 # By using <https://docs.sqlalchemy.org/en/14/core/compiler.html> we can
 # differentiate between different dialects.
 class to_isodate(FunctionElement):
-    name = 'to_isodate'
+    name = "to_isodate"
     inherit_cache = True
 
 
-@compiles(to_isodate, 'oracle')
-@compiles(to_isodate, 'postgresql')
+@compiles(to_isodate, "oracle")
+@compiles(to_isodate, "postgresql")
 def fn_to_isodate(element, compiler, **kw):
-    return "to_char(%s, 'IYYY-MM-DD HH24:MI:SS')" % compiler.process(element.clauses, **kw)
+    return "to_char(%s, 'IYYY-MM-DD HH24:MI:SS')" % compiler.process(
+        element.clauses, **kw
+    )
 
 
-@compiles(to_isodate, 'sqlite')
+@compiles(to_isodate, "sqlite")
 def fn_to_isodate(element, compiler, **kw):
     # sqlite does not have a DateTime type, they are already in ISO format
     return "%s" % compiler.process(element.clauses, **kw)
@@ -87,7 +93,8 @@ def fn_to_isodate(element, compiler, **kw):
 def fn_to_isodate(element, compiler, **kw):
     # The four percent signs are necessary for two format substitutions
     return "date_format(%s, '%%%%Y-%%%%m-%%%%d %%%%H:%%%%i:%%%%s')" % compiler.process(
-        element.clauses, **kw)
+        element.clauses, **kw
+    )
 
 
 class Audit(AuditBase):
@@ -131,21 +138,30 @@ class Audit(AuditBase):
         self.name = "sqlaudit"
         self.sign_data = not self.config.get("EDUMFA_AUDIT_NO_SIGN")
         self.sign_object = None
-        self.verify_old_sig = self.config.get('EDUMFA_CHECK_OLD_SIGNATURES')
+        self.verify_old_sig = self.config.get("EDUMFA_CHECK_OLD_SIGNATURES")
         # Disable the costly checking of private RSA keys when loading them.
-        self.check_private_key = not self.config.get("EDUMFA_AUDIT_NO_PRIVATE_KEY_CHECK", False)
+        self.check_private_key = not self.config.get(
+            "EDUMFA_AUDIT_NO_PRIVATE_KEY_CHECK", False
+        )
         if self.sign_data:
-            self.read_keys(self.config.get("EDUMFA_AUDIT_KEY_PUBLIC"),
-                           self.config.get("EDUMFA_AUDIT_KEY_PRIVATE"))
-            self.sign_object = Sign(self.private, self.public,
-                                    check_private_key=self.check_private_key)
+            self.read_keys(
+                self.config.get("EDUMFA_AUDIT_KEY_PUBLIC"),
+                self.config.get("EDUMFA_AUDIT_KEY_PRIVATE"),
+            )
+            self.sign_object = Sign(
+                self.private, self.public, check_private_key=self.check_private_key
+            )
         # Read column_length from the config file
         config_column_length = self.config.get("EDUMFA_AUDIT_SQL_COLUMN_LENGTH", {})
         # fill the missing parts with the default from the models
-        self.custom_column_length = {k: (v if k not in config_column_length else config_column_length[k])
-                                     for k, v in column_length.items()}
+        self.custom_column_length = {
+            k: (v if k not in config_column_length else config_column_length[k])
+            for k, v in column_length.items()
+        }
         store = get_app_local_store()
-        registry_class_name = get_app_config_value(REGISTRY_CONFIG_NAME, DEFAULT_REGISTRY_CLASS_NAME)
+        registry_class_name = get_app_config_value(
+            REGISTRY_CONFIG_NAME, DEFAULT_REGISTRY_CLASS_NAME
+        )
         if registry_class_name == "null":
             self.engine = self._create_engine()
             self.session = scoped_session(sessionmaker(bind=self.engine))
@@ -157,17 +173,17 @@ class Audit(AuditBase):
             # string is fixed for a running eduMFA instance.
             # In other words, we will not run into any problems with changing connect strings.
             self.engine = get_engine(self.name, self._create_engine)
-            if 'sqlaudit.session' not in store:                
+            if "sqlaudit.session" not in store:
                 # create a configured "Session" class. ``scoped_session`` is not
                 # necessary because we do not share session objects among threads.
                 # We use it anyway as a safety measure.
                 self.session = scoped_session(sessionmaker(bind=self.engine))
-                store['sqlaudit.session'] = self.session
+                store["sqlaudit.session"] = self.session
                 # Ensure that the connection gets returned to the pool when the request has
                 # been handled. This may close an already-closed session, but this is not a problem.
                 register_finalizer(self.session.close)
             else:
-                self.session = store['sqlaudit.session']
+                self.session = store["sqlaudit.session"]
         self.session._model_changes = {}
 
     def _create_engine(self):
@@ -176,13 +192,19 @@ class Audit(AuditBase):
         """
         # an Engine, which the Session will use for connection
         # resources
-        connect_string = self.config.get("EDUMFA_AUDIT_SQL_URI", self.config.get(
-            "SQLALCHEMY_DATABASE_URI"))
-        log.debug("using the connect string {0!s}".format(censor_connect_string(connect_string)))
+        connect_string = self.config.get(
+            "EDUMFA_AUDIT_SQL_URI", self.config.get("SQLALCHEMY_DATABASE_URI")
+        )
+        log.debug(
+            "using the connect string {0!s}".format(
+                censor_connect_string(connect_string)
+            )
+        )
         # if no specific audit engine options are given, use the default from
         # SQLALCHEMY_ENGINE_OPTIONS or none
-        sqa_options = self.config.get("EDUMFA_AUDIT_SQL_OPTIONS",
-                                      self.config.get('SQLALCHEMY_ENGINE_OPTIONS', {}))
+        sqa_options = self.config.get(
+            "EDUMFA_AUDIT_SQL_OPTIONS", self.config.get("SQLALCHEMY_ENGINE_OPTIONS", {})
+        )
         log.debug("Using Audit SQLAlchemy engine options: {0!s}".format(sqa_options))
         try:
             pool_size = self.config.get("EDUMFA_AUDIT_POOL_SIZE", 20)
@@ -190,7 +212,8 @@ class Audit(AuditBase):
                 connect_string,
                 pool_size=pool_size,
                 pool_recycle=self.config.get("EDUMFA_AUDIT_POOL_RECYCLE", 600),
-                **sqa_options)
+                **sqa_options,
+            )
             log.debug("Using SQL pool size of {}".format(pool_size))
         except TypeError:
             # SQLite does not support pool_size
@@ -232,13 +255,14 @@ class Audit(AuditBase):
                 filter_realm = or_(*realm_conditions)
                 conditions.append(filter_realm)
             # We do not search if the search value only consists of '*'
-            elif search_value.strip() != '' and search_value.strip('*') != '':
+            elif search_value.strip() != "" and search_value.strip("*") != "":
                 try:
                     if search_key == "success":
                         # "success" is the only integer.
                         search_value = search_value.strip("*")
-                        conditions.append(getattr(LogEntry, search_key) ==
-                                          int(is_true(search_value)))
+                        conditions.append(
+                            getattr(LogEntry, search_key) == int(is_true(search_value))
+                        )
                     else:
                         # All other keys are compared as strings
                         column = getattr(LogEntry, search_key)
@@ -246,8 +270,8 @@ class Audit(AuditBase):
                             # but we cast a column with a DateTime type to an
                             # ISO-format string first
                             column = to_isodate(column)
-                        search_value = search_value.replace('*', '%')
-                        if '%' in search_value:
+                        search_value = search_value.replace("*", "%")
+                        if "%" in search_value:
                             conditions.append(column.like(search_value))
                         else:
                             conditions.append(column == search_value)
@@ -257,8 +281,7 @@ class Audit(AuditBase):
                     log.debug("Not a valid searchkey: {0!s}".format(exx))
 
         if timelimit:
-            conditions.append(LogEntry.date >= datetime.datetime.now() -
-                              timelimit)
+            conditions.append(LogEntry.date >= datetime.datetime.now() - timelimit)
         # Combine them with or to a BooleanClauseList
         filter_condition = and_(*conditions)
         return filter_condition
@@ -274,9 +297,7 @@ class Audit(AuditBase):
         filter_condition = self._create_filter(param, timelimit=timelimit)
 
         try:
-            count = self.session.query(LogEntry.id) \
-                .filter(filter_condition) \
-                .count()
+            count = self.session.query(LogEntry.id).filter(filter_condition).count()
         finally:
             self.session.close()
         return count
@@ -293,8 +314,12 @@ class Audit(AuditBase):
             if self.config.get("EDUMFA_AUDIT_SQL_TRUNCATE"):
                 self._truncate_data()
             if "tokentype" in self.audit_data:
-                log.warning("We have a wrong 'tokentype' key. This should not happen. Fix it!. "
-                            "Error occurs in action: {0!r}.".format(self.audit_data.get("action")))
+                log.warning(
+                    "We have a wrong 'tokentype' key. This should not happen. Fix it!. "
+                    "Error occurs in action: {0!r}.".format(
+                        self.audit_data.get("action")
+                    )
+                )
                 if not "token_type" in self.audit_data:
                     self.audit_data["token_type"] = self.audit_data.get("tokentype")
             if self.audit_data.get("startdate"):
@@ -302,33 +327,43 @@ class Audit(AuditBase):
             else:
                 duration = None
             # We wan't to reduce the passkey events a bit...
-            if self.config.get("EDUMFA_REDUCE_SQLAUDIT") == "1" or str(self.config.get("EDUMFA_REDUCE_SQLAUDIT")).lower() == "true":                
-                if (self.audit_data.get("action") == "POST /validate/triggerchallenge" or \
-                    "PRE-EVENT" in self.audit_data.get("action") or \
-                    "POST-EVENT" in self.audit_data.get("action")) and \
-                    self.audit_data.get("serial") == None and self.audit_data.get("user") == None:
-                    self.session.close()                    
+            if (
+                self.config.get("EDUMFA_REDUCE_SQLAUDIT") == "1"
+                or str(self.config.get("EDUMFA_REDUCE_SQLAUDIT")).lower() == "true"
+            ):
+                if (
+                    (
+                        self.audit_data.get("action")
+                        == "POST /validate/triggerchallenge"
+                        or "PRE-EVENT" in self.audit_data.get("action")
+                        or "POST-EVENT" in self.audit_data.get("action")
+                    )
+                    and self.audit_data.get("serial") == None
+                    and self.audit_data.get("user") == None
+                ):
+                    self.session.close()
                     self.audit_data = {}
                     return
-            le = LogEntry(action=self.audit_data.get("action"),
-                          success=int(self.audit_data.get("success", 0)),
-                          serial=self.audit_data.get("serial"),
-                          token_type=self.audit_data.get("token_type"),
-                          user=self.audit_data.get("user"),
-                          realm=self.audit_data.get("realm"),
-                          resolver=self.audit_data.get("resolver"),
-                          administrator=self.audit_data.get("administrator"),
-                          action_detail=self.audit_data.get("action_detail"),
-                          info=self.audit_data.get("info"),
-                          edumfa_server=self.audit_data.get("edumfa_server"),
-                          client=self.audit_data.get("client", ""),
-                          loglevel=self.audit_data.get("log_level"),
-                          clearance_level=self.audit_data.get("clearance_level"),
-                          policies=self.audit_data.get("policies"),
-                          startdate=self.audit_data.get("startdate"),
-                          duration=duration,
-                          thread_id=self.audit_data.get("thread_id")
-                          )
+            le = LogEntry(
+                action=self.audit_data.get("action"),
+                success=int(self.audit_data.get("success", 0)),
+                serial=self.audit_data.get("serial"),
+                token_type=self.audit_data.get("token_type"),
+                user=self.audit_data.get("user"),
+                realm=self.audit_data.get("realm"),
+                resolver=self.audit_data.get("resolver"),
+                administrator=self.audit_data.get("administrator"),
+                action_detail=self.audit_data.get("action_detail"),
+                info=self.audit_data.get("info"),
+                edumfa_server=self.audit_data.get("edumfa_server"),
+                client=self.audit_data.get("client", ""),
+                loglevel=self.audit_data.get("log_level"),
+                clearance_level=self.audit_data.get("clearance_level"),
+                policies=self.audit_data.get("policies"),
+                startdate=self.audit_data.get("startdate"),
+                duration=duration,
+                thread_id=self.audit_data.get("thread_id"),
+            )
             self.session.add(le)
             self.session.commit()
             # Add the signature
@@ -364,12 +399,16 @@ class Audit(AuditBase):
         """
         res = False
         try:
-            id_bef = self.session.query(LogEntry.id
-                                        ).filter(LogEntry.id ==
-                                                 int(audit_id) - 1).count()
-            id_aft = self.session.query(LogEntry.id
-                                        ).filter(LogEntry.id ==
-                                                 int(audit_id) + 1).count()
+            id_bef = (
+                self.session.query(LogEntry.id)
+                .filter(LogEntry.id == int(audit_id) - 1)
+                .count()
+            )
+            id_aft = (
+                self.session.query(LogEntry.id)
+                .filter(LogEntry.id == int(audit_id) + 1)
+                .count()
+            )
             # We may not do a commit!
             # self.session.commit()
             if id_bef and id_aft:
@@ -398,22 +437,27 @@ class Audit(AuditBase):
         :rtype str
         """
         # TODO: Add thread_id. We really should add a versioning to identify which audit data is signed.
-        s = "id=%s,date=%s,action=%s,succ=%s,serial=%s,t=%s,u=%s,r=%s,adm=%s," \
-            "ad=%s,i=%s,ps=%s,c=%s,l=%s,cl=%s" % (le.id,
-                                                   le.date,
-                                                   le.action,
-                                                   le.success,
-                                                   le.serial,
-                                                   le.token_type,
-                                                   le.user,
-                                                   le.realm,
-                                                   le.administrator,
-                                                   le.action_detail,
-                                                   le.info,
-                                                   le.edumfa_server,
-                                                   le.client,
-                                                   le.loglevel,
-                                                   le.clearance_level)
+        s = (
+            "id=%s,date=%s,action=%s,succ=%s,serial=%s,t=%s,u=%s,r=%s,adm=%s,"
+            "ad=%s,i=%s,ps=%s,c=%s,l=%s,cl=%s"
+            % (
+                le.id,
+                le.date,
+                le.action,
+                le.success,
+                le.serial,
+                le.token_type,
+                le.user,
+                le.realm,
+                le.administrator,
+                le.action_detail,
+                le.info,
+                le.edumfa_server,
+                le.client,
+                le.loglevel,
+                le.clearance_level,
+            )
+        )
         # If we have the new log entries, we also add them for signing and verification.
         if le.startdate:
             s += ",{0!s}".format(le.startdate)
@@ -426,25 +470,27 @@ class Audit(AuditBase):
         """
         This function returns the LogEntry attribute for the given key value
         """
-        sortname = {'number': LogEntry.id,
-                    'action': LogEntry.action,
-                    'success': LogEntry.success,
-                    'serial': LogEntry.serial,
-                    'date': LogEntry.date,
-                    'startdate': LogEntry.startdate,
-                    'duration': LogEntry.duration,
-                    'token_type': LogEntry.token_type,
-                    'user': LogEntry.user,
-                    'realm': LogEntry.realm,
-                    'administrator': LogEntry.administrator,
-                    'action_detail': LogEntry.action_detail,
-                    'info': LogEntry.info,
-                    'edumfa_server': LogEntry.edumfa_server,
-                    'client': LogEntry.client,
-                    'log_level': LogEntry.loglevel,
-                    'policies': LogEntry.policies,
-                    'clearance_level': LogEntry.clearance_level,
-                    'thread_id': LogEntry.thread_id}
+        sortname = {
+            "number": LogEntry.id,
+            "action": LogEntry.action,
+            "success": LogEntry.success,
+            "serial": LogEntry.serial,
+            "date": LogEntry.date,
+            "startdate": LogEntry.startdate,
+            "duration": LogEntry.duration,
+            "token_type": LogEntry.token_type,
+            "user": LogEntry.user,
+            "realm": LogEntry.realm,
+            "administrator": LogEntry.administrator,
+            "action_detail": LogEntry.action_detail,
+            "info": LogEntry.info,
+            "edumfa_server": LogEntry.edumfa_server,
+            "client": LogEntry.client,
+            "log_level": LogEntry.loglevel,
+            "policies": LogEntry.policies,
+            "clearance_level": LogEntry.clearance_level,
+            "thread_id": LogEntry.thread_id,
+        }
         return sortname.get(key)
 
     def csv_generator(self, param=None, user=None, timelimit=None):
@@ -458,9 +504,13 @@ class Audit(AuditBase):
         :param user: The user, who issued the request
         :return: None. It yields results as a generator
         """
-        filter_condition = self._create_filter(param,
-                                               timelimit=timelimit)
-        logentries = self.session.query(LogEntry).filter(filter_condition).order_by(LogEntry.date).all()
+        filter_condition = self._create_filter(param, timelimit=timelimit)
+        logentries = (
+            self.session.query(LogEntry)
+            .filter(filter_condition)
+            .order_by(LogEntry.date)
+            .all()
+        )
 
         for le in logentries:
             audit_dict = self.audit_entry_to_dict(le)
@@ -474,16 +524,16 @@ class Audit(AuditBase):
             conditions.append(LogEntry.success == int(is_true(success)))
 
         if timedelta is not None:
-            conditions.append(LogEntry.date >= datetime.datetime.now() -
-                              timedelta)
+            conditions.append(LogEntry.date >= datetime.datetime.now() - timedelta)
 
         filter_condition = and_(*conditions)
         log_count = self.session.query(LogEntry).filter(filter_condition).count()
 
         return log_count
 
-    def search(self, search_dict, page_size=15, page=1, sortorder="asc",
-               timelimit=None):
+    def search(
+        self, search_dict, page_size=15, page=1, sortorder="asc", timelimit=None
+    ):
         """
         This function returns the audit log as a Pagination object.
 
@@ -501,9 +551,13 @@ class Audit(AuditBase):
         if paging_object.total > (page_size * page):
             paging_object.next = page + 1
 
-        auditIter = self.search_query(search_dict, page_size=page_size,
-                                      page=page, sortorder=sortorder,
-                                      timelimit=timelimit)
+        auditIter = self.search_query(
+            search_dict,
+            page_size=page_size,
+            page=page,
+            sortorder=sortorder,
+            timelimit=timelimit,
+        )
         while True:
             try:
                 le = next(auditIter)
@@ -517,14 +571,23 @@ class Audit(AuditBase):
                 # iteration stops and we return an empty paging_object.
                 # TODO: Check if we can return the other entries in the auditIter
                 #  or some meaningful error for the user.
-                log.warning('Could not read audit log entry! '
-                            'Possible database encoding mismatch.')
+                log.warning(
+                    "Could not read audit log entry! "
+                    "Possible database encoding mismatch."
+                )
                 log.debug("{0!s}".format(traceback.format_exc()))
 
         return paging_object
 
-    def search_query(self, search_dict, page_size=15, page=1, sortorder="asc",
-                     sortname="number", timelimit=None):
+    def search_query(
+        self,
+        search_dict,
+        page_size=15,
+        page=1,
+        sortorder="asc",
+        sortname="number",
+        timelimit=None,
+    ):
         """
         This function returns the audit log as an iterator on the result
 
@@ -538,19 +601,24 @@ class Audit(AuditBase):
             offset = (int(page) - 1) * limit
 
             # create filter condition
-            filter_condition = self._create_filter(search_dict,
-                                                   timelimit=timelimit)
+            filter_condition = self._create_filter(search_dict, timelimit=timelimit)
 
             if sortorder == "desc":
-                logentries = self.session.query(LogEntry).filter(
-                    filter_condition).order_by(
-                    desc(self._get_logentry_attribute("number"))).limit(
-                    limit).offset(offset)
+                logentries = (
+                    self.session.query(LogEntry)
+                    .filter(filter_condition)
+                    .order_by(desc(self._get_logentry_attribute("number")))
+                    .limit(limit)
+                    .offset(offset)
+                )
             else:
-                logentries = self.session.query(LogEntry).filter(
-                    filter_condition).order_by(
-                    asc(self._get_logentry_attribute("number"))).limit(
-                    limit).offset(offset)
+                logentries = (
+                    self.session.query(LogEntry)
+                    .filter(filter_condition)
+                    .order_by(asc(self._get_logentry_attribute("number")))
+                    .limit(limit)
+                    .offset(offset)
+                )
 
         except Exception as exx:  # pragma: no cover
             log.error("exception {0!r}".format(exx))
@@ -577,39 +645,47 @@ class Audit(AuditBase):
         sig = None
         if self.sign_data:
             try:
-                sig = self.sign_object.verify(self._log_to_string(audit_entry),
-                                              audit_entry.signature,
-                                              self.verify_old_sig)
+                sig = self.sign_object.verify(
+                    self._log_to_string(audit_entry),
+                    audit_entry.signature,
+                    self.verify_old_sig,
+                )
             except UnicodeDecodeError as _e:
                 # TODO: Unless we trace and eliminate the broken unicode in the
                 #  audit_entry, we will get issues when packing the response.
-                log.warning('Could not verify log entry! We get invalid values '
-                            'from the database, please check the encoding.')
-                log.debug('{0!s}'.format(traceback.format_exc()))
+                log.warning(
+                    "Could not verify log entry! We get invalid values "
+                    "from the database, please check the encoding."
+                )
+                log.debug("{0!s}".format(traceback.format_exc()))
 
         is_not_missing = self._check_missing(int(audit_entry.id))
         # is_not_missing = True
         audit_dict = OrderedDict()
-        audit_dict['number'] = audit_entry.id
-        audit_dict['date'] = audit_entry.date.isoformat()
-        audit_dict['sig_check'] = "OK" if sig else "FAIL"
-        audit_dict['missing_line'] = "OK" if is_not_missing else "FAIL"
-        audit_dict['action'] = audit_entry.action
-        audit_dict['success'] = audit_entry.success
-        audit_dict['serial'] = audit_entry.serial
-        audit_dict['token_type'] = audit_entry.token_type
-        audit_dict['user'] = audit_entry.user
-        audit_dict['realm'] = audit_entry.realm
-        audit_dict['resolver'] = audit_entry.resolver
-        audit_dict['administrator'] = audit_entry.administrator
-        audit_dict['action_detail'] = audit_entry.action_detail
-        audit_dict['info'] = audit_entry.info
-        audit_dict['edumfa_server'] = audit_entry.edumfa_server
-        audit_dict['policies'] = audit_entry.policies
-        audit_dict['client'] = audit_entry.client
-        audit_dict['log_level'] = audit_entry.loglevel
-        audit_dict['clearance_level'] = audit_entry.clearance_level
-        audit_dict['startdate'] = audit_entry.startdate.isoformat() if audit_entry.startdate else None
-        audit_dict['duration'] = audit_entry.duration.total_seconds() if audit_entry.duration else None
-        audit_dict['thread_id'] = audit_entry.thread_id
+        audit_dict["number"] = audit_entry.id
+        audit_dict["date"] = audit_entry.date.isoformat()
+        audit_dict["sig_check"] = "OK" if sig else "FAIL"
+        audit_dict["missing_line"] = "OK" if is_not_missing else "FAIL"
+        audit_dict["action"] = audit_entry.action
+        audit_dict["success"] = audit_entry.success
+        audit_dict["serial"] = audit_entry.serial
+        audit_dict["token_type"] = audit_entry.token_type
+        audit_dict["user"] = audit_entry.user
+        audit_dict["realm"] = audit_entry.realm
+        audit_dict["resolver"] = audit_entry.resolver
+        audit_dict["administrator"] = audit_entry.administrator
+        audit_dict["action_detail"] = audit_entry.action_detail
+        audit_dict["info"] = audit_entry.info
+        audit_dict["edumfa_server"] = audit_entry.edumfa_server
+        audit_dict["policies"] = audit_entry.policies
+        audit_dict["client"] = audit_entry.client
+        audit_dict["log_level"] = audit_entry.loglevel
+        audit_dict["clearance_level"] = audit_entry.clearance_level
+        audit_dict["startdate"] = (
+            audit_entry.startdate.isoformat() if audit_entry.startdate else None
+        )
+        audit_dict["duration"] = (
+            audit_entry.duration.total_seconds() if audit_entry.duration else None
+        )
+        audit_dict["thread_id"] = audit_entry.thread_id
         return audit_dict
