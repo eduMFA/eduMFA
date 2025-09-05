@@ -44,7 +44,7 @@ from edumfa.lib.crypto import (
 from sqlalchemy import and_
 from sqlalchemy.schema import Sequence, CreateSequence
 from sqlalchemy.ext.compiler import compiles
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import OperationalError, IntegrityError
 from sqlalchemy import BigInteger
 from sqlalchemy.dialects import postgresql, mysql, sqlite
 from .lib.log import log_with
@@ -1506,8 +1506,11 @@ def cleanup_challenges():
     :return: None
     """
     c_now = datetime.utcnow()
-    Challenge.query.filter(Challenge.expiration < c_now).delete()
-    db.session.commit()
+    try:
+        Challenge.query.filter(Challenge.expiration < c_now).delete()
+        db.session.commit()
+    except (OperationalError, IntegrityError) as e:
+        log.warning("Error in cleanup_challenges: {0!s}".format(e))
 
 
 # -----------------------------------------------------------------------------
@@ -2685,20 +2688,21 @@ class ClientApplication(MethodsMixin, db.Model):
         self.lastseen = datetime.now()
         if clientapp is None:
             # create a new one
-            db.session.add(self)
+            try:
+                db.session.add(self)
+                db.session.commit()
+            except (OperationalError, IntegrityError) as e:
+                log.warning('Unable to write ClientApplication entry to db: {0!s}'.format(e))
         else:
             # update
             values = {"lastseen": self.lastseen}
             if self.hostname is not None:
                 values["hostname"] = self.hostname
-            ClientApplication.query.filter(ClientApplication.id == clientapp.id).update(
-                values
-            )
-        try:
-            db.session.commit()
-        except IntegrityError as e:  # pragma: no cover
-            log.info("Unable to write ClientApplication entry to db: {0!s}".format(e))
-            log.debug(traceback.format_exc())
+            try:
+                ClientApplication.query.filter(ClientApplication.id == clientapp.id).update(values)
+                db.session.commit()
+            except (OperationalError, IntegrityError) as e:
+                log.warning("Unable to update ClientApplication entry: {0!s}".format(e))
 
     def __repr__(self):
         return "<ClientApplication [{0!s}][{1!s}:{2!s}] on {3!s}>".format(
