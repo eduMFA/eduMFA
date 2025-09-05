@@ -69,8 +69,6 @@ keylen = {'sha1': 20,
           'sha512': 64
           }
 
-VERIFY_ENROLLMENT_MESSAGE = _("Please enter a valid OTP value of the new token.")
-
 
 class HotpTokenClass(TokenClass):
     """
@@ -92,6 +90,7 @@ class HotpTokenClass(TokenClass):
                            'two-step enrollment.')
     desc_two_step_admin = _('Specify whether admins are allowed or forced to '
                             'use two-step enrollment.')
+    verify_enrollment_message = _("Please enter a valid OTP value of the new token.")
 
     @staticmethod
     def get_class_type():
@@ -784,7 +783,8 @@ class HotpTokenClass(TokenClass):
 
         :return: A dictionary with information that is needed to trigger the verification.
         """
-        return {"message": VERIFY_ENROLLMENT_MESSAGE}
+
+        return {"message": HotpTokenClass.verify_enrollment_message}
 
     def verify_enrollment(self, verify):
         """
