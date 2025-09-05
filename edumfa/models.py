@@ -2692,14 +2692,18 @@ class ClientApplication(MethodsMixin, db.Model):
                 db.session.add(self)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
-                log.warning('Unable to write ClientApplication entry to db: {0!s}'.format(e))
+                log.warning(
+                    "Unable to write ClientApplication entry to db: {0!s}".format(e)
+                )
         else:
             # update
             values = {"lastseen": self.lastseen}
             if self.hostname is not None:
                 values["hostname"] = self.hostname
             try:
-                ClientApplication.query.filter(ClientApplication.id == clientapp.id).update(values)
+                ClientApplication.query.filter(
+                    ClientApplication.id == clientapp.id
+                ).update(values)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
                 log.warning("Unable to update ClientApplication entry: {0!s}".format(e))
