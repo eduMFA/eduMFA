@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77.0.3"]  # Minimum for new license field
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,11 +9,10 @@ requires-python = ">=3.9,<3.14"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
 readme = { file = "README.rst", content-type = "text/x-rst" }
-license = { file = "LICENSE" }
+license = "AGPL-3.0-only"
 keywords = ["OTP", "two factor authentication", "management", "security"]
 classifiers = [
     "Framework :: Flask",
-    "License :: OSI Approved :: GNU Affero General Public License v3",
     "Programming Language :: Python",
     "Development Status :: 5 - Production/Stable",
     "Topic :: Internet",
