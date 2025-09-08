@@ -23,14 +23,16 @@ from flask import current_app
 def set_database_url(config):
     url = current_app.config.get('SQLALCHEMY_DATABASE_URI')
     try:
-        # In case of MySQL, add ``charset=utf8`` to the parameters (if no charset is set),
-        # because this is what Flask-SQLAlchemy does
+        # In case of MySQL, add "charset=utf8mb4" to the parameters (if no charset is set),
+        # because this is what Flask-SQLAlchemy does:
+        # https://github.com/pallets-eco/flask-sqlalchemy/blob/168cb4b7b50fe5176307a10d873781bfafc6eeda/src/flask_sqlalchemy/extension.py#L644-L645
         if url.startswith("mysql"):
             parsed_url = make_url(url)
-            parsed_url = parsed_url.update_query_dict({"charset": "utf8"})
+            if "charset" not in parsed_url.query:
+                parsed_url = parsed_url.update_query_dict({"charset": "utf8mb4"})
             url = parsed_url.render_as_string(hide_password=False)
     except Exception as exx:
-        print(u"Attempted to set charset=utf8 on connection, but failed: {}".format(exx))
+        print(u"Attempted to set charset=utf8mb4 on connection, but failed: {}".format(exx))
     # set_main_option() requires escaped "%" signs in the string
     config.set_main_option('sqlalchemy.url', url.replace('%', '%%'))
 
