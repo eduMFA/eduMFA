@@ -1568,12 +1568,12 @@ class Policy(TimestampMethodsMixin, db.Model):
     def set_conditions(self, conditions):
         """
         Replace the list of conditions of this policy with a new list
-        of conditions, i.e. a list of 5-tuples (section, key, comparator, value, active).
+        of conditions, i.e. a list of 6-tuples (section, key, comparator, value, active, unset).
         """
         self.conditions = []
-        for section, key, comparator, value, active in conditions:
+        for section, key, comparator, value, active, unset in conditions:
             condition_object = PolicyCondition(
-                section=section, Key=key, comparator=comparator, Value=value, active=active,
+                section=section, Key=key, comparator=comparator, Value=value, active=active, unset=unset
             )
             self.conditions.append(condition_object)
 
@@ -1649,14 +1649,15 @@ class PolicyCondition(MethodsMixin, db.Model):
     comparator = db.Column(db.Unicode(255), nullable=False, default='equals')
     Value = db.Column(db.Unicode(2000), nullable=False, default='')
     active = db.Column(db.Boolean, nullable=False, default=True)
+    undef = db.Column(db.Unicode(255), nullable=False, default=u'exception')
 
     __table_args__ = {'mysql_row_format': 'DYNAMIC'}
 
     def as_tuple(self):
         """
-        :return: the condition as a tuple (section, key, comparator, value, active)
+        :return: the condition as a tuple (section, key, comparator, value, active, unset)
         """
-        return self.section, self.Key, self.comparator, self.Value, self.active
+        return self.section, self.Key, self.comparator, self.Value, self.active, self.undef
 
 
 # ------------------------------------------------------------------
