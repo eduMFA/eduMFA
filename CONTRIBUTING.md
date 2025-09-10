@@ -115,6 +115,32 @@ scripts.
 
   To update the local database.
 
+## Translations
+
+We aim to provide translations for different languages.
+
+To generate the translations for the web interface we use `grunt`. The files can be updated using 
+
+```bash
+npm install 
+npm run translate
+```
+
+The server-side messages get translated using babel. For a simplified process and installation you can use `uv`. After installing `babel` you can generate the files.
+
+```bash
+uv tool install babel
+```
+
+```bash
+cd edumfa
+uv tool run --from babel pybabel extract -F babel.cfg -o messages.pot .
+uv tool run --from babel pybabel update -i messages.pot -d translations
+uv tool run --from babel pybabel compile -d translations
+```
+
+
+
 ## Development Workflow
 
 The following section describes our development workflow: How do we handle
