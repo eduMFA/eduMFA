@@ -6,23 +6,24 @@ EDUMFA_ADMIN_USER="${EDUMFA_ADMIN_USER:-admin}"
 EDUMFA_ADMIN_PASS="${EDUMFA_ADMIN_PASS:-$GEN_PWD}"
 
 # Create enckey if doesn't exist yet
-edumfa-manage create_enckey || true
+edumfa-manage -q create_enckey || true
 
 # Create audit keys if they don't exist yet
-edumfa-manage create_audit_keys || true
+edumfa-manage -q create_audit_keys || true
 
 # Create DB
 echo "Creating DB"
-until edumfa-manage create_tables
+# FIXME: this creates a exception trace on every attempt
+until edumfa-manage -q create_tables
 do
     echo "Cannot connect to database. Trying again..."
     sleep 3
 done
 
 # Check and stamp DB
-STAMP=$(edumfa-manage db current -d /usr/local/lib/edumfa/migrations 2>/dev/null)
+STAMP=$(edumfa-manage -q db current -d /usr/local/lib/edumfa/migrations 2>/dev/null)
 if [[ -z "${STAMP//Running online/}" ]]; then
-  edumfa-manage db stamp head -d /usr/local/lib/edumfa/migrations
+  edumfa-manage -q db stamp head -d /usr/local/lib/edumfa/migrations
 fi
 
 # Upgrading DB
@@ -31,7 +32,7 @@ edumfa-schema-upgrade /usr/local/lib/edumfa/migrations --skipstamp
 
 # Create admin user
 echo "Creating Admin"
-edumfa-manage admin add "$EDUMFA_ADMIN_USER" -p "$EDUMFA_ADMIN_PASS"
+edumfa-manage -q admin add "$EDUMFA_ADMIN_USER" -p "$EDUMFA_ADMIN_PASS"
 
 # Execute user scripts
 shopt -s nullglob
