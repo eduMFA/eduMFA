@@ -38,7 +38,7 @@ edumfa-manage -q admin add "$EDUMFA_ADMIN_USER" -p "$EDUMFA_ADMIN_PASS"
 shopt -s nullglob
 for script in /opt/edumfa/user-scripts/*.sh; do
   echo "Executing user script $script..."
-  bash $script || true
+  bash $script
 done
 
 echo "
