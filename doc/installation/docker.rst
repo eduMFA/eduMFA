@@ -21,65 +21,69 @@ Docker Compose
 
 For the most setups you should use Docker Compose. Here's a sample `docker-compose.yml` file also containing a mariadb service. 
 
-Beside the `docker-compose.yml` you must create your own `edumfa.cfg` and replace the paths. 
-
-The container contains a default logging configuration printing the logs to `stdout`, performs database maintanance on start and runs the application using `guincorn` on port 8000.
-
-For production you should replace the passwords and secrets with your own values. 
-
-.. code-block:: cfg
-   
-   # The realm, where users are allowed to login as administrators
-   SUPERUSER_REALM = ['super', 'administrators']
-   # Your database
-   SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:pass@mariadb/edumfa'
-   # This is used to encrypt the auth_token
-   SECRET_KEY = 'strong-key'
-   # This is used to encrypt the admin passwords
-   EDUMFA_PEPPER = "strong-pepper"
-   # This is used to encrypt the token data and token passwords
-   EDUMFA_ENCFILE = '/etc/edumfa/enckey'
-   # This is used to sign the audit log
-   EDUMFA_AUDIT_KEY_PRIVATE = '/etc/edumfa/private.pem'
-   EDUMFA_AUDIT_KEY_PUBLIC = '/etc/edumfa/public.pem'
+The container contains a default logging configuration printing the logs to `stdout`, performs database maintanance on start and runs the application on port 8000.
 
 .. code-block:: yaml
 
    services:
      mariadb:
-       image: docker.io/mariadb:lts-jammy
+       image: docker.io/mariadb:lts-noble
        restart: always
        volumes:
-         - maria-data:/var/lib/mysql:rw
+         - mariadb-data:/var/lib/mysql:rw
        environment:
-         - MARIADB_PORT_NUMBER=3306
-         - MARIADB_DATABASE=edumfa
-         - MARIADB_USER=edumfa
-         - MARIADB_PASSWORD=pass
-         - MARIADB_ROOT_PASSWORD=pass
+         MARIADB_DATABASE: ${MARIADB_DATABASE}
+         MARIADB_USER: ${MARIADB_USER}
+         MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+         MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
        healthcheck:
          test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
          start_period: 10s
          interval: 10s
          timeout: 5s
          retries: 3
+
      edumfa:
        image: ghcr.io/edumfa/edumfa:latest
+       restart: always
        ports:
          - "8000:8000"
        volumes:
-         - edumfa-config:/etc/edumfa
-         - /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg
+         - edumfa-keys:/etc/edumfa/:rw
        environment:
-         - EDUMFA_ADMIN_USER=admin
-         - EDUMFA_ADMIN_PASS=Passwort123
+         DB_DRIVER: mysql+pymysql
+         DB_HOSTNAME: mariadb
+         DB_USER: ${MARIADB_USER}
+         DB_PASSWORD: ${MARIADB_PASSWORD}
+         DB_DATABASE: ${MARIADB_DATABASE}
+         SECRET_KEY: ${EDUMFA_SECRET_KEY}
+         EDUMFA_PEPPER: ${EDUMFA_PEPPER}
+         EDUMFA_ADMIN_USER: ${EDUMFA_ADMIN_USER}
+         EDUMFA_ADMIN_PASS: ${EDUMFA_ADMIN_PASS}
+         EDUMFA_UI_DEACTIVATED: ${EDUMFA_UI_DEACTIVATED}
        depends_on:
          mariadb:
            condition: service_healthy
 
    volumes:
-      edumfa-config:
-      maria-data:
+     edumfa-keys:
+     mariadb-data:
+
+
+The `.env` file should contain the following variables:
+
+- MARIADB_USER: the MariaDB user
+- MARIADB_PASSWORD: the MariaDB password
+- MARIADB_DATABASE: the MariaDB database
+- MARIADB_ROOT_PASSWORD: the MariaDB root password (not used by eduMFA, required)
+- EDUMFA_SECRET_KEY: the secret key which signs API tokens, should be at least 24 random characters long
+- EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 24 random characters long
+- EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional)
+- EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional)
+- SUPERUSER_REALM: which realms should be superuser realms (optional)
+- EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional)
+
+For production you should replace the passwords and secrets with your own values. Alternatively, you can mount your own `edumfa.cfg` instead of configuring eduMFA via environment variables.
 
 To start eduMFA using Docker Compose, run:
 
