@@ -235,8 +235,9 @@ myApp.controller("tokenDetailController", ['$scope', 'TokenFactory',
     };
 
     $scope.deleteTokenAsk = function() {
-        var tokenType = $scope.token.info.tokenkind;
-        if (tokenType == "hardware"){
+        var tokenKind = $scope.token.info.tokenkind;
+        var typeType = $scope.token.tokentype;
+        if (tokenKind == "hardware" || typeType in $scope.token_ask_delete ){
             $('#dialogTokenDelete').modal();
         } else {
             $scope.delete();
