@@ -468,6 +468,7 @@ angular.module("eduMfaApp")
             $scope.token_rollover = data.result.value.token_rollover;
             $scope.subscription_state = data.result.value.subscription_status;
             $scope.subscription_state_push = data.result.value.subscription_status_push;
+            $scope.token_ask_delete = data.result.value.token_ask_delete;
             $rootScope.search_on_enter = data.result.value.search_on_enter;
             // Token specific settings
             $scope.tokensettings = {indexedsecret:

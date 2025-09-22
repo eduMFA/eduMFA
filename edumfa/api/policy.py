@@ -45,7 +45,8 @@ from ..lib.policy import (set_policy, ACTION,
                           export_policies, import_policies,
                           delete_policy, get_static_policy_definitions,
                           enable_policy, get_policy_condition_sections,
-                          get_policy_condition_comparators, Match)
+                          get_policy_condition_comparators, Match,
+                          get_policy_condition_unset_options)
 from ..lib.token import get_dynamic_policy_definitions
 from ..lib.error import (ParameterError)
 from edumfa.lib.utils import to_unicode, is_true
@@ -125,8 +126,8 @@ def set_policy_api(name=None):
     :jsonparam check_all_resolvers: bool, whether all all resolvers in which
         the user exists should be checked with this policy.
     :jsonparam conditions: a (possibly empty) list of conditions of the policy.
-        Each condition is encoded as a list with 5 elements:
-        ``[section (string), key (string), comparator (string), value (string), active (boolean)]``
+        Each condition is encoded as a list with 6 elements:
+        ``[section (string), key (string), comparator (string), value (string), active (boolean), unset operation (string)]``
         Hence, the ``conditions`` parameter expects a list of lists.
         When eduMFA checks if a defined policy should take effect,
         *all* conditions of the policy must be fulfilled for the policy to match.
@@ -152,7 +153,7 @@ def set_policy_api(name=None):
        action=enroll, disable
 
     The policy POST request can also take the parameter of conditions. This is a list of conditions sets:
-    [ [ "userinfo", "memberOf", "equals", "groupA", "true" ], [ ... ] ]
+    [ [ "userinfo", "memberOf", "equals", "groupA", "true", "exception" ], [ ... ] ]
     With the entries being the ``section``, the ``key``, the ``comparator``, the ``value`` and ``active``.
     For more on conditions see :ref:`policy_conditions`.
 
@@ -519,6 +520,9 @@ def get_policy_defs(scope=None):
          * ``"description"``, a human-readable description of the section
      * ``"comparators"``, containing a dictionary mapping each comparator to a dictionary with the following keys:
          * ``"description"``, a human-readable description of the comparator
+     * ``"unsetOptions"``, containing a dictionary mapping each option how to react to an unset value to a dictionary with the following keys:
+         * ``"description"``, a human-readable description of the option
+
 
     if the scope is "edumfanodes", it returns a list of the configured eduMFA nodes.
 
@@ -534,9 +538,11 @@ def get_policy_defs(scope=None):
         # special treatment: get descriptions of conditions
         section_descriptions = get_policy_condition_sections()
         comparator_descriptions = get_policy_condition_comparators()
+        unset_descriptions = get_policy_condition_unset_options()
         result = {
             "sections": section_descriptions,
             "comparators": comparator_descriptions,
+            "unsetOptions": unset_descriptions,
         }
     elif scope == 'edumfanodes':
         result = get_edumfa_nodes()
