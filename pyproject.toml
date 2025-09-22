@@ -67,7 +67,7 @@ test = [
     "packaging==25.0",
     "pluggy==1.6.0",
     "pyparsing==3.2.5",
-    "pytest==8.4.1",
+    "pytest==8.4.2",
     "pytest-cov==6.3.0",
     "responses==0.25.8",
     "testfixtures==8.3.0",
