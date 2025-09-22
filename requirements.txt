@@ -111,7 +111,7 @@ pyjwt==2.10.1
     # via edumfa (setup.py)
 pymysql==1.1.2
     # via edumfa (setup.py)
-pyopenssl==25.1.0
+pyopenssl==25.3.0
     # via edumfa (setup.py)
 pyrad==2.4
     # via edumfa (setup.py)
