@@ -23,17 +23,17 @@
 __doc__ = """This module writes statistics data to the SQL database table "monitoringstats".
 """
 import logging
+import traceback
+
+from dateutil.tz import tzutc
+from sqlalchemy import MetaData, and_, create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+from edumfa.lib.lifecycle import register_finalizer
 from edumfa.lib.monitoringmodules.base import Monitoring as MonitoringBase
 from edumfa.lib.pooling import get_engine
 from edumfa.lib.utils import censor_connect_string, convert_timestamp_to_utc
-from edumfa.lib.lifecycle import register_finalizer
-from sqlalchemy import MetaData
-from sqlalchemy import and_
 from edumfa.models import MonitoringStats
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-import traceback
-from dateutil.tz import tzutc
 
 log = logging.getLogger(__name__)
 

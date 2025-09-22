@@ -32,33 +32,35 @@ It is used for importing SafeNet (former Aladdin)
 XML files, that hold the OTP secrets for eToken PASS.
 """
 
-import hmac, hashlib
-import defusedxml.ElementTree as etree
-import re
-import binascii
 import base64
+import binascii
+import hashlib
+import hmac
 import html
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from edumfa.lib.error import TokenImportException
-from edumfa.lib.utils import (
-    modhex_decode,
-    modhex_encode,
-    hexlify_and_unicode,
-    to_unicode,
-    to_utf8,
-    b64encode_and_unicode,
-)
-from edumfa.lib.config import get_token_class
-from edumfa.lib.log import log_with
-from edumfa.lib.crypto import aes_decrypt_b64, aes_encrypt_b64, geturandom
-from bs4 import BeautifulSoup
+import logging
+import re
 import traceback
-from passlib.crypto.digest import pbkdf2_hmac
-import gnupg
 from os import path
 
-import logging
+import defusedxml.ElementTree as etree
+import gnupg
+from bs4 import BeautifulSoup
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from passlib.crypto.digest import pbkdf2_hmac
+
+from edumfa.lib.config import get_token_class
+from edumfa.lib.crypto import aes_decrypt_b64, aes_encrypt_b64, geturandom
+from edumfa.lib.error import TokenImportException
+from edumfa.lib.log import log_with
+from edumfa.lib.utils import (
+    b64encode_and_unicode,
+    hexlify_and_unicode,
+    modhex_decode,
+    modhex_encode,
+    to_unicode,
+    to_utf8,
+)
 
 log = logging.getLogger(__name__)
 

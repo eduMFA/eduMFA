@@ -43,28 +43,28 @@ as the backend server.
 This code is tested in tests/test_lib_tokens_yubikey.py
 """
 
-import logging
-from edumfa.lib.log import log_with
-from edumfa.lib.policydecorators import challenge_response_allowed
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.utils import (
-    modhex_decode,
-    hexlify_and_unicode,
-    checksum,
-    to_bytes,
-    b64encode_and_unicode,
-)
-import binascii
-from edumfa.lib.decorators import check_token_locked
-from edumfa.api.lib.utils import getParam
-import datetime
 import base64
+import binascii
+import datetime
 import hmac
+import logging
 from hashlib import sha1
-from edumfa.lib.config import get_from_config
-from edumfa.lib.tokenclass import TOKENKIND
+
+from edumfa.api.lib.utils import getParam
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.config import get_from_config
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.policydecorators import challenge_response_allowed
+from edumfa.lib.tokenclass import TOKENKIND, TokenClass
+from edumfa.lib.utils import (
+    b64encode_and_unicode,
+    checksum,
+    hexlify_and_unicode,
+    modhex_decode,
+    to_bytes,
+)
 
 optional = True
 required = False
@@ -446,8 +446,7 @@ h={h}
         # strip the yubico OTP and the PIN
         prefix = passw[:-32][-16:]
 
-        from edumfa.lib.token import get_tokens
-        from edumfa.lib.token import check_token_list
+        from edumfa.lib.token import check_token_list, get_tokens
 
         # See if the prefix matches the serial number
         if prefix[:2] != "vv" and prefix[:2] != "cc":

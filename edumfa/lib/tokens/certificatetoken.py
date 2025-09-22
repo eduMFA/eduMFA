@@ -28,32 +28,39 @@ The code is tested in test_lib_tokens_certificate.py.
 
 import logging
 
-from edumfa.lib.utils import to_unicode, b64encode_and_unicode, to_byte_string
-from edumfa.lib.tokenclass import TokenClass, ROLLOUTSTATE
-from edumfa.lib.log import log_with
 from edumfa.api.lib.utils import getParam
-from edumfa.lib.caconnector import get_caconnector_object, get_caconnector_list
+from edumfa.lib.caconnector import get_caconnector_list, get_caconnector_object
+from edumfa.lib.log import log_with
+from edumfa.lib.tokenclass import ROLLOUTSTATE, TokenClass
 from edumfa.lib.user import get_user_from_param
-from edumfa.lib.utils import determine_logged_in_userparams
+from edumfa.lib.utils import (
+    b64encode_and_unicode,
+    determine_logged_in_userparams,
+    to_byte_string,
+    to_unicode,
+)
 
 try:
     from OpenSSL import crypto
 except AttributeError as e:
     pass
-from cryptography.x509 import load_pem_x509_certificate, load_pem_x509_csr
+import traceback
+
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.serialization import (
     PrivateFormat,
     load_pem_private_key,
     pkcs12,
 )
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import padding
-from edumfa.lib.decorators import check_token_locked
+from cryptography.x509 import load_pem_x509_certificate, load_pem_x509_csr
+
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION as BASE_ACTION, GROUP, Match
-from edumfa.lib.error import eduMFAError, CSRError, CSRPending
-import traceback
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.error import CSRError, CSRPending, eduMFAError
+from edumfa.lib.policy import ACTION as BASE_ACTION
+from edumfa.lib.policy import GROUP, SCOPE, Match
 
 optional = True
 required = False
@@ -91,7 +98,7 @@ def verify_certificate_path(certificate, trusted_ca_paths):
     :return: True or False
     """
     from os import listdir
-    from os.path import isfile, join, isdir
+    from os.path import isdir, isfile, join
 
     for capath in trusted_ca_paths:
         if isdir(capath):

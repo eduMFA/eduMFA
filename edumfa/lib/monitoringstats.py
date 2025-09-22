@@ -27,12 +27,14 @@ database table "monitoringstats". This can be arbitrary data for time series of
 
 This module is tested in tests/test_lib_monitoringstats.py
 """
+import datetime
 import logging
+
 from dateutil.tz import tzlocal
+
+from edumfa.lib.framework import get_app_config, get_request_local_store
 from edumfa.lib.log import log_with
 from edumfa.lib.utils import get_module_class
-from edumfa.lib.framework import get_app_config, get_request_local_store
-import datetime
 
 log = logging.getLogger(__name__)
 

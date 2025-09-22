@@ -20,16 +20,16 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-import os
-import time
-import sys
 import contextlib
 import getopt
 import logging
-from edumfa.lib.security.default import DefaultSecurityModule, int_list_to_bytestring
-from edumfa.lib.error import HSMException
+import os
+import sys
+import time
 from getpass import getpass
 
+from edumfa.lib.error import HSMException
+from edumfa.lib.security.default import DefaultSecurityModule, int_list_to_bytestring
 
 __doc__ = """
 This is a PKCS11 Security module that decrypts a given encrypted key file

@@ -24,6 +24,7 @@ Mock module for testing the handling of hardware security modules
 """
 
 import sys
+
 import mock
 
 try:
@@ -53,8 +54,9 @@ except ImportError:
     PyKCS11 = _setup_module_mock()
     sys.modules["PyKCS11"] = PyKCS11
 
-from PyKCS11 import PyKCS11Error
 from contextlib import contextmanager
+
+from PyKCS11 import PyKCS11Error
 
 SLOT_IDS = [1, 2, 3]
 

@@ -2,22 +2,25 @@
 This test file tests the lib.tokens.smstoken
 """
 
-from .base import MyTestCase, FakeFlaskG, FakeAudit
-from edumfa.lib.resolver import save_resolver
+import datetime
+
+import mock
+from dateutil.tz import tzlocal
+
+from edumfa.lib import _
+from edumfa.lib.config import delete_edumfa_config, set_edumfa_config, set_prepend_pin
+from edumfa.lib.policy import SCOPE, PolicyClass, set_policy
 from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.smtpserver import add_smtpserver, delete_smtpserver
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.tokens.emailtoken import EMAILACTION, EmailTokenClass
 from edumfa.lib.user import User
 from edumfa.lib.utils import is_true
-from edumfa.lib.tokenclass import DATE_FORMAT
-from edumfa.lib.tokens.emailtoken import EmailTokenClass, EMAILACTION
-from edumfa.models import Token, Config, Challenge
-from edumfa.lib.config import set_edumfa_config, set_prepend_pin, delete_edumfa_config
-from edumfa.lib.policy import set_policy, SCOPE, PolicyClass
-from edumfa.lib.smtpserver import add_smtpserver, delete_smtpserver
-from edumfa.lib import _
-import datetime
-from dateutil.tz import tzlocal
+from edumfa.models import Challenge, Config, Token
+
 from . import smtpmock
-import mock
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 TEMPLATE_FILE = "tests/testdata/emailtemplate.html"

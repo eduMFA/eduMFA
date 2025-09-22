@@ -12,13 +12,13 @@ Create Date: 2023-09-08 15:59:01.374626
 revision = "5cb310101a1f"
 down_revision = "4a0aec37e7cf"
 
-from alembic import op, context
-from sqlalchemy.schema import Sequence, CreateSequence, DropSequence
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql.expression import func
+from alembic import context, op
 from sqlalchemy.exc import OperationalError, ProgrammingError
-from edumfa.models import db
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.schema import CreateSequence, DropSequence, Sequence
+from sqlalchemy.sql.expression import func
 
+from edumfa.models import db
 
 Session = sessionmaker()
 

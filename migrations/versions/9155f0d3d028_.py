@@ -11,9 +11,9 @@ privacyIDEA Version: 3.6
 revision = "9155f0d3d028"
 down_revision = "d5870fd2f2a4"
 
+import sqlalchemy as sa
 from alembic import op
 from sqlalchemy import orm
-import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import Sequence
 

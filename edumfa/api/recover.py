@@ -27,15 +27,16 @@ user managed in eduMFA.
 
 The methods are also tested in the file tests/test_api_register.py
 """
-from flask import Blueprint, request, g, current_app
-from .lib.utils import send_result, getParam
-from .lib.utils import required
-from edumfa.lib.user import get_user_from_param
 import logging
-from edumfa.lib.passwordreset import create_recoverycode, check_recoverycode
-from edumfa.lib.policy import ACTION
-from edumfa.api.lib.prepolicy import prepolicy, check_anonymous_user
 
+from flask import Blueprint, current_app, g, request
+
+from edumfa.api.lib.prepolicy import check_anonymous_user, prepolicy
+from edumfa.lib.passwordreset import check_recoverycode, create_recoverycode
+from edumfa.lib.policy import ACTION
+from edumfa.lib.user import get_user_from_param
+
+from .lib.utils import getParam, required, send_result
 
 log = logging.getLogger(__name__)
 

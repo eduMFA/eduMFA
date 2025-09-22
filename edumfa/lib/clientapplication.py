@@ -26,14 +26,16 @@ Client Application information was saved during authentication requests.
 The code is tested in tests/test_lib_clientapplication.py.
 """
 
-from sqlalchemy import func
-import logging
 import datetime
-from .log import log_with
-from ..models import ClientApplication, Subscription, db
-from edumfa.lib.config import get_edumfa_node
-from netaddr import IPAddress
+import logging
 
+from netaddr import IPAddress
+from sqlalchemy import func
+
+from edumfa.lib.config import get_edumfa_node
+
+from ..models import ClientApplication, Subscription, db
+from .log import log_with
 
 log = logging.getLogger(__name__)
 

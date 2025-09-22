@@ -3,49 +3,50 @@
 This test file tests the lib.crypto and lib.security.default
 """
 
-from mock import call
 import binascii
+import string
+
+import passlib.hash
+import PyKCS11
+from flask import current_app
+from mock import call
+from PyKCS11 import PyKCS11Error
 
 from edumfa.config import TestingConfig
+from edumfa.lib.crypto import (
+    Sign,
+    aes_decrypt_b64,
+    aes_encrypt_b64,
+    decrypt,
+    decryptPassword,
+    decryptPin,
+    encrypt,
+    encryptPassword,
+    encryptPin,
+    generate_keypair,
+    generate_password,
+    get_alphanum_str,
+    get_hsm,
+    get_rand_digit_str,
+    geturandom,
+    hash,
+    hash_with_pepper,
+    init_hsm,
+    pass_hash,
+    set_hsm_password,
+    urandom,
+    verify_pass_hash,
+    verify_with_pepper,
+)
 from edumfa.lib.error import HSMException
+from edumfa.lib.security.aeshsm import AESHardwareSecurityModule
+from edumfa.lib.security.default import DefaultSecurityModule, SecurityModule
+from edumfa.lib.utils import to_bytes, to_unicode
+
 from .base import MyTestCase, OverrideConfigTestCase
 
 # need to import pkcs11mock before PyKCS11, because it may be replaced by a mock module
 from .pkcs11mock import PKCS11Mock
-from edumfa.lib.crypto import (
-    encryptPin,
-    encryptPassword,
-    decryptPin,
-    decryptPassword,
-    urandom,
-    get_rand_digit_str,
-    geturandom,
-    get_alphanum_str,
-    hash_with_pepper,
-    verify_with_pepper,
-    aes_encrypt_b64,
-    aes_decrypt_b64,
-    get_hsm,
-    init_hsm,
-    set_hsm_password,
-    hash,
-    encrypt,
-    decrypt,
-    Sign,
-    generate_keypair,
-    generate_password,
-    pass_hash,
-    verify_pass_hash,
-)
-from edumfa.lib.utils import to_bytes, to_unicode
-from edumfa.lib.security.default import SecurityModule, DefaultSecurityModule
-from edumfa.lib.security.aeshsm import AESHardwareSecurityModule
-
-from flask import current_app
-import PyKCS11
-from PyKCS11 import PyKCS11Error
-import string
-import passlib.hash
 
 
 class SecurityModuleTestCase(MyTestCase):

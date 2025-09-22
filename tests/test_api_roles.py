@@ -9,31 +9,31 @@ implementation is contained in api/auth.py, api/token.py api/audit.py
 import datetime
 import json
 
-from . import ldap3mock
-from .test_api_validate import LDAPDirectory
-from .base import MyApiTestCase
-from edumfa.lib.token import (
-    get_tokens,
-    remove_token,
-    enable_token,
-    assign_token,
-    init_token,
-)
-from edumfa.lib.user import User
-from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
-from edumfa.lib.resolver import save_resolver
-from edumfa.models import Token
-from edumfa.lib.realm import set_realm, delete_realm, set_default_realm
 from edumfa.api.lib.postpolicy import DEFAULT_POLICY_TEMPLATE_URL
 from edumfa.lib.policy import (
     ACTION,
-    SCOPE,
-    set_policy,
-    delete_policy,
-    LOGINMODE,
     ACTIONVALUE,
+    LOGINMODE,
+    SCOPE,
+    delete_policy,
+    set_policy,
 )
+from edumfa.lib.realm import delete_realm, set_default_realm, set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.token import (
+    assign_token,
+    enable_token,
+    get_tokens,
+    init_token,
+    remove_token,
+)
+from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
+from edumfa.lib.user import User
+from edumfa.models import Token
 
+from . import ldap3mock
+from .base import MyApiTestCase
+from .test_api_validate import LDAPDirectory
 
 PWFILE = "tests/testdata/passwords"
 

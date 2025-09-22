@@ -32,26 +32,29 @@ lib/machineresolver.py, so this can be tested standalone without realms,
 tokens and webservice!
 """
 
-from .machineresolver import get_resolver_list, get_resolver_object
-from edumfa.models import Token
-from edumfa.models import (
-    MachineToken,
-    db,
-    MachineTokenOptions,
-    MachineResolver,
-    get_token_id,
-    get_machineresolver_id,
-    get_machinetoken_ids,
-)
-from edumfa.lib.utils import fetch_one_resource
-from netaddr import IPAddress
-from sqlalchemy import and_
 import logging
 import re
 
+from netaddr import IPAddress
+from sqlalchemy import and_
+
+from edumfa.lib.utils import fetch_one_resource
+from edumfa.models import (
+    MachineResolver,
+    MachineToken,
+    MachineTokenOptions,
+    Token,
+    db,
+    get_machineresolver_id,
+    get_machinetoken_ids,
+    get_token_id,
+)
+
+from .machineresolver import get_resolver_list, get_resolver_object
+
 log = logging.getLogger(__name__)
-from edumfa.lib.log import log_with
 from edumfa.lib.applications.base import get_auth_item
+from edumfa.lib.log import log_with
 
 ANY_MACHINE = "any machine"
 NO_RESOLVER = "no resolver"

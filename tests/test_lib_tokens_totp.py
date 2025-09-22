@@ -6,18 +6,20 @@ The lib.tokenclass depends on the DB model and lib.user
 
 PWFILE = "tests/testdata/passwords"
 
-from .base import MyTestCase, FakeAudit, FakeFlaskG
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
-from edumfa.lib.tokens.totptoken import TotpTokenClass
-from edumfa.lib.policy import PolicyClass, set_policy, delete_policy, SCOPE
-from unittest import mock
-from edumfa.models import Token, Config, Challenge
-from edumfa.lib.config import set_edumfa_config, set_prepend_pin
-import datetime
 import binascii
+import datetime
 import time
+from unittest import mock
+
+from edumfa.lib.config import set_edumfa_config, set_prepend_pin
+from edumfa.lib.policy import SCOPE, PolicyClass, delete_policy, set_policy
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.tokens.totptoken import TotpTokenClass
+from edumfa.lib.user import User
+from edumfa.models import Challenge, Config, Token
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 
 class TOTPTokenTestCase(MyTestCase):

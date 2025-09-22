@@ -11,10 +11,10 @@ revision = "ff26585932ec"
 down_revision = "fa07bd604a75"
 
 from alembic import op
-from sqlalchemy import orm
-from edumfa.models import EventHandlerOption
+from sqlalchemy import and_, orm
+
 from edumfa.lib.eventhandler.usernotification import NOTIFY_TYPE
-from sqlalchemy import and_
+from edumfa.models import EventHandlerOption
 
 
 def upgrade():

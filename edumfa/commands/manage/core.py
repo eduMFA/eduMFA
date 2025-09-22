@@ -258,8 +258,8 @@ def validate(user, password, realm=None):
     """
     Do an authentication request
     """
-    from edumfa.lib.user import get_user_from_param
     from edumfa.lib.token import check_user_pass
+    from edumfa.lib.user import get_user_from_param
 
     try:
         user = get_user_from_param({"user": user, "realm": realm})

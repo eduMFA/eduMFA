@@ -32,36 +32,48 @@ The functions of this module are tested in tests/test_api_lib_policy.py
 """
 
 import datetime
-import logging
-import traceback
-from edumfa.lib.error import PolicyError, ValidateError
-from flask import g, current_app, make_response
-from edumfa.lib.policy import SCOPE, ACTION, AUTOASSIGNVALUE, AUTHORIZED
-from edumfa.lib.policy import DEFAULT_ANDROID_APP_URL, DEFAULT_IOS_APP_URL
-from edumfa.lib.policy import DEFAULT_PREFERRED_CLIENT_MODE_LIST
-from edumfa.lib.policy import Match
-from edumfa.lib.token import (
-    get_tokens,
-    assign_token,
-    get_realms_of_token,
-    get_one_token,
-)
-from edumfa.lib.machine import get_auth_items
-from edumfa.lib.config import get_multichallenge_enrollable_tokentypes, get_token_class
-from .prepolicy import check_max_token_user, check_max_token_realm
 import functools
 import json
+import logging
 import re
+import traceback
+
 import netaddr
-from edumfa.lib.crypto import Sign
+from flask import current_app, g, make_response
+
 from edumfa.api.lib.utils import get_all_params
 from edumfa.lib.auth import ROLE
-from edumfa.lib.user import User
+from edumfa.lib.config import (
+    get_edumfa_node,
+    get_multichallenge_enrollable_tokentypes,
+    get_token_class,
+)
+from edumfa.lib.crypto import Sign
+from edumfa.lib.error import PolicyError, ValidateError
+from edumfa.lib.machine import get_auth_items
+from edumfa.lib.policy import (
+    ACTION,
+    AUTHORIZED,
+    AUTOASSIGNVALUE,
+    DEFAULT_ANDROID_APP_URL,
+    DEFAULT_IOS_APP_URL,
+    DEFAULT_PREFERRED_CLIENT_MODE_LIST,
+    SCOPE,
+    Match,
+)
 from edumfa.lib.realm import get_default_realm
 from edumfa.lib.subscriptions import subscription_status
-from edumfa.lib.utils import create_img
-from edumfa.lib.config import get_edumfa_node
+from edumfa.lib.token import (
+    assign_token,
+    get_one_token,
+    get_realms_of_token,
+    get_tokens,
+)
 from edumfa.lib.tokenclass import ROLLOUTSTATE
+from edumfa.lib.user import User
+from edumfa.lib.utils import create_img
+
+from .prepolicy import check_max_token_realm, check_max_token_user
 
 log = logging.getLogger(__name__)
 

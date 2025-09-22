@@ -6,6 +6,7 @@ lib/task/base.py
 """
 
 from edumfa.lib.task.base import BaseTask
+
 from .base import MyTestCase
 
 
