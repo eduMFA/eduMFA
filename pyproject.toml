@@ -35,6 +35,9 @@ Repository = "https://github.com/eduMFA/eduMFA.git"
 Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
+lint = [
+    "ruff==0.12.11",
+]
 docs = [
     "furo==2025.7.19",
     "docutils==0.21.2",

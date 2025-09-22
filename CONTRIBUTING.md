@@ -85,13 +85,8 @@ If you are sending a pull request, please note the following:
   not guess the intention from the pull request!
 * In your pull request refer to the issue.
 * Describe your changes in the commit message.
-* At the beginning of the file, add the date, your name,
-  your email address and a description of what you
-  changed in the file!
-* We try to stick to **PEP 8**. So please use sensible names, check your line
-  breaks, comment your classes and functions...
-  Using something like *pylint* or an integrated editor like *pycharm* can
-  help you with that.
+* We use **Ruff** as linter and formatter. Please install the pinned version
+  (see `pyproject.toml`) and run it before committing your code.
 * When implementing something new, try to do more with **less code**!
 * When implementing something new, try to implement it in a **generic way**,
   that it can be used and different use cases.

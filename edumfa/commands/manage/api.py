@@ -32,15 +32,29 @@ api_cli = AppGroup("api", help="Manage API Keys")
 
 
 @api_cli.command("createtoken")
-@click.option('-r', '--role',
-              help="The role of the API key can either be 'admin' or 'validate' to access the admin API or the validate API.",
-              default=ROLE.ADMIN)
-@click.option('-d', '--days', type=int, help='The number of days the access token should be valid. Defaults to 365.',
-              default=365)
-@click.option('-R', '--realm', help='The realm of the admin. Defaults to "API"', default="API")
-@click.option('-u', '--username', help='The username of the admin.')
-@click.option('-f', '--force', is_flag=True,
-              help='Force the creation of the token even if the admin user does not exist.')
+@click.option(
+    "-r",
+    "--role",
+    help="The role of the API key can either be 'admin' or 'validate' to access the admin API or the validate API.",
+    default=ROLE.ADMIN,
+)
+@click.option(
+    "-d",
+    "--days",
+    type=int,
+    help="The number of days the access token should be valid. Defaults to 365.",
+    default=365,
+)
+@click.option(
+    "-R", "--realm", help='The realm of the admin. Defaults to "API"', default="API"
+)
+@click.option("-u", "--username", help="The username of the admin.")
+@click.option(
+    "-f",
+    "--force",
+    is_flag=True,
+    help="Force the creation of the token even if the admin user does not exist.",
+)
 def createtoken(role, days, realm, username, force=False):
     """
     Create an API authentication token
@@ -52,17 +66,34 @@ def createtoken(role, days, realm, username, force=False):
         sys.exit(1)
     admins = [x.username for x in get_db_admins()]
     username = username or geturandom(hex=True)
-    if username not in admins and not force:        
-        click.echo("ERROR: The username '{0!s}' does not exist in the database!".format(username))
-        click.echo("ERROR: Use the --force option to create a token for a non-existing admin user '{0!s}'.".format(username))
+    if username not in admins and not force:
+        click.echo(
+            "ERROR: The username '{0!s}' does not exist in the database!".format(
+                username
+            )
+        )
+        click.echo(
+            "ERROR: Use the --force option to create a token for a non-existing admin user '{0!s}'.".format(
+                username
+            )
+        )
         sys.exit(1)
 
     secret = current_app.config.get("SECRET_KEY")
     authtype = "API"
     validity = timedelta(days=int(days))
     token = jwt.encode(
-        {"username": username, "realm": realm, "nonce": geturandom(hex=True), "role": role, "authtype": authtype,
-            "exp": datetime.utcnow() + validity, "rights": "TODO"}, secret)
+        {
+            "username": username,
+            "realm": realm,
+            "nonce": geturandom(hex=True),
+            "role": role,
+            "authtype": authtype,
+            "exp": datetime.utcnow() + validity,
+            "rights": "TODO",
+        },
+        secret,
+    )
     click.echo("Username:   {0!s}".format(username))
     click.echo("Realm:      {0!s}".format(realm))
     click.echo("Role:       {0!s}".format(role))
