@@ -3,12 +3,17 @@
 This test file tests the lib.crypto and lib.security.default
 """
 
+# need to import pkcs11mock before PyKCS11, because it may be replaced by a mock module
+from .pkcs11mock import PKCS11Mock
+
 import binascii
 import string
 
 import passlib.hash
+import PyKCS11
 from flask import current_app
 from mock import call
+from PyKCS11 import PyKCS11Error
 
 from edumfa.config import TestingConfig
 from edumfa.lib.crypto import (
@@ -42,11 +47,6 @@ from edumfa.lib.security.default import DefaultSecurityModule, SecurityModule
 from edumfa.lib.utils import to_bytes, to_unicode
 
 from .base import MyTestCase, OverrideConfigTestCase
-
-# need to import pkcs11mock before PyKCS11, because it may be replaced by a mock module
-from .pkcs11mock import PKCS11Mock
-import PyKCS11
-from PyKCS11 import PyKCS11Error
 
 
 class SecurityModuleTestCase(MyTestCase):
