@@ -43,7 +43,7 @@ docs = [
     "docutils==0.21.2",
     "imagesize==1.4.1",
     "packaging==25.0",
-    "pyenchant==3.2.2",
+    "pyenchant==3.3.0",
     "Pygments==2.19.2",
     "snowballstemmer==3.0.1",
     "Sphinx==8.2.3; python_version >= '3.11'",
@@ -67,12 +67,12 @@ test = [
     "packaging==25.0",
     "pluggy==1.6.0",
     "pyparsing==3.2.5",
-    "pytest==8.4.1",
+    "pytest==8.4.2",
     "pytest-cov==6.3.0",
     "responses==0.25.8",
     "testfixtures==8.3.0",
     "tomli==2.2.1",
-    "types-PyYAML==6.0.12.20250822",
+    "types-PyYAML==6.0.12.20250915",
 ]
 postgres = ["psycopg2==2.9.10"]
 hsm = ["PyKCS11==1.5.18"]
