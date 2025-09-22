@@ -115,6 +115,20 @@ scripts.
 
   To update the local database.
 
+## Translations
+
+We aim to provide translations for different languages.
+
+To generate the translations for the web interface we use `grunt`. The files can be updated using 
+
+```bash
+npm install 
+npm run translate
+```
+
+The server-side messages get translated using babel. Translations can be regenerated using `make translate-server`.
+
+
 ## Development Workflow
 
 The following section describes our development workflow: How do we handle
