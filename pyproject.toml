@@ -93,3 +93,8 @@ include = ["edumfa*"]
 
 [tool.setuptools.package-data]
 "edumfa" = ["translations/**/*", "static/**/*"]
+
+[tool.ruff.lint]
+select = [
+    "I", # Isort
+]
