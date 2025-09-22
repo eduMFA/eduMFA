@@ -37,7 +37,7 @@ from edumfa.lib.crypto import (encrypt,
                                     decryptPin,
                                     geturandom,
                                     hash,
-                                    SecretObj,
+                                    SecretObj, NullCryptoObj,
                                     get_rand_digit_str)
 from sqlalchemy import and_
 from sqlalchemy.schema import Sequence, CreateSequence
@@ -300,7 +300,10 @@ class Token(MethodsMixin, db.Model):
         return data
 
     @log_with(log, hide_args=[1])
-    def set_otpkey(self, otpkey, reset_failcount=True):
+    def set_otpkey(self, otpkey, reset_failcount=True, encrypted=True):
+        if not encrypted:
+            self.key_enc = otpkey
+            return
         iv = geturandom(16)
         self.key_enc = encrypt(otpkey, iv)
         length = len(self.key_enc)
@@ -395,7 +398,9 @@ class Token(MethodsMixin, db.Model):
         self.user_pin_iv = hexlify_and_unicode(iv)
 
     @log_with(log)
-    def get_otpkey(self):
+    def get_otpkey(self, encrypted=True):
+        if not encrypted:
+            return NullCryptoObj(self.key_enc)
         key = binascii.unhexlify(self.key_enc)
         iv = binascii.unhexlify(self.key_iv)
         secret = SecretObj(key, iv)

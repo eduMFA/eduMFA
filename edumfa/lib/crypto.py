@@ -84,6 +84,14 @@ FAILED_TO_DECRYPT_PASSWORD = "FAILED TO DECRYPT PASSWORD!"  # nosec B105 # place
 
 log = logging.getLogger(__name__)
 
+class NullCryptoObj:
+
+    def __init__(self, val):
+        self.val = val
+
+    def getKey(self):
+        return self.val
+
 
 class SecretObj:
     def __init__(self, val, iv, preserve=True):
@@ -180,7 +188,7 @@ def pass_hash(password):
 
 
 @log_with(log, log_entry=False, log_exit=False)
-def verify_pass_hash(password, hvalue):
+def verify_pass_hash(password, hvalue) -> bool:
     """
     Verify the hashed password value
     :param password: The plaintext password to verify
@@ -195,7 +203,7 @@ def verify_pass_hash(password, hvalue):
     return pass_ctx.verify(password, hvalue)
 
 
-def hash_with_pepper(password):
+def hash_with_pepper(password) -> str:
     """
     Hash function to hash with salt and pepper. The pepper is read from
     "EDUMFA_PEPPER" from edumfa.cfg.
@@ -211,7 +219,7 @@ def hash_with_pepper(password):
     return pass_hash(key + password)
 
 
-def verify_with_pepper(passwordhash, password):
+def verify_with_pepper(passwordhash, password) -> bool:
     """
     verify the password hash with the given password and pepper
 
