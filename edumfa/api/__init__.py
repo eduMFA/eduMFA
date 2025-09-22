@@ -27,4 +27,3 @@ Policies are rules how eduMFA behaves and which user and administrator
 is allowed to do what.
 
 """
-

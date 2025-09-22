@@ -34,7 +34,9 @@ class ScriptsTestCase(unittest.TestCase):
 
     def test_01_edumfa_admin(self):
         runner = self.app.test_cli_runner()
-        result = runner.invoke(edumfa_manage, ["admin", "add", "Admin-User"], input="Test\nTest")
+        result = runner.invoke(
+            edumfa_manage, ["admin", "add", "Admin-User"], input="Test\nTest"
+        )
         assert result.exit_code == 0
         assert "was registered successfully" in result.output
         result = runner.invoke(edumfa_manage, ["admin", "list"])
@@ -47,7 +49,9 @@ class ScriptsTestCase(unittest.TestCase):
         assert "Admin-User" not in result.output
         result = runner.invoke(edumfa_manage, ["admin", "delete", "Admin-User"])
         assert result.exit_code == 1
-        result = runner.invoke(edumfa_manage, ["admin", "add", "Admin-User", "-p", "Test"])
+        result = runner.invoke(
+            edumfa_manage, ["admin", "add", "Admin-User", "-p", "Test"]
+        )
         assert result.exit_code == 0
         assert "was registered successfully" in result.output
 
@@ -55,7 +59,9 @@ class ScriptsTestCase(unittest.TestCase):
         runner = self.app.test_cli_runner()
         result = runner.invoke(edumfa_manage, ["resolver", "list"])
         assert result.exit_code == 0
-        result = runner.invoke(edumfa_manage, ["resolver", "create_internal", "test-resolver"])
+        result = runner.invoke(
+            edumfa_manage, ["resolver", "create_internal", "test-resolver"]
+        )
         assert result.exit_code == 0
         result = runner.invoke(edumfa_manage, ["resolver", "list"])
         assert result.exit_code == 0
@@ -65,9 +71,13 @@ class ScriptsTestCase(unittest.TestCase):
         runner = self.app.test_cli_runner()
         result = runner.invoke(edumfa_manage, ["realm", "list"])
         assert result.exit_code == 0
-        result = runner.invoke(edumfa_manage, ["resolver", "create_internal", "test-resolver"])
+        result = runner.invoke(
+            edumfa_manage, ["resolver", "create_internal", "test-resolver"]
+        )
         assert result.exit_code == 0
-        result = runner.invoke(edumfa_manage, ["realm", "create", "test-realm", "test-resolver"])
+        result = runner.invoke(
+            edumfa_manage, ["realm", "create", "test-realm", "test-resolver"]
+        )
         assert result.exit_code == 0
         result = runner.invoke(edumfa_manage, ["realm", "delete", "test-realm"])
         assert result.exit_code == 0
@@ -78,16 +88,22 @@ class ScriptsTestCase(unittest.TestCase):
         runner = self.app.test_cli_runner()
         result = runner.invoke(edumfa_manage, ["event", "list"])
         assert result.exit_code == 0
-        result = runner.invoke(edumfa_manage, ["event", "import", "-f", "tests/testdata/event.conf"])
+        result = runner.invoke(
+            edumfa_manage, ["event", "import", "-f", "tests/testdata/event.conf"]
+        )
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 3
-        result = runner.invoke(edumfa_manage, ["event", "e_import", "-f", "tests/testdata/event.conf"])
+        result = runner.invoke(
+            edumfa_manage, ["event", "e_import", "-f", "tests/testdata/event.conf"]
+        )
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 3
         assert "Event reset exists" in result.output
-        result = runner.invoke(edumfa_manage, ["event", "import", "-u", "-f", "tests/testdata/event.conf"])
+        result = runner.invoke(
+            edumfa_manage, ["event", "import", "-u", "-f", "tests/testdata/event.conf"]
+        )
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 3
@@ -99,18 +115,29 @@ class ScriptsTestCase(unittest.TestCase):
         condition = "always"
         options = {}
         conditions = {"user_type": "admin"}
-        eh1 = EventHandler("event-test", event, handlermodule=handlermodule,
-                           action=action, condition=condition,
-                           options=options, conditions=conditions)
+        eh1 = EventHandler(
+            "event-test",
+            event,
+            handlermodule=handlermodule,
+            action=action,
+            condition=condition,
+            options=options,
+            conditions=conditions,
+        )
         eh1.save()
         events = EventHandler.query.all()
         assert len(events) == 4
-        result = runner.invoke(edumfa_manage, ["event", "import", "-u", "-f", "tests/testdata/event.conf"])
+        result = runner.invoke(
+            edumfa_manage, ["event", "import", "-u", "-f", "tests/testdata/event.conf"]
+        )
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 4
         assert "Updated" in result.output
-        result = runner.invoke(edumfa_manage, ["event", "import", "-c", "-u", "-f", "tests/testdata/event.conf"])
+        result = runner.invoke(
+            edumfa_manage,
+            ["event", "import", "-c", "-u", "-f", "tests/testdata/event.conf"],
+        )
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert len(events) == 3
@@ -133,7 +160,10 @@ class ScriptsTestCase(unittest.TestCase):
         eh1.save()
         events = EventHandler.query.all()
         assert len(events) == 4
-        result = runner.invoke(edumfa_manage, ["event", "import", "-p", "-u", "-f", "tests/testdata/event.conf"])
+        result = runner.invoke(
+            edumfa_manage,
+            ["event", "import", "-p", "-u", "-f", "tests/testdata/event.conf"],
+        )
         assert result.exit_code == 0
         events = EventHandler.query.all()
         assert "event-test-2" not in [e.name for e in events]
@@ -156,44 +186,69 @@ class ScriptsTestCase(unittest.TestCase):
         runner = self.app.test_cli_runner()
         result = runner.invoke(edumfa_manage, ["policy", "list"])
         assert result.exit_code == 0
-        result = runner.invoke(edumfa_manage, ["policy", "import", "-f", "tests/testdata/policy.conf"])
+        result = runner.invoke(
+            edumfa_manage, ["policy", "import", "-f", "tests/testdata/policy.conf"]
+        )
         assert result.exit_code == 0
         policies = Policy.query.all()
         assert len(policies) == 2
-        assert "Added policy hide_welcome with result 1\nAdded policy user-UI-TOTP with result 2" in result.output
+        assert (
+            "Added policy hide_welcome with result 1\nAdded policy user-UI-TOTP with result 2"
+            in result.output
+        )
 
         # Test non updating import
-        result = runner.invoke(edumfa_manage, ["policy", "import", "-f", "tests/testdata/policy.conf"])
+        result = runner.invoke(
+            edumfa_manage, ["policy", "import", "-f", "tests/testdata/policy.conf"]
+        )
         assert result.exit_code == 0
         policies = Policy.query.all()
         assert len(policies) == 2
-        assert "Policy hide_welcome exists and -u is not specified, skipping import.\nPolicy user-UI-TOTP exists and -u is not specified, skipping import." in result.output
+        assert (
+            "Policy hide_welcome exists and -u is not specified, skipping import.\nPolicy user-UI-TOTP exists and -u is not specified, skipping import."
+            in result.output
+        )
 
         # Test Updating Policies
         policies[0].active = False
-        result = runner.invoke(edumfa_manage, ["policy", "import", "-u", "-f", "tests/testdata/policy.conf"])
+        result = runner.invoke(
+            edumfa_manage,
+            ["policy", "import", "-u", "-f", "tests/testdata/policy.conf"],
+        )
         assert result.exit_code == 0
         policies = Policy.query.all()
         assert len(policies) == 2
-        assert "Updated policy hide_welcome with result 1\nUpdated policy user-UI-TOTP with result 2" in result.output
+        assert (
+            "Updated policy hide_welcome with result 1\nUpdated policy user-UI-TOTP with result 2"
+            in result.output
+        )
         assert policies[0].active
 
         Policy(name="ui-totp", active=True).save()
         policies = Policy.query.all()
         assert len(policies) == 3
-        result = runner.invoke(edumfa_manage, ["policy", "import", "-u", "-f", "tests/testdata/policy.conf"])
+        result = runner.invoke(
+            edumfa_manage,
+            ["policy", "import", "-u", "-f", "tests/testdata/policy.conf"],
+        )
         assert result.exit_code == 0
         policies = Policy.query.all()
         assert len(policies) == 3
 
-        result = runner.invoke(edumfa_manage, ["policy", "import", "-c", "-u", "-f", "tests/testdata/policy.conf"])
+        result = runner.invoke(
+            edumfa_manage,
+            ["policy", "import", "-c", "-u", "-f", "tests/testdata/policy.conf"],
+        )
         assert result.exit_code == 0
         policies = Policy.query.all()
         assert len(policies) == 2
         assert "Deleted policy ui-totp with result 3" in result.output
 
         Policy(name="ui-totp", active=True).save()
-        result = runner.invoke(edumfa_manage, ["policy", "import", "-p", "-u", "-f", "tests/testdata/policy.conf"])
+        result = runner.invoke(
+            edumfa_manage,
+            ["policy", "import", "-p", "-u", "-f", "tests/testdata/policy.conf"],
+        )
         assert result.exit_code == 0
         policies = Policy.query.all()
         assert len(policies) == 2
@@ -217,7 +272,7 @@ class ScriptsTestCase(unittest.TestCase):
     def test_06_core_commands(self):
         runner = self.app.test_cli_runner()
         dir = tempfile.mkdtemp()
-        path = os.path.join(dir, 'something')
+        path = os.path.join(dir, "something")
         self.app.config.update({"EDUMFA_AUDIT_KEY_PRIVATE": path})
         result = runner.invoke(edumfa_manage, ["create_audit_keys"])
         assert result.exit_code == 0
@@ -236,7 +291,10 @@ class ScriptsTestCase(unittest.TestCase):
         runner = self.app.test_cli_runner()
         result = runner.invoke(edumfa_manage, ["audit", "rotate"])
         assert result.exit_code == 0
-        assert "Cleaning up with high: 10000, low: 5000.\nThe log audit log has 0 entries, the last one is 0" in result.output
+        assert (
+            "Cleaning up with high: 10000, low: 5000.\nThe log audit log has 0 entries, the last one is 0"
+            in result.output
+        )
 
         for i in range(0, 20_000):
             db.session.add(LogEntry())

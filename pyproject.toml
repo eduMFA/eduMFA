@@ -1,19 +1,18 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77.0.3"]  # Minimum for new license field
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "edumfa"
 version = "2.8.0"
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.14"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
 readme = { file = "README.rst", content-type = "text/x-rst" }
-license = { file = "LICENSE" }
+license = "AGPL-3.0-only"
 keywords = ["OTP", "two factor authentication", "management", "security"]
 classifiers = [
     "Framework :: Flask",
-    "License :: OSI Approved :: GNU Affero General Public License v3",
     "Programming Language :: Python",
     "Development Status :: 5 - Production/Stable",
     "Topic :: Internet",
@@ -36,6 +35,9 @@ Repository = "https://github.com/eduMFA/eduMFA.git"
 Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
+lint = [
+    "ruff==0.12.11",
+]
 docs = [
     "furo==2025.7.19",
     "docutils==0.21.2",
@@ -44,7 +46,7 @@ docs = [
     "pyenchant==3.2.2",
     "Pygments==2.19.2",
     "snowballstemmer==3.0.1",
-    "Sphinx==8.2.3",
+    "Sphinx==8.2.3; python_version >= '3.11'",
     "sphinxcontrib-applehelp==2.0.0",
     "sphinxcontrib-devhelp==2.0.0",
     "sphinxcontrib-htmlhelp==2.1.0",
@@ -52,13 +54,13 @@ docs = [
     "sphinxcontrib-jsmath==1.0.1",
     "sphinxcontrib-qthelp==2.0.0",
     "sphinxcontrib-serializinghtml==2.0.0",
-    "sphinxcontrib-spelling==8.0.1",
+    "sphinxcontrib-spelling==8.0.1; python_version >= '3.10'",
     "sphinx-copybutton==0.5.2",
     "sphinx-inline-tabs==2023.4.21",
 ]
 test = [
     "attrs==25.3.0",
-    "coverage==7.10.4",
+    "coverage==7.10.7",
     "exceptiongroup==1.3.0",
     "iniconfig==2.1.0",
     "mock==5.2.0",
@@ -66,7 +68,7 @@ test = [
     "pluggy==1.6.0",
     "pyparsing==3.2.3",
     "pytest==8.4.1",
-    "pytest-cov==6.2.1",
+    "pytest-cov==6.3.0",
     "responses==0.25.8",
     "testfixtures==8.3.0",
     "tomli==2.2.1",
@@ -74,7 +76,11 @@ test = [
 ]
 postgres = ["psycopg2==2.9.10"]
 hsm = ["PyKCS11==1.5.18"]
-kerberos = ["gssapi==1.9.0"]
+kerberos = ["gssapi==1.10.0"]
+grpc = [
+    "protobuf==6.32.1",
+    "google==3.0.0",
+]
 
 [project.scripts]
 edumfa-manage = "edumfa.commands.manage.main:cli"

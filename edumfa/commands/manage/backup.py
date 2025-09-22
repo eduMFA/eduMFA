@@ -32,8 +32,13 @@ from flask.cli import AppGroup
 backup_cli = AppGroup("backup", help="Perform backup operations")
 
 MYSQL_DIALECTS = ["mysql", "pymysql", "mysql+pymysql", "mariadb+pymysql"]
-PSQL_DIALECTS = ["postgresql+psycopg", "postgresql+psycopg2", "postgresql+pg8000",
-                 "postgresql+asyncpg", "postgresql+psycopg2cffi"]
+PSQL_DIALECTS = [
+    "postgresql+psycopg",
+    "postgresql+psycopg2",
+    "postgresql+pg8000",
+    "postgresql+asyncpg",
+    "postgresql+psycopg2cffi",
+]
 
 
 def _write_mysql_defaults(filename, username, password):
@@ -46,11 +51,13 @@ def _write_mysql_defaults(filename, username, password):
     :return:
     """
     with open(filename, "w") as f:
-        f.write("""[client]
+        f.write(
+            """[client]
 user={0!s}
 password={1!s}
 [mysqldump]
-no-tablespaces=True""".format(username, password))
+no-tablespaces=True""".format(username, password)
+        )
 
     os.chmod(filename, 0o600)
     # set correct owner, if possible
@@ -88,7 +95,9 @@ def restore(backup_file: str):
     if enckey_contained:
         click.echo("Also restoring encryption key 'enckey'")
     else:
-        click.echo("NO FILE 'enckey' CONTAINED! BE SURE TO RESTORE THE ENCRYPTION KEY MANUALLY!")
+        click.echo(
+            "NO FILE 'enckey' CONTAINED! BE SURE TO RESTORE THE ENCRYPTION KEY MANUALLY!"
+        )
     click.echo("Restoring to {0!s} with data from {1!s}".format(config_file, sqlfile))
 
     call(["tar", "-zxf", backup_file, "-C", "/"])
@@ -106,7 +115,7 @@ def restore(backup_file: str):
         sys.exit(2)
     sqltype = sqluri.split(":")[0]
     if sqltype == "sqlite":
-        productive_file = sqluri[len("sqlite:///"):]
+        productive_file = sqluri[len("sqlite:///") :]
         click.echo("Restore SQLite %s" % productive_file)
         call(["cp", sqlfile, productive_file])
         os.unlink(sqlfile)
@@ -120,15 +129,32 @@ def restore(backup_file: str):
         _write_mysql_defaults(defaults_file, username, password)
         # Rewriting database
         click.echo("Restoring database.")
-        call("mysql --defaults-file=%s -h %s %s < %s" % (
-            shlex_quote(defaults_file), shlex_quote(hostname), shlex_quote(database), shlex_quote(sqlfile)), shell=True)
+        call(
+            "mysql --defaults-file=%s -h %s %s < %s"
+            % (
+                shlex_quote(defaults_file),
+                shlex_quote(hostname),
+                shlex_quote(database),
+                shlex_quote(sqlfile),
+            ),
+            shell=True,
+        )
         os.unlink(sqlfile)
     elif sqltype in PSQL_DIALECTS:
         parsed_sqluri = sqlalchemy.engine.url.make_url(sqluri)
         env = os.environ.copy()
         env["PGPASSWORD"] = parsed_sqluri.password
-        cmd = ['psql', '-U', parsed_sqluri.username, '-d', parsed_sqluri.database,
-               '-h', parsed_sqluri.host, '-f', sqlfile]
+        cmd = [
+            "psql",
+            "-U",
+            parsed_sqluri.username,
+            "-d",
+            parsed_sqluri.database,
+            "-h",
+            parsed_sqluri.host,
+            "-f",
+            sqlfile,
+        ]
         run(cmd, env=env)
     else:
         click.echo("unsupported SQL syntax: %s" % sqltype)
@@ -136,15 +162,39 @@ def restore(backup_file: str):
 
 
 @backup_cli.command("create")
-@click.option("-d", "--directory", "target_dir", type=click.Path(file_okay=False, writable=True),
-              default="/var/lib/edumfa/backup/", show_default=True, help="Path to the backup directory")
-@click.option("-c", "--config_dir", help="Path to eduMFA config directory",
-              type=click.Path(exists=True, file_okay=False, writable=True), default="/etc/edumfa/", show_default=True)
-@click.option("-r", "--radius_dir", help="Path to FreeRADIUS config directory",
-              type=click.Path(exists=True, file_okay=False, readable=True), default=None, show_default=True)
-@click.option("-e", "--enckey", is_flag=True, help="Add the encryption key to the backup")
-@click.option("-l", "--lock_table_strategy", type=click.Choice(["LAT","ST","SLT"], case_sensitive=False),
-              help="""
+@click.option(
+    "-d",
+    "--directory",
+    "target_dir",
+    type=click.Path(file_okay=False, writable=True),
+    default="/var/lib/edumfa/backup/",
+    show_default=True,
+    help="Path to the backup directory",
+)
+@click.option(
+    "-c",
+    "--config_dir",
+    help="Path to eduMFA config directory",
+    type=click.Path(exists=True, file_okay=False, writable=True),
+    default="/etc/edumfa/",
+    show_default=True,
+)
+@click.option(
+    "-r",
+    "--radius_dir",
+    help="Path to FreeRADIUS config directory",
+    type=click.Path(exists=True, file_okay=False, readable=True),
+    default=None,
+    show_default=True,
+)
+@click.option(
+    "-e", "--enckey", is_flag=True, help="Add the encryption key to the backup"
+)
+@click.option(
+    "-l",
+    "--lock_table_strategy",
+    type=click.Choice(["LAT", "ST", "SLT"], case_sensitive=False),
+    help="""
                 Set the strategy for how to lock tables (only needed for mariadb galera cluster).
                 Options are:\n
                 LAT: Lock ALL tables in ALL databases! (not recommended for productive instances or
@@ -152,8 +202,15 @@ def restore(backup_file: str):
                 ST: Single transaction (only for InnoDB);\n
                 SLT: Skip lock tables (may lead to inconsistent dumps)
                 """,
-              default=None)
-def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = False, lock_table_strategy: str = None):
+    default=None,
+)
+def create(
+    target_dir: str,
+    config_dir: str,
+    radius_dir=None,
+    enckey: bool = False,
+    lock_table_strategy: str = None,
+):
     """
     Create a new backup of the database and the configuration. The default
     does not include the encryption key. Use the 'enckey' option to also
@@ -187,7 +244,7 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
     sqltype = parsed_sqluri.drivername
 
     if sqltype == "sqlite":
-        productive_file = sqluri[len("sqlite:///"):]
+        productive_file = sqluri[len("sqlite:///") :]
         click.echo(f"Backup SQLite {productive_file}")
         sqlfile = "%s/db-%s.sqlite" % (target_dir, DATE)
         call(["cp", productive_file, sqlfile])
@@ -198,23 +255,37 @@ def create(target_dir: str, config_dir: str, radius_dir=None, enckey: bool = Fal
         database = parsed_sqluri.database
         defaults_file = "{0!s}/mysql.cnf".format(config_dir)
         _write_mysql_defaults(defaults_file, username, password)
-        cmd = ['mysqldump', '--defaults-file={!s}'.format(shlex_quote(defaults_file)), '-h', shlex_quote(hostname)]
+        cmd = [
+            "mysqldump",
+            "--defaults-file={!s}".format(shlex_quote(defaults_file)),
+            "-h",
+            shlex_quote(hostname),
+        ]
         if parsed_sqluri.port:
-            cmd.extend(['-P', str(parsed_sqluri.port)])
-        cmd.extend(['-B', shlex_quote(database), '-r', shlex_quote(sqlfile)])
+            cmd.extend(["-P", str(parsed_sqluri.port)])
+        cmd.extend(["-B", shlex_quote(database), "-r", shlex_quote(sqlfile)])
         if lock_table_strategy:
-            if lock_table_strategy.upper() == 'LAT':
-                cmd.append('--lock-all-tables')
-            elif lock_table_strategy.upper() == 'ST':
-                cmd.append('--single-transaction')
-            elif lock_table_strategy.upper() == 'SLT':
-                cmd.append('--skip-lock-tables')
+            if lock_table_strategy.upper() == "LAT":
+                cmd.append("--lock-all-tables")
+            elif lock_table_strategy.upper() == "ST":
+                cmd.append("--single-transaction")
+            elif lock_table_strategy.upper() == "SLT":
+                cmd.append("--skip-lock-tables")
         call(cmd, shell=False)
     elif sqltype in PSQL_DIALECTS:
         env = os.environ.copy()
         env["PGPASSWORD"] = parsed_sqluri.password
-        cmd = ['pg_dump', '-U', parsed_sqluri.username, '-d', parsed_sqluri.database,
-               '-h', parsed_sqluri.host, '-f', sqlfile]
+        cmd = [
+            "pg_dump",
+            "-U",
+            parsed_sqluri.username,
+            "-d",
+            parsed_sqluri.database,
+            "-h",
+            parsed_sqluri.host,
+            "-f",
+            sqlfile,
+        ]
         run(cmd, env=env)
     else:
         click.echo(f"unsupported SQL syntax: {sqltype}")
