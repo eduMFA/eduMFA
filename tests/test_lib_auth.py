@@ -4,9 +4,13 @@ This tests the files
 """
 
 from .base import MyTestCase
-from edumfa.lib.auth import (create_db_admin, verify_db_admin,
-                             delete_db_admin,
-                             check_webui_user, db_admin_exist)
+from edumfa.lib.auth import (
+    create_db_admin,
+    verify_db_admin,
+    delete_db_admin,
+    check_webui_user,
+    db_admin_exist,
+)
 from edumfa.lib.user import User
 from flask import current_app
 

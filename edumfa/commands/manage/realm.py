@@ -30,8 +30,9 @@ def list_realms():
     list the available realms
     """
     from edumfa.lib.realm import get_realms
+
     realm_list = get_realms()
-    for (name, realm_data) in realm_list.items():
+    for name, realm_data in realm_list.items():
         resolvernames = [x.get("name") for x in realm_data.get("resolver")]
         click.echo("%16s: %s" % (name, resolvernames))
 
@@ -47,6 +48,7 @@ def create(name: str, resolvers):
     with the same name will be replaced.
     """
     from edumfa.lib.realm import set_realm
+
     resolvers = resolvers.split(",")
     set_realm(name, resolvers)
 
@@ -58,6 +60,7 @@ def delete(name: str):
     Delete the given realm
     """
     from edumfa.lib.realm import delete_realm
+
     delete_realm(name)
 
 
@@ -68,6 +71,7 @@ def set_default(name):
     Set the given realm to default
     """
     from edumfa.lib.realm import set_default_realm
+
     set_default_realm(name)
 
 
@@ -77,4 +81,5 @@ def clear_default():
     Unset the default realm
     """
     from edumfa.lib.realm import set_default_realm
+
     set_default_realm(None)

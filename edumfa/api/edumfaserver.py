@@ -28,29 +28,29 @@ Remote-Tokens and for Federation-Events.
 
 The code of this module is tested in tests/test_api_edumfaserver.py
 """
-from flask import (Blueprint, request)
-from .lib.utils import (getParam,
-                        required,
-                        send_result)
+from flask import Blueprint, request
+from .lib.utils import getParam, required, send_result
 from ..lib.log import log_with
 from ..lib.policy import ACTION
 from .lib.prepolicy import prepolicy, check_base_action
 from ..lib.utils import is_true
 from flask import g
 import logging
-from edumfa.lib.edumfaserver import (add_edumfaserver,
-                                               eduMFAServer,
-                                               delete_edumfaserver,
-                                               list_edumfaservers)
+from edumfa.lib.edumfaserver import (
+    add_edumfaserver,
+    eduMFAServer,
+    delete_edumfaserver,
+    list_edumfaservers,
+)
 from edumfa.models import eduMFAServer as eduMFAServerDB
 
 
 log = logging.getLogger(__name__)
 
-edumfaserver_blueprint = Blueprint('edumfaserver_blueprint', __name__)
+edumfaserver_blueprint = Blueprint("edumfaserver_blueprint", __name__)
 
 
-@edumfaserver_blueprint.route('/<identifier>', methods=['POST'])
+@edumfaserver_blueprint.route("/<identifier>", methods=["POST"])
 @prepolicy(check_base_action, request, ACTION.EDUMFASERVERWRITE)
 @log_with(log)
 def create(identifier=None):
@@ -68,15 +68,13 @@ def create(identifier=None):
     tls = is_true(getParam(param, "tls", default="1"))
     description = getParam(param, "description", default="")
 
-    r = add_edumfaserver(identifier, url=url, tls=tls,
-                              description=description)
+    r = add_edumfaserver(identifier, url=url, tls=tls, description=description)
 
-    g.audit_object.log({'success': r > 0,
-                        'info':  r})
+    g.audit_object.log({"success": r > 0, "info": r})
     return send_result(r > 0)
 
 
-@edumfaserver_blueprint.route('/', methods=['GET'])
+@edumfaserver_blueprint.route("/", methods=["GET"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.EDUMFASERVERREAD)
 def list_edumfa():
@@ -85,11 +83,11 @@ def list_edumfa():
     """
     res = list_edumfaservers()
 
-    g.audit_object.log({'success': True})
+    g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@edumfaserver_blueprint.route('/<identifier>', methods=['DELETE'])
+@edumfaserver_blueprint.route("/<identifier>", methods=["DELETE"])
 @prepolicy(check_base_action, request, ACTION.EDUMFASERVERWRITE)
 @log_with(log)
 def delete_server(identifier=None):
@@ -100,12 +98,11 @@ def delete_server(identifier=None):
     """
     r = delete_edumfaserver(identifier)
 
-    g.audit_object.log({'success': r > 0,
-                        'info':  r})
+    g.audit_object.log({"success": r > 0, "info": r})
     return send_result(r > 0)
 
 
-@edumfaserver_blueprint.route('/test_request', methods=['POST'])
+@edumfaserver_blueprint.route("/test_request", methods=["POST"])
 @prepolicy(check_base_action, request, ACTION.EDUMFASERVERWRITE)
 @log_with(log)
 def test():
@@ -120,10 +117,8 @@ def test():
     user = getParam(param, "username", required)
     password = getParam(param, "password", required)
 
-
     s = eduMFAServerDB(identifier=identifier, url=url, tls=tls)
     r = eduMFAServer.request(s, user, password)
 
-    g.audit_object.log({'success': r > 0,
-                        'info':  r})
+    g.audit_object.log({"success": r > 0, "info": r})
     return send_result(r > 0)
