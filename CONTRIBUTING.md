@@ -25,6 +25,9 @@ https://github.com/eduMFA/eduMFA/issues
 
 ## Documentation
 
+> [!IMPORTANT]  
+> Python 3.11+ is required to build the documentation.
+
 The source code is pretty well documented. The main documentation resides in the
 `doc`-subfolder and can be build with:
 ```
@@ -109,6 +112,20 @@ scripts.
   ```
 
   To update the local database.
+
+## Translations
+
+We aim to provide translations for different languages.
+
+To generate the translations for the web interface we use `grunt`. The files can be updated using 
+
+```bash
+npm install 
+npm run translate
+```
+
+The server-side messages get translated using babel. Translations can be regenerated using `make translate-server`.
+
 
 ## Development Workflow
 

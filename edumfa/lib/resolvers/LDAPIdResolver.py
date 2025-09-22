@@ -831,14 +831,15 @@ class IdResolver(UserIdResolver):
         :return: the id of the resolver
         :rtype: str
         """
-        s = "{0!s}{1!s}{2!s}{3!s}".format(
+        s = "{0!s}{1!s}{2!s}{3!s}{4!s}".format(
             self.uri,
             self.basedn,
+            self.binddn,
             self.searchfilter,
             sorted(self.userinfo.items(), key=itemgetter(0)),
         )
         r = binascii.hexlify(hashlib.sha1(s.encode("utf-8")).digest())  # nosec B324 # hash used as unique identifier
-        return r.decode("utf8")
+        return "ldap." + r.decode("utf8")
 
     @staticmethod
     def getResolverClassType():
