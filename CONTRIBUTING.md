@@ -126,19 +126,7 @@ npm install
 npm run translate
 ```
 
-The server-side messages get translated using babel. For a simplified process and installation you can use `uv`. After installing `babel` you can generate the files.
-
-```bash
-uv tool install babel
-```
-
-```bash
-cd edumfa
-uv tool run --from babel pybabel extract -F babel.cfg -o messages.pot .
-uv tool run --from babel pybabel update -i messages.pot -d translations
-uv tool run --from babel pybabel compile -d translations
-```
-
+The server-side messages get translated using babel. Translations can be regenerated using `make translate-server`.
 
 
 ## Development Workflow
