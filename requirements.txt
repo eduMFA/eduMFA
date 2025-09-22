@@ -103,7 +103,7 @@ pyasn1==0.6.1
     #   rsa
 pyasn1-modules==0.4.2
     # via google-auth
-pycparser==2.22
+pycparser==2.23
     # via cffi
 pydash==8.0.5
     # via edumfa (setup.py)
