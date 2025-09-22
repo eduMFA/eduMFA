@@ -7,8 +7,8 @@ Create Date: 2024-07-15 17:25:38.602934
 """
 
 # revision identifiers, used by Alembic.
-revision = '7d82d8b680a9'
-down_revision = '0d011e94a8e8'
+revision = "7d82d8b680a9"
+down_revision = "0d011e94a8e8"
 
 from alembic import op
 import sqlalchemy as sa
@@ -17,11 +17,14 @@ import sqlalchemy as sa
 def upgrade():
     print("Adding column radiusserver.enforce_ma")
     try:
-        op.add_column('radiusserver', sa.Column('enforce_ma', sa.Boolean(), nullable=True))
+        op.add_column(
+            "radiusserver", sa.Column("enforce_ma", sa.Boolean(), nullable=True)
+        )
     except Exception as exx:
         print("Could not add column 'enforce_ma' in table radiusserver")
         print(exx)
 
+
 def downgrade():
     print("Dropping column radiusserver.enforce_ma")
-    op.drop_column('radiusserver', 'enforce_ma')
+    op.drop_column("radiusserver", "enforce_ma")

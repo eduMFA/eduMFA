@@ -25,6 +25,7 @@ These are the applications that can be assigned to machines in eduMFA.
 
 An application must be inherited from the MachineApplicationBase class.
 """
+
 from .base import MachineApplication as MachineApplicationBase
 from .base import get_auth_item
 from .base import is_application_allow_bulk_call

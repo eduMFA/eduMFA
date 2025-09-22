@@ -4,6 +4,7 @@ This test file tests the lib.serviceid methods.
 
 This tests the token functions on an interface level
 """
+
 from .base import MyTestCase
 from edumfa.lib.error import eduMFAError, ResourceNotFoundError
 
@@ -15,9 +16,7 @@ MAILSERVER = "mailserver"
 
 
 class TokenTestCase(MyTestCase):
-
     def test_01_create_serviceid(self):
-
         r = set_serviceid(WEBSERVER, "all cool light machines")
         self.assertGreaterEqual(r, 1)
         si = Serviceid.query.filter_by(id=r).first()
@@ -40,8 +39,7 @@ class TokenTestCase(MyTestCase):
         r = set_serviceid("webserver", "other machines")
         self.assertGreaterEqual(r, 1)
 
-        self.assertRaises(eduMFAError,
-                          delete_serviceid, sid=(r + 1), name=WEBSERVER)
+        self.assertRaises(eduMFAError, delete_serviceid, sid=(r + 1), name=WEBSERVER)
 
         delete_serviceid(sid=r)
         si = Serviceid.query.filter_by(name=WEBSERVER).all()

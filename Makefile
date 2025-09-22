@@ -23,14 +23,6 @@ setversion:
 	@echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 	@echo "Please set a tag like:  git tag 3.17"
 
-POS = $(wildcard po/*.po)
-translate:
-	grunt nggettext_extract
-	for language in $(POS); do \
-		msgmerge -U --backup=off $$language po/template.pot; \
-	done
-	grunt nggettext_compile
-
 translate-server:
 	(cd edumfa; pybabel extract -F babel.cfg -o messages.pot .)
 	# pybabel init -i messages.pot -d translations -l de
