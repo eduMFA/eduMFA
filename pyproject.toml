@@ -35,14 +35,14 @@ Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
 lint = [
-    "ruff==0.12.11",
+    "ruff==0.13.1",
 ]
 docs = [
     "furo==2025.7.19",
     "docutils==0.21.2",
     "imagesize==1.4.1",
     "packaging==25.0",
-    "pyenchant==3.2.2",
+    "pyenchant==3.3.0",
     "Pygments==2.19.2",
     "snowballstemmer==3.0.1",
     "Sphinx==8.2.3; python_version >= '3.11'",
