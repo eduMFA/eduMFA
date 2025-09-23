@@ -36,7 +36,7 @@ Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
 lint = [
-    "ruff==0.12.11",
+    "ruff==0.13.1",
 ]
 docs = [
     "furo==2025.7.19",
@@ -68,7 +68,7 @@ test = [
     "pluggy==1.6.0",
     "pyparsing==3.2.5",
     "pytest==8.4.2",
-    "pytest-cov==6.3.0",
+    "pytest-cov==7.0.0",
     "responses==0.25.8",
     "testfixtures==8.3.0",
     "tomli==2.2.1",
