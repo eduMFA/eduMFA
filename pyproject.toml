@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "edumfa"
 version = "2.8.0"
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.10,<3.15"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
 readme = { file = "README.rst", content-type = "text/x-rst" }
@@ -13,18 +13,17 @@ license = "AGPL-3.0-only"
 keywords = ["OTP", "two factor authentication", "management", "security"]
 classifiers = [
     "Framework :: Flask",
-    "Programming Language :: Python",
     "Development Status :: 5 - Production/Stable",
     "Topic :: Internet",
     "Topic :: Security",
     "Topic :: System :: Systems Administration :: Authentication/Directory",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dynamic = ["dependencies"]
 

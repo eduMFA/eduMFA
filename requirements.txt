@@ -42,7 +42,7 @@ cryptography==45.0.7
     # via
     #   edumfa (setup.py)
     #   pyopenssl
-crypt-r==3.13.1; python_version == "3.13" and sys_platform == "linux"
+crypt-r==3.13.1; python_version >= "3.13" and sys_platform == "linux"
     # via edumfa (setup.py)
 defusedxml==0.7.1
     # via edumfa (setup.py)
