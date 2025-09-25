@@ -22,13 +22,9 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-import sys
 from typing import Callable
 
-if sys.version_info >= (3, 10):
-    from typing import ParamSpec, TypeVar
-else:
-    from typing_extensions import ParamSpec, TypeVar
+from typing_extensions import ParamSpec, TypeVar
 from edumfa.lib.config import get_config_object
 from edumfa.lib.utils import fetch_one_resource
 from edumfa.models import EventHandler, EventHandlerOption, db

@@ -29,13 +29,9 @@ The functions of this module are tested in tests/test_lib_policy_decorator.py
 
 import logging
 import re
-import sys
 from typing import Callable
 
-if sys.version_info >= (3, 10):
-    from typing import ParamSpec, TypeVar
-else:
-    from typing_extensions import ParamSpec, TypeVar
+from typing_extensions import ParamSpec, TypeVar
 from edumfa.lib.policy import Match
 from edumfa.lib.error import PolicyError, eduMFAError
 import functools
