@@ -10,10 +10,12 @@ It exports
    serial, counter
 
 """
-from sqlalchemy.sql import select
-from edumfa.models import Token
 import argparse
+
 from sqlalchemy import create_engine
+from sqlalchemy.sql import select
+
+from edumfa.models import Token
 
 
 def get_edumfa_uri(config_file):

@@ -34,19 +34,20 @@ possible to do a "single shot" authentication, since the base class check_otp al
 returns -1.
 """
 
-import logging
 import datetime
-from edumfa.lib.config import get_from_config
-from edumfa.lib.tokenclass import TokenClass, AUTHENTICATIONMODE
-from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
-from edumfa.lib.crypto import urandom, safe_compare
-from edumfa.lib.log import log_with
+import logging
+
 from edumfa.lib import _
-from edumfa.lib.utils import to_unicode
 from edumfa.lib.challenge import get_challenges
-from edumfa.models import Challenge
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import safe_compare, urandom
 from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.error import ValidateError
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE, get_action_values_from_options
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, TokenClass
+from edumfa.lib.utils import to_unicode
+from edumfa.models import Challenge
 
 log = logging.getLogger(__name__)
 

@@ -24,10 +24,10 @@ import click
 from flask.cli import AppGroup
 
 from edumfa.lib.caconnector import (
-    get_caconnector_list,
-    save_caconnector,
-    get_caconnector_object,
     get_caconnector_class,
+    get_caconnector_list,
+    get_caconnector_object,
+    save_caconnector,
 )
 
 ca_cli = AppGroup("ca", help="Manage Certificate Authorities")

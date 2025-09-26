@@ -1,12 +1,14 @@
 # coding: utf-8
-from .base import MyApiTestCase
 import json
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
-from edumfa.lib.token import init_token, remove_token
-from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION
 from urllib.parse import urlencode
+
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.user import User
+
+from .base import MyApiTestCase
 
 PWFILE = "tests/testdata/passwd"
 
@@ -420,7 +422,7 @@ class APIUsersTestCase(MyApiTestCase):
             self.assertTrue(result.get("value"))
 
     def test_10_additional_attributes(self):
-        from edumfa.lib.policy import set_policy, ACTION, SCOPE, delete_policy
+        from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 
         with self.app.test_request_context(
             "/user/attribute",

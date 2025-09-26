@@ -29,10 +29,11 @@ address, subject and body this gateway will trigger the sending of the SMS.
 
 The code is tested in tests/test_lib_smsprovider
 """
-from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
-from edumfa.lib.smtpserver import send_email_identifier, send_email_data
-from edumfa.lib import _
 import logging
+
+from edumfa.lib import _
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
+from edumfa.lib.smtpserver import send_email_data, send_email_identifier
 
 log = logging.getLogger(__name__)
 

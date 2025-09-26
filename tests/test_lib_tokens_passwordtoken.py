@@ -3,9 +3,10 @@ This test file tests the lib.tokens.passwordtoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
 from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
 from edumfa.models import Token
+
+from .base import MyTestCase
 
 
 class PasswordTokenTestCase(MyTestCase):

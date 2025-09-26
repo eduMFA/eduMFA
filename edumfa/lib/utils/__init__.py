@@ -26,32 +26,31 @@ This is the library with base functions for eduMFA.
 This module is tested in tests/test_lib_utils.py
 """
 
-import os
-
+import base64
+import binascii
+import hashlib
+import html
 import logging
+import mimetypes
+import os
+import re
+import string
+import threading
+import time
+import traceback
+from datetime import datetime, timedelta
+from datetime import time as dt_time
 from importlib import import_module
 from urllib.parse import unquote
 
-import binascii
-import base64
+import importlib_metadata
+import segno
 import sqlalchemy
-import string
-import re
-from datetime import timedelta, datetime
-from datetime import time as dt_time
 from dateutil.parser import parse as parse_date_string
 from dateutil.tz import tzlocal, tzutc
-from netaddr import IPAddress, IPNetwork, AddrFormatError
-import hashlib
-import traceback
-import threading
-import importlib_metadata
-import time
-import html
-import segno
-import mimetypes
+from netaddr import AddrFormatError, IPAddress, IPNetwork
 
-from edumfa.lib.error import ParameterError, ResourceNotFoundError, PolicyError
+from edumfa.lib.error import ParameterError, PolicyError, ResourceNotFoundError
 
 log = logging.getLogger(__name__)
 

@@ -19,16 +19,15 @@ This file contains the definition of the password token class
 
 import logging
 
-from edumfa.lib.crypto import zerome, safe_compare
-from edumfa.lib.utils import to_unicode
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.log import log_with
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
 from edumfa.api.lib.prepolicy import _generate_pin_from_policy
 from edumfa.api.lib.utils import getParam
-from edumfa.lib.utils import is_true
+from edumfa.lib import _
+from edumfa.lib.crypto import safe_compare, zerome
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.utils import is_true, to_unicode
 
 optional = True
 required = False

@@ -38,21 +38,21 @@ This code is tested in tests/test_lib_user.py
 import logging
 import traceback
 
-from .error import UserError
-from ..api.lib.utils import getParam, optional
-from .log import log_with
-from .resolver import get_resolver_object, get_resolver_type
+from edumfa.models import CustomUserAttribute, db
 
+from ..api.lib.utils import getParam, optional
+from .config import SYSCONF, get_from_config
+from .error import UserError
+from .log import log_with
 from .realm import (
-    get_realms,
-    realm_is_defined,
     get_default_realm,
     get_realm,
     get_realm_id,
+    get_realms,
+    realm_is_defined,
 )
-from .config import get_from_config, SYSCONF
-from .usercache import user_cache, cache_username, user_init, delete_user_cache
-from edumfa.models import CustomUserAttribute, db
+from .resolver import get_resolver_object, get_resolver_type
+from .usercache import cache_username, delete_user_cache, user_cache, user_init
 
 log = logging.getLogger(__name__)
 

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-import hashlib
-import binascii
 import base64
+import binascii
+import hashlib
 import time
 
 from passlib.crypto.digest import pbkdf2_hmac
 
-from edumfa.lib.utils import b32encode_and_unicode
-from edumfa.lib.policy import set_policy, SCOPE, delete_policy
-from .base import MyApiTestCase
+from edumfa.lib.policy import SCOPE, delete_policy, set_policy
 from edumfa.lib.tokens.HMAC import HmacOtp
+from edumfa.lib.utils import b32encode_and_unicode
+
+from .base import MyApiTestCase
 
 
 class TwoStepInitTestCase(MyApiTestCase):

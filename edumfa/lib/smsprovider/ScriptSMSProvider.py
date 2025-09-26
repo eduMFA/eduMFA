@@ -24,12 +24,13 @@
 __doc__ = """This is the SMSClass to send SMS via a script.
 """
 
-from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
+import logging
+import subprocess  # nosec B404 # We know what we are doing and only allow trusted scripts
+import traceback
+
 from edumfa.lib import _
 from edumfa.lib.framework import get_app_config_value
-import subprocess  # nosec B404 # We know what we are doing and only allow trusted scripts
-import logging
-import traceback
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
 
 log = logging.getLogger(__name__)
 

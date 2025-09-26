@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from setuptools import setup
 import os
 import stat
+
+from setuptools import setup
 
 # Taken from kennethreitz/requests/setup.py
 package_directory = os.path.realpath(os.path.dirname(__file__))

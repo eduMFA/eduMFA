@@ -30,8 +30,8 @@ This code is tested in test_ui_certificate.py
 __author__ = "Cornelius Kölbel, <cornelius@privacyidea.org>"
 
 from flask import Blueprint, render_template, request
-from edumfa.api.lib.utils import get_all_params, verify_auth_token, send_html
 
+from edumfa.api.lib.utils import get_all_params, send_html, verify_auth_token
 
 cert_blueprint = Blueprint("cert_blueprint", __name__)
 

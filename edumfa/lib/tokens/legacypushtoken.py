@@ -28,11 +28,11 @@ and send it back to the authentication endpoint.
 This code is tested in tests/test_lib_tokens_push
 """
 
-from edumfa.api.lib.policyhelper import get_legacypushtoken_add_config
-from edumfa.lib.tokens.pushtoken import PushTokenClass
-from edumfa.lib.tokenclass import TokenClass
-
 import logging
+
+from edumfa.api.lib.policyhelper import get_legacypushtoken_add_config
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.tokens.pushtoken import PushTokenClass
 
 log = logging.getLogger(__name__)
 
