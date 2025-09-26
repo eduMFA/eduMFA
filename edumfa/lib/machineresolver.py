@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -80,9 +79,7 @@ def save_resolver(params):
     (class_dict, type_dict) = get_machine_resolver_class_dict()
     if resolvertype not in type_dict.values():
         raise Exception(
-            "machine resolver type : {0!s} not in {1!s}".format(
-                resolvertype, list(type_dict.values())
-            )
+            f"machine resolver type : {resolvertype} not in {list(type_dict.values())}"
         )
 
     # check the name
@@ -95,7 +92,7 @@ def save_resolver(params):
         else:  # pragma: no cover
             raise Exception(
                 "machine resolver with similar name and other type "
-                "already exists: %s" % r_name
+                f"already exists: {r_name}"
             )
 
     # create a dictionary for the ResolverConfig
@@ -262,7 +259,7 @@ def get_resolver_object(resolvername):
             # This can only happen if a resolver class definition would be
             # removed.
             log.error(
-                "unknown resolver class for type {0!s} ".format(resolver.get("type"))
+                "unknown resolver class for type {!s} ".format(resolver.get("type"))
             )
         else:
             # create the resolver instance and load the config
@@ -297,7 +294,7 @@ def export_machineresolver(name=None):
 @register_import("machineresolver")
 def import_machineresolver(data, name=None):
     """Import machineresolver configuration"""
-    log.debug("Import caconnector config: {0!s}".format(data))
+    log.debug(f"Import caconnector config: {data}")
     for _res_name, res_data in data.items():
         if name and name != res_data.get("resolvername"):
             continue
@@ -307,7 +304,7 @@ def import_machineresolver(data, name=None):
         res_data.update(res_data.pop("data"))
         rid = save_resolver(res_data)
         log.info(
-            'Import of caconnector "{0!s}" finished, id: {1!s}'.format(
+            'Import of caconnector "{!s}" finished, id: {!s}'.format(
                 res_data["name"], rid
             )
         )

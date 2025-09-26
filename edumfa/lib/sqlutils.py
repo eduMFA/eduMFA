@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -80,11 +79,7 @@ def visit_delete_limit_mysql(element, compiler, **kw):
 
         DELETE FROM mfa_audit WHERE ... LIMIT ...
     """
-    return "DELETE FROM {} WHERE {} LIMIT {:d}".format(  # nosec B608 # no user input used in query construction
-        compiler.process(element.table, asfrom=True, **kw),
-        compiler.process(element.filter),
-        element.limit,
-    )
+    return f"DELETE FROM {compiler.process(element.table, asfrom=True, **kw)} WHERE {compiler.process(element.filter)} LIMIT {element.limit}"
 
 
 def delete_chunked(session, table, filter, limit=1000):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -150,6 +149,6 @@ def delete_gateway_option(gwid=None, key=None):
         type, key = key.split(".", 1)
 
     res = delete_smsgateway_key_generic(gwid, key, Type=type)
-    g.audit_object.log({"success": res, "info": "{0!s}/{1!s}".format(gwid, key)})
+    g.audit_object.log({"success": res, "info": f"{gwid}/{key}"})
 
     return send_result(res)

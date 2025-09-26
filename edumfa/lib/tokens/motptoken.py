@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -157,8 +156,8 @@ class MotpTokenClass(TokenClass):
                         "img": create_img(motp_url),
                     }
                 except Exception as ex:  # pragma: no cover
-                    log.debug("{0!s}".format(traceback.format_exc()))
-                    log.error("failed to set motp url: {0!r}".format(ex))
+                    log.debug(f"{traceback.format_exc()}")
+                    log.error(f"failed to set motp url: {ex!r}")
 
         return response_detail
 
@@ -227,8 +226,8 @@ class MotpTokenClass(TokenClass):
 
         if res != -1 and oCount != 0 and res <= oCount:
             log.warning(
-                "a previous OTP value was used again! former "
-                "tokencounter: %i, presented counter %i" % (oCount, res)
+                f"a previous OTP value was used again! former "
+                f"tokencounter: {oCount}, presented counter {res}"
             )
             res = -1
             return res

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -147,7 +146,7 @@ class HmacOtp:
             start = 0 if (start < 0) else start
             end = self.counter + (window)
 
-        log.debug("OTP range counter: {0!r} - {1!r}".format(start, end))
+        log.debug(f"OTP range counter: {start!r} - {end!r}")
         for c in range(start, end):
             otpval = self.generate(c)
             # log.debug("calculating counter {0!r}".format(c))

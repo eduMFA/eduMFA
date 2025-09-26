@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import json
 
 from edumfa.models import Resolver, ResolverConfig, db
@@ -58,7 +56,7 @@ class APIResolverTestCase(MyApiTestCase):
         realm = "realm1"
         resolvers = "r1, r2"
         with self.app.test_request_context(
-            "/realm/{0!s}".format(realm),
+            f"/realm/{realm}",
             data={"resolvers": resolvers},
             method="POST",
             headers={"Authorization": self.at},

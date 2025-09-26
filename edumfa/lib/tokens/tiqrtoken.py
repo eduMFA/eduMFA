@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -219,7 +218,7 @@ class TiqrTokenClass(OcraTokenClass):
         # smartphone needs to contain a userId.
         if not self.user:
             # The user and realms should have already been set in init_token()
-            raise ParameterError("Missing parameter: {0!r}".format("user"), id=905)
+            raise ParameterError("Missing parameter: {!r}".format("user"), id=905)
 
         ocrasuite = get_from_config("tiqr.ocrasuite") or OCRA_DEFAULT_SUITE
         OCRASuite(ocrasuite)
@@ -234,16 +233,12 @@ class TiqrTokenClass(OcraTokenClass):
         response_detail = TokenClass.get_init_detail(self, params, user)
         params = params or {}
         enroll_url = get_from_config("tiqr.regServer")
-        log.info("using tiqr.regServer for enrollment: {0!s}".format(enroll_url))
+        log.info(f"using tiqr.regServer for enrollment: {enroll_url}")
         serial = self.token.serial
         session = generate_otpkey()
         # save the session in the token
         self.add_tokeninfo("session", session)
-        tiqrenroll = (
-            "tiqrenroll://{0!s}?action={1!s}&session={2!s}&serial={3!s}".format(
-                enroll_url, API_ACTIONS.METADATA, session, serial
-            )
-        )
+        tiqrenroll = f"tiqrenroll://{enroll_url}?action={API_ACTIONS.METADATA}&session={session}&serial={serial}"
 
         response_detail["tiqrenroll"] = {
             "description": _("URL for TiQR enrollment"),
@@ -267,9 +262,7 @@ class TiqrTokenClass(OcraTokenClass):
         params = request.all_data
         action = getParam(params, "action", optional) or API_ACTIONS.AUTHENTICATION
         if action not in API_ACTIONS.ALLOWED_ACTIONS:
-            raise ParameterError(
-                "Allowed actions are {0!s}".format(API_ACTIONS.ALLOWED_ACTIONS)
-            )
+            raise ParameterError(f"Allowed actions are {API_ACTIONS.ALLOWED_ACTIONS}")
 
         if action == API_ACTIONS.METADATA:
             session = getParam(params, "session", required)
@@ -294,11 +287,9 @@ class TiqrTokenClass(OcraTokenClass):
                 "identifier": service_identifier,
                 "logoUrl": logo_url,
                 "infoUrl": info_url,
-                "authenticationUrl": "{0!s}".format(auth_server),
+                "authenticationUrl": f"{auth_server}",
                 "ocraSuite": ocrasuite,
-                "enrollmentUrl": "{0!s}?action={1!s}&session={2!s}&serial={3!s}".format(
-                    reg_server, API_ACTIONS.ENROLLMENT, session, serial
-                ),
+                "enrollmentUrl": f"{reg_server}?action={API_ACTIONS.ENROLLMENT}&session={session}&serial={serial}",
             }
             identity = {"identifier": user_identifier, "displayName": user_displayname}
 
@@ -369,7 +360,7 @@ class TiqrTokenClass(OcraTokenClass):
                             token.inc_failcount()
                             fail = token.get_failcount()
                             maxfail = token.get_max_failcount()
-                            res = "INVALID_RESPONSE:{0!s}".format(maxfail - fail)
+                            res = f"INVALID_RESPONSE:{maxfail - fail}"
                             break
 
             cleanup_challenges()
@@ -430,13 +421,7 @@ class TiqrTokenClass(OcraTokenClass):
 
         # Encode the user to UTF-8 and quote the result
         encoded_user_identifier = quote_plus(user_identifier.encode("utf-8"))
-        authurl = "tiqrauth://{0!s}@{1!s}/{2!s}/{3!s}/{4!s}".format(
-            encoded_user_identifier,
-            service_identifier,
-            db_challenge.transaction_id,
-            challenge,
-            quote(service_displayname),
-        )
+        authurl = f"tiqrauth://{encoded_user_identifier}@{service_identifier}/{db_challenge.transaction_id}/{challenge}/{quote(service_displayname)}"
         image = create_img(authurl)
         attributes = {
             "img": image,

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -184,15 +183,9 @@ def create_push_token_url(
     url_url = quote(url.encode("utf-8"))
 
     return (
-        "otpauth://pipush/{label!s}?"
-        "url={url!s}&ttl={ttl!s}&"
-        "issuer={issuer!s}{extra}".format(
-            label=url_label,
-            issuer=url_issuer,
-            url=url_url,
-            ttl=ttl,
-            extra=_construct_extra_parameters(extra_data),
-        )
+        f"otpauth://pipush/{url_label}?"
+        f"url={url_url}&ttl={ttl}&"
+        f"issuer={url_issuer}{_construct_extra_parameters(extra_data)}"
     )
 
 
@@ -265,7 +258,7 @@ def _build_verify_object(pubkey_pem):
     # The public key of the smartphone was probably sent as urlsafe:
     pubkey_pem = pubkey_pem.replace("-", "+").replace("_", "/")
     # The public key was sent without any header
-    pubkey_pem = "-----BEGIN PUBLIC KEY-----\n{0!s}\n-----END PUBLIC KEY-----".format(
+    pubkey_pem = "-----BEGIN PUBLIC KEY-----\n{!s}\n-----END PUBLIC KEY-----".format(
         pubkey_pem.strip().replace(" ", "+")
     )
 
@@ -313,7 +306,7 @@ class PushTokenClass(TokenClass):
     # If the token is enrollable via multichallenge
     is_multichallenge_enrollable = True
 
-    class PUSH_ACTION(object):
+    class PUSH_ACTION:
         FIREBASE_CONFIG = "edupush_firebase_configuration"
         REGISTRATION_URL = "edupush_registration_url"
         TTL = "edupush_ttl"
@@ -685,14 +678,7 @@ class PushTokenClass(TokenClass):
         url_issuer = quote(issuer.encode("utf-8"))
         url_url = quote(url.encode("utf-8"))
 
-        return "{prefix}/{label!s}?url={url!s}&ttl={ttl!s}&issuer={issuer!s}{extra}".format(
-            prefix=self.get_push_url_prefix(),
-            label=url_label,
-            issuer=url_issuer,
-            url=url_url,
-            ttl=ttl,
-            extra=_construct_extra_parameters(extra_data),
-        )
+        return f"{self.get_push_url_prefix()}/{url_label}?url={url_url}&ttl={ttl}&issuer={url_issuer}{_construct_extra_parameters(extra_data)}"
 
     @log_with(log)
     def get_init_detail(self, params=None, user=None):
@@ -788,11 +774,9 @@ class PushTokenClass(TokenClass):
         try:
             ts = isoparse(timestamp)
         except (ValueError, TypeError) as _e:
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.debug(f"{traceback.format_exc()}")
             raise eduMFAError(
-                "Could not parse timestamp {0!s}. ISO-Format required.".format(
-                    timestamp
-                )
+                f"Could not parse timestamp {timestamp}. ISO-Format required."
             )
         td = timedelta(minutes=window)
         # We don't know if the passed timestamp is timezone aware. If no
@@ -802,7 +786,7 @@ class PushTokenClass(TokenClass):
         else:
             now = datetime.utcnow()
         if not (now - td <= ts <= now + td):
-            raise eduMFAError("Timestamp {0!s} not in valid range.".format(timestamp))
+            raise eduMFAError(f"Timestamp {timestamp} not in valid range.")
 
     @classmethod
     def _api_endpoint_post(cls, request_data):
@@ -864,13 +848,13 @@ class PushTokenClass(TokenClass):
                 # There are valid challenges, so we check this signature
                 for chal in challengeobject_list:
                     # verify the signature of the nonce
-                    sign_data = "{0!s}|{1!s}".format(challenge, serial)
+                    sign_data = f"{challenge}|{serial}"
                     if decline:
                         sign_data += "|decline"
                     try:
                         cls.verify_signature(pubkey_obj, sign_data, signature)
                         # The signature was valid
-                        log.debug("Found matching challenge {0!s}.".format(chal))
+                        log.debug(f"Found matching challenge {chal}.")
                         if decline:
                             chal.set_data("challenge_declined")
                         else:
@@ -904,10 +888,9 @@ class PushTokenClass(TokenClass):
             ) as e:
                 # to avoid disclosing information we always fail with an invalid
                 # signature error even if the token with the serial could not be found
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.debug(f"{traceback.format_exc()}")
                 log.info(
-                    "The following error occurred during the signature "
-                    'check: "{0!r}"'.format(e)
+                    f'The following error occurred during the signature check: "{e!r}"'
                 )
                 raise eduMFAError("Could not verify signature!")
         else:
@@ -969,8 +952,7 @@ class PushTokenClass(TokenClass):
             if allow_polling == PushAllowPolling.TOKEN:
                 if not is_true(tok.get_tokeninfo(POLLING_ALLOWED, default="True")):
                     log.debug(
-                        "Polling not allowed for pushtoken {0!s} due to "
-                        "tokeninfo.".format(serial)
+                        f"Polling not allowed for pushtoken {serial} due to tokeninfo."
                     )
                     raise PolicyError("Polling not allowed!")
 
@@ -988,8 +970,8 @@ class PushTokenClass(TokenClass):
             if not registration_url:
                 raise ResourceNotFoundError(
                     "There is no registration_url defined for the "
-                    " pushtoken {0!s}. You need to define a push_registration_url "
-                    "in an enrollment policy.".format(serial)
+                    f" pushtoken {serial}. You need to define a push_registration_url "
+                    "in an enrollment policy."
                 )
             options = {"g": g}
             challenges = []
@@ -1017,10 +999,9 @@ class PushTokenClass(TokenClass):
         ) as e:
             # to avoid disclosing information we always fail with an invalid
             # signature error even if the token with the serial could not be found
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.debug(f"{traceback.format_exc()}")
             log.info(
-                "The following error occurred during the signature "
-                'check: "{0!r}"'.format(e)
+                f'The following error occurred during the signature check: "{e!r}"'
             )
             raise eduMFAError("Could not verify signature!")
 
@@ -1113,9 +1094,7 @@ class PushTokenClass(TokenClass):
             result = cls._api_endpoint_get(g, request.all_data)
         else:
             raise eduMFAError(
-                "Method {0!s} not allowed in 'api_endpoint' for push token.".format(
-                    request.method
-                )
+                f"Method {request.method} not allowed in 'api_endpoint' for push token."
             )
 
         return "json", prepare_result(result, details=details)
@@ -1227,16 +1206,14 @@ class PushTokenClass(TokenClass):
             # If sending the Push message failed, we log a warning
             if not res:
                 log.warning(
-                    "Failed to submit message to Firebase service for token {0!s}.".format(
-                        self.token.serial
-                    )
+                    f"Failed to submit message to Firebase service for token {self.token.serial}."
                 )
                 message += " " + ERROR_CHALLENGE_TEXT
                 if is_true(options.get("exception")):
                     raise ValidateError("Failed to submit message to Firebase service.")
         else:
             log.warning(
-                f"The token {self.token.serial!s} has no tokeninfo {self.PUSH_ACTION.FIREBASE_CONFIG!s}. The message could not be sent."
+                f"The token {self.token.serial} has no tokeninfo {self.PUSH_ACTION.FIREBASE_CONFIG}. The message could not be sent."
             )
             message += f" {ERROR_CHALLENGE_TEXT}"
             if is_true(options.get("exception")):

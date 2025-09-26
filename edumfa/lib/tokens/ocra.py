@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -84,15 +83,15 @@ class OCRASuite:
         self.sha = hotp_sha_trunc[1]
         self.truncation = int(hotp_sha_trunc[2])
         if hotp != "HOTP":
-            raise Exception("Only HOTP is allowed. You specified {0!s}".format(hotp))
+            raise Exception(f"Only HOTP is allowed. You specified {hotp}")
         if self.sha not in ["SHA1", "SHA256", "SHA512"]:
             raise Exception(
-                "Only SHA1, SHA256 or SHA512 is allowed. You specified %s" % self.sha
+                f"Only SHA1, SHA256 or SHA512 is allowed. You specified {self.sha}"
             )
         if self.truncation not in [0, 4, 5, 6, 7, 8, 9, 10]:
             raise Exception(
                 "Only truncation of 0 or 4-10 is allowed. "
-                "You specified %s" % self.truncation
+                f"You specified {self.truncation}"
             )
 
         ########################################################
@@ -130,7 +129,7 @@ class OCRASuite:
         if self.challenge_type not in ["QA", "QH", "QN"]:
             raise Exception(
                 "Error in challenge. The challenge must start "
-                "with QA, QN or QH. You specified %s" % self.challenge
+                f"with QA, QN or QH. You specified {self.challenge}"
             )
 
         self.challenge_length = 0
@@ -139,13 +138,13 @@ class OCRASuite:
         except ValueError:
             raise Exception(
                 "The last characters in the challenge must be a "
-                "number. You specified %s" % self.challenge
+                f"number. You specified {self.challenge}"
             )
 
         if self.challenge_length < 4 or self.challenge_length > 64:
             raise Exception(
                 "The length of the challenge must be specified "
-                "between 4 and 64. You specified %s" % self.challenge_length
+                f"between 4 and 64. You specified {self.challenge_length}"
             )
 
         # signature
@@ -156,7 +155,7 @@ class OCRASuite:
             if self.signature_type not in ["P", "S", "T"]:
                 raise Exception(
                     "The signature needs to be P, S or T. You "
-                    "specified %s" % self.signature_type
+                    f"specified {self.signature_type}"
                 )
             if self.signature_type == "P":
                 # P is followed by a Hashing Algorithm SHA1, SHA256, SHA512
@@ -273,13 +272,11 @@ class OCRA:
                 counter = struct.pack(">Q", int(counter))
                 data_input += counter
             else:
-                raise Exception(
-                    "The ocrasuite {0!s} requires a counter".format(self.ocrasuite)
-                )
+                raise Exception(f"The ocrasuite {self.ocrasuite} requires a counter")
         # Check for Question
         if self.ocrasuite_obj.challenge_type == "QN":
             # question contains only numeric values
-            hex_q = "{0:x}".format(int(question))
+            hex_q = f"{int(question):x}"
             hex_q += "0" * (len(hex_q) % 2)
             bin_q = binascii.unhexlify(hex_q)
             bin_q += b"\x00" * (128 - len(bin_q))
@@ -305,14 +302,10 @@ class OCRA:
                 ).digest()
                 data_input += pin_hash
             else:
-                raise Exception(
-                    "The ocrasuite {0!s} requires a PIN!".format(self.ocrasuite)
-                )
+                raise Exception(f"The ocrasuite {self.ocrasuite} requires a PIN!")
         elif self.ocrasuite_obj.signature_type == "T":
             if not timesteps:
-                raise Exception(
-                    "The ocrasuite {0!s} requires timesteps".format(self.ocrasuite)
-                )
+                raise Exception(f"The ocrasuite {self.ocrasuite} requires timesteps")
             # In case of Time
             timesteps = int(timesteps, 16)
             timesteps = struct.pack(">Q", int(timesteps))
