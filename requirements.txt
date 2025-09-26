@@ -123,7 +123,7 @@ python-gnupg==0.5.5
     # via edumfa (setup.py)
 pytz==2025.2
     # via flask-babel
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via edumfa (setup.py)
 redis==6.4.0
     # via huey
