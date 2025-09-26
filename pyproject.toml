@@ -97,7 +97,7 @@ include = ["edumfa*"]
 [tool.ruff.lint]
 select = [
     "I", # Isort
-    "UP",
+    "UP", # Pyupgrade
 ]
 
 [tool.ruff.lint.per-file-ignores]
