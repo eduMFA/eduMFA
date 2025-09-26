@@ -97,7 +97,11 @@ include = ["edumfa*"]
 [tool.ruff.lint]
 select = [
     "I", # Isort
+    "UP",
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/test_lib_crypto.py" = ["I001"]
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
