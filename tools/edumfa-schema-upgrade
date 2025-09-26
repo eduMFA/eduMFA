@@ -10,13 +10,13 @@ if [ ! -d "$MIGRATION_PATH" ]; then
 fi
 
 # check if we do not have DB versioning, yet.
-if [ -z "$(edumfa-manage db current -v -d $MIGRATION_PATH | grep "^Rev:")" ]; then
+if [ -z "$(edumfa-manage -q db current -v -d $MIGRATION_PATH | grep "^Rev:")" ]; then
     if [ "$SKIP_STAMP" != "--skipstamp" ]; then
         # Set the version to the first PI 2.0 version
         echo "++ Stamping DB to $FIRST_VERSION"
-        edumfa-manage db stamp $FIRST_VERSION -d $MIGRATION_PATH > /dev/null
+        edumfa-manage -q db stamp $FIRST_VERSION -d $MIGRATION_PATH > /dev/null
     fi
 fi
 # Upgrade the database
 echo "++ Upgrading DB schema."
-edumfa-manage db upgrade -d $MIGRATION_PATH
+edumfa-manage -q db upgrade -d $MIGRATION_PATH
