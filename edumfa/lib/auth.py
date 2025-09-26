@@ -22,13 +22,14 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.lib.policy import LOGINMODE
-from edumfa.models import Admin
-from edumfa.lib.token import check_user_pass
-from edumfa.lib.policydecorators import libpolicy, login_mode
-from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper
-from edumfa.lib.utils import fetch_one_resource
 import logging
+
+from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper
+from edumfa.lib.policy import LOGINMODE
+from edumfa.lib.policydecorators import libpolicy, login_mode
+from edumfa.lib.token import check_user_pass
+from edumfa.lib.utils import fetch_one_resource
+from edumfa.models import Admin
 
 log = logging.getLogger(__name__)
 
@@ -89,11 +90,9 @@ def delete_db_admin(username):
 
 
 @libpolicy(login_mode)
-def check_webui_user(user_obj,
-                     password,
-                     options=None,
-                     superuser_realms=None,
-                     check_otp=False):
+def check_webui_user(
+    user_obj, password, options=None, superuser_realms=None, check_otp=False
+):
     """
     This function is used to authenticate the user at the web ui.
     It checks against the userstore or against OTP/eduMFA (check_otp).

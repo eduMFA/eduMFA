@@ -28,12 +28,12 @@ We can add or delete key or even subtrees in the JSON response of a request.
 The key is identified by a JSON Pointer
 (see https://tools.ietf.org/html/rfc6901)
 """
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib.utils import is_true
-from edumfa.lib import _
 import json
 import logging
 
+from edumfa.lib import _
+from edumfa.lib.eventhandler.base import BaseEventHandler
+from edumfa.lib.utils import is_true
 
 log = logging.getLogger(__name__)
 
@@ -42,6 +42,7 @@ class ACTION_TYPE:
     """
     Allowed actions
     """
+
     SET = "set"
     DELETE = "delete"
 
@@ -76,33 +77,39 @@ class ResponseManglerEventHandler(BaseEventHandler):
 
         :return: dict with actions
         """
-        actions = {ACTION_TYPE.DELETE:
-                       {"JSON pointer":
-                            {"type": "str",
-                             "required": True,
-                             "description": _("The JSON pointer (key) that should be deleted. Please "
-                                              "specify in the format '/detail/message'.")}
-                        },
-                   ACTION_TYPE.SET:
-                       {"JSON pointer":
-                            {"type": "str",
-                             "required": True,
-                             "description": _("The JSON pointer (key) that should be set. "
-                                              "Please specify in the format '/detail/message'.")
-                             },
-                        "type":
-                            {"type": "str",
-                             "required": True,
-                             "description": _("The type of the value."),
-                             "value": ["string", "integer", "bool"]
-                            },
-                        "value":
-                            {"type": "str",
-                             "required": True,
-                             "description": _("The value of the JSON key that should be set.")
-                            }
-                        }
-                   }
+        actions = {
+            ACTION_TYPE.DELETE: {
+                "JSON pointer": {
+                    "type": "str",
+                    "required": True,
+                    "description": _(
+                        "The JSON pointer (key) that should be deleted. Please "
+                        "specify in the format '/detail/message'."
+                    ),
+                }
+            },
+            ACTION_TYPE.SET: {
+                "JSON pointer": {
+                    "type": "str",
+                    "required": True,
+                    "description": _(
+                        "The JSON pointer (key) that should be set. "
+                        "Please specify in the format '/detail/message'."
+                    ),
+                },
+                "type": {
+                    "type": "str",
+                    "required": True,
+                    "description": _("The type of the value."),
+                    "value": ["string", "integer", "bool"],
+                },
+                "value": {
+                    "type": "str",
+                    "required": True,
+                    "description": _("The value of the JSON key that should be set."),
+                },
+            },
+        }
         return actions
 
     def do(self, action, options=None):
@@ -136,16 +143,20 @@ class ResponseManglerEventHandler(BaseEventHandler):
         if action.lower() == ACTION_TYPE.DELETE:
             try:
                 if len(comp) == 1:
-                    del(content[comp[0]])
+                    del content[comp[0]]
                 elif len(comp) == 2:
-                    del(content[comp[0]][comp[1]])
+                    del content[comp[0]][comp[1]]
                 elif len(comp) == 3:
-                    del (content[comp[0]][comp[1]][comp[2]])
+                    del content[comp[0]][comp[1]][comp[2]]
                 else:
-                    log.warning("JSON pointer length of {0!s} not supported.".format(len(comp)))
+                    log.warning(
+                        "JSON pointer length of {0!s} not supported.".format(len(comp))
+                    )
                 options.get("response").data = json.dumps(content)
             except KeyError:
-                log.warning("Can not delete response JSON Pointer {0!s}.".format(json_pointer))
+                log.warning(
+                    "Can not delete response JSON Pointer {0!s}.".format(json_pointer)
+                )
         elif action.lower() == ACTION_TYPE.SET:
             try:
                 if type == "integer":
@@ -165,7 +176,9 @@ class ResponseManglerEventHandler(BaseEventHandler):
                 content[comp[0]][comp[1]] = content[comp[0]].get(comp[1]) or {}
                 content[comp[0]][comp[1]][comp[2]] = value
             else:
-                log.warning("JSON pointer of length {0!s} not supported.".format(len(comp)))
+                log.warning(
+                    "JSON pointer of length {0!s} not supported.".format(len(comp))
+                )
             options.get("response").data = json.dumps(content)
 
         return ret

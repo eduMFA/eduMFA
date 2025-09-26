@@ -3,35 +3,38 @@ This test file tests the lib.tokens.passwordtoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
-from edumfa.lib.tokens.registrationtoken import RegistrationTokenClass
 from edumfa.lib.token import init_token
+from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH, RegistrationTokenClass
 from edumfa.models import Token
-from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH
+
+from .base import MyTestCase
 
 
 class RegistrationTokenTestCase(MyTestCase):
     serial1 = "ser1"
 
     # add_user, get_user, reset, set_user_identifiers
-    
+
     def test_01_create_token(self):
         db_token = Token(self.serial1, tokentype="registration")
         db_token.save()
         token = RegistrationTokenClass(db_token)
         token.update({})
         self.assertTrue(token.token.serial == self.serial1, token)
-        self.assertTrue(token.token.tokentype == "registration",
-                        token.token.tokentype)
+        self.assertTrue(token.token.tokentype == "registration", token.token.tokentype)
         self.assertTrue(token.type == "registration", token)
         class_prefix = token.get_class_prefix()
         self.assertTrue(class_prefix == "REG", class_prefix)
         self.assertTrue(token.get_class_type() == "registration", token)
 
     def test_01b_create_token_with_policy(self):
-        token = init_token({"type": "registration",
-                            "registration.length": "15",
-                            "registration.contents": "-sc"})
+        token = init_token(
+            {
+                "type": "registration",
+                "registration.length": "15",
+                "registration.contents": "-sc",
+            }
+        )
         init_detail = token.get_init_detail()
         registrationcode = init_detail.get("registrationcode")
         # the registrationcode should only contain 15 digits
@@ -43,8 +46,7 @@ class RegistrationTokenTestCase(MyTestCase):
         self.assertEqual(DEFAULT_LENGTH, len(registrationcode))
 
     def test_01c_create_token_with_key(self):
-        token = init_token({"type": "registration",
-                            "otpkey": "test_registration_key"})
+        token = init_token({"type": "registration", "otpkey": "test_registration_key"})
         init_detail = token.get_init_detail()
         registrationcode = init_detail.get("registrationcode")
         # the registrationcode should now equal the otpkey-param
@@ -79,4 +81,3 @@ class RegistrationTokenTestCase(MyTestCase):
         token.post_success()
         db_token = Token.query.filter(Token.serial == self.serial1).first()
         self.assertEqual(db_token, None)
-

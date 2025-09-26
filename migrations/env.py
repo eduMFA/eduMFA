@@ -1,8 +1,9 @@
+from logging.config import fileConfig
+from urllib.parse import quote
+
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 from sqlalchemy.engine.url import make_url
-from logging.config import fileConfig
-from urllib.parse import quote
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -21,22 +22,26 @@ from flask import current_app
 
 
 def set_database_url(config):
-    url = current_app.config.get('SQLALCHEMY_DATABASE_URI')
+    url = current_app.config.get("SQLALCHEMY_DATABASE_URI")
     try:
-        # In case of MySQL, add ``charset=utf8`` to the parameters (if no charset is set),
-        # because this is what Flask-SQLAlchemy does
+        # In case of MySQL, add "charset=utf8mb4" to the parameters (if no charset is set),
+        # because this is what Flask-SQLAlchemy does:
+        # https://github.com/pallets-eco/flask-sqlalchemy/blob/168cb4b7b50fe5176307a10d873781bfafc6eeda/src/flask_sqlalchemy/extension.py#L644-L645
         if url.startswith("mysql"):
             parsed_url = make_url(url)
-            parsed_url = parsed_url.update_query_dict({"charset": "utf8"})
+            if "charset" not in parsed_url.query:
+                parsed_url = parsed_url.update_query_dict({"charset": "utf8mb4"})
             url = parsed_url.render_as_string(hide_password=False)
     except Exception as exx:
-        print(u"Attempted to set charset=utf8 on connection, but failed: {}".format(exx))
+        print(
+            "Attempted to set charset=utf8mb4 on connection, but failed: {}".format(exx)
+        )
     # set_main_option() requires escaped "%" signs in the string
-    config.set_main_option('sqlalchemy.url', url.replace('%', '%%'))
+    config.set_main_option("sqlalchemy.url", url.replace("%", "%%"))
 
 
 set_database_url(config)
-target_metadata = current_app.extensions['migrate'].db.metadata
+target_metadata = current_app.extensions["migrate"].db.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -76,22 +81,22 @@ def run_migrations_online():
 
     if driver == "postgresql+psycopg2":
         engine = engine_from_config(
-                    config.get_section(config.config_ini_section),
-                    prefix='sqlalchemy.',
-                    isolation_level="AUTOCOMMIT",
-                    poolclass=pool.NullPool)
+            config.get_section(config.config_ini_section),
+            prefix="sqlalchemy.",
+            isolation_level="AUTOCOMMIT",
+            poolclass=pool.NullPool,
+        )
     else:
         engine = engine_from_config(
-                    config.get_section(config.config_ini_section),
-                    prefix='sqlalchemy.',
-                    poolclass=pool.NullPool)
+            config.get_section(config.config_ini_section),
+            prefix="sqlalchemy.",
+            poolclass=pool.NullPool,
+        )
 
     connection = engine.connect()
     context.configure(
-                connection=connection,
-                target_metadata=target_metadata,
-                compare_type=True
-                )
+        connection=connection, target_metadata=target_metadata, compare_type=True
+    )
 
     try:
         with context.begin_transaction():
