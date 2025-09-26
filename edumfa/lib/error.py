@@ -30,8 +30,9 @@
 contains Errors and Exceptions
 """
 
-from edumfa.lib import _
 import logging
+
+from edumfa.lib import _
 
 log = logging.getLogger(__name__)
 

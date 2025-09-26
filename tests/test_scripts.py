@@ -7,8 +7,8 @@ import unittest
 
 from edumfa.app import create_app
 from edumfa.commands.manage.main import cli as edumfa_manage
-from edumfa.models import db, EventHandler, Policy
 from edumfa.lib.auditmodules.sqlaudit import LogEntry
+from edumfa.models import EventHandler, Policy, db
 
 
 class ScriptsTestCase(unittest.TestCase):

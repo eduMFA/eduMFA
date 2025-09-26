@@ -32,28 +32,28 @@ forwards the authentication request to another RADIUS server.
 The code is tested in tests/test_lib_tokens_radius
 """
 
-import logging
-
-import traceback
 import binascii
-from edumfa.lib.utils import is_true, to_bytes, hexlify_and_unicode, to_unicode
-from edumfa.lib.tokens.remotetoken import RemoteTokenClass
-from edumfa.lib.tokenclass import TokenClass, TOKENKIND, AUTHENTICATIONMODE
-from edumfa.api.lib.utils import getParam, ParameterError
-from edumfa.lib.log import log_with
-from edumfa.lib.config import get_from_config
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.radiusserver import get_radius
-from edumfa.models import Challenge
-from edumfa.lib.challenge import get_challenges
-from edumfa.lib.policydecorators import challenge_response_allowed
+import logging
+import traceback
 
 import pyrad.packet
 from pyrad.client import Client, Timeout
 from pyrad.dictionary import Dictionary
-from pyrad.packet import AccessChallenge, AccessAccept, AccessReject
+from pyrad.packet import AccessAccept, AccessChallenge, AccessReject
+
+from edumfa.api.lib.utils import ParameterError, getParam
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.config import get_from_config
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.policydecorators import challenge_response_allowed
+from edumfa.lib.radiusserver import get_radius
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, TOKENKIND, TokenClass
+from edumfa.lib.tokens.remotetoken import RemoteTokenClass
+from edumfa.lib.utils import hexlify_and_unicode, is_true, to_bytes, to_unicode
+from edumfa.models import Challenge
 
 optional = True
 required = False

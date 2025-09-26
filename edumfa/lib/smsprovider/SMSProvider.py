@@ -32,13 +32,14 @@ and returns an instance.
 The code is tested in tests/test_lib_smsprovider
 """
 
-from edumfa.lib.error import ConfigAdminError
-from edumfa.models import SMSGateway, SMSGatewayOption
-from edumfa.lib.utils import fetch_one_resource, get_module_class
-from edumfa.lib.utils.export import register_import, register_export
-from edumfa.lib import _
-import re
 import logging
+import re
+
+from edumfa.lib import _
+from edumfa.lib.error import ConfigAdminError
+from edumfa.lib.utils import fetch_one_resource, get_module_class
+from edumfa.lib.utils.export import register_export, register_import
+from edumfa.models import SMSGateway, SMSGatewayOption
 
 log = logging.getLogger(__name__)
 

@@ -17,19 +17,20 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+import datetime
 import logging
 import time
-import datetime
-from edumfa.lib.tokens.HMAC import HmacOtp
+
+from edumfa.lib import _
 from edumfa.lib.config import get_from_config
-from edumfa.lib.log import log_with
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.policy import ACTION, SCOPE, GROUP, Match
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE, Match
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.tokens.HMAC import HmacOtp
+from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.tokens.totptoken import TotpTokenClass
 from edumfa.lib.utils import determine_logged_in_userparams, parse_time_sec_int
-from edumfa.lib import _
 
 log = logging.getLogger(__name__)
 

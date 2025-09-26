@@ -2,38 +2,40 @@
 This test file tests the lib.tokens.certificatetoken
 """
 
-from .base import MyTestCase, FakeFlaskG, FakeAudit
-from edumfa.models import Token
-from edumfa.lib.caconnector import save_caconnector
-from edumfa.lib.token import get_tokens, remove_token
-from edumfa.lib.error import ParameterError, eduMFAError
-from edumfa.lib.utils import int_to_hex
-from edumfa.lib.tokens.certificatetoken import (
-    parse_chainfile,
-    verify_certificate_path,
-    ACTION,
-    CertificateTokenClass,
-)
-from edumfa.lib.policy import set_policy, delete_policy, PolicyClass, SCOPE
 import os
 import unittest
+
 import mock
 from OpenSSL import crypto
+
+from edumfa.lib.caconnector import save_caconnector
 from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
-from edumfa.lib.caconnectors.msca import MSCAConnector
-from .mscamock import (
-    MyTemplateReply,
-    MyCAReply,
-    MyCSRReply,
-    MyCertReply,
-    MyCertificateReply,
-    MyCSRStatusReply,
-    CAServiceMock,
-)
 from edumfa.lib.caconnectors.msca import ATTR as MS_ATTR
-from edumfa.lib.token import init_token
+from edumfa.lib.caconnectors.msca import MSCAConnector
+from edumfa.lib.error import ParameterError, eduMFAError
+from edumfa.lib.policy import SCOPE, PolicyClass, delete_policy, set_policy
+from edumfa.lib.token import get_tokens, init_token, remove_token
 from edumfa.lib.tokenclass import ROLLOUTSTATE
+from edumfa.lib.tokens.certificatetoken import (
+    ACTION,
+    CertificateTokenClass,
+    parse_chainfile,
+    verify_certificate_path,
+)
 from edumfa.lib.user import User
+from edumfa.lib.utils import int_to_hex
+from edumfa.models import Token
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
+from .mscamock import (
+    CAServiceMock,
+    MyCAReply,
+    MyCertificateReply,
+    MyCertReply,
+    MyCSRReply,
+    MyCSRStatusReply,
+    MyTemplateReply,
+)
 
 CERT = """-----BEGIN CERTIFICATE-----
 MIIGXDCCBUSgAwIBAgITYwAAAA27DqXl0fVdOAAAAAAADTANBgkqhkiG9w0BAQsF

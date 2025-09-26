@@ -27,21 +27,23 @@ It only provides the method
 
   GET /audit
 """
-from flask import Blueprint, request, current_app, stream_with_context
-from .lib.utils import send_result, send_file
-from ..api.lib.prepolicy import (
-    prepolicy,
-    check_base_action,
-    auditlog_age,
-    allowed_audit_realm,
-    hide_audit_columns,
-)
-from ..api.auth import admin_required
-from ..lib.policy import ACTION
-from flask import g
 import logging
-from ..lib.audit import search, getAudit
+
+from flask import Blueprint, current_app, g, request, stream_with_context
+
 from edumfa.lib.utils import parse_timedelta
+
+from ..api.auth import admin_required
+from ..api.lib.prepolicy import (
+    allowed_audit_realm,
+    auditlog_age,
+    check_base_action,
+    hide_audit_columns,
+    prepolicy,
+)
+from ..lib.audit import getAudit, search
+from ..lib.policy import ACTION
+from .lib.utils import send_file, send_result
 
 log = logging.getLogger(__name__)
 

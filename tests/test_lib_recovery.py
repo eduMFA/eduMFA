@@ -3,20 +3,21 @@
 This test file tests the lib/passwordreset.py
 """
 
-from .base import MyTestCase, FakeFlaskG
-from edumfa.lib.smtpserver import add_smtpserver
-from . import smtpmock
+from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.error import eduMFAError
 from edumfa.lib.passwordreset import (
-    create_recoverycode,
     check_recoverycode,
+    create_recoverycode,
     is_password_reset,
 )
-from edumfa.lib.config import set_edumfa_config
-from edumfa.lib.user import User
-from edumfa.lib.resolver import save_resolver
+from edumfa.lib.policy import ACTION, SCOPE, PolicyClass, set_policy
 from edumfa.lib.realm import set_realm
-from edumfa.lib.policy import ACTION, SCOPE, set_policy, PolicyClass
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.smtpserver import add_smtpserver
+from edumfa.lib.user import User
+
+from . import smtpmock
+from .base import FakeFlaskG, MyTestCase
 
 
 class RecoveryTestCase(MyTestCase):

@@ -35,31 +35,32 @@ This code is tested in tests/test_lib_tokens_sms
 """
 
 import datetime
+import logging
 import traceback
+from json import loads
 
-from edumfa.api.lib.utils import getParam
-from edumfa.api.lib.utils import required, optional
-from edumfa.lib.utils import is_true, create_tag_dict
-
+from edumfa.api.lib.utils import getParam, optional, required
+from edumfa.lib import _
 from edumfa.lib.config import get_from_config
-from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
-from edumfa.lib.log import log_with
-from edumfa.lib.policy import Match
 from edumfa.lib.crypto import safe_compare
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import (
+    ACTION,
+    GROUP,
+    SCOPE,
+    Match,
+    get_action_values_from_options,
+)
 from edumfa.lib.smsprovider.SMSProvider import (
-    get_sms_provider_class,
     create_sms_instance,
+    get_sms_provider_class,
     get_smsgateway,
 )
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, CHALLENGE_SESSION
 from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE, HotpTokenClass
-from json import loads
-from edumfa.lib import _
-
-from edumfa.lib.tokenclass import CHALLENGE_SESSION, AUTHENTICATIONMODE
+from edumfa.lib.utils import create_tag_dict, is_true
 from edumfa.models import Challenge
-from edumfa.lib.decorators import check_token_locked
-import logging
-
 
 log = logging.getLogger(__name__)
 

@@ -38,84 +38,85 @@ try:
     from OpenSSL import crypto
 except AttributeError as e:
     pass
-from edumfa.lib import _
-from edumfa.lib.error import (
-    PolicyError,
-    RegistrationError,
-    TokenAdminError,
-    ResourceNotFoundError,
-    ParameterError,
-)
-from flask import g, current_app
-from edumfa.lib.policy import SCOPE, ACTION, REMOTE_USER
-from edumfa.lib.policy import Match, check_pin
-from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
-from edumfa.lib.user import get_user_from_param, get_default_realm, split_user, User
-from edumfa.lib.token import (
-    get_tokens,
-    get_realms_of_token,
-    get_token_type,
-    get_token_owner,
-)
-from edumfa.lib.utils import (
-    parse_timedelta,
-    is_true,
-    generate_charlists_from_pin_policy,
-    get_module_class,
-    determine_logged_in_userparams,
-    parse_string_to_dict,
-)
-from edumfa.lib.crypto import generate_password
-from edumfa.lib.auth import ROLE
-from edumfa.api.lib.utils import getParam, attestation_certificate_allowed, is_fqdn
+import functools
+import importlib
+import re
+
+import jwt
+from flask import current_app, g
+
 from edumfa.api.lib.policyhelper import (
     get_init_tokenlabel_parameters,
-    get_pushtoken_add_config,
     get_legacypushtoken_add_config,
+    get_pushtoken_add_config,
 )
+from edumfa.api.lib.utils import attestation_certificate_allowed, getParam, is_fqdn
+from edumfa.lib import _
+from edumfa.lib.auth import ROLE
 from edumfa.lib.clientapplication import save_clientapplication
 from edumfa.lib.config import get_token_class
+from edumfa.lib.crypto import generate_password
+from edumfa.lib.error import (
+    ParameterError,
+    PolicyError,
+    RegistrationError,
+    ResourceNotFoundError,
+    TokenAdminError,
+)
+from edumfa.lib.policy import ACTION, REMOTE_USER, SCOPE, Match, check_pin
+from edumfa.lib.token import (
+    get_one_token,
+    get_realms_of_token,
+    get_token_owner,
+    get_token_type,
+    get_tokens,
+)
 from edumfa.lib.tokenclass import ROLLOUTSTATE
 from edumfa.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
-from edumfa.lib.token import get_one_token
-import functools
-import jwt
-import re
-import importlib
+from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
+from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+from edumfa.lib.tokens.pushtoken import PushTokenClass
+from edumfa.lib.tokens.u2f import x509name_to_string
+from edumfa.lib.tokens.u2ftoken import U2FACTION, parse_registration_data
 
 # Token specific imports!
 from edumfa.lib.tokens.webauthn import (
-    WebAuthnRegistrationResponse,
-    AUTHENTICATOR_ATTACHMENT_TYPES,
-    USER_VERIFICATION_LEVELS,
-    ATTESTATION_LEVELS,
     ATTESTATION_FORMS,
+    ATTESTATION_LEVELS,
+    AUTHENTICATOR_ATTACHMENT_TYPES,
     RESIDENT_KEY_LEVELS,
+    USER_VERIFICATION_LEVELS,
     USERNAMELESS_AUTHN,
     USERNAMELESS_REALM_POLICY,
+    WebAuthnRegistrationResponse,
 )
 from edumfa.lib.tokens.webauthntoken import (
-    WEBAUTHNACTION,
-    DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE,
-    PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
-    PUBKEY_CRED_ALGORITHMS_ORDER,
-    DEFAULT_TIMEOUT,
     DEFAULT_ALLOWED_TRANSPORTS,
-    DEFAULT_USER_VERIFICATION_REQUIREMENT,
-    DEFAULT_AUTHENTICATOR_ATTESTATION_LEVEL,
     DEFAULT_AUTHENTICATOR_ATTESTATION_FORM,
-    DEFAULT_RESIDENT_KEY_LEVEL,
-    DEFAULT_USERNAMELESS_AUTHN,
-    DEFAULT_USERNAMELESS_REALM_POLICY,
-    WebAuthnTokenClass,
+    DEFAULT_AUTHENTICATOR_ATTESTATION_LEVEL,
     DEFAULT_CHALLENGE_TEXT_AUTH,
     DEFAULT_CHALLENGE_TEXT_ENROLL,
+    DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE,
+    DEFAULT_RESIDENT_KEY_LEVEL,
+    DEFAULT_TIMEOUT,
+    DEFAULT_USER_VERIFICATION_REQUIREMENT,
+    DEFAULT_USERNAMELESS_AUTHN,
+    DEFAULT_USERNAMELESS_REALM_POLICY,
+    PUBKEY_CRED_ALGORITHMS_ORDER,
+    PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
+    WEBAUTHNACTION,
+    WebAuthnTokenClass,
     is_webauthn_assertion_response,
 )
-from edumfa.lib.tokens.u2ftoken import U2FACTION, parse_registration_data
-from edumfa.lib.tokens.u2f import x509name_to_string
-from edumfa.lib.tokens.pushtoken import PushTokenClass
-from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
+from edumfa.lib.user import User, get_default_realm, get_user_from_param, split_user
+from edumfa.lib.utils import (
+    determine_logged_in_userparams,
+    generate_charlists_from_pin_policy,
+    get_module_class,
+    is_true,
+    parse_string_to_dict,
+    parse_timedelta,
+)
 
 log = logging.getLogger(__name__)
 
@@ -571,12 +572,12 @@ def init_token_length_contents(request=None, action=None):
     tokentype = params.get("type")
 
     if tokentype == "registration":
-        from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
+        from edumfa.lib.tokens.registrationtoken import DEFAULT_CONTENTS, DEFAULT_LENGTH
 
         length_action = ACTION.REGISTRATIONCODE_LENGTH
         contents_action = ACTION.REGISTRATIONCODE_CONTENTS
     elif tokentype == "pw":
-        from edumfa.lib.tokens.passwordtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
+        from edumfa.lib.tokens.passwordtoken import DEFAULT_CONTENTS, DEFAULT_LENGTH
 
         length_action = ACTION.PASSWORD_LENGTH
         contents_action = ACTION.PASSWORD_CONTENTS

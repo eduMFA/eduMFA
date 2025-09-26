@@ -28,55 +28,58 @@ and send it back to the authentication endpoint.
 This code is tested in tests/test_lib_tokens_push
 """
 
+import logging
+import time
+import traceback
 from base64 import b32decode
 from binascii import Error as BinasciiError
-from urllib.parse import quote
 from datetime import datetime, timedelta
-from pytz import utc
-from dateutil.parser import isoparse
-import traceback
+from urllib.parse import quote
 
-from edumfa.api.lib.utils import getParam
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec, padding
+from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
+from dateutil.parser import isoparse
+from pytz import utc
+
 from edumfa.api.lib.policyhelper import get_pushtoken_add_config
-from edumfa.lib.token import get_one_token, init_token
-from edumfa.lib.utils import prepare_result, to_bytes, is_true
+from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
+from edumfa.lib.apps import _construct_extra_parameters
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import generate_keypair, geturandom
+from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.error import (
+    ConfigAdminError,
+    ParameterError,
+    PolicyError,
     ResourceNotFoundError,
     ValidateError,
     eduMFAError,
-    ConfigAdminError,
-    PolicyError,
 )
-
-from edumfa.lib.config import get_from_config
-from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
 from edumfa.lib.log import log_with
-from edumfa.lib import _
-
+from edumfa.lib.policy import ACTION, GROUP, SCOPE, get_action_values_from_options
+from edumfa.lib.smsprovider.SMSProvider import create_sms_instance, get_smsgateway
+from edumfa.lib.token import get_one_token, init_token
 from edumfa.lib.tokenclass import (
-    TokenClass,
     AUTHENTICATIONMODE,
+    CHALLENGE_SESSION,
     CLIENTMODE,
     ROLLOUTSTATE,
-    CHALLENGE_SESSION,
+    TokenClass,
+)
+from edumfa.lib.user import User
+from edumfa.lib.utils import (
+    b32encode_and_unicode,
+    create_img,
+    is_true,
+    prepare_result,
+    to_bytes,
 )
 from edumfa.models import Challenge, db
-from edumfa.lib.decorators import check_token_locked
-import logging
-from edumfa.lib.utils import create_img, b32encode_and_unicode
-from edumfa.lib.error import ParameterError
-from edumfa.lib.user import User
-from edumfa.lib.apps import _construct_extra_parameters
-from edumfa.lib.crypto import geturandom, generate_keypair
-from edumfa.lib.smsprovider.SMSProvider import get_smsgateway, create_sms_instance
-from edumfa.lib.challenge import get_challenges
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding, ec
-from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
-from cryptography.exceptions import InvalidSignature
-import time
 
 log = logging.getLogger(__name__)
 

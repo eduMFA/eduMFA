@@ -24,35 +24,35 @@
 #
 __doc__ = """This is the event handler module modifying request parameters.
 """
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib.token import (
-    get_token_types,
-    set_validity_period_end,
-    set_validity_period_start,
-)
-from edumfa.lib.realm import get_realms
-from edumfa.lib.token import (
-    set_realms,
-    remove_token,
-    enable_token,
-    unassign_token,
-    init_token,
-    set_description,
-    set_count_window,
-    add_tokeninfo,
-    set_failcounter,
-    delete_tokeninfo,
-)
-from edumfa.lib.utils import parse_date, is_true, parse_time_offset_from_now
-from edumfa.lib.tokenclass import DATE_FORMAT, AUTH_DATE_FORMAT
-from edumfa.lib import _
+import datetime
 import json
 import logging
 import re
-import datetime
+
 import yaml
 from dateutil.parser import parse as parse_date_string
 from dateutil.tz import tzlocal
+
+from edumfa.lib import _
+from edumfa.lib.eventhandler.base import BaseEventHandler
+from edumfa.lib.realm import get_realms
+from edumfa.lib.token import (
+    add_tokeninfo,
+    delete_tokeninfo,
+    enable_token,
+    get_token_types,
+    init_token,
+    remove_token,
+    set_count_window,
+    set_description,
+    set_failcounter,
+    set_realms,
+    set_validity_period_end,
+    set_validity_period_start,
+    unassign_token,
+)
+from edumfa.lib.tokenclass import AUTH_DATE_FORMAT, DATE_FORMAT
+from edumfa.lib.utils import is_true, parse_date, parse_time_offset_from_now
 
 log = logging.getLogger(__name__)
 

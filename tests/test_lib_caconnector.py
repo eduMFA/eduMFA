@@ -3,38 +3,39 @@ This test file tests the lib.caconnector.py and
 lib.caconnectors.localca.py
 """
 
-import unittest
-
-import OpenSSL.crypto
-
-from .base import MyTestCase
-import os
 import glob
+import os
 import shutil
-import mock
+import unittest
 from io import StringIO
-from mock import patch
-from edumfa.lib.caconnectors.localca import LocalCAConnector, ATTR
-from edumfa.lib.caconnectors.msca import MSCAConnector, ATTR as MS_ATTR
-from OpenSSL import crypto
+
+import mock
+import OpenSSL.crypto
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
-from edumfa.lib.utils import int_to_hex, to_unicode
-from edumfa.lib.error import CAError, CSRError, CSRPending
+from mock import patch
+from OpenSSL import crypto
+
 from edumfa.lib.caconnector import (
-    get_caconnector_list,
+    delete_caconnector,
     get_caconnector_class,
     get_caconnector_config,
     get_caconnector_config_description,
+    get_caconnector_list,
     get_caconnector_object,
     get_caconnector_type,
     get_caconnector_types,
     save_caconnector,
-    delete_caconnector,
 )
 from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
-from .mscamock import CAServiceMock
+from edumfa.lib.caconnectors.localca import ATTR, LocalCAConnector
+from edumfa.lib.caconnectors.msca import ATTR as MS_ATTR
+from edumfa.lib.caconnectors.msca import MSCAConnector
+from edumfa.lib.error import CAError, CSRError, CSRPending
+from edumfa.lib.utils import int_to_hex, to_unicode
 
+from .base import MyTestCase
+from .mscamock import CAServiceMock
 
 CAKEY = "cakey.pem"
 CACERT = "cacert.pem"

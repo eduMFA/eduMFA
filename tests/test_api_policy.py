@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from .base import MyApiTestCase
 from edumfa.lib.policy import (
-    set_policy,
-    SCOPE,
     ACTION,
-    delete_policy,
     CONDITION_SECTION,
+    SCOPE,
+    delete_policy,
+    set_policy,
 )
 from edumfa.lib.token import remove_token
+
+from .base import MyApiTestCase
 
 
 class APIPolicyTestCase(MyApiTestCase):

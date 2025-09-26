@@ -3,63 +3,65 @@
 This tests the package lib.utils
 """
 
-from .base import MyTestCase
-
-from edumfa.lib.utils import (
-    parse_timelimit,
-    check_time_in_range,
-    parse_proxy,
-    check_proxy,
-    reduce_realms,
-    is_true,
-    parse_date,
-    compare_condition,
-    get_data_from_params,
-    parse_legacy_time,
-    int_to_hex,
-    compare_value_value,
-    compare_generic_condition,
-    parse_time_offset_from_now,
-    censor_connect_string,
-    parse_timedelta,
-    to_unicode,
-    parse_int,
-    convert_column_to_unicode,
-    truncate_comma_list,
-    check_pin_contents,
-    CHARLIST_CONTENTPOLICY,
-    get_module_class,
-    decode_base32check,
-    get_client_ip,
-    sanity_name_check,
-    to_utf8,
-    to_byte_string,
-    hexlify_and_unicode,
-    b32encode_and_unicode,
-    to_bytes,
-    b64encode_and_unicode,
-    create_img,
-    convert_timestamp_to_utc,
-    modhex_encode,
-    modhex_decode,
-    checksum,
-    urlsafe_b64encode_and_unicode,
-    check_ip_in_policy,
-    split_pin_pass,
-    create_tag_dict,
-    check_serial_valid,
-    determine_logged_in_userparams,
-    to_list,
-    parse_string_to_dict,
-    convert_imagefile_to_dataimage,
-)
-from edumfa.lib.crypto import generate_password
-from datetime import timedelta, datetime
-from netaddr import IPAddress, IPNetwork, AddrFormatError
-from dateutil.tz import tzlocal, tzoffset, gettz
-from edumfa.lib.tokenclass import DATE_FORMAT
-from edumfa.lib.error import PolicyError
 import binascii
+from datetime import datetime, timedelta
+
+from dateutil.tz import gettz, tzlocal, tzoffset
+from netaddr import AddrFormatError, IPAddress, IPNetwork
+
+from edumfa.lib.crypto import generate_password
+from edumfa.lib.error import PolicyError
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.utils import (
+    CHARLIST_CONTENTPOLICY,
+    b32encode_and_unicode,
+    b64encode_and_unicode,
+    censor_connect_string,
+    check_ip_in_policy,
+    check_pin_contents,
+    check_proxy,
+    check_serial_valid,
+    check_time_in_range,
+    checksum,
+    compare_condition,
+    compare_generic_condition,
+    compare_value_value,
+    convert_column_to_unicode,
+    convert_imagefile_to_dataimage,
+    convert_timestamp_to_utc,
+    create_img,
+    create_tag_dict,
+    decode_base32check,
+    determine_logged_in_userparams,
+    get_client_ip,
+    get_data_from_params,
+    get_module_class,
+    hexlify_and_unicode,
+    int_to_hex,
+    is_true,
+    modhex_decode,
+    modhex_encode,
+    parse_date,
+    parse_int,
+    parse_legacy_time,
+    parse_proxy,
+    parse_string_to_dict,
+    parse_time_offset_from_now,
+    parse_timedelta,
+    parse_timelimit,
+    reduce_realms,
+    sanity_name_check,
+    split_pin_pass,
+    to_byte_string,
+    to_bytes,
+    to_list,
+    to_unicode,
+    to_utf8,
+    truncate_comma_list,
+    urlsafe_b64encode_and_unicode,
+)
+
+from .base import MyTestCase
 
 
 class UtilsTestCase(MyTestCase):

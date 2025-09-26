@@ -28,18 +28,19 @@ Other html code is dynamically loaded via angularJS and located in
 """
 __author__ = "Cornelius Kölbel <cornelius@privacyidea.org>"
 
-from flask import Blueprint, render_template, request, current_app, g
-from edumfa.api.lib.utils import send_html
+from flask import Blueprint, current_app, g, render_template, request
+
 from edumfa.api.lib.prepolicy import is_remote_user_allowed
+from edumfa.api.lib.utils import send_html
+from edumfa.lib.config import SYSCONF, get_edumfa_node, get_from_config
+from edumfa.lib.error import HSMException
 from edumfa.lib.framework import get_app_config_value
 from edumfa.lib.passwordreset import is_password_reset
-from edumfa.lib.error import HSMException
+from edumfa.lib.policy import ACTION, REMOTE_USER, SCOPE, Match, PolicyClass
+from edumfa.lib.queue import has_job_queue
 from edumfa.lib.realm import get_realms
-from edumfa.lib.policy import PolicyClass, ACTION, SCOPE, Match, REMOTE_USER
 from edumfa.lib.subscriptions import subscription_status
 from edumfa.lib.utils import get_client_ip
-from edumfa.lib.config import get_from_config, SYSCONF, get_edumfa_node
-from edumfa.lib.queue import has_job_queue
 
 DEFAULT_THEME = "/static/contrib/css/bootstrap-theme.css"
 # note: the comment in the following line allows to include it in the docs

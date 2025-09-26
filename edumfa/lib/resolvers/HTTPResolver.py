@@ -25,12 +25,14 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from .UserIdResolver import UserIdResolver
-import requests
-import logging
 import json
+import logging
 from urllib.parse import urlencode
+
+import requests
 from pydash import get
+
+from .UserIdResolver import UserIdResolver
 
 ENCODING = "utf-8"
 

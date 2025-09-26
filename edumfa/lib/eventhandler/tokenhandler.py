@@ -33,44 +33,44 @@ You can attach token actions like enable, disable, delete, unassign,... of the
  * ...
 """
 
+import datetime
+import json
+import logging
+
+import yaml
+from dateutil.tz import tzlocal
+
 from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
+from edumfa.lib.crypto import generate_password
 from edumfa.lib.eventhandler.base import BaseEventHandler
 from edumfa.lib.machine import attach_token
+from edumfa.lib.realm import get_realms
+from edumfa.lib.smsprovider.SMSProvider import get_smsgateway
+from edumfa.lib.smtpserver import get_smtpservers
 from edumfa.lib.token import (
+    add_tokeninfo,
+    assign_tokengroup,
+    delete_tokeninfo,
+    enable_token,
+    get_one_token,
     get_token_types,
+    init_token,
+    remove_token,
+    set_count_window,
+    set_description,
+    set_failcounter,
+    set_max_failcount,
+    set_pin,
+    set_realms,
     set_validity_period_end,
     set_validity_period_start,
-    set_pin,
-)
-from edumfa.lib.crypto import generate_password
-from edumfa.lib.realm import get_realms
-from edumfa.lib.token import (
-    set_realms,
-    remove_token,
-    enable_token,
     unassign_token,
-    init_token,
-    set_description,
-    set_count_window,
-    add_tokeninfo,
-    set_failcounter,
-    delete_tokeninfo,
-    get_one_token,
-    set_max_failcount,
-    assign_tokengroup,
     unassign_tokengroup,
 )
-from edumfa.lib.utils import parse_date, is_true, parse_time_offset_from_now
-from edumfa.lib.tokenclass import DATE_FORMAT, AUTH_DATE_FORMAT
-from edumfa.lib.smtpserver import get_smtpservers
-from edumfa.lib.smsprovider.SMSProvider import get_smsgateway
+from edumfa.lib.tokenclass import AUTH_DATE_FORMAT, DATE_FORMAT
 from edumfa.lib.tokengroup import get_tokengroups
-from edumfa.lib import _
-import logging
-import datetime
-import yaml
-import json
-from dateutil.tz import tzlocal
+from edumfa.lib.utils import is_true, parse_date, parse_time_offset_from_now
 
 log = logging.getLogger(__name__)
 

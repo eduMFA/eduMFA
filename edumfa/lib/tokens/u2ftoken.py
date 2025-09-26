@@ -20,37 +20,43 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.api.lib.utils import getParam, attestation_certificate_allowed
-from edumfa.lib.config import get_from_config
-from edumfa.lib.tokenclass import TokenClass, CLIENTMODE, ROLLOUTSTATE
-from edumfa.lib.token import get_tokens
-from edumfa.lib.log import log_with
-import logging
-from edumfa.models import Challenge
-from edumfa.lib import _
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.crypto import geturandom
-from edumfa.lib.tokens.u2f import (
-    check_registration_data,
-    url_decode,
-    parse_registration_data,
-    url_encode,
-    parse_response_data,
-    check_response,
-    x509name_to_string,
-)
-from edumfa.lib.error import ValidateError, PolicyError, ParameterError
-from edumfa.lib.policy import SCOPE, GROUP, ACTION, get_action_values_from_options
-from edumfa.lib.policy import Match
-from edumfa.lib.challenge import get_challenges
-from edumfa.lib.utils import (
-    is_true,
-    hexlify_and_unicode,
-    to_unicode,
-    convert_imagefile_to_dataimage,
-)
 import binascii
 import json
+import logging
+
+from edumfa.api.lib.utils import attestation_certificate_allowed, getParam
+from edumfa.lib import _
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import geturandom
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.error import ParameterError, PolicyError, ValidateError
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import (
+    ACTION,
+    GROUP,
+    SCOPE,
+    Match,
+    get_action_values_from_options,
+)
+from edumfa.lib.token import get_tokens
+from edumfa.lib.tokenclass import CLIENTMODE, ROLLOUTSTATE, TokenClass
+from edumfa.lib.tokens.u2f import (
+    check_registration_data,
+    check_response,
+    parse_registration_data,
+    parse_response_data,
+    url_decode,
+    url_encode,
+    x509name_to_string,
+)
+from edumfa.lib.utils import (
+    convert_imagefile_to_dataimage,
+    hexlify_and_unicode,
+    is_true,
+    to_unicode,
+)
+from edumfa.models import Challenge
 
 __doc__ = """
 U2F is the "Universal 2nd Factor" specified by the FIDO Alliance.

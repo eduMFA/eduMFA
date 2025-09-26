@@ -10,11 +10,11 @@ Create Date: 2020-06-15 09:18:43.855589
 revision = "e360c56bcf8c"
 down_revision = "a7e91b18a460"
 
-from alembic import op, context
 import sqlalchemy as sa
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.schema import Sequence, CreateSequence
+from alembic import context, op
 from sqlalchemy import orm
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.schema import CreateSequence, Sequence
 
 Base = declarative_base()
 

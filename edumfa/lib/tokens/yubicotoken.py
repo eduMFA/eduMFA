@@ -33,21 +33,23 @@ Authentication requests are forwarded to the Yubico Cloud service YubiCloud.
 The code is tested in tests/test_lib_tokens_yubico
 """
 import logging
-from edumfa.lib.decorators import check_token_locked
 import traceback
-import requests
-from edumfa.api.lib.utils import getParam
-from edumfa.lib.crypto import geturandom
-from edumfa.lib.config import get_from_config
-from edumfa.lib.log import log_with
-from edumfa.lib.tokenclass import TokenClass, TOKENKIND
-from edumfa.lib.tokens.yubikeytoken import (
-    yubico_check_api_signature,
-    yubico_api_signature,
-)
 from urllib.parse import urlencode
+
+import requests
+
+from edumfa.api.lib.utils import getParam
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import geturandom
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import TOKENKIND, TokenClass
+from edumfa.lib.tokens.yubikeytoken import (
+    yubico_api_signature,
+    yubico_check_api_signature,
+)
 
 YUBICO_LEN_ID = 12
 YUBICO_LEN_OTP = 44

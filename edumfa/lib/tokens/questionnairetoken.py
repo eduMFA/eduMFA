@@ -26,21 +26,22 @@ user is asked one of these questions and can respond with the corresponding
 answer.
 """
 
-from edumfa.api.lib.utils import getParam
-from edumfa.lib.config import get_from_config
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.log import log_with
-from edumfa.lib.error import TokenAdminError
-import logging
-from edumfa.models import Challenge
-from edumfa.lib.challenge import get_challenges
-from edumfa.lib import _
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
-from edumfa.lib.crypto import safe_compare
-import secrets
-import json
 import datetime
+import json
+import logging
+import secrets
+
+from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import safe_compare
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.error import TokenAdminError
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE, get_action_values_from_options
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.models import Challenge
 
 log = logging.getLogger(__name__)
 optional = True

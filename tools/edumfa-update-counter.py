@@ -16,11 +16,13 @@ You can update counters like
 edumfa-export-linotp-counter.py -c MIGRATION/linotp.ini  | ./tools/edumfa-update-counter.py -c /etc/edumfa/edumfa.cfg -i -
 """
 
-from edumfa.models import Token
 import argparse
 import sys
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from edumfa.models import Token
 
 
 def get_edumfa_uri(config_file):

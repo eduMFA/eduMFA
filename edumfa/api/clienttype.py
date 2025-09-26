@@ -27,14 +27,15 @@ eduMFA authentication clients, which used eduMFA to authenticate.
 
   GET /clients
 """
-from flask import Blueprint, request
-from .lib.utils import send_result, getParam
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from ..api.auth import admin_required
-from ..lib.policy import ACTION
-from flask import g
 import logging
+
+from flask import Blueprint, g, request
+
+from ..api.auth import admin_required
+from ..api.lib.prepolicy import check_base_action, prepolicy
 from ..lib.clientapplication import get_clientapplication
+from ..lib.policy import ACTION
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 

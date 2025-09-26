@@ -6,10 +6,9 @@
 __doc__ = """Read a file containing serials and base32 encoded secrets and converting it to hex."""
 
 import argparse
-import sys
-import binascii
 import base64
-
+import binascii
+import sys
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument(

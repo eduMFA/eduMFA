@@ -28,12 +28,12 @@ The code is tested in test_lib_tokens_registration.py.
 
 import logging
 
-from edumfa.lib.utils import to_unicode
-from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
-from edumfa.lib.log import log_with
-from edumfa.lib.decorators import check_token_locked
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
+from edumfa.lib.utils import to_unicode
 
 # We use the old default length of 24 for registration tokens
 DEFAULT_LENGTH = 24

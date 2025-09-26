@@ -31,18 +31,20 @@ described in motp.sourceforge.net.
 
 The code is tested in tests/test_lib_tokens_motp
 """
-from .mOTP import mTimeOtp
-from edumfa.lib.apps import create_motp_url
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.log import log_with
-from edumfa.lib.utils import create_img, is_true
+import logging
+import traceback
+
 from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
+from edumfa.lib.apps import create_motp_url
 from edumfa.lib.crypto import generate_otpkey
 from edumfa.lib.decorators import check_token_locked
-import traceback
-import logging
-from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.utils import create_img, is_true
+
+from .mOTP import mTimeOtp
 
 optional = True
 required = False

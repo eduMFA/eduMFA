@@ -2,13 +2,15 @@
 This test file tests the lib.clientapplicaton.py
 """
 
-import mock
-from datetime import datetime, timedelta
 from contextlib import contextmanager
+from datetime import datetime, timedelta
 
-from edumfa.models import ClientApplication
-from .base import MyTestCase
+import mock
+
 from edumfa.lib.clientapplication import get_clientapplication, save_clientapplication
+from edumfa.models import ClientApplication
+
+from .base import MyTestCase
 
 
 class ClientApplicationTestCase(MyTestCase):

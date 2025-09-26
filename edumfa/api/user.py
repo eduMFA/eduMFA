@@ -22,24 +22,23 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from flask import Blueprint, request
-from .lib.utils import getParam, send_result
-from ..api.lib.prepolicy import (
-    prepolicy,
-    check_base_action,
-    realmadmin,
-    check_custom_user_attributes,
-)
-from ..lib.policy import ACTION, get_allowed_custom_attributes
-from edumfa.api.auth import admin_required, user_required
-from edumfa.lib.user import create_user, User, is_attribute_at_all
-from edumfa.lib.event import event
-
-
-from flask import g
-from ..lib.user import get_user_list
 import logging
 
+from flask import Blueprint, g, request
+
+from edumfa.api.auth import admin_required, user_required
+from edumfa.lib.event import event
+from edumfa.lib.user import User, create_user, is_attribute_at_all
+
+from ..api.lib.prepolicy import (
+    check_base_action,
+    check_custom_user_attributes,
+    prepolicy,
+    realmadmin,
+)
+from ..lib.policy import ACTION, get_allowed_custom_attributes
+from ..lib.user import get_user_list
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 

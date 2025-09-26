@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from .base import MyApiTestCase
 import json
+
 import responses
+
+from .base import MyApiTestCase
 
 
 class eduMFAServerTestCase(MyApiTestCase):

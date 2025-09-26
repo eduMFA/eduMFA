@@ -1,55 +1,54 @@
 # -*- coding: utf-8 -*-
-from flask import Request
-from werkzeug.test import EnvironBuilder
+import json
+import time
+from base64 import b32decode, b32encode
 from datetime import datetime, timedelta
-from pytz import utc
+from threading import Timer
 
-from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
-from .base import MyTestCase, FakeFlaskG
-from edumfa.lib.error import ParameterError, eduMFAError, PolicyError
-from edumfa.lib.user import User
-from edumfa.lib.framework import get_app_local_store
-from edumfa.lib.tokens.pushtoken import (
-    PushTokenClass,
-    DEFAULT_CHALLENGE_TEXT,
-    strip_key,
-    PUBLIC_KEY_SMARTPHONE,
-    PRIVATE_KEY_SERVER,
-    PUBLIC_KEY_SERVER,
-    PushAllowPolling,
-    POLLING_ALLOWED,
-    POLL_ONLY,
-)
-from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
-from edumfa.lib.token import get_tokens, remove_token, init_token
+import mock
+import responses
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPublicKey
+from cryptography.hazmat.primitives.serialization import load_pem_public_key
+from flask import Request
+from google.oauth2 import service_account
+from pytz import utc
+from werkzeug.test import EnvironBuilder
+
 from edumfa.lib.challenge import get_challenges
 from edumfa.lib.crypto import geturandom
-from edumfa.models import Token, Challenge
+from edumfa.lib.error import ConfigAdminError, ParameterError, PolicyError, eduMFAError
+from edumfa.lib.framework import get_app_local_store
 from edumfa.lib.policy import (
-    SCOPE,
-    set_policy,
-    delete_policy,
     ACTION,
     LOGINMODE,
+    SCOPE,
     PolicyClass,
+    delete_policy,
+    set_policy,
 )
-from edumfa.lib.utils import to_bytes, b32encode_and_unicode, to_unicode
-from edumfa.lib.smsprovider.SMSProvider import set_smsgateway, delete_smsgateway
-from edumfa.lib.error import ConfigAdminError
-from base64 import b32decode, b32encode
-import json
-import responses
-import mock
-from cryptography.hazmat.primitives.serialization import load_pem_public_key
-from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey, RSAPrivateKey
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
-from google.oauth2 import service_account
-from threading import Timer
-import time
+from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
+from edumfa.lib.smsprovider.SMSProvider import delete_smsgateway, set_smsgateway
+from edumfa.lib.token import get_tokens, init_token, remove_token
+from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+from edumfa.lib.tokens.pushtoken import (
+    DEFAULT_CHALLENGE_TEXT,
+    POLL_ONLY,
+    POLLING_ALLOWED,
+    PRIVATE_KEY_SERVER,
+    PUBLIC_KEY_SERVER,
+    PUBLIC_KEY_SMARTPHONE,
+    PushAllowPolling,
+    PushTokenClass,
+    strip_key,
+)
+from edumfa.lib.user import User
+from edumfa.lib.utils import b32encode_and_unicode, to_bytes, to_unicode
+from edumfa.models import Challenge, Token
+
+from .base import FakeFlaskG, MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 FIREBASE_FILE = "tests/testdata/firebase-test.json"

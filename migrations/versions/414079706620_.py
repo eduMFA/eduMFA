@@ -10,10 +10,10 @@ Create Date: 2024-11-30 13:49:31.091598
 revision = "414079706620"
 down_revision = "7d82d8b680a9"
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy import BigInteger
-from sqlalchemy.dialects import postgresql, mysql, sqlite
+from sqlalchemy.dialects import mysql, postgresql, sqlite
 
 BigIntegerType = (
     BigInteger()

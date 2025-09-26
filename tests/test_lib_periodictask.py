@@ -11,22 +11,23 @@ from dateutil.parser import parse as parse_timestamp
 from dateutil.tz import gettz, tzutc
 from mock import mock
 
-from edumfa.lib.error import ServerError, ParameterError, ResourceNotFoundError
+from edumfa.lib.error import ParameterError, ResourceNotFoundError, ServerError
 from edumfa.lib.periodictask import (
-    calculate_next_timestamp,
-    set_periodic_task,
-    get_periodic_tasks,
-    enable_periodic_task,
-    delete_periodic_task,
-    set_periodic_task_last_run,
-    get_scheduled_periodic_tasks,
-    get_periodic_task_by_name,
     TASK_MODULES,
+    calculate_next_timestamp,
+    delete_periodic_task,
+    enable_periodic_task,
     execute_task,
     get_periodic_task_by_id,
+    get_periodic_task_by_name,
+    get_periodic_tasks,
+    get_scheduled_periodic_tasks,
+    set_periodic_task,
+    set_periodic_task_last_run,
 )
 from edumfa.lib.task.base import BaseTask
 from edumfa.models import PeriodicTask
+
 from .base import MyTestCase
 
 

@@ -4,13 +4,14 @@ This test file tests the lib.challange methods.
 This tests the token functions on an interface level
 """
 
-from .base import MyTestCase
-from edumfa.lib.error import TokenAdminError, ParameterError
-from edumfa.lib.challenge import get_challenges, extract_answered_challenges
-from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION
-from edumfa.models import Challenge, db
-from edumfa.lib.token import init_token
 from edumfa.lib import _
+from edumfa.lib.challenge import extract_answered_challenges, get_challenges
+from edumfa.lib.error import ParameterError, TokenAdminError
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+from edumfa.lib.token import init_token
+from edumfa.models import Challenge, db
+
+from .base import MyTestCase
 
 
 class ChallengeTestCase(MyTestCase):

@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
-from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
-from .base import MyApiTestCase
-from edumfa.lib.user import User
-from edumfa.lib.token import get_tokens, init_token, remove_token, get_one_token
-from edumfa.lib.policy import SCOPE, set_policy, delete_policy
-from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
-from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
-from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.hazmat.backends import default_backend
-from edumfa.lib.utils import to_bytes, to_unicode
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
-from edumfa.lib.policy import ACTION
-from edumfa.lib.token import enable_token
-from edumfa.lib.realm import set_realm, set_default_realm
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.tokenclass import CLIENTMODE
-from . import ldap3mock
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+from edumfa.lib.realm import set_default_realm, set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
+from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
+from edumfa.lib.token import (
+    enable_token,
+    get_one_token,
+    get_tokens,
+    init_token,
+    remove_token,
+)
+from edumfa.lib.tokenclass import CLIENTMODE
+from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
+from edumfa.lib.user import User
+from edumfa.lib.utils import to_bytes, to_unicode
+
+from . import ldap3mock
+from .base import MyApiTestCase
 
 PWFILE = "tests/testdata/passwords"
 HOSTSFILE = "tests/testdata/hosts"

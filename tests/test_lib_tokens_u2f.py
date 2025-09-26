@@ -3,28 +3,30 @@ This test file tests the lib.tokens.u2ftoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
-from edumfa.lib.tokens.u2ftoken import U2fTokenClass
-from edumfa.lib.tokens.u2f import (
-    check_registration_data,
-    parse_registration_data,
-    url_decode,
-    check_response,
-    parse_response_data,
-)
-from edumfa.lib.token import init_token, remove_token, check_user_pass
-from edumfa.lib.user import User
-from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
-from edumfa.lib.config import set_edumfa_config
-from edumfa.lib.challenge import get_challenges
-from edumfa.lib.utils import hexlify_and_unicode, to_bytes
-from edumfa.lib.error import TokenAdminError
-from edumfa.lib import _
+import base64
 import binascii
 from hashlib import sha256
-from OpenSSL import crypto
-import base64
 
+from OpenSSL import crypto
+
+from edumfa.lib import _
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.error import TokenAdminError
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+from edumfa.lib.token import check_user_pass, init_token, remove_token
+from edumfa.lib.tokens.u2f import (
+    check_registration_data,
+    check_response,
+    parse_registration_data,
+    parse_response_data,
+    url_decode,
+)
+from edumfa.lib.tokens.u2ftoken import U2fTokenClass
+from edumfa.lib.user import User
+from edumfa.lib.utils import hexlify_and_unicode, to_bytes
+
+from .base import MyTestCase
 
 REG_DATA = "BQRFnd8XtfZzsTK68VPK64Bcjiog_ZzyYNuzjaaGwpPnSpifxaqQV4_4IMxVlGS3CLoQmNAR41MSMxZHG0dENLRmQGnk4OqRxGRHmUOOLmDkGgdIJycQe79JCERV1gqGnWAOFBg_bH4WFSxZwnX-IMRcl3zW_X442QNrrdFySvXrba4wggIcMIIBBqADAgECAgQ4Zt91MAsGCSqGSIb3DQEBCzAuMSwwKgYDVQQDEyNZdWJpY28gVTJGIFJvb3QgQ0EgU2VyaWFsIDQ1NzIwMDYzMTAgFw0xNDA4MDEwMDAwMDBaGA8yMDUwMDkwNDAwMDAwMFowKzEpMCcGA1UEAwwgWXViaWNvIFUyRiBFRSBTZXJpYWwgMTM4MzExNjc4NjEwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQ3jfx0DHOblHJO09Ujubh2gQZWwT3ob6-uzzjZD1XiyAob_gsw3FOzXefQRblty48r-U-o4LkDFjx_btwuSHtxoxIwEDAOBgorBgEEAYLECgEBBAAwCwYJKoZIhvcNAQELA4IBAQIaR2TKAInPkq24f6hIU45yzD79uzR5KUMEe4IWqTm69METVio0W2FHWXlpeUe85nGqanwGeW7U67G4_WAnGbcd6zz2QumNsdlmb_AebbdPRa95Z8BG1ub_S04JoxQYNLaa8WRlzN7POgqAnAqkmnsZQ_W9Tj2uO9zP3mpxOkkmnqz7P5zt4Lp5xrv7p15hGOIPD5V-ph7tUmiCJsq0LfeRA36X7aXi32Ap0rt_wyfnRef59YYr7SmwaMuXKjbIZSLesscZZTMzXd-uuLb6DbUCasqEVBkGGqTRfAcOmPov1nHUrNDCkOR0obR4PsJG4PiamIfApNeoXGYpGbok6nucMEYCIQC_yerJqB3mnuAJGfbdKuOIx-Flxr-VSQ2nAkUUE_50dQIhAJE2NL1Xs2oVEG4bFzEM86TfS7nkHxad89aYmUrII49V"
 CLIENT_DATA_HASH = "eyJ0eXAiOiJuYXZpZ2F0b3IuaWQuZmluaXNoRW5yb2xsbWVudCIsImNoYWxsZW5nZSI6ImdXbndtYnFSMl9YOE91RFhId0dyQWNmUTBUajN4YTVfZ2RJMjBYcVlsdTg9Iiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiY2lkX3B1YmtleSI6IiJ9"

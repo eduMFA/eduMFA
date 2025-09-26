@@ -21,12 +21,11 @@ limitations under the License.
 """
 
 from collections import namedtuple
-
 from collections.abc import Sequence, Sized
 
 from pyrad import packet
 from pyrad.client import Timeout
-from pyrad.packet import AccessReject, AccessAccept, AccessChallenge
+from pyrad.packet import AccessAccept, AccessChallenge, AccessReject
 
 from .smtpmock import get_wrapped
 

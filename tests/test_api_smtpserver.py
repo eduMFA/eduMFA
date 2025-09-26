@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from .base import MyApiTestCase
 import json
+
 from . import smtpmock
+from .base import MyApiTestCase
 
 
 class SMTPServerTestCase(MyApiTestCase):

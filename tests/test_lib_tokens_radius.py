@@ -4,15 +4,16 @@ This test file tests the lib.tokens.radiustoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
-from edumfa.lib.tokens.radiustoken import RadiusTokenClass
 from edumfa.lib.challenge import get_challenges
-from edumfa.models import Token
-from edumfa.lib.error import ParameterError
 from edumfa.lib.config import set_edumfa_config
-from . import radiusmock
-from edumfa.lib.token import init_token
+from edumfa.lib.error import ParameterError
 from edumfa.lib.radiusserver import add_radius
+from edumfa.lib.token import init_token
+from edumfa.lib.tokens.radiustoken import RadiusTokenClass
+from edumfa.models import Token
+
+from . import radiusmock
+from .base import MyTestCase
 
 DICT_FILE = "tests/testdata/dictionary"
 

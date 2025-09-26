@@ -81,25 +81,24 @@ the token in challenge response.
 This code is tested in tests/test_lib_tokens_tiqr.
 """
 
+import logging
 from urllib.parse import quote, quote_plus
 
 from edumfa.api.lib.utils import getParam
-from edumfa.lib.config import get_from_config
-from edumfa.lib.tokenclass import TokenClass, AUTHENTICATIONMODE, CLIENTMODE
-from edumfa.lib.log import log_with
-from edumfa.lib.crypto import generate_otpkey
-from edumfa.lib.utils import create_img
-import logging
-from edumfa.lib.token import get_one_token
-from edumfa.lib.error import ParameterError
-from edumfa.models import Challenge
-from edumfa.lib.tokens.ocra import OCRASuite
-from edumfa.lib.challenge import get_challenges
-from edumfa.models import cleanup_challenges
 from edumfa.lib import _
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import generate_otpkey
 from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.error import ParameterError
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.token import get_one_token
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, CLIENTMODE, TokenClass
+from edumfa.lib.tokens.ocra import OCRASuite
 from edumfa.lib.tokens.ocratoken import OcraTokenClass
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.utils import create_img
+from edumfa.models import Challenge, cleanup_challenges
 
 log = logging.getLogger(__name__)
 optional = True

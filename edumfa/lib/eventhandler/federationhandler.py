@@ -25,15 +25,16 @@
 __doc__ = """This is the event handler module for eduMFA federations.
 Requests can be forwarded to other eduMFA servers.
 """
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib.edumfaserver import get_edumfaservers, get_edumfaserver
-from edumfa.lib import _
-from edumfa.lib.utils import is_true
 import json
 import logging
+
 import requests
 from flask import current_app
 
+from edumfa.lib import _
+from edumfa.lib.edumfaserver import get_edumfaserver, get_edumfaservers
+from edumfa.lib.eventhandler.base import BaseEventHandler
+from edumfa.lib.utils import is_true
 
 log = logging.getLogger(__name__)
 

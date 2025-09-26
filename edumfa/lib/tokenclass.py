@@ -48,45 +48,45 @@ client_component using the TokenClass method generate_symmetric_key.
 This method is supposed to be overwritten by the corresponding token classes.
 """
 
-import logging
 import hashlib
+import logging
 import traceback
+from base64 import b32encode
+from binascii import unhexlify
 from datetime import datetime, timedelta
 
-from .error import TokenAdminError, ParameterError
+from dateutil.parser import ParserError
+from dateutil.parser import parse as parse_date_string
+from dateutil.tz import tzlocal, tzutc
+
+from edumfa.lib import _
+from edumfa.lib.crypto import decryptPassword, encryptPassword, generate_otpkey
+from edumfa.lib.policy import ACTION, SCOPE, get_action_values_from_options
+from edumfa.lib.utils import (
+    create_img,
+    decode_base32check,
+    is_true,
+    parse_legacy_time,
+    parse_timedelta,
+    split_pin_pass,
+    to_unicode,
+)
 
 from ..api.lib.utils import getParam
-from .log import log_with
-
-from .config import get_from_config, get_prepend_pin
-from .user import User, get_username
 from ..models import (
+    Challenge,
+    Tokengroup,
     TokenOwner,
     TokenTokengroup,
-    Tokengroup,
-    Challenge,
     cleanup_challenges,
 )
 from .challenge import get_challenges
-from edumfa.lib.crypto import encryptPassword, decryptPassword, generate_otpkey
-from .policydecorators import libpolicy, auth_otppin, challenge_response_allowed
+from .config import get_from_config, get_prepend_pin
 from .decorators import check_token_locked
-from dateutil.parser import parse as parse_date_string, ParserError
-from dateutil.tz import tzlocal, tzutc
-from edumfa.lib.utils import (
-    is_true,
-    decode_base32check,
-    to_unicode,
-    create_img,
-    parse_timedelta,
-    parse_legacy_time,
-    split_pin_pass,
-)
-from edumfa.lib import _
-from edumfa.lib.policy import get_action_values_from_options, SCOPE, ACTION
-from base64 import b32encode
-from binascii import unhexlify
-
+from .error import ParameterError, TokenAdminError
+from .log import log_with
+from .policydecorators import auth_otppin, challenge_response_allowed, libpolicy
+from .user import User, get_username
 
 # DATE_FORMAT = "%d/%m/%y %H:%M"
 DATE_FORMAT = "%Y-%m-%dT%H:%M%z"

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import mock
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 
-from .base import MyApiTestCase
-from edumfa.lib.policy import set_policy, SCOPE, ACTION, delete_policy
-from edumfa.models import Audit
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
+import mock
+
 from edumfa.lib.auditmodules.base import Audit as BaseAudit
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.models import Audit
+
+from .base import MyApiTestCase
 
 PWFILE = "tests/testdata/passwords"
 

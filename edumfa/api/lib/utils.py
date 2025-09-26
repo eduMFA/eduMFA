@@ -26,21 +26,23 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-import string
-
-from ...lib.error import ParameterError, AuthError, ERROR
-from ...lib.log import log_with
-from edumfa.lib import _
-from edumfa.lib.utils import prepare_result, get_version, to_unicode
-import time
-import logging
 import json
-import jwt
-import threading
+import logging
 import re
+import string
+import threading
+import time
 from copy import copy
 from urllib.parse import unquote
-from flask import jsonify, current_app
+
+import jwt
+from flask import current_app, jsonify
+
+from edumfa.lib import _
+from edumfa.lib.utils import get_version, prepare_result, to_unicode
+
+from ...lib.error import ERROR, AuthError, ParameterError
+from ...lib.log import log_with
 
 log = logging.getLogger(__name__)
 ENCODING = "utf-8"

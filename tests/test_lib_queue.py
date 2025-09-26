@@ -5,23 +5,24 @@ In particular, this tests
 lib/queue/*.py
 """
 
-from huey import RedisHuey
 import mock
+from huey import RedisHuey
 
 from edumfa.app import create_app
 from edumfa.config import TestingConfig
 from edumfa.lib.error import ServerError
 from edumfa.lib.queue import (
-    job,
     JOB_COLLECTOR,
     JobCollector,
     get_job_queue,
-    wrap_job,
     has_job_queue,
+    job,
+    wrap_job,
 )
-from edumfa.lib.queues.huey_queue import HueyQueue
 from edumfa.lib.queues.base import QueueError
-from .base import OverrideConfigTestCase, MyTestCase
+from edumfa.lib.queues.huey_queue import HueyQueue
+
+from .base import MyTestCase, OverrideConfigTestCase
 
 
 class TestSender:

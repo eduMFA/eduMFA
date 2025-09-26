@@ -11,13 +11,15 @@ revision = "48ee74b8a7c8"
 down_revision = "cb6d7b7bae63"
 
 
-from alembic import op, context
-import sqlalchemy as sa
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.schema import Sequence, CreateSequence
-from sqlalchemy import orm
-from edumfa.models import TokenRealm, Resolver
 import sys
+
+import sqlalchemy as sa
+from alembic import context, op
+from sqlalchemy import orm
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.schema import CreateSequence, Sequence
+
+from edumfa.models import Resolver, TokenRealm
 
 Base = declarative_base()
 

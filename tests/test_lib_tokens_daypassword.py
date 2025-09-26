@@ -2,19 +2,21 @@
 This test file tests the lib.tokens.daypasswordtoken.py
 """
 
-import datetime
 import binascii
+import datetime
 import logging
 import time
 from unittest import mock
-from .base import MyTestCase, FakeAudit, FakeFlaskG
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
-from edumfa.lib.policy import PolicyClass, set_policy, delete_policy, SCOPE
-from edumfa.models import Token, Config, Challenge
+
 from edumfa.lib.config import set_prepend_pin
+from edumfa.lib.policy import SCOPE, PolicyClass, delete_policy, set_policy
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
 from edumfa.lib.tokens.daypasswordtoken import DayPasswordTokenClass
+from edumfa.lib.user import User
+from edumfa.models import Challenge, Config, Token
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 

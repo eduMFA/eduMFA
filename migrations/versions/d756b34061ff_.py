@@ -15,10 +15,9 @@ from edumfa.lib.config import get_edumfa_node
 revision = "d756b34061ff"
 down_revision = "3d7f8b29cbb1"
 
-from alembic import op, context
 import sqlalchemy as sa
+from alembic import context, op
 from sqlalchemy.ext.declarative import declarative_base
-
 
 Base = declarative_base()
 

@@ -20,23 +20,24 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.models import RADIUSServer as RADIUSServerDB
+import logging
+
+import pyrad.packet
+from pyrad.client import Client, Timeout
+from pyrad.dictionary import Dictionary
+
+from edumfa.lib import _
+from edumfa.lib.config import get_from_config
 from edumfa.lib.crypto import (
+    FAILED_TO_DECRYPT_PASSWORD,
     decryptPassword,
     encryptPassword,
-    FAILED_TO_DECRYPT_PASSWORD,
 )
-from edumfa.lib.config import get_from_config
-import logging
-from edumfa.lib.log import log_with
 from edumfa.lib.error import ConfigAdminError, eduMFAError
-import pyrad.packet
-from pyrad.client import Client
-from pyrad.client import Timeout
-from pyrad.dictionary import Dictionary
-from edumfa.lib import _
+from edumfa.lib.log import log_with
 from edumfa.lib.utils import fetch_one_resource, to_bytes
-from edumfa.lib.utils.export import register_import, register_export
+from edumfa.lib.utils.export import register_export, register_import
+from edumfa.models import RADIUSServer as RADIUSServerDB
 
 __doc__ = """
 This is the library for creating, listing and deleting RADIUS server objects in

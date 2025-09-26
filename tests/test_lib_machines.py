@@ -9,20 +9,22 @@ lib.machines.hosts
 """
 
 HOSTSFILE = "tests/testdata/hosts"
-from .base import MyTestCase
-from edumfa.lib.machines import BaseMachineResolver
-from edumfa.lib.machines.hosts import HostsMachineResolver
-from edumfa.lib.machines.base import Machine, MachineResolverError
 import netaddr
+
+from edumfa.lib.machine import get_machines
 from edumfa.lib.machineresolver import (
-    get_resolver_list,
-    save_resolver,
     delete_resolver,
     get_resolver_config,
+    get_resolver_list,
     get_resolver_object,
     pretestresolver,
+    save_resolver,
 )
-from edumfa.lib.machine import get_machines
+from edumfa.lib.machines import BaseMachineResolver
+from edumfa.lib.machines.base import Machine, MachineResolverError
+from edumfa.lib.machines.hosts import HostsMachineResolver
+
+from .base import MyTestCase
 
 
 class MachineObjectTestCase(MyTestCase):

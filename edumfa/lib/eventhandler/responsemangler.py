@@ -28,12 +28,12 @@ We can add or delete key or even subtrees in the JSON response of a request.
 The key is identified by a JSON Pointer
 (see https://tools.ietf.org/html/rfc6901)
 """
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib.utils import is_true
-from edumfa.lib import _
 import json
 import logging
 
+from edumfa.lib import _
+from edumfa.lib.eventhandler.base import BaseEventHandler
+from edumfa.lib.utils import is_true
 
 log = logging.getLogger(__name__)
 

@@ -27,19 +27,19 @@ register.
 
 The methods are tested in the file tests/test_api_register.py
 """
-from flask import Blueprint, request, g, current_app
-from .lib.utils import send_result, getParam
-from .lib.utils import required
 import logging
-from edumfa.lib.policy import ACTION, SCOPE
-from edumfa.lib.user import create_user
-from edumfa.lib.user import User
-from edumfa.lib.token import init_token
-from edumfa.lib.policy import Match
-from edumfa.lib.realm import get_default_realm
+
+from flask import Blueprint, current_app, g, request
+
+from edumfa.api.lib.prepolicy import prepolicy, required_email
 from edumfa.lib.error import RegistrationError
-from edumfa.api.lib.prepolicy import required_email, prepolicy
+from edumfa.lib.policy import ACTION, SCOPE, Match
+from edumfa.lib.realm import get_default_realm
 from edumfa.lib.smtpserver import get_smtpserver, send_email_identifier
+from edumfa.lib.token import init_token
+from edumfa.lib.user import User, create_user
+
+from .lib.utils import getParam, required, send_result
 
 DEFAULT_BODY = """
 Your registration token is {regkey}.

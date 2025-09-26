@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import json
+
 from edumfa.models import Resolver, ResolverConfig, db
-from .base import MyTestCase, MyApiTestCase
+
+from .base import MyApiTestCase, MyTestCase
 
 
 class ResolverModelTestCase(MyTestCase):

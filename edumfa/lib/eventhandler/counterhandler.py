@@ -28,12 +28,13 @@ increasing/decreasing/resetting database counters.
 These counters can be used by rrdtool to monitor values and print time series of
 certain parameters.
 """
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib import _
-from edumfa.lib.counter import increase, decrease, reset
 import logging
-from edumfa.lib.utils import is_true
 import traceback
+
+from edumfa.lib import _
+from edumfa.lib.counter import decrease, increase, reset
+from edumfa.lib.eventhandler.base import BaseEventHandler
+from edumfa.lib.utils import is_true
 
 log = logging.getLogger(__name__)
 

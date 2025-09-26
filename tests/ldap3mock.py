@@ -24,20 +24,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from passlib.hash import ldap_salted_sha1
-from ast import literal_eval
-import uuid
-from ldap3.utils.conv import escape_bytes
-import ldap3
 import re
-import pyparsing
-
-from .smtpmock import get_wrapped
-
+import uuid
+from ast import literal_eval
 from collections import namedtuple
 from collections.abc import Sequence, Sized
 
+import ldap3
+import pyparsing
+from ldap3.utils.conv import escape_bytes
+from passlib.hash import ldap_salted_sha1
+
 from edumfa.lib.utils import to_bytes, to_unicode
+
+from .smtpmock import get_wrapped
 
 DIRECTORY = "tests/testdata/tmp_directory"
 
