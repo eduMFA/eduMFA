@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib.resolver and all
 the resolvers under it:
@@ -14,9 +13,9 @@ import datetime
 import json
 import ssl
 import uuid
+from unittest import mock
 
 import ldap3
-import mock
 import pytest
 import responses
 from ldap3.core.exceptions import LDAPOperationResult
@@ -335,7 +334,7 @@ class SQLResolverTestCase(MyTestCase):
         y = SQLResolver()
         result = y.testconnection(self.parameters)
         self.assertEqual(result[0], self.num_users)
-        self.assertTrue("Found {0!s} users.".format(self.num_users) in result[1])
+        self.assertTrue(f"Found {self.num_users} users." in result[1])
 
     def test_05_add_user_update_delete(self):
         y = SQLResolver()
@@ -1082,8 +1081,7 @@ class LDAPResolverTestCase(MyTestCase):
             def _search_with_ref(*args, **kwargs):
                 results = original_search(*args, **kwargs)
                 # paged_search returns an iterator
-                for result in results:
-                    yield result
+                yield from results
                 yield {"type": "searchResRef", "foo": "bar"}
 
             mock_search.side_effect = _search_with_ref
@@ -1245,7 +1243,7 @@ class LDAPResolverTestCase(MyTestCase):
 
         user = "bob"
         user_id = y.getUserId(user)
-        self.assertTrue(user_id == "3", "{0!s}".format(user_id))
+        self.assertTrue(user_id == "3", f"{user_id}")
 
         rid = y.getResolverId()
         self.assertTrue(rid == "ldap.6b19559ae3a3f62f47d0ed24c0bee3323b588ece", rid)
@@ -1297,7 +1295,7 @@ class LDAPResolverTestCase(MyTestCase):
         )
 
         self.assertTrue(res[0], res)
-        self.assertTrue("{!s}".format(len(LDAPDirectory)) in res[1], res[1])
+        self.assertTrue(f"{len(LDAPDirectory)}" in res[1], res[1])
         # 'Your LDAP config seems to be OK, 3 user objects found.'
 
     @ldap3mock.activate
@@ -1323,7 +1321,7 @@ class LDAPResolverTestCase(MyTestCase):
         )
 
         self.assertTrue(res[0], res)
-        self.assertTrue("{!s}".format(len(LDAPDirectory)) in res[1])
+        self.assertTrue(f"{len(LDAPDirectory)}" in res[1])
         #'Your LDAP config seems to be OK, 3 user objects found.'
 
     @ldap3mock.activate
@@ -2037,7 +2035,7 @@ class LDAPResolverTestCase(MyTestCase):
         result = y.getUserList({"username": "*"})
         self.assertEqual(len(result), len(LDAPDirectory))
 
-        user = "kölbel".encode("utf8")
+        user = "kölbel".encode()
         user_id = y.getUserId(user)
         self.assertEqual(user_id, "cn=kölbel,ou=example,o=test")
 
@@ -2893,7 +2891,7 @@ class ResolverTestCase(MyTestCase):
         r = y.getUserList({"userid": "between 1001, 1000"})
         self.assertTrue(len(r) == 2, r)
         r = y.getUserList({"userid": "<=1000"})
-        self.assertTrue(len(r) == 1, "{0!s}".format(r))
+        self.assertTrue(len(r) == 1, f"{r}")
         r = y.getUserList({"userid": ">=1000"})
         self.assertTrue(len(r) > 1, r)
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -97,11 +96,10 @@ class RADIUSServer:
         r_dict = config.dictionary or get_from_config(
             "radius.dictfile", "/etc/edumfa/dictionary"
         )
-        log.debug("NAS Identifier: %r, Dictionary: %r" % (nas_identifier, r_dict))
+        log.debug(f"NAS Identifier: {nas_identifier!r}, Dictionary: {r_dict!r}")
         log.debug(
             "constructing client object "
-            "with server: %r, port: %r, secret: %r"
-            % (config.server, config.port, config.secret)
+            f"with server: {config.server!r}, port: {config.port!r}, secret: {config.secret!r}"
         )
 
         srv = Client(
@@ -136,33 +134,25 @@ class RADIUSServer:
                     success = response.verify_message_authenticator()
                     if not success:
                         log.info(
-                            "Radiusserver %s sent broken"
-                            "Message-Authenticator" % (config.server)
+                            f"Radiusserver {config.server} sent broken"
+                            "Message-Authenticator"
                         )
                         return False
                 else:
                     log.info(
-                        "Radiusserver %s sent no "
-                        "Message-Authenticator" % (config.server)
+                        f"Radiusserver {config.server} sent no Message-Authenticator"
                     )
                     return False
 
             if response.code == pyrad.packet.AccessAccept:
-                log.info(
-                    "Radiusserver %s granted access to user %s." % (config.server, user)
-                )
+                log.info(f"Radiusserver {config.server} granted access to user {user}.")
                 success = True
             else:
                 log.warning(
-                    "Radiusserver %s rejected "
-                    "access to user %s." % (config.server, user)
+                    f"Radiusserver {config.server} rejected access to user {user}."
                 )
         except Timeout:
-            log.warning(
-                "Receiving timeout from remote radius server {0!s}".format(
-                    config.server
-                )
-            )
+            log.warning(f"Receiving timeout from remote radius server {config.server}")
 
         return success
 
@@ -360,12 +350,10 @@ def export_radiusserver(name=None):
 @register_import("radiusserver")
 def import_radiusserver(data, name=None):
     """Import radiusserver configuration"""
-    log.debug("Import radiusserver config: {0!s}".format(data))
+    log.debug(f"Import radiusserver config: {data}")
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         res_data["secret"] = res_data.pop("password")
         rid = add_radius(res_name, **res_data)
-        log.info(
-            'Import of radiusserver "{0!s}" finished, id: {1!s}'.format(res_name, rid)
-        )
+        log.info(f'Import of radiusserver "{res_name}" finished, id: {rid}')

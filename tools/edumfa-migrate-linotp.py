@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 #  2020-06-13 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #  2019-10-04 Cornelius Kölbel <cornelius.koelbel@netknights.it>
@@ -111,7 +110,7 @@ UUID_REPLACE_PATTERN = "\\4\\3\\2\\1-\\6\\5-\\8\\7-\\9\\10-\\11\\12\\13\\14\\15\
 
 class Config:
     def __init__(self, config_file):
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             contents = f.read()
         config = json.loads(contents)
         self.ASSIGNMENTS = config.get("ASSIGNMENTS")
@@ -169,7 +168,7 @@ def dict_without_keys(d, keys):
 
 
 def migrate(config_obj):
-    print("Re-Encryption token data: {0!s}".format(config_obj.REENCRYPT))
+    print(f"Re-Encryption token data: {config_obj.REENCRYPT}")
 
     # This maps the resolver types. You must not change this!
     resolver_map = {
@@ -339,15 +338,13 @@ def migrate(config_obj):
         values_length = len(values)
         for chunk in range(0, values_length, chunk_size):
             print(
-                "Insert {} {} to {} ...".format(
-                    record_name, chunk, min(chunk + chunk_size, values_length) - 1
-                )
+                f"Insert {record_name} {chunk} to {min(chunk + chunk_size, values_length) - 1} ..."
             )
             try:
                 sess.execute(table.insert(), values[chunk : chunk + chunk_size])
                 sess.commit()
             except Exception as err:
-                t = "Failed to insert chunk: {0!s}".format(err)
+                t = f"Failed to insert chunk: {err}"
                 warnings.append(t)
                 print(t)
 
@@ -371,8 +368,8 @@ def migrate(config_obj):
         for r in result.mappings():
             resolver_id_map[r["name"]] = r["id"]
 
-        print("Realm-Map: {}".format(realm_id_map))
-        print("Resolver-Map: {}".format(resolver_id_map))
+        print(f"Realm-Map: {realm_id_map}")
+        print(f"Resolver-Map: {resolver_id_map}")
 
     # Process Tokens
 
@@ -384,7 +381,7 @@ def migrate(config_obj):
         for r in result.mappings():
             i = i + 1
             print(
-                "processing token #{1!s}: {0!s}".format(r["LinOtpTokenSerialnumber"], i)
+                "processing token #{!s}: {!s}".format(i, r["LinOtpTokenSerialnumber"])
             )
             # Adapt type
             ttype = r["LinOtpTokenType"]
@@ -411,16 +408,14 @@ def migrate(config_obj):
                 resolver = config_obj.ASSIGNMENTS.get("resolver").get(linotp_resolver)
                 if not resolver and linotp_resolver:
                     warnings.append(
-                        "No mapping defined for the LinOTP resolver: {0!s}".format(
-                            linotp_resolver
-                        )
+                        f"No mapping defined for the LinOTP resolver: {linotp_resolver}"
                     )
                 resolver_type = resolver_type
                 user_id = r["LinOtpUserid"]
                 if config_obj.ASSIGNMENTS.get("convert_endian"):
-                    print(" +--- converting UUID {0!s}".format(user_id))
+                    print(f" +--- converting UUID {user_id}")
                     user_id = re.sub(UUID_MATCH_PATTERN, UUID_REPLACE_PATTERN, user_id)
-                    print("  +-- to              {0!s}".format(user_id))
+                    print(f"  +-- to              {user_id}")
             else:
                 user_pin = None
                 user_pin_iv = None
@@ -477,7 +472,7 @@ def migrate(config_obj):
                             token_id=r["LinOtpTokenId"],
                         )
                     )
-                    print(" +--- processing tokeninfo {0!s}".format(k))
+                    print(f" +--- processing tokeninfo {k}")
                 if config_obj.NEW_TOKENINFO:
                     print(" +--- processing new tokeninfo")
                     for k, v in config_obj.NEW_TOKENINFO.items():
@@ -491,7 +486,7 @@ def migrate(config_obj):
                         )
 
         print()
-        print("Adding {} tokens...".format(len(token_values)))
+        print(f"Adding {len(token_values)} tokens...")
         # Insert into database without the user_id
         insert_chunks(
             edumfa_session,
@@ -519,7 +514,7 @@ def migrate(config_obj):
                 ti["token_id"] = token_serial_id_map[ti["serial"]]
                 del ti["serial"]
 
-            print("Adding {} token infos...".format(len(tokeninfo_values)))
+            print(f"Adding {len(tokeninfo_values)} token infos...")
             insert_chunks(
                 edumfa_session,
                 conn_pi,
@@ -540,8 +535,8 @@ def migrate(config_obj):
                 realm = config_obj.ASSIGNMENTS.get("realm").get(resolver)
                 realm_id = realm_id_map.get(realm)
                 print(
-                    "Assigning token {} for resolver {} to realm_id {} "
-                    "(realm {})".format(token_id, resolver, realm_id, realm)
+                    f"Assigning token {token_id} for resolver {resolver} to realm_id {realm_id} "
+                    f"(realm {realm})"
                 )
                 tokenrealm_values.append(dict(token_id=token_id, realm_id=realm_id))
 
@@ -564,7 +559,7 @@ def migrate(config_obj):
                             dict(token_id=token_id, realm_id=realm_id)
                         )
 
-        print("Adding {} tokenrealms...".format(len(tokenrealm_values)))
+        print(f"Adding {len(tokenrealm_values)} tokenrealms...")
         insert_chunks(
             edumfa_session,
             conn_pi,
@@ -574,7 +569,7 @@ def migrate(config_obj):
             record_name="tokenrealm records",
         )
 
-        print("Adding {} tokenowners...".format(len(tokenowner_values)))
+        print(f"Adding {len(tokenowner_values)} tokenowners...")
         insert_chunks(
             edumfa_session,
             conn_pi,
@@ -594,7 +589,7 @@ def migrate(config_obj):
 
 def usage():
     print(
-        """
+        f"""
 edumfa-migrate-linotp.py --generate-example-config [--config <config file>]
 
     --generate-example-config, -g   Output an example config file. 
@@ -604,8 +599,8 @@ edumfa-migrate-linotp.py --generate-example-config [--config <config file>]
     --config, -c <file>             The config file, that contains the complete
                                     configuration.
 
-{0!s}
-""".format(__doc__)
+{__doc__}
+"""
     )
 
 
@@ -634,7 +629,7 @@ def main():
         elif o in ("-c", "--config"):
             config_file = a
         else:
-            print("Unknown parameter: {0!s}".format(o))
+            print(f"Unknown parameter: {o}")
             sys.exit(3)
 
     if config_file:

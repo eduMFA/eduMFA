@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -72,9 +71,7 @@ def save_caconnector(params):
     # check the type
     if connector_type not in get_caconnector_types():
         raise Exception(
-            "connector type : {0!s} not in {1!s}".format(
-                connector_type, get_caconnector_types()
-            )
+            f"connector type : {connector_type} not in {get_caconnector_types()}"
         )
 
     # check the name
@@ -87,7 +84,7 @@ def save_caconnector(params):
         else:  # pragma: no cover
             raise Exception(
                 "CA Connector with similar name and other type "
-                "already exists: %s" % connector_name
+                f"already exists: {connector_name}"
             )
 
     # create a dictionary for the ResolverConfig
@@ -293,7 +290,7 @@ def get_caconnector_object(connector_name):
         c_obj_class = get_caconnector_class(conn.catype)
 
         if c_obj_class is None:
-            log.error("unknown CA connector class {0!s} ".format(connector_name))
+            log.error(f"unknown CA connector class {connector_name} ")
         else:
             # create the resolver instance and load the config
             c_obj = c_obj_class(connector_name)
@@ -309,9 +306,7 @@ def get_caconnector_object(connector_name):
 
     if not c_obj:
         log.warning(
-            "A CA connector with the name {0!s} could not be found!".format(
-                connector_name
-            )
+            f"A CA connector with the name {connector_name} could not be found!"
         )
 
     return c_obj
@@ -326,7 +321,7 @@ def export_caconnector(name=None):
 @register_import("caconnector")
 def import_caconnector(data, name=None):
     """Import caconnector configuration"""
-    log.debug("Import caconnector config: {0!s}".format(data))
+    log.debug(f"Import caconnector config: {data}")
     for res_data in data:
         if name and name != res_data.get("connectorname"):
             continue
@@ -337,7 +332,7 @@ def import_caconnector(data, name=None):
         res_data.update(res_data.pop("data"))
         rid = save_caconnector(res_data)
         log.info(
-            'Import of caconnector "{0!s}" finished, id: {1!s}'.format(
+            'Import of caconnector "{!s}" finished, id: {!s}'.format(
                 res_data["caconnector"], rid
             )
         )

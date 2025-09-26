@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -85,33 +84,25 @@ class SecurityModule:
 
     def setup_module(self, params):
         fname = "setup_module"
-        log.error(
-            "This is the base class. You should implement the method : %s " % (fname,)
-        )
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        log.error(f"This is the base class. You should implement the method : {fname} ")
+        raise NotImplementedError(f"Should have been implemented {fname}")
 
     """ base methods """
 
     def random(self, length):
         fname = "random"
-        log.error(
-            "This is the base class. You should implement the method : %s " % (fname,)
-        )
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        log.error(f"This is the base class. You should implement the method : {fname} ")
+        raise NotImplementedError(f"Should have been implemented {fname}")
 
     def encrypt(self, data, iv, key_id=TOKEN_KEY):
         fname = "encrypt"
-        log.error(
-            "This is the base class. You should implement the method : %s " % (fname,)
-        )
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        log.error(f"This is the base class. You should implement the method : {fname} ")
+        raise NotImplementedError(f"Should have been implemented {fname}")
 
     def decrypt(self, enc_data, iv, key_id=TOKEN_KEY):
         fname = "decrypt"
-        log.error(
-            "This is the base class. You should implement the method : %s " % (fname,)
-        )
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        log.error(f"This is the base class. You should implement the method : {fname} ")
+        raise NotImplementedError(f"Should have been implemented {fname}")
 
     def decrypt_password(self, crypt_pass):
         """
@@ -224,7 +215,7 @@ class SecurityModule:
         :return: Module dependent
         """
         fname = "create_keys"
-        raise NotImplementedError("Should have been implemented {0!s}".format(fname))
+        raise NotImplementedError(f"Should have been implemented {fname}")
 
 
 class DefaultSecurityModule(SecurityModule):
@@ -327,9 +318,9 @@ class DefaultSecurityModule(SecurityModule):
 
             if secret == b"":
                 raise HSMException(
-                    "No secret key defined for index: %s !\n"
-                    "Please extend your %s"
-                    " !" % (str(slot_id), self.secFile)
+                    f"No secret key defined for index: {str(slot_id)} !\n"
+                    f"Please extend your {self.secFile}"
+                    " !"
                 )
 
         # cache the result
@@ -438,7 +429,7 @@ class DefaultSecurityModule(SecurityModule):
         cipher = aes_cbc_encrypt(bkey, iv, input_data)
         iv_hex = hexlify_and_unicode(iv)
         cipher_hex = hexlify_and_unicode(cipher)
-        return "{0!s}:{1!s}".format(iv_hex, cipher_hex)
+        return f"{iv_hex}:{cipher_hex}"
 
     @staticmethod
     def password_decrypt(enc_data, password):

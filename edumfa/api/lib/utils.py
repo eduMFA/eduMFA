@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -103,10 +102,10 @@ def getParam(
     elif default:
         ret = default
     elif not optional:
-        raise ParameterError("Missing parameter: {0!r}".format(key), id=905)
+        raise ParameterError(f"Missing parameter: {key!r}", id=905)
 
     if not allow_empty and ret == "":
-        raise ParameterError("Parameter {0!r} must not be empty".format(key), id=905)
+        raise ParameterError(f"Parameter {key!r} must not be empty", id=905)
 
     if allowed_values and ret not in allowed_values:
         ret = default
@@ -203,7 +202,7 @@ def send_file(output, filename, content_type="text/csv"):
     :return: The generated response
     :rtype: flask.Response
     """
-    headers = {"Content-disposition": "attachment; filename={0!s}".format(filename)}
+    headers = {"Content-disposition": f"attachment; filename={filename}"}
     return current_app.response_class(output, headers=headers, mimetype=content_type)
 
 
@@ -232,7 +231,7 @@ def send_csv_result(obj, data_key="tokens", filename="eduMFA-tokendata.csv"):
     if data_key in obj and len(obj[data_key]) > 0:
         # Do the header
         for k, _v in obj.get(data_key)[0].items():
-            output += "{0!s}{1!s}{2!s}, ".format(delim, k, delim)
+            output += f"{delim}{k}{delim}, "
         output += "\n"
 
         # Do the data
@@ -242,7 +241,7 @@ def send_csv_result(obj, data_key="tokens", filename="eduMFA-tokendata.csv"):
                     value = val.replace("\n", " ")
                 else:
                     value = val
-                output += "{0!s}{1!s}{2!s}, ".format(delim, value, delim)
+                output += f"{delim}{value}{delim}, "
             output += "\n"
 
     return send_file(output, filename)
@@ -300,9 +299,7 @@ def get_all_params(request):
     return_param = {}
     if param:
         log.debug(
-            "Update params in request {0!s} {1!s} with values.".format(
-                request.method, request.base_url
-            )
+            f"Update params in request {request.method} {request.base_url} with values."
         )
         # Add the unquoted HTML and form parameters
         return_param = check_unquote(request, request.values)
@@ -312,9 +309,7 @@ def get_all_params(request):
 
     if request.is_json:
         log.debug(
-            "Update params in request {0!s} {1!s} with JSON data.".format(
-                request.method, request.base_url
-            )
+            f"Update params in request {request.method} {request.base_url} with JSON data."
         )
         # Add the original JSON data
         return_param.update(request.json)
@@ -325,13 +320,11 @@ def get_all_params(request):
             for k, v in json_data.items():
                 return_param[k] = v
         except Exception as exx:
-            log.debug("Can not get param: {0!s}".format(exx))
+            log.debug(f"Can not get param: {exx}")
 
     if request.view_args:
         log.debug(
-            "Update params in request {0!s} {1!s} with view_args.".format(
-                request.method, request.base_url
-            )
+            f"Update params in request {request.method} {request.base_url} with view_args."
         )
         # We add the unquoted view_args
         return_param.update(check_unquote(request, request.view_args))
@@ -410,14 +403,14 @@ def verify_auth_token(auth_token, required_role=None):
                     if "claim" in trusted_jwt and trusted_jwt.get("claim") in j:
                         j["username"] = j[trusted_jwt.get("claim")]
 
-                    log.debug("JWT decoded: {0!s}".format(j))
+                    log.debug(f"JWT decoded: {j}")
                     if re.match(trusted_jwt.get("username") + "$", j.get("username")):
                         if "static_data" in trusted_jwt:
                             j["role"] = trusted_jwt.get("role")
                             j["realm"] = trusted_jwt.get("realm")
                             j["resolver"] = trusted_jwt.get("resolver")
                             r = j
-                            log.debug("JWT is trusted. {0!s}".format(r))
+                            log.debug(f"JWT is trusted. {r}")
                         elif dict(
                             (k, j.get(k)) for k in ("role", "resolver", "realm")
                         ) == dict(
@@ -425,7 +418,7 @@ def verify_auth_token(auth_token, required_role=None):
                             for k in ("role", "resolver", "realm")
                         ):
                             r = j
-                            log.debug("JWT is trusted. {0!s}".format(r))
+                            log.debug(f"JWT is trusted. {r}")
                         break
                     else:
                         wrong_username = j.get("username")
@@ -460,8 +453,8 @@ def verify_auth_token(auth_token, required_role=None):
     if wrong_username and not r:
         raise AuthError(
             _(
-                "Authentication failure. The username {0!s} is not allowed to "
-                "impersonate via JWT.".format(wrong_username)
+                f"Authentication failure. The username {wrong_username} is not allowed to "
+                "impersonate via JWT."
             )
         )
     if required_role and r.get("role") not in required_role:
@@ -524,7 +517,7 @@ def attestation_certificate_allowed(cert_info, allowed_certs_pols):
     if allowed_certs_pols:
         for allowed_cert in allowed_certs_pols:
             tag, matching, _rest = allowed_cert.split("/", 3)
-            tag_value = cert_info.get("attestation_{0!s}".format(tag))
+            tag_value = cert_info.get(f"attestation_{tag}")
             # if we do not get a match, we bail out
             m = re.search(matching, tag_value) if matching and tag_value else None
             if matching and not m:

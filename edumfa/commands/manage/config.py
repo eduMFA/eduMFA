@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -85,7 +84,7 @@ imp_fmt_dict = {"python": ast.literal_eval, "json": json.loads, "yaml": yaml.saf
     default=["all"],
     show_default=True,
     type=click.Choice(["all"] + list(EXPORT_FUNCTIONS.keys()), case_sensitive=False),
-    help=f"The types of configuration to export (can be given multiple times). By default, export all available types. Currently registered exporter types are: {', '.join(['all'] + list(EXPORT_FUNCTIONS.keys()))!s}",
+    help=f"The types of configuration to export (can be given multiple times). By default, export all available types. Currently registered exporter types are: {', '.join(['all'] + list(EXPORT_FUNCTIONS.keys()))}",
 )
 @click.option(
     "-n",
@@ -125,7 +124,7 @@ def exporter(output, fmt, types, name=None):
     type=click.Choice(["all"] + list(IMPORT_FUNCTIONS.keys()), case_sensitive=False),
     help=f"The types of configuration to import. By default import all available data if a corresponding "
     f"importer type exists. Currently registered importer types "
-    f"are: {', '.join(['all'] + list(IMPORT_FUNCTIONS.keys()))!s}",
+    f"are: {', '.join(['all'] + list(IMPORT_FUNCTIONS.keys()))}",
 )
 @click.option(
     "-n",
@@ -149,7 +148,7 @@ def importer(infile, types, name=None):
             continue
     if not data:
         click.echo(
-            "Could not read input format! Accepting: {0!s}.".format(
+            "Could not read input format! Accepting: {!s}.".format(
                 ", ".join(imp_fmt_dict.keys())
             ),
             file=sys.stderr,
@@ -160,7 +159,7 @@ def importer(infile, types, name=None):
     for typ, value in sorted(IMPORT_FUNCTIONS.items(), key=lambda x: x[1]["prio"]):
         if typ in imp_types:
             if typ in data:
-                click.echo('Importing configuration type "{0!s}".'.format(typ))
+                click.echo(f'Importing configuration type "{typ}".')
                 value["func"](data[typ], name=name)
 
 

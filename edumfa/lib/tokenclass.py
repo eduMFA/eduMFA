@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -220,10 +219,8 @@ class TokenClass:
         # FIXME: We need to remove this, if we one day want to assign several users to one token
         if self.user and self.user != user:
             log.info(
-                "The token with serial {0!s} is already assigned "
-                "to user {1!s}. Can not assign to {2!s}.".format(
-                    self.token.serial, self.user, user
-                )
+                f"The token with serial {self.token.serial} is already assigned "
+                f"to user {self.user}. Can not assign to {user}."
             )
             raise TokenAdminError("This token is already assigned to another user.")
 
@@ -308,8 +305,8 @@ class TokenClass:
         """
         user_object = self.user
         user_info = user_object.info
-        user_identifier = "{0!s}_{1!s}".format(user_object.login, user_object.realm)
-        user_displayname = "{0!s} {1!s}".format(
+        user_identifier = f"{user_object.login}_{user_object.realm}"
+        user_displayname = "{!s} {!s}".format(
             user_info.get("givenname", "."), user_info.get("surname", ".")
         )
         return user_identifier, user_displayname
@@ -534,7 +531,7 @@ class TokenClass:
         elif otpkeyformat == "base32check":
             return decode_base32check(otpkey)
         else:
-            raise ParameterError("Unknown OTP key format: {!r}".format(otpkeyformat))
+            raise ParameterError(f"Unknown OTP key format: {otpkeyformat!r}")
 
     def update(self, param, reset_failcount=True):
         """
@@ -1087,7 +1084,7 @@ class TokenClass:
             try:
                 d = parse_date_string(end_date)
             except ValueError as _e:
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.debug(f"{traceback.format_exc()}")
                 raise TokenAdminError("Could not parse validity period end date!")
             self.add_tokeninfo("validity_period_end", d.strftime(DATE_FORMAT))
 
@@ -1120,7 +1117,7 @@ class TokenClass:
             try:
                 d = parse_date_string(start_date)
             except ValueError as _e:
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.debug(f"{traceback.format_exc()}")
                 raise TokenAdminError("Could not parse validity period start date!")
 
             self.add_tokeninfo("validity_period_start", d.strftime(DATE_FORMAT))
@@ -1205,9 +1202,7 @@ class TokenClass:
             timeout = int(get_from_config(FAILCOUNTER_CLEAR_TIMEOUT, 0))
         except Exception as exx:
             log.warning(
-                "Misconfiguration. Error retrieving "
-                "failcounter_clear_timeout: "
-                "{0!s}".format(exx)
+                f"Misconfiguration. Error retrieving failcounter_clear_timeout: {exx}"
             )
         if timeout and self.token.failcount == self.get_max_failcount():
             now = datetime.now(tzlocal())
@@ -1305,7 +1300,7 @@ class TokenClass:
         else:
             r = True
         if not r:
-            log.info("{0} {1}".format(message_list, self.get_serial()))
+            log.info(f"{message_list} {self.get_serial()}")
         return r
 
     @log_with(log)
@@ -1397,11 +1392,7 @@ class TokenClass:
         """
         # The database field is always an integer
         otplen = self.token.otplen
-        log.debug(
-            "Splitting the an OTP value of length {0!s} from the password.".format(
-                otplen
-            )
-        )
+        log.debug(f"Splitting the an OTP value of length {otplen} from the password.")
         pin, otpval = split_pin_pass(passw, otplen, get_prepend_pin())
         # If the provided passw is shorter than the expected otplen, we return the status False
         return len(passw) >= otplen, pin, otpval
@@ -1427,10 +1418,10 @@ class TokenClass:
         """
         ldict = {}
         for attr in self.__dict__:
-            key = "{0!r}".format(attr)
-            val = "{0!r}".format(getattr(self, attr))
+            key = f"{attr!r}"
+            val = f"{getattr(self, attr)!r}"
             ldict[key] = val
-        res = "<{0!r} {1!r}>".format(self.__class__, ldict)
+        res = f"<{self.__class__!r} {ldict!r}>"
         return res
 
     def get_init_detail(self, params=None, user=None):
@@ -1463,7 +1454,7 @@ class TokenClass:
         if otpkey is not None:
             response_detail["otpkey"] = {
                 "description": "OTP seed",
-                "value": "seed://{0!s}".format(otpkey),
+                "value": f"seed://{otpkey}",
                 "img": create_img(otpkey),
             }
 
@@ -1734,9 +1725,7 @@ class TokenClass:
         :param g: The Flask global object g
         :return: Flask Response or text
         """
-        raise ParameterError(
-            "{0!s} does not support the API endpoint".format(cls.get_tokentype())
-        )
+        raise ParameterError(f"{cls.get_tokentype()} does not support the API endpoint")
 
     @staticmethod
     def test_config(params=None):
@@ -1812,17 +1801,15 @@ class TokenClass:
         if date_s:
             log.debug(
                 "Compare the last successful authentication of "
-                "token %s with policy "
-                "tdelta %s: %s" % (self.token.serial, tdelta, date_s)
+                f"token {self.token.serial} with policy "
+                f"tdelta {tdelta}: {date_s}"
             )
             # parse the string from the database
             try:
                 last_success_auth = parse_date_string(date_s)
             except ParserError:
                 log.info(
-                    "Failed to parse the date in 'last_auth' of token {0!s}.".format(
-                        self.token.serial
-                    )
+                    f"Failed to parse the date in 'last_auth' of token {self.token.serial}."
                 )
                 return False
 
@@ -1834,9 +1821,7 @@ class TokenClass:
             if last_success_auth + tdelta < datetime.now(tzlocal()):
                 res = False
                 log.debug(
-                    "The last successful authentication is too old: {0!s}".format(
-                        last_success_auth
-                    )
+                    f"The last successful authentication is too old: {last_success_auth}"
                 )
 
         return res

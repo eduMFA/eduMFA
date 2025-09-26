@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 #
 #  2018-05-27 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #             init
@@ -53,7 +52,7 @@ def main():
     result = edumfa_engine.execute(s)
 
     for r in result:
-        print("{0!s}, {1!s}".format(r.serial, r.count))
+        print(f"{r.serial}, {r.count}")
 
 
 if __name__ == "__main__":

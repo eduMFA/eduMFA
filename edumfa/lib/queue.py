@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -65,7 +64,7 @@ class JobCollector:
         :param kwargs: keyword arguments passed to the job queue's ``register_job`` method
         """
         if name in self._jobs:
-            raise RuntimeError("Duplicate jobs: {!r}".format(name))
+            raise RuntimeError(f"Duplicate jobs: {name!r}")
         self._jobs[name] = (func, args, kwargs)
 
     def register_app(self, app):
@@ -89,9 +88,7 @@ class JobCollector:
             queue_class = get_module_class(package_name, class_name)
         except (ImportError, ValueError) as exx:
             log.warning(
-                "Could not import job queue class {!r}: {!r}".format(
-                    app.config[JOB_QUEUE_CLASS], exx
-                )
+                f"Could not import job queue class {app.config[JOB_QUEUE_CLASS]!r}: {exx!r}"
             )
             return
         # Extract configuration from app config: All options starting with EDUMFA_JOB_QUEUE_
@@ -100,7 +97,7 @@ class JobCollector:
             if k.startswith(JOB_QUEUE_OPTION_PREFIX) and k != JOB_QUEUE_CLASS:
                 options[k[len(JOB_QUEUE_OPTION_PREFIX) :].lower()] = v
         job_queue = queue_class(options)
-        log.info("Created a new job queue: {!r}".format(job_queue))
+        log.info(f"Created a new job queue: {job_queue!r}")
         store["job_queue"] = job_queue
         for name, (func, args, kwargs) in self._jobs.items():
             job_queue.register_job(name, func, *args, **kwargs)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -58,9 +57,7 @@ def _construct_extra_parameters(extra_data):
     for key, value in extra_data.items():
         encoded_key = quote(to_byte_string(key))
         encoded_value = quote(to_byte_string(value))
-        extra_data_list.append(
-            "{key}={value}".format(key=encoded_key, value=encoded_value)
-        )
+        extra_data_list.append(f"{encoded_key}={encoded_value}")
     return ("&" if extra_data_list else "") + "&".join(extra_data_list)
 
 
@@ -84,7 +81,7 @@ def create_motp_url(key, user=None, realm=None, serial=""):
     label = label[0:allowed_label_len]
     url_label = quote(label)
 
-    return "motp://edumfa:{0!s}?secret={1!s}".format(url_label, otpkey)
+    return f"motp://edumfa:{url_label}?secret={otpkey}"
 
 
 @log_with(log)
@@ -128,12 +125,10 @@ def create_google_authenticator_url(
     # also strip the padding =, as it will get problems with the google app.
     otpkey = b32encode_and_unicode(key_bin).strip("=")
 
-    base_len = len("otpauth://{0!s}/?secret={1!s}&counter=1".format(tokentype, otpkey))
+    base_len = len(f"otpauth://{tokentype}/?secret={otpkey}&counter=1")
     allowed_label_len = MAX_QRCODE_LEN - base_len
     log.debug(
-        "we have got {0!s} characters left for the token label".format(
-            str(allowed_label_len)
-        )
+        f"we have got {str(allowed_label_len)} characters left for the token label"
     )
     # Deprecated
     label = tokenlabel.replace("<s>", serial).replace("<u>", user).replace("<r>", realm)
@@ -158,34 +153,24 @@ def create_google_authenticator_url(
     url_issuer = quote(issuer.encode("utf-8"))
 
     if hash_algo.lower() != "sha1":
-        hash_algo = "algorithm={0!s}&".format(hash_algo.upper())
+        hash_algo = f"algorithm={hash_algo.upper()}&"
     else:
         # If the hash_algo is SHA1, we do not add it to the QR code to keep
         # the QR code simpler
         hash_algo = ""
 
     if tokentype.lower() == "totp":
-        period = "period={0!s}&".format(period)
+        period = f"period={period}&"
     elif tokentype.lower() == "daypassword":
-        period = "period={0!s}&".format(parse_time_sec_int(period))
+        period = f"period={parse_time_sec_int(period)}&"
     else:
         period = ""
 
     return (
-        "otpauth://{tokentype!s}/{label!s}?secret={secret!s}&"
-        "{counter!s}{hash!s}{period!s}"
-        "digits={digits!s}&"
-        "issuer={issuer!s}{extra}".format(
-            tokentype=tokentype,
-            label=url_label,
-            secret=otpkey,
-            hash=hash_algo,
-            period=period,
-            digits=digits,
-            issuer=url_issuer,
-            counter=counter,
-            extra=_construct_extra_parameters(extra_data),
-        )
+        f"otpauth://{tokentype}/{url_label}?secret={otpkey}&"
+        f"{counter}{hash_algo}{period}"
+        f"digits={digits}&"
+        f"issuer={url_issuer}{_construct_extra_parameters(extra_data)}"
     )
 
 
@@ -211,7 +196,5 @@ def create_oathtoken_url(
     url_label = quote(label)
 
     extra_parameters = _construct_extra_parameters(extra_data)
-    url = "oathtoken:///addToken?name={0!s}&lockdown=true&key={1!s}{2!s}{3!s}".format(
-        url_label, otpkey, timebased, extra_parameters
-    )
+    url = f"oathtoken:///addToken?name={url_label}&lockdown=true&key={otpkey}{timebased}{extra_parameters}"
     return url

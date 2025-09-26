@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -93,7 +92,7 @@ log = logging.getLogger(__name__)
 # The decorated functions are called before and after *every* request.
 @token_blueprint.before_app_request
 def log_begin_request():
-    log.debug("Begin handling of request {!r}".format(request.full_path))
+    log.debug(f"Begin handling of request {request.full_path!r}")
     g.startdate = datetime.datetime.now()
 
 
@@ -108,7 +107,7 @@ def teardown_request(exc):
         # Also during calling webui, there is not audit_object, yet.
         pass
     call_finalizers()
-    log.debug("End handling of request {!r}".format(request.full_path))
+    log.debug(f"End handling of request {request.full_path!r}")
 
 
 @token_blueprint.before_request
@@ -233,9 +232,9 @@ def before_request():
             "client": g.client_ip,
             "client_user_agent": request.user_agent.browser,
             "edumfa_server": edumfa_server,
-            "action": "{0!s} {1!s}".format(request.method, request.url_rule),
+            "action": f"{request.method} {request.url_rule}",
             "action_detail": "",
-            "thread_id": "{0!s}".format(threading.current_thread().ident),
+            "thread_id": f"{threading.current_thread().ident}",
             "info": "",
         }
     )

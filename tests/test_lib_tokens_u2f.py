@@ -415,9 +415,7 @@ class MultipleU2FTokenTestCase(MyTestCase):
 
     # TODO: also test challenge-response with different tokens (u2f + totp)
     def test_01_multiple_token(self):
-        set_policy(
-            "otppin", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN)
-        )
+        set_policy("otppin", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN}=none")
         res, reply = check_user_pass(self.user, "")
         self.assertFalse(res)
         self.assertIn("transaction_id", reply, reply)

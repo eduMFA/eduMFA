@@ -87,7 +87,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}={1!s}".format(ACTION.OTPPIN, ACTIONVALUE.NONE),
+            action=f"{ACTION.OTPPIN}={ACTIONVALUE.NONE}",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -114,7 +114,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}={1!s}".format(ACTION.OTPPIN, ACTIONVALUE.TOKENPIN),
+            action=f"{ACTION.OTPPIN}={ACTIONVALUE.TOKENPIN}",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -147,7 +147,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}={1!s}".format(ACTION.OTPPIN, ACTIONVALUE.USERSTORE),
+            action=f"{ACTION.OTPPIN}={ACTIONVALUE.USERSTORE}",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -181,7 +181,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}={1!s}".format(ACTION.OTPPIN, ACTIONVALUE.USERSTORE),
+            action=f"{ACTION.OTPPIN}={ACTIONVALUE.USERSTORE}",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -240,12 +240,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0}, {1}, {2}, {3}=none".format(
-                ACTION.RESETALLTOKENS,
-                ACTION.PASSNOUSER,
-                ACTION.PASSNOTOKEN,
-                ACTION.OTPPIN,
-            ),
+            action=f"{ACTION.RESETALLTOKENS}, {ACTION.PASSNOUSER}, {ACTION.PASSNOTOKEN}, {ACTION.OTPPIN}=none",
             realm=self.realm1,
         )
         g = FakeFlaskG()
@@ -307,7 +302,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}=userstore".format(ACTION.PASSTHRU),
+            action=f"{ACTION.PASSTHRU}=userstore",
         )
         g = FakeFlaskG()
         g.policy_object = PolicyClass()
@@ -322,7 +317,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}=radiusconfig1".format(ACTION.PASSTHRU),
+            action=f"{ACTION.PASSTHRU}=radiusconfig1",
         )
         r = add_radius("radiusconfig1", "1.2.3.4", "testing123", dictionary=DICT_FILE)
         self.assertTrue(r > 0)
@@ -381,7 +376,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA),
+            action=f"{ACTION.LOGINMODE}={LOGINMODE.EDUMFA}",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -403,7 +398,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.LOGINMODE, LOGINMODE.DISABLE),
+            action=f"{ACTION.LOGINMODE}={LOGINMODE.DISABLE}",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -452,9 +447,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="lost_pol2",
             scope=SCOPE.ENROLL,
-            action="%s=%s, %s=%s,"
-            "%s=%s"
-            % (
+            action="{}={}, {}={},{}={}".format(
                 ACTION.LOSTTOKENPWCONTENTS,
                 "C",
                 ACTION.LOSTTOKENVALID,
@@ -488,12 +481,12 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol_chal_resp_1",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp tiqr totp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp tiqr totp",
         )
         set_policy(
             name="pol_chal_resp_2",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp motp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp motp",
         )
         g = FakeFlaskG()
         g.policy_object = PolicyClass()
@@ -520,7 +513,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol_lastauth",
             scope=SCOPE.AUTHZ,
-            action="{0!s}=1d".format(ACTION.LASTAUTH),
+            action=f"{ACTION.LASTAUTH}=1d",
         )
         g = FakeFlaskG()
         g.policy_object = PolicyClass()
@@ -584,7 +577,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm="myrealm",
             resolver="reso002",
-            action="{0!s}={1!s}".format(ACTION.OTPPIN, ACTIONVALUE.NONE),
+            action=f"{ACTION.OTPPIN}={ACTIONVALUE.NONE}",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -639,7 +632,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm=realm,
             resolver=resolver,
-            action="{0!s}={1!s}".format(ACTION.AUTH_CACHE, "4h/5m"),
+            action="{!s}={!s}".format(ACTION.AUTH_CACHE, "4h/5m"),
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -704,7 +697,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm=realm,
             resolver=resolver,
-            action="{0!s}={1!s}".format(ACTION.AUTH_CACHE, "4h"),
+            action="{!s}={!s}".format(ACTION.AUTH_CACHE, "4h"),
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -733,7 +726,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm=realm,
             resolver=resolver,
-            action="{0!s}={1!s}".format(ACTION.AUTH_CACHE, "50s/2"),
+            action="{!s}={!s}".format(ACTION.AUTH_CACHE, "50s/2"),
         )
 
         g = FakeFlaskG()
@@ -771,7 +764,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm=realm,
             resolver=resolver,
-            action="{0!s}={1!s}".format(ACTION.AUTH_CACHE, "50s/2"),
+            action="{!s}={!s}".format(ACTION.AUTH_CACHE, "50s/2"),
         )
 
         g = FakeFlaskG()
@@ -816,7 +809,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}=userstore".format(ACTION.PASSTHRU),
+            action=f"{ACTION.PASSTHRU}=userstore",
         )
         g = FakeFlaskG()
         g.policy_object = PolicyClass()
@@ -831,7 +824,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.AUTH,
-            action="{0!s}=radiusconfig1".format(ACTION.PASSTHRU),
+            action=f"{ACTION.PASSTHRU}=radiusconfig1",
         )
         r = add_radius("radiusconfig1", "1.2.3.4", "testing123", dictionary=DICT_FILE)
         self.assertTrue(r > 0)
@@ -891,13 +884,13 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}={1!s}".format(ACTION.OTPPIN, ACTIONVALUE.NONE),
+            action=f"{ACTION.OTPPIN}={ACTIONVALUE.NONE}",
             priority=2,
         )
         set_policy(
             name="pol2",
             scope=SCOPE.AUTH,
-            action="{0!s}={1!s}".format(ACTION.OTPPIN, ACTIONVALUE.TOKENPIN),
+            action=f"{ACTION.OTPPIN}={ACTIONVALUE.TOKENPIN}",
             priority=2,
         )
         g = FakeFlaskG()
@@ -986,7 +979,7 @@ class LibPolicyTestCase(MyTestCase):
     @radiusmock.activate
     def test_16_passthru_assign(self):
         user = User("cornelius", realm="r1")
-        passw = "{0!s}test".format(self.valid_otp_values[1])
+        passw = f"{self.valid_otp_values[1]}test"
         options = {}
         # remove all tokens of cornelius
         remove_token(user=user)
@@ -1012,14 +1005,14 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTH,
-            action="{0!s}=radiusconfig1".format(ACTION.PASSTHRU),
+            action=f"{ACTION.PASSTHRU}=radiusconfig1",
         )
         r = add_radius("radiusconfig1", "1.2.3.4", "testing123", dictionary=DICT_FILE)
         self.assertTrue(r > 0)
         set_policy(
             name="pol2",
             scope=SCOPE.AUTH,
-            action="{0!s}=6:pin:1234".format(ACTION.PASSTHRU_ASSIGN),
+            action=f"{ACTION.PASSTHRU_ASSIGN}=6:pin:1234",
         )
 
         g = FakeFlaskG()
@@ -1035,9 +1028,7 @@ class LibPolicyTestCase(MyTestCase):
         self.assertTrue("autoassigned TOKMATCH" in rv[1].get("message"))
 
         # Check if the token is assigned and can authenticate
-        r = check_user_pass(
-            User("cornelius", "r1"), "test{0!s}".format(self.valid_otp_values[2])
-        )
+        r = check_user_pass(User("cornelius", "r1"), f"test{self.valid_otp_values[2]}")
         self.assertTrue(r[0])
         self.assertEqual(r[1].get("serial"), "TOKMATCH")
 

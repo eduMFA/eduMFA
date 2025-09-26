@@ -20,9 +20,7 @@ def upgrade():
             "pidea_audit", sa.Column("policies", sa.String(length=255), nullable=True)
         )
     except Exception as exx:
-        print(
-            'Adding of column "policies" in table pidea_audit failed: {!r}'.format(exx)
-        )
+        print(f'Adding of column "policies" in table pidea_audit failed: {exx!r}')
         print("This is expected behavior if this column already exists.")
 
 

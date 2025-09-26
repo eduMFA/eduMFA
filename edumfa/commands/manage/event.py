@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -44,19 +43,17 @@ def list_events():
     conf = EventConfiguration()
     events = conf.events
     click.echo(
-        "{0:7} {4:4} {1:30}\t{2:20}\t{3}".format(
-            "Active", "Name", "Module", "Action", "ID"
-        )
+        "{:7} {:4} {:30}\t{:20}\t{}".format("Active", "ID", "Name", "Module", "Action")
     )
     click.echo(90 * "=")
     for event in events:
         click.echo(
-            "[{0!s:>5}] {4:4} {1:30}\t{2:20}\t{3}".format(
+            "[{!s:>5}] {:4} {:30}\t{:20}\t{}".format(
                 event.get("active"),
+                event.get("id"),
                 event.get("name")[0:30],
                 event.get("handlermodule"),
                 event.get("action"),
-                event.get("id"),
             )
         )
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -48,9 +47,7 @@ def get_machine_application_class_list():
         f.split(".")[0] for f in files if f.endswith(".py") and f != "__init__.py"
     ]
     for module in modules:
-        class_list.append(
-            "edumfa.lib.applications.{0!s}.MachineApplication".format(module)
-        )
+        class_list.append(f"edumfa.lib.applications.{module}.MachineApplication")
     return class_list
 
 
@@ -169,11 +166,11 @@ def get_application_types():
     for f in files:
         if f not in ["base", "__init__"]:
             try:
-                mod = import_module("edumfa.lib.applications.{0!s}".format(f))
+                mod = import_module(f"edumfa.lib.applications.{f}")
                 name = mod.MachineApplication.application_name
                 options = mod.MachineApplication.get_options()
                 ret[name] = {"options": options}
             except Exception as exx:
-                log.info("Can not get application type: {0!s}".format(exx))
+                log.info(f"Can not get application type: {exx}")
 
     return ret

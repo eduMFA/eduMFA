@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -112,9 +111,7 @@ def challenge_response_allowed(func):
                 user_object=user_object,
             ).action_values(unique=False, write_to_audit_log=False)
             log.debug(
-                "Found these allowed tokentypes: {0!s}".format(
-                    list(allowed_tokentypes_dict)
-                )
+                f"Found these allowed tokentypes: {list(allowed_tokentypes_dict)}"
             )
             allowed_tokentypes_dict = {
                 k.lower(): v for k, v in allowed_tokentypes_dict.items()
@@ -301,13 +298,13 @@ def auth_user_passthru(wrapped_function, user_object, passw, options=None):
                 # Now we need to check the userstore password
                 if user_object.check_password(passw):
                     return True, {
-                        "message": "against userstore due to '{!s}'".format(policy_name)
+                        "message": f"against userstore due to '{policy_name}'"
                     }
             else:
                 # We are doing RADIUS passthru
                 log.info(
                     "Forwarding the authentication request to the radius "
-                    "server %s" % pass_thru_action
+                    f"server {pass_thru_action}"
                 )
                 radius = get_radius(pass_thru_action)
                 r = radius.request(radius.config, user_object.login, passw)
@@ -344,22 +341,16 @@ def auth_user_passthru(wrapped_function, user_object, passw, options=None):
                                         pin=pin,
                                     )
                                     messages.append(
-                                        "autoassigned {0!s}".format(
-                                            token_obj.token.serial
-                                        )
+                                        f"autoassigned {token_obj.token.serial}"
                                     )
                                     break
 
                         else:
                             log.warning(
-                                "Wrong value in passthru_assign policy: {0!s}".format(
-                                    passthru_assign
-                                )
+                                f"Wrong value in passthru_assign policy: {passthru_assign}"
                             )
                     messages.append(
-                        "against RADIUS server {!s} due to '{!s}'".format(
-                            pass_thru_action, policy_name
-                        )
+                        f"against RADIUS server {pass_thru_action} due to '{policy_name}'"
                     )
                     return True, {"message": ",".join(messages)}
 
@@ -412,9 +403,8 @@ def auth_user_timelimit(wrapped_function, user_object, passw, options=None):
                 timedelta=tdelta,
             )
             log.debug(
-                "Checking users timelimit %s: %s "
+                f"Checking users timelimit {list(max_fail_dict)[0]}: {fail_c} "
                 "failed authentications with /validate/check"
-                % (list(max_fail_dict)[0], fail_c)
             )
             fail_auth_c = g.audit_object.get_count(
                 {
@@ -427,15 +417,13 @@ def auth_user_timelimit(wrapped_function, user_object, passw, options=None):
                 timedelta=tdelta,
             )
             log.debug(
-                "Checking users timelimit %s: %s "
+                f"Checking users timelimit {list(max_fail_dict)[0]}: {fail_auth_c} "
                 "failed authentications with /auth"
-                % (list(max_fail_dict)[0], fail_auth_c)
             )
             if fail_c + fail_auth_c >= policy_count:
                 res = False
-                reply_dict["message"] = "Only %s failed authentications per %s" % (
-                    policy_count,
-                    tdelta,
+                reply_dict["message"] = (
+                    f"Only {policy_count} failed authentications per {tdelta}"
                 )
                 g.audit_object.add_policy(next(iter(max_fail_dict.values())))
 
@@ -455,9 +443,8 @@ def auth_user_timelimit(wrapped_function, user_object, passw, options=None):
                     timedelta=tdelta,
                 )
                 log.debug(
-                    "Checking users timelimit %s: %s "
+                    f"Checking users timelimit {list(max_success_dict)[0]}: {succ_c} "
                     "successful authentications with /validate/check"
-                    % (list(max_success_dict)[0], succ_c)
                 )
                 succ_auth_c = g.audit_object.get_count(
                     {
@@ -470,15 +457,13 @@ def auth_user_timelimit(wrapped_function, user_object, passw, options=None):
                     timedelta=tdelta,
                 )
                 log.debug(
-                    "Checking users timelimit %s: %s "
+                    f"Checking users timelimit {list(max_success_dict)[0]}: {succ_auth_c} "
                     "successful authentications with /auth"
-                    % (list(max_success_dict)[0], succ_auth_c)
                 )
                 if succ_c + succ_auth_c >= policy_count:
                     res = False
                     reply_dict["message"] = (
-                        "Only %s successful "
-                        "authentications per %s" % (policy_count, tdelta)
+                        f"Only {policy_count} successful authentications per {tdelta}"
                     )
 
     return res, reply_dict
@@ -535,8 +520,8 @@ def auth_lastauth(wrapped_function, user_or_serial, passw, options=None):
                 if not res:
                     reply_dict["message"] = (
                         "The last successful "
-                        "authentication was %s. "
-                        "It is to long ago." % token.get_tokeninfo(ACTION.LASTAUTH)
+                        f"authentication was {token.get_tokeninfo(ACTION.LASTAUTH)}. "
+                        "It is to long ago."
                     )
                     g.audit_object.add_policy(next(iter(last_auth_dict.values())))
 
@@ -732,7 +717,7 @@ def reset_all_user_tokens(wrapped_function, *args, **kwds):
             user_object=token_owner if token_owner else None,
         ).policies()
         if reset_all:
-            log.debug("Reset failcounter of all tokens of {0!s}".format(token_owner))
+            log.debug(f"Reset failcounter of all tokens of {token_owner}")
             for tok_obj_reset in toks_avail:
                 try:
                     tok_obj_reset.reset()

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -181,12 +180,8 @@ def sign_response(request, response):
         sign_object = Sign(
             priv_key, public_key=None, check_private_key=check_private_key
         )
-    except (IOError, ValueError, TypeError) as e:
-        log.info(
-            "Could not load private key from file {0!s}: {1!r}!".format(
-                priv_file_name, e
-            )
-        )
+    except (OSError, ValueError, TypeError) as e:
+        log.info(f"Could not load private key from file {priv_file_name}: {e!r}!")
         log.debug(traceback.format_exc())
         return response
 
@@ -243,8 +238,8 @@ def check_tokentype(request, response):
         g.audit_object.log(
             {
                 "success": False,
-                "action_detail": "Tokentype {0!r} not allowed for "
-                "authentication".format(tokentype),
+                "action_detail": f"Tokentype {tokentype!r} not allowed for "
+                "authentication",
             }
         )
         raise PolicyError("Tokentype not allowed for authentication!")
@@ -311,22 +306,20 @@ def check_tokeninfo(request, response):
                         value = token_obj.get_tokeninfo(key, "")
                         if re.search(regex, value):
                             log.debug(
-                                "Regular expression {0!s} "
-                                "matches the tokeninfo field {1!s}.".format(regex, key)
+                                f"Regular expression {regex} "
+                                f"matches the tokeninfo field {key}."
                             )
                         else:
                             log.info(
-                                "Tokeninfo field {0!s} with contents {1!s} "
-                                "does not match {2!s}".format(key, value, regex)
+                                f"Tokeninfo field {key} with contents {value} "
+                                f"does not match {regex}"
                             )
                             raise PolicyError(
-                                "Tokeninfo field {0!s} with contents does not"
-                                " match regular expression.".format(key)
+                                f"Tokeninfo field {key} with contents {value} "
+                                f"does not match regular expression."
                             )
                     except ValueError:
-                        log.warning(
-                            "invalid tokeinfo policy: {0!s}".format(tokeninfo_pol)
-                        )
+                        log.warning(f"invalid tokeinfo policy: {tokeninfo_pol}")
 
     return response
 
@@ -402,8 +395,8 @@ def preferred_client_mode(request, response):
                 log.error(
                     "There was no acceptable client mode in the multi-challenge list. "
                     'The preferred client mode is set to "interactive". '
-                    "Please check Your policy ({0!s}). "
-                    "Error: {1!s} ".format(preferred_client_mode_list, err)
+                    f"Please check Your policy ({preferred_client_mode_list}). "
+                    f"Error: {err} "
                 )
             except Exception as err:  # pragma no cover
                 content.setdefault("detail", {})["preferred_client_mode"] = (
@@ -411,7 +404,7 @@ def preferred_client_mode(request, response):
                 )
                 log.error(
                     "Something went wrong during setting the preferred "
-                    "client mode. Error: {0!s}".format(err)
+                    f"client mode. Error: {err}"
                 )
 
     response.set_data(json.dumps(content))
@@ -1020,7 +1013,7 @@ def mangle_challenge_response(request, response):
             messages = sorted(set(messages))
             if message[-4:].lower() in ["<ol>", "<ul>"]:
                 for m in messages:
-                    message += "<li>{0!s}</li>\n".format(m)
+                    message += f"<li>{m}</li>\n"
             else:
                 message += "\n"
                 message += ", ".join(messages)
@@ -1111,12 +1104,10 @@ def check_verify_enrollment(request, response):
                 tokenobj.token.save()
                 response.set_data(json.dumps(content))
     elif len(tokenobj_list) == 0:
-        log.warning("Token serial {0!s} not found in database.".format(serial))
+        log.warning(f"Token serial {serial} not found in database.")
     else:
         log.warning(
-            "No distinct token object found in enrollment response for serial {0!s}!".format(
-                serial
-            )
+            f"No distinct token object found in enrollment response for serial {serial}!"
         )
 
     return response

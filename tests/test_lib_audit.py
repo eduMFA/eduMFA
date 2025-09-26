@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This tests the files
   lib/audit.py and
@@ -8,9 +7,9 @@ This tests the files
 import datetime
 import os
 import types
+from unittest import mock
 
 import sqlalchemy.engine
-from mock import mock
 from testfixtures import log_capture
 
 from edumfa.config import TestingConfig
@@ -76,7 +75,7 @@ class AuditTestCase(MyTestCase):
 
         # with search filter
         tot = self.Audit.get_total({"action": "action2", "bullshit": "value"})
-        self.assertTrue(tot == 2, "Total numbers: {0!s}".format(tot))
+        self.assertTrue(tot == 2, f"Total numbers: {tot}")
 
     def test_02_filter_search(self):
         # Prepare some audit entries:
@@ -441,12 +440,9 @@ class AuditFileTestCase(OverrideConfigTestCase):
                     (
                         "edumfa.lib.auditmodules.loggeraudit",
                         "INFO",
-                        '{{"action": "No EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:02", '
-                        '"policies": "", "startdate": "{startdate}", '
-                        '"timestamp": "{timestamp}"}}'.format(
-                            timestamp=current_utc_time.isoformat(),
-                            startdate=startdate_time.isoformat(),
-                        ),
+                        '{"action": "No EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:02", '
+                        f'"policies": "", "startdate": "{startdate_time.isoformat()}", '
+                        f'"timestamp": "{current_utc_time.isoformat()}"}}',
                     )
                 )
 
@@ -466,12 +462,9 @@ class AuditFileTestCase(OverrideConfigTestCase):
                     (
                         "edumfa-audit",
                         "INFO",
-                        '{{"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:08", '
-                        '"policies": "", "startdate": "{startdate}", '
-                        '"timestamp": "{timestamp}"}}'.format(
-                            timestamp=current_utc_time.isoformat(),
-                            startdate=startdate_time.isoformat(),
-                        ),
+                        '{"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given", "duration": "0:00:08", '
+                        f'"policies": "", "startdate": "{startdate_time.isoformat()}", '
+                        f'"timestamp": "{current_utc_time.isoformat()}"}}',
                     )
                 )
 

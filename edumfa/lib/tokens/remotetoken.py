@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -192,7 +191,7 @@ class RemoteTokenClass(TokenClass):
         :return: bool
         """
         local_check = is_true(self.get_tokeninfo("remote.local_checkpin"))
-        log.debug(" local checking pin? {0!r}".format(local_check))
+        log.debug(f" local checking pin? {local_check!r}")
 
         return local_check
 
@@ -284,9 +283,8 @@ class RemoteTokenClass(TokenClass):
 
         # here we also need to check for remote.user and so on....
         log.debug(
-            "checking OTP len:%r remotely on server: %r,"
-            " serial: %r, user: %r"
-            % (len(otpval), remoteServer, remoteSerial, remoteUser)
+            f"checking OTP len:{len(otpval)!r} remotely on server: {remoteServer!r},"
+            f" serial: {remoteSerial!r}, user: {remoteUser!r}"
         )
         params = {}
 
@@ -307,7 +305,7 @@ class RemoteTokenClass(TokenClass):
             if remoteServer:
                 # Deprecated
                 params["pass"] = otpval
-                request_url = "{0!s}{1!s}".format(remoteServer, remotePath)
+                request_url = f"{remoteServer}{remotePath}"
                 r = requests.post(
                     request_url, data=params, verify=ssl_verify, timeout=60
                 )
@@ -333,10 +331,9 @@ class RemoteTokenClass(TokenClass):
 
         except Exception as exx:  # pragma: no cover
             log.error(
-                "Error getting response from "
-                "remote Server (%r): %r" % (request_url, exx)
+                f"Error getting response from remote Server ({request_url!r}): {exx!r}"
             )
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.debug(f"{traceback.format_exc()}")
 
         return otp_count
 

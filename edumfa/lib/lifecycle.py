@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -64,7 +63,7 @@ def call_finalizers():
             try:
                 func()
             except Exception as exx:
-                log.warning("Caught exception in finalizer: {!r}".format(exx))
+                log.warning(f"Caught exception in finalizer: {exx!r}")
                 log.debug("Exception in finalizer:", exc_info=True)
 
     store = get_request_local_store()
@@ -73,5 +72,5 @@ def call_finalizers():
             try:
                 func()
             except Exception as exx:
-                log.warning("Caught exception in finalizer: {!r}".format(exx))
+                log.warning(f"Caught exception in finalizer: {exx!r}")
                 log.debug("Exception in finalizer:", exc_info=True)

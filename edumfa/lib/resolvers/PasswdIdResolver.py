@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -134,11 +133,7 @@ class IdResolver(UserIdResolver):
         if self.fileName == "":
             self.fileName = "/etc/passwd"
 
-        log.info(
-            "loading users from file {0!s} from within {1!r}".format(
-                self.fileName, os.getcwd()
-            )
-        )
+        log.info(f"loading users from file {self.fileName} from within {os.getcwd()!r}")
         with codecs.open(self.fileName, "r", ENCODING) as fileHandle:
             ID = self.sF["userid"]
             NAME = self.sF["username"]
@@ -203,23 +198,21 @@ class IdResolver(UserIdResolver):
         :return: True or False
         :rtype: bool
         """
-        log.info("checking password for user uid {0!s}".format(uid))
+        log.info(f"checking password for user uid {uid}")
         cryptedpasswd = self.passDict[uid]
-        log.debug(
-            "We found the encrypted pass {0!s} for uid {1!s}".format(cryptedpasswd, uid)
-        )
+        log.debug(f"We found the encrypted pass {cryptedpasswd} for uid {uid}")
         if cryptedpasswd:
             if cryptedpasswd in ["x", "*"]:
                 err = "Sorry, currently no support for shadow passwords"
-                log.error("{0!s}".format(err))
+                log.error(f"{err}")
                 raise NotImplementedError(err)
             cp = crypt.crypt(password, cryptedpasswd)
-            log.debug("encrypted pass is {0!s}".format(cp))
+            log.debug(f"encrypted pass is {cp}")
             if crypt.crypt(password, cryptedpasswd) == cryptedpasswd:
-                log.info("successfully authenticated user uid {0!s}".format(uid))
+                log.info(f"successfully authenticated user uid {uid}")
                 return True
             else:
-                log.warning("user uid {0!s} failed to authenticate".format(uid))
+                log.warning(f"user uid {uid} failed to authenticate")
                 return False
         else:
             log.warning(

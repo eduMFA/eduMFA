@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 
 from .base import MyApiTestCase
@@ -147,7 +145,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
 
         # delete option "URL"
         with self.app.test_request_context(
-            "/smsgateway/option/{0!s}/option.URL".format(smsgw_id),
+            f"/smsgateway/option/{smsgw_id}/option.URL",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -156,7 +154,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
 
         # try to delete header "header1" at the wrong endpoint
         with self.app.test_request_context(
-            "/smsgateway/option/{0!s}/option.header1".format(smsgw_id),
+            f"/smsgateway/option/{smsgw_id}/option.header1",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -165,7 +163,7 @@ class APISmsGatewayTestCase(MyApiTestCase):
 
         # delete header "header1"
         with self.app.test_request_context(
-            "/smsgateway/option/{0!s}/header.header1".format(smsgw_id),
+            f"/smsgateway/option/{smsgw_id}/header.header1",
             method="DELETE",
             headers={"Authorization": self.at},
         ):

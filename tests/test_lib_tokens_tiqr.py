@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 This test file tests the lib.tokens.tiqrtoken and lib.tokens.ocra
 This depends on lib.tokenclass
@@ -510,7 +509,7 @@ class TiQRTokenTestCase(MyApiTestCase):
         # Calculate Response with the challenge.
         response = ocra_object.get_response(challenge)
 
-        encoded_user_id = "{!s}_{!s}".format(user, self.realm1).encode("utf-8")
+        encoded_user_id = f"{user}_{self.realm1}".encode()
         # First, send a wrong response
         req.all_data = {
             "response": "12345",
@@ -522,7 +521,7 @@ class TiQRTokenTestCase(MyApiTestCase):
         self.assertEqual(r[0], "plain")
         # check the failed response count
         fcnt1 = token.get_max_failcount() - token.get_failcount()
-        self.assertRegex(r[1], r"INVALID_RESPONSE:{0!s}".format(fcnt1))
+        self.assertRegex(r[1], rf"INVALID_RESPONSE:{fcnt1}")
 
         # Try another wrong response
         req.all_data = {
@@ -535,7 +534,7 @@ class TiQRTokenTestCase(MyApiTestCase):
         self.assertEqual(r[0], "plain")
         # check the failed response count
         fcnt2 = token.get_max_failcount() - token.get_failcount()
-        self.assertRegex(r[1], r"INVALID_RESPONSE:{0!s}".format(fcnt2))
+        self.assertRegex(r[1], rf"INVALID_RESPONSE:{fcnt2}")
         # has the failcounter decreased?
         self.assertEqual(fcnt1 - 1, fcnt2)
 

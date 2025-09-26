@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -218,7 +217,7 @@ class IndexedSecretTokenClass(TokenClass):
         return_message = (
             get_action_values_from_options(
                 SCOPE.AUTH,
-                "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+                f"{self.get_class_type()}_{ACTION.CHALLENGETEXT}",
                 options,
             )
             or DEFAULT_CHALLENGE_TEXT
@@ -231,7 +230,7 @@ class IndexedSecretTokenClass(TokenClass):
             position_count = int(
                 get_action_values_from_options(
                     SCOPE.AUTH,
-                    "{0!s}_{1!s}".format(self.get_class_type(), PIIXACTION.COUNT),
+                    f"{self.get_class_type()}_{PIIXACTION.COUNT}",
                     options,
                 )
                 or DEFAULT_POSITION_COUNT
@@ -251,7 +250,7 @@ class IndexedSecretTokenClass(TokenClass):
             random_positions = [
                 urandom.randint(1, secret_length) for _x in range(0, position_count)
             ]
-            position_str = ",".join(["{0!s}".format(x) for x in random_positions])
+            position_str = ",".join([f"{x}" for x in random_positions])
             attributes["random_positions"] = random_positions
 
             db_challenge = Challenge(
@@ -267,7 +266,7 @@ class IndexedSecretTokenClass(TokenClass):
             return_message = return_message.format(position_str)
 
         expiry_date = datetime.datetime.now() + datetime.timedelta(seconds=validity)
-        attributes["valid_until"] = "{0!s}".format(expiry_date)
+        attributes["valid_until"] = f"{expiry_date}"
         reply_dict = {"attributes": attributes}
 
         return True, return_message, transactionid, reply_dict
@@ -371,14 +370,14 @@ class IndexedSecretTokenClass(TokenClass):
             position_count = int(
                 get_action_values_from_options(
                     SCOPE.AUTH,
-                    "{0!s}_{1!s}".format(self.get_class_type(), PIIXACTION.COUNT),
+                    f"{self.get_class_type()}_{PIIXACTION.COUNT}",
                     options,
                 )
                 or DEFAULT_POSITION_COUNT
             )
             if len(challengeobject_list) == 1:
                 session = int(challengeobject_list[0].session or "0") + 1
-                options["session"] = "{0!s}".format(session)
+                options["session"] = f"{session}"
                 if session < position_count:
                     return True
 
@@ -417,5 +416,5 @@ class IndexedSecretTokenClass(TokenClass):
         r = self.check_challenge_response(
             passw=verify, options={"transaction_id": transaction_id}
         )
-        log.debug("Enrollment verified: {0!s}".format(r))
+        log.debug(f"Enrollment verified: {r}")
         return r >= 0

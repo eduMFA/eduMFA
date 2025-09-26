@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -52,7 +51,7 @@ def conf_import(file=None, conftype=None):
             conftype_list = list(contents_var.keys())
 
     for conftype in conftype_list:
-        click.echo("Importing {0!s} from {1!s}".format(conftype, file.name))
+        click.echo(f"Importing {conftype} from {file.name}")
     return contents_var
 
 
@@ -87,7 +86,7 @@ def import_conf_policy(config_list, cleanup=False, update=False, purge=False):
         for policy in policies:
             name = policy.get("name")
             r = delete_policy(name)
-            click.echo(f"Deleted policy {name!s} with result {r!s}")
+            click.echo(f"Deleted policy {name} with result {r}")
     if purge:
         if cleanup:
             click.echo("Cleanup was performed before - nothing to purge here.")
@@ -99,9 +98,9 @@ def import_conf_policy(config_list, cleanup=False, update=False, purge=False):
                 if stored not in import_names:
                     try:
                         r = delete_policy(stored)
-                        click.echo(f"Purged policy {stored!s} with result {r!s}")
+                        click.echo(f"Purged policy {stored} with result {r}")
                     except Exception as ex:
-                        click.echo(f"Purged policy {stored!s} failed with error {ex}")
+                        click.echo(f"Purged policy {stored} failed with error {ex}")
 
     for policy in config_list:
         action_str = "Added"
@@ -110,9 +109,7 @@ def import_conf_policy(config_list, cleanup=False, update=False, purge=False):
         if exists:
             if not update:
                 click.echo(
-                    "Policy {0!s} exists and -u is not specified, skipping import.".format(
-                        name
-                    )
+                    f"Policy {name} exists and -u is not specified, skipping import."
                 )
                 continue
             else:
@@ -134,7 +131,7 @@ def import_conf_policy(config_list, cleanup=False, update=False, purge=False):
             time=policy.get("time"),
             user=policy.get("user"),
         )
-        click.echo("{0!s} policy {1!s} with result {2!s}".format(action_str, name, r))
+        click.echo(f"{action_str} policy {name} with result {r}")
 
 
 # conf export menu
@@ -164,7 +161,7 @@ def import_conf_event(config_list, cleanup=False, update=False, purge=False):
             name = event.get("name")
             r = delete_event(event.get("id"))
             click.echo(
-                "Deleted event '{0!s}' with result {1!s}".format(name, r),
+                f"Deleted event '{name}' with result {r}",
                 file=sys.stderr,
             )
 
@@ -184,9 +181,9 @@ def import_conf_event(config_list, cleanup=False, update=False, purge=False):
                                 "id"
                             )
                         )
-                        click.echo(f"Purged event {stored!s} with result {r!s}")
+                        click.echo(f"Purged event {stored} with result {r}")
                     except Exception as ex:
-                        click.echo(f"Purged event {stored!s} failed with error {ex}")
+                        click.echo(f"Purged event {stored} failed with error {ex}")
 
     for event in config_list:
         action_str = "Added"
@@ -202,9 +199,7 @@ def import_conf_event(config_list, cleanup=False, update=False, purge=False):
         if exists:
             if not update:
                 click.echo(
-                    "Event {0!s} exists and -u is not specified, skipping import.".format(
-                        name
-                    )
+                    f"Event {name} exists and -u is not specified, skipping import."
                 )
                 continue
             else:
@@ -221,7 +216,7 @@ def import_conf_event(config_list, cleanup=False, update=False, purge=False):
             position=event.get("position", "post"),
             id=event_id,
         )
-        click.echo("{0!s} event {1!s} with result {2!s}".format(action_str, name, r))
+        click.echo(f"{action_str} event {name} with result {r}")
 
 
 def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
@@ -237,7 +232,7 @@ def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
             name = resolver
             if name not in [r.get("resolvername") for r in config_list]:
                 r = delete_resolver(name, force=True)
-                click.echo("Purged resolver '{0!s}' with result {1!s}".format(name, r))
+                click.echo(f"Purged resolver '{name}' with result {r}")
 
     for config in config_list:
         action_str = "Added"
@@ -247,9 +242,7 @@ def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
         if exists:
             if not update:
                 click.echo(
-                    "Resolver {0!s} exists and -u is not specified, skipping import.".format(
-                        name
-                    )
+                    f"Resolver {name} exists and -u is not specified, skipping import."
                 )
                 continue
             else:
@@ -262,7 +255,7 @@ def import_conf_resolver(config_list, cleanup=False, update=False, purge=False):
         for key in data.keys():
             params.update({key: data.get(key)})
         r = save_resolver(params)
-        click.echo("{0!s} resolver {1!s} with result {2!s}".format(action_str, name, r))
+        click.echo(f"{action_str} resolver {name} with result {r}")
 
 
 def get_conf_resolver(name=None, print_passwords=False):

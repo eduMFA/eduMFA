@@ -8,12 +8,12 @@ import os
 import shutil
 import unittest
 from io import StringIO
+from unittest import mock
+from unittest.mock import patch
 
-import mock
 import OpenSSL.crypto
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
-from mock import patch
 from OpenSSL import crypto
 
 from edumfa.lib.caconnector import (
@@ -243,17 +243,15 @@ class LocalCATestCase(MyTestCase):
         super().setUpClass()
 
         # Backup the original index and serial
+        shutil.copyfile(f"{WORKINGDIR}/serial", f"{WORKINGDIR}/serial.orig")
         shutil.copyfile(
-            "{0!s}/serial".format(WORKINGDIR), "{0!s}/serial.orig".format(WORKINGDIR)
-        )
-        shutil.copyfile(
-            "{0!s}/index.txt".format(WORKINGDIR),
-            "{0!s}/index.txt.orig".format(WORKINGDIR),
+            f"{WORKINGDIR}/index.txt",
+            f"{WORKINGDIR}/index.txt.orig",
         )
 
     @classmethod
     def tearDownClass(cls):
-        filelist = glob.glob("{0!s}/100*.pem".format(WORKINGDIR))
+        filelist = glob.glob(f"{WORKINGDIR}/100*.pem")
         for f in filelist:
             os.remove(f)
 
@@ -271,20 +269,18 @@ class LocalCATestCase(MyTestCase):
         ]
         for f in FILES:
             try:
-                os.remove("{0!s}/{1!s}".format(WORKINGDIR, f))
+                os.remove(f"{WORKINGDIR}/{f}")
             except OSError:
-                print("File {0!s} could not be deleted.".format(f))
+                print(f"File {f} could not be deleted.")
 
         # restore backup of index.txt and serial
+        shutil.copyfile(f"{WORKINGDIR}/serial.orig", f"{WORKINGDIR}/serial")
         shutil.copyfile(
-            "{0!s}/serial.orig".format(WORKINGDIR), "{0!s}/serial".format(WORKINGDIR)
+            f"{WORKINGDIR}/index.txt.orig",
+            f"{WORKINGDIR}/index.txt",
         )
-        shutil.copyfile(
-            "{0!s}/index.txt.orig".format(WORKINGDIR),
-            "{0!s}/index.txt".format(WORKINGDIR),
-        )
-        os.remove("{0!s}/serial.orig".format(WORKINGDIR))
-        os.remove("{0!s}/index.txt.orig".format(WORKINGDIR))
+        os.remove(f"{WORKINGDIR}/serial.orig")
+        os.remove(f"{WORKINGDIR}/index.txt.orig")
         # call parent
         super().tearDownClass()
 
@@ -318,11 +314,11 @@ class LocalCATestCase(MyTestCase):
         serial = cert.get_serial_number()
 
         self.assertEqual(
-            "{0!r}".format(cert.get_issuer()),
+            f"{cert.get_issuer()!r}",
             "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
         )
         self.assertEqual(
-            "{0!r}".format(cert.get_subject()),
+            f"{cert.get_subject()!r}",
             "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=requester.localdomain'>",
         )
 
@@ -382,11 +378,11 @@ class LocalCATestCase(MyTestCase):
 
         _, cert = cacon.sign_request(REQUEST_USER)
         self.assertEqual(
-            "{0!r}".format(cert.get_issuer()),
+            f"{cert.get_issuer()!r}",
             "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
         )
         self.assertEqual(
-            "{0!r}".format(cert.get_subject()),
+            f"{cert.get_subject()!r}",
             "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=usercert'>",
         )
 
@@ -404,11 +400,11 @@ class LocalCATestCase(MyTestCase):
 
         _, cert = cacon.sign_request(SPKAC, options={"spkac": 1})
         self.assertEqual(
-            "{0!r}".format(cert.get_issuer()),
+            f"{cert.get_issuer()!r}",
             "<X509Name object '/C=DE/ST=Bavaria/O=eduMFA/CN=eduMFA Test-CA'>",
         )
         self.assertEqual(
-            "{0!r}".format(cert.get_subject()),
+            f"{cert.get_subject()!r}",
             "<X509Name object '/CN=Steve Test/emailAddress=steve@openssl.org'>",
         )
 
@@ -736,13 +732,13 @@ class CreateLocalCATestCase(MyTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        filelist = glob.glob("{0!s}2/*".format(WORKINGDIR))
+        filelist = glob.glob(f"{WORKINGDIR}2/*")
         for f in filelist:
             try:
                 os.remove(f)
             except OSError:
-                print("Error deleting file {0!s}.".format(f))
-        os.rmdir("{0!s}2".format(WORKINGDIR))
+                print(f"Error deleting file {f}.")
+        os.rmdir(f"{WORKINGDIR}2")
         super().tearDownClass()
 
     def test_01_create_ca(self):

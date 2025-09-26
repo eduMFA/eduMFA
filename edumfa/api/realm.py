@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -145,7 +144,7 @@ def set_realm_api(realm=None):
     g.audit_object.log(
         {
             "success": len(added) == len(Resolvers),
-            "info": "realm: {0!r}, resolvers: {1!r}".format(realm, resolvers),
+            "info": f"realm: {realm!r}, resolvers: {resolvers!r}",
         }
     )
     return send_result({"added": added, "failed": failed})

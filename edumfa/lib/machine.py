@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -108,7 +107,7 @@ def get_hostname(ip):
     machines = get_machines(ip=ip)
     if len(machines) > 1:
         raise Exception(
-            "Can not get unique ID for IP=%r. More than one machine found." % ip
+            f"Can not get unique ID for IP={ip!r}. More than one machine found."
         )
     if len(machines) == 1:
         # There is only one machine in the list and we get its ID
@@ -117,7 +116,7 @@ def get_hostname(ip):
         if type(hostname) == list:
             hostname = hostname[0]
     else:
-        raise Exception("There is no machine with IP={0!r}".format(ip))
+        raise Exception(f"There is no machine with IP={ip!r}")
     return hostname
 
 
@@ -135,8 +134,8 @@ def get_machine_id(hostname, ip=None):
     machines = get_machines(hostname=hostname, ip=ip, substring=False)
     if len(machines) > 1:
         raise Exception(
-            "Can not get unique ID for hostname=%r and IP=%r. "
-            "More than one machine found." % (hostname, ip)
+            f"Can not get unique ID for hostname={hostname!r} and IP={ip!r}. "
+            "More than one machine found."
         )
     if len(machines) == 1:
         # There is only one machine in the list and we get its ID
@@ -144,9 +143,7 @@ def get_machine_id(hostname, ip=None):
         resolver_name = machines[0].resolver_name
 
     if machine_id is None:
-        raise Exception(
-            "There is no machine with name={0!r} and IP={1!r}".format(hostname, ip)
-        )
+        raise Exception(f"There is no machine with name={hostname!r} and IP={ip!r}")
 
     return machine_id, resolver_name
 

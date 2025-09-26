@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib/machine.py for attaching and detaching tokens
 """
@@ -99,7 +98,7 @@ class MachineTokenTestCase(MyTestCase):
             elif option.mt_key == "option2":
                 self.assertEqual(option.mt_value, "valü2")
             else:
-                self.fail("Unspecified Option! {0!s}".format(option.mt_key))
+                self.fail(f"Unspecified Option! {option.mt_key}")
 
         r = delete_option(
             serial=self.serial, application="luks", hostname="gandalf", key="option1"

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -88,11 +87,7 @@ def save_resolver(params):
     # check the type
     resolvertypes = get_resolver_types()
     if resolvertype not in resolvertypes:
-        raise Exception(
-            "resolver type : {0!s} not in {1!s}".format(
-                resolvertype, str(resolvertypes)
-            )
-        )
+        raise Exception(f"resolver type : {resolvertype} not in {str(resolvertypes)}")
 
     # check the name
     resolvers = get_resolver_list(filter_resolver_name=resolvername)
@@ -103,7 +98,7 @@ def save_resolver(params):
             update_resolver = True
         else:
             raise Exception(
-                "resolver with similar name and other type already exists: %s" % r_name
+                f"resolver with similar name and other type already exists: {r_name}"
             )
 
     # create a dictionary for the ResolverConfig
@@ -226,8 +221,8 @@ def delete_resolver(resolvername, force=False):
             # The resolver is still contained in a realm! We must not delete it
             realmname = reso.realm_list[0].realm.name
             raise ConfigAdminError(
-                "The resolver %r is still contained in "
-                "realm %r." % (resolvername, realmname)
+                f"The resolver {resolvername!r} is still contained in "
+                f"realm {realmname!r}."
             )
         elif reso.realm_list and force:
             # The resolver is still contained in a realm! We must delete the link
@@ -334,7 +329,7 @@ def get_resolver_object(resolvername):
     r_obj_class = get_resolver_class(r_type)
 
     if r_obj_class is None:
-        log.error("Can not find resolver with name {0!s} ".format(resolvername))
+        log.error(f"Can not find resolver with name {resolvername} ")
         return None
     else:
         store = get_app_local_store()
@@ -392,7 +387,7 @@ def import_resolver(data, name=None):
     #  given data. We could use "pretestresolver() / testconnection()" (which
     #  doesn't check the input) or "loadConfig()" (which also doesn't check the
     #  parameter, at least for LDAP/SQL-resolver).
-    log.debug("Import resolver config: {0!s}".format(data))
+    log.debug(f"Import resolver config: {data}")
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
@@ -406,7 +401,7 @@ def import_resolver(data, name=None):
         # TODO: we have no information if a new resolver was created or an
         #  existing resolver updated. We would need to enhance "save_resolver()".
         log.info(
-            'Import of resolver "{0!s}" finished, id: {1!s}'.format(
+            'Import of resolver "{!s}" finished, id: {!s}'.format(
                 res_data["resolver"], rid
             )
         )

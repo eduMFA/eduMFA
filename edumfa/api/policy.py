@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -205,7 +204,7 @@ def set_policy_api(name=None):
     priority = int(getParam(param, "priority", optional, default=1))
     conditions = getParam(param, "conditions", optional)
 
-    g.audit_object.log({"action_detail": name, "info": "{0!s}".format(param)})
+    g.audit_object.log({"action_detail": name, "info": f"{param}"})
     ret = set_policy(
         name=name,
         scope=scope,
@@ -223,7 +222,7 @@ def set_policy_api(name=None):
         priority=priority,
         conditions=conditions,
     )
-    log.debug("policy {0!s} successfully saved.".format(name))
+    log.debug(f"policy {name} successfully saved.")
     string = "setPolicy " + name
     res[string] = ret
     g.audit_object.log({"success": True})
@@ -305,11 +304,7 @@ def get_policy(name=None, export=None):
 
     P = g.policy_object
     if not export:
-        log.debug(
-            "retrieving policy name: {0!s}, realm: {1!s}, scope: {2!s}".format(
-                name, realm, scope
-            )
-        )
+        log.debug(f"retrieving policy name: {name}, realm: {realm}, scope: {scope}")
 
         pol = P.list_policies(name=name, realm=realm, scope=scope, active=active)
         ret = send_result(pol)
@@ -321,9 +316,7 @@ def get_policy(name=None, export=None):
     g.audit_object.log(
         {
             "success": True,
-            "info": "name = {0!s}, realm = {1!s}, scope = {2!s}".format(
-                name, realm, scope
-            ),
+            "info": f"name = {name}, realm = {realm}, scope = {scope}",
         }
     )
     return ret
@@ -429,18 +422,14 @@ def import_policy_api(filename=None):
     file_contents = to_unicode(file_contents)
 
     if file_contents == "":
-        log.error(
-            "Error loading/importing policy file. file {0!s} empty!".format(filename)
-        )
+        log.error(f"Error loading/importing policy file. file {filename} empty!")
         raise ParameterError("Error loading policy. File empty!")
 
     policy_num = import_policies(file_contents=file_contents)
     g.audit_object.log(
         {
             "success": True,
-            "info": "imported {0:d} policies from file {1!s}".format(
-                policy_num, filename
-            ),
+            "info": f"imported {policy_num:d} policies from file {filename}",
         }
     )
 
@@ -533,7 +522,7 @@ def check_policy_api():
         policy_names = []
         for pol in policies:
             policy_names.append(pol.get("name"))
-        g.audit_object.log({"info": "allowed by policy {0!s}".format(policy_names)})
+        g.audit_object.log({"info": f"allowed by policy {policy_names}"})
     else:
         res["allowed"] = False
         res["info"] = "No policies found"
@@ -541,8 +530,7 @@ def check_policy_api():
     g.audit_object.log(
         {
             "success": True,
-            "action_detail": "action = %s, realm = %s, scope = "
-            "%s" % (action, realm, scope),
+            "action_detail": f"action = {action}, realm = {realm}, scope = {scope}",
         }
     )
 

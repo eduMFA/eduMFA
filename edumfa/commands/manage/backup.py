@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -52,11 +51,11 @@ def _write_mysql_defaults(filename, username, password):
     """
     with open(filename, "w") as f:
         f.write(
-            """[client]
-user={0!s}
-password={1!s}
+            f"""[client]
+user={username}
+password={password}
 [mysqldump]
-no-tablespaces=True""".format(username, password)
+no-tablespaces=True"""
         )
 
     os.chmod(filename, 0o600)
@@ -81,9 +80,9 @@ def restore(backup_file: str):
     std_out, err_out = p.communicate()
     for line in std_out.split("\n"):
         if re.search(r"/edumfa.cfg$", line):
-            config_file = "/{0!s}".format(line.strip())
+            config_file = f"/{line.strip()}"
         elif re.search(r"\.sql", line):
-            sqlfile = "/{0!s}".format(line.strip())
+            sqlfile = f"/{line.strip()}"
         elif re.search(r"/enckey", line):
             enckey_contained = True
 
@@ -98,11 +97,11 @@ def restore(backup_file: str):
         click.echo(
             "NO FILE 'enckey' CONTAINED! BE SURE TO RESTORE THE ENCRYPTION KEY MANUALLY!"
         )
-    click.echo("Restoring to {0!s} with data from {1!s}".format(config_file, sqlfile))
+    click.echo(f"Restoring to {config_file} with data from {sqlfile}")
 
     call(["tar", "-zxf", backup_file, "-C", "/"])
     print(60 * "=")
-    with open(config_file, "r") as f:
+    with open(config_file) as f:
         # Determine the SQLAlchemy URI
         for line in f:
             if re.search("^SQLALCHEMY_DATABASE_URI", line):
@@ -111,12 +110,12 @@ def restore(backup_file: str):
                 sqluri = value.strip().strip("'").strip('"')
 
     if sqluri is None:
-        click.echo("No SQLALCHEMY_DATABASE_URI found in {0!s}".format(config_file))
+        click.echo(f"No SQLALCHEMY_DATABASE_URI found in {config_file}")
         sys.exit(2)
     sqltype = sqluri.split(":")[0]
     if sqltype == "sqlite":
         productive_file = sqluri[len("sqlite:///") :]
-        click.echo("Restore SQLite %s" % productive_file)
+        click.echo(f"Restore SQLite {productive_file}")
         call(["cp", sqlfile, productive_file])
         os.unlink(sqlfile)
     elif sqltype in MYSQL_DIALECTS:
@@ -130,13 +129,7 @@ def restore(backup_file: str):
         # Rewriting database
         click.echo("Restoring database.")
         call(
-            "mysql --defaults-file=%s -h %s %s < %s"
-            % (
-                shlex_quote(defaults_file),
-                shlex_quote(hostname),
-                shlex_quote(database),
-                shlex_quote(sqlfile),
-            ),
+            f"mysql --defaults-file={shlex_quote(defaults_file)} -h {shlex_quote(hostname)} {shlex_quote(database)} < {shlex_quote(sqlfile)}",
             shell=True,
         )
         os.unlink(sqlfile)
@@ -157,7 +150,7 @@ def restore(backup_file: str):
         ]
         run(cmd, env=env)
     else:
-        click.echo("unsupported SQL syntax: %s" % sqltype)
+        click.echo(f"unsupported SQL syntax: {sqltype}")
         sys.exit(2)
 
 
@@ -236,8 +229,8 @@ def create(
         encfile_stat = os.stat(current_app.config.get("EDUMFA_ENCFILE"))
         os.chown(target_dir, encfile_stat.st_uid, encfile_stat.st_gid)
 
-    sqlfile = "%s/dbdump-%s.sql" % (target_dir, DATE)
-    backup_file = "%s/%s-%s.tgz" % (target_dir, BASE_NAME, DATE)
+    sqlfile = f"{target_dir}/dbdump-{DATE}.sql"
+    backup_file = f"{target_dir}/{BASE_NAME}-{DATE}.tgz"
 
     sqluri = current_app.config.get("SQLALCHEMY_DATABASE_URI")
     parsed_sqluri = sqlalchemy.engine.url.make_url(sqluri)
@@ -246,18 +239,18 @@ def create(
     if sqltype == "sqlite":
         productive_file = sqluri[len("sqlite:///") :]
         click.echo(f"Backup SQLite {productive_file}")
-        sqlfile = "%s/db-%s.sqlite" % (target_dir, DATE)
+        sqlfile = f"{target_dir}/db-{DATE}.sqlite"
         call(["cp", productive_file, sqlfile])
     elif sqltype in MYSQL_DIALECTS:
         username = parsed_sqluri.username
         password = parsed_sqluri.password
         hostname = parsed_sqluri.host
         database = parsed_sqluri.database
-        defaults_file = "{0!s}/mysql.cnf".format(config_dir)
+        defaults_file = f"{config_dir}/mysql.cnf"
         _write_mysql_defaults(defaults_file, username, password)
         cmd = [
             "mysqldump",
-            "--defaults-file={!s}".format(shlex_quote(defaults_file)),
+            f"--defaults-file={shlex_quote(defaults_file)}",
             "-h",
             shlex_quote(hostname),
         ]
@@ -301,7 +294,7 @@ def create(
     if not enckey:
         # Exclude enckey from backup
         # since tar v1.30 --exclude cannot be appended
-        backup_call.insert(1, "--exclude={0!s}".format(enc_file))
+        backup_call.insert(1, f"--exclude={enc_file}")
 
     call(backup_call)
     os.unlink(sqlfile)

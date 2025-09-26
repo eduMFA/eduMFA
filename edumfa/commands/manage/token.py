@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -39,5 +38,5 @@ def import_tokens(file, tokenrealm):
     i = 0
     for serial in tokens:
         i += 1
-        click.echo("{0!s}/{1!s} Importing token {2!s}".format(i, len(tokens), serial))
+        click.echo(f"{i}/{len(tokens)} Importing token {serial}")
         import_token(serial, tokens[serial], tokenrealms=tokenrealm)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -120,9 +119,9 @@ def before_request():
             "client": g.client_ip,
             "client_user_agent": request.user_agent.browser,
             "edumfa_server": edumfa_server,
-            "action": "{0!s} {1!s}".format(request.method, request.url_rule),
+            "action": f"{request.method} {request.url_rule}",
             "action_detail": "",
-            "thread_id": "{0!s}".format(threading.current_thread().ident),
+            "thread_id": f"{threading.current_thread().ident}",
             "info": "",
         }
     )
@@ -139,12 +138,8 @@ def before_request():
             request.User = User(loginname, realm)
         except Exception as e:
             request.User = None
-            log.warning(
-                "Problem resolving user {0!s} in realm {1!s}: {2!s}.".format(
-                    loginname, realm, e
-                )
-            )
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.warning(f"Problem resolving user {loginname} in realm {realm}: {e}.")
+            log.debug(f"{traceback.format_exc()}")
 
 
 @jwtauth.route("", methods=["POST"])
@@ -244,7 +239,7 @@ def get_auth_token():
     # the realm parameter has precedence! Check if it exists
     if realm_param and not realm_is_defined(realm_param):
         raise AuthError(
-            _("Authentication failure. Unknown realm: {0!s}.".format(realm_param)),
+            _(f"Authentication failure. Unknown realm: {realm_param}."),
             id=ERROR.AUTHENTICATE_WRONG_CREDENTIALS,
         )
 
@@ -329,7 +324,7 @@ def get_auth_token():
     elif verify_db_admin(username, password):
         role = ROLE.ADMIN
         admin_auth = True
-        log.info("Local admin '{0!s}' successfully logged in.".format(username))
+        log.info(f"Local admin '{username}' successfully logged in.")
         # This admin is not in the default realm!
         realm = ""
         user_obj = User()
@@ -379,8 +374,8 @@ def get_auth_token():
                 # This condition can only be checked if the user was authenticated as it
                 # is the only way to verify if such a user exists.
                 log.warning(
-                    "A user '{0!s}' exists as local admin and as user in "
-                    "your default realm!".format(user_obj.login)
+                    f"A user '{user_obj.login}' exists as local admin and as user in "
+                    "your default realm!"
                 )
             if role == ROLE.ADMIN:
                 g.audit_object.log(
@@ -390,7 +385,7 @@ def get_auth_token():
                         "realm": user_obj.realm,
                         "resolver": user_obj.resolver,
                         "serial": serials,
-                        "info": "{0!s}|loginmode={1!s}".format(
+                        "info": "{!s}|loginmode={!s}".format(
                             log_used_user(user_obj), details.get("loginmode")
                         ),
                     }
@@ -402,7 +397,7 @@ def get_auth_token():
                         "realm": user_obj.realm,
                         "resolver": user_obj.resolver,
                         "serial": serials,
-                        "info": "{0!s}|loginmode={1!s}".format(
+                        "info": "{!s}|loginmode={!s}".format(
                             log_used_user(user_obj), details.get("loginmode")
                         ),
                     }

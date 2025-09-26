@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -209,7 +208,7 @@ def set_config():
             desc = getParam(param, key + ".desc", optional)
             res = set_edumfa_config(key, value, typ, desc)
             result[key] = res
-            g.audit_object.add_to_log({"info": "{0!s}={1!s}, ".format(key, value)})
+            g.audit_object.add_to_log({"info": f"{key}={value}, "})
     g.audit_object.log({"success": True})
     return send_result(result)
 
@@ -243,7 +242,7 @@ def set_default():
         "DefaultResetFailCount",
     ]
 
-    description = "parameters are: {0!s}".format(", ".join(keys))
+    description = "parameters are: {!s}".format(", ".join(keys))
     param = getLowerParams(request.all_data)
     result = {}
     for k in keys:
@@ -252,13 +251,13 @@ def set_default():
             res = set_edumfa_config(k, value)
             result[k] = res
             g.audit_object.log({"success": True})
-            g.audit_object.add_to_log({"info": "{0!s}={1!s}, ".format(k, value)})
+            g.audit_object.add_to_log({"info": f"{k}={value}, "})
 
     if not result:
         log.warning(
-            "Failed saving config. Could not find any known parameter. %s" % description
+            f"Failed saving config. Could not find any known parameter. {description}"
         )
-        raise ParameterError("Usage: {0!s}".format(description), id=77)
+        raise ParameterError(f"Usage: {description}", id=77)
 
     return send_result(result)
 

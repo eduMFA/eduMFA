@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This test file tests the lib.tokens.4eyestoken
 This depends on lib.tokenclass
@@ -58,7 +56,7 @@ class FourEyesTokenTestCase(MyTestCase):
             {
                 "serial": "eye1",
                 "type": "4eyes",
-                "4eyes": "{0!s}:2".format(self.realm1),
+                "4eyes": f"{self.realm1}:2",
                 "separator": " ",
             }
         )
@@ -80,7 +78,7 @@ class FourEyesTokenTestCase(MyTestCase):
         self.assertFalse(r[0])
         self.assertEqual(
             r[1].get("foureyes"),
-            "Only found 0 tokens in realm {0!s}".format(self.realm1),
+            f"Only found 0 tokens in realm {self.realm1}",
         )
 
         # check authentication also works if the 4eyes-token is in the same realm

@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 """
 This tests the file api.lib.utils
 """
 
 import datetime
 import warnings
+from unittest import mock
 from urllib.parse import quote
 
 import jwt
-import mock
 
 from edumfa.api.lib.utils import (
     attestation_certificate_allowed,
@@ -86,7 +85,7 @@ class UtilsTestCase(MyApiTestCase):
         )
 
         # create a jwt with a trusted private key
-        with open("tests/testdata/jwt_sign.key", "r") as f:
+        with open("tests/testdata/jwt_sign.key") as f:
             key = f.read()
 
         # successful authentication with wildcard user, starting with an "h" and ending with "s"
@@ -212,7 +211,7 @@ class UtilsTestCase(MyApiTestCase):
         # Here we check, if the username from the trusted JWT appears in the audit log.
         # This means that the username is read in the correct way from the JWT and
         # also used in the correct way for policy handling.
-        with open("tests/testdata/jwt_sign.key", "r") as f:
+        with open("tests/testdata/jwt_sign.key") as f:
             key = f.read()
 
         auth_token = jwt.encode(
@@ -313,7 +312,7 @@ class UtilsTestCase(MyApiTestCase):
         # Test viewargs
         with mock.patch("logging.Logger.debug") as mock_log:
             with self.app.test_request_context(
-                "/token/{0!s}".format(serial),
+                f"/token/{serial}",
                 method="DELETE",
                 headers={"Authorization": self.at},
             ):
@@ -423,7 +422,7 @@ class UtilsTestCase(MyApiTestCase):
         set_policy(
             name="otppin",
             scope=SCOPE.AUTH,
-            action="{0!s}={1!s}".format(ACTION.OTPPIN, "userstore"),
+            action="{!s}={!s}".format(ACTION.OTPPIN, "userstore"),
         )
         init_token(
             {"type": "spass", "serial": "spass1d"}, user=User("pwpercent", self.realm1)
@@ -498,7 +497,7 @@ class UtilsTestCase(MyApiTestCase):
         ]
 
         # create a jwt with a trusted private key
-        with open("tests/testdata/jwt_sign.key", "r") as f:
+        with open("tests/testdata/jwt_sign.key") as f:
             key = f.read()
 
         auth_token = jwt.encode(

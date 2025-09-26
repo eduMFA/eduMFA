@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -44,16 +43,16 @@ def list_resolver(verbose: bool = False):
 
     if not verbose:
         for name, resolver in resolver_list.items():
-            print("{0!s:16} - ({1!s})".format(name, resolver.get("type")))
+            print("{!s:16} - ({!s})".format(name, resolver.get("type")))
     else:
         for name, resolver in resolver_list.items():
-            print("{0!s:16} - ({1!s})".format(name, resolver.get("type")))
+            print("{!s:16} - ({!s})".format(name, resolver.get("type")))
             print("." * 32)
             data = resolver.get("data", {})
             for k, v in data.items():
                 if k.lower() in ["bindpw", "password"]:
                     v = "xxxxx"
-                print("{0!s:>24}: {1!r}".format(k, v))
+                print(f"{k:>24}: {v!r}")
             print("")
 
 
@@ -105,7 +104,7 @@ def create_internal(name):
     # determine host and user
     hostparts = user_pw_host.split("@")
     if len(hostparts) > 2:
-        click.echo("Invalid database URI: %s" % sqluri)
+        click.echo(f"Invalid database URI: {sqluri}")
         sys.exit(2)
     elif len(hostparts) == 1:
         host = hostparts[0] or "/"
@@ -119,7 +118,7 @@ def create_internal(name):
         elif len(userparts) == 1:
             username = userparts[0]
         else:
-            click.echo("Invalid username and password in database URI: %s" % sqluri)
+            click.echo(f"Invalid username and password in database URI: {sqluri}")
             sys.exit(3)
     # now we can create the resolver
     params = {
@@ -146,7 +145,7 @@ def create_internal(name):
     engine = create_engine(sqluri)
     metadata = MetaData()
     Table(
-        "users_%s" % name,
+        f"users_{name}",
         metadata,
         Column("id", Integer, primary_key=True),
         Column("username", String(40), unique=True),

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -153,7 +152,7 @@ def get_ad_timestamp_now():
 
 
 def trim_objectGUID(userId):
-    userId = uuid.UUID("{{{0!s}}}".format(userId)).bytes_le
+    userId = uuid.UUID(f"{{{userId}}}").bytes_le
     userId = escape_bytes(userId)
     return userId
 
@@ -168,7 +167,7 @@ def get_info_configuration(noschemas):
     get_schema_info = ldap3.SCHEMA
     if noschemas:
         get_schema_info = ldap3.NONE
-    log.debug("Get LDAP schema info: {0!r}".format(get_schema_info))
+    log.debug(f"Get LDAP schema info: {get_schema_info!r}")
     return get_schema_info
 
 
@@ -203,8 +202,7 @@ def ignore_sizelimit_exception(conn, generator):
                 # in ``conn.response``. If that is the case, we assume the generator works correctly
                 # and *all* of ``conn.response`` have been yielded already.
                 if last_entry is None or last_entry not in conn.response:
-                    for entry in conn.response:
-                        yield entry
+                    yield from conn.response
                 break
             else:
                 raise
@@ -251,9 +249,7 @@ def cache(func):
             r_cache = CACHE.get(resolver_id).get(func.__name__)
             entry = r_cache.get(args[0])
             if entry and now < entry.get("timestamp") + tdelta:
-                log.debug(
-                    "Reading {0!r} from cache for {1!r}".format(args[0], func.__name__)
-                )
+                log.debug(f"Reading {args[0]!r} from cache for {func.__name__!r}")
                 return entry.get("value")
 
         f_result = func(self, *args, **kwds)
@@ -314,11 +310,7 @@ class IdResolver(UserIdResolver):
         pooling_loop_timeout = get_app_config_value(
             "EDUMFA_LDAP_POOLING_LOOP_TIMEOUT", 10
         )
-        log.info(
-            "Setting system wide POOLING_LOOP_TIMEOUT to {0!s}.".format(
-                pooling_loop_timeout
-            )
-        )
+        log.info(f"Setting system wide POOLING_LOOP_TIMEOUT to {pooling_loop_timeout}.")
         ldap3.set_config_parameter("POOLING_LOOP_TIMEOUT", pooling_loop_timeout)
 
     def checkPass(self, uid, password):
@@ -342,11 +334,7 @@ class IdResolver(UserIdResolver):
                     name, to_bytes(password)
                 )
             except gssapi.exceptions.GSSError as e:
-                log.info(
-                    "Failed to authenticate user {0!s} with GSSAPI: {1!r}".format(
-                        name, e
-                    )
-                )
+                log.info(f"Failed to authenticate user {name} with GSSAPI: {e!r}")
                 log.debug(traceback.format_exc())
                 return False
             return True
@@ -359,7 +347,7 @@ class IdResolver(UserIdResolver):
             # In fact, we need the sAMAccountName. If the username mapping is
             # another attribute than the sAMAccountName the authentication
             # will fail!
-            bind_user = "{0!s}\\{1!s}".format(domain_name, uinfo.get("username"))
+            bind_user = "{!s}\\{!s}".format(domain_name, uinfo.get("username"))
         else:
             bind_user = self._getDN(uid)
 
@@ -367,8 +355,8 @@ class IdResolver(UserIdResolver):
             self.serverpool = self.get_serverpool_instance(get_info=ldap3.NONE)
 
         try:
-            log.debug("Authtype: {0!r}".format(self.authtype))
-            log.debug("user    : {0!r}".format(bind_user))
+            log.debug(f"Authtype: {self.authtype!r}")
+            log.debug(f"user    : {bind_user!r}")
             # Whatever happens. If we have an empty bind_user, we must break
             # since we must avoid anonymous binds!
             if not bind_user or len(bind_user) < 1:
@@ -383,18 +371,14 @@ class IdResolver(UserIdResolver):
                 start_tls=self.start_tls,
             )
             r = l.bind()
-            log.debug("bind result: {0!r}".format(r))
+            log.debug(f"bind result: {r!r}")
             if not r:
                 raise Exception("Wrong credentials")
             log.debug("bind seems successful.")
             l.unbind()
             log.debug("unbind successful.")
         except Exception as e:
-            log.warning(
-                "failed to check password for {0!r}/{1!r}: {2!r}".format(
-                    uid, bind_user, e
-                )
-            )
+            log.warning(f"failed to check password for {uid!r}/{bind_user!r}: {e!r}")
             log.debug(traceback.format_exc())
             return False
 
@@ -471,8 +455,8 @@ class IdResolver(UserIdResolver):
                     # in some weird cases we sometimes get a byte-array here
                     # which resembles an uuid. So we just convert it to one...
                     log.warning(
-                        "Found a byte-array as uid ({0!s}), trying to "
-                        "convert it to a UUID. ({1!s})".format(binascii.hexlify(uid), e)
+                        f"Found a byte-array as uid ({binascii.hexlify(uid)}), trying to "
+                        f"convert it to a UUID. ({e})"
                     )
                     log.debug(traceback.format_exc())
                     uid = str(uuid.UUID(bytes_le=uid))
@@ -507,9 +491,7 @@ class IdResolver(UserIdResolver):
             # get the DN for the Object
             self._bind()
             search_userId = self._trim_user_id(userId)
-            filter = "(&{0!s}({1!s}={2!s}))".format(
-                self.searchfilter, self.uidtype, search_userId
-            )
+            filter = f"(&{self.searchfilter}({self.uidtype}={search_userId}))"
             self.l.search(
                 search_base=self.basedn,
                 search_scope=self.scope,
@@ -519,13 +501,11 @@ class IdResolver(UserIdResolver):
             r = self.l.response
             r = self._trim_result(r)
             if len(r) > 1:  # pragma: no cover
-                raise Exception(
-                    "Found more than one object for uid {0!r}".format(userId)
-                )
+                raise Exception(f"Found more than one object for uid {userId!r}")
             elif len(r) == 1:
                 dn = r[0].get("dn")
             else:
-                log.info("The filter {0!r} returned no DN.".format(filter))
+                log.info(f"The filter {filter!r} returned no DN.")
 
         return dn
 
@@ -616,9 +596,7 @@ class IdResolver(UserIdResolver):
             )
         else:
             search_userId = to_unicode(self._trim_user_id(userId))
-            filter = "(&{0!s}({1!s}={2!s}))".format(
-                self.searchfilter, self.uidtype, search_userId
-            )
+            filter = f"(&{self.searchfilter}({self.uidtype}={search_userId}))"
             self.l.search(
                 search_base=self.basedn,
                 search_scope=self.scope,
@@ -629,7 +607,7 @@ class IdResolver(UserIdResolver):
         r = self.l.response
         r = self._trim_result(r)
         if len(r) > 1:  # pragma: no cover
-            raise Exception("Found more than one object for uid {0!r}".format(userId))
+            raise Exception(f"Found more than one object for uid {userId!r}")
 
         for entry in r:
             attributes = entry.get("attributes")
@@ -656,7 +634,7 @@ class IdResolver(UserIdResolver):
                         else:
                             raise Exception(
                                 "The LDAP returns an objectGUID, "
-                                "that is no string: {0!s}".format(type(ldap_v))
+                                f"that is no string: {type(ldap_v)}"
                             )
                     elif (
                         type(ldap_v) == list and map_k not in self.multivalueattributes
@@ -707,16 +685,12 @@ class IdResolver(UserIdResolver):
                         search_login_name = trim_objectGUID(login_name)
                     else:
                         search_login_name = login_name
-                    loginname_filter += "({!s}={!s})".format(
-                        l_attribute.strip(), search_login_name
-                    )
+                    loginname_filter += f"({l_attribute.strip()}={search_login_name})"
                 except ValueError:
                     # This happens if we have a self.loginname_attribute like ["sAMAccountName","objectGUID"],
                     # the user logs in with his sAMAccountName, which can
                     # not be transformed to a UUID
-                    log.debug(
-                        "Can not transform {0!s} to a objectGUID.".format(login_name)
-                    )
+                    log.debug(f"Can not transform {login_name} to a objectGUID.")
 
             loginname_filter = "|" + loginname_filter
         else:
@@ -724,19 +698,17 @@ class IdResolver(UserIdResolver):
                 search_login_name = trim_objectGUID(login_name)
             else:
                 search_login_name = login_name
-            loginname_filter = "{!s}={!s}".format(
-                self.loginname_attribute[0], search_login_name
-            )
+            loginname_filter = f"{self.loginname_attribute[0]}={search_login_name}"
 
-        log.debug("login name filter: {!r}".format(loginname_filter))
-        filter = "(&{0!s}({1!s}))".format(self.searchfilter, loginname_filter)
+        log.debug(f"login name filter: {loginname_filter!r}")
+        filter = f"(&{self.searchfilter}({loginname_filter}))"
 
         # create search attributes
         attributes = list(self.userinfo.values())
         if self.uidtype.lower() != "dn":
             attributes.append(str(self.uidtype))
 
-        log.debug("Searching user {0!r} in LDAP.".format(LoginName))
+        log.debug(f"Searching user {LoginName!r} in LDAP.")
         self.l.search(
             search_base=self.basedn,
             search_scope=self.scope,
@@ -747,9 +719,7 @@ class IdResolver(UserIdResolver):
         r = self.l.response
         r = self._trim_result(r)
         if len(r) > 1:  # pragma: no cover
-            raise Exception(
-                "Found more than one object for Loginname {0!r}".format(LoginName)
-            )
+            raise Exception(f"Found more than one object for Loginname {LoginName!r}")
 
         for entry in r:
             userid = self._get_uid(entry, self.uidtype)
@@ -778,16 +748,9 @@ class IdResolver(UserIdResolver):
                 comperator = ">="
                 if searchDict[search_key] in ["1", 1]:
                     comperator = "<="
-                filter += "(&({0!s}{1!s}{2!s})(!({3!s}=0)))".format(
-                    self.userinfo[search_key],
-                    comperator,
-                    get_ad_timestamp_now(),
-                    self.userinfo[search_key],
-                )
+                filter += f"(&({self.userinfo[search_key]}{comperator}{get_ad_timestamp_now()})(!({self.userinfo[search_key]}=0)))"
             else:
-                filter += "({0!s}={1!s})".format(
-                    self.userinfo[search_key], searchDict[search_key]
-                )
+                filter += f"({self.userinfo[search_key]}={searchDict[search_key]})"
         filter += ")"
 
         g = self.l.extend.standard.paged_search(
@@ -813,8 +776,8 @@ class IdResolver(UserIdResolver):
                 user["userid"] = self._get_uid(entry, self.uidtype)
                 ret.append(user)
             except Exception as exx:  # pragma: no cover
-                log.error("Error during fetching LDAP objects: {0!r}".format(exx))
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.error(f"Error during fetching LDAP objects: {exx!r}")
+                log.debug(f"{traceback.format_exc()}")
 
         return ret
 
@@ -827,13 +790,7 @@ class IdResolver(UserIdResolver):
         :return: the id of the resolver
         :rtype: str
         """
-        s = "{0!s}{1!s}{2!s}{3!s}{4!s}".format(
-            self.uri,
-            self.basedn,
-            self.binddn,
-            self.searchfilter,
-            sorted(self.userinfo.items(), key=itemgetter(0)),
-        )
+        s = f"{self.uri}{self.basedn}{self.binddn}{self.searchfilter}{sorted(self.userinfo.items(), key=itemgetter(0))}"
         r = binascii.hexlify(hashlib.sha1(s.encode("utf-8")).digest())  # nosec B324 # hash used as unique identifier
         return "ldap." + r.decode("utf8")
 
@@ -1027,9 +984,7 @@ class IdResolver(UserIdResolver):
                 tls=tls_context,
             )
             server_pool.add(server)
-            log.debug(
-                "Added {0!s}, {1!s}, {2!s} to server pool.".format(host, port, ssl)
-            )
+            log.debug(f"Added {host}, {port}, {ssl} to server pool.")
         return server_pool
 
     def get_serverpool_instance(self, get_info=None):
@@ -1080,9 +1035,7 @@ class IdResolver(UserIdResolver):
         )
         if pool_description not in pools:
             log.debug(
-                "Creating a persistent server pool instance for {!r} ...".format(
-                    pool_description
-                )
+                f"Creating a persistent server pool instance for {pool_description!r} ..."
             )
             # Create a suitable instance of ``LockingServerPool``
             server_pool = self.create_serverpool(
@@ -1237,8 +1190,8 @@ class IdResolver(UserIdResolver):
                     if userid:
                         uidtype_count += 1
                 except Exception as exx:  # pragma: no cover
-                    log.warning("Error during fetching LDAP objects: {0!r}".format(exx))
-                    log.debug("{0!s}".format(traceback.format_exc()))
+                    log.warning(f"Error during fetching LDAP objects: {exx!r}")
+                    log.debug(f"{traceback.format_exc()}")
 
             if uidtype_count < count:  # pragma: no cover
                 desc = _(
@@ -1254,8 +1207,8 @@ class IdResolver(UserIdResolver):
             success = True
 
         except Exception as e:
-            desc = "{0!r}".format(e)
-            log.debug("{0!s}".format(traceback.format_exc()))
+            desc = f"{e!r}"
+            log.debug(f"{traceback.format_exc()}")
 
         return success, desc
 
@@ -1289,13 +1242,13 @@ class IdResolver(UserIdResolver):
             self.l.add(dn, self.object_classes, params)
 
         except Exception as e:
-            log.error("Error accessing LDAP server: {0!r}".format(e))
-            log.debug("{0}".format(traceback.format_exc()))
+            log.error(f"Error accessing LDAP server: {e!r}")
+            log.debug(f"{traceback.format_exc()}")
             raise eduMFAError(e)
 
         if self.l.result.get("result") != 0:
             log.error(
-                "Error during adding of user {0!r}: {1!r}".format(
+                "Error during adding of user {!r}: {!r}".format(
                     dn, self.l.result.get("message")
                 )
             )
@@ -1319,7 +1272,7 @@ class IdResolver(UserIdResolver):
 
             self.l.delete(self._getDN(uid))
         except Exception as exx:
-            log.error("Error deleting user: {0!r}".format(exx))
+            log.error(f"Error deleting user: {exx!r}")
             res = False
         return res
 
@@ -1397,13 +1350,13 @@ class IdResolver(UserIdResolver):
             params = self._attributes_to_ldap_attributes(mapped)
             self.l.modify(self._getDN(uid), params)
         except Exception as e:
-            log.error("Error accessing LDAP server: {0!r}".format(e))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"Error accessing LDAP server: {e!r}")
+            log.debug(f"{traceback.format_exc()}")
             return False
 
         if self.l.result.get("result") != 0:
             log.error(
-                "Error during update of user {0!r}: {1!r}".format(
+                "Error during update of user {!r}: {!r}".format(
                     uid, self.l.result.get("message")
                 )
             )
@@ -1489,7 +1442,7 @@ class IdResolver(UserIdResolver):
                 }
             )
         else:
-            raise Exception("Authtype {0!s} not supported".format(authtype))
+            raise Exception(f"Authtype {authtype} not supported")
 
         l = ldap3.Connection(server, **conn_opts)
         if start_tls:

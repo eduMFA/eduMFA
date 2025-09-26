@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -87,7 +86,7 @@ class HttpSMSProvider(ISMSProvider):
             parameter = self._get_parameters(message, phone)
             timeout = self.config.get("TIMEOUT") or 3
 
-        log.debug("submitting message {0!r} to {1!s}".format(message, phone))
+        log.debug(f"submitting message {message!r} to {phone}")
 
         if url is None:
             log.warning("can not submit message. URL is missing.")
@@ -125,7 +124,7 @@ class HttpSMSProvider(ISMSProvider):
             params = None
             if json_data:
                 json_param = parameter
-                log.debug("passing JSON data: {0!s}".format(json_param))
+                log.debug(f"passing JSON data: {json_param}")
             else:
                 data = parameter
 
@@ -157,15 +156,13 @@ class HttpSMSProvider(ISMSProvider):
             proxies=proxies,
         )
         log.debug(
-            "queued SMS on the HTTP gateway. status code returned: {0!s}".format(
-                r.status_code
-            )
+            f"queued SMS on the HTTP gateway. status code returned: {r.status_code}"
         )
 
         # We assume, that all gateways return with HTTP Status Code 200,
         # 201 or 202
         if r.status_code not in [200, 201, 202]:
-            raise SMSError(r.status_code, "SMS could not be sent: %s" % r.status_code)
+            raise SMSError(r.status_code, f"SMS could not be sent: {r.status_code}")
         success = self._check_success(r)
         return success
 
@@ -179,7 +176,7 @@ class HttpSMSProvider(ISMSProvider):
         urldata[messageKey] = message
         params = self.config.get("PARAMETER", {})
         urldata.update(params)
-        log.debug("[getParameters] urldata: {0!s}".format(urldata))
+        log.debug(f"[getParameters] urldata: {urldata}")
         return urldata
 
     def _check_success(self, response):
@@ -204,19 +201,19 @@ class HttpSMSProvider(ISMSProvider):
                 ret = True
             else:
                 log.warning(
-                    "failed to send sms. Reply %s does not match "
-                    "the RETURN_SUCCESS definition" % reply
+                    f"failed to send sms. Reply {reply} does not match "
+                    "the RETURN_SUCCESS definition"
                 )
                 raise SMSError(
                     response.status_code,
                     "We received a none success reply from the "
-                    "SMS Gateway: {0!s} ({1!s})".format(reply, return_success),
+                    f"SMS Gateway: {reply} ({return_success})",
                 )
 
         elif return_fail:
             if return_fail in reply:
                 log.warning(
-                    "sending sms failed. %s was not found in %s" % (return_fail, reply)
+                    f"sending sms failed. {return_fail} was not found in {reply}"
                 )
                 raise SMSError(
                     response.status_code,

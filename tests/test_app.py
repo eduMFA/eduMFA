@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This testfile tests the basic app functionality of the privacyIDEA app
 """
@@ -7,9 +6,9 @@ import inspect
 import logging
 import os
 import unittest
+from unittest import mock
 
 import flask
-import mock
 from testfixtures import Comparison, compare
 
 from edumfa.app import PiResponseClass, create_app

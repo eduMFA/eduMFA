@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -55,7 +54,7 @@ def save_clientapplication(ip, clienttype):
     # Check for a valid IP address
     ip = IPAddress(ip)
     # TODO: resolve hostname
-    app = ClientApplication(ip="{0!s}".format(ip), clienttype=clienttype, node=node)
+    app = ClientApplication(ip=f"{ip}", clienttype=clienttype, node=node)
     app.save()
 
 
@@ -90,7 +89,7 @@ def get_clientapplication(ip=None, clienttype=None, group_by="clienttype"):
     if ip:
         # Check for a valid IP address
         ip = IPAddress(ip)
-        sql_query = sql_query.filter(ClientApplication.ip == "{0!s}".format(ip))
+        sql_query = sql_query.filter(ClientApplication.ip == f"{ip}")
 
     if clienttype:
         sql_query = sql_query.filter(ClientApplication.clienttype == clienttype)

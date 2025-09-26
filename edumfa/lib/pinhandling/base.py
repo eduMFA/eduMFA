@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -83,11 +82,9 @@ class PinHandler:
         :rtype: bool
         """
         # The most simple way of handling a random PIN! ;-)
+        log.info(f"handling pin {pin!r} for token {serial} of user {user!r}")
         log.info(
-            "handling pin {0!r} for token {1!s} of user {2!r}".format(pin, serial, user)
-        )
-        log.info(
-            "The token was enrolled by {0!r}@{1!s}".format(
+            "The token was enrolled by {!r}@{!s}".format(
                 logged_in_user.get("username"), logged_in_user.get("realm")
             )
         )

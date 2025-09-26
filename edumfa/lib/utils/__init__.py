@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -126,7 +125,7 @@ def check_time_in_range(time_range, check_time=None):
                 time_match = True
     except ValueError:
         log.error("Wrong time range format: <dow>-<dow>:<hh:mm>-<hh:mm>")
-        log.debug("{0!s}".format(traceback.format_exc()))
+        log.debug(f"{traceback.format_exc()}")
 
     return time_match
 
@@ -147,7 +146,7 @@ def to_utf8(password):
         except (UnicodeDecodeError, AttributeError) as _exx:
             # In case the password is already an encoded string, we fail to
             # encode it again...
-            log.debug("Failed to convert password: {0!s}".format(type(password)))
+            log.debug(f"Failed to convert password: {type(password)}")
     return password
 
 
@@ -373,7 +372,7 @@ def sanity_name_check(name, name_exp=r"^[A-Za-z0-9_\-\.]+$"):
     """
     if re.match(name_exp, name) is None:
         raise Exception(
-            "non conformant characters in the name: %r (not in %s)" % (name, name_exp)
+            f"non conformant characters in the name: {name!r} (not in {name_exp})"
         )
     return True
 
@@ -417,8 +416,8 @@ def get_data_from_params(params, exclude_params, config_description, module, typ
                     types[k] = config_description.get(k)
                 else:
                     log.warning(
-                        "the passed key '{0!s}' is not a parameter for "
-                        "the {1!s} type '{2!s}'".format(k, module, type)
+                        f"the passed key '{k}' is not a parameter for "
+                        f"the {module} type '{type}'"
                     )
 
     # Check that there is no type or desc without the data itself.
@@ -432,9 +431,7 @@ def get_data_from_params(params, exclude_params, config_description, module, typ
         if t not in data:
             _missing = True
     if _missing:
-        raise Exception(
-            "type or description without necessary data! {0!s}".format(params)
-        )
+        raise Exception(f"type or description without necessary data! {params}")
 
     return data, types, desc
 
@@ -517,7 +514,7 @@ def parse_date(date_string):
         # See https://github.com/dateutil/dateutil/issues/457
         d = parse_date_string(date_string, dayfirst=re.match(r"^\d\d[/.]", date_string))
     except ValueError:
-        log.debug("Dateformat {0!s} could not be parsed".format(date_string))
+        log.debug(f"Dateformat {date_string} could not be parsed")
 
     return d
 
@@ -590,10 +587,10 @@ def check_proxy(path_to_client, proxy_settings):
     except AddrFormatError:
         log.error(
             "Error parsing the OverrideAuthorizationClient setting: "
-            "{0!s}! The IP addresses need to be comma separated. Fix "
-            "this. The client IP will not be mapped!".format(proxy_settings)
+            f"{proxy_settings}! The IP addresses need to be comma separated. Fix "
+            "this. The client IP will not be mapped!"
         )
-        log.debug("{0!s}".format(traceback.format_exc()))
+        log.debug(f"{traceback.format_exc()}")
         return path_to_client[0]
 
     # We extract the IP from ``path_to_client`` that should be considered the "real" client IP by eduMFA.
@@ -611,13 +608,11 @@ def check_proxy(path_to_client, proxy_settings):
     # After having processed all paths in the proxy settings, we return the "deepest" IP from ``path_to_client`` that
     # is allowed according to any proxy path of the proxy settings.
     log.debug(
-        "Determining the mapped IP from {!r} given the proxy settings {!r} ...".format(
-            path_to_client, proxy_settings
-        )
+        f"Determining the mapped IP from {path_to_client!r} given the proxy settings {proxy_settings!r} ..."
     )
     max_idx = 0
     for proxy_path in proxy_dict:
-        log.debug("Proxy path: {!r}".format(proxy_path))
+        log.debug(f"Proxy path: {proxy_path!r}")
         # If the proxy path contains more subnets than the path to the client, we already know that it cannot match.
         if len(proxy_path) > len(path_to_client):
             log.debug("... ignored because it is longer than the path to the client")
@@ -633,9 +628,7 @@ def check_proxy(path_to_client, proxy_settings):
             if client_path_ip not in proxy_path_ip:
                 # If not, the current proxy path does not match and we do not have to keep checking it.
                 log.debug(
-                    "... ignored because {!r} is not in subnet {!r}".format(
-                        client_path_ip, proxy_path_ip
-                    )
+                    f"... ignored because {client_path_ip!r} is not in subnet {proxy_path_ip!r}"
                 )
                 break
             else:
@@ -645,13 +638,11 @@ def check_proxy(path_to_client, proxy_settings):
             # completely matches the path to client, so the mapped client IP is a viable candidate.
             if current_max_idx >= max_idx:
                 log.debug(
-                    "... setting new candidate for client IP: {!r}".format(
-                        path_to_client[current_max_idx]
-                    )
+                    f"... setting new candidate for client IP: {path_to_client[current_max_idx]!r}"
                 )
             max_idx = max(max_idx, current_max_idx)
 
-    log.debug("Determined mapped client IP: {!r}".format(path_to_client[max_idx]))
+    log.debug(f"Determined mapped client IP: {path_to_client[max_idx]!r}")
     return path_to_client[max_idx]
 
 
@@ -722,9 +713,7 @@ def check_ip_in_policy(client_ip, policy):
         if ipdef[0] in ["-", "!"]:
             # exclude the client?
             if IPAddress(client_ip) in IPNetwork(ipdef[1:]):
-                log.debug(
-                    "the client {0!s} is excluded by {1!s}".format(client_ip, ipdef)
-                )
+                log.debug(f"the client {client_ip} is excluded by {ipdef}")
                 client_excluded = True
         elif IPAddress(client_ip) in IPNetwork(ipdef):
             client_found = True
@@ -828,9 +817,7 @@ def compare_condition(condition, value):
             return value == int(condition)
 
     except ValueError:
-        log.warning(
-            "Invalid condition {0!s}. Needs to contain an integer.".format(condition)
-        )
+        log.warning(f"Invalid condition {condition}. Needs to contain an integer.")
         return False
 
 
@@ -884,7 +871,7 @@ def compare_value_value(value1, comparator, value2):
     elif comparator == "!=":
         return value1 != value2
     else:
-        raise Exception("Unknown comparator: {0!s}".format(comparator))
+        raise Exception(f"Unknown comparator: {comparator}")
 
 
 def compare_generic_condition(cond, key_method, warning):
@@ -906,11 +893,7 @@ def compare_generic_condition(cond, key_method, warning):
             break
     if value:
         res = compare_value_value(key_method(key), comparator, value)
-        log.debug(
-            "Comparing {0!s} {1!s} {2!s} with result {3!s}.".format(
-                key, comparator, value, res
-            )
-        )
+        log.debug(f"Comparing {key} {comparator} {value} with result {res}.")
         return res
     else:
         # There is a condition, but we do not know it!
@@ -977,7 +960,7 @@ def parse_timedelta(s):
     days = 0
     m = re.match(r"\s*([+-]?)\s*(\d+)\s*([smhdy])\s*$", s)
     if not m:
-        log.warning("Unsupported timedelta: {0!r}".format(s))
+        log.warning(f"Unsupported timedelta: {s!r}")
         raise TypeError(f"Unsupported timedelta {s!r}")
     count = int(m.group(2))
     if m.group(1) == "-":
@@ -1119,7 +1102,7 @@ def fetch_one_resource(table, **query):
         return table.query.filter_by(**query).one()
     except sqlalchemy.orm.exc.NoResultFound:
         raise ResourceNotFoundError(
-            "The requested {!s} could not be found.".format(table.__name__)
+            f"The requested {table.__name__} could not be found."
         )
 
 
@@ -1140,7 +1123,7 @@ def truncate_comma_list(data, max_len):
     if len(data) >= max_len:
         r = ",".join(data)[:max_len]
         # Also mark this string
-        r = "{0!s}+".format(r[:-1])
+        r = f"{r[:-1]}+"
         return r
 
     while len(",".join(data)) > max_len:
@@ -1149,7 +1132,7 @@ def truncate_comma_list(data, max_len):
         for d in data:
             if d == longest:
                 # Shorten the longest and mark with "+"
-                d = "{0!s}+".format(d[:-2])
+                d = f"{d[:-2]}+"
             new_data.append(d)
         data = new_data
     return ",".join(data)
@@ -1234,7 +1217,7 @@ def check_pin_contents(pin, policy):
     for str in charlists_dict["requirements"]:
         if not re.search(re.compile("[" + re.escape(str) + "]"), pin):
             ret = False
-            comment.append("Missing character in PIN: {0!s}".format(str))
+            comment.append(f"Missing character in PIN: {str}")
 
     return ret, ",".join(comment)
 
@@ -1260,14 +1243,12 @@ def get_module_class(package_name, class_name, check_method=None):
     """
     mod = import_module(package_name)
     if not hasattr(mod, class_name):
-        raise ImportError("{0} has no attribute {1}".format(package_name, class_name))
+        raise ImportError(f"{package_name} has no attribute {class_name}")
     klass = getattr(mod, class_name)
-    log.debug("klass: {0!s}".format(klass))
+    log.debug(f"klass: {klass}")
     if check_method and not hasattr(klass, check_method):
         raise NameError(
-            "Class AttributeError: {0}.{1} instance has no attribute '{2}'".format(
-                package_name, class_name, check_method
-            )
+            f"Class AttributeError: {package_name}.{class_name} instance has no attribute '{check_method}'"
         )
     return klass
 
@@ -1290,7 +1271,7 @@ def get_version():
     self-service portal.
     """
     version = get_version_number()
-    return "eduMFA {0!s}".format(version)
+    return f"eduMFA {version}"
 
 
 def prepare_result(obj, rid=1, details=None):
@@ -1465,9 +1446,7 @@ def check_serial_valid(serial):
     :return: True or Exception
     """
     if not re.match(ALLOWED_SERIAL, serial):
-        raise ParameterError(
-            "Invalid serial number. Must comply to {0!s}.".format(ALLOWED_SERIAL)
-        )
+        raise ParameterError(f"Invalid serial number. Must comply to {ALLOWED_SERIAL}.")
     return True
 
 
@@ -1500,7 +1479,7 @@ def determine_logged_in_userparams(logged_in_user, params):
     elif role == "user":
         pass
     else:
-        raise PolicyError("Unknown role: {}".format(role))
+        raise PolicyError(f"Unknown role: {role}")
 
     return role, username, realm, admin_user, admin_realm
 
@@ -1584,9 +1563,7 @@ def replace_function_event_handler(
         return new_text
     except (ValueError, KeyError) as err:
         log.warning(
-            "Unable to replace placeholder: ({0!s})! Please check the webhooks data option.".format(
-                err
-            )
+            f"Unable to replace placeholder: ({err})! Please check the webhooks data option."
         )
         return text
 
@@ -1602,12 +1579,12 @@ def convert_imagefile_to_dataimage(imagepath):
     try:
         mime, _ = mimetypes.guess_type(imagepath)
         if not mime:
-            log.warning("Unknown file type in file {0!s}.".format(imagepath))
+            log.warning(f"Unknown file type in file {imagepath}.")
             return ""
         with open(imagepath, "rb") as f:
             data = f.read()
             data64 = base64.b64encode(data)
-        return "data:{0!s};base64,{1!s}".format(mime, to_unicode(data64))
+        return f"data:{mime};base64,{to_unicode(data64)}"
     except FileNotFoundError:
-        log.warning("The file {0!s} could not be found.".format(imagepath))
+        log.warning(f"The file {imagepath} could not be found.")
         return ""

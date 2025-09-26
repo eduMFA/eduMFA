@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -78,23 +77,21 @@ class to_isodate(FunctionElement):
 @compiles(to_isodate, "oracle")
 @compiles(to_isodate, "postgresql")
 def fn_to_isodate(element, compiler, **kw):
-    return "to_char(%s, 'IYYY-MM-DD HH24:MI:SS')" % compiler.process(
-        element.clauses, **kw
+    return (
+        f"to_char({compiler.process(element.clauses, **kw)}, 'IYYY-MM-DD HH24:MI:SS')"
     )
 
 
 @compiles(to_isodate, "sqlite")
 def fn_to_isodate(element, compiler, **kw):
     # sqlite does not have a DateTime type, they are already in ISO format
-    return "%s" % compiler.process(element.clauses, **kw)
+    return f"{compiler.process(element.clauses, **kw)}"
 
 
 @compiles(to_isodate)
 def fn_to_isodate(element, compiler, **kw):
     # The four percent signs are necessary for two format substitutions
-    return "date_format(%s, '%%%%Y-%%%%m-%%%%d %%%%H:%%%%i:%%%%s')" % compiler.process(
-        element.clauses, **kw
-    )
+    return f"date_format({compiler.process(element.clauses, **kw)}, '%Y-%m-%d %H:%i:%s')"
 
 
 class Audit(AuditBase):
@@ -134,7 +131,7 @@ class Audit(AuditBase):
     is_readable = True
 
     def __init__(self, config=None, startdate=None):
-        super(Audit, self).__init__(config, startdate)
+        super().__init__(config, startdate)
         self.name = "sqlaudit"
         self.sign_data = not self.config.get("EDUMFA_AUDIT_NO_SIGN")
         self.sign_object = None
@@ -195,17 +192,13 @@ class Audit(AuditBase):
         connect_string = self.config.get(
             "EDUMFA_AUDIT_SQL_URI", self.config.get("SQLALCHEMY_DATABASE_URI")
         )
-        log.debug(
-            "using the connect string {0!s}".format(
-                censor_connect_string(connect_string)
-            )
-        )
+        log.debug(f"using the connect string {censor_connect_string(connect_string)}")
         # if no specific audit engine options are given, use the default from
         # SQLALCHEMY_ENGINE_OPTIONS or none
         sqa_options = self.config.get(
             "EDUMFA_AUDIT_SQL_OPTIONS", self.config.get("SQLALCHEMY_ENGINE_OPTIONS", {})
         )
-        log.debug("Using Audit SQLAlchemy engine options: {0!s}".format(sqa_options))
+        log.debug(f"Using Audit SQLAlchemy engine options: {sqa_options}")
         try:
             pool_size = self.config.get("EDUMFA_AUDIT_POOL_SIZE", 20)
             engine = create_engine(
@@ -214,7 +207,7 @@ class Audit(AuditBase):
                 pool_recycle=self.config.get("EDUMFA_AUDIT_POOL_RECYCLE", 600),
                 **sqa_options,
             )
-            log.debug("Using SQL pool size of {}".format(pool_size))
+            log.debug(f"Using SQL pool size of {pool_size}")
         except TypeError:
             # SQLite does not support pool_size
             engine = create_engine(connect_string, **sqa_options)
@@ -278,7 +271,7 @@ class Audit(AuditBase):
                 except Exception as exx:
                     # The search_key was no search key but some
                     # bullshit stuff in the param
-                    log.debug("Not a valid searchkey: {0!s}".format(exx))
+                    log.debug(f"Not a valid searchkey: {exx}")
 
         if timelimit:
             conditions.append(LogEntry.date >= datetime.datetime.now() - timelimit)
@@ -316,7 +309,7 @@ class Audit(AuditBase):
             if "tokentype" in self.audit_data:
                 log.warning(
                     "We have a wrong 'tokentype' key. This should not happen. Fix it!. "
-                    "Error occurs in action: {0!r}.".format(
+                    "Error occurs in action: {!r}.".format(
                         self.audit_data.get("action")
                     )
                 )
@@ -376,9 +369,9 @@ class Audit(AuditBase):
         except Exception as exx:  # pragma: no cover
             # in case of a Unicode Error in _log_to_string() we won't have
             # a signature, but the log entry is available
-            log.error("exception {0!r}".format(exx))
-            log.error("DATA: {0!s}".format(self.audit_data))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"exception {exx!r}")
+            log.error(f"DATA: {self.audit_data}")
+            log.debug(f"{traceback.format_exc()}")
             self.session.rollback()
 
         finally:
@@ -414,8 +407,8 @@ class Audit(AuditBase):
             if id_bef and id_aft:
                 res = True
         except Exception as exx:  # pragma: no cover
-            log.error("exception {0!r}".format(exx))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"exception {exx!r}")
+            log.debug(f"{traceback.format_exc()}")
             # self.session.rollback()
         finally:
             # self.session.close()
@@ -438,31 +431,14 @@ class Audit(AuditBase):
         """
         # TODO: Add thread_id. We really should add a versioning to identify which audit data is signed.
         s = (
-            "id=%s,date=%s,action=%s,succ=%s,serial=%s,t=%s,u=%s,r=%s,adm=%s,"
-            "ad=%s,i=%s,ps=%s,c=%s,l=%s,cl=%s"
-            % (
-                le.id,
-                le.date,
-                le.action,
-                le.success,
-                le.serial,
-                le.token_type,
-                le.user,
-                le.realm,
-                le.administrator,
-                le.action_detail,
-                le.info,
-                le.edumfa_server,
-                le.client,
-                le.loglevel,
-                le.clearance_level,
-            )
+            f"id={le.id},date={le.date},action={le.action},succ={le.success},serial={le.serial},t={le.token_type},u={le.user},r={le.realm},adm={le.administrator},"
+            f"ad={le.action_detail},i={le.info},ps={le.edumfa_server},c={le.client},l={le.loglevel},cl={le.clearance_level}"
         )
         # If we have the new log entries, we also add them for signing and verification.
         if le.startdate:
-            s += ",{0!s}".format(le.startdate)
+            s += f",{le.startdate}"
         if le.duration:
-            s += ",{0!s}".format(le.duration)
+            s += f",{le.duration}"
         return s
 
     @staticmethod
@@ -514,7 +490,7 @@ class Audit(AuditBase):
 
         for le in logentries:
             audit_dict = self.audit_entry_to_dict(le)
-            yield ",".join(["'{0!s}'".format(x) for x in audit_dict.values()]) + "\n"
+            yield ",".join([f"'{x}'" for x in audit_dict.values()]) + "\n"
 
     def get_count(self, search_dict, timedelta=None, success=None):
         # create filter condition
@@ -575,7 +551,7 @@ class Audit(AuditBase):
                     "Could not read audit log entry! "
                     "Possible database encoding mismatch."
                 )
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.debug(f"{traceback.format_exc()}")
 
         return paging_object
 
@@ -621,8 +597,8 @@ class Audit(AuditBase):
                 )
 
         except Exception as exx:  # pragma: no cover
-            log.error("exception {0!r}".format(exx))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"exception {exx!r}")
+            log.debug(f"{traceback.format_exc()}")
             self.session.rollback()
         finally:
             self.session.close()
@@ -657,7 +633,7 @@ class Audit(AuditBase):
                     "Could not verify log entry! We get invalid values "
                     "from the database, please check the encoding."
                 )
-                log.debug("{0!s}".format(traceback.format_exc()))
+                log.debug(f"{traceback.format_exc()}")
 
         is_not_missing = self._check_missing(int(audit_entry.id))
         # is_not_missing = True

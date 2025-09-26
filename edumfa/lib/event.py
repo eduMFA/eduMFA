@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -68,11 +67,7 @@ class event:
                 self.eventname, position="pre"
             )
             for e_handler_def in e_handles:
-                log.debug(
-                    "Pre-Handling event {eventname} with {eventDef}".format(
-                        eventname=self.eventname, eventDef=e_handler_def
-                    )
-                )
+                log.debug(f"Pre-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
                 event_handler = get_handler_object(event_handler_name)
                 # The "action is determined by the event configuration
@@ -84,9 +79,7 @@ class event:
                 }
                 if event_handler.check_condition(options=options):
                     log.debug(
-                        "Pre-Handling event {eventname} with options{options}".format(
-                            eventname=self.eventname, options=options
-                        )
+                        f"Pre-Handling event {self.eventname} with options{options}"
                     )
                     # create a new audit object for this action
                     event_audit = getAudit(self.g.audit_object.config)
@@ -99,7 +92,7 @@ class event:
                             action=e_handler_def.get("action"),
                         )
                     )
-                    event_audit_data["action_detail"] = "{0!s}".format(
+                    event_audit_data["action_detail"] = "{!s}".format(
                         e_handler_def.get("options")
                     )
                     event_audit_data["info"] = e_handler_def.get("name")
@@ -117,11 +110,7 @@ class event:
             # Post-Event Handling
             e_handles = self.g.event_config.get_handled_events(self.eventname)
             for e_handler_def in e_handles:
-                log.debug(
-                    "Post-Handling event {eventname} with {eventDef}".format(
-                        eventname=self.eventname, eventDef=e_handler_def
-                    )
-                )
+                log.debug(f"Post-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
                 event_handler = get_handler_object(event_handler_name)
                 # The "action is determined by the event configuration
@@ -134,9 +123,7 @@ class event:
                 }
                 if event_handler.check_condition(options=options):
                     log.debug(
-                        "Post-Handling event {eventname} with options{options}".format(
-                            eventname=self.eventname, options=options
-                        )
+                        f"Post-Handling event {self.eventname} with options{options}"
                     )
                     # create a new audit object
                     event_audit = getAudit(self.g.audit_object.config)
@@ -149,7 +136,7 @@ class event:
                             action=e_handler_def.get("action"),
                         )
                     )
-                    event_audit_data["action_detail"] = "{0!s}".format(
+                    event_audit_data["action_detail"] = "{!s}".format(
                         e_handler_def.get("options")
                     )
                     event_audit_data["info"] = e_handler_def.get("name")
@@ -366,7 +353,7 @@ def export_event(name=None):
 @register_import("event")
 def import_event(data, name=None):
     """Import policy configuration"""
-    log.debug("Import event config: {0!s}".format(data))
+    log.debug(f"Import event config: {data}")
     for res_data in data:
         if name and name != res_data.get("name"):
             continue
@@ -374,5 +361,5 @@ def import_event(data, name=None):
         del res_data["condition"]
         rid = set_event(**res_data)
         log.info(
-            'Import of event "{0!s}" finished, id: {1!s}'.format(res_data["name"], rid)
+            'Import of event "{!s}" finished, id: {!s}'.format(res_data["name"], rid)
         )

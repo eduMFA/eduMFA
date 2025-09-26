@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from contextlib import contextmanager
 from datetime import datetime, timedelta
-
-import mock
+from unittest import mock
 
 from edumfa.lib.auditmodules.base import Audit as BaseAudit
 from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
@@ -382,7 +379,7 @@ class APIAuditTestCase(MyApiTestCase):
             "/auth",
             method="POST",
             data={
-                "username": "selfservice@{0!s}".format(self.realm1a),
+                "username": f"selfservice@{self.realm1a}",
                 "password": "test",
             },
         ):

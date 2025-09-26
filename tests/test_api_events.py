@@ -222,7 +222,7 @@ class APIEventsTestCase(MyApiTestCase):
 
         # delete event
         with self.app.test_request_context(
-            "/event/{0!s}".format(ev1_id),
+            f"/event/{ev1_id}",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -334,7 +334,7 @@ class APIEventsTestCase(MyApiTestCase):
 
         # disable event
         with self.app.test_request_context(
-            "/event/disable/{0!s}".format(ev1_id),
+            f"/event/disable/{ev1_id}",
             method="POST",
             headers={"Authorization": self.at},
         ):
@@ -353,7 +353,7 @@ class APIEventsTestCase(MyApiTestCase):
 
         # Enable event
         with self.app.test_request_context(
-            "/event/enable/{0!s}".format(ev1_id),
+            f"/event/enable/{ev1_id}",
             method="POST",
             headers={"Authorization": self.at},
         ):
@@ -372,7 +372,7 @@ class APIEventsTestCase(MyApiTestCase):
 
         # delete event
         with self.app.test_request_context(
-            "/event/{0!s}".format(ev1_id),
+            f"/event/{ev1_id}",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -425,7 +425,7 @@ class APIEventsTestCase(MyApiTestCase):
 
         # check the event
         with self.app.test_request_context(
-            "/event/{0!s}".format(ev1_id),
+            f"/event/{ev1_id}",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -449,7 +449,7 @@ class APIEventsTestCase(MyApiTestCase):
 
         # check the event
         with self.app.test_request_context(
-            "/event/{0!s}".format(ev1_id),
+            f"/event/{ev1_id}",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -461,7 +461,7 @@ class APIEventsTestCase(MyApiTestCase):
 
         # delete event
         with self.app.test_request_context(
-            "/event/{0!s}".format(ev1_id),
+            f"/event/{ev1_id}",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -566,7 +566,7 @@ class APIEventsTestCase(MyApiTestCase):
 
 class CustomUserAttributeHandlerTestCase(MyApiTestCase):
     def setUp(self):
-        super(CustomUserAttributeHandlerTestCase, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def test_01_user_attribute_with_handler_tokenowner(self):

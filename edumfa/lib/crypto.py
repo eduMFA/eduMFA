@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -253,7 +252,7 @@ def init_hsm():
         config = get_app_config()
         HSM_config = {"obj": create_hsm_object(config)}
         app_store["pi_hsm"] = HSM_config
-        log.info("Initialized HSM object {0}".format(HSM_config))
+        log.info(f"Initialized HSM object {HSM_config}")
     return app_store["pi_hsm"]["obj"]
 
 
@@ -635,7 +634,7 @@ def get_rand_digit_str(length=16):
         raise ValueError("get_rand_digit_str only works for values > 1")
     clen = int(length / 2.4 + 0.5)
     randd = geturandom(clen, hex=True)
-    s = "{0:d}".format((int(randd, 16)))
+    s = f"{int(randd, 16):d}"
     if len(s) < length:
         s = "0" * (length - len(s)) + s
     elif len(s) > length:
@@ -721,7 +720,7 @@ class Sign:
                     unsafe_skip_rsa_key_validation=not check_private_key,
                 )
             except Exception as e:
-                log.error("Error loading private key: ({0!r})".format(e))
+                log.error(f"Error loading private key: ({e!r})")
                 log.debug(traceback.format_exc())
                 raise e
 
@@ -731,7 +730,7 @@ class Sign:
                     public_key, backend=backend
                 )
             except Exception as e:
-                log.error("Error loading public key: ({0!r})".format(e))
+                log.error(f"Error loading public key: ({e!r})")
                 log.debug(traceback.format_exc())
                 raise e
 
@@ -745,7 +744,7 @@ class Sign:
         :rtype: str
         """
         if not self.private:
-            log.info("Could not sign message {0!s}, no private key!".format(s))
+            log.info(f"Could not sign message {s}, no private key!")
             # TODO: should we throw an exception in this case?
             return ""
 
@@ -775,9 +774,7 @@ class Sign:
         """
         r = False
         if not self.public:
-            log.info(
-                "Could not verify signature for message {0!s}, no public key!".format(s)
-            )
+            log.info(f"Could not verify signature for message {s}, no public key!")
             return r
 
         sver = ""
@@ -805,12 +802,12 @@ class Sign:
                     r = _slow_rsa_verify_raw(self.public, int(signature), int_s)
                 else:
                     log.debug(
-                        "Could not verify old style signature {0!s} "
-                        "for data {1:s}".format(signature, s)
+                        f"Could not verify old style signature {signature} "
+                        f"for data {s:s}"
                     )
         except Exception:
-            log.error("Failed to verify signature: {0!r}".format(s))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"Failed to verify signature: {s!r}")
+            log.debug(f"{traceback.format_exc()}")
 
         return r
 
@@ -834,7 +831,7 @@ def create_hsm_object(config):
     )
     package_name, class_name = hsm_module_name.rsplit(".", 1)
     hsm_class = get_module_class(package_name, class_name, "setup_module")
-    log.info("initializing HSM class: {0!s}".format(hsm_class))
+    log.info(f"initializing HSM class: {hsm_class}")
     if class_name == "DefaultSecurityModule":
         hsm_parameters = {"file": config.get("EDUMFA_ENCFILE")}
     else:
@@ -848,7 +845,7 @@ def create_hsm_object(config):
         logging_params = dict(hsm_parameters)
         if "password" in logging_params:
             logging_params["password"] = "XXXX"  # nosec B105 # Hide password
-        log.info("calling HSM module with parameters {0}".format(logging_params))
+        log.info(f"calling HSM module with parameters {logging_params}")
 
     return hsm_class(hsm_parameters)
 
@@ -862,7 +859,7 @@ def generate_otpkey(key_size=20):
     :return: hexlified key
     :rtype: str
     """
-    log.debug("generating key of size {0!s}".format(key_size))
+    log.debug(f"generating key of size {key_size}")
     return hexlify_and_unicode(geturandom(key_size))
 
 

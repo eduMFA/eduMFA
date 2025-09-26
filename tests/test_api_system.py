@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import json
 import os
 from urllib.parse import urlencode
@@ -490,7 +488,7 @@ class APIConfigTestCase(MyApiTestCase):
         realmname = "realm1_with_resolver"
         # create a resolver
         with self.app.test_request_context(
-            "/resolver/{0!s}".format(resolvername),
+            f"/resolver/{resolvername}",
             method="POST",
             data={"filename": PWFILE, "type": "passwdresolver"},
             headers={"Authorization": self.at},
@@ -505,7 +503,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # create a realm
         with self.app.test_request_context(
-            "/realm/{0!s}".format(realmname),
+            f"/realm/{realmname}",
             method="POST",
             data={"resolvers": resolvername},
             headers={"Authorization": self.at},
@@ -545,7 +543,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # try to delete the resolver in the realm
         with self.app.test_request_context(
-            "/resolver/{0!s}".format(resolvername),
+            f"/resolver/{resolvername}",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -555,7 +553,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # delete the realm
         with self.app.test_request_context(
-            "/realm/{0!s}".format(realmname),
+            f"/realm/{realmname}",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -570,7 +568,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # Now, we can delete the resolver
         with self.app.test_request_context(
-            "/resolver/{0!s}".format(resolvername),
+            f"/resolver/{resolvername}",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -586,7 +584,7 @@ class APIConfigTestCase(MyApiTestCase):
         resolvername = "defresolver"
         realmname = "defrealm"
         with self.app.test_request_context(
-            "/resolver/{0!s}".format(resolvername),
+            f"/resolver/{resolvername}",
             method="POST",
             data={"filename": PWFILE, "type": "passwdresolver"},
             headers={"Authorization": self.at},
@@ -598,7 +596,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # create a realm
         with self.app.test_request_context(
-            "/realm/{0!s}".format(realmname),
+            f"/realm/{realmname}",
             method="POST",
             data={"resolvers": resolvername, "priority.defresolver": 10},
             headers={"Authorization": self.at},
@@ -1010,7 +1008,7 @@ class APIConfigTestCase(MyApiTestCase):
         params["resolver"] = resolvername
         params["type"] = "ldapresolver"
         with self.app.test_request_context(
-            "/resolver/{0}".format(resolvername),
+            f"/resolver/{resolvername}",
             data=params,
             method="POST",
             headers={"Authorization": self.at},
@@ -1021,7 +1019,7 @@ class APIConfigTestCase(MyApiTestCase):
             pass
 
         with self.app.test_request_context(
-            "/resolver/{0}".format(resolvername),
+            f"/resolver/{resolvername}",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -1048,7 +1046,7 @@ class APIConfigTestCase(MyApiTestCase):
             "file": "/etc/passwd",
         }
         with self.app.test_request_context(
-            "/resolver/{0}".format(resolvername),
+            f"/resolver/{resolvername}",
             data=params,
             method="POST",
             headers={"Authorization": self.at},
@@ -1061,7 +1059,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # Now writing a resolver will fail
         with self.app.test_request_context(
-            "/resolver/{0}".format(resolvername),
+            f"/resolver/{resolvername}",
             data=params,
             method="POST",
             headers={"Authorization": self.at},
@@ -1071,7 +1069,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # reading a resolver will succeed
         with self.app.test_request_context(
-            "/resolver/{0}".format(resolvername),
+            f"/resolver/{resolvername}",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -1083,7 +1081,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # Now writing a resolver will succeed
         with self.app.test_request_context(
-            "/resolver/{0}".format(resolvername),
+            f"/resolver/{resolvername}",
             data=params,
             method="POST",
             headers={"Authorization": self.at},
@@ -1096,7 +1094,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # reading a resolver will fail
         with self.app.test_request_context(
-            "/resolver/{0}".format(resolvername),
+            f"/resolver/{resolvername}",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -1105,7 +1103,7 @@ class APIConfigTestCase(MyApiTestCase):
 
         # writing a resolver will still succeed
         with self.app.test_request_context(
-            "/resolver/{0}".format(resolvername),
+            f"/resolver/{resolvername}",
             data=params,
             method="POST",
             headers={"Authorization": self.at},

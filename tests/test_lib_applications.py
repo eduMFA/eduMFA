@@ -3,7 +3,8 @@ This test file tests the applications definitions standalone
 lib/applications/*
 """
 
-import mock
+from unittest import mock
+
 import passlib.hash
 
 from edumfa.lib.applications import (

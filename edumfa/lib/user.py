@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -110,9 +109,7 @@ class User:
         if self.resolver:
             y = get_resolver_object(self.resolver)
             if y is None:
-                raise UserError(
-                    "The resolver '{0!s}' does not exist!".format(self.resolver)
-                )
+                raise UserError(f"The resolver '{self.resolver}' does not exist!")
             if self.uid is None:
                 # Determine the uid
                 self.uid = y.getUserId(self.login)
@@ -141,25 +138,17 @@ class User:
         :rtype: bool
         """
         if not isinstance(other, type(self)):
-            log.info(
-                "Comparing a non-user object: {0!s} != {1!s}.".format(self, type(other))
-            )
+            log.info(f"Comparing a non-user object: {self} != {type(other)}.")
             return False
         if (self.resolver != other.resolver) or (self.realm != other.realm):
             log.info(
-                "Users are not in the same resolver and realm: {0!s} != {1!s}.".format(
-                    self, other
-                )
+                f"Users are not in the same resolver and realm: {self} != {other}."
             )
             return False
         if self.uid and other.uid:
-            log.debug(
-                "Comparing based on uid: {0!s} vs {1!s}".format(self.uid, other.uid)
-            )
+            log.debug(f"Comparing based on uid: {self.uid} vs {other.uid}")
             return self.uid == other.uid
-        log.debug(
-            "Comparing based on login: {0!s} vs {1!s}".format(self.login, other.login)
-        )
+        log.debug(f"Comparing based on login: {self.login} vs {other.login}")
         return self.login == other.login
 
     def __ne__(self, other):
@@ -180,14 +169,12 @@ class User:
             # Realm and resolver should always be ASCII
             conf = ""
             if self.resolver:
-                conf = ".{0!s}".format(self.resolver)
-            ret = "<{0!s}{1!s}@{2!s}>".format(self.login, conf, self.realm)
+                conf = f".{self.resolver}"
+            ret = f"<{self.login}{conf}@{self.realm}>"
         return ret
 
     def __repr__(self):
-        ret = "User(login={0!r}, realm={1!r}, resolver={2!r})".format(
-            self.login, self.realm, self.resolver
-        )
+        ret = f"User(login={self.login!r}, realm={self.realm!r}, resolver={self.resolver!r})"
         return ret
 
     def __bool__(self):
@@ -257,27 +244,19 @@ class User:
         """
         y = get_resolver_object(resolvername)
         if y is None:  # pragma: no cover
-            log.info("Resolver {0!r} not found!".format(resolvername))
+            log.info(f"Resolver {resolvername!r} not found!")
             return False
         else:
             uid = y.getUserId(self.login)
             if uid not in ["", None]:
-                log.info(
-                    "user {0!r} found in resolver {1!r}".format(
-                        self.login, resolvername
-                    )
-                )
-                log.info("userid resolved to {0!r} ".format(uid))
+                log.info(f"user {self.login!r} found in resolver {resolvername!r}")
+                log.info(f"userid resolved to {uid!r} ")
                 self.resolver = resolvername
                 self.uid = uid
                 # We do not need to search other resolvers!
                 return True
             else:
-                log.debug(
-                    "user {0!r} not found in resolver {1!r}".format(
-                        self.login, resolvername
-                    )
-                )
+                log.debug(f"user {self.login!r} not found in resolver {resolvername!r}")
                 return False
 
     def get_user_identifiers(self):
@@ -388,24 +367,20 @@ class User:
         userinfo = self.info
         if phone_type in userinfo:
             phone = userinfo[phone_type]
-            log.debug("got user phone {0!r} of type {1!r}".format(phone, phone_type))
+            log.debug(f"got user phone {phone!r} of type {phone_type!r}")
             if type(phone) == list and index is not None:
                 if len(phone) > index:
                     return phone[index]
                 else:
                     log.warning(
-                        "userobject ({0!r}) has not that much "
-                        "phone numbers ({1!r} of {2!r}).".format(self, index, phone)
+                        f"userobject ({self!r}) has not that much "
+                        f"phone numbers ({index!r} of {phone!r})."
                     )
                     return ""
             else:
                 return phone
         else:
-            log.warning(
-                "userobject ({0!r}) has no phone of type {1!r}.".format(
-                    self, phone_type
-                )
-            )
+            log.warning(f"userobject ({self!r}) has no phone of type {phone_type!r}.")
             return ""
 
     @log_with(log)
@@ -433,14 +408,14 @@ class User:
             # we have got a resolver and will get all realms
             # the resolver belongs to.
             for key, val in allRealms.items():
-                log.debug("evaluating realm {0!r}: {1!r} ".format(key, val))
+                log.debug(f"evaluating realm {key!r}: {val!r} ")
                 for reso in val.get("resolver", []):
                     resoname = reso.get("name")
                     if resoname == self.resolver:
                         Realms.append(key.lower())
                         log.debug(
-                            "added realm %r to Realms due to "
-                            "resolver %r" % (key, self.resolver)
+                            f"added realm {key!r} to Realms due to "
+                            f"resolver {self.resolver!r}"
                         )
         return Realms
 
@@ -457,7 +432,7 @@ class User:
         success = None
         try:
             log.info(
-                "User %r from realm %r tries to authenticate" % (self.login, self.realm)
+                f"User {self.login!r} from realm {self.realm!r} tries to authenticate"
             )
             res = self._get_resolvers()
             # Now we know, the resolvers of this user and we can verify the
@@ -466,18 +441,18 @@ class User:
                 y = get_resolver_object(self.resolver)
                 uid, _rtype, _rname = self.get_user_identifiers()
                 if y.checkPass(uid, password):
-                    success = "{0!s}@{1!s}".format(self.login, self.realm)
-                    log.debug("Successfully authenticated user {0!r}.".format(self))
+                    success = f"{self.login}@{self.realm}"
+                    log.debug(f"Successfully authenticated user {self!r}.")
                 else:
-                    log.info("user {0!r} failed to authenticate.".format(self))
+                    log.info(f"user {self!r} failed to authenticate.")
 
             elif not res:
-                log.error("The user {0!r} exists in NO resolver.".format(self))
+                log.error(f"The user {self!r} exists in NO resolver.")
         except UserError as e:  # pragma: no cover
-            log.error("Error while trying to verify the username: {0!r}".format(e))
+            log.error(f"Error while trying to verify the username: {e!r}")
         except Exception as e:  # pragma: no cover
-            log.error("Error checking password within module {0!r}".format(e))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"Error checking password within module {e!r}")
+            log.debug(f"{traceback.format_exc()}")
 
         return success
 
@@ -500,7 +475,7 @@ class User:
                 searchFields[reso] = sf
 
             except Exception as e:  # pragma: no cover
-                log.warning("module {0!r}: {1!r}".format(reso, e))
+                log.warning(f"module {reso!r}: {e!r}")
 
         return searchFields
 
@@ -522,9 +497,7 @@ class User:
         success = False
         try:
             log.info(
-                "User info for user {0!r}@{1!r} about to be updated.".format(
-                    self.login, self.realm
-                )
+                f"User info for user {self.login!r}@{self.realm!r} about to be updated."
             )
             res = self._get_resolvers()
             # Now we know, the resolvers of this user and we can update the
@@ -532,7 +505,7 @@ class User:
             if len(res) == 1:
                 y = get_resolver_object(self.resolver)
                 if not y.updateable:  # pragma: no cover
-                    log.warning("The resolver {0!r} is not updateable.".format(y))
+                    log.warning(f"The resolver {y!r} is not updateable.")
                 else:
                     uid, _rtype, _rname = self.get_user_identifiers()
                     if y.update_user(uid, attributes):
@@ -542,14 +515,14 @@ class User:
                         # If necessary, update the username
                         if attributes.get("username"):
                             self.login = attributes.get("username")
-                        log.info("Successfully updated user {0!r}.".format(self))
+                        log.info(f"Successfully updated user {self!r}.")
                     else:  # pragma: no cover
-                        log.info("user {0!r} failed to update.".format(self))
+                        log.info(f"user {self!r} failed to update.")
 
             elif not res:  # pragma: no cover
-                log.error("The user {0!r} exists in NO resolver.".format(self))
+                log.error(f"The user {self!r} exists in NO resolver.")
         except UserError as exx:  # pragma: no cover
-            log.error("Error while trying to verify the username: {0!r}".format(exx))
+            log.error(f"Error while trying to verify the username: {exx!r}")
 
         return success
 
@@ -563,32 +536,30 @@ class User:
         """
         success = False
         try:
-            log.info(
-                "User {0!r}@{1!r} about to be deleted.".format(self.login, self.realm)
-            )
+            log.info(f"User {self.login!r}@{self.realm!r} about to be deleted.")
             res = self._get_resolvers()
             # Now we know, the resolvers of this user and we can delete it
             if len(res) == 1:
                 y = get_resolver_object(self.resolver)
                 if not y.updateable:  # pragma: no cover
-                    log.warning("The resolver {0!r} is not updateable.".format(y))
+                    log.warning(f"The resolver {y!r} is not updateable.")
                 else:
                     uid, _rtype, _rname = self.get_user_identifiers()
                     if y.delete_user(uid):
                         success = True
-                        log.info("Successfully deleted user {0!r}.".format(self))
+                        log.info(f"Successfully deleted user {self!r}.")
                         # Delete corresponding entry from the user cache
                         delete_user_cache(username=self.login, resolver=self.resolver)
                     else:  # pragma: no cover
-                        log.info("user {0!r} failed to update.".format(self))
+                        log.info(f"user {self!r} failed to update.")
 
             elif not res:  # pragma: no cover
-                log.error("The user {0!r} exists in NO resolver.".format(self))
+                log.error(f"The user {self!r} exists in NO resolver.")
         except UserError as exx:  # pragma: no cover
-            log.error("Error while trying to verify the username: {0!r}".format(exx))
+            log.error(f"Error while trying to verify the username: {exx!r}")
         except Exception as exx:  # pragma: no cover
-            log.error("Error checking password within module {0!r}".format(exx))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"Error checking password within module {exx!r}")
+            log.debug(f"{traceback.format_exc()}")
 
         return success
 
@@ -721,7 +692,7 @@ def get_user_list(param=None, user=None, custom_attributes=False):
         if key in ["realm", "resolver", "user", "username"]:
             continue
         searchDict[key] = lval
-        log.debug("Parameter key:{0!r}={1!r}".format(key, lval))
+        log.debug(f"Parameter key:{key!r}={lval!r}")
 
     # update searchdict depending on existence of 'user' or 'username' in param
     # Since 'user' takes precedence over 'username' we have to check the order
@@ -762,9 +733,9 @@ def get_user_list(param=None, user=None, custom_attributes=False):
 
     for resolver_name in set(resolvers):
         try:
-            log.debug("Check for resolver class: {0!r}".format(resolver_name))
+            log.debug(f"Check for resolver class: {resolver_name!r}")
             y = get_resolver_object(resolver_name)
-            log.debug("with this search dictionary: {0!r} ".format(searchDict))
+            log.debug(f"with this search dictionary: {searchDict!r} ")
             ulist = y.getUserList(searchDict)
             # Add resolvername to the list
             realm_id = get_realm_id(param_realm or user_realm)
@@ -778,17 +749,17 @@ def get_user_list(param=None, user=None, custom_attributes=False):
                     ue.update(
                         get_attributes(ue.get("userid"), ue.get("resolver"), realm_id)
                     )
-            log.debug("Found this userlist: {0!r}".format(ulist))
+            log.debug(f"Found this userlist: {ulist!r}")
             users.extend(ulist)
 
         except KeyError as exx:  # pragma: no cover
-            log.error("{0!r}".format((exx)))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"{exx!r}")
+            log.debug(f"{traceback.format_exc()}")
             raise exx
 
         except Exception as exx:  # pragma: no cover
-            log.error("{0!r}".format((exx)))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"{exx!r}")
+            log.debug(f"{traceback.format_exc()}")
             continue
 
     return users
@@ -825,7 +796,7 @@ def log_used_user(user, other_text=""):
     :return: str
     """
     return (
-        "logged in as {0}. {1}".format(user.used_login, other_text)
+        f"logged in as {user.used_login}. {other_text}"
         if user.used_login != user.login
         else other_text
     )

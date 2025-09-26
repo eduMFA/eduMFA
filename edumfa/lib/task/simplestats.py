@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -100,7 +99,7 @@ class SimpleStatsTask(BaseTask):
     def do(self, params):
         for opt in self.options.keys():
             if is_true(params.get(opt)):
-                log.debug("Got param {0}".format(opt))
+                log.debug(f"Got param {opt}")
                 write_stats(opt, getattr(self, "_" + opt))
 
         return True

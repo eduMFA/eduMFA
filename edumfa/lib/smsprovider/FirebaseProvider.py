@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -80,9 +79,7 @@ def get_firebase_access_token(config_file_name):
         )
 
         log.debug(
-            "Fetching a new access_token for {!r} from firebase...".format(
-                config_file_name
-            )
+            f"Fetching a new access_token for {config_file_name!r} from firebase..."
         )
         # We do not use a lock here: The worst that could happen is that two threads
         # fetch new auth tokens concurrently. In this case, one of them wins and
@@ -92,9 +89,7 @@ def get_firebase_access_token(config_file_name):
             credentials.expiry.isoformat() if credentials.expiry else "Never"
         )
         log.debug(
-            "Setting the expiration for {!r} of the new access_token to {!s}.".format(
-                config_file_name, readable_time
-            )
+            f"Setting the expiration for {config_file_name!r} of the new access_token to {readable_time}."
         )
 
     return app_store[fbt][config_file_name]
@@ -201,11 +196,7 @@ class FirebaseProvider(ISMSProvider):
                 log.debug("Message sent successfully to Firebase service.")
                 return True
             else:
-                log.warning(
-                    "Failed to send message to firebase service: {0!s}".format(
-                        resp.text
-                    )
-                )
+                log.warning(f"Failed to send message to firebase service: {resp.text}")
                 return False
 
         except Exception as e:
