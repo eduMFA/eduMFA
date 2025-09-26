@@ -23,16 +23,17 @@ api requests and reduce your traffic this way.
 
 """
 
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib import _
 import json
 import logging
+
 import requests
-from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException
+from requests.exceptions import ConnectionError, HTTPError, RequestException, Timeout
+
+from edumfa.lib import _
+from edumfa.lib.error import UserError
+from edumfa.lib.eventhandler.base import BaseEventHandler
 from edumfa.lib.user import User
 from edumfa.lib.utils import replace_function_event_handler
-from edumfa.lib.error import UserError
-
 
 log = logging.getLogger(__name__)
 TIMEOUT = 10

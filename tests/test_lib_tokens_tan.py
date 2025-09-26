@@ -3,10 +3,11 @@ This test file tests the lib.tokens.papertoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
+from edumfa.lib.token import get_tokens_paginate, import_token, init_token
 from edumfa.lib.tokens.tantoken import TanTokenClass
-from edumfa.lib.token import init_token, get_tokens_paginate, import_token
 from edumfa.models import Token
+
+from .base import MyTestCase
 
 OTPKEY = "3132333435363738393031323334353637383930"
 

@@ -1,17 +1,19 @@
 # coding: utf-8
-from edumfa.models import MonitoringStats, db
+import datetime
+from datetime import timedelta
+
+from dateutil.tz import tzlocal, tzutc
+
 from edumfa.lib.monitoringstats import (
-    write_stats,
     delete_stats,
+    get_last_value,
     get_stats_keys,
     get_values,
-    get_last_value,
+    write_stats,
 )
+from edumfa.models import MonitoringStats, db
 
 from .base import MyTestCase
-import datetime
-from dateutil.tz import tzlocal, tzutc
-from datetime import timedelta
 
 
 class TokenModelTestCase(MyTestCase):

@@ -22,6 +22,7 @@
 #
 
 import logging
+
 from huey import RedisHuey
 
 from edumfa.lib.queues.base import BaseQueue, QueueError

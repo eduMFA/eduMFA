@@ -20,14 +20,11 @@ limitations under the License.
 """
 
 import smtplib
-
-from inspect import getfullargspec as getargspec
-from collections.abc import Sequence, Sized
-
 from collections import namedtuple
+from collections.abc import Sequence, Sized
 from functools import update_wrapper
+from inspect import getfullargspec as getargspec
 from smtplib import SMTPException
-
 
 Call = namedtuple("Call", ["request", "response"])
 

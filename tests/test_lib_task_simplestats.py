@@ -4,15 +4,16 @@ This tests the files
   lib/task/simplestats.py
 """
 
-from edumfa.lib.user import User
-from edumfa.lib.tokenclass import TOKENKIND
-from edumfa.lib.token import init_token
-from edumfa.models import db
-from .base import MyTestCase
-from edumfa.lib.monitoringstats import get_values
 from flask import current_app
 
+from edumfa.lib.monitoringstats import get_values
 from edumfa.lib.task.simplestats import SimpleStatsTask
+from edumfa.lib.token import init_token
+from edumfa.lib.tokenclass import TOKENKIND
+from edumfa.lib.user import User
+from edumfa.models import db
+
+from .base import MyTestCase
 
 simple_results = {
     "total_tokens": (1, 2, 3, 4),

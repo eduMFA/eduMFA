@@ -41,20 +41,26 @@ You will only be able to see and use user object, that are contained in a realm.
 
 The code of this module is tested in tests/test_api_system.py
 """
-from flask import Blueprint, request, current_app
-from .lib.utils import getParam, required, send_result, get_priority_from_param
-from ..lib.log import log_with
-from ..lib.realm import get_realms
+import logging
 
-from ..lib.realm import set_default_realm, get_default_realm, set_realm, delete_realm
-from ..lib.policy import ACTION, Match
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from ..lib.utils import reduce_realms
-from flask import g
+from flask import Blueprint, current_app, g, request
+from flask_babel import gettext as _
+
 from edumfa.lib.auth import ROLE
 from edumfa.lib.policy import CONDITION_CHECK
-from flask_babel import gettext as _
-import logging
+
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.log import log_with
+from ..lib.policy import ACTION, Match
+from ..lib.realm import (
+    delete_realm,
+    get_default_realm,
+    get_realms,
+    set_default_realm,
+    set_realm,
+)
+from ..lib.utils import reduce_realms
+from .lib.utils import get_priority_from_param, getParam, required, send_result
 
 log = logging.getLogger(__name__)
 

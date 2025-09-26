@@ -28,21 +28,21 @@ importing a CSV or PSKC file.
 This code is tested in tests/test_lib_tokens_tiqr.
 """
 
-import logging
 import hashlib
+import logging
 
 from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
 from edumfa.lib.config import get_from_config
-from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.crypto import get_alphanum_str
+from edumfa.lib.decorators import check_token_locked
 from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.tokens.ocra import OCRA, OCRASuite
+from edumfa.lib.user import get_user_from_param
 from edumfa.lib.utils import create_img, hexlify_and_unicode, to_bytes
 from edumfa.models import Challenge
-from edumfa.lib.user import get_user_from_param
-from edumfa.lib.tokens.ocra import OCRASuite, OCRA
-from edumfa.lib import _
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.crypto import get_alphanum_str
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
 
 OCRA_DEFAULT_SUITE = "OCRA-1:HOTP-SHA1-8:QH40"
 

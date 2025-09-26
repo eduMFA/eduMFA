@@ -33,13 +33,14 @@ This code is tested in tests/test_lib_tokens_daplug
 """
 
 import binascii
-from edumfa.lib.tokens.hotptoken import HotpTokenClass
-from edumfa.lib.log import log_with
+
+from edumfa.lib import _
 from edumfa.lib.config import get_prepend_pin
 from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.utils import to_bytes, to_unicode
-from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
 
 optional = True
 required = False

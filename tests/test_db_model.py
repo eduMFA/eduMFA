@@ -1,50 +1,51 @@
 # coding: utf-8
-from mock import mock
 import os
+from datetime import datetime, timedelta
+
+from dateutil.tz import tzutc
+from mock import mock
 from sqlalchemy import func
 
 from edumfa.models import (
-    Token,
-    Resolver,
-    ResolverRealm,
-    TokenRealm,
-    ResolverConfig,
-    Realm,
-    Config,
-    Policy,
-    Challenge,
-    MachineResolver,
-    MachineResolverConfig,
-    MachineToken,
     Admin,
     CAConnector,
     CAConnectorConfig,
-    SMTPServer,
-    PasswordReset,
-    EventHandlerOption,
-    EventHandler,
-    SMSGatewayOption,
-    SMSGateway,
-    EventHandlerCondition,
-    eduMFAServer,
+    Challenge,
     ClientApplication,
-    Subscription,
-    UserCache,
+    Config,
     EventCounter,
+    EventHandler,
+    EventHandlerCondition,
+    EventHandlerOption,
+    MachineResolver,
+    MachineResolverConfig,
+    MachineToken,
+    MonitoringStats,
+    PasswordReset,
     PeriodicTask,
     PeriodicTaskLastRun,
     PeriodicTaskOption,
-    MonitoringStats,
+    Policy,
     PolicyCondition,
-    db,
-    Tokengroup,
-    TokenTokengroup,
+    Realm,
+    Resolver,
+    ResolverConfig,
+    ResolverRealm,
     Serviceid,
+    SMSGateway,
+    SMSGatewayOption,
+    SMTPServer,
+    Subscription,
+    Token,
+    Tokengroup,
+    TokenRealm,
+    TokenTokengroup,
+    UserCache,
+    db,
+    eduMFAServer,
 )
+
 from .base import MyTestCase
-from dateutil.tz import tzutc
-from datetime import datetime
-from datetime import timedelta
 
 
 class TokenModelTestCase(MyTestCase):

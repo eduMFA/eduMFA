@@ -19,10 +19,9 @@ limitations under the License.
 """
 
 from collections import namedtuple
-from mock import Mock
-
 from collections.abc import Sequence, Sized
 
+from mock import Mock
 from smpplib.exceptions import ConnectionError
 
 from .smtpmock import get_wrapped

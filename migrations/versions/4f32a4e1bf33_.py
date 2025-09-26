@@ -11,12 +11,13 @@ Create Date: 2015-01-26 10:06:50.568505
 revision = "4f32a4e1bf33"
 down_revision = None
 
-from alembic import op
-import sqlalchemy as sa
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.exc import ProgrammingError
 import json
+
+import sqlalchemy as sa
+from alembic import op
+from sqlalchemy.exc import ProgrammingError
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
 
 Session = sessionmaker()
 

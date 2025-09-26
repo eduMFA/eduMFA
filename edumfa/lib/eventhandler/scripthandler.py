@@ -33,16 +33,17 @@ The scripts can take parameters like
 * resolver
 * logged_in_user
 """
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib.utils import is_true
-from edumfa.lib.framework import get_app_config_value
-from edumfa.lib.error import ServerError
-from edumfa.lib import _
-from edumfa.app import db
 import logging
-import subprocess  # nosec B404 # We know what we are doing and only allow trusted script calls
 import os
+import subprocess  # nosec B404 # We know what we are doing and only allow trusted script calls
 import traceback
+
+from edumfa.app import db
+from edumfa.lib import _
+from edumfa.lib.error import ServerError
+from edumfa.lib.eventhandler.base import BaseEventHandler
+from edumfa.lib.framework import get_app_config_value
+from edumfa.lib.utils import is_true
 
 log = logging.getLogger(__name__)
 

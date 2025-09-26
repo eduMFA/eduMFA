@@ -58,10 +58,11 @@ args=('/var/log/edumfa/audit.log',)
 
 """
 
-import logging
 import json
-from edumfa.lib.auditmodules.base import Audit as AuditBase
+import logging
 from datetime import datetime
+
+from edumfa.lib.auditmodules.base import Audit as AuditBase
 
 
 class Audit(AuditBase):

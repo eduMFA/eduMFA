@@ -39,17 +39,19 @@ The code is tested in tests/test_lib_tokens_remote
 
 import logging
 import traceback
+
 import requests
-from edumfa.lib.utils import is_true
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.config import get_from_config
+
 from edumfa.api.lib.utils import getParam
-from edumfa.lib.log import log_with
-from edumfa.lib.policydecorators import challenge_response_allowed
-from edumfa.lib.tokenclass import TokenClass, TOKENKIND, AUTHENTICATIONMODE
-from edumfa.lib.edumfaserver import get_edumfaserver
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.config import get_from_config
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.edumfaserver import get_edumfaserver
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.policydecorators import challenge_response_allowed
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, TOKENKIND, TokenClass
+from edumfa.lib.utils import is_true
 
 optional = True
 required = False

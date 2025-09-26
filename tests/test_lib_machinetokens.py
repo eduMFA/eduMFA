@@ -4,19 +4,19 @@ This test file tests the lib/machine.py for attaching and detaching tokens
 """
 
 HOSTSFILE = "tests/testdata/hosts"
-from .base import MyTestCase
 from edumfa.lib.machine import (
-    attach_token,
-    detach_token,
     add_option,
+    attach_token,
     delete_option,
+    detach_token,
+    get_auth_items,
     list_machine_tokens,
     list_token_machines,
-    get_auth_items,
 )
-from edumfa.lib.token import init_token, get_tokens
 from edumfa.lib.machineresolver import save_resolver
+from edumfa.lib.token import get_tokens, init_token
 
+from .base import MyTestCase
 
 sshkey = (
     "ssh-rsa "

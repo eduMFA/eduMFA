@@ -10,8 +10,8 @@ Create Date: 2020-01-29 13:42:15.390923
 revision = "a7e91b18a460"
 down_revision = "0c7123345224"
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy import orm
 from sqlalchemy.ext.declarative import declarative_base
 

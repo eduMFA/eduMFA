@@ -34,13 +34,14 @@ Description:  This file is part of the eduMFA service
 Dependencies: -
 """
 
-import re
-import os
-import logging
-import sys
 import codecs
+import logging
+import os
+import re
+import sys
 
-from edumfa.lib.utils import to_bytes, convert_column_to_unicode
+from edumfa.lib.utils import convert_column_to_unicode, to_bytes
+
 from .UserIdResolver import UserIdResolver
 
 # Python 3.13 dropped crypt package, so we need to import crypt_r

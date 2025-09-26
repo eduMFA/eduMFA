@@ -6,25 +6,26 @@ This test file tests the lib.tokenclass
 The lib.tokenclass depends on the DB model and lib.user
 """
 
-import warnings
-
-from .base import MyTestCase, FakeFlaskG, FakeAudit
-from edumfa.lib.error import ParameterError
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
-from edumfa.lib.tokenclass import DATE_FORMAT
-from edumfa.lib.utils import b32encode_and_unicode
-from edumfa.lib.tokens.hotptoken import HotpTokenClass
-from edumfa.models import Token, Config, Challenge
-from edumfa.lib.config import set_edumfa_config, set_prepend_pin
-from edumfa.lib.policy import PolicyClass, SCOPE, set_policy, delete_policy
 import binascii
 import datetime
 import hashlib
-from dateutil.tz import tzlocal
+import warnings
 
+from dateutil.tz import tzlocal
 from passlib.crypto.digest import pbkdf2_hmac
+
+from edumfa.lib.config import set_edumfa_config, set_prepend_pin
+from edumfa.lib.error import ParameterError
+from edumfa.lib.policy import SCOPE, PolicyClass, delete_policy, set_policy
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.tokens.hotptoken import HotpTokenClass
+from edumfa.lib.user import User
+from edumfa.lib.utils import b32encode_and_unicode
+from edumfa.models import Challenge, Config, Token
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 

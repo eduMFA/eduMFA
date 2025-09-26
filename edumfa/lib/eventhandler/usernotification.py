@@ -31,25 +31,24 @@ It can be bound to each event and can perform the action:
 
 The module is tested in tests/test_lib_eventhandler_usernotification.py
 """
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib.smtpserver import send_email_identifier
-from edumfa.lib.smsprovider.SMSProvider import send_sms_identifier
-from edumfa.lib.auth import get_db_admins, get_db_admin
-from edumfa.lib.framework import get_app_config_value
-from edumfa.lib.token import get_tokens
-from edumfa.lib.smtpserver import get_smtpservers
-from edumfa.lib.smsprovider.SMSProvider import get_smsgateway
-from edumfa.lib.user import User, get_user_list, is_attribute_at_all
-from edumfa.lib.utils import create_tag_dict, to_unicode, is_true
-from edumfa.lib.crypto import get_alphanum_str
-from edumfa.lib import _
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
-from urllib.request import urlopen
 import logging
 import os
 import traceback
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from urllib.request import urlopen
+
+from edumfa.lib import _
+from edumfa.lib.auth import get_db_admin, get_db_admins
+from edumfa.lib.crypto import get_alphanum_str
+from edumfa.lib.eventhandler.base import BaseEventHandler
+from edumfa.lib.framework import get_app_config_value
+from edumfa.lib.smsprovider.SMSProvider import get_smsgateway, send_sms_identifier
+from edumfa.lib.smtpserver import get_smtpservers, send_email_identifier
+from edumfa.lib.token import get_tokens
+from edumfa.lib.user import User, get_user_list, is_attribute_at_all
+from edumfa.lib.utils import create_tag_dict, is_true, to_unicode
 
 log = logging.getLogger(__name__)
 

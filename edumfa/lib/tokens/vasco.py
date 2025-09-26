@@ -31,16 +31,10 @@
 import logging
 
 # from ctypes import *
-from ctypes import CDLL, create_string_buffer
-from ctypes import Structure
+from ctypes import CDLL, Structure, byref, c_byte, c_char, c_ulong, create_string_buffer
 
-from ctypes import byref
-from ctypes import c_ulong
-from ctypes import c_char
-from ctypes import c_byte
-
-from edumfa.lib.framework import get_app_config_value
 from edumfa.lib.error import ParameterError
+from edumfa.lib.framework import get_app_config_value
 
 __all__ = ["vasco_otp_check"]
 

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+
 from .base import MyApiTestCase
-from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION
 
 
 class APISmsGatewayTestCase(MyApiTestCase):

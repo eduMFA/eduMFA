@@ -20,15 +20,17 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from urllib.parse import quote
-from edumfa.models import eduMFAServer as eduMFAServerDB
+import json
 import logging
+from urllib.parse import quote
+
+import requests
+
+from edumfa.lib.error import ConfigAdminError
 from edumfa.lib.log import log_with
 from edumfa.lib.utils import fetch_one_resource, to_unicode
-from edumfa.lib.error import ConfigAdminError
-from edumfa.lib.utils.export import register_import, register_export
-import json
-import requests
+from edumfa.lib.utils.export import register_export, register_import
+from edumfa.models import eduMFAServer as eduMFAServerDB
 
 __doc__ = """
 This is the library for creating, listing and deleting remote eduMFA

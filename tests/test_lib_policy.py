@@ -8,33 +8,33 @@ The lib.policy.py only depends on the database model.
 import dateutil
 import mock
 
-from .base import MyTestCase, FakeFlaskG, FakeAudit
-
 from edumfa.lib.auth import ROLE
+from edumfa.lib.error import ParameterError
 from edumfa.lib.policy import (
-    set_policy,
-    delete_policy,
-    import_policies,
-    export_policies,
-    get_static_policy_definitions,
-    PolicyClass,
-    SCOPE,
-    enable_policy,
-    PolicyError,
     ACTION,
     MAIN_MENU,
-    delete_all_policies,
-    get_action_values_from_options,
+    SCOPE,
     Match,
     MatchingError,
+    PolicyClass,
+    PolicyError,
+    delete_all_policies,
+    delete_policy,
+    enable_policy,
+    export_policies,
+    get_action_values_from_options,
     get_allowed_custom_attributes,
+    get_static_policy_definitions,
+    import_policies,
+    set_policy,
 )
-from edumfa.lib.realm import set_realm, delete_realm, get_realms
-from edumfa.lib.resolver import save_resolver, get_resolver_list, delete_resolver
-from edumfa.lib.error import ParameterError
+from edumfa.lib.realm import delete_realm, get_realms, set_realm
+from edumfa.lib.resolver import delete_resolver, get_resolver_list, save_resolver
 from edumfa.lib.user import User
+
 from .base import PWFILE as FILE_PASSWORDS
 from .base import PWFILE2 as FILE_PASSWD
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 
 def _check_policy_name(polname, policies):

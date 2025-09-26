@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from .base import MyApiTestCase
 import binascii
 import struct
 from hashlib import sha256
-from cryptography.hazmat.primitives.asymmetric import ec
+
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec
 
-from edumfa.lib.token import assign_token, remove_token, get_tokens
-from edumfa.lib.user import User
 from edumfa.lib.config import set_edumfa_config
-from edumfa.lib.tokens.u2f import check_response, url_encode
-from edumfa.lib.policy import set_policy, delete_policy, SCOPE
-from edumfa.lib.tokens.u2ftoken import U2FACTION
-from edumfa.models import Challenge
-from edumfa.lib.utils import hexlify_and_unicode, to_bytes
 from edumfa.lib.error import ERROR
+from edumfa.lib.policy import SCOPE, delete_policy, set_policy
+from edumfa.lib.token import assign_token, get_tokens, remove_token
+from edumfa.lib.tokens.u2f import check_response, url_encode
+from edumfa.lib.tokens.u2ftoken import U2FACTION
+from edumfa.lib.user import User
+from edumfa.lib.utils import hexlify_and_unicode, to_bytes
+from edumfa.models import Challenge
 
+from .base import MyApiTestCase
 
 PWFILE = "tests/testdata/passwords"
 IMPORTFILE = "tests/testdata/import.oath"

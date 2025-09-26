@@ -23,19 +23,21 @@ The CA connectors are written to the database table "caconnector".
 
 The code is tested in tests/test_api_caconnector.py.
 """
-from flask import Blueprint, request
-from .lib.utils import send_result, getParam
-from ..lib.log import log_with
-from flask import g
 import logging
+
+from flask import Blueprint, g, request
+
 from edumfa.lib.caconnector import (
-    save_caconnector,
     delete_caconnector,
-    get_caconnector_specific_options,
     get_caconnector_list,
+    get_caconnector_specific_options,
+    save_caconnector,
 )
-from ..api.lib.prepolicy import prepolicy, check_base_action
 from edumfa.lib.policy import ACTION
+
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.log import log_with
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 

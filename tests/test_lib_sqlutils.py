@@ -4,13 +4,15 @@
 This file contains the tests for lib/sqlutils.py
 """
 
+import warnings
 from datetime import datetime
 
 from mock import MagicMock
-import warnings
 from sqlalchemy.testing import AssertsCompiledSQL
+
 from edumfa.lib.sqlutils import DeleteLimit, delete_matching_rows
 from edumfa.models import Audit as LogEntry
+
 from .base import MyTestCase
 
 

@@ -30,21 +30,23 @@ These gateway definitions are written to the database table "smsgateway" and
 The code of this module is tested in tests/test_api_smsgateway.py
 """
 
-from flask import Blueprint, request
-from .lib.utils import getParam, send_result
-from ..lib.log import log_with
-from flask import g
 import logging
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from ..lib.policy import ACTION
+
+from flask import Blueprint, g, request
+
 from edumfa.lib.smsprovider.SMSProvider import (
     SMS_PROVIDERS,
+    delete_smsgateway,
+    delete_smsgateway_key_generic,
+    get_sms_provider_class,
     get_smsgateway,
     set_smsgateway,
-    delete_smsgateway_key_generic,
-    delete_smsgateway,
-    get_sms_provider_class,
 )
+
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.log import log_with
+from ..lib.policy import ACTION
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 

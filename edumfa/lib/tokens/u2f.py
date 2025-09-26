@@ -27,24 +27,22 @@ try:
     from OpenSSL import crypto
 except AttributeError as e:
     pass
-import binascii
-from hashlib import sha256
 import base64
+import binascii
 import logging
-import time
 import struct
-from cryptography.hazmat.primitives.asymmetric import ec, rsa
-from cryptography.hazmat.primitives import hashes
+import time
+from hashlib import sha256
+
 from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec, padding, rsa
 
 from edumfa.lib.utils import (
+    hexlify_and_unicode,
     to_bytes,
     to_unicode,
-    hexlify_and_unicode,
     urlsafe_b64encode_and_unicode,
 )
 

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from .base import MyApiTestCase
+import datetime
+
 from edumfa.lib.monitoringstats import write_stats
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.models import db
-import datetime
+
+from .base import MyApiTestCase
 
 
 class APIMonitoringTestCase(MyApiTestCase):

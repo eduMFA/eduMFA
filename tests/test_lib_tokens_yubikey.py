@@ -5,17 +5,19 @@ This test file tests the lib.tokens.yubikeytoken
 
 PWFILE = "tests/testdata/passwords"
 
-from .base import MyTestCase
+from flask import Request, g
+from werkzeug.test import EnvironBuilder
+
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.token import init_token
 from edumfa.lib.tokens.yubikeytoken import (
     YubikeyTokenClass,
     yubico_api_signature,
     yubico_check_api_signature,
 )
-from edumfa.lib.token import init_token
 from edumfa.models import Token
-from flask import Request, g
-from werkzeug.test import EnvironBuilder
-from edumfa.lib.config import set_edumfa_config
+
+from .base import MyTestCase
 
 
 class YubikeyTokenTestCase(MyTestCase):

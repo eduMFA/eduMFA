@@ -11,12 +11,11 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
-import os
-
 # Monkey-patch functools.wraps
 # http://stackoverflow.com/questions/28366818/preserve-default-arguments-of-wrapped-decorated-python-function-in-sphinx-docume
 import functools
+import os
+import sys
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -4,19 +4,21 @@ This test file tests the lib.auth_cache.py
 The lib.auth_cache.py only depends on the database model.
 """
 
-from .base import MyTestCase
+import datetime
+
+from passlib.hash import argon2
 
 from edumfa.lib.authcache import (
+    _hash_password,
     add_to_cache,
+    cleanup,
     delete_from_cache,
     update_cache,
     verify_in_cache,
-    _hash_password,
-    cleanup,
 )
-from passlib.hash import argon2
 from edumfa.models import AuthCache
-import datetime
+
+from .base import MyTestCase
 
 
 class AuthCacheTestCase(MyTestCase):

@@ -2,23 +2,24 @@
 This test file tests the lib/smtpserver.py
 """
 
+import binascii
 import email
 from email.mime.image import MIMEImage
-import binascii
-from edumfa.lib.queue import get_job_queue
+from smtplib import SMTPException
 
-from tests.queuemock import MockQueueTestCase
-from .base import MyTestCase
 from edumfa.lib.error import ResourceNotFoundError
+from edumfa.lib.queue import get_job_queue
 from edumfa.lib.smtpserver import (
-    get_smtpservers,
+    SMTPServer,
     add_smtpserver,
     delete_smtpserver,
     get_smtpserver,
-    SMTPServer,
+    get_smtpservers,
 )
+from tests.queuemock import MockQueueTestCase
+
 from . import smtpmock
-from smtplib import SMTPException
+from .base import MyTestCase
 
 PNG_IMG = (
     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAA"

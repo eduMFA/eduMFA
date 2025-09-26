@@ -30,36 +30,32 @@ OpenLDAP and Active Directory.
 The file is tested in tests/test_lib_resolver.py
 """
 
-import logging
-
-import yaml
-import threading
+import binascii
+import datetime
 import functools
-
-from .UserIdResolver import UserIdResolver
+import hashlib
+import logging
+import os.path
+import ssl
+import threading
+import traceback
+import uuid
+from operator import itemgetter
 
 import ldap3
-from ldap3 import MODIFY_REPLACE, MODIFY_ADD, MODIFY_DELETE
-from ldap3 import Tls
+import yaml
+from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE, Tls
 from ldap3.core.exceptions import LDAPOperationResult
 from ldap3.core.results import RESULT_SIZE_LIMIT_EXCEEDED
-import ssl
-
-import os.path
-
-import traceback
+from ldap3.utils.conv import escape_bytes
 from passlib.hash import ldap_salted_sha1
-import hashlib
-import binascii
-from edumfa.lib.framework import get_app_local_store, get_app_config_value
-import datetime
 
 from edumfa.lib import _
-from edumfa.lib.utils import is_true, to_bytes, to_unicode, convert_column_to_unicode
 from edumfa.lib.error import eduMFAError
-import uuid
-from ldap3.utils.conv import escape_bytes
-from operator import itemgetter
+from edumfa.lib.framework import get_app_config_value, get_app_local_store
+from edumfa.lib.utils import convert_column_to_unicode, is_true, to_bytes, to_unicode
+
+from .UserIdResolver import UserIdResolver
 
 log = logging.getLogger(__name__)
 

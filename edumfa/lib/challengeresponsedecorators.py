@@ -30,15 +30,13 @@ Currently the decorator is only tested in tests/test_lib_token.py
 
 import logging
 
-from edumfa.lib.policy import Match
-from edumfa.lib.policy import ACTION, SCOPE, check_pin, SCOPE
-from edumfa.lib.config import get_from_config
-from edumfa.lib.crypto import pass_hash, verify_pass_hash, get_rand_digit_str
-from edumfa.models import Challenge
-from edumfa.lib.challenge import get_challenges
 from edumfa.lib import _
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import get_rand_digit_str, pass_hash, verify_pass_hash
+from edumfa.lib.policy import ACTION, SCOPE, Match, check_pin
 from edumfa.lib.tokenclass import CLIENTMODE
-
+from edumfa.models import Challenge
 
 log = logging.getLogger(__name__)
 

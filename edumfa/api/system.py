@@ -34,42 +34,42 @@ This is the REST API for system calls to create and read system configuration.
 The code of this module is tested in tests/test_api_system.py
 """
 
-from flask import Blueprint, request
-from .lib.utils import (
-    getParam,
-    getLowerParams,
-    optional,
-    required,
-    send_result,
-    send_file,
-)
-from ..lib.log import log_with
-from ..lib.radiusserver import get_radiusservers
-from ..lib.caconnector import get_caconnector_list
-from ..lib.config import (
-    get_token_class,
-    set_edumfa_config,
-    delete_edumfa_config,
-    get_from_config,
-)
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from ..lib.error import ParameterError
-
-from .auth import admin_required
-from flask import g, current_app, render_template
-import logging
-import json
 import datetime
+import json
+import logging
 import re
 import socket
-from edumfa.lib.resolver import get_resolver_list
-from edumfa.lib.realm import get_realms
-from edumfa.lib.policy import PolicyClass, ACTION
-from edumfa.lib.auth import get_db_admins
-from edumfa.lib.crypto import geturandom, set_hsm_password, get_hsm
-from edumfa.lib.importotp import GPGImport
-from edumfa.lib.utils import hexlify_and_unicode, b64encode_and_unicode
 
+from flask import Blueprint, current_app, g, render_template, request
+
+from edumfa.lib.auth import get_db_admins
+from edumfa.lib.crypto import get_hsm, geturandom, set_hsm_password
+from edumfa.lib.importotp import GPGImport
+from edumfa.lib.policy import ACTION, PolicyClass
+from edumfa.lib.realm import get_realms
+from edumfa.lib.resolver import get_resolver_list
+from edumfa.lib.utils import b64encode_and_unicode, hexlify_and_unicode
+
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.caconnector import get_caconnector_list
+from ..lib.config import (
+    delete_edumfa_config,
+    get_from_config,
+    get_token_class,
+    set_edumfa_config,
+)
+from ..lib.error import ParameterError
+from ..lib.log import log_with
+from ..lib.radiusserver import get_radiusservers
+from .auth import admin_required
+from .lib.utils import (
+    getLowerParams,
+    getParam,
+    optional,
+    required,
+    send_file,
+    send_result,
+)
 
 log = logging.getLogger(__name__)
 

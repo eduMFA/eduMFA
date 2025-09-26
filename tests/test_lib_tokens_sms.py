@@ -2,23 +2,25 @@
 This test file tests the lib.tokens.smstoken
 """
 
+import datetime
 import logging
 
-from .base import MyTestCase, FakeFlaskG, FakeAudit
-from edumfa.lib.resolver import save_resolver
-from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
-from edumfa.lib.utils import is_true
-from edumfa.lib.token import init_token, remove_token
-from edumfa.lib.tokens.smstoken import SmsTokenClass, SMSACTION
-from edumfa.models import Token, Config, Challenge
-from edumfa.lib.config import set_edumfa_config, set_prepend_pin
-from edumfa.lib.policy import set_policy, SCOPE, PolicyClass
-from edumfa.lib import _
-import datetime
 import mock
 import responses
 from testfixtures import log_capture
+
+from edumfa.lib import _
+from edumfa.lib.config import set_edumfa_config, set_prepend_pin
+from edumfa.lib.policy import SCOPE, PolicyClass, set_policy
+from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.tokens.smstoken import SMSACTION, SmsTokenClass
+from edumfa.lib.user import User
+from edumfa.lib.utils import is_true
+from edumfa.models import Challenge, Config, Token
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 

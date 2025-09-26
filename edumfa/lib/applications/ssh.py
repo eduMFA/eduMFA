@@ -24,12 +24,13 @@
 This file is tested in tests/test_lib_machinetokens.py
 """
 
-from edumfa.lib.applications import MachineApplicationBase
 import logging
-from edumfa.lib.token import get_tokens
+
+from edumfa.lib import _
+from edumfa.lib.applications import MachineApplicationBase
 from edumfa.lib.policy import TYPE
 from edumfa.lib.serviceid import get_serviceids
-from edumfa.lib import _
+from edumfa.lib.token import get_tokens
 
 log = logging.getLogger(__name__)
 

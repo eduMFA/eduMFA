@@ -47,10 +47,11 @@ which creates a signature of the audit data and writes the data to the audit
 storage.
 """
 
+import datetime
 import logging
 import traceback
+
 from edumfa.lib.log import log_with
-import datetime
 
 log = logging.getLogger(__name__)
 

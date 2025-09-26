@@ -4,8 +4,9 @@ This file contains the tests for the periodic tasks API.
 This tests api/periodictask.py
 """
 
-import jwt
 from contextlib import contextmanager
+
+import jwt
 import mock
 from dateutil.parser import parse as parse_timestamp
 

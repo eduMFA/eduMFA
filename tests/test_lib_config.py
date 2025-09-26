@@ -4,37 +4,40 @@ This test file tests the lib.config
 The lib.config only depends on the database model.
 """
 
-from edumfa.models import Config, save_config_timestamp, db
-from .base import MyTestCase
+import importlib
+
+from flask import current_app
+
 from edumfa.lib.config import (
-    get_resolver_list,
-    get_resolver_classes,
-    get_resolver_class_dict,
-    get_resolver_types,
-    get_resolver_module_list,
-    get_from_config,
-    get_edumfa_config,
-    set_edumfa_config,
     delete_edumfa_config,
-    get_token_list,
-    get_token_module_list,
-    get_token_class_dict,
-    get_token_types,
-    get_token_classes,
-    get_token_prefix,
-    get_machine_resolver_class_dict,
+    get_config_object,
+    get_edumfa_config,
     get_edumfa_node,
     get_edumfa_nodes,
-    this,
-    get_config_object,
-    invalidate_config_object,
+    get_from_config,
+    get_machine_resolver_class_dict,
     get_multichallenge_enrollable_tokentypes,
+    get_resolver_class_dict,
+    get_resolver_classes,
+    get_resolver_list,
+    get_resolver_module_list,
+    get_resolver_types,
+    get_token_class_dict,
+    get_token_classes,
+    get_token_list,
+    get_token_module_list,
+    get_token_prefix,
+    get_token_types,
+    invalidate_config_object,
+    set_edumfa_config,
+    this,
 )
 from edumfa.lib.resolvers.PasswdIdResolver import IdResolver as PWResolver
 from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.tokens.totptoken import TotpTokenClass
-from flask import current_app
-import importlib
+from edumfa.models import Config, db, save_config_timestamp
+
+from .base import MyTestCase
 
 
 class ConfigTestCase(MyTestCase):

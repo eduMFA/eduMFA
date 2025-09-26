@@ -36,20 +36,19 @@ This file is tested in tests/test_lib_machine_resolver_ldap.py in the class
 LdapMachineTestCase
 """
 
-import netaddr
-import traceback
 import logging
+import ssl
+import traceback
 
 import ldap3
+import netaddr
 from ldap3 import Tls
-import ssl
 
-from .base import Machine
-from .base import BaseMachineResolver
-from .base import MachineResolverError
-from edumfa.lib.utils import is_true
-from edumfa.lib.resolvers.LDAPIdResolver import AUTHTYPE, DEFAULT_CA_FILE, IdResolver
 from edumfa.lib import _
+from edumfa.lib.resolvers.LDAPIdResolver import AUTHTYPE, DEFAULT_CA_FILE, IdResolver
+from edumfa.lib.utils import is_true
+
+from .base import BaseMachineResolver, Machine, MachineResolverError
 
 log = logging.getLogger(__name__)
 

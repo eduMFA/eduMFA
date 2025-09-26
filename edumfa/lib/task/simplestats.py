@@ -22,13 +22,13 @@
 #
 import logging
 
-from edumfa.lib.utils import is_true
-from edumfa.lib.tokenclass import TOKENKIND
-from edumfa.lib.token import get_tokens
+from edumfa.lib import _
 from edumfa.lib.monitoringstats import write_stats
 from edumfa.lib.subscriptions import get_users_with_active_tokens
 from edumfa.lib.task.base import BaseTask
-from edumfa.lib import _
+from edumfa.lib.token import get_tokens
+from edumfa.lib.tokenclass import TOKENKIND
+from edumfa.lib.utils import is_true
 
 __doc__ = """This is a statistics task which collects simple statistics from the database.
 If You want to add more statistic points, simply add them to the options method and add a

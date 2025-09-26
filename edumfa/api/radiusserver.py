@@ -28,20 +28,21 @@ like RADIUS-Token or RADIUS-passthru policies.
 
 The code of this module is tested in tests/test_api_radiusserver.py
 """
-from flask import Blueprint, request
-from .lib.utils import getParam, required, send_result
-from ..lib.log import log_with
-from ..lib.policy import ACTION
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from flask import g
 import logging
+
+from flask import Blueprint, g, request
+
 from edumfa.lib.radiusserver import (
     add_radius,
-    list_radiusservers,
     delete_radius,
+    list_radiusservers,
     test_radius,
 )
 
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.log import log_with
+from ..lib.policy import ACTION
+from .lib.utils import getParam, required, send_result
 
 log = logging.getLogger(__name__)
 

@@ -33,40 +33,41 @@ It is inherited from lib.tokenclass and is thus dependent on models.py
 This code is tested in tests/test_lib_tokens_hotp
 """
 
-import time
 import binascii
-
-from .HMAC import HmacOtp
-from edumfa.api.lib.utils import getParam
-from edumfa.api.lib.policyhelper import get_init_tokenlabel_parameters
-from edumfa.lib.config import get_from_config
-from edumfa.lib.tokenclass import (
-    TokenClass,
-    TWOSTEP_DEFAULT_DIFFICULTY,
-    TWOSTEP_DEFAULT_CLIENTSIZE,
-    TOKENKIND,
-    ROLLOUTSTATE,
-)
-from edumfa.lib.log import log_with
-from edumfa.lib.apps import create_google_authenticator_url as cr_google
-from edumfa.lib.error import ParameterError
-from edumfa.lib.apps import create_oathtoken_url as cr_oath
-from edumfa.lib.utils import (
-    create_img,
-    is_true,
-    b32encode_and_unicode,
-    hexlify_and_unicode,
-    determine_logged_in_userparams,
-)
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.policy import SCOPE, ACTION, GROUP, Match
-from edumfa.lib.token import init_token
-from edumfa.lib.tokenclass import CLIENTMODE
-from edumfa.lib import _
-import traceback
 import logging
+import time
+import traceback
 
 from passlib.crypto.digest import pbkdf2_hmac
+
+from edumfa.api.lib.policyhelper import get_init_tokenlabel_parameters
+from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
+from edumfa.lib.apps import create_google_authenticator_url as cr_google
+from edumfa.lib.apps import create_oathtoken_url as cr_oath
+from edumfa.lib.config import get_from_config
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.error import ParameterError
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE, Match
+from edumfa.lib.token import init_token
+from edumfa.lib.tokenclass import (
+    CLIENTMODE,
+    ROLLOUTSTATE,
+    TOKENKIND,
+    TWOSTEP_DEFAULT_CLIENTSIZE,
+    TWOSTEP_DEFAULT_DIFFICULTY,
+    TokenClass,
+)
+from edumfa.lib.utils import (
+    b32encode_and_unicode,
+    create_img,
+    determine_logged_in_userparams,
+    hexlify_and_unicode,
+    is_true,
+)
+
+from .HMAC import HmacOtp
 
 optional = True
 required = False

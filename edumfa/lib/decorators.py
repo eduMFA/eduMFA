@@ -20,11 +20,11 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import logging
 import functools
-from edumfa.lib.error import TokenAdminError
-from edumfa.lib.error import ParameterError
+import logging
+
 from edumfa.lib import _
+from edumfa.lib.error import ParameterError, TokenAdminError
 from edumfa.lib.utils import check_serial_valid
 
 log = logging.getLogger(__name__)

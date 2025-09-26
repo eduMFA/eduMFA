@@ -27,8 +27,8 @@ It depends on the models
 
 import logging
 
+from edumfa.lib.error import ResourceNotFoundError, eduMFAError
 from edumfa.lib.utils import fetch_one_resource
-from edumfa.lib.error import eduMFAError, ResourceNotFoundError
 from edumfa.models import Tokengroup, TokenTokengroup, db
 
 log = logging.getLogger(__name__)

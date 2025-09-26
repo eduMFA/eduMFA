@@ -35,11 +35,12 @@ This code is tested in tests/test_lib_tokens_spass
 """
 
 import logging
+
 from edumfa.lib import _
-from edumfa.lib.log import log_with
-from edumfa.lib.tokenclass import TokenClass, AUTHENTICATIONMODE
 from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, TokenClass
 
 optional = True
 required = False

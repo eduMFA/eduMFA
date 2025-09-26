@@ -38,56 +38,57 @@ authenticated, the API returns a 401 response.
 To authenticate you need to send a POST request to /auth containing username
 and password.
 """
-from flask import Blueprint, request, current_app, g
-import jwt
-from functools import wraps
+import logging
+import threading
+import traceback
 from datetime import datetime, timedelta
-from edumfa.lib.error import AuthError, ERROR
-from edumfa.lib.crypto import geturandom, init_hsm
-from edumfa.lib.audit import getAudit
-from edumfa.lib.auth import check_webui_user, ROLE, verify_db_admin, db_admin_exist
-from edumfa.lib.framework import get_app_config_value
-from edumfa.lib.user import User, split_user, log_used_user
-from edumfa.lib.policy import PolicyClass, REMOTE_USER
-from edumfa.lib.realm import get_default_realm, realm_is_defined
+from functools import wraps
+
+import jwt
+from flask import Blueprint, current_app, g, request
+
 from edumfa.api.lib.postpolicy import (
-    postpolicy,
-    get_webui_settings,
     add_user_detail_to_response,
-    check_tokentype,
-    check_tokeninfo,
     check_serial,
+    check_tokeninfo,
+    check_tokentype,
+    get_webui_settings,
     no_detail_on_fail,
     no_detail_on_success,
-    get_webui_settings,
+    postpolicy,
 )
 from edumfa.api.lib.prepolicy import (
+    increase_failcounter_on_challenge,
     is_remote_user_allowed,
     prepolicy,
     pushtoken_disable_wait,
+    webauthntoken_auth,
     webauthntoken_authz,
     webauthntoken_request,
-    webauthntoken_auth,
-    increase_failcounter_on_challenge,
 )
 from edumfa.api.lib.utils import (
-    send_result,
     get_all_params,
-    verify_auth_token,
     getParam,
+    send_result,
+    verify_auth_token,
 )
-from edumfa.lib.utils import get_client_ip, hexlify_and_unicode, to_unicode
+from edumfa.lib import _
+from edumfa.lib.audit import getAudit
+from edumfa.lib.auth import ROLE, check_webui_user, db_admin_exist, verify_db_admin
 from edumfa.lib.config import (
-    get_from_config,
     SYSCONF,
     ensure_no_config_object,
     get_edumfa_node,
+    get_from_config,
 )
-from edumfa.lib.event import event, EventConfiguration
-from edumfa.lib import _
-import logging
-import traceback
-import threading
+from edumfa.lib.crypto import geturandom, init_hsm
+from edumfa.lib.error import ERROR, AuthError
+from edumfa.lib.event import EventConfiguration, event
+from edumfa.lib.framework import get_app_config_value
+from edumfa.lib.policy import REMOTE_USER, PolicyClass
+from edumfa.lib.realm import get_default_realm, realm_is_defined
+from edumfa.lib.user import User, log_used_user, split_user
+from edumfa.lib.utils import get_client_ip, hexlify_and_unicode, to_unicode
 
 log = logging.getLogger(__name__)
 

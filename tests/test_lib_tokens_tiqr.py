@@ -4,23 +4,26 @@ This test file tests the lib.tokens.tiqrtoken and lib.tokens.ocra
 This depends on lib.tokenclass
 """
 
-from tests import smtpmock
-from .base import MyTestCase, MyApiTestCase
-from edumfa.lib.challenge import get_challenges
-from edumfa.lib.tokens.tiqrtoken import TiqrTokenClass
-from edumfa.lib.tokens.ocratoken import OcraTokenClass
-from edumfa.lib.tokens.ocra import OCRASuite, OCRA
-from edumfa.lib.user import User
-from edumfa.lib.token import init_token, remove_token
-from edumfa.lib.utils import hexlify_and_unicode
-from edumfa.lib.error import ParameterError
-from edumfa.lib import _
-import re
 import binascii
 import hashlib
-from urllib.parse import urlparse, urlencode
+import re
+from urllib.parse import urlencode, urlparse
+
 from flask import Request, g
 from werkzeug.test import EnvironBuilder
+
+from edumfa.lib import _
+from edumfa.lib.challenge import get_challenges
+from edumfa.lib.error import ParameterError
+from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.tokens.ocra import OCRA, OCRASuite
+from edumfa.lib.tokens.ocratoken import OcraTokenClass
+from edumfa.lib.tokens.tiqrtoken import TiqrTokenClass
+from edumfa.lib.user import User
+from edumfa.lib.utils import hexlify_and_unicode
+from tests import smtpmock
+
+from .base import MyApiTestCase, MyTestCase
 
 
 class OCRASuiteTestCase(MyTestCase):

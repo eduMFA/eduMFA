@@ -21,17 +21,17 @@
 #
 __doc__ = """The serviceid endpoint allows administrators to manage service ID definitions.
 """
-from flask import Blueprint, request
-from .lib.utils import getParam, send_result
-from ..lib.log import log_with
-from edumfa.lib.serviceid import get_serviceids, delete_serviceid, set_serviceid
-from edumfa.lib.event import event
-from edumfa.lib.policy import ACTION
-from edumfa.api.lib.prepolicy import prepolicy, check_base_action
-
-from flask import g
 import logging
 
+from flask import Blueprint, g, request
+
+from edumfa.api.lib.prepolicy import check_base_action, prepolicy
+from edumfa.lib.event import event
+from edumfa.lib.policy import ACTION
+from edumfa.lib.serviceid import delete_serviceid, get_serviceids, set_serviceid
+
+from ..lib.log import log_with
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 

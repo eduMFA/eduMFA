@@ -10,41 +10,46 @@ The lib.resolver.py only depends on the database model.
 """
 
 PWFILE = "tests/testdata/passwords"
-from .base import MyTestCase
-from . import ldap3mock
-from ldap3.core.exceptions import LDAPOperationResult
-from ldap3.core.results import RESULT_SIZE_LIMIT_EXCEEDED
-import mock
-import ldap3
-import responses
 import datetime
-import uuid
-import pytest
 import json
 import ssl
-from edumfa.lib.resolvers.LDAPIdResolver import (
-    IdResolver as LDAPResolver,
-    LockingServerPool,
-)
-from edumfa.lib.resolvers.SQLIdResolver import IdResolver as SQLResolver
-from edumfa.lib.resolvers.SCIMIdResolver import IdResolver as SCIMResolver
-from edumfa.lib.resolvers.UserIdResolver import UserIdResolver
-from edumfa.lib.resolvers.LDAPIdResolver import SERVERPOOL_ROUNDS, SERVERPOOL_SKIP
-from edumfa.lib.resolvers.HTTPResolver import HTTPResolver
+import uuid
 
+import ldap3
+import mock
+import pytest
+import responses
+from ldap3.core.exceptions import LDAPOperationResult
+from ldap3.core.results import RESULT_SIZE_LIMIT_EXCEEDED
+from requests import HTTPError
+
+from edumfa.lib.realm import delete_realm, set_realm
 from edumfa.lib.resolver import (
-    save_resolver,
+    CENSORED,
     delete_resolver,
     get_resolver_config,
     get_resolver_list,
     get_resolver_object,
     pretestresolver,
-    CENSORED,
+    save_resolver,
 )
-from edumfa.lib.realm import set_realm, delete_realm
-from edumfa.models import ResolverConfig
+from edumfa.lib.resolvers.HTTPResolver import HTTPResolver
+from edumfa.lib.resolvers.LDAPIdResolver import (
+    SERVERPOOL_ROUNDS,
+    SERVERPOOL_SKIP,
+    LockingServerPool,
+)
+from edumfa.lib.resolvers.LDAPIdResolver import (
+    IdResolver as LDAPResolver,
+)
+from edumfa.lib.resolvers.SCIMIdResolver import IdResolver as SCIMResolver
+from edumfa.lib.resolvers.SQLIdResolver import IdResolver as SQLResolver
+from edumfa.lib.resolvers.UserIdResolver import UserIdResolver
 from edumfa.lib.utils import to_bytes, to_unicode
-from requests import HTTPError
+from edumfa.models import ResolverConfig
+
+from . import ldap3mock
+from .base import MyTestCase
 
 objectGUIDs = [
     "039b36ef-e7c0-42f3-9bf9-ca6a6c0d4d31",

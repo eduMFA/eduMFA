@@ -20,11 +20,13 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from ..models import AuthCache, db
-from sqlalchemy import and_
-from passlib.hash import argon2
 import datetime
 import logging
+
+from passlib.hash import argon2
+from sqlalchemy import and_
+
+from ..models import AuthCache, db
 
 ROUNDS = 9
 log = logging.getLogger(__name__)

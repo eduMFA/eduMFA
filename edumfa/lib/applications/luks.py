@@ -20,12 +20,13 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.lib.applications import MachineApplicationBase
-from edumfa.lib.utils import hexlify_and_unicode
-from edumfa.lib.crypto import geturandom
-from edumfa.lib.token import get_tokens
-from edumfa.lib.policy import TYPE
 import logging
+
+from edumfa.lib.applications import MachineApplicationBase
+from edumfa.lib.crypto import geturandom
+from edumfa.lib.policy import TYPE
+from edumfa.lib.token import get_tokens
+from edumfa.lib.utils import hexlify_and_unicode
 
 log = logging.getLogger(__name__)
 

@@ -22,13 +22,14 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.lib.policy import LOGINMODE
-from edumfa.models import Admin
-from edumfa.lib.token import check_user_pass
-from edumfa.lib.policydecorators import libpolicy, login_mode
-from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper
-from edumfa.lib.utils import fetch_one_resource
 import logging
+
+from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper
+from edumfa.lib.policy import LOGINMODE
+from edumfa.lib.policydecorators import libpolicy, login_mode
+from edumfa.lib.token import check_user_pass
+from edumfa.lib.utils import fetch_one_resource
+from edumfa.models import Admin
 
 log = logging.getLogger(__name__)
 

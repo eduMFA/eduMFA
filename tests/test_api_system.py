@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import os
-
 import json
+import os
+from urllib.parse import urlencode
+
+from edumfa.lib.caconnector import delete_caconnector, save_caconnector
+from edumfa.lib.caconnectors.localca import ATTR
+from edumfa.lib.config import SYSCONF, delete_edumfa_config, set_edumfa_config
+from edumfa.lib.policy import ACTION, SCOPE, PolicyClass, delete_policy, set_policy
+from edumfa.lib.radiusserver import add_radius, delete_radius
+from edumfa.lib.resolver import CENSORED, delete_resolver, save_resolver
 
 from .base import MyApiTestCase
-
-from edumfa.lib.policy import PolicyClass, set_policy, delete_policy, ACTION, SCOPE
-from edumfa.lib.config import set_edumfa_config, delete_edumfa_config, SYSCONF
-from edumfa.lib.caconnector import save_caconnector, delete_caconnector
-from edumfa.lib.caconnectors.localca import ATTR
-from edumfa.lib.radiusserver import add_radius, delete_radius
-from edumfa.lib.resolver import save_resolver, delete_resolver, CENSORED
+from .test_lib_caconnector import CACERT, CAKEY, OPENSSLCNF, WORKINGDIR
 from .test_lib_resolver import LDAPDirectory, ldap3mock
-from .test_lib_caconnector import CACERT, CAKEY, WORKINGDIR, OPENSSLCNF
-from urllib.parse import urlencode
 
 PWFILE = "tests/testdata/passwords"
 POLICYFILE = "tests/testdata/policy.cfg"

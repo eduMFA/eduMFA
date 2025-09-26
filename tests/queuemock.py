@@ -21,10 +21,9 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from edumfa.lib.queue import get_job_queue
 from edumfa.config import TestingConfig
+from edumfa.lib.queue import get_job_queue
 from edumfa.lib.queues.base import BaseQueue, QueueError
-
 from tests.base import OverrideConfigTestCase
 
 

@@ -21,12 +21,13 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import logging
-import sys
 import os
-from edumfa.lib.log import log_with
-import edumfa.lib.applications
-from edumfa.lib.policy import TYPE
+import sys
 from importlib import import_module
+
+import edumfa.lib.applications
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import TYPE
 
 log = logging.getLogger(__name__)
 

@@ -6,9 +6,9 @@ Create Date: 2024-02-17 08:50:59.295124
 
 """
 
-from sqlalchemy import orm
-from alembic import op, context
 import sqlalchemy as sa
+from alembic import context, op
+from sqlalchemy import orm
 
 from edumfa.models import Policy, SMSGateway
 

@@ -33,19 +33,19 @@ which is the encryption key in the file.
 The contents of the file is tested in tests/test_lib_crypto.py
 """
 
-import logging
 import binascii
+import logging
 import os
-
 from hashlib import sha256
 
-from edumfa.lib.crypto import geturandom, zerome, aes_cbc_encrypt, aes_cbc_decrypt
+from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.primitives.ciphers import algorithms
+
+from edumfa.lib.crypto import aes_cbc_decrypt, aes_cbc_encrypt, geturandom, zerome
 from edumfa.lib.error import HSMException
-from edumfa.lib.utils import is_true, to_unicode, to_bytes, hexlify_and_unicode
+from edumfa.lib.utils import hexlify_and_unicode, is_true, to_bytes, to_unicode
 
 from .password import PASSWORD
-from cryptography.hazmat.primitives.ciphers import algorithms
-from cryptography.hazmat.primitives import padding
 
 log = logging.getLogger(__name__)
 

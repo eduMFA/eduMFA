@@ -5,18 +5,18 @@ The lib.resolvers.py only depends on the database model.
 """
 
 import json
-from .base import MyTestCase
-
-from edumfa.lib.resolver import save_resolver, delete_resolver
 
 from edumfa.lib.realm import (
-    set_realm,
-    get_realms,
+    delete_realm,
     get_default_realm,
+    get_realms,
     realm_is_defined,
     set_default_realm,
-    delete_realm,
+    set_realm,
 )
+from edumfa.lib.resolver import delete_resolver, save_resolver
+
+from .base import MyTestCase
 
 
 class ResolverTestCase(MyTestCase):

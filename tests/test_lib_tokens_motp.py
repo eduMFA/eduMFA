@@ -3,13 +3,14 @@ This test file tests the lib.tokens.spasstoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
-from edumfa.lib.tokens.motptoken import MotpTokenClass
-from edumfa.lib.tokens.mOTP import mTimeOtp
-from edumfa.models import Token
-from edumfa.lib.resolver import save_resolver
 from edumfa.lib.realm import set_realm
+from edumfa.lib.resolver import save_resolver
+from edumfa.lib.tokens.mOTP import mTimeOtp
+from edumfa.lib.tokens.motptoken import MotpTokenClass
 from edumfa.lib.user import User
+from edumfa.models import Token
+
+from .base import MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 

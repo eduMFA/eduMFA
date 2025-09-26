@@ -5,10 +5,11 @@ This depends on lib.tokenclass
 """
 
 from edumfa.lib.error import TokenAdminError
-from .base import MyTestCase
 from edumfa.lib.tokenclass import ROLLOUTSTATE
 from edumfa.lib.tokens.sshkeytoken import SSHkeyTokenClass
 from edumfa.models import Token
+
+from .base import MyTestCase
 
 
 class SSHTokenTestCase(MyTestCase):
