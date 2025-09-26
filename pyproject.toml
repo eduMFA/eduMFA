@@ -39,7 +39,7 @@ lint = [
     "ruff==0.13.1",
 ]
 docs = [
-    "furo==2025.7.19",
+    "furo==2025.9.25",
     "docutils==0.21.2",
     "imagesize==1.4.1",
     "packaging==25.0",
