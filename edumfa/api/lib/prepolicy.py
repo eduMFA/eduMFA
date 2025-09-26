@@ -36,6 +36,7 @@ import logging
 from typing import Callable
 
 from typing_extensions import ParamSpec, TypeVar
+
 try:
     from OpenSSL import crypto
 except AttributeError as e:
