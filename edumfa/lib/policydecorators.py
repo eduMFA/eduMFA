@@ -31,8 +31,10 @@ import datetime
 import functools
 import logging
 import re
+from typing import Callable
 
 from dateutil.tz import tzlocal
+from typing_extensions import ParamSpec, TypeVar
 
 from edumfa.lib.authcache import add_to_cache, verify_in_cache
 from edumfa.lib.error import PolicyError, eduMFAError
@@ -42,6 +44,9 @@ from edumfa.lib.user import User
 from edumfa.lib.utils import parse_timedelta, parse_timelimit, split_pin_pass
 
 log = logging.getLogger(__name__)
+
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 class libpolicy:
@@ -62,7 +67,7 @@ class libpolicy:
         """
         self.decorator_function = decorator_function
 
-    def __call__(self, wrapped_function):
+    def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
         """
         This decorates the given function.
         If some error occur the a PolicyException is raised.
@@ -70,14 +75,14 @@ class libpolicy:
         The decorator function takes the options parameter and can modify
         the behaviour of the original function.
 
-        :param wrapped_function: The function, that is decorated.
-        :type wrapped_function: API function
+        :param func: The function, that is decorated.
+        :type func: API function
         :return: None
         """
 
-        @functools.wraps(wrapped_function)
-        def policy_wrapper(*args, **kwds):
-            return self.decorator_function(wrapped_function, *args, **kwds)
+        @functools.wraps(func)
+        def policy_wrapper(*args: P.args, **kwds: P.kwargs) -> R:
+            return self.decorator_function(func, *args, **kwds)
 
         return policy_wrapper
 
