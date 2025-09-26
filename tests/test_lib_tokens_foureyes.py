@@ -5,10 +5,11 @@ This test file tests the lib.tokens.4eyestoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
+from edumfa.lib.token import check_serial_pass, init_token, remove_token
 from edumfa.lib.tokens.foureyestoken import FourEyesTokenClass
-from edumfa.lib.token import init_token, check_serial_pass, remove_token
 from edumfa.lib.user import User
+
+from .base import MyTestCase
 
 
 class FourEyesTokenTestCase(MyTestCase):

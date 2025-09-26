@@ -34,18 +34,19 @@ It depends on the DB model, and the lib.tokenclass.
 TOTP is defined in https://tools.ietf.org/html/rfc6238
 """
 
+import datetime
 import logging
 import time
-import datetime
-from edumfa.lib.tokens.HMAC import HmacOtp
-from edumfa.lib.config import get_from_config
-from edumfa.lib.log import log_with
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.tokens.hotptoken import HotpTokenClass
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.policy import ACTION, SCOPE, GROUP, Match
-from edumfa.lib.utils import determine_logged_in_userparams
+
 from edumfa.lib import _
+from edumfa.lib.config import get_from_config
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE, Match
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.tokens.HMAC import HmacOtp
+from edumfa.lib.tokens.hotptoken import HotpTokenClass
+from edumfa.lib.utils import determine_logged_in_userparams
 
 optional = True
 required = False

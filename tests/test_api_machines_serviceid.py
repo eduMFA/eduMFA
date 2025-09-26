@@ -3,14 +3,16 @@ This testcase is used to test the REST API  in api/machines.py
 to fetch machine information and to attach token to machines
 """
 
+import json
+
 import passlib
 
+from edumfa.lib.machine import ANY_MACHINE, NO_RESOLVER, attach_token, detach_token
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+from edumfa.lib.token import get_tokens, init_token, remove_token
 from edumfa.lib.user import User
+
 from .base import MyApiTestCase
-import json
-from edumfa.lib.token import init_token, get_tokens, remove_token
-from edumfa.lib.machine import attach_token, detach_token, ANY_MACHINE, NO_RESOLVER
-from edumfa.lib.policy import set_policy, delete_policy, ACTION, SCOPE
 
 HOSTSFILE = "tests/testdata/hosts"
 

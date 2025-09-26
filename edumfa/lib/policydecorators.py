@@ -27,18 +27,19 @@ policy decorators for the API (pre/post) are defined in api/lib/policy
 The functions of this module are tested in tests/test_lib_policy_decorator.py
 """
 
+import datetime
+import functools
 import logging
 import re
-from edumfa.lib.policy import Match
-from edumfa.lib.error import PolicyError, eduMFAError
-import functools
-from edumfa.lib.policy import ACTION, SCOPE, ACTIONVALUE, LOGINMODE
-from edumfa.lib.user import User
-from edumfa.lib.utils import parse_timelimit, parse_timedelta, split_pin_pass
-from edumfa.lib.authcache import verify_in_cache, add_to_cache
-import datetime
+
 from dateutil.tz import tzlocal
+
+from edumfa.lib.authcache import add_to_cache, verify_in_cache
+from edumfa.lib.error import PolicyError, eduMFAError
+from edumfa.lib.policy import ACTION, ACTIONVALUE, LOGINMODE, SCOPE, Match
 from edumfa.lib.radiusserver import get_radius
+from edumfa.lib.user import User
+from edumfa.lib.utils import parse_timedelta, parse_timelimit, split_pin_pass
 
 log = logging.getLogger(__name__)
 
@@ -280,8 +281,7 @@ def auth_user_passthru(wrapped_function, user_object, passw, options=None):
     :param options: Dict containing values for "g" and "clientip"
     :return: Tuple of True/False and reply-dictionary
     """
-    from edumfa.lib.token import get_tokens
-    from edumfa.lib.token import assign_token
+    from edumfa.lib.token import assign_token, get_tokens
 
     options = options or {}
     g = options.get("g")

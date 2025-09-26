@@ -44,20 +44,29 @@ to true. This will convert the mixed endian notation to a standard notation used
 The NEW_TOKENINFO section can set any arbitrary tokeninfo for the 
 migrated tokens.
 """
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.sql import select
-from sqlalchemy.schema import ForeignKey, Sequence
-from sqlalchemy import Table, MetaData, Column, Integer, Unicode, Boolean, UnicodeText
-import sys
-import json
-import getopt
 import binascii
+import getopt
+import json
 import os
 import re
+import sys
+
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Integer,
+    MetaData,
+    Table,
+    Unicode,
+    UnicodeText,
+    create_engine,
+)
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.schema import ForeignKey, Sequence
+from sqlalchemy.sql import select
+
 from edumfa.lib.crypto import aes_cbc_decrypt, aes_cbc_encrypt
 from edumfa.lib.utils import hexlify_and_unicode
-
 
 EXAMPLE_CONFIG_FILE = """{
     "SQL": {

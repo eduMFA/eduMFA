@@ -36,13 +36,11 @@ Implementation inspired by:
 
 import logging
 import time
-
 from hashlib import md5
 
-from edumfa.lib.utils import to_unicode, to_bytes
-from edumfa.lib.crypto import zerome, safe_compare
+from edumfa.lib.crypto import safe_compare, zerome
 from edumfa.lib.log import log_with
-
+from edumfa.lib.utils import to_bytes, to_unicode
 
 log = logging.getLogger(__name__)
 

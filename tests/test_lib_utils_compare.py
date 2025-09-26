@@ -4,10 +4,11 @@ This tests the module lib.utils.compare
 """
 
 from edumfa.lib.utils.compare import (
-    compare_values,
     CompareError,
+    compare_values,
     parse_comma_separated_string,
 )
+
 from .base import MyTestCase
 
 

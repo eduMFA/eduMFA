@@ -10,9 +10,9 @@ Create Date: 2023-03-15 16:14:26.204225
 revision = "4a0aec37e7cf"
 down_revision = "006d4747f858"
 
-from alembic import op, context
 import sqlalchemy as sa
-from sqlalchemy.schema import Sequence, CreateSequence
+from alembic import context, op
+from sqlalchemy.schema import CreateSequence, Sequence
 
 
 def dialect_supports_sequences():

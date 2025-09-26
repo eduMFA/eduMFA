@@ -26,10 +26,10 @@ Provide decorator to test the subscriptions.
 The code is tested in tests/test_lib_subscriptions.py.
 """
 
-import logging
-from .log import log_with
 import functools
+import logging
 
+from .log import log_with
 
 SUBSCRIPTION_DATE_FORMAT = "%Y-%m-%d"
 SIGN_FORMAT = """{application}

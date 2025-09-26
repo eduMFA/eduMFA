@@ -26,15 +26,17 @@ Firebase Cloud Messaging Service.
 This provider is used for the push token and can be used for SMS tokens.
 """
 
-from edumfa.lib.smsprovider.SMSProvider import ISMSProvider
+import json
+import logging
+import time
+
+from google.auth.transport.requests import AuthorizedSession
+from google.oauth2 import service_account
+
+from edumfa.lib import _
 from edumfa.lib.error import ConfigAdminError
 from edumfa.lib.framework import get_app_config_value, get_app_local_store
-from edumfa.lib import _
-import logging
-from google.oauth2 import service_account
-from google.auth.transport.requests import AuthorizedSession
-import json
-import time
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider
 
 FIREBASE_URL_SEND = "https://fcm.googleapis.com/v1/projects/{0!s}/messages:send"
 SCOPES = [

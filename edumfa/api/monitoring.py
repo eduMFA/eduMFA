@@ -26,22 +26,22 @@ This endpoint is used fetch monitoring/statistics data
 The code of this module is tested in tests/test_api_monitoring.py
 """
 
-from flask import Blueprint, request
+import logging
+
+from flask import Blueprint, g, request
+
+from edumfa.api.lib.prepolicy import check_base_action, prepolicy
 from edumfa.api.lib.utils import getParam, send_result
-from edumfa.api.lib.prepolicy import prepolicy, check_base_action
-from edumfa.lib.utils import parse_legacy_time
 from edumfa.lib.log import log_with
 from edumfa.lib.monitoringstats import (
+    delete_stats,
+    get_last_value,
     get_stats_keys,
     get_values,
-    get_last_value,
-    delete_stats,
 )
-from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
-from flask import g
-import logging
 from edumfa.lib.policy import ACTION
-
+from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
+from edumfa.lib.utils import parse_legacy_time
 
 log = logging.getLogger(__name__)
 

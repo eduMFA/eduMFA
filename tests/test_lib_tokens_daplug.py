@@ -6,16 +6,19 @@ The lib.tokenclass depends on the DB model and lib.user
 
 PWFILE = "tests/testdata/passwords"
 
-from .base import MyTestCase
-from edumfa.lib.resolver import save_resolver
+import datetime
+
+from dateutil.tz import tzlocal
+
+from edumfa.lib.config import set_edumfa_config, set_prepend_pin
 from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
+from edumfa.lib.resolver import save_resolver
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.tokens.daplugtoken import DaplugTokenClass, _digi2daplug
-from edumfa.models import Token, Config, Challenge
-from edumfa.lib.config import set_edumfa_config, set_prepend_pin
-import datetime
-from dateutil.tz import tzlocal
+from edumfa.lib.user import User
+from edumfa.models import Challenge, Config, Token
+
+from .base import MyTestCase
 
 
 class DaplugTokenTestCase(MyTestCase):

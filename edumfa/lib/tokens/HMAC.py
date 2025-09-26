@@ -33,17 +33,15 @@
 Description:  HOTP basic functions
 """
 
+import binascii
 import hmac
 import logging
 import struct
-import binascii
-
 from hashlib import sha1
 
-from edumfa.lib.utils import hexlify_and_unicode
-from edumfa.lib.log import log_with
 from edumfa.lib.crypto import safe_compare
-
+from edumfa.lib.log import log_with
+from edumfa.lib.utils import hexlify_and_unicode
 
 log = logging.getLogger(__name__)
 

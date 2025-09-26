@@ -30,8 +30,9 @@ The method is tested in test_lib_challenges
 """
 
 import logging
-from .log import log_with
+
 from ..models import Challenge
+from .log import log_with
 
 log = logging.getLogger(__name__)
 

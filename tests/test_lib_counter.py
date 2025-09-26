@@ -3,12 +3,14 @@ This tests the files
   lib/counter.py
 """
 
-import mock
 from contextlib import contextmanager
 
-from .base import MyTestCase
-from edumfa.lib.counter import increase, decrease, reset, read
+import mock
+
+from edumfa.lib.counter import decrease, increase, read, reset
 from edumfa.models import EventCounter
+
+from .base import MyTestCase
 
 
 def increase_and_read(name):

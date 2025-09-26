@@ -21,12 +21,12 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import logging
-from edumfa.lib.task.base import BaseTask
-from edumfa.lib.monitoringstats import write_stats
-from edumfa.lib.counter import reset, read
-from edumfa.lib.utils import is_true
-from edumfa.lib import _
 
+from edumfa.lib import _
+from edumfa.lib.counter import read, reset
+from edumfa.lib.monitoringstats import write_stats
+from edumfa.lib.task.base import BaseTask
+from edumfa.lib.utils import is_true
 
 __doc__ = """This task module reads event counters and writes them to the 
 MonitoringStats database table."""

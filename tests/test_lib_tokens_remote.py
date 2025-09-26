@@ -3,15 +3,18 @@ This test file tests the lib.tokens.remotetoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
+import json
+
+import responses
+
+from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.edumfaserver import add_edumfaserver
+from edumfa.lib.error import ConfigAdminError
+from edumfa.lib.token import remove_token
 from edumfa.lib.tokens.remotetoken import RemoteTokenClass
 from edumfa.models import Token
-import responses
-import json
-from edumfa.lib.config import set_edumfa_config
-from edumfa.lib.token import remove_token
-from edumfa.lib.error import ConfigAdminError
-from edumfa.lib.edumfaserver import add_edumfaserver
+
+from .base import MyTestCase
 
 
 class RemoteTokenTestCase(MyTestCase):

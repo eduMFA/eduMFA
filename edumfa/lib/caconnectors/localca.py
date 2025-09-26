@@ -27,24 +27,25 @@ In this first implementation it is only a local certificate authority.
 
 This module is tested in tests/test_lib_caconnector.py
 """
+from edumfa.lib.caconnectors.baseca import AvailableCAConnectors, BaseCAConnector
 from edumfa.lib.error import CAError
 from edumfa.lib.utils import int_to_hex, to_unicode
-from edumfa.lib.caconnectors.baseca import BaseCAConnector, AvailableCAConnectors
 
 try:
     from OpenSSL import crypto
 except AttributeError as e:
     pass
-from cryptography import x509
-from cryptography.hazmat.backends import default_backend
-from subprocess import Popen, PIPE  # nosec B404
-import yaml
 import datetime
-import shlex
-import re
 import logging
 import os
+import re
+import shlex
 import traceback
+from subprocess import PIPE, Popen  # nosec B404
+
+import yaml
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
 
 log = logging.getLogger(__name__)
 

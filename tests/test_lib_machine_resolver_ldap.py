@@ -4,11 +4,13 @@ lib/machines/ldap.py
 """
 
 HOSTSFILE = "tests/testdata/hosts"
-from .base import MyTestCase
-from edumfa.lib.machines.ldap import LdapMachineResolver
-from edumfa.lib.machines.base import MachineResolverError
-from . import ldap3mock
 import netaddr
+
+from edumfa.lib.machines.base import MachineResolverError
+from edumfa.lib.machines.ldap import LdapMachineResolver
+
+from . import ldap3mock
+from .base import MyTestCase
 
 LDAPDirectory = [
     {
