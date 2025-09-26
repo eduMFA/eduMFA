@@ -30,6 +30,7 @@ import functools
 import logging
 import string
 from copy import deepcopy
+from logging import Formatter
 from typing import Callable
 
 from typing_extensions import ParamSpec, TypeVar
