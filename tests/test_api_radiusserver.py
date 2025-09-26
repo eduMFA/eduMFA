@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-from .base import MyApiTestCase
 import json
-from . import radiusmock
+
 from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.radiusserver import delete_radius
+
+from . import radiusmock
+from .base import MyApiTestCase
 
 DICT_FILE = "tests/testdata/dictionary"
 

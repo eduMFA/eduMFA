@@ -26,18 +26,18 @@ to determine their next scheduled running time and to run them."""
 
 import logging
 from datetime import datetime
-from edumfa.lib.tokenclass import DATE_FORMAT
 
 from croniter import croniter
-from dateutil.tz import tzutc, tzlocal
+from dateutil.tz import tzlocal, tzutc
 
 from edumfa.lib.error import ParameterError, ResourceNotFoundError
-from edumfa.lib.utils import fetch_one_resource, parse_date
+from edumfa.lib.framework import get_app_config
 from edumfa.lib.task.eventcounter import EventCounterTask
 from edumfa.lib.task.simplestats import SimpleStatsTask
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.utils import fetch_one_resource, parse_date
+from edumfa.lib.utils.export import register_export, register_import
 from edumfa.models import PeriodicTask
-from edumfa.lib.framework import get_app_config
-from edumfa.lib.utils.export import register_import, register_export
 
 log = logging.getLogger(__name__)
 

@@ -20,22 +20,23 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from urllib.parse import urlparse
-from edumfa.lib.queue import job, wrap_job, has_job_queue
-from edumfa.models import SMTPServer as SMTPServerDB
-from edumfa.lib.crypto import (
-    decryptPassword,
-    encryptPassword,
-    FAILED_TO_DECRYPT_PASSWORD,
-)
-from edumfa.lib.utils import fetch_one_resource, to_unicode
-from edumfa.lib.utils.export import register_import, register_export
 import logging
-from edumfa.lib.log import log_with
-from time import gmtime, strftime
 import smtplib
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
+from time import gmtime, strftime
+from urllib.parse import urlparse
+
+from edumfa.lib.crypto import (
+    FAILED_TO_DECRYPT_PASSWORD,
+    decryptPassword,
+    encryptPassword,
+)
+from edumfa.lib.log import log_with
+from edumfa.lib.queue import has_job_queue, job, wrap_job
+from edumfa.lib.utils import fetch_one_resource, to_unicode
+from edumfa.lib.utils.export import register_export, register_import
+from edumfa.models import SMTPServer as SMTPServerDB
 
 __doc__ = """
 This is the library for creating, listing and deleting SMTPServer objects in

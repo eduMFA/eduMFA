@@ -7,158 +7,157 @@ The api.lib.policy.py depends on lib.policy and on flask!
 
 import json
 import logging
+from datetime import datetime, timedelta
+
+import jwt
+from dateutil.tz import tzlocal
+from flask import Request, current_app, g, jsonify
+from passlib.hash import pbkdf2_sha512
 from testfixtures import log_capture
+from werkzeug.test import EnvironBuilder
 
-from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
-from edumfa.lib.tokens.webauthn import (
-    webauthn_b64_decode,
-    AUTHENTICATOR_ATTACHMENT_TYPE,
-    ATTESTATION_LEVEL,
-    ATTESTATION_FORM,
-    USER_VERIFICATION_LEVEL,
-)
-from edumfa.lib.tokens.webauthntoken import (
-    WEBAUTHNACTION,
-    DEFAULT_ALLOWED_TRANSPORTS,
-    WebAuthnTokenClass,
-    DEFAULT_CHALLENGE_TEXT_AUTH,
-    PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
-    DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE,
-    DEFAULT_AUTHENTICATOR_ATTESTATION_LEVEL,
-    DEFAULT_AUTHENTICATOR_ATTESTATION_FORM,
-    DEFAULT_CHALLENGE_TEXT_ENROLL,
-    DEFAULT_TIMEOUT,
-    DEFAULT_USER_VERIFICATION_REQUIREMENT,
-    PUBKEY_CRED_ALGORITHMS_ORDER,
-)
-from edumfa.lib.utils import hexlify_and_unicode
-from edumfa.lib.config import set_edumfa_config, SYSCONF
-from .base import MyApiTestCase
-
-from edumfa.lib.policy import (
-    set_policy,
-    delete_policy,
-    enable_policy,
-    PolicyClass,
-    SCOPE,
-    ACTION,
-    REMOTE_USER,
-    AUTOASSIGNVALUE,
-    AUTHORIZED,
+from edumfa.api.lib.postpolicy import (
+    add_user_detail_to_response,
+    autoassign,
+    check_serial,
+    check_tokeninfo,
+    check_tokentype,
+    check_verify_enrollment,
+    get_webui_settings,
+    is_authorized,
+    mangle_challenge_response,
+    no_detail_on_fail,
+    no_detail_on_success,
+    offline_info,
+    save_pin_change,
+    sign_response,
 )
 from edumfa.api.lib.prepolicy import (
-    check_token_upload,
-    check_base_action,
-    check_token_init,
-    check_max_token_user,
-    check_anonymous_user,
-    check_max_token_realm,
-    set_realm,
-    init_tokenlabel,
-    init_random_pin,
-    set_random_pin,
-    init_token_defaults,
     _generate_pin_from_policy,
-    encrypt_pin,
-    check_otp_pin,
-    enroll_pin,
-    init_token_length_contents,
-    check_external,
-    api_key_required,
-    mangle,
-    is_remote_user_allowed,
-    required_email,
-    auditlog_age,
-    hide_audit_columns,
-    papertoken_count,
     allowed_audit_realm,
-    u2ftoken_verify_cert,
-    tantoken_count,
-    sms_identifiers,
-    pushtoken_add_config,
-    indexedsecret_force_attribute,
+    api_key_required,
+    auditlog_age,
     check_admin_tokenlist,
+    check_anonymous_user,
+    check_base_action,
+    check_custom_user_attributes,
+    check_external,
+    check_max_token_realm,
+    check_max_token_user,
+    check_otp_pin,
+    check_token_init,
+    check_token_upload,
+    encrypt_pin,
+    enroll_pin,
+    hide_audit_columns,
+    hide_tokeninfo,
+    increase_failcounter_on_challenge,
+    indexedsecret_force_attribute,
+    init_ca_connector,
+    init_ca_template,
+    init_random_pin,
+    init_subject_components,
+    init_token_defaults,
+    init_token_length_contents,
+    init_tokenlabel,
+    is_remote_user_allowed,
+    legacypushtoken_wait,
+    mangle,
+    papertoken_count,
+    pushtoken_add_config,
+    pushtoken_disable_wait,
+    pushtoken_wait,
+    require_description,
+    required_email,
+    required_piv_attestation,
+    set_random_pin,
+    set_realm,
+    sms_identifiers,
+    tantoken_count,
+    u2ftoken_verify_cert,
+    webauthntoken_allowed,
     webauthntoken_auth,
     webauthntoken_authz,
     webauthntoken_enroll,
     webauthntoken_request,
-    webauthntoken_allowed,
-    required_piv_attestation,
-    check_custom_user_attributes,
-    hide_tokeninfo,
-    init_ca_template,
-    init_ca_connector,
-    init_subject_components,
-    increase_failcounter_on_challenge,
-    require_description,
-    pushtoken_wait,
-    pushtoken_disable_wait,
-    legacypushtoken_wait,
 )
-from edumfa.lib.realm import set_realm as create_realm
+from edumfa.lib.auth import ROLE
+from edumfa.lib.config import SYSCONF, set_edumfa_config
+from edumfa.lib.error import PolicyError, RegistrationError, ValidateError
+from edumfa.lib.machine import attach_token
+from edumfa.lib.machineresolver import save_resolver
+from edumfa.lib.policy import (
+    ACTION,
+    AUTHORIZED,
+    AUTOASSIGNVALUE,
+    REMOTE_USER,
+    SCOPE,
+    PolicyClass,
+    delete_policy,
+    enable_policy,
+    set_policy,
+)
 from edumfa.lib.realm import delete_realm
-from edumfa.api.lib.postpolicy import (
-    check_serial,
-    check_tokentype,
-    check_tokeninfo,
-    no_detail_on_success,
-    no_detail_on_fail,
-    autoassign,
-    offline_info,
-    sign_response,
-    get_webui_settings,
-    save_pin_change,
-    add_user_detail_to_response,
-    mangle_challenge_response,
-    is_authorized,
-    check_verify_enrollment,
-)
+from edumfa.lib.realm import set_realm as create_realm
 from edumfa.lib.token import (
-    init_token,
+    check_user_pass,
+    enable_token,
     get_tokens,
+    init_token,
     remove_token,
     set_realms,
-    check_user_pass,
     unassign_token,
-    enable_token,
+)
+from edumfa.lib.tokenclass import DATE_FORMAT
+from edumfa.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
+from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
+from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+from edumfa.lib.tokens.papertoken import PAPERACTION
+from edumfa.lib.tokens.pushtoken import PushTokenClass
+from edumfa.lib.tokens.registrationtoken import DEFAULT_CONTENTS, DEFAULT_LENGTH
+from edumfa.lib.tokens.smstoken import SMSACTION
+from edumfa.lib.tokens.tantoken import TANACTION
+from edumfa.lib.tokens.webauthn import (
+    ATTESTATION_FORM,
+    ATTESTATION_LEVEL,
+    AUTHENTICATOR_ATTACHMENT_TYPE,
+    USER_VERIFICATION_LEVEL,
+    webauthn_b64_decode,
+)
+from edumfa.lib.tokens.webauthntoken import (
+    DEFAULT_ALLOWED_TRANSPORTS,
+    DEFAULT_AUTHENTICATOR_ATTESTATION_FORM,
+    DEFAULT_AUTHENTICATOR_ATTESTATION_LEVEL,
+    DEFAULT_CHALLENGE_TEXT_AUTH,
+    DEFAULT_CHALLENGE_TEXT_ENROLL,
+    DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE,
+    DEFAULT_TIMEOUT,
+    DEFAULT_USER_VERIFICATION_REQUIREMENT,
+    PUBKEY_CRED_ALGORITHMS_ORDER,
+    PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
+    WEBAUTHNACTION,
+    WebAuthnTokenClass,
 )
 from edumfa.lib.user import User
-from edumfa.lib.tokens.papertoken import PAPERACTION
-from edumfa.lib.tokens.tantoken import TANACTION
-from edumfa.lib.tokens.smstoken import SMSACTION
-from edumfa.lib.tokens.pushtoken import PushTokenClass
-from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
-from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
-from edumfa.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
-
-from flask import Request, g, current_app, jsonify
-from werkzeug.test import EnvironBuilder
-from edumfa.lib.error import PolicyError, RegistrationError, ValidateError
-from edumfa.lib.machineresolver import save_resolver
-from edumfa.lib.machine import attach_token
-from edumfa.lib.auth import ROLE
-import jwt
-from passlib.hash import pbkdf2_sha512
-from datetime import datetime, timedelta
-from dateutil.tz import tzlocal
-from edumfa.lib.tokenclass import DATE_FORMAT
-from .test_lib_tokens_webauthn import (
-    ALLOWED_TRANSPORTS,
-    CRED_ID,
-    ASSERTION_RESPONSE_TMPL,
-    ASSERTION_CHALLENGE,
-    RP_ID,
-    RP_NAME,
-    ORIGIN,
-    REGISTRATION_RESPONSE_TMPL,
-)
 from edumfa.lib.utils import (
-    create_img,
-    generate_charlists_from_pin_policy,
     CHARLIST_CONTENTPOLICY,
     check_pin_contents,
+    create_img,
+    generate_charlists_from_pin_policy,
+    hexlify_and_unicode,
 )
 
+from .base import MyApiTestCase
+from .test_lib_tokens_webauthn import (
+    ALLOWED_TRANSPORTS,
+    ASSERTION_CHALLENGE,
+    ASSERTION_RESPONSE_TMPL,
+    CRED_ID,
+    ORIGIN,
+    REGISTRATION_RESPONSE_TMPL,
+    RP_ID,
+    RP_NAME,
+)
 
 HOSTSFILE = "tests/testdata/hosts"
 SSHKEY = (
@@ -3301,7 +3300,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req.all_data = {"user": "cornelius", "realm": "home", "type": "pw", "genkey": 1}
         init_token_length_contents(req)
         # Check, if the tokenlabel was added
-        from edumfa.lib.tokens.passwordtoken import DEFAULT_LENGTH, DEFAULT_CONTENTS
+        from edumfa.lib.tokens.passwordtoken import DEFAULT_CONTENTS, DEFAULT_LENGTH
 
         self.assertEqual(req.all_data.get("pw.length"), DEFAULT_LENGTH)
         self.assertEqual(req.all_data.get("pw.contents"), DEFAULT_CONTENTS)
@@ -4935,8 +4934,8 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         self.setUp_user_realms()
         req.User = User("autoassignuser", self.realm1)
         # The response contains the token type HOTP, enrollment
-        from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
         from edumfa.lib.tokenclass import ROLLOUTSTATE
+        from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
 
         res = {
             "jsonrpc": "2.0",

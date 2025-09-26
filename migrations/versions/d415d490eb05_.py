@@ -11,9 +11,9 @@ privacyIDEA Version: 3.6
 revision = "d415d490eb05"
 down_revision = "9155f0d3d028"
 
-from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.exc import OperationalError, ProgrammingError, InternalError
+from alembic import op
+from sqlalchemy.exc import InternalError, OperationalError, ProgrammingError
 
 
 def upgrade():

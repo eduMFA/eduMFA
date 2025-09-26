@@ -93,3 +93,11 @@ include = ["edumfa*"]
 
 [tool.setuptools.package-data]
 "edumfa" = ["translations/**/*", "static/**/*"]
+
+[tool.ruff.lint]
+select = [
+    "I", # Isort
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/test_lib_crypto.py" = ["I001"]

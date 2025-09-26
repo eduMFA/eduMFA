@@ -4,6 +4,7 @@ api/applications.py
 """
 
 import json
+
 from .base import MyApiTestCase
 
 

@@ -21,16 +21,17 @@
 #
 __doc__ = """The tokengroup endpoint allows administrators to manage tokengroup definitions.
 """
-from flask import Blueprint, request
-from .lib.utils import getParam, send_result
-from ..lib.log import log_with
-from edumfa.lib.tokengroup import get_tokengroups, set_tokengroup, delete_tokengroup
+import logging
+
+from flask import Blueprint, g, request
+
+from edumfa.api.lib.prepolicy import check_base_action, prepolicy
 from edumfa.lib.event import event
 from edumfa.lib.policy import ACTION
-from edumfa.api.lib.prepolicy import prepolicy, check_base_action
+from edumfa.lib.tokengroup import delete_tokengroup, get_tokengroups, set_tokengroup
 
-from flask import g
-import logging
+from ..lib.log import log_with
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 

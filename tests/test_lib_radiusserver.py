@@ -3,18 +3,19 @@
 This test file tests the lib/radiusserver.py
 """
 
-from .base import MyTestCase
+from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.error import ConfigAdminError, eduMFAError
 from edumfa.lib.radiusserver import (
+    RADIUSServer,
     add_radius,
     delete_radius,
-    get_radiusservers,
     get_radius,
-    RADIUSServer,
+    get_radiusservers,
     test_radius,
 )
-from edumfa.lib.config import set_edumfa_config
+
 from . import radiusmock
+from .base import MyTestCase
 
 DICT_FILE = "tests/testdata/dictionary"
 

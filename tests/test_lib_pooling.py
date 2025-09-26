@@ -10,12 +10,13 @@ from sqlalchemy import create_engine
 from edumfa.app import create_app
 from edumfa.lib.auth import create_db_admin
 from edumfa.lib.pooling import (
+    NullEngineRegistry,
+    SharedEngineRegistry,
     get_engine,
     get_registry,
-    SharedEngineRegistry,
-    NullEngineRegistry,
 )
 from edumfa.models import db, save_config_timestamp
+
 from .base import MyTestCase
 
 

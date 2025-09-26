@@ -25,25 +25,26 @@ __doc__ = """This REST API is used to list machines from Machine Resolvers.
 
 The code is tested in tests/test_api_machines
 """
-from flask import Blueprint, request, g
-from .lib.utils import getParam, send_result
-from ..api.lib.prepolicy import prepolicy, check_base_action, mangle
-from ..lib.policy import ACTION
-
-from ..lib.machine import (
-    get_machines,
-    attach_token,
-    detach_token,
-    add_option,
-    delete_option,
-    list_token_machines,
-    list_machine_tokens,
-    get_auth_items,
-)
-from edumfa.lib.machine import ANY_MACHINE
 import logging
-import netaddr
 
+import netaddr
+from flask import Blueprint, g, request
+
+from edumfa.lib.machine import ANY_MACHINE
+
+from ..api.lib.prepolicy import check_base_action, mangle, prepolicy
+from ..lib.machine import (
+    add_option,
+    attach_token,
+    delete_option,
+    detach_token,
+    get_auth_items,
+    get_machines,
+    list_machine_tokens,
+    list_token_machines,
+)
+from ..lib.policy import ACTION
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 

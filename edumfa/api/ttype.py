@@ -34,28 +34,29 @@ The TiQR Token uses this API to implement its special functionalities. See
 :ref:`code_tiqr_token`.
 """
 
+import json
+import logging
 import threading
 
-from flask import Blueprint, request
-from .lib.utils import getParam
-from ..lib.framework import get_app_config_value
-from ..lib.log import log_with
-from flask import g, jsonify, current_app
-import logging
+from flask import Blueprint, current_app, g, jsonify, request
+
 from edumfa.api.lib.utils import get_all_params
-from edumfa.lib.error import ParameterError
-from edumfa.lib.policy import PolicyClass
 from edumfa.lib.audit import getAudit
 from edumfa.lib.config import (
-    get_token_class,
-    get_from_config,
     SYSCONF,
     ensure_no_config_object,
     get_edumfa_node,
+    get_from_config,
+    get_token_class,
 )
+from edumfa.lib.error import ParameterError
+from edumfa.lib.policy import PolicyClass
 from edumfa.lib.user import get_user_from_param
 from edumfa.lib.utils import get_client_ip
-import json
+
+from ..lib.framework import get_app_config_value
+from ..lib.log import log_with
+from .lib.utils import getParam
 
 log = logging.getLogger(__name__)
 
