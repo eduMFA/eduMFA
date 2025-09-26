@@ -31,6 +31,7 @@ def upgrade():
         existing_type=sa.Integer(),
         type_=BigIntegerType,
         existing_nullable=False,
+        existing_autoincrement=True,
     )
     print("Setting challenge.id to bigint")
     op.alter_column(
@@ -39,6 +40,7 @@ def upgrade():
         existing_type=sa.Integer(),
         type_=BigIntegerType,
         existing_nullable=False,
+        existing_autoincrement=True,
     )
     pass
 
@@ -59,5 +61,6 @@ def downgrade():
         existing_type=BigIntegerType,
         type_=sa.Integer(),
         existing_nullable=False,
+        existing_autoincrement=True,
     )
     pass
