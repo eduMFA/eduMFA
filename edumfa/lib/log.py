@@ -30,6 +30,9 @@ import logging
 import string
 from copy import deepcopy
 from logging import Formatter
+from typing import Callable
+
+from typing_extensions import ParamSpec, TypeVar
 
 log = logging.getLogger(__name__)
 
@@ -74,6 +77,10 @@ DEFAULT_LOGGING_CONFIG = {
         },
     },
 }
+
+
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 class SecureFormatter(Formatter):
@@ -139,7 +146,7 @@ class log_with:
         self.hide_kwargs = hide_kwargs or []
         self.hide_args_keywords = hide_args_keywords or {}
 
-    def __call__(self, func):
+    def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
         """
         Returns a wrapper that wraps func.
         The wrapper will log the entry and exit points of the function
@@ -150,7 +157,7 @@ class log_with:
         """
 
         @functools.wraps(func)
-        def log_wrapper(*args, **kwds):
+        def log_wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
             """
             Wrap the function in log entries. The entry of the function and
             the exit of the function is logged using the DEBUG log level.
@@ -165,10 +172,10 @@ class log_with:
             """
             # Exit early if self.logger disregards DEBUG messages.
             if not self.logger.isEnabledFor(logging.DEBUG):
-                return func(*args, **kwds)
+                return func(*args, **kwargs)
 
             log_args = args
-            log_kwds = kwds
+            log_kwds = kwargs
             if self.hide_args or self.hide_kwargs or self.hide_args_keywords:
                 try:
                     level = self.logger.getEffectiveLevel()
@@ -177,7 +184,7 @@ class log_with:
                     if level != 0 and level >= 10:
                         # Hide specific arguments or keyword arguments
                         log_args = list(deepcopy(args))
-                        log_kwds = deepcopy(kwds)
+                        log_kwds = deepcopy(kwargs)
                         for arg_index in self.hide_args:
                             log_args[arg_index] = "HIDDEN"
                         for keyword in self.hide_kwargs:
@@ -207,7 +214,7 @@ class log_with:
                     f"Error during logging of function {func.__name__}! {exx}"
                 )
 
-            f_result = func(*args, **kwds)
+            f_result = func(*args, **kwargs)
 
             try:
                 if self.log_exit:
