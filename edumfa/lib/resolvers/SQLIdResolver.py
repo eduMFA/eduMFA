@@ -43,6 +43,7 @@ from passlib.utils import h64, to_unicode
 from passlib.utils.compat import uascii_to_str
 from passlib.utils.compat import unicode as pl_unicode
 from sqlalchemy import (
+    URL,
     Integer,
     MetaData,
     String,
@@ -565,26 +566,16 @@ class IdResolver(UserIdResolver):
         Port, Password, conParams, Driver, User,
         Server, Database
         """
-        port = ""
-        password = ""  # nosec B105 # default parameter
-        conParams = ""
-        if param.get("Port"):
-            port = f":{param.get('Port')}"
-        if param.get("Password"):
-            password = f":{param.get('Password')}"
-        if param.get("conParams"):
-            conParams = f"?{param.get('conParams')}"
-        connect_string = "{!s}://{!s}{2!s}{!s}{4!s}{!s}/{!s}{7!s}".format(
-            param.get("Driver") or "",
-            param.get("User") or "",
-            password,
-            "@" if (param.get("User") or password) else "",
-            param.get("Server") or "",
-            port,
-            param.get("Database") or "",
-            conParams,
+        connect_url = URL.create(
+            drivername=param.get("Driver", ""),
+            username=param.get("User"),
+            password=param.get("Password"),
+            host=param.get("Server"),
+            port=param.get("Port"),
+            database=param.get("Database"),
+            query=param.get("conParams"),
         )
-        return connect_string
+        return connect_url.render_as_string(hide_password=False)
 
     @classmethod
     def testconnection(cls, param):
