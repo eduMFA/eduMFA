@@ -23,6 +23,9 @@
 #
 import functools
 import logging
+from typing import Callable
+
+from typing_extensions import ParamSpec, TypeVar
 
 from edumfa.lib.audit import getAudit
 from edumfa.lib.config import get_config_object
@@ -33,6 +36,9 @@ from edumfa.models import EventHandler, EventHandlerOption, db
 log = logging.getLogger(__name__)
 
 AVAILABLE_EVENTS = []
+
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
 class event:
@@ -48,7 +54,7 @@ class event:
         self.request = request
         self.g = g
 
-    def __call__(self, func):
+    def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
         """
         Returns a wrapper that wraps func.
         The wrapper will evaluate the event handling definitions and call the

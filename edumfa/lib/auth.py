@@ -22,6 +22,7 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import logging
+from typing import List, Union
 
 from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper
 from edumfa.lib.policy import LOGINMODE
@@ -39,7 +40,7 @@ class ROLE:
     VALIDATE = "validate"
 
 
-def verify_db_admin(username, password):
+def verify_db_admin(username, password) -> bool:
     """
     This function is used to verify the username and the password against the
     database table "Admin".
@@ -74,12 +75,12 @@ def create_db_admin(username: str, email: str = None, password=None):
     user.save()
 
 
-def get_db_admins():
+def get_db_admins() -> List[Admin]:
     admins = Admin.query.all()
     return admins
 
 
-def get_db_admin(username):
+def get_db_admin(username) -> Union[Admin, None]:
     return Admin.query.filter(Admin.username == username).first()
 
 
