@@ -258,9 +258,11 @@ def _build_verify_object(pubkey_pem):
     # The public key of the smartphone was probably sent as urlsafe:
     pubkey_pem = pubkey_pem.replace("-", "+").replace("_", "/")
     # The public key was sent without any header
-    pubkey_pem = "-----BEGIN PUBLIC KEY-----\n"
-    f"{pubkey_pem.strip().replace(' ', '+')}\n"
-    "-----END PUBLIC KEY-----"
+    pubkey_pem = (
+        "-----BEGIN PUBLIC KEY-----\n"
+        f"{pubkey_pem.strip().replace(' ', '+')}\n"
+        "-----END PUBLIC KEY-----"
+    )
 
     return serialization.load_pem_public_key(to_bytes(pubkey_pem), default_backend())
 
