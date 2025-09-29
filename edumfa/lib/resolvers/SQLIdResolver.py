@@ -566,12 +566,18 @@ class IdResolver(UserIdResolver):
         Port, Password, conParams, Driver, User,
         Server, Database
         """
+        port = None
+        if param.get("Port"):
+            try:
+                port = int(param.get("Port"))
+            except ValueError:
+                pass
         connect_url = URL.create(
             drivername=param.get("Driver", ""),
             username=param.get("User"),
             password=param.get("Password"),
             host=param.get("Server"),
-            port=param.get("Port"),
+            port=port,
             database=param.get("Database"),
             query=param.get("conParams"),
         )
