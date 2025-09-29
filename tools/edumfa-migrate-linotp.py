@@ -380,9 +380,7 @@ def migrate(config_obj):
         i = 0
         for r in result.mappings():
             i = i + 1
-            print(
-                "processing token #{!s}: {!s}".format(i, r["LinOtpTokenSerialnumber"])
-            )
+            print(f"processing token #{i}: {r['LinOtpTokenSerialnumber']}")
             # Adapt type
             ttype = r["LinOtpTokenType"]
             if ttype.lower() == "hmac":

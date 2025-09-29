@@ -188,7 +188,7 @@ class SharedConfigClass:
                             }
                         )
                     except Exception as exx:  # pragma: no cover
-                        log.debug(f"{traceback.format_exc()}")
+                        log.debug(traceback.format_exc())
                         log.error(exx)
 
                 # Finally, set the current timestamp
@@ -1084,14 +1084,10 @@ def import_config(data, name=None):
         )
         res[key] = r
     log.info(
-        "Added configuration: {!s}".format(
-            ", ".join([k for k, v in res.items() if v == "insert"])
-        )
+        f"Added configuration: {', '.join([k for k, v in res.items() if v == 'insert'])}"
     )
     log.info(
-        "Updated configuration: {!s}".format(
-            ", ".join([k for k, v in res.items() if v == "update"])
-        )
+        f"Updated configuration: {', '.join([k for k, v in res.items() if v == 'update'])}"
     )
 
 

@@ -553,9 +553,7 @@ class WebAuthnMakeCredentialOptions:
         attestation = str(attestation).lower()
         if attestation not in ATTESTATION_FORMS:
             raise ValueError(
-                "Attestation string must be one of {!s}".format(
-                    ", ".join(ATTESTATION_FORMS)
-                )
+                f"Attestation string must be one of {', '.join(ATTESTATION_FORMS)}"
             )
         self.attestation = attestation
 
@@ -563,9 +561,7 @@ class WebAuthnMakeCredentialOptions:
             user_verification = str(user_verification).lower()
             if user_verification not in USER_VERIFICATION_LEVELS:
                 raise ValueError(
-                    "user_verification must be one of {!s}".format(
-                        ", ".join(USER_VERIFICATION_LEVELS)
-                    )
+                    f"user_verification must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
         self.user_verification = user_verification
 
@@ -573,9 +569,7 @@ class WebAuthnMakeCredentialOptions:
             authenticator_attachment = str(authenticator_attachment).lower()
             if authenticator_attachment not in AUTHENTICATOR_ATTACHMENT_TYPES:
                 raise ValueError(
-                    "authenticator_attachment must be one of {!s}".format(
-                        ", ".join(AUTHENTICATOR_ATTACHMENT_TYPES)
-                    )
+                    f"authenticator_attachment must be one of {', '.join(AUTHENTICATOR_ATTACHMENT_TYPES)}"
                 )
         self.authenticator_attachment = authenticator_attachment
 
@@ -583,9 +577,7 @@ class WebAuthnMakeCredentialOptions:
             resident_key = str(resident_key).lower()
             if resident_key not in RESIDENT_KEY_LEVELS:
                 raise ValueError(
-                    "resident_key must be one of {!s}".format(
-                        ", ".join(RESIDENT_KEY_LEVELS)
-                    )
+                    f"resident_key must be one of {', '.join(RESIDENT_KEY_LEVELS)}"
                 )
         self.resident_key = resident_key
 
@@ -728,9 +720,7 @@ class WebAuthnAssertionOptions:
             ).lower()
             if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
                 raise ValueError(
-                    "user_verification_requirement must be one of {!s}".format(
-                        ", ".join(USER_VERIFICATION_LEVELS)
-                    )
+                    f"user_verification_requirement must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
         else:
             if is_usernameless_realm:
@@ -744,9 +734,7 @@ class WebAuthnAssertionOptions:
                 ).lower()
                 if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
                     raise ValueError(
-                        "user_verification_requirement must be one of {!s}".format(
-                            ", ".join(USER_VERIFICATION_LEVELS)
-                        )
+                        f"user_verification_requirement must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                     )
             if rp_id:
                 self.rp_id = rp_id
@@ -904,9 +892,7 @@ class WebAuthnCredential:
         attestation_level = str(attestation_level).lower()
         if attestation_level not in ATTESTATION_LEVELS:
             raise ValueError(
-                "Attestation level must be one of {!s}".format(
-                    ", ".join(ATTESTATION_LEVELS)
-                )
+                f"Attestation level must be one of {', '.join(ATTESTATION_LEVELS)}"
             )
         self.attestation_level = attestation_level
 

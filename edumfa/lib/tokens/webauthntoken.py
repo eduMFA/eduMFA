@@ -881,9 +881,7 @@ class WebAuthnTokenClass(TokenClass):
 
         if key not in WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys():
             raise ValueError(
-                "key must be one of {!s}".format(
-                    ", ".join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())
-                )
+                f"key must be one of {', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())}"
             )
         return WEBAUTHN_TOKEN_SPECIFIC_SETTINGS[key]
 
@@ -1525,10 +1523,7 @@ class WebAuthnTokenClass(TokenClass):
             )
             if user_verification_requirement not in USER_VERIFICATION_LEVELS:
                 raise PolicyError(
-                    "{!s} must be one of {!s}".format(
-                        WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                        ", ".join(USER_VERIFICATION_LEVELS),
-                    )
+                    f"{WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT} must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
 
             options[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] = (

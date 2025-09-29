@@ -79,9 +79,7 @@ class MachineApplication(MachineApplicationBase):
                     # We just return the ssh public key, so that
                     # it can be included into authorized keys.
                     log.info(
-                        "Using SSH key {!s} for SSH user {!s}".format(
-                            tokclass.token.serial, options.get("user")
-                        )
+                        f"Using SSH key {tokclass.token.serial} for SSH user {options.get('user')}"
                     )
                     ret["sshkey"] = tokclass.get_sshkey()
                     # We return the username if the token is assigned to a
@@ -101,8 +99,7 @@ class MachineApplication(MachineApplicationBase):
                     )
         else:
             log.info(
-                f"Token {serial!r}, type {serial!r} is not supported by "
-                "SSH application module"
+                f"Token {serial!r}, type {serial!r} is not supported by SSH application module"
             )
 
         return ret

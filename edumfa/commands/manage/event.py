@@ -42,19 +42,11 @@ def list_events():
 
     conf = EventConfiguration()
     events = conf.events
-    click.echo(
-        "{:7} {:4} {:30}\t{:20}\t{}".format("Active", "ID", "Name", "Module", "Action")
-    )
+    click.echo(f"{'Active':7} {'ID':4} {'Name':30}\t{'Module':20}\t{'Action'}")
     click.echo(90 * "=")
     for event in events:
         click.echo(
-            "[{!s:>5}] {:4} {:30}\t{:20}\t{}".format(
-                event.get("active"),
-                event.get("id"),
-                event.get("name")[0:30],
-                event.get("handlermodule"),
-                event.get("action"),
-            )
+            f"[{event.get('active'):>5}] {event.get('id'):4} {event.get('name')[0:30]:30}\t{event.get('handlermodule'):20}\t{event.get('action')}"
         )
 
 

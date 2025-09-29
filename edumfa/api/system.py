@@ -242,7 +242,7 @@ def set_default():
         "DefaultResetFailCount",
     ]
 
-    description = "parameters are: {!s}".format(", ".join(keys))
+    description = f"parameters are: {', '.join(keys)}"
     param = getLowerParams(request.all_data)
     result = {}
     for k in keys:

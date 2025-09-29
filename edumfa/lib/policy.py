@@ -749,7 +749,7 @@ class PolicyClass:
                 raise ParameterError(
                     f"Cannot pass user_object ({user_object}) as well as user ({user}),"
                     f" resolver ({resolver}), realm ({realm})"
-                    f"in policy {(name, scope, action)!s}"
+                    f"in policy {(name, scope, action)}"
                 )
             user = user_object.login
             realm = user_object.realm
@@ -779,9 +779,7 @@ class PolicyClass:
             or not policy.get("time")
         ]
         log.debug(
-            "Policies after matching time: {!s}".format(
-                [p.get("name") for p in reduced_policies]
-            )
+            f"Policies after matching time: {[p.get('name') for p in reduced_policies]}"
         )
 
         # filter policies by the policy conditions
@@ -1653,7 +1651,7 @@ def export_policies(policies):
     file_contents = ""
     if policies:
         for policy in policies:
-            file_contents += "[{!s}]\n".format(policy.get("name"))
+            file_contents += f"[{policy.get('name')}]\n"
             for key, value in policy.items():
                 file_contents += f"{key} = {value}\n"
             file_contents += "\n"
@@ -3769,6 +3767,4 @@ def import_policy(data, name=None):
         #  existing policy updated. We would need to enhance "set_policy()"
         #  to either force overwriting or not and also return if the policy
         #  existed before.
-        log.info(
-            'Import of policy "{!s}" finished, id: {!s}'.format(res_data["name"], rid)
-        )
+        log.info(f'Import of policy "{res_data["name"]}" finished, id: {rid}')

@@ -306,8 +306,8 @@ class TokenClass:
         user_object = self.user
         user_info = user_object.info
         user_identifier = f"{user_object.login}_{user_object.realm}"
-        user_displayname = "{!s} {!s}".format(
-            user_info.get("givenname", "."), user_info.get("surname", ".")
+        user_displayname = (
+            f"{user_info.get('givenname', '.')} {user_info.get('surname', '.')}"
         )
         return user_identifier, user_displayname
 
@@ -1084,7 +1084,7 @@ class TokenClass:
             try:
                 d = parse_date_string(end_date)
             except ValueError as _e:
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
                 raise TokenAdminError("Could not parse validity period end date!")
             self.add_tokeninfo("validity_period_end", d.strftime(DATE_FORMAT))
 
@@ -1117,7 +1117,7 @@ class TokenClass:
             try:
                 d = parse_date_string(start_date)
             except ValueError as _e:
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
                 raise TokenAdminError("Could not parse validity period start date!")
 
             self.add_tokeninfo("validity_period_start", d.strftime(DATE_FORMAT))

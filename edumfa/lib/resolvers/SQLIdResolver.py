@@ -96,12 +96,7 @@ class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no 
         )
 
     def to_string(self):
-        hash = "{}{}{}{}".format(
-            self.ident,
-            h64.encode_int6(self.rounds).decode("ascii"),
-            self.salt,
-            self.checksum or "",
-        )
+        hash = f"{self.ident}{h64.encode_int6(self.rounds).decode('ascii')}{self.salt}{self.checksum or ''}"
         return uascii_to_str(hash)
 
     def _calc_checksum(self, secret):
@@ -574,11 +569,11 @@ class IdResolver(UserIdResolver):
         password = ""  # nosec B105 # default parameter
         conParams = ""
         if param.get("Port"):
-            port = ":{!s}".format(param.get("Port"))
+            port = f":{param.get('Port')}"
         if param.get("Password"):
-            password = ":{!s}".format(param.get("Password"))
+            password = f":{param.get('Password')}"
         if param.get("conParams"):
-            conParams = "?{!s}".format(param.get("conParams"))
+            conParams = f"?{param.get('conParams')}"
         connect_string = "{!s}://{!s}{2!s}{!s}{4!s}{!s}/{!s}{7!s}".format(
             param.get("Driver") or "",
             param.get("User") or "",

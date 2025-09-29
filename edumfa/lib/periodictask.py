@@ -333,8 +333,4 @@ def import_periodictask(data, name=None):
         res_data.pop("last_update")
         res_data.pop("last_runs")
         rid = set_periodic_task(**res_data)
-        log.info(
-            'Import of periodictask "{!s}" finished, id: {!s}'.format(
-                res_data["name"], rid
-            )
-        )
+        log.info(f'Import of periodictask "{res_data["name"]}" finished, id: {rid}')

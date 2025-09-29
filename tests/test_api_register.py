@@ -65,9 +65,7 @@ class RegisterTestCase(MyApiTestCase):
         r = set_policy(
             name="pol2",
             scope=SCOPE.REGISTER,
-            action="{!s}={!s}, {!s}={!s}".format(
-                ACTION.REALM, "register", ACTION.RESOLVER, "register"
-            ),
+            action=f"{ACTION.REALM}=register, {ACTION.RESOLVER}=register",
         )
 
         # Try to register, but missing parameter

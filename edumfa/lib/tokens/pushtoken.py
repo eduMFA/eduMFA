@@ -258,9 +258,9 @@ def _build_verify_object(pubkey_pem):
     # The public key of the smartphone was probably sent as urlsafe:
     pubkey_pem = pubkey_pem.replace("-", "+").replace("_", "/")
     # The public key was sent without any header
-    pubkey_pem = "-----BEGIN PUBLIC KEY-----\n{!s}\n-----END PUBLIC KEY-----".format(
-        pubkey_pem.strip().replace(" ", "+")
-    )
+    pubkey_pem = "-----BEGIN PUBLIC KEY-----\n"
+    f"{pubkey_pem.strip().replace(' ', '+')}\n"
+    "-----END PUBLIC KEY-----"
 
     return serialization.load_pem_public_key(to_bytes(pubkey_pem), default_backend())
 
@@ -774,7 +774,7 @@ class PushTokenClass(TokenClass):
         try:
             ts = isoparse(timestamp)
         except (ValueError, TypeError) as _e:
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             raise eduMFAError(
                 f"Could not parse timestamp {timestamp}. ISO-Format required."
             )
@@ -888,7 +888,7 @@ class PushTokenClass(TokenClass):
             ) as e:
                 # to avoid disclosing information we always fail with an invalid
                 # signature error even if the token with the serial could not be found
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
                 log.info(
                     f'The following error occurred during the signature check: "{e!r}"'
                 )
@@ -999,7 +999,7 @@ class PushTokenClass(TokenClass):
         ) as e:
             # to avoid disclosing information we always fail with an invalid
             # signature error even if the token with the serial could not be found
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             log.info(
                 f'The following error occurred during the signature check: "{e!r}"'
             )

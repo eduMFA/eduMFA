@@ -1902,10 +1902,7 @@ def webauthntoken_request(request, action):
                 )
                 if user_verification_requirement not in USER_VERIFICATION_LEVELS:
                     raise PolicyError(
-                        "{!s} must be one of {!s}".format(
-                            WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                            ", ".join(USER_VERIFICATION_LEVELS),
-                        )
+                        f"{WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT} must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                     )
 
                 request.all_data[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] = (
@@ -1977,10 +1974,7 @@ def webauthntoken_request(request, action):
                 )
                 if user_verification_requirement not in USER_VERIFICATION_LEVELS:
                     raise PolicyError(
-                        "{!s} must be one of {!s}".format(
-                            WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                            ", ".join(USER_VERIFICATION_LEVELS),
-                        )
+                        f"{WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT} must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                     )
 
                 request.all_data[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] = (
@@ -2239,10 +2233,7 @@ def webauthntoken_enroll(request, action):
             ]
         ):
             raise PolicyError(
-                "{!s} must be one of {!s}".format(
-                    WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
-                    ", ".join(PUBLIC_KEY_CREDENTIAL_ALGORITHMS.keys()),
-                )
+                f"{WEBAUTHNACTION.PUBLIC_KEY_CREDENTIAL_ALGORITHMS} must be one of {', '.join(PUBLIC_KEY_CREDENTIAL_ALGORITHMS.keys())}"
             )
 
         authenticator_attestation_level_policies = Match.user(
@@ -2258,10 +2249,7 @@ def webauthntoken_enroll(request, action):
         )
         if authenticator_attestation_level not in ATTESTATION_LEVELS:
             raise PolicyError(
-                "{!s} must be one of {!s}".format(
-                    WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL,
-                    ", ".join(ATTESTATION_LEVELS),
-                )
+                f"{WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_LEVEL} must be one of {', '.join(ATTESTATION_LEVELS)}"
             )
 
         authenticator_attestation_form_policies = Match.user(
@@ -2277,10 +2265,7 @@ def webauthntoken_enroll(request, action):
         )
         if authenticator_attestation_form not in ATTESTATION_FORMS:
             raise PolicyError(
-                "{!s} must be one of {!s}".format(
-                    WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM,
-                    ", ".join(ATTESTATION_FORMS),
-                )
+                f"{WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM} must be one of {', '.join(ATTESTATION_FORMS)}"
             )
         authenticator_resident_key_levels = Match.user(
             g,
@@ -2295,10 +2280,7 @@ def webauthntoken_enroll(request, action):
         )
         if authenticator_resident_key not in RESIDENT_KEY_LEVELS:
             raise PolicyError(
-                "{!s} must be one of {!s}".format(
-                    WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY,
-                    ", ".join(RESIDENT_KEY_LEVELS),
-                )
+                f"{WEBAUTHNACTION.AUTHENTICATOR_RESIDENT_KEY} must be one of {', '.join(RESIDENT_KEY_LEVELS)}"
             )
         challengetext_policies = Match.user(
             g,

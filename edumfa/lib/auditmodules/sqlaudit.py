@@ -91,7 +91,9 @@ def fn_to_isodate(element, compiler, **kw):
 @compiles(to_isodate)
 def fn_to_isodate(element, compiler, **kw):
     # The four percent signs are necessary for two format substitutions
-    return f"date_format({compiler.process(element.clauses, **kw)}, '%Y-%m-%d %H:%i:%s')"
+    return (
+        f"date_format({compiler.process(element.clauses, **kw)}, '%Y-%m-%d %H:%i:%s')"
+    )
 
 
 class Audit(AuditBase):
@@ -309,9 +311,7 @@ class Audit(AuditBase):
             if "tokentype" in self.audit_data:
                 log.warning(
                     "We have a wrong 'tokentype' key. This should not happen. Fix it!. "
-                    "Error occurs in action: {!r}.".format(
-                        self.audit_data.get("action")
-                    )
+                    f"Error occurs in action: {self.audit_data.get('action')}."
                 )
                 if not "token_type" in self.audit_data:
                     self.audit_data["token_type"] = self.audit_data.get("tokentype")

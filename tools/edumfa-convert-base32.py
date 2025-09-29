@@ -35,7 +35,7 @@ for line in content:
         sys.stderr.write(f"Error converting secret of serial {serial}.\n")
         continue
 
-    print("{}, {}".format(serial, secret.decode("utf8")), end="")
+    print(f"{serial}, {secret.decode('utf8')}", end="")
 
     if args.type:
         print(f", {args.type}", end="")

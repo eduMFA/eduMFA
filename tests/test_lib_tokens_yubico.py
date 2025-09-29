@@ -51,9 +51,7 @@ status=REPLAYED_OTP"""
         token = YubicoTokenClass(db_token)
 
         info = token.get_class_info()
-        self.assertTrue(
-            info.get("title") == "Yubico Token", "{!s}".format(info.get("title"))
-        )
+        self.assertTrue(info.get("title") == "Yubico Token", f"{info.get('title')}")
 
         info = token.get_class_info("title")
         self.assertTrue(info == "Yubico Token", info)

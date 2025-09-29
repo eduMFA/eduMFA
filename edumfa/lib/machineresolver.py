@@ -258,9 +258,7 @@ def get_resolver_object(resolvername):
         if r_obj_class is None:  # pragma: no cover
             # This can only happen if a resolver class definition would be
             # removed.
-            log.error(
-                "unknown resolver class for type {!s} ".format(resolver.get("type"))
-            )
+            log.error(f"unknown resolver class for type {resolver.get('type')}")
         else:
             # create the resolver instance and load the config
             r_obj = r_obj_class(resolvername, resolver.get("data"))
@@ -303,8 +301,4 @@ def import_machineresolver(data, name=None):
         res_data["name"] = res_data.pop("resolvername")
         res_data.update(res_data.pop("data"))
         rid = save_resolver(res_data)
-        log.info(
-            'Import of caconnector "{!s}" finished, id: {!s}'.format(
-                res_data["name"], rid
-            )
-        )
+        log.info(f'Import of caconnector "{res_data["name"]}" finished, id: {rid}')

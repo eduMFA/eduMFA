@@ -333,7 +333,7 @@ class RemoteTokenClass(TokenClass):
             log.error(
                 f"Error getting response from remote Server ({request_url!r}): {exx!r}"
             )
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
 
         return otp_count
 

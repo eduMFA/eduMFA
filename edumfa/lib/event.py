@@ -92,8 +92,8 @@ class event:
                             action=e_handler_def.get("action"),
                         )
                     )
-                    event_audit_data["action_detail"] = "{!s}".format(
-                        e_handler_def.get("options")
+                    event_audit_data["action_detail"] = (
+                        f"{e_handler_def.get('options')}"
                     )
                     event_audit_data["info"] = e_handler_def.get("name")
                     event_audit.log(event_audit_data)
@@ -136,8 +136,8 @@ class event:
                             action=e_handler_def.get("action"),
                         )
                     )
-                    event_audit_data["action_detail"] = "{!s}".format(
-                        e_handler_def.get("options")
+                    event_audit_data["action_detail"] = (
+                        f"{e_handler_def.get('options')}"
                     )
                     event_audit_data["info"] = e_handler_def.get("name")
                     event_audit.log(event_audit_data)
@@ -360,6 +360,4 @@ def import_event(data, name=None):
         # condition is apparently not used anymore
         del res_data["condition"]
         rid = set_event(**res_data)
-        log.info(
-            'Import of event "{!s}" finished, id: {!s}'.format(res_data["name"], rid)
-        )
+        log.info(f'Import of event "{res_data["name"]}" finished, id: {rid}')

@@ -1248,9 +1248,7 @@ class IdResolver(UserIdResolver):
 
         if self.l.result.get("result") != 0:
             log.error(
-                "Error during adding of user {!r}: {!r}".format(
-                    dn, self.l.result.get("message")
-                )
+                f"Error during adding of user {dn}: {self.l.result.get('message')!r}"
             )
             raise eduMFAError(self.l.result.get("message"))
 
@@ -1356,9 +1354,7 @@ class IdResolver(UserIdResolver):
 
         if self.l.result.get("result") != 0:
             log.error(
-                "Error during update of user {!r}: {!r}".format(
-                    uid, self.l.result.get("message")
-                )
+                f"Error during update of user {uid}: {self.l.result.get('message')!r}"
             )
             return False
 

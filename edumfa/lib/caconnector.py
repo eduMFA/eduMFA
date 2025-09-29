@@ -332,9 +332,7 @@ def import_caconnector(data, name=None):
         res_data.update(res_data.pop("data"))
         rid = save_caconnector(res_data)
         log.info(
-            'Import of caconnector "{!s}" finished, id: {!s}'.format(
-                res_data["caconnector"], rid
-            )
+            f'Import of caconnector "{res_data["caconnector"]}" finished, id: {rid}'
         )
 
 

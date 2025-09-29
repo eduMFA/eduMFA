@@ -131,17 +131,17 @@ class SMTPServer:
                 port=smtp_url.port or int(config["port"]),
                 timeout=config.get("timeout", TIMEOUT),
             )
-        log.debug("submitting message to {!s}".format(msg["To"]))
-        log.debug("Saying EHLO to mailserver {!s}".format(config["server"]))
+        log.debug(f"submitting message to {msg['To']}")
+        log.debug(f"Saying EHLO to mailserver {config['server']}")
         r = mail.ehlo()
         log.debug(f"mailserver responded with {r}")
         # Start TLS if required
         if not smtp_url.scheme == "smtps" and config.get("tls", False):
-            log.debug("Trying to STARTTLS: {!s}".format(config["tls"]))
+            log.debug(f"Trying to STARTTLS: {config['tls']}")
             mail.starttls()
         # Authenticate, if a username is given.
         if config.get("username", ""):
-            log.debug("Doing authentication with {!s}".format(config["username"]))
+            log.debug(f"Doing authentication with {config['username']}")
             password = decryptPassword(config["password"])
             if password == FAILED_TO_DECRYPT_PASSWORD:
                 password = config["password"]

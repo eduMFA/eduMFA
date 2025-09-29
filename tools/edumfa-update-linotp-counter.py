@@ -148,9 +148,9 @@ def main():
     linotp_session.commit()
 
     print()
-    print(f"{processed!s:6} tokens processed.")
-    print(f"{updated!s:6} counters updated.")
-    print(f"{not_found!s:6} tokens not found.")
+    print(f"{processed:6} tokens processed.")
+    print(f"{updated:6} counters updated.")
+    print(f"{not_found:6} tokens not found.")
     print(f"List of unknown tokens: {unknown_tokens}")
 
 

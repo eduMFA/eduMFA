@@ -400,8 +400,4 @@ def import_resolver(data, name=None):
         rid = save_resolver(res_data)
         # TODO: we have no information if a new resolver was created or an
         #  existing resolver updated. We would need to enhance "save_resolver()".
-        log.info(
-            'Import of resolver "{!s}" finished, id: {!s}'.format(
-                res_data["resolver"], rid
-            )
-        )
+        log.info(f'Import of resolver "{res_data["resolver"]}" finished, id: {rid}')

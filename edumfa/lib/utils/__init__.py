@@ -125,7 +125,7 @@ def check_time_in_range(time_range, check_time=None):
                 time_match = True
     except ValueError:
         log.error("Wrong time range format: <dow>-<dow>:<hh:mm>-<hh:mm>")
-        log.debug(f"{traceback.format_exc()}")
+        log.debug(traceback.format_exc())
 
     return time_match
 
@@ -590,7 +590,7 @@ def check_proxy(path_to_client, proxy_settings):
             f"{proxy_settings}! The IP addresses need to be comma separated. Fix "
             "this. The client IP will not be mapped!"
         )
-        log.debug(f"{traceback.format_exc()}")
+        log.debug(traceback.format_exc())
         return path_to_client[0]
 
     # We extract the IP from ``path_to_client`` that should be considered the "real" client IP by eduMFA.

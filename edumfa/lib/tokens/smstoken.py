@@ -230,21 +230,13 @@ class SmsTokenClass(HotpTokenClass):
                 SCOPE.ADMIN: {
                     SMSACTION.GATEWAYS: {
                         "type": "str",
-                        "desc": "{!s} ({!s})".format(
-                            _(
-                                "Choose the gateways the administrator is allowed to set."
-                            ),
-                            " ".join(sms_gateways),
-                        ),
+                        "desc": f"{_('Choose the gateways the administrator is allowed to set.')} ({' '.join(sms_gateways)})",
                     }
                 },
                 SCOPE.USER: {
                     SMSACTION.GATEWAYS: {
                         "type": "str",
-                        "desc": "{!s} ({!s})".format(
-                            _("Choose the gateways the user is allowed to set."),
-                            " ".join(sms_gateways),
-                        ),
+                        "desc": f"{_('Choose the gateways the user is allowed to set.')} ({' '.join(sms_gateways)})",
                     }
                 },
                 SCOPE.ENROLL: {

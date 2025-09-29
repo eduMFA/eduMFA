@@ -43,10 +43,10 @@ def list_resolver(verbose: bool = False):
 
     if not verbose:
         for name, resolver in resolver_list.items():
-            print("{!s:16} - ({!s})".format(name, resolver.get("type")))
+            print(f"{name:16} - ({resolver.get('type')})")
     else:
         for name, resolver in resolver_list.items():
-            print("{!s:16} - ({!s})".format(name, resolver.get("type")))
+            print(f"{name:16} - ({resolver.get('type')})")
             print("." * 32)
             data = resolver.get("data", {})
             for k, v in data.items():

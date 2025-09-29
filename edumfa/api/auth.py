@@ -385,9 +385,7 @@ def get_auth_token():
                         "realm": user_obj.realm,
                         "resolver": user_obj.resolver,
                         "serial": serials,
-                        "info": "{!s}|loginmode={!s}".format(
-                            log_used_user(user_obj), details.get("loginmode")
-                        ),
+                        "info": f"{log_used_user(user_obj)}|loginmode={details.get('loginmode')}",
                     }
                 )
             else:
@@ -397,9 +395,7 @@ def get_auth_token():
                         "realm": user_obj.realm,
                         "resolver": user_obj.resolver,
                         "serial": serials,
-                        "info": "{!s}|loginmode={!s}".format(
-                            log_used_user(user_obj), details.get("loginmode")
-                        ),
+                        "info": f"{log_used_user(user_obj)}|loginmode={details.get('loginmode')}",
                     }
                 )
 

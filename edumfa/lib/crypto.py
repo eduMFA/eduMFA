@@ -807,7 +807,7 @@ class Sign:
                     )
         except Exception:
             log.error(f"Failed to verify signature: {s!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
 
         return r
 

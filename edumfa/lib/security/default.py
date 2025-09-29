@@ -318,7 +318,7 @@ class DefaultSecurityModule(SecurityModule):
 
             if secret == b"":
                 raise HSMException(
-                    f"No secret key defined for index: {str(slot_id)} !\n"
+                    f"No secret key defined for index: {slot_id} !\n"
                     f"Please extend your {self.secFile}"
                     " !"
                 )

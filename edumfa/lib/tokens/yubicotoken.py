@@ -220,6 +220,6 @@ class YubicoTokenClass(TokenClass):
                     "Error getting response from Yubico Cloud Server"
                     f" ({yubico_url!r}): {ex!r}"
                 )
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
 
         return res

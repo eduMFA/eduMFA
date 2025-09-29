@@ -148,9 +148,7 @@ def importer(infile, types, name=None):
             continue
     if not data:
         click.echo(
-            "Could not read input format! Accepting: {!s}.".format(
-                ", ".join(imp_fmt_dict.keys())
-            ),
+            f"Could not read input format! Accepting: {', '.join(imp_fmt_dict.keys())}.",
             file=sys.stderr,
         )
         sys.exit(1)

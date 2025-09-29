@@ -1223,7 +1223,7 @@ def init_token(param, user=None, tokenrealms=None, tokenkind=None):
 
     except Exception as e:
         log.error(f"token create failed: {e}")
-        log.debug(f"{traceback.format_exc()}")
+        log.debug(traceback.format_exc())
         # delete the newly created token from the db
         if token_count == 0:
             db_token.delete()
@@ -2538,10 +2538,8 @@ def check_token_list(
                     )
                     reply_dict["message"] = ". ".join(messages)
                     log.info(
-                        "Received a valid response to a "
-                        "challenge for a non-fit token {!s}. {!s}".format(
-                            tokenobject.token.serial, reply_dict["message"]
-                        )
+                        f"Received a valid response to a "
+                        f"challenge for a non-fit token {tokenobject.token.serial}. {reply_dict['message']}"
                     )
                 else:
                     # Challenge matches, token is active and token is fit for challenge

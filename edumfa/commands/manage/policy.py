@@ -45,9 +45,7 @@ def list_policies():
     click.echo(40 * "=")
     for policy in policies:
         click.echo(
-            "{} \t {} \t {}".format(
-                policy.get("active"), policy.get("name"), policy.get("scope")
-            )
+            f"{policy.get('active')} \t {policy.get('name')} \t {policy.get('scope')}"
         )
 
 
@@ -145,9 +143,7 @@ def create(name, scope, action, filename):
 
             if params.get("name") and params.get("name") != name:
                 click.echo(
-                    "Found name '{!s}' in file, will use that instead of '{!s}'.".format(
-                        params.get("name"), name
-                    )
+                    f"Found name '{params.get('name')}' in file, will use that instead of '{name}'."
                 )
             else:
                 click.echo(f"name not defined in file, will use the cli value {name}.")
@@ -155,9 +151,7 @@ def create(name, scope, action, filename):
 
             if params.get("scope") and params.get("scope") != scope:
                 click.echo(
-                    "Found scope '{!s}' in file, will use that instead of '{}'.".format(
-                        params.get("scope"), scope
-                    )
+                    f"Found scope '{params.get('scope')}' in file, will use that instead of '{scope}'."
                 )
             else:
                 click.echo(
@@ -167,9 +161,7 @@ def create(name, scope, action, filename):
 
             if params.get("action") and params.get("action") != action:
                 click.echo(
-                    "Found action in file: '{!s}', will use that instead of: '{!s}'.".format(
-                        params.get("action"), action
-                    )
+                    f"Found action in file: '{params.get('action')}', will use that instead of: '{action}'."
                 )
             else:
                 click.echo(

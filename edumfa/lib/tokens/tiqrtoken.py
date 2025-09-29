@@ -218,7 +218,7 @@ class TiqrTokenClass(OcraTokenClass):
         # smartphone needs to contain a userId.
         if not self.user:
             # The user and realms should have already been set in init_token()
-            raise ParameterError("Missing parameter: {!r}".format("user"), id=905)
+            raise ParameterError("Missing parameter: 'user'", id=905)
 
         ocrasuite = get_from_config("tiqr.ocrasuite") or OCRA_DEFAULT_SUITE
         OCRASuite(ocrasuite)

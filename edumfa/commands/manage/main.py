@@ -62,14 +62,14 @@ def cli(quiet):
     """Management script for the eduMFA application."""
     if not quiet:
         click.echo(
-            r"""
+            rf"""
                 _       __  __ ______      
                 | |     |  \/  |  ____/\    
         ___  __| |_   _| \  / | |__ /  \   
         / _ \/ _` | | | | |\/| |  __/ /\ \  
         |  __/ (_| | |_| | |  | | | / ____ \ 
-        \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {!s:>12}
-        """.format(f"v{get_version_number()}"),
+        \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {f"v{get_version_number()}":>12}
+        """,
             err=True,
         )
 
