@@ -139,7 +139,7 @@ def before_request():
         except Exception as e:
             request.User = None
             log.warning(f"Problem resolving user {loginname} in realm {realm}: {e}.")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
 
 
 @jwtauth.route("", methods=["POST"])
