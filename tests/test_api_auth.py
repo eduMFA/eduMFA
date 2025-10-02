@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 """Test for the '/auth' API-endpoint"""
 
 import logging
+from unittest import mock
 
-import mock
 from testfixtures import log_capture
 
 from edumfa.config import TestingConfig
@@ -549,7 +548,7 @@ class AuthApiTestCase(MyApiTestCase):
         set_policy(
             name="remote",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.DISABLE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.DISABLE}",
         )
         with self.app.test_request_context(
             "/auth",
@@ -576,7 +575,7 @@ class AuthApiTestCase(MyApiTestCase):
         set_policy(
             name="remote",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.ACTIVE}",
         )
         with self.app.test_request_context(
             "/auth",
@@ -599,7 +598,7 @@ class AuthApiTestCase(MyApiTestCase):
             name="remote",
             scope=SCOPE.WEBUI,
             realm=self.realm1,
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.ACTIVE}",
         )
         with self.app.test_request_context(
             "/auth",
@@ -623,7 +622,7 @@ class AuthApiTestCase(MyApiTestCase):
             name="remote",
             scope=SCOPE.WEBUI,
             realm=self.realm1,
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.FORCE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.FORCE}",
         )
         with self.app.test_request_context(
             "/", method="GET", environ_base={"REMOTE_USER": "cornelius@realm1"}
@@ -642,7 +641,7 @@ class AuthApiTestCase(MyApiTestCase):
             name="remote",
             scope=SCOPE.WEBUI,
             realm="unknown",
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.ACTIVE}",
         )
         with self.app.test_request_context(
             "/auth",
@@ -664,7 +663,7 @@ class AuthApiTestCase(MyApiTestCase):
             name="remote",
             scope=SCOPE.WEBUI,
             realm=self.realm1,
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.ACTIVE}",
         )
         set_edumfa_config(SYSCONF.SPLITATSIGN, False)
         with self.app.test_request_context(
@@ -811,9 +810,7 @@ class AuthApiTestCase(MyApiTestCase):
             )
 
         # set a policy to authenticate against eduMFA
-        set_policy(
-            "piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE)
-        )
+        set_policy("piLogin", scope=SCOPE.WEBUI, action=f"{ACTION.LOGINMODE}=eduMFA")
 
         # user authenticates against eduMFA but user does not exist
         with self.app.test_request_context(
@@ -980,18 +977,14 @@ class EventHandlerTest(MyApiTestCase):
         set_default_realm(self.realm1)
 
         # set a policy to authenticate against eduMFA
-        set_policy(
-            "piLogin", scope=SCOPE.WEBUI, action="{0!s}=eduMFA".format(ACTION.LOGINMODE)
-        )
+        set_policy("piLogin", scope=SCOPE.WEBUI, action=f"{ACTION.LOGINMODE}=eduMFA")
         # set a policy to for otppin=userstore
-        set_policy(
-            "otppin", scope=SCOPE.AUTH, action="{0!s}=userstore".format(ACTION.OTPPIN)
-        )
+        set_policy("otppin", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN}=userstore")
         # Set a policy to do C/R with HOTP tokens
         set_policy(
             "crhotp",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp",
         )
 
         # Create an event handler, that creates HOTP token on /auth with default OTP key

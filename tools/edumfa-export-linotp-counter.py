@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 #  2018-05-27 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #             init
@@ -92,7 +91,7 @@ def main():
     result = conn_linotp.execute(s)
 
     for r in result:
-        print("{0!s}, {1!s}".format(r.LinOtpTokenSerialnumber, r.LinOtpCount))
+        print(f"{r.LinOtpTokenSerialnumber}, {r.LinOtpCount}")
 
 
 if __name__ == "__main__":

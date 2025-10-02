@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This tests the files
   lib/task/simplestats.py
@@ -48,7 +47,7 @@ class TaskSimpleStatsTestCase(MyTestCase):
             self.assertEqual(
                 simple_results[o][0],
                 get_values(o)[0][1],
-                msg="Current option: {0}".format(o),
+                msg=f"Current option: {o}",
             )
 
         # add a hardware token
@@ -63,7 +62,7 @@ class TaskSimpleStatsTestCase(MyTestCase):
             self.assertEqual(
                 simple_results[o][1],
                 get_values(o)[1][1],
-                msg="Current option: {0}".format(o),
+                msg=f"Current option: {o}",
             )
 
         # add a hardware token and assign it to a user
@@ -82,7 +81,7 @@ class TaskSimpleStatsTestCase(MyTestCase):
             self.assertEqual(
                 simple_results[o][2],
                 get_values(o)[2][1],
-                msg="Current option: {0}".format(o),
+                msg=f"Current option: {o}",
             )
 
         # add a software token and assign it to a user
@@ -105,7 +104,7 @@ class TaskSimpleStatsTestCase(MyTestCase):
                 self.assertEqual(
                     simple_results[o][3],
                     get_values(o)[3][1],
-                    msg="Current option: {0}".format(o),
+                    msg=f"Current option: {o}",
                 )
         self.assertEqual(
             simple_results["assigned_tokens"][3], get_values("assigned_tokens")[2][1]

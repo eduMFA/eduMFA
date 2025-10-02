@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -158,9 +157,7 @@ def test():
         s,
         recipient,
         "Test Email from eduMFA",
-        "This is a test email from eduMFA. The configuration {} is working.".format(
-            identifier
-        ),
+        f"This is a test email from eduMFA. The configuration {identifier} is working.",
     )
 
     g.audit_object.log({"success": r > 0, "info": r})

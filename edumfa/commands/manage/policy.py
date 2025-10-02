@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -46,8 +45,7 @@ def list_policies():
     click.echo(40 * "=")
     for policy in policies:
         click.echo(
-            "%s \t %s \t %s"
-            % (policy.get("active"), policy.get("name"), policy.get("scope"))
+            f"{policy.get('active')} \t {policy.get('name')} \t {policy.get('scope')}"
         )
 
 
@@ -145,43 +143,29 @@ def create(name, scope, action, filename):
 
             if params.get("name") and params.get("name") != name:
                 click.echo(
-                    "Found name '{0!s}' in file, will use that instead of '{1!s}'.".format(
-                        params.get("name"), name
-                    )
+                    f"Found name '{params.get('name')}' in file, will use that instead of '{name}'."
                 )
             else:
-                click.echo(
-                    "name not defined in file, will use the cli value {0!s}.".format(
-                        name
-                    )
-                )
+                click.echo(f"name not defined in file, will use the cli value {name}.")
                 params["name"] = name
 
             if params.get("scope") and params.get("scope") != scope:
                 click.echo(
-                    "Found scope '{0!s}' in file, will use that instead of '{1!s}'.".format(
-                        params.get("scope"), scope
-                    )
+                    f"Found scope '{params.get('scope')}' in file, will use that instead of '{scope}'."
                 )
             else:
                 click.echo(
-                    "scope not defined in file, will use the cli value {0!s}.".format(
-                        scope
-                    )
+                    f"scope not defined in file, will use the cli value {scope}."
                 )
                 params["scope"] = scope
 
             if params.get("action") and params.get("action") != action:
                 click.echo(
-                    "Found action in file: '{0!s}', will use that instead of: '{1!s}'.".format(
-                        params.get("action"), action
-                    )
+                    f"Found action in file: '{params.get('action')}', will use that instead of: '{action}'."
                 )
             else:
                 click.echo(
-                    "action not defined in file, will use the cli value {0!s}.".format(
-                        action
-                    )
+                    f"action not defined in file, will use the cli value {action}."
                 )
                 params["action"] = action
 
@@ -202,7 +186,7 @@ def create(name, scope, action, filename):
             return r
 
         except Exception as _e:
-            click.echo("Unexpected error: {0!s}".format(sys.exc_info()[1]))
+            click.echo(f"Unexpected error: {sys.exc_info()[1]}")
 
     else:
         r = set_policy(name, scope, action)

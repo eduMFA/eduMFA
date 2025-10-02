@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -145,7 +144,7 @@ class WebHookHandler(BaseEventHandler):
                 realm=g.logged_in_user.get("realm"),
             )
         except (UserError, AttributeError) as e:  # pragma: no cover
-            log.info("Could not determine user: {0!s}".format(e))
+            log.info(f"Could not determine user: {e}")
             user = None
 
         if replace:
@@ -164,9 +163,7 @@ class WebHookHandler(BaseEventHandler):
                     Documentation of the requests function is found her docs.python-requests.org
                     """
                     log.info(
-                        "A webhook is send to {0!r} with the text: {1!r}".format(
-                            webhook_url, webhook_text
-                        )
+                        f"A webhook is send to {webhook_url!r} with the text: {webhook_text!r}"
                     )
                     resp = requests.post(
                         webhook_url,
@@ -183,9 +180,7 @@ class WebHookHandler(BaseEventHandler):
                     Documentation of the requests function is found her docs.python-requests.org
                     """
                     log.info(
-                        "A webhook is send to {0!r} with the text: {1!r}".format(
-                            webhook_url, webhook_text
-                        )
+                        f"A webhook is send to {webhook_url!r} with the text: {webhook_text!r}"
                     )
                     resp = requests.post(
                         webhook_url,
@@ -197,15 +192,13 @@ class WebHookHandler(BaseEventHandler):
                     log.info(resp.status_code)
                     log.debug(resp)
                 else:
-                    log.warning(
-                        "Unknown content type value: {0!s}".format(content_type)
-                    )
+                    log.warning(f"Unknown content type value: {content_type}")
                     ret = False
             # error handling
             except (HTTPError, ConnectionError, RequestException, Timeout) as err:
                 log.warning(err)
                 return False
         else:
-            log.warning("Unknown action value: {0!s}".format(action))
+            log.warning(f"Unknown action value: {action}")
             ret = False
         return ret

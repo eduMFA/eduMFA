@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 __doc__ = """
 This test file tests the modules:
  lib.smsprovider.httpsmsprovider
@@ -10,8 +9,8 @@ This test file tests the modules:
 """
 
 import os
+from unittest import mock
 
-import mock
 import responses
 from responses import json_params_matcher
 
@@ -42,12 +41,12 @@ from .base import MyTestCase
 class SMSTestCase(MyTestCase):
     def test_00_SMSError(self):
         err = SMSError(100, "Some Error")
-        text = "{0!r}".format(err)
+        text = f"{err!r}"
         self.assertTrue(
             text == "SMSError(error_id=100, description='Some Error')", text
         )
 
-        text = "{0!s}".format(err)
+        text = f"{err}"
         self.assertTrue(text == "Some Error", text)
 
     def test_01_get_provider_class(self):
@@ -319,7 +318,7 @@ class SmtpSMSTestCase(MyTestCase):
             r = sms.submit_message("123456", "Halo")
             self.assertTrue(r)
             log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Halo", "123456")
+                "submitting message {!r} to {!s}".format("Halo", "123456")
             )
 
     @smtpmock.activate
@@ -342,7 +341,7 @@ class SmtpSMSTestCase(MyTestCase):
             r = self.regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
             log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "4912345678")
+                "submitting message {!r} to {!s}".format("Hello", "4912345678")
             )
 
 
@@ -392,7 +391,7 @@ class SipgateSMSTestCase(MyTestCase):
             r = regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
             log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "4912345678")
+                "submitting message {!r} to {!s}".format("Hello", "4912345678")
             )
 
     @responses.activate
@@ -409,12 +408,12 @@ class SipgateSMSTestCase(MyTestCase):
             r = sms.submit_message("123456", "Hello")
             self.assertTrue(r)
             log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "123456")
+                "submitting message {!r} to {!s}".format("Hello", "123456")
             )
 
 
 class ScriptSMSTestCase(MyTestCase):
-    directory = "{0!s}/tests/testdata/scripts/".format(os.getcwd())
+    directory = f"{os.getcwd()}/tests/testdata/scripts/"
 
     def test_01_fail_no_script(self):
         # The script does not exist
@@ -586,7 +585,7 @@ class HttpSMSTestCase(MyTestCase):
             r = self.regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
             log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "4912345678")
+                "submitting message {!r} to {!s}".format("Hello", "4912345678")
             )
 
     @responses.activate
@@ -820,7 +819,7 @@ class SmppSMSTestCase(MyTestCase):
             r = regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
             log.assert_any_call(
-                "submitting message {0!r} to {1!s}".format("Hello", "4912345678")
+                "submitting message {!r} to {!s}".format("Hello", "4912345678")
             )
 
         delete_smsgateway(identifier_regexp)

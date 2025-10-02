@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -85,13 +84,13 @@ class CONFIG:  # pragma: no cover
         self.ssl_client_key_password = None
 
     def __str__(self):
-        s = """
-        Worker HostName  : {ca.hostname}
-        Worker Port      : {ca.port}
-        Connect via HTTP Proxy      : {ca.http_proxy}
-        CA               : {ca.ca}
-        Use SSL          : {ca.use_ssl}
-        """.format(ca=self)
+        s = f"""
+        Worker HostName  : {self.hostname}
+        Worker Port      : {self.port}
+        Connect via HTTP Proxy      : {self.http_proxy}
+        CA               : {self.ca}
+        Use SSL          : {self.use_ssl}
+        """
         return s
 
 
@@ -169,13 +168,11 @@ class MSCAConnector(BaseCAConnector):
                 log.error(
                     "For a secure connection we need 'ssl_ca_cert', 'ssl_client_cert'"
                     " and 'ssl_client_key'. The following configuration seems incomplete: "
-                    "({0!s}, {1!s}, {2!s})".format(
-                        self.ssl_ca_cert, self.ssl_client_cert, self.ssl_client_key
-                    )
+                    f"({self.ssl_ca_cert}, {self.ssl_client_cert}, {self.ssl_client_key})"
                 )
                 raise CAError(
                     "Incomplete TLS configuration for MSCA worker "
-                    "configuration {0!s}".format(self.name)
+                    f"configuration {self.name}"
                 )
             else:
                 # Read all stuff. We need to provide all parameters as PEM encoded byte string
@@ -199,18 +196,14 @@ class MSCAConnector(BaseCAConnector):
                     )
                     log.debug("Client private key decrypted.")
                 except ValueError as e:
-                    log.error(
-                        "Could not decrypt TLS key with given password. ({0!s})".format(
-                            e
-                        )
-                    )
+                    log.error(f"Could not decrypt TLS key with given password. ({e})")
                     raise CAError("Invalid TLS configuration for MSCA worker.")
                 except TypeError as e:
                     log.error(
-                        "Faulty configuration in CA '{0!s}'. "
+                        f"Faulty configuration in CA '{self.name}'. "
                         "Trying to use an encrypted private key "
                         "without providing a password (or vice versa)! "
-                        "The CA connector will not work! ({1!s})".format(self.name, e)
+                        f"The CA connector will not work! ({e})"
                     )
                     raise CAError("Invalid TLS configuration for MSCA worker.")
 
@@ -218,7 +211,7 @@ class MSCAConnector(BaseCAConnector):
                     ca_cert_pem, client_key_pem, client_cert_pem
                 )
                 channel = grpc.secure_channel(
-                    "{0!s}:{1!s}".format(self.hostname, self.port),
+                    f"{self.hostname}:{self.port}",
                     credentials,
                     options=(
                         ("grpc.enable_http_proxy", int(is_true(self.http_proxy))),
@@ -226,7 +219,7 @@ class MSCAConnector(BaseCAConnector):
                 )
         else:
             channel = grpc.insecure_channel(
-                "{0!s}:{1!s}".format(self.hostname, self.port),
+                f"{self.hostname}:{self.port}",
                 options=(("grpc.enable_http_proxy", int(is_true(self.http_proxy))),),
             )
         try:
@@ -268,7 +261,7 @@ class MSCAConnector(BaseCAConnector):
     def _check_attributes(self):
         for req_key in [ATTR.HOSTNAME, ATTR.PORT]:
             if req_key not in self.config:
-                raise CAError("required argument '{0!s}' is missing.".format(req_key))
+                raise CAError(f"required argument '{req_key}' is missing.")
 
     def set_config(self, config=None):
         self.config = config or {}
@@ -308,9 +301,7 @@ class MSCAConnector(BaseCAConnector):
             if reply.disposition == 3:
                 request_id = reply.requestId
                 log.info(
-                    "certificate with request ID {0!s} successfully rolled out".format(
-                        request_id
-                    )
+                    f"certificate with request ID {request_id} successfully rolled out"
                 )
                 certificate = self.connection.GetCertificate(
                     GetCertificateRequest(id=request_id, caName=self.ca)
@@ -322,9 +313,7 @@ class MSCAConnector(BaseCAConnector):
                 log.info("cert still under submission")
                 raise CSRPending(requestId=reply.requestId)
             else:
-                log.warning(
-                    "certification request could not be fulfilled! {0!s}".format(reply)
-                )
+                log.warning(f"certification request could not be fulfilled! {reply}")
                 raise CSRError(description=reply.dispositionMessage)
 
     def revoke_cert(self, certificate, request_id=None, reason=None):
@@ -434,10 +423,10 @@ class MSCAConnector(BaseCAConnector):
             cas = [x for x in cAReply.caNames]
             print("Available CAs: \n")
             for c in cas:
-                print("     {0!s}".format(c))
-            config.ca = input("Choose CA: ".format(config.ca))
+                print(f"     {c}")
+            config.ca = input("Choose CA: ")
             print("=" * 60)
-            print("{0!s}".format(config))
+            print(f"{config}")
             answer = input("Is this configuration correct? [y/n] ")
             if answer.lower() == "y":
                 break

@@ -4,8 +4,7 @@ This test file tests the lib.clientapplicaton.py
 
 from contextlib import contextmanager
 from datetime import datetime, timedelta
-
-import mock
+from unittest import mock
 
 from edumfa.lib.clientapplication import get_clientapplication, save_clientapplication
 from edumfa.models import ClientApplication
