@@ -115,6 +115,17 @@ This command will:
 - Map port 8000 on the host to port 8000 in the container (`-p 8000:8000`)
 - Name the container "edumfa" (`--name edumfa`)
 
+Running your own scripts
+....................
+
+To run your own scripts on startup, put it into the `/opt/edumfa/user-scripts/` directory with a `.sh` suffix:
+
+.. code-block:: bash
+
+   docker run -d -p 8000:8000 -v /path/to/script.sh:/opt/edumfa/user-scripts/script.sh --name edumfa ghcr.io/edumfa/edumfa:latest
+
+It will be executed as a bash script. It's also possible to execute multiple files by placing multiple scripts with the suffix there [#bashGlobbing]_.
+
 Persistent Data 
 ...............
 
@@ -122,7 +133,7 @@ To persist data between container restarts, you can mount a volume for the datab
 
 .. code-block:: bash
 
-   docker run -d -p 8000:8000  -v /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg -v edumfa-config:/etc/edumfa --name edumfa ghcr.io/edumfa/edumfa:latest
+   docker run -d -p 8000:8000 -v /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg -v edumfa-config:/etc/edumfa --name edumfa ghcr.io/edumfa/edumfa:latest
 
 This will create a named volume `edumfa-config` that will persist your eduMFA configuration. This volume will contain the encryption key and the audit key.
 
@@ -138,4 +149,10 @@ To update eduMFA to a newer version, pull the latest image and recreate the cont
    docker pull ghcr.io/edumfa/edumfa:latest
    docker stop edumfa
    docker rm edumfa
-   docker run -d -p 8000:8000  -v /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg -v edumfa-config:/etc/edumfa --name edumfa ghcr.io/edumfa/edumfa:latest
+   docker run -d -p 8000:8000 -v /path/to/edumfa.cfg:/etc/edumfa/edumfa.cfg -v edumfa-config:/etc/edumfa --name edumfa ghcr.io/edumfa/edumfa:latest
+
+
+.. rubric:: Footnotes
+
+.. [#bashGlobbing] The execution order depends on the way Bash expands `*.sh`. Read more in the `POSIX specification`_.
+.. _POSIX specification: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_13_03

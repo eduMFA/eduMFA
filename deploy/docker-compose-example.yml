@@ -16,7 +16,7 @@ services:
       - MARIADB_ROOT_PASSWORD=pass
 
   edumfa:
-    image: edumfa:latest
+    image: ghcr.io/edumfa/edumfa:latest
     restart: always
     networks:
        - edumfa-net
