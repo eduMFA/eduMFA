@@ -40,7 +40,7 @@ from edumfa.lib.token import (
     token_exist,
 )
 from edumfa.lib.tokenclass import DATE_FORMAT, ROLLOUTSTATE
-from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
+from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.user import User
 
 from .base import PWFILE2, MyApiTestCase
@@ -2961,7 +2961,8 @@ class APITokenTestCase(MyApiTestCase):
             self.assertTrue(result.get("value"))
             self.assertEqual(detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING)
             self.assertEqual(
-                detail.get("verify").get("message"), VERIFY_ENROLLMENT_MESSAGE
+                detail.get("verify").get("message"),
+                HotpTokenClass.verify_enrollment_message,
             )
             serial = detail.get("serial")
             tokenobj_list = get_tokens(serial=serial)
@@ -3047,7 +3048,8 @@ class APITokenTestCase(MyApiTestCase):
             self.assertTrue(result.get("value"))
             self.assertEqual(detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING)
             self.assertEqual(
-                detail.get("verify").get("message"), VERIFY_ENROLLMENT_MESSAGE
+                detail.get("verify").get("message"),
+                HotpTokenClass.verify_enrollment_message,
             )
             serial = detail.get("serial")
             tokenobj_list = get_tokens(serial=serial)
@@ -3102,7 +3104,8 @@ class APITokenTestCase(MyApiTestCase):
             self.assertTrue(result.get("value"))
             self.assertEqual(detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING)
             self.assertEqual(
-                detail.get("verify").get("message"), VERIFY_ENROLLMENT_MESSAGE
+                detail.get("verify").get("message"),
+                HotpTokenClass.verify_enrollment_message,
             )
             serial = detail.get("serial")
             tokenobj_list = get_tokens(serial=serial)
@@ -3215,7 +3218,9 @@ class APITokenTestCase(MyApiTestCase):
                 detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING, detail
             )
             self.assertEqual(
-                detail.get("verify").get("message"), VERIFY_ENROLLMENT_MESSAGE, detail
+                detail.get("verify").get("message"),
+                HotpTokenClass.verify_enrollment_message,
+                detail,
             )
             otps = detail.get("otps")
             serial = detail.get("serial")
@@ -3303,7 +3308,9 @@ class APITokenTestCase(MyApiTestCase):
                 detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING, detail
             )
             self.assertEqual(
-                detail.get("verify").get("message"), VERIFY_ENROLLMENT_MESSAGE, detail
+                detail.get("verify").get("message"),
+                HotpTokenClass.verify_enrollment_message,
+                detail,
             )
             otps = detail.get("otps")
             serial = detail.get("serial")
