@@ -22,7 +22,7 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import logging
-from typing import List, Union
+from typing import Union
 
 from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper
 from edumfa.lib.policy import LOGINMODE
@@ -75,7 +75,7 @@ def create_db_admin(username: str, email: str = None, password=None):
     user.save()
 
 
-def get_db_admins() -> List[Admin]:
+def get_db_admins() -> list[Admin]:
     admins = Admin.query.all()
     return admins
 
