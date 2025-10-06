@@ -76,7 +76,7 @@ test = [
 ]
 postgres = ["psycopg2==2.9.10"]
 hsm = ["PyKCS11==1.5.18"]
-kerberos = ["gssapi==1.10.0"]
+kerberos = ["gssapi==1.10.1"]
 grpc = [
     "protobuf==6.32.1",
     "google==3.0.0",
