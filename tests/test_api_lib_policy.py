@@ -4935,7 +4935,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         req.User = User("autoassignuser", self.realm1)
         # The response contains the token type HOTP, enrollment
         from edumfa.lib.tokenclass import ROLLOUTSTATE
-        from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
+        from edumfa.lib.tokens.hotptoken import HotpTokenClass
 
         res = {
             "jsonrpc": "2.0",
@@ -4961,7 +4961,10 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
 
         new_resp = check_verify_enrollment(req, resp)
         detail = new_resp.json.get("detail")
-        self.assertEqual(detail.get("verify").get("message"), VERIFY_ENROLLMENT_MESSAGE)
+        self.assertEqual(
+            detail.get("verify").get("message"),
+            HotpTokenClass.verify_enrollment_message,
+        )
         self.assertEqual(detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING)
         # Also check the token object.
         self.assertEqual(tok.token.rollout_state, ROLLOUTSTATE.VERIFYPENDING)

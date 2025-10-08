@@ -16,7 +16,7 @@ babel==2.17.0
     # via flask-babel
 bcrypt==4.3.0
     # via passlib
-beautifulsoup4==4.13.5
+beautifulsoup4==4.14.2
     # via edumfa (setup.py)
 blinker==1.9.0
     # via flask
@@ -24,7 +24,7 @@ cachetools==5.5.2
     # via google-auth
 cbor2==5.7.0
     # via edumfa (setup.py)
-certifi==2025.8.3
+certifi==2025.10.5
     # via requests
 cffi==2.0.0
     # via
@@ -38,7 +38,7 @@ configobj==5.0.9
     # via edumfa (setup.py)
 croniter==6.0.0
     # via edumfa (setup.py)
-cryptography==46.0.1
+cryptography==46.0.2
     # via
     #   edumfa (setup.py)
     #   pyopenssl
@@ -61,7 +61,7 @@ flask-sqlalchemy==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-migrate
-google-auth==2.40.3
+google-auth==2.41.1
     # via edumfa (setup.py)
 grpcio==1.75.1
     # via edumfa (setup.py)
@@ -85,7 +85,7 @@ lxml==6.0.2
     #   edumfa (setup.py)
 mako==1.3.10
     # via alembic
-markupsafe==3.0.2
+markupsafe==3.0.3
     # via
     #   jinja2
     #   mako
