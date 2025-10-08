@@ -1,6 +1,8 @@
 import json
-from .base import MyApiTestCase
+
 from edumfa.lib.clientapplication import save_clientapplication
+
+from .base import MyApiTestCase
 
 
 class APIClienttypeTestCase(MyApiTestCase):

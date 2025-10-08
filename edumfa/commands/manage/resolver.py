@@ -28,8 +28,8 @@ from edumfa.commands.manage.config import export_cli, import_cli
 from edumfa.commands.manage.helper import (
     conf_export,
     conf_import,
-    import_conf_resolver,
     get_conf_resolver,
+    import_conf_resolver,
 )
 
 resolver_cli = AppGroup("resolver", help="Manage resolvers")
@@ -141,9 +141,7 @@ def create_internal(name):
     save_resolver(params)
 
     # Now we create the database table
-    from sqlalchemy import create_engine
-    from sqlalchemy import Table, MetaData, Column
-    from sqlalchemy import Integer, String
+    from sqlalchemy import Column, Integer, MetaData, String, Table, create_engine
 
     engine = create_engine(sqluri)
     metadata = MetaData()

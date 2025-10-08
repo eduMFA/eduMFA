@@ -28,22 +28,23 @@ Remote-Tokens and for Federation-Events.
 
 The code of this module is tested in tests/test_api_edumfaserver.py
 """
-from flask import Blueprint, request
-from .lib.utils import getParam, required, send_result
-from ..lib.log import log_with
-from ..lib.policy import ACTION
-from .lib.prepolicy import prepolicy, check_base_action
-from ..lib.utils import is_true
-from flask import g
 import logging
+
+from flask import Blueprint, g, request
+
 from edumfa.lib.edumfaserver import (
     add_edumfaserver,
-    eduMFAServer,
     delete_edumfaserver,
+    eduMFAServer,
     list_edumfaservers,
 )
 from edumfa.models import eduMFAServer as eduMFAServerDB
 
+from ..lib.log import log_with
+from ..lib.policy import ACTION
+from ..lib.utils import is_true
+from .lib.prepolicy import check_base_action, prepolicy
+from .lib.utils import getParam, required, send_result
 
 log = logging.getLogger(__name__)
 

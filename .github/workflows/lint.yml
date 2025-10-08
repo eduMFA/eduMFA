@@ -6,29 +6,14 @@ on:
     types: [ opened, reopened, synchronize ]
 
 jobs:
-  check:
+  ruff:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [ '3.9', '3.x' ]
-
-    name: check ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Set up CPython ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        id: install-deps
+      - name: Get Ruff Version
+        id: ruff-version
         run: |
-          pip install -e .[lint]
-
-      - name: Run ruff
-        run: |
-          ruff format --check edumfa tests tools
+          echo "version=$(grep -Po '(?<=ruff==)[0-9]+\.[0-9]+\.[0-9]+' pyproject.toml)" >> $GITHUB_OUTPUT
+      - uses: astral-sh/ruff-action@v3
+        with:
+          version: ${{ steps.ruff-version.outputs.version }}

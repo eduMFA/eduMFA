@@ -3,10 +3,10 @@ You can set or delete custom your attributes
 
 """
 
-from edumfa.lib.eventhandler.base import BaseEventHandler
-from edumfa.lib import _
 import logging
 
+from edumfa.lib import _
+from edumfa.lib.eventhandler.base import BaseEventHandler
 from edumfa.lib.user import User
 
 log = logging.getLogger(__name__)

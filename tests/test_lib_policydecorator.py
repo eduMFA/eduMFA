@@ -8,44 +8,46 @@ PWFILE2 = "tests/testdata/passwords"
 DICT_FILE = "tests/testdata/dictionary"
 
 
-from .base import MyTestCase, FakeFlaskG, FakeAudit
+import binascii
+import datetime
+import hashlib
+from datetime import timedelta
 
+from flask import g
+
+from edumfa.lib.authcache import _hash_password, delete_from_cache
+from edumfa.lib.error import PolicyError, UserError
 from edumfa.lib.policy import (
-    set_policy,
-    delete_policy,
-    PolicyClass,
-    SCOPE,
     ACTION,
     ACTIONVALUE,
     LOGINMODE,
+    SCOPE,
+    PolicyClass,
+    delete_policy,
+    set_policy,
 )
 from edumfa.lib.policydecorators import (
-    auth_otppin,
-    auth_user_does_not_exist,
-    auth_user_passthru,
-    auth_user_has_no_token,
-    login_mode,
-    config_lost_token,
-    challenge_response_allowed,
-    auth_user_timelimit,
     auth_cache,
     auth_lastauth,
+    auth_otppin,
+    auth_user_does_not_exist,
+    auth_user_has_no_token,
+    auth_user_passthru,
+    auth_user_timelimit,
+    challenge_response_allowed,
+    config_lost_token,
+    login_mode,
     reset_all_user_tokens,
 )
-from edumfa.lib.user import User
-from edumfa.lib.resolver import save_resolver, delete_resolver
-from edumfa.lib.realm import set_realm, delete_realm
-from edumfa.lib.token import init_token, remove_token, check_user_pass, get_tokens
-from edumfa.lib.error import UserError, PolicyError
 from edumfa.lib.radiusserver import add_radius
-from flask import g
-import datetime
-from . import radiusmock
-import binascii
-import hashlib
+from edumfa.lib.realm import delete_realm, set_realm
+from edumfa.lib.resolver import delete_resolver, save_resolver
+from edumfa.lib.token import check_user_pass, get_tokens, init_token, remove_token
+from edumfa.lib.user import User
 from edumfa.models import AuthCache
-from edumfa.lib.authcache import delete_from_cache, _hash_password
-from datetime import timedelta
+
+from . import radiusmock
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 
 def _check_policy_name(polname, policies):

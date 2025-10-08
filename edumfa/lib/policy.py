@@ -92,48 +92,50 @@ and any combination of it. ``dow`` being day of week Mon, Tue, Wed, Thu, Fri,
 Sat, Sun.
 """
 
-from .log import log_with
-from configobj import ConfigObj
-
-from operator import itemgetter
+import ast
+import datetime
 import logging
-from ..models import Policy, db, save_config_timestamp, Token
+import re
+import traceback
+from operator import itemgetter
+
+from configobj import ConfigObj
+from netaddr import AddrFormatError
+
+from edumfa.lib import _
 from edumfa.lib.config import (
-    get_token_classes,
-    get_token_types,
     get_config_object,
     get_edumfa_node,
     get_multichallenge_enrollable_tokentypes,
+    get_token_classes,
+    get_token_types,
 )
 from edumfa.lib.error import (
     ParameterError,
     PolicyError,
     ResourceNotFoundError,
     ServerError,
+    eduMFAError,
 )
+from edumfa.lib.radiusserver import get_radiusservers
 from edumfa.lib.realm import get_realms
 from edumfa.lib.resolver import get_resolver_list
 from edumfa.lib.smtpserver import get_smtpservers
-from edumfa.lib.radiusserver import get_radiusservers
+from edumfa.lib.user import User
 from edumfa.lib.utils import (
-    check_time_in_range,
+    check_ip_in_policy,
     check_pin_contents,
+    check_time_in_range,
+    determine_logged_in_userparams,
     fetch_one_resource,
     is_true,
-    check_ip_in_policy,
-    determine_logged_in_userparams,
     parse_string_to_dict,
 )
-from edumfa.lib.utils.compare import compare_values, COMPARATOR_DESCRIPTIONS
-from edumfa.lib.utils.export import register_import, register_export
-from edumfa.lib.user import User
-from edumfa.lib import _
-from netaddr import AddrFormatError
-from edumfa.lib.error import eduMFAError
-import datetime
-import re
-import ast
-import traceback
+from edumfa.lib.utils.compare import COMPARATOR_DESCRIPTIONS, compare_values
+from edumfa.lib.utils.export import register_export, register_import
+
+from ..models import Policy, Token, db, save_config_timestamp
+from .log import log_with
 
 log = logging.getLogger(__name__)
 

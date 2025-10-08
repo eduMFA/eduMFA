@@ -19,7 +19,6 @@ limitations under the License.
 """
 
 from collections import namedtuple
-
 from collections.abc import Sequence, Sized
 
 from .smtpmock import get_wrapped

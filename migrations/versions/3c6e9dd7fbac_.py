@@ -10,9 +10,9 @@ Create Date: 2016-08-30 17:40:29.869763
 revision = "3c6e9dd7fbac"
 down_revision = "3ae3c668f444"
 
-from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.exc import OperationalError, ProgrammingError, InternalError
+from alembic import op
+from sqlalchemy.exc import InternalError, OperationalError, ProgrammingError
 
 
 def upgrade():

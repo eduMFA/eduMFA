@@ -38,7 +38,7 @@ configobj==5.0.9
     # via edumfa (setup.py)
 croniter==6.0.0
     # via edumfa (setup.py)
-cryptography==45.0.7
+cryptography==46.0.1
     # via
     #   edumfa (setup.py)
     #   pyopenssl
@@ -63,7 +63,7 @@ flask-sqlalchemy==3.1.1
     #   flask-migrate
 google-auth==2.40.3
     # via edumfa (setup.py)
-grpcio==1.75.0
+grpcio==1.75.1
     # via edumfa (setup.py)
 huey==2.5.3
     # via edumfa (setup.py)
@@ -123,7 +123,7 @@ python-gnupg==0.5.5
     # via edumfa (setup.py)
 pytz==2025.2
     # via flask-babel
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via edumfa (setup.py)
 redis==6.4.0
     # via huey

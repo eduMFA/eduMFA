@@ -2,14 +2,15 @@
 This test file tests the lib.tokens.smstoken
 """
 
-from .base import MyTestCase, FakeFlaskG, FakeAudit
-from edumfa.lib.resolver import save_resolver
+from edumfa.lib.policy import ACTION, SCOPE, PolicyClass, delete_policy, set_policy
 from edumfa.lib.realm import set_realm
-from edumfa.lib.user import User
-from edumfa.lib.tokens.indexedsecrettoken import IndexedSecretTokenClass, PIIXACTION
-from edumfa.lib.policy import set_policy, delete_policy, SCOPE, ACTION, PolicyClass
-from edumfa.models import Token
+from edumfa.lib.resolver import save_resolver
 from edumfa.lib.token import init_token, remove_token
+from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION, IndexedSecretTokenClass
+from edumfa.lib.user import User
+from edumfa.models import Token
+
+from .base import FakeAudit, FakeFlaskG, MyTestCase
 
 PWFILE = "tests/testdata/passwords"
 

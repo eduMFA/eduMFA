@@ -54,24 +54,29 @@ policy: action: emailtext
 The code is tested in tests/test_lib_tokens_email
 """
 
+import datetime
 import logging
 import traceback
-import datetime
-from edumfa.lib.tokens.smstoken import HotpTokenClass
-from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
-from edumfa.lib.tokenclass import CHALLENGE_SESSION, AUTHENTICATIONMODE
-from edumfa.lib.config import get_from_config
-from edumfa.api.lib.utils import getParam
-from edumfa.lib.utils import is_true, create_tag_dict
-from edumfa.lib.policy import SCOPE, ACTION, GROUP, get_action_values_from_options
-from edumfa.lib.policy import Match
-from edumfa.lib.log import log_with
-from edumfa.lib import _
-from edumfa.models import Challenge
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.smtpserver import send_email_data, send_email_identifier
-from edumfa.lib.crypto import safe_compare
 
+from edumfa.api.lib.utils import getParam
+from edumfa.lib import _
+from edumfa.lib.config import get_from_config
+from edumfa.lib.crypto import safe_compare
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import (
+    ACTION,
+    GROUP,
+    SCOPE,
+    Match,
+    get_action_values_from_options,
+)
+from edumfa.lib.smtpserver import send_email_data, send_email_identifier
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, CHALLENGE_SESSION
+from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
+from edumfa.lib.tokens.smstoken import HotpTokenClass
+from edumfa.lib.utils import create_tag_dict, is_true
+from edumfa.models import Challenge
 
 log = logging.getLogger(__name__)
 TEST_SUCCESSFUL = "Successfully sent email. Please check your inbox."

@@ -6,28 +6,28 @@ The lib.usercache.py only depends on the database model
 """
 
 from contextlib import contextmanager
+from datetime import datetime, timedelta
 
 from mock import patch
 
+from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.error import UserError
-from tests import ldap3mock
-from tests.test_mock_ldap3 import LDAPDirectory
-from .base import MyTestCase
-from edumfa.lib.resolver import save_resolver, delete_resolver, get_resolver_object
-from edumfa.lib.realm import set_realm, delete_realm
-from edumfa.lib.user import User, get_username, create_user
+from edumfa.lib.realm import delete_realm, set_realm
+from edumfa.lib.resolver import delete_resolver, get_resolver_object, save_resolver
+from edumfa.lib.user import User, create_user, get_username
 from edumfa.lib.usercache import (
-    get_cache_time,
+    EXPIRATION_SECONDS,
     cache_username,
     delete_user_cache,
-    EXPIRATION_SECONDS,
-    retrieve_latest_entry,
+    get_cache_time,
     is_cache_enabled,
+    retrieve_latest_entry,
 )
-from edumfa.lib.config import set_edumfa_config
-from datetime import timedelta
-from datetime import datetime
 from edumfa.models import UserCache
+from tests import ldap3mock
+from tests.test_mock_ldap3 import LDAPDirectory
+
+from .base import MyTestCase
 
 
 class UserCacheTestCase(MyTestCase):

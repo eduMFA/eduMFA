@@ -30,11 +30,13 @@ It can handle HTTP/HTTPS POST and GET requests also with Proxy support
 The code is tested in tests/test_lib_smsprovider
 """
 
-from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
-from edumfa.lib import _
-import requests
-from urllib.parse import urlparse
 import logging
+from urllib.parse import urlparse
+
+import requests
+
+from edumfa.lib import _
+from edumfa.lib.smsprovider.SMSProvider import ISMSProvider, SMSError
 
 log = logging.getLogger(__name__)
 
