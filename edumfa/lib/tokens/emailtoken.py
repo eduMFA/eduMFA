@@ -73,7 +73,6 @@ from edumfa.lib.policy import (
 )
 from edumfa.lib.smtpserver import send_email_data, send_email_identifier
 from edumfa.lib.tokenclass import AUTHENTICATIONMODE, CHALLENGE_SESSION
-from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE
 from edumfa.lib.tokens.smstoken import HotpTokenClass
 from edumfa.lib.utils import create_tag_dict, is_true
 from edumfa.models import Challenge
@@ -561,7 +560,7 @@ class EmailTokenClass(HotpTokenClass):
         :return: A dictionary with information that is needed to trigger the verification.
         """
         self.create_challenge()
-        return {"message": VERIFY_ENROLLMENT_MESSAGE}
+        return {"message": HotpTokenClass.verify_enrollment_message}
 
     @classmethod
     def enroll_via_validate(cls, g, content, user_obj):

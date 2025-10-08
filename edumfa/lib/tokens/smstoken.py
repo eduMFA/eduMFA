@@ -58,7 +58,7 @@ from edumfa.lib.smsprovider.SMSProvider import (
     get_smsgateway,
 )
 from edumfa.lib.tokenclass import AUTHENTICATIONMODE, CHALLENGE_SESSION
-from edumfa.lib.tokens.hotptoken import VERIFY_ENROLLMENT_MESSAGE, HotpTokenClass
+from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.utils import create_tag_dict, is_true
 from edumfa.models import Challenge
 
@@ -645,7 +645,7 @@ class SmsTokenClass(HotpTokenClass):
         :return: A dictionary with information that is needed to trigger the verification.
         """
         self.create_challenge()
-        return {"message": VERIFY_ENROLLMENT_MESSAGE}
+        return {"message": HotpTokenClass.verify_enrollment_message}
 
     @classmethod
     def enroll_via_validate(cls, g, content, user_obj):
