@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -478,7 +477,7 @@ def list_api():
     # allowed_realms determines, which realms the admin would be allowed to see
     # In certain cases like for users, we do not have allowed_realms
     allowed_realms = getattr(request, "pi_allowed_realms", None)
-    g.audit_object.log({"info": "realm: {0!s}".format((allowed_realms))})
+    g.audit_object.log({"info": f"realm: {allowed_realms}"})
 
     # get hide_tokeninfo setting from all_data
     hidden_tokeninfo = getParam(request.all_data, "hidden_tokeninfo", default=None)
@@ -836,9 +835,7 @@ def set_description_api(serial=None):
         serial = getParam(request.all_data, "serial", required)
     g.audit_object.log({"serial": serial})
     description = getParam(request.all_data, "description", optional=required)
-    g.audit_object.add_to_log(
-        {"action_detail": "description={0!r}".format(description)}
-    )
+    g.audit_object.add_to_log({"action_detail": f"description={description!r}"})
     res = set_description(serial, description, user=user)
     g.audit_object.log({"success": True})
     return send_result(res)
@@ -897,40 +894,36 @@ def set_api(serial=None):
     res = 0
 
     if description is not None:
-        g.audit_object.add_to_log({"action_detail": "description=%r, " % description})
+        g.audit_object.add_to_log({"action_detail": f"description={description!r}, "})
         res += set_description(serial, description, user=user)
 
     if count_window is not None:
-        g.audit_object.add_to_log({"action_detail": "count_window=%r, " % count_window})
+        g.audit_object.add_to_log({"action_detail": f"count_window={count_window!r}, "})
         res += set_count_window(serial, count_window, user=user)
 
     if sync_window is not None:
-        g.audit_object.add_to_log({"action_detail": "sync_window=%r, " % sync_window})
+        g.audit_object.add_to_log({"action_detail": f"sync_window={sync_window!r}, "})
         res += set_sync_window(serial, sync_window, user=user)
 
     if hashlib is not None:
-        g.audit_object.add_to_log({"action_detail": "hashlib=%r, " % hashlib})
+        g.audit_object.add_to_log({"action_detail": f"hashlib={hashlib!r}, "})
         res += set_hashlib(serial, hashlib, user=user)
 
     if max_failcount is not None:
         g.audit_object.add_to_log(
-            {"action_detail": "max_failcount=%r, " % max_failcount}
+            {"action_detail": f"max_failcount={max_failcount!r}, "}
         )
         res += set_max_failcount(serial, max_failcount, user=user)
 
     if count_auth_max is not None:
         g.audit_object.add_to_log(
-            {"action_detail": "count_auth_max=%r, " % count_auth_max}
+            {"action_detail": f"count_auth_max={count_auth_max!r}, "}
         )
         res += set_count_auth(serial, count_auth_max, user=user, max=True)
 
     if count_auth_success_max is not None:
         g.audit_object.add_to_log(
-            {
-                "action_detail": "count_auth_success_max={0!r}, ".format(
-                    count_auth_success_max
-                )
-            }
+            {"action_detail": f"count_auth_success_max={count_auth_success_max!r}, "}
         )
         res += set_count_auth(
             serial, count_auth_success_max, user=user, max=True, success=True
@@ -938,23 +931,19 @@ def set_api(serial=None):
 
     if validity_period_end is not None:
         g.audit_object.add_to_log(
-            {"action_detail": "validity_period_end={0!r}, ".format(validity_period_end)}
+            {"action_detail": f"validity_period_end={validity_period_end!r}, "}
         )
         res += set_validity_period_end(serial, user, validity_period_end)
 
     if validity_period_start is not None:
         g.audit_object.add_to_log(
-            {
-                "action_detail": "validity_period_start={0!r}, ".format(
-                    validity_period_start
-                )
-            }
+            {"action_detail": f"validity_period_start={validity_period_start!r}, "}
         )
         res += set_validity_period_start(serial, user, validity_period_start)
 
     if use_timeshift is not None:
         g.audit_object.add_to_log(
-            {"action_detail": "use_timeshift=%r, " % use_timeshift}
+            {"action_detail": f"use_timeshift={use_timeshift!r}, "}
         )
         set_use_timeshift(serial, use_timeshift)
 
@@ -1057,20 +1046,19 @@ def loadtokens_api(filename=None):
     file_contents = to_unicode(file_contents)
 
     if file_contents == "":
-        log.error(
-            "Error loading/importing token file. file {0!s} empty!".format(filename)
-        )
+        log.error(f"Error loading/importing token file. file {filename} empty!")
         raise ParameterError("Error loading token file. File empty!")
 
     if file_type not in known_types:
         log.error(
-            "Unknown file type: >>{0!s}<<. We only know the types: {1!s}".format(
+            "Unknown file type: >>{!s}<<. We only know the types: {!s}".format(
                 file_type, ", ".join(known_types)
             )
         )
         raise TokenAdminError(
-            "Unknown file type: >>%s<<. We only know the "
-            "types: %s" % (file_type, ", ".join(known_types))
+            "Unknown file type: >>{}<<. We only know the types: {}".format(
+                file_type, ", ".join(known_types)
+            )
         )
 
     # Decrypt file, if necessary
@@ -1096,19 +1084,15 @@ def loadtokens_api(filename=None):
     # Now import the Tokens from the dictionary
     ret = ""
     for serial in TOKENS:
-        log.debug("importing token {0!s}".format(TOKENS[serial]))
+        log.debug(f"importing token {TOKENS[serial]}")
 
-        log.info(
-            "initialize token. serial: {0!s}, realm: {1!s}".format(serial, tokenrealms)
-        )
+        log.info(f"initialize token. serial: {serial}, realm: {tokenrealms}")
 
         import_token(serial, TOKENS[serial], tokenrealms=tokenrealms)
 
     g.audit_object.log(
         {
-            "info": "{0!s}, {1!s} (imported: {2:d})".format(
-                file_type, token_file, len(TOKENS)
-            ),
+            "info": f"{file_type}, {token_file} (imported: {len(TOKENS):d})",
             "serial": ", ".join(TOKENS),
             "success": True,
         }
@@ -1192,7 +1176,7 @@ def lost_api(serial=None):
         toks = get_tokens(serial=serial, user=userobj)
         if not toks:
             raise TokenAdminError(
-                "The user {0!r} does not own the token {1!s}".format(userobj, serial)
+                f"The user {userobj!r} does not own the token {serial}"
             )
 
     options = {"g": g, "clientip": g.client_ip}
@@ -1242,14 +1226,14 @@ def get_serial_by_otp_api(otp=None):
 
     count = get_tokens(
         tokentype=ttype,
-        serial_wildcard="*{0!s}*".format(serial_substr),
+        serial_wildcard=f"*{serial_substr}*",
         assigned=assigned,
         count=True,
     )
     if not count_only:
         tokenobj_list = get_tokens(
             tokentype=ttype,
-            serial_wildcard="*{0!s}*".format(serial_substr),
+            serial_wildcard=f"*{serial_substr}*",
             assigned=assigned,
         )
         serial = get_serial_by_otp(tokenobj_list, otp=otp, window=window)
@@ -1257,7 +1241,7 @@ def get_serial_by_otp_api(otp=None):
     g.audit_object.log(
         {
             "success": True,
-            "info": "get {0!s} by OTP. {1!s} tokens".format(serial, count),
+            "info": f"get {serial} by OTP. {count} tokens",
         }
     )
 
@@ -1282,7 +1266,7 @@ def set_tokeninfo_api(serial, key):
     """
     value = getParam(request.all_data, "value", required)
     g.audit_object.log({"serial": serial})
-    g.audit_object.log({"action_detail": "key={0!s}, value={1!s}".format(key, value)})
+    g.audit_object.log({"action_detail": f"key={key}, value={value}"})
     count = add_tokeninfo(serial, key, value)
     success = count > 0
     g.audit_object.log({"success": success})
@@ -1339,9 +1323,7 @@ def modify_tokeninfo_api(serial):
     else:
         g.audit_object.log({"serial": serial})
         for key, value in tokeninfo.items():
-            g.audit_object.add_to_log(
-                {"action_detail": "'{0!s}':'{1!s}', ".format(key, value)}
-            )
+            g.audit_object.add_to_log({"action_detail": f"'{key}':'{value}', "})
             if value is None:
                 count += delete_tokeninfo(serial, key)
             else:

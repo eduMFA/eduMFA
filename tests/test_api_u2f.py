@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import binascii
 import struct
 from hashlib import sha256
@@ -227,7 +225,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(
                 detail.get("message"),
                 detail.get("message"),
-                "Please confirm with your U2F token ({0!s})".format(
+                "Please confirm with your U2F token ({!s})".format(
                     "Yubico U2F EE Serial 13831167861"
                 ),
             )
@@ -288,7 +286,7 @@ class APIU2fTestCase(MyApiTestCase):
         set_policy(
             name="facet1",
             scope=SCOPE.AUTH,
-            action="{0!s}=host1 host2 host3".format(U2FACTION.FACETS),
+            action=f"{U2FACTION.FACETS}=host1 host2 host3",
         )
 
         with self.app.test_request_context("/ttype/u2f", method="GET"):
@@ -358,7 +356,7 @@ class APIU2fTestCase(MyApiTestCase):
         set_policy(
             name="u2f01",
             scope=SCOPE.AUTHZ,
-            action="{0!s}=issuer/.*Yubico.*/".format(U2FACTION.REQ),
+            action=f"{U2FACTION.REQ}=issuer/.*Yubico.*/",
         )
 
         # Successful C/R authentication
@@ -441,7 +439,7 @@ class APIU2fTestCase(MyApiTestCase):
         set_policy(
             name="u2f01",
             scope=SCOPE.AUTHZ,
-            action="{0!s}=issuer/.*Plugup.*/".format(U2FACTION.REQ),
+            action=f"{U2FACTION.REQ}=issuer/.*Plugup.*/",
         )
 
         # Successful C/R authentication
@@ -501,7 +499,7 @@ class APIU2fTestCase(MyApiTestCase):
         set_policy(
             name="u2f01",
             scope=SCOPE.ENROLL,
-            action="{0!s}=issuer/.*Plugup.*/".format(U2FACTION.REQ),
+            action=f"{U2FACTION.REQ}=issuer/.*Plugup.*/",
         )
 
         # Init step 2

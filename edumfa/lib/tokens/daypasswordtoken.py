@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -264,7 +263,7 @@ class DayPasswordTokenClass(TotpTokenClass):
             counter = self._time2counter(server_time, timeStepping=self.timestep)
 
         hmac2Otp = HmacOtp(secretHOtp, counter, otplen, self.get_hashlib(self.hashlib))
-        res = hmac2Otp.checkOtp(anOtpVal, int(1), symetric=False)
+        res = hmac2Otp.checkOtp(anOtpVal, 1, symetric=False)
 
         if res != -1:
             # on success, we have to save the last attempt
@@ -280,10 +279,10 @@ class DayPasswordTokenClass(TotpTokenClass):
             lastauth = self._counter2time(oCount, self.timestep)
             lastauthDt = datetime.datetime.fromtimestamp(lastauth / 1.0)
 
-            log.debug("last auth : {0!r}".format(lastauthDt))
-            log.debug("tokentime : {0!r}".format(tokenDt))
-            log.debug("now       : {0!r}".format(nowDt))
-            log.debug("delta     : {0!r}".format((tokentime - inow)))
+            log.debug(f"last auth : {lastauthDt!r}")
+            log.debug(f"tokentime : {tokenDt!r}")
+            log.debug(f"now       : {nowDt!r}")
+            log.debug(f"delta     : {tokentime - inow!r}")
 
         return res
 
@@ -323,9 +322,9 @@ class DayPasswordTokenClass(TotpTokenClass):
         )
 
         pin = self.token.get_pin()
-        combined = "{0!s}{1!s}".format(otpval, pin)
+        combined = f"{otpval}{pin}"
         if get_from_config("PrependPin") == "True":
-            combined = "{0!s}{1!s}".format(pin, otpval)
+            combined = f"{pin}{otpval}"
 
         return 1, pin, otpval, combined
 

@@ -6,10 +6,10 @@ lib/periodictask.py
 """
 
 from datetime import datetime, timedelta
+from unittest import mock
 
 from dateutil.parser import parse as parse_timestamp
 from dateutil.tz import gettz, tzutc
-from mock import mock
 
 from edumfa.lib.error import ParameterError, ResourceNotFoundError, ServerError
 from edumfa.lib.periodictask import (

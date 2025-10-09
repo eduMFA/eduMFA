@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 This test file tests the lib.tokens.sshkeytoken
 This depends on lib.tokenclass
@@ -112,7 +111,7 @@ class SSHTokenTestCase(MyTestCase):
 
         info = token.get_class_info()
         self.assertTrue(
-            info.get("title") == "SSHkey Token", "{0!s}".format(info.get("title"))
+            info.get("title") == "SSHkey Token", "{!s}".format(info.get("title"))
         )
 
         info = token.get_class_info("title")

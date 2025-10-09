@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -62,7 +61,7 @@ def get_recover_code():
     user_obj = get_user_from_param(param, required)
     email = getParam(param, "email", required)
     r = create_recoverycode(user_obj, email, base_url=request.base_url)
-    g.audit_object.log({"success": r, "info": "{0!s}".format(user_obj)})
+    g.audit_object.log({"success": r, "info": f"{user_obj}"})
     return send_result(r)
 
 
@@ -86,5 +85,5 @@ def reset_password():
     if check_recoverycode(user_obj, recoverycode):
         # set password
         r = user_obj.update_user_info({"password": password})
-        g.audit_object.log({"success": r, "info": "{0!s}".format(user_obj)})
+        g.audit_object.log({"success": r, "info": f"{user_obj}"})
     return send_result(r)

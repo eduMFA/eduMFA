@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -453,16 +452,12 @@ class TokenEventHandler(BaseEventHandler):
                     serials = [serial]
                 for serial in serials:
                     if action.lower() != ACTION_TYPE.SET_TOKENINFO:
-                        log.info("{0!s} for token {1!s}".format(action, serial))
+                        log.info(f"{action} for token {serial}")
                     if action.lower() == ACTION_TYPE.SET_TOKENREALM:
                         realm = handler_options.get("realm")
                         only_realm = is_true(handler_options.get("only_realm"))
                         # Set the realm..
-                        log.info(
-                            "Setting realm of token {0!s} to {1!s}".format(
-                                serial, realm
-                            )
-                        )
+                        log.info(f"Setting realm of token {serial} to {realm}")
                         # Add the token realm
                         set_realms(serial, [realm], add=not only_realm)
                     elif action.lower() == ACTION_TYPE.SET_RANDOM_PIN:
@@ -526,7 +521,7 @@ class TokenEventHandler(BaseEventHandler):
                             ),
                         )
                         log.info(
-                            "set tokeninfo for token {0!s} - {1!s}: {2!s}".format(
+                            "set tokeninfo for token {!s} - {!s}: {!s}".format(
                                 serial,
                                 handler_options.get("key"),
                                 tokeninfo.format(
@@ -589,7 +584,7 @@ class TokenEventHandler(BaseEventHandler):
                         except Exception as exx:
                             log.warning(
                                 "Misconfiguration: Failed to add tokengroup "
-                                "to token {0!s}!".format(serial)
+                                f"to token {serial}!"
                             )
                     elif action.lower() == ACTION_TYPE.REMOVE_TOKENGROUP:
                         try:
@@ -599,7 +594,7 @@ class TokenEventHandler(BaseEventHandler):
                         except Exception as exx:
                             log.warning(
                                 "Misconfiguration: Failed to remove tokengroup "
-                                "from token {0!s}!".format(serial)
+                                f"from token {serial}!"
                             )
                     elif action.lower() == ACTION_TYPE.ATTACH_APPLICATION:
                         try:
@@ -635,8 +630,8 @@ class TokenEventHandler(BaseEventHandler):
 
             elif not getParam(request.all_data, "webauthn_usernameless_authn"):
                 log.info(
-                    "Action {0!s} requires serial number. But no serial "
-                    "number could be found in request {1!s}.".format(action, request)
+                    f"Action {action} requires serial number. But no serial "
+                    f"number could be found in request {request}."
                 )
 
         if action.lower() == ACTION_TYPE.INIT:
@@ -668,7 +663,7 @@ class TokenEventHandler(BaseEventHandler):
                         if not init_param["phone"]:
                             log.warning(
                                 "Enrolling SMS token. But the user "
-                                "{0!r} has no mobile number!".format(user)
+                                f"{user!r} has no mobile number!"
                             )
                     if handler_options.get("sms_identifier"):
                         init_param["sms.identifier"] = handler_options.get(
@@ -681,8 +676,8 @@ class TokenEventHandler(BaseEventHandler):
                         init_param["email"] = user.info.get("email", "")
                         if not init_param["email"]:
                             log.warning(
-                                "Enrolling EMail token. But the user {0!s}"
-                                "has no email address!".format(user)
+                                f"Enrolling EMail token. But the user {user}"
+                                "has no email address!"
                             )
                     if handler_options.get("smtp_identifier"):
                         init_param["email.identifier"] = handler_options.get(
@@ -692,6 +687,6 @@ class TokenEventHandler(BaseEventHandler):
                     init_param["motppin"] = handler_options.get("motppin")
 
             t = init_token(param=init_param, user=user)
-            log.info("New token {0!s} enrolled.".format(t.token.serial))
+            log.info(f"New token {t.token.serial} enrolled.")
 
         return ret
