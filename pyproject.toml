@@ -71,7 +71,7 @@ test = [
     "pytest-cov==7.0.0",
     "responses==0.25.8",
     "testfixtures==8.3.0",
-    "tomli==2.2.1",
+    "tomli==2.3.0",
     "types-PyYAML==6.0.12.20250915",
 ]
 postgres = ["psycopg2==2.9.10"]
