@@ -63,6 +63,7 @@ from edumfa.lib.utils import (
     checksum,
     hexlify_and_unicode,
     modhex_decode,
+    modHexChars,
     to_bytes,
 )
 
@@ -262,6 +263,8 @@ class YubikeyTokenClass(TokenClass):
         -1 if the OTP is old (counter < stored counter)
         -2 if the private_uid sent in the OTP is wrong (different from the one stored with the token)
         -3 if the CRC verification fails
+        -4 if OTP is not a yubikey otp value
+        -5 if the secret is malformed (e.g. not 32 chars)
         :rtype: int
 
         """
@@ -269,17 +272,29 @@ class YubikeyTokenClass(TokenClass):
 
         serial = self.token.serial
         secret = self.token.get_otpkey()
+        # Enforce a secret length of 32 characters as the Yubico Authenticator
+        # application does.
+        if len(secret.getKey()) != 32:
+            log.warning(f"Token {serial} has a malformed secret.")
+            return -5
 
         # The prefix is the characters in front of the last 32 chars
         yubi_prefix = anOtpVal[:-32]
         # The variable otp val is the last 32 chars
         yubi_otp = anOtpVal[-32:]
 
-        try:
-            otp_bin = modhex_decode(yubi_otp)
-        except KeyError:
-            # The OTP value is no yubikey aes otp value and can not be decoded
+        # Catch invalid OTPs not in modhex format. modhex is an encoding scheme
+        # by Yubico.
+        # "ModHex only uses characters that are located in the same place on
+        # virtually all Latin alphabet keyboards:
+        # b, c, d, e, f, g, h, i, j, k, l, n, r, t, u, and v"
+        # https://docs.yubico.com/yesdk/users-manual/application-otp/modhex.html
+        if any(character not in modHexChars for character in yubi_otp):
+            # The OTP value is not a Yubikey AES OTP value and can not be
+            # decoded.
             return -4
+        else:
+            otp_bin = modhex_decode(yubi_otp)
 
         msg_bin = secret.aes_ecb_decrypt(otp_bin)
         msg_hex = hexlify_and_unicode(msg_bin)
