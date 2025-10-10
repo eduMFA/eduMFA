@@ -92,7 +92,7 @@ def create_enckey(enckey_b64=None):
     """
     filename = current_app.config.get("EDUMFA_ENCFILE")
     if os.path.isfile(filename):
-        click.echo(f"The file \n\t{filename}\nalready exist. We do not overwrite it!")
+        click.echo(f"The file '{filename}' already exists.")
         sys.exit(1)
     with open(filename, "wb") as f:
         if enckey_b64 is None:
@@ -167,7 +167,7 @@ def create_audit_keys(keysize):
     """
     filename = current_app.config.get("EDUMFA_AUDIT_KEY_PRIVATE")
     if os.path.isfile(filename):
-        click.echo(f"The file \n\t{filename}\nalready exist. We do not overwrite it!")
+        click.echo(f"The file '{filename}' already exists.")
         sys.exit(1)
     new_key = rsa.generate_private_key(
         public_exponent=65537, key_size=keysize, backend=default_backend()
