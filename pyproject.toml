@@ -94,6 +94,27 @@ include = ["edumfa*"]
 [tool.setuptools.package-data]
 "edumfa" = ["translations/**/*", "static/**/*"]
 
+[tool.ruff]
+extend-include = [
+    "tools/creategoogleauthenticator-file",
+    "tools/edumfa-create-ad-users",
+    "tools/edumfa-create-certificate",
+    "tools/edumfa-create-pwidresolver-user",
+    "tools/edumfa-create-sqlidresolver-user",
+    "tools/edumfa-cron",
+    "tools/edumfa-expired-users",
+    "tools/edumfa-fix-access-rights",
+    "tools/edumfa-get-serial",
+    "tools/edumfa-get-unused-tokens",
+    "tools/edumfa-pip-update",
+    "tools/edumfa-queue-huey",
+    "tools/edumfa-standalone",
+    "tools/edumfa-token-janitor",
+    "tools/edumfa-user-action",
+    "tools/edumfa-usercache-cleanup",
+    "tools/getgooglecodes"
+]
+
 [tool.ruff.lint]
 select = [
     "I", # Isort

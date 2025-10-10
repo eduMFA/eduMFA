@@ -3,33 +3,35 @@
 
 import os
 import sys
-from getopt import getopt, GetoptError
-from subprocess import call
+from getopt import GetoptError, getopt
 from shlex import quote as shlex_quote
+from subprocess import call
 
-
-__version__ = '0.1'
+__version__ = "0.1"
 CONFIG_FILE = "/etc/apache2/sites-available/privacyidea"
 
 
 def usage():
-    print('''
+    print(
+        """
     Parameter:
     -f <apache config file> (Default: %s)
     -h : help
-    ''' % CONFIG_FILE)
+    """
+        % CONFIG_FILE
+    )
 
 
 def create_keys(file):
     print("Creating certificate...")
-    '''
+    """
     Read
     SSLCertificateFile    /etc/ssl/certs/edumfaserver.pem
     SSLCertificateKeyFile /etc/ssl/private/edumfaserver.key
-    '''
+    """
     key = None
     cert = None
-    f = open(file, 'r')
+    f = open(file, "r")
     for l in f:
         if l.strip()[:18] == "SSLCertificateFile":
             cert = l.split()[1]
@@ -38,8 +40,11 @@ def create_keys(file):
     f.close()
 
     if key and cert:
-        command = "openssl req -x509 -newkey rsa:2048 -keyout %s -out %s " \
-                  "-days 1000 -subj /CN=privacyideaserver -nodes" % (shlex_quote(key), shlex_quote(cert))
+        command = (
+            "openssl req -x509 -newkey rsa:2048 -keyout %s -out %s "
+            "-days 1000 -subj /CN=privacyideaserver -nodes"
+            % (shlex_quote(key), shlex_quote(cert))
+        )
         r = call(command, shell=True)
         if r == 0:
             print("created key and cert...")
@@ -56,7 +61,6 @@ def create_keys(file):
 
 
 def main():
-
     fname = CONFIG_FILE
     try:
         opts, args = getopt(sys.argv[1:], "f:", ["file="])
@@ -67,9 +71,9 @@ def main():
         sys.exit(1)
 
     for opt, arg in opts:
-        if opt in ('-f', '--file'):
+        if opt in ("-f", "--file"):
             fname = arg
-        elif opt in ('-h', '--help'):
+        elif opt in ("-h", "--help"):
             usage()
             sys.exit(1)
 
@@ -80,5 +84,5 @@ def main():
         sys.exit(2)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
