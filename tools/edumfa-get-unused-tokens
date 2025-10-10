@@ -48,24 +48,31 @@ You can call the script like this:
 """
 __version__ = "0.1"
 
-from edumfa.lib.token import get_tokens, remove_token, enable_token
-from edumfa.lib.policy import ACTION
-from edumfa.app import create_app
 import click
-from flask.cli import FlaskGroup
 from flask import current_app as app
+from flask.cli import FlaskGroup
 
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+from edumfa.app import create_app
+from edumfa.lib.policy import ACTION
+from edumfa.lib.token import enable_token, get_tokens, remove_token
+
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 def create_prod_app():
     return create_app("production", silent=True, script=True)
 
 
-@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
-             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
+@click.group(
+    cls=FlaskGroup,
+    add_default_commands=False,
+    create_app=create_prod_app,
+    context_settings=CONTEXT_SETTINGS,
+    epilog="Check out our docs at https://edumfa.readthedocs.io/ for more details",
+)
 def cli():
     pass
+
 
 def _get_tokenlist(age):
     tlist = []
@@ -75,8 +82,9 @@ def _get_tokenlist(age):
             tlist.append(token_obj)
     return tlist
 
+
 @cli.command()
-@click.argument('age')
+@click.argument("age")
 def list(age):
     """
     finds all tokens, where the last_auth is too old.
@@ -84,17 +92,24 @@ def list(age):
     # Oh bad performance, we have to look at *ALL* tokens!
     tlist = _get_tokenlist(age)
     click.echo("Token serial\tLast authentication")
-    click.echo("="*42)
+    click.echo("=" * 42)
     for token_obj in tlist:
-        click.echo("{0!s}\t{1!s}".format(token_obj.token.serial,
-                                    token_obj.get_tokeninfo(ACTION.LASTAUTH)))
+        click.echo(
+            "{0!s}\t{1!s}".format(
+                token_obj.token.serial, token_obj.get_tokeninfo(ACTION.LASTAUTH)
+            )
+        )
+
 
 @cli.command()
-@click.argument('age')
-@click.option('-d', '--description', help='The description that will be set.')
-@click.option('-t', '--tokeninfo',
-                help='The tokeninfo that will be set. It needs a key and a '
-                     'value and should be specified like key=value.')
+@click.argument("age")
+@click.option("-d", "--description", help="The description that will be set.")
+@click.option(
+    "-t",
+    "--tokeninfo",
+    help="The tokeninfo that will be set. It needs a key and a "
+    "value and should be specified like key=value.",
+)
 def mark(age, description=None, tokeninfo=None):
     """
     Find unused tokens and mark them either by setting the description or by
@@ -105,19 +120,26 @@ def mark(age, description=None, tokeninfo=None):
     tlist = _get_tokenlist(age)
     for token_obj in tlist:
         if description:
-            click.echo("Setting description for token {0!s}: {1!s}".format(
-                token_obj.token.serial, description))
+            click.echo(
+                "Setting description for token {0!s}: {1!s}".format(
+                    token_obj.token.serial, description
+                )
+            )
             token_obj.set_description(description)
             token_obj.save()
         if tokeninfo:
             key, value = tokeninfo.split("=")
-            click.echo("Setting tokeninfo for token {0!s}: {1!s}={2!s}".format(
-                token_obj.token.serial, key, value))
+            click.echo(
+                "Setting tokeninfo for token {0!s}: {1!s}={2!s}".format(
+                    token_obj.token.serial, key, value
+                )
+            )
             token_obj.add_tokeninfo(key, value)
             token_obj.save()
 
+
 @cli.command()
-@click.argument('age')
+@click.argument("age")
 def delete(age):
     """
     Find unused tokens and delete them.
@@ -128,8 +150,9 @@ def delete(age):
         remove_token(serial)
         click.echo("Token {0!s} deleted.".format(serial))
 
+
 @cli.command()
-@click.argument('age')
+@click.argument("age")
 def disable(age):
     """
     Find unused tokens and delete them.
@@ -140,6 +163,6 @@ def disable(age):
         enable_token(serial, enable=False)
         click.echo("Token {0!s} disabled.".format(serial))
 
-if __name__ == '__main__':
-    cli()
 
+if __name__ == "__main__":
+    cli()

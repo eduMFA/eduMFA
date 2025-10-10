@@ -39,33 +39,47 @@ This script deletes expired entries from the user cache.
 """
 __version__ = "0.1"
 
-from edumfa.app import create_app
 import click
+from flask.cli import FlaskGroup
+
+from edumfa.app import create_app
 from edumfa.lib.usercache import create_filter, get_cache_time
 from edumfa.models import UserCache, db
-from edumfa.app import create_app
-from flask.cli import FlaskGroup
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 def create_prod_app():
     return create_app("production", silent=True, script=True)
 
 
-@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
-             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
+@click.group(
+    cls=FlaskGroup,
+    add_default_commands=False,
+    create_app=create_prod_app,
+    context_settings=CONTEXT_SETTINGS,
+    epilog="Check out our docs at https://edumfa.readthedocs.io/ for more details",
+)
 def cli():
     pass
+
 
 def _get_expired_entries():
     """
     Returns a list of all cache entries that are considered expired.
     """
     filter_condition = create_filter(expired=True)
-    return UserCache.query.filter(filter_condition).order_by(UserCache.timestamp.desc()).all()
+    return (
+        UserCache.query.filter(filter_condition)
+        .order_by(UserCache.timestamp.desc())
+        .all()
+    )
+
 
 @cli.command()
-@click.option('--noaction', is_flag=True, help="List expired cache entries without deleting them.")
+@click.option(
+    "--noaction", is_flag=True, help="List expired cache entries without deleting them."
+)
 def delete(noaction):
     """
     Delete all cache entries that are considered expired according to the
@@ -75,27 +89,36 @@ def delete(noaction):
     actually deleted.
     """
     if not get_cache_time():
-        print('User cache is disabled, not doing anything.')
+        print("User cache is disabled, not doing anything.")
     else:
-        print('Expired entries:')
+        print("Expired entries:")
         entries = _get_expired_entries()
         if entries:
-            print('{:<5} {:<10} {:<10} {:<30} {:<10}'.format('id', 'username', 'resolver', 'timestamp', 'user id'))
+            print(
+                "{:<5} {:<10} {:<10} {:<30} {:<10}".format(
+                    "id", "username", "resolver", "timestamp", "user id"
+                )
+            )
         for entry in entries:
-            print('{:<5} {:<10} {:<10} {:<30} {:<10}'.format(entry.id,
-                                     entry.username,
-                                     entry.resolver,
-                                     entry.timestamp.isoformat(),
-                                     entry.user_id))
-        print('{} entries'.format(len(entries)))
+            print(
+                "{:<5} {:<10} {:<10} {:<30} {:<10}".format(
+                    entry.id,
+                    entry.username,
+                    entry.resolver,
+                    entry.timestamp.isoformat(),
+                    entry.user_id,
+                )
+            )
+        print("{} entries".format(len(entries)))
         if not noaction:
             for entry in entries:
-                print('Deleting entry with id={} ...'.format(entry.id))
+                print("Deleting entry with id={} ...".format(entry.id))
                 entry.delete()
-            print('Deleted {} expired entries.'.format(len(entries)))
+            print("Deleted {} expired entries.".format(len(entries)))
             db.session.commit()
         else:
             print("'--noaction' was passed, not doing anything.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     cli()
