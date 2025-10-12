@@ -73,7 +73,7 @@ test = [
     "tomli==2.3.0",
     "types-PyYAML==6.0.12.20250915",
 ]
-postgres = ["psycopg2==2.9.10"]
+postgres = ["psycopg2==2.9.11"]
 hsm = ["PyKCS11==1.5.18"]
 kerberos = ["gssapi==1.10.1"]
 grpc = [
