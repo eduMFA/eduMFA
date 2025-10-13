@@ -1051,14 +1051,10 @@ def loadtokens_api(filename=None):
 
     if file_type not in known_types:
         log.error(
-            "Unknown file type: >>{!s}<<. We only know the types: {!s}".format(
-                file_type, ", ".join(known_types)
-            )
+            f"Unknown file type: >>{file_type}<<. We only know the types: >>{', '.join(known_types)}<<"
         )
         raise TokenAdminError(
-            "Unknown file type: >>{}<<. We only know the types: {}".format(
-                file_type, ", ".join(known_types)
-            )
+            f"Unknown file type: >>{file_type}<<. We only know the types: >>{', '.join(known_types)}<<"
         )
 
     # Decrypt file, if necessary

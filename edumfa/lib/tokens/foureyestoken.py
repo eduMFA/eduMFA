@@ -179,7 +179,7 @@ class FourEyesTokenClass(TokenClass):
         if type(realms) is dict:
             for realmname, v in realms.items():
                 if v.get("selected"):
-                    realms_string += "{!s}:{!s},".format(realmname, v.get("count"))
+                    realms_string += f"{realmname}:{v.get('count')},"
             if realms_string[-1] == ",":
                 realms_string = realms_string[:-1]
         else:
@@ -470,8 +470,8 @@ class FourEyesTokenClass(TokenClass):
         remaining_realms = self._get_remaining_realms(used_tokens)
         if remaining_realms:
             message = (
-                "Please authenticate with another token from "
-                "either realm: {!s}.".format(", ".join(remaining_realms))
+                f"Please authenticate with another token from "
+                f"either realm: {', '.join(remaining_realms)}."
             )
 
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))

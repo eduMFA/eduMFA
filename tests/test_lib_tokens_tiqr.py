@@ -694,7 +694,7 @@ class TiQRTokenTestCase(MyApiTestCase):
         # Calculate Response with the challenge.
         response = ocra_object.get_response(challenge)
 
-        encoded_user_id = "{!s}_{!s}".format("selfservice", self.realm1).encode("utf-8")
+        encoded_user_id = f"selfservice_{self.realm1}".encode()
         # First, send a wrong response
         req.all_data = {
             "response": "12345",

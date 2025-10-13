@@ -34,7 +34,7 @@ def upgrade():
                 pol.get("action").get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG)
                 == fbgw.identifier
             ):
-                print("Modifying policy {!s}".format(pol.get("name")))
+                print(f"Modifying policy {pol.get('name')}")
                 # This is an enrollment policy, that references this very firebase config
                 # 3. Add the push_registration_url and ttl to this policy
                 registration_url = fbgw.option_dict.get("registration URL")
@@ -56,7 +56,7 @@ def upgrade():
                     check_all_resolvers=pol.get("check_all_resolvers"),
                     action=action,
                 )
-                print("+- Updated policy {!s}: {!s}".format(pol.get("name"), r))
+                print(f"+- Updated policy {pol.get('name')}: {r}")
                 # 4. Delete push_registration_url and ttl from the Firebase Config
                 #    Note: If we had a firebase config, that would not be used in a policy,
                 #    the url and ttl would not be deleted from the firebase config. But this

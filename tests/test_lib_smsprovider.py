@@ -317,9 +317,7 @@ class SmtpSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = sms.submit_message("123456", "Halo")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {!r} to {!s}".format("Halo", "123456")
-            )
+            log.assert_any_call("submitting message 'Halo' to 123456")
 
     @smtpmock.activate
     def test_09_send_sms_regexp_success(self):
@@ -340,9 +338,7 @@ class SmtpSMSTestCase(MyTestCase):
             # Here we need to send the SMS
             r = self.regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {!r} to {!s}".format("Hello", "4912345678")
-            )
+            log.assert_any_call("submitting message 'Hello' to 4912345678")
 
 
 class SipgateSMSTestCase(MyTestCase):
@@ -390,9 +386,7 @@ class SipgateSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {!r} to {!s}".format("Hello", "4912345678")
-            )
+            log.assert_any_call("submitting message 'Hello' to 4912345678")
 
     @responses.activate
     def test_08_smsgateway_success(self):
@@ -407,9 +401,7 @@ class SipgateSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = sms.submit_message("123456", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {!r} to {!s}".format("Hello", "123456")
-            )
+            log.assert_any_call("submitting message 'Hello' to 123456")
 
 
 class ScriptSMSTestCase(MyTestCase):
@@ -584,9 +576,7 @@ class HttpSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = self.regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {!r} to {!s}".format("Hello", "4912345678")
-            )
+            log.assert_any_call("submitting message 'Hello' to 4912345678")
 
     @responses.activate
     def test_02_send_sms_post_fail(self):
@@ -818,9 +808,7 @@ class SmppSMSTestCase(MyTestCase):
         with mock.patch("logging.Logger.debug") as log:
             r = regexp_provider.submit_message("+49 123/456-78", "Hello")
             self.assertTrue(r)
-            log.assert_any_call(
-                "submitting message {!r} to {!s}".format("Hello", "4912345678")
-            )
+            log.assert_any_call("submitting message 'Hello' to 4912345678")
 
         delete_smsgateway(identifier_regexp)
 

@@ -632,7 +632,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm=realm,
             resolver=resolver,
-            action="{!s}={!s}".format(ACTION.AUTH_CACHE, "4h/5m"),
+            action=f"{ACTION.AUTH_CACHE}=4h/5m",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -697,7 +697,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm=realm,
             resolver=resolver,
-            action="{!s}={!s}".format(ACTION.AUTH_CACHE, "4h"),
+            action=f"{ACTION.AUTH_CACHE}=4h",
         )
         g = FakeFlaskG()
         P = PolicyClass()
@@ -726,7 +726,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm=realm,
             resolver=resolver,
-            action="{!s}={!s}".format(ACTION.AUTH_CACHE, "50s/2"),
+            action=f"{ACTION.AUTH_CACHE}=50s/2",
         )
 
         g = FakeFlaskG()
@@ -764,7 +764,7 @@ class LibPolicyTestCase(MyTestCase):
             scope=SCOPE.AUTH,
             realm=realm,
             resolver=resolver,
-            action="{!s}={!s}".format(ACTION.AUTH_CACHE, "50s/2"),
+            action=f"{ACTION.AUTH_CACHE}=50s/2",
         )
 
         g = FakeFlaskG()

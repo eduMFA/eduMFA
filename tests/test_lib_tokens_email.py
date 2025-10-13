@@ -383,7 +383,7 @@ class EmailTokenTestCase(MyTestCase):
         # create a EMAILTEXT policy:
         p = set_policy(
             name="emailtext",
-            action="{!s}={!s}".format(EMAILACTION.EMAILTEXT, "'Your {otp}'"),
+            action=f"{EMAILACTION.EMAILTEXT}='Your {{otp}}'",
             scope=SCOPE.AUTH,
         )
         self.assertTrue(p > 0)

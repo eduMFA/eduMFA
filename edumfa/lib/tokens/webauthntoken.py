@@ -1509,11 +1509,11 @@ class WebAuthnTokenClass(TokenClass):
             )[0]
             reply_dict = {}
             if token is None:
-                log.warning(f"Passkey {user_handle!s} not found.")
+                log.warning(f"Passkey {user_handle} not found.")
                 return False, reply_dict
             if token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
                 log.warning(
-                    f"Passkey {token.token.serial!s} is in clientwait state. Can not be used for authentication!"
+                    f"Passkey {token.token.serial} is in clientwait state. Can not be used for authentication!"
                 )
                 return False, reply_dict
             user_verification_requirement_policies = Match.user(

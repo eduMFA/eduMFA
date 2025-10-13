@@ -507,33 +507,18 @@ class TokenEventHandler(BaseEventHandler):
                         except Exception:
                             username = "N/A"
                             realm = "N/A"
-                        add_tokeninfo(
-                            serial,
-                            handler_options.get("key"),
-                            tokeninfo.format(
-                                current_time=s_now,
-                                now=s_now,
-                                client_ip=g.client_ip,
-                                username=username,
-                                realm=realm,
-                                ua_browser=request.user_agent.browser,
-                                ua_string=request.user_agent.string,
-                            ),
+                        tokeninfo_fmt = tokeninfo.format(
+                            current_time=s_now,
+                            now=s_now,
+                            client_ip=g.client_ip,
+                            username=username,
+                            realm=realm,
+                            ua_browser=request.user_agent.browser,
+                            ua_string=request.user_agent.string,
                         )
+                        add_tokeninfo(serial, handler_options.get("key"), tokeninfo_fmt)
                         log.info(
-                            "set tokeninfo for token {!s} - {!s}: {!s}".format(
-                                serial,
-                                handler_options.get("key"),
-                                tokeninfo.format(
-                                    current_time=s_now,
-                                    now=s_now,
-                                    client_ip=g.client_ip,
-                                    username=username,
-                                    realm=realm,
-                                    ua_browser=request.user_agent.browser,
-                                    ua_string=request.user_agent.string,
-                                ),
-                            )
+                            f"set tokeninfo for token {serial} - {handler_options.get('key')}: {tokeninfo_fmt}"
                         )
                     elif action.lower() == ACTION_TYPE.DELETE_TOKENINFO:
                         delete_tokeninfo(serial, handler_options.get("key"))

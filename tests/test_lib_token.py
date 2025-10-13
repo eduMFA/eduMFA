@@ -270,7 +270,7 @@ class TokenTestCase(MyTestCase):
         # Return a list of realmnames for a token
         self.assertTrue(
             get_realms_of_token("hotptoken") == [self.realm1],
-            "{!s}".format(get_realms_of_token("hotptoken")),
+            f"{get_realms_of_token('hotptoken')}",
         )
 
     def test_07_token_exist(self):

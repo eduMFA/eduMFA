@@ -2140,7 +2140,7 @@ class ValidateAPITestCase(MyApiTestCase):
         set_policy(
             name="disabled",
             scope=SCOPE.AUTH,
-            action="{!s}={!s}".format(ACTION.OTPPIN, "userstore"),
+            action=f"{ACTION.OTPPIN}=userstore",
         )
         # enroll two tokens
         r = init_token(
@@ -2192,7 +2192,7 @@ class ValidateAPITestCase(MyApiTestCase):
         set_policy(
             name="locked",
             scope=SCOPE.AUTH,
-            action="{!s}={!s}".format(ACTION.OTPPIN, "tokenpin"),
+            action=f"{ACTION.OTPPIN}=tokenpin",
         )
         r = init_token(
             {"type": "spass", "serial": "spass1l", "pin": "locked"},

@@ -66,9 +66,7 @@ def downgrade():
             pol_actions = [x.strip() for x in row.action.split(",")]
             for pol_action in filter(regex.match, pol_actions):
                 pol_actions.remove(pol_action)
-                pol_actions.append(
-                    "{!s}={!s}".format(old_policy_action, "ecdsa_preferred")
-                )
+                pol_actions.append(f"{old_policy_action}=ecdsa_preferred")
             row.action = ", ".join(pol_actions)
         session.commit()
     except Exception as e:

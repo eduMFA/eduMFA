@@ -225,9 +225,7 @@ def auth_user_has_no_token(wrapped_function, user_object, passw, options=None):
             if tokencount == 0:
                 g.audit_object.add_policy([p.get("name") for p in pass_no_token])
                 return True, {
-                    "message": "user has no token, accepted due to '{!s}'".format(
-                        pass_no_token[0].get("name")
-                    )
+                    "message": f"user has no token, accepted due to '{pass_no_token[0].get('name')}'"
                 }
 
     # If nothing else returned, we return the wrapped function
@@ -259,9 +257,7 @@ def auth_user_does_not_exist(wrapped_function, user_object, passw, options=None)
             if not user_object.exist():
                 g.audit_object.add_policy([p.get("name") for p in pass_no_user])
                 return True, {
-                    "message": "user does not exist, accepted due to '{!s}'".format(
-                        pass_no_user[0].get("name")
-                    )
+                    "message": f"user does not exist, accepted due to '{pass_no_user[0].get('name')}'"
                 }
 
     # If nothing else returned, we return the wrapped function

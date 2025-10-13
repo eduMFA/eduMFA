@@ -672,7 +672,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.AUTHZ,
-            action="{!s}={!s}".format(ACTION.SETREALM, "ConflictRealm"),
+            action=f"{ACTION.SETREALM}=ConflictRealm",
             realm="somerealm",
         )
         g.policy_object = PolicyClass()
@@ -700,12 +700,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action="{!s}={!s}".format(ACTION.TOKENLABEL, "<u>@<r>"),
+            action=f"{ACTION.TOKENLABEL}=<u>@<r>",
         )
         set_policy(
             name="pol2",
             scope=SCOPE.ENROLL,
-            action="{!s}={!s}".format(ACTION.TOKENISSUER, "myPI"),
+            action=f"{ACTION.TOKENISSUER}=myPI",
         )
         g.policy_object = PolicyClass()
 
@@ -996,14 +996,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.USER,
-            action="{!s}={!s},{!s}={!s},{!s}={!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
         )
         g.policy_object = PolicyClass()
 
@@ -1086,14 +1079,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ADMIN,
-            action="{!s}={!s},{!s}={!s},{!s}={!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
             realm="home",
         )
         g.policy_object = PolicyClass()
@@ -1176,14 +1162,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ADMIN,
-            action="{!s}={!s},{!s}={!s},{!s}={!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
             realm="home",
         )
 
@@ -1191,14 +1170,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ADMIN,
-            action="{!s}={!s},{!s}={!s},{!s}={!s}".format(
-                "spass_otp_pin_maxlength",
-                "11",
-                "spass_otp_pin_minlength",
-                "8",
-                "spass_otp_pin_contents",
-                "n",
-            ),
+            action=f"{ACTION.SPASS_OTP_PIN_MAXLENGTH}=11,{ACTION.SPASS_OTP_PIN_MINLENGTH}=8,{ACTION.SPASS_OTP_PIN_CONTENTS}=n",
             realm="home",
         )
         g.policy_object = PolicyClass()
@@ -3253,7 +3225,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="reg_contents",
             scope=SCOPE.ENROLL,
-            action="{!s}={!s}".format(ACTION.REGISTRATIONCODE_CONTENTS, "+n"),
+            action=f"{ACTION.REGISTRATIONCODE_CONTENTS}=+n",
         )
         # request, that matches the policy
         req.all_data = {"user": "cornelius", "realm": "home", "type": "registration"}
@@ -3291,7 +3263,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pw_contents",
             scope=SCOPE.ENROLL,
-            action="{!s}={!s}".format(ACTION.PASSWORD_CONTENTS, "+n"),
+            action=f"{ACTION.PASSWORD_CONTENTS}=+n",
         )
         # request, that matches the policy
         req.all_data = {"user": "cornelius", "realm": "home", "type": "pw"}
@@ -3492,12 +3464,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="ca",
             scope=SCOPE.ENROLL,
-            action="{!s}={!s},{!s}={!s}".format(
-                CERTIFICATE_ACTION.CA_CONNECTOR,
-                "caconnector",
-                CERTIFICATE_ACTION.CERTIFICATE_TEMPLATE,
-                "catemplate",
-            ),
+            action=f"{CERTIFICATE_ACTION.CA_CONNECTOR}=caconnector,{CERTIFICATE_ACTION.CERTIFICATE_TEMPLATE}=catemplate",
         )
         set_policy(
             name="sub1",

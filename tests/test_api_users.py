@@ -73,7 +73,7 @@ class APIUsersTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/auth",
             method="POST",
-            data={"username": "wordy@{!s}".format("sqlrealm"), "password": password},
+            data={"username": "wordy@sqlrealm", "password": password},
         ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
@@ -266,7 +266,7 @@ class APIUsersTestCase(MyApiTestCase):
 
         # Delete the users
         with self.app.test_request_context(
-            "/user/{!s}/{!s}".format(resolver, "wordy2"),
+            f"/user/{resolver}/wordy2",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -276,7 +276,7 @@ class APIUsersTestCase(MyApiTestCase):
             self.assertTrue(result.get("value"))
 
         with self.app.test_request_context(
-            "/user/{!s}/{!s}".format(resolver, "wordy"),
+            f"/user/{resolver}/wordy",
             method="DELETE",
             headers={"Authorization": self.at},
         ):
@@ -411,7 +411,7 @@ class APIUsersTestCase(MyApiTestCase):
 
         # Delete the users
         with self.app.test_request_context(
-            "/user/{!s}/{!s}".format(resolver, "wördy"),
+            f"/user/{resolver}/wördy",
             method="DELETE",
             headers={"Authorization": self.at},
         ):

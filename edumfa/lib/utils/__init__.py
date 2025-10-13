@@ -1333,17 +1333,13 @@ def split_pin_pass(passw, otplen, prependpin):
         pin = passw[0:-otplen]
         otpval = passw[-otplen:]
         log.debug(
-            "PIN prepended. PIN length is {0!s}, OTP length is {0!s}.".format(
-                len(pin), len(otpval)
-            )
+            f"PIN prepended. PIN length is {len(pin)}, OTP length is {len(otpval)}."
         )
     else:
         pin = passw[otplen:]
         otpval = passw[0:otplen]
         log.debug(
-            "PIN appended. PIN length is {0!s}, OTP length is {0!s}.".format(
-                len(pin), len(otpval)
-            )
+            f"PIN appended. PIN length is {len(pin)}, OTP length is {len(otpval)}."
         )
     return pin, otpval
 

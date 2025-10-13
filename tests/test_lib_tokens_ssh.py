@@ -110,9 +110,7 @@ class SSHTokenTestCase(MyTestCase):
         token = SSHkeyTokenClass(db_token)
 
         info = token.get_class_info()
-        self.assertTrue(
-            info.get("title") == "SSHkey Token", "{!s}".format(info.get("title"))
-        )
+        self.assertTrue(info.get("title") == "SSHkey Token", f"{info.get('title')}")
 
         info = token.get_class_info("title")
         self.assertTrue(info == "SSHkey Token", info)

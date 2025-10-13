@@ -422,7 +422,7 @@ class UtilsTestCase(MyApiTestCase):
         set_policy(
             name="otppin",
             scope=SCOPE.AUTH,
-            action="{!s}={!s}".format(ACTION.OTPPIN, "userstore"),
+            action=f"{ACTION.OTPPIN}=userstore",
         )
         init_token(
             {"type": "spass", "serial": "spass1d"}, user=User("pwpercent", self.realm1)

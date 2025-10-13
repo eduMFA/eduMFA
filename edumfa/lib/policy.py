@@ -940,15 +940,13 @@ class PolicyClass:
                 )
         else:  # pragma: no cover
             log.error(
-                "Policy {!r} has conditions on HTTP environment, but HTTP environment"
-                " is not available. This should not happen - possible "
-                "programming error {!s}.".format(
-                    policy["name"], "".join(traceback.format_stack())
-                )
+                f"Policy {policy['name']!r} has conditions on HTTP environment, but HTTP environment"
+                f" is not available. This should not happen - possible "
+                f"programming error {''.join(traceback.format_stack())}."
             )
             raise PolicyError(
-                "Policy {!r} has conditions on environment {!r}, but HTTP environment"
-                " is not available".format(policy["name"], key)
+                f"Policy {policy['name']!r} has conditions on environment {key!r}, but HTTP environment"
+                f" is not available"
             )
 
     @staticmethod
@@ -988,15 +986,13 @@ class PolicyClass:
                 )
         else:  # pragma: no cover
             log.error(
-                "Policy {!r} has conditions on HTTP headers, but HTTP header"
-                " is not available. This should not happen - possible "
-                "programming error {!s}.".format(
-                    policy["name"], "".join(traceback.format_stack())
-                )
+                f"Policy {policy['name']!r} has conditions on HTTP headers, but HTTP headers"
+                f" are not available. This should not happen - possible "
+                f"programming error {''.join(traceback.format_stack())}."
             )
             raise PolicyError(
-                "Policy {!r} has conditions on headers {!r}, but HTTP header"
-                " is not available".format(policy["name"], key)
+                f"Policy {policy['name']!r} has conditions on headers {key!r}, but HTTP headers"
+                f" are not available"
             )
 
     @staticmethod
@@ -1039,13 +1035,13 @@ class PolicyClass:
                 )
         else:  # pragma: no cover
             log.error(
-                "Policy {!r} has conditions on tokens, but a token object"
-                " is not available. This should not happen - possible programming "
-                "error: {!s}.".format(policy["name"], "".join(traceback.format_stack()))
+                f"Policy {policy['name']!r} has conditions on tokens, but a token object"
+                f" is not available. This should not happen - possible programming "
+                f"error: {''.join(traceback.format_stack())}."
             )
             raise PolicyError(
-                "Policy {!r} has conditions on tokens, but a token object"
-                " is not available".format(policy["name"])
+                f"Policy {policy['name']!r} has conditions on tokens, but a token object"
+                f" is not available"
             )
 
     @staticmethod
@@ -1076,41 +1072,31 @@ class PolicyClass:
                     return compare_values(info[key], comparator, value)
                 except Exception as exx:
                     log.warning(
-                        "Error during handling the condition on {!s} {!r} of policy {!r}: {!r}".format(
-                            type, key, policy["name"], exx
-                        )
+                        f"Error during handling the condition on {type} {key!r} of policy {policy['name']!r}: {exx!r}"
                     )
                     raise PolicyError(
-                        "Invalid comparison in the {!s} conditions of policy {!r}".format(
-                            type, policy["name"]
-                        )
+                        f"Invalid comparison in the {type} conditions of policy {policy['name']!r}"
                     )
             else:
                 log.warning(
-                    "Unknown {!s} key referenced in a condition of policy {!r}: {!r}".format(
-                        type, policy["name"], key
-                    )
+                    f"Unknown {type} key referenced in a condition of policy {policy['name']!r}: {key!r}"
                 )
                 # If we do have an user or token object, but the conditions of policies reference
                 # an unknown userinfo or tokeninfo key, we have a misconfiguration and raise an error.
                 raise PolicyError(
-                    "Unknown key in the {!s} conditions of policy {!r}".format(
-                        type, policy["name"]
-                    )
+                    f"Unknown key in the {type} conditions of policy {policy['name']!r}"
                 )
+
         else:
             log.error(
-                "Policy {!r} has condition on {!s}, but the according object"
-                " is not available - possible programming error "
-                "{!s}.".format(policy["name"], type, "".join(traceback.format_stack()))
+                f"Policy {policy['name']!r} has condition on {type}, but the according object"
+                f" is not available - possible programming error {''.join(traceback.format_stack())}."
             )
             # If the policy specifies a userinfo or tokeninfo condition, but no object is available,
             # the policy is misconfigured. We have to raise a PolicyError to ensure that
             # the eduMFA server does not silently misbehave.
             raise PolicyError(
-                "Policy {!r} has condition on {!s}, but an according object is not available".format(
-                    policy["name"], type
-                )
+                f"Policy {policy['name']!r} has condition on {type}, but an according object is not available"
             )
 
     @staticmethod

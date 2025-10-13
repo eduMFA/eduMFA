@@ -92,10 +92,8 @@ class MachineApplication(MachineApplicationBase):
                             ret["username"] = uInfo.get("username")
                 else:
                     log.debug(
-                        "The requested user {0!s} does not match the user "
-                        "option ({0!s}) of the SSH application.".format(
-                            user_filter, options.get("user")
-                        )
+                        f"The requested user {user_filter} does not match the user "
+                        f"option ({options.get('user')}) of the SSH application."
                     )
         else:
             log.info(

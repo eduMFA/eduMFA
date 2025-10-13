@@ -152,9 +152,7 @@ class VascoTokenClass(TokenClass):
         if "otpkey" in param:
             if len(param["otpkey"]) != 496:
                 raise ParameterError(
-                    "Expected OTP key as 496-character hex string, but length is {!s}".format(
-                        len(param["otpkey"])
-                    )
+                    f"Expected OTP key as 496-character hex string, but length is {len(param['otpkey'])}"
                 )
             try:
                 upd_param["otpkey"] = binascii.unhexlify(upd_param["otpkey"])

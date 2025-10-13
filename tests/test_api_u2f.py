@@ -1,6 +1,7 @@
 import binascii
 import struct
 from hashlib import sha256
+from http import client
 
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -225,9 +226,7 @@ class APIU2fTestCase(MyApiTestCase):
             self.assertEqual(
                 detail.get("message"),
                 detail.get("message"),
-                "Please confirm with your U2F token ({!s})".format(
-                    "Yubico U2F EE Serial 13831167861"
-                ),
+                "Please confirm with your U2F token (Yubico U2F EE Serial 13831167861)",
             )
             attributes = detail.get("attributes")
             u2f_sign_request = attributes.get("u2fSignRequest")
@@ -242,15 +241,17 @@ class APIU2fTestCase(MyApiTestCase):
         # private key from the registration example
         privkey = "9a9684b127c5e3a706d618c86401c7cf6fd827fd0bc18d24b0eb842e36d16df1"
         counter = 1
-        cdata = """{{"typ":"navigator.id.getAssertion",
-                    "challenge":"{0!s}",
+        client_data = f"""{{
+                    "typ":"navigator.id.getAssertion",
+                    "challenge":"{challenge}",
                     "cid_pubkey":{{
                         "kty":"EC",
                         "crv":"P-256",
                         "x":"HzQwlfXX7Q4S5MtCCnZUNBw3RMzPO9tOyWjBqRl4tJ8",
                         "y":"XVguGFLIZx1fXg3wNqfdbn75hi4-_7-BxhMljw42Ht4"}},
-                    "origin":"{1!s}"}}"""
-        client_data = cdata.format(challenge, app_id)
+                    "origin":"{app_id}"
+                    }}
+                """
         client_data_str = "".join(client_data.split())
         signature_hex = sign_challenge(privkey, app_id, client_data_str, counter)
         signature_data_hex = "0100000001" + signature_hex

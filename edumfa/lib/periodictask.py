@@ -285,15 +285,13 @@ def get_scheduled_periodic_tasks(node, current_timestamp=None, interval_tzinfo=N
         try:
             next_timestamp = calculate_next_timestamp(ptask, node, interval_tzinfo)
             log.debug(
-                "Next scheduled run of {!r}: {!s}".format(
-                    ptask["name"], next_timestamp.isoformat()
-                )
+                f"Next scheduled run of {ptask['name']!r}: {next_timestamp.isoformat()}"
             )
             if next_timestamp <= current_timestamp:
-                log.debug("Scheduling periodic task {!r}".format(ptask["name"]))
+                log.debug(f"Scheduling periodic task {ptask['name']!r}")
                 scheduled_ptasks.append(ptask)
         except Exception as e:
-            log.warning("Ignoring periodic task {!r}: {!r}".format(ptask["name"], e))
+            log.warning(f"Ignoring periodic task {ptask['name']!r}: {e!r}")
     return scheduled_ptasks
 
 
