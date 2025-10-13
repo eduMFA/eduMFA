@@ -268,7 +268,7 @@ class YubikeyTokenTestCase(MyTestCase):
         r = token.check_otp(self.valid_otp_values[0])
         self.assertTrue(r == -5, r)
         # secret too long
-        token.set_otpkey(self.otpkey+"1")
+        token.set_otpkey(self.otpkey + "1")
         r = token.check_otp(self.valid_otp_values[0])
         self.assertTrue(r == -5, r)
         # secret empty

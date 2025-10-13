@@ -80,7 +80,7 @@ def get_db_admins() -> list[Admin]:
     return admins
 
 
-def get_db_admin(username) -> Union[Admin, None]:
+def get_db_admin(username) -> Admin | None:
     return Admin.query.filter(Admin.username == username).first()
 
 

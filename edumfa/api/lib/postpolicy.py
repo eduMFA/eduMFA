@@ -36,7 +36,7 @@ import json
 import logging
 import re
 import traceback
-from typing import Callable
+from collections.abc import Callable
 
 import netaddr
 from flask import current_app, g, make_response

@@ -30,7 +30,7 @@ import datetime
 import functools
 import logging
 import re
-from typing import Callable
+from collections.abc import Callable
 
 from dateutil.tz import tzlocal
 from typing_extensions import ParamSpec, TypeVar

@@ -32,7 +32,7 @@ The functions of this module are tested in tests/test_api_lib_policy.py
 """
 
 import logging
-from typing import Callable
+from collections.abc import Callable
 
 from typing_extensions import ParamSpec, TypeVar
 
