@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -13,12 +12,11 @@ CONFIG_FILE = "/etc/apache2/sites-available/privacyidea"
 
 def usage():
     print(
-        """
+        f"""
     Parameter:
-    -f <apache config file> (Default: %s)
+    -f <apache config file> (Default: {CONFIG_FILE})
     -h : help
     """
-        % CONFIG_FILE
     )
 
 
@@ -31,7 +29,7 @@ def create_keys(file):
     """
     key = None
     cert = None
-    f = open(file, "r")
+    f = open(file)
     for l in f:
         if l.strip()[:18] == "SSLCertificateFile":
             cert = l.split()[1]
@@ -41,22 +39,21 @@ def create_keys(file):
 
     if key and cert:
         command = (
-            "openssl req -x509 -newkey rsa:2048 -keyout %s -out %s "
+            f"openssl req -x509 -newkey rsa:2048 -keyout {shlex_quote(key)} -out {shlex_quote(cert)} "
             "-days 1000 -subj /CN=privacyideaserver -nodes"
-            % (shlex_quote(key), shlex_quote(cert))
         )
         r = call(command, shell=True)
         if r == 0:
             print("created key and cert...")
             os.chmod(key, 0x400)
         else:
-            print("Failed to create key and cert: %i" % r)
+            print(f"Failed to create key and cert: {r}")
             sys.exit(r)
 
     else:
         print("Could not find key and cert!")
-        print("key: %s" % key)
-        print("cert: %s" % cert)
+        print(f"key: {key}")
+        print(f"cert: {cert}")
         sys.exit(2)
 
 

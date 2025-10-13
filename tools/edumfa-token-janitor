@@ -328,7 +328,7 @@ def _get_tokenlist(
         user_obj = User(login=user_login, realm=user_realm)
         if not user_obj.exist():
             sys.exit(
-                f"User {user_obj!s} does not exist. Please check username and realm."
+                f"User {user_obj} does not exist. Please check username and realm."
             )
 
     if chunksize is not None:
@@ -417,7 +417,7 @@ def export_token_data(token_list, attributes=None):
     """
     tokens = []
     for token_obj in token_list:
-        token_data = [f"{token_obj.token.serial!s}", f"{token_obj.token.tokentype!s}"]
+        token_data = [f"{token_obj.token.serial}", f"{token_obj.token.tokentype}"]
         try:
             user = token_obj.user
             if user:
@@ -430,10 +430,10 @@ def export_token_data(token_list, attributes=None):
 
             if attributes:
                 for att in attributes.split(","):
-                    token_data.append(f"{user.info.get(att, '')!s}")
+                    token_data.append(f"{user.info.get(att, '')}")
         except Exception:
             sys.stderr.write(
-                f"Failed to determine user for token {token_obj.token.serial!s}.\n"
+                f"Failed to determine user for token {token_obj.token.serial}.\n"
             )
             token_data.append("**failed to resolve user**")
         tokens.append(token_data)
@@ -454,7 +454,7 @@ def export_user_data(token_list, attributes=None):
             user = token_obj.user
         except Exception:
             sys.stderr.write(
-                f"Failed to determine user for token {token_obj.token.serial!s}.\n"
+                f"Failed to determine user for token {token_obj.token.serial}.\n"
             )
         if user:
             uid = f"'{user.info.get('username', '')}','{user.info.get('givenname', '')}','{user.info.get('surname', '')}','{user.uid}','{user.resolver}','{user.realm}'"
@@ -554,9 +554,9 @@ def export_user_data(token_list, attributes=None):
 )
 @click.option(
     "--action",
-    help="Which action should be performed on the "
-    "found tokens. {0!s}. Exporting to PSKC only supports "
-    "HOTP, TOTP and PW tokens!".format("|".join(ALLOWED_ACTIONS)),
+    help=f"Which action should be performed on the "
+    f"found tokens. {'|'.join(ALLOWED_ACTIONS)}. Exporting to PSKC only supports "
+    f"HOTP, TOTP and PW tokens!",
 )
 @click.option(
     "--csv",
@@ -637,15 +637,13 @@ def find(
     tokenattributes = [col.key for col in Token.__table__.columns]
     if tokenattribute and tokenattribute not in tokenattributes:
         sys.stderr.write(
-            "Unknown token attribute. Allowed attributes are {0!s}\n".format(
-                ", ".join(tokenattributes)
-            )
+            f"Unknown token attribute. Allowed attributes are {', '.join(tokenattributes)}\n"
         )
         sys.exit(1)
     if action and action not in ALLOWED_ACTIONS:
         sys.stderr.write(
-            "Unknown action. Allowed actions are {0!s}\n".format(
-                ", ".join([f"'{x!s}'" for x in ALLOWED_ACTIONS])
+            "Unknown action. Allowed actions are {}\n".format(
+                ", ".join([f"'{x}'" for x in ALLOWED_ACTIONS])
             )
         )
         sys.exit(1)
@@ -701,12 +699,12 @@ def find(
                 click.echo("=" * 42)
                 for token_obj in tlist:
                     click.echo(
-                        f"{token_obj.token.serial!s} ({token_obj.token.tokentype!s})\n\t\t{token_obj.token.description!s}\n\t\t{token_obj.get_tokeninfo()!s}"
+                        f"{token_obj.token.serial} ({token_obj.token.tokentype})\n\t\t{token_obj.token.description}\n\t\t{token_obj.get_tokeninfo()}"
                     )
             else:
                 for token_obj in tlist:
                     click.echo(
-                        f"'{token_obj.token.serial!s}','{token_obj.token.tokentype!s}','{token_obj.token.description!s}','{token_obj.get_tokeninfo()!s}'"
+                        f"'{token_obj.token.serial}','{token_obj.token.tokentype}','{token_obj.token.description}','{token_obj.get_tokeninfo()}'"
                     )
 
         elif action == "listuser":
@@ -726,17 +724,17 @@ def find(
                         continue
                     token_dict = tokenobj._to_dict(b32=b32)
                     owner = (
-                        f"{tokenobj.user.login!s}@{tokenobj.user.realm!s}"
+                        f"{tokenobj.user.login}@{tokenobj.user.realm}"
                         if tokenobj.user
                         else "n/a"
                     )
                     if type == "totp":
                         click.echo(
-                            f"{owner!s}, {token_dict.get('serial')!s}, {token_dict.get('otpkey')!s}, {token_dict.get('type')!s}, {token_dict.get('otplen')!s}, {token_dict.get('timestep')!s}"
+                            f"{owner}, {token_dict.get('serial')}, {token_dict.get('otpkey')}, {token_dict.get('type')}, {token_dict.get('otplen')}, {token_dict.get('timestep')}"
                         )
                     else:
                         click.echo(
-                            f"{owner!s}, {token_dict.get('serial')!s}, {token_dict.get('otpkey')!s}, {token_dict.get('type')!s}, {token_dict.get('otplen')!s}"
+                            f"{owner}, {token_dict.get('serial')}, {token_dict.get('otpkey')}, {token_dict.get('type')}, {token_dict.get('otplen')}"
                         )
             elif yaml:
                 token_list = []
@@ -744,29 +742,29 @@ def find(
                     try:
                         token_dict = tokenobj._to_dict(b32=b32)
                         token_dict["owner"] = (
-                            f"{tokenobj.user.login!s}@{tokenobj.user.realm!s}"
+                            f"{tokenobj.user.login}@{tokenobj.user.realm}"
                             if tokenobj.user
                             else "n/a"
                         )
                         token_list.append(token_dict)
                     except Exception as e:
                         sys.stderr.write(
-                            f"\nFailed to export token {token_dict.get('serial')!s}.\n"
+                            f"\nFailed to export token {token_dict.get('serial')}.\n"
                         )
                 print(yaml_safe_dump(token_list))
             else:
                 key, token_num, soup = export_pskc(tlist)
-                sys.stderr.write(f"\n{token_num!s} tokens exported.\n")
+                sys.stderr.write(f"\n{token_num} tokens exported.\n")
                 sys.stderr.write(
                     "\nThis is the AES encryption key of the token seeds.\n"
                     "You need this key to import the "
-                    f"tokens again:\n\n\t{key!s}\n\n"
+                    f"tokens again:\n\n\t{key}\n\n"
                 )
-                click.echo(f"{soup!s}")
+                click.echo(f"{soup}")
         else:
             if limit is not None and int(limit) < len(tlist):
                 click.echo(
-                    f'{len(tlist)!s} tokens would be affected of given action "{action!s}", but limit was {limit!s}. Aborting the action!'
+                    f'{len(tlist)} tokens would be affected of given action "{action}", but limit was {limit}. Aborting the action!'
                 )
             else:
                 for token_obj in tlist:
@@ -775,7 +773,7 @@ def find(
                             trealms = [r.strip() for r in tokenrealms.split(",") if r]
                             token_obj.set_realms(trealms)
                             click.echo(
-                                f"Setting realms of token {token_obj.token.serial!s} to {trealms!s}."
+                                f"Setting realms of token {token_obj.token.serial} to {trealms}."
                             )
                         if action == "disable":
                             enable_token(serial=token_obj.token.serial, enable=False)
@@ -789,13 +787,13 @@ def find(
                         elif action == "mark":
                             if set_description:
                                 click.echo(
-                                    f"Setting description for token {token_obj.token.serial!s}: {set_description!s}"
+                                    f"Setting description for token {token_obj.token.serial}: {set_description}"
                                 )
                                 token_obj.set_description(set_description)
                                 token_obj.save()
                             if set_tokeninfo_value and set_tokeninfo_key:
                                 click.echo(
-                                    f"Setting tokeninfo for token {token_obj.token.serial!s}: {set_tokeninfo_key!s}={set_tokeninfo_value!s}"
+                                    f"Setting tokeninfo for token {token_obj.token.serial}: {set_tokeninfo_key}={set_tokeninfo_value}"
                                 )
                                 token_obj.add_tokeninfo(
                                     set_tokeninfo_key, set_tokeninfo_value
@@ -823,16 +821,14 @@ def updatetokens(yaml):
         tok_objects = get_tokens(serial=tok.get("serial"))
         if len(tok_objects) == 0:
             sys.stderr.write(
-                "\nCan not find token {0!s}. Not updating.\n".format(tok.get("serial"))
+                f"\nCan not find token {tok.get('serial')}. Not updating.\n"
             )
         else:
             print(f"Updating token {tok.get('serial')}.")
             try:
                 tok_objects[0].update(tok)
             except Exception as e:
-                sys.stderr.write(
-                    "\nFailed to update token {0!s}.".format(tok.get("serial"))
-                )
+                sys.stderr.write(f"\nFailed to update token {tok.get('serial')}.")
 
 
 @cli.command("loadtokens")
@@ -874,10 +870,10 @@ def loadtokens(pskc, preshared_key_hex, validate_mac):
     if not_parsed_tokens:
         print(
             "The following tokens were not read from the PSKC file"
-            f" because they could not be validated: {not_parsed_tokens!s}"
+            f" because they could not be validated: {not_parsed_tokens}"
         )
-    print(f"Successfully imported {success!s} tokens.")
-    print(f"Failed to import {failed!s} tokens: {failed_tokens!s}")
+    print(f"Successfully imported {success} tokens.")
+    print(f"Failed to import {failed} tokens: {failed_tokens}")
 
 
 if __name__ == "__main__":

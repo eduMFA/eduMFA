@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # 2018-08-06 Friedrich Weber <friedrich.weber@netknights.it>
 #
@@ -144,8 +143,8 @@ def require_instance(f):
         config_file = os.path.join(current_app.instance_directory, "edumfa.cfg")
         if not os.path.exists(config_file):
             raise RuntimeError(
-                "{!r} does not exist! Create a new instance using"
-                " ``edumfa-standalone create``.".format(config_file)
+                f"{config_file!r} does not exist! Create a new instance using"
+                " ``edumfa-standalone create``."
             )
         return f(*args, **kwargs)
 
@@ -201,7 +200,7 @@ def choice(question, choices, case_insensitive=True):
         if answer in choices:
             return choices[answer]
         else:
-            print("{!r} is not a valid answer.".format(answer))
+            print(f"{answer!r} is not a valid answer.")
 
 
 def yesno(question, default):
@@ -219,11 +218,7 @@ def create():
     """Create a new eduMFA instance"""
     instance_dir = os.path.abspath(current_app.instance_directory)
     if os.path.exists(current_app.instance_directory):
-        print(
-            "Instance at {!s} exists already! Aborting.".format(
-                current_app.instance_directory
-            )
-        )
+        print(f"Instance at {current_app.instance_directory} exists already! Aborting.")
     else:
         try:
             os.makedirs(instance_dir)
@@ -232,7 +227,7 @@ def create():
             secret_key = DefaultSecurityModule.random(24)
             edumfa_pepper = create_pepper()
 
-            secret_key_hex = "".join("\\x{:02x}".format(b) for b in secret_key)
+            secret_key_hex = "".join(f"\\x{b:02x}" for b in secret_key)
             # create a edumfa.cfg
             edumfa_cfg = os.path.join(instance_dir, "edumfa.cfg")
             with open(edumfa_cfg, "w") as f:
@@ -286,7 +281,7 @@ def create():
                 "Configuration is complete. You can now configure eduMFA in "
                 "the web browser by running"
             )
-            print("  edumfa-standalone -i '{}' configure".format(instance_dir))
+            print(f"  edumfa-standalone -i '{instance_dir}' configure")
         except Exception as e:
             print("Could not finish creation process! Removing instance.")
             shutil.rmtree(instance_dir)

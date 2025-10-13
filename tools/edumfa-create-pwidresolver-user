@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #  This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Previous changes by privacyIDEA project:
 #  May 08, 2014 Cornelius Kölbel
@@ -76,9 +75,7 @@ def main():
     gid = uid
     home = ""
     shell = ""
-    print(
-        "%s:%s:%s:%s:%s:%s:%s" % (user, encryptedPW, uid, gid, description, home, shell)
-    )
+    print(f"{user}:{encryptedPW}:{uid}:{gid}:{description}:{home}:{shell}")
 
 
 if __name__ == "__main__":
