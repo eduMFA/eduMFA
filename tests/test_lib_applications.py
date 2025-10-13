@@ -76,7 +76,7 @@ class SSHApplicationTestCase(MyTestCase):
             self.assertFalse(auth_item)
             mock_log.assert_called_with(
                 "The requested user Idefix does "
-                "not match the user option (Idefix) of the SSH application."
+                "not match the user option (None) of the SSH application."
             )
 
     def test_03_get_auth_item_unsupported(self):
