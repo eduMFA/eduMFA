@@ -69,7 +69,7 @@ test = [
     "pytest==8.4.2",
     "pytest-cov==7.0.0",
     "responses==0.25.8",
-    "testfixtures==8.3.0",
+    "testfixtures==9.2.0",
     "tomli==2.3.0",
     "types-PyYAML==6.0.12.20250915",
 ]
