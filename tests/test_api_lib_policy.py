@@ -394,7 +394,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action=f"{ACTION.MAXACTIVETOKENUSER}={1}",
+            action=f"{ACTION.MAXACTIVETOKENUSER}=1",
         )
         g.policy_object = PolicyClass()
         # The user has one token, everything is fine.
@@ -428,7 +428,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action=f"hotp_{ACTION.MAXACTIVETOKENUSER}={1}",
+            action=f"hotp_{ACTION.MAXACTIVETOKENUSER}=1",
         )
         # we try to enroll a new HOTP token, this would fail.
         req.all_data = {"user": "cornelius", "realm": self.realm1, "type": "hotp"}
@@ -482,7 +482,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action=f"{ACTION.MAXTOKENUSER}={2}",
+            action=f"{ACTION.MAXTOKENUSER}=2",
         )
         g.policy_object = PolicyClass()
         # The user has one token, everything is fine.
@@ -518,7 +518,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_max_12",
             scope=SCOPE.ENROLL,
-            action=f"{ACTION.MAXTOKENUSER}={12}",
+            action=f"{ACTION.MAXTOKENUSER}=12",
         )
         g.policy_object = PolicyClass()
         # new check_max_token_user should not raise an error!
@@ -542,7 +542,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ENROLL,
-            action=f"hotp_{ACTION.MAXTOKENUSER}={2}",
+            action=f"hotp_{ACTION.MAXTOKENUSER}=2",
         )
         g.policy_object = PolicyClass()
         # and fail to enroll a new token
@@ -1170,7 +1170,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ADMIN,
-            action=f"{ACTION.SPASS_OTP_PIN_MAXLENGTH}=11,{ACTION.SPASS_OTP_PIN_MINLENGTH}=8,{ACTION.SPASS_OTP_PIN_CONTENTS}=n",
+            action="spass_otp_pin_maxlength=11,spass_otp_pin_minlength=8,spass_otp_pin_contents=n",
             realm="home",
         )
         g.policy_object = PolicyClass()
@@ -3220,7 +3220,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="reg_length",
             scope=SCOPE.ENROLL,
-            action=f"{ACTION.REGISTRATIONCODE_LENGTH}={6}",
+            action=f"{ACTION.REGISTRATIONCODE_LENGTH}=6",
         )
         set_policy(
             name="reg_contents",
