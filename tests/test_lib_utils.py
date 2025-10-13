@@ -1172,6 +1172,6 @@ class UtilsTestCase(MyTestCase):
         self.assertEqual("", dataimage)
 
         # Try to read a grazy file with an unknown mime-type
-        file = "./tests/testdata/logging.yml"
+        file = "./tests/testdata/logging.cfg"
         dataimage = convert_imagefile_to_dataimage(file)
         self.assertEqual("", dataimage)

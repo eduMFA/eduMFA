@@ -29,7 +29,7 @@
 <div class="form-group">
     <label for="otpkey" translate>OTP Key</label>
     <input id="otpkey"
-           type="text" ng-pattern="/^[0-9a-fA-F ]*$/"
+           type="text" ng-pattern="/^[0-9a-fA-F ]{32}$/"
            ng-init="form.genkey=false"
            autofocus
            class="form-control"

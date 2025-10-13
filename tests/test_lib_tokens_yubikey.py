@@ -250,6 +250,32 @@ class YubikeyTokenTestCase(MyTestCase):
         self.assertTrue("status=OK" in result, result)
         self.assertTrue(f"nonce={nonce}" in result, result)
 
+    def test_12_malformed_otp(self):
+        db_token = Token(self.serial1, tokentype="yubikey")
+        token = YubikeyTokenClass(db_token)
+        token.set_otpkey(self.otpkey)
+        token.set_otplen(48)
+        token.set_pin(self.pin)
+        # ModHex only uses [..]  b, c, d, e, f, g, h, i, j, k, l, n, r, t, u, and v
+        r = token.check_otp("ayz123")
+        self.assertTrue(r == -4, r)
+
+    def test_13_malformed_secret(self):
+        db_token = Token(self.serial1, tokentype="yubikey")
+        token = YubikeyTokenClass(db_token)
+        # secret too short
+        token.set_otpkey(self.otpkey[:-1])
+        r = token.check_otp(self.valid_otp_values[0])
+        self.assertTrue(r == -5, r)
+        # secret too long
+        token.set_otpkey(self.otpkey+"1")
+        r = token.check_otp(self.valid_otp_values[0])
+        self.assertTrue(r == -5, r)
+        # secret empty
+        token.set_otpkey("")
+        r = token.check_otp(self.valid_otp_values[0])
+        self.assertTrue(r == -5, r)
+
     def test_98_wrong_tokenid(self):
         db_token = Token.query.filter(Token.serial == self.serial1).first()
         token = YubikeyTokenClass(db_token)
