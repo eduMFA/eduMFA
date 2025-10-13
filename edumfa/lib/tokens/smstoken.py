@@ -230,13 +230,17 @@ class SmsTokenClass(HotpTokenClass):
                 SCOPE.ADMIN: {
                     SMSACTION.GATEWAYS: {
                         "type": "str",
-                        "desc": f"{_('Choose the gateways the administrator is allowed to set.')} ({' '.join(sms_gateways)})",
+                        "desc": _(
+                            "Choose the gateways the administrator is allowed to set."
+                        )
+                        + f" ({' '.join(sms_gateways)})",
                     }
                 },
                 SCOPE.USER: {
                     SMSACTION.GATEWAYS: {
                         "type": "str",
-                        "desc": f"{_('Choose the gateways the user is allowed to set.')} ({' '.join(sms_gateways)})",
+                        "desc": _("Choose the gateways the user is allowed to set.")
+                        + f" ({' '.join(sms_gateways)})",
                     }
                 },
                 SCOPE.ENROLL: {

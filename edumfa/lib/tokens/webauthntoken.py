@@ -771,13 +771,13 @@ class WebAuthnTokenClass(TokenClass):
                         "type": "str",
                         "desc": _(
                             "Which algorithm are available to use for creating public key "
-                            "credentials for WebAuthn tokens. (Default: [{!s}], Order: "
-                            "[{!s}])".format(
-                                ", ".join(
-                                    DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
-                                ),
-                                ", ".join(PUBKEY_CRED_ALGORITHMS_ORDER),
-                            )
+                            "credentials for WebAuthn tokens. (Default: [{0!s}], Order: "
+                            "[{1!s}])"
+                        ).format(
+                            ", ".join(
+                                DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
+                            ),
+                            ", ".join(PUBKEY_CRED_ALGORITHMS_ORDER),
                         ),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                         "multiple": True,

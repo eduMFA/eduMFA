@@ -453,9 +453,9 @@ def verify_auth_token(auth_token, required_role=None):
     if wrong_username and not r:
         raise AuthError(
             _(
-                f"Authentication failure. The username {wrong_username} is not allowed to "
+                "Authentication failure. The username {!s} is not allowed to "
                 "impersonate via JWT."
-            )
+            ).format(wrong_username)
         )
     if required_role and r.get("role") not in required_role:
         # If we require a certain role like "admin", but the users role does
