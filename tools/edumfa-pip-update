@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import pipes
-from subprocess import call, check_output
 import getopt
-import sys
 import os
+import pipes
+import sys
+from subprocess import call, check_output
 
 # We follow the hint at https://pip.pypa.io/en/latest/user_guide/#using-pip-from-your-program to invoke pip.
-PIP_EXECUTABLE = [sys.executable, '-m', 'pip']
+PIP_EXECUTABLE = [sys.executable, "-m", "pip"]
 
 
 def usage():
@@ -26,7 +26,10 @@ def update(environment):
     call(PIP_EXECUTABLE + ["install", "--upgrade", "edumfa"])
     # Now we need to run the new requirements of edumfa
     # dependencies like ldap3 or pyasn1. This call could downgrade packages
-    call(PIP_EXECUTABLE + ["install", "-r", "{0!s}/lib/edumfa/requirements.txt".format(environment)])
+    call(
+        PIP_EXECUTABLE
+        + ["install", "-r", "{0!s}/lib/edumfa/requirements.txt".format(environment)]
+    )
 
 
 def update_db_schema(environment, skip_stamp=False):
@@ -50,7 +53,9 @@ def main():
         sys.exit(2)
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "snhf", ["help", "force", "skipstamp", "noschema"])
+        opts, args = getopt.getopt(
+            sys.argv[1:], "snhf", ["help", "force", "skipstamp", "noschema"]
+        )
     except getopt.GetoptError as e:
         print(str(e))
         sys.exit(1)
@@ -70,13 +75,15 @@ def main():
         update(environment)
     else:
         answer = False
-        res = 'n'
+        res = "n"
         while not answer:
-            res = input("Do you really want to update your "
-                        "python environment and the DB schema? (y/N)")
-            answer = res.lower() in ['y', 'n', '']
+            res = input(
+                "Do you really want to update your "
+                "python environment and the DB schema? (y/N)"
+            )
+            answer = res.lower() in ["y", "n", ""]
 
-        if res.lower() == 'y':
+        if res.lower() == "y":
             update(environment)
             if not no_schema:
                 update_db_schema(environment, skip_stamp)
