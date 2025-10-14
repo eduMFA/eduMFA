@@ -38,32 +38,38 @@ calling function handle the data.
 
 This lib.crypto is tested in tests/test_lib_crypto.py
 """
-import hmac
-import logging
-from hashlib import sha256
-import secrets
-import random
-import string
-import binascii
-import ctypes
 
 import base64
+import binascii
+import ctypes
+import hmac
+import logging
+import random
+import secrets
+import string
 import traceback
-from passlib.context import CryptContext
-from edumfa.lib.log import log_with
-from edumfa.lib.error import HSMException, ParameterError
-from edumfa.lib.framework import (get_app_local_store, get_app_config_value,
-                                       get_app_config)
-from edumfa.lib.utils import (to_unicode, to_bytes, hexlify_and_unicode,
-                                   b64encode_and_unicode)
+from hashlib import sha256
 
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import hashes, padding, serialization
 from cryptography.hazmat.primitives.asymmetric import padding as asym_padding
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from passlib.context import CryptContext
+
+from edumfa.lib.error import HSMException, ParameterError
+from edumfa.lib.framework import (
+    get_app_config,
+    get_app_config_value,
+    get_app_local_store,
+)
+from edumfa.lib.log import log_with
+from edumfa.lib.utils import (
+    b64encode_and_unicode,
+    hexlify_and_unicode,
+    to_bytes,
+    to_unicode,
+)
 
 
 def safe_compare(a, b):
@@ -77,8 +83,8 @@ ROUNDS = 9
 # When verifying a password hash, all algorithms in the context are checked
 # until one succeeds (or all fail).
 
-DEFAULT_HASH_ALGO_LIST = ['argon2', 'pbkdf2_sha512']
-DEFAULT_HASH_ALGO_PARAMS = {'argon2__rounds': ROUNDS}
+DEFAULT_HASH_ALGO_LIST = ["argon2", "pbkdf2_sha512"]
+DEFAULT_HASH_ALGO_PARAMS = {"argon2__rounds": ROUNDS}
 
 FAILED_TO_DECRYPT_PASSWORD = "FAILED TO DECRYPT PASSWORD!"  # nosec B105 # placeholder in case of error
 
@@ -93,8 +99,7 @@ class SecretObj:
         self.preserve = preserve
 
     def getKey(self):
-        log.info('Requesting secret key '
-                 '- verify the usage scope and zero + free ')
+        log.debug("Requesting secret key - verify the usage scope and zero + free ")
         return decrypt(self.val, self.iv)
 
     def getPin(self):
@@ -112,12 +117,12 @@ class SecretObj:
         return h
 
     def aes_ecb_decrypt(self, enc_data):
-        '''
+        """
         support inplace aes decryption for the yubikey (mode ECB)
 
         :param enc_data: data, that should be decrypted
         :return: the decrypted data
-        '''
+        """
         self._setupKey_()
         backend = default_backend()
         cipher = Cipher(algorithms.AES(self.bkey), modes.ECB(), backend=backend)  # nosec B305 # part of Yubikey specification
@@ -156,7 +161,7 @@ def hash(val, seed, algo=None):
     :return: the hexlified hash value calculated from hash and seed
     :rtype: str
     """
-    log.debug('hash()')
+    log.debug("hash()")
     m = sha256()
     m.update(to_bytes(val))
     m.update(to_bytes(seed))
@@ -171,11 +176,13 @@ def pass_hash(password):
     :type password: str
     :return: The hash string of the password
     """
-    DEFAULT_HASH_ALGO_PARAMS.update(get_app_config_value("EDUMFA_HASH_ALGO_PARAMS",
-                                                         default={}))
-    pass_ctx = CryptContext(get_app_config_value("EDUMFA_HASH_ALGO_LIST",
-                                                 default=DEFAULT_HASH_ALGO_LIST),
-                            **DEFAULT_HASH_ALGO_PARAMS)
+    DEFAULT_HASH_ALGO_PARAMS.update(
+        get_app_config_value("EDUMFA_HASH_ALGO_PARAMS", default={})
+    )
+    pass_ctx = CryptContext(
+        get_app_config_value("EDUMFA_HASH_ALGO_LIST", default=DEFAULT_HASH_ALGO_LIST),
+        **DEFAULT_HASH_ALGO_PARAMS,
+    )
     pw_dig = pass_ctx.hash(password)
     return pw_dig
 
@@ -191,8 +198,9 @@ def verify_pass_hash(password, hvalue):
     :return: True if the password matches
     :rtype: bool
     """
-    pass_ctx = CryptContext(get_app_config_value("EDUMFA_HASH_ALGO_LIST",
-                                                 default=DEFAULT_HASH_ALGO_LIST))
+    pass_ctx = CryptContext(
+        get_app_config_value("EDUMFA_HASH_ALGO_LIST", default=DEFAULT_HASH_ALGO_LIST)
+    )
     return pass_ctx.verify(password, hvalue)
 
 
@@ -259,9 +267,9 @@ def get_hsm(require_ready=True):
     """
     hsm = init_hsm()
     if hsm is None:
-        raise HSMException('hsm is None!')
+        raise HSMException("hsm is None!")
     if require_ready and not hsm.is_ready:
-        raise HSMException('hsm not ready!')
+        raise HSMException("hsm not ready!")
     return hsm
 
 
@@ -481,7 +489,7 @@ def aes_decrypt_b64(key, enc_data_b64):
 
 # @log_with(log)
 def geturandom(length=20, hex=False):
-    '''
+    """
     get random - from the security module
 
     :param length: length of the returned bytes - default is 20 bytes
@@ -492,7 +500,7 @@ def geturandom(length=20, hex=False):
     :return:
     :rtype: bytes, unicode
 
-    '''
+    """
     hsm = get_hsm()
     ret = hsm.random(length)
 
@@ -500,11 +508,11 @@ def geturandom(length=20, hex=False):
         ret = to_unicode(binascii.hexlify(ret))
     return ret
 
+
 # some random functions based on geturandom #################################
 
 
 class urandom:
-
     precision = 12
 
     @staticmethod
@@ -544,7 +552,7 @@ class urandom:
         # make sure we have a float
         startf = start * 1.0
 
-        dist = (end - start)
+        dist = end - start
         # if end lower than start invert the distance and start at the end
         if dist < 0:
             dist = dist * -1.0
@@ -583,12 +591,12 @@ class urandom:
 
     @staticmethod
     def choice(array):
-        '''
+        """
         get one out of an array
 
         :param array: sequence - string or list
         :return: array element
-        '''
+        """
         size = len(array)
         idx = urandom.randint(0, size)
         return array[idx]
@@ -649,19 +657,19 @@ def get_alphanum_str(length=16):
 
 
 def zerome(bufferObject):
-    '''
+    """
     clear a string value from memory
 
     :param bufferObject: the string variable, which should be cleared
     :type  bufferObject: string or key buffer
 
     :return:    - nothing -
-    '''
+    """
     data = ctypes.POINTER(ctypes.c_char)()
     size = ctypes.c_int()  # Note, int only valid for python 2.5
-    ctypes.pythonapi.PyObject_AsCharBuffer(ctypes.py_object(bufferObject),
-                                           ctypes.pointer(data),
-                                           ctypes.pointer(size))
+    ctypes.pythonapi.PyObject_AsCharBuffer(
+        ctypes.py_object(bufferObject), ctypes.pointer(data), ctypes.pointer(size)
+    )
     ctypes.memset(data, 0, size.value)
 
     return
@@ -670,12 +678,12 @@ def zerome(bufferObject):
 def _slow_rsa_verify_raw(key, sig, msg):
     if not (isinstance(sig, int) and isinstance(msg, int)):  # pragma: no cover
         raise ParameterError("Message and signature need to be integer")
-    if hasattr(key, 'public_numbers'):
+    if hasattr(key, "public_numbers"):
         pn = key.public_numbers()
-    elif hasattr(key, 'private_numbers'):  # pragma: no cover
+    elif hasattr(key, "private_numbers"):  # pragma: no cover
         pn = key.private_numbers().public_numbers
     else:  # pragma: no cover
-        raise TypeError('No public key')
+        raise TypeError("No public key")
 
     # compute m**d (mod n) and compare the two integers
     return msg == pow(sig, pn.e, pn.n)
@@ -685,7 +693,8 @@ class Sign:
     """
     Signing class that is used to sign Audit Entries and to sign API responses.
     """
-    sig_ver = 'rsa_sha256_pss'
+
+    sig_ver = "rsa_sha256_pss"
 
     def __init__(self, private_key=None, public_key=None, check_private_key=True):
         """
@@ -705,10 +714,12 @@ class Sign:
         backend = default_backend()
         if private_key:
             try:
-                self.private = serialization.load_pem_private_key(private_key,
-                                                                  password=None,
-                                                                  backend=backend,
-                                                                  unsafe_skip_rsa_key_validation=not check_private_key)
+                self.private = serialization.load_pem_private_key(
+                    private_key,
+                    password=None,
+                    backend=backend,
+                    unsafe_skip_rsa_key_validation=not check_private_key,
+                )
             except Exception as e:
                 log.error("Error loading private key: ({0!r})".format(e))
                 log.debug(traceback.format_exc())
@@ -716,8 +727,9 @@ class Sign:
 
         if public_key:
             try:
-                self.public = serialization.load_pem_public_key(public_key,
-                                                                backend=backend)
+                self.public = serialization.load_pem_public_key(
+                    public_key, backend=backend
+                )
             except Exception as e:
                 log.error("Error loading public key: ({0!r})".format(e))
                 log.debug(traceback.format_exc())
@@ -733,17 +745,19 @@ class Sign:
         :rtype: str
         """
         if not self.private:
-            log.info('Could not sign message {0!s}, no private key!'.format(s))
+            log.info("Could not sign message {0!s}, no private key!".format(s))
             # TODO: should we throw an exception in this case?
-            return ''
+            return ""
 
         signature = self.private.sign(
             to_bytes(s),
             asym_padding.PSS(
                 mgf=asym_padding.MGF1(hashes.SHA256()),
-                salt_length=asym_padding.PSS.MAX_LENGTH),
-            hashes.SHA256())
-        res = ':'.join([self.sig_ver, hexlify_and_unicode(signature)])
+                salt_length=asym_padding.PSS.MAX_LENGTH,
+            ),
+            hashes.SHA256(),
+        )
+        res = ":".join([self.sig_ver, hexlify_and_unicode(signature)])
         return res
 
     def verify(self, s, signature, verify_old_sigs=False):
@@ -761,13 +775,14 @@ class Sign:
         """
         r = False
         if not self.public:
-            log.info('Could not verify signature for message {0!s}, '
-                     'no public key!'.format(s))
+            log.info(
+                "Could not verify signature for message {0!s}, no public key!".format(s)
+            )
             return r
 
-        sver = ''
+        sver = ""
         try:
-            sver, signature = str(signature).split(':')
+            sver, signature = str(signature).split(":")
         except ValueError:
             # if the signature does not contain a colon we assume an old style signature.
             pass
@@ -779,16 +794,20 @@ class Sign:
                     to_bytes(s),
                     asym_padding.PSS(
                         mgf=asym_padding.MGF1(hashes.SHA256()),
-                        salt_length=asym_padding.PSS.MAX_LENGTH),
-                    hashes.SHA256())
+                        salt_length=asym_padding.PSS.MAX_LENGTH,
+                    ),
+                    hashes.SHA256(),
+                )
                 r = True
             else:
                 if verify_old_sigs:
                     int_s = int(binascii.hexlify(sha256(to_bytes(s)).digest()), 16)
                     r = _slow_rsa_verify_raw(self.public, int(signature), int_s)
                 else:
-                    log.debug('Could not verify old style signature {0!s} '
-                              'for data {1:s}'.format(signature, s))
+                    log.debug(
+                        "Could not verify old style signature {0!s} "
+                        "for data {1:s}".format(signature, s)
+                    )
         except Exception:
             log.error("Failed to verify signature: {0!r}".format(s))
             log.debug("{0!s}".format(traceback.format_exc()))
@@ -809,8 +828,10 @@ def create_hsm_object(config):
     """
     # We need this to resolve the circular dependency between utils and crypto.
     from edumfa.lib.utils import get_module_class
-    hsm_module_name = config.get("EDUMFA_HSM_MODULE",
-                                 "edumfa.lib.security.default.DefaultSecurityModule")
+
+    hsm_module_name = config.get(
+        "EDUMFA_HSM_MODULE", "edumfa.lib.security.default.DefaultSecurityModule"
+    )
     package_name, class_name = hsm_module_name.rsplit(".", 1)
     hsm_class = get_module_class(package_name, class_name, "setup_module")
     log.info("initializing HSM class: {0!s}".format(hsm_class))
@@ -822,7 +843,7 @@ def create_hsm_object(config):
         hsm_parameters = {}
         for key in config.keys():
             if key.startswith("EDUMFA_HSM_MODULE_"):
-                param = key[len("EDUMFA_HSM_MODULE_"):].lower()
+                param = key[len("EDUMFA_HSM_MODULE_") :].lower()
                 hsm_parameters[param] = config.get(key)
         logging_params = dict(hsm_parameters)
         if "password" in logging_params:
@@ -845,8 +866,11 @@ def generate_otpkey(key_size=20):
     return hexlify_and_unicode(geturandom(key_size))
 
 
-def generate_password(size=6, characters=string.ascii_lowercase +
-                        string.ascii_uppercase + string.digits, requirements=[]):
+def generate_password(
+    size=6,
+    characters=string.ascii_lowercase + string.ascii_uppercase + string.digits,
+    requirements=[],
+):
     """
     Generate a random password of the specified length of the given characters
     with optional requirements
@@ -860,7 +884,7 @@ def generate_password(size=6, characters=string.ascii_lowercase +
     :rtype: basestring
     """
     if len(requirements) > size:
-        log.info('The number of requirements is larger then the password length.')
+        log.info("The number of requirements is larger then the password length.")
     # add one random character from each string in the requirements list
     passwd = [secrets.choice(str) for str in requirements]
     # fill the password until size with allowed characters
@@ -881,16 +905,19 @@ def generate_keypair(rsa_keysize=2048):
     :return: tuple of (pubkey, privkey)
     """
     private_key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=rsa_keysize,
-        backend=default_backend()
-        )
+        public_exponent=65537, key_size=rsa_keysize, backend=default_backend()
+    )
     public_key = private_key.public_key()
-    pem_priv = to_unicode(private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption()))
-    pem_pub = to_unicode(public_key.public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.PKCS1))
+    pem_priv = to_unicode(
+        private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.TraditionalOpenSSL,
+            encryption_algorithm=serialization.NoEncryption(),
+        )
+    )
+    pem_pub = to_unicode(
+        public_key.public_bytes(
+            encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.PKCS1
+        )
+    )
     return pem_pub, pem_priv

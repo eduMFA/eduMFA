@@ -57,7 +57,7 @@ Backup and Restore
 
 .. index:: Backup, Restore
 
-You can create a backup which will be save to */var/lib/edumfa/backup/*.
+You can create a backup which will be saved to */var/lib/edumfa/backup/*.
 
 The backup will contain the database dump and the complete directory
 */etc/edumfa*. You may choose if you want to add the encryption key to
@@ -105,14 +105,18 @@ This command also generates an admin account name. But it does not create
 this admin account. You need to do so using ``edumfa-manage admin``.
 You can now use this API key to enroll tokens as administrator.
 
+.. note:: Currently, this API key works without the admin account actually being
+   created. This also means you can not revoke an API key by simply deleting
+   the admin account!
+   This might be subject to change in coming versions.
+
 .. note:: These API keys are not persistent. They are not stored in the
    eduMFA server. The API key is connected to the username, that is also
-   generated. This means you have to create an administrative account with
-   this very username to use this API key for this admin user.
+   generated.
    You also should set policies for this admin user, so that this API key has
    only restricted rights!
 
-.. note:: The API key is valid for 365 days.
+.. note:: The API key is valid for 365 days by default.
 
 Policies
 --------

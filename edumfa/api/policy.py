@@ -32,37 +32,44 @@
 __doc__ = """
 The code of this module is tested in tests/test_api_system.py
 """
-from flask import (Blueprint,
-                   request)
-from .lib.utils import (getParam,
-                        getLowerParams,
-                        optional,
-                        required,
-                        send_result,
-                        check_policy_name, send_file)
-from ..lib.log import log_with
-from ..lib.policy import (set_policy, ACTION,
-                          export_policies, import_policies,
-                          delete_policy, get_static_policy_definitions,
-                          enable_policy, get_policy_condition_sections,
-                          get_policy_condition_comparators, Match)
-from ..lib.token import get_dynamic_policy_definitions
-from ..lib.error import (ParameterError)
-from edumfa.lib.utils import to_unicode, is_true
-from edumfa.lib.config import get_edumfa_nodes
-from ..api.lib.prepolicy import prepolicy, check_base_action
-
-from flask import g
-from werkzeug.datastructures import FileStorage
-from cgi import FieldStorage
-
 import logging
 
+from flask import Blueprint, g, request
+from werkzeug.datastructures import FileStorage
+
+from edumfa.lib.config import get_edumfa_nodes
+from edumfa.lib.utils import is_true, to_unicode
+
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.error import ParameterError
+from ..lib.log import log_with
+from ..lib.policy import (
+    ACTION,
+    Match,
+    delete_policy,
+    enable_policy,
+    export_policies,
+    get_policy_condition_comparators,
+    get_policy_condition_sections,
+    get_static_policy_definitions,
+    import_policies,
+    set_policy,
+)
+from ..lib.token import get_dynamic_policy_definitions
+from .lib.utils import (
+    check_policy_name,
+    getLowerParams,
+    getParam,
+    optional,
+    required,
+    send_file,
+    send_result,
+)
 
 log = logging.getLogger(__name__)
 
 
-policy_blueprint = Blueprint('policy_blueprint', __name__)
+policy_blueprint = Blueprint("policy_blueprint", __name__)
 
 
 # -------------------------------------------------------------------
@@ -70,7 +77,8 @@ policy_blueprint = Blueprint('policy_blueprint', __name__)
 # POLICY functions
 #
 
-@policy_blueprint.route('/enable/<name>', methods=['POST'])
+
+@policy_blueprint.route("/enable/<name>", methods=["POST"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.POLICYWRITE)
 def enable_policy_api(name):
@@ -85,7 +93,7 @@ def enable_policy_api(name):
     return send_result(p)
 
 
-@policy_blueprint.route('/disable/<name>', methods=['POST'])
+@policy_blueprint.route("/disable/<name>", methods=["POST"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.POLICYWRITE)
 def disable_policy_api(name):
@@ -100,7 +108,7 @@ def disable_policy_api(name):
     return send_result(p)
 
 
-@policy_blueprint.route('/<name>', methods=['POST'])
+@policy_blueprint.route("/<name>", methods=["POST"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.POLICYWRITE)
 def set_policy_api(name=None):
@@ -197,14 +205,24 @@ def set_policy_api(name=None):
     priority = int(getParam(param, "priority", optional, default=1))
     conditions = getParam(param, "conditions", optional)
 
-    g.audit_object.log({'action_detail': name,
-                        'info': "{0!s}".format(param)})
-    ret = set_policy(name=name, scope=scope, action=action, realm=realm,
-                     resolver=resolver, user=user, client=client, time=time,
-                     active=active or True, adminrealm=admin_realm,
-                     adminuser=admin_user, edumfanode=edumfanode,
-                     check_all_resolvers=check_all_resolvers or False,
-                     priority=priority, conditions=conditions)
+    g.audit_object.log({"action_detail": name, "info": "{0!s}".format(param)})
+    ret = set_policy(
+        name=name,
+        scope=scope,
+        action=action,
+        realm=realm,
+        resolver=resolver,
+        user=user,
+        client=client,
+        time=time,
+        active=active or True,
+        adminrealm=admin_realm,
+        adminuser=admin_user,
+        edumfanode=edumfanode,
+        check_all_resolvers=check_all_resolvers or False,
+        priority=priority,
+        conditions=conditions,
+    )
     log.debug("policy {0!s} successfully saved.".format(name))
     string = "setPolicy " + name
     res[string] = ret
@@ -213,9 +231,9 @@ def set_policy_api(name=None):
     return send_result(res)
 
 
-@policy_blueprint.route('/', methods=['GET'])
-@policy_blueprint.route('/<name>', methods=['GET'])
-@policy_blueprint.route('/export/<export>', methods=['GET'])
+@policy_blueprint.route("/", methods=["GET"])
+@policy_blueprint.route("/<name>", methods=["GET"])
+@policy_blueprint.route("/export/<export>", methods=["GET"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.POLICYREAD)
 def get_policy(name=None, export=None):
@@ -287,21 +305,31 @@ def get_policy(name=None, export=None):
 
     P = g.policy_object
     if not export:
-        log.debug("retrieving policy name: {0!s}, realm: {1!s}, scope: {2!s}".format(name, realm, scope))
+        log.debug(
+            "retrieving policy name: {0!s}, realm: {1!s}, scope: {2!s}".format(
+                name, realm, scope
+            )
+        )
 
         pol = P.list_policies(name=name, realm=realm, scope=scope, active=active)
         ret = send_result(pol)
     else:
         # We want to export all policies
         pol = P.list_policies()
-        ret = send_file(export_policies(pol), export, content_type='text/plain')
+        ret = send_file(export_policies(pol), export, content_type="text/plain")
 
-    g.audit_object.log({"success": True,
-                        'info': "name = {0!s}, realm = {1!s}, scope = {2!s}".format(name, realm, scope)})
+    g.audit_object.log(
+        {
+            "success": True,
+            "info": "name = {0!s}, realm = {1!s}, scope = {2!s}".format(
+                name, realm, scope
+            ),
+        }
+    )
     return ret
 
 
-@policy_blueprint.route('/<name>', methods=['DELETE'])
+@policy_blueprint.route("/<name>", methods=["DELETE"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.POLICYDELETE)
 def delete_policy_api(name=None):
@@ -343,12 +371,11 @@ def delete_policy_api(name=None):
        }
     """
     ret = delete_policy(name)
-    g.audit_object.log({'success': ret,
-                        'info': name})
+    g.audit_object.log({"success": ret, "info": name})
     return send_result(ret)
 
 
-@policy_blueprint.route('/import/<filename>', methods=['POST'])
+@policy_blueprint.route("/import/<filename>", methods=["POST"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.POLICYWRITE)
 def import_policy_api(filename=None):
@@ -391,17 +418,8 @@ def import_policy_api(filename=None):
 
 
     """
-    policy_file = request.files['file']
-    file_contents = ""
-    # In case of form post requests, it is a "instance" of FieldStorage
-    # i.e. the Filename is selected in the browser and the data is
-    # transferred
-    # in an iframe. see: http://jquery.malsup.com/form/#sample4
-    #
-    if type(policy_file) == FieldStorage:  # pragma: no cover
-        log.debug("Field storage file: %s", policy_file)
-        file_contents = policy_file.value
-    elif type(policy_file) == FileStorage:
+    policy_file = request.files["file"]
+    if type(policy_file) == FileStorage:
         log.debug("Werkzeug File storage file: %s", policy_file)
         file_contents = policy_file.read()
     else:  # pragma: no cover
@@ -411,19 +429,25 @@ def import_policy_api(filename=None):
     file_contents = to_unicode(file_contents)
 
     if file_contents == "":
-        log.error("Error loading/importing policy file. file {0!s} empty!".format(
-                  filename))
+        log.error(
+            "Error loading/importing policy file. file {0!s} empty!".format(filename)
+        )
         raise ParameterError("Error loading policy. File empty!")
 
     policy_num = import_policies(file_contents=file_contents)
-    g.audit_object.log({"success": True,
-                        'info': "imported {0:d} policies from file {1!s}".format(
-                            policy_num, filename)})
+    g.audit_object.log(
+        {
+            "success": True,
+            "info": "imported {0:d} policies from file {1!s}".format(
+                policy_num, filename
+            ),
+        }
+    )
 
     return send_result(policy_num)
 
 
-@policy_blueprint.route('/check', methods=['GET'])
+@policy_blueprint.route("/check", methods=["GET"])
 @log_with(log)
 def check_policy_api():
     """
@@ -493,29 +517,40 @@ def check_policy_api():
     client = getParam(param, "client", optional)
     resolver = getParam(param, "resolver", optional)
 
-    policies = Match.generic(g, scope=scope, user=user, resolver=resolver, realm=realm,
-                             action=action, client=client, active=True).policies()
+    policies = Match.generic(
+        g,
+        scope=scope,
+        user=user,
+        resolver=resolver,
+        realm=realm,
+        action=action,
+        client=client,
+        active=True,
+    ).policies()
     if policies:
         res["allowed"] = True
         res["policy"] = policies
         policy_names = []
         for pol in policies:
             policy_names.append(pol.get("name"))
-        g.audit_object.log({'info': "allowed by policy {0!s}".format(policy_names)})
+        g.audit_object.log({"info": "allowed by policy {0!s}".format(policy_names)})
     else:
         res["allowed"] = False
         res["info"] = "No policies found"
 
-    g.audit_object.log({"success": True,
-                        'action_detail': "action = %s, realm = %s, scope = "
-                                         "%s" % (action, realm, scope)
-                        })
+    g.audit_object.log(
+        {
+            "success": True,
+            "action_detail": "action = %s, realm = %s, scope = "
+            "%s" % (action, realm, scope),
+        }
+    )
 
     return send_result(res)
 
 
-@policy_blueprint.route('/defs', methods=['GET'])
-@policy_blueprint.route('/defs/<scope>', methods=['GET'])
+@policy_blueprint.route("/defs", methods=["GET"])
+@policy_blueprint.route("/defs/<scope>", methods=["GET"])
 @log_with(log)
 def get_policy_defs(scope=None):
     """
@@ -540,7 +575,7 @@ def get_policy_defs(scope=None):
     :rtype: dict
     """
 
-    if scope == 'conditions':
+    if scope == "conditions":
         # special treatment: get descriptions of conditions
         section_descriptions = get_policy_condition_sections()
         comparator_descriptions = get_policy_condition_comparators()
@@ -548,7 +583,7 @@ def get_policy_defs(scope=None):
             "sections": section_descriptions,
             "comparators": comparator_descriptions,
         }
-    elif scope == 'edumfanodes':
+    elif scope == "edumfanodes":
         result = get_edumfa_nodes()
     else:
         static_pol = get_static_policy_definitions()
@@ -556,12 +591,16 @@ def get_policy_defs(scope=None):
 
         # combine static and dynamic policies
         keys = list(static_pol) + list(dynamic_pol)
-        result = {k: dict(list(static_pol.get(k, {}).items())
-                          + list(dynamic_pol.get(k, {}).items())) for k in keys}
+        result = {
+            k: dict(
+                list(static_pol.get(k, {}).items())
+                + list(dynamic_pol.get(k, {}).items())
+            )
+            for k in keys
+        }
 
         if scope:
             result = result.get(scope)
 
-    g.audit_object.log({"success": True,
-                        'info': scope})
+    g.audit_object.log({"success": True, "info": scope})
     return send_result(result)

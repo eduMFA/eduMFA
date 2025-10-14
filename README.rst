@@ -76,7 +76,7 @@ If you want to setup a development environment start like this::
 You may additionally want to set up your environment for testing, by adding the
 additional dependencies::
 
-    pip install -r .[test]
+    pip install .[test]
 
 
 Getting and updating submodules

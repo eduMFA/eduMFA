@@ -10,29 +10,33 @@
 #            http://www.lsexperts.de
 #            linotp@lsexperts.de
 """
-  Description:  This tool generates lines for a PasswdIdResolver user file
+Description:  This tool generates lines for a PasswdIdResolver user file
 
-  Dependencies: ./.
+Dependencies: ./.
 
 """
 
-import sys
-from getopt import getopt, GetoptError
 import getpass
-import crypt
-import random
+import sys
+from getopt import GetoptError, getopt
 
-__version__ = '0.1'
+# Python 3.13 dropped crypt package, so we need to import crypt_r
+if sys.version_info >= (3, 13):
+    import crypt_r as crypt
+else:
+    import crypt
+
+__version__ = "0.1"
 
 
 def usage():
-    print('''
+    print("""
     Parameter:
     -u username
     -i uid (numerical)
     -p password
     -d description
-    ''')
+    """)
 
 
 def main():
@@ -50,15 +54,15 @@ def main():
         sys.exit(1)
 
     for opt, arg in opts:
-        if opt in ('-u',):
+        if opt in ("-u",):
             user = arg
-        elif opt in ('-i',):
+        elif opt in ("-i",):
             uid = arg
-        elif opt in ('-p',):
+        elif opt in ("-p",):
             password = arg
-        elif opt in ('-d',):
+        elif opt in ("-d",):
             description = arg
-        elif opt in ('-h', '--help'):
+        elif opt in ("-h", "--help"):
             usage()
             sys.exit(1)
 
@@ -72,14 +76,10 @@ def main():
     gid = uid
     home = ""
     shell = ""
-    print("%s:%s:%s:%s:%s:%s:%s" % (user,
-                                    encryptedPW,
-                                    uid,
-                                    gid,
-                                    description,
-                                    home,
-                                    shell))
+    print(
+        "%s:%s:%s:%s:%s:%s:%s" % (user, encryptedPW, uid, gid, description, home, shell)
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

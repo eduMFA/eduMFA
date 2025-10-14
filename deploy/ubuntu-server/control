@@ -22,7 +22,7 @@ Package: edumfa-apache2
 Architecture: all
 #Depends: ${misc:Depends}, edumfa (=${binary:Version}), apache2,
 Depends: ${misc:Depends}, edumfa (>=1.0), apache2,
- mysql-server|mariadb-server, mysql-client|mariadb-client, libapache2-mod-wsgi-py3, rng-tools
+ mysql-server|mariadb-server, mysql-client|mariadb-client, libapache2-mod-wsgi-py3
 Conflicts: nginx, nginx-full, edumfa-nginx, libapache2-mod-wsgi
 Description: 2FA system. This is a meta package to install edumfa with apache2
  eduMFA: identity, multifactor authentication, authorization.

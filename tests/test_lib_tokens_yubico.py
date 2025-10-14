@@ -3,16 +3,18 @@ This test file tests the lib.tokens.yubicotoken
 This depends on lib.tokenclass
 """
 
-from .base import MyTestCase
-from edumfa.lib.tokens.yubicotoken import (YubicoTokenClass, YUBICO_URL)
-from edumfa.models import Token
-import responses
 import json
+
+import responses
+
 from edumfa.lib.config import set_edumfa_config
+from edumfa.lib.tokens.yubicotoken import YUBICO_URL, YubicoTokenClass
+from edumfa.models import Token
+
+from .base import MyTestCase
 
 
 class YubicoTokenTestCase(MyTestCase):
-
     otppin = "topsecret"
     serial1 = "ser1"
     params1 = {"yubico.tokenid": "vvbgidlghkhgfbvetefnbrfibfctu"}
@@ -31,7 +33,6 @@ nonce=fbbfd6fead1f16372b493e7515396363cec90c00
 status=REPLAYED_OTP"""
 
     def test_01_create_token(self):
-
         db_token = Token(self.serial1, tokentype="remote")
         db_token.save()
         token = YubicoTokenClass(db_token)
@@ -39,8 +40,7 @@ status=REPLAYED_OTP"""
         token.set_pin(self.otppin)
 
         self.assertTrue(token.token.serial == self.serial1, token)
-        self.assertTrue(token.token.tokentype == "yubico",
-                        token.token.tokentype)
+        self.assertTrue(token.token.tokentype == "yubico", token.token.tokentype)
         self.assertTrue(token.type == "yubico", token)
         class_prefix = token.get_class_prefix()
         self.assertTrue(class_prefix == "UBCM", class_prefix)
@@ -51,16 +51,16 @@ status=REPLAYED_OTP"""
         token = YubicoTokenClass(db_token)
 
         info = token.get_class_info()
-        self.assertTrue(info.get("title") == "Yubico Token",
-                        "{0!s}".format(info.get("title")))
+        self.assertTrue(
+            info.get("title") == "Yubico Token", "{0!s}".format(info.get("title"))
+        )
 
         info = token.get_class_info("title")
         self.assertTrue(info == "Yubico Token", info)
 
     @responses.activate
     def test_04_check_otp_success(self):
-        responses.add(responses.GET, YUBICO_URL,
-                      body=self.success_body)
+        responses.add(responses.GET, YUBICO_URL, body=self.success_body)
 
         db_token = Token.query.filter(Token.serial == self.serial1).first()
         token = YubicoTokenClass(db_token)
@@ -71,8 +71,7 @@ status=REPLAYED_OTP"""
     @responses.activate
     def test_04_check_otp_success_with_post_request(self):
         set_edumfa_config("yubico.do_post", True)
-        responses.add(responses.POST, YUBICO_URL,
-                      body=self.success_body)
+        responses.add(responses.POST, YUBICO_URL, body=self.success_body)
 
         db_token = Token.query.filter(Token.serial == self.serial1).first()
         token = YubicoTokenClass(db_token)
@@ -81,11 +80,9 @@ status=REPLAYED_OTP"""
         self.assertTrue(otpcount == -2, otpcount)
         set_edumfa_config("yubico.do_post", False)
 
-
     @responses.activate
     def test_05_check_otp_fail(self):
-        responses.add(responses.POST, YUBICO_URL,
-                      body=self.fail_body)
+        responses.add(responses.POST, YUBICO_URL, body=self.fail_body)
 
         db_token = Token.query.filter(Token.serial == self.serial1).first()
         token = YubicoTokenClass(db_token)
@@ -110,5 +107,4 @@ status=REPLAYED_OTP"""
         db_token = Token("neuYT", tokentype="remote")
         db_token.save()
         token = YubicoTokenClass(db_token)
-        self.assertRaises(Exception, token.update,
-                          {"yubico.tokenid": "vvbgidlg"})
+        self.assertRaises(Exception, token.update, {"yubico.tokenid": "vvbgidlg"})

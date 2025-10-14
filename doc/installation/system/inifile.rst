@@ -50,6 +50,7 @@ The file should contain the following contents::
 
 .. note:: The config file is parsed as python code, so you can use variables to
    set the path and you need to take care of the indentation.
+   Note that this doesn't work when using the Ubuntu package.
 
 ``SQLALCHEMY_DATABASE_URI`` defines the location of your database.
 For more information about the database connect string, supported databases and
@@ -250,7 +251,9 @@ users and roles using the parameter ``EDUMFA_TRUSTED_JWT``::
                       "role": "user",
                       "realm": "realm1",
                       "username": "userA",
-                      "resolver": "resolverX"}]
+                      "resolver": "resolverX",
+                      "aud": "edumfa",
+                      "claim": "eduPersonPrincipalName"}]
 
 
 This entry means, that the private key, that corresponds to the given

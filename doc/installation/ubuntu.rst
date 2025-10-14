@@ -5,7 +5,7 @@ Ubuntu Packages
 
 .. index:: ubuntu
 
-There are ready made packages for Ubuntu 20.04LTS, 22.04LTS and 24.04LTS.
+There are ready made packages for Ubuntu 22.04LTS and 24.04LTS.
 
 .. note:: The packages ``edumfa-apache2`` and ``edumfa-nginx`` assume
    that you want to run a eduMFA system. These packages deactivate all
@@ -41,25 +41,11 @@ The fingerprint of the key is::
 
 You now need to add the signing key to your system. The following instructions
 
-.. tab:: Ubuntu 24.04LTS
+.. code-block:: bash
 
-    .. code-block:: bash
+    mv eduMFA-Release.asc /etc/apt/trusted.gpg.d/eduMFA-Release.asc
 
-        mv eduMFA-Release.asc /etc/apt/trusted.gpg.d/eduMFA-Release.asc
-
-.. tab:: Ubuntu 22.04LTS
-
-    .. code-block:: bash
-
-        mv eduMFA-Release.asc /etc/apt/trusted.gpg.d/eduMFA-Release.asc
-
-.. tab:: Ubuntu 20.04LTS
-
-    .. code-block:: bash
-
-        apt-key add eduMFA-Release.asc
-
-Now you need to add the repository for your release (focal/20.04LTS, jammy/22.04LTS or noble/24.04LTS) You can do this by running the command:
+Now you need to add the repository for your release (jammy/22.04LTS or noble/24.04LTS) You can do this by running the command:
 
 .. tab:: Ubuntu 24.04LTS
 
@@ -72,12 +58,6 @@ Now you need to add the repository for your release (focal/20.04LTS, jammy/22.04
     .. code-block:: bash
 
         add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy
-
-.. tab:: Ubuntu 20.04LTS
-
-    .. code-block:: bash
-
-        add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal
 
 As an alternative you can add the repo in a dedicated file. Create a new
 file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the following contents:
@@ -94,14 +74,8 @@ file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the following conten
 
         deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy jammy main
 
-.. tab:: Ubuntu 20.04LTS
 
-    .. code-block:: bash
-
-        deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-focal focal main
-
-
-Installation of eduMFA 1.x
+Installation of eduMFA 1.x or higher
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After having added the repositories, run::
@@ -170,7 +144,7 @@ Choose the packages you want to build based on your requirements. Use one of the
 
         cp -r deploy/ubuntu-radius debian
 
-Update the Linux distribution version in the changelog file:
+Update the Linux distribution version in the changelog file. For Ubuntu 24.04LTS, you must also force the use of Python3.9.
 
 .. tab:: Ubuntu 24.04LTS
 
@@ -183,12 +157,6 @@ Update the Linux distribution version in the changelog file:
     .. code-block:: bash
 
         sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
-
-.. tab:: Ubuntu 20.04LTS
-
-    .. code-block:: bash
-
-        sed -i 's/{{CODENAME}}/focal/g' debian/changelog
 
 Install build dependencies and build the package::
 

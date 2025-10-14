@@ -29,32 +29,46 @@ The code is tested in tests/test_lib_config
 """
 
 import copy
-import sys
-import logging
+import datetime
+import importlib
 import inspect
+import logging
+import sys
 import threading
 import traceback
 
-from .log import log_with
-from ..models import (Config, db, Resolver, Realm, EDUMFA_TIMESTAMP,
-                      save_config_timestamp, Policy, EventHandler, CAConnector)
-from edumfa.lib.framework import get_request_local_store, get_app_config_value, get_app_local_store
+from edumfa.lib.framework import (
+    get_app_config_value,
+    get_app_local_store,
+    get_request_local_store,
+)
 from edumfa.lib.utils import to_list
-from edumfa.lib.utils.export import (register_import, register_export)
-from .crypto import encryptPassword
-from .crypto import decryptPassword
-from .resolvers.UserIdResolver import UserIdResolver
-from .machines.base import BaseMachineResolver
-from .caconnectors.baseca import BaseCAConnector
+from edumfa.lib.utils.export import register_export, register_import
+
+from ..models import (
+    EDUMFA_TIMESTAMP,
+    CAConnector,
+    Config,
+    EventHandler,
+    Policy,
+    Realm,
+    Resolver,
+    db,
+    save_config_timestamp,
+)
+
 # We need these imports to return the list of CA connector types. Bummer: New import for each new Class anyway.
 from .caconnectors import localca, msca
-from .utils import reload_db, is_true
-import importlib
-import datetime
+from .caconnectors.baseca import BaseCAConnector
+from .crypto import decryptPassword, encryptPassword
+from .log import log_with
+from .machines.base import BaseMachineResolver
+from .resolvers.UserIdResolver import UserIdResolver
+from .utils import is_true, reload_db
 
 log = logging.getLogger(__name__)
 
-ENCODING = 'utf-8'
+ENCODING = "utf-8"
 
 # this is a pointer to the module object instance itself.
 this = sys.modules[__name__]
@@ -77,6 +91,7 @@ class SharedConfigClass:
     Instead, it must use ``reload_and_clone()`` to retrieve
     a ``LocalConfigClass`` object which holds a local configuration snapshot.
     """
+
     def __init__(self):
         self._config_lock = threading.Lock()
         self.config = {}
@@ -95,8 +110,11 @@ class SharedConfigClass:
         :return:
         """
         check_reload_config = get_app_config_value("EDUMFA_CHECK_RELOAD_CONFIG", 0)
-        if not self.timestamp or \
-            self.timestamp + datetime.timedelta(seconds=check_reload_config) < datetime.datetime.now():
+        if (
+            not self.timestamp
+            or self.timestamp + datetime.timedelta(seconds=check_reload_config)
+            < datetime.datetime.now()
+        ):
             db_ts = Config.query.filter_by(Key=EDUMFA_TIMESTAMP).first()
             if reload_db(self.timestamp, db_ts):
                 log.debug("Reloading shared config from database")
@@ -112,12 +130,15 @@ class SharedConfigClass:
                     config[sysconf.Key] = {
                         "Value": sysconf.Value,
                         "Type": sysconf.Type,
-                        "Description": sysconf.Description}
+                        "Description": sysconf.Description,
+                    }
                 # Load resolver configuration
                 for resolver in Resolver.query.all():
-                    resolverdef = {"type": resolver.rtype,
-                                   "resolvername": resolver.name,
-                                   "censor_keys": []}
+                    resolverdef = {
+                        "type": resolver.rtype,
+                        "resolvername": resolver.name,
+                        "censor_keys": [],
+                    }
                     data = {}
                     for rconf in resolver.config_list:
                         if rconf.Type == "password":
@@ -132,14 +153,20 @@ class SharedConfigClass:
                 for realm in Realm.query.all():
                     if realm.default:
                         default_realm = realm.name
-                    realmdef = {"id": realm.id,
-                                "option": realm.option,
-                                "default": realm.default,
-                                "resolver": []}
+                    realmdef = {
+                        "id": realm.id,
+                        "option": realm.option,
+                        "default": realm.default,
+                        "resolver": [],
+                    }
                     for x in realm.resolver_list:
-                        realmdef["resolver"].append({"priority": x.priority,
-                                                     "name": x.resolver.name,
-                                                     "type": x.resolver.rtype})
+                        realmdef["resolver"].append(
+                            {
+                                "priority": x.priority,
+                                "name": x.resolver.name,
+                                "type": x.resolver.rtype,
+                            }
+                        )
                     realmconfig[realm.name] = realmdef
                 # Load all policies
                 for pol in Policy.query.all():
@@ -149,13 +176,18 @@ class SharedConfigClass:
                     events.append(event.get())
                 # Load all CA connectors
                 from edumfa.lib.caconnector import get_caconnector_object
+
                 for ca in CAConnector.query.all():
                     try:
                         ca_obj = get_caconnector_object(ca.name)
-                        caconnectors.append({"connectorname": ca.name,
-                                             "type": ca.catype,
-                                             "data": ca_obj.config,
-                                             "templates": ca_obj.get_templates()})
+                        caconnectors.append(
+                            {
+                                "connectorname": ca.name,
+                                "type": ca.catype,
+                                "data": ca_obj.config,
+                                "templates": ca_obj.get_templates(),
+                            }
+                        )
                     except Exception as exx:  # pragma: no cover
                         log.debug("{0!s}".format(traceback.format_exc()))
                         log.error(exx)
@@ -185,7 +217,7 @@ class SharedConfigClass:
                 self.policies,
                 self.events,
                 self.caconnectors,
-                self.timestamp
+                self.timestamp,
             )
 
     def reload_and_clone(self):
@@ -206,7 +238,18 @@ class LocalConfigClass:
     It will be cloned from the shared config object at the beginning of the
     request and is supposed to stay alive and unchanged during the request.
     """
-    def __init__(self, config, resolver, realm, default_realm, policies, events, caconnectors, timestamp):
+
+    def __init__(
+        self,
+        config,
+        resolver,
+        realm,
+        default_realm,
+        policies,
+        events,
+        caconnectors,
+        timestamp,
+    ):
         self.config = config
         self.resolver = resolver
         self.realm = realm
@@ -216,8 +259,7 @@ class LocalConfigClass:
         self.caconnectors = caconnectors
         self.timestamp = timestamp
 
-    def get_config(self, key=None, default=None, role="admin",
-                   return_bool=False):
+    def get_config(self, key=None, default=None, role="admin", return_bool=False):
         """
         :param key: A key to retrieve
         :type key: string
@@ -231,8 +273,12 @@ class LocalConfigClass:
         :return: If key is None, then a dictionary is returned. If a certain key
             is given a string/bool is returned.
         """
-        default_true_keys = [SYSCONF.PREPENDPIN, SYSCONF.SPLITATSIGN,
-                             SYSCONF.INCFAILCOUNTER, SYSCONF.RETURNSAML]
+        default_true_keys = [
+            SYSCONF.PREPENDPIN,
+            SYSCONF.SPLITATSIGN,
+            SYSCONF.INCFAILCOUNTER,
+            SYSCONF.RETURNSAML,
+        ]
 
         r_config = {}
 
@@ -281,7 +327,7 @@ class SYSCONF:
     RESET_FAILCOUNTER_ON_PIN_ONLY = "ResetFailcounterOnPIN"
 
 
-#@cache.cached(key_prefix="allConfig")
+# @cache.cached(key_prefix="allConfig")
 def get_edumfa_config():
     # timestamp = Config.query.filter_by(Key="edumfa.timestamp").first()
     return get_from_config()
@@ -292,13 +338,13 @@ def get_shared_config_object():
     :return: the application-wide ``SharedConfigClass`` object, which is created on demand.
     """
     store = get_app_local_store()
-    if 'shared_config_object' not in store:
+    if "shared_config_object" not in store:
         # It might happen that two threads create SharedConfigClass() instances in parallel.
         # However, as setting dictionary values is atomic, one of the two objects will "win",
         # and the next request handled by the second thread will use the winning config object.
         log.debug("Creating new shared config object")
-        store['shared_config_object'] = SharedConfigClass()
-    return store['shared_config_object']
+        store["shared_config_object"] = SharedConfigClass()
+    return store["shared_config_object"]
 
 
 def invalidate_config_object():
@@ -313,9 +359,9 @@ def invalidate_config_object():
     If the request-local store contains no config object, do nothing.
     """
     store = get_request_local_store()
-    if 'config_object' in store:
+    if "config_object" in store:
         log.debug("Invalidating request-local config object")
-        del store['config_object']
+        del store["config_object"]
 
 
 def ensure_no_config_object():
@@ -327,9 +373,11 @@ def ensure_no_config_object():
     If the request-local store contains no config object, do nothing.
     """
     store = get_request_local_store()
-    if 'config_object' in store:
-        log.warning("Request-local store already contains config object, even though it should not")
-        del store['config_object']
+    if "config_object" in store:
+        log.warning(
+            "Request-local store already contains config object, even though it should not"
+        )
+        del store["config_object"]
 
 
 def get_config_object():
@@ -338,15 +386,15 @@ def get_config_object():
     :return: a ``LocalConfigClass`` object
     """
     store = get_request_local_store()
-    if 'config_object' not in store:
+    if "config_object" not in store:
         log.debug("Cloning request-local config from shared config object")
         shared_config = get_shared_config_object()
-        store['config_object'] = shared_config.reload_and_clone()
-    return store['config_object']
+        store["config_object"] = shared_config.reload_and_clone()
+    return store["config_object"]
 
 
 @log_with(log)
-#@cache.cached(key_prefix="singleConfig")
+# @cache.cached(key_prefix="singleConfig")
 def get_from_config(key=None, default=None, role="admin", return_bool=False):
     """
     :param key: A key to retrieve
@@ -362,11 +410,12 @@ def get_from_config(key=None, default=None, role="admin", return_bool=False):
         is given a string/bool is returned.
     """
     config_object = get_config_object()
-    return config_object.get_config(key=key, default=default, role=role,
-                                    return_bool=return_bool)
+    return config_object.get_config(
+        key=key, default=default, role=role, return_bool=return_bool
+    )
 
 
-#@cache.cached(key_prefix="resolver")
+# @cache.cached(key_prefix="resolver")
 def get_resolver_types():
     """
     Return a simple list of the type names of the resolvers.
@@ -392,7 +441,7 @@ def get_caconnector_types():
     return caconnector_types
 
 
-#@cache.cached(key_prefix="classes")
+# @cache.cached(key_prefix="classes")
 def get_resolver_classes():
     """
     Returns a list of the available resolver classes like:
@@ -411,7 +460,7 @@ def get_resolver_classes():
     return list(this.config["pi_resolver_classes"].values())
 
 
-#@cache.cached(key_prefix="classes")
+# @cache.cached(key_prefix="classes")
 def get_token_class_dict():
     """
     get a dictionary of the token classes and a dictionary of the
@@ -438,12 +487,15 @@ def get_token_class_dict():
         for name in dir(module):
             obj = getattr(module, name)
             # We must not process imported classes!
-            if (inspect.isclass(obj) and issubclass(obj, TokenClass) and
-                        obj.__module__ == module.__name__):
+            if (
+                inspect.isclass(obj)
+                and issubclass(obj, TokenClass)
+                and obj.__module__ == module.__name__
+            ):
                 try:
                     class_name = "{0!s}.{1!s}".format(module.__name__, obj.__name__)
                     tokenclass_dict[class_name] = obj
-                    if hasattr(obj, 'get_class_type'):
+                    if hasattr(obj, "get_class_type"):
                         tokentype_dict[class_name] = obj.get_class_type()
                 except Exception as e:  # pragma: no cover
                     log.error("error constructing token_class_dict: {0!r}".format(e))
@@ -451,7 +503,7 @@ def get_token_class_dict():
     return tokenclass_dict, tokentype_dict
 
 
-#@cache.cached(key_prefix="classes")
+# @cache.cached(key_prefix="classes")
 def get_token_class(tokentype):
     """
     This takes a token type like "hotp" and returns a class
@@ -472,7 +524,7 @@ def get_token_class(tokentype):
     return tokenclass
 
 
-#@cache.cached(key_prefix="types")
+# @cache.cached(key_prefix="types")
 def get_token_types():
     """
     Return a simple list of the type names of the tokens.
@@ -487,7 +539,7 @@ def get_token_types():
     return list(this.config["pi_token_types"].values())
 
 
-#@cache.cached(key_prefix="prefix")
+# @cache.cached(key_prefix="prefix")
 def get_token_prefix(tokentype=None, default=None):
     """
     Return the token prefix for a tokentype as it is defined in the
@@ -511,7 +563,7 @@ def get_token_prefix(tokentype=None, default=None):
     return ret
 
 
-#@cache.cached(key_prefix="classes")
+# @cache.cached(key_prefix="classes")
 def get_token_classes():
     """
     Returns a list of the available token classes like:
@@ -549,17 +601,18 @@ def get_machine_resolver_class_dict():
         log.debug("module: {0!s}".format(module))
         for name in dir(module):
             obj = getattr(module, name)
-            if inspect.isclass(obj) and \
-                    (issubclass(obj, BaseMachineResolver)) and \
-                    (obj != BaseMachineResolver):
+            if (
+                inspect.isclass(obj)
+                and (issubclass(obj, BaseMachineResolver))
+                and (obj != BaseMachineResolver)
+            ):
                 try:
                     class_name = "{0!s}.{1!s}".format(module.__name__, obj.__name__)
                     resolverclass_dict[class_name] = obj
                     resolvertype_dict[class_name] = obj.type
 
                 except Exception as e:  # pragma: no cover
-                    log.error("error constructing machine resolver "
-                              "class_list: %r" % e)
+                    log.error("error constructing machine resolver class_list: %r" % e)
 
     return resolverclass_dict, resolvertype_dict
 
@@ -584,22 +637,23 @@ def get_caconnector_class_dict():
         log.debug("module: {0!s}".format(module))
         for name in dir(module):
             obj = getattr(module, name)
-            if inspect.isclass(obj) and \
-                    (issubclass(obj, BaseCAConnector)) and \
-                    (obj != BaseCAConnector):
+            if (
+                inspect.isclass(obj)
+                and (issubclass(obj, BaseCAConnector))
+                and (obj != BaseCAConnector)
+            ):
                 try:
                     class_name = "{0!s}.{1!s}".format(module.__name__, obj.__name__)
                     class_dict[class_name] = obj
                     type_dict[class_name] = obj.connector_type
 
                 except Exception as e:  # pragma: no cover
-                    log.error("error constructing CA connector "
-                              "class_list: %r" % e)
+                    log.error("error constructing CA connector class_list: %r" % e)
 
     return class_dict, type_dict
 
 
-#@cache.cached(key_prefix="resolver")
+# @cache.cached(key_prefix="resolver")
 def get_resolver_class_dict():
     """
     get a dictionary of the resolver classes and a dictionary
@@ -627,16 +681,17 @@ def get_resolver_class_dict():
             obj = getattr(module, name)
             # There are other classes like HMAC in the lib.tokens module,
             # which we do not want to load.
-            if inspect.isclass(obj) and (issubclass(obj, UserIdResolver) or
-                                             obj == UserIdResolver):
+            if inspect.isclass(obj) and (
+                issubclass(obj, UserIdResolver) or obj == UserIdResolver
+            ):
                 # We must not process imported classes!
                 # if obj.__module__ == module.__name__:
                 try:
                     class_name = "{0!s}.{1!s}".format(module.__name__, obj.__name__)
                     resolverclass_dict[class_name] = obj
 
-                    prefix = class_name.split('.')[1]
-                    if hasattr(obj, 'getResolverClassType'):
+                    prefix = class_name.split(".")[1]
+                    if hasattr(obj, "getResolverClassType"):
                         prefix = obj.getResolverClassType()
 
                     resolverprefix_dict[class_name] = prefix
@@ -648,7 +703,7 @@ def get_resolver_class_dict():
 
 
 @log_with(log)
-#@cache.cached(key_prefix="resolver")
+# @cache.cached(key_prefix="resolver")
 def get_resolver_list():
     """
     get the list of the module names of the resolvers like
@@ -677,15 +732,15 @@ def get_resolver_list():
         # lines
         lines = config_modules.splitlines()
         coco = ",".join(lines)
-        for module in coco.split(','):
-            if module.strip() != '\\':
+        for module in coco.split(","):
+            if module.strip() != "\\":
                 module_list.add(module.strip())
 
     return module_list
 
 
 @log_with(log)
-#@cache.memoize(1)
+# @cache.memoize(1)
 def get_machine_resolver_class_list():
     """
     get the list of the class names of the machine resolvers like
@@ -704,7 +759,7 @@ def get_machine_resolver_class_list():
 
 
 @log_with(log)
-#@cache.cached(key_prefix="token")
+# @cache.cached(key_prefix="token")
 def get_token_list():
     """
     get the list of the tokens
@@ -753,7 +808,7 @@ def get_token_list():
 
 
 @log_with(log)
-#@cache.cached(key_prefix="modules")
+# @cache.cached(key_prefix="modules")
 def get_token_module_list():
     """
     return the list of modules of the available token classes
@@ -766,27 +821,29 @@ def get_token_module_list():
 
     modules = []
     for mod_name in module_list:
-        if mod_name == '\\' or len(mod_name.strip()) == 0:
+        if mod_name == "\\" or len(mod_name.strip()) == 0:
             continue
 
         # load all token class implementations
-        #if mod_name in sys.modules:
+        # if mod_name in sys.modules:
         #    module = sys.modules[mod_name]
         #    log.debug('module %s loaded' % (mod_name))
         #    modules.append(module)
-        #else:
+        # else:
         try:
             log.debug("import module: {0!s}".format(mod_name))
             module = importlib.import_module(mod_name)
             modules.append(module)
         except Exception as exx:  # pragma: no cover
             module = None
-            log.warning('unable to load token module : {0!r} ({1!r})'.format(mod_name, exx))
+            log.warning(
+                "unable to load token module : {0!r} ({1!r})".format(mod_name, exx)
+            )
 
     return modules
 
 
-#@cache.cached(key_prefix="modules")
+# @cache.cached(key_prefix="modules")
 def get_resolver_module_list():
     """
     return the list of modules of the available resolver classes
@@ -801,7 +858,7 @@ def get_resolver_module_list():
 
     modules = []
     for mod_name in module_list:
-        if mod_name == '\\' or len(mod_name.strip()) == 0:
+        if mod_name == "\\" or len(mod_name.strip()) == 0:
             continue
 
         try:
@@ -810,7 +867,9 @@ def get_resolver_module_list():
 
         except Exception as exx:  # pragma: no cover
             module = None
-            log.warning('unable to load resolver module : {0!r} ({1!r})'.format(mod_name, exx))
+            log.warning(
+                "unable to load resolver module : {0!r} ({1!r})".format(mod_name, exx)
+            )
 
         if module is not None:
             modules.append(module)
@@ -818,7 +877,7 @@ def get_resolver_module_list():
     return modules
 
 
-#@cache.cached(key_prefix="module")
+# @cache.cached(key_prefix="module")
 def get_caconnector_module_list():
     """
     return the list of modules of the available CA connector classes
@@ -826,6 +885,7 @@ def get_caconnector_module_list():
     :return: list of CA connector modules
     """
     from edumfa.lib.caconnectors.baseca import AvailableCAConnectors
+
     module_list = set(AvailableCAConnectors)
 
     modules = []
@@ -838,7 +898,11 @@ def get_caconnector_module_list():
 
         except Exception as exx:  # pragma: no cover
             module = None
-            log.warning('unable to load ca connector module : {0!r} ({1!r})'.format(mod_name, exx))
+            log.warning(
+                "unable to load ca connector module : {0!r} ({1!r})".format(
+                    mod_name, exx
+                )
+            )
 
         if module is not None:
             modules.append(module)
@@ -846,7 +910,7 @@ def get_caconnector_module_list():
     return modules
 
 
-#@cache.cached(key_prefix="module")
+# @cache.cached(key_prefix="module")
 def get_machine_resolver_module_list():
     """
     return the list of modules of the available machines resolver classes
@@ -868,7 +932,11 @@ def get_machine_resolver_module_list():
 
         except Exception as exx:  # pragma: no cover
             module = None
-            log.warning('unable to load machine resolver module : {0!r} ({1!r})'.format(module_name, exx))
+            log.warning(
+                "unable to load machine resolver module : {0!r} ({1!r})".format(
+                    module_name, exx
+                )
+            )
 
         if module is not None:
             modules.append(module)
@@ -906,14 +974,14 @@ def set_edumfa_config(key, value, typ="", desc=""):
         db.session.commit()
         ret = "update"
     else:
-        #new_entry = Config(key, value, typ, desc)
+        # new_entry = Config(key, value, typ, desc)
         # ``save`` will call ``save_config_timestamp`` for us
         Config(key, value, typ, desc).save()
-        #db.session.add(new_entry)
+        # db.session.add(new_entry)
         ret = "insert"
 
-    #save_config_timestamp()
-    #db.session.commit()
+    # save_config_timestamp()
+    # db.session.commit()
     return ret
 
 
@@ -925,7 +993,7 @@ def delete_edumfa_config(key):
     # We need to check, if the value already exist
     if Config.query.filter_by(Key=key).first().delete():
         ret = True
-    #if q:
+    # if q:
     #    db.session.delete(q)
     #    db.session.commit()
     #    ret = True
@@ -933,7 +1001,7 @@ def delete_edumfa_config(key):
     return ret
 
 
-#@cache.cached(key_prefix="pin")
+# @cache.cached(key_prefix="pin")
 def get_inc_fail_count_on_false_pin():
     """
     Return if the Failcounter should be increased if only tokens
@@ -941,12 +1009,11 @@ def get_inc_fail_count_on_false_pin():
     :return: True of False
     :rtype: bool
     """
-    r = get_from_config(key="IncFailCountOnFalsePin",
-                        default=False, return_bool=True)
+    r = get_from_config(key="IncFailCountOnFalsePin", default=False, return_bool=True)
     return r
 
 
-#@cache.cached(key_prefix="pin")
+# @cache.cached(key_prefix="pin")
 def get_prepend_pin():
     """
     Get the status of the "PrependPin" Config
@@ -968,25 +1035,25 @@ def set_prepend_pin(prepend=True):
 
 
 def return_saml_attributes():
-    r = get_from_config(key=SYSCONF.RETURNSAML, default=False,
-                        return_bool=True)
+    r = get_from_config(key=SYSCONF.RETURNSAML, default=False, return_bool=True)
     return r
 
 
 def return_saml_attributes_on_fail():
-    r = get_from_config(key=SYSCONF.RETURNSAMLONFAIL, default=False,
-                        return_bool=True)
+    r = get_from_config(key=SYSCONF.RETURNSAMLONFAIL, default=False, return_bool=True)
     return r
 
 
-def get_edumfa_node(default='localnode'):
+def get_edumfa_node(default="localnode"):
     """
     This returns the node name of the eduMFA node as found in the edumfa.cfg
     file in EDUMFA_NODE.
     If it does not exist, the EDUMFA_AUDIT_SERVERNAME is used.
     :return: the distinct node name
     """
-    node_name = get_app_config_value("EDUMFA_NODE", get_app_config_value("EDUMFA_AUDIT_SERVERNAME", default))
+    node_name = get_app_config_value(
+        "EDUMFA_NODE", get_app_config_value("EDUMFA_AUDIT_SERVERNAME", default)
+    )
     return node_name
 
 
@@ -1014,20 +1081,29 @@ def export_config(name=None):
 @register_import()
 def import_config(data, name=None):
     """Import given server configuration"""
-    log.debug('Import server config: {0!s}'.format(data))
+    log.debug("Import server config: {0!s}".format(data))
     res = {}
-    data.pop('__timestamp__', None)
+    data.pop("__timestamp__", None)
     for key, values in data.items():
         if name and name != key:
             continue
-        r = set_edumfa_config(key, values['Value'],
-                                   desc=values['Description'] if 'Description' in values else None,
-                                   typ=values['Type'] if 'Type' in values else None)
+        r = set_edumfa_config(
+            key,
+            values["Value"],
+            desc=values["Description"] if "Description" in values else None,
+            typ=values["Type"] if "Type" in values else None,
+        )
         res[key] = r
-    log.info('Added configuration: {0!s}'.format(
-        ', '.join([k for k, v in res.items() if v == 'insert'])))
-    log.info('Updated configuration: {0!s}'.format(
-        ', '.join([k for k, v in res.items() if v == 'update'])))
+    log.info(
+        "Added configuration: {0!s}".format(
+            ", ".join([k for k, v in res.items() if v == "insert"])
+        )
+    )
+    log.info(
+        "Updated configuration: {0!s}".format(
+            ", ".join([k for k, v in res.items() if v == "update"])
+        )
+    )
 
 
 def get_multichallenge_enrollable_tokentypes():
