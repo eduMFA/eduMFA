@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "edumfa"
 version = "2.8.0"
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.10,<3.15"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
 readme = { file = "README.rst", content-type = "text/x-rst" }
@@ -13,18 +13,17 @@ license = "AGPL-3.0-only"
 keywords = ["OTP", "two factor authentication", "management", "security"]
 classifiers = [
     "Framework :: Flask",
-    "Programming Language :: Python",
     "Development Status :: 5 - Production/Stable",
     "Topic :: Internet",
     "Topic :: Security",
     "Topic :: System :: Systems Administration :: Authentication/Directory",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dynamic = ["dependencies"]
 
@@ -71,10 +70,10 @@ test = [
     "pytest-cov==7.0.0",
     "responses==0.25.8",
     "testfixtures==8.3.0",
-    "tomli==2.2.1",
+    "tomli==2.3.0",
     "types-PyYAML==6.0.12.20250915",
 ]
-postgres = ["psycopg2==2.9.10"]
+postgres = ["psycopg2==2.9.11"]
 hsm = ["PyKCS11==1.5.18"]
 kerberos = ["gssapi==1.10.1"]
 grpc = [
@@ -93,6 +92,27 @@ include = ["edumfa*"]
 
 [tool.setuptools.package-data]
 "edumfa" = ["translations/**/*", "static/**/*"]
+
+[tool.ruff]
+extend-include = [
+    "tools/creategoogleauthenticator-file",
+    "tools/edumfa-create-ad-users",
+    "tools/edumfa-create-certificate",
+    "tools/edumfa-create-pwidresolver-user",
+    "tools/edumfa-create-sqlidresolver-user",
+    "tools/edumfa-cron",
+    "tools/edumfa-expired-users",
+    "tools/edumfa-fix-access-rights",
+    "tools/edumfa-get-serial",
+    "tools/edumfa-get-unused-tokens",
+    "tools/edumfa-pip-update",
+    "tools/edumfa-queue-huey",
+    "tools/edumfa-standalone",
+    "tools/edumfa-token-janitor",
+    "tools/edumfa-user-action",
+    "tools/edumfa-usercache-cleanup",
+    "tools/getgooglecodes"
+]
 
 [tool.ruff.lint]
 select = [
