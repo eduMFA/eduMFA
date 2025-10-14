@@ -29,28 +29,29 @@ Configuration. Event handling configuration is stored in the database table
 
 The code of this module is tested in tests/test_api_events.py
 """
-from flask import (Blueprint,
-                   request)
-from .lib.utils import getParam, send_result
-from ..lib.log import log_with
-from ..lib.event import set_event, delete_event, enable_event
-from flask import g
+
+import json
 import logging
-from ..api.lib.prepolicy import prepolicy, check_base_action
-from ..lib.policy import ACTION
+
+from flask import Blueprint, g, request
+
 from edumfa.lib.event import AVAILABLE_EVENTS, get_handler_object
 from edumfa.lib.utils import is_true
-import json
 
+from ..api.lib.prepolicy import check_base_action, prepolicy
+from ..lib.event import delete_event, enable_event, set_event
+from ..lib.log import log_with
+from ..lib.policy import ACTION
+from .lib.utils import getParam, send_result
 
 log = logging.getLogger(__name__)
 
 
-eventhandling_blueprint = Blueprint('eventhandling_blueprint', __name__)
+eventhandling_blueprint = Blueprint("eventhandling_blueprint", __name__)
 
 
-@eventhandling_blueprint.route('/', methods=['GET'])
-@eventhandling_blueprint.route('/<eventid>', methods=['GET'])
+@eventhandling_blueprint.route("/", methods=["GET"])
+@eventhandling_blueprint.route("/<eventid>", methods=["GET"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.EVENTHANDLINGREAD)
 def get_eventhandling(eventid=None):
@@ -69,15 +70,25 @@ def get_eventhandling(eventid=None):
         res = AVAILABLE_EVENTS
     elif eventid == "handlermodules":
         # TODO: We need to provide a dynamic list of event handlers
-        res = ["UserNotification", "Token", "Federation", "Script", "Counter",
-               "RequestMangler", "ResponseMangler", "Logging", "CustomUserAttributes", "WebHook"]
+        res = [
+            "UserNotification",
+            "Token",
+            "Federation",
+            "Script",
+            "Counter",
+            "RequestMangler",
+            "ResponseMangler",
+            "Logging",
+            "CustomUserAttributes",
+            "WebHook",
+        ]
     else:
         res = g.event_config.get_event(eventid)
     g.audit_object.log({"success": True})
     return send_result(res)
 
 
-@eventhandling_blueprint.route('/positions/<handlermodule>', methods=["GET"])
+@eventhandling_blueprint.route("/positions/<handlermodule>", methods=["GET"])
 @log_with(log)
 def get_module_positions(handlermodule=None):
     """
@@ -95,7 +106,7 @@ def get_module_positions(handlermodule=None):
     return send_result(ret)
 
 
-@eventhandling_blueprint.route('/actions/<handlermodule>', methods=["GET"])
+@eventhandling_blueprint.route("/actions/<handlermodule>", methods=["GET"])
 @log_with(log)
 def get_module_actions(handlermodule=None):
     """
@@ -113,7 +124,7 @@ def get_module_actions(handlermodule=None):
     return send_result(ret)
 
 
-@eventhandling_blueprint.route('/conditions/<handlermodule>', methods=["GET"])
+@eventhandling_blueprint.route("/conditions/<handlermodule>", methods=["GET"])
 @log_with(log)
 def get_module_conditions(handlermodule=None):
     """
@@ -131,7 +142,7 @@ def get_module_conditions(handlermodule=None):
     return send_result(ret)
 
 
-@eventhandling_blueprint.route('', methods=['POST'])
+@eventhandling_blueprint.route("", methods=["POST"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.EVENTHANDLINGWRITE)
 def set_eventhandling():
@@ -168,16 +179,23 @@ def set_eventhandling():
         if k.startswith("option."):
             options[k[7:]] = v
 
-    res = set_event(name, event, handlermodule=handlermodule,
-                    action=action, conditions=conditions,
-                    ordering=ordering, id=eid, options=options, active=active,
-                    position=position)
-    g.audit_object.log({"success": True,
-                        "info": res})
+    res = set_event(
+        name,
+        event,
+        handlermodule=handlermodule,
+        action=action,
+        conditions=conditions,
+        ordering=ordering,
+        id=eid,
+        options=options,
+        active=active,
+        position=position,
+    )
+    g.audit_object.log({"success": True, "info": res})
     return send_result(res)
 
 
-@eventhandling_blueprint.route('/enable/<eventid>', methods=['POST'])
+@eventhandling_blueprint.route("/enable/<eventid>", methods=["POST"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.EVENTHANDLINGWRITE)
 def enable_event_api(eventid):
@@ -192,7 +210,7 @@ def enable_event_api(eventid):
     return send_result(p)
 
 
-@eventhandling_blueprint.route('/disable/<eventid>', methods=['POST'])
+@eventhandling_blueprint.route("/disable/<eventid>", methods=["POST"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.EVENTHANDLINGWRITE)
 def disable_event_api(eventid):
@@ -207,7 +225,7 @@ def disable_event_api(eventid):
     return send_result(p)
 
 
-@eventhandling_blueprint.route('/<eid>', methods=['DELETE'])
+@eventhandling_blueprint.route("/<eid>", methods=["DELETE"])
 @log_with(log)
 @prepolicy(check_base_action, request, ACTION.EVENTHANDLINGWRITE)
 def delete_eventid(eid=None):
@@ -218,8 +236,6 @@ def delete_eventid(eid=None):
     :return: json with success or fail
     """
     res = delete_event(eid)
-    g.audit_object.log({"success": res,
-                        "info": eid})
+    g.audit_object.log({"success": res, "info": eid})
 
     return send_result(res)
-

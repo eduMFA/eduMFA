@@ -10,10 +10,12 @@ It exports
    serial, counter
 
 """
-from sqlalchemy.sql import select
-from edumfa.models import Token
 import argparse
+
 from sqlalchemy import create_engine
+from sqlalchemy.sql import select
+
+from edumfa.models import Token
 
 
 def get_edumfa_uri(config_file):
@@ -30,9 +32,12 @@ def get_edumfa_uri(config_file):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("-c", "--config", help="eduMFA config file. We only "
-                                               "need the SQLALCHEMY_DATABASE_URI.",
-                        required=True)
+    parser.add_argument(
+        "-c",
+        "--config",
+        help="eduMFA config file. We only need the SQLALCHEMY_DATABASE_URI.",
+        required=True,
+    )
     args = parser.parse_args()
 
     # Parse data
@@ -51,5 +56,5 @@ def main():
         print("{0!s}, {1!s}".format(r.serial, r.count))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

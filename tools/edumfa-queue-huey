@@ -37,14 +37,13 @@
 # THE SOFTWARE.
 #
 
+import copy
+import logging
 import os
 import sys
 
-import copy
-import logging
 from flask import _app_ctx_stack
-from huey.consumer_options import ConsumerConfig, option
-from huey.consumer_options import OptionParserHandler
+from huey.consumer_options import ConsumerConfig, OptionParserHandler, option
 
 from edumfa.app import create_app
 from edumfa.lib.log import DEFAULT_LOGGING_CONFIG as EDUMFA_LOGGING_CONFIG
@@ -61,7 +60,7 @@ class CustomOptionParserHandler(OptionParserHandler):
         """
         return (
             # -l
-            option('logfile', metavar='FILE'),
+            option("logfile", metavar="FILE"),
         )
 
     def get_option_parser(self):
@@ -69,7 +68,7 @@ class CustomOptionParserHandler(OptionParserHandler):
         overrides parent method: modifies the usage string to not include ``path.to.huey_instance``.
         """
         parser = OptionParserHandler.get_option_parser(self)
-        parser.set_usage('Usage: %prog [options]')
+        parser.set_usage("Usage: %prog [options]")
         return parser
 
 
@@ -77,9 +76,11 @@ def make_push_app_context(app):
     """
     Create a huey pre-execute hook that pushes a new app context before executing any job.
     """
+
     def func(task):
         ctx = app.app_context()
         ctx.push()
+
     return func
 
 
@@ -105,7 +106,7 @@ def make_logging_config(logfile, loglevel):
 
 
 def consumer_main():
-    app = create_app(config_name='production', silent=True)
+    app = create_app(config_name="production", silent=True)
 
     with app.app_context():
         queue = get_job_queue()
@@ -116,8 +117,7 @@ def consumer_main():
     parser = parser_handler.get_option_parser()
     options, args = parser.parse_args()
 
-    options = {k: v for k, v in options.__dict__.items()
-               if v is not None}
+    options = {k: v for k, v in options.__dict__.items() if v is not None}
     config = ConsumerConfig(**options)
     config.validate()
     # setup logging:
@@ -129,7 +129,9 @@ def consumer_main():
         # has already been set up by ``create_app``.
         # But we ensure that the user hasn't passed ``-l``
         if config.logfile is not None:
-            sys.stderr.write("-l is unsupported if EDUMFA_LOGCONFIG is used. Exiting.\n")
+            sys.stderr.write(
+                "-l is unsupported if EDUMFA_LOGCONFIG is used. Exiting.\n"
+            )
             sys.exit(1)
         print("Using logging configuration from {!r}".format(log_config_file))
     else:
@@ -143,12 +145,12 @@ def consumer_main():
         logging.config.dictConfig(log_config)
         print("Logging to {!r}".format(logfile))
 
-    queue.huey.register_pre_execute('push_app_context', make_push_app_context(app))
-    queue.huey.register_post_execute('pop_app_context', pop_app_context)
+    queue.huey.register_pre_execute("push_app_context", make_push_app_context(app))
+    queue.huey.register_post_execute("pop_app_context", pop_app_context)
 
     consumer = queue.huey.create_consumer(**config.values)
     consumer.run()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     consumer_main()

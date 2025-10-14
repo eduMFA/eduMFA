@@ -2,17 +2,18 @@
 This tests the files
   lib/task/eventcounter.py
 """
-from .base import MyTestCase
-from .test_lib_counter import increase_and_read
+
+from flask import current_app
+
 from edumfa.lib.counter import increase, read
 from edumfa.lib.monitoringstats import get_values
-
 from edumfa.lib.task.eventcounter import EventCounterTask
-from flask import current_app
+
+from .base import MyTestCase
+from .test_lib_counter import increase_and_read
 
 
 class TaskEventCounterTestCase(MyTestCase):
-
     def setUp(self):
         pass
 
@@ -33,9 +34,11 @@ class TaskEventCounterTestCase(MyTestCase):
         self.assertEqual(r, 2)
 
         et = EventCounterTask(current_app.config)
-        params = {"event_counter": "counter1",
-                  "stats_key": "C1",
-                  "reset_event_counter": "True"}
+        params = {
+            "event_counter": "counter1",
+            "stats_key": "C1",
+            "reset_event_counter": "True",
+        }
 
         # Now we execute the task
         et.do(params)

@@ -18,14 +18,17 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from edumfa.lib.applications import MachineApplicationBase
-from edumfa.lib.crypto import geturandom
-from edumfa.lib.error import ValidateError, ParameterError
 import logging
+
 from passlib.hash import pbkdf2_sha512
-from edumfa.lib.token import get_tokens
+
+from edumfa.lib.applications import MachineApplicationBase
 from edumfa.lib.config import get_prepend_pin
+from edumfa.lib.crypto import geturandom
+from edumfa.lib.error import ParameterError, ValidateError
 from edumfa.lib.policy import TYPE
+from edumfa.lib.token import get_tokens
+
 log = logging.getLogger(__name__)
 ROUNDS = 6549
 REFILLTOKEN_LENGTH = 40
@@ -48,6 +51,7 @@ class MachineApplication(MachineApplicationBase):
       * count: is the number of OTP values returned
 
     """
+
     application_name = "offline"
 
     @staticmethod
@@ -80,8 +84,7 @@ class MachineApplication(MachineApplicationBase):
         for key, otp in otps.items():
             # Return the hash of OTP PIN and OTP values
             otppw = otppin + otp if prepend_pin else otp + otppin
-            otps[key] = pbkdf2_sha512.using(
-                rounds=rounds, salt_size=10).hash(otppw)
+            otps[key] = pbkdf2_sha512.using(rounds=rounds, salt_size=10).hash(otppw)
         # We do not disable the token, so if all offline OTP values
         # are used, the token can be used the authenticate online again.
         # token_obj.enable(False)
@@ -123,16 +126,16 @@ class MachineApplication(MachineApplicationBase):
         # we sent to the client. Assume the client then requests a refill with that exact OTP value.
         # Then, we need to respond with a refill of one OTP value, as the client has consumed one OTP value.
         counter_diff = matching_count - first_offline_counter + 1
-        otps = MachineApplication.get_offline_otps(token_obj, otppin, counter_diff, rounds)
-        token_obj.add_tokeninfo(key="offline_counter",
-                                value=count)
+        otps = MachineApplication.get_offline_otps(
+            token_obj, otppin, counter_diff, rounds
+        )
+        token_obj.add_tokeninfo(key="offline_counter", value=count)
         return otps
 
     @staticmethod
-    def get_authentication_item(token_type,
-                                serial,
-                                challenge=None, options=None,
-                                filter_param=None):
+    def get_authentication_item(
+        token_type, serial, challenge=None, options=None, filter_param=None
+    ):
         """
         :param token_type: the type of the token. At the moment
                            we only support "HOTP" token. Supporting time
@@ -159,10 +162,12 @@ class MachineApplication(MachineApplicationBase):
                         raise ParameterError("Could not split password")
                 else:
                     otppin = ""
-                otps = MachineApplication.get_offline_otps(token_obj,
-                                                           otppin,
-                                                           int(options.get("count", 100)),
-                                                           int(options.get("rounds", ROUNDS)))
+                otps = MachineApplication.get_offline_otps(
+                    token_obj,
+                    otppin,
+                    int(options.get("count", 100)),
+                    int(options.get("rounds", ROUNDS)),
+                )
                 refilltoken = MachineApplication.generate_new_refilltoken(token_obj)
                 ret["response"] = otps
                 ret["refilltoken"] = refilltoken
@@ -173,8 +178,10 @@ class MachineApplication(MachineApplicationBase):
                         ret["user"] = ret["username"] = uInfo.get("username")
 
         else:
-            log.info("Token %r, type %r is not supported by "
-                     "OFFLINE application module" % (serial, token_type))
+            log.info(
+                "Token %r, type %r is not supported by "
+                "OFFLINE application module" % (serial, token_type)
+            )
 
         return ret
 
@@ -183,5 +190,4 @@ class MachineApplication(MachineApplicationBase):
         """
         returns a dictionary with a list of required and optional options
         """
-        return {'count': {'type': TYPE.STRING},
-                'rounds': {'type': TYPE.STRING}}
+        return {"count": {"type": TYPE.STRING}, "rounds": {"type": TYPE.STRING}}

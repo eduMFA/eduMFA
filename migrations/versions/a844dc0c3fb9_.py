@@ -16,8 +16,8 @@ Create Date: 2025-08-01 14:06:18.532560
 revision = "a844dc0c3fb9"
 down_revision = "414079706620"
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 
 def upgrade():
@@ -27,7 +27,7 @@ def upgrade():
         "user",
         existing_type=sa.Unicode(length=20),
         type_=sa.Unicode(length=64),
-        existing_nullable=True
+        existing_nullable=True,
     )
     print("Setting mfa_audit.administrator to a maximum of 64 characters")
     op.alter_column(
@@ -35,7 +35,7 @@ def upgrade():
         "administrator",
         existing_type=sa.Unicode(length=20),
         type_=sa.Unicode(length=64),
-        existing_nullable=True
+        existing_nullable=True,
     )
 
 
@@ -46,7 +46,7 @@ def downgrade():
         "user",
         existing_type=sa.Unicode(length=64),
         type_=sa.Unicode(length=20),
-        existing_nullable=True
+        existing_nullable=True,
     )
     print("Resetting mfa_audit.administrator to a maximum of 20 characters")
     op.alter_column(
@@ -54,5 +54,5 @@ def downgrade():
         "administrator",
         existing_type=sa.Unicode(length=64),
         type_=sa.Unicode(length=20),
-        existing_nullable=True
+        existing_nullable=True,
     )

@@ -72,33 +72,56 @@ expect.
 """
 __version__ = "0.1"
 
-from edumfa.lib.user import get_user_list, User
-from edumfa.lib.token import get_tokens, remove_token, unassign_token
-from edumfa.app import create_app
 import datetime
 import re
-import click
-from flask.cli import FlaskGroup
-from flask import current_app as app
 
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+import click
+from flask import current_app as app
+from flask.cli import FlaskGroup
+
+from edumfa.app import create_app
+from edumfa.lib.token import get_tokens, remove_token, unassign_token
+from edumfa.lib.user import User, get_user_list
+
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 def create_prod_app():
     return create_app("production", silent=True, script=True)
 
 
-@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
-             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
+@click.group(
+    cls=FlaskGroup,
+    add_default_commands=False,
+    create_app=create_prod_app,
+    context_settings=CONTEXT_SETTINGS,
+    epilog="Check out our docs at https://edumfa.readthedocs.io/ for more details",
+)
 def cli():
     pass
 
+
 @cli.command()
-@click.option('--realm', help='The realm which should be checked')
-@click.option('--attribute_name', default='accountExpires', help='The attribute name that contains the expiration date')
-@click.option('--delete_serial', help='Regular expression to match the serial numbers of tokens to be deleted')
-@click.option('--unassign_serial', default='.*', help='Regular expression to match the serial numbers of tokens to be unassigned')
-@click.option('--noaction', is_flag=True, help='If set, the script will only show which accounts have expired, but do nothing')
+@click.option("--realm", help="The realm which should be checked")
+@click.option(
+    "--attribute_name",
+    default="accountExpires",
+    help="The attribute name that contains the expiration date",
+)
+@click.option(
+    "--delete_serial",
+    help="Regular expression to match the serial numbers of tokens to be deleted",
+)
+@click.option(
+    "--unassign_serial",
+    default=".*",
+    help="Regular expression to match the serial numbers of tokens to be unassigned",
+)
+@click.option(
+    "--noaction",
+    is_flag=True,
+    help="If set, the script will only show which accounts have expired, but do nothing",
+)
 def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
     """
     This searches for expired Users in the specified realm.
@@ -148,22 +171,23 @@ def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
                         m = re.search(unassign_serial, token.token.serial)
                         if m:
                             if noaction:
-                                print("=== I WOULD unassign token %s" %
-                                      token.token.serial)
+                                print(
+                                    "=== I WOULD unassign token %s" % token.token.serial
+                                )
                             else:
-                                print("=== Unassigning token %s" %
-                                      token.token.serial)
+                                print("=== Unassigning token %s" % token.token.serial)
                                 unassign_token(token.token.serial)
                     if delete_serial:
                         m = re.search(delete_serial, token.token.serial)
                         if m:
                             if noaction:
-                                print("=== I WOULD delete token %s" %
-                                      token.token.serial)
+                                print(
+                                    "=== I WOULD delete token %s" % token.token.serial
+                                )
                             else:
-                                print("=== Deleting token %s" %
-                                      token.token.serial)
+                                print("=== Deleting token %s" % token.token.serial)
                                 remove_token(token.token.serial)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     cli()

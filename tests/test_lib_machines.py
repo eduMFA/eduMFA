@@ -9,19 +9,25 @@ lib.machines.hosts
 """
 
 HOSTSFILE = "tests/testdata/hosts"
-from .base import MyTestCase
-from edumfa.lib.machines import BaseMachineResolver
-from edumfa.lib.machines.hosts import HostsMachineResolver
-from edumfa.lib.machines.base import Machine, MachineResolverError
 import netaddr
-from edumfa.lib.machineresolver import (get_resolver_list, save_resolver,
-                                     delete_resolver, get_resolver_config,
-                                     get_resolver_object, pretestresolver)
+
 from edumfa.lib.machine import get_machines
+from edumfa.lib.machineresolver import (
+    delete_resolver,
+    get_resolver_config,
+    get_resolver_list,
+    get_resolver_object,
+    pretestresolver,
+    save_resolver,
+)
+from edumfa.lib.machines import BaseMachineResolver
+from edumfa.lib.machines.base import Machine, MachineResolverError
+from edumfa.lib.machines.hosts import HostsMachineResolver
+
+from .base import MyTestCase
 
 
 class MachineObjectTestCase(MyTestCase):
-
     def test_01_create_machine(self):
         m = Machine("noResolver", "id1", ip="1.2.3.4")
         self.assertEqual(m.ip, netaddr.IPAddress("1.2.3.4"))
@@ -30,11 +36,13 @@ class MachineObjectTestCase(MyTestCase):
         self.assertEqual(m.ip, netaddr.IPAddress("1.2.3.4"))
 
     def test_02_has_attributes(self):
-
         m1 = Machine("noResolver", "id1", hostname="gandalf", ip="1.2.3.4")
-        m2 = Machine("noResolver", "id2", hostname=["gandalf", "borodin"],
-                     ip=[netaddr.IPAddress("1.2.3.4"), netaddr.IPAddress(
-                         "2.3.4.5")])
+        m2 = Machine(
+            "noResolver",
+            "id2",
+            hostname=["gandalf", "borodin"],
+            ip=[netaddr.IPAddress("1.2.3.4"), netaddr.IPAddress("2.3.4.5")],
+        )
 
         self.assertTrue(m1.has_hostname("gandalf"))
         self.assertTrue(m2.has_hostname("gandalf"))
@@ -43,7 +51,6 @@ class MachineObjectTestCase(MyTestCase):
 
 
 class MachineResolverTestCase(MyTestCase):
-
     """
     Test the handling of machines on the library level, which creates
     machine objects in the database.
@@ -53,43 +60,58 @@ class MachineResolverTestCase(MyTestCase):
         # Save a resolver in the database
 
         # Try to create a resolver, which type does not exist:
-        self.assertRaises(Exception, save_resolver, {"name": "testresolver",
-                                                     "type": "DNE",
-                                                     "filename": HOSTSFILE})
+        self.assertRaises(
+            Exception,
+            save_resolver,
+            {"name": "testresolver", "type": "DNE", "filename": HOSTSFILE},
+        )
 
         # Try to create a resolver, with wrong name:
-        self.assertRaises(Exception, save_resolver, {"name": "=====",
-                                                     "type": "hosts",
-                                                     "filename": HOSTSFILE})
+        self.assertRaises(
+            Exception,
+            save_resolver,
+            {"name": "=====", "type": "hosts", "filename": HOSTSFILE},
+        )
 
         # Create a hosts resolver
-        mr_obj = save_resolver({"name": "testresolver",
-                                "type": "hosts",
-                                "filename": "somefile",
-                                "unknown_param": "xyz"})
+        mr_obj = save_resolver(
+            {
+                "name": "testresolver",
+                "type": "hosts",
+                "filename": "somefile",
+                "unknown_param": "xyz",
+            }
+        )
         self.assertTrue(mr_obj > 0)
 
         # update the resolver
-        mr_obj = save_resolver({"name": "testresolver",
-                                "type": "hosts",
-                                "filename": HOSTSFILE,
-                                "type.filename": "string",
-                                "desc.filename": "the filename with the "
-                                                  "hosts",
-                                "pw": "secretöö",
-                                "type.pw": "password"})
+        mr_obj = save_resolver(
+            {
+                "name": "testresolver",
+                "type": "hosts",
+                "filename": HOSTSFILE,
+                "type.filename": "string",
+                "desc.filename": "the filename with the hosts",
+                "pw": "secretöö",
+                "type.pw": "password",
+            }
+        )
         self.assertTrue(mr_obj > 0)
 
         # wrong machine resolver definitions
         # missing value with type
-        self.assertRaises(Exception, save_resolver, {"name": "t2",
-                                                     "type": "hosts",
-                                                     "type.filename": "string"})
+        self.assertRaises(
+            Exception,
+            save_resolver,
+            {"name": "t2", "type": "hosts", "type.filename": "string"},
+        )
 
         # missing value with description
-        self.assertRaises(Exception, save_resolver, {"name": "t2",
-                                                     "type": "hosts",
-                                                     "desc.filename": "s.t."})
+        self.assertRaises(
+            Exception,
+            save_resolver,
+            {"name": "t2", "type": "hosts", "desc.filename": "s.t."},
+        )
 
     def test_02_list_resolvers(self):
         # check if the resolver, we created is in the database
@@ -138,8 +160,8 @@ class BaseMachineTestCase(MyTestCase):
     """
     Test the base resolver
     """
-    mreso = BaseMachineResolver("newresolver",
-                                config={"somekey": "somevalue"})
+
+    mreso = BaseMachineResolver("newresolver", config={"somekey": "somevalue"})
 
     def test_02_get_type(self):
         mtype = self.mreso.get_type()
@@ -158,13 +180,12 @@ class HostsMachineTestCase(MyTestCase):
     """
     Test the Hosts Resolver
     """
-    mreso = HostsMachineResolver("myResolver",
-                                 config={"filename": HOSTSFILE})
+
+    mreso = HostsMachineResolver("myResolver", config={"filename": HOSTSFILE})
 
     def test_01_get_config_description(self):
         desc = self.mreso.get_config_description()
-        self.assertEqual(desc.get("hosts").get("config").get("filename"),
-                         "string")
+        self.assertEqual(desc.get("hosts").get("config").get("filename"), "string")
 
     def test_02_get_machines(self):
         machines = self.mreso.get_machines()
@@ -173,13 +194,13 @@ class HostsMachineTestCase(MyTestCase):
         machines = self.mreso.get_machines(hostname="gandalf")
         self.assertEqual(len(machines), 1)
 
-        machines = self.mreso.get_machines(hostname="gandalf",
-                                           ip=netaddr.IPAddress("192.168.0.1"))
+        machines = self.mreso.get_machines(
+            hostname="gandalf", ip=netaddr.IPAddress("192.168.0.1")
+        )
         self.assertEqual(len(machines), 1)
 
         # THere are 3 machines, whose name contains an "n"
-        machines = self.mreso.get_machines(hostname="n",
-                                           substring=True)
+        machines = self.mreso.get_machines(hostname="n", substring=True)
         self.assertEqual(len(machines), 4)
 
     def test_02_get_machines_any(self):
@@ -223,6 +244,6 @@ class HostsMachineTestCase(MyTestCase):
 
     def test_05_failing_load_config(self):
         # missing filename
-        self.assertRaises(MachineResolverError,
-                          self.mreso.load_config,
-                          {"name": "nothing"})
+        self.assertRaises(
+            MachineResolverError, self.mreso.load_config, {"name": "nothing"}
+        )

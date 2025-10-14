@@ -5,38 +5,45 @@ Yubikey Enrollment Tools
 
 .. index:: Yubikey, Yubico AES mode, Yubikey OATH-HOTP mode
 
-The Yubikey can be used with eduMFA in Yubico's own AES mode (*Yubico OTP*),
-in the HOTP mode (*OATH-HOTP*) or the seldom used static password mode.
+The Yubikey can be used with eduMFA in Yubico's own AES mode ("Yubico OTP") or
+the seldom used static password mode. It also supports importing an existing
+HOTP secret ("OATH-HOTP").
 
 This section describes tools which can be used to initialize and enroll a
 Yubikey with eduMFA.
 
-If not using the :ref:`yubico_token` mode, the Yubikey has to be initialized/configured
-which creates a new secret on the device that has to be imported to eduMFA.
+If not using the :ref:`yubico_token` mode, the Yubikey has to be
+initialized/configured which creates a new secret on the device that has to be
+imported to eduMFA.
 
-.. _ykpersgui:
+.. _ykapp:
 
-Yubikey Personalization GUI
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Yubikey Authenticator
+~~~~~~~~~~~~~~~~~~~~~
 
-.. index:: Yubikey, Yubikey personalization GUI, Yubikey personalization tool
+.. index:: Yubikey, Yubikey Authenticator
 
-You can initialize the Yubikey with the official Yubico personalization GUI
-[#ykpers]_ and use the obtained secret to enroll the Yubikey with eduMFA.
-For both AES (Yubico OTP) and OATH-HOTP mode, there are two possibilities to initialize
-the Yubikey with eduMFA.
+You can initialize the Yubikey with the official Yubico Authenticator
+application [#ykappurl]_ and use the obtained secret to enroll the Yubikey with
+eduMFA.
 
 Manual token enrollment
 .......................
 
-To initialize a single Yubikey in AES mode (Yubico OTP) use the *Quick* button and
-copy the displayed secret labeled with "Secret Key (16 bytes Hex)" to the field *OTP Key*
-on the enrollment form in the eduMFA WebUI.
+To initialize a single Yubikey in AES mode (Yubico OTP) open the "Slots" menu,
+select a slot and press "Yubico OTP". To generate the values, press the
+right-hand button in each field. Copy the displayed secret labeled with "Secret
+Key" to the field *OTP Key* on the enrollment form in the eduMFA WebUI.
 
-.. figure:: images/ykpers-quick-initialize-aes.png
+.. figure:: images/ykapp-slots.png
    :width: 500
 
-   *Initialize a Yubikey in AES mode (Yubikey OTP)*
+   *Create a new Yubikey OTP token in a key slot*
+
+.. figure:: images/ykapp-initialize.png
+   :width: 500
+
+   *Select all the buttons to generate values*
 
 .. figure:: images/enroll_yubikey.png
    :width: 500
@@ -55,54 +62,7 @@ length of the *OTP value* and the field *OTP length* is automatically filled.
     eduMFA takes care of separating these parts but it needs to know the
     complete length of the OTP value to work correctly.
 
-The process is similar for the HOTP mode. You have to deselect *OATH Token Identifier*.
-Copy the displayed secret to the HOTP :ref:`hotp_token_enrollment` form in eduMFA.
-
-.. figure:: images/ykpers-quick-initialize-oath-hotp.png
-   :width: 500
-
-   *To initialize a single Yubikey in HOTP mode, deselect OATH Token Identifier.*
-
-.. note::
-   In the case of HOTP mode eduMFA can not necessarily distinguish a Yubikey in
-   HOTP mode from a smartphone App in HOTP mode. Using the above mentioned mass-enrollment,
-   the token serial number is used to distinguish these tokens.
-
-Mass enrollment
-...............
-
-To initialize one or more Yubikeys it is convenient to write the created token secrets to a file
-which can be imported in the eduMFA WebUI. To do this, activate *Settings* -> *Log configuration output*.
-We recommend to select *Yubico format* since here eduMFA is able to detect the Yubikey mode and
-sets the serial accordingly prepending UBOM or UBAM. PSKC format is also supported upon import.
-You may also use the *Flexible format* to set custom token serials upon import with :ref:`import_oath_csv`.
-
-To set a custom serial for Yubikey Tokens, set the *Flexible format* to::
-
-   YUBIAES{serial}_{configSlot},{secretKeyTxt},yubikey
-
-For Yubikeys in HOTP mode, set the output format as::
-
-   YUBIHOTP{serial}_{configSlot},{secretKeyTxt},hotp,{hotpDigits}
-
-Upon clicking *Write Configuration* for the first time, you will be prompted to select an output file name and
-the generated configuration is written both to the device and to the selected file. In the *Advanced* mode
-select *Program Multiple Yubikeys* and *Automatically program Yubikeys when inserted* to program each Yubikey
-automatically after you insert it.
-
-.. figure:: images/ykpers-mass-initialize.png
-   :width: 500
-
-   *Write Configuration initializes the Yubikey*
-
-During this process the token secrets are automatically
-appended to the selected export file. Note again, that for HOTP, you have to deselect
-*OATH Token Identifier*.
-
-After mass-initialization, the token secrets have to be imported to eduMFA according to the
-output format (see :ref:`import`).
-
 .. rubric:: Footnotes
 
-.. [#ykpers] https://www.yubico.com/products/services-software/download/yubikey-personalization-tools/
+.. [#ykappurl] https://www.yubico.com/products/yubico-authenticator/
 .. [#ykotp] https://developers.yubico.com/OTP/OTPs_Explained.html

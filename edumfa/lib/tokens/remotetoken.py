@@ -39,17 +39,19 @@ The code is tested in tests/test_lib_tokens_remote
 
 import logging
 import traceback
+
 import requests
-from edumfa.lib.utils import is_true
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib.config import get_from_config
+
 from edumfa.api.lib.utils import getParam
-from edumfa.lib.log import log_with
-from edumfa.lib.policydecorators import challenge_response_allowed
-from edumfa.lib.tokenclass import TokenClass, TOKENKIND, AUTHENTICATIONMODE
-from edumfa.lib.edumfaserver import get_edumfaserver
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.config import get_from_config
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.edumfaserver import get_edumfaserver
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.policydecorators import challenge_response_allowed
+from edumfa.lib.tokenclass import AUTHENTICATIONMODE, TOKENKIND, TokenClass
+from edumfa.lib.utils import is_true
 
 optional = True
 required = False
@@ -69,6 +71,7 @@ class RemoteTokenClass(TokenClass):
     Using the Remote token you can assign one physical token to many
     different users.
     """
+
     mode = [AUTHENTICATIONMODE.AUTHENTICATE, AUTHENTICATIONMODE.CHALLENGE]
 
     def __init__(self, db_token):
@@ -96,7 +99,7 @@ class RemoteTokenClass(TokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         :param key: subsection identifier
         :type key: string
@@ -105,34 +108,39 @@ class RemoteTokenClass(TokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or string
         """
-        res = {'type': 'remote',
-               'title': 'Remote Token',
-               'description': _('Remote Token: Forward authentication request '
-                                'to another server.'),
-               'user': [],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin"],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of remote tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _(
-                               "The user may only have this maximum number of active remote tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               },
-               }
+        res = {
+            "type": "remote",
+            "title": "Remote Token",
+            "description": _(
+                "Remote Token: Forward authentication request to another server."
+            ),
+            "user": [],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin"],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of remote tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of active remote tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
 
         if key:
             ret = res.get(key, {})
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
@@ -156,13 +164,20 @@ class RemoteTokenClass(TokenClass):
         else:
             remoteServer = getParam(param, "remote.server", required)
             self.add_tokeninfo("remote.server", remoteServer)
-            log.warning("Using remote.server for remote tokens is deprecated. Use remote.server_id!")
+            log.warning(
+                "Using remote.server for remote tokens is deprecated. Use remote.server_id!"
+            )
 
         val = getParam(param, "remote.local_checkpin", optional) or 0
         self.add_tokeninfo("remote.local_checkpin", val)
 
-        for key in ["remote.serial", "remote.user", "remote.path",
-                    "remote.realm", "remote.resolver"]:
+        for key in [
+            "remote.serial",
+            "remote.user",
+            "remote.path",
+            "remote.realm",
+            "remote.resolver",
+        ]:
             val = getParam(param, key, optional)
             if val is not None:
                 self.add_tokeninfo(key, val)
@@ -204,20 +219,21 @@ class RemoteTokenClass(TokenClass):
 
         # should we check the pin localy?
         if self.check_pin_local:
-            (_res, pin, otpval) = self.split_pin_pass(passw, user,
-                                                      options=options)
+            (_res, pin, otpval) = self.split_pin_pass(passw, user, options=options)
 
             if not TokenClass.check_pin(self, pin, user=user, options=options):
-                return False, otp_counter, {'message': "Wrong PIN"}
+                return False, otp_counter, {"message": "Wrong PIN"}
 
         otp_count = self.check_otp(otpval, options=options)
         if otp_count >= 0:
             res = True
-            reply = {'message': 'matching 1 tokens',
-                     'serial': self.get_serial(),
-                     'type': self.get_tokentype()}
+            reply = {
+                "message": "matching 1 tokens",
+                "serial": self.get_serial(),
+                "type": self.get_tokentype(),
+            }
         else:
-            reply = {'message': 'remote side denied access'}
+            reply = {"message": "remote side denied access"}
 
         return res, otp_count, reply
 
@@ -246,9 +262,15 @@ class RemoteTokenClass(TokenClass):
         else:
             # Deprecated
             remoteServer = self.get_tokeninfo("remote.server") or ""
-            log.warning("Using remote.server for remote tokens is deprecated. Use remote.server_id!")
-            ssl_verify = get_from_config("remote.verify_ssl_certificate",
-                                         False, return_bool=True) or False
+            log.warning(
+                "Using remote.server for remote tokens is deprecated. Use remote.server_id!"
+            )
+            ssl_verify = (
+                get_from_config(
+                    "remote.verify_ssl_certificate", False, return_bool=True
+                )
+                or False
+            )
             # in preparation of the ability to relocate eduMFA urls,
             # we introduce the remote url path
             remotePath = self.get_tokeninfo("remote.path") or ""
@@ -261,33 +283,42 @@ class RemoteTokenClass(TokenClass):
         remoteResolver = self.get_tokeninfo("remote.resolver") or ""
 
         # here we also need to check for remote.user and so on....
-        log.debug("checking OTP len:%r remotely on server: %r,"
-                  " serial: %r, user: %r" %
-                  (len(otpval), remoteServer, remoteSerial, remoteUser))
+        log.debug(
+            "checking OTP len:%r remotely on server: %r,"
+            " serial: %r, user: %r"
+            % (len(otpval), remoteServer, remoteSerial, remoteUser)
+        )
         params = {}
 
         if remoteSerial:
-            params['serial'] = remoteSerial
+            params["serial"] = remoteSerial
         elif remoteUser:
-            params['user'] = remoteUser
-            params['realm'] = remoteRealm
-            params['resolver'] = remoteResolver
+            params["user"] = remoteUser
+            params["realm"] = remoteRealm
+            params["resolver"] = remoteResolver
         else:
-            log.warning("The remote token does neither contain a "
-                        "remote.serial nor a remote.user.")
+            log.warning(
+                "The remote token does neither contain a "
+                "remote.serial nor a remote.user."
+            )
             return otp_count
 
         try:
             if remoteServer:
                 # Deprecated
-                params['pass'] = otpval
+                params["pass"] = otpval
                 request_url = "{0!s}{1!s}".format(remoteServer, remotePath)
-                r = requests.post(request_url, data=params, verify=ssl_verify, timeout=60)
+                r = requests.post(
+                    request_url, data=params, verify=ssl_verify, timeout=60
+                )
             elif pi_server_obj:
-                r = pi_server_obj.validate_check(remoteUser, otpval,
-                                                 serial=remoteSerial,
-                                                 realm=remoteRealm,
-                                                 resolver=remoteResolver)
+                r = pi_server_obj.validate_check(
+                    remoteUser,
+                    otpval,
+                    serial=remoteSerial,
+                    realm=remoteRealm,
+                    resolver=remoteResolver,
+                )
 
             if r.status_code == requests.codes.ok:
                 response = r.json()
@@ -295,11 +326,16 @@ class RemoteTokenClass(TokenClass):
                 if result.get("value"):
                     otp_count = 1
                     # Add the serial of the used remote token in the tokeninfo parameters
-                    self.add_tokeninfo("last_matching_remote_serial", response.get("detail", {}).get("serial"))
+                    self.add_tokeninfo(
+                        "last_matching_remote_serial",
+                        response.get("detail", {}).get("serial"),
+                    )
 
         except Exception as exx:  # pragma: no cover
-            log.error("Error getting response from "
-                      "remote Server (%r): %r" % (request_url, exx))
+            log.error(
+                "Error getting response from "
+                "remote Server (%r): %r" % (request_url, exx)
+            )
             log.debug("{0!s}".format(traceback.format_exc()))
 
         return otp_count

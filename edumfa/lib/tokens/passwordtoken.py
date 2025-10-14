@@ -19,23 +19,22 @@ This file contains the definition of the password token class
 
 import logging
 
-from edumfa.lib.crypto import zerome, safe_compare
-from edumfa.lib.utils import to_unicode
-from edumfa.lib.tokenclass import TokenClass
-from edumfa.lib.log import log_with
-from edumfa.lib.decorators import check_token_locked
-from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
 from edumfa.api.lib.prepolicy import _generate_pin_from_policy
 from edumfa.api.lib.utils import getParam
-from edumfa.lib.utils import is_true
+from edumfa.lib import _
+from edumfa.lib.crypto import safe_compare, zerome
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokenclass import TokenClass
+from edumfa.lib.utils import is_true, to_unicode
 
 optional = True
 required = False
 
 # We use an easier length of 12 for password tokens
 DEFAULT_LENGTH = 12
-DEFAULT_CONTENTS = 'cn'
+DEFAULT_CONTENTS = "cn"
 
 log = logging.getLogger(__name__)
 
@@ -52,7 +51,6 @@ class PasswordTokenClass(TokenClass):
     default_contents = DEFAULT_CONTENTS
 
     class SecretPassword:
-
         def __init__(self, secObj):
             self.secretObject = secObj
 
@@ -98,7 +96,7 @@ class PasswordTokenClass(TokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -109,37 +107,44 @@ class PasswordTokenClass(TokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or scalar
         """
-        res = {'type': 'pw',
-               'title': 'Password Token',
-               'description': _('A token with a fixed password. Can be '
-                                'combined  with the OTP PIN. Is used for the '
-                                'lost token scenario.'),
-               'init': {},
-               'config': {},
-               'user':  [],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': [],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of password tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of active password tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               },
-               }
+        res = {
+            "type": "pw",
+            "title": "Password Token",
+            "description": _(
+                "A token with a fixed password. Can be "
+                "combined  with the OTP PIN. Is used for the "
+                "lost token scenario."
+            ),
+            "init": {},
+            "config": {},
+            "user": [],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": [],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of password tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of active password tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
         # I don't think we need to define the lost token policies here...
 
         if key:
             ret = res.get(key)
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 

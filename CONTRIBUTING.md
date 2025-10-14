@@ -25,6 +25,9 @@ https://github.com/eduMFA/eduMFA/issues
 
 ## Documentation
 
+> [!IMPORTANT]  
+> Python 3.11+ is required to build the documentation.
+
 The source code is pretty well documented. The main documentation resides in the
 `doc`-subfolder and can be build with:
 ```
@@ -82,13 +85,8 @@ If you are sending a pull request, please note the following:
   not guess the intention from the pull request!
 * In your pull request refer to the issue.
 * Describe your changes in the commit message.
-* At the beginning of the file, add the date, your name,
-  your email address and a description of what you
-  changed in the file!
-* We try to stick to **PEP 8**. So please use sensible names, check your line
-  breaks, comment your classes and functions...
-  Using something like *pylint* or an integrated editor like *pycharm* can
-  help you with that.
+* We use **Ruff** as linter and formatter. Please install the pinned version
+  (see `pyproject.toml`) and run it before committing your code.
 * When implementing something new, try to do more with **less code**!
 * When implementing something new, try to implement it in a **generic way**,
   that it can be used and different use cases.
@@ -114,6 +112,20 @@ scripts.
   ```
 
   To update the local database.
+
+## Translations
+
+We aim to provide translations for different languages.
+
+To generate the translations for the web interface we use `grunt`. The files can be updated using 
+
+```bash
+npm install 
+npm run translate
+```
+
+The server-side messages get translated using babel. Translations can be regenerated using `make translate-server`.
+
 
 ## Development Workflow
 

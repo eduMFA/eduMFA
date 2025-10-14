@@ -22,11 +22,17 @@ import sys
 import click
 from flask.cli import AppGroup
 
-from edumfa.commands.manage.config import import_cli, export_cli
-from edumfa.commands.manage.helper import conf_export, conf_import, get_conf_event, import_conf_event
+from edumfa.commands.manage.config import export_cli, import_cli
+from edumfa.commands.manage.helper import (
+    conf_export,
+    conf_import,
+    get_conf_event,
+    import_conf_event,
+)
 from edumfa.lib.event import delete_event, set_event
 
 event_cli = AppGroup("event", help="Manage events")
+
 
 @event_cli.command("list")
 def list_events():
@@ -34,14 +40,25 @@ def list_events():
     List events
     """
     from edumfa.lib.event import EventConfiguration
+
     conf = EventConfiguration()
     events = conf.events
-    click.echo("{0:7} {4:4} {1:30}\t{2:20}\t{3}".format("Active", "Name", "Module", "Action", "ID"))
+    click.echo(
+        "{0:7} {4:4} {1:30}\t{2:20}\t{3}".format(
+            "Active", "Name", "Module", "Action", "ID"
+        )
+    )
     click.echo(90 * "=")
     for event in events:
-        click.echo("[{0!s:>5}] {4:4} {1:30}\t{2:20}\t{3}".format(event.get("active"), event.get("name")[0:30],
-                                                                 event.get("handlermodule"), event.get("action"),
-                                                                 event.get("id"), ))
+        click.echo(
+            "[{0!s:>5}] {4:4} {1:30}\t{2:20}\t{3}".format(
+                event.get("active"),
+                event.get("name")[0:30],
+                event.get("handlermodule"),
+                event.get("action"),
+                event.get("id"),
+            )
+        )
 
 
 @event_cli.command("enable")
@@ -51,6 +68,7 @@ def enable(eid: int):
     enable en event by ID
     """
     from edumfa.lib.event import enable_event
+
     r = enable_event(eid)
     click.echo(r)
 
@@ -62,6 +80,7 @@ def disable(eid):
     disable an event by ID
     """
     from edumfa.lib.event import enable_event
+
     r = enable_event(eid, enable=False)
     click.echo(r)
 
@@ -73,12 +92,19 @@ def delete(eid):
     delete an event by ID
     """
     from edumfa.lib.event import delete_event
+
     r = delete_event(eid)
     click.echo(r)
 
 
 @export_cli.command("event")
-@click.option("-f", "filename", type=click.File('w'), default=sys.stdout, help="filename to export")
+@click.option(
+    "-f",
+    "filename",
+    type=click.File("w"),
+    default=sys.stdout,
+    help="filename to export",
+)
 @click.option("-n", "name", help="event to export")
 def e_export(filename, name):
     """
@@ -89,7 +115,9 @@ def e_export(filename, name):
 
 
 @import_cli.command("event")
-@click.option("-f", "filename", help="filename to import", required=True, type=click.File('r'))
+@click.option(
+    "-f", "filename", help="filename to import", required=True, type=click.File("r")
+)
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
 @click.option("-u", "update", help="update configuration during import", is_flag=True)
 @click.option(

@@ -11,17 +11,17 @@
 #            http://www.lsexperts.de
 #            linotp@lsexperts.de
 """
-  Description:  This tool generates passwords for the sql resolver
+Description:  This tool generates passwords for the sql resolver
 
-  Dependencies: ./.
+Dependencies: ./.
 
 
 """
 
-import sys
-from getopt import getopt, GetoptError
 import getpass
 import random
+import sys
+from getopt import GetoptError, getopt
 
 # Python 3.13 dropped crypt package, so we need to import crypt_r
 if sys.version_info >= (3, 13):
@@ -29,19 +29,18 @@ if sys.version_info >= (3, 13):
 else:
     import crypt
 
-__version__ = '0.1'
+__version__ = "0.1"
 
 
 def usage():
-    print('''
+    print("""
     Parameter:
     -u username 
     -p password
-    ''')
+    """)
 
 
 def main():
-
     user = ""
     password = ""
 
@@ -54,11 +53,11 @@ def main():
         sys.exit(1)
 
     for opt, arg in opts:
-        if opt in ('-u',):
+        if opt in ("-u",):
             user = arg
-        elif opt in ('-p',):
+        elif opt in ("-p",):
             password = arg
-        elif opt in ('-h', '--help'):
+        elif opt in ("-h", "--help"):
             usage()
             sys.exit(1)
 
@@ -73,5 +72,5 @@ def main():
     print("|%s|%s|%s|" % (user, encryptedPW, salt))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

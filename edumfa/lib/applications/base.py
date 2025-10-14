@@ -21,12 +21,14 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import logging
-import sys
 import os
-from edumfa.lib.log import log_with
-import edumfa.lib.applications
-from edumfa.lib.policy import TYPE
+import sys
 from importlib import import_module
+
+import edumfa.lib.applications
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import TYPE
+
 log = logging.getLogger(__name__)
 
 
@@ -42,10 +44,13 @@ def get_machine_application_class_list():
     # We add each python module in this directory to the class list
     path = os.path.dirname(edumfa.lib.applications.__file__)
     files = os.listdir(path)
-    modules = [f.split(".")[0] for f in files if f.endswith(".py") and f !=
-               "__init__.py"]
+    modules = [
+        f.split(".")[0] for f in files if f.endswith(".py") and f != "__init__.py"
+    ]
     for module in modules:
-        class_list.append("edumfa.lib.applications.{0!s}.MachineApplication".format(module))
+        class_list.append(
+            "edumfa.lib.applications.{0!s}.MachineApplication".format(module)
+        )
     return class_list
 
 
@@ -76,12 +81,11 @@ def get_machine_application_class_dict():
 
 
 class MachineApplication:
-
     application_name = "base"
-    '''If bulk_call is false, the administrator may
+    """If bulk_call is false, the administrator may
     only retrieve authentication items for the
     very host he is starting the request.
-    '''
+    """
     allow_bulk_call = False
 
     @classmethod
@@ -92,10 +96,9 @@ class MachineApplication:
         return cls.application_name
 
     @staticmethod
-    def get_authentication_item(token_type,
-                                serial,
-                                challenge=None, options=None,
-                                filter_param=None):
+    def get_authentication_item(
+        token_type, serial, challenge=None, options=None, filter_param=None
+    ):
         """
         returns a dictionary of authentication items
         like public keys, challenges, responses...
@@ -110,26 +113,28 @@ class MachineApplication:
         """
         returns a dictionary with a list of required and optional options
         """
-        return {'optionA': {'type': TYPE.BOOL,
-                            'required': True},
-                'optionB': {'type': TYPE.STRING,
-                            'value': ["val1", "val2"]}}
+        return {
+            "optionA": {"type": TYPE.BOOL, "required": True},
+            "optionB": {"type": TYPE.STRING, "value": ["val1", "val2"]},
+        }
 
 
 @log_with(log)
-def get_auth_item(application, token_type,serial,
-                  challenge=None, options=None, filter_param=None):
-
+def get_auth_item(
+    application, token_type, serial, challenge=None, options=None, filter_param=None
+):
     options = options or {}
     # application_module from application
     class_dict = get_machine_application_class_dict()
     # should be able to run as class or as object
     auth_class = class_dict.get(application)
-    auth_item = auth_class.get_authentication_item(token_type,
-                                                   serial,
-                                                   challenge=challenge,
-                                                   options=options,
-                                                   filter_param=filter_param)
+    auth_item = auth_class.get_authentication_item(
+        token_type,
+        serial,
+        challenge=challenge,
+        options=options,
+        filter_param=filter_param,
+    )
     return auth_item
 
 
@@ -158,8 +163,9 @@ def get_application_types():
     module_dir = os.path.dirname(current_module.__file__)
 
     # load all modules and get their application names
-    files = [os.path.basename(f)[:-3] for f in os.listdir(module_dir) if
-             f.endswith(".py")]
+    files = [
+        os.path.basename(f)[:-3] for f in os.listdir(module_dir) if f.endswith(".py")
+    ]
     for f in files:
         if f not in ["base", "__init__"]:
             try:

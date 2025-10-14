@@ -6,6 +6,7 @@ lib/task/base.py
 """
 
 from edumfa.lib.task.base import BaseTask
+
 from .base import MyTestCase
 
 
@@ -20,7 +21,5 @@ class BaseTaskTestCase(MyTestCase):
         result1 = task.do()
         self.assertTrue(result1)
 
-        result2 = task.do({
-            "foo": "bar"
-        })
+        result2 = task.do({"foo": "bar"})
         self.assertTrue(result2)

@@ -18,4 +18,4 @@ work with user.py
 
 from edumfa.lib.framework import _
 
-__all__ = ['_']
+__all__ = ["_"]

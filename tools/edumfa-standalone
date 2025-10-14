@@ -47,23 +47,21 @@ import os
 import shutil
 import string
 import subprocess
-from functools import wraps
-
-import sqlalchemy
 import sys
 import warnings
-
+from functools import wraps
 from tempfile import NamedTemporaryFile
 
+import click
+import sqlalchemy
 from click import get_current_context
+from flask import current_app
+from flask.cli import FlaskGroup, pass_script_info
 
 from edumfa.app import create_app
 from edumfa.lib.security.default import DefaultSecurityModule
-import click
-from flask.cli import FlaskGroup, pass_script_info
-from flask import current_app
 
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 def create_prod_app(*args, **kwargs):
@@ -72,21 +70,31 @@ def create_prod_app(*args, **kwargs):
         script_info = ctx.obj
         instance = script_info.instance
     elif kwargs.get("instance"):
-        # Production server, e.g., gunincorn 
+        # Production server, e.g., gunincorn
         # We don't have access to the current context, so must
         # read kwargs instead.
         instance = kwargs["instance"]
-    config_file = os.path.abspath(os.path.join(instance, 'edumfa.cfg'))
+    config_file = os.path.abspath(os.path.join(instance, "edumfa.cfg"))
     app = create_app("production", config_file=config_file, silent=True, script=True)
     app.instance_directory = instance
     return app
 
 
-@click.group(cls=FlaskGroup, add_default_commands=False, create_app=create_prod_app, context_settings=CONTEXT_SETTINGS,
-             epilog='Check out our docs at https://edumfa.readthedocs.io/ for more details')
-@click.option('-i', '--instance', 'instance', required=False,
-              default=os.path.expanduser('~/.edumfa'),
-              help='Location of the eduMFA instance (defaults to ~/.edumfa)')
+@click.group(
+    cls=FlaskGroup,
+    add_default_commands=False,
+    create_app=create_prod_app,
+    context_settings=CONTEXT_SETTINGS,
+    epilog="Check out our docs at https://edumfa.readthedocs.io/ for more details",
+)
+@click.option(
+    "-i",
+    "--instance",
+    "instance",
+    required=False,
+    default=os.path.expanduser("~/.edumfa"),
+    help="Location of the eduMFA instance (defaults to ~/.edumfa)",
+)
 @pass_script_info
 def cli(script_info, instance):
     script_info.instance = instance
@@ -112,7 +120,7 @@ EDUMFA_PEPPER = '{edumfa_pepper}'
 """
 
 RSA_KEYSIZE = 2048
-PEPPER_CHARSET = string.ascii_letters + string.digits + '_'
+PEPPER_CHARSET = string.ascii_letters + string.digits + "_"
 
 
 def invoke_edumfa_config(commandline, edumfa_cfg):
@@ -122,8 +130,8 @@ def invoke_edumfa_config(commandline, edumfa_cfg):
     :param edumfa_cfg: location of the eduMFA config file
     """
     environment = os.environ.copy()
-    environment['EDUMFA_CONFIGFILE'] = edumfa_cfg
-    subprocess.check_call(['edumfa-manage'] + commandline, env=environment)
+    environment["EDUMFA_CONFIGFILE"] = edumfa_cfg
+    subprocess.check_call(["edumfa-manage"] + commandline, env=environment)
 
 
 def require_instance(f):
@@ -133,15 +141,15 @@ def require_instance(f):
 
     @wraps(f)
     def deco(*args, **kwargs):
-        config_file = os.path.join(current_app.instance_directory, 'edumfa.cfg')
+        config_file = os.path.join(current_app.instance_directory, "edumfa.cfg")
         if not os.path.exists(config_file):
-            raise RuntimeError("{!r} does not exist! Create a new instance using"
-                               " ``edumfa-standalone create``.".format(config_file))
+            raise RuntimeError(
+                "{!r} does not exist! Create a new instance using"
+                " ``edumfa-standalone create``.".format(config_file)
+            )
         return f(*args, **kwargs)
 
     return deco
-
-
 
 
 def read_credentials(fobj):
@@ -168,10 +176,10 @@ def create_pepper(length=24, chunk_size=8, charset=PEPPER_CHARSET):
     :return: a string of the specified length
     :rtype: str
     """
-    pepper = ''
+    pepper = ""
     while len(pepper) < length:
         random_bytes = DefaultSecurityModule.random(chunk_size)
-        printables = ''.join(chr(b) for b in random_bytes if chr(b) in charset)
+        printables = "".join(chr(b) for b in random_bytes if chr(b) in charset)
         pepper += printables
     return pepper[:length]
 
@@ -193,7 +201,7 @@ def choice(question, choices, case_insensitive=True):
         if answer in choices:
             return choices[answer]
         else:
-            print('{!r} is not a valid answer.'.format(answer))
+            print("{!r} is not a valid answer.".format(answer))
 
 
 def yesno(question, default):
@@ -203,17 +211,19 @@ def yesno(question, default):
     :param default: Default return value (boolean)
     :return: boolean
     """
-    return choice(question, {'y': True,
-                             'n': False,
-                             '': default})
+    return choice(question, {"y": True, "n": False, "": default})
 
 
 @cli.command("create")
 def create():
-    """ Create a new eduMFA instance """
+    """Create a new eduMFA instance"""
     instance_dir = os.path.abspath(current_app.instance_directory)
     if os.path.exists(current_app.instance_directory):
-        print("Instance at {!s} exists already! Aborting.".format(current_app.instance_directory))
+        print(
+            "Instance at {!s} exists already! Aborting.".format(
+                current_app.instance_directory
+            )
+        )
     else:
         try:
             os.makedirs(instance_dir)
@@ -222,26 +232,29 @@ def create():
             secret_key = DefaultSecurityModule.random(24)
             edumfa_pepper = create_pepper()
 
-            secret_key_hex = ''.join('\\x{:02x}'.format(b) for b in secret_key)
+            secret_key_hex = "".join("\\x{:02x}".format(b) for b in secret_key)
             # create a edumfa.cfg
-            edumfa_cfg = os.path.join(instance_dir, 'edumfa.cfg')
-            with open(edumfa_cfg, 'w') as f:
-                f.write(EDUMFA_CFG_TEMPLATE.format(
-                    secret_key=secret_key_hex,
-                    edumfa_pepper=edumfa_pepper
-                ))
+            edumfa_cfg = os.path.join(instance_dir, "edumfa.cfg")
+            with open(edumfa_cfg, "w") as f:
+                f.write(
+                    EDUMFA_CFG_TEMPLATE.format(
+                        secret_key=secret_key_hex, edumfa_pepper=edumfa_pepper
+                    )
+                )
 
             # create an enckey
-            invoke_edumfa_config(['create_enckey'], edumfa_cfg)
-            invoke_edumfa_config(['create_audit_keys'], edumfa_cfg)
-            invoke_edumfa_config(['create_tables'], edumfa_cfg)
+            invoke_edumfa_config(["create_enckey"], edumfa_cfg)
+            invoke_edumfa_config(["create_audit_keys"], edumfa_cfg)
+            invoke_edumfa_config(["create_tables"], edumfa_cfg)
 
             print()
-            print('Please enter a password for the new admin `super`.')
-            invoke_edumfa_config(['admin', 'add', 'super'], edumfa_cfg)
+            print("Please enter a password for the new admin `super`.")
+            invoke_edumfa_config(["admin", "add", "super"], edumfa_cfg)
 
             # create users
-            if yesno('Would you like to create a default resolver and realm (Y/n)? ', True):
+            if yesno(
+                "Would you like to create a default resolver and realm (Y/n)? ", True
+            ):
                 print("""
     There are two possibilities to create a resolver:
      1) We can create a table in the eduMFA SQLite database to store the users.
@@ -249,28 +262,33 @@ def create():
      2) We can create a resolver that contains the users from /etc/passwd
     """)
                 print()
-                create_sql_resolver = choice('Please choose (default=1): ', {
-                    '1': True,
-                    '2': False,
-                    '': True
-                })
+                create_sql_resolver = choice(
+                    "Please choose (default=1): ", {"1": True, "2": False, "": True}
+                )
                 if create_sql_resolver:
-                    invoke_edumfa_config(['resolver', 'create_internal', 'defresolver'], edumfa_cfg)
+                    invoke_edumfa_config(
+                        ["resolver", "create_internal", "defresolver"], edumfa_cfg
+                    )
                 else:
                     with NamedTemporaryFile(delete=False) as f:
                         f.write('{"fileName": "/etc/passwd"}')
-                    invoke_edumfa_config(['resolver', 'create', 'defresolver', 'passwdresolver',
-                                          f.name], edumfa_cfg)
+                    invoke_edumfa_config(
+                        ["resolver", "create", "defresolver", "passwdresolver", f.name],
+                        edumfa_cfg,
+                    )
                     os.unlink(f.name)
-                invoke_edumfa_config(['realm', 'create', 'defrealm', 'defresolver'], edumfa_cfg)
+                invoke_edumfa_config(
+                    ["realm", "create", "defrealm", "defresolver"], edumfa_cfg
+                )
 
             print()
-            print('Configuration is complete. You can now configure eduMFA in '
-                  'the web browser by running')
-            print("  edumfa-standalone -i '{}' "
-                  "configure".format(instance_dir))
+            print(
+                "Configuration is complete. You can now configure eduMFA in "
+                "the web browser by running"
+            )
+            print("  edumfa-standalone -i '{}' configure".format(instance_dir))
         except Exception as e:
-            print('Could not finish creation process! Removing instance.')
+            print("Could not finish creation process! Removing instance.")
             shutil.rmtree(instance_dir)
             raise e
 
@@ -287,8 +305,13 @@ def configure():
 
 
 @cli.command("check")
-@click.option('-r', '--response', 'show_response', is_flag=True,
-                help='Print the JSON response of eduMFA to standard output')
+@click.option(
+    "-r",
+    "--response",
+    "show_response",
+    is_flag=True,
+    help="Print the JSON response of eduMFA to standard output",
+)
 @require_instance
 def check(show_response=False):
     """
@@ -303,12 +326,13 @@ def check(show_response=False):
     user, password = read_credentials(sys.stdin)
     exitcode = 255
     try:
-        with current_app.test_request_context('/validate/check', method='POST',
-                                              data={'user': user, 'pass': password}):
+        with current_app.test_request_context(
+            "/validate/check", method="POST", data={"user": user, "pass": password}
+        ):
             response = current_app.full_dispatch_request()
             data = json.loads(response.data)
-            result = data['result']
-            if result['value'] is True:
+            result = data["result"]
+            if result["value"] is True:
                 exitcode = 0
             else:
                 exitcode = 1
@@ -319,5 +343,5 @@ def check(show_response=False):
     sys.exit(exitcode)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

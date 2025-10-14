@@ -58,10 +58,11 @@ args=('/var/log/edumfa/audit.log',)
 
 """
 
-import logging
 import json
-from edumfa.lib.auditmodules.base import (Audit as AuditBase)
+import logging
 from datetime import datetime
+
+from edumfa.lib.auditmodules.base import Audit as AuditBase
 
 
 class Audit(AuditBase):
@@ -75,7 +76,7 @@ class Audit(AuditBase):
     def __init__(self, config=None, startdate=None):
         super(Audit, self).__init__(config, startdate)
         self.name = "loggeraudit"
-        self.qualname = self.config.get('EDUMFA_AUDIT_LOGGER_QUALNAME', __name__)
+        self.qualname = self.config.get("EDUMFA_AUDIT_LOGGER_QUALNAME", __name__)
         self.logger = logging.getLogger(self.qualname)
 
     def finalize_log(self):

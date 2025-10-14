@@ -51,60 +51,82 @@ In case if authenticating a serial number:
 
 """
 
+import json
+import logging
 import threading
 
-from flask import (Blueprint, request, g, current_app)
-from edumfa.lib.user import get_user_from_param, log_used_user
-from .lib.utils import send_result, getParam
-from ..lib.decorators import (check_user_or_serial_in_request)
-from .lib.utils import required
-from edumfa.lib.error import ParameterError
-from edumfa.lib.token import (check_user_pass, check_serial_pass,
-                                   check_otp, create_challenges_from_tokens,
-                                   create_challenge_without_token, get_one_token)
-from edumfa.lib.utils import is_true
-from edumfa.api.lib.utils import get_all_params
-from edumfa.lib.config import (return_saml_attributes, get_from_config,
-                                    return_saml_attributes_on_fail,
-                                    SYSCONF, ensure_no_config_object, get_edumfa_node)
-from edumfa.lib.audit import getAudit
-from edumfa.api.lib.decorators import add_serial_from_response_to_g
-from edumfa.api.lib.prepolicy import (prepolicy, set_realm,
-                                           api_key_required, mangle,
-                                           save_client_application_type,
-                                           check_base_action, pushtoken_wait, webauthntoken_auth, webauthntoken_authz,
-                                           webauthntoken_request,
-                                           increase_failcounter_on_challenge, legacypushtoken_wait)
-from edumfa.api.lib.postpolicy import (postpolicy,
-                                            check_tokentype, check_serial,
-                                            check_tokeninfo,
-                                            no_detail_on_fail,
-                                            no_detail_on_success, autoassign,
-                                            offline_info,
-                                            add_user_detail_to_response, construct_radius_response,
-                                            mangle_challenge_response, is_authorized,
-                                            multichallenge_enroll_via_validate, preferred_client_mode)
-from edumfa.lib.policy import PolicyClass
-from edumfa.lib.event import EventConfiguration
-import logging
-from edumfa.api.register import register_blueprint
-from edumfa.api.recover import recover_blueprint
-from edumfa.lib.utils import get_client_ip
-from edumfa.lib.event import event
-from edumfa.lib.challenge import get_challenges, extract_answered_challenges
-from edumfa.lib.subscriptions import CheckSubscription
-from edumfa.api.auth import admin_required
-from edumfa.lib.policy import ACTION
-from edumfa.lib.token import get_tokens
-from edumfa.lib.machine import list_machine_tokens
-from edumfa.lib.applications.offline import MachineApplication
-import json
+from flask import Blueprint, current_app, g, request
 
+from edumfa.api.auth import admin_required
+from edumfa.api.lib.decorators import add_serial_from_response_to_g
+from edumfa.api.lib.postpolicy import (
+    add_user_detail_to_response,
+    autoassign,
+    check_serial,
+    check_tokeninfo,
+    check_tokentype,
+    construct_radius_response,
+    is_authorized,
+    mangle_challenge_response,
+    multichallenge_enroll_via_validate,
+    no_detail_on_fail,
+    no_detail_on_success,
+    offline_info,
+    postpolicy,
+    preferred_client_mode,
+)
+from edumfa.api.lib.prepolicy import (
+    api_key_required,
+    check_base_action,
+    increase_failcounter_on_challenge,
+    legacypushtoken_wait,
+    mangle,
+    prepolicy,
+    pushtoken_wait,
+    save_client_application_type,
+    set_realm,
+    webauthntoken_auth,
+    webauthntoken_authz,
+    webauthntoken_request,
+)
+from edumfa.api.lib.utils import get_all_params
+from edumfa.api.recover import recover_blueprint
+from edumfa.api.register import register_blueprint
+from edumfa.lib.applications.offline import MachineApplication
+from edumfa.lib.audit import getAudit
+from edumfa.lib.challenge import extract_answered_challenges, get_challenges
+from edumfa.lib.config import (
+    SYSCONF,
+    ensure_no_config_object,
+    get_edumfa_node,
+    get_from_config,
+    return_saml_attributes,
+    return_saml_attributes_on_fail,
+)
+from edumfa.lib.error import ParameterError
+from edumfa.lib.event import EventConfiguration, event
+from edumfa.lib.machine import list_machine_tokens
+from edumfa.lib.policy import ACTION, PolicyClass
+from edumfa.lib.subscriptions import CheckSubscription
+from edumfa.lib.token import (
+    check_otp,
+    check_serial_pass,
+    check_user_pass,
+    create_challenge_without_token,
+    create_challenges_from_tokens,
+    get_one_token,
+    get_tokens,
+)
+from edumfa.lib.user import get_user_from_param, log_used_user
+from edumfa.lib.utils import get_client_ip, is_true
+
+from ..lib.decorators import check_user_or_serial_in_request
 from ..lib.framework import get_app_config_value
+from .lib.utils import getParam, required, send_result
 
 log = logging.getLogger(__name__)
 
-validate_blueprint = Blueprint('validate_blueprint', __name__)
+validate_blueprint = Blueprint("validate_blueprint", __name__)
 
 
 @validate_blueprint.before_request
@@ -117,7 +139,9 @@ def before_request():
     ensure_no_config_object()
     request.all_data = get_all_params(request)
     request.User = get_user_from_param(request.all_data)
-    edumfa_server = get_app_config_value("EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host))
+    edumfa_server = get_app_config_value(
+        "EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host)
+    )
     # Create a policy_object, that reads the database audit settings
     # and contains the complete policy definition during the request.
     # This audit_object can be used in the postpolicy and prepolicy and it
@@ -132,17 +156,21 @@ def before_request():
     # Save the HTTP header in the localproxy object
     g.request_headers = request.headers
     g.serial = getParam(request.all_data, "serial", default=None)
-    g.audit_object.log({"success": False,
-                        "action_detail": "",
-                        "client": g.client_ip,
-                        "client_user_agent": request.user_agent.browser,
-                        "edumfa_server": edumfa_server,
-                        "action": "{0!s} {1!s}".format(request.method, request.url_rule),
-                        "thread_id": "{0!s}".format(threading.current_thread().ident),
-                        "info": ""})
+    g.audit_object.log(
+        {
+            "success": False,
+            "action_detail": "",
+            "client": g.client_ip,
+            "client_user_agent": request.user_agent.browser,
+            "edumfa_server": edumfa_server,
+            "action": "{0!s} {1!s}".format(request.method, request.url_rule),
+            "thread_id": "{0!s}".format(threading.current_thread().ident),
+            "info": "",
+        }
+    )
 
 
-@validate_blueprint.route('/offlinerefill', methods=['POST'])
+@validate_blueprint.route("/offlinerefill", methods=["POST"])
 @check_user_or_serial_in_request(request)
 @event("validate_offlinerefill", request, g)
 def offlinerefill():
@@ -178,17 +206,21 @@ def offlinerefill():
                 refilltoken = MachineApplication.generate_new_refilltoken(tokenobj)
                 response = send_result(True)
                 content = response.json
-                content["auth_items"] = {"offline": [{"refilltoken": refilltoken,
-                                                      "response": otps,
-                                                      "serial": serial}]}
+                content["auth_items"] = {
+                    "offline": [
+                        {"refilltoken": refilltoken, "response": otps, "serial": serial}
+                    ]
+                }
                 response.set_data(json.dumps(content))
                 return response
-        raise ParameterError("Token is not an offline token or refill token is incorrect")
+        raise ParameterError(
+            "Token is not an offline token or refill token is incorrect"
+        )
 
 
-@validate_blueprint.route('/check', methods=['POST', 'GET'])
-@validate_blueprint.route('/radiuscheck', methods=['POST', 'GET'])
-@validate_blueprint.route('/samlcheck', methods=['POST', 'GET'])
+@validate_blueprint.route("/check", methods=["POST", "GET"])
+@validate_blueprint.route("/radiuscheck", methods=["POST", "GET"])
+@validate_blueprint.route("/samlcheck", methods=["POST", "GET"])
 @postpolicy(is_authorized, request=request)
 @postpolicy(mangle_challenge_response, request=request)
 @postpolicy(construct_radius_response, request=request)
@@ -370,41 +402,56 @@ def check():
     user_handle = getParam(request.all_data, "userhandle")
     otp_only = getParam(request.all_data, "otponly")
     token_type = getParam(request.all_data, "type")
-    options = {"g": g,
-               "clientip": g.client_ip,
-               "user": user}
+    options = {"g": g, "clientip": g.client_ip, "user": user}
     # Add all params to the options
     for key, value in request.all_data.items():
         if value and key not in ["g", "clientip", "user"]:
             options[key] = value
 
-    if not user.login and not serial and token_type == WebAuthnTokenClass.get_class_type() and user_handle:
+    if (
+        not user.login
+        and not serial
+        and token_type == WebAuthnTokenClass.get_class_type()
+        and user_handle
+    ):
         # 2. call in usernameless setting, this time including a userhandle
         success, details = WebAuthnTokenClass.check_userless_otp(options)
         result = success
         if success:
             user = options["user"]
-        serials = ",".join([challenge_info["serial"] for challenge_info in details["multi_challenge"]]) \
-            if 'multi_challenge' in details else details.get('serial')
-        g.audit_object.log({"info": log_used_user(user, details.get("message")),
-                            "success": success,
-                            "serial": serials,
-                            "user": user.login,
-                            "resolver": user.resolver,
-                            "realm": user.realm,
-                            "token_type": details.get("type")})
+        serials = (
+            ",".join(
+                [
+                    challenge_info["serial"]
+                    for challenge_info in details["multi_challenge"]
+                ]
+            )
+            if "multi_challenge" in details
+            else details.get("serial")
+        )
+        g.audit_object.log(
+            {
+                "info": log_used_user(user, details.get("message")),
+                "success": success,
+                "serial": serials,
+                "user": user.login,
+                "resolver": user.resolver,
+                "realm": user.realm,
+                "token_type": details.get("type"),
+            }
+        )
         return send_result(result, rid=2, details=details)
 
     password = getParam(request.all_data, "pass", required)
-    g.audit_object.log({"user": user.login,
-                        "resolver": user.resolver,
-                        "realm": user.realm})
+    g.audit_object.log(
+        {"user": user.login, "resolver": user.resolver, "realm": user.realm}
+    )
 
     if serial:
         if user:
             # check if the given token belongs to the user
             if not get_tokens(user=user, serial=serial, count=True):
-                raise ParameterError('Given serial does not belong to given user!')
+                raise ParameterError("Given serial does not belong to given user!")
         if not otp_only:
             success, details = check_serial_pass(serial, password, options=options)
         else:
@@ -417,32 +464,42 @@ def check():
         result = success
         if request.path.endswith("samlcheck"):
             ui = user.info
-            result = {"auth": success,
-                      "attributes": {}}
+            result = {"auth": success, "attributes": {}}
             if return_saml_attributes():
                 if success or return_saml_attributes_on_fail():
                     # eduMFA's own attribute map
-                    result["attributes"] = {"username": ui.get("username"),
-                                                "realm": user.realm,
-                                                "resolver": user.resolver,
-                                                "email": ui.get("email"),
-                                                "surname": ui.get("surname"),
-                                                "givenname": ui.get("givenname"),
-                                                "mobile": ui.get("mobile"),
-                                                "phone": ui.get("phone")}
+                    result["attributes"] = {
+                        "username": ui.get("username"),
+                        "realm": user.realm,
+                        "resolver": user.resolver,
+                        "email": ui.get("email"),
+                        "surname": ui.get("surname"),
+                        "givenname": ui.get("givenname"),
+                        "mobile": ui.get("mobile"),
+                        "phone": ui.get("phone"),
+                    }
                     # additional attributes
                     for k, v in ui.items():
                         result["attributes"][k] = v
-    serials = ",".join([challenge_info["serial"] for challenge_info in details["multi_challenge"]]) \
-        if 'multi_challenge' in details else details.get('serial')
-    g.audit_object.log({"info": log_used_user(user, details.get("message")),
-                        "success": success,
-                        "serial": serials,
-                        "token_type": details.get("type")})
+    serials = (
+        ",".join(
+            [challenge_info["serial"] for challenge_info in details["multi_challenge"]]
+        )
+        if "multi_challenge" in details
+        else details.get("serial")
+    )
+    g.audit_object.log(
+        {
+            "info": log_used_user(user, details.get("message")),
+            "success": success,
+            "serial": serials,
+            "token_type": details.get("type"),
+        }
+    )
     return send_result(result, rid=2, details=details)
 
 
-@validate_blueprint.route('/triggerchallenge', methods=['POST', 'GET'])
+@validate_blueprint.route("/triggerchallenge", methods=["POST", "GET"])
 @admin_required
 @postpolicy(is_authorized, request=request)
 @postpolicy(mangle_challenge_response, request=request)
@@ -569,11 +626,8 @@ def trigger_challenge():
     user = request.User
     serial = getParam(request.all_data, "serial")
     token_type = getParam(request.all_data, "type")
-    details = {"messages": [],
-               "transaction_ids": []}
-    options = {"g": g,
-               "clientip": g.client_ip,
-               "user": user}
+    details = {"messages": [], "transaction_ids": []}
+    options = {"g": g, "clientip": g.client_ip, "user": user}
     # Add all params to the options
     for key, value in request.all_data.items():
         if value and key not in ["g", "clientip", "user"]:
@@ -581,34 +635,51 @@ def trigger_challenge():
     if getParam(request.all_data, "webauthn_usernameless_authn"):
         create_challenge_without_token(details, options)
         result_obj = len(details.get("multi_challenge"))
-        g.audit_object.log({
-            "success": True,
-        })
+        g.audit_object.log(
+            {
+                "success": True,
+            }
+        )
     else:
-        token_objs = get_tokens(serial=serial, user=user, active=True, revoked=False, locked=False, tokentype=token_type)
+        token_objs = get_tokens(
+            serial=serial,
+            user=user,
+            active=True,
+            revoked=False,
+            locked=False,
+            tokentype=token_type,
+        )
         # Only use the tokens, that are allowed to do challenge response
-        chal_resp_tokens = [token_obj for token_obj in token_objs if "challenge" in token_obj.mode]
+        chal_resp_tokens = [
+            token_obj for token_obj in token_objs if "challenge" in token_obj.mode
+        ]
         if is_true(options.get("increase_failcounter_on_challenge")):
             for token_obj in chal_resp_tokens:
                 token_obj.inc_failcount()
         create_challenges_from_tokens(chal_resp_tokens, details, options)
         result_obj = len(details.get("multi_challenge"))
 
-        challenge_serials = [challenge_info["serial"] for challenge_info in details["multi_challenge"]]
-        g.audit_object.log({
-            "user": user.login,
-            "resolver": user.resolver,
-            "realm": user.realm,
-            "success": result_obj > 0,
-            "info": log_used_user(user, "triggered {0!s} challenges".format(result_obj)),
-            "serial": ",".join(challenge_serials),
-        })
+        challenge_serials = [
+            challenge_info["serial"] for challenge_info in details["multi_challenge"]
+        ]
+        g.audit_object.log(
+            {
+                "user": user.login,
+                "resolver": user.resolver,
+                "realm": user.realm,
+                "success": result_obj > 0,
+                "info": log_used_user(
+                    user, "triggered {0!s} challenges".format(result_obj)
+                ),
+                "serial": ",".join(challenge_serials),
+            }
+        )
 
     return send_result(result_obj, rid=2, details=details)
 
 
-@validate_blueprint.route('/polltransaction', methods=['GET'])
-@validate_blueprint.route('/polltransaction/<transaction_id>', methods=['GET'])
+@validate_blueprint.route("/polltransaction", methods=["GET"])
+@validate_blueprint.route("/polltransaction/<transaction_id>", methods=["GET"])
 @prepolicy(mangle, request=request)
 @CheckSubscription(request)
 @prepolicy(api_key_required, request=request)
@@ -629,8 +700,11 @@ def poll_transaction(transaction_id=None):
         transaction_id = getParam(request.all_data, "transaction_id", required)
     # Fetch a list of non-exired challenges with the given transaction ID
     # and determine whether it contains at least one non-expired answered challenge.
-    matching_challenges = [challenge for challenge in get_challenges(transaction_id=transaction_id)
-                           if challenge.is_valid()]
+    matching_challenges = [
+        challenge
+        for challenge in get_challenges(transaction_id=transaction_id)
+        if challenge.is_valid()
+    ]
     answered_challenges = extract_answered_challenges(matching_challenges)
 
     declined_challenges = []
@@ -655,23 +729,29 @@ def poll_transaction(transaction_id=None):
     #   the transaction ID and the corresponding token owner
     # * If there are any answered valid challenges, we log their token serials and the corresponding user
     if log_challenges:
-        g.audit_object.log({
-            "serial": ",".join(challenge.serial for challenge in log_challenges),
-        })
+        g.audit_object.log(
+            {
+                "serial": ",".join(challenge.serial for challenge in log_challenges),
+            }
+        )
         # The token owner should be the same for all matching transactions
         user = get_one_token(serial=log_challenges[0].serial).user
         if user:
-            g.audit_object.log({
-                "user": user.login,
-                "resolver": user.resolver,
-                "realm": user.realm,
-            })
+            g.audit_object.log(
+                {
+                    "user": user.login,
+                    "resolver": user.resolver,
+                    "realm": user.realm,
+                }
+            )
 
     # In any case, we log the transaction ID
-    g.audit_object.log({
-        "info": "status: {}".format(details.get("challenge_status")),
-        "action_detail": "transaction_id: {}".format(transaction_id),
-        "success": result
-    })
+    g.audit_object.log(
+        {
+            "info": "status: {}".format(details.get("challenge_status")),
+            "action_detail": "transaction_id: {}".format(transaction_id),
+            "success": result,
+        }
+    )
 
     return send_result(result, rid=2, details=details)
