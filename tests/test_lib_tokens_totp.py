@@ -771,13 +771,14 @@ class TOTPTokenTestCase(MyTestCase):
         set_policy(
             "pol1",
             scope=SCOPE.USER,
-            action="totp_hashlib=sha256,totp_timestep=60,totp_otplen=8",
+            action="totp_hashlib=sha256,totp_timestep=60,totp_otplen=8,totp_timeshift=True",
         )
         g.policy_object = PolicyClass()
         p = TotpTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")
         self.assertEqual(p.get("hashlib"), "sha256")
         self.assertEqual(p.get("timeStep"), "60")
+        self.assertEqual(p.get("useTimeShift"), "True")
         delete_policy("pol1")
 
         # the same should work for admins
@@ -785,13 +786,14 @@ class TOTPTokenTestCase(MyTestCase):
         set_policy(
             "pol1",
             scope=SCOPE.ADMIN,
-            action="totp_hashlib=sha512,totp_timestep=60,totp_otplen=8",
+            action="totp_hashlib=sha512,totp_timestep=60,totp_otplen=8,totp_timeshift=default",
         )
         g.policy_object = PolicyClass()
         p = TotpTokenClass.get_default_settings(g, params)
         self.assertEqual(p.get("otplen"), "8")
         self.assertEqual(p.get("hashlib"), "sha512")
         self.assertEqual(p.get("timeStep"), "60")
+        self.assertEqual(p.get("useTimeShift"), "default")
         # test check if there is no logged in user
         g.logged_in_user = None
         p = TotpTokenClass.get_default_settings(g, params)
