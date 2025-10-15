@@ -14,10 +14,17 @@ edumfa-manage -q create_audit_keys || true
 # Create DB
 echo "Creating DB"
 # FIXME: this creates a exception trace on every attempt
+attempts=10
 until edumfa-manage -q create_tables
 do
+  if [[ $attempts -eq 0 ]]; then
+    echo "Exhausted database connection tries. Stopping."
+    exit 1
+  else
     echo "Cannot connect to database. Trying again..."
     sleep 3
+    attempts=$((attempts-1))
+  fi
 done
 
 # Check and stamp DB
