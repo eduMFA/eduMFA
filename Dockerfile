@@ -33,6 +33,7 @@ COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
 RUN mkdir -p /opt/edumfa/user-scripts
 
 EXPOSE 8000
+HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1
 WORKDIR /opt/edumfa
 
 # Set environment variables
