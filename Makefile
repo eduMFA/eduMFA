@@ -1,9 +1,9 @@
 info:
-	@echo "make clean        	 - remove all automatically created files"
-	@echo "make pypi             - upload package to pypi"
-	@echo "make translate        - translate WebUI"
-	@echo "make translate-server - translate string in the server code."
-	@echo "make update-contrib   - update JS contrib libraries"
+	@echo "make clean        	 	- remove all automatically created files"
+	@echo "make pypi             	- upload package to pypi"
+	@echo "make translate-frontend	- translate WebUI"
+	@echo "make translate-backend 	- translate string in the server code."
+	@echo "make update-contrib   	- update JS contrib libraries"
 
 
 SIGNING_KEY=53E66E1D2CABEFCDB1D3B83E106164552E8D8149
