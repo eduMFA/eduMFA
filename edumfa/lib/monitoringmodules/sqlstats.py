@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -64,11 +63,7 @@ class Monitoring(MonitoringBase):
         connect_string = self.config.get(
             "EDUMFA_MONITORING_SQL_URI", self.config.get("SQLALCHEMY_DATABASE_URI")
         )
-        log.debug(
-            "using the connect string {0!s}".format(
-                censor_connect_string(connect_string)
-            )
-        )
+        log.debug(f"using the connect string {censor_connect_string(connect_string)}")
         try:
             pool_size = self.config.get("EDUMFA_MONITORING_POOL_SIZE", 20)
             engine = create_engine(
@@ -76,7 +71,7 @@ class Monitoring(MonitoringBase):
                 pool_size=pool_size,
                 pool_recycle=self.config.get("EDUMFA_MONITORING_POOL_RECYCLE", 600),
             )
-            log.debug("Using SQL pool size of {}".format(pool_size))
+            log.debug(f"Using SQL pool size of {pool_size}")
         except TypeError:
             # SQLite does not support pool_size
             engine = create_engine(connect_string)
@@ -99,9 +94,9 @@ class Monitoring(MonitoringBase):
                 ).delete()
                 self.session.commit()
         except Exception as exx:  # pragma: no cover
-            log.error("exception {0!r}".format(exx))
-            log.error("DATA: {0!s} -> {1!s}".format(stats_key, stats_value))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"exception {exx!r}")
+            log.error(f"DATA: {stats_key} -> {stats_value}")
+            log.debug(f"{traceback.format_exc()}")
             self.session.rollback()
 
         finally:
@@ -120,9 +115,9 @@ class Monitoring(MonitoringBase):
             r = self.session.query(MonitoringStats).filter(and_(*conditions)).delete()
             self.session.commit()
         except Exception as exx:  # pragma: no cover
-            log.error("exception {0!r}".format(exx))
-            log.error("could not delete statskeys {0!s}".format(stats_key))
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.error(f"exception {exx!r}")
+            log.error(f"could not delete statskeys {stats_key}")
+            log.debug(f"{traceback.format_exc()}")
             self.session.rollback()
 
         finally:
@@ -144,9 +139,9 @@ class Monitoring(MonitoringBase):
             ):
                 keys.append(monStat.stats_key)
         except Exception as exx:  # pragma: no cover
-            log.error("exception {0!r}".format(exx))
+            log.error(f"exception {exx!r}")
             log.error("could not fetch list of keys")
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.debug(f"{traceback.format_exc()}")
             self.session.rollback()
 
         finally:
@@ -174,9 +169,9 @@ class Monitoring(MonitoringBase):
                 aware_timestamp = ms.timestamp.replace(tzinfo=tzutc())
                 values.append((aware_timestamp, ms.stats_value))
         except Exception as exx:  # pragma: no cover
-            log.error("exception {0!r}".format(exx))
+            log.error(f"exception {exx!r}")
             log.error("could not fetch list of keys")
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.debug(f"{traceback.format_exc()}")
             self.session.rollback()
 
         finally:
@@ -196,9 +191,9 @@ class Monitoring(MonitoringBase):
             if s:
                 val = s.stats_value
         except Exception as exx:  # pragma: no cover
-            log.error("exception {0!r}".format(exx))
+            log.error(f"exception {exx!r}")
             log.error("could not fetch list of keys")
-            log.debug("{0!s}".format(traceback.format_exc()))
+            log.debug(f"{traceback.format_exc()}")
             self.session.rollback()
 
         finally:

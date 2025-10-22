@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 #  2020-04-28 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #             Read tables oc_accounts and oc_users from owncloud
@@ -32,7 +31,7 @@ EXAMPLE_CONFIG_FILE = """{
 
 class Config:
     def __init__(self, config_file):
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             contents = f.read()
         config = json.loads(contents)
         self.OWNCLOUD_URI = config.get("SQL").get("OWNCLOUD_URI")
@@ -81,7 +80,7 @@ def sync_owncloud(config_obj):
     oc_engine = create_engine(config_obj.OWNCLOUD_URI)
     edumfa_engine = create_engine(config_obj.EDUMFA_URI)
 
-    print("Creating table {0!s}, if it does not exist.".format(config_obj.LOCAL_TABLE))
+    print(f"Creating table {config_obj.LOCAL_TABLE}, if it does not exist.")
     metadata.create_all(edumfa_engine)
 
     conn_oc = oc_engine.connect()
@@ -94,14 +93,12 @@ def sync_owncloud(config_obj):
         values_length = len(values)
         for chunk in range(0, values_length, chunk_size):
             print(
-                "Insert records {} to {} ...".format(
-                    chunk, min(chunk + chunk_size, values_length) - 1
-                )
+                f"Insert records {chunk} to {min(chunk + chunk_size, values_length) - 1} ..."
             )
             try:
                 conn.execute(table.insert(), values[chunk : chunk + chunk_size])
             except Exception as err:
-                t = "Failed to insert chunk: {0!s}".format(err)
+                t = f"Failed to insert chunk: {err}"
                 warnings.append(t)
                 print(t)
 
@@ -148,7 +145,7 @@ def sync_owncloud(config_obj):
             # Check if the entry is the same
             if r == edumfa_users[r.id]:
                 # The values are the same
-                print("Entry {0!s}/{1!s} unchanged.".format(r.id, r.user_id))
+                print(f"Entry {r.id}/{r.user_id} unchanged.")
                 unchanged += 1
             else:
                 # add to update
@@ -171,10 +168,10 @@ def sync_owncloud(config_obj):
     edumfa_users_delete = edumfa_users
 
     print("Processing...")
-    print("{0!s} new entries.".format(len(edumfa_users_insert)))
-    print("{0!s} unchanged entries.".format(unchanged))
-    print("{0!s} updated entries.".format(len(edumfa_users_update)))
-    print("{0!s} removed entries.".format(len(edumfa_users_delete)))
+    print(f"{len(edumfa_users_insert)} new entries.")
+    print(f"{unchanged} unchanged entries.")
+    print(f"{len(edumfa_users_update)} updated entries.")
+    print(f"{len(edumfa_users_delete)} removed entries.")
 
     if len(edumfa_users_insert):
         print("Inserting new entries.")
@@ -204,7 +201,7 @@ def sync_owncloud(config_obj):
 
 def usage():
     print(
-        """
+        f"""
 edumfa-sync-owncloud.py --generate-example-config [--config <config file>]
 
     --generate-example-config, -g   Output an example config file.
@@ -214,7 +211,7 @@ edumfa-sync-owncloud.py --generate-example-config [--config <config file>]
     --config, -c <file>             The config file, that contains the complete
                                     configuration.
 
-{0!s}""".format(__doc__)
+{__doc__}"""
     )
 
 
@@ -237,7 +234,7 @@ def main():
         elif o in ("-c", "--config"):
             config_file = a
         else:
-            print("Unknown parameter: {0!s}".format(o))
+            print(f"Unknown parameter: {o}")
             sys.exit(3)
 
     if config_file:

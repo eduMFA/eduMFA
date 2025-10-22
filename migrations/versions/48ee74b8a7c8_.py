@@ -116,13 +116,9 @@ def upgrade():
             realm_id = None
             if not token_realms:
                 sys.stderr.write(
-                    "{serial!s}, {userid!s}, {resolver!s}, "
+                    f"{token.serial}, {token.user_id}, {token.resolver}, "
                     "Error while migrating token assignment. "
-                    "This token has no realm assignments!\n".format(
-                        serial=token.serial,
-                        userid=token.user_id,
-                        resolver=token.resolver,
-                    )
+                    "This token has no realm assignments!\n"
                 )
             elif len(token_realms) == 1:
                 realm_id = token_realms[0].realm_id
@@ -134,26 +130,18 @@ def upgrade():
                 )
                 if not resolver:
                     sys.stderr.write(
-                        "{serial!s}, {userid!s}, {resolver!s}, "
+                        f"{token.serial}, {token.user_id}, {token.resolver}, "
                         "The token is assigned, but the assigned resolver can not "
-                        "be found!\n".format(
-                            serial=token.serial,
-                            userid=token.user_id,
-                            resolver=token.resolver,
-                        )
+                        "be found!\n"
                     )
                 else:
                     # Then, fetch the list of ``Realm`` objects in which the token resolver is contained.
                     resolver_realms = [r.realm for r in resolver.realm_list]
                     if not resolver_realms:
                         sys.stderr.write(
-                            "{serial!s}, {userid!s}, {resolver!s}, "
+                            f"{token.serial}, {token.user_id}, {token.resolver}, "
                             "The token is assigned, but the assigned resolver is not "
-                            "contained in any realm!\n".format(
-                                serial=token.serial,
-                                userid=token.user_id,
-                                resolver=token.resolver,
-                            )
+                            "contained in any realm!\n"
                         )
                     elif len(resolver_realms) == 1:
                         # The resolver is only in one realm, so this is the new realm of the token!
@@ -176,28 +164,19 @@ def upgrade():
                                 found_realm_names.append(token_realm.realm.name)
                         if len(found_realm_ids) > 1:
                             sys.stderr.write(
-                                "{serial!s}, {userid!s}, {resolver!s}, Can not assign token. "
+                                f"{token.serial}, {token.user_id}, {token.resolver}, Can not assign token. "
                                 "Your realm configuration for the token is not distinct! "
                                 "The tokenowner could be in multiple realms! "
                                 "The token is assigned to the following realms and the resolver is also "
-                                "contained in these realm IDs: {realms!s}.\n".format(
-                                    serial=token.serial,
-                                    userid=token.user_id,
-                                    resolver=token.resolver,
-                                    realms=found_realm_names,
-                                )
+                                f"contained in these realm IDs: {found_realm_names}.\n"
                             )
                         elif len(found_realm_ids) == 1:
                             realm_id = found_realm_ids[0]
                         else:
                             sys.stderr.write(
-                                "{serial!s}, {userid!s}, {resolver!s}, "
+                                f"{token.serial}, {token.user_id}, {token.resolver}, "
                                 "Can not assign token. The resolver is not contained in any "
-                                "realms, to which the token is assigned!\n".format(
-                                    serial=token.serial,
-                                    userid=token.user_id,
-                                    resolver=token.resolver,
-                                )
+                                "realms, to which the token is assigned!\n"
                             )
             # If we could not figure out a tokenowner realm, we skip the token assignment.
             if realm_id is not None:

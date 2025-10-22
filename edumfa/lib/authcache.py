@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -42,9 +41,7 @@ def add_to_cache(username, realm, resolver, password):
     auth_hash = _hash_password(password)
     record = AuthCache(username, realm, resolver, auth_hash, first_auth, first_auth)
     log.debug(
-        "Adding record to auth cache: ({!r}, {!r}, {!r}, {!r})".format(
-            username, realm, resolver, auth_hash
-        )
+        f"Adding record to auth cache: ({username!r}, {realm!r}, {resolver!r}, {auth_hash!r})"
     )
     r = record.save()
     return r
@@ -97,11 +94,7 @@ def delete_from_cache(
                 delete_entry = True
 
         except ValueError:
-            log.debug(
-                "Old (non-argon2) authcache entry for user {0!s}@{1!s}.".format(
-                    username, realm
-                )
-            )
+            log.debug(f"Old (non-argon2) authcache entry for user {username}@{realm}.")
             # Also delete old entries
             delete_entry = True
         if delete_entry:
@@ -164,11 +157,7 @@ def verify_in_cache(
         try:
             result = argon2.verify(password, cached_auth.authentication)
         except ValueError:
-            log.debug(
-                "Old (non-argon2) authcache entry for user {0!s}@{1!s}.".format(
-                    username, realm
-                )
-            )
+            log.debug(f"Old (non-argon2) authcache entry for user {username}@{realm}.")
             result = False
 
         if result and max_auths > 0:

@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 This test file tests the lib.tokens.radiustoken
 This depends on lib.tokenclass
@@ -70,9 +69,7 @@ class RadiusTokenTestCase(MyTestCase):
         token = RadiusTokenClass(db_token)
 
         info = token.get_class_info()
-        self.assertTrue(
-            info.get("title") == "RADIUS Token", "{0!s}".format(info.get("title"))
-        )
+        self.assertTrue(info.get("title") == "RADIUS Token", f"{info.get('title')}")
 
         info = token.get_class_info("title")
         self.assertTrue(info == "RADIUS Token", info)
