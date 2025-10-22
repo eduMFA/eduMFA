@@ -21,7 +21,8 @@
             <input name="otp" type="password" autocomplete="one-time-code"
                    id="otp" class="form-control"
                    ng-model="login.password" required
-                   placeholder="{{ challenge_message }}"/>
+                   placeholder="{{ challenge_message }}"
+                   autofocus />
 
             <div class="text-center">
                 <button ng-click="authenticate()"

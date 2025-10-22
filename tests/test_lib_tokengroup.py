@@ -13,17 +13,16 @@ getTokens4UserOrSerial
 gettokensoftype
 getToken....
 """
-from .base import MyTestCase
-from edumfa.lib.error import eduMFAError, ResourceNotFoundError
 
-from edumfa.lib.tokengroup import set_tokengroup, delete_tokengroup, get_tokengroups
+from edumfa.lib.error import ResourceNotFoundError, eduMFAError
+from edumfa.lib.tokengroup import delete_tokengroup, get_tokengroups, set_tokengroup
 from edumfa.models import Tokengroup
+
+from .base import MyTestCase
 
 
 class TokenTestCase(MyTestCase):
-
     def test_01_create_tokengroup(self):
-
         r = set_tokengroup("gruppe1", "my first typo")
         self.assertGreaterEqual(r, 1)
         tg = Tokengroup.query.filter_by(id=r).first()
@@ -45,8 +44,9 @@ class TokenTestCase(MyTestCase):
         r = set_tokengroup("gruppe1", "my other first group")
         self.assertGreaterEqual(r, 1)
 
-        self.assertRaises(eduMFAError,
-                          delete_tokengroup, tokengroup_id=(r + 1), name='gruppe1')
+        self.assertRaises(
+            eduMFAError, delete_tokengroup, tokengroup_id=(r + 1), name="gruppe1"
+        )
 
         delete_tokengroup(tokengroup_id=r)
         tg = Tokengroup.query.filter_by(name="gruppe1").all()
@@ -71,8 +71,3 @@ class TokenTestCase(MyTestCase):
         self.assertEqual(len(tgroups), 1)
 
         self.assertEqual(tgroups[0].name, "gruppe2")
-
-
-
-
-

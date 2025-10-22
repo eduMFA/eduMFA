@@ -3,14 +3,15 @@ This test file tests the lib.challange methods.
 
 This tests the token functions on an interface level
 """
-from .base import MyTestCase
-from edumfa.lib.error import (TokenAdminError, ParameterError)
-from edumfa.lib.challenge import get_challenges, extract_answered_challenges
-from edumfa.lib.policy import (set_policy, delete_policy, SCOPE,
-                                    ACTION)
-from edumfa.models import Challenge, db
-from edumfa.lib.token import init_token
+
 from edumfa.lib import _
+from edumfa.lib.challenge import extract_answered_challenges, get_challenges
+from edumfa.lib.error import ParameterError, TokenAdminError
+from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
+from edumfa.lib.token import init_token
+from edumfa.models import Challenge, db
+
+from .base import MyTestCase
 
 
 class ChallengeTestCase(MyTestCase):
@@ -19,11 +20,14 @@ class ChallengeTestCase(MyTestCase):
     """
 
     def test_01_challenge(self):
-
-        set_policy("chalresp", scope=SCOPE.AUTHZ,
-                   action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE))
+        set_policy(
+            "chalresp",
+            scope=SCOPE.AUTHZ,
+            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+        )
         token = init_token({"genkey": 1, "serial": "CHAL1", "pin": "pin"})
         from edumfa.lib.token import check_serial_pass
+
         r = check_serial_pass(token.token.serial, "pin")
         # The OTP PIN is correct
         self.assertEqual(r[0], False)
@@ -52,6 +56,7 @@ class ChallengeTestCase(MyTestCase):
         self.assertEqual(extract_answered_challenges(challenges), [])
         # we trigger two challenges
         from edumfa.lib.token import check_serial_pass
+
         r = check_serial_pass(token.token.serial, "pin")
         self.assertEqual(r[0], False)
         transaction_id1 = r[1].get("transaction_id")
@@ -63,7 +68,9 @@ class ChallengeTestCase(MyTestCase):
         self.assertEqual(len(challenges), 2)
         self.assertEqual(extract_answered_challenges(challenges), [])
         # answer one challenge
-        Challenge.query.filter_by(transaction_id=transaction_id1).update({"otp_valid": True})
+        Challenge.query.filter_by(transaction_id=transaction_id1).update(
+            {"otp_valid": True}
+        )
         db.session.commit()
         # two challenges, one answered challenge
         challenges = get_challenges(serial="CHAL2")

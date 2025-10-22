@@ -23,9 +23,14 @@ import sys
 import click
 from flask.cli import AppGroup
 
-from edumfa.commands.manage.config import import_cli, export_cli
-from edumfa.commands.manage.helper import conf_export, conf_import, import_conf_policy, get_conf_policy
-from edumfa.lib.policy import PolicyClass, delete_policy, set_policy, enable_policy
+from edumfa.commands.manage.config import export_cli, import_cli
+from edumfa.commands.manage.helper import (
+    conf_export,
+    conf_import,
+    get_conf_policy,
+    import_conf_policy,
+)
+from edumfa.lib.policy import PolicyClass, delete_policy, enable_policy, set_policy
 
 policy_cli = AppGroup("policy", help="Manage policies")
 
@@ -40,7 +45,10 @@ def list_policies():
     click.echo("Active \t Name \t Scope")
     click.echo(40 * "=")
     for policy in policies:
-        click.echo("%s \t %s \t %s" % (policy.get("active"), policy.get("name"), policy.get("scope")))
+        click.echo(
+            "%s \t %s \t %s"
+            % (policy.get("active"), policy.get("name"), policy.get("scope"))
+        )
 
 
 @policy_cli.command("enable")
@@ -74,7 +82,13 @@ def delete(name):
 
 
 @export_cli.command("policy")
-@click.option("-f", "filename", type=click.File('w'), default=sys.stdout, help="filename to export")
+@click.option(
+    "-f",
+    "filename",
+    type=click.File("w"),
+    default=sys.stdout,
+    help="filename to export",
+)
 @click.option("-n", "name", help="policy to export")
 def p_export(filename, name):
     """
@@ -85,7 +99,9 @@ def p_export(filename, name):
 
 
 @import_cli.command("policy")
-@click.option("-f", "filename", help="filename to import", required=True, type=click.File('r'))
+@click.option(
+    "-f", "filename", help="filename to import", required=True, type=click.File("r")
+)
 @click.option("-c", "cleanup", help="cleanup configuration before import", is_flag=True)
 @click.option("-u", "update", help="update configuration during import", is_flag=True)
 @click.option(
@@ -109,7 +125,9 @@ def p_import(filename, cleanup, update, purge):
 @click.argument("name")
 @click.argument("scope")
 @click.argument("action")
-@click.option("-f", "filename", help="filename to import", required=False, type=click.File('r'))
+@click.option(
+    "-f", "filename", help="filename to import", required=False, type=click.File("r")
+)
 def create(name, scope, action, filename):
     """
     create a new policy. 'FILENAME' must contain a dictionary and its content
@@ -127,31 +145,60 @@ def create(name, scope, action, filename):
 
             if params.get("name") and params.get("name") != name:
                 click.echo(
-                    "Found name '{0!s}' in file, will use that instead of '{1!s}'.".format(params.get("name"), name))
+                    "Found name '{0!s}' in file, will use that instead of '{1!s}'.".format(
+                        params.get("name"), name
+                    )
+                )
             else:
-                click.echo("name not defined in file, will use the cli value {0!s}.".format(name))
+                click.echo(
+                    "name not defined in file, will use the cli value {0!s}.".format(
+                        name
+                    )
+                )
                 params["name"] = name
 
             if params.get("scope") and params.get("scope") != scope:
                 click.echo(
-                    "Found scope '{0!s}' in file, will use that instead of '{1!s}'.".format(params.get("scope"), scope))
+                    "Found scope '{0!s}' in file, will use that instead of '{1!s}'.".format(
+                        params.get("scope"), scope
+                    )
+                )
             else:
-                click.echo("scope not defined in file, will use the cli value {0!s}.".format(scope))
+                click.echo(
+                    "scope not defined in file, will use the cli value {0!s}.".format(
+                        scope
+                    )
+                )
                 params["scope"] = scope
 
             if params.get("action") and params.get("action") != action:
                 click.echo(
-                    "Found action in file: '{0!s}', will use that instead of: '{1!s}'.".format(params.get("action"),
-                                                                                               action))
+                    "Found action in file: '{0!s}', will use that instead of: '{1!s}'.".format(
+                        params.get("action"), action
+                    )
+                )
             else:
-                click.echo("action not defined in file, will use the cli value {0!s}.".format(action))
+                click.echo(
+                    "action not defined in file, will use the cli value {0!s}.".format(
+                        action
+                    )
+                )
                 params["action"] = action
 
-            r = set_policy(params.get("name"), scope=params.get("scope"), action=params.get("action"),
-                           realm=params.get("realm"), resolver=params.get("resolver"), user=params.get("user"),
-                           time=params.get("time"), client=params.get("client"), active=params.get("active", True),
-                           adminrealm=params.get("adminrealm"), adminuser=params.get("adminuser"),
-                           check_all_resolvers=params.get("check_all_resolvers", False))
+            r = set_policy(
+                params.get("name"),
+                scope=params.get("scope"),
+                action=params.get("action"),
+                realm=params.get("realm"),
+                resolver=params.get("resolver"),
+                user=params.get("user"),
+                time=params.get("time"),
+                client=params.get("client"),
+                active=params.get("active", True),
+                adminrealm=params.get("adminrealm"),
+                adminuser=params.get("adminuser"),
+                check_all_resolvers=params.get("check_all_resolvers", False),
+            )
             return r
 
         except Exception as _e:

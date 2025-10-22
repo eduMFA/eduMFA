@@ -30,14 +30,13 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from edumfa.app import create_app
-import requests
-from edumfa.lib.user import get_user_list
-from edumfa.lib.token import get_tokens
-import jwt
 import click
-from edumfa.lib.user import User
+import jwt
+import requests
 
+from edumfa.app import create_app
+from edumfa.lib.token import get_tokens
+from edumfa.lib.user import User, get_user_list
 
 __doc__ = """
 This script can be called from a cron job to enroll tokens to users,
@@ -51,7 +50,7 @@ __version__ = "0.1"
 ROLE = "admin"
 ALGO = "RS256"
 
-app = create_app(config_name='production', silent=True)
+app = create_app(config_name="production", silent=True)
 
 
 def create_jwt(jwt_privkey, jwt_user, jwt_realm):
@@ -68,21 +67,21 @@ def create_jwt(jwt_privkey, jwt_user, jwt_realm):
         with open(jwt_privkey, "r") as f:
             pkey = f.read()
         if pkey:
-            auth_token = jwt.encode(payload={"role": ROLE,
-                                             "username": jwt_user,
-                                             "realm": jwt_realm},
-                                    key=pkey,
-                                    algorithm=ALGO)
+            auth_token = jwt.encode(
+                payload={"role": ROLE, "username": jwt_user, "realm": jwt_realm},
+                key=pkey,
+                algorithm=ALGO,
+            )
     return auth_token
 
 
 @click.command()
-@click.option('-r', '--realm', required=True)
-@click.option('-t', '--tokentype', default="registration", show_default=True)
-@click.option('--jwt_privkey', required=True)
-@click.option('--jwt_user', required=True)
-@click.option('--jwt_realm')
-@click.option('--url', default="https://localhost", show_default=True)
+@click.option("-r", "--realm", required=True)
+@click.option("-t", "--tokentype", default="registration", show_default=True)
+@click.option("--jwt_privkey", required=True)
+@click.option("--jwt_user", required=True)
+@click.option("--jwt_realm")
+@click.option("--url", default="https://localhost", show_default=True)
 def enroll(realm, tokentype, jwt_privkey, jwt_user, jwt_realm, url):
     """
     Enroll a token for users in the given realm.
@@ -108,24 +107,32 @@ def enroll(realm, tokentype, jwt_privkey, jwt_user, jwt_realm, url):
         num_fail = 0
 
         for user in usernames:
-            toks = get_tokens(user=User(user,realm))
+            toks = get_tokens(user=User(user, realm))
             if len(toks) == 0:
                 print("user {0!s} has no token assigned.".format(user))
                 # Do a REST request with a trusted JWT
                 # See https://privacyidea.readthedocs.io/en/latest/installation/system/inifile.html#trusted-jwts
                 if auth_token:
-                    r = requests.post("{0!s}/token/init".format(url),
-                                  verify=False,
-                                  data={"type": tokentype,
-                                        "genkey": 1,
-                                        "user": user,
-                                        "realm": realm},
-                                  headers={"Authorization": auth_token})
+                    r = requests.post(
+                        "{0!s}/token/init".format(url),
+                        verify=False,
+                        data={
+                            "type": tokentype,
+                            "genkey": 1,
+                            "user": user,
+                            "realm": realm,
+                        },
+                        headers={"Authorization": auth_token},
+                    )
                     if r.status_code == 200:
                         print("Created token for user {0!s}.".format(user))
                         num_success += 1
                     else:
-                        print("Failed to create token for user {0!s}: {1!s}.".format(user, r.status_code))
+                        print(
+                            "Failed to create token for user {0!s}: {1!s}.".format(
+                                user, r.status_code
+                            )
+                        )
                         num_fail += 1
             else:
                 print(".")
@@ -137,5 +144,5 @@ def enroll(realm, tokentype, jwt_privkey, jwt_user, jwt_realm, url):
             print("Created {0!s} tokens.".format(num_success))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     enroll()

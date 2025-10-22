@@ -18,15 +18,15 @@ Other concepts like handling of machines or enrolling certificates
 are coming up, you may monitor this development on Github.
 
 eduMFA is a web application written in Python based on the
-`flask micro framework`_. You can use any webserver with a wsgi interface
+`Flask microframework`_. You can use any webserver with a wsgi interface
 to run eduMFA. E.g. this can be Apache, Nginx or even `werkzeug`_.
 
 A device or item used to authenticate is still called a
 "token". All token information is stored in an SQL database,
-while you may choose, which database you want to use.
+while you may choose which database you want to use.
 eduMFA uses `SQLAlchemy`_ to map the database to
 internal objects. Thus you may choose to run eduMFA
-with SQLite, MySQL, PostgreSQL, Oracle, DB2 or other database.
+with SQLite, MySQL, PostgreSQL, Oracle, DB2 or other databases.
 
 The code is divided into three layers, the API, the library and the
 database layer. Read about it at :ref:`code_docu`.
@@ -47,6 +47,18 @@ We will take a look at common ways to setup eduMFA
 in the section :ref:`installation`
 but there are still many others.
 
-.. _flask micro framework: https://flask.palletsprojects.com/
+Hardware Requirements
+---------------------
+
+The hardware requirements are dependant on the amount of traffic you anticipate. As a starting point, an eduMFA VM could have these specs:
+
+* 2 CPU cores
+* 8GB RAM
+* 40GB Storage
+
+See :ref:`performance` for more information.
+
+
+.. _Flask microframework: https://flask.palletsprojects.com/
 .. _SQLAlchemy: https://www.sqlalchemy.org/
 .. _werkzeug: https://werkzeug.palletsprojects.com/

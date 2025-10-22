@@ -82,7 +82,7 @@ angular.module("eduMfaApp")
     obj = angular.element(document.querySelector('#GDPR_LINK'));
     // we need to trust the GDPR URI explicitly since an admin can change this via policy.
     $scope.piGDPRLink = $sce.trustAsUrl(obj.val());
-    obj = angular.element(document.querySelector('#PI_TRANSLATION_WARNING'));
+    obj = angular.element(document.querySelector('#EDUMFA_TRANSLATION_WARNING'));
     $scope.piTranslationWarning = obj.val() !== "False";
     $scope.piTranslationPrefix = obj.val();
     gettextCatalog.debug = $scope.piTranslationWarning;
@@ -638,6 +638,10 @@ angular.module("eduMfaApp")
     $scope.reload = function() {
         // emit a signal to the scope, that just listens
         $scope.$broadcast("piReload");
+    };
+
+    $scope.ldapRestartDialog = function() {
+        $("#dialogLdapRestart").modal("show");
     };
 
 }]);

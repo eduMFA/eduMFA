@@ -28,16 +28,16 @@ The code is tested in test_lib_tokens_registration.py.
 
 import logging
 
-from edumfa.lib.utils import to_unicode
-from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
-from edumfa.lib.log import log_with
-from edumfa.lib.decorators import check_token_locked
 from edumfa.lib import _
-from edumfa.lib.policy import SCOPE, ACTION, GROUP
+from edumfa.lib.decorators import check_token_locked
+from edumfa.lib.log import log_with
+from edumfa.lib.policy import ACTION, GROUP, SCOPE
+from edumfa.lib.tokens.passwordtoken import PasswordTokenClass
+from edumfa.lib.utils import to_unicode
 
 # We use the old default length of 24 for registration tokens
 DEFAULT_LENGTH = 24
-DEFAULT_CONTENTS = 'cn'
+DEFAULT_CONTENTS = "cn"
 
 optional = True
 required = False
@@ -112,7 +112,7 @@ class RegistrationTokenClass(PasswordTokenClass):
 
     @staticmethod
     @log_with(log)
-    def get_class_info(key=None, ret='all'):
+    def get_class_info(key=None, ret="all"):
         """
         returns a subtree of the token definition
 
@@ -123,37 +123,43 @@ class RegistrationTokenClass(PasswordTokenClass):
         :return: subsection if key exists or user defined
         :rtype: dict or scalar
         """
-        res = {'type': 'registration',
-               'title': 'Registration Code Token',
-               'description': _('Registration: A token that creates a '
-                                'registration code that '
-                                'can be used as a second factor once.'),
-               'init': {},
-               'config': {},
-               'user':  [],
-               # This tokentype is enrollable in the UI for...
-               'ui_enroll': ["admin"],
-               'policy': {
-                   SCOPE.ENROLL: {
-                       ACTION.MAXTOKENUSER: {
-                           'type': 'int',
-                           'desc': _("The user may only have this maximum number of registration tokens assigned."),
-                           'group': GROUP.TOKEN
-                       },
-                       ACTION.MAXACTIVETOKENUSER: {
-                           'type': 'int',
-                           'desc': _(
-                               "The user may only have this maximum number of active registration tokens assigned."),
-                           'group': GROUP.TOKEN
-                       }
-                   }
-               },
-               }
+        res = {
+            "type": "registration",
+            "title": "Registration Code Token",
+            "description": _(
+                "Registration: A token that creates a "
+                "registration code that "
+                "can be used as a second factor once."
+            ),
+            "init": {},
+            "config": {},
+            "user": [],
+            # This tokentype is enrollable in the UI for...
+            "ui_enroll": ["admin"],
+            "policy": {
+                SCOPE.ENROLL: {
+                    ACTION.MAXTOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of registration tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                    ACTION.MAXACTIVETOKENUSER: {
+                        "type": "int",
+                        "desc": _(
+                            "The user may only have this maximum number of active registration tokens assigned."
+                        ),
+                        "group": GROUP.TOKEN,
+                    },
+                }
+            },
+        }
 
         if key:
             ret = res.get(key)
         else:
-            if ret == 'all':
+            if ret == "all":
                 ret = res
         return ret
 
@@ -164,8 +170,10 @@ class RegistrationTokenClass(PasswordTokenClass):
         :type param: dict
         :return: None
         """
-        # We always generate the registration code, so we need to set this parameter
-        param["genkey"] = 1
+        # If neither genkey or otpkey is given we always generate the key
+        if "genkey" not in param and "otpkey" not in param:
+            param["genkey"] = 1
+
         PasswordTokenClass.update(self, param)
 
     @log_with(log, log_entry=False)

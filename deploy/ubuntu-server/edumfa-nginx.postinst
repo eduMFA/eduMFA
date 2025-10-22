@@ -17,6 +17,13 @@ CERTKEYSIZE=4096
 MIGRATIONSDIR=/opt/edumfa/lib/edumfa/migrations/
 MYSQLFIX=/etc/mysql/conf.d/edumfa-maxkeylengthfix.cnf
 DB_CREATED=false
+CONFIG_FILE=/etc/edumfa/edumfa.cfg
+
+# Default paths
+ENCKEY_PATH=/etc/edumfa/enckey
+AUDIT_KEY_PRIVATE=/etc/edumfa/private.pem
+AUDIT_KEY_PUBLIC=/etc/edumfa/public.pem
+LOG_FILE=/var/log/edumfa/edumfa.log
 
 
 if test -f /etc/default/edumfa; then
@@ -26,27 +33,76 @@ if test -f /etc/default/edumfa; then
   USERNAME=$USER
 fi
 
+# Function to extract config values from edumfa.cfg
+get_config_value() {
+  local key="$1"
+  local default="$2"
+  local value
+
+  if [ -f "$CONFIG_FILE" ]; then
+    # Try to extract the value using grep and sed
+    value=$(grep -E "^$key\s*=" "$CONFIG_FILE" | sed -E "s/^$key\s*=\s*['\"]?(.*)['\"]?$/\1/" | tr -d "'" | tr -d '"')
+    if [ -n "$value" ]; then
+      echo "$value"
+    else
+      echo "$default"
+    fi
+  else
+    echo "$default"
+  fi
+}
+
+read_config_paths() {
+  # Only read config if it exists
+  if [ -f "$CONFIG_FILE" ]; then
+    ENCKEY_PATH=$(get_config_value "EDUMFA_ENCFILE" "$ENCKEY_PATH")
+    AUDIT_KEY_PRIVATE=$(get_config_value "EDUMFA_AUDIT_KEY_PRIVATE" "$AUDIT_KEY_PRIVATE")
+    AUDIT_KEY_PUBLIC=$(get_config_value "EDUMFA_AUDIT_KEY_PUBLIC" "$AUDIT_KEY_PUBLIC")
+    LOG_FILE=$(get_config_value "EDUMFA_LOGFILE" "$LOG_FILE")
+  fi
+}
 
 create_user() {
   useradd -r "$USERNAME" -m || true
 }
 
 create_files() {
-  mkdir -p /var/log/edumfa
+  # Read configuration paths first
+  read_config_paths
+  
+  # Extract directories from the paths
+  ENCKEY_DIR=$(dirname "$ENCKEY_PATH")
+  AUDIT_KEY_PRIVATE_DIR=$(dirname "$AUDIT_KEY_PRIVATE")
+  AUDIT_KEY_PUBLIC_DIR=$(dirname "$AUDIT_KEY_PUBLIC")
+  LOG_DIR=$(dirname "$LOG_FILE")
+  
+  # Create necessary directories
+  mkdir -p "$LOG_DIR"
   mkdir -p /var/lib/edumfa
   mkdir -p /etc/edumfa/scripts
-  touch /var/log/edumfa/edumfa.log
+  mkdir -p "$ENCKEY_DIR"
+  mkdir -p "$AUDIT_KEY_PRIVATE_DIR"
+  mkdir -p "$AUDIT_KEY_PUBLIC_DIR"
+  
+  touch "$LOG_FILE"
   /opt/edumfa/bin/edumfa-manage create_enckey || true
   /opt/edumfa/bin/edumfa-manage create_audit_keys || true
-  chown -R "$USERNAME" /var/log/edumfa
+  
+  chown -R "$USERNAME" "$LOG_DIR"
   chown -R "$USERNAME" /var/lib/edumfa
   chown -R "$USERNAME" /etc/edumfa
-  chmod 600 /etc/edumfa/enckey
-  chmod 600 /etc/edumfa/private.pem
+  
+  chown "$USERNAME" "$ENCKEY_PATH"
+  chown "$USERNAME" "$AUDIT_KEY_PRIVATE"
+  chown "$USERNAME" "$AUDIT_KEY_PUBLIC"
+  
+  chmod 600 "$ENCKEY_PATH"
+  chmod 600 "$AUDIT_KEY_PRIVATE"
+  
   # we need to change access right, otherwise each local user could call
   # edumfa-manage
-  chgrp root /etc/edumfa/edumfa.cfg
-  chmod 640 /etc/edumfa/edumfa.cfg
+  chgrp root "$CONFIG_FILE"
+  chmod 640 "$CONFIG_FILE"
 }
 
 create_certificate() {
@@ -58,7 +114,7 @@ create_certificate() {
     openssl x509 -req -days $CERTDAYS -in server.csr -signkey server.key -out server.crt
     cat server.crt server.key > server.pem
     rm -f server.crt server.key
-    chown edumfa server.pem
+    chown "$USERNAME" server.pem
     chmod 400 server.pem
   fi
   
@@ -107,7 +163,7 @@ create_database() {
     mysql -u "$USER" --password="$PASSWORD" -e "create database edumfa;" || true
     mysql -u "$USER" --password="$PASSWORD" -e "create user 'edumfa'@'localhost' IDENTIFIED BY '$NPW';"
     mysql -u "$USER" --password="$PASSWORD" -e "grant all privileges on edumfa.* to 'edumfa'@'localhost';"
-    echo "SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:$NPW@localhost/edumfa?charset=utf8'" >> /etc/edumfa/edumfa.cfg
+    echo "SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:$NPW@localhost/edumfa?charset=utf8mb4'" >> /etc/edumfa/edumfa.cfg
     echo "DB created"
     /opt/edumfa/bin/edumfa-manage create_tables || true
     DB_CREATED=true

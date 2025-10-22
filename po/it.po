@@ -158,7 +158,7 @@ msgstr "Chiave dell'API"
 msgid "API client ID"
 msgstr "API client ID"
 
-#: edumfa/static/components/token/controllers/tokenControllers.js:691
+#: edumfa/static/components/token/controllers/tokenControllers.js:694
 msgid "Abort operation on unverifiable token"
 msgstr "Operazione abortita per token non verificato"
 
@@ -292,8 +292,8 @@ msgstr "Una mail per resettare la password a te inviata."
 
 #: edumfa/static/components/machine/views/machine.details.html:127
 #: edumfa/static/components/machine/views/machine.details.html:51
-#: edumfa/static/components/token/views/token.details.html:598
-#: edumfa/static/components/token/views/token.details.html:679
+#: edumfa/static/components/token/views/token.details.html:614
+#: edumfa/static/components/token/views/token.details.html:695
 msgid "Application"
 msgstr "Applicazione"
 
@@ -325,8 +325,8 @@ msgstr ""
 msgid "Assign Token"
 msgstr "Assegna token"
 
-#: edumfa/static/components/token/views/token.details.html:556
-#: edumfa/static/components/token/views/token.details.html:569
+#: edumfa/static/components/token/views/token.details.html:572
+#: edumfa/static/components/token/views/token.details.html:585
 msgid "Assign User"
 msgstr "Assegna utente"
 
@@ -338,11 +338,11 @@ msgstr "Assegna un nuovo token {{ newToken.serial }}"
 msgid "Assign a new token {{ newTokenObject.serial }}"
 msgstr "Assegnare un nuovo token {{ newTokenObject.serial }}"
 
-#: edumfa/static/components/token/views/token.enroll.html:44
+#: edumfa/static/components/token/views/token.enroll.html:45
 msgid "Assign token to user"
 msgstr "Assegnare token all'utente"
 
-#: edumfa/static/components/token/views/token.details.html:506
+#: edumfa/static/components/token/views/token.details.html:522
 msgid "Assigned User"
 msgstr "Utente assegnato"
 
@@ -350,7 +350,7 @@ msgstr "Utente assegnato"
 msgid "Assignment State"
 msgstr "Stato di assegnamento"
 
-#: edumfa/static/components/token/views/token.details.html:714
+#: edumfa/static/components/token/views/token.details.html:730
 msgid "Attach Machine"
 msgstr "Collegare la macchina"
 
@@ -358,7 +358,7 @@ msgstr "Collegare la macchina"
 msgid "Attach Token"
 msgstr "Allega token"
 
-#: edumfa/static/components/token/views/token.details.html:672
+#: edumfa/static/components/token/views/token.details.html:688
 msgid "Attach to a new Machine"
 msgstr "Collegare a una nuova macchina"
 
@@ -476,10 +476,10 @@ msgstr "Timeout della cache (secondi)"
 #: edumfa/static/components/config/views/config.realms.list.html:77
 #: edumfa/static/components/directives/views/directive.tokendata.html:23
 #: edumfa/static/components/machine/views/machine.details.html:110
-#: edumfa/static/components/token/views/token.details.html:301
-#: edumfa/static/components/token/views/token.details.html:344
-#: edumfa/static/components/token/views/token.details.html:389
-#: edumfa/static/components/token/views/token.details.html:661
+#: edumfa/static/components/token/views/token.details.html:317
+#: edumfa/static/components/token/views/token.details.html:360
+#: edumfa/static/components/token/views/token.details.html:405
+#: edumfa/static/components/token/views/token.details.html:677
 #: edumfa/static/components/token/views/token.getserial.html:83
 #: edumfa/static/components/user/views/user.details.html:56
 msgid "Cancel"
@@ -533,7 +533,7 @@ msgstr "Risposta alla sfida per l'Autenticazione. La risposta non è valida!"
 msgid "Change PIN"
 msgstr "Modifica del PIN"
 
-#: edumfa/static/components/token/views/token.details.html:494
+#: edumfa/static/components/token/views/token.details.html:510
 msgid "Check OTP only."
 msgstr "Controlla solo OTP."
 
@@ -551,7 +551,7 @@ msgstr ""
 msgid "Check the PIN locally"
 msgstr "Controllare il PIN localmente"
 
-#: edumfa/static/components/token/views/token.details.html:487
+#: edumfa/static/components/token/views/token.details.html:503
 msgid "Check with OTP PIN."
 msgstr "Verifica con il PIN OTP."
 
@@ -852,7 +852,7 @@ msgstr "Predefinito"
 
 #: edumfa/static/components/config/views/config.token.daypassword.html:21
 #: edumfa/static/components/config/views/config.token.hotp.html:12
-#: edumfa/static/components/config/views/config.token.totp.html:39
+#: edumfa/static/components/config/views/config.token.totp.html:47
 msgid "Default Hashlib"
 msgstr "Hashlib predefinito"
 
@@ -933,15 +933,15 @@ msgstr "Elimina utente"
 #: edumfa/static/components/config/views/config.tokengroup.edit.html:28
 #: edumfa/static/components/config/views/config.tokengroup.list.html:7
 #: edumfa/static/components/token/views/token.details.html:151
-#: edumfa/static/components/token/views/token.details.html:163
-#: edumfa/static/components/token/views/token.details.html:175
+#: edumfa/static/components/token/views/token.details.html:164
+#: edumfa/static/components/token/views/token.details.html:177
 #: edumfa/static/components/token/views/token.enroll.html:34
 #: edumfa/static/components/user/views/user.password.html:21
 msgid "Description"
 msgstr "Descrizione"
 
 #: edumfa/static/components/machine/views/machine.details.html:99
-#: edumfa/static/components/token/views/token.details.html:650
+#: edumfa/static/components/token/views/token.details.html:666
 msgid "Detach"
 msgstr "Stacca"
 
@@ -985,17 +985,17 @@ msgstr "Immergiti!"
 msgid "Do not use an authentication counter per token."
 msgstr "Non utilizzare un contatore di autenticazione per token."
 
-#: edumfa/static/components/token/controllers/tokenControllers.js:689
+#: edumfa/static/components/token/controllers/tokenControllers.js:692
 msgid "Do not verify the authenticity"
 msgstr "Non verificare l'autenticità"
 
 #: edumfa/static/components/token/views/dialog.ask_token_delete.html:16
 msgid ""
-"Do you really want to delete the Token {{ tokenSerial }} from user {{ token."
-"username }}?"
+"Do you really want to delete the Token {{ tokenSerial }} from user "
+"{{ token.username }}?"
 msgstr ""
-"Vuoi davvero eliminare il token {{ tokenSerial }} dall'utente {{ token."
-"username }}?"
+"Vuoi davvero eliminare il token {{ tokenSerial }} dall'utente "
+"{{ token.username }}?"
 
 #: edumfa/static/components/token/views/dialog.ask_token_delete.html:19
 msgid "Do you really want to delete the Token {{ tokenSerial }}?"
@@ -1068,9 +1068,9 @@ msgstr "Impostazioni del token EMail"
 #: edumfa/static/components/config/views/config.resolvers.list.html:19
 #: edumfa/static/components/directives/views/directive.policyconditions.html:57
 #: edumfa/static/components/directives/views/directive.tokendata.html:28
-#: edumfa/static/components/token/views/token.details.html:288
-#: edumfa/static/components/token/views/token.details.html:331
-#: edumfa/static/components/token/views/token.details.html:376
+#: edumfa/static/components/token/views/token.details.html:304
+#: edumfa/static/components/token/views/token.details.html:347
+#: edumfa/static/components/token/views/token.details.html:392
 msgid "Edit"
 msgstr "Modifica"
 
@@ -1119,7 +1119,7 @@ msgstr ""
 "        {{ connectorname }}"
 
 #: edumfa/static/components/machine/views/machine.details.html:95
-#: edumfa/static/components/token/views/token.details.html:646
+#: edumfa/static/components/token/views/token.details.html:662
 msgid "Edit Options"
 msgstr "Modifica opzioni"
 
@@ -1217,7 +1217,7 @@ msgstr "Abilita"
 msgid "Enable token"
 msgstr "Abilita token"
 
-#: edumfa/static/components/token/views/token.details.html:256
+#: edumfa/static/components/token/views/token.details.html:259
 msgid "End Date before Start Date!"
 msgstr "La data di fine precede la data di inizio!"
 
@@ -1237,7 +1237,7 @@ msgstr ""
 msgid "Enroll New Token"
 msgstr "Registra un nuovo token"
 
-#: edumfa/static/components/token/views/token.enroll.html:143
+#: edumfa/static/components/token/views/token.enroll.html:144
 #: edumfa/static/components/token/views/token.enrolled.daypassword.html:56
 #: edumfa/static/components/token/views/token.enrolled.hotp.html:56
 #: edumfa/static/components/token/views/token.enrolled.totp.html:56
@@ -1248,19 +1248,19 @@ msgstr "Registra token"
 #: edumfa/static/components/login/controllers/loginControllers.js:120
 #: edumfa/static/components/token/controllers/tokenControllers.js:140
 #: edumfa/static/components/token/views/token.enroll.html:1
-#: edumfa/static/components/token/views/token.enroll.html:209
+#: edumfa/static/components/token/views/token.enroll.html:210
 msgid "Enroll a new token"
 msgstr "Registra un nuovo token"
 
-#: edumfa/static/components/token/controllers/tokenDetailController.js:308
+#: edumfa/static/components/token/controllers/tokenDetailController.js:313
 msgid "Enrollment successfully verified."
 msgstr "Registrazione verificata con successo."
 
-#: edumfa/static/components/token/controllers/tokenDetailController.js:311
+#: edumfa/static/components/token/controllers/tokenDetailController.js:316
 msgid "Enrollment verification failed."
 msgstr "Verifica della registrazione non riuscita."
 
-#: edumfa/static/components/token/controllers/tokenDetailController.js:80
+#: edumfa/static/components/token/controllers/tokenDetailController.js:83
 msgid "Enter OTP + PIN to check the token."
 msgstr "Inserisci OTP + PIN per verificare il token."
 
@@ -1269,7 +1269,7 @@ msgstr "Inserisci OTP + PIN per verificare il token."
 msgid "Enter OTP key..."
 msgstr "Inserisci la chiave OTP ..."
 
-#: edumfa/static/components/token/views/token.details.html:435
+#: edumfa/static/components/token/views/token.details.html:451
 msgid "Enter PIN again"
 msgstr "Inserisci di nuovo il PIN"
 
@@ -1277,7 +1277,7 @@ msgstr "Inserisci di nuovo il PIN"
 msgid "Enter PIN and OTP to check the token."
 msgstr "Inserisci PIN e OTP per verificare il token."
 
-#: edumfa/static/components/token/views/token.details.html:430
+#: edumfa/static/components/token/views/token.details.html:446
 msgid "Enter PIN for token"
 msgstr "Inserisci il PIN per il token"
 
@@ -1285,11 +1285,11 @@ msgstr "Inserisci il PIN per il token"
 msgid "Enter code to verify enrollment"
 msgstr "Inserisci il codice per verificare la registrazione"
 
-#: edumfa/static/components/token/views/token.details.html:407
+#: edumfa/static/components/token/views/token.details.html:423
 msgid "Enter first OTP value"
 msgstr "Inserire il primo valore OTP"
 
-#: edumfa/static/components/token/views/token.details.html:413
+#: edumfa/static/components/token/views/token.details.html:429
 msgid "Enter second OTP value"
 msgstr "Inserisci il secondo valore OTP"
 
@@ -1337,7 +1337,7 @@ msgstr "Esempi"
 msgid "Expiration"
 msgstr "Scadenza"
 
-#: edumfa/static/components/token/views/token.enroll.html:77
+#: edumfa/static/components/token/views/token.enroll.html:78
 #, fuzzy
 msgid "Extended Attributes"
 msgstr "Attributi estesi"
@@ -1359,8 +1359,8 @@ msgstr "Impossibile ottenere una risposta JSON valida dal server eduMFA."
 msgid "Failed to reset your password."
 msgstr "Impossibile reimpostare la password."
 
-#: edumfa/static/components/token/controllers/tokenDetailController.js:253
-#: edumfa/static/components/token/controllers/tokenDetailController.js:267
+#: edumfa/static/components/token/controllers/tokenDetailController.js:258
+#: edumfa/static/components/token/controllers/tokenDetailController.js:272
 msgid "Failed to set PIN."
 msgstr "Impossibile impostare il PIN."
 
@@ -1383,7 +1383,7 @@ msgstr "Impronta digitale"
 #: edumfa/static/components/token/views/token.applications.offline.html:12
 #: edumfa/static/components/token/views/token.applications.ssh.html:15
 #: edumfa/static/components/token/views/token.challenges.html:10
-#: edumfa/static/components/token/views/token.details.html:585
+#: edumfa/static/components/token/views/token.details.html:601
 #: edumfa/static/components/token/views/token.list.html:6
 msgid "First"
 msgstr "Primo"
@@ -1522,7 +1522,7 @@ msgstr "Hardware"
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:61
 #: edumfa/static/components/token/views/token.enroll.hotp.html:60
-#: edumfa/static/components/token/views/token.enroll.totp.html:69
+#: edumfa/static/components/token/views/token.enroll.totp.html:80
 msgid "Hash algorithm"
 msgstr "Algoritmo di hash"
 
@@ -1678,7 +1678,7 @@ msgid "Hide Policy templates"
 msgstr "Nascondi i modelli di policy"
 
 #: edumfa/static/components/machine/views/machine.details.html:9
-#: edumfa/static/components/token/views/token.details.html:596
+#: edumfa/static/components/token/views/token.details.html:612
 msgid "Hostname"
 msgstr "Nome host"
 
@@ -1828,7 +1828,7 @@ msgstr ""
 msgid "Increase the failcounter if the wrong PIN was entered."
 msgstr "Incrementa il contatore di errori se è stato immesso il PIN errato."
 
-#: edumfa/static/components/token/views/token.details.html:187
+#: edumfa/static/components/token/views/token.details.html:190
 msgid "Info"
 msgstr "Info"
 
@@ -1856,7 +1856,7 @@ msgstr "Percorso del Keyfile"
 #: edumfa/static/components/token/views/token.applications.offline.html:11
 #: edumfa/static/components/token/views/token.applications.ssh.html:14
 #: edumfa/static/components/token/views/token.challenges.html:9
-#: edumfa/static/components/token/views/token.details.html:584
+#: edumfa/static/components/token/views/token.details.html:600
 #: edumfa/static/components/token/views/token.list.html:5
 msgid "Last"
 msgstr "Ultimo"
@@ -1959,7 +1959,7 @@ msgstr ""
 msgid "Login with credentials"
 msgstr "Accedi con le credenziali"
 
-#: edumfa/static/components/token/views/token.enroll.html:213
+#: edumfa/static/components/token/views/token.enroll.html:214
 #: edumfa/static/templates/menu.html:152
 msgid "Logout"
 msgstr "Disconnessione"
@@ -1973,7 +1973,7 @@ msgid "Machine"
 msgstr "Macchina"
 
 #: edumfa/static/components/machine/views/machine.details.html:14
-#: edumfa/static/components/token/views/token.details.html:595
+#: edumfa/static/components/token/views/token.details.html:611
 msgid "Machine ID"
 msgstr "ID macchina"
 
@@ -1991,7 +1991,7 @@ msgstr "Resolver di macchine"
 msgid "Machines"
 msgstr "Macchine"
 
-#: edumfa/static/components/token/views/token.details.html:578
+#: edumfa/static/components/token/views/token.details.html:594
 msgid "Machines this token is attached to"
 msgstr "Macchine a cui è collegato questo token"
 
@@ -2016,11 +2016,11 @@ msgstr ""
 msgid "Maxfail"
 msgstr "Maxfail"
 
-#: edumfa/static/components/token/views/token.details.html:213
+#: edumfa/static/components/token/views/token.details.html:216
 msgid "Maximum Authentication Count"
 msgstr "Numero massimo di autenticazioni"
 
-#: edumfa/static/components/token/views/token.details.html:224
+#: edumfa/static/components/token/views/token.details.html:227
 msgid "Maximum Success Auth Count"
 msgstr "Numero massimo di autenticazioni riuscite"
 
@@ -2109,7 +2109,7 @@ msgstr "Nuovo {{ resolvertype }}"
 #: edumfa/static/components/token/views/token.applications.offline.html:10
 #: edumfa/static/components/token/views/token.applications.ssh.html:13
 #: edumfa/static/components/token/views/token.challenges.html:8
-#: edumfa/static/components/token/views/token.details.html:583
+#: edumfa/static/components/token/views/token.details.html:599
 #: edumfa/static/components/token/views/token.list.html:4
 msgid "Next"
 msgstr "Avanti"
@@ -2201,7 +2201,7 @@ msgstr "Chiave OTP"
 msgid "OTP Length"
 msgstr "Lunghezza dell'OTP"
 
-#: edumfa/static/components/token/views/token.enroll.html:51
+#: edumfa/static/components/token/views/token.enroll.html:52
 msgid "OTP PINs do not match!"
 msgstr "I PIN dell'OTP non corrispondono!"
 
@@ -2265,7 +2265,7 @@ msgstr "File di configurazione OpenSSL"
 #: edumfa/static/components/config/views/config.periodictasks.list.html:12
 #: edumfa/static/components/config/views/config.smsgateway.edit.html:95
 #: edumfa/static/components/machine/views/machine.details.html:52
-#: edumfa/static/components/token/views/token.details.html:599
+#: edumfa/static/components/token/views/token.details.html:615
 msgid "Options"
 msgstr "Opzioni"
 
@@ -2296,19 +2296,19 @@ msgstr "Chiave PGP"
 msgid "PIN changed successfully."
 msgstr "Il PIN è stato modificato con successo."
 
-#: edumfa/static/components/token/controllers/tokenDetailController.js:250
-#: edumfa/static/components/token/controllers/tokenDetailController.js:264
+#: edumfa/static/components/token/controllers/tokenDetailController.js:255
+#: edumfa/static/components/token/controllers/tokenDetailController.js:269
 msgid "PIN set successfully."
 msgstr "PIN impostato con successo."
 
 #: edumfa/static/components/directives/views/directive.assigntoken.html:29
 #: edumfa/static/components/directives/views/directive.assignuser.html:36
-#: edumfa/static/components/token/views/token.enroll.html:59
+#: edumfa/static/components/token/views/token.enroll.html:60
 #, fuzzy
 msgid "PIN/Password"
 msgstr "Password"
 
-#: edumfa/static/components/token/views/token.details.html:203
+#: edumfa/static/components/token/views/token.details.html:206
 msgid "PKCS12"
 msgstr "PKCS12"
 
@@ -2405,8 +2405,8 @@ msgid ""
 "            smartphone."
 msgstr ""
 "Eseguire la scansione del codice QR con l'applicazione eduMFA Authenticator\n"
-"            o fare clic su <a href=\"{{ enrolledToken.pushurl."
-"value }}\">questo link</a> sul vostro\n"
+"            o fare clic su <a href=\"{{ enrolledToken.pushurl.value }}"
+"\">questo link</a> sul vostro\n"
 "            smartphone."
 
 #: edumfa/static/components/token/views/token.enrolled.push.html:9
@@ -2418,8 +2418,8 @@ msgid ""
 msgstr ""
 "Eseguire la scansione del codice QR con l'applicazione privacyIDEA "
 "Authenticator\n"
-"            o fare clic su <a href=\"{{ enrolledToken.pushurl."
-"value }}\">questo link</a> sul vostro\n"
+"            o fare clic su <a href=\"{{ enrolledToken.pushurl.value }}"
+"\">questo link</a> sul vostro\n"
 "            smartphone."
 
 #: edumfa/static/components/token/views/token.enrolled.daypassword.html:46
@@ -2515,7 +2515,7 @@ msgstr "OpenLDAP preimpostato"
 #: edumfa/static/components/token/views/token.applications.offline.html:9
 #: edumfa/static/components/token/views/token.applications.ssh.html:12
 #: edumfa/static/components/token/views/token.challenges.html:7
-#: edumfa/static/components/token/views/token.details.html:582
+#: edumfa/static/components/token/views/token.details.html:598
 #: edumfa/static/components/token/views/token.list.html:3
 msgid "Previous"
 msgstr "Precedente"
@@ -2600,7 +2600,7 @@ msgstr "Configurazione Server RADIUS"
 msgid "RADIUS servers"
 msgstr "Server RADIUS"
 
-#: edumfa/static/components/token/views/token.details.html:450
+#: edumfa/static/components/token/views/token.details.html:466
 msgid "Random generated PIN"
 msgstr "PIN generato casualmente"
 
@@ -2621,7 +2621,7 @@ msgstr "Leggi il numero dall'user source, in modo dinamico per ogni richiesta."
 #: edumfa/static/components/config/views/config.policies.list.html:23
 #: edumfa/static/components/directives/views/directive.assignuser.html:5
 #: edumfa/static/components/login/views/login.html:61
-#: edumfa/static/components/token/views/token.details.html:528
+#: edumfa/static/components/token/views/token.details.html:544
 msgid "Realm"
 msgstr "Realm"
 
@@ -2695,7 +2695,7 @@ msgstr "Utente remoto"
 
 #: edumfa/static/components/directives/views/directive.assigntoken.html:39
 #: edumfa/static/components/directives/views/directive.assignuser.html:46
-#: edumfa/static/components/token/views/token.enroll.html:67
+#: edumfa/static/components/token/views/token.enroll.html:68
 #, fuzzy
 msgid "Repeat PIN or password"
 msgstr "Ripeti la password"
@@ -2741,8 +2741,8 @@ msgid "Reset your Password"
 msgstr "Reimposta la tua password"
 
 #: edumfa/static/components/config/views/config.policies.list.html:25
-#: edumfa/static/components/token/views/token.details.html:533
-#: edumfa/static/components/token/views/token.details.html:597
+#: edumfa/static/components/token/views/token.details.html:549
+#: edumfa/static/components/token/views/token.details.html:613
 #: edumfa/static/components/token/views/token.list.html:84
 #: edumfa/static/components/user/views/user.add.html:9
 msgid "Resolver"
@@ -2781,7 +2781,7 @@ msgstr ""
 msgid "Response contains (JSON format):"
 msgstr "La risposta contiene (formato JSON):"
 
-#: edumfa/static/components/token/views/token.details.html:421
+#: edumfa/static/components/token/views/token.details.html:437
 msgid "Resync Token"
 msgstr "Risincronizza token"
 
@@ -2809,7 +2809,7 @@ msgstr "Stato del Rollout"
 msgid "Rollover"
 msgstr "Rollover"
 
-#: edumfa/static/components/token/views/token.enroll.html:144
+#: edumfa/static/components/token/views/token.enroll.html:145
 msgid "Rollover Token"
 msgstr "Token Rollover"
 
@@ -2908,7 +2908,7 @@ msgid "Save Event Handler Definition"
 msgstr "Salva la definizione del gestore di eventi"
 
 #: edumfa/static/components/machine/views/machine.details.html:105
-#: edumfa/static/components/token/views/token.details.html:656
+#: edumfa/static/components/token/views/token.details.html:672
 msgid "Save Options"
 msgstr "Salva le opzioni"
 
@@ -2943,11 +2943,11 @@ msgstr "Salva il server SMTP"
 msgid "Save System Config"
 msgstr "Salvare la configurazione del sistema"
 
-#: edumfa/static/components/token/views/token.details.html:383
+#: edumfa/static/components/token/views/token.details.html:399
 msgid "Save Token Groups"
 msgstr "Salvare i gruppi di token"
 
-#: edumfa/static/components/token/views/token.details.html:295
+#: edumfa/static/components/token/views/token.details.html:311
 msgid "Save Token Info"
 msgstr "Salva le informazioni sul Token"
 
@@ -2959,7 +2959,7 @@ msgstr "Salva Tokengroup"
 msgid "Save eduMFA server"
 msgstr "Salva il server eduMFA"
 
-#: edumfa/static/components/token/views/token.details.html:338
+#: edumfa/static/components/token/views/token.details.html:354
 msgid "Save realms"
 msgstr "Salva i realm"
 
@@ -3134,7 +3134,7 @@ msgid ""
 "applications</a>."
 msgstr ""
 
-#: edumfa/static/components/token/views/token.details.html:443
+#: edumfa/static/components/token/views/token.details.html:459
 msgid "Set PIN"
 msgstr "Imposta il PIN"
 
@@ -3143,8 +3143,8 @@ msgid "Set count window"
 msgstr "Imposta la finestra di conteggio"
 
 #: edumfa/static/components/token/views/token.details.html:152
-#: edumfa/static/components/token/views/token.details.html:164
-#: edumfa/static/components/token/views/token.details.html:176
+#: edumfa/static/components/token/views/token.details.html:165
+#: edumfa/static/components/token/views/token.details.html:178
 msgid "Set description"
 msgstr "Impostare la descrizione"
 
@@ -3152,13 +3152,18 @@ msgstr "Impostare la descrizione"
 msgid "Set max fail"
 msgstr "Imposta il numero massimo errori"
 
-#: edumfa/static/components/token/views/token.details.html:460
+#: edumfa/static/components/token/views/token.details.html:476
 msgid "Set random PIN"
 msgstr "Imposta PIN casuale"
 
 #: edumfa/static/components/token/views/token.details.html:137
 msgid "Set sync window"
 msgstr "Imposta la finestra di sincronizzazione"
+
+#: edumfa/static/components/token/views/token.details.html:295
+#: edumfa/static/components/token/views/token.enroll.totp.html:73
+msgid "Set to 'True' or 'False' to override setting in Token Config."
+msgstr ""
 
 #: edumfa/static/components/config/views/config.policies.details.html:51
 msgid "Show Policy templates"
@@ -3172,7 +3177,7 @@ msgstr "Mostra tutte le azioni"
 msgid "Show all conditions"
 msgstr "Mostra tutte le condizioni"
 
-#: edumfa/static/components/token/views/token.details.html:467
+#: edumfa/static/components/token/views/token.details.html:483
 msgid "Show password"
 msgstr "Mostra la password"
 
@@ -3189,7 +3194,7 @@ msgstr "Mostra solo le condizioni selezionate"
 msgid "Size Limit"
 msgstr "Limite della dimensione"
 
-#: edumfa/static/components/token/controllers/tokenControllers.js:690
+#: edumfa/static/components/token/controllers/tokenControllers.js:693
 msgid "Skip tokens that can not be verified"
 msgstr "Salta i token che non possono essere verificati"
 
@@ -3210,7 +3215,7 @@ msgstr "Google Authenticator supporta solo una lunghezza OTP di 6."
 
 #: edumfa/static/components/token/views/token.enroll.daypassword.html:67
 #: edumfa/static/components/token/views/token.enroll.hotp.html:66
-#: edumfa/static/components/token/views/token.enroll.totp.html:75
+#: edumfa/static/components/token/views/token.enroll.totp.html:86
 #, fuzzy
 msgid "Some Authenticator Apps only support the SHA1 algorithm."
 msgstr "Google Authenticator supporta solo l'algoritmo SHA1."
@@ -3235,7 +3240,7 @@ msgstr ""
 msgid "StartTLS"
 msgstr "StartTLS"
 
-#: edumfa/static/components/token/controllers/tokenDetailController.js:333
+#: edumfa/static/components/token/controllers/tokenDetailController.js:338
 msgid "Successfully authenticated."
 msgstr "Autenticato con successo."
 
@@ -3266,12 +3271,12 @@ msgstr "Sistema"
 msgid "System Config"
 msgstr "Configurazione di sistema"
 
-#: edumfa/static/components/config/controllers/configControllers.js:541
-#: edumfa/static/components/config/controllers/configControllers.js:764
+#: edumfa/static/components/config/controllers/configControllers.js:543
+#: edumfa/static/components/config/controllers/configControllers.js:766
 msgid "System Config saved."
 msgstr "Configurazione di sistema salvata."
 
-#: edumfa/static/components/config/controllers/configControllers.js:550
+#: edumfa/static/components/config/controllers/configControllers.js:552
 msgid "System entry deleted."
 msgstr "Voce di sistema cancellata."
 
@@ -3313,7 +3318,7 @@ msgstr "Test Resolver HTTP"
 msgid "Test LDAP Resolver"
 msgstr "Test Resolver LDAP"
 
-#: edumfa/static/components/token/views/token.details.html:497
+#: edumfa/static/components/token/views/token.details.html:513
 msgid "Test OTP only"
 msgstr "Test solo OTP"
 
@@ -3329,7 +3334,7 @@ msgstr "Test Resolver SQL"
 msgid "Test Yubikey"
 msgstr "Test Yubikey"
 
-#: edumfa/static/components/token/views/token.details.html:490
+#: edumfa/static/components/token/views/token.details.html:506
 msgid "Test token"
 msgstr "Test token"
 
@@ -3780,8 +3785,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
-"html\" target=\"_blank\">\n"
+"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
+"validate.html\" target=\"_blank\">\n"
 "        validate API</a> but can also be handled by the\n"
 "    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
 "yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\" "
@@ -3790,8 +3795,8 @@ msgid ""
 msgstr ""
 "La richiesta di autenticazione può essere gestita dall'impostazione "
 "predefinita eduMFA\n"
-"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
-"html\" target=\"_blank\">\n"
+"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
+"validate.html\" target=\"_blank\">\n"
 "        API di convalida</a> ma può anche essere gestito da\n"
 "    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
 "yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\" "
@@ -4076,7 +4081,7 @@ msgstr ""
 msgid "The server will create the static password."
 msgstr ""
 
-#: edumfa/static/components/token/views/token.enroll.html:126
+#: edumfa/static/components/token/views/token.enroll.html:127
 msgid ""
 "The start time and the end time of the validity period\n"
 "                    should be entered in the format\n"
@@ -4108,7 +4113,7 @@ msgstr "Il token è registrato."
 msgid "The token is valid till {{ lostResult.end_date }}."
 msgstr "Il token è valido fino a {{ lostResult.end_date }}."
 
-#: edumfa/static/components/token/views/token.enroll.html:187
+#: edumfa/static/components/token/views/token.enroll.html:188
 msgid ""
 "The token was enrolled, but you still need to verify it before you can use "
 "it!"
@@ -4120,36 +4125,36 @@ msgstr ""
 msgid "The token was marked lost successfully."
 msgstr "Il token è stato contrassegnato con successo come perso."
 
-#: edumfa/static/components/token/views/token.enroll.html:159
+#: edumfa/static/components/token/views/token.enroll.html:160
 msgid ""
 "The token was successfully enrolled with serial number\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
-"serial})\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
+"\">\n"
 "                {{ enrolledToken.serial }}</a>\n"
 "            for user\n"
-"            <a ui-sref=\"user.details({username:newUser.user, realmname:"
-"newUser.realm})\">{{ newUser.user }}</a> in realm\n"
+"            <a ui-sref=\"user.details({username:newUser.user, "
+"realmname:newUser.realm})\">{{ newUser.user }}</a> in realm\n"
 "            {{ newUser.realm }}."
 msgstr ""
 "Il token è stato registrato con successo con il numero di serie\n"
-"           <a ui-sref=\"token.details({tokenSerial:enrolledToken."
-"serial})\">\n"
+"           <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
+"\">\n"
 "                {{ enrolledToken.serial }}</a>\n"
 "            per l'utente\n"
-"           <a ui-sref=\"user.details({username:newUser.user, realmname:"
-"newUser.realm})\">{{ newUser.user }}</a> nel realm\n"
+"           <a ui-sref=\"user.details({username:newUser.user, "
+"realmname:newUser.realm})\">{{ newUser.user }}</a> nel realm\n"
 "            {{ newUser.realm }}."
 
-#: edumfa/static/components/token/views/token.enroll.html:168
+#: edumfa/static/components/token/views/token.enroll.html:169
 msgid ""
 "The token was successfully enrolled with serial number\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
-"serial})\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
+"\">\n"
 "                {{ enrolledToken.serial }}</a>."
 msgstr ""
 "Il token è stato registrato con successo con il numero di serie\n"
-"           <a ui-sref=\"token.details({tokenSerial:enrolledToken."
-"serial})\">\n"
+"           <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
+"\">\n"
 "                {{ enrolledToken.serial }}</a>."
 
 #: edumfa/static/components/config/views/config.token.webauthn.html:32
@@ -4574,15 +4579,15 @@ msgstr ""
 msgid "Token realms"
 msgstr "Token realm"
 
-#: edumfa/static/components/token/controllers/tokenDetailController.js:292
+#: edumfa/static/components/token/controllers/tokenDetailController.js:297
 msgid "Token resync failed."
 msgstr "Resync token fallito."
 
-#: edumfa/static/components/token/controllers/tokenDetailController.js:289
+#: edumfa/static/components/token/controllers/tokenDetailController.js:294
 msgid "Token resync successful."
 msgstr "Resync del token riuscita."
 
-#: edumfa/static/components/token/controllers/tokenControllers.js:530
+#: edumfa/static/components/token/controllers/tokenControllers.js:533
 #, fuzzy
 msgid "Token successfully verified"
 msgstr "Registrazione verificata con successo."
@@ -4631,7 +4636,7 @@ msgstr "Tipo"
 
 #: edumfa/static/components/directives/views/directive.assigntoken.html:34
 #: edumfa/static/components/directives/views/directive.assignuser.html:41
-#: edumfa/static/components/token/views/token.enroll.html:63
+#: edumfa/static/components/token/views/token.enroll.html:64
 #, fuzzy
 msgid "Type a PIN or password"
 msgstr "Digita una password"
@@ -4658,11 +4663,11 @@ msgstr "URL"
 msgid "URL of the eduMFA server"
 msgstr "URL del server eduMFA"
 
-#: edumfa/static/components/token/views/token.details.html:549
+#: edumfa/static/components/token/views/token.details.html:565
 msgid "Unassign Token"
 msgstr "Disassegna il Token"
 
-#: edumfa/static/components/token/views/token.details.html:523
+#: edumfa/static/components/token/views/token.details.html:539
 msgid "Unassign User"
 msgstr "Revoca assegnazione utente"
 
@@ -4716,6 +4721,17 @@ msgstr "Usa STARTTLS su una connessione LDAP, di solito sulla porta 389."
 msgid "Use StartTLS"
 msgstr "Usa StartTLS"
 
+#: edumfa/static/components/config/views/config.token.totp.html:43
+#, fuzzy
+msgid "Use Time Shift"
+msgstr "Spostamento temporale predefinito"
+
+#: edumfa/static/components/token/views/token.details.html:287
+#: edumfa/static/components/token/views/token.enroll.totp.html:68
+#, fuzzy
+msgid "Use Timeshift"
+msgstr "Spostamento temporale predefinito"
+
 #: edumfa/static/components/token/views/token.enroll.hotp.html:35
 #: edumfa/static/components/token/views/token.enroll.totp.html:35
 msgid "Use two-step enrollment with the privacyIDEA Authenticator App"
@@ -4739,7 +4755,7 @@ msgstr ""
 "Cache utente\n"
 "                scadenza in secondi"
 
-#: edumfa/static/components/token/views/token.details.html:538
+#: edumfa/static/components/token/views/token.details.html:554
 msgid "User Id"
 msgstr "ID utente"
 
@@ -4779,7 +4795,7 @@ msgstr "ID utente"
 #: edumfa/static/components/recovery/views/recovery.html:22
 #: edumfa/static/components/register/views/register.html:18
 #: edumfa/static/components/register/views/register.html:22
-#: edumfa/static/components/token/views/token.details.html:510
+#: edumfa/static/components/token/views/token.details.html:526
 #: edumfa/static/components/user/views/user.password.html:6
 msgid "Username"
 msgstr "Nome utente"
@@ -4797,8 +4813,8 @@ msgstr "Blob token VASCO"
 msgid "Valid time"
 msgstr "Tempo valido"
 
-#: edumfa/static/components/token/views/token.details.html:262
-#: edumfa/static/components/token/views/token.enroll.html:106
+#: edumfa/static/components/token/views/token.details.html:265
+#: edumfa/static/components/token/views/token.enroll.html:107
 msgid "Validity End"
 msgstr "Fine validità"
 
@@ -4806,8 +4822,8 @@ msgstr "Fine validità"
 msgid "Validity Period"
 msgstr "Periodo di validità"
 
-#: edumfa/static/components/token/views/token.details.html:236
-#: edumfa/static/components/token/views/token.enroll.html:85
+#: edumfa/static/components/token/views/token.details.html:239
+#: edumfa/static/components/token/views/token.enroll.html:86
 msgid "Validity Start"
 msgstr "Inizio validità"
 
@@ -4826,7 +4842,7 @@ msgid "Verify TLS"
 msgstr "Verifica TLS"
 
 #: edumfa/static/components/token/views/token.details.html:78
-#: edumfa/static/components/token/views/token.enroll.html:197
+#: edumfa/static/components/token/views/token.enroll.html:198
 msgid "Verify Token"
 msgstr "Verifica token"
 
@@ -5120,7 +5136,7 @@ msgstr "una sottostringa seriale facoltativa"
 msgid "appId"
 msgstr "app Id"
 
-#: edumfa/static/components/token/views/token.details.html:196
+#: edumfa/static/components/token/views/token.details.html:199
 msgid "certificate"
 msgstr "certificato"
 

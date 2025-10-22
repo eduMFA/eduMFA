@@ -1,12 +1,12 @@
 # Build stage
-FROM python:3.12-slim-bookworm AS builder
+FROM python:3.14.0-slim-trixie@sha256:79eaa9622e4daa24b775ac2c9b6dc49b4f302ce925e3dcf1851782b9c93cf5f5 AS builder
 WORKDIR /tmp
 COPY . .
 RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 # Final stage
-FROM python:3.12-slim-bookworm
+FROM python:3.14.0-slim-trixie@sha256:79eaa9622e4daa24b775ac2c9b6dc49b4f302ce925e3dcf1851782b9c93cf5f5
 
 # Install system dependencies
 RUN apt-get update && \
@@ -33,6 +33,7 @@ COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
 RUN mkdir -p /opt/edumfa/user-scripts
 
 EXPOSE 8000
+HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1
 WORKDIR /opt/edumfa
 
 # Set environment variables

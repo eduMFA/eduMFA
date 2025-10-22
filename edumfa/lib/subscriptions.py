@@ -26,10 +26,10 @@ Provide decorator to test the subscriptions.
 The code is tested in tests/test_lib_subscriptions.py.
 """
 
-import logging
-from .log import log_with
 import functools
+import logging
 
+from .log import log_with
 
 SUBSCRIPTION_DATE_FORMAT = "%Y-%m-%d"
 SIGN_FORMAT = """{application}
@@ -63,8 +63,13 @@ def get_users_with_active_tokens():
     :rtype: int
     """
     from edumfa.models import Token, TokenOwner
+
     sql_query = TokenOwner.query.with_entities(TokenOwner.resolver, TokenOwner.user_id)
-    sql_query = sql_query.filter(Token.active == True).filter(Token.id == TokenOwner.token_id).distinct()
+    sql_query = (
+        sql_query.filter(Token.active == True)
+        .filter(Token.id == TokenOwner.token_id)
+        .distinct()
+    )
     return sql_query.count()
 
 
