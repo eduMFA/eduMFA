@@ -33,5 +33,5 @@ It provides 3 different implementations:
 """
 
 __license__ = "GNU AGPLv3"
-__contact__ = "www.privacyidea.org"
-__email__ = "info@privacyidea.org"
+__contact__ = "edumfa.io"
+__email__ = "edumfa-users@listserv.dfn.de"
