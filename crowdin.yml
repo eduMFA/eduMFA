@@ -1,5 +1,5 @@
 project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_API_KEY
 files:
-  - source: /po/template.pot
-    translation: /locale/%locale_with_underscore%.po
+  - source: /edumfa/static/locale/template.pot
+    translation: /edumfa/static/locale/%locale_with_underscore%.po
