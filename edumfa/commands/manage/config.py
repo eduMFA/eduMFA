@@ -41,6 +41,7 @@ from edumfa.commands.manage.helper import (
     import_conf_policy,
     import_conf_resolver,
 )
+from edumfa.lib.framework import get_app_config_value
 from edumfa.lib.utils.export import EXPORT_FUNCTIONS, IMPORT_FUNCTIONS
 
 config_cli = AppGroup("config", help="Manage your eduMFA configuration")
@@ -57,6 +58,18 @@ exp_fmt_dict = {
     "yaml": yaml.safe_dump,
 }
 imp_fmt_dict = {"python": ast.literal_eval, "json": json.loads, "yaml": yaml.safe_load}
+
+
+@config_cli.command("get_value")
+@click.argument("key", type=str)
+def _get_app_config_value(key) -> None:
+    """
+    Print out the value for a given configuration key.
+
+    :param key: The key to get the value for.
+    """
+    value = get_app_config_value(key, default="")
+    print(value, end="")
 
 
 @config_cli.command("exporter")
