@@ -24,10 +24,14 @@ COPY --from=builder /tmp/dist/*.whl /dist/
 RUN pip install --no-cache-dir /dist/*.whl &&  \
     rm -rf /dist/*.whl
 
+# Volume for audit- and enckey
+VOLUME ["/etc/edumfa"]
+
 # Copy necessary files
+COPY ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
+COPY ./deploy/docker/edumfa.py /etc/edumfa/edumfa.cfg
+COPY ./deploy/docker/logging.yml /etc/edumfa/logging.yml
 COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
-COPY ./deploy/docker/logging.cfg /etc/edumfa/logging.cfg
-COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
 
 # Create directory for user scripts
 RUN mkdir -p /opt/edumfa/user-scripts
@@ -41,4 +45,4 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/edumfa:$PATH"
 
-CMD ["./docker-setup.sh"]
+CMD ["./entrypoint.sh"]
