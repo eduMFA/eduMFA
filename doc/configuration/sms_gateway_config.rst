@@ -19,7 +19,7 @@ Firebase Provider
 ~~~~~~~~~~~~~~~~~
 
 The Firebase provider sends notifications
-via the Google Firebase service and this is used for :ref:`edupush_token` and :ref:`push_token`.
+via the Google Firebase service and this is used for :ref:`edupush_token`.
 
 **JSON config file**
 
