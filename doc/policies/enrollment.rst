@@ -435,7 +435,7 @@ type: string
 
 This is the URL of your eduMFA server, which the PUSH App should
 connect to for the second registration step.
-This URL usually ends with ``/ttype/edupush`` for eduPUSH and ``/ttype/push`` legacy PUSH. Note, that the smartphone app
+This URL usually ends with ``/ttype/edupush``. Note, that the smartphone app
 may connect to a different eduMFA URL than the URL of the eduMFA Web UI.
 
 edupush_ttl, push_ttl

@@ -17,7 +17,6 @@ from edumfa.lib.token import (
     remove_token,
 )
 from edumfa.lib.tokenclass import CLIENTMODE
-from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
 from edumfa.lib.user import User
 from edumfa.lib.utils import to_bytes, to_unicode
@@ -93,18 +92,18 @@ class PushAPITestCase(MyApiTestCase):
         # set policy
         set_policy(
             "push1",
-            action="{0!s}=20".format(LegacyPushTokenClass.PUSH_ACTION.WAIT),
+            action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
             scope=SCOPE.AUTH,
         )
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
             action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
                 self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
                 self.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
+                PushTokenClass.PUSH_ACTION.TTL,
                 TTL,
             ),
         )
@@ -191,7 +190,7 @@ class PushAPITestCase(MyApiTestCase):
             )
             # The token should also contain the firebase config
             self.assertEqual(
-                tokeninfo.get(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
+                tokeninfo.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
                 self.firebase_config_name,
             )
 
@@ -237,16 +236,16 @@ class PushAPITestCase(MyApiTestCase):
         # set policy
         set_policy(
             "push1",
-            action="{0!s}=20".format(LegacyPushTokenClass.PUSH_ACTION.WAIT),
+            action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
             scope=SCOPE.AUTH,
         )
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
             action="{0!s}={1!s},{2!s}={3!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
                 self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
                 self.REGISTRATION_URL,
             ),
         )
@@ -338,7 +337,7 @@ class PushAPITestCase(MyApiTestCase):
             )
             # The token should also contain the firebase config
             self.assertEqual(
-                tokeninfo.get(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
+                tokeninfo.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
                 self.firebase_config_name,
             )
 
@@ -396,9 +395,9 @@ class PushAPITestCase(MyApiTestCase):
             "push2",
             scope=SCOPE.ENROLL,
             action="{0!s}={1!s},{2!s}={3!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
                 self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
                 self.REGISTRATION_URL,
             ),
         )
@@ -513,13 +512,13 @@ class PushAPITestCase(MyApiTestCase):
             "pol_push2",
             scope=SCOPE.ENROLL,
             action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s},{6!s}={7!s}".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
                 self.firebase_config_name,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
                 self.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY,
+                PushTokenClass.PUSH_ACTION.SSL_VERIFY,
                 1,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
+                PushTokenClass.PUSH_ACTION.TTL,
                 TTL,
             ),
         )
@@ -619,7 +618,7 @@ class PushAPITestCase(MyApiTestCase):
             )
             # The token should also contain the firebase config
             self.assertEqual(
-                tokeninfo.get(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
+                tokeninfo.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
                 self.firebase_config_name,
             )
 

@@ -61,7 +61,6 @@ from edumfa.api.lib.prepolicy import (
     init_token_length_contents,
     init_tokenlabel,
     is_remote_user_allowed,
-    legacypushtoken_wait,
     mangle,
     papertoken_count,
     pushtoken_add_config,
@@ -111,7 +110,6 @@ from edumfa.lib.token import (
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
 from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
-from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.papertoken import PAPERACTION
 from edumfa.lib.tokens.pushtoken import PushTokenClass
 from edumfa.lib.tokens.registrationtoken import DEFAULT_CONTENTS, DEFAULT_LENGTH
@@ -1979,7 +1977,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # if we have a non existing firebase config, we will raise an exception
         req.all_data = {
             "type": "push",
-            LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: "non-existing",
+            PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: "non-existing",
         }
         self.assertRaises(PolicyError, pushtoken_add_config, req, "init")
 
@@ -1990,51 +1988,45 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             action="{0!s}=some-fb-config,"
             "{1!s}=https://edumfa.io/enroll,"
             "{2!s}=10".format(
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                LegacyPushTokenClass.PUSH_ACTION.TTL,
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
+                PushTokenClass.PUSH_ACTION.TTL,
             ),
         )
         g.policy_object = PolicyClass()
         req.all_data = {"type": "push"}
         pushtoken_add_config(req, "init")
         self.assertEqual(
-            req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
+            req.all_data.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
             "some-fb-config",
         )
         self.assertEqual(
-            req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL),
+            req.all_data.get(PushTokenClass.PUSH_ACTION.REGISTRATION_URL),
             "https://edumfa.io/enroll",
         )
-        self.assertEqual("10", req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.TTL))
-        self.assertEqual(
-            "1", req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY)
-        )
+        self.assertEqual("10", req.all_data.get(PushTokenClass.PUSH_ACTION.TTL))
+        self.assertEqual("1", req.all_data.get(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
 
         # the request tries to inject a rogue value, but we assure sslverify=1
         g.policy_object = PolicyClass()
         req.all_data = {"type": "push", "sslverify": "rogue"}
         pushtoken_add_config(req, "init")
-        self.assertEqual(
-            "1", req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY)
-        )
+        self.assertEqual("1", req.all_data.get(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
 
         # set sslverify="0"
         set_policy(
             name="push_pol2",
             scope=SCOPE.ENROLL,
-            action="{0!s}=0".format(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY),
+            action="{0!s}=0".format(PushTokenClass.PUSH_ACTION.SSL_VERIFY),
         )
         g.policy_object = PolicyClass()
         req.all_data = {"type": "push"}
         pushtoken_add_config(req, "init")
         self.assertEqual(
-            req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
+            req.all_data.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
             "some-fb-config",
         )
-        self.assertEqual(
-            "0", req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY)
-        )
+        self.assertEqual("0", req.all_data.get(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
 
         # finally delete policy
         delete_policy("push_pol")
@@ -2131,19 +2123,19 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req.User = User()
         req.all_data = {"push_wait": "120"}
         g.policy_object = PolicyClass()
-        legacypushtoken_wait(req, None)
-        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), False)
+        pushtoken_wait(req, None)
+        self.assertEqual(req.all_data.get(PushTokenClass.PUSH_ACTION.WAIT), False)
 
         # Now we use the policy, to set the push_wait seconds
         set_policy(
             name="push1",
             scope=SCOPE.AUTH,
-            action="{0!s}=10".format(LegacyPushTokenClass.PUSH_ACTION.WAIT),
+            action="{0!s}=10".format(PushTokenClass.PUSH_ACTION.WAIT),
         )
         req.all_data = {}
         g.policy_object = PolicyClass()
-        legacypushtoken_wait(req, None)
-        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), 10)
+        pushtoken_wait(req, None)
+        self.assertEqual(req.all_data.get(PushTokenClass.PUSH_ACTION.WAIT), 10)
 
         delete_policy("push1")
 
@@ -2155,18 +2147,18 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req = RequestMock()
         req.all_data = {"push_wait": "120"}
         pushtoken_disable_wait(req, None)
-        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), False)
+        self.assertEqual(req.all_data.get(PushTokenClass.PUSH_ACTION.WAIT), False)
 
         # But even with a policy, the function still sets PushTokenClass.PUSH_ACTION.WAIT to False
         set_policy(
             name="push1",
             scope=SCOPE.AUTH,
-            action="{0!s}=10".format(LegacyPushTokenClass.PUSH_ACTION.WAIT),
+            action="{0!s}=10".format(PushTokenClass.PUSH_ACTION.WAIT),
         )
         req = RequestMock()
         req.all_data = {"push_wait": "120"}
         pushtoken_disable_wait(req, None)
-        self.assertEqual(req.all_data.get(LegacyPushTokenClass.PUSH_ACTION.WAIT), False)
+        self.assertEqual(req.all_data.get(PushTokenClass.PUSH_ACTION.WAIT), False)
 
         delete_policy("push1")
 

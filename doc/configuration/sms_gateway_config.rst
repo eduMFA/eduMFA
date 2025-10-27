@@ -33,9 +33,6 @@ The eduPUSH authenticator App (eduMFA Authenticator) which you can find in Googl
 Apple App Store uses a Firebase project, that is managed by the GWDG.
 You need to get in touch trough support@gwdg.de with them, to receive a JSON config file for accessing the project.
 
-When using the the legacy PUSH token type, please refer to the privacyIDEA documentation. However we don't recommend or support using it anymore.
-
-
 HTTP provider
 ~~~~~~~~~~~~~
 
