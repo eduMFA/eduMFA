@@ -102,7 +102,7 @@ from edumfa.lib.config import (
     return_saml_attributes,
     return_saml_attributes_on_fail,
 )
-from edumfa.lib.error import ParameterError, ValidateTransactionRequiredError
+from edumfa.lib.error import ParameterError
 from edumfa.lib.event import EventConfiguration, event
 from edumfa.lib.machine import list_machine_tokens
 from edumfa.lib.policy import ACTION, PolicyClass
@@ -439,20 +439,6 @@ def check():
             }
         )
         return send_result(result, rid=2, details=details)
-
-    # Example usage of ValidateTransactionRequiredError:
-    # If you need to enforce that a transaction_id must be present for certain validation scenarios,
-    # you can check for it here and raise the error. This will return a 404 HTTP status.
-    #
-    # transaction_id = getParam(request.all_data, "transaction_id") or getParam(request.all_data, "state")
-    # if should_require_transaction(user, serial, token_type):
-    #     if not transaction_id:
-    #         raise ValidateTransactionRequiredError(
-    #             "Transaction ID is required for challenge-response authentication"
-    #         )
-    #
-    # Alternatively, you can use this error in the token validation logic (edumfa/lib/token.py)
-    # within check_token_list() or check_challenge_response() methods to enforce transaction requirements.
 
     password = getParam(request.all_data, "pass", required)
     g.audit_object.log(
