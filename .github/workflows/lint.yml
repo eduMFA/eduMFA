@@ -5,18 +5,8 @@ permissions:
 
 on:
   push:
-    paths:
-      - '.github/workflows/lint.yml'
-      - '**/*.py'
-      - 'tools/**'
-      - 'pyproject.toml'
   pull_request:
     types: [ opened, reopened, synchronize ]
-    paths:
-      - '.github/workflows/lint.yml'
-      - '**/*.py'
-      - 'tools/**'
-      - 'pyproject.toml'
 
 jobs:
   ruff:
