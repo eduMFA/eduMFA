@@ -37,7 +37,7 @@ jobs:
         with:
           enable-cache: true
       - name: Install Dependencies and Package
-        run: uv sync --extra tests
+        run: uv sync --extra test
       - name: Run Pytest Checks
         run: uv run pytest --cov=edumfa --import-mode=importlib -vs tests/
       - name: Codecov upload
