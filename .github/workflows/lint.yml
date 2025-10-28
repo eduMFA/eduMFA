@@ -1,19 +1,87 @@
 name: lint
 
+permissions:
+  contents: read
+
 on:
   push:
+    paths:
+      - '.github/workflows/lint.yml'
+      - '**/*.py'
+      - 'tools/**'
+      - 'pyproject.toml'
   pull_request:
     types: [ opened, reopened, synchronize ]
+    paths:
+      - '.github/workflows/lint.yml'
+      - '**/*.py'
+      - 'tools/**'
+      - 'pyproject.toml'
 
 jobs:
   ruff:
     runs-on: ubuntu-latest
+    name: ruff linter
     steps:
       - uses: actions/checkout@v5
       - name: Get Ruff Version
         id: ruff-version
-        run: |
-          echo "version=$(grep -Po '(?<=ruff==)[0-9]+\.[0-9]+\.[0-9]+' pyproject.toml)" >> $GITHUB_OUTPUT
+        run: echo "version=$(grep -Po '(?<=ruff==)[0-9]+\.[0-9]+\.[0-9]+' pyproject.toml)" >> $GITHUB_OUTPUT
       - uses: astral-sh/ruff-action@v3
         with:
           version: ${{ steps.ruff-version.outputs.version }}
+  codespell:
+    name: codespell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: codespell
+        uses: codespell-project/actions-codespell@v2
+        with:
+          only_warn: 1
+          exclude_file: .codespell_skip
+  codeql:
+    name: codeql
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'python' ]
+    steps:
+    - uses: actions/checkout@v5
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4
+      with:
+        languages: ${{ matrix.language }}
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4
+      with:
+        category: "/language:${{matrix.language}}"
+  bandit:
+    permissions:
+      security-events: write
+    runs-on: ubuntu-latest
+    name: bandit
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Set up UV
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install Dependencies and Package
+        run: uv sync --extra docs
+
+
+          
+
+    
+     
