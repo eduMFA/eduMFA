@@ -36,6 +36,10 @@ COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
 # Create directory for user scripts
 RUN mkdir -p /opt/edumfa/user-scripts
 
+# Link the edumfa package at a predicatable position for template overriding.
+RUN python_package_path="$(python3 -c 'import site; x=site.getsitepackages(); assert len(x) == 1; print(x[0])')" && \
+    ln -s "${python_package_path}/edumfa/" "/opt/edumfa/edumfa-package"
+
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1
 WORKDIR /opt/edumfa
