@@ -21,13 +21,14 @@ on:
 jobs:
   ruff:
     runs-on: ubuntu-latest
-    name: ruff linter
+    name: ruff
     steps:
       - uses: actions/checkout@v5
-      - name: Get Ruff Version
+      - name: Get Ruff version
         id: ruff-version
         run: echo "version=$(grep -Po '(?<=ruff==)[0-9]+\.[0-9]+\.[0-9]+' pyproject.toml)" >> $GITHUB_OUTPUT
-      - uses: astral-sh/ruff-action@v3
+      - name: Run Ruff analysis
+        uses: astral-sh/ruff-action@v3
         with:
           version: ${{ steps.ruff-version.outputs.version }}
   codespell:
@@ -35,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: codespell
+      - name: Perform Codespell analysis
         uses: codespell-project/actions-codespell@v2
         with:
           only_warn: 1
@@ -44,8 +45,6 @@ jobs:
     name: codeql
     runs-on: ubuntu-latest
     permissions:
-      actions: read
-      contents: read
       security-events: write
     strategy:
       fail-fast: false
@@ -57,7 +56,7 @@ jobs:
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
-    - name: Perform CodeQL Analysis
+    - name: Perform CodeQL analysis
       uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{matrix.language}}"

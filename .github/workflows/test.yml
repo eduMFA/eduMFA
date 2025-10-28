@@ -1,4 +1,4 @@
-name: tests
+name: test
 
 permissions:
   contents: read
@@ -32,13 +32,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip" # Cache the pip packages to speed up the workflow
-      - name: Set up UV
+      - name: Setup UV
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-      - name: Install Dependencies and Package
+      - name: Install dependencies
         run: uv sync --extra test
-      - name: Run Pytest Checks
+      - name: Run Pytest checks
         run: uv run pytest --cov=edumfa --import-mode=importlib -vs tests/
       - name: Codecov upload
         uses: codecov/codecov-action@v5
