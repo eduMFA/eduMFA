@@ -61,24 +61,6 @@ jobs:
       uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{matrix.language}}"
-  bandit:
-    permissions:
-      security-events: write
-    runs-on: ubuntu-latest
-    name: bandit
-    steps:
-      - uses: actions/checkout@v5
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Set up UV
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-      - name: Install Dependencies and Package
-        run: uv sync --extra docs
 
 
           
