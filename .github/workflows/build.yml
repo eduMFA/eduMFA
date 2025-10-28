@@ -50,9 +50,12 @@ jobs:
           run: uv sync
         - name: Build distributions
           run: uv build
-        - name: Release
+        - name: Release dist
           uses: softprops/action-gh-release@v2
           if: github.ref_type == 'tag'
           with:
             files: dist/*
+        - name: Publish package
+          if: github.ref_type == 'tag'
+          run: uv publish
 
