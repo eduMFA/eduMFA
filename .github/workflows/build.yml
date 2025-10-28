@@ -1,0 +1,51 @@
+name: build
+
+on:
+  push:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    name: build docs
+    steps:
+        - uses: actions/checkout@v5
+        - name: Setup Python 3.11
+          uses: actions/setup-python@v6
+          with:
+            python-version: "3.11"
+            cache: "pip"
+        - name: Set up UV
+          uses: astral-sh/setup-uv@v6
+          with:
+            enable-cache: true
+        - name: Install Dependencies and Package
+          run: uv sync --extra docs
+        - name: Build Documentation
+          run: |
+            cd doc
+            uv run sphinx-build -b html -j auto -a -n -T -W --keep-going . _build/html
+  dist:
+    runs-on: ubuntu-latest
+    name: build dist
+    steps:
+        - uses: actions/checkout@v5
+        - name: Setup Python 3.10
+          uses: actions/setup-python@v6
+          with:
+            python-version: "3.10"
+            cache: "pip"
+        - name: Set up UV
+          uses: astral-sh/setup-uv@v6
+          with:
+            enable-cache: true
+        - name: Install Dependencies and Package
+          run: uv sync
+        - name: Build Distributions
+          run: uv build
+

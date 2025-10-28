@@ -1,6 +1,21 @@
 name: Ubuntu
+
+permissions:
+  contents: read
+
 on:
   push:
+    paths:
+      - '.github/workflows/ubuntu.yml'
+      - 'deploy/ubuntu*/**'
+      - 'edumfa/**/*.py'
+      - 'tools/**'
+      - 'edumfa-manage'
+      - 'pyproject.toml'
+      - 'requirements.txt'
+      - 'setup.py'
+  pull_request:
+    types: [ opened, reopened, synchronize ]
   release:
     types: [released]
 
@@ -16,30 +31,29 @@ jobs:
             codename: jammy
     name: Build for ${{ matrix.os }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
       - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
       - name: Build core package
         run: |
-          mv deploy/ubuntu debian
+          cp -r deploy/ubuntu debian
           sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Build server package
         run: |
-          mv deploy/ubuntu-server debian
+          cp -r deploy/ubuntu-server debian
           sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Build radius package
         run: |
-          mv deploy/ubuntu-radius debian
-          sed -i 's/{{CODENAME}}/${{ matrix.codename }}/g' debian/changelog
+          cp -r deploy/ubuntu-radius debian
+          sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian

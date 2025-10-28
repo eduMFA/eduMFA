@@ -1,0 +1,32 @@
+name: pipy release
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/eduMFA
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
+      - name: Set up UV
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Build
+        run: uv build
+      - name: Publish
+        run: uv publish
