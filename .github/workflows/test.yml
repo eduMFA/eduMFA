@@ -31,7 +31,6 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip" # Cache the pip packages to speed up the workflow
       - name: Setup UV
         uses: astral-sh/setup-uv@v6
         with:
