@@ -95,6 +95,7 @@ include = ["edumfa*"]
 
 [tool.ruff]
 extend-include = [
+    "edumfa-manage",
     "tools/creategoogleauthenticator-file",
     "tools/edumfa-create-ad-users",
     "tools/edumfa-create-certificate",
