@@ -2707,6 +2707,12 @@ msgstr "Herhaal wachtwoord"
 msgid "Request Mapping (JSON format)"
 msgstr "Koppelingsverzoek (JSON formaat)"
 
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:82
+msgid ""
+"Request to remote eduMFA server not successful. Check the fields URL, "
+"username and password for correctness."
+msgstr ""
+
 #: edumfa/static/components/config/controllers/eduMfaServerController.js:80
 msgid "Request to remote eduMFA server successful."
 msgstr "Vraag aan externe eduMFA-server gelukt."
@@ -5144,7 +5150,7 @@ msgstr "duur"
 msgid "eduMFA Node"
 msgstr "eduMFA Node"
 
-#: edumfa/static/components/config/controllers/eduMfaServerController.js:88
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:90
 msgid "eduMFA Server Config saved."
 msgstr "eduMFA Serverconfiguratie bewaard."
 

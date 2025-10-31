@@ -2521,6 +2521,12 @@ msgstr ""
 msgid "Request Mapping (JSON format)"
 msgstr ""
 
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:82
+msgid ""
+"Request to remote eduMFA server not successful. Check the fields URL, "
+"username and password for correctness."
+msgstr ""
+
 #: edumfa/static/components/config/controllers/eduMfaServerController.js:80
 msgid "Request to remote eduMFA server successful."
 msgstr ""
@@ -4548,7 +4554,7 @@ msgstr ""
 msgid "eduMFA Node"
 msgstr ""
 
-#: edumfa/static/components/config/controllers/eduMfaServerController.js:88
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:90
 msgid "eduMFA Server Config saved."
 msgstr ""
 
