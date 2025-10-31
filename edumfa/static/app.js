@@ -98,7 +98,6 @@ myApp.constant("resourceNamePatterns", {
             "and must not be the word 'test_request'")}});
 myApp.run(['$rootScope', '$state', '$stateParams', 'gettextCatalog',
         function ($rootScope, $state, $stateParams, gettextCatalog) {
-
             // It's very handy to add references to $state and $stateParams to the $rootScope
             // so that you can access them from any scope within your applications.For example,
             // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
@@ -109,9 +108,6 @@ myApp.run(['$rootScope', '$state', '$stateParams', 'gettextCatalog',
 
             // we set this, so we can use it in templates
             $rootScope.browserLanguage = browserLanguage;
-
-            $rootScope.publicLink = "https://netknights.it/" + gettextCatalog.getCurrentLanguage() + "/support-link-public";
-            $rootScope.privacyideaSupportLink = $rootScope.publicLink;
         }
     ]
 );

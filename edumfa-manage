@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -31,5 +30,5 @@
 
 from edumfa.commands.manage.main import cli as manage_cli
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     manage_cli()

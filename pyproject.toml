@@ -35,7 +35,7 @@ Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
 lint = [
-    "ruff==0.14.2",
+    "ruff==0.14.3",
 ]
 docs = [
     "furo==2025.9.25",
@@ -96,6 +96,7 @@ include = ["edumfa*"]
 
 [tool.ruff]
 extend-include = [
+    "edumfa-manage",
     "tools/creategoogleauthenticator-file",
     "tools/edumfa-create-ad-users",
     "tools/edumfa-create-certificate",
