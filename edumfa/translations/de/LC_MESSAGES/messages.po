@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-31 11:00+0100\n"
+"POT-Creation-Date: 2025-10-31 11:53+0100\n"
 "PO-Revision-Date: 2024-08-29 11:24+0200\n"
 "Last-Translator: Paul Lettich <paul.lettich@netknights.it>\n"
 "Language: de\n"
@@ -2443,7 +2443,7 @@ msgstr ""
 " der Möglichkeit, den OTP-Wert mehr als einmal zu verwenden."
 
 #: lib/tokens/daypasswordtoken.py:144 lib/tokens/hotptoken.py:183
-#: lib/tokens/totptoken.py:190
+#: lib/tokens/totptoken.py:201
 #, fuzzy
 msgid "Enforce setting an app pin for the privacyIDEA Authenticator App"
 msgstr "Erzwingt das Setzen einer Token-PIN in der privacyIDEA Authenticator App"
@@ -2593,15 +2593,15 @@ msgstr ""
 "Der Benutzer darf nur maximal diese Anzahl an aktiven HOTP Token "
 "zugewiesen haben."
 
-#: lib/tokens/hotptoken.py:162 lib/tokens/totptoken.py:167
+#: lib/tokens/hotptoken.py:162 lib/tokens/totptoken.py:178
 msgid "The size of the OTP seed part contributed by the client (in bytes)"
 msgstr "Die Größe des Smartphone-Anteils (in Byte)"
 
-#: lib/tokens/hotptoken.py:169 lib/tokens/totptoken.py:174
+#: lib/tokens/hotptoken.py:169 lib/tokens/totptoken.py:185
 msgid "The size of the OTP seed part contributed by the server (in bytes)"
 msgstr "Die Große des Server-Anteils (in Byte)"
 
-#: lib/tokens/hotptoken.py:176 lib/tokens/totptoken.py:181
+#: lib/tokens/hotptoken.py:176 lib/tokens/totptoken.py:192
 msgid ""
 "The difficulty factor used for the OTP seed generation (should be at "
 "least 10000)"
@@ -2912,13 +2912,13 @@ msgstr ""
 "Remote Token: Die Authentifizierungsanfrage an einen anderen eduMFA "
 "Server weiterleiten."
 
-#: lib/tokens/remotetoken.py:125 lib/tokens/totptoken.py:197
+#: lib/tokens/remotetoken.py:125 lib/tokens/totptoken.py:208
 msgid "The user may only have this maximum number of remote tokens assigned."
 msgstr ""
 "Der Benutzer darf nur maximal diese Anzahl an Remote Token zugewiesen "
 "haben."
 
-#: lib/tokens/remotetoken.py:132 lib/tokens/totptoken.py:204
+#: lib/tokens/remotetoken.py:132 lib/tokens/totptoken.py:215
 msgid ""
 "The user may only have this maximum number of active remote tokens "
 "assigned."
@@ -3071,7 +3071,11 @@ msgstr "Bitte scannen Sie den QR-Code"
 msgid "Specify the time step of the time-based OTP token."
 msgstr "Geben Sie den Zeitschritt des zeitbasierten OTP-Tokens an."
 
-#: lib/tokens/totptoken.py:110
+#: lib/tokens/totptoken.py:63
+msgid "Specify whether to enable timeshift."
+msgstr "Geben Sie an, ob Timeshift aktiviert werden soll."
+
+#: lib/tokens/totptoken.py:111
 msgid "TOTP: Time based One Time Passwords."
 msgstr "TOTP: Zeitbasiertes Einmalpasswort."
 

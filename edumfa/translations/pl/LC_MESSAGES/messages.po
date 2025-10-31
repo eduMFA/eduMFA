@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-10-31 11:00+0100\n"
+"POT-Creation-Date: 2025-10-31 11:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language: pl\n"
@@ -2035,7 +2035,7 @@ msgid ""
 msgstr ""
 
 #: lib/tokens/daypasswordtoken.py:144 lib/tokens/hotptoken.py:183
-#: lib/tokens/totptoken.py:190
+#: lib/tokens/totptoken.py:201
 msgid "Enforce setting an app pin for the privacyIDEA Authenticator App"
 msgstr ""
 
@@ -2156,15 +2156,15 @@ msgstr ""
 msgid "The user may only have this maximum number of active HOTP tokens assigned."
 msgstr ""
 
-#: lib/tokens/hotptoken.py:162 lib/tokens/totptoken.py:167
+#: lib/tokens/hotptoken.py:162 lib/tokens/totptoken.py:178
 msgid "The size of the OTP seed part contributed by the client (in bytes)"
 msgstr ""
 
-#: lib/tokens/hotptoken.py:169 lib/tokens/totptoken.py:174
+#: lib/tokens/hotptoken.py:169 lib/tokens/totptoken.py:185
 msgid "The size of the OTP seed part contributed by the server (in bytes)"
 msgstr ""
 
-#: lib/tokens/hotptoken.py:176 lib/tokens/totptoken.py:181
+#: lib/tokens/hotptoken.py:176 lib/tokens/totptoken.py:192
 msgid ""
 "The difficulty factor used for the OTP seed generation (should be at "
 "least 10000)"
@@ -2412,11 +2412,11 @@ msgstr ""
 msgid "Remote Token: Forward authentication request to another server."
 msgstr ""
 
-#: lib/tokens/remotetoken.py:125 lib/tokens/totptoken.py:197
+#: lib/tokens/remotetoken.py:125 lib/tokens/totptoken.py:208
 msgid "The user may only have this maximum number of remote tokens assigned."
 msgstr ""
 
-#: lib/tokens/remotetoken.py:132 lib/tokens/totptoken.py:204
+#: lib/tokens/remotetoken.py:132 lib/tokens/totptoken.py:215
 msgid ""
 "The user may only have this maximum number of active remote tokens "
 "assigned."
@@ -2542,7 +2542,11 @@ msgstr ""
 msgid "Specify the time step of the time-based OTP token."
 msgstr ""
 
-#: lib/tokens/totptoken.py:110
+#: lib/tokens/totptoken.py:63
+msgid "Specify whether to enable timeshift."
+msgstr ""
+
+#: lib/tokens/totptoken.py:111
 msgid "TOTP: Time based One Time Passwords."
 msgstr ""
 
