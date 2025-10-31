@@ -23,7 +23,7 @@
     "grunt-init": "^0.3.2"
   },
   "scripts": {
-    "translate": "grunt nggettext_extract && for language in locale/*.po; do msgmerge -U --backup=off $language locale/template.pot; done && grunt nggettext_compile"
+    "translate": "grunt nggettext_extract && for language in translations/*.po; do msgmerge -U --backup=off $language translations/template.pot; done && grunt nggettext_compile"
   },
   "repository": {
     "type": "git",
