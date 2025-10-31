@@ -1,0 +1,59 @@
+name: build
+
+on:
+  push:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    name: build docs
+    steps:
+        - uses: actions/checkout@v5
+        - name: Setup Python 3.11
+          uses: actions/setup-python@v6
+          with:
+            python-version: "3.11"
+        - name: Setup UV
+          uses: astral-sh/setup-uv@v6
+          with:
+            enable-cache: true
+        - name: Install dependencies
+          run: uv sync --extra docs
+        - name: Build documentation
+          run: |
+            cd doc
+            uv run sphinx-build -b html -j auto -a -n -T -W --keep-going . _build/html
+  dist:
+    runs-on: ubuntu-latest
+    name: build dist
+    steps:
+        - uses: actions/checkout@v5
+        - name: Setup Python 3.10
+          uses: actions/setup-python@v6
+          with:
+            python-version: "3.10"
+        - name: Setup UV
+          uses: astral-sh/setup-uv@v6
+          with:
+            enable-cache: true
+        - name: Install dependencies
+          run: uv sync
+        - name: Build distributions
+          run: uv build
+        - name: Release dist
+          uses: softprops/action-gh-release@v2
+          if: github.ref_type == 'tag'
+          with:
+            files: dist/*
+        - name: Publish package
+          if: github.ref_type == 'tag'
+          run: uv publish
+
