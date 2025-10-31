@@ -34,4 +34,4 @@ __pycache__/
 /private.pem
 dist/
 *.swp
-deploy/docker-example/config/*
+/deploy/docker-example/.env

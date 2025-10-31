@@ -1454,15 +1454,15 @@ msgstr "Obtener documentación del sistema"
 msgid "Get available CAs"
 msgstr ""
 
-#: components/login/controllers/loginControllers.js:432
+#: components/login/controllers/loginControllers.js:430
 msgid "Get the Authenticator App for Android."
 msgstr "Obtenga la aplicación Authenticator para Android."
 
-#: components/login/controllers/loginControllers.js:438
+#: components/login/controllers/loginControllers.js:436
 msgid "Get the Authenticator App for iOS."
 msgstr "Obtenga la aplicación Authenticator para iOS."
 
-#: components/login/controllers/loginControllers.js:444
+#: components/login/controllers/loginControllers.js:442
 msgid "Get the Authenticator App."
 msgstr "Obtenga la aplicación Authenticator."
 
@@ -2251,7 +2251,7 @@ msgstr "Anular Clientes de Autorización"
 msgid "PGP Key"
 msgstr "Clave PGP"
 
-#: components/login/controllers/loginControllers.js:670
+#: components/login/controllers/loginControllers.js:667
 msgid "PIN changed successfully."
 msgstr "PIN cambiado correctamente."
 
@@ -2581,7 +2581,7 @@ msgstr ""
 msgid "Realm"
 msgstr "Dominio"
 
-#: components/login/controllers/loginControllers.js:627
+#: components/login/controllers/loginControllers.js:624
 msgid "Realm defrealm created."
 msgstr "Dominio predeterminado creado."
 
@@ -3724,7 +3724,7 @@ msgid ""
 "                        service itself</a>."
 msgstr ""
 
-#: app.js:144
+#: app.js:140
 msgid "The eduMFA system seems to be offline. The API is not reachable!"
 msgstr ""
 
@@ -4656,7 +4656,7 @@ msgid ""
 "                            @  {{ loggedInUser.realm }}."
 msgstr ""
 
-#: components/login/controllers/loginControllers.js:522
+#: components/login/controllers/loginControllers.js:520
 msgid ""
 "You are using a certain amount of Push tokens. Note, that you need a valid "
 "subscription, to use Push tokens in push mode. Otherwise Push tokens will "
@@ -4759,7 +4759,7 @@ msgstr ""
 msgid "Your secret phrase."
 msgstr ""
 
-#: components/login/controllers/loginControllers.js:529
+#: components/login/controllers/loginControllers.js:527
 msgid ""
 "Your subscription for the unsupported privacyIDEA Authenticator has expired."
 msgstr ""

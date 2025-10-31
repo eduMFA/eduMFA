@@ -1485,15 +1485,15 @@ msgstr "Sistem belgelerini alın"
 msgid "Get available CAs"
 msgstr ""
 
-#: components/login/controllers/loginControllers.js:432
+#: components/login/controllers/loginControllers.js:430
 msgid "Get the Authenticator App for Android."
 msgstr "Android için doğrulama uygulamasını edinin."
 
-#: components/login/controllers/loginControllers.js:438
+#: components/login/controllers/loginControllers.js:436
 msgid "Get the Authenticator App for iOS."
 msgstr "İOS için doğrulama uygulamasını edinin."
 
-#: components/login/controllers/loginControllers.js:444
+#: components/login/controllers/loginControllers.js:442
 msgid "Get the Authenticator App."
 msgstr "Authenticator uygulamasını edinin."
 
@@ -2294,7 +2294,7 @@ msgstr "Yetkilendirme istemcilerini geçersiz kıl"
 msgid "PGP Key"
 msgstr "PGP tuşu"
 
-#: components/login/controllers/loginControllers.js:670
+#: components/login/controllers/loginControllers.js:667
 msgid "PIN changed successfully."
 msgstr "Pin başarıyla değiştirildi."
 
@@ -2628,7 +2628,7 @@ msgstr ""
 msgid "Realm"
 msgstr "Diyar"
 
-#: components/login/controllers/loginControllers.js:627
+#: components/login/controllers/loginControllers.js:624
 msgid "Realm defrealm created."
 msgstr "Realm defrealm oluşturuldu."
 
@@ -3858,7 +3858,7 @@ msgid ""
 "                        service itself</a>."
 msgstr ""
 
-#: app.js:144
+#: app.js:140
 #, fuzzy
 msgid "The eduMFA system seems to be offline. The API is not reachable!"
 msgstr "eduMFA sistemi çevrimdışı görünüyor. API erişilebilir değil!"
@@ -4919,7 +4919,7 @@ msgstr ""
 "{{ loggedInUser.username }} Olarak giriş yaptınız\n"
 "                            @  {{ loggedInUser.realm }}."
 
-#: components/login/controllers/loginControllers.js:522
+#: components/login/controllers/loginControllers.js:520
 msgid ""
 "You are using a certain amount of Push tokens. Note, that you need a valid "
 "subscription, to use Push tokens in push mode. Otherwise Push tokens will "
@@ -5056,7 +5056,7 @@ msgstr ""
 msgid "Your secret phrase."
 msgstr "Gizli ifaden."
 
-#: components/login/controllers/loginControllers.js:529
+#: components/login/controllers/loginControllers.js:527
 #, fuzzy
 msgid ""
 "Your subscription for the unsupported privacyIDEA Authenticator has expired."

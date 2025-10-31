@@ -1,12 +1,12 @@
 # Build stage
-FROM python:3.14.0-slim-trixie@sha256:5cfac249393fa6c7ebacaf0027a1e127026745e603908b226baa784c52b9d99b AS builder
+FROM python:3.14.0-slim-trixie@sha256:4ed33101ee7ec299041cc41dd268dae17031184be94384b1ce7936dc4e5dead3 AS builder
 WORKDIR /tmp
 COPY . .
 RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 # Final stage
-FROM python:3.14.0-slim-trixie@sha256:5cfac249393fa6c7ebacaf0027a1e127026745e603908b226baa784c52b9d99b
+FROM python:3.14.0-slim-trixie@sha256:4ed33101ee7ec299041cc41dd268dae17031184be94384b1ce7936dc4e5dead3
 
 # Install system dependencies
 RUN apt-get update && \
@@ -24,15 +24,20 @@ COPY --from=builder /tmp/dist/*.whl /dist/
 RUN pip install --no-cache-dir /dist/*.whl &&  \
     rm -rf /dist/*.whl
 
+# Volume for audit- and enckey
+VOLUME ["/etc/edumfa"]
+
 # Copy necessary files
+COPY ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
+COPY ./deploy/docker/edumfa.py /etc/edumfa/edumfa.cfg
+COPY ./deploy/docker/logging.yml /etc/edumfa/logging.yml
 COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
-COPY ./deploy/docker/logging.cfg /etc/edumfa/logging.cfg
-COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
 
 # Create directory for user scripts
 RUN mkdir -p /opt/edumfa/user-scripts
 
 EXPOSE 8000
+HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1
 WORKDIR /opt/edumfa
 
 # Set environment variables
@@ -40,4 +45,4 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/edumfa:$PATH"
 
-CMD ["./docker-setup.sh"]
+CMD ["./entrypoint.sh"]

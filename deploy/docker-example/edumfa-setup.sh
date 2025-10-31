@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-edumfa-manage config import full -f /opt/edumfa/policy.conf
-edumfa-manage realm create userless openldap
+edumfa-manage -q resolver create_internal testresolver
+edumfa-manage -q realm create testrealm testresolver
+
+edumfa-manage -q config importer -i /opt/edumfa/policy.py
+

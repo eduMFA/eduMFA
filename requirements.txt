@@ -4,7 +4,7 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements.txt --strip-extras
 #
-alembic==1.17.0
+alembic==1.17.1
     # via flask-migrate
 argon2-cffi==25.1.0
     # via edumfa (setup.py)
@@ -22,7 +22,7 @@ blinker==1.9.0
     # via flask
 cachetools==6.2.1
     # via google-auth
-cbor2==5.7.0
+cbor2==5.7.1
     # via edumfa (setup.py)
 certifi==2025.10.5
     # via requests
@@ -38,7 +38,7 @@ configobj==5.0.9
     # via edumfa (setup.py)
 croniter==6.0.0
     # via edumfa (setup.py)
-cryptography==46.0.2
+cryptography==46.0.3
     # via
     #   edumfa (setup.py)
     #   pyopenssl
@@ -61,11 +61,11 @@ flask-sqlalchemy==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-migrate
-google-auth==2.41.1
+google-auth==2.42.0
     # via edumfa (setup.py)
-grpcio==1.75.1
+grpcio==1.76.0
     # via edumfa (setup.py)
-huey==2.5.3
+huey==2.5.4
     # via edumfa (setup.py)
 idna==3.11
     # via requests
@@ -125,7 +125,7 @@ pytz==2025.2
     # via flask-babel
 pyyaml==6.0.3
     # via edumfa (setup.py)
-redis==6.4.0
+redis==7.0.1
     # via huey
 requests==2.32.5
     # via edumfa (setup.py)
