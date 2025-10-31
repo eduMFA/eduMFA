@@ -2327,6 +2327,8 @@ msgstr "Geben Sie die Basis-URL des eduMFA Servers an."
 msgid ""
 "Please remember to restart eduMFA when modifying an existing LDAP resolver."
 msgstr ""
+"Änderungen an existierenden LDAP-Resolvern erfordern einen Neustart "
+"von eduMFA."
 
 #: edumfa/static/components/token/views/token.enrolled.edupush.html:9
 #, fuzzy
@@ -2710,7 +2712,7 @@ msgstr "Antwort beinhaltet (JSON Format):"
 
 #: edumfa/static/components/config/views/dialog.ldap_restart.html:12
 msgid "Restart eduMFA"
-msgstr ""
+msgstr "eduMFA neustarten"
 
 #: edumfa/static/components/token/views/token.details.html:437
 msgid "Resync Token"
