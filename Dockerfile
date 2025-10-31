@@ -7,6 +7,10 @@ RUN pip install --no-cache-dir build && \
 
 # Final stage
 FROM python:3.14.0-slim-trixie@sha256:4ed33101ee7ec299041cc41dd268dae17031184be94384b1ce7936dc4e5dead3
+USER root
+
+RUN addgroup --gid 2000 edumfa \
+  && adduser --disabled-password --disabled-login --gecos "" --uid 2000 --gid 2000 edumfa
 
 # Install system dependencies
 RUN apt-get update && \
@@ -27,6 +31,10 @@ RUN pip install --no-cache-dir /dist/*.whl &&  \
 # Volume for audit- and enckey
 VOLUME ["/etc/edumfa"]
 
+# Create directory for user scripts and make sure the edumfa user can create
+# files in /etc/edumfa/.
+RUN mkdir /etc/edumfa/ && chown -R edumfa:edumfa /etc/edumfa/
+
 # Copy necessary files
 COPY ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
 COPY ./deploy/docker/edumfa.py /etc/edumfa/edumfa.cfg
@@ -44,5 +52,7 @@ WORKDIR /opt/edumfa
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/edumfa:$PATH"
+
+USER edumfa
 
 CMD ["./entrypoint.sh"]
