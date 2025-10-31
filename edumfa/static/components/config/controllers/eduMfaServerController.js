@@ -77,7 +77,9 @@ myApp.controller("eduMfaServerController", ["$scope", "$stateParams", "inform",
     $scope.testEduMfaServer = function() {
         ConfigFactory.testEduMfaServer($scope.params, function(data) {
            if (data.result.value === true) {
-               inform.add(gettextCatalog.getString("Request to remote eduMFA server successful."), {type: "info"});
+               inform.add(gettextCatalog.getString("Request to remote eduMFA server successful."), {type: "success"});
+           } else {
+               inform.add(gettextCatalog.getString("Request to remote eduMFA server not successful. Check the fields URL, username and password for correctness."), {type: "danger"});
            }
         });
     };

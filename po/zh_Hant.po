@@ -2695,6 +2695,12 @@ msgstr "重複輸入密碼"
 msgid "Request Mapping (JSON format)"
 msgstr "請求映射（JSON 格式）"
 
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:82
+msgid ""
+"Request to remote eduMFA server not successful. Check the fields URL, "
+"username and password for correctness."
+msgstr ""
+
 #: edumfa/static/components/config/controllers/eduMfaServerController.js:80
 #, fuzzy
 msgid "Request to remote eduMFA server successful."
@@ -5102,7 +5108,7 @@ msgstr "行動"
 msgid "eduMFA Node"
 msgstr ""
 
-#: edumfa/static/components/config/controllers/eduMfaServerController.js:88
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:90
 #, fuzzy
 msgid "eduMFA Server Config saved."
 msgstr "已保存eduMFA 伺服器配置。"

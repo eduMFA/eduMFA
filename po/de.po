@@ -2641,6 +2641,14 @@ msgstr "Passwort wiederholen"
 msgid "Request Mapping (JSON format)"
 msgstr "Anfrage Mapping (JSON Format)"
 
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:82
+msgid ""
+"Request to remote eduMFA server not successful. Check the fields URL, "
+"username and password for correctness."
+msgstr ""
+"Die HTTP Anfrage an den entfernten eduMFA Server wurde nicht erfolgreich "
+"beantwortet. Überprüfen Sie die URL, den Usernamen und das Passwort."
+
 #: edumfa/static/components/config/controllers/eduMfaServerController.js:80
 msgid "Request to remote eduMFA server successful."
 msgstr ""
@@ -5011,7 +5019,7 @@ msgstr "Dauer"
 msgid "eduMFA Node"
 msgstr "eduMFA Knoten"
 
-#: edumfa/static/components/config/controllers/eduMfaServerController.js:88
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:90
 msgid "eduMFA Server Config saved."
 msgstr "eduMFA Server-Konfiguration erfolgreich gespeichert."
 

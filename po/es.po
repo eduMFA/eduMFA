@@ -2654,6 +2654,12 @@ msgstr "Repita la contraseña"
 msgid "Request Mapping (JSON format)"
 msgstr "Solicitud de mapeo (JSON format)"
 
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:82
+msgid ""
+"Request to remote eduMFA server not successful. Check the fields URL, "
+"username and password for correctness."
+msgstr ""
+
 #: edumfa/static/components/config/controllers/eduMfaServerController.js:80
 msgid "Request to remote eduMFA server successful."
 msgstr "Solicitud correcta al servidor privacidadIDEA remoto."
@@ -4757,7 +4763,7 @@ msgstr ""
 msgid "eduMFA Node"
 msgstr ""
 
-#: edumfa/static/components/config/controllers/eduMfaServerController.js:88
+#: edumfa/static/components/config/controllers/eduMfaServerController.js:90
 msgid "eduMFA Server Config saved."
 msgstr ""
 
