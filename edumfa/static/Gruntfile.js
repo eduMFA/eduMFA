@@ -4,12 +4,12 @@ grunt.initConfig({
   nggettext_extract: {
     pot: {
       files: {
-        "po/template.pot": [
-          "edumfa/static/components/*/views/*.html",
-          "edumfa/static/templates/*.html",
-          "edumfa/static/components/*/controllers/*.js",
-          "edumfa/static/components/*/factories/*.js",
-          "edumfa/static/*.js",
+        "translations/template.pot": [
+          "components/*/views/*.html",
+          "templates/*.html",
+          "components/*/controllers/*.js",
+          "components/*/factories/*.js",
+          "*.js",
         ],
       },
     },
@@ -17,7 +17,7 @@ grunt.initConfig({
   nggettext_compile: {
     all: {
       files: {
-        "edumfa/static/components/translation/translations.js": ["po/*.po"],
+        "components/translation/translations.js": ["translations/*.po"],
       },
     },
   },
