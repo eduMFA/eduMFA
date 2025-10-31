@@ -619,6 +619,7 @@ msgstr "Client-Zertifikat (Dateiname)"
 msgid "Client private key (filename)"
 msgstr "Privater Schlüssel des Clients (Dateiname)"
 
+#: edumfa/static/components/config/views/dialog.ldap_restart.html:20
 #: edumfa/static/components/dialogs/views/dialog.about.html:49
 msgid "Close"
 msgstr "Schließen"
@@ -1431,15 +1432,15 @@ msgstr "System Dokumentation"
 msgid "Get available CAs"
 msgstr "Verfügbare CAs abrufen"
 
-#: edumfa/static/components/login/controllers/loginControllers.js:432
+#: edumfa/static/components/login/controllers/loginControllers.js:430
 msgid "Get the Authenticator App for Android."
 msgstr "Laden Sie die Authenticator App für Android."
 
-#: edumfa/static/components/login/controllers/loginControllers.js:438
+#: edumfa/static/components/login/controllers/loginControllers.js:436
 msgid "Get the Authenticator App for iOS."
 msgstr "Laden Sie die Authenticator App für iOS."
 
-#: edumfa/static/components/login/controllers/loginControllers.js:444
+#: edumfa/static/components/login/controllers/loginControllers.js:442
 msgid "Get the Authenticator App."
 msgstr "Laden Sie die Authenticator App."
 
@@ -1870,7 +1871,7 @@ msgid "Log"
 msgstr "Logbuch"
 
 #: edumfa/static/components/dialogs/views/dialog.lock.html:28
-#: edumfa/static/components/login/views/enter-response.html:27
+#: edumfa/static/components/login/views/enter-response.html:28
 #: edumfa/static/components/login/views/login.html:20
 #: edumfa/static/components/login/views/login.html:79
 msgid "Log In"
@@ -2218,7 +2219,7 @@ msgstr "Überschreibe den authorisierenden Client"
 msgid "PGP Key"
 msgstr "PGP-Schlüssel"
 
-#: edumfa/static/components/login/controllers/loginControllers.js:666
+#: edumfa/static/components/login/controllers/loginControllers.js:667
 msgid "PIN changed successfully."
 msgstr "PIN erfolgreich geändert."
 
@@ -2321,6 +2322,11 @@ msgstr ""
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:23
 msgid "Please provide the base URL of the eduMFA server."
 msgstr "Geben Sie die Basis-URL des eduMFA Servers an."
+
+#: edumfa/static/components/config/views/dialog.ldap_restart.html:17
+msgid ""
+"Please remember to restart eduMFA when modifying an existing LDAP resolver."
+msgstr ""
 
 #: edumfa/static/components/token/views/token.enrolled.edupush.html:9
 #, fuzzy
@@ -2547,7 +2553,7 @@ msgstr ""
 msgid "Realm"
 msgstr "Realm"
 
-#: edumfa/static/components/login/controllers/loginControllers.js:627
+#: edumfa/static/components/login/controllers/loginControllers.js:624
 msgid "Realm defrealm created."
 msgstr "Der Realm defrealm wurde erzeugt."
 
@@ -2701,6 +2707,10 @@ msgstr "Antwort Mapping (JSON Format)"
 #: edumfa/static/components/config/views/config.resolvers.http.html:69
 msgid "Response contains (JSON format):"
 msgstr "Antwort beinhaltet (JSON Format):"
+
+#: edumfa/static/components/config/views/dialog.ldap_restart.html:12
+msgid "Restart eduMFA"
+msgstr ""
 
 #: edumfa/static/components/token/views/token.details.html:437
 msgid "Resync Token"
@@ -3762,7 +3772,7 @@ msgstr ""
 "schauen Sie bitte beim <a href=\"http://github.com/eduMFA/eduMFA\" "
 "target=\"github\">Backend Service</a>."
 
-#: edumfa/static/app.js:144
+#: edumfa/static/app.js:140
 #, fuzzy
 msgid "The eduMFA system seems to be offline. The API is not reachable!"
 msgstr ""
@@ -4774,7 +4784,7 @@ msgstr ""
 "Sie sind als Benutzer {{ loggedInUser.username }} \n"
 "@ {{ loggedInUser.realm}} angemeldet."
 
-#: edumfa/static/components/login/controllers/loginControllers.js:522
+#: edumfa/static/components/login/controllers/loginControllers.js:520
 msgid ""
 "You are using a certain amount of Push tokens. Note, that you need a valid "
 "subscription, to use Push tokens in push mode. Otherwise Push tokens will "
@@ -4906,7 +4916,7 @@ msgstr ""
 msgid "Your secret phrase."
 msgstr "Ihre geheime Zeichenkette oder Satz."
 
-#: edumfa/static/components/login/controllers/loginControllers.js:529
+#: edumfa/static/components/login/controllers/loginControllers.js:527
 #, fuzzy
 msgid ""
 "Your subscription for the unsupported privacyIDEA Authenticator has expired."

@@ -635,6 +635,7 @@ msgstr "Client certificaat (bestandsnaam)"
 msgid "Client private key (filename)"
 msgstr "Client private sleutel (bestandsnaam)"
 
+#: edumfa/static/components/config/views/dialog.ldap_restart.html:20
 #: edumfa/static/components/dialogs/views/dialog.about.html:49
 msgid "Close"
 msgstr "Sluit"
@@ -1476,15 +1477,15 @@ msgstr "Vraag systeem-documentatie op"
 msgid "Get available CAs"
 msgstr "Haal beschikbare CA's op"
 
-#: edumfa/static/components/login/controllers/loginControllers.js:432
+#: edumfa/static/components/login/controllers/loginControllers.js:430
 msgid "Get the Authenticator App for Android."
 msgstr "Installeer de Authenticator App voor Android."
 
-#: edumfa/static/components/login/controllers/loginControllers.js:438
+#: edumfa/static/components/login/controllers/loginControllers.js:436
 msgid "Get the Authenticator App for iOS."
 msgstr "Installeer de Authenticator App voor IOS."
 
-#: edumfa/static/components/login/controllers/loginControllers.js:444
+#: edumfa/static/components/login/controllers/loginControllers.js:442
 msgid "Get the Authenticator App."
 msgstr "Download de authenticatie app."
 
@@ -1927,7 +1928,7 @@ msgid "Log"
 msgstr "Log"
 
 #: edumfa/static/components/dialogs/views/dialog.lock.html:28
-#: edumfa/static/components/login/views/enter-response.html:27
+#: edumfa/static/components/login/views/enter-response.html:28
 #: edumfa/static/components/login/views/login.html:20
 #: edumfa/static/components/login/views/login.html:79
 msgid "Log In"
@@ -2284,7 +2285,7 @@ msgstr "Overschrijf autorisatie cliënten"
 msgid "PGP Key"
 msgstr "PGP-sleutel"
 
-#: edumfa/static/components/login/controllers/loginControllers.js:666
+#: edumfa/static/components/login/controllers/loginControllers.js:667
 msgid "PIN changed successfully."
 msgstr "PIN wijzigen gelukt."
 
@@ -2387,6 +2388,11 @@ msgstr ""
 #: edumfa/static/components/config/views/config.edumfaserver.edit.html:23
 msgid "Please provide the base URL of the eduMFA server."
 msgstr "Geef de basis-URL van de eduMFA-server."
+
+#: edumfa/static/components/config/views/dialog.ldap_restart.html:17
+msgid ""
+"Please remember to restart eduMFA when modifying an existing LDAP resolver."
+msgstr ""
 
 #: edumfa/static/components/token/views/token.enrolled.edupush.html:9
 #, fuzzy
@@ -2612,7 +2618,7 @@ msgstr "Lees nummer dynamisch van de gebruikersbron bij elke aanvraag."
 msgid "Realm"
 msgstr "Realm"
 
-#: edumfa/static/components/login/controllers/loginControllers.js:627
+#: edumfa/static/components/login/controllers/loginControllers.js:624
 msgid "Realm defrealm created."
 msgstr "Realm defrealm gemaakt."
 
@@ -2767,6 +2773,10 @@ msgstr ""
 #: edumfa/static/components/config/views/config.resolvers.http.html:69
 msgid "Response contains (JSON format):"
 msgstr "Antwoord bevat (JSON format):"
+
+#: edumfa/static/components/config/views/dialog.ldap_restart.html:12
+msgid "Restart eduMFA"
+msgstr ""
 
 #: edumfa/static/components/token/views/token.details.html:437
 msgid "Resync Token"
@@ -3832,7 +3842,7 @@ msgid ""
 "                        service itself</a>."
 msgstr ""
 
-#: edumfa/static/app.js:144
+#: edumfa/static/app.js:140
 #, fuzzy
 msgid "The eduMFA system seems to be offline. The API is not reachable!"
 msgstr ""
@@ -4902,7 +4912,7 @@ msgstr ""
 "Je bent aangemeld als {{ loggedInUser.username }}\n"
 "                            @  {{ loggedInUser.realm }}."
 
-#: edumfa/static/components/login/controllers/loginControllers.js:522
+#: edumfa/static/components/login/controllers/loginControllers.js:520
 msgid ""
 "You are using a certain amount of Push tokens. Note, that you need a valid "
 "subscription, to use Push tokens in push mode. Otherwise Push tokens will "
@@ -5039,7 +5049,7 @@ msgstr ""
 msgid "Your secret phrase."
 msgstr "Jouw geheime zin."
 
-#: edumfa/static/components/login/controllers/loginControllers.js:529
+#: edumfa/static/components/login/controllers/loginControllers.js:527
 #, fuzzy
 msgid ""
 "Your subscription for the unsupported privacyIDEA Authenticator has expired."
