@@ -44,9 +44,8 @@ from edumfa.lib.utils import convert_column_to_unicode, to_bytes
 
 from .UserIdResolver import UserIdResolver
 
-from passlib.handlers.sha2_crypt import sha256_crypt, sha512_crypt
-from passlib.handlers.md5_crypt import md5_crypt
-from passlib.handlers.des_crypt import des_crypt
+from passlib.context import CryptContext
+
 
 log = logging.getLogger(__name__)
 ENCODING = "utf-8"
@@ -211,14 +210,13 @@ class IdResolver(UserIdResolver):
                 err = "Sorry, currently no support for shadow passwords"
                 log.error("{0!s}".format(err))
                 raise NotImplementedError(err)
-            handlers = [des_crypt, md5_crypt, sha256_crypt, sha512_crypt]
-            for handler in handlers:
-                try:
-                    if handler.verify(password, cryptedpasswd):
-                        log.info("successfully authenticated user uid {0!s}".format(uid))
-                        return True
-                except ValueError:
-                    continue
+            passlib_context = CryptContext(schemes=["bcrypt", "sha512_crypt", "sha256_crypt", "md5_crypt", "des_crypt"])
+            try:
+                if passlib_context.verify(password, cryptedpasswd):
+                    log.info("successfully authenticated user uid {0!s}".format(uid))
+                    return True
+            except ValueError:
+                pass # Log below
             log.warning("user uid {0!s} failed to authenticate".format(uid))
             return False
         else:
