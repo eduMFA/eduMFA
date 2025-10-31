@@ -17,8 +17,13 @@
     "ng-file-upload": "12.2.13",
     "ng-idle": "1.3.2"
   },
+  "devDependencies": {
+    "grunt-angular-gettext": "^2.5.3",
+    "grunt-cli": "^1.5.0",
+    "grunt-init": "^0.3.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "translate": "grunt nggettext_extract && for language in translations/*.po; do msgmerge -U --backup=off $language translations/template.pot; done && grunt nggettext_compile"
   },
   "repository": {
     "type": "git",
