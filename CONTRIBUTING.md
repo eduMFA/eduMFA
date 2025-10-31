@@ -117,15 +117,17 @@ scripts.
 
 We aim to provide translations for different languages.
 
-To generate the translations for the web interface we use `grunt`. The files can be updated using 
+Translations are split in two parts: Frontend (web interface) and backend
+(server-side messages).
+
+Translations for the frontend require `bun` to be installed. You can find instructions to install `bun` in the [official documentation](https://bun.com/docs/installation).
+
+To update the translations, run the following commands:
 
 ```bash
-npm install 
-npm run translate
+make translate-frontend
+make translate-backend
 ```
-
-The server-side messages get translated using babel. Translations can be regenerated using `make translate-server`.
-
 
 ## Development Workflow
 
