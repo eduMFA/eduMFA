@@ -37,6 +37,8 @@ jobs:
       - uses: actions/checkout@v5
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
+      - name: Install gettext (msgmerge)
+        run: sudo apt-get update && sudo apt-get install -y gettext
       - name: Translate frontend
         run: make translate-frontend
       - name: Check for uncommitted translation changes
