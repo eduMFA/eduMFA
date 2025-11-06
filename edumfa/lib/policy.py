@@ -3719,13 +3719,43 @@ def check_pin(g, pin, tokentype, user_obj):
             g, action=ACTION.OTPPINCONTENTS, user_obj=user_obj
         ).action_values(unique=True)
 
-    if len(pol_minlen) == 1 and len(pin) < int(list(pol_minlen)[0]):
-        # check the minimum length requirement
-        raise PolicyError(f"The minimum OTP PIN length is {list(pol_minlen)[0]}")
+    # pol_minlen has the format {"VALUE": ["policy_name"]}
+    if len(pol_minlen) == 1:
+        policy_minlen_value = list(pol_minlen)[0]
+        if not policy_minlen_value.isdigit():
+            log.warning(
+                f"Policy '{pol_minlen[policy_minlen_value][0]}' has an invalid"
+                " otp_pin_minlength setting. Can't continue action."
+            )
+            raise PolicyError(
+                "A malformed policy blocks this action. Please contact your "
+                "administrator."
+            )
 
-    if len(pol_maxlen) == 1 and len(pin) > int(list(pol_maxlen)[0]):
-        # check the maximum length requirement
-        raise PolicyError(f"The maximum OTP PIN length is {list(pol_maxlen)[0]}")
+        if len(pin) < int(policy_minlen_value):
+            # check the minimum length requirement
+            raise PolicyError(
+                "The minimum OTP PIN length is {0!s}".format(policy_minlen_value)
+            )
+
+    # pol_minlen has the format {"VALUE": ["policy_name"]}
+    if len(pol_maxlen) == 1:
+        policy_maxlen_value = list(pol_maxlen)[0]
+        if not policy_maxlen_value.isdigit():
+            log.warning(
+                f"Policy '{pol_maxlen[policy_maxlen_value][0]}' has an invalid"
+                " otp_pin_maxlength setting. Can't continue action."
+            )
+            raise PolicyError(
+                "A malformed policy blocks this action. Please contact your "
+                "administrator."
+            )
+
+        if len(pin) > int(policy_maxlen_value):
+            # check the maximum length requirement
+            raise PolicyError(
+                "The maximum OTP PIN length is {0!s}".format(policy_maxlen_value)
+            )
 
     if len(pol_contents) == 1:
         # check the contents requirement

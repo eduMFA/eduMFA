@@ -41,8 +41,8 @@ def _random_password(size):
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY")
-    # SQL_ALCHEMY_DATABASE_URI = "mysql://privacyidea:XmbSrlqy5d4IS08zjz"
-    # "GG5HTt40Cpf5@localhost/privacyidea"
+    # SQL_ALCHEMY_DATABASE_URI = "mysql://edumfa:XmbSrlqy5d4IS08zjz"
+    # "GG5HTt40Cpf5@localhost/edumfa"
     EDUMFA_ENCFILE = os.path.join(basedir, "tests/testdata/enckey")
     EDUMFA_HSM = "default"
     EDUMFA_AUDIT_MODULE = "edumfa.lib.auditmodules.sqlaudit"

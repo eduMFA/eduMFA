@@ -93,8 +93,8 @@ def create_internal(name):
 
     sqluri = current_app.config.get("SQLALCHEMY_DATABASE_URI")
     sqlelements = sqluri.split("/")
-    # mysql://user:password@localhost/pi
-    # sqlite:////home/cornelius/src/privacyidea/data.sqlite
+    # mysql://user:password@localhost/edumfa
+    # sqlite:////home/user/src/edumfa/data.sqlite
     sql_driver = sqlelements[0][:-1]
     user_pw_host = sqlelements[2]
     database = "/".join(sqlelements[3:])

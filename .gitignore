@@ -22,7 +22,7 @@ tests/testdata/gpg/.gpg-v*-migrated
 tests/testdata/gpg/private-keys-v*.d
 tests/testdata/tmp_directory
 node_modules
-po/*.mo
+edumfa/static/translations/*.mo
 htmlcov/
 edumfa/static/customize/views/
 edumfa/static/customize/css/
@@ -34,4 +34,4 @@ __pycache__/
 /private.pem
 dist/
 *.swp
-deploy/docker-example/config/*
+/deploy/docker-example/.env
