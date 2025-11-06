@@ -3734,9 +3734,7 @@ def check_pin(g, pin, tokentype, user_obj):
 
         if len(pin) < int(policy_minlen_value):
             # check the minimum length requirement
-            raise PolicyError(
-                "The minimum OTP PIN length is {0!s}".format(policy_minlen_value)
-            )
+            raise PolicyError(f"The minimum OTP PIN length is {policy_minlen_value}")
 
     # pol_minlen has the format {"VALUE": ["policy_name"]}
     if len(pol_maxlen) == 1:
@@ -3753,9 +3751,7 @@ def check_pin(g, pin, tokentype, user_obj):
 
         if len(pin) > int(policy_maxlen_value):
             # check the maximum length requirement
-            raise PolicyError(
-                "The maximum OTP PIN length is {0!s}".format(policy_maxlen_value)
-            )
+            raise PolicyError(f"The maximum OTP PIN length is {policy_maxlen_value}")
 
     if len(pol_contents) == 1:
         # check the contents requirement
