@@ -22,7 +22,6 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    name: docker image
     permissions:
       packages: write
     env:
