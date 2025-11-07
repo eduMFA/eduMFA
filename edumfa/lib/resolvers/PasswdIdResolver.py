@@ -210,7 +210,7 @@ class IdResolver(UserIdResolver):
                 err = "Sorry, currently no support for shadow passwords"
                 log.error("{0!s}".format(err))
                 raise NotImplementedError(err)
-            passlib_context = CryptContext(schemes=["bcrypt", "sha512_crypt", "sha256_crypt", "md5_crypt", "des_crypt"])
+            passlib_context = CryptContext(schemes=["sha512_crypt", "sha256_crypt", "md5_crypt", "des_crypt"])
             try:
                 if passlib_context.verify(password, cryptedpasswd):
                     log.info("successfully authenticated user uid {0!s}".format(uid))

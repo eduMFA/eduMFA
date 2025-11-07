@@ -65,7 +65,7 @@ def main():
     if password == "":
         password = getpass.getpass("Please enter a password: ")
 
-    passlib_context = CryptContext(schemes=["bcrypt"])
+    passlib_context = CryptContext(schemes=["sha512_crypt"])
     encrypted_password = passlib_context.hash(password)
 
     gid = uid
