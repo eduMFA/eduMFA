@@ -5,6 +5,7 @@ permissions:
 
 on:
   push:
+    branches: [ main ]
     paths:
       - '.github/workflows/docker.yml'
       - 'deploy/docker/**'

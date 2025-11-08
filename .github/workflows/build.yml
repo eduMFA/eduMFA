@@ -2,9 +2,9 @@ name: build
 
 on:
   push:
+    branches: [ main ]
   pull_request:
     types: [ opened, reopened, synchronize ]
-  workflow_dispatch:
 
 permissions:
   contents: read
