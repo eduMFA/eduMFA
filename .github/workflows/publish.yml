@@ -1,12 +1,12 @@
 name: publish
 
+permissions:
+  contents: read
+
 on:
   release:
     types: [ published ]
   workflow_dispatch:
-
-permissions:
-  contents: read
 
 jobs:
   dist:
