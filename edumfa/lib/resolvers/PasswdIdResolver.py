@@ -40,12 +40,11 @@ import os
 import re
 import sys
 
+from passlib.context import CryptContext
+
 from edumfa.lib.utils import convert_column_to_unicode, to_bytes
 
 from .UserIdResolver import UserIdResolver
-
-from passlib.context import CryptContext
-
 
 log = logging.getLogger(__name__)
 ENCODING = "utf-8"

@@ -16,9 +16,9 @@ Dependencies: ./.
 
 """
 
-import sys
-from getopt import getopt, GetoptError
 import getpass
+import sys
+from getopt import GetoptError, getopt
 
 from passlib.context import CryptContext
 
