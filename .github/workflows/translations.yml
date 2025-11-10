@@ -28,7 +28,7 @@ jobs:
         run: uv run make translate-backend
       - name: Check for uncommitted translation changes
         run: |
-          if ! git diff --exit-code; then
+          if ! git diff --exit-code edumfa/translations/; then
             echo "::error::Translation files are not up to date. Please run 'make translate-backend' and commit the changes."
             exit 1
           fi
@@ -47,7 +47,7 @@ jobs:
         run: make translate-frontend
       - name: Check for uncommitted translation changes
         run: |
-          if ! git diff --exit-code; then
+          if ! git diff --exit-code edumfa/static/translations/; then
             echo "::error::Translation files are not up to date. Please run 'make translate-frontend' and commit the changes."
             exit 1
           fi
