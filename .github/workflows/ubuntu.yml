@@ -33,10 +33,11 @@ jobs:
     name: build ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
+      - name: Cache and install dependencies
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: build-essential debhelper devscripts equivs dh-virtualenv
+          version: ${{ matrix.codename }}
       - name: Build core package
         run: |
           cp -r deploy/ubuntu debian
