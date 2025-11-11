@@ -36,7 +36,7 @@ class TwoStepInitTestCase(MyApiTestCase):
             headers={"Authorization": self.at},
         ):
             res = self.app.full_dispatch_request()
-            self.assertTrue(res.status_code != 200, res)
+            self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
             self.assertTrue(result.get("status") is True, result)
             self.assertTrue(result.get("value") is True, result)
