@@ -1,7 +1,11 @@
 name: lint
 
+permissions:
+  contents: read
+
 on:
   push:
+    branches: [ main ]
   pull_request:
     types: [ opened, reopened, synchronize ]
 
@@ -10,10 +14,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Get Ruff Version
+      - name: Get Ruff version
         id: ruff-version
-        run: |
-          echo "version=$(grep -Po '(?<=ruff==)[0-9]+\.[0-9]+\.[0-9]+' pyproject.toml)" >> $GITHUB_OUTPUT
-      - uses: astral-sh/ruff-action@v3
+        run: echo "version=$(grep -Po '(?<=ruff==)[0-9]+\.[0-9]+\.[0-9]+' pyproject.toml)" >> $GITHUB_OUTPUT
+      - name: Run Ruff analysis
+        uses: astral-sh/ruff-action@v3
         with:
           version: ${{ steps.ruff-version.outputs.version }}
+  codespell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Perform Codespell analysis
+        uses: codespell-project/actions-codespell@v2
+        with:
+          only_warn: 1
+          exclude_file: .codespell_skip
+  codeql:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'python' ]
+    steps:
+    - uses: actions/checkout@v5
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4
+      with:
+        languages: ${{ matrix.language }}
+    - name: Perform CodeQL analysis
+      uses: github/codeql-action/analyze@v4
+      with:
+        category: "/language:${{matrix.language}}"
+
+
+          
+
+    
+     
