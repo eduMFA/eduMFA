@@ -18,9 +18,9 @@
     "ng-idle": "1.3.2"
   },
   "devDependencies": {
-    "grunt-angular-gettext": "^2.5.3",
-    "grunt-cli": "^1.5.0",
-    "grunt-init": "^0.3.2"
+    "grunt-angular-gettext": "2.5.3",
+    "grunt-cli": "1.5.0",
+    "grunt-init": "0.3.2"
   },
   "scripts": {
     "translate": "grunt nggettext_extract && for language in translations/*.po; do msgmerge -U --backup=off $language translations/template.pot; done && grunt nggettext_compile"
