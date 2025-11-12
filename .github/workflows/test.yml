@@ -1,0 +1,47 @@
+name: test
+
+permissions:
+  contents: read
+  
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - '.github/workflows/test.yml'
+    - 'edumfa/**/*.py'
+    - 'tests/**'
+    - 'tools/**'
+    - 'edumfa-manage'
+    - 'pyproject.toml'
+    - 'requirements.txt'
+    - 'setup.py'
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.10', '3.14' ]
+    name: pytest ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --extra test
+      - name: Run Pytest checks
+        run: uv run pytest --cov=edumfa --import-mode=importlib -vs tests/
+      - name: Codecov upload
+        uses: codecov/codecov-action@v5
+        with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            files: ./coverage.xml
