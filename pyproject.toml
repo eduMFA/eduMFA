@@ -68,6 +68,7 @@ test = [
     "pyparsing==3.2.5",
     "pytest==8.4.2",
     "pytest-cov==7.0.0",
+    "pytest-github-actions-annotate-failures==0.3.0",
     "responses==0.25.8",
     "testfixtures==8.3.0",
     "tomli==2.3.0",
