@@ -30,6 +30,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from flask import current_app
 from flask.cli import AppGroup
+from flask_migrate import stamp as f_stamp
 
 from edumfa.lib.security.default import DefaultSecurityModule
 from edumfa.models import db
@@ -214,7 +215,7 @@ def create_tables(stamp=False):
             if "migrations/env.py" in str(x)
         ]
         migration_dir = os.path.dirname(os.path.abspath(p[0]))
-        fm_stamp(directory=migration_dir)
+        f_stamp(directory=migration_dir)
     db.session.commit()
 
 

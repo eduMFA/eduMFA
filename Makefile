@@ -39,9 +39,11 @@ doc-html:
 	(cd doc; make html)
 
 translate-backend:
-	(cd edumfa; pybabel extract -F babel.cfg -o messages.pot .)
+	(cd edumfa; pybabel extract -F babel.cfg -o translations/messages.pot .)
+	# Normalize POT-Creation-Date after update (cross-platform sed)
+	(cd edumfa/translations; sed -i.bak 's/^"POT-Creation-Date:.*"/"POT-Creation-Date: 1970-01-01 00:00+0000\\n"/' messages.pot && rm -f messages.pot.bak)
 	# pybabel init -i messages.pot -d translations -l de
-	(cd edumfa; pybabel update -i messages.pot -d translations)
+	(cd edumfa; pybabel update -i translations/messages.pot -d translations)
 	# create the .mo file
 	(cd edumfa; pybabel compile -d translations)
 
