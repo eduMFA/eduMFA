@@ -57,9 +57,9 @@ msgid "Authentication failure. Your token has expired: {0!s}"
 msgstr "验证失败,因为您的令牌已过期: {0!s}"
 
 #: api/lib/utils.py
-#, python-brace-format
+#, fuzzy, python-brace-format
 msgid ""
-"Authentication failure. The username {!s} is not allowed to impersonate "
+"Authentication failure. The username {0!s} is not allowed to impersonate "
 "via JWT."
 msgstr "验证失败。用户名{0！s}不允许通过JWT模拟。"
 

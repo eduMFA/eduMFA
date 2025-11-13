@@ -57,9 +57,9 @@ msgid "Authentication failure. Your token has expired: {0!s}"
 msgstr "Kimlik doğrulama hatası. Tokeninizin süresi doldu: {0!s}"
 
 #: api/lib/utils.py
-#, python-brace-format
+#, fuzzy, python-brace-format
 msgid ""
-"Authentication failure. The username {!s} is not allowed to impersonate "
+"Authentication failure. The username {0!s} is not allowed to impersonate "
 "via JWT."
 msgstr ""
 "Kimlik doğrulama hatası. {0!s} kullanıcı adının JWT aracılığıyla "

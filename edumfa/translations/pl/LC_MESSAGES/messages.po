@@ -59,7 +59,7 @@ msgstr ""
 #: api/lib/utils.py
 #, python-brace-format
 msgid ""
-"Authentication failure. The username {!s} is not allowed to impersonate "
+"Authentication failure. The username {0!s} is not allowed to impersonate "
 "via JWT."
 msgstr ""
 

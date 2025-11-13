@@ -453,7 +453,7 @@ def verify_auth_token(auth_token, required_role=None):
     if wrong_username and not r:
         raise AuthError(
             _(
-                "Authentication failure. The username {!s} is not allowed to "
+                "Authentication failure. The username {0!s} is not allowed to "
                 "impersonate via JWT."
             ).format(wrong_username)
         )

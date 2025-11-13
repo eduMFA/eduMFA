@@ -59,9 +59,9 @@ msgid "Authentication failure. Your token has expired: {0!s}"
 msgstr "Échec de l'authentification. Votre jeton a expiré : {0!s}"
 
 #: api/lib/utils.py
-#, python-brace-format
+#, fuzzy, python-brace-format
 msgid ""
-"Authentication failure. The username {!s} is not allowed to impersonate "
+"Authentication failure. The username {0!s} is not allowed to impersonate "
 "via JWT."
 msgstr ""
 "Échec de l'authentification. Le nom d'utilisateur {0!s} n'est pas "
