@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json
 
 from edumfa.lib.config import set_edumfa_config
@@ -66,9 +65,7 @@ class RegisterTestCase(MyApiTestCase):
         r = set_policy(
             name="pol2",
             scope=SCOPE.REGISTER,
-            action="{0!s}={1!s}, {2!s}={3!s}".format(
-                ACTION.REALM, "register", ACTION.RESOLVER, "register"
-            ),
+            action=f"{ACTION.REALM}=register, {ACTION.RESOLVER}=register",
         )
 
         # Try to register, but missing parameter
@@ -108,7 +105,7 @@ class RegisterTestCase(MyApiTestCase):
         set_policy(
             "pol3",
             scope=SCOPE.REGISTER,
-            action="{0!s}=myserver".format(ACTION.EMAILCONFIG),
+            action=f"{ACTION.EMAILCONFIG}=myserver",
         )
         with self.app.test_request_context(
             "/register",

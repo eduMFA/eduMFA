@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #  2018-11-14 Friedrich Weber <friedrich.weber@netknights.it>
 #
 # This code is free software; you can redistribute it and/or
@@ -111,7 +110,7 @@ def consumer_main():
     with app.app_context():
         queue = get_job_queue()
         if not isinstance(queue, HueyQueue):
-            raise RuntimeError("{!r} is not a HueyQueue".format(queue))
+            raise RuntimeError(f"{queue!r} is not a HueyQueue")
 
     parser_handler = CustomOptionParserHandler()
     parser = parser_handler.get_option_parser()
@@ -133,7 +132,7 @@ def consumer_main():
                 "-l is unsupported if EDUMFA_LOGCONFIG is used. Exiting.\n"
             )
             sys.exit(1)
-        print("Using logging configuration from {!r}".format(log_config_file))
+        print(f"Using logging configuration from {log_config_file!r}")
     else:
         # If a logfile was given, we write to that logfile. If not, we write to ``edumfa-queue.log``.
         if config.logfile is not None:
@@ -143,7 +142,7 @@ def consumer_main():
         loglevel = app.config.get("EDUMFA_LOGLEVEL", logging.INFO)
         log_config = make_logging_config(logfile, loglevel)
         logging.config.dictConfig(log_config)
-        print("Logging to {!r}".format(logfile))
+        print(f"Logging to {logfile!r}")
 
     queue.huey.register_pre_execute("push_app_context", make_push_app_context(app))
     queue.huey.register_post_execute("pop_app_context", pop_app_context)

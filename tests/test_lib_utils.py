@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This tests the package lib.utils
 """
@@ -943,9 +942,7 @@ class UtilsTestCase(MyTestCase):
             "a3u8DAuCve59ToR8fwrsa6Xs4wEM96Hulez9PeaM+7CX+n0P+acFF/"
             "aSnBOfcY26l+d7/i1AhQoVqmeqvi4sW6dMYAvIAAAAAElFTkSuQmCC"
         )
-        self.assertEqual(
-            create_img("Hallo"), "data:image/png;base64,{0!s}".format(hallo_qr_png)
-        )
+        self.assertEqual(create_img("Hallo"), f"data:image/png;base64,{hallo_qr_png}")
 
     def test_28_yubikey_utils(self):
         self.assertEqual(modhex_encode(b"\x47"), "fi")

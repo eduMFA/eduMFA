@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -111,7 +110,7 @@ class mTimeOtp:
             otp = self.calcOtp(i, to_unicode(key), to_unicode(pin))
             if safe_compare(anOtpVal, otp):
                 res = i
-                log.debug("otpvalue {0!r} found at: {1!r}".format(anOtpVal, res))
+                log.debug(f"otpvalue {anOtpVal!r} found at: {res!r}")
                 break
 
         if self.secretObject is not None:
@@ -123,9 +122,7 @@ class mTimeOtp:
         ## prevent access twice with last motp
         if res <= self.oldtime:
             log.warning(
-                "otpvalue {0!s} checked once before ({1!r}<={2!r})".format(
-                    anOtpVal, res, self.oldtime
-                )
+                f"otpvalue {anOtpVal} checked once before ({res!r}<={self.oldtime!r})"
             )
             res = -1
         if res == -1:
@@ -133,7 +130,7 @@ class mTimeOtp:
         else:
             msg = "checking motp sucess"
 
-        log.debug("end. {0!s} : returning result: {1!r}, ".format(msg, res))
+        log.debug(f"end. {msg} : returning result: {res!r}, ")
         return res
 
     def calcOtp(self, counter, key=None, pin=None):
@@ -156,6 +153,6 @@ class mTimeOtp:
         if key is None:
             key = self.key
 
-        vhash = "{0:d}{1!s}{2!s}".format(counter, key, pin)
+        vhash = f"{counter:d}{key}{pin}"
         motp = md5(to_bytes(vhash)).hexdigest()[: self.digits]  # nosec B324 # md5 used in mOTP algorithm
         return to_unicode(motp)

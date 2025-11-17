@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -88,10 +87,10 @@ def cert_enroll():
     ca = request.form.get("ca")
     # TODO: Read the email address from the user source
     email = "meine"
-    csr = """SPKAC={0!s}
-CN={1!s},CN={2!s},O={3!s}
-emailAddress={4!s}
-""".format(request_key, request.PI_username, request.PI_role, request.PI_realm, email)
+    csr = f"""SPKAC={request_key}
+CN={request.PI_username},CN={request.PI_role},O={request.PI_realm}
+emailAddress={email}
+"""
     # Take the CSR and run a token init
     from edumfa.lib.token import init_token
 
@@ -106,7 +105,7 @@ emailAddress={4!s}
     render_context = {
         "instance": instance,
         "backendUrl": backend_url,
-        "username": "{0!s}@{1!s}".format(request.PI_username, request.PI_realm),
+        "username": f"{request.PI_username}@{request.PI_realm}",
         "role": request.PI_role,
         "serial": serial,
         "certificate": certificate,

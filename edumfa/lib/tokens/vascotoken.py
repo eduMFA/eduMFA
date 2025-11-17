@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -153,9 +152,7 @@ class VascoTokenClass(TokenClass):
         if "otpkey" in param:
             if len(param["otpkey"]) != 496:
                 raise ParameterError(
-                    "Expected OTP key as 496-character hex string, but length is {!s}".format(
-                        len(param["otpkey"])
-                    )
+                    f"Expected OTP key as 496-character hex string, but length is {len(param['otpkey'])}"
                 )
             try:
                 upd_param["otpkey"] = binascii.unhexlify(upd_param["otpkey"])
@@ -197,7 +194,5 @@ class VascoTokenClass(TokenClass):
             elif result == -205:
                 log.warning("VASCO token failed to authenticate, response not decimal!")
             else:
-                log.warning(
-                    "VASCO token failed to authenticate, result: {!r}".format(result)
-                )
+                log.warning(f"VASCO token failed to authenticate, result: {result!r}")
             return -1

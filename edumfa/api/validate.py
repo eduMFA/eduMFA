@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -163,8 +162,8 @@ def before_request():
             "client": g.client_ip,
             "client_user_agent": request.user_agent.browser,
             "edumfa_server": edumfa_server,
-            "action": "{0!s} {1!s}".format(request.method, request.url_rule),
-            "thread_id": "{0!s}".format(threading.current_thread().ident),
+            "action": f"{request.method} {request.url_rule}",
+            "thread_id": f"{threading.current_thread().ident}",
             "info": "",
         }
     )
@@ -668,9 +667,7 @@ def trigger_challenge():
                 "resolver": user.resolver,
                 "realm": user.realm,
                 "success": result_obj > 0,
-                "info": log_used_user(
-                    user, "triggered {0!s} challenges".format(result_obj)
-                ),
+                "info": log_used_user(user, f"triggered {result_obj} challenges"),
                 "serial": ",".join(challenge_serials),
             }
         )
@@ -749,7 +746,7 @@ def poll_transaction(transaction_id=None):
     g.audit_object.log(
         {
             "info": "status: {}".format(details.get("challenge_status")),
-            "action_detail": "transaction_id: {}".format(transaction_id),
+            "action_detail": f"transaction_id: {transaction_id}",
             "success": result,
         }
     )
