@@ -32,7 +32,7 @@ cffi==2.0.0
     #   cryptography
 charset-normalizer==3.4.4
     # via requests
-click==8.3.0
+click==8.3.1
     # via flask
 configobj==5.0.9
     # via edumfa (setup.py)
