@@ -573,7 +573,7 @@ class WEBAUTHNGROUP:
 
     WEBAUTHN = "WebAuthn"
 
-def reset_all_user_tokens_passkey(user):
+def reset_all_user_tokens_passkey(user) -> None:
     # Gather all tokens of the user that are not registration tokens and reset the failure counter
     reset_all = Match.user(
         g,
@@ -581,19 +581,19 @@ def reset_all_user_tokens_passkey(user):
         action=ACTION.RESETALLTOKENS,
         user_object=user if user else None,
     ).policies()
-    if reset_all:
-        tokens = get_tokens_from_serial_or_user(None, user=user)
-        tokens = [
-            tok for tok in tokens if tok.get_class_type() not in ["registration"]
-        ]
-        log.debug("Reset failcounter of all tokens of {0!s}".format(user))
-        for tok_obj_reset in tokens:
-            try:
-                tok_obj_reset.reset()
-            except Exception:
-                log.warning(
-                    "Could not reset failure for token {0!s} of user {1!s}".format(tok_obj_reset.serial, user)
-                )
+    if not reset_all:
+        return
+    tokens = get_tokens_from_serial_or_user(None, user=user)
+    log.debug("Reset failcounter of all tokens of {0!s}".format(user))
+    for tok_obj_reset in tokens:
+        if tok.get_class_type() in ["registration"]:
+            continue
+        try:
+            tok_obj_reset.reset()
+        except Exception:
+            log.warning(
+                "Could not reset failure for token {0!s} of user {1!s}".format(tok_obj_reset.serial, user)
+            )
 
 
 class WebAuthnTokenClass(TokenClass):
