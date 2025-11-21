@@ -20,11 +20,7 @@ import getpass
 import sys
 from getopt import GetoptError, getopt
 
-# Python 3.13 dropped crypt package, so we need to import crypt_r
-if sys.version_info >= (3, 13):
-    import crypt_r as crypt
-else:
-    import crypt
+from passlib.context import CryptContext
 
 __version__ = "0.1"
 
@@ -69,16 +65,13 @@ def main():
     if password == "":
         password = getpass.getpass("Please enter a password: ")
 
-    # without salt, the strongest available hash function will be selected
-    # and a random salt is created
-    encryptedPW = crypt.crypt(password)
+    passlib_context = CryptContext(schemes=["sha512_crypt"])
+    encrypted_password = passlib_context.hash(password)
 
     gid = uid
     home = ""
     shell = ""
-    print(
-        "%s:%s:%s:%s:%s:%s:%s" % (user, encryptedPW, uid, gid, description, home, shell)
-    )
+    print(f"{user}:{encrypted_password}:{uid}:{gid}:{description}:{home}:{shell}")
 
 
 if __name__ == "__main__":
