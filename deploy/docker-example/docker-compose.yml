@@ -26,11 +26,12 @@ services:
       - ./edumfa-setup.sh:/opt/edumfa/user-scripts/01-setup.sh:ro
       - ./example-policy.py:/opt/edumfa/policy.py:ro
       - ./my-login.html:/opt/edumfa/edumfa-package/static/components/login/views/login.html
+      - ./db_password.txt:/etc/edumfa/db_password.txt:ro
     environment:
       DB_DRIVER: ${DB_DRIVER}
       DB_HOSTNAME: mariadb
       DB_USER: ${MARIADB_USER}
-      DB_PASSWORD: ${MARIADB_PASSWORD}
+      DB_PASSWORD_PATH: /etc/edumfa/db_password.txt
       DB_DATABASE: ${MARIADB_DATABASE}
       SECRET_KEY: ${EDUMFA_SECRET_KEY}
       EDUMFA_PEPPER: ${EDUMFA_PEPPER}
