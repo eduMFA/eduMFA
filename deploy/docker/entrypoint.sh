@@ -15,7 +15,7 @@ edumfa-manage -q create_audit_keys || true
 echo "Creating DB"
 # FIXME: this creates a exception trace on every attempt
 attempts=10
-until edumfa-manage -q create_tables --stamp
+until edumfa-manage -q create_tables 
 do
   if [[ $attempts -eq 0 ]]; then
     echo "Exhausted database connection tries. Stopping."
@@ -26,6 +26,12 @@ do
     attempts=$((attempts-1))
   fi
 done
+
+# Check and stamp DB
+STAMP=$(edumfa-manage -q db current -d /usr/local/lib/edumfa/migrations)
+if [[ -z "${STAMP//Running online/}" ]]; then
+  edumfa-manage -q db stamp head -d /usr/local/lib/edumfa/migrations
+fi
 
 # Upgrading DB
 echo "Upgrading Database"
