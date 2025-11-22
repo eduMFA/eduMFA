@@ -13,7 +13,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v5
+        - uses: actions/checkout@v6
         - name: Setup Python 3.11
           uses: actions/setup-python@v6
           with:
@@ -31,7 +31,7 @@ jobs:
   dist:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v5
+        - uses: actions/checkout@v6
         - name: Setup Python 3.10
           uses: actions/setup-python@v6
           with:
