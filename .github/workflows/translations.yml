@@ -13,7 +13,7 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Python 3.10
         uses: actions/setup-python@v6
         with:
@@ -35,7 +35,7 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
       - name: Cache and install gettext (msgmerge)
