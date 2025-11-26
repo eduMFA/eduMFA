@@ -545,6 +545,7 @@ def get_tokens_paginate(
     allowed_realms=None,
     tokeninfo=None,
     hidden_tokeninfo=None,
+    resolve_users=True,
 ):
     """
     This function is used to retrieve a token list, that can be displayed in
@@ -626,23 +627,23 @@ def get_tokens_paginate(
         tokenobject = create_tokenclass_object(token)
         if isinstance(tokenobject, TokenClass):
             token_dict = tokenobject.get_as_dict()
-            # add user information
-            # In certain cases the LDAP or SQL server might not be reachable.
-            # Then an exception is raised
-            token_dict["username"] = ""
-            token_dict["user_realm"] = ""
-            try:
-                userobject = tokenobject.user
-                if userobject:
-                    token_dict["username"] = userobject.login
-                    token_dict["user_realm"] = userobject.realm
-                    token_dict["user_editable"] = get_resolver_object(
-                        userobject.resolver
-                    ).editable
-            except Exception as exx:
-                log.error("User information can not be retrieved: {0!s}".format(exx))
-                log.debug(traceback.format_exc())
-                token_dict["username"] = "**resolver error**"
+            if resolve_users:
+                # add user information
+                # In certain cases the LDAP or SQL server might not be reachable.
+                # Then an exception is raised
+                token_dict["username"] = ""
+                token_dict["user_realm"] = ""
+                try:
+                    userobject = tokenobject.user
+                    if userobject:
+                        token_dict["username"] = userobject.login
+                        token_dict["user_realm"] = userobject.realm
+                        token_dict["user_editable"] = get_resolver_object(
+                            userobject.resolver).editable
+                except Exception as exx:
+                    log.error("User information can not be retrieved: {0!s}".format(exx))
+                    log.debug(traceback.format_exc())
+                    token_dict["username"] = "**resolver error**"
 
             if hidden_tokeninfo:
                 for key in list(token_dict["info"]):
