@@ -627,12 +627,12 @@ def get_tokens_paginate(
         tokenobject = create_tokenclass_object(token)
         if isinstance(tokenobject, TokenClass):
             token_dict = tokenobject.get_as_dict()
+            token_dict["user_realm"] = ""
             if resolve_users:
                 # add user information
                 # In certain cases the LDAP or SQL server might not be reachable.
                 # Then an exception is raised
                 token_dict["username"] = ""
-                token_dict["user_realm"] = ""
                 try:
                     userobject = tokenobject.user
                     if userobject:
@@ -644,6 +644,10 @@ def get_tokens_paginate(
                     log.error("User information can not be retrieved: {0!s}".format(exx))
                     log.debug(traceback.format_exc())
                     token_dict["username"] = "**resolver error**"
+            else:
+                tokenowner = tokenobject.token.first_owner
+                if tokenowner:
+                    token_dict["user_realm"] = tokenowner.realm.name
 
             if hidden_tokeninfo:
                 for key in list(token_dict["info"]):
