@@ -580,6 +580,8 @@ def get_tokens_paginate(
     :type allowed_realms: list
     :param tokeninfo: Return tokens with the given tokeninfo. The tokeninfo
         is a key/value dictionary
+    :param resolve_users: set to False, to disable resolving token owner to user object (default: True)
+    :type resolve_users: bool
     :return: dict with tokens, prev, next and count
     :rtype: dict
     """
