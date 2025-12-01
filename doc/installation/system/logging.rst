@@ -67,7 +67,7 @@ Such a YAML based configuration could look like this:
 
     loggers:
       # The logger name is the qualname
-      eduMFA:
+      edumfa:
         handlers:
         - file
         - mail
@@ -115,7 +115,7 @@ The old `python logging config file format <https://docs.python.org/3/library/lo
 
    [logger_eduMFA]
    handlers=file,mail
-   qualname=eduMFA
+   qualname=edumfa
    level=DEBUG
 
    [logger_root]

@@ -2599,6 +2599,12 @@ msgid "Request Mapping (JSON format)"
 msgstr "Solicitud de mapeo (JSON format)"
 
 #: components/config/controllers/eduMfaServerController.js
+msgid ""
+"Request to remote eduMFA server not successful. Check the fields URL, "
+"username and password for correctness."
+msgstr ""
+
+#: components/config/controllers/eduMfaServerController.js
 msgid "Request to remote eduMFA server successful."
 msgstr "Solicitud correcta al servidor privacidadIDEA remoto."
 

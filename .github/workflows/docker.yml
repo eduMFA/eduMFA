@@ -29,7 +29,7 @@ jobs:
         REGISTRY: ghcr.io
         IMAGE_NAME: ${{ github.repository }}  
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Log into registry ${{ env.REGISTRY }}
