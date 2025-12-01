@@ -83,7 +83,13 @@ The `.env` file should contain the following variables:
 - SUPERUSER_REALM: which realms should be superuser realms (optional)
 - EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional)
 
-For production you should replace the passwords and secrets with your own values. Alternatively, you can mount your own `edumfa.cfg` instead of configuring eduMFA via environment variables.
+You can also add a "_PATH" suffix to each variable name and pass a path to read the value from a file instead. For example instead of passing `SECRET_KEY`:
+
+.. code-block:: bash
+
+   SECRET_KEY_PATH: /etc/edumfa/secret_key.txt
+
+Alternatively, you can mount your own `edumfa.cfg` instead of configuring eduMFA via environment variables.
 
 To start eduMFA using Docker Compose, run:
 
