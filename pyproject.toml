@@ -45,7 +45,7 @@ docs = [
     "pyenchant==3.3.0",
     "Pygments==2.19.2",
     "snowballstemmer==3.0.1",
-    "Sphinx==8.2.3; python_version >= '3.11'",
+    "Sphinx==9.0.4; python_version >= '3.11'",
     "sphinxcontrib-applehelp==2.0.0",
     "sphinxcontrib-devhelp==2.0.0",
     "sphinxcontrib-htmlhelp==2.1.0",
