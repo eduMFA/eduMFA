@@ -151,7 +151,7 @@ typing-extensions==4.15.0
     # via
     #   alembic
     #   edumfa (setup.py)
-urllib3==2.5.0
+urllib3==2.6.2
     # via
     #   edumfa (setup.py)
     #   requests
