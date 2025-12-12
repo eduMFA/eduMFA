@@ -574,6 +574,7 @@ class WEBAUTHNGROUP:
     WEBAUTHN = "WebAuthn"
 
 def reset_all_user_tokens_passkey(user) -> None:
+    # TODO: Should be merged with normal decorator
     # Gather all tokens of the user that are not registration tokens and reset the failure counter
     reset_all = Match.user(
         g,
