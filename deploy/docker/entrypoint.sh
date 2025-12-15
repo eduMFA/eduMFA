@@ -5,6 +5,9 @@ GEN_PWD="$(openssl rand -base64 42)"
 EDUMFA_ADMIN_USER="${EDUMFA_ADMIN_USER:-admin}"
 EDUMFA_ADMIN_PASS="${EDUMFA_ADMIN_PASS:-$GEN_PWD}"
 
+# Make sure the config is working by executing it once.
+python3 "/etc/edumfa/edumfa.cfg"
+
 # Create enckey if doesn't exist yet
 edumfa-manage -q create_enckey || true
 
