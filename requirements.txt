@@ -20,7 +20,7 @@ beautifulsoup4==4.14.3
     # via edumfa (setup.py)
 blinker==1.9.0
     # via flask
-cachetools==6.2.3
+cachetools==6.2.4
     # via google-auth
 cbor2==5.7.1
     # via edumfa (setup.py)
