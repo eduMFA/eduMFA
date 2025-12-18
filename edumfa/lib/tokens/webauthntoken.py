@@ -572,6 +572,7 @@ class WEBAUTHNGROUP:
 
     WEBAUTHN = "WebAuthn"
 
+
 def reset_all_user_tokens_passkey(user) -> None:
     # TODO: Should be merged with normal decorator
     # Gather all tokens of the user that are not registration tokens and reset the failure counter
@@ -584,7 +585,7 @@ def reset_all_user_tokens_passkey(user) -> None:
     if not reset_all:
         return
     tokens = get_tokens_from_serial_or_user(None, user=user)
-    log.debug("Reset failcounter of all tokens of {0!s}".format(user))
+    log.debug(f"Reset failcounter of all tokens of {user}")
     for tok_obj_reset in tokens:
         if tok.get_class_type() in ["registration"]:
             continue
@@ -592,7 +593,7 @@ def reset_all_user_tokens_passkey(user) -> None:
             tok_obj_reset.reset()
         except Exception:
             log.warning(
-                "Could not reset failure for token {0!s} of user {1!s}".format(tok_obj_reset.serial, user)
+                f"Could not reset failure for token {tok_obj_reset.serial} of user {user}"
             )
 
 
@@ -1578,7 +1579,7 @@ class WebAuthnTokenClass(TokenClass):
                         ),
                     )
                     token.inc_count_auth_success()
-                    reset_all_user_tokens_passkey(token.user)                    
+                    reset_all_user_tokens_passkey(token.user)
                     return True, reply_dict
                 else:
                     return False, reply_dict

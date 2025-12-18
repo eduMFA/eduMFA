@@ -232,14 +232,18 @@ def create(
     parsed_sqluri = sqlalchemy.engine.url.make_url(sqluri)
     sqltype = parsed_sqluri.drivername
 
-    sqlfile = "%s/dbdump-%s.sql" % (target_dir, DATE)
+    sqlfile = f"{target_dir}/dbdump-{DATE}.sql"
     if sqltype == "sqlite":
-        sqlfile = "%s/db-%s.sqlite" % (target_dir, DATE)
-    backup_file = "%s/%s-%s.tgz" % (target_dir, BASE_NAME, DATE)
+        sqlfile = f"{target_dir}/db-{DATE}.sqlite"
+    backup_file = f"{target_dir}/{BASE_NAME}-{DATE}.tgz"
 
-    sqlfile_descriptor = os.open(path=sqlfile, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT))
+    sqlfile_descriptor = os.open(
+        path=sqlfile, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT)
+    )
     os.close(sqlfile_descriptor)
-    backup_file_descriptor = os.open(path=backup_file, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT))
+    backup_file_descriptor = os.open(
+        path=backup_file, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT)
+    )
     os.close(backup_file_descriptor)
 
     if sqltype == "sqlite":

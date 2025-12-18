@@ -716,7 +716,11 @@ def _init_ca(config):
     f.close()
 
     # create the privacy key and set accesss rights
-    descriptor = os.open(path=f"{config.directory}/cakey.pem", mode=0o600, flags=(os.O_WRONLY | os.O_CREAT))
+    descriptor = os.open(
+        path=f"{config.directory}/cakey.pem",
+        mode=0o600,
+        flags=(os.O_WRONLY | os.O_CREAT),
+    )
     with open(descriptor, "w") as f:
         f.write("")
 
