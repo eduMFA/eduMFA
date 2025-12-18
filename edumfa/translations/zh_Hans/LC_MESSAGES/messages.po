@@ -2582,6 +2582,10 @@ msgid "Specify the time step of the time-based OTP token."
 msgstr ""
 
 #: lib/tokens/totptoken.py
+msgid "Specify whether to enable timeshift."
+msgstr ""
+
+#: lib/tokens/totptoken.py
 msgid "TOTP: Time based One Time Passwords."
 msgstr "TOTP：基于时间的一次性密码。"
 

@@ -2276,6 +2276,8 @@ msgstr "Geben Sie die Basis-URL des eduMFA Servers an."
 msgid ""
 "Please remember to restart eduMFA when modifying an existing LDAP resolver."
 msgstr ""
+"Änderungen an existierenden LDAP-Resolvern erfordern einen Neustart "
+"von eduMFA."
 
 #: components/token/views/token.enrolled.edupush.html
 #, fuzzy
@@ -2586,6 +2588,14 @@ msgid "Request Mapping (JSON format)"
 msgstr "Anfrage Mapping (JSON Format)"
 
 #: components/config/controllers/eduMfaServerController.js
+msgid ""
+"Request to remote eduMFA server not successful. Check the fields URL, "
+"username and password for correctness."
+msgstr ""
+"Die HTTP Anfrage an den entfernten eduMFA Server wurde nicht erfolgreich "
+"beantwortet. Überprüfen Sie die URL, den Usernamen und das Passwort."
+
+#: components/config/controllers/eduMfaServerController.js
 msgid "Request to remote eduMFA server successful."
 msgstr ""
 "Die HTTP Anfrage an den entfernten eduMFA Server wurde erfolgreich "
@@ -2650,7 +2660,7 @@ msgstr "Antwort beinhaltet (JSON Format):"
 
 #: components/config/views/dialog.ldap_restart.html
 msgid "Restart eduMFA"
-msgstr ""
+msgstr "eduMFA neustarten"
 
 #: components/token/views/token.details.html
 msgid "Resync Token"

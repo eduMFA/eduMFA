@@ -27,7 +27,7 @@ jobs:
         python-version: [ '3.10', '3.14' ]
     name: pytest ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:

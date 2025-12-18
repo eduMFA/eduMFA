@@ -3032,6 +3032,10 @@ msgid "Specify the time step of the time-based OTP token."
 msgstr "Geef de tijdsstap van het tijdsgebaseerd OTP-token."
 
 #: lib/tokens/totptoken.py
+msgid "Specify whether to enable timeshift."
+msgstr ""
+
+#: lib/tokens/totptoken.py
 msgid "TOTP: Time based One Time Passwords."
 msgstr "TOTP: tijd gebaseerd One Time Passwords."
 

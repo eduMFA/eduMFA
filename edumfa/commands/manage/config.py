@@ -189,6 +189,7 @@ def importer(infile, types, name=None):
     help="Purge not existing items and keep old (update can be enabled using -u).",
 )
 def import_full_config(file, cleanup, update, purge):
+    """Import the full configuration from a file."""
     data = {}
     if file:
         if os.path.isfile(file):
@@ -231,10 +232,15 @@ def import_full_config(file, cleanup, update, purge):
 @click.option(
     "--archive",
     "-a",
+    is_flag=True,
     help="Compress the created config-backup as tar.gz archive instead of printing to standard out.",
 )
 @click.option("--directory", "-d", help="Directory where the backup will be stored.")
 def export_full_config(passwords, archive, directory):
+    """
+    Export the full configuration to a file.
+    If the filename is omitted, the configuration is written to STDOUT.
+    """
     click.echo("Exporting eduMFA configuration.", file=sys.stderr)
     data = {
         "resolver": get_conf_resolver(print_passwords=passwords),
@@ -244,17 +250,17 @@ def export_full_config(passwords, archive, directory):
     if archive or directory:
         from socket import gethostname
 
-        DATE = datetime.now().strftime("%Y%m%d-%H%M")
-        BASE_NAME = "edumfa-config-backup"
-        HOSTNAME = gethostname()
+        date = datetime.now().strftime("%Y%m%d-%H%M")
+        base_name = "edumfa-config-backup"
+        hostname = gethostname()
         if not directory:
             directory = "./"
         else:
             call(["mkdir", "-p", directory])
-        config_backup_file_base = f"{directory}/{BASE_NAME}-{HOSTNAME}-{DATE}"
+        config_backup_file_base = f"{directory}/{base_name}-{hostname}-{date}"
         config_backup_file = f"{config_backup_file_base}.py"
 
-        with open(config_backup_file) as f:
+        with open(config_backup_file, "w") as f:
             conf_export(data, f)
         if archive:
             config_backup_archive = f"{config_backup_file_base}.tar.gz"

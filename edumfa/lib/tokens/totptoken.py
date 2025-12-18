@@ -59,6 +59,7 @@ class TotpTokenClass(HotpTokenClass):
     previous_otp_offset = 0
 
     desc_timestep = _("Specify the time step of the time-based OTP token.")
+    desc_timeshift = _("Specify whether to enable timeshift.")
 
     @log_with(log)
     def __init__(self, db_token):
@@ -131,6 +132,11 @@ class TotpTokenClass(HotpTokenClass):
                         "type": "bool",
                         "desc": TotpTokenClass.desc_key_gen,
                     },
+                    "totp_timeshift": {
+                        "type": "str",
+                        "value": ["default", "True", "False"],
+                        "desc": TotpTokenClass.desc_timeshift,
+                    },
                     "2step": {
                         "type": "str",
                         "value": ["allow", "force"],
@@ -152,6 +158,11 @@ class TotpTokenClass(HotpTokenClass):
                         "type": "int",
                         "value": [6, 8],
                         "desc": TotpTokenClass.desc_otp_len,
+                    },
+                    "totp_timeshift": {
+                        "type": "str",
+                        "value": ["default", "True", "False"],
+                        "desc": TotpTokenClass.desc_timeshift,
                     },
                     "2step": {
                         "type": "str",
@@ -715,7 +726,7 @@ class TotpTokenClass(HotpTokenClass):
         This method returns a dictionary with default settings for token
         enrollment.
         These default settings are defined in SCOPE.USER or SCOPE.ADMIN and are
-        totp_hashlib, totp_timestep and totp_otplen.
+        totp_hashlib, totp_timeshift, totp_timestep and totp_otplen.
         If these are set, the user or admin will only be able to enroll tokens
         with these values.
 
@@ -742,6 +753,18 @@ class TotpTokenClass(HotpTokenClass):
         ).action_values(unique=True)
         if hashlib_pol:
             ret["hashlib"] = list(hashlib_pol)[0]
+
+        timeshift_pol = Match.generic(
+            g,
+            scope=role,
+            action="totp_timeshift",
+            user=username,
+            realm=userrealm,
+            adminuser=adminuser,
+            adminrealm=adminrealm,
+        ).action_values(unique=True)
+        if timeshift_pol:
+            ret["useTimeShift"] = list(timeshift_pol)[0]
 
         timestep_pol = Match.generic(
             g,

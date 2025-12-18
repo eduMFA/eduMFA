@@ -2640,6 +2640,12 @@ msgid "Request Mapping (JSON format)"
 msgstr "請求映射（JSON 格式）"
 
 #: components/config/controllers/eduMfaServerController.js
+msgid ""
+"Request to remote eduMFA server not successful. Check the fields URL, "
+"username and password for correctness."
+msgstr ""
+
+#: components/config/controllers/eduMfaServerController.js
 #, fuzzy
 msgid "Request to remote eduMFA server successful."
 msgstr "請求遠程eduMFA 伺服器成功。"
