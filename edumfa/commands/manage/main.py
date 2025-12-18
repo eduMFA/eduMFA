@@ -18,6 +18,8 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import os
+
 import click
 from flask.cli import FlaskGroup, run_command
 
@@ -48,13 +50,16 @@ from edumfa.lib.utils import get_version_number
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
-def create_prod_app():
-    return create_app("production", silent=True)
+def _create_app():
+    if not os.getenv("_EDUMFA_MANAGE_COMPLETE"):
+        return create_app("production", silent=True)
+    else:
+        return create_app("completion")
 
 
 @click.group(
     cls=FlaskGroup,
-    create_app=create_prod_app,
+    create_app=_create_app,
     context_settings=CONTEXT_SETTINGS,
     epilog="Check out our docs at https://edumfa.readthedocs.io/ for more details",
 )
