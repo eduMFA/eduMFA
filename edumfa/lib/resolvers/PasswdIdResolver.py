@@ -39,15 +39,11 @@ import os
 import re
 import sys
 
+from passlib.context import CryptContext
+
 from edumfa.lib.utils import convert_column_to_unicode, to_bytes
 
 from .UserIdResolver import UserIdResolver
-
-# Python 3.13 dropped crypt package, so we need to import crypt_r
-if sys.version_info >= (3, 13):
-    import crypt_r as crypt
-else:
-    import crypt
 
 log = logging.getLogger(__name__)
 ENCODING = "utf-8"
@@ -206,14 +202,15 @@ class IdResolver(UserIdResolver):
                 err = "Sorry, currently no support for shadow passwords"
                 log.error(f"{err}")
                 raise NotImplementedError(err)
-            cp = crypt.crypt(password, cryptedpasswd)
-            log.debug(f"encrypted pass is {cp}")
-            if crypt.crypt(password, cryptedpasswd) == cryptedpasswd:
-                log.info(f"successfully authenticated user uid {uid}")
-                return True
-            else:
-                log.warning(f"user uid {uid} failed to authenticate")
-                return False
+            passlib_context = CryptContext(schemes=["sha512_crypt", "sha256_crypt", "md5_crypt", "des_crypt"])
+            try:
+                if passlib_context.verify(password, cryptedpasswd):
+                    log.info(f"successfully authenticated user uid {uid!s}")
+                    return True
+            except ValueError:
+                pass # Log below
+            log.warning(f"user uid {uid!s} failed to authenticate")
+            return False
         else:
             log.warning(
                 "Failed to verify password. No encrypted password found in file"

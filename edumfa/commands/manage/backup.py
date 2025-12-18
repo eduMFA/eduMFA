@@ -44,7 +44,7 @@ def _write_mysql_defaults(filename, username, password):
     """
     Write the defaults_file for mysql commands
 
-    :param filename: THe name of the file
+    :param filename: The name of the file
     :param username: The username to connect to the database
     :param password: The password to connect to the database
     :return:
@@ -58,7 +58,6 @@ password={password}
 no-tablespaces=True"""
         )
 
-    os.chmod(filename, 0o600)
     # set correct owner, if possible
     if os.geteuid() == 0:
         directory_stat = os.stat(os.path.dirname(filename))
@@ -229,17 +228,23 @@ def create(
         encfile_stat = os.stat(current_app.config.get("EDUMFA_ENCFILE"))
         os.chown(target_dir, encfile_stat.st_uid, encfile_stat.st_gid)
 
-    sqlfile = f"{target_dir}/dbdump-{DATE}.sql"
-    backup_file = f"{target_dir}/{BASE_NAME}-{DATE}.tgz"
-
     sqluri = current_app.config.get("SQLALCHEMY_DATABASE_URI")
     parsed_sqluri = sqlalchemy.engine.url.make_url(sqluri)
     sqltype = parsed_sqluri.drivername
 
+    sqlfile = "%s/dbdump-%s.sql" % (target_dir, DATE)
+    if sqltype == "sqlite":
+        sqlfile = "%s/db-%s.sqlite" % (target_dir, DATE)
+    backup_file = "%s/%s-%s.tgz" % (target_dir, BASE_NAME, DATE)
+
+    sqlfile_descriptor = os.open(path=sqlfile, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT))
+    os.close(sqlfile_descriptor)
+    backup_file_descriptor = os.open(path=backup_file, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT))
+    os.close(backup_file_descriptor)
+
     if sqltype == "sqlite":
         productive_file = sqluri[len("sqlite:///") :]
         click.echo(f"Backup SQLite {productive_file}")
-        sqlfile = f"{target_dir}/db-{DATE}.sqlite"
         call(["cp", productive_file, sqlfile])
     elif sqltype in MYSQL_DIALECTS:
         username = parsed_sqluri.username
@@ -298,4 +303,3 @@ def create(
 
     call(backup_call)
     os.unlink(sqlfile)
-    os.chmod(backup_file, 0o600)

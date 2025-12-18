@@ -260,13 +260,17 @@ def export_full_config(passwords, archive, directory):
         config_backup_file_base = f"{directory}/{base_name}-{hostname}-{date}"
         config_backup_file = f"{config_backup_file_base}.py"
 
-        with open(config_backup_file, "w") as f:
+        descriptor = os.open(path=config_backup_file, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT))
+        with open(descriptor, "w") as f:
             conf_export(data, f)
         if archive:
             config_backup_archive = f"{config_backup_file_base}.tar.gz"
-            tar = tarfile.open(config_backup_archive, "w:gz")
-            tar.add(config_backup_file)
-            tar.close()
+            # create file with correct permissions
+            archive_descriptor = os.open(path=config_backup_archive, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT))
+            os.close(archive_descriptor)
+            # write to file
+            with tarfile.open(config_backup_archive, "w:gz") as tar:
+                tar.add(config_backup_file)
             # cleanup
             if tarfile.is_tarfile(config_backup_archive):
                 os.remove(config_backup_file)
