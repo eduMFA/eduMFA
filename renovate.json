@@ -4,7 +4,7 @@
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
-      "matchPackageNames": ["actions/setup-python"],
+      "matchDepNames": ["python"],
       "enabled": false
     }
   ]
