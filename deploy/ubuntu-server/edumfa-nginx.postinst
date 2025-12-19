@@ -192,10 +192,15 @@ set_path() {
   ln -sf /opt/edumfa/bin/edumfa-token-janitor /usr/bin/
 }
 
+install_completions() {
+  _EDUMFA_MANAGE_COMPLETE=bash_source  edumfa-manage > /etc/bash_completion.d/edumfa-manage-prompt
+}
+
 case "$1" in
   
   configure)
     set_path
+    install_completions
     create_user
     adapt_edumfa_cfg
     create_files
