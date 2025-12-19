@@ -1,3 +1,9 @@
+edumfa-server (2.9.0~pre1-1{{CODENAME}}) {{CODENAME}}; urgency=medium
+ 
+  * update version number
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Wed, 07 May 2025 14:00:00 +0200
+
 edumfa-server (2.8.0{{CODENAME}}) {{CODENAME}}; urgency=medium
  
   * update version number

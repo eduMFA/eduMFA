@@ -33,6 +33,100 @@
         * Replace all occurrences of `privacyideaserver_write` in `policy.action` with `edumfaserver_write`
         * Replace all occurrences of `privacyidea.` in `smsgateway.providermodule` with `edumfa.`
 
+## eduMFA 2.9.0
+
+This release focuses on stability, security, and long-term maintainability. It contains several user-facing improvements, expanded Python support, and a modernized toolchain. Due to human capacity bottlenecks, this release turned out to be larger than expected. Future release are planned to be more frequent and smaller.
+
+> [!CAUTION]
+>
+> This release drops support for Python 3.9. Please ensure your environment is running Python 3.10 or higher before upgrading.
+>
+
+> [!CAUTION]
+>
+> The 3.0.0 release of eduMFA is planned to remove multiple features. This will be announced as soon as there is a complete list. A work in progress list of removals can be found at: https://github.com/eduMFA/eduMFA/issues/875
+>
+
+### Changed
+
+- enlarged multiple audit database columns ([#720](https://github.com/eduMFA/eduMFA/pull/720), [#905](https://github.com/eduMFA/eduMFA/pull/905)) (@aleyna72072)
+
+### Added
+
+- Added support for Python 3.14 ([#796](https://github.com/eduMFA/eduMFA/pull/796)) (@Luc1412)
+- Added creation timestamps to tokens ([#746](https://github.com/eduMFA/eduMFA/pull/746)) (@fritterhoff)
+- Added a new policy to enforce a TOTP timeshift setting ([#836](https://github.com/eduMFA/eduMFA/pull/836)) (@aleyna72072)
+	+ This can be used to hide the timeshift field in the enrollment screen.
+- Added configurable timeouts for Firebase requests ([#694](https://github.com/eduMFA/eduMFA/pull/694)) (@jan-peterfriebe)
+- Added a restart request popup when modifying LDAP resolvers ([#676](https://github.com/eduMFA/eduMFA/pull/676)) (@aleyna72072)
+	+ This is the result of a memory leak fix for ldapresolvers and does not affect other resolvers.
+	+ Contributions welcome to make this popup unnecessary again!
+- Added a quiet flag to `edumfa-manage` ([#751](https://github.com/eduMFA/eduMFA/pull/751)) (@fritterhoff)
+- Enabled Alembic logging ([#756](https://github.com/eduMFA/eduMFA/pull/756)) (@fritterhoff)
+- Enabled simple configuration via environment variables for container images ([#781](https://github.com/eduMFA/eduMFA/pull/781), [#854](https://github.com/eduMFA/eduMFA/pull/854)) (@aleyna72072)
+- Re-introduce the version number in the footer ([#859](https://github.com/eduMFA/eduMFA/pull/859)) (@aleyna72072)
+- Autofocus the response input field in the UI ([#719](https://github.com/eduMFA/eduMFA/pull/719)) (@flowdnb)
+- Added support for custom paths in Ubuntu install scripts ([#552](https://github.com/eduMFA/eduMFA/pull/552)) (@Luc1412)
+
+### Removed
+
+- Dropped support for Python 3.9 ([#796](https://github.com/eduMFA/eduMFA/pull/796)) (@Luc1412)
+- Apache2 packages no longer generate PGP keys for hardware token import on install ([#682](https://github.com/eduMFA/eduMFA/pull/682)) (@aleyna72072)
+	+ This was undocumented behaviour which caused problems on Ubuntu Noble.
+	+ PGP keys can still be created manually.
+
+### Fixed
+
+- Fixed `reset_all_tokens` not working for passkeys ([#845](https://github.com/eduMFA/eduMFA/pull/845)) (@fritterhoff)
+- Fixed remote token enrollment via Web UI ([#861](https://github.com/eduMFA/eduMFA/pull/861)) (@aleyna72072)
+- Improved handling of dangling passkeys ([#747](https://github.com/eduMFA/eduMFA/pull/747)) (@fritterhoff)
+- Fixed permissions being applied too late on backups ([#894](https://github.com/eduMFA/eduMFA/pull/894)) (@aleyna72072)
+- Improved handling of non-existing admin users ([#725](https://github.com/eduMFA/eduMFA/pull/725)) (@fritterhoff)
+- Fixed inflated dashboard authentication counters ([#890](https://github.com/eduMFA/eduMFA/pull/890)) (@aleyna72072)
+- Improved resilience of challenge cleanup and client applications ([#607](https://github.com/eduMFA/eduMFA/pull/607))  (@fritterhoff)
+- Fixed LDAP resolver caching for resolvers with mostly equal configuration ([#691](https://github.com/eduMFA/eduMFA/pull/691)) (@aleyna72072)
+- Fixed `config export full` ([#891](https://github.com/eduMFA/eduMFA/pull/891)) (@aleyna72072)
+- Add handling for malformed Yubikey AES token secrets ([#820](https://github.com/eduMFA/eduMFA/pull/820)) (@aleyna72072)
+- Improve handling of malformed otp length policy ([#830](https://github.com/eduMFA/eduMFA/pull/830)) (@aleyna72072)
+- Fixed username parsing from dropdowns containing parentheses ([#921](https://github.com/eduMFA/eduMFA/pull/921)) (@aleyna72072)
+- Fixed MySQL migration issues during upgrades ([#804](https://github.com/eduMFA/eduMFA/pull/804)) (@aleyna72072)
+- Improved error handling and messaging for malformed policies and OTP settings ([#830](https://github.com/eduMFA/eduMFA/pull/830)) (@aleyna72072)
+- Fixed building Ubuntu packages as described in the documentation ([#680](https://github.com/eduMFA/eduMFA/pull/680)) (@aleyna72072)
+- Explicitly specify unbroken mysql charset in Ubuntu packages ([#776](https://github.com/eduMFA/eduMFA/pull/776)) (@aleyna72072)
+- Fixed import and improved error message related to grpc modules ([#750](https://github.com/eduMFA/eduMFA/pull/750)) (@fritterhoff)
+- Fix untranslated verify OTP messages ([#772](https://github.com/eduMFA/eduMFA/pull/772)) (@aleyna72072)
+- Replace deprecated crypt library ([#754](https://github.com/eduMFA/eduMFA/pull/754)) (@fritterhoff, @aleyna72072)
+
+### Documentation
+
+- Improved translation generation and documentation ([#778](https://github.com/eduMFA/eduMFA/pull/778), [#869](https://github.com/eduMFA/eduMFA/pull/869), [#885](https://github.com/eduMFA/eduMFA/pull/885)) (@Luc1412, @fritterhoff)
+- Added spec recommendations, documentation fixes, notes ([#704](https://github.com/eduMFA/eduMFA/pull/704), [#860](https://github.com/eduMFA/eduMFA/pull/860), [#904](https://github.com/eduMFA/eduMFA/pull/904)) (@aleyna72072)
+- Clarified API key behavior ([#714](https://github.com/eduMFA/eduMFA/pull/714)) (@aleyna72072)
+- Updated YubiKey enrollment documentation due to Yubico EOL'ing the old tools ([#820](https://github.com/eduMFA/eduMFA/pull/820)) (@aleyna72072)
+
+### Infrastructure, CI & Tooling
+
+- Pinned Docker digests and Python versions for reproducible builds ([#724](https://github.com/eduMFA/eduMFA/pull/724), [#826](https://github.com/eduMFA/eduMFA/pull/826)) (@fritterhoff)
+- Reworked GitHub Actions workflows ([#853](https://github.com/eduMFA/eduMFA/pull/853))
+- Added Ruff formatter and enforced formatting via CI ([#767](https://github.com/eduMFA/eduMFA/pull/767), [#816](https://github.com/eduMFA/eduMFA/pull/816), [#850](https://github.com/eduMFA/eduMFA/pull/850), [#855](https://github.com/eduMFA/eduMFA/pull/855)) (@Luc1412)
+- Implemented isort linting rules ([#789](https://github.com/eduMFA/eduMFA/pull/789)) (@Luc1412)
+- Improved Python version constraints and license metadata ([#773](https://github.com/eduMFA/eduMFA/pull/773)) (@Luc1412)
+- Improved Docker image behavior and configuration ([#779](https://github.com/eduMFA/eduMFA/pull/779), [#880](https://github.com/eduMFA/eduMFA/pull/880)) (@aleyna72072)
+- Added git-blame ignore rules for large formatting-only changes ([#786](https://github.com/eduMFA/eduMFA/pull/786), [#801](https://github.com/eduMFA/eduMFA/pull/801)) (@Luc1412)
+- Improved type hints for intellisense ([#726](https://github.com/eduMFA/eduMFA/pull/726)) (@fritterhoff)
+
+### Dependency Updates
+
+- Regular dependency maintenance and security updates across the entire stack (multiple PRs via Renovate)
+- Security-related updates including Flask, urllib3, cryptography, and related packages ([#638](https://github.com/eduMFA/eduMFA/pull/638), [#679](https://github.com/eduMFA/eduMFA/pull/679), [#918](https://github.com/eduMFA/eduMFA/pull/918))
+- Major updates to Redis, SQLAlchemy, Alembic, pytest, grpcio, and build tooling ([#753](https://github.com/eduMFA/eduMFA/pull/753), [#824](https://github.com/eduMFA/eduMFA/pull/824), [#878](https://github.com/eduMFA/eduMFA/pull/878))
+
+### New Contributors
+
+Thanks to **@aleyna72072**, **@flowdnb**, and **@jan-peterfriebe** for their first contributions 🎉!
+
+**Full Changelog:** <https://github.com/eduMFA/eduMFA/compare/v2.8.0...v2.9.0>
+
 ## eduMFA 2.8.0
 
 > [!CAUTION]
