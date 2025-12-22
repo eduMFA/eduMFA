@@ -65,7 +65,7 @@ test = [
     "mock==5.2.0",
     "packaging==25.0",
     "pluggy==1.6.0",
-    "pyparsing==3.2.5",
+    "pyparsing==3.3.0",
     "pytest==9.0.2",
     "pytest-cov==7.0.0",
     "pytest-github-actions-annotate-failures==0.3.0",
