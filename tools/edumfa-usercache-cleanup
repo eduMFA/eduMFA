@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # 2017-04-24 Friedrich Weber <friedrich.weber@netknights.it>
 #
 # Copyright (c) 2017, Friedrich Weber
@@ -101,20 +100,14 @@ def delete(noaction):
             )
         for entry in entries:
             print(
-                "{:<5} {:<10} {:<10} {:<30} {:<10}".format(
-                    entry.id,
-                    entry.username,
-                    entry.resolver,
-                    entry.timestamp.isoformat(),
-                    entry.user_id,
-                )
+                f"{entry.id:<5} {entry.username:<10} {entry.resolver:<10} {entry.timestamp.isoformat():<30} {entry.user_id:<10}"
             )
-        print("{} entries".format(len(entries)))
+        print(f"{len(entries)} entries")
         if not noaction:
             for entry in entries:
-                print("Deleting entry with id={} ...".format(entry.id))
+                print(f"Deleting entry with id={entry.id} ...")
                 entry.delete()
-            print("Deleted {} expired entries.".format(len(entries)))
+            print(f"Deleted {len(entries)} expired entries.")
             db.session.commit()
         else:
             print("'--noaction' was passed, not doing anything.")

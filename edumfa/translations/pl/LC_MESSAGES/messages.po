@@ -2967,3 +2967,15 @@ msgstr ""
 #~ " transports)"
 #~ msgstr ""
 
+#~ msgid ""
+#~ "Authentication failure. The username {0!s} "
+#~ "is not allowed to impersonate via "
+#~ "JWT."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Authentication failure. The username {!s} "
+#~ "is not allowed to impersonate via "
+#~ "JWT."
+#~ msgstr ""
+

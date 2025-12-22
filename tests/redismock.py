@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 2015-06-04 Cornelius Kölbel <cornelius@privacyidea.org>
 
@@ -95,7 +94,7 @@ class RedisMock:
         self.data = data
 
     def start(self):
-        import mock
+        from unittest import mock
 
         def unbound_on_Redis(hostname):
             self.redis_obj = Redis()

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -78,9 +77,7 @@ def get_cache_time():
     try:
         seconds = int(get_from_config(EXPIRATION_SECONDS, "0"))
     except ValueError:
-        log.info(
-            "Non-Integer value stored in system config {0!s}".format(EXPIRATION_SECONDS)
-        )
+        log.info(f"Non-Integer value stored in system config {EXPIRATION_SECONDS}")
 
     return datetime.timedelta(seconds=seconds)
 
@@ -111,9 +108,7 @@ def delete_user_cache(resolver=None, username=None, expired=None):
     rowcount = db.session.query(UserCache).filter(filter_condition).delete()
     db.session.commit()
     log.info(
-        "Deleted {} entries from the user cache (resolver={!r}, username={!r}, expired={!r})".format(
-            rowcount, resolver, username, expired
-        )
+        f"Deleted {rowcount} entries from the user cache (resolver={resolver!r}, username={username!r}, expired={expired!r})"
     )
     return rowcount
 
@@ -132,9 +127,7 @@ def add_to_cache(username, used_login, resolver, user_id):
         timestamp = datetime.datetime.now()
         record = UserCache(username, used_login, resolver, user_id, timestamp)
         log.debug(
-            "Adding record to cache: ({!r}, {!r}, {!r}, {!r}, {!r})".format(
-                username, used_login, resolver, user_id, timestamp
-            )
+            f"Adding record to cache: ({username!r}, {used_login!r}, {resolver!r}, {user_id!r}, {timestamp!r})"
         )
         record.save()
 
@@ -202,9 +195,7 @@ def cache_username(wrapped_function, userid, resolvername):
     if result:
         username = result.username
         log.debug(
-            "Found username of {!r}/{!r} in cache: {!r}".format(
-                userid, resolvername, username
-            )
+            f"Found username of {userid!r}/{resolvername!r} in cache: {username!r}"
         )
         return username
     else:
