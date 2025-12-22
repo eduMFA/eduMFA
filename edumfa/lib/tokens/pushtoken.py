@@ -274,7 +274,7 @@ def _build_verify_object(pubkey_pem):
 
 class PushTokenClass(TokenClass):
     """
-    The :ref:`push_token` uses the Firebase service to send challenges to the
+    The :ref:`edupush_token` uses the Firebase service to send challenges to the
     user's smartphone. The user confirms on the smartphone, signs the
     challenge and sends it back to eduMFA.
 
