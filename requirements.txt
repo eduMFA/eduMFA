@@ -20,7 +20,7 @@ beautifulsoup4==4.14.3
     # via edumfa (setup.py)
 blinker==1.9.0
     # via flask
-cachetools==6.2.2
+cachetools==6.2.4
     # via google-auth
 cbor2==5.7.1
     # via edumfa (setup.py)
@@ -59,11 +59,11 @@ flask-sqlalchemy==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-migrate
-google-auth==2.43.0
+google-auth==2.45.0
     # via edumfa (setup.py)
 grpcio==1.76.0
     # via edumfa (setup.py)
-huey==2.5.4
+huey==2.5.5
     # via edumfa (setup.py)
 idna==3.11
     # via requests
@@ -140,9 +140,9 @@ six==1.17.0
     #   smpplib
 smpplib==2.2.4
     # via edumfa (setup.py)
-soupsieve==2.8
+soupsieve==2.8.1
     # via beautifulsoup4
-sqlalchemy==2.0.44
+sqlalchemy==2.0.45
     # via
     #   alembic
     #   edumfa (setup.py)
@@ -151,7 +151,7 @@ typing-extensions==4.15.0
     # via
     #   alembic
     #   edumfa (setup.py)
-urllib3==2.5.0
+urllib3==2.6.2
     # via
     #   edumfa (setup.py)
     #   requests

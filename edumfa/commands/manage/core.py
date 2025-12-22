@@ -95,7 +95,8 @@ def create_enckey(enckey_b64=None):
     if os.path.isfile(filename):
         click.echo(f"The file '{filename}' already exists.")
         sys.exit(1)
-    with open(filename, "wb") as f:
+    descriptor = os.open(path=filename, mode=0o400, flags=(os.O_WRONLY | os.O_CREAT))
+    with open(descriptor, "wb") as f:
         if enckey_b64 is None:
             f.write(DefaultSecurityModule.random(96))
         else:
@@ -106,9 +107,7 @@ def create_enckey(enckey_b64=None):
                 sys.exit(1)
             f.write(bin_enckey)
     click.echo(f"Encryption key written to {filename}")
-    os.chmod(filename, 0o400)
-    click.echo(f"The file permission of {filename} was set to 400!")
-    click.echo("Please ensure, that it is owned by the right user.")
+    click.echo("Please ensure that it is owned by the right user.")
 
 
 @core_cli.command("create_pgp_keys")
@@ -178,7 +177,9 @@ def create_audit_keys(keysize):
         format=serialization.PrivateFormat.TraditionalOpenSSL,
         encryption_algorithm=serialization.NoEncryption(),
     )
-    with open(filename, "wb") as f:
+
+    descriptor = os.open(path=filename, mode=0o400, flags=(os.O_WRONLY | os.O_CREAT))
+    with open(descriptor, "wb") as f:
         f.write(priv_pem)
 
     pub_key = new_key.public_key()
@@ -192,8 +193,6 @@ def create_audit_keys(keysize):
     click.echo(
         f"Signing keys written to {filename} and {current_app.config.get('EDUMFA_AUDIT_KEY_PUBLIC')}"
     )
-    os.chmod(filename, 0o400)
-    click.echo(f"The file permission of {filename} was set to 400!")
     click.echo("Please ensure, that it is owned by the right user.")
 
 

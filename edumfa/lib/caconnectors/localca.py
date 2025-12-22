@@ -729,12 +729,10 @@ def _init_ca(config):
     f.close()
 
     # create the privacy key and set accesss rights
-    f = open("{0!s}/cakey.pem".format(config.directory), "w")
-    f.write("")
-    f.close()
-    import stat
+    descriptor = os.open(path=f"{config.directory}/cakey.pem", mode=0o600, flags=(os.O_WRONLY | os.O_CREAT))
+    with open(descriptor, "w") as f:
+        f.write("")
 
-    os.chmod("{0!s}/cakey.pem".format(config.directory), stat.S_IRUSR | stat.S_IWUSR)
     command = "openssl genrsa -out {0!s}/cakey.pem {1!s}".format(
         config.directory, config.keysize
     )

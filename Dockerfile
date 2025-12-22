@@ -1,12 +1,12 @@
 # Build stage
-FROM python:3.14.0-slim-trixie@sha256:0aecac02dc3d4c5dbb024b753af084cafe41f5416e02193f1ce345d671ec966e AS builder
+FROM python:3.14.2-slim-trixie@sha256:2751cbe93751f0147bc1584be957c6dd4c5f977c3d4e0396b56456a9fd4ed137 AS builder
 WORKDIR /tmp
 COPY . .
 RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 # Final stage
-FROM python:3.14.0-slim-trixie@sha256:0aecac02dc3d4c5dbb024b753af084cafe41f5416e02193f1ce345d671ec966e
+FROM python:3.14.2-slim-trixie@sha256:2751cbe93751f0147bc1584be957c6dd4c5f977c3d4e0396b56456a9fd4ed137
 
 # Install system dependencies
 RUN apt-get update && \
