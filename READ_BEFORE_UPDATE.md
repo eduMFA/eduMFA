@@ -47,10 +47,6 @@ This release focuses on stability, security, and long-term maintainability. It c
 > The 3.0.0 release of eduMFA is planned to remove multiple features. This will be announced as soon as there is a complete list. A work in progress list of removals can be found at: https://github.com/eduMFA/eduMFA/issues/875
 >
 
-### Changed
-
-- enlarged multiple audit database columns ([#720](https://github.com/eduMFA/eduMFA/pull/720), [#905](https://github.com/eduMFA/eduMFA/pull/905)) (@aleyna72072)
-
 ### Added
 
 - Added support for Python 3.14 ([#796](https://github.com/eduMFA/eduMFA/pull/796)) (@Luc1412)
@@ -74,6 +70,10 @@ This release focuses on stability, security, and long-term maintainability. It c
 - Apache2 packages no longer generate PGP keys for hardware token import on install ([#682](https://github.com/eduMFA/eduMFA/pull/682)) (@aleyna72072)
 	+ This was undocumented behaviour which caused problems on Ubuntu Noble.
 	+ PGP keys can still be created manually.
+
+### Changed
+
+- enlarged multiple audit database columns ([#720](https://github.com/eduMFA/eduMFA/pull/720), [#905](https://github.com/eduMFA/eduMFA/pull/905)) (@aleyna72072)
 
 ### Fixed
 
