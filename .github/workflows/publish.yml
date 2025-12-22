@@ -5,7 +5,7 @@ permissions:
 
 on:
   release:
-    types: [ published ]
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -16,6 +16,7 @@ jobs:
       url: https://pypi.org/p/eduMFA
     permissions:
       id-token: write
+      contents: write
     steps:
         - uses: actions/checkout@v6
         - name: Setup Python 3.10
