@@ -67,7 +67,7 @@ huey==2.5.5
     # via edumfa (setup.py)
 idna==3.11
     # via requests
-importlib-metadata==8.7.0
+importlib-metadata==8.7.1
     # via edumfa (setup.py)
 itsdangerous==2.2.0
     # via flask
