@@ -966,7 +966,7 @@ manage_machine_tokens
 type: bool
 
 The administrator is allowed to attach and detach tokens to machines to enable the use with
-one of the available appliactions. See :ref:`machines`.
+one of the available applications. See :ref:`machines`.
 
 fetch_authentication_items
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
