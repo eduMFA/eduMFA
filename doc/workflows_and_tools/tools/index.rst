@@ -282,15 +282,29 @@ mark
 
 **Mark** makes it possible to mark the found tokens in order to carry out further actions with them later.
 
-The tokens are marked by setting a tokeninfo-key and an associated tokininfo-value.
+The tokens are marked by setting a tokeninfo-key and an associated tokeninfo-value.
 
 Example::
 
     edumfa-token-janitor find --serial OATH0004C934 --action mark --set-tokeninfo-key unused --set-tokeninfo-value True
 
 A new tokeninfo-key and the associated tokeninfo-value would be added for the token ``OAUTH0004C934``
-and are now marked for later processing. If the token already containd this tokeninf-key, the value
+and are now marked for later processing. If the token already contained this tokeninfo-key, the value
 would be changed.
+
+unmark
+....
+
+**Unmark** makes it possible to remove former added marks from tokens.
+
+Tokens can be unmarked by removing a tokeninfo-key and the associated value.
+
+Example::
+
+    edumfa-token-janitor find --serial OATH0004C934 --action unmark --remove-tokeninfo-key unused
+
+If the given tokeninfo-key is present on the specified token then this key with its values is removed.
+Otherwise nothing happens.
 
 
 disable
