@@ -815,13 +815,18 @@ def find(
                                 token_obj.save()
                         elif action == "unmark":
                             if remove_tokeninfo_key:
-                                click.echo(
-                                    f"Removing tokeninfo for token {token_obj.token.serial!s}: {remove_tokeninfo_key!s}"
-                                )
-                                token_obj.del_tokeninfo(
-                                    remove_tokeninfo_key
-                                )
-                                token_obj.save()
+                                if not token_obj.get_tokeninfo(key=remove_tokeninfo_key):
+                                    click.echo(
+                                        f"Could not find tokeninfo-key {remove_tokeninfo_key!s} on token {token_obj.token.serial!s}"
+                                    )
+                                else:
+                                    click.echo(
+                                        f"Removing tokeninfo for token {token_obj.token.serial!s}: {remove_tokeninfo_key!s}"
+                                    )
+                                    token_obj.del_tokeninfo(
+                                        remove_tokeninfo_key
+                                    )
+                                    token_obj.save()
                     except Exception as exx:
                         click.echo(f"Failed to process token {token_obj.token.serial}.")
                         click.echo("{0}".format(exx))
