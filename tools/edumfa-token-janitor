@@ -67,6 +67,7 @@ ALLOWED_ACTIONS = [
     "delete",
     "unassign",
     "mark",
+    "unmark",
     "export",
     "listuser",
     "tokenrealms",
@@ -485,6 +486,7 @@ def export_user_data(token_list, attributes=None):
 @click.option("--set-description", help="set a new description")
 @click.option("--set-tokeninfo-key", help="set a new tokeninfo-key")
 @click.option("--set-tokeninfo-value", help="set a new tokeninfo-value")
+@click.option("--remove-tokeninfo-key", help="remove a tokeninfo-key (and values)")
 @click.option(
     "--tokeninfo-value-before",
     metavar="DATETIME",
@@ -625,6 +627,7 @@ def find(
     set_description,
     set_tokeninfo_key,
     set_tokeninfo_value,
+    remove_tokeninfo_key,
     sum_tokens,
     tokenrealms,
     csv,
@@ -808,6 +811,15 @@ def find(
                                 )
                                 token_obj.add_tokeninfo(
                                     set_tokeninfo_key, set_tokeninfo_value
+                                )
+                                token_obj.save()
+                        elif action == "unmark":
+                            if remove_tokeninfo_key:
+                                click.echo(
+                                    f"Removing tokeninfo for token {token_obj.token.serial!s}: {remove_tokeninfo_key!s}"
+                                )
+                                token_obj.del_tokeninfo(
+                                    remove_tokeninfo_key
                                 )
                                 token_obj.save()
                     except Exception as exx:

@@ -292,6 +292,20 @@ A new tokeninfo-key and the associated tokeninfo-value would be added for the to
 and are now marked for later processing. If the token already containd this tokeninf-key, the value
 would be changed.
 
+unmark
+....
+
+**Unmark** makes it possible to remove former added marks from tokens.
+
+Tokens can be unmarked by removing a tokeninfo-key and the associated value.
+
+Example::
+
+    edumfa-token-janitor find --serial OATH0004C934 --action unmark --remove-tokeninfo-key unused
+
+If the given tokeninfo-key is present on the specified token then this key with its values is removed.
+Otherwise nothing happens.
+
 
 disable
 .......
