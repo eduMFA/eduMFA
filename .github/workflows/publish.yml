@@ -32,8 +32,10 @@ jobs:
         - name: Build distributions
           run: uv build
         - name: Release dist
+          continue-on-error: true
           uses: softprops/action-gh-release@v2
           with:
             files: dist/*
         - name: Publish package
+          continue-on-error: true
           run: uv publish
