@@ -35,7 +35,9 @@ jobs:
           continue-on-error: true
           uses: softprops/action-gh-release@v2
           with:
-            files: dist/*
+            files: |
+              dist/*.tar.gz
+              dist/*.whl
         - name: Publish package
           continue-on-error: true
           run: uv publish
