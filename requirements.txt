@@ -63,7 +63,7 @@ google-auth==2.45.0
     # via edumfa (setup.py)
 grpcio==1.76.0
     # via edumfa (setup.py)
-huey==2.5.5
+huey==2.6.0
     # via edumfa (setup.py)
 idna==3.11
     # via requests
