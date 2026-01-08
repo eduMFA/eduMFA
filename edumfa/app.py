@@ -121,6 +121,10 @@ def create_app(
     :return: The flask application
     :rtype: App object
     """
+    app = Flask(__name__, static_folder="static", template_folder="static/templates")
+    if config_name == "completion":
+        return app
+
     if not silent:
         print("The configuration name is: {0!s}".format(config_name))
     if os.environ.get(ENV_KEY):
@@ -131,7 +135,6 @@ def create_app(
                 config_file
             )
         )
-    app = Flask(__name__, static_folder="static", template_folder="static/templates")
     if config_name:
         app.config.from_object(config[config_name])
 
