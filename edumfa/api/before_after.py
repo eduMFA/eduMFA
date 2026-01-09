@@ -85,6 +85,8 @@ from .token import token_blueprint
 from .tokengroup import tokengroup_blueprint
 from .user import user_blueprint
 
+from sqlalchemy.exc import OperationalError, IntegrityError
+
 log = logging.getLogger(__name__)
 
 
@@ -421,3 +423,14 @@ def internal_error(error):
     if "audit_object" in g:
         g.audit_object.log({"info": str(error)})
     return send_error(str(error), error_code=-500), 500
+
+@validate_blueprint.app_errorhandler(OperationalError)
+@validate_blueprint.app_errorhandler(IntegrityError)
+def sql_error(error):
+    """
+    This function is called when an database error occurs.
+    """
+    log.error("Database error occurred: {!r}".format(error))
+    if "audit_object" in g:
+        g.audit_object.log({"info": "Database error occurred."})
+    return send_error("A database error occurred.", error_code=-600), 500
