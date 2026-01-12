@@ -6539,6 +6539,44 @@ class AChallengeResponse(MyApiTestCase):
         remove_token("hotp_serial")
         delete_policy("increase_failcounter_on_challenge")
 
+    def test_20_db_error(self):
+        # Create HOTP token
+        init_token(
+            {
+                "type": "hotp",
+                "serial": "hotp_serial",
+                "otpkey": "abcde12345",
+                "pin": "pin",
+            },
+            user=User("cornelius", self.realm1),
+        )
+        with self.app.test_request_context(
+                "/validate/check",
+                method="POST",
+                data={"user": "cornelius", "pass": "pin"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(200, res.status_code)
+
+        # Simulate a OperationalError during Execution of check_token_list
+        with mock.patch("edumfa.lib.token.check_token_list") as mock_check_token_list:
+            from sqlalchemy.exc import OperationalError
+
+            mock_check_token_list.side_effect = OperationalError(
+                statement=None, params=None, orig=None
+            )
+
+            with self.app.test_request_context(
+                "/validate/check",
+                method="POST",
+                data={"user": "cornelius", "pass": "pin"},
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertEqual(500, res.status_code)
+                result = res.json.get("result")
+                self.assertFalse(result.get("status"))
+                self.assertEqual("A database error occurred.", result.get("error").get("message"))
+                self.assertEqual(-600, result.get("error").get("code"))
 
 class TriggeredPoliciesTestCase(MyApiTestCase):
     def setUp(self):
