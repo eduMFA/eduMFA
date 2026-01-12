@@ -427,7 +427,7 @@ def internal_error(error):
 @validate_blueprint.app_errorhandler(IntegrityError)
 def sql_error(error):
     """
-    This function is called when an database error occurs.
+    This function is called when a database error occurs.
     """
     log.error("Database error occurred: {!r}".format(error))
     if "audit_object" in g:
