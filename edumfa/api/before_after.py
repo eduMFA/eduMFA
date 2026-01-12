@@ -32,6 +32,7 @@ import logging
 import threading
 
 from flask import current_app, g, request
+from sqlalchemy.exc import IntegrityError, OperationalError
 
 from edumfa.api.auth import admin_required, jwtauth, user_required
 from edumfa.api.lib.postpolicy import postrequest, sign_response
@@ -84,8 +85,6 @@ from .system import system_blueprint
 from .token import token_blueprint
 from .tokengroup import tokengroup_blueprint
 from .user import user_blueprint
-
-from sqlalchemy.exc import OperationalError, IntegrityError
 
 log = logging.getLogger(__name__)
 
