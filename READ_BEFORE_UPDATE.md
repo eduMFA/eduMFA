@@ -8,7 +8,6 @@
 >  * Ensure that you use the latest supported privacyIDEA version 3.9.2 and then upgrade to eduMFA
 > 
 > These migration steps are applicable for all versions released up to now
->
 
 * Uninstall privacyIDEA and stop your `Apache2` or `nginx` service
 * Move/Copy all configurations from `/etc/privacyidea/` to `/etc/edumfa/`
@@ -46,6 +45,7 @@ This release focuses on stability, security, and long-term maintainability. It c
 > [!CAUTION]
 >
 > The 3.0.0 release of eduMFA is planned to remove multiple features. This will be announced as soon as there is a complete list. A work in progress list of removals can be found at: https://github.com/eduMFA/eduMFA/issues/875
+>
 
 
 ### Added
