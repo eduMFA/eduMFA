@@ -8,6 +8,7 @@
 >  * Ensure that you use the latest supported privacyIDEA version 3.9.2 and then upgrade to eduMFA
 > 
 > These migration steps are applicable for all versions released up to now
+>
 
 * Uninstall privacyIDEA and stop your `Apache2` or `nginx` service
 * Move/Copy all configurations from `/etc/privacyidea/` to `/etc/edumfa/`
@@ -64,16 +65,16 @@ This release focuses on stability, security, and long-term maintainability. It c
 - Autofocus the response input field in the UI ([#719](https://github.com/eduMFA/eduMFA/pull/719)) (@flowdnb)
 - Added support for custom paths in Ubuntu install scripts ([#552](https://github.com/eduMFA/eduMFA/pull/552)) (@Luc1412)
 
-### Changed
-
-- enlarged multiple audit database columns ([#720](https://github.com/eduMFA/eduMFA/pull/720), [#905](https://github.com/eduMFA/eduMFA/pull/905)) (@aleyna72072)
-
 ### Removed
 
 - Dropped support for Python 3.9 ([#796](https://github.com/eduMFA/eduMFA/pull/796)) (@Luc1412)
 - Apache2 packages no longer generate PGP keys for hardware token import on install ([#682](https://github.com/eduMFA/eduMFA/pull/682)) (@aleyna72072)
 	+ This was undocumented behaviour which caused problems on Ubuntu Noble.
 	+ PGP keys can still be created manually.
+
+### Changed
+
+- enlarged multiple audit database columns ([#720](https://github.com/eduMFA/eduMFA/pull/720), [#905](https://github.com/eduMFA/eduMFA/pull/905)) (@aleyna72072)
 
 ### Fixed
 
