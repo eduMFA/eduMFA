@@ -142,11 +142,6 @@ adapt_edumfa_cfg() {
     SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
     echo "SECRET_KEY = '$SECRET'" >> /etc/edumfa/edumfa.cfg
   fi
-  if ! grep -q '^SQLALCHEMY_DATABASE_URI\s*=\s*.mysql:.*$' /etc/edumfa/edumfa.cfg; then
-    #  We found an old mysql config file
-    sed -i -e 's/\(^SQLALCHEMY_DATABASE_URI\s*=\s*.\)mysql:\(.*\)$/\1mysql+pymysql:\2/g' /etc/edumfa/edumfa.cfg
-    echo "# The SQLALCHEMY_DATABASE_URI was updated during the update to eduMFA 3.2" >> /etc/edumfa/edumfa.cfg
-  fi
 }
 
 create_database() {

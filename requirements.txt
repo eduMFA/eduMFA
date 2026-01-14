@@ -4,7 +4,7 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements.txt --strip-extras
 #
-alembic==1.17.2
+alembic==1.18.0
     # via flask-migrate
 argon2-cffi==25.1.0
     # via edumfa (setup.py)
@@ -22,9 +22,9 @@ blinker==1.9.0
     # via flask
 cachetools==6.2.4
     # via google-auth
-cbor2==5.7.1
+cbor2==5.8.0
     # via edumfa (setup.py)
-certifi==2025.11.12
+certifi==2026.1.4
     # via requests
 cffi==2.0.0
     # via
@@ -59,11 +59,11 @@ flask-sqlalchemy==3.1.1
     # via
     #   edumfa (setup.py)
     #   flask-migrate
-google-auth==2.45.0
+google-auth==2.47.0
     # via edumfa (setup.py)
 grpcio==1.76.0
     # via edumfa (setup.py)
-huey==2.5.5
+huey==2.6.0
     # via edumfa (setup.py)
 idna==3.11
     # via requests
@@ -117,7 +117,7 @@ python-dateutil==2.9.0.post0
     # via
     #   croniter
     #   edumfa (setup.py)
-python-gnupg==0.5.5
+python-gnupg==0.5.6
     # via edumfa (setup.py)
 pytz==2025.2
     # via flask-babel
@@ -151,11 +151,11 @@ typing-extensions==4.15.0
     # via
     #   alembic
     #   edumfa (setup.py)
-urllib3==2.6.2
+urllib3==2.6.3
     # via
     #   edumfa (setup.py)
     #   requests
-werkzeug==3.1.4
+werkzeug==3.1.5
     # via flask
 zipp==3.23.0
     # via importlib-metadata

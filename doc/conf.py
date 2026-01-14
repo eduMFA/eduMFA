@@ -23,6 +23,7 @@ import sys
 #
 # The short X.Y version.
 version = "2.9.0"
+version = "2.9.0"
 # The full version, including alpha/beta/rc tags.
 # release = '2.16dev5'
 release = "2.9.0"
