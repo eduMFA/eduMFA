@@ -47,7 +47,6 @@ This release focuses on stability, security, and long-term maintainability. It c
 > The 3.0.0 release of eduMFA is planned to remove multiple features. This will be announced as soon as there is a complete list. A work in progress list of removals can be found at: https://github.com/eduMFA/eduMFA/issues/875
 >
 
-
 ### Added
 
 - Added support for Python 3.14 ([#796](https://github.com/eduMFA/eduMFA/pull/796)) (@Luc1412)
