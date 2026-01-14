@@ -45,11 +45,7 @@ This release focuses on stability, security, and long-term maintainability. It c
 > [!CAUTION]
 >
 > The 3.0.0 release of eduMFA is planned to remove multiple features. This will be announced as soon as there is a complete list. A work in progress list of removals can be found at: https://github.com/eduMFA/eduMFA/issues/875
->
 
-### Changed
-
-- enlarged multiple audit database columns ([#720](https://github.com/eduMFA/eduMFA/pull/720), [#905](https://github.com/eduMFA/eduMFA/pull/905)) (@aleyna72072)
 
 ### Added
 
@@ -67,6 +63,10 @@ This release focuses on stability, security, and long-term maintainability. It c
 - Re-introduce the version number in the footer ([#859](https://github.com/eduMFA/eduMFA/pull/859)) (@aleyna72072)
 - Autofocus the response input field in the UI ([#719](https://github.com/eduMFA/eduMFA/pull/719)) (@flowdnb)
 - Added support for custom paths in Ubuntu install scripts ([#552](https://github.com/eduMFA/eduMFA/pull/552)) (@Luc1412)
+
+### Changed
+
+- enlarged multiple audit database columns ([#720](https://github.com/eduMFA/eduMFA/pull/720), [#905](https://github.com/eduMFA/eduMFA/pull/905)) (@aleyna72072)
 
 ### Removed
 
