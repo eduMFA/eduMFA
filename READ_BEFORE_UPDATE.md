@@ -80,7 +80,7 @@ This release focuses on stability, security, and long-term maintainability. It c
 - Fixed `reset_all_tokens` not working for passkeys ([#845](https://github.com/eduMFA/eduMFA/pull/845)) (@fritterhoff)
 - Fixed remote token enrollment via Web UI ([#861](https://github.com/eduMFA/eduMFA/pull/861)) (@aleyna72072)
 - Improved handling of dangling passkeys ([#747](https://github.com/eduMFA/eduMFA/pull/747)) (@fritterhoff)
-- Fixed permissions being applied too late on files containing secrets ([#894](https://github.com/eduMFA/eduMFA/pull/894)) (@aleyna72072)
+- Fixed permissions being applied too late on backups ([#894](https://github.com/eduMFA/eduMFA/pull/894)) (@aleyna72072)
 - Improved handling of non-existing admin users ([#725](https://github.com/eduMFA/eduMFA/pull/725)) (@fritterhoff)
 - Fixed inflated dashboard authentication counters ([#890](https://github.com/eduMFA/eduMFA/pull/890)) (@aleyna72072)
 - Improved resilience of challenge cleanup and client applications ([#607](https://github.com/eduMFA/eduMFA/pull/607))  (@fritterhoff)
