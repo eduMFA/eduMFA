@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This file tests the web UI Login
 
@@ -68,7 +66,7 @@ class LoginUITestCase(MyTestCase):
         set_policy(
             "realmdrop",
             scope=SCOPE.WEBUI,
-            action="{0!s}=Hello World".format(ACTION.REALMDROPDOWN),
+            action=f"{ACTION.REALMDROPDOWN}=Hello World",
         )
         with self.app.test_request_context("/", method="GET"):
             res = self.app.full_dispatch_request()
@@ -82,14 +80,12 @@ class LoginUITestCase(MyTestCase):
         set_policy(
             "custom1",
             scope=SCOPE.WEBUI,
-            action="{0!s}=mytemplates/nonexist_base.html".format(
-                ACTION.CUSTOM_BASELINE
-            ),
+            action=f"{ACTION.CUSTOM_BASELINE}=mytemplates/nonexist_base.html",
         )
         set_policy(
             "custom2",
             scope=SCOPE.WEBUI,
-            action="{0!s}=mytemplates/nonexist_menu.html".format(ACTION.CUSTOM_MENU),
+            action=f"{ACTION.CUSTOM_MENU}=mytemplates/nonexist_menu.html",
         )
 
         with self.app.test_request_context("/", method="GET"):
@@ -102,7 +98,7 @@ class LoginUITestCase(MyTestCase):
         set_policy(
             "logtext",
             scope=SCOPE.WEBUI,
-            action="{0!s}=Go for it!".format(ACTION.LOGIN_TEXT),
+            action=f"{ACTION.LOGIN_TEXT}=Go for it!",
         )
         with self.app.test_request_context("/", method="GET"):
             res = self.app.full_dispatch_request()
@@ -124,7 +120,7 @@ class LoginUITestCase(MyTestCase):
         set_policy(
             "remote_user",
             scope=SCOPE.WEBUI,
-            action="{0!s}=allowed".format(ACTION.REMOTE_USER),
+            action=f"{ACTION.REMOTE_USER}=allowed",
         )
         with self.app.test_request_context(
             "/", method="GET", environ_base={"REMOTE_USER": "foo"}
@@ -139,7 +135,7 @@ class LoginUITestCase(MyTestCase):
         set_policy(
             "gdpr_link",
             scope=SCOPE.WEBUI,
-            action="{0!s}=https://edumfa.io/".format(ACTION.GDPR_LINK),
+            action=f"{ACTION.GDPR_LINK}=https://edumfa.io/",
         )
         with self.app.test_request_context("/", method="GET"):
             res = self.app.full_dispatch_request()

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -349,7 +348,7 @@ class RadiusTokenClass(RemoteTokenClass):
         :return: bool
         """
         local_check = is_true(self.get_tokeninfo("radius.local_checkpin"))
-        log.debug("local checking pin? {0!r}".format(local_check))
+        log.debug(f"local checking pin? {local_check!r}")
 
         return local_check
 
@@ -467,7 +466,7 @@ class RadiusTokenClass(RemoteTokenClass):
             radius_server_object = get_radius(radius_identifier)
             radius_server = radius_server_object.config.server
             radius_port = radius_server_object.config.port
-            radius_server = "{0!s}:{1!s}".format(radius_server, radius_port)
+            radius_server = f"{radius_server}:{radius_port}"
             radius_secret = radius_server_object.get_secret()
             radius_dictionary = radius_server_object.config.dictionary
             radius_timeout = int(radius_server_object.config.timeout or 10)
@@ -485,9 +484,7 @@ class RadiusTokenClass(RemoteTokenClass):
 
         # here we also need to check for radius.user
         log.debug(
-            "checking OTP len:{0!s} on radius server: {1!s}, user: {2!r}".format(
-                len(otpval), radius_server, radius_user
-            )
+            f"checking OTP len:{len(otpval)} on radius server: {radius_server}, user: {radius_user!r}"
         )
 
         try:
@@ -507,13 +504,11 @@ class RadiusTokenClass(RemoteTokenClass):
                     "radius.dictfile", "/etc/edumfa/dictionary"
                 )
             log.debug(
-                "NAS Identifier: %r, "
-                "Dictionary: %r" % (nas_identifier, radius_dictionary)
+                f"NAS Identifier: {nas_identifier!r}, Dictionary: {radius_dictionary!r}"
             )
             log.debug(
                 "constructing client object "
-                "with server: %r, port: %r, secret: %r"
-                % (r_server, r_authport, to_unicode(radius_secret))
+                f"with server: {r_server!r}, port: {r_authport!r}, secret: {to_unicode(radius_secret)!r}"
             )
 
             srv = Client(
@@ -537,19 +532,13 @@ class RadiusTokenClass(RemoteTokenClass):
 
             if radius_state:
                 req["State"] = radius_state
-                log.info(
-                    "Sending saved challenge to radius server: {0!r} ".format(
-                        radius_state
-                    )
-                )
+                log.info(f"Sending saved challenge to radius server: {radius_state!r} ")
 
             try:
                 response = srv.SendPacket(req)
             except Timeout:
                 log.warning(
-                    "The remote RADIUS server {0!s} timeout out for user {1!s}.".format(
-                        r_server, radius_user
-                    )
+                    f"The remote RADIUS server {r_server} timeout out for user {radius_user}."
                 )
                 return AccessReject
 
@@ -566,25 +555,21 @@ class RadiusTokenClass(RemoteTokenClass):
                 radius_state = "<SUCCESS>"
                 radius_message = "RADIUS authentication succeeded"
                 log.info(
-                    "RADIUS server {0!s} granted access to user {1!s}.".format(
-                        r_server, radius_user
-                    )
+                    f"RADIUS server {r_server} granted access to user {radius_user}."
                 )
                 result = AccessAccept
             else:
                 radius_state = "<REJECTED>"
                 radius_message = "RADIUS authentication failed"
-                log.debug("radius response code {0!s}".format(response.code))
+                log.debug(f"radius response code {response.code}")
                 log.info(
-                    "Radiusserver {0!s} rejected access to user {1!s}.".format(
-                        r_server, radius_user
-                    )
+                    f"Radiusserver {r_server} rejected access to user {radius_user}."
                 )
                 result = AccessReject
 
         except Exception as ex:  # pragma: no cover
-            log.error("Error contacting radius Server: {0!r}".format((ex)))
-            log.info("{0!s}".format(traceback.format_exc()))
+            log.error(f"Error contacting radius Server: {ex!r}")
+            log.info(f"{traceback.format_exc()}")
 
         options.update({"radius_result": result})
         options.update({"radius_state": radius_state})

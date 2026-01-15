@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -85,13 +84,11 @@ class eduMFAError(Exception):
         try:
             res = pstr % (self.id, self.message)
         except Exception as exx:
-            res = "ERR{0:d}: {1!r}".format(self.id, self.message)
+            res = f"ERR{self.id:d}: {self.message!r}"
         return res
 
     def __repr__(self):
-        ret = "{0!s}(description={1!r}, id={2:d})".format(
-            type(self).__name__, self.message, self.id
-        )
+        ret = f"{type(self).__name__}(description={self.message!r}, id={self.id:d})"
         return ret
 
 
@@ -106,9 +103,7 @@ class SubscriptionError(eduMFAError):
         return self.__repr__()
 
     def __repr__(self):
-        ret = "{0!s}({1!r}, application={2!s})".format(
-            type(self).__name__, self.message, self.application
-        )
+        ret = f"{type(self).__name__}({self.message!r}, application={self.application})"
         return ret
 
 

@@ -19,6 +19,8 @@ on:
       - 'setup.py'
   pull_request:
     types: [ opened, reopened, synchronize ]
+  release:
+    types: [published]
 
 jobs:
   docker:

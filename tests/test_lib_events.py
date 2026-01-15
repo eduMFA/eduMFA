@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This file contains the event handlers tests. It tests:
 
@@ -10,14 +8,14 @@ lib/event.py (the decorator)
 import os
 from collections import OrderedDict
 from datetime import datetime, timedelta
+from unittest import mock
+from unittest.mock import MagicMock, patch
 
-import mock
 import requests.exceptions
 import responses
 from dateutil.parser import parse as parse_date_string
 from dateutil.tz import tzlocal
 from flask import Request
-from mock import MagicMock, patch
 from werkzeug.test import EnvironBuilder
 
 from edumfa.app import PiResponseClass as Response
@@ -790,7 +788,7 @@ class ScriptEventTestCase(MyTestCase):
 
         script_name = "ls.sh"
         d = os.getcwd()
-        d = "{0!s}/tests/testdata/scripts/".format(d)
+        d = f"{d}/tests/testdata/scripts/"
         t_handler = ScriptEventHandler(script_directory=d)
         res = t_handler.do(script_name, options=options)
         self.assertTrue(res)
@@ -833,7 +831,7 @@ class ScriptEventTestCase(MyTestCase):
 
         script_name = "fail.sh"
         d = os.getcwd()
-        d = "{0!s}/tests/testdata/scripts/".format(d)
+        d = f"{d}/tests/testdata/scripts/"
         t_handler = ScriptEventHandler(script_directory=d)
         self.assertRaises(Exception, t_handler.do, script_name, options=options)
 
@@ -866,7 +864,7 @@ class ScriptEventTestCase(MyTestCase):
 
         script_name = "ls.sh"
         d = os.getcwd()
-        d = "{0!s}/tests/testdata/scripts/".format(d)
+        d = f"{d}/tests/testdata/scripts/"
         t_handler = ScriptEventHandler(script_directory=d)
         # first check that the db session is not synced by default
         with mock.patch("edumfa.lib.eventhandler.scripthandler.db") as mdb:
@@ -2680,7 +2678,7 @@ class CustomUserAttributesTestCase(MyTestCase):
 
 class WebhookTestCase(MyTestCase):
     def setUp(self):
-        super(WebhookTestCase, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     @patch("requests.post")
@@ -2705,7 +2703,7 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = "A webhook is send to {0!r} with the text: {1!r}".format(
+            text = "A webhook is send to {!r} with the text: {!r}".format(
                 "http://test.com", "This is a test"
             )
             mock_log.assert_any_call(text)
@@ -2723,7 +2721,7 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = "A webhook is send to {0!r} with the text: {1!r}".format(
+            text = "A webhook is send to {!r} with the text: {!r}".format(
                 "http://test.com", "This is a test"
             )
             mock_log.assert_any_call(text)
@@ -2848,7 +2846,7 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = "A webhook is send to {0!r} with the text: {1!r}".format(
+            text = "A webhook is send to {!r} with the text: {!r}".format(
                 "http://test.com", "This is hans from realm realm1"
             )
             mock_log.assert_any_call(text)
@@ -2896,7 +2894,7 @@ class WebhookTestCase(MyTestCase):
                     "Unable to replace placeholder: ('unknown_tag')!"
                     " Please check the webhooks data option."
                 )
-                text = "A webhook is send to {0!r} with the text: {1!r}".format(
+                text = "A webhook is send to {!r} with the text: {!r}".format(
                     "http://test.com", "{token_serial} {token_owner} {unknown_tag}"
                 )
                 mock_info.assert_any_call(text)
@@ -2944,7 +2942,7 @@ class WebhookTestCase(MyTestCase):
                     "Unable to replace placeholder: ('token_seril')!"
                     " Please check the webhooks data option."
                 )
-                text = "A webhook is send to {0!r} with the text: {1!r}".format(
+                text = "A webhook is send to {!r} with the text: {!r}".format(
                     "http://test.com", "The token serial is {token_seril}"
                 )
                 mock_info.assert_any_call(text)
