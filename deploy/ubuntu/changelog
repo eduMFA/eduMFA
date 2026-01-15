@@ -1,6 +1,6 @@
 edumfa (2.9.0{{CODENAME}}) {{CODENAME}}; urgency=medium
 
-* This is the final version of the 2.9.0 release: https://github.com/eduMFA/eduMFA/blob/v2.9.0/READ_BEFORE_UPDATE.md
+* See the changelog for the 2.9.0 release at: https://github.com/eduMFA/eduMFA/blob/v2.9.0/READ_BEFORE_UPDATE.md#edumfa-290
 
  -- eduMFA <edumfa-dev@listserv.dfn.de>  Wed, 14 Jan 2026 11:00:00 +0200
 
