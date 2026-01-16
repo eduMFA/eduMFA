@@ -58,6 +58,12 @@ to talk to different SQL-based databases. Our best experience is with
 `MySQL <https://www.mysql.com/>`_ but SQLAlchemy supports many different
 databases [#sqlaDialects]_.
 
+.. warning:: When using a databases which utilizes InnoDB (like MariaDB or
+   MySQL), make sure to use a version shipping the `innodb_snapshot_isolation`
+   setting. Make sure this setting is set to ON, as otherwise rare circumstances
+   might allow re-using of OTPs under race conditions.
+   # TODO is MySQL also affected?
+
 The database server should be installed on the host or be otherwise reachable.
 
 In order for eduMFA to use the database, a database user with the
