@@ -69,6 +69,11 @@ The container contains a default logging configuration printing the logs to `std
      edumfa-keys:
      mariadb-data:
 
+.. warning:: When using a databases which utilizes InnoDB (like MariaDB or
+   MySQL), make sure to use a version shipping the `innodb_snapshot_isolation`
+   setting. Make sure this setting is set to ON, as otherwise rare circumstances
+   might allow re-using of OTPs under race conditions.
+   # TODO is MySQL also affected?
 
 The `.env` file should contain the following variables:
 

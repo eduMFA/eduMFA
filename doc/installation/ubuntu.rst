@@ -86,6 +86,12 @@ After having added the repositories, run::
 If you do not like the Apache2 webserver you could
 alternatively use the meta package ``edumfa-nginx``.
 
+.. warning:: When using a databases which utilizes InnoDB (like MariaDB or
+   MySQL), make sure to use a version shipping the `innodb_snapshot_isolation`
+   setting. Make sure this setting is set to ON, as otherwise rare circumstances
+   might allow re-using of OTPs under race conditions.
+   # TODO is MySQL also affected?
+
 ------------
 
 Now you may proceed to :ref:`first_steps`.
