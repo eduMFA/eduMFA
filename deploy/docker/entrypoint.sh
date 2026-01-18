@@ -3,6 +3,12 @@ set -e
 
 GEN_PWD="$(openssl rand -base64 42)"
 EDUMFA_ADMIN_USER="${EDUMFA_ADMIN_USER:-admin}"
+# Check if password is set, otherwise generate one and store the information if geneated in a variable
+GENERATED_PASSWORD=0
+if [ -z "$EDUMFA_ADMIN_PASS" ]; then
+  echo "No EDUMFA_ADMIN_PASS set, generating a random one and printing it afterwards."
+  GENERATED_PASSWORD=1
+fi
 EDUMFA_ADMIN_PASS="${EDUMFA_ADMIN_PASS:-$GEN_PWD}"
 
 # Make sure the config is working by executing it once.
@@ -51,11 +57,13 @@ for script in /opt/edumfa/user-scripts/*.sh; do
   bash $script
 done
 
-echo "
-    You can login with the following credentials:
-    username: $EDUMFA_ADMIN_USER
-    password: $EDUMFA_ADMIN_PASS
-"
+if [ $GENERATED_PASSWORD -eq 1 ]; then
+  echo "
+      You can login with the following credentials:
+      username: $EDUMFA_ADMIN_USER
+      password: $EDUMFA_ADMIN_PASS
+  "
+fi
 
 echo "Starting Server"
 gunicorn --bind 0.0.0.0:8000 --workers 4 app
