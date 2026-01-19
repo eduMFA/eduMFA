@@ -91,6 +91,7 @@ Actions:
 * list
 * unassign
 * mark
+* unmark
 * disable
 * delete
 
