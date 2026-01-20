@@ -5,20 +5,20 @@ permissions:
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - '.github/workflows/docker.yml'
-      - 'deploy/docker/**'
-      - 'edumfa/**/*.py'
-      - 'tools/**'
-      - '.docerignore'
-      - 'Dockerfile'
-      - 'edumfa-manage'
-      - 'pyproject.toml'
-      - 'requirements.txt'
-      - 'setup.py'
+      - ".github/workflows/docker.yml"
+      - "deploy/docker/**"
+      - "edumfa/**/*.py"
+      - "tools/**"
+      - ".docerignore"
+      - "Dockerfile"
+      - "edumfa-manage"
+      - "pyproject.toml"
+      - "requirements.txt"
+      - "setup.py"
   pull_request:
-    types: [ opened, reopened, synchronize ]
+    types: [opened, reopened, synchronize]
   release:
     types: [published]
 
@@ -28,8 +28,8 @@ jobs:
     permissions:
       packages: write
     env:
-        REGISTRY: ghcr.io
-        IMAGE_NAME: ${{ github.repository }}  
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v6
       - name: Setup Docker Buildx
