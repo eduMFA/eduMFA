@@ -368,7 +368,7 @@ class SmsTokenClass(HotpTokenClass):
             except Exception as e:
                 info = _("The PIN was correct, but the SMS could not be sent!")
                 log.warning(info + f" ({e!r})")
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
                 return_message = info
                 if is_true(options.get("exception")):
                     raise Exception(info)
@@ -466,7 +466,7 @@ class SmsTokenClass(HotpTokenClass):
                 sms = get_sms_provider_class(SMSProvider, SMSProviderClass)()
             except Exception as exc:
                 log.error(f"Failed to load SMSProvider: {exc!r}")
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
                 raise exc
 
             try:
@@ -477,7 +477,7 @@ class SmsTokenClass(HotpTokenClass):
                 sms.load_config(config)
             except Exception as exc:
                 log.error(f"Failed to load sms.providerConfig: {exc!r}")
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
                 raise Exception(f"Failed to load sms.providerConfig: {exc!r}")
 
         if sms.send_to_uid():

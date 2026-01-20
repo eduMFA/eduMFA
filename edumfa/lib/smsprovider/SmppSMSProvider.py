@@ -100,7 +100,7 @@ class SmppSMSProvider(ISMSProvider):
         except Exception as err:
             error_message = f"{err!r}"
             log.warning(f"Failed to send message: {error_message!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
 
         finally:
             if client:

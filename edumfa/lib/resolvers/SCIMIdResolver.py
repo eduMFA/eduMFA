@@ -232,7 +232,7 @@ class IdResolver(UserIdResolver):
             success = True
         except Exception as exx:
             log.error(f"Failed to retrieve users: {exx}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             desc = f"failed to retrieve users: {exx}"
 
         return success, desc

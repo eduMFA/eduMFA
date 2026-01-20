@@ -96,7 +96,7 @@ class Monitoring(MonitoringBase):
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
             log.error(f"DATA: {stats_key} -> {stats_value}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             self.session.rollback()
 
         finally:
@@ -117,7 +117,7 @@ class Monitoring(MonitoringBase):
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
             log.error(f"could not delete statskeys {stats_key}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             self.session.rollback()
 
         finally:
@@ -141,7 +141,7 @@ class Monitoring(MonitoringBase):
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
             log.error("could not fetch list of keys")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             self.session.rollback()
 
         finally:
@@ -171,7 +171,7 @@ class Monitoring(MonitoringBase):
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
             log.error("could not fetch list of keys")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             self.session.rollback()
 
         finally:
@@ -193,7 +193,7 @@ class Monitoring(MonitoringBase):
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
             log.error("could not fetch list of keys")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             self.session.rollback()
 
         finally:

@@ -398,7 +398,7 @@ class UserNotificationEventHandler(BaseEventHandler):
                     log.warning(
                         f"Failed to read email template from file {filename!r}: {e!r}"
                     )
-                    log.debug(f"{traceback.format_exc()}")
+                    log.debug(traceback.format_exc())
 
             subject = (
                 handler_options.get("subject")

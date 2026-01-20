@@ -777,7 +777,7 @@ class IdResolver(UserIdResolver):
                 ret.append(user)
             except Exception as exx:  # pragma: no cover
                 log.error(f"Error during fetching LDAP objects: {exx!r}")
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
 
         return ret
 
@@ -1191,7 +1191,7 @@ class IdResolver(UserIdResolver):
                         uidtype_count += 1
                 except Exception as exx:  # pragma: no cover
                     log.warning(f"Error during fetching LDAP objects: {exx!r}")
-                    log.debug(f"{traceback.format_exc()}")
+                    log.debug(traceback.format_exc())
 
             if uidtype_count < count:  # pragma: no cover
                 desc = _(
@@ -1208,7 +1208,7 @@ class IdResolver(UserIdResolver):
 
         except Exception as e:
             desc = f"{e!r}"
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
 
         return success, desc
 
@@ -1243,7 +1243,7 @@ class IdResolver(UserIdResolver):
 
         except Exception as e:
             log.error(f"Error accessing LDAP server: {e!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             raise eduMFAError(e)
 
         if self.l.result.get("result") != 0:
@@ -1349,7 +1349,7 @@ class IdResolver(UserIdResolver):
             self.l.modify(self._getDN(uid), params)
         except Exception as e:
             log.error(f"Error accessing LDAP server: {e!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             return False
 
         if self.l.result.get("result") != 0:

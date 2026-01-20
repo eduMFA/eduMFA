@@ -519,7 +519,7 @@ class CertificateTokenClass(TokenClass):
                         )
                     except Exception as exx:
                         # We could have file system errors during verification.
-                        log.debug(f"{traceback.format_exc()}")
+                        log.debug(traceback.format_exc())
                         verified = False
 
                     if not verified:

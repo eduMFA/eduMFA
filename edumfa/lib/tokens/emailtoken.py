@@ -330,7 +330,7 @@ class EmailTokenClass(HotpTokenClass):
             except Exception as e:
                 info = _("The PIN was correct, but the EMail could not be sent!")
                 log.warning(info + f" ({e!r})")
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
                 return_message = info
                 if is_true(options.get("exception")):
                     raise Exception(info)
@@ -410,7 +410,7 @@ class EmailTokenClass(HotpTokenClass):
             except Exception as e:  # pragma: no cover
                 message = default
                 log.warning(f"Failed to read email template: {e!r}")
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
 
         return message, mimetype
 

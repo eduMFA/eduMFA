@@ -452,7 +452,7 @@ class User:
             log.error(f"Error while trying to verify the username: {e!r}")
         except Exception as e:  # pragma: no cover
             log.error(f"Error checking password within module {e!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
 
         return success
 
@@ -559,7 +559,7 @@ class User:
             log.error(f"Error while trying to verify the username: {exx!r}")
         except Exception as exx:  # pragma: no cover
             log.error(f"Error checking password within module {exx!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
 
         return success
 
@@ -754,12 +754,12 @@ def get_user_list(param=None, user=None, custom_attributes=False):
 
         except KeyError as exx:  # pragma: no cover
             log.error(f"{exx!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             raise exx
 
         except Exception as exx:  # pragma: no cover
             log.error(f"{exx!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             continue
 
     return users

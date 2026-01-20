@@ -569,7 +569,7 @@ class RadiusTokenClass(RemoteTokenClass):
 
         except Exception as ex:  # pragma: no cover
             log.error(f"Error contacting radius Server: {ex!r}")
-            log.info(f"{traceback.format_exc()}")
+            log.info(traceback.format_exc())
 
         options.update({"radius_result": result})
         options.update({"radius_state": radius_state})

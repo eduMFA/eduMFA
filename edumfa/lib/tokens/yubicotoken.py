@@ -197,9 +197,9 @@ class YubicoTokenClass(TokenClass):
 
                     if not signature_valid:
                         log.error(
-                            "The hash of the return from the yubico "
+                            f"The hash of the return from the yubico "
                             f"authentication server ({yubico_url}) "
-                            "does not match the data!"
+                            f"does not match the data!"
                         )
 
                     if nonce != return_nonce:

@@ -371,7 +371,7 @@ class Audit(AuditBase):
             # a signature, but the log entry is available
             log.error(f"exception {exx!r}")
             log.error(f"DATA: {self.audit_data}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             self.session.rollback()
 
         finally:
@@ -408,7 +408,7 @@ class Audit(AuditBase):
                 res = True
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             # self.session.rollback()
         finally:
             # self.session.close()
@@ -551,7 +551,7 @@ class Audit(AuditBase):
                     "Could not read audit log entry! "
                     "Possible database encoding mismatch."
                 )
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
 
         return paging_object
 
@@ -598,7 +598,7 @@ class Audit(AuditBase):
 
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
             self.session.rollback()
         finally:
             self.session.close()
@@ -633,7 +633,7 @@ class Audit(AuditBase):
                     "Could not verify log entry! We get invalid values "
                     "from the database, please check the encoding."
                 )
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
 
         is_not_missing = self._check_missing(int(audit_entry.id))
         # is_not_missing = True

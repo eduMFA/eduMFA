@@ -473,7 +473,7 @@ class LocalCAConnector(BaseCAConnector):
                 log.warning(
                     f"Template file {self.template_file} for {self.name} not found or not permitted."
                 )
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
         return content
 
     def revoke_cert(self, certificate, request_id=None, reason=CRL_REASONS[0]):

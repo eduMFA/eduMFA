@@ -372,7 +372,7 @@ class IdResolver(UserIdResolver):
                 user["id"] = ro[self.map.get("userid")]
         except UnicodeEncodeError:  # pragma: no cover
             log.error(f"Failed to convert user: {ro!r}")
-            log.debug(f"{traceback.format_exc()}")
+            log.debug(traceback.format_exc())
 
         for key in self.map.keys():
             try:
@@ -389,7 +389,7 @@ class IdResolver(UserIdResolver):
             except UnicodeDecodeError:  # pragma: no cover
                 user[key] = "decoding_error"
                 log.error(f"Failed to convert user: {ro!r}")
-                log.debug(f"{traceback.format_exc()}")
+                log.debug(traceback.format_exc())
 
         return user
 

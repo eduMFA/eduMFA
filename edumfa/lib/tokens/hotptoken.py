@@ -317,7 +317,7 @@ class HotpTokenClass(TokenClass):
                         "img": create_img(oath_url),
                     }
                 except Exception as ex:  # pragma: no cover
-                    log.error(f"{traceback.format_exc()}")
+                    log.error(traceback.format_exc())
                     log.error(f"failed to set oath or google url: {ex!r}")
 
         return response_detail
