@@ -70,7 +70,7 @@ test = [
     "pytest-cov==7.0.0",
     "pytest-github-actions-annotate-failures==0.3.0",
     "responses==0.25.8",
-    "testfixtures==8.3.0",
+    "testfixtures==10.0.0",
     "tomli==2.4.0",
     "types-PyYAML==6.0.12.20250915",
 ]
