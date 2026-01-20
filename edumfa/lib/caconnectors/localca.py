@@ -636,8 +636,7 @@ class LocalCAConnector(BaseCAConnector):
             # At the moment we do not use this. This would be written to the
             # templates file.
             # validity_cert = raw_input(
-            #    "What should be the validity period of enrolled certificates in days [{0!s}]: ".format(
-            #    config.validity_cert))
+            #    f"What should be the validity period of enrolled certificates in days [{config.validity_cert}]: "
             # config.validity_cert = validity_cert or config.validity_cert
             crl_days = input(
                 f"How many days should the CRL be valid [{config.crl_days}]: "
@@ -724,7 +723,7 @@ def _init_ca(config):
     with open(descriptor, "w") as f:
         f.write("")
 
-    command = f"openssl genrsa -out {config.directory!s}/cakey.pem {config.keysize!s}"
+    command = f"openssl genrsa -out {config.directory}/cakey.pem {config.keysize}"
     print("Running command...")
     print(command)
     args = shlex.split(command)

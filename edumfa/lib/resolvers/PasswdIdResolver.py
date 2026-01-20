@@ -207,11 +207,11 @@ class IdResolver(UserIdResolver):
             )
             try:
                 if passlib_context.verify(password, cryptedpasswd):
-                    log.info(f"successfully authenticated user uid {uid!s}")
+                    log.info(f"successfully authenticated user uid {uid}")
                     return True
             except ValueError:
                 pass  # Log below
-            log.warning(f"user uid {uid!s} failed to authenticate")
+            log.warning(f"user uid {uid} failed to authenticate")
             return False
         else:
             log.warning(
