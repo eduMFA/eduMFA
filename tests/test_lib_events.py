@@ -2704,7 +2704,7 @@ class WebhookTestCase(MyTestCase):
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
             text = (
-                'A webhook is send to "http://test.com" with the text: "This is a test"'
+                "A webhook is send to 'http://test.com' with the text: 'This is a test'"
             )
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
@@ -2722,7 +2722,7 @@ class WebhookTestCase(MyTestCase):
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
             text = (
-                'A webhook is send to "http://test.com" with the text: "This is a test"'
+                "A webhook is send to 'http://test.com' with the text: 'This is a test'"
             )
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
@@ -2846,7 +2846,7 @@ class WebhookTestCase(MyTestCase):
             }
             res = t_handler.do("post_webhook", options=options)
             self.assertTrue(res)
-            text = f'A webhook is send to "http://test.com" with the text: "This is hans from realm realm1"'
+            text = "A webhook is send to 'http://test.com' with the text: 'This is hans from realm realm1'"
             mock_log.assert_any_call(text)
             mock_log.assert_called_with(200)
 
@@ -2892,7 +2892,7 @@ class WebhookTestCase(MyTestCase):
                     "Unable to replace placeholder: ('unknown_tag')!"
                     " Please check the webhooks data option."
                 )
-                text = 'A webhook is send to "http://test.com" with the text: "{token_serial} {token_owner} {unknown_tag}"'
+                text = "A webhook is send to 'http://test.com' with the text: '{token_serial} {token_owner} {unknown_tag}'"
                 mock_info.assert_any_call(text)
                 mock_info.assert_called_with(200)
 
@@ -2938,6 +2938,6 @@ class WebhookTestCase(MyTestCase):
                     "Unable to replace placeholder: ('token_seril')!"
                     " Please check the webhooks data option."
                 )
-                text = 'A webhook is send to "http://test.com" with the text: "The token serial is {token_seril}"'
+                text = "A webhook is send to 'http://test.com' with the text: 'The token serial is {token_seril}'"
                 mock_info.assert_any_call(text)
                 mock_info.assert_called_with(200)
