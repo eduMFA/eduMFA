@@ -119,13 +119,6 @@ Actions:
         --set-tokeninfo-value=<value>    
         --limit=<value>
     
-.. note:: If you fail to redirect the output of this command at the commandline
-   to e.g. a file with a UnicodeEncodeError, you need to set the environment
-   variable like this:
-       export PYTHONIOENCODING=UTF-8
-   Here is a good read about it:
-   https://stackoverflow.com/questions/4545661/unicodedecodeerror-when-redirecting-to-file
-
 """
 
 import click
@@ -545,7 +538,7 @@ def export_user_data(token_list, attributes=None):
 )
 @click.option(
     "--tokenrealms",
-    help="A comma separated list of realms, to which the tokens should be assigned.",
+    help="A comma separated list of realms to which the tokens should be assigned.",
 )
 @click.option(
     "--sum",
@@ -558,7 +551,7 @@ def export_user_data(token_list, attributes=None):
 @click.option(
     "--action",
     help=f"Which action should be performed on the "
-    f"found tokens. {'|'.join(ALLOWED_ACTIONS)}. Exporting to PSKC only supports "
+    f"found tokens: {'|'.join(ALLOWED_ACTIONS)}. Exporting to PSKC only supports "
     f"HOTP, TOTP and PW tokens!",
 )
 @click.option(
@@ -574,14 +567,17 @@ def export_user_data(token_list, attributes=None):
     "formatted output.",
 )
 @click.option("--last_auth", help="Can be something like 10h, 7d, or 2y")
-@click.option("--assigned", help="True|False|None")
-@click.option("--active", help="True|False|None")
-@click.option("--orphaned", help="Whether the token is an orphaned token. Set to 1")
+@click.option("--assigned", help="True|False|None (default)")
+@click.option("--active", help="True|False|None (default)")
+@click.option(
+    "--orphaned",
+    help="Whether the token is an orphaned token (True|False|None (default)).",
+)
 @click.option(
     "--orphan_exception_value",
     default=False,
     type=bool,
-    help="If an exception occures during orphan check use this value.",
+    help="Whether to consider users whose lookup causes an exception as orphaned (True|False (default)|None).",
 )
 @click.option(
     "--b32",

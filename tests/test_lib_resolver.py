@@ -2864,6 +2864,7 @@ class ResolverTestCase(MyTestCase):
         self.assertFalse(y.checkPass("1002", "no pw at all"))
         self.assertTrue(y.getUsername("1000") == "cornelius", y.getUsername("1000"))
         self.assertTrue(y.getUserId("cornelius") == "1000", y.getUserId("cornelius"))
+        self.assertEqual(y.getUsername("user does not exist"), "")
         self.assertTrue(y.getUserId("user does not exist") == "")
         # Check that non-ASCII user was read successfully
         self.assertEqual(y.getUsername("1116"), "nönäscii")
