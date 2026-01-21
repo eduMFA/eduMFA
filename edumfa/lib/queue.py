@@ -80,9 +80,7 @@ class JobCollector:
         with app.app_context():
             store = get_app_local_store()
         if "job_queue" in store:
-            raise RuntimeError(
-                "App already has a job queue: {!r}".format(store["job_queue"])
-            )
+            raise RuntimeError(f"App already has a job queue: {store['job_queue']!r}")
         try:
             package_name, class_name = app.config[JOB_QUEUE_CLASS].rsplit(".", 1)
             queue_class = get_module_class(package_name, class_name)

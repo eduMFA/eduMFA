@@ -149,7 +149,7 @@ class HmacOtp:
         log.debug(f"OTP range counter: {start!r} - {end!r}")
         for c in range(start, end):
             otpval = self.generate(c)
-            # log.debug("calculating counter {0!r}".format(c))
+            # log.debug(f"calculating counter {c!r}")
 
             if safe_compare(otpval, anOtpVal):
                 res = c

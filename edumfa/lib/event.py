@@ -92,11 +92,7 @@ class event:
                     # copy all values from the original audit entry
                     event_audit_data = dict(self.g.audit_object.audit_data)
                     event_audit_data["action"] = (
-                        "PRE-EVENT {trigger}>>{handler}:{action}".format(
-                            trigger=self.eventname,
-                            handler=e_handler_def.get("handlermodule"),
-                            action=e_handler_def.get("action"),
-                        )
+                        f"PRE-EVENT {self.eventname}>>{e_handler_def.get('handlermodule')}:{e_handler_def.get('action')}"
                     )
                     event_audit_data["action_detail"] = (
                         f"{e_handler_def.get('options')}"
@@ -136,11 +132,7 @@ class event:
                     # copy all values from the original audit entry
                     event_audit_data = dict(self.g.audit_object.audit_data)
                     event_audit_data["action"] = (
-                        "POST-EVENT {trigger}>>{handler}:{action}".format(
-                            trigger=self.eventname,
-                            handler=e_handler_def.get("handlermodule"),
-                            action=e_handler_def.get("action"),
-                        )
+                        f"POST-EVENT {self.eventname}>>{e_handler_def.get('handlermodule')}:{e_handler_def.get('action')}"
                     )
                     event_audit_data["action_detail"] = (
                         f"{e_handler_def.get('options')}"

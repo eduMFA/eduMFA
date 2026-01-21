@@ -756,17 +756,17 @@ def export_pskc(tokenobj_list, psk=None):
             continue
         try:
             kp2 = BeautifulSoup(
-                """<KeyPackage>
+                f"""<KeyPackage>
         <DeviceInfo>
-          <Manufacturer>{manufacturer}</Manufacturer>
-          <SerialNo>{serial}</SerialNo>
+          <Manufacturer>{html.escape(manufacturer)}</Manufacturer>
+          <SerialNo>{html.escape(serial)}</SerialNo>
         </DeviceInfo>
-        <Key Id="{serial}"
-             Algorithm="urn:ietf:params:xml:ns:keyprov:pskc:{type}">
-                 <Issuer>{issuer}</Issuer>
+        <Key Id="{html.escape(serial)}"
+             Algorithm="urn:ietf:params:xml:ns:keyprov:pskc:{html.escape(type)}">
+                 <Issuer>{html.escape(issuer)}</Issuer>
                  <AlgorithmParameters>
                      <ResponseFormat Length="{otplen}" Encoding="DECIMAL"/>
-                     <Suite hashalgo="{suite}" />
+                     <Suite hashalgo="{html.escape(suite)}" />
                  </AlgorithmParameters>
                  <Data>
                     <Secret>
@@ -776,7 +776,7 @@ def export_pskc(tokenobj_list, psk=None):
                                  <xenc:CipherValue>{encrypted_otpkey}</xenc:CipherValue>
                              </xenc:CipherData>
                          </EncryptedValue>
-                         <ValueMAC>{value_mac}</ValueMAC>
+                         <ValueMAC>{mac_value}</ValueMAC>
                      </Secret>
                     <Time>
                         <PlainValue>0</PlainValue>
@@ -792,19 +792,7 @@ def export_pskc(tokenobj_list, psk=None):
                     </TimeDrift>
                 </Data>
         </Key>
-        </KeyPackage>""".format(
-                    serial=html.escape(serial),
-                    type=html.escape(type),
-                    otplen=otplen,
-                    issuer=html.escape(issuer),
-                    manufacturer=html.escape(manufacturer),
-                    counter=counter,
-                    timestep=timestep,
-                    encrypted_otpkey=encrypted_otpkey,
-                    timedrift=timedrift,
-                    value_mac=mac_value,
-                    suite=html.escape(suite),
-                ),
+        </KeyPackage>""",
                 "html.parser",
             )
 

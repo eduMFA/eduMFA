@@ -447,14 +447,7 @@ class LibPolicyTestCase(MyTestCase):
         set_policy(
             name="lost_pol2",
             scope=SCOPE.ENROLL,
-            action="{}={}, {}={},{}={}".format(
-                ACTION.LOSTTOKENPWCONTENTS,
-                "C",
-                ACTION.LOSTTOKENVALID,
-                5,
-                ACTION.LOSTTOKENPWLEN,
-                3,
-            ),
+            action=f"{ACTION.LOSTTOKENPWCONTENTS}=C, {ACTION.LOSTTOKENVALID}=5,{ACTION.LOSTTOKENPWLEN}=3",
         )
         g = FakeFlaskG()
         P = PolicyClass()

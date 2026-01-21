@@ -199,7 +199,7 @@ class ScriptEventHandler(BaseEventHandler):
 
         if is_true(handler_options.get("logged_in_user")):
             proc_args.append("--logged_in_user")
-            proc_args.append("{username}@{realm}".format(**logged_in_user))
+            proc_args.append(f"{logged_in_user['username']}@{logged_in_user['realm']}")
 
         if is_true(handler_options.get("logged_in_role")):
             proc_args.append("--logged_in_role")

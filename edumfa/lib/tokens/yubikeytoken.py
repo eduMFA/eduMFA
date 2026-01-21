@@ -421,12 +421,12 @@ class YubikeyTokenClass(TokenClass):
                     data["status"] = "BAD_OTP"
 
             data["h"] = yubico_api_signature(data, api_key)
-        response = """nonce={nonce}
+        response = f"""nonce={nonce}
 otp={otp}
 status={status}
 timestamp={timestamp}
-h={h}
-""".format(**data)
+h={data["h"]}
+"""
 
         return "plain", response
 

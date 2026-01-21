@@ -1556,9 +1556,7 @@ class WebAuthnRegistrationResponse:
                 self.expected_registration_client_extensions,
             ):
                 raise RegistrationRejectedException(
-                    "Unable to verify client extensions. {}".format(
-                        self.registration_response.get("registrationClientExtensions")
-                    )
+                    f"Unable to verify client extensions. {self.registration_response.get('registrationClientExtensions')}"
                 )
 
             # Step 12b.
@@ -1934,9 +1932,7 @@ class WebAuthnAssertionResponse:
                 self.expected_assertion_client_extensions,
             ):
                 raise AuthenticationRejectedException(
-                    "Unable to verify client extensions. {}".format(
-                        self.assertion_response.get("assertionClientExtensions")
-                    )
+                    f"Unable to verify client extensions. {self.assertion_response.get('assertionClientExtensions')}"
                 )
 
             # Step 15.

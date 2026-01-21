@@ -707,23 +707,19 @@ class UtilsTestCase(MyTestCase):
 
         r, c = check_pin_contents("abc", "nc")
         self.assertFalse(r)
-        self.assertEqual(
-            "Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["n"]), c
-        )
+        self.assertEqual(f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['n']}", c)
 
         r, c = check_pin_contents("123", "nc")
         self.assertFalse(r)
-        self.assertEqual(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["c"]), c
-        )
+        self.assertEqual(f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['c']}", c)
 
         r, c = check_pin_contents("123", "ncs")
         self.assertFalse(r)
         self.assertTrue(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["c"] in c), c
+            f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['c']}" in c, c
         )
         self.assertTrue(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["s"] in c), c
+            f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['s']}" in c, c
         )
 
         r, c = check_pin_contents("1234", "")
@@ -748,9 +744,7 @@ class UtilsTestCase(MyTestCase):
         self.assertFalse(r)
         self.assertEqual(
             c,
-            "Missing character in PIN: {}{}".format(
-                CHARLIST_CONTENTPOLICY["c"], CHARLIST_CONTENTPOLICY["n"]
-            ),
+            f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['c']}{CHARLIST_CONTENTPOLICY['n']}",
         )
 
         # check for exclusion

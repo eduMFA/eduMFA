@@ -792,9 +792,7 @@ class PolicyClass:
                 extended_condition_check,
             )
             log.debug(
-                "Policies after matching conditions".format(
-                    [p.get("name") for p in reduced_policies]
-                )
+                f"Policies after matching conditions: {[p.get('name') for p in reduced_policies]}"
             )
 
         if audit_data is not None:
@@ -890,14 +888,10 @@ class PolicyClass:
                                 break
                         else:
                             log.warning(
-                                "Policy {!r} has condition with unknown section: {!r}".format(
-                                    policy["name"], section
-                                )
+                                f"Policy {policy['name']!r} has condition with unknown section: {section!r}"
                             )
                             raise PolicyError(
-                                "Policy {!r} has condition with unknown section".format(
-                                    policy["name"]
-                                )
+                                f"Policy {policy['name']!r} has condition with unknown section"
                             )
             if include_policy:
                 reduced_policies.append(policy)
@@ -920,23 +914,22 @@ class PolicyClass:
                     return compare_values(environ_value, comparator, value)
                 except Exception as exx:
                     log.warning(
-                        "Error during handling the condition on HTTP environment {!r} "
-                        "of policy {!r}: {!r}".format(key, policy["name"], exx)
+                        f"Error during handling the condition on HTTP environment {key!r} "
+                        f"of policy {policy['name']!r}: {exx!r}"
                     )
                     raise PolicyError(
-                        "Invalid comparison in the HTTP environment conditions of policy {!r}".format(
-                            policy["name"]
-                        )
+                        f"Invalid comparison in the HTTP environment conditions of policy {policy['name']!r}"
                     )
+
             else:
                 log.warning(
-                    "Unknown HTTP environment key referenced in condition of policy "
-                    "{!r}: {!r}".format(policy["name"], key)
+                    f"Unknown HTTP environment key referenced in condition of policy "
+                    f"{policy['name']!r}: {key!r}"
                 )
                 log.warning(f"Available HTTP environment: {request_environ!r}")
                 raise PolicyError(
-                    "Unknown HTTP environment key referenced in condition of policy "
-                    "{!r}: {!r}".format(policy["name"], key)
+                    f"Unknown HTTP environment key referenced in condition of policy "
+                    f"{policy['name']!r}: {key!r}"
                 )
         else:  # pragma: no cover
             log.error(
@@ -965,24 +958,20 @@ class PolicyClass:
                     return compare_values(header_value, comparator, value)
                 except Exception as exx:
                     log.warning(
-                        "Error during handling the condition on HTTP header {!r} of policy {!r}: {!r}".format(
-                            key, policy["name"], exx
-                        )
+                        f"Error during handling the condition on HTTP header {key!r} of policy {policy['name']!r}: {exx!r}"
                     )
                     raise PolicyError(
-                        "Invalid comparison in the HTTP header conditions of policy {!r}".format(
-                            policy["name"]
-                        )
+                        f"Invalid comparison in the HTTP header conditions of policy {policy['name']!r}"
                     )
             else:
                 log.warning(
-                    "Unknown HTTP header key referenced in condition of policy "
-                    "{!r}: {!r}".format(policy["name"], key)
+                    f"Unknown HTTP header key referenced in condition of policy "
+                    f"{policy['name']!r}: {key!r}"
                 )
                 log.warning(f"Available HTTP headers: {request_headers!r}")
                 raise PolicyError(
-                    "Unknown HTTP header key referenced in condition of policy "
-                    "{!r}: {!r}".format(policy["name"], key)
+                    f"Unknown HTTP header key referenced in condition of policy "
+                    f"{policy['name']!r}: {key!r}"
                 )
         else:  # pragma: no cover
             log.error(
@@ -1014,24 +1003,22 @@ class PolicyClass:
                     return compare_values(db_token.get(key), comparator, value)
                 except Exception as exx:
                     log.warning(
-                        "Error during handling the condition on token {!r} "
-                        "of policy {!r}: {!r}".format(key, policy["name"], exx)
+                        f"Error during handling the condition on token {key!r} "
+                        f"of policy {policy['name']!r}: {exx!r}"
                     )
                     raise PolicyError(
-                        "Invalid comparison in the 'token' "
-                        "conditions of policy {!r}".format(policy["name"])
+                        f"Invalid comparison in the 'token' "
+                        f"conditions of policy {policy['name']!r}"
                     )
             else:
                 log.warning(
-                    "Unknown token column referenced in a "
-                    "condition of policy {!r}: {!r}".format(policy["name"], key)
+                    f"Unknown token column referenced in a "
+                    f"condition of policy {policy['name']!r}: {key!r}"
                 )
                 # If we do have token object but the referenced key is not an attribute of the token,
                 # we have a misconfiguration and raise an error.
                 raise PolicyError(
-                    "Unknown key in the token conditions of policy {!r}".format(
-                        policy["name"]
-                    )
+                    f"Unknown key in the token conditions of policy {policy['name']!r}"
                 )
         else:  # pragma: no cover
             log.error(

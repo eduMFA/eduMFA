@@ -94,25 +94,21 @@ def run_task_on_node(ptask, node):
     :param node: Node name
     """
     try:
-        print_stdout("Running {!r} ...".format(ptask["name"]), end="")
+        print_stdout(f"Running {ptask['name']!r} ...", end="")
         result = execute_task(ptask["taskmodule"], ptask["options"])
     except Exception as e:
-        print_stderr(
-            "Caught exception when running {!r}: {!r}".format(ptask["name"], e)
-        )
+        print_stderr(f"Caught exception when running {ptask['name']!r}: {e!r}")
         result = False
     if result:
         current_time = datetime.now(dateutil.tz.tzlocal())
         print_stdout(
-            "Task {!r} on node {!r} exited successfully. Noting this "
-            "in the database ...".format(ptask["name"], node)
+            f"Task {ptask['name']!r} on node {node!r} exited successfully. Noting this "
+            "in the database ..."
         )
         set_periodic_task_last_run(ptask["id"], node, current_time)
     else:
         print_stderr(
-            "Task {!r} on node {!r} did not run successfully.".format(
-                ptask["name"], node
-            )
+            f"Task {ptask['name']!r} on node {node!r} did not run successfully."
         )
         print_stderr("This unsuccessful run is not recorded in the database.")
         if not ptask.get("retry_if_failed"):

@@ -266,9 +266,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -448,9 +446,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -659,9 +655,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -841,9 +835,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )

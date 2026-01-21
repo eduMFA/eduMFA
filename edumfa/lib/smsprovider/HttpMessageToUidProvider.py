@@ -134,20 +134,11 @@ class HttpMessageToUidProvider(ISMSProvider):
             else:
                 data = parameter
 
-        log_dict = {
-            "params": params,
-            "headers": headers,
-            "method": method,
-            "basic_auth": basic_auth,
-            "url": url,
-            "data": data,
-            "json_param": json_param,
-        }
         log.debug(
-            "issuing request with parameters {params} (data: {data}, "
-            "json: {json_param}), headers {headers}, method {method} and"
-            "authentication {basic_auth} "
-            "to url {url}.".format(**log_dict)
+            f"issuing request with parameters {params} (data: {data}, "
+            f"json: {json_param}), headers {headers}, method {method} and"
+            f"authentication {basic_auth} "
+            f"to url {url}."
         )
         # Todo: drop basic auth if Authorization-Header is given?
         r = requestor(

@@ -745,7 +745,7 @@ def poll_transaction(transaction_id=None):
     # In any case, we log the transaction ID
     g.audit_object.log(
         {
-            "info": "status: {}".format(details.get("challenge_status")),
+            "info": f"status: {details.get('challenge_status')}",
             "action_detail": f"transaction_id: {transaction_id}",
             "success": result,
         }

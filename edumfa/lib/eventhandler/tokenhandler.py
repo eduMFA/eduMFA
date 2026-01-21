@@ -609,8 +609,8 @@ class TokenEventHandler(BaseEventHandler):
                             )
                         except Exception as exx:
                             log.warning(
-                                "Misconfiguration: Failed to attach token to machine."
-                                " Token serial: {!0s}".format(serial)
+                                f"Misconfiguration: Failed to attach token to machine."
+                                f" Token serial: {serial}"
                             )
 
             elif not getParam(request.all_data, "webauthn_usernameless_authn"):

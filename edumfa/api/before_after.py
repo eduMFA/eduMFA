@@ -311,7 +311,7 @@ def auth_error(error):
         if hasattr(error, "details"):
             if error.details:
                 if "message" in error.details:
-                    message = "{}|{}".format(message, error.details["message"])
+                    message = f"{message}|{error.details['message']}"
 
         g.audit_object.add_to_log({"info": message}, add_with_comma=True)
     return send_error(error.message, error_code=error.id, details=error.details), 401

@@ -245,11 +245,7 @@ class PushTokenTestCase(MyTestCase):
 
         detail = token.get_init_detail()
         self.assertEqual(detail.get("rollout_state"), "enrolled")
-        augmented_pubkey = (
-            "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-        )
+        augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
         parsed_stripped_server_pubkey = serialization.load_pem_public_key(
             to_bytes(augmented_pubkey), default_backend()
         )
@@ -1966,11 +1962,7 @@ class EduPushTokenTestCase(MyTestCase):
 
         detail = token.get_init_detail()
         self.assertEqual(detail.get("rollout_state"), "enrolled")
-        augmented_pubkey = (
-            "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-        )
+        augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
         parsed_stripped_server_pubkey = serialization.load_pem_public_key(
             to_bytes(augmented_pubkey), default_backend()
         )
