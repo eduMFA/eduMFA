@@ -74,14 +74,15 @@ class SSHApplicationTestCase(MyTestCase):
                 "sshkey",
                 serial,
                 filter_param={"user": "Idefix"},
-                options={"user": "cornelius"},
+                options={"user": "john"},
             )
             self.assertFalse(auth_item)
             mock_log.assert_called_with(
                 "The requested user Idefix does "
-                "not match the user option (None) of the SSH application."
+                "not match the user option (john) of the SSH application."
             )
-        # Get with missing MachineTokenOptions, meaning the attached user can't
+
+        # Get with missing options, meaning the attached user can't
         # be checked.
         with mock.patch("logging.Logger.debug") as mock_log:
             auth_item = SSHApplication.get_authentication_item(
