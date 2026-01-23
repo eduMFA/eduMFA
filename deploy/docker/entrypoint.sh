@@ -3,7 +3,7 @@ set -e
 
 GEN_PWD="$(openssl rand -base64 42)"
 EDUMFA_ADMIN_USER="${EDUMFA_ADMIN_USER:-admin}"
-# Check if password is set, otherwise generate one and store the information if geneated in a variable
+# Check if password is set, otherwise generate one later.
 GENERATED_PASSWORD=0
 if [ -z "$EDUMFA_ADMIN_PASS" ]; then
   echo "No EDUMFA_ADMIN_PASS set, generating a random one and printing it afterwards."
