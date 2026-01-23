@@ -100,8 +100,6 @@ log = logging.getLogger(__name__)
 optional = True
 required = False
 
-ENCODING = "utf-8"
-
 
 # Define function to convert Oracle CLOBs to VARCHAR before using them in a
 # compare operation.

@@ -44,7 +44,6 @@ from ...lib.error import ERROR, AuthError, ParameterError
 from ...lib.log import log_with
 
 log = logging.getLogger(__name__)
-ENCODING = "utf-8"
 TRUSTED_JWT_ALGOS = [
     "ES256",
     "ES384",
