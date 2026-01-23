@@ -10,6 +10,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from passlib.hash import argon2
+from pymysql import OperationalError as PyMysqlOperationalError
 from testfixtures import Replace, log_capture, test_datetime
 
 from edumfa.lib import _
@@ -6511,6 +6512,53 @@ class AChallengeResponse(MyApiTestCase):
         remove_token(self.serial_sms)
         remove_token("hotp_serial")
         delete_policy("increase_failcounter_on_challenge")
+
+    @log_capture(level=logging.DEBUG)
+    def test_20_db_error(self, capture):
+        # Create HOTP token
+        init_token(
+            {
+                "type": "hotp",
+                "serial": "hotp_serial",
+                "otpkey": "abcde12345",
+                "pin": "pin",
+            },
+            user=User("cornelius", self.realm1),
+        )
+        with self.app.test_request_context(
+            "/validate/check",
+            method="POST",
+            data={"user": "cornelius", "pass": "pin"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(200, res.status_code)
+
+        # Simulate a OperationalError during Execution of check_token_list
+        with mock.patch("edumfa.lib.token.check_token_list") as mock_check_token_list:
+            from sqlalchemy.exc import OperationalError
+
+            mock_check_token_list.side_effect = OperationalError(
+                statement=None, params=None, orig=PyMysqlOperationalError("TestMessage")
+            )
+
+            with self.app.test_request_context(
+                "/validate/check",
+                method="POST",
+                data={"user": "cornelius", "pass": "pin"},
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertEqual(500, res.status_code)
+                result = res.json.get("result")
+                self.assertFalse(result.get("status"))
+                self.assertEqual(
+                    "A database error occurred.", result.get("error").get("message")
+                )
+                self.assertEqual(-600, result.get("error").get("code"))
+                log_messages = str(capture)
+                self.assertIn(
+                    "Database error occurred: OperationalError('(pymysql.err.OperationalError) TestMessage')",
+                    log_messages,
+                )
 
 
 class TriggeredPoliciesTestCase(MyApiTestCase):
