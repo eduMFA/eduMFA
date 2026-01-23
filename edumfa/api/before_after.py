@@ -428,7 +428,7 @@ def sql_error(error):
     """
     This function is called when a database error occurs.
     """
-    log.error("Database error occurred: {!r}".format(error))
+    log.error(f"Database error occurred: {error!r}")
     if "audit_object" in g:
         g.audit_object.log({"info": "Database error occurred."})
     return send_error("A database error occurred.", error_code=-600), 500
