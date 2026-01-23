@@ -422,6 +422,7 @@ def internal_error(error):
         g.audit_object.log({"info": str(error)})
     return send_error(str(error), error_code=-500), 500
 
+
 @validate_blueprint.app_errorhandler(OperationalError)
 @validate_blueprint.app_errorhandler(IntegrityError)
 def sql_error(error):
