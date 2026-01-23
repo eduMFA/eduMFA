@@ -1217,7 +1217,7 @@ msgid ""
 msgstr ""
 "L'URL d'un emplacement, où les modèles de stratégies peuvent être "
 "trouvés. ( Défaut https://raw.githubusercontent.com/edumfa/policy-"
-"templates/master/templates/ )"
+"templates/main/templates/ )"
 
 #: lib/policy.py
 msgid ""
