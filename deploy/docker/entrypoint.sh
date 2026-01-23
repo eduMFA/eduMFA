@@ -6,7 +6,7 @@ EDUMFA_ADMIN_USER="${EDUMFA_ADMIN_USER:-admin}"
 # Check if password is set, otherwise generate one later.
 GENERATED_PASSWORD=0
 if [ -z "$EDUMFA_ADMIN_PASS" ]; then
-  echo "No EDUMFA_ADMIN_PASS set, generating a random one and printing it afterwards."
+  echo "No EDUMFA_ADMIN_PASS set, a random password will be generated and printed when initialization finishes."
   GENERATED_PASSWORD=1
 fi
 EDUMFA_ADMIN_PASS="${EDUMFA_ADMIN_PASS:-$GEN_PWD}"
