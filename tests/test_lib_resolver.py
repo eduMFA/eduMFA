@@ -260,6 +260,9 @@ class SQLResolverTestCase(MyTestCase):
         username = y.getUsername(user_id)
         self.assertEqual(username, "cornelius", username)
 
+        username = y.getUsername("user does not exist")
+        self.assertEqual(username, "")
+
     def test_01a_where_tests(self):
         y = SQLResolver()
         d = self.parameters.copy()
@@ -1091,6 +1094,9 @@ class LDAPResolverTestCase(MyTestCase):
 
         username = y.getUsername(user_id)
         self.assertTrue(username == "bob", username)
+
+        username = y.getUsername("user does not exist")
+        self.assertEqual(username, "")
 
         pw = "bobpwééé"
         res = y.checkPass(user_id, pw)
@@ -2637,7 +2643,7 @@ class BaseResolverTestCase(MyTestCase):
         self.assertEqual(r[1], "Not implemented")
 
 
-class ResolverTestCase(MyTestCase):
+class PasswdIdResolverTestCase(MyTestCase):
     """
     Test the Passwdresolver
     """
