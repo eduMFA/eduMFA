@@ -32,6 +32,7 @@ import logging
 import threading
 
 from flask import current_app, g, request
+from sqlalchemy.exc import IntegrityError, OperationalError
 
 from edumfa.api.auth import admin_required, jwtauth, user_required
 from edumfa.api.lib.postpolicy import postrequest, sign_response
@@ -421,3 +422,14 @@ def internal_error(error):
     if "audit_object" in g:
         g.audit_object.log({"info": str(error)})
     return send_error(str(error), error_code=-500), 500
+
+@validate_blueprint.app_errorhandler(OperationalError)
+@validate_blueprint.app_errorhandler(IntegrityError)
+def sql_error(error):
+    """
+    This function is called when a database error occurs.
+    """
+    log.error("Database error occurred: {!r}".format(error))
+    if "audit_object" in g:
+        g.audit_object.log({"info": "Database error occurred."})
+    return send_error("A database error occurred.", error_code=-600), 500
