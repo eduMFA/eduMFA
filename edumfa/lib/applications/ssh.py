@@ -93,7 +93,7 @@ class MachineApplication(MachineApplicationBase):
                 else:
                     log.debug(
                         f"The requested user {user_filter} does not match the user "
-                        f"option ({options.get('user')}) of the SSH application."
+                        f"option ({options.get('user', '')}) of the SSH application."
                     )
         else:
             log.info(
