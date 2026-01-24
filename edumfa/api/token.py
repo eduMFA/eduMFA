@@ -467,6 +467,7 @@ def list_api():
     tokeninfokey = getParam(param, "infokey", optional)
     tokeninfovalue = getParam(param, "infovalue", optional)
     rollout_state = getParam(param, "rollout_state", optional)
+    resolve_users = getParam(param, "resolve_users", optional, default="true")
     tokeninfo = None
     if tokeninfokey and tokeninfovalue:
         tokeninfo = {tokeninfokey: tokeninfovalue}
@@ -474,6 +475,8 @@ def list_api():
         assigned = assigned.lower() == "true"
     if active:
         active = active.lower() == "true"
+    if resolve_users:
+        resolve_users = resolve_users.lower() == "true"
 
     # allowed_realms determines, which realms the admin would be allowed to see
     # In certain cases like for users, we do not have allowed_realms
@@ -502,6 +505,7 @@ def list_api():
         tokeninfo=tokeninfo,
         rollout_state=rollout_state,
         hidden_tokeninfo=hidden_tokeninfo,
+        resolve_users=resolve_users,
     )
     g.audit_object.log({"success": True})
     if output_format == "csv":
