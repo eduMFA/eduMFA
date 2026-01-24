@@ -587,7 +587,7 @@ def reset_all_user_tokens_passkey(user) -> None:
     tokens = get_tokens_from_serial_or_user(None, user=user)
     log.debug("Reset failcounter of all tokens of {0!s}".format(user))
     for tok_obj_reset in tokens:
-        if tok.get_class_type() in ["registration"]:
+        if tok_obj_reset.get_class_type() in ["registration"]:
             continue
         try:
             tok_obj_reset.reset()
