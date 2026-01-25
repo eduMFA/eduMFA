@@ -126,6 +126,7 @@ test = [
     "testfixtures==8.3.0",
     "tomli==2.4.1",
     "types-PyYAML==6.0.12.20260408",
+    "fido2==2.1.1"
 ]
 
 [tool.setuptools.packages.find]
