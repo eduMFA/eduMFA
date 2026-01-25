@@ -227,7 +227,7 @@ core_cli.add_command(create_tables, "createdb")
     "-a",
     "--attempts",
     type=int,
-    default=5,
+    default=10,
     show_default=True,
     help="Number of attempts to connect to the database before giving up.",
 )
@@ -235,7 +235,7 @@ core_cli.add_command(create_tables, "createdb")
     "-t",
     "--timeout",
     type=int,
-    default=5,
+    default=3,
     show_default=True,
     help="Timeout in seconds per attempt to wait for the database to become available.",
 )
