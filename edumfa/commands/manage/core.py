@@ -232,14 +232,14 @@ core_cli.add_command(create_tables, "createdb")
     help="Number of attempts to connect to the database before giving up.",
 )
 @click.option(
-    "-t",
-    "--timeout",
+    "-s",
+    "--sleep",
     type=int,
     default=3,
     show_default=True,
-    help="Timeout in seconds per attempt to wait for the database to become available.",
+    help="Time to sleep in seconds between the attempts to wait for the database to become available.",
 )
-def wait_for_db(attempts, timeout):
+def wait_for_db(attempts, sleep):
     """
     Wait until the database is available.
     """
@@ -256,10 +256,10 @@ def wait_for_db(attempts, timeout):
             return
         except OperationalError:
             click.echo(
-                f"Failed to connect to database. Attempt {attempt + 1} of {attempts}. Waiting {timeout} seconds...",
+                f"Failed to connect to database. Attempt {attempt + 1} of {attempts}. Waiting {sleep} seconds...",
                 err=True,
             )
-            time.sleep(timeout)
+            time.sleep(sleep)
 
     click.echo(f"Could not connect to the database after {attempts} attempts.")
     sys.exit(1)
