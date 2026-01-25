@@ -222,6 +222,49 @@ def create_tables(stamp=False):
 core_cli.add_command(create_tables, "createdb")
 
 
+@core_cli.command("wait_for_db")
+@click.option(
+    "-a",
+    "--attempts",
+    type=int,
+    default=5,
+    show_default=True,
+    help="Number of attempts to connect to the database before giving up.",
+)
+@click.option(
+    "-t",
+    "--timeout",
+    type=int,
+    default=5,
+    show_default=True,
+    help="Timeout in seconds per attempt to wait for the database to become available.",
+)
+def wait_for_db(attempts, timeout):
+    """
+    Wait until the database is available.
+    """
+    import time
+
+    from sqlalchemy import text
+    from sqlalchemy.exc import OperationalError
+
+    for attempt in range(attempts):
+        try:
+            with db.engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
+            click.echo("Database connection successful.")
+            return
+        except OperationalError:
+            click.echo(
+                f"Failed to connect to database. Attempt {attempt + 1} of {attempts}. Waiting {timeout} seconds...",
+                err=True,
+            )
+            time.sleep(timeout)
+
+    click.echo(f"Could not connect to the database after {attempts} attempts.")
+    sys.exit(1)
+
+
 @core_cli.command("drop_tables")
 @click.option(
     "-d",
