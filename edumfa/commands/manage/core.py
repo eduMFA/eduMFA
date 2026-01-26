@@ -238,7 +238,7 @@ core_cli.add_command(create_tables, "createdb")
     show_default=True,
     help="Time to sleep in seconds between the attempts to wait for the database to become available.",
 )
-def wait_for_db(attempts, sleep):
+def wait_for_db(attempts: int, sleep: int) -> None:
     """
     Wait until the database is available.
     """
