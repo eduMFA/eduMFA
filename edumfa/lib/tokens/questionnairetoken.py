@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -234,9 +233,7 @@ class QuestionnaireTokenClass(TokenClass):
         # if all questions are used up, make a new round
         if len(questions) == len(used_questions):
             log.info(
-                "User has only {0!s} questions in his token. Reusing questions now.".format(
-                    len(questions)
-                )
+                f"User has only {len(questions)} questions in his token. Reusing questions now."
             )
             used_questions = []
         # Reduce the allowed questions
@@ -245,9 +242,7 @@ class QuestionnaireTokenClass(TokenClass):
         }
         message_id = secrets.choice(list(remaining_questions))
         message = remaining_questions[message_id]
-        used_questions = (options.get("data", "") + ",{0!s}".format(message_id)).strip(
-            ","
-        )
+        used_questions = (options.get("data", "") + f",{message_id}").strip(",")
 
         validity = int(get_from_config("DefaultChallengeValidityTime", 120))
         tokentype = self.get_tokentype().lower()
@@ -266,7 +261,7 @@ class QuestionnaireTokenClass(TokenClass):
         )
         db_challenge.save()
         expiry_date = datetime.datetime.now() + datetime.timedelta(seconds=validity)
-        reply_dict = {"attributes": {"valid_until": "{0!s}".format(expiry_date)}}
+        reply_dict = {"attributes": {"valid_until": f"{expiry_date}"}}
         return True, message, db_challenge.transaction_id, reply_dict
 
     def check_answer(self, given_answer, challenge_object):
@@ -288,9 +283,7 @@ class QuestionnaireTokenClass(TokenClass):
         if safe_compare(answer, given_answer):
             res = 1
         else:
-            log.debug(
-                "The answer for token {0!s} does not match.".format(self.get_serial())
-            )
+            log.debug(f"The answer for token {self.get_serial()} does not match.")
         return res
 
     @check_token_locked
@@ -357,14 +350,14 @@ class QuestionnaireTokenClass(TokenClass):
         question_number = int(
             get_action_values_from_options(
                 SCOPE.AUTH,
-                "{0!s}_{1!s}".format(self.get_class_type(), QUESTACTION.NUM_QUESTIONS),
+                f"{self.get_class_type()}_{QUESTACTION.NUM_QUESTIONS}",
                 options,
             )
             or 1
         )
         if len(challengeobject_list) == 1:
             session = int(challengeobject_list[0].session or "0") + 1
-            options["session"] = "{0!s}".format(session)
+            options["session"] = f"{session}"
             # write the used questions to the data field
             options["data"] = challengeobject_list[0].data or ""
             if session < question_number:

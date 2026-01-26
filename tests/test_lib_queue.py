@@ -5,7 +5,8 @@ In particular, this tests
 lib/queue/*.py
 """
 
-import mock
+from unittest import mock
+
 from huey import RedisHuey
 
 from edumfa.app import create_app

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -573,6 +572,7 @@ class WEBAUTHNGROUP:
 
     WEBAUTHN = "WebAuthn"
 
+
 def reset_all_user_tokens_passkey(user) -> None:
     # TODO: Should be merged with normal decorator
     # Gather all tokens of the user that are not registration tokens and reset the failure counter
@@ -585,15 +585,15 @@ def reset_all_user_tokens_passkey(user) -> None:
     if not reset_all:
         return
     tokens = get_tokens_from_serial_or_user(None, user=user)
-    log.debug("Reset failcounter of all tokens of {0!s}".format(user))
+    log.debug(f"Reset failcounter of all tokens of {user}")
     for tok_obj_reset in tokens:
-        if tok.get_class_type() in ["registration"]:
+        if tok_obj_reset.get_class_type() in ["registration"]:
             continue
         try:
             tok_obj_reset.reset()
         except Exception:
             log.warning(
-                "Could not reset failure for token {0!s} of user {1!s}".format(tok_obj_reset.serial, user)
+                f"Could not reset failure for token {tok_obj_reset.serial} of user {user}"
             )
 
 
@@ -796,12 +796,12 @@ class WebAuthnTokenClass(TokenClass):
                         "desc": _(
                             "Which algorithm are available to use for creating public key "
                             "credentials for WebAuthn tokens. (Default: [{0!s}], Order: "
-                            "[{1!s}])".format(
-                                ", ".join(
-                                    DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
-                                ),
-                                ", ".join(PUBKEY_CRED_ALGORITHMS_ORDER),
-                            )
+                            "[{1!s}])"
+                        ).format(
+                            ", ".join(
+                                DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
+                            ),
+                            ", ".join(PUBKEY_CRED_ALGORITHMS_ORDER),
                         ),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                         "multiple": True,
@@ -905,9 +905,7 @@ class WebAuthnTokenClass(TokenClass):
 
         if key not in WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys():
             raise ValueError(
-                "key must be one of {0!s}".format(
-                    ", ".join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())
-                )
+                f"key must be one of {', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())}"
             )
         return WEBAUTHN_TOKEN_SPECIFIC_SETTINGS[key]
 
@@ -926,7 +924,7 @@ class WebAuthnTokenClass(TokenClass):
     def _get_message(self, options):
         challengetext = getParam(
             options,
-            "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+            f"{self.get_class_type()}_{ACTION.CHALLENGETEXT}",
             optional,
         )
         return challengetext.format(self.token.description) if challengetext else ""
@@ -1028,9 +1026,7 @@ class WebAuthnTokenClass(TokenClass):
             # Since we are still enrolling the token, there should be exactly one challenge.
             if not len(challengeobject_list):
                 raise EnrollmentError(
-                    "The enrollment challenge does not exist or has timed out for {0!s}".format(
-                        serial
-                    )
+                    f"The enrollment challenge does not exist or has timed out for {serial}"
                 )
             challengeobject = challengeobject_list[0]
             challenge = binascii.unhexlify(challengeobject.challenge)
@@ -1068,13 +1064,9 @@ class WebAuthnTokenClass(TokenClass):
                     ]
                 )
             except Exception as e:
-                log.warning(
-                    "Enrollment of {0!s} token failed: {1!s}!".format(
-                        self.get_class_type(), e
-                    )
-                )
+                log.warning(f"Enrollment of {self.get_class_type()} token failed: {e}!")
                 raise EnrollmentError(
-                    "Could not enroll {0!s} token!".format(self.get_class_type())
+                    f"Could not enroll {self.get_class_type()} token!"
                 )
 
             self.set_otpkey(
@@ -1121,7 +1113,7 @@ class WebAuthnTokenClass(TokenClass):
                 )
                 automatic_description = cn[0].value if len(cn) else None
             log.debug(
-                f"Got client extensions from registration: {registration_client_extensions!s}"
+                f"Got client extensions from registration: {registration_client_extensions}"
             )
             if registration_client_extensions:
                 try:
@@ -1144,9 +1136,7 @@ class WebAuthnTokenClass(TokenClass):
                                 WEBAUTHNINFO.RESIDENT_KEY, "not enough info"
                             )
                 except Exception as e:
-                    log.warning(
-                        "Could not parse registrationClientExtensions: {0!s}".format(e)
-                    )
+                    log.warning(f"Could not parse registrationClientExtensions: {e}")
 
             # Some authenticators do not set the resident key extension.
             # However, backup-eligible keys are always passkeys, i.e., resident keys.
@@ -1543,13 +1533,11 @@ class WebAuthnTokenClass(TokenClass):
             )[0]
             reply_dict = {}
             if token is None:
-                log.warning("Passkey {0!s} not found.".format(user_handle))
+                log.warning(f"Passkey {user_handle} not found.")
                 return False, reply_dict
             if token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
                 log.warning(
-                    "Passkey {0!s} is in clientwait state. Can not be used for authentication!".format(
-                        token.token.serial
-                    )
+                    f"Passkey {token.token.serial} is in clientwait state. Can not be used for authentication!"
                 )
                 return False, reply_dict
             user_verification_requirement_policies = Match.user(
@@ -1565,10 +1553,7 @@ class WebAuthnTokenClass(TokenClass):
             )
             if user_verification_requirement not in USER_VERIFICATION_LEVELS:
                 raise PolicyError(
-                    "{0!s} must be one of {1!s}".format(
-                        WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                        ", ".join(USER_VERIFICATION_LEVELS),
-                    )
+                    f"{WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT} must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
 
             options[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] = (
@@ -1594,7 +1579,7 @@ class WebAuthnTokenClass(TokenClass):
                         ),
                     )
                     token.inc_count_auth_success()
-                    reset_all_user_tokens_passkey(token.user)                    
+                    reset_all_user_tokens_passkey(token.user)
                     return True, reply_dict
                 else:
                     return False, reply_dict
@@ -1688,9 +1673,7 @@ class WebAuthnTokenClass(TokenClass):
             except AuthenticationRejectedException as e:
                 # The authentication ceremony failed.
                 log.warning(
-                    "Checking response for token {0!s} failed. {1!s}".format(
-                        self.token.serial, e
-                    )
+                    f"Checking response for token {self.token.serial} failed. {e}"
                 )
                 return -1
 
@@ -1711,10 +1694,8 @@ class WebAuthnTokenClass(TokenClass):
                 getParam(options, WEBAUTHNACTION.REQ, optional),
             ):
                 log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate "
-                    "due to policy restriction {1!s}".format(
-                        self.token.serial, WEBAUTHNACTION.REQ
-                    )
+                    f"The WebAuthn token {self.token.serial} is not allowed to authenticate "
+                    f"due to policy restriction {WEBAUTHNACTION.REQ}"
                 )
                 raise PolicyError(
                     "The WebAuthn token is not allowed to "
@@ -1732,10 +1713,8 @@ class WebAuthnTokenClass(TokenClass):
                 and self.get_tokeninfo(WEBAUTHNINFO.AAGUID) not in allowed_aaguids
             ):
                 log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate due to policy "
-                    "restriction {1!s}".format(
-                        self.token.serial, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST
-                    )
+                    f"The WebAuthn token {self.token.serial} is not allowed to authenticate due to policy "
+                    f"restriction {WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST}"
                 )
                 raise PolicyError(
                     "The WebAuthn token is not allowed to "

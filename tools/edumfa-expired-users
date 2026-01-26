@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # 2016-03-14 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 #
 # Copyright (c) 2016, Cornelius Kölbel
@@ -148,20 +147,20 @@ def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
         if account_expires:
             if int(account_expires) == 0:
                 # 0 -> account never expires
-                print("%s does not expire." % username)
+                print(f"{username} does not expire.")
                 continue
             td = datetime.timedelta(seconds=(int(account_expires) / MULTIPLYER))
             try:
                 exp_date = MS_AD_START + td
             except OverflowError:
                 # values like 9223372036854775807 do not expire
-                print("%s does not expire." % username)
+                print(f"{username} does not expire.")
                 continue
-            print("= User %s has an expiration date." % username)
-            print("== UTC now : %s" % utc_now)
-            print("== expires : %s" % exp_date)
+            print(f"= User {username} has an expiration date.")
+            print(f"== UTC now : {utc_now}")
+            print(f"== expires : {exp_date}")
             if exp_date <= utc_now:
-                print("=== Account %s has expired." % username)
+                print(f"=== Account {username} has expired.")
                 user = User(username, realm=realm)
                 tokens = get_tokens(user=user)
                 if not tokens:
@@ -172,20 +171,18 @@ def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
                         if m:
                             if noaction:
                                 print(
-                                    "=== I WOULD unassign token %s" % token.token.serial
+                                    f"=== I WOULD unassign token {token.token.serial}"
                                 )
                             else:
-                                print("=== Unassigning token %s" % token.token.serial)
+                                print(f"=== Unassigning token {token.token.serial}")
                                 unassign_token(token.token.serial)
                     if delete_serial:
                         m = re.search(delete_serial, token.token.serial)
                         if m:
                             if noaction:
-                                print(
-                                    "=== I WOULD delete token %s" % token.token.serial
-                                )
+                                print(f"=== I WOULD delete token {token.token.serial}")
                             else:
-                                print("=== Deleting token %s" % token.token.serial)
+                                print(f"=== Deleting token {token.token.serial}")
                                 remove_token(token.token.serial)
 
 
