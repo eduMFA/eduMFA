@@ -376,11 +376,11 @@ class UserTestCase(MyTestCase):
 
         # Create the user
         uid = create_user(
-            resolver, {"username": "achmed3", "givenname": "achmed"}, password="secret"
+            resolver, {"username": "alice3", "givenname": "alice"}, password="secret"
         )
         self.assertTrue(uid > 6)
 
-        user = User("achmed3", realm=realm)
+        user = User("alice3", realm=realm)
         r = user.check_password("secret")
 
         # delete user

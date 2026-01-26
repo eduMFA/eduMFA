@@ -218,12 +218,12 @@ class SQLResolverTestCase(MyTestCase):
                     "mobile": "mobile"}',
     }
 
-    def test_00_delete_achmeds(self):
-        # If the test failed and some achmeds are still in the database (from
-        #  add_user) we delete them here.
+    def test_00_delete_leftover_users(self):
+        # If the test failed and users are still in the database (from add_user)
+        # we delete them here.
         y = SQLResolver()
         y.loadConfig(self.parameters)
-        for username in ["achmed", "achmed2", "corneliusReg"]:
+        for username in ["robin", "robin2", "corneliusReg"]:
             uid = True
             while uid:
                 uid = y.getUserId(username)
@@ -342,8 +342,8 @@ class SQLResolverTestCase(MyTestCase):
         y.loadConfig(self.parameters)
         uid = y.add_user(
             {
-                "username": "achmed",
-                "email": "achmed@world.net",
+                "username": "robin",
+                "email": "robin@world.net",
                 "password": "passw0rd",
                 "mobile": "12345",
             }
@@ -353,34 +353,34 @@ class SQLResolverTestCase(MyTestCase):
         self.assertFalse(y.checkPass(uid, "password"))
         # check that we actually store SSHA256
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin"))
             .first()
             .password
         )
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
 
         # we assume here the uid is of type int
-        uid = y.getUserId("achmed")
+        uid = y.getUserId("robin")
         self.assertGreater(int(uid), self.num_users)
 
-        r = y.update_user(uid, {"username": "achmed2", "password": "test"})
+        r = y.update_user(uid, {"username": "robin2", "password": "test"})
         # check that we actually store SSHA256
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
         uname = y.getUsername(uid)
-        self.assertEqual(uname, "achmed2")
+        self.assertEqual(uname, "robin2")
         r = y.checkPass(uid, "test")
         self.assertTrue(r)
         # Now we delete the user
         y.delete_user(uid)
-        # Now there should be no achmed anymore
-        uid = y.getUserId("achmed2")
+        # Check if the user was deleted
+        uid = y.getUserId("robin2")
         self.assertFalse(uid)
-        uid = y.getUserId("achmed")
+        uid = y.getUserId("robin")
         self.assertFalse(uid)
 
     def test_06_append_where_filter(self):
@@ -451,8 +451,8 @@ class SQLResolverTestCase(MyTestCase):
         y.loadConfig(parameters)
         uid = y.add_user(
             {
-                "username": "achmed",
-                "email": "achmed@world.net",
+                "username": "robin",
+                "email": "robin@world.net",
                 "password": "passw0rd",
                 "mobile": "12345",
             }
@@ -462,20 +462,20 @@ class SQLResolverTestCase(MyTestCase):
         self.assertFalse(y.checkPass(uid, "password"))
         # check that we actually store SSHA256 at first
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin"))
             .first()
             .password
         )
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
 
-        self.assertTrue(y.update_user(uid, {"username": "achmed2", "password": "test"}))
+        self.assertTrue(y.update_user(uid, {"username": "robin2", "password": "test"}))
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
         self.assertTrue(stored_password.startswith("{SSHA256}"), stored_password)
-        self.assertEqual(y.getUsername(uid), "achmed2")
+        self.assertEqual(y.getUsername(uid), "robin2")
         self.assertTrue(y.checkPass(uid, "test"))
 
         # change to SSHA512
@@ -484,10 +484,10 @@ class SQLResolverTestCase(MyTestCase):
         y.loadConfig(parameters)
 
         self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test2"})
+            y.update_user(uid, {"username": "robin2", "password": "test2"})
         )
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
@@ -499,10 +499,10 @@ class SQLResolverTestCase(MyTestCase):
         parameters["Password_Hash_Type"] = "PHPASS"
         y.loadConfig(parameters)
         self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test3"})
+            y.update_user(uid, {"username": "robin2", "password": "test3"})
         )
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
@@ -514,10 +514,10 @@ class SQLResolverTestCase(MyTestCase):
         parameters["Password_Hash_Type"] = "SHA"
         y.loadConfig(parameters)
         self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test4"})
+            y.update_user(uid, {"username": "robin2", "password": "test4"})
         )
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
@@ -529,10 +529,10 @@ class SQLResolverTestCase(MyTestCase):
         parameters["Password_Hash_Type"] = "SSHA"
         y.loadConfig(parameters)
         self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test5"})
+            y.update_user(uid, {"username": "robin2", "password": "test5"})
         )
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
@@ -544,10 +544,10 @@ class SQLResolverTestCase(MyTestCase):
         parameters["Password_Hash_Type"] = "SHA256CRYPT"
         y.loadConfig(parameters)
         self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test6"})
+            y.update_user(uid, {"username": "robin2", "password": "test6"})
         )
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
@@ -559,10 +559,10 @@ class SQLResolverTestCase(MyTestCase):
         parameters["Password_Hash_Type"] = "SHA512CRYPT"
         y.loadConfig(parameters)
         self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test7"})
+            y.update_user(uid, {"username": "robin2", "password": "test7"})
         )
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
@@ -574,10 +574,10 @@ class SQLResolverTestCase(MyTestCase):
         parameters["Password_Hash_Type"] = "MD5CRYPT"
         y.loadConfig(parameters)
         self.assertTrue(
-            y.update_user(uid, {"username": "achmed2", "password": "test8"})
+            y.update_user(uid, {"username": "robin2", "password": "test8"})
         )
         stored_password = (
-            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "achmed2"))
+            y.session.execute(y.TABLE.select().where(y.TABLE.c.username == "robin2"))
             .first()
             .password
         )
@@ -590,7 +590,7 @@ class SQLResolverTestCase(MyTestCase):
         y.loadConfig(parameters)
         with mock.patch("logging.Logger.error") as mock_log:
             self.assertFalse(
-                y.update_user(uid, {"username": "achmed2", "password": "test9"})
+                y.update_user(uid, {"username": "robin2", "password": "test9"})
             )
             expected = (
                 "Error updating user attributes for user with uid 14: "
@@ -606,10 +606,10 @@ class SQLResolverTestCase(MyTestCase):
 
         # Now we delete the user
         y.delete_user(uid)
-        # Now there should be no achmed anymore
-        uid = y.getUserId("achmed2")
+        # Check if the user was deleted
+        uid = y.getUserId("robin2")
         self.assertFalse(uid)
-        uid = y.getUserId("achmed")
+        uid = y.getUserId("robin")
         self.assertFalse(uid)
 
         # Add a new user
@@ -1654,24 +1654,24 @@ class LDAPResolverTestCase(MyTestCase):
             }
         )
 
-        user = "achmed"
+        user = "robin"
 
         # First we add the user with add_user
         r = y.add_user(
             {
                 "username": user,
-                "surname": "Ali",
-                "email": "achmed.ali@example.com",
+                "surname": "Adams",
+                "email": "robin.adams@example.com",
                 "password": "testing123",
                 "mobile": ["1234", "45678"],
-                "givenname": "Achmed",
+                "givenname": "Robin",
             }
         )
         self.assertTrue(r)
 
         # Find the new users user_id
-        user_id = y.getUserId("achmed")
-        self.assertTrue(user_id == "cn=achmed,ou=example,o=test", user_id)
+        user_id = y.getUserId("robin")
+        self.assertTrue(user_id == "cn=robin,ou=example,o=test", user_id)
 
         # Test changing the password
         r = y.update_user(user_id, {"password": "test"})
@@ -1708,8 +1708,8 @@ class LDAPResolverTestCase(MyTestCase):
 
         # Now we delete the user with add_user
         y.delete_user(user_id)
-        # Now there should be no achmed anymore
-        user_id = y.getUserId("achmed")
+        # Check if the user was deleted
+        user_id = y.getUserId("robin")
         self.assertFalse(user_id)
 
     @ldap3mock.activate
@@ -1742,18 +1742,18 @@ class LDAPResolverTestCase(MyTestCase):
             }
         )
 
-        user = "achmed"
+        user = "robin"
         uid_bin = uuid.uuid4().bytes
         user_id = str(uuid.UUID(bytes_le=uid_bin))
 
         attributes = {
             "username": user,
-            "surname": "Ali",
+            "surname": "Adams",
             "userid": user_id,
-            "email": "achmed.ali@example.com",
+            "email": "robin.adams@example.com",
             "password": "testing123",
             "mobile": ["1234", "45678"],
-            "givenname": "Achmed",
+            "givenname": "Robin",
         }
 
         # First we add the user with add_user
@@ -1762,8 +1762,8 @@ class LDAPResolverTestCase(MyTestCase):
 
         # Now we delete the user with add_user
         y.delete_user(user_id)
-        # Now there should be no achmed anymore
-        user_id = y.getUserId("achmed")
+        # Check if the user was deleted
+        user_id = y.getUserId("robin")
         self.assertFalse(user_id)
 
     @ldap3mock.activate
