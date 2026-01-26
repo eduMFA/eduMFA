@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -124,19 +123,15 @@ def rotate_audit(
     audit_module = current_app.config.get("EDUMFA_AUDIT_MODULE", default_module)
     if audit_module != default_module:
         raise Exception(
-            "We only rotate SQL audit module. You are using %s" % audit_module
+            f"We only rotate SQL audit module. You are using {audit_module}"
         )
     if config:
         click.echo("Cleaning up with config file.")
     elif age:
         age = int(age)
-        click.echo("Cleaning up with age: {0!s}.".format(age))
+        click.echo(f"Cleaning up with age: {age}.")
     else:
-        click.echo(
-            "Cleaning up with high: {0!s}, low: {1!s}.".format(
-                highwatermark, lowwatermark
-            )
-        )
+        click.echo(f"Cleaning up with high: {highwatermark}, low: {lowwatermark}.")
 
     engine = create_engine(audit_db_uri)
     # create a configured "Session" class
@@ -148,7 +143,7 @@ def rotate_audit(
         auditlogs = session.query(LogEntry).all()
         delete_list = []
         for log in auditlogs:
-            click.echo("investigating log entry {0!s}".format(log.id))
+            click.echo(f"investigating log entry {log.id}")
             for rule in yml_config:
                 age = int(rule.get("rotate"))
                 rotate_date = datetime.now() - timedelta(days=age)
@@ -158,15 +153,13 @@ def rotate_audit(
                     if key not in ["rotate"]:
                         search_value = rule.get(key)
                         click.echo(
-                            " + searching for {0!r} in {1!s}".format(
-                                search_value, getattr(LogEntry, key)
-                            )
+                            f" + searching for {search_value!r} in {getattr(LogEntry, key)}"
                         )
                         audit_value = getattr(log, key) or ""
                         m = re.search(search_value, audit_value)
                         if m:
                             # it matches!
-                            click.echo(" + -- found {0!r}".format(audit_value))
+                            click.echo(f" + -- found {audit_value!r}")
                             match = True
                         else:
                             # It does not match, we continue to next rule
@@ -177,48 +170,42 @@ def rotate_audit(
                 if match:
                     if log.date < rotate_date:
                         # Delete it!
-                        click.echo(
-                            " + Deleting {0!s} due to rule {1!s}".format(log.id, rule)
-                        )
+                        click.echo(f" + Deleting {log.id} due to rule {rule}")
                         # Delete it
                         delete_list.append(log.id)
                     # skip all other rules and go to the next log entry
                     break
         if dryrun:
             click.echo(
-                "If you only would let me I would clean up {0!s} entries!".format(
-                    len(delete_list)
-                )
+                f"If you only would let me I would clean up {len(delete_list)} entries!"
             )
         else:
-            click.echo("Cleaning up {0!s} entries.".format(len(delete_list)))
+            click.echo(f"Cleaning up {len(delete_list)} entries.")
             delete_matching_rows(
                 session, LogEntry.__table__, LogEntry.id.in_(delete_list), chunksize
             )
     elif age:
         now = datetime.now() - timedelta(days=age)
-        click.echo("Deleting entries older than {0!s}".format(now))
+        click.echo(f"Deleting entries older than {now}")
         criterion = LogEntry.date < now
         if dryrun:
             r = LogEntry.query.filter(criterion).count()
-            click.echo("Would delete {0!s} entries.".format(r))
+            click.echo(f"Would delete {r} entries.")
         else:
             r = delete_matching_rows(session, LogEntry.__table__, criterion, chunksize)
-            click.echo("{0!s} entries deleted.".format(r))
+            click.echo(f"{r} entries deleted.")
     else:
         count = session.query(LogEntry.id).count()
         last_id = 0
         for l in session.query(LogEntry.id).order_by(desc(LogEntry.id)).limit(1):
             last_id = l[0]
-        click.echo(
-            "The log audit log has %i entries, the last one is %i" % (count, last_id)
-        )
+        click.echo(f"The log audit log has {count} entries, the last one is {last_id}")
         # deleting old entries
         if count > highwatermark:
-            click.echo("More than %i entries, deleting..." % highwatermark)
+            click.echo(f"More than {highwatermark} entries, deleting...")
             cut_id = last_id - lowwatermark
             # delete all entries less than cut_id
-            click.echo("Deleting entries smaller than %i" % cut_id)
+            click.echo(f"Deleting entries smaller than {cut_id}")
             criterion = LogEntry.id < cut_id
             if dryrun:
                 r = LogEntry.query.filter(criterion).count()
@@ -226,4 +213,4 @@ def rotate_audit(
                 r = delete_matching_rows(
                     session, LogEntry.__table__, criterion, chunksize
                 )
-            click.echo("{0!s} entries deleted.".format(r))
+            click.echo(f"{r} entries deleted.")

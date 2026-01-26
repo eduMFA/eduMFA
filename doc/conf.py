@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # eduMFA documentation build configuration file, created by
 # sphinx-quickstart on Fri Jun 13 07:31:01 2014.

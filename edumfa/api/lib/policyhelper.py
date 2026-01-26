@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -77,7 +76,7 @@ def get_init_tokenlabel_parameters(g, params=None, token_type="hotp", user_objec
     app_pin_pols = Match.user(
         g,
         scope=SCOPE.ENROLL,
-        action="{0!s}_{1!s}".format(token_type, ACTION.FORCE_APP_PIN),
+        action=f"{token_type}_{ACTION.FORCE_APP_PIN}",
         user_object=user_object,
     ).any()
     if app_pin_pols:
@@ -109,7 +108,7 @@ def get_pushtoken_add_config(g, params=None, user_obj=None):
         params[PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG] = list(firebase_config)[0]
     else:
         raise PolicyError(
-            f"Missing enrollment policy for push token: {PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG!s}"
+            f"Missing enrollment policy for push token: {PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}"
         )
 
     # Get the sslverify definition from the policies
@@ -135,7 +134,7 @@ def get_pushtoken_add_config(g, params=None, user_obj=None):
         params[PushTokenClass.PUSH_ACTION.REGISTRATION_URL] = list(registration_url)[0]
     else:
         raise PolicyError(
-            f"Missing enrollment policy for push token: {PushTokenClass.PUSH_ACTION.REGISTRATION_URL!s}"
+            f"Missing enrollment policy for push token: {PushTokenClass.PUSH_ACTION.REGISTRATION_URL}"
         )
     ttl = Match.user(
         g,
@@ -175,7 +174,7 @@ def get_legacypushtoken_add_config(g, params=None, user_obj=None):
         )[0]
     else:
         raise PolicyError(
-            f"Missing enrollment policy for push token: {LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG!s}"
+            f"Missing enrollment policy for push token: {LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}"
         )
 
     # Get the sslverify definition from the policies
@@ -203,7 +202,7 @@ def get_legacypushtoken_add_config(g, params=None, user_obj=None):
         )[0]
     else:
         raise PolicyError(
-            f"Missing enrollment policy for push token: {LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL!s}"
+            f"Missing enrollment policy for push token: {LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}"
         )
     ttl = Match.user(
         g,

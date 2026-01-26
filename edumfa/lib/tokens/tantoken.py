@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -158,9 +157,7 @@ class TanTokenClass(PaperTokenClass):
             salt = geturandom(SALT_LENGTH, hex=True)
             # Now we add all TANs to the tokeninfo of this token.
             hashed_tan = hash(tanvalue, salt)
-            self.add_tokeninfo(
-                "tan.tan{0!s}".format(tankey), "{0}:{1}".format(salt, hashed_tan)
-            )
+            self.add_tokeninfo(f"tan.tan{tankey}", f"{salt}:{hashed_tan}")
 
     def check_otp(self, anOtpVal, counter=None, window=None, options=None):
         """

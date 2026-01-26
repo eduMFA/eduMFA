@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 This test file tests the lib.importotp
 
@@ -757,7 +756,7 @@ class ImportOTPTestCase(MyTestCase):
         # Only 3 tokens exported, the spass token does not get exported!
         self.assertEqual(token_num, 3)
         self.assertEqual(len(psk), 32)
-        export = "{0!s}".format(soup)
+        export = f"{soup}"
         # remote the tokens
         remove_token("t1")
         remove_token("t2")

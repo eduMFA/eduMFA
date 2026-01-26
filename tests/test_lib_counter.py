@@ -4,8 +4,7 @@ This tests the files
 """
 
 from contextlib import contextmanager
-
-import mock
+from unittest import mock
 
 from edumfa.lib.counter import decrease, increase, read, reset
 from edumfa.models import EventCounter
