@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 from base64 import b32decode, b32encode
 from datetime import datetime, timedelta
+from unittest import mock
 
-import mock
 import responses
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
@@ -186,14 +185,7 @@ class TtypePushAPITestCase(MyApiTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
 
         # 1st step
@@ -273,9 +265,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -358,14 +348,12 @@ class TtypePushAPITestCase(MyApiTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
 
         # first create a signature
         ts = datetime.utcnow().isoformat()
-        sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
+        sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(
             sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
         )
@@ -387,7 +375,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             challenge = chall["nonce"]
             # This is what the smartphone answers.
             # create the signature:
-            sign_data = "{0!s}|{1!s}".format(challenge, serial)
+            sign_data = f"{challenge}|{serial}"
             signature = b32encode_and_unicode(
                 self.smartphone_private_key.sign(
                     sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -412,16 +400,7 @@ class TtypePushAPITestCase(MyApiTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                POLL_ONLY,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={POLL_ONLY},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
 
         # 1st step
@@ -466,9 +445,7 @@ class TtypePushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -597,14 +574,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
 
         # 1st step
@@ -684,9 +654,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -769,14 +737,12 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
 
         # first create a signature
         ts = datetime.utcnow().isoformat()
-        sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
+        sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(
             sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
         )
@@ -798,7 +764,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             challenge = chall["nonce"]
             # This is what the smartphone answers.
             # create the signature:
-            sign_data = "{0!s}|{1!s}".format(challenge, serial)
+            sign_data = f"{challenge}|{serial}"
             signature = b32encode_and_unicode(
                 self.smartphone_private_key.sign(
                     sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -823,14 +789,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                POLL_ONLY,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={POLL_ONLY},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
 
         # 1st step
@@ -875,9 +834,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )

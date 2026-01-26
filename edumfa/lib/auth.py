@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -23,7 +22,6 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import logging
-from typing import List, Union
 
 from edumfa.lib.crypto import hash_with_pepper, verify_with_pepper
 from edumfa.lib.policy import LOGINMODE
@@ -76,17 +74,17 @@ def create_db_admin(username: str, email: str = None, password=None):
     user.save()
 
 
-def get_db_admins() -> List[Admin]:
+def get_db_admins() -> list[Admin]:
     admins = Admin.query.all()
     return admins
 
 
-def get_db_admin(username) -> Union[Admin, None]:
+def get_db_admin(username) -> Admin | None:
     return Admin.query.filter(Admin.username == username).first()
 
 
 def delete_db_admin(username):
-    print("Deleting admin {0!s}".format(username))
+    print(f"Deleting admin {username}")
     fetch_one_resource(Admin, username=username).delete()
 
 
@@ -127,7 +125,7 @@ def check_webui_user(
             if check:
                 user_auth = True
         except Exception as e:
-            log.debug("Error authenticating user against eduMFA: {0!r}".format(e))
+            log.debug(f"Error authenticating user against eduMFA: {e!r}")
     else:
         # check the password of the user against the userstore
         if user_obj.check_password(password):

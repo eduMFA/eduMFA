@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # eduMFA documentation build configuration file, created by
 # sphinx-quickstart on Fri Jun 13 07:31:01 2014.
@@ -22,10 +21,10 @@ import sys
 # built documents.
 #
 # The short X.Y version.
-version = "2.8.0"
+version = "2.9.0"
 # The full version, including alpha/beta/rc tags.
 # release = '2.16dev5'
-release = version
+release = "2.9.0a"
 
 
 def no_op_wraps(func, assigned=None, updated=None):

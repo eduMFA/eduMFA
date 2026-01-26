@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -83,8 +82,8 @@ class MachineApplication(MachineApplicationBase):
                 ret["response"] = otp
         else:
             log.info(
-                "Token %r, type %r is not supported by "
-                "LUKS application module" % (serial, token_type)
+                f"Token {serial!r}, type {token_type!r} is not supported by "
+                "LUKS application module"
             )
 
         return ret

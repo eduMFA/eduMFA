@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -42,7 +41,7 @@ def create_crl(ca, force=False):
     if not r:
         print("The CRL was not created.")
     else:
-        print(f"The CRL {r!s} was created.")
+        print(f"The CRL {r} was created.")
 
 
 @ca_cli.command("create", short_help="Create a new CA connector.")
@@ -62,18 +61,18 @@ def create(name, catype="local"):
     """
     ca = get_caconnector_object(name)
     if ca:
-        click.echo(f"A CA connector with the name '{name!s}' already exists.")
+        click.echo(f"A CA connector with the name '{name}' already exists.")
         sys.exit(1)
     if not catype:
         catype = "local"
     click.echo("Warning: Be sure to set the access rights.")
     click.echo("")
-    click.echo("Creating CA connector of type {0!s}.".format(catype))
+    click.echo(f"Creating CA connector of type {catype}.")
     ca_class = get_caconnector_class(catype)
     ca_params = ca_class.create_ca(name)
     r = save_caconnector(ca_params)
     if r:
-        click.echo(f"Saved CA Connector with ID {r!s}.")
+        click.echo(f"Saved CA Connector with ID {r}.")
     else:
         click.echo("Error saving CA connector.")
 
@@ -86,7 +85,7 @@ def list_ca(verbose=False):
     """
     lst = get_caconnector_list()
     for ca in lst:
-        click.echo(f"{ca.get('connectorname')!s} (type {ca.get('type')!s})")
+        click.echo(f"{ca.get('connectorname')} (type {ca.get('type')})")
         if verbose:
             for k, v in ca.get("data").items():
-                click.echo(f"\t{k!s:20}: {v!s}")
+                click.echo(f"\t{k:20}: {v}")

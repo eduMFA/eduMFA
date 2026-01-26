@@ -106,11 +106,11 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
 
 $scope.getAuthentication = function () {
   $scope.authentications = {"success": 0, "fail": 0};
-  AuditFactory.get({"timelimit": "1d", "action": "*validate*", "success": "1"},
+  AuditFactory.get({"timelimit": "1d", "action": "*validate/*check", "success": "1"},
       function (data) {
           $scope.authentications.success = data.result.value.count;
       });
-  AuditFactory.get({"timelimit": "1d", "action": "*validate*", "success": "0"},
+  AuditFactory.get({"timelimit": "1d", "action": "*validate/*check", "success": "0"},
       function (data) {
           $scope.authentications.fail = data.result.value.count;
           $scope.authentications.users = {}; // Declare the users object as a dictionary

@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import json
 import time
 from base64 import b32decode, b32encode
 from datetime import datetime, timedelta
 from threading import Timer
+from unittest import mock
 
-import mock
 import responses
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
@@ -245,11 +244,7 @@ class PushTokenTestCase(MyTestCase):
 
         detail = token.get_init_detail()
         self.assertEqual(detail.get("rollout_state"), "enrolled")
-        augmented_pubkey = (
-            "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-        )
+        augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
         parsed_stripped_server_pubkey = serialization.load_pem_public_key(
             to_bytes(augmented_pubkey), default_backend()
         )
@@ -284,10 +279,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         token_obj = self._create_push_token()
         remove_token(token_obj.get_serial())
@@ -306,14 +298,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -354,9 +339,7 @@ class PushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
                     # Check that the user was informed about the need to poll
                     detail = res.json.get("detail")
@@ -411,10 +394,7 @@ class PushTokenTestCase(MyTestCase):
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action="{0!s}={1!s}".format(
-                    PushTokenClass.PUSH_ACTION.ALLOW_POLLING,
-                    PushAllowPolling.DENY,
-                ),
+                action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
             )
 
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -431,19 +411,14 @@ class PushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
             self.assertEqual(len(get_challenges(serial=tokenobj.token.serial)), 0)
             # disallow polling the specific token through a policy
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action="{0!s}={1!s}".format(
-                    PushTokenClass.PUSH_ACTION.ALLOW_POLLING,
-                    PushAllowPolling.TOKEN,
-                ),
+                action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
             )
             tokenobj.add_tokeninfo(POLLING_ALLOWED, False)
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -460,9 +435,7 @@ class PushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
             self.assertEqual(len(get_challenges(serial=tokenobj.token.serial)), 0)
 
@@ -528,10 +501,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_config",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -688,7 +658,7 @@ class PushTokenTestCase(MyTestCase):
                 set_policy(
                     "push1",
                     scope=SCOPE.AUTH,
-                    action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
+                    action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
                 )
                 # Send the first authentication request to trigger the challenge
                 with self.app.test_request_context(
@@ -734,7 +704,7 @@ class PushTokenTestCase(MyTestCase):
             set_policy(
                 "push1",
                 scope=SCOPE.AUTH,
-                action="{0!s}=1".format(PushTokenClass.PUSH_ACTION.WAIT),
+                action=f"{PushTokenClass.PUSH_ACTION.WAIT}=1",
             )
             # Send the first authentication request to trigger the challenge
             with self.app.test_request_context(
@@ -836,14 +806,14 @@ class PushTokenTestCase(MyTestCase):
 
         # This is what the smartphone answers.
         # create the signature:
-        sign_data = "{0!s}|{1!s}".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge}|{tokenobj.token.serial}"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
             )
         )
         # Try an invalid signature first
-        wrong_sign_data = "{}|{}".format(challenge, tokenobj.token.serial[1:])
+        wrong_sign_data = f"{challenge}|{tokenobj.token.serial[1:]}"
         wrong_signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 wrong_sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -866,7 +836,7 @@ class PushTokenTestCase(MyTestCase):
 
         # Correct signature, wrong challenge
         wrong_challenge = b32encode_and_unicode(geturandom())
-        wrong_sign_data = "{}|{}".format(wrong_challenge, tokenobj.token.serial)
+        wrong_sign_data = f"{wrong_challenge}|{tokenobj.token.serial}"
         wrong_signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 wrong_sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -901,7 +871,7 @@ class PushTokenTestCase(MyTestCase):
         wrong_key = rsa.generate_private_key(
             public_exponent=65537, key_size=4096, backend=default_backend()
         )
-        wrong_sign_data = "{}|{}".format(challenge, tokenobj.token.serial)
+        wrong_sign_data = f"{challenge}|{tokenobj.token.serial}"
         wrong_signature = b32encode_and_unicode(
             wrong_key.sign(
                 wrong_sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -1023,7 +993,7 @@ class PushTokenTestCase(MyTestCase):
         )
         challenge = challengeobject_list[0].challenge
 
-        sign_data = "{0!s}|{1!s}|decline".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge}|{tokenobj.token.serial}|decline"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -1108,13 +1078,13 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "webui",
             scope=SCOPE.WEBUI,
-            action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA),
+            action=f"{ACTION.LOGINMODE}={LOGINMODE.EDUMFA}",
         )
         # Set a PUSH_WAIT action which will be ignored by eduMFA
         set_policy(
             "push1",
             scope=SCOPE.AUTH,
-            action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
         )
         with mock.patch(
             "edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials"
@@ -1163,7 +1133,7 @@ class PushTokenTestCase(MyTestCase):
         challenge = challengeobject_list[0].challenge
         # This is what the smartphone answers.
         # create the signature:
-        sign_data = "{0!s}|{1!s}".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge}|{tokenobj.token.serial}"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -1223,8 +1193,8 @@ class PushTokenTestCase(MyTestCase):
         timestamp_fmt = "broken_timestamp_010203"
         self.assertRaisesRegex(
             eduMFAError,
-            r"Could not parse timestamp {0!s}. ISO-Format "
-            r"required.".format(timestamp_fmt),
+            rf"Could not parse timestamp {timestamp_fmt}. ISO-Format "
+            r"required.",
             PushTokenClass._check_timestamp_in_range,
             timestamp_fmt,
             10,
@@ -1240,7 +1210,7 @@ class PushTokenTestCase(MyTestCase):
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
-                r"Timestamp {0!s} not in valid "
+                r"Timestamp {!s} not in valid "
                 r"range.".format(timestamp.isoformat().replace("+", r"\+")),
                 PushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
@@ -1250,7 +1220,7 @@ class PushTokenTestCase(MyTestCase):
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
-                r"Timestamp {0!s} not in valid "
+                r"Timestamp {!s} not in valid "
                 r"range.".format(timestamp.isoformat().replace("+", r"\+")),
                 PushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
@@ -1477,14 +1447,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         g.policy_object = PolicyClass()
         # set up the Firebase Gateway
@@ -1506,7 +1469,7 @@ class PushTokenTestCase(MyTestCase):
         # create a poll request
         # first create a signature
         ts = timestamp.isoformat()
-        sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
+        sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(
             sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
         )
@@ -1587,9 +1550,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.DENY
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
         )
         with (
             mock.patch("edumfa.models.datetime") as mock_dt1,
@@ -1611,9 +1572,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.TOKEN
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
         )
         # If no tokeninfo is set, allow polling
         with (
@@ -1666,9 +1625,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.ALLOW
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.ALLOW}",
         )
         with (
             mock.patch("edumfa.models.datetime") as mock_dt1,
@@ -1747,7 +1704,7 @@ class PushTokenTestCase(MyTestCase):
             )
 
         # check for a wrongly created signature (inverted timestamp, serial)
-        sign_string2 = "{timestamp}|{serial}".format(serial=serial, timestamp=ts)
+        sign_string2 = f"{ts}|{serial}"
         sig_fail2 = self.smartphone_private_key.sign(
             sign_string2.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
         )
@@ -2004,11 +1961,7 @@ class EduPushTokenTestCase(MyTestCase):
 
         detail = token.get_init_detail()
         self.assertEqual(detail.get("rollout_state"), "enrolled")
-        augmented_pubkey = (
-            "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
-        )
+        augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
         parsed_stripped_server_pubkey = serialization.load_pem_public_key(
             to_bytes(augmented_pubkey), default_backend()
         )
@@ -2043,9 +1996,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         token_obj = self._create_push_token()
         remove_token(token_obj.get_serial())
@@ -2064,14 +2015,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -2112,9 +2056,7 @@ class EduPushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
                     # Check that the user was informed about the need to poll
                     detail = res.json.get("detail")
@@ -2169,9 +2111,7 @@ class EduPushTokenTestCase(MyTestCase):
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action="{0!s}={1!s}".format(
-                    PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.DENY
-                ),
+                action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
             )
 
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -2188,18 +2128,14 @@ class EduPushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
             self.assertEqual(len(get_challenges(serial=tokenobj.token.serial)), 0)
             # disallow polling the specific token through a policy
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action="{0!s}={1!s}".format(
-                    PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.TOKEN
-                ),
+                action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
             )
             tokenobj.add_tokeninfo(POLLING_ALLOWED, False)
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -2216,9 +2152,7 @@ class EduPushTokenTestCase(MyTestCase):
                     self.assertEqual("CHALLENGE", result.get("authentication"))
                     # Check that the warning was written to the log file.
                     mock_log.assert_called_with(
-                        "Failed to submit message to Firebase service for token {0!s}.".format(
-                            serial
-                        )
+                        f"Failed to submit message to Firebase service for token {serial}."
                     )
             self.assertEqual(len(get_challenges(serial=tokenobj.token.serial)), 0)
 
@@ -2284,9 +2218,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push_config",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -2443,7 +2375,7 @@ class EduPushTokenTestCase(MyTestCase):
                 set_policy(
                     "push1",
                     scope=SCOPE.AUTH,
-                    action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
+                    action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
                 )
                 # Send the first authentication request to trigger the challenge
                 with self.app.test_request_context(
@@ -2489,7 +2421,7 @@ class EduPushTokenTestCase(MyTestCase):
             set_policy(
                 "push1",
                 scope=SCOPE.AUTH,
-                action="{0!s}=1".format(PushTokenClass.PUSH_ACTION.WAIT),
+                action=f"{PushTokenClass.PUSH_ACTION.WAIT}=1",
             )
             # Send the first authentication request to trigger the challenge
             with self.app.test_request_context(
@@ -2591,14 +2523,14 @@ class EduPushTokenTestCase(MyTestCase):
 
         # This is what the smartphone answers.
         # create the signature:
-        sign_data = "{0!s}|{1!s}".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge}|{tokenobj.token.serial}"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
             )
         )
         # Try an invalid signature first
-        wrong_sign_data = "{}|{}".format(challenge, tokenobj.token.serial[1:])
+        wrong_sign_data = f"{challenge}|{tokenobj.token.serial[1:]}"
         wrong_signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 wrong_sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -2621,7 +2553,7 @@ class EduPushTokenTestCase(MyTestCase):
 
         # Correct signature, wrong challenge
         wrong_challenge = b32encode_and_unicode(geturandom())
-        wrong_sign_data = "{}|{}".format(wrong_challenge, tokenobj.token.serial)
+        wrong_sign_data = f"{wrong_challenge}|{tokenobj.token.serial}"
         wrong_signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 wrong_sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -2656,7 +2588,7 @@ class EduPushTokenTestCase(MyTestCase):
         wrong_key = rsa.generate_private_key(
             public_exponent=65537, key_size=4096, backend=default_backend()
         )
-        wrong_sign_data = "{}|{}".format(challenge, tokenobj.token.serial)
+        wrong_sign_data = f"{challenge}|{tokenobj.token.serial}"
         wrong_signature = b32encode_and_unicode(
             wrong_key.sign(
                 wrong_sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -2778,7 +2710,7 @@ class EduPushTokenTestCase(MyTestCase):
         )
         challenge = challengeobject_list[0].challenge
 
-        sign_data = "{0!s}|{1!s}|decline".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge}|{tokenobj.token.serial}|decline"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -2863,13 +2795,13 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "webui",
             scope=SCOPE.WEBUI,
-            action="{}={}".format(ACTION.LOGINMODE, LOGINMODE.EDUMFA),
+            action=f"{ACTION.LOGINMODE}={LOGINMODE.EDUMFA}",
         )
         # Set a PUSH_WAIT action which will be ignored by eduMFA
         set_policy(
             "push1",
             scope=SCOPE.AUTH,
-            action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
         )
         with mock.patch(
             "edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials"
@@ -2918,7 +2850,7 @@ class EduPushTokenTestCase(MyTestCase):
         challenge = challengeobject_list[0].challenge
         # This is what the smartphone answers.
         # create the signature:
-        sign_data = "{0!s}|{1!s}".format(challenge, tokenobj.token.serial)
+        sign_data = f"{challenge}|{tokenobj.token.serial}"
         signature = b32encode_and_unicode(
             self.smartphone_private_key.sign(
                 sign_data.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
@@ -2978,8 +2910,8 @@ class EduPushTokenTestCase(MyTestCase):
         timestamp_fmt = "broken_timestamp_010203"
         self.assertRaisesRegex(
             eduMFAError,
-            r"Could not parse timestamp {0!s}. ISO-Format "
-            r"required.".format(timestamp_fmt),
+            rf"Could not parse timestamp {timestamp_fmt}. ISO-Format "
+            r"required.",
             PushTokenClass._check_timestamp_in_range,
             timestamp_fmt,
             10,
@@ -2995,7 +2927,7 @@ class EduPushTokenTestCase(MyTestCase):
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
-                r"Timestamp {0!s} not in valid "
+                r"Timestamp {!s} not in valid "
                 r"range.".format(timestamp.isoformat().replace("+", r"\+")),
                 PushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
@@ -3005,7 +2937,7 @@ class EduPushTokenTestCase(MyTestCase):
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
-                r"Timestamp {0!s} not in valid "
+                r"Timestamp {!s} not in valid "
                 r"range.".format(timestamp.isoformat().replace("+", r"\+")),
                 PushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
@@ -3228,14 +3160,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         g.policy_object = PolicyClass()
         # set up the Firebase Gateway
@@ -3257,7 +3182,7 @@ class EduPushTokenTestCase(MyTestCase):
         # create a poll request
         # first create a signature
         ts = timestamp.isoformat()
-        sign_string = "{serial}|{timestamp}".format(serial=serial, timestamp=ts)
+        sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(
             sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
         )
@@ -3338,9 +3263,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.DENY
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
         )
         with (
             mock.patch("edumfa.models.datetime") as mock_dt1,
@@ -3362,9 +3285,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.TOKEN
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
         )
         # If no tokeninfo is set, allow polling
         with (
@@ -3417,9 +3338,7 @@ class EduPushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action="{0!s}={1!s}".format(
-                PushTokenClass.PUSH_ACTION.ALLOW_POLLING, PushAllowPolling.ALLOW
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.ALLOW}",
         )
         with (
             mock.patch("edumfa.models.datetime") as mock_dt1,
@@ -3498,7 +3417,7 @@ class EduPushTokenTestCase(MyTestCase):
             )
 
         # check for a wrongly created signature (inverted timestamp, serial)
-        sign_string2 = "{timestamp}|{serial}".format(serial=serial, timestamp=ts)
+        sign_string2 = f"{ts}|{serial}"
         sig_fail2 = self.smartphone_private_key.sign(
             sign_string2.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
         )

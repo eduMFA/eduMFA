@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -149,14 +148,10 @@ class ResponseManglerEventHandler(BaseEventHandler):
                 elif len(comp) == 3:
                     del content[comp[0]][comp[1]][comp[2]]
                 else:
-                    log.warning(
-                        "JSON pointer length of {0!s} not supported.".format(len(comp))
-                    )
+                    log.warning(f"JSON pointer length of {len(comp)} not supported.")
                 options.get("response").data = json.dumps(content)
             except KeyError:
-                log.warning(
-                    "Can not delete response JSON Pointer {0!s}.".format(json_pointer)
-                )
+                log.warning(f"Can not delete response JSON Pointer {json_pointer}.")
         elif action.lower() == ACTION_TYPE.SET:
             try:
                 if type == "integer":
@@ -176,9 +171,7 @@ class ResponseManglerEventHandler(BaseEventHandler):
                 content[comp[0]][comp[1]] = content[comp[0]].get(comp[1]) or {}
                 content[comp[0]][comp[1]][comp[2]] = value
             else:
-                log.warning(
-                    "JSON pointer of length {0!s} not supported.".format(len(comp))
-                )
+                log.warning(f"JSON pointer of length {len(comp)} not supported.")
             options.get("response").data = json.dumps(content)
 
         return ret

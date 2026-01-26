@@ -119,6 +119,9 @@ Each policy can contain the following attributes:
   You can enter several IP addresses or subnets divided by comma. Exclude item
   by prepending a minus sign (like ``10.2.0.0/16, -10.2.0.1, 192.168.0.1``).
 
+  .. note:: To create a policy which matches all but one client, you need to
+     include all clients explicitly: ``0.0.0.0/0, -192.0.2.42``.
+
 **eduMFA Node**
 
   If you have a redundant setup requests can hit different dedicated nodes of

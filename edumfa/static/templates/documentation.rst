@@ -124,6 +124,6 @@ CA Configuration
 **TODO**
 
 
-.. [#resolvers] http://privacyidea.readthedocs.org/en/latest/configuration/useridresolvers.htm
-.. [#realms] http://privacyidea.readthedocs.org/en/latest/configuration/realms.html
-.. [#policies] http://privacyidea.readthedocs.org/en/latest/policies/index.html
+.. [#resolvers] https://edumfa.readthedocs.io/en/latest/configuration/useridresolvers.html
+.. [#realms] https://edumfa.readthedocs.io/en/latest/configuration/realms.html
+.. [#policies] https://edumfa.readthedocs.io/en/latest/policies/index.html

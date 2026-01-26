@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the api.lib.policy.py
 
@@ -358,7 +357,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ADMIN,
-            action="enrollTOTP, enrollHOTP, {0!s}".format(ACTION.IMPORT),
+            action=f"enrollTOTP, enrollHOTP, {ACTION.IMPORT}",
             client="10.0.0.0/8",
         )
         g.policy_object = PolicyClass()
@@ -393,7 +392,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.MAXACTIVETOKENUSER, 1),
+            action=f"{ACTION.MAXACTIVETOKENUSER}=1",
         )
         g.policy_object = PolicyClass()
         # The user has one token, everything is fine.
@@ -427,7 +426,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action="hotp_{0!s}={1!s}".format(ACTION.MAXACTIVETOKENUSER, 1),
+            action=f"hotp_{ACTION.MAXACTIVETOKENUSER}=1",
         )
         # we try to enroll a new HOTP token, this would fail.
         req.all_data = {"user": "cornelius", "realm": self.realm1, "type": "hotp"}
@@ -481,7 +480,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.MAXTOKENUSER, 2),
+            action=f"{ACTION.MAXTOKENUSER}=2",
         )
         g.policy_object = PolicyClass()
         # The user has one token, everything is fine.
@@ -517,7 +516,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_max_12",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.MAXTOKENUSER, 12),
+            action=f"{ACTION.MAXTOKENUSER}=12",
         )
         g.policy_object = PolicyClass()
         # new check_max_token_user should not raise an error!
@@ -541,7 +540,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ENROLL,
-            action="hotp_{0!s}={1!s}".format(ACTION.MAXTOKENUSER, 2),
+            action=f"hotp_{ACTION.MAXTOKENUSER}=2",
         )
         g.policy_object = PolicyClass()
         # and fail to enroll a new token
@@ -616,7 +615,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(len(tokenobject_list) == 2)
 
         # request with a user object, not with a realm
-        req.all_data = {"user": "cornelius@{0!s}".format(self.realm1)}
+        req.all_data = {"user": f"cornelius@{self.realm1}"}
 
         # Now a new policy check will fail, since there are already two
         # tokens in the realm
@@ -642,7 +641,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.AUTHZ,
-            action="{0!s}={1!s}".format(ACTION.SETREALM, self.realm1),
+            action=f"{ACTION.SETREALM}={self.realm1}",
             realm="somerealm",
         )
         g.policy_object = PolicyClass()
@@ -671,7 +670,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.AUTHZ,
-            action="{0!s}={1!s}".format(ACTION.SETREALM, "ConflictRealm"),
+            action=f"{ACTION.SETREALM}=ConflictRealm",
             realm="somerealm",
         )
         g.policy_object = PolicyClass()
@@ -699,12 +698,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.TOKENLABEL, "<u>@<r>"),
+            action=f"{ACTION.TOKENLABEL}=<u>@<r>",
         )
         set_policy(
             name="pol2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.TOKENISSUER, "myPI"),
+            action=f"{ACTION.TOKENISSUER}=myPI",
         )
         g.policy_object = PolicyClass()
 
@@ -723,7 +722,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol3",
             scope=SCOPE.ENROLL,
-            action="hotp_{0!s}=True".format(ACTION.FORCE_APP_PIN),
+            action=f"hotp_{ACTION.FORCE_APP_PIN}=True",
         )
         req.all_data = {"user": "cornelius", "realm": "home"}
         init_tokenlabel(req)
@@ -759,19 +758,17 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pinsize",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.OTPPINRANDOM, size_policy),
+            action=f"{ACTION.OTPPINRANDOM}={size_policy}",
         )
         set_policy(
             name="pincontent",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s}".format(ACTION.OTPPINCONTENTS, contents_policy),
+            action=f"{ACTION.OTPPINCONTENTS}={contents_policy}",
         )
         set_policy(
             name="pinhandling",
             scope=SCOPE.ENROLL,
-            action="{0!s}=edumfa.lib.pinhandling.base.PinHandler".format(
-                ACTION.PINHANDLING
-            ),
+            action=f"{ACTION.PINHANDLING}=edumfa.lib.pinhandling.base.PinHandler",
         )
         g.policy_object = PolicyClass()
 
@@ -811,12 +808,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pinsize",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s}".format(ACTION.OTPPINSETRANDOM, size_policy),
+            action=f"{ACTION.OTPPINSETRANDOM}={size_policy}",
         )
         set_policy(
             name="pincontent",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s}".format(ACTION.OTPPINCONTENTS, contents_policy),
+            action=f"{ACTION.OTPPINCONTENTS}={contents_policy}",
         )
         g.policy_object = PolicyClass()
 
@@ -997,14 +994,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.USER,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
         )
         g.policy_object = PolicyClass()
 
@@ -1087,14 +1077,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
             realm="home",
         )
         g.policy_object = PolicyClass()
@@ -1177,14 +1160,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                ACTION.OTPPINMAXLEN,
-                "10",
-                ACTION.OTPPINMINLEN,
-                "4",
-                ACTION.OTPPINCONTENTS,
-                "cn",
-            ),
+            action=f"{ACTION.OTPPINMAXLEN}=10,{ACTION.OTPPINMINLEN}=4,{ACTION.OTPPINCONTENTS}=cn",
             realm="home",
         )
 
@@ -1192,14 +1168,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ADMIN,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                "spass_otp_pin_maxlength",
-                "11",
-                "spass_otp_pin_minlength",
-                "8",
-                "spass_otp_pin_contents",
-                "n",
-            ),
+            action="spass_otp_pin_maxlength=11,spass_otp_pin_minlength=8,spass_otp_pin_contents=n",
             realm="home",
         )
         g.policy_object = PolicyClass()
@@ -1330,7 +1299,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="mangle1",
             scope=SCOPE.AUTH,
-            action="{0!s}=user/.*(.{{4}}$)/\\1/".format(ACTION.MANGLE),
+            action=f"{ACTION.MANGLE}=user/.*(.{{4}}$)/\\1/",
         )
         g.policy_object = PolicyClass()
 
@@ -1346,7 +1315,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="mangle2",
             scope=SCOPE.AUTH,
-            action="{0!s}=realm/\\s//".format(ACTION.MANGLE),
+            action=f"{ACTION.MANGLE}=realm/\\s//",
         )
         g.policy_object = PolicyClass()
 
@@ -1375,7 +1344,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="ruser",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.ACTIVE}",
         )
 
         r = is_remote_user_allowed(req)
@@ -1386,7 +1355,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="ruser",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.ACTIVE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.ACTIVE}",
             user="super",
         )
 
@@ -1410,7 +1379,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="ruser",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.REMOTE_USER, REMOTE_USER.FORCE),
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.FORCE}",
             user="super",
         )
         self.assertEqual(REMOTE_USER.FORCE, is_remote_user_allowed(req))
@@ -1436,7 +1405,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="email1",
             scope=SCOPE.REGISTER,
-            action=r"{0!s}=/.*@mydomain\..*".format(ACTION.REQUIREDEMAIL),
+            action=rf"{ACTION.REQUIREDEMAIL}=/.*@mydomain\..*",
         )
         g.policy_object = PolicyClass()
         # request, that matches the policy
@@ -1469,9 +1438,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req = Request(env)
         # Set a mangle policy to change the username
         # and only use the last 4 characters of the username
-        set_policy(
-            name="recover", scope=SCOPE.USER, action="{0!s}".format(ACTION.RESYNC)
-        )
+        set_policy(name="recover", scope=SCOPE.USER, action=f"{ACTION.RESYNC}")
         g.policy_object = PolicyClass()
         req.all_data = {"user": "cornelius", "realm": self.realm1}
         # There is a user policy without password reset, so an exception is
@@ -1482,7 +1449,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="recover",
             scope=SCOPE.USER,
-            action="{0!s}".format(ACTION.PASSWORDRESET),
+            action=f"{ACTION.PASSWORDRESET}",
         )
         g.policy_object = PolicyClass()
         r = check_anonymous_user(req, ACTION.PASSWORDRESET)
@@ -1607,9 +1574,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # Set a mangle policy to change the username
         # and only use the last 4 characters of the username
-        set_policy(
-            name="a_age", scope=SCOPE.ADMIN, action="{0!s}=1d".format(ACTION.AUDIT_AGE)
-        )
+        set_policy(name="a_age", scope=SCOPE.ADMIN, action=f"{ACTION.AUDIT_AGE}=1d")
         g.policy_object = PolicyClass()
 
         # request, that matches the policy
@@ -1632,7 +1597,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="hide_audit_columns_admin",
             scope=SCOPE.ADMIN,
-            action="{0!s}=serial action".format(ACTION.HIDE_AUDIT_COLUMNS),
+            action=f"{ACTION.HIDE_AUDIT_COLUMNS}=serial action",
         )
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
         # request, that matches the policy
@@ -1649,7 +1614,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="hide_audit_columns_user",
             scope=SCOPE.USER,
-            action="{0!s}=number realm".format(ACTION.HIDE_AUDIT_COLUMNS),
+            action=f"{ACTION.HIDE_AUDIT_COLUMNS}=number realm",
         )
         g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
         # request, that matches the policy
@@ -1672,7 +1637,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="hide_tokeninfo_admin",
             scope=SCOPE.ADMIN,
-            action="{0!s}=tokenkind unknown".format(ACTION.HIDE_TOKENINFO),
+            action=f"{ACTION.HIDE_TOKENINFO}=tokenkind unknown",
         )
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
         req.all_data = {}
@@ -1694,7 +1659,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="hide_tokeninfo_user",
             scope=SCOPE.USER,
-            action="{0!s}=tokenkind unknown".format(ACTION.HIDE_TOKENINFO),
+            action=f"{ACTION.HIDE_TOKENINFO}=tokenkind unknown",
         )
         g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
         req.all_data = {}
@@ -1724,7 +1689,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="paperpol",
             scope=SCOPE.ENROLL,
-            action="{0!s}=10".format(PAPERACTION.PAPERTOKEN_COUNT),
+            action=f"{PAPERACTION.PAPERTOKEN_COUNT}=10",
         )
         g.policy_object = PolicyClass()
 
@@ -1749,7 +1714,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="tanpol",
             scope=SCOPE.ENROLL,
-            action="{0!s}=10".format(TANACTION.TANTOKEN_COUNT),
+            action=f"{TANACTION.TANTOKEN_COUNT}=10",
         )
         g.policy_object = PolicyClass()
 
@@ -1844,12 +1809,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
     def test_01_sms_identifier(self):
         # every admin is allowed to enroll sms token with gw1 or gw2
-        set_policy(
-            "sms1", scope=SCOPE.ADMIN, action="{0!s}=gw1 gw2".format(SMSACTION.GATEWAYS)
-        )
-        set_policy(
-            "sms2", scope=SCOPE.ADMIN, action="{0!s}=gw3".format(SMSACTION.GATEWAYS)
-        )
+        set_policy("sms1", scope=SCOPE.ADMIN, action=f"{SMSACTION.GATEWAYS}=gw1 gw2")
+        set_policy("sms2", scope=SCOPE.ADMIN, action=f"{SMSACTION.GATEWAYS}=gw3")
 
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
         builder = EnvironBuilder(method="POST", data={"serial": "SMS1234"}, headers={})
@@ -1868,9 +1829,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertRaises(PolicyError, sms_identifiers, req)
 
         # Users are allowed to choose gw4
-        set_policy(
-            "sms1", scope=SCOPE.USER, action="{0!s}=gw4".format(SMSACTION.GATEWAYS)
-        )
+        set_policy("sms1", scope=SCOPE.USER, action=f"{SMSACTION.GATEWAYS}=gw4")
 
         g.logged_in_user = {"username": "root", "realm": "", "role": "user"}
         builder = EnvironBuilder(method="POST", data={"serial": "SMS1234"}, headers={})
@@ -1913,13 +1872,9 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="push_pol",
             scope=SCOPE.ENROLL,
-            action="{0!s}=some-fb-config,"
-            "{1!s}=https://edumfa.io/enroll,"
-            "{2!s}=10".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}=some-fb-config,"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}=https://edumfa.io/enroll,"
+            f"{PushTokenClass.PUSH_ACTION.TTL}=10",
         )
         g.policy_object = PolicyClass()
         req.all_data = {"type": "edupush"}
@@ -1945,7 +1900,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="push_pol2",
             scope=SCOPE.ENROLL,
-            action="{0!s}=0".format(PushTokenClass.PUSH_ACTION.SSL_VERIFY),
+            action=f"{PushTokenClass.PUSH_ACTION.SSL_VERIFY}=0",
         )
         g.policy_object = PolicyClass()
         req.all_data = {"type": "edupush"}
@@ -1985,13 +1940,9 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="push_pol",
             scope=SCOPE.ENROLL,
-            action="{0!s}=some-fb-config,"
-            "{1!s}=https://edumfa.io/enroll,"
-            "{2!s}=10".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}=some-fb-config,"
+            f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}=https://edumfa.io/enroll,"
+            f"{PushTokenClass.PUSH_ACTION.TTL}=10",
         )
         g.policy_object = PolicyClass()
         req.all_data = {"type": "push"}
@@ -2017,7 +1968,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="push_pol2",
             scope=SCOPE.ENROLL,
-            action="{0!s}=0".format(PushTokenClass.PUSH_ACTION.SSL_VERIFY),
+            action=f"{PushTokenClass.PUSH_ACTION.SSL_VERIFY}=0",
         )
         g.policy_object = PolicyClass()
         req.all_data = {"type": "push"}
@@ -2130,7 +2081,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="push1",
             scope=SCOPE.AUTH,
-            action="{0!s}=10".format(PushTokenClass.PUSH_ACTION.WAIT),
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=10",
         )
         req.all_data = {}
         g.policy_object = PolicyClass()
@@ -2153,7 +2104,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="push1",
             scope=SCOPE.AUTH,
-            action="{0!s}=10".format(PushTokenClass.PUSH_ACTION.WAIT),
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=10",
         )
         req = RequestMock()
         req.all_data = {"push_wait": "120"}
@@ -2253,7 +2204,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="Indexed",
             scope=SCOPE.USER,
-            action="indexedsecret_{0!s}=username".format(PIIXACTION.FORCE_ATTRIBUTE),
+            action=f"indexedsecret_{PIIXACTION.FORCE_ATTRIBUTE}=username",
         )
         req.all_data = {"type": "indexedsecret"}
         g.policy_object = PolicyClass()
@@ -3231,9 +3182,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(
-                ACTION.REQUIRE_ATTESTATION, REQUIRE_ACTIONS.REQUIRE_AND_VERIFY
-            ),
+            action=f"{ACTION.REQUIRE_ATTESTATION}={REQUIRE_ACTIONS.REQUIRE_AND_VERIFY}",
         )
         g.policy_object = PolicyClass()
 
@@ -3263,12 +3212,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="reg_length",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.REGISTRATIONCODE_LENGTH, 6),
+            action=f"{ACTION.REGISTRATIONCODE_LENGTH}=6",
         )
         set_policy(
             name="reg_contents",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.REGISTRATIONCODE_CONTENTS, "+n"),
+            action=f"{ACTION.REGISTRATIONCODE_CONTENTS}=+n",
         )
         # request, that matches the policy
         req.all_data = {"user": "cornelius", "realm": "home", "type": "registration"}
@@ -3301,12 +3250,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pw_length",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.PASSWORD_LENGTH, 6),
+            action=f"{ACTION.PASSWORD_LENGTH}={6}",
         )
         set_policy(
             name="pw_contents",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.PASSWORD_CONTENTS, "+n"),
+            action=f"{ACTION.PASSWORD_CONTENTS}=+n",
         )
         # request, that matches the policy
         req.all_data = {"user": "cornelius", "realm": "home", "type": "pw"}
@@ -3356,7 +3305,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "set_custom_attr",
             scope=SCOPE.ADMIN,
-            action="{0!s}=department sth".format(ACTION.DELETE_USER_ATTRIBUTES),
+            action=f"{ACTION.DELETE_USER_ATTRIBUTES}=department sth",
         )
         req.all_data = {
             "user": "cornelius",
@@ -3373,7 +3322,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "set_custom_attr2",
             scope=SCOPE.ADMIN,
-            action="{0!s}=difkey".format(ACTION.DELETE_USER_ATTRIBUTES),
+            action=f"{ACTION.DELETE_USER_ATTRIBUTES}=difkey",
         )
         req.all_data = {"user": "cornelius", "realm": self.realm1, "attrkey": "difkey"}
         check_custom_user_attributes(req, "delete")
@@ -3382,7 +3331,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "set_custom_attr2",
             scope=SCOPE.ADMIN,
-            action="{0!s}=*".format(ACTION.DELETE_USER_ATTRIBUTES),
+            action=f"{ACTION.DELETE_USER_ATTRIBUTES}=*",
         )
         req.all_data = {
             "user": "cornelius",
@@ -3407,9 +3356,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "set_custom_attr",
             scope=SCOPE.ADMIN,
-            action="{0!s}=:department: finance devel :color: * :*: 1 2 ".format(
-                ACTION.SET_USER_ATTRIBUTES
-            ),
+            action=f"{ACTION.SET_USER_ATTRIBUTES}=:department: finance devel :color: * :*: 1 2 ",
         )
         # Allow to set to finance
         check_custom_user_attributes(req, "set")
@@ -3472,7 +3419,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "set_custom_attr2",
             scope=SCOPE.ADMIN,
-            action="{0!s}=:*: *".format(ACTION.SET_USER_ATTRIBUTES),
+            action=f"{ACTION.SET_USER_ATTRIBUTES}=:*: *",
         )
         req.all_data = {
             "user": "cornelius",
@@ -3509,26 +3456,17 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="ca",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                CERTIFICATE_ACTION.CA_CONNECTOR,
-                "caconnector",
-                CERTIFICATE_ACTION.CERTIFICATE_TEMPLATE,
-                "catemplate",
-            ),
+            action=f"{CERTIFICATE_ACTION.CA_CONNECTOR}=caconnector,{CERTIFICATE_ACTION.CERTIFICATE_TEMPLATE}=catemplate",
         )
         set_policy(
             name="sub1",
             scope=SCOPE.ENROLL,
-            action="{0!s}=email".format(
-                CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT
-            ),
+            action=f"{CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT}=email",
         )
         set_policy(
             name="sub2",
             scope=SCOPE.ENROLL,
-            action="{0!s}=email realm".format(
-                CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT
-            ),
+            action=f"{CERTIFICATE_ACTION.CERTIFICATE_REQUEST_SUBJECT_COMPONENT}=email realm",
         )
         # request, that matches the policy
         req.all_data = {
@@ -3612,7 +3550,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="require_description",
             scope=SCOPE.ENROLL,
-            action=["{0!s}=hotp".format(ACTION.REQUIRE_DESCRIPTION)],
+            action=[f"{ACTION.REQUIRE_DESCRIPTION}=hotp"],
         )
         req = Request(env)
         req.User = User("cornelius")
@@ -4096,7 +4034,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.AUTOASSIGN, AUTOASSIGNVALUE.NONE),
+            action=f"{ACTION.AUTOASSIGN}={AUTOASSIGNVALUE.NONE}",
             client="10.0.0.0/8",
         )
         g.policy_object = PolicyClass()
@@ -4162,7 +4100,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s}".format(ACTION.AUTOASSIGN, AUTOASSIGNVALUE.USERSTORE),
+            action=f"{ACTION.AUTOASSIGN}={AUTOASSIGNVALUE.USERSTORE}",
             client="10.0.0.0/8",
         )
         g.policy_object = PolicyClass()
@@ -4416,7 +4354,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_qr3",
             scope=SCOPE.WEBUI,
-            action="{0!s}=https://edumfa.io".format(ACTION.SHOW_CUSTOM_AUTHENTICATOR),
+            action=f"{ACTION.SHOW_CUSTOM_AUTHENTICATOR}=https://edumfa.io",
         )
 
         custom_url = create_img("https://edumfa.io")
@@ -4473,7 +4411,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_indexed1",
             scope=SCOPE.WEBUI,
-            action="indexedsecret_{0!s}=preattr".format(PIIXACTION.PRESET_ATTRIBUTE),
+            action=f"indexedsecret_{PIIXACTION.PRESET_ATTRIBUTE}=preattr",
         )
 
         g.policy_object = PolicyClass()
@@ -4490,7 +4428,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_indexed_force",
             scope=SCOPE.USER,
-            action="indexedsecret_{0!s}=force".format(PIIXACTION.FORCE_ATTRIBUTE),
+            action=f"indexedsecret_{PIIXACTION.FORCE_ATTRIBUTE}=force",
         )
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
@@ -4506,7 +4444,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_logout_redirect",
             scope=SCOPE.WEBUI,
-            action="{0!s}={1!s}".format(ACTION.LOGOUT_REDIRECT, redir_uri),
+            action=f"{ACTION.LOGOUT_REDIRECT}={redir_uri}",
         )
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
@@ -4553,7 +4491,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
             name="pol_pagesize",
             scope=SCOPE.WEBUI,
             realm=self.realm1,
-            action="{0!s}=177".format(ACTION.TOKENPAGESIZE),
+            action=f"{ACTION.TOKENPAGESIZE}=177",
         )
         g.policy_object = PolicyClass()
         new_response = get_webui_settings(req, resp)
@@ -4568,7 +4506,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
             scope=SCOPE.WEBUI,
             realm=self.realm1,
             user="root",
-            action="{0!s}=177".format(ACTION.TOKENPAGESIZE),
+            action=f"{ACTION.TOKENPAGESIZE}=177",
         )
         # This way the user "cornelius" gets the default pagesize again
         g.policy_object = PolicyClass()
@@ -4756,7 +4694,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol2",
             scope=SCOPE.ENROLL,
-            action="{0!s}=1d".format(ACTION.CHANGE_PIN_EVERY),
+            action=f"{ACTION.CHANGE_PIN_EVERY}=1d",
         )
         g.policy_object = PolicyClass()
         save_pin_change(req, resp)
@@ -4784,15 +4722,13 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_header",
             scope=SCOPE.AUTH,
-            action="{0!s}=These are your options:<ul>".format(
-                ACTION.CHALLENGETEXT_HEADER
-            ),
+            action=f"{ACTION.CHALLENGETEXT_HEADER}=These are your options:<ul>",
         )
         # Set a policy for the footer
         set_policy(
             name="pol_footer",
             scope=SCOPE.AUTH,
-            action="{0!s}=Happy authenticating!".format(ACTION.CHALLENGETEXT_FOOTER),
+            action=f"{ACTION.CHALLENGETEXT_FOOTER}=Happy authenticating!",
         )
         g.policy_object = PolicyClass()
 
@@ -4830,7 +4766,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol_header",
             scope=SCOPE.AUTH,
-            action="{0!s}=These are your options:".format(ACTION.CHALLENGETEXT_HEADER),
+            action=f"{ACTION.CHALLENGETEXT_HEADER}=These are your options:",
         )
         g.policy_object = PolicyClass()
         resp = jsonify(res)
@@ -4881,7 +4817,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "auth01",
             scope=SCOPE.AUTHZ,
-            action="{0!s}={1!s}".format(ACTION.AUTHORIZED, AUTHORIZED.DENY),
+            action=f"{ACTION.AUTHORIZED}={AUTHORIZED.DENY}",
             priority=2,
         )
         g.policy_object = PolicyClass()
@@ -4893,7 +4829,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "auth02",
             scope=SCOPE.AUTHZ,
-            action="{0!s}={1!s}".format(ACTION.AUTHORIZED, AUTHORIZED.ALLOW),
+            action=f"{ACTION.AUTHORIZED}={AUTHORIZED.ALLOW}",
             priority=1,
             client="10.0.0.0/8",
         )
@@ -4947,7 +4883,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             "verify_toks",
             scope=SCOPE.ENROLL,
-            action="{0!s}=hotp".format(ACTION.VERIFY_ENROLLMENT),
+            action=f"{ACTION.VERIFY_ENROLLMENT}=hotp",
         )
         g.policy_object = PolicyClass()
 

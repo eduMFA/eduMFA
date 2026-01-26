@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -146,7 +145,7 @@ class FederationEventHandler(BaseEventHandler):
             if handler_options.get("resolver"):
                 data["resolver"] = handler_options.get("resolver")
 
-            log.info("Sending {0} request to {1!r}".format(method, url))
+            log.info(f"Sending {method} request to {url!r}")
             requestor = None
             params = None
             headers = {}
@@ -183,6 +182,6 @@ class FederationEventHandler(BaseEventHandler):
                 )
                 options["response"].status_code = r.status_code
             else:
-                log.warning("Unsupported method: {0!r}".format(method))
+                log.warning(f"Unsupported method: {method!r}")
 
         return True

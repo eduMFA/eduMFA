@@ -1,12 +1,12 @@
 # Build stage
-FROM python:3.14.0-slim-trixie@sha256:4ed33101ee7ec299041cc41dd268dae17031184be94384b1ce7936dc4e5dead3 AS builder
+FROM python:3.14.2-slim-trixie@sha256:9b81fe9acff79e61affb44aaf3b6ff234392e8ca477cb86c9f7fd11732ce9b6a AS builder
 WORKDIR /tmp
 COPY . .
 RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 # Final stage
-FROM python:3.14.0-slim-trixie@sha256:4ed33101ee7ec299041cc41dd268dae17031184be94384b1ce7936dc4e5dead3
+FROM python:3.14.2-slim-trixie@sha256:9b81fe9acff79e61affb44aaf3b6ff234392e8ca477cb86c9f7fd11732ce9b6a
 
 # Install system dependencies
 RUN apt-get update && \
@@ -35,6 +35,10 @@ COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
 
 # Create directory for user scripts
 RUN mkdir -p /opt/edumfa/user-scripts
+
+# Link the edumfa package at a predicatable position for template overriding.
+RUN python_package_path="$(python3 -c 'import site; x=site.getsitepackages(); assert len(x) == 1; print(x[0])')" && \
+    ln -s "${python_package_path}/edumfa/" "/opt/edumfa/edumfa-package"
 
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1

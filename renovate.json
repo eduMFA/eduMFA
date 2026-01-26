@@ -1,7 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    ":pinVersions"
+  "extends": ["config:recommended", ":pinVersions"],
+  "schedule": ["monthly"],
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["python"],
+      "enabled": false
+    }
   ]
 }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 2018 Friedrich Weber <friedrich.weber@netknights.it>
 #
 # This code is free software; you can redistribute it and/or

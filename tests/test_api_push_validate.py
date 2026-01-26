@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -92,20 +91,13 @@ class PushAPITestCase(MyApiTestCase):
         # set policy
         set_policy(
             "push1",
-            action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
             scope=SCOPE.AUTH,
         )
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -160,9 +152,7 @@ class PushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -236,22 +226,17 @@ class PushAPITestCase(MyApiTestCase):
         # set policy
         set_policy(
             "push1",
-            action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
             scope=SCOPE.AUTH,
         )
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
         set_policy(
             "chalresp",
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp",
             scope=SCOPE.AUTH,
         )
         # Create push config
@@ -307,9 +292,7 @@ class PushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -394,12 +377,7 @@ class PushAPITestCase(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -505,22 +483,13 @@ class PushAPITestCase(MyApiTestCase):
         set_policy(
             "pol_multienroll",
             scope=SCOPE.AUTH,
-            action="{0!s}=push".format(ACTION.ENROLL_VIA_MULTICHALLENGE),
+            action=f"{ACTION.ENROLL_VIA_MULTICHALLENGE}=push",
         )
         # Set Policy scope:enrollment, action:push_config
         set_policy(
             "pol_push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s},{6!s}={7!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.SSL_VERIFY,
-                1,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.SSL_VERIFY}={1},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -588,9 +557,7 @@ class PushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -716,20 +683,13 @@ class EduPushAPITestCase(MyApiTestCase):
         # set policy
         set_policy(
             "push1",
-            action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
             scope=SCOPE.AUTH,
         )
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -784,9 +744,7 @@ class EduPushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -860,22 +818,17 @@ class EduPushAPITestCase(MyApiTestCase):
         # set policy
         set_policy(
             "push1",
-            action="{0!s}=20".format(PushTokenClass.PUSH_ACTION.WAIT),
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
             scope=SCOPE.AUTH,
         )
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
         set_policy(
             "chalresp",
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp",
             scope=SCOPE.AUTH,
         )
         # Create push config
@@ -931,9 +884,7 @@ class EduPushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )
@@ -1018,12 +969,7 @@ class EduPushAPITestCase(MyApiTestCase):
         set_policy(
             "push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -1129,22 +1075,13 @@ class EduPushAPITestCase(MyApiTestCase):
         set_policy(
             "pol_multienroll",
             scope=SCOPE.AUTH,
-            action="{0!s}=edupush".format(ACTION.ENROLL_VIA_MULTICHALLENGE),
+            action=f"{ACTION.ENROLL_VIA_MULTICHALLENGE}=edupush",
         )
         # Set Policy scope:enrollment, action:push_config
         set_policy(
             "pol_push2",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s},{4!s}={5!s},{6!s}={7!s}".format(
-                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
-                self.firebase_config_name,
-                PushTokenClass.PUSH_ACTION.REGISTRATION_URL,
-                self.REGISTRATION_URL,
-                PushTokenClass.PUSH_ACTION.SSL_VERIFY,
-                1,
-                PushTokenClass.PUSH_ACTION.TTL,
-                TTL,
-            ),
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.SSL_VERIFY}={1},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # Create push config
         r = set_smsgateway(
@@ -1212,9 +1149,7 @@ class EduPushAPITestCase(MyApiTestCase):
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
             # Now the smartphone gets a public key from the server
-            augmented_pubkey = "-----BEGIN RSA PUBLIC KEY-----\n{}\n-----END RSA PUBLIC KEY-----\n".format(
-                detail.get("public_key")
-            )
+            augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(
                 to_bytes(augmented_pubkey), default_backend()
             )

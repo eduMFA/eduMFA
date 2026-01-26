@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -31,6 +30,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from flask import current_app
 from flask.cli import AppGroup
+from flask_migrate import stamp as f_stamp
 
 from edumfa.lib.security.default import DefaultSecurityModule
 from edumfa.models import db
@@ -94,7 +94,8 @@ def create_enckey(enckey_b64=None):
     if os.path.isfile(filename):
         click.echo(f"The file '{filename}' already exists.")
         sys.exit(1)
-    with open(filename, "wb") as f:
+    descriptor = os.open(path=filename, mode=0o400, flags=(os.O_WRONLY | os.O_CREAT))
+    with open(descriptor, "wb") as f:
         if enckey_b64 is None:
             f.write(DefaultSecurityModule.random(96))
         else:
@@ -105,9 +106,7 @@ def create_enckey(enckey_b64=None):
                 sys.exit(1)
             f.write(bin_enckey)
     click.echo(f"Encryption key written to {filename}")
-    os.chmod(filename, 0o400)
-    click.echo(f"The file permission of {filename} was set to 400!")
-    click.echo("Please ensure, that it is owned by the right user.")
+    click.echo("Please ensure that it is owned by the right user.")
 
 
 @core_cli.command("create_pgp_keys")
@@ -177,7 +176,9 @@ def create_audit_keys(keysize):
         format=serialization.PrivateFormat.TraditionalOpenSSL,
         encryption_algorithm=serialization.NoEncryption(),
     )
-    with open(filename, "wb") as f:
+
+    descriptor = os.open(path=filename, mode=0o400, flags=(os.O_WRONLY | os.O_CREAT))
+    with open(descriptor, "wb") as f:
         f.write(priv_pem)
 
     pub_key = new_key.public_key()
@@ -191,8 +192,6 @@ def create_audit_keys(keysize):
     click.echo(
         f"Signing keys written to {filename} and {current_app.config.get('EDUMFA_AUDIT_KEY_PUBLIC')}"
     )
-    os.chmod(filename, 0o400)
-    click.echo(f"The file permission of {filename} was set to 400!")
     click.echo("Please ensure, that it is owned by the right user.")
 
 
@@ -215,7 +214,7 @@ def create_tables(stamp=False):
             if "migrations/env.py" in str(x)
         ]
         migration_dir = os.path.dirname(os.path.abspath(p[0]))
-        fm_stamp(directory=migration_dir)
+        f_stamp(directory=migration_dir)
     db.session.commit()
 
 
@@ -264,11 +263,11 @@ def validate(user, password, realm=None):
     try:
         user = get_user_from_param({"user": user, "realm": realm})
         auth, details = check_user_pass(user, password)
-        click.echo("RESULT=%s" % auth)
-        click.echo("DETAILS=%s" % details)
+        click.echo(f"RESULT={auth}")
+        click.echo(f"DETAILS={details}")
     except Exception as exx:
         click.echo("RESULT=Error")
-        click.echo("ERROR=%s" % exx)
+        click.echo(f"ERROR={exx}")
 
 
 @core_cli.command("profile")

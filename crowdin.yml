@@ -3,3 +3,5 @@ api_token_env: CROWDIN_API_KEY
 files:
   - source: /po/template.pot
     translation: /locale/%locale_with_underscore%.po
+  - source: /edumfa/static/translations/template.pot
+    translation: /edumfa/static/translations/%locale_with_underscore%.po
