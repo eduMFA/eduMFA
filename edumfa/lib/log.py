@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -29,9 +28,9 @@
 import functools
 import logging
 import string
+from collections.abc import Callable
 from copy import deepcopy
 from logging import Formatter
-from typing import Callable
 
 from typing_extensions import ParamSpec, TypeVar
 
@@ -86,7 +85,7 @@ R = TypeVar("R")
 
 class SecureFormatter(Formatter):
     def format(self, record):
-        message = super(SecureFormatter, self).format(record)
+        message = super().format(record)
         secured = False
 
         s = ""
@@ -212,9 +211,7 @@ class log_with:
             except Exception as exx:
                 self.logger.error(exx)
                 self.logger.error(
-                    "Error during logging of function {0}! {1}".format(
-                        func.__name__, exx
-                    )
+                    f"Error during logging of function {func.__name__}! {exx}"
                 )
 
             f_result = func(*args, **kwargs)
@@ -226,9 +223,7 @@ class log_with:
                     self.logger.debug(self.EXIT_MESSAGE.format(func.__name__, "HIDDEN"))
             except Exception as exx:
                 self.logger.error(
-                    "Error during logging of function {0}! {1}".format(
-                        func.__name__, exx
-                    )
+                    f"Error during logging of function {func.__name__}! {exx}"
                 )
             return f_result
 

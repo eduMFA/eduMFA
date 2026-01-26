@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This test file tests the lib.tokenclass
 
@@ -61,13 +59,13 @@ class HOTPTokenTestCase(MyTestCase):
 
         user = User(login="root", realm=self.realm1, resolver=self.resolvername1)
 
-        user_str = "{0!s}".format(user)
+        user_str = f"{user}"
         self.assertTrue(user_str == "<root.resolver1@realm1>", user_str)
 
         self.assertFalse(user.is_empty())
         self.assertTrue(User().is_empty())
 
-        user_repr = "{0!r}".format(user)
+        user_repr = f"{user!r}"
         expected = "User(login='root', realm='realm1', resolver='resolver1')"
         self.assertTrue(user_repr == expected, user_repr)
 

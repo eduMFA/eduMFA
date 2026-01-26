@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -97,7 +96,7 @@ class LegacyPushTokenClass(PushTokenClass):
     def get_push_url_prefix():
         return "otpauth://pipush"
 
-    class PUSH_ACTION(object):
+    class PUSH_ACTION:
         FIREBASE_CONFIG = "push_firebase_configuration"
         REGISTRATION_URL = "push_registration_url"
         TTL = "push_ttl"

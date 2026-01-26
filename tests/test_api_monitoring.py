@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import datetime
 
 from edumfa.lib.monitoringstats import write_stats

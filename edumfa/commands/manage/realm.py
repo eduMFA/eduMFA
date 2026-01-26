@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -34,7 +33,7 @@ def list_realms():
     realm_list = get_realms()
     for name, realm_data in realm_list.items():
         resolvernames = [x.get("name") for x in realm_data.get("resolver")]
-        click.echo("%16s: %s" % (name, resolvernames))
+        click.echo(f"{name:16}: {resolvernames}")
 
 
 @realm_cli.command("create")

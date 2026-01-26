@@ -135,7 +135,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get tokens for service_id self.serviceID1
         with self.app.test_request_context(
-            "/machine/token?service_id={0!s}".format(self.serviceID1),
+            f"/machine/token?service_id={self.serviceID1}",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -151,7 +151,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2
         with self.app.test_request_context(
-            "/machine/token?service_id={0!s}".format(self.serviceID2),
+            f"/machine/token?service_id={self.serviceID2}",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -170,9 +170,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # combine filter and get service_id self.serviceID2 for serial1
         with self.app.test_request_context(
-            "/machine/token?service_id={0!s}&serial={1!s}".format(
-                self.serviceID2, self.serial1
-            ),
+            f"/machine/token?service_id={self.serviceID2}&serial={self.serial1}",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -188,7 +186,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the correct application
         with self.app.test_request_context(
-            "/machine/token?service_id={0!s}&application=ssh".format(self.serviceID2),
+            f"/machine/token?service_id={self.serviceID2}&application=ssh",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -207,9 +205,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the wrong application
         with self.app.test_request_context(
-            "/machine/token?service_id={0!s}&application=openssh".format(
-                self.serviceID2
-            ),
+            f"/machine/token?service_id={self.serviceID2}&application=openssh",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -242,9 +238,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the application=ssh and the user=root
         with self.app.test_request_context(
-            "/machine/token?service_id={0!s}&application=ssh&user=root".format(
-                self.serviceID2
-            ),
+            f"/machine/token?service_id={self.serviceID2}&application=ssh&user=root",
             method="GET",
             headers={"Authorization": self.at},
         ):
@@ -263,9 +257,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
 
         # Get token for service_id self.serviceID2 and the application=ssh and the user=admin
         with self.app.test_request_context(
-            "/machine/token?service_id={0!s}&application=ssh&user=admin".format(
-                self.serviceID2
-            ),
+            f"/machine/token?service_id={self.serviceID2}&application=ssh&user=admin",
             method="GET",
             headers={"Authorization": self.at},
         ):

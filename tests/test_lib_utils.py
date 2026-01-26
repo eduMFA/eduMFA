@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This tests the package lib.utils
 """
@@ -708,23 +707,19 @@ class UtilsTestCase(MyTestCase):
 
         r, c = check_pin_contents("abc", "nc")
         self.assertFalse(r)
-        self.assertEqual(
-            "Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["n"]), c
-        )
+        self.assertEqual(f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['n']}", c)
 
         r, c = check_pin_contents("123", "nc")
         self.assertFalse(r)
-        self.assertEqual(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["c"]), c
-        )
+        self.assertEqual(f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['c']}", c)
 
         r, c = check_pin_contents("123", "ncs")
         self.assertFalse(r)
         self.assertTrue(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["c"] in c), c
+            f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['c']}" in c, c
         )
         self.assertTrue(
-            r"Missing character in PIN: {}".format(CHARLIST_CONTENTPOLICY["s"] in c), c
+            f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['s']}" in c, c
         )
 
         r, c = check_pin_contents("1234", "")
@@ -749,9 +744,7 @@ class UtilsTestCase(MyTestCase):
         self.assertFalse(r)
         self.assertEqual(
             c,
-            "Missing character in PIN: {}{}".format(
-                CHARLIST_CONTENTPOLICY["c"], CHARLIST_CONTENTPOLICY["n"]
-            ),
+            f"Missing character in PIN: {CHARLIST_CONTENTPOLICY['c']}{CHARLIST_CONTENTPOLICY['n']}",
         )
 
         # check for exclusion
@@ -943,9 +936,7 @@ class UtilsTestCase(MyTestCase):
             "a3u8DAuCve59ToR8fwrsa6Xs4wEM96Hulez9PeaM+7CX+n0P+acFF/"
             "aSnBOfcY26l+d7/i1AhQoVqmeqvi4sW6dMYAvIAAAAAElFTkSuQmCC"
         )
-        self.assertEqual(
-            create_img("Hallo"), "data:image/png;base64,{0!s}".format(hallo_qr_png)
-        )
+        self.assertEqual(create_img("Hallo"), f"data:image/png;base64,{hallo_qr_png}")
 
     def test_28_yubikey_utils(self):
         self.assertEqual(modhex_encode(b"\x47"), "fi")
