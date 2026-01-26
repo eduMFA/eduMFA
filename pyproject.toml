@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "edumfa"
-version = "2.9.0rc1"
+version = "2.9.0a"
 requires-python = ">=3.10,<3.15"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
@@ -35,7 +35,7 @@ Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
 lint = [
-    "ruff==0.14.10",
+    "ruff==0.14.13",
 ]
 docs = [
     "furo==2025.12.19",
@@ -71,14 +71,14 @@ test = [
     "pytest-github-actions-annotate-failures==0.3.0",
     "responses==0.25.8",
     "testfixtures==8.3.0",
-    "tomli==2.3.0",
+    "tomli==2.4.0",
     "types-PyYAML==6.0.12.20250915",
 ]
 postgres = ["psycopg2==2.9.11"]
 hsm = ["PyKCS11==1.5.18"]
 kerberos = ["gssapi==1.10.1"]
 grpc = [
-    "protobuf==6.33.2",
+    "protobuf==6.33.4",
     "google==3.0.0",
 ]
 
@@ -119,7 +119,11 @@ extend-include = [
 [tool.ruff.lint]
 select = [
     "I", # Isort
+    "UP", # Pyupgrade
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/test_lib_crypto.py" = ["I001"]
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true

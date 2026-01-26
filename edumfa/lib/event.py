@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -24,7 +23,7 @@
 #
 import functools
 import logging
-from typing import Callable
+from collections.abc import Callable
 
 from typing_extensions import ParamSpec, TypeVar
 
@@ -74,11 +73,7 @@ class event:
                 self.eventname, position="pre"
             )
             for e_handler_def in e_handles:
-                log.debug(
-                    "Pre-Handling event {eventname} with {eventDef}".format(
-                        eventname=self.eventname, eventDef=e_handler_def
-                    )
-                )
+                log.debug(f"Pre-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
                 event_handler = get_handler_object(event_handler_name)
                 # The "action is determined by the event configuration
@@ -90,23 +85,17 @@ class event:
                 }
                 if event_handler.check_condition(options=options):
                     log.debug(
-                        "Pre-Handling event {eventname} with options{options}".format(
-                            eventname=self.eventname, options=options
-                        )
+                        f"Pre-Handling event {self.eventname} with options{options}"
                     )
                     # create a new audit object for this action
                     event_audit = getAudit(self.g.audit_object.config)
                     # copy all values from the original audit entry
                     event_audit_data = dict(self.g.audit_object.audit_data)
                     event_audit_data["action"] = (
-                        "PRE-EVENT {trigger}>>{handler}:{action}".format(
-                            trigger=self.eventname,
-                            handler=e_handler_def.get("handlermodule"),
-                            action=e_handler_def.get("action"),
-                        )
+                        f"PRE-EVENT {self.eventname}>>{e_handler_def.get('handlermodule')}:{e_handler_def.get('action')}"
                     )
-                    event_audit_data["action_detail"] = "{0!s}".format(
-                        e_handler_def.get("options")
+                    event_audit_data["action_detail"] = (
+                        f"{e_handler_def.get('options')}"
                     )
                     event_audit_data["info"] = e_handler_def.get("name")
                     event_audit.log(event_audit_data)
@@ -123,11 +112,7 @@ class event:
             # Post-Event Handling
             e_handles = self.g.event_config.get_handled_events(self.eventname)
             for e_handler_def in e_handles:
-                log.debug(
-                    "Post-Handling event {eventname} with {eventDef}".format(
-                        eventname=self.eventname, eventDef=e_handler_def
-                    )
-                )
+                log.debug(f"Post-Handling event {self.eventname} with {e_handler_def}")
                 event_handler_name = e_handler_def.get("handlermodule")
                 event_handler = get_handler_object(event_handler_name)
                 # The "action is determined by the event configuration
@@ -140,23 +125,17 @@ class event:
                 }
                 if event_handler.check_condition(options=options):
                     log.debug(
-                        "Post-Handling event {eventname} with options{options}".format(
-                            eventname=self.eventname, options=options
-                        )
+                        f"Post-Handling event {self.eventname} with options{options}"
                     )
                     # create a new audit object
                     event_audit = getAudit(self.g.audit_object.config)
                     # copy all values from the original audit entry
                     event_audit_data = dict(self.g.audit_object.audit_data)
                     event_audit_data["action"] = (
-                        "POST-EVENT {trigger}>>{handler}:{action}".format(
-                            trigger=self.eventname,
-                            handler=e_handler_def.get("handlermodule"),
-                            action=e_handler_def.get("action"),
-                        )
+                        f"POST-EVENT {self.eventname}>>{e_handler_def.get('handlermodule')}:{e_handler_def.get('action')}"
                     )
-                    event_audit_data["action_detail"] = "{0!s}".format(
-                        e_handler_def.get("options")
+                    event_audit_data["action_detail"] = (
+                        f"{e_handler_def.get('options')}"
                     )
                     event_audit_data["info"] = e_handler_def.get("name")
                     event_audit.log(event_audit_data)
@@ -372,13 +351,11 @@ def export_event(name=None):
 @register_import("event")
 def import_event(data, name=None):
     """Import policy configuration"""
-    log.debug("Import event config: {0!s}".format(data))
+    log.debug(f"Import event config: {data}")
     for res_data in data:
         if name and name != res_data.get("name"):
             continue
         # condition is apparently not used anymore
         del res_data["condition"]
         rid = set_event(**res_data)
-        log.info(
-            'Import of event "{0!s}" finished, id: {1!s}'.format(res_data["name"], rid)
-        )
+        log.info(f'Import of event "{res_data["name"]}" finished, id: {rid}')
