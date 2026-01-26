@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This file tests:
 
@@ -9,8 +7,8 @@ lib/eventhandler/usernotification.py
 import email
 import os
 from datetime import datetime, timedelta
+from unittest import mock
 
-import mock
 from dateutil.tz import tzlocal
 from flask import Request
 from werkzeug.test import EnvironBuilder
@@ -1415,13 +1413,13 @@ class UserNotificationTestCase(MyTestCase):
         req.all_data = {"serial": "SomeSerial", "user": "cornelius"}
         req.User = User("cornelius", self.realm1)
         resp = Response()
-        resp.data = """
+        resp.data = f"""
 {{
     "detail": {{
         "googleurl": {{
             "description": "URL for google Authenticator",
-            "img": "{0!s}",
-            "value": "{1!s}"
+            "img": "{PNG_IMAGE}",
+            "value": "{OAUTH_URL}"
         }},
         "rollout_state": "",
         "serial": "OATH0001D8B6",
@@ -1437,7 +1435,7 @@ class UserNotificationTestCase(MyTestCase):
     "time": 1561549651.093083,
     "version": "privacyIDEA 3.0.1.dev2",
     "versionnumber": "3.0.1.dev2"
-}}""".format(PNG_IMAGE, OAUTH_URL)
+}}"""
         options = {
             "g": g,
             "request": req,
@@ -1459,7 +1457,7 @@ class UserNotificationTestCase(MyTestCase):
         payload = to_unicode(parsed_email.get_payload(decode=True))
         self.assertEqual(parsed_email.get_content_type(), "text/html")
         # Check that the base64-encoded image does not get mangled
-        self.assertEqual(payload, "<img src='{0!s}' />".format(PNG_IMAGE))
+        self.assertEqual(payload, f"<img src='{PNG_IMAGE}' />")
 
     @smtpmock.activate
     def test_21_sendmail_attachment(self):
@@ -1488,12 +1486,12 @@ class UserNotificationTestCase(MyTestCase):
         req.all_data = {"serial": "SomeSerial", "user": "cornelius"}
         req.User = User("cornelius", self.realm1)
         resp = Response()
-        resp.data = """{{
+        resp.data = f"""{{
             "detail": {{
                 "googleurl": {{
                     "description": "URL for google Authenticator",
-                    "img": "{0!s}",
-                    "value": "{1!s}"
+                    "img": "{PNG_IMAGE}",
+                    "value": "{OAUTH_URL}"
                 }},
                 "rollout_state": "",
                 "serial": "OATH0001D8B6",
@@ -1510,7 +1508,7 @@ class UserNotificationTestCase(MyTestCase):
             "version": "privacyIDEA 3.0.1.dev2",
             "versionnumber": "3.0.1.dev2"
         }}
-        """.format(PNG_IMAGE, OAUTH_URL)
+        """
         options = {
             "g": g,
             "request": req,

@@ -68,31 +68,27 @@ def upgrade():
     session = orm.Session(bind=bind)
     if (
         session.query(Policy.id)
-        .filter(Policy.scope == "{0!s}".format(SCOPE.ADMIN), Policy.active.is_(True))
+        .filter(Policy.scope == f"{SCOPE.ADMIN}", Policy.active.is_(True))
         .all()
     ):
         # add policy if it does not exist yet
         if session.query(Policy.id).filter_by(name=POLICYNAME).first() is None:
             tokenlist_pol = Policy(
                 name=POLICYNAME,
-                scope="{0!s}".format(SCOPE.ADMIN),
-                action="{0!s}".format(ACTION.TOKENLIST),
+                scope=f"{SCOPE.ADMIN}",
+                action=f"{ACTION.TOKENLIST}",
             )
             session.add(tokenlist_pol)
-            print("Added '{0!s}' action for admin policies.".format(ACTION.TOKENLIST))
+            print(f"Added '{ACTION.TOKENLIST}' action for admin policies.")
         else:
-            print("Policy {} already exists.".format(POLICYNAME))
+            print(f"Policy {POLICYNAME} already exists.")
     else:
-        print(
-            "No admin policy active. No need to create '{0!s}' action.".format(
-                ACTION.TOKENLIST
-            )
-        )
+        print(f"No admin policy active. No need to create '{ACTION.TOKENLIST}' action.")
 
     try:
         session.commit()
     except Exception as exx:
-        print("Could not create policy {}: {!r}".format(POLICYNAME, exx))
+        print(f"Could not create policy {POLICYNAME}: {exx!r}")
         print(exx)
 
 
@@ -100,5 +96,5 @@ def downgrade():
     # Delete the policy, if it still exists
     bind = op.get_bind()
     session = orm.Session(bind=bind)
-    session.query(Policy).filter(Policy.name == "{0!s}".format(POLICYNAME)).delete()
+    session.query(Policy).filter(Policy.name == f"{POLICYNAME}").delete()
     session.commit()

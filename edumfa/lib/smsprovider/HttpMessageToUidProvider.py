@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -94,7 +93,7 @@ class HttpMessageToUidProvider(ISMSProvider):
             parameter = self._get_parameters(message, uid)
             timeout = self.config.get("TIMEOUT") or 3
 
-        log.debug("submitting message {0!r} to {1!s}".format(message, uid))
+        log.debug(f"submitting message {message!r} to {uid}")
 
         if not url:
             if postcheck:
@@ -131,24 +130,15 @@ class HttpMessageToUidProvider(ISMSProvider):
             params = None
             if json_data:
                 json_param = parameter
-                log.debug("passing JSON data: {0!s}".format(json_param))
+                log.debug(f"passing JSON data: {json_param}")
             else:
                 data = parameter
 
-        log_dict = {
-            "params": params,
-            "headers": headers,
-            "method": method,
-            "basic_auth": basic_auth,
-            "url": url,
-            "data": data,
-            "json_param": json_param,
-        }
         log.debug(
-            "issuing request with parameters {params} (data: {data}, "
-            "json: {json_param}), headers {headers}, method {method} and"
-            "authentication {basic_auth} "
-            "to url {url}.".format(**log_dict)
+            f"issuing request with parameters {params} (data: {data}, "
+            f"json: {json_param}), headers {headers}, method {method} and"
+            f"authentication {basic_auth} "
+            f"to url {url}."
         )
         # Todo: drop basic auth if Authorization-Header is given?
         r = requestor(
@@ -163,17 +153,13 @@ class HttpMessageToUidProvider(ISMSProvider):
             proxies=proxies,
         )
         log.debug(
-            "sent message to the HTTP gateway. status code returned: {0!s}".format(
-                r.status_code
-            )
+            f"sent message to the HTTP gateway. status code returned: {r.status_code}"
         )
 
         # We assume, that all gateways return with HTTP Status Code 200,
         # 201 or 202
         if r.status_code not in [200, 201, 202]:
-            raise SMSError(
-                r.status_code, "message could not be sent: %s" % r.status_code
-            )
+            raise SMSError(r.status_code, f"message could not be sent: {r.status_code}")
         success = self._check_success(r)
         return success
 
@@ -187,7 +173,7 @@ class HttpMessageToUidProvider(ISMSProvider):
         urldata[messageKey] = message
         params = self.config.get("PARAMETER", {})
         urldata.update(params)
-        log.debug("[getParameters] urldata: {0!s}".format(urldata))
+        log.debug(f"[getParameters] urldata: {urldata}")
         return urldata
 
     def _check_success(self, response):
@@ -212,20 +198,19 @@ class HttpMessageToUidProvider(ISMSProvider):
                 ret = True
             else:
                 log.warning(
-                    "failed to send message. Reply %s does not match "
-                    "the RETURN_SUCCESS definition" % reply
+                    f"failed to send message. Reply {reply} does not match "
+                    "the RETURN_SUCCESS definition"
                 )
                 raise SMSError(
                     response.status_code,
                     "We received a none success reply from the "
-                    "Message Gateway: {0!s} ({1!s})".format(reply, return_success),
+                    f"Message Gateway: {reply} ({return_success})",
                 )
 
         elif return_fail:
             if return_fail in reply:
                 log.warning(
-                    "sending message failed. %s was not found "
-                    "in %s" % (return_fail, reply)
+                    f"sending message failed. {return_fail} was not found in {reply}"
                 )
                 raise SMSError(
                     response.status_code,

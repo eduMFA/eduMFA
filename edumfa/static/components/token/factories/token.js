@@ -23,7 +23,7 @@
 function fixUser(user) {
     //debug: console.log("User In: " + user);
     if (user) {
-        var stripUser = user.match(/^\[.*\] (.*) \(.*\).*$/);
+        var stripUser = user.match(/^\[.*\] (.+?(?= \()) \(.*\).*$/);
         if (stripUser != undefined) {
             user = stripUser[1];
         }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -85,9 +84,9 @@ class Machine:
         """
         ip = self.ip
         if type(self.ip) == list:
-            ip = ["{0!s}".format(i) for i in ip]
+            ip = [f"{i}" for i in ip]
         elif type(self.ip) == netaddr.IPAddress:
-            ip = "{0!s}".format(ip)
+            ip = f"{ip}"
 
         d = {
             "hostname": self.hostname,

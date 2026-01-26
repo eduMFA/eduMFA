@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -109,15 +108,15 @@ class CounterEventHandler(BaseEventHandler):
 
         if action == "increase_counter":
             increase(counter_name)
-            log.debug("Increased the counter {0!s}.".format(counter_name))
+            log.debug(f"Increased the counter {counter_name}.")
         elif action == "decrease_counter":
             allow_negative = is_true(
                 handler_options.get("allow_negative_values", False)
             )
             decrease(counter_name, allow_negative)
-            log.debug("Decreased the counter {0!s}.".format(counter_name))
+            log.debug(f"Decreased the counter {counter_name}.")
         elif action == "reset_counter":
             reset(counter_name)
-            log.debug("Reset the counter {0!s} to 0.".format(counter_name))
+            log.debug(f"Reset the counter {counter_name} to 0.")
 
         return ret

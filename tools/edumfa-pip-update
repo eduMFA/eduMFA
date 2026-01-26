@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import getopt
 import os
 import pipes
@@ -27,14 +26,13 @@ def update(environment):
     # Now we need to run the new requirements of edumfa
     # dependencies like ldap3 or pyasn1. This call could downgrade packages
     call(
-        PIP_EXECUTABLE
-        + ["install", "-r", "{0!s}/lib/edumfa/requirements.txt".format(environment)]
+        PIP_EXECUTABLE + ["install", "-r", f"{environment}/lib/edumfa/requirements.txt"]
     )
 
 
 def update_db_schema(environment, skip_stamp=False):
     mig_path = environment + "/lib/edumfa/migrations"
-    command = "edumfa-schema-upgrade {0}".format(pipes.quote(mig_path))
+    command = f"edumfa-schema-upgrade {pipes.quote(mig_path)}"
     if skip_stamp:
         command += " --skipstamp"
     # update the database schema
