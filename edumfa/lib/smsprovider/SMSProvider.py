@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -62,13 +61,11 @@ class SMSError(Exception):
         self.description = description
 
     def __repr__(self):
-        ret = "{0!s}(error_id={1!r}, description={2!r})".format(
-            type(self).__name__, self.error_id, self.description
-        )
+        ret = f"{type(self).__name__}(error_id={self.error_id!r}, description={self.description!r})"
         return ret
 
     def __str__(self):
-        ret = "{0!s}".format(self.description)
+        ret = f"{self.description}"
         return ret
 
 
@@ -167,8 +164,7 @@ class ISMSProvider:
                     phone = re.sub(m.group(1), m.group(2), phone)
             except re.error:
                 log.warning(
-                    "Can not mangle phone number. "
-                    "Please check your REGEXP: {0!s}".format(regexp)
+                    f"Can not mangle phone number. Please check your REGEXP: {regexp}"
                 )
 
         return phone
@@ -305,7 +301,7 @@ def get_smsgateway(identifier=None, id=None, gwtype=None):
             id = int(id)
             sqlquery = sqlquery.filter_by(id=id)
         except Exception:
-            log.info("We can not filter for smsgateway {0!s}".format(id))
+            log.info(f"We can not filter for smsgateway {id}")
     if gwtype:
         sqlquery = sqlquery.filter_by(providermodule=gwtype)
     if identifier:
@@ -327,9 +323,7 @@ def create_sms_instance(identifier):
     gateway_definition = get_smsgateway(identifier)
     if not gateway_definition:
         raise ConfigAdminError(
-            'Could not find gateway definition with identifier "{0!s}"'.format(
-                identifier
-            )
+            f'Could not find gateway definition with identifier "{identifier}"'
         )
     package_name, class_name = gateway_definition[0].providermodule.rsplit(".", 1)
     sms_klass = get_sms_provider_class(package_name, class_name)
@@ -384,11 +378,9 @@ def export_smsgateway(name=None):
 @register_import("smsgateway")
 def import_smsgateway(data, name=None):
     """Import sms gateway configuration"""
-    log.debug("Import smsgateway config: {0!s}".format(data))
+    log.debug(f"Import smsgateway config: {data}")
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         rid = set_smsgateway(res_name, **res_data)
-        log.info(
-            'Import of smsgateway "{0!s}" finished, id: {1!s}'.format(res_name, rid)
-        )
+        log.info(f'Import of smsgateway "{res_name}" finished, id: {rid}')

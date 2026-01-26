@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This file tests:
 
@@ -7,9 +5,9 @@ lib/eventhandler/logging.py
 """
 
 from datetime import datetime
+from unittest import mock
 
 from flask import Request
-from mock import mock
 from testfixtures import log_capture
 from werkzeug.test import EnvironBuilder
 
@@ -142,9 +140,7 @@ class LoggingTestCase(MyTestCase):
             "response": resp,
             "handler_def": {
                 "options": {
-                    "message": " ".join(
-                        ["{0!s}={{{0!s}}}".format(x) for x in available_tags]
-                    )
+                    "message": " ".join([f"{x}={{{x}}}" for x in available_tags])
                 }
             },
         }

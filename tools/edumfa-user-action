@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019, Cornelius Kölbel
 # All rights reserved.
@@ -64,7 +63,7 @@ def create_jwt(jwt_privkey, jwt_user, jwt_realm):
     pkey = None
     auth_token = None
     if jwt_privkey:
-        with open(jwt_privkey, "r") as f:
+        with open(jwt_privkey) as f:
             pkey = f.read()
         if pkey:
             auth_token = jwt.encode(
@@ -102,19 +101,19 @@ def enroll(realm, tokentype, jwt_privkey, jwt_user, jwt_realm, url):
         # Now we do all the users
         users = get_user_list(param={"realm": realm})
         usernames = [user.get("username") for user in users]
-        print("Processing {0!s} users.".format(len(usernames)))
+        print(f"Processing {len(usernames)} users.")
         num_success = 0
         num_fail = 0
 
         for user in usernames:
             toks = get_tokens(user=User(user, realm))
             if len(toks) == 0:
-                print("user {0!s} has no token assigned.".format(user))
+                print(f"user {user} has no token assigned.")
                 # Do a REST request with a trusted JWT
                 # See https://privacyidea.readthedocs.io/en/latest/installation/system/inifile.html#trusted-jwts
                 if auth_token:
                     r = requests.post(
-                        "{0!s}/token/init".format(url),
+                        f"{url}/token/init",
                         verify=False,
                         data={
                             "type": tokentype,
@@ -125,13 +124,11 @@ def enroll(realm, tokentype, jwt_privkey, jwt_user, jwt_realm, url):
                         headers={"Authorization": auth_token},
                     )
                     if r.status_code == 200:
-                        print("Created token for user {0!s}.".format(user))
+                        print(f"Created token for user {user}.")
                         num_success += 1
                     else:
                         print(
-                            "Failed to create token for user {0!s}: {1!s}.".format(
-                                user, r.status_code
-                            )
+                            f"Failed to create token for user {user}: {r.status_code}."
                         )
                         num_fail += 1
             else:
@@ -139,9 +136,9 @@ def enroll(realm, tokentype, jwt_privkey, jwt_user, jwt_realm, url):
 
         # Final output
         if num_fail:
-            print("Failed to create {0!s} tokens.".format(num_fail))
+            print(f"Failed to create {num_fail} tokens.")
         if num_success:
-            print("Created {0!s} tokens.".format(num_success))
+            print(f"Created {num_success} tokens.")
 
 
 if __name__ == "__main__":

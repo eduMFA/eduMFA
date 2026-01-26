@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -63,8 +62,8 @@ import os
 import struct
 import unittest
 from copy import copy
+from unittest.mock import patch
 
-from mock import patch
 from testfixtures import log_capture
 
 from edumfa.lib.challenge import get_challenges
@@ -101,8 +100,8 @@ from edumfa.lib.utils import hexlify_and_unicode
 
 from .base import MyTestCase
 
-TRUST_ANCHOR_DIR = "{}/testdata/trusted_attestation_roots".format(
-    os.path.abspath(os.path.dirname(__file__))
+TRUST_ANCHOR_DIR = (
+    f"{os.path.abspath(os.path.dirname(__file__))}/testdata/trusted_attestation_roots"
 )
 REGISTRATION_RESPONSE_TMPL = {
     "clientData": b"eyJ0eXBlIjogIndlYmF1dGhuLmNyZWF0ZSIsICJjbGllbnRFeHRlbnNpb25zIjoge30sICJjaGFsbGVu"
@@ -485,8 +484,8 @@ class WebAuthnTokenTestCase(MyTestCase):
             (
                 "edumfa.lib.tokens.webauthntoken",
                 "WARNING",
-                "Checking response for token {0!s} failed. HTTP Origin header "
-                "missing.".format(self.token.get_serial()),
+                f"Checking response for token {self.token.get_serial()} failed. HTTP Origin header "
+                "missing.",
             )
         )
 
@@ -700,7 +699,7 @@ class WebAuthnTestCase(unittest.TestCase):
         )
         self.assertEqual(
             str(webauthn_credential),
-            "{0!r} ({1!s}, {2!s}, {3!s})".format(CREDENTIAL_ID, RP_ID, ORIGIN, 0),
+            f"{CREDENTIAL_ID!r} ({RP_ID}, {ORIGIN}, {0})",
             webauthn_credential,
         )
 
@@ -747,9 +746,7 @@ class WebAuthnTestCase(unittest.TestCase):
         webauthn_user = webauthn_assertion_response.webauthn_user
         self.assertEqual(
             str(webauthn_user),
-            "{0!r} ({1!s}, {2!s}, {3!s})".format(
-                USER_ID, USER_NAME, USER_DISPLAY_NAME, 0
-            ),
+            f"{USER_ID!r} ({USER_NAME}, {USER_DISPLAY_NAME}, {0})",
             webauthn_user,
         )
         webauthn_assertion_response.verify()
@@ -1036,12 +1033,7 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
         set_policy(
             name="WebAuthn",
             scope=SCOPE.ENROLL,
-            action="{0!s}={1!s},{2!s}={3!s}".format(
-                WEBAUTHNACTION.RELYING_PARTY_NAME,
-                self.rp_name,
-                WEBAUTHNACTION.RELYING_PARTY_ID,
-                self.rp_id,
-            ),
+            action=f"{WEBAUTHNACTION.RELYING_PARTY_NAME}={self.rp_name},{WEBAUTHNACTION.RELYING_PARTY_ID}={self.rp_id}",
         )
         set_edumfa_config(WEBAUTHNCONFIG.APP_ID, self.app_id)
         self.user = User(login="hans", realm=self.realm1, resolver=self.resolvername1)
@@ -1115,9 +1107,7 @@ class MultipleWebAuthnTokenTestCase(MyTestCase):
 
     # TODO: also test challenge-response with different tokens (webauthn + totp)
     def test_01_mulitple_webauthntoken_auth(self):
-        set_policy(
-            "otppin", scope=SCOPE.AUTH, action="{0!s}=none".format(ACTION.OTPPIN)
-        )
+        set_policy("otppin", scope=SCOPE.AUTH, action=f"{ACTION.OTPPIN}=none")
         res, reply = check_user_pass(self.user, "", options=self.auth_options)
         self.assertFalse(res)
         self.assertIn("transaction_id", reply, reply)

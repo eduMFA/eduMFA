@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -94,7 +93,7 @@ log = logging.getLogger(__name__)
 # The decorated functions are called before and after *every* request.
 @token_blueprint.before_app_request
 def log_begin_request():
-    log.debug("Begin handling of request {!r}".format(request.full_path))
+    log.debug(f"Begin handling of request {request.full_path!r}")
     g.startdate = datetime.datetime.now()
 
 
@@ -109,7 +108,7 @@ def teardown_request(exc):
         # Also during calling webui, there is not audit_object, yet.
         pass
     call_finalizers()
-    log.debug("End handling of request {!r}".format(request.full_path))
+    log.debug(f"End handling of request {request.full_path!r}")
 
 
 @token_blueprint.before_request
@@ -234,9 +233,9 @@ def before_request():
             "client": g.client_ip,
             "client_user_agent": request.user_agent.browser,
             "edumfa_server": edumfa_server,
-            "action": "{0!s} {1!s}".format(request.method, request.url_rule),
+            "action": f"{request.method} {request.url_rule}",
             "action_detail": "",
-            "thread_id": "{0!s}".format(threading.current_thread().ident),
+            "thread_id": f"{threading.current_thread().ident}",
             "info": "",
         }
     )
@@ -313,7 +312,7 @@ def auth_error(error):
         if hasattr(error, "details"):
             if error.details:
                 if "message" in error.details:
-                    message = "{}|{}".format(message, error.details["message"])
+                    message = f"{message}|{error.details['message']}"
 
         g.audit_object.add_to_log({"info": message}, add_with_comma=True)
     return send_error(error.message, error_code=error.id, details=error.details), 401
@@ -423,13 +422,14 @@ def internal_error(error):
         g.audit_object.log({"info": str(error)})
     return send_error(str(error), error_code=-500), 500
 
+
 @validate_blueprint.app_errorhandler(OperationalError)
 @validate_blueprint.app_errorhandler(IntegrityError)
 def sql_error(error):
     """
     This function is called when a database error occurs.
     """
-    log.error("Database error occurred: {!r}".format(error))
+    log.error(f"Database error occurred: {error!r}")
     if "audit_object" in g:
         g.audit_object.log({"info": "Database error occurred."})
     return send_error("A database error occurred.", error_code=-600), 500

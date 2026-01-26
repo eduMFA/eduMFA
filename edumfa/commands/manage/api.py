@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -67,15 +66,9 @@ def createtoken(role, days, realm, username, force=False):
     admins = [x.username for x in get_db_admins()]
     username = username or geturandom(hex=True)
     if username not in admins and not force:
+        click.echo(f"ERROR: The username '{username}' does not exist in the database!")
         click.echo(
-            "ERROR: The username '{0!s}' does not exist in the database!".format(
-                username
-            )
-        )
-        click.echo(
-            "ERROR: Use the --force option to create a token for a non-existing admin user '{0!s}'.".format(
-                username
-            )
+            f"ERROR: Use the --force option to create a token for a non-existing admin user '{username}'."
         )
         sys.exit(1)
 
@@ -94,8 +87,8 @@ def createtoken(role, days, realm, username, force=False):
         },
         secret,
     )
-    click.echo("Username:   {0!s}".format(username))
-    click.echo("Realm:      {0!s}".format(realm))
-    click.echo("Role:       {0!s}".format(role))
-    click.echo("Validity:   {0!s} days".format(days))
-    click.echo("Auth-Token: {0!s}".format(token))
+    click.echo(f"Username:   {username}")
+    click.echo(f"Realm:      {realm}")
+    click.echo(f"Role:       {role}")
+    click.echo(f"Validity:   {days} days")
+    click.echo(f"Auth-Token: {token}")
