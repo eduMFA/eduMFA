@@ -33,7 +33,6 @@ Description:  This file is part of the eduMFA service
 Dependencies: -
 """
 
-import codecs
 import logging
 import os
 import re
@@ -129,8 +128,8 @@ class IdResolver(UserIdResolver):
         if self.fileName == "":
             self.fileName = "/etc/passwd"
 
-        log.info(f"loading users from file {self.fileName} from within {os.getcwd()!r}")
-        with codecs.open(self.fileName, "r", ENCODING) as fileHandle:
+        log.info(f"loading users from file {self.fileName} from within {os.getcwd()}")
+        with open(self.fileName, encoding=ENCODING) as fileHandle:
             ID = self.sF["userid"]
             NAME = self.sF["username"]
             PASS = self.sF["cryptpass"]

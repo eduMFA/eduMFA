@@ -68,7 +68,6 @@ except ImportError:
 
 CACHE = {}
 
-ENCODING = "utf-8"
 # The number of rounds the resolver tries to reach a responding server in the
 #  pool
 SERVERPOOL_ROUNDS = 2

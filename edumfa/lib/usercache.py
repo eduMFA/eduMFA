@@ -178,7 +178,7 @@ def create_filter(
         conditions.append(UserCache.resolver == resolver)
     if user_id:
         conditions.append(UserCache.user_id == user_id)
-    filter_condition = and_(*conditions)
+    filter_condition = and_(True, *conditions)
     return filter_condition
 
 
