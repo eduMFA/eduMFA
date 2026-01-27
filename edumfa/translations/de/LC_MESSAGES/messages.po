@@ -1186,7 +1186,7 @@ msgid ""
 msgstr ""
 "Die URL der Policy-Templates. (Default "
 "https://raw.githubusercontent.com/edumfa/policy-"
-"templates/master/templates/)"
+"templates/main/templates/)"
 
 #: lib/policy.py
 msgid ""

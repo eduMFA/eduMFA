@@ -990,7 +990,7 @@ msgid ""
 "templates/main/templates/)"
 msgstr ""
 "可以在其中找到策略模板的存储库的URL。  （默认https：//raw.githubusercontent.com/edumfa/policy-"
-"templates/master/templates/）"
+"templates/main/templates/）"
 
 #: lib/policy.py
 msgid ""

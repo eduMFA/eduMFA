@@ -1159,7 +1159,7 @@ msgid ""
 msgstr ""
 "De URL van een opslagruimte waar de beleidssjablonen kunnen worden "
 "gevonden worden. (Standaard https://raw.githubusercontent.com/edumfa"
-"/policy-templates/master/templates/)"
+"/policy-templates/main/templates/)"
 
 #: lib/policy.py
 msgid ""

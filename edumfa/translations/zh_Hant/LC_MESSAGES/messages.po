@@ -993,7 +993,7 @@ msgid ""
 "templates/main/templates/)"
 msgstr ""
 "存儲庫的 URL，可在其中找到策略範本。 （默認 https://raw.githubusercontent.com/edumfa/policy-"
-"templates/master/templates/）"
+"templates/main/templates/）"
 
 #: lib/policy.py
 msgid ""
