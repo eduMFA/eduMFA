@@ -247,17 +247,20 @@ class IdResolver(UserIdResolver):
 
         return ret
 
-    def getUsername(self, userId):
+    def getUsername(self, userId: str) -> str:
         """
-        Returns the username/loginname for a given userid
-        :param userid: The userid in this resolver
-        :type userid: string
-        :return: username
-        :rtype: str
+        Returns the username/loginname for a given userid, or an empty string
+        if it can't be found.
+
+        :param userid: the userid of the user in this resolver
+        :return: username/loginname of the userid
         """
         fields = self.descDict.get(userId)
-        index = self.sF["username"]
-        return fields[index]
+        if not fields:
+            return ""
+        else:
+            index = self.sF["username"]
+            return fields[index]
 
     def getUserId(self, LoginName):
         """

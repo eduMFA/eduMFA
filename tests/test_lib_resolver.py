@@ -260,6 +260,9 @@ class SQLResolverTestCase(MyTestCase):
         username = y.getUsername(user_id)
         self.assertEqual(username, "cornelius", username)
 
+        username = y.getUsername("user does not exist")
+        self.assertEqual(username, "")
+
     def test_01a_where_tests(self):
         y = SQLResolver()
         d = self.parameters.copy()
@@ -1091,6 +1094,9 @@ class LDAPResolverTestCase(MyTestCase):
 
         username = y.getUsername(user_id)
         self.assertTrue(username == "bob", username)
+
+        username = y.getUsername("user does not exist")
+        self.assertEqual(username, "")
 
         pw = "bobpwééé"
         res = y.checkPass(user_id, pw)
@@ -2637,7 +2643,7 @@ class BaseResolverTestCase(MyTestCase):
         self.assertEqual(r[1], "Not implemented")
 
 
-class ResolverTestCase(MyTestCase):
+class PasswdIdResolverTestCase(MyTestCase):
     """
     Test the Passwdresolver
     """
@@ -2864,6 +2870,7 @@ class ResolverTestCase(MyTestCase):
         self.assertFalse(y.checkPass("1002", "no pw at all"))
         self.assertTrue(y.getUsername("1000") == "cornelius", y.getUsername("1000"))
         self.assertTrue(y.getUserId("cornelius") == "1000", y.getUserId("cornelius"))
+        self.assertEqual(y.getUsername("user does not exist"), "")
         self.assertTrue(y.getUserId("user does not exist") == "")
         # Check that non-ASCII user was read successfully
         self.assertEqual(y.getUsername("1116"), "nönäscii")
