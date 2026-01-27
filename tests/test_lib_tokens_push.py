@@ -31,7 +31,6 @@ from edumfa.lib.policy import (
 from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
 from edumfa.lib.smsprovider.SMSProvider import delete_smsgateway, set_smsgateway
 from edumfa.lib.token import get_tokens, init_token, remove_token
-from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.pushtoken import (
     DEFAULT_CHALLENGE_TEXT,
     POLL_ONLY,
@@ -126,7 +125,7 @@ class PushTokenTestCase(MyTestCase):
         tparams.update(FB_CONFIG_VALS)
         tok = init_token(param=tparams)
         tok.add_tokeninfo(
-            LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name
+            PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name
         )
         tok.add_tokeninfo(PUBLIC_KEY_SMARTPHONE, self.smartphone_public_key_pem_urlsafe)
         tok.add_tokeninfo("firebase_token", "firebaseT")
@@ -140,7 +139,7 @@ class PushTokenTestCase(MyTestCase):
     def test_01_create_token(self):
         db_token = Token(self.serial1, tokentype="push")
         db_token.save()
-        token = LegacyPushTokenClass(db_token)
+        token = PushTokenClass(db_token)
         self.assertEqual(token.token.serial, self.serial1)
         self.assertEqual(token.token.tokentype, "push")
         self.assertEqual(token.type, "push")
@@ -261,8 +260,8 @@ class PushTokenTestCase(MyTestCase):
         tok = init_token(param=tparams)
         detail = tok.get_init_detail(
             params={
-                LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
-                LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
                 ACTION.FORCE_APP_PIN: True,
             }
         )
@@ -280,7 +279,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         token_obj = self._create_push_token()
         remove_token(token_obj.get_serial())
@@ -299,7 +298,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},{LegacyPushTokenClass.PUSH_ACTION.TTL}={TTL}",
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -395,7 +394,7 @@ class PushTokenTestCase(MyTestCase):
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
+                action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
             )
 
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -419,7 +418,7 @@ class PushTokenTestCase(MyTestCase):
             set_policy(
                 "push_poll",
                 SCOPE.AUTH,
-                action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
+                action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
             )
             tokenobj.add_tokeninfo(POLLING_ALLOWED, False)
             with mock.patch("logging.Logger.warning") as mock_log:
@@ -502,7 +501,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_config",
             scope=SCOPE.ENROLL,
-            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name}",
         )
         # create push token
         tokenobj = self._create_push_token()
@@ -659,7 +658,7 @@ class PushTokenTestCase(MyTestCase):
                 set_policy(
                     "push1",
                     scope=SCOPE.AUTH,
-                    action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT}=20",
+                    action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
                 )
                 # Send the first authentication request to trigger the challenge
                 with self.app.test_request_context(
@@ -705,7 +704,7 @@ class PushTokenTestCase(MyTestCase):
             set_policy(
                 "push1",
                 scope=SCOPE.AUTH,
-                action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT}=1",
+                action=f"{PushTokenClass.PUSH_ACTION.WAIT}=1",
             )
             # Send the first authentication request to trigger the challenge
             with self.app.test_request_context(
@@ -1085,7 +1084,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.AUTH,
-            action=f"{LegacyPushTokenClass.PUSH_ACTION.WAIT}=20",
+            action=f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
         )
         with mock.patch(
             "edumfa.lib.smsprovider.FirebaseProvider.service_account.Credentials"
@@ -1109,7 +1108,7 @@ class PushTokenTestCase(MyTestCase):
                     "username": "cornelius",
                     "realm": self.realm1,
                     # this will be overwritted by pushtoken_disable_wait
-                    LegacyPushTokenClass.PUSH_ACTION.WAIT: "10",
+                    PushTokenClass.PUSH_ACTION.WAIT: "10",
                     "password": "pushpin",
                 },
             ):
@@ -1196,24 +1195,24 @@ class PushTokenTestCase(MyTestCase):
             eduMFAError,
             rf"Could not parse timestamp {timestamp_fmt}. ISO-Format "
             r"required.",
-            LegacyPushTokenClass._check_timestamp_in_range,
+            PushTokenClass._check_timestamp_in_range,
             timestamp_fmt,
             10,
         )
         timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=utc)
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
-            LegacyPushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
+            PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp - timedelta(minutes=9)
-            LegacyPushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
+            PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Timestamp {!s} not in valid "
                 r"range.".format(timestamp.isoformat().replace("+", r"\+")),
-                LegacyPushTokenClass._check_timestamp_in_range,
+                PushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
                 8,
             )
@@ -1223,7 +1222,7 @@ class PushTokenTestCase(MyTestCase):
                 eduMFAError,
                 r"Timestamp {!s} not in valid "
                 r"range.".format(timestamp.isoformat().replace("+", r"\+")),
-                LegacyPushTokenClass._check_timestamp_in_range,
+                PushTokenClass._check_timestamp_in_range,
                 timestamp.isoformat(),
                 8,
             )
@@ -1239,7 +1238,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             "Method PUT not allowed in 'api_endpoint' for push token.",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1252,7 +1251,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             ParameterError,
             "Missing parameters!",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1265,7 +1264,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             ParameterError,
             "Missing parameter: 'signature'",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1280,7 +1279,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             r"Timestamp 2019-10-05T22:13:23\+0100 not in valid range.",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1295,7 +1294,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             r"Timestamp .* not in valid range.",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1310,7 +1309,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             r"Timestamp .* not in valid range.",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1325,7 +1324,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             r"Could not parse timestamp .*\. ISO-Format required.",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1340,7 +1339,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             r"Could not parse timestamp .*\. ISO-Format required.",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1355,7 +1354,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             r"Could not verify signature!",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1374,7 +1373,7 @@ class PushTokenTestCase(MyTestCase):
             "pubkey": self.smartphone_public_key_pem_urlsafe,
             "fbtoken": "firebaseT",
         }
-        res = LegacyPushTokenClass.api_endpoint(req, g)
+        res = PushTokenClass.api_endpoint(req, g)
         self.assertEqual(res[0], "json", res)
         self.assertTrue(res[1]["result"]["value"], res)
         self.assertTrue(res[1]["result"]["status"], res)
@@ -1416,7 +1415,7 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             "Could not verify signature!",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
@@ -1432,7 +1431,7 @@ class PushTokenTestCase(MyTestCase):
         builder = EnvironBuilder(method="POST", headers={})
         req = Request(builder.get_environ())
         req.all_data = req_data
-        res = LegacyPushTokenClass.api_endpoint(req, g)
+        res = PushTokenClass.api_endpoint(req, g)
         self.assertEqual(res[0], "json", res)
         self.assertTrue(res[1]["result"]["value"], res)
         self.assertTrue(res[1]["result"]["status"], res)
@@ -1448,7 +1447,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push1",
             scope=SCOPE.ENROLL,
-            action=f"{LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},{LegacyPushTokenClass.PUSH_ACTION.TTL}={TTL}",
+            action=f"{PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG}={self.firebase_config_name},{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL},{PushTokenClass.PUSH_ACTION.TTL}={TTL}",
         )
         g.policy_object = PolicyClass()
         # set up the Firebase Gateway
@@ -1487,7 +1486,7 @@ class PushTokenTestCase(MyTestCase):
                 seconds=15
             )
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            res = LegacyPushTokenClass.api_endpoint(req, g)
+            res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         # No challenge created yet
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"])
@@ -1513,7 +1512,7 @@ class PushTokenTestCase(MyTestCase):
                 seconds=15
             )
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            res = LegacyPushTokenClass.api_endpoint(req, g)
+            res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         chall = res[1]["result"]["value"][0]
         self.assertEqual(chall["nonce"], challenge, chall)
@@ -1543,7 +1542,7 @@ class PushTokenTestCase(MyTestCase):
                 seconds=15
             )
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            res = LegacyPushTokenClass.api_endpoint(req, g)
+            res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
 
@@ -1551,7 +1550,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
         )
         with (
             mock.patch("edumfa.models.datetime") as mock_dt1,
@@ -1564,7 +1563,7 @@ class PushTokenTestCase(MyTestCase):
             self.assertRaisesRegex(
                 PolicyError,
                 r"Polling not allowed!",
-                LegacyPushTokenClass.api_endpoint,
+                PushTokenClass.api_endpoint,
                 req,
                 g,
             )
@@ -1573,7 +1572,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.TOKEN}",
         )
         # If no tokeninfo is set, allow polling
         with (
@@ -1584,7 +1583,7 @@ class PushTokenTestCase(MyTestCase):
                 seconds=15
             )
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            res = LegacyPushTokenClass.api_endpoint(req, g)
+            res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
 
@@ -1601,7 +1600,7 @@ class PushTokenTestCase(MyTestCase):
             self.assertRaisesRegex(
                 PolicyError,
                 r"Polling not allowed!",
-                LegacyPushTokenClass.api_endpoint,
+                PushTokenClass.api_endpoint,
                 req,
                 g,
             )
@@ -1616,7 +1615,7 @@ class PushTokenTestCase(MyTestCase):
                 seconds=15
             )
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            res = LegacyPushTokenClass.api_endpoint(req, g)
+            res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
 
@@ -1626,7 +1625,7 @@ class PushTokenTestCase(MyTestCase):
         set_policy(
             "push_poll",
             SCOPE.AUTH,
-            action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.ALLOW}",
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.ALLOW}",
         )
         with (
             mock.patch("edumfa.models.datetime") as mock_dt1,
@@ -1636,7 +1635,7 @@ class PushTokenTestCase(MyTestCase):
                 seconds=15
             )
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            res = LegacyPushTokenClass.api_endpoint(req, g)
+            res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
 
@@ -1650,7 +1649,7 @@ class PushTokenTestCase(MyTestCase):
                 seconds=15
             )
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
-            res = LegacyPushTokenClass.api_endpoint(req, g)
+            res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
 
@@ -1674,7 +1673,7 @@ class PushTokenTestCase(MyTestCase):
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
-                LegacyPushTokenClass.api_endpoint,
+                PushTokenClass.api_endpoint,
                 req,
                 g,
             )
@@ -1699,7 +1698,7 @@ class PushTokenTestCase(MyTestCase):
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
-                LegacyPushTokenClass.api_endpoint,
+                PushTokenClass.api_endpoint,
                 req,
                 g,
             )
@@ -1726,7 +1725,7 @@ class PushTokenTestCase(MyTestCase):
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
-                LegacyPushTokenClass.api_endpoint,
+                PushTokenClass.api_endpoint,
                 req,
                 g,
             )
@@ -1744,13 +1743,13 @@ class PushTokenTestCase(MyTestCase):
         self.assertRaisesRegex(
             eduMFAError,
             r"Could not verify signature!",
-            LegacyPushTokenClass.api_endpoint,
+            PushTokenClass.api_endpoint,
             req,
             g,
         )
 
         # wrongly configured push token (no firebase config)
-        tok.del_tokeninfo(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG)
+        tok.del_tokeninfo(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG)
         # We are missing a registration URL, thus polling of challenges fails
         delete_policy("push1")
         req.all_data = {"serial": serial, "timestamp": ts, "signature": b32encode(sig)}
@@ -1766,14 +1765,14 @@ class PushTokenTestCase(MyTestCase):
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
-                LegacyPushTokenClass.api_endpoint,
+                PushTokenClass.api_endpoint,
                 req,
                 g,
             )
 
         # unknown firebase configuration
         tok.add_tokeninfo(
-            LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
+            PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG,
             "my unknown firebase config",
         )
         req.all_data = {"serial": serial, "timestamp": ts, "signature": b32encode(sig)}
@@ -1789,7 +1788,7 @@ class PushTokenTestCase(MyTestCase):
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
-                LegacyPushTokenClass.api_endpoint,
+                PushTokenClass.api_endpoint,
                 req,
                 g,
             )
