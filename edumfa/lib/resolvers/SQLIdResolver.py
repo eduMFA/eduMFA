@@ -298,7 +298,7 @@ class IdResolver(UserIdResolver):
         try:
             conditions = [self._get_userid_filter(userId)]
             conditions = self._append_where_filter(conditions, self.TABLE, self.where)
-            filter_condition = and_(*conditions)
+            filter_condition = and_(True, *conditions)
             result = self.session.execute(select(self.TABLE).filter(filter_condition))
 
             for r in result.mappings():
@@ -351,7 +351,7 @@ class IdResolver(UserIdResolver):
             column = self.map.get("username")
             conditions.append(self.TABLE.columns[column].like(LoginName))
             conditions = self._append_where_filter(conditions, self.TABLE, self.where)
-            filter_condition = and_(*conditions)
+            filter_condition = and_(True, *conditions)
             result = self.session.execute(select(self.TABLE).filter(filter_condition))
 
             for r in result.mappings():
@@ -417,7 +417,7 @@ class IdResolver(UserIdResolver):
             conditions.append(self.TABLE.columns[column].like(value))
 
         conditions = self._append_where_filter(conditions, self.TABLE, self.where)
-        filter_condition = and_(*conditions)
+        filter_condition = and_(True, *conditions)
 
         result = self.session.execute(
             select(self.TABLE).filter(filter_condition).limit(self.limit)
@@ -628,7 +628,7 @@ class IdResolver(UserIdResolver):
         try:
             TABLE = Table(param.get("Table"), MetaData(), autoload_with=engine)
             conditions = cls._append_where_filter([], TABLE, param.get("Where"))
-            filter_condition = and_(*conditions)
+            filter_condition = and_(True, *conditions)
             result = session.query(TABLE).filter(filter_condition).count()
 
             num = result
@@ -701,7 +701,7 @@ class IdResolver(UserIdResolver):
         try:
             conditions = [self._get_userid_filter(uid)]
             conditions = self._append_where_filter(conditions, self.TABLE, self.where)
-            filter_condition = and_(*conditions)
+            filter_condition = and_(True, *conditions)
             self.session.execute(delete(self.TABLE).where(filter_condition))
             self.session.commit()
             log.info("Deleted user with uid: {0!s}".format(uid))

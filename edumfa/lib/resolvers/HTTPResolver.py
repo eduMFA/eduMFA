@@ -34,8 +34,6 @@ from pydash import get
 
 from .UserIdResolver import UserIdResolver
 
-ENCODING = "utf-8"
-
 __name__ = "HTTP_RESOLVER"
 
 log = logging.getLogger(__name__)
