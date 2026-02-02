@@ -1175,7 +1175,7 @@ msgid ""
 msgstr ""
 "La URL de un repositorio, donde se pueden encontrar las plantillas de "
 "políticas. (Por defecto https://raw.githubusercontent.com/edumfa/policy-"
-"templates/master/templates/)"
+"templates/main/templates/)"
 
 #: lib/policy.py
 msgid ""
