@@ -127,3 +127,8 @@ select = [
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
+
+[tool.codespell]
+skip = "./edumfa/static/components/translation,./edumfa/static/contrib,./edumfa/static/translations,./edumfa/static/bun.lock,./edumfa/translations,./AUTHORS.md"
+ignore_words_file = ".codespellignore"
+check_filenames = true
