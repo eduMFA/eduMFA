@@ -129,5 +129,5 @@ select = [
 keep-runtime-typing = true
 
 [tool.codespell]
-skip = "./edumfa/static/components/translation,./edumfa/static/contrib,./edumfa/static/translations,./edumfa/static/bun.lock,./edumfa/translations,./test/testdata/enckey,./AUTHORS.md"
+skip = "./edumfa/static/components/translation,./edumfa/static/contrib,./edumfa/static/translations,./edumfa/static/bun.lock,./edumfa/translations,./tests/testdata/enckey,./AUTHORS.md"
 ignore-words = ".codespellignore"
