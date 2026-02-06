@@ -2733,8 +2733,8 @@ msgstr "Kullanıcı yalnızca bu maksimum sayıda anket belirteci atanmış olab
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionnaire tokens "
-"assigned."
+"The user may only have this maximum number of active questionnaire tokens"
+" assigned."
 msgstr ""
 "Kullanıcı yalnızca bu maksimum aktif anket belirteci atanmış sayısına "
 "sahip olabilir."

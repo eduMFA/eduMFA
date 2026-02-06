@@ -2736,8 +2736,8 @@ msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionnaire tokens "
-"assigned."
+"The user may only have this maximum number of active questionnaire tokens"
+" assigned."
 msgstr ""
 "O usuário só pode ter atribuído este número máximo de \"tokens de "
 "questionário ativo\"."

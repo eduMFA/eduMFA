@@ -2406,8 +2406,8 @@ msgstr "用户只能分配此最大数量的问卷调查令牌。"
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionnaire tokens "
-"assigned."
+"The user may only have this maximum number of active questionnaire tokens"
+" assigned."
 msgstr "用户只能分配此最大数量的活动问卷令牌。"
 
 #: lib/tokens/questionnairetoken.py
