@@ -23,20 +23,8 @@ edumfa-manage -q create_audit_keys || true
 # Wait for DB to be available
 edumfa-manage -q wait_for_db || exit 1
 
-# Check for an existing stamp -> if none exists, we have to create tables first
-# Create tables will create new tables even if there is already a database -> might break migrations that try to do this actions on their own!
-STAMP=$(edumfa-manage -q db current -d /usr/local/lib/edumfa/migrations) || true
-# Remove "Running online" from stamp for cleaner output
-STAMP=${STAMP//Running online/}
-# Remove leading and trailing whitespace and linebreaks
-STAMP=$(echo "$STAMP" | xargs)
-if [[ -z "${STAMP}" ]]; then
-  echo "No existing database stamp found."
-  echo "Initializing database and creating tables."
-  edumfa-manage -q create_tables --stamp
-else
-  echo "Existing database stamp found: $STAMP. Skipping database/table creation."
-fi
+# Create DB tables if the DB is unstamped.
+edumfa-manage -q create_tables
 
 # Upgrading DB
 echo "Upgrading Database"

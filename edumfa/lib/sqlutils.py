@@ -20,8 +20,9 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from sqlalchemy import select
+from sqlalchemy import inspect, select, text
 from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import ClauseElement, Delete
 
 
@@ -120,3 +121,29 @@ def delete_matching_rows(session, table, filter, chunksize=None):
         return result.rowcount
     else:
         return delete_chunked(session, table, filter, chunksize)
+
+
+def is_db_stamped(session: Session) -> bool:
+    """
+    Returns whether there is a single row containing a non-empty string in the
+    `alembic_version` table. This is used e.g. in `create_tables` as a
+    safeguard to avoid stamping an already-stamped database.
+
+    :param session: A session to the database.
+    :return: True if there is a a single row containing a non-empty string in the
+    `alembic_version` table, otherwise False.
+    :raises sqlalchemy.exc.MultipleResultsFound: If the table has more than one
+        row.
+    """
+    # Check if the alembic_version table exists, unstamped databases don't have
+    # it.
+    insp = inspect(session)
+    alembic_table_exists = insp.has_table("alembic_version")
+    if not alembic_table_exists:
+        return False
+    rows = session.execute(text("SELECT * FROM alembic_version"))
+    # raise exception if there is more than one row, should not happen
+    row = rows.one_or_none()
+    # Return false if the table has no row or an empty one. I don't know if
+    # that actually can happen.
+    return bool(row and row[0] != "")

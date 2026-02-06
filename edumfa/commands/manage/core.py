@@ -33,6 +33,7 @@ from flask.cli import AppGroup
 from flask_migrate import stamp as f_stamp
 
 from edumfa.lib.security.default import DefaultSecurityModule
+from edumfa.lib.sqlutils import is_db_stamped
 from edumfa.models import db
 
 core_cli = AppGroup("core", help="Core commands")
@@ -196,17 +197,18 @@ def create_audit_keys(keysize):
 
 
 @core_cli.command("create_tables")
-@click.option(
-    "-s", "--stamp", is_flag=True, help="Stamp database to current head revision."
-)
-def create_tables(stamp=False):
+def create_tables():
     """
     Initially create the tables in the database. The database must exist
-    (an SQLite database will be created).
+    (an SQLite database will be created). If the DB is stamped, exit without
+    doing anything (with a successful exit code).
     """
     click.echo(db)
-    db.create_all()
-    if stamp:
+    with db.engine.connect() as connection:
+        database_is_stamped = is_db_stamped(connection)
+    if not database_is_stamped:
+        db.create_all()
+        # stamp the database
         # get the path to the migration directory from the distribution
         p = [
             x.locate()
@@ -215,7 +217,13 @@ def create_tables(stamp=False):
         ]
         migration_dir = os.path.dirname(os.path.abspath(p[0]))
         f_stamp(directory=migration_dir)
-    db.session.commit()
+        db.session.commit()
+    else:
+        click.echo(
+            "Your database seems to already have been created. To upgrade its schema, please see the documentation."
+        )
+        # For backwards compat, exit successfully if nothing was done.
+        sys.exit(0)
 
 
 core_cli.add_command(create_tables, "createdb")
@@ -241,6 +249,9 @@ core_cli.add_command(create_tables, "createdb")
 def wait_for_db(attempts: int, sleep: int) -> None:
     """
     Wait until the database is available.
+
+    :param attempts: Amount of tries to connect.
+    :param sleep: Time to sleep in seconds between connection attempts.
     """
     import time
 

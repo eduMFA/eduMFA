@@ -2,13 +2,17 @@
 This file contains the tests for lib/sqlutils.py
 """
 
+import tempfile
+import unittest
 import warnings
 from datetime import datetime
 from unittest.mock import MagicMock
 
+from sqlalchemy import create_engine, text
+from sqlalchemy.exc import MultipleResultsFound
 from sqlalchemy.testing import AssertsCompiledSQL
 
-from edumfa.lib.sqlutils import DeleteLimit, delete_matching_rows
+from edumfa.lib.sqlutils import DeleteLimit, delete_matching_rows, is_db_stamped
 from edumfa.models import Audit as LogEntry
 
 from .base import MyTestCase
@@ -102,3 +106,70 @@ class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
         result = delete_matching_rows(session, LogEntry.__table__, LogEntry.id < 1234)
         self.assertEqual(len(session.execute.mock_calls), 1)
         self.assertEqual(result, 2500)
+
+
+class DbIsStampedTest(unittest.TestCase):
+    """Tests the `is_db_stamped` method with a sqlite DB."""
+
+    def setUp(self):
+        # Create a clean db for each test - this could get expensive with a lot
+        # of them!
+        self.database_fp = tempfile.NamedTemporaryFile()
+        self.engine = create_engine(f"sqlite:///{self.database_fp.name}")
+        self.connection = self.engine.connect()
+
+    def tearDown(self):
+        self.connection.close()
+        self.engine.dispose()
+        self.database_fp.close()
+
+    def test_01_stamped_database(self):
+        self.connection.execute(
+            text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
+        )
+        self.connection.execute(
+            text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522937')")
+        )
+        self.connection.commit()
+        is_stamped = is_db_stamped(self.connection)
+        self.assertTrue(is_stamped)
+
+    def test_02_unstamped_database_no_table(self):
+        is_stamped = is_db_stamped(self.connection)
+        self.assertFalse(is_stamped)
+
+    def test_03_unstamped_database_no_row(self):
+        self.connection.execute(
+            text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
+        )
+        self.connection.commit()
+        is_stamped = is_db_stamped(self.connection)
+        self.assertFalse(is_stamped)
+
+    def test_04_unstamped_database_empty_row(self):
+        self.connection.execute(
+            text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
+        )
+        self.connection.execute(
+            text("INSERT INTO alembic_version (version_num) VALUES ('')")
+        )
+        self.connection.commit()
+        is_stamped = is_db_stamped(self.connection)
+        self.assertFalse(is_stamped)
+
+    def test_05_malformed_database_multiple_rows(self):
+        """Tests if multiple rows in the alembic_version table leads to an
+        exception. I don't think this will ever happen.
+        """
+        self.connection.execute(
+            text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
+        )
+        self.connection.execute(
+            text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522937')")
+        )
+        self.connection.execute(
+            text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522938')")
+        )
+        self.connection.commit()
+        with self.assertRaises(MultipleResultsFound):
+            is_db_stamped(self.connection)
