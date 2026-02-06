@@ -219,7 +219,7 @@ class EncryptKeyHardwareSecurityModule(DefaultSecurityModule):  # pragma: no cov
             log.info("Successfully setup the security module.")
             self.is_ready = True
             # We need this for the base class
-            self.crypted = True
+            self.encrypted = True
             if logout:
                 self.session.logout()
                 self.session.closeSession()
@@ -376,15 +376,15 @@ if __name__ == "__main__":  # pragma: no cover
     if "encfile" in config:
         # password
         password = "topSekr3t" * 16
-        crypted = p.encrypt_password(password)
-        text = p.decrypt_password(crypted)
+        encrypted = p.encrypt_password(password)
+        text = p.decrypt_password(encrypted)
         assert text == password  # nosec B101 # This is actually a test
         log.info("password encrypt/decrypt test successful")
 
         # pin
         password = "topSekr3t"  # nosec B105 # used for testing
-        crypted = p.encrypt_pin(password)
-        text = p.decrypt_pin(crypted)
+        encrypted = p.encrypt_pin(password)
+        text = p.decrypt_pin(encrypted)
         assert text == password  # nosec B101 # This is actually a test
         log.info("pin encrypt/decrypt test successful")
 

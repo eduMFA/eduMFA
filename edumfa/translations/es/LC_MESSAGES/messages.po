@@ -355,7 +355,7 @@ msgstr "Establezca la longitud mínima requerida del PIN OTP."
 
 #: lib/policy.py
 msgid ""
-"Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, "
+"Specify the required contents of the OTP PIN. (c)haracters, (n)umeric, "
 "(s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
 msgstr ""
 "Especifique el contenido requerido del PIN OTP. (c)aracteres, "
@@ -1482,7 +1482,7 @@ msgstr "Establezca la longitud mínima requerida del PIN del token {0!s}."
 #: lib/token.py
 #, python-brace-format
 msgid ""
-"Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
+"Specify the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
 msgstr ""
 "Especifique el contenido del PIN requerido del token {0!s}. (c)aracteres,"
@@ -2805,7 +2805,7 @@ msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of questionaire tokens "
+"The user may only have this maximum number of questionnaire tokens "
 "assigned."
 msgstr ""
 "El usuario solo puede tener asignado este número máximo de \"tokens de "
@@ -2813,7 +2813,7 @@ msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionaire tokens "
+"The user may only have this maximum number of active questionnaire tokens "
 "assigned."
 msgstr ""
 "El usuario solo puede tener asignado este número máximo de \"tokens de "

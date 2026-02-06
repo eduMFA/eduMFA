@@ -116,7 +116,7 @@ class APIAuthTestCase(MyApiTestCase):
             self.assertTrue("remote" in auditentry.get("policies"))
 
         self.setUp_user_realms()
-        # User "cornelius" from the default realm as normale user
+        # User "cornelius" from the default realm as normal user
         with self.app.test_request_context(
             "/auth",
             method="POST",

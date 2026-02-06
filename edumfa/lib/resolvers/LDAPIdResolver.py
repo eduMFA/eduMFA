@@ -476,7 +476,7 @@ class IdResolver(UserIdResolver):
     def _getDN(self, userId):
         """
         This function returns the DN of a userId.
-        Therefor it evaluates the self.uidtype.
+        Therefore it evaluates the self.uidtype.
 
         :param userId: The userid of a user
         :type userId: string

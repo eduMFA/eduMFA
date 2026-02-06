@@ -14,7 +14,7 @@ The system knows one default realm. Users within this default realm can
 authenticate with their username.
 
 Users in realms, that are not the default realm, need to be additionally identified.
-Therefor the users need to authenticate with their username and the realm like this::
+Therefore the users need to authenticate with their username and the realm like this::
    
    user@realm
 

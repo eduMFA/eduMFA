@@ -1803,7 +1803,7 @@ class LDAPResolverTestCase(MyTestCase):
 
     @ldap3mock.activate
     def test_22_caching_two_ldaps(self):
-        # This test checks, if the cached values are seperated for two
+        # This test checks, if the cached values are separated for two
         # different resolvers. Alice is cached as not found in the first
         # resolver but alice will be found in the other resolver.
         ldap3mock.setLDAPDirectory(LDAPDirectory_small)
@@ -2517,7 +2517,7 @@ class LDAPResolverTestCase(MyTestCase):
         params["BINDPW"] = CENSORED
         r = save_resolver(params)
         self.assertTrue(r)
-        # Check the password in the DB. It is the originial one, not "__CENSORED__".
+        # Check the password in the DB. It is the original one, not "__CENSORED__".
         c = get_resolver_config("testname1")
         self.assertEqual(c.get("BINDPW"), "ldaptest")
         r = delete_resolver("testname1")

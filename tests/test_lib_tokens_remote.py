@@ -183,7 +183,7 @@ class RemoteTokenTestCase(MyTestCase):
         self.assertFalse(r[0], r)
         self.assertTrue(r[1] == -1, r)
         self.assertTrue(r[2].get("message") == "Wrong PIN", r)
-        # rigth PIN
+        # right PIN
         r = token.authenticate(self.otppin + "123456")
         self.assertTrue(r[0], r)
         self.assertTrue(r[1] >= 0, r)

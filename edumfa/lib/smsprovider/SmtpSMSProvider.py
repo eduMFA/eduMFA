@@ -23,7 +23,7 @@
 #
 
 __doc__ = """This is the SMSClass to send SMS via SMTP Gateway.
-i.e. a Mail is sent to an Gateway/Emailserver and dependig on the
+i.e. a Mail is sent to an Gateway/Emailserver and depending on the
 address, subject and body this gateway will trigger the sending of the SMS.
 
 The code is tested in tests/test_lib_smsprovider

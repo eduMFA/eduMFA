@@ -417,7 +417,7 @@ class Connection:
         # NOTE: We may need to expand on this list, but as this is not a real
         # LDAP server we should be OK.
         # Value to contain:
-        #   numbers, upper/lower case letters, astrisk, at symbol, minus, full
+        #   numbers, upper/lower case letters, asterisk, at symbol, minus, full
         #   stop, backslash or a space
         v = pyparsing.Word(pyparsing.alphanums + "-*@.\\ äöü")
         rel = pyparsing.oneOf("= ~= >= <=")

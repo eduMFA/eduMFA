@@ -329,7 +329,7 @@ msgstr "設置 OTP PIN 所需的最小長度。"
 
 #: lib/policy.py
 msgid ""
-"Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, "
+"Specify the required contents of the OTP PIN. (c)haracters, (n)umeric, "
 "(s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
 msgstr "指定 OTP PIN 所需的內容。 (c) 字符，(n) 數字，(s) 特殊。使用修飾符 +/- 或允許的字符列表 [1234567890]"
 
@@ -1264,7 +1264,7 @@ msgstr "設置{0!s}令牌所需的最小 PIN 長度。"
 #: lib/token.py
 #, python-brace-format
 msgid ""
-"Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
+"Specify the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
 msgstr "指定 {0!s} 令牌所需的 PIN 內容。 (c) 字符、(n) 數字、(s) 特殊、(o) 其他。 [+/-]！"
 
@@ -2405,13 +2405,13 @@ msgstr "用戶必須在身份驗證期間回答這批問題。"
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of questionaire tokens "
+"The user may only have this maximum number of questionnaire tokens "
 "assigned."
 msgstr "使用者只能分配此最大數量的提問者令牌。"
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionaire tokens "
+"The user may only have this maximum number of active questionnaire tokens "
 "assigned."
 msgstr "使用者只能分配此最大數量的活動提問者令牌。"
 

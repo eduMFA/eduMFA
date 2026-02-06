@@ -240,7 +240,7 @@ def _compare_before(key, given_value_string):
 def _compare_regex_or_equal(_key, given_regex):
     def comparator(value):
         if type(value) in (int, bool):
-            # If the value from the database is an integer, we compare "euqals integer"
+            # If the value from the database is an integer, we compare "equals integer"
             given_value = _try_convert_to_integer(given_regex)
             return given_value == value
         else:

@@ -226,7 +226,7 @@ class DefaultSecurityModule(SecurityModule):
         provide the information, that the key file is encrypted.
 
            {"file": "/etc/secretkey",
-            "crypted": True}
+            "encrypted": True}
 
         If the key file is encrypted, the HSM is not immediately ready. It will
         return HSM.is_ready == False.
@@ -241,7 +241,7 @@ class DefaultSecurityModule(SecurityModule):
         config = config or {}
         self.name = "Default"
         self.config = config
-        self.crypted = False
+        self.encrypted = False
         self.is_ready = True
         self._id = binascii.hexlify(os.urandom(3))
 
@@ -257,10 +257,10 @@ class DefaultSecurityModule(SecurityModule):
             cipher = f.read()
 
         if len(cipher) > 100:
-            config["crypted"] = True
+            config["encrypted"] = True
 
-        if is_true(config.get("crypted", "")):
-            self.crypted = True
+        if is_true(config.get("encrypted", "")):
+            self.encrypted = True
             self.is_ready = False
 
         self.secFile = config.get("file")
@@ -282,12 +282,12 @@ class DefaultSecurityModule(SecurityModule):
         :rtype: binary string
         """
         slot_id = int(slot_id)
-        if self.crypted and slot_id in self.secrets:
+        if self.encrypted and slot_id in self.secrets:
             return self.secrets.get(slot_id)
 
         secret = b""
 
-        if self.crypted:
+        if self.encrypted:
             # if the password was not provided, read it from the module
             # singleton cache
             password = password or PASSWORD
@@ -329,7 +329,7 @@ class DefaultSecurityModule(SecurityModule):
 
     def setup_module(self, params):
         """
-        callback, which is called during the runtime to initialze the
+        callback, which is called during the runtime to initialize the
         security module.
 
         E.g. here the password for an encrypted keyfile can be provided like::
@@ -341,14 +341,14 @@ class DefaultSecurityModule(SecurityModule):
 
         :return: -
         """
-        if self.crypted is False:
+        if self.encrypted is False:
             return
         if "password" in params:
             PASSWORD = params.get("password")
         else:
             raise HSMException("missing password")
 
-        # if we have a crypted file and a password, we take all keys
+        # if we have a encrypted file and a password, we take all keys
         # from the file and put them in a hash
         # After this we do not require the password anymore
         for handle in [self.TOKEN_KEY, self.CONFIG_KEY, self.VALUE_KEY]:
@@ -399,7 +399,7 @@ class DefaultSecurityModule(SecurityModule):
 
         res = aes_cbc_encrypt(key, iv, padded_data)
 
-        if self.crypted is False:
+        if self.encrypted is False:
             zerome(key)
             del key
         return res
@@ -493,7 +493,7 @@ class DefaultSecurityModule(SecurityModule):
             # convert output from ascii, back to bin data
             data = binascii.unhexlify(output)
 
-        if self.crypted is False:
+        if self.encrypted is False:
             zerome(key)
             del key
 

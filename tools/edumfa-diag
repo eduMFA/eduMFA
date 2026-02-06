@@ -196,14 +196,14 @@ apache_log() {
 }
 
 ngnix_log(){
-	# Check if NGNIX logs exist
+	# Check if NGINX logs exist
 	if [ -f /var/log/nginx/error.log ] && [ -f /var/log/nginx/access.log ]; then
 		log
-		log "SECTION: NGNIX-ERROR.LOG"
+		log "SECTION: NGINX-ERROR.LOG"
 		log "========================"
 		tail -n 100 /var/log/nginx/error.log >> "$tempfile"
 		log
-		log "SECTION: NGNIX-ACCESS.LOG"
+		log "SECTION: NGINX-ACCESS.LOG"
 		log "========================"
 		tail -n 100 /var/log/nginx/access.log >> "$tempfile"
 	fi

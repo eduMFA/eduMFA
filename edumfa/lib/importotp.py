@@ -143,7 +143,7 @@ def parseOATHcsv(csv):
             continue
 
         l = line.split(",")
-        # Do not parse emtpy lines, it could be [] or ['']
+        # Do not parse empty lines, it could be [] or ['']
         if len(l) <= 1:
             continue
 

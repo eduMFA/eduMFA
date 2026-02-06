@@ -345,7 +345,7 @@ msgstr "Stel de minimaal vereiste lengte van de OTP PIN in."
 
 #: lib/policy.py
 msgid ""
-"Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, "
+"Specify the required contents of the OTP PIN. (c)haracters, (n)umeric, "
 "(s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
 msgstr ""
 "Geef de vereiste samenstelling van de OTP PIN (c) tekens, (n) getallen, "
@@ -1468,7 +1468,7 @@ msgstr "Stl de minimaal vereiste PIN-lengte in voor een {0!s} token."
 #: lib/token.py
 #, python-brace-format
 msgid ""
-"Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
+"Specify the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
 msgstr ""
 "Specificeer de vereiste PIN-inhoud van het {0!s} token. (c)letters, "
@@ -2806,7 +2806,7 @@ msgstr "De gebruiker moet dit aantal vragen beantwoorden tijdens de authenticati
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of questionaire tokens "
+"The user may only have this maximum number of questionnaire tokens "
 "assigned."
 msgstr ""
 "De gebruiker mag slechts dit maximaal aantal enquête-tokens toegewezen "
@@ -2814,7 +2814,7 @@ msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionaire tokens "
+"The user may only have this maximum number of active questionnaire tokens "
 "assigned."
 msgstr ""
 "De gebruiker mag slechts dit maximaal aantal actieve enquête-tokens "

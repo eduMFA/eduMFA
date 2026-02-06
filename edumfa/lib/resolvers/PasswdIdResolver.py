@@ -28,7 +28,7 @@
 """
 Description:  This file is part of the eduMFA service
               This module implements the communication interface
-              for resolvin user info to the /etc/passwd user base
+              for resolving user info to the /etc/passwd user base
 
 Dependencies: -
 """
@@ -150,7 +150,7 @@ class IdResolver(UserIdResolver):
                 # for full info store the line
                 self.descDict[fields[ID]] = fields
 
-                # store the crypted password
+                # store the encrypted password
                 self.passDict[fields[ID]] = fields[PASS]
 
                 # store surname, givenname and phones
@@ -189,7 +189,7 @@ class IdResolver(UserIdResolver):
         :param uid: The uid of the user
         :type uid: int
         :param password: The password in cleartext
-        :type password: sting
+        :type password: string
         :return: True or False
         :rtype: bool
         """
@@ -362,7 +362,7 @@ class IdResolver(UserIdResolver):
 
         :param cString: The string to match
         :param cPattern: the pattern
-        :return: If the sting matches
+        :return: If the string matches
         :rtype: bool
         """
         ret = False

@@ -116,14 +116,14 @@ def send_result(obj, rid=1, details=None):
     """
     sendResult - return a json result document
 
-    :param obj: simple result object like dict, sting or list
+    :param obj: simple result object like dict, string or list
     :type obj: dict or list or string/unicode
     :param rid: id value, for future versions
     :type rid: int
     :param details: optional parameter, which allows to provide more detail
     :type  details: None or simple type like dict, list or string/unicode
 
-    :return: json rendered sting result
+    :return: json rendered string result
     :rtype: string
     """
     return jsonify(prepare_result(obj, rid, details))
@@ -152,7 +152,7 @@ def send_error(errstring, rid=1, context=None, error_code=-311, details=None):
         challenges)
     :type details: dict
 
-    :return: json rendered sting result
+    :return: json rendered string result
     :rtype: string
 
     """

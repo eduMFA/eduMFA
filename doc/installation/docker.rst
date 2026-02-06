@@ -21,7 +21,7 @@ Docker Compose
 
 For the most setups you should use Docker Compose. Here's a sample `docker-compose.yml` file also containing a mariadb service. 
 
-The container contains a default logging configuration printing the logs to `stdout`, performs database maintanance on start and runs the application on port 8000.
+The container contains a default logging configuration printing the logs to `stdout`, performs database maintenance on start and runs the application on port 8000.
 
 .. code-block:: yaml
 

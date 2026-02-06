@@ -360,7 +360,7 @@ msgstr "Die minimal geforderte Länge einer OTP PIN."
 
 #: lib/policy.py
 msgid ""
-"Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, "
+"Specify the required contents of the OTP PIN. (c)haracters, (n)umeric, "
 "(s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
 msgstr ""
 "Geben Sie den geforderten Inhalt der OTP PIN an. (c) für Buchstaben, (n) "
@@ -1495,7 +1495,7 @@ msgstr "Sete die minimal notwendite PIN-Länge für den {0!s} Token."
 #: lib/token.py
 #, python-brace-format
 msgid ""
-"Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
+"Specify the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
 msgstr ""
 "Definiere den notwendigen Inhalte der OTP PIN für den {0!s} Token. (c) "
@@ -2841,7 +2841,7 @@ msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of questionaire tokens "
+"The user may only have this maximum number of questionnaire tokens "
 "assigned."
 msgstr ""
 "Der Benutzer darf nur maximal diese Anzahl an Fragenkatalog Token "
@@ -2849,7 +2849,7 @@ msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionaire tokens "
+"The user may only have this maximum number of active questionnaire tokens "
 "assigned."
 msgstr ""
 "Der Benutzer darf nur maximal diese Anzahl an aktiven Fragenkatalog Token"
@@ -3488,7 +3488,7 @@ msgstr ""
 #~ "vergleichbare Apps."
 
 #~ msgid ""
-#~ "Specifiy the required contents of the"
+#~ "Specify the required contents of the"
 #~ " OTP PIN. (c)haracters, (n)umeric, "
 #~ "(s)pecial, (o)thers. [+/-]!"
 #~ msgstr ""

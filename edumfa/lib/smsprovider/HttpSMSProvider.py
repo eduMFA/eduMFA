@@ -115,12 +115,12 @@ class HttpSMSProvider(ISMSProvider):
             proxies = {protocol: proxy}
 
         # url, parameter, username, password, method
-        requestor = requests.get
+        requester = requests.get
         params = parameter
         data = None
         json_param = None
         if method == "POST":
-            requestor = requests.post
+            requester = requests.post
             params = None
             if json_data:
                 json_param = parameter
@@ -135,7 +135,7 @@ class HttpSMSProvider(ISMSProvider):
             f"to url {url}."
         )
         # Todo: drop basic auth if Authorization-Header is given?
-        r = requestor(
+        r = requester(
             url,
             params=params,
             headers=headers,

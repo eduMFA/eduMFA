@@ -1692,7 +1692,7 @@ def get_static_policy_definitions(scope=None):
     # "desc": description of this action
     # "value": list of allowed values of this action, works with int and str. A
     #          dropdown box will be displayed
-    # "group": ment to be used for grouping actions for better finding
+    # "group": meant to be used for grouping actions for better finding
     # "mainmenu": list of enabled Menus. If this action is set, this menu
     #                 is visible in the WebUI
     pol = {
@@ -2036,7 +2036,7 @@ def get_static_policy_definitions(scope=None):
             ACTION.OTPPINCONTENTS: {
                 "type": "str",
                 "desc": _(
-                    "Specifiy the required "
+                    "Specify the required "
                     "contents of the OTP PIN. "
                     "(c)haracters, (n)umeric, "
                     "(s)pecial. Use modifiers +/- or a list "
@@ -2401,7 +2401,7 @@ def get_static_policy_definitions(scope=None):
             ACTION.OTPPINCONTENTS: {
                 "type": "str",
                 "desc": _(
-                    "Specifiy the required "
+                    "Specify the required "
                     "contents of the OTP PIN. "
                     "(c)haracters, (n)umeric, "
                     "(s)pecial. Use modifiers +/- or a list "
