@@ -5,9 +5,9 @@ permissions:
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    types: [ opened, reopened, synchronize ]
+    types: [opened, reopened, synchronize]
 
 jobs:
   ruff:
@@ -29,7 +29,7 @@ jobs:
         uses: codespell-project/actions-codespell@v2
         with:
           check_filenames: true
-          exclude_file: .codespell_skip
+          skip: .codespell_skip
           only_warn: 1
   codeql:
     runs-on: ubuntu-latest
@@ -38,20 +38,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'python' ]
+        language: ["javascript", "python"]
     steps:
-    - uses: actions/checkout@v6
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
-      with:
-        languages: ${{ matrix.language }}
-    - name: Perform CodeQL analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{matrix.language}}"
-
-
-          
-
-    
-     
+      - uses: actions/checkout@v6
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{matrix.language}}"
