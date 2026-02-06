@@ -1,3 +1,4 @@
-edumfa/static/contrib/*
-edumfa/static/translation/*
-edumfa/translations/*
+./edumfa/static/contrib/*
+./edumfa/static/translation/*
+./edumfa/static/bun.lock
+./edumfa/translations/*
