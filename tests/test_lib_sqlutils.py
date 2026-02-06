@@ -116,60 +116,62 @@ class DbIsStampedTest(unittest.TestCase):
         # of them!
         self.database_fp = tempfile.NamedTemporaryFile()
         self.engine = create_engine(f"sqlite:///{self.database_fp.name}")
-        self.connection = self.engine.connect()
 
     def tearDown(self):
-        self.connection.close()
         self.engine.dispose()
         self.database_fp.close()
 
     def test_01_stamped_database(self):
-        self.connection.execute(
-            text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
-        )
-        self.connection.execute(
-            text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522937')")
-        )
-        self.connection.commit()
-        is_stamped = is_db_stamped(self.connection)
+        with self.engine.connect() as connection:
+            connection.execute(
+                text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
+            )
+            connection.execute(
+                text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522937')")
+            )
+            connection.commit()
+        is_stamped = is_db_stamped(self.engine)
         self.assertTrue(is_stamped)
 
     def test_02_unstamped_database_no_table(self):
-        is_stamped = is_db_stamped(self.connection)
+        is_stamped = is_db_stamped(self.engine)
         self.assertFalse(is_stamped)
 
     def test_03_unstamped_database_no_row(self):
-        self.connection.execute(
-            text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
-        )
-        self.connection.commit()
-        is_stamped = is_db_stamped(self.connection)
+        with self.engine.connect() as connection:
+            connection.execute(
+                text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
+            )
+            connection.commit()
+        is_stamped = is_db_stamped(self.engine)
         self.assertFalse(is_stamped)
 
     def test_04_unstamped_database_empty_row(self):
-        self.connection.execute(
-            text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
-        )
-        self.connection.execute(
-            text("INSERT INTO alembic_version (version_num) VALUES ('')")
-        )
-        self.connection.commit()
-        is_stamped = is_db_stamped(self.connection)
+        with self.engine.connect() as connection:
+            connection.execute(
+                text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
+            )
+            connection.execute(
+                text("INSERT INTO alembic_version (version_num) VALUES ('')")
+            )
+            connection.commit()
+        is_stamped = is_db_stamped(self.engine)
         self.assertFalse(is_stamped)
 
     def test_05_malformed_database_multiple_rows(self):
         """Tests if multiple rows in the alembic_version table leads to an
         exception. I don't think this will ever happen.
         """
-        self.connection.execute(
-            text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
-        )
-        self.connection.execute(
-            text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522937')")
-        )
-        self.connection.execute(
-            text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522938')")
-        )
-        self.connection.commit()
+        with self.engine.connect() as connection:
+            connection.execute(
+                text("CREATE TABLE alembic_version (version_num TEXT PRIMARY KEY)")
+            )
+            connection.execute(
+                text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522937')")
+            )
+            connection.execute(
+                text("INSERT INTO alembic_version (version_num) VALUES ('2a74c6522938')")
+            )
+            connection.commit()
         with self.assertRaises(MultipleResultsFound):
-            is_db_stamped(self.connection)
+            is_db_stamped(self.engine)

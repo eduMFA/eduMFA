@@ -204,8 +204,7 @@ def create_tables():
     doing anything (with a successful exit code).
     """
     click.echo(db)
-    with db.engine.connect() as connection:
-        database_is_stamped = is_db_stamped(connection)
+    database_is_stamped = is_db_stamped(db.engine)
     if not database_is_stamped:
         db.create_all()
         # stamp the database
@@ -222,7 +221,7 @@ def create_tables():
         click.echo(
             "Your database seems to already have been created. To upgrade its schema, please see the documentation."
         )
-        # For backwards compat, exit successfully if nothing was done.
+        # Exit successfully if nothing was done.
         sys.exit(0)
 
 
