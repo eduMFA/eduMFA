@@ -28,6 +28,7 @@ jobs:
       - name: Perform Codespell analysis
         uses: codespell-project/actions-codespell@v2
         with:
+          check_filenames: true
           only_warn: 1
   codeql:
     runs-on: ubuntu-latest
