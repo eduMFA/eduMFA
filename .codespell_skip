@@ -1,4 +1,3 @@
-./edumfa/static/contrib/*
-./edumfa/static/components/translation/*
-./edumfa/translations/*
-./po/*
+edumfa/static/contrib/*
+edumfa/static/translation/*
+edumfa/translations/*
