@@ -29,7 +29,7 @@ jobs:
         uses: codespell-project/actions-codespell@v2
         with:
           check_filenames: true
-          skip: .codespell_skip
+          skip: ./edumfa/static/contrib/*,./edumfa/static/translations/*,./edumfa/static/bun.lock,./edumfa/translations/*
           only_warn: 1
   codeql:
     runs-on: ubuntu-latest
