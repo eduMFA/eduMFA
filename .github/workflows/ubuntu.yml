@@ -6,6 +6,8 @@ permissions:
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
     paths:
       - '.github/workflows/ubuntu.yml'
       - 'deploy/ubuntu*/**'
@@ -17,8 +19,6 @@ on:
       - 'setup.py'
   pull_request:
     types: [ opened, reopened, synchronize ]
-  release:
-    types: [ released ]
 
 jobs:
   build:
@@ -59,7 +59,7 @@ jobs:
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Upload packages to Nexus
-        if: github.event_name == 'release'
+        if: github.ref_type == 'tag'
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
