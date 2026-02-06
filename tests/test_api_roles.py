@@ -581,7 +581,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
     def test_06_user_can_assign_token(self):
         self.authenticate_selfservice_user()
-        # The foreign token ist not assigned yet, so he can assign it
+        # The foreign token is not assigned yet, so he can assign it
         with self.app.test_request_context(
             "/token/assign",
             data={"serial": self.foreign_serial},
