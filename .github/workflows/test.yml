@@ -13,7 +13,6 @@ on:
     - 'tools/**'
     - 'edumfa-manage'
     - 'pyproject.toml'
-    - 'requirements.txt'
     - 'setup.py'
   pull_request:
     types: [ opened, reopened, synchronize ]
