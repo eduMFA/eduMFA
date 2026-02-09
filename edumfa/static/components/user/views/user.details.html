@@ -92,7 +92,7 @@
                 </td>
             </tr>
         </table>
-        <div ng-show="allowed_custom_attributes['set'].length > 0">
+        <div ng-show="allowed_custom_attributes.hasOwnProperty('set') && allowed_custom_attributes['set'].length > 0">
         <h4 translate>Add custom attribute</h4>
             <table class="table table-hover">
              <tr>
