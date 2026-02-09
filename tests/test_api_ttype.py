@@ -7,7 +7,6 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from google.oauth2 import service_account
-from pytz import utc
 
 from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.policy import SCOPE, delete_policy, set_policy
