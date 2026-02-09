@@ -76,7 +76,7 @@ class SecurityModuleTestCase(MyTestCase):
     def test_04_random(self):
         config = current_app.config
         hsm = DefaultSecurityModule(
-            {"file": config.get("EDUMFA_ENCFILE"), "encrypted": True}
+            {"file": config.get("EDUMFA_ENCFILE"), "crypted": True}
         )
         r = hsm.random(20)
         self.assertTrue(len(r) == 20, r)
@@ -144,7 +144,7 @@ class SecurityModuleTestCase(MyTestCase):
     def test_07_encrypted_key_file(self):
         config = current_app.config
         hsm = DefaultSecurityModule(
-            {"file": config.get("EDUMFA_ENCFILE_ENC"), "encrypted": True}
+            {"file": config.get("EDUMFA_ENCFILE_ENC"), "crypted": True}
         )
         # The HSM is not ready, since the file is encrypted and we did not
         # provide the password, yet

@@ -226,7 +226,7 @@ class DefaultSecurityModule(SecurityModule):
         provide the information, that the key file is encrypted.
 
            {"file": "/etc/secretkey",
-            "encrypted": True}
+            "crypted": True}
 
         If the key file is encrypted, the HSM is not immediately ready. It will
         return HSM.is_ready == False.
@@ -257,9 +257,9 @@ class DefaultSecurityModule(SecurityModule):
             cipher = f.read()
 
         if len(cipher) > 100:
-            config["encrypted"] = True
+            config["crypted"] = True
 
-        if is_true(config.get("encrypted", "")):
+        if is_true(config.get("crypted", "")):
             self.encrypted = True
             self.is_ready = False
 
