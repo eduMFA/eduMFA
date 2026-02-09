@@ -815,7 +815,7 @@ class TokenTestCase(MyTestCase):
         self.assertFalse(res)
         # check the failcounter increased
         self.assertTrue(old_failcount + 1 == hotp_tokenobject.token.failcount)
-        # Successful auth. The failcount needs to be resetted
+        # Successful auth. The failcount needs to be reset
         res, reply = check_token_list(tokenobject_list, "hotppin520489")
         self.assertTrue(res)
         self.assertTrue(hotp_tokenobject.token.failcount == 0)
@@ -1394,7 +1394,7 @@ class TokenTestCase(MyTestCase):
             user,
             options={"transaction_id": transaction_id},
         )
-        # The response is successfull
+        # The response is successful
         self.assertTrue(r)
         # The matching token was CR2B
         self.assertEqual(r_dict.get("serial"), "CR2B")

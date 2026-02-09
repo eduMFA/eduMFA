@@ -320,7 +320,7 @@ class Audit(AuditBase):
                 duration = datetime.datetime.now() - self.audit_data.get("startdate")
             else:
                 duration = None
-            # We wan't to reduce the passkey events a bit...
+            # We want to reduce the passkey events a bit...
             if (
                 self.config.get("EDUMFA_REDUCE_SQLAUDIT") == "1"
                 or str(self.config.get("EDUMFA_REDUCE_SQLAUDIT")).lower() == "true"
@@ -541,7 +541,7 @@ class Audit(AuditBase):
                 # Fill the list
                 paging_object.auditdata.append(self.audit_entry_to_dict(le))
             except StopIteration as _e:
-                log.debug("Interation stopped.")
+                log.debug("Interaction stopped.")
                 break
             except UnicodeDecodeError as _e:
                 # Unfortunately if one of the audit entries fails, the whole

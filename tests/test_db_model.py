@@ -222,7 +222,7 @@ class TokenModelTestCase(MyTestCase):
         t3info = t3.get_info()
         self.assertTrue(t3.get_info().get("info") == "value")
 
-        # test the string represenative
+        # test the string representative
         s = f"{t3}"
         self.assertTrue(s == "serial2")
 

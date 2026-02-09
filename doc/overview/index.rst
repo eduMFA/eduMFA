@@ -50,7 +50,7 @@ but there are still many others.
 Hardware Requirements
 ---------------------
 
-The hardware requirements are dependant on the amount of traffic you anticipate. As a starting point, an eduMFA VM could have these specs:
+The hardware requirements are dependent on the amount of traffic you anticipate. As a starting point, an eduMFA VM could have these specs:
 
 * 2 CPU cores
 * 8GB RAM

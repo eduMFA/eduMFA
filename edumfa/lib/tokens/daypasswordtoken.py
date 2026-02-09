@@ -210,7 +210,7 @@ class DayPasswordTokenClass(TotpTokenClass):
         return hashlibStr
 
     @log_with(log)
-    def check_otp_exist(self, otp, options=None, symetric=False, inc_counter=True):
+    def check_otp_exist(self, otp, options=None, symmetric=False, inc_counter=True):
         """
         checks if the given password value is/are values of this very token at all.
         This is used to autoassign and to determine the serial number of
@@ -263,7 +263,7 @@ class DayPasswordTokenClass(TotpTokenClass):
             counter = self._time2counter(server_time, timeStepping=self.timestep)
 
         hmac2Otp = HmacOtp(secretHOtp, counter, otplen, self.get_hashlib(self.hashlib))
-        res = hmac2Otp.checkOtp(anOtpVal, 1, symetric=False)
+        res = hmac2Otp.checkOtp(anOtpVal, 1, symmetric=False)
 
         if res != -1:
             # on success, we have to save the last attempt

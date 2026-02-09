@@ -69,7 +69,7 @@ def fake_encrypt(data):
 
 def fake_decrypt(data):
     """
-    simple fake decrypt function for testing: substract 1 from each byte
+    simple fake decrypt function for testing: subtract 1 from each byte
     :return: a list of integers
     """
     return [(c - 1) % 256 for c in data]
@@ -82,7 +82,7 @@ class PKCS11Mock:
         with PKCS11Mock():
             hsm = AESHardwareSecurityModule(...)
 
-            crypted = hsm.encrypt_password(...)
+            encrypted = hsm.encrypt_password(...)
 
     Simulation of encryption and decryption is realized using
     ``fake_encrypt`` and ``fake_decrypt``. Generated random

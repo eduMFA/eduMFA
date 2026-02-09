@@ -603,7 +603,7 @@ class SmsTokenClass(HotpTokenClass):
         This returns the AUTOSMS setting.
 
         :param options: contains user and g object.
-        :optins type: dict
+        :options type: dict
         :return: True if an SMS should be sent automatically
         :rtype: bool
         """

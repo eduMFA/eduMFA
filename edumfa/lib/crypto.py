@@ -377,7 +377,7 @@ def decrypt(enc_data, iv, key_id=0):
     """
     decrypt a variable from the given input with an initialisation vector
 
-    :param enc_data: buffer, which contains the crypted value
+    :param enc_data: buffer, which contains the encrypted value
     :type  enc_data: bytes or str
     :param iv:       initialisation vector
     :type  iv:       bytes or str
@@ -632,8 +632,8 @@ def get_rand_digit_str(length=16):
     """
     if length == 1:
         raise ValueError("get_rand_digit_str only works for values > 1")
-    clen = int(length / 2.4 + 0.5)
-    randd = geturandom(clen, hex=True)
+    clean = int(length / 2.4 + 0.5)
+    randd = geturandom(clean, hex=True)
     s = f"{int(randd, 16):d}"
     if len(s) < length:
         s = "0" * (length - len(s)) + s

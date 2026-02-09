@@ -146,7 +146,7 @@ class SecurityModuleTestCase(MyTestCase):
         hsm = DefaultSecurityModule(
             {"file": config.get("EDUMFA_ENCFILE_ENC"), "crypted": True}
         )
-        # The HSM is not ready, since the file is crypted and we did not
+        # The HSM is not ready, since the file is encrypted and we did not
         # provide the password, yet
         self.assertFalse(hsm.is_ready)
 
@@ -467,11 +467,11 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
             pkcs11.session_mock.generateRandom.assert_called_once_with(4)
 
             password = "topSekr3t" * 16
-            crypted = hsm.encrypt_password(password)
+            encrypted = hsm.encrypt_password(password)
             # to generate the IV
             pkcs11.session_mock.generateRandom.assert_called_with(16)
 
-            text = hsm.decrypt_password(crypted)
+            text = hsm.decrypt_password(encrypted)
             self.assertEqual(text, password)
             self.assertEqual(pkcs11.session_mock.encrypt.call_count, 1)
             self.assertEqual(pkcs11.session_mock.encrypt.call_count, 1)
@@ -568,8 +568,8 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
 
             # encryption+decryption succeeds once
             password = "topSekr3t" * 16
-            crypted = hsm.encrypt_password(password)
-            text = hsm.decrypt_password(crypted)
+            encrypted = hsm.encrypt_password(password)
+            text = hsm.decrypt_password(encrypted)
             self.assertEqual(text, password)
 
             # simulate that the HSM disappears after that, so we cannot
@@ -595,8 +595,8 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
                 1,
                 error=PyKCS11.CKR_SESSION_HANDLE_INVALID,
             ):
-                crypted = hsm.encrypt_password(password)
-            text = hsm.decrypt_password(crypted)
+                encrypted = hsm.encrypt_password(password)
+            text = hsm.decrypt_password(encrypted)
             self.assertEqual(text, password)
             self.assertEqual(pkcs11.mock.openSession.mock_calls, [call(slot=1)] * 3)
 

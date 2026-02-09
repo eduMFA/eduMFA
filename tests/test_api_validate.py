@@ -2731,7 +2731,7 @@ class ValidateAPITestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            # This is a challene, the value is False
+            # This is a challenge, the value is False
             self.assertEqual(result.get("value"), False)
             detail = res.json.get("detail")
             serial = detail.get("serial")
@@ -6092,7 +6092,7 @@ class AChallengeResponse(MyApiTestCase):
 
         self.assertEqual(len(set(found_questions)), 5)
 
-        # Now we run the last resonse. It can be any of the 5 originial questions again.
+        # Now we run the last response. It can be any of the 5 original questions again.
 
         # Sixth and last response will be successful
         with self.app.test_request_context(

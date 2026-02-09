@@ -4731,7 +4731,7 @@ msgstr ""
 
 #: components/config/views/config.mresolvers.ldap.html
 #: components/config/views/config.resolvers.ldap.html
-msgid "Verify the TLS cerificate of the server."
+msgid "Verify the TLS certificate of the server."
 msgstr "驗證伺服器的 TLS 證書。"
 
 #: components/config/views/config.edumfaserver.edit.html

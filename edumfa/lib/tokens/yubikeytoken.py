@@ -101,7 +101,7 @@ def yubico_api_signature(data, api_key):
 
 def yubico_check_api_signature(data, api_key, signature=None):
     """
-    Verfiy the signature of the data.
+    Verify the signature of the data.
     Either provide the signature as parameter or take it from the data
 
     :param data: The data to be signed

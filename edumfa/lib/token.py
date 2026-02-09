@@ -686,7 +686,7 @@ def get_tokens_from_serial_or_user(serial, user, **kwargs):
 
     :param serial: exact serial number or None
     :param user: a user object or None
-    :param kwargs: additional argumens to ``get_tokens``
+    :param kwargs: additional arguments to ``get_tokens``
     :return: a (possibly empty) list of tokens
     :rtype: list
     """
@@ -767,7 +767,7 @@ def get_realms_of_token(serial, only_first_realm=False):
     :param serial: the exact serial number of the token
     :type serial: basestring
 
-    :param only_first_realm: Wheather we should only return the first realm
+    :param only_first_realm: Whether we should only return the first realm
     :type only_first_realm: bool
 
     :return: list of the realm names
@@ -852,7 +852,7 @@ def is_token_owner(serial, user):
 @log_with(log)
 def get_tokens_in_resolver(resolver):
     """
-    Return a list of the token ojects, that contain this very resolver
+    Return a list of the token objects, that contain this very resolver
 
     :param resolver: The resolver, the tokens should be in
     :type resolver: basestring
@@ -2478,7 +2478,7 @@ def check_token_list(
     <count> of the valid tokens need to be increased to the new count.
     """
     if valid_token_list:
-        # One ore more successfully authenticating tokens found
+        # One or more successfully authenticating tokens found
         # We need to return success
         message_list = [_("matching {0:d} tokens").format(len(valid_token_list))]
         # write serial numbers or something to audit log
@@ -2741,7 +2741,7 @@ def get_dynamic_policy_definitions(scope=None):
             pol[pin_scope][f"{ttype.lower()}_otp_pin_contents"] = {
                 "type": "str",
                 "desc": _(
-                    "Specifiy the required PIN contents of the "
+                    "Specify the required PIN contents of the "
                     "{0!s} token. "
                     "(c)haracters, (n)umeric, "
                     "(s)pecial, (o)thers. [+/-]!"

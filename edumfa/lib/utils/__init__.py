@@ -723,7 +723,7 @@ def check_ip_in_policy(client_ip, policy):
 def reload_db(timestamp, db_ts):
     """
     Check if the configuration database should be reloaded. This is verified
-    by comparing the chache timestamp and the database timestamp
+    by comparing the cache timestamp and the database timestamp
 
     :param timestamp: cache timestamp
     :type timestamp: timestamp
@@ -1278,14 +1278,14 @@ def prepare_result(obj, rid=1, details=None):
     """
     This is used to preformat the dictionary to be sent by the API response
 
-    :param obj: simple result object like dict, sting or list
+    :param obj: simple result object like dict, string or list
     :type obj: dict or list or string/unicode
     :param rid: id value, for future versions
     :type rid: int
     :param details: optional parameter, which allows to provide more detail
     :type  details: None or simple type like dict, list or string/unicode
 
-    :return: json rendered sting result
+    :return: json rendered string result
     :rtype: string
     """
     res = {
@@ -1460,7 +1460,7 @@ def determine_logged_in_userparams(logged_in_user, params):
 
     :param logged_in_user: Logged in user dictionary.
     :param params: Request parameters (all_data)
-    :return: Tupe of (scope, username, realm, adminuser, adminrealm)
+    :return: Tuple of (scope, username, realm, adminuser, adminrealm)
     """
     role = logged_in_user.get("role")
     username = logged_in_user.get("username")

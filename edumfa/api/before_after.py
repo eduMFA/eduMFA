@@ -160,7 +160,7 @@ def before_request():
 
     user_required checks if there is a logged in admin or user
 
-    The checks for ONLY admin are preformed in api/system.py
+    The checks for ONLY admin are performed in api/system.py
     """
     # remove session from param and gather all parameters, either
     # from the Form data or from JSON in the request body.
@@ -189,7 +189,7 @@ def before_request():
     g.policy_object = PolicyClass()
     g.audit_object = getAudit(current_app.config, g.startdate)
     g.event_config = EventConfiguration()
-    # access_route contains the ip adresses of all clients, hops and proxies.
+    # access_route contains the ip addresses of all clients, hops and proxies.
     g.client_ip = get_client_ip(request, get_from_config(SYSCONF.OVERRIDECLIENT))
     # Save the HTTP header in the localproxy object
     g.request_headers = request.headers

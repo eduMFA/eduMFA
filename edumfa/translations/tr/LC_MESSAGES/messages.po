@@ -355,7 +355,7 @@ msgstr "OTP PIN'inin gerekli minimum uzunluğunu ayarlayın."
 
 #: lib/policy.py
 msgid ""
-"Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, "
+"Specify the required contents of the OTP PIN. (c)haracters, (n)umeric, "
 "(s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
 msgstr ""
 "OTP pın'inin gerekli içeriğini belirtin. (c)haracters, (n)umeric, "
@@ -1457,7 +1457,7 @@ msgstr "{0!s} belirtecinin gerekli olan minimum pin uzunluğunu ayarlayın."
 #: lib/token.py
 #, python-brace-format
 msgid ""
-"Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
+"Specify the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
 msgstr ""
 "{0!s} belirtecinin gerekli pim içeriğini belirtir. (c) haracters, (n) "
@@ -2727,14 +2727,14 @@ msgstr "Kullanıcı, kimlik doğrulama sırasında bu soru sayısını cevaplama
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of questionaire tokens "
+"The user may only have this maximum number of questionnaire tokens "
 "assigned."
 msgstr "Kullanıcı yalnızca bu maksimum sayıda anket belirteci atanmış olabilir."
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionaire tokens "
-"assigned."
+"The user may only have this maximum number of active questionnaire tokens"
+" assigned."
 msgstr ""
 "Kullanıcı yalnızca bu maksimum aktif anket belirteci atanmış sayısına "
 "sahip olabilir."

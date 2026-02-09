@@ -35,6 +35,6 @@ for user in os.listdir("/home/"):
             print(f"hotp{num_tokens:04d}{user}, {seed_hex}, hotp, 6")
 
         else:
-            sys.stderr.write("--- Only TOTP Token suppported at the moment!\n")
+            sys.stderr.write("--- Only TOTP Token supported at the moment!\n")
     except OSError:
         sys.stderr.write(f"-- Nothing for user {user}\n")

@@ -546,7 +546,7 @@ class TokenClass:
         if tdesc is not None:
             self.token.set_description(tdesc)
 
-        # key_size as parameter overrules a prevoiusly set
+        # key_size as parameter overrules a previously set
         # value e.g. in hashlib in the upper classes
         key_size = int(getParam(param, "keysize", optional) or 20)
 

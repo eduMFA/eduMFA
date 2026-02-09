@@ -151,7 +151,7 @@ class prepolicy:
 
     def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
         """
-        This decorates the given function. The prepolicy decorator is ment
+        This decorates the given function. The prepolicy decorator is meant
         for API functions on the API level.
 
         If some error occur the a PolicyException is raised.
@@ -330,7 +330,7 @@ def realmadmin(request=None, action=None):
           this is not handled at the moment. We need to change the underlying
           library functions!
 
-    :param request: The HTTP reqeust
+    :param request: The HTTP request
     :param action: The action like ACTION.USERLIST
     """
     # This decorator is only valid for admins
