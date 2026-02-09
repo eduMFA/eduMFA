@@ -75,7 +75,7 @@
     </div>
     -->
 
-    <div ng-show="allowed_custom_attributes['set'].length > 0 || allowed_custom_attributes['delete'].length > 0">
+    <div ng-show="(allowed_custom_attributes.hasOwnProperty('set') && allowed_custom_attributes['set'].length > 0) || (allowed_custom_attributes.hasOwnProperty('delete') && allowed_custom_attributes['delete'].length > 0)">
         <h3 translate>Custom attributes for user {{ username }}</h3>
         <table class="table table-hover">
             <tr ng-repeat="(attribute_key, attribute_value) in custom_attributes">
