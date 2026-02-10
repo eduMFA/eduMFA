@@ -63,20 +63,9 @@ Setup
 For setting up the system to *run* it, please read install instructions 
 at `edumfa.readthedocs.io <http://edumfa.readthedocs.io/en/latest/installation/index.html>`_.
 
-If you want to setup a development environment start like this::
+If you want to setup a development, you need to have (UV)[https://docs.astral.sh/uv/getting-started/installation/] instaled. Then you can run::
 
-    git clone https://github.com/edumfa/edumfa.git
-    cd edumfa
-    virtualenv venv
-    source venv/bin/activate
-    pip install .
-    
-.. _testing_env:
-
-You may additionally want to set up your environment for testing, by adding the
-additional dependencies::
-
-    pip install .[test]
+    uv sync
 
 
 Getting and updating submodules
