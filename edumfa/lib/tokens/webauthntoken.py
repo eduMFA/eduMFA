@@ -1563,7 +1563,7 @@ class WebAuthnTokenClass(TokenClass):
             options["challenge"] = hexlify_and_unicode(challenge)
             if token.user.login is None or token.user.login == "":
                 log.warning(
-                    f"Passkey {token.token.serial!s} is assigned to a user without a login. Can not be used for authentication!"
+                    f"Passkey {token.token.serial} is assigned to a user without a login. Can not be used for authentication!"
                 )
                 return False, {}
             try:
