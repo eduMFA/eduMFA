@@ -32,7 +32,7 @@ import time
 import traceback
 from base64 import b32decode
 from binascii import Error as BinasciiError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 
 from cryptography.exceptions import InvalidSignature
@@ -41,7 +41,6 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding
 from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
 from dateutil.parser import isoparse
-from pytz import utc
 
 from edumfa.api.lib.policyhelper import get_pushtoken_add_config
 from edumfa.api.lib.utils import getParam
@@ -780,7 +779,7 @@ class PushTokenClass(TokenClass):
         # We don't know if the passed timestamp is timezone aware. If no
         # timezone is passed, we assume UTC
         if ts.tzinfo:
-            now = datetime.now(utc)
+            now = datetime.now(timezone.utc)
         else:
             now = datetime.utcnow()
         if not (now - td <= ts <= now + td):
