@@ -90,8 +90,8 @@ dev = [
 ]
 lint = ["ruff==0.15.0"]
 docs = [
-    "furo==2025.12.19",
     "docutils==0.21.2",
+    "furo==2025.12.19",
     "imagesize==1.4.1",
     "packaging==25.0",
     "pyenchant==3.3.0",
