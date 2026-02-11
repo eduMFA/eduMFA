@@ -104,12 +104,6 @@ Then create the database tables and the encryption key::
     ./edumfa-manage create_tables
     ./edumfa-manage create_enckey
 
-If You want to keep the development database upgradable, You should `stamp
-<https://edumfa.readthedocs.io/en/latest/installation/upgrade.html>`_ it
-to simplify updates::
-
-    ./edumfa-manage db stamp head -d migrations/
-
 Create the key for the audit log::
 
     ./edumfa-manage create_audit_keys

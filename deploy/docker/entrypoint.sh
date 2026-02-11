@@ -20,27 +20,11 @@ edumfa-manage -q create_enckey || true
 # Create audit keys if they don't exist yet
 edumfa-manage -q create_audit_keys || true
 
-# Create DB
-echo "Creating DB"
-# FIXME: this creates a exception trace on every attempt
-attempts=10
-until edumfa-manage -q create_tables 
-do
-  if [[ $attempts -eq 0 ]]; then
-    echo "Exhausted database connection tries. Stopping."
-    exit 1
-  else
-    echo "Cannot connect to database. Trying again..."
-    sleep 3
-    attempts=$((attempts-1))
-  fi
-done
+# Wait for DB to be available
+edumfa-manage -q wait_for_db || exit 1
 
-# Check and stamp DB
-STAMP=$(edumfa-manage -q db current -d /usr/local/lib/edumfa/migrations)
-if [[ -z "${STAMP//Running online/}" ]]; then
-  edumfa-manage -q db stamp head -d /usr/local/lib/edumfa/migrations
-fi
+# Create DB tables if the DB is unstamped.
+edumfa-manage -q create_tables
 
 # Upgrading DB
 echo "Upgrading Database"
