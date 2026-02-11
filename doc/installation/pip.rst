@@ -92,11 +92,6 @@ To create the database tables execute::
 
     edumfa-manage create_tables
 
-Stamping the database to the current database schema version is important for
-the update process later::
-
-    edumfa-manage db stamp head -d /opt/edumfa/lib/edumfa/migrations/
-
 After creating a local administrative user with::
 
     edumfa-manage admin add <login>
