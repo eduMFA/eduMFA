@@ -4,6 +4,10 @@ alembic==1.18.3
     # via
     #   edumfa (pyproject.toml)
     #   flask-migrate
+argon2-cffi==25.1.0
+    # via edumfa (pyproject.toml)
+argon2-cffi-bindings==25.1.0
+    # via argon2-cffi
 babel==2.17.0
     # via
     #   edumfa (pyproject.toml)
@@ -17,7 +21,9 @@ cbor2==5.8.0
 certifi==2026.1.4
     # via requests
 cffi==2.0.0
-    # via cryptography
+    # via
+    #   argon2-cffi-bindings
+    #   cryptography
 charset-normalizer==3.4.4
     # via requests
 click==8.3.1
