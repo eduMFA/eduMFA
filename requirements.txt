@@ -5,13 +5,15 @@ alembic==1.18.3
     #   edumfa (pyproject.toml)
     #   flask-migrate
 argon2-cffi==25.1.0
-    # via edumfa (pyproject.toml)
+    # via passlib
 argon2-cffi-bindings==25.1.0
     # via argon2-cffi
 babel==2.17.0
     # via
     #   edumfa (pyproject.toml)
     #   flask-babel
+bcrypt==5.0.0
+    # via passlib
 beautifulsoup4==4.14.3
     # via edumfa (pyproject.toml)
 blinker==1.9.0
@@ -34,7 +36,7 @@ configobj==5.0.9
     # via edumfa (pyproject.toml)
 croniter==6.0.0
     # via edumfa (pyproject.toml)
-cryptography==46.0.5
+cryptography==46.0.3
     # via
     #   edumfa (pyproject.toml)
     #   pyopenssl
