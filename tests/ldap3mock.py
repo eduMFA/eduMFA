@@ -409,7 +409,7 @@ class Connection:
 
     @staticmethod
     def _parse_filter():
-        op = pyparsing.oneOf("! & |")
+        op = pyparsing.one_of("! & |")
         lpar = pyparsing.Literal("(").suppress()
         rpar = pyparsing.Literal(")").suppress()
 
@@ -420,7 +420,7 @@ class Connection:
         #   numbers, upper/lower case letters, asterisk, at symbol, minus, full
         #   stop, backslash or a space
         v = pyparsing.Word(pyparsing.alphanums + "-*@.\\ äöü")
-        rel = pyparsing.oneOf("= ~= >= <=")
+        rel = pyparsing.one_of("= ~= >= <=")
 
         expr = pyparsing.Forward()
         atom = pyparsing.Group(lpar + op + expr + rpar) | pyparsing.Combine(
@@ -625,7 +625,7 @@ class Connection:
                 # find the "ö"
                 search_filter = to_unicode(search_filter)
             expr = Connection._parse_filter()
-            s_filter = expr.parseString(search_filter).asList()[0]
+            s_filter = expr.parse_string(search_filter).asList()[0]
         except pyparsing.ParseBaseException as exx:
             # Just for debugging purposes
             s = f"{exx}"
