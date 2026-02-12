@@ -408,7 +408,7 @@ def strip_prefix_from_soup(xml_soup):
     :return: Beautiful Soup without prefixes in the tags
     """
     # strip the prefixes from the tags!
-    for tag in xml_soup.findAll():
+    for tag in xml_soup.find_all():
         if tag.name.find(":") >= 1:
             prefix, name = tag.name.split(":")
             tag.name = name
@@ -493,7 +493,7 @@ def parsePSKCdata(
         # KeyContainer
         preshared_key_hex = derive_key(xml, password)
 
-    key_packages = xml.keycontainer.findAll("keypackage")
+    key_packages = xml.keycontainer.find_all("keypackage")
     for key_package in key_packages:
         token = {}
         key = key_package.key
