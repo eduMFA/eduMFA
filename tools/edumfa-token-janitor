@@ -76,7 +76,7 @@ ALLOWED_ACTIONS = [
 __doc__ = f"""
 This script can be used to clean up the token database.
 
-It can list, disable, delete or mark tokens based on
+It can list, disable, enable, delete or mark tokens based on
 
 Conditions:
 
