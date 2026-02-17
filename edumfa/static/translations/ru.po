@@ -894,14 +894,14 @@ msgstr ""
 #: components/config/views/config.system.edit.html
 msgid ""
 "Disable automatic challenge janitor. You should use the token janitor to "
-"clean up old challenges if you enable this option."
+"clean up old challenges if you disable the automatic challenge janitor."
 msgstr ""
 
 #: components/config/views/config.system.edit.html
 msgid ""
 "Disable client tracking. This will disable the recording of client IP "
-"addresses and user agents in the database. This can be used to reduce the "
-"load on the database"
+"addresses and user agents in the database. This can be used to reduce "
+"database locks and load in environments with many concurrent requests."
 msgstr ""
 
 #: components/token/views/token.list.html

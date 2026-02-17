@@ -1649,10 +1649,7 @@ class TokenClass:
 
         :return: None
         """
-        if (
-            get_from_config("DisableAutoChallengeJanitor", "False", return_bool=True)
-            == True
-        ):
+        if get_from_config("DisableAutoChallengeJanitor", "False", return_bool=True):
             return
         cleanup_challenges()
 

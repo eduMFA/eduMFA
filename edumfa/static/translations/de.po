@@ -917,20 +917,20 @@ msgstr "Deaktivieren"
 #: components/config/views/config.system.edit.html
 msgid ""
 "Disable automatic challenge janitor. You should use the token janitor to "
-"clean up old challenges if you enable this option."
+"clean up old challenges if you disable the automatic challenge janitor."
 msgstr ""
-"Deaktivieren Sie den automatischen Challenge Cleanup. "
-"In diesem Fall sollten Sie den token janitor verwenden"
+"Deaktivieren Sie den automatischen Challenge Cleanup. In diesem Fall sollten "
+"Sie den token janitor verwenden"
 
 #: components/config/views/config.system.edit.html
 msgid ""
 "Disable client tracking. This will disable the recording of client IP "
-"addresses and user agents in the database. This can be used to reduce the "
-"load on the database"
+"addresses and user agents in the database. This can be used to reduce "
+"database locks and load in environments with many concurrent requests."
 msgstr ""
-"Deaktivieren Sie die Protokollierung der Clients. Diese Option "
-"deaktiviert die Aufzeichnung von IP-Adressen und User Agents der Clients in der Datenbank. "
-"Dies kann verwendet werden, um die Last auf der Datenbank zu reduzieren."
+"Deaktivieren Sie die Protokollierung der Clients. Diese Option deaktiviert "
+"die Aufzeichnung von IP-Adressen und User Agents der Clients in der "
+"Datenbank. Dies kann verwendet werden, um die Last auf der Datenbank sowie das Locking der Datenbank in Umgebungen mit vielen gleichzeitigen Anfragen zu reduzieren."
 
 #: components/token/views/token.list.html
 msgid "Disable token"
