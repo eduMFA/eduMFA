@@ -70,12 +70,13 @@ ALLOWED_ACTIONS = [
     "export",
     "listuser",
     "tokenrealms",
+    "enable",
 ]
 
 __doc__ = f"""
 This script can be used to clean up the token database.
 
-It can list, disable, delete or mark tokens based on
+It can list, disable, enable, delete or mark tokens based on
 
 Conditions:
 
@@ -93,6 +94,7 @@ Actions:
 * unmark
 * disable
 * delete
+* enable
 
 
     edumfa-token-janitor find
@@ -778,6 +780,9 @@ def find(
                         if action == "disable":
                             enable_token(serial=token_obj.token.serial, enable=False)
                             click.echo(f"Disabling token {token_obj.token.serial}")
+                        elif action == "enable":
+                            enable_token(serial=token_obj.token.serial, enable=True)
+                            click.echo(f"Enabling token {token_obj.token.serial}")
                         elif action == "delete":
                             remove_token(serial=token_obj.token.serial)
                             click.echo(f"Deleting token {token_obj.token.serial}")
