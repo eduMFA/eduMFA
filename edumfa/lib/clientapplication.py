@@ -31,7 +31,7 @@ import logging
 from netaddr import IPAddress
 from sqlalchemy import func
 
-from edumfa.lib.config import get_edumfa_node
+from edumfa.lib.config import get_edumfa_node, get_from_config
 
 from ..models import ClientApplication, Subscription, db
 from .log import log_with
@@ -50,6 +50,8 @@ def save_clientapplication(ip, clienttype):
     :type ip: basestring
     :return: None
     """
+    if get_from_config("DisableClientTracking", "False", return_bool=True) == True:
+        return
     node = get_edumfa_node()
     # Check for a valid IP address
     ip = IPAddress(ip)

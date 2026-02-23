@@ -57,7 +57,7 @@ from edumfa.lib.token import (
 )
 from edumfa.lib.user import User, split_user
 from edumfa.lib.utils import parse_legacy_time, to_unicode
-from edumfa.models import Token
+from edumfa.models import Token, cleanup_challenges
 
 __version__ = "0.1"
 
@@ -70,12 +70,13 @@ ALLOWED_ACTIONS = [
     "export",
     "listuser",
     "tokenrealms",
+    "enable",
 ]
 
 __doc__ = f"""
 This script can be used to clean up the token database.
 
-It can list, disable, delete or mark tokens based on
+It can list, disable, enable, delete or mark tokens based on
 
 Conditions:
 
@@ -93,6 +94,7 @@ Actions:
 * unmark
 * disable
 * delete
+* enable
 
 
     edumfa-token-janitor find
@@ -778,6 +780,9 @@ def find(
                         if action == "disable":
                             enable_token(serial=token_obj.token.serial, enable=False)
                             click.echo(f"Disabling token {token_obj.token.serial}")
+                        elif action == "enable":
+                            enable_token(serial=token_obj.token.serial, enable=True)
+                            click.echo(f"Enabling token {token_obj.token.serial}")
                         elif action == "delete":
                             remove_token(serial=token_obj.token.serial)
                             click.echo(f"Deleting token {token_obj.token.serial}")
@@ -844,6 +849,12 @@ def updatetokens(yaml):
             except Exception as e:
                 sys.stderr.write(f"\nFailed to update token {tok.get('serial')}.")
 
+@cli.command("cleanupchallenges")
+def cleanupchallenges():
+    """
+    This command can be used to clean up old challenges from the database.
+    """
+    cleanup_challenges()
 
 @cli.command("loadtokens")
 @click.option("--pskc", help="Import this PSKC file.")
