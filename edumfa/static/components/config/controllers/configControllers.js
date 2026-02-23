@@ -773,6 +773,8 @@ myApp.controller("configController", ["$scope", "$location", "$rootScope",
             $scope.params = data.result.value;
             $scope.params.PrependPin = $scope.isChecked($scope.params.PrependPin);
             $scope.params.no_auth_counter = $scope.isChecked($scope.params.no_auth_counter);
+            $scope.params.DisableAutoChallengeJanitor = $scope.isChecked($scope.params.DisableAutoChallengeJanitor);
+            $scope.params.DisableClientTracking = $scope.isChecked($scope.params.DisableClientTracking);
             $scope.params['PrependPin.type'] = "public";
             $scope.params.splitAtSign = $scope.isChecked($scope.params.splitAtSign);
             $scope.params.IncFailCountOnFalsePin = $scope.isChecked($scope.params.IncFailCountOnFalsePin);

@@ -1649,6 +1649,8 @@ class TokenClass:
 
         :return: None
         """
+        if get_from_config("DisableAutoChallengeJanitor", "False", return_bool=True):
+            return
         cleanup_challenges()
 
     def create_challenge(self, transactionid=None, options=None):
