@@ -57,7 +57,7 @@ from edumfa.lib.token import (
 )
 from edumfa.lib.user import User, split_user
 from edumfa.lib.utils import parse_legacy_time, to_unicode
-from edumfa.models import Token
+from edumfa.models import Token, cleanup_challenges
 
 __version__ = "0.1"
 
@@ -849,6 +849,12 @@ def updatetokens(yaml):
             except Exception as e:
                 sys.stderr.write(f"\nFailed to update token {tok.get('serial')}.")
 
+@cli.command("cleanupchallenges")
+def cleanupchallenges():
+    """
+    This command can be used to clean up old challenges from the database.
+    """
+    cleanup_challenges()
 
 @cli.command("loadtokens")
 @click.option("--pskc", help="Import this PSKC file.")
