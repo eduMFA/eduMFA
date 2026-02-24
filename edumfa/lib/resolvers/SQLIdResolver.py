@@ -277,7 +277,7 @@ class IdResolver(UserIdResolver):
         except ValueError:
             # passlib 1.7.x can raise with bcrypt >= 5.0 during verification.
             # Fall back to direct bcrypt verification for bcrypt hashes.
-            if database_pw.startswith(("$2a$", "$2b$", "$2y$")):
+            if pw_ctx.identify(database_pw) == "bcrypt":
                 if isinstance(password, str):
                     password = password.encode("utf-8")
                 try:
