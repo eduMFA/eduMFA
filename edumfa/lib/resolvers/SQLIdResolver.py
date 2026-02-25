@@ -60,8 +60,8 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from edumfa.lib.lifecycle import register_finalizer
 from edumfa.lib.pooling import get_engine
 from edumfa.lib.resolvers.UserIdResolver import UserIdResolver
-from edumfa.lib.utils.password_hash import verify_with_crypt_context
 from edumfa.lib.utils import censor_connect_string, convert_column_to_unicode, is_true
+from edumfa.lib.utils.password_hash import verify_with_crypt_context
 
 
 class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no cover
