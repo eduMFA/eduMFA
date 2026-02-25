@@ -33,7 +33,6 @@ import logging
 import re
 import traceback
 
-import bcrypt
 import passlib.exc as exc
 import passlib.utils.handlers as uh
 import yaml
@@ -274,17 +273,9 @@ class IdResolver(UserIdResolver):
 
         try:
             res = pw_ctx.verify(password, database_pw)
-        except ValueError:
-            # passlib 1.7.x can raise with bcrypt >= 5.0 during verification.
-            # Fall back to direct bcrypt verification for bcrypt hashes.
-            if pw_ctx.identify(database_pw) == "bcrypt":
-                if isinstance(password, str):
-                    password = password.encode("utf-8")
-                try:
-                    res = bcrypt.checkpw(password, database_pw.encode("ascii"))
-                except ValueError:
-                    # bcrypt>=5.0 raises on >72 byte passwords; treat as mismatch
-                    res = False
+        except ValueError as _e:
+            # if the hash could not be identified / verified, just return False
+            pass
 
         return res
 
