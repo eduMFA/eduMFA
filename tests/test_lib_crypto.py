@@ -863,3 +863,16 @@ class CustomHashAlgoListTestCase(OverrideConfigTestCase):
         )
         # Checks if a faulty hash is failing.
         self.assertFalse(verify_pass_hash(password, argon2_fail_hash))
+
+
+class BcryptHashAlgoListTestCase(OverrideConfigTestCase):
+    """Verify bcrypt hashes when passlib bcrypt backend is unavailable."""
+
+    class Config(TestingConfig):
+        EDUMFA_HASH_ALGO_LIST = ["pbkdf2_sha512", "bcrypt"]
+
+    def test_01_verify_bcrypt_hash(self):
+        bcrypt_hash = "$2y$10$o5nv09TSzlv9LNagLhVgg.rQ18UT8UvdWCoRjWeEO4lVi56rYwU8y"
+
+        self.assertTrue(verify_pass_hash("test", bcrypt_hash))
+        self.assertFalse(verify_pass_hash("wrong", bcrypt_hash))
