@@ -11,7 +11,7 @@
         "angular-inform": "0.0.19",
         "angular-sanitize": "1.8.3",
         "angular-ui-bootstrap": "2.5.6",
-        "angular-ui-router": "1.0.30",
+        "angular-ui-router": "1.1.2",
         "bootstrap": "3.4.1",
         "isteven-angular-multiselect": "4.0.0",
         "jquery": "3.7.1",
@@ -52,7 +52,7 @@
 
     "angular-ui-bootstrap": ["angular-ui-bootstrap@2.5.6", "", {}, "sha512-yzcHpPMLQl0232nDzm5P4iAFTFQ9dMw0QgFLuKYbDj9M0xJ62z0oudYD/Lvh1pWfRsukiytP4Xj6BHOSrSXP8A=="],
 
-    "angular-ui-router": ["angular-ui-router@1.0.30", "", { "dependencies": { "@uirouter/core": "6.0.8" }, "peerDependencies": { "angular": ">=1.2.0" } }, "sha512-8xMpxbOtCJbRnGR1fhbyZ5BhFXr3zs1L2ytXQiBACTJjot309QNFFCaWx0lDM2eVXp8qte4idigU9gwWdspmtQ=="],
+    "angular-ui-router": ["angular-ui-router@1.1.2", "", { "peerDependencies": { "@uirouter/core": "^6.1.2", "angular": ">=1.2.0" } }, "sha512-82O/ZbyCtljAYWmaD8P6BIABRjbKWAz6S2DNLzFX9R1++GBIhY6wMHRLttEEx1rfml7iKu7RXlzQWAuCok0tUg=="],
 
     "argparse": ["argparse@0.1.16", "", { "dependencies": { "underscore": "~1.7.0", "underscore.string": "~2.4.0" } }, "sha512-LjmC2dNpdn2L4UzyoaIr11ELYoLn37ZFy9zObrQFHsSuOepeUEMKnM8w5KL4Tnrp2gy88rRuQt6Ky8Bjml+Baw=="],
 
