@@ -61,6 +61,7 @@ from edumfa.lib.lifecycle import register_finalizer
 from edumfa.lib.pooling import get_engine
 from edumfa.lib.resolvers.UserIdResolver import UserIdResolver
 from edumfa.lib.utils import censor_connect_string, convert_column_to_unicode, is_true
+from edumfa.lib.utils.password_hash import verify_with_crypt_context
 
 
 class phpass_drupal(uh.HasRounds, uh.HasSalt, uh.GenericHandler):  # pragma: no cover
@@ -272,7 +273,7 @@ class IdResolver(UserIdResolver):
         )
 
         try:
-            res = pw_ctx.verify(password, database_pw)
+            res = verify_with_crypt_context(pw_ctx, password, database_pw)
         except ValueError as _e:
             # if the hash could not be identified / verified, just return False
             pass
