@@ -69,6 +69,7 @@ from edumfa.lib.utils import (
     to_bytes,
     to_unicode,
 )
+from edumfa.lib.utils.password_hash import verify_with_crypt_context
 
 
 def safe_compare(a, b):
@@ -200,7 +201,7 @@ def verify_pass_hash(password, hvalue):
     pass_ctx = CryptContext(
         get_app_config_value("EDUMFA_HASH_ALGO_LIST", default=DEFAULT_HASH_ALGO_LIST)
     )
-    return pass_ctx.verify(password, hvalue)
+    return verify_with_crypt_context(pass_ctx, password, hvalue)
 
 
 def hash_with_pepper(password):
