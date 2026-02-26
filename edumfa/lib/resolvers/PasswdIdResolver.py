@@ -41,6 +41,7 @@ import sys
 from passlib.context import CryptContext
 
 from edumfa.lib.utils import convert_column_to_unicode, to_bytes
+from edumfa.lib.utils.password_hash import verify_with_crypt_context
 
 from .UserIdResolver import UserIdResolver
 
@@ -205,7 +206,7 @@ class IdResolver(UserIdResolver):
                 schemes=["sha512_crypt", "sha256_crypt", "md5_crypt", "des_crypt"]
             )
             try:
-                if passlib_context.verify(password, cryptedpasswd):
+                if verify_with_crypt_context(passlib_context, password, cryptedpasswd):
                     log.info(f"successfully authenticated user uid {uid}")
                     return True
             except ValueError:
