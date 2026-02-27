@@ -79,21 +79,6 @@ additional dependencies::
     pip install .[test]
 
 
-Getting and updating submodules
-===============================
-
-The client-side library for the registering and signing of WebAuthn-Credentials
-resides in a submodule.
-
-To fetch all submodules for this repository, run::
-
-   git submodule update --init --recursive
-
-When pulling changes from upstream later, you can automatically update any outdated
-submodules, by running::
-
-   git pull --recurse-submodules
-
 Running it
 ==========
 
