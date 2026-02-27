@@ -1,12 +1,10 @@
 info:
 	@echo "make clean        	 	- remove all automatically created files"
-	@echo "make pypi             	- upload package to pypi"
 	@echo "make translate-frontend	- translate WebUI"
 	@echo "make translate-backend 	- translate string in the server code."
 	@echo "make update-contrib   	- update JS contrib libraries"
 
 
-SIGNING_KEY=53E66E1D2CABEFCDB1D3B83E106164552E8D8149
 BUN_VERSION := $(shell bun --version 2>/dev/null)
 
 clean:
@@ -24,13 +22,6 @@ setversion:
 	vim Changelog
 	@echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 	@echo "Please set a tag like:  git tag 3.17"
-
-pypi:
-	make doc-man
-	rm -fr dist
-	python setup.py sdist
-	gpg --detach-sign -a --default-key ${SIGNING_KEY} dist/*.tar.gz
-	twine upload dist/*.tar.gz dist/*.tar.gz.asc
 
 doc-man:
 	(cd doc; make man)
