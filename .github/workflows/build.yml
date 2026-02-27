@@ -23,7 +23,7 @@ jobs:
           with:
             enable-cache: true
         - name: Install dependencies
-          run: uv sync --extra docs
+          run: uv sync --group docs
         - name: Build documentation
           run: |
             cd doc
