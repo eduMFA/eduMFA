@@ -63,7 +63,7 @@ Setup
 For setting up the system to *run* it, please read install instructions 
 at `edumfa.readthedocs.io <http://edumfa.readthedocs.io/en/latest/installation/index.html>`_.
 
-If you want to setup a development, you need to have (UV)[https://docs.astral.sh/uv/getting-started/installation/] installed. Then you can run::
+If you want to setup a development environment, you need to have [UV](https://docs.astral.sh/uv/getting-started/installation/) installed. Then you can run::
 
     uv sync
 
