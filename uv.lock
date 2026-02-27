@@ -812,7 +812,7 @@ test = [
 requires-dist = [
     { name = "alembic", specifier = "==1.18.3" },
     { name = "babel", specifier = "==2.17.0" },
-    { name = "bcrypt", specifier = ">=5.0.0" },
+    { name = "bcrypt", specifier = "==5.0.0" },
     { name = "beautifulsoup4", specifier = "==4.14.3" },
     { name = "cbor2", specifier = "==5.8.0" },
     { name = "click", specifier = "==8.3.1" },
