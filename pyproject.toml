@@ -75,7 +75,7 @@ postgres = ["psycopg2==2.9.11"]
 hsm = ["PyKCS11==1.5.18"]
 kerberos = ["gssapi==1.10.1"]
 grpc = [
-    "protobuf==6.33.5",
+    "protobuf==7.34.0",
     "google==3.0.0",
 ]
 
