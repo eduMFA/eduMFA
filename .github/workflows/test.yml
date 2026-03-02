@@ -13,7 +13,6 @@ on:
     - 'tools/**'
     - 'edumfa-manage'
     - 'pyproject.toml'
-    - 'requirements.txt'
     - 'setup.py'
   pull_request:
     types: [ opened, reopened, synchronize ]
@@ -37,7 +36,7 @@ jobs:
         with:
           enable-cache: true
       - name: Install dependencies
-        run: uv sync --extra test
+        run: uv sync --group test
       - name: Run Pytest checks
         run: uv run pytest --cov=edumfa --import-mode=importlib -vs tests/
       - name: Codecov upload
