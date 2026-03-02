@@ -27,7 +27,7 @@ jobs:
         - name: Build documentation
           run: |
             cd doc
-            uv run sphinx-build -b html -j auto -a -n -T -W --keep-going . _build/html
+            make html SPHINXOPTS="-j auto -a -n -T -W --keep-going"
   dist:
     runs-on: ubuntu-latest
     steps:
