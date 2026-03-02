@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -36,6 +35,7 @@ from edumfa.commands.manage.core import (
     create_tables,
     drop_tables,
     encrypt_enckey,
+    wait_for_db,
 )
 from edumfa.commands.manage.event import event_cli
 from edumfa.commands.manage.hsm import hsm_cli
@@ -63,14 +63,14 @@ def cli(quiet):
     """Management script for the eduMFA application."""
     if not quiet:
         click.echo(
-            r"""
+            rf"""
                 _       __  __ ______      
                 | |     |  \/  |  ____/\    
         ___  __| |_   _| \  / | |__ /  \   
         / _ \/ _` | | | | |\/| |  __/ /\ \  
         |  __/ (_| | |_| | |  | | | / ____ \ 
-        \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {0!s:>12}
-        """.format("v{0!s}".format(get_version_number())),
+        \___|\__,_|\__,_|_|  |_|_|/_/    \_\ {f"v{get_version_number()}":>12}
+        """,
             err=True,
         )
 
@@ -94,6 +94,7 @@ cli.add_command(encrypt_enckey)
 cli.add_command(create_audit_keys)
 cli.add_command(create_tables)
 cli.add_command(create_tables, "createdb")
+cli.add_command(wait_for_db)
 cli.add_command(create_pgp_keys)
 cli.add_command(drop_tables)
 cli.add_command(drop_tables, "dropdb")

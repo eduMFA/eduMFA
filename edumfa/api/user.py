@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -106,7 +105,7 @@ def get_users():
     attr = is_attribute_at_all()
     users = get_user_list(request.all_data, custom_attributes=attr)
 
-    g.audit_object.log({"success": True, "info": "realm: {0!s}".format(realm)})
+    g.audit_object.log({"success": True, "info": f"realm: {realm}"})
 
     return send_result(users)
 
@@ -139,7 +138,7 @@ def set_user_attribute():
     attrvalue = getParam(request.all_data, "value", optional=False)
     attrtype = getParam(request.all_data, "type", optional=True)
     r = request.User.set_attribute(attrkey, attrvalue, attrtype)
-    g.audit_object.log({"success": True, "info": "{0!s}".format(attrkey)})
+    g.audit_object.log({"success": True, "info": f"{attrkey}"})
     return send_result(r)
 
 
@@ -165,7 +164,7 @@ def get_user_attribute():
     r = request.User.attributes
     if attrkey:
         r = r.get(attrkey)
-    g.audit_object.log({"success": True, "info": "{0!s}".format(attrkey)})
+    g.audit_object.log({"success": True, "info": f"{attrkey}"})
     return send_result(r)
 
 
@@ -208,7 +207,7 @@ def delete_user_attribute(attrkey, username, realm=None):
     """
     user = User(username, realm)
     r = user.delete_attribute(attrkey)
-    g.audit_object.log({"success": True, "info": "{0!s}".format(attrkey)})
+    g.audit_object.log({"success": True, "info": f"{attrkey}"})
     return send_result(r)
 
 
@@ -235,7 +234,7 @@ def delete_user(resolvername=None, username=None):
     """
     user_obj = request.User
     res = user_obj.delete()
-    g.audit_object.log({"success": res, "info": "{0!s}".format(user_obj)})
+    g.audit_object.log({"success": res, "info": f"{user_obj}"})
     return send_result(res)
 
 
@@ -281,7 +280,7 @@ def create_user_api():
     g.audit_object.log(
         {
             "success": True,
-            "info": "{0!s}: {1!s}/{2!s}".format(r, username, resolvername),
+            "info": f"{r}: {username}/{resolvername}",
         }
     )
     return send_result(r)
@@ -338,7 +337,7 @@ def update_user():
     g.audit_object.log(
         {
             "success": True,
-            "info": "{0!s}: {1!s}/{2!s}".format(r, username, resolvername),
+            "info": f"{r}: {username}/{resolvername}",
         }
     )
     return send_result(r)

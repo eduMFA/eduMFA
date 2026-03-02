@@ -102,6 +102,15 @@ can be set, for example::
 Further information on possible parameters can be found in the
 `PassLib documentation <https://passlib.readthedocs.io/en/stable/lib/passlib.hash.html>`_.
 
+``FIREBASE_CONNECT_TIMEOUT`` sets the timeout duration (in seconds) for
+establishing a connection to the Firebase server. If the server does not
+respond within this time, the connection attempt is aborted. Default is "1.1".
+
+``FIREBASE_READ_TIMEOUT`` sets the timeout duration (in seconds) for waiting on
+a response *after* the connection is established. This defines how long the
+system will wait for Firebase to process and respond to a request. Default is
+"3.0".
+
 Translation
 -----------
 

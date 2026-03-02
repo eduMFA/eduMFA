@@ -3,6 +3,12 @@ set -e
 
 GEN_PWD="$(openssl rand -base64 42)"
 EDUMFA_ADMIN_USER="${EDUMFA_ADMIN_USER:-admin}"
+# Check if password is set, otherwise generate one later.
+GENERATED_PASSWORD=0
+if [ -z "$EDUMFA_ADMIN_PASS" ]; then
+  echo "No EDUMFA_ADMIN_PASS set, a random password will be generated and printed when initialization finishes."
+  GENERATED_PASSWORD=1
+fi
 EDUMFA_ADMIN_PASS="${EDUMFA_ADMIN_PASS:-$GEN_PWD}"
 
 # Make sure the config is working by executing it once.
@@ -14,27 +20,11 @@ edumfa-manage -q create_enckey || true
 # Create audit keys if they don't exist yet
 edumfa-manage -q create_audit_keys || true
 
-# Create DB
-echo "Creating DB"
-# FIXME: this creates a exception trace on every attempt
-attempts=10
-until edumfa-manage -q create_tables 
-do
-  if [[ $attempts -eq 0 ]]; then
-    echo "Exhausted database connection tries. Stopping."
-    exit 1
-  else
-    echo "Cannot connect to database. Trying again..."
-    sleep 3
-    attempts=$((attempts-1))
-  fi
-done
+# Wait for DB to be available
+edumfa-manage -q wait_for_db || exit 1
 
-# Check and stamp DB
-STAMP=$(edumfa-manage -q db current -d /usr/local/lib/edumfa/migrations)
-if [[ -z "${STAMP//Running online/}" ]]; then
-  edumfa-manage -q db stamp head -d /usr/local/lib/edumfa/migrations
-fi
+# Create DB tables if the DB is unstamped.
+edumfa-manage -q create_tables
 
 # Upgrading DB
 echo "Upgrading Database"
@@ -51,11 +41,13 @@ for script in /opt/edumfa/user-scripts/*.sh; do
   bash $script
 done
 
-echo "
-    You can login with the following credentials:
-    username: $EDUMFA_ADMIN_USER
-    password: $EDUMFA_ADMIN_PASS
-"
+if [ $GENERATED_PASSWORD -eq 1 ]; then
+  echo "
+      You can login with the following credentials:
+      username: $EDUMFA_ADMIN_USER
+      password: $EDUMFA_ADMIN_PASS
+  "
+fi
 
 echo "Starting Server"
 gunicorn --bind 0.0.0.0:8000 --workers 4 app

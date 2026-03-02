@@ -126,7 +126,7 @@ class SMTPServerTestCase(MyTestCase):
             recipient,
             "Test Email from eduMFA",
             "This is a test email from eduMFA. "
-            "The configuration %s is working." % identifier,
+            f"The configuration {identifier} is working.",
         )
         self.assertTrue(r)
         parsed_email = email.message_from_string(smtpmock.get_sent_message())
@@ -175,7 +175,7 @@ class SMTPServerTestCase(MyTestCase):
             recipient,
             "Test Email from eduMFA",
             "This is a test email from eduMFA. "
-            "The configuration %s is working." % identifier,
+            f"The configuration {identifier} is working.",
         )
         self.assertTrue(r)
         parsed_email = email.message_from_string(smtpmock.get_sent_message())

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 2020-09-07 Cornelius Kölbel <cornelius.koelbel@netknights.it>
 2017-04-26 Friedrich Weber <friedrich.weber@netknights.it>
@@ -51,7 +50,7 @@ def wrapper%(signature)s:
 
 
 def _convert_objectGUID(item):
-    item = uuid.UUID("{{{0!s}}}".format(item)).bytes_le
+    item = uuid.UUID(f"{{{item}}}").bytes_le
     item = escape_bytes(item)
     return item
 
@@ -158,7 +157,7 @@ class Connection:
             # User already exists
             self.result["description"] = "failure"
             self.result["result"] = 68
-            self.result["message"] = "Error entryAlreadyExists for {0}".format(dn)
+            self.result["message"] = f"Error entryAlreadyExists for {dn}"
             return False
 
         # Add the user entry to the directory
@@ -187,7 +186,7 @@ class Connection:
             # If we get here the user doesn't exist so continue
             self.result["description"] = "failure"
             self.result["result"] = 32
-            self.result["message"] = "Error no such object: {0}".format(dn)
+            self.result["message"] = f"Error no such object: {dn}"
             return False
 
         # Delete the entry object for the user
@@ -216,7 +215,7 @@ class Connection:
             # If we get here the user doesn't exist so continue
             self.result["description"] = "failure"
             self.result["result"] = 32
-            self.result["message"] = "Error no such object: {0!s}".format(dn)
+            self.result["message"] = f"Error no such object: {dn}"
             return False
 
         # extract the hash we are interested in
@@ -231,7 +230,7 @@ class Connection:
             else:
                 self.result["result"] = 2
                 self.result["message"] = (
-                    "Error bad/missing/not implementedmodify operation: %s" % k[1]
+                    f"Error bad/missing/not implementedmodify operation: {k[1]}"
                 )
 
         # Place the attributes back into the directory hash
@@ -312,7 +311,7 @@ class Connection:
             match_using_regex = True
             # regex = check_escape(value)
             regex = value.replace("*", ".*")
-            regex = "^{0}$".format(regex)
+            regex = f"^{regex}$"
 
         for entry in candidates:
             dn = to_unicode(entry.get("dn"))
@@ -351,7 +350,7 @@ class Connection:
                     if isinstance(values_from_directory, bytes):
                         values_from_directory = values_from_directory.decode("utf-8")
                     elif type(values_from_directory) == int:
-                        values_from_directory = "{0!s}".format(values_from_directory)
+                        values_from_directory = f"{values_from_directory}"
                     if value == values_from_directory:
                         entry["type"] = "searchResEntry"
                         matches.append(entry)
@@ -367,7 +366,7 @@ class Connection:
             match_using_regex = True
             # regex = check_escape(value)
             regex = value.replace("*", ".*")
-            regex = "^{0}$".format(regex)
+            regex = f"^{regex}$"
 
         for entry in candidates:
             found = False
@@ -410,7 +409,7 @@ class Connection:
 
     @staticmethod
     def _parse_filter():
-        op = pyparsing.oneOf("! & |")
+        op = pyparsing.one_of("! & |")
         lpar = pyparsing.Literal("(").suppress()
         rpar = pyparsing.Literal(")").suppress()
 
@@ -418,10 +417,10 @@ class Connection:
         # NOTE: We may need to expand on this list, but as this is not a real
         # LDAP server we should be OK.
         # Value to contain:
-        #   numbers, upper/lower case letters, astrisk, at symbol, minus, full
+        #   numbers, upper/lower case letters, asterisk, at symbol, minus, full
         #   stop, backslash or a space
         v = pyparsing.Word(pyparsing.alphanums + "-*@.\\ äöü")
-        rel = pyparsing.oneOf("= ~= >= <=")
+        rel = pyparsing.one_of("= ~= >= <=")
 
         expr = pyparsing.Forward()
         atom = pyparsing.Group(lpar + op + expr + rpar) | pyparsing.Combine(
@@ -626,10 +625,10 @@ class Connection:
                 # find the "ö"
                 search_filter = to_unicode(search_filter)
             expr = Connection._parse_filter()
-            s_filter = expr.parseString(search_filter).asList()[0]
+            s_filter = expr.parse_string(search_filter).asList()[0]
         except pyparsing.ParseBaseException as exx:
             # Just for debugging purposes
-            s = "{!s}".format(exx)
+            s = f"{exx}"
 
         for item in s_filter:
             if item[0] in self.operation:
@@ -669,7 +668,7 @@ class Ldap3Mock:
 
     def _load_data(self, directory):
         try:
-            with open(directory, "r") as f:
+            with open(directory) as f:
                 data = f.read()
                 return literal_eval(data)
         except OSError as e:
@@ -743,7 +742,7 @@ class Ldap3Mock:
         return self.con_obj
 
     def start(self):
-        import mock
+        from unittest import mock
 
         def unbound_on_Server(host, port, use_ssl, connect_timeout, *a, **kwargs):
             return self._on_Server(host, port, use_ssl, connect_timeout, *a, **kwargs)

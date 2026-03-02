@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -162,8 +161,8 @@ class PasswordTokenClass(TokenClass):
             # PasswordTokenClass
             del param["genkey"]
             type_prefix = self.get_class_type()
-            length_param = "{0!s}.length".format(type_prefix)
-            contents_param = "{0!s}.contents".format(type_prefix)
+            length_param = f"{type_prefix}.length"
+            contents_param = f"{type_prefix}.contents"
             if length_param in param:
                 size = param[length_param]
                 del param[length_param]

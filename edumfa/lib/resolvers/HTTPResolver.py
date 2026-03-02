@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -34,8 +33,6 @@ from pydash import get
 
 from .UserIdResolver import UserIdResolver
 
-ENCODING = "utf-8"
-
 __name__ = "HTTP_RESOLVER"
 
 log = logging.getLogger(__name__)
@@ -53,7 +50,7 @@ class HTTPResolver(UserIdResolver):
     }
 
     def __init__(self):
-        super(HTTPResolver, self).__init__()
+        super().__init__()
         self.config = {}
 
     @staticmethod
@@ -184,7 +181,7 @@ class HTTPResolver(UserIdResolver):
             success = True
         except Exception as e:
             success = False
-            desc = "failed: {0!s}".format(e)
+            desc = f"failed: {e}"
         return success, desc
 
     #
@@ -220,9 +217,7 @@ class HTTPResolver(UserIdResolver):
             # verify if error response mapping is a subset of the json http response
             if all([x in jsonHTTPResponse.items() for x in errorResponse.items()]):
                 log.error(jsonHTTPResponse)
-                raise Exception(
-                    "Received an error while searching for user: %s" % userid
-                )
+                raise Exception(f"Received an error while searching for user: {userid}")
 
         # Create mapped response with response mapping resolver input
         response = {}

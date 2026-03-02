@@ -163,7 +163,7 @@ creating the release changelog later.
 
 ### Projects
 
-We use *Github Projects* to organize our weekly develoment cycle.
+We use *Github Projects* to organize our weekly development cycle.
 
 In a weekly meeting we decide, which issues will be handled during the
 following week. Issues are put into the

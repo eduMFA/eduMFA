@@ -58,7 +58,7 @@ msgid "Authentication failure. Your token has expired: {0!s}"
 msgstr "Ошибка аутентификации. Ваш токен истек: {0!s}"
 
 #: api/lib/utils.py
-#, python-brace-format
+#, fuzzy, python-brace-format
 msgid ""
 "Authentication failure. The username {0!s} is not allowed to impersonate "
 "via JWT."
@@ -356,7 +356,7 @@ msgstr "Установить минимально необходимую дли�
 
 #: lib/policy.py
 msgid ""
-"Specifiy the required contents of the OTP PIN. (c)haracters, (n)umeric, "
+"Specify the required contents of the OTP PIN. (c)haracters, (n)umeric, "
 "(s)pecial. Use modifiers +/- or a list of allowed characters [1234567890]"
 msgstr ""
 "Укажите необходимое содержимое ПИН-кода OTP. (c) символы, (n)числовые, "
@@ -1355,7 +1355,7 @@ msgstr ""
 #: lib/token.py
 #, python-brace-format
 msgid ""
-"Specifiy the required PIN contents of the {0!s} token. (c)haracters, "
+"Specify the required PIN contents of the {0!s} token. (c)haracters, "
 "(n)umeric, (s)pecial, (o)thers. [+/-]!"
 msgstr ""
 
@@ -2489,14 +2489,14 @@ msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of questionaire tokens "
+"The user may only have this maximum number of questionnaire tokens "
 "assigned."
 msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid ""
-"The user may only have this maximum number of active questionaire tokens "
-"assigned."
+"The user may only have this maximum number of active questionnaire tokens"
+" assigned."
 msgstr ""
 
 #: lib/tokens/questionnairetoken.py
@@ -3008,7 +3008,7 @@ msgstr ""
 #~ "The URL of a repository, where the"
 #~ " policy templates can be found.  "
 #~ "(Default https: //raw.githubusercontent.com/ edumfa"
-#~ "/policy-templates/master/templates/)"
+#~ "/policy-templates/main/templates/)"
 #~ msgstr ""
 
 #~ msgid "More than one matching token were found."
@@ -3030,7 +3030,7 @@ msgstr ""
 #~ "The URL of a repository, where the"
 #~ " policy templates can be found.  "
 #~ "(Default https://raw.githubusercontent.com/eduMFA/policy-"
-#~ "templates/master/templates/)"
+#~ "templates/main/templates/)"
 #~ msgstr ""
 
 #~ msgid ""

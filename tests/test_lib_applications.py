@@ -3,7 +3,8 @@ This test file tests the applications definitions standalone
 lib/applications/*
 """
 
-import mock
+from unittest import mock
+
 import passlib.hash
 
 from edumfa.lib.applications import (
@@ -70,12 +71,29 @@ class SSHApplicationTestCase(MyTestCase):
         # Get with no matching user
         with mock.patch("logging.Logger.debug") as mock_log:
             auth_item = SSHApplication.get_authentication_item(
-                "sshkey", serial, filter_param={"user": "Idefix"}
+                "sshkey",
+                serial,
+                filter_param={"user": "Idefix"},
+                options={"user": "john"},
             )
             self.assertFalse(auth_item)
             mock_log.assert_called_with(
                 "The requested user Idefix does "
-                "not match the user option (Idefix) of the SSH application."
+                "not match the user option (john) of the SSH application."
+            )
+
+        # Get with missing options, meaning the attached user can't
+        # be checked.
+        with mock.patch("logging.Logger.debug") as mock_log:
+            auth_item = SSHApplication.get_authentication_item(
+                "sshkey",
+                serial,
+                filter_param={"user": "Idefix"},
+            )
+            self.assertFalse(auth_item)
+            mock_log.assert_called_with(
+                "The requested user Idefix does "
+                "not match the user option () of the SSH application."
             )
 
     def test_03_get_auth_item_unsupported(self):

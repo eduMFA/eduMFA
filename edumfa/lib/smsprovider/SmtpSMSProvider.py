@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -24,7 +23,7 @@
 #
 
 __doc__ = """This is the SMSClass to send SMS via SMTP Gateway.
-i.e. a Mail is sent to an Gateway/Emailserver and dependig on the
+i.e. a Mail is sent to an Gateway/Emailserver and depending on the
 address, subject and body this gateway will trigger the sending of the SMS.
 
 The code is tested in tests/test_lib_smsprovider
@@ -73,8 +72,8 @@ class SmtpSMSProvider(ISMSProvider):
 
             if not (server and recipient and sender) and not (identifier and recipient):
                 log.error(
-                    "incomplete config: %s. MAILTO and (IDENTIFIER or "
-                    "MAILSERVER and MAILSENDER) needed" % self.config
+                    f"incomplete config: {self.config}. MAILTO and (IDENTIFIER or "
+                    "MAILSERVER and MAILSENDER) needed"
                 )
                 raise SMSError(-1, "Incomplete SMS config.")
 
@@ -84,7 +83,7 @@ class SmtpSMSProvider(ISMSProvider):
             body = body.replace(PHONE_TAG, phone)
             body = body.replace(MSG_TAG, message)
 
-        log.debug("submitting message {0!r} to {1!s}".format(body, phone))
+        log.debug(f"submitting message {body!r} to {phone}")
         if identifier:
             r = send_email_identifier(identifier, recipient, subject, body)
         else:

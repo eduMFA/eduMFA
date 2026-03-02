@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib.crypto and lib.security.default
 """
@@ -12,7 +11,7 @@ import string
 import passlib.hash
 import PyKCS11
 from flask import current_app
-from mock import call
+from unittest.mock import call
 from PyKCS11 import PyKCS11Error
 
 from edumfa.config import TestingConfig
@@ -147,7 +146,7 @@ class SecurityModuleTestCase(MyTestCase):
         hsm = DefaultSecurityModule(
             {"file": config.get("EDUMFA_ENCFILE_ENC"), "crypted": True}
         )
-        # The HSM is not ready, since the file is crypted and we did not
+        # The HSM is not ready, since the file is encrypted and we did not
         # provide the password, yet
         self.assertFalse(hsm.is_ready)
 
@@ -198,7 +197,7 @@ class CryptoTestCase(MyTestCase):
         self.assertEqual(decryptPin(pin3), "1234")
 
     def test_01_encrypt_decrypt_pass(self):
-        r = encryptPassword("passwörd".encode("utf8"))
+        r = encryptPassword("passwörd".encode())
         # encryptPassword returns unicode
         self.assertTrue(isinstance(r, str))
         pin = decryptPassword(r)
@@ -291,7 +290,7 @@ class CryptoTestCase(MyTestCase):
         # TODO: add checks for broken paddings/encrypted values and malformed enc_data
 
         # check some data generated with 2.23
-        s = "passwörd".encode("utf8")
+        s = "passwörd".encode()
         iv_hex = "cd5245a2875007d30cc049c2e7eca0c5"
         enc_data_hex = (
             "7ea55168952b33131077f4249cf9e52b5f2b572214ace13194c436451fe3788c"
@@ -468,11 +467,11 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
             pkcs11.session_mock.generateRandom.assert_called_once_with(4)
 
             password = "topSekr3t" * 16
-            crypted = hsm.encrypt_password(password)
+            encrypted = hsm.encrypt_password(password)
             # to generate the IV
             pkcs11.session_mock.generateRandom.assert_called_with(16)
 
-            text = hsm.decrypt_password(crypted)
+            text = hsm.decrypt_password(encrypted)
             self.assertEqual(text, password)
             self.assertEqual(pkcs11.session_mock.encrypt.call_count, 1)
             self.assertEqual(pkcs11.session_mock.encrypt.call_count, 1)
@@ -569,8 +568,8 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
 
             # encryption+decryption succeeds once
             password = "topSekr3t" * 16
-            crypted = hsm.encrypt_password(password)
-            text = hsm.decrypt_password(crypted)
+            encrypted = hsm.encrypt_password(password)
+            text = hsm.decrypt_password(encrypted)
             self.assertEqual(text, password)
 
             # simulate that the HSM disappears after that, so we cannot
@@ -596,8 +595,8 @@ class AESHardwareSecurityModuleTestCase(MyTestCase):
                 1,
                 error=PyKCS11.CKR_SESSION_HANDLE_INVALID,
             ):
-                crypted = hsm.encrypt_password(password)
-            text = hsm.decrypt_password(crypted)
+                encrypted = hsm.encrypt_password(password)
+            text = hsm.decrypt_password(encrypted)
             self.assertEqual(text, password)
             self.assertEqual(pkcs11.mock.openSession.mock_calls, [call(slot=1)] * 3)
 
@@ -752,7 +751,7 @@ class SignObjectTestCase(MyTestCase):
         # now test a broken signature
         data = "short text"
         sig = so.sign(data)
-        sig_broken = sig[:-1] + "{:x}".format((int(sig[-1], 16) + 1) % 16)
+        sig_broken = sig[:-1] + f"{(int(sig[-1], 16) + 1) % 16:x}"
         self.assertFalse(so.verify(data, sig_broken))
 
         # test with non hex string
@@ -864,3 +863,16 @@ class CustomHashAlgoListTestCase(OverrideConfigTestCase):
         )
         # Checks if a faulty hash is failing.
         self.assertFalse(verify_pass_hash(password, argon2_fail_hash))
+
+
+class BcryptHashAlgoListTestCase(OverrideConfigTestCase):
+    """Verify bcrypt hashes when passlib bcrypt backend is unavailable."""
+
+    class Config(TestingConfig):
+        EDUMFA_HASH_ALGO_LIST = ["pbkdf2_sha512", "bcrypt"]
+
+    def test_01_verify_bcrypt_hash(self):
+        bcrypt_hash = "$2y$10$o5nv09TSzlv9LNagLhVgg.rQ18UT8UvdWCoRjWeEO4lVi56rYwU8y"
+
+        self.assertTrue(verify_pass_hash("test", bcrypt_hash))
+        self.assertFalse(verify_pass_hash("wrong", bcrypt_hash))

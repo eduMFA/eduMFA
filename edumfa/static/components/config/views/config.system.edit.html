@@ -88,6 +88,25 @@
                    placeholder="300"/>
         </div>
     </div>
+    <div class="form-group">
+        <input name="DisableAutoChallengeJanitor"
+               id="DisableAutoChallengeJanitor"
+               ng-model="params.DisableAutoChallengeJanitor"
+               type="checkbox"
+               ng-checked="isChecked(params.DisableAutoChallengeJanitor)"/>
+        <label for="DisableAutoChallengeJanitor" translate>
+            Disable automatic challenge janitor. You should use the token janitor to clean up old challenges if you disable the automatic challenge janitor.
+        </label>    
+    </div>
+    <div class="form-group">
+        <input name="DisableClientTracking" id="DisableClientTracking"
+               ng-model="params.DisableClientTracking"
+               type="checkbox"
+               ng-checked="isChecked(params.DisableClientTracking)"/>
+        <label for="DisableClientTracking" translate>
+            Disable client tracking. This will disable the recording of client IP addresses and user agents in the database. This can be used to reduce database locks and load in environments with many concurrent requests.
+        </label>
+    </div>
 
     <div class="form-group">
         <label for="UserCacheExpiration"

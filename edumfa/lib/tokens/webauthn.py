@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -57,7 +56,6 @@ import json
 import logging
 import os
 import struct
-from typing import Dict
 
 import cbor2
 import cryptography.x509
@@ -555,9 +553,7 @@ class WebAuthnMakeCredentialOptions:
         attestation = str(attestation).lower()
         if attestation not in ATTESTATION_FORMS:
             raise ValueError(
-                "Attestation string must be one of {0!s}".format(
-                    ", ".join(ATTESTATION_FORMS)
-                )
+                f"Attestation string must be one of {', '.join(ATTESTATION_FORMS)}"
             )
         self.attestation = attestation
 
@@ -565,9 +561,7 @@ class WebAuthnMakeCredentialOptions:
             user_verification = str(user_verification).lower()
             if user_verification not in USER_VERIFICATION_LEVELS:
                 raise ValueError(
-                    "user_verification must be one of {0!s}".format(
-                        ", ".join(USER_VERIFICATION_LEVELS)
-                    )
+                    f"user_verification must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
         self.user_verification = user_verification
 
@@ -575,9 +569,7 @@ class WebAuthnMakeCredentialOptions:
             authenticator_attachment = str(authenticator_attachment).lower()
             if authenticator_attachment not in AUTHENTICATOR_ATTACHMENT_TYPES:
                 raise ValueError(
-                    "authenticator_attachment must be one of {0!s}".format(
-                        ", ".join(AUTHENTICATOR_ATTACHMENT_TYPES)
-                    )
+                    f"authenticator_attachment must be one of {', '.join(AUTHENTICATOR_ATTACHMENT_TYPES)}"
                 )
         self.authenticator_attachment = authenticator_attachment
 
@@ -585,9 +577,7 @@ class WebAuthnMakeCredentialOptions:
             resident_key = str(resident_key).lower()
             if resident_key not in RESIDENT_KEY_LEVELS:
                 raise ValueError(
-                    "resident_key must be one of {0!s}".format(
-                        ", ".join(RESIDENT_KEY_LEVELS)
-                    )
+                    f"resident_key must be one of {', '.join(RESIDENT_KEY_LEVELS)}"
                 )
         self.resident_key = resident_key
 
@@ -730,9 +720,7 @@ class WebAuthnAssertionOptions:
             ).lower()
             if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
                 raise ValueError(
-                    "user_verification_requirement must be one of {0!s}".format(
-                        ", ".join(USER_VERIFICATION_LEVELS)
-                    )
+                    f"user_verification_requirement must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
         else:
             if is_usernameless_realm:
@@ -746,9 +734,7 @@ class WebAuthnAssertionOptions:
                 ).lower()
                 if self.user_verification_requirement not in USER_VERIFICATION_LEVELS:
                     raise ValueError(
-                        "user_verification_requirement must be one of {0!s}".format(
-                            ", ".join(USER_VERIFICATION_LEVELS)
-                        )
+                        f"user_verification_requirement must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                     )
             if rp_id:
                 self.rp_id = rp_id
@@ -853,9 +839,7 @@ class WebAuthnUser:
         self.rp_id = rp_id
 
     def __str__(self):
-        return "{!r} ({}, {}, {})".format(
-            self.user_id, self.user_name, self.user_display_name, self.sign_count
-        )
+        return f"{self.user_id!r} ({self.user_name}, {self.user_display_name}, {self.sign_count})"
 
 
 class WebAuthnCredential:
@@ -908,9 +892,7 @@ class WebAuthnCredential:
         attestation_level = str(attestation_level).lower()
         if attestation_level not in ATTESTATION_LEVELS:
             raise ValueError(
-                "Attestation level must be one of {0!s}".format(
-                    ", ".join(ATTESTATION_LEVELS)
-                )
+                f"Attestation level must be one of {', '.join(ATTESTATION_LEVELS)}"
             )
         self.attestation_level = attestation_level
 
@@ -937,8 +919,8 @@ class WebAuthnCredential:
         ]
 
     def __str__(self):
-        return "{!r} ({}, {}, {})".format(
-            self.credential_id, self.rp_id, self.origin, self.sign_count
+        return (
+            f"{self.credential_id!r} ({self.rp_id}, {self.origin}, {self.sign_count})"
         )
 
 
@@ -1033,7 +1015,7 @@ class WebAuthnRegistrationResponse:
         return cbor2.loads(webauthn_b64_decode(attestation_object))
 
     @staticmethod
-    def get_extensions(auth_data) -> Dict:
+    def get_extensions(auth_data) -> dict:
         attestation_data = auth_data[37:]
         credential_id_len = struct.unpack("!H", attestation_data[16:18])[0]
 
@@ -1386,9 +1368,9 @@ class WebAuthnRegistrationResponse:
                     raise RegistrationRejectedException(str(e))
                 if alg != public_key_alg:
                     raise RegistrationRejectedException(
-                        "credentialPublicKey algorithm {0!s} does "
+                        f"credentialPublicKey algorithm {public_key_alg} does "
                         "not match algorithm from attestation "
-                        "statement {1!s}".format(public_key_alg, alg)
+                        f"statement {alg}"
                     )
                 # Step 2:
                 # Verify that sig is a valid signature over the concatenation of authenticatorData
@@ -1401,8 +1383,7 @@ class WebAuthnRegistrationResponse:
                     raise RegistrationRejectedException("Invalid signature received.")
                 except NotImplementedError:  # pragma: no cover
                     log.warning(
-                        "Unsupported algorithm ({0!s}) for signature "
-                        "verification".format(alg)
+                        f"Unsupported algorithm ({alg}) for signature verification"
                     )
                     # We do not support this algorithm. Treat as none attestation, if acceptable.
                     if none_attestation_permitted:
@@ -1415,7 +1396,7 @@ class WebAuthnRegistrationResponse:
                         )
                     else:
                         raise RegistrationRejectedException(
-                            "Unsupported algorithm ({0!s}).".format(alg)
+                            f"Unsupported algorithm ({alg})."
                         )
                 return (
                     ATTESTATION_TYPE.SELF_ATTESTATION,
@@ -1433,9 +1414,7 @@ class WebAuthnRegistrationResponse:
                     )
                 else:
                     raise RegistrationRejectedException(
-                        "Unsupported authenticator attestation format ({0!s})!".format(
-                            fmt
-                        )
+                        f"Unsupported authenticator attestation format ({fmt})!"
                     )
 
             # Treat as none attestation.
@@ -1570,18 +1549,14 @@ class WebAuthnRegistrationResponse:
                 auth_data, self.expected_registration_authenticator_extensions
             ):
                 raise RegistrationRejectedException(
-                    "Unable to verify authenticator extensions. {}".format(
-                        WebAuthnRegistrationResponse.get_extensions(auth_data)
-                    )
+                    f"Unable to verify authenticator extensions. {WebAuthnRegistrationResponse.get_extensions(auth_data)}"
                 )
             if not _verify_client_extensions(
                 self.registration_response.get("registrationClientExtensions"),
                 self.expected_registration_client_extensions,
             ):
                 raise RegistrationRejectedException(
-                    "Unable to verify client extensions. {}".format(
-                        self.registration_response.get("registrationClientExtensions")
-                    )
+                    f"Unable to verify client extensions. {self.registration_response.get('registrationClientExtensions')}"
                 )
 
             # Step 12b.
@@ -1744,9 +1719,7 @@ class WebAuthnRegistrationResponse:
             return credential
 
         except Exception as e:
-            raise RegistrationRejectedException(
-                "Registration rejected. Error: {}".format(e)
-            )
+            raise RegistrationRejectedException(f"Registration rejected. Error: {e}")
 
 
 class WebAuthnAssertionResponse:
@@ -1959,9 +1932,7 @@ class WebAuthnAssertionResponse:
                 self.expected_assertion_client_extensions,
             ):
                 raise AuthenticationRejectedException(
-                    "Unable to verify client extensions. {}".format(
-                        self.assertion_response.get("assertionClientExtensions")
-                    )
+                    f"Unable to verify client extensions. {self.assertion_response.get('assertionClientExtensions')}"
                 )
 
             # Step 15.
@@ -2025,7 +1996,7 @@ class WebAuthnAssertionResponse:
 
         except Exception as e:
             raise AuthenticationRejectedException(
-                "Authentication rejected. Error: {}".format(e)
+                f"Authentication rejected. Error: {e}"
             )
 
 
@@ -2074,7 +2045,7 @@ def _encode_public_key(public_key):
     :return: The coordinates packed into a standard byte string representation.
     """
     numbers = public_key.public_numbers()
-    return b"\x04" + binascii.unhexlify("{:064x}{:064x}".format(numbers.x, numbers.y))
+    return b"\x04" + binascii.unhexlify(f"{numbers.x:064x}{numbers.y:064x}")
 
 
 def _load_cose_public_key(key_bytes):
@@ -2119,7 +2090,7 @@ def _load_cose_public_key(key_bytes):
 
         return alg, RSAPublicNumbers(e, n).public_key(backend=default_backend())
     else:
-        log.warning("Unsupported webAuthn COSE algorithm: {0!s}".format(alg))
+        log.warning(f"Unsupported webAuthn COSE algorithm: {alg}")
         raise COSEKeyException("Unsupported algorithm.")
 
 
@@ -2147,8 +2118,8 @@ def _get_trust_anchors(attestation_type, attestation_fmt, trust_anchor_dir):
         or attestation_fmt not in SUPPORTED_ATTESTATION_FORMATS
     ):
         log.debug(
-            "Unsupported attestation type ({0!s}) or attestation format "
-            "({1!s}).".format(attestation_type, attestation_fmt)
+            f"Unsupported attestation type ({attestation_type}) or attestation format "
+            f"({attestation_fmt})."
         )
         return []
 
@@ -2166,15 +2137,9 @@ def _get_trust_anchors(attestation_type, attestation_fmt, trust_anchor_dir):
                         )
                         trust_anchors.append(pem)
                 except Exception as e:
-                    log.info(
-                        "Could not load certificate {0!s}: {1!s}".format(
-                            trust_anchor_path, e
-                        )
-                    )
+                    log.info(f"Could not load certificate {trust_anchor_path}: {e}")
     else:
-        log.debug(
-            "Trust anchor directory ({0!s}) not available.".format(trust_anchor_dir)
-        )
+        log.debug(f"Trust anchor directory ({trust_anchor_dir}) not available.")
 
     return trust_anchors
 
@@ -2203,7 +2168,7 @@ def _is_trusted_x509_attestation_cert(trust_path, trust_anchors):
         store_ctx.verify_certificate()
         return True
     except Exception as e:
-        log.info("Unable to verify certificate: {}".format(e))
+        log.info(f"Unable to verify certificate: {e}")
 
     return False
 

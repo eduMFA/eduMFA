@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -121,14 +120,12 @@ class eduMFAServer:
             timeout=60,
         )
         log.debug(
-            "Sent request to eduMFA server. status code returned: {0!s}".format(
-                response.status_code
-            )
+            f"Sent request to eduMFA server. status code returned: {response.status_code}"
         )
         if response.status_code != 200:
             log.warning(
-                "The request to the remote eduMFA server {0!s} "
-                "returned a status code: {1!s}".format(config.url, response.status_code)
+                f"The request to the remote eduMFA server {config.url} "
+                f"returned a status code: {response.status_code}"
             )
             return False
 
@@ -253,11 +250,9 @@ def export_edumfaservers(name=None):
 @register_import("edumfaserver")
 def import_edumfaservers(data, name=None):
     """Import edumfaservers configuration"""
-    log.debug("Import edumfaservers config: {0!s}".format(data))
+    log.debug(f"Import edumfaservers config: {data}")
     for res_name, res_data in data.items():
         if name and name != res_name:
             continue
         rid = add_edumfaserver(res_name, **res_data)
-        log.info(
-            'Import of edumfaservers "{0!s}" finished, id: {1!s}'.format(res_name, rid)
-        )
+        log.info(f'Import of edumfaservers "{res_name}" finished, id: {rid}')

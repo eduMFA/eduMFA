@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from edumfa.lib.policy import (
     ACTION,
     CONDITION_SECTION,
@@ -385,7 +383,7 @@ class APIPolicyTestCase(MyApiTestCase):
             "/policy/pol1adminuser",
             method="POST",
             data={
-                "action": "{0!s}, {1!s}".format(ACTION.POLICYDELETE, ACTION.POLICYREAD),
+                "action": f"{ACTION.POLICYDELETE}, {ACTION.POLICYREAD}",
                 "scope": SCOPE.ADMIN,
                 "realm": "",
                 "adminuser": "testadmin",

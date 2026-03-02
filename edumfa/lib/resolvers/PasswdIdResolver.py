@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -29,12 +28,11 @@
 """
 Description:  This file is part of the eduMFA service
               This module implements the communication interface
-              for resolvin user info to the /etc/passwd user base
+              for resolving user info to the /etc/passwd user base
 
 Dependencies: -
 """
 
-import codecs
 import logging
 import os
 import re
@@ -43,6 +41,7 @@ import sys
 from passlib.context import CryptContext
 
 from edumfa.lib.utils import convert_column_to_unicode, to_bytes
+from edumfa.lib.utils.password_hash import verify_with_crypt_context
 
 from .UserIdResolver import UserIdResolver
 
@@ -130,12 +129,8 @@ class IdResolver(UserIdResolver):
         if self.fileName == "":
             self.fileName = "/etc/passwd"
 
-        log.info(
-            "loading users from file {0!s} from within {1!r}".format(
-                self.fileName, os.getcwd()
-            )
-        )
-        with codecs.open(self.fileName, "r", ENCODING) as fileHandle:
+        log.info(f"loading users from file {self.fileName} from within {os.getcwd()}")
+        with open(self.fileName, encoding=ENCODING) as fileHandle:
             ID = self.sF["userid"]
             NAME = self.sF["username"]
             PASS = self.sF["cryptpass"]
@@ -156,7 +151,7 @@ class IdResolver(UserIdResolver):
                 # for full info store the line
                 self.descDict[fields[ID]] = fields
 
-                # store the crypted password
+                # store the encrypted password
                 self.passDict[fields[ID]] = fields[PASS]
 
                 # store surname, givenname and phones
@@ -195,28 +190,28 @@ class IdResolver(UserIdResolver):
         :param uid: The uid of the user
         :type uid: int
         :param password: The password in cleartext
-        :type password: sting
+        :type password: string
         :return: True or False
         :rtype: bool
         """
-        log.info("checking password for user uid {0!s}".format(uid))
+        log.info(f"checking password for user uid {uid}")
         cryptedpasswd = self.passDict[uid]
-        log.debug(
-            "We found the encrypted pass {0!s} for uid {1!s}".format(cryptedpasswd, uid)
-        )
+        log.debug(f"We found the encrypted pass {cryptedpasswd} for uid {uid}")
         if cryptedpasswd:
             if cryptedpasswd in ["x", "*"]:
                 err = "Sorry, currently no support for shadow passwords"
-                log.error("{0!s}".format(err))
+                log.error(f"{err}")
                 raise NotImplementedError(err)
-            passlib_context = CryptContext(schemes=["sha512_crypt", "sha256_crypt", "md5_crypt", "des_crypt"])
+            passlib_context = CryptContext(
+                schemes=["sha512_crypt", "sha256_crypt", "md5_crypt", "des_crypt"]
+            )
             try:
-                if passlib_context.verify(password, cryptedpasswd):
-                    log.info("successfully authenticated user uid {0!s}".format(uid))
+                if verify_with_crypt_context(passlib_context, password, cryptedpasswd):
+                    log.info(f"successfully authenticated user uid {uid}")
                     return True
             except ValueError:
-                pass # Log below
-            log.warning("user uid {0!s} failed to authenticate".format(uid))
+                pass  # Log below
+            log.warning(f"user uid {uid} failed to authenticate")
             return False
         else:
             log.warning(
@@ -252,17 +247,20 @@ class IdResolver(UserIdResolver):
 
         return ret
 
-    def getUsername(self, userId):
+    def getUsername(self, userId: str) -> str:
         """
-        Returns the username/loginname for a given userid
-        :param userid: The userid in this resolver
-        :type userid: string
-        :return: username
-        :rtype: str
+        Returns the username/loginname for a given userid, or an empty string
+        if it can't be found.
+
+        :param userid: the userid of the user in this resolver
+        :return: username/loginname of the userid
         """
         fields = self.descDict.get(userId)
-        index = self.sF["username"]
-        return fields[index]
+        if not fields:
+            return ""
+        else:
+            index = self.sF["username"]
+            return fields[index]
 
     def getUserId(self, LoginName):
         """
@@ -365,7 +363,7 @@ class IdResolver(UserIdResolver):
 
         :param cString: The string to match
         :param cPattern: the pattern
-        :return: If the sting matches
+        :return: If the string matches
         :rtype: bool
         """
         ret = False

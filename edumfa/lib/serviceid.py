@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -33,8 +32,6 @@ from edumfa.models import Serviceid, db
 
 log = logging.getLogger(__name__)
 
-ENCODING = "utf-8"
-
 
 def set_serviceid(name, description=None):
     return Serviceid(name, description).save()
@@ -58,8 +55,8 @@ def delete_serviceid(name=None, sid=None):
         if si:
             if si.id != sid:
                 raise eduMFAError(
-                    "ID of the serviceid with name {0!s} does not "
-                    "match given ID ({1:d}).".format(name, sid)
+                    f"ID of the serviceid with name {name} does not "
+                    f"match given ID ({sid:d})."
                 )
         else:
             si = fetch_one_resource(Serviceid, id=sid)

@@ -79,21 +79,6 @@ additional dependencies::
     pip install .[test]
 
 
-Getting and updating submodules
-===============================
-
-The client-side library for the registering and signing of WebAuthn-Credentials
-resides in a submodule.
-
-To fetch all submodules for this repository, run::
-
-   git submodule update --init --recursive
-
-When pulling changes from upstream later, you can automatically update any outdated
-submodules, by running::
-
-   git pull --recurse-submodules
-
 Running it
 ==========
 
@@ -103,12 +88,6 @@ Then create the database tables and the encryption key::
 
     ./edumfa-manage create_tables
     ./edumfa-manage create_enckey
-
-If You want to keep the development database upgradable, You should `stamp
-<https://edumfa.readthedocs.io/en/latest/installation/upgrade.html>`_ it
-to simplify updates::
-
-    ./edumfa-manage db stamp head -d migrations/
 
 Create the key for the audit log::
 

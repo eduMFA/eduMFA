@@ -1,4 +1,5 @@
 from os import getenv
+from socket import gethostname
 
 
 def get_content_from_file(path: str) -> str:
@@ -61,3 +62,4 @@ EDUMFA_LOGFILE = "/var/log/edumfa/edumfa.log"
 EDUMFA_LOGCONFIG = "/etc/edumfa/logging.yml"
 EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False") == "True"
 EDUMFA_AUDIT_SQL_TRUNCATE = True
+EDUMFA_NODE = gethostname()
