@@ -110,7 +110,7 @@ pycparser==3.0 ; implementation_name != 'PyPy'
     # via cffi
 pycryptodomex==3.23.0
     # via ldap3
-pydash==8.0.5
+pydash==8.0.6
     # via edumfa (pyproject.toml)
 pyjwt==2.10.1
     # via edumfa (pyproject.toml)
