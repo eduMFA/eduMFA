@@ -6,6 +6,7 @@ info:
 
 
 BUN_VERSION := $(shell bun --version 2>/dev/null)
+UV_VERSION := $(shell uv --version 2>/dev/null)
 
 clean:
 	find . -name \*.pyc -exec rm {} \;
@@ -29,14 +30,21 @@ doc-man:
 doc-html:
 	(cd doc; make html)
 
-translate-backend:
-	(cd edumfa; pybabel extract --add-location=file -F babel.cfg -o translations/messages.pot .)
+
+check-uv:
+ifeq ($(UV_VERSION),)
+	@echo "uv is not installed. Follow https://docs.astral.sh/uv/getting-started/installation/ to install it."
+	@exit 1
+endif
+
+translate-backend: check-uv
+	(cd edumfa; uv run pybabel extract --add-location=file -F babel.cfg -o translations/messages.pot .)
 	# Normalize POT-Creation-Date after update (cross-platform sed)
 	(cd edumfa/translations; sed -i.bak 's/^"POT-Creation-Date:.*"/"POT-Creation-Date: 1970-01-01 00:00+0000\\n"/' messages.pot && rm -f messages.pot.bak)
 	# pybabel init -i messages.pot -d translations -l de
-	(cd edumfa; pybabel update -i translations/messages.pot -d translations)
+	(cd edumfa; uv run pybabel update -i translations/messages.pot -d translations)
 	# create the .mo file
-	(cd edumfa; pybabel compile -d translations)
+	(cd edumfa; uv run pybabel compile -d translations)
 
 translate-frontend:
 ifdef BUN_VERSION
