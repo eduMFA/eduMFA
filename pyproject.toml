@@ -92,7 +92,7 @@ lint = ["ruff==0.15.4"]
 docs = [
     "docutils==0.21.2",
     "furo==2025.12.19",
-    "imagesize==1.4.1",
+    "imagesize==1.5.0",
     "packaging==25.0",
     "pyenchant==3.3.0",
     "Pygments==2.19.2",
