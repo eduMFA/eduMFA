@@ -53,7 +53,7 @@ dependencies = [
     "pyjwt==2.11.0",
     "pymysql==1.1.2",
     "pyopenssl==25.3.0",
-    "pyrad==2.4",
+    "pyrad==2.5.4",
     "python-dateutil==2.9.0.post0",
     "python-gnupg==0.5.6",
     "pyyaml==6.0.3",

@@ -851,7 +851,7 @@ requires-dist = [
     { name = "pykcs11", marker = "extra == 'hsm'", specifier = "==1.5.18" },
     { name = "pymysql", specifier = "==1.1.2" },
     { name = "pyopenssl", specifier = "==25.3.0" },
-    { name = "pyrad", specifier = "==2.4" },
+    { name = "pyrad", specifier = "==2.5.4" },
     { name = "python-dateutil", specifier = "==2.9.0.post0" },
     { name = "python-gnupg", specifier = "==0.5.6" },
     { name = "pyyaml", specifier = "==6.0.3" },
@@ -1735,15 +1735,14 @@ wheels = [
 
 [[package]]
 name = "pyrad"
-version = "2.4"
+version = "2.5.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "netaddr" },
-    { name = "six" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fc/04/0fe33dca20685b3ced8359f487638bdf03f2776652f7f6812a639cce1b70/pyrad-2.4.tar.gz", hash = "sha256:057de4b7e89d8da57ba782c1bde45c63ebee720ae2c0b0a69beaff15c47e30d9", size = 27952, upload-time = "2020-11-23T23:12:08.818Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/52/75/b3e18567376dd4f6d0a9d4b283cf4b16dd31420815a9e52bdd0282280777/pyrad-2.5.4.tar.gz", hash = "sha256:e039c48a026c988d49276bd7c75795f55e0e4c2788f7ddf09419ce0e191a154d", size = 488336, upload-time = "2026-02-05T15:03:07.465Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/75/23/483cc51b2ea1ac47dc30093a786190e4a2dfaef892263430c6f99296fabf/pyrad-2.4-py3-none-any.whl", hash = "sha256:233de3aefa383875c5bddfdecfd4819d1b1fbac41aa43f6bebe4f81e63dca363", size = 32547, upload-time = "2020-11-23T23:12:07.826Z" },
+    { url = "https://files.pythonhosted.org/packages/19/54/5b0ded99e5a8390be3e5c29513b9f53c01e5741256b7f73a20c0c606f29d/pyrad-2.5.4-py3-none-any.whl", hash = "sha256:2c75e8a5642df262071d631e4552e08d9d5bed0c62699d83c24105c4fbfc2cff", size = 495110, upload-time = "2026-02-05T15:03:06.385Z" },
 ]
 
 [[package]]
