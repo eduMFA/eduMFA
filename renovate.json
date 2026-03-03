@@ -10,6 +10,14 @@
     "branchTopic": "renovate-lock-file-maintenance",
     "commitMessageAction": "Update lock file"
   },
+  "pip-compile": {
+    "managerFilePatterns": ["/(^|/)requirements\\.txt$/"],
+    "lockFileMaintenance": {
+      "enabled": true,
+      "branchTopic": "renovate-pip-compile-refresh",
+      "commitMessageAction": "Refresh uv pip compile outputs"
+    }
+  },
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
