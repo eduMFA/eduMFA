@@ -26,7 +26,7 @@ def _getenv(key: str, default: str | None) -> str:
         value.
     """
     value = getenv(key, default)
-    if not value:
+    if value is None:
         raise ValueError(f"Environment variable '{key}' not set! Can't start...")
     else:
         return value
@@ -63,3 +63,9 @@ EDUMFA_LOGCONFIG = "/etc/edumfa/logging.yml"
 EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False") == "True"
 EDUMFA_AUDIT_SQL_TRUNCATE = True
 EDUMFA_NODE = gethostname()
+if edumfa_logo := get_var("EDUMFA_LOGO", ""):
+    EDUMFA_LOGO = edumfa_logo
+if edumfa_page_title := getenv("EDUMFA_PAGE_TITLE", ""):
+    EDUMFA_PAGE_TITLE = edumfa_page_title
+if edumfa_css := getenv("EDUMFA_CSS", ""):
+    EDUMFA_CSS = edumfa_css
