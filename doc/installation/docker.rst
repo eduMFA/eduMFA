@@ -82,6 +82,9 @@ The `.env` file should contain the following variables:
 - EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional)
 - SUPERUSER_REALM: which realms should be superuser realms (optional)
 - EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional)
+- EDUMFA_LOGO: filename of custom logo (optional)
+- EDUMFA_PAGE_TITLE: custom page title (optional)
+- EDUMFA_CSS: url of custom css stylesheet (optional)
 
 You can also add a "_FILE" suffix to each variable name and pass a path to read the value from a file instead. For example instead of passing `SECRET_KEY`:
 
