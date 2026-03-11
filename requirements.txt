@@ -24,13 +24,13 @@ blinker==1.9.0
     # via flask
 cbor2==5.8.0
     # via edumfa (pyproject.toml)
-certifi==2026.1.4
+certifi==2026.2.25
     # via requests
 cffi==2.0.0
     # via
     #   argon2-cffi-bindings
     #   cryptography
-charset-normalizer==3.4.4
+charset-normalizer==3.4.5
     # via requests
 click==8.3.1
     # via
@@ -45,6 +45,7 @@ croniter==6.0.0
 cryptography==46.0.5
     # via
     #   edumfa (pyproject.toml)
+    #   google-auth
     #   pyopenssl
 defusedxml==0.7.1
     # via edumfa (pyproject.toml)
@@ -64,7 +65,7 @@ flask-sqlalchemy==3.1.1
     #   flask-migrate
 google-auth==2.48.0
     # via edumfa (pyproject.toml)
-greenlet==3.3.1 ; platform_machine == 'AMD64' or platform_machine == 'WIN32' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'ppc64le' or platform_machine == 'win32' or platform_machine == 'x86_64'
+greenlet==3.3.2 ; platform_machine == 'AMD64' or platform_machine == 'WIN32' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'ppc64le' or platform_machine == 'win32' or platform_machine == 'x86_64'
     # via sqlalchemy
 grpcio==1.78.0
     # via edumfa (pyproject.toml)
@@ -126,13 +127,13 @@ python-dateutil==2.9.0.post0
     #   croniter
 python-gnupg==0.5.6
     # via edumfa (pyproject.toml)
-pytz==2025.2
+pytz==2026.1.post1
     # via
     #   croniter
     #   flask-babel
 pyyaml==6.0.3
     # via edumfa (pyproject.toml)
-redis==7.1.1
+redis==7.3.0
     # via huey
 requests==2.32.5
     # via edumfa (pyproject.toml)
@@ -149,7 +150,7 @@ smpplib==2.2.4
     # via edumfa (pyproject.toml)
 soupsieve==2.8.3
     # via beautifulsoup4
-sqlalchemy==2.0.47
+sqlalchemy==2.0.48
     # via
     #   edumfa (pyproject.toml)
     #   alembic
