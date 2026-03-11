@@ -870,7 +870,7 @@ dev = [
     { name = "docutils", specifier = "==0.21.2" },
     { name = "exceptiongroup", specifier = "==1.3.1" },
     { name = "furo", specifier = "==2025.12.19" },
-    { name = "imagesize", specifier = "==1.5.0" },
+    { name = "imagesize", specifier = "==2.0.0" },
     { name = "iniconfig", specifier = "==2.3.0" },
     { name = "mock", specifier = "==5.2.0" },
     { name = "packaging", specifier = "==26.0" },
@@ -902,7 +902,7 @@ dev = [
 docs = [
     { name = "docutils", specifier = "==0.21.2" },
     { name = "furo", specifier = "==2025.12.19" },
-    { name = "imagesize", specifier = "==1.5.0" },
+    { name = "imagesize", specifier = "==2.0.0" },
     { name = "packaging", specifier = "==26.0" },
     { name = "pyenchant", specifier = "==3.3.0" },
     { name = "pygments", specifier = "==2.19.2" },
@@ -1215,11 +1215,11 @@ wheels = [
 
 [[package]]
 name = "imagesize"
-version = "1.5.0"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/cf/59/4b0dd64676aa6fb4986a755790cb6fc558559cf0084effad516820208ec3/imagesize-1.5.0.tar.gz", hash = "sha256:8bfc5363a7f2133a89f0098451e0bcb1cd71aba4dc02bbcecb39d99d40e1b94f", size = 1281127, upload-time = "2026-03-03T01:59:54.651Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6c/e6/7bf14eeb8f8b7251141944835abd42eb20a658d89084b7e1f3e5fe394090/imagesize-2.0.0.tar.gz", hash = "sha256:8e8358c4a05c304f1fccf7ff96f036e7243a189e9e42e90851993c558cfe9ee3", size = 1773045, upload-time = "2026-03-03T14:18:29.941Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1e/b1/a0662b03103c66cf77101a187f396ea91167cd9b7d5d3a2e465ad2c7ee9b/imagesize-1.5.0-py2.py3-none-any.whl", hash = "sha256:32677681b3f434c2cb496f00e89c5a291247b35b1f527589909e008057da5899", size = 5763, upload-time = "2026-03-03T01:59:52.343Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/53/fb7122b71361a0d121b669dcf3d31244ef75badbbb724af388948de543e2/imagesize-2.0.0-py2.py3-none-any.whl", hash = "sha256:5667c5bbb57ab3f1fa4bc366f4fbc971db3d5ed011fd2715fd8001f782718d96", size = 9441, upload-time = "2026-03-03T14:18:27.892Z" },
 ]
 
 [[package]]
