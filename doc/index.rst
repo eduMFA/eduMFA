@@ -47,6 +47,7 @@ Table of Contents
    eventhandler/index
    periodictask/index
    audit/index
+   integrations/index
    machines/index
    workflows_and_tools/index
    jobqueue/index
@@ -56,7 +57,7 @@ Table of Contents
 
 
 If you are missing any information or descriptions
-file an issue at `github <https://github.com/eduMFA/eduMFA/issues>`_ (which would be the preferred way),
+file an issue at `GitHub <https://github.com/eduMFA/eduMFA/issues>`_ (which would be the preferred way),
 or drop a note to edumfa(@)listserv.dfn.de.
 
 This will help us a lot to improve documentation to your needs.

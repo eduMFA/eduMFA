@@ -98,3 +98,4 @@ using::
    apt dist-upgrade
 
 
+.. _READ_BEFORE_UPDATE: https://github.com/eduMFA/eduMFA/blob/main/READ_BEFORE_UPDATE.md

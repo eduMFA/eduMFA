@@ -90,24 +90,6 @@ alternatively use the meta package ``edumfa-nginx``.
 
 Now you may proceed to :ref:`first_steps`.
 
-
-.. _install_ubuntu_freeradius:
-
-FreeRADIUS
-..........
-
-eduMFA has a perl module to "translate" RADIUS requests to the API of the
-eduMFA server. This module plugs into FreeRADIUS. The FreeRADIUS does not
-have to run on the same machine as eduMFA.
-To install this module run::
-
-   apt-get install edumfa-radius
-
-For further details see :ref:`rlm_perl`.
-
-.. rubric:: Footnotes
-
-
 Building your own Packages
 ...........................
 To build custom packages from the source code, follow these steps meticulously:
