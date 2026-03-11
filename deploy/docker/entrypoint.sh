@@ -12,7 +12,8 @@ fi
 EDUMFA_ADMIN_PASS="${EDUMFA_ADMIN_PASS:-$GEN_PWD}"
 
 # Make sure the config is working by executing it once.
-python3 "/etc/edumfa/edumfa.cfg"
+EDUMFA_CONFIGFILE="${EDUMFA_CONFIGFILE:-/etc/edumfa/edumfa.cfg}"
+python3 "$EDUMFA_CONFIGFILE"
 
 # Create enckey if doesn't exist yet
 edumfa-manage -q create_enckey || true
@@ -38,7 +39,7 @@ edumfa-manage -q admin add "$EDUMFA_ADMIN_USER" -p "$EDUMFA_ADMIN_PASS"
 shopt -s nullglob
 for script in /opt/edumfa/user-scripts/*.sh; do
   echo "Executing user script $script..."
-  bash $script
+  bash "$script"
 done
 
 if [ $GENERATED_PASSWORD -eq 1 ]; then
