@@ -130,7 +130,7 @@ use Encode::Guess;
 # This is very important ! Without this script will not get the filled hashes from main.
 use vars qw(%RAD_REQUEST %RAD_REPLY %RAD_CHECK %RAD_CONFIG %RAD_PERLCONF);
 
-# This is hash which hold original request from radius
+# This is hash which holds the original request from radius.
 #my %RAD_REQUEST;
 # In this hash you add values that will be returned to NAS.
 #my %RAD_REPLY;
@@ -377,6 +377,9 @@ sub authenticate {
     if ( exists( $RAD_REQUEST{'User-Name'} ) ) {
         $params{"user"} = $RAD_REQUEST{'User-Name'};
     }
+    if ( exists( $RAD_REQUEST{'NAS-Identifier'} ) ) {
+        $params{"RADIUS-NAS-Identifier"} = $RAD_REQUEST{'NAS-Identifier'};
+    }
     if ( exists( $RAD_REQUEST{'Stripped-User-Name'} )) {
         $params{"user"} = $RAD_REQUEST{'Stripped-User-Name'};
     }
@@ -456,7 +459,7 @@ sub authenticate {
         }
     }
     my $starttime = [gettimeofday];
-    my $response = $ua->post( $URL, \%params );
+    my $response = $ua->post( $URL, \%params, 'RADIUS-NAS-Identifier' => $params{'RADIUS-NAS-Identifier'} );
     my $content  = $response->decoded_content();
     my $elapsedtime = tv_interval($starttime);
     &radiusd::radlog( Info, "elapsed time for edumfa call: $elapsedtime" );
