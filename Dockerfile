@@ -29,8 +29,8 @@ VOLUME ["/etc/edumfa"]
 
 # Copy necessary files
 COPY ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
-COPY ./deploy/docker/edumfa.py /etc/edumfa/edumfa.cfg
-COPY ./deploy/docker/logging.yml /etc/edumfa/logging.yml
+COPY ./deploy/docker/edumfa_config.py /opt/edumfa/edumfa_config.py
+COPY ./deploy/docker/logging.yml /opt/edumfa/logging.yml
 COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
 
 # Create directory for user scripts
