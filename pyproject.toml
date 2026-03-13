@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools>=77.0.3"]  # Minimum for new license field
+requires = ["setuptools==82.0.1"]  # Minimum for new license field
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "edumfa"
 version = "2.9.0a"
-requires-python = ">=3.10,<3.15"
+requires-python = "==3.14.3"
 authors = [{ name = "edumfa.io", email = "edumfa@listserv.dfn.de" }]
 description = "eduMFA: identity, multifactor authentication (OTP), authorization, audit"
 readme = { file = "README.rst", content-type = "text/x-rst" }
