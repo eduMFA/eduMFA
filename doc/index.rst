@@ -52,6 +52,8 @@ Table of Contents
    workflows_and_tools/index
    jobqueue/index
    modules/index
+   changelog
+   migration
    faq/index
    glossary/index
 
@@ -71,4 +73,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
