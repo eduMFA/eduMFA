@@ -52,7 +52,7 @@ dependencies = [
     "pydash==8.0.6",
     "pyjwt==2.11.0",
     "pymysql==1.1.2",
-    "pyopenssl==25.3.0",
+    "pyopenssl==26.0.0",
     "pyrad==2.4",
     "python-dateutil==2.9.0.post0",
     "python-gnupg==0.5.6",
