@@ -3,9 +3,8 @@
 Upgrading
 ---------
 
-In any case before upgrading a major version read the document
-`READ_BEFORE_UPDATE`_
-which is continuously updated in the Github repository.
+In any case before upgrading a major version read the
+:ref:`release_changelog` and relevant :ref:`migration_guides`.
 Note, that when you are upgrading over several major versions, read all the comments
 for all versions.
 
@@ -85,8 +84,8 @@ Upgrading a packaged installation
 
 In general, the upgrade of a packaged version of eduMFA should be done using the
 default tools (e.g. apt and yum). In any case, read the
-`READ_BEFORE_UPDATE`_
-file. It is also a good idea to backup your system before upgrading.
+:ref:`release_changelog` and relevant :ref:`migration_guides`. It is also a good
+idea to backup your system before upgrading.
 
 Ubuntu upgrade
 ^^^^^^^^^^^^^^
@@ -97,5 +96,3 @@ using::
    apt update
    apt dist-upgrade
 
-
-.. _READ_BEFORE_UPDATE: https://github.com/eduMFA/eduMFA/blob/main/READ_BEFORE_UPDATE.md

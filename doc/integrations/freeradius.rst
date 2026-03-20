@@ -112,7 +112,7 @@ Upgrading
 It is recommended to keep ``/usr/share/edumfa/freeradius/edumfa_radius.pm`` in
 sync with your eduMFA version. When upgrading eduMFA:
 
-1. Read the `READ_BEFORE_UPDATE`_ file for the release you're upgrading to (and
+1. Read the :ref:`release_changelog` for the release you're upgrading to (and
    those in between if you're jumping more than one version). It could contain
    information about recommended or necessary changes to the plugin's
    configuration.
@@ -121,6 +121,3 @@ sync with your eduMFA version. When upgrading eduMFA:
    See :ref:`freeradius_manual_installation` for help on how to do that.
 3. Update your configuration as necessary.
 4. Restart FreeRADIUS.
-
-
-.. _READ_BEFORE_UPDATE: https://github.com/eduMFA/eduMFA/blob/main/READ_BEFORE_UPDATE.md
