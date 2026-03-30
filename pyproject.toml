@@ -30,7 +30,7 @@ dependencies = [
     "babel==2.18.0",
     "bcrypt==5.0.0",
     "beautifulsoup4==4.14.3",
-    "cbor2==5.8.0",
+    "cbor2==5.9.0",
     "click==8.3.1",
     "configobj==5.0.9",
     "croniter==6.0.0",
