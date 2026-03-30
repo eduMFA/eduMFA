@@ -95,7 +95,7 @@ docs = [
     "imagesize==2.0.0",
     "packaging==26.0",
     "pyenchant==3.3.0",
-    "Pygments==2.19.2",
+    "Pygments==2.20.0",
     "snowballstemmer==3.0.1",
     "Sphinx==9.0.4; python_version >= '3.11'",
     "sphinxcontrib-applehelp==2.0.0",
