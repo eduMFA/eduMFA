@@ -6,7 +6,7 @@ MARIADB_ROOT_PASSWORD="rootpass"
 
 DB_DRIVER="mysql+pymysql"
 
-EDUMFA_SECRET_KEY="Test"
+EDUMFA_SECRET_KEY="Secret-Use-Your-Own-Values-Please"
 EDUMFA_PEPPER="Never know..."
 
 EDUMFA_ADMIN_USER="admin"
