@@ -535,6 +535,11 @@ class PushTokenClass(TokenClass):
             sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
         )
         smartphone_data["signature"] = b32encode_and_unicode(signature)
+
+        # In case the application wants to send its origin to the mobile app
+        if "client" in options:
+            smartphone_data["client"] = options["client"]
+        
         return smartphone_data
 
     @log_with(log)
@@ -723,6 +728,11 @@ class PushTokenClass(TokenClass):
             extra_data["serial"] = self.get_serial()
             extra_data["sslverify"] = sslverify
 
+            if user:
+               extra_data['user']=user.login
+            if params.get('realm'):
+               extra_data['realm'] = params.get('realm')
+               
             # enforce App pin
             if params.get(ACTION.FORCE_APP_PIN):
                 extra_data.update({"pin": True})
