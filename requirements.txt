@@ -168,7 +168,7 @@ typing-extensions==4.15.0
     #   sqlalchemy
 urllib3==2.6.3
     # via requests
-werkzeug==3.1.6
+werkzeug==3.1.8
     # via
     #   edumfa (pyproject.toml)
     #   flask
