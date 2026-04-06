@@ -40,7 +40,7 @@ colorama==0.4.6 ; sys_platform == 'win32'
     # via click
 configobj==5.0.9
     # via edumfa (pyproject.toml)
-croniter==6.0.0
+croniter==6.2.2
     # via edumfa (pyproject.toml)
 cryptography==46.0.6
     # via
@@ -128,9 +128,7 @@ python-dateutil==2.9.0.post0
 python-gnupg==0.5.6
     # via edumfa (pyproject.toml)
 pytz==2026.1.post1
-    # via
-    #   croniter
-    #   flask-babel
+    # via flask-babel
 pyyaml==6.0.3
     # via edumfa (pyproject.toml)
 redis==7.3.0
