@@ -60,7 +60,7 @@ dependencies = [
     "requests==2.33.1",
     "segno==1.6.6",
     "smpplib==2.2.4",
-    "sqlalchemy==2.0.48",
+    "sqlalchemy==2.0.49",
     "werkzeug==3.1.8",
 ]
 
