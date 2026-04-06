@@ -31,7 +31,7 @@ dependencies = [
     "bcrypt==5.0.0",
     "beautifulsoup4==4.14.3",
     "cbor2==5.9.0",
-    "click==8.3.1",
+    "click==8.3.2",
     "configobj==5.0.9",
     "croniter==6.0.0",
     "cryptography==46.0.6",
