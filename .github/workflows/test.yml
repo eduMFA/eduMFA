@@ -40,7 +40,7 @@ jobs:
       - name: Run Pytest checks
         run: uv run pytest --cov=edumfa --import-mode=importlib -vs tests/
       - name: Codecov upload
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
             token: ${{ secrets.CODECOV_TOKEN }}
             files: ./coverage.xml
