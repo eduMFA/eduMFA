@@ -73,7 +73,7 @@ huey==2.6.0
     # via edumfa (pyproject.toml)
 idna==3.11
     # via requests
-importlib-metadata==8.7.0
+importlib-metadata==9.0.0
     # via edumfa (pyproject.toml)
 itsdangerous==2.2.0
     # via flask
