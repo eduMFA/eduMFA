@@ -35,6 +35,7 @@ High-level migration steps
    ``edumfa-manage`` in cron jobs and systemd units.
 9. Replace ``privacyideaapp.wsgi`` with ``edumfaapp.wsgi`` and adjust paths in
    Apache2 or nginx configurations.
+10. Perform the database migration steps below.
 
 Database migration
 ~~~~~~~~~~~~~~~~~~

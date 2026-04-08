@@ -28,7 +28,9 @@ Highlights
 - Re-introduced the version number in the web UI footer.
 - Dropped support for Python 3.9.
 
-`Full changelog for 2.9.0 <https://github.com/eduMFA/eduMFA/compare/v2.8.0...v2.9.0>`_.
+See
+`full changelog for 2.9.0 <https://github.com/eduMFA/eduMFA/blob/eb8e5140ca0b29f206cbf8ada8cba3cfec31523a/READ_BEFORE_UPDATE.md#edumfa-290>`_
+and `commit history <https://github.com/eduMFA/eduMFA/compare/v2.8.0...v2.9.0>`_.
 
 Release Archive
 ---------------
