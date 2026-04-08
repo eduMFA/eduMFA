@@ -80,6 +80,7 @@ The `.env` file should contain the following variables:
 - EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 24 random characters long
 - EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional)
 - EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional)
+- EDUMFA_LOGCONFIG: a path to an alternative logging config (optional)
 - SUPERUSER_REALM: which realms should be superuser realms (optional)
 - EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional)
 
