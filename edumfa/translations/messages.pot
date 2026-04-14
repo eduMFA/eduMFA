@@ -1262,6 +1262,18 @@ msgid ""
 "service ID."
 msgstr ""
 
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The name of the logging facility"
+msgstr ""
+
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The string to write to the log"
+msgstr ""
+
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The logging level for this logging notification"
+msgstr ""
+
 #: lib/eventhandler/base.py
 msgid ""
 "The rollout_state of the token has a certain value like 'clientwait' or "
@@ -1450,18 +1462,6 @@ msgstr ""
 msgid ""
 "Forward the authorization header. This allows to also forward request "
 "like token- and system-requests."
-msgstr ""
-
-#: lib/eventhandler/logginghandler.py
-msgid "The name of the logging facility"
-msgstr ""
-
-#: lib/eventhandler/logginghandler.py
-msgid "The string to write to the log"
-msgstr ""
-
-#: lib/eventhandler/logginghandler.py
-msgid "The logging level for this logging notification"
 msgstr ""
 
 #: lib/eventhandler/requestmangler.py

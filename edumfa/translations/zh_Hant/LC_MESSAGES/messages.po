@@ -1287,6 +1287,18 @@ msgid ""
 "service ID."
 msgstr ""
 
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The name of the logging facility"
+msgstr "日誌記錄工具的名稱"
+
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The string to write to the log"
+msgstr "要寫入日誌的字串"
+
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The logging level for this logging notification"
+msgstr "此記錄通知的紀錄記錄級別"
+
 #: lib/eventhandler/base.py
 msgid ""
 "The rollout_state of the token has a certain value like 'clientwait' or "
@@ -1488,18 +1500,6 @@ msgid ""
 "Forward the authorization header. This allows to also forward request "
 "like token- and system-requests."
 msgstr "轉發授權標頭。這也允許轉發請求，如令牌和系統請求。"
-
-#: lib/eventhandler/logginghandler.py
-msgid "The name of the logging facility"
-msgstr "日誌記錄工具的名稱"
-
-#: lib/eventhandler/logginghandler.py
-msgid "The string to write to the log"
-msgstr "要寫入日誌的字串"
-
-#: lib/eventhandler/logginghandler.py
-msgid "The logging level for this logging notification"
-msgstr "此記錄通知的紀錄記錄級別"
 
 #: lib/eventhandler/requestmangler.py
 msgid "The parameter that should be deleted."

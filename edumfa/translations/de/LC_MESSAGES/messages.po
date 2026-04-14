@@ -1521,6 +1521,18 @@ msgstr ""
 "Die Dienste-Kennzeichnung des SSH-Servers. Unterschiedliche SSH-Server "
 "können die selbe Dienste-Kennzeichnung haben."
 
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The name of the logging facility"
+msgstr "Der Name des Logging-Bereichs"
+
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The string to write to the log"
+msgstr "Die Zeichenkette, die ins Log geschrieben werden soll"
+
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The logging level for this logging notification"
+msgstr "Der Loglevel der Log-Benachrichtigung"
+
 #: lib/eventhandler/base.py
 msgid ""
 "The rollout_state of the token has a certain value like 'clientwait' or "
@@ -1758,18 +1770,6 @@ msgid ""
 msgstr ""
 "Den HTML-Authorisierungsheader weiterleiten. So können bspw. auch Token- "
 "und System-Requests weitergeleitet werden."
-
-#: lib/eventhandler/logginghandler.py
-msgid "The name of the logging facility"
-msgstr "Der Name des Logging-Bereichs"
-
-#: lib/eventhandler/logginghandler.py
-msgid "The string to write to the log"
-msgstr "Die Zeichenkette, die ins Log geschrieben werden soll"
-
-#: lib/eventhandler/logginghandler.py
-msgid "The logging level for this logging notification"
-msgstr "Der Loglevel der Log-Benachrichtigung"
 
 #: lib/eventhandler/requestmangler.py
 msgid "The parameter that should be deleted."

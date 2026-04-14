@@ -1474,6 +1474,18 @@ msgid ""
 "service ID."
 msgstr ""
 
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The name of the logging facility"
+msgstr "O nome do recurso de registro (logging facility)"
+
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The string to write to the log"
+msgstr "A string para gravar no log"
+
+#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
+msgid "The logging level for this logging notification"
+msgstr "O nível de registro para esta notificação de registro (logging level)"
+
 #: lib/eventhandler/base.py
 msgid ""
 "The rollout_state of the token has a certain value like 'clientwait' or "
@@ -1697,18 +1709,6 @@ msgid ""
 msgstr ""
 "Encaminhe o cabeçalho de autorização. Isso permite também encaminhar "
 "solicitações como de token e de sistema."
-
-#: lib/eventhandler/logginghandler.py
-msgid "The name of the logging facility"
-msgstr "O nome do recurso de registro (logging facility)"
-
-#: lib/eventhandler/logginghandler.py
-msgid "The string to write to the log"
-msgstr "A string para gravar no log"
-
-#: lib/eventhandler/logginghandler.py
-msgid "The logging level for this logging notification"
-msgstr "O nível de registro para esta notificação de registro (logging level)"
 
 #: lib/eventhandler/requestmangler.py
 msgid "The parameter that should be deleted."
