@@ -46,7 +46,7 @@ fi
 # 0. Use $EDUMFA_CONFIGFILE if it is set.
 # 1. Use /etc/edumfa/edumfa.cfg if it exists.
 # 2. Use this container's /opt/edumfa/edumfa_config.py.
-if [ -v EDUMFA_CONFIGFILE ]; then
+if [ -n "$EDUMFA_CONFIGFILE" ]; then
   export EDUMFA_CONFIGFILE
 elif [ -e "/etc/edumfa/edumfa.cfg" ]; then
   export EDUMFA_CONFIGFILE="/etc/edumfa/edumfa.cfg"
@@ -102,4 +102,4 @@ if [ $GENERATED_PASSWORD -eq 1 ]; then
 fi
 
 echo "Starting Server"
-gunicorn --bind 0.0.0.0:8000 --workers 4 app
+exec "$@"
