@@ -1493,18 +1493,6 @@ msgid ""
 "service ID."
 msgstr ""
 
-#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
-msgid "The name of the logging facility"
-msgstr "De naam van waar de logs bewaard worden"
-
-#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
-msgid "The string to write to the log"
-msgstr "De strings om naar de log te schrijven"
-
-#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
-msgid "The logging level for this logging notification"
-msgstr "Het log-niveau voor deze loggingsmelding"
-
 #: lib/eventhandler/base.py
 msgid ""
 "The rollout_state of the token has a certain value like 'clientwait' or "
@@ -1742,6 +1730,18 @@ msgid ""
 msgstr ""
 "Stuur de autorisatie-header door. Hiermee kunnen ook de token- en "
 "systeem-aanvragen doorgestuurd worden."
+
+#: lib/eventhandler/logginghandler.py
+msgid "The name of the logging facility"
+msgstr "De naam van waar de logs bewaard worden"
+
+#: lib/eventhandler/logginghandler.py
+msgid "The string to write to the log"
+msgstr "De strings om naar de log te schrijven"
+
+#: lib/eventhandler/logginghandler.py
+msgid "The logging level for this logging notification"
+msgstr "Het log-niveau voor deze loggingsmelding"
 
 #: lib/eventhandler/requestmangler.py
 msgid "The parameter that should be deleted."

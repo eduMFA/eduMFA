@@ -1482,18 +1482,6 @@ msgid ""
 "service ID."
 msgstr ""
 
-#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
-msgid "The name of the logging facility"
-msgstr "Günlük tesisinin adı"
-
-#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
-msgid "The string to write to the log"
-msgstr "Kütüğe yazmak için dize"
-
-#: lib/eventhandler/aborthandler.py lib/eventhandler/logginghandler.py
-msgid "The logging level for this logging notification"
-msgstr "Bu günlük bildirimi için günlük seviyesi"
-
 #: lib/eventhandler/base.py
 msgid ""
 "The rollout_state of the token has a certain value like 'clientwait' or "
@@ -1717,6 +1705,18 @@ msgid ""
 msgstr ""
 "Yetkilendirme başlığını iletin. Bu, belirteç ve sistem istekleri gibi "
 "talebi de iletmenizi sağlar."
+
+#: lib/eventhandler/logginghandler.py
+msgid "The name of the logging facility"
+msgstr "Günlük tesisinin adı"
+
+#: lib/eventhandler/logginghandler.py
+msgid "The string to write to the log"
+msgstr "Kütüğe yazmak için dize"
+
+#: lib/eventhandler/logginghandler.py
+msgid "The logging level for this logging notification"
+msgstr "Bu günlük bildirimi için günlük seviyesi"
 
 #: lib/eventhandler/requestmangler.py
 msgid "The parameter that should be deleted."
