@@ -49,7 +49,7 @@ This release focuses on stability, security, and long-term maintainability. It c
 
 > [!CAUTION]
 >
-> Due to new fields in `edumfa.cfg`, updating your Ubuntu package will cause apt to ask you to replace it. Replacing that file will result in losing the secrets set in it (and you having to add those secrets back). If needed, add the new fields manually to your existing `edumfa.cfg`.
+> Due to new fields in `edumfa.cfg`, upgrading via Ubuntu packages prompts apt to replace that file. Replacing it can remove secrets from your current configuration, so keep your existing file and add only the new fields manually.
 >
 
 ### Added
