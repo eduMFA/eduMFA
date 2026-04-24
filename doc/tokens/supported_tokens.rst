@@ -60,8 +60,6 @@ Smartphone Apps
 
 .. index:: Software Tokens
 
-.. _privacyidea_authenticator:
-
 **Aegis Authenticator**. An open source :ref:`totp_token` and :ref:`hotp_token`
 app for Android.
 
@@ -77,6 +75,8 @@ enrollment, you can scan a QR Code with the Google Authenticator.
 See :ref:`first_steps_token` to learn how to do this.
 
 **mOTP**. Several mOTP Apps like "Potato", "Token2" or "DroidOTP" are supported.
+
+.. _privacyidea_authenticator:
 
 **privacyIDEA Authenticator (unsupported)**. privacyIDEA Authenticator is based
 on the concept of the Google Authenticator and works with the usual QR Code
