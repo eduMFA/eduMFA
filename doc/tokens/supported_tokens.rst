@@ -48,12 +48,12 @@ button tokens. The C100 is an :ref:`hotp_token` token and the C200 a
 tokens are initialized at the factory and you get a seed file, that you need
 to import to eduMFA.
 
-**Passkeys**. Yubikeys are known to work well with eduMFA, but the quality of
-all tokens depend on the implementation of the software surrounding it. On some
-Android devices, Passkey logins with certain (?) hardware tokens seems to have
-issues . This is not something we have an influence on. We recommend testing
-tokens before buying them in bulk, e.g. using one of the available
-`testing websites`_. See :ref:`webauthn` for more information on WebAuthN.
+**Passkeys**. Yubikeys are known to work well with eduMFA, but token
+compatibility depends on the implementation of the surrounding software. On
+some Android devices, passkey logins with certain hardware tokens can fail.
+This is outside of eduMFA's control. We recommend testing tokens before buying
+them in bulk, e.g. using one of the available `testing websites`_. See
+:ref:`webauthn` for more information on WebAuthN.
 
 Smartphone Apps
 ~~~~~~~~~~~~~~~
