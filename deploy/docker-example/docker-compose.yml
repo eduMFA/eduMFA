@@ -28,6 +28,7 @@ services:
       - ./my-login.html:/opt/edumfa/edumfa-package/static/components/login/views/login.html
     secrets:
       - db_password
+      - admin_password
     environment:
       DB_DRIVER: ${DB_DRIVER}
       DB_HOSTNAME: mariadb
@@ -37,7 +38,7 @@ services:
       SECRET_KEY: ${EDUMFA_SECRET_KEY}
       EDUMFA_PEPPER: ${EDUMFA_PEPPER}
       EDUMFA_ADMIN_USER: ${EDUMFA_ADMIN_USER}
-      EDUMFA_ADMIN_PASS: ${EDUMFA_ADMIN_PASS}
+      EDUMFA_ADMIN_PASS_FILE: /run/secrets/admin_password
       EDUMFA_UI_DEACTIVATED: ${EDUMFA_UI_DEACTIVATED}
     depends_on:
       mariadb:
@@ -46,6 +47,8 @@ services:
 secrets:
   db_password:
     file: ./db_password.txt
+  admin_password:
+    file: ./admin_password.txt
 
 volumes:
   edumfa-keys:

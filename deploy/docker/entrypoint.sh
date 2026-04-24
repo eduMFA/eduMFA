@@ -56,15 +56,20 @@ fi
 # Make sure the config is working by executing it once.
 python3 "$EDUMFA_CONFIGFILE"
 
-GEN_PWD="$(openssl rand -base64 42)"
+if [ -n "$EDUMFA_ADMIN_USER_FILE" ]; then
+  EDUMFA_ADMIN_USER=$(cat "$EDUMFA_ADMIN_USER_FILE")
+fi
 EDUMFA_ADMIN_USER="${EDUMFA_ADMIN_USER:-admin}"
-# Check if password is set, otherwise generate one later.
+# Check if password is set, otherwise generate one.
 GENERATED_PASSWORD=0
+if [ -n "$EDUMFA_ADMIN_PASS_FILE" ]; then
+  EDUMFA_ADMIN_PASS=$(cat "$EDUMFA_ADMIN_PASS_FILE")
+fi
 if [ -z "$EDUMFA_ADMIN_PASS" ]; then
   echo "No EDUMFA_ADMIN_PASS set, a random password will be generated and printed when initialization finishes."
+  EDUMFA_ADMIN_PASS="$(openssl rand -base64 42)"
   GENERATED_PASSWORD=1
 fi
-EDUMFA_ADMIN_PASS="${EDUMFA_ADMIN_PASS:-$GEN_PWD}"
 
 # Create enckey if doesn't exist yet
 edumfa-manage -q create_enckey || true
