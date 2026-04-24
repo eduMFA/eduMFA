@@ -20,10 +20,9 @@ The German version tends to be more up-to-date than the English one.
    workaround using the search filter. Tokens belonging to those users will be
    considered orphaned by the token janitor, though.
 
-   See `issue #1005`_ for more information.
+   See `issue #1005 <https://github.com/eduMFA/eduMFA/issues/1005>`_ for more information.
 
 
 .. _Shibboleth Identity Provider: https://shibboleth.atlassian.net/wiki/spaces/IDP5/overview
 .. _English: https://doku.tid.dfn.de/en:shibidp:plugin-fudiscr
 .. _German: https://doku.tid.dfn.de/de:shibidp:plugin-fudiscr
-.. _issue #1005: https://github.com/eduMFA/eduMFA/issues/1005

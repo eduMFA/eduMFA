@@ -33,13 +33,10 @@ The devices is identified and assigned to the user.
    workaround using the search filter. Tokens belonging to those users will be
    considered orphaned by the token janitor, though.
 
-   See `issue #1005`_ for more information.
+   See `issue #1005 <https://github.com/eduMFA/eduMFA/issues/1005>`_ for more information.
 
 For configuring eduMFA for the use of WebAuthn tokens, please see
 :ref:`webauthn_otp_token`.
 
 For further details and information how to add this to your application, see
 the code documentation at :ref:`code_webauthn_token`.
-
-
-.. _issue #1005: https://github.com/eduMFA/eduMFA/issues/1005
