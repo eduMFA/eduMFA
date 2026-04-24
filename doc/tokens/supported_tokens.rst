@@ -68,11 +68,7 @@ FreeOTP app supports only :ref:`totp_token`. So if you scan the QR Code of an
 HOTP token, the OTP will not validate. It also has a version for iOS.
 
 **Google Authenticator**. The Google Authenticator is working well in
-:ref:`hotp_token`
-and :ref:`totp_token` mode. If you choose "Generate OTP Key on the Server"
-during
-enrollment, you can scan a QR Code with the Google Authenticator.
-See :ref:`first_steps_token` to learn how to do this.
+:ref:`HOTP <hotp_token>` and :ref:`totp_token` mode.
 
 **mOTP**. Several mOTP Apps like "Potato", "Token2" or "DroidOTP" are supported.
 
