@@ -24,7 +24,7 @@ The devices is identified and assigned to the user.
 .. note:: As the key pair is only generated virtually, you can register one
     physical device for several users.
 
-.. warning:: When using WebAuthN tokens as Passkeys/resident keys, keep in mind
+.. warning:: When using WebAuthn tokens as Passkeys/resident keys, keep in mind
    the authentication will not involve your resolver. For LDAP resolvers, this
    would mean those Passkeys work for locked/deactivated users, too.
 
