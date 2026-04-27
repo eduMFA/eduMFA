@@ -419,23 +419,6 @@ there is no additional authentication step anymore during enrollment.
    enroll only one token type.
 
 
-.. _policy_u2f_facets:
-
-u2f_facets
-~~~~~~~~~~
-
-type: string
-
-This is a white space separated list of domain names, that are trusted to
-also use a U2F device that was registered with eduMFA.
-
-You need to specify a list of FQDNs without the https scheme like:
-
-*"host1.example.com host2.example.com firewall.example.com"*
-
-For more information on configuring U2F see :ref:`u2f_token`.
-
-
 .. [#pythonre] https://docs.python.org/2/library/re.html
 
 .. _reset_all_user_tokens:
@@ -673,15 +656,13 @@ challenge text received during enrollment
 
 .. _email-challenge-text:
 .. _sms-challenge-text:
-.. _u2f-challenge-text:
 
-email_challenge_text, sms_challenge_text, u2f_challenge_text
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+email_challenge_text, sms_challenge_text
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 type: str
 
-With these actions the administrator may set alternative challenge texts for email, SMS
-and U2F tokens.
+With these actions the administrator may set alternative challenge texts for email and SMS tokens.
 
 
 indexedsecret_count
@@ -781,9 +762,9 @@ preferred_client_mode
 type: string
 
 This action sets a list of the client mode in the preferred order. You can enter the different client
-modes in the order you like. For example: "interactive webauthn poll u2f". The client you are using
+modes in the order you like. For example: "interactive webauthn poll". The client you are using
 will show you the correct login for your preferred client mode. For example if this is your list:
-"interactive webauthn poll u2f" and in Your multi-challenge list are a webauthn and u2f token,
+"interactive webauthn poll" and in Your multi-challenge list is webauthn,
 then your client will automatically show you the login for a webauthn token.
 
-.. note:: The default list is "interactive webauthn poll u2f"
+.. note:: The default list is "interactive webauthn poll"

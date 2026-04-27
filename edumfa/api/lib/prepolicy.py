@@ -77,9 +77,8 @@ from edumfa.lib.tokenclass import ROLLOUTSTATE
 from edumfa.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
 from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
+from edumfa.lib.tokens.fido import x509name_to_string
 from edumfa.lib.tokens.pushtoken import PushTokenClass
-from edumfa.lib.tokens.u2f import x509name_to_string
-from edumfa.lib.tokens.u2ftoken import U2FACTION, parse_registration_data
 
 # Token specific imports!
 from edumfa.lib.tokens.webauthn import (
@@ -1630,96 +1629,6 @@ def pushtoken_add_config(request, action):
         )
 
 
-def u2ftoken_verify_cert(request, action):
-    """
-    This is a token specific wrapper for u2f token for the endpoint
-    /token/init
-    According to the policy scope=SCOPE.ENROLL,
-    action=U2FACTION.NO_VERIFY_CERT it can add a parameter to the
-    enrollment parameters to not verify the attestation certificate.
-    The default is to verify the cert.
-    :param request:
-    :param action:
-    :return:
-    """
-    # Get the registration data of the 2nd step of enrolling a U2F device
-    ttype = request.all_data.get("type")
-    if ttype and ttype.lower() == "u2f":
-        # Add the default to verify the cert.
-        request.all_data["u2f.verify_cert"] = True
-        user_object = request.User
-        do_not_verify_the_cert = Match.user(
-            g,
-            scope=SCOPE.ENROLL,
-            action=U2FACTION.NO_VERIFY_CERT,
-            user_object=user_object if user_object else None,
-        ).policies()
-        if do_not_verify_the_cert:
-            request.all_data["u2f.verify_cert"] = False
-
-        log.debug(
-            f"Should we not verify the attestation certificate? Policies: {do_not_verify_the_cert}"
-        )
-    return True
-
-
-def u2ftoken_allowed(request, action):
-    """
-    This is a token specific wrapper for u2f token for the endpoint
-     /token/init.
-     According to the policy scope=SCOPE.ENROLL,
-     action=U2FACTION.REQ it checks, if the assertion certificate is an
-     allowed U2F token type.
-
-     If the token, which is enrolled contains a non allowed attestation
-     certificate, we bail out.
-
-    :param request:
-    :param action:
-    :return:
-    """
-
-    ttype = request.all_data.get("type")
-
-    # Get the registration data of the 2nd step of enrolling a U2F device
-    reg_data = request.all_data.get("regdata")
-
-    if ttype and ttype.lower() == "u2f" and reg_data:
-        # We have a registered u2f device!
-        serial = request.all_data.get("serial")
-
-        # We just check, if the issuer is allowed, not if the certificate
-        # is still valid! (verify_cert=False)
-        attestation_cert, user_pub_key, key_handle, signature, description = (
-            parse_registration_data(reg_data, verify_cert=False)
-        )
-
-        allowed_certs_pols = Match.user(
-            g,
-            scope=SCOPE.ENROLL,
-            action=U2FACTION.REQ,
-            user_object=request.User if request.User else None,
-        ).action_values(unique=False)
-
-        if len(allowed_certs_pols) and not _attestation_certificate_allowed(
-            attestation_cert, allowed_certs_pols
-        ):
-            log.warning(
-                f"The U2F device {serial} is not "
-                "allowed to be registered due to policy "
-                "restriction"
-            )
-            raise PolicyError(
-                "The U2F device is not allowed "
-                "to be registered due to policy "
-                "restriction."
-            )
-            # TODO: Maybe we should delete the token, as it is a not
-            # usable U2F token, now.
-
-    return True
-
-
 def allowed_audit_realm(request=None, action=None):
     """
     This decorator function takes the request and adds additional parameters
@@ -2440,7 +2349,7 @@ def _attestation_certificate_allowed(attestation_cert, allowed_certs_pols):
     """
     Check a certificate against a set of policies.
 
-    This will check an attestation certificate of a U2F-, or WebAuthn-Token,
+    This will check an attestation certificate of a WebAuthn token,
     against a list of policies. It is used to verify, whether a token with the
     given attestation may be enrolled, or authorized, respectively.
 

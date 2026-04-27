@@ -43,7 +43,6 @@ from edumfa.lib.log import log_with
 from edumfa.lib.policy import ACTION, GROUP, SCOPE, Match
 from edumfa.lib.token import get_tokens, get_tokens_from_serial_or_user
 from edumfa.lib.tokenclass import CLIENTMODE, ROLLOUTSTATE, TokenClass
-from edumfa.lib.tokens.u2ftoken import IMAGES
 from edumfa.lib.tokens.webauthn import (
     ATTESTATION_REQUIREMENT_LEVEL,
     COSE_ALGORITHM,
@@ -74,7 +73,7 @@ The register and authentication process is described here:
 https://w3c.github.io/webauthn/#sctn-rp-operations
 
 But you do not need to be aware of this. eduMFA wraps all FIDO specific
-communication, which should make it easier for you, to integrate the U2F
+communication, which should make it easier for you, to integrate WebAuthn
 tokens managed by eduMFA into your application.
 
 WebAuthn tokens can be either
@@ -475,7 +474,12 @@ native encoding of the language (usually utf-16).
 
 from edumfa.models import Challenge
 
-IMAGES = IMAGES
+IMAGES = {
+    "yubico": "edumfa/static/img/fido-security-key-444x444.png",
+    "plug-up": "edumfa/static/img/plugup.jpg",
+    "u2fzero.com": "edumfa/static/img/fidozero.png",
+    "solokeys": "edumfa/static/img/solokeys.png",
+}
 
 DEFAULT_DESCRIPTION = _("Generic WebAuthn Token")
 
@@ -810,9 +814,7 @@ class WebAuthnTokenClass(TokenClass):
                     WEBAUTHNACTION.AUTHENTICATOR_ATTESTATION_FORM: {
                         "type": "str",
                         "desc": _(
-                            "Whether to request attestation data when enrolling a new WebAuthn token. "
-                            "Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
-                            "Default: direct (ask for non-anonymized attestation data)"
+                            "Whether to request attestation data when enrolling a new WebAuthn token."
                         ),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                         "value": ["none", "indirect", "direct"],

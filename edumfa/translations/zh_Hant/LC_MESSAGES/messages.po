@@ -817,8 +817,8 @@ msgstr "緩存用於身份驗證的密碼，並允許使用相同的憑據進行
 #: lib/policy.py
 msgid ""
 "You can set the client modes in the order that you prefer. For example: "
-"\"interactive webauthn poll u2f\". Accepted values are: <code>interactive"
-" webauthn poll u2f</code>"
+"\"interactive webauthn poll\". Accepted values are: <code>interactive "
+"webauthn poll</code>"
 msgstr ""
 
 #: lib/policy.py
@@ -2594,45 +2594,6 @@ msgstr ""
 msgid "TOTP: Time based One Time Passwords."
 msgstr "TOTP：基於時間的一次性密碼。"
 
-#: lib/tokens/u2ftoken.py
-msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
-msgstr "這是信任已註冊的U2F令牌的FQDN主機名的清單。"
-
-#: lib/tokens/u2ftoken.py
-msgid ""
-"Use an alternate challenge text for telling the user to confirm with his "
-"U2F device."
-msgstr "使用備用質詢文本告訴使用者使用其 U2F 設備進行確認。"
-
-#: lib/tokens/u2ftoken.py
-msgid "Only specified U2F tokens are authorized."
-msgstr "僅授權指定的 U2F 令牌。"
-
-#: lib/tokens/u2ftoken.py
-msgid "Only specified U2F tokens are allowed to be registered."
-msgstr "只允許註冊指定的 U2F 令牌。"
-
-#: lib/tokens/u2ftoken.py
-msgid "Do not verify the U2F attestation certificate."
-msgstr "不要驗證 U2F 證明證書。"
-
-#: lib/tokens/u2ftoken.py
-msgid "The user may only have this maximum number of U2F tokens assigned."
-msgstr "使用者只能分配此最大數量的U2F令牌。"
-
-#: lib/tokens/u2ftoken.py
-msgid "The user may only have this maximum number of active U2F tokens assigned."
-msgstr "使用者只能分配此最大數量的活動U2F令牌。"
-
-#: lib/tokens/u2ftoken.py
-msgid "You need to define the appId in the token config!"
-msgstr "您需要在令牌配置中定義 appId！"
-
-#: lib/tokens/u2ftoken.py
-#, python-brace-format
-msgid "Please confirm with your U2F token ({0!s})"
-msgstr "請使用您的 U2F 令牌 ({0!s}) 進行確認"
-
 #: lib/tokens/vascotoken.py
 msgid "VASCO Token: Authentication using VASCO tokens"
 msgstr "VASCO 令牌：使用 VASCO 令牌進行身份驗證"
@@ -2771,13 +2732,8 @@ msgid ""
 msgstr ""
 
 #: lib/tokens/webauthntoken.py
-msgid ""
-"Whether to request attestation data when enrolling a new WebAuthn token. "
-"Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
-"Default: direct (ask for non-anonymized attestation data)"
+msgid "Whether to request attestation data when enrolling a new WebAuthn token."
 msgstr ""
-"註冊新的 WebAuthn 令牌時是否請求證明數據。注意：要u2f_req使用 WebAuthn，則不能將其設置為 "
-"none。預設值：直接（要求提供非匿名證明數據）"
 
 #: lib/tokens/webauthntoken.py
 msgid ""
@@ -3019,4 +2975,56 @@ msgstr "如果左側屬性的整數值大於右側整數值，則為 true"
 #~ " with validate/check, validate/samlcheck and "
 #~ "validate/triggerchallenge."
 #~ msgstr "允許應用程式選擇應用於身份驗證的令牌類型。應用程式可以在請求中設置參數「type」。使用驗證/檢查，驗證/samlcheck和驗證/觸發挑戰。"
+
+#~ msgid ""
+#~ "You can set the client modes in"
+#~ " the order that you prefer. For "
+#~ "example: \"interactive webauthn poll u2f\"."
+#~ " Accepted values are: <code>interactive "
+#~ "webauthn poll u2f</code>"
+#~ msgstr ""
+
+#~ msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
+#~ msgstr "這是信任已註冊的U2F令牌的FQDN主機名的清單。"
+
+#~ msgid ""
+#~ "Use an alternate challenge text for "
+#~ "telling the user to confirm with "
+#~ "his U2F device."
+#~ msgstr "使用備用質詢文本告訴使用者使用其 U2F 設備進行確認。"
+
+#~ msgid "Only specified U2F tokens are authorized."
+#~ msgstr "僅授權指定的 U2F 令牌。"
+
+#~ msgid "Only specified U2F tokens are allowed to be registered."
+#~ msgstr "只允許註冊指定的 U2F 令牌。"
+
+#~ msgid "Do not verify the U2F attestation certificate."
+#~ msgstr "不要驗證 U2F 證明證書。"
+
+#~ msgid "The user may only have this maximum number of U2F tokens assigned."
+#~ msgstr "使用者只能分配此最大數量的U2F令牌。"
+
+#~ msgid ""
+#~ "The user may only have this "
+#~ "maximum number of active U2F tokens "
+#~ "assigned."
+#~ msgstr "使用者只能分配此最大數量的活動U2F令牌。"
+
+#~ msgid "You need to define the appId in the token config!"
+#~ msgstr "您需要在令牌配置中定義 appId！"
+
+#~ msgid "Please confirm with your U2F token ({0!s})"
+#~ msgstr "請使用您的 U2F 令牌 ({0!s}) 進行確認"
+
+#~ msgid ""
+#~ "Whether to request attestation data when"
+#~ " enrolling a new WebAuthn token. "
+#~ "Note: for webauthn_req to work, this "
+#~ "cannot be set to none. Default: "
+#~ "direct (ask for non-anonymized "
+#~ "attestation data)"
+#~ msgstr ""
+#~ "註冊新的 WebAuthn 令牌時是否請求證明數據。注意：要u2f_req使用 "
+#~ "WebAuthn，則不能將其設置為 none。預設值：直接（要求提供非匿名證明數據）"
 

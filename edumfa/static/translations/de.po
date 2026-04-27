@@ -368,10 +368,6 @@ msgstr "Zeitüberschreitung der automatischen Resynchronisation"
 msgid "Automatic resync during authentication"
 msgstr "Automatische Resynchronisation während der Authentifizierung"
 
-#: components/login/factories/u2f.js
-msgid "Bad U2F Request"
-msgstr "Fehlerhafte U2F-Anfrage"
-
 #: components/config/views/config.caconnectors.local.html
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Base Config"
@@ -574,10 +570,6 @@ msgstr "Client"
 #: components/components/views/component.html
 msgid "Client Application Type"
 msgstr "Applikationstyp des Clients"
-
-#: components/login/factories/u2f.js
-msgid "Client Configuration is not supported."
-msgstr "Die Client-Konfiguration wird nicht unterstützt."
 
 #: components/config/views/config.token.yubikey.html
 msgid "Client ID"
@@ -930,7 +922,9 @@ msgid ""
 msgstr ""
 "Deaktivieren Sie die Protokollierung der Clients. Diese Option deaktiviert "
 "die Aufzeichnung von IP-Adressen und User Agents der Clients in der "
-"Datenbank. Dies kann verwendet werden, um die Last auf der Datenbank sowie das Locking der Datenbank in Umgebungen mit vielen gleichzeitigen Anfragen zu reduzieren."
+"Datenbank. Dies kann verwendet werden, um die Last auf der Datenbank sowie "
+"das Locking der Datenbank in Umgebungen mit vielen gleichzeitigen Anfragen "
+"zu reduzieren."
 
 #: components/token/views/token.list.html
 msgid "Disable token"
@@ -1251,10 +1245,6 @@ msgstr "Fehler beim Laden der Richtlinien-Vorlage"
 #: components/config/factories/config.js
 msgid "Error fetching policy templates."
 msgstr "Fehler beim Laden der Richtlinien-Vorlagen."
-
-#: components/login/factories/u2f.js
-msgid "Error in U2F response."
-msgstr "Fehler in der U2F-Antwort."
 
 #: components/login/factories/webauthn.js
 msgid "Error in WebAuthn response."
@@ -2087,7 +2077,6 @@ msgid "OCRA Suite"
 msgstr "OCRA Suite"
 
 #: components/dialogs/views/dialog.no.token.html
-#: components/login/factories/u2f.js
 #: components/token/views/token.getserial.html
 msgid "OK"
 msgstr "OK"
@@ -2176,10 +2165,6 @@ msgstr "Optionen"
 #: components/config/views/config.periodictasks.list.html
 msgid "Order"
 msgstr "Reihenfolge"
-
-#: components/login/factories/u2f.js
-msgid "Other Error"
-msgstr "Unbekanter Fehler"
 
 #: components/config/views/config.caconnectors.local.html
 msgid "Overlap Period"
@@ -3186,10 +3171,6 @@ msgstr "Tabelle"
 msgid "Take action on your authenticator"
 msgstr "Bestätigen Sie mit Ihrem Token"
 
-#: components/token/views/token.enrolled.u2f.html
-msgid "Take action on your token"
-msgstr "Bestätigen Sie mit Ihrem Token"
-
 #: components/config/views/config.periodictasks.details.html
 #: components/config/views/config.periodictasks.list.html
 msgid "Taskmodule"
@@ -3241,14 +3222,6 @@ msgstr ""
 "Für die erfolgreiche Authentisierung mit einem Vier-Augen-Token werden zwei "
 "oder mehr Benutzer benötigt. Sie können angeben, wieviele Token aus dem "
 "jeweiligen Realm zur Authentisierung benötigt werden."
-
-#: components/config/views/config.token.u2f.html
-msgid "The AppID must not end with a \"/\"."
-msgstr "Die AppID darf nicht mit einem \"/\" enden."
-
-#: components/config/views/config.token.u2f.html
-msgid "The AppID needs to start with \"https\"."
-msgstr "Die AppID muss mit \"https\" beginnen."
 
 #: components/token/views/token.enroll.applspec.html
 msgid ""
@@ -3528,28 +3501,6 @@ msgstr ""
 "Der TiQR-Token ist eine Smartphone-App, die eine leichte Authentisierung "
 "durch das Scannen eines QR-Codes ermöglicht."
 
-#: components/config/views/config.token.u2f.html
-msgid ""
-"The U2F token is a hardware token, that communicates with the browser.\n"
-"    You need to set the correct appId, which in fact is the URL of your\n"
-"    eduMFA installation."
-msgstr ""
-"Der U2F-Token ist ein Hardware Token, der mit dem Browser kommuniziert. Sie "
-"müssen die korrekte AppID in der Token-Konfiguration setzen."
-
-#: components/token/views/token.enroll.u2f.html
-msgid ""
-"The U2F token is a token defined by the Fido Alliance.\n"
-"    You can register this token with any webservice and with as many web\n"
-"    services you wish to."
-msgstr ""
-"Der U2F-Token ist von der Fido Alliance definiert. Sie können diesen Token "
-"bei mehreren, verschiedenen Webdiensten registrieren."
-
-#: components/config/views/config.token.u2f.html
-msgid "The URL of your eduMFA installation."
-msgstr "Die URL dieser eduMFA Installation."
-
 #: components/config/views/config.token.tiqr.html
 msgid "The URL that contains the logo of the service."
 msgstr "Diese URL zeigt auf das Logo des Dienstes."
@@ -3702,11 +3653,6 @@ msgstr "Die Gültigkeitszeit der Challenge"
 #: components/config/views/config.token.yubico.html
 msgid "The client ID"
 msgstr "Die Client-ID"
-
-#: components/login/factories/u2f.js
-msgid "The client device can not be used for this type of request."
-msgstr ""
-"Das Client-Geräte kann für diese Art des Requests nicht verwendet werden."
 
 #: components/dialogs/views/dialog.about.html
 #, fuzzy
@@ -3971,7 +3917,6 @@ msgstr ""
 "Der Zeitraum, in dem das Passwort genutzt werden kann. zum Beispiel "
 "<code>1d</code> oder <code>12h</code>."
 
-#: components/token/views/token.enrolled.u2f.html
 #: components/token/views/token.enrolled.webauthn.html
 msgid "The token is enrolled."
 msgstr "Der Token wurde ausgerollt."
@@ -4260,14 +4205,6 @@ msgstr ""
 "Dieser wird verwendet, damit ein Benutzer sich einmalig anmelden kann, um "
 "danach sich selber einen Token auszustellen."
 
-#: components/config/views/config.token.u2f.html
-msgid ""
-"This must be a valid FQDN with also a valid top level domain -\n"
-"        otherwise you might receive a U2F Error 2 (Bad Request)."
-msgstr ""
-"Dies muss ein gültiger FQDN mit einer gültigen Top-Level-Domain sein -  "
-"ansonsten wird ein U2F Fehlercode 2 geworfen (Bad Request)."
-
 #: components/config/views/config.resolvers.ldap.html
 msgid ""
 "This setting activates a LDAP server pool that is persisted between requests."
@@ -4328,10 +4265,6 @@ msgstr "Time-out"
 msgid "Timeout (seconds)"
 msgstr "Time-out (Sekunden)"
 
-#: components/login/factories/u2f.js
-msgid "Timeout while waiting for signing response."
-msgstr "Timeout. Warte vergeblich auf die Antwort."
-
 #: components/token/views/token.enroll.daypassword.html
 #: components/token/views/token.enroll.totp.html
 msgid "Timestep"
@@ -4387,7 +4320,6 @@ msgstr "Tokendaten"
 msgid "Token details for {{ tokenSerial }}"
 msgstr "Details zu Token {{ tokenSerial }}"
 
-#: components/token/views/token.enrolled.u2f.html
 #: components/token/views/token.enrolled.webauthn.html
 msgid "Token enrolled"
 msgstr "Token ausgerollt"
@@ -4467,10 +4399,6 @@ msgstr "Geben Sie eine PIN/ein Passwort ein"
 #: components/user/views/user.password.html
 msgid "Type a password"
 msgstr "Geben Sie ein Passwort ein"
-
-#: components/config/views/config.token.u2f.html
-msgid "U2F Token settings"
-msgstr "U2F Token Einstellungen"
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "UID Type"
@@ -4809,17 +4737,6 @@ msgstr ""
 "Sie bitte sicher, dass Ihr Token tatsächlich\n"
 "  WebAuthn unterstützt."
 
-#: components/token/views/token.enrolled.u2f.html
-msgid ""
-"You need to confirm the registration with your token\n"
-"                    either by pushing the blinking button or by\n"
-"                    replugging your token. This depends on the actual\n"
-"                    token model."
-msgstr ""
-"Sie müssen die Registrierung an Ihrem Token bestätigen. Entweder  durch "
-"Drücken des blinkenden Knopfes oder durch neu Einstecken des Tokens.  Dies "
-"hängt von dem konkreten Tokentyp an."
-
 #: templates/menu.html
 msgid "You will be logged out in {{ myCountdown }} second(s)."
 msgstr "Sie werden nach {{ myCountdown }} Sekunden abgemeldet."
@@ -4925,10 +4842,6 @@ msgstr "Administrator"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "Optionaler Teil der Seriennummer"
-
-#: components/config/views/config.token.u2f.html
-msgid "appId"
-msgstr "AppID"
 
 #: components/token/views/token.details.html
 msgid "certificate"
@@ -5270,6 +5183,76 @@ msgstr "Fenster"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "Es wurden {{ auditdata.count }} Einträge gefunden."
+
+#~ msgid "Bad U2F Request"
+#~ msgstr "Fehlerhafte U2F-Anfrage"
+
+#~ msgid "Client Configuration is not supported."
+#~ msgstr "Die Client-Konfiguration wird nicht unterstützt."
+
+#~ msgid "Error in U2F response."
+#~ msgstr "Fehler in der U2F-Antwort."
+
+#~ msgid "Other Error"
+#~ msgstr "Unbekanter Fehler"
+
+#~ msgid "Take action on your token"
+#~ msgstr "Bestätigen Sie mit Ihrem Token"
+
+#~ msgid "The AppID must not end with a \"/\"."
+#~ msgstr "Die AppID darf nicht mit einem \"/\" enden."
+
+#~ msgid "The AppID needs to start with \"https\"."
+#~ msgstr "Die AppID muss mit \"https\" beginnen."
+
+#~ msgid ""
+#~ "The U2F token is a hardware token, that communicates with the browser.\n"
+#~ "    You need to set the correct appId, which in fact is the URL of your\n"
+#~ "    eduMFA installation."
+#~ msgstr ""
+#~ "Der U2F-Token ist ein Hardware Token, der mit dem Browser kommuniziert. "
+#~ "Sie müssen die korrekte AppID in der Token-Konfiguration setzen."
+
+#~ msgid ""
+#~ "The U2F token is a token defined by the Fido Alliance.\n"
+#~ "    You can register this token with any webservice and with as many web\n"
+#~ "    services you wish to."
+#~ msgstr ""
+#~ "Der U2F-Token ist von der Fido Alliance definiert. Sie können diesen "
+#~ "Token bei mehreren, verschiedenen Webdiensten registrieren."
+
+#~ msgid "The URL of your eduMFA installation."
+#~ msgstr "Die URL dieser eduMFA Installation."
+
+#~ msgid "The client device can not be used for this type of request."
+#~ msgstr ""
+#~ "Das Client-Geräte kann für diese Art des Requests nicht verwendet werden."
+
+#~ msgid ""
+#~ "This must be a valid FQDN with also a valid top level domain -\n"
+#~ "        otherwise you might receive a U2F Error 2 (Bad Request)."
+#~ msgstr ""
+#~ "Dies muss ein gültiger FQDN mit einer gültigen Top-Level-Domain sein -  "
+#~ "ansonsten wird ein U2F Fehlercode 2 geworfen (Bad Request)."
+
+#~ msgid "Timeout while waiting for signing response."
+#~ msgstr "Timeout. Warte vergeblich auf die Antwort."
+
+#~ msgid "U2F Token settings"
+#~ msgstr "U2F Token Einstellungen"
+
+#~ msgid ""
+#~ "You need to confirm the registration with your token\n"
+#~ "                    either by pushing the blinking button or by\n"
+#~ "                    replugging your token. This depends on the actual\n"
+#~ "                    token model."
+#~ msgstr ""
+#~ "Sie müssen die Registrierung an Ihrem Token bestätigen. Entweder  durch "
+#~ "Drücken des blinkenden Knopfes oder durch neu Einstecken des Tokens.  "
+#~ "Dies hängt von dem konkreten Tokentyp an."
+
+#~ msgid "appId"
+#~ msgstr "AppID"
 
 # This is the level in the subscriptions
 #~ msgctxt "subscription"

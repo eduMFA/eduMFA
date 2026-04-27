@@ -371,10 +371,6 @@ msgstr "自動重新同步超時"
 msgid "Automatic resync during authentication"
 msgstr "身份驗證期間自動重新同步"
 
-#: components/login/factories/u2f.js
-msgid "Bad U2F Request"
-msgstr "錯誤的 U2F 請求"
-
 #: components/config/views/config.caconnectors.local.html
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Base Config"
@@ -585,10 +581,6 @@ msgstr "用戶端"
 #: components/components/views/component.html
 msgid "Client Application Type"
 msgstr "用戶端應用程式類型"
-
-#: components/login/factories/u2f.js
-msgid "Client Configuration is not supported."
-msgstr "不支援用戶端配置。"
 
 #: components/config/views/config.token.yubikey.html
 msgid "Client ID"
@@ -1282,10 +1274,6 @@ msgstr "獲取策略範本時出錯"
 #: components/config/factories/config.js
 msgid "Error fetching policy templates."
 msgstr "獲取策略範本時出錯。"
-
-#: components/login/factories/u2f.js
-msgid "Error in U2F response."
-msgstr "U2F 回應中出錯。"
 
 #: components/login/factories/webauthn.js
 msgid "Error in WebAuthn response."
@@ -2133,7 +2121,6 @@ msgid "OCRA Suite"
 msgstr "OCRA 套件"
 
 #: components/dialogs/views/dialog.no.token.html
-#: components/login/factories/u2f.js
 #: components/token/views/token.getserial.html
 msgid "OK"
 msgstr ""
@@ -2225,10 +2212,6 @@ msgstr "選項"
 #: components/config/views/config.periodictasks.list.html
 msgid "Order"
 msgstr "次序"
-
-#: components/login/factories/u2f.js
-msgid "Other Error"
-msgstr "其他錯誤"
 
 #: components/config/views/config.caconnectors.local.html
 msgid "Overlap Period"
@@ -3246,10 +3229,6 @@ msgstr "表"
 msgid "Take action on your authenticator"
 msgstr "對您的身份驗證器採取措施"
 
-#: components/token/views/token.enrolled.u2f.html
-msgid "Take action on your token"
-msgstr "對您的令牌採取行動"
-
 #: components/config/views/config.periodictasks.details.html
 #: components/config/views/config.periodictasks.list.html
 msgid "Taskmodule"
@@ -3301,14 +3280,6 @@ msgstr ""
 "4 Eyes 令牌僅在有兩個或更多用戶時才會進行身份驗證\n"
 "    立即出現。您可以定義給定的現有令牌的數量\n"
 "    需要存在領域才能執行成功的身份驗證。"
-
-#: components/config/views/config.token.u2f.html
-msgid "The AppID must not end with a \"/\"."
-msgstr "AppID 不得以“/”結尾。"
-
-#: components/config/views/config.token.u2f.html
-msgid "The AppID needs to start with \"https\"."
-msgstr "AppID 需要以“https”開頭。"
 
 #: components/token/views/token.enroll.applspec.html
 msgid ""
@@ -3579,30 +3550,6 @@ msgstr ""
 "TiQR令牌是智慧手機應用程式令牌，可以輕鬆\n"
 "    只需在身份驗證過程中掃描QR碼即可進行身份驗證。"
 
-#: components/config/views/config.token.u2f.html
-#, fuzzy
-msgid ""
-"The U2F token is a hardware token, that communicates with the browser.\n"
-"    You need to set the correct appId, which in fact is the URL of your\n"
-"    eduMFA installation."
-msgstr ""
-"U2F令牌是一個硬件令牌，可以與瀏覽器進行通信。你需要設置正確的appId，這實際上"
-"是你的 eduMFA安裝的URL。"
-
-#: components/token/views/token.enroll.u2f.html
-msgid ""
-"The U2F token is a token defined by the Fido Alliance.\n"
-"    You can register this token with any webservice and with as many web\n"
-"    services you wish to."
-msgstr ""
-"U2F 代幣是 Fido 聯盟定義的代幣。\n"
-"    您可以使用任何網絡服務和盡可能多的網絡註冊此令牌\n"
-"    您想要的服務。"
-
-#: components/config/views/config.token.u2f.html
-msgid "The URL of your eduMFA installation."
-msgstr "您的eduMFA 安裝的URL。"
-
 #: components/config/views/config.token.tiqr.html
 msgid "The URL that contains the logo of the service."
 msgstr "包含服務徽標的 URL。"
@@ -3750,10 +3697,6 @@ msgstr "質詢有效期"
 #: components/config/views/config.token.yubico.html
 msgid "The client ID"
 msgstr "客户端ID"
-
-#: components/login/factories/u2f.js
-msgid "The client device can not be used for this type of request."
-msgstr "用戶端設備不能用於此類請求。"
 
 #: components/dialogs/views/dialog.about.html
 msgid ""
@@ -4021,7 +3964,6 @@ msgstr ""
 msgid "The time in which the password can be used. For example '1d' or '12h'."
 msgstr ""
 
-#: components/token/views/token.enrolled.u2f.html
 #: components/token/views/token.enrolled.webauthn.html
 msgid "The token is enrolled."
 msgstr "令牌已註冊。"
@@ -4332,14 +4274,6 @@ msgstr ""
 "使用此選項，以便使用者可以在以下時間之後自行註冊令牌：\n"
 "    首次登錄。"
 
-#: components/config/views/config.token.u2f.html
-msgid ""
-"This must be a valid FQDN with also a valid top level domain -\n"
-"        otherwise you might receive a U2F Error 2 (Bad Request)."
-msgstr ""
-"這必須是有效的 FQDN，並且還必須具有有效的頂級域 -\n"
-"        否則，您可能會收到U2F錯誤 2（錯誤請求）。"
-
 #: components/config/views/config.resolvers.ldap.html
 msgid ""
 "This setting activates a LDAP server pool that is persisted between requests."
@@ -4401,10 +4335,6 @@ msgstr "超時"
 msgid "Timeout (seconds)"
 msgstr "逾時（秒）"
 
-#: components/login/factories/u2f.js
-msgid "Timeout while waiting for signing response."
-msgstr "等待簽名回應時超時。"
-
 #: components/token/views/token.enroll.daypassword.html
 #: components/token/views/token.enroll.totp.html
 msgid "Timestep"
@@ -4462,7 +4392,6 @@ msgstr "令牌數據"
 msgid "Token details for {{ tokenSerial }}"
 msgstr "{{ tokenSerial }} 的令牌詳細資訊"
 
-#: components/token/views/token.enrolled.u2f.html
 #: components/token/views/token.enrolled.webauthn.html
 msgid "Token enrolled"
 msgstr "已註冊令牌"
@@ -4547,10 +4476,6 @@ msgstr "鍵入密碼"
 #: components/user/views/user.password.html
 msgid "Type a password"
 msgstr "鍵入密碼"
-
-#: components/config/views/config.token.u2f.html
-msgid "U2F Token settings"
-msgstr "U2F 令牌設置"
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "UID Type"
@@ -4888,18 +4813,6 @@ msgstr ""
 "                    看不到任何內容，請確保您的身份驗證器\n"
 "                    支援 WebAuthn。"
 
-#: components/token/views/token.enrolled.u2f.html
-msgid ""
-"You need to confirm the registration with your token\n"
-"                    either by pushing the blinking button or by\n"
-"                    replugging your token. This depends on the actual\n"
-"                    token model."
-msgstr ""
-"您需要使用令牌確認註冊\n"
-"                    通過按下閃爍的按鈕或\n"
-"                    重新插入令牌。這取決於實際情況\n"
-"                    令牌模型。"
-
 #: templates/menu.html
 msgid "You will be logged out in {{ myCountdown }} second(s)."
 msgstr "您將在 {{ myCountdown }} 秒後登出。"
@@ -5005,10 +4918,6 @@ msgstr "管理員"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "一個可選的串行子串"
-
-#: components/config/views/config.token.u2f.html
-msgid "appId"
-msgstr "應用程序ID"
 
 #: components/token/views/token.details.html
 msgid "certificate"
@@ -5359,6 +5268,78 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} 找到的條目。"
+
+#~ msgid "Bad U2F Request"
+#~ msgstr "錯誤的 U2F 請求"
+
+#~ msgid "Client Configuration is not supported."
+#~ msgstr "不支援用戶端配置。"
+
+#~ msgid "Error in U2F response."
+#~ msgstr "U2F 回應中出錯。"
+
+#~ msgid "Other Error"
+#~ msgstr "其他錯誤"
+
+#~ msgid "Take action on your token"
+#~ msgstr "對您的令牌採取行動"
+
+#~ msgid "The AppID must not end with a \"/\"."
+#~ msgstr "AppID 不得以“/”結尾。"
+
+#~ msgid "The AppID needs to start with \"https\"."
+#~ msgstr "AppID 需要以“https”開頭。"
+
+#, fuzzy
+#~ msgid ""
+#~ "The U2F token is a hardware token, that communicates with the browser.\n"
+#~ "    You need to set the correct appId, which in fact is the URL of your\n"
+#~ "    eduMFA installation."
+#~ msgstr ""
+#~ "U2F令牌是一個硬件令牌，可以與瀏覽器進行通信。你需要設置正確的appId，這實際"
+#~ "上是你的 eduMFA安裝的URL。"
+
+#~ msgid ""
+#~ "The U2F token is a token defined by the Fido Alliance.\n"
+#~ "    You can register this token with any webservice and with as many web\n"
+#~ "    services you wish to."
+#~ msgstr ""
+#~ "U2F 代幣是 Fido 聯盟定義的代幣。\n"
+#~ "    您可以使用任何網絡服務和盡可能多的網絡註冊此令牌\n"
+#~ "    您想要的服務。"
+
+#~ msgid "The URL of your eduMFA installation."
+#~ msgstr "您的eduMFA 安裝的URL。"
+
+#~ msgid "The client device can not be used for this type of request."
+#~ msgstr "用戶端設備不能用於此類請求。"
+
+#~ msgid ""
+#~ "This must be a valid FQDN with also a valid top level domain -\n"
+#~ "        otherwise you might receive a U2F Error 2 (Bad Request)."
+#~ msgstr ""
+#~ "這必須是有效的 FQDN，並且還必須具有有效的頂級域 -\n"
+#~ "        否則，您可能會收到U2F錯誤 2（錯誤請求）。"
+
+#~ msgid "Timeout while waiting for signing response."
+#~ msgstr "等待簽名回應時超時。"
+
+#~ msgid "U2F Token settings"
+#~ msgstr "U2F 令牌設置"
+
+#~ msgid ""
+#~ "You need to confirm the registration with your token\n"
+#~ "                    either by pushing the blinking button or by\n"
+#~ "                    replugging your token. This depends on the actual\n"
+#~ "                    token model."
+#~ msgstr ""
+#~ "您需要使用令牌確認註冊\n"
+#~ "                    通過按下閃爍的按鈕或\n"
+#~ "                    重新插入令牌。這取決於實際情況\n"
+#~ "                    令牌模型。"
+
+#~ msgid "appId"
+#~ msgstr "應用程序ID"
 
 #, fuzzy
 #~ msgctxt "subscription"

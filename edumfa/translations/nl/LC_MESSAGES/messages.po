@@ -926,8 +926,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "You can set the client modes in the order that you prefer. For example: "
-"\"interactive webauthn poll u2f\". Accepted values are: <code>interactive"
-" webauthn poll u2f</code>"
+"\"interactive webauthn poll\". Accepted values are: <code>interactive "
+"webauthn poll</code>"
 msgstr ""
 "Je kunt de cliënt-modi instellen in volgorde van jouw keuze. "
 "Bijvoorbeeld: \"intereactive webauthn poll u2f\". Aanvaarde waarden zijn:"
@@ -3039,51 +3039,6 @@ msgstr ""
 msgid "TOTP: Time based One Time Passwords."
 msgstr "TOTP: tijd gebaseerd One Time Passwords."
 
-#: lib/tokens/u2ftoken.py
-msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
-msgstr ""
-"Dit is een lijst met FQDN hostnames die de geregistreerde U2F-tokens "
-"vertrouwen."
-
-#: lib/tokens/u2ftoken.py
-msgid ""
-"Use an alternate challenge text for telling the user to confirm with his "
-"U2F device."
-msgstr ""
-"Gebruik een alternatieve challenge tekst om aan te geven dat de gebruiker"
-" moet bevestigen met zijn U2F-toestel."
-
-#: lib/tokens/u2ftoken.py
-msgid "Only specified U2F tokens are authorized."
-msgstr "Enkel opgegeven U2F-tokens zijn geauthoriseerd."
-
-#: lib/tokens/u2ftoken.py
-msgid "Only specified U2F tokens are allowed to be registered."
-msgstr "Enkel opgegeven U2F-tokens mogen geregistreerd worden."
-
-#: lib/tokens/u2ftoken.py
-msgid "Do not verify the U2F attestation certificate."
-msgstr "Het U2F attesteringscertificaat niet verifiëren."
-
-#: lib/tokens/u2ftoken.py
-msgid "The user may only have this maximum number of U2F tokens assigned."
-msgstr "De gebruiker mag slechts dit maximaal aantal U2F-tokens toegewezen hebben."
-
-#: lib/tokens/u2ftoken.py
-msgid "The user may only have this maximum number of active U2F tokens assigned."
-msgstr ""
-"De gebruiker mag slechts dit maximaal aantal actieve U2F-tokens "
-"toegewezen hebben."
-
-#: lib/tokens/u2ftoken.py
-msgid "You need to define the appId in the token config!"
-msgstr "Je moet de appID definiëren in de token-configuratie!"
-
-#: lib/tokens/u2ftoken.py
-#, python-brace-format
-msgid "Please confirm with your U2F token ({0!s})"
-msgstr "Bevestig met je U2F-token ({0!s})"
-
 #: lib/tokens/vascotoken.py
 msgid "VASCO Token: Authentication using VASCO tokens"
 msgstr "VASCO Token: authenticatie met VASCO tokens"
@@ -3257,15 +3212,8 @@ msgstr ""
 "sleutel-waarden voor WebAuthn tokens. (Standaard: [{0!s}], Order: [{1!s}]"
 
 #: lib/tokens/webauthntoken.py
-msgid ""
-"Whether to request attestation data when enrolling a new WebAuthn token. "
-"Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
-"Default: direct (ask for non-anonymized attestation data)"
+msgid "Whether to request attestation data when enrolling a new WebAuthn token."
 msgstr ""
-"Moet er attesteringsgegevens gevraagd worden wanneer een WebAuthn-token "
-"geregistreerd wordt. Merk op: om u2f_req te laten werken met WebAuthn kan"
-" dit niet op geen gezet worden. Standaard: rechtstreeks (vraag voor niet "
-"geanonimiseerde attesteringsgegevens)"
 
 #: lib/tokens/webauthntoken.py
 msgid ""
@@ -3617,4 +3565,65 @@ msgstr ""
 #~ "kan de parameter 'type' aan de "
 #~ "aanvraag toevoegen. Werkt met validate/check,"
 #~ " validate/samlcheck en validate/triggerchallenge."
+
+#~ msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
+#~ msgstr ""
+#~ "Dit is een lijst met FQDN "
+#~ "hostnames die de geregistreerde U2F-"
+#~ "tokens vertrouwen."
+
+#~ msgid ""
+#~ "Use an alternate challenge text for "
+#~ "telling the user to confirm with "
+#~ "his U2F device."
+#~ msgstr ""
+#~ "Gebruik een alternatieve challenge tekst "
+#~ "om aan te geven dat de gebruiker"
+#~ " moet bevestigen met zijn U2F-"
+#~ "toestel."
+
+#~ msgid "Only specified U2F tokens are authorized."
+#~ msgstr "Enkel opgegeven U2F-tokens zijn geauthoriseerd."
+
+#~ msgid "Only specified U2F tokens are allowed to be registered."
+#~ msgstr "Enkel opgegeven U2F-tokens mogen geregistreerd worden."
+
+#~ msgid "Do not verify the U2F attestation certificate."
+#~ msgstr "Het U2F attesteringscertificaat niet verifiëren."
+
+#~ msgid "The user may only have this maximum number of U2F tokens assigned."
+#~ msgstr ""
+#~ "De gebruiker mag slechts dit maximaal"
+#~ " aantal U2F-tokens toegewezen hebben."
+
+#~ msgid ""
+#~ "The user may only have this "
+#~ "maximum number of active U2F tokens "
+#~ "assigned."
+#~ msgstr ""
+#~ "De gebruiker mag slechts dit maximaal"
+#~ " aantal actieve U2F-tokens toegewezen "
+#~ "hebben."
+
+#~ msgid "You need to define the appId in the token config!"
+#~ msgstr "Je moet de appID definiëren in de token-configuratie!"
+
+#~ msgid "Please confirm with your U2F token ({0!s})"
+#~ msgstr "Bevestig met je U2F-token ({0!s})"
+
+#~ msgid ""
+#~ "Whether to request attestation data when"
+#~ " enrolling a new WebAuthn token. "
+#~ "Note: for webauthn_req to work, this "
+#~ "cannot be set to none. Default: "
+#~ "direct (ask for non-anonymized "
+#~ "attestation data)"
+#~ msgstr ""
+#~ "Moet er attesteringsgegevens gevraagd worden"
+#~ " wanneer een WebAuthn-token geregistreerd"
+#~ " wordt. Merk op: om u2f_req te "
+#~ "laten werken met WebAuthn kan dit "
+#~ "niet op geen gezet worden. Standaard:"
+#~ " rechtstreeks (vraag voor niet "
+#~ "geanonimiseerde attesteringsgegevens)"
 

@@ -48,9 +48,6 @@ button tokens. The C100 is an :ref:`hotp_token` token and the C200 a
 tokens are initialized at the factory and you get a seed file, that you need
 to import to eduMFA.
 
-**U2F**. The Yubikey and the Daplug token are known U2F devices to work well
-with eduMFA. See :ref:`u2f_token`.
-
 Smartphone Apps
 ~~~~~~~~~~~~~~~
 

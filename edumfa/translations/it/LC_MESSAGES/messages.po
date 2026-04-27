@@ -959,8 +959,8 @@ msgstr ""
 #: lib/policy.py
 msgid ""
 "You can set the client modes in the order that you prefer. For example: "
-"\"interactive webauthn poll u2f\". Accepted values are: <code>interactive"
-" webauthn poll u2f</code>"
+"\"interactive webauthn poll\". Accepted values are: <code>interactive "
+"webauthn poll</code>"
 msgstr ""
 
 #: lib/policy.py
@@ -2699,45 +2699,6 @@ msgstr ""
 msgid "TOTP: Time based One Time Passwords."
 msgstr ""
 
-#: lib/tokens/u2ftoken.py
-msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
-msgstr ""
-
-#: lib/tokens/u2ftoken.py
-msgid ""
-"Use an alternate challenge text for telling the user to confirm with his "
-"U2F device."
-msgstr ""
-
-#: lib/tokens/u2ftoken.py
-msgid "Only specified U2F tokens are authorized."
-msgstr ""
-
-#: lib/tokens/u2ftoken.py
-msgid "Only specified U2F tokens are allowed to be registered."
-msgstr ""
-
-#: lib/tokens/u2ftoken.py
-msgid "Do not verify the U2F attestation certificate."
-msgstr ""
-
-#: lib/tokens/u2ftoken.py
-msgid "The user may only have this maximum number of U2F tokens assigned."
-msgstr ""
-
-#: lib/tokens/u2ftoken.py
-msgid "The user may only have this maximum number of active U2F tokens assigned."
-msgstr ""
-
-#: lib/tokens/u2ftoken.py
-msgid "You need to define the appId in the token config!"
-msgstr ""
-
-#: lib/tokens/u2ftoken.py
-#, python-brace-format
-msgid "Please confirm with your U2F token ({0!s})"
-msgstr ""
-
 #: lib/tokens/vascotoken.py
 msgid "VASCO Token: Authentication using VASCO tokens"
 msgstr ""
@@ -2874,10 +2835,7 @@ msgid ""
 msgstr ""
 
 #: lib/tokens/webauthntoken.py
-msgid ""
-"Whether to request attestation data when enrolling a new WebAuthn token. "
-"Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
-"Default: direct (ask for non-anonymized attestation data)"
+msgid "Whether to request attestation data when enrolling a new WebAuthn token."
 msgstr ""
 
 #: lib/tokens/webauthntoken.py
@@ -3113,5 +3071,64 @@ msgstr ""
 #~ " communicate with WebAuthn tokens. Default:"
 #~ " usb ble nfc internal (All standard"
 #~ " transports)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You can set the client modes in"
+#~ " the order that you prefer. For "
+#~ "example: \"interactive webauthn poll u2f\"."
+#~ " Accepted values are: <code>interactive "
+#~ "webauthn poll u2f</code>"
+#~ msgstr ""
+
+#~ msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Use an alternate challenge text for "
+#~ "telling the user to confirm with "
+#~ "his U2F device."
+#~ msgstr ""
+
+#~ msgid "Only specified U2F tokens are authorized."
+#~ msgstr ""
+
+#~ msgid "Only specified U2F tokens are allowed to be registered."
+#~ msgstr ""
+
+#~ msgid "Do not verify the U2F attestation certificate."
+#~ msgstr ""
+
+#~ msgid "The user may only have this maximum number of U2F tokens assigned."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The user may only have this "
+#~ "maximum number of active U2F tokens "
+#~ "assigned."
+#~ msgstr ""
+
+#~ msgid "You need to define the appId in the token config!"
+#~ msgstr ""
+
+#~ msgid "Please confirm with your U2F token ({0!s})"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether to request attestation data when"
+#~ " enrolling a new WebAuthn token. "
+#~ "Note: for u2f_req to work with "
+#~ "WebAuthn, this cannot be set to "
+#~ "none. Default: direct (ask for non-"
+#~ "anonymized attestation data)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether to request attestation data when"
+#~ " enrolling a new WebAuthn token. "
+#~ "Note: for webauthn_req to work, this "
+#~ "cannot be set to none. Default: "
+#~ "direct (ask for non-anonymized "
+#~ "attestation data)"
 #~ msgstr ""
 

@@ -17,10 +17,6 @@
                 </li>
                 -->
                 <li role="presentation"
-                    ng-class="{ active: tokentype == 'u2f'}">
-                    <a ui-sref="config.tokens({tokentype: 'u2f'})">U2F</a>
-                </li>
-                <li role="presentation"
                     ng-class="{ active: tokentype == 'webauthn'}">
                     <a ui-sref="config.tokens({tokentype: 'webauthn'})">WebAuthn</a>
                 </li>

@@ -78,7 +78,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
 from cryptography.hazmat.primitives.hashes import SHA1, SHA256
 from cryptography.x509 import load_der_x509_certificate
 
-from edumfa.lib.tokens.u2f import url_decode, url_encode
+from edumfa.lib.tokens.fido import url_decode, url_encode
 from edumfa.lib.utils import to_bytes, to_unicode
 
 __doc__ = """
@@ -1116,7 +1116,7 @@ class WebAuthnRegistrationResponse:
             except COSEKeyException as e:
                 raise RegistrationRejectedException(str(e))
 
-            public_key_u2f = _encode_public_key(credential_public_key)
+            public_key_uncompressed = _encode_public_key(credential_public_key)
 
             # Step 5.
             #
@@ -1127,7 +1127,13 @@ class WebAuthnRegistrationResponse:
             alg = COSE_ALGORITHM.ES256
             signature = att_stmt["sig"]
             verification_data = b"".join(
-                [b"\0", auth_data_rp_id_hash, client_data_hash, cred_id, public_key_u2f]
+                [
+                    b"\0",
+                    auth_data_rp_id_hash,
+                    client_data_hash,
+                    cred_id,
+                    public_key_uncompressed,
+                ]
             )
 
             # Step 6.
@@ -2004,9 +2010,8 @@ def webauthn_b64_decode(encoded):
     """
     Pad a WebAuthn base64-encoded string and decode it.
 
-    WebAuthn specifies a web-safe base64 encoding *without* padding. Since
-    this is the same as u2f, this function will just rely on the existing u2f
-    implementation of this algorithm.
+    WebAuthn specifies a web-safe base64 encoding *without* padding. This uses
+    the shared FIDO helper implementation of this algorithm.
 
     :param encoded: A WebAuthn base64-encoded string.
     :type encoded: basestring or bytes
@@ -2021,9 +2026,8 @@ def webauthn_b64_encode(raw):
     """
     Encode bytes using WebAuthn base64-encoding.
 
-    WebAuthn specifies a web-safe base64 encoding *without* padding. Since
-    this is the same as u2f, this function will just rely on the existing u2f
-    implementation of this algorithm.
+    WebAuthn specifies a web-safe base64 encoding *without* padding. This uses
+    the shared FIDO helper implementation of this algorithm.
 
     :param raw: Bytes to encode.
     :type raw: basestring or bytes
