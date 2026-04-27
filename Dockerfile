@@ -1,12 +1,12 @@
 # Build stage
-FROM python:3.14.3-slim-trixie@sha256:6a27522252aef8432841f224d9baaa6e9fce07b07584154fa0b9a96603af7456 AS builder
+FROM python:3.14.3-slim-trixie@sha256:fb83750094b46fd6b8adaa80f66e2302ecbe45d513f6cece637a841e1025b4ca AS builder
 WORKDIR /tmp
 COPY . .
 RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 # Final stage
-FROM python:3.14.3-slim-trixie@sha256:6a27522252aef8432841f224d9baaa6e9fce07b07584154fa0b9a96603af7456
+FROM python:3.14.3-slim-trixie@sha256:fb83750094b46fd6b8adaa80f66e2302ecbe45d513f6cece637a841e1025b4ca
 
 # Install system dependencies
 RUN apt-get update && \
@@ -29,8 +29,8 @@ VOLUME ["/etc/edumfa"]
 
 # Copy necessary files
 COPY ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
-COPY ./deploy/docker/edumfa.py /etc/edumfa/edumfa.cfg
-COPY ./deploy/docker/logging.yml /etc/edumfa/logging.yml
+COPY ./deploy/docker/edumfa_config.py /opt/edumfa/edumfa_config.py
+COPY ./deploy/docker/logging.yml /opt/edumfa/logging.yml
 COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
 
 # Create directory for user scripts
@@ -49,4 +49,5 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/edumfa:$PATH"
 
-CMD ["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "app"]

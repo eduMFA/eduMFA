@@ -4,9 +4,9 @@ Hardware and Software Tokens
 ............................
 
 eduMFA supports a wide variety of tokens by different hardware vendors.
-It also supports token apps on the smartphone which handle software tokens.
+It also supports token apps on smartphones, which handle software tokens.
 
-Tokens not listed, will be probably supported, too, since most tokens use
+Tokens not listed will be probably supported, too, since most tokens use
 standard algorithms.
 
 If in doubt drop your question on the mailing list.
@@ -48,31 +48,37 @@ button tokens. The C100 is an :ref:`hotp_token` token and the C200 a
 tokens are initialized at the factory and you get a seed file, that you need
 to import to eduMFA.
 
-**U2F**. The Yubikey and the Daplug token are known U2F devices to work well
-with eduMFA. See :ref:`u2f_token`.
+**Passkeys**. Yubikeys are known to work well with eduMFA, but token
+compatibility depends on the implementation of the surrounding software. On
+some Android devices, passkey logins with certain hardware tokens can fail.
+This is outside of eduMFA's control. We recommend testing tokens before buying
+them in bulk, e.g. using one of the available `testing websites`_. See
+:ref:`webauthn` for more information on WebAuthN.
 
 Smartphone Apps
 ~~~~~~~~~~~~~~~
 
 .. index:: Software Tokens
 
+**Aegis Authenticator**. An open source :ref:`totp_token` and :ref:`hotp_token`
+app for Android.
+
+**FreeOTP**. eduMFA is known to work well with the FreeOTP app. The
+FreeOTP app supports only :ref:`totp_token`. So if you scan the QR Code of an
+HOTP token, the OTP will not validate. It also has a version for iOS.
+
+**Google Authenticator**. The Google Authenticator is working well in
+:ref:`HOTP <hotp_token>` and :ref:`totp_token` mode.
+
+**mOTP**. Several mOTP Apps like "Potato", "Token2" or "DroidOTP" are supported.
+
 .. _privacyidea_authenticator:
 
 **privacyIDEA Authenticator (unsupported)**. privacyIDEA Authenticator is based
-on the concept of the Google Authenticator and works with the usual QR Code key URI
-enrollment. But on top it also allows for a more secure
-enrollment process (See :ref:`2step_enrollment`).
+on the concept of the Google Authenticator and works with the usual QR Code
+enrollment. But on top it also allows for a two step enrollment process (See
+:ref:`2step_enrollment`).
 It can be used for :ref:`hotp_token`, :ref:`totp_token`, :ref:`edupush_token` and :ref:`push_token`.
 
-**Google Authenticator**. The Google Authenticator is working well in
-:ref:`hotp_token`
-and :ref:`totp_token` mode. If you choose "Generate OTP Key on the Server"
-during
-enrollment, you can scan a QR Code with the Google Authenticator.
-See :ref:`first_steps_token` to learn how to do this.
 
-**FreeOTP**. eduMFA is known to work well with the FreeOTP App. The
-FreeOTP App is a :ref:`totp_token` token. So if you scan the QR Code of an
-HOTP token, the OTP will not validate.
-
-**mOTP**. Several mOTP Apps like "Potato", "Token2" or "DroidOTP" are supported.
+.. _testing websites: https://www.passkeys.io/

@@ -6,6 +6,9 @@ Changelog
 This page tracks notable release highlights for eduMFA.
 For version-to-version upgrade steps, see :ref:`migration_guides`.
 
+.. caution::
+   Due to new fields in `edumfa.cfg`, upgrading via Ubuntu packages causes apt to prompt you to replace it. Replacing it will remove secrets from your current configuration, so keep your existing file and add only the new fields manually.
+
 eduMFA 2.9.0
 ------------
 
