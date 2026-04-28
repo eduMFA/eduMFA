@@ -5269,18 +5269,6 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} 找到的條目。"
 
-#~ msgid "Client Configuration is not supported."
-#~ msgstr "不支援用戶端配置。"
-
-#~ msgid "Other Error"
-#~ msgstr "其他錯誤"
-
-#~ msgid "The client device can not be used for this type of request."
-#~ msgstr "用戶端設備不能用於此類請求。"
-
-#~ msgid "Timeout while waiting for signing response."
-#~ msgstr "等待簽名回應時超時。"
-
 #, fuzzy
 #~ msgctxt "subscription"
 #~ msgid "Level"

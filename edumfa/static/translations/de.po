@@ -5184,19 +5184,6 @@ msgstr "Fenster"
 msgid "{{ auditdata.count }} entries found."
 msgstr "Es wurden {{ auditdata.count }} Einträge gefunden."
 
-#~ msgid "Client Configuration is not supported."
-#~ msgstr "Die Client-Konfiguration wird nicht unterstützt."
-
-#~ msgid "Other Error"
-#~ msgstr "Unbekanter Fehler"
-
-#~ msgid "The client device can not be used for this type of request."
-#~ msgstr ""
-#~ "Das Client-Geräte kann für diese Art des Requests nicht verwendet werden."
-
-#~ msgid "Timeout while waiting for signing response."
-#~ msgstr "Timeout. Warte vergeblich auf die Antwort."
-
 # This is the level in the subscriptions
 #~ msgctxt "subscription"
 #~ msgid "Level"

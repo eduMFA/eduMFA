@@ -5302,18 +5302,6 @@ msgstr "venster"
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} items gevonden."
 
-#~ msgid "Client Configuration is not supported."
-#~ msgstr "Cliënt-configuratie is niet ondersteund."
-
-#~ msgid "Other Error"
-#~ msgstr "Ander fout"
-
-#~ msgid "The client device can not be used for this type of request."
-#~ msgstr "Het cliënt-toestel kan niet gebruikt worden voor dit type aanvraag."
-
-#~ msgid "Timeout while waiting for signing response."
-#~ msgstr "Time-out tijdens het wachten op antwoord."
-
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Niveau"

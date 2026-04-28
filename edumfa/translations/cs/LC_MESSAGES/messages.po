@@ -2878,9 +2878,6 @@ msgstr ""
 #~ " menu bar."
 #~ msgstr ""
 
-#~ msgid "Action is triggered, if the user has this number of tokens assigned."
-#~ msgstr ""
-
 #~ msgid ""
 #~ "The script in script directory "
 #~ "EDUMFA_SCRIPT_SMSPROVIDER_DIRECTORY to call. Expects"

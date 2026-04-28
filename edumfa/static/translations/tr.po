@@ -5289,18 +5289,6 @@ msgstr "pencere"
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{auditdata.count}} girişleri bulundu."
 
-#~ msgid "Client Configuration is not supported."
-#~ msgstr "İstemci yapılandırması desteklenmiyor."
-
-#~ msgid "Other Error"
-#~ msgstr "Diğer hata"
-
-#~ msgid "The client device can not be used for this type of request."
-#~ msgstr "İstemci cihazı bu tür bir istek için kullanılamaz."
-
-#~ msgid "Timeout while waiting for signing response."
-#~ msgstr "İmzalama cevabı beklerken zaman aşımı."
-
 #, fuzzy
 #~ msgctxt "subscription"
 #~ msgid "Level"

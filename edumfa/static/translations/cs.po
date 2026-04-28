@@ -4938,12 +4938,6 @@ msgstr "tolerance"
 msgid "{{ auditdata.count }} entries found."
 msgstr "Nalezeno {{ auditdata.count }} záznamů."
 
-#~ msgid "Other Error"
-#~ msgstr "Jiná chyba"
-
-#~ msgid "Timeout while waiting for signing response."
-#~ msgstr "Vypršel časový limit při čekání na podepsanou odpověď."
-
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Stupeň"

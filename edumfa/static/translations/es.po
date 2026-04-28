@@ -4916,12 +4916,6 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
 
-#~ msgid "Client Configuration is not supported."
-#~ msgstr "No se admite la configuración del cliente."
-
-#~ msgid "Other Error"
-#~ msgstr "Otro error"
-
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Nivel"

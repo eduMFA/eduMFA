@@ -4897,17 +4897,6 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
 
-#~ msgid "Client Configuration is not supported."
-#~ msgstr "La configuration du client n'est pas prise en charge."
-
-#~ msgid "Other Error"
-#~ msgstr "Autre erreur"
-
-#~ msgid "The client device can not be used for this type of request."
-#~ msgstr ""
-#~ "Le périphérique du client ne peut pas être utilisé pour ce type de "
-#~ "demande."
-
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Niveau"

@@ -5337,20 +5337,6 @@ msgstr "finestra"
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} voci trovate."
 
-#~ msgid "Client Configuration is not supported."
-#~ msgstr "La configurazione del client non è supportata."
-
-#~ msgid "Other Error"
-#~ msgstr "Altro errore"
-
-#~ msgid "The client device can not be used for this type of request."
-#~ msgstr ""
-#~ "Il dispositivo client non può essere utilizzato per questo tipo di "
-#~ "richiesta."
-
-#~ msgid "Timeout while waiting for signing response."
-#~ msgstr "Timeout in attesa di firmare la risposta."
-
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Livello"

@@ -4883,9 +4883,6 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
 
-#~ msgid "Client Configuration is not supported."
-#~ msgstr "Конфігурація клієнта не підтримується."
-
 #, fuzzy
 #~ msgctxt "subscription"
 #~ msgid "Level"
