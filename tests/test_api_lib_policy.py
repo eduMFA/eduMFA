@@ -1847,7 +1847,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         delete_policy("sms1")
 
-    def test_22a_push_firebase_config(self):
+    def test_22a_edupush_firebase_config(self):
         g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
         builder = EnvironBuilder(
             method="POST", data={"serial": "OATH123456"}, headers={}
@@ -1915,7 +1915,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("push_pol")
         delete_policy("push_pol2")
 
-    def test_22b_push_firebase_config(self):
+    def test_22b_edupush_firebase_config(self):
         g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
         builder = EnvironBuilder(
             method="POST", data={"serial": "OATH123456"}, headers={}
@@ -1960,7 +1960,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         # the request tries to inject a rogue value, but we assure sslverify=1
         g.policy_object = PolicyClass()
-        req.all_data = {"type": "push", "sslverify": "rogue"}
+        req.all_data = {"type": "edupush", "sslverify": "rogue"}
         pushtoken_add_config(req, "init")
         self.assertEqual("1", req.all_data.get(PushTokenClass.PUSH_ACTION.SSL_VERIFY))
 
@@ -1971,7 +1971,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             action=f"{PushTokenClass.PUSH_ACTION.SSL_VERIFY}=0",
         )
         g.policy_object = PolicyClass()
-        req.all_data = {"type": "push"}
+        req.all_data = {"type": "edupush"}
         pushtoken_add_config(req, "init")
         self.assertEqual(
             req.all_data.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
