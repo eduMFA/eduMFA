@@ -4728,9 +4728,6 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "Неверный запрос U2F"
-
 #, fuzzy
 #~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
 #~ msgstr "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"

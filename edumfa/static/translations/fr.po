@@ -4897,26 +4897,11 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "Mauvaise requête U2F"
-
 #~ msgid "Client Configuration is not supported."
 #~ msgstr "La configuration du client n'est pas prise en charge."
 
-#~ msgid "Error in U2F response."
-#~ msgstr "Erreur dans la réponse U2F."
-
 #~ msgid "Other Error"
 #~ msgstr "Autre erreur"
-
-#~ msgid "The AppID must not end with a \"/\"."
-#~ msgstr "L'identifiant d'application ne doit pas se terminer par un « / »."
-
-#~ msgid "The AppID needs to start with \"https\"."
-#~ msgstr "L'identifiant d'application doit commencer par « https »."
-
-#~ msgid "The URL of your eduMFA installation."
-#~ msgstr "L'URL de votre installation de eduMFA."
 
 #~ msgid "The client device can not be used for this type of request."
 #~ msgstr ""

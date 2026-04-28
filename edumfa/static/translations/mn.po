@@ -4705,9 +4705,6 @@ msgstr "цонх"
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "Буруу U2F хүсэлт"
-
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Түвшин"

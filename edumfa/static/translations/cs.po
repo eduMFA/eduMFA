@@ -4938,44 +4938,11 @@ msgstr "tolerance"
 msgid "{{ auditdata.count }} entries found."
 msgstr "Nalezeno {{ auditdata.count }} záznamů."
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "Chybný požadavek U2F"
-
-#~ msgid "Error in U2F response."
-#~ msgstr "Chyba v U2F odpovědi."
-
 #~ msgid "Other Error"
 #~ msgstr "Jiná chyba"
 
-#~ msgid "Take action on your token"
-#~ msgstr "Potvrďte akci na svém tokenu"
-
-#~ msgid "The AppID must not end with a \"/\"."
-#~ msgstr "AppID nesmí končit lomítkem."
-
-#~ msgid "The AppID needs to start with \"https\"."
-#~ msgstr "AppID musí začínat \"https\"."
-
-#~ msgid "The URL of your eduMFA installation."
-#~ msgstr "URL Vaší instalace eduMFA."
-
 #~ msgid "Timeout while waiting for signing response."
 #~ msgstr "Vypršel časový limit při čekání na podepsanou odpověď."
-
-#~ msgid ""
-#~ "You need to confirm the registration with your token\n"
-#~ "                    either by pushing the blinking button or by\n"
-#~ "                    replugging your token. This depends on the actual\n"
-#~ "                    token model."
-#~ msgstr ""
-#~ "Potvrďte registraci svým tokenem,\n"
-#~ "                    zmáčknutím blikajícího tlačítka nebo\n"
-#~ "                    opětovným připojením tokenu. Postup záleží na "
-#~ "konkrétním\n"
-#~ "                    modelu."
-
-#~ msgid "appId"
-#~ msgstr "appId"
 
 #~ msgctxt "subscription"
 #~ msgid "Level"

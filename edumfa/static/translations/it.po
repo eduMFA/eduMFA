@@ -5337,81 +5337,19 @@ msgstr "finestra"
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} voci trovate."
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "Richiesta U2F errata"
-
 #~ msgid "Client Configuration is not supported."
 #~ msgstr "La configurazione del client non è supportata."
 
-#~ msgid "Error in U2F response."
-#~ msgstr "Errore nella risposta U2F."
-
 #~ msgid "Other Error"
 #~ msgstr "Altro errore"
-
-#~ msgid "Take action on your token"
-#~ msgstr "Agisci sul tuo token"
-
-#~ msgid "The AppID must not end with a \"/\"."
-#~ msgstr "L'AppID non deve terminare con \"/\"."
-
-#~ msgid "The AppID needs to start with \"https\"."
-#~ msgstr "L'AppID deve iniziare con \"https\"."
-
-#~ msgid ""
-#~ "The U2F token is a hardware token, that communicates with the browser.\n"
-#~ "    You need to set the correct appId, which in fact is the URL of your\n"
-#~ "    eduMFA installation."
-#~ msgstr ""
-#~ "Il token U2F è un token hardware che comunica con il browser.\n"
-#~ "    È necessario impostare l'appId corretto, che in realtà è l'URL "
-#~ "dell'installazione di\n"
-#~ "    eduMFA."
-
-#~ msgid ""
-#~ "The U2F token is a token defined by the Fido Alliance.\n"
-#~ "    You can register this token with any webservice and with as many web\n"
-#~ "    services you wish to."
-#~ msgstr ""
-#~ "Il token U2F è un token definito da Fido Alliance.\n"
-#~ "    È possibile registrare questo token con qualsiasi servizio web e con "
-#~ "tutti i\n"
-#~ "    servizi web che si desidera."
-
-#~ msgid "The URL of your eduMFA installation."
-#~ msgstr "L'URL dell'installazione di eduMFA."
 
 #~ msgid "The client device can not be used for this type of request."
 #~ msgstr ""
 #~ "Il dispositivo client non può essere utilizzato per questo tipo di "
 #~ "richiesta."
 
-#~ msgid ""
-#~ "This must be a valid FQDN with also a valid top level domain -\n"
-#~ "        otherwise you might receive a U2F Error 2 (Bad Request)."
-#~ msgstr ""
-#~ "Deve trattarsi di un FQDN valido con un dominio di primo livello valido.\n"
-#~ "        altrimenti si potrebbe ricevere un errore U2F 2 (Bad Request)."
-
 #~ msgid "Timeout while waiting for signing response."
 #~ msgstr "Timeout in attesa di firmare la risposta."
-
-#~ msgid "U2F Token settings"
-#~ msgstr "Impostazioni del token U2F"
-
-#~ msgid ""
-#~ "You need to confirm the registration with your token\n"
-#~ "                    either by pushing the blinking button or by\n"
-#~ "                    replugging your token. This depends on the actual\n"
-#~ "                    token model."
-#~ msgstr ""
-#~ "È necessario confermare la registrazione con il proprio token\n"
-#~ "                    premendo il pulsante lampeggiante oppure\n"
-#~ "                    reinserendo il token. Questo dipende dal modello di\n"
-#~ "                    modello di token."
-
-#~ msgid "appId"
-#~ msgstr "app Id"
 
 #~ msgctxt "subscription"
 #~ msgid "Level"
@@ -5582,9 +5520,6 @@ msgstr "{{ auditdata.count }} voci trovate."
 
 #~ msgid "Typo3"
 #~ msgstr "Typo3"
-
-#~ msgid "U2F: Universal 2nd Factor hardware token."
-#~ msgstr "U2F: token hardware di secondo fattore universale."
 
 #~ msgid "WebAuthn: Web Authentication hardware token."
 #~ msgstr "WebAuthn: token hardware di autenticazione Web."

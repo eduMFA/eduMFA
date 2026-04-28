@@ -5269,77 +5269,17 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} 找到的條目。"
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "錯誤的 U2F 請求"
-
 #~ msgid "Client Configuration is not supported."
 #~ msgstr "不支援用戶端配置。"
-
-#~ msgid "Error in U2F response."
-#~ msgstr "U2F 回應中出錯。"
 
 #~ msgid "Other Error"
 #~ msgstr "其他錯誤"
 
-#~ msgid "Take action on your token"
-#~ msgstr "對您的令牌採取行動"
-
-#~ msgid "The AppID must not end with a \"/\"."
-#~ msgstr "AppID 不得以“/”結尾。"
-
-#~ msgid "The AppID needs to start with \"https\"."
-#~ msgstr "AppID 需要以“https”開頭。"
-
-#, fuzzy
-#~ msgid ""
-#~ "The U2F token is a hardware token, that communicates with the browser.\n"
-#~ "    You need to set the correct appId, which in fact is the URL of your\n"
-#~ "    eduMFA installation."
-#~ msgstr ""
-#~ "U2F令牌是一個硬件令牌，可以與瀏覽器進行通信。你需要設置正確的appId，這實際"
-#~ "上是你的 eduMFA安裝的URL。"
-
-#~ msgid ""
-#~ "The U2F token is a token defined by the Fido Alliance.\n"
-#~ "    You can register this token with any webservice and with as many web\n"
-#~ "    services you wish to."
-#~ msgstr ""
-#~ "U2F 代幣是 Fido 聯盟定義的代幣。\n"
-#~ "    您可以使用任何網絡服務和盡可能多的網絡註冊此令牌\n"
-#~ "    您想要的服務。"
-
-#~ msgid "The URL of your eduMFA installation."
-#~ msgstr "您的eduMFA 安裝的URL。"
-
 #~ msgid "The client device can not be used for this type of request."
 #~ msgstr "用戶端設備不能用於此類請求。"
 
-#~ msgid ""
-#~ "This must be a valid FQDN with also a valid top level domain -\n"
-#~ "        otherwise you might receive a U2F Error 2 (Bad Request)."
-#~ msgstr ""
-#~ "這必須是有效的 FQDN，並且還必須具有有效的頂級域 -\n"
-#~ "        否則，您可能會收到U2F錯誤 2（錯誤請求）。"
-
 #~ msgid "Timeout while waiting for signing response."
 #~ msgstr "等待簽名回應時超時。"
-
-#~ msgid "U2F Token settings"
-#~ msgstr "U2F 令牌設置"
-
-#~ msgid ""
-#~ "You need to confirm the registration with your token\n"
-#~ "                    either by pushing the blinking button or by\n"
-#~ "                    replugging your token. This depends on the actual\n"
-#~ "                    token model."
-#~ msgstr ""
-#~ "您需要使用令牌確認註冊\n"
-#~ "                    通過按下閃爍的按鈕或\n"
-#~ "                    重新插入令牌。這取決於實際情況\n"
-#~ "                    令牌模型。"
-
-#~ msgid "appId"
-#~ msgstr "應用程序ID"
 
 #, fuzzy
 #~ msgctxt "subscription"
@@ -5495,9 +5435,6 @@ msgstr "{{ auditdata.count }} 找到的條目。"
 
 #~ msgid "Typo3"
 #~ msgstr "錯別字3"
-
-#~ msgid "U2F: Universal 2nd Factor hardware token."
-#~ msgstr "U2F：通用第二因素硬體令牌。"
 
 #~ msgid "WebAuthn: Web Authentication hardware token."
 #~ msgstr "WebAuthn：Web 身份驗證硬體令牌。"

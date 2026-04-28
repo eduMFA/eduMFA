@@ -4916,26 +4916,11 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "Solicitud U2F incorrecta"
-
 #~ msgid "Client Configuration is not supported."
 #~ msgstr "No se admite la configuración del cliente."
 
-#~ msgid "Error in U2F response."
-#~ msgstr "Error en la respuesta U2F."
-
 #~ msgid "Other Error"
 #~ msgstr "Otro error"
-
-#~ msgid "Take action on your token"
-#~ msgstr "Actúe con su token"
-
-#~ msgid "The AppID must not end with a \"/\"."
-#~ msgstr "El AppID no debe terminar con un \"/\"."
-
-#~ msgid "The AppID needs to start with \"https\"."
-#~ msgstr "El AppID debe comenzar con \"https\"."
 
 #~ msgctxt "subscription"
 #~ msgid "Level"

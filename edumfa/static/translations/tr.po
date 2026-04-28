@@ -5289,78 +5289,17 @@ msgstr "pencere"
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{auditdata.count}} girişleri bulundu."
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "Kötü U2F isteği"
-
 #~ msgid "Client Configuration is not supported."
 #~ msgstr "İstemci yapılandırması desteklenmiyor."
-
-#~ msgid "Error in U2F response."
-#~ msgstr "U2F yanıtında hata."
 
 #~ msgid "Other Error"
 #~ msgstr "Diğer hata"
 
-#~ msgid "Take action on your token"
-#~ msgstr "Jetonunuzda harekete geçin"
-
-#~ msgid "The AppID must not end with a \"/\"."
-#~ msgstr "AppID \"/\" ile bitmemelidir."
-
-#~ msgid "The AppID needs to start with \"https\"."
-#~ msgstr "AppID'nin \"https\" ile başlaması gerekiyor."
-
-#~ msgid ""
-#~ "The U2F token is a hardware token, that communicates with the browser.\n"
-#~ "    You need to set the correct appId, which in fact is the URL of your\n"
-#~ "    eduMFA installation."
-#~ msgstr ""
-#~ "U2F belirteci, tarayıcıyla iletişim kuran bir donanım belirtecidir.\n"
-#~ "    Doğru Appid'i ayarlamanız gerekir; bu aslında sizin URL'inizdir.\n"
-#~ "    eduMFA kurulumu."
-
-#~ msgid ""
-#~ "The U2F token is a token defined by the Fido Alliance.\n"
-#~ "    You can register this token with any webservice and with as many web\n"
-#~ "    services you wish to."
-#~ msgstr ""
-#~ "U2F belirteci, FIDO İttifakı tarafından tanımlanan bir belirteçtir.\n"
-#~ "    Bu belirteci herhangi bir web servisiyle ve çok sayıda web ile "
-#~ "kaydedebilirsiniz.\n"
-#~ "    İstediğiniz hizmetler."
-
-#~ msgid "The URL of your eduMFA installation."
-#~ msgstr "eduMFA kurulumunuzun URL'si."
-
 #~ msgid "The client device can not be used for this type of request."
 #~ msgstr "İstemci cihazı bu tür bir istek için kullanılamaz."
 
-#~ msgid ""
-#~ "This must be a valid FQDN with also a valid top level domain -\n"
-#~ "        otherwise you might receive a U2F Error 2 (Bad Request)."
-#~ msgstr ""
-#~ "Bu, geçerli bir üst düzey etki alanı olan geçerli bir FQDN olmalıdır -\n"
-#~ "        Aksi takdirde bir U2F hatası 2 (kötü istek) alabilirsiniz."
-
 #~ msgid "Timeout while waiting for signing response."
 #~ msgstr "İmzalama cevabı beklerken zaman aşımı."
-
-#~ msgid "U2F Token settings"
-#~ msgstr "U2F Token Ayarları"
-
-#~ msgid ""
-#~ "You need to confirm the registration with your token\n"
-#~ "                    either by pushing the blinking button or by\n"
-#~ "                    replugging your token. This depends on the actual\n"
-#~ "                    token model."
-#~ msgstr ""
-#~ "Kayıtunuzu belirteçlerinizle onaylamanız gerekir.\n"
-#~ "                    Yanıp sönen düğmeye basarak veya\n"
-#~ "                    belirteçinizi yenilemek. Bu gerçeke bağlı\n"
-#~ "                    belirteç modeli."
-
-#~ msgid "appId"
-#~ msgstr "applid"
 
 #, fuzzy
 #~ msgctxt "subscription"
@@ -5530,9 +5469,6 @@ msgstr "{{auditdata.count}} girişleri bulundu."
 
 #~ msgid "Typo3"
 #~ msgstr "Typo3"
-
-#~ msgid "U2F: Universal 2nd Factor hardware token."
-#~ msgstr "U2F: Evrensel 2. faktör donanım belirteci."
 
 #~ msgid "WebAuthn: Web Authentication hardware token."
 #~ msgstr "WebAuthn: Web Kimlik Doğrulama Donanım Simgesi."

@@ -4883,14 +4883,8 @@ msgstr ""
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
 
-#~ msgid "Bad U2F Request"
-#~ msgstr "Неправильний запит U2F"
-
 #~ msgid "Client Configuration is not supported."
 #~ msgstr "Конфігурація клієнта не підтримується."
-
-#~ msgid "Error in U2F response."
-#~ msgstr "Помилка у відповіді U2F."
 
 #, fuzzy
 #~ msgctxt "subscription"
