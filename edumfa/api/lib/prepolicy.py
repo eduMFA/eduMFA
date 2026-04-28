@@ -75,9 +75,9 @@ from edumfa.lib.token import (
 )
 from edumfa.lib.tokenclass import ROLLOUTSTATE
 from edumfa.lib.tokens.certificatetoken import ACTION as CERTIFICATE_ACTION
+from edumfa.lib.tokens.fido import x509name_to_string
 from edumfa.lib.tokens.indexedsecrettoken import PIIXACTION
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
-from edumfa.lib.tokens.fido import x509name_to_string
 from edumfa.lib.tokens.pushtoken import PushTokenClass
 
 # Token specific imports!
