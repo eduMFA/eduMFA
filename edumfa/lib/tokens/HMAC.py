@@ -127,20 +127,20 @@ class HmacOtp:
         return sotp
 
     @log_with(log)
-    def checkOtp(self, anOtpVal, window, symetric=False):
+    def checkOtp(self, anOtpVal, window, symmetric=False):
         """
 
         :param anOtpVal: The OTP value to check
         :type anOtpVal: str
         :param window:
-        :param symetric:
+        :param symmetric:
         :return: -1 if the OTP doesn't match or the current counter
         :rtype: int
         """
         res = -1
         start = self.counter
         end = self.counter + window
-        if symetric is True:
+        if symmetric is True:
             # changed window/2 to window for TOTP
             start = self.counter - (window)
             start = 0 if (start < 0) else start

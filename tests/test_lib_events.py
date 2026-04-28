@@ -1627,7 +1627,7 @@ class TokenEventTestCase(MyTestCase):
         resp = Response()
         resp.data = """{"result": {"value": true}}"""
 
-        # Now the initiailized token will be set in realm2
+        # Now the initialized token will be set in realm2
         options = {
             "g": g,
             "request": req,
@@ -1669,7 +1669,7 @@ class TokenEventTestCase(MyTestCase):
         resp = Response()
         resp.data = """{"result": {"value": true}}"""
 
-        # Now the initiailized token will be set in realm2
+        # Now the initialized token will be set in realm2
         options = {"g": g, "request": req, "response": resp, "handler_def": {}}
 
         t_handler = TokenEventHandler()
@@ -1704,7 +1704,7 @@ class TokenEventTestCase(MyTestCase):
         resp = Response()
         resp.data = """{"result": {"value": true}}"""
 
-        # Now the initiailized token will be set in realm2
+        # Now the initialized token will be set in realm2
         options = {"g": g, "request": req, "response": resp, "handler_def": {}}
 
         t_handler = TokenEventHandler()

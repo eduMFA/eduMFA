@@ -149,7 +149,7 @@ def upgrade():
                     elif len(resolver_realms) > 1:
                         # The resolver is contained in more than one realm, we have to apply more logic
                         # between the realms in which the resolver is contained and the realms,
-                        # to which the token is assigend.
+                        # to which the token is assigned.
                         # More specifically, we find all realms which are both a token realm and
                         # a realm of the token resolver.
                         # If there is exactly one such realm, we have found our token owner realm.

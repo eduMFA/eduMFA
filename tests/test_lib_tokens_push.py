@@ -1,7 +1,7 @@
 import json
 import time
 from base64 import b32decode, b32encode
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from threading import Timer
 from unittest import mock
 
@@ -13,7 +13,6 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPubl
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from flask import Request
 from google.oauth2 import service_account
-from pytz import utc
 from werkzeug.test import EnvironBuilder
 
 from edumfa.lib.challenge import get_challenges
@@ -1199,7 +1198,7 @@ class PushTokenTestCase(MyTestCase):
             timestamp_fmt,
             10,
         )
-        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=utc)
+        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=timezone.utc)
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
@@ -1288,7 +1287,7 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(utc) - timedelta(minutes=2)).isoformat(),
+            "timestamp": (datetime.now(timezone.utc) - timedelta(minutes=2)).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -1303,7 +1302,7 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(utc) + timedelta(minutes=2)).isoformat(),
+            "timestamp": (datetime.now(timezone.utc) + timedelta(minutes=2)).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -1404,7 +1403,7 @@ class PushTokenTestCase(MyTestCase):
         req_data = {
             "new_fb_token": "firebasetoken2",
             "serial": serial,
-            "timestamp": datetime.now(tz=utc).isoformat(),
+            "timestamp": datetime.now(tz=timezone.utc).isoformat(),
         }
 
         # now we perform the firebase token update with a broken signature
@@ -1464,7 +1463,7 @@ class PushTokenTestCase(MyTestCase):
         serial = tok.get_serial()
 
         # this is the default timestamp for polling in this test
-        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=utc)
+        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=timezone.utc)
 
         # create a poll request
         # first create a signature
@@ -2916,7 +2915,7 @@ class EduPushTokenTestCase(MyTestCase):
             timestamp_fmt,
             10,
         )
-        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=utc)
+        timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=timezone.utc)
         with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
             mock_dt.now.return_value = timestamp + timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
@@ -3001,7 +3000,7 @@ class EduPushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(utc) - timedelta(minutes=2)).isoformat(),
+            "timestamp": (datetime.now(timezone.utc) - timedelta(minutes=2)).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3016,7 +3015,7 @@ class EduPushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(utc) + timedelta(minutes=2)).isoformat(),
+            "timestamp": (datetime.now(timezone.utc) + timedelta(minutes=2)).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3117,7 +3116,7 @@ class EduPushTokenTestCase(MyTestCase):
         req_data = {
             "new_fb_token": "firebasetoken2",
             "serial": serial,
-            "timestamp": datetime.now(tz=utc).isoformat(),
+            "timestamp": datetime.now(tz=timezone.utc).isoformat(),
         }
 
         # now we perform the firebase token update with a broken signature
@@ -3177,7 +3176,7 @@ class EduPushTokenTestCase(MyTestCase):
         serial = tok.get_serial()
 
         # this is the default timestamp for polling in this test
-        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=utc)
+        timestamp = datetime(2020, 6, 19, 13, 27, tzinfo=timezone.utc)
 
         # create a poll request
         # first create a signature

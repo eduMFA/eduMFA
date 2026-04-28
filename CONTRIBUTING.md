@@ -31,7 +31,7 @@ https://github.com/eduMFA/eduMFA/issues
 The source code is pretty well documented. The main documentation resides in the
 `doc`-subfolder and can be build with:
 ```
-pip install .[docs]
+uv sync
 cd doc/ && make html
 ```
 This also pulls the API-documentation from the source code.
@@ -163,7 +163,7 @@ creating the release changelog later.
 
 ### Projects
 
-We use *Github Projects* to organize our weekly develoment cycle.
+We use *Github Projects* to organize our weekly development cycle.
 
 In a weekly meeting we decide, which issues will be handled during the
 following week. Issues are put into the

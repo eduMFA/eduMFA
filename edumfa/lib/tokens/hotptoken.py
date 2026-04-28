@@ -458,7 +458,7 @@ class HotpTokenClass(TokenClass):
         return res
 
     @log_with(log)
-    def check_otp_exist(self, otp, window=10, symetric=False, inc_counter=True):
+    def check_otp_exist(self, otp, window=10, symmetric=False, inc_counter=True):
         """
         checks if the given OTP value is/are values of this very token.
         This is used to autoassign and to determine the serial number of
@@ -479,7 +479,7 @@ class HotpTokenClass(TokenClass):
 
         secretHOtp = self.token.get_otpkey()
         hmac2Otp = HmacOtp(secretHOtp, counter, otplen, self.get_hashlib(self.hashlib))
-        res = hmac2Otp.checkOtp(otp, window, symetric=symetric)
+        res = hmac2Otp.checkOtp(otp, window, symmetric=symmetric)
 
         if inc_counter and res >= 0:
             # As usually the counter is increased in lib.token.checkUserPass,

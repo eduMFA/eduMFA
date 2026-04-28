@@ -57,7 +57,7 @@ from edumfa.lib.token import (
 )
 from edumfa.lib.user import User, split_user
 from edumfa.lib.utils import parse_legacy_time, to_unicode
-from edumfa.models import Token
+from edumfa.models import Token, cleanup_challenges
 
 __version__ = "0.1"
 
@@ -70,12 +70,14 @@ ALLOWED_ACTIONS = [
     "export",
     "listuser",
     "tokenrealms",
+    "enable",
+    "reset",
 ]
 
 __doc__ = f"""
 This script can be used to clean up the token database.
 
-It can list, disable, delete or mark tokens based on
+It can list, disable, enable, delete or mark tokens based on
 
 Conditions:
 
@@ -93,6 +95,8 @@ Actions:
 * unmark
 * disable
 * delete
+* enable
+* reset
 
 
     edumfa-token-janitor find
@@ -119,13 +123,6 @@ Actions:
         --set-tokeninfo-value=<value>    
         --limit=<value>
     
-.. note:: If you fail to redirect the output of this command at the commandline
-   to e.g. a file with a UnicodeEncodeError, you need to set the environment
-   variable like this:
-       export PYTHONIOENCODING=UTF-8
-   Here is a good read about it:
-   https://stackoverflow.com/questions/4545661/unicodedecodeerror-when-redirecting-to-file
-
 """
 
 import click
@@ -247,7 +244,7 @@ def _compare_before(key, given_value_string):
 def _compare_regex_or_equal(_key, given_regex):
     def comparator(value):
         if type(value) in (int, bool):
-            # If the value from the database is an integer, we compare "euqals integer"
+            # If the value from the database is an integer, we compare "equals integer"
             given_value = _try_convert_to_integer(given_regex)
             return given_value == value
         else:
@@ -545,7 +542,7 @@ def export_user_data(token_list, attributes=None):
 )
 @click.option(
     "--tokenrealms",
-    help="A comma separated list of realms, to which the tokens should be assigned.",
+    help="A comma separated list of realms to which the tokens should be assigned.",
 )
 @click.option(
     "--sum",
@@ -558,7 +555,7 @@ def export_user_data(token_list, attributes=None):
 @click.option(
     "--action",
     help=f"Which action should be performed on the "
-    f"found tokens. {'|'.join(ALLOWED_ACTIONS)}. Exporting to PSKC only supports "
+    f"found tokens: {'|'.join(ALLOWED_ACTIONS)}. Exporting to PSKC only supports "
     f"HOTP, TOTP and PW tokens!",
 )
 @click.option(
@@ -574,14 +571,17 @@ def export_user_data(token_list, attributes=None):
     "formatted output.",
 )
 @click.option("--last_auth", help="Can be something like 10h, 7d, or 2y")
-@click.option("--assigned", help="True|False|None")
-@click.option("--active", help="True|False|None")
-@click.option("--orphaned", help="Whether the token is an orphaned token. Set to 1")
+@click.option("--assigned", help="True|False|None (default)")
+@click.option("--active", help="True|False|None (default)")
+@click.option(
+    "--orphaned",
+    help="Whether the token is an orphaned token (True|False|None (default)).",
+)
 @click.option(
     "--orphan_exception_value",
     default=False,
     type=bool,
-    help="If an exception occures during orphan check use this value.",
+    help="Whether to consider users whose lookup causes an exception as orphaned (True|False (default)|None).",
 )
 @click.option(
     "--b32",
@@ -782,6 +782,9 @@ def find(
                         if action == "disable":
                             enable_token(serial=token_obj.token.serial, enable=False)
                             click.echo(f"Disabling token {token_obj.token.serial}")
+                        elif action == "enable":
+                            enable_token(serial=token_obj.token.serial, enable=True)
+                            click.echo(f"Enabling token {token_obj.token.serial}")
                         elif action == "delete":
                             remove_token(serial=token_obj.token.serial)
                             click.echo(f"Deleting token {token_obj.token.serial}")
@@ -817,6 +820,10 @@ def find(
                                     )
                                     token_obj.del_tokeninfo(remove_tokeninfo_key)
                                     token_obj.save()
+                        elif action == "reset":
+                            click.echo(f"Reset failcounter of {token_obj.token.serial}")
+                            token_obj.reset()
+                            token_obj.save()
                     except Exception as exx:
                         click.echo(f"Failed to process token {token_obj.token.serial}.")
                         click.echo(f"{exx}")
@@ -848,6 +855,12 @@ def updatetokens(yaml):
             except Exception as e:
                 sys.stderr.write(f"\nFailed to update token {tok.get('serial')}.")
 
+@cli.command("cleanupchallenges")
+def cleanupchallenges():
+    """
+    This command can be used to clean up old challenges from the database.
+    """
+    cleanup_challenges()
 
 @cli.command("loadtokens")
 @click.option("--pskc", help="Import this PSKC file.")

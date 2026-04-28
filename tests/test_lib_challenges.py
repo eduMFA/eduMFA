@@ -1,5 +1,5 @@
 """
-This test file tests the lib.challange methods.
+This test file tests the lib.challenge methods.
 
 This tests the token functions on an interface level
 """

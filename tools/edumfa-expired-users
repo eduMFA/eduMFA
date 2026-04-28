@@ -149,7 +149,7 @@ def expire(realm, attribute_name, delete_serial, unassign_serial, noaction):
                 # 0 -> account never expires
                 print(f"{username} does not expire.")
                 continue
-            td = datetime.timedelta(seconds=(int(account_expires) / MULTIPLYER))
+            td = datetime.timedelta(seconds=(int(account_expires) / MULTIPLIER))
             try:
                 exp_date = MS_AD_START + td
             except OverflowError:

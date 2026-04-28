@@ -146,7 +146,7 @@ class FederationEventHandler(BaseEventHandler):
                 data["resolver"] = handler_options.get("resolver")
 
             log.info(f"Sending {method} request to {url!r}")
-            requestor = None
+            requester = None
             params = None
             headers = {}
 
@@ -158,14 +158,14 @@ class FederationEventHandler(BaseEventHandler):
             if method.upper() == "GET":
                 params = data
                 data = None
-                requestor = requests.get
+                requester = requests.get
             elif method.upper() == "POST":
-                requestor = requests.post
+                requester = requests.post
             elif method.upper() == "DELETE":
-                requestor = requests.delete
+                requester = requests.delete
 
-            if requestor:
-                r = requestor(
+            if requester:
+                r = requester(
                     url, params=params, data=data, headers=headers, verify=tls
                 )
                 # convert requests Response to werkzeug Response

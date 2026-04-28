@@ -1561,6 +1561,11 @@ class WebAuthnTokenClass(TokenClass):
             )
             options["user"] = token.user
             options["challenge"] = hexlify_and_unicode(challenge)
+            if token.user.login is None or token.user.login == "":
+                log.warning(
+                    f"Passkey {token.token.serial} is assigned to a user without a login. Can not be used for authentication!"
+                )
+                return False, {}
             try:
                 count = token.check_otp(otpval=None, options=options)
                 reply_dict["user"] = {

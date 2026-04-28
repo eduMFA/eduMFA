@@ -420,7 +420,7 @@ class EmailTokenClass(HotpTokenClass):
         This returns the AUTOEMAIL setting.
 
         :param options: contains user and g object.
-        :optins type: dict
+        :options type: dict
         :return: True if an SMS should be sent automatically
         :rtype: bool
         """

@@ -228,7 +228,7 @@ class UtilsTestCase(MyTestCase):
             check_proxy(path_to_client, "192.168.1.1>10.0.0.0/24>2.3.4.0/24"),
             IPAddress("192.168.1.1"),
         )
-        # 10.0.0.x may map to 2.3.4.x, but it doesn't matter because there is proxy2 inbetween
+        # 10.0.0.x may map to 2.3.4.x, but it doesn't matter because there is proxy2 in between
         self.assertEqual(
             check_proxy(path_to_client, "10.0.0.0/24>2.3.4.0/24"),
             IPAddress("192.168.1.1"),
@@ -450,7 +450,7 @@ class UtilsTestCase(MyTestCase):
                 "cacert": "string",
                 "openssl.cnf": "string",
                 "WorkingDir": "string",
-                "CSRDir": "sting",
+                "CSRDir": "string",
                 "CertificateDir": "string",
                 "CRLDir": "string",
                 "CRL_Validity_Period": "int",

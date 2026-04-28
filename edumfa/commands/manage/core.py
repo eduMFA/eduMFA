@@ -33,6 +33,7 @@ from flask.cli import AppGroup
 from flask_migrate import stamp as f_stamp
 
 from edumfa.lib.security.default import DefaultSecurityModule
+from edumfa.lib.sqlutils import is_db_stamped
 from edumfa.models import db
 
 core_cli = AppGroup("core", help="Core commands")
@@ -196,17 +197,17 @@ def create_audit_keys(keysize):
 
 
 @core_cli.command("create_tables")
-@click.option(
-    "-s", "--stamp", is_flag=True, help="Stamp database to current head revision."
-)
-def create_tables(stamp=False):
+def create_tables():
     """
     Initially create the tables in the database. The database must exist
-    (an SQLite database will be created).
+    (an SQLite database will be created). If the DB is stamped, exit without
+    doing anything (with a successful exit code).
     """
     click.echo(db)
-    db.create_all()
-    if stamp:
+    database_is_stamped = is_db_stamped(db.engine)
+    if not database_is_stamped:
+        db.create_all()
+        # stamp the database
         # get the path to the migration directory from the distribution
         p = [
             x.locate()
@@ -215,10 +216,62 @@ def create_tables(stamp=False):
         ]
         migration_dir = os.path.dirname(os.path.abspath(p[0]))
         f_stamp(directory=migration_dir)
-    db.session.commit()
+        db.session.commit()
+    else:
+        click.echo(
+            "Your database seems to already have been created. To upgrade its schema, please see the documentation."
+        )
+        # Exit successfully if nothing was done.
+        sys.exit(0)
 
 
 core_cli.add_command(create_tables, "createdb")
+
+
+@core_cli.command("wait_for_db")
+@click.option(
+    "-a",
+    "--attempts",
+    type=int,
+    default=10,
+    show_default=True,
+    help="Number of attempts to connect to the database before giving up.",
+)
+@click.option(
+    "-s",
+    "--sleep",
+    type=int,
+    default=3,
+    show_default=True,
+    help="Time to sleep in seconds between the attempts to wait for the database to become available.",
+)
+def wait_for_db(attempts: int, sleep: int) -> None:
+    """
+    Wait until the database is available.
+
+    :param attempts: Amount of tries to connect.
+    :param sleep: Time to sleep in seconds between connection attempts.
+    """
+    import time
+
+    from sqlalchemy import text
+    from sqlalchemy.exc import OperationalError
+
+    for attempt in range(attempts):
+        try:
+            with db.engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
+            click.echo("Database connection successful.")
+            return
+        except OperationalError:
+            click.echo(
+                f"Failed to connect to database. Attempt {attempt + 1} of {attempts}. Waiting {sleep} seconds...",
+                err=True,
+            )
+            time.sleep(sleep)
+
+    click.echo(f"Could not connect to the database after {attempts} attempts.")
+    sys.exit(1)
 
 
 @core_cli.command("drop_tables")

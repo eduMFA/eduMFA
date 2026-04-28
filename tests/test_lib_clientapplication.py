@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from unittest import mock
 
 from edumfa.lib.clientapplication import get_clientapplication, save_clientapplication
+from edumfa.lib.config import set_edumfa_config
 from edumfa.models import ClientApplication
 
 from .base import MyTestCase
@@ -147,3 +148,13 @@ class ClientApplicationTestCase(MyTestCase):
         self.assertEqual(
             apps["2.3.4.5"], [{"clienttype": "PAM", "hostname": None, "lastseen": t1}]
         )
+
+    def test_03_disable_client_tracking(self):
+        # remove all rows first
+        ClientApplication.query.delete()
+
+        set_edumfa_config("DisableClientTracking", "True")
+        save_clientapplication("1.2.3.4", "PAM")
+        r = get_clientapplication()
+        self.assertEqual(len(r), 0)
+        set_edumfa_config("DisableClientTracking", "False")

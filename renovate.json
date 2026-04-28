@@ -2,6 +2,22 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", ":pinVersions"],
   "schedule": ["monthly"],
+  "pip_requirements": {
+    "enabled": false
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "branchTopic": "renovate-lock-file-maintenance",
+    "commitMessageAction": "Update lock file"
+  },
+  "pip-compile": {
+    "managerFilePatterns": ["/(^|/)requirements\\.txt$/"],
+    "lockFileMaintenance": {
+      "enabled": true,
+      "branchTopic": "renovate-pip-compile-refresh",
+      "commitMessageAction": "Refresh uv pip compile outputs"
+    }
+  },
   "packageRules": [
     {
       "matchManagers": ["github-actions"],

@@ -964,7 +964,7 @@ class CAConnector(TimestampMethodsMixin, db.Model):
 class CAConnectorConfig(db.Model):
     """
     Each CAConnector can have multiple configuration entries.
-    Each CA Connector type can have different required config values. Therefor
+    Each CA Connector type can have different required config values. Therefore
     the configuration is stored in simple key/value pairs. If the type of a
     config entry is set to "password" the value of this config entry is stored
     encrypted.
@@ -1070,7 +1070,7 @@ class Resolver(TimestampMethodsMixin, db.Model):
 class ResolverConfig(TimestampMethodsMixin, db.Model):
     """
     Each Resolver can have multiple configuration entries.
-    Each Resolver type can have different required config values. Therefor
+    Each Resolver type can have different required config values. Therefore
     the configuration is stored in simple key/value pairs. If the type of a
     config entry is set to "password" the value of this config entry is stored
     encrypted.
@@ -1546,7 +1546,7 @@ class Policy(TimestampMethodsMixin, db.Model):
     client = db.Column(db.Unicode(256), default="")
     time = db.Column(db.Unicode(64), default="")
     # If there are multiple matching policies, choose the one
-    # with the lowest priority number. We choose 1 to be the default priotity.
+    # with the lowest priority number. We choose 1 to be the default priority.
     priority = db.Column(db.Integer, default=1, nullable=False)
     conditions = db.relationship(
         "PolicyCondition",
@@ -1628,7 +1628,7 @@ class Policy(TimestampMethodsMixin, db.Model):
         If value is empty, it returns an empty array.
         The normal split would return an array with an empty string.
 
-        :param value: The string to be splitted
+        :param value: The string to be split
         :type value: basestring
         :return: list
         """

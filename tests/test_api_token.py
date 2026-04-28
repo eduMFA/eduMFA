@@ -2101,7 +2101,7 @@ class APITokenTestCase(MyApiTestCase):
                 # Fill the list of all transaction_ids
                 transaction_ids.append(challenge.get("transaction_id"))
 
-        # Now we only ask for the first transation id. This should return only ONE challenge
+        # Now we only ask for the first transaction id. This should return only ONE challenge
         with self.app.test_request_context(
             "/token/challenges/",
             data={"transaction_id": transaction_ids[0]},
@@ -3975,7 +3975,7 @@ class API00TokenPerformance(MyApiTestCase):
             self.assertFalse(result["status"])
 
             toks = get_tokens(tokeninfo={"newkey": "newvalue"})
-            # No token reveived this value!
+            # No token received this value!
             self.assertEqual(len(toks), 0)
 
         # Try to delete tokeninfo

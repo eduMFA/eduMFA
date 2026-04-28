@@ -16,7 +16,6 @@ CERTDAYS=1095
 CERTKEYSIZE=4096
 MIGRATIONSDIR=/opt/edumfa/lib/edumfa/migrations/
 MYSQLFIX=/etc/mysql/conf.d/edumfa-maxkeylengthfix.cnf
-DB_CREATED=false
 CONFIG_FILE=/etc/edumfa/edumfa.cfg
 
 # Default paths
@@ -160,8 +159,7 @@ create_database() {
     mysql -u "$USER" --password="$PASSWORD" -e "grant all privileges on edumfa.* to 'edumfa'@'localhost';"
     echo "SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://edumfa:$NPW@localhost/edumfa?charset=utf8mb4'" >> /etc/edumfa/edumfa.cfg
     echo "DB created"
-    /opt/edumfa/bin/edumfa-manage create_tables || true
-    DB_CREATED=true
+    /opt/edumfa/bin/edumfa-manage create_tables
   fi
 }
 
@@ -177,7 +175,7 @@ enable_nginx_uwsgi() {
 
 update_db() {
   # Upgrade the database
-  /opt/edumfa/bin/edumfa-schema-upgrade $MIGRATIONSDIR
+  /opt/edumfa/bin/edumfa-schema-upgrade $MIGRATIONSDIR --skipstamp
 }
 
 set_path() {
@@ -197,15 +195,8 @@ case "$1" in
     create_database
     enable_nginx_uwsgi
     create_certificate
-    if [ "$DB_CREATED" = true ]; then
-      # We've created the DB, so we stamp the DB
-      /opt/edumfa/bin/edumfa-manage db stamp -d $MIGRATIONSDIR head
-    else
-      # The DB was already created, so a update might be necessary
-      update_db
-    fi
-    #update-rc.d nginx defaults
-    #update-rc.d uwsgi defaults
+    # Upgrade DB schema if upgradable.
+    update_db
     service uwsgi restart
     service nginx restart
   ;;

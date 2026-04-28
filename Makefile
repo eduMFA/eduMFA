@@ -1,13 +1,12 @@
 info:
 	@echo "make clean        	 	- remove all automatically created files"
-	@echo "make pypi             	- upload package to pypi"
 	@echo "make translate-frontend	- translate WebUI"
 	@echo "make translate-backend 	- translate string in the server code."
 	@echo "make update-contrib   	- update JS contrib libraries"
 
 
-SIGNING_KEY=53E66E1D2CABEFCDB1D3B83E106164552E8D8149
 BUN_VERSION := $(shell bun --version 2>/dev/null)
+UV_VERSION := $(shell uv --version 2>/dev/null)
 
 clean:
 	find . -name \*.pyc -exec rm {} \;
@@ -25,27 +24,27 @@ setversion:
 	@echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 	@echo "Please set a tag like:  git tag 3.17"
 
-pypi:
-	make doc-man
-	rm -fr dist
-	python setup.py sdist
-	gpg --detach-sign -a --default-key ${SIGNING_KEY} dist/*.tar.gz
-	twine upload dist/*.tar.gz dist/*.tar.gz.asc
-
 doc-man:
 	(cd doc; make man)
 
 doc-html:
 	(cd doc; make html)
 
-translate-backend:
-	(cd edumfa; pybabel extract --add-location=file -F babel.cfg -o translations/messages.pot .)
+
+check-uv:
+ifeq ($(UV_VERSION),)
+	@echo "uv is not installed. Follow https://docs.astral.sh/uv/getting-started/installation/ to install it."
+	@exit 1
+endif
+
+translate-backend: check-uv
+	(cd edumfa; uv run pybabel extract --add-location=file -F babel.cfg -o translations/messages.pot .)
 	# Normalize POT-Creation-Date after update (cross-platform sed)
 	(cd edumfa/translations; sed -i.bak 's/^"POT-Creation-Date:.*"/"POT-Creation-Date: 1970-01-01 00:00+0000\\n"/' messages.pot && rm -f messages.pot.bak)
 	# pybabel init -i messages.pot -d translations -l de
-	(cd edumfa; pybabel update -i translations/messages.pot -d translations)
+	(cd edumfa; uv run pybabel update -i translations/messages.pot -d translations)
 	# create the .mo file
-	(cd edumfa; pybabel compile -d translations)
+	(cd edumfa; uv run pybabel compile -d translations)
 
 translate-frontend:
 ifdef BUN_VERSION

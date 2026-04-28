@@ -491,9 +491,9 @@ def list_token_machines(serial):
 
 def _get_host_identifier(hostname, machine_id, resolver_name):
     """
-    This returns the combiniation of machine_id and resolver_name for some
+    This returns the combination of machine_id and resolver_name for some
     of the given values. This is used when attaching and detaching tokens to
-    a machine to create a uniquely identifyable machine object.
+    a machine to create a uniquely identifiable machine object.
 
     :param hostname:
     :param machine_id:

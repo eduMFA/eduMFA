@@ -232,7 +232,7 @@ class Audit:  # pragma: no cover
         """
         This method initialized the log state.
         The fact, that the log state was initialized, also needs to be logged.
-        Therefor the same parameters are passed as in the log method.
+        Therefore the same parameters are passed as in the log method.
         """
         pass
 

@@ -112,7 +112,7 @@ class postpolicy:
 
     def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
         """
-        This decorates the given function. The postpolicy decorator is ment
+        This decorates the given function. The postpolicy decorator is meant
         for API functions on the API level.
         The wrapped_function should return a response object.
 

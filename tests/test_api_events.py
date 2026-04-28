@@ -60,7 +60,7 @@ class APIEventsTestCase(MyApiTestCase):
             self.assertEqual(res.json["result"]["error"]["code"], 303, res.json)
             delete_policy("adm_disable_event")
 
-        # check fo resourceNotFound error
+        # check for resourceNotFound error
         with self.app.test_request_context(
             "/event/enable/1234", method="POST", headers={"Authorization": self.at}
         ):

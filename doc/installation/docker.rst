@@ -21,7 +21,7 @@ Docker Compose
 
 For the most setups you should use Docker Compose. Here's a sample `docker-compose.yml` file also containing a mariadb service. 
 
-The container contains a default logging configuration printing the logs to `stdout`, performs database maintanance on start and runs the application on port 8000.
+The container contains a default logging configuration printing the logs to `stdout`, performs database maintenance on start and runs the application on port 8000.
 
 .. code-block:: yaml
 
@@ -80,8 +80,12 @@ The `.env` file should contain the following variables:
 - EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 24 random characters long
 - EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional)
 - EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional)
+- EDUMFA_LOGCONFIG: a path to an alternative logging config (optional)
 - SUPERUSER_REALM: which realms should be superuser realms (optional)
 - EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional)
+- EDUMFA_LOGO: filename of custom logo (optional)
+- EDUMFA_PAGE_TITLE: custom page title (optional)
+- EDUMFA_CSS: url of custom css stylesheet (optional)
 
 You can also add a "_FILE" suffix to each variable name and pass a path to read the value from a file instead. For example instead of passing `SECRET_KEY`:
 

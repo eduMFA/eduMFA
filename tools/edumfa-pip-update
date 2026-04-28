@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import getopt
 import os
-import pipes
 import sys
 from subprocess import call, check_output
 
@@ -32,11 +31,11 @@ def update(environment):
 
 def update_db_schema(environment, skip_stamp=False):
     mig_path = environment + "/lib/edumfa/migrations"
-    command = f"edumfa-schema-upgrade {pipes.quote(mig_path)}"
+    command = ["edumfa-schema-upgrade", mig_path]
     if skip_stamp:
-        command += " --skipstamp"
+        command.append(" --skipstamp")
     # update the database schema
-    call(command, shell=True)
+    call(command)
 
 
 def main():
