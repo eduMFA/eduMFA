@@ -2728,7 +2728,7 @@ msgstr "可用于为 WebAuthn 令牌创建公钥凭据的算法。 (默认: [{0!
 
 #: lib/tokens/webauthntoken.py
 msgid "Whether to request attestation data when enrolling a new WebAuthn token."
-msgstr ""
+msgstr "注册新的WebAuthn令牌时是否请求证明数据。"
 
 #: lib/tokens/webauthntoken.py
 msgid ""
@@ -2973,54 +2973,4 @@ msgstr ""
 #~ msgstr ""
 #~ "允许应用程序选择应使用哪些令牌类型进行身份验证。应用程序可以在请求中设置参数“类型”。与验证/检查，验证/ "
 #~ "samlcheck和验证/触发挑战一起使用。"
-
-#~ msgid ""
-#~ "You can set the client modes in"
-#~ " the order that you prefer. For "
-#~ "example: \"interactive webauthn poll u2f\"."
-#~ " Accepted values are: <code>interactive "
-#~ "webauthn poll u2f</code>"
-#~ msgstr ""
-
-#~ msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
-#~ msgstr "这是信任已注册U2F令牌的FQDN主机名的列表。"
-
-#~ msgid ""
-#~ "Use an alternate challenge text for "
-#~ "telling the user to confirm with "
-#~ "his U2F device."
-#~ msgstr "使用备用质询文本告诉用户使用其U2F设备进行确认。"
-
-#~ msgid "Only specified U2F tokens are authorized."
-#~ msgstr "仅授权指定的U2F令牌。"
-
-#~ msgid "Only specified U2F tokens are allowed to be registered."
-#~ msgstr "仅允许注册指定的U2F令牌。"
-
-#~ msgid "Do not verify the U2F attestation certificate."
-#~ msgstr "不要验证U2F证明证书。"
-
-#~ msgid "The user may only have this maximum number of U2F tokens assigned."
-#~ msgstr "用户只能分配此最大数量的U2F令牌。"
-
-#~ msgid ""
-#~ "The user may only have this "
-#~ "maximum number of active U2F tokens "
-#~ "assigned."
-#~ msgstr "用户只能分配此最大数量的活动U2F令牌。"
-
-#~ msgid "You need to define the appId in the token config!"
-#~ msgstr "您需要在令牌配置中定义appId！"
-
-#~ msgid "Please confirm with your U2F token ({0!s})"
-#~ msgstr "请使用您的U2F令牌（{0！s}）进行确认"
-
-#~ msgid ""
-#~ "Whether to request attestation data when"
-#~ " enrolling a new WebAuthn token. "
-#~ "Note: for webauthn_req to work, this "
-#~ "cannot be set to none. Default: "
-#~ "direct (ask for non-anonymized "
-#~ "attestation data)"
-#~ msgstr "注册新的WebAuthn令牌时是否请求证明数据。注意：为了使u2f_req与WebAuthn一起使用，不能将其设置为none。默认值：直接（询问非匿名证明数据）"
 
