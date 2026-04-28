@@ -1926,7 +1926,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         g.client_ip = env["REMOTE_ADDR"]
         req = Request(env)
         req.User = User()
-        req.all_data = {"type": "push"}
+        req.all_data = {"type": "edupush"}
         # In this case we have no firebase config. We will raise an exception
         self.assertRaises(PolicyError, pushtoken_add_config, req, "init")
         # if we have a non existing firebase config, we will raise an exception
