@@ -1931,7 +1931,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertRaises(PolicyError, pushtoken_add_config, req, "init")
         # if we have a non existing firebase config, we will raise an exception
         req.all_data = {
-            "type": "push",
+            "type": "edupush",
             PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: "non-existing",
         }
         self.assertRaises(PolicyError, pushtoken_add_config, req, "init")
@@ -1945,7 +1945,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             f"{PushTokenClass.PUSH_ACTION.TTL}=10",
         )
         g.policy_object = PolicyClass()
-        req.all_data = {"type": "push"}
+        req.all_data = {"type": "edupush"}
         pushtoken_add_config(req, "init")
         self.assertEqual(
             req.all_data.get(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG),
