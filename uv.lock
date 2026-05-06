@@ -683,7 +683,7 @@ wheels = [
 
 [[package]]
 name = "edumfa"
-version = "2.9.0a0"
+version = "2.10.0a0"
 source = { editable = "." }
 dependencies = [
     { name = "alembic" },
@@ -839,7 +839,7 @@ requires-dist = [
     { name = "huey", extras = ["backends"], specifier = "==2.6.0" },
     { name = "importlib-metadata", specifier = "==8.7.0" },
     { name = "jinja2", specifier = "==3.1.6" },
-    { name = "ldap3", specifier = "==2.10.2rc3" },
+    { name = "ldap3", specifier = "==2.10.2rc4" },
     { name = "lxml", specifier = "==6.1.0" },
     { name = "netaddr", specifier = "==1.3.0" },
     { name = "passlib", extras = ["bcrypt", "argon2"], specifier = "==1.7.4" },
@@ -1264,15 +1264,15 @@ wheels = [
 
 [[package]]
 name = "ldap3"
-version = "2.10.2rc3"
+version = "2.10.2rc4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyasn1" },
     { name = "pycryptodomex" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ae/e5/fc54401b5e79f3363f1b000e2b4e0200ceca1a3701a173ec44b65122421c/ldap3-2.10.2rc3.tar.gz", hash = "sha256:96b5130e56ee5a34d7e7144f1109c6297ba486b187f9b3c4119716d071dcd1e3", size = 452131, upload-time = "2025-11-09T11:34:24.351Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/aa/23/01ef900e0401be82dbc86394c613fcac0d0da322354d6419544fe975c1bc/ldap3-2.10.2rc4.tar.gz", hash = "sha256:21b0345b57dd3692d11a46545b6c8b7d078bb79713936eed10b3b5ec77614010", size = 452299, upload-time = "2026-04-18T16:02:34.712Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/83/b7/65e91c7d1121c9be48eeaf30814803b84c6640cafdbdabdce012c4b747bf/ldap3-2.10.2rc3-py3-none-any.whl", hash = "sha256:64d2ebe48f83392502a4b3a0d80127799d693c7a74f2fe6f844c4ff56c6d7347", size = 488231, upload-time = "2025-11-09T11:34:22.565Z" },
+    { url = "https://files.pythonhosted.org/packages/a0/cd/069d327a2dadee6c1c1cfcff00058e6d6c0b7adae144249d0bc227320852/ldap3-2.10.2rc4-py3-none-any.whl", hash = "sha256:74246d6916d30696e032e8a85f1cccbbf47b6ca45b4a5976dc3325a8a348d1ee", size = 488323, upload-time = "2026-04-18T16:02:33.259Z" },
 ]
 
 [[package]]
