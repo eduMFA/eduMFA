@@ -71,7 +71,7 @@ Repository = "https://github.com/eduMFA/eduMFA.git"
 Issues = "https://github.com/eduMFA/eduMFA/issues"
 
 [project.optional-dependencies]
-postgres = ["psycopg2==2.9.11"]
+postgres = ["psycopg2==2.9.12"]
 hsm = ["PyKCS11==1.5.18"]
 kerberos = ["gssapi==1.11.1"]
 grpc = [
