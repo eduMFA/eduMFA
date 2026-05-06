@@ -69,7 +69,7 @@ greenlet==3.3.2 ; platform_machine == 'AMD64' or platform_machine == 'WIN32' or 
     # via sqlalchemy
 grpcio==1.80.0
     # via edumfa (pyproject.toml)
-huey==2.6.0
+huey==3.0.0
     # via edumfa (pyproject.toml)
 idna==3.11
     # via requests
