@@ -32,7 +32,7 @@ cffi==2.0.0
     #   cryptography
 charset-normalizer==3.4.7
     # via requests
-click==8.3.2
+click==8.3.3
     # via
     #   edumfa (pyproject.toml)
     #   flask
