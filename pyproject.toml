@@ -30,6 +30,7 @@ dynamic = ["dependencies"]
 [project.urls]
 Homepage = "https://edumfa.io/"
 Documentation = "https://edumfa.readthedocs.io/"
+Changelog = "https://edumfa.readthedocs.io/en/latest/changelog.html"
 Repository = "https://github.com/eduMFA/eduMFA.git"
 Issues = "https://github.com/eduMFA/eduMFA/issues"
 
