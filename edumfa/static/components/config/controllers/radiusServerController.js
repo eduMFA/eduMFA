@@ -77,7 +77,7 @@ myApp.controller("radiusServerController", ["$scope", "$stateParams", "inform",
            if (data.result.value === true) {
                inform.add(gettextCatalog.getString("RADIUS request" +
                    " successful."),
-                   {type: "info"});
+                   {type: "success"});
            } else {
                inform.add(gettextCatalog.getString("RADIUS request failed!"),
                    {type: "danger"});
