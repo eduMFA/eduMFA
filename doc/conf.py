@@ -21,10 +21,10 @@ import sys
 # built documents.
 #
 # The short X.Y version.
-version = "2.9.0"
+version = "2.9.2"
 # The full version, including alpha/beta/rc tags.
 # release = '2.16dev5'
-release = "2.10.0a"
+release = version
 
 
 def no_op_wraps(func, assigned=None, updated=None):
