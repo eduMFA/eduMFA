@@ -1280,6 +1280,7 @@ class APISelfserviceTestCase(MyApiTestCase):
 
         delete_policy("pol_time1")
         delete_policy("pol_loginmode")
+        token.delete_token()
 
 
 class PolicyConditionsTestCase(MyApiTestCase):
