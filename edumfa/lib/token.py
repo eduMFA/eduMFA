@@ -170,6 +170,7 @@ def _create_token_query(
     tokeninfo=None,
     maxfail=None,
     allowed_realms=None,
+    for_update=False,
 ):
     """
     This function create the sql query for getting tokens. It is used by
@@ -180,7 +181,8 @@ def _create_token_query(
     if user is not None and not user.is_empty():
         # extract the realm from the user object:
         realm = user.realm
-
+    if for_update:
+        sql_query = sql_query.with_for_update(key_share=True)
     if tokentype is not None and tokentype.strip("*"):
         # filter for type
         if "*" in tokentype:
@@ -432,6 +434,7 @@ def get_tokens(
     locked=None,
     tokeninfo=None,
     maxfail=None,
+    for_update=False,
 ):
     """
     (was getTokensOfType)
@@ -478,6 +481,8 @@ def get_tokens(
     :type tokeninfo: dict
     :param maxfail: If only tokens should be returned, which failcounter
         reached maxfail
+    :param for_update: If True, a SELECT FOR UPDATE is used to lock the token
+    :type for_update: bool
     :return: A list of tokenclasses (lib.tokenclass).
     :rtype: list
     """
@@ -496,6 +501,7 @@ def get_tokens(
         locked=locked,
         tokeninfo=tokeninfo,
         maxfail=maxfail,
+        for_update=for_update,
     )
 
     # Warning for unintentional exact serial matches
@@ -2186,7 +2192,7 @@ def check_serial_pass(serial, passw, options=None):
     :rtype: tuple
     """
     reply_dict = {}
-    tokenobject = get_one_token(serial=serial)
+    tokenobject = get_one_token(serial=serial, for_update=True)
     res, reply_dict = check_token_list(
         [tokenobject],
         passw,
@@ -2210,7 +2216,7 @@ def check_otp(serial, otpval):
     :rtype: tuple(bool, dict)
     """
     reply_dict = {}
-    tokenobject = get_one_token(serial=serial)
+    tokenobject = get_one_token(serial=serial, for_update=True)
     res = tokenobject.check_otp(otpval) >= 0
     if not res:
         reply_dict["message"] = _("OTP verification failed.")
@@ -2241,7 +2247,7 @@ def check_user_pass(user, passw, options=None):
     :rtype: tuple
     """
     token_type = options.pop("token_type", None)
-    tokenobject_list = get_tokens(user=user, tokentype=token_type)
+    tokenobject_list = get_tokens(user=user, tokentype=token_type, for_update=True)
     reply_dict = {}
     if not tokenobject_list:
         # The user has no tokens assigned
