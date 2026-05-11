@@ -27,7 +27,7 @@
 import binascii
 import logging
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from json import dumps, loads
 
 from dateutil.tz import tzutc
@@ -36,6 +36,7 @@ from sqlalchemy import BigInteger, and_
 from sqlalchemy.dialects import mysql, postgresql, sqlite
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import CreateSequence, Sequence
 
 from edumfa.lib.crypto import (
@@ -1373,6 +1374,44 @@ class PasswordReset(MethodsMixin, db.Model):
         )
 
 
+class JwtBlacklist(db.Model):
+    """
+    Table for storing a JWT blacklist to prevent reusing Passkey Authentications
+    """
+
+    __tablename__ = "jwt_blacklist"
+    __table_args__ = ({"mysql_row_format": "DYNAMIC"},)
+    expiration = db.Column(db.DateTime, index=True)
+    nonce = db.Column(db.Unicode(128), nullable=False, primary_key=True, unique=True)
+
+    def __init__(self, expiration, nonce):
+        self.expiration = expiration
+        self.nonce = nonce
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        return self.nonce
+
+    def delete(self):
+        ret = self.nonce
+        db.session.delete(self)
+        db.session.commit()
+        return ret
+
+    @staticmethod
+    def blacklist_janitor():
+        try:
+            # Get a new transaction to keep the impact of the action as low as possible
+            session = sessionmaker(bind=db.engine)
+            with session.begin() as session_transaction:
+                session_transaction.query(JwtBlacklist).filter(
+                    JwtBlacklist.expiration < datetime.now(timezone.utc)
+                ).delete()
+        except (OperationalError, IntegrityError) as e:
+            log.warning(f"Error in JwtBlacklist janitor: {e}")
+
+
 class Challenge(MethodsMixin, db.Model):
     """
     Table for handling of the generic challenges.
@@ -1517,7 +1556,7 @@ def cleanup_challenges():
     """
     c_now = datetime.utcnow()
     try:
-        Challenge.query.filter(Challenge.expiration < c_now).delete()
+        Challenge.query.with_for_update().filter(Challenge.expiration < c_now).delete()
         db.session.commit()
     except (OperationalError, IntegrityError) as e:
         log.warning("Error in cleanup_challenges: {0!s}".format(e))

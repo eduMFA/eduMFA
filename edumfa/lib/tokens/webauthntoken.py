@@ -29,6 +29,7 @@ import json
 import logging
 
 import jwt
+import sqlalchemy
 from cryptography import x509
 from dateutil.tz import tzlocal
 from flask import current_app, g
@@ -67,6 +68,7 @@ from edumfa.lib.utils import (
     is_true,
     to_unicode,
 )
+from edumfa.models import Challenge, JwtBlacklist
 
 __doc__ = """
 WebAuthn  is the Web Authentication API specified by the FIDO Alliance.
@@ -474,7 +476,6 @@ native encoding of the language (usually utf-16).
 
 """
 
-from edumfa.models import Challenge
 
 IMAGES = IMAGES
 
@@ -1386,7 +1387,16 @@ class WebAuthnTokenClass(TokenClass):
         nonce = WebAuthnTokenClass._get_nonce()
         transactionid = Challenge.create_transaction_id()
         challenge = jwt.encode(
-            {"nonce": webauthn_b64_encode(nonce), "transactionId": transactionid},
+            {
+                "nonce": webauthn_b64_encode(nonce),
+                "transactionId": transactionid,
+                "exp": datetime.datetime.now(tz=datetime.timezone.utc)
+                + datetime.timedelta(
+                    seconds=int(get_from_config("DefaultChallengeValidityTime", 120))
+                ),
+                "iat": datetime.datetime.now(tz=datetime.timezone.utc),
+                "nbf": datetime.datetime.now(tz=datetime.timezone.utc),
+            },
             current_app.secret_key,
             algorithm="HS256",
         )
@@ -1523,35 +1533,81 @@ class WebAuthnTokenClass(TokenClass):
             json_text = to_unicode(client_data)
             c = json.loads(json_text)
             challenge = webauthn_b64_decode(c.get("challenge"))
+            claims = {}
             try:
-                jwt.decode(challenge, current_app.secret_key, algorithms=["HS256"])
+                claims = jwt.decode(
+                    challenge, current_app.secret_key, algorithms=["HS256"]
+                )
             except jwt.DecodeError as err:
-                raise AuthenticationRejectedException(
-                    "Provided response does not contain a challenge issued by this "
-                    "instance"
-                )
+                log.warning(f"Error decoding passkey challenge: {err}")
+                return False, {}
             except jwt.ExpiredSignatureError as err:
-                raise AuthenticationRejectedException(
-                    "Provided response does not contain a challenge issued by this "
-                    "instance"
+                claims = jwt.decode(
+                    challenge,
+                    current_app.secret_key,
+                    algorithms=["HS256"],
+                    options={"verify_exp": False},
                 )
-
+                log.warning(
+                    f"Got expired passkey challenge: {err}; Actually expired at {claims.get('exp')} ({claims.get('exp') - datetime.datetime.now(datetime.timezone.utc).timestamp()} seconds ago)"
+                )
+                reply_dict = {"message": "Passkey challenge expired."}
+                return False, reply_dict
+            if (
+                "transactionId" not in claims
+                or "nonce" not in claims
+                or "exp" not in claims
+            ):
+                log.warning(
+                    "Passkey response missing required claims (transactionId, nonce, exp)."
+                )
+                reply_dict = {"message": "Invalid passkey challenge."}
+                return False, reply_dict
+            # Try to store the transaction id in the blacklist to prevent replay attacks, should trigger an IntegrityError or an OperationalError on duplicate inserts
+            expiration = datetime.datetime.fromtimestamp(
+                claims.get("exp"), tz=datetime.timezone.utc
+            )
+            try:
+                JwtBlacklist(
+                    expiration=expiration,
+                    nonce=claims.get("nonce"),
+                ).save()
+            except (
+                sqlalchemy.exc.IntegrityError,
+                sqlalchemy.exc.OperationalError,
+            ) as err:
+                log.warning(
+                    f"Possible replay attack detected during passkey authentication for transaction id {claims.get('transactionId')}: {err}"
+                )
+                reply_dict = {"message": "Passkey challenge already used."}
+                return False, reply_dict
             # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI
             user_handle = getParam(options, "userhandle", required)
             token = get_tokens_from_serial_or_user(
-                serial=user_handle, user=None, active=True, revoked=False, locked=False, for_update=True
+                serial=user_handle,
+                user=None,
+                active=True,
+                revoked=False,
+                locked=False,
+                for_update=True,
             )[0]
             reply_dict = {}
             if token is None:
                 log.warning("Passkey {0!s} not found.".format(user_handle))
                 return False, reply_dict
+
+            reply_dict["serial"] = token.token.serial
+            reply_dict["type"] = token.token.tokentype
+
             if token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
                 log.warning(
                     "Passkey {0!s} is in clientwait state. Can not be used for authentication!".format(
                         token.token.serial
                     )
                 )
+                reply_dict["message"] = "Passkey is in clientwait state."
                 return False, reply_dict
+
             user_verification_requirement_policies = Match.user(
                 g,
                 scope=SCOPE.AUTH,
@@ -1580,18 +1636,18 @@ class WebAuthnTokenClass(TokenClass):
                 log.warning(
                     f"Passkey {token.token.serial} is assigned to a user without a login. Can not be used for authentication!"
                 )
-                return False, {}
+                reply_dict["message"] = "Passkey is assigned to a user without a login."
+                return False, reply_dict
+
             try:
                 count = token.check_otp(otpval=None, options=options)
-                reply_dict["user"] = {
-                    "username": token.user.login,
-                    "realm": token.user.realm,
-                    "resolver": token.user.resolver,
-                }
-                reply_dict["message"] = "Passkey authentication worked!"
-                reply_dict["serial"] = token.token.serial
-                reply_dict["type"] = token.token.tokentype
                 if count != -1:
+                    reply_dict["user"] = {
+                        "username": token.user.login,
+                        "realm": token.user.realm,
+                        "resolver": token.user.resolver,
+                    }
+                    reply_dict["message"] = "Passkey authentication worked!"
                     token.add_tokeninfo(
                         ACTION.LASTAUTH,
                         datetime.datetime.now(tzlocal()).isoformat(
@@ -1600,14 +1656,28 @@ class WebAuthnTokenClass(TokenClass):
                     )
                     token.inc_count_auth_success()
                     reset_all_user_tokens_passkey(token.user)                    
+                    if not get_from_config(
+                        "DisableAutoChallengeJanitor", "False", return_bool=True
+                    ):
+                        JwtBlacklist.blacklist_janitor()
                     return True, reply_dict
                 else:
+                    log.warning(
+                        f"Passkey authentication failed for token {token.token.serial}."
+                    )
                     return False, reply_dict
             except Exception as e:
+                log.error(f"Unexpected failure '{e!s}' during passkey authentication.")
+                reply_dict["message"] = (
+                    "Unexpected error during passkey authentication."
+                )
                 return False, reply_dict
         else:
-            # Not all necessary data provided.
-            return False, {}
+            log.warning(
+                "Received passkey authentication request which is not a valid WebAuthn assertion response."
+            )
+            reply_dict = {"message": "Invalid authentication request."}
+            return False, reply_dict
 
     @check_token_locked
     def check_otp(self, otpval, counter=None, window=None, options=None):

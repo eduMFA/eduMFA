@@ -57,8 +57,8 @@ from edumfa.lib.token import (
     unassign_token,
 )
 from edumfa.lib.user import User, split_user
-from edumfa.lib.utils import parse_legacy_time, to_unicode
-from edumfa.models import Token
+from edumfa.lib.utils import parse_legacy_time
+from edumfa.models import JwtBlacklist, Token
 
 __version__ = "0.1"
 
@@ -128,7 +128,6 @@ Actions:
 """.format("|".join(ALLOWED_ACTIONS))
 
 import click
-from flask import current_app as app
 from flask.cli import FlaskGroup
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -758,7 +757,7 @@ def find(
                             else "n/a"
                         )
                         token_list.append(token_dict)
-                    except Exception as e:
+                    except Exception:
                         sys.stderr.write(
                             f"\nFailed to export token {token_dict.get('serial')!s}.\n"
                         )
@@ -838,11 +837,17 @@ def updatetokens(yaml):
             print("Updating token {0!s}.".format(tok.get("serial")))
             try:
                 tok_objects[0].update(tok)
-            except Exception as e:
+            except Exception:
                 sys.stderr.write(
                     "\nFailed to update token {0!s}.".format(tok.get("serial"))
                 )
 
+@cli.command("cleanupjwtblacklist")
+def cleanupjwtblacklist():
+    """
+    This command can be used to clean up old JWT blacklist entries from the database.
+    """
+    JwtBlacklist.blacklist_janitor()
 
 @cli.command("loadtokens")
 @click.option("--pskc", help="Import this PSKC file.")
