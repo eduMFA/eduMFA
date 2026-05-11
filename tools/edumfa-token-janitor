@@ -71,6 +71,7 @@ ALLOWED_ACTIONS = [
     "listuser",
     "tokenrealms",
     "enable",
+    "reset",
 ]
 
 __doc__ = f"""
@@ -95,6 +96,7 @@ Actions:
 * disable
 * delete
 * enable
+* reset
 
 
     edumfa-token-janitor find
@@ -818,6 +820,10 @@ def find(
                                     )
                                     token_obj.del_tokeninfo(remove_tokeninfo_key)
                                     token_obj.save()
+                        elif action == "reset":
+                            click.echo(f"Reset failcounter of {token_obj.token.serial}")
+                            token_obj.reset()
+                            token_obj.save()
                     except Exception as exx:
                         click.echo(f"Failed to process token {token_obj.token.serial}.")
                         click.echo(f"{exx}")
