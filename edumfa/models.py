@@ -48,6 +48,7 @@ from edumfa.lib.crypto import (
     pass_hash,
     verify_pass_hash,
 )
+from edumfa.lib.error import ResourceNotFoundError
 from edumfa.lib.framework import get_app_config_value
 from edumfa.lib.utils import convert_column_to_unicode, hexlify_and_unicode, is_true
 
@@ -1213,13 +1214,20 @@ class TokenOwner(MethodsMixin, db.Model):
         if realm_id is not None:
             self.realm_id = realm_id
         elif realmname:
-            r = Realm.query.filter_by(name=realmname).first()
-            self.realm_id = r.id
+            realm = Realm.query.filter_by(name=realmname).first()
+            if not realm:
+                raise ResourceNotFoundError(f"Realm '{realmname}' does not exist.")
+            self.realm_id = realm.id
         if token_id is not None:
             self.token_id = token_id
         elif serial:
-            r = Token.query.filter_by(serial=serial).first()
-            self.token_id = r.id
+            token = Token.query.filter_by(serial=serial).first()
+            if not token:  # pragma: no cover
+                # usually this is already covered by the lib / token class functions
+                raise ResourceNotFoundError(
+                    f"Token with serial '{serial}' does not exist."
+                )
+            self.token_id = token.id
         self.resolver = resolver
         self.user_id = user_id
 
