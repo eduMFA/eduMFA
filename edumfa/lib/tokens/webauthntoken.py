@@ -584,7 +584,7 @@ def reset_all_user_tokens_passkey(user) -> None:
     ).policies()
     if not reset_all:
         return
-    tokens = get_tokens_from_serial_or_user(None, user=user)
+    tokens = get_tokens_from_serial_or_user(None, user=user, for_update=True)
     log.debug(f"Reset failcounter of all tokens of {user}")
     for tok_obj_reset in tokens:
         if tok_obj_reset.get_class_type() in ["registration"]:
@@ -1529,7 +1529,7 @@ class WebAuthnTokenClass(TokenClass):
             # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI
             user_handle = getParam(options, "userhandle", required)
             token = get_tokens_from_serial_or_user(
-                serial=user_handle, user=None, active=True, revoked=False, locked=False
+                serial=user_handle, user=None, active=True, revoked=False, locked=False, for_update=True
             )[0]
             reply_dict = {}
             if token is None:
