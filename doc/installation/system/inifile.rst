@@ -42,6 +42,8 @@ The file should contain the following contents::
    # EDUMFA_AUDIT_SQL_OPTIONS = {}
    # Truncate Audit entries to fit into DB columns
    EDUMFA_AUDIT_SQL_TRUNCATE = True
+   # Reduce amount of audit log rows for usernameless Passkey logins
+   # EDUMFA_REDUCE_SQLAUDIT = False
    # EDUMFA_LOGFILE = '....'
    # EDUMFA_LOGLEVEL = 20
    # EDUMFA_INIT_CHECK_HOOK = 'your.module.function'
@@ -193,6 +195,10 @@ database engine. If ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set,
 
 ``EDUMFA_AUDIT_SQL_TRUNCATE = True`` lets you truncate audit entries to the length
 of the database fields.
+
+``EDUMFA_REDUCE_SQLAUDIT = True`` reduces the amount of entries in the audit log
+for usernameless Passkey logins by not logging ``triggerchallenge`` or events
+not containing a related user.
 
 In certain cases when you experiencing problems you may use the parameters
 ``EDUMFA_AUDIT_POOL_SIZE`` and ``EDUMFA_AUDIT_POOL_RECYCLE``. However, they are only
