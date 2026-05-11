@@ -4237,7 +4237,7 @@ class WebAuthn(MyApiTestCase):
             self.assertEqual(200, res.status_code)
 
             # Test for failed Authentication because we do not have a valid webauthn_assertion_response
-            self.assertIsNone(data.get("detail"))
+            self.assertEqual("Invalid authentication request.", data.get("detail").get("message"))
             self.assertEqual("REJECT", data.get("result").get("authentication"))
 
             # FIXME: A test for a valid usernameless authentication would be better.
