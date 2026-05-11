@@ -136,7 +136,7 @@ class RADIUSServer:
                     success = response.verify_message_authenticator()
                     if not success:
                         log.info(
-                            "Radiusserver %s sent broken"
+                            "Radiusserver %s sent broken "
                             "Message-Authenticator" % (config.server)
                         )
                         return False
