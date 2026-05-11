@@ -1,6 +1,13 @@
+edumfa (2.9.2{{CODENAME}}) {{CODENAME}}; urgency=high
+
+* See the changelog for the 2.9.2 release at:
+  https://edumfa.readthedocs.io/en/latest/changelog.html#edumfa-2-9-2
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 11 May 2026 16:00:00 +0200
+
 edumfa (2.9.1{{CODENAME}}) {{CODENAME}}; urgency=high
 
-* See the changelog for the 2.9.0 release at:
+* See the changelog for the 2.9.1 release at:
   https://edumfa.readthedocs.io/en/latest/changelog.html#edumfa-2-9-1
 
  -- eduMFA <edumfa-dev@listserv.dfn.de>  Mon, 11 May 2026 16:00:00 +0200

@@ -15,12 +15,18 @@ For version-to-version upgrade steps, see :ref:`migration_guides`.
 
    This is tracked in `issue #1124 <https://github.com/eduMFA/eduMFA/issues/1124>`_.
 
+eduMFA 2.9.2
+------------
+
+This release contains no functional changes, but only docs related issues. This causes version 2.9.1 to not be available in docs.
+
+
 eduMFA 2.9.1
 ------------
 
 .. warning::
    Please see this
-   `important notice <https://edumfa.readthedocs.io/en/v.2.9.1/integrations/shibboleth.html>`_
+   `important notice <https://edumfa.readthedocs.io/en/v2.9.2/integrations/shibboleth.html>`_
    regarding Passkeys and users which are locked in a resolver. The Shibboleth
    plugin ``fudiscr`` will ship a feature for fudispasskeys which makes it easy
    to check for locked users. This will be in version 2.3.1 and has to be
