@@ -512,11 +512,12 @@ class TokenModelTestCase(MyTestCase):
         self.assertTrue("transaction_id" in f"{c}", f"{c}")
         self.assertTrue("timestamp" in f"{c}", f"{c}")
 
-        # test with timestamp=True, which results in something like this:
-        timestamp = "2014-11-29 21:56:43.057293"
-        self.assertTrue(
-            len(c.get(True).get("timestamp")) == len(timestamp), c.get(True)
-        )
+        # test with timestamp=True, which results in an ISO-compatible
+        # timezone-aware UTC string.
+        timestamp = c.get(True).get("timestamp")
+        timestamp_datetime = datetime.fromisoformat(timestamp)
+        self.assertTrue(isinstance(timestamp, str), c.get(True))
+        self.assertEqual(timestamp_datetime.utcoffset(), timedelta(0), c.get(True))
         # otp_status
         c.set_otp_status(valid=False)
         self.assertTrue(c.get_otp_status()[0], c.get_otp_status())
