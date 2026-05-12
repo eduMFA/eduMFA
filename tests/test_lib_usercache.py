@@ -5,7 +5,7 @@ The lib.usercache.py only depends on the database model
 """
 
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
 from edumfa.lib.config import set_edumfa_config
@@ -105,7 +105,7 @@ class UserCacheTestCase(MyTestCase):
         uid = "1"
 
         expiration_delta = get_cache_time()
-        r = UserCache(username, username, resolver, uid, datetime.now()).save()
+        r = UserCache(username, username, resolver, uid, datetime.now(timezone.utc)).save()
         u_name = get_username(uid, resolver)
         self.assertEqual(u_name, username)
 
@@ -204,7 +204,7 @@ class UserCacheTestCase(MyTestCase):
             user3 = User(self.username, self.realm1, self.resolvername1)
 
     def test_04_delete_cache(self):
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
         UserCache("hans1", "hans1", "resolver1", "uid1", now).save()
         UserCache("hans2", "hans1", "resolver2", "uid2", now).save()
 
@@ -229,7 +229,7 @@ class UserCacheTestCase(MyTestCase):
 
     def test_05_multiple_entries(self):
         # two consistent entries
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
         UserCache(
             "hans1", "hans1", "resolver1", "uid1", now - timedelta(seconds=60)
         ).save()
@@ -285,7 +285,7 @@ class UserCacheTestCase(MyTestCase):
             self.username,
             self.resolvername1,
             "fake_uid",
-            datetime.now() - timedelta(weeks=50),
+            datetime.now(timezone.utc) - timedelta(weeks=50),
         ).save()
         # cache contains an expired entry, uid is read from the resolver (we can verify
         # that the cache entry is indeed not queried as it contains 'fake_uid' instead of the correct uid)
@@ -306,7 +306,7 @@ class UserCacheTestCase(MyTestCase):
     def _populate_cache(self):
         self.assertEqual(UserCache.query.count(), 0)
         # initially populate the cache with three entries
-        timestamp = datetime.now()
+        timestamp = datetime.now(timezone.utc)
         UserCache("hans1", "hans1", self.resolvername1, "uid1", timestamp).save()
         UserCache(
             "hans2",
@@ -410,7 +410,9 @@ class UserCacheTestCase(MyTestCase):
     @contextmanager
     def _patch_datetime_now(self, target, delta=timedelta(days=1)):
         with patch(target) as mock_datetime:
-            mock_datetime.now.side_effect = lambda: datetime.now() + delta
+            mock_datetime.now.side_effect = (
+                lambda *args, **kwargs: datetime.now(timezone.utc) + delta
+            )
             mock_datetime.side_effect = lambda *args, **kw: datetime(*args, **kw)
             yield mock_datetime
 
@@ -419,7 +421,7 @@ class UserCacheTestCase(MyTestCase):
         r = delete_user_cache()
         self.assertTrue(r >= 0)
         # populate the cache with artificial, somewhat "old", but still relevant data
-        timestamp = datetime.now() - timedelta(seconds=300)
+        timestamp = datetime.now(timezone.utc) - timedelta(seconds=300)
         UserCache("hans1", "hans1", "resolver1", "uid1", timestamp).save()
         UserCache("hans2", "hans2", "resolver1", "uid2", timestamp).save()
         # check that the cache is indeed queried
@@ -444,7 +446,7 @@ class UserCacheTestCase(MyTestCase):
                 User("hans2", "realm1", "resolver1")
             self.assertEqual(get_username("uid3", "resolver1"), "")
             # We add another, "current" entry
-            UserCache("hans4", "hans4", "resolver1", "uid4", datetime.now()).save()
+            UserCache("hans4", "hans4", "resolver1", "uid4", datetime.now(timezone.utc)).save()
             self.assertEqual(UserCache.query.count(), 3)
             # we now remove old entries, only the newest remains
             delete_user_cache(expired=True)
