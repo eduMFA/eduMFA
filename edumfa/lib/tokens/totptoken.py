@@ -45,7 +45,7 @@ from edumfa.lib.policy import ACTION, GROUP, SCOPE, Match
 from edumfa.lib.tokenclass import TokenClass
 from edumfa.lib.tokens.HMAC import HmacOtp
 from edumfa.lib.tokens.hotptoken import HotpTokenClass
-from edumfa.lib.utils import determine_logged_in_userparams
+from edumfa.lib.utils import determine_logged_in_userparams, utc_now
 
 optional = True
 required = False
@@ -358,7 +358,7 @@ class TotpTokenClass(HotpTokenClass):
                 # curtime is naive
                 return curtime.replace(tzinfo=datetime.timezone.utc).timestamp()
         # return the current timestamp
-        return datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
+        return utc_now().timestamp()
 
     @check_token_locked
     def check_otp(self, anOtpVal, counter=None, window=None, options=None):

@@ -1200,14 +1200,14 @@ class PushTokenTestCase(MyTestCase):
             10,
         )
         timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=timezone.utc)
-        with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
-            mock_dt.now.return_value = timestamp + timedelta(minutes=9)
+        with mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt:
+            mock_dt.return_value = timestamp + timedelta(minutes=9)
             LegacyPushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
-        with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
-            mock_dt.now.return_value = timestamp - timedelta(minutes=9)
+        with mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt:
+            mock_dt.return_value = timestamp - timedelta(minutes=9)
             LegacyPushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
-        with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
-            mock_dt.now.return_value = timestamp + timedelta(minutes=9)
+        with mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt:
+            mock_dt.return_value = timestamp + timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Timestamp {!s} not in valid "
@@ -1216,8 +1216,8 @@ class PushTokenTestCase(MyTestCase):
                 timestamp.isoformat(),
                 8,
             )
-        with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
-            mock_dt.now.return_value = timestamp - timedelta(minutes=9)
+        with mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt:
+            mock_dt.return_value = timestamp - timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Timestamp {!s} not in valid "
@@ -1333,7 +1333,7 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": datetime.utcnow(),
+            "timestamp": datetime.now(timezone.utc),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -1348,7 +1348,7 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -1479,13 +1479,13 @@ class PushTokenTestCase(MyTestCase):
         req.all_data = {"serial": serial, "timestamp": ts, "signature": b32encode(sig)}
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         # No challenge created yet
@@ -1494,8 +1494,8 @@ class PushTokenTestCase(MyTestCase):
         # we need to create a challenge which we can check for with polling
         # use a given time for the challenge (15 seconds before the poll)
         challenge_timestamp = timestamp - timedelta(seconds=15)
-        with mock.patch("edumfa.models.datetime") as mock_datetime:
-            mock_datetime.utcnow.return_value = challenge_timestamp.replace(tzinfo=None)
+        with mock.patch("edumfa.models.utc_now") as mock_datetime:
+            mock_datetime.return_value = challenge_timestamp
             challenge = b32encode_and_unicode(geturandom())
             db_challenge = Challenge(serial, challenge=challenge)
             db_challenge.save()
@@ -1505,13 +1505,13 @@ class PushTokenTestCase(MyTestCase):
         # now check that we receive the challenge when polling
         # since we mock the time we can use the same request data
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         chall = res[1]["result"]["value"][0]
@@ -1535,13 +1535,13 @@ class PushTokenTestCase(MyTestCase):
         # Now mark the challenge as answered so we receive an empty list
         db_challenge.set_otp_status(True)
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -1553,13 +1553,13 @@ class PushTokenTestCase(MyTestCase):
             action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
         )
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 PolicyError,
                 r"Polling not allowed!",
@@ -1576,13 +1576,13 @@ class PushTokenTestCase(MyTestCase):
         )
         # If no tokeninfo is set, allow polling
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -1590,13 +1590,13 @@ class PushTokenTestCase(MyTestCase):
         # now set the tokeninfo POLLING_ALLOWED to 'False'
         tok.add_tokeninfo(POLLING_ALLOWED, "False")
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 PolicyError,
                 r"Polling not allowed!",
@@ -1608,13 +1608,13 @@ class PushTokenTestCase(MyTestCase):
         # Explicitly allow polling for this token
         tok.add_tokeninfo(POLLING_ALLOWED, "True")
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -1628,13 +1628,13 @@ class PushTokenTestCase(MyTestCase):
             action=f"{LegacyPushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.ALLOW}",
         )
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -1642,13 +1642,13 @@ class PushTokenTestCase(MyTestCase):
         # this should also work if there is no ALLOW_POLLING policy
         delete_policy("push_poll")
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -1663,13 +1663,13 @@ class PushTokenTestCase(MyTestCase):
         }
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -1688,13 +1688,13 @@ class PushTokenTestCase(MyTestCase):
         }
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -1715,13 +1715,13 @@ class PushTokenTestCase(MyTestCase):
         }
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -1736,7 +1736,7 @@ class PushTokenTestCase(MyTestCase):
         # we shouldn't run into the signature check here
         req.all_data = {
             "serial": serial2,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "signature": b32encode(b"signature not needed"),
         }
         # poll for challenges
@@ -1755,13 +1755,13 @@ class PushTokenTestCase(MyTestCase):
         req.all_data = {"serial": serial, "timestamp": ts, "signature": b32encode(sig)}
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -1778,13 +1778,13 @@ class PushTokenTestCase(MyTestCase):
         req.all_data = {"serial": serial, "timestamp": ts, "signature": b32encode(sig)}
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -2917,14 +2917,14 @@ class EduPushTokenTestCase(MyTestCase):
             10,
         )
         timestamp = datetime(2020, 11, 13, 13, 27, tzinfo=timezone.utc)
-        with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
-            mock_dt.now.return_value = timestamp + timedelta(minutes=9)
+        with mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt:
+            mock_dt.return_value = timestamp + timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
-        with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
-            mock_dt.now.return_value = timestamp - timedelta(minutes=9)
+        with mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt:
+            mock_dt.return_value = timestamp - timedelta(minutes=9)
             PushTokenClass._check_timestamp_in_range(timestamp.isoformat(), 10)
-        with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
-            mock_dt.now.return_value = timestamp + timedelta(minutes=9)
+        with mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt:
+            mock_dt.return_value = timestamp + timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Timestamp {!s} not in valid "
@@ -2933,8 +2933,8 @@ class EduPushTokenTestCase(MyTestCase):
                 timestamp.isoformat(),
                 8,
             )
-        with mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt:
-            mock_dt.now.return_value = timestamp - timedelta(minutes=9)
+        with mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt:
+            mock_dt.return_value = timestamp - timedelta(minutes=9)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Timestamp {!s} not in valid "
@@ -3046,7 +3046,7 @@ class EduPushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": datetime.utcnow(),
+            "timestamp": datetime.now(timezone.utc),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3061,7 +3061,7 @@ class EduPushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3192,13 +3192,13 @@ class EduPushTokenTestCase(MyTestCase):
         req.all_data = {"serial": serial, "timestamp": ts, "signature": b32encode(sig)}
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         # No challenge created yet
@@ -3207,8 +3207,8 @@ class EduPushTokenTestCase(MyTestCase):
         # we need to create a challenge which we can check for with polling
         # use a given time for the challenge (15 seconds before the poll)
         challenge_timestamp = timestamp - timedelta(seconds=15)
-        with mock.patch("edumfa.models.datetime") as mock_datetime:
-            mock_datetime.utcnow.return_value = challenge_timestamp.replace(tzinfo=None)
+        with mock.patch("edumfa.models.utc_now") as mock_datetime:
+            mock_datetime.return_value = challenge_timestamp
             challenge = b32encode_and_unicode(geturandom())
             db_challenge = Challenge(serial, challenge=challenge)
             db_challenge.save()
@@ -3218,13 +3218,13 @@ class EduPushTokenTestCase(MyTestCase):
         # now check that we receive the challenge when polling
         # since we mock the time we can use the same request data
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         chall = res[1]["result"]["value"][0]
@@ -3248,13 +3248,13 @@ class EduPushTokenTestCase(MyTestCase):
         # Now mark the challenge as answered so we receive an empty list
         db_challenge.set_otp_status(True)
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -3266,13 +3266,13 @@ class EduPushTokenTestCase(MyTestCase):
             action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.DENY}",
         )
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 PolicyError,
                 r"Polling not allowed!",
@@ -3289,13 +3289,13 @@ class EduPushTokenTestCase(MyTestCase):
         )
         # If no tokeninfo is set, allow polling
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -3303,13 +3303,13 @@ class EduPushTokenTestCase(MyTestCase):
         # now set the tokeninfo POLLING_ALLOWED to 'False'
         tok.add_tokeninfo(POLLING_ALLOWED, "False")
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 PolicyError,
                 r"Polling not allowed!",
@@ -3321,13 +3321,13 @@ class EduPushTokenTestCase(MyTestCase):
         # Explicitly allow polling for this token
         tok.add_tokeninfo(POLLING_ALLOWED, "True")
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -3341,13 +3341,13 @@ class EduPushTokenTestCase(MyTestCase):
             action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}={PushAllowPolling.ALLOW}",
         )
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -3355,13 +3355,13 @@ class EduPushTokenTestCase(MyTestCase):
         # this should also work if there is no ALLOW_POLLING policy
         delete_policy("push_poll")
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             res = PushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"]["value"])
@@ -3376,13 +3376,13 @@ class EduPushTokenTestCase(MyTestCase):
         }
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -3401,13 +3401,13 @@ class EduPushTokenTestCase(MyTestCase):
         }
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -3428,13 +3428,13 @@ class EduPushTokenTestCase(MyTestCase):
         }
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -3449,7 +3449,7 @@ class EduPushTokenTestCase(MyTestCase):
         # we shouldn't run into the signature check here
         req.all_data = {
             "serial": serial2,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "signature": b32encode(b"signature not needed"),
         }
         # poll for challenges
@@ -3468,13 +3468,13 @@ class EduPushTokenTestCase(MyTestCase):
         req.all_data = {"serial": serial, "timestamp": ts, "signature": b32encode(sig)}
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",
@@ -3490,13 +3490,13 @@ class EduPushTokenTestCase(MyTestCase):
         req.all_data = {"serial": serial, "timestamp": ts, "signature": b32encode(sig)}
         # poll for challenges
         with (
-            mock.patch("edumfa.models.datetime") as mock_dt1,
-            mock.patch("edumfa.lib.tokens.pushtoken.datetime") as mock_dt2,
+            mock.patch("edumfa.models.utc_now") as mock_dt1,
+            mock.patch("edumfa.lib.tokens.pushtoken.utc_now") as mock_dt2,
         ):
-            mock_dt1.utcnow.return_value = timestamp.replace(tzinfo=None) + timedelta(
+            mock_dt1.return_value = timestamp + timedelta(
                 seconds=15
             )
-            mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
+            mock_dt2.return_value = timestamp + timedelta(seconds=15)
             self.assertRaisesRegex(
                 eduMFAError,
                 r"Could not verify signature!",

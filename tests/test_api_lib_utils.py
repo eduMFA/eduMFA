@@ -180,7 +180,7 @@ class UtilsTestCase(MyApiTestCase):
         expired_token = jwt.encode(
             payload={
                 "role": "admin",
-                "exp": datetime.datetime.utcnow() - datetime.timedelta(seconds=1000),
+                "exp": datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(seconds=1000),
             },
             key=key,
             algorithm="RS256",

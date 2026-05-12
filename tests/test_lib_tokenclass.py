@@ -806,8 +806,8 @@ class TokenBaseTestCase(MyTestCase):
         self.assertTrue(r)
 
         # Old time format
-        # lastauth_alt = datetime.datetime.utcnow().isoformat()
-        token_obj.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.utcnow() - tdelta)
+        # lastauth_alt = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        token_obj.add_tokeninfo(ACTION.LASTAUTH, datetime.datetime.now(datetime.timezone.utc) - tdelta)
         r = token_obj.check_last_auth_newer("10h")
         self.assertFalse(r)
         r = token_obj.check_last_auth_newer("2d")

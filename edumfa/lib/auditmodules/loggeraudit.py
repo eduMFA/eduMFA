@@ -59,9 +59,9 @@ args=('/var/log/edumfa/audit.log',)
 
 import json
 import logging
-from datetime import datetime
 
 from edumfa.lib.auditmodules.base import Audit as AuditBase
+from edumfa.lib.utils import utc_now
 
 
 class Audit(AuditBase):
@@ -84,9 +84,9 @@ class Audit(AuditBase):
         e.g. write the data to a file.
         """
         self.audit_data["policies"] = ",".join(self.audit_data.get("policies", []))
-        self.audit_data["timestamp"] = datetime.utcnow().isoformat()
+        self.audit_data["timestamp"] = utc_now().isoformat()
         if self.audit_data.get("startdate"):
-            duration = datetime.utcnow() - self.audit_data.get("startdate")
+            duration = utc_now() - self.audit_data.get("startdate")
             self.audit_data["duration"] = f"{duration}"
             self.audit_data["startdate"] = self.audit_data.get("startdate").isoformat()
         self.logger.info(json.dumps(self.audit_data, sort_keys=True))
