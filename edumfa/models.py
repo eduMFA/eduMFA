@@ -1558,7 +1558,7 @@ class Challenge(MethodsMixin, db.Model):
 
         :param timestamp: if true, the timestamp will given in a readable
                           format
-                          2014-11-29 21:56:43.057293
+                          2014-11-29 21:56:43.057293+00:00
         :type timestamp: bool
         :return: dict of vars
         """
