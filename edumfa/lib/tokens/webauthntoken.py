@@ -1617,11 +1617,13 @@ class WebAuthnTokenClass(TokenClass):
             )
             options["user"] = token.user
             options["challenge"] = hexlify_and_unicode(challenge)
-            if token.user.login is None or token.user.login == "":
+            if token.user is None or token.is_orphaned():
                 log.warning(
-                    f"Passkey {token.token.serial} is assigned to a user without a login. Can not be used for authentication!"
+                    f"Passkey {token.token.serial} is unassigned or assigned to orphaned user. Can not be used for authentication!"
                 )
-                reply_dict["message"] = "Passkey is assigned to a user without a login."
+                reply_dict["message"] = (
+                    "Passkey is unassigned or assigned to orphaned user."
+                )
                 return False, reply_dict
 
             try:
