@@ -93,6 +93,7 @@ from edumfa.models import (
     TokenOwner,
     TokenRealm,
     TokenTokengroup,
+    db,
 )
 
 log = logging.getLogger(__name__)
@@ -178,7 +179,10 @@ def _create_token_query(
     if user is not None and not user.is_empty():
         # extract the realm from the user object:
         realm = user.realm
-    if for_update:
+    # TODO: This is a fix for faulty snapshot isolation in MariaDB/MySQL. It
+    # does not affect PostgreSQL, but it doesn't work with it. Find a better
+    # solution.
+    if for_update and db.engine.dialect.name == "mysql":
         sql_query = sql_query.with_for_update(key_share=True)
     if tokentype is not None and tokentype.strip("*"):
         # filter for type
