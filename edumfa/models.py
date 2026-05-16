@@ -26,7 +26,7 @@
 import binascii
 import logging
 import traceback
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta, timezone
 from json import dumps, loads
 
 from dateutil.tz import tzutc
@@ -37,6 +37,7 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import CreateSequence, Sequence
+from sqlalchemy.types import TypeDecorator
 
 from edumfa.lib.crypto import (
     SecretObj,
@@ -51,7 +52,12 @@ from edumfa.lib.crypto import (
 )
 from edumfa.lib.error import ResourceNotFoundError
 from edumfa.lib.framework import get_app_config_value
-from edumfa.lib.utils import convert_column_to_unicode, hexlify_and_unicode, is_true
+from edumfa.lib.utils import (
+    convert_column_to_unicode,
+    hexlify_and_unicode,
+    is_true,
+    utc_now,
+)
 
 from .lib.log import log_with
 
@@ -75,6 +81,39 @@ BigIntegerType = (
 )
 
 db = SQLAlchemy()
+
+
+class UTCDateTime(TypeDecorator):
+    """
+    Store datetimes as UTC and return timezone-aware UTC datetimes.
+
+    SQLite and MySQL do not preserve timezone information in their native
+    datetime types, so values are bound as UTC-naive datetimes there and
+    re-attached to UTC on read. PostgreSQL can use a timezone-aware type.
+    """
+
+    impl = db.DateTime
+    cache_ok = True
+
+    def load_dialect_impl(self, dialect):
+        return dialect.type_descriptor(db.DateTime(timezone=True))
+
+    def process_bind_param(self, value, dialect):
+        if value is None:
+            return None
+        if value.tzinfo is None or value.utcoffset() is None:
+            value = value.replace(tzinfo=timezone.utc)
+        value = value.astimezone(timezone.utc)
+        if dialect.name in {"mysql", "mariadb", "sqlite"}:
+            return value.replace(tzinfo=None)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return None
+        if value.tzinfo is None or value.utcoffset() is None:
+            return value.replace(tzinfo=timezone.utc)
+        return value.astimezone(timezone.utc)
 
 
 # Add fractions to the MySQL DataTime column type
@@ -118,12 +157,13 @@ def save_config_timestamp(invalidate_config=True):
     :param invalidate_config: defaults to True
     """
     c1 = Config.query.filter_by(Key=EDUMFA_TIMESTAMP).first()
+    timestamp = str(int(utc_now().timestamp()))
     if c1:
-        c1.Value = datetime.now().strftime("%s")
+        c1.Value = timestamp
     else:
         new_timestamp = Config(
             EDUMFA_TIMESTAMP,
-            datetime.now().strftime("%s"),
+            timestamp,
             Description="config timestamp. last changed.",
         )
         db.session.add(new_timestamp)
@@ -1342,8 +1382,8 @@ class PasswordReset(MethodsMixin, db.Model):
     realm = db.Column(db.Unicode(64), nullable=False, index=True)
     resolver = db.Column(db.Unicode(64))
     email = db.Column(db.Unicode(255))
-    timestamp = db.Column(db.DateTime, default=datetime.now())
-    expiration = db.Column(db.DateTime)
+    timestamp = db.Column(UTCDateTime(), default=utc_now)
+    expiration = db.Column(UTCDateTime())
 
     @log_with(log)
     def __init__(
@@ -1363,8 +1403,8 @@ class PasswordReset(MethodsMixin, db.Model):
         self.realm = realm
         self.resolver = resolver
         self.email = email
-        self.timestamp = timestamp or datetime.now()
-        self.expiration = expiration or datetime.now() + timedelta(
+        self.timestamp = timestamp or utc_now()
+        self.expiration = expiration or utc_now() + timedelta(
             seconds=expiration_seconds
         )
 
@@ -1376,7 +1416,7 @@ class JwtBlacklist(db.Model):
 
     __tablename__ = "jwt_blacklist"
     __table_args__ = ({"mysql_row_format": "DYNAMIC"},)
-    expiration = db.Column(db.DateTime, index=True)
+    expiration = db.Column(UTCDateTime(), index=True)
     nonce = db.Column(db.Unicode(128), nullable=False, primary_key=True, unique=True)
 
     def __init__(self, expiration, nonce):
@@ -1401,7 +1441,7 @@ class JwtBlacklist(db.Model):
             session = sessionmaker(bind=db.engine)
             with session.begin() as session_transaction:
                 session_transaction.query(JwtBlacklist).filter(
-                    JwtBlacklist.expiration < datetime.now(timezone.utc)
+                    JwtBlacklist.expiration < utc_now()
                 ).delete()
         except (OperationalError, IntegrityError) as e:
             log.warning(f"Error in JwtBlacklist janitor: {e}")
@@ -1423,8 +1463,8 @@ class Challenge(MethodsMixin, db.Model):
     session = db.Column(db.Unicode(512), default="", quote=True, name="session")
     # The token serial number
     serial = db.Column(db.Unicode(40), default="", index=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow(), index=True)
-    expiration = db.Column(db.DateTime)
+    timestamp = db.Column(UTCDateTime(), default=utc_now, index=True)
+    expiration = db.Column(UTCDateTime())
     received_count = db.Column(db.Integer(), default=0)
     otp_valid = db.Column(db.Boolean, default=False)
 
@@ -1442,11 +1482,11 @@ class Challenge(MethodsMixin, db.Model):
         self.challenge = challenge
         self.serial = serial
         self.data = data
-        self.timestamp = datetime.utcnow()
+        self.timestamp = utc_now()
         self.session = session
         self.received_count = 0
         self.otp_valid = False
-        self.expiration = datetime.utcnow() + timedelta(seconds=validitytime)
+        self.expiration = utc_now() + timedelta(seconds=validitytime)
 
     @staticmethod
     def create_transaction_id(length=20):
@@ -1459,7 +1499,7 @@ class Challenge(MethodsMixin, db.Model):
         :rtype: bool
         """
         ret = False
-        c_now = datetime.utcnow()
+        c_now = utc_now()
         if self.timestamp <= c_now < self.expiration:
             ret = True
         return ret
@@ -1518,7 +1558,7 @@ class Challenge(MethodsMixin, db.Model):
 
         :param timestamp: if true, the timestamp will given in a readable
                           format
-                          2014-11-29 21:56:43.057293
+                          2014-11-29 21:56:43.057293+00:00
         :type timestamp: bool
         :return: dict of vars
         """
@@ -1549,7 +1589,7 @@ def cleanup_challenges():
 
     :return: None
     """
-    c_now = datetime.utcnow()
+    c_now = utc_now()
     try:
         Challenge.query.with_for_update().filter(Challenge.expiration < c_now).delete()
         db.session.commit()
@@ -2712,7 +2752,7 @@ class ClientApplication(MethodsMixin, db.Model):
     ip = db.Column(db.Unicode(255), nullable=False, index=True)
     hostname = db.Column(db.Unicode(255))
     clienttype = db.Column(db.Unicode(255), nullable=False, index=True)
-    lastseen = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    lastseen = db.Column(UTCDateTime(), index=True, default=utc_now)
     node = db.Column(db.Unicode(255), nullable=False)
     __table_args__ = (
         db.UniqueConstraint("ip", "clienttype", "node", name="caix"),
@@ -2725,7 +2765,7 @@ class ClientApplication(MethodsMixin, db.Model):
             ClientApplication.clienttype == self.clienttype,
             ClientApplication.node == self.node,
         ).first()
-        self.lastseen = datetime.now()
+        self.lastseen = utc_now()
         if clientapp is None:
             # create a new one
             try:
@@ -2770,8 +2810,8 @@ class Subscription(MethodsMixin, db.Model):
     by_address = db.Column(db.Unicode(128))
     by_phone = db.Column(db.Unicode(50))
     by_url = db.Column(db.Unicode(80))
-    date_from = db.Column(db.DateTime)
-    date_till = db.Column(db.DateTime)
+    date_from = db.Column(UTCDateTime())
+    date_till = db.Column(UTCDateTime())
     num_users = db.Column(db.Integer)
     num_tokens = db.Column(db.Integer)
     num_clients = db.Column(db.Integer)
@@ -2897,8 +2937,8 @@ class Audit(MethodsMixin, db.Model):
     __tablename__ = AUDIT_TABLE_NAME
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(BigIntegerType, Sequence("audit_seq"), primary_key=True)
-    date = db.Column(db.DateTime, index=True)
-    startdate = db.Column(db.DateTime)
+    date = db.Column(UTCDateTime(), index=True)
+    startdate = db.Column(UTCDateTime())
     duration = db.Column(db.Interval(second_precision=6))
     signature = db.Column(db.Unicode(audit_column_length.get("signature")))
     action = db.Column(db.Unicode(audit_column_length.get("action")))
@@ -2940,7 +2980,7 @@ class Audit(MethodsMixin, db.Model):
         duration=None,
     ):
         self.signature = ""
-        self.date = datetime.now()
+        self.date = utc_now()
         self.startdate = startdate
         self.duration = duration
         self.action = convert_column_to_unicode(action)
@@ -2972,7 +3012,7 @@ class UserCache(MethodsMixin, db.Model):
     used_login = db.Column(db.Unicode(64), default="", index=True)
     resolver = db.Column(db.Unicode(120), default="")
     user_id = db.Column(db.Unicode(320), default="", index=True)
-    timestamp = db.Column(db.DateTime, index=True)
+    timestamp = db.Column(UTCDateTime(), index=True)
 
     def __init__(self, username, used_login, resolver, user_id, timestamp):
         self.username = username
@@ -2986,8 +3026,8 @@ class AuthCache(MethodsMixin, db.Model):
     __tablename__ = "authcache"
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("authcache_seq"), primary_key=True)
-    first_auth = db.Column(db.DateTime, index=True)
-    last_auth = db.Column(db.DateTime, index=True)
+    first_auth = db.Column(UTCDateTime(), index=True)
+    last_auth = db.Column(UTCDateTime(), index=True)
     username = db.Column(db.Unicode(64), default="", index=True)
     resolver = db.Column(db.Unicode(120), default="", index=True)
     realm = db.Column(db.Unicode(120), default="", index=True)
@@ -3005,7 +3045,7 @@ class AuthCache(MethodsMixin, db.Model):
         self.realm = realm
         self.resolver = resolver
         self.authentication = authentication
-        self.first_auth = first_auth if first_auth else datetime.utcnow()
+        self.first_auth = first_auth if first_auth else utc_now()
         self.last_auth = last_auth if last_auth else self.first_auth
 
 
@@ -3027,7 +3067,7 @@ class PeriodicTask(MethodsMixin, db.Model):
     nodes = db.Column(db.Unicode(256), nullable=False)
     taskmodule = db.Column(db.Unicode(256), nullable=False)
     ordering = db.Column(db.Integer, nullable=False, default=0)
-    last_update = db.Column(db.DateTime(False), nullable=False)
+    last_update = db.Column(UTCDateTime(), nullable=False)
     options = db.relationship(
         "PeriodicTaskOption", lazy="dynamic", backref="periodictask"
     )
@@ -3092,9 +3132,9 @@ class PeriodicTask(MethodsMixin, db.Model):
     @property
     def aware_last_update(self):
         """
-        Return self.last_update with attached UTC tzinfo
+        Return self.last_update as a UTC-aware datetime.
         """
-        return self.last_update.replace(tzinfo=tzutc())
+        return self.last_update.astimezone(tzutc())
 
     def get(self):
         """
@@ -3125,7 +3165,7 @@ class PeriodicTask(MethodsMixin, db.Model):
         Set ``last_update`` to the current time.
         :return: the entry ID
         """
-        self.last_update = datetime.utcnow()
+        self.last_update = utc_now()
         if self.id is None:
             # create a new one
             db.session.add(self)
@@ -3159,7 +3199,7 @@ class PeriodicTask(MethodsMixin, db.Model):
         """
         Store the information that the last run of the periodic job occurred on ``node`` at ``timestamp``.
         :param node: Node name as a string
-        :param timestamp: Timestamp as UTC datetime (without timezone information)
+        :param timestamp: Timestamp as UTC datetime.
         :return:
         """
         PeriodicTaskLastRun(self.id, node, timestamp)
@@ -3223,7 +3263,7 @@ class PeriodicTaskLastRun(db.Model):
     id = db.Column(db.Integer, Sequence("periodictasklastrun_seq"), primary_key=True)
     periodictask_id = db.Column(db.Integer, db.ForeignKey("periodictask.id"))
     node = db.Column(db.Unicode(255), nullable=False)
-    timestamp = db.Column(db.DateTime(False), nullable=False)
+    timestamp = db.Column(UTCDateTime(), nullable=False)
 
     __table_args__ = (
         db.UniqueConstraint("periodictask_id", "node", name="ptlrix_1"),
@@ -3234,8 +3274,7 @@ class PeriodicTaskLastRun(db.Model):
         """
         :param periodictask_id: ID of the periodic task we are referring to
         :param node: Node name as unicode
-        :param timestamp: Time of the last run as a datetime. A timezone must not be set!
-                          We require the time to be given in UTC.
+        :param timestamp: Time of the last run as a UTC datetime.
         """
         self.periodictask_id = periodictask_id
         self.node = node
@@ -3245,9 +3284,9 @@ class PeriodicTaskLastRun(db.Model):
     @property
     def aware_timestamp(self):
         """
-        Return self.timestamp with attached UTC tzinfo
+        Return self.timestamp as a UTC-aware datetime.
         """
-        return self.timestamp.replace(tzinfo=tzutc())
+        return self.timestamp.astimezone(tzutc())
 
     def save(self):
         """
@@ -3286,8 +3325,8 @@ class MonitoringStats(MethodsMixin, db.Model):
 
     __tablename__ = "monitoringstats"
     id = db.Column(db.Integer, Sequence("monitoringstats_seq"), primary_key=True)
-    # We store this as a naive datetime in UTC
-    timestamp = db.Column(db.DateTime(False), nullable=False, index=True)
+    # Values are normalized to UTC by UTCDateTime.
+    timestamp = db.Column(UTCDateTime(), nullable=False, index=True)
     stats_key = db.Column(db.Unicode(128), nullable=False)
     stats_value = db.Column(db.Integer, nullable=False, default=0)
 
@@ -3300,7 +3339,7 @@ class MonitoringStats(MethodsMixin, db.Model):
         """
         Create a new database entry in the monitoring stats table
         :param timestamp: The time of the measurement point
-        :type timestamp: timezone-naive datetime
+        :type timestamp: timezone-aware UTC datetime
         :param key: The key of the measurement
         :type key: basestring
         :param value: The value of the measurement

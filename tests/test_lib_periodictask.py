@@ -444,7 +444,8 @@ class BasePeriodicTaskTestCase(MyTestCase):
         task1 = get_periodic_tasks("task one")[0]
         self.assertEqual(len(list(task1_entry.last_runs)), 1)
         self.assertEqual(
-            task1_entry.last_runs[0].timestamp, parse_timestamp("2018-06-26 06:05")
+            task1_entry.last_runs[0].timestamp,
+            parse_timestamp("2018-06-26 06:05 UTC"),
         )
         self.assertEqual(
             task1["last_runs"]["edumfanode1"], parse_timestamp("2018-06-26 06:05 UTC")
@@ -483,9 +484,9 @@ class BasePeriodicTaskTestCase(MyTestCase):
             {"key1": 1, "key2": False},
         )
         # at 08:00 on wednesdays
-        current_utc_time = parse_timestamp("2018-05-31 05:08:00")
-        with mock.patch("edumfa.models.datetime") as mock_dt:
-            mock_dt.utcnow.return_value = current_utc_time
+        current_utc_time = parse_timestamp("2018-05-31 05:08:00 UTC")
+        with mock.patch("edumfa.models.utc_now") as mock_dt:
+            mock_dt.return_value = current_utc_time
             task2 = set_periodic_task(
                 "task two",
                 "0 8 * * WED",
@@ -611,8 +612,8 @@ class BasePeriodicTaskTestCase(MyTestCase):
         self.assertEqual([task["name"] for task in scheduled], ["task four"])
 
         # Enable task2, now we also have to run it on edumfanode2 and edumfanode3
-        with mock.patch("edumfa.models.datetime") as mock_dt:
-            mock_dt.utcnow.return_value = current_utc_time
+        with mock.patch("edumfa.models.utc_now") as mock_dt:
+            mock_dt.return_value = current_utc_time
             enable_periodic_task(task2)
 
         scheduled = get_scheduled_periodic_tasks(
