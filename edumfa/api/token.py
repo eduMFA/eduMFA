@@ -72,8 +72,6 @@ from edumfa.api.lib.prepolicy import (
     tantoken_count,
     twostep_enrollment_activation,
     twostep_enrollment_parameters,
-    u2ftoken_allowed,
-    u2ftoken_verify_cert,
     verify_enrollment,
     webauthntoken_allowed,
     webauthntoken_enroll,
@@ -169,8 +167,6 @@ To see how to authenticate read :ref:`rest_auth`.
 @prepolicy(papertoken_count, request)
 @prepolicy(sms_identifiers, request)
 @prepolicy(tantoken_count, request)
-@prepolicy(u2ftoken_allowed, request)
-@prepolicy(u2ftoken_verify_cert, request)
 @prepolicy(pushtoken_add_config, request)
 @prepolicy(indexedsecret_force_attribute, request)
 @prepolicy(webauthntoken_allowed, request)

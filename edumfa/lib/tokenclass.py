@@ -127,7 +127,6 @@ class CLIENTMODE:
 
     INTERACTIVE = "interactive"
     POLL = "poll"
-    U2F = "u2f"
     WEBAUTHN = "webauthn"
 
 

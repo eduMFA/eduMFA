@@ -4993,7 +4993,7 @@ class MultiChallege(MyApiTestCase):
         set_policy(
             "test49",
             scope=SCOPE.AUTH,
-            action=f"{ACTION.CHALLENGERESPONSE}=hotp totp, {ACTION.PREFERREDCLIENTMODE}=  poll   u2f   webauthn ",
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp totp, {ACTION.PREFERREDCLIENTMODE}=  poll   webauthn ",
         )
 
         # authenticate with PIN to trigger challenge-response

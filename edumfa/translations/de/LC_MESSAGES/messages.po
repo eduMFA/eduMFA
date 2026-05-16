@@ -957,14 +957,15 @@ msgstr ""
 "4h/5m."
 
 #: lib/policy.py
+#, fuzzy
 msgid ""
 "You can set the client modes in the order that you prefer. For example: "
-"\"interactive webauthn poll u2f\". Accepted values are: <code>interactive"
-" webauthn poll u2f</code>"
+"\"interactive webauthn poll\". Accepted values are: <code>interactive "
+"webauthn poll</code>"
 msgstr ""
 "Sie können die Client-Modi in der von Ihnen bevorzugten Reihenfolge "
-"festlegen. Zum Beispiel: \"interactive webauthn poll u2f\". Akzeptierte "
-"Werte sind:<code>interactive webauthn poll u2f</code>"
+"festlegen. Zum Beispiel: \"interactive webauthn poll\". Akzeptierte Werte"
+" sind:<code>interactive webauthn poll</code>"
 
 #: lib/policy.py
 #, python-brace-format
@@ -3075,51 +3076,6 @@ msgstr "Geben Sie an, ob Timeshift aktiviert werden soll."
 msgid "TOTP: Time based One Time Passwords."
 msgstr "TOTP: Zeitbasiertes Einmalpasswort."
 
-#: lib/tokens/u2ftoken.py
-msgid "This is a list of FQDN hostnames trusting the registered U2F tokens."
-msgstr ""
-"Die Liste der FQDNs, bei denen der registrierte U2F-Token verwendet "
-"werden kann."
-
-#: lib/tokens/u2ftoken.py
-msgid ""
-"Use an alternate challenge text for telling the user to confirm with his "
-"U2F device."
-msgstr ""
-"Ein alternativer Challenge-Text, um den Benutzer aufzufordern, die "
-"Anmeldung mit seinem U2F-Token zu bestätigen."
-
-#: lib/tokens/u2ftoken.py
-msgid "Only specified U2F tokens are authorized."
-msgstr "Nur die angegebenen U2F Geräten sind für die Anmeldung autorisiert."
-
-#: lib/tokens/u2ftoken.py
-msgid "Only specified U2F tokens are allowed to be registered."
-msgstr "Nur die angegebenen U2F Geräte dürfen registriert werden."
-
-#: lib/tokens/u2ftoken.py
-msgid "Do not verify the U2F attestation certificate."
-msgstr "Das U2F Attestation Zertifikat NICHT überprüfen."
-
-#: lib/tokens/u2ftoken.py
-msgid "The user may only have this maximum number of U2F tokens assigned."
-msgstr "Der Benutzer darf nur maximal diese Anzahl an U2F Token zugewiesen haben."
-
-#: lib/tokens/u2ftoken.py
-msgid "The user may only have this maximum number of active U2F tokens assigned."
-msgstr ""
-"Der Benutzer darf nur maximal diese Anzahl an aktiven U2F Token "
-"zugewiesen haben."
-
-#: lib/tokens/u2ftoken.py
-msgid "You need to define the appId in the token config!"
-msgstr "Sie müssen in der Token-Konfiguration die AppId definieren!"
-
-#: lib/tokens/u2ftoken.py
-#, python-brace-format
-msgid "Please confirm with your U2F token ({0!s})"
-msgstr "Bitte bestätigen Sie mit Ihrem U2F token ({0!s})"
-
 #: lib/tokens/vascotoken.py
 msgid "VASCO Token: Authentication using VASCO tokens"
 msgstr "VASCO Token: Authentisierung mit VASCO Token"
@@ -3292,15 +3248,10 @@ msgstr ""
 " sollen. Standard: [{0!s}], Reihenfolge: [{1!s}]"
 
 #: lib/tokens/webauthntoken.py
-msgid ""
-"Whether to request attestation data when enrolling a new WebAuthn token. "
-"Note: for u2f_req to work with WebAuthn, this cannot be set to none. "
-"Default: direct (ask for non-anonymized attestation data)"
+msgid "Whether to request attestation data when enrolling a new WebAuthn token."
 msgstr ""
-"Bei der Registrierung eines neuen WebAuthn Tokens sollen die Attestation "
-"Daten angefordert werden. Damit u2f_req mit WebAuthn funktioniert, muss "
-"dieser Wert auf \"none\" gesetzt werden. Standard: \"direct\" (Es werden "
-"nicht-anonymisierte Attestation Daten angefordert)"
+"Ob bei der Registrierung eines neuen WebAuthn-Tokens Zertifikatsdaten "
+"angefordert werden sollen."
 
 #: lib/tokens/webauthntoken.py
 msgid ""

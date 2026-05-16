@@ -378,10 +378,6 @@ msgstr "Otomatik resync zaman aşımı"
 msgid "Automatic resync during authentication"
 msgstr "Kimlik Doğrulama Sırasında Otomatik Resync"
 
-#: components/login/factories/u2f.js
-msgid "Bad U2F Request"
-msgstr "Kötü U2F isteği"
-
 #: components/config/views/config.caconnectors.local.html
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Base Config"
@@ -596,10 +592,6 @@ msgstr "Müşteri"
 #: components/components/views/component.html
 msgid "Client Application Type"
 msgstr "İstemci Uygulama Türü"
-
-#: components/login/factories/u2f.js
-msgid "Client Configuration is not supported."
-msgstr "İstemci yapılandırması desteklenmiyor."
 
 #: components/config/views/config.token.yubikey.html
 msgid "Client ID"
@@ -1289,10 +1281,6 @@ msgstr "Politika şablonunu alma hatası"
 #: components/config/factories/config.js
 msgid "Error fetching policy templates."
 msgstr "Politika şablonlarını alma hatası."
-
-#: components/login/factories/u2f.js
-msgid "Error in U2F response."
-msgstr "U2F yanıtında hata."
 
 #: components/login/factories/webauthn.js
 msgid "Error in WebAuthn response."
@@ -2137,7 +2125,6 @@ msgid "OCRA Suite"
 msgstr "Ocra Suite"
 
 #: components/dialogs/views/dialog.no.token.html
-#: components/login/factories/u2f.js
 #: components/token/views/token.getserial.html
 msgid "OK"
 msgstr "Tamam"
@@ -2229,10 +2216,6 @@ msgstr "Seçenekler"
 #: components/config/views/config.periodictasks.list.html
 msgid "Order"
 msgstr "Sipariş"
-
-#: components/login/factories/u2f.js
-msgid "Other Error"
-msgstr "Diğer hata"
 
 #: components/config/views/config.caconnectors.local.html
 msgid "Overlap Period"
@@ -3240,10 +3223,6 @@ msgstr "Tablo"
 msgid "Take action on your authenticator"
 msgstr "Doğrulamacınızda harekete geçin"
 
-#: components/token/views/token.enrolled.u2f.html
-msgid "Take action on your token"
-msgstr "Jetonunuzda harekete geçin"
-
 #: components/config/views/config.periodictasks.details.html
 #: components/config/views/config.periodictasks.list.html
 msgid "Taskmodule"
@@ -3297,14 +3276,6 @@ msgstr ""
 "tanımlayabilirsiniz.\n"
 "    Başarılı bir kimlik doğrulaması yapmak için alemlerin mevcut olması "
 "gerekir."
-
-#: components/config/views/config.token.u2f.html
-msgid "The AppID must not end with a \"/\"."
-msgstr "AppID \"/\" ile bitmemelidir."
-
-#: components/config/views/config.token.u2f.html
-msgid "The AppID needs to start with \"https\"."
-msgstr "AppID'nin \"https\" ile başlaması gerekiyor."
 
 #: components/token/views/token.enroll.applspec.html
 msgid ""
@@ -3589,31 +3560,6 @@ msgstr ""
 "    Kimlik doğrulama işlemi sırasında bir QR kodunu tarayarak kimlik "
 "doğrulama."
 
-#: components/config/views/config.token.u2f.html
-msgid ""
-"The U2F token is a hardware token, that communicates with the browser.\n"
-"    You need to set the correct appId, which in fact is the URL of your\n"
-"    eduMFA installation."
-msgstr ""
-"U2F belirteci, tarayıcıyla iletişim kuran bir donanım belirtecidir.\n"
-"    Doğru Appid'i ayarlamanız gerekir; bu aslında sizin URL'inizdir.\n"
-"    eduMFA kurulumu."
-
-#: components/token/views/token.enroll.u2f.html
-msgid ""
-"The U2F token is a token defined by the Fido Alliance.\n"
-"    You can register this token with any webservice and with as many web\n"
-"    services you wish to."
-msgstr ""
-"U2F belirteci, FIDO İttifakı tarafından tanımlanan bir belirteçtir.\n"
-"    Bu belirteci herhangi bir web servisiyle ve çok sayıda web ile "
-"kaydedebilirsiniz.\n"
-"    İstediğiniz hizmetler."
-
-#: components/config/views/config.token.u2f.html
-msgid "The URL of your eduMFA installation."
-msgstr "eduMFA kurulumunuzun URL'si."
-
 #: components/config/views/config.token.tiqr.html
 msgid "The URL that contains the logo of the service."
 msgstr "Hizmetin logosunu içeren URL."
@@ -3769,10 +3715,6 @@ msgstr "Zorluk geçerlilik süresi"
 #: components/config/views/config.token.yubico.html
 msgid "The client ID"
 msgstr "Müşteri kimliği"
-
-#: components/login/factories/u2f.js
-msgid "The client device can not be used for this type of request."
-msgstr "İstemci cihazı bu tür bir istek için kullanılamaz."
 
 #: components/dialogs/views/dialog.about.html
 msgid ""
@@ -4034,7 +3976,6 @@ msgstr ""
 msgid "The time in which the password can be used. For example '1d' or '12h'."
 msgstr ""
 
-#: components/token/views/token.enrolled.u2f.html
 #: components/token/views/token.enrolled.webauthn.html
 msgid "The token is enrolled."
 msgstr "Belirteç kayıtlı."
@@ -4347,14 +4288,6 @@ msgstr ""
 "kullanılır.\n"
 "    ilk kez giriş yaparak."
 
-#: components/config/views/config.token.u2f.html
-msgid ""
-"This must be a valid FQDN with also a valid top level domain -\n"
-"        otherwise you might receive a U2F Error 2 (Bad Request)."
-msgstr ""
-"Bu, geçerli bir üst düzey etki alanı olan geçerli bir FQDN olmalıdır -\n"
-"        Aksi takdirde bir U2F hatası 2 (kötü istek) alabilirsiniz."
-
 #: components/config/views/config.resolvers.ldap.html
 msgid ""
 "This setting activates a LDAP server pool that is persisted between requests."
@@ -4418,10 +4351,6 @@ msgstr "Zaman aşımı"
 msgid "Timeout (seconds)"
 msgstr "Zaman aşımı (saniye)"
 
-#: components/login/factories/u2f.js
-msgid "Timeout while waiting for signing response."
-msgstr "İmzalama cevabı beklerken zaman aşımı."
-
 #: components/token/views/token.enroll.daypassword.html
 #: components/token/views/token.enroll.totp.html
 msgid "Timestep"
@@ -4480,7 +4409,6 @@ msgstr "Jeton verileri"
 msgid "Token details for {{ tokenSerial }}"
 msgstr "{{ tokenSerial }} için jeton detayları"
 
-#: components/token/views/token.enrolled.u2f.html
 #: components/token/views/token.enrolled.webauthn.html
 msgid "Token enrolled"
 msgstr "Token kayıtlı"
@@ -4563,10 +4491,6 @@ msgstr "Bir şifre girin"
 #: components/user/views/user.password.html
 msgid "Type a password"
 msgstr "Bir şifre girin"
-
-#: components/config/views/config.token.u2f.html
-msgid "U2F Token settings"
-msgstr "U2F Token Ayarları"
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "UID Type"
@@ -4918,18 +4842,6 @@ msgstr ""
 "emin olun.\n"
 "                    WebAuthn'i destekler."
 
-#: components/token/views/token.enrolled.u2f.html
-msgid ""
-"You need to confirm the registration with your token\n"
-"                    either by pushing the blinking button or by\n"
-"                    replugging your token. This depends on the actual\n"
-"                    token model."
-msgstr ""
-"Kayıtunuzu belirteçlerinizle onaylamanız gerekir.\n"
-"                    Yanıp sönen düğmeye basarak veya\n"
-"                    belirteçinizi yenilemek. Bu gerçeke bağlı\n"
-"                    belirteç modeli."
-
 #: templates/menu.html
 msgid "You will be logged out in {{ myCountdown }} second(s)."
 msgstr "{{Mycountdown}} ikinci (ler) de oturum açacaksınız."
@@ -5034,10 +4946,6 @@ msgstr "yönetici"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "İsteğe Bağlı Seri Substring"
-
-#: components/config/views/config.token.u2f.html
-msgid "appId"
-msgstr "applid"
 
 #: components/token/views/token.details.html
 msgid "certificate"
@@ -5549,9 +5457,6 @@ msgstr "{{auditdata.count}} girişleri bulundu."
 
 #~ msgid "Typo3"
 #~ msgstr "Typo3"
-
-#~ msgid "U2F: Universal 2nd Factor hardware token."
-#~ msgstr "U2F: Evrensel 2. faktör donanım belirteci."
 
 #~ msgid "WebAuthn: Web Authentication hardware token."
 #~ msgstr "WebAuthn: Web Kimlik Doğrulama Donanım Simgesi."

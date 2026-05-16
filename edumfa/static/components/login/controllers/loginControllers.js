@@ -32,19 +32,19 @@ angular.module("eduMfaApp")
     .controller("mainController", ["Idle", "$scope", "$sce", "$http", "$location",
                                    "authUrl", "validateUrl", "AuthFactory", "$rootScope",
                                    "$state", "ConfigFactory", "inform",
-                                   "PolicyTemplateFactory", "gettextCatalog",
-                                   "hotkeys", "RegisterFactory",
-                                   "U2fFactory", "webAuthnToken", "instanceUrl",
-                                   "PollingAuthFactory", "$transitions",
-                                   "resourceNamePatterns", "$window",
-                                   function (Idle, $scope, $sce, $http, $location,
-                                             authUrl, validateUrl, AuthFactory, $rootScope,
-                                             $state, ConfigFactory, inform,
-                                             PolicyTemplateFactory, gettextCatalog,
-                                             hotkeys, RegisterFactory,
-                                             U2fFactory, webAuthnToken, instanceUrl,
-                                             PollingAuthFactory, $transitions,
-                                             resourceNamePatterns, $window) {
+                                    "PolicyTemplateFactory", "gettextCatalog",
+                                    "hotkeys", "RegisterFactory",
+                                    "webAuthnToken", "instanceUrl",
+                                    "PollingAuthFactory", "$transitions",
+                                    "resourceNamePatterns", "$window",
+                                    function (Idle, $scope, $sce, $http, $location,
+                                              authUrl, validateUrl, AuthFactory, $rootScope,
+                                              $state, ConfigFactory, inform,
+                                              PolicyTemplateFactory, gettextCatalog,
+                                              hotkeys, RegisterFactory,
+                                              webAuthnToken, instanceUrl,
+                                              PollingAuthFactory, $transitions,
+                                              resourceNamePatterns, $window) {
 
     $scope.instanceUrl = instanceUrl;
     $scope.checkRight = AuthFactory.checkRight;
@@ -258,7 +258,6 @@ angular.module("eduMfaApp")
                         " are not completely authenticated, yet."),
                     {type: "warning", ttl: 5000});
                 $scope.hideResponseInput = true;
-                $scope.u2fSignRequests = Array();
                 $scope.webAuthnSignRequests = [];
                 $scope.transactionid = data.detail["transaction_id"];
                 // Challenge Response always contains multi_challenge!
@@ -281,9 +280,6 @@ angular.module("eduMfaApp")
                             $scope.hideResponseInput = false;
                         }
                         let attributes = challenge.attributes ? challenge.attributes : null;
-                        if (attributes && attributes.u2fSignRequest) {
-                            $scope.u2fSignRequests.push(attributes.u2fSignRequest);
-                        }
                         if (attributes && attributes.webAuthnSignRequest) {
                             $scope.webAuthnSignRequests.push(attributes.webAuthnSignRequest);
                         }
@@ -301,13 +297,6 @@ angular.module("eduMfaApp")
                 // In case of TiQR we need to start the poller
                 if ($scope.polling) {
                     PollingAuthFactory.start($scope.check_authentication);
-                }
-                // In case of u2f we do:
-                if ($scope.u2fSignRequests.length > 0) {
-                    $scope.u2f_first_error = data;
-                    U2fFactory.sign_request(data, $scope.u2fSignRequests,
-                        $scope.login.username,
-                        $scope.transactionid, $scope.do_login_stuff);
                 }
                 // In case of webAuthn we do:
                 if ($scope.webAuthnSignRequests.length > 0) {
@@ -336,14 +325,6 @@ angular.module("eduMfaApp")
                 inform.add(gettextCatalog.getString("Challenge Response " +
                         "Authentication. Your response was not valid!"),
                     {type: "warning", ttl: 5000});
-                // in case of U2F we try for a 2nd signature
-                // In case of u2f we do:
-                if ($scope.u2f_first_error) {
-                    U2fFactory.sign_request($scope.u2f_first_error,
-                        $scope.u2fSignRequests,
-                        $scope.login.username,
-                        $scope.transactionid, $scope.do_login_stuff);
-                }
                 // In case of WebAuthn we try for a 2nd signature:
                 if ($scope.webauthn_first_error) {
                     webAuthnToken.sign_request(
@@ -649,14 +630,14 @@ angular.module("eduMfaApp")
                                         "$state", "ConfigFactory", "inform",
                                         "PolicyTemplateFactory", "gettextCatalog",
                                         "hotkeys", "RegisterFactory",
-                                        "U2fFactory", "instanceUrl",
+                                        "instanceUrl",
                                         "PollingAuthFactory", "TokenFactory",
                                         function (Idle, $scope, $http, $location,
                                                   authUrl, AuthFactory, $rootScope,
                                                   $state, ConfigFactory, inform,
                                                   PolicyTemplateFactory, gettextCatalog,
                                                   hotkeys, RegisterFactory,
-                                                  U2fFactory, instanceUrl,
+                                                  instanceUrl,
                                                   PollingAuthFactory, TokenFactory)
 {
 
