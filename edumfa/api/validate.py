@@ -78,7 +78,6 @@ from edumfa.api.lib.prepolicy import (
     api_key_required,
     check_base_action,
     increase_failcounter_on_challenge,
-    legacypushtoken_wait,
     mangle,
     prepolicy,
     pushtoken_wait,
@@ -235,7 +234,6 @@ def offlinerefill():
 @postpolicy(autoassign, request=request)
 @add_serial_from_response_to_g
 @prepolicy(pushtoken_wait, request=request)
-@prepolicy(legacypushtoken_wait, request=request)
 @prepolicy(set_realm, request=request)
 @prepolicy(mangle, request=request)
 @prepolicy(increase_failcounter_on_challenge, request=request)
