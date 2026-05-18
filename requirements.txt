@@ -71,7 +71,7 @@ grpcio==1.80.0
     # via edumfa (pyproject.toml)
 huey==3.0.0
     # via edumfa (pyproject.toml)
-idna==3.13
+idna==3.15
     # via requests
 importlib-metadata==8.7.0
     # via edumfa (pyproject.toml)
@@ -161,7 +161,7 @@ typing-extensions==4.15.0
     #   pyjwt
     #   pyopenssl
     #   sqlalchemy
-urllib3==2.6.3
+urllib3==2.7.0
     # via requests
 werkzeug==3.1.8
     # via
