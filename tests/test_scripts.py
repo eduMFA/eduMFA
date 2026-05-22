@@ -313,4 +313,5 @@ class ScriptsTestCase(unittest.TestCase):
         assert len(LogEntry.query.all()) == 1
         result = runner.invoke(edumfa_manage, ["audit", "rotate", "--age", "30"])
         assert result.exit_code == 0
+        db.session.remove()
         assert len(LogEntry.query.all()) == 0
