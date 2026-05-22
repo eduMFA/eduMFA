@@ -41,8 +41,8 @@ def _postgres_container():
 @contextmanager
 def _mariadb_container():
     _require_docker()
-    MariaDbContainer = pytest.importorskip("testcontainers.mysql").MariaDbContainer
-    with MariaDbContainer("mariadb:11") as mariadb:
+    MySqlContainer = pytest.importorskip("testcontainers.mysql").MySqlContainer
+    with MySqlContainer("mariadb:11") as mariadb:
         yield "mariadb", mariadb.get_connection_url()
 
 
