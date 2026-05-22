@@ -119,13 +119,16 @@ def create_app(
     :return: The flask application
     :rtype: App object
     """
+    app = Flask(__name__, static_folder="static", template_folder="static/templates")
+    if config_name == "completion":
+        return app
+
     if not silent:
         print(f"The configuration name is: {config_name}")
     if os.environ.get(ENV_KEY):
         config_file = os.environ[ENV_KEY]
     if not silent:
         print(f"Additional configuration will be read from the file {config_file}")
-    app = Flask(__name__, static_folder="static", template_folder="static/templates")
     if config_name:
         app.config.from_object(config[config_name])
 
