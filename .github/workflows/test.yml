@@ -38,9 +38,83 @@ jobs:
       - name: Install dependencies
         run: uv sync --group test
       - name: Run Pytest checks
-        run: uv run pytest --cov=edumfa --import-mode=importlib -vs tests/
+        run: uv run pytest --cov=edumfa --import-mode=importlib -vs -m "not dbcontainer" tests/
       - name: Codecov upload
         uses: codecov/codecov-action@v6
         with:
             token: ${{ secrets.CODECOV_TOKEN }}
             files: ./coverage.xml
+
+  database-full-suite:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - database: postgres
+            image: postgres:16-alpine
+            port: 5432
+            test_database_url: postgresql+psycopg://edumfa:edumfa@127.0.0.1:5432/edumfa
+            health_cmd: pg_isready -U edumfa -d edumfa
+          - database: mariadb
+            image: mariadb:11
+            port: 3306
+            test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
+            health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
+    name: pytest ${{ matrix.database }}
+    services:
+      database:
+        image: ${{ matrix.image }}
+        env:
+          POSTGRES_USER: edumfa
+          POSTGRES_PASSWORD: edumfa
+          POSTGRES_DB: edumfa
+          MARIADB_USER: edumfa
+          MARIADB_PASSWORD: edumfa
+          MARIADB_DATABASE: edumfa
+          MARIADB_ROOT_PASSWORD: edumfa
+          MYSQL_USER: edumfa
+          MYSQL_PASSWORD: edumfa
+          MYSQL_DATABASE: edumfa
+          MYSQL_ROOT_PASSWORD: edumfa
+        ports:
+          - ${{ matrix.port }}:${{ matrix.port }}
+        options: >-
+          --health-cmd "${{ matrix.health_cmd }}"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --group test
+      - name: Run Pytest checks against ${{ matrix.database }}
+        env:
+          TEST_DATABASE_URL: ${{ matrix.test_database_url }}
+        run: uv run pytest --import-mode=importlib -vs -m "not dbcontainer" tests/
+
+  database-backend-smoke:
+    runs-on: ubuntu-latest
+    name: testcontainers database smoke
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --group test
+      - name: Run database backend checks
+        run: uv run pytest --import-mode=importlib -vs -m dbcontainer tests/test_db_backends.py
