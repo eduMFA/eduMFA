@@ -43,7 +43,10 @@ def _mariadb_container():
     _require_docker()
     MySqlContainer = pytest.importorskip("testcontainers.mysql").MySqlContainer
     with MySqlContainer("mariadb:11") as mariadb:
-        yield "mariadb", mariadb.get_connection_url()
+        database_url = mariadb.get_connection_url()
+        if database_url.startswith("mysql://"):
+            database_url = database_url.replace("mysql://", "mysql+pymysql://", 1)
+        yield "mariadb", database_url
 
 
 @pytest.fixture(
