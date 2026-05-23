@@ -598,8 +598,34 @@ class Token(MethodsMixin, db.Model):
                 types[".".join(k.split(".")[:-1])] = v
         for k, v in info.items():
             if not k.endswith(".type"):
+                log.debug(
+                    "Writing TokenInfo entry: token_id=%r serial=%r key=%r "
+                    "value_length=%r type=%r",
+                    self.id,
+                    self.serial,
+                    k,
+                    len(convert_column_to_unicode(v) or ""),
+                    types.get(k),
+                )
                 TokenInfo(self.id, k, v, Type=types.get(k)).save(persistent=False)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except (IntegrityError, OperationalError):
+            log.warning(
+                "Unable to commit TokenInfo batch: token_id=%r serial=%r "
+                "keys=%r value_lengths=%r dialect=%r",
+                self.id,
+                self.serial,
+                [k for k in info if not k.endswith(".type")],
+                {
+                    k: len(convert_column_to_unicode(v) or "")
+                    for k, v in info.items()
+                    if not k.endswith(".type")
+                },
+                db.session.get_bind().dialect.name,
+                exc_info=True,
+            )
+            raise
 
     def del_info(self, key=None):
         """
@@ -720,30 +746,62 @@ class TokenInfo(MethodsMixin, db.Model):
         self.Description = Description
 
     def save(self, persistent=True):
-        ti_func = TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).first
-        ti = ti_func()
-        if ti is None:
-            # create a new one
-            db.session.add(self)
-            db.session.commit()
-            if get_app_config_value(SAFE_STORE, False):
-                ti = ti_func()
-                ret = ti.id
-            else:
-                ret = self.id
-        else:
-            # update
-            TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).update(
-                {
-                    "Value": self.Value,
-                    "Description": self.Description,
-                    "Type": self.Type,
-                }
+        operation = "unknown"
+        existing_id = None
+        token_serial = None
+        with db.session.no_autoflush:
+            token_serial = (
+                Token.query.with_entities(Token.serial)
+                .filter(Token.id == self.token_id)
+                .scalar()
             )
-            ret = ti.id
-        if persistent:
-            db.session.commit()
-        return ret
+        try:
+            ti_func = TokenInfo.query.filter_by(
+                token_id=self.token_id, Key=self.Key
+            ).first
+            ti = ti_func()
+            if ti is None:
+                operation = "insert"
+                # create a new one
+                db.session.add(self)
+                db.session.commit()
+                if get_app_config_value(SAFE_STORE, False):
+                    ti = ti_func()
+                    ret = ti.id
+                else:
+                    ret = self.id
+            else:
+                operation = "update"
+                existing_id = ti.id
+                # update
+                TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).update(
+                    {
+                        "Value": self.Value,
+                        "Description": self.Description,
+                        "Type": self.Type,
+                    }
+                )
+                ret = ti.id
+            if persistent:
+                db.session.commit()
+            return ret
+        except (IntegrityError, OperationalError):
+            log.warning(
+                "Unable to save TokenInfo entry: operation=%r token_id=%r "
+                "serial=%r tokeninfo_id=%r key=%r value_length=%r type=%r "
+                "persistent=%r dialect=%r",
+                operation,
+                self.token_id,
+                token_serial,
+                existing_id,
+                self.Key,
+                len(self.Value or ""),
+                self.Type,
+                persistent,
+                db.session.get_bind().dialect.name,
+                exc_info=True,
+            )
+            raise
 
 
 class CustomUserAttribute(MethodsMixin, db.Model):
