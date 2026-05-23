@@ -585,8 +585,10 @@ class U2fTokenClass(TokenClass):
             ):
                 # Signature verified.
                 # check, if the counter increased!
-                if counter > self.get_otp_count():
-                    self.set_otp_count(counter)
+                otp_count = self.get_otp_count()
+                if counter > otp_count and self.set_otp_count_replay_safe(
+                    otp_count, counter
+                ):
                     ret = counter
                     # At this point we can check, if the attestation
                     # certificate is authorized.

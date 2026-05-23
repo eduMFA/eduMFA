@@ -28,7 +28,7 @@ class RaceConditionValidationTest(MyTestCase):
     # ------------------------------------------------------------------ #
 
     def _run_concurrent_validations(
-        self, serial: str, otp: str, n: int
+        self, serial: str, otp: str, n: int, extra_data: dict | None = None
     ) -> list[tuple[bool, dict]]:
         """
         Fire *n* POST /validate/check requests simultaneously using a Barrier
@@ -47,9 +47,11 @@ class RaceConditionValidationTest(MyTestCase):
             try:
                 with self.app.test_client() as client:
                     barrier.wait()  # synchronise all threads to the same instant
+                    request_data = {"serial": serial, "pass": otp}
+                    request_data.update(extra_data or {})
                     res = client.post(
                         "/validate/check",
-                        data={"serial": serial, "pass": otp},
+                        data=request_data,
                     )
                     data = res.get_json() or {}
                     result_obj = data.get("result")
@@ -74,6 +76,21 @@ class RaceConditionValidationTest(MyTestCase):
         self.assertEqual(len(results), n, f"Not all threads finished: {results}")
         return results
 
+    def _assert_single_success(self, results: list[tuple[bool, dict]]) -> None:
+        values = [v for v, _ in results]
+        successes = values.count(True)
+        self.assertEqual(
+            successes,
+            1,
+            f"Expected exactly 1 successful validation (replay protection), "
+            f"got {successes} successes out of {_CONCURRENCY} concurrent requests.\n"
+            f"Per-thread responses:\n"
+            + "\n".join(
+                f"  [{i}] value={v} status={r['status']} body={r['body']}"
+                for i, (v, r) in enumerate(results)
+            ),
+        )
+
     # ------------------------------------------------------------------ #
     # tests                                                                #
     # ------------------------------------------------------------------ #
@@ -88,8 +105,6 @@ class RaceConditionValidationTest(MyTestCase):
         tokeninfo rows are created outside the race.  The actual concurrent
         replay then uses counter 1, which produces '287082'.
         """
-        if db.session.get_bind().dialect.name == "sqlite":
-            self.skipTest("SQLite ignores SELECT FOR UPDATE row locks")
 
         serial = "RACEHOTP01"
         init_token(
@@ -109,23 +124,132 @@ class RaceConditionValidationTest(MyTestCase):
             otp = self.valid_otp_values[1]  # "287082" - counter 1
             results = self._run_concurrent_validations(serial, otp, _CONCURRENCY)
 
-            values = [v for v, _ in results]
-            successes = values.count(True)
-            self.assertEqual(
-                successes,
-                1,
-                f"Expected exactly 1 successful validation (replay protection), "
-                f"got {successes} successes out of {_CONCURRENCY} concurrent requests.\n"
-                f"Per-thread responses:\n"
-                + "\n".join(
-                    f"  [{i}] value={v} status={r['status']} body={r['body']}"
-                    for i, (v, r) in enumerate(results)
-                ),
-            )
+            self._assert_single_success(results)
         finally:
             # Concurrent requests may have modified rows that the main-thread
             # session cached (e.g. tokeninfo on MariaDB).  Rollback to clear
             # stale state so remove_token() can run cleanly.
+            db.session.rollback()
+            remove_token(serial)
+
+    def test_totp_concurrent_replay_is_rejected(self):
+        """
+        N threads submit the same TOTP value concurrently.
+        Exactly one must succeed; all others must be rejected (replay protection).
+        """
+        serial = "RACETOTP01"
+        init_token(
+            {"serial": serial, "type": "totp", "otpkey": self.otpkey, "pin": ""},
+        )
+        try:
+            with self.app.test_client() as client:
+                warmup = client.post(
+                    "/validate/check",
+                    data={
+                        "serial": serial,
+                        "pass": "942826",
+                        "initTime": 47251644 * 30,
+                    },
+                )
+                self.assertTrue(
+                    warmup.get_json()["result"]["value"],
+                    "Warm-up validation should succeed",
+                )
+
+            results = self._run_concurrent_validations(
+                serial,
+                "063321",
+                _CONCURRENCY,
+                extra_data={"initTime": 47251645 * 30},
+            )
+
+            self._assert_single_success(results)
+        finally:
+            db.session.rollback()
+            remove_token(serial)
+
+    def test_motp_concurrent_replay_is_rejected(self):
+        """
+        N threads submit the same mOTP value concurrently.
+        Exactly one must succeed; all others must be rejected (replay protection).
+        """
+        serial = "RACEMOTP01"
+        init_token(
+            {
+                "serial": serial,
+                "type": "motp",
+                "otpkey": "0123456789abcdef",
+                "motppin": "6666",
+                "pin": "",
+            },
+        )
+        try:
+            with self.app.test_client() as client:
+                warmup = client.post(
+                    "/validate/check",
+                    data={
+                        "serial": serial,
+                        "pass": "6ed4e4",
+                        "initTime": 129612120,
+                    },
+                )
+                self.assertTrue(
+                    warmup.get_json()["result"]["value"],
+                    "Warm-up validation should succeed",
+                )
+
+            results = self._run_concurrent_validations(
+                serial,
+                "502a59",
+                _CONCURRENCY,
+                extra_data={"initTime": 129612130},
+            )
+
+            self._assert_single_success(results)
+        finally:
+            db.session.rollback()
+            remove_token(serial)
+
+    def test_daypassword_concurrent_replay_is_rejected(self):
+        """
+        N threads submit the same day-password value concurrently.
+        Exactly one must succeed; all others must be rejected (replay protection).
+        """
+        serial = "RACEDAYPW01"
+        init_token(
+            {
+                "serial": serial,
+                "type": "daypassword",
+                "otpkey": self.otpkey,
+                "pin": "",
+                "otplen": 6,
+                "timeStep": "1h",
+            },
+        )
+        try:
+            with self.app.test_client() as client:
+                warmup = client.post(
+                    "/validate/check",
+                    data={
+                        "serial": serial,
+                        "pass": "001659",
+                        "initTime": 470222 * 3600,
+                    },
+                )
+                self.assertTrue(
+                    warmup.get_json()["result"]["value"],
+                    "Warm-up validation should succeed",
+                )
+
+            results = self._run_concurrent_validations(
+                serial,
+                "006788",
+                _CONCURRENCY,
+                extra_data={"initTime": 470223 * 3600},
+            )
+
+            self._assert_single_success(results)
+        finally:
             db.session.rollback()
             remove_token(serial)
 

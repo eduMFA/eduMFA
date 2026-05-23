@@ -1726,27 +1726,28 @@ class WebAuthnTokenClass(TokenClass):
                 #
                 # All data is parsed and verified. If any errors occur, an exception
                 # will be raised.
-                self.set_otp_count(
-                    WebAuthnAssertionResponse(
-                        webauthn_user=user,
-                        assertion_response={
-                            "id": credential_id,
-                            "userHandle": user_handle,
-                            "clientData": client_data,
-                            "authData": authenticator_data,
-                            "signature": signature_data,
-                            "assertionClientExtensions": webauthn_b64_decode(
-                                assertion_client_extensions
-                            )
-                            if assertion_client_extensions
-                            else None,
-                        },
-                        challenge=webauthn_b64_encode(challenge),
-                        origin=http_origin,
-                        allow_credentials=[user.credential_id],
-                        uv_required=uv_req,
-                    ).verify()
-                )
+                otp_count = self.get_otp_count()
+                new_otp_count = WebAuthnAssertionResponse(
+                    webauthn_user=user,
+                    assertion_response={
+                        "id": credential_id,
+                        "userHandle": user_handle,
+                        "clientData": client_data,
+                        "authData": authenticator_data,
+                        "signature": signature_data,
+                        "assertionClientExtensions": webauthn_b64_decode(
+                            assertion_client_extensions
+                        )
+                        if assertion_client_extensions
+                        else None,
+                    },
+                    challenge=webauthn_b64_encode(challenge),
+                    origin=http_origin,
+                    allow_credentials=[user.credential_id],
+                    uv_required=uv_req,
+                ).verify()
+                if not self.set_otp_count_replay_safe(otp_count, new_otp_count):
+                    return -1
             except AuthenticationRejectedException as e:
                 # The authentication ceremony failed.
                 log.warning(
