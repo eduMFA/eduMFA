@@ -88,6 +88,8 @@ class RaceConditionValidationTest(MyTestCase):
         tokeninfo rows are created outside the race.  The actual concurrent
         replay then uses counter 1, which produces '287082'.
         """
+        if db.session.get_bind().dialect.name == "sqlite":
+            self.skipTest("SQLite ignores SELECT FOR UPDATE row locks")
 
         serial = "RACEHOTP01"
         init_token(
