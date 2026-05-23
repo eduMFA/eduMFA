@@ -111,10 +111,10 @@ class RaceConditionValidationTest(MyTestCase):
 
             values = [v for v, _ in results]
             successes = values.count(True)
-            self.assertLessEqual(
+            self.assertEqual(
                 successes,
                 1,
-                f"Expected at most 1 successful validation (replay protection), "
+                f"Expected exactly 1 successful validation (replay protection), "
                 f"got {successes} successes out of {_CONCURRENCY} concurrent requests.\n"
                 f"Per-thread responses:\n"
                 + "\n".join(
