@@ -278,6 +278,7 @@ def delete_smsgateway_key_generic(id, key, Type="option"):
     :param type: The type of the key
     :return: True
     """
+    id = int(id)
     return fetch_one_resource(
         SMSGatewayOption, gateway_id=id, Key=key, Type=Type
     ).delete()

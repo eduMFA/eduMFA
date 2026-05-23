@@ -1895,7 +1895,7 @@ class MachineTokenOptions(db.Model):
 
     def __init__(self, machinetoken_id, key, value):
         log.debug(f"setting {key!r} to {value!r} for MachineToken {machinetoken_id}")
-        self.machinetoken_id = machinetoken_id
+        self.machinetoken_id = int(machinetoken_id)
         self.mt_key = convert_column_to_unicode(key)
         self.mt_value = convert_column_to_unicode(value)
 

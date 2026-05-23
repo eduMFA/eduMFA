@@ -206,6 +206,7 @@ def enable_event(event_id, enable=True):
     :param event_id: ID of the event
     :return:
     """
+    event_id = int(event_id)
     ev = fetch_one_resource(EventHandler, id=event_id)
     # Update the event
     ev.active = enable
