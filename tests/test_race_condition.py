@@ -83,14 +83,28 @@ class RaceConditionValidationTest(MyTestCase):
         N threads submit the same HOTP OTP value concurrently.
         Exactly one must succeed; all others must be rejected (replay protection).
 
-        The well-known test key at counter 0 produces '755224'.
+        The well-known test key at counter 0 produces '755224'.  We use it
+        once before the concurrent requests so authentication-related
+        tokeninfo rows are created outside the race.  The actual concurrent
+        replay then uses counter 1, which produces '287082'.
         """
+
         serial = "RACEHOTP01"
         init_token(
             {"serial": serial, "type": "hotp", "otpkey": self.otpkey, "pin": ""},
         )
         try:
-            otp = self.valid_otp_values[0]  # "755224" — counter 0
+            with self.app.test_client() as client:
+                warmup = client.post(
+                    "/validate/check",
+                    data={"serial": serial, "pass": self.valid_otp_values[0]},
+                )
+                self.assertTrue(
+                    warmup.get_json()["result"]["value"],
+                    "Warm-up validation should succeed",
+                )
+
+            otp = self.valid_otp_values[1]  # "287082" - counter 1
             results = self._run_concurrent_validations(serial, otp, _CONCURRENCY)
 
             values = [v for v, _ in results]
