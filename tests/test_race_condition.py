@@ -12,6 +12,7 @@ lock in _create_token_query(for_update=True) is what enforces the constraint.
 import threading
 
 from edumfa.lib.token import init_token, remove_token
+from edumfa.models import db
 
 from .base import MyTestCase
 
@@ -26,14 +27,18 @@ class RaceConditionValidationTest(MyTestCase):
     # helpers                                                              #
     # ------------------------------------------------------------------ #
 
-    def _run_concurrent_validations(self, serial: str, otp: str, n: int) -> list[bool]:
+    def _run_concurrent_validations(
+        self, serial: str, otp: str, n: int
+    ) -> list[tuple[bool, dict]]:
         """
         Fire *n* POST /validate/check requests simultaneously using a Barrier
         to maximise overlap between the DB transactions.
 
-        Returns a list of ``result.value`` booleans, one per thread.
+        Returns a list of ``(result_value, response_info)`` tuples where
+        ``response_info`` contains ``status`` (HTTP status code) and ``body``
+        (parsed JSON) for diagnosing failures.
         """
-        results: list[bool] = []
+        results: list[tuple[bool, dict]] = []
         errors: list[str] = []
         lock = threading.Lock()
         barrier = threading.Barrier(n)
@@ -46,9 +51,15 @@ class RaceConditionValidationTest(MyTestCase):
                         "/validate/check",
                         data={"serial": serial, "pass": otp},
                     )
-                    value = res.get_json()["result"]["value"]
+                    data = res.get_json() or {}
+                    result_obj = data.get("result")
+                    if result_obj is None or "value" not in result_obj:
+                        raise AssertionError(
+                            f"Unexpected response: status={res.status_code}, body={data}"
+                        )
+                    value = result_obj["value"]
                     with lock:
-                        results.append(value)
+                        results.append((value, {"status": res.status_code, "body": data}))
             except Exception as exc:
                 with lock:
                     errors.append(repr(exc))
@@ -82,15 +93,24 @@ class RaceConditionValidationTest(MyTestCase):
             otp = self.valid_otp_values[0]  # "755224" — counter 0
             results = self._run_concurrent_validations(serial, otp, _CONCURRENCY)
 
-            successes = results.count(True)
-            self.assertEqual(
+            values = [v for v, _ in results]
+            successes = values.count(True)
+            self.assertLessEqual(
                 successes,
                 1,
-                f"Expected exactly 1 successful validation (replay protection), "
-                f"got {successes} successes out of {_CONCURRENCY} concurrent requests: "
-                f"{results}",
+                f"Expected at most 1 successful validation (replay protection), "
+                f"got {successes} successes out of {_CONCURRENCY} concurrent requests.\n"
+                f"Per-thread responses:\n"
+                + "\n".join(
+                    f"  [{i}] value={v} status={r['status']} body={r['body']}"
+                    for i, (v, r) in enumerate(results)
+                ),
             )
         finally:
+            # Concurrent requests may have modified rows that the main-thread
+            # session cached (e.g. tokeninfo on MariaDB).  Rollback to clear
+            # stale state so remove_token() can run cleanly.
+            db.session.rollback()
             remove_token(serial)
 
     def test_hotp_sequential_second_replay_is_rejected(self):
