@@ -41,7 +41,7 @@ import string
 import traceback
 
 from dateutil.tz import tzlocal
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, join
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.expression import FunctionElement
 
@@ -773,6 +773,37 @@ def get_num_tokens_in_realm(realm, active=True):
     return get_tokens(realm=realm, active=active, count=True)
 
 
+def count_users_with_token(
+    realm: str | None = None, active: str | None = None, tokentype: str | None = None
+) -> int:
+    """
+    Returns the numbers of users with tokens.
+
+    :param realm_id: Whether to only include users from a certain realm.
+    :param active: Whether the tokens need to be active to be counted.
+    :param tokentype: Whether the token needs to have a certain type.
+    :return: Number of users with a token in the given realm.
+    """
+    sql_query = TokenOwner.query.with_entities(
+        TokenOwner.resolver, TokenOwner.user_id
+    ).distinct()
+    if realm is not None:
+        # Filter for a realm
+        sql_query = sql_query.filter(
+            and_(
+                func.lower(Realm.name) == realm.lower(),
+                TokenOwner.realm_id == Realm.id,
+            )
+        )
+    token_subquery = _create_token_query(
+        realm=realm, assigned=True, active=active, tokentype=tokentype, for_update=False
+    ).subquery()
+    sql_query = sql_query.join(
+        token_subquery, TokenOwner.token_id == token_subquery.c.id
+    )
+    return sql_query.count()
+
+
 @log_with(log)
 def get_realms_of_token(serial, only_first_realm=False):
     """
@@ -1057,7 +1088,7 @@ def gen_serial(tokentype=None, prefix=None):
     if not prefix:
         prefix = get_token_prefix(tokentype.lower(), tokentype.upper())
 
-    # now search the number of tokens of tokenytype in the token database
+    # now search the number of tokens of tokentype in the token database
     tokennum = Token.query.filter(Token.tokentype == tokentype).count()
 
     # Now create the serial

@@ -69,7 +69,7 @@ from .event import eventhandling_blueprint
 from .lib.utils import get_all_params, getParam, send_error
 from .machine import machine_blueprint
 from .machineresolver import machineresolver_blueprint
-from .monitoring import monitoring_blueprint
+from .monitoring import monitoring_blueprint, stats_blueprint
 from .periodictask import periodictask_blueprint
 from .policy import policy_blueprint
 from .radiusserver import radiusserver_blueprint
@@ -146,6 +146,7 @@ def before_userendpoint_request():
 @caconnector_blueprint.before_request
 @edumfaserver_blueprint.before_request
 @client_blueprint.before_request
+@stats_blueprint.before_request
 @monitoring_blueprint.before_request
 @tokengroup_blueprint.before_request
 @serviceid_blueprint.before_request
@@ -269,6 +270,7 @@ def before_request():
 @periodictask_blueprint.after_request
 @edumfaserver_blueprint.after_request
 @client_blueprint.after_request
+@stats_blueprint.after_request
 @monitoring_blueprint.after_request
 @ttype_blueprint.after_request
 @validate_blueprint.after_request
@@ -299,6 +301,7 @@ def after_request(response):
 @application_blueprint.app_errorhandler(AuthError)
 @smtpserver_blueprint.app_errorhandler(AuthError)
 @eventhandling_blueprint.app_errorhandler(AuthError)
+@stats_blueprint.app_errorhandler(AuthError)
 @monitoring_blueprint.app_errorhandler(AuthError)
 @tokengroup_blueprint.app_errorhandler(AuthError)
 @serviceid_blueprint.app_errorhandler(AuthError)
@@ -331,6 +334,7 @@ def auth_error(error):
 @eventhandling_blueprint.app_errorhandler(PolicyError)
 @register_blueprint.app_errorhandler(PolicyError)
 @recover_blueprint.app_errorhandler(PolicyError)
+@stats_blueprint.app_errorhandler(PolicyError)
 @monitoring_blueprint.app_errorhandler(PolicyError)
 @ttype_blueprint.app_errorhandler(PolicyError)
 @tokengroup_blueprint.app_errorhandler(PolicyError)
@@ -380,6 +384,7 @@ def resource_not_found_error(error):
 @eventhandling_blueprint.app_errorhandler(eduMFAError)
 @register_blueprint.app_errorhandler(eduMFAError)
 @recover_blueprint.app_errorhandler(eduMFAError)
+@stats_blueprint.app_errorhandler(eduMFAError)
 @monitoring_blueprint.app_errorhandler(eduMFAError)
 @ttype_blueprint.app_errorhandler(eduMFAError)
 @tokengroup_blueprint.app_errorhandler(eduMFAError)
@@ -408,6 +413,7 @@ def edumfa_error(error):
 @eventhandling_blueprint.app_errorhandler(500)
 @register_blueprint.app_errorhandler(500)
 @recover_blueprint.app_errorhandler(500)
+@stats_blueprint.app_errorhandler(500)
 @monitoring_blueprint.app_errorhandler(500)
 @ttype_blueprint.app_errorhandler(500)
 @tokengroup_blueprint.app_errorhandler(500)

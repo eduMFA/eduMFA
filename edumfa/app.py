@@ -42,7 +42,7 @@ from edumfa.api.edumfaserver import edumfaserver_blueprint
 from edumfa.api.event import eventhandling_blueprint
 from edumfa.api.machine import machine_blueprint
 from edumfa.api.machineresolver import machineresolver_blueprint
-from edumfa.api.monitoring import monitoring_blueprint
+from edumfa.api.monitoring import monitoring_blueprint, stats_blueprint
 from edumfa.api.periodictask import periodictask_blueprint
 from edumfa.api.policy import policy_blueprint
 from edumfa.api.radiusserver import radiusserver_blueprint
@@ -175,6 +175,7 @@ def create_app(
     app.register_blueprint(smsgateway_blueprint, url_prefix="/smsgateway")
     app.register_blueprint(client_blueprint, url_prefix="/client")
     app.register_blueprint(monitoring_blueprint, url_prefix="/monitoring")
+    app.register_blueprint(stats_blueprint, url_prefix="/stats")
     app.register_blueprint(tokengroup_blueprint, url_prefix="/tokengroup")
     app.register_blueprint(serviceid_blueprint, url_prefix="/serviceid")
     db.init_app(app)
