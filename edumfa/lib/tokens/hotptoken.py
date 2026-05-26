@@ -440,7 +440,6 @@ class HotpTokenClass(TokenClass):
         otplen = int(self.token.otplen)
         secretHOtp = self.token.get_otpkey()
 
-        advance_counter_atomically = counter is None
         if counter is None:
             counter = int(self.get_otp_count())
         if window is None:
@@ -452,11 +451,7 @@ class HotpTokenClass(TokenClass):
             res = self._autosync(hmac2Otp, anOtpVal)
         if res != -1:
             # on success, we save the counter
-            if advance_counter_atomically:
-                if not self.set_otp_count_replay_safe(counter, res + 1):
-                    return -1
-            else:
-                self.set_otp_count(res + 1)
+            self.set_otp_count(res + 1)
             # We could also store it temporarily
             # self.auth_details["matched_otp_counter"] = res
 

@@ -78,7 +78,6 @@ from ..models import (
     TokenOwner,
     TokenTokengroup,
     cleanup_challenges,
-    db,
 )
 from .challenge import get_challenges
 from .config import get_from_config, get_prepend_pin
@@ -813,38 +812,6 @@ class TokenClass:
     def set_otp_count(self, otpCount):
         self.token.count = int(otpCount)
         self.token.save()
-
-    def _needs_conditional_otp_counter_update(self):
-        bind = db.session.get_bind(mapper=self.token.__class__)
-        return bind.dialect.name == "sqlite"
-
-    @check_token_locked
-    def set_otp_count_replay_safe(self, expected_count, otp_count):
-        """
-        Advance the OTP counter after replay-sensitive validation.
-
-        Databases with native row locks serialize validation via SELECT FOR
-        UPDATE.  SQLite ignores that lock, so use a conditional update there.
-        """
-        expected_count = int(expected_count)
-        otp_count = int(otp_count)
-        if not self._needs_conditional_otp_counter_update():
-            self.set_otp_count(otp_count)
-            return True
-
-        token_class = self.token.__class__
-        updated = (
-            token_class.query.filter(
-                token_class.id == self.token.id,
-                token_class.count == expected_count,
-            ).update({token_class.count: otp_count}, synchronize_session=False)
-        )
-        if updated:
-            db.session.commit()
-            self.token.count = otp_count
-            return True
-        db.session.expire(self.token, ["count"])
-        return False
 
     @check_token_locked
     def set_pin(self, pin, encrypt=False):
