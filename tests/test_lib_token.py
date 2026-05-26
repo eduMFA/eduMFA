@@ -47,6 +47,7 @@ from edumfa.lib.token import (
     check_user_pass,
     copy_token_pin,
     copy_token_user,
+    count_users_with_token,
     create_tokenclass_object,
     delete_tokeninfo,
     enable_token,
@@ -302,6 +303,47 @@ class TokenTestCase(MyTestCase):
         self.assertFalse(
             is_token_owner(self.serials[1], user), get_token_owner(self.serials[1])
         )
+
+    def test_08a_count_users_with_token(self):
+        # add some more tokens
+        self.setUp_user_realm2()
+        user_obj = User("cornelius", realm=self.realm1)
+        user_obj2 = User("hans", realm=self.realm2)
+        # Cornelius already has an active token here. Give him a second to make sure he is counted as one.
+        tok = init_token(
+            {
+                "type": "hotp",
+                "otpkey": self.otpkey,
+                "serial": "TEST08A_1",
+            },
+            user=user_obj,
+        )
+        tok2 = init_token(
+            {
+                "type": "hotp",
+                "otpkey": self.otpkey,
+                "serial": "TEST08A_2",
+                "active": "False",
+            },
+            user=user_obj2,
+        )
+        tok2.enable(False)
+        # hans and cornelius both have one or more tokens.
+        self.assertEqual(count_users_with_token(), 2)
+        # Check for realm.
+        self.assertEqual(count_users_with_token(realm=self.realm1), 1)
+        self.assertEqual(count_users_with_token(realm=self.realm2), 1)
+        self.assertEqual(count_users_with_token(realm="idontexist"), 0)
+        self.assertEqual(count_users_with_token(realm=""), 0)
+        # Check for activeness.
+        self.assertEqual(count_users_with_token(active=True), 1)
+        self.assertEqual(count_users_with_token(active=False), 1)
+        # Check for tokentype.
+        self.assertEqual(count_users_with_token(tokentype="hotp"), 2)
+        self.assertEqual(count_users_with_token(tokentype="totp"), 0)
+        # cleanup
+        tok.delete_token()
+        tok2.delete_token()
 
     def test_09_get_tokenclass_info(self):
         info = get_tokenclass_info("hotp")

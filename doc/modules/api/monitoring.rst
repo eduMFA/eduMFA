@@ -7,7 +7,6 @@ Monitoring endpoints
 
 .. autoflask:: edumfa.app:create_app()
    :endpoints:
-   :blueprints: monitoring_blueprint
+   :blueprints: monitoring_blueprint, stats_blueprint
 
    :include-empty-docstring:
-
