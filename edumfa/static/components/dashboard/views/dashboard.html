@@ -186,7 +186,48 @@
                  </div>
            </div>
        </div>
-
-   </div>
+        <div class="col-lg-4">
+            <div class="panel panel-default" ng-show="checkRight('statistics_read')">
+                <div class="panel-heading" translate>Adoption</div>
+                <div class="panel-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <label for="realm" translate>Realm</label>
+                                    <select class="form-control" ng-change="countUsersWithToken()"
+                                        ng-model="realmForUsersWithToken">
+                                        <option><span translate>any</span></option>
+                                        <option ng-repeat="(realmname, realm) in realms">{{ realmname }}</option>
+                                    </select>
+                                </th>
+                                <th>
+                                    <label for="active" translate>Active</label>
+                                    <select class="form-control" ng-change="countUsersWithToken()"
+                                        ng-model="activenessForUsersWithToken">
+                                        <option><span translate>any</span></option>
+                                        <option><span translate>True</span></option>
+                                        <option><span translate>False</span></option>
+                                    </select>
+                                </th>
+                                <th>
+                                    <label for="tokentype" translate>Tokentype</label>
+                                    <select class="form-control" ng-change="countUsersWithToken()"
+                                        ng-model="tokentypeForUsersWithToken">
+                                        <option><span translate>any</span></option>
+                                        <option ng-repeat="tokentype in tokentypes">{{ tokentype }}</option>
+                                    </select>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td translate>Users having such a token:</td>
+                                <td>{{ users_with_token }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
