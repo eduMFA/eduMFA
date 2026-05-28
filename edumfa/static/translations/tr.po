@@ -168,6 +168,7 @@ msgstr "Aksiyon"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -221,6 +222,10 @@ msgstr "Yönetim"
 #: components/dashboard/views/dashboard.html
 msgid "Administrator"
 msgstr "Yönetici"
+
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
 
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
@@ -1342,6 +1347,10 @@ msgstr "PIN ayarlanamadı."
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
 msgstr "Kullanıcı güncellenemedi."
+
+#: components/dashboard/views/dashboard.html
+msgid "False"
+msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
 #: components/config/views/config.resolvers.passwd.html
@@ -2567,6 +2576,7 @@ msgstr ""
 "okuyun."
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4536,6 +4546,11 @@ msgid "Tokens for user {{ username }}"
 msgstr "Kullanıcı için jetonlar {{username}}"
 
 #: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Tokentype"
+msgstr "Token türü"
+
+#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr "Toplam"
 
@@ -4546,6 +4561,10 @@ msgstr "Toplam Zorluklar:"
 #: components/token/views/token.challenges.html
 msgid "Transaction ID"
 msgstr "İşlem Kimliği"
+
+#: components/dashboard/views/dashboard.html
+msgid "True"
+msgstr ""
 
 #: components/token/views/token.details.html
 msgid "Type"
@@ -4716,6 +4735,10 @@ msgstr "Kullanıcı adı"
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
 msgstr "Kullanıcılar"
+
+#: components/dashboard/views/dashboard.html
+msgid "Users having such a token:"
+msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -5034,6 +5057,10 @@ msgstr "yönetici"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "İsteğe Bağlı Seri Substring"
+
+#: components/dashboard/views/dashboard.html
+msgid "any"
+msgstr ""
 
 #: components/config/views/config.token.u2f.html
 msgid "appId"
