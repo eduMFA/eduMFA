@@ -152,6 +152,7 @@ msgstr "Acción"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -205,6 +206,10 @@ msgstr "Administración"
 #: components/dashboard/views/dashboard.html
 msgid "Administrator"
 msgstr "Administrador"
+
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
 
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
@@ -1308,6 +1313,10 @@ msgstr "No se pudo establecer el PIN."
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
 msgstr "No se pudo actualizar el usuario."
+
+#: components/dashboard/views/dashboard.html
+msgid "False"
+msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
 #: components/config/views/config.resolvers.passwd.html
@@ -2520,6 +2529,7 @@ msgstr ""
 "solicitud."
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4224,6 +4234,10 @@ msgid "Tokens for user {{ username }}"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
+msgid "Tokentype"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr ""
 
@@ -4233,6 +4247,10 @@ msgstr ""
 
 #: components/token/views/token.challenges.html
 msgid "Transaction ID"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "True"
 msgstr ""
 
 #: components/token/views/token.details.html
@@ -4395,6 +4413,10 @@ msgstr ""
 
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Users having such a token:"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4662,6 +4684,10 @@ msgstr ""
 
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "any"
 msgstr ""
 
 #: components/config/views/config.token.u2f.html
