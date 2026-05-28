@@ -167,6 +167,7 @@ msgstr "Azione"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -220,6 +221,10 @@ msgstr "Amministrazione"
 #: components/dashboard/views/dashboard.html
 msgid "Administrator"
 msgstr "Amministratore"
+
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
 
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
@@ -1348,6 +1353,10 @@ msgstr "Impossibile impostare il PIN."
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
 msgstr "Impossibile aggiornare l'utente."
+
+#: components/dashboard/views/dashboard.html
+msgid "False"
+msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
 #: components/config/views/config.resolvers.passwd.html
@@ -2586,6 +2595,7 @@ msgid "Read number dynamically from user source on each request."
 msgstr "Leggi il numero dall'user source, in modo dinamico per ogni richiesta."
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4580,6 +4590,11 @@ msgid "Tokens for user {{ username }}"
 msgstr "Token per l'utente {{ username }}"
 
 #: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Tokentype"
+msgstr "Tipo di token"
+
+#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr "Totale"
 
@@ -4590,6 +4605,10 @@ msgstr "Totale Challenge:"
 #: components/token/views/token.challenges.html
 msgid "Transaction ID"
 msgstr "ID transazione"
+
+#: components/dashboard/views/dashboard.html
+msgid "True"
+msgstr ""
 
 #: components/token/views/token.details.html
 msgid "Type"
@@ -4759,6 +4778,10 @@ msgstr "Nome utente"
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
 msgstr "Utenti"
+
+#: components/dashboard/views/dashboard.html
+msgid "Users having such a token:"
+msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -5083,6 +5106,10 @@ msgstr "amministratore"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "una sottostringa seriale facoltativa"
+
+#: components/dashboard/views/dashboard.html
+msgid "any"
+msgstr ""
 
 #: components/config/views/config.token.u2f.html
 msgid "appId"
