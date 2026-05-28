@@ -160,6 +160,7 @@ msgstr "行動"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -214,6 +215,10 @@ msgstr "管理"
 #: components/dashboard/views/dashboard.html
 msgid "Administrator"
 msgstr "管理員"
+
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
 
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
@@ -1336,6 +1341,10 @@ msgstr "無法設置 PIN 碼。"
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
 msgstr "無法更新使用者。"
+
+#: components/dashboard/views/dashboard.html
+msgid "False"
+msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
 #: components/config/views/config.resolvers.passwd.html
@@ -2560,6 +2569,7 @@ msgid "Read number dynamically from user source on each request."
 msgstr "在每個請求上從使用者源動態讀取數位。"
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4521,6 +4531,11 @@ msgid "Tokens for user {{ username }}"
 msgstr "使用者 {{ username }} 的令牌"
 
 #: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Tokentype"
+msgstr "令牌類型"
+
+#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr ""
 
@@ -4531,6 +4546,10 @@ msgstr "總挑戰："
 #: components/token/views/token.challenges.html
 msgid "Transaction ID"
 msgstr "交易ID"
+
+#: components/dashboard/views/dashboard.html
+msgid "True"
+msgstr ""
 
 #: components/token/views/token.details.html
 msgid "Type"
@@ -4701,6 +4720,10 @@ msgstr "使用者名"
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
 msgstr "使用者"
+
+#: components/dashboard/views/dashboard.html
+msgid "Users having such a token:"
+msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -5006,6 +5029,10 @@ msgstr "管理員"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "一個可選的串行子串"
+
+#: components/dashboard/views/dashboard.html
+msgid "any"
+msgstr ""
 
 #: components/config/views/config.token.u2f.html
 msgid "appId"
