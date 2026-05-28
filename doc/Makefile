@@ -3,9 +3,10 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
+SPHINXBUILD   = uv run --group docs sphinx-build
 PAPER         =
 BUILDDIR      = _build
+UV_VERSION    = $(shell uv --version 2>/dev/null)
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -14,7 +15,17 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+.PHONY: help clean check-uv html htmltodo dirhtml singlehtml spelling pickle json htmlhelp qthelp devhelp epub latex latexpdf text man texinfo info changes linkcheck doctest gettext
+
+DOC_TARGETS = html htmltodo dirhtml singlehtml spelling pickle json htmlhelp qthelp devhelp epub latex latexpdf text man texinfo info gettext changes linkcheck doctest
+
+$(DOC_TARGETS): check-uv
+
+check-uv:
+ifeq ($(UV_VERSION),)
+	@echo "uv is not installed. Follow https://docs.astral.sh/uv/getting-started/installation/ to install it."
+	@exit 1
+endif
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"

@@ -10,7 +10,7 @@ setup the database and do many other tasks.
 
 .. note:: The interesting thing about edumfa-manage is, that it does not need
    the server to run as it acts directly on the database.
-   Therefor you need read access to /etc/edumfa/edumfa.cfg and the encryption
+   Therefore you need read access to /etc/edumfa/edumfa.cfg and the encryption
    key.
 
 If you want to use a config file other than /etc/edumfa/edumfa.cfg, you can

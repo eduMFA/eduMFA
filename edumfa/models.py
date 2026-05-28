@@ -26,7 +26,7 @@
 import binascii
 import logging
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from json import dumps, loads
 
 from dateutil.tz import tzutc
@@ -35,6 +35,7 @@ from sqlalchemy import BigInteger, and_
 from sqlalchemy.dialects import mysql, postgresql, sqlite
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import CreateSequence, Sequence
 
 from edumfa.lib.crypto import (
@@ -48,6 +49,7 @@ from edumfa.lib.crypto import (
     pass_hash,
     verify_pass_hash,
 )
+from edumfa.lib.error import ResourceNotFoundError
 from edumfa.lib.framework import get_app_config_value
 from edumfa.lib.utils import convert_column_to_unicode, hexlify_and_unicode, is_true
 
@@ -964,7 +966,7 @@ class CAConnector(TimestampMethodsMixin, db.Model):
 class CAConnectorConfig(db.Model):
     """
     Each CAConnector can have multiple configuration entries.
-    Each CA Connector type can have different required config values. Therefor
+    Each CA Connector type can have different required config values. Therefore
     the configuration is stored in simple key/value pairs. If the type of a
     config entry is set to "password" the value of this config entry is stored
     encrypted.
@@ -1070,7 +1072,7 @@ class Resolver(TimestampMethodsMixin, db.Model):
 class ResolverConfig(TimestampMethodsMixin, db.Model):
     """
     Each Resolver can have multiple configuration entries.
-    Each Resolver type can have different required config values. Therefor
+    Each Resolver type can have different required config values. Therefore
     the configuration is stored in simple key/value pairs. If the type of a
     config entry is set to "password" the value of this config entry is stored
     encrypted.
@@ -1213,13 +1215,20 @@ class TokenOwner(MethodsMixin, db.Model):
         if realm_id is not None:
             self.realm_id = realm_id
         elif realmname:
-            r = Realm.query.filter_by(name=realmname).first()
-            self.realm_id = r.id
+            realm = Realm.query.filter_by(name=realmname).first()
+            if not realm:
+                raise ResourceNotFoundError(f"Realm '{realmname}' does not exist.")
+            self.realm_id = realm.id
         if token_id is not None:
             self.token_id = token_id
         elif serial:
-            r = Token.query.filter_by(serial=serial).first()
-            self.token_id = r.id
+            token = Token.query.filter_by(serial=serial).first()
+            if not token:  # pragma: no cover
+                # usually this is already covered by the lib / token class functions
+                raise ResourceNotFoundError(
+                    f"Token with serial '{serial}' does not exist."
+                )
+            self.token_id = token.id
         self.resolver = resolver
         self.user_id = user_id
 
@@ -1358,6 +1367,44 @@ class PasswordReset(MethodsMixin, db.Model):
         self.expiration = expiration or datetime.now() + timedelta(
             seconds=expiration_seconds
         )
+
+
+class JwtBlacklist(db.Model):
+    """
+    Table for storing a JWT blacklist to prevent reusing Passkey Authentications
+    """
+
+    __tablename__ = "jwt_blacklist"
+    __table_args__ = ({"mysql_row_format": "DYNAMIC"},)
+    expiration = db.Column(db.DateTime, index=True)
+    nonce = db.Column(db.Unicode(128), nullable=False, primary_key=True, unique=True)
+
+    def __init__(self, expiration, nonce):
+        self.expiration = expiration
+        self.nonce = nonce
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        return self.nonce
+
+    def delete(self):
+        ret = self.nonce
+        db.session.delete(self)
+        db.session.commit()
+        return ret
+
+    @staticmethod
+    def blacklist_janitor():
+        try:
+            # Get a new transaction to keep the impact of the action as low as possible
+            session = sessionmaker(bind=db.engine)
+            with session.begin() as session_transaction:
+                session_transaction.query(JwtBlacklist).filter(
+                    JwtBlacklist.expiration < datetime.now(timezone.utc)
+                ).delete()
+        except (OperationalError, IntegrityError) as e:
+            log.warning(f"Error in JwtBlacklist janitor: {e}")
 
 
 class Challenge(MethodsMixin, db.Model):
@@ -1504,7 +1551,7 @@ def cleanup_challenges():
     """
     c_now = datetime.utcnow()
     try:
-        Challenge.query.filter(Challenge.expiration < c_now).delete()
+        Challenge.query.with_for_update().filter(Challenge.expiration < c_now).delete()
         db.session.commit()
     except (OperationalError, IntegrityError) as e:
         log.warning(f"Error in cleanup_challenges: {e}")
@@ -1546,7 +1593,7 @@ class Policy(TimestampMethodsMixin, db.Model):
     client = db.Column(db.Unicode(256), default="")
     time = db.Column(db.Unicode(64), default="")
     # If there are multiple matching policies, choose the one
-    # with the lowest priority number. We choose 1 to be the default priotity.
+    # with the lowest priority number. We choose 1 to be the default priority.
     priority = db.Column(db.Integer, default=1, nullable=False)
     conditions = db.relationship(
         "PolicyCondition",
@@ -1628,7 +1675,7 @@ class Policy(TimestampMethodsMixin, db.Model):
         If value is empty, it returns an empty array.
         The normal split would return an array with an empty string.
 
-        :param value: The string to be splitted
+        :param value: The string to be split
         :type value: basestring
         :return: list
         """

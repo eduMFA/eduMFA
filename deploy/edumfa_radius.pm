@@ -130,7 +130,7 @@ use Encode::Guess;
 # This is very important ! Without this script will not get the filled hashes from main.
 use vars qw(%RAD_REQUEST %RAD_REPLY %RAD_CHECK %RAD_CONFIG %RAD_PERLCONF);
 
-# This is hash wich hold original request from radius
+# This is hash which holds the original request from radius.
 #my %RAD_REQUEST;
 # In this hash you add values that will be returned to NAS.
 #my %RAD_REPLY;
@@ -263,7 +263,7 @@ sub mapResponse {
                 }
                 if ($group eq "Attribute") {
                     my $radiusAttribute = $topnode;
-                    # opional overwrite radiusAttribute
+                    # optional overwrite radiusAttribute
                     my $ra = $cfg_file->val($member, "radiusAttribute");
                     if ($ra ne "") {
                         $radiusAttribute = $ra;
@@ -321,7 +321,7 @@ sub authenticate {
     # in the module init we can't print this out, so it starts here
     &radiusd::radlog( Info, "Config File $CONFIG_FILE ".$Config->{FSTAT} );
 
-    # we inherrit the defaults
+    # we inherit the defaults
     my $URL     = $Config->{URL};
     my $REALM   = $Config->{REALM};
     my $RESCONF = $Config->{RESCONF};
@@ -376,6 +376,9 @@ sub authenticate {
     }
     if ( exists( $RAD_REQUEST{'User-Name'} ) ) {
         $params{"user"} = $RAD_REQUEST{'User-Name'};
+    }
+    if ( exists( $RAD_REQUEST{'NAS-Identifier'} ) ) {
+        $params{"RADIUS-NAS-Identifier"} = $RAD_REQUEST{'NAS-Identifier'};
     }
     if ( exists( $RAD_REQUEST{'Stripped-User-Name'} )) {
         $params{"user"} = $RAD_REQUEST{'Stripped-User-Name'};
@@ -448,7 +451,7 @@ sub authenticate {
     $ua->agent("FreeRADIUS");
     if ($check_ssl == false) {
         try {
-            # This is only availble with with LWP version 6
+            # This is only available with with LWP version 6
             &radiusd::radlog( Info, "Not verifying SSL certificate!" );
             $ua->ssl_opts( verify_hostname => 0, SSL_verify_mode => 0x00 );
         } catch {
@@ -456,7 +459,7 @@ sub authenticate {
         }
     }
     my $starttime = [gettimeofday];
-    my $response = $ua->post( $URL, \%params );
+    my $response = $ua->post( $URL, \%params, 'RADIUS-NAS-Identifier' => $params{'RADIUS-NAS-Identifier'} );
     my $content  = $response->decoded_content();
     my $elapsedtime = tv_interval($starttime);
     &radiusd::radlog( Info, "elapsed time for edumfa call: $elapsedtime" );

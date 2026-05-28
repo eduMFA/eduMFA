@@ -65,6 +65,8 @@ A ``0`` means that the automatic clearing of the fail counter is not used.
 .. note:: After the maximum failcounter is reached, new requests will not
    update the mentioned timestamp.
 
+.. warning:: This won't be triggered by a login via fudiscr/Shibboleth.
+
 Also see :ref:`brute_force`.
 
 .. todo:: Add description for ``Do not use an authentication counter per token.``

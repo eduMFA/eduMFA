@@ -32,8 +32,6 @@ from edumfa.models import Tokengroup, TokenTokengroup, db
 
 log = logging.getLogger(__name__)
 
-ENCODING = "utf-8"
-
 
 def set_tokengroup(name, description=None):
     return Tokengroup(name, description).save()

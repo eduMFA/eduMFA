@@ -102,7 +102,7 @@ The file format needs to start with the first line
 
    # version: 2
 
-and the first three colums will be the user:
+and the first three columns will be the user:
 
    <username>, <resolver>, <realm>, <serial>, <seed>, <type>, ...
 

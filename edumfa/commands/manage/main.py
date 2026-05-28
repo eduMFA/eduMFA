@@ -35,6 +35,7 @@ from edumfa.commands.manage.core import (
     create_tables,
     drop_tables,
     encrypt_enckey,
+    wait_for_db,
 )
 from edumfa.commands.manage.event import event_cli
 from edumfa.commands.manage.hsm import hsm_cli
@@ -93,6 +94,7 @@ cli.add_command(encrypt_enckey)
 cli.add_command(create_audit_keys)
 cli.add_command(create_tables)
 cli.add_command(create_tables, "createdb")
+cli.add_command(wait_for_db)
 cli.add_command(create_pgp_keys)
 cli.add_command(drop_tables)
 cli.add_command(drop_tables, "dropdb")

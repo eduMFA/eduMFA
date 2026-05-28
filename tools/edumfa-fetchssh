@@ -6,8 +6,8 @@
 # With this script you can test the 'edumfa-authorizedkeys' function of
 # your privacyid3a server from a remote host.
 #
-# Some small modifications to this script (paramaters for the input values and
-# some plausibility checks should be enought to use it as a replacement for
+# Some small modifications to this script (parameters for the input values and
+# some plausibility checks should be enough to use it as a replacement for
 # 'edumfa-authorizedkeys' and to have less dependencies.
 # 
 # If debug is set to 0 the script only echoes the public key.

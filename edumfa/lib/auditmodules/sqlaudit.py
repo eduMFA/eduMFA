@@ -247,8 +247,9 @@ class Audit(AuditBase):
                 realm_conditions = []
                 for realm in search_value:
                     realm_conditions.append(LogEntry.realm == realm)
-                filter_realm = or_(*realm_conditions)
-                conditions.append(filter_realm)
+                if realm_conditions:
+                    filter_realm = or_(False, *realm_conditions)
+                    conditions.append(filter_realm)
             # We do not search if the search value only consists of '*'
             elif search_value.strip() != "" and search_value.strip("*") != "":
                 try:
@@ -278,7 +279,7 @@ class Audit(AuditBase):
         if timelimit:
             conditions.append(LogEntry.date >= datetime.datetime.now() - timelimit)
         # Combine them with or to a BooleanClauseList
-        filter_condition = and_(*conditions)
+        filter_condition = and_(True, *conditions)
         return filter_condition
 
     def get_total(self, param, AND=True, display_error=True, timelimit=None):
@@ -319,7 +320,7 @@ class Audit(AuditBase):
                 duration = datetime.datetime.now() - self.audit_data.get("startdate")
             else:
                 duration = None
-            # We wan't to reduce the passkey events a bit...
+            # We want to reduce the passkey events a bit...
             if (
                 self.config.get("EDUMFA_REDUCE_SQLAUDIT") == "1"
                 or str(self.config.get("EDUMFA_REDUCE_SQLAUDIT")).lower() == "true"
@@ -502,7 +503,7 @@ class Audit(AuditBase):
         if timedelta is not None:
             conditions.append(LogEntry.date >= datetime.datetime.now() - timedelta)
 
-        filter_condition = and_(*conditions)
+        filter_condition = and_(True, *conditions)
         log_count = self.session.query(LogEntry).filter(filter_condition).count()
 
         return log_count
@@ -540,7 +541,7 @@ class Audit(AuditBase):
                 # Fill the list
                 paging_object.auditdata.append(self.audit_entry_to_dict(le))
             except StopIteration as _e:
-                log.debug("Interation stopped.")
+                log.debug("Interaction stopped.")
                 break
             except UnicodeDecodeError as _e:
                 # Unfortunately if one of the audit entries fails, the whole

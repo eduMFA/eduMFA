@@ -19,15 +19,15 @@ jobs:
           with:
             python-version: "3.11.14"
         - name: Setup UV
-          uses: astral-sh/setup-uv@v7
+          uses: astral-sh/setup-uv@v8.1.0
           with:
             enable-cache: true
         - name: Install dependencies
-          run: uv sync --extra docs
+          run: uv sync --group docs
         - name: Build documentation
           run: |
             cd doc
-            uv run sphinx-build -b html -j auto -a -n -T -W --keep-going . _build/html
+            make html SPHINXOPTS="-j auto -a -n -T -W --keep-going"
   dist:
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +37,7 @@ jobs:
           with:
             python-version: "3.10.19"
         - name: Setup UV
-          uses: astral-sh/setup-uv@v7
+          uses: astral-sh/setup-uv@v8.1.0
           with:
             enable-cache: true
         - name: Install dependencies

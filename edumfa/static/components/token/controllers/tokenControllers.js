@@ -424,6 +424,17 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
                 $scope.changeTokenType();
                 break;
             }
+            // Warn about a default tokentype being set which the user can't
+            // enroll. "hotp" is the default value when no default_tokentype is
+            // set. If the default_tokentype is hotp, it could either be due to
+            // default_tokentype not being set at all or to "hotp". As setting
+            // default_tokentype is technically not required for the token
+            // wizard, don't emit a warning to not surprise existing
+            // configurations.
+            if ($scope.default_tokentype != "hotp") {
+                inform.add(`Your user has no permission to enroll the default tokentype '${$scope.default_tokentype}'. Using '${tkey}' instead.`,
+                    {type: "warning", ttl: 10000});
+            }
         }
     });
 

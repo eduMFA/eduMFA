@@ -112,7 +112,11 @@ class Monitoring(MonitoringBase):
             utc_end_timestamp = convert_timestamp_to_utc(end_timestamp)
             conditions.append(MonitoringStats.timestamp <= utc_end_timestamp)
         try:
-            r = self.session.query(MonitoringStats).filter(and_(*conditions)).delete()
+            r = (
+                self.session.query(MonitoringStats)
+                .filter(and_(True, *conditions))
+                .delete()
+            )
             self.session.commit()
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
@@ -163,7 +167,7 @@ class Monitoring(MonitoringBase):
                 conditions.append(MonitoringStats.timestamp <= utc_end_timestamp)
             for ms in (
                 self.session.query(MonitoringStats)
-                .filter(and_(*conditions))
+                .filter(and_(True, *conditions))
                 .order_by(MonitoringStats.timestamp.asc())
             ):
                 aware_timestamp = ms.timestamp.replace(tzinfo=tzutc())

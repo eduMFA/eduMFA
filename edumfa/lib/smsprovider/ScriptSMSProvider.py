@@ -41,7 +41,7 @@ SCRIPT_WAIT = "wait"
 class ScriptSMSProvider(ISMSProvider):
     def __init__(self, db_smsprovider_object=None, smsgateway=None, directory=None):
         """
-        Create a new SMS Provider object fom a DB SMS provider object
+        Create a new SMS Provider object from a DB SMS provider object
 
         :param db_smsprovider_object: The database object
         :param smsgateway: The SMS gateway object from the database table

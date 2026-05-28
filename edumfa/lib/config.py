@@ -67,8 +67,6 @@ from .utils import is_true, reload_db
 
 log = logging.getLogger(__name__)
 
-ENCODING = "utf-8"
-
 # this is a pointer to the module object instance itself.
 this = sys.modules[__name__]
 

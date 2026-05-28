@@ -298,7 +298,7 @@ class TotpTokenClass(HotpTokenClass):
 
     @log_with(log)
     def check_otp_exist(
-        self, otp, window=None, options=None, symetric=True, inc_counter=True
+        self, otp, window=None, options=None, symmetric=True, inc_counter=True
     ):
         """
         checks if the given OTP value is/are values of this very token at all.
@@ -398,7 +398,7 @@ class TotpTokenClass(HotpTokenClass):
             counter = self._time2counter(server_time, timeStepping=self.timestep)
 
         hmac2Otp = HmacOtp(secretHOtp, counter, otplen, self.get_hashlib(self.hashlib))
-        res = hmac2Otp.checkOtp(anOtpVal, int(window / self.timestep), symetric=True)
+        res = hmac2Otp.checkOtp(anOtpVal, int(window / self.timestep), symmetric=True)
 
         if res != -1 and oCount != 0 and res <= oCount:
             log.warning(
@@ -472,7 +472,7 @@ class TotpTokenClass(HotpTokenClass):
         syncWindow = self.get_sync_window()
 
         # check if the otpval is valid in the sync scope
-        res = hmac2Otp.checkOtp(anOtpVal, syncWindow, symetric=True)
+        res = hmac2Otp.checkOtp(anOtpVal, syncWindow, symmetric=True)
         log.debug(f"found otpval {anOtpVal!r} in syncwindow ({syncWindow!r}): {res!r}")
 
         if res != -1:
@@ -556,7 +556,7 @@ class TotpTokenClass(HotpTokenClass):
         hmac2Otp = HmacOtp(secretHOtp, counter, otplen, self.get_hashlib(self.hashlib))
         log.debug(f"{otp2} in otpkey: {secretHOtp} ")
         res2 = hmac2Otp.checkOtp(
-            otp2, int(sync_window), symetric=True
+            otp2, int(sync_window), symmetric=True
         )  # TEST -remove the 10
         log.debug(f"res 2: {res2!r}")
         # check 1st value
@@ -565,7 +565,7 @@ class TotpTokenClass(HotpTokenClass):
         )
         log.debug(f"{otp1} in otpkey: {secretHOtp} ")
         res1 = hmac2Otp.checkOtp(
-            otp1, int(sync_window), symetric=True
+            otp1, int(sync_window), symmetric=True
         )  # TEST -remove the 10
         log.debug(f"res 1: {res1!r}")
 
@@ -688,7 +688,7 @@ class TotpTokenClass(HotpTokenClass):
 
         if self.is_timeshift_enabled:
             tCounter -= self.timeshift
-        # we don't need to round here as we have alread float
+        # we don't need to round here as we have already float
         counter = self._time2counter(tCounter, self.timestep)
 
         otp_dict["shift"] = self.timeshift

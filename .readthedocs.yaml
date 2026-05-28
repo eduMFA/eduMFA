@@ -21,9 +21,9 @@ sphinx:
 # Install the pinned dependencies for the documentation building process.
 python:
   install:
-    - method: pip
-      path: .
-      extra_requirements:
+    - method: uv
+      command: sync
+      groups:
         - docs
 
 # This is not currently needed, it is included so documentation will not break, if functionality is moved into

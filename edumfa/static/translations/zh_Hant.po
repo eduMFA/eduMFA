@@ -935,6 +935,19 @@ msgstr "字典"
 msgid "Disable"
 msgstr "禁用"
 
+#: components/config/views/config.system.edit.html
+msgid ""
+"Disable automatic challenge janitor. You should use the token janitor to "
+"clean up old challenges if you disable the automatic challenge janitor."
+msgstr ""
+
+#: components/config/views/config.system.edit.html
+msgid ""
+"Disable client tracking. This will disable the recording of client IP "
+"addresses and user agents in the database. This can be used to reduce "
+"database locks and load in environments with many concurrent requests."
+msgstr ""
+
 #: components/token/views/token.list.html
 msgid "Disable token"
 msgstr "禁用令牌"
@@ -4731,7 +4744,7 @@ msgstr ""
 
 #: components/config/views/config.mresolvers.ldap.html
 #: components/config/views/config.resolvers.ldap.html
-msgid "Verify the TLS cerificate of the server."
+msgid "Verify the TLS certificate of the server."
 msgstr "驗證伺服器的 TLS 證書。"
 
 #: components/config/views/config.edumfaserver.edit.html
@@ -5358,11 +5371,11 @@ msgstr "{{ auditdata.count }} 找到的條目。"
 #~ msgid ""
 #~ "According to the\n"
 #~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/master/LICENSE\">AGPLv3</a>"
+#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
 #~ msgstr ""
 #~ "根據\n"
 #~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/master/LICENSE\">AGPLv3</a>"
+#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
 
 #~ msgid "Clients"
 #~ msgstr "用戶端"

@@ -120,7 +120,7 @@ class UserIdResolver:
         not exist.
 
         :param loginName: The login name of the user
-        :type loginName: sting
+        :type loginName: string
         :return: The ID of the user
         :rtype: str
         """

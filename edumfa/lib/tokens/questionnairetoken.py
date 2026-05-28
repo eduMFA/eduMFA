@@ -116,14 +116,14 @@ class QuestionnaireTokenClass(TokenClass):
                     ACTION.MAXTOKENUSER: {
                         "type": "int",
                         "desc": _(
-                            "The user may only have this maximum number of questionaire tokens assigned."
+                            "The user may only have this maximum number of questionnaire tokens assigned."
                         ),
                         "group": GROUP.TOKEN,
                     },
                     ACTION.MAXACTIVETOKENUSER: {
                         "type": "int",
                         "desc": _(
-                            "The user may only have this maximum number of active questionaire tokens assigned."
+                            "The user may only have this maximum number of active questionnaire tokens assigned."
                         ),
                         "group": GROUP.TOKEN,
                     },

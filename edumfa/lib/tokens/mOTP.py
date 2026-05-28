@@ -128,7 +128,7 @@ class mTimeOtp:
         if res == -1:
             msg = "checking motp failed"
         else:
-            msg = "checking motp sucess"
+            msg = "checking motp success"
 
         log.debug(f"end. {msg} : returning result: {res!r}, ")
         return res

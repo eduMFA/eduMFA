@@ -382,7 +382,7 @@ class LocalCAConnector(BaseCAConnector):
         certificatedir = options.get(ATTR.CERT_DIR, self.config.get(ATTR.CERT_DIR, ""))
         if workingdir:
             if not csrdir.startswith("/"):
-                # No absolut path
+                # No absolute path
                 csrdir = workingdir + "/" + csrdir
             if not certificatedir.startswith("/"):
                 certificatedir = workingdir + "/" + certificatedir
@@ -530,7 +530,7 @@ class LocalCAConnector(BaseCAConnector):
 
         :param publish: Whether the CRL should be published at its CDPs
         :param check_validity: Onle create a new CRL, if the old one is about to
-            expire. Therfore the overlap period and the remaining runtime of
+            expire. Therefore the overlap period and the remaining runtime of
             the CRL is checked. If the remaining runtime is smaller than the
             overlap period, we recreate the CRL.
         :return: the CRL location or None, if no CRL was created
@@ -714,7 +714,7 @@ def _init_ca(config):
     f.write("1000")
     f.close()
 
-    # create the privacy key and set accesss rights
+    # create the privacy key and set access rights
     descriptor = os.open(
         path=f"{config.directory}/cakey.pem",
         mode=0o600,

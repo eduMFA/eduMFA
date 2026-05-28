@@ -1,4 +1,5 @@
 from os import getenv
+from socket import gethostname
 
 
 def get_content_from_file(path: str) -> str:
@@ -25,7 +26,7 @@ def _getenv(key: str, default: str | None) -> str:
         value.
     """
     value = getenv(key, default)
-    if not value:
+    if value is None:
         raise ValueError(f"Environment variable '{key}' not set! Can't start...")
     else:
         return value
@@ -58,6 +59,13 @@ EDUMFA_ENCFILE = "/etc/edumfa/enckey"
 EDUMFA_AUDIT_KEY_PRIVATE = "/etc/edumfa/private.pem"
 EDUMFA_AUDIT_KEY_PUBLIC = "/etc/edumfa/public.pem"
 EDUMFA_LOGFILE = "/var/log/edumfa/edumfa.log"
-EDUMFA_LOGCONFIG = "/etc/edumfa/logging.yml"
+EDUMFA_LOGCONFIG = get_var("EDUMFA_LOGCONFIG", "/opt/edumfa/logging.yml")
 EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False") == "True"
 EDUMFA_AUDIT_SQL_TRUNCATE = True
+EDUMFA_NODE = gethostname()
+if edumfa_logo := get_var("EDUMFA_LOGO", ""):
+    EDUMFA_LOGO = edumfa_logo
+if edumfa_page_title := getenv("EDUMFA_PAGE_TITLE", ""):
+    EDUMFA_PAGE_TITLE = edumfa_page_title
+if edumfa_css := getenv("EDUMFA_CSS", ""):
+    EDUMFA_CSS = edumfa_css

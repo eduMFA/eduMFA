@@ -14,7 +14,7 @@ of an SMTP server.
 .. figure:: images/token-config.png
    :width: 500
 
-   *Examplary token configuration for an SMS Token*
+   *Exemplary token configuration for an SMS Token*
 
 .. toctree::
    :glob:

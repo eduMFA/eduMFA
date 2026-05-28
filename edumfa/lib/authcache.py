@@ -150,7 +150,7 @@ def verify_in_cache(
     if last_auth:
         conditions.append(AuthCache.last_auth > last_auth)
 
-    filter_condition = and_(*conditions)
+    filter_condition = and_(True, *conditions)
     cached_auths = AuthCache.query.filter(filter_condition).all()
 
     for cached_auth in cached_auths:

@@ -317,7 +317,7 @@ class APIMachinesServiceIDTestCase(MyApiTestCase):
             self.assertEqual(len(value), 1)
             self.assertEqual(value[0]["application"], "ssh")
 
-        # Filter vor *KEY1
+        # Filter for *KEY1
         with self.app.test_request_context(
             "/machine/token?application=ssh&serial=*KEY1",
             method="GET",

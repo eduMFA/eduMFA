@@ -497,7 +497,7 @@ class APIConfigTestCase(MyApiTestCase):
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
             self.assertTrue(result["status"] is True, result)
-            # The resolver was created. The ID of the resolver is returend.
+            # The resolver was created. The ID of the resolver is returned.
             self.assertGreaterEqual(result["value"], 1, result)
             res_id = result["value"]
 
@@ -1029,7 +1029,7 @@ class APIConfigTestCase(MyApiTestCase):
             params = result.get("value").get(resolvername).get("data")
             # the returned password is censored
             self.assertEqual(params.get("BINDPW"), CENSORED)
-            # the intenal password is correct
+            # the internal password is correct
             internal_resolver_config = self.app_context.g._request_local_store.get(
                 "config_object"
             ).resolver.get(resolvername)

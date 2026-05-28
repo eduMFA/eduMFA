@@ -257,7 +257,7 @@ class OCRA:
 
         :param pin_hash: The hash of the pin
         :type pin_hash: basestring (hex)
-        :param timesteps: timestemps
+        :param timesteps: timestamps
         :type timesteps: hex string
         :return: data_input
         :rtype: bytes
@@ -287,7 +287,7 @@ class OCRA:
             bin_q += b"\x00" * (128 - len(bin_q))
             data_input += bin_q
         elif self.ocrasuite_obj.challenge_type == "QH":
-            # qustion contains hex values
+            # question contains hex values
             bin_q = binascii.unhexlify(question)
             bin_q += b"\x00" * (128 - len(bin_q))
             data_input += bin_q

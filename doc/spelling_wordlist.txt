@@ -1,5 +1,4 @@
 eduMFA
-eduMFA
 Yubikey
 Yubikeys
 Yubico

@@ -52,7 +52,7 @@ class Policy(Base):
     client = sa.Column(sa.Unicode(256), default="")
     time = sa.Column(sa.Unicode(64), default="")
     # If there are multiple matching policies, choose the one
-    # with the lowest priority number. We choose 1 to be the default priotity.
+    # with the lowest priority number. We choose 1 to be the default priority.
     priority = sa.Column(sa.Integer, default=1, nullable=False)
 
 
@@ -60,7 +60,7 @@ def upgrade():
     """
     During upgrade we check, if admin policies exist.
     If so, we add a generic policy for all admins, that allows to
-    read all configuration, which mimicks the previous behaviour
+    read all configuration, which mimics the previous behaviour
     :return:
     """
     actions = ",".join(

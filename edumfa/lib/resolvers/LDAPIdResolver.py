@@ -68,7 +68,6 @@ except ImportError:
 
 CACHE = {}
 
-ENCODING = "utf-8"
 # The number of rounds the resolver tries to reach a responding server in the
 #  pool
 SERVERPOOL_ROUNDS = 2
@@ -289,6 +288,7 @@ class IdResolver(UserIdResolver):
         self.sizelimit = 500
         self.loginname_attribute = [""]
         self.searchfilter = ""
+        self.activecheck = ""
         self.userinfo = {}
         self.multivalueattributes = []
         self.uidtype = ""
@@ -477,7 +477,7 @@ class IdResolver(UserIdResolver):
     def _getDN(self, userId):
         """
         This function returns the DN of a userId.
-        Therefor it evaluates the self.uidtype.
+        Therefore it evaluates the self.uidtype.
 
         :param userId: The userid of a user
         :type userId: string
