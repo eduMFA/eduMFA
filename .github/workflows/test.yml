@@ -122,6 +122,8 @@ jobs:
         with:
           enable-cache: true
       - name: Install dependencies
-        run: uv sync --group test
+        run: uv sync --group test --extra postgres
+      - name: Install postgres stuff
+        run: sudo apt-get install -y libpq-dev
       - name: Run database backend checks
         run: uv run pytest --import-mode=importlib -vs -m dbcontainer tests/test_db_backends.py

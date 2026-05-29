@@ -25,15 +25,11 @@ def _postgres_container():
     PostgresContainer = pytest.importorskip(
         "testcontainers.postgres"
     ).PostgresContainer
-    with PostgresContainer("postgres:16-alpine") as postgres:
+    with PostgresContainer("postgres:18-alpine") as postgres:
         database_url = postgres.get_connection_url()
-        if database_url.startswith("postgresql+psycopg2://"):
+        if database_url.startswith("postgresql://"):
             database_url = database_url.replace(
-                "postgresql+psycopg2://", "postgresql+psycopg://", 1
-            )
-        elif database_url.startswith("postgresql://"):
-            database_url = database_url.replace(
-                "postgresql://", "postgresql+psycopg://", 1
+                "postgresql://", "postgresql+psycopg2://", 1
             )
         yield "postgres", database_url
 
