@@ -51,22 +51,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - database: postgres
-            image: postgres:16-alpine
-            port: 5432
-            test_database_url: postgresql+psycopg://edumfa:edumfa@127.0.0.1:5432/edumfa
-            health_cmd: pg_isready -U edumfa -d edumfa
-            extra_sync_args: ""
-            system_deps: ""
           - database: postgres-psycopg2
-            image: postgres:16-alpine
+            image: postgres:18-alpine
             port: 5432
             test_database_url: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
             health_cmd: pg_isready -U edumfa -d edumfa
             extra_sync_args: "--extra postgres"
             system_deps: "libpq-dev"
           - database: mariadb
-            image: mariadb:11
+            image: mariadb:11.5
             port: 3306
             test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
             health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa

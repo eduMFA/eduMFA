@@ -90,7 +90,7 @@ def fn_to_isodate(element, compiler, **kw):
 
 @compiles(to_isodate)
 def fn_to_isodate(element, compiler, **kw):
-    # The four percent signs are necessary for two format substitutions
+    # The duplicate percent signs are necessary for two format substitutions
     return (
         f"date_format({compiler.process(element.clauses, **kw)}, '%%Y-%%m-%%d %%H:%%i:%%s')"
     )
