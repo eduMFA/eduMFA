@@ -1051,7 +1051,8 @@ class TokenTestCase(MyTestCase):
         self.assertTrue(len(tokens.get("tokens")) == 1, len(tokens.get("tokens")))
 
     def test_42_sort_tokens(self):
-        # return pagination
+                # This tests if the parameter sortby is enforced. The result depends on the database collation, though.
+                # return pagination
         tokendata = get_tokens_paginate(sortby=Token.serial, page=1, psize=5)
         self.assertTrue(len(tokendata.get("tokens")) == 5, len(tokendata.get("tokens")))
 
