@@ -133,18 +133,19 @@ jobs:
           export EDUMFA_CONFIGFILE="$config_file"
 
           echo "Installing released eduMFA package: $release_package"
-          uv pip install "$release_package"
+          uv pip install "$release_package" --prerelease=allow
           python -c 'import importlib.metadata as metadata; print("Release version:", metadata.version("edumfa"))'
 
           echo "Creating schema with released eduMFA"
-          edumfa-manage -q createdb
+          edumfa-manage -q create_tables
+          edumfa-schema-upgrade .venv/lib/edumfa/migrations/ --skipstamp
 
           echo "Installing current checkout: $checkout_package"
-          uv pip install --reinstall "$checkout_package"
+          uv pip install --reinstall "$checkout_package" --prerelease=allow
           python -c 'import importlib.metadata as metadata; print("Checkout version:", metadata.version("edumfa"))'
 
           echo "Migrating released schema with current migrations"
-          edumfa-manage -q db upgrade -d "$GITHUB_WORKSPACE/migrations"
+          edumfa-schema-upgrade migrations --skipstamp
 
           echo "Current migration revision after upgrade"
           edumfa-manage -q db current -d "$GITHUB_WORKSPACE/migrations"
