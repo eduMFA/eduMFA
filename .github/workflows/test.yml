@@ -138,7 +138,7 @@ jobs:
 
           echo "Creating schema with released eduMFA"
           edumfa-manage -q create_tables
-          edumfa-schema-upgrade .venv/lib/edumfa/migrations/ --skipstamp
+          edumfa-schema-upgrade "$venv_dir/lib/edumfa/migrations/" --skipstamp
 
           echo "Installing current checkout: $checkout_package"
           uv pip install --reinstall "$checkout_package" --prerelease=allow
