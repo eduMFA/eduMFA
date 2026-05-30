@@ -98,7 +98,7 @@ jobs:
       - name: Install system dependencies
         if: matrix.system_deps != ''
         run: sudo apt-get install -y ${{ matrix.system_deps }}
-      - name: Run migration from latest release against ${{ matrix.database }}
+      - name: Prepare migration test environment
         env:
           DATABASE_URL: ${{ matrix.database_url }}
           EDUMFA_EXTRAS: ${{ matrix.extras }}
@@ -110,7 +110,6 @@ jobs:
           config_file="$work_dir/edumfa.cfg"
 
           uv venv --seed --clear "$venv_dir"
-          source "$venv_dir/bin/activate"
 
           if [ -n "$EDUMFA_EXTRAS" ]; then
             release_package="edumfa[$EDUMFA_EXTRAS]"
@@ -130,20 +129,47 @@ jobs:
           EDUMFA_AUDIT_KEY_PUBLIC = "$work_dir/public.pem"
           EDUMFA_ENGINE_REGISTRY_CLASS = "null"
           EOF
-          export EDUMFA_CONFIGFILE="$config_file"
 
-          echo "Installing released eduMFA package: $release_package"
-          uv pip install "$release_package" --prerelease=allow
+          echo "$venv_dir/bin" >> "$GITHUB_PATH"
+          {
+            echo "EDUMFA_CONFIGFILE=$config_file"
+            echo "VENV_DIR=$venv_dir"
+            echo "RELEASE_PACKAGE=$release_package"
+            echo "CHECKOUT_PACKAGE=$checkout_package"
+          } >> "$GITHUB_ENV"
+
+      - name: Install latest release for ${{ matrix.database }}
+        run: |
+          set -euo pipefail
+
+          source "$VENV_DIR/bin/activate"
+          echo "Installing released eduMFA package: $RELEASE_PACKAGE"
+          uv pip install "$RELEASE_PACKAGE" --prerelease=allow
           python -c 'import importlib.metadata as metadata; print("Release version:", metadata.version("edumfa"))'
 
+      - name: Create schema with latest release
+        run: |
+          set -euo pipefail
+
+          source "$VENV_DIR/bin/activate"
           echo "Creating schema with released eduMFA"
           edumfa-manage -q create_tables
-          edumfa-schema-upgrade "$venv_dir/lib/edumfa/migrations/" --skipstamp
+          edumfa-schema-upgrade "$VENV_DIR/lib/edumfa/migrations/" --skipstamp
 
-          echo "Installing current checkout: $checkout_package"
-          uv pip install --reinstall "$checkout_package" --prerelease=allow
+      - name: Install current checkout for ${{ matrix.database }}
+        run: |
+          set -euo pipefail
+
+          source "$VENV_DIR/bin/activate"
+          echo "Installing current checkout: $CHECKOUT_PACKAGE"
+          uv pip install --reinstall "$CHECKOUT_PACKAGE" --prerelease=allow
           python -c 'import importlib.metadata as metadata; print("Checkout version:", metadata.version("edumfa"))'
 
+      - name: Run current migrations against release schema
+        run: |
+          set -euo pipefail
+
+          source "$VENV_DIR/bin/activate"
           echo "Migrating released schema with current migrations"
           edumfa-schema-upgrade migrations --skipstamp
 
