@@ -59,6 +59,10 @@ jobs:
             extra_sync_args: "--extra postgres"
             system_deps: "libpq-dev"
           - database: mariadb
+            # MariaDB version 11.5 should continue be tested for the foreseeable
+            # future, as that version is vulnerable to
+            # https://github.com/advisories/GHSA-qq2p-4282-cfc5 and testing with
+            # it therefore makes sure the replayability fix keeps working.
             image: mariadb:11.5
             port: 3306
             test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
