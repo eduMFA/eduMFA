@@ -81,10 +81,6 @@ jobs:
           MARIADB_PASSWORD: edumfa
           MARIADB_DATABASE: edumfa
           MARIADB_ROOT_PASSWORD: edumfa
-          MYSQL_USER: edumfa
-          MYSQL_PASSWORD: edumfa
-          MYSQL_DATABASE: edumfa
-          MYSQL_ROOT_PASSWORD: edumfa
         ports:
           - ${{ matrix.port }}:${{ matrix.port }}
         options: >-
