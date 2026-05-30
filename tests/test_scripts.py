@@ -250,7 +250,7 @@ class ScriptsTestCase(unittest.TestCase):
         assert result.exit_code == 0
         policies = Policy.query.all()
         assert len(policies) == 2
-        assert "Purged policy ui-totp with result " in result.output
+        assert "Purged policy ui-totp with result 3" in result.output
 
         result = runner.invoke(edumfa_manage, ["policy", "delete", "hide_welcome"])
         assert result.exit_code == 0
