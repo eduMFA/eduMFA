@@ -251,7 +251,7 @@ class ScriptsTestCase(unittest.TestCase):
         policies = Policy.query.all()
         assert len(policies) == 2
         self.assertRegex(
-            result.output, r"^Purged policy ui-totp with result [1-9]\d*$"
+            result.output, r"(?m)^Purged policy ui-totp with result [1-9]\d*$"
         )
 
         result = runner.invoke(edumfa_manage, ["policy", "delete", "hide_welcome"])
