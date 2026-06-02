@@ -1067,9 +1067,8 @@ class TokenTestCase(MyTestCase):
         # MariaDB/MySQL uses case-insensitive collation (h < x), so 'X' sorts last.
         # SQLite and PostgreSQL/Alpine use binary (C) collation (X=88 < h=104),
         # so 'hotptoken' sorts last.
-        _db_uri = self.app.config["SQLALCHEMY_DATABASE_URI"]
-        if _db_uri.startswith("mysql"):
         if db.engine.dialect.name == "mysql":
+            _last_asc = "X"
         else:
             _last_asc = "hotptoken"
         self.assertEqual(_last_asc, tokens[-1].get("serial"), tokens[-1])
