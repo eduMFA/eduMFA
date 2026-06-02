@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   docs:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
         - uses: actions/checkout@v6
         - name: Setup Python 3.11
@@ -29,7 +29,7 @@ jobs:
             cd doc
             make html SPHINXOPTS="-j auto -a -n -T -W --keep-going"
   dist:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     steps:
         - uses: actions/checkout@v6
         - name: Setup Python 3.10
