@@ -1069,7 +1069,7 @@ class TokenTestCase(MyTestCase):
         # so 'hotptoken' sorts last.
         _db_uri = self.app.config["SQLALCHEMY_DATABASE_URI"]
         if _db_uri.startswith("mysql"):
-            _last_asc = "X"
+        if db.engine.dialect.name == "mysql":
         else:
             _last_asc = "hotptoken"
         self.assertEqual(_last_asc, tokens[-1].get("serial"), tokens[-1])
