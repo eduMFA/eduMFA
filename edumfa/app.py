@@ -143,7 +143,6 @@ def create_app(
         # Try to load the given config_file.
         # If it does not exist, just ignore it.
         app.config.from_pyfile(config_file, silent=True)
-        app.config.update({"EDUMFA_CONFIGFILE": config_file})
     except OSError:
         sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
         sys.stderr.write("  WARNING: edumfa create_app has no access\n")
