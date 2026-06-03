@@ -42,19 +42,8 @@ else
   echo "======================================================================="
 fi
 
-# Decide which config file to use. The hierarchy is as follows:
-# 0. Use $EDUMFA_CONFIGFILE if it is set.
-# 1. Use /etc/edumfa/edumfa.cfg if it exists.
-# 2. Use this container's /opt/edumfa/edumfa_config.py.
-if [ -n "$EDUMFA_CONFIGFILE" ]; then
-  export EDUMFA_CONFIGFILE
-elif [ -e "/etc/edumfa/edumfa.cfg" ]; then
-  export EDUMFA_CONFIGFILE="/etc/edumfa/edumfa.cfg"
-else
-  export EDUMFA_CONFIGFILE="/opt/edumfa/edumfa_config.py"
-fi
 # Make sure the config is working by executing it once.
-python3 "$EDUMFA_CONFIGFILE"
+python3 "$(edumfa-manage config get_value EDUMFA_CONFIGFILE)"
 
 if [ -n "$EDUMFA_ADMIN_USER_FILE" ]; then
   EDUMFA_ADMIN_USER=$(cat "$EDUMFA_ADMIN_USER_FILE")

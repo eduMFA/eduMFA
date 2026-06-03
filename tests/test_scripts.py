@@ -314,3 +314,37 @@ class ScriptsTestCase(unittest.TestCase):
         result = runner.invoke(edumfa_manage, ["audit", "rotate", "--age", "30"])
         assert result.exit_code == 0
         assert len(LogEntry.query.all()) == 0
+
+    def test_08_get_value(self):
+        runner = self.app.test_cli_runner()
+        # string
+        result = runner.invoke(
+            edumfa_manage, ["-q", "config", "get_value", "SQLALCHEMY_DATABASE_URI"]
+        )
+        self.assertEqual(result.exit_code, 0)
+        self.assertTrue(result.output.startswith("sqlite:///"), result.output)
+        self.assertTrue(result.output.endswith("/data-test.sqlite"), result.output)
+
+        # list
+        result = runner.invoke(
+            edumfa_manage, ["-q", "config", "get_value", "SUPERUSER_REALM"]
+        )
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual("['adminrealm']", result.output)
+
+        # int
+        result = runner.invoke(
+            edumfa_manage, ["-q", "config", "get_value", "EDUMFA_LOGLEVEL"]
+        )
+        self.assertEqual(result.exit_code, 0)
+        self.assertEqual("20", result.output)
+
+        # invalid
+        result = runner.invoke(
+            edumfa_manage, ["-q", "config", "get_value", "IDONTEXIST"]
+        )
+        self.assertEqual(result.exit_code, 2)
+        self.assertIn(
+            "Error: Invalid value for KEY: This configuration key was not set.",
+            result.output,
+        )
