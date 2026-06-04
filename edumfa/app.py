@@ -141,18 +141,19 @@ def create_app(
 
     try:
         # Try to load the given config_file.
-        # If it does not exist, just ignore it.
-        app.config.from_pyfile(config_file, silent=True)
-    except OSError:
+        app.config.from_pyfile(config_file, silent=False)
+    except OSError as exx:
         sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
         sys.stderr.write("  WARNING: edumfa create_app has no access\n")
         sys.stderr.write(f"  to {config_file}!\n")
         sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
-
-    # Try to load the file, that was specified in the environment variable
-    # EDUMFA_CONFIG_FILE
-    # If this file does not exist, we create an error!
-    app.config.from_envvar(ENV_KEY, silent=True)
+        raise exx
+    except Exception as exx:
+        sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+        sys.stderr.write(f"  ERROR: edumfa create_app could not read {config_file}!\n")
+        sys.stderr.write(f"  Reason: {exx}\n")
+        sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+        raise exx
 
     # We allow to set different static folders
     app.static_folder = app.config.get("EDUMFA_STATIC_FOLDER", "static/")
