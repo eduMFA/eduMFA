@@ -25,6 +25,7 @@ import logging.config
 import os
 import os.path
 import sys
+from pathlib import Path
 
 import yaml
 from flask import Flask, Response, request
@@ -123,6 +124,15 @@ def create_app(
         print(f"The configuration name is: {config_name}")
     if os.environ.get(ENV_KEY):
         config_file = os.environ[ENV_KEY]
+    # Check if this is an eduMFA container image. This is necessary due to a
+    # workaround changing way the config is located in containers.
+    # This will be removed in 3.0.0.
+    elif os.getenv("__EDUMFA_RUNNING_IN_CONTAINER") == "1":
+        if Path("/etc/edumfa/edumfa.cfg").is_file():
+            config_file = "/etc/edumfa/edumfa.cfg"
+        else:
+            config_file = "/opt/edumfa/edumfa_config.py"
+
     if not silent:
         print(f"Additional configuration will be read from the file {config_file}")
     app = Flask(__name__, static_folder="static", template_folder="static/templates")

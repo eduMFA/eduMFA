@@ -40,6 +40,12 @@ RUN mkdir -p /opt/edumfa/user-scripts
 RUN python_package_path="$(python3 -c 'import site; x=site.getsitepackages(); assert len(x) == 1; print(x[0])')" && \
     ln -s "${python_package_path}/edumfa/" "/opt/edumfa/edumfa-package"
 
+# In order to enable edumfa-manage to automatically detect the correct config
+# file in a container image mark the images with an env variable.
+# This is checked in /edumfa/app.py
+# This is a workaround until 3.0.0.
+ENV __EDUMFA_RUNNING_IN_CONTAINER=1
+
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1
 WORKDIR /opt/edumfa
