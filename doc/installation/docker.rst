@@ -15,6 +15,11 @@ Before proceeding, ensure that you have:
 1. Docker installed on your system
 2. Access to GitHub Registry
 
+The example below shows a possible configuration with a MariaDB inside the same
+compose file. You could also use an external or different database.  
+For supported database systems and their versions, please see
+:ref:`choosing_a_database`.
+
 
 Docker Compose
 ..............
@@ -90,7 +95,7 @@ The `.env` file should contain the following variables:
 - EDUMFA_LOGO: filename of custom logo (optional)
 - EDUMFA_PAGE_TITLE: custom page title (optional)
 
-You can also add a "_FILE" suffix to each variable name and pass a path to read the value from a file instead. For example instead of passing `SECRET_KEY`:
+You can also add a "_FILE" suffix to each variable name and pass a path to read the value from a file instead. For example instead of passing ``SECRET_KEY``:
 
 .. code-block:: bash
 
