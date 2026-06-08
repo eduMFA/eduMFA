@@ -85,11 +85,14 @@ To avoid the verbosity of ``docker run`` above, you can use a compose file.
 Here's a sample ``docker-compose.yml`` file also containing a MariaDB service
 using :ref:`environment variable based configuration <docker_config_env>`.
 
+You could also use an external or different database. For supported database
+systems and their versions, please see :ref:`choosing_a_database`.  
+
 .. code-block:: yaml
 
    services:
      mariadb:
-       image: docker.io/mariadb:lts-noble
+       image: docker.io/mariadb:11.8
        restart: always
        volumes:
          - mariadb-data:/var/lib/mysql:rw
@@ -178,11 +181,7 @@ optional are required for eduMFA to work.
 - EDUMFA_LOGO: filename of custom logo (optional)
 - EDUMFA_PAGE_TITLE: custom page title (optional)
 
-You can also add a "_FILE" suffix to each variable name and pass a path to read
-the value from a file instead. This is helpful if used with a secret manager
-such as Docker Secrets, and is also considered best practice for sensitive data.
-
-For example instead of passing ``SECRET_KEY``:
+You can also add a "_FILE" suffix to each variable name and pass a path to read the value from a file instead. For example instead of passing ``SECRET_KEY``:
 
 .. code-block:: bash
 
