@@ -2755,6 +2755,7 @@ class ClientApplication(MethodsMixin, db.Model):
                 ).update(values)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
+                db.session.rollback()
                 log.warning("Unable to update ClientApplication entry: {0!s}".format(e))
 
     def __repr__(self):
