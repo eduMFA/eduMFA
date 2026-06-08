@@ -19,7 +19,7 @@ def upgrade():
     op.create_table(
         "jwt_blacklist",
         sa.Column("expiration", sa.DateTime(), nullable=True),
-        sa.Column("nonce", sa.Unicode(length=128), nullable=False, unique=True),
+        sa.Column("nonce", sa.Unicode(length=128), nullable=False),
         sa.PrimaryKeyConstraint("nonce"),
         mysql_row_format="DYNAMIC",
     )
