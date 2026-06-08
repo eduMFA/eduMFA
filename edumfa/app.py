@@ -139,21 +139,23 @@ def create_app(
     if config_name:
         app.config.from_object(config[config_name])
 
-    try:
-        # Try to load the given config_file.
-        app.config.from_pyfile(config_file, silent=False)
-    except OSError as exx:
-        sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
-        sys.stderr.write("  WARNING: edumfa create_app has no access\n")
-        sys.stderr.write(f"  to {config_file}!\n")
-        sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
-        raise exx
-    except Exception as exx:
-        sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
-        sys.stderr.write(f"  ERROR: edumfa create_app could not read {config_file}!\n")
-        sys.stderr.write(f"  Reason: {exx}\n")
-        sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
-        raise exx
+    
+    if config_file and config_file.strip() != '':
+        try:
+            # Try to load the given config_file.
+            app.config.from_pyfile(config_file, silent=False)
+        except OSError as exx:
+            sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+            sys.stderr.write("  WARNING: edumfa create_app has no access\n")
+            sys.stderr.write(f"  to {config_file}!\n")
+            sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+            raise exx
+        except Exception as exx:
+            sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+            sys.stderr.write(f"  ERROR: edumfa create_app could not read {config_file}!\n")
+            sys.stderr.write(f"  Reason: {exx}\n")
+            sys.stderr.write("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+            raise exx
 
     # We allow to set different static folders
     app.static_folder = app.config.get("EDUMFA_STATIC_FOLDER", "static/")
