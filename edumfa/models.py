@@ -26,7 +26,6 @@
 #
 import binascii
 import logging
-import traceback
 from datetime import datetime, timedelta, timezone
 from json import dumps, loads
 
@@ -2741,6 +2740,7 @@ class ClientApplication(MethodsMixin, db.Model):
                 db.session.add(self)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
+                db.session.rollback()
                 log.warning(
                     "Unable to write ClientApplication entry to db: {0!s}".format(e)
                 )

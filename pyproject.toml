@@ -72,6 +72,7 @@ test = [
     "pytest-cov==7.0.0",
     "pytest-github-actions-annotate-failures==0.3.0",
     "responses==0.25.8",
+    "testcontainers[mysql,postgres]==4.14.2",
     "testfixtures==8.3.0",
     "tomli==2.4.0",
     "types-PyYAML==6.0.12.20250915",
@@ -89,6 +90,11 @@ edumfa-manage = "edumfa.commands.manage.main:cli"
 
 [tool.setuptools.dynamic]
 dependencies = { file = "requirements.txt" }
+
+[tool.pytest.ini_options]
+markers = [
+    "dbcontainer: tests that start Docker containers with testcontainers",
+]
 
 [tool.setuptools.packages.find]
 include = ["edumfa*"]

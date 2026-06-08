@@ -14,6 +14,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import MultipleResultsFound
 from sqlalchemy.testing import AssertsCompiledSQL
 
+from edumfa.lib.auditmodules.sqlaudit import to_isodate
 from edumfa.lib.sqlutils import DeleteLimit, delete_matching_rows, is_db_stamped
 from edumfa.models import Audit as LogEntry
 
@@ -21,6 +22,16 @@ from .base import MyTestCase
 
 
 class SQLUtilsCompilationTestCase(MyTestCase, AssertsCompiledSQL):
+    def test_00_to_isodate_mysql_escapes_percent_signs(self):
+        stmt = to_isodate(LogEntry.date)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=BytesWarning)
+            self.assert_compile(
+                stmt,
+                "date_format(mfa_audit.date, '%%Y-%%m-%%d %%H:%%i:%%s')",
+                dialect="mysql",
+            )
+
     def test_01_delete_limit(self):
         stmt = DeleteLimit(LogEntry.__table__, LogEntry.id < 100)
         self.assertEqual(stmt.limit, 1000)

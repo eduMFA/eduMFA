@@ -252,7 +252,9 @@ class ScriptsTestCase(unittest.TestCase):
         assert result.exit_code == 0
         policies = Policy.query.all()
         assert len(policies) == 2
-        assert "Purged policy ui-totp with result 3" in result.output
+        self.assertRegex(
+            result.output, r"(?m)^Purged policy ui-totp with result [1-9]\d*$"
+        )
 
         result = runner.invoke(edumfa_manage, ["policy", "delete", "hide_welcome"])
         assert result.exit_code == 0
@@ -315,4 +317,5 @@ class ScriptsTestCase(unittest.TestCase):
         assert len(LogEntry.query.all()) == 1
         result = runner.invoke(edumfa_manage, ["audit", "rotate", "--age", "30"])
         assert result.exit_code == 0
+        db.session.remove()
         assert len(LogEntry.query.all()) == 0

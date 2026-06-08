@@ -1052,7 +1052,7 @@ class TokenTestCase(MyTestCase):
         self.assertTrue(len(tokens.get("tokens")) == 1, len(tokens.get("tokens")))
 
     def test_42_sort_tokens(self):
-        # return pagination
+        # This tests if the parameter sortby is enforced. The result depends on the database collation, though.
         tokendata = get_tokens_paginate(sortby=Token.serial, page=1, psize=5)
         self.assertTrue(len(tokendata.get("tokens")) == 5, len(tokendata.get("tokens")))
 
@@ -1065,11 +1065,14 @@ class TokenTestCase(MyTestCase):
         tokens = tokendata.get("tokens")
 
         self.assertTrue(tokens[0].get("serial") == "A8", tokens[0])
-        # SQLite does not sort like other DBs
-        if self.app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
-            self.assertEqual("hotptoken", tokens[-1].get("serial"), tokens[-1])
+        # MariaDB/MySQL uses case-insensitive collation (h < x), so 'X' sorts last.
+        # SQLite and PostgreSQL/Alpine use binary (C) collation (X=88 < h=104),
+        # so 'hotptoken' sorts last.
+        if db.engine.dialect.name == "mysql":
+            _last_asc = "X"
         else:
-            self.assertEqual("X", tokens[-1].get("serial"), tokens[-1])
+            _last_asc = "hotptoken"
+        self.assertEqual(_last_asc, tokens[-1].get("serial"), tokens[-1])
 
         # Reverse sorting
         tokendata = get_tokens_paginate(
@@ -1077,10 +1080,7 @@ class TokenTestCase(MyTestCase):
         )
         tokens = tokendata.get("tokens")
 
-        if self.app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
-            self.assertEqual("hotptoken", tokens[0].get("serial"), tokens[0])
-        else:
-            self.assertEqual("X", tokens[0].get("serial"), tokens[0])
+        self.assertEqual(_last_asc, tokens[0].get("serial"), tokens[0])
         self.assertTrue(tokens[-1].get("serial") == "A8")
 
         # sort with string column
@@ -1089,10 +1089,7 @@ class TokenTestCase(MyTestCase):
         )
         tokens = tokendata.get("tokens")
 
-        if self.app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
-            self.assertEqual("hotptoken", tokens[-1].get("serial"), tokens[-1])
-        else:
-            self.assertEqual("X", tokens[-1].get("serial"), tokens[-1])
+        self.assertEqual(_last_asc, tokens[-1].get("serial"), tokens[-1])
         self.assertTrue(tokens[0].get("serial") == "A8")
 
         tokendata = get_tokens_paginate(
@@ -1100,10 +1097,7 @@ class TokenTestCase(MyTestCase):
         )
         tokens = tokendata.get("tokens")
 
-        if self.app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
-            self.assertEqual("hotptoken", tokens[0].get("serial"), tokens[0])
-        else:
-            self.assertEqual("X", tokens[0].get("serial"), tokens[0])
+        self.assertEqual(_last_asc, tokens[0].get("serial"), tokens[0])
         self.assertTrue(tokens[-1].get("serial") == "A8")
 
         # try a different sort key
