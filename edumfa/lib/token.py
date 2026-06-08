@@ -222,30 +222,28 @@ def _create_token_query(
         # filter for the realm
         if "*" in realm:
             sql_query = sql_query.filter(
-                and_(
-                    func.lower(Realm.name).like(realm.replace("*", "%").lower()),
-                    TokenRealm.realm_id == Realm.id,
-                    TokenRealm.token_id == Token.id,
+                Token.realm_list.any(
+                    TokenRealm.realm.has(
+                        func.lower(Realm.name).like(realm.replace("*", "%").lower())
+                    )
                 )
-            ).distinct()
+            )
         else:
             # exact matching
             sql_query = sql_query.filter(
-                and_(
-                    func.lower(Realm.name) == realm.lower(),
-                    TokenRealm.realm_id == Realm.id,
-                    TokenRealm.token_id == Token.id,
+                Token.realm_list.any(
+                    TokenRealm.realm.has(func.lower(Realm.name) == realm.lower())
                 )
-            ).distinct()
+            )
 
     if allowed_realms is not None:
         sql_query = sql_query.filter(
-            and_(
-                func.lower(Realm.name).in_([r.lower() for r in allowed_realms]),
-                TokenRealm.realm_id == Realm.id,
-                TokenRealm.token_id == Token.id,
+            Token.realm_list.any(
+                TokenRealm.realm.has(
+                    func.lower(Realm.name).in_([r.lower() for r in allowed_realms])
+                )
             )
-        ).distinct()
+        )
 
     stripped_resolver = None if resolver is None else resolver.strip("*")
     stripped_userid = None if userid is None else userid.strip("*")
