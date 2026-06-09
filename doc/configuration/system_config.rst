@@ -8,7 +8,7 @@ The system configuration has three logical topics: Settings,
 token default settings and GUI settings.
 
 .. figure:: images/system-config.png
-   :width: 500
+   :width: 800
 
    *The system config*
 
@@ -136,6 +136,31 @@ provides a wrong OTP value. AutoResync works like this:
 
 .. index:: usercache
 .. _user_cache_timeout:
+
+Disable automatic challenge janitor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This setting disables the automatic cleaning of old challenges and JWT blocklist
+entries on authentication requests. This can improve performance especially in
+large deployments.
+
+If you disable the automatic challenge janitor, please set up a cronjob to clean
+up instead, as otherwise your database will continuously grow. This cronjob
+should execute the following commands:
+
+``edumfa-token-janitor cleanupchallenges``
+
+``edumfa-token-janitor cleanupjwtblacklist``
+
+The scheduling of this cronjob depends on your load. Generally, every 10 minutes
+should be a good starting point.
+
+Disable client tracking
+~~~~~~~~~~~~~~~~~~~~~~~
+
+This setting disables tracking the client user agents and IP address (visible
+in the "Components" tab), which can lead to performance improvements especially
+in large deployments.
 
 User Cache expiration in seconds
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
