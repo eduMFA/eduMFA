@@ -15,6 +15,29 @@ For version-to-version upgrade steps, see :ref:`migration_guides`.
 
    This is tracked in `issue #1124 <https://github.com/eduMFA/eduMFA/issues/1124>`_.
 
+eduMFA 2.9.3
+------------
+
+This release fixes issues introduced in v2.9.2.
+
+Bug Fixes
+~~~~~~~~
+
+- Fixed an incompatibility with PostgreSQL. To avoid issues like this in the future:
+
+  + eduMFA will soon declare its supported databases. These will likely be
+    MariaDB and PostgreSQL.
+  + Unittests now additionally run against those supported DBs (instead of only
+    SQLite as a development database).
+- Fixed dangling database sessions under high load when writing to the
+  ClientApplication table.
+- Fixed an error message when trying to login with unassigned passkeys.
+- Fixed ``edumfa-pip-update`` when used with Python 3.14.
+- Fixed ``edumfa-manage`` in the container outside of the entrypoint (e.g. for
+  interactive shells or cronjobs).
+
+See full `commit history <https://github.com/eduMFA/eduMFA/compare/v2.9.2...v2.9.3>`_.
+
 eduMFA 2.9.2
 ------------
 
