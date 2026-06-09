@@ -134,9 +134,6 @@ provides a wrong OTP value. AutoResync works like this:
    Email tokens.
 
 
-.. index:: usercache
-.. _user_cache_timeout:
-
 Disable automatic challenge janitor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -161,6 +158,10 @@ Disable client tracking
 This setting disables tracking the client user agents and IP address (visible
 in the "Components" tab), which can lead to performance improvements especially
 in large deployments.
+
+
+.. index:: usercache
+.. _user_cache_timeout:
 
 User Cache expiration in seconds
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
