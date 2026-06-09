@@ -377,10 +377,6 @@ msgstr "Délai de synchronisation automatique"
 msgid "Automatic resync during authentication"
 msgstr "Synchronisation automatique pendant l'authentification"
 
-#: components/login/factories/u2f.js
-msgid "Bad U2F Request"
-msgstr "Mauvaise requête U2F"
-
 #: components/config/views/config.caconnectors.local.html
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Base Config"
@@ -579,10 +575,6 @@ msgstr "Client"
 #: components/components/views/component.html
 msgid "Client Application Type"
 msgstr "Type d'application client"
-
-#: components/login/factories/u2f.js
-msgid "Client Configuration is not supported."
-msgstr "La configuration du client n'est pas prise en charge."
 
 #: components/config/views/config.token.yubikey.html
 msgid "Client ID"
@@ -1276,10 +1268,6 @@ msgstr "Erreur lors de la récupération du modèle de politique"
 #: components/config/factories/config.js
 msgid "Error fetching policy templates."
 msgstr "Erreur lors de la récupération des modèles de politique."
-
-#: components/login/factories/u2f.js
-msgid "Error in U2F response."
-msgstr "Erreur dans la réponse U2F."
 
 #: components/login/factories/webauthn.js
 msgid "Error in WebAuthn response."
@@ -2082,7 +2070,6 @@ msgid "OCRA Suite"
 msgstr ""
 
 #: components/dialogs/views/dialog.no.token.html
-#: components/login/factories/u2f.js
 #: components/token/views/token.getserial.html
 msgid "OK"
 msgstr "OK"
@@ -2169,10 +2156,6 @@ msgstr "Options"
 #: components/config/views/config.periodictasks.list.html
 msgid "Order"
 msgstr "Priorité"
-
-#: components/login/factories/u2f.js
-msgid "Other Error"
-msgstr "Autre erreur"
 
 #: components/config/views/config.caconnectors.local.html
 msgid "Overlap Period"
@@ -3153,10 +3136,6 @@ msgstr "Tableau"
 msgid "Take action on your authenticator"
 msgstr ""
 
-#: components/token/views/token.enrolled.u2f.html
-msgid "Take action on your token"
-msgstr ""
-
 #: components/config/views/config.periodictasks.details.html
 #: components/config/views/config.periodictasks.list.html
 msgid "Taskmodule"
@@ -3205,14 +3184,6 @@ msgid ""
 "    present at once. You can define how many existing tokens of the given\n"
 "    realms need to be present to perform a successful authentication."
 msgstr ""
-
-#: components/config/views/config.token.u2f.html
-msgid "The AppID must not end with a \"/\"."
-msgstr "L'identifiant d'application ne doit pas se terminer par un « / »."
-
-#: components/config/views/config.token.u2f.html
-msgid "The AppID needs to start with \"https\"."
-msgstr "L'identifiant d'application doit commencer par « https »."
 
 #: components/token/views/token.enroll.applspec.html
 msgid ""
@@ -3443,24 +3414,6 @@ msgid ""
 "process."
 msgstr ""
 
-#: components/config/views/config.token.u2f.html
-msgid ""
-"The U2F token is a hardware token, that communicates with the browser.\n"
-"    You need to set the correct appId, which in fact is the URL of your\n"
-"    eduMFA installation."
-msgstr ""
-
-#: components/token/views/token.enroll.u2f.html
-msgid ""
-"The U2F token is a token defined by the Fido Alliance.\n"
-"    You can register this token with any webservice and with as many web\n"
-"    services you wish to."
-msgstr ""
-
-#: components/config/views/config.token.u2f.html
-msgid "The URL of your eduMFA installation."
-msgstr "L'URL de votre installation de eduMFA."
-
 #: components/config/views/config.token.tiqr.html
 msgid "The URL that contains the logo of the service."
 msgstr "L'URL contenant le logo du service."
@@ -3565,11 +3518,6 @@ msgstr ""
 #: components/config/views/config.token.yubico.html
 msgid "The client ID"
 msgstr "L'identifiant du client"
-
-#: components/login/factories/u2f.js
-msgid "The client device can not be used for this type of request."
-msgstr ""
-"Le périphérique du client ne peut pas être utilisé pour ce type de demande."
 
 #: components/dialogs/views/dialog.about.html
 msgid ""
@@ -3786,7 +3734,6 @@ msgstr ""
 msgid "The time in which the password can be used. For example '1d' or '12h'."
 msgstr ""
 
-#: components/token/views/token.enrolled.u2f.html
 #: components/token/views/token.enrolled.webauthn.html
 msgid "The token is enrolled."
 msgstr ""
@@ -4033,12 +3980,6 @@ msgid ""
 "    logging in for the first time."
 msgstr ""
 
-#: components/config/views/config.token.u2f.html
-msgid ""
-"This must be a valid FQDN with also a valid top level domain -\n"
-"        otherwise you might receive a U2F Error 2 (Bad Request)."
-msgstr ""
-
 #: components/config/views/config.resolvers.ldap.html
 msgid ""
 "This setting activates a LDAP server pool that is persisted between requests."
@@ -4093,10 +4034,6 @@ msgstr ""
 msgid "Timeout (seconds)"
 msgstr ""
 
-#: components/login/factories/u2f.js
-msgid "Timeout while waiting for signing response."
-msgstr ""
-
 #: components/token/views/token.enroll.daypassword.html
 #: components/token/views/token.enroll.totp.html
 msgid "Timestep"
@@ -4148,7 +4085,6 @@ msgstr "Informations du jeton"
 msgid "Token details for {{ tokenSerial }}"
 msgstr "Détails pour le jeton {{ tokenSerial }}"
 
-#: components/token/views/token.enrolled.u2f.html
 #: components/token/views/token.enrolled.webauthn.html
 msgid "Token enrolled"
 msgstr ""
@@ -4227,10 +4163,6 @@ msgstr "Répéter le mot de passe"
 #: components/token/views/token.enroll.motp.html
 #: components/user/views/user.password.html
 msgid "Type a password"
-msgstr ""
-
-#: components/config/views/config.token.u2f.html
-msgid "U2F Token settings"
 msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
@@ -4535,14 +4467,6 @@ msgid ""
 "                    supports WebAuthn."
 msgstr ""
 
-#: components/token/views/token.enrolled.u2f.html
-msgid ""
-"You need to confirm the registration with your token\n"
-"                    either by pushing the blinking button or by\n"
-"                    replugging your token. This depends on the actual\n"
-"                    token model."
-msgstr ""
-
 #: templates/menu.html
 msgid "You will be logged out in {{ myCountdown }} second(s)."
 msgstr ""
@@ -4643,10 +4567,6 @@ msgstr ""
 
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
-msgstr ""
-
-#: components/config/views/config.token.u2f.html
-msgid "appId"
 msgstr ""
 
 #: components/token/views/token.details.html

@@ -784,7 +784,6 @@ def get_token_list():
     module_list.add("edumfa.lib.tokens.foureyestoken")
     module_list.add("edumfa.lib.tokens.tiqrtoken")
     module_list.add("edumfa.lib.tokens.ocratoken")
-    module_list.add("edumfa.lib.tokens.u2ftoken")
     module_list.add("edumfa.lib.tokens.papertoken")
     module_list.add("edumfa.lib.tokens.questionnairetoken")
     module_list.add("edumfa.lib.tokens.vascotoken")

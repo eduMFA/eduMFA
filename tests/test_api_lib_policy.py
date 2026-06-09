@@ -73,7 +73,6 @@ from edumfa.api.lib.prepolicy import (
     set_realm,
     sms_identifiers,
     tantoken_count,
-    u2ftoken_verify_cert,
     webauthntoken_allowed,
     webauthntoken_auth,
     webauthntoken_authz,
@@ -1488,7 +1487,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "enrollHOTP, enrollQUESTION, enrollCERTIFICATE, "
             "copytokenuser, configwrite, enrollTOTP, "
             "enrollREGISTRATION, enrollYUBICO, resolverwrite, "
-            "updateuser, enable, enrollU2F, "
+            "updateuser, enable, "
             "manage_machine_tokens, getrandom, userlist, "
             "getserial, radiusserver_write, system_documentation,"
             " caconnectordelete, caconnectorwrite, disable, "
@@ -1778,36 +1777,6 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # finally delete policy
         delete_policy("auditrealm1")
         delete_policy("auditrealm2")
-
-    def test_21_u2f_verify_cert(self):
-        # Usually the attestation certificate gets verified during enrollment unless
-        # we set the policy scope=enrollment, action=no_verifcy
-        from edumfa.lib.tokens.u2ftoken import U2FACTION
-
-        g.logged_in_user = {"username": "user1", "realm": "", "role": "user"}
-        builder = EnvironBuilder(
-            method="POST", data={"serial": "OATH123456"}, headers={}
-        )
-        env = builder.get_environ()
-        # Set the remote address so that we can filter for it
-        env["REMOTE_ADDR"] = "10.0.0.1"
-        g.client_ip = env["REMOTE_ADDR"]
-        req = Request(env)
-        req.User = User()
-        # The default behaviour is to verify the certificate
-        req.all_data = {"type": "u2f"}
-        u2ftoken_verify_cert(req, "init")
-        self.assertTrue(req.all_data.get("u2f.verify_cert"))
-
-        # Set a policy that defines to NOT verify the certificate
-        set_policy(name="polu2f1", scope=SCOPE.ENROLL, action=U2FACTION.NO_VERIFY_CERT)
-        g.policy_object = PolicyClass()
-        req.all_data = {"type": "u2f"}
-        u2ftoken_verify_cert(req, "init")
-        self.assertFalse(req.all_data.get("u2f.verify_cert"))
-
-        # finally delete policy
-        delete_policy("polu2f1")
 
     def test_01_sms_identifier(self):
         # every admin is allowed to enroll sms token with gw1 or gw2

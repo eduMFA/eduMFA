@@ -122,18 +122,17 @@ myApp.controller("tokenAssignController", ['$scope', 'TokenFactory',
 }]);
 
 myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
-                                           "$stateParams", "AuthFactory",
-                                           "UserFactory", "$state",
-                                           "ConfigFactory", "instanceUrl",
-                                           "$http", "hotkeys", "gettextCatalog",
-                                           "inform", "U2fFactory",
-                                           "webAuthnToken",
-                                           "versioningSuffixProvider",
+                                            "$stateParams", "AuthFactory",
+                                            "UserFactory", "$state",
+                                            "ConfigFactory", "instanceUrl",
+                                            "$http", "hotkeys", "gettextCatalog",
+                                            "inform", "webAuthnToken",
+                                            "versioningSuffixProvider",
     function tokenEnrollController($scope, TokenFactory, $timeout, $stateParams,
                                    AuthFactory, UserFactory, $state,
                                    ConfigFactory, instanceUrl, $http, hotkeys,
-                                   gettextCatalog, inform, U2fFactory,
-                                   webAuthnToken, versioningSuffixProvider) {
+                                   gettextCatalog, inform, webAuthnToken,
+                                   versioningSuffixProvider) {
 
     hotkeys.bindTo($scope).add({
         combo: 'alt+e',
@@ -166,7 +165,6 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
     $scope.tempData = {};
     $scope.instanceUrl = instanceUrl;
     $scope.click_wait = true;
-    $scope.U2FToken = {};
     $scope.webAuthnToken = {};
     // System default values for enrollment
     $scope.systemDefault = {};
@@ -444,7 +442,6 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
 
     // default enrollment callback
     $scope.callback = function (data) {
-        $scope.U2FToken = {};
         $scope.webAuthnToken = {};
         $scope.enrolledToken = data.detail;
         $scope.click_wait=false;
@@ -470,14 +467,8 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
             var blob = new Blob([byteArray], {type: 'application/x-pkcs12'});
             $scope.pkcs12Blob = (window.URL || window.webkitURL).createObjectURL( blob );
         }
-        if ($scope.enrolledToken.u2fRegisterRequest) {
-            // This is the first step of U2F registering, save serial.
-            $scope.serial = data.detail.serial;
-
-            $scope.register_fido($scope.enrolledToken.u2fRegisterRequest, U2fFactory, $scope.U2FToken);
-        }
         if ($scope.enrolledToken.webAuthnRegisterRequest) {
-            // This is the first step of U2F registering, save serial.
+            // This is the first step of WebAuthn registering, save serial.
             $scope.serial = data.detail.serial;
 
             $scope.register_fido($scope.enrolledToken.webAuthnRegisterRequest, webAuthnToken, $scope.webAuthnToken);
@@ -562,16 +553,15 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
         }
     };
 
-    // U2F and WebAuthn
+    // WebAuthn
     $scope.register_fido = function (registerRequest, Factory, token) {
-        // We need to send the 2nd stage of the U2F enroll
+        // We need to send the 2nd stage of the WebAuthn enroll
         Factory.register_request(registerRequest, function (params) {
             params.serial = $scope.serial;
             TokenFactory.enroll($scope.newUser,
                 params, function (response) {
                     $scope.click_wait = false;
-                    token.subject
-                        = (response.detail.u2fRegisterResponse || response.detail.webAuthnRegisterResponse).subject;
+                    token.subject = response.detail.webAuthnRegisterResponse.subject;
                     token.vendor = token.subject.split(" ")[0];
                     console.log(token);
                 });

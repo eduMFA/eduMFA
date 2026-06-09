@@ -44,7 +44,7 @@ eduMFA is not only open as far as its modular architecture is
 concerned. But eduMFA is completely licensed under the AGPLv3.
 
 It supports a wide variety of authentication devices like OTP tokens 
-(HMAC, HOTP, TOTP, OCRA, mOTP), Yubikey (HOTP, TOTP, AES), FIDO U2F, as well
+(HMAC, HOTP, TOTP, OCRA, mOTP), Yubikey (HOTP, TOTP, AES), as well
 as FIDO2 WebAuthn devices like Yubikey and Plug-Up, smartphone Apps like Google
 Authenticator, FreeOTP, Token2  or TiQR, SMS, Email, SSH keys, x509 certificates
 and Registration Codes for easy deployment.

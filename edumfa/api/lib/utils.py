@@ -495,7 +495,7 @@ def attestation_certificate_allowed(cert_info, allowed_certs_pols):
     """
     Check a certificate against a set of policies.
 
-    This will check an attestation certificate of a U2F-, or WebAuthn-Token,
+    This will check an attestation certificate of a WebAuthn token,
     against a list of policies. It is used to verify, whether a token with the
     given attestation may be enrolled, or authorized, respectively.
 
