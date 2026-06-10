@@ -78,6 +78,9 @@ The `.env` file should contain the following variables:
 - MARIADB_ROOT_PASSWORD: the MariaDB root password (not used by eduMFA, required)
 - EDUMFA_SECRET_KEY: the secret key which signs API tokens, should be at least 24 random characters long
 - EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 24 random characters long
+- EDUMFA_AUDIT_KEY_PRIVATE: an alternative path to the audit key (optional, default: ``/etc/edumfa/private.pem``)
+- EDUMFA_AUDIT_KEY_PUBLIC: an alternative path to the audit certificate (optional, default: ``/etc/edumfa/public.pem``)
+- EDUMFA_ENCFILE: an alternative path to the enckey (optional, default: ``/etc/edumfa/enckey``)
 - EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional)
 - EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional)
 - EDUMFA_LOGCONFIG: a path to an alternative logging config (optional)
