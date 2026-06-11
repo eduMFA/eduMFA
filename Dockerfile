@@ -8,6 +8,10 @@ RUN pip install --no-cache-dir build && \
 # Final stage
 FROM python:3.14.4-slim-trixie@sha256:2ca02f32b4d9d893863367ce07ec1972819f476dd38d8612f2a9cb6a41cbb727
 
+# Create an unprivileged user and group with UID/GID 1000
+RUN groupadd -g 1000 edumfa && \
+    useradd -u 1000 -g edumfa -s /bin/bash -m -d /opt/edumfa edumfa
+
 # Install system dependencies
 RUN apt-get update && \
     apt-get install -y curl libpq-dev gcc && \
@@ -24,21 +28,24 @@ COPY --from=builder /tmp/dist/*.whl /dist/
 RUN pip install --no-cache-dir /dist/*.whl &&  \
     rm -rf /dist/*.whl
 
-# Volume for audit- and enckey
+# Pre-create the volume directory and set ownership BEFORE declaring the VOLUME
+RUN mkdir -p /etc/edumfa && chown edumfa:edumfa /etc/edumfa
 VOLUME ["/etc/edumfa"]
 
-# Copy necessary files
-COPY ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
-COPY ./deploy/docker/edumfa_config.py /opt/edumfa/edumfa_config.py
-COPY ./deploy/docker/logging.yml /opt/edumfa/logging.yml
-COPY ./deploy/docker/edumfaapp.py /opt/edumfa/app.py
+# Copy necessary files with the correct ownership
+COPY --chown=edumfa:edumfa ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
+COPY --chown=edumfa:edumfa ./deploy/docker/edumfa_config.py /opt/edumfa/edumfa_config.py
+COPY --chown=edumfa:edumfa ./deploy/docker/logging.yml /opt/edumfa/logging.yml
+COPY --chown=edumfa:edumfa ./deploy/docker/edumfaapp.py /opt/edumfa/app.py
 
-# Create directory for user scripts
-RUN mkdir -p /opt/edumfa/user-scripts
+# Create directory for user scripts and ensure ownership
+RUN mkdir -p /opt/edumfa/user-scripts && \
+    chown edumfa:edumfa /opt/edumfa/user-scripts
 
-# Link the edumfa package at a predicatable position for template overriding.
+# Link the edumfa package at a predictable position for template overriding
 RUN python_package_path="$(python3 -c 'import site; x=site.getsitepackages(); assert len(x) == 1; print(x[0])')" && \
-    ln -s "${python_package_path}/edumfa/" "/opt/edumfa/edumfa-package"
+    ln -s "${python_package_path}/edumfa/" "/opt/edumfa/edumfa-package" && \
+    chown -h edumfa:edumfa "/opt/edumfa/edumfa-package"
 
 # In order to enable edumfa-manage to automatically detect the correct config
 # file in a container image mark the images with an env variable.
@@ -48,12 +55,16 @@ ENV __EDUMFA_RUNNING_IN_CONTAINER=1
 
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1
-WORKDIR /opt/edumfa
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/edumfa:$PATH"
+
+WORKDIR /opt/edumfa
+
+# Switch to the unprivileged user
+USER 1000:1000
 
 ENTRYPOINT ["./entrypoint.sh"]
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "app"]
