@@ -57,10 +57,11 @@ Every periodic task has the following attributes:
 	propagating the database changes to the other node). The name of the local node
 	as well as the names of remote nodes are configured in :ref:`cfgfile`.
 
-	Additionally, there is an option "select_manually". This option is
-	useful in case node names are unpredictable (like when used in a
-	Kubernetes deployment). In that case ``--node select_manually`` must be
-	passed to ``edumfa-cron``.
+	Additionally, there is a special option "select_manually" in the list of
+	nodes. This option is useful in case node names are unpredictable (like
+	when used in a Kubernetes deployment). If "select_manually" is ticked,
+	the task will run where ``edumfa-cron run_scheduled`` is executed with
+	the ``--node select_manually`` parameter.
 
 **taskmodule**
 	The task module determines the actual activity of the task. eduMFA comes
