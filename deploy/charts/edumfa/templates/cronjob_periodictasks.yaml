@@ -1,0 +1,21 @@
+{{- if .Values.edumfa.edumfaCron.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "edumfa.fullname" . }}-edumfacron-cronjob
+spec:
+  schedule: {{ required "A CronJob schedule is required for edumfa-cron." .Values.edumfa.edumfaCron.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          {{ $command := list "edumfa-cron" "run_scheduled" }}
+          {{- if .Values.edumfa.edumfaCron.nodeName }}
+            {{ $command = append $command "--node"}}
+            {{ $command = append $command .Values.edumfa.edumfaCron.nodeName }}
+          {{- end }}
+          {{ $spec_params := dict "Chart" .Chart "Values" .Values "containerType" "cronjob" "specSettings" .Values.edumfa.edumfaCron "command" $command }}
+          {{ include "edumfa.spec" $spec_params | nindent 10}}
+{{- end }}
