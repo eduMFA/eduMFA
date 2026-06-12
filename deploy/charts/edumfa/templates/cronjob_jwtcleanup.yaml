@@ -1,0 +1,17 @@
+{{- if .Values.edumfa.jwtCleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "edumfa.fullname" . }}-jwt-cronjob
+spec:
+  schedule: {{ required "A CronJob schedule is required for jwt cleanup." .Values.edumfa.jwtCleanup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          {{ $command := list "edumfa-token-janitor" "cleanupjwtblacklist" }}
+          {{ $spec_params := dict "Chart" .Chart "Values" .Values "containerType" "cronjob" "specSettings" .Values.edumfa.jwtCleanup "command" $command }}
+          {{ include "edumfa.spec" $spec_params | nindent 10}}
+{{- end }}

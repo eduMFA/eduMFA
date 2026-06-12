@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "edumfa.fullname" . }}
+  labels:
+    {{- include "edumfa.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.edumfa.worker.autoscaling.enabled }}
+  replicas: {{ .Values.edumfa.worker.replicaCount }}
+  {{- end }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "edumfa.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "edumfa.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{ $spec_params := dict "Chart" .Chart "Values" .Values "containerType" "helm_worker" "specSettings" .Values.edumfa.worker }}
+      {{ include "edumfa.spec" $spec_params | nindent 6}}

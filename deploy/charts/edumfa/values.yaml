@@ -1,0 +1,181 @@
+# eduMFA Helm chart
+# Please see https://edumfa.readthedocs.io/en/latest/installation/helm.html for more information.
+
+image:
+  #repository: ghcr.io/edumfa/edumfa
+  repository: ghcr.io/aleyna72072/edumfa
+  pullPolicy: IfNotPresent
+  #tag: "2.10.0-myoverride"
+  tag: "2.10.0a-1"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+edumfa:
+  # The name of the secret containing all secrets necessary for an eduMFA
+  # instance to operate. See documentation at the top of this file.
+  essentialSecretName: "edumfa-secrets"
+  # Environment variables which are applied to all eduMFA pods: worker, init,
+  # and CronJobs. To set variables to specific pods, see below.
+  env: []
+  #  - name: ENV_NAME
+  #    value: "ENV_VALUE"
+  # Below are the settings so eduMFA knows where to find the database.
+  # Note: A database backup is not enough to back up eduMFA! Always make sure
+  #       you have the contents of the secret above backed up safely.
+  db:
+    driver: "postgresql+psycopg2"
+    hostname: "postgres.my_ns.svc.cluster.local"
+    user: "edumfa_db_user"
+    database: "edumfa_db"
+  # The deployment which runs the servers.
+  worker:
+    replicaCount: 1
+    env: []
+    #podAnnotations: {}
+    #resources: {}
+    #volumes: []
+    #volumeMounts: []
+    #nodeSelector: {}
+    #tolerations: []
+    #affinity: {}
+    # Whether to enable autoscaling for the workers.
+    # If you're trying to handle more requests, it probably makes more sense to
+    # give more resources to the existing replicas (if the bottleneck is not
+    # actually elsewhere).
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 3
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
+  # The job which runs on Helm install/upgrade and upgrades the DB schema.
+  init:
+    env: []
+    #podAnnotations: {}
+    #resources: {}
+    #volumes: []
+    #volumeMounts: []
+    #nodeSelector: {}
+    #tolerations: []
+    #affinity: {}
+  # The CronJob which rotates the audit log.
+  auditRotation:
+    enabled: true
+    # See https://edumfa.readthedocs.io/en/latest/audit/index.html#cleaning-up-entries for more information.
+    #age: 90
+    highwatermark: 10000
+    lowwatermark: 5000
+    schedule: "0 3 * * * "
+    env: []
+    #podAnnotations: {}
+    #resources: {}
+    #volumes: []
+    #volumeMounts: []
+    #nodeSelector: {}
+    #tolerations: []
+    #affinity: {}
+  # The CronJob which runs the challenge cleanup job. Make sure you disable the automatic cleaning first when enabling this.
+  # See https://edumfa.readthedocs.io/en/latest/configuration/system_config.html#disable-automatic-challenge-janitor
+  challengeCleanup:
+    enabled: true
+    schedule: "*/10 * * * *"
+    env: []
+    #podAnnotations: {}
+    #resources: {}
+    #volumes: []
+    #volumeMounts: []
+    #nodeSelector: {}
+    #tolerations: []
+    #affinity: {}
+  # The CronJob which runs the jwt blocklist cleanup job. Make sure you disable the automatic cleaning first when enabling this.
+  # See https://edumfa.readthedocs.io/en/latest/configuration/system_config.html#disable-automatic-challenge-janitor
+  jwtCleanup:
+    enabled: true
+    schedule: "*/10 * * * *"
+    env: []
+    #podAnnotations: {}
+    #resources: {}
+    #volumes: []
+    #volumeMounts: []
+    #nodeSelector: {}
+    #tolerations: []
+    #affinity: {}
+  # eduMFA supports defining periodic tasks in its WebUI. To actually run them,
+  # this CronJob is needed.
+  # See https://edumfa.readthedocs.io/en/latest/periodictask/index.html for more information.
+  edumfaCron:
+    enabled: false
+    schedule: "*/5 * * * *"
+    # As node names are equal to pod names in the default configuration (and
+    # therefore keep changing), you likely want to keep the default
+    # "select_manually".
+    nodeName: "select_manually"
+    env: []
+    #podAnnotations: {}
+    #resources: {}
+    #volumes: []
+    #volumeMounts: []
+    #nodeSelector: {}
+    #tolerations: []
+    #affinity: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+
+# TODO This is currently untested.
+# -- Expose the service via gateway-api HTTPRoute
+# Requires Gateway API resources and suitable controller installed within the cluster
+# (see: https://gateway-api.sigs.k8s.io/guides/)
+httpRoute:
+  # HTTPRoute enabled.
+  enabled: false
+  # HTTPRoute annotations.
+  annotations: {}
+  # Which Gateways this Route is attached to.
+  parentRefs:
+  - name: gateway
+    sectionName: http
+    # namespace: default
+  # Hostnames matching HTTP header.
+  hostnames:
+  - chart-example.local
+  # List of rules and filters applied.
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /headers
+  #   filters:
+  #   - type: RequestHeaderModifier
+  #     requestHeaderModifier:
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2
