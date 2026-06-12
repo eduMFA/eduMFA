@@ -21,10 +21,6 @@ Notes:
 
 - None
 
-.. TODO: psql's default isolation level is Read Commited
-   (https://www.postgresql.org/docs/current/transaction-iso.html#XACT-READ-COMMITTED)
-   instead of Repeatable Read like in MariaDB. Is this an issue?
-
 MariaDB
 ^^^^^^^
 
@@ -35,8 +31,6 @@ Notes:
 
 - Please make sure that ``innodb_snapshot_isolation`` is enabled. This is the
   default starting from version 11.6.2.
-
-.. TODO: should it specify which isolation level to configure?
 
 Versions
 ^^^^^^^^
