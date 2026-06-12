@@ -21,13 +21,15 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
         include:
-          - os: ubuntu-24.04
+          - runner: blacksmith-4vcpu-ubuntu-2404
+            os: ubuntu-24.04
             codename: noble
-          - os: ubuntu-22.04
+          - runner: blacksmith-4vcpu-ubuntu-2204
+            os: ubuntu-22.04
             codename: jammy
     name: build ${{ matrix.os }}
     steps:
