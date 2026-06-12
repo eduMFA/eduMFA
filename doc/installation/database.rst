@@ -28,15 +28,13 @@ Notes:
 MariaDB
 ^^^^^^^
 
-MariaDB is supported in version 11.8. Other versions may work too but are not
-tested.
+MariaDB (also with Galera) is supported in version 11.8. Other versions may work
+too but are not tested.
 
 Notes:
 
 - Please make sure that ``innodb_snapshot_isolation`` is enabled. This is the
   default starting from version 11.6.2.
-- If you are using Galera, avoid using a multi-primary setup. Try to only write
-  to one node at a time.
 
 .. TODO: should it specify which isolation level to configure?
 
@@ -51,14 +49,3 @@ As a rule of thumb, eduMFA will support the following versions:
 Of course, there will be a delay from a release of a new version until it is
 officially listed as supported. Older versions will also not instantly be kicked
 out to allow for a transitory period.
-
-Avoid these databases
-^^^^^^^^^^^^^^^^^^^^^
-Any not listed database might potentially not work. The following databases are
-known to not work without manual intervention at the source level:
-
-- Microsoft SQL Server
-- Oracle Database Server
-
-While SQLite is used for development purposes, it is not recommended for
-productive or testing setups.
