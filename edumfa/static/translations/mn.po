@@ -135,6 +135,7 @@ msgstr "action"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -188,6 +189,10 @@ msgstr "Administration"
 #: components/dashboard/views/dashboard.html
 msgid "Administrator"
 msgstr "Administrator"
+
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
 
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
@@ -1256,6 +1261,10 @@ msgstr ""
 
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "False"
 msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
@@ -2387,6 +2396,7 @@ msgid "Read number dynamically from user source on each request."
 msgstr ""
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4017,6 +4027,11 @@ msgid "Tokens for user {{ username }}"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Tokentype"
+msgstr "Токен төрөл"
+
+#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr "Нийт"
 
@@ -4026,6 +4041,10 @@ msgstr ""
 
 #: components/token/views/token.challenges.html
 msgid "Transaction ID"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "True"
 msgstr ""
 
 #: components/token/views/token.details.html
@@ -4186,6 +4205,10 @@ msgstr "Хэрэглэгчийн нэр"
 
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Users having such a token:"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4453,6 +4476,10 @@ msgstr ""
 
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "any"
 msgstr ""
 
 #: components/config/views/config.token.u2f.html

@@ -83,6 +83,7 @@ myApp.constant("smtpServerUrl", backendUrl + instance + "/smtpserver");
 myApp.constant("radiusServerUrl", backendUrl + instance + "/radiusserver");
 myApp.constant("eduMfaServerUrl", backendUrl + instance + "/edumfaserver");
 myApp.constant("recoveryUrl", backendUrl + instance + "/recover");
+myApp.constant("statsUrl", backendUrl + instance + "/stats");
 myApp.constant("resourceNamePatterns", {
     simple: {pattern: "^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$",
         title: gettext("The resource name must consist of letters, numbers and '_', '-', '.'")},
