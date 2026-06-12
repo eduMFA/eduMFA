@@ -24,8 +24,8 @@ Notes:
 MariaDB
 ^^^^^^^
 
-MariaDB (also with Galera) is supported in version 11.8. Other versions may work
-too but are not tested.
+MariaDB (also with Galera) is supported in version 11.8 and 12.3. Other versions
+may work too but are not tested.
 
 Notes:
 
