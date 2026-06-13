@@ -410,10 +410,11 @@ class PasskeyTestCase(PasskeyBaseTestCase):
         )
         expiration = datetime.fromtimestamp(claims.get("exp"), tz=timezone.utc)
 
-        # Verify that the expiration is at least 119 seconds in the future
-        # (actually 120 seconds would be ideal, but allow for slight timing differences for test execution)
+        # Verify that the expiration is at least 118 seconds in the future
+        # (120 seconds would be ideal, but JWT exp is stored as integer seconds which truncates
+        # microseconds, so we allow a ~2 second margin for truncation and test execution time)
         self.assertGreater(
-            expiration, datetime.now(tz=timezone.utc) + timedelta(seconds=119)
+            expiration, datetime.now(tz=timezone.utc) + timedelta(seconds=118)
         )
 
         resp = self.simulator.get(

@@ -915,9 +915,11 @@ msgid "Disable"
 msgstr "Deaktivieren"
 
 #: components/config/views/config.system.edit.html
+#, fuzzy
 msgid ""
 "Disable automatic challenge janitor. You should use the token janitor to "
-"clean up old challenges if you disable the automatic challenge janitor."
+"clean up old challenges and the JWT blocklist if you disable the automatic "
+"challenge janitor."
 msgstr ""
 "Deaktivieren Sie den automatischen Challenge Cleanup. In diesem Fall sollten "
 "Sie den token janitor verwenden"
@@ -930,7 +932,9 @@ msgid ""
 msgstr ""
 "Deaktivieren Sie die Protokollierung der Clients. Diese Option deaktiviert "
 "die Aufzeichnung von IP-Adressen und User Agents der Clients in der "
-"Datenbank. Dies kann verwendet werden, um die Last auf der Datenbank sowie das Locking der Datenbank in Umgebungen mit vielen gleichzeitigen Anfragen zu reduzieren."
+"Datenbank. Dies kann verwendet werden, um die Last auf der Datenbank sowie "
+"das Locking der Datenbank in Umgebungen mit vielen gleichzeitigen Anfragen "
+"zu reduzieren."
 
 #: components/token/views/token.list.html
 msgid "Disable token"
