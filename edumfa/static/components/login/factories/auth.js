@@ -29,6 +29,33 @@ angular.module("eduMfaAuth", ['eduMfaApp.errorMessage'])
         auth_token.
          */
         var user = {};
+        var notifyReactAuthBridge = function () {
+            if (typeof window === "undefined") {
+                return;
+            }
+            window.eduMfaLegacyAuth = {
+                getAuthToken: function () {
+                    return user.auth_token;
+                },
+                getRealm: function () {
+                    return user.realm;
+                },
+                getRole: function () {
+                    return user.role;
+                },
+                getUser: function () {
+                    return user;
+                }
+            };
+            if (typeof window.CustomEvent === "function") {
+                window.dispatchEvent(new CustomEvent("eduMfa:auth-changed", {detail: user}));
+            } else {
+                var event = document.createEvent("CustomEvent");
+                event.initCustomEvent("eduMfa:auth-changed", false, false, user);
+                window.dispatchEvent(event);
+            }
+        };
+        notifyReactAuthBridge();
 
         return {
             setUser: function (username, realm, auth_token, role, rights, menus) {
@@ -38,6 +65,7 @@ angular.module("eduMfaAuth", ['eduMfaApp.errorMessage'])
                 user.role = role;
                 user.rights = rights;
                 user.menus = menus;
+                notifyReactAuthBridge();
             },
             authError: function(error) {
                 var authErrorCodes = Array(403, 4031, 4032, 4033, 4034, 4035, 4036);
@@ -63,6 +91,7 @@ angular.module("eduMfaAuth", ['eduMfaApp.errorMessage'])
             },
             dropUser: function () {
                     user = {};
+                    notifyReactAuthBridge();
             },
             getUser: function () {
                 return user;

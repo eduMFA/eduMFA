@@ -84,5 +84,8 @@
 <script src="{{ instance }}/{{ "static/contrib/js/angular-inform.js" }}"></script>
 <script src="{{ instance }}/{{ "static/contrib/js/webauthn-client/edumfa-webauthn.js" }}"></script>
 <script src="{{ instance }}/{{ "static/contrib/js/u2f-api.js" }}"></script>
+{% if react_ui_enabled %}
+<script type="module" src="{{ instance }}/{{ "static/react-dist/assets/main.js" }}"></script>
+{% endif %}
 </body>
 </html>

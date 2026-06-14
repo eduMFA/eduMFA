@@ -52,6 +52,8 @@ class Config:
     EDUMFA_LOGLEVEL = logging.INFO
     CACHE_TYPE = "simple"
     EDUMFA_EXTERNAL_LINKS = True
+    EDUMFA_REACT_UI = False
+    EDUMFA_REACT_ROUTES = ["/component/clienttype"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # EDUMFA_GNUPG_HOME = "gpg"
     # EDUMFA_LOGO = "otherlogo.png"

@@ -1,0 +1,45 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-06-14 01:13+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: de\n"
+
+#: react-src/components/feedback/ErrorAlert.tsx:23
+msgid "An unknown error occurred."
+msgstr "Ein unbekannter Fehler ist aufgetreten."
+
+#: react-src/features/components/ClientTypePage.tsx:32
+#: react-src/features/components/ClientTypePage.tsx:69
+msgid "Application Type"
+msgstr "Applikationstyp"
+
+#: react-src/features/components/ClientTypePage.tsx:72
+msgid "Client"
+msgstr "Client"
+
+#: react-src/components/feedback/LoadingIndicator.tsx:9
+msgid "Loading"
+msgstr "Laden"
+
+#: react-src/features/components/ClientTypePage.tsx:60
+msgid "Loading client applications"
+msgstr "Client-Anwendungen werden geladen"
+
+#: react-src/features/components/ClientTypePage.tsx:53
+msgid "Log in through the legacy UI before opening this migrated route."
+msgstr "Melden Sie sich über die bestehende Oberfläche an, bevor Sie diese migrierte Seite öffnen."
+
+#: react-src/features/components/ClientTypePage.tsx:78
+msgid "No client applications found."
+msgstr "Keine Client-Anwendungen gefunden."
+
+#: react-src/features/components/ClientTypePage.tsx:47
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#: react-src/components/feedback/ErrorAlert.tsx:13
+msgid "Request failed"
+msgstr "Anfrage fehlgeschlagen"

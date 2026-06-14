@@ -1,0 +1,11 @@
+{
+  "react-src/main.tsx": {
+    "file": "assets/main.js",
+    "name": "main",
+    "src": "react-src/main.tsx",
+    "isEntry": true,
+    "css": [
+      "assets/main.css"
+    ]
+  }
+}
