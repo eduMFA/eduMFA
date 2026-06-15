@@ -5,8 +5,8 @@ Helm Installation
 
 .. index:: helm
 
-.. warning:: This chart is currently considered experimental. This means it does
-             not offer the semantic versioning guarantees: breaking changes can
+.. warning:: This chart is currently considered experimental and does not offer
+             configuration stability until version 1.0.0. Breaking changes can
              happen in any release.
 
 An eduMFA Helm chart which enables quick installation in a Kubernetes setup. It
