@@ -26,7 +26,7 @@ from sysconfig import get_paths
 from alembic.config import Config
 from alembic.runtime.migration import MigrationContext
 from alembic.script import ScriptDirectory
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, Response, jsonify, request
 from sqlalchemy import text
 
 from edumfa.models import db
@@ -34,7 +34,10 @@ from edumfa.models import db
 health_blueprint = Blueprint("health_blueprint", __name__)
 
 
-def _migration_directory():
+def _migration_directory() -> Path:
+    """
+    Return the migration directory used by the running eduMFA installation.
+    """
     candidates = [
         Path(__file__).resolve().parents[2] / "migrations",
         Path(get_paths()["data"]) / "lib" / "edumfa" / "migrations",
@@ -45,40 +48,55 @@ def _migration_directory():
     raise FileNotFoundError("Could not find eduMFA migration directory")
 
 
-def _get_required_schema_heads():
+def _get_required_schema_head() -> str | None:
+    """
+    Return the migration revision expected by this application version.
+    """
     migrations = _migration_directory()
     config = Config(str(migrations / "alembic.ini"))
     config.set_main_option("script_location", str(migrations))
-    return sorted(ScriptDirectory.from_config(config).get_heads())
+    return ScriptDirectory.from_config(config).get_current_head()
 
 
-def _get_database_schema_heads(connection):
+def _get_database_schema_head(connection) -> str | None:
+    """
+    Return the migration revision currently recorded in the database.
+    """
     context = MigrationContext.configure(connection)
-    return sorted(context.get_current_heads())
+    return context.get_current_revision()
 
 
-def _check_database(connection):
+def _check_database(connection) -> dict[str, str]:
+    """
+    Check whether a simple query can be executed against the database.
+    """
     connection.execute(text("SELECT 1"))
     return {"status": "ok"}
 
 
-def _check_schema(connection):
-    required_heads = _get_required_schema_heads()
-    current_heads = _get_database_schema_heads(connection)
+def _check_schema(connection) -> dict[str, str | None]:
+    """
+    Check whether the database schema revision matches the application migrations.
+    """
+    required_head = _get_required_schema_head()
+    current_head = _get_database_schema_head(connection)
     result = {
         "status": "ok",
-        "current": current_heads,
-        "required": required_heads,
+        "current": current_head,
+        "required": required_head,
     }
-    if current_heads != required_heads:
+    if current_head != required_head:
         result["status"] = "error"
         result["message"] = "Database schema revision does not match application migrations"
     return result
 
 
-def _health_response(check_schema=False):
+def _health_response(check_schema: bool = False) -> tuple[object, int]:
+    """
+    Build the readiness response and HTTP status code from the configured checks.
+    """
     status_code = 200
-    checks = {}
+    checks: dict[str, dict[str, str | None]] = {}
 
     try:
         with db.engine.connect() as connection:
@@ -99,18 +117,25 @@ def _health_response(check_schema=False):
     return jsonify({"status": status, "checks": checks}), status_code
 
 
-def _check_schema_requested():
+def _check_schema_requested() -> bool:
+    """
+    Return whether the request asked to include the schema revision check.
+    """
     value = request.args.get("schema", "false").lower()
     return value.lower() in {"1", "true"}
 
 
 @health_blueprint.route("/live", methods=["GET"])
-def live():
+def live() -> Response:
+    """
+    Return a minimal liveness response without checking dependencies.
+    """
     return jsonify({"status": "ok"})
 
 
-@health_blueprint.route("", methods=["GET"])
-@health_blueprint.route("/", methods=["GET"])
 @health_blueprint.route("/ready", methods=["GET"])
-def ready():
+def ready() -> Response:
+    """
+    Return readiness based on database availability and optional schema state.
+    """
     return _health_response(check_schema=_check_schema_requested())
