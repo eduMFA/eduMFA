@@ -30,14 +30,14 @@ Prerequisites
 Create Secret
 ..............
 
-The chart needs a secret containing the following fields:
+The chart needs a secret (for "essentialSecretName") containing the following
+fields:
 
 - ``enckey`` The encryption key for the token secrets in the database.
 - ``private.pem`` The audit private key.
 - ``public.pem`` The audit public key.
 - ``secret_key`` The key for signing JWTs.
 - ``pepper`` The pepper for the passwords stored in eduMFA.
-- ``db_password`` The password for the DB user.
 Failing to provide these values will mean the Helm deployment fails. Here is an example how to create a suitable secret:
 
 .. XXX: It would be nice to have path options for the uv commands below.
@@ -45,7 +45,7 @@ Failing to provide these values will mean the Helm deployment fails. Here is an 
 1. Create an empty directory, ``cd`` into it.
 2. Create the enckey
 
-- Create a new key and note its path ``uv run -w edumfa --prerelease=allow edumfa-manage create_enckey``
+- Create a new key and note its path: ``uv run -w edumfa --prerelease=allow edumfa-manage create_enckey``
 - Move the key to your current directory.
 2. Create the audit key
 
@@ -53,10 +53,9 @@ Failing to provide these values will mean the Helm deployment fails. Here is an 
 - Move the certificate and key to your current directory.
 3. Create a secret key for the JWTs: ``$ tr -dc A-Za-z0-9_ </dev/urandom | head -c24 > secret_key``
 4. Create a pepper: ``$ tr -dc A-Za-z0-9_ </dev/urandom | head -c24 > pepper``
-5. Create ``db_password`` with the password for the database user.
-6. Create a Kubernetes secret from these files: ``$ kubectl create secret generic edumfa-secrets --from-file=. -n $YOUR_NAMESPACE``
-7. **Backup the files in this directory before deleting them!**  Especially the enckey is necessary to restore from a database backup as token secrets are encrypted.
-8. After **backing them up** you may delete the directory and files.
+5. Create a Kubernetes secret from these files: ``$ kubectl create secret generic edumfa-secrets --from-file=. -n $YOUR_NAMESPACE``
+6. **Backup the files in this directory before deleting them!**  Especially the enckey is necessary to restore from a database backup as token secrets are encrypted.
+7. After **backing them up** you may delete the directory and files.
 
 Installation
 ............
