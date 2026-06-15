@@ -82,7 +82,7 @@ containers:
   - name: EDUMFA_PEPPER_FILE
     value: /run/edumfa-essential-secrets/pepper
   - name: DB_PASSWORD_FILE
-    value: /run/edumfa-essential-secrets/db_password
+    value: /run/edumfa-db-password
   {{- with .Values.edumfa.env }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
@@ -95,6 +95,10 @@ containers:
   - mountPath: /run/edumfa-essential-secrets/
     name: essential-secrets
     readOnly: true
+  - mountPath: /run/edumfa-db-password
+    subPath: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+    name: db-password-secret
+    readOnly: true
   {{- with .specSettings.volumeMounts }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
@@ -106,8 +110,6 @@ volumes:
     secretName: {{ required "A secret containing the essential eduMFA secrets has to be provided." .Values.edumfa.essentialSecretName }}
     # This makes sure essential-secrets contains all necessary fields.
     items:
-      - key: db_password
-        path: db_password
       - key: enckey
         path: enckey
       - key: pepper
@@ -118,6 +120,13 @@ volumes:
         path: public.pem
       - key: secret_key
         path: secret_key
+    defaultMode: 0440
+- name: db-password-secret
+  secret:
+    secretName: {{ required "A secret containing the database password has to be provided." .Values.edumfa.db.passwordSecretName }}
+    items:
+      - key: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+        path: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
     defaultMode: 0440
 {{- with .specSettings.volumes }}
 {{- toYaml . | nindent 0 }}
