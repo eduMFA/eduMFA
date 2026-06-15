@@ -16,7 +16,7 @@ spec:
       {{- include "edumfa.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.edumfa.worker.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

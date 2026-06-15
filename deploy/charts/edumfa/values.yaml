@@ -26,7 +26,7 @@ edumfa:
   #       you have the contents of the secret above backed up safely.
   db:
     driver: "postgresql+psycopg2"
-    hostname: "postgres.my_ns.svc.cluster.local"
+    hostname: "postgres.my-ns.svc.cluster.local"
     user: "edumfa_db_user"
     database: "edumfa_db"
   # The deployment which runs the servers.

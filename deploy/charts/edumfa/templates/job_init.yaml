@@ -9,6 +9,10 @@ spec:
   template:
     metadata:
       name: {{ include "edumfa.fullname" . }}-migration-job
+      {{- with .Values.edumfa.init.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       restartPolicy: OnFailure
       {{ $spec_params := dict "Chart" .Chart "Values" .Values "containerType" "helm_init" "specSettings" .Values.edumfa.init }}
