@@ -27,8 +27,8 @@ from alembic.config import Config
 from alembic.runtime.migration import MigrationContext
 from alembic.script import ScriptDirectory
 from flask import Blueprint, Response, jsonify, request
-from sqlalchemy import text
 
+from edumfa.lib.sqlutils import is_db_available
 from edumfa.models import db
 
 health_blueprint = Blueprint("health_blueprint", __name__)
@@ -66,14 +66,6 @@ def _get_database_schema_head(connection) -> str | None:
     return context.get_current_revision()
 
 
-def _check_database(connection) -> dict[str, str]:
-    """
-    Check whether a simple query can be executed against the database.
-    """
-    connection.execute(text("SELECT 1"))
-    return {"status": "ok"}
-
-
 def _check_schema(connection) -> dict[str, str | None]:
     """
     Check whether the database schema revision matches the application migrations.
@@ -91,24 +83,30 @@ def _check_schema(connection) -> dict[str, str | None]:
     return result
 
 
-def _health_response(check_schema: bool = False) -> tuple[object, int]:
+def _health_response(check_schema: bool = False) -> tuple[Response, int]:
     """
     Build the readiness response and HTTP status code from the configured checks.
     """
     status_code = 200
     checks: dict[str, dict[str, str | None]] = {}
+    database_available = is_db_available(db.engine)
+
+    if database_available:
+        checks["database"] = {"status": "ok"}
+    else:
+        checks["database"] = {
+            "status": "error",
+            "message": "Database connection check failed",
+        }
+        return jsonify({"status": "error", "checks": checks}), 503
 
     try:
-        with db.engine.connect() as connection:
-            checks["database"] = _check_database(connection)
-            if check_schema:
+        if check_schema:
+            with db.engine.connect() as connection:
                 checks["schema"] = _check_schema(connection)
     except Exception as exx:
         status_code = 503
-        if "database" not in checks:
-            checks["database"] = {"status": "error", "message": str(exx)}
-        elif check_schema:
-            checks["schema"] = {"status": "error", "message": str(exx)}
+        checks["schema"] = {"status": "error", "message": str(exx)}
 
     if any(check["status"] != "ok" for check in checks.values()):
         status_code = 503
@@ -134,7 +132,7 @@ def live() -> Response:
 
 
 @health_blueprint.route("/ready", methods=["GET"])
-def ready() -> Response:
+def ready() -> tuple[Response, int]:
     """
     Return readiness based on database availability and optional schema state.
     """
