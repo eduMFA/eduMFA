@@ -9,6 +9,11 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          {{- with .Values.edumfa.jwtCleanup.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         spec:
           restartPolicy: OnFailure
           {{ $command := list "edumfa-token-janitor" "cleanupjwtblacklist" }}

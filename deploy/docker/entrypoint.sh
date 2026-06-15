@@ -33,7 +33,7 @@ workaround_config_file_paths() {
     # Both files were edited and/or already deleted.
     true
   else
-    # Only one file was edited, the situation is ambigious.
+    # Only one file was edited, the situation is ambiguous.
     echo "=======================================================================
     Due to an error in v2.9.0, the following files were moved:
     /etc/edumfa/edumfa.cfg ==> /opt/edumfa/edumfa.cfg
