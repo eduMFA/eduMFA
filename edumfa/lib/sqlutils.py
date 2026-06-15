@@ -22,6 +22,7 @@
 
 from sqlalchemy import MetaData, Table, inspect, select, text
 from sqlalchemy.engine import Engine
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.expression import ClauseElement, Delete
@@ -122,6 +123,21 @@ def delete_matching_rows(session, table, filter, chunksize=None):
         return result.rowcount
     else:
         return delete_chunked(session, table, filter, chunksize)
+
+
+def is_db_available(engine: Engine) -> bool:
+    """
+    Returns whether the database engine can connect and execute a simple query.
+
+    :param engine: The SQLAlchemy engine object for the database.
+    :return: True if the query succeeds, otherwise False.
+    """
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except SQLAlchemyError:
+        return False
+    return True
 
 
 def is_db_stamped(engine: Engine) -> bool:
