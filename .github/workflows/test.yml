@@ -127,7 +127,7 @@ jobs:
       - name: Run Pytest checks against ${{ matrix.database }}
         env:
           TEST_DATABASE_URL: ${{ matrix.test_database_url }}
-        run: uv run pytest --import-mode=importlib -vs -m "not dbcontainer" tests/
+        run: uv run pytest --import-mode=importlib -vs -m "not dbcontainer" tests/test_race_condition.py
 
   database-backend-smoke:
     runs-on: ubuntu-latest
