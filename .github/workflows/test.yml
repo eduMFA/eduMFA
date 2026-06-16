@@ -127,7 +127,24 @@ jobs:
       - name: Run Pytest checks against ${{ matrix.database }}
         env:
           TEST_DATABASE_URL: ${{ matrix.test_database_url }}
-        run: uv run pytest --import-mode=importlib -vs -m "not dbcontainer" tests/test_race_condition.py
+        run: |
+          failures=0
+          for run in {1..15}; do
+            echo "::group::Race-condition test run ${run}/15 against ${{ matrix.database }}"
+            if uv run pytest --import-mode=importlib -vs -m "not dbcontainer" tests/test_race_condition.py; then
+              status=0
+            else
+              status=$?
+            fi
+            echo "::endgroup::"
+            if [ "$status" -ne 0 ]; then
+              failures=$((failures + 1))
+            fi
+          done
+          if [ "$failures" -ne 0 ]; then
+            echo "${failures} race-condition test run(s) failed against ${{ matrix.database }}"
+            exit 1
+          fi
 
   database-backend-smoke:
     runs-on: ubuntu-latest
