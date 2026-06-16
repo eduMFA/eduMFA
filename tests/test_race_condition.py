@@ -18,7 +18,7 @@ from edumfa.models import db
 from .base import MyTestCase
 
 # Number of concurrent threads that will race with the same OTP.
-_CONCURRENCY = 4
+_CONCURRENCY = 8
 
 
 class RaceConditionValidationTest(MyTestCase):
