@@ -430,6 +430,9 @@ def sql_error(error):
     This function is called when a database error occurs.
     """
     log.error(f"Database error occurred: {error!r}")
+    # Add full stacktrace at DEBUG level for diagnosis
+    import traceback
+    log.debug("Database exception stacktrace (DEBUG)\n%s", traceback.format_exc())
     if "audit_object" in g:
         g.audit_object.log({"info": "Database error occurred."})
     return send_error("A database error occurred.", error_code=-600), 500
