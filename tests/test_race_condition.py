@@ -32,7 +32,7 @@ class RaceConditionValidationTest(MyTestCase):
 
 
     def tearDown(self):
-        # Restore loggers to WARNING to not affect other tests
+        # Restore loggers to INFO to not affect other tests
         for logger_name in logging.root.manager.loggerDict:
             if logger_name.startswith("edumfa"):
                 logging.getLogger(logger_name).setLevel(logging.INFO)
