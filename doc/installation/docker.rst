@@ -32,7 +32,7 @@ The container contains a default logging configuration printing the logs to `std
 
    services:
      mariadb:
-       image: docker.io/mariadb:lts-noble
+       image: docker.io/mariadb:11.8
        restart: always
        volumes:
          - mariadb-data:/var/lib/mysql:rw
