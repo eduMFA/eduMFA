@@ -1,12 +1,12 @@
 # Build stage
-FROM python:3.14.4-slim-trixie@sha256:c11aee3b3cae066f55d1e9318fc812673aa6557073b0db0d792b59491b262e0c AS builder
+FROM python:3.14.4-slim-trixie@sha256:2ca02f32b4d9d893863367ce07ec1972819f476dd38d8612f2a9cb6a41cbb727 AS builder
 WORKDIR /tmp
 COPY . .
 RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 # Final stage
-FROM python:3.14.4-slim-trixie@sha256:c11aee3b3cae066f55d1e9318fc812673aa6557073b0db0d792b59491b262e0c
+FROM python:3.14.4-slim-trixie@sha256:2ca02f32b4d9d893863367ce07ec1972819f476dd38d8612f2a9cb6a41cbb727
 
 # Install system dependencies
 RUN apt-get update && \
@@ -31,7 +31,7 @@ VOLUME ["/etc/edumfa"]
 COPY ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
 COPY ./deploy/docker/edumfa_config.py /opt/edumfa/edumfa_config.py
 COPY ./deploy/docker/logging.yml /opt/edumfa/logging.yml
-COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
+COPY ./deploy/docker/edumfaapp.py /opt/edumfa/app.py
 
 # Create directory for user scripts
 RUN mkdir -p /opt/edumfa/user-scripts
@@ -39,6 +39,12 @@ RUN mkdir -p /opt/edumfa/user-scripts
 # Link the edumfa package at a predicatable position for template overriding.
 RUN python_package_path="$(python3 -c 'import site; x=site.getsitepackages(); assert len(x) == 1; print(x[0])')" && \
     ln -s "${python_package_path}/edumfa/" "/opt/edumfa/edumfa-package"
+
+# In order to enable edumfa-manage to automatically detect the correct config
+# file in a container image mark the images with an env variable.
+# This is checked in /edumfa/app.py
+# This is a workaround until 3.0.0.
+ENV __EDUMFA_RUNNING_IN_CONTAINER=1
 
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1

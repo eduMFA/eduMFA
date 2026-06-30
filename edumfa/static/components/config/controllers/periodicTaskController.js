@@ -94,6 +94,10 @@ myApp.controller("periodicTaskDetailController", ["$scope", "$stateParams",
         ConfigFactory.getNodes(function(response) {
             // prepare the input model for the multi-select box
             $scope.availableNodes = [];
+            $scope.availableNodes.push({
+                "name": "select_manually",
+                "ticked": false,
+            });
             angular.forEach(response.result.value, function (node) {
                 $scope.availableNodes.push({
                     "name": node,

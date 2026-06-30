@@ -72,20 +72,23 @@ The container contains a default logging configuration printing the logs to `std
 
 The `.env` file should contain the following variables:
 
-- MARIADB_USER: the MariaDB user
-- MARIADB_PASSWORD: the MariaDB password
 - MARIADB_DATABASE: the MariaDB database
+- MARIADB_PASSWORD: the MariaDB password
 - MARIADB_ROOT_PASSWORD: the MariaDB root password (not used by eduMFA, required)
-- EDUMFA_SECRET_KEY: the secret key which signs API tokens, should be at least 24 random characters long
+- MARIADB_USER: the MariaDB user
 - EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 24 random characters long
-- EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional)
-- EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional)
-- EDUMFA_LOGCONFIG: a path to an alternative logging config (optional)
-- SUPERUSER_REALM: which realms should be superuser realms (optional)
-- EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional)
+- EDUMFA_SECRET_KEY: the secret key which signs API tokens, should be at least 24 random characters long
+- EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional, default: will be generated)
+- EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional, default: ``admin``)
+- EDUMFA_AUDIT_KEY_PRIVATE: an alternative path to the audit key (optional, default: ``/etc/edumfa/private.pem``)
+- EDUMFA_AUDIT_KEY_PUBLIC: an alternative path to the audit certificate (optional, default: ``/etc/edumfa/public.pem``)
+- EDUMFA_ENCFILE: an alternative path to the enckey (optional, default: ``/etc/edumfa/enckey``)
+- EDUMFA_LOGCONFIG: a path to an alternative logging config (optional, default: image provided)
+- EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional, default: ``False``)
+- SUPERUSER_REALM: which realms should be superuser realms (optional, default: ``super,administrators``)
+- EDUMFA_CSS: URL of custom css stylesheet (optional)
 - EDUMFA_LOGO: filename of custom logo (optional)
 - EDUMFA_PAGE_TITLE: custom page title (optional)
-- EDUMFA_CSS: url of custom css stylesheet (optional)
 
 You can also add a "_FILE" suffix to each variable name and pass a path to read the value from a file instead. For example instead of passing `SECRET_KEY`:
 

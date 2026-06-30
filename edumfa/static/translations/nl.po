@@ -941,7 +941,8 @@ msgstr "Schakel uit"
 #: components/config/views/config.system.edit.html
 msgid ""
 "Disable automatic challenge janitor. You should use the token janitor to "
-"clean up old challenges if you disable the automatic challenge janitor."
+"clean up old challenges and the JWT blocklist if you disable the automatic "
+"challenge janitor."
 msgstr ""
 
 #: components/config/views/config.system.edit.html

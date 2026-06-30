@@ -38,9 +38,113 @@ jobs:
       - name: Install dependencies
         run: uv sync --group test
       - name: Run Pytest checks
-        run: uv run pytest --cov=edumfa --import-mode=importlib -vs tests/
+        run: uv run pytest --cov=edumfa --import-mode=importlib -vs -m "not dbcontainer" tests/
       - name: Codecov upload
         uses: codecov/codecov-action@v6
         with:
             token: ${{ secrets.CODECOV_TOKEN }}
             files: ./coverage.xml
+
+  database-full-suite:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - database: postgres-17-psycopg2
+            image: postgres:17-alpine
+            port: 5432
+            test_database_url: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
+            health_cmd: pg_isready -U edumfa -d edumfa
+            extra_sync_args: "--extra postgres"
+            system_deps: "libpq-dev"
+          - database: postgres-18-psycopg2
+            image: postgres:18-alpine
+            port: 5432
+            test_database_url: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
+            health_cmd: pg_isready -U edumfa -d edumfa
+            extra_sync_args: "--extra postgres"
+            system_deps: "libpq-dev"
+          - database: mariadb-11.5
+            # MariaDB version 11.5 should continue be tested for the foreseeable
+            # future, as that version is vulnerable to
+            # https://github.com/advisories/GHSA-qq2p-4282-cfc5 and testing with
+            # it therefore makes sure the replayability fix keeps working.
+            image: mariadb:11.5
+            port: 3306
+            test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
+            health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
+            extra_sync_args: ""
+            system_deps: ""
+          - database: mariadb-11.8
+            image: mariadb:11.8
+            port: 3306
+            test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
+            health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
+            extra_sync_args: ""
+            system_deps: ""
+          - database: mariadb-12.3
+            image: mariadb:12.3
+            port: 3306
+            test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
+            health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
+            extra_sync_args: ""
+            system_deps: ""
+    name: pytest ${{ matrix.database }}
+    services:
+      database:
+        image: ${{ matrix.image }}
+        env:
+          POSTGRES_USER: edumfa
+          POSTGRES_PASSWORD: edumfa
+          POSTGRES_DB: edumfa
+          MARIADB_USER: edumfa
+          MARIADB_PASSWORD: edumfa
+          MARIADB_DATABASE: edumfa
+          MARIADB_ROOT_PASSWORD: edumfa
+        ports:
+          - ${{ matrix.port }}:${{ matrix.port }}
+        options: >-
+          --health-cmd "${{ matrix.health_cmd }}"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+      - name: Install system dependencies
+        if: matrix.system_deps != ''
+        run: sudo apt-get install -y ${{ matrix.system_deps }}
+      - name: Install dependencies
+        run: uv sync --group test ${{ matrix.extra_sync_args }}
+      - name: Run Pytest checks against ${{ matrix.database }}
+        env:
+          TEST_DATABASE_URL: ${{ matrix.test_database_url }}
+        run: uv run pytest --import-mode=importlib -vs -m "not dbcontainer" tests/
+
+  database-backend-smoke:
+    runs-on: ubuntu-latest
+    name: testcontainers database smoke
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+      - name: Install postgres dependencies
+        run: sudo apt-get install -y libpq-dev
+      - name: Install dependencies
+        run: uv sync --group test --extra postgres
+      - name: Run database backend checks
+        run: uv run pytest --import-mode=importlib -vs -m dbcontainer tests/test_db_backends.py

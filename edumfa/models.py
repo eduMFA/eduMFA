@@ -2772,6 +2772,7 @@ class ClientApplication(MethodsMixin, db.Model):
                 db.session.add(self)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
+                db.session.rollback()
                 log.warning(f"Unable to write ClientApplication entry to db: {e}")
         else:
             # update
@@ -2784,6 +2785,7 @@ class ClientApplication(MethodsMixin, db.Model):
                 ).update(values)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
+                db.session.rollback()
                 log.warning(f"Unable to update ClientApplication entry: {e}")
 
     def __repr__(self):
