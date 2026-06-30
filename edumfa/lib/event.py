@@ -343,9 +343,24 @@ def export_event(name=None):
     """Export given or all event configuration"""
     event_cls = EventConfiguration()
     if name:
-        return [e for e in event_cls.events if (e.get("name") == name)]
+        event_list = [e for e in event_cls.events if (e.get("name") == name)]
     else:
-        return event_cls.events
+        event_list = event_cls.events
+    # If an ID were to included (at the time of writing), importing an event would
+    # cause that ID to be updated. If that ID does not exist, the import would
+    # fail.
+    # This could be the desired behaviour, if the goal was to simply update
+    # existing event handlers in e.g. a version-controlled configuration
+    # scenario. However, in other cases this would behave strangely: imports
+    # fail or the wrong event handler would be overwritten.
+    # For the time being, simply remove the ID from exports, so a new event
+    # handler is created each time. Advanced users can add the ID manually, if
+    # they just want to update an existing one.
+    # In the long run, importing and exporting has to be cleaned up in general.
+    event_list = event_list.copy()
+    for event in event_list:
+        event.pop("id", None)
+    return event_list
 
 
 @register_import("event")
