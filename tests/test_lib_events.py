@@ -26,6 +26,7 @@ from edumfa.lib.event import (
     EventConfiguration,
     delete_event,
     enable_event,
+    export_event,
     get_handler_object,
     set_event,
 )
@@ -166,6 +167,56 @@ class EventHandlerLibTestCase(MyTestCase):
 
         h_obj = get_handler_object("Federation")
         self.assertEqual(type(h_obj), FederationEventHandler)
+
+    def test_03_export_event(self):
+        # no events means empty list
+        self.assertEqual(export_event(), [])
+        set_event(
+            "name1",
+            "token_init",
+            "UserNotification",
+            "sendmail",
+            conditions={"bla": "yes"},
+            options={"emailconfig": "themis"},
+        )
+        set_event(
+            "name2",
+            ["token_init", "token_assign"],
+            "UserNotification",
+            "fakeaction",
+            conditions={},
+            options={"emailconfig": "themis", "always": "immer"},
+        )
+        event_list = export_event()
+        self.assertEqual(len(event_list), 2)
+        event1 = event_list[0]  # just assume its the same order
+        self.assertEqual("name1", event1["name"])
+        self.assertEqual(event1["event"], ["token_init"])
+        self.assertEqual(event1["handlermodule"], "UserNotification")
+        self.assertEqual(event1["action"], "sendmail")
+        self.assertEqual(event1["conditions"], {"bla": "yes"})
+        self.assertEqual(event1["options"], {"emailconfig": "themis"})
+        event2 = event_list[1]
+        self.assertEqual(event2["name"], "name2")
+        self.assertEqual(event2["event"], ["token_init", "token_assign"])
+        self.assertEqual(event2["handlermodule"], "UserNotification")
+        self.assertEqual(event2["action"], "fakeaction")
+        self.assertEqual(event2["conditions"], {})
+        self.assertEqual(
+            event2["options"], {"emailconfig": "themis", "always": "immer"}
+        )
+        # Make sure the exported events don't contain the ID. See lib/event.py
+        # for reasoning.
+        for event in event_list:
+            self.assertNotIn("id", event)
+        # Try querying a name directly, make sure only that one gets returned,
+        # and that it's the same as the one returned by querying all.
+        event1_direct_export = export_event(name="name1")
+        self.assertEqual(len(event1_direct_export), 1)
+        event1_direct_export = event1_direct_export[0]
+        self.assertEqual(event1, event1_direct_export)
+        # query invalid event name
+        self.assertEqual(export_event(name="idontexist"), [])
 
 
 class BaseEventHandlerTestCase(MyTestCase):
