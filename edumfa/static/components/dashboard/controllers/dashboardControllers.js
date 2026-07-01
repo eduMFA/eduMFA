@@ -176,7 +176,7 @@ $scope.getAuthentication = function () {
                 delete $scope.params[key];
             }
         });
-        StatsFactory.get($scope.params, function (data) {
+        StatsFactory.getCurrentUsersWithTokens($scope.params, function (data) {
             $scope.users_with_token = data.result.value;
         });
     };
