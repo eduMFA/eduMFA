@@ -1,0 +1,150 @@
+{{- define "edumfa.spec" }}
+{{- with .Values.imagePullSecrets }}
+imagePullSecrets:
+{{- toYaml . | nindent 8 }}
+{{- end }}
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 2000
+  runAsGroup: 2000
+  fsGroup: 2000
+  fsGroupChangePolicy: "Always"
+  seccompProfile:
+    type: RuntimeDefault
+containers:
+- name: {{ .Chart.Name }}
+  securityContext:
+    privileged: false
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
+  {{- with .command }}
+  command:
+    {{- range . }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if eq .containerType "helm_worker" }}
+  ports:
+  - name: http
+    containerPort: 8000
+    protocol: TCP
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8000
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 8000
+  {{- end }}
+  {{- with .specSettings.resources }}
+  resources:
+  {{- toYaml . | nindent 12 }}
+  {{- end }}
+  env:
+  {{- if eq .containerType "helm_init" }}
+  - name: CONTAINER_TYPE
+    value: "helm_init"
+  {{- else if eq .containerType "helm_worker" }}
+  - name: CONTAINER_TYPE
+    value: "helm_worker"
+  {{- else if eq .containerType "cronjob" }}
+    {{- if not .command }}
+      {{- required "Cronjobs have to set a command to avoid running the entrypoint!" "" }}
+    {{- else }}
+  - name: CONTAINER_TYPE
+    value: "helm_cronjob"
+    {{- end }}
+  {{- else }}
+  {{- required "Invalid containerType." "" }}
+  {{- end }}
+  - name: DB_DRIVER
+    value: {{ required "DB_DRIVER is required" .Values.edumfa.db.driver | quote }}
+  - name: DB_HOSTNAME
+    value: {{ required "DB_HOSTNAME is required" .Values.edumfa.db.hostname | quote }}
+  - name: DB_USER
+    value: {{ required "DB_USER is required" .Values.edumfa.db.user | quote }}
+  - name: DB_DATABASE
+    value: {{ required "DB_DATABASE is required" .Values.edumfa.db.database | quote }}
+  - name: EDUMFA_ENCFILE
+    value: /run/edumfa-essential-secrets/enckey
+  - name: EDUMFA_AUDIT_KEY_PRIVATE
+    value: /run/edumfa-essential-secrets/private.pem
+  - name: EDUMFA_AUDIT_KEY_PUBLIC
+    value: /run/edumfa-essential-secrets/public.pem
+  - name: SECRET_KEY_FILE
+    value: /run/edumfa-essential-secrets/secret_key
+  - name: EDUMFA_PEPPER_FILE
+    value: /run/edumfa-essential-secrets/pepper
+  - name: DB_PASSWORD_FILE
+    value: /run/edumfa-db-password
+  {{- with .Values.edumfa.env }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  {{- with .specSettings.env }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  volumeMounts:
+  - mountPath: /tmp
+    name: tmp
+  - mountPath: /run/edumfa-essential-secrets/
+    name: essential-secrets
+    readOnly: true
+  - mountPath: /run/edumfa-db-password
+    subPath: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+    name: db-password-secret
+    readOnly: true
+  {{- with .specSettings.volumeMounts }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+volumes:
+- name: tmp
+  emptyDir: {}
+- name: essential-secrets
+  secret:
+    secretName: {{ required "A secret containing the essential eduMFA secrets has to be provided." .Values.edumfa.essentialSecretName }}
+    # This makes sure essential-secrets contains all necessary fields.
+    items:
+      - key: enckey
+        path: enckey
+      - key: pepper
+        path: pepper
+      - key: private.pem
+        path: private.pem
+      - key: public.pem
+        path: public.pem
+      - key: secret_key
+        path: secret_key
+    defaultMode: 0440
+- name: db-password-secret
+  secret:
+    secretName: {{ required "A secret containing the database password has to be provided." .Values.edumfa.db.passwordSecretName }}
+    items:
+      - key: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+        path: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+    defaultMode: 0440
+{{- with .specSettings.volumes }}
+{{- toYaml . | nindent 0 }}
+{{- end }}
+
+{{- with .specSettings.nodeSelector }}
+nodeSelector:
+{{- toYaml . | nindent 0 }}
+{{- end }}
+
+{{- with .specSettings.affinity }}
+affinity:
+{{- toYaml . | nindent 0 }}
+{{- end }}
+
+{{- with .specSettings.tolerations }}
+tolerations:
+{{- toYaml . | nindent 0 }}
+{{- end }}
+
+{{- end }}

@@ -19,6 +19,7 @@ If you want to upgrade please read :ref:`upgrade`.
    pip
    ubuntu
    docker
+   helm
    upgrade
    system/inifile
    system/logging

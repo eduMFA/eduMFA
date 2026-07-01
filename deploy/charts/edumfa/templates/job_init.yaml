@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "edumfa.fullname" . }}-migration-job
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      name: {{ include "edumfa.fullname" . }}-migration-job
+      {{- with .Values.edumfa.init.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      restartPolicy: OnFailure
+      {{ $spec_params := dict "Chart" .Chart "Values" .Values "containerType" "helm_init" "specSettings" .Values.edumfa.init }}
+      {{ include "edumfa.spec" $spec_params | nindent 6}}
