@@ -12,12 +12,15 @@ The database and corresponding driver are specified in the connect string
 
 .. _mysqldb:
 
-MySQL / MariaDB
-~~~~~~~~~~~~~~~
+MariaDB
+~~~~~~~
 
-While there are several database driver packages for MySQL, we recommend *PyMySQL*
-which is a pure Python package and does not require external libraries or a build
-environment on the server.
+While there are several database driver packages for MariaDB, we recommend
+*PyMySQL* which is a pure Python package and does not require external libraries
+or a build environment on the server.
+
+.. note:: While the name contains "MySQL", please note that MySQL (as opposed to
+         MariaDB) is not officially supported by eduMFA.
 
 *PyMySQL* is already installed in the virtual environment as a requirement for
 eduMFA.
