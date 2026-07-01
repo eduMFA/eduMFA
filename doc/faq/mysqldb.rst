@@ -4,19 +4,23 @@ Database connect string
 -----------------------
 
 Due to its use of a database abstraction layer, eduMFA can work with several
-databases with the help of corresponding database drivers.
+databases with the help of corresponding database drivers. Please see
+:ref:`choosing_a_database` for supported databases.
 
-The database and corresponding diver are specified in the connect string
+The database and corresponding driver are specified in the connect string
 ``SQLALCHEMY_DATABASE_URI`` in :ref:`cfgfile`
 
 .. _mysqldb:
 
-MySQL / MariaDB
-~~~~~~~~~~~~~~~
+MariaDB
+~~~~~~~
 
-While there are several database driver packages for MySQL, we recommend *PyMySQL*
-which is a pure Python package and does not require external libraries or a build
-environment on the server.
+While there are several database driver packages for MariaDB, we recommend
+*PyMySQL* which is a pure Python package and does not require external libraries
+or a build environment on the server.
+
+.. note:: While the name contains "MySQL", please note that MySQL (as opposed to
+         MariaDB) is not officially supported by eduMFA.
 
 *PyMySQL* is already installed in the virtual environment as a requirement for
 eduMFA.
@@ -37,13 +41,3 @@ the eduMFA virtual environment with::
 The corresponding connect string looks like this:
 
 **connect string**: ``postgresql+psycopg2://<user>:<password>@<host>/<database>``
-
-
-Other databases
-~~~~~~~~~~~~~~~
-
-While we recommend MySQL as the backend database we regularly test MariaDB and
-PostgreSQL as well.
-
-Other databases like Oracle or MSSQL are working as well but not all
-functionality can be assured, so be aware that "Your mileage may vary".

@@ -53,23 +53,13 @@ Configuration
 Database
 ^^^^^^^^
 
-eduMFA makes use of `SQLAlchemy <https://www.sqlalchemy.org>`_ to be able
-to talk to different SQL-based databases. Our best experience is with
-`MySQL <https://www.mysql.com/>`_ but SQLAlchemy supports many different
-databases [#sqlaDialects]_.
+Please refer to :ref:`choosing_a_database`. Create a database, as well as a user
+with full permissions to that database.
 
 The database server should be installed on the host or be otherwise reachable.
 
-In order for eduMFA to use the database, a database user with the
-appropriate privileges is needed.
-The following SQL commands will create the database as well as a user in `MySQL`::
-
-    CREATE DATABASE edumfa;
-    CREATE USER "edumfa"@"localhost" IDENTIFIED BY "<dbsecret>";
-    GRANT ALL PRIVILEGES ON edumfa.* TO "edumfa"@"localhost";
-
-You must then add the database name, user and password to your `edumfa.cfg`. See
-:ref:`cfgfile` for more information on the configuration.
+You must then add the database name, user and password to your ``edumfa.cfg``.
+See :ref:`cfgfile` for more information on the configuration.
 
 Setting up eduMFA
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -114,8 +104,3 @@ is needed.
 Setup and configuration of a webserver can be a complex procedure depending on
 several parameter (host OS, SSL, internal network structure, ...).
 More on the WSGI setup for eduMFA can be found in :ref:`wsgiscript`.
-
-
-.. rubric:: Footnotes
-
-.. [#sqlaDialects] https://docs.sqlalchemy.org/en/14/dialects/index.html
