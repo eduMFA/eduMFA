@@ -9,6 +9,7 @@ test is deterministic there.  Under PostgreSQL the SELECT FOR UPDATE row-level
 lock in _create_token_query(for_update=True) is what enforces the constraint.
 """
 
+import logging
 import threading
 
 from edumfa.lib.token import init_token, remove_token
@@ -17,10 +18,27 @@ from edumfa.models import db
 from .base import MyTestCase
 
 # Number of concurrent threads that will race with the same OTP.
-_CONCURRENCY = 4
+_CONCURRENCY = 8
 
 
 class RaceConditionValidationTest(MyTestCase):
+    
+    def setUp(self):
+        super().setUp()
+        # Set edumfa loggers to DEBUG just for these tests
+        for logger_name in logging.root.manager.loggerDict:
+            if logger_name.startswith("edumfa"):  # covers all edumfa modules
+                logging.getLogger(logger_name).setLevel(logging.DEBUG)
+
+
+    def tearDown(self):
+        # Restore loggers to INFO to not affect other tests
+        for logger_name in logging.root.manager.loggerDict:
+            if logger_name.startswith("edumfa"):
+                logging.getLogger(logger_name).setLevel(logging.INFO)
+        super().tearDown()
+
+    
     """Test that concurrent replay attempts are rejected under concurrency."""
 
     # ------------------------------------------------------------------ #
