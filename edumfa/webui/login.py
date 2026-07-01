@@ -205,6 +205,14 @@ def single_page_application():
     else:
         gdpr_link = ""
 
+    react_routes = current_app.config.get(
+        "EDUMFA_REACT_ROUTES", ["/component/clienttype"]
+    )
+    if isinstance(react_routes, str):
+        react_routes = [
+            route.strip() for route in react_routes.split(",") if route.strip()
+        ]
+
     render_context = {
         "instance": instance,
         "backendUrl": backend_url,
@@ -227,6 +235,8 @@ def single_page_application():
         "gdpr_link": gdpr_link,
         "logo": logo,
         "page_title": page_title,
+        "react_routes": react_routes,
+        "react_ui_enabled": current_app.config.get("EDUMFA_REACT_UI", False),
     }
 
     index_page = current_app.config.get("EDUMFA_INDEX_HTML") or "index.html"

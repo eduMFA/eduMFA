@@ -1,0 +1,3 @@
+node_modules/
+react-dist/
+react-src/locales/**/messages.ts

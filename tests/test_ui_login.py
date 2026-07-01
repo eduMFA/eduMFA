@@ -142,6 +142,34 @@ class LoginUITestCase(MyTestCase):
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(b"https://edumfa.io/" in res.data)
 
+    def test_08_react_mount_is_feature_flagged(self):
+        react_ui = self.app.config.get("EDUMFA_REACT_UI")
+        react_routes = self.app.config.get("EDUMFA_REACT_ROUTES")
+        try:
+            self.app.config["EDUMFA_REACT_UI"] = False
+            with self.app.test_request_context("/", method="GET"):
+                res = self.app.full_dispatch_request()
+                self.assertTrue(res.status_code == 200, res)
+                self.assertTrue(b'id="react-root"' in res.data)
+                self.assertTrue(b'data-react-enabled="false"' in res.data)
+                self.assertFalse(b"static/react-dist/assets/main.js" in res.data)
+
+            self.app.config["EDUMFA_REACT_UI"] = True
+            self.app.config["EDUMFA_REACT_ROUTES"] = ["/component/clienttype"]
+
+            with self.app.test_request_context("/", method="GET"):
+                res = self.app.full_dispatch_request()
+                self.assertTrue(res.status_code == 200, res)
+                self.assertTrue(b'data-react-enabled="true"' in res.data)
+                self.assertTrue(
+                    b'data-react-routes="/component/clienttype"' in res.data
+                )
+                self.assertTrue(b"static/react-dist/assets/main.css" in res.data)
+                self.assertTrue(b"static/react-dist/assets/main.js" in res.data)
+        finally:
+            self.app.config["EDUMFA_REACT_UI"] = react_ui
+            self.app.config["EDUMFA_REACT_ROUTES"] = react_routes
+
 
 class LanguageTestCase(MyApiTestCase):
     def test_01_check_for_english_translation(self):
