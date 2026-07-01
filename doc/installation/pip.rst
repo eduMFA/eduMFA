@@ -104,8 +104,3 @@ is needed.
 Setup and configuration of a webserver can be a complex procedure depending on
 several parameter (host OS, SSL, internal network structure, ...).
 More on the WSGI setup for eduMFA can be found in :ref:`wsgiscript`.
-
-
-.. rubric:: Footnotes
-
-.. [#sqlaDialects] https://docs.sqlalchemy.org/en/14/dialects/index.html
