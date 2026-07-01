@@ -66,6 +66,7 @@ from edumfa.lib.utils import (
     hexlify_and_unicode,
     is_true,
     to_unicode,
+    utc_now,
 )
 from edumfa.models import Challenge, JwtBlacklist
 
@@ -1376,16 +1377,17 @@ class WebAuthnTokenClass(TokenClass):
         """
         nonce = WebAuthnTokenClass._get_nonce()
         transactionid = Challenge.create_transaction_id()
+        now = utc_now()
         challenge = jwt.encode(
             {
                 "nonce": webauthn_b64_encode(nonce),
                 "transactionId": transactionid,
-                "exp": datetime.datetime.now(tz=datetime.timezone.utc)
+                "exp": now
                 + datetime.timedelta(
                     seconds=int(get_from_config("DefaultChallengeValidityTime", 120))
                 ),
-                "iat": datetime.datetime.now(tz=datetime.timezone.utc),
-                "nbf": datetime.datetime.now(tz=datetime.timezone.utc),
+                "iat": now,
+                "nbf": now,
             },
             current_app.secret_key,
             algorithm="HS256",
@@ -1539,7 +1541,7 @@ class WebAuthnTokenClass(TokenClass):
                     options={"verify_exp": False},
                 )
                 log.warning(
-                    f"Got expired passkey challenge: {err}; Actually expired at {claims.get('exp')} ({claims.get('exp') - datetime.datetime.now(datetime.timezone.utc).timestamp()} seconds ago)"
+                    f"Got expired passkey challenge: {err}; Actually expired at {claims.get('exp')} ({claims.get('exp') - utc_now().timestamp()} seconds ago)"
                 )
                 reply_dict = {"message": "Passkey challenge expired."}
                 return False, reply_dict

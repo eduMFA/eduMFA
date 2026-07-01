@@ -6,7 +6,7 @@ The api.lib.policy.py depends on lib.policy and on flask!
 
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import jwt
 from dateutil.tz import tzlocal
@@ -1264,7 +1264,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         # A request with an API key succeeds
         secret = current_app.config.get("SECRET_KEY")
         token = jwt.encode(
-            {"role": ROLE.VALIDATE, "exp": datetime.utcnow() + timedelta(hours=1)},
+            {"role": ROLE.VALIDATE, "exp": datetime.now(timezone.utc) + timedelta(hours=1)},
             secret,
         )
         req.headers = {"Authorization": token}
@@ -1276,7 +1276,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             {
                 "role": ROLE.ADMIN,
                 "username": "admin",
-                "exp": datetime.utcnow() + timedelta(hours=1),
+                "exp": datetime.now(timezone.utc) + timedelta(hours=1),
             },
             secret,
         )

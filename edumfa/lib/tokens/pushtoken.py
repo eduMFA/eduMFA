@@ -32,7 +32,7 @@ import time
 import traceback
 from base64 import b32decode
 from binascii import Error as BinasciiError
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta, timezone
 from urllib.parse import quote
 
 from cryptography.exceptions import InvalidSignature
@@ -76,6 +76,7 @@ from edumfa.lib.utils import (
     is_true,
     prepare_result,
     to_bytes,
+    utc_now,
 )
 from edumfa.models import Challenge, db
 
@@ -777,11 +778,10 @@ class PushTokenClass(TokenClass):
             )
         td = timedelta(minutes=window)
         # We don't know if the passed timestamp is timezone aware. If no
-        # timezone is passed, we assume UTC
-        if ts.tzinfo:
-            now = datetime.now(timezone.utc)
-        else:
-            now = datetime.utcnow()
+        # timezone is passed, we assume UTC.
+        if not ts.tzinfo:
+            ts = ts.replace(tzinfo=timezone.utc)
+        now = utc_now()
         if not (now - td <= ts <= now + td):
             raise eduMFAError(f"Timestamp {timestamp} not in valid range.")
 

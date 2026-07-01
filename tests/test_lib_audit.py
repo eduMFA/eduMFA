@@ -119,11 +119,11 @@ class AuditTestCase(MyTestCase):
         self.Audit.finalize_log()
 
         # remember the current time for later
-        current_timestamp = datetime.datetime.now()
+        current_timestamp = datetime.datetime.now(datetime.timezone.utc)
 
         # create a new audit log entry 2 seconds after the previous ones
-        with mock.patch("edumfa.models.datetime") as mock_dt:
-            mock_dt.now.return_value = current_timestamp + datetime.timedelta(seconds=2)
+        with mock.patch("edumfa.models.utc_now") as mock_dt:
+            mock_dt.return_value = current_timestamp + datetime.timedelta(seconds=2)
             self.Audit.log({"action": "/validate/check", "success": True})
             self.Audit.finalize_log()
 
@@ -131,8 +131,8 @@ class AuditTestCase(MyTestCase):
         # This is necessary because when doing unit tests on a CI server,
         # things will sometimes go slower than expected, which will
         # cause the very last assertion to fail.
-        with mock.patch("datetime.datetime") as mock_dt:
-            mock_dt.now.return_value = current_timestamp + datetime.timedelta(
+        with mock.patch("edumfa.lib.auditmodules.sqlaudit.utc_now") as mock_dt:
+            mock_dt.return_value = current_timestamp + datetime.timedelta(
                 seconds=2.5
             )
 
@@ -423,16 +423,20 @@ class AuditFileTestCase(OverrideConfigTestCase):
     def test_30_logger_audit_qualname(self, capture):
         # Check that the default qualname is 'edumfa.lib.auditmodules.loggeraudit'
         # The audit log runs 2 seconds - mocked
-        current_utc_time = datetime.datetime(2018, 3, 4, 5, 6, 8)
-        startdate_time = datetime.datetime(2018, 3, 4, 5, 6, 6)
+        current_utc_time = datetime.datetime(
+            2018, 3, 4, 5, 6, 8, tzinfo=datetime.timezone.utc
+        )
+        startdate_time = datetime.datetime(
+            2018, 3, 4, 5, 6, 6, tzinfo=datetime.timezone.utc
+        )
         with mock.patch(
-            "edumfa.lib.auditmodules.loggeraudit.datetime"
+            "edumfa.lib.auditmodules.loggeraudit.utc_now"
         ) as mock_timestamp:
             with mock.patch(
-                "edumfa.lib.auditmodules.base.datetime.datetime"
+                "edumfa.lib.auditmodules.base.utc_now"
             ) as mock_startdate:
-                mock_timestamp.utcnow.return_value = current_utc_time
-                mock_startdate.now.return_value = startdate_time
+                mock_timestamp.return_value = current_utc_time
+                mock_startdate.return_value = startdate_time
                 a = LoggerAudit(config={})
                 a.log({"action": "No EDUMFA_AUDIT_LOGGER_QUALNAME given"})
                 a.finalize_log()
@@ -447,14 +451,18 @@ class AuditFileTestCase(OverrideConfigTestCase):
                 )
 
         # Now change the qualname to 'edumfa-audit'
-        current_utc_time = datetime.datetime(2020, 3, 4, 5, 6, 8)
-        startdate_time = datetime.datetime(2020, 3, 4, 5, 6, 0)
-        with mock.patch("edumfa.lib.auditmodules.loggeraudit.datetime") as mock_dt:
+        current_utc_time = datetime.datetime(
+            2020, 3, 4, 5, 6, 8, tzinfo=datetime.timezone.utc
+        )
+        startdate_time = datetime.datetime(
+            2020, 3, 4, 5, 6, 0, tzinfo=datetime.timezone.utc
+        )
+        with mock.patch("edumfa.lib.auditmodules.loggeraudit.utc_now") as mock_dt:
             with mock.patch(
-                "edumfa.lib.auditmodules.base.datetime.datetime"
+                "edumfa.lib.auditmodules.base.utc_now"
             ) as mock_startdate:
-                mock_dt.utcnow.return_value = current_utc_time
-                mock_startdate.now.return_value = startdate_time
+                mock_dt.return_value = current_utc_time
+                mock_startdate.return_value = startdate_time
                 a = LoggerAudit(config={"EDUMFA_AUDIT_LOGGER_QUALNAME": "edumfa-audit"})
                 a.log({"action": "EDUMFA_AUDIT_LOGGER_QUALNAME given"})
                 a.finalize_log()

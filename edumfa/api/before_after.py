@@ -26,7 +26,6 @@ Flask endpoints.
 It also contains the error handlers.
 """
 
-import datetime
 import logging
 import threading
 
@@ -49,7 +48,7 @@ from edumfa.lib.lifecycle import call_finalizers
 from edumfa.lib.policy import PolicyClass
 from edumfa.lib.token import get_token_owner, get_token_type
 from edumfa.lib.user import User
-from edumfa.lib.utils import get_client_ip
+from edumfa.lib.utils import get_client_ip, utc_now
 
 from ..lib.error import (
     AuthError,
@@ -94,7 +93,7 @@ log = logging.getLogger(__name__)
 @token_blueprint.before_app_request
 def log_begin_request():
     log.debug(f"Begin handling of request {request.full_path!r}")
-    g.startdate = datetime.datetime.now()
+    g.startdate = utc_now()
 
 
 @token_blueprint.teardown_app_request
