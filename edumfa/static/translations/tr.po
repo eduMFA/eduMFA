@@ -263,6 +263,11 @@ msgstr "Tüm çözümler"
 msgid "All SMS Gateways"
 msgstr "Tüm SMS Ağ Geçitleri"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "All realms"
+msgstr "Tüm alemler"
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "Tüm Jetonlar"
@@ -282,6 +287,15 @@ msgstr "IP adresini içeren bir özellik."
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "Şifreyi sıfırlamak için bir e-posta size gönderildi."
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Any type"
+msgstr "Token türü"
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -1348,10 +1362,6 @@ msgstr "PIN ayarlanamadı."
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
 msgstr "Kullanıcı güncellenemedi."
-
-#: components/dashboard/views/dashboard.html
-msgid "False"
-msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
 #: components/config/views/config.resolvers.passwd.html
@@ -4547,11 +4557,6 @@ msgid "Tokens for user {{ username }}"
 msgstr "Kullanıcı için jetonlar {{username}}"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
-msgid "Tokentype"
-msgstr "Token türü"
-
-#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr "Toplam"
 
@@ -4564,9 +4569,6 @@ msgid "Transaction ID"
 msgstr "İşlem Kimliği"
 
 #: components/dashboard/views/dashboard.html
-msgid "True"
-msgstr ""
-
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Tip"
@@ -4738,8 +4740,9 @@ msgid "Users"
 msgstr "Kullanıcılar"
 
 #: components/dashboard/views/dashboard.html
-msgid "Users having such a token:"
-msgstr ""
+#, fuzzy
+msgid "Users with matching token:"
+msgstr "Aktif belirteçleri olan farklı kullanıcılar"
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -5046,6 +5049,7 @@ msgstr "eylem"
 msgid "action detail"
 msgstr "eylem detayı"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -5058,10 +5062,6 @@ msgstr "yönetici"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "İsteğe Bağlı Seri Substring"
-
-#: components/dashboard/views/dashboard.html
-msgid "any"
-msgstr ""
 
 #: components/config/views/config.token.u2f.html
 msgid "appId"
@@ -5084,6 +5084,7 @@ msgstr "müşteri"
 msgid "description"
 msgstr "tanım"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5410,6 +5411,10 @@ msgid "{{ auditdata.count }} entries found."
 msgstr "{{auditdata.count}} girişleri bulundu."
 
 #, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "Token türü"
+
+#, fuzzy
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Seviye"
@@ -5484,9 +5489,6 @@ msgstr "{{auditdata.count}} girişleri bulundu."
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "Aktif, atanmış belirteçler"
-
-#~ msgid "distinct users with active tokens"
-#~ msgstr "Aktif belirteçleri olan farklı kullanıcılar"
 
 #~ msgid "edumfa server"
 #~ msgstr "edumfa sunucusu"

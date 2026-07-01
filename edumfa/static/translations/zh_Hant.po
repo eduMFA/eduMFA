@@ -256,6 +256,11 @@ msgstr "所有旋轉變壓器"
 msgid "All SMS Gateways"
 msgstr "所有簡訊閘道"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "All realms"
+msgstr "所有領域"
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "所有令牌"
@@ -275,6 +280,15 @@ msgstr "包含IP位址的屬性。"
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "已向您發送重置密碼的電子郵件。"
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Any type"
+msgstr "令牌類型"
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -1341,10 +1355,6 @@ msgstr "無法設置 PIN 碼。"
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
 msgstr "無法更新使用者。"
-
-#: components/dashboard/views/dashboard.html
-msgid "False"
-msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
 #: components/config/views/config.resolvers.passwd.html
@@ -4531,11 +4541,6 @@ msgid "Tokens for user {{ username }}"
 msgstr "使用者 {{ username }} 的令牌"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
-msgid "Tokentype"
-msgstr "令牌類型"
-
-#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr ""
 
@@ -4548,9 +4553,6 @@ msgid "Transaction ID"
 msgstr "交易ID"
 
 #: components/dashboard/views/dashboard.html
-msgid "True"
-msgstr ""
-
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "類型"
@@ -4722,8 +4724,9 @@ msgid "Users"
 msgstr "使用者"
 
 #: components/dashboard/views/dashboard.html
-msgid "Users having such a token:"
-msgstr ""
+#, fuzzy
+msgid "Users with matching token:"
+msgstr "具有活動令牌的不同使用者"
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -5017,6 +5020,7 @@ msgstr "行動"
 msgid "action detail"
 msgstr "操作詳細資訊"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -5029,10 +5033,6 @@ msgstr "管理員"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "一個可選的串行子串"
-
-#: components/dashboard/views/dashboard.html
-msgid "any"
-msgstr ""
 
 #: components/config/views/config.token.u2f.html
 msgid "appId"
@@ -5056,6 +5056,7 @@ msgstr "用戶端"
 msgid "description"
 msgstr "描述"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5389,6 +5390,10 @@ msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} 找到的條目。"
 
 #, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "令牌類型"
+
+#, fuzzy
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "等級"
@@ -5447,9 +5452,6 @@ msgstr "{{ auditdata.count }} 找到的條目。"
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "活動的、分配的令牌"
-
-#~ msgid "distinct users with active tokens"
-#~ msgstr "具有活動令牌的不同使用者"
 
 #, fuzzy
 #~ msgid "edumfa server"

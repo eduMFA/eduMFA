@@ -258,6 +258,11 @@ msgstr "Alle Resolvers"
 msgid "All SMS Gateways"
 msgstr "Alle SMS Gateways"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "All realms"
+msgstr "Alle Realms"
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "Alle tokens"
@@ -277,6 +282,15 @@ msgstr "Een attribuut dat het IP-adres bevat."
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "Een e-mail om het wachtwoord dat naar jou verzonden is te resetten."
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Any type"
+msgstr "token type"
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -1345,10 +1359,6 @@ msgstr "Kon PIN niet instellen."
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
 msgstr "Gegevens gebruiker bijwerken mislukt."
-
-#: components/dashboard/views/dashboard.html
-msgid "False"
-msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
 #: components/config/views/config.resolvers.passwd.html
@@ -4564,11 +4574,6 @@ msgid "Tokens for user {{ username }}"
 msgstr "Tokens voor gebruiker {{ username }}"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
-msgid "Tokentype"
-msgstr "Token type"
-
-#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr "Totaal"
 
@@ -4581,9 +4586,6 @@ msgid "Transaction ID"
 msgstr "Transactie ID"
 
 #: components/dashboard/views/dashboard.html
-msgid "True"
-msgstr ""
-
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Type"
@@ -4753,8 +4755,9 @@ msgid "Users"
 msgstr "Gebruikers"
 
 #: components/dashboard/views/dashboard.html
-msgid "Users having such a token:"
-msgstr ""
+#, fuzzy
+msgid "Users with matching token:"
+msgstr "gebruikers onderscheiden met actieve tokens"
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -5061,6 +5064,7 @@ msgstr "acitie"
 msgid "action detail"
 msgstr "actiedetail"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -5073,10 +5077,6 @@ msgstr "beheerder"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "een optionele serienummer substring"
-
-#: components/dashboard/views/dashboard.html
-msgid "any"
-msgstr ""
 
 #: components/config/views/config.token.u2f.html
 msgid "appId"
@@ -5099,6 +5099,7 @@ msgstr "cliënt"
 msgid "description"
 msgstr "beschrijving"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5422,6 +5423,10 @@ msgstr "venster"
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} items gevonden."
 
+#, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "Token type"
+
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Niveau"
@@ -5496,9 +5501,6 @@ msgstr "{{ auditdata.count }} items gevonden."
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "actief, toegewezen tokens"
-
-#~ msgid "distinct users with active tokens"
-#~ msgstr "gebruikers onderscheiden met actieve tokens"
 
 #~ msgid "edumfa server"
 #~ msgstr "eduMFA-server"

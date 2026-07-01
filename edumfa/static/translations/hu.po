@@ -219,6 +219,10 @@ msgstr ""
 msgid "All SMS Gateways"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "All realms"
+msgstr ""
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr ""
@@ -237,6 +241,14 @@ msgstr ""
 
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Any type"
 msgstr ""
 
 #: components/machine/views/machine.details.html
@@ -1247,10 +1259,6 @@ msgstr ""
 
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "False"
 msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
@@ -4010,10 +4018,6 @@ msgid "Tokens for user {{ username }}"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-msgid "Tokentype"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr ""
 
@@ -4026,9 +4030,6 @@ msgid "Transaction ID"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-msgid "True"
-msgstr ""
-
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr ""
@@ -4189,7 +4190,7 @@ msgid "Users"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-msgid "Users having such a token:"
+msgid "Users with matching token:"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4445,6 +4446,7 @@ msgstr ""
 msgid "action detail"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4456,10 +4458,6 @@ msgstr ""
 
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "any"
 msgstr ""
 
 #: components/config/views/config.token.u2f.html
@@ -4483,6 +4481,7 @@ msgstr ""
 msgid "description"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
