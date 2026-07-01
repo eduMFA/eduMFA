@@ -165,7 +165,7 @@ $scope.getAuthentication = function () {
 
     $scope.countUsersWithToken = function () {
         // XXX: This could potentially instead be a directive.
-        $scope.users_with_token = "";
+        $scope.users_with_token = "loading...";
         $scope.params = {
             realm: $scope.realmForUsersWithToken,
             active: $scope.activenessForUsersWithToken,
