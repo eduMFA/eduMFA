@@ -197,7 +197,7 @@
                                     <label for="realm" translate>Realm</label>
                                     <select class="form-control" ng-change="countUsersWithToken()"
                                         ng-model="realmForUsersWithToken">
-                                        <option><span translate>any</span></option>
+                                        <option value="any" translate>All Realms</option>
                                         <option ng-repeat="(realmname, realm) in realms">{{ realmname }}</option>
                                     </select>
                                 </th>
@@ -211,16 +211,16 @@
                                     </select>
                                 </th>
                                 <th>
-                                    <label for="tokentype" translate>Tokentype</label>
+                                    <label for="tokentype" translate>Token Type</label>
                                     <select class="form-control" ng-change="countUsersWithToken()"
                                         ng-model="tokentypeForUsersWithToken">
-                                        <option><span translate>any</span></option>
+                                        <option value="any" translate>Any type</option>
                                         <option ng-repeat="tokentype in tokentypes">{{ tokentype }}</option>
                                     </select>
                                 </th>
                             </tr>
                             <tr>
-                                <td translate>Users having such a token:</td>
+                                <td translate>Users with matching token:</td>
                                 <td>{{ users_with_token }}</td>
                             </tr>
                         </tbody>
