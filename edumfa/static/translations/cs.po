@@ -230,6 +230,11 @@ msgstr "Resolvery"
 msgid "All SMS Gateways"
 msgstr "SMS brány"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "All realms"
+msgstr "Všechny domény"
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "Tokeny"
@@ -249,6 +254,15 @@ msgstr "Atribut obsahující IP adresu."
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "Byl Vám odeslán e-mail pro obnovení hesla."
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Any type"
+msgstr "typ tokenu"
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -1290,10 +1304,6 @@ msgstr "Nastavení PIN se nezdařilo."
 #: components/user/controllers/userControllers.js
 msgid "Failed to update user."
 msgstr "Aktualizace uživatele selhala."
-
-#: components/dashboard/views/dashboard.html
-msgid "False"
-msgstr ""
 
 #: components/config/views/config.mresolvers.hosts.html
 #: components/config/views/config.resolvers.passwd.html
@@ -4216,11 +4226,6 @@ msgid "Tokens for user {{ username }}"
 msgstr "Tokeny uživatele {{ username }}"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
-msgid "Tokentype"
-msgstr "Typ tokenu"
-
-#: components/dashboard/views/dashboard.html
 msgid "Total"
 msgstr "Celkem"
 
@@ -4233,9 +4238,6 @@ msgid "Transaction ID"
 msgstr "ID transakce"
 
 #: components/dashboard/views/dashboard.html
-msgid "True"
-msgstr ""
-
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Typ"
@@ -4403,8 +4405,9 @@ msgid "Users"
 msgstr "Uživatelé"
 
 #: components/dashboard/views/dashboard.html
-msgid "Users having such a token:"
-msgstr ""
+#, fuzzy
+msgid "Users with matching token:"
+msgstr "unikátní uživatelé s aktivními tokeny"
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -4696,6 +4699,7 @@ msgstr "akce"
 msgid "action detail"
 msgstr "detaily akce"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4708,10 +4712,6 @@ msgstr "administrátor"
 #: components/token/views/token.getserial.html
 msgid "an optional serial substring"
 msgstr "volitelné hledání v sériovém čísle"
-
-#: components/dashboard/views/dashboard.html
-msgid "any"
-msgstr ""
 
 #: components/config/views/config.token.u2f.html
 msgid "appId"
@@ -4734,6 +4734,7 @@ msgstr "klient"
 msgid "description"
 msgstr "popis"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5050,6 +5051,10 @@ msgstr "tolerance"
 msgid "{{ auditdata.count }} entries found."
 msgstr "Nalezeno {{ auditdata.count }} záznamů."
 
+#, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "Typ tokenu"
+
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Stupeň"
@@ -5101,9 +5106,6 @@ msgstr "Nalezeno {{ auditdata.count }} záznamů."
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "aktivní, přiřazené tokeny"
-
-#~ msgid "distinct users with active tokens"
-#~ msgstr "unikátní uživatelé s aktivními tokeny"
 
 #, fuzzy
 #~ msgid ""
