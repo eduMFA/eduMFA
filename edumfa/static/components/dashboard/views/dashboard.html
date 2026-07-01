@@ -197,7 +197,7 @@
                                     <label for="realm" translate>Realm</label>
                                     <select class="form-control" ng-change="countUsersWithToken()"
                                         ng-model="realmForUsersWithToken">
-                                        <option value="any" translate>All Realms</option>
+                                        <option value="any" translate>All realms</option>
                                         <option ng-repeat="(realmname, realm) in realms">{{ realmname }}</option>
                                     </select>
                                 </th>
@@ -205,13 +205,13 @@
                                     <label for="active" translate>Active</label>
                                     <select class="form-control" ng-change="countUsersWithToken()"
                                         ng-model="activenessForUsersWithToken">
-                                        <option><span translate>any</span></option>
-                                        <option><span translate>True</span></option>
-                                        <option><span translate>False</span></option>
+                                        <option value="any"><span translate>Any status</span></option>
+                                        <option value="True"><span translate>active</span></option>
+                                        <option value="False"><span translate>disabled</span></option>
                                     </select>
                                 </th>
                                 <th>
-                                    <label for="tokentype" translate>Token Type</label>
+                                    <label for="tokentype" translate>Type</label>
                                     <select class="form-control" ng-change="countUsersWithToken()"
                                         ng-model="tokentypeForUsersWithToken">
                                         <option value="any" translate>Any type</option>
