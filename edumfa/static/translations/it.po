@@ -167,6 +167,7 @@ msgstr "Azione"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -221,6 +222,10 @@ msgstr "Amministrazione"
 msgid "Administrator"
 msgstr "Amministratore"
 
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
+
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
 msgstr "Tutti i CA Connectors"
@@ -257,6 +262,11 @@ msgstr "Tutti i Resolver"
 msgid "All SMS Gateways"
 msgstr "Tutti gli SMS Gateway"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "All realms"
+msgstr "Tutti i Realm"
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "Tutti i token"
@@ -276,6 +286,15 @@ msgstr "Un Attributo che contiene l'indirizzo IP."
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "Una mail per resettare la password a te inviata."
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Any type"
+msgstr "tipo di token"
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -2586,6 +2605,7 @@ msgid "Read number dynamically from user source on each request."
 msgstr "Leggi il numero dall'user source, in modo dinamico per ogni richiesta."
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4591,6 +4611,7 @@ msgstr "Totale Challenge:"
 msgid "Transaction ID"
 msgstr "ID transazione"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Tipo"
@@ -4759,6 +4780,11 @@ msgstr "Nome utente"
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
 msgstr "Utenti"
+
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Users with matching token:"
+msgstr "utenti distinti con token attivi"
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -5071,6 +5097,7 @@ msgstr "azione"
 msgid "action detail"
 msgstr "dettaglio dell'azione"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -5105,6 +5132,7 @@ msgstr "client"
 msgid "description"
 msgstr "descrizione"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5432,6 +5460,10 @@ msgstr "finestra"
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} voci trovate."
 
+#, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "Tipo di token"
+
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Livello"
@@ -5506,9 +5538,6 @@ msgstr "{{ auditdata.count }} voci trovate."
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "attivo, token assegnati"
-
-#~ msgid "distinct users with active tokens"
-#~ msgstr "utenti distinti con token attivi"
 
 #~ msgid "edumfa server"
 #~ msgstr "server edumfa"

@@ -135,6 +135,7 @@ msgstr "action"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -189,6 +190,10 @@ msgstr "Administration"
 msgid "Administrator"
 msgstr "Administrator"
 
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
+
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
 msgstr "Бүх CA Connectors"
@@ -225,6 +230,11 @@ msgstr "Бүх Resolvers"
 msgid "All SMS Gateways"
 msgstr "Бүх SMS Gateways"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "All realms"
+msgstr "Бүх Realms"
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "Бүх токенууд"
@@ -244,6 +254,15 @@ msgstr ""
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "Таны мэйл хаягруу шинэчэлсэн нууц үгийг илгээлээ."
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Any type"
+msgstr "токен төрөл"
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -2387,6 +2406,7 @@ msgid "Read number dynamically from user source on each request."
 msgstr ""
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4028,6 +4048,7 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Төрөл"
@@ -4186,6 +4207,10 @@ msgstr "Хэрэглэгчийн нэр"
 
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Users with matching token:"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4442,6 +4467,7 @@ msgstr ""
 msgid "action detail"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4476,6 +4502,7 @@ msgstr ""
 msgid "description"
 msgstr "тайлбар"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -4784,6 +4811,10 @@ msgstr "цонх"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "Токен төрөл"
 
 #~ msgctxt "subscription"
 #~ msgid "Level"
