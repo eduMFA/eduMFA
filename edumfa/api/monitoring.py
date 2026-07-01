@@ -145,6 +145,8 @@ def count_users_with_tokens() -> int:
     if active:
         active = active.lower() == "true"
 
-    return send_result(
-        count_users_with_token(realm=realm, active=active, tokentype=tokentype)
+    users_with_token = count_users_with_token(
+        realm=realm, active=active, tokentype=tokentype
     )
+    g.audit_object.log({"success": True})
+    return send_result(users_with_token)
