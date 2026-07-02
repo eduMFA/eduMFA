@@ -7326,3 +7326,120 @@ class ValidateShortPasswordTestCase(MyApiTestCase):
             detail = res.json.get("detail")
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
+
+
+class WebAuthnOfflineRefillTestCase(MyApiTestCase):
+    """
+    Test the /validate/offlinerefill endpoint for WebAuthn tokens, which use a
+    per-machine refill token identified by the computer name in the User-Agent.
+    """
+
+    serial = "WANREFILL1"
+    ua_a = "eduMFACredentialProvider/3.0 ComputerName/DESK-A Windows/10"
+    ua_b = "eduMFACredentialProvider/3.0 ComputerName/DESK-B Windows/11"
+    ua_none = "Mozilla/5.0"
+
+    def test_00_setup(self):
+        from edumfa.lib.applications.offline import MachineApplication
+        from edumfa.lib.machine import attach_token
+        from edumfa.lib.machineresolver import save_resolver
+
+        self.setUp_user_realms()
+        save_resolver(
+            {
+                "name": "wanres",
+                "type": "hosts",
+                "filename": HOSTSFILE,
+                "type.filename": "string",
+                "pw": "secret",
+                "type.pw": "password",
+            }
+        )
+        db_token = Token(self.serial, tokentype="webauthn")
+        db_token.update_otpkey("1234567890abcdef")
+        db_token.save()
+        tok = get_tokens(serial=self.serial)[0]
+        tok.add_user(User("cornelius", self.realm1))
+        tok.add_tokeninfo("pubKey", "this-is-a-public-key")
+        tok.add_tokeninfo("relying_party_id", "example.com")
+        attach_token(self.serial, "offline", hostname="pippin", resolver_name="wanres")
+
+        # Simulate the online login that seeds the per-machine offline data
+        # (this is what offline_info does after a successful authentication)
+        ai_a = MachineApplication.get_authentication_item(
+            "webauthn", self.serial, user_agent=self.ua_a
+        )
+        self.assertEqual(
+            ai_a.get("refilltoken"), tok.get_tokeninfo("refilltoken_DESK-A")
+        )
+
+    def test_01_offlinerefill_webauthn(self):
+        # A valid refill from machine DESK-A returns a NEW refill token and no
+        # OTP values (WebAuthn authenticates offline with the cached pubKey).
+        tok = get_tokens(serial=self.serial)[0]
+        current_rt = tok.get_tokeninfo("refilltoken_DESK-A")
+        with self.app.test_request_context(
+            "/validate/offlinerefill",
+            method="POST",
+            data={
+                "serial": self.serial,
+                "pass": "",
+                "refilltoken": current_rt,
+            },
+            headers={"User-Agent": self.ua_a},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 200, res)
+            offline = res.json.get("auth_items").get("offline")[0]
+            new_rt = offline.get("refilltoken")
+            self.assertEqual(offline.get("serial"), self.serial)
+            self.assertNotIn("response", offline)
+            self.assertNotEqual(new_rt, current_rt)
+            tok = get_tokens(serial=self.serial)[0]
+            self.assertEqual(new_rt, tok.get_tokeninfo("refilltoken_DESK-A"))
+
+    def test_02_wrong_refilltoken_fails(self):
+        with self.app.test_request_context(
+            "/validate/offlinerefill",
+            method="POST",
+            data={
+                "serial": self.serial,
+                "pass": "",
+                "refilltoken": "f" * 80,
+            },
+            headers={"User-Agent": self.ua_a},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 400, res)
+
+    def test_03_unknown_machine_fails(self):
+        # DESK-B never did an online login, so it has no refill token
+        with self.app.test_request_context(
+            "/validate/offlinerefill",
+            method="POST",
+            data={
+                "serial": self.serial,
+                "pass": "",
+                "refilltoken": "f" * 80,
+            },
+            headers={"User-Agent": self.ua_b},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 400, res)
+
+    def test_04_missing_computer_name_fails(self):
+        with self.app.test_request_context(
+            "/validate/offlinerefill",
+            method="POST",
+            data={
+                "serial": self.serial,
+                "pass": "",
+                "refilltoken": "f" * 80,
+            },
+            headers={"User-Agent": self.ua_none},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 400, res)
+            msg = res.json.get("result").get("error").get("message")
+            self.assertIn("computer name is missing", msg)
+

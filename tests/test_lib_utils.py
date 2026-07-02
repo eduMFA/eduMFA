@@ -1169,3 +1169,33 @@ class UtilsTestCase(MyTestCase):
         file = "./tests/testdata/logging.cfg"
         dataimage = convert_imagefile_to_dataimage(file)
         self.assertEqual("", dataimage)
+
+
+class ComputerNameFromUserAgentTestCase(MyTestCase):
+    """
+    Tests for get_computer_name_from_user_agent, used to key per-machine
+    offline refill tokens for WebAuthn tokens.
+    """
+
+    def test_01_extract_computer_name(self):
+        from edumfa.lib.utils import get_computer_name_from_user_agent
+
+        ua = "eduMFACredentialProvider/3.0 ComputerName/DESK-01 Windows/10"
+        self.assertEqual(get_computer_name_from_user_agent(ua), "DESK-01")
+
+        # Other supported keys
+        self.assertEqual(
+            get_computer_name_from_user_agent("client Hostname/host-7 foo"),
+            "host-7",
+        )
+        self.assertEqual(
+            get_computer_name_from_user_agent("client MachineName/MX1"),
+            "MX1",
+        )
+
+    def test_02_no_computer_name(self):
+        from edumfa.lib.utils import get_computer_name_from_user_agent
+
+        self.assertIsNone(get_computer_name_from_user_agent("Mozilla/5.0"))
+        self.assertIsNone(get_computer_name_from_user_agent(""))
+        self.assertIsNone(get_computer_name_from_user_agent(None))

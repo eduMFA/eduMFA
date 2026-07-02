@@ -5,6 +5,8 @@
 # Previous authors by privacyIDEA project:
 #
 # 2015 Cornelius Kölbel <cornelius@privacyidea.org>
+# 2025 Daniel Valencia <daniel.valencia@pal-robotics.com>
+#      Add WebAuthn offline authentication support (ported from privacyIDEA PR #3874)
 #
 # This code is free software; you can redistribute it and/or
 # modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -515,6 +517,7 @@ def get_auth_items(
     serial=None,
     challenge=None,
     filter_param=None,
+    user_agent=None,
 ):
     """
     Return the authentication items for a given hostname and the application.
@@ -562,6 +565,7 @@ def get_auth_items(
             challenge,
             options=mtoken.get("options"),
             filter_param=filter_param,
+            user_agent=user_agent,
         )
         if auth_item:
             if mtoken.get("application") not in auth_items:
