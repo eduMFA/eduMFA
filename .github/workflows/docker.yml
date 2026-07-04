@@ -11,13 +11,15 @@ on:
     paths:
       - '.github/workflows/docker.yml'
       - 'deploy/docker/**'
-      - 'edumfa/**/*.py'
+      - 'edumfa/**'
+      - 'migrations/**'
       - 'tools/**'
-      - '.docerignore'
+      - '.dockerignore'
       - 'Dockerfile'
       - 'edumfa-manage'
       - 'pyproject.toml'
       - 'setup.py'
+      - 'uv.lock'
   pull_request:
     types: [ opened, reopened, synchronize ]
 
