@@ -48,6 +48,14 @@ edumfa:
     # If you're trying to handle more requests, it probably makes more sense to
     # give more resources to the existing replicas (if the bottleneck is not
     # actually elsewhere).
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 8000
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 8000
     autoscaling:
       enabled: false
       minReplicas: 1

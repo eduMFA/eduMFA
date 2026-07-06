@@ -1,7 +1,7 @@
 {{- define "edumfa.spec" }}
 {{- with .Values.imagePullSecrets }}
 imagePullSecrets:
-{{- toYaml . | nindent 8 }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
 securityContext:
   runAsNonRoot: true
@@ -33,18 +33,18 @@ containers:
   - name: http
     containerPort: 8000
     protocol: TCP
+  {{- with .Values.edumfa.worker.livenessProbe }}
   livenessProbe:
-    httpGet:
-      path: /
-      port: 8000
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.edumfa.worker.readinessProbe }}
   readinessProbe:
-    httpGet:
-      path: /
-      port: 8000
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- end }}
   {{- with .specSettings.resources }}
   resources:
-  {{- toYaml . | nindent 12 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   env:
   {{- if eq .containerType "helm_init" }}
@@ -90,61 +90,61 @@ containers:
     {{- toYaml . | nindent 2 }}
   {{- end }}
   volumeMounts:
-  - mountPath: /tmp
-    name: tmp
-  - mountPath: /run/edumfa-essential-secrets/
-    name: essential-secrets
-    readOnly: true
-  - mountPath: /run/edumfa-db-password
-    subPath: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
-    name: db-password-secret
-    readOnly: true
-  {{- with .specSettings.volumeMounts }}
-  {{- toYaml . | nindent 2 }}
-  {{- end }}
+    - mountPath: /tmp
+      name: tmp
+    - mountPath: /run/edumfa-essential-secrets/
+      name: essential-secrets
+      readOnly: true
+    - mountPath: /run/edumfa-db-password
+      subPath: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+      name: db-password-secret
+      readOnly: true
+    {{- with .specSettings.volumeMounts }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 volumes:
-- name: tmp
-  emptyDir: {}
-- name: essential-secrets
-  secret:
-    secretName: {{ required "A secret containing the essential eduMFA secrets has to be provided." .Values.edumfa.essentialSecretName }}
-    # This makes sure essential-secrets contains all necessary fields.
-    items:
-      - key: enckey
-        path: enckey
-      - key: pepper
-        path: pepper
-      - key: private.pem
-        path: private.pem
-      - key: public.pem
-        path: public.pem
-      - key: secret_key
-        path: secret_key
-    defaultMode: 0440
-- name: db-password-secret
-  secret:
-    secretName: {{ required "A secret containing the database password has to be provided." .Values.edumfa.db.passwordSecretName }}
-    items:
-      - key: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
-        path: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
-    defaultMode: 0440
-{{- with .specSettings.volumes }}
-{{- toYaml . | nindent 0 }}
-{{- end }}
+  - name: tmp
+    emptyDir: {}
+  - name: essential-secrets
+    secret:
+      secretName: {{ required "A secret containing the essential eduMFA secrets has to be provided." .Values.edumfa.essentialSecretName }}
+      # This makes sure essential-secrets contains all necessary fields.
+      items:
+        - key: enckey
+          path: enckey
+        - key: pepper
+          path: pepper
+        - key: private.pem
+          path: private.pem
+        - key: public.pem
+          path: public.pem
+        - key: secret_key
+          path: secret_key
+      defaultMode: 0440
+  - name: db-password-secret
+    secret:
+      secretName: {{ required "A secret containing the database password has to be provided." .Values.edumfa.db.passwordSecretName }}
+      items:
+        - key: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+          path: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+      defaultMode: 0440
+  {{- with .specSettings.volumes }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
 
 {{- with .specSettings.nodeSelector }}
 nodeSelector:
-{{- toYaml . | nindent 0 }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
 
 {{- with .specSettings.affinity }}
 affinity:
-{{- toYaml . | nindent 0 }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
 
 {{- with .specSettings.tolerations }}
 tolerations:
-{{- toYaml . | nindent 0 }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
 
 {{- end }}
