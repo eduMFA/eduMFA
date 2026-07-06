@@ -64,7 +64,7 @@ This is an explanation how to test out the draft PR.
 
 1. Create the secret as described above.
 2. Get a
-   `values.yaml <https://raw.githubusercontent.com/eduMFA/eduMFA/0b183a7f599a6e77ffcc9973fd3c6a20739fa901/deploy/charts/edumfa/values.yaml>`_.
+   `values.yaml <https://raw.githubusercontent.com/eduMFA/eduMFA/0e353c515bab798d8f8c3e2acf552380c2bac048/deploy/charts/edumfa/values.yaml>`_.
 3. Edit ``values.yaml`` to  your liking. At minimum, change ``edumfa.db``.
-4. Install: ``helm install -n $YOUR_NAMESPACE my-release -f values.yaml  'oci://ghcr.io/aleyna72072/edumfa' --version 0.1.1``
+4. Install: ``helm install -n $YOUR_NAMESPACE my-release -f values.yaml  'oci://ghcr.io/aleyna72072/edumfa' --version 0.2.0``
 
