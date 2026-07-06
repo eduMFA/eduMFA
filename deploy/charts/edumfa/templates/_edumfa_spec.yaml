@@ -50,6 +50,14 @@ containers:
   {{- if eq .containerType "helm_init" }}
   - name: CONTAINER_TYPE
     value: "helm_init"
+    {{- with ((.Values.edumfa.admin).username) }}
+  - name: EDUMFA_ADMIN_USER
+    value: {{ . }}
+    {{- end }}
+    {{- if or (((.Values.edumfa.admin).password).existingSecret) (((.Values.edumfa.admin).password).key) }}
+  - name: EDUMFA_ADMIN_PASS_FILE
+    value: /run/edumfa-admin-password
+    {{- end }}
   {{- else if eq .containerType "helm_worker" }}
   - name: CONTAINER_TYPE
     value: "helm_worker"
@@ -96,9 +104,15 @@ containers:
       name: essential-secrets
       readOnly: true
     - mountPath: /run/edumfa-db-password
-      subPath: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+      subPath: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.password.key }}
       name: db-password-secret
       readOnly: true
+    {{- if and (eq .containerType "helm_init") (or (((.Values.edumfa.admin).password).existingSecret) (((.Values.edumfa.admin).password).key)) }}
+    - mountPath: /run/edumfa-admin-password
+      subPath: {{ required "The key to the data item in the admin password secret has to be provided." .Values.edumfa.admin.password.key }}
+      name: admin-password-secret
+      readOnly: true
+    {{- end }}
     {{- with .specSettings.volumeMounts }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -123,11 +137,20 @@ volumes:
       defaultMode: 0440
   - name: db-password-secret
     secret:
-      secretName: {{ required "A secret containing the database password has to be provided." .Values.edumfa.db.passwordSecretName }}
+      secretName: {{ required "A secret containing the database password has to be provided." .Values.edumfa.db.password.existingSecret }}
       items:
-        - key: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
-          path: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.passwordSecretKey }}
+        - key: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.password.key }}
+          path: {{ required "The key to the data item in the database password secret has to be provided." .Values.edumfa.db.password.key }}
       defaultMode: 0440
+  {{- if and (eq .containerType "helm_init") (or (((.Values.edumfa.admin).password).existingSecret) (((.Values.edumfa.admin).password).key)) }}
+  - name: admin-password-secret
+    secret:
+      secretName: {{ required "A secret containing the admin password has to be provided." .Values.edumfa.admin.password.existingSecret }}
+      items:
+        - key: {{ required "The key to the data item in the admin password secret has to be provided." .Values.edumfa.admin.password.key }}
+          path: {{ required "The key to the data item in the admin password secret has to be provided." .Values.edumfa.admin.password.key }}
+      defaultMode: 0440
+  {{- end }}
   {{- with .specSettings.volumes }}
     {{- toYaml . | nindent 2 }}
   {{- end }}
