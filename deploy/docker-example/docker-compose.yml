@@ -4,10 +4,12 @@ services:
     restart: always
     volumes:
       - mariadb-data:/var/lib/mysql:rw
+    secrets:
+      - db_password
     environment:
       MARIADB_DATABASE: ${MARIADB_DATABASE}
       MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_PASSWORD_FILE: /run/secrets/db_password
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
@@ -31,7 +33,7 @@ services:
       - db_password
     environment:
       DB_DATABASE: ${MARIADB_DATABASE}
-      DB_DRIVER: ${DB_DRIVER}
+      DB_DRIVER: mysql+pymysql
       DB_HOSTNAME: mariadb
       DB_PASSWORD_FILE: /run/secrets/db_password
       DB_USER: ${MARIADB_USER}
