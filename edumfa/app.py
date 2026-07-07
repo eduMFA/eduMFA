@@ -160,18 +160,23 @@ def create_app(
 
     # MariaDB/MySQL default to the REPEATABLE READ isolation level, which pins a
     # consistent read snapshot at the transaction's first read. During the
-    # concurrent updates that happen while validating the same token from 
+    # concurrent updates that happen while validating the same token from
     # several requests at once, this raises error 1020 (ER_CHECKREAD,
     # "Record has changed since last read ...; try restarting transaction").
     #
     # PostgreSQL already defaults to READ COMMITTED (which the code targets and is
-    # tested against). SQLite is left untouched as its dialect does 
+    # tested against). SQLite is left untouched as its dialect does
     # not accept "READ COMMITTED".
     #
-    # This is currently opt-in via the EDUMFA_MYSQL_READ_COMMITTED environment variable
+    # This is currently opt-in via the EDUMFA_MYSQL_READ_COMMITTED app config
+    # setting or the environment variable of the same name (the app config
+    # setting takes precedence).
     db_uri = app.config.get("SQLALCHEMY_DATABASE_URI", "") or ""
-    if db_uri.startswith(("mysql", "mariadb")) and os.environ.get(
-        "EDUMFA_MYSQL_READ_COMMITTED", ""
+    read_committed = app.config.get("EDUMFA_MYSQL_READ_COMMITTED")
+    if read_committed is None:
+        read_committed = os.environ.get("EDUMFA_MYSQL_READ_COMMITTED", "")
+    if db_uri.startswith(("mysql", "mariadb")) and str(
+        read_committed
     ).strip().lower() in ("1", "true"):
         engine_options = dict(app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
         engine_options.setdefault("isolation_level", "READ COMMITTED")
