@@ -102,6 +102,7 @@ jobs:
           MARIADB_PASSWORD: edumfa
           MARIADB_DATABASE: edumfa
           MARIADB_ROOT_PASSWORD: edumfa
+          EDUMFA_MYSQL_READ_COMMITTED: "1"
         ports:
           - ${{ matrix.port }}:${{ matrix.port }}
         options: >-
@@ -148,51 +149,3 @@ jobs:
         run: uv sync --group test --extra postgres
       - name: Run database backend checks
         run: uv run pytest --import-mode=importlib -vs -m dbcontainer tests/test_db_backends.py
-
-  mariadb-read-committed-race:
-    # Exercises the opt-in READ COMMITTED isolation level workaround
-    # (EDUMFA_MYSQL_READ_COMMITTED) against the concurrency race tests only.
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - database: mariadb-11.5
-            image: mariadb:11.5
-          - database: mariadb-11.8
-            image: mariadb:11.8
-          - database: mariadb-12.3
-            image: mariadb:12.3
-    name: race ${{ matrix.database }} (READ COMMITTED)
-    services:
-      database:
-        image: ${{ matrix.image }}
-        env:
-          MARIADB_USER: edumfa
-          MARIADB_PASSWORD: edumfa
-          MARIADB_DATABASE: edumfa
-          MARIADB_ROOT_PASSWORD: edumfa
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd "mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
-    steps:
-      - uses: actions/checkout@v6
-      - name: Setup Python 3.14
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.14'
-      - name: Setup UV
-        uses: astral-sh/setup-uv@v8.1.0
-        with:
-          enable-cache: true
-      - name: Install dependencies
-        run: uv sync --group test
-      - name: Run race condition tests against ${{ matrix.database }}
-        env:
-          TEST_DATABASE_URL: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
-          EDUMFA_MYSQL_READ_COMMITTED: "1"
-        run: uv run pytest --import-mode=importlib -vs -m "not dbcontainer" tests/test_race_condition.py
