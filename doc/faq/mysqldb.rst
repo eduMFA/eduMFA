@@ -23,6 +23,13 @@ eduMFA.
 
 **connect string**: ``mysql+pymysql://<user>:<password>@<host>/<database>``
 
+.. note:: MySQL and MariaDB default to the ``REPEATABLE READ`` transaction
+   isolation level, which can lead to errors like *"Record has changed since
+   last read"* when the same token is used in several concurrent
+   authentication requests. You can opt in to the ``READ COMMITTED``
+   isolation level with the ``EDUMFA_MYSQL_READ_COMMITTED`` setting, see
+   the :ref:`config file <mysql_read_committed>` documentation.
+
 
 .. _postgresdb:
 
