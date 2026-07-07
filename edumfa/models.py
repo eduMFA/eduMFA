@@ -720,16 +720,7 @@ class TokenInfo(MethodsMixin, db.Model):
         self.Description = Description
 
     def save(self, persistent=True):
-        # Use a locking read (SELECT ... FOR UPDATE) so concurrent saves of the
-        # same (token_id, Key) row serialize instead of racing. This avoids the
-        # MariaDB error 1020 (ER_CHECKREAD) that concurrent token validations
-        # trigger when they update the same tokeninfo row. FOR UPDATE is a no-op
-        # on SQLite (silently ignored by its dialect).
-        ti_func = (
-            TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key)
-            .with_for_update()
-            .first
-        )
+        ti_func = TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).first
         ti = ti_func()
         if ti is None:
             # create a new one
@@ -741,11 +732,14 @@ class TokenInfo(MethodsMixin, db.Model):
             else:
                 ret = self.id
         else:
-            # Update the row we just locked with FOR UPDATE in this same
-            # transaction, instead of issuing a second, separate query for it.
-            ti.Value = self.Value
-            ti.Description = self.Description
-            ti.Type = self.Type
+            # update
+            TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).update(
+                {
+                    "Value": self.Value,
+                    "Description": self.Description,
+                    "Type": self.Type,
+                }
+            )
             ret = ti.id
         if persistent:
             db.session.commit()
