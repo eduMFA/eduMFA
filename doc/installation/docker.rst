@@ -30,7 +30,7 @@ create the container directly:
 
 .. code-block:: bash
 
-   docker run -d -p 8000:8000 --name edumfa ghcr.io/edumfa/edumfa:v1.2.3
+   docker run -d -p 8000:8000 --name edumfa ghcr.io/edumfa/edumfa:1.2.3
 
 This command will:
 
@@ -45,7 +45,7 @@ at ``/etc/edumfa/``. Combined this would look like this:
 
 .. code-block:: bash
 
-   docker run -d -p 8000:8000 -v edumfa-keys:/etc/edumfa -e 'EDUMFA_CONFIGFILE=/run/edumfa/edumfa.cfg' -v /path/to/edumfa.cfg:/run/edumfa/edumfa.cfg:ro --name edumfa ghcr.io/edumfa/edumfa:v1.2.3
+   docker run -d -p 8000:8000 -v edumfa-keys:/etc/edumfa -e 'EDUMFA_CONFIGFILE=/run/edumfa/edumfa.cfg' -v /path/to/edumfa.cfg:/run/edumfa/edumfa.cfg:ro --name edumfa ghcr.io/edumfa/edumfa:1.2.3
 
 This will create a named volume ``edumfa-keys`` that will contain the
 encryption key and the audit key. Make sure to keep them as safe as your
@@ -106,7 +106,7 @@ using :ref:`environment variable based configuration <docker_config_env>`.
          retries: 3
 
      edumfa:
-       image: ghcr.io/edumfa/edumfa:v1.2.3
+       image: ghcr.io/edumfa/edumfa:1.2.3
        restart: always
        ports:
          - "8000:8000"
@@ -164,8 +164,8 @@ optional are required for eduMFA to work.
 - DB_HOSTNAME: the hostname of the database system
 - DB_PASSWORD: the password for DB_USER
 - DB_USER: the user on the database system
+- SECRET_KEY: the secret key which signs API tokens, should be at least 24 random characters long
 - EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 24 random characters long
-- EDUMFA_SECRET_KEY: the secret key which signs API tokens, should be at least 24 random characters long
 - EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional, default: will be generated)
 - EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional, default: ``admin``)
 - EDUMFA_AUDIT_KEY_PRIVATE: an alternative path to the audit key (optional, default: ``/etc/edumfa/private.pem``)
