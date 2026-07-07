@@ -168,11 +168,11 @@ def create_app(
     # tested against). SQLite is left untouched as its dialect does 
     # not accept "READ COMMITTED".
     #
-    # This is opt-in via the EDUMFA_MYSQL_READ_COMMITTED environment variable
+    # This is currently opt-in via the EDUMFA_MYSQL_READ_COMMITTED environment variable
     db_uri = app.config.get("SQLALCHEMY_DATABASE_URI", "") or ""
     if db_uri.startswith(("mysql", "mariadb")) and os.environ.get(
-        "EDUMFA_MYSQL_READ_COMMITTED"
-    ):
+        "EDUMFA_MYSQL_READ_COMMITTED", ""
+    ).strip().lower() in ("1", "true"):
         engine_options = dict(app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
         engine_options.setdefault("isolation_level", "READ COMMITTED")
         app.config["SQLALCHEMY_ENGINE_OPTIONS"] = engine_options
