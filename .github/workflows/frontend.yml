@@ -1,0 +1,42 @@
+name: frontend
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/frontend.yml"
+      - "edumfa/static/package.json"
+      - "edumfa/static/bun.lock"
+      - "edumfa/static/react-src/**"
+      - "edumfa/static/*.config.*"
+      - "edumfa/static/tsconfig.json"
+      - "edumfa/static/vitest.setup.ts"
+      - "edumfa/static/playwright.config.ts"
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+
+jobs:
+  react:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install frontend dependencies
+        working-directory: edumfa/static
+        run: bun install --frozen-lockfile
+      - name: Compile React translations
+        working-directory: edumfa/static
+        run: bun run intl:compile
+      - name: Typecheck React migration code
+        working-directory: edumfa/static
+        run: bun run typecheck
+      - name: Lint React migration code
+        working-directory: edumfa/static
+        run: bun run lint
+      - name: Run React unit tests
+        working-directory: edumfa/static
+        run: bun run test

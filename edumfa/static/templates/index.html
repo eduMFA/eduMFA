@@ -4,9 +4,16 @@
 
 <ng-include src="'{{ instance }}/static/{{ customization_menu_file }}'">
 </ng-include>
-<div class="container">
+<div id="angular-root" class="container">
     <div ui-view class="slide"></div>
 </div>
+<div id="react-root"
+     class="container"
+     data-angular-root-id="angular-root"
+     data-react-enabled="{{ react_ui_enabled|lower }}"
+     data-react-routes="{{ react_routes|join(',') }}"
+     hidden
+     ng-non-bindable></div>
 
 <input type=hidden id=REMOTE_USER value="{{ remote_user }}">
 <input type=hidden id=FORCE_REMOTE_USER value="{{ force_remote_user }}">

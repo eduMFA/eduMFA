@@ -1,0 +1,39 @@
+#react-root[hidden],
+#angular-root[hidden] {
+  display: none !important;
+}
+
+.react-migration-shell {
+  min-height: 100%;
+}
+
+.react-route-toolbar {
+  margin: 15px 0;
+}
+
+.react-route-toolbar .glyphicon,
+.react-migration-shell .nav .glyphicon,
+.react-loading-indicator .glyphicon {
+  margin-right: 6px;
+}
+
+.react-loading-indicator {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.glyphicon-spin {
+  animation: react-glyphicon-spin 1s linear infinite;
+}
+
+@keyframes react-glyphicon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(359deg);
+  }
+}

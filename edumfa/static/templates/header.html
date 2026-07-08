@@ -20,6 +20,7 @@
     <link href="{{ instance }}/{{ "static/css/highlight.css" }}" rel="stylesheet">
     {% if theme %}<link href="{{ instance }}/{{ theme }}" rel="stylesheet"/>{%  endif %}
     {% if custom_css %}<link href="{{ instance }}/{{ custom_css }}" rel="stylesheet"/>{% endif %}
+    {% if react_ui_enabled %}<link href="{{ instance }}/{{ "static/react-dist/assets/main.css" }}" rel="stylesheet"/>{% endif %}
 
     <script type="application/javascript">
         // Pass the browser Language to our Javascript code
