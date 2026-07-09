@@ -107,6 +107,13 @@ database, e.g. ``SERIALIZABLE``. See the `SQLAlchemy documentation
 <https://docs.sqlalchemy.org/en/20/core/connections.html#setting-transaction-isolation-levels-including-dbapi-autocommit>`_
 for details.
 
+.. note:: This only applies to the main eduMFA database. The SQL audit log
+   is not affected: even if ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set and the
+   audit module falls back to ``SQLALCHEMY_ENGINE_OPTIONS``, it uses your
+   original options without the automatically applied isolation level. This
+   way an audit database on another system (e.g. SQLite, where
+   ``READ COMMITTED`` is not a valid isolation level) keeps working.
+
 ``EDUMFA_HASH_ALGO_LIST`` is a user-defined list of hash algorithms which are used
 to verify passwords and pins. The first entry in ``EDUMFA_HASH_ALGO_LIST`` is used
 for hashing a new password/pin.
