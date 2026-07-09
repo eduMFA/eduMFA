@@ -26,9 +26,10 @@ eduMFA.
 .. note:: MySQL and MariaDB default to the ``REPEATABLE READ`` transaction
    isolation level, which can lead to errors like *"Record has changed since
    last read"* when the same token is used in several concurrent
-   authentication requests. You can opt in to the ``READ COMMITTED``
-   isolation level with the ``EDUMFA_MYSQL_READ_COMMITTED`` setting, see
-   the :ref:`config file <mysql_read_committed>` documentation.
+   authentication requests. eduMFA therefore automatically uses the
+   ``READ COMMITTED`` isolation level. If you want to opt out or configure a
+   different isolation level, see the :ref:`config file
+   <mysql_isolation_level>` documentation.
 
 
 .. _postgresdb:
