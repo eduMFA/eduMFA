@@ -165,13 +165,18 @@ def create_app(
     # "Record has changed since last read ...; try restarting transaction").
     #
     # PostgreSQL already defaults to READ COMMITTED (which the code targets and is
-    # tested against). SQLite is left untouched as its dialect does
-    # not accept "READ COMMITTED".
+    # tested against). 
     db_uri = app.config.get("SQLALCHEMY_DATABASE_URI", "") or ""
     if db_uri.startswith(("mysql", "mariadb")):
         engine_options = dict(app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
         if "isolation_level" not in engine_options:
-            engine_options.setdefault("isolation_level", "READ COMMITTED")
+            # The SQL audit module falls back to SQLALCHEMY_ENGINE_OPTIONS if
+            # EDUMFA_AUDIT_SQL_OPTIONS is not set. The audit database can live
+            # on a different database (EDUMFA_AUDIT_SQL_URI), where the injected
+            # isolation level may be invalid (e.g. SQLite), so preserve the
+            # unmodified options as the audit engine's fallback.
+            app.config.setdefault("EDUMFA_AUDIT_SQL_OPTIONS", dict(engine_options))
+            engine_options["isolation_level"] = "READ COMMITTED"
             app.config["SQLALCHEMY_ENGINE_OPTIONS"] = engine_options
 
     app.register_blueprint(validate_blueprint, url_prefix="/validate")
