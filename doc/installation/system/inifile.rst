@@ -27,8 +27,6 @@ The file should contain the following contents::
    SQLALCHEMY_DATABASE_URI = 'sqlite:////etc/edumfa/data.sqlite'
    # Set maximum identifier length to 128
    # SQLALCHEMY_ENGINE_OPTIONS = {"max_identifier_length": 128}
-   # Use the READ COMMITTED isolation level on MySQL/MariaDB
-   # EDUMFA_MYSQL_READ_COMMITTED = True
    # This is used to encrypt the auth_token
    SECRET_KEY = 't0p s3cr3t'
    # This is used to encrypt the admin passwords
@@ -88,22 +86,27 @@ slower but more robust and can be necessary in large redundant setups.
    row is otherwise not present". In this case setting ``EDUMFA_DB_SAFE_STORE``  to *True*
    might help.
 
-.. _mysql_read_committed:
+.. _mysql_isolation_level:
 
-If your database is MySQL or MariaDB, you can set ``EDUMFA_MYSQL_READ_COMMITTED``
-to *True* to run eduMFA with the ``READ COMMITTED`` transaction isolation level
-instead of the MySQL/MariaDB default ``REPEATABLE READ``. With ``REPEATABLE READ``
-a consistent read snapshot is pinned at the transaction's first read, which can
-cause errors like *"Record has changed since last read ...; try restarting
-transaction"* when the same token is used in several concurrent authentication
-requests. PostgreSQL already defaults to ``READ COMMITTED`` and SQLite is not
-affected, so the setting is ignored for other databases.
+If your database is MySQL or MariaDB, eduMFA automatically uses the
+``READ COMMITTED`` transaction isolation level instead of the MySQL/MariaDB
+default ``REPEATABLE READ``. With ``REPEATABLE READ`` a consistent read
+snapshot is pinned at the transaction's first read, which can cause errors
+like *"Record has changed since last read ...; try restarting transaction"*
+when the same token is used in several concurrent authentication requests.
+PostgreSQL already defaults to ``READ COMMITTED`` and SQLite is not affected,
+so other databases are left untouched.
 
-The option can alternatively be enabled via the environment variable
-``EDUMFA_MYSQL_READ_COMMITTED``. Accepted values are ``1`` and ``true``
-(case-insensitive). If the option is set in the config file, the environment
-variable is ignored. An ``isolation_level`` that is explicitly configured in
-``SQLALCHEMY_ENGINE_OPTIONS`` always takes precedence over this setting.
+You can opt out of this behavior by explicitly configuring an
+``isolation_level`` in ``SQLALCHEMY_ENGINE_OPTIONS``, which always takes
+precedence. For example, to restore the MySQL/MariaDB default::
+
+   SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "REPEATABLE READ"}
+
+In the same way you can choose any other isolation level supported by your
+database, e.g. ``SERIALIZABLE``. See the `SQLAlchemy documentation
+<https://docs.sqlalchemy.org/en/20/core/connections.html#setting-transaction-isolation-levels-including-dbapi-autocommit>`_
+for details.
 
 ``EDUMFA_HASH_ALGO_LIST`` is a user-defined list of hash algorithms which are used
 to verify passwords and pins. The first entry in ``EDUMFA_HASH_ALGO_LIST`` is used

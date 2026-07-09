@@ -102,7 +102,6 @@ jobs:
           MARIADB_PASSWORD: edumfa
           MARIADB_DATABASE: edumfa
           MARIADB_ROOT_PASSWORD: edumfa
-          EDUMFA_MYSQL_READ_COMMITTED: "1"
         ports:
           - ${{ matrix.port }}:${{ matrix.port }}
         options: >-

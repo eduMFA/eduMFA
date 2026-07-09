@@ -167,20 +167,12 @@ def create_app(
     # PostgreSQL already defaults to READ COMMITTED (which the code targets and is
     # tested against). SQLite is left untouched as its dialect does
     # not accept "READ COMMITTED".
-    #
-    # This is currently opt-in via the EDUMFA_MYSQL_READ_COMMITTED app config
-    # setting or the environment variable of the same name (the app config
-    # setting takes precedence).
     db_uri = app.config.get("SQLALCHEMY_DATABASE_URI", "") or ""
-    read_committed = app.config.get("EDUMFA_MYSQL_READ_COMMITTED")
-    if read_committed is None:
-        read_committed = os.environ.get("EDUMFA_MYSQL_READ_COMMITTED", "")
-    if db_uri.startswith(("mysql", "mariadb")) and str(
-        read_committed
-    ).strip().lower() in ("1", "true"):
+    if db_uri.startswith(("mysql", "mariadb")):
         engine_options = dict(app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
-        engine_options.setdefault("isolation_level", "READ COMMITTED")
-        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = engine_options
+        if "isolation_level" not in engine_options:
+            engine_options.setdefault("isolation_level", "READ COMMITTED")
+            app.config["SQLALCHEMY_ENGINE_OPTIONS"] = engine_options
 
     app.register_blueprint(validate_blueprint, url_prefix="/validate")
     app.register_blueprint(token_blueprint, url_prefix="/token")
