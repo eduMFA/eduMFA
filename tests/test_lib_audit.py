@@ -323,6 +323,10 @@ class AuditTestCase(MyTestCase):
             "edumfa.lib.auditmodules.sqlaudit.create_engine"
         ) as engine_mock:
             cfg = self.app.config.copy()
+            # On MariaDB/MySQL, create_app may pre-populate EDUMFA_AUDIT_SQL_OPTIONS
+            # to preserve DB-specific defaults for the audit DB. Remove it here so
+            # this assertion really validates the SQLALCHEMY_ENGINE_OPTIONS fallback.
+            cfg.pop("EDUMFA_AUDIT_SQL_OPTIONS", None)
             cfg.update({"SQLALCHEMY_ENGINE_OPTIONS": {"pool_pre_ping": True}})
             _audit = getAudit(cfg)
             engine_mock.assert_called_once_with(
