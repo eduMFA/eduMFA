@@ -132,7 +132,7 @@ pyyaml==6.0.3
     # via edumfa (pyproject.toml)
 redis==8.0.1
     # via huey
-requests==2.33.1
+requests==2.34.2
     # via edumfa (pyproject.toml)
 segno==1.6.6
     # via edumfa (pyproject.toml)
