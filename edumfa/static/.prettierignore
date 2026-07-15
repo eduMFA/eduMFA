@@ -6,12 +6,5 @@ node_modules/
 *.min.*
 
 # Legacy templates with markup that Prettier cannot parse.
-components/audit/views/audit.log.html
-components/config/views/config.policies.list.html
-components/config/views/config.token.daypassword.html
-components/config/views/config.tokens.html
-components/machine/views/machine.details.html
-components/token/views/token.details.html
-components/user/views/user.details.html
 templates/footer.html
 templates/header.html
