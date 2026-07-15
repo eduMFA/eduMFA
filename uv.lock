@@ -865,7 +865,7 @@ requires-dist = [
     { name = "flask-migrate", specifier = "==4.1.0" },
     { name = "flask-sqlalchemy", specifier = "==3.1.1" },
     { name = "google", marker = "extra == 'grpc'", specifier = "==3.0.0" },
-    { name = "google-auth", specifier = "==2.50.0" },
+    { name = "google-auth", specifier = "==2.56.0" },
     { name = "grpcio", specifier = "==1.80.0" },
     { name = "gssapi", marker = "extra == 'kerberos'", specifier = "==1.11.1" },
     { name = "huey", extras = ["backends"], specifier = "==3.2.1" },
@@ -1087,15 +1087,15 @@ wheels = [
 
 [[package]]
 name = "google-auth"
-version = "2.50.0"
+version = "2.56.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
     { name = "pyasn1-modules" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5f/18/238d7021d151bdab868f23433817b027dd759135202f4dfce0670d1230ca/google_auth-2.50.0.tar.gz", hash = "sha256:f35eafb191195328e8ce10a7883970877e7aeb49c2bfaa54aa0e394316d353d0", size = 336523, upload-time = "2026-04-30T21:19:29.659Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/58/66/b4ba60005743e01933e22b4f62313e063f7460458b7d8a358427b4930013/google_auth-2.56.0.tar.gz", hash = "sha256:f90fa030b569a92654b9d690665a073841df33d57487be53db583a9a0867a553", size = 364629, upload-time = "2026-07-13T19:09:57.143Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/37/cf/4880c2137c14280b2f59975cdf12cc442bc0ae1f9ea473a26eaa0c146786/google_auth-2.50.0-py3-none-any.whl", hash = "sha256:04382175e28b94f49694977f0a792688b59a668def1499e9d8de996dc9ce5b15", size = 246495, upload-time = "2026-04-30T21:19:27.664Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/7d/cd3e187f14ce832e419e70709bfcc40cb0dc11517d5d03c9d3919bcc3101/google_auth-2.56.0-py3-none-any.whl", hash = "sha256:6e88c10217e07a92bfd01cac8ee99e32ccfb08414c3102e6c5b8d58f37a0d1e0", size = 257976, upload-time = "2026-07-13T19:09:42.685Z" },
 ]
 
 [[package]]
