@@ -122,7 +122,7 @@ test = [
     "pytest==9.0.3",
     "pytest-cov==7.1.0",
     "pytest-github-actions-annotate-failures==0.4.2",
-    "responses==0.26.1",
+    "responses==0.26.2",
     "testcontainers[mysql,postgres]==4.14.2",
     "testfixtures==8.3.0",
     "tomli==2.4.1",
