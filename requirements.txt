@@ -40,7 +40,7 @@ colorama==0.4.6 ; sys_platform == 'win32'
     # via click
 configobj==5.0.9
     # via edumfa (pyproject.toml)
-croniter==6.2.2
+croniter==6.2.4
     # via edumfa (pyproject.toml)
 cryptography==48.0.1
     # via
