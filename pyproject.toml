@@ -119,7 +119,7 @@ test = [
     "packaging==26.2",
     "pluggy==1.6.0",
     "pyparsing==3.3.2",
-    "pytest==9.0.3",
+    "pytest==9.1.1",
     "pytest-cov==7.1.0",
     "pytest-github-actions-annotate-failures==0.4.2",
     "responses==0.26.2",
