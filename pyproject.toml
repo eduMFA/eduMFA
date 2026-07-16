@@ -26,7 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "alembic==1.18.4",
+    "alembic==1.18.5",
     "babel==2.18.0",
     "bcrypt==5.0.0",
     "beautifulsoup4==4.14.3",
