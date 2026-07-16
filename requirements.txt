@@ -144,7 +144,7 @@ smpplib==2.2.4
     # via edumfa (pyproject.toml)
 soupsieve==2.8.4
     # via beautifulsoup4
-sqlalchemy==2.0.49
+sqlalchemy==2.0.51
     # via
     #   edumfa (pyproject.toml)
     #   alembic
