@@ -1,6 +1,7 @@
 contrib/
 customize/
 translations/
+components/translation/translations.js
 node_modules/
 *.map
 *.min.*
