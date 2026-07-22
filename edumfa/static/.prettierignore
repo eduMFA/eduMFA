@@ -5,6 +5,7 @@ components/translation/translations.js
 node_modules/
 *.map
 *.min.*
+*.md
 
 # Legacy templates with markup that Prettier cannot parse.
 templates/footer.html
