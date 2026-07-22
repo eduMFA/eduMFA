@@ -196,9 +196,9 @@ myApp.config([
 myApp.config([
   "$compileProvider",
   function ($compileProvider) {
-    // allow only links to our readthedocs documentation, netknights homepage and "otpauth:" links
+    // allow only links to our documentation and selected non-HTTP schemes
     let url_re =
-      /^\s*(https:\/\/(edumfa.readthedocs.io|netknights.it)\/|otpauth:|mailto:|file:|blob:)/;
+      /^\s*(https:\/\/(edumfa\.readthedocs\.io|docs\.edumfa\.io)\/|otpauth:|mailto:|file:|blob:)/;
     $compileProvider.aHrefSanitizationTrustedUrlList(url_re);
   },
 ]);
