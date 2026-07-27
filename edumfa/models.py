@@ -2636,7 +2636,7 @@ class SMTPServer(MethodsMixin, db.Model):
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
     id = db.Column(db.Integer, Sequence("smtpserver_seq"), primary_key=True)
     # This is a name to refer to
-    identifier = db.Column(db.Unicode(255), nullable=False)
+    identifier = db.Column(db.Unicode(255), unique=True, nullable=False)
     # This is the FQDN or the IP address
     server = db.Column(db.Unicode(255), nullable=False)
     port = db.Column(db.Integer, default=25)
