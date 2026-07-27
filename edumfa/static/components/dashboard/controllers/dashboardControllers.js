@@ -195,7 +195,7 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
             { label: "3 Months", unit: "month", amount: 3 },
             { label: "6 Months", unit: "month", amount: 6 },
             { label: "1 Year", unit: "year", amount: 1 },
-            { label: "All", unit: "year", amount: 100 }
+            { label: "All", unit: null, amount: null }
         ];
         $scope.selectedTimeFrame = $scope.timeFrame[0]
 
@@ -247,6 +247,9 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
             var hours = today.getHours()
             var minutes = today.getMinutes()
 
+            if (selectedTimeFrame.unit === null) {
+                return "";
+            }
             if (selectedTimeFrame.unit === "hour") {
                 hours = hours - selectedTimeFrame.amount
                 return new Date(year, month, day, hours, minutes)
