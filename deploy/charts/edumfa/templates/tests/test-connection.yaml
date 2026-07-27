@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "edumfa.fullname" . }}-test-connection"
+  labels:
+    {{- include "edumfa.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['sh']
+      args: ['-c', "set -x; test \"$(wget -q -O- \'{{ include "edumfa.fullname" . }}:{{ .Values.service.port }}\' | head -n2 | tail -n1)\" = \'<html ng-app=\"eduMfaApp\">\'"]
+  restartPolicy: Never

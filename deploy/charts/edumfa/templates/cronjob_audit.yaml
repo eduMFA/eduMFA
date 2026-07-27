@@ -1,0 +1,34 @@
+{{- if .Values.edumfa.auditRotation.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "edumfa.fullname" . }}-audit-cronjob
+spec:
+  schedule: {{ required "A CronJob schedule is required for audit rotation." .Values.edumfa.auditRotation.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.edumfa.auditRotation.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        spec:
+          restartPolicy: OnFailure
+          {{ $command := list "edumfa-manage" "audit" "rotate" }}
+          {{- if .Values.edumfa.auditRotation.age }}
+            {{ $command = append $command "--age"}}
+            {{ $command = append $command .Values.edumfa.auditRotation.age }}
+          {{- end }}
+          {{- if .Values.edumfa.auditRotation.lowwatermark }}
+            {{ $command = append $command "--lowwatermark"}}
+            {{ $command = append $command .Values.edumfa.auditRotation.lowwatermark }}
+          {{- end }}
+          {{- if .Values.edumfa.auditRotation.highwatermark }}
+            {{ $command = append $command "--highwatermark"}}
+            {{ $command = append $command .Values.edumfa.auditRotation.highwatermark }}
+          {{- end }}
+          {{ $spec_params := dict "Chart" .Chart "Values" .Values "containerType" "cronjob" "specSettings" .Values.edumfa.auditRotation "command" $command }}
+          {{ include "edumfa.spec" $spec_params | nindent 10}}
+{{- end }}

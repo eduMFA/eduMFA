@@ -1,0 +1,22 @@
+{{- if .Values.edumfa.challengeCleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "edumfa.fullname" . }}-challenge-cronjob
+spec:
+  schedule: {{ required "A CronJob schedule is required for challenge cleanup." .Values.edumfa.challengeCleanup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.edumfa.challengeCleanup.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+        spec:
+          restartPolicy: OnFailure
+          {{ $command := list "edumfa-token-janitor" "cleanupchallenges" }}
+          {{ $spec_params := dict "Chart" .Chart "Values" .Values "containerType" "cronjob" "specSettings" .Values.edumfa.challengeCleanup "command" $command }}
+          {{ include "edumfa.spec" $spec_params | nindent 10}}
+{{- end }}
