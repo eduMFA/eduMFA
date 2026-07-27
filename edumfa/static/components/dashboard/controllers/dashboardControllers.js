@@ -293,11 +293,11 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
                 callback($scope.datasetCache[key])
                 return
             }
-            if ($scope.pendingRequests[cacheKey]) {
-                $scope.pendingRequests[cacheKey].push({ callback: callback});
+            if ($scope.pendingRequests[key]) {
+                $scope.pendingRequests[key].push({ callback: callback});
                 return;
             }
-            $scope.pendingRequests[cacheKey] = [{ callback: callback}];
+            $scope.pendingRequests[key] = [{ callback: callback}];
 
             MonitoringFactory.get_monitored(sk.name, { start: startTime }, function (data) {
                 var d = data.result.value;
@@ -315,8 +315,8 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
                     hidden: false
                 }
                 $scope.datasetCache[key] = dataset
-                var waiters = $scope.pendingRequests[cacheKey];
-                delete $scope.pendingRequests[cacheKey];
+                var waiters = $scope.pendingRequests[key];
+                delete $scope.pendingRequests[key];
                 waiters.forEach(function (w) {
                     w.callback(dataset); 
                 });

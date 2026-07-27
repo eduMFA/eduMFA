@@ -73,7 +73,7 @@ myApp.directive('timelineChart', function () {
             );
             scope.$watch('tokenTimeline', function (c) {
                 if (!c) return;
-                chart.data.datasets = c.datasets;
+                chart.data.datasets = c.data.datasets;
                 chart.update();
             }, true);
             scope.$on('$destroy', function () { chart.destroy(); });
