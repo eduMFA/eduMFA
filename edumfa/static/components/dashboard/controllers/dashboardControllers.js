@@ -185,6 +185,8 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
         $scope.tokenTimeline = angular.copy(emptyDefaultTimeline)
         $scope.pendingRequests = {};
         $scope.datasetCache = {};
+        $scope.statsKeysLoadingText = "Loading available stats keys...";
+        ;
 
         $scope.timeFrame = [
             { label: "24 hours", unit: "hour", amount: 24 },
@@ -226,10 +228,14 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
                         name: sk,
                         color: colorMap[sk] || generateColor(),
                         selected: false,
-                        checked: true
+                        checked: true,
+                        loadingText: ""
                     })
                 })
                 $scope.availableStatsKeys = newList
+                if ($scope.availableStatsKeys.length === 0) {
+                    $scope.statsKeysLoadingText = "No available stats keys"
+                }
             })
         };
 
@@ -288,7 +294,6 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
         $scope.getDataset = function (sk, callback) {
             var startTime = getStartTime($scope.selectedTimeFrame)
             var key = sk.name + "|" + $scope.selectedTimeFrame.label
-            // Todo: pendingRequests -> gleiche keys abfangen
             if ($scope.datasetCache[key]) {
                 callback($scope.datasetCache[key])
                 return
@@ -331,10 +336,12 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
         };
 
         $scope.addToTimeline = function (sk) {
+            sk.loadingText = " (Loading...)"
             var timeFrame = $scope.selectedTimeFrame.label
             $scope.getDataset(sk, function (dataset) {
                 if (isStillRelevant(sk, timeFrame))
                     $scope.tokenTimeline.data.datasets.push(dataset)
+                sk.loadingText = ""
             })
         };
 
