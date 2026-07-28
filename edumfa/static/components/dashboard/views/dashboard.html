@@ -187,33 +187,42 @@
                 <div class="panel-heading" translate>Token Chart</div>
                 <label ng-show="availableStatsKeys.length == 0" translate>{{statsKeysLoadingText}}</label>
                 <div class="panel-body" ng-show="availableStatsKeys.length > 0">
-                    <div class="chart-controls" >
+                    <div class="chart-controls">
                         <label translate>TimeFrame:</label>
                         <select class="form-control" ng-model="selectedTimeFrame"
                             ng-options="x.label for x in timeFrame" ng-change="onTimeFrameChange()"></select>
                         <label translate>StatsKeys:</label>
                         <br>
-                        <isteven-multi-select  input-model="availableStatsKeys"
-                            output-model="selectedStatsKeys" button-label="name" item-label="name"
-                            tick-property="selected" index-property="id" on-item-click="toggleStatsKey(data)"
-                            on-select-all="addAllToTimeline()" on-select-none="clearTimeLine()"
-                            on-reset="resetTimeline()">
+                        <isteven-multi-select input-model="availableStatsKeys" output-model="selectedStatsKeys"
+                            button-label="name" item-label="name" tick-property="selected" index-property="id"
+                            on-item-click="toggleStatsKey(data)" on-select-all="addAllToTimeline()"
+                            on-select-none="clearTimeLine()" on-reset="resetTimeline()">
                         </isteven-multi-select>
-                    
+                        <br>
+                        <label translate>Legend:</label>
                         <div style="display: flex; flex-wrap: wrap; gap: 6px 10px;">
                             <!-- checkboxen next to each other -->
-                            <label translate>Legend:</label><br>
                             <label ng-repeat="key in selectedStatsKeys">
-                                <span ng-style="{'background-color': key.color}"
-                                    style="display: inline-block; width: 25px; height: 15px; border-radius: 3px; border: 1px solid #ccc;">
+                                <span ng-if="key.borderDash[0]" 
+                                ng-style="{'display': 'inline-block', 
+                                    'width': '25px', 
+                                    'height': '0px', 
+                                    'border-bottom': key.borderDash[0]+2 +'px dashed ' + key.color
+                                    }"></span>
+                                <span ng-if="!key.borderDash[0]" 
+                                ng-style="{'background-color': key.color, 
+                                    'display': 'inline-block', 
+                                    'width': '25px', 
+                                    'height': '10px', 
+                                    'border-radius': '3px', 
+                                    'border': '1px solid #ccc'}">
                                 </span> <!-- style needed for display of legend -->
                                 <label>
-                                    <input type="checkbox" ng-model="key.checked" ng-change="changeHidden(key)" display= "none";>
+                                    <input type="checkbox" ng-model="key.checked" ng-change="changeHidden(key)">
                                     {{key.name}}{{key.loadingText}}</label>
                             </label>
                         </div>
                     </div>
-
                     <timeline-chart token_timeline=" tokenTimeline"></timeline-chart>
                 </div>
             </div>

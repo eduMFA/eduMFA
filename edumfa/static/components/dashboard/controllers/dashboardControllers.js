@@ -199,37 +199,36 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
         ];
         $scope.selectedTimeFrame = $scope.timeFrame[0]
 
-        const colorMap = {
-            hardware_tokens: '#4e79a7',
-            software_tokens: '#f28e2b',
-            total_tokens: '#e15759',
-            user_with_token: '#76b7b2',
-            assigned_tokens: '#59a14f',
-            unassigned_hardware_tokens: '#edc948'
-        };
+        // Okabe Ito palette
+        const colorScheme = [
+            "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000",
+        ];
 
-        function generateColor() {
-            const chars = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += chars[Math.floor(Math.random() * 16)];
+        function getborderDash(i) {
+            if (i < colorScheme.length) {
+                return [];
+            } else if (i < colorScheme.length * 2) {
+                return [7, 2]
+            } else {
+                return [2, 3];
             }
-            return color
-        };
+        }
 
         $scope.getAvailableStatsKeys = function () {
             $scope.selectedStatsKeys = []
             $scope.availableStatsKeys = []
+            var i = 0
             MonitoringFactory.get_stats_keys(function (data) {
                 var newList = [];
                 data.result.value.forEach(function (sk) {
                     newList.push({
                         id: sk,
                         name: sk,
-                        color: colorMap[sk] || generateColor(),
+                        color: colorScheme[i % colorScheme.length],
                         selected: false,
                         checked: true,
-                        loadingText: ""
+                        loadingText: "",
+                        borderDash: getborderDash(i++)
                     })
                 })
                 $scope.availableStatsKeys = newList
@@ -302,10 +301,10 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
                 return
             }
             if ($scope.pendingRequests[key]) {
-                $scope.pendingRequests[key].push({ callback: callback});
+                $scope.pendingRequests[key].push({ callback: callback });
                 return;
             }
-            $scope.pendingRequests[key] = [{ callback: callback}];
+            $scope.pendingRequests[key] = [{ callback: callback }];
 
             MonitoringFactory.get_monitored(sk.name, { start: startTime }, function (data) {
                 var d = data.result.value;
@@ -320,13 +319,15 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
                     borderColor: color,
                     backgroundColor: color,
                     pointBackgroundColor: color,
+                    borderDash: sk.borderDash,
                     hidden: false
                 }
+
                 $scope.datasetCache[key] = dataset
                 var waiters = $scope.pendingRequests[key];
                 delete $scope.pendingRequests[key];
                 waiters.forEach(function (w) {
-                    w.callback(dataset); 
+                    w.callback(dataset);
                 });
             })
         };
@@ -345,6 +346,9 @@ myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
                 if (isStillRelevant(sk, timeFrame))
                     $scope.tokenTimeline.data.datasets.push(dataset)
                 sk.loadingText = ""
+                if (dataset.data.length === 0) {
+                    sk.loadingText = " (No data available)"
+                }
             })
         };
 
