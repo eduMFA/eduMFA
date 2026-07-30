@@ -93,8 +93,8 @@ If your database is MySQL or MariaDB, eduMFA automatically uses the
 default ``REPEATABLE READ``. With ``REPEATABLE READ`` a consistent read
 snapshot is pinned at the transaction's first read, which can cause errors
 like *"Record has changed since last read ...; try restarting transaction"*
-when the same token is used in several concurrent authentication requests.
-PostgreSQL already defaults to ``READ COMMITTED``.
+when handling several requests under high load. PostgreSQL already defaults 
+to ``READ COMMITTED``.
 
 You can opt out of this behavior by explicitly configuring an
 ``isolation_level`` in ``SQLALCHEMY_ENGINE_OPTIONS``, which always takes
