@@ -74,7 +74,22 @@ BigIntegerType = (
     .with_variant(sqlite.INTEGER(), "sqlite")
 )
 
-db = SQLAlchemy()
+# MariaDB/MySQL default to the REPEATABLE READ isolation level, which pins a
+# consistent read snapshot at the transaction's first read. During the
+# concurrent updates that happen while validating the same token from
+# several requests at once, this raises error 1020 (ER_CHECKREAD,
+# "Record has changed since last read ...; try restarting transaction").
+#
+# PostgreSQL already defaults to READ COMMITTED (which the code targets and is
+# tested against). 
+
+engine_options = {}
+
+db_uri = get_app_config_value("SQLALCHEMY_DATABASE_URI", "") or ""
+if db_uri.startswith(("mysql", "mariadb")):
+    engine_options["isolation_level"] = "READ COMMITTED"
+    
+db = SQLAlchemy(engine_options=engine_options)
 
 
 # Add fractions to the MySQL DataTime column type
