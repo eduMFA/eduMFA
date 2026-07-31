@@ -165,30 +165,30 @@ $scope.getAuthentication = function () {
 
     $scope.countUsersWithTokenGeneration = 0;
     $scope.countUsersWithToken = function () {
-	let generationId = ++$scope.countUsersWithTokenGeneration;
+        let generationId = ++$scope.countUsersWithTokenGeneration;
         $scope.users_with_token = "loading...";
         $scope.params = {
             realm: $scope.realmForUsersWithToken,
             active: $scope.activenessForUsersWithToken,
             type: $scope.tokentypeForUsersWithToken,
         }
-	// "any" means not filtering for that token property, so remove it from
-	// the list of properties to filter for.
+        // "any" means not filtering for that token property, so remove it from
+        // the list of properties to filter for.
         angular.forEach($scope.params, function (value, key) {
             if (value === "any") {
                 delete $scope.params[key];
             }
         });
         StatsFactory.getCurrentUsersWithTokens(generationId, $scope.params, function (generationId, data) {
-	    // Make sure the current request does not get overwritten.
-	    if ($scope.countUsersWithTokenGeneration === generationId) {
-	      $scope.users_with_token = data.result.value;
-	    }
+            // Make sure the current request does not get overwritten.
+            if ($scope.countUsersWithTokenGeneration === generationId) {
+                $scope.users_with_token = data.result.value;
+            }
         }, function (generationId, error) {
-	    if ($scope.countUsersWithTokenGeneration === generationId) {
-	      $scope.users_with_token = "error";
-	    }
-	});
+            if ($scope.countUsersWithTokenGeneration === generationId) {
+                $scope.users_with_token = "error";
+            }
+        });
     };
 
      $scope.compare_auditentries = function (a, b) {
