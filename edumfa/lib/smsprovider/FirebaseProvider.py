@@ -133,22 +133,25 @@ class FirebaseProvider(ISMSProvider):
         fcm_message = {
             "message": {
                 "data": data,
-                "token": firebase_token,
                 "notification": {
                     "title": data.get("title"),
                     "body": data.get("question"),
                 },
                 "android": {
+                    "collapse_key": "edumfa.pushtoken",
                     "priority": "HIGH",
                     "ttl": "120s",
+                    "notification": {
+                        "channel_id": "PUSH_AUTHENTICATION",
+                    },
                     "fcm_options": {"analytics_label": "AndroidPushToken"},
                 },
                 "apns": {
                     "headers": {
-                        "apns-priority": "10",
                         "apns-push-type": "alert",
-                        "apns-collapse-id": "privacyidea.pushtoken",
                         "apns-expiration": str(int(time.time()) + 120),
+                        "apns-priority": "10",
+                        "apns-collapse-id": "edumfa.pushtoken",
                     },
                     "payload": {
                         "aps": {
@@ -158,10 +161,12 @@ class FirebaseProvider(ISMSProvider):
                             },
                             "sound": "default",
                             "category": "PUSH_AUTHENTICATION",
+                            "interruption-level": "time-sensitive",
                         },
                     },
                     "fcm_options": {"analytics_label": "iOSPushToken"},
                 },
+                "token": firebase_token,
             }
         }
 
