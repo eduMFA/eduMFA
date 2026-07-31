@@ -171,6 +171,8 @@ $scope.getAuthentication = function () {
             active: $scope.activenessForUsersWithToken,
             type: $scope.tokentypeForUsersWithToken,
         }
+	// "any" means not filtering for that token property, so remove it from
+	// the list of properties to filter for.
         angular.forEach($scope.params, function (value, key) {
             if (value === "any") {
                 delete $scope.params[key];
@@ -178,7 +180,9 @@ $scope.getAuthentication = function () {
         });
         StatsFactory.getCurrentUsersWithTokens($scope.params, function (data) {
             $scope.users_with_token = data.result.value;
-        });
+        }, function (error) {
+	    $scope.users_with_token = "error";
+	});
     };
 
      $scope.compare_auditentries = function (a, b) {
