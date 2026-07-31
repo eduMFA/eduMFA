@@ -163,8 +163,9 @@ $scope.getAuthentication = function () {
         });
     }
 
+    $scope.countUsersWithTokenGeneration = 0;
     $scope.countUsersWithToken = function () {
-        // XXX: This could potentially instead be a directive.
+	let generationId = ++$scope.countUsersWithTokenGeneration;
         $scope.users_with_token = "loading...";
         $scope.params = {
             realm: $scope.realmForUsersWithToken,
@@ -178,10 +179,15 @@ $scope.getAuthentication = function () {
                 delete $scope.params[key];
             }
         });
-        StatsFactory.getCurrentUsersWithTokens($scope.params, function (data) {
-            $scope.users_with_token = data.result.value;
-        }, function (error) {
-	    $scope.users_with_token = "error";
+        StatsFactory.getCurrentUsersWithTokens(generationId, $scope.params, function (generationId, data) {
+	    // Make sure the current request does not get overwritten.
+	    if ($scope.countUsersWithTokenGeneration === generationId) {
+	      $scope.users_with_token = data.result.value;
+	    }
+        }, function (generationId, error) {
+	    if ($scope.countUsersWithTokenGeneration === generationId) {
+	      $scope.users_with_token = "error";
+	    }
 	});
     };
 
