@@ -638,17 +638,22 @@
                     <div class="form-group"
                          ng-repeat="(optionname, option)
                          in Applications[machine.application].options">
-                        <label for="option_{{ optionnamme }}">{{ optionname | capitalize }}</label>
+                        <strong id="machine_{{ machine.id }}_option_{{ optionname }}_label">
+                            {{ optionname | capitalize }}
+                        </strong>
                         <input class="form-control"
+                               aria-labelledby="machine_{{ machine.id }}_option_{{ optionname }}_label"
                                ng-required="option.required && !option.value"
                                ng-model="machine.options[optionname]"
                                ng-show="option.type==='str' && !option.value">
                         <select class="form-control"
+                                aria-labelledby="machine_{{ machine.id }}_option_{{ optionname }}_label"
                                 ng-show="option.value"
                                 ng-required="option.required && option.value"
                                 ng-model="machine.options[optionname]"
                                 ng-options="value for value in option.value"></select>
                         <input type="checkbox"
+                               aria-labelledby="machine_{{ machine.id }}_option_{{ optionname }}_label"
                                ng-model="machine.options[optionname]"
                                ng-show="option.type==='bool'">
                         <p class="help help-block">
@@ -707,7 +712,7 @@
         <!-- Options for a new MachineToken -->
         <div class="form-group"
              ng-repeat="(optionname, option) in Applications[form.application].options">
-            <label id="option_{{ optionname }}_label">{{ optionname | capitalize }}</label>
+            <strong id="option_{{ optionname }}_label">{{ optionname | capitalize }}</strong>
             <input class="form-control" id="option_{{ optionname }}_text"
                    aria-labelledby="option_{{ optionname }}_label"
                    ng-required="option.required && !option.value"
