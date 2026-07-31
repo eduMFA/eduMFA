@@ -1,5 +1,4 @@
 <div class="table-responsive">
-    <form name="formNewRealm" role="form" validate>
     <table class="table table-bordered table-responsive table-striped">
         <thead>
         <tr>
@@ -82,6 +81,9 @@
                 </span>
             </td>
         </tr>
+        <form name="formNewRealm" role="form"
+              validate>
+
             {{ editRealm }}
 
             <tr ng-hide="editRealm.length > 0 || !checkRight('resolverwrite')">
@@ -124,9 +126,10 @@
                     </span>
                 </td>
             </tr>
+        </form>
+
         </tbody>
     </table>
-    </form>
 
     <!--
     <pre ng-bind="selectedResolvers | json"></pre>
