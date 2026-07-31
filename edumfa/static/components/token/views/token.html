@@ -73,7 +73,7 @@
                             <span translate>Token Applications</span>
                         </a>
                     </li>
-                    <hr>
+                    <li role="separator"><hr></li>
                     <li role="presentation"
                         ng-class="{active: $state.includes('token.lost')}"
                         ng-show="($state.includes('token.details')||
@@ -92,7 +92,7 @@
                             <span class="glyphicon glyphicon-question-sign">
                             </span>
                             <span translate>Get Serial</span></a></li>
-                    <hr>
+                    <li role="separator"><hr></li>
                     <li role="presentation"
                         ng-show="($state.includes('token.list'))">
                         <a target="_external" ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
@@ -127,4 +127,3 @@
         </div>
     </div>
 </div>
-

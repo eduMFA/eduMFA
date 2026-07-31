@@ -246,11 +246,11 @@
         <div class="tab-pane" id="action">
             <h3 translate>Action</h3>
             <div class="form-group">
-                <label for="action" class="col-sm-3 control-label" translate>
+                <label for="actionSelection" class="col-sm-3 control-label" translate>
                     Action</label>
                 <div class="col-sm-6">
                     <select class="form-control"
-                            id="action"
+                            id="actionSelection"
                             ng-model="form.action" required
                             ng-options="action for action in handlerActions"
                             ng-change="actionChanged()"
