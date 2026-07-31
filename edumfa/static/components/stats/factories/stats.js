@@ -29,12 +29,12 @@ myApp.factory("StatsFactory", ["AuthFactory", "$http", "$state", "$rootScope",
          *         Each service - just like this service factory - is a singleton.
          */
         return {
-            getCurrentUsersWithTokens: function (params, callback) {
+            getCurrentUsersWithTokens: function (params, callback, errorCallback) {
                 $http.get(statsUrl + "/current/users_with_token", {
                     headers: { 'Authorization': AuthFactory.getAuthToken() },
                     params: params
                 }).then(function (response) { callback(response.data) },
-                    function (error) { AuthFactory.authError(error.data) });
+                    function (error) { errorCallback(error) });
             }
         }
     }]);
