@@ -1,13 +1,9 @@
 <div class="form-group row">
   <div
-    ng-class="
-      $state.includes('token.wizard') == true ? 'centered' : 'not-centered'
-    "
+    ng-class="$state.includes('token.wizard') == true ? 'centered' : 'not-centered'"
   >
     <div
-      ng-class="
-        $state.includes('token.wizard') == true ? qr_col_md : 'col-md-3'
-      "
+      ng-class="$state.includes('token.wizard') == true ? qr_col_md : 'col-md-3'"
       ng-repeat="qr_img in qr_images"
     >
       <p>

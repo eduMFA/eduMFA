@@ -4,11 +4,12 @@
       <div class="pa-sidebar panel">
         <ul
           class="nav nav-pills nav-stacked"
-          ng-show="loggedInUser.role === 'user' && checkRight('userlist')"
+          ng-show="loggedInUser.role === 'user' &&
+                        checkRight('userlist')"
         >
           <li
             role="presentation"
-            ng-class="{ active: $state.includes('user.password') }"
+            ng-class="{active: $state.includes('user.password')}"
           >
             <a ui-sref="user.password">
               <translate>Your details</translate>
@@ -21,7 +22,7 @@
         >
           <li
             role="presentation"
-            ng-class="{ active: $state.includes('user.list') }"
+            ng-class="{active: $state.includes('user.list')}"
           >
             <a ui-sref="user.list" translate>All users</a>
           </li>
@@ -42,14 +43,14 @@
           </li>
           <li
             role="presentation"
-            ng-class="{ active: $state.includes('user.details') }"
+            ng-class="{active: $state.includes('user.details')}"
             ng-show="$state.includes('user.details')"
           >
             <a>User {{ $stateParams.username }}</a>
           </li>
           <li
             role="presentation"
-            ng-class="{ active: $state.includes('user.add') }"
+            ng-class="{active:$state.includes('user.add')}"
             ng-show="checkRight('adduser')"
           >
             <a ui-sref="user.add" translate>Add user </a>
@@ -64,40 +65,31 @@
           </li>
           <li><span translate>total users:</span>&nbsp;{{ usercount }}</li>
           <li><hr /></li>
-          <li role="presentation" ng-show="$state.includes('user.list')">
+          <li role="presentation" ng-show="($state.includes('user.list'))">
             <a
               target="_external"
-              ng-href="{{
-                'https://edumfa.readthedocs.io/en/v' +
-                  eduMFAVersionNumber +
-                  '/webui/index.html#users'
-              }}"
+              ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                           eduMFAVersionNumber+'/webui/index.html#users'}}"
             >
               <span class="glyphicon glyphicon-info-sign"></span>
               <span translate>Help about Users</span></a
             >
           </li>
-          <li role="presentation" ng-show="$state.includes('user.add')">
+          <li role="presentation" ng-show="($state.includes('user.add'))">
             <a
               target="_external"
-              ng-href="{{
-                'https://edumfa.readthedocs.io/en/v' +
-                  eduMFAVersionNumber +
-                  '/webui/manage_users.html'
-              }}"
+              ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                           eduMFAVersionNumber+'/webui/manage_users.html'}}"
             >
               <span class="glyphicon glyphicon-info-sign"></span>
               <span translate>Help about manage Users</span></a
             >
           </li>
-          <li role="presentation" ng-show="$state.includes('user.details')">
+          <li role="presentation" ng-show="($state.includes('user.details'))">
             <a
               target="_external"
-              ng-href="{{
-                'https://edumfa.readthedocs.io/en/v' +
-                  eduMFAVersionNumber +
-                  '/webui/user_details.html'
-              }}"
+              ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                           eduMFAVersionNumber+'/webui/user_details.html'}}"
             >
               <span class="glyphicon glyphicon-info-sign"></span>
               <span translate>Help about User Details</span></a

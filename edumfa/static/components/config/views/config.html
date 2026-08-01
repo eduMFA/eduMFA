@@ -18,16 +18,11 @@
       <div class="navbar-collapse collapse myConfigNavbar">
         <ul class="nav navbar-nav">
           <li
-            ng-class="{
-              active:
-                $state.includes('config.system') ||
-                $state.includes('config.smtp') ||
-                $state.includes('config.radius') ||
-                $state.includes('config.edumfaserver') ||
-                $state.includes('config.smsgateway') ||
-                $state.includes('config.tokengroup') ||
-                $state.includes('config.caconnectors'),
-            }"
+            ng-class="{active: $state.includes('config.system')
+                || $state.includes('config.smtp') || $state.includes('config.radius')
+                || $state.includes('config.edumfaserver') || $state.includes('config.smsgateway')
+                || $state.includes('config.tokengroup') || $state.includes('config.caconnectors')
+                }"
           >
             <a ui-sref="config.system">
               <span
@@ -38,12 +33,8 @@
             >
           </li>
           <li
-            ng-class="{ active: $state.includes('config.policies') }"
-            ng-show="
-              checkRight('policyread') ||
-              checkRight('policywrite') ||
-              checkRight('policydelete')
-            "
+            ng-class="{active: $state.includes('config.policies')}"
+            ng-show="checkRight('policyread') || checkRight('policywrite') || checkRight('policydelete')"
           >
             <a ui-sref="config.policies.list">
               <span
@@ -54,11 +45,8 @@
             >
           </li>
           <li
-            ng-class="{ active: $state.includes('config.events') }"
-            ng-show="
-              checkRight('eventhandling_read') ||
-              checkRight('eventhandling_write')
-            "
+            ng-class="{active: $state.includes('config.events')}"
+            ng-show="checkRight('eventhandling_read') || checkRight('eventhandling_write')"
           >
             <a ui-sref="config.events.list">
               <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
@@ -66,11 +54,8 @@
             >
           </li>
           <li
-            ng-class="{ active: $state.includes('config.periodictasks') }"
-            ng-show="
-              checkRight('periodictask_read') ||
-              checkRight('periodictask_write')
-            "
+            ng-class="{active: $state.includes('config.periodictasks')}"
+            ng-show="checkRight('periodictask_read') || checkRight('periodictask_write')"
           >
             <a ui-sref="config.periodictasks.list">
               <span
@@ -81,7 +66,7 @@
             >
           </li>
           <li
-            ng-class="{ active: $state.includes('config.tokens') }"
+            ng-class="{active: $state.includes('config.tokens')}"
             ng-show="checkRight('configread') || checkRight('configwrite')"
           >
             <a ui-sref="config.tokens">
@@ -90,12 +75,8 @@
             >
           </li>
           <li
-            ng-class="{ active: $state.includes('config.mresolvers') }"
-            ng-show="
-              checkRight('mresolverread') ||
-              checkRight('mresolverwrite') ||
-              checkRight('mresolverdelete')
-            "
+            ng-class="{active: $state.includes('config.mresolvers')}"
+            ng-show="checkRight('mresolverread') || checkRight('mresolverwrite') || checkRight('mresolverdelete')"
           >
             <a ui-sref="config.mresolvers.list">
               <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
@@ -103,12 +84,8 @@
             </a>
           </li>
           <li
-            ng-class="{ active: $state.includes('config.resolvers') }"
-            ng-show="
-              checkRight('resolverread') ||
-              checkRight('resolverwrite') ||
-              checkRight('resolverdelete')
-            "
+            ng-class="{active: $state.includes('config.resolvers')}"
+            ng-show="checkRight('resolverread') || checkRight('resolverwrite') || checkRight('resolverdelete')"
           >
             <a ui-sref="config.resolvers.list">
               <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
@@ -116,12 +93,8 @@
             </a>
           </li>
           <li
-            ng-class="{ active: $state.includes('config.realms') }"
-            ng-show="
-              checkRight('resolverread') ||
-              checkRight('resolverwrite') ||
-              checkRight('resolverdelete')
-            "
+            ng-class="{active: $state.includes('config.realms')}"
+            ng-show="checkRight('resolverread') || checkRight('resolverwrite') || checkRight('resolverdelete')"
           >
             <a ui-sref="config.realms.list">
               <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>

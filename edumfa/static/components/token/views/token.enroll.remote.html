@@ -31,7 +31,8 @@
   <input
     type="text"
     ng-model="form['remote.serial']"
-    placeholder="{{ 'The serial number on the remote server' | translate }}"
+    placeholder="{{ 'The serial number on the remote server'|translate
+                   }}"
     class="form-control"
     ng-required="!(form['remote.user'])"
     name="remoteSerial"
@@ -45,7 +46,7 @@
     ng-model="form['remote.user']"
     class="form-control"
     ng-required="!(form['remote.serial'])"
-    plasceholder="{{ 'The username on the remote server' | translate }}"
+    plasceholder="{{ 'The username on the remote server'|translate }}"
     name="remoteUser"
   />
 </div>

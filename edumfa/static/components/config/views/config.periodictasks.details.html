@@ -69,14 +69,11 @@
         <div uib-accordion-group class="panel-default" is-open="isOpen">
           <uib-accordion-heading ng-click="isOpen=!isOpen">
             <div>
-              {{ "Examples" | translate }}
+              {{ 'Examples'|translate}}
               <span
                 class="pull-right glyphicon"
                 aria-hidden="true"
-                ng-class="{
-                  'glyphicon-chevron-down': isOpen,
-                  'glyphicon-chevron-right': !isOpen,
-                }"
+                ng-class="{'glyphicon-chevron-down': isOpen, 'glyphicon-chevron-right': !isOpen}"
               >
               </span>
             </div>
@@ -200,7 +197,7 @@
           type="text"
           rows="6"
           ng-required="option.required && !option.value"
-          ng-if="option.type === 'text' && !option.value"
+          ng-if="option.type==='text' && !option.value"
           class="form-control"
           ng-model="form.options[optionname]"
         >
@@ -209,13 +206,13 @@
           class="form-control"
           ng-required="option.required && !option.value"
           ng-model="form.options[optionname]"
-          ng-if="option.type === 'str' && !option.value"
+          ng-if="option.type==='str' && !option.value"
         />
 
         <input
           type="checkbox"
           ng-model="form.options[optionname]"
-          ng-if="option.type === 'bool' && !option.value"
+          ng-if="option.type==='bool' && !option.value"
         />
         <p class="help help-block">{{ option.description }}</p>
       </td>

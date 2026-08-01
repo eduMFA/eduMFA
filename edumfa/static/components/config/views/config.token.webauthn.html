@@ -39,11 +39,7 @@
     The trust_anchor_dir must be an absolute path.
   </div>
   <div
-    ng-show="
-      form['webauthn.trust_anchor_dir'][
-        form['webauthn.trust_anchor_dir'].length - 1
-      ] == '/'
-    "
+    ng-show="form['webauthn.trust_anchor_dir'][form['webauthn.trust_anchor_dir'].length - 1] == '/'"
     class="alert alert-warning"
     translate
   >

@@ -47,7 +47,7 @@
         class="form-control"
         id="description"
         autocomplete="new-password"
-        placeholder="{{ 'Some nice words...' | translate }}"
+        placeholder="{{ 'Some nice words...'|translate }}"
         ng-model="form.description"
         ng-pattern="/^.{0,80}$/"
         ng-required="require_description.includes(form.type)"
@@ -56,10 +56,7 @@
 
     <!-- User Assignment -->
     <div
-      ng-if="
-        loggedInUser.role == 'admin' &&
-        $state.includes('token.rollover') == false
-      "
+      ng-if="loggedInUser.role == 'admin' && $state.includes('token.rollover') == false"
     >
       <h4 translate>Assign token to user</h4>
 
@@ -80,14 +77,9 @@
     <!-- Token PIN -->
     <div
       class="form-group"
-      ng-if="
-        loggedInUser.role == 'user' &&
-        !hidePin &&
-        !$state.includes('token.rollover') &&
-        (!$state.includes('token.wizard') ||
-          getRightsValue('otp_pin_minlength')) &&
-        checkRight('enrollpin')
-      "
+      ng-if="loggedInUser.role == 'user' && !hidePin && !$state.includes('token.rollover') &&
+                    (!$state.includes('token.wizard') || getRightsValue('otp_pin_minlength'))&&
+                    checkRight('enrollpin')"
     >
       <label for="otppin" translate>PIN/Password</label>
       <input
@@ -96,7 +88,7 @@
         type="password"
         class="form-control"
         equals="{{ pin2 }}"
-        placeholder="{{ 'Type a PIN or password' | translate }}"
+        placeholder="{{ 'Type a PIN or password'|translate }}"
       />
       <input
         name="otppin2"
@@ -104,25 +96,23 @@
         type="password"
         class="form-control"
         equals="{{ newUser.pin }}"
-        placeholder="{{ 'Repeat PIN or password' | translate }}"
+        placeholder="{{ 'Repeat PIN or password'|translate }}"
       />
     </div>
 
     <!-- Extended attributes -->
     <uib-accordion
-      ng-hide="$state.includes('token.wizard') || loggedInUser.role == 'user'"
+      ng-hide="$state.includes('token.wizard') ||
+                        loggedInUser.role=='user'"
     >
       <div uib-accordion-group class="panel-default" is-open="isOpen">
         <uib-accordion-heading ng-click="isOpen=!isOpen">
           <div>
-            {{ "Extended Attributes" | translate }}
+            {{ 'Extended Attributes'|translate }}
             <span
               class="pull-right glyphicon"
               aria-hidden="true"
-              ng-class="{
-                'glyphicon-chevron-down': isOpen,
-                'glyphicon-chevron-right': !isOpen,
-              }"
+              ng-class="{'glyphicon-chevron-down': isOpen, 'glyphicon-chevron-right': !isOpen}"
             >
             </span>
           </div>
@@ -301,11 +291,8 @@
 
   <div
     class="text-center"
-    ng-hide="
-      click_wait ||
-      enrolledToken.rollout_state === 'clientwait' ||
-      enrolledToken.rollout_state === 'verify'
-    "
+    ng-hide="click_wait || enrolledToken.rollout_state === 'clientwait'
+        || enrolledToken.rollout_state === 'verify' "
   >
     <button
       ng-click="enrolledToken = null; enrolling = false"

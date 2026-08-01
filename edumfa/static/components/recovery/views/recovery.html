@@ -8,7 +8,7 @@
   <div class="container">
     <form name="formRecovery" class="form-signin" role="form" novalidate>
       <h2 class="form-signin-heading" translate>Reset Password</h2>
-      <div class="form-group" ng-class="{ 'has-error': !newUser.user }">
+      <div class="form-group" ng-class="{'has-error': !newUser.user }">
         <label for="username" translate>Username</label>
         <input
           name="username"
@@ -16,12 +16,12 @@
           class="form-control"
           ng-model="newUser.user"
           required
-          placeholder="{{ 'Username' | translate }}"
+          placeholder="{{ 'Username'|translate }}"
           autofocus
         />
       </div>
 
-      <div class="form-group" ng-class="{ 'has-error': !newUser.email }">
+      <div class="form-group" ng-class="{'has-error': !newUser.email }">
         <label for="email" translate>Email</label>
         <input
           name="email"
@@ -29,7 +29,7 @@
           class="form-control"
           ng-model="newUser.email"
           ng-required="true"
-          placeholder="{{ 'Email' | translate }}"
+          placeholder="{{ 'Email'|translate }}"
         />
       </div>
 

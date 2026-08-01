@@ -8,7 +8,7 @@ This is the directive for attaching machines to tokens.
     type="text"
     ng-model="newMachine"
     autocomplete="new-password"
-    placeholder="{{ 'start typing a machine.' | translate }}"
+    placeholder="{{ 'start typing a machine.'|translate }}"
     typeahead-wait-ms="100"
     uib-typeahead="serial for serial in loadMachines($viewValue)"
     typeahead-no-results="noResults"

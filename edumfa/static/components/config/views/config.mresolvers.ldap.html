@@ -69,10 +69,8 @@
     </div>
     <div
       class="form-group"
-      ng-show="
-        params.LDAPURI.toLowerCase().substring(0, 5) === 'ldaps' ||
-        params.START_TLS
-      "
+      ng-show="params.LDAPURI.toLowerCase().substring(0,5) === 'ldaps' ||
+                 params.START_TLS"
     >
       <label for="tls" class="col-sm-3 control-label" translate>
         Verify TLS
@@ -223,9 +221,7 @@
             id="machineIdAttribute"
             ng-model="params.IDATTRIBUTE"
             required
-            placeholder="{{
-              'An Attribute or the DN to identify the machine' | translate
-            }}"
+            placeholder="{{ 'An Attribute or the DN to identify the machine'|translate }}"
           />
         </div>
       </div>
@@ -272,9 +268,7 @@
             class="form-control"
             id="ipattribute"
             ng-model="params.IPATTRIBUTE"
-            placeholder="{{
-              'An Attribute that contains the IP address.' | translate
-            }}"
+            placeholder="{{ 'An Attribute that contains the IP address.'|translate }}"
           />
         </div>
       </div>

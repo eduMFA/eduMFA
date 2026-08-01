@@ -8,7 +8,7 @@
   <div class="container">
     <form name="formRegister" class="form-signin" role="form" novalidate>
       <h2 class="form-signin-heading" translate>Register</h2>
-      <div class="form-group" ng-class="{ 'has-error': !newUser.username }">
+      <div class="form-group" ng-class="{'has-error': !newUser.username }">
         <label for="username" translate>Username</label>
         <input
           name="username"
@@ -16,12 +16,12 @@
           class="form-control"
           ng-model="newUser.username"
           required
-          placeholder="{{ 'Username' | translate }}"
+          placeholder="{{ 'Username'|translate }}"
           autofocus
         />
       </div>
 
-      <div class="form-group" ng-class="{ 'has-error': !newUser.surname }">
+      <div class="form-group" ng-class="{'has-error': !newUser.surname }">
         <label for="surname" translate>Surname</label>
         <input
           name="surname"
@@ -29,11 +29,11 @@
           class="form-control"
           ng-model="newUser.surname"
           required
-          placeholder="{{ 'Surname' | translate }}"
+          placeholder="{{ 'Surname'|translate }}"
         />
       </div>
 
-      <div class="form-group" ng-class="{ 'has-error': !newUser.givenname }">
+      <div class="form-group" ng-class="{'has-error': !newUser.givenname }">
         <label for="givenname" translate>Given name</label>
         <input
           name="givenname"
@@ -41,11 +41,11 @@
           class="form-control"
           ng-model="newUser.givenname"
           required
-          placeholder="{{ 'Given name' | translate }}"
+          placeholder="{{ 'Given name'|translate }}"
         />
       </div>
 
-      <div class="form-group" ng-class="{ 'has-error': !newUser.email }">
+      <div class="form-group" ng-class="{'has-error': !newUser.email }">
         <label for="email" translate>Email</label>
         <input
           name="email"
@@ -53,7 +53,7 @@
           class="form-control"
           ng-model="newUser.email"
           ng-required="true"
-          placeholder="{{ 'Email' | translate }}"
+          placeholder="{{ 'Email'|translate }}"
         />
       </div>
 
@@ -64,7 +64,7 @@
           id="mobile"
           class="form-control"
           ng-model="newUser.mobile"
-          placeholder="{{ 'Mobile' | translate }}"
+          placeholder="{{ 'Mobile'|translate }}"
         />
       </div>
 
@@ -75,11 +75,11 @@
           id="phone"
           class="form-control"
           ng-model="newUser.phone"
-          placeholder="{{ 'Phone' | translate }}"
+          placeholder="{{ 'Phone'|translate }}"
         />
       </div>
 
-      <div class="form-group" ng-class="{ 'has-error': !newUser.password }">
+      <div class="form-group" ng-class="{'has-error': !newUser.password }">
         <label for="password" translate>Password</label>
         <input
           name="password"
@@ -90,7 +90,7 @@
           ng-model="newUser.password"
           required
           equals="{{ password2 }}"
-          placeholder="{{ 'Password' | translate }}"
+          placeholder="{{ 'Password'|translate }}"
         />
         <input
           name="password"
@@ -100,7 +100,7 @@
           class="form-control round-bottom"
           ng-model="password2"
           equals="{{ newUser.password }}"
-          placeholder="{{ 'Password' | translate }}"
+          placeholder="{{ 'Password'|translate }}"
         />
       </div>
       <div class="text-center">

@@ -16,7 +16,7 @@
       ng-required="1"
       class="form-control"
       ng-change="newOtp=true"
-      placeholder="{{ 'enter some OTP value' | translate }}"
+      placeholder="{{ 'enter some OTP value'|translate }}"
     />
   </div>
 
@@ -49,7 +49,7 @@
       ng-model="params.serial"
       class="form-control"
       ng-disabled="step==='count'"
-      placeholder="{{ 'an optional serial substring' | translate }}"
+      placeholder="{{ 'an optional serial substring'|translate }}"
     />
   </div>
 
@@ -61,13 +61,12 @@
       type="number"
       class="form-control"
       ng-disabled="step==='count'"
-      placeholder="{{
-        'The number of lookahead OTP values. Default 10.' | translate
-      }}"
+      placeholder="{{'The number of lookahead OTP values. Default 10.'
+               |translate }}"
     />
   </div>
 
-  <div class="text-center" ng-show="step === 'init'">
+  <div class="text-center" ng-show="step==='init'">
     <button
       ng-click="step='count'; getSerial()"
       ng-disabled="formGetSerial.$invalid"
@@ -81,7 +80,7 @@
 <p></p>
 
 <div ng-hide="newOtp">
-  <div class="alert alert-warning" ng-show="step === 'count'">
+  <div class="alert alert-warning" ng-show="step==='count'">
     <span translate>
       Your search would include {{ count }} tokens. This can take a lot of time
       and could even timeout. Do you want to run the search? You might also
@@ -99,11 +98,11 @@
     </button>
   </div>
 
-  <div class="alert alert-warning" ng-show="step === 'searching'">
+  <div class="alert alert-warning" ng-show="step==='searching'">
     <span translate> Searching token... </span>
   </div>
 
-  <div class="alert alert-success" ng-show="serial && step === 'found'">
+  <div class="alert alert-success" ng-show="serial && step==='found'">
     <span translate>
       The Serial number for the OTP value {{ otp }} is
       <a ui-sref="token.details({tokenSerial:serial})">{{ serial }}</a>.
@@ -111,10 +110,7 @@
     <button ng-click="step='init'" class="btn btn-primaty" translate>OK</button>
   </div>
 
-  <div
-    class="alert alert-warning"
-    ng-show="serial === null && step === 'found'"
-  >
+  <div class="alert alert-warning" ng-show="serial===null && step==='found'">
     <span translate>
       No Serial number could be found for OTP value {{ otp }}.
     </span>

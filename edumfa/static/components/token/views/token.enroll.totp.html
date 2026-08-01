@@ -33,10 +33,7 @@
 </div>
 <div
   class="form-group"
-  ng-show="
-    checkRight('totp_2step=allow') ||
-    (!$state.includes('token.wizard') && checkRight('totp_2step=force'))
-  "
+  ng-show="checkRight('totp_2step=allow') || (!$state.includes('token.wizard') && checkRight('totp_2step=force'))"
 >
   <input
     type="checkbox"
@@ -57,7 +54,7 @@
     id="otpkey"
     autofocus
     class="form-control"
-    placeholder="{{ 'Enter OTP key...' | translate }}"
+    placeholder="{{ 'Enter OTP key...'|translate }}"
     ng-model="form.otpkey"
     name="otpkey"
   />

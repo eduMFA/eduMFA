@@ -96,7 +96,7 @@
           ng-required="param.required && !param.values
                        && param.type !== 'text'"
           ng-model="form['option.'+paramname]"
-          ng-show="!param.values && param.type !== 'text'"
+          ng-show="!param.values && param.type !=='text'"
         />
         <p class="help help-block">{{ param.description }}</p>
       </td>

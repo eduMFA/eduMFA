@@ -9,14 +9,14 @@
     ng-options="type for type in formInit.fileTypes"
   ></select>
 
-  <div ng-show="form.type === 'aladdin-xml'">
+  <div ng-show="form.type==='aladdin-xml'">
     <p class="help-block" translate>
       Here you can upload an XML file from Aladdin or SafeNet as it was used
       with Aladdin TMS or SafeNet SAM.
     </p>
   </div>
 
-  <div ng-show="form.type === 'OATH CSV'">
+  <div ng-show="form.type==='OATH CSV'">
     <p class="help-block" translate>
       Here you can upload a csv file for your OATH token. The file is supposed
       to contain one token per line.
@@ -40,7 +40,7 @@
     </p>
   </div>
 
-  <div ng-show="form.type === 'Yubikey CSV'">
+  <div ng-show="form.type==='Yubikey CSV'">
     <p class="help-block" translate>
       Here you can upload a csv file for your Yubikey token. The file is
       supposed to contain one token per line.
@@ -51,7 +51,7 @@
     </p>
   </div>
 
-  <div ng-show="form.type === 'pskc'">
+  <div ng-show="form.type==='pskc'">
     <p class="help-block" translate>
       This is an RFC6030 OATH compliant PSKC file. Values in the PSKC files may
       be unencrypted or
@@ -113,10 +113,7 @@
           <span
             class="pull-right glyphicon"
             aria-hidden="true"
-            ng-class="{
-              'glyphicon-chevron-down': isOpen,
-              'glyphicon-chevron-right': !isOpen,
-            }"
+            ng-class="{'glyphicon-chevron-down': isOpen, 'glyphicon-chevron-right': !isOpen}"
           >
           </span>
         </uib-accordion-heading>

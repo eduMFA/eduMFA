@@ -100,7 +100,7 @@
             {{ event.name }}</a
           >
         </td>
-        <td>{{ event.event | json }}</td>
+        <td>{{ event.event | json}}</td>
         <td>{{ event.handlermodule }}</td>
         <td>{{ event.position }}</td>
         <td>{{ event.conditions }}</td>
@@ -110,9 +110,7 @@
           <button
             class="btn btn-danger"
             ng-show="checkRight('eventhandling_write')"
-            aria-label="{{
-              'Do you really want to delete this event?' | translate
-            }}"
+            aria-label="{{ 'Do you really want to delete this event?' | translate }}"
             ng-click="confirmDelete(delEvent, event.id)"
           >
             <span class="glyphicon glyphicon-trash"></span>

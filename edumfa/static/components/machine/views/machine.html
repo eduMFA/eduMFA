@@ -5,13 +5,13 @@
         <ul class="nav nav-pills nav-stacked">
           <li
             role="presentation"
-            ng-class="{ active: $state.includes('machine.list') }"
+            ng-class="{active: $state.includes('machine.list')}"
           >
             <a ui-sref="machine.list" translate>All Machines</a>
           </li>
           <li
             role="presentation"
-            ng-class="{ active: $state.includes('machine.details') }"
+            ng-class="{active: $state.includes('machine.details')}"
             ng-show="$state.includes('machine.details')"
           >
             <a>Machine {{ $stateParams.machineid }}</a>

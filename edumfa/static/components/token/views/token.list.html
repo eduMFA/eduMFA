@@ -3,10 +3,10 @@
   ng-show="tokendata.count > tokensPerPage"
   total-items="tokendata.count"
   ng-model="params.page"
-  previous-text="{{ 'Previous' | translate }}"
-  next-text="{{ 'Next' | translate }}"
-  last-text="{{ 'Last' | translate }}"
-  first-text="{{ 'First' | translate }}"
+  previous-text="{{ 'Previous'|translate }}"
+  next-text="{{ 'Next'|translate }}"
+  last-text="{{ 'Last'|translate }}"
+  first-text="{{ 'First'|translate }}"
   items-per-page="{{ tokensPerPage }}"
   max-size="5"
   boundary-links="true"
@@ -134,7 +134,7 @@
             class="label label-success"
             ng-show="token.active"
             ng-click="disable(token.serial)"
-            title="{{ 'Disable token' | translate }}"
+            title="{{ 'Disable token'|translate }}"
             translate
             >active
           </span>
@@ -142,7 +142,7 @@
             class="label label-danger"
             ng-hide="token.active"
             ng-click="enable(token.serial)"
-            title="{{ 'Enable token' | translate }}"
+            title="{{ 'Enable token'|translate }}"
             translate
             >disabled
           </span>
@@ -153,13 +153,11 @@
         <td>
           <span
             class="label"
-            title="{{ 'Reset Failcounter' | translate }}"
+            title="{{ 'Reset Failcounter'|translate }}"
             ng-click="reset(token.serial)"
-            ng-class="{
-              'label-success': token.failcount <= 0,
-              'label-warning': token.failcount > 0,
-              'label-danger': token.failcount >= token.maxfail,
-            }"
+            ng-class="{'label-success': token.failcount<=0,
+                   'label-warning': token.failcount>0,
+                   'label-danger': token.failcount>=token.maxfail}"
           >
             {{ token.failcount }}
           </span>
@@ -187,10 +185,16 @@
           >&nbsp;
         </td>
 
-        <td ng-show="loggedInUser.role == 'admin' && user_details_in_tokenlist">
+        <td
+          ng-show="loggedInUser.role == 'admin' &&
+            user_details_in_tokenlist"
+        >
           {{ token.user_id }}
         </td>
-        <td ng-show="loggedInUser.role == 'admin' && user_details_in_tokenlist">
+        <td
+          ng-show="loggedInUser.role == 'admin' &&
+            user_details_in_tokenlist"
+        >
           <a ui-sref="config.resolvers.list">{{ token.resolver }}</a>
         </td>
       </tr>

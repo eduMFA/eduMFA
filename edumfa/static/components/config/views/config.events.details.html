@@ -180,7 +180,7 @@
               type="text"
               ng-model="condition_filter"
               id="conditionfilter"
-              placeholder="{{ 'filter condition...' | translate }}"
+              placeholder="{{ 'filter condition...'|translate }}"
               ng-change="isOpen = (condition_filter.length > 0)"
               class="form-control"
               aria-describedby="filter-delete"
@@ -207,14 +207,11 @@
               >
                 <uib-accordion-heading ng-click="isOpen=!isOpen">
                   <div>
-                    {{ conditionGroup || "miscellaneous" }}
+                    {{ ( conditionGroup || 'miscellaneous') }}
                     <span
                       class="pull-right glyphicon"
                       aria-hidden="true"
-                      ng-class="{
-                        'glyphicon-chevron-down': isOpen,
-                        'glyphicon-chevron-right': !isOpen,
-                      }"
+                      ng-class="{'glyphicon-chevron-down': isOpen, 'glyphicon-chevron-right': !isOpen}"
                     >
                     </span>
                   </div>
@@ -222,17 +219,8 @@
                 <table class="table table-hover">
                   <tr
                     ng-repeat="(conditionname, condition) in handlerConditions"
-                    ng-show="
-                      checkOpenConditionGroup(
-                        condition,
-                        conditionname,
-                        condition_filter
-                      )
-                    "
-                    ng-if="
-                      condition.group === null ||
-                      conditionGroup === condition.group
-                    "
+                    ng-show="checkOpenConditionGroup(condition, conditionname, condition_filter)"
+                    ng-if="condition.group===null || conditionGroup===condition.group"
                   >
                     <td>
                       <input
@@ -255,7 +243,7 @@
                       <select
                         class="form-control"
                         id="condition_{{ conditionname }}_str_value"
-                        ng-if="condition.type !== 'multi' && condition.value"
+                        ng-if="condition.type!=='multi' && condition.value"
                         ng-disabled="!conditionCheckBox[conditionname]"
                         ng-required="condition.required && condition.value"
                         ng-model="conds[conditionname]"
@@ -267,7 +255,7 @@
                       <div
                         isteven-multi-select
                         id="condition_{{ conditionname }}_multi_str_value"
-                        ng-if="condition.type === 'multi'"
+                        ng-if="condition.type==='multi'"
                         is-disabled="!conditionCheckBox[conditionname]"
                         input-model="condition.value"
                         output-model="conds[conditionname]"
@@ -284,7 +272,7 @@
                         id="condition_{{ conditionname }}_text_value"
                         ng-disabled="!conditionCheckBox[conditionname]"
                         ng-required="condition.required && !condition.value"
-                        ng-if="condition.type === 'text' && !condition.value"
+                        ng-if="condition.type==='text' && !condition.value"
                         class="form-control"
                         ng-model="conds[conditionname]"
                       >
@@ -298,10 +286,8 @@
                         ng-disabled="!conditionCheckBox[conditionname]"
                         ng-required="condition.required && !condition.value"
                         ng-model="conds[conditionname]"
-                        ng-if="
-                          (condition.type === 'str' && !condition.value) ||
-                          condition.type === 'regexp'
-                        "
+                        ng-if="(condition.type==='str' && !condition.value)
+                                    || condition.type==='regexp'"
                       />
                       <p
                         class="help help-block"
@@ -372,7 +358,7 @@
             <input
               type="checkbox"
               ng-model="opts[optionname]"
-              ng-show="option.type === 'bool' && !option.value"
+              ng-show="option.type==='bool' && !option.value"
             />
             <p class="help help-block">{{ option.description }}</p>
           </td>

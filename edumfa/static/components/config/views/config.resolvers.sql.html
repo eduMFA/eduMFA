@@ -288,10 +288,8 @@
     <div class="text-center" ng-show="showResult">
       <label
         class="label"
-        ng-class="{
-          'label-success': result.result,
-          'label-danger': !result.result,
-        }"
+        ng-class="{'label-success':result.result,
+               'label-danger':!result.result}"
       >
         {{ result.description }}<span
           class="glyphicon glyphicon-remove"

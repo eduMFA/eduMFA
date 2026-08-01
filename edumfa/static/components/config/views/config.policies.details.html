@@ -158,7 +158,7 @@
   <div class="tab-content">
     <div class="tab-pane active" id="condition">
       <h3 translate>Condition</h3>
-      <div class="form-group" ng-show="selectedScope[0].name == 'admin'">
+      <div class="form-group" ng-show="selectedScope[0].name=='admin'">
         <label for="adminrealm" class="col-sm-3 control-label" translate
           >Admin-Realm</label
         >
@@ -176,7 +176,7 @@
         </div>
       </div>
 
-      <div class="form-group" ng-show="selectedScope[0].name == 'admin'">
+      <div class="form-group" ng-show="selectedScope[0].name=='admin'">
         <label for="adminuser" class="col-sm-3 control-label" translate
           >Admin
         </label>
@@ -192,7 +192,7 @@
           />
         </div>
       </div>
-      <hr ng-show="selectedScope[0].name == 'admin'" />
+      <hr ng-show="selectedScope[0].name=='admin'" />
 
       <div class="form-group">
         <label for="userrealm" class="col-sm-3 control-label" translate
@@ -365,7 +365,7 @@
               type="text"
               ng-model="action_filter"
               id="actionfilter"
-              placeholder="{{ 'filter action...' | translate }}"
+              placeholder="{{ 'filter action...'|translate }}"
               ng-change="isOpen = (action_filter.length > 0)"
               class="form-control"
               aria-describedby="filter-delete"
@@ -392,14 +392,11 @@
               >
                 <uib-accordion-heading ng-click="isOpen=!isOpen">
                   <div>
-                    {{ actionGroup || "miscellaneous" }}
+                    {{ ( actionGroup || 'miscellaneous') }}
                     <span
                       class="pull-right glyphicon"
                       aria-hidden="true"
-                      ng-class="{
-                        'glyphicon-chevron-down': isOpen,
-                        'glyphicon-chevron-right': !isOpen,
-                      }"
+                      ng-class="{'glyphicon-chevron-down': isOpen, 'glyphicon-chevron-right': !isOpen}"
                     >
                     </span>
                   </div>
@@ -408,9 +405,7 @@
                   <tr
                     ng-repeat="action in actions"
                     ng-show="checkOpenGroup(action, action_filter)"
-                    ng-if="
-                      action.group === null || actionGroup === action.group
-                    "
+                    ng-if="action.group===null || actionGroup===action.group"
                   >
                     <td>
                       <input
@@ -431,11 +426,7 @@
                       <select
                         class="form-control"
                         id="action_{{ action.name }}_str_vals"
-                        ng-if="
-                          action.allowedValues &&
-                          action.type == 'str' &&
-                          !action.multiple
-                        "
+                        ng-if="action.allowedValues && action.type=='str' && !action.multiple"
                         ng-model="actionValuesStr[action.name]"
                         ng-disabled="!actionCheckBox[action.name]"
                         name="action.name"
@@ -447,11 +438,7 @@
                       <div
                         isteven-multi-select
                         id="action_{{ action.name }}_mult_str_vals"
-                        ng-if="
-                          action.allowedValues &&
-                          action.type == 'str' &&
-                          action.multiple
-                        "
+                        ng-if="action.allowedValues && action.type=='str' && action.multiple"
                         input-model="action.allowedValues"
                         output-model="actionValuesStr[action.name]"
                         button-label="name"
@@ -464,7 +451,7 @@
                       <select
                         class="form-control"
                         id="action_{{ action.name }}_num_vals"
-                        ng-if="action.allowedValues && action.type == 'int'"
+                        ng-if="action.allowedValues && action.type=='int'"
                         ng-model="actionValuesNum[action.name]"
                         ng-disabled="!actionCheckBox[action.name]"
                         name="action.name"
@@ -474,7 +461,7 @@
                       <select
                         class="form-control"
                         id="action_{{ action.name }}_text_vals"
-                        ng-if="action.allowedValues && action.type == 'text'"
+                        ng-if="action.allowedValues && action.type=='text'"
                         ng-model="actionValuesText[action.name]"
                         ng-disabled="!actionCheckBox[action.name]"
                         name="action.name"
@@ -486,7 +473,7 @@
                         id="action_{{ action.name }}_str"
                         placeholder="text..."
                         ng-model="actionValuesStr[action.name]"
-                        ng-if="action.type == 'str' && !action.allowedValues"
+                        ng-if="action.type=='str' && !action.allowedValues"
                         ng-disabled="!actionCheckBox[action.name]"
                         ng-required="actionCheckBox[action.name] && action.type=='str'"
                         class="form-control"
@@ -496,7 +483,7 @@
                         type="number"
                         id="action_{{ action.name }}_num"
                         ng-model="actionValuesNum[action.name]"
-                        ng-if="action.type == 'int' && !action.allowedValues"
+                        ng-if="action.type=='int' && !action.allowedValues"
                         ng-disabled="!actionCheckBox[action.name]"
                         ng-required="actionCheckBox[action.name] && action.type=='int'"
                         class="form-control"
@@ -505,7 +492,7 @@
                       <textarea
                         id="action_{{ action.name }}_text"
                         ng-model="actionValuesText[action.name]"
-                        ng-if="action.type == 'text' && !action.allowedValues"
+                        ng-if="action.type=='text' && !action.allowedValues"
                         ng-disabled="!actionCheckBox[action.name]"
                         ng-required="actionCheckBox[action.name] && action.type=='text'"
                         class="form-control"
@@ -522,14 +509,9 @@
                     <td>
                       <a
                         target="_external"
-                        href="{{
-                          'https://edumfa.readthedocs.io/en/v' +
-                            eduMFAVersionNumber +
-                            '/policies/' +
-                            selectedScope[0].name +
-                            '.html#' +
-                            action.name.split('_').join('-').toLowerCase()
-                        }}"
+                        href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                                            eduMFAVersionNumber+'/policies/' + selectedScope[0].name + '.html#' +
+                                            action.name.split('_').join('-').toLowerCase()}}"
                       >
                         <span class="glyphicon glyphicon-info-sign"></span>
                       </a>

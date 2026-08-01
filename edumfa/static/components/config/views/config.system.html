@@ -313,11 +313,8 @@
               ng-repeat="connectortype in availableCAConnectorTypes"
               role="presentation"
               ng-show="checkRight('caconnectorwrite')"
-              ng-class="{
-                active: $state.includes(
-                  'config.caconnectors.add' + connectortype
-                ),
-              }"
+              ng-class="{active:
+                                $state.includes('config.caconnectors.add'+connectortype) }"
             >
               <a ui-sref="config.caconnectors.add{{ connectortype }}" translate>
                 New {{ connectortype | uppercase }} CA Connector</a

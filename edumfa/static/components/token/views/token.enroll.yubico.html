@@ -6,7 +6,7 @@
 <h4 translate>Token data</h4>
 
 <div
-  ng-hide="form['yubico.id'] || loggedInUser.role === 'user'"
+  ng-hide="form['yubico.id'] || loggedInUser.role==='user'"
   translate
   class="bg-danger"
 >
@@ -21,10 +21,8 @@
     autofocus
     required
     class="form-control"
-    placeholder="{{
-      'Enter the 12 digit Yubikey identifier..
-           .' | translate
-    }}"
+    placeholder="{{ 'Enter the 12 digit Yubikey identifier..
+           .'|translate }}"
     ng-model="form['yubico.tokenid']"
     name="yubicoID"
   />
