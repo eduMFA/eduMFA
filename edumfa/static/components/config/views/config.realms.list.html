@@ -38,12 +38,12 @@
           <span ng-show="editRealm == realmname">
             <!-- TODO: Hieraus eine component bauen!-->
             <span ng-repeat="resolver in resolvers">
-              <label for="{{ resolver.resolvername }}">
+              <label for="{{ resolver.resolvername }}_edit">
                 <input
                   type="checkbox"
                   ng-model="selectedResolvers[resolver.resolvername].selected"
                   name="group"
-                  id="{{ resolver.resolvername }}"
+                  id="{{ resolver.resolvername }}_edit"
                   ng-checked="selectedResolvers[resolver.resolvername].selected"
                 />
                 {{ resolver.resolvername }}
@@ -109,7 +109,7 @@
                 class="form-control"
                 ng-model="realm.name"
                 required
-                placeholder="{{ 'new realm' | translate }}"
+                placeholder="{{ 'new realm'|translate }}"
                 ng-pattern="inputNamePatterns.simple.pattern"
                 title="{{ inputNamePatterns.simple.title | translate }}"
                 autofocus
@@ -118,12 +118,12 @@
           </td>
           <td>
             <span ng-repeat="resolver in resolvers">
-              <label for="{{ resolver.resolvername }}">
+              <label for="{{ resolver.resolvername }}_new">
                 <input
                   type="checkbox"
                   ng-model="selectedResolvers[resolver.resolvername].selected"
                   name="group"
-                  id="{{ resolver.resolvername }}"
+                  id="{{ resolver.resolvername }}_new"
                 />
                 {{ resolver.resolvername }}
                 <input

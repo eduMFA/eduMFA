@@ -24,13 +24,13 @@
           <button class="btn btn-default unsorted" pi-sort-by="name" translate>
             Policy Name
           </button>
-          <pi-filter ng-model="filter.name" ng-change="$apply()" />
+          <pi-filter ng-model="filter.name" ng-change="$apply()"></pi-filter>
         </th>
         <th class="pifilter">
           <button class="btn btn-default unsorted" pi-sort-by="scope" translate>
             Scope
           </button>
-          <pi-filter ng-model="filter.scope" ng-change="$apply()" />
+          <pi-filter ng-model="filter.scope" ng-change="$apply()"></pi-filter>
         </th>
         <th class="pifilter">
           <button
@@ -40,7 +40,10 @@
           >
             Action
           </button>
-          <pi-filter ng-model="filter.action_desc" ng-change="$apply()" />
+          <pi-filter
+            ng-model="filter.action_desc"
+            ng-change="$apply()"
+          ></pi-filter>
         </th>
         <th translate>Realm</th>
         <th translate>User</th>

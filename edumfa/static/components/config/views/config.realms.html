@@ -4,7 +4,7 @@
       <ul class="nav nav-pills nav-stacked">
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.realms.list') }"
+          ng-class="{ active: $state.includes('config.realms.list')}"
         >
           <a ui-sref="config.realms.list" translate>All Realms</a>
         </li>
@@ -16,15 +16,12 @@
             >Clear default realm</a
           >
         </li>
-        <hr />
+        <li role="separator"><hr /></li>
         <li role="presentation">
           <a
             target="_external"
-            ng-href="{{
-              'https://edumfa.readthedocs.io/en/v' +
-                eduMFAVersionNumber +
-                '/configuration/realms.html#'
-            }}"
+            ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                           eduMFAVersionNumber+'/configuration/realms.html#'}}"
           >
             <span class="glyphicon glyphicon-info-sign"></span>
             <span translate>Help about Realms</span></a

@@ -414,11 +414,11 @@
     <tr>
       <td>Realms</td>
       <td>
-        <span ng-hide="editTokenRealm">
+        <div ng-hide="editTokenRealm">
           <ul ng-click="!token.locked ? editTokenRealm = true : null">
             <li ng-repeat="realm in token.realms">{{ realm }}</li>
           </ul>
-        </span>
+        </div>
         <span ng-show="editTokenRealm">
           <span ng-repeat="(realmname, realm) in realms">
             <label for="{{ realmname }}">
@@ -470,11 +470,11 @@
     <tr ng-show="checkRight('tokengroup_list')">
       <td>Token groups</td>
       <td>
-        <span ng-hide="editTokenGroups">
+        <div ng-hide="editTokenGroups">
           <ul ng-click="!token.locked ? editTokenGroups = true : null">
             <li ng-repeat="group in token.tokengroup">{{ group }}</li>
           </ul>
-        </span>
+        </div>
         <span ng-show="editTokenGroups">
           <span ng-repeat="(groupname, tokengroup) in tokengroups">
             <label for="{{ groupname }}">
@@ -809,24 +809,29 @@
               ng-repeat="(optionname, option)
                          in Applications[machine.application].options"
             >
-              <label for="option_{{ optionnamme }}"
-                >{{ optionname | capitalize }}</label
+              <strong
+                id="machine_{{ machine.id }}_option_{{ optionname }}_label"
               >
+                {{ optionname | capitalize }}
+              </strong>
               <input
                 class="form-control"
+                aria-labelledby="machine_{{ machine.id }}_option_{{ optionname }}_label"
                 ng-required="option.required && !option.value"
                 ng-model="machine.options[optionname]"
                 ng-show="option.type==='str' && !option.value"
               />
               <select
                 class="form-control"
+                aria-labelledby="machine_{{ machine.id }}_option_{{ optionname }}_label"
                 ng-show="option.value"
                 ng-required="option.required && option.value"
                 ng-model="machine.options[optionname]"
                 ng-options="value for value in option.value"
-              />
+              ></select>
               <input
                 type="checkbox"
+                aria-labelledby="machine_{{ machine.id }}_option_{{ optionname }}_label"
                 ng-model="machine.options[optionname]"
                 ng-show="option.type==='bool'"
               />
@@ -897,19 +902,21 @@
         class="form-group"
         ng-repeat="(optionname, option) in Applications[form.application].options"
       >
-        <label for="option_{{ optionname }}"
-          >{{ optionname | capitalize }}</label
+        <strong id="option_{{ optionname }}_label"
+          >{{ optionname | capitalize }}</strong
         >
         <input
           class="form-control"
-          id="option_{{ optionname }}"
+          id="option_{{ optionname }}_text"
+          aria-labelledby="option_{{ optionname }}_label"
           ng-required="option.required && !option.value"
           ng-model="form.options[optionname]"
           ng-show="option.type==='str' && !option.value"
         />
         <select
           class="form-control"
-          id="option_{{ optionname }}"
+          id="option_{{ optionname }}_select"
+          aria-labelledby="option_{{ optionname }}_label"
           ng-show="option.value"
           ng-required="option.required && option.value"
           ng-model="form.options[optionname]"
@@ -917,7 +924,8 @@
         ></select>
         <input
           type="checkbox"
-          id="option_{{ optionname }}"
+          id="option_{{ optionname }}_checkbox"
+          aria-labelledby="option_{{ optionname }}_label"
           ng-model="form.options[optionname]"
           ng-show="option.type==='bool'"
         />

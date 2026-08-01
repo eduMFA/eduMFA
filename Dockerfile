@@ -56,4 +56,4 @@ ENV PYTHONUNBUFFERED=1 \
     PATH="/opt/edumfa:$PATH"
 
 ENTRYPOINT ["./entrypoint.sh"]
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "app"]
+CMD ["gunicorn", "--no-control-socket", "--bind", "0.0.0.0:8000", "--workers", "4", "app"]

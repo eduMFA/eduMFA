@@ -5,26 +5,23 @@
         <li
           role="presentation"
           ng-show="checkRight('policyread')"
-          ng-class="{ active: $state.includes('config.policies.list') }"
+          ng-class="{ active: $state.includes('config.policies.list')}"
         >
           <a ui-sref="config.policies.list" translate> All Policies</a>
         </li>
         <li
           role="presentation"
           ng-show="checkRight('policywrite')"
-          ng-class="{ active: $state.includes('config.policies.add') }"
+          ng-class="{ active: $state.includes('config.policies.add')}"
         >
           <a ui-sref="config.policies.add" translate>Create new Policy</a>
         </li>
-        <hr />
+        <li role="separator"><hr /></li>
         <li role="presentation">
           <a
             target="_external"
-            ng-href="{{
-              'https://edumfa.readthedocs.io/en/v' +
-                eduMFAVersionNumber +
-                '/policies/index.html'
-            }}"
+            ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                       eduMFAVersionNumber+'/policies/index.html'}}"
           >
             <span class="glyphicon glyphicon-info-sign"></span>
             <span translate>Help about Policies</span></a

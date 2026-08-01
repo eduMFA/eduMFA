@@ -4,7 +4,7 @@
       <ul class="nav nav-pills nav-stacked">
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.system.edit') }"
+          ng-class="{ active: $state.includes('config.system.edit')}"
         >
           <a ui-sref="config.system.edit">
             <span class="glyphicon glyphicon-wrench"></span>
@@ -14,7 +14,7 @@
         <li
           role="presentation"
           ng-show="checkRight('system_documentation')"
-          ng-class="{ active: $state.includes('config.system.doc') }"
+          ng-class="{ active: $state.includes('config.system.doc')}"
         >
           <a ng-click="getSystemDocumentation()" ui-sref="config.system.doc"
             ><span class="glyphicon glyphicon-download"></span>
@@ -23,7 +23,7 @@
         </li>
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.smtp') }"
+          ng-class="{ active: $state.includes('config.smtp')}"
           ng-show="checkRight('smtpserver_read')"
         >
           <a ui-sref="config.smtp">
@@ -36,7 +36,7 @@
           >
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.smtp.list') }"
+              ng-class="{ active: $state.includes('config.smtp.list')}"
             >
               <a ui-sref="config.smtp.list" translate
                 >List SMTP server definitions</a
@@ -44,20 +44,17 @@
             </li>
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.smtp.add') }"
+              ng-class="{ active: $state.includes('config.smtp.add')}"
               ng-show="checkRight('smtpserver_write')"
             >
               <a ui-sref="config.smtp.add" translate> New SMTP server</a>
             </li>
-            <hr />
+            <li role="separator"><hr /></li>
             <li role="presentation">
               <a
                 target="_external"
-                ng-href="{{
-                  'https://edumfa.readthedocs.io/en/v' +
-                    eduMFAVersionNumber +
-                    '/configuration/smtpserver_config.html'
-                }}"
+                ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                                   eduMFAVersionNumber+'/configuration/smtpserver_config.html'}}"
               >
                 <span class="glyphicon glyphicon-info-sign"></span>
                 <span translate>Help about SMTP-Servers</span></a
@@ -67,7 +64,7 @@
         </li>
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.radius') }"
+          ng-class="{ active: $state.includes('config.radius')}"
           ng-show="checkRight('radiusserver_read')"
         >
           <a ui-sref="config.radius">
@@ -80,7 +77,7 @@
           >
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.radius.list') }"
+              ng-class="{ active: $state.includes('config.radius.list')}"
             >
               <a ui-sref="config.radius.list" translate
                 >List RADIUS server definitions</a
@@ -88,20 +85,17 @@
             </li>
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.radius.add') }"
+              ng-class="{ active: $state.includes('config.radius.add')}"
               ng-show="checkRight('radiusserver_write')"
             >
               <a ui-sref="config.radius.add" translate> New RADIUS server</a>
             </li>
-            <hr />
+            <li role="separator"><hr /></li>
             <li role="presentation">
               <a
                 target="_external"
-                ng-href="{{
-                  'https://edumfa.readthedocs.io/en/v' +
-                    eduMFAVersionNumber +
-                    '/configuration/radiusserver_config.html'
-                }}"
+                ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                                   eduMFAVersionNumber+'/configuration/radiusserver_config.html'}}"
               >
                 <span class="glyphicon glyphicon-info-sign"></span>
                 <span translate>Help about RADIUS-Server</span></a
@@ -111,7 +105,7 @@
         </li>
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.edumfaserver') }"
+          ng-class="{ active: $state.includes('config.edumfaserver')}"
           ng-show="checkRight('edumfaserver_read')"
         >
           <a ui-sref="config.edumfaserver">
@@ -124,7 +118,7 @@
           >
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.edumfaserver.list') }"
+              ng-class="{ active: $state.includes('config.edumfaserver.list')}"
             >
               <a ui-sref="config.edumfaserver.list" translate
                 >List eduMFA server definitions</a
@@ -133,7 +127,7 @@
             <li
               role="presentation"
               ng-show="checkRight('edumfaserver_write')"
-              ng-class="{ active: $state.includes('config.edumfaserver.add') }"
+              ng-class="{ active: $state.includes('config.edumfaserver.add')}"
             >
               <a ui-sref="config.edumfaserver.add" translate>
                 New eduMFA server
@@ -143,7 +137,7 @@
         </li>
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.smsgateway') }"
+          ng-class="{ active: $state.includes('config.smsgateway')}"
           ng-show="checkRight('smsgateway_read')"
         >
           <a ui-sref="config.smsgateway">
@@ -156,7 +150,7 @@
           >
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.smsgateway.list') }"
+              ng-class="{ active: $state.includes('config.smsgateway.list')}"
             >
               <a ui-sref="config.smsgateway.list" translate>
                 All SMS Gateways</a
@@ -165,21 +159,18 @@
             <li
               role="presentation"
               ng-show="checkRight('smsgateway_write')"
-              ng-class="{ active: $state.includes('config.smsgateway.add') }"
+              ng-class="{ active: $state.includes('config.smsgateway.add')}"
             >
               <a ui-sref="config.smsgateway.add" translate>
                 Create new SMS Gateway definition
               </a>
             </li>
-            <hr />
+            <li role="separator"><hr /></li>
             <li role="presentation">
               <a
                 target="_external"
-                ng-href="{{
-                  'https://edumfa.readthedocs.io/en/v' +
-                    eduMFAVersionNumber +
-                    '/configuration/sms_gateway_config.html'
-                }}"
+                ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                                   eduMFAVersionNumber+'/configuration/sms_gateway_config.html'}}"
               >
                 <span class="glyphicon glyphicon-info-sign"></span>
                 <span translate>Help about SMS-Gateways</span></a
@@ -189,7 +180,7 @@
         </li>
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.tokengroup') }"
+          ng-class="{ active: $state.includes('config.tokengroup')}"
           ng-show="checkRight('tokengroup_list')"
         >
           <a ui-sref="config.tokengroup">
@@ -202,7 +193,7 @@
           >
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.tokengroup.list') }"
+              ng-class="{ active: $state.includes('config.tokengroup.list')}"
             >
               <a ui-sref="config.tokengroup.list" translate
                 >List Tokengroup definitions</a
@@ -210,22 +201,19 @@
             </li>
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.tokengroup.add') }"
+              ng-class="{ active: $state.includes('config.tokengroup.add')}"
               ng-show="checkRight('tokengroup_add')"
             >
               <a ui-sref="config.tokengroup.add" translate>
                 New Tokengroup definition</a
               >
             </li>
-            <hr />
+            <li role="separator"><hr /></li>
             <li role="presentation">
               <a
                 target="_external"
-                ng-href="{{
-                  'https://edumfa.readthedocs.io/en/v' +
-                    eduMFAVersionNumber +
-                    '/configuration/tokengroups.html'
-                }}"
+                ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                                   eduMFAVersionNumber+'/configuration/tokengroups.html'}}"
               >
                 <span class="glyphicon glyphicon-info-sign"></span>
                 <span translate>Help on Tokengroups</span></a
@@ -235,7 +223,7 @@
         </li>
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.serviceid') }"
+          ng-class="{ active: $state.includes('config.serviceid')}"
           ng-show="checkRight('serviceid_list')"
         >
           <a ui-sref="config.serviceid">
@@ -248,7 +236,7 @@
           >
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.serviceid.list') }"
+              ng-class="{ active: $state.includes('config.serviceid.list')}"
             >
               <a ui-sref="config.serviceid.list" translate
                 >List Service ID definitions</a
@@ -256,22 +244,19 @@
             </li>
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.serviceid.add') }"
+              ng-class="{ active: $state.includes('config.serviceid.add')}"
               ng-show="checkRight('serviceid_add')"
             >
               <a ui-sref="config.serviceid.add" translate>
                 New Service ID definition</a
               >
             </li>
-            <hr />
+            <li role="separator"><hr /></li>
             <li role="presentation">
               <a
                 target="_external"
-                ng-href="{{
-                  'https://edumfa.readthedocs.io/en/v' +
-                    eduMFAVersionNumber +
-                    '/configuration/serviceids.html'
-                }}"
+                ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
+                                   eduMFAVersionNumber+'/configuration/serviceids.html'}}"
               >
                 <span class="glyphicon glyphicon-info-sign"></span>
                 <span translate>Help on Service IDs</span></a
@@ -281,7 +266,7 @@
         </li>
         <li
           role="presentation"
-          ng-class="{ active: $state.includes('config.caconnectors') }"
+          ng-class="{active: $state.includes('config.caconnectors')}"
         >
           <a ui-sref="config.caconnectors.list">
             <span
@@ -296,7 +281,8 @@
           >
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.caconnectors.list') }"
+              ng-class="{ active:
+                                $state.includes('config.caconnectors.list')}"
             >
               <a ui-sref="config.caconnectors.list" translate>
                 All CA Connectors</a
@@ -304,7 +290,8 @@
             </li>
             <li
               role="presentation"
-              ng-class="{ active: $state.includes('config.caconnectors.edit') }"
+              ng-class="{ active:
+                                $state.includes('config.caconnectors.edit')}"
               ng-show="$state.includes('config.caconnectors.edit')"
             >
               <a ui-sref="config.caconnector.edit" translate>

@@ -320,13 +320,13 @@
     <div class="tab-pane" id="action">
       <h3 translate>Action</h3>
       <div class="form-group">
-        <label for="action" class="col-sm-3 control-label" translate>
+        <label for="actionSelection" class="col-sm-3 control-label" translate>
           Action</label
         >
         <div class="col-sm-6">
           <select
             class="form-control"
-            id="action"
+            id="actionSelection"
             ng-model="form.action"
             required
             ng-options="action for action in handlerActions"
@@ -339,9 +339,8 @@
       <table class="table table-hover">
         <tr
           ng-repeat="(optionname, option) in options"
-          ng-show="
-            !option.visibleIf || opts[option.visibleIf] === option.visibleValue
-          "
+          ng-show="!option.visibleIf ||
+                     opts[option.visibleIf]===option.visibleValue"
         >
           <td>
             <b>{{ optionname }}</b>
@@ -358,7 +357,7 @@
               type="text"
               rows="6"
               ng-required="option.required && !option.value"
-              ng-show="option.type === 'text' && !option.value"
+              ng-show="option.type==='text' && !option.value"
               class="form-control"
               ng-model="opts[optionname]"
             >
@@ -367,7 +366,7 @@
               class="form-control"
               ng-required="option.required && !option.value"
               ng-model="opts[optionname]"
-              ng-show="option.type === 'str' && !option.value"
+              ng-show="option.type==='str' && !option.value"
             />
 
             <input
