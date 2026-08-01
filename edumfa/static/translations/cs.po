@@ -512,7 +512,6 @@ msgid "Clear default realm"
 msgstr "Zrušit výchozí doménu"
 
 #: components/config/views/config.system.edit.html
-
 #, fuzzy
 msgid "Clear failcounter after minutes"
 msgstr "Vynulovat počitadlo chyb po kolika minutách"
@@ -3167,8 +3166,9 @@ msgstr ""
 
 #: components/config/views/config.token.daypassword.html
 msgid ""
-"The DayPassword Token is a time based password token.\n"
-"    It is based on the TOTP token, but it can be used more than once."
+"The DayPassword Token is a time based password token. It is based on the "
+"TOTP\n"
+"  token, but it can be used more than once."
 msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
@@ -3793,7 +3793,8 @@ msgstr "trust_anchor_dir nesmí končit lomítkem."
 #: components/config/views/config.resolvers.ldap.html
 #: components/config/views/config.resolvers.sql.html
 msgid "The user data in this database can be modified from within eduMFA."
-msgstr "Uživatelská data v této databázi mohou být upravována přímo v systému eduMFA."
+msgstr ""
+"Uživatelská data v této databázi mohou být upravována přímo v systému eduMFA."
 
 #: components/token/views/token.lost.html
 msgid ""

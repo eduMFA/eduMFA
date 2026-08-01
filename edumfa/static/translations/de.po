@@ -3248,8 +3248,9 @@ msgstr ""
 
 #: components/config/views/config.token.daypassword.html
 msgid ""
-"The DayPassword Token is a time based password token.\n"
-"    It is based on the TOTP token, but it can be used more than once."
+"The DayPassword Token is a time based password token. It is based on the "
+"TOTP\n"
+"  token, but it can be used more than once."
 msgstr ""
 "Das DayPassword Token ist ein zeit-basiertes Passwort-Token. Es basiert auf "
 "dem TOTP Token, kann aber mehr als einmal verwendet werden..."
@@ -3996,7 +3997,8 @@ msgstr "trust_anchor_dir darf nicht mit einem \"/\" enden."
 #: components/config/views/config.resolvers.ldap.html
 #: components/config/views/config.resolvers.sql.html
 msgid "The user data in this database can be modified from within eduMFA."
-msgstr "Die Benutzerdaten in der Datenbank können von eduMFA aus verwaltet werden."
+msgstr ""
+"Die Benutzerdaten in der Datenbank können von eduMFA aus verwaltet werden."
 
 #: components/token/views/token.lost.html
 msgid ""

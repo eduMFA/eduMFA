@@ -2928,7 +2928,8 @@ msgid ""
 "        <a ui-sref=\"config.smtp\">SMTP server configuration</a>."
 msgstr ""
 "Önceden tanımlanmış bir seçme\n"
-"                    <a ui-sref=\"config.smtp\"> SMTP sunucusu yapılandırması </a>."
+"                    <a ui-sref=\"config.smtp\"> SMTP sunucusu yapılandırması "
+"</a>."
 
 #: components/config/views/config.token.radius.html
 msgid ""
@@ -3296,8 +3297,9 @@ msgstr ""
 
 #: components/config/views/config.token.daypassword.html
 msgid ""
-"The DayPassword Token is a time based password token.\n"
-"    It is based on the TOTP token, but it can be used more than once."
+"The DayPassword Token is a time based password token. It is based on the "
+"TOTP\n"
+"  token, but it can be used more than once."
 msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
