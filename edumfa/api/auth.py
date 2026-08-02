@@ -40,7 +40,7 @@ and password.
 import logging
 import threading
 import traceback
-from datetime import datetime, timedelta
+from datetime import timedelta
 from functools import wraps
 
 import jwt
@@ -87,7 +87,7 @@ from edumfa.lib.framework import get_app_config_value
 from edumfa.lib.policy import REMOTE_USER, PolicyClass
 from edumfa.lib.realm import get_default_realm, realm_is_defined
 from edumfa.lib.user import User, log_used_user, split_user
-from edumfa.lib.utils import get_client_ip, hexlify_and_unicode, to_unicode
+from edumfa.lib.utils import get_client_ip, hexlify_and_unicode, to_unicode, utc_now
 
 log = logging.getLogger(__name__)
 
@@ -447,7 +447,7 @@ def get_auth_token():
             "nonce": nonce,
             "role": role,
             "authtype": authtype,
-            "exp": datetime.utcnow() + validity,
+            "exp": utc_now() + validity,
             "rights": rights,
         },
         secret,

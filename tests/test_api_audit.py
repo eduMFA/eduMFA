@@ -88,8 +88,8 @@ class APIAuditTestCase(MyApiTestCase):
         def _fake_time(t):
             """context manager that fakes the current time that is written
             to the database"""
-            with mock.patch("edumfa.models.datetime") as mock_dt:
-                mock_dt.now.return_value = t
+            with mock.patch("edumfa.models.utc_now") as mock_dt:
+                mock_dt.return_value = t
                 yield
 
         with self.app.test_request_context(

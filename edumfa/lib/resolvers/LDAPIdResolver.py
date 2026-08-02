@@ -52,7 +52,13 @@ from passlib.hash import ldap_salted_sha1
 from edumfa.lib import _
 from edumfa.lib.error import eduMFAError
 from edumfa.lib.framework import get_app_config_value, get_app_local_store
-from edumfa.lib.utils import convert_column_to_unicode, is_true, to_bytes, to_unicode
+from edumfa.lib.utils import (
+    convert_column_to_unicode,
+    is_true,
+    to_bytes,
+    to_unicode,
+    utc_now,
+)
 
 from .UserIdResolver import UserIdResolver
 
@@ -83,7 +89,7 @@ SERVERPOOL_STRATEGY = "ROUND_ROBIN"
 
 # 1 sec == 10^9 nano secs == 10^7 * (100 nano secs)
 MS_AD_MULTIPLYER = 10**7
-MS_AD_START = datetime.datetime(1601, 1, 1)
+MS_AD_START = datetime.datetime(1601, 1, 1, tzinfo=datetime.timezone.utc)
 
 if os.path.isfile("/etc/edumfa/ldap-ca.crt"):
     DEFAULT_CA_FILE = "/etc/edumfa/ldap-ca.crt"
@@ -143,8 +149,8 @@ def get_ad_timestamp_now():
     :return: time
     :rtype: int
     """
-    utc_now = datetime.datetime.utcnow()
-    elapsed_time = utc_now - MS_AD_START
+    current_utc = utc_now()
+    elapsed_time = current_utc - MS_AD_START
     total_seconds = elapsed_time.total_seconds()
     # convert this to (100 nanoseconds)
     return int(MS_AD_MULTIPLYER * total_seconds)

@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 from dateutil.tz import tzutc
@@ -512,11 +512,12 @@ class TokenModelTestCase(MyTestCase):
         self.assertTrue("transaction_id" in f"{c}", f"{c}")
         self.assertTrue("timestamp" in f"{c}", f"{c}")
 
-        # test with timestamp=True, which results in something like this:
-        timestamp = "2014-11-29 21:56:43.057293"
-        self.assertTrue(
-            len(c.get(True).get("timestamp")) == len(timestamp), c.get(True)
-        )
+        # test with timestamp=True, which results in an ISO-compatible
+        # timezone-aware UTC string.
+        timestamp = c.get(True).get("timestamp")
+        timestamp_datetime = datetime.fromisoformat(timestamp)
+        self.assertTrue(isinstance(timestamp, str), c.get(True))
+        self.assertEqual(timestamp_datetime.utcoffset(), timedelta(0), c.get(True))
         # otp_status
         c.set_otp_status(valid=False)
         self.assertTrue(c.get_otp_status()[0], c.get_otp_status())
@@ -652,7 +653,7 @@ class TokenModelTestCase(MyTestCase):
             "recoverycode",
             "cornelius",
             "realm",
-            expiration=datetime.now() + timedelta(seconds=120),
+            expiration=datetime.now(timezone.utc) + timedelta(seconds=120),
         )
         p1.save()
         p2 = PasswordReset.query.filter_by(username="cornelius", realm="realm").first()
@@ -749,9 +750,9 @@ class TokenModelTestCase(MyTestCase):
 
     def test_21_add_update_delete_clientapp(self):
         # MySQLs DATETIME type supports only seconds so we have to mock now()
-        current_time = datetime(2018, 3, 4, 5, 6, 8)
-        with mock.patch("edumfa.models.datetime") as mock_dt:
-            mock_dt.now.return_value = current_time
+        current_time = datetime(2018, 3, 4, 5, 6, 8, tzinfo=timezone.utc)
+        with mock.patch("edumfa.models.utc_now") as mock_dt:
+            mock_dt.return_value = current_time
 
             ClientApplication(
                 ip="1.2.3.4", hostname="host1", clienttype="PAM", node="localnode"
@@ -823,7 +824,7 @@ class TokenModelTestCase(MyTestCase):
         user_id = 1
         # we don't need a timestamp with microseconds here, the MySQL DATETIME
         # type doesn't support it out of the box anyway
-        timestamp = datetime.now().replace(microsecond=0)
+        timestamp = datetime.now(timezone.utc).replace(microsecond=0)
 
         # create a user in the cache
         cached_user = UserCache(username, username, resolver, user_id, timestamp)
@@ -929,9 +930,9 @@ class TokenModelTestCase(MyTestCase):
         self.assertEqual(counter10, None)
 
     def test_26_periodictask(self):
-        current_utc_time = datetime(2018, 3, 4, 5, 6, 8)
-        with mock.patch("edumfa.models.datetime") as mock_dt:
-            mock_dt.utcnow.return_value = current_utc_time
+        current_utc_time = datetime(2018, 3, 4, 5, 6, 8, tzinfo=timezone.utc)
+        with mock.patch("edumfa.models.utc_now") as mock_dt:
+            mock_dt.return_value = current_utc_time
 
             task1 = PeriodicTask(
                 "task1",
@@ -994,8 +995,8 @@ class TokenModelTestCase(MyTestCase):
 
         # assert we can update the task
         later_utc_time = current_utc_time + timedelta(seconds=1)
-        with mock.patch("edumfa.models.datetime") as mock_dt:
-            mock_dt.utcnow.return_value = later_utc_time
+        with mock.patch("edumfa.models.utc_now") as mock_dt:
+            mock_dt.return_value = later_utc_time
             PeriodicTask(
                 "task one",
                 True,
@@ -1076,12 +1077,12 @@ class TokenModelTestCase(MyTestCase):
             PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id).one().node,
             "otherhost",
         )
-        # naive timestamp in the database
+        # ORM timestamps are returned as UTC-aware values.
         self.assertEqual(
             PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id)
             .one()
             .timestamp,
-            datetime(2018, 8, 9, 10, 11, 12, tzinfo=None),
+            datetime(2018, 8, 9, 10, 11, 12, tzinfo=tzutc()),
         )
         self.assertEqual(
             PeriodicTaskLastRun.query.filter_by(periodictask_id=task1.id)
@@ -1101,10 +1102,10 @@ class TokenModelTestCase(MyTestCase):
         # Simple test to write data to the monitoring stats table
         key1 = "user_count"
         key2 = "successful_auth"
-        utcnow = datetime.utcnow()
-        MonitoringStats(utcnow - timedelta(seconds=1), key1, 15).save()
-        MonitoringStats(utcnow, key1, 21).save()
-        MonitoringStats(utcnow, key2, 123).save()
+        now_utc = datetime.now(timezone.utc)
+        MonitoringStats(now_utc - timedelta(seconds=1), key1, 15).save()
+        MonitoringStats(now_utc, key1, 21).save()
+        MonitoringStats(now_utc, key2, 123).save()
 
         self.assertEqual(MonitoringStats.query.filter_by(stats_key=key1).count(), 2)
         self.assertEqual(MonitoringStats.query.filter_by(stats_key=key2).count(), 1)
