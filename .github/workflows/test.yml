@@ -9,6 +9,7 @@ on:
     paths:
     - '.github/workflows/test.yml'
     - 'edumfa/**/*.py'
+    - 'migrations/**'
     - 'tests/**'
     - 'tools/**'
     - 'edumfa-manage'
@@ -44,6 +45,136 @@ jobs:
         with:
             token: ${{ secrets.CODECOV_TOKEN }}
             files: ./coverage.xml
+
+  migration-from-release:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - database: postgres-psycopg2
+            image: postgres:18-alpine
+            port: 5432
+            database_url: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
+            health_cmd: pg_isready -U edumfa -d edumfa
+            extras: postgres
+            system_deps: "libpq-dev"
+          - database: mariadb
+            image: mariadb:11.5
+            port: 3306
+            database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
+            health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
+            extras: ""
+            system_deps: ""
+    name: migrate from release ${{ matrix.database }}
+    services:
+      database:
+        image: ${{ matrix.image }}
+        env:
+          POSTGRES_USER: edumfa
+          POSTGRES_PASSWORD: edumfa
+          POSTGRES_DB: edumfa
+          MARIADB_USER: edumfa
+          MARIADB_PASSWORD: edumfa
+          MARIADB_DATABASE: edumfa
+          MARIADB_ROOT_PASSWORD: edumfa
+        ports:
+          - ${{ matrix.port }}:${{ matrix.port }}
+        options: >-
+          --health-cmd "${{ matrix.health_cmd }}"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Setup UV
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          enable-cache: true
+      - name: Install system dependencies
+        if: matrix.system_deps != ''
+        run: sudo apt-get install -y ${{ matrix.system_deps }}
+      - name: Prepare migration test environment
+        env:
+          DATABASE_URL: ${{ matrix.database_url }}
+          EDUMFA_EXTRAS: ${{ matrix.extras }}
+        run: |
+          set -euo pipefail
+
+          work_dir="$RUNNER_TEMP/edumfa-release-migration"
+          venv_dir="$work_dir/.venv"
+          config_file="$work_dir/edumfa.cfg"
+
+          uv venv --seed --clear "$venv_dir"
+
+          if [ -n "$EDUMFA_EXTRAS" ]; then
+            release_package="edumfa[$EDUMFA_EXTRAS]"
+            checkout_package=".[$EDUMFA_EXTRAS]"
+          else
+            release_package="edumfa"
+            checkout_package="."
+          fi
+
+          cat > "$config_file" <<EOF
+          SQLALCHEMY_DATABASE_URI = "$DATABASE_URL"
+          SECRET_KEY = "ci-migration-secret"
+          EDUMFA_PEPPER = ""
+          EDUMFA_LOGFILE = "$work_dir/edumfa.log"
+          EDUMFA_ENCFILE = "$work_dir/enckey"
+          EDUMFA_AUDIT_KEY_PRIVATE = "$work_dir/private.pem"
+          EDUMFA_AUDIT_KEY_PUBLIC = "$work_dir/public.pem"
+          EDUMFA_ENGINE_REGISTRY_CLASS = "null"
+          EOF
+
+          echo "$venv_dir/bin" >> "$GITHUB_PATH"
+          {
+            echo "EDUMFA_CONFIGFILE=$config_file"
+            echo "VENV_DIR=$venv_dir"
+            echo "RELEASE_PACKAGE=$release_package"
+            echo "CHECKOUT_PACKAGE=$checkout_package"
+          } >> "$GITHUB_ENV"
+
+      - name: Install latest release for ${{ matrix.database }}
+        run: |
+          set -euo pipefail
+
+          source "$VENV_DIR/bin/activate"
+          echo "Installing released eduMFA package: $RELEASE_PACKAGE"
+          uv pip install "$RELEASE_PACKAGE" --prerelease=allow
+          python -c 'import importlib.metadata as metadata; print("Release version:", metadata.version("edumfa"))'
+
+      - name: Create schema with latest release
+        run: |
+          set -euo pipefail
+
+          source "$VENV_DIR/bin/activate"
+          echo "Creating schema with released eduMFA"
+          edumfa-manage -q create_tables
+          edumfa-schema-upgrade "$VENV_DIR/lib/edumfa/migrations/" --skipstamp
+
+      - name: Install current checkout for ${{ matrix.database }}
+        run: |
+          set -euo pipefail
+
+          source "$VENV_DIR/bin/activate"
+          echo "Installing current checkout: $CHECKOUT_PACKAGE"
+          uv pip install --reinstall "$CHECKOUT_PACKAGE" --prerelease=allow
+          python -c 'import importlib.metadata as metadata; print("Checkout version:", metadata.version("edumfa"))'
+
+      - name: Run current migrations against release schema
+        run: |
+          set -euo pipefail
+
+          source "$VENV_DIR/bin/activate"
+          echo "Migrating released schema with current migrations"
+          edumfa-schema-upgrade migrations --skipstamp
+
+          echo "Current migration revision after upgrade"
+          edumfa-manage -q db current -d "$GITHUB_WORKSPACE/migrations"
 
   database-full-suite:
     runs-on: ubuntu-latest
@@ -148,3 +279,4 @@ jobs:
         run: uv sync --group test --extra postgres
       - name: Run database backend checks
         run: uv run pytest --import-mode=importlib -vs -m dbcontainer tests/test_db_backends.py
+
