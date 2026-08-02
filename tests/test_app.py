@@ -3,8 +3,10 @@ This testfile tests the basic app functionality of the privacyIDEA app
 """
 
 import inspect
+import io
 import logging
 import os
+import tempfile
 import unittest
 from unittest import mock
 
@@ -111,6 +113,75 @@ class AppTestCase(unittest.TestCase):
             m for m in members if not (m[0].startswith("__") and m[0].endswith("__"))
         ]
         self.assertTrue(all(app.config[k] == v for k, v in conf), app)
+
+    def test_02a_config_file_from_env_is_parsed(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".py") as config_file:
+            config_file.write('EDUMFA_LOGFILE = "env-config.log"\n')
+            config_file.write('EDUMFA_CUSTOM_CSS = "env-custom.css"\n')
+            config_file.flush()
+
+            with mock.patch.dict(os.environ, {"EDUMFA_CONFIGFILE": config_file.name}):
+                app = create_app(config_name="testing", silent=True)
+
+        self.assertEqual(app.config["EDUMFA_LOGFILE"], "env-config.log")
+        self.assertEqual(app.config["EDUMFA_CUSTOM_CSS"], "env-custom.css")
+
+    def test_02b_invalid_config_file_from_env_raises(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".py") as config_file:
+            config_file.write("this is not valid python config\n")
+            config_file.flush()
+
+            stderr = io.StringIO()
+            with mock.patch.dict(os.environ, {"EDUMFA_CONFIGFILE": config_file.name}):
+                with mock.patch("sys.stderr", stderr):
+                    with self.assertRaises(SyntaxError):
+                        create_app(config_name="testing", silent=True)
+
+        output = stderr.getvalue()
+        self.assertIn("ERROR: edumfa create_app could not read", output)
+        self.assertIn(config_file.name, output)
+        self.assertIn("Reason: invalid syntax", output)
+
+    def test_02c_missing_config_file_from_env_raises_verbose(self):
+        with tempfile.TemporaryDirectory() as config_dir:
+            missing_config_file = os.path.join(config_dir, "missing-edumfa.cfg")
+            stdout = io.StringIO()
+            stderr = io.StringIO()
+
+            with mock.patch.dict(os.environ, {"EDUMFA_CONFIGFILE": missing_config_file}):
+                with mock.patch("sys.stdout", stdout), mock.patch("sys.stderr", stderr):
+                    with self.assertRaises(OSError) as cm:
+                        create_app(config_name="testing")
+
+        self.assertIn("Unable to load configuration file", str(cm.exception))
+        self.assertIn(missing_config_file, str(cm.exception))
+        self.assertIn("The configuration name is: testing", stdout.getvalue())
+        self.assertIn(
+            f"Additional configuration will be read from the file {missing_config_file}",
+            stdout.getvalue(),
+        )
+        self.assertIn("WARNING: edumfa create_app has no access", stderr.getvalue())
+        self.assertIn(missing_config_file, stderr.getvalue())
+
+    def test_02d_missing_explicit_config_file_raises(self):
+        with tempfile.TemporaryDirectory() as config_dir:
+            missing_config_file = os.path.join(
+                config_dir, "missing-explicit-edumfa.cfg"
+            )
+            stderr = io.StringIO()
+
+            with mock.patch("sys.stderr", stderr):
+                with self.assertRaises(OSError) as cm:
+                    create_app(
+                        config_name="testing",
+                        config_file=missing_config_file,
+                        silent=True,
+                    )
+
+        self.assertIn("Unable to load configuration file", str(cm.exception))
+        self.assertIn(missing_config_file, str(cm.exception))
+        self.assertIn("WARNING: edumfa create_app has no access", stderr.getvalue())
+        self.assertIn(missing_config_file, stderr.getvalue())
 
     def test_03_logging_config_file(self):
         class Config(TestingConfig):
