@@ -167,6 +167,7 @@ msgstr "Action"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -221,6 +222,10 @@ msgstr "Administration"
 msgid "Administrator"
 msgstr "Administrateur"
 
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
+
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
 msgstr "Tous les connecteurs CA"
@@ -257,6 +262,11 @@ msgstr "Tous les résolveurs"
 msgid "All SMS Gateways"
 msgstr "Toutes les passerelles SMS"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "All realms"
+msgstr "Tous les domaines"
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "Tous les jetons"
@@ -276,6 +286,14 @@ msgstr "Un attribut qui contient l'adresse IP."
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "Un courriel de réinitialisation du mot de passe vous a été envoyé."
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Any type"
+msgstr ""
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -2496,6 +2514,7 @@ msgstr ""
 "requête."
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4213,6 +4232,7 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr ""
@@ -4373,6 +4393,10 @@ msgstr ""
 
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Users with matching token:"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4633,6 +4657,7 @@ msgstr ""
 msgid "action detail"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4667,6 +4692,7 @@ msgstr "client"
 msgid "description"
 msgstr "description"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -4977,6 +5003,10 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "Jetons"
 
 #~ msgctxt "subscription"
 #~ msgid "Level"
