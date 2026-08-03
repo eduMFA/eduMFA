@@ -14,8 +14,8 @@
   position: relative;
   height: auto;
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   padding: 10px;
   font-size: 16px;
 }
@@ -34,7 +34,7 @@
 }
 
 .pi-submenu {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .form-signin .round-none {
@@ -45,16 +45,16 @@
 }
 
 .lock-dialog {
-   background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .deactivated {
-    text-align: center;
+  text-align: center;
 }
 
 .pilogo {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    height: 100%;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
 }

@@ -20,81 +20,95 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-myApp.controller("smtpServerController", ["$scope", "$stateParams", "inform",
-                                          "gettextCatalog", "$state",
-                                          "$location", "ConfigFactory",
-                                          function($scope, $stateParams, inform,
-                                                   gettextCatalog, $state,
-                                                   $location, ConfigFactory) {
+myApp.controller("smtpServerController", [
+  "$scope",
+  "$stateParams",
+  "inform",
+  "gettextCatalog",
+  "$state",
+  "$location",
+  "ConfigFactory",
+  function (
+    $scope,
+    $stateParams,
+    inform,
+    gettextCatalog,
+    $state,
+    $location,
+    ConfigFactory,
+  ) {
     // set the default route
     if ($location.path() === "/config/smtp") {
-        $location.path("/config/smtp/list");
+      $location.path("/config/smtp/list");
     }
 
     // Get all servers
     $scope.getSmtpServers = function (identifier) {
-        ConfigFactory.getSmtp(function(data) {
-            $scope.smtpServers = data.result.value;
-            //debug: console.log("Fetched all smtp servers");
-            //debug: console.log($scope.smtpServers);
-            // return one single smtp server
-            if (identifier) {
-                $scope.params = $scope.smtpServers[identifier];
-                $scope.params["identifier"] = identifier;
-            }
-        });
+      ConfigFactory.getSmtp(function (data) {
+        $scope.smtpServers = data.result.value;
+        //debug: console.log("Fetched all smtp servers");
+        //debug: console.log($scope.smtpServers);
+        // return one single smtp server
+        if (identifier) {
+          $scope.params = $scope.smtpServers[identifier];
+          $scope.params["identifier"] = identifier;
+        }
+      });
     };
 
     if ($location.path() == "/config/smtp/list") {
-        // in case of list we fetch all smtp servers
-        $scope.getSmtpServers();
+      // in case of list we fetch all smtp servers
+      $scope.getSmtpServers();
     }
 
     $scope.identifier = $stateParams.identifier;
     if ($scope.identifier) {
-        // We are editing an existing SMTP Server
-        $scope.getSmtpServers($scope.identifier);
+      // We are editing an existing SMTP Server
+      $scope.getSmtpServers($scope.identifier);
     } else {
-        // This is a new SMTP server
-        $scope.params = {
-            tls: true,
-            port: 25,
-            timeout: 10
-        }
+      // This is a new SMTP server
+      $scope.params = {
+        tls: true,
+        port: 25,
+        timeout: 10,
+      };
     }
 
     $scope.delSmtpServer = function (identifier) {
-        ConfigFactory.delSmtp(identifier, function(data) {
-            $scope.getSmtpServers();
-        });
+      ConfigFactory.delSmtp(identifier, function (data) {
+        $scope.getSmtpServers();
+      });
     };
 
     $scope.addSmtpServer = function (params) {
-        ConfigFactory.addSmtp(params, function(data) {
-            $scope.getSmtpServers();
-        });
+      ConfigFactory.addSmtp(params, function (data) {
+        $scope.getSmtpServers();
+      });
     };
 
-    $scope.sendTestEmail = function() {
-        ConfigFactory.testSmtp($scope.params, function(data) {
-           if (data.result.value === true) {
-               inform.add(gettextCatalog.getString("Test Email sent" +
-                   " successfully."),
-                   {type: "info"});
-           }
-        });
+    $scope.sendTestEmail = function () {
+      ConfigFactory.testSmtp($scope.params, function (data) {
+        if (data.result.value === true) {
+          inform.add(
+            gettextCatalog.getString("Test Email sent" + " successfully."),
+            { type: "info" },
+          );
+        }
+      });
     };
 
-    $scope.saveSMTPServer = function() {
-        ConfigFactory.addSmtp($scope.params, function(data){
-            if (data.result.status === true) {
-                inform.add(gettextCatalog.getString("SMTP Config saved."),
-                                {type: "info"});
-                $state.go('config.smtp.list');
-            }
-        });
+    $scope.saveSMTPServer = function () {
+      ConfigFactory.addSmtp($scope.params, function (data) {
+        if (data.result.status === true) {
+          inform.add(gettextCatalog.getString("SMTP Config saved."), {
+            type: "info",
+          });
+          $state.go("config.smtp.list");
+        }
+      });
     };
 
     // listen to the reload broadcast
     $scope.$on("piReload", $scope.getSmtpServers);
-}]);
+  },
+]);
