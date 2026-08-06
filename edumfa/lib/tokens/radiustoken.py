@@ -461,6 +461,7 @@ class RadiusTokenClass(RemoteTokenClass):
         system_radius_settings = self.get_tokeninfo("radius.system_settings")
         radius_timeout = 5
         radius_retries = 3
+        radius_enforce_ma = False
         if radius_identifier:
             # New configuration
             radius_server_object = get_radius(radius_identifier)
@@ -471,10 +472,14 @@ class RadiusTokenClass(RemoteTokenClass):
             radius_dictionary = radius_server_object.config.dictionary
             radius_timeout = int(radius_server_object.config.timeout or 10)
             radius_retries = int(radius_server_object.config.retries or 1)
+            radius_enforce_ma = radius_server_object.config.enforce_ma
         elif system_radius_settings:
             # system configuration
             radius_server = get_from_config("radius.server")
             radius_secret = get_from_config("radius.secret")
+            radius_enforce_ma = get_from_config(
+                "radius.enforce_ma", False, return_bool=True
+            )
         else:
             # individual token settings
             radius_server = self.get_tokeninfo("radius.server")
@@ -528,6 +533,9 @@ class RadiusTokenClass(RemoteTokenClass):
                 NAS_Identifier=nas_identifier.encode("ascii"),
             )
 
+            if radius_enforce_ma:
+                req.add_message_authenticator()
+
             req["User-Password"] = req.PwCrypt(otpval)
 
             if radius_state:
@@ -541,6 +549,22 @@ class RadiusTokenClass(RemoteTokenClass):
                     f"The remote RADIUS server {r_server} timeout out for user {radius_user}."
                 )
                 return AccessReject
+
+            if radius_enforce_ma:
+                # verify_message_authenticator() raises a generic exception
+                # if the M-A attribute is missing, so check for it first
+                if "Message-Authenticator" in response:
+                    if not response.verify_message_authenticator(
+                        original_authenticator=req.authenticator
+                    ):
+                        log.info(
+                            f"Radiusserver {r_server} sent broken "
+                            "Message-Authenticator"
+                        )
+                        return AccessReject
+                else:
+                    log.info(f"Radiusserver {r_server} sent no Message-Authenticator")
+                    return AccessReject
 
             # handle the RADIUS challenge
             if response.code == pyrad.packet.AccessChallenge:
