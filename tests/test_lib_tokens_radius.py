@@ -446,3 +446,38 @@ class RadiusTokenTestCase(MyTestCase):
         r, otp_count, _rpl = token.authenticate("some_remote_value")
         self.assertFalse(r)
         self.assertTrue(otp_count < 0)
+
+    @radiusmock.activate
+    def test_12_enforce_message_authenticator(self):
+        # The RADIUS token path must apply the same Message-Authenticator
+        # handling as RADIUSServer.request, which is the BlastRADIUS
+        # (CVE-2024-3596) mitigation. A server configured with enforce_ma must
+        # reject a response that carries no Message-Authenticator, and must
+        # reject one whose Message-Authenticator does not verify.
+        set_edumfa_config("radius.dictfile", DICT_FILE)
+        r = add_radius(
+            identifier="ma_server",
+            server="1.2.3.4",
+            secret="testing123",
+            dictionary=DICT_FILE,
+            enforce_ma=True,
+        )
+        self.assertTrue(r > 0)
+        token = init_token(
+            {"type": "radius", "radius.identifier": "ma_server", "radius.user": "user1"}
+        )
+
+        # No Message-Authenticator on the response: refuse.
+        radiusmock.setdata(response=radiusmock.AccessAccept)
+        r = token.authenticate("radiuspassword")
+        self.assertEqual(r[0], False)
+
+        # Present and valid: accept.
+        radiusmock.setdata(response=radiusmock.AccessAccept, ma=True)
+        r = token.authenticate("radiuspassword")
+        self.assertEqual(r[0], True)
+
+        # Present but broken: refuse.
+        radiusmock.setdata(response=radiusmock.AccessAccept, ma=True, broken_ma=True)
+        r = token.authenticate("radiuspassword")
+        self.assertEqual(r[0], False)
