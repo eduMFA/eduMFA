@@ -200,32 +200,33 @@
                         </isteven-multi-select>
                         <br>
                         <label translate>Legend:</label>
-                        <div style="display: flex; flex-wrap: wrap; gap: 6px 10px;">
-                            <!-- checkboxen next to each other -->
-                            <label ng-repeat="key in selectedStatsKeys">
-                                <span ng-if="key.borderDash[0]" 
-                                ng-style="{'display': 'inline-block', 
-                                    'width': '25px', 
-                                    'height': '0px', 
-                                    'border-bottom': key.borderDash[0]+2 +'px dashed ' + key.color
-                                    }"></span>
-                                <span ng-if="!key.borderDash[0]" 
-                                ng-style="{'background-color': key.color, 
-                                    'display': 'inline-block', 
-                                    'width': '25px', 
-                                    'height': '10px', 
-                                    'border-radius': '3px', 
-                                    'border': '1px solid #ccc'}">
-                                </span> <!-- style needed for display of legend -->
-                                <label>
-                                    <input type="checkbox" ng-model="key.checked" ng-change="changeHidden(key)">
-                                    {{key.name}}{{key.loadingText}}</label>
-                            </label>
+                        <div class="chart-legend">
+                                <div class="legend-item" ng-repeat="key in selectedStatsKeys">
+                                    <input type="checkbox" id="legend-{{$index}}" ng-model="key.checked"
+                                        ng-change="changeHidden(key)">
+                                    <label for="legend-{{$index}}" class="legend-label">
+                                        <svg class="legend-swatch" viewBox="0 0 26 14">
+                                            <line class="legend-line" x1="0" y1="7" x2="26" y2="7"
+                                                ng-attr-stroke="{{key.color}}"
+                                                ng-attr-stroke-dasharray="{{key.borderDash ? key.borderDash.join(',') : ''}}" />
+
+                                            <circle ng-if="key.pointStyle === 'circle'" class="legend-symbol" cx="13"
+                                                cy="7" r="3.5" ng-attr-fill="{{key.color}}" />
+
+                                            <rect ng-if="key.pointStyle === 'rect'" class="legend-symbol" x="9.5"
+                                                y="3.5" width="7" height="7" ng-attr-fill="{{key.color}}" />
+
+                                            <polygon ng-if="key.pointStyle === 'triangle'" class="legend-symbol"
+                                                points="13,2.5 17,10 9,10" ng-attr-fill="{{key.color}}" />
+                                        </svg>
+                                        <span>{{key.name}}{{getStatusText(key.name)}}</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
+                        <timeline-chart token_timeline="tokenTimeline"></timeline-chart>
                     </div>
-                    <timeline-chart token_timeline=" tokenTimeline"></timeline-chart>
                 </div>
             </div>
         </div>
     </div>
-</div>
