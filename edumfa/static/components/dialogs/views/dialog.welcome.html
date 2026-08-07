@@ -4,13 +4,13 @@
      role="dialog"
      ng-show="welcomeStep < 5"
      data-backdrop="static" data-keyboard="false"
-     aria-labelledby="myModalLabel"
+	     aria-labelledby="welcomeTitle{{ welcomeStep }}"
      aria-hidden="true">
     <div class="modal-dialog">
 
         <div class="modal-content" ng-show="welcomeStep === 0">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel" translate
+                <h4 class="modal-title" id="welcomeTitle0" translate
                 >Welcome</h4>
             </div>
 
@@ -33,7 +33,7 @@
 
         <div class="modal-content" ng-show="welcomeStep === 1">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel" translate
+                <h4 class="modal-title" id="welcomeTitle1" translate
                 >The value of open source</h4>
             </div>
             <div class="modal-body" translate>
@@ -69,7 +69,7 @@
 
         <div class="modal-content" ng-show="welcomeStep === 3">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel" translate
+                <h4 class="modal-title" id="welcomeTitle3" translate
                 >Thank you for improving your security!</h4>
             </div>
             <div class="modal-body" translate>
