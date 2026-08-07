@@ -323,14 +323,10 @@ class AuditTestCase(MyTestCase):
             "edumfa.lib.auditmodules.sqlaudit.create_engine"
         ) as engine_mock:
             cfg = self.app.config.copy()
-            # On MariaDB/MySQL, create_app may pre-populate EDUMFA_AUDIT_SQL_OPTIONS
-            # to preserve DB-specific defaults for the audit DB. Remove it here so
-            # this assertion really validates the SQLALCHEMY_ENGINE_OPTIONS fallback.
-            cfg.pop("EDUMFA_AUDIT_SQL_OPTIONS", None)
-            cfg.update({"SQLALCHEMY_ENGINE_OPTIONS": {"pool_pre_ping": True}})
+            cfg.update({"SQLALCHEMY_ENGINE_OPTIONS": {"foo": "bar"}})
             _audit = getAudit(cfg)
             engine_mock.assert_called_once_with(
-                AUDIT_DB, pool_size=20, pool_recycle=600, pool_pre_ping=True
+                AUDIT_DB, pool_size=20, pool_recycle=600, foo="bar"
             )
 
         # check that EDUMFA_AUDIT_SQL_OPTIONS overwrite SQLALCHEMY_ENGINE_OPTIONS
@@ -339,10 +335,10 @@ class AuditTestCase(MyTestCase):
         ) as engine_mock:
             cfg = self.app.config.copy()
             cfg.update({"SQLALCHEMY_ENGINE_OPTIONS": {"foo": "bar", "temp": 100}})
-            cfg.update({"EDUMFA_AUDIT_SQL_OPTIONS": {"pool_pre_ping": True}})
+            cfg.update({"EDUMFA_AUDIT_SQL_OPTIONS": {"foo": "baz"}})
             _audit = getAudit(cfg)
             engine_mock.assert_called_once_with(
-                AUDIT_DB, pool_size=20, pool_recycle=600, pool_pre_ping=True
+                AUDIT_DB, pool_size=20, pool_recycle=600, foo="baz"
             )
 
         # TODO: add new audit entry and check for new style signature

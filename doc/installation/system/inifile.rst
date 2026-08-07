@@ -27,6 +27,8 @@ The file should contain the following contents::
    SQLALCHEMY_DATABASE_URI = 'sqlite:////etc/edumfa/data.sqlite'
    # Set maximum identifier length to 128
    # SQLALCHEMY_ENGINE_OPTIONS = {"max_identifier_length": 128}
+   # Use READ COMMITTED with MySQL/MariaDB (see below)
+   # SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "READ COMMITTED"}
    # This is used to encrypt the auth_token
    SECRET_KEY = 't0p s3cr3t'
    # This is used to encrypt the admin passwords
@@ -88,31 +90,27 @@ slower but more robust and can be necessary in large redundant setups.
 
 .. _mysql_isolation_level:
 
-If your database is MySQL or MariaDB, eduMFA automatically uses the
-``READ COMMITTED`` transaction isolation level instead of the MySQL/MariaDB
-default ``REPEATABLE READ``. With ``REPEATABLE READ`` a consistent read
-snapshot is pinned at the transaction's first read, which can cause errors
-like *"Record has changed since last read ...; try restarting transaction"*
-when handling several requests under high load. PostgreSQL already defaults 
-to ``READ COMMITTED``.
+MySQL and MariaDB default to the ``REPEATABLE READ`` transaction isolation
+level. It pins a consistent read snapshot at the transaction's first read,
+which can cause errors like *"Record has changed since last read ...; try
+restarting transaction"* when handling several requests under high load.
+Configure eduMFA to use ``READ COMMITTED`` by adding the following option to
+``edumfa.cfg``::
 
-You can opt out of this behavior by explicitly configuring an
-``isolation_level`` in ``SQLALCHEMY_ENGINE_OPTIONS``, which always takes
-precedence. For example, to restore the MySQL/MariaDB default::
+   SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "READ COMMITTED"}
 
-   SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "REPEATABLE READ"}
-
-In the same way you can choose any other isolation level supported by your
-database, e.g. ``SERIALIZABLE``. See the `SQLAlchemy documentation
+If ``SQLALCHEMY_ENGINE_OPTIONS`` already contains other options, add the
+``isolation_level`` entry to the existing dictionary instead of defining the
+setting a second time. PostgreSQL already uses ``READ COMMITTED`` by default.
+See the `SQLAlchemy documentation
 <https://docs.sqlalchemy.org/en/20/core/connections.html#setting-transaction-isolation-levels-including-dbapi-autocommit>`_
 for details.
 
-.. note:: This only applies to the main eduMFA database. The SQL audit log
-   is not affected: even if ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set and the
-   audit module falls back to ``SQLALCHEMY_ENGINE_OPTIONS``, it uses your
-   original options without the automatically applied isolation level. This
-   way an audit database on another system (e.g. SQLite, where
-   ``READ COMMITTED`` is not a valid isolation level) keeps working.
+.. note:: The SQL audit module uses ``SQLALCHEMY_ENGINE_OPTIONS`` as a fallback.
+   If ``EDUMFA_AUDIT_SQL_URI`` points to a different database backend which
+   does not support ``READ COMMITTED`` (for example SQLite), also add
+   ``EDUMFA_AUDIT_SQL_OPTIONS = {}`` to ``edumfa.cfg``. You can alternatively
+   configure audit-engine-specific options in that dictionary.
 
 ``EDUMFA_HASH_ALGO_LIST`` is a user-defined list of hash algorithms which are used
 to verify passwords and pins. The first entry in ``EDUMFA_HASH_ALGO_LIST`` is used

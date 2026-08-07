@@ -25,10 +25,9 @@ eduMFA.
 
 .. note:: MySQL and MariaDB default to the ``REPEATABLE READ`` transaction
    isolation level, which can lead to errors like *"Record has changed since
-   last read"* when under high load. As security-sensitive operations 
-   are done via locking anyway, eduMFA therefore automatically uses 
-   the ``READ COMMITTED`` isolation level. If you want to opt out or 
-   configure a different isolation level, see the :ref:`config file
+   last read"* when under high load. Configure eduMFA to use the
+   ``READ COMMITTED`` isolation level in ``edumfa.cfg`` as described in the
+   :ref:`config file
    <mysql_isolation_level>` documentation.
 
 
