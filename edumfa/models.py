@@ -33,7 +33,6 @@ from dateutil.tz import tzutc
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger, and_
 from sqlalchemy.dialects import mysql, postgresql, sqlite
-from sqlalchemy.engine import make_url
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.orm import sessionmaker
@@ -75,35 +74,7 @@ BigIntegerType = (
     .with_variant(sqlite.INTEGER(), "sqlite")
 )
 
-class EduMFASQLAlchemy(SQLAlchemy):
-    """Flask-SQLAlchemy extension applying eduMFA's database specific defaults."""
-
-    def _apply_driver_defaults(self, options, app):
-        """Force the ``READ COMMITTED`` isolation level on MariaDB/MySQL.
-
-        MariaDB/MySQL default to the REPEATABLE READ isolation level, which pins
-        a consistent read snapshot at the transaction's first read. During the
-        concurrent updates that happen while validating the same token from
-        several requests at once, this raises error 1020 (ER_CHECKREAD, "Record
-        has changed since last read ...; try restarting transaction").
-        PostgreSQL already defaults to READ COMMITTED, which the code targets
-        and is tested against.
-
-        An ``isolation_level`` configured in ``SQLALCHEMY_ENGINE_OPTIONS`` (or in
-        ``SQLALCHEMY_BINDS``) always takes precedence.
-
-        ``_apply_driver_defaults`` is a Flask-SQLAlchemy internal hook, called
-        for every engine right before it is created. This is the earliest point
-        where the app configuration is available, as the database URI is only
-        known once ``init_app`` runs. When updating flask-sqlalchemy, check that
-        the hook still exists.
-        """
-        super()._apply_driver_defaults(options, app)
-        if make_url(options["url"]).drivername.startswith(("mysql", "mariadb")):
-            options.setdefault("isolation_level", "READ COMMITTED")
-
-
-db = EduMFASQLAlchemy()
+db = SQLAlchemy()
 
 
 # Add fractions to the MySQL DataTime column type
