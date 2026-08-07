@@ -183,7 +183,8 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="panel panel-default" ng-show="checkRight('statistics_read')">
+            <div class="panel panel-default" ng-controller="monitoringController"
+                ng-show="checkRight('statistics_read')">
                 <div class="panel-heading" translate>Token Chart</div>
                 <label ng-show="availableStatsKeys.length == 0" translate>{{statsKeysLoadingText}}</label>
                 <div class="panel-body" ng-show="availableStatsKeys.length > 0">
