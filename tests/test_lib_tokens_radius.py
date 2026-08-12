@@ -469,8 +469,18 @@ class RadiusTokenTestCase(MyTestCase):
 
         # No Message-Authenticator on the response: refuse.
         radiusmock.setdata(response=radiusmock.AccessAccept)
-        r = token.authenticate("radiuspassword")
+        # This is the options dict check_token_list works with: is_challenge_response
+        # clears "radius_result" so that only one method in the chain talks to the
+        # RADIUS server.
+        opts = {"radius_result": None}
+        r = token.authenticate("radiuspassword", options=opts)
         self.assertEqual(r[0], False)
+        # The refusal has to look like any other rejected authentication. If
+        # "radius_result" stays unset, the next method in the chain sends a
+        # second request with the same OTP value.
+        self.assertEqual(opts.get("radius_result"), radiusmock.AccessReject)
+        self.assertEqual(opts.get("radius_state"), "<REJECTED>")
+        self.assertEqual(opts.get("radius_message"), "RADIUS authentication failed")
 
         # Present and valid: accept.
         radiusmock.setdata(response=radiusmock.AccessAccept, ma=True)
@@ -479,5 +489,21 @@ class RadiusTokenTestCase(MyTestCase):
 
         # Present but broken: refuse.
         radiusmock.setdata(response=radiusmock.AccessAccept, ma=True, broken_ma=True)
-        r = token.authenticate("radiuspassword")
+        opts = {"radius_result": None}
+        r = token.authenticate("radiuspassword", options=opts)
         self.assertEqual(r[0], False)
+        self.assertEqual(opts.get("radius_result"), radiusmock.AccessReject)
+
+        # The Message-Authenticator on an AccessChallenge is checked as well, and
+        # a broken one must not reach the challenge handling.
+        radiusmock.setdata(
+            response=radiusmock.AccessChallenge,
+            response_data={"State": ["12345"], "Reply_Message": ["Enter your OTP"]},
+            ma=True,
+            broken_ma=True,
+        )
+        opts = {"radius_result": None}
+        r = token.is_challenge_request("radiuspassword", options=opts)
+        self.assertFalse(r)
+        self.assertEqual(opts.get("radius_result"), radiusmock.AccessReject)
+        self.assertEqual(opts.get("radius_message"), "RADIUS authentication failed")

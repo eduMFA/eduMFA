@@ -477,9 +477,6 @@ class RadiusTokenClass(RemoteTokenClass):
             # system configuration
             radius_server = get_from_config("radius.server")
             radius_secret = get_from_config("radius.secret")
-            radius_enforce_ma = get_from_config(
-                "radius.enforce_ma", False, return_bool=True
-            )
         else:
             # individual token settings
             radius_server = self.get_tokeninfo("radius.server")
@@ -550,24 +547,31 @@ class RadiusTokenClass(RemoteTokenClass):
                 )
                 return AccessReject
 
+            message_authenticator_ok = True
             if radius_enforce_ma:
                 # verify_message_authenticator() raises a generic exception
                 # if the M-A attribute is missing, so check for it first
-                if "Message-Authenticator" in response:
-                    if not response.verify_message_authenticator(
-                        original_authenticator=req.authenticator
-                    ):
-                        log.info(
-                            f"Radiusserver {r_server} sent broken "
-                            "Message-Authenticator"
-                        )
-                        return AccessReject
-                else:
+                if "Message-Authenticator" not in response:
                     log.info(f"Radiusserver {r_server} sent no Message-Authenticator")
-                    return AccessReject
+                    message_authenticator_ok = False
+                elif not response.verify_message_authenticator(
+                    original_authenticator=req.authenticator
+                ):
+                    log.info(
+                        f"Radiusserver {r_server} sent broken Message-Authenticator"
+                    )
+                    message_authenticator_ok = False
 
+            # An unverifiable response is treated like a rejected one, so that
+            # the option updates at the end of this method still happen. Bailing
+            # out here would leave "radius_result" unset and make authenticate()
+            # send a second request with the same OTP value.
+            if not message_authenticator_ok:
+                radius_state = "<REJECTED>"
+                radius_message = "RADIUS authentication failed"
+                result = AccessReject
             # handle the RADIUS challenge
-            if response.code == pyrad.packet.AccessChallenge:
+            elif response.code == pyrad.packet.AccessChallenge:
                 # now we map this to a eduMFA challenge
                 if "State" in response:
                     radius_state = response["State"][0]
