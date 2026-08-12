@@ -42,7 +42,7 @@ configobj==5.0.9
     # via edumfa (pyproject.toml)
 croniter==6.2.4
     # via edumfa (pyproject.toml)
-cryptography==49.0.0
+cryptography==50.0.0
     # via
     #   edumfa (pyproject.toml)
     #   google-auth
@@ -116,7 +116,7 @@ pyjwt==2.13.0
     # via edumfa (pyproject.toml)
 pymysql==1.2.0
     # via edumfa (pyproject.toml)
-pyopenssl==26.3.0
+pyopenssl==26.4.0
     # via edumfa (pyproject.toml)
 pyrad==2.5.4
     # via edumfa (pyproject.toml)
