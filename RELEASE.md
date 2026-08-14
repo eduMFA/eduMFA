@@ -194,7 +194,11 @@ been checked:
    installation and an upgrade from the preceding release.
 6. Confirm that Read the Docs built `vX.Y.Z` and rendered the changelog and
    upgrade instructions correctly.
-7. Close the milestone and announce the release through the usual channels.
+7. Open the [eduMFA documentation landing page](https://edumfa.readthedocs.io/)
+   and confirm that it redirects to `/en/vX.Y.Z/` and displays
+   `eduMFA X.Y.Z documentation`. If it still points to the previous release,
+   update the default version in Read the Docs before announcing the release.
+8. Close the milestone and announce the release through the usual channels.
 
 If publication fails transiently, re-run only the failed job and repeat the
 verification. PyPI releases and container tags may already be public when a
