@@ -21,27 +21,48 @@
  *
  */
 
-myApp.factory("AuditFactory", ["AuthFactory", "$http", "$state", "$rootScope",
-                               "auditUrl", "inform",
-                               function (AuthFactory, $http, $state, $rootScope,
-                                         auditUrl, inform) {
-        /**
+myApp.factory("AuditFactory", [
+  "AuthFactory",
+  "$http",
+  "$state",
+  "$rootScope",
+  "auditUrl",
+  "inform",
+  function (AuthFactory, $http, $state, $rootScope, auditUrl, inform) {
+    /**
          Each service - just like this service factory - is a singleton.
          */
-        return {
-            get: function (params, callback) {
-                $http.get(auditUrl + "/", {
-                    headers: {'Authorization': AuthFactory.getAuthToken()},
-                    params: params
-                }).then(function(response) { callback(response.data) },
-                    function(error) { AuthFactory.authError(error.data) });
+    return {
+      get: function (params, callback) {
+        $http
+          .get(auditUrl + "/", {
+            headers: { Authorization: AuthFactory.getAuthToken() },
+            params: params,
+          })
+          .then(
+            function (response) {
+              callback(response.data);
             },
-            download: function(params, filename, callback) {
-                $http.get(auditUrl + "/" + filename, {
-                    headers: {'Authorization': AuthFactory.getAuthToken()},
-                    params: params
-                }).then(function(response) { callback(response.data) },
-                    function(error) { AuthFactory.authError(error.data) });
-            }
-        }
-    }]);
+            function (error) {
+              AuthFactory.authError(error.data);
+            },
+          );
+      },
+      download: function (params, filename, callback) {
+        $http
+          .get(auditUrl + "/" + filename, {
+            headers: { Authorization: AuthFactory.getAuthToken() },
+            params: params,
+          })
+          .then(
+            function (response) {
+              callback(response.data);
+            },
+            function (error) {
+              AuthFactory.authError(error.data);
+            },
+          );
+      },
+    };
+  },
+]);

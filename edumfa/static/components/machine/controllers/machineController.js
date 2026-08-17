@@ -21,66 +21,76 @@
  *
  */
 
-angular.module("eduMfaApp")
-    .controller("machineController", ['$scope', '$location', 'machineUrl',
-                                      'realmUrl', '$rootScope', 'MachineFactory',
-                                      '$stateParams',
-                                      function ($scope, $location, machineUrl,
-                                                realmUrl, $rootScope,
-                                                MachineFactory, $stateParams) {
+angular.module("eduMfaApp").controller("machineController", [
+  "$scope",
+  "$location",
+  "machineUrl",
+  "realmUrl",
+  "$rootScope",
+  "MachineFactory",
+  "$stateParams",
+  function (
+    $scope,
+    $location,
+    machineUrl,
+    realmUrl,
+    $rootScope,
+    MachineFactory,
+    $stateParams,
+  ) {
+    $scope.machinesPerPage = 15;
+    $scope.params = {
+      page: 1,
+      hostnameFilter: "",
+      ipFilter: "",
+      resolverFilter: "",
+    };
+    // scroll to the top of the page
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
+    // go to the list view by default
+    if ($location.path() === "/machine") {
+      $location.path("/machine/list");
+    }
 
-        $scope.machinesPerPage = 15;
-        $scope.params = {page: 1,
-                         hostnameFilter: "",
-                         ipFilter: "",
-                         resolverFilter: ""};
-        // scroll to the top of the page
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
-        // go to the list view by default
-        if ($location.path() === "/machine") {
-            $location.path("/machine/list");
-        }
+    // listen to the reload broadcast
+    $scope.$on("piReload", function () {
+      $scope._getMachines();
+    });
 
-        // listen to the reload broadcast
-        $scope.$on("piReload", function() {
-            $scope._getMachines();
-        });
+    if ($stateParams.resolver) {
+      $scope.params.resolverFilter = $stateParams.resolver;
+    }
 
-        if ($stateParams.resolver) {
-            $scope.params.resolverFilter = $stateParams.resolver;
-        }
+    $scope._getMachines = function () {
+      var params = {};
+      if ($scope.params.hostnameFilter) {
+        params.hostname = $scope.params.hostnameFilter;
+      }
+      if ($scope.params.ipFilter) {
+        params.ip = $scope.params.ipFilter;
+      }
+      if ($scope.params.idFilter) {
+        params.id = $scope.params.idFilter;
+      }
+      if ($scope.params.resolverFilter) {
+        params.resolver = $scope.params.resolverFilter;
+      }
+      MachineFactory.getMachines(params, function (data) {
+        var machinelist = data.result.value;
+        // The machinelist is the complete list of all machines!
+        $scope.machinecount = machinelist.length;
+        var start = ($scope.params.page - 1) * $scope.machinesPerPage;
+        var stop = start + $scope.machinesPerPage;
+        $scope.machinelist = machinelist.slice(start, stop);
+      });
+    };
 
-        $scope._getMachines = function () {
-            var params = {};
-            if ($scope.params.hostnameFilter) {
-                params.hostname = $scope.params.hostnameFilter;
-            }
-            if ($scope.params.ipFilter) {
-                params.ip = $scope.params.ipFilter;
-            }
-            if ($scope.params.idFilter) {
-                params.id = $scope.params.idFilter;
-            }
-            if ($scope.params.resolverFilter) {
-                params.resolver = $scope.params.resolverFilter;
-            }
-            MachineFactory.getMachines(params,
-                function (data) {
-                    var machinelist = data.result.value;
-                    // The machinelist is the complete list of all machines!
-                    $scope.machinecount = machinelist.length;
-                    var start = ($scope.params.page - 1) * $scope.machinesPerPage;
-                    var stop = start + $scope.machinesPerPage;
-                    $scope.machinelist = machinelist.slice(start, stop);
-                });
-        };
+    $scope._getMachines();
 
-        $scope._getMachines();
-
-        // Change the pagination
-        $scope.pageChanged = function () {
-            //debug: console.log('Page changed to: ' + $scope.params.page);
-            $scope._getMachines();
-        };
-
-    }]);
+    // Change the pagination
+    $scope.pageChanged = function () {
+      //debug: console.log('Page changed to: ' + $scope.params.page);
+      $scope._getMachines();
+    };
+  },
+]);

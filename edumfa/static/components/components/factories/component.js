@@ -21,20 +21,32 @@
  *
  */
 
-myApp.factory("ComponentFactory", ["AuthFactory", "$http", "$state",
-                                   "$rootScope", "clientUrl", "inform",
-                                   function (AuthFactory, $http, $state,
-                                             $rootScope, clientUrl, inform) {
-        /**
+myApp.factory("ComponentFactory", [
+  "AuthFactory",
+  "$http",
+  "$state",
+  "$rootScope",
+  "clientUrl",
+  "inform",
+  function (AuthFactory, $http, $state, $rootScope, clientUrl, inform) {
+    /**
          Each service - just like this service factory - is a singleton.
          */
-        return {
-            getClientType: function(callback) {
-                $http.get(clientUrl + "/", {
-                    headers: {'Authorization': AuthFactory.getAuthToken()}
-                }).then(function(response) { callback(response.data) },
-                    function(error) { AuthFactory.authError(error.data) });
-            }
-        }
-    }]);
-
+    return {
+      getClientType: function (callback) {
+        $http
+          .get(clientUrl + "/", {
+            headers: { Authorization: AuthFactory.getAuthToken() },
+          })
+          .then(
+            function (response) {
+              callback(response.data);
+            },
+            function (error) {
+              AuthFactory.authError(error.data);
+            },
+          );
+      },
+    };
+  },
+]);

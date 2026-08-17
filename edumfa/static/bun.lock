@@ -22,6 +22,7 @@
         "grunt-angular-gettext": "2.5.3",
         "grunt-cli": "1.5.0",
         "grunt-init": "0.3.2",
+        "prettier": "3.6.2",
       },
     },
   },
@@ -263,6 +264,8 @@
     "pkginfo": ["pkginfo@0.4.1", "", {}, "sha512-8xCNE/aT/EXKenuMDZ+xTVwkT8gsoHN2z/Q29l80u0ppGEXVvsKRzNMbtKhg8LS8k1tJLAHHylf6p4VFmP6XUQ=="],
 
     "pofile": ["pofile@1.0.11", "", {}, "sha512-Vy9eH1dRD9wHjYt/QqXcTz+RnX/zg53xK+KljFSX30PvdDMb2z+c6uDUeblUGqqJgz3QFsdlA0IJvHziPmWtQg=="],
+
+    "prettier": ["prettier@3.6.2", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ=="],
 
     "prompt": ["prompt@0.1.12", "", { "dependencies": { "async": "0.1.x", "colors": "0.x.x", "pkginfo": "0.x.x", "winston": "0.5.x" } }, "sha512-xBp7idwXO6tda/j0ucpcw610VIv8oNAJKRWm1Xtf/QxLilkeMZV6BCd2p4QNeOgXk6w2cT5cFqmKHdFLRNczZA=="],
 
