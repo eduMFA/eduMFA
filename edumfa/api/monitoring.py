@@ -39,6 +39,7 @@ from edumfa.lib.monitoringstats import (
     get_values,
 )
 from edumfa.lib.policy import ACTION
+from edumfa.lib.token import count_users_with_token
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.lib.utils import parse_legacy_time
 
@@ -119,3 +120,33 @@ def get_statistics_last(stats_key):
     last_value = get_last_value(stats_key)
     g.audit_object.log({"success": True})
     return send_result(last_value)
+
+
+# TODO in eduMFA v3.0.0 move this under /monitoring - likely by moving
+# stats_keys under an additional prefix. Or the other way around.
+stats_blueprint = Blueprint("stats_blueprint", __name__)
+
+
+@stats_blueprint.route("/current/users_with_token", methods=["GET"])
+@log_with(log)
+@prepolicy(check_base_action, request, ACTION.STATISTICSREAD)
+def count_users_with_tokens() -> int:
+    """
+    Returns the number of users in all realms which have a token.
+
+    Please note that the split between ``/monitoring`` and ``/stats`` is
+    temporary until eduMFA v3.0.0.
+    """
+    param = request.all_data
+    tokentype = getParam(param, "type", True)
+    realm = getParam(param, "realm", True)
+    active = getParam(param, "active", True)
+
+    if active:
+        active = active.lower() == "true"
+
+    users_with_token = count_users_with_token(
+        realm=realm, active=active, tokentype=tokentype
+    )
+    g.audit_object.log({"success": True})
+    return send_result(users_with_token)

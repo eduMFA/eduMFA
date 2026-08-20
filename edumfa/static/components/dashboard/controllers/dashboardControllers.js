@@ -19,10 +19,10 @@
 
 
 myApp.controller("dashboardController", ["ConfigFactory", "TokenFactory",
-                                         "AuditFactory",
+                                         "AuditFactory", "StatsFactory",
                                          "$scope", "$location", "AuthFactory",
                                          function (ConfigFactory, TokenFactory,
-                                                   AuditFactory,
+                                                   AuditFactory, StatsFactory,
                                                    $scope, $location, AuthFactory) {
 
     $scope.tokens = {"total": 0, "hardware": 0};
@@ -157,6 +157,40 @@ $scope.getAuthentication = function () {
              });
      };
 
+    $scope.set_realm_dropdown = function () {
+        ConfigFactory.getRealms(function (data) {
+            $scope.realms = data.result.value;
+        });
+    }
+
+    $scope.countUsersWithTokenGeneration = 0;
+    $scope.countUsersWithToken = function () {
+        let generationId = ++$scope.countUsersWithTokenGeneration;
+        $scope.users_with_token = "loading...";
+        $scope.params = {
+            realm: $scope.realmForUsersWithToken,
+            active: $scope.activenessForUsersWithToken,
+            type: $scope.tokentypeForUsersWithToken,
+        }
+        // "any" means not filtering for that token property, so remove it from
+        // the list of properties to filter for.
+        angular.forEach($scope.params, function (value, key) {
+            if (value === "any") {
+                delete $scope.params[key];
+            }
+        });
+        StatsFactory.getCurrentUsersWithTokens(generationId, $scope.params, function (generationId, data) {
+            // Make sure the current request does not get overwritten.
+            if ($scope.countUsersWithTokenGeneration === generationId) {
+                $scope.users_with_token = data.result.value;
+            }
+        }, function (generationId, error) {
+            if ($scope.countUsersWithTokenGeneration === generationId) {
+                $scope.users_with_token = "error";
+            }
+        });
+    };
+
      $scope.compare_auditentries = function (a, b) {
         if (a.date < b.date ) return 1;
         if (b.date < a.date ) return -1;
@@ -178,6 +212,15 @@ $scope.getAuthentication = function () {
         $scope.getAuthentication();
         $scope.getAdministration();
     }
+    if (AuthFactory.checkRight('statistics_read')) {
+        // This is a biased list of available tokentypes to filter.
+        $scope.tokentypes = ['edupush', 'email', 'hotp', 'indexedsecret', 'registration', 'remote', 'sms', 'tan', 'totp', 'webauthn', 'yubikey'];
+        $scope.tokentypeForUsersWithToken = "any";
+        $scope.realmForUsersWithToken = "any";
+        $scope.activenessForUsersWithToken = "any";
+        $scope.set_realm_dropdown();
+        $scope.countUsersWithToken();
+    }
 
         // listen to the reload broadcast
     $scope.$on("piReload", function() {
@@ -195,6 +238,10 @@ $scope.getAuthentication = function () {
         if (AuthFactory.checkRight('auditlog')) {
             $scope.getAuthentication();
             $scope.getAdministration();
+        }
+        if (AuthFactory.checkRight('statistics_read')) {
+            $scope.set_realm_dropdown();
+            $scope.countUsersWithToken();
         }
     });
 }]);
