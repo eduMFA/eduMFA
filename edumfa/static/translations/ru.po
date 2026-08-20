@@ -191,9 +191,8 @@ msgid "Administrator"
 msgstr "Администратор"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Adoption"
-msgstr "Действие"
+msgstr ""
 
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
