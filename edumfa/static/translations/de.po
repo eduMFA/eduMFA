@@ -256,7 +256,6 @@ msgid "All SMS Gateways"
 msgstr "Alle SMS-Gateways"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "All realms"
 msgstr "Alle Realms"
 
@@ -282,12 +281,11 @@ msgstr "Eine E-Mail wurde an Sie gesendet, um Ihr Passwort zurückzusetzen."
 
 #: components/dashboard/views/dashboard.html
 msgid "Any status"
-msgstr ""
+msgstr "jeder Status"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Any type"
-msgstr "Tokentyp"
+msgstr "jeder Typ"
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -4640,9 +4638,8 @@ msgid "Users"
 msgstr "Benutzer"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Users with matching token:"
-msgstr "eindeutige Benutzer mit aktiven Token"
+msgstr "Benutzer mit entsprechendem Token:"
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"

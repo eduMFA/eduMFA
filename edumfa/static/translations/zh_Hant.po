@@ -257,9 +257,8 @@ msgid "All SMS Gateways"
 msgstr "所有簡訊閘道"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "All realms"
-msgstr "所有領域"
+msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -286,9 +285,8 @@ msgid "Any status"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Any type"
-msgstr "令牌類型"
+msgstr ""
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -4724,9 +4722,8 @@ msgid "Users"
 msgstr "使用者"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Users with matching token:"
-msgstr "具有活動令牌的不同使用者"
+msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"

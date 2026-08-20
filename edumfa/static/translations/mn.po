@@ -231,9 +231,8 @@ msgid "All SMS Gateways"
 msgstr "Бүх SMS Gateways"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "All realms"
-msgstr "Бүх Realms"
+msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -260,9 +259,8 @@ msgid "Any status"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Any type"
-msgstr "токен төрөл"
+msgstr ""
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html

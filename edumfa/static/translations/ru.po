@@ -232,9 +232,8 @@ msgid "All SMS Gateways"
 msgstr "Все СМС Шлюзы"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "All realms"
-msgstr "Все Области"
+msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"

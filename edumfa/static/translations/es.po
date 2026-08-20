@@ -248,9 +248,8 @@ msgid "All SMS Gateways"
 msgstr "Todas las puertas de enlace SMS"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "All realms"
-msgstr "Todos los Dominios"
+msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"

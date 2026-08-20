@@ -263,9 +263,8 @@ msgid "All SMS Gateways"
 msgstr "Tutti gli SMS Gateway"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "All realms"
-msgstr "Tutti i Realm"
+msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -292,9 +291,8 @@ msgid "Any status"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Any type"
-msgstr "tipo di token"
+msgstr ""
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -4782,9 +4780,8 @@ msgid "Users"
 msgstr "Utenti"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Users with matching token:"
-msgstr "utenti distinti con token attivi"
+msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
