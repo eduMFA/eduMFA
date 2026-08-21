@@ -40,7 +40,7 @@ from edumfa.lib.error import PolicyError, UserError, eduMFAError
 from edumfa.lib.policy import ACTION, ACTIONVALUE, LOGINMODE, SCOPE, Match
 from edumfa.lib.radiusserver import get_radius
 from edumfa.lib.user import User
-from edumfa.lib.utils import parse_timedelta, parse_timelimit, split_pin_pass
+from edumfa.lib.utils import parse_timedelta, parse_timelimit, split_pin_pass, utc_now
 
 log = logging.getLogger(__name__)
 
@@ -162,7 +162,7 @@ def auth_cache(wrapped_function, user_object, passw, options=None):
 
             # determine first_auth from policy!
             first_offset = parse_timedelta(auth_times[0])
-            first_auth = datetime.datetime.utcnow() - first_offset
+            first_auth = utc_now() - first_offset
             last_auth = first_auth  # Default if no last auth exists
             max_auths = 0  # Default value, 0 has no effect on verification
 
@@ -173,7 +173,7 @@ def auth_cache(wrapped_function, user_object, passw, options=None):
                 else:
                     # Determine last_auth delta from policy
                     last_offset = parse_timedelta(auth_times[1])
-                    last_auth = datetime.datetime.utcnow() - last_offset
+                    last_auth = utc_now() - last_offset
 
             result = verify_in_cache(
                 user_object.login,

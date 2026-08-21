@@ -170,7 +170,7 @@ class Monitoring(MonitoringBase):
                 .filter(and_(True, *conditions))
                 .order_by(MonitoringStats.timestamp.asc())
             ):
-                aware_timestamp = ms.timestamp.replace(tzinfo=tzutc())
+                aware_timestamp = ms.timestamp.astimezone(tzutc())
                 values.append((aware_timestamp, ms.stats_value))
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
