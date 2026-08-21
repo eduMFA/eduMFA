@@ -27,6 +27,8 @@ The file should contain the following contents::
    SQLALCHEMY_DATABASE_URI = 'sqlite:////etc/edumfa/data.sqlite'
    # Set maximum identifier length to 128
    # SQLALCHEMY_ENGINE_OPTIONS = {"max_identifier_length": 128}
+   # Use READ COMMITTED with MySQL/MariaDB (see below)
+   # SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "READ COMMITTED"}
    # This is used to encrypt the auth_token
    SECRET_KEY = 't0p s3cr3t'
    # This is used to encrypt the admin passwords
@@ -85,6 +87,30 @@ slower but more robust and can be necessary in large redundant setups.
    The database might respond with an error like "object has been deleted or its
    row is otherwise not present". In this case setting ``EDUMFA_DB_SAFE_STORE``  to *True*
    might help.
+
+.. _mysql_isolation_level:
+
+MySQL and MariaDB default to the ``REPEATABLE READ`` transaction isolation
+level. It pins a consistent read snapshot at the transaction's first read,
+which can cause errors like *"Record has changed since last read ...; try
+restarting transaction"* when handling several requests under high load.
+Configure eduMFA to use ``READ COMMITTED`` by adding the following option to
+``edumfa.cfg``::
+
+   SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "READ COMMITTED"}
+
+If ``SQLALCHEMY_ENGINE_OPTIONS`` already contains other options, add the
+``isolation_level`` entry to the existing dictionary instead of defining the
+setting a second time. PostgreSQL already uses ``READ COMMITTED`` by default.
+See the `SQLAlchemy documentation
+<https://docs.sqlalchemy.org/en/20/core/connections.html#setting-transaction-isolation-levels-including-dbapi-autocommit>`_
+for details.
+
+.. note:: The SQL audit module uses ``SQLALCHEMY_ENGINE_OPTIONS`` as a fallback.
+   If ``EDUMFA_AUDIT_SQL_URI`` points to a different database backend which
+   does not support ``READ COMMITTED`` (for example SQLite), also add
+   ``EDUMFA_AUDIT_SQL_OPTIONS = {}`` to ``edumfa.cfg``. You can alternatively
+   configure audit-engine-specific options in that dictionary.
 
 ``EDUMFA_HASH_ALGO_LIST`` is a user-defined list of hash algorithms which are used
 to verify passwords and pins. The first entry in ``EDUMFA_HASH_ALGO_LIST`` is used
