@@ -15,6 +15,22 @@ For version-to-version upgrade steps, see :ref:`migration_guides`.
 
    This is tracked in `issue #1124 <https://github.com/eduMFA/eduMFA/issues/1124>`_.
 
+eduMFA 2.9.4
+------------
+
+This release fixes the Blast-RADIUS attack for the RADIUS token.
+
+Bug Fixes
+~~~~~~~~
+
+- Fixed the `Blast-RADIUS <https://www.blastradius.fail/>`_ attack for RADIUS
+  tokens, too. See `advisory <https://github.com/eduMFA/eduMFA/security/advisories/GHSA-hmmw-j78p-f6mv>`_.
+- Actually fixed ``edumfa-pip-update`` when used with Python 3.14, which was
+  missing from v2.9.3.
+- Applies security updates to multiple libraries.
+
+See full `commit history <https://github.com/eduMFA/eduMFA/compare/v2.9.3...v2.9.4>`_.
+
 eduMFA 2.9.3
 ------------
 
