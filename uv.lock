@@ -693,7 +693,7 @@ wheels = [
 
 [[package]]
 name = "edumfa"
-version = "2.10.0a0"
+version = "2.9.4"
 source = { editable = "." }
 dependencies = [
     { name = "alembic" },
