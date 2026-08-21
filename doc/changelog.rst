@@ -15,6 +15,12 @@ For version-to-version upgrade steps, see :ref:`migration_guides`.
 
    This is tracked in `issue #1124 <https://github.com/eduMFA/eduMFA/issues/1124>`_.
 
+eduMFA 2.9.5
+------------
+
+This release contains no functional changes but fixes an issue with uploading
+to PyPi. This causes version 2.9.4 to not be available there.
+
 eduMFA 2.9.4
 ------------
 
