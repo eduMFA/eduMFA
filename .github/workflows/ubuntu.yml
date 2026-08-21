@@ -31,7 +31,7 @@ jobs:
             codename: jammy
     name: build ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
       - name: Install dependencies
         run: |
           sudo apt-get update
