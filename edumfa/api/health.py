@@ -28,17 +28,6 @@ from edumfa.models import db
 health_blueprint = Blueprint("health_blueprint", __name__)
 
 
-def _health_response() -> tuple[Response, int]:
-    """
-    Build the readiness response and HTTP status code from the configured checks.
-    """
-    database_available = is_db_available(db.engine)
-
-    if database_available:
-        return jsonify({"status": "ok"}), 200
-    return jsonify({"status": "error"}), 503
-
-
 @health_blueprint.route("/live", methods=["GET"])
 def live() -> Response:
     """
@@ -52,4 +41,8 @@ def ready() -> tuple[Response, int]:
     """
     Return readiness based on database availability.
     """
-    return _health_response()
+    database_available = is_db_available(db.engine)
+
+    if database_available:
+        return jsonify({"status": "ok"}), 200
+    return jsonify({"status": "error"}), 503
