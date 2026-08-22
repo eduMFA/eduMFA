@@ -337,15 +337,14 @@ class LocalCAConnector(BaseCAConnector):
     def _filename_from_x509(x509_name, file_extension="pem"):
         """
         return a filename from the subject from an x509 object
-        :param x509_name: The X509Name object
-        :type x509_name: X509Name object
+        :param x509_name: The certificate subject
+        :type x509_name: cryptography.x509.Name
         :param file_extension:
         :type file_extension: str
         :return: filename
         :rtype: str
         """
-        name_components = x509_name.get_components()
-        filename = "_".join([to_unicode(value) for (key, value) in name_components])
+        filename = "_".join(attribute.value for attribute in x509_name)
         return ".".join([filename, file_extension])
 
     def sign_request(self, csr, options=None):
@@ -398,12 +397,12 @@ class LocalCAConnector(BaseCAConnector):
             csr_filename = common_name + ".txt"
             certificate_filename = common_name + ".der"
         else:
-            csr_obj = crypto.load_certificate_request(crypto.FILETYPE_PEM, csr)
+            csr_obj = x509.load_pem_x509_csr(csr.encode())
             csr_filename = self._filename_from_x509(
-                csr_obj.get_subject(), file_extension="req"
+                csr_obj.subject, file_extension="req"
             )
             certificate_filename = self._filename_from_x509(
-                csr_obj.get_subject(), file_extension="pem"
+                csr_obj.subject, file_extension="pem"
             )
             # csr_extensions = csr_obj.get_extensions()
         csr_filename = csr_filename.replace(" ", "_")

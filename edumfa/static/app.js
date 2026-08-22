@@ -83,6 +83,7 @@ myApp.constant("smtpServerUrl", backendUrl + instance + "/smtpserver");
 myApp.constant("radiusServerUrl", backendUrl + instance + "/radiusserver");
 myApp.constant("eduMfaServerUrl", backendUrl + instance + "/edumfaserver");
 myApp.constant("recoveryUrl", backendUrl + instance + "/recover");
+myApp.constant("statsUrl", backendUrl + instance + "/stats");
 myApp.constant("resourceNamePatterns", {
     simple: {pattern: "^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$",
         title: gettext("The resource name must consist of letters, numbers and '_', '-', '.'")},
@@ -153,8 +154,8 @@ myApp.config(['$httpProvider', function ($httpProvider, inform, gettext) {
 
 myApp.config(['$compileProvider',
     function ($compileProvider) {
-        // allow only links to our readthedocs documentation, netknights homepage and "otpauth:" links
-        let url_re = /^\s*(https:\/\/(edumfa.readthedocs.io|netknights.it)\/|otpauth:|mailto:|file:|blob:)/;
+        // allow only links to our documentation and selected non-HTTP schemes
+        let url_re = /^\s*(https:\/\/(edumfa\.readthedocs\.io|docs\.edumfa\.io)\/|otpauth:|mailto:|file:|blob:)/;
         $compileProvider.aHrefSanitizationTrustedUrlList(url_re);
 }]);
 
