@@ -20,12 +20,6 @@
 Unauthenticated health endpoints for load balancers and orchestration probes like kubernetes, haproxy, nginx or docker.
 """
 
-from pathlib import Path
-from sysconfig import get_paths
-
-from alembic.config import Config
-from alembic.runtime.migration import MigrationContext
-from alembic.script import ScriptDirectory
 from flask import Blueprint, Response, jsonify, request
 
 from edumfa.lib.sqlutils import is_db_available
@@ -34,93 +28,16 @@ from edumfa.models import db
 health_blueprint = Blueprint("health_blueprint", __name__)
 
 
-def _migration_directory() -> Path:
-    """
-    Return the migration directory used by the running eduMFA installation.
-    """
-    candidates = [
-        Path(__file__).resolve().parents[2] / "migrations",
-        Path(get_paths()["data"]) / "lib" / "edumfa" / "migrations",
-    ]
-    for candidate in candidates:
-        if (candidate / "env.py").is_file() and (candidate / "versions").is_dir():
-            return candidate
-    raise FileNotFoundError("Could not find eduMFA migration directory")
-
-
-def _get_required_schema_head() -> str | None:
-    """
-    Return the migration revision expected by this application version.
-    """
-    migrations = _migration_directory()
-    config = Config(str(migrations / "alembic.ini"))
-    config.set_main_option("script_location", str(migrations))
-    return ScriptDirectory.from_config(config).get_current_head()
-
-
-def _get_database_schema_head(connection) -> str | None:
-    """
-    Return the migration revision currently recorded in the database.
-    """
-    context = MigrationContext.configure(connection)
-    return context.get_current_revision()
-
-
-def _check_schema(connection) -> dict[str, str | None]:
-    """
-    Check whether the database schema revision matches the application migrations.
-    """
-    required_head = _get_required_schema_head()
-    current_head = _get_database_schema_head(connection)
-    result = {
-        "status": "ok",
-        "current": current_head,
-        "required": required_head,
-    }
-    if current_head != required_head:
-        result["status"] = "error"
-        result["message"] = "Database schema revision does not match application migrations"
-    return result
-
-
-def _health_response(check_schema: bool = False) -> tuple[Response, int]:
+def _health_response() -> tuple[Response, int]:
     """
     Build the readiness response and HTTP status code from the configured checks.
     """
-    status_code = 200
     checks: dict[str, dict[str, str | None]] = {}
     database_available = is_db_available(db.engine)
 
     if database_available:
-        checks["database"] = {"status": "ok"}
-    else:
-        checks["database"] = {
-            "status": "error",
-            "message": "Database connection check failed",
-        }
-        return jsonify({"status": "error", "checks": checks}), 503
-
-    try:
-        if check_schema:
-            with db.engine.connect() as connection:
-                checks["schema"] = _check_schema(connection)
-    except Exception as exx:
-        status_code = 503
-        checks["schema"] = {"status": "error", "message": str(exx)}
-
-    if any(check["status"] != "ok" for check in checks.values()):
-        status_code = 503
-
-    status = "ok" if status_code == 200 else "error"
-    return jsonify({"status": status, "checks": checks}), status_code
-
-
-def _check_schema_requested() -> bool:
-    """
-    Return whether the request asked to include the schema revision check.
-    """
-    value = request.args.get("schema", "false").lower()
-    return value.lower() in {"1", "true"}
+        return jsonify({"status": "ok"}), 200
+    return jsonify({"status": "error"}), 503
 
 
 @health_blueprint.route("/live", methods=["GET"])
@@ -134,6 +51,6 @@ def live() -> Response:
 @health_blueprint.route("/ready", methods=["GET"])
 def ready() -> tuple[Response, int]:
     """
-    Return readiness based on database availability and optional schema state.
+    Return readiness based on database availability.
     """
-    return _health_response(check_schema=_check_schema_requested())
+    return _health_response()
