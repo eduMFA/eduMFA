@@ -32,7 +32,6 @@ def _health_response() -> tuple[Response, int]:
     """
     Build the readiness response and HTTP status code from the configured checks.
     """
-    checks: dict[str, dict[str, str | None]] = {}
     database_available = is_db_available(db.engine)
 
     if database_available:
