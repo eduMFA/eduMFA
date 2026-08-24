@@ -20,7 +20,7 @@
 Unauthenticated health endpoints for load balancers and orchestration probes like kubernetes, haproxy, nginx or docker.
 """
 
-from flask import Blueprint, Response, jsonify, request
+from flask import Blueprint, Response, jsonify
 
 from edumfa.lib.sqlutils import is_db_available
 from edumfa.models import db
