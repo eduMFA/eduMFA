@@ -31,6 +31,11 @@ Notes:
 
 - Please make sure that ``innodb_snapshot_isolation`` is enabled. This is the
   default starting from version 11.6.2.
+- MariaDB defaults to the ``REPEATABLE READ`` transaction isolation level, which
+  can lead to errors like *"Record has changed since last read"* when under high
+  load. Configure eduMFA to use the ``READ COMMITTED`` isolation level in
+  ``edumfa.cfg`` as described in the :ref:`config file <mysql_isolation_level>`
+  documentation.
 
 Versions
 ^^^^^^^^
