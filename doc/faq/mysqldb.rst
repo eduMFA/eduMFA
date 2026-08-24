@@ -5,7 +5,8 @@ Database connect string
 
 Due to its use of a database abstraction layer, eduMFA can work with several
 databases with the help of corresponding database drivers. Please see
-:ref:`choosing_a_database` for supported databases.
+:ref:`choosing_a_database` for supported databases and possibly necessary
+settings.
 
 The database and corresponding driver are specified in the connect string
 ``SQLALCHEMY_DATABASE_URI`` in :ref:`cfgfile`
@@ -26,14 +27,6 @@ or a build environment on the server.
 eduMFA.
 
 **connect string**: ``mysql+pymysql://<user>:<password>@<host>/<database>``
-
-.. note:: MySQL and MariaDB default to the ``REPEATABLE READ`` transaction
-   isolation level, which can lead to errors like *"Record has changed since
-   last read"* when under high load. Configure eduMFA to use the
-   ``READ COMMITTED`` isolation level in ``edumfa.cfg`` as described in the
-   :ref:`config file
-   <mysql_isolation_level>` documentation.
-
 
 .. _postgresdb:
 
