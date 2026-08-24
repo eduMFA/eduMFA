@@ -19,6 +19,8 @@
 """
 Test the unauthenticated health endpoints.
 """
+from unittest import mock
+
 from .base import MyTestCase
 
 
@@ -35,3 +37,10 @@ class APIHealthTestCase(MyTestCase):
             res = self.app.full_dispatch_request()
             self.assertEqual(200, res.status_code, res.data)
             self.assertEqual("ok", res.json["status"])
+
+    def test_02_ready_health_reports_unavailable_database(self):
+        with mock.patch("edumfa.api.health.is_db_available", return_value=False):
+            with self.app.test_request_context("/health/ready", method="GET"):
+                res = self.app.full_dispatch_request()
+                self.assertEqual(503, res.status_code, res.data)
+                self.assertEqual({"status": "error"}, res.json)
