@@ -45,6 +45,4 @@ As a rule of thumb, eduMFA will support the following versions:
 - the default version of the latest Ubuntu LTS
 - the latest LTS/stable version of the database system itself
 
-Of course, there will be a delay from a release of a new version until it is
-officially listed as supported. Older versions will also not instantly be kicked
-out to allow for a transitory period.
+However, please see this page for authoritative information.
