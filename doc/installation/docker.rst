@@ -124,6 +124,8 @@ supported database systems and their versions, please see
          DB_DATABASE: ${MARIADB_DATABASE}
          SECRET_KEY: ${EDUMFA_SECRET_KEY}
          EDUMFA_PEPPER: ${EDUMFA_PEPPER}
+         # See "Choosing a Database" for why this option is set.
+         SQLALCHEMY_ENGINE_OPTIONS: '{"isolation_level": "READ COMMITTED"}'
        depends_on:
          mariadb:
            condition: service_healthy
