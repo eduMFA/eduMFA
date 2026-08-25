@@ -93,7 +93,7 @@ supported database systems and their versions, please see
 
    services:
      mariadb:
-       image: docker.io/mariadb:11.8
+       image: docker.io/mariadb:12.3
        restart: always
        volumes:
          - mariadb-data:/var/lib/mysql:rw
