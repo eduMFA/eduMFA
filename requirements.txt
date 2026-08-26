@@ -6,7 +6,7 @@ alembic==1.18.5
     #   flask-migrate
 argon2-cffi==25.1.0
     # via passlib
-argon2-cffi-bindings==25.1.0
+argon2-cffi-bindings==26.1.0
     # via argon2-cffi
 async-timeout==5.0.1 ; python_full_version < '3.11.3'
     # via redis
@@ -71,7 +71,7 @@ grpcio==1.82.1
     # via edumfa (pyproject.toml)
 huey==3.2.1
     # via edumfa (pyproject.toml)
-idna==3.18
+idna==3.19
     # via requests
 importlib-metadata==8.7.0
     # via edumfa (pyproject.toml)
