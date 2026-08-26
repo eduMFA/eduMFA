@@ -134,6 +134,7 @@ msgstr "Handling"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -188,6 +189,10 @@ msgstr "Administrasjon"
 msgid "Administrator"
 msgstr "Administrator"
 
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
+
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
 msgstr ""
@@ -224,6 +229,10 @@ msgstr ""
 msgid "All SMS Gateways"
 msgstr "Alle SMS-portnere"
 
+#: components/dashboard/views/dashboard.html
+msgid "All realms"
+msgstr ""
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "Alle symboler"
@@ -242,6 +251,14 @@ msgstr ""
 
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Any type"
 msgstr ""
 
 #: components/machine/views/machine.details.html
@@ -2345,6 +2362,7 @@ msgid "Read number dynamically from user source on each request."
 msgstr ""
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -3949,6 +3967,7 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr ""
@@ -4102,6 +4121,10 @@ msgstr ""
 
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Users with matching token:"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4352,6 +4375,7 @@ msgstr ""
 msgid "action detail"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4386,6 +4410,7 @@ msgstr ""
 msgid "description"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"

@@ -168,6 +168,7 @@ msgstr "行動"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -223,6 +224,10 @@ msgstr "管理"
 msgid "Administrator"
 msgstr "管理員"
 
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
+
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
 msgstr "所有 CA 連接器"
@@ -259,6 +264,10 @@ msgstr "所有旋轉變壓器"
 msgid "All SMS Gateways"
 msgstr "所有簡訊閘道"
 
+#: components/dashboard/views/dashboard.html
+msgid "All realms"
+msgstr ""
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "所有令牌"
@@ -278,6 +287,14 @@ msgstr "包含IP位址的屬性。"
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "已向您發送重置密碼的電子郵件。"
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Any type"
+msgstr ""
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -2530,6 +2547,7 @@ msgid "Read number dynamically from user source on each request."
 msgstr "在每個請求上從使用者源動態讀取數位。"
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -4463,6 +4481,7 @@ msgstr "總挑戰："
 msgid "Transaction ID"
 msgstr "交易ID"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "類型"
@@ -4628,6 +4647,10 @@ msgstr "使用者名"
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
 msgstr "使用者"
+
+#: components/dashboard/views/dashboard.html
+msgid "Users with matching token:"
+msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -4916,6 +4939,7 @@ msgstr "行動"
 msgid "action detail"
 msgstr "操作詳細資訊"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4951,6 +4975,7 @@ msgstr "用戶端"
 msgid "description"
 msgstr "描述"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5286,6 +5311,10 @@ msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} 找到的條目。"
 
 #, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "令牌類型"
+
+#, fuzzy
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "等級"
@@ -5344,9 +5373,6 @@ msgstr "{{ auditdata.count }} 找到的條目。"
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "活動的、分配的令牌"
-
-#~ msgid "distinct users with active tokens"
-#~ msgstr "具有活動令牌的不同使用者"
 
 #, fuzzy
 #~ msgid "edumfa server"
