@@ -76,9 +76,9 @@ Setting up eduMFA
 Additionally to the database connection a new ``EDUMFA_PEPPER`` and ``SECRET_KEY``
 must be generated in order to secure the installation::
 
-    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c48)"
     echo "EDUMFA_PEPPER = '$PEPPER'" >> /path/to/edumfa.cfg
-    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c48)"
     echo "SECRET_KEY = '$SECRET'" >> /path/to/edumfa.cfg
 
 An encryption key for encrypting the secrets in the database and a key for

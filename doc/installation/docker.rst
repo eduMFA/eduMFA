@@ -100,6 +100,8 @@ To start eduMFA using Docker Compose, run:
 
 For more information on using eduMFA, please refer to :ref:`first_steps`.
 
+Use at least 32 random characters for both ``SECRET_KEY`` and ``EDUMFA_PEPPER``.
+
 Pulling the eduMFA Docker Image
 ...............................
 
