@@ -132,12 +132,12 @@ create_certificate() {
 adapt_edumfa_cfg() {
   if ! grep -q '^EDUMFA_PEPPER' /etc/edumfa/edumfa.cfg; then
     # PEPPER does not exist, yet
-    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c48)"
     echo "EDUMFA_PEPPER = '$PEPPER'" >> /etc/edumfa/edumfa.cfg
   fi
   if ! grep -q '^SECRET_KEY' /etc/edumfa/edumfa.cfg; then
     # SECRET_KEY does not exist, yet
-    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c48)"
     echo "SECRET_KEY = '$SECRET'" >> /etc/edumfa/edumfa.cfg
   fi
 }
