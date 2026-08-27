@@ -234,11 +234,12 @@ myApp.controller("monitoringController", ["MonitoringFactory",
 
         $scope.addAllToTimeline = function () {
             $scope.availableStatsKeys.forEach(sk => {
-                var needed = !$scope.tokenTimeline.data.datasets.some(ds => ds.label === sk.name)
-                if (needed) {
+                var existingDataset = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name)
+                if (!existingDataset) {
                     $scope.addToTimeline(sk)
+                } else {
+                    syncChecked(sk)
                 }
-                $scope.resetHidden(sk)
             })
         };
 
@@ -251,7 +252,6 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             $scope.availableStatsKeys.forEach(sk => {
                 if (sk.selected) {
                     $scope.addToTimeline(sk)
-                    $scope.resetHidden(sk)
                 }
             })
         };
@@ -263,11 +263,6 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             }
         };
 
-        $scope.resetHidden = function (sk) {
-            sk.checked = true
-            $scope.changeHidden(sk)
-        };
-
         function resetCheckboxes() {
             $scope.selectedStatsKeys.forEach(sk => {
                 var dataset = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name)
@@ -275,6 +270,13 @@ myApp.controller("monitoringController", ["MonitoringFactory",
                     sk.checked = !dataset.hidden
                 }
             })
+        };
+
+        function syncChecked(sk) {
+            var boundKey = $scope.selectedStatsKeys.find(k => k.name === sk.name)
+            var dataset = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name)
+            if (boundKey) boundKey.checked = true
+            if (dataset) dataset.hidden = false
         };
 
         $scope.resetTimeline = function () {
@@ -285,6 +287,7 @@ myApp.controller("monitoringController", ["MonitoringFactory",
         $scope.resetAll = function () {
             MonitoringFactory.cancelAll()
             $scope.datasetCache = {};
+            $scope.datasetStatusMap = {};
             $scope.getAvailableStatsKeys()
             $scope.resetTimeline()
         };
@@ -296,7 +299,6 @@ myApp.controller("monitoringController", ["MonitoringFactory",
         $scope.$on("piReload", function () {
             if (AuthFactory.checkRight('statistics_read')) {
                 $scope.resetAll();
-                MonitoringFactory.cancelAll()
             }
         });
 
