@@ -24,16 +24,33 @@
 }
 
 .legend-swatch {
-    width: 26px;
+    width: 40px;
     height: 14px;
     flex-shrink: 0;
 }
 
 .legend-line {
-  stroke-width: 3;
+    stroke-width: 3;
 }
 
 .legend-symbol {
-  stroke: #fff;
-  stroke-width: 0.75;
+    stroke: #fff;
+    stroke-width: 0.75;
+}
+
+.legend-symbol-rot {
+    transform: rotate(45deg);
+    transform-origin: 20px 7px;
+}
+
+.chartOuter {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+}
+
+.chartWrapper {
+    position: relative;
+    height: 400px;
 }

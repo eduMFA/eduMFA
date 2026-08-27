@@ -47,8 +47,8 @@ myApp.directive('timelineChart', function () {
             tokenTimeline: '=',
         },
         template: `
-            <div class="chartOuter" style="width:100%; overflow-x:auto; overflow-y:hidden; position:relative;">
-                <div class="chartWrapper" style="position:relative; height:400px;">
+            <div class="chartOuter">
+                <div class="chartWrapper">
                     <canvas class="chartCanvas"></canvas>
                 </div>
             </div>
@@ -64,7 +64,7 @@ myApp.directive('timelineChart', function () {
                     if (ds.data && ds.data.length > maxPoints) maxPoints = ds.data.length;
                 });
 
-                var pxPerPoint = 15;
+                var pxPerPoint = 20;
                 var outerWidth = outer.clientWidth;
                 var neededWidth = maxPoints * pxPerPoint;
                 var dpr = window.devicePixelRatio || 1;

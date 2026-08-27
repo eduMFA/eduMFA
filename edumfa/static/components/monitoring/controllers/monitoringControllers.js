@@ -15,9 +15,18 @@ myApp.controller("monitoringController", ["MonitoringFactory",
                 }
             }
         };
+
         const colorScheme = [
             "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000",
         ];
+
+        const dashStyles = [
+            { borderDash: [], pointStyle: 'circle' },
+            { borderDash: [2, 2], pointStyle: 'rect' },
+            { borderDash: [8, 3, 2, 3], pointStyle: 'rectRot' },
+            { borderDash: [8, 4], pointStyle: 'triangle' }
+        ]
+
         $scope.timeFrame = [
             { label: "24 hours", unit: "hour", amount: 24 },
             { label: "1 Week", unit: "day", amount: 7 },
@@ -33,14 +42,31 @@ myApp.controller("monitoringController", ["MonitoringFactory",
         $scope.datasetStatusMap = {}
         $scope.selectedTimeFrame = $scope.timeFrame[0]
 
-        function getLineStyle(i) {
-            if (i < colorScheme.length) {
-                return { borderDash: [], pointStyle: 'circle' }
-            } else if (i < colorScheme.length * 2) {
-                return { borderDash: [2, 2], pointStyle: 'rect' }
-            } else {
-                return { borderDash: [8, 4], pointStyle: 'triangle' }
+        function keyToSlot(key) {
+            var hash = 0;
+            for (var char of key) {
+                hash = (hash << 5) - hash + char.charCodeAt(0);
             }
+            return Math.abs(hash);
+        }
+
+        function buildStyleMap(allKeys) {
+            var totalSlots = colorScheme.length * dashStyles.length;
+            var styleMap = new Map();
+            var used = new Set()
+            allKeys.forEach((key) => {
+                var slot = keyToSlot(key) % totalSlots
+                var attemps = 0
+                while (used.has(slot) && attemps < totalSlots) {
+                    slot = (slot + 1) % totalSlots
+                    attemps++
+                }
+                used.add(slot)
+                var colorIndex = slot % colorScheme.length;
+                var dashIndex = Math.floor(slot / colorScheme.length) % dashStyles.length;
+                styleMap.set(key, { color: colorScheme[colorIndex], ...dashStyles[dashIndex] });
+            });
+            return styleMap;
         }
 
         function calculateDate(year, month, day) {
@@ -108,21 +134,20 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             $scope.statsKeysLoadingText = "Loading statistics keys..."
             $scope.selectedStatsKeys = []
             $scope.availableStatsKeys = []
-            var i = 0
-            MonitoringFactory.get_stats_keys(function (data) {
+            MonitoringFactory.getStatsKeys(function (data) {
                 var newList = [];
                 var d = data.result.value.sort()
+                var styleMap = buildStyleMap(d)
                 d.forEach(function (sk) {
-                    var lineStyle = getLineStyle(i)
                     newList.push({
                         id: sk,
                         name: sk,
-                        color: colorScheme[i++ % colorScheme.length],
+                        color: styleMap.get(sk).color,
                         selected: false,
                         checked: true,
                         datasetStatus: "",
-                        borderDash: lineStyle.borderDash,
-                        pointStyle: lineStyle.pointStyle
+                        borderDash: styleMap.get(sk).borderDash,
+                        pointStyle: styleMap.get(sk).pointStyle
                     })
                 })
                 $scope.availableStatsKeys = newList
