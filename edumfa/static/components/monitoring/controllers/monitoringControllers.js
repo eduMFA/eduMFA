@@ -158,6 +158,7 @@ myApp.controller("monitoringController", ["MonitoringFactory",
                 }
             }, function (error) {
                 $scope.statsKeysLoadingText = "Error loading statistics keys. Please try again later."
+                console.log(error)
             })
         };
 
@@ -174,7 +175,7 @@ myApp.controller("monitoringController", ["MonitoringFactory",
                 return
             }
             $scope.datasetStatusMap[key] = " (loading...)"
-            MonitoringFactory.get_monitored(sk.name, { start: startTime }, key, function (data) {
+            MonitoringFactory.getMonitored(sk.name, { start: startTime }, key, function (data) {
                 var d = data.result.value
                 var points = d.map(e => ({ x: new Date(e[0]).getTime(), y: e[1] }))
                     .filter(p => Number.isFinite(p.x) && Number.isFinite(p.y))
@@ -201,7 +202,8 @@ myApp.controller("monitoringController", ["MonitoringFactory",
                 }
                 callback(dataset);
             }, function (error) {
-                    $scope.datasetStatusMap[key] = " (Error loading data)"
+                $scope.datasetStatusMap[key] = " (Error loading data)"
+                console.log(error)
             })
         };
 
@@ -210,6 +212,7 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             $scope.getDataset(sk, function (dataset) {
                 if (isStillRelevant(sk, timeFrame)) {
                     $scope.tokenTimeline.data.datasets.push(dataset)
+                    syncChecked(sk)
                 }
             })
         };

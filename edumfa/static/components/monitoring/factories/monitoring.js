@@ -8,14 +8,19 @@ myApp.factory("MonitoringFactory", ["AuthFactory", "$http", "monitoringUrl", "$q
 
         return {
 
-            get_stats_keys: function (callback) {
+            getStatsKeys: function (callback, errorCallback) {
                 $http.get(monitoringUrl + "/", {
                     headers: { 'Authorization': AuthFactory.getAuthToken() },
                 }).then(function (response) { callback(response.data) },
-                    function (error) { AuthFactory.authError(error.data) });
+                    function (error) {
+                        AuthFactory.authError(error.data);
+                        if (errorCallback) {
+                            errorCallback(error);
+                        }
+                    });
             },
 
-            get_monitored: function (stats_key, params, cacheKey, callback) {
+            getMonitored: function (stats_key, params, cacheKey, callback, errorCallback) {
                 if (cancelers[cacheKey]) {
                     cancelers[cacheKey].resolve();
                 }
@@ -29,8 +34,18 @@ myApp.factory("MonitoringFactory", ["AuthFactory", "$http", "monitoringUrl", "$q
                     delete cancelers[cacheKey];
                     callback(response.data)
                 },
-                    function (error) { AuthFactory.authError(error.data) });
+                    function (error) {
+                        delete cancelers[cacheKey];
+                        if (error.status === -1) {
+                            return;
+                        }
+                        AuthFactory.authError(error.data);
+                        if (errorCallback) {
+                            errorCallback(error);
+                        }
+                    });
             },
+
             cancelAll: function () {
                 Object.keys(cancelers).forEach(function (key) {
                     cancelers[key].resolve();
