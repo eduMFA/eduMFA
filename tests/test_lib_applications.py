@@ -232,3 +232,84 @@ class BaseApplicationTestCase(MyTestCase):
         self.assertIn("user", apps["ssh"]["options"])
         self.assertIn("slot", apps["luks"]["options"])
         self.assertIn("partition", apps["luks"]["options"])
+
+class OfflineWebAuthnApplicationTestCase(MyTestCase):
+    """
+    Test offline authentication item generation and per-machine refill tokens
+    for WebAuthn tokens.
+    """
+
+    serial = "WAN0001"
+    ua_machine_a = "eduMFACredentialProvider/3.0 ComputerName/DESK-A Windows/10"
+    ua_machine_b = "eduMFACredentialProvider/3.0 ComputerName/DESK-B Windows/11"
+    ua_no_machine = "Mozilla/5.0"
+
+    def _create_webauthn_token(self, serial):
+        from edumfa.models import Token
+
+        db_token = Token(serial, tokentype="webauthn")
+        db_token.update_otpkey("1234567890abcdef")
+        db_token.save()
+        tok = get_tokens(serial=serial)[0]
+        tok.add_tokeninfo("pubKey", "this-is-a-public-key")
+        tok.add_tokeninfo("relying_party_id", "example.com")
+        return tok
+
+    def test_01_webauthn_offline_auth_item(self):
+        serial = "WAN0001"
+        tok = self._create_webauthn_token(serial)
+
+        auth_item = OfflineApplication.get_authentication_item(
+            "webauthn", serial, user_agent=self.ua_machine_a
+        )
+        # WebAuthn offline returns the data needed to verify assertions locally
+        response = auth_item.get("response")
+        self.assertEqual(response.get("pubKey"), "this-is-a-public-key")
+        self.assertEqual(response.get("rpId"), "example.com")
+        self.assertEqual(response.get("credentialId"), tok.decrypt_otpkey())
+        # There are no OTP values for a WebAuthn token
+        self.assertNotIn("hotp", response)
+
+        refilltoken_a = auth_item.get("refilltoken")
+        self.assertEqual(len(refilltoken_a), REFILLTOKEN_LENGTH * 2)
+        # The refill token is stored per machine
+        self.assertEqual(refilltoken_a, tok.get_tokeninfo("refilltoken_DESK-A"))
+        # The generic (HOTP-style) refilltoken key must NOT be set
+        self.assertEqual(tok.get_tokeninfo("refilltoken"), None)
+
+    def test_02_separate_refilltoken_per_machine(self):
+        serial = "WAN0002"
+        tok = self._create_webauthn_token(serial)
+
+        ai_a = OfflineApplication.get_authentication_item(
+            "webauthn", serial, user_agent=self.ua_machine_a
+        )
+        ai_b = OfflineApplication.get_authentication_item(
+            "webauthn", serial, user_agent=self.ua_machine_b
+        )
+        rt_a = ai_a.get("refilltoken")
+        rt_b = ai_b.get("refilltoken")
+
+        # Each machine has its own, distinct refill token
+        self.assertNotEqual(rt_a, rt_b)
+        self.assertEqual(rt_a, tok.get_tokeninfo("refilltoken_DESK-A"))
+        self.assertEqual(rt_b, tok.get_tokeninfo("refilltoken_DESK-B"))
+
+    def test_03_missing_computer_name_raises(self):
+        serial = "WAN0003"
+        self._create_webauthn_token(serial)
+        # Without a derivable computer name we cannot key the refill token
+        self.assertRaises(
+            ParameterError,
+            OfflineApplication.get_authentication_item,
+            "webauthn",
+            serial,
+            user_agent=self.ua_no_machine,
+        )
+        self.assertRaises(
+            ParameterError,
+            OfflineApplication.get_authentication_item,
+            "webauthn",
+            serial,
+            user_agent=None,
+        )
