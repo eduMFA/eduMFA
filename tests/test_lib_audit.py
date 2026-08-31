@@ -323,6 +323,10 @@ class AuditTestCase(MyTestCase):
             "edumfa.lib.auditmodules.sqlaudit.create_engine"
         ) as engine_mock:
             cfg = self.app.config.copy()
+            # the app config (e.g. from EDUMFA_CONFIGFILE) may define
+            # EDUMFA_AUDIT_SQL_OPTIONS, which would shadow the fallback
+            # to SQLALCHEMY_ENGINE_OPTIONS we want to test here
+            cfg.pop("EDUMFA_AUDIT_SQL_OPTIONS", None)
             cfg.update({"SQLALCHEMY_ENGINE_OPTIONS": {"foo": "bar"}})
             _audit = getAudit(cfg)
             engine_mock.assert_called_once_with(

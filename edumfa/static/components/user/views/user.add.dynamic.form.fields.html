@@ -1,20 +1,20 @@
 <!-- TEXT FIELDS -->
 <div ng-if="field.type=='text'" class="form-group">
-    <label for="{{ field.label }}">{{ field.label }}</label>
+    <label for="{{ field.name }}_text">{{ field.label }}</label>
     <input ng-show="{{ editUser }}"
            type="{{ field.type }}" name="{{ field.name }}"
-           id="{{ field.name }}" ng-model="User[field.name]"
+           id="{{ field.name }}_text" ng-model="User[field.name]"
            class="form-control" ng-required="{{ field.required }}"/>
     <div ng-hide="{{ editUser }}" name="{{ field.name }}" >
         {{ User[field.name] }}</div>
 </div>
 <!-- PASSWORD FIELDS -->
 <div ng-if="field.type=='password'" class="form-group">
-    <label class="control-label" for="{{ field.label }}">{{ field.label }}</label>
+    <label class="control-label" for="{{ field.name }}_password">{{ field.label }}</label>
     <input ng-show="{{ editUser }}"
            autocomplete="new-password"
            type="{{ field.type }}" name="{{ field.name }}"
-           id="{{ field.name }}" ng-model="User[field.name]"
+           id="{{ field.name }}_password" ng-model="User[field.name]"
            class="form-control" ng-required="{{ field.required }}"/>
     <div ng-hide="{{ editUser }}" name="{{ field.name }}">
         {{ User[field.name] }}
@@ -22,10 +22,10 @@
 </div>
 <!-- EMAIL FIELDS -->
 <div ng-if="field.type=='email'" class="form-group">
-    <label for="{{ field.label }}">{{field.label}}</label>
+    <label for="{{ field.name }}_email">{{field.label}}</label>
     <input ng-show="{{ editUser }}"
            type="{{ field.type }}" name="{{ field.name }}"
-           id="{{ field.name }}" ng-model="User[field.name]"
+           id="{{ field.name }}_email" ng-model="User[field.name]"
            class="form-control" ng-required="{{ field.required }}"/>
     <div ng-hide="{{ editUser }}" name="{{ field.name }}">
         {{ User[field.name] }}

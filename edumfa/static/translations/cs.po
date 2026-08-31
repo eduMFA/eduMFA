@@ -135,6 +135,7 @@ msgstr "Akce"
 #: components/config/views/config.events.list.html
 #: components/config/views/config.periodictasks.list.html
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.policyconditions.html
 #: components/token/views/token.details.html
 #: components/user/views/user.details.html
@@ -189,6 +190,10 @@ msgstr "Administrace"
 msgid "Administrator"
 msgstr "Administrátor"
 
+#: components/dashboard/views/dashboard.html
+msgid "Adoption"
+msgstr ""
+
 #: components/config/views/config.system.html
 msgid "All CA Connectors"
 msgstr "CA konektory"
@@ -225,6 +230,10 @@ msgstr "Resolvery"
 msgid "All SMS Gateways"
 msgstr "SMS brány"
 
+#: components/dashboard/views/dashboard.html
+msgid "All realms"
+msgstr ""
+
 #: components/token/views/token.html
 msgid "All tokens"
 msgstr "Tokeny"
@@ -244,6 +253,14 @@ msgstr "Atribut obsahující IP adresu."
 #: components/recovery/controllers/recoveryControllers.js
 msgid "An Email to reset the password has been sent to you."
 msgstr "Byl Vám odeslán e-mail pro obnovení hesla."
+
+#: components/dashboard/views/dashboard.html
+msgid "Any status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Any type"
+msgstr ""
 
 #: components/machine/views/machine.details.html
 #: components/token/views/token.details.html
@@ -2464,6 +2481,7 @@ msgid "Read number dynamically from user source on each request."
 msgstr ""
 
 #: components/config/views/config.policies.list.html
+#: components/dashboard/views/dashboard.html
 #: components/directives/views/directive.assignuser.html
 #: components/login/views/login.html components/token/views/token.details.html
 msgid "Realm"
@@ -3210,7 +3228,7 @@ msgstr ""
 #: components/config/views/config.token.daypassword.html
 msgid ""
 "The DayPassword Token is a time based password token.\n"
-"    It is based on the TOTP token, but it can be used more than once.."
+"    It is based on the TOTP token, but it can be used more than once."
 msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
@@ -4217,6 +4235,7 @@ msgstr "Celkem výzev:"
 msgid "Transaction ID"
 msgstr "ID transakce"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Typ"
@@ -4382,6 +4401,10 @@ msgstr "Uživatelské jméno"
 #: components/config/views/config.html templates/menu.html
 msgid "Users"
 msgstr "Uživatelé"
+
+#: components/dashboard/views/dashboard.html
+msgid "Users with matching token:"
+msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
@@ -4673,6 +4696,7 @@ msgstr "akce"
 msgid "action detail"
 msgstr "detaily akce"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4707,6 +4731,7 @@ msgstr "klient"
 msgid "description"
 msgstr "popis"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5023,6 +5048,10 @@ msgstr "tolerance"
 msgid "{{ auditdata.count }} entries found."
 msgstr "Nalezeno {{ auditdata.count }} záznamů."
 
+#, fuzzy
+#~ msgid "Tokentype"
+#~ msgstr "Typ tokenu"
+
 #~ msgctxt "subscription"
 #~ msgid "Level"
 #~ msgstr "Stupeň"
@@ -5074,9 +5103,6 @@ msgstr "Nalezeno {{ auditdata.count }} záznamů."
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "aktivní, přiřazené tokeny"
-
-#~ msgid "distinct users with active tokens"
-#~ msgstr "unikátní uživatelé s aktivními tokeny"
 
 #, fuzzy
 #~ msgid ""

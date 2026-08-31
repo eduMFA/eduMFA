@@ -55,12 +55,13 @@
                 </li>
                 <li role="presentation"
                     ng-class="{ active: tokentype == 'yubikey'}">
-                    <a ui-sref="config.tokens({tokentype: 'yubikey'})">Yubikey</a></li>
+                    <a ui-sref="config.tokens({tokentype: 'yubikey'})">Yubikey</a>
                 </li>
                 <li role="presentation"
                     ng-class="{ active: tokentype == 'daypassword'}">
                     <a ui-sref="config.tokens({tokentype: 'daypassword'})">DayPassword</a>
-                <hr>
+                </li>
+                <li role="separator"><hr></li>
                 <li role="presentation">
                         <a target="_external" ng-href="{{ 'https://edumfa.readthedocs.io/en/v'+
                            eduMFAVersionNumber+'/configuration/token_config.html'}}">
