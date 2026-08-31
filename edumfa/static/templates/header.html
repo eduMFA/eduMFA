@@ -1,31 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html ng-app="eduMfaApp">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Cornelius Kölbel" >
-    <link rel="icon" type="image/png" href="{{ instance }}/{{ 'static/favicon.png' }}">
-    <link href="{{ instance }}/{{ 'static/contrib/css/bootstrap.css' }}" rel="stylesheet">
-    <link href="{{ instance }}/{{ 'static/contrib/css/isteven-multi-select.css' }}" rel="stylesheet"/>
-    <link href="{{ instance }}/{{ 'static/contrib/css/angular-inform.css' }}" rel="stylesheet"/>
-    <link href="{{ instance }}/{{ 'static/contrib/css/hotkeys.css' }}" rel="stylesheet"/>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="Cornelius Kölbel" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ instance }}/{{ 'static/favicon.png' }}"
+    />
+    <link
+      href="{{ instance }}/{{ 'static/contrib/css/bootstrap.css' }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ instance }}/{{ 'static/contrib/css/isteven-multi-select.css' }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ instance }}/{{ 'static/contrib/css/angular-inform.css' }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ instance }}/{{ 'static/contrib/css/hotkeys.css' }}"
+      rel="stylesheet"
+    />
     <!-- Custom styles for this template -->
-    <link href="{{ instance }}/{{ 'static/css/signin.css' }}" rel="stylesheet">
-    <link href="{{ instance }}/{{ 'static/css/menu.css' }}" rel="stylesheet">
-    <link href="{{ instance }}/{{ 'static/css/content.css' }}" rel="stylesheet">
-    <link href="{{ instance }}/{{ 'static/css/table-ui.css' }}" rel="stylesheet">
-    <link href="{{ instance }}/{{ 'static/css/baseline.css' }}" rel="stylesheet">
-    <link href="{{ instance }}/{{ 'static/css/highlight.css' }}" rel="stylesheet">
-    {% if theme %}<link href="{{ instance }}/{{ theme }}" rel="stylesheet"/>{%  endif %}
-    {% if custom_css %}<link href="{{ instance }}/{{ custom_css }}" rel="stylesheet"/>{% endif %}
+    <link
+      href="{{ instance }}/{{ 'static/css/signin.css' }}"
+      rel="stylesheet"
+    />
+    <link href="{{ instance }}/{{ 'static/css/menu.css' }}" rel="stylesheet" />
+    <link
+      href="{{ instance }}/{{ 'static/css/content.css' }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ instance }}/{{ 'static/css/table-ui.css' }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ instance }}/{{ 'static/css/baseline.css' }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ instance }}/{{ 'static/css/highlight.css' }}"
+      rel="stylesheet"
+    />
+    {% if theme %}
+    <link href="{{ instance }}/{{ theme }}" rel="stylesheet" />
+    {% endif %} {% if custom_css %}
+    <link href="{{ instance }}/{{ custom_css }}" rel="stylesheet" />
+    {% endif %}
 
     <script type="application/javascript">
-        // Pass the browser Language to our Javascript code
-        var browserLanguage = "{{ browser_lang }}";
+      // Pass the browser Language to our Javascript code
+      var browserLanguage = "{{ browser_lang }}";
     </script>
     <title idle-disabled="true">{{ page_title }}</title>
-
-</head>
-<body ng-controller="mainController">
+  </head>
+  <body ng-controller="mainController"></body>
+</html>

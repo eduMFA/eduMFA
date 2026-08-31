@@ -21,34 +21,57 @@
  *
  */
 
-angular.module('eduMfaApp.loginStates', ['ui.router', 'eduMfaApp.versioning']).config(
-    ['$stateProvider', 'versioningSuffixProviderProvider',
-        function ($stateProvider, versioningSuffixProviderProvider) {
-            // get the instance, the pathname part
-            var instance = window.location.pathname;
-            if (instance === "/") {
-               instance = "";
-            }
-            var loginpath = instance + "/static/components/login/views/";
-            $stateProvider
-                .state('offline', {
-                    url: "/offline",
-                    templateUrl: loginpath + "offline.html" + versioningSuffixProviderProvider.$get().$get()
-                }).state('login', {
-                    url: "/login",
-                    templateUrl: loginpath + "login.html" + versioningSuffixProviderProvider.$get().$get()
-                }).state('initial_login', {
-                    // This is the state, when no login path is specified
-                    url: "",
-                    templateUrl: loginpath + "login.html" + versioningSuffixProviderProvider.$get().$get()
-                }).state('response', {
-                    // This is the state, when the login is performed via
-                    // challenge response.
-                    url: "/response",
-                    templateUrl: loginpath + "enter-response.html" + versioningSuffixProviderProvider.$get().$get()
-                }).state('pinchange', {
-                    url: "/pinchange",
-                    templateUrl: loginpath + "pinchange.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: "pinChangeController"
-            });
-        }]);
+angular
+  .module("eduMfaApp.loginStates", ["ui.router", "eduMfaApp.versioning"])
+  .config([
+    "$stateProvider",
+    "versioningSuffixProviderProvider",
+    function ($stateProvider, versioningSuffixProviderProvider) {
+      // get the instance, the pathname part
+      var instance = window.location.pathname;
+      if (instance === "/") {
+        instance = "";
+      }
+      var loginpath = instance + "/static/components/login/views/";
+      $stateProvider
+        .state("offline", {
+          url: "/offline",
+          templateUrl:
+            loginpath +
+            "offline.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+        })
+        .state("login", {
+          url: "/login",
+          templateUrl:
+            loginpath +
+            "login.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+        })
+        .state("initial_login", {
+          // This is the state, when no login path is specified
+          url: "",
+          templateUrl:
+            loginpath +
+            "login.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+        })
+        .state("response", {
+          // This is the state, when the login is performed via
+          // challenge response.
+          url: "/response",
+          templateUrl:
+            loginpath +
+            "enter-response.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+        })
+        .state("pinchange", {
+          url: "/pinchange",
+          templateUrl:
+            loginpath +
+            "pinchange.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+          controller: "pinChangeController",
+        });
+    },
+  ]);

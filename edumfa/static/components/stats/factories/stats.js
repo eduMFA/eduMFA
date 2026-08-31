@@ -21,20 +21,38 @@
  *
  */
 
-myApp.factory("StatsFactory", ["AuthFactory", "$http", "$state", "$rootScope",
-    "statsUrl", "inform",
-    function (AuthFactory, $http, $state, $rootScope,
-        statsUrl, inform) {
-        /**
-         *         Each service - just like this service factory - is a singleton.
-         */
-        return {
-            getCurrentUsersWithTokens: function (generationId, params, callback, errorCallback) {
-                $http.get(statsUrl + "/current/users_with_token", {
-                    headers: { 'Authorization': AuthFactory.getAuthToken() },
-                    params: params
-                }).then(function (response) { callback(generationId, response.data) },
-                    function (error) { errorCallback(generationId, error) });
-            }
-        }
-    }]);
+myApp.factory("StatsFactory", [
+  "AuthFactory",
+  "$http",
+  "$state",
+  "$rootScope",
+  "statsUrl",
+  "inform",
+  function (AuthFactory, $http, $state, $rootScope, statsUrl, inform) {
+    /**
+     *         Each service - just like this service factory - is a singleton.
+     */
+    return {
+      getCurrentUsersWithTokens: function (
+        generationId,
+        params,
+        callback,
+        errorCallback,
+      ) {
+        $http
+          .get(statsUrl + "/current/users_with_token", {
+            headers: { Authorization: AuthFactory.getAuthToken() },
+            params: params,
+          })
+          .then(
+            function (response) {
+              callback(generationId, response.data);
+            },
+            function (error) {
+              errorCallback(generationId, error);
+            },
+          );
+      },
+    };
+  },
+]);
