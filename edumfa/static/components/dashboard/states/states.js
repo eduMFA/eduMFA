@@ -19,18 +19,24 @@
  *
  */
 
-angular.module('eduMfaApp.dashboardStates', ['ui.router', 'eduMfaApp.versioning']).config(
-    ['$stateProvider', 'versioningSuffixProviderProvider',
-        function ($stateProvider, versioningSuffixProviderProvider) {
-            // get the instance, the pathname part
-            var instance = window.location.pathname;
-            if (instance === "/") {
-               instance = "";
-            }
-            var dashboardpath = instance + "/static/components/dashboard/views/";
-            $stateProvider
-                .state('dashboard', {
-                    url: "/dashboard",
-                    templateUrl: dashboardpath + "dashboard.html" + versioningSuffixProviderProvider.$get().$get()
-                });
-        }]);
+angular
+  .module("eduMfaApp.dashboardStates", ["ui.router", "eduMfaApp.versioning"])
+  .config([
+    "$stateProvider",
+    "versioningSuffixProviderProvider",
+    function ($stateProvider, versioningSuffixProviderProvider) {
+      // get the instance, the pathname part
+      var instance = window.location.pathname;
+      if (instance === "/") {
+        instance = "";
+      }
+      var dashboardpath = instance + "/static/components/dashboard/views/";
+      $stateProvider.state("dashboard", {
+        url: "/dashboard",
+        templateUrl:
+          dashboardpath +
+          "dashboard.html" +
+          versioningSuffixProviderProvider.$get().$get(),
+      });
+    },
+  ]);

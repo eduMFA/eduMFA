@@ -21,17 +21,20 @@
  *
  */
 
-var versioning = angular.module('eduMfaApp.versioning', []);
+var versioning = angular.module("eduMfaApp.versioning", []);
 
 /*
  * The length of the random string chosen for the version number when running in development mode.
  */
-versioning.constant('RANDOM_VERSION_STRING_LENGTH', 5);
+versioning.constant("RANDOM_VERSION_STRING_LENGTH", 5);
 
 /*
  * The version number of the eduMFA server software.
  */
-versioning.constant('EDUMFA_VERSION_NUMBER', document.getElementById('EDUMFA_VERSION_NUMBER').value);
+versioning.constant(
+  "EDUMFA_VERSION_NUMBER",
+  document.getElementById("EDUMFA_VERSION_NUMBER").value,
+);
 
 /*
  * A suffix, that can be appended to an url to invalidate the caches when necessary.
@@ -41,20 +44,22 @@ versioning.constant('EDUMFA_VERSION_NUMBER', document.getElementById('EDUMFA_VER
  * across updates of the eduMFA server software and not if the user is running a development version of
  * eduMFA.
  */
-versioning.provider('versioningSuffixProvider', [
-    'RANDOM_VERSION_STRING_LENGTH',
-    'EDUMFA_VERSION_NUMBER',
-    function(
-        RANDOM_VERSION_STRING_LENGTH,
-        EDUMFA_VERSION_NUMBER
-    ) {
-        this.$get = function() {
-            return new (function() {
-                this.$get = function() {
-                    return '?v=' + (EDUMFA_VERSION_NUMBER
-                        || Math.random().toString(36).substring(2, 2 + RANDOM_VERSION_STRING_LENGTH));
-                };
-            });
+versioning.provider("versioningSuffixProvider", [
+  "RANDOM_VERSION_STRING_LENGTH",
+  "EDUMFA_VERSION_NUMBER",
+  function (RANDOM_VERSION_STRING_LENGTH, EDUMFA_VERSION_NUMBER) {
+    this.$get = function () {
+      return new (function () {
+        this.$get = function () {
+          return (
+            "?v=" +
+            (EDUMFA_VERSION_NUMBER ||
+              Math.random()
+                .toString(36)
+                .substring(2, 2 + RANDOM_VERSION_STRING_LENGTH))
+          );
         };
-    }
+      })();
+    };
+  },
 ]);

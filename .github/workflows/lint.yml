@@ -10,6 +10,20 @@ on:
     types: [ opened, reopened, synchronize ]
 
 jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: edumfa/static
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Check frontend formatting
+        run: bun run format:check
+
   ruff:
     runs-on: ubuntu-latest
     steps:
