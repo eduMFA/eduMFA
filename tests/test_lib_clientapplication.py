@@ -3,7 +3,7 @@ This test file tests the lib.clientapplicaton.py
 """
 
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 from edumfa.lib.clientapplication import get_clientapplication, save_clientapplication
@@ -43,8 +43,8 @@ class ClientApplicationTestCase(MyTestCase):
         self.assertEqual(len(r), 4)
         self.assertEqual(r["OTRS"][0]["ip"], "1.2.3.4")
         self.assertEqual(r["PAM"][0]["ip"], "1.2.3.4")
-        self.assertTrue(r["RADIUS"][0]["lastseen"] < datetime.now())
-        self.assertTrue(r["SAML"][0]["lastseen"] < datetime.now())
+        self.assertTrue(r["RADIUS"][0]["lastseen"] < datetime.now(timezone.utc))
+        self.assertTrue(r["SAML"][0]["lastseen"] < datetime.now(timezone.utc))
 
     def test_02_multiple_nodes(self):
         @contextmanager
@@ -59,15 +59,15 @@ class ClientApplicationTestCase(MyTestCase):
         @contextmanager
         def _fake_time(t):
             """context manager that fakes the current time that is written to the ``lastseen`` column"""
-            with mock.patch("edumfa.models.datetime") as mock_dt:
-                mock_dt.now.return_value = t
+            with mock.patch("edumfa.models.utc_now") as mock_dt:
+                mock_dt.return_value = t
                 yield
 
         # remove all rows first
         ClientApplication.query.delete()
 
         # create some fake timestamps
-        t1 = datetime.now()
+        t1 = datetime.now(timezone.utc)
         t2 = t1 + timedelta(minutes=5)
         t3 = t2 + timedelta(minutes=5)
 
