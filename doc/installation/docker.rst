@@ -174,6 +174,8 @@ optional are required for eduMFA to work.
 - EDUMFA_LOGCONFIG: a path to an alternative logging config (optional, default: image provided)
 - EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional, default: ``False``)
 - SUPERUSER_REALM: which realms should be superuser realms (optional, default: ``super,administrators``)
+- SQLALCHEMY_ENGINE_OPTIONS: SQLAlchemy engine options, see :ref:`cfgfile` (optional)
+- EDUMFA_AUDIT_SQL_OPTIONS: SQLAlchemy engine options for your audit database, see :ref:`cfgfile` (optional)
 - EDUMFA_CSS: URL of custom css stylesheet (optional)
 - EDUMFA_LOGO: filename of custom logo (optional)
 - EDUMFA_PAGE_TITLE: custom page title (optional)
