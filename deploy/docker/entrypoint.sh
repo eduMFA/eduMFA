@@ -52,6 +52,9 @@ create_keys() {
 }
 
 create_and_print_admin() {
+  if [ -n "$EDUMFA_ADMIN_ENABLE_FILE" ]; then
+    EDUMFA_ADMIN_ENABLE=$(cat "$EDUMFA_ADMIN_ENABLE_FILE")
+  fi
   EDUMFA_ADMIN_ENABLE="${EDUMFA_ADMIN_ENABLE:-true}"
   if [ "${EDUMFA_ADMIN_ENABLE,,}" != "true" ]; then
     return
