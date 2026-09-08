@@ -52,6 +52,10 @@ create_keys() {
 }
 
 create_and_print_admin() {
+  EDUMFA_ADMIN_ENABLE="${EDUMFA_ADMIN_ENABLE:-true}"
+  if [ "${EDUMFA_ADMIN_ENABLE,,}" != "true" ]; then
+    return
+  fi
   if [ -n "$EDUMFA_ADMIN_USER_FILE" ]; then
     EDUMFA_ADMIN_USER=$(cat "$EDUMFA_ADMIN_USER_FILE")
   fi
