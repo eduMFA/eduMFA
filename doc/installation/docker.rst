@@ -172,7 +172,7 @@ optional are required for eduMFA to work.
 - EDUMFA_AUDIT_KEY_PUBLIC: an alternative path to the audit certificate (optional, default: ``/etc/edumfa/public.pem``)
 - EDUMFA_ENCFILE: an alternative path to the enckey (optional, default: ``/etc/edumfa/enckey``)
 - EDUMFA_LOGCONFIG: a path to an alternative logging config (optional, default: image provided)
-- EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional, default: ``False``)
+- EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional, default: ``false``)
 - SUPERUSER_REALM: which realms should be superuser realms (optional, default: ``super,administrators``)
 - EDUMFA_CSS: URL of custom css stylesheet (optional)
 - EDUMFA_LOGO: filename of custom logo (optional)
