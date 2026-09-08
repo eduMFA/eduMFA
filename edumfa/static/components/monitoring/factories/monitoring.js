@@ -24,33 +24,45 @@ myApp.factory("MonitoringFactory", ["AuthFactory", "$http", "monitoringUrl", "$q
                 if (cancelers[cacheKey]) {
                     cancelers[cacheKey].resolve();
                 }
-                cancelers[cacheKey] = $q.defer();
+                var canceler = $q.defer();
+                cancelers[cacheKey] = canceler;
 
+                function release() {
+                    if (cancelers[cacheKey] === canceler) {
+                        delete cancelers[cacheKey];
+                    }
+                }
                 $http.get(monitoringUrl + "/" + stats_key, {
                     headers: { 'Authorization': AuthFactory.getAuthToken() },
                     params: params,
-                    timeout: cancelers[cacheKey].promise,
+                    timeout: canceler.promise,
                 }).then(function (response) {
-                    delete cancelers[cacheKey];
-                    callback(response.data)
-                },
-                    function (error) {
-                        delete cancelers[cacheKey];
-                        if (error.status === -1) {
-                            return;
-                        }
-                        AuthFactory.authError(error.data);
-                        if (errorCallback) {
-                            errorCallback(error);
-                        }
-                    });
+                    release();
+                    callback(response.data);
+                }, function (error) {
+                    release();
+                    if (error.status === -1) {
+                        if (errorCallback) { errorCallback(error, { cancelled: true }); }
+                        return;
+                    }
+                    if (errorCallback) { errorCallback(error, { cancelled: false }); }
+                    AuthFactory.authError(error.data);
+                });
+            },
+
+            cancel: function (cacheKey) {
+                var canceler = cancelers[cacheKey]
+                if (canceler) {
+                    delete cancelers[cacheKey]
+                    canceler.resolve()
+                }
             },
 
             cancelAll: function () {
                 Object.keys(cancelers).forEach(function (key) {
-                    cancelers[key].resolve();
-                });
-                cancelers = {};
+                    cancelers[key].resolve()
+                })
+                cancelers = {}
             }
         }
     }]);

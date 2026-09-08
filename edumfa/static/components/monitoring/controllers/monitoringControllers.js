@@ -3,17 +3,7 @@ myApp.controller("monitoringController", ["MonitoringFactory",
     function (MonitoringFactory, AuthFactory, $scope) {
 
         const emptyDefaultTimeline = {
-            data: { datasets: [] },
-            options: {
-                plugins: {
-                    decimation: {
-                        enabled: true,
-                        algorithm: "lttb",
-                        samples: 500,
-                        threshold: 500
-                    }
-                }
-            }
+            data: { datasets: [] }
         };
 
         const colorScheme = [
@@ -25,7 +15,9 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             { borderDash: [2, 2], pointStyle: 'rect' },
             { borderDash: [8, 3, 2, 3], pointStyle: 'rectRot' },
             { borderDash: [8, 4], pointStyle: 'triangle' }
-        ]
+        ];
+
+        var STATUS = { LOADING: "loading", EMPTY: "empty", ERROR: "error" };
 
         $scope.timeFrame = [
             { label: "24 hours", unit: "hour", amount: 24 },
@@ -41,10 +33,11 @@ myApp.controller("monitoringController", ["MonitoringFactory",
         $scope.datasetCache = {}
         $scope.datasetStatusMap = {}
         $scope.selectedTimeFrame = $scope.timeFrame[0]
+        $scope.isSelected = function (k) { return k.selected; };
 
-        function keyToSlot(key) {
+        function keyToSlot(sk) {
             var hash = 0;
-            for (var char of key) {
+            for (var char of sk) {
                 hash = (hash << 5) - hash + char.charCodeAt(0);
             }
             return Math.abs(hash);
@@ -54,17 +47,17 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             var totalSlots = colorScheme.length * dashStyles.length;
             var styleMap = new Map();
             var used = new Set()
-            allKeys.forEach((key) => {
-                var slot = keyToSlot(key) % totalSlots
-                var attemps = 0
-                while (used.has(slot) && attemps < totalSlots) {
+            allKeys.forEach((sk) => {
+                var slot = keyToSlot(sk) % totalSlots
+                var attempts = 0
+                while (used.has(slot) && attempts < totalSlots) {
                     slot = (slot + 1) % totalSlots
-                    attemps++
+                    attempts++
                 }
                 used.add(slot)
                 var colorIndex = slot % colorScheme.length;
                 var dashIndex = Math.floor(slot / colorScheme.length) % dashStyles.length;
-                styleMap.set(key, { color: colorScheme[colorIndex], ...dashStyles[dashIndex] });
+                styleMap.set(sk, { color: colorScheme[colorIndex], ...dashStyles[dashIndex] });
             });
             return styleMap;
         }
@@ -118,7 +111,8 @@ myApp.controller("monitoringController", ["MonitoringFactory",
                     if (p.y < min.y) min = p
                     if (p.y > max.y) max = p
                 }
-                reducedValues.push(min, max)
+                reducedValues.push(min)
+                if (max !== min) reducedValues.push(max)
             }
             return reducedValues
         };
@@ -130,51 +124,63 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             return stillSelected && sameTimeFrame && notInDataset
         };
 
-        $scope.getAvailableStatsKeys = function () {
-            $scope.statsKeysLoadingText = "Loading statistics keys..."
-            $scope.selectedStatsKeys = []
-            $scope.availableStatsKeys = []
-            MonitoringFactory.getStatsKeys(function (data) {
-                var newList = [];
-                var d = data.result.value.sort()
-                var styleMap = buildStyleMap(d)
-                d.forEach(function (sk) {
-                    newList.push({
-                        id: sk,
-                        name: sk,
-                        color: styleMap.get(sk).color,
-                        selected: false,
-                        checked: true,
-                        datasetStatus: "",
-                        borderDash: styleMap.get(sk).borderDash,
-                        pointStyle: styleMap.get(sk).pointStyle
-                    })
-                })
-                $scope.availableStatsKeys = newList
-                if ($scope.availableStatsKeys.length === 0) {
-                    $scope.statsKeysLoadingText = "No statistics keys found. Monitoring may not be set up yet for this instance."
-                } else {
-                    $scope.statsKeysLoadingText = ""
-                }
-            }, function (error) {
-                $scope.statsKeysLoadingText = "Error loading statistics keys. Please try again later."
-                console.log(error)
-            })
+        function statusKey(name, timeFrameLabel) {
+            return name + "|" + (timeFrameLabel || $scope.selectedTimeFrame.label)
+        }
+
+        function setStatus(key, state, detail) {
+            if (!state) {
+                delete $scope.datasetStatusMap[key]
+            } else {
+                $scope.datasetStatusMap[key] = { state: state, detail: detail || "" }
+            }
+        }
+
+        $scope.getStatus = function (name) {
+            return $scope.datasetStatusMap[statusKey(name)] || null
         };
 
-        $scope.getStatusText = function (name) {
-            var key = name + "|" + $scope.selectedTimeFrame.label
-            return $scope.datasetStatusMap[key] || ""
+        function extractDetail(error) {
+            var res = error && error.data && error.data.result
+            return (res && res.error && res.error.message) || (error && error.statusText) || ""
         }
+
+        $scope.getAvailableStatsKeys = function () {
+            $scope.statsKeysState = STATUS.LOADING
+            $scope.availableStatsKeys = []
+            MonitoringFactory.getStatsKeys(function (data) {
+                try {
+                    var d = (data && data.result && data.result.value || []).sort();
+                    var styleMap = buildStyleMap(d)
+                    var newList = d.map(function (sk) {
+                        var style = styleMap.get(sk) || {}
+                        return {
+                            id: sk,
+                            name: sk,
+                            color: style.color,
+                            visible: true,
+                            borderDash: style.borderDash,
+                            pointStyle: style.pointStyle
+                        }
+                    })
+                    $scope.availableStatsKeys = newList;
+                    $scope.statsKeysState = newList.length === 0 ? STATUS.EMPTY : null;
+                } catch (e) {
+                    $scope.statsKeysState = STATUS.ERROR
+                }
+            }, function (error) {
+                $scope.statsKeysState = STATUS.ERROR
+            });
+        };
 
         $scope.getDataset = function (sk, callback) {
             var startTime = getStartTime($scope.selectedTimeFrame)
-            var key = sk.name + "|" + $scope.selectedTimeFrame.label
+            var key = statusKey(sk.name)
             if ($scope.datasetCache[key]) {
                 callback($scope.datasetCache[key])
                 return
             }
-            $scope.datasetStatusMap[key] = " (loading...)"
+            setStatus(key, STATUS.LOADING)
             MonitoringFactory.getMonitored(sk.name, { start: startTime }, key, function (data) {
                 var d = data.result.value
                 var points = d.map(e => ({ x: new Date(e[0]).getTime(), y: e[1] }))
@@ -195,15 +201,18 @@ myApp.controller("monitoringController", ["MonitoringFactory",
                     borderWidth: 2,
                 }
                 if (dataset.data.length === 0) {
-                    $scope.datasetStatusMap[key] = " (Timeout or no data available for this time frame)"
+                    setStatus(key, STATUS.EMPTY)
                 } else {
                     $scope.datasetCache[key] = dataset
-                    $scope.datasetStatusMap[key] = ""
+                    setStatus(key, null)
                 }
                 callback(dataset);
-            }, function (error) {
-                $scope.datasetStatusMap[key] = " (Error loading data)"
-                console.log(error)
+            }, function (error, meta) {
+                if (meta && meta.cancelled) {
+                    setStatus(key, null);
+                    return;
+                }
+                setStatus(key, STATUS.ERROR, extractDetail(error));
             })
         };
 
@@ -211,47 +220,41 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             var timeFrame = $scope.selectedTimeFrame.label
             $scope.getDataset(sk, function (dataset) {
                 if (isStillRelevant(sk, timeFrame)) {
-                    $scope.tokenTimeline.data.datasets.push(dataset)
-                    syncChecked(sk)
+                    applyVisibility(sk, dataset)
+                    if (dataset.data.length !== 0) {
+                        $scope.tokenTimeline.data.datasets.push(dataset)
+                    }
+
                 }
             })
         };
 
         $scope.removeFromTimeline = function (ds) {
-            var index = $scope.tokenTimeline.data.datasets.indexOf(ds)
+            var index = $scope.tokenTimeline.data.datasets.findIndex(d => d.label === ds.label)
             if (index > -1) {
                 $scope.tokenTimeline.data.datasets.splice(index, 1)
             }
         };
 
-        $scope.toggleStatsKey = function (sk) {
-            var exists = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name)
-            if (exists) {
-                $scope.removeFromTimeline(exists)
-                resetCheckboxes()
-            } else {
-                $scope.addToTimeline(sk)
-                resetCheckboxes()
-            }
-        };
-
-        $scope.addAllToTimeline = function () {
-            $scope.availableStatsKeys.forEach(sk => {
-                var existingDataset = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name)
-                if (!existingDataset) {
-                    $scope.addToTimeline(sk)
+        $scope.syncSelection = function () {
+            $scope.availableStatsKeys.forEach(function (sk) {
+                var key = statusKey(sk.name);
+                var dataset = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name);
+                if (sk.selected) {
+                    if (!dataset) {
+                        $scope.addToTimeline(sk)
+                    }
                 } else {
-                    syncChecked(sk)
+                    MonitoringFactory.cancel(key);
+                    setStatus(key, null)
+                    if (dataset) { $scope.removeFromTimeline(dataset) }
                 }
-            })
-        };
-
-        $scope.clearTimeLine = function () {
-            $scope.tokenTimeline.data.datasets = []
+            });
         };
 
         $scope.onTimeFrameChange = function () {
-            $scope.clearTimeLine()
+            MonitoringFactory.cancelAll()
+            $scope.tokenTimeline.data.datasets = []
             $scope.availableStatsKeys.forEach(sk => {
                 if (sk.selected) {
                     $scope.addToTimeline(sk)
@@ -259,41 +262,14 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             })
         };
 
+        function applyVisibility(sk, dataset) {
+            if (dataset) { dataset.hidden = !sk.visible; }
+        }
+
         $scope.changeHidden = function (sk) {
-            var dataset = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name)
-            if (dataset) {
-                dataset.hidden = !sk.checked
-            }
+            applyVisibility(sk, $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name));
         };
 
-        function resetCheckboxes() {
-            $scope.selectedStatsKeys.forEach(sk => {
-                var dataset = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name)
-                if (dataset) {
-                    sk.checked = !dataset.hidden
-                }
-            })
-        };
-
-        function syncChecked(sk) {
-            var boundKey = $scope.selectedStatsKeys.find(k => k.name === sk.name)
-            var dataset = $scope.tokenTimeline.data.datasets.find(ds => ds.label === sk.name)
-            if (boundKey) boundKey.checked = true
-            if (dataset) dataset.hidden = false
-        };
-
-        $scope.resetTimeline = function () {
-            $scope.selectedTimeFrame = $scope.timeFrame[0]
-            $scope.tokenTimeline = angular.copy(emptyDefaultTimeline)
-        };
-
-        $scope.resetAll = function () {
-            MonitoringFactory.cancelAll()
-            $scope.datasetCache = {};
-            $scope.datasetStatusMap = {};
-            $scope.getAvailableStatsKeys()
-            $scope.resetTimeline()
-        };
 
         if (AuthFactory.checkRight('statistics_read')) {
             $scope.getAvailableStatsKeys();
@@ -301,7 +277,12 @@ myApp.controller("monitoringController", ["MonitoringFactory",
 
         $scope.$on("piReload", function () {
             if (AuthFactory.checkRight('statistics_read')) {
-                $scope.resetAll();
+                MonitoringFactory.cancelAll()
+                $scope.datasetCache = {}
+                $scope.datasetStatusMap = {}
+                $scope.selectedTimeFrame = $scope.timeFrame[0]
+                $scope.tokenTimeline = angular.copy(emptyDefaultTimeline)
+                $scope.getAvailableStatsKeys()
             }
         });
 

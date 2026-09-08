@@ -183,27 +183,33 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="panel panel-default" ng-controller="monitoringController"
-                ng-show="checkRight('statistics_read')">
+            <div class="panel panel-default" ng-controller="monitoringController" ng-if="checkRight('statistics_read')">
                 <div class="panel-heading" translate>Token Chart</div>
-                <label ng-show="availableStatsKeys.length == 0" translate>{{statsKeysLoadingText}}</label>
+                <div class="panel-body" ng-if="statsKeysState" ng-switch="statsKeysState">
+                    <p ng-switch-when="loading" translate>Loading statistics keys…</p>
+                    <p ng-switch-when="empty" translate>No statistics keys found. Monitoring may not be set up yet for
+                        this instance.</p>
+                    <p ng-switch-when="error" translate>Statistics keys could not be loaded.</p>
+                </div>
                 <div class="panel-body" ng-show="availableStatsKeys.length > 0">
                     <div class="chart-controls">
                         <label translate>TimeFrame:</label>
                         <select class="form-control" ng-model="selectedTimeFrame"
-                            ng-options="x.label for x in timeFrame" ng-change="onTimeFrameChange()"></select>
+                            ng-options="x.label | translate for x in timeFrame "
+                            ng-change="onTimeFrameChange()"></select>
                         <label translate>StatsKeys:</label>
                         <br>
                         <isteven-multi-select input-model="availableStatsKeys" output-model="selectedStatsKeys"
                             button-label="name" item-label="name" tick-property="selected" index-property="id"
-                            on-item-click="toggleStatsKey(data)" on-select-all="addAllToTimeline()"
-                            on-select-none="clearTimeLine()" on-reset="resetTimeline()">
+                            on-item-click="syncSelection()" on-select-all="syncSelection()"
+                            on-select-none="syncSelection()" on-reset="syncSelection()">
                         </isteven-multi-select>
                         <br>
                         <label translate>Legend:</label>
                         <div class="chart-legend">
-                            <div class="legend-item" ng-repeat="key in selectedStatsKeys">
-                                <input type="checkbox" id="legend-{{$index}}" ng-model="key.checked"
+                            <div class="legend-item"
+                                ng-repeat="key in availableStatsKeys | filter:isSelected track by key.name">
+                                <input type="checkbox" id="legend-{{$index}}" ng-model="key.visible"
                                     ng-change="changeHidden(key)">
                                 <label for="legend-{{$index}}" class="legend-label">
                                     <svg class="legend-swatch" viewBox="0 0 40 14">
@@ -224,7 +230,13 @@
                                             class="legend-symbol legend-symbol-rot" x="16.5" y="3.5" width="7"
                                             height="7" ng-attr-fill="{{key.color}}" />
                                     </svg>
-                                    <span>{{key.name}}{{getStatusText(key.name)}}</span>
+                                    <span>{{key.name}}</span>
+                                    <span ng-switch="getStatus(key.name).state">
+                                        <span ng-switch-when="loading" class="text-muted" translate>Loading…</span>
+                                        <span ng-switch-when="empty" class="text-muted" translate>No data</span>
+                                        <span ng-switch-when="error" class="text-danger" translate>Could not be
+                                            loaded</span>
+                                    </span>
                                 </label>
                             </div>
                         </div>
