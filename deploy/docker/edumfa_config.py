@@ -59,7 +59,7 @@ EDUMFA_ENCFILE = get_var("EDUMFA_ENCFILE", "/etc/edumfa/enckey")
 EDUMFA_AUDIT_KEY_PRIVATE = get_var("EDUMFA_AUDIT_KEY_PRIVATE", "/etc/edumfa/private.pem")
 EDUMFA_AUDIT_KEY_PUBLIC = get_var("EDUMFA_AUDIT_KEY_PUBLIC", "/etc/edumfa/public.pem")
 EDUMFA_LOGCONFIG = get_var("EDUMFA_LOGCONFIG", "/opt/edumfa/logging.yml")
-EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False") == "True"
+EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False").lower() == "true"
 EDUMFA_AUDIT_SQL_TRUNCATE = True
 EDUMFA_NODE = gethostname()
 if edumfa_logo := get_var("EDUMFA_LOGO", ""):
