@@ -166,6 +166,7 @@ optional are required for eduMFA to work.
 - DB_USER: the user on the database system
 - SECRET_KEY: the secret key which signs API tokens, should be at least 32 random characters long
 - EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 32 random characters long
+- EDUMFA_ADMIN_ENABLE: whether to enable creation of the local eduMFA admin (optional, default: ``true``)
 - EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional, default: will be generated)
 - EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional, default: ``admin``)
 - EDUMFA_AUDIT_KEY_PRIVATE: an alternative path to the audit key (optional, default: ``/etc/edumfa/private.pem``)
