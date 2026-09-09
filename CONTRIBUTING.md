@@ -134,6 +134,9 @@ make translate-backend
 The following section describes our development workflow: How do we handle
 issues, how do we develop eduMFA, how do we perform code reviews?
 
+Members of the release team should also follow the
+[release checklist](RELEASE.md).
+
 ### Terminology
 
 In the following, *"we"* and *"team"* refers to the [eduMFA development
@@ -192,11 +195,10 @@ consequence, may be unstable. Features are usually added there.
 
 ##### Stable branches
 
-For each minor version ``X.Y`` (e.g. 2.23, 3.0, ...), we create a *stable
-branch* called ``branch-X.Y``, e.g.
-[``branch-3.0``](https://github.com/eduMFA/eduMFA/tree/branch-3.0).
-Hotfixes for stable versions are usually added to the stable branches. Stable
-branches are then merged back into the main branch.
+For each maintained major/minor version ``X.Y`` (e.g. 2.9, 3.0, ...), we create
+a *fix branch* called ``vX.Y.x``, e.g. ``v2.9.x``. Fixes are developed on
+``main`` and the commits intended for a fix release are cherry-picked into the
+fix branch. See the [release checklist](RELEASE.md) for the complete process.
 
 ##### Local Branches and Pull Requests
 
