@@ -42,6 +42,8 @@ services:
       EDUMFA_PEPPER: ${EDUMFA_PEPPER}
       EDUMFA_UI_DEACTIVATED: ${EDUMFA_UI_DEACTIVATED}
       SECRET_KEY: ${EDUMFA_SECRET_KEY}
+      SQLALCHEMY_ENGINE_OPTIONS: '{"isolation_level": "READ COMMITTED"}'
+      EDUMFA_AUDIT_SQL_OPTIONS: '{}'
     depends_on:
       mariadb:
         condition: service_healthy

@@ -52,7 +52,7 @@ The file should contain the following contents::
    # EDUMFA_CSS = '/location/of/theme.css'
    # EDUMFA_UI_DEACTIVATED = True
 
-.. note:: The config file is parsed as python code, so you can use variables to
+.. note:: The config file is parsed as Python code, so you can use variables to
    set the path and you need to take care of the indentation.
    Note that this doesn't work when using the Ubuntu package.
 
@@ -60,7 +60,7 @@ The file should contain the following contents::
 For more information about the database connect string, supported databases and
 drivers please read :ref:`database_connect`.
 
-``SQLALCHEMY_ENGINE_OPTIONS`` is a dictionary of keyword args to send
+``SQLALCHEMY_ENGINE_OPTIONS`` is a Python dictionary to send
 to `create_engine() <https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy
 .create_engine>`_. The ``max_identifier_length`` is the database's
 configured maximum number of characters that may be used in a SQL identifier
@@ -215,8 +215,8 @@ is not set, the value from ``EDUMFA_NODE`` or ``localnode`` will be used.
 
 You can run the database for the audit module on another database or even
 server. For this you can specify the database URI via ``EDUMFA_AUDIT_SQL_URI``.
-With ``EDUMFA_AUDIT_SQL_OPTIONS`` You can pass a dictionary of options to the
-database engine. If ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set,
+With ``EDUMFA_AUDIT_SQL_OPTIONS`` You can pass a Python dictionary of options to
+the database engine. If ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set,
 ``SQLALCHEMY_ENGINE_OPTIONS`` will be used.
 
 ``EDUMFA_AUDIT_SQL_TRUNCATE = True`` lets you truncate audit entries to the length
