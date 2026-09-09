@@ -51,17 +51,18 @@ def get_var(key: str, default: str | None = None) -> str:
         return get_content_from_file(path)
     return _getenv(key, default)
 
-def str_to_dict(data: str) -> dict[str, object]:
+def str_to_dict(data: str, option: str) -> dict[str, Any]:
     """
     Parses a string into a dict.
 
     :param data: The string to convert to a dict.
+    :param option: The eduMFA option this is parsing.
     :return: The string parsed as dict.
     :raises ValueError: If the content of the string is not a dict.
     """
     data = literal_eval(data)
     if not isinstance(data, dict):
-        raise ValueError(f"Expected string with dictionary, got {data_type}.")
+        raise ValueError(f"{option} value is not a Python dictionary.")
     return data
 
 
@@ -79,9 +80,9 @@ EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False").lower() == "tr
 EDUMFA_AUDIT_SQL_TRUNCATE = True
 EDUMFA_NODE = gethostname()
 if sqlalchemy_options := get_var("SQLALCHEMY_ENGINE_OPTIONS", ""):
-    SQLALCHEMY_ENGINE_OPTIONS = str_to_dict(sqlalchemy_options)
+    SQLALCHEMY_ENGINE_OPTIONS = str_to_dict(sqlalchemy_options, "SQLALCHEMY_ENGINE_OPTIONS")
 if sqlalchemy_options_audit := get_var("EDUMFA_AUDIT_SQL_OPTIONS", ""):
-    EDUMFA_AUDIT_SQL_OPTIONS = str_to_dict(sqlalchemy_options_audit)
+    EDUMFA_AUDIT_SQL_OPTIONS = str_to_dict(sqlalchemy_options_audit, "EDUMFA_AUDIT_SQL_OPTIONS")
 if edumfa_logo := get_var("EDUMFA_LOGO", ""):
     EDUMFA_LOGO = edumfa_logo
 if edumfa_page_title := get_var("EDUMFA_PAGE_TITLE", ""):
