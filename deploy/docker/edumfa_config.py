@@ -51,7 +51,7 @@ def get_var(key: str, default: str | None = None) -> str:
         return get_content_from_file(path)
     return _getenv(key, default)
 
-def str_to_dict(data: str) -> dict:
+def str_to_dict(data: str) -> dict[str, object]:
     """
     Parses a string into a dict.
 
@@ -60,8 +60,7 @@ def str_to_dict(data: str) -> dict:
     :raises ValueError: If the content of the string is not a dict.
     """
     data = literal_eval(data)
-    data_type = type(data)
-    if data_type != type({}):
+    if not isinstance(data, dict):
         raise ValueError(f"Expected string with dictionary, got {data_type}.")
     return data
 
