@@ -1,6 +1,7 @@
 from ast import literal_eval
 from os import getenv
 from socket import gethostname
+from typing import Any
 
 
 def get_content_from_file(path: str) -> str:
@@ -51,6 +52,7 @@ def get_var(key: str, default: str | None = None) -> str:
         return get_content_from_file(path)
     return _getenv(key, default)
 
+
 def str_to_dict(data: str, option: str) -> dict[str, Any]:
     """
     Parses a string into a dict.
@@ -80,9 +82,13 @@ EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False").lower() == "tr
 EDUMFA_AUDIT_SQL_TRUNCATE = True
 EDUMFA_NODE = gethostname()
 if sqlalchemy_options := get_var("SQLALCHEMY_ENGINE_OPTIONS", ""):
-    SQLALCHEMY_ENGINE_OPTIONS = str_to_dict(sqlalchemy_options, "SQLALCHEMY_ENGINE_OPTIONS")
+    SQLALCHEMY_ENGINE_OPTIONS = str_to_dict(
+        sqlalchemy_options, "SQLALCHEMY_ENGINE_OPTIONS"
+    )
 if sqlalchemy_options_audit := get_var("EDUMFA_AUDIT_SQL_OPTIONS", ""):
-    EDUMFA_AUDIT_SQL_OPTIONS = str_to_dict(sqlalchemy_options_audit, "EDUMFA_AUDIT_SQL_OPTIONS")
+    EDUMFA_AUDIT_SQL_OPTIONS = str_to_dict(
+        sqlalchemy_options_audit, "EDUMFA_AUDIT_SQL_OPTIONS"
+    )
 if edumfa_logo := get_var("EDUMFA_LOGO", ""):
     EDUMFA_LOGO = edumfa_logo
 if edumfa_page_title := get_var("EDUMFA_PAGE_TITLE", ""):
