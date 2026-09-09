@@ -62,7 +62,10 @@ def str_to_dict(data: str, option: str) -> dict[str, Any]:
     :return: The string parsed as dict.
     :raises ValueError: If the content of the string is not a dict.
     """
-    data = literal_eval(data)
+    if data:
+        data = literal_eval(data)
+    else:
+        data = {}
     if not isinstance(data, dict):
         raise ValueError(f"{option} value is not a Python dictionary.")
     return data
