@@ -157,6 +157,11 @@ def configured_doc_versions() -> tuple[str, str]:
     return version_match.group(1), release_match.group(1)
 
 
+def verify_dependencies() -> None:
+    subprocess.run(["uv", "lock", "--check"], cwd=ROOT, check=True)
+    subprocess.run(["uv", "sync", "--locked", "--all-groups"], cwd=ROOT, check=True)
+
+
 def check_release(version: str) -> None:
     require_final_version(version)
     require_changelog_section(version)
@@ -181,6 +186,7 @@ def check_release(version: str) -> None:
         raise ReleaseError(
             "Release versions are inconsistent:\n  " + "\n  ".join(mismatches)
         )
+    verify_dependencies()
     print(f"Release {version} is consistent.")
 
 

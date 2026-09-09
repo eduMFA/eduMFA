@@ -44,6 +44,7 @@ def release_tool(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> ModuleType:
         )
 
     monkeypatch.setattr(module, "refresh_lock", refresh_lock)
+    monkeypatch.setattr(module, "verify_dependencies", lambda: None)
     return module
 
 
@@ -81,6 +82,40 @@ def test_prepare_release_requires_changelog_section(release_tool: ModuleType) ->
         release_tool.ReleaseError, match="Add the 'eduMFA 2.10.0' section"
     ):
         release_tool.prepare_release("2.10.0")
+
+
+def test_dependency_check_uses_locked_complete_environment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    release_tool = load_release_module()
+    monkeypatch.setattr(release_tool, "ROOT", tmp_path)
+    commands: list[list[str]] = []
+
+    def run(arguments: list[str], *, cwd: Path, check: bool) -> None:
+        assert cwd == release_tool.ROOT
+        assert check is True
+        commands.append(arguments)
+
+    monkeypatch.setattr(release_tool.subprocess, "run", run)
+
+    release_tool.verify_dependencies()
+
+    assert commands == [
+        ["uv", "lock", "--check"],
+        ["uv", "sync", "--locked", "--all-groups"],
+    ]
+
+
+def test_release_check_verifies_dependencies(
+    release_tool: ModuleType, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    release_tool.prepare_release("2.10.0")
+    calls: list[None] = []
+    monkeypatch.setattr(release_tool, "verify_dependencies", lambda: calls.append(None))
+
+    release_tool.check_release("2.10.0")
+
+    assert calls == [None]
 
 
 @pytest.mark.parametrize("version", ["2.10", "v2.10.0", "2.10.0a"])
