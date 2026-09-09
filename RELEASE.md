@@ -20,7 +20,7 @@ release state:
 | --- | --- |
 | `make prepare-release VERSION=X.Y.Z` | Update release versions, Ubuntu changelogs, and `uv.lock`, then check consistency |
 | `make prepare-fix-release VERSION=X.Y.Z COMMITS="sha1 sha2"` | Verify the fix branch, cherry-pick approved commits, and prepare the release |
-| `make check-release VERSION=X.Y.Z` | Check the changelog and every release version without changing files |
+| `make check-release VERSION=X.Y.Z` | Check release metadata, the lockfile, and the complete dependency environment without changing resolution |
 | `make tag-release VERSION=X.Y.Z` | Check the release and create a local tag at the published branch tip |
 | `make create-fix-branch VERSION=X.Y.0` | Create a local `vX.Y.x` branch from the local release tag |
 | `make start-development VERSION=X.Y.Za` | Set the next development version and refresh `uv.lock` |
@@ -66,7 +66,15 @@ $ git diff
 - prepends entries to `deploy/ubuntu/changelog` and
   `deploy/ubuntu-server/changelog`;
 - refreshes `uv.lock`; and
-- verifies that these versions and the changelog agree.
+- verifies that these versions and the changelog agree; and
+- runs the immutable dependency checks described below.
+
+The dependency check runs `uv lock --check` followed by
+`uv sync --locked --all-groups`. It fails if `uv.lock` is stale, dependency
+resolution is unsatisfiable, or any dependency group cannot be installed. The
+locked mode prevents release validation from silently changing the committed
+resolution. Dependency upgrades must therefore include every related update
+needed to keep the complete dependency set compatible.
 
 The `edumfa-radius` Debian package has an independent version. Update
 `deploy/ubuntu-radius/changelog` manually only when that package itself is
@@ -93,9 +101,11 @@ $ make tag-release VERSION=X.Y.0
 $ git push origin vX.Y.0
 ```
 
-`tag-release` creates the tag locally. It refuses to tag a dirty tree, the
-wrong branch, an unpublished branch tip, inconsistent versions, or an existing
-tag. The final `git push` is intentionally manual because it starts publication.
+`tag-release` runs the complete release and dependency checks before creating
+the tag locally. It refuses to tag a dirty tree, the wrong branch, an
+unpublished branch tip, inconsistent versions, incompatible dependencies, or
+an existing tag. The final `git push` is intentionally manual because it starts
+publication.
 
 ### 3. Create the fix branch
 
@@ -126,7 +136,9 @@ Do not apply the development-version bump to `vX.Y.x`.
 
 Fixes are developed and reviewed on `main`, then selected commits are
 cherry-picked into `vX.Y.x`. Only include fixes approved for the release, in
-dependency order. Avoid unrelated refactors and dependency updates.
+dependency order. Avoid unrelated refactors and dependency updates. A dependency
+or security update must, however, be cherry-picked together with every
+compatibility update required for a valid dependency resolution.
 
 ### 1. Prepare the fix branch
 
