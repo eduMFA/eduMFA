@@ -48,7 +48,7 @@ myApp.controller("monitoringController", ["MonitoringFactory",
         }
 
         function buildStyleMap(allKeys) {
-            var totalSlots = colorScheme.length * borderDashList.length * pointStyleList.length;
+            var totalSlots = colorScheme.length * dashStyles;
             var styleMap = new Map();
             var used = new Set()
             allKeys.forEach((sk) => {
@@ -171,9 +171,11 @@ myApp.controller("monitoringController", ["MonitoringFactory",
                     $scope.statsKeysState = newList.length === 0 ? STATUS.EMPTY : null;
                 } catch (e) {
                     $scope.statsKeysState = STATUS.ERROR
+                    console.log(e)
                 }
             }, function (error) {
                 $scope.statsKeysState = STATUS.ERROR
+                console.log(error)
             });
         };
 
