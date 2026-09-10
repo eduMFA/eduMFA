@@ -14,7 +14,11 @@ myApp.controller("monitoringController", ["MonitoringFactory",
             { borderDash: [], pointStyle: 'circle' },
             { borderDash: [2, 2], pointStyle: 'rect' },
             { borderDash: [8, 3, 2, 3], pointStyle: 'rectRot' },
-            { borderDash: [8, 4], pointStyle: 'triangle' }
+            { borderDash: [8, 4], pointStyle: 'triangle' },
+            { borderDash: [], pointStyle: false },
+            { borderDash: [2, 2], pointStyle: false },
+            { borderDash: [8, 3, 2, 3], pointStyle: false },
+            { borderDash: [8, 4], pointStyle: false }
         ];
 
         var STATUS = { LOADING: "loading", EMPTY: "empty", ERROR: "error" };
@@ -44,7 +48,7 @@ myApp.controller("monitoringController", ["MonitoringFactory",
         }
 
         function buildStyleMap(allKeys) {
-            var totalSlots = colorScheme.length * dashStyles.length;
+            var totalSlots = colorScheme.length * borderDashList.length * pointStyleList.length;
             var styleMap = new Map();
             var used = new Set()
             allKeys.forEach((sk) => {

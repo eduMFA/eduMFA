@@ -1,14 +1,15 @@
 <div class="well" ng-controller="dashboardController">
 
-    <div class="row"> <!-- upper row -->
-        <div class="col-lg-4">
-            <div class="panel panel-default" ng-show="checkRight('tokenlist')">
-                <div class="panel-heading">
-                    <a ui-sref="token.list">
-                        <span class="glyphicon glyphicon-phone"></span>
-                        <span translate>Tokens</span>
-                    </a>
-                </div>
+    <div class="row">  <!-- upper row -->
+       <div class="col-lg-4">
+           <div class="panel panel-default"
+                  ng-show="checkRight('tokenlist')">
+               <div class="panel-heading">
+	           <a ui-sref="token.list">
+                       <span class="glyphicon glyphicon-phone"></span>
+                       <span translate>Tokens</span>
+                   </a>
+	       </div>
                 <div class="panel-body">
                     <table class="table">
                         <tbody>
@@ -37,15 +38,16 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="panel panel-default" ng-show="checkRight('auditlog')">
-                <div class="panel-heading" translate>Authentications</div>
-                <div class="panel-body">
-                    <div translate>Authentications in the last 24 hours</div>
-                    <table class="table">
-                        <tbody>
+           </div>
+       </div>
+       <div class="col-lg-3">
+             <div class="panel panel-default"
+                  ng-show="checkRight('auditlog')">
+                 <div class="panel-heading" translate>Authentications</div>
+                 <div class="panel-body">
+                     <div translate>Authentications in the last 24 hours</div>
+                     <table class="table">
+                         <tbody>
                             <tr>
                                 <td translate>success</td>
                                 <td>{{ authentications.success }}</td>
@@ -71,15 +73,16 @@
                                     </span>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-5">
-            <div class="panel panel-default" ng-show="checkRight('auditlog')">
-                <div class="panel-heading" translate>Administration</div>
-                <div class="panel-body">
+                         </tbody>
+                     </table>
+                 </div>
+           </div>
+       </div>
+       <div class="col-lg-5">
+            <div class="panel panel-default"
+                  ng-show="checkRight('auditlog')">
+                 <div class="panel-heading" translate>Administration</div>
+                 <div class="panel-body">
                     <table class="table">
                         <thead>
                             <tr>
@@ -89,29 +92,31 @@
                                 <th translate>Detail</th>
                             </tr>
                         </thead>
-                        <tr ng-repeat="auditentry in administration">
-                            <td>{{ auditentry.date | date: "y-MM-d HH:mm" }}</td>
-                            <td>{{ auditentry.administrator }}</td>
-                            <td>{{ auditentry.action }}</td>
-                            <td>{{ auditentry.action_detail }}</td>
-                        </tr>
+                            <tr ng-repeat="auditentry in administration">
+                                <td>{{ auditentry.date | date: "y-MM-d HH:mm" }}</td>
+                                <td>{{ auditentry.administrator }}</td>
+                                <td>{{ auditentry.action }}</td>
+                                <td>{{ auditentry.action_detail }}</td>
+                            </tr>
                         <tbody>
 
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="panel panel-default" ng-show="checkRight('policyread')">
-                <div class="panel-heading">
+                 </div>
+           </div>
+       </div>
+   </div>
+   <div class="row">
+       <div class="col-lg-4">
+           <div class="panel panel-default"
+                ng-show="checkRight('policyread')">
+                 <div class="panel-heading">
                     <a ui-sref="config.policies.list">
-                        <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>
-                        <span translate>Policies</span></a>
-                </div>
-                <div class="panel-body">
+                    <span class="glyphicon glyphicon-hand-up"
+                          aria-hidden="true"></span>
+                    <span translate>Policies</span></a>
+		 </div>
+                 <div class="panel-body">
                     <table class="table">
                         <tbody>
                             <tr>
@@ -122,7 +127,7 @@
                                 <td span="2">
                                     <span ng-repeat="pol in policies.active">
                                         {{ ! $first ? "| " : "" }}<a ui-sref="config.policies.details({policyname:pol})"
-                                            ng-click="$rootScope.returnTo=dashboard;">{{ pol }}</a>
+                                           ng-click="$rootScope.returnTo=dashboard;">{{ pol }}</a>
                                     </span>
                                 </td>
                             </tr>
@@ -134,20 +139,21 @@
                                 <td span="2">
                                     <span ng-repeat="pol in policies.inactive">
                                         {{ ! $first ? "| " : "" }}<a ui-sref="config.policies.details({policyname:pol})"
-                                            ng-click="$rootScope.returnTo=dashboard;">{{ pol }}</a>
+                                           ng-click="$rootScope.returnTo=dashboard;">{{ pol }}</a>
                                     </span>
 
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="panel panel-default" ng-show="checkRight('eventhandling_read')">
-                <div class="panel-heading" translate>Events</div>
-                <div class="panel-body">
+                 </div>
+           </div>
+       </div>
+       <div class="col-lg-4">
+             <div class="panel panel-default"
+                  ng-show="checkRight('eventhandling_read')">
+                 <div class="panel-heading" translate>Events</div>
+                 <div class="panel-body">
                     <table class="table">
                         <tbody>
                             <tr>
@@ -158,7 +164,7 @@
                                 <td span="2">
                                     <span ng-repeat="event in events.active">
                                         {{ ! $first ? "| " : "" }}<a ui-sref="config.events.details({eventid:event.id})"
-                                            ng-click="$rootScope.returnTo=dashboard;">{{ event.name }}</a>
+                                           ng-click="$rootScope.returnTo=dashboard;">{{ event.name }}</a>
                                     </span>
                                 </td>
                             </tr>
@@ -170,7 +176,7 @@
                                 <td span="2">
                                     <span ng-repeat="event in events.inactive">
                                         {{ ! $first ? "| " : "" }}<a ui-sref="config.events.details({eventid:event.id})"
-                                            ng-click="$rootScope.returnTo=dashboard;">{{ event.name }}</a>
+                                           ng-click="$rootScope.returnTo=dashboard;">{{ event.name }}</a>
                                     </span>
 
                                 </td>
@@ -186,29 +192,27 @@
             <div class="panel panel-default" ng-controller="monitoringController" ng-if="checkRight('statistics_read')">
                 <div class="panel-heading" translate>Token Chart</div>
                 <div class="panel-body" ng-if="statsKeysState" ng-switch="statsKeysState">
-                    <p ng-switch-when="loading" translate>Loading statistics keys…</p>
-                    <p ng-switch-when="empty" translate>No statistics keys found. Monitoring may not be set up yet for
+                    <p ng-switch-when="loading" translate>Loading metrics…</p>
+                    <p ng-switch-when="empty" translate>No metrics found. Monitoring may not be set up yet for
                         this instance.</p>
-                    <p ng-switch-when="error" translate>Statistics keys could not be loaded.</p>
+                    <p ng-switch-when="error" translate>Metrics could not be loaded.</p>
                 </div>
                 <div class="panel-body" ng-show="availableStatsKeys.length > 0">
                     <div class="chart-controls">
                         <label translate>TimeFrame:</label>
                         <select class="form-control" ng-model="selectedTimeFrame"
-                            ng-options="x.label | translate for x in timeFrame "
-                            ng-change="onTimeFrameChange()"></select>
+                            ng-options="x.label | translate for x in timeFrame " ng-change="onTimeFrameChange()"></select>
                         <label translate>StatsKeys:</label>
                         <br>
                         <isteven-multi-select input-model="availableStatsKeys" output-model="selectedStatsKeys"
                             button-label="name" item-label="name" tick-property="selected" index-property="id"
-                            on-item-click="syncSelection()" on-select-all="syncSelection()"
-                            on-select-none="syncSelection()" on-reset="syncSelection()">
+                            on-item-click="syncSelection()" on-select-all="syncSelection()" on-select-none="syncSelection()"
+                            on-reset="syncSelection()">
                         </isteven-multi-select>
                         <br>
                         <label translate>Legend:</label>
                         <div class="chart-legend">
-                            <div class="legend-item"
-                                ng-repeat="key in availableStatsKeys | filter:isSelected track by key.name">
+                            <div class="legend-item" ng-repeat="key in availableStatsKeys | filter:isSelected">
                                 <input type="checkbox" id="legend-{{$index}}" ng-model="key.visible"
                                     ng-change="changeHidden(key)">
                                 <label for="legend-{{$index}}" class="legend-label">
@@ -225,10 +229,9 @@
 
                                         <polygon ng-if="key.pointStyle === 'triangle'" class="legend-symbol"
                                             points="20,2.5 24,10 16,10" ng-attr-fill="{{key.color}}" />
-
-                                        <rect ng-if="key.pointStyle === 'rectRot'"
-                                            class="legend-symbol legend-symbol-rot" x="16.5" y="3.5" width="7"
-                                            height="7" ng-attr-fill="{{key.color}}" />
+                                            
+                                        <rect ng-if="key.pointStyle === 'rectRot'" class="legend-symbol legend-symbol-rot"
+                                            x="16.5" y="3.5" width="7" height="7" ng-attr-fill="{{key.color}}" />
                                     </svg>
                                     <span>{{key.name}}</span>
                                     <span ng-switch="getStatus(key.name).state">
