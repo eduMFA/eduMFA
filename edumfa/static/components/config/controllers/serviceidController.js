@@ -18,65 +18,76 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-myApp.controller("serviceidController", ["$scope", "$stateParams", "inform",
-                                         "gettextCatalog", "$state",
-                                         "$location", "ConfigFactory",
-                                         function($scope, $stateParams,
-                                                  inform, gettextCatalog,
-                                                  $state, $location,
-                                                  ConfigFactory) {
+myApp.controller("serviceidController", [
+  "$scope",
+  "$stateParams",
+  "inform",
+  "gettextCatalog",
+  "$state",
+  "$location",
+  "ConfigFactory",
+  function (
+    $scope,
+    $stateParams,
+    inform,
+    gettextCatalog,
+    $state,
+    $location,
+    ConfigFactory,
+  ) {
     // Set the default route
     if ($location.path() === "/config/serviceid") {
-        $location.path("/config/serviceid/list");
+      $location.path("/config/serviceid/list");
     }
-
 
     // Get all services
     $scope.getServiceids = function () {
-        ConfigFactory.getServiceid("", function(data) {
-            $scope.serviceids = data.result.value;
-        });
+      ConfigFactory.getServiceid("", function (data) {
+        $scope.serviceids = data.result.value;
+      });
     };
     // get one special service
     $scope.getServiceid = function (sname) {
-        ConfigFactory.getServiceid(sname, function(data){
-            var serviceids = data.result.value
-            $scope.params.servicename = sname;
-            $scope.params.description = serviceids[sname].description;
-            $scope.params.id = serviceids[sname].id;
-        });
-    }
+      ConfigFactory.getServiceid(sname, function (data) {
+        var serviceids = data.result.value;
+        $scope.params.servicename = sname;
+        $scope.params.description = serviceids[sname].description;
+        $scope.params.id = serviceids[sname].id;
+      });
+    };
 
     if ($location.path() === "/config/serviceid/list") {
-        // In the case of list, we fetch all Service IDs
-        $scope.getServiceids();
+      // In the case of list, we fetch all Service IDs
+      $scope.getServiceids();
     }
 
     $scope.servicename = $stateParams.servicename;
     if ($scope.servicename) {
-        // We are editing an existing Service ID
-        $scope.getServiceid($scope.servicename);
+      // We are editing an existing Service ID
+      $scope.getServiceid($scope.servicename);
     } else {
-        // This is a new service
-        $scope.params = { };
+      // This is a new service
+      $scope.params = {};
     }
 
     $scope.delServiceid = function (sname) {
-        ConfigFactory.delServiceid(sname, function(data) {
-            $scope.getServiceids();
-        });
+      ConfigFactory.delServiceid(sname, function (data) {
+        $scope.getServiceids();
+      });
     };
 
-    $scope.saveServiceid = function() {
-        ConfigFactory.addServiceid($scope.params, function(data){
-            if (data.result.status === true) {
-                inform.add(gettextCatalog.getString("Service ID saved."),
-                                {type: "info"});
-                $state.go('config.serviceid.list');
-            }
-        });
+    $scope.saveServiceid = function () {
+      ConfigFactory.addServiceid($scope.params, function (data) {
+        if (data.result.status === true) {
+          inform.add(gettextCatalog.getString("Service ID saved."), {
+            type: "info",
+          });
+          $state.go("config.serviceid.list");
+        }
+      });
     };
 
     // listen to the reload broadcast
     $scope.$on("piReload", $scope.getServiceids);
-}]);
+  },
+]);

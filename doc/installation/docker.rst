@@ -164,16 +164,19 @@ optional are required for eduMFA to work.
 - DB_HOSTNAME: the hostname of the database system
 - DB_PASSWORD: the password for DB_USER
 - DB_USER: the user on the database system
-- SECRET_KEY: the secret key which signs API tokens, should be at least 24 random characters long
-- EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 24 random characters long
+- SECRET_KEY: the secret key which signs API tokens, should be at least 32 random characters long
+- EDUMFA_PEPPER: the pepper to use for password hashing, should be at least 32 random characters long
+- EDUMFA_ADMIN_ENABLE: whether to enable creation of the local eduMFA admin (optional, default: ``true``)
 - EDUMFA_ADMIN_PASS: the password for the local eduMFA admin (optional, default: will be generated)
 - EDUMFA_ADMIN_USER: the username for the local eduMFA admin (optional, default: ``admin``)
 - EDUMFA_AUDIT_KEY_PRIVATE: an alternative path to the audit key (optional, default: ``/etc/edumfa/private.pem``)
 - EDUMFA_AUDIT_KEY_PUBLIC: an alternative path to the audit certificate (optional, default: ``/etc/edumfa/public.pem``)
 - EDUMFA_ENCFILE: an alternative path to the enckey (optional, default: ``/etc/edumfa/enckey``)
 - EDUMFA_LOGCONFIG: a path to an alternative logging config (optional, default: image provided)
-- EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional, default: ``False``)
-- SUPERUSER_REALM: which realms should be superuser realms (optional, default: ``super,administrators``)
+- EDUMFA_UI_DEACTIVATED: whether to disable the WebUI (optional, default: ``false``)
+- SUPERUSER_REALM: a comma-separated list of realms which should be superuser realms (optional, default: ``super,administrators``)
+- SQLALCHEMY_ENGINE_OPTIONS: a string containing a Python dictionary with SQLAlchemy engine options, see :ref:`cfgfile` (optional)
+- EDUMFA_AUDIT_SQL_OPTIONS: a string containing a Python dictionary with SQLAlchemy engine options for your audit database, see :ref:`cfgfile` (optional)
 - EDUMFA_CSS: URL of custom css stylesheet (optional)
 - EDUMFA_LOGO: filename of custom logo (optional)
 - EDUMFA_PAGE_TITLE: custom page title (optional)

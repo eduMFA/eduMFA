@@ -21,25 +21,34 @@
  *
  */
 
-angular.module('eduMfaApp.componentStates', ['ui.router', 'eduMfaApp.versioning']).config(
-    ['$stateProvider', 'versioningSuffixProviderProvider',
-        function ($stateProvider, versioningSuffixProviderProvider) {
-            // get the instance, the pathname part
-            var instance = window.location.pathname;
-            if (instance === "/") {
-               instance = "";
-            }
-            var auditpath = instance + "/static/components/components/views/";
-            $stateProvider
-                .state('component', {
-                    url: "/component",
-                    templateUrl: auditpath + "component.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: "componentController"
-                })
-                .state('component.clienttype', {
-                    url: "/clienttype",
-                    templateUrl: auditpath + "component.clienttype.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: "componentController"
-                })
-            ;
-        }]);
+angular
+  .module("eduMfaApp.componentStates", ["ui.router", "eduMfaApp.versioning"])
+  .config([
+    "$stateProvider",
+    "versioningSuffixProviderProvider",
+    function ($stateProvider, versioningSuffixProviderProvider) {
+      // get the instance, the pathname part
+      var instance = window.location.pathname;
+      if (instance === "/") {
+        instance = "";
+      }
+      var auditpath = instance + "/static/components/components/views/";
+      $stateProvider
+        .state("component", {
+          url: "/component",
+          templateUrl:
+            auditpath +
+            "component.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+          controller: "componentController",
+        })
+        .state("component.clienttype", {
+          url: "/clienttype",
+          templateUrl:
+            auditpath +
+            "component.clienttype.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+          controller: "componentController",
+        });
+    },
+  ]);

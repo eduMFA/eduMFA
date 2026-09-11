@@ -33,7 +33,7 @@ from flask.cli import AppGroup
 from flask_migrate import stamp as f_stamp
 
 from edumfa.lib.security.default import DefaultSecurityModule
-from edumfa.lib.sqlutils import is_db_stamped
+from edumfa.lib.sqlutils import is_db_available, is_db_stamped
 from edumfa.models import db
 
 core_cli = AppGroup("core", help="Core commands")
@@ -254,21 +254,15 @@ def wait_for_db(attempts: int, sleep: int) -> None:
     """
     import time
 
-    from sqlalchemy import text
-    from sqlalchemy.exc import OperationalError
-
     for attempt in range(attempts):
-        try:
-            with db.engine.connect() as connection:
-                connection.execute(text("SELECT 1"))
+        if is_db_available(db.engine):
             click.echo("Database connection successful.")
             return
-        except OperationalError:
-            click.echo(
-                f"Failed to connect to database. Attempt {attempt + 1} of {attempts}. Waiting {sleep} seconds...",
-                err=True,
-            )
-            time.sleep(sleep)
+        click.echo(
+            f"Failed to connect to database. Attempt {attempt + 1} of {attempts}. Waiting {sleep} seconds...",
+            err=True,
+        )
+        time.sleep(sleep)
 
     click.echo(f"Could not connect to the database after {attempts} attempts.")
     sys.exit(1)

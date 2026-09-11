@@ -21,24 +21,34 @@
  *
  */
 
-angular.module('eduMfaApp.recoveryStates', ['ui.router', 'eduMfaApp.versioning']).config(
-    ['$stateProvider', 'versioningSuffixProviderProvider',
-        function ($stateProvider, versioningSuffixProviderProvider) {
-            // get the instance, the pathname part
-            var instance = window.location.pathname;
-            if (instance === "/") {
-               instance = "";
-            }
-            var recoverypath = instance + "/static/components/recovery/views/";
-            $stateProvider
-                .state('recovery', {
-                    url: "/recovery",
-                    templateUrl: recoverypath + "recovery.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: "recoveryController"
-                })
-                .state('reset', {
-                    url: "/reset/{user:.*}/{recoverycode:.*}",
-                    templateUrl: recoverypath + "recovery.reset.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: "recoveryController"
-                });
-        }]);
+angular
+  .module("eduMfaApp.recoveryStates", ["ui.router", "eduMfaApp.versioning"])
+  .config([
+    "$stateProvider",
+    "versioningSuffixProviderProvider",
+    function ($stateProvider, versioningSuffixProviderProvider) {
+      // get the instance, the pathname part
+      var instance = window.location.pathname;
+      if (instance === "/") {
+        instance = "";
+      }
+      var recoverypath = instance + "/static/components/recovery/views/";
+      $stateProvider
+        .state("recovery", {
+          url: "/recovery",
+          templateUrl:
+            recoverypath +
+            "recovery.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+          controller: "recoveryController",
+        })
+        .state("reset", {
+          url: "/reset/{user:.*}/{recoverycode:.*}",
+          templateUrl:
+            recoverypath +
+            "recovery.reset.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+          controller: "recoveryController",
+        });
+    },
+  ]);

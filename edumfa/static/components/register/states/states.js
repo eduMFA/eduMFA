@@ -21,19 +21,25 @@
  *
  */
 
-angular.module('eduMfaApp.registerStates', ['ui.router', 'eduMfaApp.versioning']).config(
-    ['$stateProvider', 'versioningSuffixProviderProvider',
-        function ($stateProvider, versioningSuffixProviderProvider) {
-            // get the instance, the pathname part
-            var instance = window.location.pathname;
-            if (instance === "/") {
-               instance = "";
-            }
-            var registerpath = instance + "/static/components/register/views/";
-            $stateProvider
-                .state('register', {
-                    url: "/register",
-                    templateUrl: registerpath + "register.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: "registerController"
-                });
-        }]);
+angular
+  .module("eduMfaApp.registerStates", ["ui.router", "eduMfaApp.versioning"])
+  .config([
+    "$stateProvider",
+    "versioningSuffixProviderProvider",
+    function ($stateProvider, versioningSuffixProviderProvider) {
+      // get the instance, the pathname part
+      var instance = window.location.pathname;
+      if (instance === "/") {
+        instance = "";
+      }
+      var registerpath = instance + "/static/components/register/views/";
+      $stateProvider.state("register", {
+        url: "/register",
+        templateUrl:
+          registerpath +
+          "register.html" +
+          versioningSuffixProviderProvider.$get().$get(),
+        controller: "registerController",
+      });
+    },
+  ]);

@@ -26,41 +26,41 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "alembic==1.18.4",
+    "alembic==1.18.5",
     "babel==2.18.0",
     "bcrypt==5.0.0",
-    "beautifulsoup4==4.14.3",
-    "cbor2==6.0.1",
-    "click==8.3.3",
+    "beautifulsoup4==4.15.0",
+    "cbor2==6.1.3",
+    "click==8.4.2",
     "configobj==5.0.9",
-    "croniter==6.2.2",
-    "cryptography==48.0.1",
+    "croniter==6.2.4",
+    "cryptography==50.0.0",
     "defusedxml==0.7.1",
     "flask==3.1.3",
     "flask-babel==4.0.0",
     "flask-migrate==4.1.0",
     "flask-sqlalchemy==3.1.1",
-    "google-auth==2.50.0",
-    "grpcio==1.80.0",
-    "huey[backends]==3.0.0",
+    "google-auth==2.56.0",
+    "grpcio==1.82.1",
+    "huey[backends]==3.2.1",
     "importlib-metadata==8.7.0",
     "jinja2==3.1.6",
     "ldap3==2.10.2rc4",
-    "lxml==6.1.0",
+    "lxml==6.1.1",
     "netaddr==1.3.0",
     "passlib[bcrypt,argon2]==1.7.4",
     "pydash==8.0.6",
     "pyjwt==2.13.0",
-    "pymysql==1.1.3",
-    "pyopenssl==26.2.0",
+    "pymysql==1.2.0",
+    "pyopenssl==26.4.0",
     "pyrad==2.5.4",
     "python-dateutil==2.9.0.post0",
     "python-gnupg==0.5.6",
     "pyyaml==6.0.3",
-    "requests==2.33.1",
+    "requests==2.34.2",
     "segno==1.6.6",
     "smpplib==2.2.4",
-    "sqlalchemy==2.0.49",
+    "sqlalchemy==2.0.51",
     "werkzeug==3.1.8",
 ]
 
@@ -76,7 +76,7 @@ postgres = ["psycopg2==2.9.12"]
 hsm = ["PyKCS11==1.5.18"]
 kerberos = ["gssapi==1.11.1"]
 grpc = [
-    "protobuf==7.34.1",
+    "protobuf==7.35.1",
     "google==3.0.0",
 ]
 
@@ -89,7 +89,7 @@ dev = [
     {include-group = "docs"},
     {include-group = "test"},
 ]
-lint = ["ruff==0.15.20"]
+lint = ["ruff==0.15.21"]
 docs = [
     "docutils==0.21.2",
     "furo==2025.12.19",
@@ -97,7 +97,7 @@ docs = [
     "packaging==26.2",
     "pyenchant==3.3.0",
     "Pygments==2.20.0",
-    "snowballstemmer==3.0.1",
+    "snowballstemmer==3.1.1",
     "Sphinx==9.0.4; python_version >= '3.11'",
     "sphinxcontrib-applehelp==2.0.0",
     "sphinxcontrib-devhelp==2.0.0",
@@ -112,22 +112,22 @@ docs = [
 ]
 test = [
     "attrs==26.1.0",
-    "coverage==7.13.5",
+    "coverage==7.15.2",
     "exceptiongroup==1.3.1",
     "iniconfig==2.3.0",
     "mock==5.2.0",
     "packaging==26.2",
     "pluggy==1.6.0",
     "pyparsing==3.3.2",
-    "pytest==9.0.3",
+    "pytest==9.1.1",
     "pytest-cov==7.1.0",
     "pytest-github-actions-annotate-failures==0.4.2",
-    "responses==0.26.1",
+    "responses==0.26.2",
     "testcontainers[mysql,postgres]==4.14.2",
     "testfixtures==8.3.0",
     "tomli==2.4.1",
-    "types-PyYAML==6.0.12.20260408",
-    "fido2==2.1.1"
+    "types-PyYAML==6.0.12.20260518",
+    "fido2==2.2.1"
 ]
 
 [tool.pytest.ini_options]

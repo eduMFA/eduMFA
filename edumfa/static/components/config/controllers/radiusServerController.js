@@ -20,81 +20,95 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-myApp.controller("radiusServerController", ["$scope", "$stateParams", "inform",
-                                            "gettextCatalog", "$state",
-                                            "$location", "ConfigFactory",
-                                            function($scope, $stateParams,
-                                                     inform, gettextCatalog,
-                                                     $state, $location,
-                                                     ConfigFactory) {
+myApp.controller("radiusServerController", [
+  "$scope",
+  "$stateParams",
+  "inform",
+  "gettextCatalog",
+  "$state",
+  "$location",
+  "ConfigFactory",
+  function (
+    $scope,
+    $stateParams,
+    inform,
+    gettextCatalog,
+    $state,
+    $location,
+    ConfigFactory,
+  ) {
     // Set the default route
     if ($location.path() === "/config/radius") {
-        $location.path("/config/radius/list");
+      $location.path("/config/radius/list");
     }
 
     // Get all servers
     $scope.getRadiusServers = function (identifier) {
-        ConfigFactory.getRadius(function(data) {
-            $scope.radiusServers = data.result.value;
-            //debug: console.log("Fetched all radius servers");
-            //debug: console.log($scope.radiusServers);
-            // return one single RADIUS server
-            if (identifier) {
-                $scope.params = $scope.radiusServers[identifier];
-                $scope.params["identifier"] = identifier;
-            }
-        });
+      ConfigFactory.getRadius(function (data) {
+        $scope.radiusServers = data.result.value;
+        //debug: console.log("Fetched all radius servers");
+        //debug: console.log($scope.radiusServers);
+        // return one single RADIUS server
+        if (identifier) {
+          $scope.params = $scope.radiusServers[identifier];
+          $scope.params["identifier"] = identifier;
+        }
+      });
     };
 
     if ($location.path() === "/config/radius/list") {
-        // In the case of list, we fetch all radius servers
-        $scope.getRadiusServers();
+      // In the case of list, we fetch all radius servers
+      $scope.getRadiusServers();
     }
 
     $scope.identifier = $stateParams.identifier;
     if ($scope.identifier) {
-        // We are editing an existing RADIUS Server
-        $scope.getRadiusServers($scope.identifier);
+      // We are editing an existing RADIUS Server
+      $scope.getRadiusServers($scope.identifier);
     } else {
-        // This is a new RADIUS Server or the list
-        $scope.params = { };
+      // This is a new RADIUS Server or the list
+      $scope.params = {};
     }
 
     $scope.delRadiusServer = function (identifier) {
-        ConfigFactory.delRadius(identifier, function(data) {
-            $scope.getRadiusServers();
-        });
+      ConfigFactory.delRadius(identifier, function (data) {
+        $scope.getRadiusServers();
+      });
     };
 
     $scope.addRadiusServer = function (params) {
-        ConfigFactory.addRadius(params, function(data) {
-            $scope.getRadiusServers();
-        });
+      ConfigFactory.addRadius(params, function (data) {
+        $scope.getRadiusServers();
+      });
     };
 
-    $scope.testRadiusRequest = function() {
-        ConfigFactory.testRadius($scope.params, function(data) {
-           if (data.result.value === true) {
-               inform.add(gettextCatalog.getString("RADIUS request" +
-                   " successful."),
-                   {type: "success"});
-           } else {
-               inform.add(gettextCatalog.getString("RADIUS request failed!"),
-                   {type: "danger"});
-           }
-        });
+    $scope.testRadiusRequest = function () {
+      ConfigFactory.testRadius($scope.params, function (data) {
+        if (data.result.value === true) {
+          inform.add(
+            gettextCatalog.getString("RADIUS request" + " successful."),
+            { type: "success" },
+          );
+        } else {
+          inform.add(gettextCatalog.getString("RADIUS request failed!"), {
+            type: "danger",
+          });
+        }
+      });
     };
 
-    $scope.saveRadiusServer= function() {
-        ConfigFactory.addRadius($scope.params, function(data){
-            if (data.result.status === true) {
-                inform.add(gettextCatalog.getString("RADIUS Config saved."),
-                                {type: "info"});
-                $state.go('config.radius.list');
-            }
-        });
+    $scope.saveRadiusServer = function () {
+      ConfigFactory.addRadius($scope.params, function (data) {
+        if (data.result.status === true) {
+          inform.add(gettextCatalog.getString("RADIUS Config saved."), {
+            type: "info",
+          });
+          $state.go("config.radius.list");
+        }
+      });
     };
 
     // listen to the reload broadcast
     $scope.$on("piReload", $scope.getRadiusServers);
-}]);
+  },
+]);

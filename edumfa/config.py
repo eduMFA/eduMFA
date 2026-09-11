@@ -139,7 +139,7 @@ class ProductionConfig(Config):
     ) or "sqlite:///" + os.path.join(basedir, "data.sqlite")
     # SQLALCHEMY_DATABASE_URI = "mysql://pi2:pi2@localhost/pi2"
     # This is used to encrypt the auth_token
-    SECRET_KEY = os.environ.get("SECRET_KEY") or _random_password(24)
+    SECRET_KEY = os.environ.get("SECRET_KEY") or _random_password(48)
     # This is used to encrypt the admin passwords
     EDUMFA_PEPPER = "Never know..."
     # This is used to encrypt the token data and token passwords

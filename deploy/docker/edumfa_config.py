@@ -1,5 +1,7 @@
+from ast import literal_eval
 from os import getenv
 from socket import gethostname
+from typing import Any
 
 
 def get_content_from_file(path: str) -> str:
@@ -51,20 +53,45 @@ def get_var(key: str, default: str | None = None) -> str:
     return _getenv(key, default)
 
 
+def str_to_dict(data: str, option: str) -> dict[str, Any]:
+    """
+    Parses a string into a dict.
+
+    :param data: The string to convert to a dict.
+    :param option: The eduMFA option this is parsing.
+    :return: The string parsed as dict.
+    :raises ValueError: If the content of the string is not a dict.
+    """
+    data = literal_eval(data)
+    if not isinstance(data, dict):
+        raise ValueError(f"{option} value is not a Python dictionary.")
+    return data
+
+
 SQLALCHEMY_DATABASE_URI = f"{get_var('DB_DRIVER')}://{get_var('DB_USER')}:{get_var('DB_PASSWORD')}@{get_var('DB_HOSTNAME')}/{get_var('DB_DATABASE')}"
 SUPERUSER_REALM = get_var("SUPERUSER_REALM", "super,administrators").split(",")
 SECRET_KEY = get_var("SECRET_KEY")
 EDUMFA_PEPPER = get_var("EDUMFA_PEPPER")
 EDUMFA_ENCFILE = get_var("EDUMFA_ENCFILE", "/etc/edumfa/enckey")
-EDUMFA_AUDIT_KEY_PRIVATE = get_var("EDUMFA_AUDIT_KEY_PRIVATE", "/etc/edumfa/private.pem")
+EDUMFA_AUDIT_KEY_PRIVATE = get_var(
+    "EDUMFA_AUDIT_KEY_PRIVATE", "/etc/edumfa/private.pem"
+)
 EDUMFA_AUDIT_KEY_PUBLIC = get_var("EDUMFA_AUDIT_KEY_PUBLIC", "/etc/edumfa/public.pem")
 EDUMFA_LOGCONFIG = get_var("EDUMFA_LOGCONFIG", "/opt/edumfa/logging.yml")
-EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False") == "True"
+EDUMFA_UI_DEACTIVATED = get_var("EDUMFA_UI_DEACTIVATED", "False").lower() == "true"
 EDUMFA_AUDIT_SQL_TRUNCATE = True
 EDUMFA_NODE = gethostname()
+if sqlalchemy_options := get_var("SQLALCHEMY_ENGINE_OPTIONS", ""):
+    SQLALCHEMY_ENGINE_OPTIONS = str_to_dict(
+        sqlalchemy_options, "SQLALCHEMY_ENGINE_OPTIONS"
+    )
+if sqlalchemy_options_audit := get_var("EDUMFA_AUDIT_SQL_OPTIONS", ""):
+    EDUMFA_AUDIT_SQL_OPTIONS = str_to_dict(
+        sqlalchemy_options_audit, "EDUMFA_AUDIT_SQL_OPTIONS"
+    )
 if edumfa_logo := get_var("EDUMFA_LOGO", ""):
     EDUMFA_LOGO = edumfa_logo
-if edumfa_page_title := getenv("EDUMFA_PAGE_TITLE", ""):
+if edumfa_page_title := get_var("EDUMFA_PAGE_TITLE", ""):
     EDUMFA_PAGE_TITLE = edumfa_page_title
-if edumfa_css := getenv("EDUMFA_CSS", ""):
+if edumfa_css := get_var("EDUMFA_CSS", ""):
     EDUMFA_CSS = edumfa_css

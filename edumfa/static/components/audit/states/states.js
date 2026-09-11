@@ -21,24 +21,34 @@
  *
  */
 
-angular.module('eduMfaApp.auditStates', ['ui.router', 'eduMfaApp.versioning']).config(
-    ['$stateProvider', 'versioningSuffixProviderProvider',
-        function ($stateProvider, versioningSuffixProviderProvider) {
-            // get the instance, the pathname part
-            var instance = window.location.pathname;
-            if (instance === "/") {
-               instance = "";
-            }
-            var auditpath = instance + "/static/components/audit/views/";
-            $stateProvider
-                .state('audit', {
-                    url: "/audit",
-                    templateUrl: auditpath + "audit.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: "auditController"
-                })
-                .state('audit.log', {
-                    url: "/log?serial&user",
-                    templateUrl: auditpath + "audit.log.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: "auditController"
-                });
-        }]);
+angular
+  .module("eduMfaApp.auditStates", ["ui.router", "eduMfaApp.versioning"])
+  .config([
+    "$stateProvider",
+    "versioningSuffixProviderProvider",
+    function ($stateProvider, versioningSuffixProviderProvider) {
+      // get the instance, the pathname part
+      var instance = window.location.pathname;
+      if (instance === "/") {
+        instance = "";
+      }
+      var auditpath = instance + "/static/components/audit/views/";
+      $stateProvider
+        .state("audit", {
+          url: "/audit",
+          templateUrl:
+            auditpath +
+            "audit.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+          controller: "auditController",
+        })
+        .state("audit.log", {
+          url: "/log?serial&user",
+          templateUrl:
+            auditpath +
+            "audit.log.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+          controller: "auditController",
+        });
+    },
+  ]);

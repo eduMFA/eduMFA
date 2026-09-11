@@ -446,3 +446,64 @@ class RadiusTokenTestCase(MyTestCase):
         r, otp_count, _rpl = token.authenticate("some_remote_value")
         self.assertFalse(r)
         self.assertTrue(otp_count < 0)
+
+    @radiusmock.activate
+    def test_12_enforce_message_authenticator(self):
+        # The RADIUS token path must apply the same Message-Authenticator
+        # handling as RADIUSServer.request, which is the BlastRADIUS
+        # (CVE-2024-3596) mitigation. A server configured with enforce_ma must
+        # reject a response that carries no Message-Authenticator, and must
+        # reject one whose Message-Authenticator does not verify.
+        set_edumfa_config("radius.dictfile", DICT_FILE)
+        r = add_radius(
+            identifier="ma_server",
+            server="1.2.3.4",
+            secret="testing123",
+            dictionary=DICT_FILE,
+            enforce_ma=True,
+        )
+        self.assertTrue(r > 0)
+        token = init_token(
+            {"type": "radius", "radius.identifier": "ma_server", "radius.user": "user1"}
+        )
+
+        # No Message-Authenticator on the response: refuse.
+        radiusmock.setdata(response=radiusmock.AccessAccept)
+        # This is the options dict check_token_list works with: is_challenge_response
+        # clears "radius_result" so that only one method in the chain talks to the
+        # RADIUS server.
+        opts = {"radius_result": None}
+        r = token.authenticate("radiuspassword", options=opts)
+        self.assertEqual(r[0], False)
+        # The refusal has to look like any other rejected authentication. If
+        # "radius_result" stays unset, the next method in the chain sends a
+        # second request with the same OTP value.
+        self.assertEqual(opts.get("radius_result"), radiusmock.AccessReject)
+        self.assertEqual(opts.get("radius_state"), "<REJECTED>")
+        self.assertEqual(opts.get("radius_message"), "RADIUS authentication failed")
+
+        # Present and valid: accept.
+        radiusmock.setdata(response=radiusmock.AccessAccept, ma=True)
+        r = token.authenticate("radiuspassword")
+        self.assertEqual(r[0], True)
+
+        # Present but broken: refuse.
+        radiusmock.setdata(response=radiusmock.AccessAccept, ma=True, broken_ma=True)
+        opts = {"radius_result": None}
+        r = token.authenticate("radiuspassword", options=opts)
+        self.assertEqual(r[0], False)
+        self.assertEqual(opts.get("radius_result"), radiusmock.AccessReject)
+
+        # The Message-Authenticator on an AccessChallenge is checked as well, and
+        # a broken one must not reach the challenge handling.
+        radiusmock.setdata(
+            response=radiusmock.AccessChallenge,
+            response_data={"State": ["12345"], "Reply_Message": ["Enter your OTP"]},
+            ma=True,
+            broken_ma=True,
+        )
+        opts = {"radius_result": None}
+        r = token.is_challenge_request("radiuspassword", options=opts)
+        self.assertFalse(r)
+        self.assertEqual(opts.get("radius_result"), radiusmock.AccessReject)
+        self.assertEqual(opts.get("radius_message"), "RADIUS authentication failed")

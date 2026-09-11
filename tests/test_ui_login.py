@@ -114,7 +114,9 @@ class LoginUITestCase(MyTestCase):
         ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
-            self.assertTrue(b'<input type=hidden id=REMOTE_USER value="">' in res.data)
+            self.assertTrue(
+                b'<input type="hidden" id="REMOTE_USER" value=""' in res.data
+            )
 
         # test login with remote_user policy set
         set_policy(
@@ -128,7 +130,7 @@ class LoginUITestCase(MyTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(
-                b'<input type=hidden id=REMOTE_USER value="foo">' in res.data
+                b'<input type="hidden" id="REMOTE_USER" value="foo"' in res.data
             )
 
     def test_07_privacy_statement_link(self):

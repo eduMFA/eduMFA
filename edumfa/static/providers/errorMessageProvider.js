@@ -31,106 +31,92 @@
  * WebAuthn).
  */
 angular
-    .module('eduMfaApp.errorMessage', [])
-    .factory('domExceptionErrorMessage', [
-        'gettextCatalog',
-        function domExceptionErrorMessageFactory(
-            gettextCatalog
-        ) {
-            return {
-                "IndexSizeError": gettextCatalog.getString(
-                    "The index is not in the allowed range"
-                ),
-                "HierarchyRequestError": gettextCatalog.getString(
-                    "The operation would yield an incorrect node tree."
-                ),
-                "WrongDocumentError": gettextCatalog.getString(
-                    "The object is in the wrong document."
-                ),
-                "InvalidCharacterError": gettextCatalog.getString(
-                    "The string contains invalid characters."
-                ),
-                "NoModificationAllowedError": gettextCatalog.getString(
-                    "The object can not be modified."
-                ),
-                "NotFoundError": gettextCatalog.getString(
-                    "The object can not be found here."
-                ),
-                "NotSupportedError": gettextCatalog.getString(
-                    "The operation is not supported."
-                ),
-                "InUseAttributeError": gettextCatalog.getString(
-                    "The attribute is in use."
-                ),
-                "InvalidStateError": gettextCatalog.getString(
-                    "The object is in an invalid state."
-                ),
-                "SyntaxError": gettextCatalog.getString(
-                    "The string did not match the expected pattern."
-                ),
-                "InvalidModificationError": gettextCatalog.getString(
-                    "The object can not be modified in this way."
-                ),
-                "NamespaceError": gettextCatalog.getString(
-                    "The operation is not allowed by namespaces in XML."
-                ),
-                "InvalidAccessError": gettextCatalog.getString(
-                    "The object does not support the operation or argument."
-                ),
-                "SecurityError": gettextCatalog.getString(
-                    "The operation is insecure."
-                ),
-                "NetworkError": gettextCatalog.getString(
-                    "A network error occurred."
-                ),
-                "AbortError": gettextCatalog.getString(
-                    "The operation was aborted."
-                ),
-                "URLMismatchError": gettextCatalog.getString(
-                    "The given URL does not match another URL."
-                ),
-                "QuotaExceededError": gettextCatalog.getString(
-                    "The quota has been exceeded."
-                ),
-                "TimeoutError": gettextCatalog.getString(
-                    "The operation timed out."
-                ),
-                "InvalidNodeTypeError": gettextCatalog.getString(
-                    "The supplied node is incorrect or has an incorrect ancestor for this operation."
-                ),
-                "DataCloneError": gettextCatalog.getString(
-                    "The object can not be cloned."
-                ),
-                "EncodingError": gettextCatalog.getString(
-                    "The encoding operation (either encoded or decoding) failed." /* (sic) */
-                ),
-                "NotReadableError": gettextCatalog.getString(
-                    "The I/O operation failed."
-                ),
-                "UnknownError": gettextCatalog.getString(
-                    "The operation failed for an unknown transient reason (e.g. out of memory)."
-                ),
-                "ConstraintError": gettextCatalog.getString(
-                    "A mutation operation in a transaction failed because a constraint was not satisfied."
-                ),
-                "DataError": gettextCatalog.getString(
-                    "Provided data is inaccurate."
-                ),
-                "TransactionInactiveError": gettextCatalog.getString(
-                    "A request was placed against a transaction which is currently not active, or which is finished."
-                ),
-                "ReadOnlyError": gettextCatalog.getString(
-                    "The mutating operation was attempted in a \"readonly\" transaction."
-                ),
-                "VersionError": gettextCatalog.getString(
-                    "An attempt was made to open a database using a lower version than the existing version."
-                ),
-                "OperationError": gettextCatalog.getString(
-                    "The operation failed for an operation-specific reason."
-                ),
-                "NotAllowedError": gettextCatalog.getString(
-                    "The request is not allowed by the user agent or the platform in the current context, possibly because the user denied permission."
-                )
-            };
-        }
-    ]);
+  .module("eduMfaApp.errorMessage", [])
+  .factory("domExceptionErrorMessage", [
+    "gettextCatalog",
+    function domExceptionErrorMessageFactory(gettextCatalog) {
+      return {
+        IndexSizeError: gettextCatalog.getString(
+          "The index is not in the allowed range",
+        ),
+        HierarchyRequestError: gettextCatalog.getString(
+          "The operation would yield an incorrect node tree.",
+        ),
+        WrongDocumentError: gettextCatalog.getString(
+          "The object is in the wrong document.",
+        ),
+        InvalidCharacterError: gettextCatalog.getString(
+          "The string contains invalid characters.",
+        ),
+        NoModificationAllowedError: gettextCatalog.getString(
+          "The object can not be modified.",
+        ),
+        NotFoundError: gettextCatalog.getString(
+          "The object can not be found here.",
+        ),
+        NotSupportedError: gettextCatalog.getString(
+          "The operation is not supported.",
+        ),
+        InUseAttributeError: gettextCatalog.getString(
+          "The attribute is in use.",
+        ),
+        InvalidStateError: gettextCatalog.getString(
+          "The object is in an invalid state.",
+        ),
+        SyntaxError: gettextCatalog.getString(
+          "The string did not match the expected pattern.",
+        ),
+        InvalidModificationError: gettextCatalog.getString(
+          "The object can not be modified in this way.",
+        ),
+        NamespaceError: gettextCatalog.getString(
+          "The operation is not allowed by namespaces in XML.",
+        ),
+        InvalidAccessError: gettextCatalog.getString(
+          "The object does not support the operation or argument.",
+        ),
+        SecurityError: gettextCatalog.getString("The operation is insecure."),
+        NetworkError: gettextCatalog.getString("A network error occurred."),
+        AbortError: gettextCatalog.getString("The operation was aborted."),
+        URLMismatchError: gettextCatalog.getString(
+          "The given URL does not match another URL.",
+        ),
+        QuotaExceededError: gettextCatalog.getString(
+          "The quota has been exceeded.",
+        ),
+        TimeoutError: gettextCatalog.getString("The operation timed out."),
+        InvalidNodeTypeError: gettextCatalog.getString(
+          "The supplied node is incorrect or has an incorrect ancestor for this operation.",
+        ),
+        DataCloneError: gettextCatalog.getString(
+          "The object can not be cloned.",
+        ),
+        EncodingError: gettextCatalog.getString(
+          "The encoding operation (either encoded or decoding) failed." /* (sic) */,
+        ),
+        NotReadableError: gettextCatalog.getString("The I/O operation failed."),
+        UnknownError: gettextCatalog.getString(
+          "The operation failed for an unknown transient reason (e.g. out of memory).",
+        ),
+        ConstraintError: gettextCatalog.getString(
+          "A mutation operation in a transaction failed because a constraint was not satisfied.",
+        ),
+        DataError: gettextCatalog.getString("Provided data is inaccurate."),
+        TransactionInactiveError: gettextCatalog.getString(
+          "A request was placed against a transaction which is currently not active, or which is finished.",
+        ),
+        ReadOnlyError: gettextCatalog.getString(
+          'The mutating operation was attempted in a "readonly" transaction.',
+        ),
+        VersionError: gettextCatalog.getString(
+          "An attempt was made to open a database using a lower version than the existing version.",
+        ),
+        OperationError: gettextCatalog.getString(
+          "The operation failed for an operation-specific reason.",
+        ),
+        NotAllowedError: gettextCatalog.getString(
+          "The request is not allowed by the user agent or the platform in the current context, possibly because the user denied permission.",
+        ),
+      };
+    },
+  ]);

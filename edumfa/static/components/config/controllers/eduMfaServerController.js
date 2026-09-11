@@ -20,80 +20,102 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-myApp.controller("eduMfaServerController", ["$scope", "$stateParams", "inform",
-                                                 "gettextCatalog", "$state",
-                                                 "$location", "ConfigFactory",
-                                                 function($scope, $stateParams,
-                                                          inform, gettextCatalog,
-                                                          $state, $location,
-                                                          ConfigFactory) {
+myApp.controller("eduMfaServerController", [
+  "$scope",
+  "$stateParams",
+  "inform",
+  "gettextCatalog",
+  "$state",
+  "$location",
+  "ConfigFactory",
+  function (
+    $scope,
+    $stateParams,
+    inform,
+    gettextCatalog,
+    $state,
+    $location,
+    ConfigFactory,
+  ) {
     // Set the default route
     if ($location.path() === "/config/edumfaserver") {
-        $location.path("/config/edumfaserver/list");
+      $location.path("/config/edumfaserver/list");
     }
 
     // Get all servers
     $scope.getEduMfaServers = function (identifier) {
-        ConfigFactory.getEduMfaServer(function(data) {
-            $scope.eduMfaServers = data.result.value;
-            //debug: console.log("Fetched all edumfa servers");
-            //debug: console.log($scope.edumfaServers);
-            // return one single eduMFA server
-            if (identifier) {
-                $scope.params = $scope.eduMfaServers[identifier];
-                $scope.params["identifier"] = identifier;
-            }
-        });
+      ConfigFactory.getEduMfaServer(function (data) {
+        $scope.eduMfaServers = data.result.value;
+        //debug: console.log("Fetched all edumfa servers");
+        //debug: console.log($scope.edumfaServers);
+        // return one single eduMFA server
+        if (identifier) {
+          $scope.params = $scope.eduMfaServers[identifier];
+          $scope.params["identifier"] = identifier;
+        }
+      });
     };
 
     if ($location.path() === "/config/edumfaserver/list") {
-    // in case of list we fetch all servers
-        $scope.getEduMfaServers();
+      // in case of list we fetch all servers
+      $scope.getEduMfaServers();
     }
 
     $scope.identifier = $stateParams.identifier;
     if ($scope.identifier) {
-        // We are editing an existing eduMFA Server
-        $scope.getEduMfaServers($scope.identifier);
+      // We are editing an existing eduMFA Server
+      $scope.getEduMfaServers($scope.identifier);
     } else {
-        // This is a new eduMFA server
-        $scope.params = {
-            tls: true
-        }
+      // This is a new eduMFA server
+      $scope.params = {
+        tls: true,
+      };
     }
 
     $scope.delEduMfaServer = function (identifier) {
-        ConfigFactory.delEduMfaServer(identifier, function(data) {
-            $scope.getEduMfaServers();
-        });
+      ConfigFactory.delEduMfaServer(identifier, function (data) {
+        $scope.getEduMfaServers();
+      });
     };
 
     $scope.addEduMfaServer = function (params) {
-        ConfigFactory.addEduMfaServer(params, function(data) {
-            $scope.getEduMfaServers();
-        });
+      ConfigFactory.addEduMfaServer(params, function (data) {
+        $scope.getEduMfaServers();
+      });
     };
 
-    $scope.testEduMfaServer = function() {
-        ConfigFactory.testEduMfaServer($scope.params, function(data) {
-           if (data.result.value === true) {
-               inform.add(gettextCatalog.getString("Request to remote eduMFA server successful."), {type: "success"});
-           } else {
-               inform.add(gettextCatalog.getString("Request to remote eduMFA server not successful. Check the fields URL, username and password for correctness."), {type: "danger"});
-           }
-        });
+    $scope.testEduMfaServer = function () {
+      ConfigFactory.testEduMfaServer($scope.params, function (data) {
+        if (data.result.value === true) {
+          inform.add(
+            gettextCatalog.getString(
+              "Request to remote eduMFA server successful.",
+            ),
+            { type: "success" },
+          );
+        } else {
+          inform.add(
+            gettextCatalog.getString(
+              "Request to remote eduMFA server not successful. Check the fields URL, username and password for correctness.",
+            ),
+            { type: "danger" },
+          );
+        }
+      });
     };
 
-    $scope.saveEduMfaServer = function() {
-        ConfigFactory.addEduMfaServer($scope.params, function(data){
-            if (data.result.status === true) {
-                inform.add(gettextCatalog.getString("eduMFA Server Config saved."), {type: "info"});
-                $state.go('config.edumfaserver.list');
-            }
-        });
+    $scope.saveEduMfaServer = function () {
+      ConfigFactory.addEduMfaServer($scope.params, function (data) {
+        if (data.result.status === true) {
+          inform.add(gettextCatalog.getString("eduMFA Server Config saved."), {
+            type: "info",
+          });
+          $state.go("config.edumfaserver.list");
+        }
+      });
     };
 
     // listen to the reload broadcast
     $scope.$on("piReload", $scope.getEduMfaServers);
-
-}]);
+  },
+]);
