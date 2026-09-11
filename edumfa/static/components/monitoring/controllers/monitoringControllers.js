@@ -219,8 +219,8 @@ myApp.controller("monitoringController", [
             .map((e) => ({ x: new Date(e[0]).getTime(), y: e[1] }))
             .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y));
           points = minimalizeValues(points).sort((a, b) => a.x - b.x);
-          if (points.length === 1 && sk.pointStyle === false){
-            sk.pointStyle = "circle"
+          if (points.length === 1 && sk.pointStyle === false) {
+            sk.pointStyle = "circle";
           }
           var dataset = {
             label: sk.name,
