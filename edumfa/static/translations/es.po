@@ -655,6 +655,10 @@ msgstr "Parámetros de conexión"
 msgid "Connector name"
 msgstr "Nombre de la conexión"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -965,8 +969,8 @@ msgid ""
 "Do you really want to delete the Token {{ tokenSerial }} from user\n"
 "            {{ token.username }}?"
 msgstr ""
-"¿Realmente desea eliminar el Token {{tokenSerial}} del usuario "
-"{{token.username}}?"
+"¿Realmente desea eliminar el Token {{tokenSerial}} del usuario {{token."
+"username}}?"
 
 #: components/token/views/dialog.ask_token_delete.html
 msgid "Do you really want to delete the Token {{ tokenSerial }}?"
@@ -1798,6 +1802,10 @@ msgstr "Última actualización de definición"
 msgid "Last seen:"
 msgstr "Visto la última vez:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Bajo Licencia"
@@ -1840,6 +1848,11 @@ msgstr "Lista de tokens"
 msgid "Loading Machines..."
 msgstr "Cargando Máquinas..."
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "Cargando secuencias..."
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1848,6 +1861,10 @@ msgstr "Cargando secuencias..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Cargando usuarios..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1941,6 +1958,10 @@ msgstr "Contador Máximo de éxitos de Autenticación"
 msgid "Method"
 msgstr "Método"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1953,6 +1974,10 @@ msgstr ""
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Móvil"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2039,9 +2064,19 @@ msgstr ""
 msgid "No anonymous referral chasing"
 msgstr "No encontradas referencias anónimas"
 
+#: components/dashboard/views/dashboard.html
+msgid "No data"
+msgstr ""
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "No se encontró ninguna máquina"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -3119,6 +3154,10 @@ msgstr "Manejo especial de errores"
 msgid "StartTLS"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "StatsKeys:"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Autenticación con éxito."
@@ -3432,8 +3471,8 @@ msgid ""
 "The Serial number for the OTP value {{ otp }} is\n"
 "      <a ui-sref=\"token.details({tokenSerial:serial})\">{{ serial }}</a>."
 msgstr ""
-"La secuencia para el valor OTP {{ otp }} es <a ui-"
-"sref=\"token.details({tokenSerial:serial})\">{{ serial }}</a>."
+"La secuencia para el valor OTP {{ otp }} es <a ui-sref=\"token."
+"details({tokenSerial:serial})\">{{ serial }}</a>."
 
 #: components/token/views/token.enroll.spass.html
 #, fuzzy
@@ -3573,8 +3612,8 @@ msgstr ""
 #: components/config/views/config.token.yubikey.html
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3829,8 +3868,8 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 
@@ -4059,6 +4098,10 @@ msgstr ""
 
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "TimeFrame:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html
@@ -4685,8 +4728,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 
 #: components/audit/views/audit.log.html

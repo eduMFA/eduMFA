@@ -12,6 +12,8 @@ JS=(
     "angular-inform/dist/angular-inform.js.map"
     "bootstrap/dist/js/bootstrap.js"
     "angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"
+    "chart.js/dist/chart.umd.min.js"
+    "chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"
 )
 
 # AngularJS modules

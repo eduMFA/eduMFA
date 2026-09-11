@@ -100,6 +100,7 @@ myApp.constant("radiusServerUrl", backendUrl + instance + "/radiusserver");
 myApp.constant("eduMfaServerUrl", backendUrl + instance + "/edumfaserver");
 myApp.constant("recoveryUrl", backendUrl + instance + "/recover");
 myApp.constant("statsUrl", backendUrl + instance + "/stats");
+myApp.constant("monitoringUrl", backendUrl + instance + "/monitoring");
 myApp.constant("resourceNamePatterns", {
   simple: {
     pattern: "^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$",
