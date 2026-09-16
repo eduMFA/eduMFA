@@ -51,7 +51,12 @@ from edumfa.lib.crypto import (
 )
 from edumfa.lib.error import ResourceNotFoundError
 from edumfa.lib.framework import get_app_config_value
-from edumfa.lib.utils import convert_column_to_unicode, hexlify_and_unicode, is_true
+from edumfa.lib.utils import (
+    convert_column_to_unicode,
+    hexlify_and_unicode,
+    is_true,
+    to_unicode,
+)
 
 from .lib.log import log_with
 
@@ -289,15 +294,31 @@ class Token(MethodsMixin, db.Model):
 
     @log_with(log, hide_args=[1])
     def set_otpkey(self, otpkey, reset_failcount=True, encrypted=True):
-        if not encrypted:
-            self.key_enc = otpkey
-            return
-        iv = geturandom(16)
-        self.key_enc = encrypt(otpkey, iv)
+        """
+        Store the otpkey of the token and reset the OTP counter.
+
+        :param otpkey: the otpkey to store
+        :type otpkey: str or bytes
+        :param reset_failcount: whether to reset the failcounter as well
+        :type reset_failcount: bool
+        :param encrypted: If ``True`` (the default), the otpkey is encrypted
+            with the security module before it is stored. Set it to ``False``
+            for values that are not secret, like the credential id of a
+            WebAuthn token, to avoid the costly encryption and decryption.
+            Such values are stored as they are with an empty IV, which marks
+            them as unencrypted for :py:meth:`get_otpkey`.
+        :type encrypted: bool
+        """
+        if encrypted:
+            iv = geturandom(16)
+            self.key_enc = encrypt(otpkey, iv)
+            self.key_iv = hexlify_and_unicode(iv)
+        else:
+            self.key_enc = to_unicode(otpkey)
+            self.key_iv = ""
         length = len(self.key_enc)
         if length > Token.key_enc.property.columns[0].type.length:
             log.error(f"Key {self.serial} exceeds database field {length:d}!")
-        self.key_iv = hexlify_and_unicode(iv)
         self.count = 0
         if reset_failcount is True:
             self.failcount = 0
@@ -382,8 +403,31 @@ class Token(MethodsMixin, db.Model):
         self.user_pin = encrypt(userPin, iv)
         self.user_pin_iv = hexlify_and_unicode(iv)
 
+    def is_otpkey_encrypted(self):
+        """
+        Check whether the otpkey of this token is stored encrypted.
+
+        Encrypted otpkeys always come with an IV. An empty IV marks an otpkey
+        that was stored in plain text via ``set_otpkey(..., encrypted=False)``.
+
+        :rtype: bool
+        """
+        return bool(self._fix_spaces(self.key_iv))
+
     @log_with(log)
-    def get_otpkey(self, encrypted=True):
+    def get_otpkey(self, encrypted=None):
+        """
+        Return the otpkey of the token as an object with a ``getKey()`` method.
+
+        :param encrypted: ``True`` to decrypt the stored value, ``False`` to
+            return it as it is stored. Defaults to ``None``, which detects the
+            storage format via :py:meth:`is_otpkey_encrypted`.
+        :type encrypted: bool or None
+        :return: the otpkey
+        :rtype: SecretObj or NullCryptoObj
+        """
+        if encrypted is None:
+            encrypted = self.is_otpkey_encrypted()
         if not encrypted:
             return NullCryptoObj(self.key_enc)
         key = binascii.unhexlify(self.key_enc)

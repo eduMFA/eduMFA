@@ -90,13 +90,27 @@ FAILED_TO_DECRYPT_PASSWORD = "FAILED TO DECRYPT PASSWORD!"  # nosec B105 # place
 
 log = logging.getLogger(__name__)
 
+
 class NullCryptoObj:
+    """
+    Container for a value that is stored in plain text.
+
+    It offers the same ``getKey()`` interface as :py:class:`SecretObj`, so that
+    callers can handle encrypted and unencrypted values alike. It is used for
+    values that are not secret and therefore do not need to be encrypted, like
+    the credential id of a WebAuthn token.
+    """
 
     def __init__(self, val):
         self.val = val
 
     def getKey(self):
-        return self.val
+        """
+        Return the stored value as bytes, like :py:meth:`SecretObj.getKey`.
+
+        :rtype: bytes
+        """
+        return to_bytes(self.val)
 
 
 class SecretObj:

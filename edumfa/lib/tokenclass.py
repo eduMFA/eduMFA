@@ -798,6 +798,15 @@ class TokenClass:
 
     @check_token_locked
     def set_otpkey(self, otpKey, encrypted=True):
+        """
+        Set the otpkey of the token.
+
+        :param otpKey: the otpkey to store
+        :param encrypted: Store the otpkey encrypted (the default). Only set
+            this to ``False`` for values that are not secret, see
+            :py:meth:`edumfa.models.Token.set_otpkey`.
+        :type encrypted: bool
+        """
         self.token.set_otpkey(otpKey, encrypted=encrypted)
 
     @check_token_locked
