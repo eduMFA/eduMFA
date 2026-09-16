@@ -956,13 +956,16 @@ class WebAuthnTokenClass(TokenClass):
         client to allow the client to create an assertion for the
         authentication process.
 
-        :return: The otpkey decrypted and encoded as WebAuthn base64.
+        The credential id is public information. To avoid decrypting it on every
+        authentication it is stored as plain text (see :py:meth:`edumfa.models.Token.set_otpkey`).
+        Credential ids of tokens that were enrolled with an earlier version and
+        have not been migrated yet are still decrypted transparently.
+
+        :return: The credential id encoded as WebAuthn base64.
         :rtype: basestring
         """
 
-        return webauthn_b64_encode(
-            binascii.unhexlify(self.token.get_otpkey(encrypted=False).getKey())
-        )
+        return webauthn_b64_encode(binascii.unhexlify(self.token.get_otpkey().getKey()))
 
     def update(self, param, reset_failcount=True):
         """
@@ -1072,6 +1075,9 @@ class WebAuthnTokenClass(TokenClass):
                     f"Could not enroll {self.get_class_type()} token!"
                 )
 
+            # The credential id is public information, which is sent to the
+            # client with every authentication request. It is stored in plain
+            # text to avoid decrypting it on every authentication.
             self.set_otpkey(
                 hexlify_and_unicode(
                     webauthn_b64_decode(webauthn_credential.credential_id)

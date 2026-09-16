@@ -238,7 +238,9 @@ SELF_ATTESTATION_REGISTRATION_RESPONSE_BROKEN_SIG = {
 
 class WebAuthnTokenTestCase(MyTestCase):
     def _create_challenge(self):
-        self.token.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(CRED_ID)), encrypted=False)
+        self.token.set_otpkey(
+            hexlify_and_unicode(webauthn_b64_decode(CRED_ID)), encrypted=False
+        )
         self.token.add_tokeninfo(WEBAUTHNINFO.PUB_KEY, PUB_KEY)
         self.token.add_tokeninfo(WEBAUTHNINFO.RELYING_PARTY_ID, RP_ID)
         (_, _, _, response_details) = self.token.create_challenge(
@@ -392,6 +394,13 @@ class WebAuthnTokenTestCase(MyTestCase):
         )
         self.assertEqual(CRED_ID, self.token.decrypt_otpkey())
         self.assertEqual(PUB_KEY, self.token.get_tokeninfo(WEBAUTHNINFO.PUB_KEY))
+        # The credential id is public information and stored unencrypted
+        self.assertEqual(
+            hexlify_and_unicode(webauthn_b64_decode(CRED_ID)),
+            self.token.token.key_enc,
+        )
+        self.assertEqual("", self.token.token.key_iv)
+        self.assertFalse(self.token.token.is_otpkey_encrypted())
 
     def test_03b_double_registration(self):
         self.assertEqual(self.token.type, "webauthn")
@@ -426,6 +435,21 @@ class WebAuthnTokenTestCase(MyTestCase):
         # Now the excludeCredentials is contained
         self.assertIn("excludeCredentials", web_authn_register_request)
         temp_token.delete_token()
+
+    def test_03c_credential_id_storage(self):
+        cred_id_hex = hexlify_and_unicode(webauthn_b64_decode(CRED_ID))
+        # Reading an unencrypted credential id does not involve the security module
+        self.token.set_otpkey(cred_id_hex, encrypted=False)
+        with patch("edumfa.lib.crypto.get_hsm") as mock_get_hsm:
+            self.assertEqual(CRED_ID, self.token.decrypt_otpkey())
+            mock_get_hsm.assert_not_called()
+
+        # Tokens enrolled before eduMFA 2.10 store the credential id encrypted.
+        # It is still decrypted transparently.
+        self.token.set_otpkey(cred_id_hex)
+        self.assertTrue(self.token.token.is_otpkey_encrypted())
+        self.assertNotEqual(cred_id_hex, self.token.token.key_enc)
+        self.assertEqual(CRED_ID, self.token.decrypt_otpkey())
 
     def test_04_authentication(self):
         reply_dict = self._create_challenge()
