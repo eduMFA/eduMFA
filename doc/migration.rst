@@ -40,7 +40,7 @@ High-level migration steps
 Database migration
 ~~~~~~~~~~~~~~~~~~
 
-Run:
+Run [1]_:
 
 .. code-block:: bash
 
@@ -54,7 +54,16 @@ database migration is executed automatically during package installation.
 Manual SQL fallback
 ~~~~~~~~~~~~~~~~~~~
 
-If automatic migration fails, apply the equivalent SQL changes:
+If automatic migration fails, apply the equivalent SQL changes as a last resort.
+
+- First, make sure that you're on the correct database version.
+
+  - ``edumfa-manage db -d /opt/edumfa/lib/edumfa/migrations current`` [1]_
+    should return ``5cb310101a1f``.
+  - Alternatively, you can just look at the single row in the
+    ``alembic_version`` table. It should have the same value.
+  - Only continue if this is the case! If not, update your database to that
+    version [2]_.
 
 - Rename table ``pidea_audit`` to ``mfa_audit``.
 - Rename table ``privacyideaserver`` to ``edumfaserver``.
@@ -72,3 +81,23 @@ If automatic migration fails, apply the equivalent SQL changes:
 - In ``policy.action``, replace ``privacyideaserver_write`` with
   ``edumfaserver_write``.
 - In ``smsgateway.providermodule``, replace ``privacyidea.`` with ``edumfa.``.
+
+After that, make sure to stamp the database to the version which is already
+migrated:
+``edumfa-manage db -d /opt/edumfa/lib/edumfa/migrations stamp 0d011e94a8e8``.
+This tells eduMFA that the migration from privacyIDEA to eduMFA has already
+happened.
+
+Now run the rest of the database upgrade operations to update to the current
+eduMFA version:
+``edumfa-schema-upgrade /opt/edumfa/lib/edumfa/migrations`` [1]_.
+
+.. [1] Note that this path can be different on your machine, depending on how
+   you installed eduMFA. In the container, the path would for example be
+   `/usr/local/lib/edumfa/migrations` instead.
+   The correct directory should contain a "versions" directory and an
+   "alembic.ini" file.
+
+.. [2] That database version is the one in privacyIDEA 3.9.2. It is necessary to
+   be on that exact version to make sure your database schema does not miss any
+   changes.
