@@ -145,8 +145,8 @@ def upgrade():
     if failed:
         print(
             f" -> WARNING: The credential id of {failed} WebAuthn token(s) could not be "
-            "decrypted. These tokens keep their encrypted credential id and continue "
-            "to work.",
+            "decrypted. These tokens keep their encrypted credential id and were "
+            "not changed.",
             file=sys.stderr,
         )
 
