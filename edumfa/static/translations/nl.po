@@ -545,12 +545,16 @@ msgstr ""
 "Controleer alle mogelijke resolvers om een resolver te koppelen\n"
 "in dit beleid."
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr ""
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "Controleer de PIN lokaal"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr "Controleer met OTP PIN."
 
@@ -1272,6 +1276,10 @@ msgstr "Geef eerst de OTP-waarde"
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
 msgstr "Geef de tweede OTP-waarde"
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
+msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
 #, fuzzy

@@ -33,18 +33,49 @@ angular.module("eduMfaAuth").factory("webAuthnToken", [
     gettextCatalog,
     domExceptionErrorMessage,
   ) {
+    /**
+     * Check whether WebAuthn can be used in this browser and context.
+     * If not, the user is informed and false is returned.
+     */
+    var checkSupport = function () {
+      if (!edumfa_webauthn) {
+        inform.add(
+          gettextCatalog.getString(
+            "WebAuthn is not supported by this browser, or in this context.",
+          ),
+          {
+            type: "danger",
+            ttl: 10000,
+          },
+        );
+        return false;
+      }
+      return true;
+    };
+
+    /**
+     * Merge the WebAuthnSignRequests of several tokens into a single request
+     * for the authenticator, so that any one of the tokens can answer it.
+     */
+    var mergeSignRequests = function (signRequests) {
+      return {
+        challenge: signRequests[0].challenge,
+        allowCredentials: signRequests
+          .map(function (signRequest) {
+            return signRequest.allowCredentials;
+          })
+          .reduce(function (acc, val) {
+            return acc.concat(val);
+          }, []),
+        rpId: signRequests[0].rpId,
+        userVerification: signRequests[0].userVerification,
+        timeout: signRequests[0].timeout,
+      };
+    };
+
     return {
       register_request: function (registerRequest, callback) {
-        if (!edumfa_webauthn) {
-          inform.add(
-            gettextCatalog.getString(
-              "WebAuthn is not supported by this browser, or in this context.",
-            ),
-            {
-              type: "danger",
-              ttl: 10000,
-            },
-          );
+        if (!checkSupport()) {
           return;
         }
 
@@ -58,6 +89,35 @@ angular.module("eduMfaAuth").factory("webAuthnToken", [
             });
           });
       },
+      /**
+       * Sign the given challenge(s) with the authenticator.
+       *
+       * The callback receives the WebAuthnSignResponse, i.e. the fields
+       * credentialid, clientdata, signaturedata, authenticatordata (and
+       * optionally userhandle and assertionclientextensions), which are sent
+       * to /validate/check together with the serial or user and the
+       * transaction_id. Errors are shown to the user.
+       */
+      sign_challenge: function (signRequests, callback) {
+        if (!checkSupport()) {
+          return;
+        }
+
+        edumfa_webauthn
+          .sign(mergeSignRequests(signRequests))
+          .then(callback)
+          .catch(function (e) {
+            inform.add(
+              e instanceof DOMException
+                ? domExceptionErrorMessage[e.name] + " / " + e.message
+                : gettextCatalog.getString("Error in WebAuthn response."),
+              {
+                type: "danger",
+                ttl: 10000,
+              },
+            );
+          });
+      },
       sign_request: function (
         data,
         signRequests,
@@ -65,33 +125,12 @@ angular.module("eduMfaAuth").factory("webAuthnToken", [
         transactionid,
         login_callback,
       ) {
-        if (!edumfa_webauthn) {
-          inform.add(
-            gettextCatalog.getString(
-              "WebAuthn is not supported by this browser, or in this context.",
-            ),
-            {
-              type: "danger",
-              ttl: 10000,
-            },
-          );
+        if (!checkSupport()) {
           return;
         }
 
         edumfa_webauthn
-          .sign({
-            challenge: signRequests[0].challenge,
-            allowCredentials: signRequests
-              .map(function (signRequest) {
-                return signRequest.allowCredentials;
-              })
-              .reduce(function (acc, val) {
-                return acc.concat(val);
-              }, []),
-            rpId: signRequests[0].rpId,
-            userVerification: signRequests[0].userVerification,
-            timeout: signRequests[0].timeout,
-          })
+          .sign(mergeSignRequests(signRequests))
           .then(function (signResponse) {
             inform.clear();
             signResponse.username = username;
