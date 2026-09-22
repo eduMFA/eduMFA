@@ -32,26 +32,31 @@ in order to install the latest eduMFA version from
 Deterministic Installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The eduMFA package contains dependencies with a minimal required version. However, newest
-versions of dependencies are not always tested and might cause problems.
-If you want to achieve a deterministic installation, you can now install the pinned and tested
-versions of the dependencies::
+Each eduMFA version pins the version of its dependencies. However, those
+dependencies have dependencies themselves, and some of those transitive
+dependencies do not have their version pinned. This means installing the same
+eduMFA version at different points in time can result in a different set of
+dependency versions to be installed.
+
+If you want to avoid this and stick to the tested versions at the time of
+release, you can now install the pinned and tested versions of the
+dependencies::
 
   pip install -r lib/edumfa/requirements.txt
 
 It would even be safer to install the pinned dependencies *before* installing eduMFA.
-So if you e.g. know that you are going to install version 1.2.0 you can run::
+So if you e.g. know that you are going to install version 1.2.3 you can run::
 
-    pip install -r https://raw.githubusercontent.com/eduMFA/eduMFA/v1.2.0/requirements.txt
-    pip install edumfa==1.2.0
+    pip install -r https://raw.githubusercontent.com/eduMFA/eduMFA/v1.2.3/requirements.txt
+    pip install edumfa==1.2.3
 
 .. _pip_configuration:
 
 Configuration
-.............
+^^^^^^^^^^^^^
 
 Database
-^^^^^^^^
+........
 
 Please refer to :ref:`choosing_a_database`. Create a database, as well as a user
 with full permissions to that database.
@@ -62,9 +67,10 @@ You must then add the database name, user and password to your ``edumfa.cfg``.
 See :ref:`cfgfile` for more information on the configuration.
 
 Setting up eduMFA
-^^^^^^^^^^^^^^^^^^^^^^
+.................
+
 Additionally to the database connection a new ``EDUMFA_PEPPER`` and ``SECRET_KEY``
-must be generated in order to secure the installation::
+must be added to that configuration file in order to secure the installation::
 
     PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c48)"
     echo "EDUMFA_PEPPER = '$PEPPER'" >> /path/to/edumfa.cfg
@@ -94,7 +100,7 @@ the development server can be started with::
     The development server should not be used for a productive environment.
 
 Webserver
-^^^^^^^^^
+.........
 
 To serve authentication requests and provide the management UI a
 `WSGI <https://wsgi.readthedocs.io/en/latest/index.html>`_ capable webserver
