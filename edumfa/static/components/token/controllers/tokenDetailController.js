@@ -57,6 +57,7 @@ myApp.controller("tokenDetailController", [
   "MachineFactory",
   "inform",
   "gettextCatalog",
+  "webAuthnToken",
   function (
     $scope,
     TokenFactory,
@@ -70,6 +71,7 @@ myApp.controller("tokenDetailController", [
     MachineFactory,
     inform,
     gettextCatalog,
+    webAuthnToken,
   ) {
     $scope.tokenSerial = $stateParams.tokenSerial;
     // This is the parents object
@@ -84,20 +86,34 @@ myApp.controller("tokenDetailController", [
     $scope.form = { options: {} };
     $scope.editTokenInfo = 0;
     $scope.pin1 = $scope.pin2 = "";
-    $scope.testTokenPlaceholder = gettextCatalog.getString(
-      "Enter PIN and OTP to check the" + " token.",
-    );
+    $scope.prependPin = true;
     $scope.tokenInfoFormInit = {
       useTimeShift: ["default", "True", "False"],
     };
-    ConfigFactory.getSystemConfig(function (data) {
-      prepend = data.result.value.PrependPin;
-      //debug: console.log(prepend);
-      if (!$scope.isChecked(prepend)) {
+    // The hint for the "Test token" input depends on the position of the PIN
+    // and on the token type: a WebAuthn token is tested by signing a challenge
+    // with the authenticator, so only the PIN (if any) is entered.
+    $scope.updateTestTokenPlaceholder = function () {
+      if ($scope.token && $scope.token.tokentype === "webauthn") {
         $scope.testTokenPlaceholder = gettextCatalog.getString(
-          "Enter OTP + PIN to" + " check the token.",
+          "Enter the PIN (if set) and confirm with your WebAuthn authenticator.",
+        );
+        $scope.testTokenTooltip = gettextCatalog.getString(
+          "Check the PIN and sign a challenge with the authenticator.",
+        );
+      } else {
+        $scope.testTokenPlaceholder = $scope.prependPin
+          ? gettextCatalog.getString("Enter PIN and OTP to check the token.")
+          : gettextCatalog.getString("Enter OTP + PIN to check the token.");
+        $scope.testTokenTooltip = gettextCatalog.getString(
+          "Check with OTP PIN.",
         );
       }
+    };
+    $scope.updateTestTokenPlaceholder();
+    ConfigFactory.getSystemConfig(function (data) {
+      $scope.prependPin = $scope.isChecked(data.result.value.PrependPin);
+      $scope.updateTestTokenPlaceholder();
     });
     // scroll to the top of the page
     document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -106,6 +122,7 @@ myApp.controller("tokenDetailController", [
     $scope.get = function () {
       TokenFactory.getTokenForSerial($scope.tokenSerial, function (data) {
         $scope.token = data.result.value.tokens[0];
+        $scope.updateTestTokenPlaceholder();
         $scope.max_auth_count = parseInt($scope.token.info.count_auth_max);
         $scope.max_success_auth_count = parseInt(
           $scope.token.info.count_auth_success_max,
@@ -378,27 +395,77 @@ myApp.controller("tokenDetailController", [
       });
     };
 
+    $scope.showTestResult = function (data) {
+      // refresh the token data
+      $scope.get();
+      if (data.result.value === true) {
+        inform.add(gettextCatalog.getString("Successfully authenticated."), {
+          type: "success",
+          ttl: 10000,
+        });
+      } else if (!$scope.testWebAuthnChallenge(data.detail)) {
+        inform.add(data.detail.message, { type: "danger", ttl: 10000 });
+      }
+    };
+
     $scope.testOtp = function (otponly) {
       var params = {
         serial: $scope.tokenSerial,
-        pass: $scope.testPassword,
+        // A WebAuthn token may have no PIN, so an empty password is valid here
+        pass: $scope.testPassword || "",
       };
       if (otponly) {
         params["otponly"] = "1";
       }
-      ValidateFactory.check(params, function (data) {
-        //debug: console.log(data);
-        // refresh the token data
-        $scope.get();
-        if (data.result.value === true) {
-          inform.add(gettextCatalog.getString("Successfully authenticated."), {
-            type: "success",
-            ttl: 10000,
-          });
-        } else {
-          inform.add(data.detail.message, { type: "danger", ttl: 10000 });
+      ValidateFactory.check(params, $scope.showTestResult);
+    };
+
+    // A WebAuthn token answers a correct PIN with a challenge. Let the
+    // authenticator sign it and send the assertion back as the second step of
+    // the test. Returns false if the response contains no WebAuthn challenge.
+    $scope.testWebAuthnChallenge = function (detail) {
+      if (!detail || !detail.transaction_id) {
+        return false;
+      }
+      var signRequests = [];
+      angular.forEach(detail.multi_challenge || [], function (challenge) {
+        if (challenge.attributes && challenge.attributes.webAuthnSignRequest) {
+          signRequests.push(challenge.attributes.webAuthnSignRequest);
         }
       });
+      if (
+        signRequests.length === 0 &&
+        detail.attributes &&
+        detail.attributes.webAuthnSignRequest
+      ) {
+        signRequests.push(detail.attributes.webAuthnSignRequest);
+      }
+      if (signRequests.length === 0) {
+        return false;
+      }
+      inform.add(detail.message, { type: "info", ttl: 10000 });
+      webAuthnToken.sign_challenge(signRequests, function (signResponse) {
+        var params = angular.extend(
+          {
+            serial: $scope.tokenSerial,
+            transaction_id: detail.transaction_id,
+            pass: "",
+          },
+          signResponse,
+        );
+        ValidateFactory.check(params, function (data) {
+          $scope.get();
+          if (data.result.value === true) {
+            inform.add(
+              gettextCatalog.getString("Successfully authenticated."),
+              { type: "success", ttl: 10000 },
+            );
+          } else {
+            inform.add(data.detail.message, { type: "danger", ttl: 10000 });
+          }
+        });
+      });
+      return true;
     };
 
     //----------------------------------------------------------------

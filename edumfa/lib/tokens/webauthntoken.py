@@ -1697,6 +1697,12 @@ class WebAuthnTokenClass(TokenClass):
         :rtype: int
         """
 
+        # check_otp() is also called without options, e.g. by /validate/check
+        # with otponly=1. A WebAuthn token can not be verified that way, but it
+        # must fail gracefully instead of raising an exception.
+        if not options:
+            return -1
+
         if is_webauthn_assertion_response(options) and getParam(
             options, "challenge", optional
         ):
@@ -1828,6 +1834,9 @@ def is_webauthn_assertion_response(request_data):
     :return: Whether all data necessary to verify the assertion is available.
     :rtype: bool
     """
+
+    if not request_data:
+        return False
 
     return bool(
         getParam(request_data, "credentialid", optional)

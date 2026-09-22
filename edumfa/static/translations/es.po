@@ -530,12 +530,16 @@ msgstr ""
 "Compruebe todos los posibles almacenes de un usuario para que coincidan con "
 "el almacén de esta política."
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr ""
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "Verifique el PIN localmente"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr "Verifique con PIN OTP."
 
@@ -1242,6 +1246,10 @@ msgstr "Teclee el primer valor de OTP"
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
 msgstr "Teclee el segundo valor de OTP"
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
+msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
 #, fuzzy
