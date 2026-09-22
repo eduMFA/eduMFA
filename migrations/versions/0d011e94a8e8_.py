@@ -39,7 +39,7 @@ def upgrade():
     print(" * Renaming table privacyideaserver to edumfaserver")
     op.rename_table("privacyideaserver", "edumfaserver")
     if dialect_supports_sequences():
-        if context.get_context().dialect.name in ["mariadb", "mysql"]:
+        if context.get_context().dialect.name in ["mariadb", "mysql", "postgresql"]:
             print(" * Renaming table privacyideaserver_seq to edumfaserver_seq")
             op.rename_table("privacyideaserver_seq", "edumfaserver_seq")
         else:
@@ -140,7 +140,7 @@ def downgrade():
     print(" * Renaming table edumfaserver to privacyideaserver")
     op.rename_table("edumfaserver", "privacyideaserver")
     if dialect_supports_sequences():
-        if context.get_context().dialect.name in ["mariadb", "mysql"]:
+        if context.get_context().dialect.name in ["mariadb", "mysql", "postgresql"]:
             op.rename_table("edumfaserver_seq", "privacyideaserver_seq")
         else:
             op.execute(
