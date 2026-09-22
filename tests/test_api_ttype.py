@@ -1,5 +1,5 @@
 from base64 import b32decode, b32encode
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 
 import responses
@@ -352,7 +352,7 @@ class TtypePushAPITestCase(MyApiTestCase):
                     )
 
         # first create a signature
-        ts = datetime.utcnow().isoformat()
+        ts = datetime.now(timezone.utc).isoformat()
         sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(
             sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()
@@ -741,7 +741,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                     )
 
         # first create a signature
-        ts = datetime.utcnow().isoformat()
+        ts = datetime.now(timezone.utc).isoformat()
         sign_string = f"{serial}|{ts}"
         sig = self.smartphone_private_key.sign(
             sign_string.encode("utf8"), padding.PKCS1v15(), hashes.SHA256()

@@ -51,6 +51,7 @@ import logging
 import traceback
 
 from edumfa.lib.log import log_with
+from edumfa.lib.utils import utc_now
 
 log = logging.getLogger(__name__)
 
@@ -89,7 +90,9 @@ class Audit:  # pragma: no cover
         :return: Audit object
         """
         self.name = "AuditBase"
-        self.audit_data = {"startdate": startdate or datetime.datetime.now()}
+        if startdate and (startdate.tzinfo is None or startdate.utcoffset() is None):
+            startdate = startdate.replace(tzinfo=datetime.timezone.utc)
+        self.audit_data = {"startdate": startdate or utc_now()}
         self.config = config or {}
         self.private = ""
         self.public = ""

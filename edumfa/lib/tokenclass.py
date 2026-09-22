@@ -89,7 +89,7 @@ from .user import User, get_username
 
 # DATE_FORMAT = "%d/%m/%y %H:%M"
 DATE_FORMAT = "%Y-%m-%dT%H:%M%z"
-# LASTAUTH is utcnow()
+# LASTAUTH is stored as a UTC timestamp.
 AUTH_DATE_FORMAT = "%Y-%m-%d %H:%M:%S.%f%z"
 optional = True
 required = False

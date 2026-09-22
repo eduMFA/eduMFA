@@ -22,10 +22,10 @@ class TokenModelTestCase(MyTestCase):
         write_stats(key1, 13)
 
         self.assertEqual(MonitoringStats.query.filter_by(stats_key=key1).count(), 2)
-        # Assert naive datetime
+        # Assert UTC-aware datetime
         self.assertEqual(
             MonitoringStats.query.filter_by(stats_key=key1).first().timestamp.tzinfo,
-            None,
+            datetime.timezone.utc,
         )
 
         # Now we write a new value, but with the parameter to delete old values

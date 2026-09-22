@@ -37,7 +37,7 @@ import string
 import threading
 import time
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from datetime import time as dt_time
 from importlib import import_module
 from urllib.parse import unquote
@@ -56,6 +56,13 @@ log = logging.getLogger(__name__)
 BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 ALLOWED_SERIAL = r"^[0-9a-zA-Z\-_]+$"
+
+
+def utc_now():
+    """
+    Return the current time as a timezone-aware UTC datetime.
+    """
+    return datetime.now(timezone.utc)
 
 # character lists for the identifiers in the pin content policy
 CHARLIST_CONTENTPOLICY = {
@@ -1069,13 +1076,15 @@ def convert_column_to_unicode(value):
 
 def convert_timestamp_to_utc(timestamp):
     """
-    Convert a timezone-aware datetime object to a naive UTC datetime.
+    Convert a datetime object to a timezone-aware UTC datetime.
 
     :param timestamp: datetime object that should be converted
-    :type timestamp: timezone-aware datetime object
-    :return: timezone-naive datetime object
+    :type timestamp: datetime object
+    :return: timezone-aware UTC datetime object
     """
-    return timestamp.astimezone(tzutc()).replace(tzinfo=None)
+    if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+        timestamp = timestamp.replace(tzinfo=tzutc())
+    return timestamp.astimezone(tzutc())
 
 
 def censor_connect_string(connect_string):

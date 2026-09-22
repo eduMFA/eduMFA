@@ -20,7 +20,6 @@
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import logging
-from datetime import datetime
 
 from sqlalchemy import and_
 
@@ -31,6 +30,7 @@ from edumfa.lib.log import log_with
 from edumfa.lib.policy import ACTION, SCOPE, Match
 from edumfa.lib.resolver import get_resolver_list
 from edumfa.lib.smtpserver import send_email_identifier
+from edumfa.lib.utils import utc_now
 from edumfa.models import PasswordReset
 
 __doc__ = """
@@ -117,9 +117,7 @@ def check_recoverycode(user, recoverycode):
     """
     recoverycode_valid = False
     # delete old entries
-    r = PasswordReset.query.filter(
-        and_(PasswordReset.expiration < datetime.now())
-    ).delete()
+    r = PasswordReset.query.filter(and_(PasswordReset.expiration < utc_now())).delete()
     log.debug(f"{r} old password recoverycodes deleted.")
     sql_query = PasswordReset.query.filter(
         and_(PasswordReset.username == user.login, PasswordReset.realm == user.realm)

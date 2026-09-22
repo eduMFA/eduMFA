@@ -11,7 +11,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from passlib.hash import argon2
 from pymysql import OperationalError as PyMysqlOperationalError
-from testfixtures import Replace, log_capture, test_datetime
+from testfixtures import Replace, log_capture
 
 from edumfa.lib import _
 from edumfa.lib.authcache import _hash_password
@@ -1504,8 +1504,8 @@ class ValidateAPITestCase(MyApiTestCase):
 
         # create the challenge by authenticating with the OTP PIN
         with Replace(
-            "edumfa.models.datetime",
-            test_datetime(
+            "edumfa.models.utc_now",
+            lambda: datetime.datetime(
                 2020,
                 6,
                 13,
@@ -1532,8 +1532,8 @@ class ValidateAPITestCase(MyApiTestCase):
         # This should not happen unless there is a server misconfiguration
         # The transaction should not be removed by the janitor
         with Replace(
-            "edumfa.models.datetime",
-            test_datetime(
+            "edumfa.models.utc_now",
+            lambda: datetime.datetime(
                 2020,
                 6,
                 13,
@@ -1559,8 +1559,8 @@ class ValidateAPITestCase(MyApiTestCase):
 
         # send the OTP value while being an hour too late (timezone -1)
         with Replace(
-            "edumfa.models.datetime",
-            test_datetime(
+            "edumfa.models.utc_now",
+            lambda: datetime.datetime(
                 2020,
                 6,
                 13,
@@ -5966,7 +5966,9 @@ class AChallengeResponse(MyApiTestCase):
         old_challenge = Challenge(
             serial="tok1", transaction_id=old_transaction_id, challenge=""
         )
-        old_challenge_timestamp = datetime.datetime.now() - datetime.timedelta(days=3)
+        old_challenge_timestamp = datetime.datetime.now(
+            datetime.timezone.utc
+        ) - datetime.timedelta(days=3)
         old_challenge.timestamp = old_challenge_timestamp
         old_challenge.expiration = old_challenge_timestamp + datetime.timedelta(
             minutes=120
@@ -6611,15 +6613,11 @@ class AChallengeResponse(MyApiTestCase):
         # If we wait long enough, the challenge has expired,
         # while the HOTP value 287082 in itself would still be valid.
         # However, the authentication with the expired transaction_id has to fail
-        new_utcnow = datetime.datetime.utcnow().replace(
-            tzinfo=None
-        ) + datetime.timedelta(minutes=12)
-        new_now = datetime.datetime.now().replace(tzinfo=None) + datetime.timedelta(
+        new_now = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=12
         )
-        with mock.patch("edumfa.models.datetime") as mock_datetime:
-            mock_datetime.utcnow.return_value = new_utcnow
-            mock_datetime.now.return_value = new_now
+        with mock.patch("edumfa.models.utc_now") as mock_datetime:
+            mock_datetime.return_value = new_now
             with self.app.test_request_context(
                 "/validate/check",
                 method="POST",

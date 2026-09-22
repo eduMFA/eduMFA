@@ -57,7 +57,12 @@ from edumfa.lib.pooling import (
     REGISTRY_CONFIG_NAME,
     get_engine,
 )
-from edumfa.lib.utils import censor_connect_string, is_true, truncate_comma_list
+from edumfa.lib.utils import (
+    censor_connect_string,
+    is_true,
+    truncate_comma_list,
+    utc_now,
+)
 from edumfa.models import Audit as LogEntry
 from edumfa.models import audit_column_length as column_length
 
@@ -277,7 +282,9 @@ class Audit(AuditBase):
                     log.debug(f"Not a valid searchkey: {exx}")
 
         if timelimit:
-            conditions.append(LogEntry.date >= datetime.datetime.now() - timelimit)
+            conditions.append(
+                LogEntry.date >= utc_now() - timelimit
+            )
         # Combine them with or to a BooleanClauseList
         filter_condition = and_(True, *conditions)
         return filter_condition
@@ -317,7 +324,7 @@ class Audit(AuditBase):
                 if not "token_type" in self.audit_data:
                     self.audit_data["token_type"] = self.audit_data.get("tokentype")
             if self.audit_data.get("startdate"):
-                duration = datetime.datetime.now() - self.audit_data.get("startdate")
+                duration = utc_now() - self.audit_data.get("startdate")
             else:
                 duration = None
             # We want to reduce the passkey events a bit...
@@ -418,6 +425,12 @@ class Audit(AuditBase):
         return res
 
     @staticmethod
+    def _format_datetime_for_signature(value):
+        if value and value.tzinfo is not None and value.utcoffset() is not None:
+            value = value.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+        return value
+
+    @staticmethod
     def _log_to_string(le):
         """
         This function creates a string from the logentry so
@@ -431,13 +444,15 @@ class Audit(AuditBase):
         :rtype str
         """
         # TODO: Add thread_id. We really should add a versioning to identify which audit data is signed.
+        date = Audit._format_datetime_for_signature(le.date)
         s = (
-            f"id={le.id},date={le.date},action={le.action},succ={le.success},serial={le.serial},t={le.token_type},u={le.user},r={le.realm},adm={le.administrator},"
+            f"id={le.id},date={date},action={le.action},succ={le.success},serial={le.serial},t={le.token_type},u={le.user},r={le.realm},adm={le.administrator},"
             f"ad={le.action_detail},i={le.info},ps={le.edumfa_server},c={le.client},l={le.loglevel},cl={le.clearance_level}"
         )
         # If we have the new log entries, we also add them for signing and verification.
         if le.startdate:
-            s += f",{le.startdate}"
+            startdate = Audit._format_datetime_for_signature(le.startdate)
+            s += f",{startdate}"
         if le.duration:
             s += f",{le.duration}"
         return s
@@ -501,7 +516,9 @@ class Audit(AuditBase):
             conditions.append(LogEntry.success == int(is_true(success)))
 
         if timedelta is not None:
-            conditions.append(LogEntry.date >= datetime.datetime.now() - timedelta)
+            conditions.append(
+                LogEntry.date >= utc_now() - timedelta
+            )
 
         filter_condition = and_(True, *conditions)
         log_count = self.session.query(LogEntry).filter(filter_condition).count()

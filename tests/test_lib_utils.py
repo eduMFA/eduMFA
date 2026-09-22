@@ -5,7 +5,7 @@ This tests the package lib.utils
 import binascii
 from datetime import datetime, timedelta
 
-from dateutil.tz import gettz, tzlocal, tzoffset
+from dateutil.tz import gettz, tzlocal, tzoffset, tzutc
 from netaddr import AddrFormatError, IPAddress, IPNetwork
 
 from edumfa.lib.crypto import generate_password
@@ -603,7 +603,8 @@ class UtilsTestCase(MyTestCase):
     def test_14_convert_timestamp_to_utc(self):
         d = datetime.now(tz=gettz("America/New York"))
         d_utc = convert_timestamp_to_utc(d)
-        self.assertGreater(d_utc, d.replace(tzinfo=None))
+        self.assertEqual(d_utc.tzinfo, tzutc())
+        self.assertEqual(d_utc, d.astimezone(tzutc()))
 
     def test_16_parse_int(self):
         r = parse_int("xxx", 12)
