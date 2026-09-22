@@ -1375,29 +1375,37 @@ class WebAuthnRegistrationResponse:
                 # Step 2:
                 # Verify that sig is a valid signature over the concatenation of authenticatorData
                 # and clientDataHash using the credential public key with alg.
-                try:
-                    _verify_signature(
-                        credential_public_key, alg, verification_data, signature
-                    )
-                except InvalidSignature:
-                    raise RegistrationRejectedException("Invalid signature received.")
-                except NotImplementedError:  # pragma: no cover
-                    log.warning(
-                        f"Unsupported algorithm ({alg}) for signature verification"
-                    )
-                    # We do not support this algorithm. Treat as none attestation, if acceptable.
-                    if none_attestation_permitted:
-                        return (
-                            ATTESTATION_TYPE.NONE,
-                            [],
-                            credential_pub_key,
-                            cred_id,
-                            aaguid,
+                #
+                # client_data_hash is not provided, if this function is called just to
+                # parse out the attestation data, to check against WEBAUTHNACTION.REQ.
+                # In that case, this function will be called a second time later on for
+                # the actual validation of the signature.
+                if client_data_hash:
+                    try:
+                        _verify_signature(
+                            credential_public_key, alg, verification_data, signature
                         )
-                    else:
+                    except InvalidSignature:
                         raise RegistrationRejectedException(
-                            f"Unsupported algorithm ({alg})."
+                            "Invalid signature received."
                         )
+                    except NotImplementedError:  # pragma: no cover
+                        log.warning(
+                            f"Unsupported algorithm ({alg}) for signature verification"
+                        )
+                        # We do not support this algorithm. Treat as none attestation, if acceptable.
+                        if none_attestation_permitted:
+                            return (
+                                ATTESTATION_TYPE.NONE,
+                                [],
+                                credential_pub_key,
+                                cred_id,
+                                aaguid,
+                            )
+                        else:
+                            raise RegistrationRejectedException(
+                                f"Unsupported algorithm ({alg})."
+                            )
                 return (
                     ATTESTATION_TYPE.SELF_ATTESTATION,
                     [],

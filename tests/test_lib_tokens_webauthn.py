@@ -74,6 +74,7 @@ from edumfa.lib.token import check_user_pass, init_token, remove_token
 from edumfa.lib.tokens.webauthn import (
     ATTESTATION_LEVEL,
     ATTESTATION_REQUIREMENT_LEVEL,
+    ATTESTATION_TYPE,
     COSE_ALGORITHM,
     DEFAULT_CLIENT_EXTENSIONS,
     AuthenticationRejectedException,
@@ -932,6 +933,28 @@ class WebAuthnTestCase(unittest.TestCase):
                 expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
             ).verify,
         )
+
+    def test_09e_registration_self_attestation_parse_only_no_hash(self):
+        # The webauthntoken_allowed prepolicy calls
+        # verify_attestation_statement() *without* a client_data_hash, only to
+        # parse out the AAGUID / attestation certificate for policy checks. In
+        # that case the self-attestation signature must NOT be verified (there
+        # is no clientDataHash to verify against), so this must not raise.
+        # See https://github.com/eduMFA/eduMFA — self-attestation enrollments
+        # were rejected with "Invalid signature received." because the
+        # self-attestation branch unconditionally verified the signature.
+        att_obj = WebAuthnRegistrationResponse.parse_attestation_object(
+            SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"]
+        )
+        (attestation_type, trust_path, credential_pub_key, cred_id, aaguid) = (
+            WebAuthnRegistrationResponse.verify_attestation_statement(
+                fmt=att_obj.get("fmt"),
+                att_stmt=att_obj.get("attStmt"),
+                auth_data=att_obj.get("authData"),
+            )
+        )
+        self.assertEqual(ATTESTATION_TYPE.SELF_ATTESTATION, attestation_type)
+        self.assertEqual([], trust_path)
 
     def test_10_permit_windows_hello(self):
         response = WebAuthnRegistrationResponse(
