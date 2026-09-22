@@ -1393,30 +1393,33 @@ class WebAuthnRegistrationResponse:
                 # Step 2:
                 # Verify that sig is a valid signature over the concatenation of authenticatorData
                 # and clientDataHash using the credential public key with alg.
-                try:
-                    _verify_signature(
-                        credential_public_key, alg, verification_data, signature
-                    )
-                except InvalidSignature:
-                    raise RegistrationRejectedException("Invalid signature received.")
-                except NotImplementedError:  # pragma: no cover
-                    log.warning(
-                        "Unsupported algorithm ({0!s}) for signature "
-                        "verification".format(alg)
-                    )
-                    # We do not support this algorithm. Treat as none attestation, if acceptable.
-                    if none_attestation_permitted:
-                        return (
-                            ATTESTATION_TYPE.NONE,
-                            [],
-                            credential_pub_key,
-                            cred_id,
-                            aaguid,
+                # Skip signature verification only during the parse-only prepolicy pass.
+                # The subsequent verification supplies the client data hash.
+                if client_data_hash:
+                    try:
+                        _verify_signature(
+                            credential_public_key, alg, verification_data, signature
                         )
-                    else:
-                        raise RegistrationRejectedException(
-                            "Unsupported algorithm ({0!s}).".format(alg)
+                    except InvalidSignature:
+                        raise RegistrationRejectedException("Invalid signature received.")
+                    except NotImplementedError:  # pragma: no cover
+                        log.warning(
+                            "Unsupported algorithm ({0!s}) for signature "
+                            "verification".format(alg)
                         )
+                        # We do not support this algorithm. Treat as none attestation, if acceptable.
+                        if none_attestation_permitted:
+                            return (
+                                ATTESTATION_TYPE.NONE,
+                                [],
+                                credential_pub_key,
+                                cred_id,
+                                aaguid,
+                            )
+                        else:
+                            raise RegistrationRejectedException(
+                                "Unsupported algorithm ({0!s}).".format(alg)
+                            )
                 return (
                     ATTESTATION_TYPE.SELF_ATTESTATION,
                     [],
