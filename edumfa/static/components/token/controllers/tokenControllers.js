@@ -723,7 +723,7 @@ myApp.controller("tokenEnrollController", [
          */
       $scope.systemDefault = data.result.value;
       //debug: console.log("system default config");
-      //debug: console.log(systemDefault);
+      //debug: console.log($scope.systemDefault);
       // TODO: The entries should be handled automatically.
       var entries = [
         "radius.server",
@@ -752,6 +752,10 @@ myApp.controller("tokenEnrollController", [
       $scope.num_answers = $scope.systemDefault["question.num_answers"];
       //debug: console.log($scope.questions);
       //debug: console.log($scope.form);
+      // When initially opening the token enrollment page, the fields also
+      // have to be populated (with e.g. the systemDefaults) as when the
+      // selected tokentype changes.
+      $scope.changeTokenType();
     });
 
     // open the window to generate the key pair
