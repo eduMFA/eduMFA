@@ -633,6 +633,10 @@ msgstr "Parametry připojení"
 msgid "Connector name"
 msgstr "Název konektoru"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -940,8 +944,8 @@ msgid ""
 "Do you really want to delete the Token {{ tokenSerial }} from user\n"
 "            {{ token.username }}?"
 msgstr ""
-"Opravdu chcete odstranit token {{ tokenSerial }} od uživatele "
-"{{ token.username }}?"
+"Opravdu chcete odstranit token {{ tokenSerial }} od uživatele {{ token."
+"username }}?"
 
 #: components/token/views/dialog.ask_token_delete.html
 msgid "Do you really want to delete the Token {{ tokenSerial }}?"
@@ -1741,6 +1745,10 @@ msgstr ""
 msgid "Last seen:"
 msgstr "Poslední aktivita:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Licencováno pod"
@@ -1784,6 +1792,11 @@ msgstr "Zobrazit seznam tokenů"
 msgid "Loading Machines..."
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "Načítání sériových čísel..."
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1792,6 +1805,10 @@ msgstr "Načítání sériových čísel..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Načítání uživatelů..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1887,6 +1904,10 @@ msgstr "Maximální počet úspěšných autentizací"
 msgid "Method"
 msgstr "Metoda"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1899,6 +1920,10 @@ msgstr ""
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Mobil"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -1983,8 +2008,19 @@ msgstr "Nebylo nalezeno žádné sériové číslo pro jednorázový kód {{ otp
 msgid "No anonymous referral chasing"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "No data"
+msgstr "Data tokenu"
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
 msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
@@ -2243,8 +2279,8 @@ msgid ""
 "      smartphone."
 msgstr ""
 "Naskenujte QR kód aplikací eduMFA Authenticator\n"
-"            nebo klikněte na <a href=\"{{ enrolledToken.pushurl.value }}"
-"\">tento odkaz</a> ze svého\n"
+"            nebo klikněte na <a href=\"{{ enrolledToken.pushurl."
+"value }}\">tento odkaz</a> ze svého\n"
 "            chytrého telefonu."
 
 #: components/token/views/token.enrolled.push.html
@@ -2254,8 +2290,8 @@ msgid ""
 "      smartphone."
 msgstr ""
 "Naskenujte QR kód aplikací privacyIDEA Authenticator\n"
-"            nebo klikněte na <a href=\"{{ enrolledToken.pushurl.value }}"
-"\">tento odkaz</a> ze svého\n"
+"            nebo klikněte na <a href=\"{{ enrolledToken.pushurl."
+"value }}\">tento odkaz</a> ze svého\n"
 "            chytrého telefonu."
 
 #: components/token/views/token.enrolled.daypassword.html
@@ -3044,6 +3080,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr "StartTLS"
 
+#: components/dashboard/views/dashboard.html
+msgid "StatsKeys:"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Přihlášení bylo úspěšné."
@@ -3494,8 +3534,8 @@ msgstr ""
 #: components/config/views/config.token.yubikey.html
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3776,17 +3816,17 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "Token byl úspěšně přidán se sériovým číslem\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>\n"
 "            pro uživatele\n"
-"            <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a> v doméně\n"
+"            <a ui-sref=\"user.details({username:newUser.user, realmname:"
+"newUser.realm})\">{{ newUser.user }}</a> v doméně\n"
 "            {{ newUser.realm }}."
 
 #: components/token/views/token.enroll.html
@@ -3796,8 +3836,8 @@ msgid ""
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
 "Token byl úspěšně přidán se sériovým číslem\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>."
 
 #: components/config/views/config.token.webauthn.html
@@ -4030,6 +4070,10 @@ msgstr ""
 
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "TimeFrame:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html
@@ -4697,8 +4741,8 @@ msgstr ""
 #: templates/menu.html
 #, fuzzy
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA je spuštěna v režimu ladění. Úroveň ladění můžete změnit v souboru\n"
 "    edumfa.cfg."

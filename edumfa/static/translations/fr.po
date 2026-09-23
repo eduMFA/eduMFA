@@ -664,6 +664,10 @@ msgstr "Paramètres de connexion"
 msgid "Connector name"
 msgstr "Nom du connecteur"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -1785,6 +1789,10 @@ msgstr "Dernière mise à jour de définition"
 msgid "Last seen:"
 msgstr "Vu pour la dernière fois :"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Sous licence"
@@ -1829,6 +1837,11 @@ msgstr "Lister les jetons"
 msgid "Loading Machines..."
 msgstr "Chargement des machines…"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "Chargement des numéros de série…"
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1837,6 +1850,10 @@ msgstr "Chargement des numéros de série…"
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Chargement des utilisateurs…"
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1931,6 +1948,10 @@ msgstr ""
 msgid "Method"
 msgstr "Méthode"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1943,6 +1964,10 @@ msgstr ""
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Mobile"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2028,9 +2053,20 @@ msgstr "Aucun numéro de série n'a été trouvé pour le token {{ otp }}."
 msgid "No anonymous referral chasing"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "No data"
+msgstr "Informations du jeton"
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Aucune machine trouvée"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -3088,6 +3124,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "StatsKeys:"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Authentification réussie."
@@ -3516,8 +3556,8 @@ msgstr ""
 #: components/config/views/config.token.yubikey.html
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3680,16 +3720,16 @@ msgid ""
 "The resource name must consist of letters, numbers and '_', '-', '.' and "
 "must not be the word 'send_test_email'"
 msgstr ""
-"Le nom de la ressource ne doit comporter que des lettres, des chiffres et "
-"« _ », « - », « . » et ne doit pas être égal à « send_test_email »"
+"Le nom de la ressource ne doit comporter que des lettres, des chiffres et « "
+"_ », « - », « . » et ne doit pas être égal à « send_test_email »"
 
 #: app.js
 msgid ""
 "The resource name must consist of letters, numbers and '_', '-', '.' and "
 "must not be the word 'test'"
 msgstr ""
-"Le nom de la ressource ne doit comporter que des lettres, des chiffres et "
-"« _ », « - », « . » et ne doit pas être égal à « test »"
+"Le nom de la ressource ne doit comporter que des lettres, des chiffres et « "
+"_ », « - », « . » et ne doit pas être égal à « test »"
 
 #: app.js
 msgid ""
@@ -3794,17 +3834,17 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "Le jeton a été enrôlé avec le numéro de série suivant\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>\n"
 "            pour l'utilisateur\n"
-"            <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a> dans le royaume\n"
+"            <a ui-sref=\"user.details({username:newUser.user, realmname:"
+"newUser.realm})\">{{ newUser.user }}</a> dans le royaume\n"
 "            {{ newUser.realm }}."
 
 #: components/token/views/token.enroll.html
@@ -3814,8 +3854,8 @@ msgid ""
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
 "Le jeton a été enrôlé avec le numéro de série\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>."
 
 #: components/config/views/config.token.webauthn.html
@@ -4040,6 +4080,10 @@ msgstr ""
 
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "TimeFrame:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html
@@ -4667,8 +4711,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 
 #: components/audit/views/audit.log.html

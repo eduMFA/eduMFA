@@ -659,6 +659,10 @@ msgstr "Verbindungsparameter"
 msgid "Connector name"
 msgstr "Konnektorname"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -973,8 +977,8 @@ msgid ""
 "Do you really want to delete the Token {{ tokenSerial }} from user\n"
 "            {{ token.username }}?"
 msgstr ""
-"Wollen Sie wirklich den Token {{ tokenSerial }} des Benutzers "
-"{{ token.username }} löschen?"
+"Wollen Sie wirklich den Token {{ tokenSerial }} des Benutzers {{ token."
+"username }} löschen?"
 
 #: components/token/views/dialog.ask_token_delete.html
 msgid "Do you really want to delete the Token {{ tokenSerial }}?"
@@ -1356,26 +1360,24 @@ msgid ""
 "For SMS tokens to work properly you need to set the\n"
 "  <a ui-sref=\"config.tokens({tokentype:'sms'})\">SMS Token Config</a>!"
 msgstr ""
-"Damit SMS-Token richtig funktionieren, müssen Sie die  <a ui-"
-"sref=\"config.tokens({tokentype:'sms'})\">SMS-Token Konfiguration</a> setzen!"
+"Damit SMS-Token richtig funktionieren, müssen Sie die  <a ui-sref=\"config."
+"tokens({tokentype:'sms'})\">SMS-Token Konfiguration</a> setzen!"
 
 #: components/token/views/token.enroll.tiqr.html
 msgid ""
 "For TiQR tokens to work properly you need to set the\n"
 "  <a ui-sref=\"config.tokens({tokentype:'tiqr'})\">TiQR Token Config</a>!"
 msgstr ""
-"Damit TiQR-Token richtig funktionieren, müssen Sie die  <a ui-"
-"sref=\"config.tokens({tokentype:'tiqr'})\">TiQR-Token Konfiguration</a> "
-"setzen!"
+"Damit TiQR-Token richtig funktionieren, müssen Sie die  <a ui-sref=\"config."
+"tokens({tokentype:'tiqr'})\">TiQR-Token Konfiguration</a> setzen!"
 
 #: components/token/views/token.enroll.yubico.html
 msgid ""
 "For Yubico tokens to work properly you need to set the\n"
 "  <a ui-sref=\"config.tokens({tokentype:'yubico'})\">Yubico Token Config</a>!"
 msgstr ""
-"Damit Yubico-Token richtig funktionieren, müssen Sie die <a ui-"
-"sref=\"config.tokens({tokentype:'yubico'})\">Yubico-Token Konfiguration</a> "
-"setzen!"
+"Damit Yubico-Token richtig funktionieren, müssen Sie die <a ui-sref=\"config."
+"tokens({tokentype:'yubico'})\">Yubico-Token Konfiguration</a> setzen!"
 
 #: components/token/views/token.enroll.edupush.html
 #: components/token/views/token.enroll.push.html
@@ -1798,6 +1800,10 @@ msgstr "Letzte Aktualisierung der Definition"
 msgid "Last seen:"
 msgstr "Zuletzt gesehen:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Lizenziert unter"
@@ -1838,6 +1844,11 @@ msgstr "Tokenliste anzeigen"
 msgid "Loading Machines..."
 msgstr "Lade Maschinen..."
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "Laden Seriennummern..."
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1846,6 +1857,10 @@ msgstr "Laden Seriennummern..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Lade Benutzer..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1938,6 +1953,10 @@ msgstr "Maximale erfolgreiche Authentisierungen"
 msgid "Method"
 msgstr "Methode"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr "Hostname des Microsoft CA-Workers"
@@ -1950,6 +1969,10 @@ msgstr "Port für Microsoft CA-Worker"
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Mobiltelefon"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2034,9 +2057,20 @@ msgstr "Zu dem OTP-Wert {{ otp }} konnte keine Seriennummer gefunden werden."
 msgid "No anonymous referral chasing"
 msgstr "Referrals werden nicht (anonym) verfolgt"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "No data"
+msgstr "Tokendaten"
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Keine Maschine gefunen"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -2310,8 +2344,8 @@ msgid ""
 "      smartphone."
 msgstr ""
 "Bitte scannen Sie den QR-Code mit der eingeschränkt unterstützten "
-"PrivacyIDEA Authenticator-App oder klicken Sie <a "
-"href=\"{{ enrolledToken.pushurl.value }}\">den Link</a> auf Ihrem Smartphone."
+"PrivacyIDEA Authenticator-App oder klicken Sie <a href=\"{{ enrolledToken."
+"pushurl.value }}\">den Link</a> auf Ihrem Smartphone."
 
 #: components/token/views/token.enrolled.daypassword.html
 #: components/token/views/token.enrolled.hotp.html
@@ -3124,6 +3158,11 @@ msgstr "Spezielle Fehlerbehandlung"
 msgid "StartTLS"
 msgstr "StartTLS"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "StatsKeys:"
+msgstr "Statistik"
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Erfolgreich authentisiert."
@@ -3643,8 +3682,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3652,11 +3691,11 @@ msgid ""
 "target=\"_blank\">\n"
 "    Yubico Validation Protocol</a>."
 msgstr ""
-"Die Authentifizierung kann von der normalen eduMFA <a href=\"http://"
-"edumfa.readthedocs.org/en/latest/modules/api/validate.html\" "
-"target=\"_blank\">validate API</a> aber auch vom <a href=\"http://"
-"edumfa.readthedocs.org/en/latest/modules/lib/tokentypes/"
-"yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\" "
+"Die Authentifizierung kann von der normalen eduMFA <a href=\"http://edumfa."
+"readthedocs.org/en/latest/modules/api/validate.html\" "
+"target=\"_blank\">validate API</a> aber auch vom <a href=\"http://edumfa."
+"readthedocs.org/en/latest/modules/lib/tokentypes/yubikey.html#edumfa.lib."
+"tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\" "
 "target=\"_blank\">Yubico Validation Protokoll</a> durchgeführt werden."
 
 #: components/config/views/config.token.yubico.html
@@ -3892,9 +3931,8 @@ msgid ""
 "    <a ui-sref=\"token.details({tokenSerial:lostResult.serial})\">\n"
 "      {{ lostResult.serial }}</a>."
 msgstr ""
-"Die Seriennummer des neuen Tokens ist <a ui-"
-"sref=\"token.details({tokenSerial:lostResult.serial})"
-"\">{{ lostResult.serial }}</a>."
+"Die Seriennummer des neuen Tokens ist <a ui-sref=\"token."
+"details({tokenSerial:lostResult.serial})\">{{ lostResult.serial }}</a>."
 
 #: components/token/views/token.enroll.hotp.html
 #: components/token/views/token.enroll.totp.html
@@ -3984,15 +4022,15 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
-"Der Token mit der Seriennummer <a ui-"
-"sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">{{ enrolledToken.serial }}</a> wurde erfolgreich für den Benutzer\n"
-"<a ui-sref=\"user.details({username:newUser.user, realmname:newUser.realm})"
-"\">{{ newUser.user }}</a> in Realm {{ newUser.realm }} ausgerollt."
+"Der Token mit der Seriennummer <a ui-sref=\"token.details({tokenSerial:"
+"enrolledToken.serial})\">{{ enrolledToken.serial }}</a> wurde erfolgreich "
+"für den Benutzer\n"
+"<a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a> in Realm {{ newUser.realm }} ausgerollt."
 
 #: components/token/views/token.enroll.html
 msgid ""
@@ -4000,9 +4038,9 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
-"Der Token mit der Seriennummer  <a ui-"
-"sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">{{ enrolledToken.serial }}</a>  wurde erfolgreich ausgerollt."
+"Der Token mit der Seriennummer  <a ui-sref=\"token.details({tokenSerial:"
+"enrolledToken.serial})\">{{ enrolledToken.serial }}</a>  wurde erfolgreich "
+"ausgerollt."
 
 #: components/config/views/config.token.webauthn.html
 msgid "The trust_anchor_dir must be an absolute path."
@@ -4278,6 +4316,10 @@ msgstr "TiQR Dienste ID"
 msgid "TiQR Token settings"
 msgstr "TiQR Token Einstellungen"
 
+#: components/dashboard/views/dashboard.html
+msgid "TimeFrame:"
+msgstr ""
+
 #: components/config/views/config.radius.edit.html
 #: components/config/views/config.smtp.edit.html
 msgid "Timeout"
@@ -4302,17 +4344,16 @@ msgid ""
 "To define service IDs go to\n"
 "    <a ui-sref=\"config.serviceid\">Service ID config</a>"
 msgstr ""
-"Um eine Dienste-Kennzeichnung zu erstellen gehen Sie zu <a ui-"
-"sref=\"config.serviceid\">Dienste-Kennzeichnungen Konfiguration</a>"
+"Um eine Dienste-Kennzeichnung zu erstellen gehen Sie zu <a ui-sref=\"config."
+"serviceid\">Dienste-Kennzeichnungen Konfiguration</a>"
 
 #: components/token/views/token.enroll.radius.html
 msgid ""
 "To ease the enrolling of RADIUS tokens you can set default values in the\n"
 "  <a ui-sref=\"config.tokens({tokentype:'radius'})\">RADIUS Token Config</a>."
 msgstr ""
-"Um RADIUS Token leichter auszurollen, können Sie die    <a ui-"
-"sref=\"config.tokens({tokentype:'radius'})\">RADIUS Token Konfiguration</a> "
-"setzen."
+"Um RADIUS Token leichter auszurollen, können Sie die    <a ui-sref=\"config."
+"tokens({tokentype:'radius'})\">RADIUS Token Konfiguration</a> setzen."
 
 #: components/token/views/token.html
 msgid "Token Applications"
@@ -4729,8 +4770,8 @@ msgid ""
 msgstr ""
 "Sie haben keine editierbaren Resolver definiert. Daher können Sie in keine "
 "Benutzer-Quelle schreiben. \n"
-"Wenn Sie Benutzer hinzufügen wollen, müssen Sie einen <a ui-"
-"sref=\"config.resolvers.list\">editierbaren Resolver definieren</a> \n"
+"Wenn Sie Benutzer hinzufügen wollen, müssen Sie einen <a ui-sref=\"config."
+"resolvers.list\">editierbaren Resolver definieren</a> \n"
 "(bpsw. SQLResolver) und die Checkbox \"Benutzerquelle editierbar\" anhaken."
 
 #: components/token/views/token.enrolled.registration.html
@@ -4957,8 +4998,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA läuft im DEBUG-Modus. Sie können dies wieder in edumfa.cfg ändern."
 
@@ -5301,8 +5342,8 @@ msgstr "Es wurden {{ auditdata.count }} Einträge gefunden."
 #~ msgstr ""
 #~ "Ihre Subskription ist nicht mehr gültig. Entweder haben Sie die Anzahl "
 #~ "der erlaubten Token überschritten oder Ihre Subskription ist abgelaufen. "
-#~ "Bitte überprüfen Sie, ob Sie Ihre <a ui-"
-#~ "sref=\"component.subscriptions\">Subskription</a> erneuern müssen."
+#~ "Bitte überprüfen Sie, ob Sie Ihre <a ui-sref=\"component."
+#~ "subscriptions\">Subskription</a> erneuern müssen."
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "aktive, zugewiesene Token"
@@ -5538,9 +5579,6 @@ msgstr "Es wurden {{ auditdata.count }} Einträge gefunden."
 #~ msgid "Run statistics for the last number of days..."
 #~ msgstr "Statistik für die zurückliegenden Tage..."
 
-#~ msgid "Statistics"
-#~ msgstr "Statistik"
-
 #~ msgid "Statistics end time"
 #~ msgstr "Statistik bis"
 
@@ -5608,9 +5646,8 @@ msgstr "Es wurden {{ auditdata.count }} Einträge gefunden."
 #~ "werden.</p>\n"
 #~ "<p>Mittels Richtlinien kann der Administrator das Verhalten von eduMFA "
 #~ "bestimmen.\n"
-#~ "Mehr zu Richtlinie erfahren Sie in der <a href=\"http://"
-#~ "edumfa.readthedocs.io/en/latest/policies/index.html\" "
-#~ "target=\"policy\">Online\n"
+#~ "Mehr zu Richtlinie erfahren Sie in der <a href=\"http://edumfa."
+#~ "readthedocs.io/en/latest/policies/index.html\" target=\"policy\">Online\n"
 #~ "Dokumentation</a>.</p>"
 
 #~ msgid ""

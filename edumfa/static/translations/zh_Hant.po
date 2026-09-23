@@ -670,6 +670,10 @@ msgstr "連接參數"
 msgid "Connector name"
 msgstr "連接器名稱"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -1821,6 +1825,10 @@ msgstr "上次定義更新"
 msgid "Last seen:"
 msgstr "上次檢視時間："
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "許可依據"
@@ -1865,6 +1873,11 @@ msgstr "列出令牌"
 msgid "Loading Machines..."
 msgstr "載入機器..."
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "載入連續出版物..."
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1873,6 +1886,10 @@ msgstr "載入連續出版物..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "載入使用者..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 #, fuzzy
@@ -1972,6 +1989,10 @@ msgstr "最大成功身份驗證計數"
 msgid "Method"
 msgstr "方法"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1985,6 +2006,10 @@ msgstr ""
 #, fuzzy
 msgid "Mobile"
 msgstr "手機"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2075,9 +2100,20 @@ msgstr "找不到 OTP 值 {{ otp }} 的序列號。"
 msgid "No anonymous referral chasing"
 msgstr "沒有匿名推薦追逐"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "No data"
+msgstr "令牌數據"
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "未找到電腦"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -3176,6 +3212,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "StatsKeys:"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "已成功通過身份驗證。"
@@ -3686,8 +3726,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3696,11 +3736,12 @@ msgid ""
 "    Yubico Validation Protocol</a>."
 msgstr ""
 "認證請求可以由默認的eduMFA處理\n"
-"    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/api/"
-"validate.html\">\n"
+"    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/api/validate."
+"html\">\n"
 "        驗證 API</a> 但也可以由\n"
 "    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/lib/tokentypes/"
-"yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\">\n"
+"yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass."
+"api_endpoint\">\n"
 "        Yubico 驗證協議 </a>。"
 
 #: components/config/views/config.token.yubico.html
@@ -4027,17 +4068,17 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "令牌已成功註冊序列號\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ 已註冊的令牌.serial }}</a>\n"
 "            對於使用者\n"
-"            <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a> 在領域\n"
+"            <a ui-sref=\"user.details({username:newUser.user, realmname:"
+"newUser.realm})\">{{ newUser.user }}</a> 在領域\n"
 "            {{ newUser.realm }}."
 
 #: components/token/views/token.enroll.html
@@ -4047,8 +4088,8 @@ msgid ""
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
 "使用序列號成功註冊令牌\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{enrolledToken.serial }}</a>。"
 
 #: components/config/views/config.token.webauthn.html
@@ -4344,6 +4385,10 @@ msgstr ""
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
 msgstr "TiQR 令牌設置"
+
+#: components/dashboard/views/dashboard.html
+msgid "TimeFrame:"
+msgstr ""
 
 #: components/config/views/config.radius.edit.html
 #: components/config/views/config.smtp.edit.html
@@ -5034,8 +5079,8 @@ msgstr ""
 #: templates/menu.html
 #, fuzzy
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA 在調試模式下運行。您可以在 中更改除錯級別\n"
 "    配置文件。"

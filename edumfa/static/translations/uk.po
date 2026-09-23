@@ -681,6 +681,10 @@ msgstr "Параметри підключення"
 msgid "Connector name"
 msgstr "Назва з'єднувача"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -993,8 +997,8 @@ msgid ""
 "Do you really want to delete the Token {{ tokenSerial }} from user\n"
 "            {{ token.username }}?"
 msgstr ""
-"Ви дійсно хочете видалити токен {{tokenSerial}} для користувача "
-"{{token.username}}?"
+"Ви дійсно хочете видалити токен {{tokenSerial}} для користувача {{token."
+"username}}?"
 
 #: components/token/views/dialog.ask_token_delete.html
 msgid "Do you really want to delete the Token {{ tokenSerial }}?"
@@ -1840,6 +1844,10 @@ msgstr "Останнє оновлення визначень"
 msgid "Last seen:"
 msgstr "Востаннє бачили:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Ліцензовано під"
@@ -1884,6 +1892,11 @@ msgstr "Перелік токенів"
 msgid "Loading Machines..."
 msgstr "Завантаження комп'ютерів..."
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "Завантаження серійних номерів..."
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1892,6 +1905,10 @@ msgstr "Завантаження серійних номерів..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Завантаження користувачів..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1989,6 +2006,10 @@ msgstr "Максимальна кількість успішних автент�
 msgid "Method"
 msgstr "Метод"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -2001,6 +2022,10 @@ msgstr ""
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Мобільний"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2086,9 +2111,19 @@ msgstr "Не вдалося знайти серійний номер для зн
 msgid "No anonymous referral chasing"
 msgstr "Немає анонімного переходу за посиланнями"
 
+#: components/dashboard/views/dashboard.html
+msgid "No data"
+msgstr ""
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Комп'ютер не знайдено"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -3139,6 +3174,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "StatsKeys:"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr ""
@@ -3542,8 +3581,8 @@ msgstr ""
 #: components/config/views/config.token.yubikey.html
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3798,8 +3837,8 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 
@@ -4028,6 +4067,10 @@ msgstr ""
 
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "TimeFrame:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html
@@ -4651,8 +4694,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 
 #: components/audit/views/audit.log.html
