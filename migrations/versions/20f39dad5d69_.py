@@ -1,8 +1,8 @@
-"""v3.12: Add column 'handle_missing_data' to the policycondition table
+"""Add column 'handle_missing_data' to the policycondition table
 
 
-Revision ID: 5f40baab76ca
-Revises: 903a6ed6f6c4
+Revision ID: 20f39dad5d69
+Revises: 1b2262ddbf6b
 Create Date: 2025-04-04 09:57:56.313709
 
 """
@@ -12,8 +12,8 @@ from alembic import op
 from sqlalchemy.exc import OperationalError, ProgrammingError
 
 # revision identifiers, used by Alembic.
-revision = "5f40baab76ca"
-down_revision = "903a6ed6f6c4"
+revision = "20f39dad5d69"
+down_revision = "1b2262ddbf6b"
 
 
 def upgrade():
