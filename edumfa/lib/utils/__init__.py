@@ -5,6 +5,8 @@
 # Previous authors by privacyIDEA project:
 #
 # 2015 - 2017 Cornelius Kölbel <cornelius.koelbel@netknights.it>
+# 2025 Daniel Valencia <daniel.valencia@pal-robotics.com>
+#      Add WebAuthn offline authentication support (ported from privacyIDEA PR #3874)
 #
 # This code is free software; you can redistribute it and/or
 # modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -1584,3 +1586,47 @@ def convert_imagefile_to_dataimage(imagepath):
     except FileNotFoundError:
         log.warning(f"The file {imagepath} could not be found.")
         return ""
+
+
+def get_computer_name_from_user_agent(user_agent):
+    """
+    Searches for entries in the user agent that could identify the machine.
+    Example: ComputerName/Laptop-3324231
+
+    The following keys are searched for in the user agent by default:
+    ["ComputerName", "Hostname", "MachineName", "Windows", "Linux", "Mac"]
+    The list can be extended with custom keys in edumfa.cfg with the entry
+    OFFLINE_MACHINE_KEYS = ["CustomKey1", ...]
+
+    This is required for offline WebAuthn tokens, since the same token (e.g. a
+    security key) can be enrolled for offline use on multiple machines and each
+    machine needs its own refill token.
+
+    :param user_agent: The user agent string sent by the client
+    :type user_agent: str or None
+    :return: The computer name or None if no matching key was found
+    :rtype: str or None
+    """
+    from edumfa.lib.framework import get_app_config_value
+
+    if not user_agent:
+        log.warning("No user agent provided to extract computer name from.")
+        return None
+    # Do not convert to set, the order of the keys should be preserved and
+    # iteration should be deterministic
+    keys = ["ComputerName", "Hostname", "MachineName", "Windows", "Linux", "Mac"]
+    try:
+        config_keys = get_app_config_value("OFFLINE_MACHINE_KEYS", []) or []
+    except RuntimeError:
+        # Called outside an application context: only use the default keys
+        config_keys = []
+    keys.extend([key for key in config_keys if key not in keys])
+    log.debug(f"Keys to search for machine name in user agent: {keys}")
+    for key in keys:
+        if key in user_agent:
+            try:
+                return user_agent.split(key + "/")[1].split(" ")[0]
+            except Exception:
+                # Likely to happen, because parts like "Mac" are common
+                pass
+    return None
