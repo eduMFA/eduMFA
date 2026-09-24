@@ -20,13 +20,16 @@ unset_sites () {
 
 unset_sites "$1"
 
-# Remove the symbolic link to edumfa-manage
+# Remove the symbolic links to the edumfa scripts
 if [ -L /usr/local/bin/edumfa-manage ]; then
   rm -f /usr/local/bin/edumfa-manage
   rm -f /usr/bin/edumfa-manage
   rm -f /usr/bin/edumfa-diag
   rm -f /usr/bin/edumfa-token-janitor
 fi
+
+# Remove bash completion
+rm -f /etc/bash_completion.d/edumfa-manage-prompt
 
 #DEBHELPER#
 exit 0
