@@ -158,12 +158,16 @@ class FirebaseProvider(ISMSProvider):
                             },
                             "sound": "default",
                             "category": "PUSH_AUTHENTICATION",
-                        },
-                    },
-                    "fcm_options": {"analytics_label": "iOSPushToken"},
-                },
-            }
-        }
+                            "content-available" : 1,
+                            "interruption-level":"time-sensitive"
+                             },
+                         },
+                             "fcm_options": {"analytics_label": "iOSPushToken"}
+                             },
+                       }
+                   }
+
+                 
 
         proxies = {}
         if self.smsgateway.option_dict.get(FIREBASE_CONFIG.HTTPS_PROXY):
