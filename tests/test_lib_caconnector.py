@@ -732,13 +732,7 @@ class CreateLocalCATestCase(MyTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        filelist = glob.glob(f"{WORKINGDIR}2/*")
-        for f in filelist:
-            try:
-                os.remove(f)
-            except OSError:
-                print(f"Error deleting file {f}.")
-        os.rmdir(f"{WORKINGDIR}2")
+        shutil.rmtree(f"{WORKINGDIR}2/")
         super().tearDownClass()
 
     def test_01_create_ca(self):
