@@ -78,7 +78,7 @@ HOTP token, the OTP will not validate. It also has a version for iOS.
 on the concept of the Google Authenticator and works with the usual QR Code
 enrollment. But on top it also allows for a two step enrollment process (See
 :ref:`2step_enrollment`).
-It can be used for :ref:`hotp_token`, :ref:`totp_token`, :ref:`edupush_token` and :ref:`push_token`.
+It can be used for :ref:`hotp_token` and :ref:`totp_token`.
 
 
 .. _testing websites: https://www.passkeys.io/
