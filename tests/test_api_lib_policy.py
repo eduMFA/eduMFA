@@ -194,7 +194,12 @@ tA==
 
 
 class PrePolicyDecoratorTestCase(MyApiTestCase):
-    def test_01_check_token_action(self):
+    def setUp(self):
+        self.setUp_user_realms()
+        self.setUp_user_realm2()
+        self.setUp_user_realm3()
+
+    def test_01_check_base_action(self):
         g.logged_in_user = {"username": "admin1", "realm": "", "role": "admin"}
         builder = EnvironBuilder(
             method="POST", data={"serial": "OATH123456"}, headers={}
@@ -208,7 +213,9 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req.User = User()
 
         # Set a policy, that does allow the action
-        set_policy(name="pol1", scope=SCOPE.ADMIN, action="enable", client="10.0.0.0/8")
+        set_policy(
+            name="pol1", scope=SCOPE.ADMIN, action=ACTION.ENABLE, client="10.0.0.0/8"
+        )
         g.policy_object = PolicyClass()
 
         # Action enable is cool
@@ -226,32 +233,24 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         set_policy(
             name="pol1",
             scope=SCOPE.ADMIN,
-            action="enable",
+            action=ACTION.ENABLE,
             client="10.0.0.0/8",
-            realm="realm1",
+            realm=self.realm1,
         )
         set_policy(
             name="pol2",
             scope=SCOPE.ADMIN,
             action="*",
             client="10.0.0.0/8",
-            realm="realm2",
+            realm=self.realm2,
         )
         g.policy_object = PolicyClass()
         # set a polrealm1 and a polrealm2
-        # setup realm1
-        self.setUp_user_realms()
-        # setup realm2
-        self.setUp_user_realm2()
-        tokenobject = init_token(
-            {"serial": "POL001", "type": "hotp", "otpkey": "1234567890123456"}
-        )
-        r = set_realms("POL001", [self.realm1])
+        init_token({"serial": "POL001", "type": "hotp", "otpkey": "1234567890123456"})
+        set_realms("POL001", [self.realm1])
 
-        tokenobject = init_token(
-            {"serial": "POL002", "type": "hotp", "otpkey": "1234567890123456"}
-        )
-        r = set_realms("POL002", [self.realm2])
+        init_token({"serial": "POL002", "type": "hotp", "otpkey": "1234567890123456"})
+        set_realms("POL002", [self.realm2])
 
         # Token in realm1 can not be deleted
         req.all_data = {"serial": "POL001"}
@@ -272,11 +271,11 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         remove_token("POL002")
 
     def test_01a_admin_realms(self):
-        admin1 = {"username": "admin1", "role": "admin", "realm": "realm1"}
+        admin1 = {"username": "admin1", "role": "admin", "realm": "adminrealm"}
 
         admin2 = {"username": "admin1", "role": "admin", "realm": "realm2"}
 
-        set_policy(name="pol", scope=SCOPE.ADMIN, action="*", adminrealm="realm1")
+        set_policy(name="pol", scope=SCOPE.ADMIN, action="*", adminrealm="adminrealm")
         g.policy_object = PolicyClass()
         builder = EnvironBuilder(
             method="POST", data={"serial": "OATH123456"}, headers={}
@@ -398,8 +397,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         )
         g.policy_object = PolicyClass()
         # The user has one token, everything is fine.
-        self.setUp_user_realms()
-        tokenobject = init_token(
+        init_token(
             {"serial": "NEW001", "type": "hotp", "otpkey": "1234567890123456"},
             user=User(login="cornelius", realm=self.realm1),
         )
@@ -487,7 +485,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         g.policy_object = PolicyClass()
         # The user has one token, everything is fine.
         self.setUp_user_realms()
-        tokenobject = init_token(
+        init_token(
             {"serial": "NEW001", "type": "hotp", "otpkey": "1234567890123456"},
             user=User(login="cornelius", realm=self.realm1),
         )
@@ -496,7 +494,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(check_max_token_user(req))
 
         # Now the user gets his second token
-        tokenobject = init_token(
+        init_token(
             {"serial": "NEW002", "type": "hotp", "otpkey": "1234567890123456"},
             user=User(login="cornelius", realm=self.realm1),
         )
@@ -562,7 +560,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         req.all_data = {"user": "cornelius", "realm": self.realm1, "serial": "NEW002"}
         self.assertTrue(check_max_token_user(req))
 
-        # and we succeed in issuing a new totp token
+        # and we succeed in issueing a new totp token
         req.all_data = {
             "user": "cornelius",
             "realm": self.realm1,
@@ -596,11 +594,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             realm=self.realm1,
         )
         g.policy_object = PolicyClass()
-        self.setUp_user_realms()
         # Add the first token into the realm
-        tokenobject = init_token(
-            {"serial": "NEW001", "type": "hotp", "otpkey": "1234567890123456"}
-        )
+        init_token({"serial": "NEW001", "type": "hotp", "otpkey": "1234567890123456"})
         set_realms("NEW001", [self.realm1])
         # check the realm, only one token is in it the policy condition will
         # pass
@@ -609,9 +604,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertTrue(check_max_token_realm(req))
 
         # add a second token to the realm
-        tokenobject = init_token(
-            {"serial": "NEW002", "type": "hotp", "otpkey": "1234567890123456"}
-        )
+        init_token({"serial": "NEW002", "type": "hotp", "otpkey": "1234567890123456"})
         set_realms("NEW002", [self.realm1])
         tokenobject_list = get_tokens(realm=self.realm1)
         self.assertTrue(len(tokenobject_list) == 2)
@@ -644,7 +637,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             name="pol1",
             scope=SCOPE.AUTHZ,
             action=f"{ACTION.SETREALM}={self.realm1}",
-            realm="somerealm",
+            realm=self.realm2,
         )
         g.policy_object = PolicyClass()
 
@@ -656,7 +649,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(req.all_data.get("realm"), None)
 
         req.all_data = {}
-        req.User = User(login="cornelius", realm="somerealm")
+        req.User = User(login="cornelius", realm=self.realm2)
         set_realm(req)
         # Check, if the realm was modified to the realm specified in the policy
         self.assertEqual(req.all_data.get("realm"), self.realm1)
@@ -673,12 +666,12 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             name="pol2",
             scope=SCOPE.AUTHZ,
             action=f"{ACTION.SETREALM}=ConflictRealm",
-            realm="somerealm",
+            realm=self.realm2,
         )
         g.policy_object = PolicyClass()
         # This request will trigger two policies with different realms to set
-        req.all_data = {"realm": "somerealm"}
-        req.User = User(login="cornelius", realm="somerealm")
+        req.all_data = {"realm": self.realm2}
+        req.User = User(login="cornelius", realm=self.realm2)
         self.assertRaises(PolicyError, set_realm, req)
 
         # finally delete policy
@@ -868,7 +861,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         policies = ["+cn", "+c", "+cs"]
         for policy in policies:
-            required = ["".join([CHARLIST_CONTENTPOLICY[str] for str in policy[1:]])]
+            required = ["".join([CHARLIST_CONTENTPOLICY[c] for c in policy[1:]])]
             charlists_dict = generate_charlists_from_pin_policy(policy)
             self.assertEqual(
                 charlists_dict, {"base": default_chars, "requirements": required}
@@ -886,7 +879,7 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
 
         policies = ["cn", "c", "sc"]
         for policy in policies:
-            required = [CHARLIST_CONTENTPOLICY[str] for str in policy[:]]
+            required = [CHARLIST_CONTENTPOLICY[c] for c in policy]
             charlists_dict = generate_charlists_from_pin_policy(policy)
             self.assertEqual(
                 charlists_dict, {"base": default_chars, "requirements": required}
@@ -1472,8 +1465,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "action": ["loginmode=eduMFA"],
             "active": True,
             "client": [],
-            "realm": ["realmB"],
-            "resolver": ["resolverB"],
+            "realm": [self.realm3],
+            "resolver": [self.resolvername3],
             "time": "",
             "user": [],
         }
@@ -1499,8 +1492,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "mresolverwrite, losttoken, enrollSSHKEY, "
             "importtokens, assign, delete",
             adminuser="admin[aA]",
-            realm="realmA, realmB",
-            resolver="resolverA, resolverB",
+            realm=f"{self.realm1}, {self.realm3}",
+            resolver=f"{self.resolvername1}, {self.resolvername3}",
         )
         set_policy(
             "polAdminB",
@@ -1510,8 +1503,8 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             "enrollREGISTRATION, updateuser, enable, userlist, "
             "getserial, disable, reset, getchallenges, losttoken,"
             " assign, delete ",
-            realm="realmB",
-            resolver="resolverB",
+            realm=self.realm3,
+            resolver=self.resolvername3,
             adminuser="adminB",
         )
         g.policy_object = PolicyClass()
@@ -1544,22 +1537,22 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
             scope=SCOPE.ADMIN,
             action="adduser",
             adminuser="adminA",
-            realm="realmA",
-            resolver="resolverA",
+            realm=self.realm1,
+            resolver=self.resolvername1,
         )
         builder = EnvironBuilder(method="POST")
         env = builder.get_environ()
         # Set the remote address so that we can filter for it
         req = Request(env)
         req.User = User()
-        req.all_data = {"user": "new_user", "resolver": "resolverA"}
+        req.all_data = {"user": "new_user", "resolver": self.resolvername1}
         g.policy_object = PolicyClass()
         g.logged_in_user = {"username": "adminA", "role": "admin", "realm": ""}
         # User can be added
         r = check_base_action(req, action=ACTION.ADDUSER)
         self.assertEqual(r, True)
 
-        req.all_data = {"user": "new_user", "resolver": "resolverB"}
+        req.all_data = {"user": "new_user", "resolver": self.resolvername3}
 
         # User can not be added in a different resolver
         self.assertRaises(PolicyError, check_base_action, req, action=ACTION.ADDUSER)
@@ -3880,6 +3873,8 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         delete_policy("pol2")
 
     def test_04_add_user_in_response(self):
+        self.setUp_user_realms()
+        self.setUp_user_realm2()
         builder = EnvironBuilder(
             method="POST", data={"user": "cornelius", "pass": "test"}, headers={}
         )
@@ -3888,12 +3883,14 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         env["REMOTE_ADDR"] = "10.0.0.1"
         g.client_ip = env["REMOTE_ADDR"]
         req = Request(env)
-        self.setUp_user_realms()
         req.User = User("autoassignuser", self.realm1)
-        # The response contains the token type SPASS
+        # The response contains the token type SPASS and result->authentication set to ACCEPT
         res = {
             "jsonrpc": "2.0",
-            "result": {"status": True, "value": True},
+            "result": {
+                "status": True,
+                "value": True,
+            },
             "version": "eduMFA test",
             "id": 1,
             "detail": {
@@ -4370,41 +4367,11 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
         self.assertEqual(
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG"
-            "aAQAAAAAefbjOAAACFElEQVR42u1cS07FMBCL6AFypHd1jtQDVJrX"
-            "zD+FBbBDdhZPbVpviOV4nClDfj8+B0EEEUQQQQQRRFCAho/jnpnrd"
-            "uozHyJnXL4U9DH+MAj6HyBnhK60nIeRwVd/3eaD9h4ZgcCI0ylwa8"
-            "TlUiByX4371qkyDjICkBF9w1Bu1AMyAlMjljKYKKw5lQxqBLSPaLQ"
-            "wy1lz9BFAjMhaw/3k84e1BhgjtqHy4BbidhTH15KVfz0QjSgpaJKh"
-            "FFhmwhwFGYGiEUqGWauvMZXWoe4s7RXuGjjO8so8wm+DKmtuHOLJB"
-            "BkBU31GhWHG4fzecpIRQM7ysoVXjTBaZBRhOabuKWQEjkaMEWTY5S"
-            "FpYfUHGQGiES2anCEZLdTevQUZAVF91pFG5lISkuHegj4CSiO2Q29"
-            "94LrhWwc1Aq/WeAQQVpHqeByTkxEIu0Zrmupp1ONwnBqBoxHRHVNd"
-            "EVF4imyRBRmBkke4vWxXmVXRR0DWGrrwIlsbXb4SvTP0EVjOsrfaZ"
-            "mDVfqgRUIwojfBWqao/PMUe9BFozrL3R+QpaM1NdtWBOcstnNqPPW"
-            "tjISOgnGULsK8UhTjheJ2DPgJp1+gpdjXL2DuvarwjI5CcZX6oE/0"
-            "RfSfxrYOMgGNEbg4+V19usGMGVyOaZ2hf9dBHQPqIOPss95CbCPMI"
-            "zFqjjRlt+y4ZzCwR8wj+PxaCCCKIIIIIIuinoDczovv0cx3r0AAAA"
-            "ABJRU5ErkJggg==",
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAACDElEQVR42u1cQW7DMAwTlgf4Sfl6n5QHGFBjWZLldIdtt4H0oWic8rIQDEXJE/39eglBBBFEEEEEEURQgMTXce+0cdnsni/VK76eBvqSPyyC/gfIGWFPWq9jksGf/rjMG+V3ZAQCIy6nwK0R3aVA9f4m96VTRQ4yApAR9YVh3Fg3yAhMjRjKMEVh7JlkUCOgfUShxbSca48+AogRWWu4n3x+sNYAY8S2TB7cQtyO4vgsWfnXA9GIJQVFMowCw0xMR0FGoGiEkaGtp28xldWh7iznT/jWwHGWPfMIvwyqjD051JMJMgKm+owKYxqH63vLSUYAOcte+hqTFhlFzBzT3ilkBFJCFWTY5SFpMesPMgJEI0o02UIySqi9ewsyAqL6XC2NzKU0JMO9BX0ElEZsTW+74bqRPS9qBFqt8QggZkUq8tkmJyMQ3hplaKqmUY/mODUCK6GS1stURBSeqltkQUbgdLpcHvJbZlX0EbDd8OhmxIhMnbyljwB0lnXUNgOr8kGNQJuqkxjMn6Yy6w9PsYU+Aq/3KfI8uVH2GqfqEGeoIpza257rxUJGgM5Zak9RiA7HeQl9BOAsdl1ZcJxr8I6MwDvBk1HECqcWLcgIPEbky8H31skNTszgakTxDOVUD30E6JkujR74uefZL+YRmLVGWS3G9l0ymFmCnuni/2MhiCCCCCKIIIJ+BHoDM6L79FccHQwAAAAASUVORK5CYII=",
             jresult.get("result").get("value").get("qr_image_android"),
         )
         self.assertEqual(
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG"
-            "aAQAAAAAefbjOAAACC0lEQVR42u2cUW7DMAxDheUAPlKvniPlAAa8"
-            "xpYtufnZ9jfw5aPo0vCnJiSSUmft99dpgAABAgQIECBAE2R+He/31"
-            "9Hsdd3vWh133/fmA68O+rI/XID+B8gZ0U86keHy0zcr/kF6DkYoMK"
-            "JTIB189YpzljZY0isIjNBjxDh4K3fDKLluwAjVGnGmNhE6Akbo6oh"
-            "eHm6CuORER2gyYnmN0SEeL3gNMUZsfrTfq1NWlPp8hG9PpEaMUnBT"
-            "4FwvQ0ykP2GERo04h2ystpmLWS08uqJrSNWIY9IiEqotvaRG6NWIu"
-            "NxrdDM69KQXDxihoyw/E6qWk4keXA4fCiNUasTQjqtKbJ4zBVboCB"
-            "kdMccX3ib2SZf3FHSEECNGZtm2uDLNPtEReoy43Guk/pF1RLU8D+X"
-            "bU1CWeciV+kfoCKcFjBBSlpFBeQCxzEWZwSU1QkdHeAblGnMbhcba"
-            "DIzQ6Rqbdtw2ZjyhQkfoeY3H5tTkwfAf6Ag997m8xiRDziPQEWru0"
-            "+ec0T+SI229Rhg6QowR3hz63bL5j3692KrTUpYx9sz7Ebb2bf0DGC"
-            "FSI9Lpxy7dGnflBRoYIaQs2xVrMzOrWg7DDB0hqCOO3YdWy/0DryH"
-            "MiLSTT2apzgiz+DlXVhTDgsIIOR0xzcVMJmJZhjxC1GtEFHGuuUZ/"
-            "jl1szTyC/8cCCBAgQIAAAfop6Bt9aCglBgbq7QAAAABJRU5ErkJgg"
-            "g==",
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAACBUlEQVR42u2cUW6EMAxErXKAHGmvzpE4QKR0iZ3EWX7a/lXz+EAsMD9kZI/Hzlr7/XEaIECAAAECBAjQAFkcx/v6Opq9rvuqVb/7vjdeeHXQl/3hAPQ/QMGIvtKJDFesvlmJB+k9GKHAiE6BtPA1Is5ZmrOkRxAYoccIX3grd8IoOW7ACNUYcaY0sXQEjNDVET083AQJyYmO0GTErDU8QzxO1BpijNjq0X6vDllR6vMVvp5IjPBQcFPgnCcXE+knjNCIEafLxmpbcTGiRVhXZA2pGHEMWiyHanMviRF6MWIdUWv0YtT1ZAQPGKGjLD8dqpadiW5ceh0KI1RihGvHGSW2mjMZVugIGR0x2heRJvZOV+QUdIScZ9k2uzL1PtERgn2NqDVS/sg6olruh/L1FJRlbnKl/LF0RNACRggpy+VBhQExi4syjEtihI6OCA8qNObWCl1jMzBCqNOVteM2MRMOFTpCr9Z4TE4NHnj9gY7Qqz5nrTHIkP0IdITeVN3woHIDNMypHiMMHaE3Z9kX3mz0NernVg2yht4MVZqlszVptx7ACM05S9cMs92VB2hghNgs9hibmfNSZWpMdITmDp5ch1bL+YNaQ5gRaSYfz5Jdfms7V1YUXoLCCME9XWsqu/c65rAMfoRorbGsiHP2Nfp7zGKL7uni/1gAAQIECBAgQD8EfQN9aCglrskZDAAAAABJRU5ErkJggg==",
             jresult.get("result").get("value").get("qr_image_ios"),
         )
         qr_image_custom = jresult.get("result").get("value").get("qr_image_custom")
