@@ -4367,41 +4367,11 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         new_response = get_webui_settings(req, resp)
         jresult = new_response.json
         self.assertEqual(
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG"
-            "aAQAAAAAefbjOAAACFElEQVR42u1cS07FMBCL6AFypHd1jtQDVJrX"
-            "zD+FBbBDdhZPbVpviOV4nClDfj8+B0EEEUQQQQQRRFCAho/jnpnrd"
-            "uozHyJnXL4U9DH+MAj6HyBnhK60nIeRwVd/3eaD9h4ZgcCI0ylwa8"
-            "TlUiByX4371qkyDjICkBF9w1Bu1AMyAlMjljKYKKw5lQxqBLSPaLQ"
-            "wy1lz9BFAjMhaw/3k84e1BhgjtqHy4BbidhTH15KVfz0QjSgpaJKh"
-            "FFhmwhwFGYGiEUqGWauvMZXWoe4s7RXuGjjO8so8wm+DKmtuHOLJB"
-            "BkBU31GhWHG4fzecpIRQM7ysoVXjTBaZBRhOabuKWQEjkaMEWTY5S"
-            "FpYfUHGQGiES2anCEZLdTevQUZAVF91pFG5lISkuHegj4CSiO2Q29"
-            "94LrhWwc1Aq/WeAQQVpHqeByTkxEIu0Zrmupp1ONwnBqBoxHRHVNd"
-            "EVF4imyRBRmBkke4vWxXmVXRR0DWGrrwIlsbXb4SvTP0EVjOsrfaZ"
-            "mDVfqgRUIwojfBWqao/PMUe9BFozrL3R+QpaM1NdtWBOcstnNqPPW"
-            "tjISOgnGULsK8UhTjheJ2DPgJp1+gpdjXL2DuvarwjI5CcZX6oE/0"
-            "RfSfxrYOMgGNEbg4+V19usGMGVyOaZ2hf9dBHQPqIOPss95CbCPMI"
-            "zFqjjRlt+y4ZzCwR8wj+PxaCCCKIIIIIIuinoDczovv0cx3r0AAAA"
-            "ABJRU5ErkJggg==",
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAACDElEQVR42u1cQW7DMAwTlgf4Sfl6n5QHGFBjWZLldIdtt4H0oWic8rIQDEXJE/39eglBBBFEEEEEEURQgMTXce+0cdnsni/VK76eBvqSPyyC/gfIGWFPWq9jksGf/rjMG+V3ZAQCIy6nwK0R3aVA9f4m96VTRQ4yApAR9YVh3Fg3yAhMjRjKMEVh7JlkUCOgfUShxbSca48+AogRWWu4n3x+sNYAY8S2TB7cQtyO4vgsWfnXA9GIJQVFMowCw0xMR0FGoGiEkaGtp28xldWh7iznT/jWwHGWPfMIvwyqjD051JMJMgKm+owKYxqH63vLSUYAOcte+hqTFhlFzBzT3ilkBFJCFWTY5SFpMesPMgJEI0o02UIySqi9ewsyAqL6XC2NzKU0JMO9BX0ElEZsTW+74bqRPS9qBFqt8QggZkUq8tkmJyMQ3hplaKqmUY/mODUCK6GS1stURBSeqltkQUbgdLpcHvJbZlX0EbDd8OhmxIhMnbyljwB0lnXUNgOr8kGNQJuqkxjMn6Yy6w9PsYU+Aq/3KfI8uVH2GqfqEGeoIpza257rxUJGgM5Zak9RiA7HeQl9BOAsdl1ZcJxr8I6MwDvBk1HECqcWLcgIPEbky8H31skNTszgakTxDOVUD30E6JkujR74uefZL+YRmLVGWS3G9l0ymFmCnuni/2MhiCCCCCKIIIJ+BHoDM6L79FccHQwAAAAASUVORK5CYII=",
             jresult.get("result").get("value").get("qr_image_android"),
         )
         self.assertEqual(
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG"
-            "aAQAAAAAefbjOAAACC0lEQVR42u2cUW7DMAxDheUAPlKvniPlAAa8"
-            "xpYtufnZ9jfw5aPo0vCnJiSSUmft99dpgAABAgQIECBAE2R+He/31"
-            "9Hsdd3vWh133/fmA68O+rI/XID+B8gZ0U86keHy0zcr/kF6DkYoMK"
-            "JTIB189YpzljZY0isIjNBjxDh4K3fDKLluwAjVGnGmNhE6Akbo6oh"
-            "eHm6CuORER2gyYnmN0SEeL3gNMUZsfrTfq1NWlPp8hG9PpEaMUnBT"
-            "4FwvQ0ykP2GERo04h2ystpmLWS08uqJrSNWIY9IiEqotvaRG6NWIu"
-            "NxrdDM69KQXDxihoyw/E6qWk4keXA4fCiNUasTQjqtKbJ4zBVboCB"
-            "kdMccX3ib2SZf3FHSEECNGZtm2uDLNPtEReoy43Guk/pF1RLU8D+X"
-            "bU1CWeciV+kfoCKcFjBBSlpFBeQCxzEWZwSU1QkdHeAblGnMbhcba"
-            "DIzQ6Rqbdtw2ZjyhQkfoeY3H5tTkwfAf6Ag997m8xiRDziPQEWru0"
-            "+ec0T+SI229Rhg6QowR3hz63bL5j3692KrTUpYx9sz7Ebb2bf0DGC"
-            "FSI9Lpxy7dGnflBRoYIaQs2xVrMzOrWg7DDB0hqCOO3YdWy/0DryH"
-            "MiLSTT2apzgiz+DlXVhTDgsIIOR0xzcVMJmJZhjxC1GtEFHGuuUZ/"
-            "jl1szTyC/8cCCBAgQIAAAfop6Bt9aCglBgbq7QAAAABJRU5ErkJgg"
-            "g==",
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaAQAAAAAefbjOAAACBUlEQVR42u2cUW6EMAxErXKAHGmvzpE4QKR0iZ3EWX7a/lXz+EAsMD9kZI/Hzlr7/XEaIECAAAECBAjQAFkcx/v6Opq9rvuqVb/7vjdeeHXQl/3hAPQ/QMGIvtKJDFesvlmJB+k9GKHAiE6BtPA1Is5ZmrOkRxAYoccIX3grd8IoOW7ACNUYcaY0sXQEjNDVET083AQJyYmO0GTErDU8QzxO1BpijNjq0X6vDllR6vMVvp5IjPBQcFPgnCcXE+knjNCIEafLxmpbcTGiRVhXZA2pGHEMWiyHanMviRF6MWIdUWv0YtT1ZAQPGKGjLD8dqpadiW5ceh0KI1RihGvHGSW2mjMZVugIGR0x2heRJvZOV+QUdIScZ9k2uzL1PtERgn2NqDVS/sg6olruh/L1FJRlbnKl/LF0RNACRggpy+VBhQExi4syjEtihI6OCA8qNObWCl1jMzBCqNOVteM2MRMOFTpCr9Z4TE4NHnj9gY7Qqz5nrTHIkP0IdITeVN3woHIDNMypHiMMHaE3Z9kX3mz0NernVg2yht4MVZqlszVptx7ACM05S9cMs92VB2hghNgs9hibmfNSZWpMdITmDp5ch1bL+YNaQ5gRaSYfz5Jdfms7V1YUXoLCCME9XWsqu/c65rAMfoRorbGsiHP2Nfp7zGKL7uni/1gAAQIECBAgQD8EfQN9aCglrskZDAAAAABJRU5ErkJggg==",
             jresult.get("result").get("value").get("qr_image_ios"),
         )
         qr_image_custom = jresult.get("result").get("value").get("qr_image_custom")

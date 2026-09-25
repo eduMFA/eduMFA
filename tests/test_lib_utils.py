@@ -922,14 +922,14 @@ class UtilsTestCase(MyTestCase):
 
     def test_27_images(self):
         hallo_qr_png = (
-            "iVBORw0KGgoAAAANSUhEUgAAASIAAAEiAQAAAAB1xeIbAAABC0lEQV"
-            "R42u2aQQ6EIBAEJ7sP8El8nSftA0xYGBiM8eIe6E1McTCofSpnmka1"
-            "cmNkQ4UKFSpUj1DZGO86//ghriRXvezOQPWbarB3xBP7mM0bsF/Kvh"
-            "V6asRzFL+3AezV7H0GezV7s2036v4/fp8r+94B+L2G/cw5vfgTOUfG"
-            "/hgV9n5Jp7Bfyr4nSzf92QGwl6211epLZMwSCy6es7zu83aC3di7+8"
-            "BelDFtRpzeAVs4P+zXrrWVc26nx742kTHVOad3QCn4vTzfz1RPztHv"
-            "a3u8DAuCve59ToR8fwrsa6Xs4wEM96Hulez9PeaM+7CX+n0P+acFF/"
-            "aSnBOfcY26l+d7/i1AhQoVqmeqvi4sW6dMYAvIAAAAAElFTkSuQmCC"
+            "iVBORw0KGgoAAAANSUhEUgAAASIAAAEiAQAAAAB1xeIbAAABCUlEQV"
+            "R42u2aSw7CMAxELThAj5Sr50gcoFLIzy4Vm7LIVEIvCxRgVg97MnGx"
+            "cmFlQ4UKFSpUf6GyuZ51/+ov/knqqoddWah+U032HXFgn7v4AvZL2b"
+            "dCT4149uLvbQB7Nfu+g72avdm2G3V/j9/nyn50AH6vYR85ZxR/IufI"
+            "2B+rwt6/0insl7IfybKbfnQA7GVnbbX64hmz+IGL5yyv+7ydYDf23"
+            "X1gL8qYFhFndMDmzg/7tWdt5Zzb2+Nem8iY6pwzOqAU/F6e7yPVk3"
+            "P099oRL92CYC+cpZWPqRr3Wu0sbf4A032oe/kcM+I+7G+YY54OXNh"
+            "Lco4/xjXqXp7v+W8BKlSoUP2n6g0uLFunQsjogAAAAABJRU5ErkJggg=="
         )
         self.assertEqual(create_img("Hallo"), f"data:image/png;base64,{hallo_qr_png}")
 
