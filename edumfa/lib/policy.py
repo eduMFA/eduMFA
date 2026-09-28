@@ -1376,8 +1376,6 @@ def set_policy(
         if conditions is not None:
             # only update the conditions if there are any
             set_policy_conditions(conditions_data, p1)
-        save_config_timestamp()
-        db.session.commit()
         ret = p1.id
     else:
         # Create a new policy
@@ -1397,9 +1395,13 @@ def set_policy(
             check_all_resolvers=check_all_resolvers,
             edumfanode=edumfanode,
         )
-        ret = policy.save()
+        db.session.add(policy)
+        db.session.flush()
+        ret = policy.id
         # Since we create a new policy we always set the conditions, even if the list is empty
         set_policy_conditions(conditions_data, policy)
+    save_config_timestamp()
+    db.session.commit()
     return ret
 
 
