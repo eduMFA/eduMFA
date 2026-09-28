@@ -10,7 +10,7 @@ import dateutil
 from werkzeug.datastructures.headers import EnvironHeaders, Headers
 
 from edumfa.lib.auth import ROLE
-from edumfa.lib.error import ParameterError
+from edumfa.lib.error import ParameterError, eduMFAError
 from edumfa.lib.policies.conditions import (
     ConditionHandleMissingData,
     ConditionSection,
@@ -34,6 +34,7 @@ from edumfa.lib.policy import (
     import_policies,
     set_policy,
     set_policy_conditions,
+    validate_actions,
 )
 from edumfa.lib.realm import delete_realm, get_realms, set_realm
 from edumfa.lib.resolver import delete_resolver, get_resolver_list, save_resolver
@@ -208,6 +209,72 @@ class PolicyTestCase(MyTestCase):
         self.assertTrue(len(policies) == 3, policies)
 
         delete_policy(name="pol5")
+
+    def test_03_set_policy_fails(self):
+        # invalid scope
+        with self.assertRaises(ParameterError):
+            set_policy(name="invalid", scope="invalid_scope")
+
+        # Scope is None, but actions are defined
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(name="invalid", action=ACTION.ENABLE)
+            self.assertEqual(
+                "Scope is required to set action values!", exception.exception.message
+            )
+
+        # Invalid actions
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(name="invalid", scope=SCOPE.ADMIN, action="invalid_action")
+            self.assertEqual(
+                f"The following actions are not valid for scope '{SCOPE.ADMIN}': ['invalid_action']",
+                exception.exception.message,
+            )
+
+        # Priority
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(name="invalid", action=ACTION.ENABLE, priority=0)
+            self.assertEqual("Priority must be at least 1", exception.exception.message)
+
+        # Invalid client ip
+        with self.assertRaises(eduMFAError) as exception:
+            set_policy(name="invalid", action=ACTION.ENABLE, client="10.1.2.3.4")
+            self.assertEqual("Invalid client definition!", exception.exception.message)
+
+        # Invalid realm
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(name="invalid", action=ACTION.ENABLE, realm="invalid_realm")
+            self.assertEqual(
+                "Invalid Realms ['invalid_realm']!", exception.exception.message
+            )
+
+        # Invalid adminrealm
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(name="invalid", action=ACTION.ENABLE, adminrealm="invalid_realm")
+            self.assertEqual(
+                "Invalid Adminrealms ['invalid_realm']!", exception.exception.message
+            )
+
+        # Invalid resolver
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(
+                name="invalid", action=ACTION.ENABLE, resolver="invalid_resolver"
+            )
+            self.assertEqual(
+                f"Undefined resolvers ['invalid_resolver']!",
+                exception.exception.message,
+            )
+
+        # Invalid node
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(name="invalid", action=ACTION.ENABLE, edumfanode="invalid_node")
+            self.assertEqual(
+                f"Undefined nodes ['invalid_node']!", exception.exception.message
+            )
+
+        # Invalid time
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(name="invalid", action=ACTION.ENABLE, time="Monday: 12-18")
+            self.assertEqual(f"Invalid time format!", exception.exception.message)
 
     def test_04_delete_policy(self):
         delete_policy(name="pol4")
@@ -864,6 +931,48 @@ class PolicyTestCase(MyTestCase):
         )
         policy = Policy.query.filter_by(name="test").first()
         self.assertEqual("", policy.time)
+
+        # Set invalid times raises Error
+        self.assertRaises(
+            ParameterError,
+            set_policy,
+            name="test",
+            scope=SCOPE.AUTHZ,
+            action=f"{ACTION.TOKENTYPE}=hotp totp",
+            time="Montag: 8-12",
+        )
+        self.assertRaises(
+            ParameterError,
+            set_policy,
+            name="test",
+            scope=SCOPE.AUTHZ,
+            action=f"{ACTION.TOKENTYPE}=hotp totp",
+            time=":8-12",
+        )
+        self.assertRaises(
+            ParameterError,
+            set_policy,
+            name="test",
+            scope=SCOPE.AUTHZ,
+            action=f"{ACTION.TOKENTYPE}=hotp totp",
+            time="Mon-Fri: 12:26",
+        )
+        self.assertRaises(
+            ParameterError,
+            set_policy,
+            name="test",
+            scope=SCOPE.AUTHZ,
+            action=f"{ACTION.TOKENTYPE}=hotp totp",
+            time="Mon:",
+        )
+        self.assertRaises(
+            ParameterError,
+            set_policy,
+            name="test",
+            scope=SCOPE.AUTHZ,
+            action=f"{ACTION.TOKENTYPE}=hotp totp",
+            time="Mon-Fri: 12-08",
+        )
 
         delete_policy("test")
 
@@ -2832,6 +2941,239 @@ class PolicyTestCase(MyTestCase):
         self.assertEqual(0, len(conditions))
 
         delete_policy("policy")
+
+    def test_51_validate_actions(self):
+        action_dict = {
+            ACTION.ENABLE: True,
+            ACTION.HIDE_TOKENINFO: "hashlib private_server_key",
+            ACTION.DISABLE: True,
+        }
+        action_str = f"{ACTION.ENABLE}, {ACTION.HIDE_TOKENINFO}=hashlib private_server_key ,{ACTION.DISABLE}"
+        action_list = [ACTION.ENABLE, ACTION.TOKENINFO, ACTION.DISABLE]
+
+        # Valid actions for admin scope
+        self.assertTrue(validate_actions(SCOPE.ADMIN, action_dict))
+        self.assertTrue(validate_actions(SCOPE.ADMIN, action_str))
+
+        # Valid actions for user scope
+        self.assertTrue(validate_actions(SCOPE.USER, action_dict))
+        self.assertTrue(validate_actions(SCOPE.USER, action_str))
+
+        # Invalid actions for enroll scope
+        with self.assertRaises(ParameterError) as exception:
+            validate_actions(SCOPE.ENROLL, action_dict)
+            self.assertEqual(
+                f"Invalid actions [{ACTION.ENABLE}, {ACTION.HIDE_TOKENINFO}, {ACTION.DISABLE}]",
+                exception.exception.message,
+            )
+        with self.assertRaises(ParameterError) as exception:
+            validate_actions(SCOPE.ENROLL, action_str)
+            self.assertEqual(
+                f"Invalid actions [{ACTION.ENABLE}, {ACTION.HIDE_TOKENINFO}, {ACTION.DISABLE}]",
+                exception.exception.message,
+            )
+
+        # Invalid for non-existing scope
+        with self.assertRaises(ParameterError) as exception:
+            validate_actions("non-exisiting-scope", action_dict)
+            self.assertEqual(
+                f"Invalid actions [{ACTION.ENABLE}, {ACTION.HIDE_TOKENINFO}, {ACTION.DISABLE}]",
+                exception.exception.message,
+            )
+        with self.assertRaises(ParameterError) as exception:
+            validate_actions("non-exisiting-scope", action_str)
+            self.assertEqual(
+                f"Invalid actions [{ACTION.ENABLE}, {ACTION.HIDE_TOKENINFO}, {ACTION.DISABLE}]",
+                exception.exception.message,
+            )
+
+        # Invalid action type
+        with self.assertRaises(ParameterError) as exception:
+            validate_actions(SCOPE.ADMIN, action_list)
+            self.assertEqual(
+                "Invalid actions type 'list'. Must be a string or a dictionary.",
+                exception.exception.message,
+            )
+
+        # Use wildcard
+        self.assertTrue(validate_actions(SCOPE.ADMIN, "*"))
+
+        # Exclude actions from wildcard
+        self.assertTrue(
+            validate_actions(
+                SCOPE.ADMIN, f"*, -{ACTION.ENABLE}, {ACTION.DISABLE}, !{ACTION.DELETE}"
+            )
+        )
+
+        # Exclude invalid actions passes (excluded actions are not checked anyway)
+        with self.assertRaises(ParameterError) as exception:
+            validate_actions(
+                SCOPE.ADMIN, f"*, -i_am_invalid, {ACTION.DISABLE}, !not-existing"
+            )
+            self.assertEqual(
+                "Invalid actions: ['i_am_invalid', 'not-existing']",
+                exception.exception.message,
+            )
+
+        # Invalid action set to false are also not accepted
+        with self.assertRaises(ParameterError) as exception:
+            validate_actions(SCOPE.ADMIN, {"i_am_invalid": False})
+            self.assertEqual(
+                "Invalid actions: ['i_am_invalid']", exception.exception.message
+            )
+
+        # Invalid action string (actions can not be extracted correctly)
+        action_str = (
+            f"{ACTION.ENABLE}, {ACTION.HIDE_TOKENINFO}:hashlib private_server_key ,"
+            f"{ACTION.DISABLE}; {ACTION.DELETE}"
+        )
+        with self.assertRaises(ParameterError) as exception:
+            validate_actions(SCOPE.ADMIN, action_str)
+            self.assertEqual(
+                f"Invalid actions: ['{ACTION.HIDE_TOKENINFO}:hashlib private_server_key', "
+                f"'{ACTION.DISABLE}; {ACTION.DELETE}']",
+                exception.exception.message,
+            )
+
+    def test_52_set_policy_validate_realms(self):
+        """
+        This test checks that the realm parameter is evaluated correctly in the set_policy function
+        """
+        # Valid single realm
+        set_policy(name="test", scope=SCOPE.ADMIN, realm=self.realm1)
+
+        # Valid list
+        set_policy(name="test", scope=SCOPE.ADMIN, realm=[self.realm1, self.realm2])
+        set_policy(
+            name="test", scope=SCOPE.ADMIN, realm=f"{self.realm1}, {self.realm2}"
+        )
+
+        # realm is None
+        set_policy(name="test", scope=SCOPE.ADMIN, realm=None)
+
+        # Use wildcard and negations
+        set_policy(
+            name="test",
+            scope=SCOPE.ADMIN,
+            realm=f"*, -{self.realm1}, {self.realm2}, !{self.realm1}",
+        )
+
+        # Invalid data type
+        self.assertRaises(
+            ParameterError,
+            set_policy,
+            name="test",
+            scope=SCOPE.ADMIN,
+            realm={self.realm1, self.realm2},
+        )
+
+        # Undefined Realm
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(
+                name="test",
+                scope=SCOPE.ADMIN,
+                realm=[self.realm2, "undefined_realm", self.realm1, "invalid"],
+            )
+            self.assertEqual(
+                "Undefined Realms: ['undefined_realm', 'invalid']!",
+                exception.exception.message,
+            )
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(
+                name="test",
+                scope=SCOPE.ADMIN,
+                realm=f"{self.realm2}, undefined_realm,{self.realm1} ,invalid",
+            )
+            self.assertEqual(
+                "Undefined Realms: ['undefined_realm', 'invalid']!",
+                exception.exception.message,
+            )
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(
+                name="test",
+                scope=SCOPE.ADMIN,
+                realm=f"{self.realm2}, -undefined_realm,{self.realm1} ,!invalid",
+            )
+            self.assertEqual(
+                "Undefined Realms: ['undefined_realm', 'invalid']!",
+                exception.exception.message,
+            )
+
+        delete_policy("test")
+
+    def test_53_set_policy_validate_resolvers(self):
+        # Valid single resolver
+        set_policy(name="test", scope=SCOPE.ADMIN, resolver=self.resolvername1)
+
+        # Valid list
+        set_policy(
+            name="test",
+            scope=SCOPE.ADMIN,
+            resolver=[self.resolvername1, self.resolvername3, ""],
+        )
+        set_policy(
+            name="test",
+            scope=SCOPE.ADMIN,
+            resolver=f"{self.resolvername1}, {self.resolvername3}",
+        )
+
+        # resolver is None
+        set_policy(name="test", scope=SCOPE.ADMIN, resolver=None)
+
+        # Use wildcard and negations
+        set_policy(
+            name="test",
+            scope=SCOPE.ADMIN,
+            resolver=f"*, -{self.resolvername1}, !{self.resolvername3}, ",
+        )
+
+        # Invalid data type
+        self.assertRaises(
+            ParameterError,
+            set_policy,
+            name="test",
+            scope=SCOPE.ADMIN,
+            resolver={self.resolvername1, self.resolvername3},
+        )
+
+        # Undefined Resolver
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(
+                name="test",
+                scope=SCOPE.ADMIN,
+                resolver=[
+                    self.resolvername1,
+                    "undefined_resolver",
+                    self.resolvername3,
+                    "invalid",
+                ],
+            )
+            self.assertEqual(
+                "Undefined Resolvers: ['undefined_resolver', 'invalid']!",
+                exception.exception.message,
+            )
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(
+                name="test",
+                scope=SCOPE.ADMIN,
+                resolver=f"undefined_resolver,{self.resolvername1}, invalid",
+            )
+            self.assertEqual(
+                "Undefined Resolvers: ['undefined_resolver', 'invalid']!",
+                exception.exception.message,
+            )
+        with self.assertRaises(ParameterError) as exception:
+            set_policy(
+                name="test",
+                scope=SCOPE.ADMIN,
+                resolver=f"*, -undefined_resolver,{self.resolvername1}, !invalid",
+            )
+            self.assertEqual(
+                "Undefined Resolvers: ['undefined_resolver', 'invalid']!",
+                exception.exception.message,
+            )
+
+        delete_policy("test")
 
 
 class PolicyConditionClassTestCase(MyTestCase):

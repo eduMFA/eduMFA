@@ -33,7 +33,7 @@ The code of this module is tested in tests/test_api_system.py
 """
 import logging
 
-from flask import Blueprint, g, request
+from flask import Blueprint, current_app, g, request
 from werkzeug.datastructures import FileStorage
 
 from edumfa.lib.config import get_edumfa_nodes
@@ -54,6 +54,7 @@ from ..lib.policy import (
     get_static_policy_definitions,
     import_policies,
     set_policy,
+    validate_values,
 )
 from ..lib.token import get_dynamic_policy_definitions
 from .lib.utils import (
@@ -192,7 +193,7 @@ def set_policy_api(name=None):
 
     action = getParam(param, "action", required)
     scope = getParam(param, "scope", required)
-    realm = getParam(param, "realm", required)
+    realm = getParam(param, "realm", optional)
     resolver = getParam(param, "resolver", optional)
     edumfanode = getParam(param, "edumfanode", optional)
     user = getParam(param, "user", optional)
@@ -204,6 +205,11 @@ def set_policy_api(name=None):
     admin_user = getParam(param, "adminuser", optional)
     priority = int(getParam(param, "priority", optional, default=1))
     conditions = getParam(param, "conditions", optional)
+
+    # Validate admin realms here, because the allowed realms need to be read from the config file
+    # (avoid flask imports on lib level)
+    valid_admin_realms = current_app.config.get("SUPERUSER_REALM", [])
+    validate_values(admin_realm, valid_admin_realms, "Admin Realms")
 
     g.audit_object.log({"action_detail": name, "info": f"{param}"})
     ret = set_policy(

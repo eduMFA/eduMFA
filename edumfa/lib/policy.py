@@ -168,6 +168,23 @@ class SCOPE:
     WEBUI = "webui"
     REGISTER = "register"
 
+    @classmethod
+    def get_all_scopes(cls) -> list[str]:
+        """
+        Return all valid scopes as a list
+        """
+        valid_scopes = [
+            cls.AUTHZ,
+            cls.ADMIN,
+            cls.AUTH,
+            cls.AUDIT,
+            cls.USER,
+            cls.ENROLL,
+            cls.WEBUI,
+            cls.REGISTER,
+        ]
+        return valid_scopes
+
 
 class ACTION:
     __doc__ = """This is the list of usual actions."""
@@ -1246,6 +1263,87 @@ def set_policy_conditions(conditions: list[PolicyConditionClass], policy: Policy
         )
         policy.conditions.append(db_condition)
 
+def remove_wildcards_and_negations(value_list: list[str]) -> list[str]:
+    """
+    Removes leading negation characters ("!" or "-") from the strings in a list. Removes wildcard ("*") and empty
+    strings from the list.
+
+    :param value_list: A list of values to be processed
+    :return: A list of values without leading negation characters and wildcards
+    """
+    raw_values = []
+    for value in value_list:
+        if value == "*" or value == "":
+            # Wildcard is allowed
+            continue
+        elif value[0] in ("!", "-"):
+            # remove leading negation characters
+            value = value[1:]
+        raw_values.append(value)
+    return raw_values
+
+
+def validate_actions(scope: str, action: str | dict) -> bool:
+    """
+    Check if the given actions are valid for the given scope.
+
+    :param scope: The scope of the policy
+    :param action: The policy actions
+    :return: True if all actions are valid, raises a Parameter Error otherwise
+    """
+    from .token import get_dynamic_policy_definitions
+
+    policy_definitions_static = get_static_policy_definitions(scope)
+    policy_definitions_dynamic = get_dynamic_policy_definitions(scope)
+    allowed_actions = set(policy_definitions_static.keys()) | set(
+        policy_definitions_dynamic.keys()
+    )
+    if isinstance(action, dict):
+        action_keys = list(action.keys())
+    elif isinstance(action, str):
+        # This is similarly implemented in models.py in Policy.get(), but with the actual code structure there is no
+        # possibility to use the same function without mixing up the layers
+        action_keys = [
+            x.strip().split("=", 1)[0] for x in re.split(r"(?<!\\),", action or "")
+        ]
+    else:
+        raise ParameterError(
+            f"Invalid actions type '{type(action)}'. Must be a string or a dictionary."
+        )
+
+    raw_actions = remove_wildcards_and_negations(action_keys)
+    invalid_actions = list(set(raw_actions) - allowed_actions)
+
+    if len(invalid_actions) > 0:
+        log.error(
+            f"The following actions are not valid for scope '{scope}': {invalid_actions}"
+        )
+        raise ParameterError(f"Invalid actions {invalid_actions}!")
+    else:
+        return True
+
+
+def validate_values(values: str | list | None, allowed_values: list, name: str) -> bool:
+    """
+    Checks if all values are contained in the 'allowed_values' list.
+
+    :param values: Values to be evaluated whether they are defined. Either passed as list of strings or as a comma
+        separated list as single string
+    :param allowed_values: A list of allowed values
+    :param name: The name of the parameter used for an error message
+    :return: True if all values are valid, raise a ParameterError otherwise
+    """
+    if values is not None:
+        if isinstance(values, str):
+            values = values.replace(" ", "").split(",")
+        elif not isinstance(values, list):
+            raise ParameterError(f"Invalid {name.capitalize()} type '{type(values)}'!")
+        values = remove_wildcards_and_negations(values)
+        undefined_values = list(set(values) - set(allowed_values))
+        if undefined_values:
+            raise ParameterError(f"Undefined {name.capitalize()}: {undefined_values}!")
+    return True
+
 
 @log_with(log)
 def set_policy(
@@ -1296,12 +1394,41 @@ def set_policy(
     :return: The database ID od the the policy
     :rtype: int
     """
-    active = is_true(active)
-    check_all_resolvers = is_true(check_all_resolvers)
+    # TODO: Create update_policy function and restrict set_policy to only create new policies
+    # validate name
+    if name and " " in name:
+        raise ParameterError("Policy name must not contain white spaces!")
+
+    # validate scope
+    if scope and scope not in SCOPE.get_all_scopes():
+        log.error(
+            f"Invalid scope '{scope}' in policy '{name}'. Valid scopes are: {SCOPE.get_all_scopes()}"
+        )
+        raise ParameterError(f"Invalid scope '{scope}' in policy '{name}'!")
+
+    # validate priority
     if isinstance(priority, str):
         priority = int(priority)
     if priority is not None and priority <= 0:
         raise ParameterError("Priority must be at least 1")
+
+    # check for valid realms
+    valid_realms = list(get_realms().keys())
+    validate_values(realm, valid_realms, "User-Realms")
+
+    # check for valid resolvers
+    valid_resolvers = list(get_resolver_list().keys())
+    validate_values(resolver, valid_resolvers, "Resolvers")
+
+    # check for valid time
+    if time is not None and len(time) > 0:
+        try:
+            check_time_in_range(time)
+        except (ValueError, ParameterError):
+            raise ParameterError(f"Invalid time format '{time}'!")
+
+    active = is_true(active)
+    check_all_resolvers = is_true(check_all_resolvers)
     if type(action) == list:
         action = ", ".join(action)
     if type(realm) == list:
@@ -1332,7 +1459,15 @@ def set_policy(
             )
             conditions_data.append(condition)
     p1 = Policy.query.filter_by(name=name).first()
-    if type(action) == dict:
+    # validate action values
+    if action is not None:
+        if scope is not None:
+            validate_actions(scope, action)
+        elif p1:
+            validate_actions(p1.scope, action)
+        else:
+            raise ParameterError("Scope is required to set action values!")
+    if isinstance(action, dict):
         action_list = []
         for k, v in action.items():
             if v is not True:
