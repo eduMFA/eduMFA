@@ -19,7 +19,7 @@ down_revision = "1b2262ddbf6b"
 def upgrade():
     op.add_column(
         "policycondition",
-        sa.Column("handle_missing_data", sa.Unicode(length=255), nullable=True),
+        sa.Column("handle_missing_data", sa.Unicode(length=24), nullable=True),
     )
 
 
