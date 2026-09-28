@@ -135,7 +135,7 @@ def set_realm_api(realm=None):
     resolvers = getParam(param, "resolvers", required)
     priority = get_priority_from_param(param)
 
-    if type(resolvers) == "list":
+    if isinstance(resolvers, list):
         Resolvers = resolvers
     else:
         Resolvers = resolvers.split(",")
