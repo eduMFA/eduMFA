@@ -4104,7 +4104,7 @@ class APIDetermineUserFromSerialForPolicies(MyApiTestCase):
 
 class APIRolloutState(MyApiTestCase):
     def setUp(self):
-        super(APIRolloutState, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def test_01_enroll_two_tokens(self):
@@ -4308,7 +4308,7 @@ class APIMSCACertTestCase(MyApiTestCase):
 
 class APITokengroupTestCase(MyApiTestCase):
     def setUp(self):
-        super(APITokengroupTestCase, self).setUp()
+        super().setUp()
         self.setUp_user_realms()
 
     def test_01_add_tokengroups(self):
