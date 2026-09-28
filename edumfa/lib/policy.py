@@ -1276,7 +1276,6 @@ def set_policy(
     :param name: The name of the policy
     :param scope: The scope of the policy. Something like "admin" or "authentication"
     :param action: A scope specific action or a comma separated list of actions
-    :type active: basestring
     :param realm: A realm, for which this policy is valid
     :param resolver: A resolver, for which this policy is valid
     :param user: A username or a list of usernames
@@ -1293,7 +1292,6 @@ def set_policy(
     :param check_all_resolvers: If all the resolvers of a user should be
         checked with this policy
     :type check_all_resolvers: bool
-    :param conditions: A list of 5-tuples (section, key, comparator, value, active) of policy conditions
     :param conditions: A list of 5- or 6-tuples (section, key, comparator, value, active, handle_missing_data) of
         policy conditions
     :param edumfanode: A eduMFA node or a list of eduMFA nodes.
