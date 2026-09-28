@@ -1105,8 +1105,9 @@ msgstr ""
 "l'authentification."
 
 #: lib/policy.py
+#, fuzzy
 msgid ""
-"The sending of an API Auth Key is required duringauthentication. This "
+"The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
 msgstr ""
 "L'envoi d'une clé d'authentification API est requise durant "
@@ -2113,6 +2114,24 @@ msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr ""
 "Votre configuration LDAP semble correcte, %i objets machines ont été "
 "trouvées."
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"Raise an error if the data that is required to check the condition is not"
+" available."
+msgstr ""
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"true. Hence, the policy is applied."
+msgstr ""
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"false. Hence, the policy is not applied."
+msgstr ""
 
 #: lib/resolvers/LDAPIdResolver.py
 #, python-brace-format
