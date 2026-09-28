@@ -1347,22 +1347,22 @@ def validate_values(values: str | list | None, allowed_values: list, name: str) 
 
 @log_with(log)
 def set_policy(
-    name=None,
-    scope=None,
-    action=None,
-    realm=None,
-    resolver=None,
-    user=None,
-    time=None,
-    client=None,
-    active=True,
-    adminrealm=None,
-    adminuser=None,
-    priority=None,
-    check_all_resolvers=False,
-    conditions=None,
-    edumfanode=None,
-):
+    name: str | None = None,
+    scope: str | None = None,
+    action: str | list | None = None,
+    realm: str | list | None = None,
+    resolver: str | list | None = None,
+    user: str | list | None = None,
+    time: str | None = None,
+    client: str | None = None,
+    active: bool = True,
+    adminrealm: str | list | None = None,
+    adminuser: str | list | None = None,
+    priority: int | str | None = None,
+    check_all_resolvers: bool = False,
+    conditions: list | None = None,
+    edumfanode: str | list | None = None,
+) -> int:
     """
     Function to set a policy.
 
@@ -1378,21 +1378,15 @@ def set_policy(
     :param time: N/A    if type()
     :param client: A client IP with optionally a subnet like 172.16.0.0/16
     :param active: If the policy is active or not
-    :type active: bool
     :param adminrealm: The name of the realm of administrators
-    :type adminrealm: str
     :param adminuser: A comma separated list of administrators
-    :type adminuser: str
     :param priority: the priority of the policy (smaller values having higher priority)
-    :type priority: int
     :param check_all_resolvers: If all the resolvers of a user should be
         checked with this policy
-    :type check_all_resolvers: bool
     :param conditions: A list of 5- or 6-tuples (section, key, comparator, value, active, handle_missing_data) of
         policy conditions
     :param edumfanode: A eduMFA node or a list of eduMFA nodes.
-    :return: The database ID od the the policy
-    :rtype: int
+    :return: The database ID of the policy
     """
     # TODO: Create update_policy function and restrict set_policy to only create new policies
     # validate name

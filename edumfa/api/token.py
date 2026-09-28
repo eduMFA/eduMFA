@@ -1082,7 +1082,6 @@ def loadtokens_api(filename=None):
         )
 
     # Now import the Tokens from the dictionary
-    ret = ""
     for serial in TOKENS:
         log.debug(f"importing token {TOKENS[serial]}")
 

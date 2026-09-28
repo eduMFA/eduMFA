@@ -174,14 +174,40 @@ XZp8nprZvJuk6/QIRpadjRkv4NElZ2oNu6a8mtaO38xxnfQm4FEMbm5p+4tM
 
 
 class API000TokenAdminRealmList(MyApiTestCase):
+    def request_denied_assert_403(self, url, data: dict, auth_token, method="POST"):
+        with self.app.test_request_context(
+            url,
+            method=method,
+            data=data if method == "POST" else None,
+            query_string=data if method == "GET" else None,
+            headers={"Authorization": auth_token},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(403, res.status_code, res.json)
+            self.assertEqual(res.json["result"]["error"]["code"], 303)
+            return res.json
+
+    def request_assert_200(self, url, data: dict, auth_token, method="POST"):
+        with self.app.test_request_context(
+            url,
+            method=method,
+            data=data if method == "POST" else None,
+            query_string=data if method == "GET" else None,
+            headers={"Authorization": auth_token},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(200, res.status_code, res.json)
+            self.assertTrue(res.json["result"]["status"])
+            return res.json
+
     def test_000_setup_realms(self):
         self.setUp_user_realms()
         self.setUp_user_realm2()
 
         # create tokens
-        t = init_token({"otpkey": self.otpkey}, tokenrealms=[self.realm1])
+        init_token({"otpkey": self.otpkey}, tokenrealms=[self.realm1])
 
-        t = init_token({"otpkey": self.otpkey}, tokenrealms=[self.realm2])
+        init_token({"otpkey": self.otpkey}, tokenrealms=[self.realm2])
 
     def test_01_test_two_tokens(self):
         with self.app.test_request_context(
@@ -252,6 +278,7 @@ class API000TokenAdminRealmList(MyApiTestCase):
 
     def test_02_two_resolver_in_realm_policy_condition(self):
         self.setUp_user_realms()
+        self.setUp_user_realm2()
         # add a second resolver to the realm
         save_resolver(
             {
@@ -455,7 +482,7 @@ class APIAttestationTestCase(MyApiTestCase):
         self.setUp_user_realms()
         cwd = os.getcwd()
         # setup ca connector
-        r = save_caconnector(
+        save_caconnector(
             {
                 "cakey": CAKEY,
                 "cacert": CACERT,
@@ -660,7 +687,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             count = result.get("value").get("count")
             next = result.get("value").get("next")
@@ -689,7 +715,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             # NO token assigned, yet
             self.assertGreaterEqual(len(tokenlist), 0, f"{tokenlist}")
@@ -704,7 +729,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             self.assertTrue(len(tokenlist) == 1, len(tokenlist))
 
@@ -721,7 +745,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             # NO token assigned, yet
             self.assertTrue(len(tokenlist) == 1, f"{tokenlist}")
@@ -736,7 +759,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             self.assertTrue(len(tokenlist) == 1, len(tokenlist))
             token0 = tokenlist[0]
@@ -749,7 +771,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             self.assertTrue(len(tokenlist) == 2, len(tokenlist))
 
@@ -767,7 +788,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             self.assertEqual(len(tokenlist), 0)
 
@@ -784,7 +804,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertEqual(res.status_code, 200)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             self.assertEqual(len(tokenlist), 1)
 
@@ -841,11 +860,9 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             count = result.get("value").get("count")
-            next = result.get("value").get("next")
-            prev = result.get("value").get("prev")
+            result.get("value").get("prev")
             self.assertTrue(len(tokenlist) == 2, res.data)
             self.assertTrue(count == 2, count)
 
@@ -860,11 +877,8 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             tokenlist = result.get("value").get("tokens")
             count = result.get("value").get("count")
-            next = result.get("value").get("next")
-            prev = result.get("value").get("prev")
             self.assertTrue(len(tokenlist) == 2, res.data)
             self.assertTrue(count == 2, count)
 
@@ -1455,7 +1469,7 @@ class APITokenTestCase(MyApiTestCase):
             self.assertTrue(token.get("realms") == [self.realm1], token)
 
     def test_11_load_tokens(self):
-        # Set dummy policy to verify faulty behaviour with #2209
+        # Set dummy policy to check if token upload still works (see #2209)
         set_policy("dumm01", scope=SCOPE.USER, action=ACTION.DISABLE)
         # Load OATH CSV
         with self.app.test_request_context(
@@ -1523,6 +1537,11 @@ class APITokenTestCase(MyApiTestCase):
         ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 400, res)
+            self.assertEqual(
+                res.json["result"]["error"]["message"],
+                "ERR905: Error loading token file. File empty!",
+                res.json,
+            )
         # check for a failed audit entry
         entry = self.find_most_recent_audit_entry(action="*/token/load/*")
         self.assertEqual(entry["success"], 0, entry)
@@ -1535,7 +1554,13 @@ class APITokenTestCase(MyApiTestCase):
             headers={"Authorization": self.at},
         ):
             res = self.app.full_dispatch_request()
-            self.assertTrue(res.status_code == 400, res)
+            self.assertEqual(res.status_code, 400, res)
+            self.assertTrue(
+                res.json["result"]["error"]["message"].startswith(
+                    "ERR301: Unknown file type: 'unknown'"
+                ),
+                res.json,
+            )
 
         # Load PSKC file, encrypted PSK
         with self.app.test_request_context(
@@ -1569,9 +1594,7 @@ class APITokenTestCase(MyApiTestCase):
 
     def test_11_load_tokens_tokenhandler(self):
         # create a new event to disable tokens after import
-        r = set_event(
-            "token_disable", ["token_load"], "Token", "disable", position="post"
-        )
+        set_event("token_disable", ["token_load"], "Token", "disable", position="post")
         events = EventConfiguration()
         event_id = [
             event["id"] for event in events.events if event["name"] == "token_disable"
@@ -1605,6 +1628,7 @@ class APITokenTestCase(MyApiTestCase):
         delete_event(event_id)
 
     def test_11_load_tokens_only_to_specific_realm(self):
+
         # Load token to a realm
         def _clean_up_tokens():
             remove_token("token01")
@@ -1920,7 +1944,6 @@ class APITokenTestCase(MyApiTestCase):
                 self.assertTrue(res.status_code == 200, res)
                 result = res.json.get("result")
                 self.assertTrue(result.get("value"))
-                detail = res.json.get("detail")
 
             token = get_tokens(serial=f"totp{timestep}")[0]
             self.assertEqual(token.timestep, int(timestep))
@@ -1929,7 +1952,7 @@ class APITokenTestCase(MyApiTestCase):
         self.setUp_user_realms()
         cwd = os.getcwd()
         # setup ca connector
-        r = save_caconnector(
+        save_caconnector(
             {
                 "cakey": CAKEY,
                 "cacert": CACERT,
@@ -1976,7 +1999,17 @@ class APITokenTestCase(MyApiTestCase):
             result = json.loads(res.data.decode("utf8")).get("result")
             self.assertTrue(result.get("value"))
             detail = json.loads(res.data.decode("utf8")).get("detail")
-            self.assertIn("pkcs12", detail)
+            self.assertIn("pkcs12", detail, detail)
+            self.assertIn("pkcs12_password", detail, detail)
+        # Check the data stored in tokeninfo
+        serial = detail.get("serial")
+        token = get_one_token(serial=serial)
+        token_info = token.get_tokeninfo()
+        self.assertIn("pkcs12", token_info, token_info)
+        # Make sure we do not store the pkcs12 password
+        self.assertNotIn("pkcs12_password", token_info, token_info)
+        # Make sure the private key is not stored in the tokeninfo
+        self.assertNotIn("privatekey", token_info, token_info)
 
         # List tokens
         with self.app.test_request_context(
@@ -2039,9 +2072,7 @@ class APITokenTestCase(MyApiTestCase):
 
     def test_19_get_challenges(self):
         set_policy(
-            "chalresp",
-            scope=SCOPE.AUTH,
-            action=f"{ACTION.CHALLENGERESPONSE}=hotp",
+            "chalresp", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGERESPONSE}=hotp"
         )
         token = init_token({"genkey": 1, "serial": "CHAL1", "pin": "pin"})
         serial = token.token.serial
@@ -2084,9 +2115,9 @@ class APITokenTestCase(MyApiTestCase):
             value = result.get("value")
             self.assertEqual(value.get("count"), 0)
 
-        # create a second challenge and a third cahllenge
-        r = check_serial_pass(serial, "pin")
-        r = check_serial_pass(serial, "pin")
+        # create a second challenge and a third challenge
+        check_serial_pass(serial, "pin")
+        check_serial_pass(serial, "pin")
         transaction_ids = []
         with self.app.test_request_context(
             "/token/challenges/", method="GET", headers={"Authorization": self.at}
@@ -2098,7 +2129,7 @@ class APITokenTestCase(MyApiTestCase):
             self.assertEqual(value.get("count"), 3)
             challenges = value.get("challenges")
             for challenge in challenges:
-                # Fill the list of all transaction_ids
+                # Fill the list with all transaction_ids
                 transaction_ids.append(challenge.get("transaction_id"))
 
         # Now we only ask for the first transaction id. This should return only ONE challenge
@@ -2139,6 +2170,29 @@ class APITokenTestCase(MyApiTestCase):
 
         tokens = get_tokens(serial="yk1")
         self.assertEqual(tokens[0].get_tokeninfo("yubikey.prefix"), "vv123456")
+
+    def test_20b_init_yubikey_with_wrong_otp_length(self):
+        # save yubikey.prefix
+        with self.app.test_request_context(
+            "/token/init",
+            method="POST",
+            data={
+                "type": "yubikey",
+                "serial": "yk1",
+                "otpkey": "31323334353637383930313233343565436",
+                "yubikey.prefix": "vv123456",
+            },
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 400, res)
+            result = res.json.get("result")
+            self.assertEqual(result["error"]["code"], 404, result)
+            self.assertEqual(
+                result["error"]["message"],
+                "ERR404: The otpkey must be 32 characters long for yubikey token in AES mode",
+                result,
+            )
 
     def test_21_time_policies(self):
         # Here we test, if an admin policy does not match in time,
@@ -2191,7 +2245,7 @@ class APITokenTestCase(MyApiTestCase):
             user="testadmin",
             realm=self.realm1,
         )
-        r = init_token(
+        init_token(
             {"type": "SPASS", "serial": "SP001"}, user=User("cornelius", self.realm2)
         )
 
@@ -2292,10 +2346,7 @@ class APITokenTestCase(MyApiTestCase):
 
             tokeninfo = token.get("info")
             test_dict = {"key1": "value 1", "key2": "value 2"}
-            try:
-                self.assertTrue(test_dict.viewitems() <= tokeninfo.viewitems())
-            except AttributeError:
-                self.assertTrue(test_dict.items() <= tokeninfo.items())
+            self.assertLessEqual(test_dict.items(), tokeninfo.items())
 
         # Overwrite an existing tokeninfo value
         with self.app.test_request_context(
@@ -2324,10 +2375,7 @@ class APITokenTestCase(MyApiTestCase):
 
             tokeninfo = token.get("info")
             test_dict = {"key1": "value 1 new", "key2": "value 2"}
-            try:
-                self.assertTrue(test_dict.viewitems() <= tokeninfo.viewitems())
-            except AttributeError:
-                self.assertTrue(test_dict.items() <= tokeninfo.items())
+            self.assertLessEqual(test_dict.items(), tokeninfo.items())
 
         # Delete an existing tokeninfo value
         with self.app.test_request_context(
@@ -2377,109 +2425,85 @@ class APITokenTestCase(MyApiTestCase):
             self.assertTrue(value.get("count") == 1, result)
 
             tokeninfo = token.get("info")
-            try:
-                self.assertTrue(
-                    {"key2": "value 2"}.viewitems() <= tokeninfo.viewitems()
-                )
-            except AttributeError:
-                self.assertTrue({"key2": "value 2"}.items() <= tokeninfo.items())
+            self.assertLessEqual({"key2": "value 2"}.items(), tokeninfo.items())
             self.assertNotIn("key1", tokeninfo)
 
     def test_25_user_init_defaults(self):
-        self.setUp_user_realms()
+        """
+        Test the token init endpoint without passing the required enrollment parameters for TOTP tokens.
+        Test that the correct system defaults are used for the token and in the enroll url.
+        There are three possibilities for the hashlib and time step: Use the system default (sha1, 30 seconds), set the
+        defaults in the configurations, or use a user/admin policy to enforce a specific hashlib and time step. The
+        policies take precedence over the system defaults.
+        """
         self.authenticate_selfservice_user()
-        # Now this user is authenticated as selfservice@realm1
+        set_policy("user_enroll", SCOPE.USER, "enrollTOTP")
+        set_policy("admin_enroll", SCOPE.ADMIN, "enrollTOTP")
 
-        # first test with system configuration
-        set_edumfa_config("totp.hashlib", "sha512")
-        with self.app.test_request_context(
-            "/token/init",
-            method="POST",
-            data={
-                "type": "totp",
-                "genkey": 1,
-                "user": "selfservice",
-                "realm": "realm1",
-            },
-            headers={"Authorization": self.at_user},
-        ):
-            res = self.app.full_dispatch_request()
-            self.assertTrue(res.status_code == 200, res)
-            self.assertTrue(res.json.get("result").get("value"))
-            detail = res.json.get("detail")
-            googleurl = detail.get("googleurl")
-            # TODO: The google URL states no hashlib (which means sha1) but the
-            #       actual hashlib is sha512 since no hashlib parameter was
-            #       send in the request.
-            #       This is wrong and needs to be fixed in hotptoken.py:253
-            self.assertFalse("sha1" in googleurl.get("value"))
-            serial = detail.get("serial")
-            token = get_tokens(serial=serial)[0]
-            self.assertEqual(token.hashlib, "sha512")
-            self.assertEqual(token.timestep, 30)
-            self.assertEqual(token.token.otplen, 6)
-            remove_token(serial)
+        def check_token_init(hashlib, time_step, otp_len=6, auth_header=self.at_user):
+            with self.app.test_request_context(
+                "/token/init",
+                method="POST",
+                data={
+                    "type": "totp",
+                    "genkey": True,
+                    "user": "selfservice",
+                    "realm": self.realm1,
+                },
+                headers={"Authorization": auth_header},
+            ):
+                res = self.app.full_dispatch_request()
+                data = res.json
+                self.assertTrue(res.status_code == 200, res)
+                result = data.get("result")
+                detail = data.get("detail")
+                self.assertTrue(result.get("status"), result)
+                self.assertTrue(result.get("value"), result)
 
-        # Now create policy for sha256, overwriting the system config
+                # check enroll url
+                enroll_url = detail.get("googleurl", {}).get("value")
+                if hashlib == "sha1":
+                    self.assertNotIn("&algorithm", enroll_url)
+                else:
+                    self.assertIn(f"&algorithm={hashlib.upper()}", enroll_url)
+                self.assertIn(f"&period={time_step}", enroll_url)
+
+                # check token info
+                serial = detail.get("serial")
+                token = get_tokens(serial=serial)[0]
+                self.assertEqual(hashlib, token.hashlib)
+                self.assertEqual(time_step, token.timestep)
+                self.assertEqual(otp_len, token.token.otplen)
+
+        # ---- hashlib and time step ----
+        # System default
+        check_token_init("sha1", 30)
+
+        # Set system default to sha256 and 60 seconds
+        set_edumfa_config("totp.hashlib", "sha256", "public", "")
+        set_edumfa_config("totp.timeStep", "60", "public", "")
+        check_token_init("sha256", 60)
+
+        # Set user policy
         set_policy(
-            name="init_details",
-            scope=SCOPE.USER,
-            action="totp_otplen=8,totp_hashlib=sha256,totp_timestep=60,enrollTOTP",
+            "user_policy", SCOPE.USER, {"totp_hashlib": "sha512", "totp_timestep": "30"}
         )
+        check_token_init("sha512", 30)
+        delete_policy("user_policy")
 
-        with self.app.test_request_context(
-            "/token/init",
-            method="POST",
-            data={
-                "type": "totp",
-                "totp.hashlib": "sha1",
-                "hashlib": "sha1",
-                "genkey": 1,
-                "user": "selfservice",
-                "realm": "realm1",
-            },
-            headers={"Authorization": self.at_user},
-        ):
-            res = self.app.full_dispatch_request()
-            self.assertTrue(res.status_code == 200, res)
-            result = res.json.get("result")
-            self.assertTrue(result.get("value"))
-            detail = res.json.get("detail")
-            googleurl = detail.get("googleurl")
-            self.assertTrue("SHA256" in googleurl.get("value"))
-            serial = detail.get("serial")
-            token = get_tokens(serial=serial)[0]
-            self.assertEqual(token.hashlib, "sha256")
-            self.assertEqual(token.token.otplen, 8)
+        # Set admin policy
+        set_policy(
+            "admin_policy",
+            SCOPE.ADMIN,
+            {"totp_hashlib": "sha512", "totp_timestep": "30"},
+        )
+        check_token_init("sha512", 30, auth_header=self.at)
+        delete_policy("admin_policy")
 
-        delete_policy("init_details")
-        remove_token(serial)
-
+        # ---- OTP len ----
         # Set OTP len using the system wide default
         set_edumfa_config("DefaultOtpLen", 8)
-        with self.app.test_request_context(
-            "/token/init",
-            method="POST",
-            data={
-                "type": "totp",
-                "totp.hashlib": "sha1",
-                "hashlib": "sha1",
-                "genkey": 1,
-                "user": "selfservice",
-                "realm": "realm1",
-            },
-            headers={"Authorization": self.at_user},
-        ):
-            res = self.app.full_dispatch_request()
-            self.assertTrue(res.status_code == 200, res)
-            result = res.json.get("result")
-            self.assertTrue(result.get("value"))
-            detail = res.json.get("detail")
-            serial = detail.get("serial")
-            token = get_tokens(serial=serial)[0]
-            self.assertEqual(token.token.otplen, 8)
-
-        remove_token(serial)
+        check_token_init("sha256", 60, 8)
 
         # override the DefaultOtpLen
         with self.app.test_request_context(
@@ -3006,7 +3030,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             tokenobj_list = get_tokens(serial=serial)
@@ -3064,7 +3087,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             tokenobj_list = get_tokens(serial=serial)
@@ -3074,6 +3096,8 @@ class APITokenTestCase(MyApiTestCase):
             )
 
         delete_policy("verify_toks1")
+        delete_policy("email_challenge_text")
+        remove_token(serial=serial)
 
     def test_42_init_verify_sms_token(self):
         set_policy(
@@ -3095,9 +3119,10 @@ class APITokenTestCase(MyApiTestCase):
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             self.assertEqual(detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING)
+            # Without a challenge-text policy we get the default challenge message for SMS tokens
             self.assertEqual(
                 detail.get("verify").get("message"),
-                HotpTokenClass.verify_enrollment_message,
+                detail,
             )
             serial = detail.get("serial")
             tokenobj_list = get_tokens(serial=serial)
@@ -3116,7 +3141,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             tokenobj_list = get_tokens(serial=serial)
@@ -3126,6 +3150,8 @@ class APITokenTestCase(MyApiTestCase):
             )
 
         delete_policy("verify_toks1")
+        delete_policy("smstext")
+        delete_smsgateway(smsgw_id)
 
     def test_43_init_verify_index_token(self):
         set_policy(
@@ -3149,15 +3175,17 @@ class APITokenTestCase(MyApiTestCase):
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             self.assertEqual(SECRET, secret)
-            self.assertEqual(detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING)
+            self.assertEqual(ROLLOUTSTATE.VERIFYPENDING, detail.get("rollout_state"))
             message = detail.get("verify").get("message")
             self.assertTrue(message.startswith("Please enter the positions"))
             serial = detail.get("serial")
             tokenobj_list = get_tokens(serial=serial)
             # Check the token rollout state
             self.assertEqual(
-                tokenobj_list[0].token.rollout_state, ROLLOUTSTATE.VERIFYPENDING
+                ROLLOUTSTATE.VERIFYPENDING, tokenobj_list[0].token.rollout_state
             )
+            # Check the default otplen
+            self.assertEqual(6, tokenobj_list[0].token.otplen)
             s_pos = message.strip("Please enter the positions ").strip(
                 " from your secret."
             )
@@ -3176,7 +3204,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             tokenobj_list = get_tokens(serial=serial)
@@ -3184,6 +3211,8 @@ class APITokenTestCase(MyApiTestCase):
             self.assertEqual(
                 ROLLOUTSTATE.ENROLLED, tokenobj_list[0].token.rollout_state
             )
+            # Check the default otplen of the token
+            self.assertEqual(6, tokenobj_list[0].token.otplen)
 
         delete_policy("verify_toks1")
 
@@ -3201,7 +3230,7 @@ class APITokenTestCase(MyApiTestCase):
             headers={"Authorization": self.at},
         ):
             res = self.app.full_dispatch_request()
-            self.assertTrue(res.status_code == 200, res)
+            self.assertEqual(200, res.status_code, res)
             detail = res.json.get("detail")
             result = res.json.get("result")
             self.assertTrue(result.get("status"), result)
@@ -3266,7 +3295,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             self.assertTrue(result.get("status"), result)
             self.assertTrue(result.get("value"), result)
             tokenobj_list = get_tokens(serial=serial)
@@ -3356,7 +3384,6 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
-            detail = res.json.get("detail")
             self.assertTrue(result.get("status"), result)
             self.assertTrue(result.get("value"), result)
             tokenobj_list = get_tokens(serial=serial)
@@ -3991,7 +4018,7 @@ class API00TokenPerformance(MyApiTestCase):
             self.assertFalse(result["status"])
 
 
-class APIDetermine_User_from_Serial_for_Policies(MyApiTestCase):
+class APIDetermineUserFromSerialForPolicies(MyApiTestCase):
     """
     This Testclass verifies if a request, that only contains a serial will also
     honour policies, that are configured for users, if the serial is assigned to such a user.
@@ -4005,7 +4032,7 @@ class APIDetermine_User_from_Serial_for_Policies(MyApiTestCase):
         serial = "SPASS001"
         polname = "disabletokens"
 
-        t = init_token(
+        init_token(
             {"type": "spass", "serial": serial}, user=User("cornelius", self.realm1)
         )
 
@@ -4077,7 +4104,7 @@ class APIDetermine_User_from_Serial_for_Policies(MyApiTestCase):
 
 class APIRolloutState(MyApiTestCase):
     def setUp(self):
-        super().setUp()
+        super(APIRolloutState, self).setUp()
         self.setUp_user_realms()
 
     def test_01_enroll_two_tokens(self):
@@ -4087,7 +4114,7 @@ class APIRolloutState(MyApiTestCase):
 
         r = init_token({"genkey": 1})
         self.assertEqual(r.rollout_state, "")
-        serial2 = r.token.serial
+        r.token.serial
 
         # There are two tokens enrolled
         with self.app.test_request_context(
@@ -4142,12 +4169,12 @@ class APIRolloutState(MyApiTestCase):
             self.assertIn(tok.get("serial"), [serial1, serial3])
 
 
+@unittest.skipUnless(
+    "privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    "Can not test MSCA. grpc module seems not available.",
+)
 class APIMSCACertTestCase(MyApiTestCase):
-    @unittest.skipUnless(
-        "edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
-        "Can not test MSCA. grpc module seems not available.",
-    )
-    def test_00_setup(self):
+    def setUp(self):
         self.setUp_user_realms()
         # setup ca connector
         CONF["type"] = "microsoft"
@@ -4155,10 +4182,6 @@ class APIMSCACertTestCase(MyApiTestCase):
         r = save_caconnector(CONF)
         self.assertEqual(r, 1)
 
-    @unittest.skipUnless(
-        "edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
-        "Can not test MSCA. grpc module seems not available.",
-    )
     def test_01_msca_certificate_pending_and_enrolled(self):
         with mock.patch.object(
             MSCAConnector, "_connect_to_worker"
@@ -4187,6 +4210,13 @@ class APIMSCACertTestCase(MyApiTestCase):
             )
             self.assertEqual("certificate", cert_tok.type)
             self.assertEqual(ROLLOUTSTATE.PENDING, cert_tok.rollout_state)
+            # Check, that there is no pkcs12 container in the tokeninfo and init details
+            self.assertIsNotNone(
+                cert_tok.get_tokeninfo("pkcs12"), cert_tok.get_tokeninfo()
+            )
+            init_details = cert_tok.get_init_details()
+            self.assertIn("pkcs12", init_details, init_details)
+            self.assertIn("pkcs12_password", init_details, init_details)
 
             # Fetch the rolloutstate by fetching the token
             with self.app.test_request_context(
@@ -4217,10 +4247,6 @@ class APIMSCACertTestCase(MyApiTestCase):
                 # certificate is still pending
                 self.assertEqual(ROLLOUTSTATE.ENROLLED, token.get("rollout_state"))
 
-    @unittest.skipUnless(
-        "edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
-        "Can not test MSCA. grpc module seems not available.",
-    )
     def test_02_msca_certificate_pending_and_denied(self):
         with mock.patch.object(
             MSCAConnector, "_connect_to_worker"
@@ -4282,7 +4308,7 @@ class APIMSCACertTestCase(MyApiTestCase):
 
 class APITokengroupTestCase(MyApiTestCase):
     def setUp(self):
-        super().setUp()
+        super(APITokengroupTestCase, self).setUp()
         self.setUp_user_realms()
 
     def test_01_add_tokengroups(self):

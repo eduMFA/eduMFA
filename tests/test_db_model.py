@@ -555,7 +555,7 @@ class TokenModelTestCase(MyTestCase):
 
         # Check that the change has been persisted to the database
         p3_reloaded1 = Policy.query.filter_by(name="pol3").one()
-        self.assertEqual(["edumfanode3"], p3_reloaded1.get()["edumfanode"])
+        self.assertEqual(["pinode3"], p3_reloaded1.get()["pinode"])
         self.assertEqual(
             [
                 (
@@ -962,7 +962,7 @@ class TokenModelTestCase(MyTestCase):
         self.assertFalse(pi2.tls)
 
         # Update the server
-        r = eduMFAServer(
+        eduMFAServer(
             identifier="myserver",
             url="https://pi2.example.com",
             tls=True,
@@ -1288,9 +1288,9 @@ class TokengroupTestCase(MyTestCase):
         self.assertEqual(tok2.serial, "tok2")
 
         # assign tokens to token groups
-        t = TokenTokengroup(token_id=tok1.id, tokengroupname="gruppe1").save()
-        t = TokenTokengroup(token_id=tok1.id, tokengroupname="gruppe2").save()
-        t = TokenTokengroup(token_id=tok2.id, tokengroup_id=tg2.id).save()
+        TokenTokengroup(token_id=tok1.id, tokengroupname="gruppe1").save()
+        TokenTokengroup(token_id=tok1.id, tokengroupname="gruppe2").save()
+        TokenTokengroup(token_id=tok2.id, tokengroup_id=tg2.id).save()
         ttg = TokenTokengroup.query.all()
         self.assertEqual(len(ttg), 3)
         # It does not change anything, if we try to save the same assignment!

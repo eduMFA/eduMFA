@@ -41,7 +41,7 @@ import string
 import traceback
 
 from dateutil.tz import tzlocal
-from sqlalchemy import and_, func, join
+from sqlalchemy import and_, func
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.expression import FunctionElement
 
@@ -85,7 +85,6 @@ from edumfa.lib.user import User
 from edumfa.lib.utils import BASE58, check_serial_valid, hexlify_and_unicode, is_true
 from edumfa.models import (
     Challenge,
-    MachineToken,
     Realm,
     Token,
     Tokengroup,
@@ -2695,7 +2694,7 @@ def check_token_list(
     elif invalid_token_list:
         # There were only tokens, that did not match the OTP value and
         # not even the PIN.
-        # Depending of IncFailCountOnFalsePin, we increase the failcounter.
+        # Depending on IncFailCountOnFalsePin, we increase the failcounter.
         reply_dict["message"] = _("wrong otp pin")
         if get_inc_fail_count_on_false_pin():
             for tokenobject in invalid_token_list:
