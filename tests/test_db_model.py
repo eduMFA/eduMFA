@@ -555,7 +555,7 @@ class TokenModelTestCase(MyTestCase):
 
         # Check that the change has been persisted to the database
         p3_reloaded1 = Policy.query.filter_by(name="pol3").one()
-        self.assertEqual(["pinode3"], p3_reloaded1.get()["pinode"])
+        self.assertEqual(["edumfanode"], p3_reloaded1.get()["edumfanode"])
         self.assertEqual(
             [
                 (

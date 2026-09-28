@@ -6,6 +6,7 @@ from edumfa.lib.caconnector import delete_caconnector, save_caconnector
 from edumfa.lib.caconnectors.localca import ATTR
 from edumfa.lib.policy import ACTION, SCOPE, PolicyClass, delete_policy, set_policy
 from edumfa.lib.radiusserver import add_radius, delete_radius
+from edumfa.lib.realm import delete_realm
 from edumfa.lib.resolver import CENSORED, delete_resolver, save_resolver
 
 from .base import MyApiTestCase
@@ -517,6 +518,21 @@ class APIConfigTestCase(MyApiTestCase):
             # The resolver was created
             self.assertTrue(len(result["value"].get("added")) == 1, result)
             self.assertTrue(len(result["value"].get("failed")) == 0, result)
+
+        # create a realm with multiple resolvers
+        with self.app.test_request_context(
+            "/realm/realm2",
+            method="POST",
+            json={"resolvers": [resolvername, "resolver2"]},
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 200, res)
+            result = res.json.get("result")
+            self.assertTrue(result["status"], result)
+            # The resolver was created
+            self.assertEqual(len(result["value"].get("added")), 1, result)
+            self.assertEqual(len(result["value"].get("failed")), 1, result)
 
         # display the realm
         with self.app.test_request_context(
