@@ -161,7 +161,7 @@ def negate(func):
 #: This class enumerates all available comparators.
 #: In order to add a comparator to this module, add a suitable member to COMPARATORS
 #: and suitable entries to COMPARATOR_FUNCTIONS and COMPARATOR_DESCRIPTIONS.
-class COMPARATORS:
+class Comparators:
     EQUALS = "equals"
     NOT_EQUALS = "!equals"
 
@@ -177,53 +177,74 @@ class COMPARATORS:
     SMALLER = "<"
     BIGGER = ">"
 
+    @classmethod
+    def get_all_comparators(cls):
+        """
+        Return a list of all comparators.
+        """
+        return [
+            cls.EQUALS,
+            cls.NOT_EQUALS,
+            cls.CONTAINS,
+            cls.NOT_CONTAINS,
+            cls.MATCHES,
+            cls.NOT_MATCHES,
+            cls.IN,
+            cls.NOT_IN,
+            cls.SMALLER,
+            cls.BIGGER,
+        ]
+
 
 #: This dictionary connects comparators to comparator functions.
 #: A comparison function takes three parameters ``left``, ``comparator``, ``right``.
 COMPARATOR_FUNCTIONS = {
-    COMPARATORS.EQUALS: _compare_equality,
-    COMPARATORS.NOT_EQUALS: negate(_compare_equality),
-    COMPARATORS.CONTAINS: _compare_contains,
-    COMPARATORS.NOT_CONTAINS: negate(_compare_contains),
-    COMPARATORS.MATCHES: _compare_matches,
-    COMPARATORS.NOT_MATCHES: negate(_compare_matches),
-    COMPARATORS.IN: _compare_in,
-    COMPARATORS.NOT_IN: negate(_compare_in),
-    COMPARATORS.SMALLER: _compare_smaller,
-    COMPARATORS.BIGGER: _compare_bigger,
+    Comparators.EQUALS: _compare_equality,
+    Comparators.NOT_EQUALS: negate(_compare_equality),
+    Comparators.CONTAINS: _compare_contains,
+    Comparators.NOT_CONTAINS: negate(_compare_contains),
+    Comparators.MATCHES: _compare_matches,
+    Comparators.NOT_MATCHES: negate(_compare_matches),
+    Comparators.IN: _compare_in,
+    Comparators.NOT_IN: negate(_compare_in),
+    Comparators.SMALLER: _compare_smaller,
+    Comparators.BIGGER: _compare_bigger,
 }
-
 
 #: This dictionary connects comparators to their human-readable (and translated) descriptions.
 COMPARATOR_DESCRIPTIONS = {
-    COMPARATORS.CONTAINS: _(
+    Comparators.CONTAINS: _(
         "true if the value of the left attribute contains the right value"
     ),
-    COMPARATORS.NOT_CONTAINS: _(
+    Comparators.NOT_CONTAINS: _(
         "false if the value of the left attribute contains the right value"
     ),
-    COMPARATORS.EQUALS: _(
+    Comparators.EQUALS: _(
         "true if the value of the left attribute equals the right value"
     ),
-    COMPARATORS.NOT_EQUALS: _(
+    Comparators.NOT_EQUALS: _(
         "false if the value of the left attribute equals the right value"
     ),
-    COMPARATORS.MATCHES: _(
-        "true if the value of the left attribute completely matches the given regular expression pattern on the right"
+    Comparators.MATCHES: _(
+        "true if the value of the left attribute completely matches the given regular expression "
+        "pattern on the right"
     ),
-    COMPARATORS.NOT_MATCHES: _(
-        "false if the value of the left attribute completely matches the given regular expression pattern on the right"
+    Comparators.NOT_MATCHES: _(
+        "false if the value of the left attribute completely matches the given regular "
+        "expression pattern on the right"
     ),
-    COMPARATORS.IN: _(
-        "true if the value of the left attribute is contained in the comma-separated values on the right"
+    Comparators.IN: _(
+        "true if the value of the left attribute is contained in the comma-separated values on the "
+        "right"
     ),
-    COMPARATORS.NOT_IN: _(
-        "false if the value of the left attribute is contained in the comma-separated values on the right"
+    Comparators.NOT_IN: _(
+        "false if the value of the left attribute is contained in the comma-separated values on the "
+        "right"
     ),
-    COMPARATORS.SMALLER: _(
+    Comparators.SMALLER: _(
         "true if the integer value of the left attribute is smaller than the right integer value"
     ),
-    COMPARATORS.BIGGER: _(
+    Comparators.BIGGER: _(
         "true if the integer value of the left attribute is bigger than the right integer value"
     ),
 }

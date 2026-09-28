@@ -42,6 +42,7 @@ from edumfa.lib.utils import is_true, to_unicode
 from ..api.lib.prepolicy import check_base_action, prepolicy
 from ..lib.error import ParameterError
 from ..lib.log import log_with
+from ..lib.policies.policy_conditions import ConditionHandleMissingData
 from ..lib.policy import (
     ACTION,
     Match,
@@ -552,6 +553,10 @@ def get_policy_defs(scope=None):
          * ``"description"``, a human-readable description of the section
      * ``"comparators"``, containing a dictionary mapping each comparator to a dictionary with the following keys:
          * ``"description"``, a human-readable description of the comparator
+     * ``"handle_missing_data"``, containing a dictionary mapping each handle_missing_data to a dictionary with the
+        following keys:
+            * ``"display_value"``, a human-readable name of the behaviour to be displayed in the webUI
+            * ``"description"``, a short description of the behaviour
 
     if the scope is "edumfanodes", it returns a list of the configured eduMFA nodes.
 
@@ -567,9 +572,11 @@ def get_policy_defs(scope=None):
         # special treatment: get descriptions of conditions
         section_descriptions = get_policy_condition_sections()
         comparator_descriptions = get_policy_condition_comparators()
+        handle_missing_data = ConditionHandleMissingData.get_selection_dict()
         result = {
             "sections": section_descriptions,
             "comparators": comparator_descriptions,
+            "handle_missing_data": handle_missing_data,
         }
     elif scope == "edumfanodes":
         result = get_edumfa_nodes()

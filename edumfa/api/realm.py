@@ -46,7 +46,7 @@ from flask import Blueprint, current_app, g, request
 from flask_babel import gettext as _
 
 from edumfa.lib.auth import ROLE
-from edumfa.lib.policy import CONDITION_CHECK
+from edumfa.lib.policy import ConditionCheck
 
 from ..api.lib.prepolicy import check_base_action, prepolicy
 from ..lib.log import log_with
@@ -205,7 +205,7 @@ def get_realms_api():
         adminrealm=luser.get("realm"),
         adminuser=luser.get("username"),
         active=True,
-        extended_condition_check=CONDITION_CHECK.DO_NOT_CHECK_AT_ALL,
+        extended_condition_check=ConditionCheck.DO_NOT_CHECK_AT_ALL,
     ).policies()
     realms = reduce_realms(all_realms, policies)
 

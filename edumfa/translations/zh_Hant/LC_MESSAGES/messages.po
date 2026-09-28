@@ -906,8 +906,9 @@ msgid ""
 msgstr "如果認證成功，使用者解析程式和領域將添加到認證回應的詳細資訊分支中。"
 
 #: lib/policy.py
+#, fuzzy
 msgid ""
-"The sending of an API Auth Key is required duringauthentication. This "
+"The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
 msgstr "在身份驗證期間需要發送 API 身份驗證金鑰。這樣可以避免針對 /validate/check 介面的惡意身份驗證請求。"
 
@@ -1793,6 +1794,24 @@ msgstr ""
 #, python-format
 msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr "您的LDAP配置似乎正常，%i 機器物件已找到。"
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"Raise an error if the data that is required to check the condition is not"
+" available."
+msgstr ""
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"true. Hence, the policy is applied."
+msgstr ""
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"false. Hence, the policy is not applied."
+msgstr ""
 
 #: lib/resolvers/LDAPIdResolver.py
 #, python-brace-format

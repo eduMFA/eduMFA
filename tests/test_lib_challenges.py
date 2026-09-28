@@ -22,7 +22,7 @@ class ChallengeTestCase(MyTestCase):
     def test_01_challenge(self):
         set_policy(
             "chalresp",
-            scope=SCOPE.AUTHZ,
+            scope=SCOPE.AUTH,
             action=f"{ACTION.CHALLENGERESPONSE}=hotp",
         )
         token = init_token({"genkey": 1, "serial": "CHAL1", "pin": "pin"})
