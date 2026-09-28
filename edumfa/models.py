@@ -1771,7 +1771,7 @@ class PolicyCondition(MethodsMixin, db.Model):
     comparator = db.Column(db.Unicode(255), nullable=False, default="equals")
     Value = db.Column(db.Unicode(2000), nullable=False, default="")
     active = db.Column(db.Boolean, nullable=False, default=True)
-    handle_missing_data = db.Column(db.Unicode(255), nullable=True)
+    handle_missing_data = db.Column(db.Unicode(24), nullable=True)
 
     __table_args__ = {"mysql_row_format": "DYNAMIC"}
 
