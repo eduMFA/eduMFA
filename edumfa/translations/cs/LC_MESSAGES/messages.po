@@ -914,7 +914,7 @@ msgstr ""
 
 #: lib/policy.py
 msgid ""
-"The sending of an API Auth Key is required duringauthentication. This "
+"The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
 msgstr ""
 
@@ -1792,6 +1792,24 @@ msgstr ""
 #, python-format
 msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr "Vaše konfigurace LDAP vypadá v pořádku, bylo nalezeno %i strojů."
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"Raise an error if the data that is required to check the condition is not"
+" available."
+msgstr ""
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"true. Hence, the policy is applied."
+msgstr ""
+
+#: lib/policies/policy_conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"false. Hence, the policy is not applied."
+msgstr ""
 
 #: lib/resolvers/LDAPIdResolver.py
 #, python-brace-format
@@ -2992,5 +3010,12 @@ msgstr ""
 #~ " communicate with WebAuthn tokens. Default:"
 #~ " usb ble nfc internal (All standard"
 #~ " transports)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The sending of an API Auth Key "
+#~ "is required duringauthentication. This avoids"
+#~ " rogue authenticate requests against the"
+#~ " /validate/check interface."
 #~ msgstr ""
 

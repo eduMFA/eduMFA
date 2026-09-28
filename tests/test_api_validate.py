@@ -3617,7 +3617,9 @@ class ValidateAPITestCase(MyApiTestCase):
 
         # Make sure none of the invalid tests above raised any failcounter.
         self.assertEqual(0, get_one_token(serial=token.get_serial()).token.failcount)
-        self.assertEqual(0, get_one_token(serial=token_realm1.get_serial()).token.failcount)
+        self.assertEqual(
+            0, get_one_token(serial=token_realm1.get_serial()).token.failcount
+        )
         token.delete_token()
         token_realm1.delete_token()
 
@@ -4237,7 +4239,9 @@ class WebAuthn(MyApiTestCase):
             self.assertEqual(200, res.status_code)
 
             # Test for failed Authentication because we do not have a valid webauthn_assertion_response
-            self.assertEqual("Invalid authentication request.", data.get("detail").get("message"))
+            self.assertEqual(
+                "Invalid authentication request.", data.get("detail").get("message")
+            )
             self.assertEqual("REJECT", data.get("result").get("authentication"))
 
             # FIXME: A test for a valid usernameless authentication would be better.
@@ -4264,12 +4268,12 @@ class WebAuthn(MyApiTestCase):
             "realm_timeout_policy",
             scope=SCOPE.AUTH,
             action=f"{WEBAUTHNACTION.TIMEOUT}=42",
-            realm="foo-realm",
+            realm=self.realm1,
         )
 
-        # Run challenge request against /validate/triggerchallenge?type=webauthn&foo-realm without user
+        # Run challenge request against /validate/triggerchallenge?type=webauthn&realm={self.realm1} without user
         with self.app.test_request_context(
-            "/validate/triggerchallenge?type=webauthn&realm=foo-realm",
+            f"/validate/triggerchallenge?type=webauthn&realm={self.realm1}",
             method="GET",
             headers={
                 "Host": "pi.example.com",
@@ -5064,7 +5068,7 @@ class MultiChallege(MyApiTestCase):
         set_policy(
             "test",
             scope=SCOPE.AUTH,
-            action=f"{ACTION.PREFERREDCLIENTMODE}=wrong, falsch, Chigau, sbagliato",
+            action=f"{ACTION.PREFERREDCLIENTMODE}=wrong falsch Chigau sbagliato",
         )
 
         with self.app.test_request_context(
@@ -5792,7 +5796,7 @@ class AChallengeResponse(MyApiTestCase):
 
         set_policy(
             "chalresp",
-            scope=SCOPE.AUTHZ,
+            scope=SCOPE.ADMIN,
             action=f"{ACTION.TRIGGERCHALLENGE}=hotp",
         )
 
