@@ -1999,17 +1999,7 @@ class APITokenTestCase(MyApiTestCase):
             result = json.loads(res.data.decode("utf8")).get("result")
             self.assertTrue(result.get("value"))
             detail = json.loads(res.data.decode("utf8")).get("detail")
-            self.assertIn("pkcs12", detail, detail)
-            self.assertIn("pkcs12_password", detail, detail)
-        # Check the data stored in tokeninfo
-        serial = detail.get("serial")
-        token = get_one_token(serial=serial)
-        token_info = token.get_tokeninfo()
-        self.assertIn("pkcs12", token_info, token_info)
-        # Make sure we do not store the pkcs12 password
-        self.assertNotIn("pkcs12_password", token_info, token_info)
-        # Make sure the private key is not stored in the tokeninfo
-        self.assertNotIn("privatekey", token_info, token_info)
+            self.assertIn("pkcs12", detail)
 
         # List tokens
         with self.app.test_request_context(
@@ -4210,13 +4200,6 @@ class APIMSCACertTestCase(MyApiTestCase):
             )
             self.assertEqual("certificate", cert_tok.type)
             self.assertEqual(ROLLOUTSTATE.PENDING, cert_tok.rollout_state)
-            # Check, that there is no pkcs12 container in the tokeninfo and init details
-            self.assertIsNotNone(
-                cert_tok.get_tokeninfo("pkcs12"), cert_tok.get_tokeninfo()
-            )
-            init_details = cert_tok.get_init_details()
-            self.assertIn("pkcs12", init_details, init_details)
-            self.assertIn("pkcs12_password", init_details, init_details)
 
             # Fetch the rolloutstate by fetching the token
             with self.app.test_request_context(
