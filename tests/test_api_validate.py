@@ -5034,7 +5034,7 @@ class MultiChallege(MyApiTestCase):
         set_policy(
             "test",
             scope=SCOPE.AUTH,
-            action=f"{ACTION.PREFERREDCLIENTMODE}=wrong, falsch, Chigau, sbagliato",
+            action=f"{ACTION.PREFERREDCLIENTMODE}=wrong falsch Chigau sbagliato",
         )
 
         with self.app.test_request_context(
@@ -5762,7 +5762,7 @@ class AChallengeResponse(MyApiTestCase):
 
         set_policy(
             "chalresp",
-            scope=SCOPE.AUTHZ,
+            scope=SCOPE.ADMIN,
             action=f"{ACTION.TRIGGERCHALLENGE}=hotp",
         )
 
