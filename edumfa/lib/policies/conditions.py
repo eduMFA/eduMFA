@@ -32,27 +32,29 @@ from edumfa.lib.utils.compare import Comparators, compare_values
 log = logging.getLogger(__name__)
 
 
+# TODO: Change this to an Enum or StrEnum (Python 3.11+) and remove subclass Section
 class ConditionSection:
     __doc__ = """This is a list of available sections for conditions of policies """
-    USERINFO = "userinfo"
-    TOKENINFO = "tokeninfo"
-    TOKEN = "token"  # nosec B105 # section name
-    HTTP_REQUEST_HEADER = "HTTP Request header"
-    HTTP_ENVIRONMENT = "HTTP Environment"
+
+    class Section(Enum):
+        USERINFO = "userinfo"
+        TOKENINFO = "tokeninfo"
+        TOKEN = "token"  # nosec B105 # section name
+        HTTP_REQUEST_HEADER = "HTTP Request header"
+        HTTP_ENVIRONMENT = "HTTP Environment"
+
+    USERINFO = Section.USERINFO.value
+    TOKENINFO = Section.TOKENINFO.value
+    TOKEN = Section.TOKEN.value
+    HTTP_REQUEST_HEADER = Section.HTTP_REQUEST_HEADER.value
+    HTTP_ENVIRONMENT = Section.HTTP_ENVIRONMENT.value
 
     @classmethod
     def get_all_sections(cls) -> list[str]:
         """
         Return all available sections for conditions of policies as a list.
         """
-        sections = [
-            cls.USERINFO,
-            cls.TOKENINFO,
-            cls.TOKEN,
-            cls.HTTP_REQUEST_HEADER,
-            cls.HTTP_ENVIRONMENT,
-        ]
-        return sections
+        return [section.value for section in cls.Section]
 
 
 class ConditionCheck:
