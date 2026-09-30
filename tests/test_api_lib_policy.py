@@ -65,7 +65,6 @@ from edumfa.api.lib.prepolicy import (
     papertoken_count,
     pushtoken_add_config,
     pushtoken_disable_wait,
-    pushtoken_wait,
     require_description,
     required_email,
     required_piv_attestation,
@@ -4075,7 +4074,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # unassign all tokens from the user autoassignuser
         try:
             unassign_token(None, user=user_obj)
-        except Exception as e:
+        except Exception:
             print("no need to unassign token")
 
         # The request with an OTP value and a PIN of a user, who has not

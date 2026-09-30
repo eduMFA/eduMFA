@@ -41,7 +41,6 @@ from edumfa.models import (
     ResolverRealm,
     Serviceid,
     SMSGateway,
-    SMSGatewayOption,
     SMTPServer,
     Subscription,
     Token,

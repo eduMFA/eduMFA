@@ -544,7 +544,7 @@ class AValidateOfflineTestCase(MyApiTestCase):
         # tokenobj = get_tokens(self.serials[0])[0]
         from edumfa.lib.applications.offline import REFILLTOKEN_LENGTH
         from edumfa.lib.machine import attach_token, detach_token
-        from edumfa.lib.machineresolver import delete_resolver, save_resolver
+        from edumfa.lib.machineresolver import save_resolver
 
         mr_obj = save_resolver(
             {
@@ -2367,8 +2367,6 @@ class ValidateAPITestCase(MyApiTestCase):
 
     @responses.activate
     def test_24_trigger_challenge(self):
-        from edumfa.lib.config import set_edumfa_config
-        from edumfa.lib.smsprovider.SMSProvider import set_smsgateway
 
         setup_sms_gateway()
 
@@ -2875,7 +2873,6 @@ class ValidateAPITestCase(MyApiTestCase):
 
         # Configure the SMS Gateway
         setup_sms_gateway()
-        from edumfa.lib.config import set_edumfa_config
 
         self.setUp_user_realms()
         user = User("cornelius", self.realm1)
