@@ -268,9 +268,6 @@ class HotpTokenClass(TokenClass):
             twostep_parameters = self._get_twostep_parameters()
             extra_data.update(twostep_parameters)
             response_detail.update(twostep_parameters)
-        imageurl = params.get("appimageurl")
-        if imageurl:
-            extra_data.update({"image": imageurl})
         force_app_pin = params.get(ACTION.FORCE_APP_PIN)
         if force_app_pin:
             extra_data.update({"pin": True})

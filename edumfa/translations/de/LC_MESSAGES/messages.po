@@ -739,15 +739,6 @@ msgstr ""
 "<code>{surname}</code>."
 
 #: lib/policy.py
-#, fuzzy
-msgid ""
-"This is the URL to the token image for apps like FreeOTP (supported file "
-"formats: PNG, JPG and GIF)."
-msgstr ""
-"Die URL zum Token-Symbol für den privacyIDEA Authenticator und anderen "
-"Apps wie FreeOTP (unterstützte Bildformate: PNG, JPG und GIF)."
-
-#: lib/policy.py
 msgid ""
 "Users can assign a token just by using the unassigned token to "
 "authenticate."
@@ -3600,12 +3591,6 @@ msgstr ""
 #~ "können soll, dann geben Sie hier "
 #~ "'*' ein. Für weitere Details lesen "
 #~ "Sie bitte die Dokumentation."
-
-#~ msgid "This is the URL to the token image for smartphone apps like FreeOTP."
-#~ msgstr ""
-#~ "URL zu einem Bild, das zum Token"
-#~ " in einer App wie FreeOTP angezeigt"
-#~ " wird."
 
 #~ msgid ""
 #~ "The project ID, that the client "

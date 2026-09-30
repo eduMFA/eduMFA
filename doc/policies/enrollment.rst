@@ -101,16 +101,6 @@ The default behaviour is to use the serial number.
    You should rather use a label like ``"{user}@{realm}"``,
    which would result in ``"@"``.
 
-appimageurl
-~~~~~~~~~~~
-
-.. index:: Token Image, FreeOTP
-
-type: string
-
-With this action the administrator may specify the URL to a token image which is included in the
-QR code during enrollment (key in otpauth URL: ``image``). It is used by smartphone apps like FreeOTP (supported file formats: PNG, JPG and GIF).
-
 .. _autoassignment:
 
 autoassignment
