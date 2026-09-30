@@ -11,7 +11,7 @@ from werkzeug.datastructures.headers import EnvironHeaders, Headers
 
 from edumfa.lib.auth import ROLE
 from edumfa.lib.error import ParameterError
-from edumfa.lib.policies.policy_conditions import (
+from edumfa.lib.policies.conditions import (
     ConditionHandleMissingData,
     ConditionSection,
     PolicyConditionClass,
@@ -1833,7 +1833,7 @@ class PolicyTestCase(MyTestCase):
 
         # an unforeseen error in the comparison function => policy error
         with mock.patch(
-            "edumfa.lib.policies.policy_conditions.compare_values"
+            "edumfa.lib.policies.conditions.compare_values"
         ) as mock_function:
             mock_function.side_effect = ValueError
             with self.assertRaisesRegex(PolicyError, r".*Invalid comparison.*"):
