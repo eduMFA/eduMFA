@@ -4156,7 +4156,7 @@ class APIRolloutState(MyApiTestCase):
 
 
 @unittest.skipUnless(
-    "privacyidea.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
+    "edumfa.lib.caconnectors.msca.MSCAConnector" in AvailableCAConnectors,
     "Can not test MSCA. grpc module seems not available.",
 )
 class APIMSCACertTestCase(MyApiTestCase):
