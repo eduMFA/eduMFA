@@ -16,13 +16,7 @@ from alembic import op
 
 def upgrade():
     print("Adding column radiusserver.enforce_ma")
-    try:
-        op.add_column(
-            "radiusserver", sa.Column("enforce_ma", sa.Boolean(), nullable=True)
-        )
-    except Exception as exx:
-        print("Could not add column 'enforce_ma' in table radiusserver")
-        print(exx)
+    op.add_column("radiusserver", sa.Column("enforce_ma", sa.Boolean(), nullable=True))
 
 
 def downgrade():
