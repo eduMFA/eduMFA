@@ -32,9 +32,8 @@ in order to install the latest eduMFA version from
 Deterministic Installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Each eduMFA version pins the version of its dependencies. However, those
-dependencies have dependencies themselves, and some of those transitive
-dependencies do not have their version pinned. This means installing the same
+Each eduMFA version pins the version of it's direct dependencies. However, those
+dependencies have dependencies (so called transitive dependencies), that may not have their version pinned. This means installing the same
 eduMFA version at different points in time can result in a different set of
 dependency versions to be installed.
 
