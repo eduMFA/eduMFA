@@ -318,6 +318,7 @@ class PushTokenClass(TokenClass):
         SSL_VERIFY = "edupush_ssl_verify"
         WAIT = "edupush_wait"
         ALLOW_POLLING = "edupush_allow_polling"
+        IMAGE_URL = "edupush_image_url"
 
     def __init__(self, db_token):
         TokenClass.__init__(self, db_token)
@@ -464,6 +465,15 @@ class PushTokenClass(TokenClass):
                 },
             },
         }
+
+        if cls.get_class_type() == "edupush":
+            res["policy"][SCOPE.AUTH][cls.PUSH_ACTION.IMAGE_URL] = {
+                "type": "str",
+                "desc": _(
+                    "The token image URL returned to the Push App when polling for challenges."
+                ),
+                "group": cls.get_policy_group(),
+            }
 
         if key:
             ret = res.get(key, {})
@@ -786,14 +796,18 @@ class PushTokenClass(TokenClass):
         if not (now - td <= ts <= now + td):
             raise eduMFAError(f"Timestamp {timestamp} not in valid range.")
 
-    def _get_versioned_details(self, _g: object | None) -> dict[str, object]:
+    def _get_versioned_details(self, g: object | None) -> dict[str, object]:
         if self.get_class_type() != "edupush":
             return {}
 
+        image = get_action_values_from_options(
+            SCOPE.AUTH, self.PUSH_ACTION.IMAGE_URL, options={"g": g, "user": self.user}
+        )
         version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
+        details: dict[str, object] = {"image": image}
         if version == 2:
-            return {"token_update": {}}
-        return {}
+            details["token_update"] = {"image": image}
+        return details
 
     @classmethod
     def _api_endpoint_post(cls, request_data, g: object | None = None):
@@ -1092,6 +1106,11 @@ class PushTokenClass(TokenClass):
               signature=SIGNATURE(<tokenserial>|<timestamp>)
 
           More on polling can be found here: https://github.com/privacyidea/privacyidea/wiki/concept%3A-pushtoken-poll
+
+          Successful eduMFA push responses include ``detail.image`` with the
+          token owner's configured image URL, or ``null`` when no image is configured.
+          Clients should preserve their existing image if older servers omit
+          this field. eduMFA push enrollment QR codes do not include image URLs.
 
         :param request: The Flask request
         :param g: The Flask global object g
