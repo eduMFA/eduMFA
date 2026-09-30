@@ -6,7 +6,6 @@ This tests the token functions on an interface level
 
 from edumfa.lib import _
 from edumfa.lib.challenge import extract_answered_challenges, get_challenges
-from edumfa.lib.error import ParameterError, TokenAdminError
 from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 from edumfa.lib.token import init_token
 from edumfa.models import Challenge, db
