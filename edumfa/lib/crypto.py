@@ -91,6 +91,28 @@ FAILED_TO_DECRYPT_PASSWORD = "FAILED TO DECRYPT PASSWORD!"  # nosec B105 # place
 log = logging.getLogger(__name__)
 
 
+class NullCryptoObj:
+    """
+    Container for a value that is stored in plain text.
+
+    It offers the same ``getKey()`` interface as :py:class:`SecretObj`, so that
+    callers can handle encrypted and unencrypted values alike. It is used for
+    values that are not secret and therefore do not need to be encrypted, like
+    the credential id of a WebAuthn token.
+    """
+
+    def __init__(self, val):
+        self.val = val
+
+    def getKey(self):
+        """
+        Return the stored value as bytes, like :py:meth:`SecretObj.getKey`.
+
+        :rtype: bytes
+        """
+        return to_bytes(self.val)
+
+
 class SecretObj:
     def __init__(self, val, iv, preserve=True):
         self.val = val
@@ -188,7 +210,7 @@ def pass_hash(password):
 
 
 @log_with(log, log_entry=False, log_exit=False)
-def verify_pass_hash(password, hvalue):
+def verify_pass_hash(password, hvalue) -> bool:
     """
     Verify the hashed password value
     :param password: The plaintext password to verify
@@ -204,7 +226,7 @@ def verify_pass_hash(password, hvalue):
     return verify_with_crypt_context(pass_ctx, password, hvalue)
 
 
-def hash_with_pepper(password):
+def hash_with_pepper(password) -> str:
     """
     Hash function to hash with salt and pepper. The pepper is read from
     "EDUMFA_PEPPER" from edumfa.cfg.
@@ -220,7 +242,7 @@ def hash_with_pepper(password):
     return pass_hash(key + password)
 
 
-def verify_with_pepper(passwordhash, password):
+def verify_with_pepper(passwordhash, password) -> bool:
     """
     verify the password hash with the given password and pepper
 

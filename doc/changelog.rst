@@ -15,6 +15,27 @@ For version-to-version upgrade steps, see :ref:`migration_guides`.
 
    This is tracked in `issue #1124 <https://github.com/eduMFA/eduMFA/issues/1124>`_.
 
+eduMFA 2.X.Y (unreleased)
+--------------------------
+
+Changes
+~~~~~~~
+
+- The credential id of WebAuthn tokens is no longer stored encrypted. It is
+  public information that is sent to the client with every authentication
+  request, so encrypting it only cost time. This removes one decryption per
+  WebAuthn token from every authentication, which is noticeable with many
+  WebAuthn tokens or a hardware security module. The public key and all other
+  token data are not affected. See :ref:`webauthn`.
+
+Upgrade Notes
+~~~~~~~~~~~~~
+
+- The database migration decrypts the credential id of all existing WebAuthn
+  tokens once. Tokens that can not be decrypted are reported and keep working 
+  with their encrypted credential id. Downgrading the schema encrypts the 
+  credential ids again.
+
 eduMFA 2.9.5
 ------------
 
