@@ -3073,6 +3073,7 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
+            detail = res.json.get("detail")
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             tokenobj_list = get_tokens(serial=serial)
@@ -3082,8 +3083,6 @@ class APITokenTestCase(MyApiTestCase):
             )
 
         delete_policy("verify_toks1")
-        delete_policy("email_challenge_text")
-        remove_token(serial=serial)
 
     def test_42_init_verify_sms_token(self):
         set_policy(
@@ -3105,10 +3104,9 @@ class APITokenTestCase(MyApiTestCase):
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             self.assertEqual(detail.get("rollout_state"), ROLLOUTSTATE.VERIFYPENDING)
-            # Without a challenge-text policy we get the default challenge message for SMS tokens
             self.assertEqual(
                 detail.get("verify").get("message"),
-                detail,
+                HotpTokenClass.verify_enrollment_message,
             )
             serial = detail.get("serial")
             tokenobj_list = get_tokens(serial=serial)
@@ -3127,6 +3125,7 @@ class APITokenTestCase(MyApiTestCase):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             result = res.json.get("result")
+            detail = res.json.get("detail")
             self.assertTrue(result.get("status"))
             self.assertTrue(result.get("value"))
             tokenobj_list = get_tokens(serial=serial)
@@ -3136,8 +3135,6 @@ class APITokenTestCase(MyApiTestCase):
             )
 
         delete_policy("verify_toks1")
-        delete_policy("smstext")
-        delete_smsgateway(smsgw_id)
 
     def test_43_init_verify_index_token(self):
         set_policy(
