@@ -92,7 +92,6 @@ Sat, Sun.
 """
 
 import ast
-import datetime
 import logging
 import re
 import traceback
@@ -1246,7 +1245,6 @@ def set_policy_conditions(conditions: list[PolicyConditionClass], policy: Policy
             handle_missing_data=condition.handle_missing_data.value,
         )
         policy.conditions.append(db_condition)
-
 
 
 @log_with(log)

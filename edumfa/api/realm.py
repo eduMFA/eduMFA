@@ -43,7 +43,6 @@ The code of this module is tested in tests/test_api_system.py
 import logging
 
 from flask import Blueprint, current_app, g, request
-from flask_babel import gettext as _
 
 from edumfa.lib.auth import ROLE
 from edumfa.lib.policy import ConditionCheck

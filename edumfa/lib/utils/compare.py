@@ -71,7 +71,7 @@ def parse_comma_separated_string(input_string):
             escapechar="\\",
         )
         rows = list(reader)
-    except csv.Error as exx:
+    except csv.Error:
         raise CompareError(f"Malformed comma-separated value: {input_string!r}")
     return rows[0]
 
