@@ -10,7 +10,7 @@ import dateutil
 from werkzeug.datastructures.headers import EnvironHeaders, Headers
 
 from edumfa.lib.auth import ROLE
-from edumfa.lib.error import ParameterError, eduMFAError
+from edumfa.lib.error import ParameterError
 from edumfa.lib.policies.policy_conditions import (
     ConditionHandleMissingData,
     ConditionSection,
@@ -2832,6 +2832,7 @@ class PolicyTestCase(MyTestCase):
         self.assertEqual(0, len(conditions))
 
         delete_policy("policy")
+
 
 class PolicyConditionClassTestCase(MyTestCase):
     def test_01_init_success(self):

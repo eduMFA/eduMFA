@@ -30,7 +30,6 @@ from edumfa.lib.token import (
     assign_token,
     check_serial_pass,
     enable_token,
-    get_realms_of_token,
     get_tokens,
     get_tokens_from_serial_or_user,
     init_token,
