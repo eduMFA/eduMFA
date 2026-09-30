@@ -6,7 +6,7 @@ from dateutil.tz import tzutc
 from sqlalchemy import func
 
 from edumfa.lib.crypto import NullCryptoObj, SecretObj
-from edumfa.lib.policies.policy_conditions import (
+from edumfa.lib.policies.conditions import (
     ConditionHandleMissingData,
     ConditionSection,
     PolicyConditionClass,

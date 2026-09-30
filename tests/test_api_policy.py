@@ -2,7 +2,7 @@ import logging
 
 from testfixtures import LogCapture
 
-from edumfa.lib.policies.policy_conditions import (
+from edumfa.lib.policies.conditions import (
     ConditionHandleMissingData,
     ConditionSection,
 )
@@ -740,7 +740,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                 # Make sure the missing key is described in the error log
                 lc.check_present(
                     (
-                        "edumfa.lib.policies.policy_conditions",
+                        "edumfa.lib.policies.conditions",
                         "ERROR",
                         "Unknown HTTP Request header key 'User-Agent' referenced in condition of policy "
                         "'policy'.",
@@ -770,7 +770,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                 # Make sure the missing key is described in the error log
                 lc.check_present(
                     (
-                        "edumfa.lib.policies.policy_conditions",
+                        "edumfa.lib.policies.conditions",
                         "ERROR",
                         "Unknown HTTP Request header key 'User-Agent' "
                         "referenced in condition of policy 'policy'.",
@@ -1045,7 +1045,7 @@ class APIPolicyConditionTestCase(MyApiTestCase):
                 # Make sure the missing key is described in the error log
                 lc.check_present(
                     (
-                        "edumfa.lib.policies.policy_conditions",
+                        "edumfa.lib.policies.conditions",
                         "ERROR",
                         "Unknown HTTP Environment key 'NON_EXISTING' referenced in condition of policy "
                         "'cond1'.",
