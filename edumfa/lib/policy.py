@@ -135,7 +135,7 @@ from edumfa.lib.utils.export import register_export, register_import
 
 from ..models import Policy, PolicyCondition, db, save_config_timestamp
 from .log import log_with
-from .policies.policy_conditions import (
+from .policies.conditions import (
     ConditionCheck,
     ConditionSection,
     PolicyConditionClass,

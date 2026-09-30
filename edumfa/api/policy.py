@@ -42,7 +42,7 @@ from edumfa.lib.utils import is_true, to_unicode
 from ..api.lib.prepolicy import check_base_action, prepolicy
 from ..lib.error import ParameterError
 from ..lib.log import log_with
-from ..lib.policies.policy_conditions import ConditionHandleMissingData
+from ..lib.policies.conditions import ConditionHandleMissingData
 from ..lib.policy import (
     ACTION,
     Match,
