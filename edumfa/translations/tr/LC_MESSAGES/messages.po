@@ -2046,19 +2046,19 @@ msgstr ""
 msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr "LDAP yapılandırmanız iyi görünüyor,%i makine nesneleri bulundu."
 
-#: lib/policies/policy_conditions.py
+#: lib/policies/conditions.py
 msgid ""
 "Raise an error if the data that is required to check the condition is not"
 " available."
 msgstr ""
 
-#: lib/policies/policy_conditions.py
+#: lib/policies/conditions.py
 msgid ""
 "If the required data is not available, the condition is considered to be "
 "true. Hence, the policy is applied."
 msgstr ""
 
-#: lib/policies/policy_conditions.py
+#: lib/policies/conditions.py
 msgid ""
 "If the required data is not available, the condition is considered to be "
 "false. Hence, the policy is not applied."
