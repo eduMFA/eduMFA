@@ -25,6 +25,7 @@ import logging.config
 import os
 import os.path
 import sys
+from pathlib import Path
 
 import yaml
 from flask import Flask, Response, request
@@ -40,9 +41,10 @@ from edumfa.api.caconnector import caconnector_blueprint
 from edumfa.api.clienttype import client_blueprint
 from edumfa.api.edumfaserver import edumfaserver_blueprint
 from edumfa.api.event import eventhandling_blueprint
+from edumfa.api.health import health_blueprint
 from edumfa.api.machine import machine_blueprint
 from edumfa.api.machineresolver import machineresolver_blueprint
-from edumfa.api.monitoring import monitoring_blueprint
+from edumfa.api.monitoring import monitoring_blueprint, stats_blueprint
 from edumfa.api.periodictask import periodictask_blueprint
 from edumfa.api.policy import policy_blueprint
 from edumfa.api.radiusserver import radiusserver_blueprint
@@ -123,6 +125,15 @@ def create_app(
         print(f"The configuration name is: {config_name}")
     if os.environ.get(ENV_KEY):
         config_file = os.environ[ENV_KEY]
+    # Check if this is an eduMFA container image. This is necessary due to a
+    # workaround changing way the config is located in containers.
+    # This will be removed in 3.0.0.
+    elif os.getenv("__EDUMFA_RUNNING_IN_CONTAINER") == "1":
+        if Path("/etc/edumfa/edumfa.cfg").is_file():
+            config_file = "/etc/edumfa/edumfa.cfg"
+        else:
+            config_file = "/opt/edumfa/edumfa_config.py"
+
     if not silent:
         print(f"Additional configuration will be read from the file {config_file}")
     app = Flask(__name__, static_folder="static", template_folder="static/templates")
@@ -175,8 +186,10 @@ def create_app(
     app.register_blueprint(smsgateway_blueprint, url_prefix="/smsgateway")
     app.register_blueprint(client_blueprint, url_prefix="/client")
     app.register_blueprint(monitoring_blueprint, url_prefix="/monitoring")
+    app.register_blueprint(stats_blueprint, url_prefix="/stats")
     app.register_blueprint(tokengroup_blueprint, url_prefix="/tokengroup")
     app.register_blueprint(serviceid_blueprint, url_prefix="/serviceid")
+    app.register_blueprint(health_blueprint, url_prefix="/health")
     db.init_app(app)
     if not script:
         migrate = Migrate(app, db)

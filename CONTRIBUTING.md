@@ -31,7 +31,7 @@ https://github.com/eduMFA/eduMFA/issues
 The source code is pretty well documented. The main documentation resides in the
 `doc`-subfolder and can be build with:
 ```
-pip install .[docs]
+uv sync
 cd doc/ && make html
 ```
 This also pulls the API-documentation from the source code.
@@ -103,8 +103,7 @@ If you are sending a pull request, please note the following:
   ```
 
   This will create a new file in ``migrations/versions/``. Edit the description
-  and put a *try-except* around the operations. Take a look at the other
-scripts.
+  and take a look at the other scripts for inspiration.
   Then you can run:
 
   ```

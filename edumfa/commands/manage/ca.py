@@ -33,7 +33,7 @@ ca_cli = AppGroup("ca", help="Manage Certificate Authorities")
 
 
 @ca_cli.command("create_crl", short_help="Create a new CA connector.")
-@click.argument("name", type=str)
+@click.argument("ca", type=str)
 @click.option("-f", "--force", is_flag=True, help="Enforce creation of a new CRL")
 def create_crl(ca, force=False):
     ca_obj = get_caconnector_object(ca)

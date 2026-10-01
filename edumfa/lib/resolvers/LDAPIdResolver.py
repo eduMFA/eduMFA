@@ -288,6 +288,7 @@ class IdResolver(UserIdResolver):
         self.sizelimit = 500
         self.loginname_attribute = [""]
         self.searchfilter = ""
+        self.activecheck = ""
         self.userinfo = {}
         self.multivalueattributes = []
         self.uidtype = ""

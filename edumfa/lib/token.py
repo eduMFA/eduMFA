@@ -41,7 +41,7 @@ import string
 import traceback
 
 from dateutil.tz import tzlocal
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, join
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.expression import FunctionElement
 
@@ -167,6 +167,7 @@ def _create_token_query(
     tokeninfo=None,
     maxfail=None,
     allowed_realms=None,
+    for_update=False,
 ):
     """
     This function create the sql query for getting tokens. It is used by
@@ -177,7 +178,8 @@ def _create_token_query(
     if user is not None and not user.is_empty():
         # extract the realm from the user object:
         realm = user.realm
-
+    if for_update:
+        sql_query = sql_query.with_for_update(key_share=True)
     if tokentype is not None and tokentype.strip("*"):
         # filter for type
         if "*" in tokentype:
@@ -220,30 +222,28 @@ def _create_token_query(
         # filter for the realm
         if "*" in realm:
             sql_query = sql_query.filter(
-                and_(
-                    func.lower(Realm.name).like(realm.replace("*", "%").lower()),
-                    TokenRealm.realm_id == Realm.id,
-                    TokenRealm.token_id == Token.id,
+                Token.realm_list.any(
+                    TokenRealm.realm.has(
+                        func.lower(Realm.name).like(realm.replace("*", "%").lower())
+                    )
                 )
-            ).distinct()
+            )
         else:
             # exact matching
             sql_query = sql_query.filter(
-                and_(
-                    func.lower(Realm.name) == realm.lower(),
-                    TokenRealm.realm_id == Realm.id,
-                    TokenRealm.token_id == Token.id,
+                Token.realm_list.any(
+                    TokenRealm.realm.has(func.lower(Realm.name) == realm.lower())
                 )
-            ).distinct()
+            )
 
     if allowed_realms is not None:
         sql_query = sql_query.filter(
-            and_(
-                func.lower(Realm.name).in_([r.lower() for r in allowed_realms]),
-                TokenRealm.realm_id == Realm.id,
-                TokenRealm.token_id == Token.id,
+            Token.realm_list.any(
+                TokenRealm.realm.has(
+                    func.lower(Realm.name).in_([r.lower() for r in allowed_realms])
+                )
             )
-        ).distinct()
+        )
 
     stripped_resolver = None if resolver is None else resolver.strip("*")
     stripped_userid = None if userid is None else userid.strip("*")
@@ -284,6 +284,14 @@ def _create_token_query(
 
     if user is not None and not user.is_empty():
         # filter for the rest of the user.
+        if user.realm:
+            realm_db = Realm.query.filter(
+                func.lower(Realm.name) == user.realm.lower()
+            ).first()
+            if realm_db:
+                sql_query = sql_query.filter(TokenOwner.realm_id == realm_db.id)
+            else:
+                raise ResourceNotFoundError(f"Realm '{user.realm}' does not exist.")
         if user.resolver:
             sql_query = sql_query.filter(TokenOwner.token_id == Token.id)
             sql_query = sql_query.filter(TokenOwner.resolver == user.resolver)
@@ -429,6 +437,7 @@ def get_tokens(
     locked=None,
     tokeninfo=None,
     maxfail=None,
+    for_update=False,
 ):
     """
     (was getTokensOfType)
@@ -475,6 +484,8 @@ def get_tokens(
     :type tokeninfo: dict
     :param maxfail: If only tokens should be returned, which failcounter
         reached maxfail
+    :param for_update: If True, a SELECT FOR UPDATE is used to lock the token
+    :type for_update: bool
     :return: A list of tokenclasses (lib.tokenclass).
     :rtype: list
     """
@@ -493,6 +504,7 @@ def get_tokens(
         locked=locked,
         tokeninfo=tokeninfo,
         maxfail=maxfail,
+        for_update=for_update,
     )
 
     # Warning for unintentional exact serial matches
@@ -765,6 +777,37 @@ def get_num_tokens_in_realm(realm, active=True):
     :rtype: int
     """
     return get_tokens(realm=realm, active=active, count=True)
+
+
+def count_users_with_token(
+    realm: str | None = None, active: str | None = None, tokentype: str | None = None
+) -> int:
+    """
+    Returns the numbers of users with tokens.
+
+    :param realm_id: Whether to only include users from a certain realm.
+    :param active: Whether the tokens need to be active to be counted.
+    :param tokentype: Whether the token needs to have a certain type.
+    :return: Number of users with a token in the given realm.
+    """
+    sql_query = TokenOwner.query.with_entities(
+        TokenOwner.resolver, TokenOwner.user_id
+    ).distinct()
+    if realm is not None:
+        # Filter for a realm
+        sql_query = sql_query.filter(
+            and_(
+                func.lower(Realm.name) == realm.lower(),
+                TokenOwner.realm_id == Realm.id,
+            )
+        )
+    token_subquery = _create_token_query(
+        realm=realm, assigned=True, active=active, tokentype=tokentype, for_update=False
+    ).subquery()
+    sql_query = sql_query.join(
+        token_subquery, TokenOwner.token_id == token_subquery.c.id
+    )
+    return sql_query.count()
 
 
 @log_with(log)
@@ -1051,7 +1094,7 @@ def gen_serial(tokentype=None, prefix=None):
     if not prefix:
         prefix = get_token_prefix(tokentype.lower(), tokentype.upper())
 
-    # now search the number of tokens of tokenytype in the token database
+    # now search the number of tokens of tokentype in the token database
     tokennum = Token.query.filter(Token.tokentype == tokentype).count()
 
     # Now create the serial
@@ -2172,7 +2215,7 @@ def check_serial_pass(serial, passw, options=None):
     :rtype: tuple
     """
     reply_dict = {}
-    tokenobject = get_one_token(serial=serial)
+    tokenobject = get_one_token(serial=serial, for_update=True)
     res, reply_dict = check_token_list(
         [tokenobject],
         passw,
@@ -2196,7 +2239,7 @@ def check_otp(serial, otpval):
     :rtype: tuple(bool, dict)
     """
     reply_dict = {}
-    tokenobject = get_one_token(serial=serial)
+    tokenobject = get_one_token(serial=serial, for_update=True)
     res = tokenobject.check_otp(otpval) >= 0
     if not res:
         reply_dict["message"] = _("OTP verification failed.")
@@ -2227,7 +2270,7 @@ def check_user_pass(user, passw, options=None):
     :rtype: tuple
     """
     token_type = options.pop("token_type", None)
-    tokenobject_list = get_tokens(user=user, tokentype=token_type)
+    tokenobject_list = get_tokens(user=user, tokentype=token_type, for_update=True)
     reply_dict = {}
     if not tokenobject_list:
         # The user has no tokens assigned

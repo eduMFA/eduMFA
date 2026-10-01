@@ -213,6 +213,7 @@ class UtilsTestCase(MyApiTestCase):
         # also used in the correct way for policy handling.
         with open("tests/testdata/jwt_sign.key") as f:
             key = f.read()
+        self.setUp_user_realms()
 
         auth_token = jwt.encode(
             payload={

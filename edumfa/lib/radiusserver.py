@@ -128,13 +128,15 @@ class RADIUSServer:
         try:
             response = srv.SendPacket(req)
             if config.enforce_ma:
-                # verify_message_authenticator() raised a generic exception
+                # verify_message_authenticator() raises a generic exception
                 # if M-A attribute is missing .. check for it before!
                 if "Message-Authenticator" in response:
-                    success = response.verify_message_authenticator()
+                    success = response.verify_message_authenticator(
+                        original_authenticator=req.authenticator
+                    )
                     if not success:
                         log.info(
-                            f"Radiusserver {config.server} sent broken"
+                            f"Radiusserver {config.server} sent broken "
                             "Message-Authenticator"
                         )
                         return False

@@ -7,6 +7,8 @@ The code roughly has three levels: API, LIB and DB.
 
 .. index:: JWT, JSON Web Token
 
+.. _code_docu_rest_api:
+
 API level
 ---------
 The API level is used to access the system. 

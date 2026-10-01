@@ -57,7 +57,7 @@ from edumfa.lib.token import (
 )
 from edumfa.lib.user import User, split_user
 from edumfa.lib.utils import parse_legacy_time, to_unicode
-from edumfa.models import Token, cleanup_challenges
+from edumfa.models import JwtBlacklist, Token, cleanup_challenges
 
 __version__ = "0.1"
 
@@ -71,6 +71,7 @@ ALLOWED_ACTIONS = [
     "listuser",
     "tokenrealms",
     "enable",
+    "reset",
 ]
 
 __doc__ = f"""
@@ -95,6 +96,7 @@ Actions:
 * disable
 * delete
 * enable
+* reset
 
 
     edumfa-token-janitor find
@@ -818,6 +820,10 @@ def find(
                                     )
                                     token_obj.del_tokeninfo(remove_tokeninfo_key)
                                     token_obj.save()
+                        elif action == "reset":
+                            click.echo(f"Reset failcounter of {token_obj.token.serial}")
+                            token_obj.reset()
+                            token_obj.save()
                     except Exception as exx:
                         click.echo(f"Failed to process token {token_obj.token.serial}.")
                         click.echo(f"{exx}")
@@ -855,6 +861,13 @@ def cleanupchallenges():
     This command can be used to clean up old challenges from the database.
     """
     cleanup_challenges()
+
+@cli.command("cleanupjwtblacklist")
+def cleanupjwtblacklist():
+    """
+    This command can be used to clean up old JWT blacklist entries from the database.
+    """
+    JwtBlacklist.blacklist_janitor()
 
 @cli.command("loadtokens")
 @click.option("--pskc", help="Import this PSKC file.")

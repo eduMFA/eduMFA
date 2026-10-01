@@ -15,7 +15,6 @@ on:
       - 'tools/**'
       - 'edumfa-manage'
       - 'pyproject.toml'
-      - 'requirements.txt'
       - 'setup.py'
   pull_request:
     types: [ opened, reopened, synchronize ]
@@ -32,7 +31,7 @@ jobs:
             codename: jammy
     name: build ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install dependencies
         run: |
           sudo apt-get update

@@ -25,8 +25,7 @@
 #
 import binascii
 import logging
-import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from json import dumps, loads
 
 from dateutil.tz import tzutc
@@ -35,9 +34,11 @@ from sqlalchemy import BigInteger, and_
 from sqlalchemy.dialects import mysql, postgresql, sqlite
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import CreateSequence, Sequence
 
 from edumfa.lib.crypto import (
+    NullCryptoObj,
     SecretObj,
     decryptPin,
     encrypt,
@@ -48,8 +49,14 @@ from edumfa.lib.crypto import (
     pass_hash,
     verify_pass_hash,
 )
+from edumfa.lib.error import ResourceNotFoundError
 from edumfa.lib.framework import get_app_config_value
-from edumfa.lib.utils import convert_column_to_unicode, hexlify_and_unicode, is_true
+from edumfa.lib.utils import (
+    convert_column_to_unicode,
+    hexlify_and_unicode,
+    is_true,
+    to_unicode,
+)
 
 from .lib.log import log_with
 
@@ -286,13 +293,32 @@ class Token(MethodsMixin, db.Model):
         return data
 
     @log_with(log, hide_args=[1])
-    def set_otpkey(self, otpkey, reset_failcount=True):
-        iv = geturandom(16)
-        self.key_enc = encrypt(otpkey, iv)
+    def set_otpkey(self, otpkey, reset_failcount=True, encrypted=True):
+        """
+        Store the otpkey of the token and reset the OTP counter.
+
+        :param otpkey: the otpkey to store
+        :type otpkey: str or bytes
+        :param reset_failcount: whether to reset the failcounter as well
+        :type reset_failcount: bool
+        :param encrypted: If ``True`` (the default), the otpkey is encrypted
+            with the security module before it is stored. Set it to ``False``
+            for values that are not secret, like the credential id of a
+            WebAuthn token, to avoid the costly encryption and decryption.
+            Such values are stored as they are with an empty IV, which marks
+            them as unencrypted for :py:meth:`get_otpkey`.
+        :type encrypted: bool
+        """
+        if encrypted:
+            iv = geturandom(16)
+            self.key_enc = encrypt(otpkey, iv)
+            self.key_iv = hexlify_and_unicode(iv)
+        else:
+            self.key_enc = to_unicode(otpkey)
+            self.key_iv = ""
         length = len(self.key_enc)
         if length > Token.key_enc.property.columns[0].type.length:
             log.error(f"Key {self.serial} exceeds database field {length:d}!")
-        self.key_iv = hexlify_and_unicode(iv)
         self.count = 0
         if reset_failcount is True:
             self.failcount = 0
@@ -377,8 +403,33 @@ class Token(MethodsMixin, db.Model):
         self.user_pin = encrypt(userPin, iv)
         self.user_pin_iv = hexlify_and_unicode(iv)
 
+    def is_otpkey_encrypted(self):
+        """
+        Check whether the otpkey of this token is stored encrypted.
+
+        Encrypted otpkeys always come with an IV. An empty IV marks an otpkey
+        that was stored in plain text via ``set_otpkey(..., encrypted=False)``.
+
+        :rtype: bool
+        """
+        return bool(self._fix_spaces(self.key_iv))
+
     @log_with(log)
-    def get_otpkey(self):
+    def get_otpkey(self, encrypted=None):
+        """
+        Return the otpkey of the token as an object with a ``getKey()`` method.
+
+        :param encrypted: ``True`` to decrypt the stored value, ``False`` to
+            return it as it is stored. Defaults to ``None``, which detects the
+            storage format via :py:meth:`is_otpkey_encrypted`.
+        :type encrypted: bool or None
+        :return: the otpkey
+        :rtype: SecretObj or NullCryptoObj
+        """
+        if encrypted is None:
+            encrypted = self.is_otpkey_encrypted()
+        if not encrypted:
+            return NullCryptoObj(self.key_enc)
         key = binascii.unhexlify(self.key_enc)
         iv = binascii.unhexlify(self.key_iv)
         secret = SecretObj(key, iv)
@@ -718,7 +769,16 @@ class TokenInfo(MethodsMixin, db.Model):
         self.Description = Description
 
     def save(self, persistent=True):
-        ti_func = TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).first
+        # Use a locking read (SELECT ... FOR UPDATE) so concurrent saves of the
+        # same (token_id, Key) row serialize instead of racing. This avoids the
+        # MariaDB error 1020 (ER_CHECKREAD) that concurrent token validations
+        # trigger when they update the same tokeninfo row. FOR UPDATE is a no-op
+        # on SQLite (silently ignored by its dialect).
+        ti_func = (
+            TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key)
+            .with_for_update()
+            .first
+        )
         ti = ti_func()
         if ti is None:
             # create a new one
@@ -730,14 +790,11 @@ class TokenInfo(MethodsMixin, db.Model):
             else:
                 ret = self.id
         else:
-            # update
-            TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).update(
-                {
-                    "Value": self.Value,
-                    "Description": self.Description,
-                    "Type": self.Type,
-                }
-            )
+            # Update the row we just locked with FOR UPDATE in this same
+            # transaction, instead of issuing a second, separate query for it.
+            ti.Value = self.Value
+            ti.Description = self.Description
+            ti.Type = self.Type
             ret = ti.id
         if persistent:
             db.session.commit()
@@ -1213,13 +1270,20 @@ class TokenOwner(MethodsMixin, db.Model):
         if realm_id is not None:
             self.realm_id = realm_id
         elif realmname:
-            r = Realm.query.filter_by(name=realmname).first()
-            self.realm_id = r.id
+            realm = Realm.query.filter_by(name=realmname).first()
+            if not realm:
+                raise ResourceNotFoundError(f"Realm '{realmname}' does not exist.")
+            self.realm_id = realm.id
         if token_id is not None:
             self.token_id = token_id
         elif serial:
-            r = Token.query.filter_by(serial=serial).first()
-            self.token_id = r.id
+            token = Token.query.filter_by(serial=serial).first()
+            if not token:  # pragma: no cover
+                # usually this is already covered by the lib / token class functions
+                raise ResourceNotFoundError(
+                    f"Token with serial '{serial}' does not exist."
+                )
+            self.token_id = token.id
         self.resolver = resolver
         self.user_id = user_id
 
@@ -1358,6 +1422,44 @@ class PasswordReset(MethodsMixin, db.Model):
         self.expiration = expiration or datetime.now() + timedelta(
             seconds=expiration_seconds
         )
+
+
+class JwtBlacklist(db.Model):
+    """
+    Table for storing a JWT blacklist to prevent reusing Passkey Authentications
+    """
+
+    __tablename__ = "jwt_blacklist"
+    __table_args__ = ({"mysql_row_format": "DYNAMIC"},)
+    expiration = db.Column(db.DateTime, index=True)
+    nonce = db.Column(db.Unicode(128), nullable=False, primary_key=True, unique=True)
+
+    def __init__(self, expiration, nonce):
+        self.expiration = expiration
+        self.nonce = nonce
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        return self.nonce
+
+    def delete(self):
+        ret = self.nonce
+        db.session.delete(self)
+        db.session.commit()
+        return ret
+
+    @staticmethod
+    def blacklist_janitor():
+        try:
+            # Get a new transaction to keep the impact of the action as low as possible
+            session = sessionmaker(bind=db.engine)
+            with session.begin() as session_transaction:
+                session_transaction.query(JwtBlacklist).filter(
+                    JwtBlacklist.expiration < datetime.now(timezone.utc)
+                ).delete()
+        except (OperationalError, IntegrityError) as e:
+            log.warning(f"Error in JwtBlacklist janitor: {e}")
 
 
 class Challenge(MethodsMixin, db.Model):
@@ -1504,7 +1606,7 @@ def cleanup_challenges():
     """
     c_now = datetime.utcnow()
     try:
-        Challenge.query.filter(Challenge.expiration < c_now).delete()
+        Challenge.query.with_for_update().filter(Challenge.expiration < c_now).delete()
         db.session.commit()
     except (OperationalError, IntegrityError) as e:
         log.warning(f"Error in cleanup_challenges: {e}")
@@ -2685,6 +2787,7 @@ class ClientApplication(MethodsMixin, db.Model):
                 db.session.add(self)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
+                db.session.rollback()
                 log.warning(f"Unable to write ClientApplication entry to db: {e}")
         else:
             # update
@@ -2697,6 +2800,7 @@ class ClientApplication(MethodsMixin, db.Model):
                 ).update(values)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
+                db.session.rollback()
                 log.warning(f"Unable to update ClientApplication entry: {e}")
 
     def __repr__(self):

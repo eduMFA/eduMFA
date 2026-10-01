@@ -157,6 +157,10 @@ class RADIUSServerTestCase(MyTestCase):
 
     @radiusmock.activate
     def test_08_RADIUS_request_ma(self):
+        # TODO: Some of these tests should probably have failed without the
+        # change in commit "fix: radiusserver message authenticator". They
+        # didn't, and it would be nice to have a unit test covering that at
+        # least. But for now there's no time..
         radiusmock.setdata(response=radiusmock.AccessAccept)
         r = add_radius(
             identifier="myserver",

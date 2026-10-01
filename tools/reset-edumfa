@@ -46,10 +46,10 @@ fi
 
 adapt_edumfa_cfg() {
 	    # PEPPER does not exist, yet
-	    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+	    PEPPER="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c48)"
 	    echo "EDUMFA_PEPPER = '$PEPPER'" >> /etc/edumfa/edumfa.cfg
 	    # SECRET_KEY does not exist, yet
-	    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c24)"
+	    SECRET="$(tr -dc A-Za-z0-9_ </dev/urandom | head -c48)"
 	    echo "SECRET_KEY = '$SECRET'" >> /etc/edumfa/edumfa.cfg
 }
 

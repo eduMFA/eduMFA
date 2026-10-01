@@ -1,7 +1,9 @@
 import datetime
 
 from edumfa.lib.monitoringstats import write_stats
+from edumfa.lib.token import init_token
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
+from edumfa.lib.user import User
 from edumfa.models import db
 
 from .base import MyApiTestCase
@@ -118,3 +120,37 @@ class APIMonitoringTestCase(MyApiTestCase):
             result = res.json.get("result")
             # Number of remaining values
             self.assertEqual(1, len(result.get("value")), result)
+
+    def test_03_count_users_with_token(self):
+        # no assigned tokens
+        with self.app.test_request_context(
+            "/stats/current/users_with_token",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            self.assertTrue(b'"status": true' in res.data, res.data)
+            self.assertTrue(b'"value": 0' in res.data, res.data)
+        # test with an assigned token
+        self.setUp_user_realms()
+        user_obj = User("cornelius", realm=self.realm1)
+        tok = init_token(
+            {
+                "type": "hotp",
+                "otpkey": self.otpkey,
+                "serial": "TEST08A_1",
+            },
+            user=user_obj,
+        )
+        with self.app.test_request_context(
+            "/stats/current/users_with_token",
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            self.assertTrue(b'"status": true' in res.data, res.data)
+            self.assertTrue(b'"value": 1' in res.data, res.data)
+        # cleanup
+        tok.delete_token()

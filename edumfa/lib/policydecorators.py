@@ -36,7 +36,7 @@ from dateutil.tz import tzlocal
 from typing_extensions import ParamSpec, TypeVar
 
 from edumfa.lib.authcache import add_to_cache, verify_in_cache
-from edumfa.lib.error import PolicyError, eduMFAError
+from edumfa.lib.error import PolicyError, UserError, eduMFAError
 from edumfa.lib.policy import ACTION, ACTIONVALUE, LOGINMODE, SCOPE, Match
 from edumfa.lib.radiusserver import get_radius
 from edumfa.lib.user import User
@@ -232,19 +232,20 @@ def auth_user_has_no_token(wrapped_function, user_object, passw, options=None):
     return wrapped_function(user_object, passw, options)
 
 
-def auth_user_does_not_exist(wrapped_function, user_object, passw, options=None):
+def auth_user_does_not_exist(wrapped_function: Callable, user_object: User, passw: str, options: dict | None = None) -> tuple[bool, dict]:
     """
-    This decorator checks, if the user does exist at all.
-    If the user does exist, the wrapped function is called.
+    Check if the user exist, raise a UserError if it does not. Except when
+    PASSNOUSER is set, then accept the authentication request.
 
     The wrapped function is usually token.check_user_pass, which takes the
     arguments (user, passw, options={})
 
-    :param wrapped_function:
-    :param user_object:
-    :param passw:
+    :param wrapped_function: The decorated method.
+    :param user_object: The user object to check for PASSNOUSER.
+    :param passw: The password which will be passed to the decorated method.
     :param options: Dict containing values for "g" and "clientip"
     :return: Tuple of True/False and reply-dictionary
+    :raises UserError: If the user does not exist.
     """
     options = options or {}
     g = options.get("g")
@@ -252,15 +253,17 @@ def auth_user_does_not_exist(wrapped_function, user_object, passw, options=None)
         pass_no_user = Match.user(
             g, scope=SCOPE.AUTH, action=ACTION.PASSNOUSER, user_object=user_object
         ).policies(write_to_audit_log=False)
-        if pass_no_user:
-            # Check if user object exists
-            if not user_object.exist():
+        if not user_object.exist():
+            if pass_no_user:
+                # Check if user object exists
                 g.audit_object.add_policy([p.get("name") for p in pass_no_user])
                 return True, {
                     "message": f"user does not exist, accepted due to '{pass_no_user[0].get('name')}'"
                 }
+            else:
+                raise UserError(f"User {user_object} does not exist.")
 
-    # If nothing else returned, we return the wrapped function
+    # If the user exists, return the wrapped function.
     return wrapped_function(user_object, passw, options)
 
 
