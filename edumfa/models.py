@@ -25,7 +25,7 @@
 #
 import binascii
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from json import dumps, loads
 
 from dateutil.tz import tzutc
@@ -1456,7 +1456,7 @@ class JwtBlacklist(db.Model):
             session = sessionmaker(bind=db.engine)
             with session.begin() as session_transaction:
                 session_transaction.query(JwtBlacklist).filter(
-                    JwtBlacklist.expiration < datetime.now(timezone.utc)
+                    JwtBlacklist.expiration < datetime.now(UTC)
                 ).delete()
         except (OperationalError, IntegrityError) as e:
             log.warning(f"Error in JwtBlacklist janitor: {e}")
