@@ -111,27 +111,6 @@ myApp.controller("monitoringController", [
       }
     }
 
-    function minimalizeValues(values) {
-      var maxLength = 10000; // more than that and the chart will be too slow to render.
-      if (values.length <= maxLength) {
-        return values;
-      }
-      var bucketSize = Math.ceil(values.length / (maxLength / 2));
-      var reducedValues = [];
-      for (var i = 0; i < values.length; i += bucketSize) {
-        var bucket = values.slice(i, i + bucketSize);
-        var min = bucket[0];
-        var max = bucket[0];
-        for (var p of bucket) {
-          if (p.y < min.y) min = p;
-          if (p.y > max.y) max = p;
-        }
-        reducedValues.push(min);
-        if (max !== min) reducedValues.push(max);
-      }
-      return reducedValues;
-    }
-
     function isStillRelevant(sk, timeFrame) {
       var stillSelected = sk.selected;
       var sameTimeFrame = $scope.selectedTimeFrame.label === timeFrame;
@@ -211,14 +190,14 @@ myApp.controller("monitoringController", [
       setStatus(key, STATUS.LOADING);
       MonitoringFactory.getMonitored(
         sk.name,
-        { start: startTime },
+        { start: startTime, max_points: 500 },
         key,
         function (data) {
           var d = data.result.value;
           var points = d
             .map((e) => ({ x: new Date(e[0]).getTime(), y: e[1] }))
-            .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y));
-          points = minimalizeValues(points).sort((a, b) => a.x - b.x);
+            .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y))
+            .sort((a, b) => a.x - b.x);
           if (points.length === 1 && sk.pointStyle === false) {
             sk.pointStyle = "circle";
           }

@@ -116,7 +116,7 @@ myApp.directive("timelineChart", function () {
           if (ds.data && ds.data.length > maxPoints) maxPoints = ds.data.length;
         });
 
-        var pxPerPoint = 20;
+        var pxPerPoint = 15;
         var outerWidth = outer.clientWidth;
         var neededWidth = maxPoints * pxPerPoint;
         var dpr = window.devicePixelRatio || 1;
@@ -146,12 +146,6 @@ myApp.directive("timelineChart", function () {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            decimation: {
-              algorithm: "lttb",
-              enabled: true,
-              samples: 500,
-              threshold: 500,
-            },
             legend: {
               display: false,
             },
