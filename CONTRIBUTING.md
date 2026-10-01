@@ -103,8 +103,7 @@ If you are sending a pull request, please note the following:
   ```
 
   This will create a new file in ``migrations/versions/``. Edit the description
-  and put a *try-except* around the operations. Take a look at the other
-scripts.
+  and take a look at the other scripts for inspiration.
   Then you can run:
 
   ```

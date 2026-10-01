@@ -65,11 +65,15 @@ class AppTestCase(unittest.TestCase):
             "smsgateway_blueprint",
             "client_blueprint",
             "monitoring_blueprint",
+            "stats_blueprint",
         ]
-        self.assertTrue(all(k in app.before_request_funcs for k in blueprints), app)
-        self.assertTrue(all(k in app.blueprints for k in blueprints), app)
+        self.assertTrue(
+            all(k in app.before_request_funcs for k in blueprints),
+            app.before_request_funcs,
+        )
+        self.assertTrue(all(k in app.blueprints for k in blueprints), app.blueprints)
         extensions = ["sqlalchemy", "migrate", "babel"]
-        self.assertTrue(all(k in extensions for k in app.extensions), app)
+        self.assertTrue(all(k in extensions for k in app.extensions), app.extensions)
         self.assertEqual(app.secret_key, "t0p s3cr3t", app)
         # TODO: check url_map and view_functions
         # check that the configuration was loaded successfully

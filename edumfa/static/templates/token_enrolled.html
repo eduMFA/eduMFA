@@ -1,49 +1,46 @@
 {% include 'header.html' %}
 
 <div class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="#">eduMFA Certificate</a>
+  <div class="container">
+    <a class="navbar-brand" href="#">eduMFA Certificate</a>
 
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <button onclick="window.close()"
-                        class="btn btn-sm btn-warning">
-                    Close Window
-                </button>
-            </li>
-        </ul>
-    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <button onclick="window.close()" class="btn btn-sm btn-warning">
+          Close Window
+        </button>
+      </li>
+    </ul>
+  </div>
 </div>
 
 <!----------------- main -------------------------->
 
 <div class="container">
+  <p>
+    The certificate with token serial {{ serial }} for user {{ username }} ({{
+    role }}) was enrolled successfully.
+  </p>
 
-<p>
-The certificate with token serial {{ serial }} for user {{ username }}
-    ({{ role }}) was    enrolled    successfully.
-</p>
+  <a href="data:application/x-x509-user-cert;base64,{{ cert_pem }}"
+    >Install Certificate to Browser</a
+  >
 
-<a href="data:application/x-x509-user-cert;base64,{{ cert_pem }}">Install
-    Certificate to Browser</a>
-
-<div class="well">
-    <pre>{{ certificate }}
+  <div class="well">
+    <pre>
+{{ certificate }}
     </pre>
-</div>
-
+  </div>
 </div>
 
 <!------------------ footer ------------------------------->
 
 <div class="navbar navbar-inverse navbar-fixed-bottom">
-    <div class="container">
-        <a ng-click="about()"
-            class="navbar-text pull-left">
-            eduMFA
-            {{ eduMFAVersionNumber }}
-        </a>
-        <!--
+  <div class="container">
+    <a ng-click="about()" class="navbar-text pull-left">
+      eduMFA {{ eduMFAVersionNumber }}
+    </a>
+    <!--
         <a class="navbar-btn btn btn-success pull-right"
            href="https://netknights.it/leistungen/support/"
            target="_external">
@@ -60,7 +57,7 @@ The certificate with token serial {{ serial }} for user {{ username }}
             Online Documentation
         </a>
         -->
-    </div>
+  </div>
 </div>
 
 {% include 'footer.html' %}

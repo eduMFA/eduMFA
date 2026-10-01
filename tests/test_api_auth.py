@@ -633,7 +633,7 @@ class AuthApiTestCase(MyApiTestCase):
             # The login page contains the info about force remote_user, which will hide the
             # "login with credentials" button.
             self.assertIn(
-                'input type=hidden id=FORCE_REMOTE_USER value="True"',
+                'input type="hidden" id="FORCE_REMOTE_USER" value="True"',
                 to_unicode(res.data),
             )
 

@@ -15,6 +15,72 @@ For version-to-version upgrade steps, see :ref:`migration_guides`.
 
    This is tracked in `issue #1124 <https://github.com/eduMFA/eduMFA/issues/1124>`_.
 
+eduMFA 2.X.Y (unreleased)
+--------------------------
+
+Changes
+~~~~~~~
+
+- The credential id of WebAuthn tokens is no longer stored encrypted. It is
+  public information that is sent to the client with every authentication
+  request, so encrypting it only cost time. This removes one decryption per
+  WebAuthn token from every authentication, which is noticeable with many
+  WebAuthn tokens or a hardware security module. The public key and all other
+  token data are not affected. See :ref:`webauthn`.
+
+Upgrade Notes
+~~~~~~~~~~~~~
+
+- The database migration decrypts the credential id of all existing WebAuthn
+  tokens once. Tokens that can not be decrypted are reported and keep working 
+  with their encrypted credential id. Downgrading the schema encrypts the 
+  credential ids again.
+
+eduMFA 2.9.5
+------------
+
+This release contains no functional changes but fixes an issue with uploading
+to PyPi. This causes version 2.9.4 to not be available there.
+
+eduMFA 2.9.4
+------------
+
+This release fixes the Blast-RADIUS attack for the RADIUS token.
+
+Bug Fixes
+~~~~~~~~
+
+- Fixed the `Blast-RADIUS <https://www.blastradius.fail/>`_ attack for RADIUS
+  tokens, too. See `advisory <https://github.com/eduMFA/eduMFA/security/advisories/GHSA-hmmw-j78p-f6mv>`_.
+- Actually fixed ``edumfa-pip-update`` when used with Python 3.14, which was
+  missing from v2.9.3.
+- Applies security updates to multiple libraries.
+
+See full `commit history <https://github.com/eduMFA/eduMFA/compare/v2.9.3...v2.9.4>`_.
+
+eduMFA 2.9.3
+------------
+
+This release fixes issues introduced in v2.9.2.
+
+Bug Fixes
+~~~~~~~~
+
+- Fixed an incompatibility with PostgreSQL. To avoid issues like this in the future:
+
+  + eduMFA will soon declare its supported databases. These will likely be
+    MariaDB and PostgreSQL.
+  + Unittests now additionally run against those supported DBs (instead of only
+    SQLite as a development database).
+- Fixed dangling database sessions under high load when writing to the
+  ClientApplication table.
+- Fixed an error message when trying to login with unassigned passkeys.
+- Fixed ``edumfa-pip-update`` when used with Python 3.14.
+- Fixed ``edumfa-manage`` in the container outside of the entrypoint (e.g. for
+  interactive shells or cronjobs).
+
+See full `commit history <https://github.com/eduMFA/eduMFA/compare/v2.9.2...v2.9.3>`_.
+
 eduMFA 2.9.2
 ------------
 

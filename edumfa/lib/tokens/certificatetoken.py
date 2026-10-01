@@ -47,13 +47,22 @@ import traceback
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives.serialization import (
+    Encoding,
+    NoEncryption,
     PrivateFormat,
     load_pem_private_key,
     pkcs12,
 )
-from cryptography.x509 import load_pem_x509_certificate, load_pem_x509_csr
+from cryptography.x509 import (
+    CertificateSigningRequestBuilder,
+    Name,
+    NameAttribute,
+    load_pem_x509_certificate,
+    load_pem_x509_csr,
+)
+from cryptography.x509.oid import NameOID
 
 from edumfa.lib import _
 from edumfa.lib.decorators import check_token_locked
@@ -546,16 +555,18 @@ class CertificateTokenClass(TokenClass):
             """
             user = get_user_from_param(param, optionalOrRequired=required)
             keysize = getParam(param, "keysize", optional, 2048)
-            key = crypto.PKey()
-            key.generate_key(crypto.TYPE_RSA, keysize)
-            req = crypto.X509Req()
-            req.get_subject().CN = user.login
+            key = rsa.generate_private_key(public_exponent=65537, key_size=keysize)
+            subject = [NameAttribute(NameOID.COMMON_NAME, user.login)]
             # Add components to subject
             if subject_components:
                 if "email" in subject_components and user.info.get("email"):
-                    req.get_subject().emailAddress = user.info.get("email")
+                    subject.append(
+                        NameAttribute(NameOID.EMAIL_ADDRESS, user.info.get("email"))
+                    )
                 if "realm" in subject_components:
-                    req.get_subject().organizationalUnitName = user.realm
+                    subject.append(
+                        NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, user.realm)
+                    )
             # TODO: Add Country, Organization
             """
             req.get_subject().countryName = 'xxx'
@@ -563,9 +574,10 @@ class CertificateTokenClass(TokenClass):
             req.get_subject().localityName = 'xxx'
             req.get_subject().organizationName = 'xxx'
             """
-            req.set_pubkey(key)
-            r = req.sign(key, "sha256")
-            csr = to_unicode(crypto.dump_certificate_request(crypto.FILETYPE_PEM, req))
+            req = CertificateSigningRequestBuilder().subject_name(Name(subject)).sign(
+                key, hashes.SHA256()
+            )
+            csr = to_unicode(req.public_bytes(Encoding.PEM))
             try:
                 request_id, x509object = cacon.sign_request(
                     csr, options={"template": template_name}
@@ -582,7 +594,9 @@ class CertificateTokenClass(TokenClass):
                     request_id = e.requestId
             finally:
                 # Save the private key to the encrypted key field of the token
-                s = crypto.dump_privatekey(crypto.FILETYPE_PEM, key)
+                s = key.private_bytes(
+                    Encoding.PEM, PrivateFormat.PKCS8, NoEncryption()
+                )
                 self.add_tokeninfo("privatekey", s, value_type="password")
 
         if "pin" in param:

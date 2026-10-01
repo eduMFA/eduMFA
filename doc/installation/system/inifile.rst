@@ -27,6 +27,8 @@ The file should contain the following contents::
    SQLALCHEMY_DATABASE_URI = 'sqlite:////etc/edumfa/data.sqlite'
    # Set maximum identifier length to 128
    # SQLALCHEMY_ENGINE_OPTIONS = {"max_identifier_length": 128}
+   # Use READ COMMITTED with MySQL/MariaDB (see below)
+   # SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "READ COMMITTED"}
    # This is used to encrypt the auth_token
    SECRET_KEY = 't0p s3cr3t'
    # This is used to encrypt the admin passwords
@@ -50,7 +52,7 @@ The file should contain the following contents::
    # EDUMFA_CSS = '/location/of/theme.css'
    # EDUMFA_UI_DEACTIVATED = True
 
-.. note:: The config file is parsed as python code, so you can use variables to
+.. note:: The config file is parsed as Python code, so you can use variables to
    set the path and you need to take care of the indentation.
    Note that this doesn't work when using the Ubuntu package.
 
@@ -58,7 +60,7 @@ The file should contain the following contents::
 For more information about the database connect string, supported databases and
 drivers please read :ref:`database_connect`.
 
-``SQLALCHEMY_ENGINE_OPTIONS`` is a dictionary of keyword args to send
+``SQLALCHEMY_ENGINE_OPTIONS`` is a Python dictionary to send
 to `create_engine() <https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy
 .create_engine>`_. The ``max_identifier_length`` is the database's
 configured maximum number of characters that may be used in a SQL identifier
@@ -85,6 +87,30 @@ slower but more robust and can be necessary in large redundant setups.
    The database might respond with an error like "object has been deleted or its
    row is otherwise not present". In this case setting ``EDUMFA_DB_SAFE_STORE``  to *True*
    might help.
+
+.. _mysql_isolation_level:
+
+MySQL and MariaDB default to the ``REPEATABLE READ`` transaction isolation
+level. It pins a consistent read snapshot at the transaction's first read,
+which can cause errors like *"Record has changed since last read ...; try
+restarting transaction"* when handling several requests under high load.
+Configure eduMFA to use ``READ COMMITTED`` by adding the following option to
+``edumfa.cfg``::
+
+   SQLALCHEMY_ENGINE_OPTIONS = {"isolation_level": "READ COMMITTED"}
+
+If ``SQLALCHEMY_ENGINE_OPTIONS`` already contains other options, add the
+``isolation_level`` entry to the existing dictionary instead of defining the
+setting a second time. PostgreSQL already uses ``READ COMMITTED`` by default.
+See the `SQLAlchemy documentation
+<https://docs.sqlalchemy.org/en/20/core/connections.html#setting-transaction-isolation-levels-including-dbapi-autocommit>`_
+for details.
+
+.. note:: The SQL audit module uses ``SQLALCHEMY_ENGINE_OPTIONS`` as a fallback.
+   If ``EDUMFA_AUDIT_SQL_URI`` points to a different database backend which
+   does not support ``READ COMMITTED`` (for example SQLite), also add
+   ``EDUMFA_AUDIT_SQL_OPTIONS = {}`` to ``edumfa.cfg``. You can alternatively
+   configure audit-engine-specific options in that dictionary.
 
 ``EDUMFA_HASH_ALGO_LIST`` is a user-defined list of hash algorithms which are used
 to verify passwords and pins. The first entry in ``EDUMFA_HASH_ALGO_LIST`` is used
@@ -189,8 +215,8 @@ is not set, the value from ``EDUMFA_NODE`` or ``localnode`` will be used.
 
 You can run the database for the audit module on another database or even
 server. For this you can specify the database URI via ``EDUMFA_AUDIT_SQL_URI``.
-With ``EDUMFA_AUDIT_SQL_OPTIONS`` You can pass a dictionary of options to the
-database engine. If ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set,
+With ``EDUMFA_AUDIT_SQL_OPTIONS`` You can pass a Python dictionary of options to
+the database engine. If ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set,
 ``SQLALCHEMY_ENGINE_OPTIONS`` will be used.
 
 ``EDUMFA_AUDIT_SQL_TRUNCATE = True`` lets you truncate audit entries to the length

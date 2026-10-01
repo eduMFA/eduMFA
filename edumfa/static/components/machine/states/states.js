@@ -21,32 +21,47 @@
  *
  */
 
-angular.module('eduMfaApp.machineStates', ['ui.router', 'eduMfaApp.versioning']).config(
-    ['$stateProvider', 'versioningSuffixProviderProvider',
-        function ($stateProvider, versioningSuffixProviderProvider) {
-            // get the instance, the pathname part
-            var instance = window.location.pathname;
-            if (instance === "/") {
-               instance = "";
-            }
-            var machinepath = instance + "/static/components/machine/views/";
-            $stateProvider
-                .state('machine', {
-                    url: "/machine",
-                    templateUrl: machinepath + "machine.html" + versioningSuffixProviderProvider.$get().$get()
-                })
-                .state('machine.list', {
-                    url: "/list?resolver",
-                    templateUrl: machinepath + "machine.list.html" + versioningSuffixProviderProvider.$get().$get()
-                })
-                .state('machine.details', {
-                    url: "/details/{machineid:.*}/{machineresolver:.*}",
-                    templateUrl: machinepath + "machine.details.html" + versioningSuffixProviderProvider.$get().$get(),
-                    controller: ['$scope', '$stateParams',
-                        function ($scope, $stateParams) {
-                            $scope.machineid = $stateParams.machineid;
-                            $scope.machineresolver = $stateParams.machineresolver;
-                        }]
-                });
-
-        }]);
+angular
+  .module("eduMfaApp.machineStates", ["ui.router", "eduMfaApp.versioning"])
+  .config([
+    "$stateProvider",
+    "versioningSuffixProviderProvider",
+    function ($stateProvider, versioningSuffixProviderProvider) {
+      // get the instance, the pathname part
+      var instance = window.location.pathname;
+      if (instance === "/") {
+        instance = "";
+      }
+      var machinepath = instance + "/static/components/machine/views/";
+      $stateProvider
+        .state("machine", {
+          url: "/machine",
+          templateUrl:
+            machinepath +
+            "machine.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+        })
+        .state("machine.list", {
+          url: "/list?resolver",
+          templateUrl:
+            machinepath +
+            "machine.list.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+        })
+        .state("machine.details", {
+          url: "/details/{machineid:.*}/{machineresolver:.*}",
+          templateUrl:
+            machinepath +
+            "machine.details.html" +
+            versioningSuffixProviderProvider.$get().$get(),
+          controller: [
+            "$scope",
+            "$stateParams",
+            function ($scope, $stateParams) {
+              $scope.machineid = $stateParams.machineid;
+              $scope.machineresolver = $stateParams.machineresolver;
+            },
+          ],
+        });
+    },
+  ]);

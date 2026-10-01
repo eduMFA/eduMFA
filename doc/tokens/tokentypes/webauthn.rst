@@ -24,6 +24,14 @@ The devices is identified and assigned to the user.
 .. note:: As the key pair is only generated virtually, you can register one
     physical device for several users.
 
+.. note:: The credential id of a WebAuthn token is stored in the ``otpkey``
+   field of the token. Unlike the OTP seeds of other token types it is not
+   encrypted. The credential id is public information: it is sent to the client
+   with every authentication request, so encrypting it only slows down the 
+   authentication. The security of the token relies on the private key, which 
+   never leaves the authenticator. The credential ids of tokens enrolled with
+   an earlier version are decrypted once by the database migration during the upgrade.
+
 .. warning:: When using WebAuthn tokens as Passkeys/resident keys, keep in mind
    the authentication will not involve your resolver. For LDAP resolvers, this
    would mean those Passkeys work for locked/deactivated users, too.
