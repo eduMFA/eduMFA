@@ -278,14 +278,14 @@
         </div>
         <div class="panel-body" ng-show="availableStatsKeys.length > 0">
           <div class="chart-controls">
-            <label translate>TimeFrame:</label>
+            <label translate>Time range:</label>
             <select
               class="form-control"
               ng-model="selectedTimeFrame"
               ng-options="x.label | translate for x in timeFrame "
               ng-change="onTimeFrameChange()"
             ></select>
-            <label translate>StatsKeys:</label>
+            <label translate>Metrics:</label>
             <br />
             <isteven-multi-select
               input-model="availableStatsKeys"
