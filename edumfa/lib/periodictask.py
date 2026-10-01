@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -61,7 +60,7 @@ def get_taskmodule(identifier, config=None):
     :return: instance of a BaseTask subclass
     """
     if identifier not in TASK_MODULES:
-        raise ParameterError("Unknown task module: {!r}".format(identifier))
+        raise ParameterError(f"Unknown task module: {identifier!r}")
     else:
         r = TASK_MODULES[identifier](config=get_app_config())
         return r
@@ -137,9 +136,9 @@ def set_periodic_task(
     try:
         croniter(interval)
     except ValueError as e:
-        raise ParameterError("Invalid interval: {!s}".format(e))
+        raise ParameterError(f"Invalid interval: {e}")
     if ordering < 0:
-        raise ParameterError("Invalid ordering: {!s}".format(ordering))
+        raise ParameterError(f"Invalid ordering: {ordering}")
     if id is not None:
         # This will throw a ParameterError if there is no such entry
         get_periodic_task_by_id(id)
@@ -216,7 +215,7 @@ def get_periodic_task_by_name(name):
     periodic_tasks = get_periodic_tasks(name)
     if len(periodic_tasks) != 1:
         raise ResourceNotFoundError(
-            "The periodic task with unique name {!r} does not exist".format(name)
+            f"The periodic task with unique name {name!r} does not exist"
         )
     return periodic_tasks[0]
 
@@ -278,25 +277,21 @@ def get_scheduled_periodic_tasks(node, current_timestamp=None, interval_tzinfo=N
         current_timestamp = datetime.now(tzutc())
     if current_timestamp.tzinfo is None:
         raise ParameterError(
-            "expected timezone-aware datetime, got {!r}".format(current_timestamp)
+            f"expected timezone-aware datetime, got {current_timestamp!r}"
         )
     scheduled_ptasks = []
-    log.debug(
-        "Collecting periodic tasks to run at {!s}".format(current_timestamp.isoformat())
-    )
+    log.debug(f"Collecting periodic tasks to run at {current_timestamp.isoformat()}")
     for ptask in active_ptasks:
         try:
             next_timestamp = calculate_next_timestamp(ptask, node, interval_tzinfo)
             log.debug(
-                "Next scheduled run of {!r}: {!s}".format(
-                    ptask["name"], next_timestamp.isoformat()
-                )
+                f"Next scheduled run of {ptask['name']!r}: {next_timestamp.isoformat()}"
             )
             if next_timestamp <= current_timestamp:
-                log.debug("Scheduling periodic task {!r}".format(ptask["name"]))
+                log.debug(f"Scheduling periodic task {ptask['name']!r}")
                 scheduled_ptasks.append(ptask)
         except Exception as e:
-            log.warning("Ignoring periodic task {!r}: {!r}".format(ptask["name"], e))
+            log.warning(f"Ignoring periodic task {ptask['name']!r}: {e!r}")
     return scheduled_ptasks
 
 
@@ -309,7 +304,7 @@ def execute_task(taskmodule, params):
     :return: boolean returned by the task
     """
     module = get_taskmodule(taskmodule)
-    log.info("Running taskmodule {!r} with parameters {!r}".format(module, params))
+    log.info(f"Running taskmodule {module!r} with parameters {params!r}")
     return module.do(params)
 
 
@@ -329,15 +324,11 @@ def export_periodictask(name=None):
 @register_import("periodictask")
 def import_periodictask(data, name=None):
     """Import periodictask configuration"""
-    log.debug("Import periodictask config: {0!s}".format(data))
+    log.debug(f"Import periodictask config: {data}")
     for res_data in data:
         if name and name != res_data.get("name"):
             continue
         res_data.pop("last_update")
         res_data.pop("last_runs")
         rid = set_periodic_task(**res_data)
-        log.info(
-            'Import of periodictask "{0!s}" finished, id: {1!s}'.format(
-                res_data["name"], rid
-            )
-        )
+        log.info(f'Import of periodictask "{res_data["name"]}" finished, id: {rid}')

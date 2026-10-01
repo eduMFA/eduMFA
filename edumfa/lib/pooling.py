@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -86,9 +85,7 @@ class SharedEngineRegistry(BaseEngineRegistry):
         # is already one associated with the given key, we use a lock.
         with self._engine_lock:
             if key not in self._engines:
-                log.info(
-                    "Creating a new engine and connection pool for key {!s}".format(key)
-                )
+                log.info(f"Creating a new engine and connection pool for key {key}")
                 self._engines[key] = creator()
             return self._engines[key]
 
@@ -123,12 +120,10 @@ def get_registry():
             REGISTRY_CONFIG_NAME, DEFAULT_REGISTRY_CLASS_NAME
         )
         if registry_class_name not in ENGINE_REGISTRY_CLASSES:
-            log.warning(
-                "Unknown engine registry class: {!r}".format(registry_class_name)
-            )
+            log.warning(f"Unknown engine registry class: {registry_class_name!r}")
             registry_class_name = DEFAULT_REGISTRY_CLASS_NAME
         registry = ENGINE_REGISTRY_CLASSES[registry_class_name]()
-        log.info("Created a new engine registry: {!r}".format(registry))
+        log.info(f"Created a new engine registry: {registry!r}")
         return app_store.setdefault("engine_registry", registry)
 
 

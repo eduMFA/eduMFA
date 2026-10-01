@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -122,9 +121,7 @@ def list_machines_api():
     # this returns a list of Machine Object. This is not JSON serialiable,
     # so we need to convert the Machine Object to dict
     machines = [mobject.get_dict() for mobject in machines]
-    g.audit_object.log(
-        {"success": True, "info": "hostname: {0!s}, ip: {1!s}".format(hostname, ip)}
-    )
+    g.audit_object.log({"success": True, "info": f"hostname: {hostname}, ip: {ip}"})
 
     return send_result(machines)
 
@@ -189,7 +186,7 @@ def attach_token_api():
     g.audit_object.log(
         {
             "success": True,
-            "info": "serial: {0!s}, application: {1!s}".format(serial, application),
+            "info": f"serial: {serial}, application: {application}",
         }
     )
 
@@ -236,7 +233,7 @@ def detach_token_api(
     g.audit_object.log(
         {
             "success": True,
-            "info": "serial: {0!s}, application: {1!s}".format(serial, application),
+            "info": f"serial: {serial}, application: {application}",
         }
     )
 
@@ -334,7 +331,7 @@ def list_machinetokens_api():
     g.audit_object.log(
         {
             "success": True,
-            "info": "serial: {0!s}, hostname: {1!s}".format(serial, hostname),
+            "info": f"serial: {serial}, hostname: {hostname}",
         }
     )
     return send_result(res)
@@ -416,7 +413,7 @@ def set_option_api():
     g.audit_object.log(
         {
             "success": True,
-            "info": "serial: {0!s}, application: {1!s}".format(serial, application),
+            "info": f"serial: {serial}, application: {application}",
         }
     )
 
@@ -486,7 +483,7 @@ def get_auth_items_api(application=None):
     g.audit_object.log(
         {
             "success": True,
-            "info": "host: {0!s}, application: {1!s}".format(hostname, application),
+            "info": f"host: {hostname}, application: {application}",
         }
     )
     return send_result(ret)

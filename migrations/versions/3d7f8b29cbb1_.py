@@ -52,7 +52,7 @@ class Policy(Base):
     client = sa.Column(sa.Unicode(256), default="")
     time = sa.Column(sa.Unicode(64), default="")
     # If there are multiple matching policies, choose the one
-    # with the lowest priority number. We choose 1 to be the default priotity.
+    # with the lowest priority number. We choose 1 to be the default priority.
     priority = sa.Column(sa.Integer, default=1, nullable=False)
 
 
@@ -60,7 +60,7 @@ def upgrade():
     """
     During upgrade we check, if admin policies exist.
     If so, we add a generic policy for all admins, that allows to
-    read all configuration, which mimicks the previous behaviour
+    read all configuration, which mimics the previous behaviour
     :return:
     """
     actions = ",".join(
@@ -84,27 +84,25 @@ def upgrade():
     session = orm.Session(bind=bind)
     if (
         session.query(Policy.id)
-        .filter(Policy.scope == "{0!s}".format(SCOPE.ADMIN), Policy.active.is_(True))
+        .filter(Policy.scope == f"{SCOPE.ADMIN}", Policy.active.is_(True))
         .all()
     ):
         if session.query(Policy.id).filter_by(name=POLICYNAME).first() is None:
             # add policy
             tokenlist_pol = Policy(
-                name=POLICYNAME, scope="{0!s}".format(SCOPE.ADMIN), action=actions
+                name=POLICYNAME, scope=f"{SCOPE.ADMIN}", action=actions
             )
             session.add(tokenlist_pol)
-            print("Added '{0!s}' action for admin policies.".format(actions))
+            print(f"Added '{actions}' action for admin policies.")
         else:
-            print("Policy {} already exists.".format(POLICYNAME))
+            print(f"Policy {POLICYNAME} already exists.")
     else:
-        print(
-            "No admin policy active. No need to create '{0!s}' action.".format(actions)
-        )
+        print(f"No admin policy active. No need to create '{actions}' action.")
 
     try:
         session.commit()
     except Exception as exx:
-        print("Could not create policy {}: {!r}".format(POLICYNAME, exx))
+        print(f"Could not create policy {POLICYNAME}: {exx!r}")
         print(exx)
 
 
@@ -112,5 +110,5 @@ def downgrade():
     # Delete the policy, if it still exists
     bind = op.get_bind()
     session = orm.Session(bind=bind)
-    session.query(Policy).filter(Policy.name == "{0!s}".format(POLICYNAME)).delete()
+    session.query(Policy).filter(Policy.name == f"{POLICYNAME}").delete()
     session.commit()

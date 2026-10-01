@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -26,8 +25,7 @@
 #
 import binascii
 import logging
-import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from json import dumps, loads
 
 from dateutil.tz import tzutc
@@ -36,9 +34,11 @@ from sqlalchemy import BigInteger, and_
 from sqlalchemy.dialects import mysql, postgresql, sqlite
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import CreateSequence, Sequence
 
 from edumfa.lib.crypto import (
+    NullCryptoObj,
     SecretObj,
     decryptPin,
     encrypt,
@@ -49,8 +49,14 @@ from edumfa.lib.crypto import (
     pass_hash,
     verify_pass_hash,
 )
+from edumfa.lib.error import ResourceNotFoundError
 from edumfa.lib.framework import get_app_config_value
-from edumfa.lib.utils import convert_column_to_unicode, hexlify_and_unicode, is_true
+from edumfa.lib.utils import (
+    convert_column_to_unicode,
+    hexlify_and_unicode,
+    is_true,
+    to_unicode,
+)
 
 from .lib.log import log_with
 
@@ -214,7 +220,7 @@ class Token(MethodsMixin, db.Model):
         realm=None,
         **kwargs,
     ):
-        super(Token, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.serial = "" + serial
         self.tokentype = tokentype
         self.count = 0
@@ -287,15 +293,32 @@ class Token(MethodsMixin, db.Model):
         return data
 
     @log_with(log, hide_args=[1])
-    def set_otpkey(self, otpkey, reset_failcount=True):
-        iv = geturandom(16)
-        self.key_enc = encrypt(otpkey, iv)
+    def set_otpkey(self, otpkey, reset_failcount=True, encrypted=True):
+        """
+        Store the otpkey of the token and reset the OTP counter.
+
+        :param otpkey: the otpkey to store
+        :type otpkey: str or bytes
+        :param reset_failcount: whether to reset the failcounter as well
+        :type reset_failcount: bool
+        :param encrypted: If ``True`` (the default), the otpkey is encrypted
+            with the security module before it is stored. Set it to ``False``
+            for values that are not secret, like the credential id of a
+            WebAuthn token, to avoid the costly encryption and decryption.
+            Such values are stored as they are with an empty IV, which marks
+            them as unencrypted for :py:meth:`get_otpkey`.
+        :type encrypted: bool
+        """
+        if encrypted:
+            iv = geturandom(16)
+            self.key_enc = encrypt(otpkey, iv)
+            self.key_iv = hexlify_and_unicode(iv)
+        else:
+            self.key_enc = to_unicode(otpkey)
+            self.key_iv = ""
         length = len(self.key_enc)
         if length > Token.key_enc.property.columns[0].type.length:
-            log.error(
-                "Key {0!s} exceeds database field {1:d}!".format(self.serial, length)
-            )
-        self.key_iv = hexlify_and_unicode(iv)
+            log.error(f"Key {self.serial} exceeds database field {length:d}!")
         self.count = 0
         if reset_failcount is True:
             self.failcount = 0
@@ -380,8 +403,33 @@ class Token(MethodsMixin, db.Model):
         self.user_pin = encrypt(userPin, iv)
         self.user_pin_iv = hexlify_and_unicode(iv)
 
+    def is_otpkey_encrypted(self):
+        """
+        Check whether the otpkey of this token is stored encrypted.
+
+        Encrypted otpkeys always come with an IV. An empty IV marks an otpkey
+        that was stored in plain text via ``set_otpkey(..., encrypted=False)``.
+
+        :rtype: bool
+        """
+        return bool(self._fix_spaces(self.key_iv))
+
     @log_with(log)
-    def get_otpkey(self):
+    def get_otpkey(self, encrypted=None):
+        """
+        Return the otpkey of the token as an object with a ``getKey()`` method.
+
+        :param encrypted: ``True`` to decrypt the stored value, ``False`` to
+            return it as it is stored. Defaults to ``None``, which detects the
+            storage format via :py:meth:`is_otpkey_encrypted`.
+        :type encrypted: bool or None
+        :return: the otpkey
+        :rtype: SecretObj or NullCryptoObj
+        """
+        if encrypted is None:
+            encrypted = self.is_otpkey_encrypted()
+        if not encrypted:
+            return NullCryptoObj(self.key_enc)
         key = binascii.unhexlify(self.key_enc)
         iv = binascii.unhexlify(self.key_iv)
         secret = SecretObj(key, iv)
@@ -427,9 +475,7 @@ class Token(MethodsMixin, db.Model):
         seed_str = self._fix_spaces(self.pin_seed)
         seed = binascii.unhexlify(seed_str)
         hPin = hash(pin, seed)
-        log.debug(
-            "hPin: {0!s}, pin: {1!r}, seed: {2!s}".format(hPin, pin, self.pin_seed)
-        )
+        log.debug(f"hPin: {hPin}, pin: {pin!r}, seed: {self.pin_seed}")
         return hPin
 
     @log_with(log)
@@ -448,10 +494,10 @@ class Token(MethodsMixin, db.Model):
             upin = pin
         if hashed is True:
             self.set_hashed_pin(upin)
-            log.debug("setPin(HASH:{0!r})".format(self.pin_hash))
+            log.debug(f"setPin(HASH:{self.pin_hash!r})")
         else:
             self.pin_hash = "@@" + encryptPin(upin)
-            log.debug("setPin(ENCR:{0!r})".format(self.pin_hash))
+            log.debug(f"setPin(ENCR:{self.pin_hash!r})")
         return self.pin_hash
 
     def check_pin(self, pin):
@@ -574,10 +620,10 @@ class Token(MethodsMixin, db.Model):
         """
         ldict = {}
         for attr in self.__dict__:
-            key = "{0!r}".format(attr)
-            val = "{0!r}".format(getattr(self, attr))
+            key = f"{attr!r}"
+            val = f"{getattr(self, attr)!r}"
             ldict[key] = val
-        res = "<{0!r} {1!r}>".format(self.__class__, ldict)
+        res = f"<{self.__class__!r} {ldict!r}>"
         return res
 
     def set_info(self, info):
@@ -723,7 +769,16 @@ class TokenInfo(MethodsMixin, db.Model):
         self.Description = Description
 
     def save(self, persistent=True):
-        ti_func = TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).first
+        # Use a locking read (SELECT ... FOR UPDATE) so concurrent saves of the
+        # same (token_id, Key) row serialize instead of racing. This avoids the
+        # MariaDB error 1020 (ER_CHECKREAD) that concurrent token validations
+        # trigger when they update the same tokeninfo row. FOR UPDATE is a no-op
+        # on SQLite (silently ignored by its dialect).
+        ti_func = (
+            TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key)
+            .with_for_update()
+            .first
+        )
         ti = ti_func()
         if ti is None:
             # create a new one
@@ -735,14 +790,11 @@ class TokenInfo(MethodsMixin, db.Model):
             else:
                 ret = self.id
         else:
-            # update
-            TokenInfo.query.filter_by(token_id=self.token_id, Key=self.Key).update(
-                {
-                    "Value": self.Value,
-                    "Description": self.Description,
-                    "Type": self.Type,
-                }
-            )
+            # Update the row we just locked with FOR UPDATE in this same
+            # transaction, instead of issuing a second, separate query for it.
+            ti.Value = self.Value
+            ti.Description = self.Description
+            ti.Type = self.Type
             ret = ti.id
         if persistent:
             db.session.commit()
@@ -881,7 +933,7 @@ class Config(TimestampMethodsMixin, db.Model):
         self.Description = convert_column_to_unicode(Description)
 
     def __str__(self):
-        return "<{0!s} ({1!s})>".format(self.Key, self.Type)
+        return f"<{self.Key} ({self.Type})>"
 
     def save(self):
         db.session.add(self)
@@ -969,7 +1021,7 @@ class CAConnector(TimestampMethodsMixin, db.Model):
 class CAConnectorConfig(db.Model):
     """
     Each CAConnector can have multiple configuration entries.
-    Each CA Connector type can have different required config values. Therefor
+    Each CA Connector type can have different required config values. Therefore
     the configuration is stored in simple key/value pairs. If the type of a
     config entry is set to "password" the value of this config entry is stored
     encrypted.
@@ -1075,7 +1127,7 @@ class Resolver(TimestampMethodsMixin, db.Model):
 class ResolverConfig(TimestampMethodsMixin, db.Model):
     """
     Each Resolver can have multiple configuration entries.
-    Each Resolver type can have different required config values. Therefor
+    Each Resolver type can have different required config values. Therefore
     the configuration is stored in simple key/value pairs. If the type of a
     config entry is set to "password" the value of this config entry is stored
     encrypted.
@@ -1218,13 +1270,20 @@ class TokenOwner(MethodsMixin, db.Model):
         if realm_id is not None:
             self.realm_id = realm_id
         elif realmname:
-            r = Realm.query.filter_by(name=realmname).first()
-            self.realm_id = r.id
+            realm = Realm.query.filter_by(name=realmname).first()
+            if not realm:
+                raise ResourceNotFoundError(f"Realm '{realmname}' does not exist.")
+            self.realm_id = realm.id
         if token_id is not None:
             self.token_id = token_id
         elif serial:
-            r = Token.query.filter_by(serial=serial).first()
-            self.token_id = r.id
+            token = Token.query.filter_by(serial=serial).first()
+            if not token:  # pragma: no cover
+                # usually this is already covered by the lib / token class functions
+                raise ResourceNotFoundError(
+                    f"Token with serial '{serial}' does not exist."
+                )
+            self.token_id = token.id
         self.resolver = resolver
         self.user_id = user_id
 
@@ -1282,7 +1341,7 @@ class TokenRealm(MethodsMixin, db.Model):
         :param realm_id: The id of the realm
         :param token_id: The id of the token
         """
-        log.debug("setting realm_id to {0:d}".format(realm_id))
+        log.debug(f"setting realm_id to {realm_id:d}")
         if realmname:
             r = Realm.query.filter_by(name=realmname).first()
             self.realm_id = r.id
@@ -1363,6 +1422,44 @@ class PasswordReset(MethodsMixin, db.Model):
         self.expiration = expiration or datetime.now() + timedelta(
             seconds=expiration_seconds
         )
+
+
+class JwtBlacklist(db.Model):
+    """
+    Table for storing a JWT blacklist to prevent reusing Passkey Authentications
+    """
+
+    __tablename__ = "jwt_blacklist"
+    __table_args__ = ({"mysql_row_format": "DYNAMIC"},)
+    expiration = db.Column(db.DateTime, index=True)
+    nonce = db.Column(db.Unicode(128), nullable=False, primary_key=True, unique=True)
+
+    def __init__(self, expiration, nonce):
+        self.expiration = expiration
+        self.nonce = nonce
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        return self.nonce
+
+    def delete(self):
+        ret = self.nonce
+        db.session.delete(self)
+        db.session.commit()
+        return ret
+
+    @staticmethod
+    def blacklist_janitor():
+        try:
+            # Get a new transaction to keep the impact of the action as low as possible
+            session = sessionmaker(bind=db.engine)
+            with session.begin() as session_transaction:
+                session_transaction.query(JwtBlacklist).filter(
+                    JwtBlacklist.expiration < datetime.now(timezone.utc)
+                ).delete()
+        except (OperationalError, IntegrityError) as e:
+            log.warning(f"Error in JwtBlacklist janitor: {e}")
 
 
 class Challenge(MethodsMixin, db.Model):
@@ -1487,7 +1584,7 @@ class Challenge(MethodsMixin, db.Model):
         descr["serial"] = self.serial
         descr["data"] = self.get_data()
         if timestamp is True:
-            descr["timestamp"] = "{0!s}".format(self.timestamp)
+            descr["timestamp"] = f"{self.timestamp}"
         else:
             descr["timestamp"] = self.timestamp
         descr["otp_received"] = self.received_count > 0
@@ -1498,7 +1595,7 @@ class Challenge(MethodsMixin, db.Model):
 
     def __str__(self):
         descr = self.get()
-        return "{0!s}".format(descr)
+        return f"{descr}"
 
 
 def cleanup_challenges():
@@ -1509,10 +1606,10 @@ def cleanup_challenges():
     """
     c_now = datetime.utcnow()
     try:
-        Challenge.query.filter(Challenge.expiration < c_now).delete()
+        Challenge.query.with_for_update().filter(Challenge.expiration < c_now).delete()
         db.session.commit()
     except (OperationalError, IntegrityError) as e:
-        log.warning("Error in cleanup_challenges: {0!s}".format(e))
+        log.warning(f"Error in cleanup_challenges: {e}")
 
 
 # -----------------------------------------------------------------------------
@@ -1551,7 +1648,7 @@ class Policy(TimestampMethodsMixin, db.Model):
     client = db.Column(db.Unicode(256), default="")
     time = db.Column(db.Unicode(64), default="")
     # If there are multiple matching policies, choose the one
-    # with the lowest priority number. We choose 1 to be the default priotity.
+    # with the lowest priority number. We choose 1 to be the default priority.
     priority = db.Column(db.Integer, default=1, nullable=False)
     conditions = db.relationship(
         "PolicyCondition",
@@ -1633,7 +1730,7 @@ class Policy(TimestampMethodsMixin, db.Model):
         If value is empty, it returns an empty array.
         The normal split would return an array with an empty string.
 
-        :param value: The string to be splitted
+        :param value: The string to be split
         :type value: basestring
         :return: list
         """
@@ -1852,11 +1949,7 @@ class MachineTokenOptions(db.Model):
     machinetoken = db.relationship("MachineToken", lazy="joined", backref="option_list")
 
     def __init__(self, machinetoken_id, key, value):
-        log.debug(
-            "setting {0!r} to {1!r} for MachineToken {2!s}".format(
-                key, value, machinetoken_id
-            )
-        )
+        log.debug(f"setting {key!r} to {value!r} for MachineToken {machinetoken_id}")
         self.machinetoken_id = machinetoken_id
         self.mt_key = convert_column_to_unicode(key)
         self.mt_value = convert_column_to_unicode(value)
@@ -2694,9 +2787,8 @@ class ClientApplication(MethodsMixin, db.Model):
                 db.session.add(self)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
-                log.warning(
-                    "Unable to write ClientApplication entry to db: {0!s}".format(e)
-                )
+                db.session.rollback()
+                log.warning(f"Unable to write ClientApplication entry to db: {e}")
         else:
             # update
             values = {"lastseen": self.lastseen}
@@ -2708,12 +2800,11 @@ class ClientApplication(MethodsMixin, db.Model):
                 ).update(values)
                 db.session.commit()
             except (OperationalError, IntegrityError) as e:
-                log.warning("Unable to update ClientApplication entry: {0!s}".format(e))
+                db.session.rollback()
+                log.warning(f"Unable to update ClientApplication entry: {e}")
 
     def __repr__(self):
-        return "<ClientApplication [{0!s}][{1!s}:{2!s}] on {3!s}>".format(
-            self.id, self.ip, self.clienttype, self.node
-        )
+        return f"<ClientApplication [{self.id}][{self.ip}:{self.clienttype}] on {self.node}>"
 
 
 class Subscription(MethodsMixin, db.Model):
@@ -2762,9 +2853,7 @@ class Subscription(MethodsMixin, db.Model):
         return ret
 
     def __repr__(self):
-        return "<Subscription [{0!s}][{1!s}:{2!s}:{3!s}]>".format(
-            self.id, self.application, self.for_name, self.by_name
-        )
+        return f"<Subscription [{self.id}][{self.application}:{self.for_name}:{self.by_name}]>"
 
     def get(self):
         """
@@ -2845,8 +2934,8 @@ audit_column_length = {
     "realm": 20,
     "resolver": 50,
     "administrator": 64,
-    "action_detail": 50,
-    "info": 50,
+    "action_detail": 128,
+    "info": 128,
     "edumfa_server": 255,
     "client": 50,
     "loglevel": 12,

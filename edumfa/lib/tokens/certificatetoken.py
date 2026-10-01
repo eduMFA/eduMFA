@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -48,13 +47,22 @@ import traceback
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives.serialization import (
+    Encoding,
+    NoEncryption,
     PrivateFormat,
     load_pem_private_key,
     pkcs12,
 )
-from cryptography.x509 import load_pem_x509_certificate, load_pem_x509_csr
+from cryptography.x509 import (
+    CertificateSigningRequestBuilder,
+    Name,
+    NameAttribute,
+    load_pem_x509_certificate,
+    load_pem_x509_csr,
+)
+from cryptography.x509.oid import NameOID
 
 from edumfa.lib import _
 from edumfa.lib.decorators import check_token_locked
@@ -112,9 +120,7 @@ def verify_certificate_path(certificate, trusted_ca_paths):
                     return True
                 except Exception as exx:
                     log.debug(
-                        "Can not verify attestation certificate against chain {0!s}.".format(
-                            chain
-                        )
+                        f"Can not verify attestation certificate against chain {chain}."
                     )
         else:
             log.warning("The configured attestation CA directory does not exist.")
@@ -275,7 +281,7 @@ class CertificateTokenClass(TokenClass):
         try:
             self._update_rollout_state()
         except Exception as e:
-            log.warning("Failed to check for pending update. {0!s}".format(e))
+            log.warning(f"Failed to check for pending update. {e}")
 
     @staticmethod
     def get_class_type():
@@ -446,9 +452,7 @@ class CertificateTokenClass(TokenClass):
                 # different codes. So each CA Connector needs a mapper for its specific codes.
                 if status in [3, 4]:  # issued or "issued out of band"
                     log.info(
-                        "The certificate {0!s} has been issued by the CA.".format(
-                            self.token.serial
-                        )
+                        f"The certificate {self.token.serial} has been issued by the CA."
                     )
                     certificate = cacon.get_issued_certificate(request_id)
                     # Update the rollout state
@@ -456,22 +460,16 @@ class CertificateTokenClass(TokenClass):
                     self.add_tokeninfo("certificate", certificate)
                 elif status == 2:  # denied
                     log.warning(
-                        "The certificate {0!s} has been denied by the CA.".format(
-                            self.token.serial
-                        )
+                        f"The certificate {self.token.serial} has been denied by the CA."
                     )
                     self.token.rollout_state = ROLLOUTSTATE.DENIED
                     self.token.save()
                 else:
-                    log.info(
-                        "The certificate {0!s} is still pending.".format(
-                            self.token.serial
-                        )
-                    )
+                    log.info(f"The certificate {self.token.serial} is still pending.")
             else:
                 log.warning(
-                    "The certificate token in rollout_state pending, but either the CA ({0!s}) "
-                    "or the requestId ({1!s}) is missing.".format(ca, request_id)
+                    f"The certificate token in rollout_state pending, but either the CA ({ca}) "
+                    f"or the requestId ({request_id}) is missing."
                 )
         return status
 
@@ -530,7 +528,7 @@ class CertificateTokenClass(TokenClass):
                         )
                     except Exception as exx:
                         # We could have file system errors during verification.
-                        log.debug("{0!s}".format(traceback.format_exc()))
+                        log.debug(traceback.format_exc())
                         verified = False
 
                     if not verified:
@@ -557,16 +555,18 @@ class CertificateTokenClass(TokenClass):
             """
             user = get_user_from_param(param, optionalOrRequired=required)
             keysize = getParam(param, "keysize", optional, 2048)
-            key = crypto.PKey()
-            key.generate_key(crypto.TYPE_RSA, keysize)
-            req = crypto.X509Req()
-            req.get_subject().CN = user.login
+            key = rsa.generate_private_key(public_exponent=65537, key_size=keysize)
+            subject = [NameAttribute(NameOID.COMMON_NAME, user.login)]
             # Add components to subject
             if subject_components:
                 if "email" in subject_components and user.info.get("email"):
-                    req.get_subject().emailAddress = user.info.get("email")
+                    subject.append(
+                        NameAttribute(NameOID.EMAIL_ADDRESS, user.info.get("email"))
+                    )
                 if "realm" in subject_components:
-                    req.get_subject().organizationalUnitName = user.realm
+                    subject.append(
+                        NameAttribute(NameOID.ORGANIZATIONAL_UNIT_NAME, user.realm)
+                    )
             # TODO: Add Country, Organization
             """
             req.get_subject().countryName = 'xxx'
@@ -574,9 +574,10 @@ class CertificateTokenClass(TokenClass):
             req.get_subject().localityName = 'xxx'
             req.get_subject().organizationName = 'xxx'
             """
-            req.set_pubkey(key)
-            r = req.sign(key, "sha256")
-            csr = to_unicode(crypto.dump_certificate_request(crypto.FILETYPE_PEM, req))
+            req = CertificateSigningRequestBuilder().subject_name(Name(subject)).sign(
+                key, hashes.SHA256()
+            )
+            csr = to_unicode(req.public_bytes(Encoding.PEM))
             try:
                 request_id, x509object = cacon.sign_request(
                     csr, options={"template": template_name}
@@ -593,7 +594,9 @@ class CertificateTokenClass(TokenClass):
                     request_id = e.requestId
             finally:
                 # Save the private key to the encrypted key field of the token
-                s = crypto.dump_privatekey(crypto.FILETYPE_PEM, key)
+                s = key.private_bytes(
+                    Encoding.PEM, PrivateFormat.PKCS8, NoEncryption()
+                )
                 self.add_tokeninfo("privatekey", s, value_type="password")
 
         if "pin" in param:
@@ -624,9 +627,7 @@ class CertificateTokenClass(TokenClass):
                     self._create_pkcs12_bin()
                 )
             except Exception:
-                log.warning(
-                    "Can not create PKCS12 for token {0!s}.".format(self.token.serial)
-                )
+                log.warning(f"Can not create PKCS12 for token {self.token.serial}.")
 
         return response_detail
 
@@ -675,9 +676,7 @@ class CertificateTokenClass(TokenClass):
                     self._create_pkcs12_bin()
                 )
             except Exception:
-                log.warning(
-                    "Can not create PKCS12 for token {0!s}.".format(self.token.serial)
-                )
+                log.warning(f"Can not create PKCS12 for token {self.token.serial}.")
 
         return token_dict
 
@@ -709,20 +708,16 @@ class CertificateTokenClass(TokenClass):
         # determine the CA and its connector.
         ti = self.get_tokeninfo()
         ca_specifier = ti.get("CA")
-        log.debug(
-            "Revoking certificate {0!s} on CA {1!s}.".format(
-                self.token.serial, ca_specifier
-            )
-        )
+        log.debug(f"Revoking certificate {self.token.serial} on CA {ca_specifier}.")
         certificate_pem = ti.get("certificate")
 
         # call CAConnector.revoke_cert()
         ca_obj = get_caconnector_object(ca_specifier)
         revoked = ca_obj.revoke_cert(certificate_pem, request_id=ti.get(REQUEST_ID))
-        log.info("Certificate {0!s} revoked on CA {1!s}.".format(revoked, ca_specifier))
+        log.info(f"Certificate {revoked} revoked on CA {ca_specifier}.")
 
         # call CAConnector.create_crl()
         crl = ca_obj.create_crl()
-        log.info("CRL {0!s} created.".format(crl))
+        log.info(f"CRL {crl} created.")
 
         return revoked

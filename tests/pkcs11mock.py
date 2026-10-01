@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -24,8 +23,7 @@ Mock module for testing the handling of hardware security modules
 """
 
 import sys
-
-import mock
+from unittest import mock
 
 try:
     import PyKCS11
@@ -71,7 +69,7 @@ def fake_encrypt(data):
 
 def fake_decrypt(data):
     """
-    simple fake decrypt function for testing: substract 1 from each byte
+    simple fake decrypt function for testing: subtract 1 from each byte
     :return: a list of integers
     """
     return [(c - 1) % 256 for c in data]
@@ -84,7 +82,7 @@ class PKCS11Mock:
         with PKCS11Mock():
             hsm = AESHardwareSecurityModule(...)
 
-            crypted = hsm.encrypt_password(...)
+            encrypted = hsm.encrypt_password(...)
 
     Simulation of encryption and decryption is realized using
     ``fake_encrypt`` and ``fake_decrypt``. Generated random
@@ -102,7 +100,7 @@ class PKCS11Mock:
         if slot not in SLOT_IDS:
             raise PyKCS11Error(PyKCS11.CKR_SLOT_ID_INVALID)
         slot_info = PyKCS11.CK_SLOT_INFO()
-        slot_info.slotDescription = "slot {!s} description".format(slot)
+        slot_info.slotDescription = f"slot {slot} description"
         return slot_info
 
     @contextmanager

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -121,7 +120,7 @@ class UserIdResolver:
         not exist.
 
         :param loginName: The login name of the user
-        :type loginName: sting
+        :type loginName: string
         :return: The ID of the user
         :rtype: str
         """

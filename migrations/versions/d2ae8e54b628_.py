@@ -52,9 +52,7 @@ def upgrade():
         )
     except Exception as exx:
         print(
-            "Creation of periodictasklastrun and periodictaskoption with shortened columns failed: {!r}".format(
-                exx
-            )
+            f"Creation of periodictasklastrun and periodictaskoption with shortened columns failed: {exx!r}"
         )
         print("This is expected behavior if they were already present.")
     try:
@@ -77,9 +75,7 @@ def upgrade():
         )
     except Exception as exx:
         print(
-            "Shortening of periodictasklastrun and periodictaskoption columns failed: {!r}".format(
-                exx
-            )
+            f"Shortening of periodictasklastrun and periodictaskoption columns failed: {exx!r}"
         )
         print("This is expected behavior if the columns have already been shorted.")
 

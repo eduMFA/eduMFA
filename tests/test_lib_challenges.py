@@ -1,5 +1,5 @@
 """
-This test file tests the lib.challange methods.
+This test file tests the lib.challenge methods.
 
 This tests the token functions on an interface level
 """
@@ -23,7 +23,7 @@ class ChallengeTestCase(MyTestCase):
         set_policy(
             "chalresp",
             scope=SCOPE.AUTHZ,
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp",
         )
         token = init_token({"genkey": 1, "serial": "CHAL1", "pin": "pin"})
         from edumfa.lib.token import check_serial_pass

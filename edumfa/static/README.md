@@ -2,7 +2,7 @@ This is the Web Client for the eduMFA authentication service.
 
 The Web Client acts as a Single Page Application that communicates with the
 eduMFA backend service. You could as well install and run the Web Client
-on another exposed Webserver, while shielding the orginial eduMFA
+on another exposed Webserver, while shielding the original eduMFA
 backend service in a more protected network segment.
 
 The eduMFA Web Client is licensed under the AGPLv3.

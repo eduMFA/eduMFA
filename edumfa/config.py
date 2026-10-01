@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import logging
 import os
 import secrets
@@ -43,8 +41,8 @@ def _random_password(size):
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY")
-    # SQL_ALCHEMY_DATABASE_URI = "mysql://privacyidea:XmbSrlqy5d4IS08zjz"
-    # "GG5HTt40Cpf5@localhost/privacyidea"
+    # SQL_ALCHEMY_DATABASE_URI = "mysql://edumfa:XmbSrlqy5d4IS08zjz"
+    # "GG5HTt40Cpf5@localhost/edumfa"
     EDUMFA_ENCFILE = os.path.join(basedir, "tests/testdata/enckey")
     EDUMFA_HSM = "default"
     EDUMFA_AUDIT_MODULE = "edumfa.lib.auditmodules.sqlaudit"
@@ -141,7 +139,7 @@ class ProductionConfig(Config):
     ) or "sqlite:///" + os.path.join(basedir, "data.sqlite")
     # SQLALCHEMY_DATABASE_URI = "mysql://pi2:pi2@localhost/pi2"
     # This is used to encrypt the auth_token
-    SECRET_KEY = os.environ.get("SECRET_KEY") or _random_password(24)
+    SECRET_KEY = os.environ.get("SECRET_KEY") or _random_password(48)
     # This is used to encrypt the admin passwords
     EDUMFA_PEPPER = "Never know..."
     # This is used to encrypt the token data and token passwords

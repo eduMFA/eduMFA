@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -32,6 +31,7 @@ import logging
 import threading
 
 from flask import current_app, g, request
+from sqlalchemy.exc import IntegrityError, OperationalError
 
 from edumfa.api.auth import admin_required, jwtauth, user_required
 from edumfa.api.lib.postpolicy import postrequest, sign_response
@@ -69,7 +69,7 @@ from .event import eventhandling_blueprint
 from .lib.utils import get_all_params, getParam, send_error
 from .machine import machine_blueprint
 from .machineresolver import machineresolver_blueprint
-from .monitoring import monitoring_blueprint
+from .monitoring import monitoring_blueprint, stats_blueprint
 from .periodictask import periodictask_blueprint
 from .policy import policy_blueprint
 from .radiusserver import radiusserver_blueprint
@@ -93,7 +93,7 @@ log = logging.getLogger(__name__)
 # The decorated functions are called before and after *every* request.
 @token_blueprint.before_app_request
 def log_begin_request():
-    log.debug("Begin handling of request {!r}".format(request.full_path))
+    log.debug(f"Begin handling of request {request.full_path!r}")
     g.startdate = datetime.datetime.now()
 
 
@@ -108,7 +108,7 @@ def teardown_request(exc):
         # Also during calling webui, there is not audit_object, yet.
         pass
     call_finalizers()
-    log.debug("End handling of request {!r}".format(request.full_path))
+    log.debug(f"End handling of request {request.full_path!r}")
 
 
 @token_blueprint.before_request
@@ -146,6 +146,7 @@ def before_userendpoint_request():
 @caconnector_blueprint.before_request
 @edumfaserver_blueprint.before_request
 @client_blueprint.before_request
+@stats_blueprint.before_request
 @monitoring_blueprint.before_request
 @tokengroup_blueprint.before_request
 @serviceid_blueprint.before_request
@@ -160,7 +161,7 @@ def before_request():
 
     user_required checks if there is a logged in admin or user
 
-    The checks for ONLY admin are preformed in api/system.py
+    The checks for ONLY admin are performed in api/system.py
     """
     # remove session from param and gather all parameters, either
     # from the Form data or from JSON in the request body.
@@ -189,7 +190,7 @@ def before_request():
     g.policy_object = PolicyClass()
     g.audit_object = getAudit(current_app.config, g.startdate)
     g.event_config = EventConfiguration()
-    # access_route contains the ip adresses of all clients, hops and proxies.
+    # access_route contains the ip addresses of all clients, hops and proxies.
     g.client_ip = get_client_ip(request, get_from_config(SYSCONF.OVERRIDECLIENT))
     # Save the HTTP header in the localproxy object
     g.request_headers = request.headers
@@ -233,9 +234,9 @@ def before_request():
             "client": g.client_ip,
             "client_user_agent": request.user_agent.browser,
             "edumfa_server": edumfa_server,
-            "action": "{0!s} {1!s}".format(request.method, request.url_rule),
+            "action": f"{request.method} {request.url_rule}",
             "action_detail": "",
-            "thread_id": "{0!s}".format(threading.current_thread().ident),
+            "thread_id": f"{threading.current_thread().ident}",
             "info": "",
         }
     )
@@ -269,6 +270,7 @@ def before_request():
 @periodictask_blueprint.after_request
 @edumfaserver_blueprint.after_request
 @client_blueprint.after_request
+@stats_blueprint.after_request
 @monitoring_blueprint.after_request
 @ttype_blueprint.after_request
 @validate_blueprint.after_request
@@ -299,6 +301,7 @@ def after_request(response):
 @application_blueprint.app_errorhandler(AuthError)
 @smtpserver_blueprint.app_errorhandler(AuthError)
 @eventhandling_blueprint.app_errorhandler(AuthError)
+@stats_blueprint.app_errorhandler(AuthError)
 @monitoring_blueprint.app_errorhandler(AuthError)
 @tokengroup_blueprint.app_errorhandler(AuthError)
 @serviceid_blueprint.app_errorhandler(AuthError)
@@ -312,7 +315,7 @@ def auth_error(error):
         if hasattr(error, "details"):
             if error.details:
                 if "message" in error.details:
-                    message = "{}|{}".format(message, error.details["message"])
+                    message = f"{message}|{error.details['message']}"
 
         g.audit_object.add_to_log({"info": message}, add_with_comma=True)
     return send_error(error.message, error_code=error.id, details=error.details), 401
@@ -331,6 +334,7 @@ def auth_error(error):
 @eventhandling_blueprint.app_errorhandler(PolicyError)
 @register_blueprint.app_errorhandler(PolicyError)
 @recover_blueprint.app_errorhandler(PolicyError)
+@stats_blueprint.app_errorhandler(PolicyError)
 @monitoring_blueprint.app_errorhandler(PolicyError)
 @ttype_blueprint.app_errorhandler(PolicyError)
 @tokengroup_blueprint.app_errorhandler(PolicyError)
@@ -380,6 +384,7 @@ def resource_not_found_error(error):
 @eventhandling_blueprint.app_errorhandler(eduMFAError)
 @register_blueprint.app_errorhandler(eduMFAError)
 @recover_blueprint.app_errorhandler(eduMFAError)
+@stats_blueprint.app_errorhandler(eduMFAError)
 @monitoring_blueprint.app_errorhandler(eduMFAError)
 @ttype_blueprint.app_errorhandler(eduMFAError)
 @tokengroup_blueprint.app_errorhandler(eduMFAError)
@@ -408,6 +413,7 @@ def edumfa_error(error):
 @eventhandling_blueprint.app_errorhandler(500)
 @register_blueprint.app_errorhandler(500)
 @recover_blueprint.app_errorhandler(500)
+@stats_blueprint.app_errorhandler(500)
 @monitoring_blueprint.app_errorhandler(500)
 @ttype_blueprint.app_errorhandler(500)
 @tokengroup_blueprint.app_errorhandler(500)
@@ -421,3 +427,15 @@ def internal_error(error):
     if "audit_object" in g:
         g.audit_object.log({"info": str(error)})
     return send_error(str(error), error_code=-500), 500
+
+
+@validate_blueprint.app_errorhandler(OperationalError)
+@validate_blueprint.app_errorhandler(IntegrityError)
+def sql_error(error):
+    """
+    This function is called when a database error occurs.
+    """
+    log.error(f"Database error occurred: {error!r}")
+    if "audit_object" in g:
+        g.audit_object.log({"info": "Database error occurred."})
+    return send_error("A database error occurred.", error_code=-600), 500

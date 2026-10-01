@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from edumfa.lib.machine import attach_token
 from edumfa.lib.policy import ACTION, SCOPE, set_policy
 from edumfa.lib.token import init_token

@@ -1,12 +1,12 @@
 # Build stage
-FROM python:3.14.0-slim-trixie@sha256:79eaa9622e4daa24b775ac2c9b6dc49b4f302ce925e3dcf1851782b9c93cf5f5 AS builder
+FROM python:3.14.7-slim-trixie@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d AS builder
 WORKDIR /tmp
 COPY . .
 RUN pip install --no-cache-dir build && \
     python -m build --sdist --wheel --outdir dist/
 
 # Final stage
-FROM python:3.14.0-slim-trixie@sha256:79eaa9622e4daa24b775ac2c9b6dc49b4f302ce925e3dcf1851782b9c93cf5f5
+FROM python:3.14.7-slim-trixie@sha256:51dafde81dbdb6ebde285137a295cf18a47ca95234fe388a343719cb97305b3d
 
 # Install system dependencies
 RUN apt-get update && \
@@ -24,13 +24,27 @@ COPY --from=builder /tmp/dist/*.whl /dist/
 RUN pip install --no-cache-dir /dist/*.whl &&  \
     rm -rf /dist/*.whl
 
+# Volume for audit- and enckey
+VOLUME ["/etc/edumfa"]
+
 # Copy necessary files
-COPY ./deploy/gunicorn/edumfaapp.py /opt/edumfa/app.py
-COPY ./deploy/docker/logging.cfg /etc/edumfa/logging.cfg
-COPY ./deploy/docker-setup.sh /opt/edumfa/docker-setup.sh
+COPY ./deploy/docker/entrypoint.sh /opt/edumfa/entrypoint.sh
+COPY ./deploy/docker/edumfa_config.py /opt/edumfa/edumfa_config.py
+COPY ./deploy/docker/logging.yml /opt/edumfa/logging.yml
+COPY ./deploy/docker/edumfaapp.py /opt/edumfa/app.py
 
 # Create directory for user scripts
 RUN mkdir -p /opt/edumfa/user-scripts
+
+# Link the edumfa package at a predicatable position for template overriding.
+RUN python_package_path="$(python3 -c 'import site; x=site.getsitepackages(); assert len(x) == 1; print(x[0])')" && \
+    ln -s "${python_package_path}/edumfa/" "/opt/edumfa/edumfa-package"
+
+# In order to enable edumfa-manage to automatically detect the correct config
+# file in a container image mark the images with an env variable.
+# This is checked in /edumfa/app.py
+# This is a workaround until 3.0.0.
+ENV __EDUMFA_RUNNING_IN_CONTAINER=1
 
 EXPOSE 8000
 HEALTHCHECK --interval=5s --timeout=3s --start-period=60s --retries=2 CMD curl --fail http://localhost:8000/ || exit 1
@@ -41,4 +55,5 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PATH="/opt/edumfa:$PATH"
 
-CMD ["./docker-setup.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["gunicorn", "--no-control-socket", "--bind", "0.0.0.0:8000", "--workers", "4", "app"]

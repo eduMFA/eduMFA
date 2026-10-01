@@ -1,8 +1,23 @@
-name: Ubuntu
+name: ubuntu
+
+permissions:
+  contents: read
+
 on:
   push:
-  release:
-    types: [released]
+    branches: [ main ]
+    tags:
+      - 'v*'
+    paths:
+      - '.github/workflows/ubuntu.yml'
+      - 'deploy/ubuntu*/**'
+      - 'edumfa/**/*.py'
+      - 'tools/**'
+      - 'edumfa-manage'
+      - 'pyproject.toml'
+      - 'setup.py'
+  pull_request:
+    types: [ opened, reopened, synchronize ]
 
 jobs:
   build:
@@ -14,37 +29,36 @@ jobs:
             codename: noble
           - os: ubuntu-22.04
             codename: jammy
-    name: Build for ${{ matrix.os }}
+    name: build ${{ matrix.os }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y build-essential debhelper devscripts equivs dh-virtualenv
+          sudo apt-get update
+          sudo apt-get install -y build-essential debhelper devscripts equivs dh-virtualenv
       - name: Build core package
         run: |
-          mv deploy/ubuntu debian
+          cp -r deploy/ubuntu debian
           sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Build server package
         run: |
-          mv deploy/ubuntu-server debian
+          cp -r deploy/ubuntu-server debian
           sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Build radius package
         run: |
-          mv deploy/ubuntu-radius debian
-          sed -i 's/{{CODENAME}}/${{ matrix.codename }}/g' debian/changelog
+          cp -r deploy/ubuntu-radius debian
+          sed -i "s/{{CODENAME}}/${{ matrix.codename }}/g" debian/changelog
           sudo mk-build-deps -ri
           dpkg-buildpackage -us -uc -b
           rm -r debian
       - name: Upload packages to Nexus
-        if: github.event_name == 'release'
+        if: github.ref_type == 'tag'
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}

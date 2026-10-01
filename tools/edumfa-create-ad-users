@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 # 2015-10-12 Cornelius Kölbel <cornelius@privacyidea.org>
 #            Rewrite to LDAP3
@@ -30,15 +29,15 @@ def usage():
 
 
 def create_user(l, base, keys, values):
-    dn = "%s=%s,%s" % (keys[0], values[0], base)
+    dn = f"{keys[0]}={values[0]},{base}"
     attrs = {}
     for x in range(1, len(keys)):
         attrs[keys[x]] = values[x]
 
-    print("creating user %s" % dn)
+    print(f"creating user {dn}")
     r = l.add(dn, object_class=OBJECT_CLASSES, attributes=attrs)
     if not r:
-        print("   Failed to create user with attributes %s" % attrs)
+        print(f"   Failed to create user with attributes {attrs}")
         print(l.result)
 
 
@@ -73,10 +72,10 @@ def main():
         usage()
         sys.exit(2)
     else:
-        password = getpass.getpass("Please enter password for %s: " % bind)
+        password = getpass.getpass(f"Please enter password for {bind}: ")
 
         # read the first line
-        f = open(filename, "r")
+        f = open(filename)
         first_line = f.readline()
         keys = [x.strip() for x in first_line.split(",")]
 

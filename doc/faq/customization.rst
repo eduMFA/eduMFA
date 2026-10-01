@@ -14,7 +14,7 @@ Templates
 .. index:: customize, templates, HTML views
 
 You can change the HTML templates of the web UI as follows.
-You can create a copy of the orignial templates, modify them and use rewrite rules of your webserver
+You can create a copy of the original templates, modify them and use rewrite rules of your webserver
 to call your new, modified templates.
 
 This way updates will not affect your modifications.
@@ -55,6 +55,29 @@ Follow these basic steps:
 .. warning:: Of course - if there are functional enhancements or bug fixes in the
    original templates - your template will also not be affected by these.
 
+Templates (Docker)
+..................
+
+In the Docker image, you can modify templates by mounting them over their
+original paths. To change the *login.html* template, you would:
+
+1. Copy and modify the file at */edumfa/static/components/login/views/login.html*
+2. Mount that file at */opt/edumfa/edumfa-package/static/components/login/views/login.html*
+
+In a compose file, it could look like this:
+
+.. code-block:: yaml
+
+   services:
+     [...]
+     edumfa:
+       [...]
+       volumes:
+         [...]
+         - ./your-login.html:/opt/edumfa/edumfa-package/static/components/login/views/login.html
+
+.. warning:: If there are functional enhancements or bug fixes in the
+   original templates, remember to update your customized copy, too!
 
 Translating templates
 .....................

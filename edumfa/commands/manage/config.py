@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -85,7 +84,7 @@ imp_fmt_dict = {"python": ast.literal_eval, "json": json.loads, "yaml": yaml.saf
     default=["all"],
     show_default=True,
     type=click.Choice(["all"] + list(EXPORT_FUNCTIONS.keys()), case_sensitive=False),
-    help=f"The types of configuration to export (can be given multiple times). By default, export all available types. Currently registered exporter types are: {', '.join(['all'] + list(EXPORT_FUNCTIONS.keys()))!s}",
+    help=f"The types of configuration to export (can be given multiple times). By default, export all available types. Currently registered exporter types are: {', '.join(['all'] + list(EXPORT_FUNCTIONS.keys()))}",
 )
 @click.option(
     "-n",
@@ -125,7 +124,7 @@ def exporter(output, fmt, types, name=None):
     type=click.Choice(["all"] + list(IMPORT_FUNCTIONS.keys()), case_sensitive=False),
     help=f"The types of configuration to import. By default import all available data if a corresponding "
     f"importer type exists. Currently registered importer types "
-    f"are: {', '.join(['all'] + list(IMPORT_FUNCTIONS.keys()))!s}",
+    f"are: {', '.join(['all'] + list(IMPORT_FUNCTIONS.keys()))}",
 )
 @click.option(
     "-n",
@@ -149,9 +148,7 @@ def importer(infile, types, name=None):
             continue
     if not data:
         click.echo(
-            "Could not read input format! Accepting: {0!s}.".format(
-                ", ".join(imp_fmt_dict.keys())
-            ),
+            f"Could not read input format! Accepting: {', '.join(imp_fmt_dict.keys())}.",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -160,7 +157,7 @@ def importer(infile, types, name=None):
     for typ, value in sorted(IMPORT_FUNCTIONS.items(), key=lambda x: x[1]["prio"]):
         if typ in imp_types:
             if typ in data:
-                click.echo('Importing configuration type "{0!s}".'.format(typ))
+                click.echo(f'Importing configuration type "{typ}".')
                 value["func"](data[typ], name=name)
 
 
@@ -192,6 +189,7 @@ def importer(infile, types, name=None):
     help="Purge not existing items and keep old (update can be enabled using -u).",
 )
 def import_full_config(file, cleanup, update, purge):
+    """Import the full configuration from a file."""
     data = {}
     if file:
         if os.path.isfile(file):
@@ -234,10 +232,15 @@ def import_full_config(file, cleanup, update, purge):
 @click.option(
     "--archive",
     "-a",
+    is_flag=True,
     help="Compress the created config-backup as tar.gz archive instead of printing to standard out.",
 )
 @click.option("--directory", "-d", help="Directory where the backup will be stored.")
 def export_full_config(passwords, archive, directory):
+    """
+    Export the full configuration to a file.
+    If the filename is omitted, the configuration is written to STDOUT.
+    """
     click.echo("Exporting eduMFA configuration.", file=sys.stderr)
     data = {
         "resolver": get_conf_resolver(print_passwords=passwords),
@@ -247,23 +250,31 @@ def export_full_config(passwords, archive, directory):
     if archive or directory:
         from socket import gethostname
 
-        DATE = datetime.now().strftime("%Y%m%d-%H%M")
-        BASE_NAME = "edumfa-config-backup"
-        HOSTNAME = gethostname()
+        date = datetime.now().strftime("%Y%m%d-%H%M")
+        base_name = "edumfa-config-backup"
+        hostname = gethostname()
         if not directory:
             directory = "./"
         else:
             call(["mkdir", "-p", directory])
-        config_backup_file_base = f"{directory}/{BASE_NAME}-{HOSTNAME}-{DATE}"
+        config_backup_file_base = f"{directory}/{base_name}-{hostname}-{date}"
         config_backup_file = f"{config_backup_file_base}.py"
 
-        with open(config_backup_file) as f:
+        descriptor = os.open(
+            path=config_backup_file, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT)
+        )
+        with open(descriptor, "w") as f:
             conf_export(data, f)
         if archive:
             config_backup_archive = f"{config_backup_file_base}.tar.gz"
-            tar = tarfile.open(config_backup_archive, "w:gz")
-            tar.add(config_backup_file)
-            tar.close()
+            # create file with correct permissions
+            archive_descriptor = os.open(
+                path=config_backup_archive, mode=0o600, flags=(os.O_WRONLY | os.O_CREAT)
+            )
+            os.close(archive_descriptor)
+            # write to file
+            with tarfile.open(config_backup_archive, "w:gz") as tar:
+                tar.add(config_backup_file)
             # cleanup
             if tarfile.is_tarfile(config_backup_archive):
                 os.remove(config_backup_file)

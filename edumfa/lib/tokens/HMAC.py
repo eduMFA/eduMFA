@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -128,29 +127,29 @@ class HmacOtp:
         return sotp
 
     @log_with(log)
-    def checkOtp(self, anOtpVal, window, symetric=False):
+    def checkOtp(self, anOtpVal, window, symmetric=False):
         """
 
         :param anOtpVal: The OTP value to check
         :type anOtpVal: str
         :param window:
-        :param symetric:
+        :param symmetric:
         :return: -1 if the OTP doesn't match or the current counter
         :rtype: int
         """
         res = -1
         start = self.counter
         end = self.counter + window
-        if symetric is True:
+        if symmetric is True:
             # changed window/2 to window for TOTP
             start = self.counter - (window)
             start = 0 if (start < 0) else start
             end = self.counter + (window)
 
-        log.debug("OTP range counter: {0!r} - {1!r}".format(start, end))
+        log.debug(f"OTP range counter: {start!r} - {end!r}")
         for c in range(start, end):
             otpval = self.generate(c)
-            # log.debug("calculating counter {0!r}".format(c))
+            # log.debug(f"calculating counter {c!r}")
 
             if safe_compare(otpval, anOtpVal):
                 res = c

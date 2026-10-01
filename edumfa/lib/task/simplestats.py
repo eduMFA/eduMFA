@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -24,9 +23,8 @@ import logging
 
 from edumfa.lib import _
 from edumfa.lib.monitoringstats import write_stats
-from edumfa.lib.subscriptions import get_users_with_active_tokens
 from edumfa.lib.task.base import BaseTask
-from edumfa.lib.token import get_tokens
+from edumfa.lib.token import count_users_with_token, get_tokens
 from edumfa.lib.tokenclass import TOKENKIND
 from edumfa.lib.utils import is_true
 
@@ -73,7 +71,9 @@ class SimpleStatsTask(BaseTask):
 
     @property
     def _user_with_token(self):
-        return get_users_with_active_tokens()
+        # TODO: change this to user_with_active_token in eduMFA v3.0.0 or
+        #       remove active=True
+        return count_users_with_token(active=True)
 
     @property
     def _total_tokens(self):
@@ -100,7 +100,7 @@ class SimpleStatsTask(BaseTask):
     def do(self, params):
         for opt in self.options.keys():
             if is_true(params.get(opt)):
-                log.debug("Got param {0}".format(opt))
+                log.debug(f"Got param {opt}")
                 write_stats(opt, getattr(self, "_" + opt))
 
         return True

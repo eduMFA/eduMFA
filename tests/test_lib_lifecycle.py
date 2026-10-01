@@ -3,8 +3,7 @@ This file contains the tests for the lifecycle module lib/lifecycle.py
 """
 
 import json
-
-from mock import mock
+from unittest import mock
 
 from edumfa.lib.lifecycle import call_finalizers, register_finalizer
 

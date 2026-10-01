@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This testfile tests the basic app functionality of the privacyIDEA app
 """
@@ -7,9 +6,9 @@ import inspect
 import logging
 import os
 import unittest
+from unittest import mock
 
 import flask
-import mock
 from testfixtures import Comparison, compare
 
 from edumfa.app import PiResponseClass, create_app
@@ -66,11 +65,15 @@ class AppTestCase(unittest.TestCase):
             "smsgateway_blueprint",
             "client_blueprint",
             "monitoring_blueprint",
+            "stats_blueprint",
         ]
-        self.assertTrue(all(k in app.before_request_funcs for k in blueprints), app)
-        self.assertTrue(all(k in app.blueprints for k in blueprints), app)
+        self.assertTrue(
+            all(k in app.before_request_funcs for k in blueprints),
+            app.before_request_funcs,
+        )
+        self.assertTrue(all(k in app.blueprints for k in blueprints), app.blueprints)
         extensions = ["sqlalchemy", "migrate", "babel"]
-        self.assertTrue(all(k in extensions for k in app.extensions), app)
+        self.assertTrue(all(k in extensions for k in app.extensions), app.extensions)
         self.assertEqual(app.secret_key, "t0p s3cr3t", app)
         # TODO: check url_map and view_functions
         # check that the configuration was loaded successfully

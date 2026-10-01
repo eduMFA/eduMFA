@@ -1,0 +1,59 @@
+services:
+  mariadb:
+    image: docker.io/mariadb:12.3
+    restart: always
+    volumes:
+      - mariadb-data:/var/lib/mysql:rw
+    secrets:
+      - db_password
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD_FILE: /run/secrets/db_password
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  edumfa:
+    build: ../..
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - edumfa-keys:/etc/edumfa/:rw
+      - ./edumfa-setup.sh:/opt/edumfa/user-scripts/01-setup.sh:ro
+      - ./example-policy.py:/opt/edumfa/policy.py:ro
+      - ./my-login.html:/opt/edumfa/edumfa-package/static/components/login/views/login.html
+    secrets:
+      - admin_password
+      - db_password
+    environment:
+      DB_DATABASE: ${MARIADB_DATABASE}
+      DB_DRIVER: mysql+pymysql
+      DB_HOSTNAME: mariadb
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      DB_USER: ${MARIADB_USER}
+      EDUMFA_ADMIN_PASS_FILE: /run/secrets/admin_password
+      EDUMFA_ADMIN_USER: ${EDUMFA_ADMIN_USER}
+      EDUMFA_PEPPER: ${EDUMFA_PEPPER}
+      EDUMFA_UI_DEACTIVATED: ${EDUMFA_UI_DEACTIVATED}
+      SECRET_KEY: ${EDUMFA_SECRET_KEY}
+      SQLALCHEMY_ENGINE_OPTIONS: '{"isolation_level": "READ COMMITTED"}'
+      EDUMFA_AUDIT_SQL_OPTIONS: '{}'
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+secrets:
+  db_password:
+    file: ./db_password.txt
+  admin_password:
+    file: ./admin_password.txt
+
+volumes:
+  edumfa-keys:
+  mariadb-data:

@@ -127,7 +127,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
         else:
             log.warning(
                 "Unable to determine the user for handling the custom "
-                "attribute! action: {0!s}, handler: {1!s}".format(action, handler_def)
+                f"attribute! action: {action}, handler: {handler_def}"
             )
             return False
 
@@ -138,7 +138,7 @@ class CustomUserAttributesHandler(BaseEventHandler):
         elif action.lower() == "delete_custom_user_attributes":
             ret = user.delete_attribute(attrkey)
         else:
-            log.warning("Unknown action value: {0!s}".format(action))
+            log.warning(f"Unknown action value: {action}")
             ret = False
 
         return ret

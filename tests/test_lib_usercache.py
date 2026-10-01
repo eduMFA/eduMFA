@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 This test file tests the lib.usercache
 
@@ -7,8 +6,7 @@ The lib.usercache.py only depends on the database model
 
 from contextlib import contextmanager
 from datetime import datetime, timedelta
-
-from mock import patch
+from unittest.mock import patch
 
 from edumfa.lib.config import set_edumfa_config
 from edumfa.lib.error import UserError

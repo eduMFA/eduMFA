@@ -91,9 +91,7 @@ class RemoteTokenTestCase(MyTestCase):
         token = RemoteTokenClass(db_token)
 
         info = token.get_class_info()
-        self.assertTrue(
-            info.get("title") == "Remote Token", "{0!s}".format(info.get("title"))
-        )
+        self.assertTrue(info.get("title") == "Remote Token", f"{info.get('title')}")
 
         info = token.get_class_info("title")
         self.assertTrue(info == "Remote Token", info)
@@ -185,7 +183,7 @@ class RemoteTokenTestCase(MyTestCase):
         self.assertFalse(r[0], r)
         self.assertTrue(r[1] == -1, r)
         self.assertTrue(r[2].get("message") == "Wrong PIN", r)
-        # rigth PIN
+        # right PIN
         r = token.authenticate(self.otppin + "123456")
         self.assertTrue(r[0], r)
         self.assertTrue(r[1] >= 0, r)

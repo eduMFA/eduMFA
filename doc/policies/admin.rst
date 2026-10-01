@@ -841,6 +841,18 @@ Enforce the timestep of the time-based OTP token.
 A corresponding input selection will be disabled/hidden in the web UI.
 Possible values are *30* or *60*, default is *30*.
 
+totp_timeshift
+~~~~~~~~~~~~~
+
+type: string
+
+Which setting to enforce for TOTP timeshift. Enabling timeshift means that
+eduMFA will try to work-around wrong clocks, for example in hardware tokens
+which drift behind with age. This is not necessary for smartphones which have
+their time normally synchronized.
+Possible values are *default*, *True* and *False*. *default* enforces the TOTP
+default setting in the eduMFA config.
+
 system_documentation
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -954,7 +966,7 @@ manage_machine_tokens
 type: bool
 
 The administrator is allowed to attach and detach tokens to machines to enable the use with
-one of the available appliactions. See :ref:`machines`.
+one of the available applications. See :ref:`machines`.
 
 fetch_authentication_items
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

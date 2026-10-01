@@ -45,7 +45,7 @@ def upgrade():
             "policy", sa.Column("adminuser", sa.Unicode(length=256), nullable=True)
         )
     except Exception as exx:
-        print('Adding of column "adminuser" in table policy failed: {!r}'.format(exx))
+        print(f'Adding of column "adminuser" in table policy failed: {exx!r}')
         print("This is expected behavior if this column already exists.")
 
     # Now that we added the column in the table, we can move the "user" from admin-policies to
@@ -66,7 +66,7 @@ def upgrade():
         session.rollback()
         print(
             "Failed to migrate column adminuser in policies due to error in "
-            "policy '{0!s}'.".format(pol_name)
+            f"policy '{pol_name}'."
         )
         print(exx)
 

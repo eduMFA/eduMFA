@@ -1,0 +1,11 @@
+## eduMFA docker config
+MARIADB_USER="edumfa"
+MARIADB_DATABASE="edumfa"
+MARIADB_ROOT_PASSWORD="rootpass"
+
+EDUMFA_SECRET_KEY="Secret-Use-Your-Own-Values-Please"
+EDUMFA_PEPPER="Never know..."
+
+EDUMFA_ADMIN_USER="admin"
+SUPERUSER_REALM="super,administrators"
+EDUMFA_UI_DEACTIVATED="False"

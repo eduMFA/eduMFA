@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -29,6 +28,7 @@ import json
 import logging
 
 import jwt
+import sqlalchemy
 from cryptography import x509
 from dateutil.tz import tzlocal
 from flask import current_app, g
@@ -67,6 +67,7 @@ from edumfa.lib.utils import (
     is_true,
     to_unicode,
 )
+from edumfa.models import Challenge, JwtBlacklist
 
 __doc__ = """
 WebAuthn  is the Web Authentication API specified by the FIDO Alliance.
@@ -474,7 +475,6 @@ native encoding of the language (usually utf-16).
 
 """
 
-from edumfa.models import Challenge
 
 IMAGES = IMAGES
 
@@ -572,6 +572,30 @@ class WEBAUTHNGROUP:
     """
 
     WEBAUTHN = "WebAuthn"
+
+
+def reset_all_user_tokens_passkey(user) -> None:
+    # TODO: Should be merged with normal decorator
+    # Gather all tokens of the user that are not registration tokens and reset the failure counter
+    reset_all = Match.user(
+        g,
+        scope=SCOPE.AUTH,
+        action=ACTION.RESETALLTOKENS,
+        user_object=user if user else None,
+    ).policies()
+    if not reset_all:
+        return
+    tokens = get_tokens_from_serial_or_user(None, user=user, for_update=True)
+    log.debug(f"Reset failcounter of all tokens of {user}")
+    for tok_obj_reset in tokens:
+        if tok_obj_reset.get_class_type() in ["registration"]:
+            continue
+        try:
+            tok_obj_reset.reset()
+        except Exception:
+            log.warning(
+                f"Could not reset failure for token {tok_obj_reset.serial} of user {user}"
+            )
 
 
 class WebAuthnTokenClass(TokenClass):
@@ -773,12 +797,12 @@ class WebAuthnTokenClass(TokenClass):
                         "desc": _(
                             "Which algorithm are available to use for creating public key "
                             "credentials for WebAuthn tokens. (Default: [{0!s}], Order: "
-                            "[{1!s}])".format(
-                                ", ".join(
-                                    DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
-                                ),
-                                ", ".join(PUBKEY_CRED_ALGORITHMS_ORDER),
-                            )
+                            "[{1!s}])"
+                        ).format(
+                            ", ".join(
+                                DEFAULT_PUBLIC_KEY_CREDENTIAL_ALGORITHM_PREFERENCE
+                            ),
+                            ", ".join(PUBKEY_CRED_ALGORITHMS_ORDER),
                         ),
                         "group": WEBAUTHNGROUP.WEBAUTHN,
                         "multiple": True,
@@ -882,9 +906,7 @@ class WebAuthnTokenClass(TokenClass):
 
         if key not in WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys():
             raise ValueError(
-                "key must be one of {0!s}".format(
-                    ", ".join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())
-                )
+                f"key must be one of {', '.join(WEBAUTHN_TOKEN_SPECIFIC_SETTINGS.keys())}"
             )
         return WEBAUTHN_TOKEN_SPECIFIC_SETTINGS[key]
 
@@ -903,7 +925,7 @@ class WebAuthnTokenClass(TokenClass):
     def _get_message(self, options):
         challengetext = getParam(
             options,
-            "{0!s}_{1!s}".format(self.get_class_type(), ACTION.CHALLENGETEXT),
+            f"{self.get_class_type()}_{ACTION.CHALLENGETEXT}",
             optional,
         )
         return challengetext.format(self.token.description) if challengetext else ""
@@ -934,7 +956,12 @@ class WebAuthnTokenClass(TokenClass):
         client to allow the client to create an assertion for the
         authentication process.
 
-        :return: The otpkey decrypted and encoded as WebAuthn base64.
+        The credential id is public information. To avoid decrypting it on every
+        authentication it is stored as plain text (see :py:meth:`edumfa.models.Token.set_otpkey`).
+        Credential ids of tokens that were enrolled with an earlier version and
+        have not been migrated yet are still decrypted transparently.
+
+        :return: The credential id encoded as WebAuthn base64.
         :rtype: basestring
         """
 
@@ -1005,9 +1032,7 @@ class WebAuthnTokenClass(TokenClass):
             # Since we are still enrolling the token, there should be exactly one challenge.
             if not len(challengeobject_list):
                 raise EnrollmentError(
-                    "The enrollment challenge does not exist or has timed out for {0!s}".format(
-                        serial
-                    )
+                    f"The enrollment challenge does not exist or has timed out for {serial}"
                 )
             challengeobject = challengeobject_list[0]
             challenge = binascii.unhexlify(challengeobject.challenge)
@@ -1045,19 +1070,19 @@ class WebAuthnTokenClass(TokenClass):
                     ]
                 )
             except Exception as e:
-                log.warning(
-                    "Enrollment of {0!s} token failed: {1!s}!".format(
-                        self.get_class_type(), e
-                    )
-                )
+                log.warning(f"Enrollment of {self.get_class_type()} token failed: {e}!")
                 raise EnrollmentError(
-                    "Could not enroll {0!s} token!".format(self.get_class_type())
+                    f"Could not enroll {self.get_class_type()} token!"
                 )
 
+            # The credential id is public information, which is sent to the
+            # client with every authentication request. It is stored in plain
+            # text to avoid decrypting it on every authentication.
             self.set_otpkey(
                 hexlify_and_unicode(
                     webauthn_b64_decode(webauthn_credential.credential_id)
-                )
+                ),
+                encrypted=False,
             )
             self.set_otp_count(webauthn_credential.sign_count)
             self.add_tokeninfo(
@@ -1098,7 +1123,7 @@ class WebAuthnTokenClass(TokenClass):
                 )
                 automatic_description = cn[0].value if len(cn) else None
             log.debug(
-                f"Got client extensions from registration: {registration_client_extensions!s}"
+                f"Got client extensions from registration: {registration_client_extensions}"
             )
             if registration_client_extensions:
                 try:
@@ -1121,9 +1146,7 @@ class WebAuthnTokenClass(TokenClass):
                                 WEBAUTHNINFO.RESIDENT_KEY, "not enough info"
                             )
                 except Exception as e:
-                    log.warning(
-                        "Could not parse registrationClientExtensions: {0!s}".format(e)
-                    )
+                    log.warning(f"Could not parse registrationClientExtensions: {e}")
 
             # Some authenticators do not set the resident key extension.
             # However, backup-eligible keys are always passkeys, i.e., resident keys.
@@ -1363,7 +1386,16 @@ class WebAuthnTokenClass(TokenClass):
         nonce = WebAuthnTokenClass._get_nonce()
         transactionid = Challenge.create_transaction_id()
         challenge = jwt.encode(
-            {"nonce": webauthn_b64_encode(nonce), "transactionId": transactionid},
+            {
+                "nonce": webauthn_b64_encode(nonce),
+                "transactionId": transactionid,
+                "exp": datetime.datetime.now(tz=datetime.timezone.utc)
+                + datetime.timedelta(
+                    seconds=int(get_from_config("DefaultChallengeValidityTime", 120))
+                ),
+                "iat": datetime.datetime.now(tz=datetime.timezone.utc),
+                "nbf": datetime.datetime.now(tz=datetime.timezone.utc),
+            },
             current_app.secret_key,
             algorithm="HS256",
         )
@@ -1500,35 +1532,79 @@ class WebAuthnTokenClass(TokenClass):
             json_text = to_unicode(client_data)
             c = json.loads(json_text)
             challenge = webauthn_b64_decode(c.get("challenge"))
+            claims = {}
             try:
-                jwt.decode(challenge, current_app.secret_key, algorithms=["HS256"])
+                claims = jwt.decode(
+                    challenge, current_app.secret_key, algorithms=["HS256"]
+                )
             except jwt.DecodeError as err:
-                raise AuthenticationRejectedException(
-                    "Provided response does not contain a challenge issued by this "
-                    "instance"
-                )
+                log.warning(f"Error decoding passkey challenge: {err}")
+                return False, {}
             except jwt.ExpiredSignatureError as err:
-                raise AuthenticationRejectedException(
-                    "Provided response does not contain a challenge issued by this "
-                    "instance"
+                claims = jwt.decode(
+                    challenge,
+                    current_app.secret_key,
+                    algorithms=["HS256"],
+                    options={"verify_exp": False},
                 )
-
+                log.warning(
+                    f"Got expired passkey challenge: {err}; Actually expired at {claims.get('exp')} ({claims.get('exp') - datetime.datetime.now(datetime.timezone.utc).timestamp()} seconds ago)"
+                )
+                reply_dict = {"message": "Passkey challenge expired."}
+                return False, reply_dict
+            if (
+                "transactionId" not in claims
+                or "nonce" not in claims
+                or "exp" not in claims
+            ):
+                log.warning(
+                    "Passkey response missing required claims (transactionId, nonce, exp)."
+                )
+                reply_dict = {"message": "Invalid passkey challenge."}
+                return False, reply_dict
+            # Try to store the transaction id in the blacklist to prevent replay attacks, should trigger an IntegrityError or an OperationalError on duplicate inserts
+            expiration = datetime.datetime.fromtimestamp(
+                claims.get("exp"), tz=datetime.timezone.utc
+            )
+            try:
+                JwtBlacklist(
+                    expiration=expiration,
+                    nonce=claims.get("nonce"),
+                ).save()
+            except (
+                sqlalchemy.exc.IntegrityError,
+                sqlalchemy.exc.OperationalError,
+            ) as err:
+                log.warning(
+                    f"Possible replay attack detected during passkey authentication for transaction id {claims.get('transactionId')}: {err}"
+                )
+                reply_dict = {"message": "Passkey challenge already used."}
+                return False, reply_dict
             # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI
             user_handle = getParam(options, "userhandle", required)
             token = get_tokens_from_serial_or_user(
-                serial=user_handle, user=None, active=True, revoked=False, locked=False
+                serial=user_handle,
+                user=None,
+                active=True,
+                revoked=False,
+                locked=False,
+                for_update=True,
             )[0]
             reply_dict = {}
             if token is None:
-                log.warning("Passkey {0!s} not found.".format(user_handle))
+                log.warning(f"Passkey {user_handle} not found.")
                 return False, reply_dict
+
+            reply_dict["serial"] = token.token.serial
+            reply_dict["type"] = token.token.tokentype
+
             if token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
                 log.warning(
-                    "Passkey {0!s} is in clientwait state. Can not be used for authentication!".format(
-                        token.token.serial
-                    )
+                    f"Passkey {token.token.serial} is in clientwait state. Can not be used for authentication!"
                 )
+                reply_dict["message"] = "Passkey is in clientwait state."
                 return False, reply_dict
+
             user_verification_requirement_policies = Match.user(
                 g,
                 scope=SCOPE.AUTH,
@@ -1542,10 +1618,7 @@ class WebAuthnTokenClass(TokenClass):
             )
             if user_verification_requirement not in USER_VERIFICATION_LEVELS:
                 raise PolicyError(
-                    "{0!s} must be one of {1!s}".format(
-                        WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT,
-                        ", ".join(USER_VERIFICATION_LEVELS),
-                    )
+                    f"{WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT} must be one of {', '.join(USER_VERIFICATION_LEVELS)}"
                 )
 
             options[WEBAUTHNACTION.USER_VERIFICATION_REQUIREMENT] = (
@@ -1553,17 +1626,24 @@ class WebAuthnTokenClass(TokenClass):
             )
             options["user"] = token.user
             options["challenge"] = hexlify_and_unicode(challenge)
+            if token.user is None or token.is_orphaned():
+                log.warning(
+                    f"Passkey {token.token.serial} is unassigned or assigned to orphaned user. Can not be used for authentication!"
+                )
+                reply_dict["message"] = (
+                    "Passkey is unassigned or assigned to orphaned user."
+                )
+                return False, reply_dict
+
             try:
                 count = token.check_otp(otpval=None, options=options)
-                reply_dict["user"] = {
-                    "username": token.user.login,
-                    "realm": token.user.realm,
-                    "resolver": token.user.resolver,
-                }
-                reply_dict["message"] = "Passkey authentication worked!"
-                reply_dict["serial"] = token.token.serial
-                reply_dict["type"] = token.token.tokentype
                 if count != -1:
+                    reply_dict["user"] = {
+                        "username": token.user.login,
+                        "realm": token.user.realm,
+                        "resolver": token.user.resolver,
+                    }
+                    reply_dict["message"] = "Passkey authentication worked!"
                     token.add_tokeninfo(
                         ACTION.LASTAUTH,
                         datetime.datetime.now(tzlocal()).isoformat(
@@ -1571,14 +1651,29 @@ class WebAuthnTokenClass(TokenClass):
                         ),
                     )
                     token.inc_count_auth_success()
+                    reset_all_user_tokens_passkey(token.user)
+                    if not get_from_config(
+                        "DisableAutoChallengeJanitor", "False", return_bool=True
+                    ):
+                        JwtBlacklist.blacklist_janitor()
                     return True, reply_dict
                 else:
+                    log.warning(
+                        f"Passkey authentication failed for token {token.token.serial}."
+                    )
                     return False, reply_dict
             except Exception as e:
+                log.error(f"Unexpected failure '{e!s}' during passkey authentication.")
+                reply_dict["message"] = (
+                    "Unexpected error during passkey authentication."
+                )
                 return False, reply_dict
         else:
-            # Not all necessary data provided.
-            return False, {}
+            log.warning(
+                "Received passkey authentication request which is not a valid WebAuthn assertion response."
+            )
+            reply_dict = {"message": "Invalid authentication request."}
+            return False, reply_dict
 
     @check_token_locked
     def check_otp(self, otpval, counter=None, window=None, options=None):
@@ -1664,9 +1759,7 @@ class WebAuthnTokenClass(TokenClass):
             except AuthenticationRejectedException as e:
                 # The authentication ceremony failed.
                 log.warning(
-                    "Checking response for token {0!s} failed. {1!s}".format(
-                        self.token.serial, e
-                    )
+                    f"Checking response for token {self.token.serial} failed. {e}"
                 )
                 return -1
 
@@ -1687,10 +1780,8 @@ class WebAuthnTokenClass(TokenClass):
                 getParam(options, WEBAUTHNACTION.REQ, optional),
             ):
                 log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate "
-                    "due to policy restriction {1!s}".format(
-                        self.token.serial, WEBAUTHNACTION.REQ
-                    )
+                    f"The WebAuthn token {self.token.serial} is not allowed to authenticate "
+                    f"due to policy restriction {WEBAUTHNACTION.REQ}"
                 )
                 raise PolicyError(
                     "The WebAuthn token is not allowed to "
@@ -1708,10 +1799,8 @@ class WebAuthnTokenClass(TokenClass):
                 and self.get_tokeninfo(WEBAUTHNINFO.AAGUID) not in allowed_aaguids
             ):
                 log.warning(
-                    "The WebAuthn token {0!s} is not allowed to authenticate due to policy "
-                    "restriction {1!s}".format(
-                        self.token.serial, WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST
-                    )
+                    f"The WebAuthn token {self.token.serial} is not allowed to authenticate due to policy "
+                    f"restriction {WEBAUTHNACTION.AUTHENTICATOR_SELECTION_LIST}"
                 )
                 raise PolicyError(
                     "The WebAuthn token is not allowed to "

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This test file tests the lib.token methods.
 
@@ -33,6 +32,7 @@ from edumfa.lib.error import (
     PolicyError,
     ResourceNotFoundError,
     TokenAdminError,
+    UserError,
     eduMFAError,
 )
 from edumfa.lib.policy import ACTION, SCOPE, PolicyClass, delete_policy, set_policy
@@ -47,6 +47,7 @@ from edumfa.lib.token import (
     check_user_pass,
     copy_token_pin,
     copy_token_user,
+    count_users_with_token,
     create_tokenclass_object,
     delete_tokeninfo,
     enable_token,
@@ -155,7 +156,7 @@ class TokenTestCase(MyTestCase):
         db_token.delete()
 
     def test_02_get_tokens(self):
-        # get All tokens
+        # get all tokens
         tokenobject_list = get_tokens()
         # Check if these are valid tokentypes
         self.assertTrue(len(tokenobject_list) > 0, tokenobject_list)
@@ -227,6 +228,10 @@ class TokenTestCase(MyTestCase):
             eduMFAError, get_tokens, tokeninfo={"key1": "value1", "key2": "value2"}
         )
 
+        # get tokens for a user with an invalid realm
+        user = User("test", realm="deleted")
+        self.assertRaises(ResourceNotFoundError, get_tokens, user=user)
+
         # wildcard matches do not work for the ``serial`` parameter
         tokenobject_list = get_tokens(serial="hotptoke*")
         self.assertEqual(len(tokenobject_list), 0)
@@ -258,7 +263,7 @@ class TokenTestCase(MyTestCase):
         # one active token
         self.assertTrue(
             get_num_tokens_in_realm(self.realm1) == 1,
-            "{0!r}".format(get_num_tokens_in_realm(self.realm1)),
+            f"{get_num_tokens_in_realm(self.realm1)!r}",
         )
         # No active tokens
         self.assertTrue(get_num_tokens_in_realm(self.realm1, active=False) == 0)
@@ -271,7 +276,7 @@ class TokenTestCase(MyTestCase):
         # Return a list of realmnames for a token
         self.assertTrue(
             get_realms_of_token("hotptoken") == [self.realm1],
-            "{0!s}".format(get_realms_of_token("hotptoken")),
+            f"{get_realms_of_token('hotptoken')}",
         )
 
     def test_07_token_exist(self):
@@ -298,6 +303,47 @@ class TokenTestCase(MyTestCase):
         self.assertFalse(
             is_token_owner(self.serials[1], user), get_token_owner(self.serials[1])
         )
+
+    def test_08a_count_users_with_token(self):
+        # add some more tokens
+        self.setUp_user_realm2()
+        user_obj = User("cornelius", realm=self.realm1)
+        user_obj2 = User("hans", realm=self.realm2)
+        # Cornelius already has an active token here. Give him a second to make sure he is counted as one.
+        tok = init_token(
+            {
+                "type": "hotp",
+                "otpkey": self.otpkey,
+                "serial": "TEST08A_1",
+            },
+            user=user_obj,
+        )
+        tok2 = init_token(
+            {
+                "type": "hotp",
+                "otpkey": self.otpkey,
+                "serial": "TEST08A_2",
+                "active": "False",
+            },
+            user=user_obj2,
+        )
+        tok2.enable(False)
+        # hans and cornelius both have one or more tokens.
+        self.assertEqual(count_users_with_token(), 2)
+        # Check for realm.
+        self.assertEqual(count_users_with_token(realm=self.realm1), 1)
+        self.assertEqual(count_users_with_token(realm=self.realm2), 1)
+        self.assertEqual(count_users_with_token(realm="idontexist"), 0)
+        self.assertEqual(count_users_with_token(realm=""), 0)
+        # Check for activeness.
+        self.assertEqual(count_users_with_token(active=True), 1)
+        self.assertEqual(count_users_with_token(active=False), 1)
+        # Check for tokentype.
+        self.assertEqual(count_users_with_token(tokentype="hotp"), 2)
+        self.assertEqual(count_users_with_token(tokentype="totp"), 0)
+        # cleanup
+        tok.delete_token()
+        tok2.delete_token()
 
     def test_09_get_tokenclass_info(self):
         info = get_tokenclass_info("hotp")
@@ -464,13 +510,13 @@ class TokenTestCase(MyTestCase):
         serial = "NEWREALM01"
         tokenobject = init_token({"serial": serial, "otpkey": "1234567890123456"})
         realms = get_realms_of_token(serial)
-        self.assertEqual(realms, [], "{0!s}".format(realms))
+        self.assertEqual(realms, [], f"{realms}")
         set_realms(serial, [self.realm1])
         realms = get_realms_of_token(serial)
-        self.assertEqual(realms, [self.realm1], "{0!s}".format(realms))
+        self.assertEqual(realms, [self.realm1], f"{realms}")
         remove_token(serial=serial)
         realms = get_realms_of_token(serial)
-        self.assertTrue(realms == [], "{0!s}".format(realms))
+        self.assertTrue(realms == [], f"{realms}")
 
     def test_17_set_defaults(self):
         serial = "SETTOKEN"
@@ -500,6 +546,17 @@ class TokenTestCase(MyTestCase):
         r = unassign_token(serial)
         self.assertTrue(r)
         self.assertEqual(tokenobject.token.first_owner, None)
+
+        # assign invalid user
+        self.assertRaises(
+            UserError, assign_token, serial, User("invalid", realm=self.realm2)
+        )
+        self.assertRaises(
+            ResourceNotFoundError,
+            assign_token,
+            serial,
+            User("hans", realm="invalid", resolver=self.resolvername1),
+        )
 
         remove_token(serial)
         # assign or unassign a token, that does not exist
@@ -671,7 +728,7 @@ class TokenTestCase(MyTestCase):
         r = set_max_failcount(serial, 112)
         self.assertTrue(r == 1, r)
         self.assertTrue(
-            tokenobject.token.maxfail == 112, "{0!s}".format(tokenobject.token.maxfail)
+            tokenobject.token.maxfail == 112, f"{tokenobject.token.maxfail}"
         )
         remove_token(serial)
 
@@ -688,7 +745,7 @@ class TokenTestCase(MyTestCase):
         # Now compare the pinhash
         self.assertTrue(
             tobject1.token.pin_hash == tobject2.token.pin_hash,
-            "{0!s} <> {1!s}".format(tobject1.token.pin_hash, tobject2.token.pin_hash),
+            f"{tobject1.token.pin_hash} <> {tobject2.token.pin_hash}",
         )
 
         remove_token(serial1)
@@ -739,7 +796,7 @@ class TokenTestCase(MyTestCase):
         self.assertTrue(r.get("pin"), r)
         self.assertTrue(r.get("init"), r)
         self.assertTrue(r.get("user"), r)
-        self.assertTrue(r.get("serial") == "lost{0!s}".format(serial1), r)
+        self.assertTrue(r.get("serial") == f"lost{serial1}", r)
         self.assertTrue(parser.parse(r.get("end_date")) <= end_date, r)
         remove_token("losttoken")
         remove_token("lostlosttoken")
@@ -816,7 +873,7 @@ class TokenTestCase(MyTestCase):
         self.assertFalse(res)
         # check the failcounter increased
         self.assertTrue(old_failcount + 1 == hotp_tokenobject.token.failcount)
-        # Successful auth. The failcount needs to be resetted
+        # Successful auth. The failcount needs to be reset
         res, reply = check_token_list(tokenobject_list, "hotppin520489")
         self.assertTrue(res)
         self.assertTrue(hotp_tokenobject.token.failcount == 0)
@@ -837,14 +894,14 @@ class TokenTestCase(MyTestCase):
         set_policy(
             "check_token_list_CR",
             scope=SCOPE.AUTH,
-            action="{0!s}=HOTP".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=HOTP",
         )
 
         hotp_tokenobject.add_tokeninfo(
-            "next_pin_change", "{0!s}".format(datetime.datetime(2019, 1, 7, 0, 0))
+            "next_pin_change", f"{datetime.datetime(2019, 1, 7, 0, 0)}"
         )
         hotp_tokenobject.add_tokeninfo(
-            "next_password_change", "{0!s}".format(datetime.datetime(2019, 1, 7, 0, 0))
+            "next_password_change", f"{datetime.datetime(2019, 1, 7, 0, 0)}"
         )
 
         # Now the HOTP is a valid C/R token
@@ -915,7 +972,7 @@ class TokenTestCase(MyTestCase):
         self.assertFalse(r)
         self.assertTrue(
             reply.get("message") == "The user has no tokens assigned",
-            "{0!s}".format(reply),
+            f"{reply}",
         )
 
         user = User("cornelius", realm=self.realm1)
@@ -1036,7 +1093,7 @@ class TokenTestCase(MyTestCase):
         self.assertTrue(len(tokens.get("tokens")) == 1, len(tokens.get("tokens")))
 
     def test_42_sort_tokens(self):
-        # return pagination
+        # This tests if the parameter sortby is enforced. The result depends on the database collation, though.
         tokendata = get_tokens_paginate(sortby=Token.serial, page=1, psize=5)
         self.assertTrue(len(tokendata.get("tokens")) == 5, len(tokendata.get("tokens")))
 
@@ -1049,11 +1106,14 @@ class TokenTestCase(MyTestCase):
         tokens = tokendata.get("tokens")
 
         self.assertTrue(tokens[0].get("serial") == "A8", tokens[0])
-        # SQLite does not sort like other DBs
-        if self.app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
-            self.assertEqual("hotptoken", tokens[-1].get("serial"), tokens[-1])
+        # MariaDB/MySQL uses case-insensitive collation (h < x), so 'X' sorts last.
+        # SQLite and PostgreSQL/Alpine use binary (C) collation (X=88 < h=104),
+        # so 'hotptoken' sorts last.
+        if db.engine.dialect.name == "mysql":
+            _last_asc = "X"
         else:
-            self.assertEqual("X", tokens[-1].get("serial"), tokens[-1])
+            _last_asc = "hotptoken"
+        self.assertEqual(_last_asc, tokens[-1].get("serial"), tokens[-1])
 
         # Reverse sorting
         tokendata = get_tokens_paginate(
@@ -1061,10 +1121,7 @@ class TokenTestCase(MyTestCase):
         )
         tokens = tokendata.get("tokens")
 
-        if self.app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
-            self.assertEqual("hotptoken", tokens[0].get("serial"), tokens[0])
-        else:
-            self.assertEqual("X", tokens[0].get("serial"), tokens[0])
+        self.assertEqual(_last_asc, tokens[0].get("serial"), tokens[0])
         self.assertTrue(tokens[-1].get("serial") == "A8")
 
         # sort with string column
@@ -1073,10 +1130,7 @@ class TokenTestCase(MyTestCase):
         )
         tokens = tokendata.get("tokens")
 
-        if self.app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
-            self.assertEqual("hotptoken", tokens[-1].get("serial"), tokens[-1])
-        else:
-            self.assertEqual("X", tokens[-1].get("serial"), tokens[-1])
+        self.assertEqual(_last_asc, tokens[-1].get("serial"), tokens[-1])
         self.assertTrue(tokens[0].get("serial") == "A8")
 
         tokendata = get_tokens_paginate(
@@ -1084,10 +1138,7 @@ class TokenTestCase(MyTestCase):
         )
         tokens = tokendata.get("tokens")
 
-        if self.app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
-            self.assertEqual("hotptoken", tokens[0].get("serial"), tokens[0])
-        else:
-            self.assertEqual("X", tokens[0].get("serial"), tokens[0])
+        self.assertEqual(_last_asc, tokens[0].get("serial"), tokens[0])
         self.assertTrue(tokens[-1].get("serial") == "A8")
 
         # try a different sort key
@@ -1309,7 +1360,7 @@ class TokenTestCase(MyTestCase):
         set_policy(
             "test48",
             scope=SCOPE.AUTH,
-            action="{0!s}=HOTP".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=HOTP",
         )
         r, r_dict = check_token_list([token_a, token_b], pin, user)
         self.assertFalse(r)
@@ -1370,7 +1421,7 @@ class TokenTestCase(MyTestCase):
         set_policy(
             "test49",
             scope=SCOPE.AUTH,
-            action="{0!s}=HOTP".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=HOTP",
         )
         # both tokens will be a valid challenge response token!
         r, r_dict = check_token_list([token_a, token_b], pin, user)
@@ -1395,7 +1446,7 @@ class TokenTestCase(MyTestCase):
             user,
             options={"transaction_id": transaction_id},
         )
-        # The response is successfull
+        # The response is successful
         self.assertTrue(r)
         # The matching token was CR2B
         self.assertEqual(r_dict.get("serial"), "CR2B")
@@ -2062,9 +2113,7 @@ class TokenFailCounterTestCase(MyTestCase):
         tok.set_pin("hotppin")
         tok.set_count_window(2)
 
-        res, reply = check_token_list(
-            [tok], "hotppin{0!s}".format(self.valid_otp_values[0])
-        )
+        res, reply = check_token_list([tok], f"hotppin{self.valid_otp_values[0]}")
         self.assertTrue(res)
 
         # Now we set the failoucnter and the exceeded time.
@@ -2078,15 +2127,11 @@ class TokenFailCounterTestCase(MyTestCase):
         set_edumfa_config(FAILCOUNTER_CLEAR_TIMEOUT, 1)
 
         # authentication with otp value #3 will fail
-        res, reply = check_token_list(
-            [tok], "hotppin{0!s}".format(self.valid_otp_values[3])
-        )
+        res, reply = check_token_list([tok], f"hotppin{self.valid_otp_values[3]}")
         self.assertFalse(res)
 
         # authentication with otp value #4 will resync and succeed
-        res, reply = check_token_list(
-            [tok], "hotppin{0!s}".format(self.valid_otp_values[4])
-        )
+        res, reply = check_token_list([tok], f"hotppin{self.valid_otp_values[4]}")
         self.assertTrue(res)
         self.assertEqual(tok.get_failcount(), 0)
 
@@ -2137,13 +2182,13 @@ class PINChangeTestCase(MyTestCase):
         set_policy(
             "every10d",
             scope=SCOPE.ENROLL,
-            action="{0!s}=10d".format(ACTION.CHANGE_PIN_EVERY),
+            action=f"{ACTION.CHANGE_PIN_EVERY}=10d",
         )
         # set policy for chalresp
         set_policy(
             "chalresp",
             scope=SCOPE.AUTH,
-            action="{0!s}=hotp".format(ACTION.CHALLENGERESPONSE),
+            action=f"{ACTION.CHALLENGERESPONSE}=hotp",
         )
         # Change PIN via validate
         set_policy(
@@ -2236,7 +2281,7 @@ class PINChangeTestCase(MyTestCase):
         # Run an authentication with the new PIN
         r, reply_dict = check_token_list(
             [tok, tok2],
-            "{0!s}{1!s}".format(newpin, self.valid_otp_values[2]),
+            f"{newpin}{self.valid_otp_values[2]}",
             user=user_obj,
             options={"g": g},
         )
@@ -2284,7 +2329,7 @@ class PINChangeTestCase(MyTestCase):
         # successfully authenticate, but thus trigger a PIN change
         r, reply_dict = check_token_list(
             [tok, tok2],
-            "test{0!s}".format(self.valid_otp_values[1]),
+            f"test{self.valid_otp_values[1]}",
             user=user_obj,
             options={"g": g},
         )
@@ -2354,14 +2399,12 @@ class PINChangeTestCase(MyTestCase):
         # Check it
         self.assertTrue(tok.is_pin_change())
         # Require minimum length of 5
-        set_policy(
-            "minpin", scope=SCOPE.USER, action="{0!s}=5".format(ACTION.OTPPINMINLEN)
-        )
+        set_policy("minpin", scope=SCOPE.USER, action=f"{ACTION.OTPPINMINLEN}=5")
 
         # successfully authenticate, but thus trigger a PIN change
         r, reply_dict = check_token_list(
             [tok, tok2],
-            "test{0!s}".format(self.valid_otp_values[1]),
+            f"test{self.valid_otp_values[1]}",
             user=user_obj,
             options={"g": g},
         )

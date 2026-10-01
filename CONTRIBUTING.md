@@ -31,7 +31,7 @@ https://github.com/eduMFA/eduMFA/issues
 The source code is pretty well documented. The main documentation resides in the
 `doc`-subfolder and can be build with:
 ```
-pip install .[docs]
+uv sync
 cd doc/ && make html
 ```
 This also pulls the API-documentation from the source code.
@@ -103,8 +103,7 @@ If you are sending a pull request, please note the following:
   ```
 
   This will create a new file in ``migrations/versions/``. Edit the description
-  and put a *try-except* around the operations. Take a look at the other
-scripts.
+  and take a look at the other scripts for inspiration.
   Then you can run:
 
   ```
@@ -117,15 +116,17 @@ scripts.
 
 We aim to provide translations for different languages.
 
-To generate the translations for the web interface we use `grunt`. The files can be updated using 
+Translations are split in two parts: Frontend (web interface) and backend
+(server-side messages).
+
+Translations for the frontend require `bun` to be installed. You can find instructions to install `bun` in the [official documentation](https://bun.com/docs/installation).
+
+To update the translations, run the following commands:
 
 ```bash
-npm install 
-npm run translate
+make translate-frontend
+make translate-backend
 ```
-
-The server-side messages get translated using babel. Translations can be regenerated using `make translate-server`.
-
 
 ## Development Workflow
 
@@ -161,7 +162,7 @@ creating the release changelog later.
 
 ### Projects
 
-We use *Github Projects* to organize our weekly develoment cycle.
+We use *Github Projects* to organize our weekly development cycle.
 
 In a weekly meeting we decide, which issues will be handled during the
 following week. Issues are put into the

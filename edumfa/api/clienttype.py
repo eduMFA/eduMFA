@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -22,10 +21,8 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-__doc__ = """This is the audit REST API that can be used to retrieve the
-eduMFA authentication clients, which used eduMFA to authenticate.
-
-  GET /clients
+__doc__ = """This is the REST API that can be used to retrieve the eduMFA
+authentication clients, which used eduMFA to authenticate.
 """
 import logging
 

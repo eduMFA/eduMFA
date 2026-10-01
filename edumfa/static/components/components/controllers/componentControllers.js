@@ -20,37 +20,48 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-myApp.controller("componentController", ["ComponentFactory", "$scope",
-                                         "$stateParams", "$http", "AuthFactory",
-                                         "instanceUrl",  "$location",
-                                         "Upload", "inform",
-                                         function (ComponentFactory, $scope,
-                                                   $stateParams, $http,
-                                                   AuthFactory, instanceUrl, $location,
-                                                   Upload, inform) {
+myApp.controller("componentController", [
+  "ComponentFactory",
+  "$scope",
+  "$stateParams",
+  "$http",
+  "AuthFactory",
+  "instanceUrl",
+  "$location",
+  "Upload",
+  "inform",
+  function (
+    ComponentFactory,
+    $scope,
+    $stateParams,
+    $http,
+    AuthFactory,
+    instanceUrl,
+    $location,
+    Upload,
+    inform,
+  ) {
     $scope.instanceUrl = instanceUrl;
 
     $scope.getClientType = function () {
-        //debug: console.log("Requesting client application types.");
-        ComponentFactory.getClientType(function (data) {
-            $scope.clientdata = data.result.value;
-            //debug: console.log($scope.clientdata);
-        });
+      //debug: console.log("Requesting client application types.");
+      ComponentFactory.getClientType(function (data) {
+        $scope.clientdata = data.result.value;
+        //debug: console.log($scope.clientdata);
+      });
     };
 
     if ($location.path() === "/component/clienttype") {
-        $scope.getClientType();
+      $scope.getClientType();
     }
-
 
     if ($location.path() === "/component") {
-        $location.path("/component/clienttype");
+      $location.path("/component/clienttype");
     }
-
-
 
     // listen to the reload broadcast
     $scope.$on("piReload", function () {
-        ComponentFactory.getClientType();
+      ComponentFactory.getClientType();
     });
-}]);
+  },
+]);

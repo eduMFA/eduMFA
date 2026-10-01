@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -151,10 +150,10 @@ class ApplicationSpecificPasswordTokenClass(PasswordTokenClass):
         """
         service_id = options.get(TOKENINFO_KEY)
         if not service_id:
-            log.debug("The request has no {0!s}.".format(TOKENINFO_KEY))
+            log.debug(f"The request has no {TOKENINFO_KEY}.")
             return False
         if not self.service_id:
             # A token could be missing the service_id
-            log.debug("The token has no {0!s}.".format(TOKENINFO_KEY))
+            log.debug(f"The token has no {TOKENINFO_KEY}.")
             return False
         return self.service_id.lower() == service_id.lower()

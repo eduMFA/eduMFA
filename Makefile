@@ -1,11 +1,12 @@
 info:
-	@echo "make clean        	 - remove all automatically created files"
-	@echo "make pypi             - upload package to pypi"
-	@echo "make translate        - translate WebUI"
-	@echo "make translate-server - translate string in the server code."
+	@echo "make clean        	 	- remove all automatically created files"
+	@echo "make translate-frontend	- translate WebUI"
+	@echo "make translate-backend 	- translate string in the server code."
+	@echo "make update-contrib   	- update JS contrib libraries"
 
 
-SIGNING_KEY=53E66E1D2CABEFCDB1D3B83E106164552E8D8149
+BUN_VERSION := $(shell bun --version 2>/dev/null)
+UV_VERSION := $(shell uv --version 2>/dev/null)
 
 clean:
 	find . -name \*.pyc -exec rm {} \;
@@ -23,31 +24,40 @@ setversion:
 	@echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 	@echo "Please set a tag like:  git tag 3.17"
 
-translate-server:
-	(cd edumfa; pybabel extract -F babel.cfg -o messages.pot .)
-	# pybabel init -i messages.pot -d translations -l de
-	(cd edumfa; pybabel update -i messages.pot -d translations)
-	# create the .mo file
-	(cd edumfa; pybabel compile -d translations)
-
-pypi:
-	make doc-man
-	rm -fr dist
-	python setup.py sdist
-	gpg --detach-sign -a --default-key ${SIGNING_KEY} dist/*.tar.gz
-	twine upload dist/*.tar.gz dist/*.tar.gz.asc
-
 doc-man:
 	(cd doc; make man)
 
 doc-html:
 	(cd doc; make html)
 
-NPM_VERSION := $(shell npm --version 2>/dev/null)
+
+check-uv:
+ifeq ($(UV_VERSION),)
+	@echo "uv is not installed. Follow https://docs.astral.sh/uv/getting-started/installation/ to install it."
+	@exit 1
+endif
+
+translate-backend: check-uv
+	(cd edumfa; uv run pybabel extract --add-location=file -F babel.cfg -o translations/messages.pot .)
+	# Normalize POT-Creation-Date after update (cross-platform sed)
+	(cd edumfa/translations; sed -i.bak 's/^"POT-Creation-Date:.*"/"POT-Creation-Date: 1970-01-01 00:00+0000\\n"/' messages.pot && rm -f messages.pot.bak)
+	# pybabel init -i messages.pot -d translations -l de
+	(cd edumfa; uv run pybabel update -i translations/messages.pot -d translations)
+	# create the .mo file
+	(cd edumfa; uv run pybabel compile -d translations)
+
+translate-frontend:
+ifdef BUN_VERSION
+	(cd edumfa/static && bun install && bun run translate)
+else
+	@echo "Bun is not installed. Follow https://bun.com/docs/installation to install it."
+	@echo "Skipping frontend translation."
+endif
 
 update-contrib:
-ifdef NPM_VERSION
-	(cd edumfa/static && npm install && ./update_contrib.sh)
+ifdef BUN_VERSION
+	(cd edumfa/static && bun install && ./update_contrib.sh)
 else
-	@echo "Command 'npm' not found! It is needed to install the JS contrib libraries."
+	@echo "Bun is not installed. Follow https://bun.com/docs/installation to install it."
+	@echo "Skipping update of JS contrib libraries."
 endif

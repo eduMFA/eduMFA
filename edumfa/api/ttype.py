@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
 # Copyright (c) 2024 eduMFA Project-Team
@@ -79,7 +78,7 @@ def before_request():
     # can be passed to the innerpolicies.
     g.policy_object = PolicyClass()
     g.audit_object = getAudit(current_app.config)
-    # access_route contains the ip adresses of all clients, hops and proxies.
+    # access_route contains the ip addresses of all clients, hops and proxies.
     g.client_ip = get_client_ip(request, get_from_config(SYSCONF.OVERRIDECLIENT))
     g.serial = getParam(request.all_data, "serial") or None
     g.audit_object.log(
@@ -89,8 +88,8 @@ def before_request():
             "client": g.client_ip,
             "client_user_agent": request.user_agent.browser,
             "edumfa_server": edumfa_server,
-            "action": "{0!s} {1!s}".format(request.method, request.url_rule),
-            "thread_id": "{0!s}".format(threading.current_thread().ident),
+            "action": f"{request.method} {request.url_rule}",
+            "thread_id": f"{threading.current_thread().ident}",
             "info": "",
         }
     )
@@ -108,10 +107,8 @@ def token(ttype=None):
     """
     tokenc = get_token_class(ttype)
     if tokenc is None:
-        log.error("Invalid tokentype provided. ttype: {}".format(ttype.lower()))
-        raise ParameterError(
-            "Invalid tokentype provided. ttype: {}".format(ttype.lower())
-        )
+        log.error(f"Invalid tokentype provided. ttype: {ttype.lower()}")
+        raise ParameterError(f"Invalid tokentype provided. ttype: {ttype.lower()}")
     res = tokenc.api_endpoint(request, g)
     serial = getParam(request.all_data, "serial")
     user = get_user_from_param(request.all_data)
@@ -127,10 +124,10 @@ def token(ttype=None):
     if res[0] == "json":
         return jsonify(res[1])
     elif res[0] in ["html", "plain"]:
-        return current_app.response_class(res[1], mimetype="text/{0!s}".format(res[0]))
+        return current_app.response_class(res[1], mimetype=f"text/{res[0]}")
     elif len(res) == 2:
         return current_app.response_class(
-            json.dumps(res[1]), mimetype="application/{0!s}".format(res[0])
+            json.dumps(res[1]), mimetype=f"application/{res[0]}"
         )
     else:
         return current_app.response_class(

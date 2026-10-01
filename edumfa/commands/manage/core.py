@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # License:  AGPLv3
 # This file is part of eduMFA. eduMFA is a fork of privacyIDEA which was forked from LinOTP.
@@ -31,8 +30,10 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from flask import current_app
 from flask.cli import AppGroup
+from flask_migrate import stamp as f_stamp
 
 from edumfa.lib.security.default import DefaultSecurityModule
+from edumfa.lib.sqlutils import is_db_available, is_db_stamped
 from edumfa.models import db
 
 core_cli = AppGroup("core", help="Core commands")
@@ -94,7 +95,8 @@ def create_enckey(enckey_b64=None):
     if os.path.isfile(filename):
         click.echo(f"The file '{filename}' already exists.")
         sys.exit(1)
-    with open(filename, "wb") as f:
+    descriptor = os.open(path=filename, mode=0o400, flags=(os.O_WRONLY | os.O_CREAT))
+    with open(descriptor, "wb") as f:
         if enckey_b64 is None:
             f.write(DefaultSecurityModule.random(96))
         else:
@@ -105,9 +107,7 @@ def create_enckey(enckey_b64=None):
                 sys.exit(1)
             f.write(bin_enckey)
     click.echo(f"Encryption key written to {filename}")
-    os.chmod(filename, 0o400)
-    click.echo(f"The file permission of {filename} was set to 400!")
-    click.echo("Please ensure, that it is owned by the right user.")
+    click.echo("Please ensure that it is owned by the right user.")
 
 
 @core_cli.command("create_pgp_keys")
@@ -177,7 +177,9 @@ def create_audit_keys(keysize):
         format=serialization.PrivateFormat.TraditionalOpenSSL,
         encryption_algorithm=serialization.NoEncryption(),
     )
-    with open(filename, "wb") as f:
+
+    descriptor = os.open(path=filename, mode=0o400, flags=(os.O_WRONLY | os.O_CREAT))
+    with open(descriptor, "wb") as f:
         f.write(priv_pem)
 
     pub_key = new_key.public_key()
@@ -191,23 +193,21 @@ def create_audit_keys(keysize):
     click.echo(
         f"Signing keys written to {filename} and {current_app.config.get('EDUMFA_AUDIT_KEY_PUBLIC')}"
     )
-    os.chmod(filename, 0o400)
-    click.echo(f"The file permission of {filename} was set to 400!")
     click.echo("Please ensure, that it is owned by the right user.")
 
 
 @core_cli.command("create_tables")
-@click.option(
-    "-s", "--stamp", is_flag=True, help="Stamp database to current head revision."
-)
-def create_tables(stamp=False):
+def create_tables():
     """
     Initially create the tables in the database. The database must exist
-    (an SQLite database will be created).
+    (an SQLite database will be created). If the DB is stamped, exit without
+    doing anything (with a successful exit code).
     """
     click.echo(db)
-    db.create_all()
-    if stamp:
+    database_is_stamped = is_db_stamped(db.engine)
+    if not database_is_stamped:
+        db.create_all()
+        # stamp the database
         # get the path to the migration directory from the distribution
         p = [
             x.locate()
@@ -215,11 +215,57 @@ def create_tables(stamp=False):
             if "migrations/env.py" in str(x)
         ]
         migration_dir = os.path.dirname(os.path.abspath(p[0]))
-        fm_stamp(directory=migration_dir)
-    db.session.commit()
+        f_stamp(directory=migration_dir)
+        db.session.commit()
+    else:
+        click.echo(
+            "Your database seems to already have been created. To upgrade its schema, please see the documentation."
+        )
+        # Exit successfully if nothing was done.
+        sys.exit(0)
 
 
 core_cli.add_command(create_tables, "createdb")
+
+
+@core_cli.command("wait_for_db")
+@click.option(
+    "-a",
+    "--attempts",
+    type=int,
+    default=10,
+    show_default=True,
+    help="Number of attempts to connect to the database before giving up.",
+)
+@click.option(
+    "-s",
+    "--sleep",
+    type=int,
+    default=3,
+    show_default=True,
+    help="Time to sleep in seconds between the attempts to wait for the database to become available.",
+)
+def wait_for_db(attempts: int, sleep: int) -> None:
+    """
+    Wait until the database is available.
+
+    :param attempts: Amount of tries to connect.
+    :param sleep: Time to sleep in seconds between connection attempts.
+    """
+    import time
+
+    for attempt in range(attempts):
+        if is_db_available(db.engine):
+            click.echo("Database connection successful.")
+            return
+        click.echo(
+            f"Failed to connect to database. Attempt {attempt + 1} of {attempts}. Waiting {sleep} seconds...",
+            err=True,
+        )
+        time.sleep(sleep)
+
+    click.echo(f"Could not connect to the database after {attempts} attempts.")
+    sys.exit(1)
 
 
 @core_cli.command("drop_tables")
@@ -264,11 +310,11 @@ def validate(user, password, realm=None):
     try:
         user = get_user_from_param({"user": user, "realm": realm})
         auth, details = check_user_pass(user, password)
-        click.echo("RESULT=%s" % auth)
-        click.echo("DETAILS=%s" % details)
+        click.echo(f"RESULT={auth}")
+        click.echo(f"DETAILS={details}")
     except Exception as exx:
         click.echo("RESULT=Error")
-        click.echo("ERROR=%s" % exx)
+        click.echo(f"ERROR={exx}")
 
 
 @core_cli.command("profile")
