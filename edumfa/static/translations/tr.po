@@ -681,6 +681,10 @@ msgstr "Bağlantı parametreleri"
 msgid "Connector name"
 msgstr "Bağlayıcı adı"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -1833,6 +1837,10 @@ msgstr "Son tanım güncellemesi"
 msgid "Last seen:"
 msgstr "Son görülen:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Lisanslı"
@@ -1877,6 +1885,11 @@ msgstr "Jeton listesi"
 msgid "Loading Machines..."
 msgstr "Yükleme makineleri ..."
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "Seri yükleme ..."
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1885,6 +1898,10 @@ msgstr "Seri yükleme ..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Kullanıcıları Yükleme ..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1982,6 +1999,10 @@ msgstr "Maksimum Başarı Auth Sayımı"
 msgid "Method"
 msgstr "Yöntem"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1994,6 +2015,10 @@ msgstr ""
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Mobile"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2079,9 +2104,20 @@ msgstr "OTP değeri {{OTP}} için hiçbir seri numarası bulunamadı."
 msgid "No anonymous referral chasing"
 msgstr "Anonim yönlendirme takibi yok"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "No data"
+msgstr "Jeton verileri"
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Makine bulunamadı"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -3170,6 +3206,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr "Starttls"
 
+#: components/dashboard/views/dashboard.html
+msgid "StatsKeys:"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Başarıyla doğrulanmış."
@@ -3701,8 +3741,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3711,8 +3751,8 @@ msgid ""
 "    Yubico Validation Protocol</a>."
 msgstr ""
 "Kimlik doğrulama isteği, varsayılan eduMFA tarafından ele alınabilir.\n"
-"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "        API </a> doğrulamak ancak aynı zamanda tarafından da "
 "kullanılabilir.\n"
 "    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -4041,16 +4081,16 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "Token başarıyla seri numarası ile kayıt oldu.\n"
 "            <a ui-sref=\"token.details( {Serial :enRolledten.serial}\">\n"
 "                {{enroledtoken.serial}} </a>\n"
 "            kullanıcı için\n"
-"            <a ui-sref=\"user.details('sererName:newuser.user, "
-"realmname:newuser.realm fromerm}\"> {{newuser.user}} </a> realm\n"
+"            <a ui-sref=\"user.details('sererName:newuser.user, realmname:"
+"newuser.realm fromerm}\"> {{newuser.user}} </a> realm\n"
 "            {{newuser.realm}}."
 
 #: components/token/views/token.enroll.html
@@ -4362,6 +4402,10 @@ msgstr ""
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
 msgstr "Tiqr Token Ayarları"
+
+#: components/dashboard/views/dashboard.html
+msgid "TimeFrame:"
+msgstr ""
 
 #: components/config/views/config.radius.edit.html
 #: components/config/views/config.smtp.edit.html
@@ -5056,8 +5100,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA hata ayıklama modunda çalışıyor. Hata ayıklama seviyesini "
 "değiştirebilirsiniz\n"
@@ -5405,9 +5449,8 @@ msgstr "{{auditdata.count}} girişleri bulundu."
 #~ "ui-sref=\"component.subscriptions\">subscription</a>."
 #~ msgstr ""
 #~ "Aboneliğiniz artık geçerli değil. Ya belirteçlerin sayısını ya da\n"
-#~ "        Abonelik süresi doldu. Lütfen <a ui-"
-#~ "sref=\"component.subscripts\"> aboneliğinizi yenilemenizi istiyorsanız, </"
-#~ "a>."
+#~ "        Abonelik süresi doldu. Lütfen <a ui-sref=\"component."
+#~ "subscripts\"> aboneliğinizi yenilemenizi istiyorsanız, </a>."
 
 #~ msgid "active, assigned tokens"
 #~ msgstr "Aktif, atanmış belirteçler"

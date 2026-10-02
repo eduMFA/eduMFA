@@ -683,6 +683,10 @@ msgstr "Parametri di connessione"
 msgid "Connector name"
 msgstr "Nome del connettore"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -995,8 +999,8 @@ msgid ""
 "Do you really want to delete the Token {{ tokenSerial }} from user\n"
 "            {{ token.username }}?"
 msgstr ""
-"Vuoi davvero eliminare il token {{ tokenSerial }} dall'utente "
-"{{ token.username }}?"
+"Vuoi davvero eliminare il token {{ tokenSerial }} dall'utente {{ token."
+"username }}?"
 
 #: components/token/views/dialog.ask_token_delete.html
 msgid "Do you really want to delete the Token {{ tokenSerial }}?"
@@ -1847,6 +1851,10 @@ msgstr "Ultimo aggiornamento della definizione"
 msgid "Last seen:"
 msgstr "L'ultima volta che è stato visto:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Concesso in licenza ai sensi"
@@ -1891,6 +1899,11 @@ msgstr "Elenco dei token"
 msgid "Loading Machines..."
 msgstr "Caricamento delle macchine..."
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "Caricamento dei seriali..."
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1899,6 +1912,10 @@ msgstr "Caricamento dei seriali..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Caricamento utenti..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1996,6 +2013,10 @@ msgstr "Numero massimo di autenticazioni riuscite"
 msgid "Method"
 msgstr "Metodo"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr "Nome host del worker Microsoft CA"
@@ -2008,6 +2029,10 @@ msgstr "Porta del worker Microsoft CA"
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Cellulare"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2095,9 +2120,20 @@ msgstr ""
 msgid "No anonymous referral chasing"
 msgstr "Nessun riferimento anonimo da seguire"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "No data"
+msgstr "Dati token"
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Nessuna macchina trovata"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -2362,8 +2398,8 @@ msgid ""
 "      smartphone."
 msgstr ""
 "Eseguire la scansione del codice QR con l'applicazione eduMFA Authenticator\n"
-"            o fare clic su <a href=\"{{ enrolledToken.pushurl.value }}"
-"\">questo link</a> sul vostro\n"
+"            o fare clic su <a href=\"{{ enrolledToken.pushurl."
+"value }}\">questo link</a> sul vostro\n"
 "            smartphone."
 
 #: components/token/views/token.enrolled.push.html
@@ -2374,8 +2410,8 @@ msgid ""
 msgstr ""
 "Eseguire la scansione del codice QR con l'applicazione privacyIDEA "
 "Authenticator\n"
-"            o fare clic su <a href=\"{{ enrolledToken.pushurl.value }}"
-"\">questo link</a> sul vostro\n"
+"            o fare clic su <a href=\"{{ enrolledToken.pushurl."
+"value }}\">questo link</a> sul vostro\n"
 "            smartphone."
 
 #: components/token/views/token.enrolled.daypassword.html
@@ -3187,6 +3223,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr "StartTLS"
 
+#: components/dashboard/views/dashboard.html
+msgid "StatsKeys:"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Autenticato con successo."
@@ -3729,8 +3769,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3740,8 +3780,8 @@ msgid ""
 msgstr ""
 "La richiesta di autenticazione può essere gestita dall'impostazione "
 "predefinita eduMFA\n"
-"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "        API di convalida</a> ma può anche essere gestito da\n"
 "    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
 "yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\" "
@@ -4073,17 +4113,17 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "Il token è stato registrato con successo con il numero di serie\n"
-"           <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"           <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>\n"
 "            per l'utente\n"
-"           <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a> nel realm\n"
+"           <a ui-sref=\"user.details({username:newUser.user, realmname:"
+"newUser.realm})\">{{ newUser.user }}</a> nel realm\n"
 "            {{ newUser.realm }}."
 
 #: components/token/views/token.enroll.html
@@ -4093,8 +4133,8 @@ msgid ""
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
 "Il token è stato registrato con successo con il numero di serie\n"
-"           <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"           <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>."
 
 #: components/config/views/config.token.webauthn.html
@@ -4404,6 +4444,10 @@ msgstr ""
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
 msgstr "Impostazioni del token TiQR"
+
+#: components/dashboard/views/dashboard.html
+msgid "TimeFrame:"
+msgstr ""
 
 #: components/config/views/config.radius.edit.html
 #: components/config/views/config.smtp.edit.html
@@ -5103,8 +5147,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA è in esecuzione in modalità DEBUG. Puoi modificare il livello di "
 "debug in\n"
