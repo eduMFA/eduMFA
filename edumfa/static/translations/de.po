@@ -1452,6 +1452,10 @@ msgstr ""
 "HOTP Token können mit der \"offline\" Anwendung beispielsweise Notebooks "
 "zugeordnet werden."
 
+#: components/directives/views/directive.policyconditions.html
+msgid "Handle Missing Data"
+msgstr ""
+
 #: components/config/views/config.events.details.html
 #: components/config/views/config.events.list.html
 msgid "Handlermodule"

@@ -1627,7 +1627,7 @@ class PolicyConditionsTestCase(MyApiTestCase):
         self.assertEqual(status_code, 403)
         self.assertFalse(result["status"])
         self.assertIn(
-            "has conditions on tokens, but a token object is not available",
+            "has a condition on the section 'token' with key 'count', but a token is unavailable",
             result["error"]["message"],
         )
         # ... and certainly not SPASS
