@@ -896,7 +896,7 @@ requires-dist = [
     { name = "google-auth", specifier = "==2.59.1" },
     { name = "grpcio", specifier = "==1.82.1" },
     { name = "gssapi", marker = "extra == 'kerberos'", specifier = "==1.12.0" },
-    { name = "huey", extras = ["backends"], specifier = "==3.2.1" },
+    { name = "huey", extras = ["backends"], specifier = "==3.4.0" },
     { name = "importlib-metadata", specifier = "==8.7.0" },
     { name = "jinja2", specifier = "==3.1.6" },
     { name = "ldap3", specifier = "==2.10.2rc4" },
@@ -1266,11 +1266,11 @@ wheels = [
 
 [[package]]
 name = "huey"
-version = "3.2.1"
+version = "3.4.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/55/59/de9e22fa4be35ee03eff7be144a92c32c63c9a80e323a45f260089162b97/huey-3.2.1.tar.gz", hash = "sha256:79cd63d117e5b8da2de58420dcde4e2d0f963e362d67a9b3872ce565eec5c3dc", size = 601509, upload-time = "2026-07-09T21:22:41.187Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/57/25/1281d8f3febc30b5facbfc5e4163447241711591c094dac642d32c827eb0/huey-3.4.0.tar.gz", hash = "sha256:ac9b02e741f13da4092ea19bcaafc73669e97d3153914d2fed2868df144f6dfa", size = 630013, upload-time = "2026-09-04T02:04:34.521Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a4/9e/7fe3bdca0b2749f4b80a50bf033e9f83db6310b75f93c7aa74543f667dbe/huey-3.2.1-py3-none-any.whl", hash = "sha256:da9e004b80941a718f33f9714697a67e6d5cf12e0707fc4f3dbb5d9c796e7224", size = 120963, upload-time = "2026-07-09T21:22:40.023Z" },
+    { url = "https://files.pythonhosted.org/packages/57/31/cee585bd4d1e39947a426a6736f4e17d22b454952370fb9cf48eb3103085/huey-3.4.0-py3-none-any.whl", hash = "sha256:d0580762397744026f83baae5f2b97a62474a62b8565ac75bbafefe72f9c784f", size = 136493, upload-time = "2026-09-04T02:04:32.848Z" },
 ]
 
 [package.optional-dependencies]
