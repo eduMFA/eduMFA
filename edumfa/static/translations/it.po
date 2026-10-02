@@ -551,12 +551,16 @@ msgstr ""
 "corrispondano al resolver\n"
 "                in questa politica."
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr ""
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "Controllare il PIN localmente"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr "Verifica con il PIN OTP."
 
@@ -1280,6 +1284,10 @@ msgstr "Inserire il primo valore OTP"
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
 msgstr "Inserisci il secondo valore OTP"
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
+msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
 #, fuzzy
