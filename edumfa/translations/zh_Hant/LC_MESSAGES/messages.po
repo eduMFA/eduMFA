@@ -656,12 +656,6 @@ msgstr ""
 
 #: lib/policy.py
 msgid ""
-"This is the URL to the token image for apps like FreeOTP (supported file "
-"formats: PNG, JPG and GIF)."
-msgstr ""
-
-#: lib/policy.py
-msgid ""
 "Users can assign a token just by using the unassigned token to "
 "authenticate."
 msgstr "使用者只需使用未分配的令牌進行身份驗證即可分配令牌。"
@@ -2916,9 +2910,6 @@ msgstr "如果左側屬性的整數值大於右側整數值，則為 true"
 
 #~ msgid "This is the issuer label for new enrolled Google Authenticators."
 #~ msgstr "這是新註冊的Google身份驗證器的頒發者標籤。"
-
-#~ msgid "This is the URL to the token image for smartphone apps like FreeOTP."
-#~ msgstr "這是智慧手機應用程式（如FreeOTP）的令牌圖像的URL。"
 
 #~ msgid ""
 #~ "The project ID, that the client "

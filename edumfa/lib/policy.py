@@ -168,7 +168,6 @@ class ACTION:
     __doc__ = """This is the list of usual actions."""
     ADMIN_DASHBOARD = "admin_dashboard"
     ASSIGN = "assign"
-    APPIMAGEURL = "appimageurl"
     APPLICATION_TOKENTYPE = "application_tokentype"
     AUDIT = "auditlog"
     AUDIT_AGE = "auditlog_age"
@@ -2567,13 +2566,6 @@ def get_static_policy_definitions(scope=None):
                     "The issuer label for new enrolled Smartphone token."
                     "Possible tags are <code>{user}</code>, <code>{realm}</code>, "
                     "<code>{serial}</code>, <code>{givenname}</code> and <code>{surname}</code>."
-                ),
-                "group": GROUP.TOKEN,
-            },
-            ACTION.APPIMAGEURL: {
-                "type": "str",
-                "desc": _(
-                    "This is the URL to the token image for apps like FreeOTP (supported file formats: PNG, JPG and GIF)."
                 ),
                 "group": GROUP.TOKEN,
             },
