@@ -96,6 +96,7 @@ def check_time_in_range(time_range, check_time=None):
     time_range = "".join(time_range.split())
     # split into list of time ranges
     time_ranges = time_range.split(",")
+
     try:
         for tr in time_ranges:
             # tr is something like: Mon-Tue:09:30-17:30
