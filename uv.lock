@@ -911,7 +911,7 @@ requires-dist = [
     { name = "pydash", specifier = "==8.0.6" },
     { name = "pyjwt", specifier = "==2.15.0" },
     { name = "pykcs11", marker = "extra == 'hsm'", specifier = "==1.5.20" },
-    { name = "pymysql", specifier = "==1.2.0" },
+    { name = "pymysql", specifier = "==1.2.3" },
     { name = "pyopenssl", specifier = "==26.4.0" },
     { name = "pyrad", specifier = "==2.5.4" },
     { name = "python-dateutil", specifier = "==2.9.0.post0" },
@@ -936,7 +936,7 @@ dev = [
     { name = "imagesize", specifier = "==2.0.1" },
     { name = "iniconfig", specifier = "==2.3.0" },
     { name = "mock", specifier = "==5.2.0" },
-    { name = "packaging", specifier = "==26.2" },
+    { name = "packaging", specifier = "==26.3" },
     { name = "pluggy", specifier = "==1.6.0" },
     { name = "pyenchant", specifier = "==3.3.0" },
     { name = "pygments", specifier = "==2.20.0" },
@@ -958,7 +958,7 @@ dev = [
     { name = "sphinxcontrib-qthelp", specifier = "==2.0.0" },
     { name = "sphinxcontrib-serializinghtml", specifier = "==2.0.0" },
     { name = "sphinxcontrib-spelling", marker = "python_full_version >= '3.10'", specifier = "==8.0.2" },
-    { name = "testcontainers", extras = ["mysql", "postgres"], specifier = "==4.14.2" },
+    { name = "testcontainers", extras = ["mysql", "postgres"], specifier = "==4.15.0" },
     { name = "testfixtures", specifier = "==8.3.0" },
     { name = "tomli", specifier = "==2.4.1" },
     { name = "types-pyyaml", specifier = "==6.0.12.20260906" },
@@ -967,7 +967,7 @@ docs = [
     { name = "docutils", specifier = "==0.21.2" },
     { name = "furo", specifier = "==2025.12.19" },
     { name = "imagesize", specifier = "==2.0.1" },
-    { name = "packaging", specifier = "==26.2" },
+    { name = "packaging", specifier = "==26.3" },
     { name = "pyenchant", specifier = "==3.3.0" },
     { name = "pygments", specifier = "==2.20.0" },
     { name = "snowballstemmer", specifier = "==3.1.1" },
@@ -991,14 +991,14 @@ test = [
     { name = "fido2", specifier = "==2.2.1" },
     { name = "iniconfig", specifier = "==2.3.0" },
     { name = "mock", specifier = "==5.2.0" },
-    { name = "packaging", specifier = "==26.2" },
+    { name = "packaging", specifier = "==26.3" },
     { name = "pluggy", specifier = "==1.6.0" },
     { name = "pyparsing", specifier = "==3.3.3" },
     { name = "pytest", specifier = "==9.1.1" },
     { name = "pytest-cov", specifier = "==7.1.0" },
     { name = "pytest-github-actions-annotate-failures", specifier = "==0.4.2" },
     { name = "responses", specifier = "==0.26.3" },
-    { name = "testcontainers", extras = ["mysql", "postgres"], specifier = "==4.14.2" },
+    { name = "testcontainers", extras = ["mysql", "postgres"], specifier = "==4.15.0" },
     { name = "testfixtures", specifier = "==8.3.0" },
     { name = "tomli", specifier = "==2.4.1" },
     { name = "types-pyyaml", specifier = "==6.0.12.20260906" },
@@ -1595,11 +1595,11 @@ wheels = [
 
 [[package]]
 name = "packaging"
-version = "26.2"
+version = "26.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d7/f1/e7a6dd94a8d4a5626c03e4e99c87f241ba9e350cd9e6d75123f992427270/packaging-26.2.tar.gz", hash = "sha256:ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661", size = 228134, upload-time = "2026-04-24T20:15:23.917Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7d/fa/3944b40b07da9ce895c0e6303a5ab7d53da063554f534556b134a54d6093/packaging-26.3.tar.gz", hash = "sha256:94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79", size = 313412, upload-time = "2026-08-04T18:15:28.737Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/df/b2/87e62e8c3e2f4b32e5fe99e0b86d576da1312593b39f47d8ceef365e95ed/packaging-26.2-py3-none-any.whl", hash = "sha256:5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e", size = 100195, upload-time = "2026-04-24T20:15:22.081Z" },
+    { url = "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl", hash = "sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c", size = 129956, upload-time = "2026-08-04T18:15:27.159Z" },
 ]
 
 [[package]]
@@ -1800,11 +1800,11 @@ wheels = [
 
 [[package]]
 name = "pymysql"
-version = "1.2.0"
+version = "1.2.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c9/bc/1c6a92f385940f727daeecf3bacaf186e03875dff57197801046c583bcf0/pymysql-1.2.0.tar.gz", hash = "sha256:6c7b17ca686988104d7426c27895b455cdeea3e9d3ceb1270f0c3704fead8c33", size = 49021, upload-time = "2026-05-19T08:26:22.302Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b1/d4/c15b459e25a23767d2f4065ef40968920320f04e302889574310c21c96a3/pymysql-1.2.3.tar.gz", hash = "sha256:d5b288529782e536ae171866df3ca9dc4f6cbfb3cc2f18e6f837fbb90dbc262b", size = 50629, upload-time = "2026-09-17T12:22:49.146Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c4/bd/2534e130295c8cfd4f0a2e31623baab7502278f1e97bcfe61db75656a77f/pymysql-1.2.0-py3-none-any.whl", hash = "sha256:62169ce6d5510f08e140c5e7990ee884a9764024e4a9a27b2cc11f1099322ae0", size = 45716, upload-time = "2026-05-19T08:26:20.974Z" },
+    { url = "https://files.pythonhosted.org/packages/a9/4b/0a906d8184f011ff8dbd4722743783867589b33269d2c5fff238d636fdcb/pymysql-1.2.3-py3-none-any.whl", hash = "sha256:14f1c68e2ed859243ae5ca41ffbe677027fc46bc136a9f0be8a4e928e5e7415a", size = 46740, upload-time = "2026-09-17T12:22:47.826Z" },
 ]
 
 [package.optional-dependencies]
@@ -2379,7 +2379,7 @@ wheels = [
 
 [[package]]
 name = "testcontainers"
-version = "4.14.2"
+version = "4.15.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "docker" },
@@ -2388,9 +2388,9 @@ dependencies = [
     { name = "urllib3" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ca/ac/a597c3a0e02b26cbed6dd07df68be1e57684766fd1c381dee9b170a99690/testcontainers-4.14.2.tar.gz", hash = "sha256:1340ccf16fe3acd9389a6c9e1d9ab21d9fe99a8afdf8165f89c3e69c1967d239", size = 166841, upload-time = "2026-03-18T05:19:16.696Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4b/13/2cc466bddf26d0085f30a2b2bd56b7f8708b54a54db833eec97c5c69129b/testcontainers-4.15.0.tar.gz", hash = "sha256:085cde086337632e19002719460b7b80bbab2bdd51bb3ea04f77d0de96504706", size = 95340, upload-time = "2026-07-24T23:08:01.731Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/13/2d/26b8b30067d94339afee62c3edc9b803a6eb9332f521ba77d8aaab5de873/testcontainers-4.14.2-py3-none-any.whl", hash = "sha256:0d0522c3cd8f8d9627cda41f7a6b51b639fa57bdc492923c045117933c668d68", size = 125712, upload-time = "2026-03-18T05:19:15.29Z" },
+    { url = "https://files.pythonhosted.org/packages/00/7e/424aac8b355597835deb333e757a0e94b5ccf38ad00f07fe6ed1f4e17c88/testcontainers-4.15.0-py3-none-any.whl", hash = "sha256:8796c14e76604031ad39cf0ed3b8e9806283a1fbf5270965c2b1c594caa31b74", size = 160771, upload-time = "2026-07-24T23:08:00.13Z" },
 ]
 
 [package.optional-dependencies]
