@@ -6,7 +6,14 @@ from dateutil.tz import tzutc
 from sqlalchemy import func
 
 from edumfa.lib.crypto import NullCryptoObj, SecretObj
+from edumfa.lib.policies.policy_conditions import (
+    ConditionHandleMissingData,
+    ConditionSection,
+    PolicyConditionClass,
+)
+from edumfa.lib.policy import set_policy_conditions
 from edumfa.lib.utils import to_bytes
+from edumfa.lib.utils.compare import Comparators
 from edumfa.models import (
     Admin,
     CAConnector,
@@ -147,7 +154,7 @@ class TokenModelTestCase(MyTestCase):
         otpkey = "123456"
 
         # create token and also assign the user and realm
-        tneu = Token(
+        Token(
             serial="serial2",
             otpkey=otpkey,
             userid=1009,
@@ -198,7 +205,7 @@ class TokenModelTestCase(MyTestCase):
 
         # get token information
         token_dict = t2.get()
-        self.assertTrue(type(token_dict) == dict)
+        self.assertIsInstance(token_dict, dict)
         self.assertTrue(token_dict.get("resolver") == "resolver1")
         # THe realm list is contained in realms
         self.assertTrue("realm1" in token_dict.get("realms"))
@@ -221,12 +228,11 @@ class TokenModelTestCase(MyTestCase):
         self.assertTrue(t3.otplen == 8)
         self.assertTrue(t3.description == "De scription")
         self.assertTrue(t3.info_list[0].Value == "value")
-        t3info = t3.get_info()
         self.assertTrue(t3.get_info().get("info") == "value")
 
         # test the string representative
         s = f"{t3}"
-        self.assertTrue(s == "serial2")
+        self.assertEqual("serial2", s)
 
         # update token type
         t2.update_type("totp")
@@ -487,54 +493,94 @@ class TokenModelTestCase(MyTestCase):
         p3.save()
 
         # set conditions
-        p3.set_conditions(
-            [
-                ("userinfo", "type", "==", "foobar", False),
-                ("request", "user_agent", "==", "abcd", True),
-            ]
-        )
-        self.assertEqual(
-            p3.get_conditions_tuples(),
-            [
-                ("userinfo", "type", "==", "foobar", False),
-                ("request", "user_agent", "==", "abcd", True),
-            ],
-        )
-        self.assertEqual(
-            p3.get()["conditions"],
-            [
-                ("userinfo", "type", "==", "foobar", False),
-                ("request", "user_agent", "==", "abcd", True),
-            ],
-        )
-        self.assertEqual(PolicyCondition.query.count(), 2)
+        conditions = [
+            PolicyConditionClass(
+                ConditionSection.USERINFO, "type", Comparators.EQUALS, "foobar", False
+            ),
+            PolicyConditionClass(
+                ConditionSection.HTTP_REQUEST_HEADER,
+                "user_agent",
+                Comparators.EQUALS,
+                "abcd",
+                True,
+            ),
+        ]
+        set_policy_conditions(conditions, p3)
+        expected = [
+            (
+                ConditionSection.USERINFO,
+                "type",
+                Comparators.EQUALS,
+                "foobar",
+                False,
+                ConditionHandleMissingData.default().value,
+            ),
+            (
+                ConditionSection.HTTP_REQUEST_HEADER,
+                "user_agent",
+                Comparators.EQUALS,
+                "abcd",
+                True,
+                ConditionHandleMissingData.default().value,
+            ),
+        ]
+        self.assertEqual(expected, p3.get_conditions_tuples())
+        self.assertEqual(expected, p3.get()["conditions"])
+        self.assertEqual(2, PolicyCondition.query.count())
 
-        p3.set_conditions([("userinfo", "type", "==", "baz", True)])
+        set_policy_conditions(
+            [
+                PolicyConditionClass(
+                    ConditionSection.USERINFO, "type", Comparators.EQUALS, "baz", True
+                )
+            ],
+            p3,
+        )
         p3.save()
         self.assertEqual(
-            p3.get()["conditions"], [("userinfo", "type", "==", "baz", True)]
+            [
+                (
+                    ConditionSection.USERINFO,
+                    "type",
+                    Comparators.EQUALS,
+                    "baz",
+                    True,
+                    ConditionHandleMissingData.default().value,
+                )
+            ],
+            p3.get()["conditions"],
         )
-        self.assertEqual(len(p3.conditions), 1)
-        self.assertEqual(p3.conditions[0].Value, "baz")
-        self.assertEqual(PolicyCondition.query.count(), 1)
+        self.assertEqual(1, len(p3.conditions))
+        self.assertEqual("baz", p3.conditions[0].Value)
+        self.assertEqual(1, PolicyCondition.query.count())
 
         # Check that the change has been persisted to the database
         p3_reloaded1 = Policy.query.filter_by(name="pol3").one()
-        self.assertEqual(p3_reloaded1.get()["edumfanode"], ["edumfanode3"])
+        self.assertEqual(["pinode3"], p3_reloaded1.get()["pinode"])
         self.assertEqual(
-            p3_reloaded1.get()["conditions"], [("userinfo", "type", "==", "baz", True)]
+            [
+                (
+                    "userinfo",
+                    "type",
+                    Comparators.EQUALS,
+                    "baz",
+                    True,
+                    ConditionHandleMissingData.default().value,
+                )
+            ],
+            p3_reloaded1.get()["conditions"],
         )
-        self.assertEqual(len(p3_reloaded1.conditions), 1)
-        self.assertEqual(p3_reloaded1.conditions[0].Value, "baz")
-        self.assertEqual(PolicyCondition.query.count(), 1)
+        self.assertEqual(1, len(p3_reloaded1.conditions))
+        self.assertEqual("baz", p3_reloaded1.conditions[0].Value)
+        self.assertEqual(1, PolicyCondition.query.count())
 
-        p3.set_conditions([])
+        set_policy_conditions([], p3)
         p3.save()
-        self.assertEqual(p3.get()["conditions"], [])
+        self.assertEqual([], p3.get()["conditions"])
         self.assertEqual(
-            Policy.query.filter_by(name="pol3").one().get()["conditions"], []
+            [], Policy.query.filter_by(name="pol3").one().get()["conditions"]
         )
-        self.assertEqual(PolicyCondition.query.count(), 0)
+        self.assertEqual(0, PolicyCondition.query.count())
 
         # Test policies with adminusers
         p = Policy(
@@ -683,7 +729,7 @@ class TokenModelTestCase(MyTestCase):
         self.assertTrue(s2.server, "1.2.3.4")
 
         # Update the server
-        r = SMTPServer(
+        SMTPServer(
             identifier="myserver",
             server="100.2.3.4",
             username="user",
@@ -746,10 +792,10 @@ class TokenModelTestCase(MyTestCase):
         self.assertEqual(eh1.conditions[0].Key, "user_type")
         self.assertEqual(eh1.conditions[0].Value, "admin")
 
-        id = eh1.id
+        eh1_id = eh1.id
 
         # update eventhandler
-        eh2 = EventHandler(
+        EventHandler(
             "ev1",
             event_update,
             handlermodule=handlermodule,
@@ -757,25 +803,25 @@ class TokenModelTestCase(MyTestCase):
             condition=condition,
             options=options,
             ordering=0,
-            id=id,
+            id=eh1_id,
         )
         self.assertEqual(eh1.event, event_update)
 
         # Update option value
-        EventHandlerOption(id, Key="mailserver", Value="mailserver")
+        EventHandlerOption(eh1_id, Key="mailserver", Value="mailserver")
         self.assertEqual(eh1.options[0].Value, "mailserver")
 
         # Add Option
-        EventHandlerOption(id, Key="option3", Value="value3")
+        EventHandlerOption(eh1_id, Key="option3", Value="value3")
         self.assertEqual(eh1.options[2].Key, "option3")
         self.assertEqual(eh1.options[2].Value, "value3")
 
         # Update condition value
-        EventHandlerCondition(id, Key="user_type", Value="user")
+        EventHandlerCondition(eh1_id, Key="user_type", Value="user")
         self.assertEqual(eh1.conditions[0].Value, "user")
 
         # Add condition
-        EventHandlerCondition(id, Key="result_value", Value="True")
+        EventHandlerCondition(eh1_id, Key="result_value", Value="True")
         self.assertEqual(eh1.conditions[0].Key, "result_value")
         self.assertEqual(eh1.conditions[0].Value, "True")
         self.assertEqual(eh1.conditions[1].Key, "user_type")
@@ -833,7 +879,7 @@ class TokenModelTestCase(MyTestCase):
         self.assertEqual(c, None)
 
     def test_22_subscription(self):
-        sid = Subscription(
+        Subscription(
             application="otrs",
             for_name="customer",
             for_email="customer@example.com",
@@ -852,7 +898,7 @@ class TokenModelTestCase(MyTestCase):
         self.assertEqual(s.level, "Gold")
 
         # Update the entry
-        sid = Subscription(
+        Subscription(
             application="otrs",
             for_phone="11111",
             by_url="https://support.com",
@@ -1249,7 +1295,7 @@ class TokengroupTestCase(MyTestCase):
         ttg = TokenTokengroup.query.all()
         self.assertEqual(len(ttg), 3)
         # It does not change anything, if we try to save the same assignment!
-        t = TokenTokengroup(token_id=tok2.id, tokengroup_id=tg2.id).save()
+        TokenTokengroup(token_id=tok2.id, tokengroup_id=tg2.id).save()
         ttg = TokenTokengroup.query.all()
         self.assertEqual(len(ttg), 3)
 

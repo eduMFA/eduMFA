@@ -9,7 +9,7 @@ from dateutil.tz import gettz, tzlocal, tzoffset
 from netaddr import AddrFormatError, IPAddress, IPNetwork
 
 from edumfa.lib.crypto import generate_password
-from edumfa.lib.error import PolicyError
+from edumfa.lib.error import ParameterError, PolicyError
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.utils import (
     CHARLIST_CONTENTPOLICY,
@@ -110,34 +110,29 @@ class UtilsTestCase(MyTestCase):
     def test_03_check_time_in_range(self):
         # April 5th, 2016 is a Tuesday
         t = datetime(2016, 4, 5, hour=9, minute=12)
-        r = check_time_in_range("Mon-Fri: 09:00-17:30", t)
-        self.assertEqual(r, True)
-        r = check_time_in_range("Mon - Fri : 09:00- 17:30", t)
-        self.assertEqual(r, True)
-        r = check_time_in_range("Sat-Sun:10:00-15:00, Mon - Fri : 09:00- 17:30", t)
-        self.assertEqual(r, True)
+        self.assertTrue(check_time_in_range("Mon-Fri: 09:00-17:30", t))
+        self.assertTrue(check_time_in_range("Mon - Fri : 09:00- 17:30", t))
+        self.assertTrue(
+            check_time_in_range("Sat-Sun:10:00-15:00, Mon - Fri : 09:00- 17:30", t)
+        )
 
         # Short time description
-        r = check_time_in_range("Tue: 9-15", t)
-        self.assertEqual(r, True)
-        r = check_time_in_range("Tue: 9-15:1", t)
-        self.assertEqual(r, True)
+        self.assertTrue(check_time_in_range("Tue: 9-15", t))
+        self.assertTrue(check_time_in_range("Tue: 9-15:1", t))
 
         # day out of range
-        r = check_time_in_range("Wed - Fri: 09:00-17:30", t)
-        self.assertEqual(r, False)
+        self.assertFalse(check_time_in_range("Wed - Fri: 09:00-17:30", t))
 
         # time out of range
-        r = check_time_in_range("Mon-Fri: 09:30-17:30", t)
-        self.assertEqual(r, False)
+        self.assertFalse(check_time_in_range("Mon-Fri: 09:30-17:30", t))
 
         # A time with a missing leading 0 matches anyway
-        r = check_time_in_range("Mon-Fri: 9:12-17:30", t)
-        self.assertEqual(r, True)
+        self.assertTrue(check_time_in_range("Mon-Fri: 9:12-17:30", t))
 
         # Nonsense will not match
-        r = check_time_in_range("Mon-Wrong: asd-17:30", t)
-        self.assertEqual(r, False)
+        self.assertRaises(
+            ParameterError, check_time_in_range, "Mon-Wrong: asd-17:30", t
+        )
 
     def test_04a_parse_proxy(self):
         self.assertEqual(parse_proxy(""), set())
@@ -927,14 +922,14 @@ class UtilsTestCase(MyTestCase):
 
     def test_27_images(self):
         hallo_qr_png = (
-            "iVBORw0KGgoAAAANSUhEUgAAASIAAAEiAQAAAAB1xeIbAAABC0lEQV"
-            "R42u2aQQ6EIBAEJ7sP8El8nSftA0xYGBiM8eIe6E1McTCofSpnmka1"
-            "cmNkQ4UKFSpUj1DZGO86//ghriRXvezOQPWbarB3xBP7mM0bsF/Kvh"
-            "V6asRzFL+3AezV7H0GezV7s2036v4/fp8r+94B+L2G/cw5vfgTOUfG"
-            "/hgV9n5Jp7Bfyr4nSzf92QGwl6211epLZMwSCy6es7zu83aC3di7+8"
-            "BelDFtRpzeAVs4P+zXrrWVc26nx742kTHVOad3QCn4vTzfz1RPztHv"
-            "a3u8DAuCve59ToR8fwrsa6Xs4wEM96Hulez9PeaM+7CX+n0P+acFF/"
-            "aSnBOfcY26l+d7/i1AhQoVqmeqvi4sW6dMYAvIAAAAAElFTkSuQmCC"
+            "iVBORw0KGgoAAAANSUhEUgAAASIAAAEiAQAAAAB1xeIbAAABCUlEQV"
+            "R42u2aSw7CMAxELThAj5Sr50gcoFLIzy4Vm7LIVEIvCxRgVg97MnGx"
+            "cmFlQ4UKFSpUf6GyuZ51/+ov/knqqoddWah+U032HXFgn7v4AvZL2b"
+            "dCT4149uLvbQB7Nfu+g72avdm2G3V/j9/nyn50AH6vYR85ZxR/IufI"
+            "2B+rwt6/0insl7IfybKbfnQA7GVnbbX64hmz+IGL5yyv+7ydYDf23"
+            "X1gL8qYFhFndMDmzg/7tWdt5Zzb2+Nem8iY6pwzOqAU/F6e7yPVk3"
+            "P099oRL92CYC+cpZWPqRr3Wu0sbf4A032oe/kcM+I+7G+YY54OXNh"
+            "Lco4/xjXqXp7v+W8BKlSoUP2n6g0uLFunQsjogAAAAABJRU5ErkJggg=="
         )
         self.assertEqual(create_img("Hallo"), f"data:image/png;base64,{hallo_qr_png}")
 
@@ -1084,6 +1079,21 @@ class UtilsTestCase(MyTestCase):
         # Wrong condition
         self.assertFalse(
             compare_generic_condition("c <500", mock_attribute, "Error {0!s}")
+        )
+
+        # Wrong condition: key does not exist
+        self.assertFalse(
+            compare_generic_condition("d==1", mock_attribute, "Error {0!s}")
+        )
+
+        # Wrong condition: key does not exist
+        self.assertFalse(
+            compare_generic_condition("d<1", mock_attribute, "Error {0!s}")
+        )
+
+        # Wrong condition: key does not exist
+        self.assertFalse(
+            compare_generic_condition("d>1", mock_attribute, "Error {0!s}")
         )
 
         # Wrong entry, that is not processed
