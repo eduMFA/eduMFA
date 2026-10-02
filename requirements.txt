@@ -32,12 +32,10 @@ cffi==2.1.1
     #   cryptography
 charset-normalizer==3.5.2
     # via requests
-click==8.4.2
+click==8.5.0
     # via
     #   edumfa (pyproject.toml)
     #   flask
-colorama==0.4.6 ; sys_platform == 'win32'
-    # via click
 configobj==5.0.9
     # via edumfa (pyproject.toml)
 croniter==6.2.4
