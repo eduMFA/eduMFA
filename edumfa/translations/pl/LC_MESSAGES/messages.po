@@ -895,7 +895,7 @@ msgstr ""
 
 #: lib/policy.py
 msgid ""
-"The sending of an API Auth Key is required duringauthentication. This "
+"The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
 msgstr ""
 
@@ -1755,6 +1755,24 @@ msgstr ""
 #: lib/machines/ldap.py
 #, python-format
 msgid "Your LDAP config seems to be OK, %i machine objects found."
+msgstr ""
+
+#: lib/policies/conditions.py
+msgid ""
+"Raise an error if the data that is required to check the condition is not"
+" available."
+msgstr ""
+
+#: lib/policies/conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"true. Hence, the policy is applied."
+msgstr ""
+
+#: lib/policies/conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"false. Hence, the policy is not applied."
 msgstr ""
 
 #: lib/resolvers/LDAPIdResolver.py
@@ -2977,5 +2995,12 @@ msgstr ""
 #~ "Authentication failure. The username {!s} "
 #~ "is not allowed to impersonate via "
 #~ "JWT."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The sending of an API Auth Key "
+#~ "is required duringauthentication. This avoids"
+#~ " rogue authenticate requests against the"
+#~ " /validate/check interface."
 #~ msgstr ""
 

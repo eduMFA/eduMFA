@@ -508,7 +508,7 @@ class TokenTestCase(MyTestCase):
 
     def test_16_set_realms(self):
         serial = "NEWREALM01"
-        tokenobject = init_token({"serial": serial, "otpkey": "1234567890123456"})
+        init_token({"serial": serial, "otpkey": "1234567890123456"})
         realms = get_realms_of_token(serial)
         self.assertEqual(realms, [], f"{realms}")
         set_realms(serial, [self.realm1])
@@ -753,7 +753,7 @@ class TokenTestCase(MyTestCase):
 
     def test_32_copy_token_user(self):
         serial1 = "tcopy1"
-        tobject1 = init_token({"serial": serial1, "genkey": 1})
+        init_token({"serial": serial1, "genkey": 1})
         r = assign_token(serial1, User(login="cornelius", realm=self.realm1))
         self.assertTrue(r, r)
         serial2 = "tcopy2"
@@ -777,7 +777,7 @@ class TokenTestCase(MyTestCase):
     def test_33_lost_token(self):
         # create a token with a user
         serial1 = "losttoken"
-        tobject1 = init_token({"serial": serial1, "genkey": 1})
+        init_token({"serial": serial1, "genkey": 1})
         r = assign_token(serial1, User(login="cornelius", realm=self.realm1))
         self.assertTrue(r, r)
 
@@ -966,7 +966,7 @@ class TokenTestCase(MyTestCase):
         self.assertFalse(r)
 
     def test_36_check_user_pass(self):
-        hotp_tokenobject = get_tokens(serial="hotptoken")[0]
+        get_tokens(serial="hotptoken")[0]
         user = User("shadow", realm=self.realm1)
         r, reply = check_user_pass(user, "passwordasdf")
         self.assertFalse(r)
@@ -989,7 +989,7 @@ class TokenTestCase(MyTestCase):
     def test_36b_check_nonascii_pin(self):
         user = User("cornelius", self.realm1)
         serial = "nonasciipin"
-        token = init_token(
+        init_token(
             {"type": "hotp", "otpkey": self.otpkey, "pin": "ünicøde", "serial": serial},
             user,
         )
@@ -1039,6 +1039,10 @@ class TokenTestCase(MyTestCase):
         self.assertTrue("spass_otp_pin_contents" in p, p)
         self.assertTrue("spass_otp_pin_maxlength" in p, p)
         self.assertTrue("spass_otp_pin_minlength" in p, p)
+
+        # invalid scope returns empty dict
+        p = get_dynamic_policy_definitions(scope="invalid")
+        self.assertDictEqual({}, p)
 
     def test_41_get_tokens_paginate(self):
         # create some tokens
@@ -1333,12 +1337,8 @@ class TokenTestCase(MyTestCase):
     def test_47_use_yubikey_and_hotp(self):
         # fix problem https://github.com/privacyidea/privacyidea/issues/279
         user = User("cornelius", self.realm1)
-        token = init_token(
-            {"type": "hotp", "otpkey": self.otpkey, "pin": "pin47"}, user
-        )
-        token = init_token(
-            {"type": "yubikey", "otpkey": self.otpkey, "pin": "pin47"}, user
-        )
+        init_token({"type": "hotp", "otpkey": self.otpkey, "pin": "pin47"}, user)
+        init_token({"type": "yubikey", "otpkey": self.otpkey, "pin": "pin47"}, user)
         r = check_user_pass(user, "pin47888888")
         self.assertEqual(r[0], False)
         self.assertEqual(r[1].get("message"), "wrong otp value")
@@ -2434,7 +2434,7 @@ class TokenGroupTestCase(MyTestCase):
         # Create tokens
         serials = ["s1", "s2"]
         for s in serials:
-            tok = init_token({"serial": s, "type": "spass"})
+            init_token({"serial": s, "type": "spass"})
 
         # create tokengroups
         groups = [("g1", "Test A"), ("g2", "test B")]
@@ -2469,7 +2469,7 @@ class TokenGroupTestCase(MyTestCase):
         self.assertEqual(len(grouplist), 2)
 
         # unassign tokengroups
-        r = tok1.del_tokengroup("g1")
+        tok1.del_tokengroup("g1")
         # only the 2nd group remains
         self.assertEqual(tok1.token.tokengroup_list[0].tokengroup.name, "g2")
         # remove it

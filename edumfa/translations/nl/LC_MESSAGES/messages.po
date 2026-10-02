@@ -1045,8 +1045,9 @@ msgstr ""
 "toegevoegd worden in de detail-tak van het authenticatie-antwoord."
 
 #: lib/policy.py
+#, fuzzy
 msgid ""
-"The sending of an API Auth Key is required duringauthentication. This "
+"The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
 msgstr ""
 "Het sturen van een API Auth Key is vereist tijdens authenticatie. Dit "
@@ -2069,6 +2070,24 @@ msgstr "De gegevens gepost in de webhook"
 #, python-format
 msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr "Jouw LDAP-configuratie lijkt OK, %i machine-objecten gevonden."
+
+#: lib/policies/conditions.py
+msgid ""
+"Raise an error if the data that is required to check the condition is not"
+" available."
+msgstr ""
+
+#: lib/policies/conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"true. Hence, the policy is applied."
+msgstr ""
+
+#: lib/policies/conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"false. Hence, the policy is not applied."
+msgstr ""
 
 #: lib/resolvers/LDAPIdResolver.py
 #, python-brace-format
