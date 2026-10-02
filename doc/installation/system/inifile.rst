@@ -44,6 +44,8 @@ The file should contain the following contents::
    # EDUMFA_AUDIT_SQL_OPTIONS = {}
    # Truncate Audit entries to fit into DB columns
    EDUMFA_AUDIT_SQL_TRUNCATE = True
+   # Optional per-column truncation lengths used when TRUNCATE is enabled
+   # EDUMFA_AUDIT_SQL_COLUMN_LENGTH = {"user": 100, "policies": 1000}
    # Reduce amount of audit log rows for usernameless Passkey logins
    # EDUMFA_REDUCE_SQLAUDIT = False
    # EDUMFA_LOGFILE = '....'
@@ -221,6 +223,19 @@ the database engine. If ``EDUMFA_AUDIT_SQL_OPTIONS`` is not set,
 
 ``EDUMFA_AUDIT_SQL_TRUNCATE = True`` lets you truncate audit entries to the length
 of the database fields.
+
+If you enlarge audit columns in the database itself, eduMFA will still
+truncate to the originally defined schema lengths unless you also set
+``EDUMFA_AUDIT_SQL_COLUMN_LENGTH``. This setting is a Python dictionary that
+overrides the default truncation length per column name, for example::
+
+   EDUMFA_AUDIT_SQL_COLUMN_LENGTH = {"user": 100,
+                                     "policies": 1000}
+
+Only columns listed in the dictionary are overridden; unspecified columns keep
+the schema default. Check the audit table schema for the available column
+names. The setting is only effective when ``EDUMFA_AUDIT_SQL_TRUNCATE`` is
+enabled.
 
 ``EDUMFA_REDUCE_SQLAUDIT = True`` reduces the amount of entries in the audit log
 for usernameless Passkey logins by not logging ``triggerchallenge`` or events
