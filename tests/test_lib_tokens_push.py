@@ -1488,6 +1488,14 @@ class PushTokenTestCase(MyTestCase):
             mock_dt2.now.return_value = timestamp + timedelta(seconds=15)
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
+        self.assertNotIn("image", res[1].get("detail", {}))
+        self.assertNotIn(
+            PushTokenClass.PUSH_ACTION.IMAGE_URL,
+            LegacyPushTokenClass.get_class_info("policy")[SCOPE.AUTH],
+        )
+        self.assertNotIn(
+            "push_image_url", LegacyPushTokenClass.get_class_info("policy")[SCOPE.AUTH]
+        )
         # No challenge created yet
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"])
 
@@ -1915,6 +1923,7 @@ class EduPushTokenTestCase(MyTestCase):
             params={
                 "firebase_config": self.firebase_config_name,
                 "edupush_registration_url": "https://edumfa.io/enroll",
+                "appimageurl": "https://example.org/token.png",
             }
         )
         self.assertEqual(detail.get("serial"), self.serial1)
@@ -1922,6 +1931,7 @@ class EduPushTokenTestCase(MyTestCase):
         enrollment_credential = detail.get("enrollment_credential")
         self.assertTrue("pushurl" in detail)
         self.assertNotIn("pin=True", detail["pushurl"]["value"])
+        self.assertNotIn("image=", detail["pushurl"]["value"])
         self.assertFalse("otpkey" in detail)
 
         # Run enrollment step 2
@@ -3154,6 +3164,117 @@ class EduPushTokenTestCase(MyTestCase):
             tok.get_tokeninfo("firebase_token"), req_data["new_fb_token"], tok
         )
         tok.delete_token()
+
+    def test_enrollment_token_image(self) -> None:
+        self.setUp_user_realms()
+        g = FakeFlaskG()
+        g.policy_object = PolicyClass()
+        action = PushTokenClass.PUSH_ACTION.IMAGE_URL
+        set_policy(
+            "enrollment_image",
+            SCOPE.AUTH,
+            action=f"{action}=https://example.org/token.png",
+            user="cornelius",
+        )
+        try:
+            for owner, image in (
+                ("cornelius", "https://example.org/token.png"),
+                ("other", None),
+            ):
+                tok = init_token(param={"type": "edupush", "genkey": 1})
+                set_policy("enrollment_image", SCOPE.AUTH, user=owner)
+                tok.add_user(User("cornelius", self.realm1, resolver=self.resolvername1))
+                serial = tok.get_serial()
+                req = Request(EnvironBuilder(method="POST").get_environ())
+                req.all_data = {
+                    "serial": serial,
+                    "enrollment_credential": "invalid",
+                    "pubkey": self.smartphone_public_key_pem_urlsafe,
+                    "fbtoken": "firebaseT",
+                }
+                try:
+                    with self.assertRaises(ParameterError):
+                        PushTokenClass.api_endpoint(req, g)
+                    req.all_data["enrollment_credential"] = tok.get_tokeninfo(
+                        "enrollment_credential"
+                    )
+                    res = PushTokenClass.api_endpoint(req, g)[1]
+                    self.assertTrue(res["result"]["value"])
+                    self.assertEqual(res["detail"]["rollout_state"], "enrolled")
+                    self.assertIn("public_key", res["detail"])
+                    self.assertEqual(res["detail"]["image"], image)
+                finally:
+                    tok.delete_token()
+        finally:
+            delete_policy("enrollment_image")
+
+    def test_poll_token_image(self) -> None:
+        self.setUp_user_realms()
+        token_class = PushTokenClass
+        action = token_class.PUSH_ACTION.IMAGE_URL
+        definition = token_class.get_class_info("policy")[SCOPE.AUTH][action]
+        self.assertEqual(definition["type"], "str")
+        self.assertEqual(definition["group"], token_class.get_policy_group())
+        set_policy(
+            "image_registration",
+            SCOPE.ENROLL,
+            action=f"{token_class.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL}",
+        )
+        set_policy(
+            "unrelated_app_image",
+            SCOPE.ENROLL,
+            action=f"{ACTION.APPIMAGEURL}=https://example.org/unrelated.png",
+        )
+        g = FakeFlaskG()
+        g.policy_object = PolicyClass()
+        tok = self._create_push_token()
+        tok.add_user(User("cornelius", self.realm1, resolver=self.resolvername1))
+        serial = tok.get_serial()
+        timestamp = datetime.now(timezone.utc).isoformat()
+        signature = self.smartphone_private_key.sign(
+            f"{serial}|{timestamp}".encode(), padding.PKCS1v15(), hashes.SHA256()
+        )
+        req = Request(EnvironBuilder(method="GET").get_environ())
+        req.all_data = {
+            "serial": serial,
+            "timestamp": timestamp,
+            "signature": b32encode(signature),
+        }
+        set_policy(
+            "push_image",
+            SCOPE.AUTH,
+            action=f"{action}=https://example.org/unused.png",
+            active=False,
+        )
+        try:
+            for image in (
+                None,
+                "https://example.org/first.png",
+                "https://example.org/second.png",
+                None,
+            ):
+                if image is None:
+                    set_policy("push_image", SCOPE.AUTH, active=False)
+                else:
+                    set_policy(
+                        "push_image",
+                        SCOPE.AUTH,
+                        action=f"{action}={image}",
+                        user="cornelius",
+                        active=True,
+                    )
+                res = token_class.api_endpoint(req, g)[1]
+                self.assertEqual(res["result"]["value"], [])
+                self.assertEqual(res["detail"]["image"], image)
+            set_policy("push_image", SCOPE.AUTH, user="other", active=True)
+            self.assertIsNone(token_class.api_endpoint(req, g)[1]["detail"]["image"])
+            req.all_data["signature"] = b32encode(b"invalid")
+            with self.assertRaises(eduMFAError):
+                token_class.api_endpoint(req, g)
+        finally:
+            for name in ("push_image", "image_registration", "unrelated_app_image"):
+                delete_policy(name)
+            tok.delete_token()
 
     def test_15_poll_endpoint(self):
         g = FakeFlaskG()
