@@ -7,7 +7,6 @@ The ways described here to install eduMFA are
 
  * the installation via the :ref:`pip_install`, which can be used on
    any Linux distribution.
- * ready made :ref:`install_ubuntu` for Ubuntu 22.04 LTS and 24.04 LTS.
  * the installation via :ref:`install_docker`.
 
 If you want to upgrade please read :ref:`upgrade`.
@@ -18,7 +17,6 @@ If you want to upgrade please read :ref:`upgrade`.
 
    database
    pip
-   ubuntu
    docker
    helm
    upgrade

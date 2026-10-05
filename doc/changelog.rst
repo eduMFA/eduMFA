@@ -10,11 +10,6 @@ For version-to-version upgrade steps, see :ref:`migration_guides`.
    eduMFA 3.0.0 is expected to remove multiple features. The current work in
    progress tracking issue is `#875 <https://github.com/eduMFA/eduMFA/issues/875>`_.
 
-.. caution::
-   Due to new fields in ``edumfa.cfg``, upgrading via Ubuntu packages can cause apt to prompt you to replace it. Replacing it will remove secrets from your current configuration, so keep your existing file and add only the new fields manually.
-
-   This is tracked in `issue #1124 <https://github.com/eduMFA/eduMFA/issues/1124>`_.
-
 eduMFA 2.X.Y (unreleased)
 --------------------------
 
