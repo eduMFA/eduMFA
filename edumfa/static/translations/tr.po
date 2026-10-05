@@ -2003,6 +2003,11 @@ msgstr "Yöntem"
 msgid "Metrics could not be loaded."
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Metrics:"
+msgstr "Yeniden deneme"
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -3206,10 +3211,6 @@ msgstr ""
 msgid "StartTLS"
 msgstr "Starttls"
 
-#: components/dashboard/views/dashboard.html
-msgid "StatsKeys:"
-msgstr ""
-
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Başarıyla doğrulanmış."
@@ -4404,7 +4405,7 @@ msgid "TiQR Token settings"
 msgstr "Tiqr Token Ayarları"
 
 #: components/dashboard/views/dashboard.html
-msgid "TimeFrame:"
+msgid "Time range:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html

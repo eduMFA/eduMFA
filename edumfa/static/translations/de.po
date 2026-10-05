@@ -1957,6 +1957,11 @@ msgstr "Methode"
 msgid "Metrics could not be loaded."
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Metrics:"
+msgstr "Wiederholungen"
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr "Hostname des Microsoft CA-Workers"
@@ -3158,11 +3163,6 @@ msgstr "Spezielle Fehlerbehandlung"
 msgid "StartTLS"
 msgstr "StartTLS"
 
-#: components/dashboard/views/dashboard.html
-#, fuzzy
-msgid "StatsKeys:"
-msgstr "Statistik"
-
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Erfolgreich authentisiert."
@@ -4317,7 +4317,7 @@ msgid "TiQR Token settings"
 msgstr "TiQR Token Einstellungen"
 
 #: components/dashboard/views/dashboard.html
-msgid "TimeFrame:"
+msgid "Time range:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html
@@ -5267,6 +5267,10 @@ msgstr "Fenster"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "Es wurden {{ auditdata.count }} Einträge gefunden."
+
+#, fuzzy
+#~ msgid "StatsKeys:"
+#~ msgstr "Statistik"
 
 #, fuzzy
 #~ msgid "Tokentype"

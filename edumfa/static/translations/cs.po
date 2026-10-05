@@ -1908,6 +1908,11 @@ msgstr "Metoda"
 msgid "Metrics could not be loaded."
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Metrics:"
+msgstr "Počet pokusů"
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -3080,10 +3085,6 @@ msgstr ""
 msgid "StartTLS"
 msgstr "StartTLS"
 
-#: components/dashboard/views/dashboard.html
-msgid "StatsKeys:"
-msgstr ""
-
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Přihlášení bylo úspěšné."
@@ -4073,7 +4074,7 @@ msgid "TiQR Token settings"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-msgid "TimeFrame:"
+msgid "Time range:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html

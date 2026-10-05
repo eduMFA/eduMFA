@@ -2017,6 +2017,11 @@ msgstr "Metodo"
 msgid "Metrics could not be loaded."
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Metrics:"
+msgstr "Tentativi"
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr "Nome host del worker Microsoft CA"
@@ -3222,10 +3227,6 @@ msgstr ""
 #: components/config/views/config.smtp.list.html
 msgid "StartTLS"
 msgstr "StartTLS"
-
-#: components/dashboard/views/dashboard.html
-msgid "StatsKeys:"
-msgstr ""
 
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
@@ -4446,7 +4447,7 @@ msgid "TiQR Token settings"
 msgstr "Impostazioni del token TiQR"
 
 #: components/dashboard/views/dashboard.html
-msgid "TimeFrame:"
+msgid "Time range:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html

@@ -1993,6 +1993,11 @@ msgstr "方法"
 msgid "Metrics could not be loaded."
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Metrics:"
+msgstr "重試"
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -3212,10 +3217,6 @@ msgstr ""
 msgid "StartTLS"
 msgstr ""
 
-#: components/dashboard/views/dashboard.html
-msgid "StatsKeys:"
-msgstr ""
-
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "已成功通過身份驗證。"
@@ -4387,7 +4388,7 @@ msgid "TiQR Token settings"
 msgstr "TiQR 令牌設置"
 
 #: components/dashboard/views/dashboard.html
-msgid "TimeFrame:"
+msgid "Time range:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html
