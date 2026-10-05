@@ -7,26 +7,40 @@ myApp.factory("MonitoringFactory", [
     /**
          Each service - just like this service factory - is a singleton.
          */
-
     var cancelers = {};
 
+    function request(cacheKey, url, params) {
+      if (cancelers[cacheKey]) {
+        cancelers[cacheKey].resolve();
+      }
+      var canceler = $q.defer();
+      cancelers[cacheKey] = canceler;
+
+      return $http
+        .get(url, {
+          headers: { Authorization: AuthFactory.getAuthToken() },
+          params: params,
+          timeout: canceler.promise,
+        })
+        .finally(function () {
+          if (cancelers[cacheKey] === canceler) {
+            delete cancelers[cacheKey];
+          }
+        });
+    }
+
     return {
-      getStatsKeys: function (callback, errorCallback) {
-        $http
-          .get(monitoringUrl + "/", {
-            headers: { Authorization: AuthFactory.getAuthToken() },
-          })
-          .then(
-            function (response) {
-              callback(response.data);
-            },
-            function (error) {
-              AuthFactory.authError(error.data);
-              if (errorCallback) {
-                errorCallback(error);
-              }
-            },
-          );
+      getStatsKeys: function (cacheKey, callback, errorCallback) {
+        request(cacheKey, monitoringUrl + "/").then(
+          function (response) {
+            callback(response.data);
+          },
+          function (error) {
+            var cancelled = error.status === -1;
+            if (errorCallback) errorCallback(error, { cancelled: cancelled });
+            if (!cancelled) AuthFactory.authError(error.data);
+          },
+        );
       },
 
       getMonitored: function (
@@ -36,42 +50,16 @@ myApp.factory("MonitoringFactory", [
         callback,
         errorCallback,
       ) {
-        if (cancelers[cacheKey]) {
-          cancelers[cacheKey].resolve();
-        }
-        var canceler = $q.defer();
-        cancelers[cacheKey] = canceler;
-
-        function release() {
-          if (cancelers[cacheKey] === canceler) {
-            delete cancelers[cacheKey];
-          }
-        }
-        $http
-          .get(monitoringUrl + "/" + stats_key, {
-            headers: { Authorization: AuthFactory.getAuthToken() },
-            params: params,
-            timeout: canceler.promise,
-          })
-          .then(
-            function (response) {
-              release();
-              callback(response.data);
-            },
-            function (error) {
-              release();
-              if (error.status === -1) {
-                if (errorCallback) {
-                  errorCallback(error, { cancelled: true });
-                }
-                return;
-              }
-              if (errorCallback) {
-                errorCallback(error, { cancelled: false });
-              }
-              AuthFactory.authError(error.data);
-            },
-          );
+        request(cacheKey, monitoringUrl + "/" + stats_key, params).then(
+          function (response) {
+            callback(response.data);
+          },
+          function (error) {
+            var cancelled = error.status === -1;
+            if (errorCallback) errorCallback(error, { cancelled: cancelled });
+            if (!cancelled) AuthFactory.authError(error.data);
+          },
+        );
       },
 
       cancel: function (cacheKey) {

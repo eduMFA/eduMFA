@@ -29,6 +29,8 @@ myApp.controller("monitoringController", [
       { borderDash: [8, 4], pointStyle: false },
     ];
 
+    var requestSeq = {};
+
     const STATUS = { LOADING: "loading", EMPTY: "empty", ERROR: "error" };
 
     $scope.timeFrame = [
@@ -153,6 +155,7 @@ myApp.controller("monitoringController", [
       $scope.statsKeysState = STATUS.LOADING;
       $scope.availableStatsKeys = [];
       MonitoringFactory.getStatsKeys(
+        "statskeys",
         function (data) {
           try {
             var d = ((data && data.result && data.result.value) || []).sort();
@@ -187,12 +190,21 @@ myApp.controller("monitoringController", [
         callback($scope.datasetCache[key]);
         return;
       }
+      var current = $scope.datasetStatusMap[key];
+      if (current && current.state === STATUS.LOADING) {
+        return;
+      }
+      var seq = (requestSeq[key] = (requestSeq[key] || 0) + 1);
+      var isCurrent = function () {
+        return requestSeq[key] === seq;
+      };
       setStatus(key, STATUS.LOADING);
       MonitoringFactory.getMonitored(
         sk.name,
         { start: startTime, max_points: 500 },
         key,
         function (data) {
+          if (!isCurrent()) return;
           var d = data.result.value;
           var points = d
             .map((e) => ({ x: new Date(e[0]).getTime(), y: e[1] }))
@@ -224,6 +236,7 @@ myApp.controller("monitoringController", [
           callback(dataset);
         },
         function (error, meta) {
+          if (!isCurrent()) return;
           if (meta && meta.cancelled) {
             setStatus(key, null);
             return;
@@ -261,10 +274,11 @@ myApp.controller("monitoringController", [
           (ds) => ds.label === sk.name,
         );
         if (sk.selected) {
-          if (!dataset) {
+          if (!dataset && !$scope.datasetStatusMap[key]) {
             $scope.addToTimeline(sk);
           }
         } else {
+          requestSeq[key] = (requestSeq[key] || 0) + 1;
           MonitoringFactory.cancel(key);
           setStatus(key, null);
           if (dataset) {
