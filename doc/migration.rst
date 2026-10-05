@@ -30,7 +30,7 @@ High-level migration steps
    ``PI_ENCFILE`` becomes ``EDUMFA_ENCFILE``).
 5. Update configuration paths to ``/etc/edumfa/``.
 6. Update the log file path to ``/var/log/edumfa/edumfa.log``.
-7. Install eduMFA (container, pip, or ``.deb`` package).
+7. Install eduMFA (container or pip).
 8. Replace usage of privacyIDEA scripts such as ``pi-manage`` with
    ``edumfa-manage`` in cron jobs and systemd units.
 9. Replace ``privacyideaapp.wsgi`` with ``edumfaapp.wsgi`` and adjust paths in
@@ -47,9 +47,6 @@ Run:
    edumfa-schema-upgrade /opt/edumfa/lib/edumfa/migrations
 
 The command is typically located in ``/opt/edumfa/bin``.
-
-If you use server ``.deb`` packages (``edumfa-apache2`` or ``edumfa-nginx``),
-database migration is executed automatically during package installation.
 
 Manual SQL fallback
 ~~~~~~~~~~~~~~~~~~~
