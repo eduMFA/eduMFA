@@ -12,19 +12,6 @@ have to run on the same machine as eduMFA.
 Installation
 ~~~~~~~~~~~~
 
-There are two installation options available: Ubuntu packages and manual installation.
-
-Ubuntu package
-..............
-
-First add the repository as described in :ref:`add_ubuntu_repository`.
-
-
-After having added the repositories, run::
-
-   sudo apt update
-   sudo apt install edumfa-radius
-
 .. _freeradius_manual_installation:
 
 Manual installation
@@ -59,7 +46,7 @@ depending on your operating system)::
 
 Now the module has to be integrated into your site configuration. If this is a
 new FreeRADIUS server just for eduMFA, you might want to copy the configuration
-from our packages and remove other sites::
+from our deployment examples and remove other sites::
 
    wget https://raw.githubusercontent.com/eduMFA/eduMFA/refs/tags/v2.9.0/deploy/config/freeradius3/edumfa
    sudo mv edumfa /etc/freeradius/3.0/sites-available/

@@ -8,17 +8,11 @@ In any case before upgrading a major version read the
 Note, that when you are upgrading over several major versions, read all the comments
 for all versions.
 
-If you installed eduMFA via DEB repository you can use the normal
-system ways of *apt-get* or *aptitude* to upgrade eduMFA to the
-current version.
-
-
 Different upgrade processes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Depending on the way eduMFA was installed, there are different recommended update procedures.
 The following section describes the process for pip installations.
-Instructions for packaged versions on Ubuntu are found in :ref:`upgrade_packaged`.
 
 Upgrading a pip installation
 ............................
@@ -76,23 +70,3 @@ Usually you will need to upgrade/migrate the database:
    edumfa-schema-upgrade /opt/edumfa/lib/edumfa/migrations
 
 Now you need to restart your webserver for the new code to take effect.
-
-.. _upgrade_packaged:
-
-Upgrading a packaged installation
-.................................
-
-In general, the upgrade of a packaged version of eduMFA should be done using the
-default tools (e.g. apt and yum). In any case, read the
-:ref:`release_changelog` and relevant :ref:`migration_guides`. It is also a good
-idea to backup your system before upgrading.
-
-Ubuntu upgrade
-^^^^^^^^^^^^^^
-
-If you use the Ubuntu packages in a default setup, the upgrade can should be done
-using::
-
-   apt update
-   apt dist-upgrade
-
