@@ -16,9 +16,11 @@ If you want to upgrade please read :ref:`upgrade`.
 .. toctree::
    :maxdepth: 1
 
+   database
    pip
    ubuntu
    docker
+   helm
    upgrade
    system/inifile
    system/logging

@@ -85,11 +85,15 @@ To avoid the verbosity of ``docker run`` above, you can use a compose file.
 Here's a sample ``docker-compose.yml`` file also containing a MariaDB service
 using :ref:`environment variable based configuration <docker_config_env>`.
 
+You could also use an external database or a different database system. For
+supported database systems and their versions, please see
+:ref:`choosing_a_database`.
+
 .. code-block:: yaml
 
    services:
      mariadb:
-       image: docker.io/mariadb:lts-noble
+       image: docker.io/mariadb:12.3
        restart: always
        volumes:
          - mariadb-data:/var/lib/mysql:rw
@@ -120,6 +124,8 @@ using :ref:`environment variable based configuration <docker_config_env>`.
          DB_DATABASE: ${MARIADB_DATABASE}
          SECRET_KEY: ${EDUMFA_SECRET_KEY}
          EDUMFA_PEPPER: ${EDUMFA_PEPPER}
+         # See "Choosing a Database" for why this option is set.
+         SQLALCHEMY_ENGINE_OPTIONS: '{"isolation_level": "READ COMMITTED"}'
        depends_on:
          mariadb:
            condition: service_healthy

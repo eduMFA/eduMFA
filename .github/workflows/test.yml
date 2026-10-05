@@ -28,11 +28,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup UV
-        uses: astral-sh/setup-uv@v8.3.2
+        uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
       - name: Install dependencies
@@ -117,11 +117,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Setup Python 3.14
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.14'
       - name: Setup UV
-        uses: astral-sh/setup-uv@v8.3.2
+        uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
       - name: Install system dependencies
@@ -141,11 +141,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Setup Python 3.14
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.14'
       - name: Setup UV
-        uses: astral-sh/setup-uv@v8.3.2
+        uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
       - name: Install postgres dependencies
