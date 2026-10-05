@@ -42,12 +42,11 @@ from edumfa.lib.policy import ACTION
 from edumfa.lib.token import count_users_with_token
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.lib.utils import parse_legacy_time
+from edumfa.lib.lttb import lttb
 
 log = logging.getLogger(__name__)
 
-
 monitoring_blueprint = Blueprint("monitoring_blueprint", __name__)
-
 
 @monitoring_blueprint.route("/", methods=["GET"])
 @monitoring_blueprint.route("/<stats_key>", methods=["GET"])
@@ -77,6 +76,9 @@ def get_statistics(stats_key=None):
         values = get_values(
             stats_key=stats_key, start_timestamp=start, end_timestamp=end
         )
+        max_points = getParam(param, "max_points")
+        if max_points:
+           values = lttb(values, int(max_points), x_key=lambda d: d.timestamp())
         # convert timestamps to strings
         values_w_string = [(s[0].strftime(AUTH_DATE_FORMAT), s[1]) for s in values]
         g.audit_object.log({"success": True})
