@@ -551,10 +551,12 @@ def save_pin_change(request, response, serial=None):
 def offline_info(request, response):
     """
     This decorator is used with the function /validate/check.
-    It is not triggered by an ordinary policy but by a MachineToken definition.
-    If for the given Token an offline application is defined,
-    the response is enhanced with the offline information - the hashes of the
-    OTP.
+    It is triggered by a MachineToken definition (the token must be attached
+    to the offline application). For WebAuthn tokens the attachment does not
+    need to specify a particular machine hostname — any machine that
+    successfully authenticates online receives the offline data (public key,
+    credential ID, relying party ID, and a per-machine refill token keyed by
+    the computer name in the User-Agent).
 
     """
     content = response.json
@@ -568,6 +570,7 @@ def offline_info(request, response):
                     serial=serial,
                     application="offline",
                     challenge=request.all_data.get("pass"),
+                    user_agent=request.user_agent.string,
                 )
                 if auth_items:
                     content["auth_items"] = auth_items
