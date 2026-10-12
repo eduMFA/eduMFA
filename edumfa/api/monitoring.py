@@ -32,6 +32,7 @@ from flask import Blueprint, g, request
 from edumfa.api.lib.prepolicy import check_base_action, prepolicy
 from edumfa.api.lib.utils import getParam, send_result
 from edumfa.lib.log import log_with
+from edumfa.lib.lttb import lttb
 from edumfa.lib.monitoringstats import (
     delete_stats,
     get_last_value,
@@ -42,7 +43,6 @@ from edumfa.lib.policy import ACTION
 from edumfa.lib.token import count_users_with_token
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.lib.utils import parse_legacy_time
-from edumfa.lib.lttb import lttb
 
 log = logging.getLogger(__name__)
 

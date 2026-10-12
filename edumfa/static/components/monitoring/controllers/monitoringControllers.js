@@ -48,35 +48,30 @@ myApp.controller("monitoringController", [
     $scope.datasetStatusMap = {};
     $scope.selectedTimeFrame = $scope.timeFrame[0];
 
-    function keyToSlot(sk) {
-      var hash = 0;
-      for (var char of sk) {
-        hash = (hash << 5) - hash + char.charCodeAt(0);
+    function keyToHash(key) {
+      const enc = new TextEncoder();
+      const bytes = enc.encode(key.normalize("NFC"));
+      let h = 0x811c9dc5;
+      for (const b of bytes) {
+        h ^= b;
+        h = Math.imul(h, 0x01000193);
       }
-      return Math.abs(hash);
+      h ^= h >>> 16;
+      h = Math.imul(h, 0x85ebca6b);
+      h ^= h >>> 13;
+      h = Math.imul(h, 0xc2b2ae35);
+      h ^= h >>> 16;
+      return (h >>> 0) >>> 26;
     }
 
-    function buildStyleMap(allKeys) {
-      var totalSlots = colorScheme.length * dashStyles.length;
-      var styleMap = new Map();
-      var used = new Set();
-      allKeys.forEach((sk) => {
-        var slot = keyToSlot(sk) % totalSlots;
-        var attempts = 0;
-        while (used.has(slot) && attempts < totalSlots) {
-          slot = (slot + 1) % totalSlots;
-          attempts++;
-        }
-        used.add(slot);
-        var colorIndex = slot % colorScheme.length;
-        var dashIndex =
-          Math.floor(slot / colorScheme.length) % dashStyles.length;
-        styleMap.set(sk, {
-          color: colorScheme[colorIndex],
-          ...dashStyles[dashIndex],
-        });
-      });
-      return styleMap;
+    function getStyle(sk) {
+      var hash = keyToHash(sk);
+      var colorIndex = hash % colorScheme.length;
+      var dashIndex = Math.floor(hash / colorScheme.length) % dashStyles.length;
+      return {
+        color: colorScheme[colorIndex],
+        ...dashStyles[dashIndex],
+      };
     }
 
     function calculateDate(year, month, day) {
@@ -159,9 +154,8 @@ myApp.controller("monitoringController", [
         function (data) {
           try {
             var d = ((data && data.result && data.result.value) || []).sort();
-            var styleMap = buildStyleMap(d);
             var newList = d.map(function (sk) {
-              var style = styleMap.get(sk) || {};
+              var style = getStyle(sk) || {};
               return {
                 id: sk,
                 name: sk,
@@ -224,7 +218,9 @@ myApp.controller("monitoringController", [
             pointStyle: sk.pointStyle,
             hidden: false,
             pointBorderWidth: 0.75,
-            pointRadius: 3.5,
+            pointRadius: 2.5,
+            pointHoverRadius: 5,
+            pointHitRadius: 6,
             borderWidth: 2,
           };
           if (dataset.data.length === 0) {
