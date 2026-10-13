@@ -147,7 +147,7 @@ myApp.controller("monitoringController", [
       return datasetStatusMap[statusKey(name)] || null;
     };
 
-    function getAvailableStatsKeys () {
+    function getAvailableStatsKeys() {
       var seq = ++statsKeysSeq;
       var isCurrent = function () {
         return seq === statsKeysSeq;
@@ -182,9 +182,9 @@ myApp.controller("monitoringController", [
           $scope.statsKeysState = STATUS.ERROR;
         },
       );
-    };
+    }
 
-    function getDataset (sk, callback) {
+    function getDataset(sk, callback) {
       var startTime = getStartTime($scope.selectedTimeFrame);
       var key = statusKey(sk.name);
       if (datasetCache[key]) {
@@ -247,9 +247,9 @@ myApp.controller("monitoringController", [
           setStatus(key, STATUS.ERROR, extractDetail(error));
         },
       );
-    };
+    }
 
-    function addToTimeline (sk) {
+    function addToTimeline(sk) {
       var timeFrame = $scope.selectedTimeFrame.label;
       getDataset(sk, function (dataset) {
         if (isStillRelevant(sk, timeFrame)) {
@@ -259,16 +259,16 @@ myApp.controller("monitoringController", [
           }
         }
       });
-    };
+    }
 
-    function removeFromTimeline (ds) {
+    function removeFromTimeline(ds) {
       var index = $scope.tokenTimeline.data.datasets.findIndex(
         (d) => d.label === ds.label,
       );
       if (index > -1) {
         $scope.tokenTimeline.data.datasets.splice(index, 1);
       }
-    };
+    }
 
     $scope.syncSelection = function () {
       $scope.availableStatsKeys.forEach(function (sk) {
