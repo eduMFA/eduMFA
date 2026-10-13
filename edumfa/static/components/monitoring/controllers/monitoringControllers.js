@@ -29,8 +29,6 @@ myApp.controller("monitoringController", [
       { borderDash: [8, 4], pointStyle: false },
     ];
 
-    var requestSeq = {};
-
     const STATUS = { LOADING: "loading", EMPTY: "empty", ERROR: "error" };
 
     $scope.timeFrame = [
@@ -44,9 +42,12 @@ myApp.controller("monitoringController", [
     ];
 
     $scope.tokenTimeline = angular.copy(emptyDefaultTimeline);
-    $scope.datasetCache = {};
-    $scope.datasetStatusMap = {};
     $scope.selectedTimeFrame = $scope.timeFrame[0];
+
+    var datasetCache = {};
+    var datasetStatusMap = {};
+    var requestSeq = {};
+    var statsKeysSeq = 0;
 
     function keyToHash(key) {
       const enc = new TextEncoder();
@@ -123,9 +124,9 @@ myApp.controller("monitoringController", [
 
     function setStatus(key, state, detail) {
       if (!state) {
-        delete $scope.datasetStatusMap[key];
+        delete datasetStatusMap[key];
       } else {
-        $scope.datasetStatusMap[key] = { state: state, detail: detail || "" };
+        datasetStatusMap[key] = { state: state, detail: detail || "" };
       }
     }
 
@@ -138,20 +139,24 @@ myApp.controller("monitoringController", [
       );
     }
 
-    $scope.isSelected = function (k) {
-      return k.selected;
+    $scope.isSelected = function (sk) {
+      return sk.selected;
     };
 
     $scope.getStatus = function (name) {
-      return $scope.datasetStatusMap[statusKey(name)] || null;
+      return datasetStatusMap[statusKey(name)] || null;
     };
 
-    $scope.getAvailableStatsKeys = function () {
+    function getAvailableStatsKeys () {
+      var seq = ++statsKeysSeq;
+      var isCurrent = function () {
+        return seq === statsKeysSeq;
+      };
       $scope.statsKeysState = STATUS.LOADING;
       $scope.availableStatsKeys = [];
       MonitoringFactory.getStatsKeys(
-        "statskeys",
         function (data) {
+          if (!isCurrent()) return;
           try {
             var d = ((data && data.result && data.result.value) || []).sort();
             var newList = d.map(function (sk) {
@@ -171,20 +176,22 @@ myApp.controller("monitoringController", [
             $scope.statsKeysState = STATUS.ERROR;
           }
         },
-        function (error) {
+        function (error, meta) {
+          if (!isCurrent()) return;
+          if (meta && meta.cancelled) return;
           $scope.statsKeysState = STATUS.ERROR;
         },
       );
     };
 
-    $scope.getDataset = function (sk, callback) {
+    function getDataset (sk, callback) {
       var startTime = getStartTime($scope.selectedTimeFrame);
       var key = statusKey(sk.name);
-      if ($scope.datasetCache[key]) {
-        callback($scope.datasetCache[key]);
+      if (datasetCache[key]) {
+        callback(datasetCache[key]);
         return;
       }
-      var current = $scope.datasetStatusMap[key];
+      var current = datasetStatusMap[key];
       if (current && current.state === STATUS.LOADING) {
         return;
       }
@@ -226,7 +233,7 @@ myApp.controller("monitoringController", [
           if (dataset.data.length === 0) {
             setStatus(key, STATUS.EMPTY);
           } else {
-            $scope.datasetCache[key] = dataset;
+            datasetCache[key] = dataset;
             setStatus(key, null);
           }
           callback(dataset);
@@ -242,9 +249,9 @@ myApp.controller("monitoringController", [
       );
     };
 
-    $scope.addToTimeline = function (sk) {
+    function addToTimeline (sk) {
       var timeFrame = $scope.selectedTimeFrame.label;
-      $scope.getDataset(sk, function (dataset) {
+      getDataset(sk, function (dataset) {
         if (isStillRelevant(sk, timeFrame)) {
           applyVisibility(sk, dataset);
           if (dataset.data.length !== 0) {
@@ -254,7 +261,7 @@ myApp.controller("monitoringController", [
       });
     };
 
-    $scope.removeFromTimeline = function (ds) {
+    function removeFromTimeline (ds) {
       var index = $scope.tokenTimeline.data.datasets.findIndex(
         (d) => d.label === ds.label,
       );
@@ -270,15 +277,15 @@ myApp.controller("monitoringController", [
           (ds) => ds.label === sk.name,
         );
         if (sk.selected) {
-          if (!dataset && !$scope.datasetStatusMap[key]) {
-            $scope.addToTimeline(sk);
+          if (!dataset && !datasetStatusMap[key]) {
+            addToTimeline(sk);
           }
         } else {
           requestSeq[key] = (requestSeq[key] || 0) + 1;
           MonitoringFactory.cancel(key);
           setStatus(key, null);
           if (dataset) {
-            $scope.removeFromTimeline(dataset);
+            removeFromTimeline(dataset);
           }
         }
       });
@@ -289,7 +296,7 @@ myApp.controller("monitoringController", [
       $scope.tokenTimeline.data.datasets = [];
       $scope.availableStatsKeys.forEach((sk) => {
         if (sk.selected) {
-          $scope.addToTimeline(sk);
+          addToTimeline(sk);
         }
       });
     };
@@ -308,17 +315,17 @@ myApp.controller("monitoringController", [
     };
 
     if (AuthFactory.checkRight("statistics_read")) {
-      $scope.getAvailableStatsKeys();
+      getAvailableStatsKeys();
     }
 
     $scope.$on("piReload", function () {
       if (AuthFactory.checkRight("statistics_read")) {
         MonitoringFactory.cancelAll();
-        $scope.datasetCache = {};
-        $scope.datasetStatusMap = {};
+        datasetCache = {};
+        datasetStatusMap = {};
         $scope.selectedTimeFrame = $scope.timeFrame[0];
         $scope.tokenTimeline = angular.copy(emptyDefaultTimeline);
-        $scope.getAvailableStatsKeys();
+        getAvailableStatsKeys();
       }
     });
 

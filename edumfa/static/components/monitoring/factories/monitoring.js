@@ -30,8 +30,8 @@ myApp.factory("MonitoringFactory", [
     }
 
     return {
-      getStatsKeys: function (cacheKey, callback, errorCallback) {
-        request(cacheKey, monitoringUrl + "/").then(
+      getStatsKeys: function (callback, errorCallback) {
+        request("statskeys", monitoringUrl + "/").then(
           function (response) {
             callback(response.data);
           },
