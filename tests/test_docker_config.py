@@ -46,23 +46,20 @@ class DockerEnvConfigTestCase(unittest.TestCase):
         if docker_dir not in sys.path:
             sys.path.insert(0, docker_dir)
 
-        # Create a context manager that will keep the environment variables set
+        # Patch the environment for the duration of this test. Register the
+        # cleanup immediately so that every patcher is stopped, even when a
+        # test calls this helper more than once.
         patcher = mock.patch.dict(os.environ, merged_vars, clear=True)
         patcher.start()
+        self.addCleanup(patcher.stop)
 
         # Import the module fresh
         import edumfa_config as config_module
 
-        # Store the patcher so we can stop it later
-        self._patcher = patcher
         return config_module
 
     def tearDown(self):
         """Clean up the environment mock after each test"""
-        if hasattr(self, "_patcher") and self._patcher is not None:
-            self._patcher.stop()
-            self._patcher = None
-
         # Remove the docker directory from sys.path
         docker_dir = str((Path(__file__).parent.parent / "deploy" / "docker").resolve())
         if docker_dir in sys.path:
