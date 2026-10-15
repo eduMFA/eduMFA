@@ -6,7 +6,6 @@ This tests the token functions on an interface level
 
 from edumfa.lib import _
 from edumfa.lib.challenge import extract_answered_challenges, get_challenges
-from edumfa.lib.error import ParameterError, TokenAdminError
 from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 from edumfa.lib.token import init_token
 from edumfa.models import Challenge, db
@@ -21,9 +20,7 @@ class ChallengeTestCase(MyTestCase):
 
     def test_01_challenge(self):
         set_policy(
-            "chalresp",
-            scope=SCOPE.AUTHZ,
-            action=f"{ACTION.CHALLENGERESPONSE}=hotp",
+            "chalresp", scope=SCOPE.AUTH, action=f"{ACTION.CHALLENGERESPONSE}=hotp"
         )
         token = init_token({"genkey": 1, "serial": "CHAL1", "pin": "pin"})
         from edumfa.lib.token import check_serial_pass
@@ -62,7 +59,6 @@ class ChallengeTestCase(MyTestCase):
         transaction_id1 = r[1].get("transaction_id")
         r = check_serial_pass(token.token.serial, "pin")
         self.assertEqual(r[0], False)
-        transaction_id2 = r[1].get("transaction_id")
         # two challenges, but no answered challenges
         challenges = get_challenges(serial="CHAL2")
         self.assertEqual(len(challenges), 2)

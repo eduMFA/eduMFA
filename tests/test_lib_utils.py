@@ -9,7 +9,7 @@ from dateutil.tz import gettz, tzlocal, tzoffset
 from netaddr import AddrFormatError, IPAddress, IPNetwork
 
 from edumfa.lib.crypto import generate_password
-from edumfa.lib.error import PolicyError
+from edumfa.lib.error import ParameterError, PolicyError
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.utils import (
     CHARLIST_CONTENTPOLICY,
@@ -110,34 +110,29 @@ class UtilsTestCase(MyTestCase):
     def test_03_check_time_in_range(self):
         # April 5th, 2016 is a Tuesday
         t = datetime(2016, 4, 5, hour=9, minute=12)
-        r = check_time_in_range("Mon-Fri: 09:00-17:30", t)
-        self.assertEqual(r, True)
-        r = check_time_in_range("Mon - Fri : 09:00- 17:30", t)
-        self.assertEqual(r, True)
-        r = check_time_in_range("Sat-Sun:10:00-15:00, Mon - Fri : 09:00- 17:30", t)
-        self.assertEqual(r, True)
+        self.assertTrue(check_time_in_range("Mon-Fri: 09:00-17:30", t))
+        self.assertTrue(check_time_in_range("Mon - Fri : 09:00- 17:30", t))
+        self.assertTrue(
+            check_time_in_range("Sat-Sun:10:00-15:00, Mon - Fri : 09:00- 17:30", t)
+        )
 
         # Short time description
-        r = check_time_in_range("Tue: 9-15", t)
-        self.assertEqual(r, True)
-        r = check_time_in_range("Tue: 9-15:1", t)
-        self.assertEqual(r, True)
+        self.assertTrue(check_time_in_range("Tue: 9-15", t))
+        self.assertTrue(check_time_in_range("Tue: 9-15:1", t))
 
         # day out of range
-        r = check_time_in_range("Wed - Fri: 09:00-17:30", t)
-        self.assertEqual(r, False)
+        self.assertFalse(check_time_in_range("Wed - Fri: 09:00-17:30", t))
 
         # time out of range
-        r = check_time_in_range("Mon-Fri: 09:30-17:30", t)
-        self.assertEqual(r, False)
+        self.assertFalse(check_time_in_range("Mon-Fri: 09:30-17:30", t))
 
         # A time with a missing leading 0 matches anyway
-        r = check_time_in_range("Mon-Fri: 9:12-17:30", t)
-        self.assertEqual(r, True)
+        self.assertTrue(check_time_in_range("Mon-Fri: 9:12-17:30", t))
 
         # Nonsense will not match
-        r = check_time_in_range("Mon-Wrong: asd-17:30", t)
-        self.assertEqual(r, False)
+        self.assertRaises(
+            ParameterError, check_time_in_range, "Mon-Wrong: asd-17:30", t
+        )
 
     def test_04a_parse_proxy(self):
         self.assertEqual(parse_proxy(""), set())
@@ -1084,6 +1079,21 @@ class UtilsTestCase(MyTestCase):
         # Wrong condition
         self.assertFalse(
             compare_generic_condition("c <500", mock_attribute, "Error {0!s}")
+        )
+
+        # Wrong condition: key does not exist
+        self.assertFalse(
+            compare_generic_condition("d==1", mock_attribute, "Error {0!s}")
+        )
+
+        # Wrong condition: key does not exist
+        self.assertFalse(
+            compare_generic_condition("d<1", mock_attribute, "Error {0!s}")
+        )
+
+        # Wrong condition: key does not exist
+        self.assertFalse(
+            compare_generic_condition("d>1", mock_attribute, "Error {0!s}")
         )
 
         # Wrong entry, that is not processed
