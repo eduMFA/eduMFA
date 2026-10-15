@@ -16,6 +16,7 @@ from PyKCS11 import PyKCS11Error
 
 from edumfa.config import TestingConfig
 from edumfa.lib.crypto import (
+    NullCryptoObj,
     Sign,
     aes_decrypt_b64,
     aes_encrypt_b64,
@@ -317,6 +318,12 @@ class CryptoTestCase(MyTestCase):
         self.assertEqual(to_unicode(u_str), u_str)
         self.assertEqual(to_bytes(b_str), b_str)
         self.assertEqual(to_bytes(u_str), u_str.encode("utf8"))
+
+    def test_06_null_crypto_obj(self):
+        # NullCryptoObj mirrors SecretObj.getKey() for values stored in plain text
+        self.assertEqual(b"1234", NullCryptoObj("1234").getKey())
+        self.assertEqual(b"1234", NullCryptoObj(b"1234").getKey())
+        self.assertEqual("passwörd".encode(), NullCryptoObj("passwörd").getKey())
 
     def test_10_generate_keypair(self):
         keypub, keypriv = generate_keypair(rsa_keysize=4096)

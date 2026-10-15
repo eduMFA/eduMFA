@@ -74,6 +74,7 @@ from edumfa.lib.token import check_user_pass, init_token, remove_token
 from edumfa.lib.tokens.webauthn import (
     ATTESTATION_LEVEL,
     ATTESTATION_REQUIREMENT_LEVEL,
+    ATTESTATION_TYPE,
     COSE_ALGORITHM,
     DEFAULT_CLIENT_EXTENSIONS,
     AuthenticationRejectedException,
@@ -238,7 +239,9 @@ SELF_ATTESTATION_REGISTRATION_RESPONSE_BROKEN_SIG = {
 
 class WebAuthnTokenTestCase(MyTestCase):
     def _create_challenge(self):
-        self.token.set_otpkey(hexlify_and_unicode(webauthn_b64_decode(CRED_ID)))
+        self.token.set_otpkey(
+            hexlify_and_unicode(webauthn_b64_decode(CRED_ID)), encrypted=False
+        )
         self.token.add_tokeninfo(WEBAUTHNINFO.PUB_KEY, PUB_KEY)
         self.token.add_tokeninfo(WEBAUTHNINFO.RELYING_PARTY_ID, RP_ID)
         (_, _, _, response_details) = self.token.create_challenge(
@@ -392,6 +395,13 @@ class WebAuthnTokenTestCase(MyTestCase):
         )
         self.assertEqual(CRED_ID, self.token.decrypt_otpkey())
         self.assertEqual(PUB_KEY, self.token.get_tokeninfo(WEBAUTHNINFO.PUB_KEY))
+        # The credential id is public information and stored unencrypted
+        self.assertEqual(
+            hexlify_and_unicode(webauthn_b64_decode(CRED_ID)),
+            self.token.token.key_enc,
+        )
+        self.assertEqual("", self.token.token.key_iv)
+        self.assertFalse(self.token.token.is_otpkey_encrypted())
 
     def test_03b_double_registration(self):
         self.assertEqual(self.token.type, "webauthn")
@@ -426,6 +436,21 @@ class WebAuthnTokenTestCase(MyTestCase):
         # Now the excludeCredentials is contained
         self.assertIn("excludeCredentials", web_authn_register_request)
         temp_token.delete_token()
+
+    def test_03c_credential_id_storage(self):
+        cred_id_hex = hexlify_and_unicode(webauthn_b64_decode(CRED_ID))
+        # Reading an unencrypted credential id does not involve the security module
+        self.token.set_otpkey(cred_id_hex, encrypted=False)
+        with patch("edumfa.lib.crypto.get_hsm") as mock_get_hsm:
+            self.assertEqual(CRED_ID, self.token.decrypt_otpkey())
+            mock_get_hsm.assert_not_called()
+
+        # Tokens enrolled before eduMFA 2.10 store the credential id encrypted.
+        # It is still decrypted transparently.
+        self.token.set_otpkey(cred_id_hex)
+        self.assertTrue(self.token.token.is_otpkey_encrypted())
+        self.assertNotEqual(cred_id_hex, self.token.token.key_enc)
+        self.assertEqual(CRED_ID, self.token.decrypt_otpkey())
 
     def test_04_authentication(self):
         reply_dict = self._create_challenge()
@@ -908,6 +933,28 @@ class WebAuthnTestCase(unittest.TestCase):
                 expected_registration_client_extensions=EXPECTED_REGISTRATION_CLIENT_EXTENSIONS,
             ).verify,
         )
+
+    def test_09e_registration_self_attestation_parse_only_no_hash(self):
+        # The webauthntoken_allowed prepolicy calls
+        # verify_attestation_statement() *without* a client_data_hash, only to
+        # parse out the AAGUID / attestation certificate for policy checks. In
+        # that case the self-attestation signature must NOT be verified (there
+        # is no clientDataHash to verify against), so this must not raise.
+        # See https://github.com/eduMFA/eduMFA — self-attestation enrollments
+        # were rejected with "Invalid signature received." because the
+        # self-attestation branch unconditionally verified the signature.
+        att_obj = WebAuthnRegistrationResponse.parse_attestation_object(
+            SELF_ATTESTATION_REGISTRATION_RESPONSE_TMPL["attObj"]
+        )
+        (attestation_type, trust_path, credential_pub_key, cred_id, aaguid) = (
+            WebAuthnRegistrationResponse.verify_attestation_statement(
+                fmt=att_obj.get("fmt"),
+                att_stmt=att_obj.get("attStmt"),
+                auth_data=att_obj.get("authData"),
+            )
+        )
+        self.assertEqual(ATTESTATION_TYPE.SELF_ATTESTATION, attestation_type)
+        self.assertEqual([], trust_path)
 
     def test_10_permit_windows_hello(self):
         response = WebAuthnRegistrationResponse(

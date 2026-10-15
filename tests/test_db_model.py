@@ -5,6 +5,8 @@ from unittest import mock
 from dateutil.tz import tzutc
 from sqlalchemy import func
 
+from edumfa.lib.crypto import NullCryptoObj, SecretObj
+from edumfa.lib.utils import to_bytes
 from edumfa.models import (
     Admin,
     CAConnector,
@@ -266,6 +268,61 @@ class TokenModelTestCase(MyTestCase):
         # check that the TokenRealm is deleted
         q = TokenRealm.query.all()
         self.assertTrue(len(q) == 0)
+
+    def test_01b_unencrypted_otpkey(self):
+        otpkey = "3132333435363738393031323334353637383930"
+        t = Token("plainkey", tokentype="webauthn")
+        t.save()
+        # By default the otpkey is stored encrypted
+        self.assertTrue(t.is_otpkey_encrypted())
+        t.set_otpkey(otpkey)
+        self.assertTrue(t.is_otpkey_encrypted())
+        self.assertNotEqual(otpkey, t.key_enc)
+        self.assertEqual(32, len(t.key_iv))
+        self.assertIsInstance(t.get_otpkey(), SecretObj)
+        self.assertEqual(to_bytes(otpkey), t.get_otpkey().getKey())
+        self.assertEqual(to_bytes(otpkey), t.get_otpkey(encrypted=True).getKey())
+
+        # Store the otpkey unencrypted
+        t.count = 5
+        t.failcount = 3
+        t.set_otpkey(otpkey, encrypted=False)
+        self.assertFalse(t.is_otpkey_encrypted())
+        self.assertEqual(otpkey, t.key_enc)
+        self.assertEqual("", t.key_iv)
+        # The counters are reset like for encrypted keys
+        self.assertEqual(0, t.count)
+        self.assertEqual(0, t.failcount)
+        # The storage format is detected automatically
+        self.assertIsInstance(t.get_otpkey(), NullCryptoObj)
+        self.assertEqual(to_bytes(otpkey), t.get_otpkey().getKey())
+        self.assertEqual(to_bytes(otpkey), t.get_otpkey(encrypted=False).getKey())
+
+        # The unencrypted otpkey survives a roundtrip through the database
+        t.save()
+        db.session.expire_all()
+        t = Token.query.filter_by(serial="plainkey").first()
+        self.assertFalse(t.is_otpkey_encrypted())
+        self.assertEqual(otpkey, t.key_enc)
+        self.assertEqual(to_bytes(otpkey), t.get_otpkey().getKey())
+
+        # Bytes are stored as unicode
+        t.set_otpkey(to_bytes(otpkey), encrypted=False)
+        self.assertIsInstance(t.key_enc, str)
+        self.assertEqual(otpkey, t.key_enc)
+
+        # The failcounter is only reset on request
+        t.failcount = 3
+        t.set_otpkey(otpkey, reset_failcount=False, encrypted=False)
+        self.assertEqual(3, t.failcount)
+
+        # Switching back to encrypted storage creates a new IV
+        t.set_otpkey(otpkey)
+        self.assertTrue(t.is_otpkey_encrypted())
+        self.assertNotEqual(otpkey, t.key_enc)
+        self.assertEqual(to_bytes(otpkey), t.get_otpkey().getKey())
+
+        t.delete()
 
     def test_02_config_model(self):
         c = Config("splitRealm", True, Type="string", Description="something")
