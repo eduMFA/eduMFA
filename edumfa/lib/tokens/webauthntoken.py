@@ -1580,19 +1580,24 @@ class WebAuthnTokenClass(TokenClass):
                 )
                 reply_dict = {"message": "Passkey challenge already used."}
                 return False, reply_dict
-            # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI
+            # Get token by using the userhandle which is mandatory for resident keys and is equal to the serial in PI.
+            # The userhandle is client-controlled, so the lookup is restricted to WebAuthn tokens: the result's
+            # check_otp() is trusted below, and other token types (e.g. spass, whose check_otp() always
+            # succeeds) must never be able to satisfy a passkey assertion.
             user_handle = getParam(options, "userhandle", required)
             token = get_tokens_from_serial_or_user(
                 serial=user_handle,
                 user=None,
+                tokentype=WebAuthnTokenClass.get_class_type(),
                 active=True,
                 revoked=False,
                 locked=False,
                 for_update=True,
             )[0]
             reply_dict = {}
-            if token is None:
-                log.warning(f"Passkey {user_handle} not found.")
+            if token is None or not isinstance(token, WebAuthnTokenClass):
+                log.warning(f"Passkey {user_handle} not found or not a WebAuthn token.")
+                reply_dict["message"] = "Passkey not found."
                 return False, reply_dict
 
             reply_dict["serial"] = token.token.serial
