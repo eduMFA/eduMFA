@@ -36,6 +36,7 @@ from urllib.parse import unquote
 
 import jwt
 from flask import current_app, jsonify
+from werkzeug.exceptions import BadRequest
 
 from edumfa.lib import _
 from edumfa.lib.utils import get_version, prepare_result, to_unicode
@@ -311,7 +312,15 @@ def get_all_params(request):
             f"Update params in request {request.method} {request.base_url} with JSON data."
         )
         # Add the original JSON data
-        return_param.update(request.json)
+        try:
+            return_param.update(request.json)
+        except BadRequest as exx:
+            # Malformed JSON in the request body. Raise a meaningful
+            # parameter error instead of letting the BadRequest bubble up
+            # and be reported as an internal server error.
+            raise ParameterError(
+                _("The request body does not contain valid JSON: {0!s}").format(exx)
+            )
     elif body:
         # In case of serialized JSON data in the body, add these to the values.
         try:
