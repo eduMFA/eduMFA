@@ -59,7 +59,6 @@ class DockerEnvConfigTestCase(unittest.TestCase):
         return config_module
 
     def tearDown(self):
-        """Clean up the environment mock after each test"""
         # Remove the docker directory from sys.path
         docker_dir = str((Path(__file__).parent.parent / "deploy" / "docker").resolve())
         if docker_dir in sys.path:
