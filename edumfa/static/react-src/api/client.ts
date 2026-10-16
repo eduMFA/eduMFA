@@ -27,6 +27,12 @@ export interface ApiRequestOptions {
   formData?: FormData | undefined;
   headers?: Record<string, string> | undefined;
   params?: Record<string, QueryValue> | undefined;
+  /**
+   * "json" (default) parses and unwraps the eduMFA envelope. "text" returns
+   * the raw response body, e.g. for the audit CSV download; type the call as
+   * `get<string>` in that case.
+   */
+  responseType?: "json" | "text" | undefined;
   signal?: AbortSignal | undefined;
 }
 
@@ -59,6 +65,15 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
         buildUrl(path, options.baseUrl, requestOptions),
         requestInit
       );
+
+      if (requestOptions.responseType === "text") {
+        if (!response.ok) {
+          throw createHttpError(response, await readJsonPayloadSafe(response));
+        }
+
+        return (await response.text()) as TValue;
+      }
+
       const payload = await readJsonPayload(response);
 
       if (!response.ok) {
@@ -144,6 +159,14 @@ function createRequestBody(
   return JSON.stringify(body);
 }
 
+async function readJsonPayloadSafe(response: Response): Promise<unknown> {
+  try {
+    return await readJsonPayload(response);
+  } catch {
+    return null;
+  }
+}
+
 async function readJsonPayload(response: Response): Promise<unknown> {
   const text = await response.text();
 
@@ -178,6 +201,11 @@ function createHttpError(response: Response, payload: unknown): ApiError {
   });
 }
 
+/**
+ * Mirrors the legacy `AuthFactory.authError`: only authentication failures
+ * end the session. Policy denials also answer HTTP 403, but with code 303,
+ * and must keep the session alive.
+ */
 function isAuthError(error: ApiError): boolean {
-  return [401, 403].includes(error.status) || authErrorCodes.has(error.code ?? 0);
+  return error.status === 401 || authErrorCodes.has(error.code ?? 0);
 }

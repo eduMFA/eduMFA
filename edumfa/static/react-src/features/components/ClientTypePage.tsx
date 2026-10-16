@@ -8,6 +8,8 @@ import { ErrorAlert } from "../../components/feedback/ErrorAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
 import { EmptyState } from "../../components/tables/EmptyState";
 import { useAuth } from "../../auth/AuthProvider";
+import { formatLegacyDate } from "../../lib/dates";
+import { hashHref } from "../../lib/hashbang";
 
 export function ClientTypePage() {
   const apiClient = useApiClient();
@@ -27,7 +29,7 @@ export function ClientTypePage() {
       <div className="well">
         <ul className="nav nav-tabs">
           <li className="active">
-            <a href="#/component/clienttype">
+            <a href={hashHref("/component/clienttype")}>
               <span className="glyphicon glyphicon-phone" aria-hidden="true" />
               <Trans>Application Type</Trans>
             </a>
@@ -112,29 +114,4 @@ function ClientTypeRows({ applicationType, clients }: ClientTypeRowsProps) {
       ))}
     </>
   );
-}
-
-function formatLegacyDate(value: string | null): string {
-  if (!value) {
-    return "";
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  const year = String(date.getFullYear());
-  const month = padDatePart(date.getMonth() + 1);
-  const day = padDatePart(date.getDate());
-  const hours = padDatePart(date.getHours());
-  const minutes = padDatePart(date.getMinutes());
-  const seconds = padDatePart(date.getSeconds());
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
-function padDatePart(value: number): string {
-  return String(value).padStart(2, "0");
 }

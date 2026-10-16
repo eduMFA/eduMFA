@@ -75,6 +75,36 @@ describe("createApiClient", () => {
     await expect(apiClient.get("/client/")).rejects.toThrow(ApiError);
     expect(onAuthError).toHaveBeenCalledOnce();
   });
+
+  it("keeps the session on policy denials that also answer 403", async () => {
+    const fetchMock = vi.fn<typeof fetch>();
+    const onAuthError = vi.fn();
+    fetchMock.mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          id: 1,
+          jsonrpc: "2.0",
+          result: {
+            error: {
+              code: 303,
+              message: "Admin actions are defined, but this action is not allowed!"
+            },
+            status: false
+          },
+          version: "eduMFA"
+        }),
+        { status: 403 }
+      )
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const apiClient = createApiClient({ onAuthError });
+
+    await expect(apiClient.get("/resolver/sqlres")).rejects.toThrow(
+      "Admin actions are defined, but this action is not allowed!"
+    );
+    expect(onAuthError).not.toHaveBeenCalled();
+  });
 });
 
 function getFetchUrl(input: RequestInfo | URL): string {

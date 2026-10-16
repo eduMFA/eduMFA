@@ -1,16 +1,16 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { I18nProvider } from "@lingui/react";
 import { useEffect, useMemo, useState } from "react";
-import { HashRouter } from "react-router-dom";
 
 import {
   normalizeHashRoute,
   readReactBootstrapConfig,
   type ReactBootstrapConfig
 } from "./bootstrap";
+import { HashbangRouter } from "./HashbangRouter";
 import { i18n } from "./i18n";
 import { createEduMfaQueryClient } from "./queryClient";
-import { isRouteMigrated, MigratedRoutes } from "./routes";
+import { MigratedRoutes, shouldReactOwnRoute } from "./routes";
 import { ApiClientProvider } from "../api/ApiClientProvider";
 import { AuthProvider } from "../auth/AuthProvider";
 
@@ -21,7 +21,8 @@ export function App() {
   );
   const [queryClient] = useState(() => createEduMfaQueryClient());
   const shouldRenderReact =
-    bootstrapConfig.enabled && isRouteMigrated(currentRoute, bootstrapConfig.routes);
+    bootstrapConfig.enabled &&
+    shouldReactOwnRoute(currentRoute, bootstrapConfig.routes);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -49,9 +50,9 @@ export function App() {
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <ApiClientProvider>
-            <HashRouter>
+            <HashbangRouter>
               <MigratedRoutes />
-            </HashRouter>
+            </HashbangRouter>
           </ApiClientProvider>
         </QueryClientProvider>
       </AuthProvider>

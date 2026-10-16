@@ -13,39 +13,800 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: react-src/features/audit/AuditLogPage.tsx:153
+msgid "{entryCount} entries found."
+msgstr "{entryCount} entries found."
+
+#: react-src/features/audit/AuditLogPage.tsx:437
+msgid "action"
+msgstr "action"
+
+#: react-src/features/audit/AuditLogPage.tsx:455
+msgid "action detail"
+msgstr "action detail"
+
+#: react-src/features/users/UserDetailsPage.tsx:651
+msgid "active"
+msgstr "active"
+
+#: react-src/features/users/UserDetailsPage.tsx:613
+msgid "Active"
+msgstr "Active"
+
+#: react-src/features/audit/AuditLogPage.tsx:170
+msgid "Active filters"
+msgstr "Active filters"
+
+#: react-src/features/users/UserDetailsPage.tsx:532
+msgid "Add"
+msgstr "Add"
+
+#: react-src/features/users/UserAddPage.tsx:68
+msgid "Add a new user"
+msgstr "Add a new user"
+
+#: react-src/features/users/UserListPage.tsx:155
+#: react-src/features/users/UserSidebar.tsx:74
+msgid "Add user"
+msgstr "Add user"
+
+#: react-src/features/audit/AuditLogPage.tsx:473
+msgid "administrator"
+msgstr "administrator"
+
+#: react-src/features/machines/MachineSidebar.tsx:23
+msgid "All Machines"
+msgstr "All Machines"
+
+#: react-src/features/users/UserSidebar.tsx:57
+msgid "All users"
+msgstr "All users"
+
+#: react-src/features/recovery/RecoveryPage.tsx:42
+msgid "An Email to reset the password has been sent to you."
+msgstr "An Email to reset the password has been sent to you."
+
 #: react-src/components/feedback/ErrorAlert.tsx:23
 msgid "An unknown error occurred."
 msgstr "An unknown error occurred."
 
-#: react-src/features/components/ClientTypePage.tsx:32
-#: react-src/features/components/ClientTypePage.tsx:69
+#: react-src/features/audit/AuditLogPage.tsx:243
+msgid "any"
+msgstr "any"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:250
+#: react-src/features/machines/MachineDetailsPage.tsx:390
+msgid "Application"
+msgstr "Application"
+
+#: react-src/features/components/ClientTypePage.tsx:34
+#: react-src/features/components/ClientTypePage.tsx:71
 msgid "Application Type"
 msgstr "Application Type"
 
-#: react-src/features/components/ClientTypePage.tsx:72
+#: react-src/features/users/UserDetailsPage.tsx:695
+msgid "Assign an existing token"
+msgstr "Assign an existing token"
+
+#: react-src/features/users/UserDetailsPage.tsx:692
+msgid "Assign Token"
+msgstr "Assign Token"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:378
+msgid "Attach a new token"
+msgstr "Attach a new token"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:375
+msgid "Attach Token"
+msgstr "Attach Token"
+
+#: react-src/features/audit/AuditLogPage.tsx:154
+msgid "Audit log"
+msgstr "Audit log"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:323
+#: react-src/features/users/UserDetailsPage.tsx:354
+msgid "Cancel"
+msgstr "Cancel"
+
+#: react-src/features/users/UserPasswordPage.tsx:150
+msgid "Change password"
+msgstr "Change password"
+
+#: react-src/features/audit/AuditLogPage.tsx:196
+msgid "Clear all filters"
+msgstr "Clear all filters"
+
+#: react-src/features/audit/AuditLogPage.tsx:549
+msgid "clearance"
+msgstr "clearance"
+
+#: react-src/features/audit/AuditLogPage.tsx:523
+msgid "client"
+msgstr "client"
+
+#: react-src/features/components/ClientTypePage.tsx:74
 msgid "Client"
 msgstr "Client"
+
+#: react-src/features/users/UserAddPage.tsx:67
+msgid "Create a user in an editable user store."
+msgstr "Create a user in an editable user store."
+
+#: react-src/features/users/UserDetailsPage.tsx:449
+#: react-src/features/users/UserDetailsPage.tsx:459
+msgid "Custom attribute"
+msgstr "Custom attribute"
+
+#: react-src/features/users/UserDetailsPage.tsx:469
+#: react-src/features/users/UserDetailsPage.tsx:477
+msgid "Custom attribute name"
+msgstr "Custom attribute name"
+
+#: react-src/features/users/UserDetailsPage.tsx:486
+#: react-src/features/users/UserDetailsPage.tsx:497
+#: react-src/features/users/UserDetailsPage.tsx:509
+#: react-src/features/users/UserDetailsPage.tsx:517
+msgid "Custom attribute value"
+msgstr "Custom attribute value"
+
+#: react-src/features/users/UserDetailsPage.tsx:537
+msgid "Custom attributes"
+msgstr "Custom attributes"
+
+#: react-src/features/users/UserDetailsPage.tsx:564
+msgid "Delete"
+msgstr "Delete"
+
+#: react-src/features/users/UserDetailsPage.tsx:337
+msgid "Delete user"
+msgstr "Delete user"
+
+#: react-src/features/users/UserDetailsPage.tsx:746
+#: react-src/features/users/UserDetailsPage.tsx:761
+msgid "Delete User"
+msgstr "Delete User"
+
+#: react-src/features/users/UserDetailsPage.tsx:619
+#: react-src/features/users/userFieldLabels.ts:10
+#: react-src/features/users/UserListPage.tsx:245
+msgid "description"
+msgstr "description"
+
+#: react-src/features/users/UserPasswordPage.tsx:111
+msgid "Description"
+msgstr "Description"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:346
+msgid "Detach"
+msgstr "Detach"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:201
+msgid "Details"
+msgstr "Details"
+
+#: react-src/features/users/UserDetailsPage.tsx:655
+msgid "disabled"
+msgstr "disabled"
+
+#: react-src/features/users/UserDetailsPage.tsx:753
+msgid "Do you really want to delete the user in the user store?"
+msgstr "Do you really want to delete the user in the user store?"
+
+#: react-src/features/audit/AuditLogPage.tsx:148
+msgid "Download audit log as CSV"
+msgstr "Download audit log as CSV"
+
+#: react-src/features/audit/AuditLogPage.tsx:431
+msgid "duration"
+msgstr "duration"
+
+#: react-src/features/machines/MachineSidebar.tsx:40
+msgid "Edit Machine Resolvers"
+msgstr "Edit Machine Resolvers"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:336
+msgid "Edit Options"
+msgstr "Edit Options"
+
+#: react-src/features/users/UserSidebar.tsx:86
+msgid "Edit realms"
+msgstr "Edit realms"
+
+#: react-src/features/users/UserDetailsPage.tsx:325
+msgid "Edit user"
+msgstr "Edit user"
+
+#: react-src/features/audit/AuditLogPage.tsx:560
+msgid "eduMFA server"
+msgstr "eduMFA server"
+
+#: react-src/features/users/userFieldLabels.ts:11
+#: react-src/features/users/UserListPage.tsx:229
+#: react-src/features/users/UserListPage.tsx:231
+msgid "email"
+msgstr "email"
+
+#: react-src/features/recovery/RecoveryPage.tsx:72
+#: react-src/features/recovery/RecoveryPage.tsx:73
+#: react-src/features/register/RegisterPage.tsx:101
+#: react-src/features/register/RegisterPage.tsx:102
+#: react-src/features/users/UserPasswordPage.tsx:116
+msgid "Email"
+msgstr "Email"
+
+#: react-src/features/audit/AuditLogPage.tsx:425
+msgid "enddate"
+msgstr "enddate"
+
+#: react-src/features/users/UserDetailsPage.tsx:586
+msgid "Enroll New Token"
+msgstr "Enroll New Token"
+
+#: react-src/features/users/UserDetailsPage.tsx:622
+msgid "failcounter"
+msgstr "failcounter"
+
+#: react-src/features/audit/AuditLogPage.tsx:446
+msgid "failed"
+msgstr "failed"
+
+#: react-src/features/users/UserDetailsPage.tsx:195
+msgid "Failed to delete user."
+msgstr "Failed to delete user."
+
+#: react-src/features/recovery/RecoveryResetPage.tsx:57
+msgid "Failed to reset your password."
+msgstr "Failed to reset your password."
+
+#: react-src/features/users/UserDetailsPage.tsx:169
+msgid "Failed to update user."
+msgstr "Failed to update user."
+
+#: react-src/features/audit/AuditLogPage.tsx:172
+msgid "Filters"
+msgstr "Filters"
+
+#: react-src/components/tables/Pagination.tsx:52
+msgid "First"
+msgstr "First"
+
+#: react-src/features/register/RegisterPage.tsx:94
+#: react-src/features/register/RegisterPage.tsx:95
+#: react-src/features/users/UserPasswordPage.tsx:105
+msgid "Given name"
+msgstr "Given name"
+
+#: react-src/features/users/userFieldLabels.ts:12
+#: react-src/features/users/UserListPage.tsx:219
+#: react-src/features/users/UserListPage.tsx:221
+msgid "givenname"
+msgstr "givenname"
+
+#: react-src/features/users/UserSidebar.tsx:118
+msgid "Help about manage Users"
+msgstr "Help about manage Users"
+
+#: react-src/features/users/UserSidebar.tsx:125
+msgid "Help about User Details"
+msgstr "Help about User Details"
+
+#: react-src/features/users/UserSidebar.tsx:132
+msgid "Help about Users"
+msgstr "Help about Users"
+
+#: react-src/features/register/RegisterPage.tsx:52
+msgid "Here you may register a new user account"
+msgstr "Here you may register a new user account"
+
+#: react-src/features/machines/MachineListPage.tsx:131
+#: react-src/features/machines/MachineListPage.tsx:133
+msgid "hostname"
+msgstr "hostname"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:206
+msgid "Hostname"
+msgstr "Hostname"
+
+#: react-src/features/users/userFieldLabels.ts:17
+#: react-src/features/users/UserListPage.tsx:248
+msgid "id"
+msgstr "id"
+
+#: react-src/features/machines/MachineListPage.tsx:151
+#: react-src/features/machines/MachineListPage.tsx:153
+msgid "Id"
+msgstr "Id"
+
+#: react-src/features/recovery/RecoveryPage.tsx:37
+msgid "If you forgot your password, you may set a new one."
+msgstr "If you forgot your password, you may set a new one."
+
+#: react-src/features/audit/AuditLogPage.tsx:529
+msgid "info"
+msgstr "info"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:224
+#: react-src/features/machines/MachineListPage.tsx:141
+#: react-src/features/machines/MachineListPage.tsx:143
+msgid "IP Address"
+msgstr "IP Address"
+
+#: react-src/components/tables/Pagination.tsx:83
+msgid "Last"
+msgstr "Last"
 
 #: react-src/components/feedback/LoadingIndicator.tsx:9
 msgid "Loading"
 msgstr "Loading"
 
-#: react-src/features/components/ClientTypePage.tsx:60
+#: react-src/features/audit/AuditLogPage.tsx:202
+msgid "Loading audit log"
+msgstr "Loading audit log"
+
+#: react-src/features/components/ClientTypePage.tsx:62
 msgid "Loading client applications"
 msgstr "Loading client applications"
 
-#: react-src/features/components/ClientTypePage.tsx:53
+#: react-src/features/machines/MachineDetailsPage.tsx:191
+msgid "Loading machine"
+msgstr "Loading machine"
+
+#: react-src/features/machines/MachineListPage.tsx:115
+msgid "Loading machines"
+msgstr "Loading machines"
+
+#: react-src/features/users/UserAddPage.tsx:83
+msgid "Loading resolvers"
+msgstr "Loading resolvers"
+
+#: react-src/components/forms/SerialLookupField.tsx:93
+msgid "Loading serials..."
+msgstr "Loading serials..."
+
+#: react-src/features/users/UserDetailsPage.tsx:410
+#: react-src/features/users/UserPasswordPage.tsx:95
+msgid "Loading user"
+msgstr "Loading user"
+
+#: react-src/features/users/UserListPage.tsx:183
+msgid "Loading users"
+msgstr "Loading users"
+
+#: react-src/features/audit/AuditLogPage.tsx:159
+#: react-src/features/components/ClientTypePage.tsx:55
+#: react-src/features/machines/MachineDetailsPage.tsx:177
+#: react-src/features/machines/MachineListPage.tsx:105
+#: react-src/features/users/UserAddPage.tsx:73
+#: react-src/features/users/UserDetailsPage.tsx:389
+#: react-src/features/users/UserListPage.tsx:165
+#: react-src/features/users/UserPasswordPage.tsx:78
 msgid "Log in through the legacy UI before opening this migrated route."
 msgstr "Log in through the legacy UI before opening this migrated route."
 
-#: react-src/features/components/ClientTypePage.tsx:78
+#: react-src/features/audit/AuditLogPage.tsx:554
+msgid "log level"
+msgstr "log level"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:172
+#: react-src/features/machines/MachineSidebar.tsx:29
+msgid "Machine {machineId}"
+msgstr "Machine {machineId}"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:216
+msgid "Machine ID"
+msgstr "Machine ID"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:196
+msgid "Machine not found."
+msgstr "Machine not found."
+
+#: react-src/features/machines/MachineDetailsPage.tsx:162
+#: react-src/features/machines/MachineListPage.tsx:161
+#: react-src/features/machines/MachineListPage.tsx:163
+msgid "Machine Resolver"
+msgstr "Machine Resolver"
+
+#. placeholder {0}: filters.resolver
+#: react-src/features/machines/MachineListPage.tsx:98
+msgid "Machine Resolver {0}"
+msgstr "Machine Resolver {0}"
+
+#: react-src/features/machines/MachineListPage.tsx:100
+msgid "Machines"
+msgstr "Machines"
+
+#: react-src/features/users/UserDetailsPage.tsx:625
+msgid "maxfail"
+msgstr "maxfail"
+
+#: react-src/features/audit/AuditLogPage.tsx:539
+msgid "missing_line"
+msgstr "missing_line"
+
+#: react-src/features/users/userFieldLabels.ts:13
+#: react-src/features/users/UserListPage.tsx:242
+msgid "mobile"
+msgstr "mobile"
+
+#: react-src/features/register/RegisterPage.tsx:108
+#: react-src/features/register/RegisterPage.tsx:109
+#: react-src/features/users/UserPasswordPage.tsx:124
+msgid "Mobile"
+msgstr "Mobile"
+
+#: react-src/components/tables/Pagination.tsx:76
+msgid "Next"
+msgstr "Next"
+
+#: react-src/components/feedback/BooleanPill.tsx:15
+#: react-src/features/audit/AuditLogPage.tsx:125
+#: react-src/features/audit/AuditLogPage.tsx:245
+msgid "no"
+msgstr "no"
+
+#: react-src/components/feedback/ConfirmDialog.tsx:23
+msgid "No"
+msgstr "No"
+
+#: react-src/features/audit/AuditLogPage.tsx:273
+msgid "No audit entries match the current filters."
+msgstr "No audit entries match the current filters."
+
+#: react-src/features/components/ClientTypePage.tsx:80
 msgid "No client applications found."
 msgstr "No client applications found."
 
-#: react-src/features/components/ClientTypePage.tsx:47
+#: react-src/features/users/UserDetailsPage.tsx:545
+msgid "No custom attributes set."
+msgstr "No custom attributes set."
+
+#: react-src/features/machines/MachineListPage.tsx:174
+msgid "No machines found."
+msgstr "No machines found."
+
+#: react-src/components/forms/SerialLookupField.tsx:99
+msgid "No serial found"
+msgstr "No serial found"
+
+#: react-src/features/users/UserDetailsPage.tsx:634
+msgid "No tokens assigned."
+msgstr "No tokens assigned."
+
+#: react-src/features/machines/MachineDetailsPage.tsx:260
+msgid "No tokens attached."
+msgstr "No tokens attached."
+
+#: react-src/features/users/UserListPage.tsx:254
+msgid "No users found."
+msgstr "No users found."
+
+#: react-src/features/audit/AuditLogPage.tsx:411
+msgid "number"
+msgstr "number"
+
+#: react-src/features/machines/MachineSidebar.tsx:45
+msgid "Number of machines: {machineCount}"
+msgstr "Number of machines: {machineCount}"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:253
+msgid "Options"
+msgstr "Options"
+
+#: react-src/features/users/UserDetailsPage.tsx:628
+msgid "otplen"
+msgstr "otplen"
+
+#: react-src/features/users/userFieldLabels.ts:14
+msgid "password"
+msgstr "password"
+
+#: react-src/features/recovery/RecoveryResetPage.tsx:84
+#: react-src/features/register/RegisterPage.tsx:122
+#: react-src/features/register/RegisterPage.tsx:123
+#: react-src/features/register/RegisterPage.tsx:134
+#: react-src/features/users/UserPasswordPage.tsx:158
+msgid "Password"
+msgstr "Password"
+
+#: react-src/features/users/UserPasswordPage.tsx:57
+msgid "Password set successfully."
+msgstr "Password set successfully."
+
+#: react-src/features/users/userFieldLabels.ts:15
+#: react-src/features/users/UserListPage.tsx:239
+msgid "phone"
+msgstr "phone"
+
+#: react-src/features/register/RegisterPage.tsx:114
+#: react-src/features/register/RegisterPage.tsx:115
+#: react-src/features/users/UserPasswordPage.tsx:121
+msgid "Phone"
+msgstr "Phone"
+
+#: react-src/features/users/UserDetailsPage.tsx:707
+msgid "PIN/Password"
+msgstr "PIN/Password"
+
+#: react-src/features/recovery/RecoveryResetPage.tsx:77
+msgid "Please enter a new password."
+msgstr "Please enter a new password."
+
+#: react-src/features/audit/AuditLogPage.tsx:146
+msgid "Please Wait! Crunching data..."
+msgstr "Please Wait! Crunching data..."
+
+#: react-src/features/audit/AuditLogPage.tsx:517
+msgid "policies"
+msgstr "policies"
+
+#: react-src/components/tables/Pagination.tsx:59
+msgid "Previous"
+msgstr "Previous"
+
+#: react-src/features/recovery/RecoveryResetPage.tsx:52
+msgid "Proceed to login"
+msgstr "Proceed to login"
+
+#: react-src/features/users/UserPasswordPage.tsx:99
+msgid "Profile"
+msgstr "Profile"
+
+#: react-src/features/machines/MachineSidebar.tsx:35
+#: react-src/features/users/UserSidebar.tsx:80
+msgid "Quick links"
+msgstr "Quick links"
+
+#: react-src/features/audit/AuditLogPage.tsx:494
+msgid "realm"
+msgstr "realm"
+
+#: react-src/features/users/UserDetailsPage.tsx:375
+msgid "Realm"
+msgstr "Realm"
+
+#. placeholder {0}: user.realm
+#: react-src/features/users/UserPasswordPage.tsx:72
+msgid "Realm {0}"
+msgstr "Realm {0}"
+
+#: react-src/features/users/UserListPage.tsx:159
+msgid "Realm {activeRealm}"
+msgstr "Realm {activeRealm}"
+
+#: react-src/features/components/ClientTypePage.tsx:49
 msgid "Refresh"
 msgstr "Refresh"
+
+#: react-src/features/register/RegisterPage.tsx:73
+#: react-src/features/register/RegisterPage.tsx:148
+msgid "Register"
+msgstr "Register"
+
+#: react-src/features/audit/AuditLogPage.tsx:178
+msgid "Remove filter {name}"
+msgstr "Remove filter {name}"
+
+#: react-src/features/recovery/RecoveryResetPage.tsx:96
+#: react-src/features/users/UserPasswordPage.tsx:172
+#: react-src/features/users/UserPasswordPage.tsx:176
+msgid "Repeat password"
+msgstr "Repeat password"
+
+#: react-src/features/users/UserDetailsPage.tsx:721
+#: react-src/features/users/UserDetailsPage.tsx:728
+msgid "Repeat PIN or password"
+msgstr "Repeat PIN or password"
 
 #: react-src/components/feedback/ErrorAlert.tsx:13
 msgid "Request failed"
 msgstr "Request failed"
+
+#: react-src/features/recovery/RecoveryPage.tsx:58
+#: react-src/features/recovery/RecoveryResetPage.tsx:110
+msgid "Reset Password"
+msgstr "Reset Password"
+
+#: react-src/features/recovery/RecoveryResetPage.tsx:74
+msgid "Reset your Password"
+msgstr "Reset your Password"
+
+#: react-src/features/audit/AuditLogPage.tsx:505
+msgid "resolver"
+msgstr "resolver"
+
+#: react-src/features/users/UserAddPage.tsx:108
+#: react-src/features/users/UserDetailsPage.tsx:379
+msgid "Resolver"
+msgstr "Resolver"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:314
+msgid "Save Options"
+msgstr "Save Options"
+
+#: react-src/features/users/UserAddPage.tsx:101
+#: react-src/features/users/UserDetailsPage.tsx:351
+msgid "Save user"
+msgstr "Save user"
+
+#: react-src/features/users/UserListPage.tsx:119
+msgid "Select Realm"
+msgstr "Select Realm"
+
+#: react-src/features/recovery/RecoveryPage.tsx:84
+msgid "Send Reset Code"
+msgstr "Send Reset Code"
+
+#: react-src/features/audit/AuditLogPage.tsx:461
+#: react-src/features/users/UserDetailsPage.tsx:607
+msgid "serial"
+msgstr "serial"
+
+#: react-src/components/forms/SerialLookupField.tsx:68
+#: react-src/features/machines/MachineDetailsPage.tsx:247
+msgid "Serial"
+msgstr "Serial"
+
+#: react-src/features/users/UserPasswordPage.tsx:147
+msgid "set password"
+msgstr "set password"
+
+#: react-src/features/audit/AuditLogPage.tsx:534
+msgid "sig_check"
+msgstr "sig_check"
+
+#: react-src/features/users/UserDetailsPage.tsx:700
+msgid "start typing a serial number of a token that is notassigned, yet."
+msgstr "start typing a serial number of a token that is notassigned, yet."
+
+#: react-src/features/machines/MachineDetailsPage.tsx:384
+msgid "start typing a serial number of a token."
+msgstr "start typing a serial number of a token."
+
+#: react-src/features/audit/AuditLogPage.tsx:418
+msgid "startdate"
+msgstr "startdate"
+
+#: react-src/features/audit/AuditLogPage.tsx:443
+#: react-src/features/audit/AuditLogPage.tsx:447
+msgid "success"
+msgstr "success"
+
+#: react-src/features/users/userFieldLabels.ts:16
+#: react-src/features/users/UserListPage.tsx:209
+#: react-src/features/users/UserListPage.tsx:211
+msgid "surname"
+msgstr "surname"
+
+#: react-src/features/register/RegisterPage.tsx:87
+#: react-src/features/register/RegisterPage.tsx:88
+#: react-src/features/users/UserPasswordPage.tsx:108
+msgid "Surname"
+msgstr "Surname"
+
+#: react-src/features/users/UserPasswordPage.tsx:185
+msgid "The passwords do not match."
+msgstr "The passwords do not match."
+
+#: react-src/features/users/UserDetailsPage.tsx:734
+msgid "The PINs do not match."
+msgstr "The PINs do not match."
+
+#: react-src/features/users/UserAddPage.tsx:127
+msgid "These are the resolvers marked as editable. You can add a user to the resolver. The user will appear in the realms, that contain this resolver."
+msgstr "These are the resolvers marked as editable. You can add a user to the resolver. The user will appear in the realms, that contain this resolver."
+
+#: react-src/features/audit/AuditLogPage.tsx:544
+msgid "thread_id"
+msgstr "thread_id"
+
+#: react-src/features/users/UserDetailsPage.tsx:288
+msgid "Token assigned successfully."
+msgstr "Token assigned successfully."
+
+#: react-src/features/audit/AuditLogPage.tsx:467
+msgid "token type"
+msgstr "token type"
+
+#: react-src/features/users/UserDetailsPage.tsx:590
+msgid "Tokens"
+msgstr "Tokens"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:233
+msgid "Tokens and Applications"
+msgstr "Tokens and Applications"
+
+#: react-src/features/users/UserSidebar.tsx:95
+msgid "total users:"
+msgstr "total users:"
+
+#: react-src/features/users/UserDetailsPage.tsx:610
+msgid "type"
+msgstr "type"
+
+#: react-src/features/recovery/RecoveryResetPage.tsx:85
+#: react-src/features/users/UserPasswordPage.tsx:164
+msgid "Type a password"
+msgstr "Type a password"
+
+#: react-src/features/users/UserDetailsPage.tsx:716
+msgid "Type a PIN or password"
+msgstr "Type a PIN or password"
+
+#: react-src/features/audit/AuditLogPage.tsx:479
+msgid "user"
+msgstr "user"
+
+#: react-src/features/users/UserSidebar.tsx:64
+msgid "User {detailsUsername}"
+msgstr "User {detailsUsername}"
+
+#: react-src/features/register/RegisterPage.tsx:57
+msgid "User account created. An Email has been sent to you."
+msgstr "User account created. An Email has been sent to you."
+
+#: react-src/features/users/UserAddPage.tsx:55
+msgid "User created."
+msgstr "User created."
+
+#: react-src/features/users/UserDetailsPage.tsx:201
+msgid "User deleted successfully."
+msgstr "User deleted successfully."
+
+#: react-src/features/users/UserAddPage.tsx:104
+#: react-src/features/users/UserDetailsPage.tsx:429
+msgid "User details"
+msgstr "User details"
+
+#: react-src/features/users/UserDetailsPage.tsx:415
+msgid "User not found."
+msgstr "User not found."
+
+#: react-src/features/users/UserDetailsPage.tsx:175
+msgid "User updated successfully."
+msgstr "User updated successfully."
+
+#: react-src/features/users/userFieldLabels.ts:18
+#: react-src/features/users/UserListPage.tsx:199
+#: react-src/features/users/UserListPage.tsx:201
+msgid "username"
+msgstr "username"
+
+#: react-src/features/recovery/RecoveryPage.tsx:65
+#: react-src/features/recovery/RecoveryPage.tsx:66
+#: react-src/features/register/RegisterPage.tsx:80
+#: react-src/features/register/RegisterPage.tsx:81
+#: react-src/features/users/UserPasswordPage.tsx:102
+msgid "Username"
+msgstr "Username"
+
+#: react-src/features/users/UserListPage.tsx:160
+msgid "Users"
+msgstr "Users"
+
+#: react-src/features/users/UserDetailsPage.tsx:370
+msgid "View user in Audit log"
+msgstr "View user in Audit log"
+
+#: react-src/features/users/UserDetailsPage.tsx:616
+msgid "window"
+msgstr "window"
+
+#: react-src/components/feedback/BooleanPill.tsx:16
+#: react-src/features/audit/AuditLogPage.tsx:125
+#: react-src/features/audit/AuditLogPage.tsx:244
+msgid "yes"
+msgstr "yes"
+
+#: react-src/features/users/UserAddPage.tsx:148
+msgid "You have no editable resolvers defined. So you can not write to any user store. If you want to add users, you need to <0>define an editable resolver</0> (like SQLResolver) and check the box \"Edit user store\"."
+msgstr "You have no editable resolvers defined. So you can not write to any user store. If you want to add users, you need to <0>define an editable resolver</0> (like SQLResolver) and check the box \"Edit user store\"."
+
+#: react-src/features/users/UserPasswordPage.tsx:73
+#: react-src/features/users/UserSidebar.tsx:44
+msgid "Your details"
+msgstr "Your details"
+
+#: react-src/features/recovery/RecoveryResetPage.tsx:50
+msgid "Your password has been reset successfully."
+msgstr "Your password has been reset successfully."

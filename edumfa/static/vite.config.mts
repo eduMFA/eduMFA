@@ -1,16 +1,9 @@
-import babel from "@rolldown/plugin-babel";
-import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
+import { lingui } from "@lingui/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    lingui(),
-    babel({
-      presets: [linguiTransformerBabelPreset()]
-    })
-  ],
+  plugins: [react(), lingui({ macroTransform: true })],
   build: {
     emptyOutDir: true,
     manifest: true,

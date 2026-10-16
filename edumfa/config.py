@@ -52,8 +52,20 @@ class Config:
     EDUMFA_LOGLEVEL = logging.INFO
     CACHE_TYPE = "simple"
     EDUMFA_EXTERNAL_LINKS = True
-    EDUMFA_REACT_UI = False
-    EDUMFA_REACT_ROUTES = ["/component/clienttype"]
+    EDUMFA_REACT_UI = True
+    EDUMFA_REACT_ROUTES = [
+        "/component/clienttype",
+        "/register",
+        "/recovery",
+        "/reset/:user/:recoverycode",
+        "/audit/log",
+        "/user/list",
+        "/user/details/:realm/:user",
+        "/user/add",
+        "/user/password",
+        "/machine/list",
+        "/machine/details/:id/:resolver",
+    ]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # EDUMFA_GNUPG_HOME = "gpg"
     # EDUMFA_LOGO = "otherlogo.png"

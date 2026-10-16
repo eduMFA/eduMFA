@@ -29,8 +29,7 @@ export interface EduMfaErrorEnvelope {
 }
 
 export type EduMfaEnvelope<TValue> =
-  | EduMfaSuccessEnvelope<TValue>
-  | EduMfaErrorEnvelope;
+  EduMfaSuccessEnvelope<TValue> | EduMfaErrorEnvelope;
 
 export class ApiError extends Error {
   readonly code: number | null;

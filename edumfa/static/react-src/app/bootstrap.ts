@@ -1,4 +1,16 @@
-const defaultMigratedRoutes = ["/component/clienttype"];
+const defaultMigratedRoutes = [
+  "/component/clienttype",
+  "/register",
+  "/recovery",
+  "/reset/:user/:recoverycode",
+  "/audit/log",
+  "/user/list",
+  "/user/details/:realm/:user",
+  "/user/add",
+  "/user/password",
+  "/machine/list",
+  "/machine/details/:id/:resolver"
+];
 
 export interface ReactBootstrapConfig {
   angularRootId: string;

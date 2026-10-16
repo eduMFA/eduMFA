@@ -206,7 +206,20 @@ def single_page_application():
         gdpr_link = ""
 
     react_routes = current_app.config.get(
-        "EDUMFA_REACT_ROUTES", ["/component/clienttype"]
+        "EDUMFA_REACT_ROUTES",
+        [
+            "/component/clienttype",
+            "/register",
+            "/recovery",
+            "/reset/:user/:recoverycode",
+            "/audit/log",
+            "/user/list",
+            "/user/details/:realm/:user",
+            "/user/add",
+            "/user/password",
+            "/machine/list",
+            "/machine/details/:id/:resolver",
+        ],
     )
     if isinstance(react_routes, str):
         react_routes = [
