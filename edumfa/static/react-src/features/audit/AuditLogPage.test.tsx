@@ -148,7 +148,9 @@ describe("AuditLogPage", () => {
     const chipRemoveButton = screen.getByRole("button", {
       name: "Remove filter success"
     });
-    expect(chipRemoveButton.parentElement).toHaveTextContent("success: no");
+    expect(chipRemoveButton.closest('[data-chip="success"]')).toHaveTextContent(
+      "success: no"
+    );
 
     await user.click(chipRemoveButton);
 
@@ -208,10 +210,10 @@ describe("AuditLogPage", () => {
     const failedRow = (await screen.findByText("POST /validate/check")).closest("tr");
     expect(failedRow).not.toBeNull();
     expect(failedRow).toHaveTextContent("failed");
-    expect(failedRow?.querySelector(".label-danger")).not.toBeNull();
+    expect(failedRow?.querySelector('[data-value="false"]')).not.toBeNull();
 
     const okRow = screen.getByText("POST /auth").closest("tr");
-    expect(okRow?.querySelector(".label-success")).not.toBeNull();
+    expect(okRow?.querySelector('[data-value="true"]')).not.toBeNull();
   });
 });
 

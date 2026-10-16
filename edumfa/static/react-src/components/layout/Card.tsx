@@ -1,8 +1,8 @@
+import { Box, Divider, Group, Paper, Title } from "@mantine/core";
 import type { PropsWithChildren, ReactNode } from "react";
 
 export interface CardProps {
   actions?: ReactNode;
-  className?: string | undefined;
   /** Removes the body padding, e.g. for a table that fills the card. */
   flush?: boolean;
   footer?: ReactNode;
@@ -10,33 +10,53 @@ export interface CardProps {
   title?: ReactNode;
 }
 
+/** Bordered section panel with an optional header row and footer toolbar. */
 export function Card({
   actions,
   children,
-  className,
   flush = false,
   footer,
   footerAlign = "start",
   title
 }: PropsWithChildren<CardProps>) {
-  const classNames = ["react-card", flush ? "react-card--flush" : "", className ?? ""]
-    .filter((name) => name.length > 0)
-    .join(" ");
-  const footerClassNames =
-    footerAlign === "center"
-      ? "react-card__footer react-card__footer--center"
-      : "react-card__footer";
-
   return (
-    <section className={classNames}>
+    <Paper
+      component="section"
+      mb="lg"
+      radius="md"
+      style={{ overflow: "hidden" }}
+      withBorder
+    >
       {title || actions ? (
-        <div className="react-card__header">
-          {title ? <h3 className="react-card__title">{title}</h3> : <span />}
-          {actions ? <div className="react-card__actions">{actions}</div> : null}
-        </div>
+        <>
+          <Group justify="space-between" px="md" py="sm" wrap="wrap">
+            {title ? (
+              <Title order={3} size="h5">
+                {title}
+              </Title>
+            ) : (
+              <span />
+            )}
+            {actions ? <Group gap="xs">{actions}</Group> : null}
+          </Group>
+          <Divider />
+        </>
       ) : null}
-      <div className="react-card__body">{children}</div>
-      {footer ? <div className={footerClassNames}>{footer}</div> : null}
-    </section>
+      <Box p={flush ? 0 : "md"}>{children}</Box>
+      {footer ? (
+        <>
+          <Divider />
+          <Group
+            bg="var(--mantine-color-gray-0)"
+            gap="xs"
+            justify={footerAlign === "center" ? "center" : "flex-start"}
+            px="md"
+            py="sm"
+          >
+            {footer}
+          </Group>
+        </>
+      ) : null}
+    </Paper>
   );
 }

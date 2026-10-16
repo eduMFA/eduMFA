@@ -1,8 +1,17 @@
 import { Trans } from "@lingui/react/macro";
+import { Box, Divider, NavLink, Stack, Text } from "@mantine/core";
+import {
+  IconInfoCircle,
+  IconSettings,
+  IconUser,
+  IconUserPlus,
+  IconUsers
+} from "@tabler/icons-react";
 import type { ReactNode } from "react";
 
 import { useAuth } from "../../auth/AuthProvider";
 import { hasRight } from "../../auth/permissions";
+import { SidebarSection } from "../../components/layout/SidebarSection";
 import { hashHref } from "../../lib/hashbang";
 
 export type UserSidebarItem = "add" | "details" | "list" | "password";
@@ -33,104 +42,95 @@ export function UserSidebar({
   const isUser = user?.role === "user";
 
   return (
-    <>
+    <Stack gap={2}>
       {isUser && hasRight(rights, "userlist") ? (
-        <ul className="nav nav-pills nav-stacked">
-          <li
-            className={activeItem === "password" ? "active" : undefined}
-            role="presentation"
-          >
-            <a href={hashHref("/user/password")}>
-              <Trans>Your details</Trans>
-            </a>
-          </li>
-        </ul>
+        <NavLink
+          active={activeItem === "password"}
+          component="a"
+          href={hashHref("/user/password")}
+          label={<Trans>Your details</Trans>}
+          leftSection={<IconUser size={16} />}
+        />
       ) : null}
 
       {isAdmin ? (
-        <ul className="nav nav-pills nav-stacked">
-          <li
-            className={activeItem === "list" ? "active" : undefined}
-            role="presentation"
-          >
-            <a href={hashHref("/user/list")}>
-              <Trans>All users</Trans>
-            </a>
-          </li>
-          {realmSelector ? <li role="presentation">{realmSelector}</li> : null}
+        <>
+          <NavLink
+            active={activeItem === "list"}
+            component="a"
+            href={hashHref("/user/list")}
+            label={<Trans>All users</Trans>}
+            leftSection={<IconUsers size={16} />}
+          />
+          {realmSelector ? (
+            <Box px="sm" py="xs">
+              {realmSelector}
+            </Box>
+          ) : null}
           {activeItem === "details" ? (
-            <li className="active" role="presentation">
-              <a>
-                <Trans>User {detailsUsername}</Trans>
-              </a>
-            </li>
+            <NavLink
+              active
+              label={<Trans>User {detailsUsername}</Trans>}
+              leftSection={<IconUser size={16} />}
+            />
           ) : null}
           {hasRight(rights, "adduser") ? (
-            <li
-              className={activeItem === "add" ? "active" : undefined}
-              role="presentation"
-            >
-              <a href={hashHref("/user/add")}>
-                <Trans>Add user</Trans>
-              </a>
-            </li>
+            <NavLink
+              active={activeItem === "add"}
+              component="a"
+              href={hashHref("/user/add")}
+              label={<Trans>Add user</Trans>}
+              leftSection={<IconUserPlus size={16} />}
+            />
           ) : null}
-          <li className="react-sidebar-section">
-            <span>
-              <Trans>Quick links</Trans>
-            </span>
-            <ul className="nav nav-pills nav-stacked">
-              {hasRight(rights, "resolverwrite") ? (
-                <li>
-                  <a href={hashHref("/config/realms/list")}>
-                    <Trans>Edit realms</Trans>
-                  </a>
-                </li>
-              ) : null}
-            </ul>
-          </li>
+          <SidebarSection>
+            <Trans>Quick links</Trans>
+          </SidebarSection>
+          {hasRight(rights, "resolverwrite") ? (
+            <NavLink
+              component="a"
+              href={hashHref("/config/realms/list")}
+              label={<Trans>Edit realms</Trans>}
+              leftSection={<IconSettings size={16} />}
+            />
+          ) : null}
           {userCount !== undefined ? (
-            <li className="react-sidebar-meta">
-              <span>
-                <Trans>total users:</Trans>
-              </span>
-              &nbsp;{userCount}
-            </li>
+            <Text c="dimmed" px="sm" py="xs" size="sm">
+              <Trans>total users:</Trans> {userCount}
+            </Text>
           ) : null}
-          <li>
-            <hr />
-          </li>
-          <li role="presentation">
-            <HelpLink activeItem={activeItem} />
-          </li>
-        </ul>
+          <Divider my="xs" />
+          <HelpLink activeItem={activeItem} />
+        </>
       ) : null}
-    </>
+    </Stack>
   );
 }
 
 function HelpLink({ activeItem }: { activeItem: UserSidebarItem }) {
-  switch (activeItem) {
-    case "add":
-      return (
-        <a href={`${docsBaseUrl}manage_users.html`} target="_external">
-          <span className="glyphicon glyphicon-info-sign" aria-hidden="true" />
-          <Trans>Help about manage Users</Trans>
-        </a>
-      );
-    case "details":
-      return (
-        <a href={`${docsBaseUrl}user_details.html`} target="_external">
-          <span className="glyphicon glyphicon-info-sign" aria-hidden="true" />
-          <Trans>Help about User Details</Trans>
-        </a>
-      );
-    default:
-      return (
-        <a href={`${docsBaseUrl}index.html#users`} target="_external">
-          <span className="glyphicon glyphicon-info-sign" aria-hidden="true" />
-          <Trans>Help about Users</Trans>
-        </a>
-      );
-  }
+  const target =
+    activeItem === "add"
+      ? {
+          href: `${docsBaseUrl}manage_users.html`,
+          label: <Trans>Help about manage Users</Trans>
+        }
+      : activeItem === "details"
+        ? {
+            href: `${docsBaseUrl}user_details.html`,
+            label: <Trans>Help about User Details</Trans>
+          }
+        : {
+            href: `${docsBaseUrl}index.html#users`,
+            label: <Trans>Help about Users</Trans>
+          };
+
+  return (
+    <NavLink
+      component="a"
+      href={target.href}
+      label={target.label}
+      leftSection={<IconInfoCircle size={16} />}
+      target="_external"
+    />
+  );
 }

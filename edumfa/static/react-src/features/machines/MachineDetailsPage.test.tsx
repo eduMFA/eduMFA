@@ -10,6 +10,7 @@ import {
   getJsonRequestBody,
   stubLegacySession
 } from "../../tests/fetchMockUtils";
+import { fieldLabel } from "../../tests/labels";
 import { renderWithProviders } from "../../tests/renderWithProviders";
 
 const machine = { hostname: "web1", id: "m1", ip: "10.0.0.1", resolver_name: "hosts1" };
@@ -60,7 +61,7 @@ describe("MachineDetailsPage", () => {
       "#!/machine/list?resolver=hosts1"
     );
 
-    const applicationSelect = screen.getByLabelText("Application");
+    const applicationSelect = screen.getByLabelText(fieldLabel("Application"));
     expect(applicationSelect).toContainHTML('<option value="ssh">ssh</option>');
     expect(applicationSelect).not.toContainHTML("offline");
   });
@@ -76,12 +77,15 @@ describe("MachineDetailsPage", () => {
     await screen.findByText("web1");
 
     const attachButton = screen.getByRole("button", { name: "Attach Token" });
-    await user.type(screen.getByLabelText("Serial"), "SSH0002 (sshkey) ");
-    await user.selectOptions(screen.getByLabelText("Application"), "ssh");
+    await user.type(
+      screen.getByRole("combobox", { name: fieldLabel("Serial") }),
+      "SSH0002 (sshkey) "
+    );
+    await user.selectOptions(screen.getByLabelText(fieldLabel("Application")), "ssh");
     expect(attachButton).toBeDisabled();
 
-    await user.type(screen.getByLabelText("User"), "deploy");
-    await user.selectOptions(screen.getByLabelText("Service_id"), "web");
+    await user.type(screen.getByLabelText(fieldLabel("User")), "deploy");
+    await user.selectOptions(screen.getByLabelText(fieldLabel("Service_id")), "web");
     await user.click(attachButton);
 
     await waitFor(() => {
@@ -128,7 +132,7 @@ describe("MachineDetailsPage", () => {
     await screen.findByText("web1");
     await user.click(screen.getByRole("button", { name: "Edit Options" }));
 
-    const userOption = screen.getByLabelText("User");
+    const userOption = screen.getByLabelText(fieldLabel("User"));
     await user.clear(userOption);
     await user.type(userOption, "admin");
     await user.click(screen.getByRole("button", { name: "Save Options" }));

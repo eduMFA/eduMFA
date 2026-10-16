@@ -1,9 +1,10 @@
 import { Trans } from "@lingui/react/macro";
-import { useEffect, useRef, type ReactNode } from "react";
+import { Button, Group, Modal, Text } from "@mantine/core";
+import type { ReactNode } from "react";
 
 export interface ConfirmDialogProps {
   cancelLabel?: ReactNode;
-  confirmClassName?: string;
+  confirmColor?: string;
   confirmLabel: ReactNode;
   id: string;
   isOpen: boolean;
@@ -15,13 +16,12 @@ export interface ConfirmDialogProps {
 }
 
 /**
- * Bootstrap 3 confirmation modal driven by React state instead of the legacy
- * jQuery `$('#dialog').modal()` call. Escape closes it and focus lands on the
- * cancel button so a stray Enter key never confirms a destructive action.
+ * Confirmation modal replacing the legacy jQuery `$('#dialog').modal()` call.
+ * Escape and the overlay cancel; focus is trapped inside the dialog.
  */
 export function ConfirmDialog({
   cancelLabel = <Trans>No</Trans>,
-  confirmClassName = "btn btn-danger",
+  confirmColor = "red",
   confirmLabel,
   id,
   isOpen,
@@ -31,83 +31,17 @@ export function ConfirmDialog({
   onConfirm,
   title
 }: ConfirmDialogProps) {
-  const cancelButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!isOpen) {
-      return undefined;
-    }
-
-    cancelButtonRef.current?.focus();
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onCancel();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, onCancel]);
-
-  if (!isOpen) {
-    return null;
-  }
-
-  const titleId = `${id}-title`;
-
   return (
-    <>
-      <div className="modal-backdrop fade in" />
-      <div
-        aria-labelledby={titleId}
-        aria-modal="true"
-        className="modal fade in"
-        id={id}
-        role="dialog"
-        style={{ display: "block" }}
-        tabIndex={-1}
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button
-                aria-label="Close"
-                className="close"
-                onClick={onCancel}
-                type="button"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h4 className="modal-title" id={titleId}>
-                {title}
-              </h4>
-            </div>
-            <div className="modal-body">{message}</div>
-            <div className="modal-footer">
-              <button
-                className="btn btn-default"
-                onClick={onCancel}
-                ref={cancelButtonRef}
-                type="button"
-              >
-                {cancelLabel}
-              </button>
-              <button
-                className={confirmClassName}
-                disabled={isPending}
-                onClick={onConfirm}
-                type="button"
-              >
-                {confirmLabel}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <Modal centered id={id} onClose={onCancel} opened={isOpen} title={title}>
+      <Text size="sm">{message}</Text>
+      <Group justify="flex-end" mt="lg">
+        <Button data-autofocus onClick={onCancel} variant="default">
+          {cancelLabel}
+        </Button>
+        <Button color={confirmColor} loading={isPending} onClick={onConfirm}>
+          {confirmLabel}
+        </Button>
+      </Group>
+    </Modal>
   );
 }

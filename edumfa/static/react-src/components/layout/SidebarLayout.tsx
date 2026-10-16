@@ -1,3 +1,4 @@
+import { Box, Grid, Paper } from "@mantine/core";
 import type { PropsWithChildren, ReactNode } from "react";
 
 export interface SidebarLayoutProps {
@@ -14,13 +15,17 @@ export function SidebarLayout({
   sidebar
 }: PropsWithChildren<SidebarLayoutProps>) {
   return (
-    <div className="react-migration-shell">
-      <div className="react-layout">
-        <aside className="react-layout__sidebar">
-          <nav className="pa-sidebar">{sidebar}</nav>
-        </aside>
-        <main className="react-layout__main">{children}</main>
-      </div>
-    </div>
+    <Box className="react-migration-shell">
+      <Grid align="flex-start" gap="lg">
+        <Grid.Col span={{ base: 12, lg: 3 }}>
+          <Paper component="nav" p="xs" pos="sticky" radius="md" top={12} withBorder>
+            {sidebar}
+          </Paper>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, lg: 9 }}>
+          <main>{children}</main>
+        </Grid.Col>
+      </Grid>
+    </Box>
   );
 }

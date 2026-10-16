@@ -1,4 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
+import { Anchor, Button, NativeSelect, Text } from "@mantine/core";
+import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -12,6 +14,7 @@ import { createUser, userQueryKeys } from "../../api/users";
 import { useAuth } from "../../auth/AuthProvider";
 import { ErrorAlert } from "../../components/feedback/ErrorAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
 import { Card } from "../../components/layout/Card";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { SidebarLayout } from "../../components/layout/SidebarLayout";
@@ -52,7 +55,7 @@ export function UserAddPage() {
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
-      pushFlash(t`User created.`);
+      pushFlash(t`User created.`, "success");
       void navigate("/user/list");
     }
   });
@@ -68,14 +71,7 @@ export function UserAddPage() {
         title={<Trans>Add a new user</Trans>}
       />
 
-      {!isAuthenticated ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>
-            Log in through the legacy UI before opening this migrated route.
-          </Trans>
-        </div>
-      ) : null}
-
+      {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={resolversQuery.error} />
       <ErrorAlert error={createMutation.error} />
 
@@ -92,45 +88,36 @@ export function UserAddPage() {
         {resolverNames.length > 0 ? (
           <Card
             footer={
-              <button
-                className="btn btn-primary"
-                disabled={!formState.isValid || createMutation.isPending}
+              <Button
+                disabled={!formState.isValid}
+                leftSection={<IconDeviceFloppy size={16} />}
+                loading={createMutation.isPending}
                 type="submit"
               >
-                <span className="glyphicon glyphicon-save" aria-hidden="true" />
                 <Trans>Save user</Trans>
-              </button>
+              </Button>
             }
             title={<Trans>User details</Trans>}
           >
-            <div className="form-group">
-              <label htmlFor="resolvername">
-                <Trans>Resolver</Trans>
-              </label>
-              <select
-                className="form-control"
-                id="resolvername"
-                onChange={(event) => {
-                  setSelectedResolver(event.target.value);
-                  reset({});
-                }}
-                required
-                value={activeResolver}
-              >
-                {resolverNames.map((resolverName) => (
-                  <option key={resolverName} value={resolverName}>
-                    {resolverName}
-                  </option>
-                ))}
-              </select>
-              <span className="help-block">
+            <NativeSelect
+              data={resolverNames}
+              description={
                 <Trans>
                   These are the resolvers marked as editable. You can add a user to the
                   resolver. The user will appear in the realms, that contain this
                   resolver.
                 </Trans>
-              </span>
-            </div>
+              }
+              id="resolvername"
+              label={<Trans>Resolver</Trans>}
+              mb="md"
+              onChange={(event) => {
+                setSelectedResolver(event.currentTarget.value);
+                reset({});
+              }}
+              required
+              value={activeResolver}
+            />
 
             <UserAttributeFields
               errors={formState.errors}
@@ -144,16 +131,16 @@ export function UserAddPage() {
 
         {resolversQuery.isSuccess && resolverNames.length === 0 ? (
           <Card>
-            <p className="help-block">
+            <Text size="sm">
               <Trans>
                 You have no editable resolvers defined. So you can not write to any user
                 store. If you want to add users, you need to{" "}
-                <a href={hashHref("/config/resolvers/list")}>
+                <Anchor href={hashHref("/config/resolvers/list")} size="sm">
                   define an editable resolver
-                </a>{" "}
+                </Anchor>{" "}
                 (like SQLResolver) and check the box "Edit user store".
               </Trans>
-            </p>
+            </Text>
           </Card>
         ) : null}
       </form>

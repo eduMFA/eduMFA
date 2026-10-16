@@ -1,6 +1,7 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
+import { Autocomplete, Loader } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { useId, useMemo, type ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 
 import { useApiClient } from "../../api/ApiClientProvider";
 import { getTokens, tokenQueryKeys, type TokenListParams } from "../../api/tokens";
@@ -23,8 +24,8 @@ export interface SerialLookupFieldProps {
 
 /**
  * Serial input with live suggestions from `GET /token/`, replacing the
- * `uib-typeahead` directives. Suggestions are offered through a native
- * `<datalist>`; pass the selected value through `fixSerial` before use.
+ * `uib-typeahead` directives. Pass the selected value through `fixSerial`
+ * before use.
  */
 export function SerialLookupField({
   id,
@@ -37,8 +38,8 @@ export function SerialLookupField({
   value
 }: SerialLookupFieldProps) {
   const apiClient = useApiClient();
+  const { t } = useLingui();
   const { isAuthenticated } = useAuth();
-  const suggestionListId = useId();
   const searchTerm = useDebouncedValue(value.trim(), 150);
   const params = useMemo<TokenListParams>(() => {
     const listParams: TokenListParams = { serial: `*${searchTerm}*` };
@@ -62,43 +63,22 @@ export function SerialLookupField({
   const suggestions = (suggestionsQuery.data?.tokens ?? []).map((token) =>
     formatSerialSuggestion(token, { includeUser })
   );
+  const noResults = canSearch && suggestionsQuery.isSuccess && suggestions.length === 0;
 
   return (
-    <div className="form-group">
-      <label htmlFor={id}>{label ?? <Trans>Serial</Trans>}</label>
-      <input
-        autoComplete="off"
-        className="form-control"
-        id={id}
-        list={suggestionListId}
-        onChange={(event) => {
-          onChange(event.target.value);
-        }}
-        placeholder={placeholder}
-        required={required}
-        type="text"
-        value={value}
-      />
-      <datalist id={suggestionListId}>
-        {suggestions.map((suggestion) => (
-          <option key={suggestion} value={suggestion} />
-        ))}
-      </datalist>
-      {suggestionsQuery.isFetching ? (
-        <div className="help-block">
-          <span
-            className="glyphicon glyphicon-refresh glyphicon-spin"
-            aria-hidden="true"
-          />{" "}
-          <Trans>Loading serials...</Trans>
-        </div>
-      ) : null}
-      {canSearch && suggestionsQuery.isSuccess && suggestions.length === 0 ? (
-        <div className="help-block">
-          <span className="glyphicon glyphicon-remove" aria-hidden="true" />{" "}
-          <Trans>No serial found</Trans>
-        </div>
-      ) : null}
-    </div>
+    <Autocomplete
+      autoComplete="off"
+      data={suggestions}
+      description={noResults ? t`No serial found` : undefined}
+      filter={({ options }) => options}
+      id={id}
+      label={label ?? <Trans>Serial</Trans>}
+      mb="sm"
+      onChange={onChange}
+      placeholder={placeholder}
+      required={required}
+      rightSection={suggestionsQuery.isFetching ? <Loader size="xs" /> : null}
+      value={value}
+    />
   );
 }

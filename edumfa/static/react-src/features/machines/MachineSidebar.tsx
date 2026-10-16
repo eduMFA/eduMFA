@@ -1,4 +1,8 @@
 import { Trans } from "@lingui/react/macro";
+import { NavLink, Stack, Text } from "@mantine/core";
+import { IconServer, IconServer2, IconSettings } from "@tabler/icons-react";
+
+import { SidebarSection } from "../../components/layout/SidebarSection";
 import { hashHref } from "../../lib/hashbang";
 
 export interface MachineSidebarProps {
@@ -17,34 +21,35 @@ export function MachineSidebar({
   machineId
 }: MachineSidebarProps) {
   return (
-    <ul className="nav nav-pills nav-stacked">
-      <li className={activeItem === "list" ? "active" : undefined} role="presentation">
-        <a href={hashHref("/machine/list")}>
-          <Trans>All Machines</Trans>
-        </a>
-      </li>
+    <Stack gap={2}>
+      <NavLink
+        active={activeItem === "list"}
+        component="a"
+        href={hashHref("/machine/list")}
+        label={<Trans>All Machines</Trans>}
+        leftSection={<IconServer2 size={16} />}
+      />
       {activeItem === "details" ? (
-        <li className="active" role="presentation">
-          <a>
-            <Trans>Machine {machineId}</Trans>
-          </a>
-        </li>
+        <NavLink
+          active
+          label={<Trans>Machine {machineId}</Trans>}
+          leftSection={<IconServer size={16} />}
+        />
       ) : null}
-      <li className="react-sidebar-section">
-        <span>
-          <Trans>Quick links</Trans>
-        </span>
-      </li>
-      <li>
-        <a href={hashHref("/config/machineresolvers/list")}>
-          <Trans>Edit Machine Resolvers</Trans>
-        </a>
-      </li>
+      <SidebarSection>
+        <Trans>Quick links</Trans>
+      </SidebarSection>
+      <NavLink
+        component="a"
+        href={hashHref("/config/machineresolvers/list")}
+        label={<Trans>Edit Machine Resolvers</Trans>}
+        leftSection={<IconSettings size={16} />}
+      />
       {machineCount !== undefined ? (
-        <li className="react-sidebar-meta">
+        <Text c="dimmed" px="sm" py="xs" size="sm">
           <Trans>Number of machines: {machineCount}</Trans>
-        </li>
+        </Text>
       ) : null}
-    </ul>
+    </Stack>
   );
 }

@@ -24,6 +24,13 @@ as React-owned and enabled by the Flask `EDUMFA_REACT_UI` flag.
   answer HTTP 403 with code 303 and keep the session.
 - React internationalization uses Lingui catalogs and `Trans` macros. Angular
   gettext remains in place for legacy routes until Angular is removed.
+- Vite (Rolldown) emits `react-dist/assets/main.js` plus the library chunks
+  `react.js`, `mantine.js`, `vendor.js` and `rolldown-runtime.js`
+  (`codeSplitting` groups in `vite.config.mts`). `templates/footer.html` loads
+  `main.js` as an ES module and `main.js` imports the chunks statically, so the
+  template never changes with the chunk layout. The groups leave stylesheets
+  out so everything lands in `main.css`, the only sheet `templates/header.html`
+  links. Commit new chunk files together with `main.js`.
 - Authentication is still initiated by Angular. React reads the in-memory legacy
   auth bridge when a migrated route calls the same Flask APIs.
 
@@ -166,27 +173,58 @@ share `components/layout/SidebarLayout.tsx`, which ports the legacy
 - Known coexistence cost: Angular still runs the hidden controllers for these
   states, so the legacy views fetch their data in the background as well.
 
-## Design Layer for React-Owned Routes
+## UI Framework: Mantine
 
-React pages keep Bootstrap 3 markup but are restyled through
-`styles/react.css`, scoped to `.react-migration-shell`, so Angular-owned views
-look unchanged while both UIs coexist. The layer defines colour and radius
-tokens on the shell, card panels (`components/layout/Card.tsx`), page headers
-with actions (`components/layout/PageHeader.tsx`), the two-column
-`SidebarLayout`, pill-style status labels (`components/feedback/BooleanPill.tsx`),
-flat tables with a separate filter row, rounded form controls and buttons.
-Everything inside the shell is opt-in through class names, so the legacy
-`components/` CSS is not touched.
+React-owned routes are built with [Mantine](https://mantine.dev) (`@mantine/core`,
+`@mantine/hooks`, `@mantine/notifications`) and Tabler icons. Angular-owned
+views keep Bootstrap 3 until the last route is migrated.
+
+- `app/theme.ts` holds the brand colour (derived from the legacy link blue),
+  radius and font. It sets `scale: 1.6` because Bootstrap 3 fixes
+  `html { font-size: 10px }` while Mantine sizes everything in `rem` for a
+  16px root; without it every Mantine size renders at 62.5%. `MantineProvider` and `Notifications` wrap the React tree in
+  `app/App.tsx`; the test render helper does the same.
+- Styles are imported per component in `main.tsx`. `@mantine/core/styles/baseline.css`
+  is deliberately not loaded because it restyles `body`, which still belongs to
+  the Angular views. The CSS variables land on `:root`; they are inert without
+  Mantine class names. `styles/react.css` only hides the inactive shell and
+  neutralises the few Bootstrap element rules (`label`, checkboxes, `table`)
+  that would leak into `#react-root`.
+- Mantine's `MantineProvider` injects one `<style>` tag with the theme variables.
+  Deployments with a strict `style-src` can pass a nonce through
+  `getStyleNonce`; component styles themselves are static CSS.
+- Shared building blocks: `components/layout` (`SidebarLayout`, `PageHeader`,
+  `Card`, `SidebarSection`), `components/tables` (`DataTable`, `ColumnFilter`,
+  `Pagination`, `EmptyState`), `components/forms` (`TextField`, `FieldValue`,
+  `SerialLookupField` on `Autocomplete`), `components/feedback` (`ErrorAlert`,
+  `LoginRequiredAlert`, `LoadingIndicator`, `BooleanPill`, `ConfirmDialog` on
+  `Modal`). One-off success notices use `lib/notify.ts` (Mantine notifications);
+  the legacy growl equivalent across a navigation is still `lib/flash.ts`.
+- `DataTable` is a thin column-config table on Mantine's `Table`; all paging,
+  sorting and filtering stay server-side. Column filters are rendered in the
+  header cell under the label; the `th` gets `font-weight: 400` because the
+  browser default bold would otherwise leak into the inputs. TanStack Table was evaluated but its
+  v9 feature-object API adds little for static columns; revisit it for the token
+  list if client-side sorting or column visibility is needed.
+- Native `<select>` elements (`NativeSelect`) are used instead of Mantine's
+  custom `Select`, so keyboard, browser autofill and the existing tests keep
+  working. Mantine appends an asterisk to required labels; tests match labels
+  with `tests/labels.ts` (`fieldLabel("Resolver")`).
+- `vitest.setup.ts` stubs `matchMedia`, `ResizeObserver` and `scrollIntoView`
+  for Mantine and clears the notification store after each test.
 
 ## Audit Log Filtering
 
-- Column filters live in a second header row instead of the label cells.
+- Column filters render inside the header cell under the column label
+  (`DataTable`), so the header is one band instead of a label row stacked on
+  an input row. `startdate` and `enddate` use Mantine date pickers; a picked
+  day is sent as `*YYYY-MM-DD*` because the backend matches ISO strings.
 - Text filters are debounced (300 ms); Enter applies immediately. Values are
   sent as `*value*` like the legacy `getParams`, unless the user typed `*`
   wildcards, which are passed through unchanged.
 - `success` is a boolean on the backend (`is_true` on the SQL audit module),
   so it is filtered through a yes/no select that sends `1`/`0`, and rendered
-  as a check/cross pill instead of the raw integer. `sig_check` and
-  `missing_line` use the same pill with their `OK`/`FAIL` labels.
-- Applied filters are listed as removable chips with a "Clear all" action; the
+  as a check/cross badge instead of the raw integer. `sig_check` and
+  `missing_line` use the same badge with their `OK`/`FAIL` labels.
+- Applied filters are listed as removable badges with a "Clear all" action; the
   `?serial`/`?user` deep links still seed the filters.

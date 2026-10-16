@@ -1,4 +1,5 @@
 import { Trans, useLingui } from "@lingui/react/macro";
+import { Anchor } from "@mantine/core";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -9,16 +10,18 @@ import {
   formatMachineHostname,
   getMachines,
   machineQueryKeys,
+  type MachineDetail,
   type MachineListParams
 } from "../../api/machines";
 import { useAuth } from "../../auth/AuthProvider";
 import { ErrorAlert } from "../../components/feedback/ErrorAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
 import { Card } from "../../components/layout/Card";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { SidebarLayout } from "../../components/layout/SidebarLayout";
 import { ColumnFilter } from "../../components/tables/ColumnFilter";
-import { EmptyState } from "../../components/tables/EmptyState";
+import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
 import { Pagination } from "../../components/tables/Pagination";
 import { hashHref } from "../../lib/hashbang";
 
@@ -84,6 +87,52 @@ export function MachineListPage() {
     setFilters((previousFilters) => ({ ...previousFilters, [name]: value }));
   };
 
+  const filterFor = (name: keyof MachineFilters, label: string) => (
+    <ColumnFilter
+      label={label}
+      onChange={(value) => {
+        setFilter(name, value);
+      }}
+      value={filters[name]}
+    />
+  );
+
+  const columns: DataTableColumn<MachineDetail>[] = [
+    {
+      filter: filterFor("hostname", t`hostname`),
+      header: <Trans>hostname</Trans>,
+      key: "hostname",
+      render: (machine) => (
+        <Anchor
+          href={hashHref(
+            `/machine/details/${encodeURIComponent(machine.id)}/${encodeURIComponent(machine.resolver_name)}`
+          )}
+          size="sm"
+        >
+          {formatMachineHostname(machine.hostname)}
+        </Anchor>
+      )
+    },
+    {
+      filter: filterFor("ip", t`IP Address`),
+      header: <Trans>IP Address</Trans>,
+      key: "ip",
+      render: (machine) => machine.ip
+    },
+    {
+      filter: filterFor("id", t`Id`),
+      header: <Trans>Id</Trans>,
+      key: "id",
+      render: (machine) => machine.id
+    },
+    {
+      filter: filterFor("resolver", t`Machine Resolver`),
+      header: <Trans>Machine Resolver</Trans>,
+      key: "resolver_name",
+      render: (machine) => machine.resolver_name
+    }
+  ];
+
   return (
     <SidebarLayout
       sidebar={
@@ -100,14 +149,7 @@ export function MachineListPage() {
         title={<Trans>Machines</Trans>}
       />
 
-      {!isAuthenticated ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>
-            Log in through the legacy UI before opening this migrated route.
-          </Trans>
-        </div>
-      ) : null}
-
+      {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={machinesQuery.error} />
 
       <Card flush>
@@ -123,76 +165,14 @@ export function MachineListPage() {
           totalCount={allMachines.length}
         />
 
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped" id="tablemachinelist">
-            <thead>
-              <tr>
-                <th className="pifilter">
-                  <Trans>hostname</Trans>
-                  <ColumnFilter
-                    label={t`hostname`}
-                    onChange={(value) => {
-                      setFilter("hostname", value);
-                    }}
-                    value={filters.hostname}
-                  />
-                </th>
-                <th className="pifilter">
-                  <Trans>IP Address</Trans>
-                  <ColumnFilter
-                    label={t`IP Address`}
-                    onChange={(value) => {
-                      setFilter("ip", value);
-                    }}
-                    value={filters.ip}
-                  />
-                </th>
-                <th className="pifilter">
-                  <Trans>Id</Trans>
-                  <ColumnFilter
-                    label={t`Id`}
-                    onChange={(value) => {
-                      setFilter("id", value);
-                    }}
-                    value={filters.id}
-                  />
-                </th>
-                <th className="pifilter">
-                  <Trans>Machine Resolver</Trans>
-                  <ColumnFilter
-                    label={t`Machine Resolver`}
-                    onChange={(value) => {
-                      setFilter("resolver", value);
-                    }}
-                    value={filters.resolver}
-                  />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {visibleMachines.length === 0 && !machinesQuery.isLoading ? (
-                <EmptyState colSpan={4} message={<Trans>No machines found.</Trans>} />
-              ) : (
-                visibleMachines.map((machine) => (
-                  <tr key={`${machine.resolver_name}-${machine.id}`}>
-                    <td>
-                      <a
-                        href={hashHref(
-                          `/machine/details/${encodeURIComponent(machine.id)}/${encodeURIComponent(machine.resolver_name)}`
-                        )}
-                      >
-                        {formatMachineHostname(machine.hostname)}
-                      </a>
-                    </td>
-                    <td>{machine.ip}</td>
-                    <td>{machine.id}</td>
-                    <td>{machine.resolver_name}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={columns}
+          data={visibleMachines}
+          emptyMessage={<Trans>No machines found.</Trans>}
+          getRowKey={(machine) => `${machine.resolver_name}-${machine.id}`}
+          id="tablemachinelist"
+          isLoading={machinesQuery.data === undefined}
+        />
       </Card>
     </SidebarLayout>
   );

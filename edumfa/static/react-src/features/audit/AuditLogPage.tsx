@@ -1,4 +1,17 @@
 import { Trans, useLingui } from "@lingui/react/macro";
+import {
+  ActionIcon,
+  Anchor,
+  Badge,
+  Box,
+  Button,
+  Group,
+  NativeSelect,
+  Text
+} from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
+import { IconCalendar, IconDownload, IconFilterOff, IconX } from "@tabler/icons-react";
+import dayjs from "dayjs";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -16,10 +29,11 @@ import { useAuth } from "../../auth/AuthProvider";
 import { BooleanPill } from "../../components/feedback/BooleanPill";
 import { ErrorAlert } from "../../components/feedback/ErrorAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
 import { Card } from "../../components/layout/Card";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { ColumnFilter } from "../../components/tables/ColumnFilter";
-import { EmptyState } from "../../components/tables/EmptyState";
+import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
 import { Pagination } from "../../components/tables/Pagination";
 import { formatLegacyDate } from "../../lib/dates";
 import { hashHref } from "../../lib/hashbang";
@@ -113,9 +127,69 @@ export function AuditLogPage() {
     applyFilters(nextFilters);
   };
 
-  const visibleColumns = auditColumnConfigs.filter(
-    (column) => auditColumns.includes(column.key) && (!column.adminOnly || isAdmin)
-  );
+  const renderFilter = (filterName: AuditFilterName): ReactNode => {
+    if (filterName === "success") {
+      return (
+        <NativeSelect
+          aria-label={filterName}
+          data={[
+            { label: t`any`, value: "" },
+            { label: t`yes`, value: "1" },
+            { label: t`no`, value: "0" }
+          ]}
+          onChange={(event) => {
+            replaceFilters({ ...draftFilters, success: event.currentTarget.value });
+          }}
+          size="xs"
+          value={draftFilters.success ?? ""}
+        />
+      );
+    }
+
+    if (filterName === "date" || filterName === "startdate") {
+      return (
+        <DatePickerInput
+          aria-label={filterName}
+          clearable
+          leftSection={<IconCalendar size={14} />}
+          leftSectionPointerEvents="none"
+          onChange={(value) => {
+            replaceFilters({ ...draftFilters, [filterName]: formatDateFilter(value) });
+          }}
+          placeholder={t`Pick a date`}
+          size="xs"
+          value={draftFilters[filterName] || null}
+          valueFormat="YYYY-MM-DD"
+        />
+      );
+    }
+
+    return (
+      <ColumnFilter
+        label={filterName}
+        onChange={(value) => {
+          setDraftFilter(filterName, value);
+        }}
+        onSubmit={() => {
+          applyFilters();
+        }}
+        value={draftFilters[filterName] ?? ""}
+      />
+    );
+  };
+
+  const columns: DataTableColumn<AuditEntry>[] = auditColumnConfigs
+    .filter(
+      (column) => auditColumns.includes(column.key) && (!column.adminOnly || isAdmin)
+    )
+    .map((column) => ({
+      filter: column.filterName ? renderFilter(column.filterName) : null,
+      header: column.label,
+      key: column.key,
+      nowrap: column.nowrap,
+      render: (entry) => column.render(entry, isAdmin)
+    }));
+
   const activeFilters = (
     Object.entries(appliedFilters) as [AuditFilterName, string][]
   ).filter(([, value]) => value.length > 0);
@@ -129,73 +203,81 @@ export function AuditLogPage() {
   };
 
   return (
-    <div className="react-migration-shell">
+    <Box className="react-migration-shell">
       <PageHeader
         actions={
           canDownload ? (
-            <button
-              className="btn btn-default"
-              disabled={downloadMutation.isPending}
+            <Button
+              leftSection={<IconDownload size={16} />}
+              loading={downloadMutation.isPending}
               onClick={() => {
                 downloadMutation.mutate();
               }}
-              type="button"
+              variant="default"
             >
-              <span className="glyphicon glyphicon-download-alt" aria-hidden="true" />
               {downloadMutation.isPending ? (
                 <Trans>Please Wait! Crunching data...</Trans>
               ) : (
                 <Trans>Download audit log as CSV</Trans>
               )}
-            </button>
+            </Button>
           ) : null
         }
         subtitle={auditPage ? <Trans>{entryCount} entries found.</Trans> : null}
         title={<Trans>Audit log</Trans>}
       />
 
-      {!isAuthenticated ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>
-            Log in through the legacy UI before opening this migrated route.
-          </Trans>
-        </div>
-      ) : null}
-
+      {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={auditQuery.error} />
       <ErrorAlert error={downloadMutation.error} />
 
       <Card flush>
         {activeFilters.length > 0 ? (
-          <div className="react-filter-bar" role="group" aria-label={t`Active filters`}>
-            <span className="react-filter-bar__label">
+          <Group
+            aria-label={t`Active filters`}
+            gap="xs"
+            px="md"
+            py="sm"
+            role="group"
+            style={{ borderBottom: "1px solid var(--mantine-color-gray-3)" }}
+          >
+            <Text c="dimmed" fw={600} size="xs" tt="uppercase">
               <Trans>Filters</Trans>
-            </span>
+            </Text>
             {activeFilters.map(([name, value]) => (
-              <span className="react-chip" key={name}>
+              <Badge
+                data-chip={name}
+                key={name}
+                rightSection={
+                  <ActionIcon
+                    aria-label={t`Remove filter ${name}`}
+                    onClick={() => {
+                      replaceFilters({ ...appliedFilters, [name]: "" });
+                    }}
+                    size="xs"
+                    variant="transparent"
+                  >
+                    <IconX size={12} />
+                  </ActionIcon>
+                }
+                size="lg"
+                tt="none"
+                variant="light"
+              >
                 {getFilterLabel(name)}: {describeFilterValue(name, value)}
-                <button
-                  aria-label={t`Remove filter ${name}`}
-                  className="react-chip__remove"
-                  onClick={() => {
-                    replaceFilters({ ...appliedFilters, [name]: "" });
-                  }}
-                  type="button"
-                >
-                  &times;
-                </button>
-              </span>
+              </Badge>
             ))}
-            <button
-              className="btn btn-link btn-xs"
+            <Button
+              leftSection={<IconFilterOff size={14} />}
               onClick={() => {
                 replaceFilters({});
               }}
-              type="button"
+              size="compact-xs"
+              variant="subtle"
             >
               <Trans>Clear all filters</Trans>
-            </button>
-          </div>
+            </Button>
+          </Group>
         ) : null}
 
         {auditQuery.isLoading ? (
@@ -210,83 +292,18 @@ export function AuditLogPage() {
         />
 
         {auditPage ? (
-          <div className="table-responsive">
-            <table className="table table-bordered table-striped" id="tableauditlog">
-              <thead>
-                <tr>
-                  {visibleColumns.map((column) => (
-                    <th key={column.key}>{column.label}</th>
-                  ))}
-                </tr>
-                <tr className="react-filter-row">
-                  {visibleColumns.map((column) => {
-                    const filterName = column.filterName;
-
-                    if (!filterName) {
-                      return <th key={column.key} />;
-                    }
-
-                    if (filterName === "success") {
-                      return (
-                        <th key={column.key}>
-                          <select
-                            aria-label={filterName}
-                            className="form-control input-sm"
-                            onChange={(event) => {
-                              replaceFilters({
-                                ...draftFilters,
-                                success: event.target.value
-                              });
-                            }}
-                            value={draftFilters.success ?? ""}
-                          >
-                            <option value="">{t`any`}</option>
-                            <option value="1">{t`yes`}</option>
-                            <option value="0">{t`no`}</option>
-                          </select>
-                        </th>
-                      );
-                    }
-
-                    return (
-                      <th key={column.key}>
-                        <ColumnFilter
-                          label={filterName}
-                          onChange={(value) => {
-                            setDraftFilter(filterName, value);
-                          }}
-                          onSubmit={() => {
-                            applyFilters();
-                          }}
-                          placeholder={column.filterPlaceholder}
-                          value={draftFilters[filterName] ?? ""}
-                        />
-                      </th>
-                    );
-                  })}
-                </tr>
-              </thead>
-              <tbody>
-                {auditPage.auditdata.length === 0 ? (
-                  <EmptyState
-                    colSpan={visibleColumns.length}
-                    message={<Trans>No audit entries match the current filters.</Trans>}
-                  />
-                ) : (
-                  auditPage.auditdata.map((entry) => (
-                    <tr key={entry.number}>
-                      {visibleColumns.map((column) => (
-                        <td key={column.key}>{column.render(entry, isAdmin)}</td>
-                      ))}
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            columns={columns}
+            data={auditPage.auditdata}
+            emptyMessage={<Trans>No audit entries match the current filters.</Trans>}
+            getRowKey={(entry) => String(entry.number)}
+            id="tableauditlog"
+            isLoading={auditQuery.isLoading}
+            minWidth={Math.max(900, columns.length * 130)}
+          />
         ) : null}
       </Card>
-    </div>
+    </Box>
   );
 }
 
@@ -347,9 +364,9 @@ function saveTextAsFile(text: string, filename: string): void {
 interface AuditColumnConfig {
   adminOnly?: boolean;
   filterName?: AuditFilterName;
-  filterPlaceholder?: string;
   key: string;
   label: ReactNode;
+  nowrap?: boolean;
   render: (entry: AuditEntry, isAdmin: boolean) => ReactNode;
 }
 
@@ -367,16 +384,17 @@ function SerialLinks({ serial }: { serial: string | null }) {
   }
 
   return (
-    <>
+    <Group gap={4}>
       {serial.split(",").map((singleSerial, index) => (
-        <a
+        <Anchor
           href={hashHref(`/token/details/${encodeURIComponent(singleSerial)}`)}
           key={`${singleSerial}-${String(index)}`}
+          size="sm"
         >
-          {singleSerial}{" "}
-        </a>
+          {singleSerial}
+        </Anchor>
       ))}
-    </>
+    </Group>
   );
 }
 
@@ -388,20 +406,21 @@ function PolicyLinks({ policies }: { policies: string | null }) {
   const uniquePolicies = [...new Set(policies.split(","))];
 
   return (
-    <>
+    <Group gap={4}>
       {uniquePolicies.map((policy) =>
         policy.endsWith("+") ? (
-          <span key={policy}>{policy} </span>
+          <span key={policy}>{policy}</span>
         ) : (
-          <a
+          <Anchor
             href={hashHref(`/config/policies/details/${encodeURIComponent(policy)}`)}
             key={policy}
+            size="sm"
           >
-            {policy}{" "}
-          </a>
+            {policy}
+          </Anchor>
         )
       )}
-    </>
+    </Group>
   );
 }
 
@@ -409,26 +428,28 @@ const auditColumnConfigs: AuditColumnConfig[] = [
   {
     key: "number",
     label: <Trans>number</Trans>,
+    nowrap: true,
     render: (entry) => entry.number
   },
   {
     filterName: "startdate",
-    filterPlaceholder: "YYYY-MM-DD",
     key: "startdate",
     label: <Trans>startdate</Trans>,
+    nowrap: true,
     render: (entry) => formatLegacyDate(entry.startdate)
   },
   {
     filterName: "date",
-    filterPlaceholder: "YYYY-MM-DD",
     key: "date",
     label: <Trans>enddate</Trans>,
+    nowrap: true,
     render: (entry) => formatLegacyDate(entry.date)
   },
   {
     filterName: "duration",
     key: "duration",
     label: <Trans>duration</Trans>,
+    nowrap: true,
     render: (entry) => entry.duration
   },
   {
@@ -479,13 +500,14 @@ const auditColumnConfigs: AuditColumnConfig[] = [
     label: <Trans>user</Trans>,
     render: (entry) =>
       entry.user ? (
-        <a
+        <Anchor
           href={hashHref(
             `/user/details/${encodeURIComponent(entry.realm ?? "")}/${encodeURIComponent(entry.user)}`
           )}
+          size="sm"
         >
           {entry.user}
-        </a>
+        </Anchor>
       ) : null
   },
   {
@@ -493,8 +515,10 @@ const auditColumnConfigs: AuditColumnConfig[] = [
     key: "realm",
     label: <Trans>realm</Trans>,
     render: (entry, isAdmin) =>
-      isAdmin ? (
-        <a href={hashHref("/config/realms/list")}>{entry.realm}</a>
+      isAdmin && entry.realm ? (
+        <Anchor href={hashHref("/config/realms/list")} size="sm">
+          {entry.realm}
+        </Anchor>
       ) : (
         entry.realm
       )
@@ -504,8 +528,10 @@ const auditColumnConfigs: AuditColumnConfig[] = [
     key: "resolver",
     label: <Trans>resolver</Trans>,
     render: (entry, isAdmin) =>
-      isAdmin ? (
-        <a href={hashHref("/config/resolvers/list")}>{entry.resolver}</a>
+      isAdmin && entry.resolver ? (
+        <Anchor href={hashHref("/config/resolvers/list")} size="sm">
+          {entry.resolver}
+        </Anchor>
       ) : (
         entry.resolver
       )
@@ -561,3 +587,12 @@ const auditColumnConfigs: AuditColumnConfig[] = [
     render: (entry) => entry.edumfa_server
   }
 ];
+
+/** The backend matches dates as ISO strings, so a picked day becomes `*YYYY-MM-DD*`. */
+function formatDateFilter(value: Date | string | null): string {
+  if (!value) {
+    return "";
+  }
+
+  return typeof value === "string" ? value : dayjs(value).format("YYYY-MM-DD");
+}

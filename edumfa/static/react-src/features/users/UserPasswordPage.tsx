@@ -1,6 +1,7 @@
 import { Trans, useLingui } from "@lingui/react/macro";
+import { Anchor, Button, PasswordInput, SimpleGrid } from "@mantine/core";
+import { IconLock } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 
 import { UserSidebar } from "./UserSidebar";
@@ -9,12 +10,13 @@ import { getUserDetails, updateUser, userQueryKeys } from "../../api/users";
 import { useAuth } from "../../auth/AuthProvider";
 import { hasRight } from "../../auth/permissions";
 import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { InfoAlert } from "../../components/feedback/InfoAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
+import { FieldValue } from "../../components/forms/FieldValue";
 import { Card } from "../../components/layout/Card";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { SidebarLayout } from "../../components/layout/SidebarLayout";
-import type { FlashMessage } from "../../lib/flash";
+import { notify } from "../../lib/notify";
 
 interface PasswordFormValues {
   password: string;
@@ -30,7 +32,6 @@ export function UserPasswordPage() {
   const apiClient = useApiClient();
   const { t } = useLingui();
   const { isAuthenticated, rights, user } = useAuth();
-  const [flash, setFlash] = useState<FlashMessage | null>(null);
   const { formState, handleSubmit, register, reset } = useForm<PasswordFormValues>({
     defaultValues: { password: "", passwordRepeat: "" },
     mode: "onChange"
@@ -54,7 +55,7 @@ export function UserPasswordPage() {
         username: userDetail?.username ?? ""
       }),
     onSuccess: () => {
-      setFlash({ message: t`Password set successfully.`, type: "info" });
+      notify(t`Password set successfully.`, "success");
       reset();
     }
   });
@@ -73,21 +74,7 @@ export function UserPasswordPage() {
         title={<Trans>Your details</Trans>}
       />
 
-      {!isAuthenticated ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>
-            Log in through the legacy UI before opening this migrated route.
-          </Trans>
-        </div>
-      ) : null}
-
-      <InfoAlert
-        message={flash?.message ?? null}
-        onDismiss={() => {
-          setFlash(null);
-        }}
-        type={flash?.type}
-      />
+      {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={userQuery.error} />
       <ErrorAlert error={passwordMutation.error} />
 
@@ -97,35 +84,33 @@ export function UserPasswordPage() {
 
       {userDetail ? (
         <Card title={<Trans>Profile</Trans>}>
-          <div className="row">
-            <div className="col-sm-6">
-              <DetailField label={<Trans>Username</Trans>} name="username">
-                {userDetail.username}
-              </DetailField>
-              <DetailField label={<Trans>Given name</Trans>} name="givenname">
-                {userDetail.givenname}
-              </DetailField>
-              <DetailField label={<Trans>Surname</Trans>} name="surname">
-                {userDetail.surname}
-              </DetailField>
-              <DetailField label={<Trans>Description</Trans>} name="description">
-                {userDetail.description}
-              </DetailField>
-            </div>
-            <div className="col-sm-6">
-              <DetailField label={<Trans>Email</Trans>} name="email">
-                {userDetail.email ? (
-                  <a href={`mailto:${userDetail.email}`}>{userDetail.email}</a>
-                ) : null}
-              </DetailField>
-              <DetailField label={<Trans>Phone</Trans>} name="phone">
-                {userDetail.phone}
-              </DetailField>
-              <DetailField label={<Trans>Mobile</Trans>} name="mobile">
-                {userDetail.mobile}
-              </DetailField>
-            </div>
-          </div>
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" verticalSpacing={0}>
+            <FieldValue label={<Trans>Username</Trans>} name="username">
+              {userDetail.username}
+            </FieldValue>
+            <FieldValue label={<Trans>Email</Trans>} name="email">
+              {userDetail.email ? (
+                <Anchor href={`mailto:${userDetail.email}`} size="sm">
+                  {userDetail.email}
+                </Anchor>
+              ) : null}
+            </FieldValue>
+            <FieldValue label={<Trans>Given name</Trans>} name="givenname">
+              {userDetail.givenname}
+            </FieldValue>
+            <FieldValue label={<Trans>Phone</Trans>} name="phone">
+              {userDetail.phone}
+            </FieldValue>
+            <FieldValue label={<Trans>Surname</Trans>} name="surname">
+              {userDetail.surname}
+            </FieldValue>
+            <FieldValue label={<Trans>Mobile</Trans>} name="mobile">
+              {userDetail.mobile}
+            </FieldValue>
+            <FieldValue label={<Trans>Description</Trans>} name="description">
+              {userDetail.description}
+            </FieldValue>
+          </SimpleGrid>
         </Card>
       ) : null}
 
@@ -138,74 +123,46 @@ export function UserPasswordPage() {
         >
           <Card
             footer={
-              <button
-                className="btn btn-primary"
-                disabled={!formState.isValid || passwordMutation.isPending}
+              <Button
+                disabled={!formState.isValid}
+                leftSection={<IconLock size={16} />}
+                loading={passwordMutation.isPending}
                 type="submit"
               >
-                <span className="glyphicon glyphicon-lock" aria-hidden="true" />
                 <Trans>set password</Trans>
-              </button>
+              </Button>
             }
             title={<Trans>Change password</Trans>}
           >
-            <div
-              className={
-                formState.errors.passwordRepeat ? "form-group has-error" : "form-group"
+            <PasswordInput
+              autoComplete="new-password"
+              id="password"
+              label={<Trans>Password</Trans>}
+              mb="sm"
+              placeholder={t`Type a password`}
+              {...register("password", {
+                deps: ["passwordRepeat"],
+                required: true
+              })}
+            />
+            <PasswordInput
+              aria-label={t`Repeat password`}
+              autoComplete="new-password"
+              error={
+                formState.errors.passwordRepeat
+                  ? t`The passwords do not match.`
+                  : undefined
               }
-            >
-              <label htmlFor="password">
-                <Trans>Password</Trans>
-              </label>
-              <input
-                autoComplete="new-password"
-                className="form-control"
-                id="password"
-                placeholder={t`Type a password`}
-                type="password"
-                {...register("password", {
-                  deps: ["passwordRepeat"],
-                  required: true
-                })}
-              />
-              <input
-                aria-label={t`Repeat password`}
-                autoComplete="new-password"
-                className="form-control"
-                id="passwordRepeat"
-                placeholder={t`Repeat password`}
-                type="password"
-                {...register("passwordRepeat", {
-                  required: true,
-                  validate: (value, values) => value === values.password
-                })}
-              />
-              {formState.errors.passwordRepeat ? (
-                <span className="help-block">
-                  <Trans>The passwords do not match.</Trans>
-                </span>
-              ) : null}
-            </div>
+              id="passwordRepeat"
+              placeholder={t`Repeat password`}
+              {...register("passwordRepeat", {
+                required: true,
+                validate: (value, values) => value === values.password
+              })}
+            />
           </Card>
         </form>
       ) : null}
     </SidebarLayout>
-  );
-}
-
-interface DetailFieldProps {
-  children?: ReactNode;
-  label: ReactNode;
-  name: string;
-}
-
-function DetailField({ children, label, name }: DetailFieldProps) {
-  return (
-    <div className="react-field">
-      <span className="react-field__label">{label}</span>
-      <div className="react-field__value" data-field={name}>
-        {children}
-      </div>
-    </div>
   );
 }

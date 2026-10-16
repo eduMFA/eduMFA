@@ -10,6 +10,7 @@ import {
   getJsonRequestBody,
   stubLegacySession
 } from "../../tests/fetchMockUtils";
+import { fieldLabel } from "../../tests/labels";
 import { renderWithProviders } from "../../tests/renderWithProviders";
 
 const alice = {
@@ -118,7 +119,7 @@ describe("UserDetailsPage", () => {
     await screen.findByText("Cooper");
     await user.click(screen.getByRole("button", { name: "Delete user" }));
 
-    const dialog = screen.getByRole("dialog");
+    const dialog = await screen.findByRole("dialog");
     await user.click(within(dialog).getByRole("button", { name: "Delete User" }));
 
     await screen.findByText("list page");
@@ -134,7 +135,10 @@ describe("UserDetailsPage", () => {
     renderPage();
 
     await screen.findByText("Cooper");
-    await user.type(screen.getByLabelText("Serial"), "HOTP0002 (hotp) ");
+    await user.type(
+      screen.getByRole("combobox", { name: fieldLabel("Serial") }),
+      "HOTP0002 (hotp) "
+    );
     await user.type(screen.getByLabelText("PIN/Password"), "1234");
     await user.type(screen.getByLabelText("Repeat PIN or password"), "1234");
     await user.click(screen.getByRole("button", { name: "Assign Token" }));

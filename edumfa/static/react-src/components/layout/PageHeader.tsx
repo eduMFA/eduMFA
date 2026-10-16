@@ -1,3 +1,4 @@
+import { Group, Text, Title } from "@mantine/core";
 import type { ReactNode } from "react";
 
 export interface PageHeaderProps {
@@ -8,12 +9,24 @@ export interface PageHeaderProps {
 
 export function PageHeader({ actions, subtitle, title }: PageHeaderProps) {
   return (
-    <header className="react-page-header">
+    <Group
+      align="flex-start"
+      component="header"
+      justify="space-between"
+      mb="lg"
+      wrap="wrap"
+    >
       <div>
-        <h2 className="react-page-title">{title}</h2>
-        {subtitle ? <p className="react-page-subtitle">{subtitle}</p> : null}
+        <Title order={2} size="h3">
+          {title}
+        </Title>
+        {subtitle ? (
+          <Text c="dimmed" component="p" m={0} mt={4} size="sm">
+            {subtitle}
+          </Text>
+        ) : null}
       </div>
-      {actions ? <div className="react-page-header__actions">{actions}</div> : null}
-    </header>
+      {actions ? <Group gap="xs">{actions}</Group> : null}
+    </Group>
   );
 }

@@ -1,4 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
+import { Alert, Box, Button, Container, Paper, Title } from "@mantine/core";
+import { IconInfoCircle } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
@@ -31,32 +33,31 @@ export function RecoveryPage() {
   });
 
   return (
-    <div className="react-migration-shell">
-      <div className="well">
-        <div className="alert alert-info" role="alert">
+    <Box className="react-migration-shell">
+      <Container size="xs">
+        <Alert icon={<IconInfoCircle size={18} />} mb="md" variant="light">
           <Trans>If you forgot your password, you may set a new one.</Trans>
-        </div>
+        </Alert>
 
         {recoveryMutation.isSuccess ? (
-          <div className="alert alert-info" role="alert">
+          <Alert color="green" mb="md" role="status" variant="light">
             <Trans>An Email to reset the password has been sent to you.</Trans>
-          </div>
+          </Alert>
         ) : null}
 
         <ErrorAlert error={recoveryMutation.error} />
 
-        <div className="container">
+        <Paper p="xl" radius="md" withBorder>
           <form
-            className="form-signin"
             noValidate
             onSubmit={(event) => {
               void submitForm(event);
             }}
             role="form"
           >
-            <h2 className="form-signin-heading">
+            <Title mb="md" order={2} size="h3">
               <Trans>Reset Password</Trans>
-            </h2>
+            </Title>
 
             <TextField
               autoFocus
@@ -75,18 +76,18 @@ export function RecoveryPage() {
               type="email"
             />
 
-            <div className="text-center">
-              <button
-                className="btn btn-primary btn-block"
-                disabled={!formState.isValid || recoveryMutation.isPending}
-                type="submit"
-              >
-                <Trans>Send Reset Code</Trans>
-              </button>
-            </div>
+            <Button
+              disabled={!formState.isValid}
+              fullWidth
+              loading={recoveryMutation.isPending}
+              mt="md"
+              type="submit"
+            >
+              <Trans>Send Reset Code</Trans>
+            </Button>
           </form>
-        </div>
-      </div>
-    </div>
+        </Paper>
+      </Container>
+    </Box>
   );
 }

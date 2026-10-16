@@ -1,5 +1,17 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import {
+  Anchor,
+  Badge,
+  Button,
+  Checkbox,
+  Group,
+  NativeSelect,
+  SimpleGrid,
+  Text,
+  TextInput
+} from "@mantine/core";
+import { IconDeviceFloppy, IconEdit, IconUnlink } from "@tabler/icons-react";
+import {
   keepPreviousData,
   useMutation,
   useQuery,
@@ -27,11 +39,13 @@ import { useAuth } from "../../auth/AuthProvider";
 import { hasRight } from "../../auth/permissions";
 import { ErrorAlert } from "../../components/feedback/ErrorAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
+import { FieldValue } from "../../components/forms/FieldValue";
 import { SerialLookupField } from "../../components/forms/SerialLookupField";
 import { Card } from "../../components/layout/Card";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { SidebarLayout } from "../../components/layout/SidebarLayout";
-import { EmptyState } from "../../components/tables/EmptyState";
+import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
 import { Pagination } from "../../components/tables/Pagination";
 import { hashHref } from "../../lib/hashbang";
 import { fixSerial } from "../../lib/serial";
@@ -152,6 +166,116 @@ export function MachineDetailsPage() {
     }
   });
 
+  const assignmentColumns: DataTableColumn<MachineTokenAssignment>[] = [
+    {
+      header: <Trans>Serial</Trans>,
+      key: "serial",
+      render: (assignment) => (
+        <Group gap="xs">
+          <Anchor
+            href={hashHref(`/token/details/${encodeURIComponent(assignment.serial)}`)}
+            size="sm"
+          >
+            {assignment.serial}
+          </Anchor>
+          {assignment.type ? (
+            <Badge color="gray" variant="light">
+              {assignment.type}
+            </Badge>
+          ) : null}
+        </Group>
+      )
+    },
+    {
+      header: <Trans>Application</Trans>,
+      key: "application",
+      render: (assignment) => assignment.application
+    },
+    {
+      header: <Trans>Options</Trans>,
+      key: "options",
+      render: (assignment) => {
+        const optionSpecs = applications[assignment.application]?.options ?? {};
+
+        if (editingAssignmentId === assignment.id) {
+          return Object.entries(optionSpecs).map(([name, spec]) => (
+            <ApplicationOptionInput
+              idPrefix={`option_${String(assignment.id)}`}
+              key={name}
+              name={name}
+              onChange={(value) => {
+                setDraftOptions((previous) => ({ ...previous, [name]: value }));
+              }}
+              spec={spec}
+              value={draftOptions[name]}
+            />
+          ));
+        }
+
+        return Object.keys(optionSpecs).map((name) => (
+          <Text key={name} size="sm">
+            <b>{capitalize(name)}:</b> {assignment.options[name]}
+          </Text>
+        ));
+      }
+    },
+    {
+      align: "right",
+      header: "",
+      key: "actions",
+      render: (assignment) =>
+        editingAssignmentId === assignment.id ? (
+          <Group gap="xs" justify="flex-end">
+            <Button
+              leftSection={<IconDeviceFloppy size={14} />}
+              loading={saveOptionsMutation.isPending}
+              onClick={() => {
+                saveOptionsMutation.mutate(assignment);
+              }}
+              size="xs"
+            >
+              <Trans>Save Options</Trans>
+            </Button>
+            <Button
+              onClick={() => {
+                setEditingAssignmentId(null);
+              }}
+              size="xs"
+              variant="default"
+            >
+              <Trans>Cancel</Trans>
+            </Button>
+          </Group>
+        ) : (
+          <Group gap="xs" justify="flex-end">
+            <Button
+              leftSection={<IconEdit size={14} />}
+              onClick={() => {
+                setDraftOptions({ ...assignment.options });
+                setEditingAssignmentId(assignment.id);
+              }}
+              size="xs"
+              variant="default"
+            >
+              <Trans>Edit Options</Trans>
+            </Button>
+            <Button
+              color="red"
+              leftSection={<IconUnlink size={14} />}
+              loading={detachMutation.isPending}
+              onClick={() => {
+                detachMutation.mutate(assignment);
+              }}
+              size="xs"
+              variant="light"
+            >
+              <Trans>Detach</Trans>
+            </Button>
+          </Group>
+        )
+    }
+  ];
+
   return (
     <SidebarLayout
       sidebar={<MachineSidebar activeItem="details" machineId={machineId} />}
@@ -160,26 +284,20 @@ export function MachineDetailsPage() {
         subtitle={
           <>
             <Trans>Machine Resolver</Trans>{" "}
-            <a
+            <Anchor
               href={hashHref(
                 `/machine/list?resolver=${encodeURIComponent(machineResolver)}`
               )}
+              size="sm"
             >
               {machineResolver}
-            </a>
+            </Anchor>
           </>
         }
         title={<Trans>Machine {machineId}</Trans>}
       />
 
-      {!isAuthenticated ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>
-            Log in through the legacy UI before opening this migrated route.
-          </Trans>
-        </div>
-      ) : null}
-
+      {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={machineQuery.error} />
       <ErrorAlert error={applicationsQuery.error} />
       <ErrorAlert error={tokensQuery.error} />
@@ -192,41 +310,25 @@ export function MachineDetailsPage() {
       ) : null}
 
       {machineQuery.isSuccess && !machine ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>Machine not found.</Trans>
-        </div>
+        <ErrorAlert
+          error={new Error(t`Machine not found.`)}
+          title={<Trans>Machine not found.</Trans>}
+        />
       ) : null}
 
       {machine ? (
         <Card title={<Trans>Details</Trans>}>
-          <div className="row">
-            <div className="col-sm-4">
-              <div className="react-field">
-                <span className="react-field__label">
-                  <Trans>Hostname</Trans>
-                </span>
-                <div className="react-field__value">
-                  {formatMachineHostname(machine.hostname)}
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-4">
-              <div className="react-field">
-                <span className="react-field__label">
-                  <Trans>Machine ID</Trans>
-                </span>
-                <div className="react-field__value">{machine.id}</div>
-              </div>
-            </div>
-            <div className="col-sm-4">
-              <div className="react-field">
-                <span className="react-field__label">
-                  <Trans>IP Address</Trans>
-                </span>
-                <div className="react-field__value">{machine.ip}</div>
-              </div>
-            </div>
-          </div>
+          <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md" verticalSpacing={0}>
+            <FieldValue label={<Trans>Hostname</Trans>} name="hostname">
+              {formatMachineHostname(machine.hostname)}
+            </FieldValue>
+            <FieldValue label={<Trans>Machine ID</Trans>} name="id">
+              {machine.id}
+            </FieldValue>
+            <FieldValue label={<Trans>IP Address</Trans>} name="ip">
+              {machine.ip}
+            </FieldValue>
+          </SimpleGrid>
         </Card>
       ) : null}
 
@@ -239,122 +341,14 @@ export function MachineDetailsPage() {
           totalCount={assignments.length}
         />
 
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>
-                  <Trans>Serial</Trans>
-                </th>
-                <th>
-                  <Trans>Application</Trans>
-                </th>
-                <th>
-                  <Trans>Options</Trans>
-                </th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {visibleAssignments.length === 0 && !tokensQuery.isLoading ? (
-                <EmptyState colSpan={4} message={<Trans>No tokens attached.</Trans>} />
-              ) : (
-                visibleAssignments.map((assignment) => {
-                  const optionSpecs =
-                    applications[assignment.application]?.options ?? {};
-                  const isEditingRow = editingAssignmentId === assignment.id;
-
-                  return (
-                    <tr key={assignment.id}>
-                      <td>
-                        <a
-                          href={hashHref(
-                            `/token/details/${encodeURIComponent(assignment.serial)}`
-                          )}
-                        >
-                          {assignment.serial}
-                        </a>{" "}
-                        <span className="label label-default">{assignment.type}</span>
-                      </td>
-                      <td>{assignment.application}</td>
-                      <td>
-                        {isEditingRow
-                          ? Object.entries(optionSpecs).map(([name, spec]) => (
-                              <ApplicationOptionInput
-                                idPrefix={`option_${String(assignment.id)}`}
-                                key={name}
-                                name={name}
-                                onChange={(value) => {
-                                  setDraftOptions((previous) => ({
-                                    ...previous,
-                                    [name]: value
-                                  }));
-                                }}
-                                spec={spec}
-                                value={draftOptions[name]}
-                              />
-                            ))
-                          : Object.keys(optionSpecs).map((name) => (
-                              <div key={name}>
-                                <b>{capitalize(name)}:</b> {assignment.options[name]}
-                              </div>
-                            ))}
-                      </td>
-                      <td className="text-right">
-                        {isEditingRow ? (
-                          <div className="btn-toolbar">
-                            <button
-                              className="btn btn-primary btn-sm"
-                              disabled={saveOptionsMutation.isPending}
-                              onClick={() => {
-                                saveOptionsMutation.mutate(assignment);
-                              }}
-                              type="button"
-                            >
-                              <Trans>Save Options</Trans>
-                            </button>
-                            <button
-                              className="btn btn-default btn-sm"
-                              onClick={() => {
-                                setEditingAssignmentId(null);
-                              }}
-                              type="button"
-                            >
-                              <Trans>Cancel</Trans>
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="btn-toolbar">
-                            <button
-                              className="btn btn-default btn-sm"
-                              onClick={() => {
-                                setDraftOptions({ ...assignment.options });
-                                setEditingAssignmentId(assignment.id);
-                              }}
-                              type="button"
-                            >
-                              <Trans>Edit Options</Trans>
-                            </button>
-                            <button
-                              className="btn btn-danger btn-sm"
-                              disabled={detachMutation.isPending}
-                              onClick={() => {
-                                detachMutation.mutate(assignment);
-                              }}
-                              type="button"
-                            >
-                              <Trans>Detach</Trans>
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={assignmentColumns}
+          data={visibleAssignments}
+          emptyMessage={<Trans>No tokens attached.</Trans>}
+          getRowKey={(assignment) => String(assignment.id)}
+          isLoading={tokensQuery.isLoading}
+          minWidth={720}
+        />
       </Card>
 
       {hasRight(rights, "manage_machine_tokens") ? (
@@ -367,13 +361,13 @@ export function MachineDetailsPage() {
         >
           <Card
             footer={
-              <button
-                className="btn btn-primary"
-                disabled={!canAttach || attachMutation.isPending}
+              <Button
+                disabled={!canAttach}
+                loading={attachMutation.isPending}
                 type="submit"
               >
                 <Trans>Attach Token</Trans>
-              </button>
+              </Button>
             }
             title={<Trans>Attach a new token</Trans>}
           >
@@ -385,28 +379,18 @@ export function MachineDetailsPage() {
               value={newSerial}
             />
 
-            <div className="form-group">
-              <label htmlFor="application">
-                <Trans>Application</Trans>
-              </label>
-              <select
-                className="form-control"
-                id="application"
-                onChange={(event) => {
-                  setNewApplication(event.target.value);
-                  setNewOptions({});
-                }}
-                required
-                value={newApplication}
-              >
-                <option value="" />
-                {applicationNames.map((applicationName) => (
-                  <option key={applicationName} value={applicationName}>
-                    {applicationName}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <NativeSelect
+              data={[{ label: "", value: "" }, ...applicationNames]}
+              id="application"
+              label={<Trans>Application</Trans>}
+              mb="sm"
+              onChange={(event) => {
+                setNewApplication(event.currentTarget.value);
+                setNewOptions({});
+              }}
+              required
+              value={newApplication}
+            />
 
             {Object.entries(newApplicationOptions).map(([name, spec]) => (
               <ApplicationOptionInput
@@ -448,53 +432,53 @@ function ApplicationOptionInput({
   value
 }: ApplicationOptionInputProps) {
   const inputId = `${idPrefix}_${name}`;
+  const label = capitalize(name);
   const textValue = typeof value === "string" ? value : "";
   const isChecked = value === true || value === "True" || value === "true";
 
+  if (spec.value) {
+    return (
+      <NativeSelect
+        data={[{ label: "", value: "" }, ...spec.value]}
+        description={spec.description}
+        id={inputId}
+        label={label}
+        mb="sm"
+        onChange={(event) => {
+          onChange(event.currentTarget.value);
+        }}
+        required={Boolean(spec.required)}
+        value={textValue}
+      />
+    );
+  }
+
+  if (spec.type === "bool") {
+    return (
+      <Checkbox
+        checked={isChecked}
+        description={spec.description}
+        id={inputId}
+        label={label}
+        mb="sm"
+        onChange={(event) => {
+          onChange(event.currentTarget.checked);
+        }}
+      />
+    );
+  }
+
   return (
-    <div className="form-group">
-      <label htmlFor={inputId}>{capitalize(name)}</label>
-      {spec.value ? (
-        <select
-          className="form-control"
-          id={inputId}
-          onChange={(event) => {
-            onChange(event.target.value);
-          }}
-          required={Boolean(spec.required)}
-          value={textValue}
-        >
-          <option value="" />
-          {spec.value.map((allowedValue) => (
-            <option key={allowedValue} value={allowedValue}>
-              {allowedValue}
-            </option>
-          ))}
-        </select>
-      ) : spec.type === "bool" ? (
-        <div>
-          <input
-            checked={isChecked}
-            id={inputId}
-            onChange={(event) => {
-              onChange(event.target.checked);
-            }}
-            type="checkbox"
-          />
-        </div>
-      ) : (
-        <input
-          className="form-control"
-          id={inputId}
-          onChange={(event) => {
-            onChange(event.target.value);
-          }}
-          required={Boolean(spec.required)}
-          type="text"
-          value={textValue}
-        />
-      )}
-      {spec.description ? <span className="help-block">{spec.description}</span> : null}
-    </div>
+    <TextInput
+      description={spec.description}
+      id={inputId}
+      label={label}
+      mb="sm"
+      onChange={(event) => {
+        onChange(event.currentTarget.value);
+      }}
+      required={Boolean(spec.required)}
+      value={textValue}
+    />
   );
 }

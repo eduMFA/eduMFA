@@ -10,6 +10,7 @@ import {
   getJsonRequestBody,
   stubLegacySession
 } from "../../tests/fetchMockUtils";
+import { fieldLabel } from "../../tests/labels";
 import { renderWithProviders } from "../../tests/renderWithProviders";
 
 const editableResolvers = {
@@ -59,7 +60,7 @@ describe("UserAddPage", () => {
       { route: "/user/add" }
     );
 
-    expect(await screen.findByLabelText("Resolver")).toHaveValue("sqlres");
+    expect(await screen.findByLabelText(fieldLabel("Resolver"))).toHaveValue("sqlres");
 
     const [resolverCall] = findFetchCalls(fetchMock, "GET", "/resolver/");
     expect(resolverCall?.url.searchParams.get("editable")).toBe("1");
@@ -67,9 +68,9 @@ describe("UserAddPage", () => {
     const saveButton = screen.getByRole("button", { name: "Save user" });
     expect(saveButton).toBeDisabled();
 
-    await user.type(screen.getByLabelText("username"), "carol");
-    await user.type(screen.getByLabelText("email"), "carol@example.com");
-    await user.type(screen.getByLabelText("password"), "s3cret");
+    await user.type(screen.getByLabelText(fieldLabel("username")), "carol");
+    await user.type(screen.getByLabelText(fieldLabel("email")), "carol@example.com");
+    await user.type(screen.getByLabelText(fieldLabel("password")), "s3cret");
 
     await waitFor(() => {
       expect(saveButton).toBeEnabled();

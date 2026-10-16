@@ -1,4 +1,5 @@
 import { Trans } from "@lingui/react/macro";
+import { Group, Loader, Text } from "@mantine/core";
 import type { ReactNode } from "react";
 
 export interface LoadingIndicatorProps {
@@ -9,9 +10,9 @@ export function LoadingIndicator({
   label = <Trans>Loading</Trans>
 }: LoadingIndicatorProps) {
   return (
-    <div className="react-loading-indicator" role="status">
-      <span className="glyphicon glyphicon-refresh glyphicon-spin" aria-hidden="true" />
-      <span>{label}</span>
-    </div>
+    <Group c="dimmed" gap="xs" my="sm" px="md" role="status">
+      <Loader size="xs" />
+      <Text size="sm">{label}</Text>
+    </Group>
   );
 }

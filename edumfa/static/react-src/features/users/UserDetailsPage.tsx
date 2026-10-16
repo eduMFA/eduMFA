@@ -1,5 +1,23 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import {
+  Anchor,
+  Badge,
+  Button,
+  Group,
+  NativeSelect,
+  PasswordInput,
+  Table,
+  Text,
+  TextInput
+} from "@mantine/core";
+import {
+  IconDeviceFloppy,
+  IconEdit,
+  IconPlus,
+  IconSearch,
+  IconTrash
+} from "@tabler/icons-react";
+import {
   keepPreviousData,
   useMutation,
   useQuery,
@@ -38,18 +56,21 @@ import {
 } from "../../api/users";
 import { useAuth } from "../../auth/AuthProvider";
 import { hasEnrollRight, hasRight } from "../../auth/permissions";
+import { BooleanPill } from "../../components/feedback/BooleanPill";
 import { ConfirmDialog } from "../../components/feedback/ConfirmDialog";
 import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { InfoAlert } from "../../components/feedback/InfoAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
 import { SerialLookupField } from "../../components/forms/SerialLookupField";
 import { Card } from "../../components/layout/Card";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { SidebarLayout } from "../../components/layout/SidebarLayout";
+import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
 import { EmptyState } from "../../components/tables/EmptyState";
 import { Pagination } from "../../components/tables/Pagination";
-import { pushFlash, type FlashMessage } from "../../lib/flash";
+import { pushFlash } from "../../lib/flash";
 import { hashHref } from "../../lib/hashbang";
+import { notify } from "../../lib/notify";
 import { fixSerial } from "../../lib/serial";
 import {
   fallbackUserFields,
@@ -67,7 +88,6 @@ export function UserDetailsPage() {
   const navigate = useNavigate();
   const { t } = useLingui();
   const { isAuthenticated, rights } = useAuth();
-  const [flash, setFlash] = useState<FlashMessage | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [tokenPage, setTokenPage] = useState(1);
@@ -166,13 +186,13 @@ export function UserDetailsPage() {
     },
     onSuccess: async (updated, values) => {
       if (!updated) {
-        setFlash({ message: t`Failed to update user.`, type: "danger" });
+        notify(t`Failed to update user.`, "danger");
 
         return;
       }
 
       setIsEditing(false);
-      setFlash({ message: t`User updated successfully.`, type: "info" });
+      notify(t`User updated successfully.`, "success");
       await invalidateUsers();
 
       const nextUsername = values.username ?? username;
@@ -192,13 +212,13 @@ export function UserDetailsPage() {
     },
     onSuccess: async (deleted) => {
       if (!deleted) {
-        setFlash({ message: t`Failed to delete user.`, type: "danger" });
+        notify(t`Failed to delete user.`, "danger");
 
         return;
       }
 
       await invalidateUsers();
-      pushFlash(t`User deleted successfully.`);
+      pushFlash(t`User deleted successfully.`, "success");
       void navigate("/user/list");
     }
   });
@@ -219,8 +239,7 @@ export function UserDetailsPage() {
     selectedAttributeValue === "*" ? customAttributeValue : selectedAttributeValue;
   const canAddAttribute =
     resolvedAttributeKey.length > 0 && resolvedAttributeValue.length > 0;
-  const customAttributes = customAttributesQuery.data ?? {};
-  const customAttributeEntries = Object.entries(customAttributes);
+  const customAttributeEntries = Object.entries(customAttributesQuery.data ?? {});
   const showCustomAttributes =
     settableKeys.length > 0 ||
     deletableAttributes.length > 0 ||
@@ -285,7 +304,7 @@ export function UserDetailsPage() {
       setAssignSerial("");
       setAssignPin("");
       setAssignPinRepeat("");
-      setFlash({ message: t`Token assigned successfully.`, type: "info" });
+      notify(t`Token assigned successfully.`, "success");
       window.scrollTo(0, 0);
       await queryClient.invalidateQueries({ queryKey: tokenQueryKeys.all });
     }
@@ -316,43 +335,99 @@ export function UserDetailsPage() {
   const tokenPageData = tokensQuery.data;
   const tokens = tokenPageData?.tokens ?? [];
 
+  const tokenColumns: DataTableColumn<TokenDetail>[] = [
+    {
+      header: <Trans>serial</Trans>,
+      key: "serial",
+      render: (token) => (
+        <Anchor
+          href={hashHref(`/token/details/${encodeURIComponent(token.serial)}`)}
+          size="sm"
+        >
+          {token.serial}
+        </Anchor>
+      )
+    },
+    {
+      header: <Trans>type</Trans>,
+      key: "tokentype",
+      render: (token) => token.tokentype
+    },
+    {
+      header: <Trans>Active</Trans>,
+      key: "active",
+      render: (token) => (
+        <BooleanPill
+          falseLabel={<Trans>disabled</Trans>}
+          trueLabel={<Trans>active</Trans>}
+          value={token.active}
+        />
+      )
+    },
+    {
+      header: <Trans>window</Trans>,
+      key: "count_window",
+      render: (token) => token.count_window
+    },
+    {
+      header: <Trans>description</Trans>,
+      key: "description",
+      render: (token) => token.description
+    },
+    {
+      header: <Trans>failcounter</Trans>,
+      key: "failcount",
+      render: (token) => (
+        <Badge color={getFailCounterColor(token)} variant="light">
+          {token.failcount}
+        </Badge>
+      )
+    },
+    {
+      header: <Trans>maxfail</Trans>,
+      key: "maxfail",
+      render: (token) => token.maxfail
+    },
+    { header: <Trans>otplen</Trans>, key: "otplen", render: (token) => token.otplen }
+  ];
+
   const userActions =
     userDetail?.editable && !isEditing ? (
       <>
         {hasRight(rights, "updateuser") ? (
-          <button className="btn btn-primary" onClick={startEditing} type="button">
-            <span className="glyphicon glyphicon-edit" aria-hidden="true" />
+          <Button leftSection={<IconEdit size={16} />} onClick={startEditing} size="sm">
             <Trans>Edit user</Trans>
-          </button>
+          </Button>
         ) : null}
         {hasRight(rights, "deleteuser") ? (
-          <button
-            className="btn btn-danger"
+          <Button
+            color="red"
+            leftSection={<IconTrash size={16} />}
             onClick={() => {
               setIsDeleteDialogOpen(true);
             }}
-            type="button"
+            size="sm"
+            variant="light"
           >
-            <span className="glyphicon glyphicon-trash" aria-hidden="true" />
             <Trans>Delete user</Trans>
-          </button>
+          </Button>
         ) : null}
       </>
     ) : null;
 
   const editFooter = isEditing ? (
     <>
-      <button
-        className="btn btn-primary"
-        disabled={!form.formState.isValid || updateMutation.isPending}
+      <Button
+        disabled={!form.formState.isValid}
+        leftSection={<IconDeviceFloppy size={16} />}
+        loading={updateMutation.isPending}
         type="submit"
       >
-        <span className="glyphicon glyphicon-save" aria-hidden="true" />
         <Trans>Save user</Trans>
-      </button>
-      <button className="btn btn-default" onClick={cancelEditing} type="button">
+      </Button>
+      <Button onClick={cancelEditing} variant="default">
         <Trans>Cancel</Trans>
-      </button>
+      </Button>
     </>
   ) : undefined;
 
@@ -362,17 +437,21 @@ export function UserDetailsPage() {
     >
       <PageHeader
         actions={
-          <a
-            className="btn btn-default"
+          <Button
+            component="a"
             href={hashHref(`/audit/log?user=${encodeURIComponent(username)}`)}
+            leftSection={<IconSearch size={16} />}
+            variant="default"
           >
-            <span className="glyphicon glyphicon-search" aria-hidden="true" />
             <Trans>View user in Audit log</Trans>
-          </a>
+          </Button>
         }
         subtitle={
           <>
-            <Trans>Realm</Trans> <a href={hashHref("/config/realms/list")}>{realm}</a>
+            <Trans>Realm</Trans>{" "}
+            <Anchor href={hashHref("/config/realms/list")} size="sm">
+              {realm}
+            </Anchor>
             {resolverName ? (
               <>
                 {" · "}
@@ -384,21 +463,7 @@ export function UserDetailsPage() {
         title={username}
       />
 
-      {!isAuthenticated ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>
-            Log in through the legacy UI before opening this migrated route.
-          </Trans>
-        </div>
-      ) : null}
-
-      <InfoAlert
-        message={flash?.message ?? null}
-        onDismiss={() => {
-          setFlash(null);
-        }}
-        type={flash?.type}
-      />
+      {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={userQuery.error} />
       <ErrorAlert error={updateMutation.error} />
       <ErrorAlert error={deleteMutation.error} />
@@ -411,9 +476,10 @@ export function UserDetailsPage() {
       ) : null}
 
       {userQuery.isSuccess && !userDetail ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>User not found.</Trans>
-        </div>
+        <ErrorAlert
+          error={new Error(t`User not found.`)}
+          title={<Trans>User not found.</Trans>}
+        />
       ) : null}
 
       {userDetail ? (
@@ -444,147 +510,130 @@ export function UserDetailsPage() {
           flush
           footer={
             settableKeys.length > 0 ? (
-              <div className="react-inline-form">
-                <label className="sr-only" htmlFor="attr_key">
-                  <Trans>Custom attribute</Trans>
-                </label>
-                <select
-                  className="form-control"
+              <Group gap="xs">
+                <NativeSelect
+                  aria-label={t`Custom attribute`}
+                  data={[{ label: t`Custom attribute`, value: "" }, ...settableKeys]}
                   id="attr_key"
                   onChange={(event) => {
-                    selectAttributeKey(event.target.value);
+                    selectAttributeKey(event.currentTarget.value);
                   }}
+                  size="sm"
                   value={selectedAttributeKey}
-                >
-                  <option value="">{t`Custom attribute`}</option>
-                  {settableKeys.map((attributeKey) => (
-                    <option key={attributeKey} value={attributeKey}>
-                      {attributeKey}
-                    </option>
-                  ))}
-                </select>
+                />
                 {selectedAttributeKey === "*" ? (
-                  <>
-                    <label className="sr-only" htmlFor="new_custom_attribute_key">
-                      <Trans>Custom attribute name</Trans>
-                    </label>
-                    <input
-                      className="form-control"
-                      id="new_custom_attribute_key"
-                      onChange={(event) => {
-                        setCustomAttributeKey(event.target.value);
-                      }}
-                      placeholder={t`Custom attribute name`}
-                      type="text"
-                      value={customAttributeKey}
-                    />
-                  </>
+                  <TextInput
+                    aria-label={t`Custom attribute name`}
+                    id="new_custom_attribute_key"
+                    onChange={(event) => {
+                      setCustomAttributeKey(event.currentTarget.value);
+                    }}
+                    placeholder={t`Custom attribute name`}
+                    size="sm"
+                    value={customAttributeKey}
+                  />
                 ) : null}
                 {allowedValues.length !== 1 ? (
-                  <>
-                    <label className="sr-only" htmlFor="attr_value">
-                      <Trans>Custom attribute value</Trans>
-                    </label>
-                    <select
-                      className="form-control"
-                      id="attr_value"
-                      onChange={(event) => {
-                        setSelectedAttributeValue(event.target.value);
-                        setCustomAttributeValue("");
-                      }}
-                      value={selectedAttributeValue}
-                    >
-                      <option value="">{t`Custom attribute value`}</option>
-                      {allowedValues.map((attributeValue) => (
-                        <option key={attributeValue} value={attributeValue}>
-                          {attributeValue}
-                        </option>
-                      ))}
-                    </select>
-                  </>
+                  <NativeSelect
+                    aria-label={t`Custom attribute value`}
+                    data={[
+                      { label: t`Custom attribute value`, value: "" },
+                      ...allowedValues
+                    ]}
+                    id="attr_value"
+                    onChange={(event) => {
+                      setSelectedAttributeValue(event.currentTarget.value);
+                      setCustomAttributeValue("");
+                    }}
+                    size="sm"
+                    value={selectedAttributeValue}
+                  />
                 ) : null}
                 {selectedAttributeValue === "*" ? (
-                  <>
-                    <label className="sr-only" htmlFor="new_custom_attribute_value">
-                      <Trans>Custom attribute value</Trans>
-                    </label>
-                    <input
-                      className="form-control"
-                      id="new_custom_attribute_value"
-                      onChange={(event) => {
-                        setCustomAttributeValue(event.target.value);
-                      }}
-                      placeholder={t`Custom attribute value`}
-                      type="text"
-                      value={customAttributeValue}
-                    />
-                  </>
+                  <TextInput
+                    aria-label={t`Custom attribute value`}
+                    id="new_custom_attribute_value"
+                    onChange={(event) => {
+                      setCustomAttributeValue(event.currentTarget.value);
+                    }}
+                    placeholder={t`Custom attribute value`}
+                    size="sm"
+                    value={customAttributeValue}
+                  />
                 ) : null}
-                <button
-                  className="btn btn-success"
-                  disabled={!canAddAttribute || addAttributeMutation.isPending}
+                <Button
+                  disabled={!canAddAttribute}
+                  leftSection={<IconPlus size={16} />}
+                  loading={addAttributeMutation.isPending}
                   onClick={() => {
                     addAttributeMutation.mutate();
                   }}
-                  type="button"
+                  size="sm"
                 >
-                  <span className="glyphicon glyphicon-plus" aria-hidden="true" />
                   <Trans>Add</Trans>
-                </button>
-              </div>
+                </Button>
+              </Group>
             ) : undefined
           }
           title={<Trans>Custom attributes</Trans>}
         >
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <tbody>
-                {customAttributeEntries.length === 0 ? (
-                  <EmptyState
-                    colSpan={3}
-                    message={<Trans>No custom attributes set.</Trans>}
-                  />
-                ) : (
-                  customAttributeEntries.map(([attributeKey, attributeValue]) => (
-                    <tr key={attributeKey}>
-                      <td className="col-sm-4">
-                        <b>{attributeKey}</b>
-                      </td>
-                      <td className="col-sm-6">{attributeValue}</td>
-                      <td className="col-sm-2 text-right">
-                        {canDeleteAttribute(attributeKey) ? (
-                          <button
-                            className="btn btn-danger btn-sm"
-                            disabled={deleteAttributeMutation.isPending}
-                            onClick={() => {
-                              deleteAttributeMutation.mutate(attributeKey);
-                            }}
-                            type="button"
-                          >
-                            <Trans>Delete</Trans>
-                          </button>
-                        ) : null}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <Table verticalSpacing="sm">
+            <Table.Tbody>
+              {customAttributeEntries.length === 0 ? (
+                <EmptyState
+                  colSpan={3}
+                  message={<Trans>No custom attributes set.</Trans>}
+                />
+              ) : (
+                customAttributeEntries.map(([attributeKey, attributeValue]) => (
+                  <Table.Tr key={attributeKey}>
+                    <Table.Td fw={600} w="30%">
+                      {attributeKey}
+                    </Table.Td>
+                    <Table.Td>{attributeValue}</Table.Td>
+                    <Table.Td ta="right" w="20%">
+                      {canDeleteAttribute(attributeKey) ? (
+                        <Button
+                          color="red"
+                          loading={deleteAttributeMutation.isPending}
+                          onClick={() => {
+                            deleteAttributeMutation.mutate(attributeKey);
+                          }}
+                          size="xs"
+                          variant="light"
+                        >
+                          <Trans>Delete</Trans>
+                        </Button>
+                      ) : null}
+                    </Table.Td>
+                  </Table.Tr>
+                ))
+              )}
+            </Table.Tbody>
+          </Table>
         </Card>
       ) : null}
 
       <Card
         actions={
-          <a
+          <Button
             aria-disabled={!canEnroll}
-            className={canEnroll ? "btn btn-primary" : "btn btn-primary disabled"}
+            component="a"
+            data-disabled={!canEnroll}
             href={canEnroll ? enrollHref : undefined}
             id="enrollButton"
+            leftSection={<IconPlus size={16} />}
+            onClick={
+              canEnroll
+                ? undefined
+                : (event) => {
+                    event.preventDefault();
+                  }
+            }
+            size="sm"
           >
-            <span className="glyphicon glyphicon-plus" aria-hidden="true" />
             <Trans>Enroll New Token</Trans>
-          </a>
+          </Button>
         }
         flush
         title={<Trans>Tokens</Trans>}
@@ -599,78 +648,14 @@ export function UserDetailsPage() {
           totalCount={tokenPageData?.count ?? 0}
         />
 
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>
-                  <Trans>serial</Trans>
-                </th>
-                <th>
-                  <Trans>type</Trans>
-                </th>
-                <th>
-                  <Trans>Active</Trans>
-                </th>
-                <th>
-                  <Trans>window</Trans>
-                </th>
-                <th>
-                  <Trans>description</Trans>
-                </th>
-                <th>
-                  <Trans>failcounter</Trans>
-                </th>
-                <th>
-                  <Trans>maxfail</Trans>
-                </th>
-                <th>
-                  <Trans>otplen</Trans>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {tokens.length === 0 && !tokensQuery.isLoading ? (
-                <EmptyState colSpan={8} message={<Trans>No tokens assigned.</Trans>} />
-              ) : (
-                tokens.map((token) => (
-                  <tr key={token.serial}>
-                    <td>
-                      <a
-                        href={hashHref(
-                          `/token/details/${encodeURIComponent(token.serial)}`
-                        )}
-                      >
-                        {token.serial}
-                      </a>
-                    </td>
-                    <td>{token.tokentype}</td>
-                    <td>
-                      {token.active ? (
-                        <span className="label label-success">
-                          <Trans>active</Trans>
-                        </span>
-                      ) : (
-                        <span className="label label-danger">
-                          <Trans>disabled</Trans>
-                        </span>
-                      )}
-                    </td>
-                    <td>{token.count_window}</td>
-                    <td>{token.description}</td>
-                    <td>
-                      <span className={`label ${getFailCounterClassName(token)}`}>
-                        {token.failcount}
-                      </span>
-                    </td>
-                    <td>{token.maxfail}</td>
-                    <td>{token.otplen}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={tokenColumns}
+          data={tokens}
+          emptyMessage={<Trans>No tokens assigned.</Trans>}
+          getRowKey={(token) => token.serial}
+          isLoading={tokensQuery.isLoading}
+          minWidth={760}
+        />
       </Card>
 
       {hasRight(rights, "assign") ? (
@@ -683,14 +668,14 @@ export function UserDetailsPage() {
         >
           <Card
             footer={
-              <button
-                className="btn btn-primary"
-                disabled={!canAssign || assignMutation.isPending}
+              <Button
+                disabled={!canAssign}
                 id="assignButton"
+                loading={assignMutation.isPending}
                 type="submit"
               >
                 <Trans>Assign Token</Trans>
-              </button>
+              </Button>
             }
             title={<Trans>Assign an existing token</Trans>}
           >
@@ -702,50 +687,34 @@ export function UserDetailsPage() {
               unassignedOnly
               value={assignSerial}
             />
-            <div className={pinsMatch ? "form-group" : "form-group has-error"}>
-              <label htmlFor="assignPin">
-                <Trans>PIN/Password</Trans>
-              </label>
-              <input
-                autoComplete="new-password"
-                className="form-control"
-                id="assignPin"
-                onChange={(event) => {
-                  setAssignPin(event.target.value);
-                }}
-                placeholder={t`Type a PIN or password`}
-                type="password"
-                value={assignPin}
-              />
-              <input
-                aria-label={t`Repeat PIN or password`}
-                autoComplete="new-password"
-                className="form-control"
-                id="assignPinRepeat"
-                onChange={(event) => {
-                  setAssignPinRepeat(event.target.value);
-                }}
-                placeholder={t`Repeat PIN or password`}
-                type="password"
-                value={assignPinRepeat}
-              />
-              {!pinsMatch ? (
-                <span className="help-block">
-                  <Trans>The PINs do not match.</Trans>
-                </span>
-              ) : null}
-            </div>
+            <PasswordInput
+              autoComplete="new-password"
+              id="assignPin"
+              label={<Trans>PIN/Password</Trans>}
+              mb="sm"
+              onChange={(event) => {
+                setAssignPin(event.currentTarget.value);
+              }}
+              placeholder={t`Type a PIN or password`}
+              value={assignPin}
+            />
+            <PasswordInput
+              aria-label={t`Repeat PIN or password`}
+              autoComplete="new-password"
+              error={pinsMatch ? undefined : t`The PINs do not match.`}
+              id="assignPinRepeat"
+              onChange={(event) => {
+                setAssignPinRepeat(event.currentTarget.value);
+              }}
+              placeholder={t`Repeat PIN or password`}
+              value={assignPinRepeat}
+            />
           </Card>
         </form>
       ) : null}
 
       <ConfirmDialog
-        confirmLabel={
-          <>
-            <span className="glyphicon glyphicon-trash" aria-hidden="true" />
-            <Trans>Delete User</Trans>
-          </>
-        }
+        confirmLabel={<Trans>Delete User</Trans>}
         id="dialogUserDelete"
         isOpen={isDeleteDialogOpen}
         isPending={deleteMutation.isPending}
@@ -760,6 +729,8 @@ export function UserDetailsPage() {
         }}
         title={<Trans>Delete User</Trans>}
       />
+
+      {userDetail ? null : <Text size="sm" />}
     </SidebarLayout>
   );
 }
@@ -778,14 +749,14 @@ function createFormValues(
   return values;
 }
 
-function getFailCounterClassName(token: TokenDetail): string {
+function getFailCounterColor(token: TokenDetail): string {
   if (token.failcount >= token.maxfail) {
-    return "label-danger";
+    return "red";
   }
 
   if (token.failcount > 0) {
-    return "label-warning";
+    return "yellow";
   }
 
-  return "label-success";
+  return "green";
 }

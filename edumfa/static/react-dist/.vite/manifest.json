@@ -1,9 +1,42 @@
 {
+  "_mantine.js": {
+    "file": "assets/mantine.js",
+    "name": "mantine",
+    "imports": [
+      "_rolldown-runtime.js",
+      "_react.js"
+    ]
+  },
+  "_react.js": {
+    "file": "assets/react.js",
+    "name": "react",
+    "imports": [
+      "_rolldown-runtime.js"
+    ]
+  },
+  "_rolldown-runtime.js": {
+    "file": "assets/rolldown-runtime.js",
+    "name": "rolldown-runtime"
+  },
+  "_vendor.js": {
+    "file": "assets/vendor.js",
+    "name": "vendor",
+    "imports": [
+      "_rolldown-runtime.js",
+      "_react.js"
+    ]
+  },
   "react-src/main.tsx": {
     "file": "assets/main.js",
     "name": "main",
     "src": "react-src/main.tsx",
     "isEntry": true,
+    "imports": [
+      "_rolldown-runtime.js",
+      "_react.js",
+      "_mantine.js",
+      "_vendor.js"
+    ],
     "css": [
       "assets/main.css"
     ]

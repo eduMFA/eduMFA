@@ -1,8 +1,10 @@
 import { useLingui } from "@lingui/react/macro";
+import { PasswordInput, SimpleGrid, TextInput } from "@mantine/core";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import { getUserFieldLabel } from "./userFieldLabels";
-import { splitIntoColumns, type UserFieldDefinition } from "../../lib/userAttributes";
+import { FieldValue } from "../../components/forms/FieldValue";
+import type { UserFieldDefinition } from "../../lib/userAttributes";
 
 export type UserFormValues = Record<string, string>;
 
@@ -30,48 +32,55 @@ export function UserAttributeFields({
   const visibleFields = isEditing
     ? fields
     : fields.filter((field) => field.type !== "password");
-  const [leftColumn, rightColumn] = splitIntoColumns(visibleFields);
-
-  const renderField = (field: UserFieldDefinition) => {
-    const label = getUserFieldLabel(i18n, field.name);
-
-    if (!isEditing) {
-      return (
-        <div className="react-field" key={field.name}>
-          <span className="react-field__label">{label}</span>
-          <div className="react-field__value" data-field={field.name}>
-            {formatFieldValue(values[field.name])}
-          </div>
-        </div>
-      );
-    }
-
-    const hasError = Boolean(errors?.[field.name]);
-
-    return (
-      <div
-        className={hasError ? "form-group has-error" : "form-group"}
-        key={field.name}
-      >
-        <label className="control-label" htmlFor={field.name}>
-          {label}
-        </label>
-        <input
-          autoComplete={field.type === "password" ? "new-password" : "off"}
-          className="form-control"
-          id={field.name}
-          type={field.type}
-          {...register(field.name, { required: field.required })}
-        />
-      </div>
-    );
-  };
 
   return (
-    <div className="row">
-      <div className="col-sm-6">{leftColumn.map(renderField)}</div>
-      <div className="col-sm-6">{rightColumn.map(renderField)}</div>
-    </div>
+    <SimpleGrid
+      cols={{ base: 1, sm: 2 }}
+      spacing="md"
+      verticalSpacing={isEditing ? "sm" : 0}
+    >
+      {visibleFields.map((field) => {
+        const label = getUserFieldLabel(i18n, field.name);
+
+        if (!isEditing) {
+          return (
+            <FieldValue key={field.name} label={label} name={field.name}>
+              {formatFieldValue(values[field.name])}
+            </FieldValue>
+          );
+        }
+
+        const hasError = Boolean(errors?.[field.name]);
+        const registration = register(field.name, { required: field.required });
+
+        if (field.type === "password") {
+          return (
+            <PasswordInput
+              autoComplete="new-password"
+              error={hasError ? true : undefined}
+              id={field.name}
+              key={field.name}
+              label={label}
+              required={field.required}
+              {...registration}
+            />
+          );
+        }
+
+        return (
+          <TextInput
+            autoComplete="off"
+            error={hasError ? true : undefined}
+            id={field.name}
+            key={field.name}
+            label={label}
+            required={field.required}
+            type={field.type}
+            {...registration}
+          />
+        );
+      })}
+    </SimpleGrid>
   );
 }
 

@@ -1,3 +1,5 @@
+import { TextInput } from "@mantine/core";
+
 export interface ColumnFilterProps {
   label: string;
   onChange: (value: string) => void;
@@ -20,11 +22,10 @@ export function ColumnFilter({
   value
 }: ColumnFilterProps) {
   return (
-    <input
+    <TextInput
       aria-label={label}
-      className="form-control input-sm"
       onChange={(event) => {
-        onChange(event.target.value);
+        onChange(event.currentTarget.value);
       }}
       onKeyDown={(event) => {
         if (event.key === "Enter" && onSubmit) {
@@ -33,7 +34,7 @@ export function ColumnFilter({
         }
       }}
       placeholder={placeholder}
-      type="text"
+      size="xs"
       value={value}
     />
   );

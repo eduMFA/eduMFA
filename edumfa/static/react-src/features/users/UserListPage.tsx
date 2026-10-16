@@ -1,24 +1,32 @@
 import { Trans, useLingui } from "@lingui/react/macro";
+import { Anchor, Button, NativeSelect } from "@mantine/core";
+import { IconUserPlus } from "@tabler/icons-react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { UserSidebar } from "./UserSidebar";
 import { useApiClient } from "../../api/ApiClientProvider";
 import { configQueryKeys, getDefaultRealmName, getRealms } from "../../api/config";
-import { getUsers, userQueryKeys, type UserListParams } from "../../api/users";
+import {
+  getUsers,
+  userQueryKeys,
+  type UserDetail,
+  type UserListParams
+} from "../../api/users";
 import { useAuth } from "../../auth/AuthProvider";
 import { hasRight } from "../../auth/permissions";
 import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { InfoAlert } from "../../components/feedback/InfoAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
 import { Card } from "../../components/layout/Card";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { SidebarLayout } from "../../components/layout/SidebarLayout";
 import { ColumnFilter } from "../../components/tables/ColumnFilter";
-import { EmptyState } from "../../components/tables/EmptyState";
+import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
 import { Pagination } from "../../components/tables/Pagination";
 import { popFlash } from "../../lib/flash";
 import { hashHref } from "../../lib/hashbang";
+import { notify } from "../../lib/notify";
 
 /**
  * Default page size. The legacy UI could raise this through the
@@ -50,8 +58,15 @@ export function UserListPage() {
   const [filters, setFilters] = useState<UserFilters>(emptyFilters);
   const [page, setPage] = useState(1);
   const [selectedRealm, setSelectedRealm] = useState("");
+
   // Notices handed over by the add/details pages, e.g. "User created."
-  const [flash, setFlash] = useState(() => popFlash());
+  useEffect(() => {
+    const flash = popFlash();
+
+    if (flash) {
+      notify(flash.message, flash.type);
+    }
+  }, []);
 
   const realmsQuery = useQuery({
     enabled: isAuthenticated && isAdmin,
@@ -112,29 +127,91 @@ export function UserListPage() {
     setFilters((previousFilters) => ({ ...previousFilters, [name]: value }));
   };
 
+  const filterFor = (name: keyof UserFilters, label: string) => (
+    <ColumnFilter
+      label={label}
+      onChange={(value) => {
+        setFilter(name, value);
+      }}
+      value={filters[name]}
+    />
+  );
+
+  const columns: DataTableColumn<UserDetail>[] = [
+    {
+      filter: filterFor("username", t`username`),
+      header: <Trans>username</Trans>,
+      key: "username",
+      render: (listedUser) => (
+        <Anchor
+          href={hashHref(
+            `/user/details/${encodeURIComponent(activeRealm)}/${encodeURIComponent(listedUser.username)}`
+          )}
+          size="sm"
+        >
+          {listedUser.username}
+        </Anchor>
+      )
+    },
+    {
+      filter: filterFor("surname", t`surname`),
+      header: <Trans>surname</Trans>,
+      key: "surname",
+      render: (listedUser) => listedUser.surname
+    },
+    {
+      filter: filterFor("givenname", t`givenname`),
+      header: <Trans>givenname</Trans>,
+      key: "givenname",
+      render: (listedUser) => listedUser.givenname
+    },
+    {
+      filter: filterFor("email", t`email`),
+      header: <Trans>email</Trans>,
+      key: "email",
+      render: (listedUser) =>
+        listedUser.email ? (
+          <Anchor href={`mailto:${listedUser.email}`} size="sm">
+            {listedUser.email}
+          </Anchor>
+        ) : null
+    },
+    {
+      header: <Trans>phone</Trans>,
+      key: "phone",
+      render: (listedUser) => listedUser.phone
+    },
+    {
+      header: <Trans>mobile</Trans>,
+      key: "mobile",
+      render: (listedUser) => listedUser.mobile
+    },
+    {
+      header: <Trans>description</Trans>,
+      key: "description",
+      render: (listedUser) => listedUser.description
+    },
+    {
+      header: <Trans>id</Trans>,
+      key: "userid",
+      render: (listedUser) => listedUser.userid
+    }
+  ];
+
   const realmSelector =
     isAdmin && realmNames.length > 0 ? (
-      <>
-        <label htmlFor="realmSelect">
-          <Trans>Select Realm</Trans>
-        </label>
-        <select
-          className="form-control"
-          id="realmSelect"
-          onChange={(event) => {
-            setPage(1);
-            setFilters(emptyFilters);
-            setSelectedRealm(event.target.value);
-          }}
-          value={activeRealm}
-        >
-          {realmNames.map((realmName) => (
-            <option key={realmName} value={realmName}>
-              {realmName}
-            </option>
-          ))}
-        </select>
-      </>
+      <NativeSelect
+        data={realmNames}
+        id="realmSelect"
+        label={<Trans>Select Realm</Trans>}
+        onChange={(event) => {
+          setPage(1);
+          setFilters(emptyFilters);
+          setSelectedRealm(event.currentTarget.value);
+        }}
+        size="sm"
+        value={activeRealm}
+      />
     ) : undefined;
 
   return (
@@ -150,31 +227,20 @@ export function UserListPage() {
       <PageHeader
         actions={
           isAdmin && hasRight(rights, "adduser") ? (
-            <a className="btn btn-primary" href={hashHref("/user/add")}>
-              <span className="glyphicon glyphicon-plus" aria-hidden="true" />
+            <Button
+              component="a"
+              href={hashHref("/user/add")}
+              leftSection={<IconUserPlus size={16} />}
+            >
               <Trans>Add user</Trans>
-            </a>
+            </Button>
           ) : null
         }
         subtitle={activeRealm ? <Trans>Realm {activeRealm}</Trans> : null}
         title={<Trans>Users</Trans>}
       />
 
-      {!isAuthenticated ? (
-        <div className="alert alert-warning" role="alert">
-          <Trans>
-            Log in through the legacy UI before opening this migrated route.
-          </Trans>
-        </div>
-      ) : null}
-
-      <InfoAlert
-        message={flash?.message ?? null}
-        onDismiss={() => {
-          setFlash(null);
-        }}
-        type={flash?.type}
-      />
+      {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={realmsQuery.error} />
       <ErrorAlert error={usersQuery.error} />
 
@@ -191,96 +257,15 @@ export function UserListPage() {
           totalCount={allUsers.length}
         />
 
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped" id="tableuserlist">
-            <thead>
-              <tr>
-                <th className="pifilter">
-                  <Trans>username</Trans>
-                  <ColumnFilter
-                    label={t`username`}
-                    onChange={(value) => {
-                      setFilter("username", value);
-                    }}
-                    value={filters.username}
-                  />
-                </th>
-                <th className="pifilter">
-                  <Trans>surname</Trans>
-                  <ColumnFilter
-                    label={t`surname`}
-                    onChange={(value) => {
-                      setFilter("surname", value);
-                    }}
-                    value={filters.surname}
-                  />
-                </th>
-                <th className="pifilter">
-                  <Trans>givenname</Trans>
-                  <ColumnFilter
-                    label={t`givenname`}
-                    onChange={(value) => {
-                      setFilter("givenname", value);
-                    }}
-                    value={filters.givenname}
-                  />
-                </th>
-                <th className="pifilter">
-                  <Trans>email</Trans>
-                  <ColumnFilter
-                    label={t`email`}
-                    onChange={(value) => {
-                      setFilter("email", value);
-                    }}
-                    value={filters.email}
-                  />
-                </th>
-                <th>
-                  <Trans>phone</Trans>
-                </th>
-                <th>
-                  <Trans>mobile</Trans>
-                </th>
-                <th>
-                  <Trans>description</Trans>
-                </th>
-                <th>
-                  <Trans>id</Trans>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {visibleUsers.length === 0 && !usersQuery.isLoading ? (
-                <EmptyState colSpan={8} message={<Trans>No users found.</Trans>} />
-              ) : (
-                visibleUsers.map((listedUser) => (
-                  <tr key={`${listedUser.resolver}-${listedUser.userid}`}>
-                    <td>
-                      <a
-                        href={hashHref(
-                          `/user/details/${encodeURIComponent(activeRealm)}/${encodeURIComponent(listedUser.username)}`
-                        )}
-                      >
-                        {listedUser.username}
-                      </a>
-                    </td>
-                    <td>{listedUser.surname}</td>
-                    <td>{listedUser.givenname}</td>
-                    <td>
-                      {listedUser.email ? (
-                        <a href={`mailto:${listedUser.email}`}>{listedUser.email}</a>
-                      ) : null}
-                    </td>
-                    <td>{listedUser.phone}</td>
-                    <td>{listedUser.mobile}</td>
-                    <td>{listedUser.description}</td>
-                    <td>{listedUser.userid}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={columns}
+          data={visibleUsers}
+          emptyMessage={<Trans>No users found.</Trans>}
+          getRowKey={(listedUser) => `${listedUser.resolver}-${listedUser.userid}`}
+          id="tableuserlist"
+          isLoading={usersQuery.data === undefined}
+          minWidth={900}
+        />
       </Card>
     </SidebarLayout>
   );

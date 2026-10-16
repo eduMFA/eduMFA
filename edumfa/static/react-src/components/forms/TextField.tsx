@@ -1,3 +1,4 @@
+import { PasswordInput, TextInput } from "@mantine/core";
 import type { ReactNode } from "react";
 import type { UseFormRegisterReturn } from "react-hook-form";
 
@@ -12,6 +13,7 @@ export interface TextFieldProps {
   type?: string;
 }
 
+/** react-hook-form field on top of Mantine's text and password inputs. */
 export function TextField({
   autoComplete,
   autoFocus,
@@ -22,18 +24,20 @@ export function TextField({
   registration,
   type = "text"
 }: TextFieldProps) {
-  return (
-    <div className={hasError ? "form-group has-error" : "form-group"}>
-      {label ? <label htmlFor={id}>{label}</label> : null}
-      <input
-        autoComplete={autoComplete}
-        autoFocus={autoFocus}
-        className="form-control"
-        id={id}
-        placeholder={placeholder}
-        type={type}
-        {...registration}
-      />
-    </div>
-  );
+  const sharedProps = {
+    autoComplete,
+    autoFocus,
+    error: hasError ? true : undefined,
+    id,
+    label,
+    mb: "sm",
+    placeholder,
+    ...registration
+  };
+
+  if (type === "password") {
+    return <PasswordInput {...sharedProps} />;
+  }
+
+  return <TextInput type={type} {...sharedProps} />;
 }

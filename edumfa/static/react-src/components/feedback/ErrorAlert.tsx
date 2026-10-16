@@ -1,4 +1,6 @@
 import { Trans } from "@lingui/react/macro";
+import { Alert } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
 import type { ReactNode } from "react";
 
 import { ApiError } from "../../api/envelope";
@@ -17,11 +19,16 @@ export function ErrorAlert({
   }
 
   return (
-    <div className="alert alert-danger" role="alert">
-      <strong>{title}</strong>
-      <br />
+    <Alert
+      color="red"
+      icon={<IconAlertCircle size={18} />}
+      mb="md"
+      role="alert"
+      title={title}
+      variant="light"
+    >
       {getErrorMessage(error) ?? <Trans>An unknown error occurred.</Trans>}
-    </div>
+    </Alert>
   );
 }
 

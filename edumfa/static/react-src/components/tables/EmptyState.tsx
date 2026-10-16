@@ -1,3 +1,4 @@
+import { Table } from "@mantine/core";
 import type { ReactNode } from "react";
 
 export interface EmptyStateProps {
@@ -5,12 +6,13 @@ export interface EmptyStateProps {
   message: ReactNode;
 }
 
+/** Placeholder row for an empty Mantine table body. */
 export function EmptyState({ colSpan = 3, message }: EmptyStateProps) {
   return (
-    <tr>
-      <td className="text-muted" colSpan={colSpan}>
+    <Table.Tr>
+      <Table.Td c="dimmed" colSpan={colSpan} py="xl" ta="center">
         {message}
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 }

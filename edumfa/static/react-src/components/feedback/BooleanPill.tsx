@@ -1,4 +1,6 @@
 import { Trans } from "@lingui/react/macro";
+import { Badge } from "@mantine/core";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import type { ReactNode } from "react";
 
 export interface BooleanPillProps {
@@ -8,7 +10,7 @@ export interface BooleanPillProps {
 }
 
 /**
- * Renders a boolean as a status pill with an icon instead of the raw `1`/`0`
+ * Renders a boolean as a status badge with an icon instead of the raw `1`/`0`
  * the API delivers. `null`/`undefined` render nothing.
  */
 export function BooleanPill({
@@ -21,12 +23,15 @@ export function BooleanPill({
   }
 
   return (
-    <span className={value ? "label label-success" : "label label-danger"}>
-      <span
-        aria-hidden="true"
-        className={value ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove"}
-      />{" "}
+    <Badge
+      color={value ? "green" : "red"}
+      data-value={String(value)}
+      leftSection={value ? <IconCheck size={12} /> : <IconX size={12} />}
+      // Table cells may shrink below the badge width; keep the label whole.
+      miw="max-content"
+      variant="light"
+    >
       {value ? trueLabel : falseLabel}
-    </span>
+    </Badge>
   );
 }

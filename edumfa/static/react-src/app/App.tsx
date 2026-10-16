@@ -1,3 +1,5 @@
+import { MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { I18nProvider } from "@lingui/react";
 import { useEffect, useMemo, useState } from "react";
@@ -11,6 +13,7 @@ import { HashbangRouter } from "./HashbangRouter";
 import { i18n } from "./i18n";
 import { createEduMfaQueryClient } from "./queryClient";
 import { MigratedRoutes, shouldReactOwnRoute } from "./routes";
+import { theme } from "./theme";
 import { ApiClientProvider } from "../api/ApiClientProvider";
 import { AuthProvider } from "../auth/AuthProvider";
 
@@ -46,17 +49,20 @@ export function App() {
   }
 
   return (
-    <I18nProvider i18n={i18n}>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <ApiClientProvider>
-            <HashbangRouter>
-              <MigratedRoutes />
-            </HashbangRouter>
-          </ApiClientProvider>
-        </QueryClientProvider>
-      </AuthProvider>
-    </I18nProvider>
+    <MantineProvider theme={theme}>
+      <Notifications position="top-right" />
+      <I18nProvider i18n={i18n}>
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <ApiClientProvider>
+              <HashbangRouter>
+                <MigratedRoutes />
+              </HashbangRouter>
+            </ApiClientProvider>
+          </QueryClientProvider>
+        </AuthProvider>
+      </I18nProvider>
+    </MantineProvider>
   );
 }
 

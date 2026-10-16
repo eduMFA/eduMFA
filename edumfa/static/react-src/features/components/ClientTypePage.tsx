@@ -1,15 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
 import { Trans } from "@lingui/react/macro";
+import { Box, Button, Table } from "@mantine/core";
+import { IconRefresh } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 
 import { getClientApplications } from "../../api/component";
 import type { ClientApplication } from "../../api/component";
 import { useApiClient } from "../../api/ApiClientProvider";
+import { useAuth } from "../../auth/AuthProvider";
 import { ErrorAlert } from "../../components/feedback/ErrorAlert";
 import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
+import { Card } from "../../components/layout/Card";
+import { PageHeader } from "../../components/layout/PageHeader";
 import { EmptyState } from "../../components/tables/EmptyState";
-import { useAuth } from "../../auth/AuthProvider";
 import { formatLegacyDate } from "../../lib/dates";
-import { hashHref } from "../../lib/hashbang";
 
 export function ClientTypePage() {
   const apiClient = useApiClient();
@@ -25,57 +29,45 @@ export function ClientTypePage() {
   );
 
   return (
-    <div className="react-migration-shell">
-      <div className="well">
-        <ul className="nav nav-tabs">
-          <li className="active">
-            <a href={hashHref("/component/clienttype")}>
-              <span className="glyphicon glyphicon-phone" aria-hidden="true" />
-              <Trans>Application Type</Trans>
-            </a>
-          </li>
-        </ul>
-
-        <div className="react-route-toolbar">
-          <button
-            className="btn btn-default"
-            disabled={!isAuthenticated || clientTypesQuery.isFetching}
+    <Box className="react-migration-shell">
+      <PageHeader
+        actions={
+          <Button
+            disabled={!isAuthenticated}
+            leftSection={<IconRefresh size={16} />}
+            loading={clientTypesQuery.isFetching}
             onClick={() => {
               void clientTypesQuery.refetch();
             }}
-            type="button"
+            variant="default"
           >
-            <span className="glyphicon glyphicon-refresh" aria-hidden="true" />
             <Trans>Refresh</Trans>
-          </button>
-        </div>
+          </Button>
+        }
+        subtitle={<Trans>Client applications seen by this eduMFA instance.</Trans>}
+        title={<Trans>Application Type</Trans>}
+      />
 
-        {!isAuthenticated ? (
-          <div className="alert alert-warning" role="alert">
-            <Trans>
-              Log in through the legacy UI before opening this migrated route.
-            </Trans>
-          </div>
-        ) : null}
+      {!isAuthenticated ? <LoginRequiredAlert /> : null}
+      <ErrorAlert error={clientTypesQuery.error} />
 
+      <Card flush>
         {clientTypesQuery.isLoading ? (
           <LoadingIndicator label={<Trans>Loading client applications</Trans>} />
         ) : null}
 
-        <ErrorAlert error={clientTypesQuery.error} />
-
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>
+        <Table highlightOnHover verticalSpacing="sm">
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th c="dimmed" fz="xs" tt="uppercase">
                 <Trans>Application Type</Trans>
-              </th>
-              <th colSpan={2}>
+              </Table.Th>
+              <Table.Th c="dimmed" colSpan={2} fz="xs" tt="uppercase">
                 <Trans>Client</Trans>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+              </Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
             {entries.length === 0 && !clientTypesQuery.isLoading ? (
               <EmptyState message={<Trans>No client applications found.</Trans>} />
             ) : (
@@ -87,10 +79,10 @@ export function ClientTypePage() {
                 />
               ))
             )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          </Table.Tbody>
+        </Table>
+      </Card>
+    </Box>
   );
 }
 
@@ -103,14 +95,20 @@ function ClientTypeRows({ applicationType, clients }: ClientTypeRowsProps) {
   return (
     <>
       {clients.map((client, index) => (
-        <tr key={`${applicationType}-${client.ip}-${client.lastseen ?? String(index)}`}>
-          {index === 0 ? <td rowSpan={clients.length}>{applicationType}</td> : null}
-          <td>{client.ip}</td>
-          <td>
+        <Table.Tr
+          key={`${applicationType}-${client.ip}-${client.lastseen ?? String(index)}`}
+        >
+          {index === 0 ? (
+            <Table.Td fw={600} rowSpan={clients.length}>
+              {applicationType}
+            </Table.Td>
+          ) : null}
+          <Table.Td>{client.ip}</Table.Td>
+          <Table.Td>
             {client.hostname ? `${client.hostname} - ` : ""}
             {formatLegacyDate(client.lastseen)}
-          </td>
-        </tr>
+          </Table.Td>
+        </Table.Tr>
       ))}
     </>
   );

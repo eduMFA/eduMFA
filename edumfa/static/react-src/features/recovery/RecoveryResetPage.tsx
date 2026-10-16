@@ -1,4 +1,14 @@
 import { Trans, useLingui } from "@lingui/react/macro";
+import {
+  Alert,
+  Anchor,
+  Box,
+  Button,
+  Container,
+  Paper,
+  Text,
+  Title
+} from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -22,7 +32,9 @@ export function RecoveryResetPage() {
     user: string;
   }>();
   const { formState, handleSubmit, register, reset } = useForm<RecoveryResetFormValues>(
-    { mode: "onChange" }
+    {
+      mode: "onChange"
+    }
   );
   const resetMutation = useMutation({
     mutationFn: (values: RecoveryResetFormValues) =>
@@ -42,40 +54,39 @@ export function RecoveryResetPage() {
   });
 
   return (
-    <div className="react-migration-shell">
-      <div className="well">
+    <Box className="react-migration-shell">
+      <Container size="xs">
         {resetMutation.isSuccess ? (
           resetMutation.data ? (
-            <div className="alert alert-success" role="alert">
+            <Alert color="green" mb="md" role="status" variant="light">
               <Trans>Your password has been reset successfully.</Trans>{" "}
-              <a href={hashHref("/login")}>
+              <Anchor href={hashHref("/login")} size="sm">
                 <Trans>Proceed to login</Trans>
-              </a>
-            </div>
+              </Anchor>
+            </Alert>
           ) : (
-            <div className="alert alert-danger" role="alert">
+            <Alert color="red" mb="md" role="alert" variant="light">
               <Trans>Failed to reset your password.</Trans>
-            </div>
+            </Alert>
           )
         ) : null}
 
         <ErrorAlert error={resetMutation.error} />
 
-        <div className="container">
+        <Paper p="xl" radius="md" withBorder>
           <form
-            className="form-signin"
             noValidate
             onSubmit={(event) => {
               void submitForm(event);
             }}
             role="form"
           >
-            <h2 className="form-signin-heading">
+            <Title mb="xs" order={2} size="h3">
               <Trans>Reset your Password</Trans>
-            </h2>
-            <p className="help-block">
+            </Title>
+            <Text c="dimmed" mb="md" size="sm">
               <Trans>Please enter a new password.</Trans>
-            </p>
+            </Text>
 
             <TextField
               autoComplete="new-password"
@@ -101,18 +112,18 @@ export function RecoveryResetPage() {
               type="password"
             />
 
-            <div className="text-center">
-              <button
-                className="btn btn-primary btn-block"
-                disabled={!formState.isValid || resetMutation.isPending}
-                type="submit"
-              >
-                <Trans>Reset Password</Trans>
-              </button>
-            </div>
+            <Button
+              disabled={!formState.isValid}
+              fullWidth
+              loading={resetMutation.isPending}
+              mt="md"
+              type="submit"
+            >
+              <Trans>Reset Password</Trans>
+            </Button>
           </form>
-        </div>
-      </div>
-    </div>
+        </Paper>
+      </Container>
+    </Box>
   );
 }
