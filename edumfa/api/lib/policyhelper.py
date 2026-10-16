@@ -39,7 +39,7 @@ log = logging.getLogger(__name__)
 def get_init_tokenlabel_parameters(g, params=None, token_type="hotp", user_object=None):
     """
     This helper function modifies the request parameters in regards
-    to enrollment policies tokenlabel, tokenissuer, appimage, force_app_pin
+    to enrollment policies tokenlabel, tokenissuer, force_app_pin
 
     :param params: The request parameter
     :param user_object: User object in the request
@@ -65,12 +65,6 @@ def get_init_tokenlabel_parameters(g, params=None, token_type="hotp", user_objec
     ).action_values(unique=True, allow_white_space_in_action=True)
     if len(issuer_pols) == 1:
         params[ACTION.TOKENISSUER] = list(issuer_pols)[0]
-
-    imageurl_pols = Match.user(
-        g, scope=SCOPE.ENROLL, action=ACTION.APPIMAGEURL, user_object=user_object
-    ).action_values(unique=True, allow_white_space_in_action=True)
-    if len(imageurl_pols) == 1:
-        params[ACTION.APPIMAGEURL] = list(imageurl_pols)[0]
 
     # check the force_app_pin policy
     app_pin_pols = Match.user(

@@ -700,9 +700,6 @@ class PushTokenClass(TokenClass):
         extra_data = {
             "enrollment_credential": self.get_tokeninfo("enrollment_credential")
         }
-        imageurl = params.get("appimageurl")
-        if imageurl:
-            extra_data.update({"image": imageurl})
         if self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
             # Get enrollment values from the policy
             registration_url = getParam(

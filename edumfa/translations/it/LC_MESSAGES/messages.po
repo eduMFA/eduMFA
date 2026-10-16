@@ -751,16 +751,6 @@ msgid ""
 msgstr ""
 
 #: lib/policy.py
-#, fuzzy
-msgid ""
-"This is the URL to the token image for apps like FreeOTP (supported file "
-"formats: PNG, JPG and GIF)."
-msgstr ""
-"Questo è l'URL dell'immagine del token per privacyIDEA Authenticator e "
-"alcune altre app come FreeOTP (formati di file supportati: PNG, JPG e "
-"GIF)."
-
-#: lib/policy.py
 msgid ""
 "Users can assign a token just by using the unassigned token to "
 "authenticate."
