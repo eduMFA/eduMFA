@@ -26,6 +26,7 @@ import logging
 from flask import Blueprint, g, request
 
 from edumfa.api.auth import admin_required, user_required
+from edumfa.lib.auth import ROLE
 from edumfa.lib.event import event
 from edumfa.lib.user import User, create_user, is_attribute_at_all
 
@@ -198,6 +199,8 @@ def delete_user_attribute(attrkey, username, realm=None):
     """
     Delete a specified custom attribute from the user.
     The user is specified by the positional parameters user and realm.
+    When a user is calling the endpoint, the positional parameters are
+    ignored and the attribute is deleted from the authenticated user.
 
     :httpparam user: The username of the user, for whom the attribute should be set
     :httpparam realm: The realm of the user
@@ -205,7 +208,13 @@ def delete_user_attribute(attrkey, username, realm=None):
 
     Returns the number of deleted attributes.
     """
-    user = User(username, realm)
+    if g.logged_in_user.get("role") == ROLE.USER:
+        # The policy check in check_custom_user_attributes was done for the
+        # authenticated user, so the positional parameters must not be able
+        # to address anybody else.
+        user = request.User
+    else:
+        user = User(username, realm)
     r = user.delete_attribute(attrkey)
     g.audit_object.log({"success": True, "info": f"{attrkey}"})
     return send_result(r)
@@ -317,12 +326,20 @@ def update_user():
     .. note:: Also a user can call this function to e.g. change his password.
        But in this case the parameter "user" and "resolver" get overwritten
        by the values of the authenticated user, even if he specifies another
-       username.
+       username, and the parameter "userid" is ignored.
     """
     attributes = _get_attributes_from_param(request.all_data)
+    # The userid only addresses the record to be updated. It is the primary
+    # identifier that token assignments refer to and must never be rewritten.
+    attributes.pop("userid", None)
     username = getParam(request.all_data, "user", optional=False)
     resolvername = getParam(request.all_data, "resolver", optional=False)
     userid = getParam(request.all_data, "userid")
+    if g.logged_in_user.get("role") == ROLE.USER:
+        # A user may only ever update their own record. "user" and "resolver"
+        # are already overwritten in before_request, but "userid" would still
+        # address any other record of the same resolver.
+        userid = None
     if userid is not None:
         # Create the user object by uid
         user_obj = User(resolver=resolvername, uid=userid)
