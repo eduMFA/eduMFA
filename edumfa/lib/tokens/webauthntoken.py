@@ -1389,12 +1389,12 @@ class WebAuthnTokenClass(TokenClass):
             {
                 "nonce": webauthn_b64_encode(nonce),
                 "transactionId": transactionid,
-                "exp": datetime.datetime.now(tz=datetime.timezone.utc)
+                "exp": datetime.datetime.now(tz=datetime.UTC)
                 + datetime.timedelta(
                     seconds=int(get_from_config("DefaultChallengeValidityTime", 120))
                 ),
-                "iat": datetime.datetime.now(tz=datetime.timezone.utc),
-                "nbf": datetime.datetime.now(tz=datetime.timezone.utc),
+                "iat": datetime.datetime.now(tz=datetime.UTC),
+                "nbf": datetime.datetime.now(tz=datetime.UTC),
             },
             current_app.secret_key,
             algorithm="HS256",
@@ -1548,7 +1548,7 @@ class WebAuthnTokenClass(TokenClass):
                     options={"verify_exp": False},
                 )
                 log.warning(
-                    f"Got expired passkey challenge: {err}; Actually expired at {claims.get('exp')} ({claims.get('exp') - datetime.datetime.now(datetime.timezone.utc).timestamp()} seconds ago)"
+                    f"Got expired passkey challenge: {err}; Actually expired at {claims.get('exp')} ({claims.get('exp') - datetime.datetime.now(datetime.UTC).timestamp()} seconds ago)"
                 )
                 reply_dict = {"message": "Passkey challenge expired."}
                 return False, reply_dict
@@ -1564,7 +1564,7 @@ class WebAuthnTokenClass(TokenClass):
                 return False, reply_dict
             # Try to store the transaction id in the blacklist to prevent replay attacks, should trigger an IntegrityError or an OperationalError on duplicate inserts
             expiration = datetime.datetime.fromtimestamp(
-                claims.get("exp"), tz=datetime.timezone.utc
+                claims.get("exp"), tz=datetime.UTC
             )
             try:
                 JwtBlacklist(

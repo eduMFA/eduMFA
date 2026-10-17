@@ -12,10 +12,9 @@ You are using eduMFA in your network? Tell about it!
 Write a blog post, tell your friends or simply twitter about it.
 This will make eduMFA wider known and attract new users and contributors.
 
-
 ## Tell us your ideas
 
-If you have a *new idea* you may submit a feature request.
+If you have a _new idea_ you may submit a feature request.
 This should be a new idea that puts forward eduMFA and looks
 at some things from a new angle.
 
@@ -25,15 +24,14 @@ https://github.com/eduMFA/eduMFA/issues
 
 ## Documentation
 
-> [!IMPORTANT]  
-> Python 3.11+ is required to build the documentation.
-
 The source code is pretty well documented. The main documentation resides in the
 `doc`-subfolder and can be build with:
+
 ```
 uv sync
 cd doc/ && make html
 ```
+
 This also pulls the API-documentation from the source code.
 The latest release documentation can be found here:
 
@@ -57,19 +55,18 @@ refrain from reporting an issue at GitHub but send this vulnerability to
 us directly.
 Please include the following details:
 
-* The name and version of the problematic software component,
+- The name and version of the problematic software component,
   and if possible
 
-  * the location of the issue and
-  * the potential impact
+  - the location of the issue and
+  - the potential impact
 
-* A detailed description to reproduce the vulnerability and
+- A detailed description to reproduce the vulnerability and
 
-* Your name, (handle or alias) to be included in the
+- Your name, (handle or alias) to be included in the
   disclosure and hall of fame.
 
 You can send this information to the eduMFA core development team by submitting a security report using the GitHub Form.
-
 
 ## Develop
 
@@ -79,30 +76,30 @@ Take a look at the issues. Maybe you can find something, you
 would like to start with?
 If you are sending a pull request, please note the following:
 
-* Before coding you need to **create an issue**, that describes
+- Before coding you need to **create an issue**, that describes
   your problem or idea, which you want to solve with your
   pull request. We want to discuss the functionality within the issue and
   not guess the intention from the pull request!
-* In your pull request refer to the issue.
-* Describe your changes in the commit message.
-* We use **Ruff** as linter and formatter. Please install the pinned version
+- In your pull request refer to the issue.
+- Describe your changes in the commit message.
+- We use **Ruff** as linter and formatter. Please install the pinned version
   (see `pyproject.toml`) and run it before committing your code.
-* When implementing something new, try to do more with **less code**!
-* When implementing something new, try to implement it in a **generic way**,
+- When implementing something new, try to do more with **less code**!
+- When implementing something new, try to implement it in a **generic way**,
   that it can be used and different use cases.
-* We are proud of our **code coverage**. The modular code with decorators can
+- We are proud of our **code coverage**. The modular code with decorators can
   be tested more easy. Write **tests** for your code!
-* If you need to change the database model, edit ``edumfa/models.py``
+- If you need to change the database model, edit `edumfa/models.py`
   accordingly. Then you can use
-  ``./edumfa-manage`` to create migration scripts. The migration scripts
-  are located at ``migrations/versions/``.
+  `./edumfa-manage` to create migration scripts. The migration scripts
+  are located at `migrations/versions/`.
   To create a migration script to update the database schema run:
 
   ```
   ./edumfa-manage db migrate
   ```
 
-  This will create a new file in ``migrations/versions/``. Edit the description
+  This will create a new file in `migrations/versions/`. Edit the description
   and take a look at the other scripts for inspiration.
   Then you can run:
 
@@ -135,8 +132,8 @@ issues, how do we develop eduMFA, how do we perform code reviews?
 
 ### Terminology
 
-In the following, *"we"* and *"team"* refers to the [eduMFA development
-team](https://github.com/orgs/eduMFA/people). *"External contributors"*
+In the following, _"we"_ and _"team"_ refers to the [eduMFA development
+team](https://github.com/orgs/eduMFA/people). _"External contributors"_
 refers to contributing developers from the community.
 
 ### Issues
@@ -162,47 +159,47 @@ creating the release changelog later.
 
 ### Projects
 
-We use *Github Projects* to organize our weekly development cycle.
+We use _Github Projects_ to organize our weekly development cycle.
 
 In a weekly meeting we decide, which issues will be handled during the
 following week. Issues are put into the
 [project](https://github.com/eduMFA/eduMFA/projects) in the state
-*Todo*.
+_Todo_.
 
 When a developer starts working on the issue, the developer puts the issue
-into the state *In progress*. When he is done he opens a pull requests,
-assigns a reviewer and puts the issue into the state *Review in progress*.
+into the state _In progress_. When he is done he opens a pull requests,
+assigns a reviewer and puts the issue into the state _Review in progress_.
 
 When the reviewer is happy with the pull request, he can merge the PR
 into the `main` branch. The issue is closed and goes into the state
-*Nearly done*.
+_Nearly done_.
 
 The closes issue is again discussed in the next meeting and then finally
-moved to the state *Done*.
+moved to the state _Done_.
 
 (More details on each step further below)
 
 ### Branches
 
-##### ``main`` branch
+##### `main` branch
 
-Our ``main`` branch represents the current development state and, as a
+Our `main` branch represents the current development state and, as a
 consequence, may be unstable. Features are usually added there.
 
 ##### Stable branches
 
-For each minor version ``X.Y`` (e.g. 2.23, 3.0, ...), we create a *stable
-branch* called ``branch-X.Y``, e.g.
-[``branch-3.0``](https://github.com/eduMFA/eduMFA/tree/branch-3.0).
+For each minor version `X.Y` (e.g. 2.23, 3.0, ...), we create a _stable
+branch_ called `branch-X.Y`, e.g.
+[`branch-3.0`](https://github.com/eduMFA/eduMFA/tree/branch-3.0).
 Hotfixes for stable versions are usually added to the stable branches. Stable
 branches are then merged back into the main branch.
 
 ##### Local Branches and Pull Requests
 
-We do not directly work on the ``main`` branch or the stable branches.
-Instead, we locally create new branches, diverging either from ``main`` or a
-stable branch. These branches are called ``123/some-shortname``, where ``123``
-refers to an issue number, and ``some-shortname`` is a short description of the
+We do not directly work on the `main` branch or the stable branches.
+Instead, we locally create new branches, diverging either from `main` or a
+stable branch. These branches are called `123/some-shortname`, where `123`
+refers to an issue number, and `some-shortname` is a short description of the
 changes. If we are done developing a bugfix, a feature, or a reasonable part of
 a feature, we open a pull request (see below).
 
@@ -210,7 +207,7 @@ a feature, we open a pull request (see below).
 
 ##### PR descriptions
 
-We use github's *pull requests*. The pull request description mentions the
+We use github's _pull requests_. The pull request description mentions the
 issue that is being worked on (e.g. "Working on #xyz" or "Closes #xyz", see
 [keywords](https://help.github.com/en/articles/closing-issues-using-keywords)).
 The respective issue should be added to a milestone. This makes it easier to
@@ -223,22 +220,22 @@ members before it is merged.
 
 ##### Choosing a Reviewer
 
-In the following, we call the requester of a pull request the *developer* and
-differentiate between *external contributors* and *team members*:
+In the following, we call the requester of a pull request the _developer_ and
+differentiate between _external contributors_ and _team members_:
 
-* An external contributor can simply open a pull request. The team then decides
-on a reviewer and accordingly requests a review.
-* A team member explicitly requests a review from one or more other team
-members. In order to find a suitable reviewer, a developer may refer to the
-[development team list](Development-Team). Even after having created a pull
-request, the **developer is responsible for getting the pull request merged**.
-In particular, it is the developer's responsibility to choose a suitable
-reviewer. As the reviewer may not notice an incoming review request due to the
-high number of notifications, the developer is responsible for reminding the
-reviewer of pending review requests. If the reviewer is too busy to deal with
-the pull request, the developer chooses a different reviewer.
+- An external contributor can simply open a pull request. The team then decides
+  on a reviewer and accordingly requests a review.
+- A team member explicitly requests a review from one or more other team
+  members. In order to find a suitable reviewer, a developer may refer to the
+  [development team list](Development-Team). Even after having created a pull
+  request, the **developer is responsible for getting the pull request merged**.
+  In particular, it is the developer's responsibility to choose a suitable
+  reviewer. As the reviewer may not notice an incoming review request due to the
+  high number of notifications, the developer is responsible for reminding the
+  reviewer of pending review requests. If the reviewer is too busy to deal with
+  the pull request, the developer chooses a different reviewer.
 
-We *do not* request reviews from the whole team, because this makes it hard to
+We _do not_ request reviews from the whole team, because this makes it hard to
 assign responsibility.
 
 ##### Reviewing Pull Requests
@@ -259,8 +256,8 @@ the feature branch, if possible.
 ##### Multiple Reviewers
 
 The developer may also request reviews from multiple team members. This makes
-sense if the PR spans across multiple architectural layers (e.g. backend *and*
+sense if the PR spans across multiple architectural layers (e.g. backend _and_
 frontend), or if the developer wants both a functional (does the PR fix the
 bug?) and technical review (is the code okay?). If a developer requests
-multiple reviews, the PR description should explicitly state if *all* reviews
-should be positive, or if *one* positive review is sufficient.
+multiple reviews, the PR description should explicitly state if _all_ reviews
+should be positive, or if _one_ positive review is sufficient.
