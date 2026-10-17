@@ -14,6 +14,9 @@
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@/*": ["./react-src/*"]
+    },
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,

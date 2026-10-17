@@ -8,8 +8,8 @@ import {
   findFetchCalls,
   getJsonRequestBody,
   stubLegacySession
-} from "../../tests/fetchMockUtils";
-import { renderWithProviders } from "../../tests/renderWithProviders";
+} from "@/tests/fetchMockUtils";
+import { renderWithProviders } from "@/tests/renderWithProviders";
 
 const self = {
   description: "",

@@ -1,5 +1,5 @@
-import type { ResolverConfig } from "../api/config";
-import { isRecord } from "../api/envelope";
+import type { ResolverConfig } from "@/api/config";
+import { isRecord } from "@/api/envelope";
 
 /**
  * Port of the legacy `getUserAttributes` / `getUserAttributesView` scope

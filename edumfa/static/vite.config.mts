@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+
 import { lingui } from "@lingui/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
@@ -16,6 +18,10 @@ const libraryChunk = (name: string, pattern: RegExp) => ({
 
 export default defineConfig({
   plugins: [react(), lingui({ macroTransform: true })],
+  resolve: {
+    // `@/` points at react-src, mirroring the `paths` entry in tsconfig.json.
+    alias: { "@": fileURLToPath(new URL("./react-src", import.meta.url)) }
+  },
   build: {
     emptyOutDir: true,
     manifest: true,

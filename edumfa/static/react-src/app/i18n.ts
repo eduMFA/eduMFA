@@ -1,7 +1,7 @@
 import { i18n } from "@lingui/core";
 
-import { messages as deMessages } from "../locales/de/messages";
-import { messages as enMessages } from "../locales/en/messages";
+import { messages as deMessages } from "@/locales/de/messages";
+import { messages as enMessages } from "@/locales/en/messages";
 
 const catalogs = {
   de: deMessages,

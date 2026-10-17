@@ -29,6 +29,16 @@ angular.module("eduMfaAuth", ['eduMfaApp.errorMessage'])
         auth_token.
          */
         var user = {};
+        // WebUI policy values from the login response that React routes
+        // read through the bridge (page sizes, token list columns, ...).
+        var webUiSettings = {};
+        // Registered by the main controller so React routes (the enrollment
+        // wizard) can end the session through the Angular logout.
+        var logoutHandler = null;
+        // Registered by the main controller so the React login page can hand a
+        // successful /auth response over (do_login_stuff keeps the session,
+        // the idle timer and the dialogs during coexistence).
+        var loginHandler = null;
         var notifyReactAuthBridge = function () {
             if (typeof window === "undefined") {
                 return;
@@ -43,8 +53,21 @@ angular.module("eduMfaAuth", ['eduMfaApp.errorMessage'])
                 getRole: function () {
                     return user.role;
                 },
+                getSettings: function () {
+                    return webUiSettings;
+                },
                 getUser: function () {
                     return user;
+                },
+                login: function (data) {
+                    if (loginHandler) {
+                        loginHandler(data);
+                    }
+                },
+                logout: function () {
+                    if (logoutHandler) {
+                        logoutHandler();
+                    }
                 }
             };
             if (typeof window.CustomEvent === "function") {
@@ -65,7 +88,21 @@ angular.module("eduMfaAuth", ['eduMfaApp.errorMessage'])
                 user.role = role;
                 user.rights = rights;
                 user.menus = menus;
+                if (!auth_token) {
+                    // logout: the settings belong to the ended session
+                    webUiSettings = {};
+                }
                 notifyReactAuthBridge();
+            },
+            setWebUiSettings: function (settings) {
+                webUiSettings = settings || {};
+                notifyReactAuthBridge();
+            },
+            setLogoutHandler: function (handler) {
+                logoutHandler = handler;
+            },
+            setLoginHandler: function (handler) {
+                loginHandler = handler;
             },
             authError: function(error) {
                 var authErrorCodes = Array(403, 4031, 4032, 4033, 4034, 4035, 4036);

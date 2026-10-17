@@ -3,12 +3,10 @@ import {
   Anchor,
   Badge,
   Button,
-  Checkbox,
   Group,
   NativeSelect,
   SimpleGrid,
-  Text,
-  TextInput
+  Text
 } from "@mantine/core";
 import { IconDeviceFloppy, IconEdit, IconUnlink } from "@tabler/icons-react";
 import {
@@ -21,7 +19,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { MachineSidebar } from "./MachineSidebar";
-import { useApiClient } from "../../api/ApiClientProvider";
+import { useApiClient } from "@/api/ApiClientProvider";
 import {
   attachTokenToMachine,
   detachTokenFromMachine,
@@ -31,25 +29,25 @@ import {
   getMachineTokens,
   machineQueryKeys,
   saveMachineTokenOptions,
-  type ApplicationOptionSpec,
   type MachineTokenAssignment,
   type MachineTokenParams
-} from "../../api/machines";
-import { useAuth } from "../../auth/AuthProvider";
-import { hasRight } from "../../auth/permissions";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
-import { FieldValue } from "../../components/forms/FieldValue";
-import { SerialLookupField } from "../../components/forms/SerialLookupField";
-import { Card } from "../../components/layout/Card";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { SidebarLayout } from "../../components/layout/SidebarLayout";
-import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
-import { Pagination } from "../../components/tables/Pagination";
-import { hashHref } from "../../lib/hashbang";
-import { fixSerial } from "../../lib/serial";
-import { capitalize } from "../../lib/strings";
+} from "@/api/machines";
+import { useAuth } from "@/auth/AuthProvider";
+import { hasRight } from "@/auth/permissions";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { FieldValue } from "@/components/forms/FieldValue";
+import { SerialLookupField } from "@/components/forms/SerialLookupField";
+import { Card } from "@/components/layout/Card";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { ApplicationOptionInput } from "@/components/forms/ApplicationOptionInput";
+import { DataTable, type DataTableColumn } from "@/components/tables/DataTable";
+import { Pagination } from "@/components/tables/Pagination";
+import { hashHref } from "@/lib/hashbang";
+import { fixSerial } from "@/lib/serial";
+import { capitalize } from "@/lib/strings";
 
 /** The legacy details view listed five assignments per page. */
 const MACHINE_TOKEN_PAGE_SIZE = 5;
@@ -408,77 +406,5 @@ export function MachineDetailsPage() {
         </form>
       ) : null}
     </SidebarLayout>
-  );
-}
-
-interface ApplicationOptionInputProps {
-  idPrefix: string;
-  name: string;
-  onChange: (value: boolean | string) => void;
-  spec: ApplicationOptionSpec;
-  value: boolean | string | undefined;
-}
-
-/**
- * One application option, rendered like the legacy template: a select when
- * the option lists allowed values, a checkbox for booleans, a text input
- * otherwise.
- */
-function ApplicationOptionInput({
-  idPrefix,
-  name,
-  onChange,
-  spec,
-  value
-}: ApplicationOptionInputProps) {
-  const inputId = `${idPrefix}_${name}`;
-  const label = capitalize(name);
-  const textValue = typeof value === "string" ? value : "";
-  const isChecked = value === true || value === "True" || value === "true";
-
-  if (spec.value) {
-    return (
-      <NativeSelect
-        data={[{ label: "", value: "" }, ...spec.value]}
-        description={spec.description}
-        id={inputId}
-        label={label}
-        mb="sm"
-        onChange={(event) => {
-          onChange(event.currentTarget.value);
-        }}
-        required={Boolean(spec.required)}
-        value={textValue}
-      />
-    );
-  }
-
-  if (spec.type === "bool") {
-    return (
-      <Checkbox
-        checked={isChecked}
-        description={spec.description}
-        id={inputId}
-        label={label}
-        mb="sm"
-        onChange={(event) => {
-          onChange(event.currentTarget.checked);
-        }}
-      />
-    );
-  }
-
-  return (
-    <TextInput
-      description={spec.description}
-      id={inputId}
-      label={label}
-      mb="sm"
-      onChange={(event) => {
-        onChange(event.currentTarget.value);
-      }}
-      required={Boolean(spec.required)}
-      value={textValue}
-    />
   );
 }

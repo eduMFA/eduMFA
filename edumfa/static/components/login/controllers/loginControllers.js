@@ -400,6 +400,27 @@ angular.module("eduMfaApp")
                 data.result.value.role,
                 data.result.value.rights,
                 data.result.value.menus);
+            // Hand the WebUI policy values to the React routes, which
+            // cannot read the login response themselves yet.
+            AuthFactory.setWebUiSettings({
+                audit_page_size: data.result.value.audit_page_size,
+                default_tokentype: data.result.value.default_tokentype,
+                hide_buttons: data.result.value.hide_buttons,
+                indexedsecret_force_attribute: data.result.value.indexedsecret_force_attribute,
+                indexedsecret_preset_attribute: data.result.value.indexedsecret_preset_attribute,
+                qr_image_android: data.result.value.qr_image_android,
+                qr_image_custom: data.result.value.qr_image_custom,
+                qr_image_ios: data.result.value.qr_image_ios,
+                require_description: data.result.value.require_description,
+                search_on_enter: data.result.value.search_on_enter,
+                show_seed: data.result.value.show_seed,
+                token_page_size: data.result.value.token_page_size,
+                token_rollover: data.result.value.token_rollover,
+                token_wizard: data.result.value.token_wizard,
+                token_wizard_2nd: data.result.value.token_wizard_2nd,
+                user_details: data.result.value.user_details,
+                user_page_size: data.result.value.user_page_size
+            });
             // clear old error messages
             inform.clear();
             if (data.detail) {
@@ -560,6 +581,24 @@ angular.module("eduMfaApp")
             $window.location.href = $scope.logout_redirect_url;
         }
     };
+
+    // React routes (the enrollment wizard) end the session through this
+    // handler, which runs the Angular logout inside a digest.
+    AuthFactory.setLogoutHandler(function () {
+        $scope.$applyAsync(function () {
+            $scope.logout();
+        });
+    });
+
+    // The React login page hands a successful /auth response over through
+    // this handler, so the session, the idle timer, the dialogs and the start
+    // page stay with this controller during coexistence.
+    AuthFactory.setLoginHandler(function (data) {
+        $scope.$applyAsync(function () {
+            $scope.unlocking = false;
+            $scope.do_login_stuff(data);
+        });
+    });
 
     $scope.nextWelcome = function() {
         $scope.welcomeStep += 1;

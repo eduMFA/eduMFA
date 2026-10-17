@@ -27,13 +27,40 @@
   max-width: none;
 }
 
-#react-root input[type="checkbox"],
-#react-root input[type="radio"] {
+/*
+ * Native checkboxes and radios only. The legacy content.css gives every
+ * checkbox `height: 20px; margin-bottom: 5px`; Mantine's own inputs size
+ * themselves through `--checkbox-size` / `--radio-size`, and this id selector
+ * would otherwise collapse them to a line.
+ */
+#react-root input[type="checkbox"]:not([class*="mantine-"]),
+#react-root input[type="radio"]:not([class*="mantine-"]) {
   height: auto;
   margin: 0;
   vertical-align: baseline;
 }
 
+#react-root input.mantine-Checkbox-input {
+  height: var(--checkbox-size);
+  margin: 0;
+  vertical-align: top;
+}
+
+#react-root input.mantine-Radio-radio {
+  height: var(--radio-size);
+  margin: 0;
+  vertical-align: top;
+}
+
 #react-root table {
   background-color: transparent;
+}
+
+/*
+ * Badges used as buttons (token list: enable/disable, reset fail counter).
+ * Mantine's Badge pins `cursor: default` and so hides the pointer of the
+ * surrounding UnstyledButton.
+ */
+#react-root button .mantine-Badge-root {
+  cursor: pointer;
 }

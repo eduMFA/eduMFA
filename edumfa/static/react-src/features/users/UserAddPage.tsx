@@ -8,19 +8,19 @@ import { useNavigate } from "react-router-dom";
 
 import { UserAttributeFields, type UserFormValues } from "./UserAttributeFields";
 import { UserSidebar } from "./UserSidebar";
-import { useApiClient } from "../../api/ApiClientProvider";
-import { configQueryKeys, getResolvers } from "../../api/config";
-import { createUser, userQueryKeys } from "../../api/users";
-import { useAuth } from "../../auth/AuthProvider";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
-import { Card } from "../../components/layout/Card";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { SidebarLayout } from "../../components/layout/SidebarLayout";
-import { pushFlash } from "../../lib/flash";
-import { hashHref } from "../../lib/hashbang";
-import { getResolverUserFields } from "../../lib/userAttributes";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { configQueryKeys, getResolvers } from "@/api/config";
+import { createUser, userQueryKeys } from "@/api/users";
+import { useAuth } from "@/auth/AuthProvider";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { Card } from "@/components/layout/Card";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { pushFlash } from "@/lib/flash";
+import { hashHref } from "@/lib/hashbang";
+import { getResolverUserFields } from "@/lib/userAttributes";
 
 const editableResolverParams = { editable: true };
 

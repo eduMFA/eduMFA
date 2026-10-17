@@ -54,6 +54,10 @@ class Config:
     EDUMFA_EXTERNAL_LINKS = True
     EDUMFA_REACT_UI = True
     EDUMFA_REACT_ROUTES = [
+        "/login",
+        "/response",
+        "/pinchange",
+        "/offline",
         "/component/clienttype",
         "/register",
         "/recovery",
@@ -65,6 +69,19 @@ class Config:
         "/user/password",
         "/machine/list",
         "/machine/details/:id/:resolver",
+        "/token/list",
+        "/token/assign",
+        "/token/getserial",
+        "/token/challenges",
+        "/token/details/:serial",
+        "/token/lost/:serial",
+        "/token/applications/:application",
+        "/token/import",
+        "/token/enroll",
+        "/token/enroll/:realmname/:username",
+        "/token/rollover/:tokenType/:tokenSerial",
+        "/token/wizard",
+        "/dashboard",
     ]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # EDUMFA_GNUPG_HOME = "gpg"

@@ -48,4 +48,25 @@ describe("useDebouncedState", () => {
     expect(result.current.draft).toBe("");
     expect(result.current.applied).toBe("");
   });
+
+  it("waits for apply() when live application is disabled", () => {
+    const { result } = renderHook(() =>
+      useDebouncedState("", 300, { liveApply: false })
+    );
+
+    act(() => {
+      result.current.setDraft("ali");
+    });
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+
+    expect(result.current.applied).toBe("");
+
+    act(() => {
+      result.current.apply();
+    });
+
+    expect(result.current.applied).toBe("ali");
+  });
 });

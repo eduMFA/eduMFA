@@ -5,18 +5,18 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
 import { UserSidebar } from "./UserSidebar";
-import { useApiClient } from "../../api/ApiClientProvider";
-import { getUserDetails, updateUser, userQueryKeys } from "../../api/users";
-import { useAuth } from "../../auth/AuthProvider";
-import { hasRight } from "../../auth/permissions";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
-import { FieldValue } from "../../components/forms/FieldValue";
-import { Card } from "../../components/layout/Card";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { SidebarLayout } from "../../components/layout/SidebarLayout";
-import { notify } from "../../lib/notify";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { getUserDetails, updateUser, userQueryKeys } from "@/api/users";
+import { useAuth } from "@/auth/AuthProvider";
+import { hasRight } from "@/auth/permissions";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { FieldValue } from "@/components/forms/FieldValue";
+import { Card } from "@/components/layout/Card";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { notify } from "@/lib/notify";
 
 interface PasswordFormValues {
   password: string;

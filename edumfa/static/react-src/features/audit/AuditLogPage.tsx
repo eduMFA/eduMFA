@@ -23,28 +23,22 @@ import {
   isAuditSuccess,
   type AuditEntry,
   type AuditLogParams
-} from "../../api/audit";
-import { useApiClient } from "../../api/ApiClientProvider";
-import { useAuth } from "../../auth/AuthProvider";
-import { BooleanPill } from "../../components/feedback/BooleanPill";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
-import { Card } from "../../components/layout/Card";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { ColumnFilter } from "../../components/tables/ColumnFilter";
-import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
-import { Pagination } from "../../components/tables/Pagination";
-import { formatLegacyDate } from "../../lib/dates";
-import { hashHref } from "../../lib/hashbang";
-import { useDebouncedState } from "../../lib/useDebouncedState";
-
-/**
- * Default page size. The legacy UI could raise this through the
- * `audit_page_size` WebUI policy, which is delivered with the login response;
- * wiring that policy in React is deferred until React owns the login flow.
- */
-const AUDIT_PAGE_SIZE = 10;
+} from "@/api/audit";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { useAuth } from "@/auth/AuthProvider";
+import { BooleanPill } from "@/components/feedback/BooleanPill";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { Card } from "@/components/layout/Card";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { ColumnFilter } from "@/components/tables/ColumnFilter";
+import { DataTable, type DataTableColumn } from "@/components/tables/DataTable";
+import { Pagination } from "@/components/tables/Pagination";
+import { formatLegacyDate } from "@/lib/dates";
+import { hashHref } from "@/lib/hashbang";
+import { toContainsWildcard } from "@/lib/strings";
+import { useDebouncedState } from "@/lib/useDebouncedState";
 
 /** Typing pauses this long before the backend is queried; Enter applies at once. */
 const FILTER_DEBOUNCE_MS = 300;
@@ -72,14 +66,15 @@ type AuditFilters = Partial<Record<AuditFilterName, string>>;
 export function AuditLogPage() {
   const apiClient = useApiClient();
   const { t } = useLingui();
-  const { isAuthenticated, rights, user } = useAuth();
+  const { isAuthenticated, rights, settings, user } = useAuth();
   const isAdmin = user?.role === "admin";
   // The legacy audit state accepted ?serial and ?user to open the log
   // pre-filtered from the token and user detail views.
   const [searchParams] = useSearchParams();
   const filterState = useDebouncedState<AuditFilters>(
     () => readInitialFilters(searchParams),
-    FILTER_DEBOUNCE_MS
+    FILTER_DEBOUNCE_MS,
+    { liveApply: !settings.searchOnEnter }
   );
   const {
     applied: appliedFilters,
@@ -91,11 +86,11 @@ export function AuditLogPage() {
   const params = useMemo<AuditLogParams>(
     () => ({
       page,
-      page_size: AUDIT_PAGE_SIZE,
+      page_size: settings.auditPageSize,
       sortorder: "desc",
       ...toAuditParams(appliedFilters)
     }),
-    [appliedFilters, page]
+    [appliedFilters, page, settings.auditPageSize]
   );
 
   const auditQuery = useQuery({
@@ -287,7 +282,7 @@ export function AuditLogPage() {
         <Pagination
           currentPage={page}
           onPageChange={setPage}
-          pageSize={AUDIT_PAGE_SIZE}
+          pageSize={settings.auditPageSize}
           totalCount={entryCount}
         />
 
@@ -336,11 +331,7 @@ function toAuditParams(filters: AuditFilters): AuditFilters {
       continue;
     }
 
-    if (name === "success" || value.includes("*")) {
-      requestParams[name] = value;
-    } else {
-      requestParams[name] = `*${value}*`;
-    }
+    requestParams[name] = name === "success" ? value : toContainsWildcard(value);
   }
 
   return requestParams;

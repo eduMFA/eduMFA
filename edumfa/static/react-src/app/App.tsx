@@ -14,8 +14,8 @@ import { i18n } from "./i18n";
 import { createEduMfaQueryClient } from "./queryClient";
 import { MigratedRoutes, shouldReactOwnRoute } from "./routes";
 import { theme } from "./theme";
-import { ApiClientProvider } from "../api/ApiClientProvider";
-import { AuthProvider } from "../auth/AuthProvider";
+import { ApiClientProvider } from "@/api/ApiClientProvider";
+import { AuthProvider } from "@/auth/AuthProvider";
 
 export function App() {
   const bootstrapConfig = useMemo(() => readReactBootstrapConfig(), []);

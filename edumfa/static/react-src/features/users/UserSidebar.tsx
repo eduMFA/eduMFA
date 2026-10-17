@@ -9,10 +9,10 @@ import {
 } from "@tabler/icons-react";
 import type { ReactNode } from "react";
 
-import { useAuth } from "../../auth/AuthProvider";
-import { hasRight } from "../../auth/permissions";
-import { SidebarSection } from "../../components/layout/SidebarSection";
-import { hashHref } from "../../lib/hashbang";
+import { useAuth } from "@/auth/AuthProvider";
+import { hasRight } from "@/auth/permissions";
+import { SidebarSection } from "@/components/layout/SidebarSection";
+import { hashHref } from "@/lib/hashbang";
 
 export type UserSidebarItem = "add" | "details" | "list" | "password";
 

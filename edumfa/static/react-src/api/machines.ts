@@ -23,14 +23,26 @@ export interface MachineDetail {
 
 export interface MachineTokenParams {
   application?: string;
+  /** Offline application option filter (`*value*`). */
+  count?: string;
   hostname?: string;
   machineid?: string;
   resolver?: string;
+  /** Offline application option filter (`*value*`). */
+  rounds?: string;
   serial?: string;
+  /** SSH application option filter (`*value*`). */
+  service_id?: string;
+  sortby?: string;
+  sortdir?: "asc" | "desc";
+  /** SSH application option filter (`*value*`). */
+  user?: string;
 }
 
 export interface MachineTokenAssignment {
   application: string;
+  /** Only delivered when listing the machines of one token. */
+  hostname?: string | string[] | null;
   id: number;
   machine_id: string | null;
   options: Record<string, string>;

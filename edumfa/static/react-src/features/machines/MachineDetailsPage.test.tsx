@@ -9,9 +9,9 @@ import {
   findFetchCalls,
   getJsonRequestBody,
   stubLegacySession
-} from "../../tests/fetchMockUtils";
-import { fieldLabel } from "../../tests/labels";
-import { renderWithProviders } from "../../tests/renderWithProviders";
+} from "@/tests/fetchMockUtils";
+import { fieldLabel } from "@/tests/labels";
+import { renderWithProviders } from "@/tests/renderWithProviders";
 
 const machine = { hostname: "web1", id: "m1", ip: "10.0.0.1", resolver_name: "hosts1" };
 

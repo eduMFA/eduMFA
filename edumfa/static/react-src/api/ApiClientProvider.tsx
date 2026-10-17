@@ -7,7 +7,7 @@ import {
 } from "react";
 
 import { createApiClient, type ApiClient } from "./client";
-import { useAuth } from "../auth/AuthProvider";
+import { useAuth } from "@/auth/AuthProvider";
 
 const ApiClientContext = createContext<ApiClient | null>(null);
 

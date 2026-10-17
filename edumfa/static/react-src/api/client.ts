@@ -30,9 +30,12 @@ export interface ApiRequestOptions {
   /**
    * "json" (default) parses and unwraps the eduMFA envelope. "text" returns
    * the raw response body, e.g. for the audit CSV download; type the call as
-   * `get<string>` in that case.
+   * `get<string>` in that case. "envelope" returns the whole success envelope
+   * for endpoints that put data next to the value in `detail` (the random
+   * PIN, the validate message); type the call as
+   * `post<EduMfaSuccessEnvelope<TValue>>`.
    */
-  responseType?: "json" | "text" | undefined;
+  responseType?: "envelope" | "json" | "text" | undefined;
   signal?: AbortSignal | undefined;
 }
 
@@ -80,7 +83,13 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
         throw createHttpError(response, payload);
       }
 
-      return unwrapEduMfaEnvelope(payload) as TValue;
+      const value = unwrapEduMfaEnvelope(payload);
+
+      if (requestOptions.responseType === "envelope") {
+        return payload as TValue;
+      }
+
+      return value as TValue;
     } catch (error) {
       if (error instanceof ApiError) {
         if (isAuthError(error)) {

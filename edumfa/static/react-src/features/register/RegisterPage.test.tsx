@@ -3,8 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { RegisterPage } from "./RegisterPage";
-import { getFetchUrl, getJsonRequestBody } from "../../tests/fetchMockUtils";
-import { renderWithProviders } from "../../tests/renderWithProviders";
+import { getFetchUrl, getJsonRequestBody } from "@/tests/fetchMockUtils";
+import { renderWithProviders } from "@/tests/renderWithProviders";
 
 describe("RegisterPage", () => {
   afterEach(() => {

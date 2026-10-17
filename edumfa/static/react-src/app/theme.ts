@@ -21,6 +21,9 @@ const edumfaBlue: MantineColorsTuple = [
  */
 export const theme = createTheme({
   colors: { edumfa: edumfaBlue },
+  // Clickable Mantine elements (badges inside buttons, checkboxes, selects)
+  // get the pointer, like the Bootstrap views' `[ng-click] { cursor: pointer }`.
+  cursorType: "pointer",
   defaultRadius: "md",
   fontFamily:
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',

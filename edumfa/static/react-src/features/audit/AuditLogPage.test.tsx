@@ -7,8 +7,8 @@ import {
   createEnvelopeResponse,
   createLegacyAuthBridge,
   getFetchUrl
-} from "../../tests/fetchMockUtils";
-import { renderWithProviders } from "../../tests/renderWithProviders";
+} from "@/tests/fetchMockUtils";
+import { renderWithProviders } from "@/tests/renderWithProviders";
 
 const auditPage = {
   auditcolumns: ["number", "date", "action", "success", "serial", "user", "realm"],

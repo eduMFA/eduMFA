@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { downloadAuditLog, getAuditLog } from "./audit";
 import { createApiClient } from "./client";
 import { ApiError } from "./envelope";
-import { getFetchUrl } from "../tests/fetchMockUtils";
+import { getFetchUrl } from "@/tests/fetchMockUtils";
 
 describe("audit api", () => {
   afterEach(() => {

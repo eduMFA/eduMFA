@@ -4,10 +4,10 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
-import { useApiClient } from "../../api/ApiClientProvider";
-import { requestRecoveryCode } from "../../api/recovery";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { TextField } from "../../components/forms/TextField";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { requestRecoveryCode } from "@/api/recovery";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { TextField } from "@/components/forms/TextField";
 
 interface RecoveryFormValues {
   email: string;

@@ -5,25 +5,25 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { MachineSidebar } from "./MachineSidebar";
-import { useApiClient } from "../../api/ApiClientProvider";
+import { useApiClient } from "@/api/ApiClientProvider";
 import {
   formatMachineHostname,
   getMachines,
   machineQueryKeys,
   type MachineDetail,
   type MachineListParams
-} from "../../api/machines";
-import { useAuth } from "../../auth/AuthProvider";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
-import { Card } from "../../components/layout/Card";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { SidebarLayout } from "../../components/layout/SidebarLayout";
-import { ColumnFilter } from "../../components/tables/ColumnFilter";
-import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
-import { Pagination } from "../../components/tables/Pagination";
-import { hashHref } from "../../lib/hashbang";
+} from "@/api/machines";
+import { useAuth } from "@/auth/AuthProvider";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { Card } from "@/components/layout/Card";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { ColumnFilter } from "@/components/tables/ColumnFilter";
+import { DataTable, type DataTableColumn } from "@/components/tables/DataTable";
+import { Pagination } from "@/components/tables/Pagination";
+import { hashHref } from "@/lib/hashbang";
 
 /** Like the legacy controller, machines are paginated client-side. */
 const MACHINE_PAGE_SIZE = 15;

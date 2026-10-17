@@ -1,8 +1,10 @@
 import { Trans } from "@lingui/react/macro";
-import { Alert } from "@mantine/core";
+import { Alert, Anchor } from "@mantine/core";
 import { IconLock } from "@tabler/icons-react";
 
-/** Shown while the legacy auth bridge has no session for a migrated route. */
+import { hashHref } from "@/lib/hashbang";
+
+/** Shown while the auth bridge has no session for a route that needs one. */
 export function LoginRequiredAlert() {
   return (
     <Alert
@@ -12,7 +14,13 @@ export function LoginRequiredAlert() {
       role="alert"
       variant="light"
     >
-      <Trans>Log in through the legacy UI before opening this migrated route.</Trans>
+      <Trans>
+        Please{" "}
+        <Anchor href={hashHref("/login")} inherit>
+          log in
+        </Anchor>{" "}
+        to open this page.
+      </Trans>
     </Alert>
   );
 }

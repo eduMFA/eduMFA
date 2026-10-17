@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type PropsWithChildren } from "react";
 import { Router, type Navigator } from "react-router-dom";
 
-import { readHashbangLocation, toHashbangHref } from "../lib/hashbang";
+import { readHashbangLocation, toHashbangHref } from "@/lib/hashbang";
 
 /**
  * Router for the coexistence shell. React Router's `HashRouter` only

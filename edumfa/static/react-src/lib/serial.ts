@@ -1,4 +1,4 @@
-import type { TokenDetail } from "../api/tokens";
+import type { TokenDetail } from "@/api/tokens";
 
 /**
  * Port of the legacy global `fixSerial`. Serial suggestions are presented as

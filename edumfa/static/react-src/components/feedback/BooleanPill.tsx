@@ -25,10 +25,12 @@ export function BooleanPill({
   return (
     <Badge
       color={value ? "green" : "red"}
+      component="span"
       data-value={String(value)}
       leftSection={value ? <IconCheck size={12} /> : <IconX size={12} />}
       // Table cells may shrink below the badge width; keep the label whole.
       miw="max-content"
+      style={{ verticalAlign: "middle" }}
       variant="light"
     >
       {value ? trueLabel : falseLabel}

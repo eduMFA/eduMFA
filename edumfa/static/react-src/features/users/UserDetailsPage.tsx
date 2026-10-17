@@ -1,7 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Anchor,
-  Badge,
   Button,
   Group,
   NativeSelect,
@@ -33,15 +32,15 @@ import {
   type UserFormValues
 } from "./UserAttributeFields";
 import { UserSidebar } from "./UserSidebar";
-import { useApiClient } from "../../api/ApiClientProvider";
-import { configQueryKeys, getResolver } from "../../api/config";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { configQueryKeys, getResolver } from "@/api/config";
 import {
   assignToken,
   getTokens,
   tokenQueryKeys,
   type TokenDetail,
   type TokenListParams
-} from "../../api/tokens";
+} from "@/api/tokens";
 import {
   deleteCustomAttribute,
   deleteUser,
@@ -53,30 +52,31 @@ import {
   userQueryKeys,
   type UserDetail,
   type UserWriteRequest
-} from "../../api/users";
-import { useAuth } from "../../auth/AuthProvider";
-import { hasEnrollRight, hasRight } from "../../auth/permissions";
-import { BooleanPill } from "../../components/feedback/BooleanPill";
-import { ConfirmDialog } from "../../components/feedback/ConfirmDialog";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
-import { SerialLookupField } from "../../components/forms/SerialLookupField";
-import { Card } from "../../components/layout/Card";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { SidebarLayout } from "../../components/layout/SidebarLayout";
-import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
-import { EmptyState } from "../../components/tables/EmptyState";
-import { Pagination } from "../../components/tables/Pagination";
-import { pushFlash } from "../../lib/flash";
-import { hashHref } from "../../lib/hashbang";
-import { notify } from "../../lib/notify";
-import { fixSerial } from "../../lib/serial";
+} from "@/api/users";
+import { useAuth } from "@/auth/AuthProvider";
+import { hasEnrollRight, hasRight } from "@/auth/permissions";
+import { BooleanPill } from "@/components/feedback/BooleanPill";
+import { ConfirmDialog } from "@/components/feedback/ConfirmDialog";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { SerialLookupField } from "@/components/forms/SerialLookupField";
+import { Card } from "@/components/layout/Card";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { FailCounterBadge } from "@/features/tokens/tokenBadges";
+import { DataTable, type DataTableColumn } from "@/components/tables/DataTable";
+import { EmptyState } from "@/components/tables/EmptyState";
+import { Pagination } from "@/components/tables/Pagination";
+import { pushFlash } from "@/lib/flash";
+import { hashHref } from "@/lib/hashbang";
+import { notify } from "@/lib/notify";
+import { fixSerial } from "@/lib/serial";
 import {
   fallbackUserFields,
   getResolverUserFields,
   type UserFieldDefinition
-} from "../../lib/userAttributes";
+} from "@/lib/userAttributes";
 
 /** The legacy details view listed five tokens per page. */
 const USER_TOKEN_PAGE_SIZE = 5;
@@ -377,11 +377,7 @@ export function UserDetailsPage() {
     {
       header: <Trans>failcounter</Trans>,
       key: "failcount",
-      render: (token) => (
-        <Badge color={getFailCounterColor(token)} variant="light">
-          {token.failcount}
-        </Badge>
-      )
+      render: (token) => <FailCounterBadge token={token} />
     },
     {
       header: <Trans>maxfail</Trans>,
@@ -747,16 +743,4 @@ function createFormValues(
   }
 
   return values;
-}
-
-function getFailCounterColor(token: TokenDetail): string {
-  if (token.failcount >= token.maxfail) {
-    return "red";
-  }
-
-  if (token.failcount > 0) {
-    return "yellow";
-  }
-
-  return "green";
 }

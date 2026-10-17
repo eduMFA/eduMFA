@@ -7,8 +7,8 @@ import {
   createRouteFetchMock,
   findFetchCalls,
   stubLegacySession
-} from "../../tests/fetchMockUtils";
-import { renderWithProviders } from "../../tests/renderWithProviders";
+} from "@/tests/fetchMockUtils";
+import { renderWithProviders } from "@/tests/renderWithProviders";
 
 const machines = [
   {

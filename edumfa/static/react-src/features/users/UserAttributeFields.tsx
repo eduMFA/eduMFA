@@ -3,8 +3,8 @@ import { PasswordInput, SimpleGrid, TextInput } from "@mantine/core";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import { getUserFieldLabel } from "./userFieldLabels";
-import { FieldValue } from "../../components/forms/FieldValue";
-import type { UserFieldDefinition } from "../../lib/userAttributes";
+import { FieldValue } from "@/components/forms/FieldValue";
+import type { UserFieldDefinition } from "@/lib/userAttributes";
 
 export type UserFormValues = Record<string, string>;
 

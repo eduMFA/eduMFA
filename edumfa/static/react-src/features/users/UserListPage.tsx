@@ -5,36 +5,32 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 
 import { UserSidebar } from "./UserSidebar";
-import { useApiClient } from "../../api/ApiClientProvider";
-import { configQueryKeys, getDefaultRealmName, getRealms } from "../../api/config";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { configQueryKeys, getDefaultRealmName, getRealms } from "@/api/config";
 import {
   getUsers,
   userQueryKeys,
   type UserDetail,
   type UserListParams
-} from "../../api/users";
-import { useAuth } from "../../auth/AuthProvider";
-import { hasRight } from "../../auth/permissions";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
-import { Card } from "../../components/layout/Card";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { SidebarLayout } from "../../components/layout/SidebarLayout";
-import { ColumnFilter } from "../../components/tables/ColumnFilter";
-import { DataTable, type DataTableColumn } from "../../components/tables/DataTable";
-import { Pagination } from "../../components/tables/Pagination";
-import { popFlash } from "../../lib/flash";
-import { hashHref } from "../../lib/hashbang";
-import { notify } from "../../lib/notify";
+} from "@/api/users";
+import { useAuth } from "@/auth/AuthProvider";
+import { hasRight } from "@/auth/permissions";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { Card } from "@/components/layout/Card";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { ColumnFilter } from "@/components/tables/ColumnFilter";
+import { DataTable, type DataTableColumn } from "@/components/tables/DataTable";
+import { Pagination } from "@/components/tables/Pagination";
+import { popFlash } from "@/lib/flash";
+import { hashHref } from "@/lib/hashbang";
+import { notify } from "@/lib/notify";
+import { useDebouncedState } from "@/lib/useDebouncedState";
 
-/**
- * Default page size. The legacy UI could raise this through the
- * `user_page_size` WebUI policy delivered with the login response; wiring
- * that policy in React is deferred until React owns the login flow.
- * Like the legacy view, the user list is paginated client-side.
- */
-const USER_PAGE_SIZE = 15;
+/** Typing pauses this long before the backend is queried; Enter applies at once. */
+const FILTER_DEBOUNCE_MS = 300;
 
 interface UserFilters {
   email: string;
@@ -53,9 +49,15 @@ const emptyFilters: UserFilters = {
 export function UserListPage() {
   const apiClient = useApiClient();
   const { t } = useLingui();
-  const { isAuthenticated, rights, user } = useAuth();
+  const { isAuthenticated, rights, settings, user } = useAuth();
   const isAdmin = user?.role === "admin";
-  const [filters, setFilters] = useState<UserFilters>(emptyFilters);
+  const filterState = useDebouncedState<UserFilters>(emptyFilters, FILTER_DEBOUNCE_MS, {
+    liveApply: !settings.searchOnEnter
+  });
+  const { applied: filters, apply: applyFilters, draft: draftFilters } = filterState;
+  // Like the legacy view, the user list is paginated client-side; the page
+  // size comes from the `user_page_size` WebUI policy.
+  const pageSize = settings.userPageSize;
   const [page, setPage] = useState(1);
   const [selectedRealm, setSelectedRealm] = useState("");
 
@@ -119,12 +121,12 @@ export function UserListPage() {
   });
 
   const allUsers = usersQuery.data ?? [];
-  const pageStart = (page - 1) * USER_PAGE_SIZE;
-  const visibleUsers = allUsers.slice(pageStart, pageStart + USER_PAGE_SIZE);
+  const pageStart = (page - 1) * pageSize;
+  const visibleUsers = allUsers.slice(pageStart, pageStart + pageSize);
 
   const setFilter = (name: keyof UserFilters, value: string) => {
     setPage(1);
-    setFilters((previousFilters) => ({ ...previousFilters, [name]: value }));
+    filterState.setDraft((previousFilters) => ({ ...previousFilters, [name]: value }));
   };
 
   const filterFor = (name: keyof UserFilters, label: string) => (
@@ -133,7 +135,10 @@ export function UserListPage() {
       onChange={(value) => {
         setFilter(name, value);
       }}
-      value={filters[name]}
+      onSubmit={() => {
+        applyFilters();
+      }}
+      value={draftFilters[name]}
     />
   );
 
@@ -206,7 +211,7 @@ export function UserListPage() {
         label={<Trans>Select Realm</Trans>}
         onChange={(event) => {
           setPage(1);
-          setFilters(emptyFilters);
+          applyFilters(emptyFilters);
           setSelectedRealm(event.currentTarget.value);
         }}
         size="sm"
@@ -253,7 +258,7 @@ export function UserListPage() {
           currentPage={page}
           maxSize={5}
           onPageChange={setPage}
-          pageSize={USER_PAGE_SIZE}
+          pageSize={pageSize}
           totalCount={allUsers.length}
         />
 

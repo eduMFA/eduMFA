@@ -9,9 +9,9 @@ import {
   findFetchCalls,
   getJsonRequestBody,
   stubLegacySession
-} from "../../tests/fetchMockUtils";
-import { fieldLabel } from "../../tests/labels";
-import { renderWithProviders } from "../../tests/renderWithProviders";
+} from "@/tests/fetchMockUtils";
+import { fieldLabel } from "@/tests/labels";
+import { renderWithProviders } from "@/tests/renderWithProviders";
 
 const alice = {
   editable: true,

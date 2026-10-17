@@ -208,6 +208,10 @@ def single_page_application():
     react_routes = current_app.config.get(
         "EDUMFA_REACT_ROUTES",
         [
+            "/login",
+            "/response",
+            "/pinchange",
+            "/offline",
             "/component/clienttype",
             "/register",
             "/recovery",
@@ -219,6 +223,19 @@ def single_page_application():
             "/user/password",
             "/machine/list",
             "/machine/details/:id/:resolver",
+            "/token/list",
+            "/token/assign",
+            "/token/getserial",
+            "/token/challenges",
+            "/token/details/:serial",
+            "/token/lost/:serial",
+            "/token/applications/:application",
+            "/token/import",
+            "/token/enroll",
+            "/token/enroll/:realmname/:username",
+            "/token/rollover/:tokenType/:tokenSerial",
+            "/token/wizard",
+            "/dashboard",
         ],
     )
     if isinstance(react_routes, str):

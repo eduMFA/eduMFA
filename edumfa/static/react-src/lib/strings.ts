@@ -12,3 +12,21 @@ export function capitalize(input: string | null | undefined): string {
     (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
   );
 }
+
+/**
+ * Turns a table filter into the "contains" pattern the legacy controllers
+ * sent (`*value*`), unless the user typed `*` wildcards themselves, which are
+ * passed through unchanged.
+ */
+export function toContainsWildcard(value: string): string {
+  return value.includes("*") ? value : `*${value}*`;
+}
+
+/** Port of the legacy `truncate` filter: cuts long values and appends "...". */
+export function truncate(value: string, maxLength: number): string {
+  if (value.length <= maxLength) {
+    return value;
+  }
+
+  return `${value.slice(0, maxLength)}...`;
+}

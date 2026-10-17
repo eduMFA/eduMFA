@@ -3,7 +3,7 @@ import { Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import type { ReactNode } from "react";
 
-import { ApiError } from "../../api/envelope";
+import { ApiError } from "@/api/envelope";
 
 export interface ErrorAlertProps {
   error: unknown;

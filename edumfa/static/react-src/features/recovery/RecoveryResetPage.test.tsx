@@ -4,8 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { RecoveryResetPage } from "./RecoveryResetPage";
-import { getFetchUrl, getJsonRequestBody } from "../../tests/fetchMockUtils";
-import { renderWithProviders } from "../../tests/renderWithProviders";
+import { getFetchUrl, getJsonRequestBody } from "@/tests/fetchMockUtils";
+import { renderWithProviders } from "@/tests/renderWithProviders";
 
 describe("RecoveryResetPage", () => {
   afterEach(() => {

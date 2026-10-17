@@ -1,4 +1,8 @@
 const defaultMigratedRoutes = [
+  "/login",
+  "/response",
+  "/pinchange",
+  "/offline",
   "/component/clienttype",
   "/register",
   "/recovery",
@@ -9,7 +13,20 @@ const defaultMigratedRoutes = [
   "/user/add",
   "/user/password",
   "/machine/list",
-  "/machine/details/:id/:resolver"
+  "/machine/details/:id/:resolver",
+  "/token/list",
+  "/token/assign",
+  "/token/getserial",
+  "/token/challenges",
+  "/token/details/:serial",
+  "/token/lost/:serial",
+  "/token/applications/:application",
+  "/token/import",
+  "/token/enroll",
+  "/token/enroll/:realmname/:username",
+  "/token/rollover/:tokenType/:tokenSerial",
+  "/token/wizard",
+  "/dashboard"
 ];
 
 export interface ReactBootstrapConfig {

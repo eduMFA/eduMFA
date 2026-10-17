@@ -2,8 +2,8 @@ import { Trans } from "@lingui/react/macro";
 import { NavLink, Stack, Text } from "@mantine/core";
 import { IconServer, IconServer2, IconSettings } from "@tabler/icons-react";
 
-import { SidebarSection } from "../../components/layout/SidebarSection";
-import { hashHref } from "../../lib/hashbang";
+import { SidebarSection } from "@/components/layout/SidebarSection";
+import { hashHref } from "@/lib/hashbang";
 
 export interface MachineSidebarProps {
   activeItem: "details" | "list";

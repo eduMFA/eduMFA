@@ -3,17 +3,17 @@ import { Box, Button, Table } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 
-import { getClientApplications } from "../../api/component";
-import type { ClientApplication } from "../../api/component";
-import { useApiClient } from "../../api/ApiClientProvider";
-import { useAuth } from "../../auth/AuthProvider";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { LoadingIndicator } from "../../components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "../../components/feedback/LoginRequiredAlert";
-import { Card } from "../../components/layout/Card";
-import { PageHeader } from "../../components/layout/PageHeader";
-import { EmptyState } from "../../components/tables/EmptyState";
-import { formatLegacyDate } from "../../lib/dates";
+import { getClientApplications } from "@/api/component";
+import type { ClientApplication } from "@/api/component";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { useAuth } from "@/auth/AuthProvider";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
+import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { Card } from "@/components/layout/Card";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { EmptyState } from "@/components/tables/EmptyState";
+import { formatLegacyDate } from "@/lib/dates";
 
 export function ClientTypePage() {
   const apiClient = useApiClient();

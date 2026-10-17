@@ -16,6 +16,15 @@ export interface DebouncedState<TValue> {
   setDraft: Dispatch<SetStateAction<TValue>>;
 }
 
+export interface DebouncedStateOptions {
+  /**
+   * Apply the draft on its own once typing pauses. `false` only applies on
+   * demand through `apply()`, which is how the legacy `search_on_enter`
+   * policy made the tables wait for the Enter key.
+   */
+  liveApply?: boolean;
+}
+
 /**
  * Keeps an edited "draft" value and a debounced "applied" copy of it, so a
  * filter form can update inputs instantly while the backend is only queried
@@ -23,12 +32,17 @@ export interface DebouncedState<TValue> {
  */
 export function useDebouncedState<TValue>(
   initialValue: TValue | (() => TValue),
-  delayMs: number
+  delayMs: number,
+  { liveApply = true }: DebouncedStateOptions = {}
 ): DebouncedState<TValue> {
   const [draft, setDraft] = useState<TValue>(initialValue);
   const [applied, setApplied] = useState<TValue>(initialValue);
 
   useEffect(() => {
+    if (!liveApply) {
+      return undefined;
+    }
+
     const timer = window.setTimeout(() => {
       setApplied(draft);
     }, delayMs);
@@ -36,7 +50,7 @@ export function useDebouncedState<TValue>(
     return () => {
       window.clearTimeout(timer);
     };
-  }, [delayMs, draft]);
+  }, [delayMs, draft, liveApply]);
 
   const apply = useCallback(
     (value?: TValue) => {

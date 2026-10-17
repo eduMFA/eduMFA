@@ -13,11 +13,11 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-import { useApiClient } from "../../api/ApiClientProvider";
-import { resetRecoveredPassword } from "../../api/recovery";
-import { ErrorAlert } from "../../components/feedback/ErrorAlert";
-import { TextField } from "../../components/forms/TextField";
-import { hashHref } from "../../lib/hashbang";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { resetRecoveredPassword } from "@/api/recovery";
+import { ErrorAlert } from "@/components/feedback/ErrorAlert";
+import { TextField } from "@/components/forms/TextField";
+import { hashHref } from "@/lib/hashbang";
 
 interface RecoveryResetFormValues {
   password: string;

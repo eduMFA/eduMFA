@@ -22,6 +22,10 @@ as React-owned and enabled by the Flask `EDUMFA_REACT_UI` flag.
 - The API client ends the React session only on HTTP 401 or the legacy auth
   error codes (403, 4031-4036), like `AuthFactory.authError`. Policy denials
   answer HTTP 403 with code 303 and keep the session.
+- Imports from other directories use the `@/` alias (`paths` in
+  `tsconfig.json`, `resolve.alias` in `vite.config.mts`, shared by Vitest);
+  only sibling files are imported as `./name`. Relative `../` imports are not
+  used.
 - React internationalization uses Lingui catalogs and `Trans` macros. Angular
   gettext remains in place for legacy routes until Angular is removed.
 - Vite (Rolldown) emits `react-dist/assets/main.js` plus the library chunks
@@ -31,21 +35,35 @@ as React-owned and enabled by the Flask `EDUMFA_REACT_UI` flag.
   template never changes with the chunk layout. The groups leave stylesheets
   out so everything lands in `main.css`, the only sheet `templates/header.html`
   links. Commit new chunk files together with `main.js`.
-- Authentication is still initiated by Angular. React reads the in-memory legacy
-  auth bridge when a migrated route calls the same Flask APIs.
+- The login page is React-owned, but the session still lives in Angular:
+  the React page posts `/auth` and hands the envelope to
+  `window.eduMfaLegacyAuth.login()`, which runs the legacy `do_login_stuff`
+  (see "Login"). React reads the in-memory legacy auth bridge when a
+  migrated route calls the same Flask APIs. The bridge also hands over the
+  WebUI policy values of the login response
+  (`AuthFactory.setWebUiSettings` in `login/factories/auth.js`, read as
+  `settings` from `useAuth()`): `token_page_size`, `user_page_size`,
+  `audit_page_size`, `user_details`, `search_on_enter`, `token_wizard_2nd`,
+  `hide_buttons` and `token_rollover` (the policy dict, exposed as a list of
+  token types). Missing values fall back to the backend defaults
+  (`auth/AuthProvider.tsx`).
+- The API client's `responseType: "envelope"` returns the whole success
+  envelope for the few endpoints that put data next to the value in
+  `detail` (`/token/setrandompin` → `detail.pin`, `/validate/check` →
+  `detail.message`).
 
 ## Current Angular Route Ownership
 
 | Hash route                          | Angular state          | Current owner | Migration complexity | Notes                                                                  |
 | ----------------------------------- | ---------------------- | ------------- | -------------------- | ---------------------------------------------------------------------- |
-| `#/offline`                         | `offline`              | Angular       | Low                  | Static/offline shell.                                                  |
-| `#/login`                           | `login`                | Angular       | Medium               | Auth, WebAuthn/U2F, polling, policies.                                 |
-| `#/response`                        | `response`             | Angular       | Medium               | Challenge response flow.                                               |
-| `#/pinchange`                       | `pinchange`            | Angular       | Medium               | Authenticated form flow.                                               |
+| `#/offline`                         | `offline`              | React         | Low                  | Migrated. Static alert.                                                |
+| `#/login`                           | `login`                | React         | Medium               | Migrated. Session handed to Angular through the bridge.                |
+| `#/response`                        | `response`             | React         | Medium               | Migrated. OTP input, polling, U2F/WebAuthn sign.                       |
+| `#/pinchange`                       | `pinchange`            | React         | Medium               | Migrated. Serial kept in the login flow store.                         |
 | `#/register`                        | `register`             | React         | Low                  | Migrated public form. Calls `POST /register`.                          |
 | `#/recovery`                        | `recovery`             | React         | Low                  | Migrated public form. Calls `POST /recover`.                           |
 | `#/reset/:user/:recoverycode`       | `reset`                | React         | Low                  | Migrated public form. Calls `POST /recover/reset`.                     |
-| `#/dashboard`                       | `dashboard`            | Angular       | Medium               | Aggregated API state.                                                  |
+| `#/dashboard`                       | `dashboard`            | React         | Medium               | Migrated. Token counts, audit summaries, policies, events.             |
 | `#/component/clienttype`            | `component.clienttype` | React         | Low                  | First migrated route. Calls `/client/`.                                |
 | `#/audit/log`                       | `audit.log`            | React         | Medium               | Migrated table. Filters, `?serial`/`?user`, CSV.                       |
 | `#/user/list`                       | `user.list`            | React         | Medium               | Migrated table. Realm select, client-side paging.                      |
@@ -54,33 +72,33 @@ as React-owned and enabled by the Flask `EDUMFA_REACT_UI` flag.
 | `#/user/add`                        | `user.add`             | React         | Medium               | Migrated form. Fields come from the editable resolver's map.           |
 | `#/machine/list`                    | `machine.list`         | React         | Medium               | Migrated table. Filters, `?resolver` deep link, client paging.         |
 | `#/machine/details/:id/:resolver`   | `machine.details`      | React         | Medium               | Migrated detail view: options editing, attach/detach tokens.           |
-| `#/token/list`                      | `token.list`           | Angular       | Medium               | Shared table, action menus, rights checks.                             |
-| `#/token/assign`                    | `token.assign`         | Angular       | Medium               | User/token selector directives.                                        |
-| `#/token/details/:serial`           | `token.details`        | Angular       | High                 | Many action states, blobs, policy checks.                              |
-| `#/token/lost/:serial`              | `token.lost`           | Angular       | High                 | Token lifecycle action flow.                                           |
-| `#/token/getserial`                 | `token.getserial`      | Angular       | Medium               | Form + token lookup.                                                   |
-| `#/token/enroll/:realm/:user`       | `token.enroll`         | Angular       | High                 | Token type matrix, WebAuthn/U2F, certificates.                         |
-| `#/token/rollover/:type/:serial`    | `token.rollover`       | Angular       | High                 | Reuses enroll controller and token metadata.                           |
-| `#/token/wizard`                    | `token.wizard`         | Angular       | High                 | Policy-dependent token enrollment.                                     |
-| `#/token/import`                    | `token.import`         | Angular       | High                 | Uploads and token format handling.                                     |
-| `#/token/challenges`                | `token.challenges`     | Angular       | Medium               | Polling/table state.                                                   |
-| `#/token/applications/:application` | `token.applications`   | Angular       | Medium               | Application-specific token details.                                    |
+| `#/token/list`                      | `token.list`           | React         | Medium               | Migrated table. Server paging/sorting/filters, enable/disable, reset.  |
+| `#/token/assign`                    | `token.assign`         | React         | Medium               | Migrated form. Serial lookup + PIN, calls `POST /token/assign`.        |
+| `#/token/details/:serial`           | `token.details`        | React         | High                 | Migrated. Properties, functions, user, machines; delete confirmation.  |
+| `#/token/lost/:serial`              | `token.lost`           | React         | High                 | Migrated. Calls `POST /token/lost/:serial`, shows the password once.   |
+| `#/token/getserial`                 | `token.getserial`      | React         | Medium               | Migrated form. Count step, then `GET /token/getserial/:otp`.           |
+| `#/token/enroll/:realm/:user`       | `token.enroll`         | React         | High                 | Migrated. Every token type, two-step, U2F/WebAuthn, verify, polling.   |
+| `#/token/rollover/:type/:serial`    | `token.rollover`       | React         | High                 | Migrated. Same page with a fixed type and `rollover=1`.                |
+| `#/token/wizard`                    | `token.wizard`         | React         | High                 | Migrated. Same page without type select; logout through the bridge.    |
+| `#/token/import`                    | `token.import`         | React         | High                 | Migrated. Multipart upload to `POST /token/load/:filename`.            |
+| `#/token/challenges`                | `token.challenges`     | React         | Medium               | Migrated table. Server paging/sorting, serial filter in the path.      |
+| `#/token/applications/:application` | `token.applications`   | React         | Medium               | Migrated. ssh/offline tables from `GET /machine/token`.                |
 | `#/config/**`                       | `config.*`             | Angular       | High                 | Broad admin surface, policy/event/resolver complexity.                 |
 
 ## Current API Factory Ownership
 
-| Angular factory                          | Primary concern                        | React target                           |
-| ---------------------------------------- | -------------------------------------- | -------------------------------------- |
-| `AuthFactory`                            | Login session, rights, menus, settings | `auth/AuthProvider.tsx`, `api/auth.ts` |
-| `PollingAuthFactory`                     | Polling auth responses                 | Auth feature hooks                     |
-| `U2fFactory`, WebAuthn factory           | Browser auth hardware flows            | `auth/u2f.ts`, `auth/webauthn.ts`      |
-| `TokenFactory`, `ValidateFactory`        | Token lifecycle and validation         | `api/tokens.ts` (done), validate open  |
-| `UserFactory`                            | User list/detail/password APIs         | `api/users.ts` (done)                  |
-| `MachineFactory`                         | Machine resolver/list/detail APIs      | `api/machines.ts` (done)               |
-| `AuditFactory`                           | Audit log and CSV APIs                 | `api/audit.ts` (done)                  |
-| `ConfigFactory`, `PolicyTemplateFactory` | Admin config APIs                      | `api/config.ts` (realms, resolvers)    |
-| `ComponentFactory`                       | Client application types               | `api/component.ts`                     |
-| `RegisterFactory`, `RecoveryFactory`     | Public account flows                   | `api/register.ts`, `api/recovery.ts`   |
+| Angular factory                          | Primary concern                        | React target                                                |
+| ---------------------------------------- | -------------------------------------- | ----------------------------------------------------------- |
+| `AuthFactory`                            | Login session, rights, menus, settings | `auth/AuthProvider.tsx`, `api/auth.ts` (session in Angular) |
+| `PollingAuthFactory`                     | Polling auth responses                 | `features/login/usePollTransaction.ts` (done)               |
+| `U2fFactory`, WebAuthn factory           | Browser auth hardware flows            | `auth/u2f.ts`, `auth/webauthn.ts` (done)                    |
+| `TokenFactory`, `ValidateFactory`        | Token lifecycle and validation         | `api/tokens.ts`, `api/validate.ts`                          |
+| `UserFactory`                            | User list/detail/password APIs         | `api/users.ts` (done)                                       |
+| `MachineFactory`                         | Machine resolver/list/detail APIs      | `api/machines.ts` (done)                                    |
+| `AuditFactory`                           | Audit log and CSV APIs                 | `api/audit.ts` (done)                                       |
+| `ConfigFactory`, `PolicyTemplateFactory` | Admin config APIs                      | `api/config.ts` (realms, resolvers, tokengroups, system)    |
+| `ComponentFactory`                       | Client application types               | `api/component.ts`                                          |
+| `RegisterFactory`, `RecoveryFactory`     | Public account flows                   | `api/register.ts`, `api/recovery.ts`                        |
 
 ## Migrated Public Forms
 
@@ -94,8 +112,7 @@ They are anonymous flows, so they work without the legacy auth bridge.
   the legacy `inform` growl notifications.
 - Deviation from Angular: after a password reset the page shows the result
   message with a "Proceed to login" link instead of navigating to `#/login`
-  immediately, because the React shell unmounts on Angular-owned routes and
-  would lose the growl-style feedback.
+  immediately (kept after the login page moved to React).
 - The route allowlist supports `:param` segments (`app/routes.tsx`,
   `matchesRoutePattern`), which `EDUMFA_REACT_ROUTES` entries such as
   `/reset/:user/:recoverycode` rely on.
@@ -105,8 +122,8 @@ They are anonymous flows, so they work without the legacy auth bridge.
 
 ## Migrated Authenticated Tables
 
-`#/audit/log` and `#/user/list` are React-owned. Both require the legacy auth
-bridge (login stays Angular-owned) and reuse the shared table components in
+`#/audit/log` and `#/user/list` are React-owned. Both require a session from
+the legacy auth bridge and reuse the shared table components in
 `components/tables/` (`Pagination`, `ColumnFilter`, `EmptyState`).
 
 - Audit: server-side pagination and filtering (`*value*` wildcards like the
@@ -118,10 +135,10 @@ bridge (login stays Angular-owned) and reuse the shared table components in
   controller.
 - Cross-links to Angular-owned routes (token details, user details, config
   pages) are plain hash links; the shell hands those routes back to Angular.
-- Known limitation: the `audit_page_size` and `user_page_size` WebUI policies
-  are delivered with the legacy login response and are not yet readable from
-  the auth bridge, so the React pages use the backend defaults (10 and 15)
-  until React owns the login flow.
+- The `audit_page_size` and `user_page_size` WebUI policies come from the auth
+  bridge settings (see Runtime Shell). With `search_on_enter` the filters wait
+  for the Enter key (`useDebouncedState` with `liveApply: false`) instead of
+  querying while typing.
 
 ## First React-Owned Route
 
@@ -161,9 +178,8 @@ share `components/layout/SidebarLayout.tsx`, which ports the legacy
 - Token assignment and machine attachment use `SerialLookupField`, a native
   `<datalist>` replacement for the `uib-typeahead` directives, and
   `fixSerial()` recovers the serial from the chosen suggestion.
-- "Enroll New Token" links to the Angular enrollment route. The legacy
-  `$rootScope.returnTo` hand-back is not available from React, so enrollment
-  returns to Angular's default route afterwards.
+- "Enroll New Token" opens the React enrollment page with realm and user
+  preset through the route (`#!/token/enroll/<realm>/<user>`).
 - Sidebar help links point at the latest docs because the running version
   number is only known to the Angular login controller.
 - Machine list reads `?resolver=` from the hash query like the legacy state.
@@ -180,16 +196,24 @@ React-owned routes are built with [Mantine](https://mantine.dev) (`@mantine/core
 views keep Bootstrap 3 until the last route is migrated.
 
 - `app/theme.ts` holds the brand colour (derived from the legacy link blue),
-  radius and font. It sets `scale: 1.6` because Bootstrap 3 fixes
+  radius, font and `cursorType: "pointer"` (badges inside buttons, checkboxes
+  and selects show the pointer like the Bootstrap `[ng-click]` elements). It sets `scale: 1.6` because Bootstrap 3 fixes
   `html { font-size: 10px }` while Mantine sizes everything in `rem` for a
   16px root; without it every Mantine size renders at 62.5%. `MantineProvider` and `Notifications` wrap the React tree in
   `app/App.tsx`; the test render helper does the same.
+- The bundle is one entry (`main.js`) plus three stable library chunks
+  (`react`, `mantine`, `vendor`). Route-level code splitting with per-feature
+  chunks and a lazy catalog was tried in Oct 2026 and reverted: the extra
+  chunks made the coexistence setup hard to debug. The `.vite/manifest.json`
+  is written but not consumed by Flask.
 - Styles are imported per component in `main.tsx`. `@mantine/core/styles/baseline.css`
   is deliberately not loaded because it restyles `body`, which still belongs to
   the Angular views. The CSS variables land on `:root`; they are inert without
   Mantine class names. `styles/react.css` only hides the inactive shell and
   neutralises the few Bootstrap element rules (`label`, checkboxes, `table`)
-  that would leak into `#react-root`.
+  that would leak into `#react-root`. The checkbox/radio reset is limited to
+  native inputs: Mantine's `Checkbox`/`Radio` size themselves through
+  `--checkbox-size`, and an id-scoped `height: auto` collapses them to a line.
 - Mantine's `MantineProvider` injects one `<style>` tag with the theme variables.
   Deployments with a strict `style-src` can pass a nonce through
   `getStyleNonce`; component styles themselves are static CSS.
@@ -201,7 +225,10 @@ views keep Bootstrap 3 until the last route is migrated.
   `Modal`). One-off success notices use `lib/notify.ts` (Mantine notifications);
   the legacy growl equivalent across a navigation is still `lib/flash.ts`.
 - `DataTable` is a thin column-config table on Mantine's `Table`; all paging,
-  sorting and filtering stay server-side. Column filters are rendered in the
+  sorting and filtering stay server-side. A column with a `sortKey` renders
+  its label as a sort toggle (`aria-sort` on the `th`) when the table gets
+  `sort`/`onSortChange`; `toggleSort` replaces the legacy `pi-sort-by`
+  directive. Column filters are rendered in the
   header cell under the label; the `th` gets `font-weight: 400` because the
   browser default bold would otherwise leak into the inputs. TanStack Table was evaluated but its
   v9 feature-object API adds little for static columns; revisit it for the token
@@ -212,6 +239,94 @@ views keep Bootstrap 3 until the last route is migrated.
   with `tests/labels.ts` (`fieldLabel("Resolver")`).
 - `vitest.setup.ts` stubs `matchMedia`, `ResizeObserver` and `scrollIntoView`
   for Mantine and clears the notification store after each test.
+
+## Migrated Token Views
+
+`#/token/list`, `#/token/assign`, `#/token/getserial` and `#/token/challenges`
+are React-owned. They share `features/tokens/TokenSidebar.tsx`, the port of
+the `token.html` navigation. The parameterless enroll entry links to
+`#!/token/enroll//`, which is how ui-router addresses the `token.enroll`
+state without realm and user; the allowlist therefore carries both
+`/token/enroll` (the normalised form) and `/token/enroll/:realmname/:username`.
+
+- Token list: server-side paging (`token_page_size`), sorting (`sortby`,
+  `sortdir`, default `serial` ascending) and `*value*` filters for serial,
+  type, description, rollout state and token realm. The active and fail
+  counter badges are buttons ("Disable token", "Enable token", "Reset
+  Failcounter") when the session has the matching right; the legacy list
+  made the labels clickable without checking rights. The user, realm and
+  token realm columns are admin-only; `user_details` adds user id and
+  resolver like the legacy template. Serial links go to the Angular token
+  details view.
+- Assign: `SerialLookupField` with unassigned tokens only, PIN plus repeat.
+  Like the legacy controller only `serial` and `pin` are sent; the backend
+  assigns to the authenticated user. Success notifies through `lib/flash.ts`
+  on the token list.
+- Get serial: the form first asks the backend for the number of candidate
+  tokens (`count=1`) and shows the legacy warning with "Run search" and
+  "Cancel" before the real lookup. The token type list is the hard-coded one
+  from the legacy controller, with an added "Any token type" entry for the
+  blank option Angular rendered implicitly. Editing after a result returns to
+  the form, like the legacy `newOtp` flag.
+- Challenges: 15 per page like the legacy template, sortable columns, the
+  serial filter is sent as `GET /token/challenges/*value*`; without a filter
+  `GET /token/challenges/` is called instead of the legacy `**` pattern.
+- `FailCounterBadge` (`features/tokens/tokenBadges.tsx`) is shared with the
+  user details token table.
+- Known coexistence cost: Angular's `tokenController` still runs for these
+  states and fetches the token list in the background.
+
+### Token details, lost token and applications
+
+`#/token/details/:serial`, `#/token/lost/:serial` and
+`#/token/applications/:application` are React-owned as well.
+
+- The details view (`features/tokens/details/`) is split into cards:
+  `TokenPropertiesCard` (status actions, editable counters and description
+  through `EditableValueRow`, the port of the `token-data-edit` directive,
+  token info with the validity period editor, realms and token groups),
+  `TokenFunctionsCard` (resync, set PIN, random PIN, test token),
+  `TokenUserCard` (assigned user, unassign, assign form with
+  `UserLookupField`) and `TokenMachinesCard` (attached machines with option
+  editing, attach form with `MachineLookupField`). The page header carries
+  the audit link, the delete button and the rollover link (Angular route,
+  offered when `token_rollover` lists the type and the token is software).
+- Rights follow the legacy pattern: a button without the right is disabled,
+  and hidden altogether under the `hide_buttons` policy. Locked tokens show
+  no editing controls at all.
+- Deleting a hardware token (`info.tokenkind`) asks for confirmation; the
+  page then returns to the token list, because the legacy "previous state"
+  is not known to React. A user who unassigns their own token is sent to
+  the list as well, like the legacy controller did.
+- Validity periods are stored as `YYYY-MM-DDTHH:mm+HHMM`; `lib/dates.ts`
+  parses and formats them (`parseValidityPeriod`, `formatValidityPeriod`)
+  and the editor uses Mantine's `DateTimePicker`.
+- The test-token placeholder depends on the `PrependPin` system config, read
+  through `GET /system/` like the legacy controller.
+- Certificate and PKCS12 info entries are offered as downloads through Blob
+  object URLs; other info values are truncated to 35 characters with the
+  full value in the tooltip.
+- Applications: the application is part of the route (`ssh` or `offline`);
+  filters and sorting go to `GET /machine/token`, paging stays client-side
+  because the endpoint returns the whole list.
+- Import (`TokenImportPage`): the file is uploaded as soon as it is picked
+  (`FileButton`), like the legacy `ngf-select`, as multipart form data with
+  `type`, `tokenrealms` and the PSKC options. Deviation: `fetch` offers no
+  upload progress, so the legacy percentage is replaced by the button's
+  loading state. PGP keys from `GET /system/gpgkeys` are listed in an
+  accordion.
+
+## Dashboard
+
+`#/dashboard` (`features/dashboard/DashboardPage.tsx`) is React-owned. It is
+the start route when the `admin_dashboard` policy is set; the redirect itself
+still happens in the Angular login controller. Each panel is gated by the
+legacy right (`tokenlist`, `auditlog`, `policyread`, `eventhandling_read`).
+Token counts use `GET /token/?pagesize=0` per kind, authentications and the
+administration list come from `GET /audit/` with `timelimit=1d` (the failed
+users are grouped client-side like the legacy controller, `summarizeFailures`),
+policies and events from `GET /policy/` and `GET /event/`. Links to policy
+and event details point at the Angular config routes.
 
 ## Audit Log Filtering
 
@@ -228,3 +343,107 @@ views keep Bootstrap 3 until the last route is migrated.
   `missing_line` use the same badge with their `OK`/`FAIL` labels.
 - Applied filters are listed as removable badges with a "Clear all" action; the
   `?serial`/`?user` deep links still seed the filters.
+
+## Token Enrollment
+
+`#/token/enroll/:realm/:user`, `#/token/rollover/:type/:serial` and
+`#/token/wizard` are React-owned and share `features/tokens/enroll/
+EnrollTokenPage.tsx`, the port of `token.enroll.html` and
+`tokenEnrollController`. The page gets its mode from the route.
+
+- Route handling: React Router matches `/token/enroll/*` and splits the
+  splat into realm and user, because ui-router emits `#!/token/enroll//`
+  for the parameterless state and `/token/enroll/realm/user` from the user
+  details view.
+- Form model (`enrollForm.ts`): fields the legacy controller preset from
+  policies, the system config or the selected user are `null` until typed,
+  and `resolveEnrollForm` fills the defaults from the current context. That
+  replaces the `$watch`/`changeTokenType` presets without effects.
+  `buildEnrollRequest` sends the common OTP settings with every type like
+  the legacy form did, plus the type's own keys; `otpkey` is omitted when
+  the server generates the key (the backend rejects both), the 4eyes realms
+  go as the documented `realm:count,...` string, and validity dates use
+  `formatValidityPeriod`.
+- `TokenTypeFields.tsx` and `EnrolledTokenResult.tsx` are thin dispatchers
+  over `enroll/fields/*` (inputs per topic: OTP key, contact, hardware,
+  forwarding, certificate, secrets, questionnaire) and `enroll/results/*`
+  (QR, OTP list with print, links, codes, certificate, FIDO). The page itself
+  keeps the state and the mutations; the type-specific lookups
+  (`useTypeLookups`), the `clientwait` polling (`useRolloutState`), the FIDO
+  error texts (`useFidoErrorMessage`) and the smaller sections
+  (`UserAssignmentFields`, `PinFields`, `ExtendedAttributesFields`,
+  `EnrollmentSummary`) are their own modules.
+- `TokenTypeHelp.tsx` is table-driven: the intro paragraphs are Lingui
+  `msg` descriptors per type, the admin config hints a small table with the
+  system config key that silences them. Message texts in `msg` templates
+  must stay on one line, otherwise the extracted id changes and the German
+  translation is lost.
+- Second steps: the client part (`otpkeyformat=base32check`), the verify
+  answer and the FIDO attestation all go through `POST /token/init` with the
+  session's user/realm/PIN. `auth/webauthn.ts` ports
+  `edumfa-webauthn.js`'s `register` (base64url helpers in `lib/base64url.ts`);
+  `auth/u2f.ts` wraps the callback API of `contrib/js/u2f-api.js` in a
+  promise. A token in `clientwait` is polled every 2.5 s through React
+  Query's `refetchInterval` instead of `$timeout`.
+- Bridge additions: the login response now also hands over
+  `default_tokentype`, `require_description`, `show_seed`, `token_wizard`,
+  the indexed secret policies and the authenticator app QR images
+  (`useAuth().settings`), and `window.eduMfaLegacyAuth.logout()` runs the
+  Angular logout for the wizard's "Logout" button.
+- `GET /auth/rights` is typed as the `{type: description}` dict the
+  backend actually returns; `enrollToken` reads the whole envelope because
+  the enrollment data lives in `detail`.
+- Deviations: the customizable wizard includes
+  (`customize/views/includes/token.enroll.*.html`) are not in this
+  repository and have no counterpart; certificate downloads use data URLs
+  instead of Blob object URLs; the paper/TAN print window is filled through
+  the DOM instead of `document.write`, and the OTP table rounds the row
+  count up so no values are dropped; the unavailable default token type is
+  reported as an inline alert instead of a growl.
+- Lingui/ICU pitfall: an apostrophe directly before a placeholder
+  (`'{0}'`) is ICU quoting and swallows the variable, so messages quote
+  values with double quotes.
+
+## Login
+
+`#/login` (and the empty hash, ui-router's `initial_login` state),
+`#/response`, `#/pinchange` and `#/offline` are React-owned
+(`features/login/`). The session itself stays with Angular during
+coexistence, because the still-Angular config routes, the idle lock, the
+logout redirect and the welcome dialogs all live on the `mainController`.
+
+- Handover: the React page posts `/auth` and gives the whole envelope to
+  `window.eduMfaLegacyAuth.login()` (`AuthFactory.setLoginHandler` in
+  `login/factories/auth.js`), which runs the legacy `do_login_stuff`: it
+  stores the user, starts the idle timer, opens the dialogs and navigates to
+  `/token` or `/dashboard`; the hidden `tokenController` then still moves on
+  to the wizard or `/pinchange`. Without a bridge (tests, standalone) the
+  React session is set from the response and `getStartRoute` picks the
+  target (`features/login/loginFlow.ts`).
+- Page settings (`REMOTE_USER`, `FORCE_REMOTE_USER`, `PASSWORD_RESET`,
+  `HSM_READY`, `REALMS`, `LOGO`, `LOGIN_TEXT`) are read from the hidden
+  inputs `webui/login.py` renders into `index.html`
+  (`features/login/loginPageConfig.ts`), like the legacy controller did.
+- Challenge response: `derivePendingChallenge` ports the `multi_challenge`
+  handling (interactive input, polling, image, U2F/WebAuthn sign requests).
+  The pending challenge and the PIN change notice live in a small external
+  store (`loginFlowStore.ts`), because the legacy kept them on the
+  `mainController` scope and the React pages are mounted per route.
+  `/response` without a pending challenge points back to the login.
+- Out-of-band tokens are polled through `GET /validate/polltransaction`
+  every second (`usePollTransaction`, the `PollingAuthFactory` port); U2F
+  and WebAuthn tokens are signed as soon as the response page mounts and
+  again after a rejected answer (`auth/u2f.ts` `signU2fChallenge`,
+  `auth/webauthn.ts` `signWebAuthnChallenge`, ports of
+  `U2fFactory.sign_request` and `edumfa_webauthn.sign`). The FIDO error
+  texts moved to `auth/useFidoErrorMessage.ts` with a ceremony parameter.
+- PIN change: `setpin` with `otppin`, then the Angular logout through the
+  bridge; the success notice travels through `lib/flash.ts` to the login
+  page.
+- Deviations: follow-up `/auth` posts (OTP, polled, FIDO) include the realm
+  chosen in the dropdown, which the legacy controller dropped; the challenge
+  message is shown as text (the legacy only used it as placeholder);
+  WebAuthn assertion extensions are not sent (the legacy read a property
+  browsers never set). The lock screen dialog and its unlock stay Angular.
+- `LoginRequiredAlert` now links to `#!/login` instead of asking for the
+  legacy UI.

@@ -13,31 +13,54 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: react-src/features/audit/AuditLogPage.tsx:226
+#: react-src/features/audit/AuditLogPage.tsx:221
 msgid "{entryCount} entries found."
 msgstr "{entryCount} entries found."
 
-#: react-src/features/audit/AuditLogPage.tsx:458
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:111
+msgid "A token specific SMS gateway"
+msgstr "A token specific SMS gateway"
+
+#: react-src/features/tokens/TokenImportPage.tsx:109
+msgid "Abort operation on unverifiable token"
+msgstr "Abort operation on unverifiable token"
+
+#: react-src/features/audit/AuditLogPage.tsx:449
 msgid "action"
 msgstr "action"
 
-#: react-src/features/audit/AuditLogPage.tsx:476
+#: react-src/features/dashboard/DashboardPage.tsx:246
+msgid "Action"
+msgstr "Action"
+
+#: react-src/features/audit/AuditLogPage.tsx:467
 msgid "action detail"
 msgstr "action detail"
 
+#: react-src/features/tokens/tokenBadges.tsx:63
+#: react-src/features/tokens/TokenListPage.tsx:163
 #: react-src/features/users/UserDetailsPage.tsx:362
 msgid "active"
 msgstr "active"
 
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:265
 #: react-src/features/users/UserDetailsPage.tsx:357
 msgid "Active"
 msgstr "Active"
 
-#: react-src/features/audit/AuditLogPage.tsx:237
+#: react-src/features/dashboard/DashboardPage.tsx:316
+msgid "Active Events"
+msgstr "Active Events"
+
+#: react-src/features/audit/AuditLogPage.tsx:232
 msgid "Active filters"
 msgstr "Active filters"
 
-#: react-src/features/users/UserDetailsPage.tsx:573
+#: react-src/features/dashboard/DashboardPage.tsx:280
+msgid "Active Policies"
+msgstr "Active Policies"
+
+#: react-src/features/users/UserDetailsPage.tsx:569
 msgid "Add"
 msgstr "Add"
 
@@ -45,18 +68,30 @@ msgstr "Add"
 msgid "Add a new user"
 msgstr "Add a new user"
 
-#: react-src/features/users/UserListPage.tsx:235
+#: react-src/features/users/UserListPage.tsx:240
 #: react-src/features/users/UserSidebar.tsx:82
 msgid "Add user"
 msgstr "Add user"
 
-#: react-src/features/audit/AuditLogPage.tsx:494
+#: react-src/features/dashboard/DashboardPage.tsx:235
+msgid "Administration"
+msgstr "Administration"
+
+#: react-src/features/audit/AuditLogPage.tsx:485
 msgid "administrator"
 msgstr "administrator"
+
+#: react-src/features/dashboard/DashboardPage.tsx:243
+msgid "Administrator"
+msgstr "Administrator"
 
 #: react-src/features/machines/MachineSidebar.tsx:29
 msgid "All Machines"
 msgstr "All Machines"
+
+#: react-src/features/tokens/TokenSidebar.tsx:62
+msgid "All tokens"
+msgstr "All tokens"
 
 #: react-src/features/users/UserSidebar.tsx:62
 msgid "All users"
@@ -66,62 +101,203 @@ msgstr "All users"
 msgid "An Email to reset the password has been sent to you."
 msgstr "An Email to reset the password has been sent to you."
 
+#: react-src/features/tokens/TokenGetSerialPage.tsx:228
+msgid "an optional serial substring"
+msgstr "an optional serial substring"
+
 #: react-src/components/feedback/ErrorAlert.tsx:30
 msgid "An unknown error occurred."
 msgstr "An unknown error occurred."
 
-#: react-src/features/audit/AuditLogPage.tsx:137
+#: react-src/features/audit/AuditLogPage.tsx:131
 msgid "any"
 msgstr "any"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:190
-#: react-src/features/machines/MachineDetailsPage.tsx:385
+#: react-src/features/tokens/TokenGetSerialPage.tsx:190
+msgid "Any token type"
+msgstr "Any token type"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:188
+#: react-src/features/machines/MachineDetailsPage.tsx:383
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:160
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:305
+#: react-src/features/tokens/TokenApplicationsPage.tsx:204
 msgid "Application"
 msgstr "Application"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:75
+msgid "Application specific password"
+msgstr "Application specific password"
 
 #: react-src/features/components/ClientTypePage.tsx:48
 #: react-src/features/components/ClientTypePage.tsx:63
 msgid "Application Type"
 msgstr "Application Type"
 
-#: react-src/features/users/UserDetailsPage.tsx:680
+#: react-src/features/tokens/TokenImportPage.tsx:352
+msgid "As the values are encrypted with AES128-CBC, you need to give a 32 characters long hex string."
+msgstr "As the values are encrypted with AES128-CBC, you need to give a 32 characters long hex string."
+
+#: react-src/features/tokens/TokenAssignPage.tsx:66
+msgid "Assign a new token"
+msgstr "Assign a new token"
+
+#: react-src/features/users/UserDetailsPage.tsx:676
 msgid "Assign an existing token"
 msgstr "Assign an existing token"
 
-#: react-src/features/users/UserDetailsPage.tsx:677
+#: react-src/features/tokens/TokenAssignPage.tsx:91
+#: react-src/features/tokens/TokenSidebar.tsx:96
+#: react-src/features/users/UserDetailsPage.tsx:673
 msgid "Assign Token"
 msgstr "Assign Token"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:372
+#: react-src/features/tokens/enroll/UserAssignmentFields.tsx:25
+msgid "Assign token to user"
+msgstr "Assign token to user"
+
+#: react-src/features/tokens/details/TokenUserCard.tsx:205
+#: react-src/features/tokens/details/TokenUserCard.tsx:208
+msgid "Assign User"
+msgstr "Assign User"
+
+#: react-src/features/tokens/details/TokenUserCard.tsx:116
+msgid "Assigned User"
+msgstr "Assigned User"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:211
+msgid "Assignment State"
+msgstr "Assignment State"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:370
 msgid "Attach a new token"
 msgstr "Attach a new token"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:369
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:296
+msgid "Attach Machine"
+msgstr "Attach Machine"
+
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:299
+msgid "Attach to a new Machine"
+msgstr "Attach to a new Machine"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:367
 msgid "Attach Token"
 msgstr "Attach Token"
 
-#: react-src/features/audit/AuditLogPage.tsx:227
+#: react-src/features/audit/AuditLogPage.tsx:222
 msgid "Audit log"
 msgstr "Audit log"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:246
-#: react-src/features/users/UserDetailsPage.tsx:429
+#: react-src/features/login/useAuthenticate.ts:64
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:121
+msgid "Authentication failed."
+msgstr "Authentication failed."
+
+#: react-src/features/dashboard/DashboardPage.tsx:190
+msgid "Authentications"
+msgstr "Authentications"
+
+#: react-src/features/dashboard/DashboardPage.tsx:192
+msgid "Authentications in the last 24 hours"
+msgstr "Authentications in the last 24 hours"
+
+#: react-src/auth/useFidoErrorMessage.ts:48
+msgid "Bad U2F Request"
+msgstr "Bad U2F Request"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:137
+msgid "By entering an OTP value you can get the serial number of the token. You can also enter additional optional parameters, to narrow down the search for the token. So you can only search within certain token types or in assigned or unassigned tokens."
+msgstr "By entering an OTP value you can get the serial number of the token. You can also enter additional optional parameters, to narrow down the search for the token. So you can only search within certain token types or in assigned or unassigned tokens."
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:38
+msgid "CA Connector"
+msgstr "CA Connector"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:244
+#: react-src/features/tokens/details/EditableValueRow.tsx:99
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:216
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:205
+#: react-src/features/tokens/TokenGetSerialPage.tsx:276
+#: react-src/features/users/UserDetailsPage.tsx:425
 msgid "Cancel"
 msgstr "Cancel"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:765
+msgid "certificate"
+msgstr "certificate"
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:62
+msgid "Certificate (PEM)"
+msgstr "Certificate (PEM)"
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:76
+msgid "Certificate Signing Request (PEM)"
+msgstr "Certificate Signing Request (PEM)"
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:51
+msgid "Certificate Template"
+msgstr "Certificate Template"
+
+#: react-src/features/login/useAuthenticate.ts:102
+msgid "Challenge Response Authentication. You are not completely authenticated, yet."
+msgstr "Challenge Response Authentication. You are not completely authenticated, yet."
+
+#: react-src/features/login/useAuthenticate.ts:56
+msgid "Challenge Response Authentication. Your response was not valid!"
+msgstr "Challenge Response Authentication. Your response was not valid!"
+
+#: react-src/features/tokens/TokenChallengesPage.tsx:143
+msgid "Challenges"
+msgstr "Challenges"
 
 #: react-src/features/users/UserPasswordPage.tsx:135
 msgid "Change password"
 msgstr "Change password"
 
-#: react-src/features/audit/AuditLogPage.tsx:278
+#: react-src/features/login/PinChangePage.tsx:71
+#: react-src/features/login/PinChangePage.tsx:119
+msgid "Change PIN"
+msgstr "Change PIN"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:291
+msgid "Check OTP only."
+msgstr "Check OTP only."
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:19
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:99
+msgid "Check the PIN locally"
+msgstr "Check the PIN locally"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:279
+msgid "Check with OTP PIN."
+msgstr "Check with OTP PIN."
+
+#: react-src/features/login/LoginPage.tsx:168
+msgid "Choose a realm..."
+msgstr "Choose a realm..."
+
+#: react-src/features/audit/AuditLogPage.tsx:273
 msgid "Clear all filters"
 msgstr "Clear all filters"
 
-#: react-src/features/audit/AuditLogPage.tsx:575
+#: react-src/features/audit/AuditLogPage.tsx:566
 msgid "clearance"
 msgstr "clearance"
 
-#: react-src/features/audit/AuditLogPage.tsx:549
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:33
+msgid "Click <0>here</0> or scan the QR Code, if you want to add the Token to your mOTP App like Token2."
+msgstr "Click <0>here</0> or scan the QR Code, if you want to add the Token to your mOTP App like Token2."
+
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:73
+msgid "Click <0>here</0> or scan the QR Code, if you want to add the Token to your smartphone authenticator app."
+msgstr "Click <0>here</0> or scan the QR Code, if you want to add the Token to your smartphone authenticator app."
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:75
+msgid "Click <0>here</0> or scan the QR Code, if you want to add the Token to your TiQR App."
+msgstr "Click <0>here</0> or scan the QR Code, if you want to add the Token to your TiQR App."
+
+#: react-src/features/audit/AuditLogPage.tsx:540
 msgid "client"
 msgstr "client"
 
@@ -133,83 +309,161 @@ msgstr "Client"
 msgid "Client applications seen by this eduMFA instance."
 msgstr "Client applications seen by this eduMFA instance."
 
+#: react-src/auth/useFidoErrorMessage.ts:49
+msgid "Client Configuration is not supported."
+msgstr "Client Configuration is not supported."
+
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:122
+msgid "Client Part"
+msgstr "Client Part"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:431
+#: react-src/features/tokens/TokenApplicationsPage.tsx:153
+#: react-src/features/tokens/TokenApplicationsPage.tsx:154
+msgid "Count"
+msgstr "Count"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:443
+#: react-src/features/tokens/TokenGetSerialPage.tsx:235
+msgid "Count Window"
+msgstr "Count Window"
+
 #: react-src/features/users/UserAddPage.tsx:70
 msgid "Create a user in an editable user store."
 msgstr "Create a user in an editable user store."
 
-#: react-src/features/users/UserDetailsPage.tsx:515
-#: react-src/features/users/UserDetailsPage.tsx:516
+#: react-src/features/users/UserDetailsPage.tsx:511
+#: react-src/features/users/UserDetailsPage.tsx:512
 msgid "Custom attribute"
 msgstr "Custom attribute"
 
-#: react-src/features/users/UserDetailsPage.tsx:526
-#: react-src/features/users/UserDetailsPage.tsx:531
+#: react-src/features/users/UserDetailsPage.tsx:522
+#: react-src/features/users/UserDetailsPage.tsx:527
 msgid "Custom attribute name"
 msgstr "Custom attribute name"
 
-#: react-src/features/users/UserDetailsPage.tsx:538
-#: react-src/features/users/UserDetailsPage.tsx:540
-#: react-src/features/users/UserDetailsPage.tsx:554
-#: react-src/features/users/UserDetailsPage.tsx:559
+#: react-src/features/users/UserDetailsPage.tsx:534
+#: react-src/features/users/UserDetailsPage.tsx:536
+#: react-src/features/users/UserDetailsPage.tsx:550
+#: react-src/features/users/UserDetailsPage.tsx:555
 msgid "Custom attribute value"
 msgstr "Custom attribute value"
 
-#: react-src/features/users/UserDetailsPage.tsx:578
+#: react-src/features/users/UserDetailsPage.tsx:574
 msgid "Custom attributes"
 msgstr "Custom attributes"
 
-#: react-src/features/users/UserDetailsPage.tsx:605
+#: react-src/features/dashboard/DashboardPage.tsx:144
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: react-src/features/dashboard/DashboardPage.tsx:240
+msgid "Date"
+msgstr "Date"
+
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:123
+#: react-src/features/users/UserDetailsPage.tsx:601
 msgid "Delete"
 msgstr "Delete"
 
-#: react-src/features/users/UserDetailsPage.tsx:412
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:164
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:184
+msgid "Delete Token"
+msgstr "Delete Token"
+
+#: react-src/features/users/UserDetailsPage.tsx:408
 msgid "Delete user"
 msgstr "Delete user"
 
-#: react-src/features/users/UserDetailsPage.tsx:717
-#: react-src/features/users/UserDetailsPage.tsx:730
+#: react-src/features/users/UserDetailsPage.tsx:713
+#: react-src/features/users/UserDetailsPage.tsx:726
 msgid "Delete User"
 msgstr "Delete User"
 
+#: react-src/features/tokens/TokenListPage.tsx:180
+#: react-src/features/tokens/TokenListPage.tsx:181
 #: react-src/features/users/UserDetailsPage.tsx:373
 #: react-src/features/users/userFieldLabels.ts:10
-#: react-src/features/users/UserListPage.tsx:190
+#: react-src/features/users/UserListPage.tsx:195
 msgid "description"
 msgstr "description"
 
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:475
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:592
 #: react-src/features/users/UserPasswordPage.tsx:110
 msgid "Description"
 msgstr "Description"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:272
+#: react-src/features/machines/MachineDetailsPage.tsx:270
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:242
 msgid "Detach"
 msgstr "Detach"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:320
+#: react-src/features/dashboard/DashboardPage.tsx:249
+msgid "Detail"
+msgstr "Detail"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:318
 msgid "Details"
 msgstr "Details"
 
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:298
+msgid "Disable"
+msgstr "Disable"
+
+#: react-src/features/tokens/tokenBadges.tsx:57
+msgid "Disable token"
+msgstr "Disable token"
+
+#: react-src/features/tokens/tokenBadges.tsx:62
 #: react-src/features/users/UserDetailsPage.tsx:361
 msgid "disabled"
 msgstr "disabled"
 
-#: react-src/features/users/UserDetailsPage.tsx:722
+#: react-src/features/tokens/TokenImportPage.tsx:107
+msgid "Do not verify the authenticity"
+msgstr "Do not verify the authenticity"
+
+#. placeholder {0}: token.username
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:170
+msgid "Do you really want to delete the Token {serial} from user {0}?"
+msgstr "Do you really want to delete the Token {serial} from user {0}?"
+
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:175
+msgid "Do you really want to delete the Token {serial}?"
+msgstr "Do you really want to delete the Token {serial}?"
+
+#: react-src/features/users/UserDetailsPage.tsx:718
 msgid "Do you really want to delete the user in the user store?"
 msgstr "Do you really want to delete the user in the user store?"
 
-#: react-src/features/audit/AuditLogPage.tsx:221
+#: react-src/features/audit/AuditLogPage.tsx:216
 msgid "Download audit log as CSV"
 msgstr "Download audit log as CSV"
 
-#: react-src/features/audit/AuditLogPage.tsx:451
+#: react-src/features/tokens/enroll/results/CertificateResult.tsx:44
+msgid "Download the certificate"
+msgstr "Download the certificate"
+
+#: react-src/features/tokens/enroll/results/CertificateResult.tsx:55
+msgid "Download the PKCS12 file"
+msgstr "Download the PKCS12 file"
+
+#: react-src/features/audit/AuditLogPage.tsx:442
 msgid "duration"
 msgstr "duration"
+
+#: react-src/features/tokens/details/EditableValueRow.tsx:111
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:219
+msgid "Edit"
+msgstr "Edit"
 
 #: react-src/features/machines/MachineSidebar.tsx:45
 msgid "Edit Machine Resolvers"
 msgstr "Edit Machine Resolvers"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:260
+#: react-src/features/machines/MachineDetailsPage.tsx:258
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:230
 msgid "Edit Options"
 msgstr "Edit Options"
 
@@ -217,17 +471,17 @@ msgstr "Edit Options"
 msgid "Edit realms"
 msgstr "Edit realms"
 
-#: react-src/features/users/UserDetailsPage.tsx:399
+#: react-src/features/users/UserDetailsPage.tsx:395
 msgid "Edit user"
 msgstr "Edit user"
 
-#: react-src/features/audit/AuditLogPage.tsx:586
+#: react-src/features/audit/AuditLogPage.tsx:577
 msgid "eduMFA server"
 msgstr "eduMFA server"
 
 #: react-src/features/users/userFieldLabels.ts:11
-#: react-src/features/users/UserListPage.tsx:169
-#: react-src/features/users/UserListPage.tsx:170
+#: react-src/features/users/UserListPage.tsx:174
+#: react-src/features/users/UserListPage.tsx:175
 msgid "email"
 msgstr "email"
 
@@ -239,19 +493,141 @@ msgstr "email"
 msgid "Email"
 msgstr "Email"
 
-#: react-src/features/audit/AuditLogPage.tsx:444
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:32
+msgid "Email Address"
+msgstr "Email Address"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:120
+msgid "Email Token Config"
+msgstr "Email Token Config"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:316
+msgid "Enable"
+msgstr "Enable"
+
+#: react-src/features/tokens/tokenBadges.tsx:57
+msgid "Enable token"
+msgstr "Enable token"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:544
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:641
+msgid "End Date before Start Date!"
+msgstr "End Date before Start Date!"
+
+#: react-src/features/audit/AuditLogPage.tsx:435
 msgid "enddate"
 msgstr "enddate"
 
-#: react-src/features/users/UserDetailsPage.tsx:635
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:396
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:508
+msgid "Enroll a new token"
+msgstr "Enroll a new token"
+
+#: react-src/features/users/UserDetailsPage.tsx:631
 msgid "Enroll New Token"
 msgstr "Enroll New Token"
 
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:540
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:134
+#: react-src/features/tokens/TokenSidebar.tsx:78
+msgid "Enroll Token"
+msgstr "Enroll Token"
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:436
+msgid "Enrolled token"
+msgstr "Enrolled token"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:118
+msgid "Enrollment successfully verified."
+msgstr "Enrollment successfully verified."
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:119
+msgid "Enrollment verification failed."
+msgstr "Enrollment verification failed."
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:352
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:356
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:471
+msgid "Enter code to verify enrollment"
+msgstr "Enter code to verify enrollment"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:141
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:146
+msgid "Enter first OTP value"
+msgstr "Enter first OTP value"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:68
+msgid "Enter OTP + PIN to check the token."
+msgstr "Enter OTP + PIN to check the token."
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:44
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:47
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:107
+msgid "Enter OTP key..."
+msgstr "Enter OTP key..."
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:186
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:192
+msgid "Enter PIN again"
+msgstr "Enter PIN again"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:67
+msgid "Enter PIN and OTP to check the token."
+msgstr "Enter PIN and OTP to check the token."
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:177
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:182
+msgid "Enter PIN for token"
+msgstr "Enter PIN for token"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:150
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:155
+msgid "Enter second OTP value"
+msgstr "Enter second OTP value"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:185
+msgid "enter some OTP value"
+msgstr "enter some OTP value"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:80
+msgid "Enter static password..."
+msgstr "Enter static password..."
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:84
+msgid "Enter the 12 digit Yubikey identifier..."
+msgstr "Enter the 12 digit Yubikey identifier..."
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:107
+msgid "Enter the secret..."
+msgstr "Enter the secret..."
+
+#: react-src/features/login/LoginPage.tsx:136
+msgid "Enter your username and password and click Log In to authenticate."
+msgstr "Enter your username and password and click Log In to authenticate."
+
+#: react-src/features/dashboard/DashboardPage.tsx:313
+msgid "Events"
+msgstr "Events"
+
+#: react-src/features/tokens/TokenChallengesPage.tsx:122
+msgid "Expiration"
+msgstr "Expiration"
+
+#: react-src/features/tokens/enroll/ExtendedAttributesFields.tsx:29
+msgid "Extended Attributes"
+msgstr "Extended Attributes"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:393
+msgid "Fail counter"
+msgstr "Fail counter"
+
+#: react-src/features/tokens/TokenListPage.tsx:187
 #: react-src/features/users/UserDetailsPage.tsx:378
 msgid "failcounter"
 msgstr "failcounter"
 
-#: react-src/features/audit/AuditLogPage.tsx:467
+#: react-src/features/audit/AuditLogPage.tsx:458
+#: react-src/features/dashboard/DashboardPage.tsx:199
 msgid "failed"
 msgstr "failed"
 
@@ -263,17 +639,103 @@ msgstr "Failed to delete user."
 msgid "Failed to reset your password."
 msgstr "Failed to reset your password."
 
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:88
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:102
+msgid "Failed to set PIN."
+msgstr "Failed to set PIN."
+
 #: react-src/features/users/UserDetailsPage.tsx:189
 msgid "Failed to update user."
 msgstr "Failed to update user."
 
-#: react-src/features/audit/AuditLogPage.tsx:245
+#: react-src/features/dashboard/DashboardPage.tsx:203
+msgid "failed users / tokens"
+msgstr "failed users / tokens"
+
+#: react-src/features/tokens/TokenImportPage.tsx:148
+msgid "File type"
+msgstr "File type"
+
+#: react-src/features/audit/AuditLogPage.tsx:240
 msgid "Filters"
 msgstr "Filters"
+
+#: react-src/features/tokens/TokenImportPage.tsx:239
+msgid "Fingerprint"
+msgstr "Fingerprint"
 
 #: react-src/components/tables/Pagination.tsx:31
 msgid "First"
 msgstr "First"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:122
+msgid "For Email tokens to work properly you need to set the {link}!"
+msgstr "For Email tokens to work properly you need to set the {link}!"
+
+#: react-src/features/tokens/TokenImportPage.tsx:301
+msgid "For HOTP and TOTP tokens:"
+msgstr "For HOTP and TOTP tokens:"
+
+#: react-src/features/tokens/TokenImportPage.tsx:307
+msgid "For OCRA tokens:"
+msgstr "For OCRA tokens:"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:139
+msgid "For SMS tokens to work properly you need to set the {link}!"
+msgstr "For SMS tokens to work properly you need to set the {link}!"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:23
+msgid "For the enrollment process and for the authentication process your smartphone needs an internet connection to eduMFA."
+msgstr "For the enrollment process and for the authentication process your smartphone needs an internet connection to eduMFA."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:147
+msgid "For TiQR tokens to work properly you need to set the {link}!"
+msgstr "For TiQR tokens to work properly you need to set the {link}!"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:155
+msgid "For Yubico tokens to work properly you need to set the {link}!"
+msgstr "For Yubico tokens to work properly you need to set the {link}!"
+
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:19
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:51
+msgid "Generate OTP Key on the Server"
+msgstr "Generate OTP Key on the Server"
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:17
+msgid "Generate Request"
+msgstr "Generate Request"
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:49
+msgid "Generate secret on the Server"
+msgstr "Generate secret on the Server"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:60
+msgid "Generate the static password on the Server"
+msgstr "Generate the static password on the Server"
+
+#: react-src/features/tokens/TokenSidebar.tsx:146
+msgid "Get Serial"
+msgstr "Get Serial"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:170
+msgid "Get Serial Number"
+msgstr "Get Serial Number"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:144
+msgid "Get Serial number by OTP value"
+msgstr "Get Serial number by OTP value"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:208
+msgid "Get the Authenticator App for Android."
+msgstr "Get the Authenticator App for Android."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:213
+msgid "Get the Authenticator App for iOS."
+msgstr "Get the Authenticator App for iOS."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:218
+msgid "Get the Authenticator App."
+msgstr "Get the Authenticator App."
 
 #: react-src/features/register/RegisterPage.tsx:95
 #: react-src/features/register/RegisterPage.tsx:96
@@ -282,14 +744,34 @@ msgid "Given name"
 msgstr "Given name"
 
 #: react-src/features/users/userFieldLabels.ts:12
-#: react-src/features/users/UserListPage.tsx:163
-#: react-src/features/users/UserListPage.tsx:164
+#: react-src/features/users/UserListPage.tsx:168
+#: react-src/features/users/UserListPage.tsx:169
 msgid "givenname"
 msgstr "givenname"
+
+#: react-src/features/dashboard/DashboardPage.tsx:166
+msgid "Hardware"
+msgstr "Hardware"
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:192
+msgid "Hash algorithm"
+msgstr "Hash algorithm"
 
 #: react-src/features/users/UserSidebar.tsx:115
 msgid "Help about manage Users"
 msgstr "Help about manage Users"
+
+#: react-src/features/tokens/TokenSidebar.tsx:157
+msgid "Help about Token"
+msgstr "Help about Token"
+
+#: react-src/features/tokens/TokenSidebar.tsx:181
+msgid "Help about Token Details"
+msgstr "Help about Token Details"
+
+#: react-src/features/tokens/TokenSidebar.tsx:169
+msgid "Help about Token Import"
+msgstr "Help about Token Import"
 
 #: react-src/features/users/UserSidebar.tsx:120
 msgid "Help about User Details"
@@ -298,6 +780,22 @@ msgstr "Help about User Details"
 #: react-src/features/users/UserSidebar.tsx:124
 msgid "Help about Users"
 msgstr "Help about Users"
+
+#: react-src/features/tokens/enroll/fields/QuestionFields.tsx:65
+msgid "Here you can select how many tokens of which realm are required to perform a successful authentication."
+msgstr "Here you can select how many tokens of which realm are required to perform a successful authentication."
+
+#: react-src/features/tokens/TokenImportPage.tsx:295
+msgid "Here you can upload a csv file for your OATH token. The file is supposed to contain one token per line."
+msgstr "Here you can upload a csv file for your OATH token. The file is supposed to contain one token per line."
+
+#: react-src/features/tokens/TokenImportPage.tsx:326
+msgid "Here you can upload a csv file for your Yubikey token. The file is supposed to contain one token per line."
+msgstr "Here you can upload a csv file for your Yubikey token. The file is supposed to contain one token per line."
+
+#: react-src/features/tokens/TokenImportPage.tsx:283
+msgid "Here you can upload an XML file from Aladdin or SafeNet as it was used with Aladdin TMS or SafeNet SAM."
+msgstr "Here you can upload an XML file from Aladdin or SafeNet as it was used with Aladdin TMS or SafeNet SAM."
 
 #: react-src/features/register/RegisterPage.tsx:54
 msgid "Here you may register a new user account"
@@ -308,12 +806,17 @@ msgstr "Here you may register a new user account"
 msgid "hostname"
 msgstr "hostname"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:322
+#: react-src/features/machines/MachineDetailsPage.tsx:320
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:150
 msgid "Hostname"
 msgstr "Hostname"
 
+#: react-src/features/tokens/TokenApplicationsPage.tsx:179
+msgid "HOTP tokens can be attached with offline to e.g. notebooks."
+msgstr "HOTP tokens can be attached with offline to e.g. notebooks."
+
 #: react-src/features/users/userFieldLabels.ts:17
-#: react-src/features/users/UserListPage.tsx:195
+#: react-src/features/users/UserListPage.tsx:200
 msgid "id"
 msgstr "id"
 
@@ -322,37 +825,97 @@ msgstr "id"
 msgid "Id"
 msgstr "Id"
 
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:28
+msgid "If the PIN is split and verified locally, you need to define, how long the password is, that is sent to the RADIUS server."
+msgstr "If the PIN is split and verified locally, you need to define, how long the password is, that is sent to the RADIUS server."
+
+#: react-src/features/tokens/TokenLostPage.tsx:75
+msgid "If the token is lost, you can enroll a temporary password based token and give the password to the user. The OTP PIN of the old token is still the same."
+msgstr "If the token is lost, you can enroll a temporary password based token and give the password to the user. The OTP PIN of the old token is still the same."
+
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:105
+msgid "If this token should not use the system wide SMS gateway but an individual SMS gateway, you can select the gateway here."
+msgstr "If this token should not use the system wide SMS gateway but an individual SMS gateway, you can select the gateway here."
+
+#: react-src/features/tokens/TokenImportPage.tsx:332
+msgid "If you are enrolling the Yubikey in HOTP mode, you should use the PSKC file format in the newer version of the Yubikey GUI."
+msgstr "If you are enrolling the Yubikey in HOTP mode, you should use the PSKC file format in the newer version of the Yubikey GUI."
+
 #: react-src/features/recovery/RecoveryPage.tsx:39
 msgid "If you forgot your password, you may set a new one."
 msgstr "If you forgot your password, you may set a new one."
 
-#: react-src/features/audit/AuditLogPage.tsx:555
+#: react-src/features/tokens/TokenAssignPage.tsx:60
+msgid "If you were handed a token device, you may connect this device to your account. Turn over the token, you may find a serial number printed on the token. Please enter this serial number and make up a token pin."
+msgstr "If you were handed a token device, you may connect this device to your account. Turn over the token, you may find a serial number printed on the token. Please enter this serial number and make up a token pin."
+
+#: react-src/features/tokens/TokenImportPage.tsx:249
+msgid "Import result"
+msgstr "Import result"
+
+#: react-src/features/tokens/TokenSidebar.tsx:105
+msgid "Import Tokens"
+msgstr "Import Tokens"
+
+#: react-src/features/tokens/TokenImportPage.tsx:114
+msgid "Import tokens from a file"
+msgstr "Import tokens from a file"
+
+#: react-src/features/dashboard/DashboardPage.tsx:326
+msgid "Inactive Events"
+msgstr "Inactive Events"
+
+#: react-src/features/dashboard/DashboardPage.tsx:293
+msgid "Inactive Policies"
+msgstr "Inactive Policies"
+
+#: react-src/features/audit/AuditLogPage.tsx:546
 msgid "info"
 msgstr "info"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:328
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:486
+msgid "Info"
+msgstr "Info"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:326
 #: react-src/features/machines/MachineListPage.tsx:117
 #: react-src/features/machines/MachineListPage.tsx:118
 msgid "IP Address"
 msgstr "IP Address"
 
+#: react-src/features/tokens/TokenGetSerialPage.tsx:203
+msgid "It does not matter, if the token is assigned or not"
+msgstr "It does not matter, if the token is assigned or not"
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:150
+msgid "It will send the missing registration data to the configured endpoint."
+msgstr "It will send the missing registration data to the configured endpoint."
+
 #: react-src/components/tables/Pagination.tsx:32
 msgid "Last"
 msgstr "Last"
+
+#: react-src/features/tokens/TokenSidebar.tsx:114
+msgid "List Challenges"
+msgstr "List Challenges"
 
 #: react-src/components/feedback/LoadingIndicator.tsx:10
 msgid "Loading"
 msgstr "Loading"
 
-#: react-src/features/audit/AuditLogPage.tsx:284
+#: react-src/features/audit/AuditLogPage.tsx:279
 msgid "Loading audit log"
 msgstr "Loading audit log"
+
+#: react-src/features/tokens/TokenChallengesPage.tsx:151
+msgid "Loading challenges"
+msgstr "Loading challenges"
 
 #: react-src/features/components/ClientTypePage.tsx:56
 msgid "Loading client applications"
 msgstr "Loading client applications"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:309
+#: react-src/features/machines/MachineDetailsPage.tsx:307
 msgid "Loading machine"
 msgstr "Loading machine"
 
@@ -364,38 +927,75 @@ msgstr "Loading machines"
 msgid "Loading resolvers"
 msgstr "Loading resolvers"
 
-#: react-src/features/users/UserDetailsPage.tsx:475
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:142
+msgid "Loading token"
+msgstr "Loading token"
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:226
+#: react-src/features/tokens/TokenListPage.tsx:291
+msgid "Loading tokens"
+msgstr "Loading tokens"
+
+#: react-src/features/users/UserDetailsPage.tsx:471
 #: react-src/features/users/UserPasswordPage.tsx:82
 msgid "Loading user"
 msgstr "Loading user"
 
-#: react-src/features/users/UserListPage.tsx:249
+#: react-src/features/users/UserListPage.tsx:254
 msgid "Loading users"
 msgstr "Loading users"
 
-#: react-src/components/feedback/LoginRequiredAlert.tsx:15
-msgid "Log in through the legacy UI before opening this migrated route."
-msgstr "Log in through the legacy UI before opening this migrated route."
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:272
+msgid "locked"
+msgstr "locked"
 
-#: react-src/features/audit/AuditLogPage.tsx:580
+#: react-src/features/login/LoginPage.tsx:91
+#: react-src/features/login/LoginPage.tsx:195
+#: react-src/features/login/ResponsePage.tsx:216
+msgid "Log In"
+msgstr "Log In"
+
+#: react-src/features/audit/AuditLogPage.tsx:571
 msgid "log level"
 msgstr "log level"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:297
+#. placeholder {0}: config.remoteUser
+#: react-src/features/login/LoginPage.tsx:72
+msgid "Login as {0}"
+msgstr "Login as {0}"
+
+#: react-src/features/login/LoginPage.tsx:101
+msgid "Login with credentials"
+msgstr "Login with credentials"
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:498
+msgid "Logout"
+msgstr "Logout"
+
+#: react-src/features/tokens/TokenSidebar.tsx:134
+msgid "Lost Token"
+msgstr "Lost Token"
+
+#: react-src/components/forms/MachineLookupField.tsx:56
+msgid "Machine"
+msgstr "Machine"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:295
 #: react-src/features/machines/MachineSidebar.tsx:35
 msgid "Machine {machineId}"
 msgstr "Machine {machineId}"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:325
+#: react-src/features/machines/MachineDetailsPage.tsx:323
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:133
 msgid "Machine ID"
 msgstr "Machine ID"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:314
-#: react-src/features/machines/MachineDetailsPage.tsx:315
+#: react-src/features/machines/MachineDetailsPage.tsx:312
+#: react-src/features/machines/MachineDetailsPage.tsx:313
 msgid "Machine not found."
 msgstr "Machine not found."
 
-#: react-src/features/machines/MachineDetailsPage.tsx:286
+#: react-src/features/machines/MachineDetailsPage.tsx:284
 #: react-src/features/machines/MachineListPage.tsx:129
 #: react-src/features/machines/MachineListPage.tsx:130
 msgid "Machine Resolver"
@@ -410,16 +1010,44 @@ msgstr "Machine Resolver {0}"
 msgid "Machines"
 msgstr "Machines"
 
-#: react-src/features/users/UserDetailsPage.tsx:387
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:251
+msgid "Machines this token is attached to"
+msgstr "Machines this token is attached to"
+
+#: react-src/features/tokens/TokenLostPage.tsx:68
+msgid "Mark the token as lost"
+msgstr "Mark the token as lost"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:509
+msgid "Max allowed auths"
+msgstr "Max allowed auths"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:524
+msgid "Max allowed successful auths"
+msgstr "Max allowed successful auths"
+
+#: react-src/features/users/UserDetailsPage.tsx:383
 msgid "maxfail"
 msgstr "maxfail"
 
-#: react-src/features/audit/AuditLogPage.tsx:565
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:383
+msgid "Maxfail"
+msgstr "Maxfail"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:502
+msgid "Maximum Authentication Count"
+msgstr "Maximum Authentication Count"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:517
+msgid "Maximum Success Auth Count"
+msgstr "Maximum Success Auth Count"
+
+#: react-src/features/audit/AuditLogPage.tsx:556
 msgid "missing_line"
 msgstr "missing_line"
 
 #: react-src/features/users/userFieldLabels.ts:13
-#: react-src/features/users/UserListPage.tsx:185
+#: react-src/features/users/UserListPage.tsx:190
 msgid "mobile"
 msgstr "mobile"
 
@@ -429,13 +1057,22 @@ msgstr "mobile"
 msgid "Mobile"
 msgstr "Mobile"
 
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:59
+msgid "mOTP PIN"
+msgstr "mOTP PIN"
+
+#: react-src/features/login/PinChangePage.tsx:93
+#: react-src/features/login/PinChangePage.tsx:98
+msgid "New PIN"
+msgstr "New PIN"
+
 #: react-src/components/tables/Pagination.tsx:33
 msgid "Next"
 msgstr "Next"
 
 #: react-src/components/feedback/BooleanPill.tsx:17
-#: react-src/features/audit/AuditLogPage.tsx:139
-#: react-src/features/audit/AuditLogPage.tsx:199
+#: react-src/features/audit/AuditLogPage.tsx:133
+#: react-src/features/audit/AuditLogPage.tsx:194
 msgid "no"
 msgstr "no"
 
@@ -443,7 +1080,7 @@ msgstr "no"
 msgid "No"
 msgstr "No"
 
-#: react-src/features/audit/AuditLogPage.tsx:298
+#: react-src/features/audit/AuditLogPage.tsx:293
 msgid "No audit entries match the current filters."
 msgstr "No audit entries match the current filters."
 
@@ -451,31 +1088,56 @@ msgstr "No audit entries match the current filters."
 msgid "No client applications found."
 msgstr "No client applications found."
 
-#: react-src/features/users/UserDetailsPage.tsx:585
+#: react-src/features/users/UserDetailsPage.tsx:581
 msgid "No custom attributes set."
 msgstr "No custom attributes set."
+
+#: react-src/components/forms/MachineLookupField.tsx:53
+msgid "No machine found"
+msgstr "No machine found"
 
 #: react-src/features/machines/MachineListPage.tsx:171
 msgid "No machines found."
 msgstr "No machines found."
 
+#: react-src/features/tokens/TokenChallengesPage.tsx:165
+msgid "No open challenges."
+msgstr "No open challenges."
+
+#: react-src/features/login/PinChangePage.tsx:52
+msgid "No PIN change is pending. Continue to the <0>token list</0>."
+msgstr "No PIN change is pending. Continue to the <0>token list</0>."
+
 #: react-src/components/forms/SerialLookupField.tsx:72
 msgid "No serial found"
 msgstr "No serial found"
 
-#: react-src/features/users/UserDetailsPage.tsx:654
+#: react-src/features/tokens/TokenGetSerialPage.tsx:316
+msgid "No Serial number could be found for OTP value {searchedOtp}."
+msgstr "No Serial number could be found for OTP value {searchedOtp}."
+
+#: react-src/features/users/UserDetailsPage.tsx:650
 msgid "No tokens assigned."
 msgstr "No tokens assigned."
 
-#: react-src/features/machines/MachineDetailsPage.tsx:347
+#: react-src/features/machines/MachineDetailsPage.tsx:345
+#: react-src/features/tokens/TokenApplicationsPage.tsx:240
 msgid "No tokens attached."
 msgstr "No tokens attached."
 
-#: react-src/features/users/UserListPage.tsx:263
+#: react-src/features/tokens/TokenListPage.tsx:305
+msgid "No tokens found."
+msgstr "No tokens found."
+
+#: react-src/components/forms/UserLookupField.tsx:57
+msgid "No user found"
+msgstr "No user found"
+
+#: react-src/features/users/UserListPage.tsx:268
 msgid "No users found."
 msgstr "No users found."
 
-#: react-src/features/audit/AuditLogPage.tsx:430
+#: react-src/features/audit/AuditLogPage.tsx:421
 msgid "number"
 msgstr "number"
 
@@ -483,11 +1145,54 @@ msgstr "number"
 msgid "Number of machines: {machineCount}"
 msgstr "Number of machines: {machineCount}"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:195
+#: react-src/features/tokens/enroll/fields/QuestionFields.tsx:91
+msgid "Number of required tokens"
+msgstr "Number of required tokens"
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:186
+msgid "Offline tokens attached to notebooks"
+msgstr "Offline tokens attached to notebooks"
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:199
+msgid "offline: Use HOTP token for offline login to notebooks."
+msgstr "offline: Use HOTP token for offline login to notebooks."
+
+#: react-src/auth/useFidoErrorMessage.ts:46
+#: react-src/features/tokens/TokenGetSerialPage.tsx:302
+#: react-src/features/tokens/TokenGetSerialPage.tsx:319
+msgid "OK"
+msgstr "OK"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:193
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:165
 msgid "Options"
 msgstr "Options"
 
-#: react-src/features/users/UserDetailsPage.tsx:391
+#: react-src/auth/useFidoErrorMessage.ts:47
+msgid "Other Error"
+msgstr "Other Error"
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:39
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:42
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:101
+msgid "OTP Key"
+msgstr "OTP Key"
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:55
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:125
+msgid "OTP length"
+msgstr "OTP length"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:424
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:34
+msgid "OTP Length"
+msgstr "OTP Length"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:180
+msgid "OTP Value"
+msgstr "OTP Value"
+
+#: react-src/features/users/UserDetailsPage.tsx:387
 msgid "otplen"
 msgstr "otplen"
 
@@ -495,20 +1200,44 @@ msgstr "otplen"
 msgid "password"
 msgstr "password"
 
+#: react-src/features/login/LoginPage.tsx:181
+#: react-src/features/login/LoginPage.tsx:186
 #: react-src/features/recovery/RecoveryResetPage.tsx:95
 #: react-src/features/register/RegisterPage.tsx:123
 #: react-src/features/register/RegisterPage.tsx:124
 #: react-src/features/register/RegisterPage.tsx:135
+#: react-src/features/tokens/TokenImportPage.tsx:173
+#: react-src/features/tokens/TokenImportPage.tsx:178
 #: react-src/features/users/UserPasswordPage.tsx:140
 msgid "Password"
 msgstr "Password"
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:123
+msgid "password length"
+msgstr "password length"
 
 #: react-src/features/users/UserPasswordPage.tsx:58
 msgid "Password set successfully."
 msgstr "Password set successfully."
 
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:68
+msgid "Paste the Certificate"
+msgstr "Paste the Certificate"
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:82
+msgid "Paste the Certificate Signing Request"
+msgstr "Paste the Certificate Signing Request"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:34
+msgid "Paste the ssh PUBLIC key"
+msgstr "Paste the ssh PUBLIC key"
+
+#: react-src/features/tokens/TokenImportPage.tsx:221
+msgid "PGP Key"
+msgstr "PGP Key"
+
 #: react-src/features/users/userFieldLabels.ts:15
-#: react-src/features/users/UserListPage.tsx:180
+#: react-src/features/users/UserListPage.tsx:185
 msgid "phone"
 msgstr "phone"
 
@@ -518,29 +1247,106 @@ msgstr "phone"
 msgid "Phone"
 msgstr "Phone"
 
-#: react-src/features/audit/AuditLogPage.tsx:158
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:73
+msgid "Phone number"
+msgstr "Phone number"
+
+#: react-src/features/audit/AuditLogPage.tsx:154
 msgid "Pick a date"
 msgstr "Pick a date"
 
-#: react-src/features/users/UserDetailsPage.tsx:693
+#: react-src/features/login/PinChangePage.tsx:40
+msgid "PIN changed successfully."
+msgstr "PIN changed successfully."
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:88
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:102
+msgid "PIN set successfully."
+msgstr "PIN set successfully."
+
+#: react-src/features/tokens/details/TokenUserCard.tsx:235
+#: react-src/features/tokens/enroll/PinFields.tsx:25
+#: react-src/features/tokens/TokenAssignPage.tsx:107
+#: react-src/features/users/UserDetailsPage.tsx:689
 msgid "PIN/Password"
 msgstr "PIN/Password"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:765
+msgid "PKCS12"
+msgstr "PKCS12"
+
+#: react-src/components/feedback/LoginRequiredAlert.tsx:17
+msgid "Please <0>log in</0> to open this page."
+msgstr "Please <0>log in</0> to open this page."
+
+#: react-src/features/tokens/enroll/fields/QuestionFields.tsx:16
+msgid "Please answer at least {numAnswers} of the following questions."
+msgstr "Please answer at least {numAnswers} of the following questions."
+
+#: react-src/features/login/ResponsePage.tsx:165
+msgid "Please confirm with one of these tokens:"
+msgstr "Please confirm with one of these tokens:"
 
 #: react-src/features/recovery/RecoveryResetPage.tsx:88
 msgid "Please enter a new password."
 msgstr "Please enter a new password."
 
-#: react-src/features/audit/AuditLogPage.tsx:219
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:69
+msgid "Please enter a valid phone number."
+msgstr "Please enter a valid phone number."
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:103
+msgid "Please note, that your smartphone needs internet access during the authentication process."
+msgstr "Please note, that your smartphone needs internet access during the authentication process."
+
+#: react-src/features/tokens/TokenImportPage.tsx:225
+msgid "Please pass the public key and the fingerprint to the token provider."
+msgstr "Please pass the public key and the fingerprint to the token provider."
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:120
+msgid "Please scan the QR code with the eduMFA Authenticator App or click <0>this link</0> on your smartphone."
+msgstr "Please scan the QR code with the eduMFA Authenticator App or click <0>this link</0> on your smartphone."
+
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:114
+msgid "Please scan the QR code with the privacyIDEA Authenticator app and enter the generated code below."
+msgstr "Please scan the QR code with the privacyIDEA Authenticator app and enter the generated code below."
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:128
+msgid "Please scan the QR code with the privacyIDEA Authenticator App or click <0>this link</0> on your smartphone."
+msgstr "Please scan the QR code with the privacyIDEA Authenticator App or click <0>this link</0> on your smartphone."
+
+#: react-src/features/login/LoginPage.tsx:144
+msgid "Please sign in"
+msgstr "Please sign in"
+
+#: react-src/features/login/OfflinePage.tsx:21
+msgid "Please try to reload and otherwise contact your system administrator!"
+msgstr "Please try to reload and otherwise contact your system administrator!"
+
+#: react-src/features/audit/AuditLogPage.tsx:214
 msgid "Please Wait! Crunching data..."
 msgstr "Please Wait! Crunching data..."
 
-#: react-src/features/audit/AuditLogPage.tsx:543
+#: react-src/features/audit/AuditLogPage.tsx:534
 msgid "policies"
 msgstr "policies"
+
+#: react-src/features/dashboard/DashboardPage.tsx:274
+msgid "Policies"
+msgstr "Policies"
+
+#: react-src/features/tokens/TokenImportPage.tsx:162
+#: react-src/features/tokens/TokenImportPage.tsx:168
+msgid "Pre Shared Key"
+msgstr "Pre Shared Key"
 
 #: react-src/components/tables/Pagination.tsx:34
 msgid "Previous"
 msgstr "Previous"
+
+#: react-src/features/tokens/enroll/results/OtpListResult.tsx:94
+msgid "Print the OTP list"
+msgstr "Print the OTP list"
 
 #: react-src/features/recovery/RecoveryResetPage.tsx:64
 msgid "Proceed to login"
@@ -550,16 +1356,77 @@ msgstr "Proceed to login"
 msgid "Profile"
 msgstr "Profile"
 
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:28
+msgid "Push Yubikey button here..."
+msgstr "Push Yubikey button here..."
+
+#: react-src/features/tokens/enroll/results/CodeResults.tsx:36
+msgid "QR code of the password"
+msgstr "QR code of the password"
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:14
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:56
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:139
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:43
+msgid "QR code of the token"
+msgstr "QR code of the token"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:217
+msgid "QR-Code with link to a custom app"
+msgstr "QR-Code with link to a custom app"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:207
+msgid "QR-Code with link to android app in play store"
+msgstr "QR-Code with link to android app in play store"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:212
+msgid "QR-Code with link to iOS app in app store"
+msgstr "QR-Code with link to iOS app in app store"
+
+#: react-src/features/tokens/enroll/fields/QuestionFields.tsx:13
+msgid "Questionnaire"
+msgstr "Questionnaire"
+
 #: react-src/features/machines/MachineSidebar.tsx:40
 #: react-src/features/users/UserSidebar.tsx:87
 msgid "Quick links"
 msgstr "Quick links"
 
-#: react-src/features/audit/AuditLogPage.tsx:516
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:53
+msgid "RADIUS server configuration"
+msgstr "RADIUS server configuration"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:128
+msgid "RADIUS Token Config"
+msgstr "RADIUS Token Config"
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:68
+msgid "RADIUS User"
+msgstr "RADIUS User"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:214
+msgid "Random generated PIN"
+msgstr "Random generated PIN"
+
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:20
+msgid "Read email address dynamically from user source on each request."
+msgstr "Read email address dynamically from user source on each request."
+
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:58
+msgid "Read number dynamically from user source on each request."
+msgstr "Read number dynamically from user source on each request."
+
+#: react-src/features/audit/AuditLogPage.tsx:507
+#: react-src/features/tokens/TokenListPage.tsx:230
 msgid "realm"
 msgstr "realm"
 
-#: react-src/features/users/UserDetailsPage.tsx:451
+#: react-src/features/login/LoginPage.tsx:170
+#: react-src/features/tokens/details/TokenUserCard.tsx:138
+#: react-src/features/tokens/details/TokenUserCard.tsx:216
+#: react-src/features/tokens/enroll/UserAssignmentFields.tsx:30
+#: react-src/features/tokens/TokenImportPage.tsx:208
+#: react-src/features/users/UserDetailsPage.tsx:447
 msgid "Realm"
 msgstr "Realm"
 
@@ -568,31 +1435,80 @@ msgstr "Realm"
 msgid "Realm {0}"
 msgstr "Realm {0}"
 
-#: react-src/features/users/UserListPage.tsx:239
+#: react-src/features/users/UserListPage.tsx:244
 msgid "Realm {activeRealm}"
 msgstr "Realm {activeRealm}"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:598
+msgid "Realms"
+msgstr "Realms"
+
+#: react-src/features/tokens/TokenChallengesPage.tsx:130
+msgid "Received"
+msgstr "Received"
 
 #: react-src/features/components/ClientTypePage.tsx:44
 msgid "Refresh"
 msgstr "Refresh"
+
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:100
+msgid "Regenerate QR Code"
+msgstr "Regenerate QR Code"
 
 #: react-src/features/register/RegisterPage.tsx:74
 #: react-src/features/register/RegisterPage.tsx:150
 msgid "Register"
 msgstr "Register"
 
-#: react-src/features/audit/AuditLogPage.tsx:253
+#: react-src/features/tokens/enroll/results/CodeResults.tsx:12
+msgid "Registration Code"
+msgstr "Registration Code"
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:138
+msgid "Remote Realm"
+msgstr "Remote Realm"
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:147
+msgid "Remote Resolver"
+msgstr "Remote Resolver"
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:118
+msgid "Remote Serial"
+msgstr "Remote Serial"
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:108
+msgid "Remote Server"
+msgstr "Remote Server"
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:128
+msgid "Remote User"
+msgstr "Remote User"
+
+#: react-src/features/audit/AuditLogPage.tsx:248
 msgid "Remove filter {name}"
 msgstr "Remove filter {name}"
 
+#: react-src/features/login/PinChangePage.tsx:105
+#: react-src/features/login/PinChangePage.tsx:110
+msgid "Repeat new PIN"
+msgstr "Repeat new PIN"
+
 #: react-src/features/recovery/RecoveryResetPage.tsx:107
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:68
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:80
 #: react-src/features/users/UserPasswordPage.tsx:149
 #: react-src/features/users/UserPasswordPage.tsx:157
 msgid "Repeat password"
 msgstr "Repeat password"
 
-#: react-src/features/users/UserDetailsPage.tsx:702
-#: react-src/features/users/UserDetailsPage.tsx:709
+#: react-src/features/tokens/details/TokenUserCard.tsx:244
+#: react-src/features/tokens/details/TokenUserCard.tsx:251
+#: react-src/features/tokens/enroll/PinFields.tsx:34
+#: react-src/features/tokens/enroll/PinFields.tsx:42
+#: react-src/features/tokens/TokenAssignPage.tsx:116
+#: react-src/features/tokens/TokenAssignPage.tsx:123
+#: react-src/features/users/UserDetailsPage.tsx:698
+#: react-src/features/users/UserDetailsPage.tsx:705
 msgid "Repeat PIN or password"
 msgstr "Repeat PIN or password"
 
@@ -600,6 +1516,19 @@ msgstr "Repeat PIN or password"
 msgid "Request failed"
 msgstr "Request failed"
 
+#: react-src/features/tokens/enroll/fields/QuestionFields.tsx:62
+msgid "Required Realms"
+msgstr "Required Realms"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:413
+msgid "Reset fail counter"
+msgstr "Reset fail counter"
+
+#: react-src/features/tokens/tokenBadges.tsx:43
+msgid "Reset Failcounter"
+msgstr "Reset Failcounter"
+
+#: react-src/features/login/LoginPage.tsx:200
 #: react-src/features/recovery/RecoveryPage.tsx:59
 #: react-src/features/recovery/RecoveryResetPage.tsx:122
 msgid "Reset Password"
@@ -609,25 +1538,109 @@ msgstr "Reset Password"
 msgid "Reset your Password"
 msgstr "Reset your Password"
 
-#: react-src/features/audit/AuditLogPage.tsx:529
+#: react-src/features/audit/AuditLogPage.tsx:520
 msgid "resolver"
 msgstr "resolver"
 
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:155
+#: react-src/features/tokens/details/TokenUserCard.tsx:148
+#: react-src/features/tokens/TokenListPage.tsx:265
 #: react-src/features/users/UserAddPage.tsx:112
-#: react-src/features/users/UserDetailsPage.tsx:458
+#: react-src/features/users/UserDetailsPage.tsx:454
 msgid "Resolver"
 msgstr "Resolver"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:237
+#: react-src/features/login/ResponsePage.tsx:161
+#: react-src/features/login/ResponsePage.tsx:199
+#: react-src/features/login/ResponsePage.tsx:207
+msgid "Response"
+msgstr "Response"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:168
+msgid "Resync Token"
+msgstr "Resync Token"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:334
+msgid "Revoke"
+msgstr "Revoke"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:277
+msgid "revoked"
+msgstr "revoked"
+
+#: react-src/features/tokens/TokenListPage.tsx:204
+#: react-src/features/tokens/TokenListPage.tsx:205
+msgid "rollout state"
+msgstr "rollout state"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:345
+msgid "Rollout State"
+msgstr "Rollout State"
+
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:111
+msgid "Rollover"
+msgstr "Rollover"
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:538
+msgid "Rollover Token"
+msgstr "Rollover Token"
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:392
+msgid "Rollover token {rolloverSerial}"
+msgstr "Rollover token {rolloverSerial}"
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:160
+#: react-src/features/tokens/TokenApplicationsPage.tsx:161
+msgid "Rounds"
+msgstr "Rounds"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:268
+msgid "Run search"
+msgstr "Run search"
+
+#: react-src/features/machines/MachineDetailsPage.tsx:235
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:207
 msgid "Save Options"
 msgstr "Save Options"
 
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:641
+msgid "Save realms"
+msgstr "Save realms"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:697
+msgid "Save Token Groups"
+msgstr "Save Token Groups"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:590
+msgid "Save Token Info"
+msgstr "Save Token Info"
+
 #: react-src/features/users/UserAddPage.tsx:97
-#: react-src/features/users/UserDetailsPage.tsx:426
+#: react-src/features/users/UserDetailsPage.tsx:422
 msgid "Save user"
 msgstr "Save user"
 
-#: react-src/features/users/UserListPage.tsx:206
+#: react-src/features/tokens/TokenGetSerialPage.tsx:174
+msgid "Search parameters"
+msgstr "Search parameters"
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:138
+msgid "seconds"
+msgstr "seconds"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:119
+msgid "Secret"
+msgstr "Secret"
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:46
+msgid "Select a predefined <0>RADIUS server configuration</0>. The RADIUS request will be forwarded to this RADIUS server."
+msgstr "Select a predefined <0>RADIUS server configuration</0>. The RADIUS request will be forwarded to this RADIUS server."
+
+#: react-src/features/tokens/TokenImportPage.tsx:137
+msgid "Select file and import"
+msgstr "Select file and import"
+
+#: react-src/features/users/UserListPage.tsx:211
 msgid "Select Realm"
 msgstr "Select Realm"
 
@@ -635,44 +1648,172 @@ msgstr "Select Realm"
 msgid "Send Reset Code"
 msgstr "Send Reset Code"
 
-#: react-src/features/audit/AuditLogPage.tsx:482
+#: react-src/features/tokens/enroll/fields/QuestionFields.tsx:52
+msgid "Separator"
+msgstr "Separator"
+
+#: react-src/features/audit/AuditLogPage.tsx:473
+#: react-src/features/tokens/TokenApplicationsPage.tsx:118
+#: react-src/features/tokens/TokenApplicationsPage.tsx:119
+#: react-src/features/tokens/TokenChallengesPage.tsx:92
+#: react-src/features/tokens/TokenChallengesPage.tsx:103
+#: react-src/features/tokens/TokenListPage.tsx:142
+#: react-src/features/tokens/TokenListPage.tsx:143
 #: react-src/features/users/UserDetailsPage.tsx:340
 msgid "serial"
 msgstr "serial"
 
 #: react-src/components/forms/SerialLookupField.tsx:75
-#: react-src/features/machines/MachineDetailsPage.tsx:171
+#: react-src/features/machines/MachineDetailsPage.tsx:169
 msgid "Serial"
 msgstr "Serial"
+
+#: react-src/features/tokens/TokenImportPage.tsx:310
+msgid "serial number, seed, type, ocrasuite"
+msgstr "serial number, seed, type, ocrasuite"
+
+#: react-src/features/tokens/TokenImportPage.tsx:304
+msgid "serial number, seed, type, otplen, timeStep"
+msgstr "serial number, seed, type, otplen, timeStep"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:223
+msgid "Serial Substring"
+msgstr "Serial Substring"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:87
+#: react-src/features/tokens/TokenApplicationsPage.tsx:136
+#: react-src/features/tokens/TokenApplicationsPage.tsx:137
+msgid "Service ID"
+msgstr "Service ID"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:437
+msgid "Set count window"
+msgstr "Set count window"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:468
+msgid "Set description"
+msgstr "Set description"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:377
+msgid "Set max fail"
+msgstr "Set max fail"
 
 #: react-src/features/users/UserPasswordPage.tsx:132
 msgid "set password"
 msgstr "set password"
 
-#: react-src/features/audit/AuditLogPage.tsx:560
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:205
+msgid "Set PIN"
+msgstr "Set PIN"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:228
+msgid "Set random PIN"
+msgstr "Set random PIN"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:451
+msgid "Set sync window"
+msgstr "Set sync window"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:560
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:172
+msgid "Set to 'True' or 'False' to override setting in Token Config."
+msgstr "Set to 'True' or 'False' to override setting in Token Config."
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:238
+msgid "Show password"
+msgstr "Show password"
+
+#: react-src/features/audit/AuditLogPage.tsx:551
 msgid "sig_check"
 msgstr "sig_check"
 
-#: react-src/features/users/UserDetailsPage.tsx:685
+#: react-src/features/tokens/TokenImportPage.tsx:108
+msgid "Skip tokens that can not be verified"
+msgstr "Skip tokens that can not be verified"
+
+#: react-src/features/tokens/TokenImportPage.tsx:266
+msgid "Skipped Tokens"
+msgstr "Skipped Tokens"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:137
+msgid "SMS Token Config"
+msgstr "SMS Token Config"
+
+#: react-src/features/dashboard/DashboardPage.tsx:169
+msgid "Software"
+msgstr "Software"
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:117
+msgid "Some Authenticator Apps only support an OTP length of 6."
+msgstr "Some Authenticator Apps only support an OTP length of 6."
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:188
+msgid "Some Authenticator Apps only support the SHA1 algorithm."
+msgstr "Some Authenticator Apps only support the SHA1 algorithm."
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:597
+msgid "Some nice words..."
+msgstr "Some nice words..."
+
+#: react-src/features/login/useAuthenticate.ts:113
+msgid "Something went wrong!"
+msgstr "Something went wrong!"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:26
+msgid "SSH public Key"
+msgstr "SSH public Key"
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:184
+msgid "SSH Tokens attached to services"
+msgstr "SSH Tokens attached to services"
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:173
+msgid "SSH Tokens can be attached to a service ID with a user. The user is the user on the SSH server and may differ from the token owner. To attach the token to a service ID go to the token details."
+msgstr "SSH Tokens can be attached to a service ID with a user. The user is the user on the SSH server and may differ from the token owner. To attach the token to a service ID go to the token details."
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:143
+#: react-src/features/tokens/TokenApplicationsPage.tsx:144
+msgid "SSH user"
+msgstr "SSH user"
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:197
+msgid "SSH: Attaching ssh keys to services."
+msgstr "SSH: Attaching ssh keys to services."
+
+#: react-src/components/forms/MachineLookupField.tsx:59
+msgid "start typing a machine."
+msgstr "start typing a machine."
+
+#: react-src/features/tokens/TokenAssignPage.tsx:99
+#: react-src/features/users/UserDetailsPage.tsx:681
 msgid "start typing a serial number of a token that is notassigned, yet."
 msgstr "start typing a serial number of a token that is notassigned, yet."
 
-#: react-src/features/machines/MachineDetailsPage.tsx:378
+#: react-src/features/machines/MachineDetailsPage.tsx:376
 msgid "start typing a serial number of a token."
 msgstr "start typing a serial number of a token."
 
-#: react-src/features/audit/AuditLogPage.tsx:437
+#: react-src/components/forms/UserLookupField.tsx:63
+msgid "start typing a username"
+msgstr "start typing a username"
+
+#: react-src/features/audit/AuditLogPage.tsx:428
 msgid "startdate"
 msgstr "startdate"
 
-#: react-src/features/audit/AuditLogPage.tsx:464
-#: react-src/features/audit/AuditLogPage.tsx:468
+#: react-src/features/audit/AuditLogPage.tsx:455
+#: react-src/features/audit/AuditLogPage.tsx:459
+#: react-src/features/dashboard/DashboardPage.tsx:196
 msgid "success"
 msgstr "success"
 
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:119
+msgid "Successfully authenticated."
+msgstr "Successfully authenticated."
+
 #: react-src/features/users/userFieldLabels.ts:16
-#: react-src/features/users/UserListPage.tsx:157
-#: react-src/features/users/UserListPage.tsx:158
+#: react-src/features/users/UserListPage.tsx:162
+#: react-src/features/users/UserListPage.tsx:163
 msgid "surname"
 msgstr "surname"
 
@@ -682,56 +1823,632 @@ msgstr "surname"
 msgid "Surname"
 msgstr "Surname"
 
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:457
+msgid "Sync Window"
+msgstr "Sync Window"
+
+#: react-src/features/tokens/enroll/results/FidoResult.tsx:25
+msgid "Take action on your authenticator"
+msgstr "Take action on your authenticator"
+
+#: react-src/features/tokens/enroll/results/FidoResult.tsx:23
+msgid "Take action on your token"
+msgstr "Take action on your token"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:294
+msgid "Test OTP only"
+msgstr "Test OTP only"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:246
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:257
+msgid "Test password"
+msgstr "Test password"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:281
+msgid "Test token"
+msgstr "Test token"
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:19
+msgid "Test Yubikey"
+msgstr "Test Yubikey"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:29
+msgid "The 4 Eyes token will only authenticate if two or more users are present at once. You can define how many existing tokens of the given realms need to be present to perform a successful authentication."
+msgstr "The 4 Eyes token will only authenticate if two or more users are present at once. You can define how many existing tokens of the given realms need to be present to perform a successful authentication."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:32
+msgid "The Application Specific Password Token is a static password, that can be bound to certain services. This static password then can only be used to authenticate at this service."
+msgstr "The Application Specific Password Token is a static password, that can be bound to certain services. This static password then can only be used to authenticate at this service."
+
+#: react-src/auth/useFidoErrorMessage.ts:73
+msgid "The authentication failed."
+msgstr "The authentication failed."
+
+#: react-src/auth/useFidoErrorMessage.ts:25
+msgid "The authentication was aborted."
+msgstr "The authentication was aborted."
+
+#: react-src/auth/useFidoErrorMessage.ts:33
+msgid "The authentication was cancelled or timed out."
+msgstr "The authentication was cancelled or timed out."
+
+#: react-src/auth/useFidoErrorMessage.ts:35
+msgid "The authenticator does not support the requested options."
+msgstr "The authenticator does not support the requested options."
+
+#: react-src/auth/useFidoErrorMessage.ts:28
+msgid "The authenticator is already registered."
+msgstr "The authenticator is already registered."
+
+#: react-src/auth/useFidoErrorMessage.ts:29
+msgid "The authenticator is in an invalid state."
+msgstr "The authenticator is in an invalid state."
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:105
+msgid "The blob must be a hexadecimal string."
+msgstr "The blob must be a hexadecimal string."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:35
+msgid "The Certificate Token lets you enroll an x509 ceritificate by the given CA."
+msgstr "The Certificate Token lets you enroll an x509 ceritificate by the given CA."
+
+#: react-src/features/tokens/enroll/results/CertificateResult.tsx:19
+msgid "The certificate was enrolled successfully."
+msgstr "The certificate was enrolled successfully."
+
+#: react-src/auth/useFidoErrorMessage.ts:50
+msgid "The client device can not be used for this type of request."
+msgstr "The client device can not be used for this type of request."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:38
+msgid "The DayPassword token is a time based password token. You can paste a secret key or have the server generate the secret and scan the QR code with an authenticator app that supports the token."
+msgstr "The DayPassword token is a time based password token. You can paste a secret key or have the server generate the secret and scan the QR code with an authenticator app that supports the token."
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:588
+msgid "The description may have at most 80 characters."
+msgstr "The description may have at most 80 characters."
+
+#: react-src/features/login/OfflinePage.tsx:18
+msgid "The eduMFA API seems to be offline!"
+msgstr "The eduMFA API seems to be offline!"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:41
+msgid "The Email Token sends the OTP value to the users email address."
+msgstr "The Email Token sends the OTP value to the users email address."
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:64
+msgid "The Enrollment URL"
+msgstr "The Enrollment URL"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:43
+msgid "The HOTP token is an event based token. You can paste a secret key or have the server generate the secret and scan the QR code with an Authenticator App turning your smartphone into an authentication device. But note, that some Apps might have limitations in the supported hash algorithms or other parameters."
+msgstr "The HOTP token is an event based token. You can paste a secret key or have the server generate the secret and scan the QR code with an Authenticator App turning your smartphone into an authentication device. But note, that some Apps might have limitations in the supported hash algorithms or other parameters."
+
+#: react-src/features/login/LoginPage.tsx:57
+msgid "The HSM is not ready. eduMFA can not work properly. Please start the HSM and reload this page."
+msgstr "The HSM is not ready. eduMFA can not work properly. Please start the HSM and reload this page."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:46
+msgid "The indexed secret Token is based on a shared secret between eduMFA and the user. During authentication the user is asked for random positions from this known secret."
+msgstr "The indexed secret Token is based on a shared secret between eduMFA and the user. During authentication the user is asked for random positions from this known secret."
+
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:54
+msgid "The mOTP PIN is the PIN that needs to be entered on the mobile device."
+msgstr "The mOTP PIN is the PIN that needs to be entered on the mobile device."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:49
+msgid "The mOTP token is a time based OTP token for mobile devices. You can have the server generate the secret and scan the QR code."
+msgstr "The mOTP token is a time based OTP token for mobile devices. You can have the server generate the secret and scan the QR code."
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:240
+msgid "The number of lookahead OTP values. Default 10."
+msgstr "The number of lookahead OTP values. Default 10."
+
+#: react-src/features/tokens/TokenLostPage.tsx:88
+msgid "The old token <0>{serial}</0> will be disabled and can be deleted or enabled later."
+msgstr "The old token <0>{serial}</0> will be disabled and can be deleted or enabled later."
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:22
+#: react-src/features/tokens/enroll/results/OtpListResult.tsx:50
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:56
+msgid "The OTP key"
+msgstr "The OTP key"
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:35
+msgid "The OTP key must be 32 hexadecimal characters."
+msgstr "The OTP key must be 32 hexadecimal characters."
+
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:38
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:97
+msgid "The OTP key must be a hexadecimal string."
+msgstr "The OTP key must be a hexadecimal string."
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:51
+msgid "The OTP length must be between 32 and 99."
+msgstr "The OTP length must be between 32 and 99."
+
+#: react-src/features/tokens/enroll/results/OtpListResult.tsx:48
+msgid "The OTP values"
+msgstr "The OTP values"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:52
+msgid "The Paper token will let you print a list of OTP values. These OTP values can be used to authenticate. You need to use on value after the other."
+msgstr "The Paper token will let you print a list of OTP values. These OTP values can be used to authenticate. You need to use on value after the other."
+
+#: react-src/features/tokens/TokenLostPage.tsx:130
+msgid "The password can not be shown again, later!"
+msgstr "The password can not be shown again, later!"
+
+#. placeholder {0}: result.password
+#: react-src/features/tokens/TokenLostPage.tsx:122
+msgid "The password that needs to be combined with the OTP PIN: <0>{0}</0>"
+msgstr "The password that needs to be combined with the OTP PIN: <0>{0}</0>"
+
 #: react-src/features/users/UserPasswordPage.tsx:153
 msgid "The passwords do not match."
 msgstr "The passwords do not match."
 
-#: react-src/features/users/UserDetailsPage.tsx:704
+#: react-src/features/login/PinChangePage.tsx:103
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:188
+#: react-src/features/tokens/details/TokenUserCard.tsx:246
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:621
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:72
+#: react-src/features/tokens/TokenAssignPage.tsx:118
+#: react-src/features/users/UserDetailsPage.tsx:700
 msgid "The PINs do not match."
 msgstr "The PINs do not match."
+
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:84
+msgid "The QR Code contains the secret key of your token. You need to protect it. <0>If you are in doubt, that someone else saw it, please regenerate the QR Code, when no one else is watching.</0>"
+msgstr "The QR Code contains the secret key of your token. You need to protect it. <0>If you are in doubt, that someone else saw it, please regenerate the QR Code, when no one else is watching.</0>"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:56
+msgid "The Questionnaire token will let you define answers to questions. When authenticating with this type of token, you will be asked a random question and then need to provide the previously defined answer."
+msgstr "The Questionnaire token will let you define answers to questions. When authenticating with this type of token, you will be asked a random question and then need to provide the previously defined answer."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:59
+msgid "The RADIUS token forwards the authentication request to another RADIUS server. You can choose if the PIN should be stripped and checked locally."
+msgstr "The RADIUS token forwards the authentication request to another RADIUS server. You can choose if the PIN should be stripped and checked locally."
+
+#: react-src/auth/useFidoErrorMessage.ts:73
+msgid "The registration failed."
+msgstr "The registration failed."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:62
+msgid "The registration token is a code, that the user can use to authenticate once! After using this code to login, the registration token is deleted and can not be used anymore."
+msgstr "The registration token is a code, that the user can use to authenticate once! After using this code to login, the registration token is deleted and can not be used anymore."
+
+#: react-src/auth/useFidoErrorMessage.ts:24
+msgid "The registration was aborted."
+msgstr "The registration was aborted."
+
+#: react-src/auth/useFidoErrorMessage.ts:32
+msgid "The registration was cancelled or timed out."
+msgstr "The registration was cancelled or timed out."
+
+#: react-src/auth/useFidoErrorMessage.ts:37
+msgid "The relying party ID does not match this site."
+msgstr "The relying party ID does not match this site."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:66
+msgid "The remote token forwards the authentication request to another eduMFA server. You can choose if the PIN should be stripped and checked locally."
+msgstr "The remote token forwards the authentication request to another eduMFA server. You can choose if the PIN should be stripped and checked locally."
+
+#: react-src/features/tokens/enroll/fields/QuestionFields.tsx:46
+msgid "The separator that is used to separate the passwords of the different tokens."
+msgstr "The separator that is used to separate the passwords of the different tokens."
+
+#. placeholder {0}: result.serial
+#: react-src/features/tokens/TokenGetSerialPage.tsx:290
+msgid "The Serial number for the OTP value {searchedOtp} is <0>{0}</0>."
+msgstr "The Serial number for the OTP value {searchedOtp} is <0>{0}</0>."
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:123
+msgid "The serial number on the remote server"
+msgstr "The serial number on the remote server"
+
+#. placeholder {0}: result.serial
+#: react-src/features/tokens/TokenLostPage.tsx:110
+msgid "The serial of the new token is <0>{0}</0>."
+msgstr "The serial of the new token is <0>{0}</0>."
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:67
+msgid "The server will create the OTP key and a QR Code will be displayed to you to be scanned."
+msgstr "The server will create the OTP key and a QR Code will be displayed to you to be scanned."
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:88
+msgid "The server will create the private RSA key and store it in the database. You can later download the PKCS#12 file."
+msgstr "The server will create the private RSA key and store it in the database. You can later download the PKCS#12 file."
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:62
+msgid "The server will create the secret and a QR Code will be displayed for you to be scanned."
+msgstr "The server will create the secret and a QR Code will be displayed for you to be scanned."
+
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:26
+msgid "The server will create the secret key and a QR Code will be displayed to you to be scanned with the Token2 app."
+msgstr "The server will create the secret key and a QR Code will be displayed to you to be scanned with the Token2 app."
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:67
+msgid "The server will create the static password."
+msgstr "The server will create the static password."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:70
+msgid "The Simple Pass Token does not take additional arguments. You only need to specify an OTP PIN."
+msgstr "The Simple Pass Token does not take additional arguments. You only need to specify an OTP PIN."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:68
+msgid "The SMS Token sends an OTP value to the mobile phone of the user."
+msgstr "The SMS Token sends an OTP value to the mobile phone of the user."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:73
+msgid "The SSH Key Token stores the public SSH Key in the server. This can be used to authenticate to a secure shell."
+msgstr "The SSH Key Token stores the public SSH Key in the server. This can be used to authenticate to a secure shell."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:76
+msgid "The TAN token will let you print a list of OTP values. These OTP values can be used to authenticate. The values can be used in an arbitrary order."
+msgstr "The TAN token will let you print a list of OTP values. These OTP values can be used to authenticate. The values can be used in an arbitrary order."
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:152
+msgid "The time in which the password can be used. For example '1d' or '12h'."
+msgstr "The time in which the password can be used. For example '1d' or '12h'."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:79
+msgid "The TiQR token is a Smartphone App token, which allows easy authentication by just scanning a QR Code during the authentication process."
+msgstr "The TiQR token is a Smartphone App token, which allows easy authentication by just scanning a QR Code during the authentication process."
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:206
+msgid "The token is assigned to a user"
+msgstr "The token is assigned to a user"
+
+#: react-src/features/tokens/enroll/results/FidoResult.tsx:59
+msgid "The token is enrolled."
+msgstr "The token is enrolled."
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:207
+msgid "The token is not assigned to a user"
+msgstr "The token is not assigned to a user"
+
+#. placeholder {0}: result.end_date
+#: react-src/features/tokens/TokenLostPage.tsx:133
+msgid "The token is valid till {0}."
+msgstr "The token is valid till {0}."
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:463
+msgid "The token was enrolled, but you still need to verify it before you can use it!"
+msgstr "The token was enrolled, but you still need to verify it before you can use it!"
+
+#: react-src/features/tokens/TokenLostPage.tsx:105
+msgid "The token was marked lost successfully."
+msgstr "The token was marked lost successfully."
+
+#: react-src/features/tokens/enroll/EnrollmentSummary.tsx:38
+msgid "The token was successfully enrolled with serial number {detailsLink} for user {userLink} in realm {realm}."
+msgstr "The token was successfully enrolled with serial number {detailsLink} for user {userLink} in realm {realm}."
+
+#: react-src/features/tokens/enroll/EnrollmentSummary.tsx:52
+msgid "The token was successfully enrolled with serial number {detailsLink}."
+msgstr "The token was successfully enrolled with serial number {detailsLink}."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:82
+msgid "The TOTP token is a time based token. You can paste a secret key or have the server generate the secret and scan the QR code with an Authenticator App turning your smartphone into an authentication device. But note, that some Apps might have limitations in the supported hash algorithms or other parameters."
+msgstr "The TOTP token is a time based token. You can paste a secret key or have the server generate the secret and scan the QR code with an Authenticator App turning your smartphone into an authentication device. But note, that some Apps might have limitations in the supported hash algorithms or other parameters."
+
+#: react-src/auth/useFidoErrorMessage.ts:58
+msgid "The U2F API is not available in this browser."
+msgstr "The U2F API is not available in this browser."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:85
+msgid "The U2F token is a token defined by the Fido Alliance. You can register this token with any webservice and with as many web services you wish to."
+msgstr "The U2F token is a token defined by the Fido Alliance. You can register this token with any webservice and with as many web services you wish to."
+
+#: react-src/features/tokens/TokenLostPage.tsx:82
+msgid "The user will have to authenticate with the old OTP PIN he knows and this newly generated password."
+msgstr "The user will have to authenticate with the old OTP PIN he knows and this newly generated password."
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:73
+msgid "The username on the RADIUS server"
+msgstr "The username on the RADIUS server"
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:133
+msgid "The username on the remote server"
+msgstr "The username on the remote server"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:113
+msgid "The value of the indexed secret will be set by a policy."
+msgstr "The value of the indexed secret will be set by a policy."
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:130
+msgid "The VASCO serial is read from the VASCO blob. If you want to use this VASCO serial number within eduMFA, activate the checkbox. Otherwise eduMFA will create a new unique serial number."
+msgstr "The VASCO serial is read from the VASCO blob. If you want to use this VASCO serial number within eduMFA, activate the checkbox. Otherwise eduMFA will create a new unique serial number."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:88
+msgid "The VASCO token is a proprietary OTP token. You can paste the VASCO token blob in a hexlified format."
+msgstr "The VASCO token is a proprietary OTP token. You can paste the VASCO token blob in a hexlified format."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:91
+msgid "The WebAuthn token is a token defined by the W3C and the Fido Alliance. You can register this token with any webservice and with as many web services you wish to."
+msgstr "The WebAuthn token is a token defined by the W3C and the Fido Alliance. You can register this token with any webservice and with as many web services you wish to."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:94
+msgid "The Yubico Cloud mode forwards the authentication request to the YubiCloud. The Yubikey needs to be registered with the YubiCloud."
+msgstr "The Yubico Cloud mode forwards the authentication request to the YubiCloud. The Yubikey needs to be registered with the YubiCloud."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:97
+msgid "The Yubikey Token is an USB device that emits an event based One Time Password. You can initialize the Yubikey using the YubiKey personalization tools. The secret hex key and the final OTP length are needed here. For tokens compatible with the Yubico cloud service the OTP length must be 44 (12 characters UID and 32 characters OTP). When programming the token for the Yubico cloud service, the Public Identity Length must be 6 bytes, which will give you a UID with 12 characters. The current OTP length of a programmed YubiKey can automatically be determined by inserting it in the test field."
+msgstr "The Yubikey Token is an USB device that emits an event based One Time Password. You can initialize the Yubikey using the YubiKey personalization tools. The secret hex key and the final OTP length are needed here. For tokens compatible with the Yubico cloud service the OTP length must be 44 (12 characters UID and 32 characters OTP). When programming the token for the Yubico cloud service, the Public Identity Length must be 6 bytes, which will give you a UID with 12 characters. The current OTP length of a programmed YubiKey can automatically be determined by inserting it in the test field."
+
+#: react-src/features/login/ResponsePage.tsx:138
+msgid "There is no pending challenge. Please <0>log in</0> first."
+msgstr "There is no pending challenge. Please <0>log in</0> first."
 
 #: react-src/features/users/UserAddPage.tsx:105
 msgid "These are the resolvers marked as editable. You can add a user to the resolver. The user will appear in the realms, that contain this resolver."
 msgstr "These are the resolvers marked as editable. You can add a user to the resolver. The user will appear in the realms, that contain this resolver."
 
-#: react-src/features/audit/AuditLogPage.tsx:570
+#: react-src/features/tokens/TokenImportPage.tsx:344
+msgid "This is an RFC6030 OATH compliant PSKC file. Values in the PSKC files may be unencrypted or <0>either</0> encrypted with a <1>Pre Shared Key</1> or <2>password</2>. If the values are encrypted, please specify the Pre Shared Key in hex format or the password."
+msgstr "This is an RFC6030 OATH compliant PSKC file. Values in the PSKC files may be unencrypted or <0>either</0> encrypted with a <1>Pre Shared Key</1> or <2>password</2>. If the values are encrypted, please specify the Pre Shared Key in hex format or the password."
+
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:62
+msgid "This is the username that is sent to the RADIUS server. It can be different from the owner of this RADIUS token."
+msgstr "This is the username that is sent to the RADIUS server. It can be different from the owner of this RADIUS token."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:63
+msgid "This is used, so that the user can enroll a token on his own, after logging in for the first time."
+msgstr "This is used, so that the user can enroll a token on his own, after logging in for the first time."
+
+#: react-src/features/tokens/details/TokenMachinesCard.tsx:268
+msgid "This token is not attached to any machine."
+msgstr "This token is not attached to any machine."
+
+#: react-src/features/audit/AuditLogPage.tsx:561
 msgid "thread_id"
 msgstr "thread_id"
 
+#: react-src/auth/useFidoErrorMessage.ts:51
+msgid "Timeout while waiting for signing response."
+msgstr "Timeout while waiting for signing response."
+
+#: react-src/features/tokens/TokenChallengesPage.tsx:83
+msgid "timestamp"
+msgstr "timestamp"
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:140
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:158
+msgid "Timestep"
+msgstr "Timestep"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:145
+msgid "TiQR Token Config"
+msgstr "TiQR Token Config"
+
+#: react-src/features/tokens/TokenApplicationsPage.tsx:214
+msgid "To define service IDs go to <0>Service ID config</0>"
+msgstr "To define service IDs go to <0>Service ID config</0>"
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:130
+msgid "To ease the enrolling of RADIUS tokens you can set default values in the {link}."
+msgstr "To ease the enrolling of RADIUS tokens you can set default values in the {link}."
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:545
+#: react-src/features/tokens/TokenAssignPage.tsx:94
+msgid "Token"
+msgstr "Token"
+
+#: react-src/features/tokens/TokenSidebar.tsx:68
+msgid "Token {serial}"
+msgstr "Token {serial}"
+
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:65
+msgid "Token {serial} deleted."
+msgstr "Token {serial} deleted."
+
+#: react-src/features/tokens/TokenLostPage.tsx:51
+msgid "Token {serial} is lost?"
+msgstr "Token {serial} is lost?"
+
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:147
+msgid "Token {serial} not found."
+msgstr "Token {serial} not found."
+
+#: react-src/features/tokens/TokenSidebar.tsx:123
+msgid "Token Applications"
+msgstr "Token Applications"
+
+#: react-src/features/tokens/details/TokenUserCard.tsx:86
+#: react-src/features/tokens/TokenAssignPage.tsx:51
 #: react-src/features/users/UserDetailsPage.tsx:307
 msgid "Token assigned successfully."
 msgstr "Token assigned successfully."
 
-#: react-src/features/audit/AuditLogPage.tsx:488
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:545
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:25
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:14
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:53
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:14
+#: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:94
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:14
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:75
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:99
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:13
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:37
+#: react-src/features/tokens/enroll/fields/QuestionFields.tsx:42
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:21
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:54
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:109
+msgid "Token data"
+msgstr "Token data"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:241
+msgid "Token details"
+msgstr "Token details"
+
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:134
+msgid "Token details for {serial}"
+msgstr "Token details for {serial}"
+
+#: react-src/features/tokens/enroll/results/FidoResult.tsx:28
+msgid "Token enrolled"
+msgstr "Token enrolled"
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:394
+#: react-src/features/tokens/TokenSidebar.tsx:87
+msgid "Token enrollment wizard"
+msgstr "Token enrollment wizard"
+
+#: react-src/features/tokens/TokenImportPage.tsx:143
+msgid "Token file"
+msgstr "Token file"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:131
+msgid "Token functions"
+msgstr "Token functions"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:650
+msgid "Token groups"
+msgstr "Token groups"
+
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:148
+msgid "Token not found."
+msgstr "Token not found."
+
+#: react-src/features/tokens/TokenListPage.tsx:240
+#: react-src/features/tokens/TokenListPage.tsx:241
+msgid "Token realms"
+msgstr "Token realms"
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:76
+msgid "Token resync failed."
+msgstr "Token resync failed."
+
+#: react-src/features/tokens/details/TokenFunctionsCard.tsx:76
+msgid "Token resync successful."
+msgstr "Token resync successful."
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:333
+msgid "Token successfully verified"
+msgstr "Token successfully verified"
+
+#: react-src/features/audit/AuditLogPage.tsx:479
 msgid "token type"
 msgstr "token type"
 
-#: react-src/features/users/UserDetailsPage.tsx:639
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:554
+msgid "Token type"
+msgstr "Token type"
+
+#: react-src/features/tokens/TokenGetSerialPage.tsx:193
+msgid "Token Type"
+msgstr "Token Type"
+
+#: react-src/features/tokens/details/TokenUserCard.tsx:65
+msgid "Token unassigned."
+msgstr "Token unassigned."
+
+#: react-src/features/dashboard/DashboardPage.tsx:155
+#: react-src/features/tokens/TokenListPage.tsx:281
+#: react-src/features/users/UserDetailsPage.tsx:635
 msgid "Tokens"
 msgstr "Tokens"
 
-#: react-src/features/machines/MachineDetailsPage.tsx:335
+#: react-src/features/machines/MachineDetailsPage.tsx:333
 msgid "Tokens and Applications"
 msgstr "Tokens and Applications"
+
+#: react-src/features/dashboard/DashboardPage.tsx:161
+msgid "Total"
+msgstr "Total"
+
+#: react-src/features/tokens/TokenChallengesPage.tsx:141
+msgid "Total Challenges: {challengeCount}"
+msgstr "Total Challenges: {challengeCount}"
+
+#: react-src/features/tokens/TokenListPage.tsx:280
+msgid "total tokens: {tokenCount}"
+msgstr "total tokens: {tokenCount}"
 
 #: react-src/features/users/UserSidebar.tsx:99
 msgid "total users:"
 msgstr "total users:"
 
+#: react-src/features/tokens/TokenChallengesPage.tsx:116
+msgid "Transaction ID"
+msgstr "Transaction ID"
+
+#: react-src/features/tokens/TokenListPage.tsx:156
+#: react-src/features/tokens/TokenListPage.tsx:157
 #: react-src/features/users/UserDetailsPage.tsx:352
 msgid "type"
 msgstr "type"
 
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:257
+msgid "Type"
+msgstr "Type"
+
+#: react-src/features/tokens/TokenImportPage.tsx:313
+msgid "type (default hotp), otplen (default 6), timeStep (default 30) and ocrasuite are optional."
+msgstr "type (default hotp), otplen (default 6), timeStep (default 30) and ocrasuite are optional."
+
 #: react-src/features/recovery/RecoveryResetPage.tsx:96
+#: react-src/features/tokens/enroll/fields/MotpFields.tsx:64
 #: react-src/features/users/UserPasswordPage.tsx:142
 msgid "Type a password"
 msgstr "Type a password"
 
-#: react-src/features/users/UserDetailsPage.tsx:698
+#: react-src/features/tokens/details/TokenUserCard.tsx:240
+#: react-src/features/tokens/enroll/PinFields.tsx:30
+#: react-src/features/tokens/TokenAssignPage.tsx:112
+#: react-src/features/users/UserDetailsPage.tsx:694
 msgid "Type a PIN or password"
 msgstr "Type a PIN or password"
 
-#: react-src/features/audit/AuditLogPage.tsx:500
+#: react-src/features/tokens/details/TokenUserCard.tsx:180
+msgid "Unassign Token"
+msgstr "Unassign Token"
+
+#: react-src/features/tokens/details/TokenUserCard.tsx:111
+msgid "Unassign User"
+msgstr "Unassign User"
+
+#: react-src/features/dashboard/DashboardPage.tsx:173
+msgid "Unassigned Hardware"
+msgstr "Unassigned Hardware"
+
+#: react-src/features/dashboard/DashboardPage.tsx:179
+msgid "Unassigned Software"
+msgstr "Unassigned Software"
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:19
+msgid "Upload Certificate"
+msgstr "Upload Certificate"
+
+#: react-src/features/tokens/enroll/fields/CertificateFields.tsx:18
+msgid "Upload Request"
+msgstr "Upload Request"
+
+#: react-src/features/tokens/TokenImportPage.tsx:254
+msgid "Uploaded File"
+msgstr "Uploaded File"
+
+#: react-src/features/tokens/TokenImportPage.tsx:260
+msgid "Uploaded Tokens"
+msgstr "Uploaded Tokens"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:566
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:175
+msgid "Use Timeshift"
+msgstr "Use Timeshift"
+
+#: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:82
+msgid "Use two-step enrollment with the privacyIDEA Authenticator App"
+msgstr "Use two-step enrollment with the privacyIDEA Authenticator App"
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:121
+msgid "use VASCO Serial"
+msgstr "use VASCO Serial"
+
+#: react-src/features/audit/AuditLogPage.tsx:491
+#: react-src/features/tokens/TokenListPage.tsx:215
 msgid "user"
 msgstr "user"
 
@@ -752,12 +2469,16 @@ msgid "User deleted successfully."
 msgstr "User deleted successfully."
 
 #: react-src/features/users/UserAddPage.tsx:100
-#: react-src/features/users/UserDetailsPage.tsx:495
+#: react-src/features/users/UserDetailsPage.tsx:491
 msgid "User details"
 msgstr "User details"
 
-#: react-src/features/users/UserDetailsPage.tsx:480
-#: react-src/features/users/UserDetailsPage.tsx:481
+#: react-src/features/tokens/details/TokenUserCard.tsx:158
+msgid "User Id"
+msgstr "User Id"
+
+#: react-src/features/users/UserDetailsPage.tsx:476
+#: react-src/features/users/UserDetailsPage.tsx:477
 msgid "User not found."
 msgstr "User not found."
 
@@ -765,47 +2486,179 @@ msgstr "User not found."
 msgid "User updated successfully."
 msgstr "User updated successfully."
 
+#: react-src/features/tokens/TokenListPage.tsx:260
+msgid "UserId"
+msgstr "UserId"
+
 #: react-src/features/users/userFieldLabels.ts:18
-#: react-src/features/users/UserListPage.tsx:142
-#: react-src/features/users/UserListPage.tsx:143
+#: react-src/features/users/UserListPage.tsx:147
+#: react-src/features/users/UserListPage.tsx:148
 msgid "username"
 msgstr "username"
 
+#: react-src/components/forms/UserLookupField.tsx:60
+#: react-src/features/login/LoginPage.tsx:158
+#: react-src/features/login/LoginPage.tsx:163
 #: react-src/features/recovery/RecoveryPage.tsx:66
 #: react-src/features/recovery/RecoveryPage.tsx:67
 #: react-src/features/register/RegisterPage.tsx:81
 #: react-src/features/register/RegisterPage.tsx:82
+#: react-src/features/tokens/details/TokenUserCard.tsx:123
 #: react-src/features/users/UserPasswordPage.tsx:88
 msgid "Username"
 msgstr "Username"
 
-#: react-src/features/users/UserListPage.tsx:240
+#: react-src/features/users/UserListPage.tsx:245
 msgid "Users"
 msgstr "Users"
 
-#: react-src/features/users/UserDetailsPage.tsx:446
+#: react-src/features/tokens/enroll/fields/ContactFields.tsx:37
+msgid "Users email address..."
+msgstr "Users email address..."
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:548
+#: react-src/features/tokens/enroll/ExtendedAttributesFields.tsx:48
+msgid "Validity End"
+msgstr "Validity End"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:532
+#: react-src/features/tokens/enroll/ExtendedAttributesFields.tsx:36
+msgid "Validity Start"
+msgstr "Validity Start"
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:128
+msgid "VASCO serial"
+msgstr "VASCO serial"
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:109
+msgid "VASCO Token blob"
+msgstr "VASCO Token blob"
+
+#: react-src/features/tokens/TokenImportPage.tsx:190
+msgid "Verification"
+msgstr "Verification"
+
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:368
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:483
+msgid "Verify Token"
+msgstr "Verify Token"
+
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:99
+#: react-src/features/tokens/TokenLostPage.tsx:48
+msgid "View token in Audit log"
+msgstr "View token in Audit log"
+
+#: react-src/features/users/UserDetailsPage.tsx:442
 msgid "View user in Audit log"
 msgstr "View user in Audit log"
+
+#: react-src/features/login/ResponsePage.tsx:182
+msgid "Waiting for the confirmation…"
+msgstr "Waiting for the confirmation…"
+
+#: react-src/auth/useFidoErrorMessage.ts:62
+msgid "WebAuthn is not supported by this browser, or in this context."
+msgstr "WebAuthn is not supported by this browser, or in this context."
 
 #: react-src/features/users/UserDetailsPage.tsx:368
 msgid "window"
 msgstr "window"
 
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:22
+msgid "With the PUSH token eduMFA sends a notification to your registered smartphone asking if you want to approve the authentication step. You can accept or deny the authentication on your smartphone."
+msgstr "With the PUSH token eduMFA sends a notification to your registered smartphone asking if you want to approve the authentication step. You can accept or deny the authentication on your smartphone."
+
 #: react-src/components/feedback/BooleanPill.tsx:18
-#: react-src/features/audit/AuditLogPage.tsx:138
-#: react-src/features/audit/AuditLogPage.tsx:199
+#: react-src/features/audit/AuditLogPage.tsx:132
+#: react-src/features/audit/AuditLogPage.tsx:194
 msgid "yes"
 msgstr "yes"
+
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:412
+msgid "You are about to rollover your token! This will invalidate your existing token and create a new token with a new secret key!"
+msgstr "You are about to rollover your token! This will invalidate your existing token and create a new token with a new secret key!"
+
+#. placeholder {0}: config.remoteUser
+#: react-src/features/login/LoginPage.tsx:75
+msgid "You are authenticated by the web server as user <0>{0}</0>. You may login as this user to eduMFA without any further credentials."
+msgstr "You are authenticated by the web server as user <0>{0}</0>. You may login as this user to eduMFA without any further credentials."
+
+#: react-src/features/tokens/TokenImportPage.tsx:202
+msgid "You can choose a realm to which the tokens should be imported. You can also change the realms of each token later."
+msgstr "You can choose a realm to which the tokens should be imported. You can also change the realms of each token later."
+
+#: react-src/features/tokens/TokenImportPage.tsx:184
+msgid "You can choose how the authenticity of the tokens to be imported should be verified."
+msgstr "You can choose how the authenticity of the tokens to be imported should be verified."
 
 #: react-src/features/users/UserAddPage.tsx:135
 msgid "You have no editable resolvers defined. So you can not write to any user store. If you want to add users, you need to <0>define an editable resolver</0> (like SQLResolver) and check the box \"Edit user store\"."
 msgstr "You have no editable resolvers defined. So you can not write to any user store. If you want to add users, you need to <0>define an editable resolver</0> (like SQLResolver) and check the box \"Edit user store\"."
+
+#: react-src/features/tokens/enroll/results/CodeResults.tsx:22
+msgid "You may pass this registration code to the user."
+msgstr "You may pass this registration code to the user."
+
+#: react-src/features/tokens/enroll/results/FidoResult.tsx:48
+msgid "You need to confirm the registration with your authenticator. For an external authenticator, this usually means pushing the button on the authenticator, or replugging it (if there is no button on the authenticator). If you want to use an authenticator that is integrated into your device, look for a dialog box from your operating system. If you do not see anything, please make sure that your authenticator supports WebAuthn."
+msgstr "You need to confirm the registration with your authenticator. For an external authenticator, this usually means pushing the button on the authenticator, or replugging it (if there is no button on the authenticator). If you want to use an authenticator that is integrated into your device, look for a dialog box from your operating system. If you do not see anything, please make sure that your authenticator supports WebAuthn."
+
+#: react-src/features/tokens/enroll/results/FidoResult.tsx:42
+msgid "You need to confirm the registration with your token either by pushing the blinking button or by replugging your token. This depends on the actual token model."
+msgstr "You need to confirm the registration with your token either by pushing the blinking button or by replugging your token. This depends on the actual token model."
+
+#: react-src/features/tokens/enroll/results/CertificateResult.tsx:24
+msgid "Your certificate request is taken under submission and waiting for administrative approval."
+msgstr "Your certificate request is taken under submission and waiting for administrative approval."
+
+#: react-src/features/tokens/enroll/results/CertificateResult.tsx:32
+msgid "Your CSR to the certificate authority failed."
+msgstr "Your CSR to the certificate authority failed."
 
 #: react-src/features/users/UserPasswordPage.tsx:74
 #: react-src/features/users/UserSidebar.tsx:51
 msgid "Your details"
 msgstr "Your details"
 
+#: react-src/features/login/useAuthenticate.ts:77
+msgid "Your OTP pin expires on {nextPinChange}"
+msgstr "Your OTP pin expires on {nextPinChange}"
+
 #: react-src/features/recovery/RecoveryResetPage.tsx:62
 msgid "Your password has been reset successfully."
 msgstr "Your password has been reset successfully."
+
+#: react-src/features/tokens/enroll/results/CodeResults.tsx:44
+msgid "Your Password:"
+msgstr "Your Password:"
+
+#. placeholder {0}: result?.count ?? 0
+#: react-src/features/tokens/TokenGetSerialPage.tsx:255
+msgid "Your search would include {0} tokens. This can take a lot of time and could even timeout. Do you want to run the search? You might also cancel this and narrow down the search!"
+msgstr "Your search would include {0} tokens. This can take a lot of time and could even timeout. Do you want to run the search? You might also cancel this and narrow down the search!"
+
+#: react-src/features/tokens/enroll/fields/SecretFields.tsx:124
+msgid "Your secret phrase."
+msgstr "Your secret phrase."
+
+#: react-src/features/tokens/enroll/results/LinkResults.tsx:147
+#: react-src/features/tokens/enroll/results/OtpResult.tsx:111
+msgid "Your token {serial} is not completely enrolled, yet."
+msgstr "Your token {serial} is not completely enrolled, yet."
+
+#: react-src/features/login/PinChangePage.tsx:74
+msgid "Your token PIN has expired. You need to set a new PIN for token {serial}."
+msgstr "Your token PIN has expired. You need to set a new PIN for token {serial}."
+
+#. placeholder {0}: settings.defaultTokenType
+#: react-src/features/tokens/enroll/EnrollTokenPage.tsx:420
+msgid "Your user has no permission to enroll the default tokentype \"{0}\". Using \"{defaultTokenType}\" instead."
+msgstr "Your user has no permission to enroll the default tokentype \"{0}\". Using \"{defaultTokenType}\" instead."
+
+#: react-src/features/tokens/enroll/TokenTypeHelp.tsx:153
+msgid "Yubico Token Config"
+msgstr "Yubico Token Config"
+
+#: react-src/features/tokens/enroll/fields/HardwareFields.tsx:79
+msgid "Yubikey Identifier"
+msgstr "Yubikey Identifier"

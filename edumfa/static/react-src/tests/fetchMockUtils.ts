@@ -1,10 +1,18 @@
 import { vi } from "vitest";
 
-import type { LegacyEduMfaAuthBridge, LegacyEduMfaUser } from "../global";
+import type {
+  LegacyEduMfaAuthBridge,
+  LegacyEduMfaUser,
+  LegacyWebUiSettings
+} from "@/global";
 
-export function createEnvelopeResponse(value: unknown): Response {
+export function createEnvelopeResponse(
+  value: unknown,
+  detail?: Record<string, unknown>
+): Response {
   return new Response(
     JSON.stringify({
+      ...(detail ? { detail } : {}),
       id: 1,
       jsonrpc: "2.0",
       result: { status: true, value },
@@ -14,11 +22,15 @@ export function createEnvelopeResponse(value: unknown): Response {
   );
 }
 
-export function createLegacyAuthBridge(user: LegacyEduMfaUser): LegacyEduMfaAuthBridge {
+export function createLegacyAuthBridge(
+  user: LegacyEduMfaUser,
+  settings: LegacyWebUiSettings = {}
+): LegacyEduMfaAuthBridge {
   return {
     getAuthToken: () => user.auth_token,
     getRealm: () => user.realm,
     getRole: () => user.role,
+    getSettings: () => settings,
     getUser: () => user
   };
 }
@@ -46,6 +58,8 @@ export function getJsonRequestBody(
 }
 
 export interface FetchRoute {
+  /** Optional `detail` section of the envelope, e.g. the enrollment data. */
+  detail?: (url: URL, init: RequestInit | undefined) => Record<string, unknown>;
   method?: string;
   /** Exact pathname, e.g. "/user/" or "/machine/token". */
   path: string;
@@ -80,7 +94,9 @@ export function createRouteFetchMock(
       return Promise.reject(new Error(`Unexpected request: ${method} ${url.pathname}`));
     }
 
-    return Promise.resolve(createEnvelopeResponse(route.respond(url, init)));
+    return Promise.resolve(
+      createEnvelopeResponse(route.respond(url, init), route.detail?.(url, init))
+    );
   });
 
   return fetchMock;
@@ -100,6 +116,10 @@ export function findFetchCalls(
     );
 }
 
-export function stubLegacySession(user: LegacyEduMfaUser): void {
-  vi.stubGlobal("eduMfaLegacyAuth", createLegacyAuthBridge(user));
+/** Installs a legacy auth bridge; `settings` are the WebUI policy values. */
+export function stubLegacySession(
+  user: LegacyEduMfaUser,
+  settings: LegacyWebUiSettings = {}
+): void {
+  vi.stubGlobal("eduMfaLegacyAuth", createLegacyAuthBridge(user, settings));
 }

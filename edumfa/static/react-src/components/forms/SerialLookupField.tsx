@@ -3,11 +3,11 @@ import { Autocomplete, Loader } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, type ReactNode } from "react";
 
-import { useApiClient } from "../../api/ApiClientProvider";
-import { getTokens, tokenQueryKeys, type TokenListParams } from "../../api/tokens";
-import { useAuth } from "../../auth/AuthProvider";
-import { formatSerialSuggestion } from "../../lib/serial";
-import { useDebouncedValue } from "../../lib/useDebouncedValue";
+import { useApiClient } from "@/api/ApiClientProvider";
+import { getTokens, tokenQueryKeys, type TokenListParams } from "@/api/tokens";
+import { useAuth } from "@/auth/AuthProvider";
+import { formatSerialSuggestion } from "@/lib/serial";
+import { useDebouncedValue } from "@/lib/useDebouncedValue";
 
 export interface SerialLookupFieldProps {
   id: string;
