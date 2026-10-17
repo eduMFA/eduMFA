@@ -65,7 +65,7 @@ describe("AppShell", () => {
     expect(screen.getByText("node1")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Login" })).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /admin @ \(admin\)/ }));
+    await user.click(screen.getByRole("button", { name: /admin \(admin\)/ }));
     await user.click(await screen.findByRole("menuitem", { name: "Logout" }));
 
     expect(getSessionState().session.authToken).toBeNull();
@@ -143,7 +143,7 @@ describe("AppShell", () => {
     renderWithProviders(<AppShell />, { route: "/token/list" });
 
     const dialog = await screen.findByRole("dialog", { name: "eduMFA UI is locked" });
-    expect(dialog).toHaveTextContent("You are logged in as alice @ realm1.");
+    expect(dialog).toHaveTextContent("You are logged in as alice@realm1.");
 
     await user.type(screen.getByLabelText("Password"), "secret");
     await user.click(screen.getByRole("button", { name: "Log In" }));

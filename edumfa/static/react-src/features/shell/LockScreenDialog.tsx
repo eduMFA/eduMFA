@@ -90,7 +90,7 @@ export function LockScreenDialog() {
         >
           <Text mb="md" size="sm" ta="center">
             <Trans>
-              You are logged in as {username} @ {realm}.
+              You are logged in as {username}@{realm}.
             </Trans>
           </Text>
           <PasswordInput

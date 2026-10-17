@@ -230,7 +230,8 @@ export function AppNavbar() {
                     size="sm"
                     variant="filled"
                   >
-                    {user.username} @{user.realm} ({user.role})
+                    {user.realm ? `${user.username} @${user.realm}` : user.username} (
+                    {user.role})
                   </Button>
                 </Menu.Target>
                 <Menu.Dropdown>

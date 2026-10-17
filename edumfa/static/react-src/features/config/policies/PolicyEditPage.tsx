@@ -16,8 +16,8 @@ import {
   Stack,
   TextInput
 } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { PolicyActionsEditor } from "./PolicyActionsEditor";
@@ -56,10 +56,12 @@ import { Card } from "@/components/layout/Card";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { notify } from "@/lib/notify";
+import { prefetchQuery } from "@/lib/prefetch";
 
 export function PolicyEditPage() {
   const { policyname = "" } = useParams();
   const apiClient = useApiClient();
+  const queryClient = useQueryClient();
   const { isAuthenticated, rights } = useAuth();
   const canOpen = hasRight(rights, policyname ? "policyread" : "policywrite");
   const enabled = isAuthenticated && canOpen;
@@ -78,6 +80,28 @@ export function PolicyEditPage() {
     queryFn: ({ signal }) => getPolicyConditionDefinitions(apiClient, signal),
     queryKey: policyQueryKeys.conditions
   });
+  // The editor mounts after the definitions arrive; its own lookups do not
+  // depend on them, so they start now and are in the cache by then.
+  const canReadResolvers = hasRight(rights, "resolverread");
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    prefetchQuery(queryClient, configQueryKeys.realms, ({ signal }) =>
+      getRealms(apiClient, signal)
+    );
+    prefetchQuery(queryClient, policyQueryKeys.nodes, ({ signal }) =>
+      getPolicyNodes(apiClient, signal)
+    );
+
+    if (canReadResolvers) {
+      prefetchQuery(queryClient, configQueryKeys.resolvers(), ({ signal }) =>
+        getResolvers(apiClient, undefined, signal)
+      );
+    }
+  }, [apiClient, canReadResolvers, enabled, queryClient]);
+
   const policy = policyQuery.data?.find((item) => item.name === policyname);
   const notFound = !!policyname && policyQuery.isSuccess && !policy;
   const loading =

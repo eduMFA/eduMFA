@@ -31,7 +31,9 @@ not distinguish between them; only the page served at `/` differs.
   `<input id="...">` elements that scripts read at load time. The React page emits
   one JSON block (`#edumfa-ui-config`) that is parsed in
   `react-src/lib/uiConfig.ts`. The legacy page additionally needs
-  `EDUMFA_VERSION_NUMBER` for cache-busting template URLs.
+  `EDUMFA_VERSION_NUMBER` for cache-busting template URLs. The React page
+  preloads the chunks `main.js` imports, so the browser does not discover
+  them one round trip late.
 - **State and data flow.** AngularJS controllers share data through scope
   inheritance and watchers. The React UI keeps server data in TanStack Query
   (`react-src/api/*`, one typed module per endpoint group) and local form state in

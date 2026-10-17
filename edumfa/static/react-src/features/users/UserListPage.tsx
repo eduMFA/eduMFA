@@ -184,11 +184,13 @@ export function UserListPage() {
     {
       header: <Trans>phone</Trans>,
       key: "phone",
+      nowrap: true,
       render: (listedUser) => listedUser.phone
     },
     {
       header: <Trans>mobile</Trans>,
       key: "mobile",
+      nowrap: true,
       render: (listedUser) => listedUser.mobile
     },
     {

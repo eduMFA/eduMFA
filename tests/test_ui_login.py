@@ -115,6 +115,11 @@ class LoginUITestCase(MyTestCase):
             self.assertTrue(b'id="edumfa-ui-config"' in res.data)
             self.assertTrue(b"static/react-dist/assets/main.css" in res.data)
             self.assertTrue(b"static/react-dist/assets/main.js" in res.data)
+            # The chunks main.js imports are preloaded.
+            self.assertIn(
+                b'rel="modulepreload" href="/static/react-dist/assets/react.js"',
+                res.data,
+            )
             # The default React page does not load the Angular shell.
             self.assertFalse(b"static/templates/menu.html" in res.data)
             self.assertFalse(b"static/app.js" in res.data)

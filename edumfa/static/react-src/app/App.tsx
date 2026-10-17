@@ -11,6 +11,7 @@ import { theme } from "./theme";
 import { ApiClientProvider } from "@/api/ApiClientProvider";
 import { AuthProvider } from "@/auth/AuthProvider";
 import { AppShell } from "@/features/shell/AppShell";
+import { SessionCacheReset } from "@/features/shell/SessionCacheReset";
 
 export function App() {
   const [queryClient] = useState(() => createEduMfaQueryClient());
@@ -21,6 +22,7 @@ export function App() {
       <I18nProvider i18n={i18n}>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
+            <SessionCacheReset />
             <ApiClientProvider>
               <HashbangRouter>
                 <AppShell />

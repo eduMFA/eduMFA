@@ -32,8 +32,13 @@ export function useIdleWatch({
       return undefined;
     }
 
+    const idleMs = Math.max(idleSeconds, 1) * 1000;
     let idleTimer: ReturnType<typeof setTimeout> | null = null;
     let countdownTimer: ReturnType<typeof setInterval> | null = null;
+    // Activity only records a timestamp; the idle timer compares against it
+    // when it fires. Mouse moves arrive by the hundreds per second, so they
+    // must not clear and re-create a timer each time.
+    let lastActivity = Date.now();
 
     const clearTimers = () => {
       if (idleTimer) {
@@ -64,24 +69,30 @@ export function useIdleWatch({
         setCountdown(remaining);
       }, 1000);
     };
-    const armIdleTimer = () => {
-      idleTimer = setTimeout(startCountdown, Math.max(idleSeconds, 1) * 1000);
+    const checkIdle = () => {
+      idleTimer = null;
+      const elapsed = Date.now() - lastActivity;
+
+      if (elapsed < idleMs) {
+        idleTimer = setTimeout(checkIdle, idleMs - elapsed);
+      } else {
+        startCountdown();
+      }
     };
     const handleActivity = () => {
-      const wasCountingDown = countdownTimer !== null;
+      lastActivity = Date.now();
 
-      clearTimers();
-      armIdleTimer();
-
-      if (wasCountingDown) {
+      if (countdownTimer !== null) {
+        clearTimers();
         setCountdown(null);
+        idleTimer = setTimeout(checkIdle, idleMs);
       }
     };
 
     activityEvents.forEach((eventName) => {
       window.addEventListener(eventName, handleActivity, { passive: true });
     });
-    armIdleTimer();
+    idleTimer = setTimeout(checkIdle, idleMs);
 
     return () => {
       clearTimers();

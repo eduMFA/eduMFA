@@ -36,6 +36,7 @@ import { ColumnFilter } from "@/components/tables/ColumnFilter";
 import { DataTable, type DataTableColumn } from "@/components/tables/DataTable";
 import { Pagination } from "@/components/tables/Pagination";
 import { formatLegacyDate } from "@/lib/dates";
+import { saveTextAsFile } from "@/lib/download";
 import { hashHref } from "@/lib/hashbang";
 import { toContainsWildcard } from "@/lib/strings";
 import { useDebouncedState } from "@/lib/useDebouncedState";
@@ -103,7 +104,7 @@ export function AuditLogPage() {
   const downloadMutation = useMutation({
     mutationFn: () => downloadAuditLog(apiClient, toAuditParams(appliedFilters)),
     onSuccess: (csv) => {
-      saveTextAsFile(csv, "audit.csv");
+      saveTextAsFile(csv, "audit.csv", "text/csv;charset=utf-8");
     }
   });
 
@@ -339,17 +340,6 @@ function toAuditParams(filters: AuditFilters): AuditFilters {
 
 function getFilterLabel(name: AuditFilterName): ReactNode {
   return auditColumnConfigs.find((column) => column.filterName === name)?.label ?? name;
-}
-
-function saveTextAsFile(text: string, filename: string): void {
-  const blob = new Blob([text], { type: "text/csv;charset=utf-8" });
-  const objectUrl = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-
-  anchor.href = objectUrl;
-  anchor.download = filename;
-  anchor.click();
-  URL.revokeObjectURL(objectUrl);
 }
 
 interface AuditColumnConfig {

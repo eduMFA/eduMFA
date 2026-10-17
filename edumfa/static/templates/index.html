@@ -7,6 +7,10 @@
     <meta name="description" content="">
     <link rel="icon" type="image/png" href="{{ instance }}/static/favicon.png">
     <link href="{{ instance }}/static/react-dist/assets/main.css" rel="stylesheet">
+    <!-- The chunks main.js imports (static/vite.config.mts), preloaded so the
+         browser does not discover them only after downloading and parsing main.js. -->
+    {% for chunk in ("rolldown-runtime", "react", "mantine", "vendor") %}<link rel="modulepreload" href="{{ instance }}/static/react-dist/assets/{{ chunk }}.js">
+    {% endfor %}
     {% if theme %}<link href="{{ instance }}/{{ theme }}" rel="stylesheet">{% endif %}
     {% if custom_css %}<link href="{{ instance }}/{{ custom_css }}" rel="stylesheet">{% endif %}
     <title>{{ page_title }}</title>

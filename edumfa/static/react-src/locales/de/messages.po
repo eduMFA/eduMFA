@@ -17,7 +17,7 @@ msgstr ""
 msgid "(none)"
 msgstr "(none)"
 
-#: react-src/features/audit/AuditLogPage.tsx:221
+#: react-src/features/audit/AuditLogPage.tsx:222
 msgid "{entryCount} entries found."
 msgstr "Es wurden {entryCount} Einträge gefunden."
 
@@ -37,20 +37,20 @@ msgstr "Import abbrechen, wenn Token nicht verifiziert werden können"
 msgid "About eduMFA Web Client"
 msgstr "Über das eduMFA WebUI"
 
-#: react-src/features/audit/AuditLogPage.tsx:449
+#: react-src/features/audit/AuditLogPage.tsx:439
 msgid "action"
 msgstr "Aktion"
 
 #: react-src/features/config/events/EventEditPage.tsx:393
 #: react-src/features/config/events/EventEditPage.tsx:396
 #: react-src/features/config/events/EventListPage.tsx:43
-#: react-src/features/config/policies/PolicyEditPage.tsx:425
+#: react-src/features/config/policies/PolicyEditPage.tsx:449
 #: react-src/features/config/policies/PolicyListPage.tsx:155
-#: react-src/features/dashboard/DashboardPage.tsx:246
+#: react-src/features/dashboard/DashboardPage.tsx:248
 msgid "Action"
 msgstr "Aktion"
 
-#: react-src/features/audit/AuditLogPage.tsx:467
+#: react-src/features/audit/AuditLogPage.tsx:457
 msgid "action detail"
 msgstr "Aktionsdetail"
 
@@ -77,9 +77,9 @@ msgstr "aktiv"
 #: react-src/features/config/events/EventEditPage.tsx:318
 #: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:259
 #: react-src/features/config/policies/PolicyConditionsEditor.tsx:32
-#: react-src/features/config/policies/PolicyEditPage.tsx:312
+#: react-src/features/config/policies/PolicyEditPage.tsx:336
 #: react-src/features/config/policies/PolicyListPage.tsx:112
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:265
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:266
 #: react-src/features/users/UserDetailsPage.tsx:357
 msgid "Active"
 msgstr "Aktiv"
@@ -88,15 +88,15 @@ msgstr "Aktiv"
 msgid "Active condition {number}"
 msgstr "Aktive Bedingung {number}"
 
-#: react-src/features/dashboard/DashboardPage.tsx:316
+#: react-src/features/dashboard/DashboardPage.tsx:319
 msgid "Active Events"
 msgstr "Aktive Ereignisse"
 
-#: react-src/features/audit/AuditLogPage.tsx:232
+#: react-src/features/audit/AuditLogPage.tsx:233
 msgid "Active filters"
 msgstr "Aktive Filter"
 
-#: react-src/features/dashboard/DashboardPage.tsx:280
+#: react-src/features/dashboard/DashboardPage.tsx:283
 msgid "Active Policies"
 msgstr "Aktive Richtlinien"
 
@@ -117,20 +117,20 @@ msgstr "Benutzer hinzufügen"
 msgid "Add new question"
 msgstr "Neue Frage hinzufügen"
 
-#: react-src/features/users/UserListPage.tsx:240
+#: react-src/features/users/UserListPage.tsx:242
 #: react-src/features/users/UserSidebar.tsx:82
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:415
+#: react-src/features/config/policies/PolicyEditPage.tsx:439
 msgid "Additional conditions"
 msgstr "Weitere Bedingungen"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:336
+#: react-src/features/config/policies/PolicyEditPage.tsx:360
 msgid "Admin"
 msgstr "Administrator"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:327
+#: react-src/features/config/policies/PolicyEditPage.tsx:351
 msgid "Admin-Realm"
 msgstr "Admin-Realm"
 
@@ -138,11 +138,11 @@ msgstr "Admin-Realm"
 msgid "Administration"
 msgstr "Administration"
 
-#: react-src/features/audit/AuditLogPage.tsx:485
+#: react-src/features/audit/AuditLogPage.tsx:475
 msgid "administrator"
 msgstr "Administrator"
 
-#: react-src/features/dashboard/DashboardPage.tsx:243
+#: react-src/features/dashboard/DashboardPage.tsx:245
 msgid "Administrator"
 msgstr "Administrator"
 
@@ -204,7 +204,7 @@ msgstr "Optionaler Teil der Seriennummer"
 msgid "An unknown error occurred."
 msgstr "Ein unbekannter Fehler ist aufgetreten."
 
-#: react-src/features/audit/AuditLogPage.tsx:131
+#: react-src/features/audit/AuditLogPage.tsx:132
 msgid "any"
 msgstr "beliebig"
 
@@ -304,7 +304,7 @@ msgstr "Attributszuordnung"
 msgid "Audit"
 msgstr "Audit"
 
-#: react-src/features/audit/AuditLogPage.tsx:222
+#: react-src/features/audit/AuditLogPage.tsx:223
 msgid "Audit log"
 msgstr "Audit-Log"
 
@@ -406,7 +406,7 @@ msgstr "Cache-Zeitüberschreitung (Sekunden)"
 #: react-src/features/machines/MachineDetailsPage.tsx:244
 #: react-src/features/tokens/details/EditableValueRow.tsx:99
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:216
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:205
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:206
 #: react-src/features/tokens/TokenGetSerialPage.tsx:276
 #: react-src/features/users/UserDetailsPage.tsx:425
 msgid "Cancel"
@@ -416,7 +416,7 @@ msgstr "Abbrechen"
 msgid "CAs"
 msgstr "Zertifizierungsstellen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:765
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:759
 msgid "certificate"
 msgstr "Zertifikat"
 
@@ -469,7 +469,7 @@ msgstr "Passwort ändern"
 msgid "Change PIN"
 msgstr "PIN ändern"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:369
+#: react-src/features/config/policies/PolicyEditPage.tsx:393
 msgid "Check all possible resolvers of a user to match the resolver in this policy."
 msgstr "Alle möglichen Resolver eines Benutzers auf Übereinstimmung mit dem Resolver dieser Richtlinie prüfen."
 
@@ -490,7 +490,7 @@ msgstr "OTP PIN und OTP Wert prüfen."
 msgid "Choose a realm..."
 msgstr "Realm auswählen..."
 
-#: react-src/features/audit/AuditLogPage.tsx:273
+#: react-src/features/audit/AuditLogPage.tsx:274
 msgid "Clear all filters"
 msgstr "Alle Filter zurücksetzen"
 
@@ -506,7 +506,7 @@ msgstr "Fehlversuchszähler nach Minuten zurücksetzen"
 msgid "Clear filter"
 msgstr "Filter zurücksetzen"
 
-#: react-src/features/audit/AuditLogPage.tsx:566
+#: react-src/features/audit/AuditLogPage.tsx:556
 msgid "clearance"
 msgstr "Freigabestufe"
 
@@ -522,12 +522,12 @@ msgstr "Klicken Sie <0>hier</0> oder scannen Sie den QR-Code, um den Token zu Ih
 msgid "Click <0>here</0> or scan the QR Code, if you want to add the Token to your TiQR App."
 msgstr "Klicken Sie <0>hier</0> oder scannen Sie den QR-Code, um den Token zu Ihrer TiQR-App hinzuzufügen."
 
-#: react-src/features/audit/AuditLogPage.tsx:540
+#: react-src/features/audit/AuditLogPage.tsx:530
 msgid "client"
 msgstr "Client"
 
 #: react-src/features/components/ClientTypePage.tsx:66
-#: react-src/features/config/policies/PolicyEditPage.tsx:398
+#: react-src/features/config/policies/PolicyEditPage.tsx:422
 #: react-src/features/config/policies/PolicyListPage.tsx:181
 #: react-src/features/config/resolvers/ScimResolverPage.tsx:18
 msgid "Client"
@@ -581,7 +581,7 @@ msgstr "Vergleichsoperator {number}"
 msgid "Components"
 msgstr "Komponenten"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:321
+#: react-src/features/config/policies/PolicyEditPage.tsx:345
 msgid "Condition"
 msgstr "Bedingung"
 
@@ -603,13 +603,13 @@ msgstr "Verbindungsparameter"
 msgid "Connector name"
 msgstr "Konnektorname"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:431
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:432
 #: react-src/features/tokens/TokenApplicationsPage.tsx:153
 #: react-src/features/tokens/TokenApplicationsPage.tsx:154
 msgid "Count"
 msgstr "Zähler"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:443
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:444
 #: react-src/features/tokens/TokenGetSerialPage.tsx:235
 msgid "Count Window"
 msgstr "Zählerfenster"
@@ -655,7 +655,7 @@ msgstr "Erzeuge einen neuen Passwd-Resolver"
 msgid "Create a new Periodic Task"
 msgstr "Erstelle eine regelmäßigen Aufgabe"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:93
+#: react-src/features/config/policies/PolicyEditPage.tsx:117
 msgid "Create a new Policy"
 msgstr "Erzeuge eine neue Richtlinie"
 
@@ -753,7 +753,7 @@ msgstr "Datenbank"
 msgid "Database Encoding"
 msgstr "Datenbank-Enkodierung"
 
-#: react-src/features/dashboard/DashboardPage.tsx:240
+#: react-src/features/dashboard/DashboardPage.tsx:242
 msgid "Date"
 msgstr "Datum"
 
@@ -791,7 +791,7 @@ msgstr "Standard Zeitfenster"
 #: react-src/features/config/events/EventEditPage.tsx:200
 #: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:112
 #: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:166
-#: react-src/features/config/policies/PolicyEditPage.tsx:222
+#: react-src/features/config/policies/PolicyEditPage.tsx:246
 #: react-src/features/config/policies/PolicyListPage.tsx:205
 #: react-src/features/config/realms/RealmListPage.tsx:246
 #: react-src/features/config/resolvers/ResolverListPage.tsx:121
@@ -804,7 +804,7 @@ msgstr "Standard Zeitfenster"
 #: react-src/features/config/tokengroups/TokengroupListPage.tsx:126
 #: react-src/features/config/tokens/types/QuestionConfigFields.tsx:91
 #: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:120
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:123
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:181
 #: react-src/features/users/UserDetailsPage.tsx:601
 msgid "Delete"
 msgstr "Löschen"
@@ -813,8 +813,8 @@ msgstr "Löschen"
 msgid "Delete Configuration"
 msgstr "Konfiguration löschen"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:164
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:184
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:222
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:242
 msgid "Delete Token"
 msgstr "Token löschen"
 
@@ -831,7 +831,7 @@ msgstr "Benutzer löschen"
 #: react-src/features/tokens/TokenListPage.tsx:181
 #: react-src/features/users/UserDetailsPage.tsx:373
 #: react-src/features/users/userFieldLabels.ts:10
-#: react-src/features/users/UserListPage.tsx:195
+#: react-src/features/users/UserListPage.tsx:197
 msgid "description"
 msgstr "Beschreibung"
 
@@ -850,7 +850,7 @@ msgstr "Beschreibung"
 #: react-src/features/config/serviceids/ServiceIdListPage.tsx:94
 #: react-src/features/config/tokengroups/TokengroupEditPage.tsx:181
 #: react-src/features/config/tokengroups/TokengroupListPage.tsx:94
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:475
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:476
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:592
 #: react-src/features/users/UserPasswordPage.tsx:110
 msgid "Description"
@@ -861,7 +861,7 @@ msgstr "Beschreibung"
 msgid "Detach"
 msgstr "abhängen"
 
-#: react-src/features/dashboard/DashboardPage.tsx:249
+#: react-src/features/dashboard/DashboardPage.tsx:251
 msgid "Detail"
 msgstr "Detail"
 
@@ -874,8 +874,8 @@ msgstr "Details"
 msgid "Dictionary"
 msgstr "Wörterbuch"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:198
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:298
+#: react-src/features/config/policies/PolicyEditPage.tsx:222
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:299
 msgid "Disable"
 msgstr "Deaktivieren"
 
@@ -919,11 +919,11 @@ msgid "Do not verify the authenticity"
 msgstr "Token nicht verifizieren"
 
 #. placeholder {0}: token.username
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:170
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:228
 msgid "Do you really want to delete the Token {serial} from user {0}?"
 msgstr "Möchten Sie den Token {serial} des Benutzers {0} wirklich löschen?"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:175
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:233
 msgid "Do you really want to delete the Token {serial}?"
 msgstr "Möchten Sie den Token {serial} wirklich löschen?"
 
@@ -953,7 +953,7 @@ msgstr "Wollen Sie dieses Objekt wirklich löschen?"
 msgid "Do you really want to delete this periodic task?"
 msgstr "Wollen Sie wirklich diese Regelmäßige Aufgabe löschen?"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:211
+#: react-src/features/config/policies/PolicyEditPage.tsx:235
 #: react-src/features/config/policies/PolicyListPage.tsx:198
 msgid "Do you really want to delete this policy?"
 msgstr "Wollen Sie diese Richtlinie wirklich löschen?"
@@ -966,7 +966,7 @@ msgstr "Wollen Sie diesen Benutzer-Resolver wirklich löschen?"
 msgid "Domain CA"
 msgstr "Domänen-CA"
 
-#: react-src/features/audit/AuditLogPage.tsx:216
+#: react-src/features/audit/AuditLogPage.tsx:217
 msgid "Download audit log as CSV"
 msgstr "Audit-Log als CSV herunterladen"
 
@@ -986,7 +986,7 @@ msgstr "PKCS12-Datei herunterladen"
 msgid "Driver"
 msgstr "Treiber"
 
-#: react-src/features/audit/AuditLogPage.tsx:442
+#: react-src/features/audit/AuditLogPage.tsx:432
 msgid "duration"
 msgstr "Dauer"
 
@@ -995,7 +995,7 @@ msgstr "Dauer"
 #: react-src/features/config/realms/RealmListPage.tsx:227
 #: react-src/features/config/resolvers/ResolverListPage.tsx:98
 #: react-src/features/tokens/details/EditableValueRow.tsx:111
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:219
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:220
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -1047,7 +1047,7 @@ msgstr "Passwd-Resolver {resolvername} bearbeiten"
 msgid "Edit Periodic Task {0}"
 msgstr "Periodische Aufgabe {0} bearbeiten"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:91
+#: react-src/features/config/policies/PolicyEditPage.tsx:115
 msgid "Edit Policy {policyname}"
 msgstr "Richtlinie {policyname} bearbeiten"
 
@@ -1110,11 +1110,11 @@ msgstr "eduMFA läuft im DEBUG-Modus. Dabei werden PASSWÖRTER in die Protokolld
 msgid "eduMFA is running in DEBUG mode. You can change the debug level in edumfa.cfg."
 msgstr "eduMFA läuft im DEBUG-Modus. Sie können die Protokollierungsstufe in edumfa.cfg ändern."
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:389
+#: react-src/features/config/policies/PolicyEditPage.tsx:413
 msgid "eduMFA Node"
 msgstr "eduMFA Knoten"
 
-#: react-src/features/audit/AuditLogPage.tsx:577
+#: react-src/features/audit/AuditLogPage.tsx:567
 msgid "eduMFA server"
 msgstr "eduMFA Server"
 
@@ -1161,8 +1161,8 @@ msgstr "E-Mail-Adresse"
 msgid "Email Token Config"
 msgstr "E-Mail-Token-Konfiguration"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:198
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:316
+#: react-src/features/config/policies/PolicyEditPage.tsx:222
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:317
 msgid "Enable"
 msgstr "Aktivieren"
 
@@ -1180,12 +1180,12 @@ msgstr "Richtlinie {0} aktivieren"
 msgid "Enable token"
 msgstr "Token aktivieren"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:544
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:545
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:641
 msgid "End Date before Start Date!"
 msgstr "Enddatum vor dem Startdatum!"
 
-#: react-src/features/audit/AuditLogPage.tsx:435
+#: react-src/features/audit/AuditLogPage.tsx:425
 msgid "enddate"
 msgstr "Enddatum"
 
@@ -1220,11 +1220,11 @@ msgstr "Token ausrollen"
 msgid "Enrolled token"
 msgstr "Ausgerollter Token"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:118
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:119
 msgid "Enrollment successfully verified."
 msgstr "Der Rollout wurde erfolgreich überprüft."
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:119
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:120
 msgid "Enrollment verification failed."
 msgstr "Die Überprüfung des Rollouts ist fehlgeschlagen."
 
@@ -1236,8 +1236,8 @@ msgstr "Geben Sie ein gültiges JSON-Objekt ein."
 msgid "Enter an HTTP or HTTPS URL."
 msgstr "Geben Sie eine HTTP- oder HTTPS-URL ein."
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:352
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:356
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:353
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:357
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:471
 msgid "Enter code to verify enrollment"
 msgstr "Bitte Code eingeben, um das Rollout abzuschließen"
@@ -1308,7 +1308,7 @@ msgstr "Ereignisbehandlungen"
 #: react-src/features/config/ConfigLayout.tsx:58
 #: react-src/features/config/events/EventEditPage.tsx:327
 #: react-src/features/config/events/EventListPage.tsx:20
-#: react-src/features/dashboard/DashboardPage.tsx:313
+#: react-src/features/dashboard/DashboardPage.tsx:316
 msgid "Events"
 msgstr "Ereignisse"
 
@@ -1328,7 +1328,7 @@ msgstr "Gültig bis"
 msgid "Extended Attributes"
 msgstr "Erweiterte Attribute"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:393
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:394
 msgid "Fail counter"
 msgstr "Fehlerzähler"
 
@@ -1337,7 +1337,7 @@ msgstr "Fehlerzähler"
 msgid "failcounter"
 msgstr "Fehlerzähler"
 
-#: react-src/features/audit/AuditLogPage.tsx:458
+#: react-src/features/audit/AuditLogPage.tsx:448
 #: react-src/features/dashboard/DashboardPage.tsx:199
 msgid "failed"
 msgstr "fehlgeschlagen"
@@ -1401,7 +1401,7 @@ msgstr "Geltungsbereich filtern"
 msgid "filter..."
 msgstr "Filtern …"
 
-#: react-src/features/audit/AuditLogPage.tsx:240
+#: react-src/features/audit/AuditLogPage.tsx:241
 msgid "Filters"
 msgstr "Filter"
 
@@ -1655,7 +1655,7 @@ msgid "HOTP tokens can be attached with offline to e.g. notebooks."
 msgstr "HOTP-Token können mit der Anwendung \"offline\" beispielsweise an Notebooks angehängt werden."
 
 #: react-src/features/users/userFieldLabels.ts:17
-#: react-src/features/users/UserListPage.tsx:200
+#: react-src/features/users/UserListPage.tsx:202
 msgid "id"
 msgstr "ID"
 
@@ -1697,7 +1697,7 @@ msgstr "Wenn dieser Token die SMS nicht über das systemweite Gateway, sondern �
 msgid "If you are enrolling the Yubikey in HOTP mode, you should use the PSKC file format in the newer version of the Yubikey GUI."
 msgstr "Wenn Sie den Yubikey im HOTP-Modus ausrollen, sollten Sie das PSKC-Dateiformat der neueren Version der Yubikey-GUI verwenden."
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:270
+#: react-src/features/config/policies/PolicyEditPage.tsx:294
 msgid "If you change the name of the policy, it will create a new policy with the new name!"
 msgstr "Wenn Sie den Namen der Richtlinie ändern, wird eine neue Richtlinie mit dem neuen Namen erstellt!"
 
@@ -1721,7 +1721,7 @@ msgstr "Token importieren"
 msgid "Import tokens from a file"
 msgstr "Tokendatei importieren"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:304
+#: react-src/features/config/policies/PolicyEditPage.tsx:328
 msgid "In case of conflicting policies, the policy with the lowest priority number will take precedence."
 msgstr "Im Fall eines Richtlinienkonflikts wird die Richtlinie mit dem niedrigsten \"Priorität\"-Wert berücksichtigt."
 
@@ -1729,11 +1729,11 @@ msgstr "Im Fall eines Richtlinienkonflikts wird die Richtlinie mit dem niedrigst
 msgid "inactive"
 msgstr "inaktiv"
 
-#: react-src/features/dashboard/DashboardPage.tsx:326
+#: react-src/features/dashboard/DashboardPage.tsx:329
 msgid "Inactive Events"
 msgstr "Inaktive Ereignisse"
 
-#: react-src/features/dashboard/DashboardPage.tsx:293
+#: react-src/features/dashboard/DashboardPage.tsx:296
 msgid "Inactive Policies"
 msgstr "Inaktive Richtlinien"
 
@@ -1749,11 +1749,11 @@ msgstr "SAML-Attribute in die Authentifizierungsantwort aufnehmen."
 msgid "Increase the failcounter if the wrong PIN was entered."
 msgstr "Den Fehlerzähler erhöhen, wenn eine falsche PIN eingegeben wurde."
 
-#: react-src/features/audit/AuditLogPage.tsx:546
+#: react-src/features/audit/AuditLogPage.tsx:536
 msgid "info"
 msgstr "Info"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:486
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:487
 msgid "Info"
 msgstr "Info"
 
@@ -1858,7 +1858,7 @@ msgstr "Eine Vorlage aus dem Repository für eduMFA-Richtlinienvorlagen laden. P
 msgid "Loading"
 msgstr "Laden"
 
-#: react-src/features/audit/AuditLogPage.tsx:279
+#: react-src/features/audit/AuditLogPage.tsx:280
 msgid "Loading audit log"
 msgstr "Audit-Log wird geladen"
 
@@ -1936,7 +1936,7 @@ msgstr "SMS-Gateways werden geladen"
 msgid "Loading SMTP servers"
 msgstr "SMTP-Server werden geladen"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:142
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:200
 msgid "Loading token"
 msgstr "Token wird geladen"
 
@@ -1958,15 +1958,15 @@ msgstr "Token werden geladen"
 msgid "Loading user"
 msgstr "Benutzer wird geladen"
 
-#: react-src/features/users/UserListPage.tsx:254
+#: react-src/features/users/UserListPage.tsx:256
 msgid "Loading users"
 msgstr "Benutzer werden geladen"
 
-#: react-src/features/shell/AppNavbar.tsx:242
+#: react-src/features/shell/AppNavbar.tsx:243
 msgid "Lock screen"
 msgstr "Applikation sperren"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:272
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:273
 msgid "locked"
 msgstr "gesperrt"
 
@@ -1977,7 +1977,7 @@ msgstr "gesperrt"
 msgid "Log In"
 msgstr "Anmelden"
 
-#: react-src/features/audit/AuditLogPage.tsx:571
+#: react-src/features/audit/AuditLogPage.tsx:561
 msgid "log level"
 msgstr "Logstufe"
 
@@ -1998,7 +1998,7 @@ msgstr "Mit Zugangsdaten anmelden"
 msgid "Loginname Attribute"
 msgstr "Attribut für den Anmeldenamen"
 
-#: react-src/features/shell/AppNavbar.tsx:245
+#: react-src/features/shell/AppNavbar.tsx:246
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:498
 msgid "Logout"
 msgstr "Abmelden"
@@ -2067,11 +2067,11 @@ msgstr "Zuordnung"
 msgid "Mark the token as lost"
 msgstr "Den Token als verloren markieren"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:509
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:510
 msgid "Max allowed auths"
 msgstr "Maximal erlaubte Authentisierungen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:524
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:525
 msgid "Max allowed successful auths"
 msgstr "Maximal erlaubte erfolgreiche Authentisierungen"
 
@@ -2083,15 +2083,15 @@ msgstr "Maximale Anzahl von Fehlversuchen für neu ausgerollte Token"
 msgid "maxfail"
 msgstr "Max. Fehlerzähler"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:383
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:384
 msgid "Maxfail"
 msgstr "Max. Fehlerzähler"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:502
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:503
 msgid "Maximum Authentication Count"
 msgstr "Maximale Authentisierungen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:517
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:518
 msgid "Maximum Success Auth Count"
 msgstr "Maximale erfolgreiche Authentisierungen"
 
@@ -2112,12 +2112,12 @@ msgstr "Port für Microsoft CA-Worker"
 msgid "Miscellaneous"
 msgstr "Sonstiges"
 
-#: react-src/features/audit/AuditLogPage.tsx:556
+#: react-src/features/audit/AuditLogPage.tsx:546
 msgid "missing_line"
 msgstr "Fehlende Zeile"
 
 #: react-src/features/users/userFieldLabels.ts:13
-#: react-src/features/users/UserListPage.tsx:190
+#: react-src/features/users/UserListPage.tsx:191
 msgid "mobile"
 msgstr "Mobiltelefon"
 
@@ -2207,8 +2207,8 @@ msgid "Next"
 msgstr "Weiter"
 
 #: react-src/components/feedback/BooleanPill.tsx:17
-#: react-src/features/audit/AuditLogPage.tsx:133
-#: react-src/features/audit/AuditLogPage.tsx:194
+#: react-src/features/audit/AuditLogPage.tsx:134
+#: react-src/features/audit/AuditLogPage.tsx:195
 msgid "no"
 msgstr "nein"
 
@@ -2226,7 +2226,7 @@ msgstr "Keine Aktionen entsprechen dem Filter."
 msgid "No anonymous referral chasing"
 msgstr "Referrals werden nicht (anonym) verfolgt"
 
-#: react-src/features/audit/AuditLogPage.tsx:293
+#: react-src/features/audit/AuditLogPage.tsx:294
 msgid "No audit entries match the current filters."
 msgstr "Keine Audit-Einträge entsprechen den aktuellen Filtern."
 
@@ -2344,7 +2344,7 @@ msgstr "Keine Token gefunden."
 msgid "No user found"
 msgstr "Keinen Benutzer gefunden"
 
-#: react-src/features/users/UserListPage.tsx:268
+#: react-src/features/users/UserListPage.tsx:270
 msgid "No users found."
 msgstr "Keine Benutzer gefunden."
 
@@ -2357,7 +2357,7 @@ msgstr "Knoten"
 msgid "Nodes"
 msgstr "Knoten"
 
-#: react-src/features/audit/AuditLogPage.tsx:421
+#: react-src/features/audit/AuditLogPage.tsx:411
 msgid "number"
 msgstr "Nr."
 
@@ -2463,7 +2463,7 @@ msgstr "OTP-Schlüssel"
 msgid "OTP length"
 msgstr "OTP-Länge"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:424
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:425
 #: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:34
 msgid "OTP Length"
 msgstr "OTP-Länge"
@@ -2579,7 +2579,7 @@ msgstr "Telefon"
 msgid "Phone number"
 msgstr "Telefonnummer"
 
-#: react-src/features/audit/AuditLogPage.tsx:154
+#: react-src/features/audit/AuditLogPage.tsx:155
 msgid "Pick a date"
 msgstr "Datum wählen"
 
@@ -2599,7 +2599,7 @@ msgstr "PIN erfolgreich gesetzt."
 msgid "PIN/Password"
 msgstr "PIN/Passwort"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:765
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:759
 msgid "PKCS12"
 msgstr "PKCS12"
 
@@ -2659,29 +2659,29 @@ msgstr "Bitte anmelden"
 msgid "Please try to reload and otherwise contact your system administrator!"
 msgstr "Bitte laden Sie die Seite neu und wenden Sie sich andernfalls an Ihren Systemadministrator!"
 
-#: react-src/features/audit/AuditLogPage.tsx:214
+#: react-src/features/audit/AuditLogPage.tsx:215
 msgid "Please Wait! Crunching data..."
 msgstr "Bitte warten! Daten werden verarbeitet..."
 
-#: react-src/features/audit/AuditLogPage.tsx:534
+#: react-src/features/audit/AuditLogPage.tsx:524
 msgid "policies"
 msgstr "Richtlinien"
 
 #: react-src/features/config/ConfigLayout.tsx:51
-#: react-src/features/dashboard/DashboardPage.tsx:274
+#: react-src/features/dashboard/DashboardPage.tsx:277
 msgid "Policies"
 msgstr "Richtlinien"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:111
+#: react-src/features/config/policies/PolicyEditPage.tsx:135
 msgid "Policy {policyname} was not found."
 msgstr "Richtlinie {policyname} wurde nicht gefunden."
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:256
+#: react-src/features/config/policies/PolicyEditPage.tsx:280
 #: react-src/features/config/policies/PolicyListPage.tsx:134
 msgid "Policy Name"
 msgstr "Richtlinienname"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:242
+#: react-src/features/config/policies/PolicyEditPage.tsx:266
 msgid "Policy saved."
 msgstr "Richtlinie gespeichert."
 
@@ -2742,7 +2742,7 @@ msgstr "OTP-Liste drucken"
 msgid "priority"
 msgstr "Priorität"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:295
+#: react-src/features/config/policies/PolicyEditPage.tsx:319
 #: react-src/features/config/policies/PolicyListPage.tsx:89
 msgid "Priority"
 msgstr "Priorität"
@@ -2867,7 +2867,7 @@ msgstr "Die Email-Adresse wird bei jeder Authentifizierung dynamisch aus der Ben
 msgid "Read number dynamically from user source on each request."
 msgstr "Die Mobilnummer wird bei jeder Authentifizierung dynamisch aus der Benutzerquelle gelesen."
 
-#: react-src/features/audit/AuditLogPage.tsx:507
+#: react-src/features/audit/AuditLogPage.tsx:497
 #: react-src/features/tokens/TokenListPage.tsx:230
 msgid "realm"
 msgstr "Realm"
@@ -2887,7 +2887,7 @@ msgstr "Realm"
 msgid "Realm {0}"
 msgstr "Realm {0}"
 
-#: react-src/features/users/UserListPage.tsx:244
+#: react-src/features/users/UserListPage.tsx:246
 msgid "Realm {activeRealm}"
 msgstr "Realm {activeRealm}"
 
@@ -2902,7 +2902,7 @@ msgstr "Realmname"
 
 #: react-src/features/config/ConfigLayout.tsx:93
 #: react-src/features/config/realms/RealmListPage.tsx:267
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:598
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:599
 msgid "Realms"
 msgstr "Realms"
 
@@ -2965,7 +2965,7 @@ msgstr "Entfernen"
 msgid "Remove condition {number}"
 msgstr "Bedingung {number} entfernen"
 
-#: react-src/features/audit/AuditLogPage.tsx:248
+#: react-src/features/audit/AuditLogPage.tsx:249
 msgid "Remove filter {name}"
 msgstr "Filter {name} entfernen"
 
@@ -3013,7 +3013,7 @@ msgstr "Die HTTP Anfrage an den entfernten eduMFA Server wurde erfolgreich beant
 msgid "Required Realms"
 msgstr "Erforderliche Realms"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:413
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:414
 msgid "Reset fail counter"
 msgstr "Fehlerzähler zurücksetzen"
 
@@ -3031,7 +3031,7 @@ msgstr "Passwort zurücksetzen"
 msgid "Reset your Password"
 msgstr "Ihr Passwort zurücksetzen"
 
-#: react-src/features/audit/AuditLogPage.tsx:520
+#: react-src/features/audit/AuditLogPage.tsx:510
 msgid "resolver"
 msgstr "Resolver"
 
@@ -3095,11 +3095,11 @@ msgstr "Wiederholungen"
 msgid "Retry If Failed"
 msgstr "Bei Fehler erneut versuchen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:334
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:335
 msgid "Revoke"
 msgstr "Widerrufen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:277
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:278
 msgid "revoked"
 msgstr "widerrufen"
 
@@ -3108,11 +3108,11 @@ msgstr "widerrufen"
 msgid "rollout state"
 msgstr "Rollout Status"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:345
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:346
 msgid "Rollout State"
 msgstr "Rollout Status"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:111
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:169
 msgid "Rollover"
 msgstr "Rollover"
 
@@ -3160,7 +3160,7 @@ msgstr "Optionen speichern"
 msgid "Save Periodic Task Definition"
 msgstr "Definition der periodischen Aufgabe speichern"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:445
+#: react-src/features/config/policies/PolicyEditPage.tsx:469
 msgid "Save Policy"
 msgstr "Richtlinie speichern"
 
@@ -3168,7 +3168,7 @@ msgstr "Richtlinie speichern"
 msgid "Save RADIUS server"
 msgstr "RADIUS-Server speichern"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:641
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:642
 msgid "Save realms"
 msgstr "Realms speichern"
 
@@ -3195,11 +3195,11 @@ msgstr "SMTP-Server speichern"
 msgid "Save System Config"
 msgstr "Systemkonfiguration speichern"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:697
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:698
 msgid "Save Token Groups"
 msgstr "Tokengruppen speichern"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:590
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:591
 msgid "Save Token Info"
 msgstr "Tokeninfo speichern"
 
@@ -3212,7 +3212,7 @@ msgstr "Tokengruppe speichern"
 msgid "Save user"
 msgstr "Benutzer speichern"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:286
+#: react-src/features/config/policies/PolicyEditPage.tsx:310
 #: react-src/features/config/policies/PolicyListPage.tsx:148
 #: react-src/features/config/resolvers/LdapResolverPage.tsx:64
 msgid "Scope"
@@ -3270,7 +3270,7 @@ msgstr "Wählen Sie eine vordefinierte <0>SMTP-Serverkonfiguration</0>."
 msgid "Select file and import"
 msgstr "Datei auswählen und importieren"
 
-#: react-src/features/users/UserListPage.tsx:211
+#: react-src/features/users/UserListPage.tsx:213
 msgid "Select Realm"
 msgstr "Realm auswählen"
 
@@ -3306,7 +3306,7 @@ msgstr "Absende-Email-Adresse"
 msgid "Separator"
 msgstr "Trennzeichen"
 
-#: react-src/features/audit/AuditLogPage.tsx:473
+#: react-src/features/audit/AuditLogPage.tsx:463
 #: react-src/features/tokens/TokenApplicationsPage.tsx:118
 #: react-src/features/tokens/TokenApplicationsPage.tsx:119
 #: react-src/features/tokens/TokenChallengesPage.tsx:92
@@ -3374,7 +3374,7 @@ msgstr "Dienste-Kennzeichnungen"
 msgid "Service IDs can be used to attach e.g. SSH keys to certain machines and services. To view attached tokens go to <0>token applications</0>."
 msgstr "Mit Service-IDs können Sie beispielsweise SSH-Schlüssel bestimmten Maschinen und Diensten zuordnen. Zugeordnete Token finden Sie unter <0>Token-Anwendungen</0>."
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:437
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:438
 msgid "Set count window"
 msgstr "Zählerfenster setzen"
 
@@ -3382,11 +3382,11 @@ msgstr "Zählerfenster setzen"
 msgid "set Default"
 msgstr "Setze als Standard"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:468
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:469
 msgid "Set description"
 msgstr "Beschreibung setzen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:377
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:378
 msgid "Set max fail"
 msgstr "Max. Fehlerzähler setzen"
 
@@ -3402,11 +3402,11 @@ msgstr "PIN setzen"
 msgid "Set random PIN"
 msgstr "Zufällige PIN setzen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:451
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:452
 msgid "Set sync window"
 msgstr "Sync-Fenster setzen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:560
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:561
 #: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:172
 msgid "Set to 'True' or 'False' to override setting in Token Config."
 msgstr "Auf 'True' oder 'False' setzen, um die Einstellung der Token-Konfiguration zu überschreiben."
@@ -3427,7 +3427,7 @@ msgstr "Zeige nur aktivierte Aktionen"
 msgid "Show selected conditions only"
 msgstr "Nur ausgewählte Bedingungen anzeigen"
 
-#: react-src/features/audit/AuditLogPage.tsx:551
+#: react-src/features/audit/AuditLogPage.tsx:541
 msgid "sig_check"
 msgstr "Signatur"
 
@@ -3549,7 +3549,7 @@ msgstr "Fangen Sie an, eine Seriennummer zu tippen."
 msgid "start typing a username"
 msgstr "Geben Sie einen Benutzernamen ein..."
 
-#: react-src/features/audit/AuditLogPage.tsx:428
+#: react-src/features/audit/AuditLogPage.tsx:418
 msgid "startdate"
 msgstr "Startdatum"
 
@@ -3562,8 +3562,8 @@ msgstr "StartTLS"
 msgid "STARTTLS"
 msgstr "STARTTLS"
 
-#: react-src/features/audit/AuditLogPage.tsx:455
-#: react-src/features/audit/AuditLogPage.tsx:459
+#: react-src/features/audit/AuditLogPage.tsx:445
+#: react-src/features/audit/AuditLogPage.tsx:449
 #: react-src/features/dashboard/DashboardPage.tsx:196
 msgid "success"
 msgstr "Erfolg"
@@ -3589,7 +3589,7 @@ msgstr "Nachname"
 msgid "Switch to legacy UI"
 msgstr "Alte Oberfläche"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:457
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:458
 msgid "Sync Window"
 msgstr "Sync-Fenster"
 
@@ -4292,7 +4292,7 @@ msgstr "Geben Sie den Pfad zu einem lokalen Verzeichnis auf dem Server an, auf d
 msgid "This token is not attached to any machine."
 msgstr "Dieser Token ist an keine Maschine angehängt."
 
-#: react-src/features/audit/AuditLogPage.tsx:561
+#: react-src/features/audit/AuditLogPage.tsx:551
 msgid "thread_id"
 msgstr "thread_id"
 
@@ -4368,7 +4368,7 @@ msgstr "Token"
 msgid "Token {serial}"
 msgstr "Token {serial}"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:65
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:123
 msgid "Token {serial} deleted."
 msgstr "Token {serial} gelöscht."
 
@@ -4376,7 +4376,7 @@ msgstr "Token {serial} gelöscht."
 msgid "Token {serial} is lost?"
 msgstr "Token {serial} verloren?"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:147
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:205
 msgid "Token {serial} not found."
 msgstr "Token {serial} nicht gefunden."
 
@@ -4412,11 +4412,11 @@ msgstr "Token-Konfiguration gespeichert."
 msgid "Token data"
 msgstr "Tokendaten"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:241
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:242
 msgid "Token details"
 msgstr "Token-Details"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:134
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:192
 msgid "Token details for {serial}"
 msgstr "Token-Details für {serial}"
 
@@ -4437,11 +4437,11 @@ msgstr "Tokendatei"
 msgid "Token functions"
 msgstr "Token-Funktionen"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:650
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:651
 msgid "Token groups"
 msgstr "Tokengruppen"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:148
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:206
 msgid "Token not found."
 msgstr "Token nicht gefunden."
 
@@ -4462,7 +4462,7 @@ msgstr "Token wurde erfolgreich resynchronisiert."
 msgid "Token successfully verified"
 msgstr "Token erfolgreich verifiziert"
 
-#: react-src/features/audit/AuditLogPage.tsx:479
+#: react-src/features/audit/AuditLogPage.tsx:469
 msgid "token type"
 msgstr "Tokentyp"
 
@@ -4536,7 +4536,7 @@ msgstr "trust_anchor_dir"
 msgid "type"
 msgstr "Typ"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:257
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:258
 msgid "Type"
 msgstr "Typ"
 
@@ -4613,7 +4613,7 @@ msgstr "Verwenden Sie die Crontab-Schreibweise: Minute, Stunde, Tag des Monats, 
 msgid "Use HTTP proxy"
 msgstr "HTTP-Proxy verwenden"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:265
+#: react-src/features/config/policies/PolicyEditPage.tsx:289
 msgid "Use letters, numbers, spaces, underscores, dots or hyphens. Reserved policy names are not allowed."
 msgstr "Verwenden Sie Buchstaben, Zahlen, Leerzeichen, Unterstriche, Punkte oder Bindestriche. Reservierte Richtliniennamen sind nicht zulässig."
 
@@ -4633,7 +4633,7 @@ msgstr "STARTTLS mit einer LDAP-Verbindung auf Port 389 benutzen."
 msgid "Use Time Shift"
 msgstr "Standard Zeitabweichung"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:566
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:567
 #: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:175
 msgid "Use Timeshift"
 msgstr "Zeitversatz zulassen"
@@ -4646,12 +4646,12 @@ msgstr "Ausrollen mit Zwei-Schritt und der privacyIDEA Authenticator App"
 msgid "use VASCO Serial"
 msgstr "VASCO Seriennummer verwenden"
 
-#: react-src/features/audit/AuditLogPage.tsx:491
+#: react-src/features/audit/AuditLogPage.tsx:481
 #: react-src/features/tokens/TokenListPage.tsx:215
 msgid "user"
 msgstr "Benutzer"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:380
+#: react-src/features/config/policies/PolicyEditPage.tsx:404
 #: react-src/features/config/policies/PolicyListPage.tsx:171
 #: react-src/features/config/resolvers/SqlResolverPage.tsx:24
 #: react-src/features/config/servers/TestCredentialsFields.tsx:38
@@ -4697,11 +4697,11 @@ msgstr "Benutzer nicht gefunden."
 msgid "User updated successfully."
 msgstr "Benutzer erfolgreich aktualisiert."
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:348
+#: react-src/features/config/policies/PolicyEditPage.tsx:372
 msgid "User-Realm"
 msgstr "Benutzerrealm"
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:358
+#: react-src/features/config/policies/PolicyEditPage.tsx:382
 msgid "User-Resolver"
 msgstr "Benutzer-Resolver"
 
@@ -4730,7 +4730,7 @@ msgstr "Benutzer"
 
 #: react-src/features/config/ConfigLayout.tsx:86
 #: react-src/features/shell/AppNavbar.tsx:92
-#: react-src/features/users/UserListPage.tsx:245
+#: react-src/features/users/UserListPage.tsx:247
 msgid "Users"
 msgstr "Benutzer"
 
@@ -4738,11 +4738,11 @@ msgstr "Benutzer"
 msgid "Users email address..."
 msgstr "E-Mail-Adresse des Benutzers..."
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:406
+#: react-src/features/config/policies/PolicyEditPage.tsx:430
 msgid "Valid time"
 msgstr "Gültigkeitszeitraum"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:548
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:549
 #: react-src/features/tokens/enroll/ExtendedAttributesFields.tsx:48
 msgid "Validity End"
 msgstr "Ende Gültigkeit"
@@ -4751,7 +4751,7 @@ msgstr "Ende Gültigkeit"
 msgid "Validity Period"
 msgstr "Gültigkeitsdauer"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:532
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:533
 #: react-src/features/tokens/enroll/ExtendedAttributesFields.tsx:36
 msgid "Validity Start"
 msgstr "Beginn Gültigkeit"
@@ -4799,12 +4799,12 @@ msgstr "Das TLS Zertifikat des LDAP Servers wird verifiziert."
 msgid "Verify TLS"
 msgstr "TLS verifizieren"
 
-#: react-src/features/tokens/details/TokenPropertiesCard.tsx:368
+#: react-src/features/tokens/details/TokenPropertiesCard.tsx:369
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:483
 msgid "Verify Token"
 msgstr "Token verifizieren"
 
-#: react-src/features/tokens/details/TokenDetailsPage.tsx:99
+#: react-src/features/tokens/details/TokenDetailsPage.tsx:157
 #: react-src/features/tokens/TokenLostPage.tsx:48
 msgid "View token in Audit log"
 msgstr "Token im Audit-Log anzeigen"
@@ -4842,8 +4842,8 @@ msgid "Working Directory"
 msgstr "Arbeitsverzeichnis"
 
 #: react-src/components/feedback/BooleanPill.tsx:18
-#: react-src/features/audit/AuditLogPage.tsx:132
-#: react-src/features/audit/AuditLogPage.tsx:194
+#: react-src/features/audit/AuditLogPage.tsx:133
+#: react-src/features/audit/AuditLogPage.tsx:195
 msgid "yes"
 msgstr "ja"
 
@@ -4857,8 +4857,8 @@ msgid "You are authenticated by the web server as user <0>{0}</0>. You may login
 msgstr "Sie sind vom Webserver als Benutzer <0>{0}</0> authentifiziert. Sie können sich als dieser Benutzer ohne weitere Zugangsdaten bei eduMFA anmelden."
 
 #: react-src/features/shell/LockScreenDialog.tsx:92
-msgid "You are logged in as {username} @ {realm}."
-msgstr "Sie sind als {username} @ {realm} angemeldet."
+msgid "You are logged in as {username}@{realm}."
+msgstr "Sie sind als {username}@{realm} angemeldet."
 
 #: react-src/features/tokens/TokenImportPage.tsx:202
 msgid "You can choose a realm to which the tokens should be imported. You can also change the realms of each token later."
@@ -4872,7 +4872,7 @@ msgstr "Sie können wählen, wie die Authentizität der zu importierenden Token 
 msgid "You do not have permission to open this configuration page."
 msgstr "Sie haben keine Berechtigung, diese Konfigurationsseite zu öffnen."
 
-#: react-src/features/config/policies/PolicyEditPage.tsx:101
+#: react-src/features/config/policies/PolicyEditPage.tsx:125
 msgid "You do not have permission to open this policy page."
 msgstr "Sie haben keine Berechtigung, diese Richtlinienseite zu öffnen."
 

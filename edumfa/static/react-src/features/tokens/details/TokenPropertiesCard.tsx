@@ -37,6 +37,7 @@ import { hasRight } from "@/auth/permissions";
 import { ErrorAlert } from "@/components/feedback/ErrorAlert";
 import { Card } from "@/components/layout/Card";
 import { formatValidityPeriod, parseValidityPeriod } from "@/lib/dates";
+import { saveBlobAsFile } from "@/lib/download";
 import { notify } from "@/lib/notify";
 import { truncate } from "@/lib/strings";
 import { FailCounterBadge, TokenActiveBadge } from "@/features/tokens/tokenBadges";
@@ -727,8 +728,9 @@ function toDate(value: Date | string | null): Date | null {
 
 /**
  * One token info entry. Certificates and PKCS12 blobs are offered as
- * downloads like the legacy view; other values are truncated to 35
- * characters with the full value in the tooltip.
+ * downloads like the legacy view; the file is built when the link is
+ * clicked, so no object URL has to be kept alive. Other values are
+ * truncated to 35 characters with the full value in the tooltip.
  */
 function TokenInfoEntry({
   infoKey,
@@ -739,30 +741,22 @@ function TokenInfoEntry({
   serial: string;
   value: string;
 }) {
-  const downloadHref = useMemo(() => {
-    if (!blobInfoKeys.includes(infoKey)) {
-      return null;
-    }
+  if (blobInfoKeys.includes(infoKey)) {
+    const isPkcs12 = infoKey === "pkcs12";
+    const download = () => {
+      const blob = isPkcs12
+        ? new Blob(
+            [Uint8Array.from(atob(value), (character) => character.charCodeAt(0))],
+            { type: "application/x-pkcs12" }
+          )
+        : new Blob([value], { type: "text/plain" });
 
-    if (infoKey === "pkcs12") {
-      const bytes = Uint8Array.from(atob(value), (character) =>
-        character.charCodeAt(0)
-      );
+      saveBlobAsFile(blob, isPkcs12 ? `${serial}.p12` : `${serial}.pem`);
+    };
 
-      return URL.createObjectURL(new Blob([bytes], { type: "application/x-pkcs12" }));
-    }
-
-    return URL.createObjectURL(new Blob([value], { type: "text/plain" }));
-  }, [infoKey, value]);
-
-  if (downloadHref) {
     return (
-      <Anchor
-        download={infoKey === "pkcs12" ? `${serial}.p12` : `${serial}.pem`}
-        href={downloadHref}
-        size="sm"
-      >
-        {infoKey === "pkcs12" ? <Trans>PKCS12</Trans> : <Trans>certificate</Trans>}
+      <Anchor component="button" onClick={download} size="sm" type="button">
+        {isPkcs12 ? <Trans>PKCS12</Trans> : <Trans>certificate</Trans>}
       </Anchor>
     );
   }

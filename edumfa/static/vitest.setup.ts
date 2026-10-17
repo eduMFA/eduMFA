@@ -10,6 +10,7 @@ import { resetUiConfigCache } from "./react-src/lib/uiConfig";
 const { getComputedStyle } = window;
 window.getComputedStyle = (element) => getComputedStyle(element);
 window.HTMLElement.prototype.scrollIntoView = () => {};
+window.scrollTo = () => {};
 
 Object.defineProperty(window, "matchMedia", {
   value: vi.fn().mockImplementation((query: string) => ({

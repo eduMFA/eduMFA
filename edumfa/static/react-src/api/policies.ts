@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod/mini";
 
 import type { ApiClient } from "./client";
 import { configQueryKeys } from "./config";
@@ -130,25 +130,27 @@ export function getPolicyAdminRealms(
   return apiClient.get<string[]>("/realm/superuser", { signal });
 }
 
+const optionalStringList = z.optional(z.array(z.string()));
 const templateSchema = z.object({
-  name: z.string().min(1),
-  scope: z.string().min(1),
+  name: z.string().check(z.minLength(1)),
+  scope: z.string().check(z.minLength(1)),
   action: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])),
-  active: z.boolean().optional(),
-  priority: z.number().int().positive().optional(),
-  realm: z.array(z.string()).optional(),
-  resolver: z.array(z.string()).optional(),
-  adminrealm: z.array(z.string()).optional(),
-  edumfanode: z.array(z.string()).optional(),
-  user: z.array(z.string()).optional(),
-  adminuser: z.array(z.string()).optional(),
-  client: z.array(z.string()).optional(),
-  time: z.string().optional(),
-  check_all_resolvers: z.boolean().optional(),
-  conditions: z
-    .array(z.tuple([z.string(), z.string(), z.string(), z.string(), z.boolean()]))
-    .optional()
+  active: z.optional(z.boolean()),
+  priority: z.optional(z.int().check(z.positive())),
+  realm: optionalStringList,
+  resolver: optionalStringList,
+  adminrealm: optionalStringList,
+  edumfanode: optionalStringList,
+  user: optionalStringList,
+  adminuser: optionalStringList,
+  client: optionalStringList,
+  time: z.optional(z.string()),
+  check_all_resolvers: z.optional(z.boolean()),
+  conditions: z.optional(
+    z.array(z.tuple([z.string(), z.string(), z.string(), z.string(), z.boolean()]))
+  )
 });
+const templateIndexSchema = z.record(z.string(), z.string());
 export type PolicyTemplate = z.infer<typeof templateSchema>;
 const templateBaseUrl =
   "https://raw.githubusercontent.com/eduMFA/policy-templates/main/templates/";
@@ -170,13 +172,12 @@ async function fetchTemplateJson(
 export async function getPolicyTemplates(
   signal?: AbortSignal
 ): Promise<Record<string, string>> {
-  return z
-    .record(z.string(), z.string())
-    .parse(await fetchTemplateJson("index.json", signal));
+  return z.parse(templateIndexSchema, await fetchTemplateJson("index.json", signal));
 }
 
 export async function getPolicyTemplate(name: string): Promise<PolicyTemplate> {
-  return templateSchema.parse(
+  return z.parse(
+    templateSchema,
     await fetchTemplateJson(`${encodeURIComponent(name)}.json`)
   );
 }

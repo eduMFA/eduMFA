@@ -233,36 +233,39 @@ export function DashboardPage() {
 
         {canReadAudit ? (
           <Card flush title={<Trans>Administration</Trans>}>
-            <Table verticalSpacing="xs">
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>
-                    <Trans>Date</Trans>
-                  </Table.Th>
-                  <Table.Th>
-                    <Trans>Administrator</Trans>
-                  </Table.Th>
-                  <Table.Th>
-                    <Trans>Action</Trans>
-                  </Table.Th>
-                  <Table.Th>
-                    <Trans>Detail</Trans>
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {administration.map((entry) => (
-                  <Table.Tr key={entry.number}>
-                    <Table.Td style={{ whiteSpace: "nowrap" }}>
-                      {formatDashboardDate(entry.date)}
-                    </Table.Td>
-                    <Table.Td>{entry.administrator}</Table.Td>
-                    <Table.Td>{entry.action}</Table.Td>
-                    <Table.Td>{entry.action_detail}</Table.Td>
+            {/* Paths like POST /policy/<name> do not wrap; the table scrolls inside the card. */}
+            <Table.ScrollContainer minWidth={480}>
+              <Table verticalSpacing="xs">
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>
+                      <Trans>Date</Trans>
+                    </Table.Th>
+                    <Table.Th>
+                      <Trans>Administrator</Trans>
+                    </Table.Th>
+                    <Table.Th>
+                      <Trans>Action</Trans>
+                    </Table.Th>
+                    <Table.Th>
+                      <Trans>Detail</Trans>
+                    </Table.Th>
                   </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
+                </Table.Thead>
+                <Table.Tbody>
+                  {administration.map((entry) => (
+                    <Table.Tr key={entry.number}>
+                      <Table.Td style={{ whiteSpace: "nowrap" }}>
+                        {formatDashboardDate(entry.date)}
+                      </Table.Td>
+                      <Table.Td>{entry.administrator}</Table.Td>
+                      <Table.Td>{entry.action}</Table.Td>
+                      <Table.Td>{entry.action_detail}</Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </Table.ScrollContainer>
           </Card>
         ) : null}
 
