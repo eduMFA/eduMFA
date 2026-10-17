@@ -21,15 +21,23 @@ export function Card({
 }: PropsWithChildren<CardProps>) {
   return (
     <Paper
+      className="content-card"
       component="section"
       mb="lg"
       radius="md"
+      shadow="xs"
       style={{ overflow: "hidden" }}
       withBorder
     >
       {title || actions ? (
         <>
-          <Group justify="space-between" px="md" py="sm" wrap="wrap">
+          <Group
+            className="content-card-header"
+            justify="space-between"
+            px="md"
+            py="sm"
+            wrap="wrap"
+          >
             {title ? (
               <Title order={3} size="h5">
                 {title}
@@ -47,7 +55,7 @@ export function Card({
         <>
           <Divider />
           <Group
-            bg="var(--mantine-color-gray-0)"
+            className="content-card-footer"
             gap="xs"
             justify={footerAlign === "center" ? "center" : "flex-start"}
             px="md"

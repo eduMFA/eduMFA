@@ -14,9 +14,14 @@ const ApiClientContext = createContext<ApiClient | null>(null);
 export function ApiClientProvider({ children }: PropsWithChildren) {
   const { authToken, dropSession } = useAuth();
 
+  // Port of `AuthFactory.authError`: an authentication failure ends the
+  // session. Without a token (login page, lock screen) there is nothing to
+  // drop, and the lock must survive a wrong unlock password.
   const handleAuthError = useCallback(() => {
-    dropSession();
-  }, [dropSession]);
+    if (authToken) {
+      dropSession();
+    }
+  }, [authToken, dropSession]);
 
   const client = useMemo(
     () =>

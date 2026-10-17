@@ -14,13 +14,13 @@ import {
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
-import { readLoginPageConfig } from "./loginPageConfig";
 import { LoginLogo, LoginShell } from "./LoginShell";
 import { useAuthenticate } from "./useAuthenticate";
 import type { AuthLoginRequest } from "@/api/auth";
 import { popFlash } from "@/lib/flash";
 import { hashHref } from "@/lib/hashbang";
 import { notify } from "@/lib/notify";
+import { getUiConfig } from "@/lib/uiConfig";
 
 /**
  * Port of `login.html`: the credentials form with the optional realm
@@ -30,7 +30,10 @@ import { notify } from "@/lib/notify";
  */
 export function LoginPage() {
   const { t } = useLingui();
-  const [config] = useState(() => readLoginPageConfig());
+  const [config] = useState(() => getUiConfig());
+  const logoUrl = config.logo
+    ? `${config.instanceUrl}/static/css/${config.logo}`
+    : null;
   const [withCredentials, setWithCredentials] = useState(
     () => config.remoteUser === ""
   );
@@ -67,7 +70,7 @@ export function LoginPage() {
     return (
       <LoginShell>
         <Paper p="xl" radius="md" withBorder>
-          <LoginLogo url={config.logoUrl} />
+          <LoginLogo url={logoUrl} />
           <Title mb="md" order={2} size="h3" ta="center">
             <Trans>Login as {config.remoteUser}</Trans>
           </Title>
@@ -139,7 +142,7 @@ export function LoginPage() {
         </Alert>
       ) : null}
       <Paper p="xl" radius="md" withBorder>
-        <LoginLogo url={config.logoUrl} />
+        <LoginLogo url={logoUrl} />
         <Title mb="md" order={2} size="h3" ta="center">
           {config.loginText || <Trans>Please sign in</Trans>}
         </Title>

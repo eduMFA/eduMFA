@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { UserListPage } from "./UserListPage";
 import {
   createEnvelopeResponse,
-  createLegacyAuthBridge,
+  stubSession,
   getFetchUrl
 } from "@/tests/fetchMockUtils";
 import { renderWithProviders } from "@/tests/renderWithProviders";
@@ -102,17 +102,14 @@ describe("UserListPage", () => {
 });
 
 function stubAdminSession(): void {
-  vi.stubGlobal(
-    "eduMfaLegacyAuth",
-    createLegacyAuthBridge({
-      auth_token: "legacy-token",
-      menus: [],
-      realm: "",
-      rights: ["userlist"],
-      role: "admin",
-      username: "admin"
-    })
-  );
+  stubSession({
+    auth_token: "legacy-token",
+    menus: [],
+    realm: "",
+    rights: ["userlist"],
+    role: "admin",
+    username: "admin"
+  });
 }
 
 function createBackendMock(): ReturnType<typeof vi.fn<typeof fetch>> {

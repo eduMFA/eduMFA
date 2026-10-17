@@ -6,11 +6,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { resetLoginFlow, setPendingPinChange } from "./loginFlowStore";
 import { PinChangePage } from "./PinChangePage";
 import { popFlash } from "@/lib/flash";
+import { getSessionState } from "@/auth/sessionStore";
 import {
-  createLegacyAuthBridge,
   createRouteFetchMock,
   findFetchCalls,
-  getJsonRequestBody
+  getJsonRequestBody,
+  stubSession
 } from "@/tests/fetchMockUtils";
 import { renderWithProviders } from "@/tests/renderWithProviders";
 
@@ -32,16 +33,12 @@ describe("PinChangePage", () => {
   });
 
   it("sets the new PIN and logs out", async () => {
-    const bridge = {
-      ...createLegacyAuthBridge({
-        auth_token: "jwt-1",
-        realm: "realm1",
-        role: "user",
-        username: "alice"
-      }),
-      logout: vi.fn()
-    };
-    vi.stubGlobal("eduMfaLegacyAuth", bridge);
+    stubSession({
+      auth_token: "jwt-1",
+      realm: "realm1",
+      role: "user",
+      username: "alice"
+    });
     const fetchMock = createRouteFetchMock([
       { method: "POST", path: "/token/setpin/HOTP0001", respond: () => 1 }
     ]);
@@ -70,7 +67,7 @@ describe("PinChangePage", () => {
       otppin: "1234"
     });
     await waitFor(() => {
-      expect(bridge.logout).toHaveBeenCalledTimes(1);
+      expect(getSessionState().session.authToken).toBeNull();
     });
     expect(popFlash()).toEqual({
       message: "PIN changed successfully.",

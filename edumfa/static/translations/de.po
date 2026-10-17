@@ -5793,3 +5793,9 @@ msgstr "Es wurden {{ auditdata.count }} Einträge gefunden."
 
 #~ msgid "Pass, if the user does not exist"
 #~ msgstr "Durchwinken, wenn der Benutzer nicht existiert"
+
+msgid "Switch to new UI"
+msgstr "Zur neuen Oberfläche wechseln"
+
+msgid "Switching interfaces opens the sign-in page."
+msgstr "Beim Wechsel der Oberfläche wird die Anmeldeseite geöffnet."

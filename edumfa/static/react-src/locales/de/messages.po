@@ -13,9 +13,17 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:299
+msgid "(none)"
+msgstr "(none)"
+
 #: react-src/features/audit/AuditLogPage.tsx:221
 msgid "{entryCount} entries found."
 msgstr "Es wurden {entryCount} Einträge gefunden."
+
+#: react-src/features/config/tokens/TokenConfigPage.tsx:125
+msgid "{label} Token Settings"
+msgstr "{label}-Token-Einstellungen"
 
 #: react-src/features/tokens/enroll/fields/ContactFields.tsx:111
 msgid "A token specific SMS gateway"
@@ -25,10 +33,19 @@ msgstr "Ein Token-spezifisches SMS-Gateway"
 msgid "Abort operation on unverifiable token"
 msgstr "Import abbrechen, wenn Token nicht verifiziert werden können"
 
+#: react-src/features/shell/AboutDialog.tsx:16
+msgid "About eduMFA Web Client"
+msgstr "Über das eduMFA WebUI"
+
 #: react-src/features/audit/AuditLogPage.tsx:449
 msgid "action"
 msgstr "Aktion"
 
+#: react-src/features/config/events/EventEditPage.tsx:291
+#: react-src/features/config/events/EventEditPage.tsx:294
+#: react-src/features/config/events/EventListPage.tsx:43
+#: react-src/features/config/policies/PolicyEditPage.tsx:425
+#: react-src/features/config/policies/PolicyListPage.tsx:155
 #: react-src/features/dashboard/DashboardPage.tsx:246
 msgid "Action"
 msgstr "Aktion"
@@ -37,16 +54,39 @@ msgstr "Aktion"
 msgid "action detail"
 msgstr "Aktionsdetail"
 
+#: react-src/features/config/caconnectors/CaConnectorListPage.tsx:70
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:77
+#: react-src/features/config/realms/RealmListPage.tsx:182
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:101
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:97
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:71
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:104
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:106
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:106
+msgid "Actions"
+msgstr "Aktionen"
+
+#: react-src/components/feedback/ActiveToggleBadge.tsx:31
 #: react-src/features/tokens/tokenBadges.tsx:63
 #: react-src/features/tokens/TokenListPage.tsx:163
 #: react-src/features/users/UserDetailsPage.tsx:362
 msgid "active"
 msgstr "aktiv"
 
+#: react-src/features/config/automation/DefinitionList.tsx:98
+#: react-src/features/config/events/EventEditPage.tsx:219
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:181
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:32
+#: react-src/features/config/policies/PolicyEditPage.tsx:312
+#: react-src/features/config/policies/PolicyListPage.tsx:112
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:265
 #: react-src/features/users/UserDetailsPage.tsx:357
 msgid "Active"
 msgstr "Aktiv"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:56
+msgid "Active condition {number}"
+msgstr "Aktive Bedingung {number}"
 
 #: react-src/features/dashboard/DashboardPage.tsx:316
 msgid "Active Events"
@@ -60,18 +100,39 @@ msgstr "Aktive Filter"
 msgid "Active Policies"
 msgstr "Aktive Richtlinien"
 
+#: react-src/features/config/servers/smsgateway/KeyValueTable.tsx:125
 #: react-src/features/users/UserDetailsPage.tsx:569
 msgid "Add"
 msgstr "Hinzufügen"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:163
+msgid "Add a condition"
+msgstr "Bedingung hinzufügen"
 
 #: react-src/features/users/UserAddPage.tsx:71
 msgid "Add a new user"
 msgstr "Benutzer hinzufügen"
 
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:120
+msgid "Add new question"
+msgstr "Neue Frage hinzufügen"
+
 #: react-src/features/users/UserListPage.tsx:240
 #: react-src/features/users/UserSidebar.tsx:82
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:415
+msgid "Additional conditions"
+msgstr "Weitere Bedingungen"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:336
+msgid "Admin"
+msgstr "Administrator"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:327
+msgid "Admin-Realm"
+msgstr "Admin-Realm"
 
 #: react-src/features/dashboard/DashboardPage.tsx:235
 msgid "Administration"
@@ -85,9 +146,35 @@ msgstr "Administrator"
 msgid "Administrator"
 msgstr "Administrator"
 
+#: react-src/features/config/system/SystemLayout.tsx:175
+msgid "All CA Connectors"
+msgstr "Alle CA-Konnektoren"
+
+#: react-src/features/config/machineresolvers/MachineResolverSidebar.tsx:37
+msgid "All Machine Resolvers"
+msgstr "Alle Maschinen-Resolver"
+
 #: react-src/features/machines/MachineSidebar.tsx:29
 msgid "All Machines"
 msgstr "Alle Maschinen"
+
+#: react-src/features/config/policies/PolicyListPage.tsx:213
+#: react-src/features/config/policies/PolicySidebar.tsx:21
+msgid "All Policies"
+msgstr "Alle Richtlinien"
+
+#: react-src/features/config/realms/RealmSidebar.tsx:29
+msgid "All Realms"
+msgstr "Alle Realms"
+
+#: react-src/features/config/resolvers/ResolverListPage.tsx:131
+#: react-src/features/config/resolvers/ResolverSidebar.tsx:35
+msgid "All Resolvers"
+msgstr "Alle Resolver"
+
+#: react-src/features/config/system/SystemLayout.tsx:92
+msgid "All SMS Gateways"
+msgstr "Alle SMS-Gateways"
 
 #: react-src/features/tokens/TokenSidebar.tsx:62
 msgid "All tokens"
@@ -96,6 +183,14 @@ msgstr "Alle Token"
 #: react-src/features/users/UserSidebar.tsx:62
 msgid "All users"
 msgstr "Alle Benutzer"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:273
+msgid "An Attribute or the DN to identify the machine"
+msgstr "Ein Attribut oder DN zur Identifizierung der Maschine"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:294
+msgid "An Attribute that contains the IP address."
+msgstr "Ein Attribut, das die IP-Adresse der Maschine enthält."
 
 #: react-src/features/recovery/RecoveryPage.tsx:44
 msgid "An Email to reset the password has been sent to you."
@@ -116,6 +211,22 @@ msgstr "beliebig"
 #: react-src/features/tokens/TokenGetSerialPage.tsx:190
 msgid "Any token type"
 msgstr "Beliebiger Tokentyp"
+
+#: react-src/features/config/tokens/types/YubicoConfigFields.tsx:40
+msgid "API client ID"
+msgstr "API Client ID"
+
+#: react-src/features/config/tokens/types/YubicoConfigFields.tsx:50
+#: react-src/features/config/tokens/types/YubicoConfigFields.tsx:54
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:97
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:142
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:148
+msgid "API Key"
+msgstr "API-Schlüssel"
+
+#: react-src/features/config/tokens/types/U2fConfigFields.tsx:33
+msgid "appId"
+msgstr "AppID"
 
 #: react-src/features/machines/MachineDetailsPage.tsx:188
 #: react-src/features/machines/MachineDetailsPage.tsx:383
@@ -185,14 +296,30 @@ msgstr "An eine neue Maschine anhängen"
 msgid "Attach Token"
 msgstr "Token anhängen"
 
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:120
+msgid "Attribute mapping"
+msgstr "Attributszuordnung"
+
+#: react-src/features/shell/AppNavbar.tsx:117
+msgid "Audit"
+msgstr "Audit"
+
 #: react-src/features/audit/AuditLogPage.tsx:222
 msgid "Audit log"
 msgstr "Audit-Log"
 
-#: react-src/features/login/useAuthenticate.ts:64
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:19
+msgid "Authentication"
+msgstr "Authentifizierung"
+
+#: react-src/features/login/useAuthenticate.ts:65
 #: react-src/features/tokens/details/TokenFunctionsCard.tsx:121
 msgid "Authentication failed."
 msgstr "Authentisierung fehlgeschlagen."
+
+#: react-src/features/config/resolvers/ScimResolverPage.tsx:8
+msgid "Authentication Server URI"
+msgstr "URI des Authentisierungsservers"
 
 #: react-src/features/dashboard/DashboardPage.tsx:190
 msgid "Authentications"
@@ -202,18 +329,80 @@ msgstr "Authentifizierungen"
 msgid "Authentications in the last 24 hours"
 msgstr "Authentifizierungen in den letzten 24 Stunden"
 
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:111
+msgid "Auto resync timeout"
+msgstr "Zeitüberschreitung der automatischen Resynchronisation"
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:102
+msgid "Automatic resync during authentication"
+msgstr "Automatische Resynchronisation während der Authentifizierung"
+
 #: react-src/auth/useFidoErrorMessage.ts:48
 msgid "Bad U2F Request"
 msgstr "Fehlerhafte U2F-Anfrage"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:149
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:214
+msgid "Base Config"
+msgstr "Basiskonfiguration"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:178
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:60
+msgid "Base DN"
+msgstr "Base-DN"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:185
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:72
+msgid "Bind DN"
+msgstr "Bind-DN"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:193
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:77
+msgid "Bind Password"
+msgstr "Bind-Passwort"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:200
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:67
+msgid "Bind Type"
+msgstr "Bind-Typ"
 
 #: react-src/features/tokens/TokenGetSerialPage.tsx:137
 msgid "By entering an OTP value you can get the serial number of the token. You can also enter additional optional parameters, to narrow down the search for the token. So you can only search within certain token types or in assigned or unassigned tokens."
 msgstr "Durch Eingabe eines OTP-Wertes können Sie die Seriennummer des Tokens bestimmen. Mit den optionalen Parametern lässt sich die Suche eingrenzen, etwa auf bestimmte Tokentypen oder auf zugewiesene bzw. nicht zugewiesene Token."
 
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:153
+msgid "CA Certificate"
+msgstr "Zertifikat der Zeritfizierungsstelle (CA)"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:252
+msgid "CA certificate (filename)"
+msgstr "CA-Zertifikat (Dateiname)"
+
 #: react-src/features/tokens/enroll/fields/CertificateFields.tsx:38
 msgid "CA Connector"
 msgstr "CA-Konnektor"
 
+#: react-src/features/config/caconnectors/CaConnectorListPage.tsx:55
+msgid "CA Connector name"
+msgstr "CA-Konnektor-Name"
+
+#: react-src/features/config/caconnectors/CaConnectorListPage.tsx:112
+msgid "CA Connectors"
+msgstr "CA-Konnektoren"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:161
+msgid "CA Key"
+msgstr "Schlüssel der Zertifizierungsstelle"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:279
+msgid "CA specific options"
+msgstr "CA-spezifische Optionen"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:90
+msgid "Cache Timeout (seconds)"
+msgstr "Cache-Zeitüberschreitung (Sekunden)"
+
+#: react-src/features/config/realms/RealmListPage.tsx:204
 #: react-src/features/machines/MachineDetailsPage.tsx:244
 #: react-src/features/tokens/details/EditableValueRow.tsx:99
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:216
@@ -223,6 +412,10 @@ msgstr "CA-Konnektor"
 msgid "Cancel"
 msgstr "Abbrechen"
 
+#: react-src/features/config/system/SystemLayout.tsx:167
+msgid "CAs"
+msgstr "Zertifizierungsstellen"
+
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:765
 msgid "certificate"
 msgstr "Zertifikat"
@@ -231,19 +424,35 @@ msgstr "Zertifikat"
 msgid "Certificate (PEM)"
 msgstr "Zertifikat (PEM)"
 
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:201
+msgid "Certificate Directory"
+msgstr "Zertifikats-Verzeichnis"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:221
+msgid "Certificate Revocation List"
+msgstr "Zertifikatssperrliste (CRL)"
+
 #: react-src/features/tokens/enroll/fields/CertificateFields.tsx:76
 msgid "Certificate Signing Request (PEM)"
 msgstr "Zertifikatsanforderung (PEM)"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:191
+msgid "Certificate Signing Request Directory"
+msgstr "Verzeichnis für Zertifikatsanfragen"
 
 #: react-src/features/tokens/enroll/fields/CertificateFields.tsx:51
 msgid "Certificate Template"
 msgstr "Zertifikatsvorlage"
 
-#: react-src/features/login/useAuthenticate.ts:102
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:177
+msgid "Certificates Templates file"
+msgstr "Datei mit Zertifikatstemplates"
+
+#: react-src/features/login/useAuthenticate.ts:98
 msgid "Challenge Response Authentication. You are not completely authenticated, yet."
 msgstr "Challenge-Response-Authentifizierung. Sie sind noch nicht vollständig angemeldet."
 
-#: react-src/features/login/useAuthenticate.ts:56
+#: react-src/features/login/useAuthenticate.ts:57
 msgid "Challenge Response Authentication. Your response was not valid!"
 msgstr "Challenge-Response-Authentifizierung. Ihre Antwort war ungültig!"
 
@@ -260,6 +469,10 @@ msgstr "Passwort ändern"
 msgid "Change PIN"
 msgstr "PIN ändern"
 
+#: react-src/features/config/policies/PolicyEditPage.tsx:369
+msgid "Check all possible resolvers of a user to match the resolver in this policy."
+msgstr "Alle möglichen Resolver eines Benutzers auf Übereinstimmung mit dem Resolver dieser Richtlinie prüfen."
+
 #: react-src/features/tokens/details/TokenFunctionsCard.tsx:291
 msgid "Check OTP only."
 msgstr "Nur den OTP-Wert prüfen."
@@ -273,13 +486,25 @@ msgstr "PIN lokal verifizieren"
 msgid "Check with OTP PIN."
 msgstr "OTP PIN und OTP Wert prüfen."
 
-#: react-src/features/login/LoginPage.tsx:168
+#: react-src/features/login/LoginPage.tsx:171
 msgid "Choose a realm..."
 msgstr "Realm auswählen..."
 
 #: react-src/features/audit/AuditLogPage.tsx:273
 msgid "Clear all filters"
 msgstr "Alle Filter zurücksetzen"
+
+#: react-src/features/config/realms/RealmSidebar.tsx:36
+msgid "Clear default realm"
+msgstr "Standard-Realm zurücksetzen"
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:49
+msgid "Clear failcounter after minutes"
+msgstr "Fehlversuchszähler nach Minuten zurücksetzen"
+
+#: react-src/components/forms/CheckboxPickList.tsx:93
+msgid "Clear filter"
+msgstr "Filter zurücksetzen"
 
 #: react-src/features/audit/AuditLogPage.tsx:566
 msgid "clearance"
@@ -302,6 +527,9 @@ msgid "client"
 msgstr "Client"
 
 #: react-src/features/components/ClientTypePage.tsx:66
+#: react-src/features/config/policies/PolicyEditPage.tsx:398
+#: react-src/features/config/policies/PolicyListPage.tsx:181
+#: react-src/features/config/resolvers/ScimResolverPage.tsx:18
 msgid "Client"
 msgstr "Client"
 
@@ -309,13 +537,71 @@ msgstr "Client"
 msgid "Client applications seen by this eduMFA instance."
 msgstr "Client-Anwendungen, die diese eduMFA-Instanz gesehen hat."
 
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:258
+msgid "Client certificate (filename)"
+msgstr "Client-Zertifikat (Dateiname)"
+
 #: react-src/auth/useFidoErrorMessage.ts:49
 msgid "Client Configuration is not supported."
 msgstr "Die Client-Konfiguration wird nicht unterstützt."
 
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:94
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:129
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:135
+msgid "Client ID"
+msgstr "Client-ID"
+
 #: react-src/features/tokens/enroll/results/OtpResult.tsx:122
 msgid "Client Part"
 msgstr "Client-Teil"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:264
+msgid "Client private key (filename)"
+msgstr "Privater Schlüssel des Clients (Dateiname)"
+
+#: react-src/features/config/resolvers/ResolverTestResultAlert.tsx:28
+#: react-src/features/shell/AboutDialog.tsx:64
+msgid "Close"
+msgstr "Schließen"
+
+#: react-src/features/config/events/EventConditionsEditor.tsx:82
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:92
+msgid "Close all groups"
+msgstr "Alle Gruppen zuklappen"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:41
+msgid "Comparator"
+msgstr "Vergleichsoperator"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:104
+msgid "Comparator {number}"
+msgstr "Vergleichsoperator {number}"
+
+#: react-src/features/shell/AppNavbar.tsx:124
+msgid "Components"
+msgstr "Komponenten"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:321
+msgid "Condition"
+msgstr "Bedingung"
+
+#: react-src/features/config/events/EventEditPage.tsx:280
+#: react-src/features/config/events/EventListPage.tsx:35
+msgid "Conditions"
+msgstr "Bedingungen"
+
+#: react-src/features/shell/AppNavbar.tsx:110
+msgid "Config"
+msgstr "Konfiguration"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:47
+msgid "Connection Parameters"
+msgstr "Verbindungsparameter"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:136
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:201
+msgid "Connector name"
+msgstr "Konnektorname"
 
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:431
 #: react-src/features/tokens/TokenApplicationsPage.tsx:153
@@ -328,9 +614,110 @@ msgstr "Zähler"
 msgid "Count Window"
 msgstr "Zählerfenster"
 
+#: react-src/features/config/system/TokenDefaultsCard.tsx:25
+msgid "Count Window of newly enrolled tokens"
+msgstr "Zählerfenster für neu ausgerollte Token"
+
+#: react-src/features/config/resolvers/ResolverConnectionPage.tsx:76
+msgid "Create a new {label} Resolver"
+msgstr "Neuen {label}-Resolver anlegen"
+
+#. placeholder {0}: values.identifier
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:161
+msgid "Create a new eduMFA server {0}"
+msgstr "Neuen eduMFA-Server {0} anlegen"
+
+#: react-src/features/config/events/EventEditPage.tsx:157
+msgid "Create a new Event Handler"
+msgstr "Erstelle eine neue Ereignisdefinition"
+
+#: react-src/features/config/machineresolvers/HostsMachineResolverPage.tsx:64
+msgid "Create a new hosts Machine Resolver"
+msgstr "Erzeuge einen neuen Hosts-Maschinen-Resolver"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverPage.tsx:49
+msgid "Create a new LDAP Machine Resolver"
+msgstr "Neuen LDAP-Maschinenresolver anlegen"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:50
+msgid "Create a new Local CA Connector"
+msgstr "Erzeuge einen neuen Lokalen CA-Konnektor"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:69
+msgid "Create a new Microsoft CA Connector"
+msgstr "Erzeuge einen neuen Microsoft CA-Konnektor"
+
+#: react-src/features/config/resolvers/PasswdResolverPage.tsx:30
+msgid "Create a new Passwd Resolver"
+msgstr "Erzeuge einen neuen Passwd-Resolver"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:124
+msgid "Create a new Periodic Task"
+msgstr "Erstelle eine regelmäßigen Aufgabe"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:93
+msgid "Create a new Policy"
+msgstr "Erzeuge eine neue Richtlinie"
+
+#. placeholder {0}: values.identifier
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:208
+msgid "Create a new RADIUS server {0}"
+msgstr "Neuen RADIUS-Server {0} anlegen"
+
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:133
+msgid "Create a new Service ID {typedName}"
+msgstr "Neue Service-ID {typedName} anlegen"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:208
+msgid "Create a new SMS gateway"
+msgstr "Ein neues SMS-Gateway definieren"
+
+#. placeholder {0}: values.identifier
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:198
+msgid "Create a new SMTP server {0}"
+msgstr "Neuen SMTP-Server {0} anlegen"
+
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:133
+msgid "Create a new Tokengroup {typedName}"
+msgstr "Neue Tokengruppe {typedName} anlegen"
+
 #: react-src/features/users/UserAddPage.tsx:70
 msgid "Create a user in an editable user store."
 msgstr "Legen Sie einen Benutzer in einem editierbaren Benutzerspeicher an."
+
+#: react-src/features/shell/AutoCreateRealmDialog.tsx:44
+msgid "Create default realm"
+msgstr "Standard-Realm anlegen"
+
+#: react-src/features/config/automation/DefinitionLayout.tsx:55
+msgid "Create Event Handler"
+msgstr "Ereignisbehandlung anlegen"
+
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:165
+msgid "Create new API key"
+msgstr "Erzeuge einen neuen API-Schlüssel"
+
+#: react-src/features/config/policies/PolicySidebar.tsx:30
+msgid "Create new Policy"
+msgstr "Erzeuge einen neue Richtlinie"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:109
+#: react-src/features/config/system/SystemLayout.tsx:85
+msgid "Create new SMS Gateway definition"
+msgstr "Eine neue SMS-Gateway-Definition erzeugen"
+
+#: react-src/features/config/automation/DefinitionLayout.tsx:57
+msgid "Create Periodic Task"
+msgstr "Periodische Aufgabe anlegen"
+
+#: react-src/features/config/realms/RealmListPage.tsx:317
+#: react-src/features/shell/AutoCreateRealmDialog.tsx:64
+msgid "Create realm"
+msgstr "Realm anlegen"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:208
+msgid "CRL Configuration"
+msgstr "CRL Konfiguration"
 
 #: react-src/features/users/UserDetailsPage.tsx:511
 #: react-src/features/users/UserDetailsPage.tsx:512
@@ -354,17 +741,77 @@ msgid "Custom attributes"
 msgstr "Benutzerdefinierte Attribute"
 
 #: react-src/features/dashboard/DashboardPage.tsx:144
+#: react-src/features/shell/AppNavbar.tsx:75
 msgid "Dashboard"
 msgstr "Dashboard"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:23
+msgid "Database"
+msgstr "Datenbank"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:46
+msgid "Database Encoding"
+msgstr "Datenbank-Enkodierung"
 
 #: react-src/features/dashboard/DashboardPage.tsx:240
 msgid "Date"
 msgstr "Datum"
 
+#: react-src/features/config/realms/RealmListPage.tsx:118
+#: react-src/features/config/realms/RealmListPage.tsx:129
+msgid "Default"
+msgstr "Standard"
+
+#: react-src/features/config/tokens/types/DayPasswordConfigFields.tsx:45
+#: react-src/features/config/tokens/types/HotpConfigFields.tsx:35
+#: react-src/features/config/tokens/types/TotpConfigFields.tsx:80
+msgid "Default Hashlib"
+msgstr "Standard Hashverfahren"
+
+#: react-src/features/config/tokens/types/RemoteConfigFields.tsx:28
+msgid "Default Remote Server"
+msgstr "Standard Remote eduMFA-Server"
+
+#: react-src/features/config/tokens/types/TotpConfigFields.tsx:61
+msgid "Default Time Shift"
+msgstr "Standard Zeitabweichung"
+
+#: react-src/features/config/tokens/types/DayPasswordConfigFields.tsx:34
+#: react-src/features/config/tokens/types/TotpConfigFields.tsx:41
+msgid "Default Time Step"
+msgstr "Standard Zeitschritt"
+
+#: react-src/features/config/tokens/types/TotpConfigFields.tsx:50
+msgid "Default Time Window"
+msgstr "Standard Zeitfenster"
+
+#: react-src/components/feedback/useDeleteConfirmation.tsx:39
+#: react-src/features/config/automation/DefinitionList.tsx:152
+#: react-src/features/config/caconnectors/CaConnectorListPage.tsx:102
+#: react-src/features/config/events/EventEditPage.tsx:177
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:112
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:146
+#: react-src/features/config/policies/PolicyEditPage.tsx:222
+#: react-src/features/config/policies/PolicyListPage.tsx:205
+#: react-src/features/config/realms/RealmListPage.tsx:246
+#: react-src/features/config/resolvers/ResolverListPage.tsx:121
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:122
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:118
+#: react-src/features/config/servers/smsgateway/KeyValueTable.tsx:77
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:92
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:125
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:127
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:126
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:91
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:120
 #: react-src/features/tokens/details/TokenDetailsPage.tsx:123
 #: react-src/features/users/UserDetailsPage.tsx:601
 msgid "Delete"
 msgstr "Löschen"
+
+#: react-src/components/feedback/useDeleteConfirmation.tsx:55
+msgid "Delete Configuration"
+msgstr "Konfiguration löschen"
 
 #: react-src/features/tokens/details/TokenDetailsPage.tsx:164
 #: react-src/features/tokens/details/TokenDetailsPage.tsx:184
@@ -388,6 +835,21 @@ msgstr "Benutzer löschen"
 msgid "description"
 msgstr "Beschreibung"
 
+#: react-src/features/config/automation/DefinitionList.tsx:117
+#: react-src/features/config/events/EventEditPage.tsx:211
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:173
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:231
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:95
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:345
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:91
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:240
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:60
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:326
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:98
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:181
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:94
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:181
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:94
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:475
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:592
 #: react-src/features/users/UserPasswordPage.tsx:110
@@ -407,9 +869,33 @@ msgstr "Detail"
 msgid "Details"
 msgstr "Details"
 
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:335
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:86
+msgid "Dictionary"
+msgstr "Wörterbuch"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:198
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:298
 msgid "Disable"
 msgstr "Deaktivieren"
+
+#. placeholder {0}: row.name
+#: react-src/features/config/automation/DefinitionList.tsx:104
+msgid "Disable {0}"
+msgstr "{0} deaktivieren"
+
+#: react-src/features/config/system/ServerSettingsCard.tsx:30
+msgid "Disable automatic challenge janitor. You should use the token janitor to clean up old challenges and the JWT blocklist if you disable the automatic challenge janitor."
+msgstr "Deaktivieren Sie den automatischen Challenge Cleanup. In diesem Fall sollten Sie den token janitor verwenden"
+
+#: react-src/features/config/system/ServerSettingsCard.tsx:44
+msgid "Disable client tracking. This will disable the recording of client IP addresses and user agents in the database. This can be used to reduce database locks and load in environments with many concurrent requests."
+msgstr "Deaktivieren Sie die Protokollierung der Clients. Diese Option deaktiviert die Aufzeichnung von IP-Adressen und User Agents der Clients in der Datenbank. Dies kann verwendet werden, um die Last auf der Datenbank sowie das Locking der Datenbank in Umgebungen mit vielen gleichzeitigen Anfragen zu reduzieren."
+
+#. placeholder {0}: policy.name
+#: react-src/features/config/policies/PolicyListPage.tsx:117
+msgid "Disable policy {0}"
+msgstr "Richtlinie {0} deaktivieren"
 
 #: react-src/features/tokens/tokenBadges.tsx:57
 msgid "Disable token"
@@ -419,6 +905,14 @@ msgstr "Token deaktivieren"
 #: react-src/features/users/UserDetailsPage.tsx:361
 msgid "disabled"
 msgstr "deaktiviert"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:109
+msgid "DN of a new created user object"
+msgstr "DN eines neu erzeugten Benutzerobjekts"
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:60
+msgid "Do not use an authentication counter per token."
+msgstr "Den Authentifizierungszähler pro Token nicht verwenden."
 
 #: react-src/features/tokens/TokenImportPage.tsx:107
 msgid "Do not verify the authenticity"
@@ -437,9 +931,48 @@ msgstr "Möchten Sie den Token {serial} wirklich löschen?"
 msgid "Do you really want to delete the user in the user store?"
 msgstr "Wollen Sie wirklich den Benutzer in der Benutzerquelle löschen?"
 
+#: react-src/features/config/tokens/TokenConfigPage.tsx:239
+msgid "Do you really want to delete this configuration entry?"
+msgstr "Möchten Sie diesen Konfigurationseintrag wirklich löschen?"
+
+#: react-src/features/config/automation/DefinitionList.tsx:142
+#: react-src/features/config/events/EventEditPage.tsx:170
+msgid "Do you really want to delete this event?"
+msgstr "Wollen Sie wirklich diese Ereignisdefinition löschen?"
+
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:105
+msgid "Do you really want to delete this machine resolver?"
+msgstr "Wollen Sie wirklich diesen Maschinen-Resolver löschen?"
+
+#: react-src/components/feedback/useDeleteConfirmation.tsx:44
+msgid "Do you really want to delete this object?"
+msgstr "Wollen Sie dieses Objekt wirklich löschen?"
+
+#: react-src/features/config/automation/DefinitionList.tsx:144
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:138
+msgid "Do you really want to delete this periodic task?"
+msgstr "Wollen Sie wirklich diese Regelmäßige Aufgabe löschen?"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:211
+#: react-src/features/config/policies/PolicyListPage.tsx:198
+msgid "Do you really want to delete this policy?"
+msgstr "Wollen Sie diese Richtlinie wirklich löschen?"
+
+#: react-src/features/config/resolvers/ResolverListPage.tsx:115
+msgid "Do you really want to delete this resolver?"
+msgstr "Wollen Sie diesen Benutzer-Resolver wirklich löschen?"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:302
+msgid "Domain CA"
+msgstr "Domänen-CA"
+
 #: react-src/features/audit/AuditLogPage.tsx:216
 msgid "Download audit log as CSV"
 msgstr "Audit-Log als CSV herunterladen"
+
+#: react-src/features/config/system/SystemDocumentationPage.tsx:48
+msgid "Download documentation"
+msgstr "Dokumentation herunterladen"
 
 #: react-src/features/tokens/enroll/results/CertificateResult.tsx:44
 msgid "Download the certificate"
@@ -449,35 +982,162 @@ msgstr "Zertifikat herunterladen"
 msgid "Download the PKCS12 file"
 msgstr "PKCS12-Datei herunterladen"
 
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:12
+msgid "Driver"
+msgstr "Treiber"
+
 #: react-src/features/audit/AuditLogPage.tsx:442
 msgid "duration"
 msgstr "Dauer"
 
+#: react-src/features/config/caconnectors/CaConnectorListPage.tsx:81
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:88
+#: react-src/features/config/realms/RealmListPage.tsx:227
+#: react-src/features/config/resolvers/ResolverListPage.tsx:98
 #: react-src/features/tokens/details/EditableValueRow.tsx:111
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:219
 msgid "Edit"
 msgstr "Bearbeiten"
 
+#: react-src/features/config/resolvers/ResolverConnectionPage.tsx:72
+msgid "Edit {label} Resolver {resolvername}"
+msgstr "{label}-Resolver {resolvername} bearbeiten"
+
+#. placeholder {0}: existing.identifier
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:159
+msgid "Edit eduMFA server {0}"
+msgstr "eduMFA-Server {0} bearbeiten"
+
+#. placeholder {0}: existing.id
+#: react-src/features/config/events/EventEditPage.tsx:155
+msgid "Edit Event Handler {0}"
+msgstr "Ereignisbehandlung {0} bearbeiten"
+
+#: react-src/features/config/machineresolvers/HostsMachineResolverPage.tsx:62
+msgid "Edit hosts Machine Resolver {resolvername}"
+msgstr "Hosts-Maschinenresolver {resolvername} bearbeiten"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverPage.tsx:47
+msgid "Edit LDAP Machine Resolver {resolvername}"
+msgstr "LDAP-Maschinenresolver {resolvername} bearbeiten"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:48
+msgid "Edit Local CA Connector {connectorname}"
+msgstr "Lokalen CA-Konnektor {connectorname} bearbeiten"
+
 #: react-src/features/machines/MachineSidebar.tsx:45
 msgid "Edit Machine Resolvers"
 msgstr "Maschinen-Resolver bearbeiten"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:67
+msgid "Edit Microsoft CA Connector {connectorname}"
+msgstr "Microsoft-CA-Konnektor {connectorname} bearbeiten"
 
 #: react-src/features/machines/MachineDetailsPage.tsx:258
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:230
 msgid "Edit Options"
 msgstr "Optionen bearbeiten"
 
+#: react-src/features/config/resolvers/PasswdResolverPage.tsx:28
+msgid "Edit Passwd Resolver {resolvername}"
+msgstr "Passwd-Resolver {resolvername} bearbeiten"
+
+#. placeholder {0}: existing.id
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:122
+msgid "Edit Periodic Task {0}"
+msgstr "Periodische Aufgabe {0} bearbeiten"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:91
+msgid "Edit Policy {policyname}"
+msgstr "Richtlinie {policyname} bearbeiten"
+
+#. placeholder {0}: existing.identifier
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:206
+msgid "Edit RADIUS server {0}"
+msgstr "RADIUS-Server {0} bearbeiten"
+
 #: react-src/features/users/UserSidebar.tsx:93
 msgid "Edit realms"
 msgstr "Realms bearbeiten"
+
+#: react-src/features/config/machineresolvers/MachineResolverSidebar.tsx:43
+#: react-src/features/config/resolvers/ResolverSidebar.tsx:41
+msgid "Edit Resolver {resolverName}"
+msgstr "Resolver {resolverName} bearbeiten"
+
+#. placeholder {0}: existing.servicename
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:131
+msgid "Edit Service ID {0}"
+msgstr "Service-ID {0} bearbeiten"
+
+#. placeholder {0}: values.name
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:206
+msgid "Edit SMS gateway {0}"
+msgstr "SMS-Gateway {0} bearbeiten"
+
+#. placeholder {0}: existing.identifier
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:196
+msgid "Edit SMTP server {0}"
+msgstr "SMTP-Server {0} bearbeiten"
+
+#. placeholder {0}: existing.groupname
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:131
+msgid "Edit Tokengroup {0}"
+msgstr "Tokengruppe {0} bearbeiten"
 
 #: react-src/features/users/UserDetailsPage.tsx:395
 msgid "Edit user"
 msgstr "Benutzer bearbeiten"
 
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:101
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:26
+msgid "Edit user store"
+msgstr "Benutzerquelle editierbar"
+
+#: react-src/features/shell/AboutDialog.tsx:43
+msgid "eduMFA authentication backend"
+msgstr "eduMFA Authentisierungsbackend"
+
+#: react-src/features/shell/NoTokenDialog.tsx:21
+msgid "eduMFA is a system to manage your tokens. You currently have no token assigned. You can manage your own tokens here - you can create new tokens, set the PIN of the tokens, disable tokens or even delete tokens."
+msgstr "eduMFA ist ein System zur Verwaltung Ihrer Token. Ihnen ist derzeit kein Token zugewiesen. Hier können Sie Ihre eigenen Token verwalten: neue Token anlegen, deren PIN festlegen sowie Token deaktivieren oder löschen."
+
+#: react-src/features/shell/AppShell.tsx:120
+msgid "eduMFA is running in DEBUG mode with PASSWORDS being written to the log file. You can change the debug level in edumfa.cfg. Afterwards be sure to remove the logfile!"
+msgstr "eduMFA läuft im DEBUG-Modus. Dabei werden PASSWÖRTER in die Protokolldatei geschrieben. Sie können die Protokollierungsstufe in edumfa.cfg ändern. Löschen Sie anschließend unbedingt die Protokolldatei!"
+
+#: react-src/features/shell/AppShell.tsx:112
+msgid "eduMFA is running in DEBUG mode. You can change the debug level in edumfa.cfg."
+msgstr "eduMFA läuft im DEBUG-Modus. Sie können die Protokollierungsstufe in edumfa.cfg ändern."
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:389
+msgid "eduMFA Node"
+msgstr "eduMFA Knoten"
+
 #: react-src/features/audit/AuditLogPage.tsx:577
 msgid "eduMFA server"
 msgstr "eduMFA Server"
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:125
+msgid "eduMFA Server Config saved."
+msgstr "eduMFA Server-Konfiguration erfolgreich gespeichert."
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:143
+#: react-src/features/config/system/SystemLayout.tsx:80
+msgid "eduMFA servers"
+msgstr "eduMFA Server"
+
+#: react-src/features/shell/AboutDialog.tsx:19
+msgid "eduMFA Single Page Web Client"
+msgstr "eduMFA Single Page Web Client"
+
+#: react-src/features/shell/LockScreenDialog.tsx:63
+msgid "eduMFA UI is locked"
+msgstr "Die eduMFA UI ist gesperrt"
+
+#: react-src/features/shell/AboutDialog.tsx:37
+msgid "eduMFA, including this client, was forked from privacyIDEA, which was licensed by NetKnights GmbH."
+msgstr "eduMFA einschließlich dieses Clients ist eine Abspaltung von privacyIDEA, das von der NetKnights GmbH lizenziert wurde."
 
 #: react-src/features/users/userFieldLabels.ts:11
 #: react-src/features/users/UserListPage.tsx:174
@@ -501,9 +1161,20 @@ msgstr "E-Mail-Adresse"
 msgid "Email Token Config"
 msgstr "E-Mail-Token-Konfiguration"
 
+#: react-src/features/config/policies/PolicyEditPage.tsx:198
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:316
 msgid "Enable"
 msgstr "Aktivieren"
+
+#. placeholder {0}: row.name
+#: react-src/features/config/automation/DefinitionList.tsx:103
+msgid "Enable {0}"
+msgstr "{0} aktivieren"
+
+#. placeholder {0}: policy.name
+#: react-src/features/config/policies/PolicyListPage.tsx:118
+msgid "Enable policy {0}"
+msgstr "Richtlinie {0} aktivieren"
 
 #: react-src/features/tokens/tokenBadges.tsx:57
 msgid "Enable token"
@@ -517,6 +1188,18 @@ msgstr "Enddatum vor dem Startdatum!"
 #: react-src/features/audit/AuditLogPage.tsx:435
 msgid "enddate"
 msgstr "Enddatum"
+
+#: react-src/features/config/resolvers/HttpResolverPage.tsx:8
+msgid "Endpoint (URL)"
+msgstr "Endpunkt (URL)"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:308
+msgid "Enforce Message-Authenticator"
+msgstr "Message-Authenticator erzwingen"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:306
+msgid "Enforce usage of Message-Authenticator attribute"
+msgstr "Verwendung des Attributs Message-Authenticator erzwingen"
 
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:396
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:508
@@ -544,6 +1227,14 @@ msgstr "Der Rollout wurde erfolgreich überprüft."
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:119
 msgid "Enrollment verification failed."
 msgstr "Die Überprüfung des Rollouts ist fehlgeschlagen."
+
+#: react-src/features/config/resolvers/ResolverConnectionPage.tsx:254
+msgid "Enter a valid JSON object."
+msgstr "Geben Sie ein gültiges JSON-Objekt ein."
+
+#: react-src/features/config/resolvers/ResolverConnectionPage.tsx:256
+msgid "Enter an HTTP or HTTPS URL."
+msgstr "Geben Sie eine HTTP- oder HTTPS-URL ein."
 
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:352
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:356
@@ -601,13 +1292,33 @@ msgstr "Geben Sie die 12-stellige Yubikey-Kennung ein..."
 msgid "Enter the secret..."
 msgstr "Geheimnis eingeben..."
 
-#: react-src/features/login/LoginPage.tsx:136
+#: react-src/features/login/LoginPage.tsx:139
 msgid "Enter your username and password and click Log In to authenticate."
 msgstr "Geben Sie Benutzername und Passwort ein und klicken Sie auf Anmelden, um sich zu authentifizieren."
 
+#: react-src/features/config/events/EventEditPage.tsx:198
+msgid "Event handler saved."
+msgstr "Ereignisbehandlung gespeichert."
+
+#: react-src/features/config/automation/DefinitionLayout.tsx:40
+#: react-src/features/config/automation/DefinitionList.tsx:162
+msgid "Event Handlers"
+msgstr "Ereignisbehandlungen"
+
+#: react-src/features/config/ConfigLayout.tsx:58
+#: react-src/features/config/events/EventEditPage.tsx:227
+#: react-src/features/config/events/EventListPage.tsx:20
 #: react-src/features/dashboard/DashboardPage.tsx:313
 msgid "Events"
 msgstr "Ereignisse"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:206
+msgid "Every day at 10:05"
+msgstr "Täglich um 10:05 Uhr"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:204
+msgid "Every ten minutes"
+msgstr "Alle zehn Minuten"
 
 #: react-src/features/tokens/TokenChallengesPage.tsx:122
 msgid "Expiration"
@@ -652,9 +1363,43 @@ msgstr "Aktualisieren des Benutzers fehlgeschlagen."
 msgid "failed users / tokens"
 msgstr "Fehler Benutzer / Token"
 
+#: react-src/features/config/machineresolvers/HostsMachineResolverPage.tsx:177
+#: react-src/features/config/resolvers/PasswdResolverPage.tsx:108
+msgid "File name"
+msgstr "Dateiname"
+
 #: react-src/features/tokens/TokenImportPage.tsx:148
 msgid "File type"
 msgstr "Dateityp"
+
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:56
+#: react-src/features/config/policies/PolicyListPage.tsx:157
+msgid "Filter actions"
+msgstr "Aktionen filtern"
+
+#: react-src/features/config/events/EventConditionsEditor.tsx:48
+msgid "Filter conditions"
+msgstr "Bedingungen filtern"
+
+#: react-src/features/config/automation/DefinitionList.tsx:175
+msgid "Filter definitions"
+msgstr "Definitionen filtern"
+
+#: react-src/components/forms/CheckboxPickList.tsx:84
+msgid "Filter entries"
+msgstr "Einträge filtern"
+
+#: react-src/features/config/policies/PolicyListPage.tsx:136
+msgid "Filter policy name"
+msgstr "Richtliniennamen filtern"
+
+#: react-src/features/config/policies/PolicyListPage.tsx:150
+msgid "Filter scope"
+msgstr "Geltungsbereich filtern"
+
+#: react-src/components/forms/CheckboxPickList.tsx:89
+msgid "filter..."
+msgstr "Filtern …"
 
 #: react-src/features/audit/AuditLogPage.tsx:240
 msgid "Filters"
@@ -713,6 +1458,10 @@ msgstr "Geheimnis auf dem Server erzeugen"
 msgid "Generate the static password on the Server"
 msgstr "Das Passwort auf dem Server erzeugen"
 
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:293
+msgid "Get available CAs"
+msgstr "Verfügbare CAs abrufen"
+
 #: react-src/features/tokens/TokenSidebar.tsx:146
 msgid "Get Serial"
 msgstr "Seriennummer bestimmen"
@@ -724,6 +1473,10 @@ msgstr "Seriennummer bestimmen"
 #: react-src/features/tokens/TokenGetSerialPage.tsx:144
 msgid "Get Serial number by OTP value"
 msgstr "Seriennummer anhand eines OTP-Wertes bestimmen"
+
+#: react-src/features/config/system/SystemLayout.tsx:149
+msgid "Get System Documentation"
+msgstr "System Dokumentation"
 
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:208
 msgid "Get the Authenticator App for Android."
@@ -749,6 +1502,11 @@ msgstr "Vorname"
 msgid "givenname"
 msgstr "Vorname"
 
+#: react-src/features/config/events/EventEditPage.tsx:236
+#: react-src/features/config/events/EventListPage.tsx:25
+msgid "Handlermodule"
+msgstr "Handlermodul"
+
 #: react-src/features/dashboard/DashboardPage.tsx:166
 msgid "Hardware"
 msgstr "Hardware"
@@ -757,9 +1515,50 @@ msgstr "Hardware"
 msgid "Hash algorithm"
 msgstr "Hash-Algorithmus"
 
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:292
+msgid "Header name"
+msgstr "Header-Name"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:299
+msgid "Header value"
+msgstr "Header-Wert"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:288
+msgid "Headers"
+msgstr "Header"
+
+#: react-src/features/config/resolvers/HttpResolverPage.tsx:31
+msgid "Headers (JSON format)"
+msgstr "Header (JSON Format)"
+
+#: react-src/features/config/automation/DefinitionLayout.tsx:69
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:169
+msgid "Help"
+msgstr "Hilfe"
+
 #: react-src/features/users/UserSidebar.tsx:115
 msgid "Help about manage Users"
 msgstr "Hilfe zur Benutzerverwaltung"
+
+#: react-src/features/config/policies/PolicySidebar.tsx:38
+msgid "Help about Policies"
+msgstr "Hilfe zu Richtlinien"
+
+#: react-src/features/config/system/SystemLayout.tsx:66
+msgid "Help about RADIUS-Server"
+msgstr "Hilfe zu RADIUS Servern"
+
+#: react-src/features/config/realms/RealmSidebar.tsx:46
+msgid "Help about Realms"
+msgstr "Hilfe zu Realms"
+
+#: react-src/features/config/system/SystemLayout.tsx:88
+msgid "Help about SMS-Gateways"
+msgstr "Hilfe zu SMS-Gateways"
+
+#: react-src/features/config/system/SystemLayout.tsx:55
+msgid "Help about SMTP-Servers"
+msgstr "Hilfe zu SMTP-Servern"
 
 #: react-src/features/tokens/TokenSidebar.tsx:157
 msgid "Help about Token"
@@ -773,13 +1572,45 @@ msgstr "Hilfe zu Token Details"
 msgid "Help about Token Import"
 msgstr "Hilfe zum Token-Import"
 
+#: react-src/features/config/tokens/TokenConfigPage.tsx:118
+msgid "Help about Token Settings"
+msgstr "Hilfe zu Tokenenstellungen"
+
 #: react-src/features/users/UserSidebar.tsx:120
 msgid "Help about User Details"
 msgstr "Hilfe zu Benutzerdetails"
 
+#: react-src/features/config/resolvers/ResolverSidebar.tsx:66
+msgid "Help about UserResolver"
+msgstr "Hilfe zu Benutzer-Resolvern"
+
 #: react-src/features/users/UserSidebar.tsx:124
 msgid "Help about Users"
 msgstr "Hilfe zu Benutzern"
+
+#: react-src/features/config/system/SystemLayout.tsx:110
+msgid "Help on Service IDs"
+msgstr "Hilfe zu Dienste-Kennzeichnungen"
+
+#: react-src/features/config/system/SystemLayout.tsx:99
+msgid "Help on Tokengroups"
+msgstr "Hilfe zu Tokengruppen"
+
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:43
+msgid "Here you can define how the SMS will be sent - via which kind of gateway."
+msgstr "Hier können Sie definieren, wie SMS versendet werden - über welche Art Gateway."
+
+#: react-src/features/config/tokens/types/DayPasswordConfigFields.tsx:25
+msgid "Here you can define settings, that will be set as default values, when enrolling a DayPassword token."
+msgstr "Hier legen Sie die Standardeinstellungen für das Ausrollen eines DayPassword-Token fest."
+
+#: react-src/features/config/tokens/types/HotpConfigFields.tsx:27
+msgid "Here you can define settings, that will be set as default values, when enrolling a HOTP token."
+msgstr "Hier legen Sie die Standardeinstellungen für das Ausrollen eines HOTP-Token fest."
+
+#: react-src/features/config/tokens/types/TotpConfigFields.tsx:32
+msgid "Here you can define settings, that will be set as default values, when enrolling a TOTP token."
+msgstr "Hier legen Sie die Standardeinstellungen für das Ausrollen eines TOTP-Token fest."
 
 #: react-src/features/tokens/enroll/fields/QuestionFields.tsx:65
 msgid "Here you can select how many tokens of which realm are required to perform a successful authentication."
@@ -801,6 +1632,10 @@ msgstr "Hier können Sie eine XML-Datei von Aladdin oder SafeNet hochladen, wie 
 msgid "Here you may register a new user account"
 msgstr "Hier können Sie ein neues Benutzerkonto registrieren"
 
+#: react-src/features/config/policies/PolicyTemplatePicker.tsx:51
+msgid "Hide Policy templates"
+msgstr "Vorlagen ausblenden"
+
 #: react-src/features/machines/MachineListPage.tsx:102
 #: react-src/features/machines/MachineListPage.tsx:103
 msgid "hostname"
@@ -811,6 +1646,10 @@ msgstr "Hostname"
 msgid "Hostname"
 msgstr "Hostname"
 
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:286
+msgid "Hostname Attribute"
+msgstr "Attribut für Hostnamen"
+
 #: react-src/features/tokens/TokenApplicationsPage.tsx:179
 msgid "HOTP tokens can be attached with offline to e.g. notebooks."
 msgstr "HOTP-Token können mit der Anwendung \"offline\" beispielsweise an Notebooks angehängt werden."
@@ -820,14 +1659,31 @@ msgstr "HOTP-Token können mit der Anwendung \"offline\" beispielsweise an Noteb
 msgid "id"
 msgstr "ID"
 
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:74
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:74
 #: react-src/features/machines/MachineListPage.tsx:123
 #: react-src/features/machines/MachineListPage.tsx:124
 msgid "Id"
 msgstr "ID"
 
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:193
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:71
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:240
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:69
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:230
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:71
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:165
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:165
+msgid "Identifier"
+msgstr "Bezeichner"
+
 #: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:28
 msgid "If the PIN is split and verified locally, you need to define, how long the password is, that is sent to the RADIUS server."
 msgstr "Wenn die PIN abgetrennt und lokal geprüft wird, müssen Sie festlegen, wie lang das Passwort ist, das an den RADIUS-Server gesendet wird."
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:300
+msgid "If the SMTP server requires authentication you need to specify the user."
+msgstr "Wenn der SMTP-Server eine Authentifizierung erfordert, müssen Sie den Benutzernamen angeben."
 
 #: react-src/features/tokens/TokenLostPage.tsx:75
 msgid "If the token is lost, you can enroll a temporary password based token and give the password to the user. The OTP PIN of the old token is still the same."
@@ -840,6 +1696,10 @@ msgstr "Wenn dieser Token die SMS nicht über das systemweite Gateway, sondern �
 #: react-src/features/tokens/TokenImportPage.tsx:332
 msgid "If you are enrolling the Yubikey in HOTP mode, you should use the PSKC file format in the newer version of the Yubikey GUI."
 msgstr "Wenn Sie den Yubikey im HOTP-Modus ausrollen, sollten Sie das PSKC-Dateiformat der neueren Version der Yubikey-GUI verwenden."
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:270
+msgid "If you change the name of the policy, it will create a new policy with the new name!"
+msgstr "Wenn Sie den Namen der Richtlinie ändern, wird eine neue Richtlinie mit dem neuen Namen erstellt!"
 
 #: react-src/features/recovery/RecoveryPage.tsx:39
 msgid "If you forgot your password, you may set a new one."
@@ -861,6 +1721,14 @@ msgstr "Token importieren"
 msgid "Import tokens from a file"
 msgstr "Tokendatei importieren"
 
+#: react-src/features/config/policies/PolicyEditPage.tsx:304
+msgid "In case of conflicting policies, the policy with the lowest priority number will take precedence."
+msgstr "Im Fall eines Richtlinienkonflikts wird die Richtlinie mit dem niedrigsten \"Priorität\"-Wert berücksichtigt."
+
+#: react-src/components/feedback/ActiveToggleBadge.tsx:30
+msgid "inactive"
+msgstr "inaktiv"
+
 #: react-src/features/dashboard/DashboardPage.tsx:326
 msgid "Inactive Events"
 msgstr "Inaktive Ereignisse"
@@ -868,6 +1736,18 @@ msgstr "Inaktive Ereignisse"
 #: react-src/features/dashboard/DashboardPage.tsx:293
 msgid "Inactive Policies"
 msgstr "Inaktive Richtlinien"
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:91
+msgid "Include SAML attributes even if the user failed to authenticate."
+msgstr "SAML Attribute einbinden, auch wenn die Authentisierungsanfrage fehlgeschlagen ist."
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:81
+msgid "Include SAML attributes in the authentication response."
+msgstr "SAML-Attribute in die Authentifizierungsantwort aufnehmen."
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:32
+msgid "Increase the failcounter if the wrong PIN was entered."
+msgstr "Den Fehlerzähler erhöhen, wenn eine falsche PIN eingegeben wurde."
 
 #: react-src/features/audit/AuditLogPage.tsx:546
 msgid "info"
@@ -877,11 +1757,30 @@ msgstr "Info"
 msgid "Info"
 msgstr "Info"
 
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:188
+#: react-src/features/config/periodictasks/PeriodicTaskListPage.tsx:17
+msgid "Interval"
+msgstr "Intervall"
+
 #: react-src/features/machines/MachineDetailsPage.tsx:326
 #: react-src/features/machines/MachineListPage.tsx:117
 #: react-src/features/machines/MachineListPage.tsx:118
 msgid "IP Address"
 msgstr "IP-Adresse"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:293
+msgid "IP Address Attribute"
+msgstr "Attribut für IP-Adresse"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:251
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:241
+msgid "IP or FQDN"
+msgstr "IP oder FQDN"
+
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:81
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:83
+msgid "IP/FQDN"
+msgstr "IP/FQDN"
 
 #: react-src/features/tokens/TokenGetSerialPage.tsx:203
 msgid "It does not matter, if the token is assigned or not"
@@ -891,13 +1790,69 @@ msgstr "Egal, ob der Token zugewiesen ist oder nicht"
 msgid "It will send the missing registration data to the configured endpoint."
 msgstr "Die fehlenden Registrierungsdaten werden an den konfigurierten API-Endpunkt gesendet."
 
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:38
+msgid "Key"
+msgstr "Schlüssel"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:88
+msgid "Key {number}"
+msgstr "Schlüssel {number}"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:84
+msgid "Keyfile Path"
+msgstr "Pfad zur KeyTab-Datei"
+
 #: react-src/components/tables/Pagination.tsx:32
 msgid "Last"
 msgstr "Ende"
 
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:303
+msgid "Last Definition Update"
+msgstr "Letzte Aktualisierung der Definition"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:284
+msgid "Last Run"
+msgstr "Letzte Ausführung"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:115
+msgid "LDAP connection"
+msgstr "LDAP-Verbindung"
+
+#: react-src/features/shell/AboutDialog.tsx:28
+msgid "Licensed under"
+msgstr "Lizenziert unter"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:43
+msgid "Limit"
+msgstr "Begrenzung"
+
 #: react-src/features/tokens/TokenSidebar.tsx:114
 msgid "List Challenges"
 msgstr "Challenges anzeigen"
+
+#: react-src/features/config/system/SystemLayout.tsx:81
+msgid "List eduMFA server definitions"
+msgstr "eduMFA-Serverdefinitionen auflisten"
+
+#: react-src/features/config/system/SystemLayout.tsx:70
+msgid "List RADIUS server definitions"
+msgstr "Alle RADIUS-Server anzeigen"
+
+#: react-src/features/config/system/SystemLayout.tsx:114
+msgid "List Service ID definitions"
+msgstr "Alle Dienste-Kennzeichnungen anzeigen"
+
+#: react-src/features/config/system/SystemLayout.tsx:59
+msgid "List SMTP server definitions"
+msgstr "Alle SMTP-Server anzeigen"
+
+#: react-src/features/config/system/SystemLayout.tsx:103
+msgid "List Tokengroup definitions"
+msgstr "Alle Tokengruppen anzeigen"
+
+#: react-src/features/config/policies/PolicyTemplatePicker.tsx:59
+msgid "Load a template from the eduMFA policy template repository. Review its settings before saving."
+msgstr "Eine Vorlage aus dem Repository für eduMFA-Richtlinienvorlagen laden. Prüfen Sie die Einstellungen vor dem Speichern."
 
 #: react-src/components/feedback/LoadingIndicator.tsx:10
 msgid "Loading"
@@ -907,6 +1862,14 @@ msgstr "Laden"
 msgid "Loading audit log"
 msgstr "Audit-Log wird geladen"
 
+#: react-src/features/config/caconnectors/caConnectorEditor.tsx:91
+msgid "Loading CA connector"
+msgstr "CA-Konnektor wird geladen"
+
+#: react-src/features/config/caconnectors/CaConnectorListPage.tsx:120
+msgid "Loading CA connectors"
+msgstr "CA-Konnektoren werden geladen"
+
 #: react-src/features/tokens/TokenChallengesPage.tsx:151
 msgid "Loading challenges"
 msgstr "Challenges werden geladen"
@@ -915,21 +1878,75 @@ msgstr "Challenges werden geladen"
 msgid "Loading client applications"
 msgstr "Client-Anwendungen werden geladen"
 
+#: react-src/features/config/servers/edumfaserver/EduMfaServerEditPage.tsx:47
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:155
+msgid "Loading eduMFA servers"
+msgstr "eduMFA-Server werden geladen"
+
 #: react-src/features/machines/MachineDetailsPage.tsx:307
 msgid "Loading machine"
 msgstr "Maschine wird geladen"
+
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:133
+msgid "Loading machine resolvers"
+msgstr "Maschinenresolver werden geladen"
 
 #: react-src/features/machines/MachineListPage.tsx:157
 msgid "Loading machines"
 msgstr "Maschinen werden geladen"
 
+#: react-src/features/config/servers/radius/RadiusServerEditPage.tsx:47
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:151
+msgid "Loading RADIUS servers"
+msgstr "RADIUS-Server werden geladen"
+
+#: react-src/features/config/realms/RealmListPage.tsx:282
+msgid "Loading realms"
+msgstr "Realms werden geladen"
+
+#: react-src/features/config/machineresolvers/HostsMachineResolverPage.tsx:75
+#: react-src/features/config/machineresolvers/LdapMachineResolverPage.tsx:60
+#: react-src/features/config/resolvers/ResolverEditorLayout.tsx:53
+msgid "Loading resolver"
+msgstr "Resolver wird geladen"
+
+#: react-src/features/config/resolvers/ResolverListPage.tsx:140
 #: react-src/features/users/UserAddPage.tsx:79
 msgid "Loading resolvers"
 msgstr "Resolver werden geladen"
 
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:57
+msgid "Loading service ID"
+msgstr "Service-ID wird geladen"
+
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:169
+msgid "Loading service IDs"
+msgstr "Service-IDs werden geladen"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayEditPage.tsx:53
+msgid "Loading SMS gateway"
+msgstr "SMS-Gateway wird geladen"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:125
+msgid "Loading SMS gateways"
+msgstr "SMS-Gateways werden geladen"
+
+#: react-src/features/config/servers/smtp/SmtpServerEditPage.tsx:47
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:158
+msgid "Loading SMTP servers"
+msgstr "SMTP-Server werden geladen"
+
 #: react-src/features/tokens/details/TokenDetailsPage.tsx:142
 msgid "Loading token"
 msgstr "Token wird geladen"
+
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:57
+msgid "Loading tokengroup"
+msgstr "Tokengruppe wird geladen"
+
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:158
+msgid "Loading tokengroups"
+msgstr "Tokengruppen werden geladen"
 
 #: react-src/features/tokens/TokenApplicationsPage.tsx:226
 #: react-src/features/tokens/TokenListPage.tsx:291
@@ -945,13 +1962,18 @@ msgstr "Benutzer wird geladen"
 msgid "Loading users"
 msgstr "Benutzer werden geladen"
 
+#: react-src/features/shell/AppNavbar.tsx:240
+msgid "Lock screen"
+msgstr "Applikation sperren"
+
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:272
 msgid "locked"
 msgstr "gesperrt"
 
-#: react-src/features/login/LoginPage.tsx:91
-#: react-src/features/login/LoginPage.tsx:195
-#: react-src/features/login/ResponsePage.tsx:216
+#: react-src/features/login/ChallengeResponseForm.tsx:100
+#: react-src/features/login/LoginPage.tsx:94
+#: react-src/features/login/LoginPage.tsx:198
+#: react-src/features/shell/LockScreenDialog.tsx:114
 msgid "Log In"
 msgstr "Anmelden"
 
@@ -959,15 +1981,24 @@ msgstr "Anmelden"
 msgid "log level"
 msgstr "Logstufe"
 
+#: react-src/features/shell/AppNavbar.tsx:218
+msgid "Login"
+msgstr "Anmelden"
+
 #. placeholder {0}: config.remoteUser
-#: react-src/features/login/LoginPage.tsx:72
+#: react-src/features/login/LoginPage.tsx:75
 msgid "Login as {0}"
 msgstr "Anmelden als {0}"
 
-#: react-src/features/login/LoginPage.tsx:101
+#: react-src/features/login/LoginPage.tsx:104
 msgid "Login with credentials"
 msgstr "Mit Zugangsdaten anmelden"
 
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:114
+msgid "Loginname Attribute"
+msgstr "Attribut für den Anmeldenamen"
+
+#: react-src/features/shell/AppNavbar.tsx:243
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:498
 msgid "Logout"
 msgstr "Abmelden"
@@ -985,10 +2016,18 @@ msgstr "Maschine"
 msgid "Machine {machineId}"
 msgstr "Maschine {machineId}"
 
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:262
+msgid "Machine attributes"
+msgstr "Maschinenattribute"
+
 #: react-src/features/machines/MachineDetailsPage.tsx:323
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:133
 msgid "Machine ID"
 msgstr "Maschinen-ID"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:272
+msgid "Machine ID Attribute"
+msgstr "Attribut für Maschinen-ID"
 
 #: react-src/features/machines/MachineDetailsPage.tsx:312
 #: react-src/features/machines/MachineDetailsPage.tsx:313
@@ -1006,13 +2045,23 @@ msgstr "Maschinen-Resolver"
 msgid "Machine Resolver {0}"
 msgstr "Maschinen-Resolver {0}"
 
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:122
+msgid "Machine Resolvers"
+msgstr "Maschinenresolver"
+
+#: react-src/features/config/ConfigLayout.tsx:79
 #: react-src/features/machines/MachineListPage.tsx:149
+#: react-src/features/shell/AppNavbar.tsx:103
 msgid "Machines"
 msgstr "Maschinen"
 
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:251
 msgid "Machines this token is attached to"
 msgstr "Maschinen, an die dieser Token angehängt ist"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:44
+msgid "Mapping"
+msgstr "Zuordnung"
 
 #: react-src/features/tokens/TokenLostPage.tsx:68
 msgid "Mark the token as lost"
@@ -1025,6 +2074,10 @@ msgstr "Maximal erlaubte Authentisierungen"
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:524
 msgid "Max allowed successful auths"
 msgstr "Maximal erlaubte erfolgreiche Authentisierungen"
+
+#: react-src/features/config/system/TokenDefaultsCard.tsx:35
+msgid "Max Failcount of newly enrolled tokens"
+msgstr "Maximale Anzahl von Fehlversuchen für neu ausgerollte Token"
 
 #: react-src/features/users/UserDetailsPage.tsx:383
 msgid "maxfail"
@@ -1041,6 +2094,23 @@ msgstr "Maximale Authentisierungen"
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:517
 msgid "Maximum Success Auth Count"
 msgstr "Maximale erfolgreiche Authentisierungen"
+
+#: react-src/features/config/resolvers/HttpResolverPage.tsx:15
+msgid "Method"
+msgstr "Methode"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:218
+msgid "Microsoft CA worker hostname"
+msgstr "Hostname des Microsoft CA-Workers"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:227
+msgid "Microsoft CA worker port"
+msgstr "Port für Microsoft CA-Worker"
+
+#: react-src/features/config/events/EventConditionsEditor.tsx:97
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:112
+msgid "Miscellaneous"
+msgstr "Sonstiges"
 
 #: react-src/features/audit/AuditLogPage.tsx:556
 msgid "missing_line"
@@ -1061,10 +2131,76 @@ msgstr "Mobiltelefon"
 msgid "mOTP PIN"
 msgstr "mOTP-PIN"
 
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:126
+msgid "Multivalue Attributes"
+msgstr "Attribute mit mehreren Werten"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:219
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:48
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:80
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:80
+msgid "Name"
+msgstr "Name"
+
+#. placeholder {0}: connectorType.toUpperCase()
+#: react-src/features/config/system/SystemLayout.tsx:184
+msgid "New {0} CA Connector"
+msgstr "Neuer {0}-CA-Konnektor"
+
+#: react-src/features/config/resolvers/ResolverSidebar.tsx:56
+msgid "New {resolverType}"
+msgstr "Neu: {resolverType}"
+
+#: react-src/features/config/machineresolvers/MachineResolverSidebar.tsx:61
+msgid "New {typeLabel} Resolver"
+msgstr "Neuer {typeLabel}-Resolver"
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:139
+#: react-src/features/config/system/SystemLayout.tsx:74
+msgid "New eduMFA server"
+msgstr "Neuer eduMFA Server"
+
 #: react-src/features/login/PinChangePage.tsx:93
 #: react-src/features/login/PinChangePage.tsx:98
 msgid "New PIN"
 msgstr "Neue PIN"
+
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:135
+#: react-src/features/config/system/SystemLayout.tsx:63
+msgid "New RADIUS server"
+msgstr "Neuen RADIUS-Server anlegen"
+
+#: react-src/features/config/realms/RealmListPage.tsx:334
+msgid "new realm"
+msgstr "Neuer Realm"
+
+#: react-src/features/config/realms/RealmListPage.tsx:320
+msgid "New realm"
+msgstr "Neuer Realm"
+
+#: react-src/features/config/machineresolvers/MachineResolverSidebar.tsx:50
+#: react-src/features/config/resolvers/ResolverSidebar.tsx:48
+msgid "New Resolvers"
+msgstr "Neue Resolver"
+
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:146
+#: react-src/features/config/system/SystemLayout.tsx:107
+msgid "New Service ID definition"
+msgstr "Neue Dienste-Kennzeichnung definieren"
+
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:142
+#: react-src/features/config/system/SystemLayout.tsx:52
+msgid "New SMTP server"
+msgstr "Neuen SMTP-Server anlegen"
+
+#: react-src/features/config/system/SystemLayout.tsx:96
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:145
+msgid "New Tokengroup definition"
+msgstr "Neue Tokengruppen Definition"
+
+#: react-src/features/config/system/TokenDefaultsCard.tsx:10
+msgid "Newly enrolled tokens"
+msgstr "Neu ausgerollte Token"
 
 #: react-src/components/tables/Pagination.tsx:33
 msgid "Next"
@@ -1077,12 +2213,26 @@ msgid "no"
 msgstr "nein"
 
 #: react-src/components/feedback/ConfirmDialog.tsx:23
+#: react-src/features/shell/AutoCreateRealmDialog.tsx:55
 msgid "No"
 msgstr "Nein"
+
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:97
+msgid "No actions match the filter."
+msgstr "Keine Aktionen entsprechen dem Filter."
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:267
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:132
+msgid "No anonymous referral chasing"
+msgstr "Referrals werden nicht (anonym) verfolgt"
 
 #: react-src/features/audit/AuditLogPage.tsx:293
 msgid "No audit entries match the current filters."
 msgstr "Keine Audit-Einträge entsprechen den aktuellen Filtern."
+
+#: react-src/features/config/caconnectors/CaConnectorListPage.tsx:126
+msgid "No CA connectors defined."
+msgstr "Keine CA-Konnektoren definiert."
 
 #: react-src/features/components/ClientTypePage.tsx:72
 msgid "No client applications found."
@@ -1092,9 +2242,29 @@ msgstr "Keine Client-Anwendungen gefunden."
 msgid "No custom attributes set."
 msgstr "Keine benutzerdefinierten Attribute gesetzt."
 
+#: react-src/features/config/automation/DefinitionList.tsx:188
+msgid "No definitions found."
+msgstr "Keine Definitionen gefunden."
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:160
+msgid "No eduMFA servers defined."
+msgstr "Keine eduMFA-Server definiert."
+
+#: react-src/components/forms/CheckboxPickList.tsx:123
+msgid "No entries available."
+msgstr "Keine Einträge vorhanden."
+
+#: react-src/components/forms/CheckboxPickList.tsx:124
+msgid "No entries match the filter."
+msgstr "Keine Einträge entsprechen dem Filter."
+
 #: react-src/components/forms/MachineLookupField.tsx:53
 msgid "No machine found"
 msgstr "Keine Maschine gefunden"
+
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:138
+msgid "No machine resolvers defined."
+msgstr "Keine Maschinenresolver definiert."
 
 #: react-src/features/machines/MachineListPage.tsx:171
 msgid "No machines found."
@@ -1104,9 +2274,34 @@ msgstr "Keine Maschinen gefunden."
 msgid "No open challenges."
 msgstr "Keine offenen Challenges."
 
+#: react-src/components/forms/TypedOptionsTable.tsx:33
+msgid "No options available."
+msgstr "Keine Optionen verfügbar."
+
 #: react-src/features/login/PinChangePage.tsx:52
 msgid "No PIN change is pending. Continue to the <0>token list</0>."
 msgstr "Es steht keine PIN-Änderung an. Weiter zur <0>Token-Liste</0>."
+
+#: react-src/features/config/policies/PolicyListPage.tsx:233
+msgid "No policies found."
+msgstr "Keine Richtlinien gefunden."
+
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:156
+msgid "No RADIUS servers defined."
+msgstr "Keine RADIUS-Server definiert."
+
+#: react-src/features/config/realms/RealmListPage.tsx:287
+msgid "No realms defined."
+msgstr "Keine Realms definiert."
+
+#: react-src/features/config/realms/RealmForm.tsx:50
+#: react-src/features/config/resolvers/ResolverListPage.tsx:145
+msgid "No resolvers defined."
+msgstr "Keine Resolver definiert."
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:137
+msgid "No retrieval of schema information"
+msgstr "Schema-Informationen werden nicht abgerufen"
 
 #: react-src/components/forms/SerialLookupField.tsx:72
 msgid "No serial found"
@@ -1115,6 +2310,22 @@ msgstr "Keine Seriennummer gefunden"
 #: react-src/features/tokens/TokenGetSerialPage.tsx:316
 msgid "No Serial number could be found for OTP value {searchedOtp}."
 msgstr "Für den OTP-Wert {searchedOtp} konnte keine Seriennummer gefunden werden."
+
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:175
+msgid "No service IDs defined."
+msgstr "Keine Service-IDs definiert."
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:130
+msgid "No SMS gateways defined."
+msgstr "Keine SMS-Gateways definiert."
+
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:163
+msgid "No SMTP servers defined."
+msgstr "Keine SMTP-Server definiert."
+
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:164
+msgid "No tokengroups defined."
+msgstr "Keine Tokengruppen definiert."
 
 #: react-src/features/users/UserDetailsPage.tsx:650
 msgid "No tokens assigned."
@@ -1137,9 +2348,30 @@ msgstr "Keinen Benutzer gefunden"
 msgid "No users found."
 msgstr "Keine Benutzer gefunden."
 
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:281
+msgid "Node"
+msgstr "Knoten"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:210
+#: react-src/features/config/periodictasks/PeriodicTaskListPage.tsx:27
+msgid "Nodes"
+msgstr "Knoten"
+
 #: react-src/features/audit/AuditLogPage.tsx:421
 msgid "number"
 msgstr "Nr."
+
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:51
+msgid "Number of answers"
+msgstr "Anzahl der Antworten"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:242
+msgid "Number of days a new CRL should be generated before the current CRL expires."
+msgstr "Anzahl der Tage vor Ablauf der aktuellen Sperrliste (CRL), an denen eine neue Sperrliste erzeugt werden soll."
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:230
+msgid "Number of days the generated CRL should be valid."
+msgstr "Die Anzahl der Tage, wie lange eine erzeugte CRL gültig sein soll."
 
 #: react-src/features/machines/MachineSidebar.tsx:50
 msgid "Number of machines: {machineCount}"
@@ -1148,6 +2380,22 @@ msgstr "Anzahl der Maschinen: {machineCount}"
 #: react-src/features/tokens/enroll/fields/QuestionFields.tsx:91
 msgid "Number of required tokens"
 msgstr "Anzahl der benötigten Token"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:104
+msgid "Object classes of a new created user object"
+msgstr "Objektklassen eines neu erzeugten Benutzerobjekts"
+
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:84
+msgid "Obsolete settings"
+msgstr "Nicht mehr verwendete Einstellungen"
+
+#: react-src/features/shell/AutoCreateRealmDialog.tsx:48
+msgid "Obviously you have no realms defined. Do you want me to create a default realm for you from the machines /etc/passwd?"
+msgstr "Es sind noch keine Realms definiert. Soll ein Standard-Realm aus der Datei /etc/passwd dieses Systems angelegt werden?"
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:117
+msgid "OCRA Suite"
+msgstr "OCRA Suite"
 
 #: react-src/features/tokens/TokenApplicationsPage.tsx:186
 msgid "Offline tokens attached to notebooks"
@@ -1158,15 +2406,47 @@ msgid "offline: Use HOTP token for offline login to notebooks."
 msgstr "offline: HOTP-Token für die Offline-Anmeldung an Notebooks verwenden."
 
 #: react-src/auth/useFidoErrorMessage.ts:46
+#: react-src/features/shell/NoTokenDialog.tsx:29
 #: react-src/features/tokens/TokenGetSerialPage.tsx:302
 #: react-src/features/tokens/TokenGetSerialPage.tsx:319
 msgid "OK"
 msgstr "OK"
 
+#: react-src/features/config/events/EventConditionsEditor.tsx:71
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:80
+msgid "Open all groups"
+msgstr "Alle Gruppen aufklappen"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:169
+msgid "OpenSSL config file"
+msgstr "Konfigurationsdatei für OpenSSL"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:275
+msgid "Option name"
+msgstr "Optionsname"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:282
+msgid "Option value"
+msgstr "Optionswert"
+
+#: react-src/features/config/events/EventListPage.tsx:48
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:251
+#: react-src/features/config/periodictasks/PeriodicTaskListPage.tsx:32
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:271
 #: react-src/features/machines/MachineDetailsPage.tsx:193
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:165
 msgid "Options"
 msgstr "Optionen"
+
+#: react-src/features/config/automation/DefinitionList.tsx:79
+#: react-src/features/config/events/EventEditPage.tsx:262
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:226
+msgid "Order"
+msgstr "Reihenfolge"
+
+#: react-src/features/config/automation/DefinitionList.tsx:217
+msgid "Order for {name}"
+msgstr "Reihenfolge für {name}"
 
 #: react-src/auth/useFidoErrorMessage.ts:47
 msgid "Other Error"
@@ -1188,6 +2468,15 @@ msgstr "OTP-Länge"
 msgid "OTP Length"
 msgstr "OTP-Länge"
 
+#: react-src/features/config/system/TokenDefaultsCard.tsx:15
+msgid "OTP length of newly enrolled tokens"
+msgstr "OTP-Länge für neu ausgerollte Token"
+
+#: react-src/features/config/tokens/types/EmailConfigFields.tsx:64
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:76
+msgid "OTP validity time"
+msgstr "Gültigkeitszeitraum für OTP"
+
 #: react-src/features/tokens/TokenGetSerialPage.tsx:180
 msgid "OTP Value"
 msgstr "OTP-Wert"
@@ -1196,25 +2485,50 @@ msgstr "OTP-Wert"
 msgid "otplen"
 msgstr "OTP Länge"
 
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:249
+msgid "Overlap Period"
+msgstr "Überlappungsdauer"
+
+#: react-src/features/config/system/ServerSettingsCard.tsx:73
+msgid "Override Authorization Clients"
+msgstr "Überschreibe den authorisierenden Client"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:250
+msgid "Parameters"
+msgstr "Parameter"
+
 #: react-src/features/users/userFieldLabels.ts:14
 msgid "password"
 msgstr "Passwort"
 
-#: react-src/features/login/LoginPage.tsx:181
-#: react-src/features/login/LoginPage.tsx:186
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:25
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:316
+#: react-src/features/config/servers/TestCredentialsFields.tsx:49
+#: react-src/features/login/LoginPage.tsx:184
+#: react-src/features/login/LoginPage.tsx:189
 #: react-src/features/recovery/RecoveryResetPage.tsx:95
 #: react-src/features/register/RegisterPage.tsx:123
 #: react-src/features/register/RegisterPage.tsx:124
 #: react-src/features/register/RegisterPage.tsx:135
+#: react-src/features/shell/LockScreenDialog.tsx:100
+#: react-src/features/shell/LockScreenDialog.tsx:105
 #: react-src/features/tokens/TokenImportPage.tsx:173
 #: react-src/features/tokens/TokenImportPage.tsx:178
 #: react-src/features/users/UserPasswordPage.tsx:140
 msgid "Password"
 msgstr "Passwort"
 
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:29
+msgid "Password Hash for editable users"
+msgstr "Passwort Hash für neu angelegte Benutzer"
+
 #: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:123
 msgid "password length"
 msgstr "Länge des Passworts"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:271
+msgid "Password of encrypted client private key"
+msgstr "Passwort des verschlüsselten privaten Schlüssels des Clients"
 
 #: react-src/features/users/UserPasswordPage.tsx:58
 msgid "Password set successfully."
@@ -1231,6 +2545,20 @@ msgstr "Zertifikatsanforderung hier einfügen"
 #: react-src/features/tokens/enroll/fields/SecretFields.tsx:34
 msgid "Paste the ssh PUBLIC key"
 msgstr "Fügen Sie hier den öffentlichen SSH-Schlüssel ein"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:98
+msgid "Per-process server pool"
+msgstr "Serverpool pro Prozess"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:160
+msgid "Periodic task saved."
+msgstr "Periodische Aufgabe gespeichert."
+
+#: react-src/features/config/automation/DefinitionLayout.tsx:42
+#: react-src/features/config/automation/DefinitionList.tsx:164
+#: react-src/features/config/ConfigLayout.tsx:65
+msgid "Periodic Tasks"
+msgstr "Regelmäßige Aufgaben"
 
 #: react-src/features/tokens/TokenImportPage.tsx:221
 msgid "PGP Key"
@@ -1283,7 +2611,7 @@ msgstr "Bitte <0>melden Sie sich an</0>, um diese Seite zu öffnen."
 msgid "Please answer at least {numAnswers} of the following questions."
 msgstr "Bitte beantworten Sie mindestens {numAnswers} der folgenden Fragen."
 
-#: react-src/features/login/ResponsePage.tsx:165
+#: react-src/features/login/ChallengeResponseForm.tsx:49
 msgid "Please confirm with one of these tokens:"
 msgstr "Bitte bestätigen Sie mit einem dieser Token:"
 
@@ -1303,6 +2631,14 @@ msgstr "Bitte beachten Sie, dass Ihr Smartphone während des Anmeldevorgangs ein
 msgid "Please pass the public key and the fingerprint to the token provider."
 msgstr "Bitte geben Sie den öffentlichen Schlüssel und den Fingerabdruck an den Token-Anbieter weiter."
 
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:203
+msgid "Please provide the base URL of the eduMFA server."
+msgstr "Geben Sie die Basis-URL des eduMFA Servers an."
+
+#: react-src/features/config/resolvers/ResolverConnectionPage.tsx:122
+msgid "Please remember to restart eduMFA when modifying an existing LDAP resolver."
+msgstr "Änderungen an existierenden LDAP-Resolvern erfordern einen Neustart von eduMFA."
+
 #: react-src/features/tokens/enroll/results/LinkResults.tsx:120
 msgid "Please scan the QR code with the eduMFA Authenticator App or click <0>this link</0> on your smartphone."
 msgstr "Bitte scannen Sie den QR-Code mit der eduMFA Authenticator-App oder klicken Sie auf Ihrem Smartphone auf <0>diesen Link</0>."
@@ -1315,7 +2651,7 @@ msgstr "Bitte scannen Sie den QR-Code mit der privacyIDEA Authenticator-App und 
 msgid "Please scan the QR code with the privacyIDEA Authenticator App or click <0>this link</0> on your smartphone."
 msgstr "Bitte scannen Sie den QR-Code mit der privacyIDEA Authenticator-App oder klicken Sie auf Ihrem Smartphone auf <0>diesen Link</0>."
 
-#: react-src/features/login/LoginPage.tsx:144
+#: react-src/features/login/LoginPage.tsx:147
 msgid "Please sign in"
 msgstr "Bitte anmelden"
 
@@ -1331,14 +2667,68 @@ msgstr "Bitte warten! Daten werden verarbeitet..."
 msgid "policies"
 msgstr "Richtlinien"
 
+#: react-src/features/config/ConfigLayout.tsx:51
 #: react-src/features/dashboard/DashboardPage.tsx:274
 msgid "Policies"
 msgstr "Richtlinien"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:111
+msgid "Policy {policyname} was not found."
+msgstr "Richtlinie {policyname} wurde nicht gefunden."
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:256
+#: react-src/features/config/policies/PolicyListPage.tsx:134
+msgid "Policy Name"
+msgstr "Richtlinienname"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:242
+msgid "Policy saved."
+msgstr "Richtlinie gespeichert."
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:50
+msgid "Pool recycle timeout"
+msgstr "Pool-Recycle Timeout"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:48
+msgid "Pool size"
+msgstr "Pool-Größe"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:49
+msgid "Pool timeout"
+msgstr "Pool-Timeout"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:22
+msgid "Pooling strategy"
+msgstr "Pooling-Strategie"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:22
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:266
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:256
+msgid "Port"
+msgstr "Port"
+
+#: react-src/features/config/events/EventEditPage.tsx:252
+#: react-src/features/config/events/EventListPage.tsx:30
+msgid "Position"
+msgstr "Position"
 
 #: react-src/features/tokens/TokenImportPage.tsx:162
 #: react-src/features/tokens/TokenImportPage.tsx:168
 msgid "Pre Shared Key"
 msgstr "Preshared Key"
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:69
+msgid "Prepend the PIN in front of the OTP value. Otherwise it will be post pended."
+msgstr "Die PIN dem OTP-Wert voranstellen. Andernfalls wird sie angehängt."
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:231
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:179
+msgid "Preset Active Directory"
+msgstr "Active Directory vorbelegen"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:170
+msgid "Preset OpenLDAP"
+msgstr "OpenLDAP vorbelegen"
 
 #: react-src/components/tables/Pagination.tsx:34
 msgid "Previous"
@@ -1348,6 +2738,27 @@ msgstr "Zurück"
 msgid "Print the OTP list"
 msgstr "OTP-Liste drucken"
 
+#: react-src/features/config/realms/RealmForm.tsx:93
+msgid "priority"
+msgstr "Priorität"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:295
+#: react-src/features/config/policies/PolicyListPage.tsx:89
+msgid "Priority"
+msgstr "Priorität"
+
+#: react-src/features/config/policies/PolicyListPage.tsx:265
+msgid "Priority for {name}"
+msgstr "Priorität für {name}"
+
+#: react-src/features/config/realms/RealmForm.tsx:81
+msgid "Priority of {resolverName}"
+msgstr "Priorität von {resolverName}"
+
+#: react-src/features/shell/AppFooter.tsx:38
+msgid "Privacy statement"
+msgstr "Datenschutzerklärung"
+
 #: react-src/features/recovery/RecoveryResetPage.tsx:64
 msgid "Proceed to login"
 msgstr "Weiter zur Anmeldung"
@@ -1355,6 +2766,15 @@ msgstr "Weiter zur Anmeldung"
 #: react-src/features/users/UserPasswordPage.tsx:86
 msgid "Profile"
 msgstr "Profil"
+
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:96
+msgid "Provider Config"
+msgstr "Provider-Konfiguration"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:230
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:65
+msgid "Providermodule"
+msgstr "Providermodul"
 
 #: react-src/features/tokens/enroll/fields/HardwareFields.tsx:28
 msgid "Push Yubikey button here..."
@@ -1383,6 +2803,15 @@ msgstr "QR-Code mit Link zur Android-App im Play Store"
 msgid "QR-Code with link to iOS app in app store"
 msgstr "QR-Code mit Link zur iOS-App im App Store"
 
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:71
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:100
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:105
+msgid "Question"
+msgstr "Frage"
+
+#: react-src/features/config/tokens/TokenConfigPage.tsx:90
+#: react-src/features/config/tokens/TokenConfigPage.tsx:107
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:62
 #: react-src/features/tokens/enroll/fields/QuestionFields.tsx:13
 msgid "Questionnaire"
 msgstr "Fragenkatalog"
@@ -1392,9 +2821,31 @@ msgstr "Fragenkatalog"
 msgid "Quick links"
 msgstr "Verwandte Themen"
 
+#: react-src/features/config/resolvers/ResolverConnectionPage.tsx:193
+msgid "Quick Resolver Test"
+msgstr "Schneller Resolver-Test"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:176
+msgid "RADIUS Config saved."
+msgstr "RADIUS-Konfiguration erfolgreich gespeichert."
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:187
+msgid "RADIUS request failed!"
+msgstr "RADIUS-Anfrage fehlgeschlagen!"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:185
+msgid "RADIUS request successful."
+msgstr "RADIUS-Anfrage erfolgreich durchgeführt."
+
+#: react-src/features/config/tokens/types/RadiusConfigFields.tsx:47
 #: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:53
 msgid "RADIUS server configuration"
 msgstr "RADIUS-Server Konfiguration"
+
+#: react-src/features/config/servers/radius/RadiusServerListPage.tsx:139
+#: react-src/features/config/system/SystemLayout.tsx:69
+msgid "RADIUS servers"
+msgstr "RADIUS-Server"
 
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:128
 msgid "RADIUS Token Config"
@@ -1421,7 +2872,8 @@ msgstr "Die Mobilnummer wird bei jeder Authentifizierung dynamisch aus der Benut
 msgid "realm"
 msgstr "Realm"
 
-#: react-src/features/login/LoginPage.tsx:170
+#: react-src/features/config/policies/PolicyListPage.tsx:166
+#: react-src/features/login/LoginPage.tsx:173
 #: react-src/features/tokens/details/TokenUserCard.tsx:138
 #: react-src/features/tokens/details/TokenUserCard.tsx:216
 #: react-src/features/tokens/enroll/UserAssignmentFields.tsx:30
@@ -1439,6 +2891,17 @@ msgstr "Realm {0}"
 msgid "Realm {activeRealm}"
 msgstr "Realm {activeRealm}"
 
+#: react-src/features/shell/AutoCreateRealmDialog.tsx:33
+msgid "Realm defrealm created."
+msgstr "Der Realm defrealm wurde erzeugt."
+
+#: react-src/features/config/realms/RealmListPage.tsx:148
+#: react-src/features/config/realms/RealmListPage.tsx:329
+msgid "Realm name"
+msgstr "Realmname"
+
+#: react-src/features/config/ConfigLayout.tsx:93
+#: react-src/features/config/realms/RealmListPage.tsx:267
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:598
 msgid "Realms"
 msgstr "Realms"
@@ -1447,7 +2910,16 @@ msgstr "Realms"
 msgid "Received"
 msgstr "Empfangen"
 
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:363
+msgid "Recipient for testing"
+msgstr "Empfänger für Test-Emails"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:275
+msgid "Recorded Last Runs"
+msgstr "Letzte Ausführung"
+
 #: react-src/features/components/ClientTypePage.tsx:44
+#: react-src/features/shell/AppNavbar.tsx:201
 msgid "Refresh"
 msgstr "Aktualisieren"
 
@@ -1457,6 +2929,7 @@ msgstr "QR-Code neu erzeugen"
 
 #: react-src/features/register/RegisterPage.tsx:74
 #: react-src/features/register/RegisterPage.tsx:150
+#: react-src/features/shell/AppNavbar.tsx:209
 msgid "Register"
 msgstr "Registrieren"
 
@@ -1483,6 +2956,14 @@ msgstr "Remote-Server"
 #: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:128
 msgid "Remote User"
 msgstr "Remote Benutzer"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:145
+msgid "Remove"
+msgstr "Entfernen"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:140
+msgid "Remove condition {number}"
+msgstr "Bedingung {number} entfernen"
 
 #: react-src/features/audit/AuditLogPage.tsx:248
 msgid "Remove filter {name}"
@@ -1516,6 +2997,18 @@ msgstr "PIN/Passwort wiederholen"
 msgid "Request failed"
 msgstr "Anfrage fehlgeschlagen"
 
+#: react-src/features/config/resolvers/HttpResolverPage.tsx:24
+msgid "Request Mapping (JSON format)"
+msgstr "Anfrage Mapping (JSON Format)"
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:138
+msgid "Request to remote eduMFA server not successful. Check the fields URL, username and password for correctness."
+msgstr "Die HTTP Anfrage an den entfernten eduMFA Server wurde nicht erfolgreich beantwortet. Überprüfen Sie die URL, den Usernamen und das Passwort."
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:135
+msgid "Request to remote eduMFA server successful."
+msgstr "Die HTTP Anfrage an den entfernten eduMFA Server wurde erfolgreich beantwortet."
+
 #: react-src/features/tokens/enroll/fields/QuestionFields.tsx:62
 msgid "Required Realms"
 msgstr "Erforderliche Realms"
@@ -1528,7 +3021,7 @@ msgstr "Fehlerzähler zurücksetzen"
 msgid "Reset Failcounter"
 msgstr "Fehlerzähler zurücksetzen"
 
-#: react-src/features/login/LoginPage.tsx:200
+#: react-src/features/login/LoginPage.tsx:203
 #: react-src/features/recovery/RecoveryPage.tsx:59
 #: react-src/features/recovery/RecoveryResetPage.tsx:122
 msgid "Reset Password"
@@ -1542,6 +3035,7 @@ msgstr "Ihr Passwort zurücksetzen"
 msgid "resolver"
 msgstr "Resolver"
 
+#: react-src/features/config/policies/PolicyListPage.tsx:176
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:155
 #: react-src/features/tokens/details/TokenUserCard.tsx:148
 #: react-src/features/tokens/TokenListPage.tsx:265
@@ -1550,15 +3044,56 @@ msgstr "Resolver"
 msgid "Resolver"
 msgstr "Resolver"
 
-#: react-src/features/login/ResponsePage.tsx:161
-#: react-src/features/login/ResponsePage.tsx:199
-#: react-src/features/login/ResponsePage.tsx:207
+#: react-src/features/config/resolvers/ResolverEditorLayout.tsx:58
+msgid "Resolver {resolverName} not found."
+msgstr "Resolver {resolverName} wurde nicht gefunden."
+
+#: react-src/features/config/machineresolvers/HostsMachineResolverPage.tsx:162
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:121
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:62
+#: react-src/features/config/resolvers/ResolverListPage.tsx:64
+#: react-src/features/config/resolvers/ResolverNameField.tsx:28
+msgid "Resolver name"
+msgstr "Resolvername"
+
+#: react-src/features/config/resolvers/ResolverEditorLayout.tsx:59
+msgid "Resolver not found."
+msgstr "Resolver wurde nicht gefunden."
+
+#: react-src/features/config/realms/RealmListPage.tsx:157
+#: react-src/features/config/realms/RealmListPage.tsx:339
+msgid "resolvers"
+msgstr "Resolver"
+
+#: react-src/features/config/resolvers/ScimResolverPage.tsx:14
+msgid "Resource Server URI"
+msgstr "URI des Resource Servers"
+
+#: react-src/features/login/ChallengeResponseForm.tsx:83
+#: react-src/features/login/ChallengeResponseForm.tsx:91
+#: react-src/features/login/ResponsePage.tsx:70
 msgid "Response"
 msgstr "Antwort"
+
+#: react-src/features/config/resolvers/HttpResolverPage.tsx:50
+msgid "Response contains (JSON format):"
+msgstr "Antwort beinhaltet (JSON Format):"
+
+#: react-src/features/config/resolvers/HttpResolverPage.tsx:38
+msgid "Response Mapping (JSON format)"
+msgstr "Zuordnung der Antwortfelder (JSON-Format)"
 
 #: react-src/features/tokens/details/TokenFunctionsCard.tsx:168
 msgid "Resync Token"
 msgstr "Token resynchronisieren"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:294
+msgid "Retries"
+msgstr "Wiederholungen"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:219
+msgid "Retry If Failed"
+msgstr "Bei Fehler erneut versuchen"
 
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:334
 msgid "Revoke"
@@ -1598,14 +3133,67 @@ msgstr "Anzahl Runden"
 msgid "Run search"
 msgstr "Suche starten"
 
+#: react-src/features/config/realms/RealmListPage.tsx:200
+#: react-src/features/config/tokens/TokenConfigPage.tsx:215
+msgid "Save"
+msgstr "Speichern"
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:126
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:191
+msgid "Save CA"
+msgstr "Zertifizierungsstelle speichern"
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:178
+msgid "Save eduMFA server"
+msgstr "eduMFA Server speichern"
+
+#: react-src/features/config/events/EventEditPage.tsx:322
+msgid "Save Event Handler Definition"
+msgstr "Ereignisdefinition speichern"
+
 #: react-src/features/machines/MachineDetailsPage.tsx:235
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:207
 msgid "Save Options"
 msgstr "Optionen speichern"
 
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:269
+msgid "Save Periodic Task Definition"
+msgstr "Definition der periodischen Aufgabe speichern"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:445
+msgid "Save Policy"
+msgstr "Richtlinie speichern"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:225
+msgid "Save RADIUS server"
+msgstr "RADIUS-Server speichern"
+
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:641
 msgid "Save realms"
 msgstr "Realms speichern"
+
+#: react-src/features/config/machineresolvers/HostsMachineResolverPage.tsx:152
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:256
+#: react-src/features/config/resolvers/PasswdResolverPage.tsx:94
+#: react-src/features/config/resolvers/ResolverConnectionPage.tsx:212
+msgid "Save resolver"
+msgstr "Resolver speichern"
+
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:149
+msgid "Save Service ID"
+msgstr "Dienste-Kennzeichnung speichern"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:187
+msgid "Save SMS gateway"
+msgstr "SMS-Gateway speichern"
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:215
+msgid "Save SMTP server"
+msgstr "SMTP-Server speichern"
+
+#: react-src/features/config/system/SystemConfigPage.tsx:106
+msgid "Save System Config"
+msgstr "Systemkonfiguration speichern"
 
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:697
 msgid "Save Token Groups"
@@ -1615,10 +3203,25 @@ msgstr "Tokengruppen speichern"
 msgid "Save Token Info"
 msgstr "Tokeninfo speichern"
 
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:149
+msgid "Save Tokengroup"
+msgstr "Tokengruppe speichern"
+
 #: react-src/features/users/UserAddPage.tsx:97
 #: react-src/features/users/UserDetailsPage.tsx:422
 msgid "Save user"
 msgstr "Benutzer speichern"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:286
+#: react-src/features/config/policies/PolicyListPage.tsx:148
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:64
+msgid "Scope"
+msgstr "Geltungsbereich"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:279
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:117
+msgid "Search Filter"
+msgstr "Suchfilter"
 
 #: react-src/features/tokens/TokenGetSerialPage.tsx:174
 msgid "Search parameters"
@@ -1628,13 +3231,40 @@ msgstr "Suchparameter"
 msgid "seconds"
 msgstr "Sekunden"
 
+#: react-src/features/config/resolvers/ScimResolverPage.tsx:19
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:324
 #: react-src/features/tokens/enroll/fields/SecretFields.tsx:119
 msgid "Secret"
 msgstr "Geheimnis"
 
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:35
+msgid "Section"
+msgstr "Bereich"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:71
+msgid "Section {number}"
+msgstr "Abschnitt {number}"
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:39
+msgid "See the <0>documentation</0> before using."
+msgstr "Lesen Sie vor der Verwendung die <0>Dokumentation</0>."
+
+#: react-src/features/config/tokens/types/RadiusConfigFields.tsx:38
+msgid "Select a predefined <0>RADIUS server configuration</0>."
+msgstr "Wählen Sie eine vordefinierte <0>RADIUS-Serverkonfiguration</0>."
+
 #: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:46
 msgid "Select a predefined <0>RADIUS server configuration</0>. The RADIUS request will be forwarded to this RADIUS server."
 msgstr "Wählen Sie eine vordefinierte <0>RADIUS-Server-Konfiguration</0>. Die RADIUS-Anfrage wird an diesen RADIUS-Server weitergeleitet."
+
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:52
+msgid "Select a predefined <0>SMS Gateway configuration</0>."
+msgstr "Wählen Sie eine vordefinierte <0>SMS-Gateway-Konfiguration</0>."
+
+#: react-src/features/config/system/ServerSettingsCard.tsx:83
+#: react-src/features/config/tokens/types/EmailConfigFields.tsx:40
+msgid "Select a predefined <0>SMTP server configuration</0>."
+msgstr "Wählen Sie eine vordefinierte <0>SMTP-Serverkonfiguration</0>."
 
 #: react-src/features/tokens/TokenImportPage.tsx:137
 msgid "Select file and import"
@@ -1644,9 +3274,33 @@ msgstr "Datei auswählen und importieren"
 msgid "Select Realm"
 msgstr "Realm auswählen"
 
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:349
+msgid "Send mail from job queue"
+msgstr "Sende Email über die Job-Queue"
+
 #: react-src/features/recovery/RecoveryPage.tsx:86
 msgid "Send Reset Code"
 msgstr "Reset-Code senden"
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:385
+msgid "Send Test Email"
+msgstr "Sende Test-Email"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:357
+msgid "Send test RADIUS request"
+msgstr "RADIUS-Anfrage senden"
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:243
+msgid "Send test request to eduMFA server"
+msgstr "Sende Test-Request an den eduMFA Server"
+
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:88
+msgid "Sender"
+msgstr "Absender"
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:288
+msgid "Sender Email"
+msgstr "Absende-Email-Adresse"
 
 #: react-src/features/tokens/enroll/fields/QuestionFields.tsx:52
 msgid "Separator"
@@ -1680,15 +3334,53 @@ msgstr "Seriennummer, OTP-Schlüssel, Typ, OTP-Länge, Zeitschritt"
 msgid "Serial Substring"
 msgstr "Teil einer Seriennummer"
 
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:18
+msgid "Server"
+msgstr "Server"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:94
+msgid "Server pool retry rounds"
+msgstr "Serverpool Rundenanzahl"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:95
+msgid "Server pool skip timeout (seconds)"
+msgstr "Zeit, die ein nicht erreichbarer Server im Serverpool ignoriert wird (Sekunden)"
+
+#: react-src/features/config/system/ServerSettingsCard.tsx:24
+msgid "Server settings"
+msgstr "Servereinstellungen"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:134
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:16
+msgid "Server URI"
+msgstr "Server-URI"
+
 #: react-src/features/tokens/enroll/fields/SecretFields.tsx:87
 #: react-src/features/tokens/TokenApplicationsPage.tsx:136
 #: react-src/features/tokens/TokenApplicationsPage.tsx:137
 msgid "Service ID"
 msgstr "Dienste-Kennzeichnung"
 
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:112
+msgid "Service ID saved."
+msgstr "Dienste-Kennzeichnung gespeichert."
+
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:160
+#: react-src/features/config/system/SystemLayout.tsx:113
+msgid "Service IDs"
+msgstr "Dienste-Kennzeichnungen"
+
+#: react-src/features/config/serviceids/ServiceIdListPage.tsx:151
+msgid "Service IDs can be used to attach e.g. SSH keys to certain machines and services. To view attached tokens go to <0>token applications</0>."
+msgstr "Mit Service-IDs können Sie beispielsweise SSH-Schlüssel bestimmten Maschinen und Diensten zuordnen. Zugeordnete Token finden Sie unter <0>Token-Anwendungen</0>."
+
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:437
 msgid "Set count window"
 msgstr "Zählerfenster setzen"
+
+#: react-src/features/config/realms/RealmListPage.tsx:143
+msgid "set Default"
+msgstr "Setze als Standard"
 
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:468
 msgid "Set description"
@@ -1723,9 +3415,26 @@ msgstr "Auf 'True' oder 'False' setzen, um die Einstellung der Token-Konfigurati
 msgid "Show password"
 msgstr "Passwort anzeigen"
 
+#: react-src/features/config/policies/PolicyTemplatePicker.tsx:53
+msgid "Show Policy templates"
+msgstr "Vorlagen anzeigen"
+
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:65
+msgid "Show selected actions only"
+msgstr "Zeige nur aktivierte Aktionen"
+
+#: react-src/features/config/events/EventConditionsEditor.tsx:56
+msgid "Show selected conditions only"
+msgstr "Nur ausgewählte Bedingungen anzeigen"
+
 #: react-src/features/audit/AuditLogPage.tsx:551
 msgid "sig_check"
 msgstr "Signatur"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:214
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:93
+msgid "Size Limit"
+msgstr "Größenbeschränkung"
 
 #: react-src/features/tokens/TokenImportPage.tsx:108
 msgid "Skip tokens that can not be verified"
@@ -1735,9 +3444,39 @@ msgstr "Token überspringen, die nicht verifiziert werden können"
 msgid "Skipped Tokens"
 msgstr "Ausgelassene Token"
 
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:61
+msgid "SMS Gateway configuration"
+msgstr "SMS-Gateway Konfiguration"
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayListPage.tsx:113
+#: react-src/features/config/system/SystemLayout.tsx:91
+msgid "SMS Gateways"
+msgstr "SMS-Gateways"
+
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:90
+msgid "SMS Provider"
+msgstr "SMS-Provider"
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:137
 msgid "SMS Token Config"
 msgstr "SMS-Token-Konfiguration"
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:168
+msgid "SMTP Config saved."
+msgstr "SMTP-Konfiguration erfolgreich gespeichert."
+
+#: react-src/features/config/tokens/types/EmailConfigFields.tsx:49
+msgid "SMTP server configuration"
+msgstr "SMTP-Server Konfiguration"
+
+#: react-src/features/config/system/ServerSettingsCard.tsx:92
+msgid "SMTP server for password recovery"
+msgstr "SMTP-Server für die Passwort-Wiederherstellung"
+
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:146
+#: react-src/features/config/system/SystemLayout.tsx:58
+msgid "SMTP servers"
+msgstr "SMTP-Server"
 
 #: react-src/features/dashboard/DashboardPage.tsx:169
 msgid "Software"
@@ -1755,9 +3494,18 @@ msgstr "Einige Authenticator-Apps unterstützen lediglich den SHA1-Algorithmus."
 msgid "Some nice words..."
 msgstr "Ein paar nette Worte..."
 
-#: react-src/features/login/useAuthenticate.ts:113
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:182
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:182
+msgid "some wise words"
+msgstr "Eine aussagekräftige Beschreibung"
+
+#: react-src/features/login/useAuthenticate.ts:109
 msgid "Something went wrong!"
 msgstr "Etwas ist schiefgelaufen!"
+
+#: react-src/features/config/resolvers/HttpResolverPage.tsx:45
+msgid "Special Error Handling"
+msgstr "Spezielle Fehlerbehandlung"
 
 #: react-src/features/tokens/enroll/fields/SecretFields.tsx:26
 msgid "SSH public Key"
@@ -1780,6 +3528,10 @@ msgstr "SSH Benutzer"
 msgid "SSH: Attaching ssh keys to services."
 msgstr "SSH: SSH-Schlüssel mit Diensten verbinden."
 
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:240
+msgid "SSL Config"
+msgstr "SSL Konfiguration"
+
 #: react-src/components/forms/MachineLookupField.tsx:59
 msgid "start typing a machine."
 msgstr "Fangen Sie an, einen Maschinennamen zu tippen."
@@ -1800,6 +3552,15 @@ msgstr "Geben Sie einen Benutzernamen ein..."
 #: react-src/features/audit/AuditLogPage.tsx:428
 msgid "startdate"
 msgstr "Startdatum"
+
+#: react-src/features/config/servers/smtp/SmtpServerListPage.tsx:93
+msgid "StartTLS"
+msgstr "StartTLS"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:147
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:28
+msgid "STARTTLS"
+msgstr "STARTTLS"
 
 #: react-src/features/audit/AuditLogPage.tsx:455
 #: react-src/features/audit/AuditLogPage.tsx:459
@@ -1823,9 +3584,42 @@ msgstr "Nachname"
 msgid "Surname"
 msgstr "Nachname"
 
+#: react-src/features/shell/AppNavbar.tsx:185
+msgid "Switch to legacy UI"
+msgstr "Zur bisherigen Oberfläche wechseln"
+
+#: react-src/features/shell/AppNavbar.tsx:183
+msgid "Switching interfaces opens the sign-in page."
+msgstr "Beim Wechsel der Oberfläche wird die Anmeldeseite geöffnet."
+
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:457
 msgid "Sync Window"
 msgstr "Sync-Fenster"
+
+#: react-src/features/config/system/TokenDefaultsCard.tsx:45
+msgid "Sync Window of newly enrolled tokens"
+msgstr "Synchronisationsfenster für neu ausgerollte Token"
+
+#: react-src/features/config/ConfigLayout.tsx:44
+msgid "System"
+msgstr "System"
+
+#: react-src/features/config/system/SystemConfigPage.tsx:75
+#: react-src/features/config/system/SystemLayout.tsx:141
+msgid "System Config"
+msgstr "Systemkonfiguration"
+
+#: react-src/features/config/system/SystemConfigPage.tsx:58
+msgid "System Config saved."
+msgstr "Systemkonfiguration gespeichert."
+
+#: react-src/features/config/system/SystemDocumentationPage.tsx:52
+msgid "System Documentation"
+msgstr "Systemdokumentation"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:42
+msgid "Table"
+msgstr "Tabelle"
 
 #: react-src/features/tokens/enroll/results/FidoResult.tsx:25
 msgid "Take action on your authenticator"
@@ -1834,6 +3628,23 @@ msgstr "Bestätigen Sie mit Ihrem Authenticator"
 #: react-src/features/tokens/enroll/results/FidoResult.tsx:23
 msgid "Take action on your token"
 msgstr "Bestätigen Sie mit Ihrem Token"
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:235
+#: react-src/features/config/periodictasks/PeriodicTaskListPage.tsx:22
+msgid "Taskmodule"
+msgstr "Aufgabenmodul"
+
+#: react-src/features/config/resolvers/ResolverConnectionPage.tsx:205
+msgid "Test {label} Resolver"
+msgstr "{label}-Resolver testen"
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:177
+msgid "Test Email sent successfully."
+msgstr "Test Email wurde erfolgreich versendet."
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:247
+msgid "Test LDAP Resolver"
+msgstr "LDAP-Resolver testen"
 
 #: react-src/features/tokens/details/TokenFunctionsCard.tsx:294
 msgid "Test OTP only"
@@ -1848,6 +3659,10 @@ msgstr "Testpasswort"
 msgid "Test token"
 msgstr "Token testen"
 
+#: react-src/features/config/resolvers/HttpResolverPage.tsx:55
+msgid "Test user"
+msgstr "Testbenutzer"
+
 #: react-src/features/tokens/enroll/fields/HardwareFields.tsx:19
 msgid "Test Yubikey"
 msgstr "Yubikey testen"
@@ -1856,6 +3671,14 @@ msgstr "Yubikey testen"
 msgid "The 4 Eyes token will only authenticate if two or more users are present at once. You can define how many existing tokens of the given realms need to be present to perform a successful authentication."
 msgstr "Für die erfolgreiche Authentisierung mit einem Vier-Augen-Token werden zwei oder mehr Benutzer benötigt. Sie können angeben, wieviele Token aus dem jeweiligen Realm zur Authentisierung benötigt werden."
 
+#: react-src/features/config/tokens/types/U2fConfigFields.tsx:49
+msgid "The AppID must not end with a \"/\"."
+msgstr "Die AppID darf nicht mit einem \"/\" enden."
+
+#: react-src/features/config/tokens/types/U2fConfigFields.tsx:44
+msgid "The AppID needs to start with \"https\"."
+msgstr "Die AppID muss mit \"https\" beginnen."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:32
 msgid "The Application Specific Password Token is a static password, that can be bound to certain services. This static password then can only be used to authenticate at this service."
 msgstr "Das anwendungsspezifische Passwort-Token ist ein statisches Passwort, welches an bestimmte Dienste gebunden werden kann. Dieses statische Passwort kann dann nur zur Authentifizierung bei diesem Dienst genutzt werden."
@@ -1863,6 +3686,18 @@ msgstr "Das anwendungsspezifische Passwort-Token ist ein statisches Passwort, we
 #: react-src/auth/useFidoErrorMessage.ts:73
 msgid "The authentication failed."
 msgstr "Die Authentifizierung ist fehlgeschlagen."
+
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:67
+msgid "The authentication request can be handled by the default eduMFA <0>validate API</0> but can also be handled by the <1>Yubico Validation Protocol</1>."
+msgstr "Die Authentifizierungsanfrage kann über die standardmäßige <0>Validate-API</0> von eduMFA oder über das <1>Yubico-Validierungsprotokoll</1> verarbeitet werden."
+
+#: react-src/features/config/tokens/types/YubicoConfigFields.tsx:22
+msgid "The authentication request is forwarded to the YubiCloud. For accessing the YubiCloud you need to enter an API Client ID and an API Key, which you can request <0>here</0>."
+msgstr "Die Authentifizierungsanfrage wird an die YubiCloud weitergeleitet. Für den Zugriff benötigen Sie eine API-Client-ID und einen API-Schlüssel, die Sie <0>hier</0> anfordern können."
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:38
+msgid "The Authentication Server is this eduMFA server. Note that the eduMFA server needs to be accessible from the users smartphone."
+msgstr "Dieser eduMFA-Server ist der Authentifizierungsserver. Er muss vom Smartphone des Benutzers aus erreichbar sein."
 
 #: react-src/auth/useFidoErrorMessage.ts:25
 msgid "The authentication was aborted."
@@ -1888,6 +3723,10 @@ msgstr "Der Authenticator befindet sich in einem ungültigen Zustand."
 msgid "The blob must be a hexadecimal string."
 msgstr "Der Blob muss eine hexadezimale Zeichenkette sein."
 
+#: react-src/features/config/caconnectors/caConnectorEditor.tsx:96
+msgid "The CA connector {connectorName} does not exist."
+msgstr "Der CA-Konnektor {connectorName} existiert nicht."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:35
 msgid "The Certificate Token lets you enroll an x509 ceritificate by the given CA."
 msgstr "Der Zertifikatstoken wird dazu verwendet, um x509-Zertifikate von einer konfigurierten Zertifizierungsstelle ausstellen zu lassen."
@@ -1896,9 +3735,25 @@ msgstr "Der Zertifikatstoken wird dazu verwendet, um x509-Zertifikate von einer 
 msgid "The certificate was enrolled successfully."
 msgstr "Das Zertifikat wurde erfolgreich ausgestellt."
 
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:217
+msgid "The certificate will be checked for a valid hostname and for a trusted certificate. Do not uncheck this in productive use!"
+msgstr "Das Zertifikat wird auf einen gültigen Hostnamen und eine vertrauenswürdige Zertifikatskette geprüft. Deaktivieren Sie diese Prüfung nicht im Produktivbetrieb!"
+
+#: react-src/features/config/system/TokenDefaultsCard.tsx:55
+msgid "The challenge validity time"
+msgstr "Die Gültigkeitszeit der Challenge"
+
 #: react-src/auth/useFidoErrorMessage.ts:50
 msgid "The client device can not be used for this type of request."
 msgstr "Das Client-Geräte kann für diese Art des Requests nicht verwendet werden."
+
+#: react-src/features/config/tokens/types/YubicoConfigFields.tsx:44
+msgid "The client ID"
+msgstr "Die Client-ID"
+
+#: react-src/features/config/tokens/types/DayPasswordConfigFields.tsx:19
+msgid "The DayPassword Token is a time based password token. It is based on the TOTP token, but it can be used more than once."
+msgstr "Der DayPassword-Token ist ein zeitbasiertes Passwort-Token. Er basiert auf TOTP, kann aber innerhalb des Gültigkeitszeitraums mehrfach verwendet werden."
 
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:38
 msgid "The DayPassword token is a time based password token. You can paste a secret key or have the server generate the secret and scan the QR code with an authenticator app that supports the token."
@@ -1912,6 +3767,18 @@ msgstr "Die Beschreibung darf höchstens 80 Zeichen lang sein."
 msgid "The eduMFA API seems to be offline!"
 msgstr "Die eduMFA-API scheint offline zu sein!"
 
+#: react-src/features/shell/AboutDialog.tsx:46
+msgid "The eduMFA authentication backend is licensed under the AGPLv3. Some components may be part to other licenses. eduMFA was forked from privacyIDEA, which was licensed by NetKnights GmbH. Prior to this, privacyIDEA was originally forked from LinOTP, which was licensed by LSE Leading Security Experts GmbH. For detailed information please take a look at the <0>backend service itself</0>."
+msgstr "Das Authentifizierungsbackend von eduMFA steht unter der AGPLv3. Einzelne Komponenten können anderen Lizenzen unterliegen. eduMFA ist eine Abspaltung von privacyIDEA, das von der NetKnights GmbH lizenziert wurde. privacyIDEA ging ursprünglich aus LinOTP hervor, das von der LSE Leading Security Experts GmbH lizenziert wurde. Weitere Informationen finden Sie im <0>Backend-Dienst</0>."
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerEditPage.tsx:54
+msgid "The eduMFA server {identifier} does not exist."
+msgstr "Der eduMFA-Server {identifier} existiert nicht."
+
+#: react-src/features/config/tokens/types/EmailConfigFields.tsx:30
+msgid "The EMail token is a challenge response token that sends the OTP value to the given email address, when the correct OTP PIN was presented by the user."
+msgstr "Der E-Mail-Token ist ein Challenge-Response-Token. Nach Eingabe der korrekten OTP-PIN wird der OTP-Wert an die angegebene E-Mail-Adresse gesendet."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:41
 msgid "The Email Token sends the OTP value to the users email address."
 msgstr "Der EMail-Token sendet einen OTP-Wert an die EMail-Adresse des Benutzers."
@@ -1920,17 +3787,35 @@ msgstr "Der EMail-Token sendet einen OTP-Wert an die EMail-Adresse des Benutzers
 msgid "The Enrollment URL"
 msgstr "Registrierungs-URL"
 
+#: react-src/features/config/events/EventEditPage.tsx:77
+msgid "The event handler does not exist."
+msgstr "Die Ereignisbehandlung existiert nicht."
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:164
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:52
+msgid "The file containing the CA certificate which signed the LDAP TLS certificate."
+msgstr "Die Datei mit dem CA-Zertifikat, mit dem das TLS-Zertifikat des LDAP-Servers signiert wurde."
+
+#: react-src/features/config/tokens/types/HotpConfigFields.tsx:13
+msgid "The HOTP Token is a event based one time password token. It is described in <0>RFC 4226</0>."
+msgstr "Der HOTP-Token ist ein ereignisbasiertes Einmalpasswort-Token. Er wird in <0>RFC 4226</0> beschrieben."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:43
 msgid "The HOTP token is an event based token. You can paste a secret key or have the server generate the secret and scan the QR code with an Authenticator App turning your smartphone into an authentication device. But note, that some Apps might have limitations in the supported hash algorithms or other parameters."
 msgstr "Der HOTP-Token ist ein ereignis-basierte Token. Sie können den geheimen OTP-Schlüssel hier einfügen oder den Server einen Schlüssel generieren lassen. Diesen können Sie in Ihre Authenticator-App importieren, indem Sie den QR-Code scannen. Beachten Sie, dass nicht alle Authenticator-Apps möglicherweise alle Parameter unterstützen."
 
-#: react-src/features/login/LoginPage.tsx:57
+#: react-src/features/login/LoginPage.tsx:60
 msgid "The HSM is not ready. eduMFA can not work properly. Please start the HSM and reload this page."
 msgstr "Das HSM ist nicht bereit. eduMFA kann nicht richtig arbeiten. Bitte starten Sie das HSM und laden Sie diese Seite neu."
 
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:46
 msgid "The indexed secret Token is based on a shared secret between eduMFA and the user. During authentication the user is asked for random positions from this known secret."
 msgstr "Der IndexedSecret Token basiert auf einem geheimen String, der dem eduMFA Server und dem Benutzer bekannt ist. Während der Authentisierung wird der Benutzer nach zufälligen Positionen aus diesem geheimen String gefragt."
+
+#: react-src/features/config/machineresolvers/HostsMachineResolverPage.tsx:79
+#: react-src/features/config/machineresolvers/LdapMachineResolverPage.tsx:64
+msgid "The machine resolver {resolvername} does not exist."
+msgstr "Der Maschinenresolver {resolvername} existiert nicht."
 
 #: react-src/features/tokens/enroll/fields/MotpFields.tsx:54
 msgid "The mOTP PIN is the PIN that needs to be entered on the mobile device."
@@ -1988,6 +3873,10 @@ msgstr "Das Passwort, das mit der OTP-PIN kombiniert werden muss: <0>{0}</0>"
 msgid "The passwords do not match."
 msgstr "Die Passwörter stimmen nicht überein."
 
+#: react-src/features/config/tokens/types/WebAuthnConfigFields.tsx:25
+msgid "The path to the directory containing the trust anchors."
+msgstr "Der Pfad zum Verzeichnis, das die Vertrauensanker enthält."
+
 #: react-src/features/login/PinChangePage.tsx:103
 #: react-src/features/tokens/details/TokenFunctionsCard.tsx:188
 #: react-src/features/tokens/details/TokenUserCard.tsx:246
@@ -2002,9 +3891,21 @@ msgstr "Die PINs stimmen nicht überein."
 msgid "The QR Code contains the secret key of your token. You need to protect it. <0>If you are in doubt, that someone else saw it, please regenerate the QR Code, when no one else is watching.</0>"
 msgstr "Der QR-Code enthält den geheimen Schlüssel Ihres Tokens. Sie müssen ihn schützen. <0>Wenn Sie befürchten, dass jemand anderes ihn gesehen hat, erzeugen Sie den QR-Code bitte neu, wenn niemand zusieht.</0>"
 
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:37
+msgid "The questionnaire lets you define a set of questions. The questionnaire token needs to define answers to these questions and the user will be presented with a random questions and needs to provide his previously defined answer."
+msgstr "Der Fragebogen legt eine Reihe von Fragen fest. Für den Fragebogen-Token hinterlegt der Benutzer Antworten auf diese Fragen. Bei der Anmeldung wird eine zufällig ausgewählte Frage gestellt, die mit der zuvor hinterlegten Antwort beantwortet werden muss."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:56
 msgid "The Questionnaire token will let you define answers to questions. When authenticating with this type of token, you will be asked a random question and then need to provide the previously defined answer."
 msgstr "Für einen \"Fragenkatalog\"-Token können Sie eine Reihe an Antworten auf die Fragen festlegen. Bei der Authentisierung mit diesem Tokentyp wird eine der Fragen zufällig ausgewählt und Ihnen gestellt. Darauf müssen Sie dann die richtige Antwort geben."
+
+#: react-src/features/config/servers/radius/RadiusServerEditPage.tsx:54
+msgid "The RADIUS server {identifier} does not exist."
+msgstr "Der RADIUS-Server {identifier} existiert nicht."
+
+#: react-src/features/config/tokens/types/RadiusConfigFields.tsx:30
+msgid "The RADIUS token forwards the authentication request to another RADIUS server."
+msgstr "Der RADIUS-Token leitet die Authentifizierungsanfrage an einen anderen RADIUS-Server weiter."
 
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:59
 msgid "The RADIUS token forwards the authentication request to another RADIUS server. You can choose if the PIN should be stripped and checked locally."
@@ -2013,6 +3914,10 @@ msgstr "Der RADIUS-Token leitet die Authentisierungsanfrage an einen RADIUS-Serv
 #: react-src/auth/useFidoErrorMessage.ts:73
 msgid "The registration failed."
 msgstr "Die Registrierung ist fehlgeschlagen."
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:21
+msgid "The Registration Server is this eduMFA server. Note that the eduMFA server needs to be accessible from the users smartphone."
+msgstr "Dieser eduMFA-Server ist der Registrierungsserver. Er muss vom Smartphone des Benutzers aus erreichbar sein."
 
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:62
 msgid "The registration token is a code, that the user can use to authenticate once! After using this code to login, the registration token is deleted and can not be used anymore."
@@ -2030,9 +3935,37 @@ msgstr "Die Registrierung wurde abgebrochen oder hat das Zeitlimit überschritte
 msgid "The relying party ID does not match this site."
 msgstr "Die Relying-Party-ID passt nicht zu dieser Website."
 
+#: react-src/features/config/tokens/types/RemoteConfigFields.tsx:13
+msgid "The Remote token forwards the authentication request to another eduMFA server."
+msgstr "Der Remote-Token leitet die Authentifizierungsanfrage an einen anderen eduMFA-Server weiter."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:66
 msgid "The remote token forwards the authentication request to another eduMFA server. You can choose if the PIN should be stripped and checked locally."
 msgstr "Der Remote-Token leitet die Authentisierungsanfrage an einen anderen eduMFA-Server weiter. Sie können auswählen, ob die PIN abgetrennt und lokal überprüft werden soll."
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:142
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:207
+#: react-src/features/config/realms/RealmListPage.tsx:325
+#: react-src/features/config/resolvers/ResolverNameField.tsx:19
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:171
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:171
+msgid "The resource name must consist of letters, numbers and '_', '-', '.'"
+msgstr "Der Name der Ressource darf nur Buchstaben, Zahlen und die Zeichen '_', '-' oder '.' enthalten"
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:155
+msgid "The resource name must consist of letters, numbers and '_', '-', '.' and must not be the word 'send_test_email'"
+msgstr "Der Name der Ressource darf nur Buchstaben, Zahlen und die Zeichen '_', '-' oder '.' enthalten. Das Wort 'send_test_email' ist nicht erlaubt"
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:115
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:166
+msgid "The resource name must consist of letters, numbers and '_', '-', '.' and must not be the word 'test_request'"
+msgstr "Der Name der Ressource darf nur Buchstaben, Zahlen und die Zeichen '_', '-' oder '.' enthalten. Das Wort 'test_request' ist nicht erlaubt"
+
+#: react-src/features/config/machineresolvers/HostsMachineResolverPage.tsx:168
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:126
+#: react-src/features/config/resolvers/ResolverNameField.tsx:20
+msgid "The resource name must consist of letters, numbers and '_', '-', '.' and must not be the word 'test'"
+msgstr "Der Name der Ressource darf nur Buchstaben, Zahlen und die Zeichen '_', '-' oder '.' enthalten. Das Wort 'test' ist nicht erlaubt"
 
 #: react-src/features/tokens/enroll/fields/QuestionFields.tsx:46
 msgid "The separator that is used to separate the passwords of the different tokens."
@@ -2072,21 +4005,46 @@ msgstr "Der Server erzeugt den geheimen Schlüssel und es wird ein QR-Code angez
 msgid "The server will create the static password."
 msgstr "Der Server wird ein Passwort erzeugen."
 
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:62
+msgid "The service ID {servicename} does not exist."
+msgstr "Die Service-ID {servicename} existiert nicht."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:70
 msgid "The Simple Pass Token does not take additional arguments. You only need to specify an OTP PIN."
 msgstr "Der Simple-Pass-Token benötigt keine zusätzlichen Argumente. Sie müssen lediglich eine OTP-PIN angeben."
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayEditPage.tsx:76
+msgid "The SMS gateway {gatewayId} does not exist."
+msgstr "Das SMS-Gateway {gatewayId} existiert nicht."
+
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:36
+msgid "The SMS Token is an event based token. After the user has tried to authenticate with the OTP PIN, an SMS with an OTP value is sent to the users mobile phone. Then user can authenticate with this OTP value in a second step."
+msgstr "Der SMS-Token ist ein ereignisbasiertes Token. Nach dem Anmeldeversuch mit der OTP-PIN wird eine SMS mit einem OTP-Wert an das Mobiltelefon des Benutzers gesendet. Im zweiten Schritt kann sich der Benutzer mit diesem OTP-Wert authentifizieren."
 
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:68
 msgid "The SMS Token sends an OTP value to the mobile phone of the user."
 msgstr "Der SMS-Token sendet einen OTP-Wert an das Mobiltelefon des Benutzers."
 
+#: react-src/features/config/servers/smtp/SmtpServerEditPage.tsx:54
+msgid "The SMTP server {identifier} does not exist."
+msgstr "Der SMTP-Server {identifier} existiert nicht."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:73
 msgid "The SSH Key Token stores the public SSH Key in the server. This can be used to authenticate to a secure shell."
 msgstr "Der SSH-Key-Token speichert den öffentlichen SSH-Schlüssel im Server. Damit kann der Benutzer sich an Servern mittels SSH anmelden."
 
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:318
+msgid "The stored secret is not shown. Enter it again to save the definition."
+msgstr "Das gespeicherte Geheimnis wird nicht angezeigt. Geben Sie es erneut ein, um die Definition zu speichern."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:76
 msgid "The TAN token will let you print a list of OTP values. These OTP values can be used to authenticate. The values can be used in an arbitrary order."
 msgstr "Der TAN-Token ist eine Liste von ausgedruckten OTP-Werten. Mit diesen OTP-Werten kann sich der Benutzer authentisieren. Er streicht dann die Werte aus der Liste, nachdem er sie benutzt hat."
+
+#: react-src/features/config/tokens/types/EmailConfigFields.tsx:57
+#: react-src/features/config/tokens/types/SmsConfigFields.tsx:69
+msgid "The time in seconds for which the sent OTP value is valid for authentication."
+msgstr "Gültigkeitsdauer des gesendeten OTP-Werts für die Authentifizierung in Sekunden."
 
 #: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:152
 msgid "The time in which the password can be used. For example '1d' or '12h'."
@@ -2095,6 +4053,10 @@ msgstr "Der Zeitraum, in dem das Passwort genutzt werden kann, zum Beispiel '1d'
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:79
 msgid "The TiQR token is a Smartphone App token, which allows easy authentication by just scanning a QR Code during the authentication process."
 msgstr "Der TiQR-Token ist eine Smartphone-App, die eine leichte Authentisierung durch das Scannen eines QR-Codes ermöglicht."
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:13
+msgid "The TiQR Token is an OCRA based Smartphone Token, that can be used to authenticate by just scanning a QR code."
+msgstr "Der TiQR-Token ist ein OCRA-basiertes Smartphone-Token. Zur Authentifizierung genügt das Scannen eines QR-Codes."
 
 #: react-src/features/tokens/TokenGetSerialPage.tsx:206
 msgid "The token is assigned to a user"
@@ -2129,17 +4091,45 @@ msgstr "Der Token mit der Seriennummer {detailsLink} wurde erfolgreich für den 
 msgid "The token was successfully enrolled with serial number {detailsLink}."
 msgstr "Der Token mit der Seriennummer {detailsLink} wurde erfolgreich ausgerollt."
 
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:62
+msgid "The tokengroup {groupname} does not exist."
+msgstr "Die Tokengruppe {groupname} existiert nicht."
+
+#: react-src/features/config/tokens/types/TotpConfigFields.tsx:18
+msgid "The TOTP Token is a time based one time password token. It is described in <0>RFC 6238</0>."
+msgstr "Der TOTP-Token ist ein zeitbasiertes Einmalpasswort-Token. Er wird in <0>RFC 6238</0> beschrieben."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:82
 msgid "The TOTP token is a time based token. You can paste a secret key or have the server generate the secret and scan the QR code with an Authenticator App turning your smartphone into an authentication device. But note, that some Apps might have limitations in the supported hash algorithms or other parameters."
 msgstr "Der TOTP-Token ist ein zeit-basierter Token. Sie können den geheimen Schlüssel hier einfügen oder den Server einen Schlüssel generieren lassen. Diesen können Sie in Ihre Authenticator-App importieren, indem Sie den QR-Code scannen. Beachten Sie, dass nicht alle Authenticator-Apps möglicherweise alle Parameter unterstützen."
+
+#: react-src/features/config/tokens/types/WebAuthnConfigFields.tsx:51
+msgid "The trust_anchor_dir must be an absolute path."
+msgstr "Das trust_anchor_dir muss als absoluter Pfad angegeben werden."
+
+#: react-src/features/config/tokens/types/WebAuthnConfigFields.tsx:56
+msgid "The trust_anchor_dir must not end with a \"/\"."
+msgstr "trust_anchor_dir darf nicht mit einem \"/\" enden."
 
 #: react-src/auth/useFidoErrorMessage.ts:58
 msgid "The U2F API is not available in this browser."
 msgstr "Die U2F-API ist in diesem Browser nicht verfügbar."
 
+#: react-src/features/config/tokens/types/U2fConfigFields.tsx:15
+msgid "The U2F token is a hardware token, that communicates with the browser. You need to set the correct appId, which in fact is the URL of your eduMFA installation."
+msgstr "Der U2F-Token ist ein Hardware-Token, das mit dem Browser kommuniziert. Als appId müssen Sie die URL Ihrer eduMFA-Installation eintragen."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:85
 msgid "The U2F token is a token defined by the Fido Alliance. You can register this token with any webservice and with as many web services you wish to."
 msgstr "Der U2F-Token ist von der Fido Alliance definiert. Sie können diesen Token bei mehreren, verschiedenen Webdiensten registrieren."
+
+#: react-src/features/config/tokens/types/U2fConfigFields.tsx:25
+msgid "The URL of your eduMFA installation."
+msgstr "Die URL dieser eduMFA Installation."
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:77
+msgid "The URL that contains the logo of the service."
+msgstr "Diese URL zeigt auf das Logo des Dienstes."
 
 #: react-src/features/tokens/TokenLostPage.tsx:82
 msgid "The user will have to authenticate with the old OTP PIN he knows and this newly generated password."
@@ -2165,29 +4155,121 @@ msgstr "Die Seriennummer des VASCO Tokens wird aus dem VASCO Blob gelesen. Wenn 
 msgid "The VASCO token is a proprietary OTP token. You can paste the VASCO token blob in a hexlified format."
 msgstr "Der VASCO Token ist ein proprietärer Token. Sie können den VASCO Token Blob hier einfügen. Der Token Blob muss im Hexformat eingefügt werden."
 
+#: react-src/features/config/tokens/types/WebAuthnConfigFields.tsx:15
+msgid "The WebAuthn token is a hardware token, that communicates with the browser. You may set a trust anchor directory, which is a path to a directory containing certificates to trust for WebAuthn authenticator attestation."
+msgstr "Der WebAuthn-Token ist ein Hardware-Token, das mit dem Browser kommuniziert. Sie können ein Verzeichnis für Vertrauensanker festlegen. Es enthält Zertifikate, denen bei der Attestierung von WebAuthn-Authentifikatoren vertraut wird."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:91
 msgid "The WebAuthn token is a token defined by the W3C and the Fido Alliance. You can register this token with any webservice and with as many web services you wish to."
 msgstr "Der WebAuthn-Token ist vom W3C und der Fido Alliance definiert. Sie können diesen Token bei mehreren, verschiedenen Webdiensten registrieren."
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:89
+msgid "The website of the identity provider"
+msgstr "Die Webseite des Identity Providers"
 
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:94
 msgid "The Yubico Cloud mode forwards the authentication request to the YubiCloud. The Yubikey needs to be registered with the YubiCloud."
 msgstr "Im Yubico Cloud Modus wird die Authentisierungsanfrage an die YubiCloud weitergeleitet. Der Yubikey muss in der YubiCloud registriert sein."
 
+#: react-src/features/config/tokens/types/YubicoConfigFields.tsx:15
+msgid "The Yubico Token is a Yubikey that is registered with the YubiCloud service. The Yubikey emits a 44 character one time password. The first 12 characters are a unique ID which is used to bind the device to the user."
+msgstr "Der Yubico-Token ist ein bei YubiCloud registrierter YubiKey. Er erzeugt ein 44 Zeichen langes Einmalpasswort. Die ersten zwölf Zeichen bilden eine eindeutige ID, die das Gerät dem Benutzer zuordnet."
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:97
 msgid "The Yubikey Token is an USB device that emits an event based One Time Password. You can initialize the Yubikey using the YubiKey personalization tools. The secret hex key and the final OTP length are needed here. For tokens compatible with the Yubico cloud service the OTP length must be 44 (12 characters UID and 32 characters OTP). When programming the token for the Yubico cloud service, the Public Identity Length must be 6 bytes, which will give you a UID with 12 characters. The current OTP length of a programmed YubiKey can automatically be determined by inserting it in the test field."
 msgstr "Der Yubikey ist ein USB-Gerät, das ein ereignisbasiertes Einmalpasswort ausgibt. Dazu wird es als Tastatur erkannt. Sie können den Yubikey mit Personalisierungstools von Yubico initialisieren. Der geheime Schlüssel in Hex und die gesamte Länge des OTP-Wertes werden hier benötigt. Yubikeys, die mit der Yubicloud kompatibel sind, geben eine Gesamtlänge von 44 Zeichen (12 Zeichen UID und 32 Zeichen OTP) aus. Wenn ein Yubikey für den Yubicloud Service programmiert wird, dann muss die \"Public Identity\" 6 Bytes sein, was in der UID 12 Zeichen entspricht. Die gesamte OTP Länge des Yubikeys wird automatisch bestimmt, wenn Sie einen OTP-Wert in das Testfeld eingeben."
 
-#: react-src/features/login/ResponsePage.tsx:138
+#: react-src/features/login/ResponsePage.tsx:54
 msgid "There is no pending challenge. Please <0>log in</0> first."
 msgstr "Es steht keine Challenge aus. Bitte <0>melden Sie sich</0> zuerst an."
+
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:65
+msgid "These are the possible questions, a user may define answers to."
+msgstr "Dies sind die möglichen Fragen, zu denen ein Benutzer Antworten definieren kann."
 
 #: react-src/features/users/UserAddPage.tsx:105
 msgid "These are the resolvers marked as editable. You can add a user to the resolver. The user will appear in the realms, that contain this resolver."
 msgstr "Das sind die Resolver, die als editierbar markiert sind. SIe könne Benutzer in diesen Resolver hinzufügen. Der Benutzer erscheint dann in den Realm, in denen dieser Resolver enthalten ist."
 
+#: react-src/features/config/system/ServerSettingsCard.tsx:67
+msgid "These client IP addresses or subnets are allowed to masquerade as another client."
+msgstr "Diese Client-IP-Adressen oder Subnetze dürfen Anfragen im Namen anderer Clients übermitteln."
+
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:190
+msgid "This action is not in the current definitions. Its value will be preserved."
+msgstr "Diese Aktion ist nicht in den aktuellen Definitionen enthalten. Ihr Wert bleibt erhalten."
+
+#: react-src/app/routes.tsx:107
+msgid "This configuration page is not available yet."
+msgstr "Diese Konfigurationsseite ist noch nicht verfügbar."
+
+#: react-src/features/config/system/SystemDocumentationPage.tsx:62
+msgid "This documentation contains the current configuration of your system in restructured text. You can use this to document your installed system."
+msgstr "Diese Dokumentation enthält die aktuelle Systemkonfiguration im Format reStructuredText. Sie können sie zur Dokumentation Ihrer Installation verwenden."
+
+#: react-src/features/config/tokens/types/WebAuthnConfigFields.tsx:32
+msgid "This does not need to be set for WebAuthn to work, however without this, eduMFA can not check, whether an attestation certificate is actually trusted (it will still be checked for validity). Therefore it is mandatory to set this, if webauthn_authenticator_attestation_level is set to \"trusted\" by a policy for any user."
+msgstr "Diese Einstellung ist für WebAuthn grundsätzlich nicht erforderlich. Ohne sie kann eduMFA jedoch nicht prüfen, ob ein Attestierungszertifikat vertrauenswürdig ist. Die Gültigkeit wird weiterhin geprüft. Die Einstellung ist daher erforderlich, wenn eine Richtlinie für einen Benutzer webauthn_authenticator_attestation_level auf \"trusted\" setzt."
+
+#: react-src/features/shell/AboutDialog.tsx:22
+msgid "This is a Single Page Application client that acts as a frontend for the eduMFA authentication backend."
+msgstr "Diese Single-Page-Anwendung stellt die Benutzeroberfläche für das Authentifizierungsbackend von eduMFA bereit."
+
+#: react-src/features/config/tokens/types/YubikeyConfigFields.tsx:61
+msgid "This is a Yubikey in the Yubico Mode authenticated against eduMFA. The Yubikey emits a 44 character on time password."
+msgstr "Dies ist ein YubiKey im Yubico-Modus, der sich gegen eduMFA authentifiziert. Der YubiKey erzeugt ein 44 Zeichen langes Einmalpasswort."
+
 #: react-src/features/tokens/TokenImportPage.tsx:344
 msgid "This is an RFC6030 OATH compliant PSKC file. Values in the PSKC files may be unencrypted or <0>either</0> encrypted with a <1>Pre Shared Key</1> or <2>password</2>. If the values are encrypted, please specify the Pre Shared Key in hex format or the password."
 msgstr "Dies ist eine RFC6030-konforme OATH-PSKC-Datei. Die Werte in der PSKC-Datei können unverschlüsselt oder <0>entweder</0> mit einem <1>Preshared Key</1> oder einem <2>Passwort</2> verschlüsselt sein. Sind die Werte verschlüsselt, geben Sie bitte den Preshared Key im Hex-Format oder das Passwort an."
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:215
+msgid "This is the CRL file, which is written when a certificate is revoked or the CRL is created otherwise."
+msgstr "Diese Sperrlistendatei (CRL) wird geschrieben, wenn ein Zertifikat gesperrt oder die Sperrliste anderweitig erzeugt wird."
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:198
+msgid "This is the directory were certificates get written to."
+msgstr "Das Verzeichnis, in das generierte Zertifikate geschrieben werden."
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:53
+msgid "This is the display name of your service in the TiQR app."
+msgstr "Dies ist der Anzeigename Ihres Service in der TiQR-App."
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:282
+msgid "This is the email address of the sender. Usually this should be an email address identifying your system."
+msgstr "Dies ist die E-Mail-Adresse des Absenders. Sie sollte in der Regel Ihr System eindeutig kennzeichnen."
+
+#: react-src/features/config/tokens/types/QuestionConfigFields.tsx:45
+msgid "This is the number of answers a user needs to define to enroll a token."
+msgstr "Dies ist die Anzahl der Antworten, die ein Benutzer definieren muss, um einen Token auszurollen."
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:102
+msgid "This is the OCRA suite used by the TiQR App. The default OCRA suite is OCRA-1:HOTP-SHA1-6:QN10. For more details see the <0>RFC 6287</0>."
+msgstr "Dies ist die von der TiQR-App verwendete OCRA-Suite. Der Standardwert ist OCRA-1:HOTP-SHA1-6:QN10. Einzelheiten finden Sie in <0>RFC 6287</0>."
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:64
+msgid "This is the service identifier that will be passed to the TiQR app. This should contain a reverse FQDN (defaults to org.edumfa)."
+msgstr "Diese Dienstkennung wird an die TiQR-App übergeben. Sie sollte einen umgekehrten FQDN enthalten; der Standardwert ist org.edumfa."
+
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:159
+msgid "This is the unique identifying name for this group definition."
+msgstr "Dies ist der eindeutige Name dieser Gruppendefinition."
+
+#: react-src/features/config/serviceids/ServiceIdEditPage.tsx:159
+msgid "This is the unique identifying name for this service definition."
+msgstr "Dies ist der eindeutige Name dieser Dienstdefinition."
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:187
+msgid "This is the unique identifying name of the eduMFA server definition."
+msgstr "Dies ist der eindeutige Name dieser eduMFA-Serverdefinition."
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:234
+msgid "This is the unique identifying name of the RADIUS server definition."
+msgstr "Dies ist der eindeutige Name dieser RADIUS-Serverdefinition."
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:224
+msgid "This is the unique identifying name of the SMTP server definition."
+msgstr "Dies ist der eindeutige Name dieser SMTP-Serverdefinition."
 
 #: react-src/features/tokens/enroll/fields/ForwardingFields.tsx:62
 msgid "This is the username that is sent to the RADIUS server. It can be different from the owner of this RADIUS token."
@@ -2197,6 +4279,18 @@ msgstr "Dieser Benutzername wird zum RADIUS server gesendet. Er kann ein anderer
 msgid "This is used, so that the user can enroll a token on his own, after logging in for the first time."
 msgstr "Dieser wird verwendet, damit ein Benutzer sich einmalig anmelden kann, um danach sich selber einen Token auszustellen."
 
+#: react-src/features/config/tokens/types/U2fConfigFields.tsx:26
+msgid "This must be a valid FQDN with also a valid top level domain - otherwise you might receive a U2F Error 2 (Bad Request)."
+msgstr "Dies muss ein gültiger FQDN mit einer gültigen Top-Level-Domain sein. Andernfalls kann der U2F-Fehler 2 (Bad Request) auftreten."
+
+#: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:264
+msgid "This provider module has no parameters."
+msgstr "Dieses Anbietermodul hat keine Parameter."
+
+#: react-src/features/config/tokens/types/WebAuthnConfigFields.tsx:26
+msgid "This should be a path to a local directory on the server, that eduMFA has read access to. It should contain certificate files. Any certificates in this directory will be trusted to correctly attest authenticators during enrollment."
+msgstr "Geben Sie den Pfad zu einem lokalen Verzeichnis auf dem Server an, auf das eduMFA lesend zugreifen kann. Es sollte Zertifikatsdateien enthalten. Allen Zertifikaten in diesem Verzeichnis wird bei der Attestierung von Authentifikatoren während des Ausrollens vertraut."
+
 #: react-src/features/tokens/details/TokenMachinesCard.tsx:268
 msgid "This token is not attached to any machine."
 msgstr "Dieser Token ist an keine Maschine angehängt."
@@ -2204,6 +4298,16 @@ msgstr "Dieser Token ist an keine Maschine angehängt."
 #: react-src/features/audit/AuditLogPage.tsx:561
 msgid "thread_id"
 msgstr "thread_id"
+
+#: react-src/features/config/servers/radius/RadiusServerForm.tsx:280
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:270
+msgid "Timeout"
+msgstr "Time-out"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:207
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:87
+msgid "Timeout (seconds)"
+msgstr "Time-out (Sekunden)"
 
 #: react-src/auth/useFidoErrorMessage.ts:51
 msgid "Timeout while waiting for signing response."
@@ -2218,9 +4322,37 @@ msgstr "Zeitstempel"
 msgid "Timestep"
 msgstr "Zeitschritt"
 
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:44
+msgid "TiQR Authentication Server"
+msgstr "TiQR Authentisierungsserver"
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:91
+msgid "TiQR Info URL"
+msgstr "TiQR Info-URL"
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:79
+msgid "TiQR Logo URL"
+msgstr "TiQR Logo-URL"
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:27
+msgid "TiQR Registration Server"
+msgstr "TiQR Registrierungsserver"
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:56
+msgid "TiQR Service Displayname"
+msgstr "TiQR Service Anzeigename"
+
+#: react-src/features/config/tokens/types/TiqrConfigFields.tsx:70
+msgid "TiQR Service Identifier"
+msgstr "TiQR-Dienstkennung"
+
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:145
 msgid "TiQR Token Config"
 msgstr "TiQR-Token-Konfiguration"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:34
+msgid "TLS Version"
+msgstr "TLS Protokollversion"
 
 #: react-src/features/tokens/TokenApplicationsPage.tsx:214
 msgid "To define service IDs go to <0>Service ID config</0>"
@@ -2260,6 +4392,10 @@ msgstr "Token Anwendungen"
 #: react-src/features/users/UserDetailsPage.tsx:307
 msgid "Token assigned successfully."
 msgstr "Token erfolgreich zugewiesen."
+
+#: react-src/features/config/tokens/TokenConfigPage.tsx:167
+msgid "Token configuration saved."
+msgstr "Token-Konfiguration gespeichert."
 
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:545
 #: react-src/features/tokens/enroll/fields/CertificateFields.tsx:25
@@ -2345,7 +4481,18 @@ msgstr "Tokentyp"
 msgid "Token unassigned."
 msgstr "Tokenzuweisung aufgehoben."
 
+#: react-src/features/config/tokengroups/TokengroupEditPage.tsx:112
+msgid "Tokengroup saved."
+msgstr "Tokengruppe erfolgreich gespeichert."
+
+#: react-src/features/config/system/SystemLayout.tsx:102
+#: react-src/features/config/tokengroups/TokengroupListPage.tsx:149
+msgid "Tokengroups"
+msgstr "Tokengruppen"
+
+#: react-src/features/config/ConfigLayout.tsx:72
 #: react-src/features/dashboard/DashboardPage.tsx:155
+#: react-src/features/shell/AppNavbar.tsx:82
 #: react-src/features/tokens/TokenListPage.tsx:281
 #: react-src/features/users/UserDetailsPage.tsx:635
 msgid "Tokens"
@@ -2354,6 +4501,10 @@ msgstr "Token"
 #: react-src/features/machines/MachineDetailsPage.tsx:333
 msgid "Tokens and Applications"
 msgstr "Token und Anwendungen"
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:272
+msgid "top secret"
+msgstr "Streng geheim"
 
 #: react-src/features/dashboard/DashboardPage.tsx:161
 msgid "Total"
@@ -2375,6 +4526,13 @@ msgstr "Anzahl der Benutzer:"
 msgid "Transaction ID"
 msgstr "Transaktions-ID"
 
+#: react-src/features/config/tokens/types/WebAuthnConfigFields.tsx:42
+msgid "trust_anchor_dir"
+msgstr "trust_anchor_dir"
+
+#: react-src/features/config/caconnectors/CaConnectorListPage.tsx:64
+#: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:71
+#: react-src/features/config/resolvers/ResolverListPage.tsx:79
 #: react-src/features/tokens/TokenListPage.tsx:156
 #: react-src/features/tokens/TokenListPage.tsx:157
 #: react-src/features/users/UserDetailsPage.tsx:352
@@ -2401,6 +4559,10 @@ msgstr "Geben Sie ein Passwort ein"
 #: react-src/features/users/UserDetailsPage.tsx:694
 msgid "Type a PIN or password"
 msgstr "Geben Sie eine PIN/ein Passwort ein"
+
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:129
+msgid "UID Type"
+msgstr "UID Typ"
 
 #: react-src/features/tokens/details/TokenUserCard.tsx:180
 msgid "Unassign Token"
@@ -2434,6 +4596,46 @@ msgstr "Hochgeladene Datei"
 msgid "Uploaded Tokens"
 msgstr "Hochgeladene Token"
 
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:85
+msgid "URL"
+msgstr "URL"
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:205
+msgid "URL of the eduMFA server"
+msgstr "URL des eduMFA Servers"
+
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:24
+msgid "Use @ sign to split the username and the realm."
+msgstr "Benutzername und Realm mit dem Zeichen @ trennen."
+
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:192
+msgid "Use crontab notation: minute, hour, day of month, month, day of week."
+msgstr "Verwenden Sie die Crontab-Schreibweise: Minute, Stunde, Tag des Monats, Monat, Wochentag."
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:235
+msgid "Use HTTP proxy"
+msgstr "HTTP-Proxy verwenden"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:265
+msgid "Use letters, numbers, spaces, underscores, dots or hyphens. Reserved policy names are not allowed."
+msgstr "Verwenden Sie Buchstaben, Zahlen, Leerzeichen, Unterstriche, Punkte oder Bindestriche. Reservierte Richtliniennamen sind nicht zulässig."
+
+#: react-src/features/config/caconnectors/MicrosoftCaConnectorPage.tsx:244
+msgid "Use SSL"
+msgstr "SSL verwenden"
+
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:338
+msgid "Use StartTLS"
+msgstr "StartTLS verwenden"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:142
+msgid "Use STARTTLS on a plain LDAP connection usually on port 389."
+msgstr "STARTTLS mit einer LDAP-Verbindung auf Port 389 benutzen."
+
+#: react-src/features/config/tokens/types/TotpConfigFields.tsx:72
+msgid "Use Time Shift"
+msgstr "Standard Zeitabweichung"
+
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:566
 #: react-src/features/tokens/enroll/fields/OtpKeyFields.tsx:175
 msgid "Use Timeshift"
@@ -2452,6 +4654,14 @@ msgstr "VASCO Seriennummer verwenden"
 msgid "user"
 msgstr "Benutzer"
 
+#: react-src/features/config/policies/PolicyEditPage.tsx:380
+#: react-src/features/config/policies/PolicyListPage.tsx:171
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:24
+#: react-src/features/config/servers/TestCredentialsFields.tsx:38
+#: react-src/features/shell/AppNavbar.tsx:96
+msgid "User"
+msgstr "Benutzer"
+
 #: react-src/features/users/UserSidebar.tsx:73
 msgid "User {detailsUsername}"
 msgstr "Benutzer {detailsUsername}"
@@ -2459,6 +4669,10 @@ msgstr "Benutzer {detailsUsername}"
 #: react-src/features/register/RegisterPage.tsx:59
 msgid "User account created. An Email has been sent to you."
 msgstr "Benutzerkonto wurde angelegt. Eine Email wurde an Sie gesendet."
+
+#: react-src/features/config/system/ServerSettingsCard.tsx:57
+msgid "User Cache expiration in seconds"
+msgstr "Gültigkeitsdauer des Benutzer-Caches in Sekunden"
 
 #: react-src/features/users/UserAddPage.tsx:58
 msgid "User created."
@@ -2486,6 +4700,14 @@ msgstr "Benutzer nicht gefunden."
 msgid "User updated successfully."
 msgstr "Benutzer erfolgreich aktualisiert."
 
+#: react-src/features/config/policies/PolicyEditPage.tsx:348
+msgid "User-Realm"
+msgstr "Benutzerrealm"
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:358
+msgid "User-Resolver"
+msgstr "Benutzer-Resolver"
+
 #: react-src/features/tokens/TokenListPage.tsx:260
 msgid "UserId"
 msgstr "Benutzer-ID"
@@ -2497,8 +4719,9 @@ msgid "username"
 msgstr "Benutzername"
 
 #: react-src/components/forms/UserLookupField.tsx:60
-#: react-src/features/login/LoginPage.tsx:158
-#: react-src/features/login/LoginPage.tsx:163
+#: react-src/features/config/servers/smtp/SmtpServerForm.tsx:305
+#: react-src/features/login/LoginPage.tsx:161
+#: react-src/features/login/LoginPage.tsx:166
 #: react-src/features/recovery/RecoveryPage.tsx:66
 #: react-src/features/recovery/RecoveryPage.tsx:67
 #: react-src/features/register/RegisterPage.tsx:81
@@ -2508,6 +4731,8 @@ msgstr "Benutzername"
 msgid "Username"
 msgstr "Benutzer"
 
+#: react-src/features/config/ConfigLayout.tsx:86
+#: react-src/features/shell/AppNavbar.tsx:89
 #: react-src/features/users/UserListPage.tsx:245
 msgid "Users"
 msgstr "Benutzer"
@@ -2516,15 +4741,36 @@ msgstr "Benutzer"
 msgid "Users email address..."
 msgstr "E-Mail-Adresse des Benutzers..."
 
+#: react-src/features/config/policies/PolicyEditPage.tsx:406
+msgid "Valid time"
+msgstr "Gültigkeitszeitraum"
+
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:548
 #: react-src/features/tokens/enroll/ExtendedAttributesFields.tsx:48
 msgid "Validity End"
 msgstr "Ende Gültigkeit"
 
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:234
+msgid "Validity Period"
+msgstr "Gültigkeitsdauer"
+
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:532
 #: react-src/features/tokens/enroll/ExtendedAttributesFields.tsx:36
 msgid "Validity Start"
 msgstr "Beginn Gültigkeit"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:44
+msgid "Value"
+msgstr "Wert"
+
+#: react-src/features/config/policies/PolicyConditionsEditor.tsx:121
+msgid "Value {number}"
+msgstr "Wert {number}"
+
+#: react-src/features/config/events/EventConditionsEditor.tsx:120
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:175
+msgid "Value for {name}"
+msgstr "Wert für {name}"
 
 #: react-src/features/tokens/enroll/fields/HardwareFields.tsx:128
 msgid "VASCO serial"
@@ -2537,6 +4783,24 @@ msgstr "VASCO Token Blob"
 #: react-src/features/tokens/TokenImportPage.tsx:190
 msgid "Verification"
 msgstr "Überprüfung"
+
+#: react-src/features/config/tokens/types/RemoteConfigFields.tsx:21
+msgid "Verify SSL certificate"
+msgstr "SSL-Zertifikat verifizieren"
+
+#: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:223
+msgid "Verify the certificate"
+msgstr "Zertifikat verifizieren"
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:154
+msgid "Verify the TLS certificate of the server."
+msgstr "Das TLS Zertifikat des LDAP Servers wird verifiziert."
+
+#: react-src/features/config/machineresolvers/LdapMachineResolverForm.tsx:156
+#: react-src/features/config/resolvers/LdapResolverPage.tsx:45
+#: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:90
+msgid "Verify TLS"
+msgstr "TLS verifizieren"
 
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:368
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:483
@@ -2552,13 +4816,21 @@ msgstr "Token im Audit-Log anzeigen"
 msgid "View user in Audit log"
 msgstr "Benutzer im Audit-Log anzeigen"
 
-#: react-src/features/login/ResponsePage.tsx:182
+#: react-src/features/login/ChallengeResponseForm.tsx:66
 msgid "Waiting for the confirmation…"
 msgstr "Warte auf die Bestätigung…"
 
 #: react-src/auth/useFidoErrorMessage.ts:62
 msgid "WebAuthn is not supported by this browser, or in this context."
 msgstr "WebAuthn wird von diesem Browser oder in diesem Kontext nicht unterstützt."
+
+#: react-src/features/shell/NoTokenDialog.tsx:17
+msgid "Welcome"
+msgstr "Willkommen"
+
+#: react-src/features/config/resolvers/SqlResolverPage.tsx:45
+msgid "Where statement"
+msgstr "WHERE-Ausdruck"
 
 #: react-src/features/users/UserDetailsPage.tsx:368
 msgid "window"
@@ -2567,6 +4839,10 @@ msgstr "Fenster"
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:22
 msgid "With the PUSH token eduMFA sends a notification to your registered smartphone asking if you want to approve the authentication step. You can accept or deny the authentication on your smartphone."
 msgstr "Mit dem PUSH Token sendet eduMFA eine Benachrichtigung an das registrierte Smartphone. Auf dem Smartphone kann der Benutzer die Anmeldung bestätigen oder verwerfen."
+
+#: react-src/features/config/caconnectors/LocalCaConnectorPage.tsx:184
+msgid "Working Directory"
+msgstr "Arbeitsverzeichnis"
 
 #: react-src/components/feedback/BooleanPill.tsx:18
 #: react-src/features/audit/AuditLogPage.tsx:132
@@ -2579,9 +4855,13 @@ msgid "You are about to rollover your token! This will invalidate your existing 
 msgstr "Sie sind gerade dabei, ein Rollover für Ihren Token durchzuführen! Dies führt dazu, dass Ihr aktueller Token ungültig wird und ein neuer Token mit einem neuen geheimen Schlüssel erzeugt wird!"
 
 #. placeholder {0}: config.remoteUser
-#: react-src/features/login/LoginPage.tsx:75
+#: react-src/features/login/LoginPage.tsx:78
 msgid "You are authenticated by the web server as user <0>{0}</0>. You may login as this user to eduMFA without any further credentials."
 msgstr "Sie sind vom Webserver als Benutzer <0>{0}</0> authentifiziert. Sie können sich als dieser Benutzer ohne weitere Zugangsdaten bei eduMFA anmelden."
+
+#: react-src/features/shell/LockScreenDialog.tsx:92
+msgid "You are logged in as {username} @ {realm}."
+msgstr "Sie sind als {username} @ {realm} angemeldet."
 
 #: react-src/features/tokens/TokenImportPage.tsx:202
 msgid "You can choose a realm to which the tokens should be imported. You can also change the realms of each token later."
@@ -2590,6 +4870,18 @@ msgstr "Sie können einen Realm wählen, in den die Token importiert werden soll
 #: react-src/features/tokens/TokenImportPage.tsx:184
 msgid "You can choose how the authenticity of the tokens to be imported should be verified."
 msgstr "Sie können wählen, wie die Authentizität der zu importierenden Token überprüft werden soll."
+
+#: react-src/features/config/automation/DefinitionLayout.tsx:81
+msgid "You do not have permission to open this configuration page."
+msgstr "Sie haben keine Berechtigung, diese Konfigurationsseite zu öffnen."
+
+#: react-src/features/config/policies/PolicyEditPage.tsx:101
+msgid "You do not have permission to open this policy page."
+msgstr "Sie haben keine Berechtigung, diese Richtlinienseite zu öffnen."
+
+#: react-src/features/config/policies/PolicyListPage.tsx:218
+msgid "You do not have permission to read policies."
+msgstr "Sie haben keine Berechtigung, Richtlinien zu lesen."
 
 #: react-src/features/users/UserAddPage.tsx:135
 msgid "You have no editable resolvers defined. So you can not write to any user store. If you want to add users, you need to <0>define an editable resolver</0> (like SQLResolver) and check the box \"Edit user store\"."
@@ -2607,6 +4899,10 @@ msgstr "Sie müssen die Registrierung mit ihrem Token bestätigen. Bei einem \"e
 msgid "You need to confirm the registration with your token either by pushing the blinking button or by replugging your token. This depends on the actual token model."
 msgstr "Sie müssen die Registrierung an Ihrem Token bestätigen. Entweder durch Drücken des blinkenden Knopfes oder durch neu Einstecken des Tokens. Dies hängt von dem konkreten Tokentyp an."
 
+#: react-src/features/shell/AppShell.tsx:129
+msgid "You will be logged out in {countdown} second(s)."
+msgstr "Sie werden in {countdown} Sekunden abgemeldet."
+
 #: react-src/features/tokens/enroll/results/CertificateResult.tsx:24
 msgid "Your certificate request is taken under submission and waiting for administrative approval."
 msgstr "Ihre Zertifikatsanforderung ist eingegangen und wartet auf die Genehmigung eine Administrators."
@@ -2620,7 +4916,7 @@ msgstr "Der CSR an die Zertifizierungsstelle ist fehlgeschlagen."
 msgid "Your details"
 msgstr "Ihr Profil"
 
-#: react-src/features/login/useAuthenticate.ts:77
+#: react-src/features/login/useAuthenticate.ts:78
 msgid "Your OTP pin expires on {nextPinChange}"
 msgstr "Ihre OTP-PIN läuft am {nextPinChange} ab"
 
@@ -2658,6 +4954,10 @@ msgstr "Ihr Benutzer darf den Standard-Tokentyp \"{0}\" nicht ausrollen. Stattde
 #: react-src/features/tokens/enroll/TokenTypeHelp.tsx:153
 msgid "Yubico Token Config"
 msgstr "Yubico-Token-Konfiguration"
+
+#: react-src/features/config/tokens/types/YubicoConfigFields.tsx:60
+msgid "Yubico URL"
+msgstr "Yubico URL"
 
 #: react-src/features/tokens/enroll/fields/HardwareFields.tsx:79
 msgid "Yubikey Identifier"

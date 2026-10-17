@@ -1,0 +1,30 @@
+{% include 'header.html' %}
+
+{% if switch_ui_enabled %}
+<div class="container text-right" style="padding-top: 10px; padding-bottom: 10px">
+    <a href="?ui=react" class="btn btn-default btn-sm" title="{% raw %}{{ 'Switching interfaces opens the sign-in page.' | translate }}{% endraw %}">
+        <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+        <span translate>Switch to new UI</span>
+    </a>
+</div>
+{% endif %}
+<ng-include src="'{{ instance }}/static/{{ customization_menu_file }}'"></ng-include>
+<div class="container"><div ui-view class="slide"></div></div>
+
+<input type="hidden" id="REMOTE_USER" value="{{ remote_user }}">
+<input type="hidden" id="FORCE_REMOTE_USER" value="{{ force_remote_user }}">
+<input type="hidden" id="PASSWORD_RESET" value="{{ password_reset }}">
+<input type="hidden" id="HSM_READY" value="{{ hsm_ready }}">
+<input type="hidden" id="CUSTOMIZATION" value="{{ customization }}">
+<input type="hidden" id="REALMS" value="{{ realms }}">
+<input type="hidden" id="LOGO" value="{{ logo }}">
+<input type="hidden" id="SHOW_NODE" value="{{ show_node }}">
+<input type="hidden" id="EXTERNAL_LINKS" value="{{ external_links }}">
+<input type="hidden" id="HAS_JOB_QUEUE" value="{{ has_job_queue }}">
+<input type="hidden" id="LOGIN_TEXT" value="{{ login_text }}">
+<input type="hidden" id="GDPR_LINK" value="{{ gdpr_link }}">
+<input type="hidden" id="EDUMFA_TRANSLATION_WARNING" value="{{ translation_warning }}">
+<input type="hidden" id="EDUMFA_VERSION_NUMBER" value="{{ version_number }}">
+
+<ng-include src="'{{ instance }}/static/{{ customization_baseline_file }}'"></ng-include>
+{% include 'footer.html' %}

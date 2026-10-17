@@ -108,18 +108,17 @@ Themes
 
 .. index:: themes, CSS, customize
 
-You can adapt the style and colors by changing CSS. There are at least two ways to do this.
+You can adapt the style and colors by changing CSS.
 
 Providing your own stylesheet in the config file
 ................................................
 
 You can create your own CSS file to adapt the look and feel of the Web UI.
-The default CSS is the bootstrap CSS theme. Using ``EDUMFA_CSS`` in ``edumfa.cfg`` you can specify
-the URL of your own CSS file.
-The default CSS file url is */static/contrib/css/bootstrap-theme.css*.
-The file in the file system is located at *edumfa/static/contrib/css*.
-You might add a directory *edumfa/static/custom/css/* and add your CSS
-file there.
+The Web UI is built with `Mantine <https://mantine.dev>`_; its components use
+CSS variables (``--mantine-color-...``, ``--mantine-spacing-...``) that your
+stylesheet can override. Using ``EDUMFA_CSS`` in ``edumfa.cfg`` you can specify
+the URL of an additional CSS file, which is loaded after the client's own
+stylesheet.
 
 The CSS you specify here adds to the already existing styles. Thus a convenient way for
 using this setting is to help you distinguish different eduMFA instances like "testing", "acceptances"
@@ -137,21 +136,9 @@ and then set in the edumfa.cfg::
 
 This way your testing instance will be immediately distinguishable due to the green background.
 
-Use web server rewrite modules
-..............................
-
-Again you can also use the Apache rewrite module to replace the original css file::
-
-    RewriteEngine On
-    RewriteRule "/static/contrib/css/bootstrap-theme.css"  \
-         "/etc/edumfa/customization/my.css"
-
-
-A good stating point might be the themes at http://bootswatch.com.
-
-.. note:: If you add your own CSS file, the file *bootstrap-theme.css* will
-   not be loaded anymore. So you might start with a copy of the original file.
-
+Alternatively set ``EDUMFA_CUSTOM_CSS = True`` and place a file ``css/custom.css``
+in the customization directory (``EDUMFA_CUSTOMIZATION``, see
+``edumfa/static/customize/README.rst``).
 
 Use web server substitute module
 ................................
@@ -190,26 +177,14 @@ Page title
 You can configure the page title by setting ``EDUMFA_PAGE_TITLE`` in the
 ``edumfa.cfg`` file.
 
-Menu
-~~~~
+Menu, headers and footers
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The administrator can adapt the menu of the web UI using policies or of course web server rewrite
-rules. The original menu is located in ``static/templates/menu.html``.
-
-Note that policies are also dependent on the client IP, this way different
-clients could see different menus.
-
-Read more about it at the web UI policies at the :ref:`webui_custom_menu`.
-
-Headers and Footers
-~~~~~~~~~~~~~~~~~~~
-
-The administrator can change the header and footer of each page. We call this the baseline of the
-web UI. The original baseline is contained in ``static/templates/baseline.html``.
-You can use a web UI policy to change this baseline or - of course - could use the web server
-rewrite module.
-
-Read more about changing it via the web UI policies at :ref:`webui_custom_baseline`.
+The navigation and the footer are part of the React client
+(``edumfa/static/react-src/features/shell``). The former web UI policies
+``custom_menu`` and ``custom_baseline``, which replaced AngularJS templates,
+no longer exist. Use ``EDUMFA_CSS`` or a web server substitute rule to adapt
+them, or change the client sources and rebuild ``react-dist``.
 
 .. _customize_tokenwizard:
 

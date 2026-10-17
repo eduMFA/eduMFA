@@ -1,8 +1,164 @@
 # Frontend Migration Inventory
 
-This document tracks AngularJS route ownership during the React + TypeScript
-migration. Angular remains the default owner unless a route is explicitly listed
-as React-owned and enabled by the Flask `EDUMFA_REACT_UI` flag.
+This document tracks the React + TypeScript rewrite and retains notes from the
+earlier AngularJS coexistence phase.
+
+## Legacy UI versus React UI
+
+Both interfaces talk to the same REST API (`/auth`, `/token`, `/policy`, ...),
+use the same rights and policies, and keep the `#!/` URL prefix. The backend does
+not distinguish between them; only the page served at `/` differs.
+
+### At a glance
+
+| Aspect        | Legacy UI (AngularJS)                                            | React UI                                                            |
+| ------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Availability  | Default                                                          | Opt-in via `EDUMFA_REACT_UI = True`                                 |
+| Framework     | AngularJS 1.8 (end of life), jQuery, Bootstrap 3                 | React 19, TypeScript, Mantine 9                                     |
+| Source        | `static/app.js`, `static/components/**`                          | `static/react-src/**`                                               |
+| Delivery      | Individual scripts and HTML templates loaded at runtime          | Bundle built by Vite into `static/react-dist` and committed         |
+| Page template | `templates/legacy.html`                                          | `templates/index.html`                                              |
+| Server state  | `$http` calls in factories, shared mutable `$scope`/`$rootScope` | TanStack Query (cache, refetch, invalidation)                       |
+| Forms         | Two-way `ng-model` bindings                                      | Controlled components; explicit state and validation                |
+| Routing       | `ui-router` states                                               | React Router, same URLs                                             |
+| Translations  | `angular-gettext` and `.po` files in `static/translations`       | Lingui catalogs in `react-src/locales` (`en`, `de`)                 |
+| Customization | `EDUMFA_CUSTOMIZATION` menu and baseline templates               | Not applied; see "Behavior changes"                                 |
+| Tests         | Python API tests only                                            | Vitest and Testing Library for components, payloads and permissions |
+
+### Architecture
+
+- **Page bootstrap.** The legacy page renders configuration into hidden
+  `<input id="...">` elements that scripts read at load time. The React page emits
+  one JSON block (`#edumfa-ui-config`) that is parsed in
+  `react-src/lib/uiConfig.ts`. The legacy page additionally needs
+  `EDUMFA_VERSION_NUMBER` for cache-busting template URLs.
+- **State and data flow.** AngularJS controllers share data through scope
+  inheritance and watchers. The React UI keeps server data in TanStack Query
+  (`react-src/api/*`, one typed module per endpoint group) and local form state in
+  the component that owns the form. Saving invalidates the matching query keys.
+- **Types.** API responses and requests are typed in `react-src/api`. The legacy
+  code is untyped, so many payload quirks only lived in controller code (see
+  "Behavior changes").
+- **Session.** The React UI owns its session (`react-src/auth`): login, idle lock,
+  logout and rights come from one provider. The legacy UI keeps this in the
+  `AuthFactory` and `$rootScope`.
+- **Components.** Shared building blocks replace copy-pasted templates, for example
+  `DataTable`, `CheckboxPickList` (replaces `isteven-multi-select`),
+  `TypedOptionInput` and `useDeleteConfirmation`.
+
+### Behavior changes
+
+- **Interface switching.** The switch (`?ui=react` or `?ui=legacy`) reloads the
+  page and requires signing in again; no tokens are shared between the clients.
+  The choice is stored in an instance-scoped, `HttpOnly` cookie.
+- **Customization.** Legacy deployments can replace menu and baseline templates
+  with `EDUMFA_CUSTOMIZATION`. The React UI does not load those templates. Custom
+  CSS (`EDUMFA_CUSTOM_CSS`) and the theme (`EDUMFA_CSS`) still apply.
+  `EDUMFA_INDEX_HTML` still takes precedence over both interfaces.
+- **Event handlers and periodic tasks.** Changing the handler or task module
+  clears options that no longer apply, as in the legacy editors. Stored options
+  unknown to the module are kept on ordinary edits instead of being dropped.
+- **Policies.** `active` is sent as the string `"true"` or `"false"` because
+  `set_policy_api` treats a JSON `false` as `True`. Multi-value actions are space
+  separated. Renaming a policy creates a copy, like the legacy editor.
+- **Multi-selects.** Dropdown multi-selects are checkbox lists; entries that the
+  stored value holds but the backend no longer offers stay visible, so saving does
+  not silently drop them.
+- **Required and integer options.** `required` and `int` option specs are
+  validated before saving. The legacy template had no input for `int` options.
+- **Accessibility.** Inputs carry accessible names, errors use `role="alert"`, and
+  navigation and action buttons combine icons with text labels.
+- **Confirmations.** Deletes honor the `deletion_confirmation` WebUI policy in both
+  interfaces; React uses one shared hook instead of per-controller dialogs.
+
+### Not yet at parity
+
+Every AngularJS state now has a React counterpart (see "Route coverage" below).
+What the React UI still does not do:
+
+- **Customization templates.** `EDUMFA_CUSTOMIZATION` menu and baseline templates
+  (`customize/`) are only rendered by the legacy page. Custom CSS and the theme are
+  shared.
+- **Legacy-only plumbing.** The AngularJS auth bridge and route allowlist are gone
+  from the runtime; the React UI has its own session. `config.machines` is
+  commented out in the legacy states and has no React route either.
+- **Production soak time.** The React forms are covered by unit tests, but have
+  seen far less real-world use than the legacy ones. Keep the legacy UI as the
+  default until that has changed.
+
+### Working on either UI
+
+- Legacy changes: edit `static/components/**` and `templates/legacy.html`; no build.
+- React changes: edit `static/react-src/**`, run `bun run typecheck`,
+  `bun run lint`, `bun run test`, then `bun run react:build` and commit the result in
+  `static/react-dist`. Update translations with the `intl:*` scripts.
+
+## Current implementation (October 2026)
+
+When `EDUMFA_REACT_UI` is enabled, users can opt into the React application with
+`?ui=react`; the legacy AngularJS interface remains the default. React owns its
+session, login, navigation, idle lock and welcome dialogs. A visible switch returns
+to AngularJS with `?ui=legacy`, and the legacy interface links back to React. The
+selected interface is remembered in an instance-scoped cookie. Switching reloads
+the page and requires signing in again. Neither client stores authentication tokens
+for the switch. URLs retain the `#!/` prefix.
+
+The configuration route table now mounts these existing areas:
+
+- System settings and documentation; SMTP, RADIUS, eduMFA and SMS gateway servers.
+- CA connectors, service IDs and token groups.
+- Realms, hosts/LDAP machine resolvers, and all five user resolver editors
+  (passwd, LDAP, SQL, SCIM and HTTP).
+- Token settings for all 13 types in `tokenConfigTypeKeys`, including questionnaire
+  entries and Yubikey API keys. Only changed settings are saved; writes and deletes
+  respect their respective rights and the deletion-confirmation policy.
+- Policy listing, creation and editing at the legacy `/config/policies` URLs.
+  The list filters and sorts policies, updates priorities on blur/Enter, toggles
+  active state and confirms deletions according to the WebUI policy. The editor
+  uses the backend action definitions for boolean, integer, text, selection and
+  multiple-selection actions. It includes realm/resolver/admin/node restrictions,
+  users, clients, time and additional five-field conditions. Unknown stored actions
+  and unavailable selection entries are retained. Public policy templates load
+  only on request and receive no session credentials.
+- Event handlers: lists, ordering, activation and confirmed deletion; editors
+  load action, position, option and grouped condition definitions per module.
+  Conditional options and comma-separated multi-value conditions are supported.
+- Periodic tasks: lists, ordering, activation and confirmed deletion; editors
+  include cron schedules, nodes (including `select_manually`), retries, typed
+  module options, last runs and definition timestamps. Changing modules clears
+  obsolete options; ordinary edits preserve unknown stored values.
+
+The new user resolver editors preserve stored keys and censored passwords.
+Connection tests include the original resolver name so the backend can recover
+stored secrets. LDAP tests override the size limit only for the test request;
+anonymous tests clear bind credentials. LDAP and SQL presets match the legacy
+controllers. HTTP mappings are validated as JSON objects. Saving and testing
+require `resolverwrite`, matching the backend endpoint policy.
+
+Policy writes serialize `active` as the string `"true"` or `"false"` because
+`set_policy_api` defaults a JSON `false` to `True`. This prevents edits and priority
+changes from accidentally reactivating a disabled policy. Actions with multiple
+values use spaces, as expected by the backend. A changed policy name creates a
+copy, like the legacy editor; the original policy is not renamed or removed.
+
+Policy action descriptions wrap independently of the Help link. Navigation and
+editor controls use icons alongside their text labels. All current React messages
+have German translations, with interpolation and rich-text placeholders retained.
+
+Validation: `bun run typecheck`, `bun run lint`, `bun run test` and
+`bun run react:build`. Configuration tests cover application routing, resolver
+payloads, secrets, permissions, token settings, policy actions and conditions,
+templates, inactive-state preservation, event handlers, periodic tasks and
+confirmed deletions. Flask tests cover selecting and remembering both UIs,
+mount paths, custom templates and disabled-UI behavior. Extract
+catalogs with `bun run intl:extract` before building; ship `react-dist` together
+with the sources.
+
+## Historical coexistence notes
+
+The sections below describe the earlier migration stages. References to the
+Angular auth bridge, route allowlists, Bootstrap coexistence and feature flag
+are historical and do not describe the current runtime.
 
 ## Runtime Shell
 
@@ -52,53 +208,58 @@ as React-owned and enabled by the Flask `EDUMFA_REACT_UI` flag.
   `detail` (`/token/setrandompin` → `detail.pin`, `/validate/check` →
   `detail.message`).
 
-## Current Angular Route Ownership
+## Route coverage
 
-| Hash route                          | Angular state          | Current owner | Migration complexity | Notes                                                                  |
-| ----------------------------------- | ---------------------- | ------------- | -------------------- | ---------------------------------------------------------------------- |
-| `#/offline`                         | `offline`              | React         | Low                  | Migrated. Static alert.                                                |
-| `#/login`                           | `login`                | React         | Medium               | Migrated. Session handed to Angular through the bridge.                |
-| `#/response`                        | `response`             | React         | Medium               | Migrated. OTP input, polling, U2F/WebAuthn sign.                       |
-| `#/pinchange`                       | `pinchange`            | React         | Medium               | Migrated. Serial kept in the login flow store.                         |
-| `#/register`                        | `register`             | React         | Low                  | Migrated public form. Calls `POST /register`.                          |
-| `#/recovery`                        | `recovery`             | React         | Low                  | Migrated public form. Calls `POST /recover`.                           |
-| `#/reset/:user/:recoverycode`       | `reset`                | React         | Low                  | Migrated public form. Calls `POST /recover/reset`.                     |
-| `#/dashboard`                       | `dashboard`            | React         | Medium               | Migrated. Token counts, audit summaries, policies, events.             |
-| `#/component/clienttype`            | `component.clienttype` | React         | Low                  | First migrated route. Calls `/client/`.                                |
-| `#/audit/log`                       | `audit.log`            | React         | Medium               | Migrated table. Filters, `?serial`/`?user`, CSV.                       |
-| `#/user/list`                       | `user.list`            | React         | Medium               | Migrated table. Realm select, client-side paging.                      |
-| `#/user/details/:realm/:user`       | `user.details`         | React         | Medium               | Migrated detail view: edit, delete, custom attributes, tokens, assign. |
-| `#/user/password`                   | `user.password`        | React         | Medium               | Migrated own-details view with password form.                          |
-| `#/user/add`                        | `user.add`             | React         | Medium               | Migrated form. Fields come from the editable resolver's map.           |
-| `#/machine/list`                    | `machine.list`         | React         | Medium               | Migrated table. Filters, `?resolver` deep link, client paging.         |
-| `#/machine/details/:id/:resolver`   | `machine.details`      | React         | Medium               | Migrated detail view: options editing, attach/detach tokens.           |
-| `#/token/list`                      | `token.list`           | React         | Medium               | Migrated table. Server paging/sorting/filters, enable/disable, reset.  |
-| `#/token/assign`                    | `token.assign`         | React         | Medium               | Migrated form. Serial lookup + PIN, calls `POST /token/assign`.        |
-| `#/token/details/:serial`           | `token.details`        | React         | High                 | Migrated. Properties, functions, user, machines; delete confirmation.  |
-| `#/token/lost/:serial`              | `token.lost`           | React         | High                 | Migrated. Calls `POST /token/lost/:serial`, shows the password once.   |
-| `#/token/getserial`                 | `token.getserial`      | React         | Medium               | Migrated form. Count step, then `GET /token/getserial/:otp`.           |
-| `#/token/enroll/:realm/:user`       | `token.enroll`         | React         | High                 | Migrated. Every token type, two-step, U2F/WebAuthn, verify, polling.   |
-| `#/token/rollover/:type/:serial`    | `token.rollover`       | React         | High                 | Migrated. Same page with a fixed type and `rollover=1`.                |
-| `#/token/wizard`                    | `token.wizard`         | React         | High                 | Migrated. Same page without type select; logout through the bridge.    |
-| `#/token/import`                    | `token.import`         | React         | High                 | Migrated. Multipart upload to `POST /token/load/:filename`.            |
-| `#/token/challenges`                | `token.challenges`     | React         | Medium               | Migrated table. Server paging/sorting, serial filter in the path.      |
-| `#/token/applications/:application` | `token.applications`   | React         | Medium               | Migrated. ssh/offline tables from `GET /machine/token`.                |
-| `#/config/**`                       | `config.*`             | Angular       | High                 | Broad admin surface, policy/event/resolver complexity.                 |
+The table lists every AngularJS state and its React counterpart. The title is
+historical: all routes are now implemented in React. Which interface serves them
+is decided per browser (see "Current implementation"); the allowlist and auth
+bridge mentioned in the notes below no longer exist.
+
+| Hash route                          | Angular state          | Current owner | Migration complexity | Notes                                                                                                                                     |
+| ----------------------------------- | ---------------------- | ------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `#/offline`                         | `offline`              | React         | Low                  | Migrated. Static alert.                                                                                                                   |
+| `#/login`                           | `login`                | React         | Medium               | Migrated. Session handed to Angular through the bridge.                                                                                   |
+| `#/response`                        | `response`             | React         | Medium               | Migrated. OTP input, polling, U2F/WebAuthn sign.                                                                                          |
+| `#/pinchange`                       | `pinchange`            | React         | Medium               | Migrated. Serial kept in the login flow store.                                                                                            |
+| `#/register`                        | `register`             | React         | Low                  | Migrated public form. Calls `POST /register`.                                                                                             |
+| `#/recovery`                        | `recovery`             | React         | Low                  | Migrated public form. Calls `POST /recover`.                                                                                              |
+| `#/reset/:user/:recoverycode`       | `reset`                | React         | Low                  | Migrated public form. Calls `POST /recover/reset`.                                                                                        |
+| `#/dashboard`                       | `dashboard`            | React         | Medium               | Migrated. Token counts, audit summaries, policies, events.                                                                                |
+| `#/component/clienttype`            | `component.clienttype` | React         | Low                  | First migrated route. Calls `/client/`.                                                                                                   |
+| `#/audit/log`                       | `audit.log`            | React         | Medium               | Migrated table. Filters, `?serial`/`?user`, CSV.                                                                                          |
+| `#/user/list`                       | `user.list`            | React         | Medium               | Migrated table. Realm select, client-side paging.                                                                                         |
+| `#/user/details/:realm/:user`       | `user.details`         | React         | Medium               | Migrated detail view: edit, delete, custom attributes, tokens, assign.                                                                    |
+| `#/user/password`                   | `user.password`        | React         | Medium               | Migrated own-details view with password form.                                                                                             |
+| `#/user/add`                        | `user.add`             | React         | Medium               | Migrated form. Fields come from the editable resolver's map.                                                                              |
+| `#/machine/list`                    | `machine.list`         | React         | Medium               | Migrated table. Filters, `?resolver` deep link, client paging.                                                                            |
+| `#/machine/details/:id/:resolver`   | `machine.details`      | React         | Medium               | Migrated detail view: options editing, attach/detach tokens.                                                                              |
+| `#/token/list`                      | `token.list`           | React         | Medium               | Migrated table. Server paging/sorting/filters, enable/disable, reset.                                                                     |
+| `#/token/assign`                    | `token.assign`         | React         | Medium               | Migrated form. Serial lookup + PIN, calls `POST /token/assign`.                                                                           |
+| `#/token/details/:serial`           | `token.details`        | React         | High                 | Migrated. Properties, functions, user, machines; delete confirmation.                                                                     |
+| `#/token/lost/:serial`              | `token.lost`           | React         | High                 | Migrated. Calls `POST /token/lost/:serial`, shows the password once.                                                                      |
+| `#/token/getserial`                 | `token.getserial`      | React         | Medium               | Migrated form. Count step, then `GET /token/getserial/:otp`.                                                                              |
+| `#/token/enroll/:realm/:user`       | `token.enroll`         | React         | High                 | Migrated. Every token type, two-step, U2F/WebAuthn, verify, polling.                                                                      |
+| `#/token/rollover/:type/:serial`    | `token.rollover`       | React         | High                 | Migrated. Same page with a fixed type and `rollover=1`.                                                                                   |
+| `#/token/wizard`                    | `token.wizard`         | React         | High                 | Migrated. Same page without type select; logout through the bridge.                                                                       |
+| `#/token/import`                    | `token.import`         | React         | High                 | Migrated. Multipart upload to `POST /token/load/:filename`.                                                                               |
+| `#/token/challenges`                | `token.challenges`     | React         | Medium               | Migrated table. Server paging/sorting, serial filter in the path.                                                                         |
+| `#/token/applications/:application` | `token.applications`   | React         | Medium               | Migrated. ssh/offline tables from `GET /machine/token`.                                                                                   |
+| `#/config/**`                       | `config.*`             | React         | High                 | Migrated: system, policies, events, periodic tasks, resolvers, realms, servers, CA connectors, service IDs, token groups, token settings. |
 
 ## Current API Factory Ownership
 
-| Angular factory                          | Primary concern                        | React target                                                |
-| ---------------------------------------- | -------------------------------------- | ----------------------------------------------------------- |
-| `AuthFactory`                            | Login session, rights, menus, settings | `auth/AuthProvider.tsx`, `api/auth.ts` (session in Angular) |
-| `PollingAuthFactory`                     | Polling auth responses                 | `features/login/usePollTransaction.ts` (done)               |
-| `U2fFactory`, WebAuthn factory           | Browser auth hardware flows            | `auth/u2f.ts`, `auth/webauthn.ts` (done)                    |
-| `TokenFactory`, `ValidateFactory`        | Token lifecycle and validation         | `api/tokens.ts`, `api/validate.ts`                          |
-| `UserFactory`                            | User list/detail/password APIs         | `api/users.ts` (done)                                       |
-| `MachineFactory`                         | Machine resolver/list/detail APIs      | `api/machines.ts` (done)                                    |
-| `AuditFactory`                           | Audit log and CSV APIs                 | `api/audit.ts` (done)                                       |
-| `ConfigFactory`, `PolicyTemplateFactory` | Admin config APIs                      | `api/config.ts` (realms, resolvers, tokengroups, system)    |
-| `ComponentFactory`                       | Client application types               | `api/component.ts`                                          |
-| `RegisterFactory`, `RecoveryFactory`     | Public account flows                   | `api/register.ts`, `api/recovery.ts`                        |
+| Angular factory                          | Primary concern                        | React target                                                                                                                                                                                   |
+| ---------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AuthFactory`                            | Login session, rights, menus, settings | `auth/AuthProvider.tsx`, `api/auth.ts` (session in Angular)                                                                                                                                    |
+| `PollingAuthFactory`                     | Polling auth responses                 | `features/login/usePollTransaction.ts` (done)                                                                                                                                                  |
+| `U2fFactory`, WebAuthn factory           | Browser auth hardware flows            | `auth/u2f.ts`, `auth/webauthn.ts` (done)                                                                                                                                                       |
+| `TokenFactory`, `ValidateFactory`        | Token lifecycle and validation         | `api/tokens.ts`, `api/validate.ts`                                                                                                                                                             |
+| `UserFactory`                            | User list/detail/password APIs         | `api/users.ts` (done)                                                                                                                                                                          |
+| `MachineFactory`                         | Machine resolver/list/detail APIs      | `api/machines.ts` (done)                                                                                                                                                                       |
+| `AuditFactory`                           | Audit log and CSV APIs                 | `api/audit.ts` (done)                                                                                                                                                                          |
+| `ConfigFactory`, `PolicyTemplateFactory` | Admin config APIs                      | `api/system.ts`, `policies.ts`, `events.ts`, `periodicTasks.ts`, `realms.ts`, `resolvers.ts`, `machineResolvers.ts`, `caConnectors.ts`, `servers.ts`, `serviceIds.ts`, `tokengroups.ts` (done) |
+| `ComponentFactory`                       | Client application types               | `api/component.ts`                                                                                                                                                                             |
+| `RegisterFactory`, `RecoveryFactory`     | Public account flows                   | `api/register.ts`, `api/recovery.ts`                                                                                                                                                           |
 
 ## Migrated Public Forms
 

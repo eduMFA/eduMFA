@@ -1,8 +1,8 @@
 import type { ApiClient } from "./client";
 import type { EduMfaSuccessEnvelope } from "./envelope";
+import type { SessionPayload } from "@/auth/session";
 import type { U2fSignRequest } from "@/auth/u2f";
 import type { WebAuthnSignRequest } from "@/auth/webauthn";
-import type { LegacyWebUiSettings } from "@/global";
 
 /**
  * `POST /auth` parameters. The first step sends the credentials; a
@@ -26,21 +26,8 @@ export interface AuthLoginRequest {
  * values (`get_webui_settings` in `api/lib/postpolicy.py`); a pending
  * challenge only answers the role, username and realm.
  */
-export interface AuthLoginResponse extends LegacyWebUiSettings {
-  admin_dashboard?: boolean;
-  deletion_confirmation?: boolean;
-  dialog_no_token?: boolean;
-  hide_welcome?: boolean;
-  log_level?: number;
-  logout_redirect_url?: string;
-  logout_time?: number;
-  menus?: string[];
-  realm: string;
-  rights?: string[];
-  role: string;
-  timeout_action?: string;
-  token?: string;
-  username: string;
+export interface AuthLoginResponse extends SessionPayload {
+  debug_passwords?: boolean;
 }
 
 /** One entry of `detail.multi_challenge` (`create_challenges_from_tokens` in `lib/token.py`). */

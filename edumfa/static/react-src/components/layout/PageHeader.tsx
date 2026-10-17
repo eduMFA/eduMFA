@@ -11,13 +11,14 @@ export function PageHeader({ actions, subtitle, title }: PageHeaderProps) {
   return (
     <Group
       align="flex-start"
+      className="page-header"
       component="header"
       justify="space-between"
       mb="lg"
       wrap="wrap"
     >
       <div>
-        <Title order={2} size="h3">
+        <Title className="page-header-title" order={2} size="h3">
           {title}
         </Title>
         {subtitle ? (

@@ -313,8 +313,6 @@ class ACTION:
     HIDE_BUTTONS = "hide_buttons"
     HIDE_WELCOME = "hide_welcome_info"
     SHOW_SEED = "show_seed"
-    CUSTOM_MENU = "custom_menu"
-    CUSTOM_BASELINE = "custom_baseline"
     GDPR_LINK = "privacy_statement_link"
     STATISTICSREAD = "statistics_read"
     STATISTICSDELETE = "statistics_delete"
@@ -2998,14 +2996,6 @@ def get_static_policy_definitions(scope=None):
                     "Set how many audit entries should be displayed in the audit "
                     "view on one page."
                 ),
-            },
-            ACTION.CUSTOM_MENU: {
-                "type": "str",
-                "desc": _("Use your own html template for the web UI menu."),
-            },
-            ACTION.CUSTOM_BASELINE: {
-                "type": "str",
-                "desc": _("Use your own html template for the web UI baseline/footer."),
             },
             ACTION.GDPR_LINK: {
                 "type": "str",

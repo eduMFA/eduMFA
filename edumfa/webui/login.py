@@ -21,9 +21,9 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-__doc__ = """This is the starting point for the single web application.
-Other html code is dynamically loaded via angularJS and located in
-/static/views/...
+__doc__ = """This is the starting point for the single page application.
+The default page carries the React client. Users can select the legacy AngularJS
+interface with ?ui=legacy and return with ?ui=react.
 """
 __author__ = "Cornelius Kölbel <cornelius@privacyidea.org>"
 
@@ -38,10 +38,8 @@ from edumfa.lib.passwordreset import is_password_reset
 from edumfa.lib.policy import ACTION, REMOTE_USER, SCOPE, Match, PolicyClass
 from edumfa.lib.queue import has_job_queue
 from edumfa.lib.realm import get_realms
-from edumfa.lib.subscriptions import subscription_status
-from edumfa.lib.utils import get_client_ip
+from edumfa.lib.utils import get_client_ip, get_version_number
 
-DEFAULT_THEME = "/static/contrib/css/bootstrap-theme.css"
 # note: the comment in the following line allows to include it in the docs
 DEFAULT_LANGUAGE_LIST = ["en", "de", "nl", "zh_Hant", "fr", "es", "tr", "cs", "it"]  #:
 
@@ -72,21 +70,31 @@ def before_request():
     g.client_ip = get_client_ip(request, get_from_config(SYSCONF.OVERRIDECLIENT))
 
 
+def _single_action_value(action):
+    """
+    Return the value of a webui policy action that takes one string value,
+    or "" when the policy is not set.
+    """
+    values = Match.action_only(g, action=action, scope=SCOPE.WEBUI).action_values(
+        unique=True, allow_white_space_in_action=True, write_to_audit_log=False
+    )
+    if len(values) and list(values)[0]:
+        return list(values)[0]
+    return ""
+
+
 @login_blueprint.route("/", methods=["GET"])
 def single_page_application():
     instance = request.script_root
     if instance == "/":
         instance = ""
-    # The backend URL should come from the configuration of the system.
-    backend_url = ""
 
     if current_app.config.get("EDUMFA_UI_DEACTIVATED"):
         # Do not provide the UI
         return send_html(render_template("deactivated.html"))
 
-    # The default theme. We can change this later
-    theme = current_app.config.get("EDUMFA_CSS", DEFAULT_THEME)
-    theme = theme.strip("/")
+    # An additional stylesheet, e.g. to tell instances apart (EDUMFA_CSS).
+    theme = (current_app.config.get("EDUMFA_CSS") or "").strip("/")
     # Get further customizations
     customization = current_app.config.get("EDUMFA_CUSTOMIZATION", "/static/customize/")
     customization = customization.strip("/")
@@ -95,15 +103,8 @@ def single_page_application():
         if current_app.config.get("EDUMFA_CUSTOM_CSS")
         else ""
     )
-    # Enrollment-Wizard:
-    #    EDUMFA_CUSTOMIZATION/views/includes/token.enroll.pre.top.html
-    #    EDUMFA_CUSTOMIZATION/views/includes/token.enroll.pre.bottom.html
-    #    EDUMFA_CUSTOMIZATION/views/includes/token.enroll.post.top.html
-    #    EDUMFA_CUSTOMIZATION/views/includes/token.enroll.post.bottom.html
     # Get the hidden external links
     external_links = current_app.config.get("EDUMFA_EXTERNAL_LINKS", True)
-    # Read the UI translation warning
-    translation_warning = current_app.config.get("EDUMFA_TRANSLATION_WARNING", False)
     # Get the logo file
     logo = current_app.config.get("EDUMFA_LOGO", "eduMFA-logo.png")
     browser_lang = get_accepted_language(request)
@@ -115,7 +116,7 @@ def single_page_application():
     if not hasattr(request, "all_data"):
         request.all_data = {}
     # Depending on displaying the realm dropdown, we fill realms or not.
-    realms = ""
+    realms = []
     realm_dropdown = Match.action_only(
         g, scope=SCOPE.WEBUI, action=ACTION.REALMDROPDOWN
     ).policies(write_to_audit_log=False)
@@ -130,14 +131,19 @@ def single_page_application():
         try:
             realm_dropdown_values = Match.action_only(
                 g, scope=SCOPE.WEBUI, action=ACTION.REALMDROPDOWN
-            ).action_values(unique=False, write_to_audit_log=False)
+            ).action_values(
+                unique=False,
+                allow_white_space_in_action=True,
+                write_to_audit_log=False,
+            )
             # Use the realms from the policy.
-            realms = ",".join(realm_dropdown_values)
+            realms = sorted(realm_dropdown_values)
         except AttributeError as _e:
             # The policy is still a boolean realm_dropdown action
             # Thus we display ALL realms
-            realms = ",".join(get_realms())
+            realms = sorted(get_realms())
 
+    force_remote_user = False
     try:
         r = is_remote_user_allowed(request, write_to_audit_log=False)
         force_remote_user = r == REMOTE_USER.FORCE
@@ -155,119 +161,76 @@ def single_page_application():
     except HSMException:
         hsm_ready = False
 
-    # Use policies to determine the customization of menu
-    # and baseline. get_action_values returns an array!
-    sub_state = subscription_status()
-    customization_menu_file = Match.action_only(
-        g, action=ACTION.CUSTOM_MENU, scope=SCOPE.WEBUI
-    ).action_values(
-        unique=True, allow_white_space_in_action=True, write_to_audit_log=False
-    )
-    if (
-        len(customization_menu_file)
-        and list(customization_menu_file)[0]
-        and sub_state not in [1, 2]
-    ):
-        customization_menu_file = list(customization_menu_file)[0]
-    else:
-        customization_menu_file = "templates/menu.html"
-    customization_baseline_file = Match.action_only(
-        g, action=ACTION.CUSTOM_BASELINE, scope=SCOPE.WEBUI
-    ).action_values(
-        unique=True, allow_white_space_in_action=True, write_to_audit_log=False
-    )
-    if (
-        len(customization_baseline_file)
-        and list(customization_baseline_file)[0]
-        and sub_state not in [1, 2]
-    ):
-        customization_baseline_file = list(customization_baseline_file)[0]
-    else:
-        customization_baseline_file = "templates/baseline.html"
-
-    login_text = Match.action_only(
-        g, action=ACTION.LOGIN_TEXT, scope=SCOPE.WEBUI
-    ).action_values(
-        unique=True, allow_white_space_in_action=True, write_to_audit_log=False
-    )
-    if len(login_text) and list(login_text)[0] and sub_state not in [1, 2]:
-        login_text = list(login_text)[0]
-    else:
-        login_text = ""
-
-    gdpr_link = Match.action_only(
-        g, action=ACTION.GDPR_LINK, scope=SCOPE.WEBUI
-    ).action_values(
-        unique=True, allow_white_space_in_action=True, write_to_audit_log=False
-    )
-    if len(gdpr_link) and list(gdpr_link)[0] and sub_state not in [1, 2]:
-        gdpr_link = list(gdpr_link)[0]
-    else:
-        gdpr_link = ""
-
-    react_routes = current_app.config.get(
-        "EDUMFA_REACT_ROUTES",
-        [
-            "/login",
-            "/response",
-            "/pinchange",
-            "/offline",
-            "/component/clienttype",
-            "/register",
-            "/recovery",
-            "/reset/:user/:recoverycode",
-            "/audit/log",
-            "/user/list",
-            "/user/details/:realm/:user",
-            "/user/add",
-            "/user/password",
-            "/machine/list",
-            "/machine/details/:id/:resolver",
-            "/token/list",
-            "/token/assign",
-            "/token/getserial",
-            "/token/challenges",
-            "/token/details/:serial",
-            "/token/lost/:serial",
-            "/token/applications/:application",
-            "/token/import",
-            "/token/enroll",
-            "/token/enroll/:realmname/:username",
-            "/token/rollover/:tokenType/:tokenSerial",
-            "/token/wizard",
-            "/dashboard",
-        ],
-    )
-    if isinstance(react_routes, str):
-        react_routes = [
-            route.strip() for route in react_routes.split(",") if route.strip()
-        ]
+    # Settings the React client reads from the JSON block in index.html
+    # (edumfa/static/react-src/lib/uiConfig.ts).
+    ui_config = {
+        "browser_lang": browser_lang,
+        "customization": customization,
+        "external_links": bool(external_links),
+        "force_remote_user": bool(force_remote_user),
+        "gdpr_link": _single_action_value(ACTION.GDPR_LINK),
+        "has_job_queue": bool(has_job_queue()),
+        "hsm_ready": hsm_ready,
+        "instance": instance,
+        "login_text": _single_action_value(ACTION.LOGIN_TEXT),
+        "logo": logo,
+        "page_title": page_title,
+        "password_reset": bool(password_reset),
+        "realms": realms,
+        "remote_user": remote_user or "",
+        "show_node": show_node,
+    }
 
     render_context = {
         "instance": instance,
-        "backendUrl": backend_url,
         "browser_lang": browser_lang,
-        "remote_user": remote_user,
-        "force_remote_user": force_remote_user,
         "theme": theme,
-        "translation_warning": translation_warning,
-        "password_reset": password_reset,
-        "hsm_ready": hsm_ready,
-        "has_job_queue": str(has_job_queue()),
-        "customization": customization,
         "custom_css": custom_css,
-        "customization_menu_file": customization_menu_file,
-        "customization_baseline_file": customization_baseline_file,
-        "realms": realms,
-        "show_node": show_node,
-        "external_links": external_links,
-        "login_text": login_text,
-        "gdpr_link": gdpr_link,
-        "logo": logo,
         "page_title": page_title,
-        "react_routes": react_routes,
-        "react_ui_enabled": current_app.config.get("EDUMFA_REACT_UI", False),
+        "ui_config": ui_config,
     }
 
-    index_page = current_app.config.get("EDUMFA_INDEX_HTML") or "index.html"
-    return send_html(render_template(index_page, **render_context))
+    # The React UI and the switch buttons are opt-in (EDUMFA_REACT_UI); legacy is the default.
+    react_ui_available = bool(current_app.config.get("EDUMFA_REACT_UI", False))
+    # Only an explicit, allowlisted choice changes the browser's preference.
+    # The cookie holds a UI name, never authentication data.
+    requested_ui = request.args.get("ui") if react_ui_available else None
+    selected_ui = (
+        requested_ui
+        if requested_ui in ("react", "legacy")
+        else request.cookies.get("edumfa_ui", "legacy")
+        if react_ui_available
+        else "legacy"
+    )
+    if selected_ui == "legacy":
+        render_context.update(ui_config)
+        render_context.update(
+            {
+                "realms": ",".join(realms),
+                "translation_warning": current_app.config.get(
+                    "EDUMFA_TRANSLATION_WARNING", False
+                ),
+                "customization_menu_file": "templates/menu.html",
+                "customization_baseline_file": "templates/baseline.html",
+                "react_ui_enabled": False,
+                "switch_ui_enabled": react_ui_available,
+                "version_number": get_version_number(),
+            }
+        )
+    index_page = current_app.config.get("EDUMFA_INDEX_HTML") or (
+        "legacy.html" if selected_ui == "legacy" else "index.html"
+    )
+    response = send_html(render_template(index_page, **render_context))
+    response.vary.add("Cookie")
+    response.cache_control.no_store = True
+    if requested_ui in ("react", "legacy"):
+        response.set_cookie(
+            "edumfa_ui",
+            requested_ui,
+            max_age=31536000,
+            path=instance + "/",
+            httponly=True,
+            secure=request.is_secure,
+            samesite="Lax",
+        )
+    return response

@@ -1,59 +1,192 @@
 /*
- * Coexistence glue for React-owned routes. Components are styled by Mantine;
- * this file only hides the inactive shell and neutralises the few Bootstrap 3
- * element defaults that would leak into `#react-root`.
+ * Application-level styles. Components are styled by Mantine; this file only
+ * sets up the page frame (sticky footer) and a few overrides.
  */
 
-#react-root[hidden],
-#angular-root[hidden] {
-  display: none !important;
-}
-
 #react-root {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(43, 108, 176, 0.08), transparent 28rem),
+    linear-gradient(180deg, #f8fafc 0, #f4f7fb 24rem, #f7f9fc 100%);
   color: var(--mantine-color-text);
+  display: flex;
+  flex-direction: column;
   font-family: var(--mantine-font-family);
   font-size: var(--mantine-font-size-sm);
   line-height: var(--mantine-line-height);
+  min-height: 100vh;
 }
 
+/* Vertical rhythm of a routed page. */
 .react-migration-shell {
   padding: var(--mantine-spacing-lg) 0 var(--mantine-spacing-xl);
 }
 
-/* Bootstrap 3 element rules Mantine does not override itself. */
-#react-root label {
-  font-weight: inherit;
-  margin-bottom: 0;
-  max-width: none;
+.app-main {
+  position: relative;
 }
 
-/*
- * Native checkboxes and radios only. The legacy content.css gives every
- * checkbox `height: 20px; margin-bottom: 5px`; Mantine's own inputs size
- * themselves through `--checkbox-size` / `--radio-size`, and this id selector
- * would otherwise collapse them to a line.
- */
-#react-root input[type="checkbox"]:not([class*="mantine-"]),
-#react-root input[type="radio"]:not([class*="mantine-"]) {
-  height: auto;
-  margin: 0;
-  vertical-align: baseline;
+.app-navbar {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.34);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7),
+    0 8px 30px rgba(30, 78, 128, 0.06);
+  position: relative;
+  z-index: 100;
 }
 
-#react-root input.mantine-Checkbox-input {
-  height: var(--checkbox-size);
-  margin: 0;
-  vertical-align: top;
+.app-navbar-inner {
+  min-height: 58px;
 }
 
-#react-root input.mantine-Radio-radio {
-  height: var(--radio-size);
-  margin: 0;
-  vertical-align: top;
+.app-brand {
+  align-items: center;
+  border-radius: var(--mantine-radius-md);
+  min-height: 42px;
+  padding: 2px 6px;
+  transition: background-color 120ms ease;
 }
 
-#react-root table {
-  background-color: transparent;
+.app-brand:hover {
+  background: var(--mantine-color-edumfa-0);
+}
+
+.app-navigation-link,
+.config-section-link {
+  border-radius: var(--mantine-radius-md);
+  font-weight: 550;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+}
+
+.app-navigation-link:hover,
+.config-section-link:hover {
+  transform: translateY(-1px);
+}
+
+.app-navigation-link[data-active],
+.config-section-link[data-active] {
+  box-shadow: inset 0 0 0 1px rgba(43, 108, 176, 0.16);
+}
+
+.ui-switch-button {
+  color: var(--mantine-color-gray-7);
+}
+
+.app-footer {
+  background: linear-gradient(
+    120deg,
+    var(--mantine-color-dark-8),
+    var(--mantine-color-dark-6)
+  );
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.config-section-navigation {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(148, 163, 184, 0.32);
+}
+
+.page-header {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+  padding-bottom: var(--mantine-spacing-md);
+}
+
+.page-header-title {
+  color: var(--mantine-color-dark-8);
+  letter-spacing: -0.02em;
+}
+
+.content-card,
+.sidebar-navigation {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(148, 163, 184, 0.34);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 8px 24px rgba(30, 78, 128, 0.055);
+}
+
+.content-card {
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.content-card:hover {
+  border-color: rgba(80, 137, 210, 0.34);
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.035),
+    0 12px 30px rgba(30, 78, 128, 0.075);
+}
+
+.content-card-header {
+  background: linear-gradient(
+    90deg,
+    rgba(232, 240, 251, 0.7),
+    rgba(255, 255, 255, 0.65)
+  );
+  min-height: 50px;
+}
+
+.content-card-footer {
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.sidebar-navigation .mantine-NavLink-root {
+  border-radius: var(--mantine-radius-md);
+  margin-bottom: 2px;
+}
+
+.sidebar-navigation .mantine-NavLink-root[data-active] {
+  box-shadow: inset 3px 0 0 var(--mantine-color-edumfa-6);
+  font-weight: 600;
+}
+
+.content-card .mantine-Table-thead {
+  background: rgba(241, 245, 249, 0.84);
+}
+
+.content-card .mantine-Table-tr:hover td {
+  background: rgba(232, 240, 251, 0.42);
+}
+
+.definition-accordion-group {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: var(--mantine-radius-md);
+  margin-bottom: var(--mantine-spacing-sm);
+  overflow: hidden;
+}
+
+.definition-accordion-group .mantine-Accordion-control {
+  background: linear-gradient(
+    90deg,
+    rgba(232, 240, 251, 0.66),
+    rgba(248, 250, 252, 0.5)
+  );
+  font-weight: 650;
+}
+
+.definition-accordion-group .mantine-Accordion-control:hover {
+  background: var(--mantine-color-edumfa-0);
+}
+
+.policy-action-item {
+  background: rgba(248, 250, 252, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.policy-action-item:focus-within,
+.policy-action-item:hover {
+  background: #fff;
+  border-color: rgba(80, 137, 210, 0.4);
 }
 
 /*
@@ -63,4 +196,51 @@
  */
 #react-root button .mantine-Badge-root {
   cursor: pointer;
+}
+
+.policy-action-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--mantine-spacing-md);
+}
+
+.policy-action-description {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.policy-action-help {
+  align-self: start;
+  background: var(--mantine-color-edumfa-0);
+  border-radius: var(--mantine-radius-sm);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+@media (max-width: 48em) {
+  .react-migration-shell {
+    padding-top: var(--mantine-spacing-md);
+  }
+
+  .app-navbar-inner {
+    padding-inline: var(--mantine-spacing-sm);
+  }
+
+  .config-section-navigation {
+    overflow-x: auto;
+  }
+
+  .config-section-navigation > .mantine-Group-root {
+    flex-wrap: nowrap;
+    width: max-content;
+  }
+
+  .sidebar-navigation {
+    position: static;
+  }
+
+  .policy-action-row {
+    gap: var(--mantine-spacing-sm);
+  }
 }

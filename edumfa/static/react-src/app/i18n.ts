@@ -2,6 +2,7 @@ import { i18n } from "@lingui/core";
 
 import { messages as deMessages } from "@/locales/de/messages";
 import { messages as enMessages } from "@/locales/en/messages";
+import { getUiConfig } from "@/lib/uiConfig";
 
 const catalogs = {
   de: deMessages,
@@ -14,9 +15,9 @@ type SupportedLocale = keyof typeof catalogs;
 export { i18n };
 
 export function activateDefaultLocale(): void {
-  const browserLocale =
-    typeof window === "undefined" ? undefined : window.browserLanguage;
-  const locale = getSupportedLocale(browserLocale);
+  const locale = getSupportedLocale(
+    typeof document === "undefined" ? undefined : getUiConfig().browserLanguage
+  );
 
   i18n.load(locale, catalogs[locale]);
   i18n.activate(locale);

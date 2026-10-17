@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { setPendingChallenge, resetLoginFlow } from "./loginFlowStore";
 import type { PendingChallenge } from "./loginFlow";
 import { ResponsePage } from "./ResponsePage";
+import { getSessionState } from "@/auth/sessionStore";
 import {
-  createLegacyAuthBridge,
   createRouteFetchMock,
   findFetchCalls,
   getJsonRequestBody
@@ -34,13 +34,6 @@ const baseChallenge: PendingChallenge = {
   webAuthnSignRequests: []
 };
 
-function installBridge(): { login: ReturnType<typeof vi.fn> } {
-  const bridge = { ...createLegacyAuthBridge({}), login: vi.fn() };
-  vi.stubGlobal("eduMfaLegacyAuth", bridge);
-
-  return bridge;
-}
-
 describe("ResponsePage", () => {
   afterEach(() => {
     vi.useRealTimers();
@@ -60,7 +53,6 @@ describe("ResponsePage", () => {
   it("finishes the login once the polled challenge is confirmed", async () => {
     vi.useFakeTimers();
     let polls = 0;
-    const bridge = installBridge();
     const fetchMock = createRouteFetchMock([
       {
         path: "/validate/polltransaction",
@@ -108,11 +100,10 @@ describe("ResponsePage", () => {
       transaction_id: "tx-1",
       username: "alice"
     });
-    expect(bridge.login).toHaveBeenCalledTimes(1);
+    expect(getSessionState().session.authToken).toBe("jwt-1");
   });
 
   it("signs a WebAuthn challenge and sends the assertion", async () => {
-    const bridge = installBridge();
     const fetchMock = createRouteFetchMock([
       { method: "POST", path: "/auth", respond: () => sessionValue }
     ]);
@@ -149,7 +140,7 @@ describe("ResponsePage", () => {
     renderWithProviders(<ResponsePage />, { route: "/response" });
 
     await waitFor(() => {
-      expect(bridge.login).toHaveBeenCalledTimes(1);
+      expect(getSessionState().session.authToken).toBe("jwt-1");
     });
     expect(get).toHaveBeenCalledTimes(1);
     const [authCall] = findFetchCalls(fetchMock, "POST", "/auth");
@@ -165,7 +156,6 @@ describe("ResponsePage", () => {
   });
 
   it("shows why the WebAuthn ceremony failed", async () => {
-    installBridge();
     vi.stubGlobal("fetch", createRouteFetchMock([]));
     vi.stubGlobal("PublicKeyCredential", {});
     Object.defineProperty(navigator, "credentials", {

@@ -5,9 +5,11 @@ import { Route, Routes } from "react-router-dom";
 
 import { EnrollTokenPage } from "./EnrollTokenPage";
 import { buildOtpListRows } from "./results/OtpListResult";
-import type { LegacyEduMfaUser, LegacyWebUiSettings } from "@/global";
+import type { WebUiSettingsPayload } from "@/auth/session";
+import { getSessionState } from "@/auth/sessionStore";
 import {
-  createLegacyAuthBridge,
+  stubSession,
+  type TestSessionUser,
   createRouteFetchMock,
   findFetchCalls,
   getJsonRequestBody,
@@ -16,7 +18,7 @@ import {
 } from "@/tests/fetchMockUtils";
 import { renderWithProviders } from "@/tests/renderWithProviders";
 
-const adminUser: LegacyEduMfaUser = {
+const adminUser: TestSessionUser = {
   auth_token: "legacy-token",
   menus: [],
   realm: "",
@@ -25,7 +27,7 @@ const adminUser: LegacyEduMfaUser = {
   username: "admin"
 };
 
-const plainUser: LegacyEduMfaUser = {
+const plainUser: TestSessionUser = {
   auth_token: "legacy-token",
   menus: [],
   realm: "realm2",
@@ -281,14 +283,11 @@ describe("EnrollTokenPage", () => {
   });
 
   it("hides the navigation in the wizard and logs out afterwards", async () => {
-    const logout = vi.fn();
-    const settings: LegacyWebUiSettings = {
+    const settings: WebUiSettingsPayload = {
       default_tokentype: "totp",
       token_wizard: true
     };
-    const bridge = createLegacyAuthBridge(plainUser, settings);
-    bridge.logout = logout;
-    vi.stubGlobal("eduMfaLegacyAuth", bridge);
+    stubSession(plainUser, settings);
     const fetchMock = createRouteFetchMock([
       rightsRoute({ totp: "TOTP" }),
       { path: "/system/", respond: () => ({}) },
@@ -316,7 +315,7 @@ describe("EnrollTokenPage", () => {
     await user.click(button);
 
     await user.click(await screen.findByRole("button", { name: "Logout" }));
-    expect(logout).toHaveBeenCalledTimes(1);
+    expect(getSessionState().session.authToken).toBeNull();
     expect(screen.queryByText(/successfully enrolled/)).toBeNull();
     expect(screen.queryByRole("button", { name: "Regenerate QR Code" })).toBeNull();
   });

@@ -1,7 +1,10 @@
 import "@testing-library/jest-dom/vitest";
 import { notifications } from "@mantine/notifications";
 import { cleanup } from "@testing-library/react";
-import { afterEach, vi } from "vitest";
+import { afterEach, beforeEach, vi } from "vitest";
+
+import { clearSession } from "./react-src/auth/sessionStore";
+import { resetUiConfigCache } from "./react-src/lib/uiConfig";
 
 // Browser APIs Mantine components rely on but jsdom does not implement.
 const { getComputedStyle } = window;
@@ -30,7 +33,14 @@ class ResizeObserverStub {
 
 window.ResizeObserver = ResizeObserverStub as unknown as typeof ResizeObserver;
 
+// The page config is read once per document; tests set their own inputs first.
+beforeEach(() => {
+  resetUiConfigCache();
+});
+
 afterEach(() => {
   cleanup();
   notifications.clean();
+  clearSession();
+  resetUiConfigCache();
 });

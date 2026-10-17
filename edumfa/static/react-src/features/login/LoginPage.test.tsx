@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -6,9 +6,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { resetLoginFlow } from "./loginFlowStore";
 import { LoginPage } from "./LoginPage";
 import { ResponsePage } from "./ResponsePage";
+import { getSessionState } from "@/auth/sessionStore";
 import {
   createEnvelopeResponse,
-  createLegacyAuthBridge,
   createRouteFetchMock,
   findFetchCalls,
   getJsonRequestBody
@@ -42,13 +42,6 @@ function setHiddenInputs(values: Record<string, string>): void {
     .join("");
 }
 
-function installBridge(): { login: ReturnType<typeof vi.fn> } {
-  const bridge = { ...createLegacyAuthBridge({}), login: vi.fn() };
-  vi.stubGlobal("eduMfaLegacyAuth", bridge);
-
-  return bridge;
-}
-
 describe("LoginPage", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -56,9 +49,8 @@ describe("LoginPage", () => {
     document.body.innerHTML = "";
   });
 
-  it("logs in with credentials and hands the session to the Angular bridge", async () => {
+  it("logs in with credentials and stores the session", async () => {
     setHiddenInputs({ REALMS: "realm2,realm1" });
-    const bridge = installBridge();
     const fetchMock = createRouteFetchMock([
       { method: "POST", path: "/auth", respond: () => sessionValue }
     ]);
@@ -75,9 +67,7 @@ describe("LoginPage", () => {
     await user.type(screen.getByLabelText("Password"), "secret");
     await user.click(loginButton);
 
-    await waitFor(() => {
-      expect(bridge.login).toHaveBeenCalledTimes(1);
-    });
+    await screen.findByText("token list");
 
     const [authCall] = findFetchCalls(fetchMock, "POST", "/auth");
     expect(authCall && getJsonRequestBody(authCall.init)).toEqual({
@@ -85,15 +75,15 @@ describe("LoginPage", () => {
       realm: "realm2",
       username: "alice"
     });
-    expect(bridge.login).toHaveBeenCalledWith(
-      expect.objectContaining({
-        result: { status: true, value: sessionValue }
-      })
-    );
+    expect(getSessionState().session).toMatchObject({
+      authToken: "jwt-1",
+      menus: ["tokens"],
+      rights: ["tokenlist"],
+      user: { realm: "", role: "admin", username: "admin" }
+    });
   });
 
-  it("sets the React session and opens the start page without a bridge", async () => {
-    vi.stubGlobal("eduMfaLegacyAuth", undefined);
+  it("opens the dashboard for administrators with the dashboard policy", async () => {
     vi.stubGlobal(
       "fetch",
       createRouteFetchMock([
@@ -116,7 +106,6 @@ describe("LoginPage", () => {
   });
 
   it("moves to the response page for a challenge and sends the OTP", async () => {
-    const bridge = installBridge();
     const fetchMock = vi.fn<typeof fetch>();
     fetchMock
       .mockResolvedValueOnce(
@@ -152,9 +141,8 @@ describe("LoginPage", () => {
     await user.type(screen.getByLabelText("Response"), "123456");
     await user.click(screen.getByRole("button", { name: "Log In" }));
 
-    await waitFor(() => {
-      expect(bridge.login).toHaveBeenCalledTimes(1);
-    });
+    await screen.findByText("token list");
+    expect(getSessionState().session.authToken).toBe("jwt-1");
 
     const calls = findFetchCalls(fetchMock, "POST", "/auth");
     expect(calls).toHaveLength(2);
@@ -165,9 +153,8 @@ describe("LoginPage", () => {
     });
   });
 
-  it("offers the web server user and the credentials form", async () => {
+  it("offers the web server user", async () => {
     setHiddenInputs({ FORCE_REMOTE_USER: "False", REMOTE_USER: "foo" });
-    installBridge();
     const fetchMock = createRouteFetchMock([
       { method: "POST", path: "/auth", respond: () => sessionValue }
     ]);
@@ -180,14 +167,19 @@ describe("LoginPage", () => {
 
     await user.click(screen.getByRole("button", { name: "Log In" }));
 
-    await waitFor(() => {
-      expect(findFetchCalls(fetchMock, "POST", "/auth")).toHaveLength(1);
-    });
+    await screen.findByText("token list");
     const [authCall] = findFetchCalls(fetchMock, "POST", "/auth");
     expect(authCall && getJsonRequestBody(authCall.init)).toEqual({
       password: "",
       username: "foo"
     });
+  });
+
+  it("switches from the web server user to the credentials form", async () => {
+    setHiddenInputs({ FORCE_REMOTE_USER: "False", REMOTE_USER: "foo" });
+    const user = userEvent.setup();
+
+    renderLogin();
 
     await user.click(screen.getByRole("button", { name: "Login with credentials" }));
 
@@ -215,7 +207,6 @@ describe("LoginPage", () => {
   });
 
   it("reports a rejected login", async () => {
-    installBridge();
     vi.stubGlobal(
       "fetch",
       vi.fn<typeof fetch>().mockResolvedValue(

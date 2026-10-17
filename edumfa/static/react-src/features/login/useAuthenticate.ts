@@ -3,7 +3,6 @@ import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import {
-  buildSessionFromLogin,
   derivePendingChallenge,
   getPendingPinChange,
   getStartRoute
@@ -21,8 +20,12 @@ import { notify } from "@/lib/notify";
 export interface UseAuthenticateOptions {
   /** A challenge answer was rejected; FIDO tokens are asked for a second signature. */
   onChallengeRejected?: () => void;
-  /** The login page moves to `/response` for a challenge; the response page stays. */
-  step: "login" | "response";
+  /**
+   * "login" moves to `/response` for a challenge and to the start page after
+   * success; "response" stays on its page; "unlock" (the lock dialog) never
+   * navigates, the session replacement closes the dialog.
+   */
+  step: "login" | "response" | "unlock";
 }
 
 export type AuthenticateMutation = UseMutationResult<
@@ -33,11 +36,9 @@ export type AuthenticateMutation = UseMutationResult<
 
 /**
  * Port of the legacy `authenticate` / `do_login_stuff` pair. A login that
- * returns a token is handed to the Angular `mainController` through the
- * bridge, which stores the session, starts the idle timer, opens the welcome
- * dialogs and navigates to the start page as before; without a bridge
- * (tests, standalone) the React session is set directly. A response with a
- * `transaction_id` becomes the pending challenge of the response page.
+ * returns a token becomes the session and opens the start page; a response
+ * with a `transaction_id` becomes the pending challenge of the response
+ * page (or of the lock dialog while unlocking).
  */
 export function useAuthenticate({
   onChallengeRejected,
@@ -45,7 +46,7 @@ export function useAuthenticate({
 }: UseAuthenticateOptions): AuthenticateMutation {
   const apiClient = useApiClient();
   const navigate = useNavigate();
-  const { setSession } = useAuth();
+  const { login } = useAuth();
   const { t } = useLingui();
 
   return useMutation({
@@ -77,16 +78,11 @@ export function useAuthenticate({
           notify(t`Your OTP pin expires on ${nextPinChange}`, "warning");
         }
 
-        const bridge = window.eduMfaLegacyAuth;
+        login(envelope);
 
-        if (bridge?.login) {
-          bridge.login(envelope);
-
-          return;
+        if (step !== "unlock") {
+          void navigate(getStartRoute(value, detail));
         }
-
-        setSession(buildSessionFromLogin(value));
-        void navigate(getStartRoute(value, detail));
 
         return;
       }
@@ -111,7 +107,10 @@ export function useAuthenticate({
       }
 
       notify(t`Something went wrong!`, "danger");
-      void navigate("/login");
+
+      if (step !== "unlock") {
+        void navigate("/login");
+      }
     }
   });
 }

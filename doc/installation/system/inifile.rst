@@ -127,9 +127,9 @@ will be used as the default language::
 
    .. autodata:: eduMFA.webui.login.DEFAULT_LANGUAGE_LIST
 
-The parameter ``EDUMFA_TRANSLATION_WARNING`` can be used to provide a prefix, that is
-set in front of every string in the UI, that is not translated to the language your browser
-is using.
+Strings that are not translated into the browser language fall back to
+English. The Web UI translations live in
+``edumfa/static/react-src/locales/<language>/messages.po``.
 
 Logging
 -------
@@ -312,6 +312,14 @@ in ``edumfa.cfg`` using the parameter ``EDUMFA_TOKEN_MODULES``::
 
 Custom Web UI
 -------------
+
+The default interface is the legacy AngularJS client. The React client is opt-in:
+set ``EDUMFA_REACT_UI = True`` to show a switch to the new interface (and a return
+link to the legacy one). The same selection can be made with ``?ui=react`` or
+``?ui=legacy`` on the installation URL. Without this option, ``?ui`` is ignored and
+no switch is shown. An instance-scoped browser cookie remembers the selection. Switching reloads the
+page and requires signing in again. ``EDUMFA_UI_DEACTIVATED`` still disables both
+interfaces, and ``EDUMFA_INDEX_HTML`` still takes precedence over this selection.
 
 The Web UI is a single page application, that is initiated from the file
 ``static/templates/index.html``. This file pulls all CSS, the javascript framework

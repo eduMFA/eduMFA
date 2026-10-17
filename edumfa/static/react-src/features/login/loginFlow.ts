@@ -1,32 +1,12 @@
 import type { AuthLoginDetail, AuthLoginResponse } from "@/api/auth";
-import { normalizeWebUiSettings, type AuthSession } from "@/auth/AuthProvider";
-import type { U2fSignRequest } from "@/auth/u2f";
-import type { WebAuthnSignRequest } from "@/auth/webauthn";
+import {
+  buildSession,
+  type AuthSession,
+  type PendingChallenge,
+  type PendingPinChange
+} from "@/auth/session";
 
-/** A challenge-response login waiting for its second step. */
-export interface PendingChallenge {
-  /** Data URL of a QR code (TiQR, push); the last one when several tokens send one. */
-  image: string | null;
-  /** The challenge text (`detail.message`, the messages of all tokens joined). */
-  message: string;
-  /** At least one token is confirmed out of band (`client_mode: "poll"`). */
-  polling: boolean;
-  realm: string;
-  /** Serials of the challenged tokens; the legacy view listed them when there was more than one. */
-  serials: string[];
-  /** At least one token expects a typed response (`client_mode: "interactive"`). */
-  showInput: boolean;
-  transactionId: string;
-  u2fSignRequests: U2fSignRequest[];
-  username: string;
-  webAuthnSignRequests: WebAuthnSignRequest[];
-}
-
-/** `detail.pin_change` of a successful login: the token whose PIN expired. */
-export interface PendingPinChange {
-  nextPinChange: string | null;
-  serial: string;
-}
+export type { PendingChallenge, PendingPinChange };
 
 export interface LoginCredentials {
   realm: string;
@@ -105,13 +85,10 @@ export function getStartRoute(
   return "/token/list";
 }
 
-/** The React session when no Angular bridge takes the login over. */
-export function buildSessionFromLogin(value: AuthLoginResponse): AuthSession {
-  return {
-    authToken: value.token ?? null,
-    menus: value.menus ?? [],
-    rights: value.rights ?? [],
-    settings: normalizeWebUiSettings(value),
-    user: { realm: value.realm, role: value.role, username: value.username }
-  };
+/** The session of a successful login response. */
+export function buildSessionFromLogin(
+  value: AuthLoginResponse,
+  versionNumber: string | null = null
+): AuthSession {
+  return buildSession(value, versionNumber);
 }

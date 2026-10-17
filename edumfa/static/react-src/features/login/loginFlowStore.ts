@@ -1,6 +1,11 @@
-import { useSyncExternalStore } from "react";
+import type { PendingChallenge, PendingPinChange } from "@/auth/session";
+import {
+  setPendingChallenge,
+  setPendingPinChange,
+  useSessionState
+} from "@/auth/sessionStore";
 
-import type { PendingChallenge, PendingPinChange } from "./loginFlow";
+export { setPendingChallenge, setPendingPinChange };
 
 export interface LoginFlowState {
   challenge: PendingChallenge | null;
@@ -8,46 +13,18 @@ export interface LoginFlowState {
 }
 
 /**
- * State the login carries between its routes. The legacy controller kept the
- * transaction and the PIN change notice on the `mainController` scope, which
- * outlives every state change; the React pages mount per route and the
- * shell unmounts while Angular owns a route, so the values live outside the
- * component tree.
+ * The state the login carries between its routes (the pending challenge of
+ * `/response`, the PIN change notice of `/pinchange`). It is part of the
+ * session store, so it outlives the route components like the legacy
+ * `mainController` scope did.
  */
-let state: LoginFlowState = { challenge: null, pinChange: null };
-const listeners = new Set<() => void>();
+export function useLoginFlow(): LoginFlowState {
+  const { challenge, pinChange } = useSessionState();
 
-function update(patch: Partial<LoginFlowState>): void {
-  state = { ...state, ...patch };
-  listeners.forEach((listener) => {
-    listener();
-  });
-}
-
-export function setPendingChallenge(challenge: PendingChallenge | null): void {
-  update({ challenge });
-}
-
-export function setPendingPinChange(pinChange: PendingPinChange | null): void {
-  update({ pinChange });
+  return { challenge, pinChange };
 }
 
 export function resetLoginFlow(): void {
-  update({ challenge: null, pinChange: null });
-}
-
-function subscribe(listener: () => void): () => void {
-  listeners.add(listener);
-
-  return () => {
-    listeners.delete(listener);
-  };
-}
-
-function getSnapshot(): LoginFlowState {
-  return state;
-}
-
-export function useLoginFlow(): LoginFlowState {
-  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  setPendingChallenge(null);
+  setPendingPinChange(null);
 }

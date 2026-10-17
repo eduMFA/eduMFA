@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { AuditLogPage } from "./AuditLogPage";
 import {
   createEnvelopeResponse,
-  createLegacyAuthBridge,
+  stubSession,
   getFetchUrl
 } from "@/tests/fetchMockUtils";
 import { renderWithProviders } from "@/tests/renderWithProviders";
@@ -218,17 +218,14 @@ describe("AuditLogPage", () => {
 });
 
 function stubAdminSession(rights: string[]): void {
-  vi.stubGlobal(
-    "eduMfaLegacyAuth",
-    createLegacyAuthBridge({
-      auth_token: "legacy-token",
-      menus: [],
-      realm: "realm1",
-      rights,
-      role: "admin",
-      username: "admin"
-    })
-  );
+  stubSession({
+    auth_token: "legacy-token",
+    menus: [],
+    realm: "realm1",
+    rights,
+    role: "admin",
+    username: "admin"
+  });
 }
 
 function getRequestedParams(

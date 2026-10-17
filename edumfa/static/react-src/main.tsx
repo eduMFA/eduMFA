@@ -3,10 +3,10 @@ import { createRoot } from "react-dom/client";
 
 import { App } from "./app/App";
 
-// Mantine styles are imported per component. The `baseline.css` entry is
-// deliberately left out: it restyles `body`, which still belongs to the
-// Bootstrap 3 Angular views during coexistence.
+// Mantine styles are imported per component so the bundle only carries the
+// components in use.
 import "@mantine/core/styles/default-css-variables.css";
+import "@mantine/core/styles/baseline.css";
 import "@mantine/core/styles/global.css";
 import "@mantine/core/styles/UnstyledButton.css";
 import "@mantine/core/styles/Accordion.css";
@@ -25,8 +25,10 @@ import "@mantine/core/styles/Group.css";
 import "@mantine/core/styles/Input.css";
 import "@mantine/core/styles/InlineInput.css";
 import "@mantine/core/styles/Checkbox.css";
+import "@mantine/core/styles/Code.css";
 import "@mantine/core/styles/Combobox.css";
 import "@mantine/core/styles/Loader.css";
+import "@mantine/core/styles/Menu.css";
 import "@mantine/core/styles/Overlay.css";
 import "@mantine/core/styles/ModalBase.css";
 import "@mantine/core/styles/Modal.css";

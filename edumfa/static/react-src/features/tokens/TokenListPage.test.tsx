@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { TokenListPage } from "./TokenListPage";
-import type { LegacyWebUiSettings } from "@/global";
+import type { WebUiSettingsPayload } from "@/auth/session";
 import {
   createRouteFetchMock,
   findFetchCalls,
@@ -195,7 +195,7 @@ describe("TokenListPage", () => {
   });
 });
 
-function stubAdminSession(settings: LegacyWebUiSettings = {}): void {
+function stubAdminSession(settings: WebUiSettingsPayload = {}): void {
   stubLegacySession(
     {
       auth_token: "legacy-token",

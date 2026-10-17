@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -73,7 +73,7 @@ describe("AuthProvider", () => {
     vi.unstubAllGlobals();
   });
 
-  it("exposes the session and settings of the legacy bridge", () => {
+  it("exposes the session and settings of the store", () => {
     stubLegacySession(
       {
         auth_token: "legacy-token",
@@ -93,12 +93,53 @@ describe("AuthProvider", () => {
     expect(result.current.settings.auditPageSize).toBe(10);
   });
 
-  it("starts without a session when the bridge is missing", () => {
-    vi.stubGlobal("eduMfaLegacyAuth", undefined);
-
+  it("starts without a session", () => {
     const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
 
     expect(result.current.isAuthenticated).toBe(false);
+    expect(result.current.isLocked).toBe(false);
     expect(result.current.settings).toEqual(defaultWebUiSettings);
+  });
+
+  it("stores a login, locks and logs out", () => {
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider });
+
+    act(() => {
+      result.current.login({
+        result: {
+          value: {
+            logout_time: 300,
+            realm: "realm1",
+            rights: ["tokenlist"],
+            role: "user",
+            timeout_action: "logout",
+            token: "jwt-1",
+            username: "alice"
+          }
+        },
+        versionnumber: "2.10"
+      });
+    });
+
+    expect(result.current.isAuthenticated).toBe(true);
+    expect(result.current.versionNumber).toBe("2.10");
+    expect(result.current.settings.logoutTime).toBe(300);
+    expect(result.current.settings.timeoutAction).toBe("logout");
+
+    act(() => {
+      result.current.lock();
+    });
+
+    expect(result.current.isLocked).toBe(true);
+    expect(result.current.isAuthenticated).toBe(false);
+    expect(result.current.user?.username).toBe("alice");
+
+    act(() => {
+      result.current.logout();
+    });
+
+    expect(result.current.isLocked).toBe(false);
+    expect(result.current.user).toBeNull();
+    expect(window.location.hash).toBe("#!/login");
   });
 });

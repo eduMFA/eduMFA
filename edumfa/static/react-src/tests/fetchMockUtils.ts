@@ -1,10 +1,17 @@
 import { vi } from "vitest";
 
-import type {
-  LegacyEduMfaAuthBridge,
-  LegacyEduMfaUser,
-  LegacyWebUiSettings
-} from "@/global";
+import { buildSession, type WebUiSettingsPayload } from "@/auth/session";
+import { setSession } from "@/auth/sessionStore";
+
+/** The session fields a test provides; everything else falls back to the defaults. */
+export interface TestSessionUser {
+  auth_token?: string;
+  menus?: string[];
+  realm?: string;
+  rights?: string[];
+  role?: string;
+  username?: string;
+}
 
 export function createEnvelopeResponse(
   value: unknown,
@@ -22,17 +29,25 @@ export function createEnvelopeResponse(
   );
 }
 
-export function createLegacyAuthBridge(
-  user: LegacyEduMfaUser,
-  settings: LegacyWebUiSettings = {}
-): LegacyEduMfaAuthBridge {
-  return {
-    getAuthToken: () => user.auth_token,
-    getRealm: () => user.realm,
-    getRole: () => user.role,
-    getSettings: () => settings,
-    getUser: () => user
-  };
+/**
+ * Puts a session into the store, as a login would. `vitest.setup.ts` clears
+ * the store after every test.
+ */
+export function stubSession(
+  user: TestSessionUser,
+  settings: WebUiSettingsPayload = {}
+): void {
+  setSession(
+    buildSession({
+      ...settings,
+      menus: user.menus ?? [],
+      realm: user.realm ?? "",
+      rights: user.rights ?? [],
+      role: user.role ?? "admin",
+      token: user.auth_token ?? "test-token",
+      username: user.username ?? "admin"
+    })
+  );
 }
 
 export function getFetchUrl(input: RequestInfo | URL): string {
@@ -116,10 +131,10 @@ export function findFetchCalls(
     );
 }
 
-/** Installs a legacy auth bridge; `settings` are the WebUI policy values. */
+/** Older name of `stubSession`; `settings` are the WebUI policy values. */
 export function stubLegacySession(
-  user: LegacyEduMfaUser,
-  settings: LegacyWebUiSettings = {}
+  user: TestSessionUser,
+  settings: WebUiSettingsPayload = {}
 ): void {
-  vi.stubGlobal("eduMfaLegacyAuth", createLegacyAuthBridge(user, settings));
+  stubSession(user, settings);
 }

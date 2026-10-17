@@ -44,18 +44,84 @@ class AlternativeWebUI(MyTestCase):
 
 
 class LoginUITestCase(MyTestCase):
+    def setUp(self):
+        super().setUp()
+        self.app.config["EDUMFA_REACT_UI"] = True
+
+    def tearDown(self):
+        self.app.config.pop("EDUMFA_REACT_UI", None)
+        super().tearDown()
+
+    def test_legacy_is_default_and_react_is_opt_in(self):
+        self.app.config.pop("EDUMFA_REACT_UI")
+        client = self.app.test_client()
+        for url in ("/", "/?ui=react"):
+            res = client.get(url)
+            self.assertIn(b"static/app.js", res.data)
+            self.assertNotIn(b"Switch to new UI", res.data)
+            self.assertNotIn(b'id="react-root"', res.data)
+            self.assertNotIn("Set-Cookie", res.headers)
+
+    def test_switch_interfaces_and_remember_preference(self):
+        client = self.app.test_client()
+        default = client.get("/")
+        self.assertIn(b"static/app.js", default.data)
+        self.assertIn(b"Switch to new UI", default.data)
+        react = client.get("/?ui=react")
+        self.assertIn(b'id="react-root"', react.data)
+        self.assertNotIn(b"static/app.js", react.data)
+        self.assertIn("edumfa_ui=react", react.headers["Set-Cookie"])
+        self.assertIn(b'id="react-root"', client.get("/").data)
+        legacy = client.get("/?ui=legacy")
+        self.assertIn(b"static/app.js", legacy.data)
+        self.assertNotIn(b"static/react-dist/assets/main.js", legacy.data)
+        self.assertIn(b"static/app.js", client.get("/").data)
+
+    def test_unknown_ui_does_not_select_a_template_or_set_a_cookie(self):
+        with self.app.test_request_context("/?ui=../../deactivated.html"):
+            response = self.app.full_dispatch_request()
+            self.assertIn(b"static/app.js", response.data)
+            self.assertNotIn("Set-Cookie", response.headers)
+
+    def test_legacy_interface_respects_mount_path_and_page_settings(self):
+        with self.app.test_request_context(
+            "/?ui=legacy", environ_overrides={"SCRIPT_NAME": "/mfa"}
+        ):
+            response = self.app.full_dispatch_request()
+            self.assertIn(b"/mfa/static/app.js", response.data)
+            self.assertIn(b'id="REALMS"', response.data)
+            self.assertIn(b'id="HSM_READY" value="True"', response.data)
+            self.assertIn("Path=/mfa/", response.headers["Set-Cookie"])
+
+    def test_deactivated_ui_cannot_be_bypassed_with_ui_selection(self):
+        original = self.app.config.get("EDUMFA_UI_DEACTIVATED")
+        self.app.config["EDUMFA_UI_DEACTIVATED"] = True
+        try:
+            with self.app.test_request_context("/?ui=legacy"):
+                response = self.app.full_dispatch_request()
+                self.assertIn(b"The eduMFA WebUI is deactivated.", response.data)
+                self.assertNotIn(b"Switch to new UI", response.data)
+                self.assertNotIn(b"ui-view", response.data)
+        finally:
+            self.app.config["EDUMFA_UI_DEACTIVATED"] = original
+
     def test_01_normal_login(self):
         # We just test, if the login page can be called.
-        with self.app.test_request_context("/", method="GET"):
+        with self.app.test_request_context("/?ui=react", method="GET"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual(res.mimetype, "text/html", res)
-            self.assertTrue(b"/static/templates/baseline.html" in res.data)
-            self.assertTrue(b"/static/templates/menu.html" in res.data)
+            self.assertTrue(b'id="react-root"' in res.data)
+            self.assertTrue(b'id="edumfa-ui-config"' in res.data)
+            self.assertTrue(b"static/react-dist/assets/main.css" in res.data)
+            self.assertTrue(b"static/react-dist/assets/main.js" in res.data)
+            # The default React page does not load the Angular shell.
+            self.assertFalse(b"static/templates/menu.html" in res.data)
+            self.assertFalse(b"static/app.js" in res.data)
 
     def test_02_deactivated(self):
         self.app.config["EDUMFA_UI_DEACTIVATED"] = True
-        with self.app.test_request_context("/", method="GET"):
+        with self.app.test_request_context("/?ui=react", method="GET"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertEqual(res.mimetype, "text/html", res)
@@ -68,31 +134,12 @@ class LoginUITestCase(MyTestCase):
             scope=SCOPE.WEBUI,
             action=f"{ACTION.REALMDROPDOWN}=Hello World",
         )
-        with self.app.test_request_context("/", method="GET"):
+        with self.app.test_request_context("/?ui=react", method="GET"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertIsNotNone(
-                re.search(r'id="REALMS" value=".*World.*"', to_unicode(res.data)), res
+                re.search(r'"realms":\s*\["Hello World"\]', to_unicode(res.data)), res
             )
-
-    def test_04_custom_menu_baseline(self):
-        # We provide a non-existing file, so we can not read "eduMFA" in the footer.
-        set_policy(
-            "custom1",
-            scope=SCOPE.WEBUI,
-            action=f"{ACTION.CUSTOM_BASELINE}=mytemplates/nonexist_base.html",
-        )
-        set_policy(
-            "custom2",
-            scope=SCOPE.WEBUI,
-            action=f"{ACTION.CUSTOM_MENU}=mytemplates/nonexist_menu.html",
-        )
-
-        with self.app.test_request_context("/", method="GET"):
-            res = self.app.full_dispatch_request()
-            self.assertTrue(res.status_code == 200, res)
-            self.assertTrue(b"/static/mytemplates/nonexist_base.html" in res.data)
-            self.assertTrue(b"/static/mytemplates/nonexist_menu.html" in res.data)
 
     def test_05_custom_login_text(self):
         set_policy(
@@ -110,11 +157,13 @@ class LoginUITestCase(MyTestCase):
         # test login when no policies are set
         self.assertEqual(len(PolicyClass().policies), 0, PolicyClass().policies)
         with self.app.test_request_context(
-            "/", method="GET", environ_base={"REMOTE_USER": "foo"}
+            "/?ui=react", method="GET", environ_base={"REMOTE_USER": "foo"}
         ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
-            self.assertTrue(b'<input type=hidden id=REMOTE_USER value="">' in res.data)
+            self.assertIsNotNone(
+                re.search(r'"remote_user":\s*""', to_unicode(res.data)), res
+            )
 
         # test login with remote_user policy set
         set_policy(
@@ -123,12 +172,12 @@ class LoginUITestCase(MyTestCase):
             action=f"{ACTION.REMOTE_USER}=allowed",
         )
         with self.app.test_request_context(
-            "/", method="GET", environ_base={"REMOTE_USER": "foo"}
+            "/?ui=react", method="GET", environ_base={"REMOTE_USER": "foo"}
         ):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
-            self.assertTrue(
-                b'<input type=hidden id=REMOTE_USER value="foo">' in res.data
+            self.assertIsNotNone(
+                re.search(r'"remote_user":\s*"foo"', to_unicode(res.data)), res
             )
 
     def test_07_privacy_statement_link(self):
@@ -137,38 +186,19 @@ class LoginUITestCase(MyTestCase):
             scope=SCOPE.WEBUI,
             action=f"{ACTION.GDPR_LINK}=https://edumfa.io/",
         )
-        with self.app.test_request_context("/", method="GET"):
+        with self.app.test_request_context("/?ui=react", method="GET"):
             res = self.app.full_dispatch_request()
             self.assertTrue(res.status_code == 200, res)
             self.assertTrue(b"https://edumfa.io/" in res.data)
 
-    def test_08_react_mount_is_feature_flagged(self):
-        react_ui = self.app.config.get("EDUMFA_REACT_UI")
-        react_routes = self.app.config.get("EDUMFA_REACT_ROUTES")
-        try:
-            self.app.config["EDUMFA_REACT_UI"] = False
-            with self.app.test_request_context("/", method="GET"):
-                res = self.app.full_dispatch_request()
-                self.assertTrue(res.status_code == 200, res)
-                self.assertTrue(b'id="react-root"' in res.data)
-                self.assertTrue(b'data-react-enabled="false"' in res.data)
-                self.assertFalse(b"static/react-dist/assets/main.js" in res.data)
-
-            self.app.config["EDUMFA_REACT_UI"] = True
-            self.app.config["EDUMFA_REACT_ROUTES"] = ["/component/clienttype"]
-
-            with self.app.test_request_context("/", method="GET"):
-                res = self.app.full_dispatch_request()
-                self.assertTrue(res.status_code == 200, res)
-                self.assertTrue(b'data-react-enabled="true"' in res.data)
-                self.assertTrue(
-                    b'data-react-routes="/component/clienttype"' in res.data
-                )
-                self.assertTrue(b"static/react-dist/assets/main.css" in res.data)
-                self.assertTrue(b"static/react-dist/assets/main.js" in res.data)
-        finally:
-            self.app.config["EDUMFA_REACT_UI"] = react_ui
-            self.app.config["EDUMFA_REACT_ROUTES"] = react_routes
+    def test_08_ui_config_json(self):
+        with self.app.test_request_context("/?ui=react", method="GET"):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            data = to_unicode(res.data)
+            self.assertIsNotNone(re.search(r'"hsm_ready":\s*true', data), res)
+            self.assertIsNotNone(re.search(r'"logo":\s*"eduMFA-logo.png"', data), res)
+            self.assertIsNotNone(re.search(r'"instance":\s*""', data), res)
 
 
 class LanguageTestCase(MyApiTestCase):

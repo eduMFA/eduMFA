@@ -16,9 +16,18 @@ export function SidebarLayout({
 }: PropsWithChildren<SidebarLayoutProps>) {
   return (
     <Box className="react-migration-shell">
-      <Grid align="flex-start" gap="lg">
+      <Grid align="flex-start" className="sidebar-layout" gap="lg">
         <Grid.Col span={{ base: 12, lg: 3 }}>
-          <Paper component="nav" p="xs" pos="sticky" radius="md" top={12} withBorder>
+          <Paper
+            className="sidebar-navigation"
+            component="nav"
+            p="xs"
+            pos="sticky"
+            radius="md"
+            shadow="xs"
+            top={12}
+            withBorder
+          >
             {sidebar}
           </Paper>
         </Grid.Col>

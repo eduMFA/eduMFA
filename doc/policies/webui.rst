@@ -270,40 +270,6 @@ type: ``bool``
 
 This action adds the user ID and the resolver name to the token list.
 
-.. index:: Customize baseline, customize footer
-.. _webui_custom_baseline:
-
-custom_baseline
-~~~~~~~~~~~~~~~
-
-type: ``string``
-
-The administrator can replace the file ``templates/baseline.html`` with another template.
-This way he can change the links to e.g. internal documentation or ticketing systems.
-The new file could be called ``mytemplates/mybase.html``.
-
-.. note:: This policy is evaluated before login. So any realm or user setting will have no
-   effect. But you can specify different baselines for different client IP addresses.
-
-If you want to adapt the eduMFA look and feel even more, read :ref:`customize`.
-
-.. index:: Customize menu
-.. _webui_custom_menu:
-
-custom_menu
-~~~~~~~~~~~
-
-type: ``string``
-
-The administrator can replace the file ``templates/menu.html`` with another template.
-This way he can change the links to e.g. internal documentation or ticketing systems.
-The new file could be called ``mytemplates/mymenu.html``.
-
-.. note:: This policy is evaluated before login. So any realm or user setting will have no
-   effect. But you can specify different menus for different client IP addresses.
-
-If you want to adapt the eduMFA look and feel even more, read :ref:`customize`.
-
 hide_buttons
 ~~~~~~~~~~~~
 
