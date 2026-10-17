@@ -32,6 +32,7 @@ from flask import Blueprint, g, request
 from edumfa.api.lib.prepolicy import check_base_action, prepolicy
 from edumfa.api.lib.utils import getParam, send_result
 from edumfa.lib.log import log_with
+from edumfa.lib.lttb import lttb
 from edumfa.lib.monitoringstats import (
     delete_stats,
     get_last_value,
@@ -45,9 +46,7 @@ from edumfa.lib.utils import parse_legacy_time
 
 log = logging.getLogger(__name__)
 
-
 monitoring_blueprint = Blueprint("monitoring_blueprint", __name__)
-
 
 @monitoring_blueprint.route("/", methods=["GET"])
 @monitoring_blueprint.route("/<stats_key>", methods=["GET"])
@@ -77,6 +76,9 @@ def get_statistics(stats_key=None):
         values = get_values(
             stats_key=stats_key, start_timestamp=start, end_timestamp=end
         )
+        max_points = getParam(param, "max_points")
+        if max_points:
+           values = lttb(values, int(max_points), x_key=lambda d: d.timestamp())
         # convert timestamps to strings
         values_w_string = [(s[0].strftime(AUTH_DATE_FORMAT), s[1]) for s in values]
         g.audit_object.log({"success": True})
