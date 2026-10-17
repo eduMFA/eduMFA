@@ -55,7 +55,6 @@ export function ServerSettingsCard({
           id="UserCacheExpiration"
           inputMode="numeric"
           label={<Trans>User Cache expiration in seconds</Trans>}
-          maw={320}
           onChange={(event) => {
             onChange({ UserCacheExpiration: event.currentTarget.value });
           }}

@@ -495,7 +495,7 @@ export function TokenPropertiesCard({
                   ))}
                 </List>
                 {infoDraft ? (
-                  <Stack gap="xs" maw={420}>
+                  <Stack gap="xs">
                     <TextInput
                       id="max_auth_count"
                       inputMode="numeric"

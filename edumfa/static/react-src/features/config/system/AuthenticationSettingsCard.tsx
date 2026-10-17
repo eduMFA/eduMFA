@@ -47,7 +47,6 @@ export function AuthenticationSettingsCard({ form, onChange }: SystemConfigCardP
           id="failcounter_clear_timeout"
           inputMode="numeric"
           label={<Trans>Clear failcounter after minutes</Trans>}
-          maw={320}
           onChange={(event) => {
             onChange({ failcounter_clear_timeout: event.currentTarget.value });
           }}
@@ -109,7 +108,6 @@ export function AuthenticationSettingsCard({ form, onChange }: SystemConfigCardP
           id="AutoResyncTimeout"
           inputMode="numeric"
           label={<Trans>Auto resync timeout</Trans>}
-          maw={320}
           onChange={(event) => {
             onChange({ AutoResyncTimeout: event.currentTarget.value });
           }}

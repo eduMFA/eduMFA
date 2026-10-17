@@ -41,7 +41,8 @@ not distinguish between them; only the page served at `/` differs.
   "Behavior changes").
 - **Session.** The React UI owns its session (`react-src/auth`): login, idle lock,
   logout and rights come from one provider. The legacy UI keeps this in the
-  `AuthFactory` and `$rootScope`.
+  `AuthFactory` and `$rootScope`, so an F5 there signs the user out. The React
+  session survives a reload (see "Behavior changes").
 - **Components.** Shared building blocks replace copy-pasted templates, for example
   `DataTable`, `CheckboxPickList` (replaces `isteven-multi-select`),
   `TypedOptionInput` and `useDeleteConfirmation`.
@@ -50,7 +51,25 @@ not distinguish between them; only the page served at `/` differs.
 
 - **Interface switching.** The switch (`?ui=react` or `?ui=legacy`) reloads the
   page and requires signing in again; no tokens are shared between the clients.
-  The choice is stored in an instance-scoped, `HttpOnly` cookie.
+  The React UI drops its stored session when you leave for the legacy UI. The
+  choice is stored in an instance-scoped, `HttpOnly` cookie.
+- **Reload (F5) keeps the React login.** Unlike the legacy UI, the React session
+  (token, user, rights, WebUI settings and the lock state) is kept in
+  `sessionStorage` (`auth/sessionStore.ts`) and restored when the page loads.
+  Details and trade-offs:
+  - It is per tab and per installation path; closing the tab ends it. Nothing
+    goes to `localStorage` or a cookie.
+  - Logout, an authentication error (HTTP 401 and the legacy auth codes) and the
+    switch to the legacy UI remove it. An expired JWT (`exp`) is discarded on load
+    without a request.
+  - The idle lock survives a reload: a locked session comes back locked, without
+    a token. The idle timer restarts on load, so a reload counts as activity.
+  - Pending challenge-response and PIN-change steps are not stored; they start
+    over after a reload.
+  - The token is readable by scripts of the page, exactly like the in-memory
+    copy before, so XSS exposure is unchanged. Deployments that must not keep a
+    token across reloads can use the `timeout_action = logout` policy and a short
+    `logout_time`.
 - **Customization.** Legacy deployments can replace menu and baseline templates
   with `EDUMFA_CUSTOMIZATION`. The React UI does not load those templates. Custom
   CSS (`EDUMFA_CUSTOM_CSS`) and the theme (`EDUMFA_CSS`) still apply.
@@ -101,7 +120,8 @@ session, login, navigation, idle lock and welcome dialogs. A visible switch retu
 to AngularJS with `?ui=legacy`, and the legacy interface links back to React. The
 selected interface is remembered in an instance-scoped cookie. Switching reloads
 the page and requires signing in again. Neither client stores authentication tokens
-for the switch. URLs retain the `#!/` prefix.
+for the switch. The React session itself survives a reload through
+`sessionStorage` (see "Behavior changes"). URLs retain the `#!/` prefix.
 
 The configuration route table now mounts these existing areas:
 

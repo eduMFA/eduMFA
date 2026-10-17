@@ -6,11 +6,11 @@ import {
   IconDownload,
   IconInfoCircle,
   IconMail,
-  IconPlayerPlayFilled,
   IconPower,
-  IconSignal5g,
   IconTag,
-  IconTool
+  IconServer2,
+  IconTool,
+  IconMessageCog
 } from "@tabler/icons-react";
 import type { PropsWithChildren, ReactNode } from "react";
 
@@ -75,7 +75,7 @@ const serverSections: ServerSection[] = [
     addRight: "edumfaserver_write",
     docsPath: null,
     helpLabel: null,
-    icon: IconPlayerPlayFilled,
+    icon: IconServer2,
     key: "edumfaserver",
     label: <Trans>eduMFA servers</Trans>,
     listLabel: <Trans>List eduMFA server definitions</Trans>,
@@ -86,7 +86,7 @@ const serverSections: ServerSection[] = [
     addRight: "smsgateway_write",
     docsPath: "configuration/sms_gateway_config.html",
     helpLabel: <Trans>Help about SMS-Gateways</Trans>,
-    icon: IconSignal5g,
+    icon: IconMessageCog,
     key: "smsgateway",
     label: <Trans>SMS Gateways</Trans>,
     listLabel: <Trans>All SMS Gateways</Trans>,

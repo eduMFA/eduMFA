@@ -39,6 +39,28 @@
   min-height: 58px;
 }
 
+/* Long translations (German) must wrap onto a second row instead of widening the page. */
+.app-navbar-inner > .mantine-Group-root {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.app-navbar .mantine-NavLink-label,
+.app-navbar .mantine-Button-label {
+  font-size: var(--mantine-font-size-sm);
+  white-space: nowrap;
+}
+
+.app-navbar .mantine-NavLink-root {
+  padding-inline: var(--mantine-spacing-xs);
+}
+
+.app-navbar .mantine-Button-label {
+  max-width: 22rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .app-brand {
   align-items: center;
   border-radius: var(--mantine-radius-md);

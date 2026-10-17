@@ -24,17 +24,84 @@ const initialState: SessionState = {
   session: emptySession
 };
 
+/** Per tab and per installation path, so instances under one origin do not share a login. */
+const storageKey = `edumfa.session:${window.location.pathname}`;
+
+/** The JWT `exp` claim in seconds, or null when the token is not a readable JWT. */
+function tokenExpiry(token: string): number | null {
+  try {
+    const payload = token.split(".")[1] ?? "";
+    const claims = JSON.parse(
+      atob(payload.replaceAll("-", "+").replaceAll("_", "/"))
+    ) as { exp?: unknown };
+
+    return typeof claims.exp === "number" ? claims.exp : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Restores the session after a page reload (F5). Only a user, a live token
+ * or a lock survive; challenges and PIN changes are step-by-step flows that
+ * start over.
+ */
+function loadPersistedState(): SessionState {
+  try {
+    const raw = window.sessionStorage.getItem(storageKey);
+    const stored = (raw ? JSON.parse(raw) : {}) as Partial<SessionState>;
+    const session = stored.session;
+
+    if (!session?.user) {
+      return initialState;
+    }
+
+    const expiry = session.authToken ? tokenExpiry(session.authToken) : null;
+    const expired = expiry !== null && expiry * 1000 <= Date.now();
+
+    if (expired || (!session.authToken && !stored.locked)) {
+      window.sessionStorage.removeItem(storageKey);
+
+      return initialState;
+    }
+
+    return {
+      ...initialState,
+      locked: stored.locked === true,
+      session: { ...emptySession, ...session }
+    };
+  } catch {
+    return initialState;
+  }
+}
+
+function persistState(next: SessionState): void {
+  try {
+    if (next.session.user && (next.session.authToken || next.locked)) {
+      window.sessionStorage.setItem(
+        storageKey,
+        JSON.stringify({ locked: next.locked, session: next.session })
+      );
+    } else {
+      window.sessionStorage.removeItem(storageKey);
+    }
+  } catch {
+    // Storage can be blocked; the session then simply ends with the reload.
+  }
+}
+
 /**
  * The session lives outside the component tree, like the legacy
  * `AuthFactory` singleton: the API client, the idle watch, the login pages
  * and the navigation all read the same state, and the value survives route
  * changes. Components subscribe through `useSessionState`.
  */
-let state: SessionState = initialState;
+let state: SessionState = loadPersistedState();
 const listeners = new Set<() => void>();
 
 function update(patch: Partial<SessionState>): void {
   state = { ...state, ...patch };
+  persistState(state);
   listeners.forEach((listener) => {
     listener();
   });

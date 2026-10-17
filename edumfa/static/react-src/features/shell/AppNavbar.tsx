@@ -1,5 +1,6 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import {
+  ActionIcon,
   Anchor,
   Box,
   Button,
@@ -7,7 +8,8 @@ import {
   Group,
   Menu,
   NavLink,
-  Text
+  Text,
+  Tooltip
 } from "@mantine/core";
 import {
   IconCalendar,
@@ -31,6 +33,7 @@ import { useApiClient } from "@/api/ApiClientProvider";
 import { getRegisterStatus } from "@/api/register";
 import { useAuth } from "@/auth/AuthProvider";
 import { hasMainMenu } from "@/auth/permissions";
+import { clearSession } from "@/auth/sessionStore";
 import { hashHref } from "@/lib/hashbang";
 import { getUiConfig } from "@/lib/uiConfig";
 
@@ -170,17 +173,19 @@ export function AppNavbar() {
                   })}
           </Group>
           <Group gap="xs" wrap="wrap">
-            <Button
-              className="ui-switch-button"
-              component="a"
-              href="?ui=legacy"
-              variant="subtle"
-              size="sm"
-              leftSection={<IconSwitchHorizontal aria-hidden size={16} />}
-              title={t`Switching interfaces opens the sign-in page.`}
-            >
-              <Trans>Switch to legacy UI</Trans>
-            </Button>
+            <Tooltip label={t`Switch to legacy UI`}>
+              <ActionIcon
+                aria-label={t`Switch to legacy UI`}
+                className="ui-switch-button"
+                component="a"
+                href="?ui=legacy"
+                onClick={clearSession}
+                size="lg"
+                variant="subtle"
+              >
+                <IconSwitchHorizontal aria-hidden size={18} />
+              </ActionIcon>
+            </Tooltip>
             {nodeName ? (
               <Text fw={700} size="sm">
                 {nodeName}

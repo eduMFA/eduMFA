@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:299
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:360
 msgid "(none)"
 msgstr "(none)"
 
@@ -41,8 +41,8 @@ msgstr "About eduMFA Web Client"
 msgid "action"
 msgstr "action"
 
-#: react-src/features/config/events/EventEditPage.tsx:291
-#: react-src/features/config/events/EventEditPage.tsx:294
+#: react-src/features/config/events/EventEditPage.tsx:393
+#: react-src/features/config/events/EventEditPage.tsx:396
 #: react-src/features/config/events/EventListPage.tsx:43
 #: react-src/features/config/policies/PolicyEditPage.tsx:425
 #: react-src/features/config/policies/PolicyListPage.tsx:155
@@ -73,9 +73,9 @@ msgstr "Actions"
 msgid "active"
 msgstr "active"
 
-#: react-src/features/config/automation/DefinitionList.tsx:98
-#: react-src/features/config/events/EventEditPage.tsx:219
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:181
+#: react-src/features/config/automation/DefinitionList.tsx:113
+#: react-src/features/config/events/EventEditPage.tsx:318
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:259
 #: react-src/features/config/policies/PolicyConditionsEditor.tsx:32
 #: react-src/features/config/policies/PolicyEditPage.tsx:312
 #: react-src/features/config/policies/PolicyListPage.tsx:112
@@ -300,7 +300,7 @@ msgstr "Attach Token"
 msgid "Attribute mapping"
 msgstr "Attribute mapping"
 
-#: react-src/features/shell/AppNavbar.tsx:117
+#: react-src/features/shell/AppNavbar.tsx:120
 msgid "Audit"
 msgstr "Audit"
 
@@ -329,11 +329,11 @@ msgstr "Authentications"
 msgid "Authentications in the last 24 hours"
 msgstr "Authentications in the last 24 hours"
 
-#: react-src/features/config/system/AuthenticationSettingsCard.tsx:111
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:110
 msgid "Auto resync timeout"
 msgstr "Auto resync timeout"
 
-#: react-src/features/config/system/AuthenticationSettingsCard.tsx:102
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:101
 msgid "Automatic resync during authentication"
 msgstr "Automatic resync during authentication"
 
@@ -564,7 +564,7 @@ msgstr "Client private key (filename)"
 msgid "Close"
 msgstr "Close"
 
-#: react-src/features/config/events/EventConditionsEditor.tsx:82
+#: react-src/features/config/events/EventConditionsEditor.tsx:85
 #: react-src/features/config/policies/PolicyActionsEditor.tsx:92
 msgid "Close all groups"
 msgstr "Close all groups"
@@ -577,7 +577,7 @@ msgstr "Comparator"
 msgid "Comparator {number}"
 msgstr "Comparator {number}"
 
-#: react-src/features/shell/AppNavbar.tsx:124
+#: react-src/features/shell/AppNavbar.tsx:127
 msgid "Components"
 msgstr "Components"
 
@@ -585,12 +585,12 @@ msgstr "Components"
 msgid "Condition"
 msgstr "Condition"
 
-#: react-src/features/config/events/EventEditPage.tsx:280
+#: react-src/features/config/events/EventEditPage.tsx:251
 #: react-src/features/config/events/EventListPage.tsx:35
 msgid "Conditions"
 msgstr "Conditions"
 
-#: react-src/features/shell/AppNavbar.tsx:110
+#: react-src/features/shell/AppNavbar.tsx:113
 msgid "Config"
 msgstr "Config"
 
@@ -627,7 +627,7 @@ msgstr "Create a new {label} Resolver"
 msgid "Create a new eduMFA server {0}"
 msgstr "Create a new eduMFA server {0}"
 
-#: react-src/features/config/events/EventEditPage.tsx:157
+#: react-src/features/config/events/EventEditPage.tsx:180
 msgid "Create a new Event Handler"
 msgstr "Create a new Event Handler"
 
@@ -651,7 +651,7 @@ msgstr "Create a new Microsoft CA Connector"
 msgid "Create a new Passwd Resolver"
 msgstr "Create a new Passwd Resolver"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:124
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:144
 msgid "Create a new Periodic Task"
 msgstr "Create a new Periodic Task"
 
@@ -689,7 +689,7 @@ msgstr "Create a user in an editable user store."
 msgid "Create default realm"
 msgstr "Create default realm"
 
-#: react-src/features/config/automation/DefinitionLayout.tsx:55
+#: react-src/features/config/automation/DefinitionLayout.tsx:62
 msgid "Create Event Handler"
 msgstr "Create Event Handler"
 
@@ -706,7 +706,7 @@ msgstr "Create new Policy"
 msgid "Create new SMS Gateway definition"
 msgstr "Create new SMS Gateway definition"
 
-#: react-src/features/config/automation/DefinitionLayout.tsx:57
+#: react-src/features/config/automation/DefinitionLayout.tsx:64
 msgid "Create Periodic Task"
 msgstr "Create Periodic Task"
 
@@ -741,7 +741,7 @@ msgid "Custom attributes"
 msgstr "Custom attributes"
 
 #: react-src/features/dashboard/DashboardPage.tsx:144
-#: react-src/features/shell/AppNavbar.tsx:75
+#: react-src/features/shell/AppNavbar.tsx:78
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -786,11 +786,11 @@ msgid "Default Time Window"
 msgstr "Default Time Window"
 
 #: react-src/components/feedback/useDeleteConfirmation.tsx:39
-#: react-src/features/config/automation/DefinitionList.tsx:152
+#: react-src/features/config/automation/DefinitionList.tsx:170
 #: react-src/features/config/caconnectors/CaConnectorListPage.tsx:102
-#: react-src/features/config/events/EventEditPage.tsx:177
+#: react-src/features/config/events/EventEditPage.tsx:200
 #: react-src/features/config/machineresolvers/MachineResolverListPage.tsx:112
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:146
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:166
 #: react-src/features/config/policies/PolicyEditPage.tsx:222
 #: react-src/features/config/policies/PolicyListPage.tsx:205
 #: react-src/features/config/realms/RealmListPage.tsx:246
@@ -835,9 +835,9 @@ msgstr "Delete User"
 msgid "description"
 msgstr "description"
 
-#: react-src/features/config/automation/DefinitionList.tsx:117
-#: react-src/features/config/events/EventEditPage.tsx:211
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:173
+#: react-src/features/config/automation/DefinitionList.tsx:133
+#: react-src/features/config/events/EventEditPage.tsx:309
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:250
 #: react-src/features/config/servers/edumfaserver/EduMfaServerForm.tsx:231
 #: react-src/features/config/servers/edumfaserver/EduMfaServerListPage.tsx:95
 #: react-src/features/config/servers/radius/RadiusServerForm.tsx:345
@@ -880,7 +880,7 @@ msgid "Disable"
 msgstr "Disable"
 
 #. placeholder {0}: row.name
-#: react-src/features/config/automation/DefinitionList.tsx:104
+#: react-src/features/config/automation/DefinitionList.tsx:119
 msgid "Disable {0}"
 msgstr "Disable {0}"
 
@@ -910,7 +910,7 @@ msgstr "disabled"
 msgid "DN of a new created user object"
 msgstr "DN of a new created user object"
 
-#: react-src/features/config/system/AuthenticationSettingsCard.tsx:60
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:59
 msgid "Do not use an authentication counter per token."
 msgstr "Do not use an authentication counter per token."
 
@@ -935,8 +935,8 @@ msgstr "Do you really want to delete the user in the user store?"
 msgid "Do you really want to delete this configuration entry?"
 msgstr "Do you really want to delete this configuration entry?"
 
-#: react-src/features/config/automation/DefinitionList.tsx:142
-#: react-src/features/config/events/EventEditPage.tsx:170
+#: react-src/features/config/automation/DefinitionList.tsx:160
+#: react-src/features/config/events/EventEditPage.tsx:193
 msgid "Do you really want to delete this event?"
 msgstr "Do you really want to delete this event?"
 
@@ -948,8 +948,8 @@ msgstr "Do you really want to delete this machine resolver?"
 msgid "Do you really want to delete this object?"
 msgstr "Do you really want to delete this object?"
 
-#: react-src/features/config/automation/DefinitionList.tsx:144
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:138
+#: react-src/features/config/automation/DefinitionList.tsx:162
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:158
 msgid "Do you really want to delete this periodic task?"
 msgstr "Do you really want to delete this periodic task?"
 
@@ -1009,7 +1009,7 @@ msgid "Edit eduMFA server {0}"
 msgstr "Edit eduMFA server {0}"
 
 #. placeholder {0}: existing.id
-#: react-src/features/config/events/EventEditPage.tsx:155
+#: react-src/features/config/events/EventEditPage.tsx:178
 msgid "Edit Event Handler {0}"
 msgstr "Edit Event Handler {0}"
 
@@ -1043,7 +1043,7 @@ msgid "Edit Passwd Resolver {resolvername}"
 msgstr "Edit Passwd Resolver {resolvername}"
 
 #. placeholder {0}: existing.id
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:122
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:142
 msgid "Edit Periodic Task {0}"
 msgstr "Edit Periodic Task {0}"
 
@@ -1102,11 +1102,11 @@ msgstr "eduMFA authentication backend"
 msgid "eduMFA is a system to manage your tokens. You currently have no token assigned. You can manage your own tokens here - you can create new tokens, set the PIN of the tokens, disable tokens or even delete tokens."
 msgstr "eduMFA is a system to manage your tokens. You currently have no token assigned. You can manage your own tokens here - you can create new tokens, set the PIN of the tokens, disable tokens or even delete tokens."
 
-#: react-src/features/shell/AppShell.tsx:120
+#: react-src/features/shell/AppShell.tsx:126
 msgid "eduMFA is running in DEBUG mode with PASSWORDS being written to the log file. You can change the debug level in edumfa.cfg. Afterwards be sure to remove the logfile!"
 msgstr "eduMFA is running in DEBUG mode with PASSWORDS being written to the log file. You can change the debug level in edumfa.cfg. Afterwards be sure to remove the logfile!"
 
-#: react-src/features/shell/AppShell.tsx:112
+#: react-src/features/shell/AppShell.tsx:118
 msgid "eduMFA is running in DEBUG mode. You can change the debug level in edumfa.cfg."
 msgstr "eduMFA is running in DEBUG mode. You can change the debug level in edumfa.cfg."
 
@@ -1167,7 +1167,7 @@ msgid "Enable"
 msgstr "Enable"
 
 #. placeholder {0}: row.name
-#: react-src/features/config/automation/DefinitionList.tsx:103
+#: react-src/features/config/automation/DefinitionList.tsx:118
 msgid "Enable {0}"
 msgstr "Enable {0}"
 
@@ -1296,27 +1296,27 @@ msgstr "Enter the secret..."
 msgid "Enter your username and password and click Log In to authenticate."
 msgstr "Enter your username and password and click Log In to authenticate."
 
-#: react-src/features/config/events/EventEditPage.tsx:198
+#: react-src/features/config/events/EventEditPage.tsx:223
 msgid "Event handler saved."
 msgstr "Event handler saved."
 
-#: react-src/features/config/automation/DefinitionLayout.tsx:40
-#: react-src/features/config/automation/DefinitionList.tsx:162
+#: react-src/features/config/automation/DefinitionLayout.tsx:46
+#: react-src/features/config/automation/DefinitionList.tsx:181
 msgid "Event Handlers"
 msgstr "Event Handlers"
 
 #: react-src/features/config/ConfigLayout.tsx:58
-#: react-src/features/config/events/EventEditPage.tsx:227
+#: react-src/features/config/events/EventEditPage.tsx:327
 #: react-src/features/config/events/EventListPage.tsx:20
 #: react-src/features/dashboard/DashboardPage.tsx:313
 msgid "Events"
 msgstr "Events"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:206
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:284
 msgid "Every day at 10:05"
 msgstr "Every day at 10:05"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:204
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:282
 msgid "Every ten minutes"
 msgstr "Every ten minutes"
 
@@ -1377,11 +1377,11 @@ msgstr "File type"
 msgid "Filter actions"
 msgstr "Filter actions"
 
-#: react-src/features/config/events/EventConditionsEditor.tsx:48
+#: react-src/features/config/events/EventConditionsEditor.tsx:51
 msgid "Filter conditions"
 msgstr "Filter conditions"
 
-#: react-src/features/config/automation/DefinitionList.tsx:175
+#: react-src/features/config/automation/DefinitionList.tsx:196
 msgid "Filter definitions"
 msgstr "Filter definitions"
 
@@ -1502,7 +1502,7 @@ msgstr "Given name"
 msgid "givenname"
 msgstr "givenname"
 
-#: react-src/features/config/events/EventEditPage.tsx:236
+#: react-src/features/config/events/EventEditPage.tsx:337
 #: react-src/features/config/events/EventListPage.tsx:25
 msgid "Handlermodule"
 msgstr "Handlermodule"
@@ -1531,8 +1531,8 @@ msgstr "Headers"
 msgid "Headers (JSON format)"
 msgstr "Headers (JSON format)"
 
-#: react-src/features/config/automation/DefinitionLayout.tsx:69
-#: react-src/features/config/policies/PolicyActionsEditor.tsx:169
+#: react-src/features/config/automation/DefinitionLayout.tsx:77
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:174
 msgid "Help"
 msgstr "Help"
 
@@ -1737,11 +1737,11 @@ msgstr "Inactive Events"
 msgid "Inactive Policies"
 msgstr "Inactive Policies"
 
-#: react-src/features/config/system/AuthenticationSettingsCard.tsx:91
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:90
 msgid "Include SAML attributes even if the user failed to authenticate."
 msgstr "Include SAML attributes even if the user failed to authenticate."
 
-#: react-src/features/config/system/AuthenticationSettingsCard.tsx:81
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:80
 msgid "Include SAML attributes in the authentication response."
 msgstr "Include SAML attributes in the authentication response."
 
@@ -1757,7 +1757,7 @@ msgstr "info"
 msgid "Info"
 msgstr "Info"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:188
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:267
 #: react-src/features/config/periodictasks/PeriodicTaskListPage.tsx:17
 msgid "Interval"
 msgstr "Interval"
@@ -1806,11 +1806,11 @@ msgstr "Keyfile Path"
 msgid "Last"
 msgstr "Last"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:303
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:365
 msgid "Last Definition Update"
 msgstr "Last Definition Update"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:284
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:345
 msgid "Last Run"
 msgstr "Last Run"
 
@@ -1962,7 +1962,7 @@ msgstr "Loading user"
 msgid "Loading users"
 msgstr "Loading users"
 
-#: react-src/features/shell/AppNavbar.tsx:240
+#: react-src/features/shell/AppNavbar.tsx:242
 msgid "Lock screen"
 msgstr "Lock screen"
 
@@ -1981,7 +1981,7 @@ msgstr "Log In"
 msgid "log level"
 msgstr "log level"
 
-#: react-src/features/shell/AppNavbar.tsx:218
+#: react-src/features/shell/AppNavbar.tsx:220
 msgid "Login"
 msgstr "Login"
 
@@ -1998,7 +1998,7 @@ msgstr "Login with credentials"
 msgid "Loginname Attribute"
 msgstr "Loginname Attribute"
 
-#: react-src/features/shell/AppNavbar.tsx:243
+#: react-src/features/shell/AppNavbar.tsx:245
 #: react-src/features/tokens/enroll/EnrollTokenPage.tsx:498
 msgid "Logout"
 msgstr "Logout"
@@ -2051,7 +2051,7 @@ msgstr "Machine Resolvers"
 
 #: react-src/features/config/ConfigLayout.tsx:79
 #: react-src/features/machines/MachineListPage.tsx:149
-#: react-src/features/shell/AppNavbar.tsx:103
+#: react-src/features/shell/AppNavbar.tsx:106
 msgid "Machines"
 msgstr "Machines"
 
@@ -2107,8 +2107,8 @@ msgstr "Microsoft CA worker hostname"
 msgid "Microsoft CA worker port"
 msgstr "Microsoft CA worker port"
 
-#: react-src/features/config/events/EventConditionsEditor.tsx:97
-#: react-src/features/config/policies/PolicyActionsEditor.tsx:112
+#: react-src/features/config/events/EventConditionsEditor.tsx:100
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:117
 msgid "Miscellaneous"
 msgstr "Miscellaneous"
 
@@ -2242,7 +2242,7 @@ msgstr "No client applications found."
 msgid "No custom attributes set."
 msgstr "No custom attributes set."
 
-#: react-src/features/config/automation/DefinitionList.tsx:188
+#: react-src/features/config/automation/DefinitionList.tsx:210
 msgid "No definitions found."
 msgstr "No definitions found."
 
@@ -2348,11 +2348,11 @@ msgstr "No user found"
 msgid "No users found."
 msgstr "No users found."
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:281
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:342
 msgid "Node"
 msgstr "Node"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:210
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:289
 #: react-src/features/config/periodictasks/PeriodicTaskListPage.tsx:27
 msgid "Nodes"
 msgstr "Nodes"
@@ -2412,7 +2412,7 @@ msgstr "offline: Use HOTP token for offline login to notebooks."
 msgid "OK"
 msgstr "OK"
 
-#: react-src/features/config/events/EventConditionsEditor.tsx:71
+#: react-src/features/config/events/EventConditionsEditor.tsx:74
 #: react-src/features/config/policies/PolicyActionsEditor.tsx:80
 msgid "Open all groups"
 msgstr "Open all groups"
@@ -2430,7 +2430,7 @@ msgid "Option value"
 msgstr "Option value"
 
 #: react-src/features/config/events/EventListPage.tsx:48
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:251
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:202
 #: react-src/features/config/periodictasks/PeriodicTaskListPage.tsx:32
 #: react-src/features/config/servers/smsgateway/SmsGatewayForm.tsx:271
 #: react-src/features/machines/MachineDetailsPage.tsx:193
@@ -2438,13 +2438,13 @@ msgstr "Option value"
 msgid "Options"
 msgstr "Options"
 
-#: react-src/features/config/automation/DefinitionList.tsx:79
-#: react-src/features/config/events/EventEditPage.tsx:262
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:226
+#: react-src/features/config/automation/DefinitionList.tsx:93
+#: react-src/features/config/events/EventEditPage.tsx:365
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:307
 msgid "Order"
 msgstr "Order"
 
-#: react-src/features/config/automation/DefinitionList.tsx:217
+#: react-src/features/config/automation/DefinitionList.tsx:243
 msgid "Order for {name}"
 msgstr "Order for {name}"
 
@@ -2489,7 +2489,7 @@ msgstr "otplen"
 msgid "Overlap Period"
 msgstr "Overlap Period"
 
-#: react-src/features/config/system/ServerSettingsCard.tsx:73
+#: react-src/features/config/system/ServerSettingsCard.tsx:72
 msgid "Override Authorization Clients"
 msgstr "Override Authorization Clients"
 
@@ -2550,12 +2550,12 @@ msgstr "Paste the ssh PUBLIC key"
 msgid "Per-process server pool"
 msgstr "Per-process server pool"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:160
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:182
 msgid "Periodic task saved."
 msgstr "Periodic task saved."
 
-#: react-src/features/config/automation/DefinitionLayout.tsx:42
-#: react-src/features/config/automation/DefinitionList.tsx:164
+#: react-src/features/config/automation/DefinitionLayout.tsx:48
+#: react-src/features/config/automation/DefinitionList.tsx:183
 #: react-src/features/config/ConfigLayout.tsx:65
 msgid "Periodic Tasks"
 msgstr "Periodic Tasks"
@@ -2707,7 +2707,7 @@ msgstr "Pooling strategy"
 msgid "Port"
 msgstr "Port"
 
-#: react-src/features/config/events/EventEditPage.tsx:252
+#: react-src/features/config/events/EventEditPage.tsx:354
 #: react-src/features/config/events/EventListPage.tsx:30
 msgid "Position"
 msgstr "Position"
@@ -2717,7 +2717,7 @@ msgstr "Position"
 msgid "Pre Shared Key"
 msgstr "Pre Shared Key"
 
-#: react-src/features/config/system/AuthenticationSettingsCard.tsx:69
+#: react-src/features/config/system/AuthenticationSettingsCard.tsx:68
 msgid "Prepend the PIN in front of the OTP value. Otherwise it will be post pended."
 msgstr "Prepend the PIN in front of the OTP value. Otherwise it will be post pended."
 
@@ -2755,7 +2755,7 @@ msgstr "Priority for {name}"
 msgid "Priority of {resolverName}"
 msgstr "Priority of {resolverName}"
 
-#: react-src/features/shell/AppFooter.tsx:38
+#: react-src/features/shell/AppFooter.tsx:34
 msgid "Privacy statement"
 msgstr "Privacy statement"
 
@@ -2914,12 +2914,12 @@ msgstr "Received"
 msgid "Recipient for testing"
 msgstr "Recipient for testing"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:275
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:336
 msgid "Recorded Last Runs"
 msgstr "Recorded Last Runs"
 
 #: react-src/features/components/ClientTypePage.tsx:44
-#: react-src/features/shell/AppNavbar.tsx:201
+#: react-src/features/shell/AppNavbar.tsx:203
 msgid "Refresh"
 msgstr "Refresh"
 
@@ -2929,7 +2929,7 @@ msgstr "Regenerate QR Code"
 
 #: react-src/features/register/RegisterPage.tsx:74
 #: react-src/features/register/RegisterPage.tsx:150
-#: react-src/features/shell/AppNavbar.tsx:209
+#: react-src/features/shell/AppNavbar.tsx:211
 msgid "Register"
 msgstr "Register"
 
@@ -3091,7 +3091,7 @@ msgstr "Resync Token"
 msgid "Retries"
 msgstr "Retries"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:219
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:299
 msgid "Retry If Failed"
 msgstr "Retry If Failed"
 
@@ -3147,7 +3147,7 @@ msgstr "Save CA"
 msgid "Save eduMFA server"
 msgstr "Save eduMFA server"
 
-#: react-src/features/config/events/EventEditPage.tsx:322
+#: react-src/features/config/events/EventEditPage.tsx:278
 msgid "Save Event Handler Definition"
 msgstr "Save Event Handler Definition"
 
@@ -3156,7 +3156,7 @@ msgstr "Save Event Handler Definition"
 msgid "Save Options"
 msgstr "Save Options"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:269
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:221
 msgid "Save Periodic Task Definition"
 msgstr "Save Periodic Task Definition"
 
@@ -3261,7 +3261,7 @@ msgstr "Select a predefined <0>RADIUS server configuration</0>. The RADIUS reque
 msgid "Select a predefined <0>SMS Gateway configuration</0>."
 msgstr "Select a predefined <0>SMS Gateway configuration</0>."
 
-#: react-src/features/config/system/ServerSettingsCard.tsx:83
+#: react-src/features/config/system/ServerSettingsCard.tsx:82
 #: react-src/features/config/tokens/types/EmailConfigFields.tsx:40
 msgid "Select a predefined <0>SMTP server configuration</0>."
 msgstr "Select a predefined <0>SMTP server configuration</0>."
@@ -3423,7 +3423,7 @@ msgstr "Show Policy templates"
 msgid "Show selected actions only"
 msgstr "Show selected actions only"
 
-#: react-src/features/config/events/EventConditionsEditor.tsx:56
+#: react-src/features/config/events/EventConditionsEditor.tsx:59
 msgid "Show selected conditions only"
 msgstr "Show selected conditions only"
 
@@ -3469,7 +3469,7 @@ msgstr "SMTP Config saved."
 msgid "SMTP server configuration"
 msgstr "SMTP server configuration"
 
-#: react-src/features/config/system/ServerSettingsCard.tsx:92
+#: react-src/features/config/system/ServerSettingsCard.tsx:91
 msgid "SMTP server for password recovery"
 msgstr "SMTP server for password recovery"
 
@@ -3584,13 +3584,10 @@ msgstr "surname"
 msgid "Surname"
 msgstr "Surname"
 
-#: react-src/features/shell/AppNavbar.tsx:185
+#: react-src/features/shell/AppNavbar.tsx:176
+#: react-src/features/shell/AppNavbar.tsx:178
 msgid "Switch to legacy UI"
 msgstr "Switch to legacy UI"
-
-#: react-src/features/shell/AppNavbar.tsx:183
-msgid "Switching interfaces opens the sign-in page."
-msgstr "Switching interfaces opens the sign-in page."
 
 #: react-src/features/tokens/details/TokenPropertiesCard.tsx:457
 msgid "Sync Window"
@@ -3629,7 +3626,7 @@ msgstr "Take action on your authenticator"
 msgid "Take action on your token"
 msgstr "Take action on your token"
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:235
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:317
 #: react-src/features/config/periodictasks/PeriodicTaskListPage.tsx:22
 msgid "Taskmodule"
 msgstr "Taskmodule"
@@ -3787,7 +3784,7 @@ msgstr "The Email Token sends the OTP value to the users email address."
 msgid "The Enrollment URL"
 msgstr "The Enrollment URL"
 
-#: react-src/features/config/events/EventEditPage.tsx:77
+#: react-src/features/config/events/EventEditPage.tsx:85
 msgid "The event handler does not exist."
 msgstr "The event handler does not exist."
 
@@ -4191,11 +4188,11 @@ msgstr "These are the possible questions, a user may define answers to."
 msgid "These are the resolvers marked as editable. You can add a user to the resolver. The user will appear in the realms, that contain this resolver."
 msgstr "These are the resolvers marked as editable. You can add a user to the resolver. The user will appear in the realms, that contain this resolver."
 
-#: react-src/features/config/system/ServerSettingsCard.tsx:67
+#: react-src/features/config/system/ServerSettingsCard.tsx:66
 msgid "These client IP addresses or subnets are allowed to masquerade as another client."
 msgstr "These client IP addresses or subnets are allowed to masquerade as another client."
 
-#: react-src/features/config/policies/PolicyActionsEditor.tsx:190
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:195
 msgid "This action is not in the current definitions. Its value will be preserved."
 msgstr "This action is not in the current definitions. Its value will be preserved."
 
@@ -4492,7 +4489,7 @@ msgstr "Tokengroups"
 
 #: react-src/features/config/ConfigLayout.tsx:72
 #: react-src/features/dashboard/DashboardPage.tsx:155
-#: react-src/features/shell/AppNavbar.tsx:82
+#: react-src/features/shell/AppNavbar.tsx:85
 #: react-src/features/tokens/TokenListPage.tsx:281
 #: react-src/features/users/UserDetailsPage.tsx:635
 msgid "Tokens"
@@ -4608,7 +4605,7 @@ msgstr "URL of the eduMFA server"
 msgid "Use @ sign to split the username and the realm."
 msgstr "Use @ sign to split the username and the realm."
 
-#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:192
+#: react-src/features/config/periodictasks/PeriodicTaskEditPage.tsx:271
 msgid "Use crontab notation: minute, hour, day of month, month, day of week."
 msgstr "Use crontab notation: minute, hour, day of month, month, day of week."
 
@@ -4658,7 +4655,7 @@ msgstr "user"
 #: react-src/features/config/policies/PolicyListPage.tsx:171
 #: react-src/features/config/resolvers/SqlResolverPage.tsx:24
 #: react-src/features/config/servers/TestCredentialsFields.tsx:38
-#: react-src/features/shell/AppNavbar.tsx:96
+#: react-src/features/shell/AppNavbar.tsx:99
 msgid "User"
 msgstr "User"
 
@@ -4732,7 +4729,7 @@ msgid "Username"
 msgstr "Username"
 
 #: react-src/features/config/ConfigLayout.tsx:86
-#: react-src/features/shell/AppNavbar.tsx:89
+#: react-src/features/shell/AppNavbar.tsx:92
 #: react-src/features/users/UserListPage.tsx:245
 msgid "Users"
 msgstr "Users"
@@ -4767,8 +4764,8 @@ msgstr "Value"
 msgid "Value {number}"
 msgstr "Value {number}"
 
-#: react-src/features/config/events/EventConditionsEditor.tsx:120
-#: react-src/features/config/policies/PolicyActionsEditor.tsx:175
+#: react-src/features/config/events/EventConditionsEditor.tsx:123
+#: react-src/features/config/policies/PolicyActionsEditor.tsx:180
 msgid "Value for {name}"
 msgstr "Value for {name}"
 
@@ -4871,7 +4868,7 @@ msgstr "You can choose a realm to which the tokens should be imported. You can a
 msgid "You can choose how the authenticity of the tokens to be imported should be verified."
 msgstr "You can choose how the authenticity of the tokens to be imported should be verified."
 
-#: react-src/features/config/automation/DefinitionLayout.tsx:81
+#: react-src/features/config/automation/DefinitionLayout.tsx:91
 msgid "You do not have permission to open this configuration page."
 msgstr "You do not have permission to open this configuration page."
 
@@ -4899,7 +4896,7 @@ msgstr "You need to confirm the registration with your authenticator. For an ext
 msgid "You need to confirm the registration with your token either by pushing the blinking button or by replugging your token. This depends on the actual token model."
 msgstr "You need to confirm the registration with your token either by pushing the blinking button or by replugging your token. This depends on the actual token model."
 
-#: react-src/features/shell/AppShell.tsx:129
+#: react-src/features/shell/AppShell.tsx:135
 msgid "You will be logged out in {countdown} second(s)."
 msgstr "You will be logged out in {countdown} second(s)."
 
