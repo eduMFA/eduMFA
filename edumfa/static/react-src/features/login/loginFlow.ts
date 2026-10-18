@@ -1,4 +1,4 @@
-import type { AuthLoginDetail, AuthLoginResponse } from "@/api/auth";
+import type { AuthLoginDetail, AuthLoginRequest, AuthLoginResponse } from "@/api/auth";
 import {
   buildSession,
   type AuthSession,
@@ -11,6 +11,20 @@ export type { PendingChallenge, PendingPinChange };
 export interface LoginCredentials {
   realm: string;
   username: string;
+}
+
+/** The request of the credentials form: the realm only when one was chosen. */
+export function buildLoginRequest(
+  credentials: LoginCredentials,
+  password: string
+): AuthLoginRequest {
+  const request: AuthLoginRequest = { password, username: credentials.username };
+
+  if (credentials.realm) {
+    request.realm = credentials.realm;
+  }
+
+  return request;
 }
 
 /** Port of the challenge branch of the legacy `authenticate`. */

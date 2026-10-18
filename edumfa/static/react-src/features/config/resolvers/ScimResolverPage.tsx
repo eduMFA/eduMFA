@@ -1,6 +1,7 @@
 import { Trans } from "@lingui/react/macro";
 
-import { ResolverConnectionPage, type ResolverField } from "./ResolverConnectionPage";
+import { ResolverConnectionPage } from "./ResolverConnectionPage";
+import type { ResolverField } from "./resolverFields";
 
 const fields: ResolverField[] = [
   {

@@ -1,11 +1,8 @@
-import { Trans } from "@lingui/react/macro";
-import { Alert } from "@mantine/core";
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import { ConfigRoutes } from "./ConfigRoutes";
 import { AuditLogPage } from "@/features/audit/AuditLogPage";
 import { ClientTypePage } from "@/features/components/ClientTypePage";
-import { ConfigLayout } from "@/features/config/ConfigLayout";
-import { configRouteTable } from "@/features/config/configRouteTable";
 import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { LoginPage } from "@/features/login/LoginPage";
 import { OfflinePage } from "@/features/login/OfflinePage";
@@ -90,25 +87,5 @@ export function AppRoutes() {
       {/* `$urlRouterProvider.otherwise("/token/list")` */}
       <Route path="*" element={<Navigate replace to="/token/list" />} />
     </Routes>
-  );
-}
-
-function ConfigRoutes() {
-  return (
-    <ConfigLayout>
-      <Routes>
-        {configRouteTable.map((route) => (
-          <Route element={route.element} key={route.path} path={route.path} />
-        ))}
-        <Route
-          path="*"
-          element={
-            <Alert color="yellow" role="alert" variant="light">
-              <Trans>This configuration page is not available yet.</Trans>
-            </Alert>
-          }
-        />
-      </Routes>
-    </ConfigLayout>
   );
 }

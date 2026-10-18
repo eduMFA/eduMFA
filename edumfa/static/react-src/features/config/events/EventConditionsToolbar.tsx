@@ -1,0 +1,55 @@
+import { Trans, useLingui } from "@lingui/react/macro";
+import { Button, Checkbox, Group, TextInput } from "@mantine/core";
+import { IconFilter, IconFold, IconArrowsVertical } from "@tabler/icons-react";
+
+/** Filter input, "selected only" switch and the open/close all group buttons. */
+export function EventConditionsToolbar({
+  filter,
+  onCloseAll,
+  onFilterChange,
+  onOpenAll,
+  onSelectedOnlyChange,
+  selectedOnly
+}: {
+  filter: string;
+  onCloseAll: () => void;
+  onFilterChange: (filter: string) => void;
+  onOpenAll: () => void;
+  onSelectedOnlyChange: (selectedOnly: boolean) => void;
+  selectedOnly: boolean;
+}) {
+  const { t } = useLingui();
+  return (
+    <Group>
+      <TextInput
+        label={t`Filter conditions`}
+        leftSection={<IconFilter aria-hidden size={16} />}
+        value={filter}
+        onChange={(event) => {
+          onFilterChange(event.currentTarget.value);
+        }}
+      />
+      <Checkbox
+        label={<Trans>Show selected conditions only</Trans>}
+        checked={selectedOnly}
+        onChange={(event) => {
+          onSelectedOnlyChange(event.currentTarget.checked);
+        }}
+      />
+      <Button
+        variant="subtle"
+        leftSection={<IconArrowsVertical aria-hidden size={16} />}
+        onClick={onOpenAll}
+      >
+        <Trans>Open all groups</Trans>
+      </Button>
+      <Button
+        variant="subtle"
+        leftSection={<IconFold aria-hidden size={16} />}
+        onClick={onCloseAll}
+      >
+        <Trans>Close all groups</Trans>
+      </Button>
+    </Group>
+  );
+}

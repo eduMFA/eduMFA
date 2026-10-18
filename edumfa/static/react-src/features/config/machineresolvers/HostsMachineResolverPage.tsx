@@ -1,34 +1,20 @@
-import { Trans, useLingui } from "@lingui/react/macro";
-import { Alert, Button, TextInput } from "@mantine/core";
-import { IconDeviceFloppy } from "@tabler/icons-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { Trans } from "@lingui/react/macro";
+import { Alert } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
-import { machineResolverNamePattern, readText } from "./machineResolverFields";
+import { HostsMachineResolverForm } from "./HostsMachineResolverForm";
+import { defaultFilename } from "./hostsMachineResolverValues";
+import { readText } from "./machineResolverFields";
 import { MachineResolverSidebar } from "./MachineResolverSidebar";
 import { useApiClient } from "@/api/ApiClientProvider";
-import {
-  getMachineResolver,
-  machineResolverQueryKeys,
-  saveMachineResolver
-} from "@/api/machineResolvers";
+import { getMachineResolver, machineResolverQueryKeys } from "@/api/machineResolvers";
 import { useAuth } from "@/auth/AuthProvider";
-import { hasRight } from "@/auth/permissions";
 import { ErrorAlert } from "@/components/feedback/ErrorAlert";
 import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
 import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
-import { Card } from "@/components/layout/Card";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
-
-interface HostsFormValues {
-  filename: string;
-  resolvername: string;
-}
-
-/** The legacy controller preset this file for a new resolver. */
-const defaultFilename = "/etc/hosts";
 
 /**
  * Port of `config.mresolvers.hosts.html` and `hostsResolverController`: the
@@ -92,94 +78,5 @@ export function HostsMachineResolverPage() {
         </>
       )}
     </SidebarLayout>
-  );
-}
-
-interface HostsMachineResolverFormProps {
-  initialValues: HostsFormValues;
-  /** Stored keys of the resolver; sent back unchanged like the legacy `$scope.params`. */
-  storedData: Record<string, unknown>;
-}
-
-function HostsMachineResolverForm({
-  initialValues,
-  storedData
-}: HostsMachineResolverFormProps) {
-  const apiClient = useApiClient();
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const { t } = useLingui();
-  const { rights } = useAuth();
-  const { formState, handleSubmit, register } = useForm<HostsFormValues>({
-    defaultValues: initialValues,
-    mode: "onChange"
-  });
-
-  const saveMutation = useMutation({
-    mutationFn: (values: HostsFormValues) =>
-      saveMachineResolver(apiClient, values.resolvername, {
-        ...storedData,
-        filename: values.filename,
-        type: "hosts"
-      }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: machineResolverQueryKeys.all });
-      void navigate("/config/machineresolvers/list");
-    }
-  });
-
-  const submitResolver = handleSubmit((values) => {
-    saveMutation.mutate(values);
-  });
-
-  return (
-    <form
-      noValidate
-      onSubmit={(event) => {
-        void submitResolver(event);
-      }}
-    >
-      <ErrorAlert error={saveMutation.error} />
-      <Card
-        footer={
-          hasRight(rights, "mresolverwrite") ? (
-            <Button
-              disabled={!formState.isValid}
-              leftSection={<IconDeviceFloppy size={16} />}
-              loading={saveMutation.isPending}
-              type="submit"
-            >
-              <Trans>Save resolver</Trans>
-            </Button>
-          ) : null
-        }
-        footerAlign="center"
-      >
-        <TextInput
-          autoFocus
-          error={formState.errors.resolvername?.message}
-          id="resolvername"
-          label={<Trans>Resolver name</Trans>}
-          mb="sm"
-          placeholder="MachineResolver1"
-          required
-          {...register("resolvername", {
-            pattern: {
-              message: t`The resource name must consist of letters, numbers and '_', '-', '.' and must not be the word 'test'`,
-              value: machineResolverNamePattern
-            },
-            required: true
-          })}
-        />
-        <TextInput
-          error={formState.errors.filename?.message}
-          id="resolverfile"
-          label={<Trans>File name</Trans>}
-          placeholder="/etc/hosts"
-          required
-          {...register("filename", { required: true })}
-        />
-      </Card>
-    </form>
   );
 }

@@ -1,14 +1,11 @@
-import {
-  Checkbox,
-  NativeSelect,
-  NumberInput,
-  Textarea,
-  TextInput
-} from "@mantine/core";
 import type { ReactNode } from "react";
 
-import { CheckboxPickList } from "./CheckboxPickList";
-import { isConfigEnabled } from "@/api/config";
+import { BoolOptionInput } from "./BoolOptionInput";
+import { ChoiceOptionInput } from "./ChoiceOptionInput";
+import { IntOptionInput } from "./IntOptionInput";
+import { MultiOptionInput } from "./MultiOptionInput";
+import { StringOptionInput } from "./StringOptionInput";
+import { TextOptionInput } from "./TextOptionInput";
 
 export type TypedOptionChoice = number | string | { name: string };
 
@@ -35,12 +32,16 @@ export interface TypedOptionInputProps {
   value: TypedOptionValue | undefined;
 }
 
-const wrapperOrder: ("label" | "input" | "description" | "error")[] = [
-  "label",
-  "input",
-  "description",
-  "error"
-];
+/** What the per-type inputs receive once `TypedOptionInput` resolved the defaults. */
+export interface TypedOptionFieldProps {
+  description: ReactNode;
+  disabled: boolean;
+  id: string;
+  label: string;
+  onChange: (value: TypedOptionValue) => void;
+  required: boolean;
+  value: TypedOptionValue | undefined;
+}
 
 /**
  * Port of the input switch of `config.events.details.html` and
@@ -58,122 +59,37 @@ export function TypedOptionInput({
   spec,
   value
 }: TypedOptionInputProps) {
-  const required = Boolean(spec.required);
-  const help = description ?? spec.description;
+  const field: TypedOptionFieldProps = {
+    description: description ?? spec.description,
+    disabled,
+    id,
+    label,
+    onChange,
+    required: Boolean(spec.required),
+    value
+  };
 
   if (spec.type === "multi") {
-    return (
-      <CheckboxPickList
-        columns={2}
-        description={help}
-        disabled={disabled}
-        id={id}
-        label={label}
-        labelHidden
-        onChange={onChange}
-        options={(spec.value ?? []).map((choice) => String(getChoiceName(choice)))}
-        required={required}
-        selected={toList(value)}
-      />
-    );
+    return <MultiOptionInput {...field} choices={spec.value ?? []} />;
   }
 
   if (spec.value !== undefined) {
-    return (
-      <NativeSelect
-        aria-label={label}
-        data={[
-          { label: "", value: "" },
-          ...spec.value.map((choice) => String(getChoiceName(choice)))
-        ]}
-        description={help}
-        disabled={disabled}
-        id={id}
-        inputWrapperOrder={wrapperOrder}
-        onChange={(event) => {
-          onChange(event.currentTarget.value);
-        }}
-        required={required}
-        value={toText(value)}
-      />
-    );
+    return <ChoiceOptionInput {...field} choices={spec.value} />;
   }
 
   if (spec.type === "bool") {
-    return (
-      <Checkbox
-        aria-label={label}
-        checked={isConfigEnabled(value)}
-        description={help}
-        disabled={disabled}
-        id={id}
-        onChange={(event) => {
-          onChange(event.currentTarget.checked);
-        }}
-      />
-    );
+    return <BoolOptionInput {...field} />;
   }
 
   if (spec.type === "text") {
-    return (
-      <Textarea
-        aria-label={label}
-        description={help}
-        disabled={disabled}
-        id={id}
-        inputWrapperOrder={wrapperOrder}
-        onChange={(event) => {
-          onChange(event.currentTarget.value);
-        }}
-        required={required}
-        rows={6}
-        value={toText(value)}
-      />
-    );
+    return <TextOptionInput {...field} />;
   }
 
   if (spec.type === "int") {
-    return (
-      <NumberInput
-        allowDecimal={false}
-        aria-label={label}
-        description={help}
-        disabled={disabled}
-        id={id}
-        inputWrapperOrder={wrapperOrder}
-        onChange={onChange}
-        required={required}
-        value={toNumberInputValue(value)}
-      />
-    );
+    return <IntOptionInput {...field} />;
   }
 
-  return (
-    <TextInput
-      aria-label={label}
-      description={help}
-      disabled={disabled}
-      id={id}
-      inputWrapperOrder={wrapperOrder}
-      onChange={(event) => {
-        onChange(event.currentTarget.value);
-      }}
-      required={required}
-      value={toText(value)}
-    />
-  );
-}
-
-function getChoiceName(choice: TypedOptionChoice): number | string {
-  return typeof choice === "object" ? choice.name : choice;
-}
-
-/** Splits a stored "a, b" list the way the legacy controller ticked multi values. */
-export function splitCommaList(value: string): string[] {
-  return value
-    .split(",")
-    .map((entry) => entry.trim())
-    .filter((entry) => entry.length > 0);
+  return <StringOptionInput {...field} />;
 }
 
 /** A required option counts as filled unless it is empty text or an empty list. */
@@ -198,28 +114,4 @@ export function toOptionRequestValue(
   value: TypedOptionValue
 ): boolean | number | string {
   return Array.isArray(value) ? value.join(",") : value;
-}
-
-function toList(value: TypedOptionValue | undefined): string[] {
-  if (Array.isArray(value)) {
-    return value;
-  }
-
-  return typeof value === "string" ? splitCommaList(value) : [];
-}
-
-function toText(value: TypedOptionValue | undefined): string {
-  if (typeof value === "string") {
-    return value;
-  }
-
-  return typeof value === "number" ? String(value) : "";
-}
-
-function toNumberInputValue(value: TypedOptionValue | undefined): number | string {
-  if (typeof value === "number") {
-    return value;
-  }
-
-  return typeof value === "string" ? value : "";
 }

@@ -1,13 +1,12 @@
 import { msg } from "@lingui/core/macro";
-import { Trans, useLingui } from "@lingui/react/macro";
-import { Alert, Anchor, Box, SimpleGrid, Stack, Text } from "@mantine/core";
+import { useLingui } from "@lingui/react/macro";
+import { Stack, Text } from "@mantine/core";
 import type { MessageDescriptor } from "@lingui/core";
-import type { ReactNode } from "react";
 
-import { configString } from "./enrollForm";
+import { AppStoreImages } from "./AppStoreImages";
+import { TokenConfigWarning } from "./TokenConfigWarning";
 import type { SystemConfig } from "@/api/config";
 import type { AuthenticatorAppImages } from "@/auth/AuthProvider";
-import { hashHref } from "@/lib/hashbang";
 
 export interface TokenTypeHelpProps {
   appImages: AuthenticatorAppImages;
@@ -104,59 +103,6 @@ const descriptionHiddenInWizard = new Set(["daypassword", "hotp", "totp"]);
 /** Token types whose enrollment shows the authenticator app store QR codes. */
 const appTokenTypes = new Set(["daypassword", "edupush", "hotp", "push", "totp"]);
 
-interface ConfigWarning {
-  color: "blue" | "red";
-  /** Shown only while this system config key is empty; always when absent. */
-  configKey?: string;
-  label: MessageDescriptor;
-  text: (link: ReactNode) => ReactNode;
-}
-
-/** The "please configure" hints of the legacy templates; only admins can act on them. */
-const configWarnings: Record<string, ConfigWarning> = {
-  email: {
-    color: "red",
-    configKey: "email.mailserver",
-    label: msg`Email Token Config`,
-    text: (link) => (
-      <Trans>For Email tokens to work properly you need to set the {link}!</Trans>
-    )
-  },
-  radius: {
-    color: "blue",
-    configKey: "radius.server",
-    label: msg`RADIUS Token Config`,
-    text: (link) => (
-      <Trans>
-        To ease the enrolling of RADIUS tokens you can set default values in the {link}.
-      </Trans>
-    )
-  },
-  sms: {
-    color: "blue",
-    label: msg`SMS Token Config`,
-    text: (link) => (
-      <Trans>For SMS tokens to work properly you need to set the {link}!</Trans>
-    )
-  },
-  tiqr: {
-    color: "red",
-    configKey: "tiqr.regServer",
-    label: msg`TiQR Token Config`,
-    text: (link) => (
-      <Trans>For TiQR tokens to work properly you need to set the {link}!</Trans>
-    )
-  },
-  yubico: {
-    color: "red",
-    configKey: "yubico.id",
-    label: msg`Yubico Token Config`,
-    text: (link) => (
-      <Trans>For Yubico tokens to work properly you need to set the {link}!</Trans>
-    )
-  }
-};
-
 /**
  * Help shown above the type-specific inputs: the intro paragraphs, the app
  * store QR codes (`token.display.apps.html`) and the admin config hints.
@@ -174,10 +120,6 @@ export function TokenTypeHelp({
     isWizard && descriptionHiddenInWizard.has(type)
       ? []
       : (typeDescriptions[type] ?? []);
-  const warning = isAdmin ? configWarnings[type] : undefined;
-  const showWarning =
-    warning !== undefined &&
-    (warning.configKey === undefined || !configString(systemConfig, warning.configKey));
 
   return (
     <Stack gap="xs" mb="md">
@@ -189,77 +131,7 @@ export function TokenTypeHelp({
       {appTokenTypes.has(type) ? (
         <AppStoreImages images={appImages} isWizard={isWizard} width={qrCodeWidth} />
       ) : null}
-      {showWarning ? (
-        <Alert color={warning.color} variant="light">
-          {warning.text(
-            <Anchor href={hashHref(`/config/tokens/${type}`)} inherit>
-              {i18n._(warning.label)}
-            </Anchor>
-          )}
-        </Alert>
-      ) : null}
+      {isAdmin ? <TokenConfigWarning systemConfig={systemConfig} type={type} /> : null}
     </Stack>
-  );
-}
-
-const appStores = [
-  {
-    alt: msg`QR-Code with link to android app in play store`,
-    help: msg`Get the Authenticator App for Android.`,
-    key: "android"
-  },
-  {
-    alt: msg`QR-Code with link to iOS app in app store`,
-    help: msg`Get the Authenticator App for iOS.`,
-    key: "ios"
-  },
-  {
-    alt: msg`QR-Code with link to a custom app`,
-    help: msg`Get the Authenticator App.`,
-    key: "custom"
-  }
-] as const;
-
-function AppStoreImages({
-  images,
-  isWizard,
-  width
-}: {
-  images: AuthenticatorAppImages;
-  isWizard: boolean;
-  width: number;
-}) {
-  const { i18n } = useLingui();
-  const entries = appStores.flatMap((store) => {
-    const src = images[store.key];
-
-    return src ? [{ ...store, src }] : [];
-  });
-
-  if (entries.length === 0) {
-    return null;
-  }
-
-  return (
-    <SimpleGrid
-      cols={{ base: 1, sm: Math.min(entries.length, 3) }}
-      data-testid="authenticator-app-images"
-      mx={isWizard ? "auto" : 0}
-      spacing="md"
-    >
-      {entries.map((entry) => (
-        <Box key={entry.key} ta="center">
-          <img
-            alt={i18n._(entry.alt)}
-            src={entry.src}
-            style={{ maxWidth: "100%" }}
-            width={width}
-          />
-          <Text c="dimmed" size="sm">
-            {i18n._(entry.help)}
-          </Text>
-        </Box>
-      ))}
-    </SimpleGrid>
   );
 }

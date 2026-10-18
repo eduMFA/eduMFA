@@ -1,5 +1,5 @@
 import { Trans } from "@lingui/react/macro";
-import { Alert, Divider, NavLink, Stack } from "@mantine/core";
+import { Divider, NavLink, Stack } from "@mantine/core";
 import { IconBolt, IconCalendarTime, IconHelp, IconPlus } from "@tabler/icons-react";
 import type { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
@@ -81,14 +81,5 @@ export function DefinitionLayout({
     >
       {children}
     </SidebarLayout>
-  );
-}
-
-/** Shown instead of the page content when the user lacks the matching right. */
-export function DefinitionPermissionAlert() {
-  return (
-    <Alert color="yellow" role="alert">
-      <Trans>You do not have permission to open this configuration page.</Trans>
-    </Alert>
   );
 }

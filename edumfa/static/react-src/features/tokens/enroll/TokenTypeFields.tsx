@@ -1,16 +1,19 @@
+import { ApplSpecFields } from "./fields/ApplSpecFields";
 import { CertificateFields } from "./fields/CertificateFields";
-import { EmailFields, SmsFields } from "./fields/ContactFields";
-import { RadiusFields, RemoteFields } from "./fields/ForwardingFields";
-import { VascoFields, YubicoFields, YubikeyFields } from "./fields/HardwareFields";
+import { EmailFields } from "./fields/EmailFields";
+import { FourEyesFields } from "./fields/FourEyesFields";
+import { IndexedSecretFields } from "./fields/IndexedSecretFields";
 import { MotpFields } from "./fields/MotpFields";
 import { OtpKeyFields } from "./fields/OtpKeyFields";
-import { FourEyesFields, QuestionFields } from "./fields/QuestionFields";
-import {
-  ApplSpecFields,
-  IndexedSecretFields,
-  SshKeyFields
-} from "./fields/SecretFields";
+import { QuestionFields } from "./fields/QuestionFields";
+import { RadiusFields } from "./fields/RadiusFields";
+import { RemoteFields } from "./fields/RemoteFields";
+import { SmsFields } from "./fields/SmsFields";
+import { SshKeyFields } from "./fields/SshKeyFields";
 import type { TokenTypeFieldsProps } from "./fields/types";
+import { VascoFields } from "./fields/VascoFields";
+import { YubicoFields } from "./fields/YubicoFields";
+import { YubikeyFields } from "./fields/YubikeyFields";
 
 export type { EnrollLookups, TokenTypeFieldsProps } from "./fields/types";
 

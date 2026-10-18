@@ -1,11 +1,7 @@
 import { Trans } from "@lingui/react/macro";
 
-import {
-  ResolverConnectionPage,
-  type ResolverField,
-  type ResolverPreset,
-  type ResolverValues
-} from "./ResolverConnectionPage";
+import { ResolverConnectionPage } from "./ResolverConnectionPage";
+import type { ResolverField, ResolverPreset, ResolverValues } from "./resolverFields";
 
 const usesTls = (values: ResolverValues) =>
   String(values.LDAPURI).toLowerCase().startsWith("ldaps:") ||

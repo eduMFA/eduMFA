@@ -1,23 +1,12 @@
-import { Trans, useLingui } from "@lingui/react/macro";
-import { IconFilter, IconFold, IconArrowsVertical } from "@tabler/icons-react";
-import {
-  Accordion,
-  Anchor,
-  Box,
-  Checkbox,
-  Group,
-  Button,
-  Stack,
-  Text,
-  TextInput
-} from "@mantine/core";
+import { Trans } from "@lingui/react/macro";
+import { Accordion, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 
+import { listPolicyActionEntries } from "./policyActionEntries";
+import { PolicyActionItem } from "./PolicyActionItem";
+import { PolicyActionsToolbar } from "./PolicyActionsToolbar";
 import type { PolicyActionDefinition } from "@/api/policies";
-import {
-  TypedOptionInput,
-  type TypedOptionValue
-} from "@/components/forms/TypedOptionInput";
+import type { TypedOptionValue } from "@/components/forms/TypedOptionInput";
 import { useDocsUrl } from "@/lib/docs";
 
 interface Props {
@@ -28,15 +17,10 @@ interface Props {
 }
 
 export function PolicyActionsEditor({ scope, definitions, actions, onChange }: Props) {
-  const { t } = useLingui();
   const docsUrl = useDocsUrl(`policies/${encodeURIComponent(scope)}.html`);
   const [filter, setFilter] = useState("");
   const [selectedOnly, setSelectedOnly] = useState(false);
-  const known = Object.entries(definitions);
-  const unknown: [string, PolicyActionDefinition][] = Object.keys(actions)
-    .filter((key) => !(key in definitions))
-    .map((key) => [key, { type: typeof actions[key] === "boolean" ? "bool" : "str" }]);
-  const entries = [...known, ...unknown].sort(([a], [b]) => a.localeCompare(b));
+  const entries = listPolicyActionEntries(definitions, actions);
   const groups = [...new Set(entries.map(([, spec]) => spec.group ?? ""))];
   const [openGroups, setOpenGroups] = useState(groups.map((group) => `group:${group}`));
   const needle = filter.toLowerCase();
@@ -48,50 +32,26 @@ export function PolicyActionsEditor({ scope, definitions, actions, onChange }: P
   const visibleGroups = groups.filter((group) =>
     visible.some(([, spec]) => (spec.group ?? "") === group)
   );
+  const reset = (open: string[]) => {
+    setFilter("");
+    setSelectedOnly(false);
+    setOpenGroups(open);
+  };
 
   return (
     <Stack>
-      <Group>
-        <TextInput
-          label={t`Filter actions`}
-          leftSection={<IconFilter aria-hidden size={16} />}
-          value={filter}
-          onChange={(event) => {
-            setFilter(event.currentTarget.value);
-          }}
-        />
-        <Checkbox
-          checked={selectedOnly}
-          label={<Trans>Show selected actions only</Trans>}
-          onChange={(event) => {
-            setSelectedOnly(event.currentTarget.checked);
-          }}
-        />
-        <Button
-          leftSection={<IconArrowsVertical aria-hidden size={16} />}
-          type="button"
-          variant="subtle"
-          onClick={() => {
-            setFilter("");
-            setSelectedOnly(false);
-            setOpenGroups(groups.map((group) => `group:${group}`));
-          }}
-        >
-          <Trans>Open all groups</Trans>
-        </Button>
-        <Button
-          leftSection={<IconFold aria-hidden size={16} />}
-          type="button"
-          variant="subtle"
-          onClick={() => {
-            setFilter("");
-            setSelectedOnly(false);
-            setOpenGroups([]);
-          }}
-        >
-          <Trans>Close all groups</Trans>
-        </Button>
-      </Group>
+      <PolicyActionsToolbar
+        filter={filter}
+        selectedOnly={selectedOnly}
+        onFilterChange={setFilter}
+        onSelectedOnlyChange={setSelectedOnly}
+        onOpenAll={() => {
+          reset(groups.map((group) => `group:${group}`));
+        }}
+        onCloseAll={() => {
+          reset([]);
+        }}
+      />
       {visible.length === 0 ? (
         <Text c="dimmed">
           <Trans>No actions match the filter.</Trans>
@@ -120,87 +80,17 @@ export function PolicyActionsEditor({ scope, definitions, actions, onChange }: P
               <Stack>
                 {visible
                   .filter(([, spec]) => (spec.group ?? "") === group)
-                  .map(([name, spec]) => {
-                    const selected = name in actions;
-                    const rawValue = actions[name];
-                    const value =
-                      spec.multiple && typeof rawValue === "string"
-                        ? rawValue.split(/\s+/).filter(Boolean)
-                        : rawValue;
-                    const choices =
-                      spec.value === undefined ? undefined : [...spec.value];
-                    if (
-                      choices &&
-                      !spec.multiple &&
-                      (typeof value === "number" || typeof value === "string") &&
-                      !choices.some((choice) => String(choice) === String(value))
-                    )
-                      choices.unshift(value);
-                    return (
-                      <Stack className="policy-action-item" gap="xs" key={name}>
-                        <Box className="policy-action-row">
-                          <Checkbox
-                            className="policy-action-description"
-                            checked={selected}
-                            label={name}
-                            description={spec.desc}
-                            onChange={(event) => {
-                              onChange(
-                                event.currentTarget.checked
-                                  ? {
-                                      ...actions,
-                                      [name]:
-                                        spec.type === "bool"
-                                          ? true
-                                          : spec.multiple
-                                            ? []
-                                            : ""
-                                    }
-                                  : Object.fromEntries(
-                                      Object.entries(actions).filter(
-                                        ([key]) => key !== name
-                                      )
-                                    )
-                              );
-                            }}
-                          />
-                          <Anchor
-                            className="policy-action-help"
-                            href={`${docsUrl}#${name.replaceAll("_", "-").toLowerCase()}`}
-                            target="_blank"
-                            rel="noopener"
-                            size="xs"
-                          >
-                            <Trans>Help</Trans>
-                          </Anchor>
-                        </Box>
-                        {spec.type !== "bool" ? (
-                          <TypedOptionInput
-                            id={`policy-action-${name}`}
-                            label={t`Value for ${name}`}
-                            disabled={!selected}
-                            spec={{
-                              type: spec.multiple ? "multi" : spec.type,
-                              value: choices,
-                              required: selected
-                            }}
-                            value={value}
-                            onChange={(next) => {
-                              onChange({ ...actions, [name]: next });
-                            }}
-                          />
-                        ) : null}
-                        {!(name in definitions) ? (
-                          <Text c="dimmed" size="xs">
-                            <Trans>
-                              This action is not in the current definitions. Its value
-                              will be preserved.
-                            </Trans>
-                          </Text>
-                        ) : null}
-                      </Stack>
-                    );
-                  })}
+                  .map(([name, spec]) => (
+                    <PolicyActionItem
+                      key={name}
+                      actions={actions}
+                      docsUrl={docsUrl}
+                      known={name in definitions}
+                      name={name}
+                      spec={spec}
+                      onChange={onChange}
+                    />
+                  ))}
               </Stack>
             </Accordion.Panel>
           </Accordion.Item>

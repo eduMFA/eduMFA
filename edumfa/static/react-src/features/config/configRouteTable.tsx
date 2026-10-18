@@ -14,7 +14,7 @@ import { tokenConfigRoutes } from "@/features/config/tokens/routes";
 
 /**
  * All routes of the config area, relative to `/config`. Each area exports
- * its own definitions; `app/routes.tsx` mounts them inside `ConfigLayout`.
+ * its own definitions; `app/ConfigRoutes.tsx` mounts them inside `ConfigLayout`.
  */
 export const configRouteTable: ConfigRouteDefinition[] = [
   ...systemConfigRoutes,

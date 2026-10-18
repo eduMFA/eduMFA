@@ -3,8 +3,8 @@ import { Box, Button, Table } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 
+import { ClientTypeRows } from "./ClientTypeRows";
 import { getClientApplications } from "@/api/component";
-import type { ClientApplication } from "@/api/component";
 import { useApiClient } from "@/api/ApiClientProvider";
 import { useAuth } from "@/auth/AuthProvider";
 import { ErrorAlert } from "@/components/feedback/ErrorAlert";
@@ -13,7 +13,6 @@ import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
 import { Card } from "@/components/layout/Card";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { EmptyState } from "@/components/tables/EmptyState";
-import { formatLegacyDate } from "@/lib/dates";
 
 export function ClientTypePage() {
   const apiClient = useApiClient();
@@ -83,33 +82,5 @@ export function ClientTypePage() {
         </Table>
       </Card>
     </Box>
-  );
-}
-
-interface ClientTypeRowsProps {
-  applicationType: string;
-  clients: ClientApplication[];
-}
-
-function ClientTypeRows({ applicationType, clients }: ClientTypeRowsProps) {
-  return (
-    <>
-      {clients.map((client, index) => (
-        <Table.Tr
-          key={`${applicationType}-${client.ip}-${client.lastseen ?? String(index)}`}
-        >
-          {index === 0 ? (
-            <Table.Td fw={600} rowSpan={clients.length}>
-              {applicationType}
-            </Table.Td>
-          ) : null}
-          <Table.Td>{client.ip}</Table.Td>
-          <Table.Td>
-            {client.hostname ? `${client.hostname} - ` : ""}
-            {formatLegacyDate(client.lastseen)}
-          </Table.Td>
-        </Table.Tr>
-      ))}
-    </>
   );
 }

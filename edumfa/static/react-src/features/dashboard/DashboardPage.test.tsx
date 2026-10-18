@@ -1,7 +1,8 @@
 import { screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { DashboardPage, summarizeFailures } from "./DashboardPage";
+import { DashboardPage } from "./DashboardPage";
+import { summarizeFailures } from "./summarizeFailures";
 import type { AuditEntry } from "@/api/audit";
 import { createRouteFetchMock, stubLegacySession } from "@/tests/fetchMockUtils";
 import { renderWithProviders } from "@/tests/renderWithProviders";

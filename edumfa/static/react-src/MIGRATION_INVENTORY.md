@@ -454,7 +454,7 @@ state without realm and user; the allowlist therefore carries both
 - Challenges: 15 per page like the legacy template, sortable columns, the
   serial filter is sent as `GET /token/challenges/*value*`; without a filter
   `GET /token/challenges/` is called instead of the legacy `**` pattern.
-- `FailCounterBadge` (`features/tokens/tokenBadges.tsx`) is shared with the
+- `FailCounterBadge` (`features/tokens/badges/FailCounterBadge.tsx`) is shared with the
   user details token table.
 - Known coexistence cost: Angular's `tokenController` still runs for these
   states and fetches the token list in the background.

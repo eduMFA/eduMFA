@@ -1,9 +1,12 @@
+import { ApplSpecResult } from "./results/ApplSpecResult";
 import { CertificateResult } from "./results/CertificateResult";
-import { ApplSpecResult, RegistrationResult } from "./results/CodeResults";
 import { FidoResult } from "./results/FidoResult";
-import { MotpResult, PushResult, TiqrResult } from "./results/LinkResults";
+import { MotpResult } from "./results/MotpResult";
 import { OtpListResult } from "./results/OtpListResult";
 import { OtpResult } from "./results/OtpResult";
+import { PushResult } from "./results/PushResult";
+import { RegistrationResult } from "./results/RegistrationResult";
+import { TiqrResult } from "./results/TiqrResult";
 import type { EnrolledTokenResultProps } from "./results/types";
 
 export type { EnrolledTokenResultProps, FidoState } from "./results/types";
