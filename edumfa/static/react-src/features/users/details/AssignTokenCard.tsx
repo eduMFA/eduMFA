@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, PasswordInput } from "@mantine/core";
 
 import type { AssignTokenForm } from "./useAssignToken";
@@ -29,10 +29,10 @@ export function AssignTokenCard({ assignment }: AssignTokenCardProps) {
             loading={assignment.mutation.isPending}
             type="submit"
           >
-            <Trans>Assign Token</Trans>
+            {t`Assign Token`}
           </Button>
         }
-        title={<Trans>Assign an existing token</Trans>}
+        title={t`Assign an existing token`}
       >
         <SerialLookupField
           id="assignSerial"
@@ -45,7 +45,7 @@ export function AssignTokenCard({ assignment }: AssignTokenCardProps) {
         <PasswordInput
           autoComplete="new-password"
           id="assignPin"
-          label={<Trans>PIN/Password</Trans>}
+          label={t`PIN/Password`}
           mb="sm"
           onChange={(event) => {
             assignment.setPin(event.currentTarget.value);

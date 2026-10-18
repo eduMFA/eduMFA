@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import {
   Alert,
   Anchor,
@@ -56,19 +56,18 @@ export function RecoveryResetPage() {
   return (
     <Box className="react-migration-shell">
       <Container size="xs">
-        {resetMutation.isSuccess ? (
-          resetMutation.data ? (
-            <Alert color="green" mb="md" role="status" variant="light">
-              <Trans>Your password has been reset successfully.</Trans>{" "}
-              <Anchor href={hashHref("/login")} size="sm">
-                <Trans>Proceed to login</Trans>
-              </Anchor>
-            </Alert>
-          ) : (
-            <Alert color="red" mb="md" role="alert" variant="light">
-              <Trans>Failed to reset your password.</Trans>
-            </Alert>
-          )
+        {resetMutation.isSuccess && resetMutation.data ? (
+          <Alert color="green" mb="md" role="status" variant="light">
+            {t`Your password has been reset successfully.`}{" "}
+            <Anchor href={hashHref("/login")} size="sm">
+              {t`Proceed to login`}
+            </Anchor>
+          </Alert>
+        ) : null}
+        {resetMutation.isSuccess && !resetMutation.data ? (
+          <Alert color="red" mb="md" role="alert" variant="light">
+            {t`Failed to reset your password.`}
+          </Alert>
         ) : null}
 
         <ErrorAlert error={resetMutation.error} />
@@ -82,17 +81,17 @@ export function RecoveryResetPage() {
             role="form"
           >
             <Title mb="xs" order={2} size="h3">
-              <Trans>Reset your Password</Trans>
+              {t`Reset your Password`}
             </Title>
             <Text c="dimmed" mb="md" size="sm">
-              <Trans>Please enter a new password.</Trans>
+              {t`Please enter a new password.`}
             </Text>
 
             <TextField
               autoComplete="new-password"
               hasError={Boolean(formState.errors.password)}
               id="password"
-              label={<Trans>Password</Trans>}
+              label={t`Password`}
               placeholder={t`Type a password`}
               registration={register("password", {
                 deps: ["password2"],
@@ -119,7 +118,7 @@ export function RecoveryResetPage() {
               mt="md"
               type="submit"
             >
-              <Trans>Reset Password</Trans>
+              {t`Reset Password`}
             </Button>
           </form>
         </Paper>

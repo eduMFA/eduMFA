@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { useTokenChallengeColumns } from "./challenges/useTokenChallengeColumns";
 import {
@@ -22,6 +22,8 @@ import { Pagination } from "@/components/tables/Pagination";
  * segment of `GET /token/challenges/<serial>` like the legacy controller did.
  */
 export function TokenChallengesPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated } = useAuth();
   const {
     challengesQuery,
@@ -49,7 +51,7 @@ export function TokenChallengesPage() {
         subtitle={
           challengePage ? <Trans>Total Challenges: {challengeCount}</Trans> : null
         }
-        title={<Trans>Challenges</Trans>}
+        title={t`Challenges`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
@@ -57,7 +59,7 @@ export function TokenChallengesPage() {
 
       <Card flush>
         {challengesQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading challenges</Trans>} />
+          <LoadingIndicator label={t`Loading challenges`} />
         ) : null}
 
         <Pagination
@@ -71,7 +73,7 @@ export function TokenChallengesPage() {
         <DataTable
           columns={columns}
           data={challengePage?.challenges ?? []}
-          emptyMessage={<Trans>No open challenges.</Trans>}
+          emptyMessage={t`No open challenges.`}
           getRowKey={(challenge) => String(challenge.id)}
           id="tabletokenchallenges"
           isLoading={challengePage === undefined}

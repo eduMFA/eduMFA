@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, PasswordInput, TextInput } from "@mantine/core";
 
 import type {
@@ -19,13 +19,15 @@ export function RadiusServerSecretFields({
   setValue,
   values
 }: RadiusServerSecretFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <Checkbox
         checked={values.enforce_ma}
-        description={<Trans>Enforce usage of Message-Authenticator attribute</Trans>}
+        description={t`Enforce usage of Message-Authenticator attribute`}
         id="enforce_ma"
-        label={<Trans>Enforce Message-Authenticator</Trans>}
+        label={t`Enforce Message-Authenticator`}
         mb="sm"
         onChange={(event) => {
           setValue("enforce_ma", event.currentTarget.checked);
@@ -34,14 +36,12 @@ export function RadiusServerSecretFields({
       <PasswordInput
         autoComplete="new-password"
         description={
-          isEditing ? (
-            <Trans>
-              The stored secret is not shown. Enter it again to save the definition.
-            </Trans>
-          ) : null
+          isEditing
+            ? t`The stored secret is not shown. Enter it again to save the definition.`
+            : null
         }
         id="secret"
-        label={<Trans>Secret</Trans>}
+        label={t`Secret`}
         mb="sm"
         onChange={(event) => {
           setValue("secret", event.currentTarget.value);
@@ -52,7 +52,7 @@ export function RadiusServerSecretFields({
       />
       <TextInput
         id="dictionary"
-        label={<Trans>Dictionary</Trans>}
+        label={t`Dictionary`}
         mb="sm"
         onChange={(event) => {
           setValue("dictionary", event.currentTarget.value);
@@ -62,7 +62,7 @@ export function RadiusServerSecretFields({
       />
       <TextInput
         id="description"
-        label={<Trans>Description</Trans>}
+        label={t`Description`}
         mb="sm"
         onChange={(event) => {
           setValue("description", event.currentTarget.value);

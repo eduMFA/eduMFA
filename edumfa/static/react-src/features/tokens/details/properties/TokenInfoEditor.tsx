@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect, Stack, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 
@@ -25,7 +25,7 @@ export function TokenInfoEditor({
       <TextInput
         id="max_auth_count"
         inputMode="numeric"
-        label={<Trans>Maximum Authentication Count</Trans>}
+        label={t`Maximum Authentication Count`}
         onChange={(event) => {
           onChange({ ...draft, maxAuthCount: event.currentTarget.value });
         }}
@@ -37,7 +37,7 @@ export function TokenInfoEditor({
       <TextInput
         id="max_success_auth_count"
         inputMode="numeric"
-        label={<Trans>Maximum Success Auth Count</Trans>}
+        label={t`Maximum Success Auth Count`}
         onChange={(event) => {
           onChange({ ...draft, maxSuccessAuthCount: event.currentTarget.value });
         }}
@@ -49,7 +49,7 @@ export function TokenInfoEditor({
       <DateTimePicker
         clearable
         id="validity_start"
-        label={<Trans>Validity Start</Trans>}
+        label={t`Validity Start`}
         onChange={(value) => {
           onChange({ ...draft, validityStart: toDate(value) });
         }}
@@ -61,7 +61,7 @@ export function TokenInfoEditor({
         clearable
         error={invalidValidityPeriod ? t`End Date before Start Date!` : undefined}
         id="validity_end"
-        label={<Trans>Validity End</Trans>}
+        label={t`Validity End`}
         onChange={(value) => {
           onChange({ ...draft, validityEnd: toDate(value) });
         }}
@@ -72,11 +72,9 @@ export function TokenInfoEditor({
       {showTimeShift ? (
         <NativeSelect
           data={["default", "True", "False"]}
-          description={
-            <Trans>Set to 'True' or 'False' to override setting in Token Config.</Trans>
-          }
+          description={t`Set to 'True' or 'False' to override setting in Token Config.`}
           id="use_timeshift"
-          label={<Trans>Use Timeshift</Trans>}
+          label={t`Use Timeshift`}
           onChange={(event) => {
             onChange({ ...draft, useTimeShift: event.currentTarget.value });
           }}

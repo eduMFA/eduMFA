@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, FileButton } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 
@@ -12,6 +12,8 @@ export interface TokenImportButtonProps {
  * `ngf-select="upload($file)"`.
  */
 export function TokenImportButton({ loading, onSelect }: TokenImportButtonProps) {
+  const { t } = useLingui();
+
   return (
     <FileButton
       onChange={(file) => {
@@ -27,7 +29,7 @@ export function TokenImportButton({ loading, onSelect }: TokenImportButtonProps)
           leftSection={<IconUpload size={16} />}
           loading={loading}
         >
-          <Trans>Select file and import</Trans>
+          {t`Select file and import`}
         </Button>
       )}
     </FileButton>

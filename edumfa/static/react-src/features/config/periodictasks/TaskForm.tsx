@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 
@@ -15,6 +15,8 @@ import { Card } from "@/components/layout/Card";
 
 /** Create/edit form; `key` on the caller remounts it so state resets per task. */
 export function TaskForm({ existing }: { existing: PeriodicTask | undefined }) {
+  const { t } = useLingui();
+
   const { canWrite, change, finish, form, lookups, mutations, options, submit, valid } =
     useTaskForm(existing);
   const { modules, nodes, specs } = lookups;
@@ -47,7 +49,7 @@ export function TaskForm({ existing }: { existing: PeriodicTask | undefined }) {
           {specs.isLoading ? <LoadingIndicator /> : null}
 
           {specs.data ? (
-            <Card title={<Trans>Options</Trans>}>
+            <Card title={t`Options`}>
               <TypedOptionsTable
                 idPrefix="task-option"
                 options={options}
@@ -66,7 +68,7 @@ export function TaskForm({ existing }: { existing: PeriodicTask | undefined }) {
               loading={mutations.save.isPending}
               leftSection={<IconDeviceFloppy aria-hidden size={16} />}
             >
-              <Trans>Save Periodic Task Definition</Trans>
+              {t`Save Periodic Task Definition`}
             </Button>
           ) : null}
         </fieldset>

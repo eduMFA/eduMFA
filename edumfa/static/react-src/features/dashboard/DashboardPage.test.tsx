@@ -35,6 +35,18 @@ function auditEntry(overrides: Partial<AuditEntry>): AuditEntry {
   };
 }
 
+/** Token counts the dashboard mock answers for the total, hardware and software queries. */
+function mockTokenCount(kind: string | null, unassigned: boolean): number {
+  switch (kind) {
+    case null:
+      return 22;
+    case "hardware":
+      return unassigned ? 2 : 5;
+    default:
+      return unassigned ? 7 : 17;
+  }
+}
+
 describe("summarizeFailures", () => {
   it("groups failures by user, newest first, and keeps user-less serials", () => {
     const summary = summarizeFailures([
@@ -74,16 +86,7 @@ describe("DashboardPage", () => {
           respond: (url) => {
             const kind = url.searchParams.get("infovalue");
             const unassigned = url.searchParams.get("assigned") === "False";
-            const count =
-              kind === null
-                ? 22
-                : kind === "hardware"
-                  ? unassigned
-                    ? 2
-                    : 5
-                  : unassigned
-                    ? 7
-                    : 17;
+            const count = mockTokenCount(kind, unassigned);
 
             return { count, current: 1, next: null, prev: null, tokens: [] };
           }

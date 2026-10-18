@@ -1,5 +1,5 @@
-import { Trans } from "@lingui/react/macro";
-import { Alert } from "@mantine/core";
+import { useLingui } from "@lingui/react/macro";
+import {} from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -13,7 +13,7 @@ import { useAuth } from "@/auth/AuthProvider";
 import { hasRight } from "@/auth/permissions";
 import { ErrorAlert } from "@/components/feedback/ErrorAlert";
 import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { AccessGate } from "@/components/feedback/AccessGate";
 import { useDeleteConfirmation } from "@/components/feedback/useDeleteConfirmation";
 import { Card } from "@/components/layout/Card";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -21,6 +21,8 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { DataTable, type DataTableSort } from "@/components/tables/DataTable";
 
 export function PolicyListPage() {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const { isAuthenticated, rights } = useAuth();
   const canRead = hasRight(rights, "policyread");
@@ -51,36 +53,32 @@ export function PolicyListPage() {
 
   return (
     <SidebarLayout sidebar={<PolicySidebar active="list" />}>
-      <PageHeader title={<Trans>All Policies</Trans>} />
-      {!isAuthenticated ? (
-        <LoginRequiredAlert />
-      ) : !canRead ? (
-        <Alert color="yellow" role="alert">
-          <Trans>You do not have permission to read policies.</Trans>
-        </Alert>
-      ) : (
-        <>
-          <ErrorAlert error={policiesQuery.error} />
-          <ErrorAlert
-            error={
-              mutations.save.error ?? mutations.toggle.error ?? mutations.remove.error
-            }
+      <PageHeader title={t`All Policies`} />
+      <AccessGate
+        allowed={canRead}
+        deniedMessage={t`You do not have permission to read policies.`}
+        isAuthenticated={isAuthenticated}
+      >
+        <ErrorAlert error={policiesQuery.error} />
+        <ErrorAlert
+          error={
+            mutations.save.error ?? mutations.toggle.error ?? mutations.remove.error
+          }
+        />
+        <Card flush>
+          {policiesQuery.isLoading ? <LoadingIndicator /> : null}
+          <DataTable
+            columns={columns}
+            data={rows}
+            emptyMessage={t`No policies found.`}
+            getRowKey={(policy) => policy.name}
+            isLoading={policiesQuery.data === undefined}
+            sort={sort}
+            onSortChange={setSort}
+            minWidth={1000}
           />
-          <Card flush>
-            {policiesQuery.isLoading ? <LoadingIndicator /> : null}
-            <DataTable
-              columns={columns}
-              data={rows}
-              emptyMessage={<Trans>No policies found.</Trans>}
-              getRowKey={(policy) => policy.name}
-              isLoading={policiesQuery.data === undefined}
-              sort={sort}
-              onSortChange={setSort}
-              minWidth={1000}
-            />
-          </Card>
-        </>
-      )}
+        </Card>
+      </AccessGate>
       {dialog}
     </SidebarLayout>
   );

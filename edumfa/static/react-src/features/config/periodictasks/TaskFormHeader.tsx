@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -21,13 +21,15 @@ export function TaskFormHeader({
   onDeleted: () => void;
   requestDelete: DeleteConfirmation["requestDelete"];
 }) {
+  const { t } = useLingui();
+
   return (
     <PageHeader
       title={
         existing ? (
           <Trans>Edit Periodic Task {existing.id}</Trans>
         ) : (
-          <Trans>Create a new Periodic Task</Trans>
+          t`Create a new Periodic Task`
         )
       }
       actions={
@@ -40,16 +42,14 @@ export function TaskFormHeader({
             onClick={() => {
               requestDelete({
                 identifier: existing.name,
-                question: (
-                  <Trans>Do you really want to delete this periodic task?</Trans>
-                ),
+                question: t`Do you really want to delete this periodic task?`,
                 onConfirm: () => {
                   mutations.remove.mutate(existing.id, { onSuccess: onDeleted });
                 }
               });
             }}
           >
-            <Trans>Delete</Trans>
+            {t`Delete`}
           </Button>
         ) : null
       }

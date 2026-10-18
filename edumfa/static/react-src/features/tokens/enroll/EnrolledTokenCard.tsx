@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Stack } from "@mantine/core";
 
 import { EnrolledTokenActions } from "./EnrolledTokenActions";
@@ -29,12 +29,14 @@ export function EnrolledTokenCard({
   submission,
   visibility
 }: EnrolledTokenCardProps) {
+  const { t } = useLingui();
+
   const { settings, user } = useAuth();
   const isWizard = mode === "wizard";
   const enrolledUsername = user?.role === "admin" ? fixUser(resolved.user) : "";
 
   return (
-    <Card title={<Trans>Enrolled token</Trans>}>
+    <Card title={t`Enrolled token`}>
       <Stack gap="md">
         {!submission.isClientWait ? (
           <EnrollmentSummary

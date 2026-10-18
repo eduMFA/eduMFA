@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, Stack, Text, TextInput } from "@mantine/core";
 
 import { type TokenTypeFieldsProps } from "./types";
@@ -29,11 +29,9 @@ export function OtpKeyGenerateFields({
               checked={form.genkey}
               id="generate"
               label={
-                type === "daypassword" ? (
-                  <Trans>Generate secret on the Server</Trans>
-                ) : (
-                  <Trans>Generate OTP Key on the Server</Trans>
-                )
+                type === "daypassword"
+                  ? t`Generate secret on the Server`
+                  : t`Generate OTP Key on the Server`
               }
               onChange={(event) => {
                 onChange({ genkey: event.currentTarget.checked });
@@ -42,17 +40,9 @@ export function OtpKeyGenerateFields({
           ) : null}
           {form.genkey ? (
             <Text c="dimmed" size="sm">
-              {type === "daypassword" ? (
-                <Trans>
-                  The server will create the secret and a QR Code will be displayed for
-                  you to be scanned.
-                </Trans>
-              ) : (
-                <Trans>
-                  The server will create the OTP key and a QR Code will be displayed to
-                  you to be scanned.
-                </Trans>
-              )}
+              {type === "daypassword"
+                ? t`The server will create the secret and a QR Code will be displayed for you to be scanned.`
+                : t`The server will create the OTP key and a QR Code will be displayed to you to be scanned.`}
             </Text>
           ) : null}
         </Stack>
@@ -62,11 +52,7 @@ export function OtpKeyGenerateFields({
           checked={form.twoStepInit}
           disabled={twoStepForced}
           id="twostep_enrollment"
-          label={
-            <Trans>
-              Use two-step enrollment with the privacyIDEA Authenticator App
-            </Trans>
-          }
+          label={t`Use two-step enrollment with the privacyIDEA Authenticator App`}
           mb="sm"
           onChange={(event) => {
             onChange({ twoStepInit: event.currentTarget.checked });
@@ -82,7 +68,7 @@ export function OtpKeyGenerateFields({
               : undefined
           }
           id="otpkey"
-          label={<Trans>OTP Key</Trans>}
+          label={t`OTP Key`}
           mb="sm"
           onChange={(event) => {
             onChange({ otpkey: event.currentTarget.value });

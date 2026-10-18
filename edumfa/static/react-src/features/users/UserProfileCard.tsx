@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, SimpleGrid } from "@mantine/core";
 
 import type { UserDetail } from "@/api/users";
@@ -11,32 +11,34 @@ export interface UserProfileCardProps {
 
 /** The read-only attributes of the authenticated user. */
 export function UserProfileCard({ userDetail }: UserProfileCardProps) {
+  const { t } = useLingui();
+
   return (
-    <Card title={<Trans>Profile</Trans>}>
+    <Card title={t`Profile`}>
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md" verticalSpacing={0}>
-        <FieldValue label={<Trans>Username</Trans>} name="username">
+        <FieldValue label={t`Username`} name="username">
           {userDetail.username}
         </FieldValue>
-        <FieldValue label={<Trans>Email</Trans>} name="email">
+        <FieldValue label={t`Email`} name="email">
           {userDetail.email ? (
             <Anchor href={`mailto:${userDetail.email}`} size="sm">
               {userDetail.email}
             </Anchor>
           ) : null}
         </FieldValue>
-        <FieldValue label={<Trans>Given name</Trans>} name="givenname">
+        <FieldValue label={t`Given name`} name="givenname">
           {userDetail.givenname}
         </FieldValue>
-        <FieldValue label={<Trans>Phone</Trans>} name="phone">
+        <FieldValue label={t`Phone`} name="phone">
           {userDetail.phone}
         </FieldValue>
-        <FieldValue label={<Trans>Surname</Trans>} name="surname">
+        <FieldValue label={t`Surname`} name="surname">
           {userDetail.surname}
         </FieldValue>
-        <FieldValue label={<Trans>Mobile</Trans>} name="mobile">
+        <FieldValue label={t`Mobile`} name="mobile">
           {userDetail.mobile}
         </FieldValue>
-        <FieldValue label={<Trans>Description</Trans>} name="description">
+        <FieldValue label={t`Description`} name="description">
           {userDetail.description}
         </FieldValue>
       </SimpleGrid>

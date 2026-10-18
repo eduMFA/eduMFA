@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Divider, NavLink, Stack } from "@mantine/core";
 
 import { tokenConfigTypeKeys, type TokenConfigTypeKey } from "./tokenConfigForm";
@@ -8,6 +8,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** One link per token type plus the help link. */
 export function TokenConfigSidebar({ tokenType }: { tokenType: TokenConfigTypeKey }) {
+  const { t } = useLingui();
+
   const helpUrl = useDocsUrl("configuration/token_config.html");
 
   return (
@@ -18,16 +20,14 @@ export function TokenConfigSidebar({ tokenType }: { tokenType: TokenConfigTypeKe
           component="a"
           href={hashHref(`/config/tokens/${key}`)}
           key={key}
-          label={
-            key === "question" ? <Trans>Questionnaire</Trans> : tokenTypes[key].label
-          }
+          label={key === "question" ? t`Questionnaire` : tokenTypes[key].label}
         />
       ))}
       <Divider my="xs" />
       <NavLink
         component="a"
         href={helpUrl}
-        label={<Trans>Help about Token Settings</Trans>}
+        label={t`Help about Token Settings`}
         rel="noopener"
         target="_blank"
       />

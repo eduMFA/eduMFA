@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect, Title } from "@mantine/core";
 
 import { UserLookupField } from "@/components/forms/UserLookupField";
@@ -19,15 +19,17 @@ export function UserAssignmentFields({
   realmNames,
   user
 }: UserAssignmentFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <Title mb="xs" mt="md" order={4} size="h6">
-        <Trans>Assign token to user</Trans>
+        {t`Assign token to user`}
       </Title>
       <NativeSelect
         data={realmNames.includes(realm) ? [...realmNames] : ["", ...realmNames]}
         id="realm"
-        label={<Trans>Realm</Trans>}
+        label={t`Realm`}
         mb="sm"
         onChange={(event) => {
           onRealmChange(event.currentTarget.value);

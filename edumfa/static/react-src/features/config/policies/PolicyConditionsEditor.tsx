@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { IconPlus } from "@tabler/icons-react";
 import { Button, Stack, Table } from "@mantine/core";
 
@@ -14,6 +14,8 @@ export function PolicyConditionsEditor({
   definitions: PolicyConditionDefinitions;
   onChange: (conditions: PolicyCondition[]) => void;
 }) {
+  const { t } = useLingui();
+
   const update = (index: number, condition: PolicyCondition) => {
     onChange(conditions.map((existing, i) => (i === index ? condition : existing)));
   };
@@ -24,21 +26,11 @@ export function PolicyConditionsEditor({
           <Table>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>
-                  <Trans>Active</Trans>
-                </Table.Th>
-                <Table.Th>
-                  <Trans>Section</Trans>
-                </Table.Th>
-                <Table.Th>
-                  <Trans>Key</Trans>
-                </Table.Th>
-                <Table.Th>
-                  <Trans>Comparator</Trans>
-                </Table.Th>
-                <Table.Th>
-                  <Trans>Value</Trans>
-                </Table.Th>
+                <Table.Th>{t`Active`}</Table.Th>
+                <Table.Th>{t`Section`}</Table.Th>
+                <Table.Th>{t`Key`}</Table.Th>
+                <Table.Th>{t`Comparator`}</Table.Th>
+                <Table.Th>{t`Value`}</Table.Th>
                 <Table.Th />
               </Table.Tr>
             </Table.Thead>
@@ -69,7 +61,7 @@ export function PolicyConditionsEditor({
           onChange([...conditions, ["userinfo", "", "equals", "", false]]);
         }}
       >
-        <Trans>Add a condition</Trans>
+        {t`Add a condition`}
       </Button>
     </Stack>
   );

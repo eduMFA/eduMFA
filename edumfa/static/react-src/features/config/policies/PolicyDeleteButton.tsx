@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { IconTrash } from "@tabler/icons-react";
 import { Button } from "@mantine/core";
 
@@ -16,6 +16,8 @@ export function PolicyDeleteButton({
   onConfirm: () => void;
   requestDelete: DeleteConfirmation["requestDelete"];
 }) {
+  const { t } = useLingui();
+
   return (
     <Button
       color="red"
@@ -26,12 +28,12 @@ export function PolicyDeleteButton({
       onClick={() => {
         requestDelete({
           identifier: name,
-          question: <Trans>Do you really want to delete this policy?</Trans>,
+          question: t`Do you really want to delete this policy?`,
           onConfirm
         });
       }}
     >
-      <Trans>Delete</Trans>
+      {t`Delete`}
     </Button>
   );
 }

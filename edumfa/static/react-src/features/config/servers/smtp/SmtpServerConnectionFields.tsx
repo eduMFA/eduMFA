@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Grid, NumberInput, TextInput } from "@mantine/core";
 
 import type { SmtpServerFieldSetter, SmtpServerFormValues } from "./smtpServerValues";
@@ -15,18 +15,16 @@ export function SmtpServerConnectionFields({
   setValue,
   values
 }: SmtpServerConnectionFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <TextInput
         autoFocus
-        description={
-          <Trans>
-            This is the unique identifying name of the SMTP server definition.
-          </Trans>
-        }
+        description={t`This is the unique identifying name of the SMTP server definition.`}
         error={identifierError}
         id="identifier"
-        label={<Trans>Identifier</Trans>}
+        label={t`Identifier`}
         mb="sm"
         onChange={(event) => {
           setValue("identifier", event.currentTarget.value);
@@ -37,7 +35,7 @@ export function SmtpServerConnectionFields({
       />
       <TextInput
         id="server"
-        label={<Trans>IP or FQDN</Trans>}
+        label={t`IP or FQDN`}
         mb="sm"
         onChange={(event) => {
           setValue("server", event.currentTarget.value);
@@ -52,7 +50,7 @@ export function SmtpServerConnectionFields({
             allowDecimal={false}
             allowNegative={false}
             id="port"
-            label={<Trans>Port</Trans>}
+            label={t`Port`}
             mb="sm"
             onChange={(value) => {
               setValue("port", value);
@@ -66,7 +64,7 @@ export function SmtpServerConnectionFields({
             allowDecimal={false}
             allowNegative={false}
             id="timeout"
-            label={<Trans>Timeout</Trans>}
+            label={t`Timeout`}
             mb="sm"
             onChange={(value) => {
               setValue("timeout", value);

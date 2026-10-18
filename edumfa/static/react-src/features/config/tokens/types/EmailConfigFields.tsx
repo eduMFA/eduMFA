@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, NativeSelect, Stack, TextInput } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 
@@ -15,6 +15,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** Port of `config.token.email.html`; the servers come from `GET /smtpserver/`. */
 export function EmailConfigFields({ form, onChange }: TokenConfigFieldsProps) {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const { isAuthenticated, rights } = useAuth();
   const smtpServersQuery = useQuery({
@@ -27,10 +29,7 @@ export function EmailConfigFields({ form, onChange }: TokenConfigFieldsProps) {
   return (
     <>
       <HelpText>
-        <Trans>
-          The EMail token is a challenge response token that sends the OTP value to the
-          given email address, when the correct OTP PIN was presented by the user.
-        </Trans>
+        {t`The EMail token is a challenge response token that sends the OTP value to the given email address, when the correct OTP PIN was presented by the user.`}
       </HelpText>
       <ErrorAlert error={smtpServersQuery.error} />
       <Stack gap="sm">
@@ -46,22 +45,17 @@ export function EmailConfigFields({ form, onChange }: TokenConfigFieldsProps) {
             </Trans>
           }
           id="emailIdentifier"
-          label={<Trans>SMTP server configuration</Trans>}
+          label={t`SMTP server configuration`}
           onChange={(event) => {
             onChange({ "email.identifier": event.currentTarget.value });
           }}
           value={identifier}
         />
         <TextInput
-          description={
-            <Trans>
-              The time in seconds for which the sent OTP value is valid for
-              authentication.
-            </Trans>
-          }
+          description={t`The time in seconds for which the sent OTP value is valid for authentication.`}
           id="mailvalid"
           inputMode="numeric"
-          label={<Trans>OTP validity time</Trans>}
+          label={t`OTP validity time`}
           onChange={(event) => {
             onChange({ "email.validtime": event.currentTarget.value });
           }}

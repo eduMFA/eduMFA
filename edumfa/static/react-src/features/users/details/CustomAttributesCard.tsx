@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table } from "@mantine/core";
 
 import { CustomAttributeForm } from "./CustomAttributeForm";
@@ -13,6 +13,8 @@ export interface CustomAttributesCardProps {
 
 /** The custom attributes of the user with the "add" toolbar in the footer. */
 export function CustomAttributesCard({ attributes }: CustomAttributesCardProps) {
+  const { t } = useLingui();
+
   const { canDeleteAttribute, deleteMutation, entries, settableKeys } = attributes;
 
   return (
@@ -23,15 +25,12 @@ export function CustomAttributesCard({ attributes }: CustomAttributesCardProps) 
           <CustomAttributeForm attributes={attributes} />
         ) : undefined
       }
-      title={<Trans>Custom attributes</Trans>}
+      title={t`Custom attributes`}
     >
       <Table verticalSpacing="sm">
         <Table.Tbody>
           {entries.length === 0 ? (
-            <EmptyState
-              colSpan={3}
-              message={<Trans>No custom attributes set.</Trans>}
-            />
+            <EmptyState colSpan={3} message={t`No custom attributes set.`} />
           ) : (
             entries.map(([attributeKey, attributeValue]) => (
               <CustomAttributeRow

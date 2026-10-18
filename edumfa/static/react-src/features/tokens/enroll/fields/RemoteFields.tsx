@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, NativeSelect, TextInput } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -16,13 +16,11 @@ export function RemoteFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <Checkbox
         checked={form.remoteLocalCheckPin}
         id="localPin"
-        label={<Trans>Check the PIN locally</Trans>}
+        label={t`Check the PIN locally`}
         mb="sm"
         onChange={(event) => {
           onChange({ remoteLocalCheckPin: event.currentTarget.checked });
@@ -31,7 +29,7 @@ export function RemoteFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
       <NativeSelect
         data={serverOptions}
         id="remoteServer"
-        label={<Trans>Remote Server</Trans>}
+        label={t`Remote Server`}
         mb="sm"
         onChange={(event) => {
           onChange({ remoteServerId: event.currentTarget.value });
@@ -41,7 +39,7 @@ export function RemoteFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
       />
       <TextInput
         id="remoteSerial"
-        label={<Trans>Remote Serial</Trans>}
+        label={t`Remote Serial`}
         mb="sm"
         onChange={(event) => {
           onChange({ remoteSerial: event.currentTarget.value });
@@ -51,7 +49,7 @@ export function RemoteFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
       />
       <TextInput
         id="remoteUser"
-        label={<Trans>Remote User</Trans>}
+        label={t`Remote User`}
         mb="sm"
         onChange={(event) => {
           onChange({ remoteUser: event.currentTarget.value });
@@ -61,7 +59,7 @@ export function RemoteFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
       />
       <TextInput
         id="remoteRealm"
-        label={<Trans>Remote Realm</Trans>}
+        label={t`Remote Realm`}
         mb="sm"
         onChange={(event) => {
           onChange({ remoteRealm: event.currentTarget.value });
@@ -70,7 +68,7 @@ export function RemoteFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
       />
       <TextInput
         id="remoteResolver"
-        label={<Trans>Remote Resolver</Trans>}
+        label={t`Remote Resolver`}
         mb="sm"
         onChange={(event) => {
           onChange({ remoteResolver: event.currentTarget.value });

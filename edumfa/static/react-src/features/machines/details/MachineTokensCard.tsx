@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 
 import { createAssignmentColumns } from "./assignmentColumns";
@@ -25,6 +25,8 @@ export function MachineTokensCard({
   editor,
   isLoading
 }: MachineTokensCardProps) {
+  const { t } = useLingui();
+
   const [page, setPage] = useState(1);
   const pageStart = (page - 1) * MACHINE_TOKEN_PAGE_SIZE;
   const visibleAssignments = assignments.slice(
@@ -33,7 +35,7 @@ export function MachineTokensCard({
   );
 
   return (
-    <Card flush title={<Trans>Tokens and Applications</Trans>}>
+    <Card flush title={t`Tokens and Applications`}>
       <Pagination
         currentPage={page}
         maxSize={5}
@@ -45,7 +47,7 @@ export function MachineTokensCard({
       <DataTable
         columns={createAssignmentColumns(applications, editor)}
         data={visibleAssignments}
-        emptyMessage={<Trans>No tokens attached.</Trans>}
+        emptyMessage={t`No tokens attached.`}
         getRowKey={(assignment) => String(assignment.id)}
         isLoading={isLoading}
         minWidth={720}

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { SerialLookupCountAlert } from "./serial/SerialLookupCountAlert";
 import { SerialLookupForm } from "./serial/SerialLookupForm";
@@ -17,6 +17,8 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
  * (`count=1`), so the administrator can narrow the search before running it.
  */
 export function TokenGetSerialPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated } = useAuth();
   const {
     backToForm,
@@ -34,15 +36,8 @@ export function TokenGetSerialPage() {
   return (
     <SidebarLayout sidebar={<TokenSidebar activeItem="getserial" />}>
       <PageHeader
-        subtitle={
-          <Trans>
-            By entering an OTP value you can get the serial number of the token. You can
-            also enter additional optional parameters, to narrow down the search for the
-            token. So you can only search within certain token types or in assigned or
-            unassigned tokens.
-          </Trans>
-        }
-        title={<Trans>Get Serial number by OTP value</Trans>}
+        subtitle={t`By entering an OTP value you can get the serial number of the token. You can also enter additional optional parameters, to narrow down the search for the token. So you can only search within certain token types or in assigned or unassigned tokens.`}
+        title={t`Get Serial number by OTP value`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}

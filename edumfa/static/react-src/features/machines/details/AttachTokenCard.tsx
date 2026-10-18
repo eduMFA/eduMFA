@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, NativeSelect } from "@mantine/core";
 
 import type { AttachTokenForm } from "./useAttachToken";
@@ -30,10 +30,10 @@ export function AttachTokenCard({ applicationNames, attach }: AttachTokenCardPro
             loading={attach.mutation.isPending}
             type="submit"
           >
-            <Trans>Attach Token</Trans>
+            {t`Attach Token`}
           </Button>
         }
-        title={<Trans>Attach a new token</Trans>}
+        title={t`Attach a new token`}
       >
         <SerialLookupField
           id="attachSerial"
@@ -46,7 +46,7 @@ export function AttachTokenCard({ applicationNames, attach }: AttachTokenCardPro
         <NativeSelect
           data={[{ label: "", value: "" }, ...applicationNames]}
           id="application"
-          label={<Trans>Application</Trans>}
+          label={t`Application`}
           mb="sm"
           onChange={(event) => {
             attach.selectApplication(event.currentTarget.value);

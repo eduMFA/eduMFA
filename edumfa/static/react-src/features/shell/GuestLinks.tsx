@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NavLink } from "@mantine/core";
 import { useLocation } from "react-router-dom";
 
@@ -11,6 +11,8 @@ export interface GuestLinksProps {
 
 /** The menu entries of a visitor without a session: register and login. */
 export function GuestLinks({ canRegister }: GuestLinksProps) {
+  const { t } = useLingui();
+
   const { pathname } = useLocation();
 
   return (
@@ -20,7 +22,7 @@ export function GuestLinks({ canRegister }: GuestLinksProps) {
           active={pathname.startsWith("/register")}
           component="a"
           href={hashHref("/register")}
-          label={<Trans>Register</Trans>}
+          label={t`Register`}
           style={{ borderRadius: "var(--mantine-radius-md)", width: "auto" }}
         />
       ) : null}
@@ -28,7 +30,7 @@ export function GuestLinks({ canRegister }: GuestLinksProps) {
         active={pathname === "/" || pathname.startsWith("/login")}
         component="a"
         href={hashHref("/login")}
-        label={<Trans>Login</Trans>}
+        label={t`Login`}
         style={{ borderRadius: "var(--mantine-radius-md)", width: "auto" }}
       />
     </>

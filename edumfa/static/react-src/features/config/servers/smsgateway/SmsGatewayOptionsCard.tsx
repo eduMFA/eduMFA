@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { KeyValueTable } from "./KeyValueTable";
 import { Card } from "@/components/layout/Card";
@@ -18,7 +18,7 @@ export function SmsGatewayOptionsCard({
   const { t } = useLingui();
 
   return (
-    <Card flush title={<Trans>Options</Trans>}>
+    <Card flush title={t`Options`}>
       <KeyValueTable
         entries={entries}
         idPrefix="option"

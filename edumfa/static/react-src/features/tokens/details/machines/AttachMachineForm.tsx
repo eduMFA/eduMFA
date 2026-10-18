@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, NativeSelect } from "@mantine/core";
 import { IconLink } from "@tabler/icons-react";
 
@@ -22,6 +22,8 @@ export function AttachMachineForm({
   onAttached,
   serial
 }: AttachMachineFormProps) {
+  const { t } = useLingui();
+
   const {
     application,
     attach,
@@ -56,16 +58,16 @@ export function AttachMachineForm({
             loading={attach.isPending}
             type="submit"
           >
-            <Trans>Attach Machine</Trans>
+            {t`Attach Machine`}
           </Button>
         }
-        title={<Trans>Attach to a new Machine</Trans>}
+        title={t`Attach to a new Machine`}
       >
         <ErrorAlert error={attach.error} />
         <NativeSelect
           data={[{ label: "", value: "" }, ...applicationNames]}
           id="attachApplication"
-          label={<Trans>Application</Trans>}
+          label={t`Application`}
           mb="sm"
           onChange={(event) => {
             selectApplication(event.currentTarget.value);

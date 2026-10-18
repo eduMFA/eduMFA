@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table, Text } from "@mantine/core";
 
 import {
@@ -27,10 +27,12 @@ export function TypedOptionsTable({
   options,
   values
 }: TypedOptionsTableProps) {
+  const { t } = useLingui();
+
   if (options.length === 0) {
     return (
       <Text c="dimmed" size="sm">
-        <Trans>No options available.</Trans>
+        {t`No options available.`}
       </Text>
     );
   }

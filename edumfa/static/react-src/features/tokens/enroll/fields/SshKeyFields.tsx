@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Textarea } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -10,13 +10,11 @@ export function SshKeyFields({ form, onChange }: TokenTypeFieldsProps) {
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <Textarea
         autosize
         id="sshkey"
-        label={<Trans>SSH public Key</Trans>}
+        label={t`SSH public Key`}
         mb="sm"
         minRows={5}
         onChange={(event) => {

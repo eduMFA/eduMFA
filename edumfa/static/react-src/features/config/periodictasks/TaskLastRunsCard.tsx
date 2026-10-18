@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table, Text } from "@mantine/core";
 
 import type { PeriodicTask } from "@/api/periodicTasks";
@@ -6,20 +6,18 @@ import { Card } from "@/components/layout/Card";
 
 /** Read-only list of the last run per node and the time of the last definition update. */
 export function TaskLastRunsCard({ task }: { task: PeriodicTask }) {
+  const { t } = useLingui();
+
   const runs = Object.entries(task.last_runs);
 
   return (
-    <Card title={<Trans>Recorded Last Runs</Trans>}>
+    <Card title={t`Recorded Last Runs`}>
       {runs.length ? (
         <Table>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>
-                <Trans>Node</Trans>
-              </Table.Th>
-              <Table.Th>
-                <Trans>Last Run</Trans>
-              </Table.Th>
+              <Table.Th>{t`Node`}</Table.Th>
+              <Table.Th>{t`Last Run`}</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -32,13 +30,11 @@ export function TaskLastRunsCard({ task }: { task: PeriodicTask }) {
           </Table.Tbody>
         </Table>
       ) : (
-        <Text c="dimmed">
-          <Trans>(none)</Trans>
-        </Text>
+        <Text c="dimmed">{t`(none)`}</Text>
       )}
 
       <Text size="sm" mt="md">
-        <Trans>Last Definition Update</Trans>: {task.last_update}
+        {t`Last Definition Update`}: {task.last_update}
       </Text>
     </Card>
   );

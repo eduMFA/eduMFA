@@ -60,7 +60,7 @@ export function LockScreenDialog() {
       closeOnEscape={false}
       onClose={() => undefined}
       opened={isLocked}
-      title={<Trans>eduMFA UI is locked</Trans>}
+      title={t`eduMFA UI is locked`}
       withCloseButton={false}
     >
       {challenge ? (
@@ -97,7 +97,7 @@ export function LockScreenDialog() {
             autoComplete="current-password"
             autoFocus
             id="lockPassword"
-            label={<Trans>Password</Trans>}
+            label={t`Password`}
             mb="md"
             onChange={(event) => {
               setPassword(event.currentTarget.value);
@@ -111,7 +111,7 @@ export function LockScreenDialog() {
             loading={authenticateMutation.isPending}
             type="submit"
           >
-            <Trans>Log In</Trans>
+            {t`Log In`}
           </Button>
         </form>
       )}

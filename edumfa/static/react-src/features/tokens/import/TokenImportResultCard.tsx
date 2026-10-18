@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table } from "@mantine/core";
 
 import { type TokenImportResult } from "@/api/tokens";
@@ -14,26 +14,24 @@ export function TokenImportResultCard({
   result,
   uploadedFile
 }: TokenImportResultCardProps) {
+  const { t } = useLingui();
+
   return (
-    <Card flush title={<Trans>Import result</Trans>}>
+    <Card flush title={t`Import result`}>
       <Table verticalSpacing="sm">
         <Table.Tbody>
           <Table.Tr>
             <Table.Td fw={600} w="40%">
-              <Trans>Uploaded File</Trans>
+              {t`Uploaded File`}
             </Table.Td>
             <Table.Td data-field="uploadedFile">{uploadedFile}</Table.Td>
           </Table.Tr>
           <Table.Tr>
-            <Table.Td fw={600}>
-              <Trans>Uploaded Tokens</Trans>
-            </Table.Td>
+            <Table.Td fw={600}>{t`Uploaded Tokens`}</Table.Td>
             <Table.Td data-field="uploadedTokens">{result.n_imported}</Table.Td>
           </Table.Tr>
           <Table.Tr>
-            <Table.Td fw={600}>
-              <Trans>Skipped Tokens</Trans>
-            </Table.Td>
+            <Table.Td fw={600}>{t`Skipped Tokens`}</Table.Td>
             <Table.Td data-field="skippedTokens">{result.n_not_imported}</Table.Td>
           </Table.Tr>
         </Table.Tbody>

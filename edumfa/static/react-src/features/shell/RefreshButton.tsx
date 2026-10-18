@@ -1,10 +1,12 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 /** Port of the menu's refresh button: every query is fetched again. */
 export function RefreshButton() {
+  const { t } = useLingui();
+
   const queryClient = useQueryClient();
 
   return (
@@ -16,7 +18,7 @@ export function RefreshButton() {
       size="sm"
       variant="subtle"
     >
-      <Trans>Refresh</Trans>
+      {t`Refresh`}
     </Button>
   );
 }

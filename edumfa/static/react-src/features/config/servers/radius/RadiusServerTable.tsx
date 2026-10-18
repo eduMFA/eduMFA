@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -38,9 +38,11 @@ export function RadiusServerTable({
   isLoading,
   onDelete
 }: RadiusServerTableProps) {
+  const { t } = useLingui();
+
   const columns: DataTableColumn<RadiusServerRow>[] = [
     {
-      header: <Trans>Identifier</Trans>,
+      header: t`Identifier`,
       key: "identifier",
       render: (row) => (
         <Anchor
@@ -52,23 +54,23 @@ export function RadiusServerTable({
       )
     },
     {
-      header: <Trans>IP/FQDN</Trans>,
+      header: t`IP/FQDN`,
       key: "server",
       render: (row) => `${row.server}:${String(row.port ?? "")}`
     },
     {
-      header: <Trans>Dictionary</Trans>,
+      header: t`Dictionary`,
       key: "dictionary",
       render: (row) => row.dictionary
     },
     {
-      header: <Trans>Description</Trans>,
+      header: t`Description`,
       key: "description",
       render: (row) => truncate(row.description ?? "", 20)
     },
     {
       align: "right",
-      header: <Trans>Actions</Trans>,
+      header: t`Actions`,
       key: "actions",
       render: (row) =>
         canWrite ? (
@@ -82,7 +84,7 @@ export function RadiusServerTable({
             size="xs"
             variant="light"
           >
-            <Trans>Delete</Trans>
+            {t`Delete`}
           </Button>
         ) : null
     }
@@ -90,13 +92,11 @@ export function RadiusServerTable({
 
   return (
     <Card flush>
-      {isLoading ? (
-        <LoadingIndicator label={<Trans>Loading RADIUS servers</Trans>} />
-      ) : null}
+      {isLoading ? <LoadingIndicator label={t`Loading RADIUS servers`} /> : null}
       <DataTable
         columns={columns}
         data={toRows(data)}
-        emptyMessage={<Trans>No RADIUS servers defined.</Trans>}
+        emptyMessage={t`No RADIUS servers defined.`}
         getRowKey={(row) => row.identifier}
         id="tableradiusservers"
         isLoading={data === undefined}

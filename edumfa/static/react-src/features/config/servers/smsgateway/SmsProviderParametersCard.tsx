@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Text } from "@mantine/core";
 
 import { SmsProviderParameterField } from "./SmsProviderParameterField";
@@ -18,8 +18,10 @@ export function SmsProviderParametersCard({
   parameters,
   values
 }: SmsProviderParametersCardProps) {
+  const { t } = useLingui();
+
   return (
-    <Card title={<Trans>Parameters</Trans>}>
+    <Card title={t`Parameters`}>
       {Object.entries(parameters).map(([name, parameter]) => (
         <SmsProviderParameterField
           key={name}
@@ -33,7 +35,7 @@ export function SmsProviderParametersCard({
       ))}
       {Object.keys(parameters).length === 0 ? (
         <Text c="dimmed" size="sm">
-          <Trans>This provider module has no parameters.</Trans>
+          {t`This provider module has no parameters.`}
         </Text>
       ) : null}
     </Card>

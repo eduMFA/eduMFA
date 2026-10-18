@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, PasswordInput } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -56,14 +56,8 @@ export function TokenAssignPage() {
   return (
     <SidebarLayout sidebar={<TokenSidebar activeItem="assign" />}>
       <PageHeader
-        subtitle={
-          <Trans>
-            If you were handed a token device, you may connect this device to your
-            account. Turn over the token, you may find a serial number printed on the
-            token. Please enter this serial number and make up a token pin.
-          </Trans>
-        }
-        title={<Trans>Assign a new token</Trans>}
+        subtitle={t`If you were handed a token device, you may connect this device to your account. Turn over the token, you may find a serial number printed on the token. Please enter this serial number and make up a token pin.`}
+        title={t`Assign a new token`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
@@ -88,10 +82,10 @@ export function TokenAssignPage() {
               loading={assignMutation.isPending}
               type="submit"
             >
-              <Trans>Assign Token</Trans>
+              {t`Assign Token`}
             </Button>
           }
-          title={<Trans>Token</Trans>}
+          title={t`Token`}
         >
           <SerialLookupField
             id="assignSerial"
@@ -104,7 +98,7 @@ export function TokenAssignPage() {
           <PasswordInput
             autoComplete="new-password"
             id="assignPin"
-            label={<Trans>PIN/Password</Trans>}
+            label={t`PIN/Password`}
             mb="sm"
             onChange={(event) => {
               setPin(event.currentTarget.value);

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert, Anchor, Button, Stack, Text } from "@mantine/core";
 import { IconCircleCheck, IconEyeOff, IconSearch } from "@tabler/icons-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -21,6 +21,8 @@ import { hashHref } from "@/lib/hashbang";
  * password is shown once.
  */
 export function TokenLostPage() {
+  const { t } = useLingui();
+
   const { serial = "" } = useParams();
   const apiClient = useApiClient();
   const queryClient = useQueryClient();
@@ -45,7 +47,7 @@ export function TokenLostPage() {
             leftSection={<IconSearch size={16} />}
             variant="default"
           >
-            <Trans>View token in Audit log</Trans>
+            {t`View token in Audit log`}
           </Button>
         }
         title={<Trans>Token {serial} is lost?</Trans>}
@@ -65,24 +67,17 @@ export function TokenLostPage() {
                 lostMutation.mutate();
               }}
             >
-              <Trans>Mark the token as lost</Trans>
+              {t`Mark the token as lost`}
             </Button>
           )
         }
       >
         <Stack gap="sm">
           <Text size="sm">
-            <Trans>
-              If the token is lost, you can enroll a temporary password based token and
-              give the password to the user. The OTP PIN of the old token is still the
-              same.
-            </Trans>
+            {t`If the token is lost, you can enroll a temporary password based token and give the password to the user. The OTP PIN of the old token is still the same.`}
           </Text>
           <Text size="sm">
-            <Trans>
-              The user will have to authenticate with the old OTP PIN he knows and this
-              newly generated password.
-            </Trans>
+            {t`The user will have to authenticate with the old OTP PIN he knows and this newly generated password.`}
           </Text>
           <Text size="sm">
             <Trans>
@@ -102,7 +97,7 @@ export function TokenLostPage() {
           icon={<IconCircleCheck size={18} />}
           mb="md"
           role="status"
-          title={<Trans>The token was marked lost successfully.</Trans>}
+          title={t`The token was marked lost successfully.`}
           variant="light"
         >
           <Stack gap="xs">
@@ -126,9 +121,7 @@ export function TokenLostPage() {
                 </Text>
               </Trans>
             </Text>
-            <Text size="sm">
-              <Trans>The password can not be shown again, later!</Trans>
-            </Text>
+            <Text size="sm">{t`The password can not be shown again, later!`}</Text>
             <Text size="sm">
               <Trans>The token is valid till {result.end_date}.</Trans>
             </Text>

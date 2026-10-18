@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -24,6 +24,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** Port of `config.smsgateway.list.html` and the list part of `smsgatewayController`. */
 export function SmsGatewayListPage() {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const queryClient = useQueryClient();
   const { isAuthenticated, rights } = useAuth();
@@ -45,7 +47,7 @@ export function SmsGatewayListPage() {
 
   const columns: DataTableColumn<SmsGateway>[] = [
     {
-      header: <Trans>Name</Trans>,
+      header: t`Name`,
       key: "name",
       render: (gateway) => (
         <Anchor
@@ -57,18 +59,18 @@ export function SmsGatewayListPage() {
       )
     },
     {
-      header: <Trans>Description</Trans>,
+      header: t`Description`,
       key: "description",
       render: (gateway) => gateway.description
     },
     {
-      header: <Trans>Providermodule</Trans>,
+      header: t`Providermodule`,
       key: "providermodule",
       render: (gateway) => gateway.providermodule
     },
     {
       align: "right",
-      header: <Trans>Actions</Trans>,
+      header: t`Actions`,
       key: "actions",
       render: (gateway) =>
         canWrite ? (
@@ -89,7 +91,7 @@ export function SmsGatewayListPage() {
             size="xs"
             variant="light"
           >
-            <Trans>Delete</Trans>
+            {t`Delete`}
           </Button>
         ) : null
     }
@@ -106,11 +108,11 @@ export function SmsGatewayListPage() {
               leftSection={<IconPlus size={16} />}
               variant="light"
             >
-              <Trans>Create new SMS Gateway definition</Trans>
+              {t`Create new SMS Gateway definition`}
             </Button>
           ) : null
         }
-        title={<Trans>SMS Gateways</Trans>}
+        title={t`SMS Gateways`}
       />
 
       {!isAuthenticated ? (
@@ -122,12 +124,12 @@ export function SmsGatewayListPage() {
 
           <Card flush>
             {gatewaysQuery.isLoading ? (
-              <LoadingIndicator label={<Trans>Loading SMS gateways</Trans>} />
+              <LoadingIndicator label={t`Loading SMS gateways`} />
             ) : null}
             <DataTable
               columns={columns}
               data={gatewaysQuery.data ?? []}
-              emptyMessage={<Trans>No SMS gateways defined.</Trans>}
+              emptyMessage={t`No SMS gateways defined.`}
               getRowKey={(gateway) => String(gateway.id)}
               id="tablesmsgateways"
               isLoading={gatewaysQuery.data === undefined}

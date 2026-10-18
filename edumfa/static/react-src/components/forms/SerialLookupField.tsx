@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Autocomplete, Loader } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, type ReactNode } from "react";
@@ -72,7 +72,7 @@ export function SerialLookupField({
       description={noResults ? t`No serial found` : undefined}
       filter={({ options }) => options}
       id={id}
-      label={label ?? <Trans>Serial</Trans>}
+      label={label ?? t`Serial`}
       mb="sm"
       onChange={onChange}
       placeholder={placeholder}

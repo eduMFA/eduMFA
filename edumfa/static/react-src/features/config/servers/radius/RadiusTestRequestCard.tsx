@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import type {
   RadiusServerFieldSetter,
@@ -23,10 +23,12 @@ export function RadiusTestRequestCard({
   setValue,
   values
 }: RadiusTestRequestCardProps) {
+  const { t } = useLingui();
+
   return (
     <Card>
       <TestCredentialsFields
-        buttonLabel={<Trans>Send test RADIUS request</Trans>}
+        buttonLabel={t`Send test RADIUS request`}
         disabled={!canTest}
         isPending={isPending}
         onPasswordChange={(value) => {

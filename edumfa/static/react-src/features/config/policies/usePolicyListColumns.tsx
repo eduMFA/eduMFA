@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Text } from "@mantine/core";
 import type { Dispatch, SetStateAction } from "react";
 
@@ -47,7 +47,7 @@ export function usePolicyListColumns({
   return [
     {
       key: "priority",
-      header: <Trans>Priority</Trans>,
+      header: t`Priority`,
       sortKey: "priority",
       render: (policy) =>
         canWrite ? (
@@ -70,7 +70,7 @@ export function usePolicyListColumns({
     },
     {
       key: "active",
-      header: <Trans>Active</Trans>,
+      header: t`Active`,
       sortKey: "active",
       render: (policy) => (
         <ActiveToggleBadge
@@ -92,7 +92,7 @@ export function usePolicyListColumns({
     },
     {
       key: "name",
-      header: <Trans>Policy Name</Trans>,
+      header: t`Policy Name`,
       sortKey: "name",
       filter: filter("name", t`Filter policy name`),
       render: (policy) => (
@@ -106,14 +106,14 @@ export function usePolicyListColumns({
     },
     {
       key: "scope",
-      header: <Trans>Scope</Trans>,
+      header: t`Scope`,
       sortKey: "scope",
       filter: filter("scope", t`Filter scope`),
       render: (policy) => policy.scope
     },
     {
       key: "action",
-      header: <Trans>Action</Trans>,
+      header: t`Action`,
       sortKey: "action",
       filter: filter("action", t`Filter actions`),
       render: (policy) => (
@@ -124,22 +124,22 @@ export function usePolicyListColumns({
     },
     {
       key: "realm",
-      header: <Trans>Realm</Trans>,
+      header: t`Realm`,
       render: (policy) => policy.realm.join(", ")
     },
     {
       key: "user",
-      header: <Trans>User</Trans>,
+      header: t`User`,
       render: (policy) => policy.user.join(", ")
     },
     {
       key: "resolver",
-      header: <Trans>Resolver</Trans>,
+      header: t`Resolver`,
       render: (policy) => policy.resolver.join(", ")
     },
     {
       key: "client",
-      header: <Trans>Client</Trans>,
+      header: t`Client`,
       render: (policy) => policy.client.join(", ")
     },
     {

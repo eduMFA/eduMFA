@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -72,7 +72,7 @@ export function SystemConfigPage() {
 
   return (
     <SystemLayout activeItem="system">
-      <PageHeader title={<Trans>System Config</Trans>} />
+      <PageHeader title={t`System Config`} />
 
       {!isAuthenticated ? (
         <LoginRequiredAlert />
@@ -103,7 +103,7 @@ export function SystemConfigPage() {
               {canWrite ? (
                 <Group justify="center">
                   <Button loading={saveMutation.isPending} type="submit">
-                    <Trans>Save System Config</Trans>
+                    {t`Save System Config`}
                   </Button>
                 </Group>
               ) : null}

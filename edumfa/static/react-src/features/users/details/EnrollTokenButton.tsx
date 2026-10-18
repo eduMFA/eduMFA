@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -9,6 +9,8 @@ export interface EnrollTokenButtonProps {
 
 /** Links to the enrollment wizard; without an enroll right it is inert. */
 export function EnrollTokenButton({ canEnroll, href }: EnrollTokenButtonProps) {
+  const { t } = useLingui();
+
   return (
     <Button
       aria-disabled={!canEnroll}
@@ -26,7 +28,7 @@ export function EnrollTokenButton({ canEnroll, href }: EnrollTokenButtonProps) {
       }
       size="sm"
     >
-      <Trans>Enroll New Token</Trans>
+      {t`Enroll New Token`}
     </Button>
   );
 }

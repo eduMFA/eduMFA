@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect } from "@mantine/core";
 
 export interface RealmSelectProps {
@@ -9,11 +9,13 @@ export interface RealmSelectProps {
 
 /** The realm selector in the user list sidebar. */
 export function RealmSelect({ onChange, realmNames, value }: RealmSelectProps) {
+  const { t } = useLingui();
+
   return (
     <NativeSelect
       data={realmNames}
       id="realmSelect"
-      label={<Trans>Select Realm</Trans>}
+      label={t`Select Realm`}
       onChange={(event) => {
         onChange(event.currentTarget.value);
       }}

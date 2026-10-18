@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert, Anchor, Button, Group } from "@mantine/core";
 import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 
@@ -17,6 +17,8 @@ export function SerialLookupResultAlert({
   result,
   searchedOtp
 }: SerialLookupResultAlertProps) {
+  const { t } = useLingui();
+
   if (result?.serial) {
     return (
       <Alert
@@ -38,7 +40,7 @@ export function SerialLookupResultAlert({
         </Trans>
         <Group mt="sm">
           <Button onClick={onClose} size="xs" variant="default">
-            <Trans>OK</Trans>
+            {t`OK`}
           </Button>
         </Group>
       </Alert>
@@ -56,7 +58,7 @@ export function SerialLookupResultAlert({
       <Trans>No Serial number could be found for OTP value {searchedOtp}.</Trans>
       <Group mt="sm">
         <Button onClick={onClose} size="xs" variant="default">
-          <Trans>OK</Trans>
+          {t`OK`}
         </Button>
       </Group>
     </Alert>

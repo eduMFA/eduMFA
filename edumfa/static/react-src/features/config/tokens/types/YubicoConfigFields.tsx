@@ -12,11 +12,7 @@ export function YubicoConfigFields({ form, onChange }: TokenConfigFieldsProps) {
   return (
     <>
       <HelpText>
-        <Trans>
-          The Yubico Token is a Yubikey that is registered with the YubiCloud service.
-          The Yubikey emits a 44 character one time password. The first 12 characters
-          are a unique ID which is used to bind the device to the user.
-        </Trans>
+        {t`The Yubico Token is a Yubikey that is registered with the YubiCloud service. The Yubikey emits a 44 character one time password. The first 12 characters are a unique ID which is used to bind the device to the user.`}
       </HelpText>
       <HelpText>
         <Trans>
@@ -37,7 +33,7 @@ export function YubicoConfigFields({ form, onChange }: TokenConfigFieldsProps) {
       <Stack gap="sm">
         <TextInput
           id="yubicoId"
-          label={<Trans>API client ID</Trans>}
+          label={t`API client ID`}
           onChange={(event) => {
             onChange({ "yubico.id": event.currentTarget.value });
           }}
@@ -47,7 +43,7 @@ export function YubicoConfigFields({ form, onChange }: TokenConfigFieldsProps) {
         />
         <TextInput
           id="yubicoKey"
-          label={<Trans>API Key</Trans>}
+          label={t`API Key`}
           onChange={(event) => {
             onChange({ "yubico.secret": event.currentTarget.value });
           }}
@@ -57,7 +53,7 @@ export function YubicoConfigFields({ form, onChange }: TokenConfigFieldsProps) {
         />
         <TextInput
           id="yubicoURL"
-          label={<Trans>Yubico URL</Trans>}
+          label={t`Yubico URL`}
           onChange={(event) => {
             onChange({ "yubico.url": event.currentTarget.value });
           }}

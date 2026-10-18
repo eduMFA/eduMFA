@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NavLink, Stack } from "@mantine/core";
 import { IconDownload, IconTool } from "@tabler/icons-react";
 import type { PropsWithChildren } from "react";
@@ -27,6 +27,8 @@ export function SystemLayout({
   activeItem,
   children
 }: PropsWithChildren<SystemLayoutProps>) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
 
   return (
@@ -37,7 +39,7 @@ export function SystemLayout({
             active={activeItem === "system"}
             component="a"
             href={hashHref("/config/system/edit")}
-            label={<Trans>System Config</Trans>}
+            label={t`System Config`}
             leftSection={<IconTool size={16} />}
           />
           {hasRight(rights, "system_documentation") ? (
@@ -45,7 +47,7 @@ export function SystemLayout({
               active={activeItem === "documentation"}
               component="a"
               href={hashHref("/config/system/documentation")}
-              label={<Trans>Get System Documentation</Trans>}
+              label={t`Get System Documentation`}
               leftSection={<IconDownload size={16} />}
             />
           ) : null}

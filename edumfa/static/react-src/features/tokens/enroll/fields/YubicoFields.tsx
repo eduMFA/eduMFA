@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { TextInput } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -9,12 +9,10 @@ export function YubicoFields({ form, onChange }: TokenTypeFieldsProps) {
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <TextInput
         id="yubicoID"
-        label={<Trans>Yubikey Identifier</Trans>}
+        label={t`Yubikey Identifier`}
         mb="sm"
         onChange={(event) => {
           onChange({ yubicoTokenId: event.currentTarget.value });

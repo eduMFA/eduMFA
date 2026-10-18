@@ -68,7 +68,7 @@ export function PinChangePage() {
       <ErrorAlert error={changePinMutation.error} />
       <Paper p="xl" radius="md" withBorder>
         <Title mb="md" order={2} size="h3" ta="center">
-          <Trans>Change PIN</Trans>
+          {t`Change PIN`}
         </Title>
         <Text c="dimmed" mb="md" size="sm">
           <Trans>
@@ -90,7 +90,7 @@ export function PinChangePage() {
             autoComplete="new-password"
             autoFocus
             id="pin1"
-            label={<Trans>New PIN</Trans>}
+            label={t`New PIN`}
             mb="sm"
             onChange={(event) => {
               setPin(event.currentTarget.value);
@@ -102,7 +102,7 @@ export function PinChangePage() {
             autoComplete="new-password"
             error={mismatch && t`The PINs do not match.`}
             id="pin2"
-            label={<Trans>Repeat new PIN</Trans>}
+            label={t`Repeat new PIN`}
             mb="md"
             onChange={(event) => {
               setPinRepeat(event.currentTarget.value);
@@ -116,7 +116,7 @@ export function PinChangePage() {
             loading={changePinMutation.isPending}
             type="submit"
           >
-            <Trans>Change PIN</Trans>
+            {t`Change PIN`}
           </Button>
         </form>
       </Paper>

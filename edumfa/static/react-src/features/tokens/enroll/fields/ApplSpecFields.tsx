@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, NativeSelect, Stack, Text, TextInput } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -16,21 +16,19 @@ export function ApplSpecFields({ form, lookups, onChange }: TokenTypeFieldsProps
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <Stack gap={4} mb="sm">
         <Checkbox
           checked={form.genkey}
           id="generate"
-          label={<Trans>Generate the static password on the Server</Trans>}
+          label={t`Generate the static password on the Server`}
           onChange={(event) => {
             onChange({ genkey: event.currentTarget.checked });
           }}
         />
         {form.genkey ? (
           <Text c="dimmed" size="sm">
-            <Trans>The server will create the static password.</Trans>
+            {t`The server will create the static password.`}
           </Text>
         ) : null}
       </Stack>
@@ -38,7 +36,7 @@ export function ApplSpecFields({ form, lookups, onChange }: TokenTypeFieldsProps
         <TextInput
           autoComplete="off"
           id="otpkey"
-          label={<Trans>Application specific password</Trans>}
+          label={t`Application specific password`}
           mb="sm"
           onChange={(event) => {
             onChange({ otpkey: event.currentTarget.value });
@@ -50,7 +48,7 @@ export function ApplSpecFields({ form, lookups, onChange }: TokenTypeFieldsProps
       <NativeSelect
         data={serviceOptions}
         id="service_id"
-        label={<Trans>Service ID</Trans>}
+        label={t`Service ID`}
         mb="sm"
         onChange={(event) => {
           onChange({ serviceId: event.currentTarget.value });

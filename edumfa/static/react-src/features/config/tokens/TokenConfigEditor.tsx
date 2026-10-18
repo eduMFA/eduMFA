@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 
 import type { TokenConfigTypeKey } from "./tokenConfigForm";
@@ -16,6 +16,8 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
 
 /** Loads the system config and shows the form of one token type next to the sidebar. */
 export function TokenConfigEditor({ tokenType }: { tokenType: TokenConfigTypeKey }) {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
   const configQuery = useQuery({
@@ -24,11 +26,7 @@ export function TokenConfigEditor({ tokenType }: { tokenType: TokenConfigTypeKey
     queryKey: configQueryKeys.system
   });
   const label =
-    tokenType === "question" ? (
-      <Trans>Questionnaire</Trans>
-    ) : (
-      tokenTypes[tokenType].label
-    );
+    tokenType === "question" ? t`Questionnaire` : tokenTypes[tokenType].label;
 
   return (
     <SidebarLayout sidebar={<TokenConfigSidebar tokenType={tokenType} />}>

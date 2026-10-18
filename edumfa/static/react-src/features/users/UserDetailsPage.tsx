@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Text } from "@mantine/core";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -63,15 +63,10 @@ export function UserDetailsPage() {
       <ErrorAlert error={customAttributes.deleteMutation.error} />
       <ErrorAlert error={assignment.mutation.error} />
 
-      {userQuery.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading user</Trans>} />
-      ) : null}
+      {userQuery.isLoading ? <LoadingIndicator label={t`Loading user`} /> : null}
 
       {userQuery.isSuccess && !userDetail ? (
-        <ErrorAlert
-          error={new Error(t`User not found.`)}
-          title={<Trans>User not found.</Trans>}
-        />
+        <ErrorAlert error={new Error(t`User not found.`)} title={t`User not found.`} />
       ) : null}
 
       {userDetail ? (

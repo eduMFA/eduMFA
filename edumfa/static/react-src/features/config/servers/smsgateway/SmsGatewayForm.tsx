@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 
@@ -25,6 +25,8 @@ export interface SmsGatewayFormProps {
  * tables the module allows. Saving navigates back to the list.
  */
 export function SmsGatewayForm({ existing, providers }: SmsGatewayFormProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const canWrite = hasRight(rights, "smsgateway_write");
   const { deleteEntry, setEntry, setValue, values } = useSmsGatewayValues(
@@ -42,7 +44,7 @@ export function SmsGatewayForm({ existing, providers }: SmsGatewayFormProps) {
       loading={saveMutation.isPending}
       type="submit"
     >
-      <Trans>Save SMS gateway</Trans>
+      {t`Save SMS gateway`}
     </Button>
   ) : null;
 
@@ -63,7 +65,7 @@ export function SmsGatewayForm({ existing, providers }: SmsGatewayFormProps) {
           existing ? (
             <Trans>Edit SMS gateway {values.name}</Trans>
           ) : (
-            <Trans>Create a new SMS gateway</Trans>
+            t`Create a new SMS gateway`
           )
         }
       />

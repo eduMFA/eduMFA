@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 
 export interface ResolverConnectionActionsProps {
@@ -23,11 +23,13 @@ export function ResolverConnectionActions({
   onTest,
   showQuickTest
 }: ResolverConnectionActionsProps) {
+  const { t } = useLingui();
+
   return (
     <Group justify="center">
       {showQuickTest ? (
         <Button disabled={disabled} onClick={onQuickTest} type="button" variant="light">
-          <Trans>Quick Resolver Test</Trans>
+          {t`Quick Resolver Test`}
         </Button>
       ) : null}
       <Button
@@ -40,7 +42,7 @@ export function ResolverConnectionActions({
         <Trans>Test {label} Resolver</Trans>
       </Button>
       <Button disabled={disabled} loading={isSaving} type="submit">
-        <Trans>Save resolver</Trans>
+        {t`Save resolver`}
       </Button>
     </Group>
   );

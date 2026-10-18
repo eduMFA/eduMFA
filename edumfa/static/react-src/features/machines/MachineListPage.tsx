@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import { MachineSidebar } from "./MachineSidebar";
 import { MACHINE_PAGE_SIZE, useMachineList } from "./useMachineList";
@@ -14,6 +14,8 @@ import { DataTable } from "@/components/tables/DataTable";
 import { Pagination } from "@/components/tables/Pagination";
 
 export function MachineListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated } = useAuth();
   const list = useMachineList();
   const { allMachines, filters, machinesQuery } = list;
@@ -32,7 +34,7 @@ export function MachineListPage() {
         subtitle={
           filters.resolver ? <Trans>Machine Resolver {filters.resolver}</Trans> : null
         }
-        title={<Trans>Machines</Trans>}
+        title={t`Machines`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
@@ -40,7 +42,7 @@ export function MachineListPage() {
 
       <Card flush>
         {machinesQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading machines</Trans>} />
+          <LoadingIndicator label={t`Loading machines`} />
         ) : null}
 
         <Pagination
@@ -54,7 +56,7 @@ export function MachineListPage() {
         <DataTable
           columns={columns}
           data={list.visibleMachines}
-          emptyMessage={<Trans>No machines found.</Trans>}
+          emptyMessage={t`No machines found.`}
           getRowKey={(machine) => `${machine.resolver_name}-${machine.id}`}
           id="tablemachinelist"
           isLoading={machinesQuery.data === undefined}

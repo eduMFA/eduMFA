@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import type { DefinitionKind } from "./DefinitionLayout";
@@ -18,6 +18,8 @@ export function DefinitionDeleteButton({
   onConfirm: () => void;
   requestDelete: DeleteConfirmation["requestDelete"];
 }) {
+  const { t } = useLingui();
+
   return (
     <Button
       color="red"
@@ -29,16 +31,14 @@ export function DefinitionDeleteButton({
         requestDelete({
           identifier: name,
           question:
-            kind === "events" ? (
-              <Trans>Do you really want to delete this event?</Trans>
-            ) : (
-              <Trans>Do you really want to delete this periodic task?</Trans>
-            ),
+            kind === "events"
+              ? t`Do you really want to delete this event?`
+              : t`Do you really want to delete this periodic task?`,
           onConfirm
         });
       }}
     >
-      <Trans>Delete</Trans>
+      {t`Delete`}
     </Button>
   );
 }

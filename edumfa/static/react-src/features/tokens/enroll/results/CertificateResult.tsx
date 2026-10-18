@@ -1,10 +1,12 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 
 import { type EnrolledTokenResultProps } from "./types";
 
 export function CertificateResult({ detail, rolloutState }: EnrolledTokenResultProps) {
+  const { t } = useLingui();
+
   const certificateHref = detail.certificate
     ? `data:application/x-pem-file;charset=utf-8,${encodeURIComponent(detail.certificate)}`
     : null;
@@ -15,21 +17,16 @@ export function CertificateResult({ detail, rolloutState }: EnrolledTokenResultP
   return (
     <Stack gap="sm">
       {detail.certificate ? (
-        <Text size="sm">
-          <Trans>The certificate was enrolled successfully.</Trans>
-        </Text>
+        <Text size="sm">{t`The certificate was enrolled successfully.`}</Text>
       ) : null}
       {rolloutState === "pending" ? (
         <Text size="sm">
-          <Trans>
-            Your certificate request is taken under submission and waiting for
-            administrative approval.
-          </Trans>
+          {t`Your certificate request is taken under submission and waiting for administrative approval.`}
         </Text>
       ) : null}
       {rolloutState === "failed" ? (
         <Text c="red" size="sm">
-          <Trans>Your CSR to the certificate authority failed.</Trans>
+          {t`Your CSR to the certificate authority failed.`}
         </Text>
       ) : null}
       <Group gap="sm">
@@ -41,7 +38,7 @@ export function CertificateResult({ detail, rolloutState }: EnrolledTokenResultP
             leftSection={<IconDownload size={16} />}
             variant="default"
           >
-            <Trans>Download the certificate</Trans>
+            {t`Download the certificate`}
           </Button>
         ) : null}
         {pkcs12Href ? (
@@ -52,7 +49,7 @@ export function CertificateResult({ detail, rolloutState }: EnrolledTokenResultP
             leftSection={<IconDownload size={16} />}
             variant="default"
           >
-            <Trans>Download the PKCS12 file</Trans>
+            {t`Download the PKCS12 file`}
           </Button>
         ) : null}
       </Group>

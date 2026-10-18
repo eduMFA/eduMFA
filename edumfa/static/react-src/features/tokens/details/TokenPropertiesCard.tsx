@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table } from "@mantine/core";
 
 import { EditableValueRow } from "./EditableValueRow";
@@ -40,14 +40,14 @@ export function TokenPropertiesCard({
   const { setDescription, setProperties } = mutations;
 
   return (
-    <Card flush title={<Trans>Token details</Trans>}>
+    <Card flush title={t`Token details`}>
       <TokenPropertyErrorAlerts mutations={mutations} />
 
       <Table verticalSpacing="sm">
         <Table.Tbody>
           <Table.Tr>
             <Table.Td fw={600} w="25%">
-              <Trans>Type</Trans>
+              {t`Type`}
             </Table.Td>
             <Table.Td data-field="tokentype">{token.tokentype}</Table.Td>
             <Table.Td w="30%" />
@@ -64,7 +64,7 @@ export function TokenPropertiesCard({
             verifyCode={mutations.verifyCode}
           />
           <EditableValueRow
-            buttonLabel={<Trans>Set max fail</Trans>}
+            buttonLabel={t`Set max fail`}
             canEdit={hasRight(rights, "set")}
             hideButtons={hideButtons}
             id="maxfail"
@@ -80,7 +80,7 @@ export function TokenPropertiesCard({
           <FailCounterRow reset={mutations.reset} token={token} />
           <TokenCounterRows setProperties={setProperties} token={token} />
           <EditableValueRow
-            buttonLabel={<Trans>Set description</Trans>}
+            buttonLabel={t`Set description`}
             canEdit={
               hasRight(rights, "setdescription") || (isAdmin && hasRight(rights, "set"))
             }

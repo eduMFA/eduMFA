@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Box, SimpleGrid } from "@mantine/core";
 
 import { AdministrationCard } from "./AdministrationCard";
@@ -20,6 +20,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
  * template.
  */
 export function DashboardPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights } = useAuth();
   const canListTokens = isAuthenticated && hasRight(rights, "tokenlist");
   const canReadAudit = isAuthenticated && hasRight(rights, "auditlog");
@@ -34,7 +36,7 @@ export function DashboardPage() {
 
   return (
     <Box className="react-migration-shell">
-      <PageHeader title={<Trans>Dashboard</Trans>} />
+      <PageHeader title={t`Dashboard`} />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={data.firstError} />

@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/react/macro";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -11,6 +10,7 @@ import {
 } from "./enrollForm";
 import { EnrollFormCard } from "./EnrollFormCard";
 import { EnrollPageAlerts } from "./EnrollPageAlerts";
+import { EnrollPageTitle } from "./EnrollPageTitle";
 import { EnrollTokenLayout } from "./EnrollTokenLayout";
 import { useEnrollFormModel } from "./useEnrollFormModel";
 import { useEnrollSubmission } from "./useEnrollSubmission";
@@ -64,18 +64,12 @@ export function EnrollTokenForm({ mode }: EnrollTokenFormProps) {
     model.resolved.type !== "" &&
     model.errors.length === 0 &&
     !submission.isSubmitting;
-  const title =
-    mode === "rollover" ? (
-      <Trans>Rollover token {rolloverSerial}</Trans>
-    ) : mode === "wizard" ? (
-      <Trans>Token enrollment wizard</Trans>
-    ) : (
-      <Trans>Enroll a new token</Trans>
-    );
 
   return (
     <EnrollTokenLayout mode={mode}>
-      <PageHeader title={title} />
+      <PageHeader
+        title={<EnrollPageTitle mode={mode} rolloverSerial={rolloverSerial} />}
+      />
       <EnrollPageAlerts
         defaultTokenType={model.defaults.defaultTokenType}
         defaultTypeFallback={model.defaults.defaultTypeFallback}

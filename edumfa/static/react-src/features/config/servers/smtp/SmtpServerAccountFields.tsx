@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { PasswordInput, TextInput } from "@mantine/core";
 
 import type { SmtpServerFieldSetter, SmtpServerFormValues } from "./smtpServerValues";
@@ -13,17 +13,14 @@ export function SmtpServerAccountFields({
   setValue,
   values
 }: SmtpServerAccountFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <TextInput
-        description={
-          <Trans>
-            This is the email address of the sender. Usually this should be an email
-            address identifying your system.
-          </Trans>
-        }
+        description={t`This is the email address of the sender. Usually this should be an email address identifying your system.`}
         id="sender"
-        label={<Trans>Sender Email</Trans>}
+        label={t`Sender Email`}
         mb="sm"
         onChange={(event) => {
           setValue("sender", event.currentTarget.value);
@@ -34,13 +31,9 @@ export function SmtpServerAccountFields({
       />
       <TextInput
         autoComplete="off"
-        description={
-          <Trans>
-            If the SMTP server requires authentication you need to specify the user.
-          </Trans>
-        }
+        description={t`If the SMTP server requires authentication you need to specify the user.`}
         id="username"
-        label={<Trans>Username</Trans>}
+        label={t`Username`}
         mb="sm"
         onChange={(event) => {
           setValue("username", event.currentTarget.value);
@@ -51,7 +44,7 @@ export function SmtpServerAccountFields({
       <PasswordInput
         autoComplete="new-password"
         id="password"
-        label={<Trans>Password</Trans>}
+        label={t`Password`}
         mb="sm"
         onChange={(event) => {
           setValue("password", event.currentTarget.value);
@@ -61,7 +54,7 @@ export function SmtpServerAccountFields({
       />
       <TextInput
         id="description"
-        label={<Trans>Description</Trans>}
+        label={t`Description`}
         mb="sm"
         onChange={(event) => {
           setValue("description", event.currentTarget.value);

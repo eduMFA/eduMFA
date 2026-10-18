@@ -1,10 +1,12 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { getPeriodicTasks } from "@/api/periodicTasks";
 import { DefinitionList } from "@/features/config/automation/DefinitionList";
 import { taskRequest, readTaskForm } from "@/features/config/automation/definitionForm";
 import { taskDefinitionApi } from "@/features/config/automation/useDefinitionMutations";
 
 export function PeriodicTaskListPage() {
+  const { t } = useLingui();
+
   return (
     <DefinitionList
       kind="periodictasks"
@@ -14,22 +16,22 @@ export function PeriodicTaskListPage() {
       columns={[
         {
           key: "interval",
-          header: <Trans>Interval</Trans>,
+          header: t`Interval`,
           render: (task) => task.interval
         },
         {
           key: "taskmodule",
-          header: <Trans>Taskmodule</Trans>,
+          header: t`Taskmodule`,
           render: (task) => task.taskmodule
         },
         {
           key: "nodes",
-          header: <Trans>Nodes</Trans>,
+          header: t`Nodes`,
           render: (task) => task.nodes.join(", ")
         },
         {
           key: "options",
-          header: <Trans>Options</Trans>,
+          header: t`Options`,
           render: (task) =>
             Object.entries(task.options)
               .map(([key, value]) => `${key}=${value}`)

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, TextInput } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useState } from "react";
@@ -26,6 +26,8 @@ export function PasswdResolverForm({
   resolverName,
   storedData
 }: PasswdResolverFormProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const [form, setForm] = useState<PasswdFormState>(() => ({
     fileName: storedData ? toText(storedData.fileName) : "/etc/passwd",
@@ -66,7 +68,7 @@ export function PasswdResolverForm({
               loading={saveMutation.isPending}
               type="submit"
             >
-              <Trans>Save resolver</Trans>
+              {t`Save resolver`}
             </Button>
           ) : null
         }
@@ -80,7 +82,7 @@ export function PasswdResolverForm({
         />
         <TextInput
           id="resolverfile"
-          label={<Trans>File name</Trans>}
+          label={t`File name`}
           name="resolverfile"
           onChange={(event) => {
             const fileName = event.currentTarget.value;

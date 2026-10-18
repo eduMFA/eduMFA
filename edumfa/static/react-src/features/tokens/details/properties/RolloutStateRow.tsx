@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, Table, TextInput } from "@mantine/core";
 
 import type { TokenPropertyMutations } from "./useTokenPropertyMutations";
@@ -28,9 +28,7 @@ export function RolloutStateRow({
 
   return (
     <Table.Tr>
-      <Table.Td fw={600}>
-        <Trans>Rollout State</Trans>
-      </Table.Td>
+      <Table.Td fw={600}>{t`Rollout State`}</Table.Td>
       <Table.Td data-field="rollout_state">{rolloutState}</Table.Td>
       <Table.Td ta="right">
         {rolloutState === "verify" ? (
@@ -52,7 +50,7 @@ export function RolloutStateRow({
               }}
               size="xs"
             >
-              <Trans>Verify Token</Trans>
+              {t`Verify Token`}
             </Button>
           </Group>
         ) : null}

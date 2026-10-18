@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, NativeSelect, PasswordInput } from "@mantine/core";
 import { IconUserPlus } from "@tabler/icons-react";
 
@@ -52,10 +52,10 @@ export function AssignUserForm({ onRefresh, serial }: AssignUserFormProps) {
             loading={mutation.isPending}
             type="submit"
           >
-            <Trans>Assign User</Trans>
+            {t`Assign User`}
           </Button>
         }
-        title={<Trans>Assign User</Trans>}
+        title={t`Assign User`}
       >
         <ErrorAlert error={mutation.error} />
         <ErrorAlert error={realmsQuery.error} />
@@ -63,7 +63,7 @@ export function AssignUserForm({ onRefresh, serial }: AssignUserFormProps) {
           <NativeSelect
             data={realmNames}
             id="assignRealm"
-            label={<Trans>Realm</Trans>}
+            label={t`Realm`}
             mb="sm"
             onChange={(event) => {
               selectRealm(event.currentTarget.value);
@@ -81,7 +81,7 @@ export function AssignUserForm({ onRefresh, serial }: AssignUserFormProps) {
         <PasswordInput
           autoComplete="new-password"
           id="assignUserPin"
-          label={<Trans>PIN/Password</Trans>}
+          label={t`PIN/Password`}
           mb="sm"
           onChange={(event) => {
             setPin(event.currentTarget.value);

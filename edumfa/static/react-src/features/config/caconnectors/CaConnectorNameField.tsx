@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { TextInput } from "@mantine/core";
 import type { UseFormRegisterReturn } from "react-hook-form";
 
@@ -13,12 +13,14 @@ export function CaConnectorNameField({
   error,
   registration
 }: CaConnectorNameFieldProps) {
+  const { t } = useLingui();
+
   return (
     <TextInput
       autoFocus
       error={error}
       id="connectorname"
-      label={<Trans>Connector name</Trans>}
+      label={t`Connector name`}
       mb="md"
       placeholder="MyConnector1"
       required

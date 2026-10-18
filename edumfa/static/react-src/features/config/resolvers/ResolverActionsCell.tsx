@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 
@@ -20,6 +20,8 @@ export function ResolverActionsCell({
   onDelete,
   resolver
 }: ResolverActionsCellProps) {
+  const { t } = useLingui();
+
   return (
     <Group gap="xs" justify="flex-end" wrap="nowrap">
       {isResolverType(resolver.type) ? (
@@ -30,7 +32,7 @@ export function ResolverActionsCell({
           size="xs"
           variant="light"
         >
-          <Trans>Edit</Trans>
+          {t`Edit`}
         </Button>
       ) : null}
       {canDelete ? (
@@ -42,7 +44,7 @@ export function ResolverActionsCell({
           size="xs"
           variant="light"
         >
-          <Trans>Delete</Trans>
+          {t`Delete`}
         </Button>
       ) : null}
     </Group>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconRefresh, IconSearch, IconTrash } from "@tabler/icons-react";
 
@@ -21,6 +21,8 @@ export function TokenDetailsActions({
   serial,
   token
 }: TokenDetailsActionsProps) {
+  const { t } = useLingui();
+
   const { rights, settings } = useAuth();
   const canDelete = hasRight(rights, "delete");
   const rolloverHref =
@@ -42,7 +44,7 @@ export function TokenDetailsActions({
           leftSection={<IconSearch size={16} />}
           variant="default"
         >
-          <Trans>View token in Audit log</Trans>
+          {t`View token in Audit log`}
         </Button>
       ) : null}
       {rolloverHref ? (
@@ -54,7 +56,7 @@ export function TokenDetailsActions({
           leftSection={<IconRefresh size={16} />}
           variant="light"
         >
-          <Trans>Rollover</Trans>
+          {t`Rollover`}
         </Button>
       ) : null}
       {token && (canDelete || !settings.hideButtons) ? (
@@ -66,7 +68,7 @@ export function TokenDetailsActions({
           loading={isDeleting}
           onClick={onDelete}
         >
-          <Trans>Delete</Trans>
+          {t`Delete`}
         </Button>
       ) : null}
     </>

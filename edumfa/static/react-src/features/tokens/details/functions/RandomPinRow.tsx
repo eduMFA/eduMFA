@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, SimpleGrid, Text } from "@mantine/core";
 import { IconKey } from "@tabler/icons-react";
 
@@ -10,12 +10,14 @@ export interface RandomPinRowProps {
 
 /** The generated PIN (once there is one) and the button that requests it. */
 export function RandomPinRow({ randomPin }: RandomPinRowProps) {
+  const { t } = useLingui();
+
   const { mutation, pin } = randomPin;
 
   return (
     <SimpleGrid cols={{ base: 1, md: 3 }} spacing="sm">
       <Text fw={600} size="sm">
-        {pin === null ? null : <Trans>Random generated PIN</Trans>}
+        {pin === null ? null : t`Random generated PIN`}
       </Text>
       <Text data-field="randomPin" ff="monospace" size="sm">
         {pin}
@@ -29,7 +31,7 @@ export function RandomPinRow({ randomPin }: RandomPinRowProps) {
             mutation.mutate();
           }}
         >
-          <Trans>Set random PIN</Trans>
+          {t`Set random PIN`}
         </Button>
       </Group>
     </SimpleGrid>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useParams } from "react-router-dom";
 
 import { PasswdResolverForm } from "./PasswdResolverForm";
@@ -7,6 +7,8 @@ import { useStoredResolver } from "./useResolverEditor";
 
 /** Port of `config.resolvers.passwd.html` and `PasswdResolverController`. */
 export function PasswdResolverPage() {
+  const { t } = useLingui();
+
   const { resolvername = "" } = useParams();
   const stored = useStoredResolver(resolvername);
 
@@ -19,7 +21,7 @@ export function PasswdResolverPage() {
         resolvername ? (
           <Trans>Edit Passwd Resolver {resolvername}</Trans>
         ) : (
-          <Trans>Create a new Passwd Resolver</Trans>
+          t`Create a new Passwd Resolver`
         )
       }
     >

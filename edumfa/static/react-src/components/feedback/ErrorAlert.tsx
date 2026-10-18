@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import type { ReactNode } from "react";
@@ -10,10 +10,9 @@ export interface ErrorAlertProps {
   title?: ReactNode;
 }
 
-export function ErrorAlert({
-  error,
-  title = <Trans>Request failed</Trans>
-}: ErrorAlertProps) {
+export function ErrorAlert({ error, title }: ErrorAlertProps) {
+  const { t } = useLingui();
+
   if (!error) {
     return null;
   }
@@ -24,10 +23,10 @@ export function ErrorAlert({
       icon={<IconAlertCircle size={18} />}
       mb="md"
       role="alert"
-      title={title}
+      title={title ?? t`Request failed`}
       variant="light"
     >
-      {getErrorMessage(error) ?? <Trans>An unknown error occurred.</Trans>}
+      {getErrorMessage(error) ?? t`An unknown error occurred.`}
     </Alert>
   );
 }

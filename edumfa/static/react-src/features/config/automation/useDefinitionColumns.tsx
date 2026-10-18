@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor } from "@mantine/core";
 import { DefinitionDeleteButton } from "./DefinitionDeleteButton";
 import type { DefinitionKind } from "./DefinitionLayout";
@@ -30,7 +30,7 @@ export function useDefinitionColumns<T extends Definition, R>({
   return [
     {
       key: "ordering",
-      header: <Trans>Order</Trans>,
+      header: t`Order`,
       sortKey: "ordering",
       render: (row) =>
         canWrite ? (
@@ -50,7 +50,7 @@ export function useDefinitionColumns<T extends Definition, R>({
 
     {
       key: "active",
-      header: <Trans>Active</Trans>,
+      header: t`Active`,
       sortKey: "active",
       render: (row) => (
         <ActiveToggleBadge
@@ -70,7 +70,7 @@ export function useDefinitionColumns<T extends Definition, R>({
 
     {
       key: "name",
-      header: <Trans>Description</Trans>,
+      header: t`Description`,
       sortKey: "name",
       render: (row) => (
         <Anchor href={hashHref(`/config/${kind}/details/${String(row.id)}`)}>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { Route, Routes } from "react-router-dom";
 
@@ -10,6 +10,8 @@ import { configRouteTable } from "@/features/config/configRouteTable";
  * page gets a notice instead of the redirect to the system settings.
  */
 export function ConfigRoutes() {
+  const { t } = useLingui();
+
   return (
     <ConfigLayout>
       <Routes>
@@ -20,7 +22,7 @@ export function ConfigRoutes() {
           path="*"
           element={
             <Alert color="yellow" role="alert" variant="light">
-              <Trans>This configuration page is not available yet.</Trans>
+              {t`This configuration page is not available yet.`}
             </Alert>
           }
         />

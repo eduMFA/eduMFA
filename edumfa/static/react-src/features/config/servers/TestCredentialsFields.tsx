@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Grid, PasswordInput, TextInput } from "@mantine/core";
 import { IconPlugConnected } from "@tabler/icons-react";
 import type { ReactNode } from "react";
@@ -29,13 +29,15 @@ export function TestCredentialsFields({
   password,
   username
 }: TestCredentialsFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <Grid align="flex-end">
       <Grid.Col span={{ base: 12, sm: 4 }}>
         <TextInput
           autoComplete="off"
           id="test_username"
-          label={<Trans>User</Trans>}
+          label={t`User`}
           onChange={(event) => {
             onUsernameChange(event.currentTarget.value);
           }}
@@ -46,7 +48,7 @@ export function TestCredentialsFields({
         <PasswordInput
           autoComplete="new-password"
           id="test_password"
-          label={<Trans>Password</Trans>}
+          label={t`Password`}
           onChange={(event) => {
             onPasswordChange(event.currentTarget.value);
           }}

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
@@ -23,6 +23,8 @@ export function EnrollPageAlerts({
   errors,
   mode
 }: EnrollPageAlertsProps) {
+  const { t } = useLingui();
+
   const { isAuthenticated, settings } = useAuth();
 
   return (
@@ -36,10 +38,7 @@ export function EnrollPageAlerts({
           role="alert"
           variant="light"
         >
-          <Trans>
-            You are about to rollover your token! This will invalidate your existing
-            token and create a new token with a new secret key!
-          </Trans>
+          {t`You are about to rollover your token! This will invalidate your existing token and create a new token with a new secret key!`}
         </Alert>
       ) : null}
       {defaultTypeFallback ? (

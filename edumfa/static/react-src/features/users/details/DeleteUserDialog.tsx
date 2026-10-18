@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { ConfirmDialog } from "@/components/feedback/ConfirmDialog";
 
@@ -16,16 +16,18 @@ export function DeleteUserDialog({
   onCancel,
   onConfirm
 }: DeleteUserDialogProps) {
+  const { t } = useLingui();
+
   return (
     <ConfirmDialog
-      confirmLabel={<Trans>Delete User</Trans>}
+      confirmLabel={t`Delete User`}
       id="dialogUserDelete"
       isOpen={isOpen}
       isPending={isPending}
-      message={<Trans>Do you really want to delete the user in the user store?</Trans>}
+      message={t`Do you really want to delete the user in the user store?`}
       onCancel={onCancel}
       onConfirm={onConfirm}
-      title={<Trans>Delete User</Trans>}
+      title={t`Delete User`}
     />
   );
 }

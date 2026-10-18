@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Badge, Group, Table } from "@mantine/core";
 
 import { ActionButton } from "./ActionButton";
@@ -15,22 +15,22 @@ export interface TokenStatusRowProps {
 
 /** The "Active" row: status badges with the disable, enable and revoke actions. */
 export function TokenStatusRow({ revoke, toggleActive, token }: TokenStatusRowProps) {
+  const { t } = useLingui();
+
   return (
     <Table.Tr>
-      <Table.Td fw={600}>
-        <Trans>Active</Trans>
-      </Table.Td>
+      <Table.Td fw={600}>{t`Active`}</Table.Td>
       <Table.Td>
         <Group gap="xs">
           <TokenActiveBadge active={token.active} />
           {token.locked ? (
             <Badge color="red" variant="light">
-              <Trans>locked</Trans>
+              {t`locked`}
             </Badge>
           ) : null}
           {token.revoked ? (
             <Badge color="red" variant="light">
-              <Trans>revoked</Trans>
+              {t`revoked`}
             </Badge>
           ) : null}
         </Group>
@@ -48,7 +48,7 @@ export function TokenStatusRow({ revoke, toggleActive, token }: TokenStatusRowPr
               right="disable"
               variant="light"
             >
-              <Trans>Disable</Trans>
+              {t`Disable`}
             </ActionButton>
           ) : null}
           {!token.active && !token.locked ? (
@@ -62,7 +62,7 @@ export function TokenStatusRow({ revoke, toggleActive, token }: TokenStatusRowPr
               right="enable"
               variant="light"
             >
-              <Trans>Enable</Trans>
+              {t`Enable`}
             </ActionButton>
           ) : null}
           {!token.revoked ? (
@@ -76,7 +76,7 @@ export function TokenStatusRow({ revoke, toggleActive, token }: TokenStatusRowPr
               right="revoke"
               variant="light"
             >
-              <Trans>Revoke</Trans>
+              {t`Revoke`}
             </ActionButton>
           ) : null}
         </Group>

@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Checkbox, Group, NativeSelect, Stack, TextInput } from "@mantine/core";
 import { IconPhone } from "@tabler/icons-react";
 
@@ -10,13 +10,11 @@ export function SmsFields({ errors, form, lookups, onChange }: TokenTypeFieldsPr
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <Checkbox
         checked={form.dynamicPhone}
         id="dynamic_phone"
-        label={<Trans>Read number dynamically from user source on each request.</Trans>}
+        label={t`Read number dynamically from user source on each request.`}
         mb="sm"
         onChange={(event) => {
           onChange({ dynamicPhone: event.currentTarget.checked });
@@ -31,7 +29,7 @@ export function SmsFields({ errors, form, lookups, onChange }: TokenTypeFieldsPr
                 : undefined
             }
             id="phone"
-            label={<Trans>Phone number</Trans>}
+            label={t`Phone number`}
             onChange={(event) => {
               onChange({ phone: event.currentTarget.value });
             }}
@@ -62,14 +60,9 @@ export function SmsFields({ errors, form, lookups, onChange }: TokenTypeFieldsPr
       {lookups.smsGateways.length > 0 ? (
         <NativeSelect
           data={["", ...lookups.smsGateways]}
-          description={
-            <Trans>
-              If this token should not use the system wide SMS gateway but an individual
-              SMS gateway, you can select the gateway here.
-            </Trans>
-          }
+          description={t`If this token should not use the system wide SMS gateway but an individual SMS gateway, you can select the gateway here.`}
           id="identifier"
-          label={<Trans>A token specific SMS gateway</Trans>}
+          label={t`A token specific SMS gateway`}
           mb="sm"
           onChange={(event) => {
             onChange({ smsIdentifier: event.currentTarget.value });

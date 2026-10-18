@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect } from "@mantine/core";
 
 export interface ResolverSelectProps {
@@ -13,17 +13,14 @@ export function ResolverSelect({
   resolverNames,
   value
 }: ResolverSelectProps) {
+  const { t } = useLingui();
+
   return (
     <NativeSelect
       data={resolverNames}
-      description={
-        <Trans>
-          These are the resolvers marked as editable. You can add a user to the
-          resolver. The user will appear in the realms, that contain this resolver.
-        </Trans>
-      }
+      description={t`These are the resolvers marked as editable. You can add a user to the resolver. The user will appear in the realms, that contain this resolver.`}
       id="resolvername"
-      label={<Trans>Resolver</Trans>}
+      label={t`Resolver`}
       mb="md"
       onChange={(event) => {
         onChange(event.currentTarget.value);

@@ -83,7 +83,7 @@ export function RadiusServerForm({ existing }: RadiusServerFormProps) {
               loading={saveMutation.isPending}
               type="submit"
             >
-              <Trans>Save RADIUS server</Trans>
+              {t`Save RADIUS server`}
             </Button>
           ) : null
         }

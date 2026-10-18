@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { IconFilter, IconFold, IconArrowsVertical } from "@tabler/icons-react";
 import { Button, Checkbox, Group, TextInput } from "@mantine/core";
 
@@ -32,7 +32,7 @@ export function PolicyActionsToolbar({
       />
       <Checkbox
         checked={selectedOnly}
-        label={<Trans>Show selected actions only</Trans>}
+        label={t`Show selected actions only`}
         onChange={(event) => {
           onSelectedOnlyChange(event.currentTarget.checked);
         }}
@@ -43,7 +43,7 @@ export function PolicyActionsToolbar({
         variant="subtle"
         onClick={onOpenAll}
       >
-        <Trans>Open all groups</Trans>
+        {t`Open all groups`}
       </Button>
       <Button
         leftSection={<IconFold aria-hidden size={16} />}
@@ -51,7 +51,7 @@ export function PolicyActionsToolbar({
         variant="subtle"
         onClick={onCloseAll}
       >
-        <Trans>Close all groups</Trans>
+        {t`Close all groups`}
       </Button>
     </Group>
   );

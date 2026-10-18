@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, Text } from "@mantine/core";
 import { IconFilterOff } from "@tabler/icons-react";
 
@@ -34,7 +34,7 @@ export function ActiveFilterChips({
       style={{ borderBottom: "1px solid var(--mantine-color-gray-3)" }}
     >
       <Text c="dimmed" fw={600} size="xs" tt="uppercase">
-        <Trans>Filters</Trans>
+        {t`Filters`}
       </Text>
       {activeFilters.map(([name, value]) => (
         <ActiveFilterChip
@@ -54,7 +54,7 @@ export function ActiveFilterChips({
         size="compact-xs"
         variant="subtle"
       >
-        <Trans>Clear all filters</Trans>
+        {t`Clear all filters`}
       </Button>
     </Group>
   );

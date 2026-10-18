@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 
@@ -9,6 +9,8 @@ export interface AuditDownloadButtonProps {
 
 /** Downloads the filtered audit log as CSV; the label changes while it runs. */
 export function AuditDownloadButton({ isPending, onClick }: AuditDownloadButtonProps) {
+  const { t } = useLingui();
+
   return (
     <Button
       leftSection={<IconDownload size={16} />}
@@ -16,11 +18,7 @@ export function AuditDownloadButton({ isPending, onClick }: AuditDownloadButtonP
       onClick={onClick}
       variant="default"
     >
-      {isPending ? (
-        <Trans>Please Wait! Crunching data...</Trans>
-      ) : (
-        <Trans>Download audit log as CSV</Trans>
-      )}
+      {isPending ? t`Please Wait! Crunching data...` : t`Download audit log as CSV`}
     </Button>
   );
 }

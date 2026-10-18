@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Table, TextInput } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 
@@ -58,7 +58,7 @@ export function YubikeyNewKeyRow({
             type="button"
             variant="default"
           >
-            <Trans>Create new API key</Trans>
+            {t`Create new API key`}
           </Button>
         ) : null}
       </Table.Td>

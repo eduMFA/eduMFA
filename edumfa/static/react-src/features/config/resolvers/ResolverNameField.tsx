@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { TextInput } from "@mantine/core";
 
 import { getResolverNameError } from "./resolverTypes";
@@ -25,7 +25,7 @@ export function ResolverNameField({ onChange, value }: ResolverNameFieldProps) {
       autoFocus
       error={error ? errorMessages[error] : undefined}
       id="resolvername"
-      label={<Trans>Resolver name</Trans>}
+      label={t`Resolver name`}
       mb="sm"
       name="resolvername"
       onChange={(event) => {

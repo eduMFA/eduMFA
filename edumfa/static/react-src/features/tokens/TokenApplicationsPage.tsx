@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ApplicationPageHeader } from "./applications/ApplicationPageHeader";
@@ -24,6 +24,8 @@ import { Pagination } from "@/components/tables/Pagination";
  * returns the whole list.
  */
 export function TokenApplicationsPage() {
+  const { t } = useLingui();
+
   const { application: applicationParam = "ssh" } = useParams();
   const application: ApplicationName =
     applicationParam === "offline" ? "offline" : "ssh";
@@ -67,9 +69,7 @@ export function TokenApplicationsPage() {
       />
 
       <Card flush>
-        {tokensQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading tokens</Trans>} />
-        ) : null}
+        {tokensQuery.isLoading ? <LoadingIndicator label={t`Loading tokens`} /> : null}
 
         <Pagination
           currentPage={page}
@@ -82,7 +82,7 @@ export function TokenApplicationsPage() {
         <DataTable
           columns={columns}
           data={visibleAssignments}
-          emptyMessage={<Trans>No tokens attached.</Trans>}
+          emptyMessage={t`No tokens attached.`}
           getRowKey={(assignment) => String(assignment.id)}
           id="tablemachinetokens"
           isLoading={tokensQuery.data === undefined}

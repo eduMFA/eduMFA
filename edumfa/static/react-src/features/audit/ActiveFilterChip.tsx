@@ -14,7 +14,10 @@ export interface ActiveFilterChipProps {
 /** One applied filter as "label: value" with a remove button. */
 export function ActiveFilterChip({ name, onRemove, value }: ActiveFilterChipProps) {
   const { t } = useLingui();
-  const describedValue = name === "success" ? (value === "1" ? t`yes` : t`no`) : value;
+  let describedValue = value;
+  if (name === "success") {
+    describedValue = value === "1" ? t`yes` : t`no`;
+  }
 
   return (
     <Badge

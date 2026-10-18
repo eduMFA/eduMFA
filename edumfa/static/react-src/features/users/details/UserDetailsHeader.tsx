@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
@@ -17,6 +17,8 @@ export function UserDetailsHeader({
   resolverName,
   username
 }: UserDetailsHeaderProps) {
+  const { t } = useLingui();
+
   return (
     <PageHeader
       actions={
@@ -26,19 +28,19 @@ export function UserDetailsHeader({
           leftSection={<IconSearch size={16} />}
           variant="default"
         >
-          <Trans>View user in Audit log</Trans>
+          {t`View user in Audit log`}
         </Button>
       }
       subtitle={
         <>
-          <Trans>Realm</Trans>{" "}
+          {t`Realm`}{" "}
           <Anchor href={hashHref("/config/realms/list")} size="sm">
             {realm}
           </Anchor>
           {resolverName ? (
             <>
               {" · "}
-              <Trans>Resolver</Trans> {resolverName}
+              {t`Resolver`} {resolverName}
             </>
           ) : null}
         </>

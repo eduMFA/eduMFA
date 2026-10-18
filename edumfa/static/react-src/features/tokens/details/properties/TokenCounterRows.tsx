@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table } from "@mantine/core";
 
 import type { TokenPropertyMutations } from "./useTokenPropertyMutations";
@@ -24,21 +24,17 @@ export function TokenCounterRows({ setProperties, token }: TokenCounterRowsProps
   return (
     <>
       <Table.Tr>
-        <Table.Td fw={600}>
-          <Trans>OTP Length</Trans>
-        </Table.Td>
+        <Table.Td fw={600}>{t`OTP Length`}</Table.Td>
         <Table.Td data-field="otplen">{token.otplen}</Table.Td>
         <Table.Td />
       </Table.Tr>
       <Table.Tr>
-        <Table.Td fw={600}>
-          <Trans>Count</Trans>
-        </Table.Td>
+        <Table.Td fw={600}>{t`Count`}</Table.Td>
         <Table.Td data-field="count">{token.count}</Table.Td>
         <Table.Td />
       </Table.Tr>
       <EditableValueRow
-        buttonLabel={<Trans>Set count window</Trans>}
+        buttonLabel={t`Set count window`}
         canEdit={hasRight(rights, "set")}
         hideButtons={settings.hideButtons}
         id="count_window"
@@ -52,7 +48,7 @@ export function TokenCounterRows({ setProperties, token }: TokenCounterRowsProps
         value={String(token.count_window)}
       />
       <EditableValueRow
-        buttonLabel={<Trans>Set sync window</Trans>}
+        buttonLabel={t`Set sync window`}
         canEdit={hasRight(rights, "set")}
         hideButtons={settings.hideButtons}
         id="sync_window"

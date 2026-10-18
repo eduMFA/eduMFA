@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -40,9 +40,11 @@ export function SmtpServerTable({
   isLoading,
   onDelete
 }: SmtpServerTableProps) {
+  const { t } = useLingui();
+
   const columns: DataTableColumn<SmtpServerRow>[] = [
     {
-      header: <Trans>Identifier</Trans>,
+      header: t`Identifier`,
       key: "identifier",
       render: (row) => (
         <Anchor
@@ -54,28 +56,28 @@ export function SmtpServerTable({
       )
     },
     {
-      header: <Trans>IP/FQDN</Trans>,
+      header: t`IP/FQDN`,
       key: "server",
       render: (row) => `${row.server}:${String(row.port ?? "")}`
     },
     {
-      header: <Trans>Sender</Trans>,
+      header: t`Sender`,
       key: "sender",
       render: (row) => row.sender
     },
     {
-      header: <Trans>StartTLS</Trans>,
+      header: t`StartTLS`,
       key: "tls",
       render: (row) => <BooleanPill value={isConfigEnabled(row.tls)} />
     },
     {
-      header: <Trans>Description</Trans>,
+      header: t`Description`,
       key: "description",
       render: (row) => truncate(row.description ?? "", 20)
     },
     {
       align: "right",
-      header: <Trans>Actions</Trans>,
+      header: t`Actions`,
       key: "actions",
       render: (row) =>
         canWrite ? (
@@ -89,7 +91,7 @@ export function SmtpServerTable({
             size="xs"
             variant="light"
           >
-            <Trans>Delete</Trans>
+            {t`Delete`}
           </Button>
         ) : null
     }
@@ -97,13 +99,11 @@ export function SmtpServerTable({
 
   return (
     <Card flush>
-      {isLoading ? (
-        <LoadingIndicator label={<Trans>Loading SMTP servers</Trans>} />
-      ) : null}
+      {isLoading ? <LoadingIndicator label={t`Loading SMTP servers`} /> : null}
       <DataTable
         columns={columns}
         data={toRows(data)}
-        emptyMessage={<Trans>No SMTP servers defined.</Trans>}
+        emptyMessage={t`No SMTP servers defined.`}
         getRowKey={(row) => row.identifier}
         id="tablesmtpservers"
         isLoading={data === undefined}

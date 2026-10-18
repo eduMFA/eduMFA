@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { TextInput } from "@mantine/core";
 
 import type {
@@ -18,18 +18,16 @@ export function RadiusServerConnectionFields({
   setValue,
   values
 }: RadiusServerConnectionFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <TextInput
         autoFocus
-        description={
-          <Trans>
-            This is the unique identifying name of the RADIUS server definition.
-          </Trans>
-        }
+        description={t`This is the unique identifying name of the RADIUS server definition.`}
         error={identifierError}
         id="identifier"
-        label={<Trans>Identifier</Trans>}
+        label={t`Identifier`}
         mb="sm"
         onChange={(event) => {
           setValue("identifier", event.currentTarget.value);
@@ -40,7 +38,7 @@ export function RadiusServerConnectionFields({
       />
       <TextInput
         id="server"
-        label={<Trans>IP or FQDN</Trans>}
+        label={t`IP or FQDN`}
         mb="sm"
         onChange={(event) => {
           setValue("server", event.currentTarget.value);

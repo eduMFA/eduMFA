@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconUserMinus } from "@tabler/icons-react";
 
@@ -21,6 +21,8 @@ export function AssignedUserCard({
   onUnassign,
   token
 }: AssignedUserCardProps) {
+  const { t } = useLingui();
+
   return (
     <Card
       actions={
@@ -34,12 +36,12 @@ export function AssignedUserCard({
             size="sm"
             variant="light"
           >
-            <Trans>Unassign User</Trans>
+            {t`Unassign User`}
           </Button>
         )
       }
       flush
-      title={<Trans>Assigned User</Trans>}
+      title={t`Assigned User`}
     >
       <ErrorAlert error={error} />
       <AssignedUserTable token={token} />

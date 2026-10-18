@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect, PasswordInput, Stack, TextInput } from "@mantine/core";
 
 import { type PskcValidateMac } from "@/api/tokens";
@@ -36,7 +36,7 @@ export function PskcOptions({
     <Stack gap="sm" mb="sm">
       <TextInput
         id="psk"
-        label={<Trans>Pre Shared Key</Trans>}
+        label={t`Pre Shared Key`}
         maxLength={32}
         onChange={(event) => {
           setPsk(event.currentTarget.value);
@@ -47,7 +47,7 @@ export function PskcOptions({
       />
       <PasswordInput
         id="pskcPassword"
-        label={<Trans>Password</Trans>}
+        label={t`Password`}
         onChange={(event) => {
           setPassword(event.currentTarget.value);
           setPsk("");
@@ -57,14 +57,9 @@ export function PskcOptions({
       />
       <NativeSelect
         data={validateMacOptions}
-        description={
-          <Trans>
-            You can choose how the authenticity of the tokens to be imported should be
-            verified.
-          </Trans>
-        }
+        description={t`You can choose how the authenticity of the tokens to be imported should be verified.`}
         id="pskcValidateMAC"
-        label={<Trans>Verification</Trans>}
+        label={t`Verification`}
         onChange={(event) => {
           setValidateMac(event.currentTarget.value as PskcValidateMac | "");
         }}

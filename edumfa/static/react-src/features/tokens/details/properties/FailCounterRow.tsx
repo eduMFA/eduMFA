@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table } from "@mantine/core";
 
 import { ActionButton } from "./ActionButton";
@@ -13,11 +13,11 @@ export interface FailCounterRowProps {
 
 /** The fail counter with the reset action once the counter is above zero. */
 export function FailCounterRow({ reset, token }: FailCounterRowProps) {
+  const { t } = useLingui();
+
   return (
     <Table.Tr>
-      <Table.Td fw={600}>
-        <Trans>Fail counter</Trans>
-      </Table.Td>
+      <Table.Td fw={600}>{t`Fail counter`}</Table.Td>
       <Table.Td>
         <FailCounterBadge token={token} />
       </Table.Td>
@@ -33,7 +33,7 @@ export function FailCounterRow({ reset, token }: FailCounterRowProps) {
             right="reset"
             variant="light"
           >
-            <Trans>Reset fail counter</Trans>
+            {t`Reset fail counter`}
           </ActionButton>
         ) : null}
       </Table.Td>

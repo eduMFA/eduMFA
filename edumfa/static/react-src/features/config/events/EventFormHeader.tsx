@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -21,13 +21,15 @@ export function EventFormHeader({
   onDeleted: () => void;
   requestDelete: DeleteConfirmation["requestDelete"];
 }) {
+  const { t } = useLingui();
+
   return (
     <PageHeader
       title={
         existing ? (
           <Trans>Edit Event Handler {existing.id}</Trans>
         ) : (
-          <Trans>Create a new Event Handler</Trans>
+          t`Create a new Event Handler`
         )
       }
       actions={
@@ -40,14 +42,14 @@ export function EventFormHeader({
             onClick={() => {
               requestDelete({
                 identifier: existing.name,
-                question: <Trans>Do you really want to delete this event?</Trans>,
+                question: t`Do you really want to delete this event?`,
                 onConfirm: () => {
                   mutations.remove.mutate(existing.id, { onSuccess: onDeleted });
                 }
               });
             }}
           >
-            <Trans>Delete</Trans>
+            {t`Delete`}
           </Button>
         ) : null
       }

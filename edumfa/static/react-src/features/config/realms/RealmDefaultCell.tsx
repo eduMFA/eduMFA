@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Badge, Button } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
@@ -16,6 +16,8 @@ export function RealmDefaultCell({
   isSetting,
   onSetDefault
 }: RealmDefaultCellProps) {
+  const { t } = useLingui();
+
   if (isDefault) {
     return (
       <Badge
@@ -25,7 +27,7 @@ export function RealmDefaultCell({
         style={{ verticalAlign: "middle" }}
         variant="light"
       >
-        <Trans>Default</Trans>
+        {t`Default`}
       </Badge>
     );
   }
@@ -39,7 +41,7 @@ export function RealmDefaultCell({
         size="xs"
         variant="light"
       >
-        <Trans>set Default</Trans>
+        {t`set Default`}
       </Button>
     );
   }

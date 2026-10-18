@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +19,8 @@ import { SystemLayout } from "@/features/config/system/SystemLayout";
  * controller, the single definition is picked from the list call.
  */
 export function EduMfaServerEditPage() {
+  const { t } = useLingui();
+
   const { identifier } = useParams<{ identifier: string }>();
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
@@ -44,7 +46,7 @@ export function EduMfaServerEditPage() {
       <>
         <ErrorAlert error={serversQuery.error} />
         {serversQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading eduMFA servers</Trans>} />
+          <LoadingIndicator label={t`Loading eduMFA servers`} />
         ) : null}
         {server ? (
           <EduMfaServerForm existing={{ identifier, server }} key={identifier} />

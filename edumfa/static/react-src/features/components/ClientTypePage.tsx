@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Box, Button, Table } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -15,6 +15,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { EmptyState } from "@/components/tables/EmptyState";
 
 export function ClientTypePage() {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
   const clientTypesQuery = useQuery({
@@ -40,11 +42,11 @@ export function ClientTypePage() {
             }}
             variant="default"
           >
-            <Trans>Refresh</Trans>
+            {t`Refresh`}
           </Button>
         }
-        subtitle={<Trans>Client applications seen by this eduMFA instance.</Trans>}
-        title={<Trans>Application Type</Trans>}
+        subtitle={t`Client applications seen by this eduMFA instance.`}
+        title={t`Application Type`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
@@ -52,23 +54,23 @@ export function ClientTypePage() {
 
       <Card flush>
         {clientTypesQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading client applications</Trans>} />
+          <LoadingIndicator label={t`Loading client applications`} />
         ) : null}
 
         <Table highlightOnHover verticalSpacing="sm">
           <Table.Thead>
             <Table.Tr>
               <Table.Th c="dimmed" fz="xs" tt="uppercase">
-                <Trans>Application Type</Trans>
+                {t`Application Type`}
               </Table.Th>
               <Table.Th c="dimmed" colSpan={2} fz="xs" tt="uppercase">
-                <Trans>Client</Trans>
+                {t`Client`}
               </Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
             {entries.length === 0 && !clientTypesQuery.isLoading ? (
-              <EmptyState message={<Trans>No client applications found.</Trans>} />
+              <EmptyState message={t`No client applications found.`} />
             ) : (
               entries.map(([applicationType, clients]) => (
                 <ClientTypeRows

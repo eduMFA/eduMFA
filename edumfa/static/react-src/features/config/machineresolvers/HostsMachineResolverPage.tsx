@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -22,6 +22,8 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
  * one named in the route.
  */
 export function HostsMachineResolverPage() {
+  const { t } = useLingui();
+
   const { resolvername } = useParams<{ resolvername: string }>();
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
@@ -47,7 +49,7 @@ export function HostsMachineResolverPage() {
           isEditing ? (
             <Trans>Edit hosts Machine Resolver {resolvername}</Trans>
           ) : (
-            <Trans>Create a new hosts Machine Resolver</Trans>
+            t`Create a new hosts Machine Resolver`
           )
         }
       />
@@ -58,7 +60,7 @@ export function HostsMachineResolverPage() {
         <>
           <ErrorAlert error={resolverQuery.error} />
           {resolverQuery.isLoading ? (
-            <LoadingIndicator label={<Trans>Loading resolver</Trans>} />
+            <LoadingIndicator label={t`Loading resolver`} />
           ) : null}
           {resolverQuery.isSuccess && storedResolver === undefined ? (
             <Alert color="yellow" mb="md" role="alert" variant="light">

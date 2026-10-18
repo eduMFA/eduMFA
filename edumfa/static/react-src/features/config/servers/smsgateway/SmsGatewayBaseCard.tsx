@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect, TextInput } from "@mantine/core";
 
 import type { SmsGatewayFieldSetter, SmsGatewayFormValues } from "./smsGatewayValues";
@@ -16,12 +16,14 @@ export function SmsGatewayBaseCard({
   setValue,
   values
 }: SmsGatewayBaseCardProps) {
+  const { t } = useLingui();
+
   return (
     <Card>
       <TextInput
         autoFocus
         id="name"
-        label={<Trans>Name</Trans>}
+        label={t`Name`}
         mb="sm"
         onChange={(event) => {
           setValue("name", event.currentTarget.value);
@@ -32,7 +34,7 @@ export function SmsGatewayBaseCard({
       <NativeSelect
         data={[{ label: "", value: "" }, ...moduleNames]}
         id="module"
-        label={<Trans>Providermodule</Trans>}
+        label={t`Providermodule`}
         mb="sm"
         onChange={(event) => {
           setValue("module", event.currentTarget.value);
@@ -42,7 +44,7 @@ export function SmsGatewayBaseCard({
       />
       <TextInput
         id="description"
-        label={<Trans>Description</Trans>}
+        label={t`Description`}
         mb="sm"
         onChange={(event) => {
           setValue("description", event.currentTarget.value);

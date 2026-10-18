@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { NavLink } from "@mantine/core";
 import {
   IconDeviceDesktop,
@@ -27,6 +27,8 @@ export function TokenSidebarMainLinks({
   activeItem,
   serial
 }: TokenSidebarMainLinksProps) {
+  const { t } = useLingui();
+
   const { canEnroll, canManageApplications, isAdmin, isUser, rights, settings } =
     useTokenSidebarAccess();
 
@@ -36,7 +38,7 @@ export function TokenSidebarMainLinks({
         active={activeItem === "list"}
         component="a"
         href={hashHref("/token/list")}
-        label={<Trans>All tokens</Trans>}
+        label={t`All tokens`}
         leftSection={<IconList size={16} />}
       />
       {activeItem === "details" ? (
@@ -52,7 +54,7 @@ export function TokenSidebarMainLinks({
           active={activeItem === "enroll"}
           component="a"
           href={hashHref("/token/enroll//")}
-          label={<Trans>Enroll Token</Trans>}
+          label={t`Enroll Token`}
           leftSection={<IconEdit size={16} />}
         />
       ) : null}
@@ -61,7 +63,7 @@ export function TokenSidebarMainLinks({
           active={activeItem === "wizard"}
           component="a"
           href={hashHref("/token/wizard")}
-          label={<Trans>Token enrollment wizard</Trans>}
+          label={t`Token enrollment wizard`}
           leftSection={<IconStar size={16} />}
         />
       ) : null}
@@ -70,7 +72,7 @@ export function TokenSidebarMainLinks({
           active={activeItem === "assign"}
           component="a"
           href={hashHref("/token/assign")}
-          label={<Trans>Assign Token</Trans>}
+          label={t`Assign Token`}
           leftSection={<IconPlus size={16} />}
         />
       ) : null}
@@ -79,7 +81,7 @@ export function TokenSidebarMainLinks({
           active={activeItem === "import"}
           component="a"
           href={hashHref("/token/import")}
-          label={<Trans>Import Tokens</Trans>}
+          label={t`Import Tokens`}
           leftSection={<IconUpload size={16} />}
         />
       ) : null}
@@ -88,7 +90,7 @@ export function TokenSidebarMainLinks({
           active={activeItem === "challenges"}
           component="a"
           href={hashHref("/token/challenges")}
-          label={<Trans>List Challenges</Trans>}
+          label={t`List Challenges`}
           leftSection={<IconRefresh size={16} />}
         />
       ) : null}
@@ -97,7 +99,7 @@ export function TokenSidebarMainLinks({
           active={activeItem === "applications"}
           component="a"
           href={hashHref("/token/applications/ssh")}
-          label={<Trans>Token Applications</Trans>}
+          label={t`Token Applications`}
           leftSection={<IconDeviceDesktop size={16} />}
         />
       ) : null}

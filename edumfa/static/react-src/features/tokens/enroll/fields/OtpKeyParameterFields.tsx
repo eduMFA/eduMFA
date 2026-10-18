@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect } from "@mantine/core";
 
 import { OtpKeyTimeFields } from "./OtpKeyTimeFields";
@@ -8,6 +8,8 @@ import { hashAlgorithms, otpLengths } from "@/features/tokens/enroll/enrollForm"
 
 /** OTP length, the type's time settings and the hash algorithm. */
 export function OtpKeyParameterFields(props: TokenTypeFieldsProps) {
+  const { t } = useLingui();
+
   const { form, onChange, rights } = props;
   const { type } = form;
 
@@ -17,18 +19,12 @@ export function OtpKeyParameterFields(props: TokenTypeFieldsProps) {
         <NativeSelect
           data={otpLengths.map(String)}
           description={
-            form.genkey ? (
-              <Trans>Some Authenticator Apps only support an OTP length of 6.</Trans>
-            ) : undefined
+            form.genkey
+              ? t`Some Authenticator Apps only support an OTP length of 6.`
+              : undefined
           }
           id="otplen"
-          label={
-            type === "daypassword" ? (
-              <Trans>password length</Trans>
-            ) : (
-              <Trans>OTP length</Trans>
-            )
-          }
+          label={type === "daypassword" ? t`password length` : t`OTP length`}
           mb="sm"
           onChange={(event) => {
             onChange({ otplen: Number(event.currentTarget.value) });
@@ -41,12 +37,12 @@ export function OtpKeyParameterFields(props: TokenTypeFieldsProps) {
         <NativeSelect
           data={[...hashAlgorithms]}
           description={
-            form.genkey ? (
-              <Trans>Some Authenticator Apps only support the SHA1 algorithm.</Trans>
-            ) : undefined
+            form.genkey
+              ? t`Some Authenticator Apps only support the SHA1 algorithm.`
+              : undefined
           }
           id="hashlib"
-          label={<Trans>Hash algorithm</Trans>}
+          label={t`Hash algorithm`}
           mb="sm"
           onChange={(event) => {
             onChange({ hashlib: event.currentTarget.value });

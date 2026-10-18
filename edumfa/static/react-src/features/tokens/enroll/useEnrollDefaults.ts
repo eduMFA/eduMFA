@@ -65,11 +65,12 @@ export function useEnrollDefaults({
   const enrollTypes = enrollTypesQuery.data ?? {};
   const typeNames = Object.keys(enrollTypes);
   const defaultTypeAllowed = typeNames.includes(settings.defaultTokenType);
-  const defaultTokenType = isRollover
-    ? rolloverType
-    : defaultTypeAllowed
-      ? settings.defaultTokenType
-      : (typeNames[0] ?? settings.defaultTokenType);
+  let defaultTokenType = typeNames[0] ?? settings.defaultTokenType;
+  if (isRollover) {
+    defaultTokenType = rolloverType;
+  } else if (defaultTypeAllowed) {
+    defaultTokenType = settings.defaultTokenType;
+  }
   // "hotp" is also the value when no default_tokentype policy exists, so a
   // missing enrollHOTP right is not worth a warning (legacy behaviour).
   const defaultTypeFallback =

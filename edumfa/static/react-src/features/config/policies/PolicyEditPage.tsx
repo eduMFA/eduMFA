@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { useParams } from "react-router-dom";
 
@@ -7,11 +7,13 @@ import { PolicySidebar } from "./PolicySidebar";
 import { usePolicyEditPageQueries } from "./usePolicyEditPageQueries";
 import { ErrorAlert } from "@/components/feedback/ErrorAlert";
 import { LoadingIndicator } from "@/components/feedback/LoadingIndicator";
-import { LoginRequiredAlert } from "@/components/feedback/LoginRequiredAlert";
+import { AccessGate } from "@/components/feedback/AccessGate";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 
 export function PolicyEditPage() {
+  const { t } = useLingui();
+
   const { policyname = "" } = useParams();
   const { canOpen, conditionsQuery, definitionsQuery, isAuthenticated, policyQuery } =
     usePolicyEditPageQueries(policyname);
@@ -24,40 +26,32 @@ export function PolicyEditPage() {
     <SidebarLayout sidebar={<PolicySidebar active={policyname ? "edit" : "add"} />}>
       <PageHeader
         title={
-          policyname ? (
-            <Trans>Edit Policy {policyname}</Trans>
-          ) : (
-            <Trans>Create a new Policy</Trans>
-          )
+          policyname ? <Trans>Edit Policy {policyname}</Trans> : t`Create a new Policy`
         }
       />
-      {!isAuthenticated ? (
-        <LoginRequiredAlert />
-      ) : !canOpen ? (
-        <Alert color="yellow" role="alert">
-          <Trans>You do not have permission to open this policy page.</Trans>
-        </Alert>
-      ) : (
-        <>
-          <ErrorAlert
-            error={policyQuery.error ?? definitionsQuery.error ?? conditionsQuery.error}
+      <AccessGate
+        allowed={canOpen}
+        deniedMessage={t`You do not have permission to open this policy page.`}
+        isAuthenticated={isAuthenticated}
+      >
+        <ErrorAlert
+          error={policyQuery.error ?? definitionsQuery.error ?? conditionsQuery.error}
+        />
+        {loading ? <LoadingIndicator /> : null}
+        {notFound ? (
+          <Alert color="yellow" role="alert">
+            <Trans>Policy {policyname} was not found.</Trans>
+          </Alert>
+        ) : null}
+        {definitionsQuery.data && conditionsQuery.data && (!policyname || policy) ? (
+          <PolicyEditor
+            key={policyname}
+            policy={policy}
+            definitions={definitionsQuery.data}
+            conditionDefinitions={conditionsQuery.data}
           />
-          {loading ? <LoadingIndicator /> : null}
-          {notFound ? (
-            <Alert color="yellow" role="alert">
-              <Trans>Policy {policyname} was not found.</Trans>
-            </Alert>
-          ) : null}
-          {definitionsQuery.data && conditionsQuery.data && (!policyname || policy) ? (
-            <PolicyEditor
-              key={policyname}
-              policy={policy}
-              definitions={definitionsQuery.data}
-              conditionDefinitions={conditionsQuery.data}
-            />
-          ) : null}
-        </>
-      )}
+        ) : null}
+      </AccessGate>
     </SidebarLayout>
   );
 }

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useForm, useWatch } from "react-hook-form";
@@ -19,6 +19,8 @@ export interface ServiceIdFormProps {
 
 /** The form of `config.serviceid.edit.html`; the title follows the typed identifier. */
 export function ServiceIdForm({ existing }: ServiceIdFormProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const canSave = hasRight(rights, "serviceid_add");
   const { formState, handleSubmit, register, control } = useForm<ServiceIdFormValues>({
@@ -63,7 +65,7 @@ export function ServiceIdForm({ existing }: ServiceIdFormProps) {
               loading={saveMutation.isPending}
               type="submit"
             >
-              <Trans>Save Service ID</Trans>
+              {t`Save Service ID`}
             </Button>
           ) : null
         }

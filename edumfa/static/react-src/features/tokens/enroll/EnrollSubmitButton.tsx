@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconEdit, IconRefresh } from "@tabler/icons-react";
 
@@ -14,6 +14,8 @@ export function EnrollSubmitButton({
   isRollover,
   loading
 }: EnrollSubmitButtonProps) {
+  const { t } = useLingui();
+
   return (
     <Button
       disabled={disabled}
@@ -22,7 +24,7 @@ export function EnrollSubmitButton({
       loading={loading}
       type="submit"
     >
-      {isRollover ? <Trans>Rollover Token</Trans> : <Trans>Enroll Token</Trans>}
+      {isRollover ? t`Rollover Token` : t`Enroll Token`}
     </Button>
   );
 }

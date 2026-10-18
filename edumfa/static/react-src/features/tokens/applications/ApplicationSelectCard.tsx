@@ -28,7 +28,7 @@ export function ApplicationSelectCard({
           }
         ]}
         id="token_application"
-        label={<Trans>Application</Trans>}
+        label={t`Application`}
         onChange={(event) => {
           onChange(event.currentTarget.value);
         }}

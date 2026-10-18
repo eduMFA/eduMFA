@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 import { IconDeviceFloppy, IconEdit, IconUnlink } from "@tabler/icons-react";
 
@@ -15,6 +15,8 @@ export function AssignmentActionsCell({
   assignment,
   editor
 }: AssignmentActionsCellProps) {
+  const { t } = useLingui();
+
   if (editor.editingAssignmentId === assignment.id) {
     return (
       <Group gap="xs" justify="flex-end">
@@ -26,10 +28,10 @@ export function AssignmentActionsCell({
           }}
           size="xs"
         >
-          <Trans>Save Options</Trans>
+          {t`Save Options`}
         </Button>
         <Button onClick={editor.stopEditing} size="xs" variant="default">
-          <Trans>Cancel</Trans>
+          {t`Cancel`}
         </Button>
       </Group>
     );
@@ -45,7 +47,7 @@ export function AssignmentActionsCell({
         size="xs"
         variant="default"
       >
-        <Trans>Edit Options</Trans>
+        {t`Edit Options`}
       </Button>
       <Button
         color="red"
@@ -57,7 +59,7 @@ export function AssignmentActionsCell({
         size="xs"
         variant="light"
       >
-        <Trans>Detach</Trans>
+        {t`Detach`}
       </Button>
     </Group>
   );

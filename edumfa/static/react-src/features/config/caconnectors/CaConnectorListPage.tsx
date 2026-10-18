@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button, Group } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -31,6 +31,8 @@ function editHref(connector: CaConnector): string {
 
 /** Port of `config.caconnectors.list.html` and `CAConnectorController`. */
 export function CaConnectorListPage() {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const queryClient = useQueryClient();
   const { isAuthenticated, rights } = useAuth();
@@ -52,7 +54,7 @@ export function CaConnectorListPage() {
 
   const columns: DataTableColumn<CaConnector>[] = [
     {
-      header: <Trans>CA Connector name</Trans>,
+      header: t`CA Connector name`,
       key: "connectorname",
       render: (connector) => (
         <Anchor href={editHref(connector)} size="sm">
@@ -61,13 +63,13 @@ export function CaConnectorListPage() {
       )
     },
     {
-      header: <Trans>type</Trans>,
+      header: t`type`,
       key: "type",
       render: (connector) => connector.type
     },
     {
       align: "right",
-      header: <Trans>Actions</Trans>,
+      header: t`Actions`,
       key: "actions",
       render: (connector) => (
         <Group gap="xs" justify="flex-end" wrap="nowrap">
@@ -78,7 +80,7 @@ export function CaConnectorListPage() {
             size="xs"
             variant="light"
           >
-            <Trans>Edit</Trans>
+            {t`Edit`}
           </Button>
           {canDelete ? (
             <Button
@@ -99,7 +101,7 @@ export function CaConnectorListPage() {
               size="xs"
               variant="light"
             >
-              <Trans>Delete</Trans>
+              {t`Delete`}
             </Button>
           ) : null}
         </Group>
@@ -109,7 +111,7 @@ export function CaConnectorListPage() {
 
   return (
     <SystemLayout activeItem="caconnectors">
-      <PageHeader title={<Trans>CA Connectors</Trans>} />
+      <PageHeader title={t`CA Connectors`} />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={connectorsQuery.error} />
@@ -117,13 +119,13 @@ export function CaConnectorListPage() {
 
       <Card flush>
         {connectorsQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading CA connectors</Trans>} />
+          <LoadingIndicator label={t`Loading CA connectors`} />
         ) : null}
 
         <DataTable
           columns={columns}
           data={connectorsQuery.data ?? []}
-          emptyMessage={<Trans>No CA connectors defined.</Trans>}
+          emptyMessage={t`No CA connectors defined.`}
           getRowKey={(connector) => connector.connectorname}
           id="tablecaconnectors"
           isLoading={connectorsQuery.data === undefined}

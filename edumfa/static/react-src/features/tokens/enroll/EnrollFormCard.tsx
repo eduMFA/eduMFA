@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { type EnrollFormState, type EnrollMode } from "./enrollForm";
 import { EnrollSubmitButton } from "./EnrollSubmitButton";
@@ -28,6 +28,8 @@ export function EnrollFormCard({
   onChange,
   onSubmit
 }: EnrollFormCardProps) {
+  const { t } = useLingui();
+
   const isRollover = mode === "rollover";
 
   return (
@@ -50,7 +52,7 @@ export function EnrollFormCard({
           />
         }
         footerAlign="center"
-        title={isRollover ? <Trans>Token data</Trans> : <Trans>Token</Trans>}
+        title={isRollover ? t`Token data` : t`Token`}
       >
         <TokenDataSection form={form} mode={mode} model={model} onChange={onChange} />
         <TokenAssignmentSection

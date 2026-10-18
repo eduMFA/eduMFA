@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Divider, NavLink, Stack } from "@mantine/core";
 import { IconBolt, IconCalendarTime, IconHelp, IconPlus } from "@tabler/icons-react";
 import type { PropsWithChildren } from "react";
@@ -22,6 +22,8 @@ export function DefinitionLayout({
   kind,
   children
 }: PropsWithChildren<{ kind: DefinitionKind }>) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const { pathname } = useLocation();
   const access = definitionRights(kind);
@@ -41,13 +43,7 @@ export function DefinitionLayout({
               href={hashHref(`/config/${kind}/list`)}
               active={pathname.endsWith("/list") || pathname.endsWith(kind)}
               leftSection={<Icon aria-hidden size={16} />}
-              label={
-                kind === "events" ? (
-                  <Trans>Event Handlers</Trans>
-                ) : (
-                  <Trans>Periodic Tasks</Trans>
-                )
-              }
+              label={kind === "events" ? t`Event Handlers` : t`Periodic Tasks`}
             />
           ) : null}
 
@@ -58,11 +54,7 @@ export function DefinitionLayout({
               active={pathname.endsWith("/add")}
               leftSection={<IconPlus aria-hidden size={16} />}
               label={
-                kind === "events" ? (
-                  <Trans>Create Event Handler</Trans>
-                ) : (
-                  <Trans>Create Periodic Task</Trans>
-                )
+                kind === "events" ? t`Create Event Handler` : t`Create Periodic Task`
               }
             />
           ) : null}
@@ -74,7 +66,7 @@ export function DefinitionLayout({
             target="_blank"
             rel="noopener"
             leftSection={<IconHelp aria-hidden size={16} />}
-            label={<Trans>Help</Trans>}
+            label={t`Help`}
           />
         </Stack>
       }

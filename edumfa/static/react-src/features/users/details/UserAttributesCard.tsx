@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 
@@ -27,6 +27,8 @@ export function UserAttributesCard({
   onDelete,
   userDetail
 }: UserAttributesCardProps) {
+  const { t } = useLingui();
+
   const { cancelEditing, form, isEditing, startEditing, submitUser, updateMutation } =
     editor;
 
@@ -57,15 +59,15 @@ export function UserAttributesCard({
                 loading={updateMutation.isPending}
                 type="submit"
               >
-                <Trans>Save user</Trans>
+                {t`Save user`}
               </Button>
               <Button onClick={cancelEditing} variant="default">
-                <Trans>Cancel</Trans>
+                {t`Cancel`}
               </Button>
             </>
           ) : undefined
         }
-        title={<Trans>User details</Trans>}
+        title={t`User details`}
       >
         <UserAttributeFields
           errors={form.formState.errors}

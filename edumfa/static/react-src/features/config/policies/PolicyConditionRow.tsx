@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { IconTrash } from "@tabler/icons-react";
 import { Button, Checkbox, NativeSelect, Table, TextInput } from "@mantine/core";
 
@@ -83,7 +83,7 @@ export function PolicyConditionRow({
           aria-label={t`Remove condition ${number}`}
           onClick={onRemove}
         >
-          <Trans>Remove</Trans>
+          {t`Remove`}
         </Button>
       </Table.Td>
     </Table.Tr>

@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, Group, NumberInput, Stack, Text } from "@mantine/core";
 
 import type { ResolverConfig } from "@/api/config";
@@ -47,7 +47,7 @@ export function RealmForm({
   if (resolvers.length === 0) {
     return (
       <Text c="dimmed" size="sm">
-        <Trans>No resolvers defined.</Trans>
+        {t`No resolvers defined.`}
       </Text>
     );
   }

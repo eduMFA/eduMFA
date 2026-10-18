@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 
@@ -16,11 +16,13 @@ export function UserActionButtons({
   onDelete,
   onEdit
 }: UserActionButtonsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       {canUpdate ? (
         <Button leftSection={<IconEdit size={16} />} onClick={onEdit} size="sm">
-          <Trans>Edit user</Trans>
+          {t`Edit user`}
         </Button>
       ) : null}
       {canDelete ? (
@@ -31,7 +33,7 @@ export function UserActionButtons({
           size="sm"
           variant="light"
         >
-          <Trans>Delete user</Trans>
+          {t`Delete user`}
         </Button>
       ) : null}
     </>

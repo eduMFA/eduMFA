@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -52,14 +52,12 @@ export function MachineDetailsPage() {
       <ErrorAlert error={editor.detachMutation.error} />
       <ErrorAlert error={editor.saveOptionsMutation.error} />
 
-      {machineQuery.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading machine</Trans>} />
-      ) : null}
+      {machineQuery.isLoading ? <LoadingIndicator label={t`Loading machine`} /> : null}
 
       {machineQuery.isSuccess && !machine ? (
         <ErrorAlert
           error={new Error(t`Machine not found.`)}
-          title={<Trans>Machine not found.</Trans>}
+          title={t`Machine not found.`}
         />
       ) : null}
 

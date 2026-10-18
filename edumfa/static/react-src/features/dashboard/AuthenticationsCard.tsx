@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table, Text } from "@mantine/core";
 
 import { FailureLinks } from "./FailureLinks";
@@ -18,20 +18,22 @@ export function AuthenticationsCard({
   failures,
   successCount
 }: AuthenticationsCardProps) {
+  const { t } = useLingui();
+
   return (
-    <Card flush title={<Trans>Authentications</Trans>}>
+    <Card flush title={t`Authentications`}>
       <Text c="dimmed" px="md" pt="sm" size="sm">
-        <Trans>Authentications in the last 24 hours</Trans>
+        {t`Authentications in the last 24 hours`}
       </Text>
       <Table verticalSpacing="xs">
         <Table.Tbody>
-          <StatRow label={<Trans>success</Trans>} name="authSuccess">
+          <StatRow label={t`success`} name="authSuccess">
             {successCount}
           </StatRow>
-          <StatRow label={<Trans>failed</Trans>} name="authFailed">
+          <StatRow label={t`failed`} name="authFailed">
             {failureCount}
           </StatRow>
-          <StatRow label={<Trans>failed users / tokens</Trans>} name="authFailures">
+          <StatRow label={t`failed users / tokens`} name="authFailures">
             <FailureLinks failures={failures} />
           </StatRow>
         </Table.Tbody>

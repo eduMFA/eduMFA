@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { NavLink, Stack, Text } from "@mantine/core";
 import { IconServer, IconServer2, IconSettings } from "@tabler/icons-react";
 
@@ -20,13 +20,15 @@ export function MachineSidebar({
   machineCount,
   machineId
 }: MachineSidebarProps) {
+  const { t } = useLingui();
+
   return (
     <Stack gap={2}>
       <NavLink
         active={activeItem === "list"}
         component="a"
         href={hashHref("/machine/list")}
-        label={<Trans>All Machines</Trans>}
+        label={t`All Machines`}
         leftSection={<IconServer2 size={16} />}
       />
       {activeItem === "details" ? (
@@ -36,13 +38,11 @@ export function MachineSidebar({
           leftSection={<IconServer size={16} />}
         />
       ) : null}
-      <SidebarSection>
-        <Trans>Quick links</Trans>
-      </SidebarSection>
+      <SidebarSection>{t`Quick links`}</SidebarSection>
       <NavLink
         component="a"
         href={hashHref("/config/machineresolvers/list")}
-        label={<Trans>Edit Machine Resolvers</Trans>}
+        label={t`Edit Machine Resolvers`}
         leftSection={<IconSettings size={16} />}
       />
       {machineCount !== undefined ? (

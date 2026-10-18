@@ -1,17 +1,16 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor } from "@mantine/core";
 
 import { HelpText } from "./HelpText";
 
 /** The introduction of the Yubikey settings with links to both validation APIs. */
 export function YubikeyHelpText() {
+  const { t } = useLingui();
+
   return (
     <>
       <HelpText>
-        <Trans>
-          This is a Yubikey in the Yubico Mode authenticated against eduMFA. The Yubikey
-          emits a 44 character on time password.
-        </Trans>
+        {t`This is a Yubikey in the Yubico Mode authenticated against eduMFA. The Yubikey emits a 44 character on time password.`}
       </HelpText>
       <HelpText>
         <Trans>

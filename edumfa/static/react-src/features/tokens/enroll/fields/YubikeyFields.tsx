@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NumberInput, TextInput } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -9,13 +9,11 @@ export function YubikeyFields({ errors, form, onChange }: TokenTypeFieldsProps) 
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <TextInput
         autoComplete="off"
         id="yubikeyTest"
-        label={<Trans>Test Yubikey</Trans>}
+        label={t`Test Yubikey`}
         mb="sm"
         onChange={(event) => {
           const yubikeyTest = event.currentTarget.value;
@@ -35,7 +33,7 @@ export function YubikeyFields({ errors, form, onChange }: TokenTypeFieldsProps) 
             : undefined
         }
         id="otpkey"
-        label={<Trans>OTP Key</Trans>}
+        label={t`OTP Key`}
         mb="sm"
         onChange={(event) => {
           onChange({ otpkey: event.currentTarget.value });
@@ -51,7 +49,7 @@ export function YubikeyFields({ errors, form, onChange }: TokenTypeFieldsProps) 
             : undefined
         }
         id="otplen"
-        label={<Trans>OTP length</Trans>}
+        label={t`OTP length`}
         max={99}
         mb="sm"
         min={32}

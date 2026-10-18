@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Accordion, SimpleGrid } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
@@ -22,18 +22,18 @@ export function ExtendedAttributesFields({
   validityError,
   validityStart
 }: ExtendedAttributesFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <Accordion mt="md" variant="separated">
       <Accordion.Item value="extended">
-        <Accordion.Control>
-          <Trans>Extended Attributes</Trans>
-        </Accordion.Control>
+        <Accordion.Control>{t`Extended Attributes`}</Accordion.Control>
         <Accordion.Panel>
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
             <DateTimePicker
               clearable
               id="validity_start"
-              label={<Trans>Validity Start</Trans>}
+              label={t`Validity Start`}
               minDate={new Date()}
               onChange={(value) => {
                 onChange({ validityEnd, validityStart: toDate(value) });
@@ -45,7 +45,7 @@ export function ExtendedAttributesFields({
               clearable
               error={validityError}
               id="validity_end"
-              label={<Trans>Validity End</Trans>}
+              label={t`Validity End`}
               minDate={new Date()}
               onChange={(value) => {
                 onChange({ validityEnd: toDate(value), validityStart });

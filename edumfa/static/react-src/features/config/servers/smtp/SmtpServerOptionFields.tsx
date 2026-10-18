@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox } from "@mantine/core";
 
 import type { SmtpServerFieldSetter, SmtpServerFormValues } from "./smtpServerValues";
@@ -14,6 +14,8 @@ export function SmtpServerOptionFields({
   setValue,
   values
 }: SmtpServerOptionFieldsProps) {
+  const { t } = useLingui();
+
   const { hasJobQueue } = getUiConfig();
   // StartTLS does not apply to implicit TLS; the legacy form hid it for smtps:// servers.
   const showStartTls = !values.server.toLowerCase().startsWith("smtps:");
@@ -24,7 +26,7 @@ export function SmtpServerOptionFields({
         <Checkbox
           checked={values.tls}
           id="tls"
-          label={<Trans>Use StartTLS</Trans>}
+          label={t`Use StartTLS`}
           mb="sm"
           onChange={(event) => {
             setValue("tls", event.currentTarget.checked);
@@ -35,7 +37,7 @@ export function SmtpServerOptionFields({
         <Checkbox
           checked={values.enqueue_job}
           id="enqueue_job"
-          label={<Trans>Send mail from job queue</Trans>}
+          label={t`Send mail from job queue`}
           mb="sm"
           onChange={(event) => {
             setValue("enqueue_job", event.currentTarget.checked);

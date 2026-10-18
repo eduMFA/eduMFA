@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button, Text, TextInput } from "@mantine/core";
 
 import { type EnrolledTokenResultProps } from "./types";
@@ -18,21 +18,20 @@ export function OtpClientPartFields({
   onSendClientPart,
   serial
 }: OtpClientPartFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <Text size="sm">
         <Trans>Your token {serial} is not completely enrolled, yet.</Trans>
       </Text>
       <Text mb="sm" size="sm">
-        <Trans>
-          Please scan the QR code with the privacyIDEA Authenticator app and enter the
-          generated code below.
-        </Trans>
+        {t`Please scan the QR code with the privacyIDEA Authenticator app and enter the generated code below.`}
       </Text>
       <TextInput
         autoComplete="off"
         id="clientpart"
-        label={<Trans>Client Part</Trans>}
+        label={t`Client Part`}
         mb="sm"
         onChange={(event) => {
           onClientPartChange(event.currentTarget.value);
@@ -44,7 +43,7 @@ export function OtpClientPartFields({
         loading={isSendingClientPart}
         onClick={onSendClientPart}
       >
-        <Trans>Enroll Token</Trans>
+        {t`Enroll Token`}
       </Button>
     </>
   );

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { SelectionRow } from "./SelectionRow";
 import type { TokenPropertyMutations } from "./useTokenPropertyMutations";
@@ -14,6 +14,8 @@ export interface TokenRealmsRowProps {
 
 /** The realms of the token, edited as checkboxes over all known realms. */
 export function TokenRealmsRow({ realms, setRealms, token }: TokenRealmsRowProps) {
+  const { t } = useLingui();
+
   const realmNames = Object.keys(realms ?? {}).sort((left, right) =>
     left.localeCompare(right)
   );
@@ -22,14 +24,14 @@ export function TokenRealmsRow({ realms, setRealms, token }: TokenRealmsRowProps
     <SelectionRow
       dataField="realms"
       isSaving={setRealms.isPending}
-      label={<Trans>Realms</Trans>}
+      label={t`Realms`}
       locked={token.locked}
       onSave={(selected) => {
         setRealms.mutate(selected);
       }}
       options={realmNames.map((realmName) => ({ label: realmName, value: realmName }))}
       right="tokenrealms"
-      saveLabel={<Trans>Save realms</Trans>}
+      saveLabel={t`Save realms`}
       selected={token.realms}
     />
   );

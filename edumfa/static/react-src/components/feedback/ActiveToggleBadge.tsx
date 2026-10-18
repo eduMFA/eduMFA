@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Tooltip, UnstyledButton } from "@mantine/core";
 
 import { BooleanPill } from "./BooleanPill";
@@ -25,12 +25,10 @@ export function ActiveToggleBadge({
   enableLabel,
   onToggle
 }: ActiveToggleBadgeProps) {
+  const { t } = useLingui();
+
   const pill = (
-    <BooleanPill
-      falseLabel={<Trans>inactive</Trans>}
-      trueLabel={<Trans>active</Trans>}
-      value={active}
-    />
+    <BooleanPill falseLabel={t`inactive`} trueLabel={t`active`} value={active} />
   );
 
   if (!onToggle) {

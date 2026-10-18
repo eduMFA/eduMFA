@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Table } from "@mantine/core";
 
 import { LinkListRow } from "./LinkListRow";
@@ -14,22 +14,24 @@ export interface PoliciesCardProps {
 
 /** Active and inactive policy counts, each followed by the policy links. */
 export function PoliciesCard({ activePolicies, inactivePolicies }: PoliciesCardProps) {
+  const { t } = useLingui();
+
   return (
     <Card
       flush
       title={
         <Anchor href={hashHref("/config/policies/list")} size="sm">
-          <Trans>Policies</Trans>
+          {t`Policies`}
         </Anchor>
       }
     >
       <Table verticalSpacing="xs">
         <Table.Tbody>
-          <StatRow label={<Trans>Active Policies</Trans>} name="activePolicies">
+          <StatRow label={t`Active Policies`} name="activePolicies">
             {activePolicies.length}
           </StatRow>
           <LinkListRow links={activePolicies.map(toPolicyLink)} />
-          <StatRow label={<Trans>Inactive Policies</Trans>} name="inactivePolicies">
+          <StatRow label={t`Inactive Policies`} name="inactivePolicies">
             {inactivePolicies.length}
           </StatRow>
           <LinkListRow links={inactivePolicies.map(toPolicyLink)} />

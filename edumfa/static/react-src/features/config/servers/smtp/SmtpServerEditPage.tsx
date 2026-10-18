@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +19,8 @@ import { SystemLayout } from "@/features/config/system/SystemLayout";
  * from the list call (there is no `GET /smtpserver/<identifier>`).
  */
 export function SmtpServerEditPage() {
+  const { t } = useLingui();
+
   const { identifier } = useParams<{ identifier: string }>();
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
@@ -44,7 +46,7 @@ export function SmtpServerEditPage() {
       <>
         <ErrorAlert error={serversQuery.error} />
         {serversQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading SMTP servers</Trans>} />
+          <LoadingIndicator label={t`Loading SMTP servers`} />
         ) : null}
         {server ? (
           <SmtpServerForm existing={{ identifier, server }} key={identifier} />

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect, Stack } from "@mantine/core";
 
 import type { EventFormChange } from "./types";
@@ -23,11 +23,13 @@ export function EventActionCard({
   actionsReady: boolean;
   options: Parameters<typeof TypedOptionsTable>[0]["options"];
 }) {
+  const { t } = useLingui();
+
   return (
-    <Card title={<Trans>Action</Trans>}>
+    <Card title={t`Action`}>
       <Stack>
         <NativeSelect
-          label={<Trans>Action</Trans>}
+          label={t`Action`}
           required
           disabled={!actionsReady}
           data={choicesWithCurrent(actionNames, form.action)}

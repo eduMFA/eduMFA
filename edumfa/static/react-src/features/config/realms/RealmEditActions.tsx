@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 
 export interface RealmEditActionsProps {
@@ -17,15 +17,17 @@ export function RealmEditActions({
   onCancel,
   onSave
 }: RealmEditActionsProps) {
+  const { t } = useLingui();
+
   return (
     <Group gap="xs" justify="flex-end" wrap="nowrap">
       {canWrite ? (
         <Button disabled={isSaveDisabled} loading={isSaving} onClick={onSave} size="xs">
-          <Trans>Save</Trans>
+          {t`Save`}
         </Button>
       ) : null}
       <Button color="red" onClick={onCancel} size="xs" variant="light">
-        <Trans>Cancel</Trans>
+        {t`Cancel`}
       </Button>
     </Group>
   );

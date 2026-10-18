@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button, Group } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -37,6 +37,8 @@ export function machineResolverEditHref(
  * the resolver table with the edit link and the (confirmed) delete action.
  */
 export function MachineResolverListPage() {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const queryClient = useQueryClient();
   const { isAuthenticated, rights } = useAuth();
@@ -59,7 +61,7 @@ export function MachineResolverListPage() {
 
   const columns: DataTableColumn<MachineResolverConfig>[] = [
     {
-      header: <Trans>Resolver name</Trans>,
+      header: t`Resolver name`,
       key: "resolvername",
       render: (resolver) => (
         <Anchor href={machineResolverEditHref(resolver)} size="sm">
@@ -68,13 +70,13 @@ export function MachineResolverListPage() {
       )
     },
     {
-      header: <Trans>type</Trans>,
+      header: t`type`,
       key: "type",
       render: (resolver) => resolver.type
     },
     {
       align: "right",
-      header: <Trans>Actions</Trans>,
+      header: t`Actions`,
       key: "actions",
       render: (resolver) => (
         <Group gap="xs" justify="flex-end" wrap="nowrap">
@@ -85,7 +87,7 @@ export function MachineResolverListPage() {
             size="xs"
             variant="light"
           >
-            <Trans>Edit</Trans>
+            {t`Edit`}
           </Button>
           {canDelete ? (
             <Button
@@ -101,15 +103,13 @@ export function MachineResolverListPage() {
                   onConfirm: () => {
                     deleteMutation.mutate(resolver.resolvername);
                   },
-                  question: (
-                    <Trans>Do you really want to delete this machine resolver?</Trans>
-                  )
+                  question: t`Do you really want to delete this machine resolver?`
                 });
               }}
               size="xs"
               variant="light"
             >
-              <Trans>Delete</Trans>
+              {t`Delete`}
             </Button>
           ) : null}
         </Group>
@@ -119,7 +119,7 @@ export function MachineResolverListPage() {
 
   return (
     <SidebarLayout sidebar={<MachineResolverSidebar activeItem="list" />}>
-      <PageHeader title={<Trans>Machine Resolvers</Trans>} />
+      <PageHeader title={t`Machine Resolvers`} />
 
       {!isAuthenticated ? (
         <LoginRequiredAlert />
@@ -130,12 +130,12 @@ export function MachineResolverListPage() {
 
           <Card flush>
             {resolversQuery.isLoading ? (
-              <LoadingIndicator label={<Trans>Loading machine resolvers</Trans>} />
+              <LoadingIndicator label={t`Loading machine resolvers`} />
             ) : null}
             <DataTable
               columns={columns}
               data={resolvers}
-              emptyMessage={<Trans>No machine resolvers defined.</Trans>}
+              emptyMessage={t`No machine resolvers defined.`}
               getRowKey={(resolver) => resolver.resolvername}
               id="tablemachineresolvers"
               isLoading={resolversQuery.data === undefined}

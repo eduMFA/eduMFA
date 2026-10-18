@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Autocomplete, Loader } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import type { ReactNode } from "react";
@@ -53,7 +53,7 @@ export function MachineLookupField({
       description={noResults ? t`No machine found` : undefined}
       filter={({ options }) => options}
       id={id}
-      label={label ?? <Trans>Machine</Trans>}
+      label={label ?? t`Machine`}
       mb="sm"
       onChange={onChange}
       placeholder={t`start typing a machine.`}

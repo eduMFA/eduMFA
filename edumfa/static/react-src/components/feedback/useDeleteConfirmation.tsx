@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { useState, type ReactNode } from "react";
 
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -23,6 +23,8 @@ export interface DeleteConfirmation {
 }
 
 export function useDeleteConfirmation(): DeleteConfirmation {
+  const { t } = useLingui();
+
   const { settings } = useAuth();
   const [pending, setPending] = useState<DeleteRequest | null>(null);
 
@@ -36,13 +38,13 @@ export function useDeleteConfirmation(): DeleteConfirmation {
 
   const dialog = pending ? (
     <ConfirmDialog
-      confirmLabel={<Trans>Delete</Trans>}
+      confirmLabel={t`Delete`}
       id="dialogConfirmDelete"
       isOpen
       message={
         <>
-          {pending.question ?? <Trans>Do you really want to delete this object?</Trans>}{" "}
-          ({pending.identifier})
+          {pending.question ?? t`Do you really want to delete this object?`} (
+          {pending.identifier})
         </>
       }
       onCancel={() => {
@@ -52,7 +54,7 @@ export function useDeleteConfirmation(): DeleteConfirmation {
         setPending(null);
         pending.onConfirm();
       }}
-      title={<Trans>Delete Configuration</Trans>}
+      title={t`Delete Configuration`}
     />
   ) : null;
 

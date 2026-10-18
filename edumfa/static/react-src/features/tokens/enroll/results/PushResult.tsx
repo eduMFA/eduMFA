@@ -16,10 +16,7 @@ export function PushResult({
   if (rolloutState === "enrolled") {
     return (
       <Text size="sm" ta={isWizard ? "center" : undefined}>
-        <Trans>
-          Please note, that your smartphone needs internet access during the
-          authentication process.
-        </Trans>
+        {t`Please note, that your smartphone needs internet access during the authentication process.`}
       </Text>
     );
   }
@@ -63,9 +60,7 @@ export function PushResult({
           <Trans>Your token {serial} is not completely enrolled, yet.</Trans>
         </Text>
         <Text size="sm">
-          <Trans>
-            It will send the missing registration data to the configured endpoint.
-          </Trans>
+          {t`It will send the missing registration data to the configured endpoint.`}
         </Text>
       </Grid.Col>
     </Grid>

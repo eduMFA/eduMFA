@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { SelectionRow } from "./SelectionRow";
 import type { TokenPropertyMutations } from "./useTokenPropertyMutations";
@@ -16,6 +16,8 @@ export interface TokenGroupsRowProps {
 
 /** The token groups, only for sessions that may list them. */
 export function TokenGroupsRow({ setGroups, token, tokengroups }: TokenGroupsRowProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
 
   if (!hasRight(rights, "tokengroup_list")) {
@@ -31,14 +33,14 @@ export function TokenGroupsRow({ setGroups, token, tokengroups }: TokenGroupsRow
     <SelectionRow
       dataField="tokengroup"
       isSaving={setGroups.isPending}
-      label={<Trans>Token groups</Trans>}
+      label={t`Token groups`}
       locked={token.locked}
       onSave={(selected) => {
         setGroups.mutate(selected);
       }}
       options={options}
       right="tokengroups"
-      saveLabel={<Trans>Save Token Groups</Trans>}
+      saveLabel={t`Save Token Groups`}
       selected={token.tokengroup ?? []}
     />
   );

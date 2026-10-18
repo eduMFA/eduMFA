@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 
 import { buildMachineAssignmentColumns } from "./machineAssignmentColumns";
@@ -32,6 +32,8 @@ export function MachineAssignmentsCard({
   onChanged,
   serial
 }: MachineAssignmentsCardProps) {
+  const { t } = useLingui();
+
   const [page, setPage] = useState(1);
   const editor = useMachineAssignmentEditor({ onChanged, serial });
   const allAssignments = assignments ?? [];
@@ -43,7 +45,7 @@ export function MachineAssignmentsCard({
   const columns = buildMachineAssignmentColumns({ applications, editor });
 
   return (
-    <Card flush title={<Trans>Machines this token is attached to</Trans>}>
+    <Card flush title={t`Machines this token is attached to`}>
       <ErrorAlert error={loadError} />
       <ErrorAlert error={applicationsError} />
       <ErrorAlert error={editor.detach.error} />
@@ -60,7 +62,7 @@ export function MachineAssignmentsCard({
       <DataTable
         columns={columns}
         data={visibleAssignments}
-        emptyMessage={<Trans>This token is not attached to any machine.</Trans>}
+        emptyMessage={t`This token is not attached to any machine.`}
         getRowKey={(assignment) => String(assignment.id)}
         id="tabletokenmachines"
         isLoading={assignments === undefined}

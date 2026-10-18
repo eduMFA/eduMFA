@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import type { RegisterFormValues } from "./types";
@@ -19,41 +19,41 @@ export function RegisterFormFields({ errors, register }: RegisterFormFieldsProps
         autoFocus
         hasError={Boolean(errors.username)}
         id="username"
-        label={<Trans>Username</Trans>}
+        label={t`Username`}
         placeholder={t`Username`}
         registration={register("username", { required: true })}
       />
       <TextField
         hasError={Boolean(errors.surname)}
         id="surname"
-        label={<Trans>Surname</Trans>}
+        label={t`Surname`}
         placeholder={t`Surname`}
         registration={register("surname", { required: true })}
       />
       <TextField
         hasError={Boolean(errors.givenname)}
         id="givenname"
-        label={<Trans>Given name</Trans>}
+        label={t`Given name`}
         placeholder={t`Given name`}
         registration={register("givenname", { required: true })}
       />
       <TextField
         hasError={Boolean(errors.email)}
         id="email"
-        label={<Trans>Email</Trans>}
+        label={t`Email`}
         placeholder={t`Email`}
         registration={register("email", { required: true })}
         type="email"
       />
       <TextField
         id="mobile"
-        label={<Trans>Mobile</Trans>}
+        label={t`Mobile`}
         placeholder={t`Mobile`}
         registration={register("mobile")}
       />
       <TextField
         id="phone"
-        label={<Trans>Phone</Trans>}
+        label={t`Phone`}
         placeholder={t`Phone`}
         registration={register("phone")}
       />
@@ -61,7 +61,7 @@ export function RegisterFormFields({ errors, register }: RegisterFormFieldsProps
         autoComplete="new-password"
         hasError={Boolean(errors.password)}
         id="password"
-        label={<Trans>Password</Trans>}
+        label={t`Password`}
         placeholder={t`Password`}
         registration={register("password", {
           deps: ["password2"],

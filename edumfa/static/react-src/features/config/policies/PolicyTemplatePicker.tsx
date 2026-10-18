@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { IconDownload, IconTemplate } from "@tabler/icons-react";
 import { Button, Stack, Table, Text } from "@mantine/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -20,6 +20,8 @@ export function PolicyTemplatePicker({
   onApply: (template: PolicyTemplate) => void;
   onBusyChange: (busy: boolean) => void;
 }) {
+  const { t } = useLingui();
+
   const [opened, setOpened] = useState(false);
   const templates = useQuery({
     enabled: opened,
@@ -47,19 +49,12 @@ export function PolicyTemplatePicker({
           setOpened(!opened);
         }}
       >
-        {opened ? (
-          <Trans>Hide Policy templates</Trans>
-        ) : (
-          <Trans>Show Policy templates</Trans>
-        )}
+        {opened ? t`Hide Policy templates` : t`Show Policy templates`}
       </Button>
       {opened ? (
         <>
           <Text size="sm" c="dimmed">
-            <Trans>
-              Load a template from the eduMFA policy template repository. Review its
-              settings before saving.
-            </Trans>
+            {t`Load a template from the eduMFA policy template repository. Review its settings before saving.`}
           </Text>
           <ErrorAlert error={templates.error ?? template.error} />
           {templates.isLoading ? <LoadingIndicator /> : null}

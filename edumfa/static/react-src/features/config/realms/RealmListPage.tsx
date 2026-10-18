@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { NewRealmCard } from "./NewRealmCard";
 import { RealmSidebar } from "./RealmSidebar";
@@ -21,6 +21,8 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
  * resolvers and priorities, deletion, and the create form below the table.
  */
 export function RealmListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights } = useAuth();
   const { dialog, requestDelete } = useDeleteConfirmation();
   const editing = useRealmEditing();
@@ -54,7 +56,7 @@ export function RealmListPage() {
         />
       }
     >
-      <PageHeader title={<Trans>Realms</Trans>} />
+      <PageHeader title={t`Realms`} />
 
       {!isAuthenticated ? (
         <LoginRequiredAlert />

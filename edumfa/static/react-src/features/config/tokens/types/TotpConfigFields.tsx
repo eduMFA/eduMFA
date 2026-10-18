@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, Checkbox, NativeSelect, Stack, Text, TextInput } from "@mantine/core";
 
 import { HelpText } from "./HelpText";
@@ -12,6 +12,8 @@ import {
 
 /** Port of `config.token.totp.html`. */
 export function TotpConfigFields({ form, onChange }: TokenConfigFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <HelpText>
@@ -29,16 +31,13 @@ export function TotpConfigFields({ form, onChange }: TokenConfigFieldsProps) {
         </Trans>
       </HelpText>
       <Text mb="md" size="sm">
-        <Trans>
-          Here you can define settings, that will be set as default values, when
-          enrolling a TOTP token.
-        </Trans>
+        {t`Here you can define settings, that will be set as default values, when enrolling a TOTP token.`}
       </Text>
       <Stack gap="sm">
         <NativeSelect
           data={totpTimeSteps}
           id="totpStep"
-          label={<Trans>Default Time Step</Trans>}
+          label={t`Default Time Step`}
           onChange={(event) => {
             onChange({ "totp.timeStep": event.currentTarget.value });
           }}
@@ -47,7 +46,7 @@ export function TotpConfigFields({ form, onChange }: TokenConfigFieldsProps) {
         <TextInput
           id="totpWindow"
           inputMode="numeric"
-          label={<Trans>Default Time Window</Trans>}
+          label={t`Default Time Window`}
           onChange={(event) => {
             onChange({ "totp.timeWindow": event.currentTarget.value });
           }}
@@ -58,7 +57,7 @@ export function TotpConfigFields({ form, onChange }: TokenConfigFieldsProps) {
         <TextInput
           id="totpShift"
           inputMode="numeric"
-          label={<Trans>Default Time Shift</Trans>}
+          label={t`Default Time Shift`}
           onChange={(event) => {
             onChange({ "totp.timeShift": event.currentTarget.value });
           }}
@@ -69,7 +68,7 @@ export function TotpConfigFields({ form, onChange }: TokenConfigFieldsProps) {
         <Checkbox
           checked={getFlag(form, "totp.useTimeShift")}
           id="totpUseTimeShift"
-          label={<Trans>Use Time Shift</Trans>}
+          label={t`Use Time Shift`}
           onChange={(event) => {
             onChange({ "totp.useTimeShift": event.currentTarget.checked });
           }}
@@ -77,7 +76,7 @@ export function TotpConfigFields({ form, onChange }: TokenConfigFieldsProps) {
         <NativeSelect
           data={hashlibs}
           id="totpHashlib"
-          label={<Trans>Default Hashlib</Trans>}
+          label={t`Default Hashlib`}
           onChange={(event) => {
             onChange({ "totp.hashlib": event.currentTarget.value });
           }}

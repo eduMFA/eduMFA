@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, TextInput } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
@@ -51,7 +51,7 @@ export function HostsMachineResolverForm({
               loading={saveMutation.isPending}
               type="submit"
             >
-              <Trans>Save resolver</Trans>
+              {t`Save resolver`}
             </Button>
           ) : null
         }
@@ -61,7 +61,7 @@ export function HostsMachineResolverForm({
           autoFocus
           error={formState.errors.resolvername?.message}
           id="resolvername"
-          label={<Trans>Resolver name</Trans>}
+          label={t`Resolver name`}
           mb="sm"
           placeholder="MachineResolver1"
           required
@@ -76,7 +76,7 @@ export function HostsMachineResolverForm({
         <TextInput
           error={formState.errors.filename?.message}
           id="resolverfile"
-          label={<Trans>File name</Trans>}
+          label={t`File name`}
           placeholder="/etc/hosts"
           required
           {...register("filename", { required: true })}

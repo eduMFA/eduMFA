@@ -18,9 +18,7 @@ export function MotpResult({ detail }: EnrolledTokenResultProps) {
         <Stack gap="sm">
           <Accordion variant="separated">
             <Accordion.Item value="seed">
-              <Accordion.Control>
-                <Trans>The OTP key</Trans>
-              </Accordion.Control>
+              <Accordion.Control>{t`The OTP key`}</Accordion.Control>
               <Accordion.Panel>
                 <Text ff="monospace" size="sm" style={{ wordBreak: "break-all" }}>
                   {stripSeedPrefix(detail.otpkey?.value)}

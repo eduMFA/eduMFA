@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { ActionBadge } from "./ActionBadge";
 import { BooleanPill } from "@/components/feedback/BooleanPill";
@@ -15,11 +15,7 @@ export function TokenActiveBadge({ active, onToggle }: TokenActiveBadgeProps) {
 
   return (
     <ActionBadge label={onToggle ? label : null} onClick={onToggle}>
-      <BooleanPill
-        falseLabel={<Trans>disabled</Trans>}
-        trueLabel={<Trans>active</Trans>}
-        value={active}
-      />
+      <BooleanPill falseLabel={t`disabled`} trueLabel={t`active`} value={active} />
     </ActionBadge>
   );
 }

@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { TextInput } from "@mantine/core";
 import type { UseFormRegister } from "react-hook-form";
 
@@ -24,14 +24,10 @@ export function ServiceIdFields({
       {isEditing ? null : (
         <TextInput
           autoFocus
-          description={
-            <Trans>
-              This is the unique identifying name for this service definition.
-            </Trans>
-          }
+          description={t`This is the unique identifying name for this service definition.`}
           error={nameError}
           id="identifier"
-          label={<Trans>Identifier</Trans>}
+          label={t`Identifier`}
           mb="md"
           placeholder="myNewService"
           required
@@ -47,7 +43,7 @@ export function ServiceIdFields({
 
       <TextInput
         id="description"
-        label={<Trans>Description</Trans>}
+        label={t`Description`}
         placeholder={t`some wise words`}
         {...register("description")}
       />

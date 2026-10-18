@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useParams } from "react-router-dom";
 
 import { CaConnectorEditorFrame, useCaConnectorEditor } from "./caConnectorEditor";
@@ -6,6 +6,8 @@ import { LocalCaConnectorForm } from "./LocalCaConnectorForm";
 
 /** Port of `config.caconnectors.local.html` and `LocalCAConnectorController`. */
 export function LocalCaConnectorPage() {
+  const { t } = useLingui();
+
   const { connectorname } = useParams();
   const editor = useCaConnectorEditor(connectorname);
 
@@ -16,7 +18,7 @@ export function LocalCaConnectorPage() {
         connectorname ? (
           <Trans>Edit Local CA Connector {connectorname}</Trans>
         ) : (
-          <Trans>Create a new Local CA Connector</Trans>
+          t`Create a new Local CA Connector`
         )
       }
     >

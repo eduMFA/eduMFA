@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { EnrollTokenButton } from "./EnrollTokenButton";
 import { USER_TOKEN_PAGE_SIZE, type UserTokens } from "./useUserTokens";
@@ -23,6 +23,8 @@ export function UserTokensCard({
   tokens,
   username
 }: UserTokensCardProps) {
+  const { t } = useLingui();
+
   const enrollHref = hashHref(
     `/token/enroll/${encodeURIComponent(realm)}/${encodeURIComponent(username)}`
   );
@@ -32,7 +34,7 @@ export function UserTokensCard({
     <Card
       actions={<EnrollTokenButton canEnroll={canEnroll} href={enrollHref} />}
       flush
-      title={<Trans>Tokens</Trans>}
+      title={t`Tokens`}
     >
       <ErrorAlert error={tokens.query.error} />
 
@@ -47,7 +49,7 @@ export function UserTokensCard({
       <DataTable
         columns={userTokenColumns}
         data={tokenPageData?.tokens ?? []}
-        emptyMessage={<Trans>No tokens assigned.</Trans>}
+        emptyMessage={t`No tokens assigned.`}
         getRowKey={(token) => token.serial}
         isLoading={tokens.query.isLoading}
         minWidth={760}

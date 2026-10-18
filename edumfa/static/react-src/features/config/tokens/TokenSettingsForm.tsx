@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 
 import type { TokenConfigTypeKey } from "./tokenConfigForm";
@@ -17,6 +17,8 @@ export function TokenSettingsForm({
   config: SystemConfig;
   tokenType: TokenConfigTypeKey;
 }) {
+  const { t } = useLingui();
+
   const { dialog, requestDelete } = useDeleteConfirmation();
   const {
     busy,
@@ -51,7 +53,7 @@ export function TokenSettingsForm({
               loading={saveMutation.isPending}
               type="submit"
             >
-              <Trans>Save</Trans>
+              {t`Save`}
             </Button>
           ) : null
         }
@@ -74,11 +76,7 @@ export function TokenSettingsForm({
               if (canDelete && !busy)
                 requestDelete({
                   identifier: key,
-                  question: (
-                    <Trans>
-                      Do you really want to delete this configuration entry?
-                    </Trans>
-                  ),
+                  question: t`Do you really want to delete this configuration entry?`,
                   onConfirm: () => {
                     deleteMutation.mutate(key);
                   }

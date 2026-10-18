@@ -82,7 +82,7 @@ export function EduMfaServerForm({ existing }: EduMfaServerFormProps) {
               loading={saveMutation.isPending}
               type="submit"
             >
-              <Trans>Save eduMFA server</Trans>
+              {t`Save eduMFA server`}
             </Button>
           ) : null
         }

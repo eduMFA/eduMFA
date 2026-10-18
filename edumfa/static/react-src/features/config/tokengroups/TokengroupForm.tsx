@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useForm, useWatch } from "react-hook-form";
@@ -19,6 +19,8 @@ export interface TokengroupFormProps {
 
 /** The form of `config.tokengroup.edit.html`; the title follows the typed identifier. */
 export function TokengroupForm({ existing }: TokengroupFormProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const canSave = hasRight(rights, "tokengroup_add");
   const { formState, handleSubmit, register, control } = useForm<TokengroupFormValues>({
@@ -63,7 +65,7 @@ export function TokengroupForm({ existing }: TokengroupFormProps) {
               loading={saveMutation.isPending}
               type="submit"
             >
-              <Trans>Save Tokengroup</Trans>
+              {t`Save Tokengroup`}
             </Button>
           ) : null
         }

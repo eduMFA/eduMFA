@@ -17,9 +17,7 @@ export function TiqrResult({ detail }: EnrolledTokenResultProps) {
         <Stack gap="sm">
           <Accordion variant="separated">
             <Accordion.Item value="url">
-              <Accordion.Control>
-                <Trans>The Enrollment URL</Trans>
-              </Accordion.Control>
+              <Accordion.Control>{t`The Enrollment URL`}</Accordion.Control>
               <Accordion.Panel>
                 <Text ff="monospace" size="sm" style={{ wordBreak: "break-all" }}>
                   {detail.tiqrenroll?.value ?? ""}

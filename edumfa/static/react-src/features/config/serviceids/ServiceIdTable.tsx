@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button, Text } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -49,15 +49,17 @@ export function ServiceIdTable({
   isLoading,
   onDelete
 }: ServiceIdTableProps) {
+  const { t } = useLingui();
+
   const columns: DataTableColumn<ServiceIdRow>[] = [
     {
-      header: <Trans>Id</Trans>,
+      header: t`Id`,
       key: "id",
       render: (row) => row.id,
       width: 80
     },
     {
-      header: <Trans>Name</Trans>,
+      header: t`Name`,
       key: "name",
       render: (row) => (
         <Anchor
@@ -71,7 +73,7 @@ export function ServiceIdTable({
       )
     },
     {
-      header: <Trans>Description</Trans>,
+      header: t`Description`,
       key: "description",
       render: (row) => (
         <Text size="sm" title={row.description}>
@@ -83,7 +85,7 @@ export function ServiceIdTable({
       ? [
           {
             align: "right",
-            header: <Trans>Actions</Trans>,
+            header: t`Actions`,
             key: "actions",
             render: (row) => (
               <Button
@@ -96,7 +98,7 @@ export function ServiceIdTable({
                 size="xs"
                 variant="light"
               >
-                <Trans>Delete</Trans>
+                {t`Delete`}
               </Button>
             )
           } satisfies DataTableColumn<ServiceIdRow>
@@ -106,14 +108,12 @@ export function ServiceIdTable({
 
   return (
     <Card flush>
-      {isLoading ? (
-        <LoadingIndicator label={<Trans>Loading service IDs</Trans>} />
-      ) : null}
+      {isLoading ? <LoadingIndicator label={t`Loading service IDs`} /> : null}
 
       <DataTable
         columns={columns}
         data={toRows(data)}
-        emptyMessage={<Trans>No service IDs defined.</Trans>}
+        emptyMessage={t`No service IDs defined.`}
         getRowKey={(row) => row.servicename}
         id="tableserviceids"
         isLoading={data === undefined}

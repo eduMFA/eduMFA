@@ -1,6 +1,8 @@
-import { Trans } from "@lingui/react/macro";
 import { Grid, Stack, Text, Title } from "@mantine/core";
 
+import { FidoResultDescription } from "./FidoResultDescription";
+import { FidoResultTitle } from "./FidoResultTitle";
+import { getFidoStage } from "./fidoStage";
 import { type EnrolledTokenResultProps } from "./types";
 
 /** Vendor logos shown next to a registered FIDO authenticator. */
@@ -14,19 +16,12 @@ const fidoVendorImages: Record<string, string> = {
 export function FidoResult({ fido, form }: EnrolledTokenResultProps) {
   const vendor = fido.subject.split(" ")[0] ?? "";
   const vendorImage = fidoVendorImages[vendor];
+  const stage = getFidoStage(fido.pending, form.type);
 
   return (
     <Stack gap="sm">
       <Title order={4} size="h6">
-        {fido.pending ? (
-          form.type === "u2f" ? (
-            <Trans>Take action on your token</Trans>
-          ) : (
-            <Trans>Take action on your authenticator</Trans>
-          )
-        ) : (
-          <Trans>Token enrolled</Trans>
-        )}
+        <FidoResultTitle stage={stage} />
       </Title>
       <Grid>
         <Grid.Col span={{ base: 12, sm: 4 }}>
@@ -37,27 +32,7 @@ export function FidoResult({ fido, form }: EnrolledTokenResultProps) {
         </Grid.Col>
         <Grid.Col span={{ base: 12, sm: 8 }}>
           <Text size="sm">
-            {fido.pending ? (
-              form.type === "u2f" ? (
-                <Trans>
-                  You need to confirm the registration with your token either by pushing
-                  the blinking button or by replugging your token. This depends on the
-                  actual token model.
-                </Trans>
-              ) : (
-                <Trans>
-                  You need to confirm the registration with your authenticator. For an
-                  external authenticator, this usually means pushing the button on the
-                  authenticator, or replugging it (if there is no button on the
-                  authenticator). If you want to use an authenticator that is integrated
-                  into your device, look for a dialog box from your operating system. If
-                  you do not see anything, please make sure that your authenticator
-                  supports WebAuthn.
-                </Trans>
-              )
-            ) : (
-              <Trans>The token is enrolled.</Trans>
-            )}
+            <FidoResultDescription stage={stage} />
           </Text>
         </Grid.Col>
       </Grid>

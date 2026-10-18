@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import {
   NativeSelect,
   PasswordInput,
@@ -36,7 +36,7 @@ export function LdapConnectionFields({
         autoFocus
         error={nameError}
         id="resolvername"
-        label={<Trans>Resolver name</Trans>}
+        label={t`Resolver name`}
         placeholder="resolver1"
         required
         {...register("resolvername", {
@@ -49,7 +49,7 @@ export function LdapConnectionFields({
       />
       <TextInput
         id="serveruri"
-        label={<Trans>Server URI</Trans>}
+        label={t`Server URI`}
         placeholder="ldap://edumfa.server1, ldap://edumfa.server2"
         required
         {...register("LDAPURI", { required: true })}
@@ -57,14 +57,14 @@ export function LdapConnectionFields({
       <LdapTlsFields control={control} register={register} />
       <TextInput
         id="basedn"
-        label={<Trans>Base DN</Trans>}
+        label={t`Base DN`}
         placeholder="ou=users,dc=domain,dc=tld"
         required
         {...register("LDAPBASE", { required: true })}
       />
       <TextInput
         id="binddn"
-        label={<Trans>Bind DN</Trans>}
+        label={t`Bind DN`}
         placeholder="cn=admin,ou=users,dc=domain,dc=tld"
         {...register("BINDDN")}
       />
@@ -72,28 +72,28 @@ export function LdapConnectionFields({
         <PasswordInput
           autoComplete="new-password"
           id="bindpw"
-          label={<Trans>Bind Password</Trans>}
+          label={t`Bind Password`}
           placeholder="topsecret"
           {...register("BINDPW")}
         />
         <NativeSelect
           data={ldapAuthTypes}
           id="authtype"
-          label={<Trans>Bind Type</Trans>}
+          label={t`Bind Type`}
           {...register("AUTHTYPE")}
         />
       </SimpleGrid>
       <SimpleGrid cols={{ base: 1, sm: 2 }}>
         <TextInput
           id="timeout"
-          label={<Trans>Timeout (seconds)</Trans>}
+          label={t`Timeout (seconds)`}
           placeholder="5"
           required
           {...register("TIMEOUT", { required: true })}
         />
         <TextInput
           id="sizelimit"
-          label={<Trans>Size Limit</Trans>}
+          label={t`Size Limit`}
           placeholder="500"
           required
           {...register("SIZELIMIT", { required: true })}

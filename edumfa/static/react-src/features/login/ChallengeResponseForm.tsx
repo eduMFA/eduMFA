@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import {
   Alert,
   Button,
@@ -46,10 +46,10 @@ export function ChallengeResponseForm({
       ) : null}
       {multipleTokens ? (
         <Text mb="md" ta="center">
-          <Trans>Please confirm with one of these tokens:</Trans>{" "}
-          {challenge.serials.join(" ")}
+          {t`Please confirm with one of these tokens:`} {challenge.serials.join(" ")}
         </Text>
-      ) : challenge.message ? (
+      ) : null}
+      {!multipleTokens && challenge.message ? (
         <Text mb="md" ta="center">
           {challenge.message}
         </Text>
@@ -62,9 +62,7 @@ export function ChallengeResponseForm({
       {challenge.polling ? (
         <Group c="dimmed" gap="xs" justify="center" mb="md" role="status">
           <Loader size="xs" />
-          <Text size="sm">
-            <Trans>Waiting for the confirmation…</Trans>
-          </Text>
+          <Text size="sm">{t`Waiting for the confirmation…`}</Text>
         </Group>
       ) : null}
       {challenge.showInput ? (
@@ -97,7 +95,7 @@ export function ChallengeResponseForm({
             loading={isPending}
             type="submit"
           >
-            <Trans>Log In</Trans>
+            {t`Log In`}
           </Button>
         </form>
       ) : null}

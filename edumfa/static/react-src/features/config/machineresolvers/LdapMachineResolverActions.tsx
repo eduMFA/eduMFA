@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDeviceFloppy, IconPlugConnected } from "@tabler/icons-react";
 
@@ -19,6 +19,8 @@ export function LdapMachineResolverActions({
   isValid,
   onTest
 }: LdapMachineResolverActionsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <Button
@@ -30,7 +32,7 @@ export function LdapMachineResolverActions({
         type="button"
         variant="light"
       >
-        <Trans>Test LDAP Resolver</Trans>
+        {t`Test LDAP Resolver`}
       </Button>
       {canSave ? (
         <Button
@@ -39,7 +41,7 @@ export function LdapMachineResolverActions({
           loading={isSaving}
           type="submit"
         >
-          <Trans>Save resolver</Trans>
+          {t`Save resolver`}
         </Button>
       ) : null}
     </>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Divider, TextInput } from "@mantine/core";
 import type { UseFormRegister } from "react-hook-form";
 
@@ -10,13 +10,15 @@ export interface LocalCaBaseFieldsProps {
 
 /** The "Base Config" section: the CA files and the working directories. */
 export function LocalCaBaseFields({ register }: LocalCaBaseFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
-      <Divider label={<Trans>Base Config</Trans>} labelPosition="left" my="md" />
+      <Divider label={t`Base Config`} labelPosition="left" my="md" />
 
       <TextInput
         id="cacert"
-        label={<Trans>CA Certificate</Trans>}
+        label={t`CA Certificate`}
         mb="md"
         placeholder="/etc/cacert.pem"
         required
@@ -24,7 +26,7 @@ export function LocalCaBaseFields({ register }: LocalCaBaseFieldsProps) {
       />
       <TextInput
         id="cakey"
-        label={<Trans>CA Key</Trans>}
+        label={t`CA Key`}
         mb="md"
         placeholder="/etc/cakey.pem"
         required
@@ -32,7 +34,7 @@ export function LocalCaBaseFields({ register }: LocalCaBaseFieldsProps) {
       />
       <TextInput
         id="openssl.cnf"
-        label={<Trans>OpenSSL config file</Trans>}
+        label={t`OpenSSL config file`}
         mb="md"
         placeholder="/etc/openssl.cnf"
         required
@@ -40,31 +42,29 @@ export function LocalCaBaseFields({ register }: LocalCaBaseFieldsProps) {
       />
       <TextInput
         id="templates"
-        label={<Trans>Certificates Templates file</Trans>}
+        label={t`Certificates Templates file`}
         mb="md"
         placeholder="/etc/edumfa/ca/templates.yaml"
         {...register("templates")}
       />
       <TextInput
         id="workingdir"
-        label={<Trans>Working Directory</Trans>}
+        label={t`Working Directory`}
         mb="md"
         placeholder="/opt/myCA"
         {...register("WorkingDir")}
       />
       <TextInput
         id="csrdir"
-        label={<Trans>Certificate Signing Request Directory</Trans>}
+        label={t`Certificate Signing Request Directory`}
         mb="md"
         placeholder="/opt/myCA/csrs"
         {...register("CSRDir")}
       />
       <TextInput
-        description={
-          <Trans>This is the directory were certificates get written to.</Trans>
-        }
+        description={t`This is the directory were certificates get written to.`}
         id="certdir"
-        label={<Trans>Certificate Directory</Trans>}
+        label={t`Certificate Directory`}
         mb="md"
         placeholder="/opt/myCA/certs"
         {...register("CertificateDir")}

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -24,6 +24,8 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
  * one named in the route. The form mounts once the stored values are known.
  */
 export function LdapMachineResolverPage() {
+  const { t } = useLingui();
+
   const { resolvername } = useParams<{ resolvername: string }>();
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
@@ -46,7 +48,7 @@ export function LdapMachineResolverPage() {
           isEditing ? (
             <Trans>Edit LDAP Machine Resolver {resolvername}</Trans>
           ) : (
-            <Trans>Create a new LDAP Machine Resolver</Trans>
+            t`Create a new LDAP Machine Resolver`
           )
         }
       />
@@ -57,7 +59,7 @@ export function LdapMachineResolverPage() {
         <>
           <ErrorAlert error={resolverQuery.error} />
           {resolverQuery.isLoading ? (
-            <LoadingIndicator label={<Trans>Loading resolver</Trans>} />
+            <LoadingIndicator label={t`Loading resolver`} />
           ) : null}
           {resolverQuery.isSuccess && storedResolver === undefined ? (
             <Alert color="yellow" mb="md" role="alert" variant="light">
@@ -70,7 +72,8 @@ export function LdapMachineResolverPage() {
               key=""
               storedData={{}}
             />
-          ) : storedResolver ? (
+          ) : null}
+          {isEditing && storedResolver ? (
             <LdapMachineResolverForm
               initialValues={toLdapMachineResolverFormValues(
                 storedResolver.resolvername,

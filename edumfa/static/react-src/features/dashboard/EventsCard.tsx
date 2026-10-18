@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table } from "@mantine/core";
 
 import { LinkListRow } from "./LinkListRow";
@@ -14,15 +14,17 @@ export interface EventsCardProps {
 
 /** Active and inactive event handler counts, each followed by the event links. */
 export function EventsCard({ activeEvents, inactiveEvents }: EventsCardProps) {
+  const { t } = useLingui();
+
   return (
-    <Card flush title={<Trans>Events</Trans>}>
+    <Card flush title={t`Events`}>
       <Table verticalSpacing="xs">
         <Table.Tbody>
-          <StatRow label={<Trans>Active Events</Trans>} name="activeEvents">
+          <StatRow label={t`Active Events`} name="activeEvents">
             {activeEvents.length}
           </StatRow>
           <LinkListRow links={activeEvents.map(toEventLink)} />
-          <StatRow label={<Trans>Inactive Events</Trans>} name="inactiveEvents">
+          <StatRow label={t`Inactive Events`} name="inactiveEvents">
             {inactiveEvents.length}
           </StatRow>
           <LinkListRow links={inactiveEvents.map(toEventLink)} />

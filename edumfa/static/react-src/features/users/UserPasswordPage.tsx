@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 
 import { ChangePasswordForm } from "./ChangePasswordForm";
@@ -21,6 +21,8 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
  * resolves to the authenticated user on the backend.
  */
 export function UserPasswordPage() {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const { isAuthenticated, rights, user } = useAuth();
 
@@ -43,16 +45,14 @@ export function UserPasswordPage() {
     <SidebarLayout sidebar={<UserSidebar activeItem="password" />}>
       <PageHeader
         subtitle={user?.realm ? <Trans>Realm {user.realm}</Trans> : null}
-        title={<Trans>Your details</Trans>}
+        title={t`Your details`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={userQuery.error} />
       <ErrorAlert error={changePassword.mutation.error} />
 
-      {userQuery.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading user</Trans>} />
-      ) : null}
+      {userQuery.isLoading ? <LoadingIndicator label={t`Loading user`} /> : null}
 
       {userDetail ? <UserProfileCard userDetail={userDetail} /> : null}
 

@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Text, TextInput } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -51,10 +51,10 @@ export function NewRealmCard({
             loading={isSaving}
             type="submit"
           >
-            <Trans>Create realm</Trans>
+            {t`Create realm`}
           </Button>
         }
-        title={<Trans>New realm</Trans>}
+        title={t`New realm`}
       >
         <TextInput
           error={
@@ -63,7 +63,7 @@ export function NewRealmCard({
               : undefined
           }
           id="realmname"
-          label={<Trans>Realm name</Trans>}
+          label={t`Realm name`}
           mb="md"
           onChange={(event) => {
             onNameChange(event.currentTarget.value);
@@ -73,7 +73,7 @@ export function NewRealmCard({
           value={name}
         />
         <Text c="dimmed" fw={600} mb={6} size="xs" tt="uppercase">
-          <Trans>resolvers</Trans>
+          {t`resolvers`}
         </Text>
         <RealmForm
           idPrefix="new"

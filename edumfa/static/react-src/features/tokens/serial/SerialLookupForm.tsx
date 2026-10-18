@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
@@ -47,17 +47,17 @@ export function SerialLookupForm({
               loading={countPending}
               type="submit"
             >
-              <Trans>Get Serial Number</Trans>
+              {t`Get Serial Number`}
             </Button>
           ) : undefined
         }
-        title={<Trans>Search parameters</Trans>}
+        title={t`Search parameters`}
       >
         <TextInput
           autoComplete="off"
           disabled={inputsDisabled}
           id="otp"
-          label={<Trans>OTP Value</Trans>}
+          label={t`OTP Value`}
           mb="sm"
           onChange={(event) => {
             onFieldChange("otp", event.currentTarget.value);

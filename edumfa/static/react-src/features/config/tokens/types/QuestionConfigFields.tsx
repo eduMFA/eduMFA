@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Table, TextInput, Title } from "@mantine/core";
 import { IconQuestionMark } from "@tabler/icons-react";
 
@@ -34,21 +34,13 @@ export function QuestionConfigFields({
   return (
     <>
       <HelpText>
-        <Trans>
-          The questionnaire lets you define a set of questions. The questionnaire token
-          needs to define answers to these questions and the user will be presented with
-          a random questions and needs to provide his previously defined answer.
-        </Trans>
+        {t`The questionnaire lets you define a set of questions. The questionnaire token needs to define answers to these questions and the user will be presented with a random questions and needs to provide his previously defined answer.`}
       </HelpText>
       <TextInput
-        description={
-          <Trans>
-            This is the number of answers a user needs to define to enroll a token.
-          </Trans>
-        }
+        description={t`This is the number of answers a user needs to define to enroll a token.`}
         id="questionAnswers"
         inputMode="numeric"
-        label={<Trans>Number of answers</Trans>}
+        label={t`Number of answers`}
         mb="lg"
         onChange={(event) => {
           onChange({ "question.num_answers": event.currentTarget.value });
@@ -59,17 +51,15 @@ export function QuestionConfigFields({
       />
 
       <Title mb="xs" order={4} size="h6">
-        <Trans>Questionnaire</Trans>
+        {t`Questionnaire`}
       </Title>
       <HelpText>
-        <Trans>These are the possible questions, a user may define answers to.</Trans>
+        {t`These are the possible questions, a user may define answers to.`}
       </HelpText>
       <Table striped withTableBorder>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>
-              <Trans>Question</Trans>
-            </Table.Th>
+            <Table.Th>{t`Question`}</Table.Th>
             <Table.Th />
           </Table.Tr>
         </Table.Thead>
@@ -88,7 +78,7 @@ export function QuestionConfigFields({
                     type="button"
                     variant="light"
                   >
-                    <Trans>Delete</Trans>
+                    {t`Delete`}
                   </Button>
                 ) : null}
               </Table.Td>
@@ -117,7 +107,7 @@ export function QuestionConfigFields({
                   type="button"
                   variant="default"
                 >
-                  <Trans>Add new question</Trans>
+                  {t`Add new question`}
                 </Button>
               ) : null}
             </Table.Td>

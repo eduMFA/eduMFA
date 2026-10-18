@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect, TextInput } from "@mantine/core";
 
 import { type TokenTypeFieldsProps } from "./types";
@@ -7,6 +7,8 @@ import { timeShiftOptions, timeSteps } from "@/features/tokens/enroll/enrollForm
 
 /** The TOTP time step and time shift, or the DayPassword validity period. */
 export function OtpKeyTimeFields({ form, onChange, rights }: TokenTypeFieldsProps) {
+  const { t } = useLingui();
+
   const { type } = form;
   const timeStepOptions = timeSteps.includes(
     form.timeStep as (typeof timeSteps)[number]
@@ -19,9 +21,9 @@ export function OtpKeyTimeFields({ form, onChange, rights }: TokenTypeFieldsProp
       {type === "totp" && !hasRight(rights, "totp_timestep") ? (
         <NativeSelect
           data={timeStepOptions}
-          description={<Trans>seconds</Trans>}
+          description={t`seconds`}
           id="timestep"
-          label={<Trans>Timestep</Trans>}
+          label={t`Timestep`}
           mb="sm"
           onChange={(event) => {
             onChange({ timeStep: event.currentTarget.value });
@@ -32,14 +34,12 @@ export function OtpKeyTimeFields({ form, onChange, rights }: TokenTypeFieldsProp
       {type === "daypassword" && !hasRight(rights, "daypassword_timestep") ? (
         <TextInput
           description={
-            form.genkey ? (
-              <Trans>
-                The time in which the password can be used. For example '1d' or '12h'.
-              </Trans>
-            ) : undefined
+            form.genkey
+              ? t`The time in which the password can be used. For example '1d' or '12h'.`
+              : undefined
           }
           id="timestep"
-          label={<Trans>Timestep</Trans>}
+          label={t`Timestep`}
           mb="sm"
           onChange={(event) => {
             onChange({ timeStep: event.currentTarget.value });
@@ -52,11 +52,9 @@ export function OtpKeyTimeFields({ form, onChange, rights }: TokenTypeFieldsProp
       {type === "totp" && !hasRight(rights, "totp_timeshift") ? (
         <NativeSelect
           data={[...timeShiftOptions]}
-          description={
-            <Trans>Set to 'True' or 'False' to override setting in Token Config.</Trans>
-          }
+          description={t`Set to 'True' or 'False' to override setting in Token Config.`}
           id="use_timeshift"
-          label={<Trans>Use Timeshift</Trans>}
+          label={t`Use Timeshift`}
           mb="sm"
           onChange={(event) => {
             onChange({ useTimeShift: event.currentTarget.value });

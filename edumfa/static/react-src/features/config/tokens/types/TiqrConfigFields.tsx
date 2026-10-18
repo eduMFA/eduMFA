@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, Stack, TextInput } from "@mantine/core";
 
 import { HelpText } from "./HelpText";
@@ -7,24 +7,18 @@ import { getText } from "@/features/config/tokens/tokenConfigForm";
 
 /** Port of `config.token.tiqr.html`. */
 export function TiqrConfigFields({ form, onChange }: TokenConfigFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <HelpText>
-        <Trans>
-          The TiQR Token is an OCRA based Smartphone Token, that can be used to
-          authenticate by just scanning a QR code.
-        </Trans>
+        {t`The TiQR Token is an OCRA based Smartphone Token, that can be used to authenticate by just scanning a QR code.`}
       </HelpText>
       <Stack gap="sm">
         <TextInput
-          description={
-            <Trans>
-              The Registration Server is this eduMFA server. Note that the eduMFA server
-              needs to be accessible from the users smartphone.
-            </Trans>
-          }
+          description={t`The Registration Server is this eduMFA server. Note that the eduMFA server needs to be accessible from the users smartphone.`}
           id="tiqrRegServer"
-          label={<Trans>TiQR Registration Server</Trans>}
+          label={t`TiQR Registration Server`}
           onChange={(event) => {
             onChange({ "tiqr.regServer": event.currentTarget.value });
           }}
@@ -34,14 +28,9 @@ export function TiqrConfigFields({ form, onChange }: TokenConfigFieldsProps) {
           value={getText(form, "tiqr.regServer")}
         />
         <TextInput
-          description={
-            <Trans>
-              The Authentication Server is this eduMFA server. Note that the eduMFA
-              server needs to be accessible from the users smartphone.
-            </Trans>
-          }
+          description={t`The Authentication Server is this eduMFA server. Note that the eduMFA server needs to be accessible from the users smartphone.`}
           id="tiqrAuthServer"
-          label={<Trans>TiQR Authentication Server</Trans>}
+          label={t`TiQR Authentication Server`}
           onChange={(event) => {
             onChange({ "tiqr.authServer": event.currentTarget.value });
           }}
@@ -49,34 +38,27 @@ export function TiqrConfigFields({ form, onChange }: TokenConfigFieldsProps) {
           value={getText(form, "tiqr.authServer")}
         />
         <TextInput
-          description={
-            <Trans>This is the display name of your service in the TiQR app.</Trans>
-          }
+          description={t`This is the display name of your service in the TiQR app.`}
           id="tiqrDisplayname"
-          label={<Trans>TiQR Service Displayname</Trans>}
+          label={t`TiQR Service Displayname`}
           onChange={(event) => {
             onChange({ "tiqr.serviceDisplayname": event.currentTarget.value });
           }}
           value={getText(form, "tiqr.serviceDisplayname")}
         />
         <TextInput
-          description={
-            <Trans>
-              This is the service identifier that will be passed to the TiQR app. This
-              should contain a reverse FQDN (defaults to org.edumfa).
-            </Trans>
-          }
+          description={t`This is the service identifier that will be passed to the TiQR app. This should contain a reverse FQDN (defaults to org.edumfa).`}
           id="tiqrServiceIdentifier"
-          label={<Trans>TiQR Service Identifier</Trans>}
+          label={t`TiQR Service Identifier`}
           onChange={(event) => {
             onChange({ "tiqr.serviceIdentifier": event.currentTarget.value });
           }}
           value={getText(form, "tiqr.serviceIdentifier")}
         />
         <TextInput
-          description={<Trans>The URL that contains the logo of the service.</Trans>}
+          description={t`The URL that contains the logo of the service.`}
           id="tiqrLogoUrl"
-          label={<Trans>TiQR Logo URL</Trans>}
+          label={t`TiQR Logo URL`}
           onChange={(event) => {
             onChange({ "tiqr.logoUrl": event.currentTarget.value });
           }}
@@ -86,9 +68,9 @@ export function TiqrConfigFields({ form, onChange }: TokenConfigFieldsProps) {
           value={getText(form, "tiqr.logoUrl")}
         />
         <TextInput
-          description={<Trans>The website of the identity provider</Trans>}
+          description={t`The website of the identity provider`}
           id="tiqrInfoUrl"
-          label={<Trans>TiQR Info URL</Trans>}
+          label={t`TiQR Info URL`}
           onChange={(event) => {
             onChange({ "tiqr.infoUrl": event.currentTarget.value });
           }}
@@ -114,7 +96,7 @@ export function TiqrConfigFields({ form, onChange }: TokenConfigFieldsProps) {
             </Trans>
           }
           id="tiqrOCRA"
-          label={<Trans>OCRA Suite</Trans>}
+          label={t`OCRA Suite`}
           onChange={(event) => {
             onChange({ "tiqr.ocrasuite": event.currentTarget.value });
           }}

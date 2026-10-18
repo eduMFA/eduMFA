@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect, TextInput } from "@mantine/core";
 
 import { type SerialLookupFieldName, type SerialLookupFields } from "./types";
@@ -49,7 +49,7 @@ export function SerialLookupFilters({
         data={[{ label: t`Any token type`, value: "" }, ...tokenTypeOptions]}
         disabled={inputsDisabled}
         id="tokentype"
-        label={<Trans>Token Type</Trans>}
+        label={t`Token Type`}
         mb="sm"
         onChange={(event) => {
           onFieldChange("tokenType", event.currentTarget.value);
@@ -67,7 +67,7 @@ export function SerialLookupFilters({
         ]}
         disabled={inputsDisabled}
         id="assigned"
-        label={<Trans>Assignment State</Trans>}
+        label={t`Assignment State`}
         mb="sm"
         onChange={(event) => {
           onFieldChange("assignment", event.currentTarget.value);
@@ -77,7 +77,7 @@ export function SerialLookupFilters({
       <TextInput
         disabled={inputsDisabled}
         id="serial"
-        label={<Trans>Serial Substring</Trans>}
+        label={t`Serial Substring`}
         mb="sm"
         onChange={(event) => {
           onFieldChange("serialSubstring", event.currentTarget.value);
@@ -89,7 +89,7 @@ export function SerialLookupFilters({
         disabled={inputsDisabled}
         id="window"
         inputMode="numeric"
-        label={<Trans>Count Window</Trans>}
+        label={t`Count Window`}
         min={1}
         onChange={(event) => {
           onFieldChange("countWindow", event.currentTarget.value);

@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
@@ -59,7 +59,7 @@ export function LocalCaConnectorForm({
               loading={isSaving}
               type="submit"
             >
-              <Trans>Save CA</Trans>
+              {t`Save CA`}
             </Button>
           ) : null
         }

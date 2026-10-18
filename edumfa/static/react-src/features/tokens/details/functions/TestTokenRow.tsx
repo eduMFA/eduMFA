@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Checkbox, Group, SimpleGrid } from "@mantine/core";
 import { IconQuestionMark } from "@tabler/icons-react";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export function TestTokenRow({ canTest, form }: TestTokenRowProps) {
       <Checkbox
         checked={showPassword}
         id="showPassword"
-        label={<Trans>Show password</Trans>}
+        label={t`Show password`}
         onChange={(event) => {
           setShowPassword(event.currentTarget.checked);
         }}
@@ -49,7 +49,7 @@ export function TestTokenRow({ canTest, form }: TestTokenRowProps) {
           }}
           title={t`Check with OTP PIN.`}
         >
-          <Trans>Test token</Trans>
+          {t`Test token`}
         </Button>
         <Button
           disabled={password.length === 0}
@@ -62,7 +62,7 @@ export function TestTokenRow({ canTest, form }: TestTokenRowProps) {
           title={t`Check OTP only.`}
           variant="default"
         >
-          <Trans>Test OTP only</Trans>
+          {t`Test OTP only`}
         </Button>
       </Group>
     </SimpleGrid>

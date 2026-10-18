@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { NavLink, Stack } from "@mantine/core";
 import { IconBookmark } from "@tabler/icons-react";
 
@@ -13,13 +13,15 @@ export function CaConnectorLinks({
   active: boolean;
   canAdd: boolean;
 }) {
+  const { t } = useLingui();
+
   return (
     <>
       <NavLink
         active={active}
         component="a"
         href={hashHref("/config/caconnectors/list")}
-        label={<Trans>CAs</Trans>}
+        label={t`CAs`}
         leftSection={<IconBookmark size={16} />}
       />
       {active ? (
@@ -27,7 +29,7 @@ export function CaConnectorLinks({
           <NavLink
             component="a"
             href={hashHref("/config/caconnectors/list")}
-            label={<Trans>All CA Connectors</Trans>}
+            label={t`All CA Connectors`}
           />
           {canAdd
             ? caConnectorTypes.map((connectorType) => (

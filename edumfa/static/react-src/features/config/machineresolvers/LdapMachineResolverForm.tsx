@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconWand } from "@tabler/icons-react";
 import { useForm, type UseFormSetValue } from "react-hook-form";
@@ -44,6 +44,8 @@ export function LdapMachineResolverForm({
   initialValues,
   storedData
 }: LdapMachineResolverFormProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const { formState, handleSubmit, register, setValue, control } =
     useForm<LdapMachineResolverFormValues>({
@@ -69,7 +71,7 @@ export function LdapMachineResolverForm({
       <ErrorAlert error={saveMutation.error} />
       <ErrorAlert error={testMutation.error} />
 
-      <Card title={<Trans>LDAP connection</Trans>}>
+      <Card title={t`LDAP connection`}>
         <LdapConnectionFields
           control={control}
           nameError={formState.errors.resolvername?.message}
@@ -87,7 +89,7 @@ export function LdapMachineResolverForm({
             size="xs"
             variant="light"
           >
-            <Trans>Preset Active Directory</Trans>
+            {t`Preset Active Directory`}
           </Button>
         }
         footer={
@@ -102,7 +104,7 @@ export function LdapMachineResolverForm({
           />
         }
         footerAlign="center"
-        title={<Trans>Machine attributes</Trans>}
+        title={t`Machine attributes`}
       >
         <LdapMachineAttributeFields register={register} />
       </Card>

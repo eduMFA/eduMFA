@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect, SegmentedControl, Text, Textarea } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -21,9 +21,7 @@ export function CertificateFields({ form, lookups, onChange }: TokenTypeFieldsPr
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <SegmentedControl
         data={modeOptions}
         mb="sm"
@@ -35,7 +33,7 @@ export function CertificateFields({ form, lookups, onChange }: TokenTypeFieldsPr
       <NativeSelect
         data={lookups.caConnectors.map((candidate) => candidate.connectorname)}
         id="ca"
-        label={<Trans>CA Connector</Trans>}
+        label={t`CA Connector`}
         mb="sm"
         onChange={(event) => {
           onChange({ ca: event.currentTarget.value, template: "" });
@@ -48,7 +46,7 @@ export function CertificateFields({ form, lookups, onChange }: TokenTypeFieldsPr
           typeof templateDescription === "string" ? templateDescription : undefined
         }
         id="template"
-        label={<Trans>Certificate Template</Trans>}
+        label={t`Certificate Template`}
         mb="sm"
         onChange={(event) => {
           onChange({ template: event.currentTarget.value });
@@ -59,7 +57,7 @@ export function CertificateFields({ form, lookups, onChange }: TokenTypeFieldsPr
         <Textarea
           autosize
           id="certificate"
-          label={<Trans>Certificate (PEM)</Trans>}
+          label={t`Certificate (PEM)`}
           mb="sm"
           minRows={5}
           onChange={(event) => {
@@ -73,7 +71,7 @@ export function CertificateFields({ form, lookups, onChange }: TokenTypeFieldsPr
         <Textarea
           autosize
           id="request"
-          label={<Trans>Certificate Signing Request (PEM)</Trans>}
+          label={t`Certificate Signing Request (PEM)`}
           mb="sm"
           minRows={5}
           onChange={(event) => {
@@ -85,10 +83,7 @@ export function CertificateFields({ form, lookups, onChange }: TokenTypeFieldsPr
       ) : null}
       {form.certificateMode === "csrgenerate" ? (
         <Text c="dimmed" mb="sm" size="sm">
-          <Trans>
-            The server will create the private RSA key and store it in the database. You
-            can later download the PKCS#12 file.
-          </Trans>
+          {t`The server will create the private RSA key and store it in the database. You can later download the PKCS#12 file.`}
         </Text>
       ) : null}
     </>

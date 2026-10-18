@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect } from "@mantine/core";
 
 export interface TokenTypeSelectProps {
@@ -14,6 +14,8 @@ export function TokenTypeSelect({
   onChange,
   value
 }: TokenTypeSelectProps) {
+  const { t } = useLingui();
+
   return (
     <NativeSelect
       data={Object.keys(enrollTypes).map((typeName) => ({
@@ -21,7 +23,7 @@ export function TokenTypeSelect({
         value: typeName
       }))}
       id="tokentype"
-      label={<Trans>Token type</Trans>}
+      label={t`Token type`}
       mb="md"
       onChange={(event) => {
         onChange(event.currentTarget.value);

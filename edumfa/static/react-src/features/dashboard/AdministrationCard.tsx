@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Table } from "@mantine/core";
 import dayjs from "dayjs";
 
@@ -11,25 +11,19 @@ export interface AdministrationCardProps {
 
 /** The most recent administrative requests from the audit log. */
 export function AdministrationCard({ entries }: AdministrationCardProps) {
+  const { t } = useLingui();
+
   return (
-    <Card flush title={<Trans>Administration</Trans>}>
+    <Card flush title={t`Administration`}>
       {/* Paths like POST /policy/<name> do not wrap; the table scrolls inside the card. */}
       <Table.ScrollContainer minWidth={480}>
         <Table verticalSpacing="xs">
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>
-                <Trans>Date</Trans>
-              </Table.Th>
-              <Table.Th>
-                <Trans>Administrator</Trans>
-              </Table.Th>
-              <Table.Th>
-                <Trans>Action</Trans>
-              </Table.Th>
-              <Table.Th>
-                <Trans>Detail</Trans>
-              </Table.Th>
+              <Table.Th>{t`Date`}</Table.Th>
+              <Table.Th>{t`Administrator`}</Table.Th>
+              <Table.Th>{t`Action`}</Table.Th>
+              <Table.Th>{t`Detail`}</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>

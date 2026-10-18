@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, TextInput } from "@mantine/core";
 
 import type {
@@ -18,18 +18,16 @@ export function EduMfaServerFields({
   setValue,
   values
 }: EduMfaServerFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <TextInput
         autoFocus
-        description={
-          <Trans>
-            This is the unique identifying name of the eduMFA server definition.
-          </Trans>
-        }
+        description={t`This is the unique identifying name of the eduMFA server definition.`}
         error={identifierError}
         id="identifier"
-        label={<Trans>Identifier</Trans>}
+        label={t`Identifier`}
         mb="sm"
         onChange={(event) => {
           setValue("identifier", event.currentTarget.value);
@@ -39,9 +37,9 @@ export function EduMfaServerFields({
         value={values.identifier}
       />
       <TextInput
-        description={<Trans>Please provide the base URL of the eduMFA server.</Trans>}
+        description={t`Please provide the base URL of the eduMFA server.`}
         id="url"
-        label={<Trans>URL of the eduMFA server</Trans>}
+        label={t`URL of the eduMFA server`}
         mb="sm"
         onChange={(event) => {
           setValue("url", event.currentTarget.value);
@@ -52,14 +50,9 @@ export function EduMfaServerFields({
       />
       <Checkbox
         checked={values.tls}
-        description={
-          <Trans>
-            The certificate will be checked for a valid hostname and for a trusted
-            certificate. Do not uncheck this in productive use!
-          </Trans>
-        }
+        description={t`The certificate will be checked for a valid hostname and for a trusted certificate. Do not uncheck this in productive use!`}
         id="tls"
-        label={<Trans>Verify the certificate</Trans>}
+        label={t`Verify the certificate`}
         mb="sm"
         onChange={(event) => {
           setValue("tls", event.currentTarget.checked);
@@ -67,7 +60,7 @@ export function EduMfaServerFields({
       />
       <TextInput
         id="description"
-        label={<Trans>Description</Trans>}
+        label={t`Description`}
         mb="sm"
         onChange={(event) => {
           setValue("description", event.currentTarget.value);

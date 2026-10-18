@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -17,6 +17,8 @@ import { SystemLayout } from "@/features/config/system/SystemLayout";
  * `/config/serviceid/edit` and edits one under `/config/serviceid/edit/:servicename`.
  */
 export function ServiceIdEditPage() {
+  const { t } = useLingui();
+
   const { servicename } = useParams();
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
@@ -35,7 +37,7 @@ export function ServiceIdEditPage() {
       <ErrorAlert error={serviceQuery.error} />
 
       {isEditing && serviceQuery.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading service ID</Trans>} />
+        <LoadingIndicator label={t`Loading service ID`} />
       ) : null}
 
       {isEditing && serviceQuery.isSuccess && !service ? (

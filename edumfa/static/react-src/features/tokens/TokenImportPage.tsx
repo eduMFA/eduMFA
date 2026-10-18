@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { NativeSelect } from "@mantine/core";
 
 import { FileTypeHelp } from "./import/FileTypeHelp";
@@ -31,6 +31,8 @@ const fileTypes: TokenImportFileType[] = [
  * state instead.
  */
 export function TokenImportPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated } = useAuth();
   const { defaultRealm, pgpKeysQuery, realmNames, realmsQuery } =
     useTokenImportConfig();
@@ -39,7 +41,7 @@ export function TokenImportPage() {
 
   return (
     <SidebarLayout sidebar={<TokenSidebar activeItem="import" />}>
-      <PageHeader title={<Trans>Import tokens from a file</Trans>} />
+      <PageHeader title={t`Import tokens from a file`} />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={realmsQuery.error} />
@@ -54,12 +56,12 @@ export function TokenImportPage() {
           />
         }
         footerAlign="center"
-        title={<Trans>Token file</Trans>}
+        title={t`Token file`}
       >
         <NativeSelect
           data={fileTypes}
           id="filetype"
-          label={<Trans>File type</Trans>}
+          label={t`File type`}
           mb="sm"
           onChange={(event) => {
             tokenImport.setFileType(event.currentTarget.value as TokenImportFileType);
@@ -82,14 +84,9 @@ export function TokenImportPage() {
 
         <NativeSelect
           data={[{ label: "", value: "" }, ...realmNames]}
-          description={
-            <Trans>
-              You can choose a realm to which the tokens should be imported. You can
-              also change the realms of each token later.
-            </Trans>
-          }
+          description={t`You can choose a realm to which the tokens should be imported. You can also change the realms of each token later.`}
           id="importRealm"
-          label={<Trans>Realm</Trans>}
+          label={t`Realm`}
           mb="sm"
           onChange={(event) => {
             tokenImport.setSelectedRealm(event.currentTarget.value);

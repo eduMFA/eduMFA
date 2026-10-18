@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Grid, Text } from "@mantine/core";
 
 import { type EnrolledTokenResultProps } from "./types";
@@ -19,7 +19,7 @@ export function ApplSpecResult({ detail, qrCodeWidth }: EnrolledTokenResultProps
       ) : null}
       <Grid.Col span={{ base: 12, sm: 6 }}>
         <Text size="sm">
-          <Trans>Your Password:</Trans>{" "}
+          {t`Your Password:`}{" "}
           <Text component="b" data-field="password" ff="monospace">
             {detail.password ?? ""}
           </Text>

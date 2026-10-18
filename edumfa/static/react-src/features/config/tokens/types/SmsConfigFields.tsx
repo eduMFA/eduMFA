@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, NativeSelect, Stack, Textarea, TextInput, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 
@@ -19,6 +19,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** Port of `config.token.sms.html`; the gateways come from `GET /smsgateway/`. */
 export function SmsConfigFields({ form, onChange }: TokenConfigFieldsProps) {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const { isAuthenticated, rights } = useAuth();
   const gatewaysQuery = useQuery({
@@ -33,16 +35,10 @@ export function SmsConfigFields({ form, onChange }: TokenConfigFieldsProps) {
   return (
     <>
       <HelpText>
-        <Trans>
-          The SMS Token is an event based token. After the user has tried to
-          authenticate with the OTP PIN, an SMS with an OTP value is sent to the users
-          mobile phone. Then user can authenticate with this OTP value in a second step.
-        </Trans>
+        {t`The SMS Token is an event based token. After the user has tried to authenticate with the OTP PIN, an SMS with an OTP value is sent to the users mobile phone. Then user can authenticate with this OTP value in a second step.`}
       </HelpText>
       <HelpText>
-        <Trans>
-          Here you can define how the SMS will be sent - via which kind of gateway.
-        </Trans>
+        {t`Here you can define how the SMS will be sent - via which kind of gateway.`}
       </HelpText>
       <ErrorAlert error={gatewaysQuery.error} />
       <Stack gap="sm">
@@ -58,22 +54,17 @@ export function SmsConfigFields({ form, onChange }: TokenConfigFieldsProps) {
             </Trans>
           }
           id="smsIdentifier"
-          label={<Trans>SMS Gateway configuration</Trans>}
+          label={t`SMS Gateway configuration`}
           onChange={(event) => {
             onChange({ "sms.identifier": event.currentTarget.value });
           }}
           value={identifier}
         />
         <TextInput
-          description={
-            <Trans>
-              The time in seconds for which the sent OTP value is valid for
-              authentication.
-            </Trans>
-          }
+          description={t`The time in seconds for which the sent OTP value is valid for authentication.`}
           id="smsValidity"
           inputMode="numeric"
-          label={<Trans>OTP validity time</Trans>}
+          label={t`OTP validity time`}
           onChange={(event) => {
             onChange({ "sms.providerTimeout": event.currentTarget.value });
           }}
@@ -81,19 +72,19 @@ export function SmsConfigFields({ form, onChange }: TokenConfigFieldsProps) {
           value={getText(form, "sms.providerTimeout")}
         />
         <Title mt="md" order={4} size="h6">
-          <Trans>Obsolete settings</Trans>
+          {t`Obsolete settings`}
         </Title>
         <NativeSelect
           data={fixedOptions(smsProviders, provider)}
           disabled
           id="smsProvider"
-          label={<Trans>SMS Provider</Trans>}
+          label={t`SMS Provider`}
           value={provider}
         />
         <Textarea
           disabled
           id="smsConfig"
-          label={<Trans>Provider Config</Trans>}
+          label={t`Provider Config`}
           placeholder={"{'USERNAME': 'Your User',\n 'PASSWORD': 'Your Password'}"}
           rows={6}
           value={getText(form, "sms.providerConfig")}

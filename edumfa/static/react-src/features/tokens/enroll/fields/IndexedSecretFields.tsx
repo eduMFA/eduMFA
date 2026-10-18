@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Text, TextInput } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -13,18 +13,16 @@ export function IndexedSecretFields({
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       {indexedSecretForced ? (
         <Text c="dimmed" mb="sm" size="sm">
-          <Trans>The value of the indexed secret will be set by a policy.</Trans>
+          {t`The value of the indexed secret will be set by a policy.`}
         </Text>
       ) : (
         <TextInput
           autoComplete="off"
           id="otpkey"
-          label={<Trans>Secret</Trans>}
+          label={t`Secret`}
           mb="sm"
           onChange={(event) => {
             onChange({ otpkey: event.currentTarget.value });

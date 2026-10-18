@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { List, Stack, Table } from "@mantine/core";
 import { useMemo, useState } from "react";
 
@@ -20,6 +20,8 @@ export interface TokenInfoRowProps {
  * the validity period (the values go through `POST /token/set/<serial>`).
  */
 export function TokenInfoRow({ serial, setProperties, token }: TokenInfoRowProps) {
+  const { t } = useLingui();
+
   const [infoDraft, setInfoDraft] = useState<InfoDraft | null>(null);
   const infoEntries = useMemo(() => Object.entries(token.info), [token.info]);
 
@@ -34,9 +36,7 @@ export function TokenInfoRow({ serial, setProperties, token }: TokenInfoRowProps
 
   return (
     <Table.Tr>
-      <Table.Td fw={600}>
-        <Trans>Info</Trans>
-      </Table.Td>
+      <Table.Td fw={600}>{t`Info`}</Table.Td>
       <Table.Td>
         <Stack gap="xs">
           <List size="sm" spacing={2}>
@@ -68,7 +68,7 @@ export function TokenInfoRow({ serial, setProperties, token }: TokenInfoRowProps
           }}
           onSave={saveInfo}
           right="set"
-          saveLabel={<Trans>Save Token Info</Trans>}
+          saveLabel={t`Save Token Info`}
         />
       </Table.Td>
     </Table.Tr>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -15,6 +15,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** Port of `config.tokengroup.list.html` and the list part of `tokengroupController`. */
 export function TokengroupListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights } = useAuth();
   const { dialog, requestDelete } = useDeleteConfirmation();
   const { deleteMutation, tokengroupsQuery } = useTokengroupList();
@@ -41,11 +43,11 @@ export function TokengroupListPage() {
               leftSection={<IconPlus size={16} />}
               variant="light"
             >
-              <Trans>New Tokengroup definition</Trans>
+              {t`New Tokengroup definition`}
             </Button>
           ) : null
         }
-        title={<Trans>Tokengroups</Trans>}
+        title={t`Tokengroups`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}

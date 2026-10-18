@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, NativeSelect, NumberInput, Stack, TextInput } from "@mantine/core";
 
 import type { EventFormChange } from "./types";
@@ -25,11 +25,13 @@ export function EventGeneralCard({
   positions: string[];
   positionsReady: boolean;
 }) {
+  const { t } = useLingui();
+
   return (
     <Card>
       <Stack>
         <TextInput
-          label={<Trans>Description</Trans>}
+          label={t`Description`}
           required
           value={form.name}
           onChange={(event) => {
@@ -38,7 +40,7 @@ export function EventGeneralCard({
         />
 
         <Checkbox
-          label={<Trans>Active</Trans>}
+          label={t`Active`}
           checked={form.active}
           onChange={(event) => {
             onChange({ active: event.currentTarget.checked });
@@ -47,7 +49,7 @@ export function EventGeneralCard({
 
         <CheckboxPickList
           id="event-names"
-          label={<Trans>Events</Trans>}
+          label={t`Events`}
           required
           options={events}
           selected={form.event}
@@ -57,7 +59,7 @@ export function EventGeneralCard({
         />
 
         <NativeSelect
-          label={<Trans>Handlermodule</Trans>}
+          label={t`Handlermodule`}
           required
           data={choicesWithCurrent(modules, form.handlermodule)}
           value={form.handlermodule}
@@ -74,7 +76,7 @@ export function EventGeneralCard({
         />
 
         <NativeSelect
-          label={<Trans>Position</Trans>}
+          label={t`Position`}
           required
           disabled={!positionsReady}
           data={choicesWithCurrent(positions, form.position)}
@@ -85,7 +87,7 @@ export function EventGeneralCard({
         />
 
         <NumberInput
-          label={<Trans>Order</Trans>}
+          label={t`Order`}
           min={0}
           allowDecimal={false}
           value={form.ordering}

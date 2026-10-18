@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Divider, NavLink, Stack } from "@mantine/core";
 import { IconEye, IconQuestionMark } from "@tabler/icons-react";
 
@@ -32,6 +32,8 @@ export interface TokenSidebarProps {
  * Angular login controller.
  */
 export function TokenSidebar({ activeItem, serial }: TokenSidebarProps) {
+  const { t } = useLingui();
+
   const { isAdmin, rights } = useTokenSidebarAccess();
   const isTokenView = activeItem === "details" || activeItem === "lost";
 
@@ -45,7 +47,7 @@ export function TokenSidebar({ activeItem, serial }: TokenSidebarProps) {
             active={activeItem === "lost"}
             component="a"
             href={hashHref(`/token/lost/${encodeURIComponent(serial)}`)}
-            label={<Trans>Lost Token</Trans>}
+            label={t`Lost Token`}
             leftSection={<IconEye size={16} />}
           />
         </>
@@ -57,7 +59,7 @@ export function TokenSidebar({ activeItem, serial }: TokenSidebarProps) {
             active={activeItem === "getserial"}
             component="a"
             href={hashHref("/token/getserial")}
-            label={<Trans>Get Serial</Trans>}
+            label={t`Get Serial`}
             leftSection={<IconQuestionMark size={16} />}
           />
         </>

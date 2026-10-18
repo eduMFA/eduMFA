@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Menu } from "@mantine/core";
 import { IconChevronDown, IconLock, IconLogout } from "@tabler/icons-react";
 
@@ -11,6 +11,8 @@ export interface SessionMenuProps {
 
 /** The session dropdown of `templates/menu.html`: user, realm and role, lock screen and logout. */
 export function SessionMenu({ user }: SessionMenuProps) {
+  const { t } = useLingui();
+
   const { isLocked, lock, logout } = useAuth();
 
   return (
@@ -31,10 +33,10 @@ export function SessionMenu({ user }: SessionMenuProps) {
           leftSection={<IconLock size={16} />}
           onClick={lock}
         >
-          <Trans>Lock screen</Trans>
+          {t`Lock screen`}
         </Menu.Item>
         <Menu.Item leftSection={<IconLogout size={16} />} onClick={logout}>
-          <Trans>Logout</Trans>
+          {t`Logout`}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

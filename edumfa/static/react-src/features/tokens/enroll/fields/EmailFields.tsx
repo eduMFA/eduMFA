@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, TextInput } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -9,17 +9,11 @@ export function EmailFields({ form, onChange }: TokenTypeFieldsProps) {
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <Checkbox
         checked={form.dynamicEmail}
         id="dynamic_email"
-        label={
-          <Trans>
-            Read email address dynamically from user source on each request.
-          </Trans>
-        }
+        label={t`Read email address dynamically from user source on each request.`}
         mb="sm"
         onChange={(event) => {
           onChange({ dynamicEmail: event.currentTarget.checked });
@@ -28,7 +22,7 @@ export function EmailFields({ form, onChange }: TokenTypeFieldsProps) {
       {!form.dynamicEmail ? (
         <TextInput
           id="email"
-          label={<Trans>Email Address</Trans>}
+          label={t`Email Address`}
           mb="sm"
           onChange={(event) => {
             onChange({ email: event.currentTarget.value });

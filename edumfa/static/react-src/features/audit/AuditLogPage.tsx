@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Box } from "@mantine/core";
 
 import { ActiveFilterChips } from "./ActiveFilterChips";
@@ -15,6 +15,8 @@ import { DataTable } from "@/components/tables/DataTable";
 import { Pagination } from "@/components/tables/Pagination";
 
 export function AuditLogPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights, user } = useAuth();
   const isAdmin = user?.role === "admin";
   const log = useAuditLog();
@@ -38,7 +40,7 @@ export function AuditLogPage() {
           ) : null
         }
         subtitle={auditPage ? <Trans>{entryCount} entries found.</Trans> : null}
-        title={<Trans>Audit log</Trans>}
+        title={t`Audit log`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
@@ -52,7 +54,7 @@ export function AuditLogPage() {
         />
 
         {auditQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading audit log</Trans>} />
+          <LoadingIndicator label={t`Loading audit log`} />
         ) : null}
 
         <Pagination
@@ -66,7 +68,7 @@ export function AuditLogPage() {
           <DataTable
             columns={columns}
             data={auditPage.auditdata}
-            emptyMessage={<Trans>No audit entries match the current filters.</Trans>}
+            emptyMessage={t`No audit entries match the current filters.`}
             getRowKey={(entry) => String(entry.number)}
             id="tableauditlog"
             isLoading={auditQuery.isLoading}

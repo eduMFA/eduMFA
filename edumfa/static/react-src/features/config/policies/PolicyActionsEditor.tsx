@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Accordion, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 
@@ -17,6 +17,8 @@ interface Props {
 }
 
 export function PolicyActionsEditor({ scope, definitions, actions, onChange }: Props) {
+  const { t } = useLingui();
+
   const docsUrl = useDocsUrl(`policies/${encodeURIComponent(scope)}.html`);
   const [filter, setFilter] = useState("");
   const [selectedOnly, setSelectedOnly] = useState(false);
@@ -53,9 +55,7 @@ export function PolicyActionsEditor({ scope, definitions, actions, onChange }: P
         }}
       />
       {visible.length === 0 ? (
-        <Text c="dimmed">
-          <Trans>No actions match the filter.</Trans>
-        </Text>
+        <Text c="dimmed">{t`No actions match the filter.`}</Text>
       ) : null}
       <Accordion
         className="definition-accordion"
@@ -73,9 +73,7 @@ export function PolicyActionsEditor({ scope, definitions, actions, onChange }: P
             key={group}
             value={`group:${group}`}
           >
-            <Accordion.Control>
-              {group || <Trans>Miscellaneous</Trans>}
-            </Accordion.Control>
+            <Accordion.Control>{group || t`Miscellaneous`}</Accordion.Control>
             <Accordion.Panel>
               <Stack>
                 {visible

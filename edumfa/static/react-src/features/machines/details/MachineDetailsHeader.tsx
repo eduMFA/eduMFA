@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor } from "@mantine/core";
 
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -14,11 +14,13 @@ export function MachineDetailsHeader({
   machineId,
   machineResolver
 }: MachineDetailsHeaderProps) {
+  const { t } = useLingui();
+
   return (
     <PageHeader
       subtitle={
         <>
-          <Trans>Machine Resolver</Trans>{" "}
+          {t`Machine Resolver`}{" "}
           <Anchor
             href={hashHref(
               `/machine/list?resolver=${encodeURIComponent(machineResolver)}`

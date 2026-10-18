@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, Stack, Text, TextInput } from "@mantine/core";
 
 export interface VerifyTokenFieldsProps {
@@ -23,9 +23,7 @@ export function VerifyTokenFields({
   return (
     <Stack gap="sm">
       <Text size="sm">
-        <Trans>
-          The token was enrolled, but you still need to verify it before you can use it!
-        </Trans>
+        {t`The token was enrolled, but you still need to verify it before you can use it!`}
       </Text>
       <TextInput
         autoComplete="off"
@@ -38,7 +36,7 @@ export function VerifyTokenFields({
       />
       <Group justify="center">
         <Button disabled={value.trim() === ""} loading={isVerifying} onClick={onVerify}>
-          <Trans>Verify Token</Trans>
+          {t`Verify Token`}
         </Button>
       </Group>
     </Stack>

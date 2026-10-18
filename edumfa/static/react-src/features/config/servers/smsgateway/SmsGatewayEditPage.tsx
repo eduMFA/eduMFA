@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +20,8 @@ import { SystemLayout } from "@/features/config/system/SystemLayout";
  * module's declared parameters.
  */
 export function SmsGatewayEditPage() {
+  const { t } = useLingui();
+
   const { gateway_id: gatewayId } = useParams<{ gateway_id: string }>();
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
@@ -49,9 +51,7 @@ export function SmsGatewayEditPage() {
       <>
         <ErrorAlert error={providersQuery.error} />
         <ErrorAlert error={gatewayQuery.error} />
-        {isLoading ? (
-          <LoadingIndicator label={<Trans>Loading SMS gateway</Trans>} />
-        ) : null}
+        {isLoading ? <LoadingIndicator label={t`Loading SMS gateway`} /> : null}
         {providers ? renderForm(providers) : null}
       </>
     );

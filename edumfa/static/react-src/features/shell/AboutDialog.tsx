@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, Button, Group, Modal, Text, Title } from "@mantine/core";
 
 export interface AboutDialogProps {
@@ -8,24 +8,23 @@ export interface AboutDialogProps {
 
 /** Port of `dialog.about.html`. */
 export function AboutDialog({ onClose, opened }: AboutDialogProps) {
+  const { t } = useLingui();
+
   return (
     <Modal
       centered
       onClose={onClose}
       opened={opened}
-      title={<Trans>About eduMFA Web Client</Trans>}
+      title={t`About eduMFA Web Client`}
     >
       <Title mb="xs" order={3} size="h5">
-        <Trans>eduMFA Single Page Web Client</Trans>
+        {t`eduMFA Single Page Web Client`}
       </Title>
       <Text mb="sm" size="sm">
-        <Trans>
-          This is a Single Page Application client that acts as a frontend for the
-          eduMFA authentication backend.
-        </Trans>
+        {t`This is a Single Page Application client that acts as a frontend for the eduMFA authentication backend.`}
       </Text>
       <Text mb="md" size="sm">
-        <Trans>Licensed under</Trans>{" "}
+        {t`Licensed under`}{" "}
         <Anchor
           href="http://www.gnu.org/licenses/agpl-3.0.en.html"
           rel="noopener"
@@ -34,13 +33,10 @@ export function AboutDialog({ onClose, opened }: AboutDialogProps) {
           AGPLv3
         </Anchor>
         .<br />
-        <Trans>
-          eduMFA, including this client, was forked from privacyIDEA, which was licensed
-          by NetKnights GmbH.
-        </Trans>
+        {t`eduMFA, including this client, was forked from privacyIDEA, which was licensed by NetKnights GmbH.`}
       </Text>
       <Title mb="xs" order={3} size="h5">
-        <Trans>eduMFA authentication backend</Trans>
+        {t`eduMFA authentication backend`}
       </Title>
       <Text mb="md" size="sm">
         <Trans>
@@ -61,7 +57,7 @@ export function AboutDialog({ onClose, opened }: AboutDialogProps) {
       </Text>
       <Group justify="flex-end">
         <Button onClick={onClose} variant="default">
-          <Trans>Close</Trans>
+          {t`Close`}
         </Button>
       </Group>
     </Modal>

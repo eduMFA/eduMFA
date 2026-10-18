@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Table, Text, TextInput } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
@@ -27,6 +27,8 @@ export function KeyValueTable({
   onDelete,
   valueLabel
 }: KeyValueTableProps) {
+  const { t } = useLingui();
+
   const [newName, setNewName] = useState("");
   const [newValue, setNewValue] = useState("");
 
@@ -74,7 +76,7 @@ export function KeyValueTable({
                   type="button"
                   variant="light"
                 >
-                  <Trans>Delete</Trans>
+                  {t`Delete`}
                 </Button>
               </Table.Td>
             </Table.Tr>
@@ -122,7 +124,7 @@ export function KeyValueTable({
                 type="button"
                 variant="light"
               >
-                <Trans>Add</Trans>
+                {t`Add`}
               </Button>
             </Table.Td>
           </Table.Tr>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -11,6 +11,8 @@ export interface ServiceIdListHeaderProps {
 
 /** The title, the explanation and the "new definition" button of the service ID list. */
 export function ServiceIdListHeader({ canAdd }: ServiceIdListHeaderProps) {
+  const { t } = useLingui();
+
   return (
     <PageHeader
       actions={
@@ -21,7 +23,7 @@ export function ServiceIdListHeader({ canAdd }: ServiceIdListHeaderProps) {
             leftSection={<IconPlus size={16} />}
             variant="light"
           >
-            <Trans>New Service ID definition</Trans>
+            {t`New Service ID definition`}
           </Button>
         ) : null
       }
@@ -35,7 +37,7 @@ export function ServiceIdListHeader({ canAdd }: ServiceIdListHeaderProps) {
           .
         </Trans>
       }
-      title={<Trans>Service IDs</Trans>}
+      title={t`Service IDs`}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { getEvents } from "@/api/events";
 import { DefinitionList } from "@/features/config/automation/DefinitionList";
 import {
@@ -8,6 +8,8 @@ import {
 import { eventDefinitionApi } from "@/features/config/automation/useDefinitionMutations";
 
 export function EventListPage() {
+  const { t } = useLingui();
+
   return (
     <DefinitionList
       kind="events"
@@ -17,22 +19,22 @@ export function EventListPage() {
       columns={[
         {
           key: "event",
-          header: <Trans>Events</Trans>,
+          header: t`Events`,
           render: (event) => event.event.join(", ")
         },
         {
           key: "handlermodule",
-          header: <Trans>Handlermodule</Trans>,
+          header: t`Handlermodule`,
           render: (event) => event.handlermodule
         },
         {
           key: "position",
-          header: <Trans>Position</Trans>,
+          header: t`Position`,
           render: (event) => event.position
         },
         {
           key: "conditions",
-          header: <Trans>Conditions</Trans>,
+          header: t`Conditions`,
           render: (event) =>
             Object.entries(event.conditions)
               .map(([key, value]) => `${key}=${value}`)
@@ -40,12 +42,12 @@ export function EventListPage() {
         },
         {
           key: "action",
-          header: <Trans>Action</Trans>,
+          header: t`Action`,
           render: (event) => event.action
         },
         {
           key: "options",
-          header: <Trans>Options</Trans>,
+          header: t`Options`,
           render: (event) =>
             Object.entries(event.options)
               .map(([key, value]) => `${key}=${value}`)

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Code, Text, TextInput } from "@mantine/core";
 import { IconCalendarTime } from "@tabler/icons-react";
 
@@ -10,17 +10,15 @@ export function TaskIntervalField({
   onChange: (interval: string) => void;
   value: string;
 }) {
+  const { t } = useLingui();
+
   return (
     <>
       <TextInput
-        label={<Trans>Interval</Trans>}
+        label={t`Interval`}
         required
         leftSection={<IconCalendarTime aria-hidden size={16} />}
-        description={
-          <Trans>
-            Use crontab notation: minute, hour, day of month, month, day of week.
-          </Trans>
-        }
+        description={t`Use crontab notation: minute, hour, day of month, month, day of week.`}
         placeholder="*/10 * * * *"
         value={value}
         onChange={(event) => {
@@ -28,9 +26,9 @@ export function TaskIntervalField({
         }}
       />
       <Text size="sm" c="dimmed">
-        <Code>*/10 * * * *</Code> <Trans>Every ten minutes</Trans>
+        <Code>*/10 * * * *</Code> {t`Every ten minutes`}
         <br />
-        <Code>5 10 * * *</Code> <Trans>Every day at 10:05</Trans>
+        <Code>5 10 * * *</Code> {t`Every day at 10:05`}
       </Text>
     </>
   );

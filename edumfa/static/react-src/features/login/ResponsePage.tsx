@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert, Anchor, Paper, Title } from "@mantine/core";
 import { useCallback, useState } from "react";
 
@@ -16,6 +16,8 @@ import { hashHref } from "@/lib/hashbang";
  * tokens for a second signature like the legacy controller did.
  */
 export function ResponsePage() {
+  const { t } = useLingui();
+
   const { challenge } = useLoginFlow();
   const [attempt, setAttempt] = useState(0);
   const authenticateMutation = useAuthenticate({
@@ -67,7 +69,7 @@ export function ResponsePage() {
     <LoginShell>
       <Paper p="xl" radius="md" withBorder>
         <Title mb="md" order={2} size="h3" ta="center">
-          <Trans>Response</Trans>
+          {t`Response`}
         </Title>
         <ChallengeResponseForm
           challenge={challenge}

@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Box, Checkbox, Stack, Text } from "@mantine/core";
 
 import { policyActionChoices, policyActionValue } from "./policyActionEntries";
@@ -7,6 +7,17 @@ import {
   TypedOptionInput,
   type TypedOptionValue
 } from "@/components/forms/TypedOptionInput";
+
+/** The value an action starts with when it is switched on. */
+function initialActionValue(spec: PolicyActionDefinition): TypedOptionValue {
+  if (spec.type === "bool") {
+    return true;
+  }
+  if (spec.multiple) {
+    return [];
+  }
+  return "";
+}
 
 /** One action: its checkbox with description, help link and, unless boolean, its value input. */
 export function PolicyActionItem({
@@ -43,7 +54,7 @@ export function PolicyActionItem({
               event.currentTarget.checked
                 ? {
                     ...actions,
-                    [name]: spec.type === "bool" ? true : spec.multiple ? [] : ""
+                    [name]: initialActionValue(spec)
                   }
                 : Object.fromEntries(
                     Object.entries(actions).filter(([key]) => key !== name)
@@ -58,7 +69,7 @@ export function PolicyActionItem({
           rel="noopener"
           size="xs"
         >
-          <Trans>Help</Trans>
+          {t`Help`}
         </Anchor>
       </Box>
       {spec.type !== "bool" ? (
@@ -79,9 +90,7 @@ export function PolicyActionItem({
       ) : null}
       {!known ? (
         <Text c="dimmed" size="xs">
-          <Trans>
-            This action is not in the current definitions. Its value will be preserved.
-          </Trans>
+          {t`This action is not in the current definitions. Its value will be preserved.`}
         </Text>
       ) : null}
     </Stack>

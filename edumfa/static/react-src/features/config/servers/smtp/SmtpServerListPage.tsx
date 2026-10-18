@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -15,6 +15,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** Port of `config.smtp.list.html` and the list part of `smtpServerController`. */
 export function SmtpServerListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights } = useAuth();
   const canWrite = hasRight(rights, "smtpserver_write");
   const { dialog, requestDelete } = useDeleteConfirmation();
@@ -40,11 +42,11 @@ export function SmtpServerListPage() {
               leftSection={<IconPlus size={16} />}
               variant="light"
             >
-              <Trans>New SMTP server</Trans>
+              {t`New SMTP server`}
             </Button>
           ) : null
         }
-        title={<Trans>SMTP servers</Trans>}
+        title={t`SMTP servers`}
       />
 
       {!isAuthenticated ? (

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, NativeSelect } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 
@@ -15,6 +15,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** Port of `config.token.radius.html`; the servers come from `GET /radiusserver/`. */
 export function RadiusConfigFields({ form, onChange }: TokenConfigFieldsProps) {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const { isAuthenticated, rights } = useAuth();
   const radiusServersQuery = useQuery({
@@ -27,9 +29,7 @@ export function RadiusConfigFields({ form, onChange }: TokenConfigFieldsProps) {
   return (
     <>
       <HelpText>
-        <Trans>
-          The RADIUS token forwards the authentication request to another RADIUS server.
-        </Trans>
+        {t`The RADIUS token forwards the authentication request to another RADIUS server.`}
       </HelpText>
       <ErrorAlert error={radiusServersQuery.error} />
       <NativeSelect
@@ -44,7 +44,7 @@ export function RadiusConfigFields({ form, onChange }: TokenConfigFieldsProps) {
           </Trans>
         }
         id="radiusIdentifier"
-        label={<Trans>RADIUS server configuration</Trans>}
+        label={t`RADIUS server configuration`}
         onChange={(event) => {
           onChange({ "radius.identifier": event.currentTarget.value });
         }}

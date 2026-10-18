@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert, Button, Group } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
@@ -18,6 +18,8 @@ export function SerialLookupCountAlert({
   result,
   searchPending
 }: SerialLookupCountAlertProps) {
+  const { t } = useLingui();
+
   return (
     <Alert
       color="yellow"
@@ -33,10 +35,10 @@ export function SerialLookupCountAlert({
       </Trans>
       <Group gap="xs" mt="sm">
         <Button loading={searchPending} onClick={onRun} size="xs">
-          <Trans>Run search</Trans>
+          {t`Run search`}
         </Button>
         <Button disabled={searchPending} onClick={onCancel} size="xs" variant="default">
-          <Trans>Cancel</Trans>
+          {t`Cancel`}
         </Button>
       </Group>
     </Alert>

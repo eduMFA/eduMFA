@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button, Paper, Stack, Text, Title } from "@mantine/core";
 
 import { LoginLogo } from "./LoginLogo";
@@ -22,6 +22,8 @@ export function RemoteUserLoginCard({
   onLogin,
   onUseCredentials
 }: RemoteUserLoginCardProps) {
+  const { t } = useLingui();
+
   return (
     <Paper p="xl" radius="md" withBorder>
       <LoginLogo url={logoUrl} />
@@ -36,11 +38,11 @@ export function RemoteUserLoginCard({
       </Text>
       <Stack gap="xs">
         <Button fullWidth loading={isPending} onClick={onLogin}>
-          <Trans>Log In</Trans>
+          {t`Log In`}
         </Button>
         {config.forceRemoteUser ? null : (
           <Button fullWidth onClick={onUseCredentials} variant="light">
-            <Trans>Login with credentials</Trans>
+            {t`Login with credentials`}
           </Button>
         )}
       </Stack>

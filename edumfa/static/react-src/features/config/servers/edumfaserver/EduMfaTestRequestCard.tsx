@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import type {
   EduMfaServerFieldSetter,
@@ -23,10 +23,12 @@ export function EduMfaTestRequestCard({
   setValue,
   values
 }: EduMfaTestRequestCardProps) {
+  const { t } = useLingui();
+
   return (
     <Card>
       <TestCredentialsFields
-        buttonLabel={<Trans>Send test request to eduMFA server</Trans>}
+        buttonLabel={t`Send test request to eduMFA server`}
         disabled={!canTest}
         isPending={isPending}
         onPasswordChange={(value) => {

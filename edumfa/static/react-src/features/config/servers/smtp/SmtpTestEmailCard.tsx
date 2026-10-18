@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Grid, TextInput } from "@mantine/core";
 import { IconSend } from "@tabler/icons-react";
 
@@ -20,13 +20,15 @@ export function SmtpTestEmailCard({
   onTest,
   recipient
 }: SmtpTestEmailCardProps) {
+  const { t } = useLingui();
+
   return (
     <Card>
       <Grid align="flex-end">
         <Grid.Col span={{ base: 12, sm: 8 }}>
           <TextInput
             id="recipient"
-            label={<Trans>Recipient for testing</Trans>}
+            label={t`Recipient for testing`}
             onChange={(event) => {
               onRecipientChange(event.currentTarget.value);
             }}
@@ -43,7 +45,7 @@ export function SmtpTestEmailCard({
             type="button"
             variant="default"
           >
-            <Trans>Send Test Email</Trans>
+            {t`Send Test Email`}
           </Button>
         </Grid.Col>
       </Grid>

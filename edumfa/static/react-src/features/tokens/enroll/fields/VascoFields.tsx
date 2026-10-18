@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, TextInput, Textarea } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -11,9 +11,7 @@ export function VascoFields({ errors, form, onChange }: TokenTypeFieldsProps) {
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <Textarea
         autosize
         error={
@@ -22,7 +20,7 @@ export function VascoFields({ errors, form, onChange }: TokenTypeFieldsProps) {
             : undefined
         }
         id="otpkey"
-        label={<Trans>VASCO Token blob</Trans>}
+        label={t`VASCO Token blob`}
         mb="sm"
         minRows={5}
         onChange={(event) => {
@@ -34,7 +32,7 @@ export function VascoFields({ errors, form, onChange }: TokenTypeFieldsProps) {
       <Checkbox
         checked={form.useVascoSerial}
         id="useVascoSerial"
-        label={<Trans>use VASCO Serial</Trans>}
+        label={t`use VASCO Serial`}
         mb="xs"
         onChange={(event) => {
           onChange({ useVascoSerial: event.currentTarget.checked });
@@ -42,13 +40,7 @@ export function VascoFields({ errors, form, onChange }: TokenTypeFieldsProps) {
       />
       <TextInput
         aria-label={t`VASCO serial`}
-        description={
-          <Trans>
-            The VASCO serial is read from the VASCO blob. If you want to use this VASCO
-            serial number within eduMFA, activate the checkbox. Otherwise eduMFA will
-            create a new unique serial number.
-          </Trans>
-        }
+        description={t`The VASCO serial is read from the VASCO blob. If you want to use this VASCO serial number within eduMFA, activate the checkbox. Otherwise eduMFA will create a new unique serial number.`}
         disabled
         id="serial"
         mb="sm"

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Box, Checkbox, TextInput } from "@mantine/core";
 import { useWatch, type Control, type UseFormRegister } from "react-hook-form";
 
@@ -18,6 +18,8 @@ export interface LdapTlsFieldsProps {
  * `ng-show` conditions; hidden values stay in the payload.
  */
 export function LdapTlsFields({ control, register }: LdapTlsFieldsProps) {
+  const { t } = useLingui();
+
   const ldapUri = useWatch({ control, name: "LDAPURI" });
   const startTls = useWatch({ control, name: "START_TLS" });
   const tlsVerify = useWatch({ control, name: "TLS_VERIFY" });
@@ -26,32 +28,25 @@ export function LdapTlsFields({ control, register }: LdapTlsFieldsProps) {
     <>
       {offersStartTls(ldapUri) ? (
         <Checkbox
-          description={
-            <Trans>Use STARTTLS on a plain LDAP connection usually on port 389.</Trans>
-          }
+          description={t`Use STARTTLS on a plain LDAP connection usually on port 389.`}
           id="starttls"
-          label={<Trans>STARTTLS</Trans>}
+          label={t`STARTTLS`}
           {...register("START_TLS")}
         />
       ) : null}
       {offersTlsVerify(ldapUri, startTls) ? (
         <>
           <Checkbox
-            description={<Trans>Verify the TLS certificate of the server.</Trans>}
+            description={t`Verify the TLS certificate of the server.`}
             id="tls"
-            label={<Trans>Verify TLS</Trans>}
+            label={t`Verify TLS`}
             {...register("TLS_VERIFY")}
           />
           {tlsVerify ? (
             <Box pl="xl">
               <TextInput
                 id="tls_ca_file"
-                label={
-                  <Trans>
-                    The file containing the CA certificate which signed the LDAP TLS
-                    certificate.
-                  </Trans>
-                }
+                label={t`The file containing the CA certificate which signed the LDAP TLS certificate.`}
                 placeholder="/etc/edumfa/ldap-ca.crt"
                 {...register("TLS_CA_FILE")}
               />

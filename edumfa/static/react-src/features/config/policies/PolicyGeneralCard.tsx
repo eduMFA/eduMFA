@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, NativeSelect, NumberInput, Stack, TextInput } from "@mantine/core";
 
 import { isPolicyNameValid, type PolicyFormValues } from "./policyForm";
@@ -31,7 +31,7 @@ export function PolicyGeneralCard({
     <Card>
       <Stack>
         <TextInput
-          label={<Trans>Policy Name</Trans>}
+          label={t`Policy Name`}
           value={form.name}
           required
           autoFocus
@@ -44,12 +44,9 @@ export function PolicyGeneralCard({
               : undefined
           }
           description={
-            policy ? (
-              <Trans>
-                If you change the name of the policy, it will create a new policy with
-                the new name!
-              </Trans>
-            ) : undefined
+            policy
+              ? t`If you change the name of the policy, it will create a new policy with the new name!`
+              : undefined
           }
         />
         {!policy && canWrite ? (
@@ -59,7 +56,7 @@ export function PolicyGeneralCard({
           />
         ) : null}
         <NativeSelect
-          label={<Trans>Scope</Trans>}
+          label={t`Scope`}
           data={scopes}
           value={form.scope}
           required
@@ -68,7 +65,7 @@ export function PolicyGeneralCard({
           }}
         />
         <NumberInput
-          label={<Trans>Priority</Trans>}
+          label={t`Priority`}
           value={form.priority}
           allowDecimal={false}
           min={1}
@@ -76,16 +73,11 @@ export function PolicyGeneralCard({
           onChange={(priority) => {
             onChange({ priority });
           }}
-          description={
-            <Trans>
-              In case of conflicting policies, the policy with the lowest priority
-              number will take precedence.
-            </Trans>
-          }
+          description={t`In case of conflicting policies, the policy with the lowest priority number will take precedence.`}
         />
         {!policy ? (
           <Checkbox
-            label={<Trans>Active</Trans>}
+            label={t`Active`}
             checked={form.active}
             onChange={(event) => {
               onChange({ active: event.currentTarget.checked });

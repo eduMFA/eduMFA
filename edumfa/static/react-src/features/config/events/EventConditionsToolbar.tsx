@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Checkbox, Group, TextInput } from "@mantine/core";
 import { IconFilter, IconFold, IconArrowsVertical } from "@tabler/icons-react";
 
@@ -30,7 +30,7 @@ export function EventConditionsToolbar({
         }}
       />
       <Checkbox
-        label={<Trans>Show selected conditions only</Trans>}
+        label={t`Show selected conditions only`}
         checked={selectedOnly}
         onChange={(event) => {
           onSelectedOnlyChange(event.currentTarget.checked);
@@ -41,14 +41,14 @@ export function EventConditionsToolbar({
         leftSection={<IconArrowsVertical aria-hidden size={16} />}
         onClick={onOpenAll}
       >
-        <Trans>Open all groups</Trans>
+        {t`Open all groups`}
       </Button>
       <Button
         variant="subtle"
         leftSection={<IconFold aria-hidden size={16} />}
         onClick={onCloseAll}
       >
-        <Trans>Close all groups</Trans>
+        {t`Close all groups`}
       </Button>
     </Group>
   );

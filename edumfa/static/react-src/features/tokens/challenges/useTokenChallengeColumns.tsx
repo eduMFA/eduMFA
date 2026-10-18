@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor } from "@mantine/core";
 
 import { type TokenChallenge } from "@/api/tokens";
@@ -23,7 +23,7 @@ export function useTokenChallengeColumns({
 
   return [
     {
-      header: <Trans>timestamp</Trans>,
+      header: t`timestamp`,
       key: "timestamp",
       nowrap: true,
       render: (challenge) => formatLegacyDate(challenge.timestamp),
@@ -38,7 +38,7 @@ export function useTokenChallengeColumns({
           value={serialDraft}
         />
       ),
-      header: <Trans>serial</Trans>,
+      header: t`serial`,
       key: "serial",
       render: (challenge) => (
         <Anchor
@@ -51,13 +51,13 @@ export function useTokenChallengeColumns({
       sortKey: "serial"
     },
     {
-      header: <Trans>Transaction ID</Trans>,
+      header: t`Transaction ID`,
       key: "transaction_id",
       render: (challenge) => challenge.transaction_id,
       sortKey: "transaction_id"
     },
     {
-      header: <Trans>Expiration</Trans>,
+      header: t`Expiration`,
       key: "expiration",
       nowrap: true,
       render: (challenge) => formatLegacyDate(challenge.expiration),
@@ -65,7 +65,7 @@ export function useTokenChallengeColumns({
     },
     {
       align: "right",
-      header: <Trans>Received</Trans>,
+      header: t`Received`,
       key: "received_count",
       render: (challenge) => challenge.received_count,
       sortKey: "received_count"

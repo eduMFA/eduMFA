@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button, Text } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -49,15 +49,17 @@ export function TokengroupTable({
   isLoading,
   onDelete
 }: TokengroupTableProps) {
+  const { t } = useLingui();
+
   const columns: DataTableColumn<TokengroupRow>[] = [
     {
-      header: <Trans>Id</Trans>,
+      header: t`Id`,
       key: "id",
       render: (row) => row.id,
       width: 80
     },
     {
-      header: <Trans>Name</Trans>,
+      header: t`Name`,
       key: "name",
       render: (row) => (
         <Anchor
@@ -71,7 +73,7 @@ export function TokengroupTable({
       )
     },
     {
-      header: <Trans>Description</Trans>,
+      header: t`Description`,
       key: "description",
       render: (row) => (
         <Text size="sm" title={row.description}>
@@ -83,7 +85,7 @@ export function TokengroupTable({
       ? [
           {
             align: "right",
-            header: <Trans>Actions</Trans>,
+            header: t`Actions`,
             key: "actions",
             render: (row) => (
               <Button
@@ -96,7 +98,7 @@ export function TokengroupTable({
                 size="xs"
                 variant="light"
               >
-                <Trans>Delete</Trans>
+                {t`Delete`}
               </Button>
             )
           } satisfies DataTableColumn<TokengroupRow>
@@ -106,14 +108,12 @@ export function TokengroupTable({
 
   return (
     <Card flush>
-      {isLoading ? (
-        <LoadingIndicator label={<Trans>Loading tokengroups</Trans>} />
-      ) : null}
+      {isLoading ? <LoadingIndicator label={t`Loading tokengroups`} /> : null}
 
       <DataTable
         columns={columns}
         data={toRows(data)}
-        emptyMessage={<Trans>No tokengroups defined.</Trans>}
+        emptyMessage={t`No tokengroups defined.`}
         getRowKey={(row) => row.groupname}
         id="tabletokengroups"
         isLoading={data === undefined}

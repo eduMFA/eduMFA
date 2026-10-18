@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Accordion, Anchor, Button, Group, Stack, Text } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 
@@ -17,14 +17,14 @@ export function OtpSeedDetails({
   onRegenerate,
   showSeed
 }: OtpSeedDetailsProps) {
+  const { t } = useLingui();
+
   return (
     <Stack gap="sm">
       {showSeed ? (
         <Accordion variant="separated">
           <Accordion.Item value="seed">
-            <Accordion.Control>
-              <Trans>The OTP key</Trans>
-            </Accordion.Control>
+            <Accordion.Control>{t`The OTP key`}</Accordion.Control>
             <Accordion.Panel>
               <Text ff="monospace" size="sm" style={{ wordBreak: "break-all" }}>
                 Hex: {stripSeedPrefix(detail.otpkey?.value)}
@@ -66,7 +66,7 @@ export function OtpSeedDetails({
               onClick={onRegenerate}
               variant="light"
             >
-              <Trans>Regenerate QR Code</Trans>
+              {t`Regenerate QR Code`}
             </Button>
           </Group>
         </>

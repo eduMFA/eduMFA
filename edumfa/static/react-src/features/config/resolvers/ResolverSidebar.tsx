@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Divider, NavLink, Stack } from "@mantine/core";
 import { IconEdit, IconInfoCircle, IconList, IconPlus } from "@tabler/icons-react";
 
@@ -22,6 +22,8 @@ export interface ResolverSidebarProps {
  * documentation link.
  */
 export function ResolverSidebar({ activeItem, resolverName }: ResolverSidebarProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const helpUrl = useDocsUrl("configuration/useridresolvers.html");
   const isEditing = resolverName !== undefined && resolverName !== "";
@@ -32,7 +34,7 @@ export function ResolverSidebar({ activeItem, resolverName }: ResolverSidebarPro
         active={activeItem === "list"}
         component="a"
         href={hashHref("/config/resolvers/list")}
-        label={<Trans>All Resolvers</Trans>}
+        label={t`All Resolvers`}
         leftSection={<IconList size={16} />}
       />
       {isEditing ? (
@@ -44,9 +46,7 @@ export function ResolverSidebar({ activeItem, resolverName }: ResolverSidebarPro
       ) : null}
       {hasRight(rights, "resolverwrite") ? (
         <>
-          <SidebarSection>
-            <Trans>New Resolvers</Trans>
-          </SidebarSection>
+          <SidebarSection>{t`New Resolvers`}</SidebarSection>
           {resolverTypes.map((resolverType) => (
             <NavLink
               active={activeItem === resolverType && !isEditing}
@@ -63,7 +63,7 @@ export function ResolverSidebar({ activeItem, resolverName }: ResolverSidebarPro
       <NavLink
         component="a"
         href={helpUrl}
-        label={<Trans>Help about UserResolver</Trans>}
+        label={t`Help about UserResolver`}
         leftSection={<IconInfoCircle size={16} />}
         rel="noopener"
         target="_blank"

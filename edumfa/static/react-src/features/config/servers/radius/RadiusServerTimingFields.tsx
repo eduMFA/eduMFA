@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Grid, NumberInput } from "@mantine/core";
 
 import type {
@@ -16,6 +16,8 @@ export function RadiusServerTimingFields({
   setValue,
   values
 }: RadiusServerTimingFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <Grid>
       <Grid.Col span={{ base: 12, sm: 4 }}>
@@ -23,7 +25,7 @@ export function RadiusServerTimingFields({
           allowDecimal={false}
           allowNegative={false}
           id="port"
-          label={<Trans>Port</Trans>}
+          label={t`Port`}
           mb="sm"
           onChange={(value) => {
             setValue("port", value);
@@ -37,7 +39,7 @@ export function RadiusServerTimingFields({
           allowDecimal={false}
           allowNegative={false}
           id="timeout"
-          label={<Trans>Timeout</Trans>}
+          label={t`Timeout`}
           mb="sm"
           onChange={(value) => {
             setValue("timeout", value);
@@ -51,7 +53,7 @@ export function RadiusServerTimingFields({
           allowDecimal={false}
           allowNegative={false}
           id="retries"
-          label={<Trans>Retries</Trans>}
+          label={t`Retries`}
           mb="sm"
           onChange={(value) => {
             setValue("retries", value);

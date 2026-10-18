@@ -10,13 +10,11 @@ export function RadiusFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <Checkbox
         checked={form.radiusLocalCheckPin}
         id="localPin"
-        label={<Trans>Check the PIN locally</Trans>}
+        label={t`Check the PIN locally`}
         mb="sm"
         onChange={(event) => {
           onChange({ radiusLocalCheckPin: event.currentTarget.checked });
@@ -24,14 +22,9 @@ export function RadiusFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
       />
       {form.radiusLocalCheckPin ? (
         <NumberInput
-          description={
-            <Trans>
-              If the PIN is split and verified locally, you need to define, how long the
-              password is, that is sent to the RADIUS server.
-            </Trans>
-          }
+          description={t`If the PIN is split and verified locally, you need to define, how long the password is, that is sent to the RADIUS server.`}
           id="otplen"
-          label={<Trans>OTP Length</Trans>}
+          label={t`OTP Length`}
           mb="sm"
           min={1}
           onChange={(value) => {
@@ -50,7 +43,7 @@ export function RadiusFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
           </Trans>
         }
         id="identifier"
-        label={<Trans>RADIUS server configuration</Trans>}
+        label={t`RADIUS server configuration`}
         mb="sm"
         onChange={(event) => {
           onChange({ radiusIdentifier: event.currentTarget.value });
@@ -58,14 +51,9 @@ export function RadiusFields({ form, lookups, onChange }: TokenTypeFieldsProps) 
         value={form.radiusIdentifier}
       />
       <TextInput
-        description={
-          <Trans>
-            This is the username that is sent to the RADIUS server. It can be different
-            from the owner of this RADIUS token.
-          </Trans>
-        }
+        description={t`This is the username that is sent to the RADIUS server. It can be different from the owner of this RADIUS token.`}
         id="radiusUser"
-        label={<Trans>RADIUS User</Trans>}
+        label={t`RADIUS User`}
         mb="sm"
         onChange={(event) => {
           onChange({ radiusUser: event.currentTarget.value });

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 
@@ -18,6 +18,8 @@ export function RealmRowActions({
   onDelete,
   onEdit
 }: RealmRowActionsProps) {
+  const { t } = useLingui();
+
   return (
     <Group gap="xs" justify="flex-end" wrap="nowrap">
       {canWrite ? (
@@ -27,7 +29,7 @@ export function RealmRowActions({
           size="xs"
           variant="light"
         >
-          <Trans>Edit</Trans>
+          {t`Edit`}
         </Button>
       ) : null}
       {canDelete ? (
@@ -39,7 +41,7 @@ export function RealmRowActions({
           size="xs"
           variant="light"
         >
-          <Trans>Delete</Trans>
+          {t`Delete`}
         </Button>
       ) : null}
     </Group>

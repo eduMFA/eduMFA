@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Table } from "@mantine/core";
 
 export interface CustomAttributeRowProps {
@@ -17,6 +17,8 @@ export function CustomAttributeRow({
   isDeleting,
   onDelete
 }: CustomAttributeRowProps) {
+  const { t } = useLingui();
+
   return (
     <Table.Tr>
       <Table.Td fw={600} w="30%">
@@ -32,7 +34,7 @@ export function CustomAttributeRow({
             size="xs"
             variant="light"
           >
-            <Trans>Delete</Trans>
+            {t`Delete`}
           </Button>
         ) : null}
       </Table.Td>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 
@@ -16,6 +16,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 
 export function UserAddPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated } = useAuth();
   const {
     activeResolver,
@@ -32,8 +34,8 @@ export function UserAddPage() {
   return (
     <SidebarLayout sidebar={<UserSidebar activeItem="add" />}>
       <PageHeader
-        subtitle={<Trans>Create a user in an editable user store.</Trans>}
-        title={<Trans>Add a new user</Trans>}
+        subtitle={t`Create a user in an editable user store.`}
+        title={t`Add a new user`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
@@ -41,7 +43,7 @@ export function UserAddPage() {
       <ErrorAlert error={createMutation.error} />
 
       {resolversQuery.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading resolvers</Trans>} />
+        <LoadingIndicator label={t`Loading resolvers`} />
       ) : null}
 
       <form
@@ -59,10 +61,10 @@ export function UserAddPage() {
                 loading={createMutation.isPending}
                 type="submit"
               >
-                <Trans>Save user</Trans>
+                {t`Save user`}
               </Button>
             }
-            title={<Trans>User details</Trans>}
+            title={t`User details`}
           >
             <ResolverSelect
               onChange={selectResolver}

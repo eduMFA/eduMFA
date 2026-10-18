@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { PasswordInput } from "@mantine/core";
 
 /** PIN plus repeat, shared by the admin assignment and the user's own enrollment. */
@@ -22,7 +22,7 @@ export function PinFields({
       <PasswordInput
         autoComplete="new-password"
         id="otppin"
-        label={<Trans>PIN/Password</Trans>}
+        label={t`PIN/Password`}
         mb="xs"
         onChange={(event) => {
           onPinChange(event.currentTarget.value);

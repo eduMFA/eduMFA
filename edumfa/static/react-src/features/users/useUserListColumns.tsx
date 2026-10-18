@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor } from "@mantine/core";
 
 import type { UserFilters, UserList } from "./useUserList";
@@ -37,7 +37,7 @@ export function useUserListColumns({
   return [
     {
       filter: filterFor("username", t`username`),
-      header: <Trans>username</Trans>,
+      header: t`username`,
       key: "username",
       render: (listedUser) => (
         <Anchor
@@ -52,19 +52,19 @@ export function useUserListColumns({
     },
     {
       filter: filterFor("surname", t`surname`),
-      header: <Trans>surname</Trans>,
+      header: t`surname`,
       key: "surname",
       render: (listedUser) => listedUser.surname
     },
     {
       filter: filterFor("givenname", t`givenname`),
-      header: <Trans>givenname</Trans>,
+      header: t`givenname`,
       key: "givenname",
       render: (listedUser) => listedUser.givenname
     },
     {
       filter: filterFor("email", t`email`),
-      header: <Trans>email</Trans>,
+      header: t`email`,
       key: "email",
       render: (listedUser) =>
         listedUser.email ? (
@@ -74,24 +74,24 @@ export function useUserListColumns({
         ) : null
     },
     {
-      header: <Trans>phone</Trans>,
+      header: t`phone`,
       key: "phone",
       nowrap: true,
       render: (listedUser) => listedUser.phone
     },
     {
-      header: <Trans>mobile</Trans>,
+      header: t`mobile`,
       key: "mobile",
       nowrap: true,
       render: (listedUser) => listedUser.mobile
     },
     {
-      header: <Trans>description</Trans>,
+      header: t`description`,
       key: "description",
       render: (listedUser) => listedUser.description
     },
     {
-      header: <Trans>id</Trans>,
+      header: t`id`,
       key: "userid",
       render: (listedUser) => listedUser.userid
     }

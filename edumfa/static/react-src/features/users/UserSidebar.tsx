@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Box, Divider, NavLink, Stack, Text } from "@mantine/core";
 import { IconSettings, IconUser, IconUserPlus, IconUsers } from "@tabler/icons-react";
 import type { ReactNode } from "react";
@@ -26,6 +26,8 @@ export function UserSidebar({
   realmSelector,
   userCount
 }: UserSidebarProps) {
+  const { t } = useLingui();
+
   const { rights, user } = useAuth();
   const isAdmin = user?.role === "admin";
   const isUser = user?.role === "user";
@@ -37,7 +39,7 @@ export function UserSidebar({
           active={activeItem === "password"}
           component="a"
           href={hashHref("/user/password")}
-          label={<Trans>Your details</Trans>}
+          label={t`Your details`}
           leftSection={<IconUser size={16} />}
         />
       ) : null}
@@ -48,7 +50,7 @@ export function UserSidebar({
             active={activeItem === "list"}
             component="a"
             href={hashHref("/user/list")}
-            label={<Trans>All users</Trans>}
+            label={t`All users`}
             leftSection={<IconUsers size={16} />}
           />
           {realmSelector ? (
@@ -68,24 +70,22 @@ export function UserSidebar({
               active={activeItem === "add"}
               component="a"
               href={hashHref("/user/add")}
-              label={<Trans>Add user</Trans>}
+              label={t`Add user`}
               leftSection={<IconUserPlus size={16} />}
             />
           ) : null}
-          <SidebarSection>
-            <Trans>Quick links</Trans>
-          </SidebarSection>
+          <SidebarSection>{t`Quick links`}</SidebarSection>
           {hasRight(rights, "resolverwrite") ? (
             <NavLink
               component="a"
               href={hashHref("/config/realms/list")}
-              label={<Trans>Edit realms</Trans>}
+              label={t`Edit realms`}
               leftSection={<IconSettings size={16} />}
             />
           ) : null}
           {userCount !== undefined ? (
             <Text c="dimmed" px="sm" py="xs" size="sm">
-              <Trans>total users:</Trans> {userCount}
+              {t`total users:`} {userCount}
             </Text>
           ) : null}
           <Divider my="xs" />

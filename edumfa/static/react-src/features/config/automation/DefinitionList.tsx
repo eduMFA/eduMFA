@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -49,6 +49,8 @@ export function DefinitionList<T extends Definition, R>({
   request,
   columns
 }: Props<T, R>) {
+  const { t } = useLingui();
+
   const client = useApiClient();
   const { rights, isAuthenticated } = useAuth();
   const access = definitionRights(kind);
@@ -78,15 +80,7 @@ export function DefinitionList<T extends Definition, R>({
 
   return (
     <DefinitionLayout kind={kind}>
-      <PageHeader
-        title={
-          kind === "events" ? (
-            <Trans>Event Handlers</Trans>
-          ) : (
-            <Trans>Periodic Tasks</Trans>
-          )
-        }
-      />
+      <PageHeader title={kind === "events" ? t`Event Handlers` : t`Periodic Tasks`} />
 
       {!canRead ? (
         <DefinitionPermissionAlert />
@@ -96,7 +90,7 @@ export function DefinitionList<T extends Definition, R>({
 
           <TextInput
             mb="md"
-            label={<Trans>Filter definitions</Trans>}
+            label={t`Filter definitions`}
             leftSection={<IconSearch aria-hidden size={16} />}
             value={filter}
             onChange={(event) => {
@@ -110,7 +104,7 @@ export function DefinitionList<T extends Definition, R>({
               columns={allColumns}
               data={rows}
               getRowKey={(row) => String(row.id)}
-              emptyMessage={<Trans>No definitions found.</Trans>}
+              emptyMessage={t`No definitions found.`}
               isLoading={query.data === undefined}
               minWidth={950}
               sort={sort}

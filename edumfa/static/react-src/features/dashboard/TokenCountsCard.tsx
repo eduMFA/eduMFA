@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Table } from "@mantine/core";
 
 import { StatRow } from "./StatRow";
@@ -12,32 +12,34 @@ export interface TokenCountsCardProps {
 
 /** Total, hardware and software token counts with the unassigned ones. */
 export function TokenCountsCard({ counts }: TokenCountsCardProps) {
+  const { t } = useLingui();
+
   return (
     <Card
       flush
       title={
         <Anchor href={hashHref("/token/list")} size="sm">
-          <Trans>Tokens</Trans>
+          {t`Tokens`}
         </Anchor>
       }
     >
       <Table verticalSpacing="xs">
         <Table.Tbody>
-          <StatRow label={<Trans>Total</Trans>} name="total">
+          <StatRow label={t`Total`} name="total">
             <Anchor href={hashHref("/token/list")} size="sm">
               {counts.total}
             </Anchor>
           </StatRow>
-          <StatRow label={<Trans>Hardware</Trans>} name="hardware">
+          <StatRow label={t`Hardware`} name="hardware">
             {counts.hardware}
           </StatRow>
-          <StatRow label={<Trans>Software</Trans>} name="software">
+          <StatRow label={t`Software`} name="software">
             {counts.software}
           </StatRow>
-          <StatRow label={<Trans>Unassigned Hardware</Trans>} name="unassignedHardware">
+          <StatRow label={t`Unassigned Hardware`} name="unassignedHardware">
             {counts.unassignedHardware}
           </StatRow>
-          <StatRow label={<Trans>Unassigned Software</Trans>} name="unassignedSoftware">
+          <StatRow label={t`Unassigned Software`} name="unassignedSoftware">
             {counts.unassignedSoftware}
           </StatRow>
         </Table.Tbody>

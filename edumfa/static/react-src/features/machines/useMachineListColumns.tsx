@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor } from "@mantine/core";
 
 import type { MachineFilters, MachineList } from "./useMachineList";
@@ -29,7 +29,7 @@ export function useMachineListColumns({
   return [
     {
       filter: filterFor("hostname", t`hostname`),
-      header: <Trans>hostname</Trans>,
+      header: t`hostname`,
       key: "hostname",
       render: (machine) => (
         <Anchor
@@ -44,19 +44,19 @@ export function useMachineListColumns({
     },
     {
       filter: filterFor("ip", t`IP Address`),
-      header: <Trans>IP Address</Trans>,
+      header: t`IP Address`,
       key: "ip",
       render: (machine) => machine.ip
     },
     {
       filter: filterFor("id", t`Id`),
-      header: <Trans>Id</Trans>,
+      header: t`Id`,
       key: "id",
       render: (machine) => machine.id
     },
     {
       filter: filterFor("resolver", t`Machine Resolver`),
-      header: <Trans>Machine Resolver</Trans>,
+      header: t`Machine Resolver`,
       key: "resolver_name",
       render: (machine) => machine.resolver_name
     }

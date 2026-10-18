@@ -85,7 +85,7 @@ export function SmtpServerForm({ existing }: SmtpServerFormProps) {
               loading={saveMutation.isPending}
               type="submit"
             >
-              <Trans>Save SMTP server</Trans>
+              {t`Save SMTP server`}
             </Button>
           ) : null
         }

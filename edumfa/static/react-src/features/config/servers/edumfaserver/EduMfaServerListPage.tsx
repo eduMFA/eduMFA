@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -15,6 +15,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** Port of `config.edumfaserver.list.html` and the list part of `eduMfaServerController`. */
 export function EduMfaServerListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights } = useAuth();
   const canWrite = hasRight(rights, "edumfaserver_write");
   const { dialog, requestDelete } = useDeleteConfirmation();
@@ -40,11 +42,11 @@ export function EduMfaServerListPage() {
               leftSection={<IconPlus size={16} />}
               variant="light"
             >
-              <Trans>New eduMFA server</Trans>
+              {t`New eduMFA server`}
             </Button>
           ) : null
         }
-        title={<Trans>eduMFA servers</Trans>}
+        title={t`eduMFA servers`}
       />
 
       {!isAuthenticated ? (

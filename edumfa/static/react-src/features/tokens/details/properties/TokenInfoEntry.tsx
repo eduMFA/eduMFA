@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Text } from "@mantine/core";
 
 import { saveBlobAsFile } from "@/lib/download";
@@ -20,6 +20,8 @@ export interface TokenInfoEntryProps {
  * truncated to 35 characters with the full value in the tooltip.
  */
 export function TokenInfoEntry({ infoKey, serial, value }: TokenInfoEntryProps) {
+  const { t } = useLingui();
+
   if (blobInfoKeys.includes(infoKey)) {
     const isPkcs12 = infoKey === "pkcs12";
     const download = () => {
@@ -35,7 +37,7 @@ export function TokenInfoEntry({ infoKey, serial, value }: TokenInfoEntryProps) 
 
     return (
       <Anchor component="button" onClick={download} size="sm" type="button">
-        {isPkcs12 ? <Trans>PKCS12</Trans> : <Trans>certificate</Trans>}
+        {isPkcs12 ? t`PKCS12` : t`certificate`}
       </Anchor>
     );
   }

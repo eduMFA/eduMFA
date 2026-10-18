@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, NativeSelect, TextInput } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -73,7 +73,7 @@ export function CustomAttributeForm({ attributes }: CustomAttributeFormProps) {
         }}
         size="sm"
       >
-        <Trans>Add</Trans>
+        {t`Add`}
       </Button>
     </Group>
   );

@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import type { ReactNode } from "react";
 
 import { ResolverSidebar } from "./ResolverSidebar";
@@ -49,14 +49,12 @@ export function ResolverEditorLayout({
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={stored.error} />
 
-      {stored.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading resolver</Trans>} />
-      ) : null}
+      {stored.isLoading ? <LoadingIndicator label={t`Loading resolver`} /> : null}
 
       {stored.notFound ? (
         <ErrorAlert
           error={new Error(t`Resolver ${resolverName} not found.`)}
-          title={<Trans>Resolver not found.</Trans>}
+          title={t`Resolver not found.`}
         />
       ) : null}
 

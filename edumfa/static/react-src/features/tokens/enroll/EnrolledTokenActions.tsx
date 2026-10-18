@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 import { IconEdit, IconLogout } from "@tabler/icons-react";
 
@@ -14,6 +14,8 @@ export function EnrolledTokenActions({
   isWizard,
   onEnrollAnother
 }: EnrolledTokenActionsProps) {
+  const { t } = useLingui();
+
   const { logout } = useAuth();
 
   return (
@@ -26,7 +28,7 @@ export function EnrolledTokenActions({
             logout();
           }}
         >
-          <Trans>Logout</Trans>
+          {t`Logout`}
         </Button>
       ) : (
         <Button
@@ -34,7 +36,7 @@ export function EnrolledTokenActions({
           leftSection={<IconEdit size={16} />}
           onClick={onEnrollAnother}
         >
-          <Trans>Enroll a new token</Trans>
+          {t`Enroll a new token`}
         </Button>
       )}
     </Group>

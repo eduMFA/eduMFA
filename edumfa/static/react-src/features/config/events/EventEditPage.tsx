@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -15,6 +15,8 @@ import { DefinitionPermissionAlert } from "@/features/config/automation/Definiti
 
 /** Route entry: loads the handler (when editing) and checks permissions before rendering the form. */
 export function EventEditPage() {
+  const { t } = useLingui();
+
   const { eventid } = useParams();
   const client = useApiClient();
   const { rights, isAuthenticated } = useAuth();
@@ -40,7 +42,7 @@ export function EventEditPage() {
 
           {eventid && query.isSuccess && !existing ? (
             <Alert color="yellow" role="alert">
-              <Trans>The event handler does not exist.</Trans>
+              {t`The event handler does not exist.`}
             </Alert>
           ) : null}
 

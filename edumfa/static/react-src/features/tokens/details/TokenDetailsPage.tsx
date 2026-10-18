@@ -72,14 +72,12 @@ export function TokenDetailsPage() {
       <ErrorAlert error={tokenQuery.error} />
       <ErrorAlert error={deletion.mutation.error} />
 
-      {tokenQuery.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading token</Trans>} />
-      ) : null}
+      {tokenQuery.isLoading ? <LoadingIndicator label={t`Loading token`} /> : null}
 
       {tokenQuery.isSuccess && !token ? (
         <ErrorAlert
           error={new Error(t`Token ${serial} not found.`)}
-          title={<Trans>Token not found.</Trans>}
+          title={t`Token not found.`}
         />
       ) : null}
 

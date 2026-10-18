@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { IconHelp, IconPlus, IconShieldCheck } from "@tabler/icons-react";
 import { Divider, NavLink, Stack } from "@mantine/core";
 
@@ -8,6 +8,8 @@ import { useDocsUrl } from "@/lib/docs";
 import { hashHref } from "@/lib/hashbang";
 
 export function PolicySidebar({ active }: { active: "list" | "add" | "edit" }) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const docsUrl = useDocsUrl("policies/index.html");
   return (
@@ -18,7 +20,7 @@ export function PolicySidebar({ active }: { active: "list" | "add" | "edit" }) {
           component="a"
           href={hashHref("/config/policies/list")}
           leftSection={<IconShieldCheck aria-hidden size={16} />}
-          label={<Trans>All Policies</Trans>}
+          label={t`All Policies`}
         />
       ) : null}
       {hasRight(rights, "policywrite") ? (
@@ -27,7 +29,7 @@ export function PolicySidebar({ active }: { active: "list" | "add" | "edit" }) {
           component="a"
           href={hashHref("/config/policies/add")}
           leftSection={<IconPlus aria-hidden size={16} />}
-          label={<Trans>Create new Policy</Trans>}
+          label={t`Create new Policy`}
         />
       ) : null}
       <Divider my="xs" />
@@ -35,7 +37,7 @@ export function PolicySidebar({ active }: { active: "list" | "add" | "edit" }) {
         component="a"
         href={docsUrl}
         leftSection={<IconHelp aria-hidden size={16} />}
-        label={<Trans>Help about Policies</Trans>}
+        label={t`Help about Policies`}
         target="_blank"
         rel="noopener"
       />

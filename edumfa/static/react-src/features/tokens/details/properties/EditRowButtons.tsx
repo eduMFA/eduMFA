@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group } from "@mantine/core";
 import type { ReactNode } from "react";
 
@@ -32,6 +32,8 @@ export function EditRowButtons({
   right,
   saveLabel
 }: EditRowButtonsProps) {
+  const { t } = useLingui();
+
   const { user } = useAuth();
   const canEditRows = user?.role === "admin" && !locked;
 
@@ -46,7 +48,7 @@ export function EditRowButtons({
           {saveLabel}
         </Button>
         <Button onClick={onCancel} size="xs" variant="default">
-          <Trans>Cancel</Trans>
+          {t`Cancel`}
         </Button>
       </Group>
     );
@@ -54,7 +56,7 @@ export function EditRowButtons({
 
   return (
     <ActionButton onClick={onEdit} right={right} variant="default">
-      <Trans>Edit</Trans>
+      {t`Edit`}
     </ActionButton>
   );
 }

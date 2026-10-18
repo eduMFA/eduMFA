@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { TextInput } from "@mantine/core";
 
 import type { PolicyFormValues } from "./policyForm";
@@ -14,11 +14,13 @@ export function PolicyAdminFields({
   form: PolicyFormValues;
   onChange: (changes: Partial<PolicyFormValues>) => void;
 }) {
+  const { t } = useLingui();
+
   return (
     <>
       <CheckboxPickList
         id="policy-adminrealm"
-        label={<Trans>Admin-Realm</Trans>}
+        label={t`Admin-Realm`}
         options={adminRealms}
         selected={form.adminrealm}
         onChange={(adminrealm) => {
@@ -27,7 +29,7 @@ export function PolicyAdminFields({
         columns={2}
       />
       <TextInput
-        label={<Trans>Admin</Trans>}
+        label={t`Admin`}
         value={form.adminuser}
         onChange={(event) => {
           onChange({ adminuser: event.currentTarget.value });

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 
 import type { TokenDetail } from "@/api/tokens";
 import { ConfirmDialog } from "@/components/feedback/ConfirmDialog";
@@ -21,9 +21,11 @@ export function TokenDeleteDialog({
   serial,
   token
 }: TokenDeleteDialogProps) {
+  const { t } = useLingui();
+
   return (
     <ConfirmDialog
-      confirmLabel={<Trans>Delete Token</Trans>}
+      confirmLabel={t`Delete Token`}
       id="dialogTokenDelete"
       isOpen={isOpen}
       isPending={isPending}
@@ -38,7 +40,7 @@ export function TokenDeleteDialog({
       }
       onCancel={onCancel}
       onConfirm={onConfirm}
-      title={<Trans>Delete Token</Trans>}
+      title={t`Delete Token`}
     />
   );
 }

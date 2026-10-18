@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useEffect } from "react";
 
 import { useTokenList } from "./list/useTokenList";
@@ -22,6 +22,8 @@ import { notify } from "@/lib/notify";
  * filtering stay on the server like in the legacy controller.
  */
 export function TokenListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, settings, user } = useAuth();
   const isAdmin = user?.role === "admin";
   const {
@@ -62,7 +64,7 @@ export function TokenListPage() {
     <SidebarLayout sidebar={<TokenSidebar activeItem="list" />}>
       <PageHeader
         subtitle={tokenPage ? <Trans>total tokens: {tokenCount}</Trans> : null}
-        title={<Trans>Tokens</Trans>}
+        title={t`Tokens`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
@@ -71,9 +73,7 @@ export function TokenListPage() {
       <ErrorAlert error={resetMutation.error} />
 
       <Card flush>
-        {tokensQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading tokens</Trans>} />
-        ) : null}
+        {tokensQuery.isLoading ? <LoadingIndicator label={t`Loading tokens`} /> : null}
 
         <Pagination
           currentPage={page}
@@ -86,7 +86,7 @@ export function TokenListPage() {
         <DataTable
           columns={columns}
           data={tokenPage?.tokens ?? []}
-          emptyMessage={<Trans>No tokens found.</Trans>}
+          emptyMessage={t`No tokens found.`}
           getRowKey={(token) => token.serial}
           id="tabletokenlist"
           isLoading={tokenPage === undefined}

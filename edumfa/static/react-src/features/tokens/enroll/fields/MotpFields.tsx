@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -9,24 +9,19 @@ export function MotpFields({ errors, form, onChange }: TokenTypeFieldsProps) {
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <Stack gap={4} mb="sm">
         <Checkbox
           checked={form.genkey}
           id="generate"
-          label={<Trans>Generate OTP Key on the Server</Trans>}
+          label={t`Generate OTP Key on the Server`}
           onChange={(event) => {
             onChange({ genkey: event.currentTarget.checked });
           }}
         />
         {form.genkey ? (
           <Text c="dimmed" size="sm">
-            <Trans>
-              The server will create the secret key and a QR Code will be displayed to
-              you to be scanned with the Token2 app.
-            </Trans>
+            {t`The server will create the secret key and a QR Code will be displayed to you to be scanned with the Token2 app.`}
           </Text>
         ) : null}
       </Stack>
@@ -39,7 +34,7 @@ export function MotpFields({ errors, form, onChange }: TokenTypeFieldsProps) {
               : undefined
           }
           id="otpkey"
-          label={<Trans>OTP Key</Trans>}
+          label={t`OTP Key`}
           mb="sm"
           onChange={(event) => {
             onChange({ otpkey: event.currentTarget.value });
@@ -50,13 +45,9 @@ export function MotpFields({ errors, form, onChange }: TokenTypeFieldsProps) {
       ) : null}
       <PasswordInput
         autoComplete="new-password"
-        description={
-          <Trans>
-            The mOTP PIN is the PIN that needs to be entered on the mobile device.
-          </Trans>
-        }
+        description={t`The mOTP PIN is the PIN that needs to be entered on the mobile device.`}
         id="motppin"
-        label={<Trans>mOTP PIN</Trans>}
+        label={t`mOTP PIN`}
         mb="xs"
         onChange={(event) => {
           onChange({ motpPin: event.currentTarget.value });

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, SimpleGrid, Stack, TextInput } from "@mantine/core";
 
 import { PolicyAdminFields } from "./PolicyAdminFields";
@@ -17,8 +17,10 @@ export function PolicyConditionCard({
   lookups: PolicyEditorLookups;
   onChange: (changes: Partial<PolicyFormValues>) => void;
 }) {
+  const { t } = useLingui();
+
   return (
-    <Card title={<Trans>Condition</Trans>}>
+    <Card title={t`Condition`}>
       <Stack>
         {form.scope === "admin" ? (
           <PolicyAdminFields
@@ -30,7 +32,7 @@ export function PolicyConditionCard({
         <SimpleGrid cols={{ base: 1, sm: 2 }}>
           <CheckboxPickList
             id="policy-realm"
-            label={<Trans>User-Realm</Trans>}
+            label={t`User-Realm`}
             options={lookups.realms}
             selected={form.realm}
             onChange={(realm) => {
@@ -40,7 +42,7 @@ export function PolicyConditionCard({
           />
           <CheckboxPickList
             id="policy-resolver"
-            label={<Trans>User-Resolver</Trans>}
+            label={t`User-Resolver`}
             options={lookups.resolvers}
             selected={form.resolver}
             onChange={(resolver) => {
@@ -50,19 +52,14 @@ export function PolicyConditionCard({
           />
         </SimpleGrid>
         <Checkbox
-          label={
-            <Trans>
-              Check all possible resolvers of a user to match the resolver in this
-              policy.
-            </Trans>
-          }
+          label={t`Check all possible resolvers of a user to match the resolver in this policy.`}
           checked={form.checkAllResolvers}
           onChange={(event) => {
             onChange({ checkAllResolvers: event.currentTarget.checked });
           }}
         />
         <TextInput
-          label={<Trans>User</Trans>}
+          label={t`User`}
           value={form.user}
           placeholder="userA, userB"
           onChange={(event) => {
@@ -71,7 +68,7 @@ export function PolicyConditionCard({
         />
         <CheckboxPickList
           id="policy-node"
-          label={<Trans>eduMFA Node</Trans>}
+          label={t`eduMFA Node`}
           options={lookups.nodes}
           selected={form.edumfanode}
           onChange={(edumfanode) => {
@@ -80,7 +77,7 @@ export function PolicyConditionCard({
           columns={2}
         />
         <TextInput
-          label={<Trans>Client</Trans>}
+          label={t`Client`}
           value={form.client}
           placeholder="10.0.0.0/8, !10.0.0.124"
           onChange={(event) => {
@@ -88,7 +85,7 @@ export function PolicyConditionCard({
           }}
         />
         <TextInput
-          label={<Trans>Valid time</Trans>}
+          label={t`Valid time`}
           value={form.time}
           placeholder="Mon-Fri: 9-18, Sat: 10-15"
           onChange={(event) => {

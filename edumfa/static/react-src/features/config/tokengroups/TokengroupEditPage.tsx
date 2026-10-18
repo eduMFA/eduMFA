@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -17,6 +17,8 @@ import { SystemLayout } from "@/features/config/system/SystemLayout";
  * `/config/tokengroup/edit` and edits one under `/config/tokengroup/edit/:groupname`.
  */
 export function TokengroupEditPage() {
+  const { t } = useLingui();
+
   const { groupname } = useParams();
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
@@ -35,7 +37,7 @@ export function TokengroupEditPage() {
       <ErrorAlert error={groupQuery.error} />
 
       {isEditing && groupQuery.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading tokengroup</Trans>} />
+        <LoadingIndicator label={t`Loading tokengroup`} />
       ) : null}
 
       {isEditing && groupQuery.isSuccess && !group ? (

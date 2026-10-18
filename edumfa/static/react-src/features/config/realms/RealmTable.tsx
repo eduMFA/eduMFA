@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Text } from "@mantine/core";
 
 import { RealmActionsCell } from "./RealmActionsCell";
@@ -54,9 +54,11 @@ export function RealmTable({
   resolvers,
   settingDefaultName
 }: RealmTableProps) {
+  const { t } = useLingui();
+
   const columns: DataTableColumn<RealmRow>[] = [
     {
-      header: <Trans>Default</Trans>,
+      header: t`Default`,
       key: "default",
       render: ({ name, realm }) => (
         <RealmDefaultCell
@@ -70,7 +72,7 @@ export function RealmTable({
       )
     },
     {
-      header: <Trans>Realm name</Trans>,
+      header: t`Realm name`,
       key: "name",
       render: ({ name }) => (
         <Text fw={500} size="sm">
@@ -79,7 +81,7 @@ export function RealmTable({
       )
     },
     {
-      header: <Trans>resolvers</Trans>,
+      header: t`resolvers`,
       key: "resolvers",
       render: ({ name, realm }) =>
         editing.editingRealm === name ? (
@@ -95,7 +97,7 @@ export function RealmTable({
     },
     {
       align: "right",
-      header: <Trans>Actions</Trans>,
+      header: t`Actions`,
       key: "actions",
       render: ({ name, realm }) => (
         <RealmActionsCell
@@ -119,11 +121,11 @@ export function RealmTable({
 
   return (
     <Card flush>
-      {isLoading ? <LoadingIndicator label={<Trans>Loading realms</Trans>} /> : null}
+      {isLoading ? <LoadingIndicator label={t`Loading realms`} /> : null}
       <DataTable
         columns={columns}
         data={toRows(realms)}
-        emptyMessage={<Trans>No realms defined.</Trans>}
+        emptyMessage={t`No realms defined.`}
         getRowKey={(row) => row.name}
         id="tablerealms"
         isLoading={realms === undefined}

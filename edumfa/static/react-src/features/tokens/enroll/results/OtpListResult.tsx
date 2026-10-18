@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Accordion, Box, Button, Group, Stack, Table } from "@mantine/core";
 import { IconPrinter } from "@tabler/icons-react";
 import { useRef } from "react";
@@ -31,6 +31,8 @@ export function buildOtpListRows(otps: Record<string, string>): string[][] {
 }
 
 export function OtpListResult({ detail, form }: EnrolledTokenResultProps) {
+  const { t } = useLingui();
+
   const tableRef = useRef<HTMLDivElement>(null);
   const otps = detail.otps ?? {};
   const rows = buildOtpListRows(otps);
@@ -44,11 +46,7 @@ export function OtpListResult({ detail, form }: EnrolledTokenResultProps) {
       <Accordion variant="separated">
         <Accordion.Item value="otps">
           <Accordion.Control>
-            {form.type === "tan" ? (
-              <Trans>The OTP values</Trans>
-            ) : (
-              <Trans>The OTP key</Trans>
-            )}
+            {form.type === "tan" ? t`The OTP values` : t`The OTP key`}
           </Accordion.Control>
           <Accordion.Panel>
             <Box
@@ -91,7 +89,7 @@ export function OtpListResult({ detail, form }: EnrolledTokenResultProps) {
           }}
           variant="default"
         >
-          <Trans>Print the OTP list</Trans>
+          {t`Print the OTP list`}
         </Button>
       </Group>
     </Stack>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { ResolverActionsCell } from "./ResolverActionsCell";
 import { ResolverNameCell } from "./ResolverNameCell";
@@ -22,6 +22,8 @@ import { DataTable, type DataTableColumn } from "@/components/tables/DataTable";
  * the `deletion_confirmation` policy is set).
  */
 export function ResolverListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights } = useAuth();
   const { dialog, requestDelete } = useDeleteConfirmation();
   const { deleteMutation, resolvers, resolversQuery } = useResolverList();
@@ -33,18 +35,18 @@ export function ResolverListPage() {
       onConfirm: () => {
         deleteMutation.mutate(resolverName);
       },
-      question: <Trans>Do you really want to delete this resolver?</Trans>
+      question: t`Do you really want to delete this resolver?`
     });
   };
 
   const columns: DataTableColumn<ResolverConfig>[] = [
     {
-      header: <Trans>Resolver name</Trans>,
+      header: t`Resolver name`,
       key: "resolvername",
       render: (resolver) => <ResolverNameCell resolver={resolver} />
     },
     {
-      header: <Trans>type</Trans>,
+      header: t`type`,
       key: "type",
       render: (resolver) => resolver.type
     },
@@ -71,7 +73,7 @@ export function ResolverListPage() {
 
   return (
     <SidebarLayout sidebar={<ResolverSidebar activeItem="list" />}>
-      <PageHeader title={<Trans>All Resolvers</Trans>} />
+      <PageHeader title={t`All Resolvers`} />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
       <ErrorAlert error={resolversQuery.error} />
@@ -80,12 +82,12 @@ export function ResolverListPage() {
       {isAuthenticated ? (
         <Card flush>
           {resolversQuery.isLoading ? (
-            <LoadingIndicator label={<Trans>Loading resolvers</Trans>} />
+            <LoadingIndicator label={t`Loading resolvers`} />
           ) : null}
           <DataTable
             columns={columns}
             data={resolvers}
-            emptyMessage={<Trans>No resolvers defined.</Trans>}
+            emptyMessage={t`No resolvers defined.`}
             getRowKey={(resolver) => resolver.resolvername}
             id="resolverlist"
             isLoading={resolversQuery.data === undefined}

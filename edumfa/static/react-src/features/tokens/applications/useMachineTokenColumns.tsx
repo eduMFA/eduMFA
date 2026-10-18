@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor } from "@mantine/core";
 
 import {
@@ -43,7 +43,7 @@ export function useMachineTokenColumns({
 
   const serialColumn: DataTableColumn<MachineTokenAssignment> = {
     filter: filterFor("serial", t`serial`),
-    header: <Trans>serial</Trans>,
+    header: t`serial`,
     key: "serial",
     render: (assignment) => (
       <Anchor
@@ -61,14 +61,14 @@ export function useMachineTokenColumns({
         serialColumn,
         {
           filter: filterFor("service_id", t`Service ID`),
-          header: <Trans>Service ID</Trans>,
+          header: t`Service ID`,
           key: "service_id",
           render: (assignment) => assignment.options.service_id,
           sortKey: "service_id"
         },
         {
           filter: filterFor("user", t`SSH user`),
-          header: <Trans>SSH user</Trans>,
+          header: t`SSH user`,
           key: "user",
           render: (assignment) => assignment.options.user,
           sortKey: "user"
@@ -78,14 +78,14 @@ export function useMachineTokenColumns({
         serialColumn,
         {
           filter: filterFor("count", t`Count`),
-          header: <Trans>Count</Trans>,
+          header: t`Count`,
           key: "count",
           render: (assignment) => assignment.options.count,
           sortKey: "count"
         },
         {
           filter: filterFor("rounds", t`Rounds`),
-          header: <Trans>Rounds</Trans>,
+          header: t`Rounds`,
           key: "rounds",
           render: (assignment) => assignment.options.rounds,
           sortKey: "rounds"

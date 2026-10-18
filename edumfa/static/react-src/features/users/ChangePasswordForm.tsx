@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, PasswordInput } from "@mantine/core";
 import { IconLock } from "@tabler/icons-react";
 
@@ -29,15 +29,15 @@ export function ChangePasswordForm({ changePassword }: ChangePasswordFormProps) 
             loading={mutation.isPending}
             type="submit"
           >
-            <Trans>set password</Trans>
+            {t`set password`}
           </Button>
         }
-        title={<Trans>Change password</Trans>}
+        title={t`Change password`}
       >
         <PasswordInput
           autoComplete="new-password"
           id="password"
-          label={<Trans>Password</Trans>}
+          label={t`Password`}
           mb="sm"
           placeholder={t`Type a password`}
           {...register("password", {

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -15,6 +15,8 @@ import { hashHref } from "@/lib/hashbang";
 
 /** Port of `config.radius.list.html` and the list part of `radiusServerController`. */
 export function RadiusServerListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights } = useAuth();
   const canWrite = hasRight(rights, "radiusserver_write");
   const { dialog, requestDelete } = useDeleteConfirmation();
@@ -40,11 +42,11 @@ export function RadiusServerListPage() {
               leftSection={<IconPlus size={16} />}
               variant="light"
             >
-              <Trans>New RADIUS server</Trans>
+              {t`New RADIUS server`}
             </Button>
           ) : null
         }
-        title={<Trans>RADIUS servers</Trans>}
+        title={t`RADIUS servers`}
       />
 
       {!isAuthenticated ? (

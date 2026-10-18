@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { IconPlayerPause, IconPlayerPlay, IconTrash } from "@tabler/icons-react";
 import { Button, Group } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +25,8 @@ export function PolicyEditorToolbar({
   policy: Policy;
   requestDelete: DeleteConfirmation["requestDelete"];
 }) {
+  const { t } = useLingui();
+
   const navigate = useNavigate();
 
   return (
@@ -52,7 +54,7 @@ export function PolicyEditorToolbar({
             );
           }}
         >
-          {active ? <Trans>Disable</Trans> : <Trans>Enable</Trans>}
+          {active ? t`Disable` : t`Enable`}
         </Button>
       ) : null}
       {canDelete ? (
@@ -65,7 +67,7 @@ export function PolicyEditorToolbar({
           onClick={() => {
             requestDelete({
               identifier: policy.name,
-              question: <Trans>Do you really want to delete this policy?</Trans>,
+              question: t`Do you really want to delete this policy?`,
               onConfirm: () => {
                 mutations.remove.mutate(policy.name, {
                   onSuccess: () => {
@@ -76,7 +78,7 @@ export function PolicyEditorToolbar({
             });
           }}
         >
-          <Trans>Delete</Trans>
+          {t`Delete`}
         </Button>
       ) : null}
     </Group>

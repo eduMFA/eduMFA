@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { Button, Group } from "@mantine/core";
 
@@ -28,6 +28,8 @@ export function PolicyEditor({
   definitions: PolicyDefinitions;
   conditionDefinitions: PolicyConditionDefinitions;
 }) {
+  const { t } = useLingui();
+
   const editor = usePolicyEditorForm(policy, definitions);
   const { canWrite, form, mutations, update } = editor;
   const { dialog, requestDelete } = useDeleteConfirmation();
@@ -67,7 +69,7 @@ export function PolicyEditor({
             onTemplateBusyChange={editor.setLoadingTemplate}
           />
           <PolicyConditionCard form={form} lookups={lookups} onChange={update} />
-          <Card title={<Trans>Additional conditions</Trans>}>
+          <Card title={t`Additional conditions`}>
             <PolicyConditionsEditor
               conditions={form.conditions}
               definitions={conditionDefinitions}
@@ -77,7 +79,7 @@ export function PolicyEditor({
             />
           </Card>
           {form.scope ? (
-            <Card title={<Trans>Action</Trans>}>
+            <Card title={t`Action`}>
               <PolicyActionsEditor
                 key={form.scope}
                 scope={form.scope}
@@ -97,7 +99,7 @@ export function PolicyEditor({
                 disabled={!editor.valid || mutations.busy}
                 loading={mutations.save.isPending}
               >
-                <Trans>Save Policy</Trans>
+                {t`Save Policy`}
               </Button>
             </Group>
           ) : null}

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Accordion, Stack } from "@mantine/core";
 import { useState } from "react";
 import { EventConditionItem } from "./EventConditionItem";
@@ -19,6 +19,8 @@ export function EventConditionsEditor({
   values: DefinitionValues;
   onChange: (values: DefinitionValues) => void;
 }) {
+  const { t } = useLingui();
+
   const [filter, setFilter] = useState("");
   const [selectedOnly, setSelectedOnly] = useState(false);
   // Conditions use `desc`, the shared option helpers expect `description`.
@@ -73,9 +75,7 @@ export function EventConditionsEditor({
       >
         {visibleGroups.map((group) => (
           <Accordion.Item key={group} value={`group:${group}`}>
-            <Accordion.Control>
-              {group || <Trans>Miscellaneous</Trans>}
-            </Accordion.Control>
+            <Accordion.Control>{group || t`Miscellaneous`}</Accordion.Control>
             <Accordion.Panel>
               <Stack>
                 {visible

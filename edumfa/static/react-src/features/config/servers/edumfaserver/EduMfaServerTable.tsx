@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Button } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -40,9 +40,11 @@ export function EduMfaServerTable({
   isLoading,
   onDelete
 }: EduMfaServerTableProps) {
+  const { t } = useLingui();
+
   const columns: DataTableColumn<EduMfaServerRow>[] = [
     {
-      header: <Trans>Identifier</Trans>,
+      header: t`Identifier`,
       key: "identifier",
       render: (row) => (
         <Anchor
@@ -56,23 +58,23 @@ export function EduMfaServerTable({
       )
     },
     {
-      header: <Trans>URL</Trans>,
+      header: t`URL`,
       key: "url",
       render: (row) => row.url
     },
     {
-      header: <Trans>Verify TLS</Trans>,
+      header: t`Verify TLS`,
       key: "tls",
       render: (row) => <BooleanPill value={isConfigEnabled(row.tls)} />
     },
     {
-      header: <Trans>Description</Trans>,
+      header: t`Description`,
       key: "description",
       render: (row) => truncate(row.description ?? "", 20)
     },
     {
       align: "right",
-      header: <Trans>Actions</Trans>,
+      header: t`Actions`,
       key: "actions",
       render: (row) =>
         canWrite ? (
@@ -86,7 +88,7 @@ export function EduMfaServerTable({
             size="xs"
             variant="light"
           >
-            <Trans>Delete</Trans>
+            {t`Delete`}
           </Button>
         ) : null
     }
@@ -94,13 +96,11 @@ export function EduMfaServerTable({
 
   return (
     <Card flush>
-      {isLoading ? (
-        <LoadingIndicator label={<Trans>Loading eduMFA servers</Trans>} />
-      ) : null}
+      {isLoading ? <LoadingIndicator label={t`Loading eduMFA servers`} /> : null}
       <DataTable
         columns={columns}
         data={toRows(data)}
-        emptyMessage={<Trans>No eduMFA servers defined.</Trans>}
+        emptyMessage={t`No eduMFA servers defined.`}
         getRowKey={(row) => row.identifier}
         id="tableedumfaservers"
         isLoading={data === undefined}

@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Autocomplete, Loader } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import type { ReactNode } from "react";
@@ -57,7 +57,7 @@ export function UserLookupField({
       description={noResults ? t`No user found` : undefined}
       filter={({ options }) => options}
       id={id}
-      label={label ?? <Trans>Username</Trans>}
+      label={label ?? t`Username`}
       mb="sm"
       onChange={onChange}
       placeholder={t`start typing a username`}

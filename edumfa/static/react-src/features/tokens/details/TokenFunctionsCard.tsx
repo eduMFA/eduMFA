@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Stack } from "@mantine/core";
 
 import type { TokenDetail } from "@/api/tokens";
@@ -31,6 +31,8 @@ export function TokenFunctionsCard({
   serial,
   token
 }: TokenFunctionsCardProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const resync = useResyncForm({ onRefresh, serial });
   const setPin = useSetPinForm({ onRefresh, serial, tokentype: token.tokentype });
@@ -48,7 +50,7 @@ export function TokenFunctionsCard({
   }
 
   return (
-    <Card title={<Trans>Token functions</Trans>}>
+    <Card title={t`Token functions`}>
       <ErrorAlert error={resync.mutation.error} />
       <ErrorAlert error={setPin.mutation.error} />
       <ErrorAlert error={randomPin.mutation.error} />

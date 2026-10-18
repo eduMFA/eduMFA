@@ -1,6 +1,7 @@
-import { Trans } from "@lingui/react/macro";
-import { Button, Group, Table, TextInput } from "@mantine/core";
+import { Table, TextInput } from "@mantine/core";
 import { useState, type ReactNode } from "react";
+
+import { EditableValueActions } from "./EditableValueActions";
 
 export interface EditableValueRowProps {
   /** Label of the save button, e.g. "Set max fail". */
@@ -43,6 +44,12 @@ export function EditableValueRow({
     draft !== null &&
     (inputType === "number" ? /^[0-9]*$/.test(draft) : true) &&
     (maxLength === undefined || draft.length <= maxLength);
+  const saveDraft = () => {
+    if (draft !== null) {
+      onSave(draft);
+      setDraft(null);
+    }
+  };
 
   return (
     <Table.Tr>
@@ -64,8 +71,7 @@ export function EditableValueRow({
             onKeyDown={(event) => {
               if (event.key === "Enter" && isValid) {
                 event.preventDefault();
-                onSave(draft);
-                setDraft(null);
+                saveDraft();
               }
             }}
             size="sm"
@@ -76,41 +82,22 @@ export function EditableValueRow({
         )}
       </Table.Td>
       <Table.Td ta="right" w="30%">
-        {locked ? null : isEditing ? (
-          <Group gap="xs" justify="flex-end">
-            <Button
-              disabled={!isValid}
-              loading={isSaving}
-              onClick={() => {
-                onSave(draft);
-                setDraft(null);
-              }}
-              size="xs"
-            >
-              {buttonLabel}
-            </Button>
-            <Button
-              onClick={() => {
-                setDraft(null);
-              }}
-              size="xs"
-              variant="default"
-            >
-              <Trans>Cancel</Trans>
-            </Button>
-          </Group>
-        ) : !canEdit && hideButtons ? null : (
-          <Button
-            disabled={!canEdit}
-            onClick={() => {
-              setDraft(value);
-            }}
-            size="xs"
-            variant="default"
-          >
-            <Trans>Edit</Trans>
-          </Button>
-        )}
+        <EditableValueActions
+          buttonLabel={buttonLabel}
+          canEdit={canEdit}
+          hideButtons={hideButtons}
+          isEditing={isEditing}
+          isSaving={isSaving}
+          isValid={isValid}
+          locked={locked}
+          onCancel={() => {
+            setDraft(null);
+          }}
+          onEdit={() => {
+            setDraft(value);
+          }}
+          onSave={saveDraft}
+        />
       </Table.Td>
     </Table.Tr>
   );

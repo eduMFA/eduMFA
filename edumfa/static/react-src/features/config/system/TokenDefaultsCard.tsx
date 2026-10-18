@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { SimpleGrid, TextInput } from "@mantine/core";
 
 import type { SystemConfigCardProps } from "./systemConfigForm";
@@ -6,13 +6,15 @@ import { Card } from "@/components/layout/Card";
 
 /** The "newly enrolled tokens" box of `config.system.edit.html`. */
 export function TokenDefaultsCard({ form, onChange }: SystemConfigCardProps) {
+  const { t } = useLingui();
+
   return (
-    <Card title={<Trans>Newly enrolled tokens</Trans>}>
+    <Card title={t`Newly enrolled tokens`}>
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
         <TextInput
           id="DefaultOtpLen"
           inputMode="numeric"
-          label={<Trans>OTP length of newly enrolled tokens</Trans>}
+          label={t`OTP length of newly enrolled tokens`}
           onChange={(event) => {
             onChange({ DefaultOtpLen: event.currentTarget.value });
           }}
@@ -22,7 +24,7 @@ export function TokenDefaultsCard({ form, onChange }: SystemConfigCardProps) {
         <TextInput
           id="DefaultCountWindow"
           inputMode="numeric"
-          label={<Trans>Count Window of newly enrolled tokens</Trans>}
+          label={t`Count Window of newly enrolled tokens`}
           onChange={(event) => {
             onChange({ DefaultCountWindow: event.currentTarget.value });
           }}
@@ -32,7 +34,7 @@ export function TokenDefaultsCard({ form, onChange }: SystemConfigCardProps) {
         <TextInput
           id="DefaultMaxFailCount"
           inputMode="numeric"
-          label={<Trans>Max Failcount of newly enrolled tokens</Trans>}
+          label={t`Max Failcount of newly enrolled tokens`}
           onChange={(event) => {
             onChange({ DefaultMaxFailCount: event.currentTarget.value });
           }}
@@ -42,7 +44,7 @@ export function TokenDefaultsCard({ form, onChange }: SystemConfigCardProps) {
         <TextInput
           id="DefaultSyncWindow"
           inputMode="numeric"
-          label={<Trans>Sync Window of newly enrolled tokens</Trans>}
+          label={t`Sync Window of newly enrolled tokens`}
           onChange={(event) => {
             onChange({ DefaultSyncWindow: event.currentTarget.value });
           }}
@@ -52,7 +54,7 @@ export function TokenDefaultsCard({ form, onChange }: SystemConfigCardProps) {
         <TextInput
           id="DefaultChallengeValidityTime"
           inputMode="numeric"
-          label={<Trans>The challenge validity time</Trans>}
+          label={t`The challenge validity time`}
           onChange={(event) => {
             onChange({ DefaultChallengeValidityTime: event.currentTarget.value });
           }}

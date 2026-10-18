@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconUserPlus } from "@tabler/icons-react";
 
@@ -19,6 +19,8 @@ import { Pagination } from "@/components/tables/Pagination";
 import { hashHref } from "@/lib/hashbang";
 
 export function UserListPage() {
+  const { t } = useLingui();
+
   const { isAuthenticated, rights } = useAuth();
   const list = useUserList();
   const { activeRealm, allUsers, isAdmin, realmNames, realmsQuery, usersQuery } = list;
@@ -51,12 +53,12 @@ export function UserListPage() {
               href={hashHref("/user/add")}
               leftSection={<IconUserPlus size={16} />}
             >
-              <Trans>Add user</Trans>
+              {t`Add user`}
             </Button>
           ) : null
         }
         subtitle={activeRealm ? <Trans>Realm {activeRealm}</Trans> : null}
-        title={<Trans>Users</Trans>}
+        title={t`Users`}
       />
 
       {!isAuthenticated ? <LoginRequiredAlert /> : null}
@@ -65,7 +67,7 @@ export function UserListPage() {
 
       <Card flush>
         {realmsQuery.isLoading || usersQuery.isLoading ? (
-          <LoadingIndicator label={<Trans>Loading users</Trans>} />
+          <LoadingIndicator label={t`Loading users`} />
         ) : null}
 
         <Pagination
@@ -79,7 +81,7 @@ export function UserListPage() {
         <DataTable
           columns={columns}
           data={list.visibleUsers}
-          emptyMessage={<Trans>No users found.</Trans>}
+          emptyMessage={t`No users found.`}
           getRowKey={(listedUser) => `${listedUser.resolver}-${listedUser.userid}`}
           id="tableuserlist"
           isLoading={usersQuery.data === undefined}

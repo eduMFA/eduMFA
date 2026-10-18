@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 
 import { OtpKeyGenerateFields } from "./OtpKeyGenerateFields";
 import { OtpKeyParameterFields } from "./OtpKeyParameterFields";
@@ -7,13 +7,11 @@ import { type TokenTypeFieldsProps } from "./types";
 
 /** The HOTP, TOTP and DayPassword "Token data" section: key, length, timing, hash. */
 export function OtpKeyFields(props: TokenTypeFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
-      {!props.isWizard ? (
-        <SectionTitle>
-          <Trans>Token data</Trans>
-        </SectionTitle>
-      ) : null}
+      {!props.isWizard ? <SectionTitle>{t`Token data`}</SectionTitle> : null}
       <OtpKeyGenerateFields {...props} />
       <OtpKeyParameterFields {...props} />
     </>

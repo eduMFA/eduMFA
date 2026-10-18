@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, Group, NumberInput, Stack, Text, TextInput } from "@mantine/core";
 
 import { SectionTitle } from "./SectionTitle";
@@ -9,18 +9,11 @@ export function FourEyesFields({ form, lookups, onChange }: TokenTypeFieldsProps
 
   return (
     <>
-      <SectionTitle>
-        <Trans>Token data</Trans>
-      </SectionTitle>
+      <SectionTitle>{t`Token data`}</SectionTitle>
       <TextInput
-        description={
-          <Trans>
-            The separator that is used to separate the passwords of the different
-            tokens.
-          </Trans>
-        }
+        description={t`The separator that is used to separate the passwords of the different tokens.`}
         id="separator"
-        label={<Trans>Separator</Trans>}
+        label={t`Separator`}
         maxLength={1}
         mb="sm"
         onChange={(event) => {
@@ -30,13 +23,10 @@ export function FourEyesFields({ form, lookups, onChange }: TokenTypeFieldsProps
         value={form.separator}
       />
       <Text fw={500} size="sm">
-        <Trans>Required Realms</Trans>
+        {t`Required Realms`}
       </Text>
       <Text c="dimmed" mb="xs" size="sm">
-        <Trans>
-          Here you can select how many tokens of which realm are required to perform a
-          successful authentication.
-        </Trans>
+        {t`Here you can select how many tokens of which realm are required to perform a successful authentication.`}
       </Text>
       <Stack gap="xs" mb="sm">
         {lookups.realms.map((realmName) => {

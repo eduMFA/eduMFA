@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Checkbox, NativeSelect, NumberInput, Stack, TextInput } from "@mantine/core";
 
 import { TaskIntervalField } from "./TaskIntervalField";
@@ -22,11 +22,13 @@ export function TaskGeneralCard({
   nodes: Parameters<typeof CheckboxPickList>[0]["options"];
   modules: string[];
 }) {
+  const { t } = useLingui();
+
   return (
     <Card>
       <Stack>
         <TextInput
-          label={<Trans>Description</Trans>}
+          label={t`Description`}
           required
           value={form.name}
           onChange={(event) => {
@@ -35,7 +37,7 @@ export function TaskGeneralCard({
         />
 
         <Checkbox
-          label={<Trans>Active</Trans>}
+          label={t`Active`}
           checked={form.active}
           onChange={(event) => {
             onChange({ active: event.currentTarget.checked });
@@ -51,7 +53,7 @@ export function TaskGeneralCard({
 
         <CheckboxPickList
           id="task-nodes"
-          label={<Trans>Nodes</Trans>}
+          label={t`Nodes`}
           required
           options={nodes}
           selected={form.nodes}
@@ -61,7 +63,7 @@ export function TaskGeneralCard({
         />
 
         <Checkbox
-          label={<Trans>Retry If Failed</Trans>}
+          label={t`Retry If Failed`}
           checked={form.retry_if_failed}
           onChange={(event) => {
             onChange({ retry_if_failed: event.currentTarget.checked });
@@ -69,7 +71,7 @@ export function TaskGeneralCard({
         />
 
         <NumberInput
-          label={<Trans>Order</Trans>}
+          label={t`Order`}
           min={0}
           allowDecimal={false}
           value={form.ordering}
@@ -79,7 +81,7 @@ export function TaskGeneralCard({
         />
 
         <NativeSelect
-          label={<Trans>Taskmodule</Trans>}
+          label={t`Taskmodule`}
           required
           data={choicesWithCurrent(modules, form.taskmodule)}
           value={form.taskmodule}

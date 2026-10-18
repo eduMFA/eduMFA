@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, PasswordInput, SimpleGrid } from "@mantine/core";
 import { IconKey } from "@tabler/icons-react";
 
@@ -44,7 +44,7 @@ export function SetPinRow({ form }: SetPinRowProps) {
             mutation.mutate();
           }}
         >
-          <Trans>Set PIN</Trans>
+          {t`Set PIN`}
         </Button>
       </Group>
     </SimpleGrid>

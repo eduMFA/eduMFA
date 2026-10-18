@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { NavLink, Stack } from "@mantine/core";
 import { IconEdit, IconList, IconPlus } from "@tabler/icons-react";
 
@@ -25,6 +25,8 @@ export function MachineResolverSidebar({
   activeItem,
   resolverName
 }: MachineResolverSidebarProps) {
+  const { t } = useLingui();
+
   const { rights } = useAuth();
   const isEditing = resolverName !== undefined && resolverName !== "";
 
@@ -34,7 +36,7 @@ export function MachineResolverSidebar({
         active={activeItem === "list"}
         component="a"
         href={hashHref("/config/machineresolvers/list")}
-        label={<Trans>All Machine Resolvers</Trans>}
+        label={t`All Machine Resolvers`}
         leftSection={<IconList size={16} />}
       />
       {isEditing ? (
@@ -46,9 +48,7 @@ export function MachineResolverSidebar({
       ) : null}
       {hasRight(rights, "mresolverwrite") ? (
         <>
-          <SidebarSection>
-            <Trans>New Resolvers</Trans>
-          </SidebarSection>
+          <SidebarSection>{t`New Resolvers`}</SidebarSection>
           {machineResolverTypes.map((resolverType) => {
             const typeLabel = resolverType.toUpperCase();
 

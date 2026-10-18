@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { TextInput } from "@mantine/core";
 
 export interface TokenDescriptionFieldProps {
@@ -23,7 +23,7 @@ export function TokenDescriptionField({
       autoComplete="off"
       error={tooLong ? t`The description may have at most 80 characters.` : undefined}
       id="description"
-      label={<Trans>Description</Trans>}
+      label={t`Description`}
       mb="sm"
       onChange={(event) => {
         onChange(event.currentTarget.value);

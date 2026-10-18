@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 
@@ -19,6 +19,8 @@ export function EventForm({
 }: {
   existing: EventHandlerDefinition | undefined;
 }) {
+  const { t } = useLingui();
+
   const { canWrite, change, finish, form, lookups, mutations, options, submit, valid } =
     useEventForm(existing);
   const { actions, conditions } = lookups;
@@ -53,7 +55,7 @@ export function EventForm({
           {lookups.pending ? <LoadingIndicator /> : null}
 
           {conditions.data ? (
-            <Card title={<Trans>Conditions</Trans>}>
+            <Card title={t`Conditions`}>
               <EventConditionsEditor
                 key={form.handlermodule}
                 definitions={conditions.data}
@@ -80,7 +82,7 @@ export function EventForm({
               loading={mutations.save.isPending}
               leftSection={<IconDeviceFloppy aria-hidden size={16} />}
             >
-              <Trans>Save Event Handler Definition</Trans>
+              {t`Save Event Handler Definition`}
             </Button>
           ) : null}
         </fieldset>

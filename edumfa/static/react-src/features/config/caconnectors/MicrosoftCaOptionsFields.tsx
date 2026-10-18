@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Divider, NativeSelect } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 import {
@@ -26,6 +26,8 @@ export function MicrosoftCaOptionsFields({
   isEditing,
   register
 }: MicrosoftCaOptionsFieldsProps) {
+  const { t } = useLingui();
+
   const caValue = useWatch({ control, name: "ca" });
   const hostname = useWatch({ control, name: "hostname" });
   const port = useWatch({ control, name: "port" });
@@ -33,11 +35,7 @@ export function MicrosoftCaOptionsFields({
 
   return (
     <>
-      <Divider
-        label={<Trans>CA specific options</Trans>}
-        labelPosition="left"
-        my="md"
-      />
+      <Divider label={t`CA specific options`} labelPosition="left" my="md" />
 
       <Button
         color="green"
@@ -48,7 +46,7 @@ export function MicrosoftCaOptionsFields({
         onClick={options.request}
         variant="light"
       >
-        <Trans>Get available CAs</Trans>
+        {t`Get available CAs`}
       </Button>
 
       <ErrorAlert error={options.error} />
@@ -57,7 +55,7 @@ export function MicrosoftCaOptionsFields({
         <NativeSelect
           data={options.caOptions}
           id="available_cas"
-          label={<Trans>Domain CA</Trans>}
+          label={t`Domain CA`}
           required
           {...register("ca", { required: true })}
         />

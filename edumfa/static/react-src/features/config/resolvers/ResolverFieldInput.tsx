@@ -21,6 +21,16 @@ export function ResolverFieldInput({
   const { t } = useLingui();
   const value = toText(rawValue);
   const error = value ? getResolverFieldError(field, rawValue) : null;
+  const describeError = (): string | undefined => {
+    switch (error) {
+      case "json":
+        return t`Enter a valid JSON object.`;
+      case "url":
+        return t`Enter an HTTP or HTTPS URL.`;
+      default:
+        return undefined;
+    }
+  };
   const inputProps = {
     id: `resolver-${field.key}`,
     label: field.label,
@@ -32,12 +42,7 @@ export function ResolverFieldInput({
       onChange(event.currentTarget.value);
     },
     ...(field.placeholder ? { placeholder: field.placeholder } : {}),
-    error:
-      error === "json"
-        ? t`Enter a valid JSON object.`
-        : error === "url"
-          ? t`Enter an HTTP or HTTPS URL.`
-          : undefined
+    error: describeError()
   };
   if (field.kind === "checkbox")
     return (

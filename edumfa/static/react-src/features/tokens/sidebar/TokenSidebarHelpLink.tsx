@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Divider, NavLink } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 
@@ -17,9 +17,22 @@ const helpHrefs: Record<"details" | "import" | "list", string> = {
 
 /** The documentation entry at the bottom of the list, import and details views. */
 export function TokenSidebarHelpLink({ activeItem }: { activeItem: TokenSidebarItem }) {
+  const { t } = useLingui();
+
   if (activeItem !== "details" && activeItem !== "import" && activeItem !== "list") {
     return null;
   }
+
+  const helpLabel = (): string => {
+    switch (activeItem) {
+      case "list":
+        return t`Help about Token`;
+      case "import":
+        return t`Help about Token Import`;
+      default:
+        return t`Help about Token Details`;
+    }
+  };
 
   return (
     <>
@@ -27,15 +40,7 @@ export function TokenSidebarHelpLink({ activeItem }: { activeItem: TokenSidebarI
       <NavLink
         component="a"
         href={helpHrefs[activeItem]}
-        label={
-          activeItem === "list" ? (
-            <Trans>Help about Token</Trans>
-          ) : activeItem === "import" ? (
-            <Trans>Help about Token Import</Trans>
-          ) : (
-            <Trans>Help about Token Details</Trans>
-          )
-        }
+        label={helpLabel()}
         leftSection={<IconInfoCircle size={16} />}
         target="_external"
       />

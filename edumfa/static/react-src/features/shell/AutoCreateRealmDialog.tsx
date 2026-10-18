@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, Modal, Text } from "@mantine/core";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -37,22 +37,14 @@ export function AutoCreateRealmDialog({ onClose, opened }: AutoCreateRealmDialog
   });
 
   return (
-    <Modal
-      centered
-      onClose={onClose}
-      opened={opened}
-      title={<Trans>Create default realm</Trans>}
-    >
+    <Modal centered onClose={onClose} opened={opened} title={t`Create default realm`}>
       <ErrorAlert error={createMutation.error} />
       <Text size="sm">
-        <Trans>
-          Obviously you have no realms defined. Do you want me to create a default realm
-          for you from the machines /etc/passwd?
-        </Trans>
+        {t`Obviously you have no realms defined. Do you want me to create a default realm for you from the machines /etc/passwd?`}
       </Text>
       <Group justify="flex-end" mt="lg">
         <Button onClick={onClose} variant="default">
-          <Trans>No</Trans>
+          {t`No`}
         </Button>
         <Button
           id="createDefaultRealm"
@@ -61,7 +53,7 @@ export function AutoCreateRealmDialog({ onClose, opened }: AutoCreateRealmDialog
             createMutation.mutate();
           }}
         >
-          <Trans>Create realm</Trans>
+          {t`Create realm`}
         </Button>
       </Group>
     </Modal>

@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Alert } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { PropsWithChildren, ReactNode } from "react";
@@ -76,6 +76,8 @@ export function CaConnectorEditorFrame({
   editor,
   title
 }: PropsWithChildren<CaConnectorEditorFrameProps>) {
+  const { t } = useLingui();
+
   const { connector, connectorName, connectorQuery, isAuthenticated, isEditing } =
     editor;
 
@@ -88,7 +90,7 @@ export function CaConnectorEditorFrame({
       <ErrorAlert error={editor.saveMutation.error} />
 
       {isEditing && connectorQuery.isLoading ? (
-        <LoadingIndicator label={<Trans>Loading CA connector</Trans>} />
+        <LoadingIndicator label={t`Loading CA connector`} />
       ) : null}
 
       {isEditing && connectorQuery.isSuccess && !connector ? (

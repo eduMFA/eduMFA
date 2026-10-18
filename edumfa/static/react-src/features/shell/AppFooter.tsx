@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Anchor, Box, Container, Group, Text, UnstyledButton } from "@mantine/core";
 import { useState } from "react";
 
@@ -12,6 +12,8 @@ import { getUiConfig } from "@/lib/uiConfig";
  * `gdpr_link` policy.
  */
 export function AppFooter() {
+  const { t } = useLingui();
+
   const { versionNumber } = useAuth();
   const [aboutOpen, setAboutOpen] = useState(false);
   const { gdprLink } = getUiConfig();
@@ -31,7 +33,7 @@ export function AppFooter() {
           </UnstyledButton>
           {gdprLink ? (
             <Anchor c="gray.4" href={gdprLink} rel="noopener" size="sm" target="_blank">
-              <Trans>Privacy statement</Trans>
+              {t`Privacy statement`}
             </Anchor>
           ) : null}
         </Group>

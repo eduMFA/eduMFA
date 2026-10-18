@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, NativeSelect, Text } from "@mantine/core";
 
 import { HelpText } from "./HelpText";
@@ -7,6 +7,8 @@ import { getText, hashlibs } from "@/features/config/tokens/tokenConfigForm";
 
 /** Port of `config.token.hotp.html`. */
 export function HotpConfigFields({ form, onChange }: TokenConfigFieldsProps) {
+  const { t } = useLingui();
+
   return (
     <>
       <HelpText>
@@ -24,15 +26,12 @@ export function HotpConfigFields({ form, onChange }: TokenConfigFieldsProps) {
         </Trans>
       </HelpText>
       <Text mb="md" size="sm">
-        <Trans>
-          Here you can define settings, that will be set as default values, when
-          enrolling a HOTP token.
-        </Trans>
+        {t`Here you can define settings, that will be set as default values, when enrolling a HOTP token.`}
       </Text>
       <NativeSelect
         data={hashlibs}
         id="hotpHashlib"
-        label={<Trans>Default Hashlib</Trans>}
+        label={t`Default Hashlib`}
         onChange={(event) => {
           onChange({ "hotp.hashlib": event.currentTarget.value });
         }}

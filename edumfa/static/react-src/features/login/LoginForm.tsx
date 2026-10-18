@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import {
   Anchor,
   Button,
@@ -39,7 +39,7 @@ export function LoginForm({ config, isPending, logoUrl, onSubmit }: LoginFormPro
     <Paper p="xl" radius="md" withBorder>
       <LoginLogo url={logoUrl} />
       <Title mb="md" order={2} size="h3" ta="center">
-        {config.loginText || <Trans>Please sign in</Trans>}
+        {config.loginText || t`Please sign in`}
       </Title>
       <form
         noValidate
@@ -56,7 +56,7 @@ export function LoginForm({ config, isPending, logoUrl, onSubmit }: LoginFormPro
           autoComplete="username"
           autoFocus
           id="username"
-          label={<Trans>Username</Trans>}
+          label={t`Username`}
           mb="sm"
           onChange={(event) => {
             setUsername(event.currentTarget.value);
@@ -68,7 +68,7 @@ export function LoginForm({ config, isPending, logoUrl, onSubmit }: LoginFormPro
           <NativeSelect
             data={[{ label: t`Choose a realm...`, value: "" }, ...config.realms]}
             id="realm"
-            label={<Trans>Realm</Trans>}
+            label={t`Realm`}
             mb="sm"
             onChange={(event) => {
               setRealm(event.currentTarget.value);
@@ -79,7 +79,7 @@ export function LoginForm({ config, isPending, logoUrl, onSubmit }: LoginFormPro
         <PasswordInput
           autoComplete="current-password"
           id="password"
-          label={<Trans>Password</Trans>}
+          label={t`Password`}
           mb="md"
           onChange={(event) => {
             setPassword(event.currentTarget.value);
@@ -88,12 +88,12 @@ export function LoginForm({ config, isPending, logoUrl, onSubmit }: LoginFormPro
           value={password}
         />
         <Button disabled={!canSubmit} fullWidth loading={isPending} type="submit">
-          <Trans>Log In</Trans>
+          {t`Log In`}
         </Button>
         {config.passwordReset ? (
           <Text mt="sm" size="sm" ta="right">
             <Anchor href={hashHref("/recovery")} size="sm">
-              <Trans>Reset Password</Trans>
+              {t`Reset Password`}
             </Anchor>
           </Text>
         ) : null}

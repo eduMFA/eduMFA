@@ -1,6 +1,6 @@
 import { Stack, Table, Text, UnstyledButton } from "@mantine/core";
 
-import type { DataTableColumn, DataTableSort } from "./DataTable";
+import type { DataTableColumn, DataTableSort, SortDirection } from "./DataTable";
 import { SortIcon } from "./SortIcon";
 
 export interface HeaderCellProps<TRow> {
@@ -9,6 +9,20 @@ export interface HeaderCellProps<TRow> {
   /** Sorts by the column's `sortKey`; absent when the table is not sortable. */
   onSort: ((sortKey: string) => void) | undefined;
   sort: DataTableSort | null | undefined;
+}
+
+/** The `aria-sort` value for the column's active sort direction. */
+function toAriaSort(
+  direction: SortDirection | null
+): "ascending" | "descending" | undefined {
+  switch (direction) {
+    case null:
+      return undefined;
+    case "asc":
+      return "ascending";
+    default:
+      return "descending";
+  }
 }
 
 /**
@@ -40,13 +54,7 @@ export function HeaderCell<TRow>({
 
   return (
     <Table.Th
-      aria-sort={
-        activeDirection === null
-          ? undefined
-          : activeDirection === "asc"
-            ? "ascending"
-            : "descending"
-      }
+      aria-sort={toAriaSort(activeDirection)}
       fw={400}
       py="sm"
       style={{

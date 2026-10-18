@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Table } from "@mantine/core";
 
 import type { TokenConfigFieldsProps } from "./types";
@@ -23,6 +23,8 @@ export function YubikeyConfigFields({
   onDeleteEntry,
   savedConfig
 }: TokenConfigFieldsProps) {
+  const { t } = useLingui();
+
   const apiKeys = listPrefixedEntries(savedConfig, yubikeyApiKeyPrefix);
   const newKey = useYubikeyApiKeyEntry(onChange);
 
@@ -33,12 +35,8 @@ export function YubikeyConfigFields({
       <Table striped withTableBorder>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>
-              <Trans>Client ID</Trans>
-            </Table.Th>
-            <Table.Th>
-              <Trans>API Key</Trans>
-            </Table.Th>
+            <Table.Th>{t`Client ID`}</Table.Th>
+            <Table.Th>{t`API Key`}</Table.Th>
             <Table.Th />
           </Table.Tr>
         </Table.Thead>
@@ -60,7 +58,7 @@ export function YubikeyConfigFields({
                     type="button"
                     variant="light"
                   >
-                    <Trans>Delete</Trans>
+                    {t`Delete`}
                   </Button>
                 ) : null}
               </Table.Td>

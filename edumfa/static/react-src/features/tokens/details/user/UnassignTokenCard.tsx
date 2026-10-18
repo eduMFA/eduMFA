@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button } from "@mantine/core";
 import { IconUserMinus } from "@tabler/icons-react";
 
@@ -17,6 +17,8 @@ export function UnassignTokenCard({
   isPending,
   onUnassign
 }: UnassignTokenCardProps) {
+  const { t } = useLingui();
+
   return (
     <Card>
       <ErrorAlert error={error} />
@@ -28,7 +30,7 @@ export function UnassignTokenCard({
         onClick={onUnassign}
         variant="light"
       >
-        <Trans>Unassign Token</Trans>
+        {t`Unassign Token`}
       </Button>
     </Card>
   );

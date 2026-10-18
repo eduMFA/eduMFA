@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Alert, Box, Button, Container, Paper, Title } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
@@ -36,12 +36,12 @@ export function RecoveryPage() {
     <Box className="react-migration-shell">
       <Container size="xs">
         <Alert icon={<IconInfoCircle size={18} />} mb="md" variant="light">
-          <Trans>If you forgot your password, you may set a new one.</Trans>
+          {t`If you forgot your password, you may set a new one.`}
         </Alert>
 
         {recoveryMutation.isSuccess ? (
           <Alert color="green" mb="md" role="status" variant="light">
-            <Trans>An Email to reset the password has been sent to you.</Trans>
+            {t`An Email to reset the password has been sent to you.`}
           </Alert>
         ) : null}
 
@@ -56,21 +56,21 @@ export function RecoveryPage() {
             role="form"
           >
             <Title mb="md" order={2} size="h3">
-              <Trans>Reset Password</Trans>
+              {t`Reset Password`}
             </Title>
 
             <TextField
               autoFocus
               hasError={Boolean(formState.errors.user)}
               id="username"
-              label={<Trans>Username</Trans>}
+              label={t`Username`}
               placeholder={t`Username`}
               registration={register("user", { required: true })}
             />
             <TextField
               hasError={Boolean(formState.errors.email)}
               id="email"
-              label={<Trans>Email</Trans>}
+              label={t`Email`}
               placeholder={t`Email`}
               registration={register("email", { required: true })}
               type="email"
@@ -83,7 +83,7 @@ export function RecoveryPage() {
               mt="md"
               type="submit"
             >
-              <Trans>Send Reset Code</Trans>
+              {t`Send Reset Code`}
             </Button>
           </form>
         </Paper>

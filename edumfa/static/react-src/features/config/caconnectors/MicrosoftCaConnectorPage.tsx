@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useParams } from "react-router-dom";
 
 import { CaConnectorEditorFrame, useCaConnectorEditor } from "./caConnectorEditor";
@@ -6,6 +6,8 @@ import { MicrosoftCaConnectorForm } from "./MicrosoftCaConnectorForm";
 
 /** Port of `config.caconnectors.microsoft.html` and `MicrosoftCAConnectorController`. */
 export function MicrosoftCaConnectorPage() {
+  const { t } = useLingui();
+
   const { connectorname } = useParams();
   const editor = useCaConnectorEditor(connectorname);
 
@@ -16,7 +18,7 @@ export function MicrosoftCaConnectorPage() {
         connectorname ? (
           <Trans>Edit Microsoft CA Connector {connectorname}</Trans>
         ) : (
-          <Trans>Create a new Microsoft CA Connector</Trans>
+          t`Create a new Microsoft CA Connector`
         )
       }
     >

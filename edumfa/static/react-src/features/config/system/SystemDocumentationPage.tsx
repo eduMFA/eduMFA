@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, ScrollArea, Text } from "@mantine/core";
 import { IconDownload } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +19,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
  * `GET /system/documentation`, shown read-only with a download.
  */
 export function SystemDocumentationPage() {
+  const { t } = useLingui();
+
   const apiClient = useApiClient();
   const { isAuthenticated } = useAuth();
 
@@ -45,11 +47,11 @@ export function SystemDocumentationPage() {
               leftSection={<IconDownload size={16} />}
               variant="default"
             >
-              <Trans>Download documentation</Trans>
+              {t`Download documentation`}
             </Button>
           ) : null
         }
-        title={<Trans>System Documentation</Trans>}
+        title={t`System Documentation`}
       />
 
       {!isAuthenticated ? (
@@ -59,10 +61,7 @@ export function SystemDocumentationPage() {
           <ErrorAlert error={documentationQuery.error} />
           <Card>
             <Text c="dimmed" mb="sm" size="sm">
-              <Trans>
-                This documentation contains the current configuration of your system in
-                restructured text. You can use this to document your installed system.
-              </Trans>
+              {t`This documentation contains the current configuration of your system in restructured text. You can use this to document your installed system.`}
             </Text>
             {documentationQuery.isPending ? <LoadingIndicator /> : null}
             {documentation === undefined ? null : (

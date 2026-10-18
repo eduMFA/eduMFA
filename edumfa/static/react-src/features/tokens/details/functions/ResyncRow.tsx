@@ -1,4 +1,4 @@
-import { Trans, useLingui } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, SimpleGrid, TextInput } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 
@@ -43,7 +43,7 @@ export function ResyncRow({ form }: ResyncRowProps) {
             mutation.mutate();
           }}
         >
-          <Trans>Resync Token</Trans>
+          {t`Resync Token`}
         </Button>
       </Group>
     </SimpleGrid>

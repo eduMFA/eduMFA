@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Anchor, Checkbox, NativeSelect, Stack, TextInput } from "@mantine/core";
 
 import { identifierOptions, type SystemConfigCardProps } from "./systemConfigForm";
@@ -20,19 +20,15 @@ export function ServerSettingsCard({
   onChange,
   smtpIdentifiers
 }: ServerSettingsCardProps) {
+  const { t } = useLingui();
+
   return (
-    <Card title={<Trans>Server settings</Trans>}>
+    <Card title={t`Server settings`}>
       <Stack gap="sm">
         <Checkbox
           checked={form.DisableAutoChallengeJanitor}
           id="DisableAutoChallengeJanitor"
-          label={
-            <Trans>
-              Disable automatic challenge janitor. You should use the token janitor to
-              clean up old challenges and the JWT blocklist if you disable the automatic
-              challenge janitor.
-            </Trans>
-          }
+          label={t`Disable automatic challenge janitor. You should use the token janitor to clean up old challenges and the JWT blocklist if you disable the automatic challenge janitor.`}
           onChange={(event) => {
             onChange({ DisableAutoChallengeJanitor: event.currentTarget.checked });
           }}
@@ -40,13 +36,7 @@ export function ServerSettingsCard({
         <Checkbox
           checked={form.DisableClientTracking}
           id="DisableClientTracking"
-          label={
-            <Trans>
-              Disable client tracking. This will disable the recording of client IP
-              addresses and user agents in the database. This can be used to reduce
-              database locks and load in environments with many concurrent requests.
-            </Trans>
-          }
+          label={t`Disable client tracking. This will disable the recording of client IP addresses and user agents in the database. This can be used to reduce database locks and load in environments with many concurrent requests.`}
           onChange={(event) => {
             onChange({ DisableClientTracking: event.currentTarget.checked });
           }}
@@ -54,7 +44,7 @@ export function ServerSettingsCard({
         <TextInput
           id="UserCacheExpiration"
           inputMode="numeric"
-          label={<Trans>User Cache expiration in seconds</Trans>}
+          label={t`User Cache expiration in seconds`}
           onChange={(event) => {
             onChange({ UserCacheExpiration: event.currentTarget.value });
           }}
@@ -62,14 +52,9 @@ export function ServerSettingsCard({
           value={form.UserCacheExpiration}
         />
         <TextInput
-          description={
-            <Trans>
-              These client IP addresses or subnets are allowed to masquerade as another
-              client.
-            </Trans>
-          }
+          description={t`These client IP addresses or subnets are allowed to masquerade as another client.`}
           id="OverrideAuthorizationClient"
-          label={<Trans>Override Authorization Clients</Trans>}
+          label={t`Override Authorization Clients`}
           onChange={(event) => {
             onChange({ OverrideAuthorizationClient: event.currentTarget.value });
           }}
@@ -88,7 +73,7 @@ export function ServerSettingsCard({
             </Trans>
           }
           id="recovery.identifier"
-          label={<Trans>SMTP server for password recovery</Trans>}
+          label={t`SMTP server for password recovery`}
           onChange={(event) => {
             onChange({ "recovery.identifier": event.currentTarget.value });
           }}

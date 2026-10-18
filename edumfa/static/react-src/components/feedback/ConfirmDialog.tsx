@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Button, Group, Modal, Text } from "@mantine/core";
 import type { ReactNode } from "react";
 
@@ -20,7 +20,7 @@ export interface ConfirmDialogProps {
  * Escape and the overlay cancel; focus is trapped inside the dialog.
  */
 export function ConfirmDialog({
-  cancelLabel = <Trans>No</Trans>,
+  cancelLabel,
   confirmColor = "red",
   confirmLabel,
   id,
@@ -31,12 +31,14 @@ export function ConfirmDialog({
   onConfirm,
   title
 }: ConfirmDialogProps) {
+  const { t } = useLingui();
+
   return (
     <Modal centered id={id} onClose={onCancel} opened={isOpen} title={title}>
       <Text size="sm">{message}</Text>
       <Group justify="flex-end" mt="lg">
         <Button data-autofocus onClick={onCancel} variant="default">
-          {cancelLabel}
+          {cancelLabel ?? t`No`}
         </Button>
         <Button color={confirmColor} loading={isPending} onClick={onConfirm}>
           {confirmLabel}
