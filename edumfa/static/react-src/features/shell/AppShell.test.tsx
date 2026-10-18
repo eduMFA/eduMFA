@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -158,5 +158,12 @@ describe("AppShell", () => {
       realm: "realm1",
       username: "alice"
     });
+
+    // The dialog must not keep the password for the next lock.
+    act(() => {
+      lockSession();
+    });
+    const reopened = await screen.findByRole("dialog", { name: "eduMFA UI is locked" });
+    expect(within(reopened).getByLabelText("Password")).toHaveValue("");
   });
 });

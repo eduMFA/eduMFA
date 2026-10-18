@@ -1130,7 +1130,7 @@ msgstr "eduMFA servers"
 msgid "eduMFA Single Page Web Client"
 msgstr "eduMFA Single Page Web Client"
 
-#: react-src/features/shell/LockScreenDialog.tsx:63
+#: react-src/features/shell/LockScreenDialog.tsx:69
 msgid "eduMFA UI is locked"
 msgstr "eduMFA UI is locked"
 
@@ -1972,7 +1972,7 @@ msgstr "locked"
 #: react-src/features/login/ChallengeResponseForm.tsx:98
 #: react-src/features/login/LoginForm.tsx:91
 #: react-src/features/login/RemoteUserLoginCard.tsx:41
-#: react-src/features/shell/LockScreenDialog.tsx:114
+#: react-src/features/shell/LockPasswordForm.tsx:58
 msgid "Log In"
 msgstr "Log In"
 
@@ -2509,8 +2509,8 @@ msgstr "password"
 #: react-src/features/register/RegisterFormFields.tsx:64
 #: react-src/features/register/RegisterFormFields.tsx:65
 #: react-src/features/register/RegisterFormFields.tsx:76
-#: react-src/features/shell/LockScreenDialog.tsx:100
-#: react-src/features/shell/LockScreenDialog.tsx:105
+#: react-src/features/shell/LockPasswordForm.tsx:44
+#: react-src/features/shell/LockPasswordForm.tsx:49
 #: react-src/features/tokens/import/PskcOptions.tsx:50
 #: react-src/features/tokens/import/PskcOptions.tsx:55
 #: react-src/features/users/ChangePasswordForm.tsx:40
@@ -4855,7 +4855,11 @@ msgstr "You are about to rollover your token! This will invalidate your existing
 msgid "You are authenticated by the web server as user <0>{0}</0>. You may login as this user to eduMFA without any further credentials."
 msgstr "You are authenticated by the web server as user <0>{0}</0>. You may login as this user to eduMFA without any further credentials."
 
-#: react-src/features/shell/LockScreenDialog.tsx:92
+#: react-src/features/shell/LockScreenDialog.tsx:60
+msgid "You are logged in as {username}."
+msgstr "You are logged in as {username}."
+
+#: react-src/features/shell/LockScreenDialog.tsx:56
 msgid "You are logged in as {username}@{realm}."
 msgstr "You are logged in as {username}@{realm}."
 

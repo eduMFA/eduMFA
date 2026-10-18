@@ -1,7 +1,8 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import { Button, Modal, PasswordInput, Text } from "@mantine/core";
+import { Modal } from "@mantine/core";
 import { useCallback, useState } from "react";
 
+import { LockPasswordForm } from "./LockPasswordForm";
 import { useAuth } from "@/auth/AuthProvider";
 import { ChallengeResponseForm } from "@/features/login/ChallengeResponseForm";
 import { useLoginFlow } from "@/features/login/loginFlowStore";
@@ -18,7 +19,6 @@ export function LockScreenDialog() {
   const { t } = useLingui();
   const { isLocked, user } = useAuth();
   const { challenge } = useLoginFlow();
-  const [password, setPassword] = useState("");
   const [attempt, setAttempt] = useState(0);
   const authenticateMutation = useAuthenticate({
     onChallengeRejected: () => {
@@ -52,7 +52,13 @@ export function LockScreenDialog() {
   if (!user) {
     return null;
   }
-
+  const loginMessage = realm ? (
+    <Trans>
+      You are logged in as {username}@{realm}.
+    </Trans>
+  ) : (
+    <Trans>You are logged in as {username}.</Trans>
+  );
   return (
     <Modal
       centered
@@ -71,49 +77,19 @@ export function LockScreenDialog() {
           onAnswer={answerChallenge}
         />
       ) : (
-        <form
-          noValidate
-          onSubmit={(event) => {
-            event.preventDefault();
+        <LockPasswordForm
+          isPending={authenticateMutation.isPending}
+          loginMessage={loginMessage}
+          onSubmit={(password) => {
+            const request: AuthLoginRequest = { password, username };
 
-            if (password.length > 0) {
-              const request: AuthLoginRequest = { password, username };
-
-              if (realm) {
-                request.realm = realm;
-              }
-
-              mutate(request);
+            if (realm) {
+              request.realm = realm;
             }
+
+            mutate(request);
           }}
-          role="form"
-        >
-          <Text mb="md" size="sm" ta="center">
-            <Trans>
-              You are logged in as {username}@{realm}.
-            </Trans>
-          </Text>
-          <PasswordInput
-            autoComplete="current-password"
-            autoFocus
-            id="lockPassword"
-            label={t`Password`}
-            mb="md"
-            onChange={(event) => {
-              setPassword(event.currentTarget.value);
-            }}
-            placeholder={t`Password`}
-            value={password}
-          />
-          <Button
-            disabled={password.length === 0}
-            fullWidth
-            loading={authenticateMutation.isPending}
-            type="submit"
-          >
-            {t`Log In`}
-          </Button>
-        </form>
+        />
       )}
     </Modal>
   );
