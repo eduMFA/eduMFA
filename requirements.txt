@@ -24,7 +24,7 @@ cachetools==6.2.4
     # via google-auth
 cbor2==5.9.0
     # via edumfa (setup.py)
-certifi==2026.1.4
+certifi==2026.10.19
     # via requests
 cffi==2.0.0
     # via
