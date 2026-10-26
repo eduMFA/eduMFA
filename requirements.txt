@@ -24,7 +24,7 @@ blinker==1.9.0
     # via flask
 cbor2==6.1.4
     # via edumfa (pyproject.toml)
-certifi==2026.7.22
+certifi==2026.10.19
     # via requests
 cffi==2.1.1
     # via
