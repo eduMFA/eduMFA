@@ -9,7 +9,7 @@ from dateutil.tz import gettz, tzlocal, tzoffset
 from netaddr import AddrFormatError, IPAddress, IPNetwork
 
 from edumfa.lib.crypto import generate_password
-from edumfa.lib.error import PolicyError
+from edumfa.lib.error import ParameterError, PolicyError
 from edumfa.lib.tokenclass import DATE_FORMAT
 from edumfa.lib.utils import (
     CHARLIST_CONTENTPOLICY,
@@ -136,8 +136,9 @@ class UtilsTestCase(MyTestCase):
         self.assertEqual(r, True)
 
         # Nonsense will not match
-        r = check_time_in_range("Mon-Wrong: asd-17:30", t)
-        self.assertEqual(r, False)
+        self.assertRaises(
+            ParameterError, check_time_in_range, "Mon-Wrong: asd-17:30", t
+        )
 
     def test_04a_parse_proxy(self):
         self.assertEqual(parse_proxy(""), set())

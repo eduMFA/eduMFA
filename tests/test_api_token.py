@@ -30,7 +30,6 @@ from edumfa.lib.token import (
     assign_token,
     check_serial_pass,
     enable_token,
-    get_realms_of_token,
     get_tokens,
     get_tokens_from_serial_or_user,
     init_token,
@@ -561,6 +560,7 @@ class APITokenTestCase(MyApiTestCase):
     def setUp(self):
         super().setUp()
         self.setUp_user_realms()
+        self.setUp_user_realm2()
 
     def _create_temp_token(self, serial):
         with self.app.test_request_context(
@@ -1432,7 +1432,7 @@ class APITokenTestCase(MyApiTestCase):
         with self.app.test_request_context(
             "/token/realm/REALM001",
             method="POST",
-            data={"realms": "realm1, realm2"},
+            data={"realms": f"{self.realm1}, non-existing-realm"},
             headers={"Authorization": self.at},
         ):
             res = self.app.full_dispatch_request()
@@ -1452,7 +1452,7 @@ class APITokenTestCase(MyApiTestCase):
             result = res.json.get("result")
             value = result.get("value")
             token = value.get("tokens")[0]
-            self.assertTrue(token.get("realms") == ["realm1"], token)
+            self.assertTrue(token.get("realms") == [self.realm1], token)
 
     def test_11_load_tokens(self):
         # Set dummy policy to verify faulty behaviour with #2209
@@ -1666,7 +1666,7 @@ class APITokenTestCase(MyApiTestCase):
             name="tokupload",
             scope=SCOPE.ADMIN,
             action=ACTION.IMPORT,
-            realm="otherrealm",
+            realm=self.realm2,
             adminuser="testadmin",
         )
         _clean_up_tokens()
@@ -2040,7 +2040,7 @@ class APITokenTestCase(MyApiTestCase):
     def test_19_get_challenges(self):
         set_policy(
             "chalresp",
-            scope=SCOPE.AUTHZ,
+            scope=SCOPE.AUTH,
             action=f"{ACTION.CHALLENGERESPONSE}=hotp",
         )
         token = init_token({"genkey": 1, "serial": "CHAL1", "pin": "pin"})
@@ -2187,12 +2187,12 @@ class APITokenTestCase(MyApiTestCase):
         set_policy(
             "deleteToken",
             scope=SCOPE.ADMIN,
-            action="delete",
+            action=ACTION.DELETE,
             user="testadmin",
-            realm="testrealm",
+            realm=self.realm1,
         )
         r = init_token(
-            {"type": "SPASS", "serial": "SP001"}, user=User("cornelius", self.realm1)
+            {"type": "SPASS", "serial": "SP001"}, user=User("cornelius", self.realm2)
         )
 
         # Now testadmin tries to delete a token from realm1, which he can not

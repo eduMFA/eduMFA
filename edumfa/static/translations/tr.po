@@ -1485,6 +1485,10 @@ msgstr "Hotp Token Ayarları"
 msgid "HOTP tokens can be attached with offline to e.g. notebooks."
 msgstr ""
 
+#: components/directives/views/directive.policyconditions.html
+msgid "Handle Missing Data"
+msgstr ""
+
 #: components/config/views/config.events.details.html
 #: components/config/views/config.events.list.html
 msgid "Handlermodule"
