@@ -2713,6 +2713,10 @@ msgstr ""
 "pesquisar desafios"
 
 #: lib/tokens/pushtoken.py
+msgid "The token image URL returned to the Push App when polling for challenges."
+msgstr ""
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "URL para eduMFA Push Token"
 

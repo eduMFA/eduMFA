@@ -542,6 +542,25 @@ This is the title of the push notification that is displayed
 on the user's smartphone during the login process with
 a :ref:`edupush_token` or :ref:`push_token`.
 
+.. _policy_edupush_image_url:
+
+edupush_image_url
+~~~~~~~~~~~~~~~~
+
+type: string
+
+The URL of the :ref:`edupush_token` image displayed by the authenticator app.
+The policy is matched against the token owner and belongs to the
+authentication scope and the Push token group.
+
+The image URL is returned as ``detail.image`` after the second enrollment step
+and during authenticated challenge polling, including when there are no
+pending challenges. Removing the policy
+returns ``null`` so supported apps clear the image. Older servers omit the
+field, so apps preserve their existing image. The URL is not included in the
+enrollment QR code. The enrollment policy ``appimageurl`` is not used for
+eduMFA push token images.
+
 .. _policy_push_wait:
 
 edupush_wait, push_wait
