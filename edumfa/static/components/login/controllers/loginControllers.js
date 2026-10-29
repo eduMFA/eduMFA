@@ -308,6 +308,7 @@ angular.module("eduMfaApp").controller("mainController", [
               $scope.hideResponseInput = true;
               $scope.u2fSignRequests = Array();
               $scope.webAuthnSignRequests = [];
+              $scope.pushChallenges = [];
               $scope.transactionid = data.detail["transaction_id"];
               // Challenge Response always contains multi_challenge!
               var multi_challenge = data.detail.multi_challenge;
@@ -334,6 +335,13 @@ angular.module("eduMfaApp").controller("mainController", [
                   let attributes = challenge.attributes
                     ? challenge.attributes
                     : null;
+                  if (attributes && attributes.push_challenge) {
+                    $scope.pushChallenges.push({
+                      serial: challenge.serial,
+                      value: attributes.push_challenge.value,
+                      type: attributes.push_challenge.type,
+                    });
+                  }
                   if (attributes && attributes.u2fSignRequest) {
                     $scope.u2fSignRequests.push(attributes.u2fSignRequest);
                   }
@@ -467,6 +475,24 @@ angular.module("eduMfaApp").controller("mainController", [
                   },
                 );
               PollingAuthFactory.stop();
+            }
+            if (
+              response.data.detail &&
+              ["challenge_mismatch", "declined"].includes(
+                response.data.detail.challenge_status,
+              )
+            ) {
+              PollingAuthFactory.stop();
+              inform.add(
+                gettextCatalog.getString(
+                  response.data.detail.challenge_status === "challenge_mismatch"
+                    ? "The selected number did not match. Sign in again."
+                    : "The sign-in request was denied.",
+                ),
+                { type: "danger" },
+              );
+              $scope.polling = false;
+              $state.go("login");
             }
             // if result.value is false, the challenge hasn't been answered yet.
             // Continue polling
