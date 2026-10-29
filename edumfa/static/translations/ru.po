@@ -4761,20 +4761,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#, fuzzy
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-
-#, fuzzy
-#~ msgid ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-#~ msgstr ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "Сертификат: Выпустить Сертификат x.509."

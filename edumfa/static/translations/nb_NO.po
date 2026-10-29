@@ -4721,12 +4721,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>Denne programvaren kommer uten noen form for garanti!</b>"
-
-#~ msgid "Clients"
-#~ msgstr "Klienter"
-
-#~ msgid "Community"
-#~ msgstr "Gemenskap"

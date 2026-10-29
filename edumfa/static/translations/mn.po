@@ -4738,29 +4738,3 @@ msgstr "цонх"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#, fuzzy
-#~ msgid "Tokentype"
-#~ msgstr "Токен төрөл"
-
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "Түвшин"
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>ЭНЭ ПРОГРАМ ХАНГАМЖ ЯМАР Ч БАТАЛГААТГҮЙ!</b>"
-
-#~ msgid ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-#~ msgstr ""
-#~ "Заасны дагуу\n"
-#~ "<a target=\"license\" href=\"https://github.com/edumfa/edumfa/blob/main/"
-#~ "LICENSE\">AGPLv3</a>"
-
-#~ msgid "Typo3"
-#~ msgstr "Typo3"
-
-#~ msgid "Wordpress"
-#~ msgstr "Wordpress"

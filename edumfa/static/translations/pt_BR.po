@@ -4714,13 +4714,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "Certificado: Inscrição de um Token de Certificado x509."
-
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr ""
-#~ "EMail: Envie uma senha única para o endereço de e-mail dos usuários."
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr "SMS: Envie uma senha única para o telefone celular dos usuários."

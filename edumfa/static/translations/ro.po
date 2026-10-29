@@ -4752,9 +4752,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b> ACEST SOFTWARE VINE FĂRĂ NICI O GARANȚIE! </b>"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr "SMS: Trimiteți o parolă OTP pe telefonul mobil al utilizatorului."

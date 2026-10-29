@@ -4721,20 +4721,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#, fuzzy
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "等级"
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>本软件不提供任何担保!</b>"
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "证书：注册一个 x509 证书令牌。"
-
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr "电子邮件：向用户的电子邮件地址发送一次性密码。"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr "SMS：向用户手机发送一次性密码。"

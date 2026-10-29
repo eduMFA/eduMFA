@@ -4718,8 +4718,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#, fuzzy
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "Szint"
