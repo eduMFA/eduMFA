@@ -105,3 +105,44 @@ The application can check with the original transaction ID
 with the eduMFA server, if the challenge has been successfully
 answered and automatically login the user.
 
+
+Push challenges
+...............
+
+Administrators opt in with ``edupush_challenge=number`` in an authentication
+policy (PUSH group). Without this policy, push requests keep the existing
+approve/deny flow. The policy selects a challenge type; ``number`` is the first
+supported type.
+
+Push challenges are supported only by the eduMFA Push app.
+
+For ``number``, each sign-in gets three distinct random numbers from 10 to 99.
+The initiating API response includes ``attributes.push_challenge`` in each
+``detail.multi_challenge`` entry, with ``type="number"`` and ``value="42"``
+for example. The challenge message also includes the value. The web interface
+displays it; third-party clients must display it while waiting for a response.
+This policy takes precedence over ``edupush_wait`` so the initial request
+returns immediately and the initiating application can show the challenge.
+
+Firebase payloads and polling responses include ``challenge_type="number"``
+and ``challenge_choices="17,42,86"``. These choices remain the same for the
+lifetime of the request. The correct answer is never identified in the
+smartphone payload. Both fields are strings, as required by Firebase.
+The server signature covers the existing fields followed by
+``|{challenge_type}|{challenge_choices}``.
+
+The smartphone posts ``challenge_response`` as a string to ``/ttype/edupush``.
+Its signature covers ``{nonce}|{serial}|{challenge_type}|{challenge_response}``.
+The server uses the stored type when verifying the signature. Declines keep
+``{nonce}|{serial}|decline`` and ``decline=1``. A missing response or an old
+approval signature cannot approve a challenge. Expired or already answered
+requests cannot be reused. Types are signed to prevent type substitution;
+clients must reject unsupported types rather than fall back to plain approval.
+
+A match returns ``result.value=true`` and ``detail.challenge_status="accept"``.
+A signed wrong answer returns ``result.value=false`` and
+``detail.challenge_status="challenge_mismatch"`` and ends the request.
+``/validate/polltransaction`` reports the same mismatch status to the initiating
+application, which must prompt for a new sign-in. A missing response returns
+``challenge_required`` without ending the request. Requests without a challenge
+keep their original payload and signature format.

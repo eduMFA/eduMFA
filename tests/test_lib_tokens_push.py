@@ -1288,7 +1288,9 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(timezone.utc) - timedelta(minutes=2)).isoformat(),
+            "timestamp": (
+                datetime.now(timezone.utc) - timedelta(minutes=2)
+            ).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -1303,7 +1305,9 @@ class PushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(timezone.utc) + timedelta(minutes=2)).isoformat(),
+            "timestamp": (
+                datetime.now(timezone.utc) + timedelta(minutes=2)
+            ).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3001,7 +3005,9 @@ class EduPushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(timezone.utc) - timedelta(minutes=2)).isoformat(),
+            "timestamp": (
+                datetime.now(timezone.utc) - timedelta(minutes=2)
+            ).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3016,7 +3022,9 @@ class EduPushTokenTestCase(MyTestCase):
         req = Request(builder.get_environ())
         req.all_data = {
             "serial": "SPASS01",
-            "timestamp": (datetime.now(timezone.utc) + timedelta(minutes=2)).isoformat(),
+            "timestamp": (
+                datetime.now(timezone.utc) + timedelta(minutes=2)
+            ).isoformat(),
             "signature": "unknown",
         }
         self.assertRaisesRegex(
@@ -3509,3 +3517,251 @@ class EduPushTokenTestCase(MyTestCase):
         tok.delete_token()
         tok2.delete_token()
         delete_smsgateway(self.firebase_config_name)
+
+    def test_push_challenge_protocol(self) -> None:
+        token = self._create_push_token()
+        serial = token.get_serial()
+        token.add_tokeninfo(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, POLL_ONLY)
+        set_policy(
+            "number-match",
+            SCOPE.AUTH,
+            action=f"{PushTokenClass.PUSH_ACTION.CHALLENGE}=number",
+        )
+        set_policy(
+            "number-url",
+            SCOPE.ENROLL,
+            action=f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL}",
+        )
+        context = FakeFlaskG()
+        context.policy_object = PolicyClass()
+        options = {"g": context}
+
+        def answer(
+            nonce: str,
+            selection: str | None,
+            suffix: str | None = None,
+            decline: bool = False,
+        ) -> tuple[bool, dict[str, object]]:
+            message = f"{nonce}|{serial}"
+            if decline:
+                message += "|decline"
+            elif suffix is not None:
+                message += f"|number|{suffix}"
+            signature = b32encode_and_unicode(
+                self.smartphone_private_key.sign(
+                    message.encode(), padding.PKCS1v15(), hashes.SHA256()
+                )
+            )
+            request: dict[str, object] = {
+                "serial": serial,
+                "nonce": nonce,
+                "signature": signature,
+            }
+            if selection is not None:
+                request["challenge_response"] = selection
+            if decline:
+                request["decline"] = "1"
+            return PushTokenClass._api_endpoint_post(request)
+
+        try:
+            self.assertIn(
+                PushTokenClass.PUSH_ACTION.CHALLENGE,
+                PushTokenClass.get_class_info("policy")[SCOPE.AUTH],
+            )
+            _, message, transaction, attributes = token.create_challenge(
+                options=options
+            )
+            chal = get_challenges(serial=serial, transaction_id=transaction)[0]
+            correct = attributes["attributes"]["push_challenge"]["value"]
+            choices = chal.get_data()["challenge_choices"]
+            self.assertEqual(len(set(choices.split(","))), 3)
+            self.assertTrue(
+                all(10 <= int(number) <= 99 for number in choices.split(","))
+            )
+            self.assertIn(correct, choices.split(","))
+            self.assertIn(correct, message)
+            self.assertTrue(
+                token.is_challenge_request(
+                    "", options={**options, PushTokenClass.PUSH_ACTION.WAIT: 20}
+                )
+            )
+
+            timestamp = datetime.now(timezone.utc).isoformat()
+            signature = b32encode_and_unicode(
+                self.smartphone_private_key.sign(
+                    f"{serial}|{timestamp}".encode(),
+                    padding.PKCS1v15(),
+                    hashes.SHA256(),
+                )
+            )
+            poll_request = {
+                "serial": serial,
+                "timestamp": timestamp,
+                "signature": signature,
+            }
+            first = PushTokenClass._api_endpoint_get(context, poll_request)[0]
+            second = PushTokenClass._api_endpoint_get(context, poll_request)[0]
+            self.assertEqual(first["challenge_choices"], choices)
+            self.assertEqual(second["challenge_choices"], choices)
+            self.assertNotIn("challenge_value", first)
+            self.server_private_key.public_key().verify(
+                b32decode(first["signature"]),
+                (
+                    "{nonce}|{url}|{serial}|{question}|{title}|{sslverify}|{challenge_type}|{challenge_choices}".format(
+                        **first
+                    )
+                ).encode(),
+                padding.PKCS1v15(),
+                hashes.SHA256(),
+            )
+
+            self.assertFalse(answer(chal.challenge, None)[0])
+            self.assertFalse(answer(chal.challenge, correct)[0])  # old signature
+            self.assertFalse(
+                answer(chal.challenge, correct, "99")[0]
+            )  # tampered selection
+            self.assertTrue(answer(chal.challenge, correct, correct)[0])
+            self.assertEqual(
+                token.check_challenge_response(options={"transaction_id": transaction}),
+                1,
+            )
+            self.assertFalse(answer(chal.challenge, correct, correct)[0])  # replay
+
+            _, _, transaction, attrs = token.create_challenge(options=options)
+            chal = get_challenges(serial=serial, transaction_id=transaction)[0]
+            correct = attrs["attributes"]["push_challenge"]["value"]
+            wrong = next(
+                number
+                for number in chal.get_data()["challenge_choices"].split(",")
+                if number != correct
+            )
+            result, detail = answer(chal.challenge, wrong, wrong)
+            self.assertFalse(result)
+            self.assertEqual(detail["challenge_status"], "challenge_mismatch")
+            self.assertFalse(answer(chal.challenge, correct, correct)[0])
+            self.assertEqual(
+                token.check_challenge_response(options={"transaction_id": transaction}),
+                -1,
+            )
+            with self.app.test_request_context(
+                "/validate/polltransaction",
+                method="GET",
+                data={"transaction_id": transaction},
+            ):
+                response = self.app.full_dispatch_request()
+                self.assertFalse(response.json["result"]["value"])
+                self.assertEqual(
+                    response.json["detail"]["challenge_status"], "challenge_mismatch"
+                )
+
+            _, _, transaction, attrs = token.create_challenge(options=options)
+            chal = get_challenges(serial=serial, transaction_id=transaction)[0]
+            self.assertTrue(answer(chal.challenge, None, decline=True)[0])
+            self.assertFalse(
+                answer(
+                    chal.challenge,
+                    attrs["attributes"]["push_challenge"]["value"],
+                    attrs["attributes"]["push_challenge"]["value"],
+                )[0]
+            )
+
+            _, _, transaction, attrs = token.create_challenge(options=options)
+            chal = get_challenges(serial=serial, transaction_id=transaction)[0]
+            chal.expiration = datetime.now(timezone.utc).replace(
+                tzinfo=None
+            ) - timedelta(seconds=1)
+            chal.save()
+            correct = attrs["attributes"]["push_challenge"]["value"]
+            self.assertFalse(answer(chal.challenge, correct, correct)[0])
+        finally:
+            token.delete_token()
+            delete_policy("number-match")
+            delete_policy("number-url")
+
+    def test_push_challenge_http(self) -> None:
+        self.setUp_user_realms()
+        token = self._create_push_token()
+        token.add_tokeninfo(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, POLL_ONLY)
+        token.set_pin("pushpin")
+        token.add_user(User("cornelius", self.realm1))
+        set_policy(
+            "number-http",
+            SCOPE.AUTH,
+            action=f"{PushTokenClass.PUSH_ACTION.CHALLENGE}=number,"
+            f"{PushTokenClass.PUSH_ACTION.WAIT}=20",
+        )
+        try:
+            with self.app.test_request_context(
+                "/validate/check",
+                method="POST",
+                data={"user": "cornelius", "realm": self.realm1, "pass": "pushpin"},
+            ):
+                response = self.app.full_dispatch_request()
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json["result"]["authentication"], "CHALLENGE")
+                detail = response.json["detail"]
+                correct = detail["multi_challenge"][0]["attributes"]["push_challenge"][
+                    "value"
+                ]
+                transaction = detail["transaction_id"]
+                self.assertIn(correct, detail["message"])
+            challenge = get_challenges(
+                serial=token.get_serial(), transaction_id=transaction
+            )[0]
+            signature = b32encode_and_unicode(
+                self.smartphone_private_key.sign(
+                    f"{challenge.challenge}|{token.get_serial()}|number|{correct}".encode(),
+                    padding.PKCS1v15(),
+                    hashes.SHA256(),
+                )
+            )
+            with self.app.test_request_context(
+                "/ttype/edupush",
+                method="POST",
+                json={
+                    "serial": token.get_serial(),
+                    "nonce": challenge.challenge,
+                    "challenge_response": correct,
+                    "signature": signature,
+                },
+            ):
+                response = self.app.full_dispatch_request()
+                self.assertTrue(response.json["result"]["value"])
+                self.assertEqual(response.json["detail"]["challenge_status"], "accept")
+            with self.app.test_request_context(
+                "/validate/polltransaction",
+                method="GET",
+                query_string={"transaction_id": transaction},
+            ):
+                response = self.app.full_dispatch_request()
+                self.assertTrue(response.json["result"]["value"])
+                self.assertEqual(response.json["detail"]["challenge_status"], "accept")
+        finally:
+            token.delete_token()
+            delete_policy("number-http")
+
+    def test_push_challenge_does_not_apply_to_legacy(self) -> None:
+        token = init_token({"type": "push", "genkey": 1})
+        token.add_tokeninfo(LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, POLL_ONLY)
+        set_policy(
+            "challenge-legacy-scope",
+            SCOPE.AUTH,
+            action=f"{PushTokenClass.PUSH_ACTION.CHALLENGE}=number",
+        )
+        context = FakeFlaskG()
+        context.policy_object = PolicyClass()
+        try:
+            policies = LegacyPushTokenClass.get_class_info("policy")[SCOPE.AUTH]
+            self.assertNotIn("edupush_challenge", policies)
+            self.assertNotIn("push_challenge", policies)
+            _, _, transaction, attributes = token.create_challenge(
+                options={"g": context}
+            )
+            self.assertNotIn("push_challenge", attributes["attributes"])
+            challenge = get_challenges(
+                serial=token.get_serial(), transaction_id=transaction
+            )[0]
+            self.assertEqual(challenge.get_data(), "")
+        finally:
+            token.delete_token()
+            delete_policy("challenge-legacy-scope")
