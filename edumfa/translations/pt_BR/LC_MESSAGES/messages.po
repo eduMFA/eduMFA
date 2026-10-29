@@ -1032,7 +1032,6 @@ msgstr ""
 "serão adicionados no campo de detalhes da resposta de autenticação."
 
 #: lib/policy.py
-#, fuzzy
 msgid ""
 "The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."

@@ -1077,7 +1077,6 @@ msgstr ""
 "Realm des Benutzers in der API Antwort mit zurückgeliefert."
 
 #: lib/policy.py
-#, fuzzy
 msgid ""
 "The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."

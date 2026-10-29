@@ -903,7 +903,6 @@ msgid ""
 msgstr "如果认证成功，则用户解析器和领域将添加到认证响应的详细分支中。"
 
 #: lib/policy.py
-#, fuzzy
 msgid ""
 "The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
