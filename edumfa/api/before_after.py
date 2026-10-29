@@ -32,6 +32,7 @@ import threading
 
 from flask import current_app, g, request
 from sqlalchemy.exc import IntegrityError, OperationalError
+from werkzeug.exceptions import HTTPException
 
 from edumfa.api.auth import admin_required, jwtauth, user_required
 from edumfa.api.lib.postpolicy import postrequest, sign_response
@@ -397,6 +398,42 @@ def edumfa_error(error):
     if "audit_object" in g:
         g.audit_object.log({"info": str(error)})
     return send_error(str(error), error_code=error.id), 400
+
+
+# Client and other HTTP errors (e.g. malformed JSON, unknown route,
+# unsupported method). These are subclasses of HTTPException and carry a
+# meaningful status code and description. Without this handler they would be
+# caught by the generic 500 handler below and reported as internal server
+# errors, hiding the actual reason from the client.
+@system_blueprint.app_errorhandler(HTTPException)
+@realm_blueprint.app_errorhandler(HTTPException)
+@defaultrealm_blueprint.app_errorhandler(HTTPException)
+@resolver_blueprint.app_errorhandler(HTTPException)
+@policy_blueprint.app_errorhandler(HTTPException)
+@user_blueprint.app_errorhandler(HTTPException)
+@token_blueprint.app_errorhandler(HTTPException)
+@audit_blueprint.app_errorhandler(HTTPException)
+@application_blueprint.app_errorhandler(HTTPException)
+@smtpserver_blueprint.app_errorhandler(HTTPException)
+@eventhandling_blueprint.app_errorhandler(HTTPException)
+@register_blueprint.app_errorhandler(HTTPException)
+@recover_blueprint.app_errorhandler(HTTPException)
+@stats_blueprint.app_errorhandler(HTTPException)
+@monitoring_blueprint.app_errorhandler(HTTPException)
+@ttype_blueprint.app_errorhandler(HTTPException)
+@tokengroup_blueprint.app_errorhandler(HTTPException)
+@serviceid_blueprint.app_errorhandler(HTTPException)
+def http_exception_error(error):
+    """
+    This function is called whenever an HTTPException (like a 400 Bad Request
+    or a 404 Not Found) occurs. It preserves the original HTTP status code and
+    description so that the client receives a meaningful error.
+    """
+    status_code = error.code or 500
+    description = error.description or str(error)
+    if "audit_object" in g:
+        g.audit_object.log({"info": f"{status_code}: {description}"})
+    return send_error(description, error_code=-status_code), status_code
 
 
 # other errors
