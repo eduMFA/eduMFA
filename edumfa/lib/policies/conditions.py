@@ -157,6 +157,8 @@ class PolicyConditionClass:
         self.active = active
         self.section = section
         self.key = key
+        # The comparator has to be set before the value to allow empty values only
+        # for comaptible comparators.
         self.comparator = comparator
         self.value = value
         self.handle_missing_data = handle_missing_data
@@ -220,13 +222,20 @@ class PolicyConditionClass:
 
     @value.setter
     def value(self, value: str):
+        # comparator is set before value
+        comparator = self.comparator
         if (
-            isinstance(value, str) and len(value) > 0
+            isinstance(value, str)
+            and (len(value) > 0 or Comparators.allows_empty_value(comparator))
         ) or self._allow_invalid_parameters:
             self._value = value
+        elif not isinstance(value, str):
+            raise ParameterError(
+                f"Value must be a string. Got '{value}' of type '{type(value)}' instead."
+            )
         else:
             raise ParameterError(
-                f"Value must be a non-empty string. Got '{value}' of type '{type(value)}' instead."
+                f"Value must be a non-empty string for comparator '{comparator}'."
             )
 
     @property

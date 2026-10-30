@@ -388,6 +388,44 @@ class APIPolicyTestCase(MyApiTestCase):
                 cond1["conditions"],
             )
 
+        # an empty value is allowed for all comparators that allow it ...
+        for comparator in Comparators.COMPARATORS_ALLOWING_EMPTY_VALUE:
+            with self.app.test_request_context(
+                "/policy/cond1",
+                method="POST",
+                json={
+                    "action": ACTION.NODETAILFAIL,
+                    "client": "10.1.2.3",
+                    "scope": SCOPE.AUTHZ,
+                    "conditions": [
+                        [ConditionSection.USERINFO, "type", comparator, "", True]
+                    ],
+                    "realm": self.realm2,
+                },
+                headers={"Authorization": self.at},
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertEqual(res.status_code, 200, res.json)
+
+        # ... but rejected for the comparators that crash with an empty value (<, >)
+        for comparator in [Comparators.SMALLER, Comparators.BIGGER]:
+            with self.app.test_request_context(
+                "/policy/cond1",
+                method="POST",
+                json={
+                    "action": ACTION.NODETAILFAIL,
+                    "client": "10.1.2.3",
+                    "scope": SCOPE.AUTHZ,
+                    "conditions": [
+                        [ConditionSection.USERINFO, "type", comparator, "", True]
+                    ],
+                    "realm": self.realm2,
+                },
+                headers={"Authorization": self.at},
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertEqual(res.status_code, 400, res.json)
+
         # test some invalid conditions
         # no 5-/6-tuples
         with self.app.test_request_context(

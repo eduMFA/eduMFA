@@ -1780,6 +1780,8 @@ class PolicyCondition(MethodsMixin, db.Model):
     ):
         self.section = section
         self.Key = Key
+        # The comparator has to be set before the value to allow empty values only
+        # for compatible comparators.
         self.comparator = comparator
         self.Value = Value
         self.active = active

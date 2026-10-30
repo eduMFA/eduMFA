@@ -177,6 +177,34 @@ class Comparators:
     SMALLER = "<"
     BIGGER = ">"
 
+    # The original privacyIDEA patch blanket-disallows empty right values.
+    # eduMFA can't do this on a non-major version. For now, only disallow
+    # BIGGER/SMALLER comparators, as they just crash with an empty right value.
+    # For other comparators this either makes sense:
+    # - (NOT_)EQUALS and (NOT_)MATCHES compare to an empty string
+    # - (NOT_)CONTAINS checks if the provided list has an empty string (which is
+    #   maybe slightly confusing in the WebUI)
+    # or does not hurt:
+    # - (NOT_)IN returns always true/false
+    COMPARATORS_ALLOWING_EMPTY_VALUE = (
+        EQUALS,
+        NOT_EQUALS,
+        CONTAINS,
+        NOT_CONTAINS,
+        MATCHES,
+        NOT_MATCHES,
+        IN,
+        NOT_IN,
+    )
+
+    @classmethod
+    def allows_empty_value(cls, comparator):
+        """
+        Return True if an empty string is allowed as right-hand side value for the
+        given comparator.
+        """
+        return comparator in cls.COMPARATORS_ALLOWING_EMPTY_VALUE
+
     @classmethod
     def get_all_comparators(cls):
         """
