@@ -3012,10 +3012,3 @@ msgstr ""
 #~ " transports)"
 #~ msgstr ""
 
-#~ msgid ""
-#~ "The sending of an API Auth Key "
-#~ "is required duringauthentication. This avoids"
-#~ " rogue authenticate requests against the"
-#~ " /validate/check interface."
-#~ msgstr ""
-
