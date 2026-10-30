@@ -28,7 +28,7 @@ Some token require prior configuration as described in :ref:`tokentypes_details`
 * :ref:`ocra_token` - A basic OATH Challenge Response token.
 * :ref:`paper_token` - event based One Time Password tokens that get
   you list of one time passwords on a sheet of paper.
-* :ref:`edupush_token` and :ref:`push_token` - A challenge response token, that sends a
+* :ref:`edupush_token` - A challenge response token, that sends a
   challenge to the user's smartphone and the user simply accepts the
   request to login.
 * :ref:`pw_token` - A password token used for :ref:`lost_token` scenario.
