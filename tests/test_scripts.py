@@ -3,10 +3,45 @@ import os
 import tempfile
 import unittest
 
+from click.testing import CliRunner
+
 from edumfa.app import create_app
 from edumfa.commands.manage.main import cli as edumfa_manage
 from edumfa.lib.auditmodules.sqlaudit import LogEntry
 from edumfa.models import EventHandler, Policy, db
+
+
+class EduMfaManageStartupTestCase(unittest.TestCase):
+    def test_01_invalid_config_file_from_env_fails_during_app_startup(self):
+        with tempfile.NamedTemporaryFile("w", suffix=".py") as config_file:
+            config_file.write("this is not valid python config\n")
+            config_file.flush()
+
+            result = CliRunner().invoke(
+                edumfa_manage,
+                ["--quiet", "create_enckey"],
+                env={"EDUMFA_CONFIGFILE": config_file.name},
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIsInstance(result.exception, SyntaxError)
+        self.assertIn("ERROR: edumfa create_app could not read", result.output)
+        self.assertIn(config_file.name, result.output)
+        self.assertIn("Reason: invalid syntax", result.output)
+
+    def test_02_missing_config_file_from_env_fails_during_app_startup(self):
+        with tempfile.TemporaryDirectory() as config_dir:
+            missing_config_file = os.path.join(config_dir, "missing-edumfa.cfg")
+            result = CliRunner().invoke(
+                edumfa_manage,
+                ["--quiet", "create_enckey"],
+                env={"EDUMFA_CONFIGFILE": missing_config_file},
+            )
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertIsInstance(result.exception, OSError)
+        self.assertIn("WARNING: edumfa create_app has no access", result.output)
+        self.assertIn(missing_config_file, result.output)
 
 
 class ScriptsTestCase(unittest.TestCase):
