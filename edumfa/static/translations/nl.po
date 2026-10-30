@@ -3704,8 +3704,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3714,8 +3714,8 @@ msgid ""
 "    Yubico Validation Protocol</a>."
 msgstr ""
 "De authenticatievraag kan afgehandeld worden door de standaard eduMFA\n"
-"    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/api/"
-"validate.html\" target =\"_blank\">\n"
+"    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/api/validate."
+"html\" target =\"_blank\">\n"
 "        validatie API</a> maar kan ook afgehandeld worden door het\n"
 "    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/lib/tokentypes/"
 "yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\" "
@@ -4048,17 +4048,17 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "Het aanmelden van het token met serienummer\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>\n"
 "          voor gebruiker\n"
-"            <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a> in realm\n"
+"            <a ui-sref=\"user.details({username:newUser.user, realmname:"
+"newUser.realm})\">{{ newUser.user }}</a> in realm\n"
 "            {{ newUser.realm }} is gelukt."
 
 #: components/token/views/token.enroll.html
@@ -4068,8 +4068,8 @@ msgid ""
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
 "Het aanmelden van het token met serienummer\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a> is gelukt."
 
 #: components/config/views/config.token.webauthn.html
@@ -4264,8 +4264,8 @@ msgid ""
 "    should contain a reverse FQDN (defaults to org.edumfa)."
 msgstr ""
 "Dit is de service identifier die aan de TiQR app zal doorgegeven worden.\n"
-"          Dit zou een reverse FQDN moeten bevatten (staat standaard op "
-"org.edumfa)."
+"          Dit zou een reverse FQDN moeten bevatten (staat standaard op org."
+"edumfa)."
 
 #: components/config/views/config.tokengroup.edit.html
 msgid "This is the unique identifying name for this group definition."
@@ -5071,8 +5071,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA loopt in DEBUG modus. Je kunt het debug-niveau wijzigen in\n"
 "    edumfa.cfg."
@@ -5344,259 +5344,3 @@ msgstr "venster"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} items gevonden."
-
-#, fuzzy
-#~ msgid "Tokentype"
-#~ msgstr "Token type"
-
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "Niveau"
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>DEZE SOFTWARE WORDT GELEVERD ZONDER ENIGE GARANTIE!</b>"
-
-#~ msgid ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-#~ msgstr ""
-#~ "Volgens de \n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-
-#~ msgid "Clients"
-#~ msgstr "Cliënten"
-
-#~ msgid "Community"
-#~ msgstr "Gemeenschap"
-
-#~ msgid "From"
-#~ msgstr "Van"
-
-#~ msgid "Issuer"
-#~ msgstr "Uitgever"
-
-#~ msgid "Okay"
-#~ msgstr "Ok"
-
-#~ msgid "Online Documentation"
-#~ msgstr "Online documentatie"
-
-#~ msgid "Privacy Statement"
-#~ msgstr "Privacyverklaring"
-
-#~ msgid "Subscription about to expire"
-#~ msgstr "Inschrijving gaat vervallen"
-
-#~ msgid "Subscription expired"
-#~ msgstr "Inschrijving vervallen"
-
-#~ msgid "Subscription issued to"
-#~ msgstr "Inschrijving gegeven aan"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Inschrijvingen"
-
-#~ msgid "Support"
-#~ msgstr "Ondersteuning"
-
-#~ msgid "To"
-#~ msgstr "Naar"
-
-#~ msgid "Upload Subscription File"
-#~ msgstr "Upload inschrijvingsbestand"
-
-#~ msgid "Valid subscription"
-#~ msgstr "Geldige inschrijving"
-
-#~ msgid ""
-#~ "Your subscription is not valid anymore. Either you exceeded the number of "
-#~ "tokens or the\n"
-#~ "        subscription expired. Please check, if you need to renew your <a "
-#~ "ui-sref=\"component.subscriptions\">subscription</a>."
-#~ msgstr ""
-#~ "Je abonnement is niet meer geldig. Ofwel heb je het aantal tokens "
-#~ "overschreden of je\n"
-#~ "                    abonnement is vervallen. Controleer of je een nieuw "
-#~ "<a ui-sref=\"component.subscriptions\">abonnement</a> nodig hebt."
-
-#~ msgid "active, assigned tokens"
-#~ msgstr "actief, toegewezen tokens"
-
-#~ msgid "edumfa server"
-#~ msgstr "eduMFA-server"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your smartphone authenticator App."
-#~ msgstr ""
-#~ "Klik <a href=\"{{ enrolledToken.googleurl.value }}\">hier</a> of scan\n"
-#~ "            de QR Code, als je\n"
-#~ "            het token wil toevoegen aan je Google Authenticator."
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your Authenticator App."
-#~ msgstr ""
-#~ "Klik <a href=\"{{ enrolledToken.googleurl.value }}\">hier</a> of scan\n"
-#~ "            de QR Code, als je\n"
-#~ "            het token wil toevoegen aan je Google Authenticator."
-
-#~ msgid "total users: {{ usercount }}"
-#~ msgstr "totaal aantal gebruikers: {{ usercount }}"
-
-#~ msgid "The Google Authenticator only supports an OTP length of 6."
-#~ msgstr "De Google Authenticator ondersteunt slechts een OTP-lengte van 6."
-
-#~ msgid "The Google Authenticator only supports the SHA1 algorithm."
-#~ msgstr "De Google Authenticator ondersteunt enkel het SHA1-algoritme."
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "Certificaat: een x509 certificaat-token registreren."
-
-#~ msgid "Drupal"
-#~ msgstr "Drupal"
-
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr ""
-#~ "E-mail: stuur een One Time Password naar het e-mailadres van de gebruiker."
-
-#~ msgid "Four Eyes: Two or more users are required to log in."
-#~ msgstr "Voor Eyes: twee of meer gebruikers zijn vereist om aan te melden."
-
-#~ msgid "HOTP: event based One Time Passwords"
-#~ msgstr "HOTP: gebeurtenis gebaseerd op One Time Passwords"
-
-#~ msgid "IndexedSecret: Challenge token based on a shared secret."
-#~ msgstr "IndexedSecret: Challenge token gebaseerd op een gedeeld geheim."
-
-#~ msgid "OTRS"
-#~ msgstr "OTRS"
-
-#~ msgid "Owncloud"
-#~ msgstr "Owncloud"
-
-#~ msgid "PAPER: OTP values on a sheet of paper."
-#~ msgstr "PAPIER: OTP-waarden op een blad papier."
-
-#~ msgid "PIN"
-#~ msgstr "PIN"
-
-#~ msgid "RADIUS: Forward authentication request to a RADIUS server"
-#~ msgstr "RADIUS: stuur authenticatie-aanvraag door naar een RADIUS-server"
-
-#~ msgid "Remote Token: Forward authentication request to another server"
-#~ msgstr "Extern token: stuur authenticatievraag door naar een andere server"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr ""
-#~ "SMS: stuur een one time password naar de mobiele telefoon van de "
-#~ "gebruikers."
-
-#~ msgid "SPass: Simple Pass token. Static passwords"
-#~ msgstr "SPass: Simple Pass token. Statische wachtwoorden"
-
-#~ msgid "SSH Public Key: The public SSH key"
-#~ msgstr "SSH Public Key: de publieke SSH-sleutel"
-
-#~ msgid "TOTP: time based One Time Passwords"
-#~ msgstr "TOTP: tijd gebaseerd One Time Passwords"
-
-#~ msgid "TiQR: Authenticate with Smartphone by scanning a QR code."
-#~ msgstr "TiQR: authenticeer met smartphone door het scannen van een QR-code."
-
-#~ msgid "Tine 2.0"
-#~ msgstr "Tine 2.0"
-
-#~ msgid "Typo3"
-#~ msgstr "Typo3"
-
-#~ msgid "U2F: Universal 2nd Factor hardware token."
-#~ msgstr "U2F: Universeel 2de factor hardware token."
-
-#~ msgid "WebAuthn: Web Authentication hardware token."
-#~ msgstr "WebAuthn: Web Authentication hardwaer token."
-
-#~ msgid "Wordpress"
-#~ msgstr "Wordpress"
-
-#~ msgid "Yubikey AES mode: One Time Passwords with Yubikey"
-#~ msgstr "Yubikey AES modus: One Time Passwords met Yubikey"
-
-#~ msgid "Yubikey Cloud mode: Forward authentication request to YubiCloud"
-#~ msgstr "Yubikey Cloud modus: Stuur authenticatievragen door naan YubiCloud"
-
-#~ msgid "mOTP: classical mobile One Time Passwords"
-#~ msgstr "mOTP: klassiek mobiel One Time Password"
-
-#~ msgid "{{ enrolledToken.verify.message }}"
-#~ msgstr "{{ enrolledToken.verify.message }}"
-
-#~ msgid "Leave the Bind DN empty if you want to do anonymous binding."
-#~ msgstr "Laat de Bind DN leeg als je anonieme binding wil doen."
-
-#~ msgid "Microsoft Internet Explorer is not supported."
-#~ msgstr "Microsoft Internet Explorer wordt niet ondersteund."
-
-#~ msgid ""
-#~ "Open new tab to create certificate\n"
-#~ "                    request"
-#~ msgstr ""
-#~ "Open nieuwe tab om een certificaat \n"
-#~ "                          te maken"
-
-#~ msgid ""
-#~ "The RSA keys will be generated in the browser.\n"
-#~ "                You will be taken to a new browser window, where you can\n"
-#~ "                create the Certificate Request. The private key remains "
-#~ "in\n"
-#~ "                your browser and you will be able to install the "
-#~ "certificate\n"
-#~ "                to the browser."
-#~ msgstr ""
-#~ "De RSA-sleutels zullen in de browser gegenereerd worden.\n"
-#~ "                Er zal een nieuw browservenster geopend worden waar je\n"
-#~ "                de certificaat aanvraag kan maken. De private sleutel "
-#~ "blijft\n"
-#~ "                in je browser en je zult het certificaat in je browser "
-#~ "kunnen\n"
-#~ "                installeren."
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#~ msgid "The remote Server URL"
-#~ msgstr "De URL van de externe server"
-
-#~ msgid "User Store"
-#~ msgstr "Gebruiker opslag"
-
-#~ msgid "yyyy-MM-dd HH:mm:ss"
-#~ msgstr "yyyy-MM-dd HH:mm:ss"
-
-#, fuzzy
-#~ msgid ": {{ notImportedTokens }}"
-#~ msgstr "Importeer tokens"
-
-#~ msgid "Progress: {{ uploadProgress }}%"
-#~ msgstr "Voortgang: {{ uploadProgress }}%"
-
-#~ msgid "Uploaded File: {{ uploadedFile }}"
-#~ msgstr "Upload bestand: {{ uploadedFile }}"
-
-#~ msgid "Uploaded Tokens: {{ uploadedTokens }}"
-#~ msgstr "Upload tokens: {{ uploadedTokens }}"
-
-#~ msgid "Please scan the QR code with the privacyIDEA Authenticator App"
-#~ msgstr "Scan de QR-code met de eduMFA authenticatie-app"
-
-#~ msgid "Length of UID"
-#~ msgstr "Lengte van de UID"
-
-#~ msgid "emit a public UID"
-#~ msgstr "stuur een publieke UID"

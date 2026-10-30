@@ -3516,8 +3516,8 @@ msgstr ""
 #: components/config/views/config.token.yubikey.html
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3680,16 +3680,16 @@ msgid ""
 "The resource name must consist of letters, numbers and '_', '-', '.' and "
 "must not be the word 'send_test_email'"
 msgstr ""
-"Le nom de la ressource ne doit comporter que des lettres, des chiffres et "
-"« _ », « - », « . » et ne doit pas être égal à « send_test_email »"
+"Le nom de la ressource ne doit comporter que des lettres, des chiffres et « "
+"_ », « - », « . » et ne doit pas être égal à « send_test_email »"
 
 #: app.js
 msgid ""
 "The resource name must consist of letters, numbers and '_', '-', '.' and "
 "must not be the word 'test'"
 msgstr ""
-"Le nom de la ressource ne doit comporter que des lettres, des chiffres et "
-"« _ », « - », « . » et ne doit pas être égal à « test »"
+"Le nom de la ressource ne doit comporter que des lettres, des chiffres et « "
+"_ », « - », « . » et ne doit pas être égal à « test »"
 
 #: app.js
 msgid ""
@@ -3794,17 +3794,17 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "Le jeton a été enrôlé avec le numéro de série suivant\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>\n"
 "            pour l'utilisateur\n"
-"            <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a> dans le royaume\n"
+"            <a ui-sref=\"user.details({username:newUser.user, realmname:"
+"newUser.realm})\">{{ newUser.user }}</a> dans le royaume\n"
 "            {{ newUser.realm }}."
 
 #: components/token/views/token.enroll.html
@@ -3814,8 +3814,8 @@ msgid ""
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
 "Le jeton a été enrôlé avec le numéro de série\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ enrolledToken.serial }}</a>."
 
 #: components/config/views/config.token.webauthn.html
@@ -4667,8 +4667,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 
 #: components/audit/views/audit.log.html
@@ -4931,114 +4931,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#, fuzzy
-#~ msgid "Tokentype"
-#~ msgstr "Jetons"
-
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "Niveau"
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>CE LOGICIEL N'EST FOURNI SANS AUCUNE GARANTIE !</b>"
-
-#~ msgid ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-#~ msgstr ""
-#~ "Conformément à la licence\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-
-#~ msgid "Clients"
-#~ msgstr "Clients"
-
-#~ msgid "Community"
-#~ msgstr "Communauté"
-
-#~ msgid "From"
-#~ msgstr "De"
-
-#~ msgid "Online Documentation"
-#~ msgstr "Documentation en ligne"
-
-#~ msgid "Subscription about to expire"
-#~ msgstr "L'abonnement est sur le point d'expirer"
-
-#~ msgid "Subscription expired"
-#~ msgstr "Abonnement expiré"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Abonnements"
-
-#~ msgid "Support"
-#~ msgstr "Assistance"
-
-#~ msgid ""
-#~ "Your subscription is not valid anymore. Either you exceeded the number of "
-#~ "tokens or the\n"
-#~ "        subscription expired. Please check, if you need to renew your <a "
-#~ "ui-sref=\"component.subscriptions\">subscription</a>."
-#~ msgstr ""
-#~ "<p>Votre abonnement n'est plus valide. Soit vous avez dépassé le nombre "
-#~ "de jetons soit\n"
-#~ "                    l'abonnement a expiré. Veuillez vérifier si vous "
-#~ "devez renouveler votre abonnement.\n"
-#~ "                </p>"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your smartphone authenticator App."
-#~ msgstr ""
-#~ "Cliquez <a href=\"{{ enrolledToken.googleurl.value }}\">ici</a> ou "
-#~ "scannez\n"
-#~ "            le code QR si vous\n"
-#~ "            souhaitez ajouter le jeton à votre application Google "
-#~ "Authenticator."
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your Authenticator App."
-#~ msgstr ""
-#~ "Cliquez <a href=\"{{ enrolledToken.googleurl.value }}\">ici</a> ou "
-#~ "scannez\n"
-#~ "            le code QR si vous\n"
-#~ "            souhaitez ajouter le jeton à votre application Google "
-#~ "Authenticator."
-
-#~ msgid "Drupal"
-#~ msgstr "Drupal"
-
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr ""
-#~ "Courriel : envoyez un mot de passe à usage unique à l'adresse "
-#~ "électronique des utilisateurs."
-
-#~ msgid "PIN"
-#~ msgstr "Code PIN"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr ""
-#~ "SMS : Envoyer un mot de passe à usage unique sur le téléphone portable "
-#~ "des utilisateurs."
-
-#~ msgid "SSH Public Key: The public SSH key"
-#~ msgstr "Clé SSH publique : La clé publique SSH"
-
-#~ msgid "Microsoft Internet Explorer is not supported."
-#~ msgstr "Microsoft Internet Explorer n'est pas pris en charge."
-
-#~ msgid "Progress: {{ uploadProgress }}%"
-#~ msgstr "Progression : {{ uploadProgress }}%"
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#~ msgid "The remote Server URL"
-#~ msgstr "L'URL du serveur distant"

@@ -973,8 +973,8 @@ msgid ""
 "Do you really want to delete the Token {{ tokenSerial }} from user\n"
 "            {{ token.username }}?"
 msgstr ""
-"Wollen Sie wirklich den Token {{ tokenSerial }} des Benutzers "
-"{{ token.username }} löschen?"
+"Wollen Sie wirklich den Token {{ tokenSerial }} des Benutzers {{ token."
+"username }} löschen?"
 
 #: components/token/views/dialog.ask_token_delete.html
 msgid "Do you really want to delete the Token {{ tokenSerial }}?"
@@ -1356,26 +1356,24 @@ msgid ""
 "For SMS tokens to work properly you need to set the\n"
 "  <a ui-sref=\"config.tokens({tokentype:'sms'})\">SMS Token Config</a>!"
 msgstr ""
-"Damit SMS-Token richtig funktionieren, müssen Sie die  <a ui-"
-"sref=\"config.tokens({tokentype:'sms'})\">SMS-Token Konfiguration</a> setzen!"
+"Damit SMS-Token richtig funktionieren, müssen Sie die  <a ui-sref=\"config."
+"tokens({tokentype:'sms'})\">SMS-Token Konfiguration</a> setzen!"
 
 #: components/token/views/token.enroll.tiqr.html
 msgid ""
 "For TiQR tokens to work properly you need to set the\n"
 "  <a ui-sref=\"config.tokens({tokentype:'tiqr'})\">TiQR Token Config</a>!"
 msgstr ""
-"Damit TiQR-Token richtig funktionieren, müssen Sie die  <a ui-"
-"sref=\"config.tokens({tokentype:'tiqr'})\">TiQR-Token Konfiguration</a> "
-"setzen!"
+"Damit TiQR-Token richtig funktionieren, müssen Sie die  <a ui-sref=\"config."
+"tokens({tokentype:'tiqr'})\">TiQR-Token Konfiguration</a> setzen!"
 
 #: components/token/views/token.enroll.yubico.html
 msgid ""
 "For Yubico tokens to work properly you need to set the\n"
 "  <a ui-sref=\"config.tokens({tokentype:'yubico'})\">Yubico Token Config</a>!"
 msgstr ""
-"Damit Yubico-Token richtig funktionieren, müssen Sie die <a ui-"
-"sref=\"config.tokens({tokentype:'yubico'})\">Yubico-Token Konfiguration</a> "
-"setzen!"
+"Damit Yubico-Token richtig funktionieren, müssen Sie die <a ui-sref=\"config."
+"tokens({tokentype:'yubico'})\">Yubico-Token Konfiguration</a> setzen!"
 
 #: components/token/views/token.enroll.edupush.html
 #: components/token/views/token.enroll.push.html
@@ -2310,8 +2308,8 @@ msgid ""
 "      smartphone."
 msgstr ""
 "Bitte scannen Sie den QR-Code mit der eingeschränkt unterstützten "
-"PrivacyIDEA Authenticator-App oder klicken Sie <a "
-"href=\"{{ enrolledToken.pushurl.value }}\">den Link</a> auf Ihrem Smartphone."
+"PrivacyIDEA Authenticator-App oder klicken Sie <a href=\"{{ enrolledToken."
+"pushurl.value }}\">den Link</a> auf Ihrem Smartphone."
 
 #: components/token/views/token.enrolled.daypassword.html
 #: components/token/views/token.enrolled.hotp.html
@@ -3643,8 +3641,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3652,11 +3650,11 @@ msgid ""
 "target=\"_blank\">\n"
 "    Yubico Validation Protocol</a>."
 msgstr ""
-"Die Authentifizierung kann von der normalen eduMFA <a href=\"http://"
-"edumfa.readthedocs.org/en/latest/modules/api/validate.html\" "
-"target=\"_blank\">validate API</a> aber auch vom <a href=\"http://"
-"edumfa.readthedocs.org/en/latest/modules/lib/tokentypes/"
-"yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\" "
+"Die Authentifizierung kann von der normalen eduMFA <a href=\"http://edumfa."
+"readthedocs.org/en/latest/modules/api/validate.html\" "
+"target=\"_blank\">validate API</a> aber auch vom <a href=\"http://edumfa."
+"readthedocs.org/en/latest/modules/lib/tokentypes/yubikey.html#edumfa.lib."
+"tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\" "
 "target=\"_blank\">Yubico Validation Protokoll</a> durchgeführt werden."
 
 #: components/config/views/config.token.yubico.html
@@ -3892,9 +3890,8 @@ msgid ""
 "    <a ui-sref=\"token.details({tokenSerial:lostResult.serial})\">\n"
 "      {{ lostResult.serial }}</a>."
 msgstr ""
-"Die Seriennummer des neuen Tokens ist <a ui-"
-"sref=\"token.details({tokenSerial:lostResult.serial})"
-"\">{{ lostResult.serial }}</a>."
+"Die Seriennummer des neuen Tokens ist <a ui-sref=\"token."
+"details({tokenSerial:lostResult.serial})\">{{ lostResult.serial }}</a>."
 
 #: components/token/views/token.enroll.hotp.html
 #: components/token/views/token.enroll.totp.html
@@ -3984,15 +3981,15 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
-"Der Token mit der Seriennummer <a ui-"
-"sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">{{ enrolledToken.serial }}</a> wurde erfolgreich für den Benutzer\n"
-"<a ui-sref=\"user.details({username:newUser.user, realmname:newUser.realm})"
-"\">{{ newUser.user }}</a> in Realm {{ newUser.realm }} ausgerollt."
+"Der Token mit der Seriennummer <a ui-sref=\"token.details({tokenSerial:"
+"enrolledToken.serial})\">{{ enrolledToken.serial }}</a> wurde erfolgreich "
+"für den Benutzer\n"
+"<a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a> in Realm {{ newUser.realm }} ausgerollt."
 
 #: components/token/views/token.enroll.html
 msgid ""
@@ -4000,9 +3997,9 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
-"Der Token mit der Seriennummer  <a ui-"
-"sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">{{ enrolledToken.serial }}</a>  wurde erfolgreich ausgerollt."
+"Der Token mit der Seriennummer  <a ui-sref=\"token.details({tokenSerial:"
+"enrolledToken.serial})\">{{ enrolledToken.serial }}</a>  wurde erfolgreich "
+"ausgerollt."
 
 #: components/config/views/config.token.webauthn.html
 msgid "The trust_anchor_dir must be an absolute path."
@@ -4302,17 +4299,16 @@ msgid ""
 "To define service IDs go to\n"
 "    <a ui-sref=\"config.serviceid\">Service ID config</a>"
 msgstr ""
-"Um eine Dienste-Kennzeichnung zu erstellen gehen Sie zu <a ui-"
-"sref=\"config.serviceid\">Dienste-Kennzeichnungen Konfiguration</a>"
+"Um eine Dienste-Kennzeichnung zu erstellen gehen Sie zu <a ui-sref=\"config."
+"serviceid\">Dienste-Kennzeichnungen Konfiguration</a>"
 
 #: components/token/views/token.enroll.radius.html
 msgid ""
 "To ease the enrolling of RADIUS tokens you can set default values in the\n"
 "  <a ui-sref=\"config.tokens({tokentype:'radius'})\">RADIUS Token Config</a>."
 msgstr ""
-"Um RADIUS Token leichter auszurollen, können Sie die    <a ui-"
-"sref=\"config.tokens({tokentype:'radius'})\">RADIUS Token Konfiguration</a> "
-"setzen."
+"Um RADIUS Token leichter auszurollen, können Sie die    <a ui-sref=\"config."
+"tokens({tokentype:'radius'})\">RADIUS Token Konfiguration</a> setzen."
 
 #: components/token/views/token.html
 msgid "Token Applications"
@@ -4729,8 +4725,8 @@ msgid ""
 msgstr ""
 "Sie haben keine editierbaren Resolver definiert. Daher können Sie in keine "
 "Benutzer-Quelle schreiben. \n"
-"Wenn Sie Benutzer hinzufügen wollen, müssen Sie einen <a ui-"
-"sref=\"config.resolvers.list\">editierbaren Resolver definieren</a> \n"
+"Wenn Sie Benutzer hinzufügen wollen, müssen Sie einen <a ui-sref=\"config."
+"resolvers.list\">editierbaren Resolver definieren</a> \n"
 "(bpsw. SQLResolver) und die Checkbox \"Benutzerquelle editierbar\" anhaken."
 
 #: components/token/views/token.enrolled.registration.html
@@ -4957,8 +4953,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA läuft im DEBUG-Modus. Sie können dies wieder in edumfa.cfg ändern."
 
@@ -5226,520 +5222,3 @@ msgstr "Fenster"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "Es wurden {{ auditdata.count }} Einträge gefunden."
-
-#, fuzzy
-#~ msgid "Tokentype"
-#~ msgstr "Tokentyp"
-
-# This is the level in the subscriptions
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "Subskriptionsstufe"
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>KEINE GEWÄHRLEISTUNG ODER HAFTUNG DURCH DIE ENTWICKLER!</b>"
-
-#~ msgid ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-#~ msgstr ""
-#~ "Entsprechend der <a target=\"license\" href=\"https://github.com/edumfa/"
-#~ "edumfa/blob/main/LICENSE\">AGPLv3</a>\n"
-#~ " gibt es für diese Software (eduMFA)"
-
-#~ msgid "Clients"
-#~ msgstr "Clients"
-
-#~ msgid "Community"
-#~ msgstr "Community"
-
-#~ msgid "From"
-#~ msgstr "Von"
-
-#~ msgid "Issuer"
-#~ msgstr "Aussteller"
-
-#~ msgid "Okay"
-#~ msgstr "Okay"
-
-#~ msgid "Online Documentation"
-#~ msgstr "Online Dokumentation"
-
-#~ msgid "Privacy Statement"
-#~ msgstr "Datenschutzhinweis"
-
-#~ msgid "Subscription about to expire"
-#~ msgstr "Die Subskription läuft in Kürze ab"
-
-#~ msgid "Subscription expired"
-#~ msgstr "Die Subskription ist abgelaufen"
-
-#~ msgid "Subscription issued to"
-#~ msgstr "Subskription ausgestellt für"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Subskriptionen"
-
-#~ msgid "Support"
-#~ msgstr "Support"
-
-#~ msgid "To"
-#~ msgstr "Bis"
-
-#~ msgid "Upload Subscription File"
-#~ msgstr "Subskriptionsdatei hochladen"
-
-#~ msgid "Valid subscription"
-#~ msgstr "Gültige Subskription"
-
-#~ msgid ""
-#~ "Your subscription is not valid anymore. Either you exceeded the number of "
-#~ "tokens or the\n"
-#~ "        subscription expired. Please check, if you need to renew your <a "
-#~ "ui-sref=\"component.subscriptions\">subscription</a>."
-#~ msgstr ""
-#~ "Ihre Subskription ist nicht mehr gültig. Entweder haben Sie die Anzahl "
-#~ "der erlaubten Token überschritten oder Ihre Subskription ist abgelaufen. "
-#~ "Bitte überprüfen Sie, ob Sie Ihre <a ui-"
-#~ "sref=\"component.subscriptions\">Subskription</a> erneuern müssen."
-
-#~ msgid "active, assigned tokens"
-#~ msgstr "aktive, zugewiesene Token"
-
-#~ msgid "edumfa server"
-#~ msgstr "eduMFA Server"
-
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your smartphone authenticator App."
-#~ msgstr ""
-#~ "Klicken Sie <a href=\"{{ enrolledToken.googleurl.value }}\">hier</a> oder "
-#~ "scannen Sie den QR-Code, um den Token in Ihrer Smartphone-App "
-#~ "hinzuzufügen."
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your Authenticator App."
-#~ msgstr ""
-#~ "Klicken Sie <a href=\"{{ enrolledToken.googleurl.value }}\">hier</a> oder "
-#~ "scannen Sie den QR-Code, um den Token in Ihrer Smartphone-App "
-#~ "hinzuzufügen."
-
-#~ msgid "total users: {{ usercount }}"
-#~ msgstr "Benutzeranzahl: {{ usercount }}"
-
-#~ msgid "The Google Authenticator only supports an OTP length of 6."
-#~ msgstr "Der Google Authenticator unterstützt lediglich OTP Länge 6."
-
-#~ msgid "The Google Authenticator only supports the SHA1 algorithm."
-#~ msgstr ""
-#~ "Der Google Authenticator unterstützt lediglich den SHA1-Algorithmus."
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "Certificate: Ein x509 Zertifikats-Token ausrollen."
-
-#~ msgid "Drupal"
-#~ msgstr "Drupal"
-
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr ""
-#~ "E-Mail: Ein Einmalpasswort an die E-Mail-Adresse des Benutzers versenden."
-
-#~ msgid "Four Eyes: Two or more users are required to log in."
-#~ msgstr "Vier-Augen: Zwei oder mehr Benutzer werden für den Login benötigt."
-
-#~ msgid "HOTP: event based One Time Passwords"
-#~ msgstr "HOTP: Ereignisbasiertes Einmalpasswort"
-
-#~ msgid "IndexedSecret: Challenge token based on a shared secret."
-#~ msgstr ""
-#~ "IndexedSecret: Challenge-Response Token, der auf einem geheimen String "
-#~ "basiert."
-
-#~ msgid "OTRS"
-#~ msgstr "OTRS"
-
-#~ msgid "Owncloud"
-#~ msgstr "ownCloud"
-
-#~ msgid "PAPER: OTP values on a sheet of paper."
-#~ msgstr "PAPER: OTP-Liste auf einem Stück Papier."
-
-#~ msgid "PIN"
-#~ msgstr "PIN"
-
-#~ msgid "RADIUS: Forward authentication request to a RADIUS server"
-#~ msgstr ""
-#~ "RADIUS: Die Authentisierungsanfrage wird an einen RADIUS-Server "
-#~ "weitergeleitet"
-
-#~ msgid "Remote Token: Forward authentication request to another server"
-#~ msgstr ""
-#~ "Remote: Die Authentisierungsanfrage wird an einen anderen eduMFA-Server "
-#~ "weitergeleitet"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr ""
-#~ "SMS: Ein Einmalpasswort per SMS an das Mobiltelefon des Benutzers senden."
-
-#~ msgid "SPass: Simple Pass token. Static passwords"
-#~ msgstr "SPass: Simple-Pass-Token. Statisches Passwort"
-
-#~ msgid "SSH Public Key: The public SSH key"
-#~ msgstr "SSH Public Key: Der öffentliche SSH-Schlüssel"
-
-#~ msgid "TOTP: time based One Time Passwords"
-#~ msgstr "TOTP: Zeitbasiertes Einmalpasswort"
-
-#~ msgid "TiQR: Authenticate with Smartphone by scanning a QR code."
-#~ msgstr "TiQR: Authentisierung mit Smartphone durch Scannen eines QR-Codes."
-
-#~ msgid "Tine 2.0"
-#~ msgstr "Tine 2.0"
-
-#~ msgid "Typo3"
-#~ msgstr "TYPO3"
-
-#~ msgid "U2F: Universal 2nd Factor hardware token."
-#~ msgstr "U2F: Universal 2nd Factor. Hardware Token."
-
-#~ msgid "WebAuthn: Web Authentication hardware token."
-#~ msgstr "WebAuthn: Web Authentication Hardware Token / FIDO2."
-
-#~ msgid "Wordpress"
-#~ msgstr "Wordpress"
-
-#~ msgid "Yubikey AES mode: One Time Passwords with Yubikey"
-#~ msgstr "Yubikey AES Mode: Einmalpasswort mit dem Yubikey"
-
-#~ msgid "Yubikey Cloud mode: Forward authentication request to YubiCloud"
-#~ msgstr ""
-#~ "Yubikey Cloud Mode: Die Authentifizierungsanfrage wird an den YubiCloud "
-#~ "Dienst weitergeleitet"
-
-#~ msgid "mOTP: classical mobile One Time Passwords"
-#~ msgstr "mOTP: Klassisches Mobiles Einmalpasswort"
-
-#~ msgid "{{ enrolledToken.verify.message }}"
-#~ msgstr "{{ enrolledToken.verify.message }}"
-
-#~ msgid "Leave the Bind DN empty if you want to do anonymous binding."
-#~ msgstr ""
-#~ "Lassen Sie Bind-DN leer, um einen Anonymous Bind gegen das LDAP-"
-#~ "Verzeichnis zu machen."
-
-#~ msgid "Microsoft Internet Explorer is not supported."
-#~ msgstr "Der Microsoft Internet Explorer wird nicht unterstützt."
-
-#~ msgid ""
-#~ "Open new tab to create certificate\n"
-#~ "                    request"
-#~ msgstr "Ein neues Tab öffnen, um die Zertifikatsanforderung zu erstellen."
-
-#~ msgid ""
-#~ "The RSA keys will be generated in the browser.\n"
-#~ "                You will be taken to a new browser window, where you can\n"
-#~ "                create the Certificate Request. The private key remains "
-#~ "in\n"
-#~ "                your browser and you will be able to install the "
-#~ "certificate\n"
-#~ "                to the browser."
-#~ msgstr ""
-#~ "Das RSA Schlüsselpaar wird im Browser erzeugt. Es wird ein neues Browser-"
-#~ "Fenster geöffnet, in dem Sie die Zertifikatsanforderung erstellen können. "
-#~ "Der private Schlüssel bleibt in ihrem Browser und Sie können anschließend "
-#~ "das Zertifikat in Ihrem Browser installieren."
-
-#~ msgid ""
-#~ "The server will create the private RSA key and store it in\n"
-#~ "                    the\n"
-#~ "                    database. If want to create the key pair client "
-#~ "side,\n"
-#~ "                    uncheck\n"
-#~ "                    this option."
-#~ msgstr ""
-#~ "Der Server erzeugt das RSA Schlüsselpaar und speichert es in der "
-#~ "Datenbank. Wenn Sie das Schlüsselpaar im Browser erzeugen wollen, "
-#~ "entfernen Sie den Haken."
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
-
-#~ msgid "Please scan the QR code with the privacyIDEA Authenticator App"
-#~ msgstr ""
-#~ "Bitte scannen Sie mit Ihrer privacyIDEA Authenticator App den QR-Code."
-
-#~ msgid "Progress: {{ uploadProgress }}%"
-#~ msgstr "Fortschritt: {{ uploadProgress }}%"
-
-#~ msgid "The remote Server URL"
-#~ msgstr "Die URL des Remote-Servers"
-
-#~ msgid "Uploaded File: {{ uploadedFile }}"
-#~ msgstr "Hochgeladene Datei: {{ uploadedFile }}"
-
-#~ msgid "Uploaded Tokens: {{ uploadedTokens }}"
-#~ msgstr "Hochgeladene Token: {{ uploadedTokens }}"
-
-#~ msgid "User Store"
-#~ msgstr "Benutzer Quelle"
-
-#~ msgid "yyyy-MM-dd HH:mm:ss"
-#~ msgstr "d.M.yy HH:mm:ss"
-
-#~ msgid "Length of UID"
-#~ msgstr "Länge des UID"
-
-#~ msgid "emit a public UID"
-#~ msgstr "Die öffentliche UID mit ausgeben"
-
-#~ msgid ""
-#~ "The HOTP token is an event based token. You can paste a secret key or\n"
-#~ "                have the server generate the secret and scan the QR code "
-#~ "with a smartphone\n"
-#~ "                app like the Google Authenticator turning your\n"
-#~ "                smartphone into an authentication device."
-#~ msgstr ""
-#~ "Der HOTP-Token ist ein ereignisbasierter Token. Sie können einen "
-#~ "existierenden geheimen Schlüssel einfügen \n"
-#~ "  oder vom Server erzeugen lassen. Den so erzeugten geheimen OTP-"
-#~ "Schlüssel können \n"
-#~ "  Sie dann mit dem Smartphone und einer App wie dem Google Authenticator "
-#~ "oder FreeOTP\n"
-#~ "   vom QR-Code einscannen. So können Sie das Smartphone zu einem "
-#~ "Authentisierungs-Token umwandeln."
-
-#~ msgid ""
-#~ "Congratulations. Your PUSH token {{ enrolledToken.serial }} was "
-#~ "successfully enrolled."
-#~ msgstr ""
-#~ "Glückwunsch. Ihr PUSH Token {{{ enrolledToken.serial }} wurde erfolgreich "
-#~ "ausgerollt."
-
-#~ msgid "Administrative actions"
-#~ msgstr "Administrative Aktionen"
-
-#~ msgid "Failed authentication requests per token"
-#~ msgstr "Fehlgeschlagene Authentisierungen pro Token"
-
-#~ msgid "Failed authentication requests per user"
-#~ msgstr "Fehlgeschlagene Authentisierungen pro Benutzer"
-
-#~ msgid "Overall token usage"
-#~ msgstr "Allgemeine Tokennutzung"
-
-#~ msgid "REST API Call"
-#~ msgstr "REST API-Aufruf"
-
-#~ msgid "Run statistics for the last number of days..."
-#~ msgstr "Statistik für die zurückliegenden Tage..."
-
-#~ msgid "Statistics"
-#~ msgstr "Statistik"
-
-#~ msgid "Statistics end time"
-#~ msgstr "Statistik bis"
-
-#~ msgid "Statistics from {{stats.time_start}} to {{ stats.time_end }}"
-#~ msgstr "Statistik von {{stats.time_start}} bis {{ stats.time_end }}"
-
-#~ msgid "Statistics start time"
-#~ msgstr "Statistik von"
-
-#~ msgid ""
-#~ "These are the validate-requests (authentication) grouped by\n"
-#~ "                users.\n"
-#~ "                The successful and the failed requests are listed."
-#~ msgstr ""
-#~ "Dies sind die Authentisierungsanfragen nach Benutzern sortiert.Außerdem "
-#~ "wird nach erfolgreichen und fehlgeschlagenen Authentisierungsanfragen "
-#~ "unterschieden."
-
-#~ msgid ""
-#~ "These are the validate-requests (authentication) grouped by the\n"
-#~ "                serial number of the token.\n"
-#~ "                The successful and the failed requests are listed."
-#~ msgstr ""
-#~ "Dies sind die Authentisierungsanfragen nach Token sortiert.Außerdem wird "
-#~ "nach erfolgreichen und fehlgeschlagenen Authentisierungsanfragen "
-#~ "unterschieden."
-
-#~ msgid ""
-#~ "This is the overall token usage with\n"
-#~ "                any\n"
-#~ "                kind of action in regards to the serial number."
-#~ msgstr ""
-#~ "Dies ist die allgemeine Tokennutzung, egal welche Aktion mit dem "
-#~ "Tokenoder in Bezug auf den Token durchgeführt wurde."
-
-#~ msgid "Validate Requests per token"
-#~ msgstr "Validate-Requests pro Token"
-
-#~ msgid "Validate Requests per users"
-#~ msgstr "Validate-Requests pro Benutzer"
-
-#~ msgid "Which administrative request where the most popular."
-#~ msgstr "Die meistgenutzen administrativen Requests."
-
-#~ msgid "Submit"
-#~ msgstr "Abschicken"
-
-#~ msgid ""
-#~ "<p>If you do not want to this information again, please\n"
-#~ "                    create your first policy in the scope \"webui\". You\n"
-#~ "                    can use the template <b>hide_welcome</b>. Such "
-#~ "policy\n"
-#~ "                    will\n"
-#~ "                    prevent this information from being displayed.</p>\n"
-#~ "                <p>Policies are the way in eduMFA to define many\n"
-#~ "                    behaviours. You can read more about policies in the\n"
-#~ "                    <a href=\"http://edumfa.readthedocs.io/en/latest/"
-#~ "policies/index.html\" target=\"policy\">online\n"
-#~ "                        documentation</a>.</p>"
-#~ msgstr ""
-#~ "<p>Wenn Sie diese Informationen nicht nochmal lesen möchte, erstellen Sei "
-#~ "bitte eine Richtlinie im Bereich \"webui\".\n"
-#~ "Sie können dazu die Vorlage <b>hide_welcome</b> verwenden.\n"
-#~ "Diese Richtlinie wird verhindern, dass diese Informationen angezeigt "
-#~ "werden.</p>\n"
-#~ "<p>Mittels Richtlinien kann der Administrator das Verhalten von eduMFA "
-#~ "bestimmen.\n"
-#~ "Mehr zu Richtlinie erfahren Sie in der <a href=\"http://"
-#~ "edumfa.readthedocs.io/en/latest/policies/index.html\" "
-#~ "target=\"policy\">Online\n"
-#~ "Dokumentation</a>.</p>"
-
-#~ msgid ""
-#~ "<p>If you have any question regarding eduMFA, please\n"
-#~ "                    visit\n"
-#~ "                    our <a href=\"https://community.edumfa.org\" "
-#~ "target=\"forum\">community forum</a>.\n"
-#~ "                    Your question might already been answered there.\n"
-#~ "                    You are welcome to file any new question or discuss\n"
-#~ "                    any new idea there.</p>\n"
-#~ "                <p>With <b>you</b> starting to use eduMFA, you\n"
-#~ "                    become a part of\n"
-#~ "                    this community. Every question you ask in the forum "
-#~ "and\n"
-#~ "                    every question you answer there helps others, to get\n"
-#~ "                    started with eduMFA.</p>"
-#~ msgstr ""
-#~ "<p>Wenn Sie irgendwelche Fragen zu eduMFA haben, besuchen Sie bitte das\n"
-#~ "<a href=\"https://community.edumfa.org\" target=\"forum\">Community "
-#~ "Forum</a>.\n"
-#~ "Ihre Frage könnte dort vielleicht schon beantwortet worden sein!\n"
-#~ "Gerne können Sie neue Fragen stellen und neue Ideen diskutieren.</p>\n"
-#~ "<p>Indem Sie eduMFA nutzen, werden auch <b>Sie</b> Teil der Community! "
-#~ "Jede Frage, die Sie im Forum stellen und jede Antwort, die Sie geben, "
-#~ "hilft auch anderen mit eduMFA zurecht zu kommen.</p>"
-
-#~ msgid "Professional Services and Enterprise Edition"
-#~ msgstr "Professionelle Leistungen und Enterprise Edition"
-
-#~ msgid "The Community"
-#~ msgstr "Die Community"
-
-#~ msgid "PGP Key {{ keyid }}"
-#~ msgstr "PGP Schlüssel {{ keyid }}"
-
-#~ msgid "The old token is disabled and can be deleted or enabled later."
-#~ msgstr ""
-#~ "Der alte Token wird deaktiviert und kann später gelöscht oder wieder "
-#~ "aktiviert werden."
-
-#~ msgid "Usernane"
-#~ msgstr "Benutzername"
-
-#~ msgid ""
-#~ "How long before the CRL expires should a new CRL be\n"
-#~ "                    generated."
-#~ msgstr ""
-#~ "Anzahl der Tage, wenn eine neue CRL wird erzeugt, bevor die alte abläuft."
-
-#~ msgid ""
-#~ "Reset\n"
-#~ "                                    Password"
-#~ msgstr "Passwort zurücksetzen"
-
-#~ msgid "miscellaneous"
-#~ msgstr "Sonstiges"
-
-#~ msgid "User Filter"
-#~ msgstr "Benutzerfilter"
-
-#~ msgid "Name or Description"
-#~ msgstr "Name oder Beschreibung"
-
-#~ msgid "field.label"
-#~ msgstr "field.label"
-
-#~ msgid "RADIUS Server"
-#~ msgstr "RADIUS-Server"
-
-#~ msgid "This view will be removed in version 2.12."
-#~ msgstr "Dies wird in Version 2.12 entfernt."
-
-#~ msgid "eduMFA UI supports hotkeys. Use '?' to get help."
-#~ msgstr "Das eduMFA UI unterstützt Hotkeys. Benutzen Sie '?' für Hilfe."
-
-#~ msgid "Not yet implemented!"
-#~ msgstr "Noch nicht implementiert!"
-
-#~ msgid "Mail Sender Address"
-#~ msgstr "Absenderadresse"
-
-#~ msgid "Mail Server"
-#~ msgstr "Mailserver"
-
-#~ msgid "Mail User"
-#~ msgstr "Mail-Benutzer"
-
-#~ msgid "RADIUS Secret"
-#~ msgstr "RADIUS Secret"
-
-#~ msgid "The RADIUS server may include the port number."
-#~ msgstr "Der RADIUS Server kann auch einen IP Port enthalten."
-
-#~ msgid "This view will be removed in version 2.11."
-#~ msgstr "Dies wird in Version 2.11 entfernt."
-
-#~ msgid ""
-#~ "Use the RADIUS server from the\n"
-#~ "        system settings. Even if you change the RADIUS system settings "
-#~ "later\n"
-#~ "        this token will use the new RADIUS server definition."
-#~ msgstr ""
-#~ "Der RADIUS-Server aus der System-Token-Konfiguration wird verwendet. Auch "
-#~ "wenn später in der System-Konfiguration der RADIUS-Server geändert wird, "
-#~ "wird dieser neue RADIUS-Server genutzt."
-
-#~ msgid "Default RADIUS Secret"
-#~ msgstr "Standard RADIUS Secret"
-
-#~ msgid "RADIUS dictionary file"
-#~ msgstr "RADIUS dictionary Datei"
-
-#~ msgid "Users phone number..."
-#~ msgstr "Telefonnummer des Benutzers"
-
-#~ msgid "Google Group"
-#~ msgstr "Google Gruppe / Mailing Liste"
-
-#~ msgid "Role"
-#~ msgstr "Rolle"
-
-#~ msgid "Error enrolling U2F token. ErrorCode :"
-#~ msgstr "Fehler beim Ausrollen des U2F Tokens. FehlerCode:"
-
-#~ msgid "U2F Error:"
-#~ msgstr "U2F Fehler: "
-
-#~ msgid "errorCode:"
-#~ msgstr "Fehlernummer:"
-
-#~ msgid "Pass, if the user does not exist"
-#~ msgstr "Durchwinken, wenn der Benutzer nicht existiert"

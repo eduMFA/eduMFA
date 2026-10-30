@@ -3356,8 +3356,8 @@ msgstr ""
 #: components/config/views/config.token.yubikey.html
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3612,8 +3612,8 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 
@@ -4460,8 +4460,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 
 #: components/audit/views/audit.log.html
@@ -4721,20 +4721,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#, fuzzy
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "等级"
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>本软件不提供任何担保!</b>"
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "证书：注册一个 x509 证书令牌。"
-
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr "电子邮件：向用户的电子邮件地址发送一次性密码。"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr "SMS：向用户手机发送一次性密码。"

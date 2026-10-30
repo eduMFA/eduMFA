@@ -3354,8 +3354,8 @@ msgstr ""
 #: components/config/views/config.token.yubikey.html
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3610,8 +3610,8 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 
@@ -4459,8 +4459,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 
 #: components/audit/views/audit.log.html
@@ -4721,12 +4721,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>Denne programvaren kommer uten noen form for garanti!</b>"
-
-#~ msgid "Clients"
-#~ msgstr "Klienter"
-
-#~ msgid "Community"
-#~ msgstr "Gemenskap"
