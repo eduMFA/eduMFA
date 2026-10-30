@@ -536,12 +536,16 @@ msgstr ""
 "Alle möglichen Resolver eines Benutzers werden geprüft, ob sie die Resolver-"
 "Bedingung dieser Richtlinie erfüllen."
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr "PIN prüfen und eine Challenge mit dem Authenticator signieren."
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "PIN lokal verifizieren"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr "OTP PIN und OTP Wert prüfen."
 
@@ -1243,6 +1247,10 @@ msgstr "Ersten OTP-Wert eingeben"
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
 msgstr "Zweiten OTP-Wert eingeben"
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
+msgstr "Geben Sie die PIN ein (falls gesetzt) und bestätigen Sie mit Ihrem WebAuthn-Authenticator."
 
 #: components/token/views/token.enroll.daypassword.html
 msgid "Enter the secret..."

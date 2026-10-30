@@ -205,6 +205,26 @@ Set PIN
 
 You can set the OTP PIN or the mOTP PIN for tokens.
 
+.. _test_token:
+
+Test token
+----------
+
+.. index:: test token
+
+The administrator or the user can check that a token works. Enter the OTP PIN
+and the OTP value and click ``Test token``. ``Test OTP only`` verifies only the
+OTP value and ignores the PIN.
+
+A WebAuthn token has no real OTP value. Enter the OTP PIN (leave the field empty if
+the token has no PIN) and click ``Test token``. eduMFA sends a challenge and
+the browser asks you to confirm with the authenticator, just like during
+authentication. ``Test OTP only`` is not available for WebAuthn tokens.
+
+.. note:: The browser only signs the challenge if the WebUI is served from
+   the relying party id the token was enrolled with (see
+   :ref:`webauthn_otp_token`).
+
 Reset Fail counter
 ------------------
 

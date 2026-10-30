@@ -550,12 +550,16 @@ msgstr ""
 "edin\n"
 "                Bu politikada."
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr ""
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "Pimi yerel olarak kontrol edin"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr "OTP PIN ile kontrol edin."
 
@@ -1276,6 +1280,10 @@ msgstr "İlk OTP değerini girin"
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
 msgstr "İkinci OTP değerini girin"
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
+msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
 #, fuzzy
