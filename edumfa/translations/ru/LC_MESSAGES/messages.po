@@ -725,16 +725,6 @@ msgid ""
 msgstr ""
 
 #: lib/policy.py
-#, fuzzy
-msgid ""
-"This is the URL to the token image for apps like FreeOTP (supported file "
-"formats: PNG, JPG and GIF)."
-msgstr ""
-"Это URL изображения токена для Аутентификатора privacyIDEA Authenticator "
-"и других приложений, таких как FreeOTP (поддерживаются следюущие форматы "
-"файлов: PNG, JPG and GIF)."
-
-#: lib/policy.py
 msgid ""
 "Users can assign a token just by using the unassigned token to "
 "authenticate."
@@ -2998,11 +2988,6 @@ msgstr ""
 
 #~ msgid "This is the issuer label for new enrolled Google Authenticators."
 #~ msgstr "Название издателя для новых токенов Google Authenticator."
-
-#~ msgid "This is the URL to the token image for smartphone apps like FreeOTP."
-#~ msgstr ""
-#~ "Ссылка на изображение токена для "
-#~ "приложения смартфона, например FreeOTP."
 
 #~ msgid ""
 #~ "The URL of a repository, where the"

@@ -710,16 +710,6 @@ msgid ""
 msgstr ""
 
 #: lib/policy.py
-#, fuzzy
-msgid ""
-"This is the URL to the token image for apps like FreeOTP (supported file "
-"formats: PNG, JPG and GIF)."
-msgstr ""
-"Dit is de URL voor de token afbeelding voor de privacyIDEA Authenticator "
-"en sommige andere apps zoals FreeOTP (ondersteunde bestandsformaten: PNG,"
-" JPG en GIF)."
-
-#: lib/policy.py
 msgid ""
 "Users can assign a token just by using the unassigned token to "
 "authenticate."
@@ -3493,12 +3483,6 @@ msgstr ""
 #~ "om te communiceren met WebAuthn tokens."
 #~ " Standaard: usb ble nfc internal "
 #~ "lightning (Alle standaard bussystemen)"
-
-#~ msgid "This is the URL to the token image for smartphone apps like FreeOTP."
-#~ msgstr ""
-#~ "Dit is de URL naar de token-"
-#~ "afbeelding voor smartphone apps zoals "
-#~ "FreeOTP."
 
 #~ msgid ""
 #~ "The project ID, that the client "

@@ -667,12 +667,6 @@ msgstr ""
 
 #: lib/policy.py
 msgid ""
-"This is the URL to the token image for apps like FreeOTP (supported file "
-"formats: PNG, JPG and GIF)."
-msgstr ""
-
-#: lib/policy.py
-msgid ""
 "Users can assign a token just by using the unassigned token to "
 "authenticate."
 msgstr ""

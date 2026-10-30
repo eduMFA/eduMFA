@@ -794,12 +794,6 @@ msgstr ""
 
 #: lib/policy.py
 msgid ""
-"This is the URL to the token image for apps like FreeOTP (supported file "
-"formats: PNG, JPG and GIF)."
-msgstr ""
-
-#: lib/policy.py
-msgid ""
 "Users can assign a token just by using the unassigned token to "
 "authenticate."
 msgstr ""
@@ -3262,12 +3256,6 @@ msgstr ""
 
 #~ msgid "This is the issuer label for new enrolled Google Authenticators."
 #~ msgstr "Label du fournisseur pour les nouveaux jetons Google Authenticators."
-
-#~ msgid "This is the URL to the token image for smartphone apps like FreeOTP."
-#~ msgstr ""
-#~ "Il s'agit de l'URL de l'image du"
-#~ " jeton pour les applications pour "
-#~ "téléphone telles que FreeOTP."
 
 #~ msgid ""
 #~ "The project ID, that the client "
