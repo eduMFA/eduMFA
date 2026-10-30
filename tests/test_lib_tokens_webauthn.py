@@ -58,12 +58,14 @@ This depends on lib.tokenclass
 """
 
 import base64
+import json
 import os
 import struct
 import unittest
 from copy import copy
 from unittest.mock import patch
 
+import cbor2
 from testfixtures import log_capture
 
 from edumfa.lib.challenge import get_challenges
@@ -72,6 +74,7 @@ from edumfa.lib.error import EnrollmentError, ParameterError, PolicyError
 from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 from edumfa.lib.token import check_user_pass, init_token, remove_token
 from edumfa.lib.tokens.webauthn import (
+    ATTESTATION_FORMAT,
     ATTESTATION_LEVEL,
     ATTESTATION_REQUIREMENT_LEVEL,
     ATTESTATION_TYPE,
@@ -104,6 +107,15 @@ from .base import MyTestCase
 TRUST_ANCHOR_DIR = (
     f"{os.path.abspath(os.path.dirname(__file__))}/testdata/trusted_attestation_roots"
 )
+# Test vectors from section 16 of the W3C Web Authentication Level 3
+# specification (https://www.w3.org/TR/webauthn-3/#sctn-test-vectors), see
+# WebAuthnSpecTestVectorsTestCase.
+WEBAUTHN_L3_TEST_VECTORS_FILE = f"{os.path.abspath(os.path.dirname(__file__))}/testdata/webauthn_l3_test_vectors.json"
+WEBAUTHN_L3_TRUST_ANCHOR_DIR = (
+    f"{os.path.abspath(os.path.dirname(__file__))}/testdata/webauthn_l3_trust_anchors"
+)
+WEBAUTHN_L3_RP_ID = "example.org"
+WEBAUTHN_L3_ORIGIN = "https://example.org"
 REGISTRATION_RESPONSE_TMPL = {
     "clientData": b"eyJ0eXBlIjogIndlYmF1dGhuLmNyZWF0ZSIsICJjbGllbnRFeHRlbnNpb25zIjoge30sICJjaGFsbGVu"
     b"Z2UiOiAiYlB6cFgzaEhRdHNwOWV2eUtZa2FadFZjOVVOMDdQVWRKMjJ2WlVkRHA5NCIsICJvcmlnaW4i"
@@ -988,6 +1000,568 @@ class WebAuthnTestCase(unittest.TestCase):
     #     with self.assertRaisesRegexp(RegistrationRejectedException,
     #                                  'Resident Key not created.'):
     #         registration_response.verify()
+
+
+class WebAuthnSpecTestVectorsTestCase(unittest.TestCase):
+    """
+    Registration and authentication ceremonies with the test vectors from
+    section 16 of the W3C Web Authentication Level 3 specification:
+    https://www.w3.org/TR/webauthn-3/#sctn-test-vectors
+
+    The vectors are stored in tests/testdata/webauthn_l3_test_vectors.json, the
+    trust root certificate from section 16.1 in
+    tests/testdata/webauthn_l3_trust_anchors/. For every vector the attestation
+    statement is first parsed without a client data hash, as done by the
+    webauthntoken_allowed prepolicy, then the registration ceremony is run at
+    the attestation levels at which the vector must be accepted and rejected,
+    and finally the authentication ceremony is run with the registered
+    credential. The last two tests run registration and authentication
+    ceremonies violating the expectations of the Relying Party with every
+    vector.
+    """
+
+    # The credential public keys of these vectors use algorithms, which are
+    # not supported by eduMFA, see test_07 to test_11.
+    UNSUPPORTED_CREDENTIAL_KEY_SECTIONS = ("16.8", "16.9", "16.10", "16.11", "16.12")
+    # Attestation statement formats, for which eduMFA verifies the attestation
+    # signature over the authenticator data and the hash of the client data.
+    SIGNED_ATTESTATION_FORMATS = (
+        ATTESTATION_FORMAT.PACKED,
+        ATTESTATION_FORMAT.FIDO_U2F,
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        with open(WEBAUTHN_L3_TEST_VECTORS_FILE) as f:
+            cls.vectors = json.load(f)
+        cls.sections = [s for s in cls.vectors if not s.startswith("_")]
+
+    @staticmethod
+    def _b64(hex_string):
+        return webauthn_b64_encode(bytes.fromhex(hex_string))
+
+    @staticmethod
+    def _tampered_client_data(hex_string):
+        # Add a member to the client data JSON. Type, challenge and origin stay
+        # intact, but the hash of the client data changes.
+        client_data = bytes.fromhex(hex_string)
+        return webauthn_b64_encode(client_data[:-1] + b',"tampered":true}')
+
+    @staticmethod
+    def _without_user_presence(auth_data):
+        # Clear the UP flag of the authenticator data.
+        flags = auth_data[32] & ~AuthenticatorDataFlags.USER_PRESENT
+        return auth_data[:32] + bytes([flags]) + auth_data[33:]
+
+    @staticmethod
+    def _with_sign_count(auth_data, sign_count):
+        return auth_data[:33] + struct.pack("!I", sign_count) + auth_data[37:]
+
+    def _attestation_object(self, section):
+        return WebAuthnRegistrationResponse.parse_attestation_object(
+            self._b64(self.vectors[section]["registration"]["attestationObject"])
+        )
+
+    def _attestation_object_without_user_presence(self, section):
+        att_obj = self._attestation_object(section)
+        att_obj["authData"] = self._without_user_presence(att_obj["authData"])
+        return webauthn_b64_encode(cbor2.dumps(att_obj))
+
+    def _registration_response(
+        self,
+        section,
+        attestation_level,
+        trust_anchor_dir=None,
+        rp_id=WEBAUTHN_L3_RP_ID,
+        origin=WEBAUTHN_L3_ORIGIN,
+        challenge=None,
+        client_data=None,
+        att_obj=None,
+        uv_required=False,
+    ):
+        registration = self.vectors[section]["registration"]
+        return WebAuthnRegistrationResponse(
+            rp_id=rp_id,
+            origin=origin,
+            registration_response={
+                "clientData": client_data or self._b64(registration["clientDataJSON"]),
+                "attObj": att_obj or self._b64(registration["attestationObject"]),
+            },
+            challenge=challenge or self._b64(registration["challenge"]),
+            attestation_requirement_level=ATTESTATION_REQUIREMENT_LEVEL[
+                attestation_level
+            ],
+            trust_anchor_dir=trust_anchor_dir,
+            uv_required=uv_required,
+        )
+
+    def _assert_registration_rejected(self, section, message, **kwargs):
+        self.assertRaisesRegex(
+            RegistrationRejectedException,
+            message,
+            self._registration_response(
+                section, ATTESTATION_LEVEL.NONE, **kwargs
+            ).verify,
+        )
+
+    def _assert_parse_only(self, section, attestation_type, trust_path_length):
+        # The webauthntoken_allowed prepolicy parses the attestation statement
+        # without a client_data_hash to obtain the AAGUID and the attestation
+        # certificate. This must classify the statement correctly and must not
+        # verify the signature, since there is no clientDataHash yet.
+        registration = self.vectors[section]["registration"]
+        att_obj = self._attestation_object(section)
+        (parsed_type, trust_path, _, cred_id, aaguid) = (
+            WebAuthnRegistrationResponse.verify_attestation_statement(
+                fmt=att_obj.get("fmt"),
+                att_stmt=att_obj.get("attStmt"),
+                auth_data=att_obj.get("authData"),
+            )
+        )
+        self.assertEqual(attestation_type, parsed_type)
+        self.assertEqual(trust_path_length, len(trust_path))
+        self.assertEqual(registration["aaguid"], aaguid.hex())
+        self.assertEqual(registration["credential_id"], cred_id.hex())
+
+    def _assert_credential(
+        self, section, credential, attestation_level=None, attestation_cert=False
+    ):
+        registration = self.vectors[section]["registration"]
+        self.assertEqual(WEBAUTHN_L3_RP_ID, credential.rp_id)
+        self.assertEqual(WEBAUTHN_L3_ORIGIN, credential.origin)
+        self.assertEqual(registration["aaguid"], credential.aaguid.hex())
+        self.assertEqual(
+            registration["credential_id"],
+            webauthn_b64_decode(credential.credential_id).hex(),
+        )
+        self.assertEqual(0, credential.sign_count)
+        if attestation_level:
+            self.assertEqual(attestation_level, credential.attestation_level)
+        if attestation_cert:
+            self.assertEqual(
+                int(registration["attestation_cert_serial_number"], 16),
+                credential.attestation_cert.serial_number,
+            )
+        else:
+            self.assertIsNone(credential.attestation_cert)
+
+    def _assertion_response(
+        self,
+        section,
+        credential,
+        rp_id=None,
+        origin=WEBAUTHN_L3_ORIGIN,
+        challenge=None,
+        client_data=None,
+        auth_data=None,
+        sign_count=None,
+        allow_credentials=None,
+        user_handle=None,
+        uv_required=False,
+    ):
+        authentication = self.vectors[section]["authentication"]
+        credential_id = credential.credential_id.decode()
+        webauthn_user = WebAuthnUser(
+            user_id=USER_ID,
+            user_name=USER_NAME,
+            user_display_name=USER_DISPLAY_NAME,
+            icon_url=ICON_URL,
+            credential_id=credential_id,
+            public_key=credential.public_key,
+            sign_count=credential.sign_count if sign_count is None else sign_count,
+            rp_id=rp_id or credential.rp_id,
+        )
+        assertion_response = {
+            "id": credential_id,
+            "authData": auth_data or self._b64(authentication["authenticatorData"]),
+            "clientData": client_data or self._b64(authentication["clientDataJSON"]),
+            "signature": self._b64(authentication["signature"]),
+        }
+        if user_handle:
+            assertion_response["userHandle"] = user_handle
+        return WebAuthnAssertionResponse(
+            webauthn_user=webauthn_user,
+            assertion_response=assertion_response,
+            challenge=challenge or self._b64(authentication["challenge"]),
+            origin=origin,
+            allow_credentials=allow_credentials,
+            uv_required=uv_required,
+        )
+
+    def _assert_authentication(self, section, credential, rejected_with=None, **kwargs):
+        assertion_response = self._assertion_response(section, credential, **kwargs)
+        if rejected_with:
+            self.assertRaisesRegex(
+                AuthenticationRejectedException,
+                rejected_with,
+                assertion_response.verify,
+            )
+        else:
+            self.assertEqual(0, assertion_response.verify())
+
+    def _check_none_attestation(self, section):
+        self._assert_parse_only(section, ATTESTATION_TYPE.NONE, 0)
+        credential = self._registration_response(
+            section, ATTESTATION_LEVEL.NONE
+        ).verify()
+        self._assert_credential(section, credential)
+        # Section 7.1, step 24: "If no attestation was provided, verify that
+        # None attestation is acceptable under Relying Party policy."
+        self.assertRaisesRegex(
+            RegistrationRejectedException,
+            "Authenticator attestation is required",
+            self._registration_response(section, ATTESTATION_LEVEL.UNTRUSTED).verify,
+        )
+        return credential
+
+    def _check_self_attestation(self, section):
+        # Section 8.2: "If x5c is not present, self attestation is in use."
+        self._assert_parse_only(section, ATTESTATION_TYPE.SELF_ATTESTATION, 0)
+        credential = self._registration_response(
+            section, ATTESTATION_LEVEL.UNTRUSTED
+        ).verify()
+        self._assert_credential(section, credential, ATTESTATION_LEVEL.UNTRUSTED)
+        self.assertTrue(credential.has_signed_attestation)
+        # Section 7.1, step 24: "If self attestation was used, verify that self
+        # attestation is acceptable under Relying Party policy."
+        self.assertRaisesRegex(
+            RegistrationRejectedException,
+            "Self attestation is not permitted",
+            self._registration_response(
+                section, ATTESTATION_LEVEL.TRUSTED, WEBAUTHN_L3_TRUST_ANCHOR_DIR
+            ).verify,
+        )
+        return credential
+
+    def _check_basic_attestation(self, section):
+        self._assert_parse_only(section, ATTESTATION_TYPE.BASIC, 1)
+        # Without a trust anchor for the attestation certificate the
+        # attestation is verified, but not trusted.
+        credential = self._registration_response(
+            section, ATTESTATION_LEVEL.UNTRUSTED
+        ).verify()
+        self._assert_credential(
+            section, credential, ATTESTATION_LEVEL.UNTRUSTED, attestation_cert=True
+        )
+        self.assertTrue(credential.has_signed_attestation)
+        # Section 7.1, step 24: the attestation certificate must chain up to an
+        # acceptable root certificate, here the root from section 16.1.
+        credential = self._registration_response(
+            section, ATTESTATION_LEVEL.TRUSTED, WEBAUTHN_L3_TRUST_ANCHOR_DIR
+        ).verify()
+        self._assert_credential(
+            section, credential, ATTESTATION_LEVEL.TRUSTED, attestation_cert=True
+        )
+        # Section 7.1: if the attestation statement verified successfully, but
+        # is not trustworthy, the Relying Party SHOULD fail the registration
+        # ceremony. Here only unrelated trust anchors are available.
+        self.assertRaisesRegex(
+            RegistrationRejectedException,
+            "Untrusted attestation certificate",
+            self._registration_response(
+                section, ATTESTATION_LEVEL.TRUSTED, TRUST_ANCHOR_DIR
+            ).verify,
+        )
+        return credential
+
+    def _check_unsupported_attestation_format(self, section, fmt):
+        # eduMFA does not implement this attestation statement format. The
+        # attestation is treated as none attestation, if that is permitted,
+        # and rejected otherwise.
+        self._assert_parse_only(section, ATTESTATION_TYPE.NONE, 0)
+        credential = self._registration_response(
+            section, ATTESTATION_LEVEL.NONE
+        ).verify()
+        self._assert_credential(section, credential)
+        self.assertRaisesRegex(
+            RegistrationRejectedException,
+            f"Unsupported authenticator attestation format \\({fmt}\\)",
+            self._registration_response(section, ATTESTATION_LEVEL.UNTRUSTED).verify,
+        )
+        return credential
+
+    def test_01_es256_credential_with_no_attestation(self):
+        credential = self._check_none_attestation("16.2")
+        self._assert_authentication("16.2", credential)
+
+    def test_02_es256_credential_with_self_attestation(self):
+        credential = self._check_self_attestation("16.3")
+        self._assert_authentication("16.3", credential)
+
+    def test_03_es256_credential_with_cross_origin(self):
+        # clientDataJSON contains "crossOrigin": true
+        credential = self._check_none_attestation("16.4")
+        self._assert_authentication("16.4", credential)
+
+    def test_04_es256_credential_with_top_origin(self):
+        # clientDataJSON contains "topOrigin": "https://example.com"
+        credential = self._check_none_attestation("16.5")
+        self._assert_authentication("16.5", credential)
+
+    def test_05_es256_credential_with_very_long_credential_id(self):
+        credential = self._check_none_attestation("16.6")
+        self.assertEqual(1023, len(webauthn_b64_decode(credential.credential_id)))
+        self._assert_authentication("16.6", credential)
+
+    def test_06_packed_attestation_with_es256_credential(self):
+        credential = self._check_basic_attestation("16.7")
+        self._assert_authentication("16.7", credential)
+
+    # The specification expects the authentication ceremonies of the vectors
+    # 16.8 to 16.12 to succeed. eduMFA only supports ES256, RS256 and PS256
+    # credential public keys, so these assertions are rejected. Adjust the
+    # expectations, when support for further algorithms is added.
+
+    def test_07_packed_attestation_with_es384_credential(self):
+        credential = self._check_basic_attestation("16.8")
+        self._assert_authentication(
+            "16.8", credential, rejected_with="Unsupported algorithm"
+        )
+
+    def test_08_packed_attestation_with_es512_credential(self):
+        credential = self._check_basic_attestation("16.9")
+        self._assert_authentication(
+            "16.9", credential, rejected_with="Unsupported algorithm"
+        )
+
+    def test_09_packed_attestation_with_rs256_credential(self):
+        credential = self._check_basic_attestation("16.10")
+        # The RSA key of this vector is constructed from two Mersenne primes and
+        # has a 3488 bit modulus, while eduMFA only accepts RSA keys with a
+        # modulus of exactly 2048 bit.
+        self._assert_authentication("16.10", credential, rejected_with="Bad public key")
+
+    def test_10_packed_attestation_with_ed25519_credential(self):
+        credential = self._check_basic_attestation("16.11")
+        self._assert_authentication(
+            "16.11", credential, rejected_with="Unsupported algorithm"
+        )
+
+    def test_11_packed_attestation_with_ed448_credential(self):
+        credential = self._check_basic_attestation("16.12")
+        self._assert_authentication(
+            "16.12", credential, rejected_with="Unsupported algorithm"
+        )
+
+    # The attestation statement formats of the vectors 16.13 to 16.15 are not
+    # implemented by eduMFA, see _check_unsupported_attestation_format.
+
+    def test_12_tpm_attestation_with_es256_credential(self):
+        credential = self._check_unsupported_attestation_format("16.13", "tpm")
+        self._assert_authentication("16.13", credential)
+
+    def test_13_android_key_attestation_with_es256_credential(self):
+        credential = self._check_unsupported_attestation_format("16.14", "android-key")
+        self._assert_authentication("16.14", credential)
+
+    def test_14_apple_anonymous_attestation_with_es256_credential(self):
+        credential = self._check_unsupported_attestation_format("16.15", "apple")
+        self._assert_authentication("16.15", credential)
+
+    # end of unsupported algorithms
+
+    def test_15_fido_u2f_attestation_with_es256_credential(self):
+        credential = self._check_basic_attestation("16.16")
+        self._assert_authentication("16.16", credential)
+
+    def test_16_registration_ceremony_rejections(self):
+        # Section 7.1: registration responses violating the expectations of
+        # the Relying Party are rejected. This does not depend on the
+        # attestation, so the ceremonies run at the most permissive level.
+        for section in self.sections:
+            registration = self.vectors[section]["registration"]
+            authentication = self.vectors[section]["authentication"]
+            att_obj = self._attestation_object(section)
+            with self.subTest(section=section):
+                # "Verify that the value of C.type is webauthn.create": the
+                # client data of the authentication ceremony has the type
+                # webauthn.get.
+                self._assert_registration_rejected(
+                    section,
+                    "Invalid type",
+                    client_data=self._b64(authentication["clientDataJSON"]),
+                )
+                # "Verify that the value of C.challenge equals the base64url
+                # encoding of options.challenge"
+                self._assert_registration_rejected(
+                    section,
+                    "Unable to verify challenge",
+                    challenge=self._b64(authentication["challenge"]),
+                )
+                # "Verify that the value of C.origin is an origin expected by
+                # the Relying Party". For the vector 16.5 this is the topOrigin
+                # of the client data, which is not the origin.
+                self._assert_registration_rejected(
+                    section, "Unable to verify origin", origin="https://example.com"
+                )
+                # "Verify that the rpIdHash in authData is the SHA-256 hash of
+                # the RP ID expected by the Relying Party"
+                self._assert_registration_rejected(
+                    section, "Unable to verify RP ID hash", rp_id="example.com"
+                )
+                # "Verify that the UP bit of the flags in authData is set"
+                self._assert_registration_rejected(
+                    section,
+                    "Malformed request received",
+                    att_obj=self._attestation_object_without_user_presence(section),
+                )
+                # "If the Relying Party requires user verification for this
+                # registration, verify that the UV bit of the flags in authData
+                # is set"
+                registration_response = self._registration_response(
+                    section, ATTESTATION_LEVEL.NONE, uv_required=True
+                )
+                if AuthenticatorDataFlags(att_obj["authData"]).user_verified:
+                    self.assertEqual(
+                        registration["credential_id"],
+                        webauthn_b64_decode(
+                            registration_response.verify().credential_id
+                        ).hex(),
+                    )
+                else:
+                    self.assertRaisesRegex(
+                        RegistrationRejectedException,
+                        "Malformed request received",
+                        registration_response.verify,
+                    )
+                # "Verify that attStmt is a correct attestation statement,
+                # conveying a valid attestation signature": the signature
+                # covers the hash of the client data. With none attestation and
+                # with attestation statement formats not implemented by eduMFA
+                # there is no signature, which would detect the modification.
+                tampered = self._tampered_client_data(registration["clientDataJSON"])
+                if att_obj["fmt"] in self.SIGNED_ATTESTATION_FORMATS:
+                    self._assert_registration_rejected(
+                        section, "Invalid signature received", client_data=tampered
+                    )
+                else:
+                    credential = self._registration_response(
+                        section, ATTESTATION_LEVEL.NONE, client_data=tampered
+                    ).verify()
+                    self._assert_credential(section, credential)
+                # "Verify that the credentialId is not yet registered for any
+                # user"
+                self.assertRaisesRegex(
+                    RegistrationRejectedException,
+                    "Credential already exists",
+                    self._registration_response(section, ATTESTATION_LEVEL.NONE).verify,
+                    existing_credential_ids=[self._b64(registration["credential_id"])],
+                )
+
+    def test_17_authentication_ceremony_rejections(self):
+        # Section 7.2: assertions violating the expectations of the Relying
+        # Party are rejected. The vectors with unsupported credential public
+        # keys are left out, their assertions are rejected anyway.
+        for section in self.sections:
+            if section in self.UNSUPPORTED_CREDENTIAL_KEY_SECTIONS:
+                continue
+            registration = self.vectors[section]["registration"]
+            authentication = self.vectors[section]["authentication"]
+            auth_data = bytes.fromhex(authentication["authenticatorData"])
+            credential = self._registration_response(
+                section, ATTESTATION_LEVEL.NONE
+            ).verify()
+            with self.subTest(section=section):
+                # "If options.allowCredentials is not empty, verify that
+                # credential.id identifies one of the public key credentials
+                # listed in options.allowCredentials": here the credentials of
+                # all other vectors.
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Credential not allowed",
+                    allow_credentials=[
+                        self._b64(self.vectors[s]["registration"]["credential_id"])
+                        for s in self.sections
+                        if s != section
+                    ],
+                )
+                # "If response.userHandle is present, verify that the user
+                # identified by this value is the owner of the public key
+                # credential"
+                self._assert_authentication(section, credential, user_handle=USER_ID)
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="user handle does not match",
+                    user_handle=b"someone else",
+                )
+                # "Verify that the value of C.type is the string webauthn.get":
+                # the client data of the registration ceremony has the type
+                # webauthn.create.
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Invalid type",
+                    client_data=self._b64(registration["clientDataJSON"]),
+                )
+                # "Verify that the value of C.challenge equals the base64url
+                # encoding of options.challenge"
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Unable to verify challenge",
+                    challenge=self._b64(registration["challenge"]),
+                )
+                # "Verify that the value of C.origin is an origin expected by
+                # the Relying Party"
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Unable to verify origin",
+                    origin="https://example.com",
+                )
+                # "Verify that the rpIdHash in authData is the SHA-256 hash of
+                # the RP ID expected by the Relying Party"
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Unable to verify RP ID hash",
+                    rp_id="example.com",
+                )
+                # "Verify that the UP bit of the flags in authData is set"
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Malformed request received",
+                    auth_data=webauthn_b64_encode(
+                        self._without_user_presence(auth_data)
+                    ),
+                )
+                # "If user verification was determined to be required, verify
+                # that the UV bit of the flags in authData is set"
+                user_verified = AuthenticatorDataFlags(auth_data).user_verified
+                rejected_with = None if user_verified else "Malformed request received"
+                self._assert_authentication(
+                    section, credential, rejected_with=rejected_with, uv_required=True
+                )
+                # "Verify that sig is a valid signature over the binary
+                # concatenation of authData and hash": modifying either the
+                # client data or the authenticator data invalidates the
+                # signature.
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Invalid signature received",
+                    client_data=self._tampered_client_data(
+                        authentication["clientDataJSON"]
+                    ),
+                )
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Invalid signature received",
+                    auth_data=webauthn_b64_encode(self._with_sign_count(auth_data, 1)),
+                )
+                # Signature counter: all vectors have a signCount of 0. If the
+                # stored signature counter is nonzero, the assertion is not
+                # accepted, since the authenticator may have been cloned.
+                self._assert_authentication(
+                    section,
+                    credential,
+                    rejected_with="Duplicate authentication detected",
+                    sign_count=1,
+                )
 
 
 class MultipleWebAuthnTokenTestCase(MyTestCase):
