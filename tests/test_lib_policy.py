@@ -2914,8 +2914,14 @@ class PolicyConditionClassTestCase(MyTestCase):
                 ConditionSection.USERINFO, "email", Comparators.MATCHES, False, True
             )
             self.assertIn(
-                "Value must be a non-empty string.", exception.exception.message
+                "Value must be a string.", exception.exception.message
             )
+
+        # An empty string is allowed as value for comparators where it is well-defined
+        condition = PolicyConditionClass(
+            ConditionSection.USERINFO, "email", Comparators.EQUALS, "", True
+        )
+        self.assertEqual("", condition.value)
 
         # Invalid active
         with self.assertRaises(ParameterError) as exception:
@@ -3077,7 +3083,7 @@ class PolicyConditionClassTestCase(MyTestCase):
                 pass_if_inactive=True,
             )
             self.assertIn(
-                "Value must be a non-empty string.", exception.exception.message
+                "Value must be a string.", exception.exception.message
             )
 
         # Invalid active always raises error
@@ -3138,6 +3144,44 @@ class PolicyConditionClassTestCase(MyTestCase):
             self.assertIn(
                 "Unknown handle missing data value", exception.exception.message
             )
+
+    def test_03b_empty_value(self):
+        # An empty string is allowed as value for the comparators that allow it
+        # (can not crash the comparison at request time).
+        for comparator in Comparators.COMPARATORS_ALLOWING_EMPTY_VALUE:
+            self.assertTrue(Comparators.allows_empty_value(comparator))
+            condition = PolicyConditionClass(
+                ConditionSection.USERINFO, "email", comparator, "", True
+            )
+            self.assertEqual("", condition.value)
+
+        # For all other comparators an empty value is rejected for active conditions
+        for comparator in Comparators.get_all_comparators():
+            if comparator in Comparators.COMPARATORS_ALLOWING_EMPTY_VALUE:
+                continue
+            with self.assertRaises(ParameterError) as exception:
+                PolicyConditionClass(
+                    ConditionSection.USERINFO, "email", comparator, "", True
+                )
+            self.assertIn(
+                f"Value must be a non-empty string for comparator '{comparator}'.",
+                exception.exception.message,
+            )
+
+        # ... but still allowed for inactive conditions (legacy rows in the db)
+        condition = PolicyConditionClass(
+            ConditionSection.USERINFO,
+            "email",
+            Comparators.SMALLER,
+            "",
+            False,
+            pass_if_inactive=True,
+        )
+        self.assertEqual("", condition.value)
+        # activating it raises an error
+        with self.assertRaises(ParameterError) as exception:
+            condition.active = True
+        self.assertIn("Value must be a non-empty string", exception.exception.message)
 
     def test_04_get_user_data(self):
         self.setUp_user_realms()
