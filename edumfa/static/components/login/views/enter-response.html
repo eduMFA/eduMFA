@@ -7,6 +7,12 @@
       <img width="250" ng-src="{{ image }}" />
     </div>
 
+    <div class="text-center" ng-repeat="challenge in pushChallenges">
+      <p translate>Select this number on your smartphone:</p>
+      <h2>{{ challenge.value }}</h2>
+      <p ng-if="pushChallenges.length > 1">{{ challenge.serial }}</p>
+    </div>
+
     <div ng-hide="hideResponseInput">
       <h2 class="form-signin-heading" translate>Response</h2>
 
