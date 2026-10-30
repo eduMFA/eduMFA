@@ -1595,6 +1595,11 @@ class WebAuthnTokenClass(TokenClass):
                 for_update=True,
             )[0]
             reply_dict = {}
+            # XXX: The token list only adds objects of TokenClass type and if
+            # a serial is given, it even raises ResourceNotFoundError. This can
+            # therefore never be None.
+            # This check is kept for now to later revisit to ensure that this
+            # guarantee is also not accidentally removed in the future.
             if token is None:
                 log.warning(f"WebAuthN token '{user_handle}' not found.")
                 reply_dict["message"] = "Passkey not found."
