@@ -383,10 +383,12 @@ myApp.controller("tokenEnrollController", [
             };
           }
           UserFactory.getUsers(params, function (data) {
-            var userObject = data.result.value[0];
+            let userObject = data.result.value[0];
             // preset for indexedsecret token
-            $scope.form.otpkey =
-              userObject[$scope.tokensettings.indexedsecret.preset_attribute];
+            if (userObject) {
+              $scope.form.otpkey =
+                userObject[$scope.tokensettings.indexedsecret.preset_attribute];
+            }
           });
         }
       }
