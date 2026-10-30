@@ -186,6 +186,9 @@ The following comparators can be used in definitions of policy conditions:
   ``!in`` evaluates to true if the left value is not found in the list given by the right value.
 * ``matches`` evaluates to true if the left value completely matches the regular expression given by the right value.
   ``!matches`` evaluates to true if this is not the case.
+* ``<``/``>`` checks if the left number is lower/higher than the right number.
+  If either the left or the right number is not a integer, it aborts the
+  request. The right value can not be empty.
 
 
 If you want to define a policy that e.g. only matches users from Active Directory, that are in a
