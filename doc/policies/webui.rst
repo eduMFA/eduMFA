@@ -52,9 +52,41 @@ remote_user
 
 type: ``string``
 
-This policy defines, if the login to the eduMFA using the web servers
-integrated authentication (like basic authentication or digest
-authentication) should be allowed.
+This policy defines, if the login to the eduMFA is handled by an external
+service, either by:
+
+- Using the web server's integrated authentication (like basic authentication
+  or SSO) which sets a server variable. This takes precedence.
+- Passing the "Remote-User" HTTP header to eduMFA.
+
+.. warning:: Currently, enabling this policy also means eduMFA fully trusts the
+   "Remote-User" HTTP header as a fallback if there is no authentication set-up
+   inside the same webserver (i.e. the ``remote_user`` server variable is not
+   set). This feature is intended for containerized flows, where the WSGI server
+   and reverse proxy doing the authentication are separated. Now, if:
+
+   - this policy is enabled and
+   - there is no authentication in the same webserver setting the WSGI
+     server variable (which takes precedence)
+   - the reverse proxy is passing user-provided Remote-User headers to the WSGI
+     server
+
+   Then an attacker can impersonate any user by simply specifying the
+   "Remote-User" HTTP header.
+   Avoid this by not passing user-provided "Remote-User" headers to eduMFA and
+   making sure eduMFA is only accessible via its reverse proxy. How to do this
+   depends on your webserver configuration, but here are examples:
+
+   - `Apache2 <https://github.com/eduMFA/eduMFA/blob/v2.9.6/deploy/apache/sites-available/edumfa.conf>`_
+     via ``RequestHeader unset Remote-User``
+   - `nginx with an integrated uwsgi server <https://github.com/eduMFA/eduMFA/blob/v2.9.6/deploy/nginx/sites-available/edumfa>`_
+     via ``uwsgi_pass_request_headers off`` plus an allowlist for necessary
+     headers
+
+   To get rid of this trap, a future minor version of eduMFA will introduce an
+   optional feature to specify trusted proxy IP addresses. A major version will
+   then make it mandatory to use the ``Remote-User`` HTTP header.
+
 
 Possible values are ``disable``, ``allowed`` and ``force``.
 
@@ -74,7 +106,7 @@ can only login with the REMOTE_USER from the browser.
    other. I.e. you can disable *login_mode* and allow *remote_user*.
 
 You can use this policy to enable Single-Sign-On and integration into Kerberos
-or Active Directory. Add the following template into you apache configuration
+or Active Directory. Add the following template into your Apache configuration
 in /etc/apache2/sites-available/edumfa.conf::
 
         <Directory />
