@@ -26,7 +26,7 @@
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "translate": "grunt nggettext_extract && for language in translations/*.po; do msgmerge -U --backup=off $language translations/template.pot; done && grunt nggettext_compile"
+    "translate": "grunt nggettext_extract && for language in translations/*.po; do msgmerge -U --backup=off $language translations/template.pot && msgattrib --no-obsolete -o $language $language; done && grunt nggettext_compile"
   },
   "repository": {
     "type": "git",

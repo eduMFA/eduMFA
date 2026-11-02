@@ -3686,8 +3686,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3696,11 +3696,12 @@ msgid ""
 "    Yubico Validation Protocol</a>."
 msgstr ""
 "認證請求可以由默認的eduMFA處理\n"
-"    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/api/"
-"validate.html\">\n"
+"    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/api/validate."
+"html\">\n"
 "        驗證 API</a> 但也可以由\n"
 "    <a href=\"http://edumfa.readthedocs.org/en/latest/modules/lib/tokentypes/"
-"yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass.api_endpoint\">\n"
+"yubikey.html#edumfa.lib.tokens.yubikeytoken.YubikeyTokenClass."
+"api_endpoint\">\n"
 "        Yubico 驗證協議 </a>。"
 
 #: components/config/views/config.token.yubico.html
@@ -4027,17 +4028,17 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "令牌已成功註冊序列號\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{ 已註冊的令牌.serial }}</a>\n"
 "            對於使用者\n"
-"            <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a> 在領域\n"
+"            <a ui-sref=\"user.details({username:newUser.user, realmname:"
+"newUser.realm})\">{{ newUser.user }}</a> 在領域\n"
 "            {{ newUser.realm }}."
 
 #: components/token/views/token.enroll.html
@@ -4047,8 +4048,8 @@ msgid ""
 "        {{ enrolledToken.serial }}</a>."
 msgstr ""
 "使用序列號成功註冊令牌\n"
-"            <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})"
-"\">\n"
+"            <a ui-sref=\"token.details({tokenSerial:enrolledToken."
+"serial})\">\n"
 "                {{enrolledToken.serial }}</a>。"
 
 #: components/config/views/config.token.webauthn.html
@@ -5034,8 +5035,8 @@ msgstr ""
 #: templates/menu.html
 #, fuzzy
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA 在調試模式下運行。您可以在 中更改除錯級別\n"
 "    配置文件。"
@@ -5309,205 +5310,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} 找到的條目。"
-
-#, fuzzy
-#~ msgid "Tokentype"
-#~ msgstr "令牌類型"
-
-#, fuzzy
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "等級"
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>本軟體不提供任何擔保！ </b>"
-
-#~ msgid ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-#~ msgstr ""
-#~ "根據\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-
-#~ msgid "Clients"
-#~ msgstr "用戶端"
-
-#~ msgid "Community"
-#~ msgstr "社區"
-
-#~ msgid "From"
-#~ msgstr "從"
-
-#~ msgid "Issuer"
-#~ msgstr "發行人"
-
-#~ msgid "Online Documentation"
-#~ msgstr "在線文檔"
-
-#, fuzzy
-#~ msgid "Privacy Statement"
-#~ msgstr "其中聲明"
-
-#~ msgid "Subscription about to expire"
-#~ msgstr "訂閱即將過期"
-
-#~ msgid "Subscription expired"
-#~ msgstr "訂閱已過期"
-
-#~ msgid "Subscription issued to"
-#~ msgstr "訂閱已頒發給"
-
-#~ msgid "Subscriptions"
-#~ msgstr "訂閱"
-
-#~ msgid "Support"
-#~ msgstr "支援"
-
-#~ msgid "Upload Subscription File"
-#~ msgstr "上傳訂閱文件"
-
-#~ msgid "Valid subscription"
-#~ msgstr "有效訂閱"
-
-#~ msgid "active, assigned tokens"
-#~ msgstr "活動的、分配的令牌"
-
-#, fuzzy
-#~ msgid "edumfa server"
-#~ msgstr "eduMFA 伺服器"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your smartphone authenticator App."
-#~ msgstr ""
-#~ "點擊<a href=\"{{ enrolledToken.googleurl.value }}\">這裡</a>或掃描\n"
-#~ "二維碼，如果您\n"
-#~ "想要將令牌添加到您的谷歌身份驗證器。"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your Authenticator App."
-#~ msgstr ""
-#~ "點擊<a href=\"{{ enrolledToken.googleurl.value }}\">這裡</a>或掃描\n"
-#~ "二維碼，如果您\n"
-#~ "想要將令牌添加到您的谷歌身份驗證器。"
-
-#, fuzzy
-#~ msgid "total users: {{ usercount }}"
-#~ msgstr "用戶總數： {{ usercount }}"
-
-#~ msgid "The Google Authenticator only supports an OTP length of 6."
-#~ msgstr "Google Authenticator 僅支持長度為 6 的 OTP。"
-
-#~ msgid "The Google Authenticator only supports the SHA1 algorithm."
-#~ msgstr "Google 身份驗證器僅支持 SHA1 算法。"
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "證書：註冊 x509 證書令牌。"
-
-#, fuzzy
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr "電子郵件：將一次性密碼發送到使用者的電子郵件位址。"
-
-#, fuzzy
-#~ msgid "Four Eyes: Two or more users are required to log in."
-#~ msgstr "Four Eyes: 需要兩個或更多用戶登錄。"
-
-#~ msgid "HOTP: event based One Time Passwords"
-#~ msgstr "HOTP：基於事件的一次性密碼"
-
-#~ msgid "IndexedSecret: Challenge token based on a shared secret."
-#~ msgstr "IndexedSecret：基於共享秘密的質詢令牌。"
-
-#~ msgid "OTRS"
-#~ msgstr "OTRS"
-
-#, fuzzy
-#~ msgid "Owncloud"
-#~ msgstr "Owncloud"
-
-#, fuzzy
-#~ msgid "PAPER: OTP values on a sheet of paper."
-#~ msgstr "PAPER:OTP 數值 on apaper."
-
-#~ msgid "PIN"
-#~ msgstr "PIN"
-
-#~ msgid "RADIUS: Forward authentication request to a RADIUS server"
-#~ msgstr "RADIUS：將身份驗證請求轉發到RADIUS伺服器"
-
-#~ msgid "Remote Token: Forward authentication request to another server"
-#~ msgstr "遠端令牌：將身份驗證請求轉發到另一台伺服器"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr "短信：向用戶手機發送一次性密碼。"
-
-#~ msgid "SPass: Simple Pass token. Static passwords"
-#~ msgstr "SPass：簡單通行證。靜態密碼"
-
-#~ msgid "SSH Public Key: The public SSH key"
-#~ msgstr "SSH 公鑰：公用 SSH 金鑰"
-
-#~ msgid "TOTP: time based One Time Passwords"
-#~ msgstr "TOTP：基於時間的一次性密碼"
-
-#~ msgid "TiQR: Authenticate with Smartphone by scanning a QR code."
-#~ msgstr "TiQR：通過掃描QR碼使用智慧手機進行身份驗證。"
-
-#~ msgid "Tine 2.0"
-#~ msgstr "Tine 2.0"
-
-#~ msgid "Typo3"
-#~ msgstr "錯別字3"
-
-#~ msgid "U2F: Universal 2nd Factor hardware token."
-#~ msgstr "U2F：通用第二因素硬體令牌。"
-
-#~ msgid "WebAuthn: Web Authentication hardware token."
-#~ msgstr "WebAuthn：Web 身份驗證硬體令牌。"
-
-#~ msgid "Yubikey AES mode: One Time Passwords with Yubikey"
-#~ msgstr "Yubikey AES 模式：使用 Yubikey 的一次性密碼"
-
-#~ msgid "Yubikey Cloud mode: Forward authentication request to YubiCloud"
-#~ msgstr "Yubikey Cloud 模式：將身份驗證請求轉發給 YubiCloud"
-
-#~ msgid "mOTP: classical mobile One Time Passwords"
-#~ msgstr "mOTP：經典移動一次性密碼"
-
-#~ msgid "Leave the Bind DN empty if you want to do anonymous binding."
-#~ msgstr "如果要執行匿名綁定，請將綁定 DN 留空。"
-
-#~ msgid "Microsoft Internet Explorer is not supported."
-#~ msgstr "不支援 Microsoft Internet Explorer。"
-
-#~ msgid ""
-#~ "Open new tab to create certificate\n"
-#~ "                    request"
-#~ msgstr ""
-#~ "打開新選項卡以創建證書\n"
-#~ "                    請求"
-
-#~ msgid ""
-#~ "The RSA keys will be generated in the browser.\n"
-#~ "                You will be taken to a new browser window, where you can\n"
-#~ "                create the Certificate Request. The private key remains "
-#~ "in\n"
-#~ "                your browser and you will be able to install the "
-#~ "certificate\n"
-#~ "                to the browser."
-#~ msgstr ""
-#~ "RSA 金鑰將在瀏覽器中生成。\n"
-#~ "                您將被帶到一個新的瀏覽器視窗，您可以在其中\n"
-#~ "                創建證書請求。私鑰保留在\n"
-#~ "                您的瀏覽器，您將能夠安裝證書\n"
-#~ "                到瀏覽器。"
-
-#~ msgid "TLS"
-#~ msgstr "TLS"

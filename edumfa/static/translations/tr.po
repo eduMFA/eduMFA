@@ -3701,8 +3701,8 @@ msgstr ""
 #, fuzzy
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3711,8 +3711,8 @@ msgid ""
 "    Yubico Validation Protocol</a>."
 msgstr ""
 "Kimlik doğrulama isteği, varsayılan eduMFA tarafından ele alınabilir.\n"
-"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "        API </a> doğrulamak ancak aynı zamanda tarafından da "
 "kullanılabilir.\n"
 "    <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -4041,16 +4041,16 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 "Token başarıyla seri numarası ile kayıt oldu.\n"
 "            <a ui-sref=\"token.details( {Serial :enRolledten.serial}\">\n"
 "                {{enroledtoken.serial}} </a>\n"
 "            kullanıcı için\n"
-"            <a ui-sref=\"user.details('sererName:newuser.user, "
-"realmname:newuser.realm fromerm}\"> {{newuser.user}} </a> realm\n"
+"            <a ui-sref=\"user.details('sererName:newuser.user, realmname:"
+"newuser.realm fromerm}\"> {{newuser.user}} </a> realm\n"
 "            {{newuser.realm}}."
 
 #: components/token/views/token.enroll.html
@@ -5056,8 +5056,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 "eduMFA hata ayıklama modunda çalışıyor. Hata ayıklama seviyesini "
 "değiştirebilirsiniz\n"
@@ -5331,197 +5331,3 @@ msgstr "pencere"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{auditdata.count}} girişleri bulundu."
-
-#, fuzzy
-#~ msgid "Tokentype"
-#~ msgstr "Token türü"
-
-#, fuzzy
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "Seviye"
-
-#~ msgid "<b>THIS SOFTWARE COMES WITHOUT ANY WARRANTY!</b>"
-#~ msgstr "<b>Bu yazılım herhangi bir garanti olmadan gelir! </b>"
-
-#~ msgid ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-#~ msgstr ""
-#~ "Göre\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/Blob/Master/license\"> AGPLv3</a>"
-
-#~ msgid "Clients"
-#~ msgstr "Müşteriler"
-
-#~ msgid "Community"
-#~ msgstr "Toplum"
-
-#~ msgid "From"
-#~ msgstr "İtibaren"
-
-#~ msgid "Issuer"
-#~ msgstr "İhraççı"
-
-#~ msgid "Okay"
-#~ msgstr "Peki"
-
-#~ msgid "Online Documentation"
-#~ msgstr "Çevrimiçi belgeler"
-
-#~ msgid "Privacy Statement"
-#~ msgstr "Gizlilik bildirimi"
-
-#~ msgid "Subscription about to expire"
-#~ msgstr "Sona Erme Hakkında Abonelik"
-
-#~ msgid "Subscription expired"
-#~ msgstr "Abonelik süresi doldu"
-
-#~ msgid "Subscription issued to"
-#~ msgstr "Abonelik Verilen"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Abonelikler"
-
-#~ msgid "Support"
-#~ msgstr "Destek"
-
-#~ msgid "To"
-#~ msgstr "İle"
-
-#~ msgid "Upload Subscription File"
-#~ msgstr "Abonelik dosyasını yükle"
-
-#~ msgid "Valid subscription"
-#~ msgstr "Geçerli abonelik"
-
-#~ msgid ""
-#~ "Your subscription is not valid anymore. Either you exceeded the number of "
-#~ "tokens or the\n"
-#~ "        subscription expired. Please check, if you need to renew your <a "
-#~ "ui-sref=\"component.subscriptions\">subscription</a>."
-#~ msgstr ""
-#~ "Aboneliğiniz artık geçerli değil. Ya belirteçlerin sayısını ya da\n"
-#~ "        Abonelik süresi doldu. Lütfen <a ui-"
-#~ "sref=\"component.subscripts\"> aboneliğinizi yenilemenizi istiyorsanız, </"
-#~ "a>."
-
-#~ msgid "active, assigned tokens"
-#~ msgstr "Aktif, atanmış belirteçler"
-
-#~ msgid "edumfa server"
-#~ msgstr "edumfa sunucusu"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your smartphone authenticator App."
-#~ msgstr ""
-#~ "<a href=\"{{ enrolledToken.googleurl.value }}\"> buradaki </a>  veya  "
-#~ "yandaki QR kodu Google Authenticator'a eklemek istiyorsanız "
-#~ "kullanabilrisiniz."
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your Authenticator App."
-#~ msgstr ""
-#~ "<a href=\"{{ enrolledToken.googleurl.value }}\"> buradaki </a>  veya  "
-#~ "yandaki QR kodu Google Authenticator'a eklemek istiyorsanız "
-#~ "kullanabilrisiniz."
-
-#~ msgid "total users: {{ usercount }}"
-#~ msgstr "Toplam kullanıcılar: {{usercount}}"
-
-#~ msgid "The Google Authenticator only supports an OTP length of 6."
-#~ msgstr "Google Authenticator, yalnızca bir OTP uzunluğunu destekler."
-
-#~ msgid "The Google Authenticator only supports the SHA1 algorithm."
-#~ msgstr "Google Authenticator yalnızca SHA1 algoritmasını destekler."
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "Sertifika: X509 sertifika belirteci kaydolun."
-
-#~ msgid "Drupal"
-#~ msgstr "Drupal"
-
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr "E-posta: Kullanıcılara e-posta adresine bir kez şifre gönderin."
-
-#~ msgid "Four Eyes: Two or more users are required to log in."
-#~ msgstr "Dört göz: oturum açmak için iki veya daha fazla kullanıcı gerekir."
-
-#~ msgid "HOTP: event based One Time Passwords"
-#~ msgstr "HOSP: Olay tabanlı bir zaman şifreleri"
-
-#~ msgid "IndexedSecret: Challenge token based on a shared secret."
-#~ msgstr "IndexedSecret: Paylaşılan bir sıraya göre meydan okuma belirteci."
-
-#~ msgid "OTRS"
-#~ msgstr "OTR'ler"
-
-#~ msgid "Owncloud"
-#~ msgstr "Konaklatmak"
-
-#~ msgid "PAPER: OTP values on a sheet of paper."
-#~ msgstr "KAĞIT: Bir kağıda OTP değerleri."
-
-#~ msgid "PIN"
-#~ msgstr "PIN"
-
-#~ msgid "RADIUS: Forward authentication request to a RADIUS server"
-#~ msgstr "RADIUS: Bir RADIUS sunucusuna doğru doğrulama isteğini ilet"
-
-#~ msgid "Remote Token: Forward authentication request to another server"
-#~ msgstr "Uzak Token: Başka bir sunucuya doğrulama isteğini ilet"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr "SMS: Cep telefonuna bir kerelik şifre gönder."
-
-#~ msgid "SPass: Simple Pass token. Static passwords"
-#~ msgstr "PASS: Basit geçiş jetonu. Statik şifreler"
-
-#~ msgid "SSH Public Key: The public SSH key"
-#~ msgstr "SSH Genel Anahtarı: Halka açık SSH tuşu"
-
-#~ msgid "TOTP: time based One Time Passwords"
-#~ msgstr "TOTP: Zaman tabanlı bir zaman şifreleri"
-
-#~ msgid "TiQR: Authenticate with Smartphone by scanning a QR code."
-#~ msgstr ""
-#~ "Tiqr: Bir QR kodunu tarayarak akıllı telefon ile kimlik doğrulaması."
-
-#~ msgid "Tine 2.0"
-#~ msgstr "Tine 2.0"
-
-#~ msgid "Typo3"
-#~ msgstr "Typo3"
-
-#~ msgid "U2F: Universal 2nd Factor hardware token."
-#~ msgstr "U2F: Evrensel 2. faktör donanım belirteci."
-
-#~ msgid "WebAuthn: Web Authentication hardware token."
-#~ msgstr "WebAuthn: Web Kimlik Doğrulama Donanım Simgesi."
-
-#~ msgid "Wordpress"
-#~ msgstr "Sözcük"
-
-#~ msgid "Yubikey AES mode: One Time Passwords with Yubikey"
-#~ msgstr "Yubikey AES modu: Yubikey ile bir kerelik şifreler"
-
-#~ msgid "Yubikey Cloud mode: Forward authentication request to YubiCloud"
-#~ msgstr "YUBIKEY Cloud Mode: Yubicloud'a İleri Kimlik Doğrulama İsteği"
-
-#~ msgid "mOTP: classical mobile One Time Passwords"
-#~ msgstr "MOTP: Klasik Mobile bir kerelik şifreler"
-
-#~ msgid "{{ enrolledToken.verify.message }}"
-#~ msgstr "{{enolroledtoken.veryy.message}}"
-
-#~ msgid "Leave the Bind DN empty if you want to do anonymous binding."
-#~ msgstr "Anonim bağlanma yapmak istiyorsanız, Bind DN'yi boş bırakın."

@@ -965,8 +965,8 @@ msgid ""
 "Do you really want to delete the Token {{ tokenSerial }} from user\n"
 "            {{ token.username }}?"
 msgstr ""
-"¿Realmente desea eliminar el Token {{tokenSerial}} del usuario "
-"{{token.username}}?"
+"¿Realmente desea eliminar el Token {{tokenSerial}} del usuario {{token."
+"username}}?"
 
 #: components/token/views/dialog.ask_token_delete.html
 msgid "Do you really want to delete the Token {{ tokenSerial }}?"
@@ -3432,8 +3432,8 @@ msgid ""
 "The Serial number for the OTP value {{ otp }} is\n"
 "      <a ui-sref=\"token.details({tokenSerial:serial})\">{{ serial }}</a>."
 msgstr ""
-"La secuencia para el valor OTP {{ otp }} es <a ui-"
-"sref=\"token.details({tokenSerial:serial})\">{{ serial }}</a>."
+"La secuencia para el valor OTP {{ otp }} es <a ui-sref=\"token."
+"details({tokenSerial:serial})\">{{ serial }}</a>."
 
 #: components/token/views/token.enroll.spass.html
 #, fuzzy
@@ -3573,8 +3573,8 @@ msgstr ""
 #: components/config/views/config.token.yubikey.html
 msgid ""
 "The authentication request can be handled by the default eduMFA\n"
-"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/"
-"validate.html\" target=\"_blank\">\n"
+"  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/api/validate."
+"html\" target=\"_blank\">\n"
 "    validate API</a>\n"
 "  but can also be handled by the\n"
 "  <a href=\"https://edumfa.readthedocs.io/en/latest/modules/lib/tokentypes/"
@@ -3829,8 +3829,8 @@ msgid ""
 "      <a ui-sref=\"token.details({tokenSerial:enrolledToken.serial})\">\n"
 "        {{ enrolledToken.serial }}</a>\n"
 "      for user\n"
-"      <a ui-sref=\"user.details({username:newUser.user, "
-"realmname:newUser.realm})\">{{ newUser.user }}</a>\n"
+"      <a ui-sref=\"user.details({username:newUser.user, realmname:newUser."
+"realm})\">{{ newUser.user }}</a>\n"
 "      in realm {{ newUser.realm }}."
 msgstr ""
 
@@ -4685,8 +4685,8 @@ msgstr ""
 
 #: templates/menu.html
 msgid ""
-"eduMFA is running in DEBUG mode. You can change the debug level in "
-"edumfa.cfg."
+"eduMFA is running in DEBUG mode. You can change the debug level in edumfa."
+"cfg."
 msgstr ""
 
 #: components/audit/views/audit.log.html
@@ -4949,157 +4949,3 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
-
-#~ msgctxt "subscription"
-#~ msgid "Level"
-#~ msgstr "Nivel"
-
-#~ msgid ""
-#~ "According to the\n"
-#~ "                    <a target=\"license\" href=\"https://github.com/"
-#~ "edumfa/edumfa/blob/main/LICENSE\">AGPLv3</a>"
-#~ msgstr ""
-#~ "Según <a target=\"license\" href=\"https://github.com/edumfa/edumfa/blob/"
-#~ "main/LICENSE\"> AGPLv3 </a>"
-
-#~ msgid "Clients"
-#~ msgstr "Clientes"
-
-#~ msgid "Community"
-#~ msgstr "Comunidad"
-
-#~ msgid "From"
-#~ msgstr "Desde"
-
-#~ msgid "Issuer"
-#~ msgstr "Editor"
-
-#~ msgid "Okay"
-#~ msgstr "OK"
-
-#~ msgid "Online Documentation"
-#~ msgstr "Documentación Online"
-
-#~ msgid "Privacy Statement"
-#~ msgstr "Declaración de privacidad"
-
-#~ msgid "Subscription about to expire"
-#~ msgstr "Suscripción a punto de caducar"
-
-#~ msgid "Subscription expired"
-#~ msgstr "Subscripción expirada"
-
-#~ msgid "Subscription issued to"
-#~ msgstr "Suscripción emitida a"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Suscripciones"
-
-#~ msgid "Support"
-#~ msgstr "Soporte"
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your smartphone authenticator App."
-#~ msgstr ""
-#~ "Haga clic en <a href=\"{{ enrolledToken.googleurl.value }}\"> aquí </a> o "
-#~ "escanee el código QR, si desea agregar el token a su Autenticador de "
-#~ "Google."
-
-#, fuzzy
-#~ msgid ""
-#~ "Click <a href=\"{{ enrolledToken.googleurl.value }}\">here</a> or scan\n"
-#~ "            the QR Code, if you\n"
-#~ "            want to add the Token to your Authenticator App."
-#~ msgstr ""
-#~ "Haga clic en <a href=\"{{ enrolledToken.googleurl.value }}\"> aquí </a> o "
-#~ "escanee el código QR, si desea agregar el token a su Autenticador de "
-#~ "Google."
-
-#~ msgid "The Google Authenticator only supports an OTP length of 6."
-#~ msgstr "Google Authenticator solo admite una longitud de OTP de 6."
-
-#~ msgid "The Google Authenticator only supports the SHA1 algorithm."
-#~ msgstr "Google Authenticator solo admite el algoritmo SHA1."
-
-#~ msgid "Certificate: Enroll an x509 Certificate Token."
-#~ msgstr "Certificado: registre un token de certificado x509."
-
-#~ msgid "Drupal"
-#~ msgstr "Drupal"
-
-#~ msgid "EMail: Send a One Time Password to the users email address."
-#~ msgstr ""
-#~ "Correo electrónico: envíe una contraseña de un solo uso a la dirección de "
-#~ "correo electrónico de los usuarios."
-
-#~ msgid "Four Eyes: Two or more users are required to log in."
-#~ msgstr "4Eyes: se requieren dos o más usuarios para iniciar sesión."
-
-#~ msgid "HOTP: event based One Time Passwords"
-#~ msgstr "HOTP: contraseñas de un solo uso basadas en eventos"
-
-#~ msgid "IndexedSecret: Challenge token based on a shared secret."
-#~ msgstr "IndexedSecret: token de desafío basado en un secreto compartido."
-
-#~ msgid "OTRS"
-#~ msgstr "OTRS"
-
-#~ msgid "Owncloud"
-#~ msgstr "Nube propia"
-
-#~ msgid "PAPER: OTP values on a sheet of paper."
-#~ msgstr "PAPER: valores OTP en una hoja de papel."
-
-#~ msgid "PIN"
-#~ msgstr "PIN"
-
-#~ msgid "RADIUS: Forward authentication request to a RADIUS server"
-#~ msgstr "RADIUS: reenviar la solicitud de autenticación a un servidor RADIUS"
-
-#~ msgid "Remote Token: Forward authentication request to another server"
-#~ msgstr "Token remoto: reenvia la solicitud de autenticación a otro servidor"
-
-#~ msgid "SMS: Send a One Time Password to the users mobile phone."
-#~ msgstr ""
-#~ "SMS: envíe una contraseña de un solo uso al teléfono móvil de los "
-#~ "usuarios."
-
-#~ msgid "SPass: Simple Pass token. Static passwords"
-#~ msgstr "SPass: Token de paso simple. Contraseñas estáticas"
-
-#~ msgid "SSH Public Key: The public SSH key"
-#~ msgstr "Clave pública SSH: la clave SSH pública"
-
-#~ msgid "TOTP: time based One Time Passwords"
-#~ msgstr "TOTP: contraseñas de un solo uso basadas en tiempo"
-
-#~ msgid "Leave the Bind DN empty if you want to do anonymous binding."
-#~ msgstr "Deje el DN de enlace vacío si desea realizar un enlace anónimo."
-
-#~ msgid "Microsoft Internet Explorer is not supported."
-#~ msgstr "Microsoft Internet Explorer no es compatible."
-
-#~ msgid ""
-#~ "Open new tab to create certificate\n"
-#~ "                    request"
-#~ msgstr "Abra una nueva pestaña para crear una solicitud de certificado"
-
-#~ msgid ""
-#~ "The RSA keys will be generated in the browser.\n"
-#~ "                You will be taken to a new browser window, where you can\n"
-#~ "                create the Certificate Request. The private key remains "
-#~ "in\n"
-#~ "                your browser and you will be able to install the "
-#~ "certificate\n"
-#~ "                to the browser."
-#~ msgstr ""
-#~ "Las claves RSA se generarán en el navegador. Accederá a una nueva ventana "
-#~ "del navegador, donde podrá crear la solicitud de certificado. La clave "
-#~ "privada permanece en su navegador y podrá instalar el certificado en el "
-#~ "navegador."
-
-#~ msgid "TLS"
-#~ msgstr "TLS"
