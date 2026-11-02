@@ -336,11 +336,9 @@ def update_user():
     resolvername = getParam(request.all_data, "resolver", optional=False)
     userid = getParam(request.all_data, "userid")
     if g.logged_in_user.get("role") == ROLE.USER:
-        # A user may only ever update their own record. "user" and "resolver"
-        # are already overwritten in before_request, but "userid" would still
-        # address any other record of the same resolver.
-        userid = None
-    if userid is not None:
+        # Use the same authenticated identity that was checked by the policy.
+        user_obj = request.User
+    elif userid is not None:
         # Create the user object by uid
         user_obj = User(resolver=resolvername, uid=userid)
     else:

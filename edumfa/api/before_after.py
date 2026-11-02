@@ -122,7 +122,10 @@ def before_user_request():
 @user_blueprint.before_request
 @user_required
 def before_userendpoint_request():
-    before_request()
+    before_request(
+        restrict_user_resolver=request.endpoint
+        in {"user_blueprint.update_user", "user_blueprint.delete_user_attribute"}
+    )
     # DEL /user/ has no realm parameter and thus we need to create the user object this way.
     if not request.User and request.method == "DELETE":
         resolvername = getParam(request.all_data, "resolvername")
@@ -155,7 +158,7 @@ def before_admin_request():
     before_request()
 
 
-def before_request():
+def before_request(*, restrict_user_resolver: bool = False) -> None:
     """
     This is executed before the request.
 
@@ -172,6 +175,9 @@ def before_request():
         # ...to restrict token view, audit view or token actions.
         request.all_data["user"] = g.logged_in_user.get("username")
         request.all_data["realm"] = g.logged_in_user.get("realm")
+        if restrict_user_resolver:
+            # Bind self-service writes before policy checks as well as mutation.
+            request.all_data.pop("resolver", None)
 
     try:
         request.User = get_user_from_param(request.all_data)
