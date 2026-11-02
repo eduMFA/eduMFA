@@ -259,7 +259,7 @@ myApp.controller("tokenEnrollController", ["$scope", "TokenFactory", "$timeout",
             $scope.form.hashlib = $scope.systemDefault['daypassword.hashlib'] || 'sha1';
             $scope.form.timeStep = parseInt($scope.systemDefault['daypassword.timeStep'] || '60');
         }
-        if ($scope.form.type === "vasco") {
+        if ($scope.form.type === "vasco" || $scope.form.type === "yubikey") {
             $scope.form.genkey = false;
         } else {
             $scope.form.genkey = true;
