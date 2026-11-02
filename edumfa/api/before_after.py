@@ -124,7 +124,11 @@ def before_user_request():
 def before_userendpoint_request():
     before_request(
         restrict_user_resolver=request.endpoint
-        in {"user_blueprint.update_user", "user_blueprint.delete_user_attribute"}
+        in {
+            "user_blueprint.update_user",
+            "user_blueprint.set_user_attribute",
+            "user_blueprint.delete_user_attribute",
+        }
     )
     # DEL /user/ has no realm parameter and thus we need to create the user object this way.
     if not request.User and request.method == "DELETE":

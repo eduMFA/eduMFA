@@ -129,6 +129,52 @@ class UserWriteIdentityTestCase(MyApiTestCase):
         self.assertEqual("writeA@example.test", User("alice", "writea").info["email"])
         self.assertEqual("writeB@example.test", User("alice", "writeb").info["email"])
 
+    def test_set_attribute_ignores_other_resolver(self) -> None:
+        set_realm("writea", ["writeA", "writeB"], priority={"writeA": 1, "writeB": 2})
+        self.addCleanup(set_realm, "writea", ["writeA"])
+        self._policy(
+            "write_user_set", SCOPE.USER, f"{ACTION.SET_USER_ATTRIBUTES}=:hello: *"
+        )
+        owner = User("alice", "writea")
+        target = User("alice", "writea", resolver="writeB")
+        self.assertEqual("writeA", owner.resolver)
+        target.set_attribute("hello", "original")
+        self.addCleanup(target.delete_attribute, "hello")
+        self.addCleanup(owner.delete_attribute, "hello")
+
+        response = self._request(
+            "/user/attribute",
+            "POST",
+            self.token,
+            {"resolver": "writeB", "key": "hello", "value": "updated"},
+        )
+        self.assertEqual(200, response.status_code, response.data)
+        self.assertTrue(response.json["result"]["status"], response.data)
+        self.assertEqual("original", target.attributes.get("hello"))
+        self.assertEqual("updated", owner.attributes.get("hello"))
+
+    def test_set_attribute_policy_uses_authenticated_resolver(self) -> None:
+        self._policy(
+            "write_other_resolver_set",
+            SCOPE.USER,
+            f"{ACTION.SET_USER_ATTRIBUTES}=:hello: *",
+            resolver="writeB",
+        )
+        owner = User("alice", "writea")
+        target = User("alice", "writea", resolver="writeB")
+        self.addCleanup(owner.delete_attribute, "hello")
+        self.addCleanup(target.delete_attribute, "hello")
+
+        response = self._request(
+            "/user/attribute",
+            "POST",
+            self.token,
+            {"resolver": "writeB", "key": "hello", "value": "updated"},
+        )
+        self.assertEqual(403, response.status_code, response.data)
+        self.assertNotIn("hello", owner.attributes)
+        self.assertNotIn("hello", target.attributes)
+
     def test_delete_ignores_other_user_and_resolver(self) -> None:
         for login, realm in (
             ("alice", "writea"),
