@@ -27,8 +27,10 @@ from flask import Blueprint, g, request
 
 from edumfa.api.auth import admin_required, user_required
 from edumfa.lib.auth import ROLE
+from edumfa.lib.error import PolicyError
 from edumfa.lib.event import event
-from edumfa.lib.user import User, create_user, is_attribute_at_all
+from edumfa.lib.realm import get_realm_id, get_realms
+from edumfa.lib.user import User, create_user, get_attributes, is_attribute_at_all
 
 from ..api.lib.prepolicy import (
     check_base_action,
@@ -36,7 +38,7 @@ from ..api.lib.prepolicy import (
     prepolicy,
     realmadmin,
 )
-from ..lib.policy import ACTION, get_allowed_custom_attributes
+from ..lib.policy import ACTION, SCOPE, Match, get_allowed_custom_attributes
 from ..lib.user import get_user_list
 from .lib.utils import getParam, send_result
 
@@ -104,11 +106,69 @@ def get_users():
     """
     realm = getParam(request.all_data, "realm")
     attr = is_attribute_at_all()
-    users = get_user_list(request.all_data, custom_attributes=attr)
+    # Check backend identities before custom attributes can override result fields.
+    users = get_user_list(request.all_data)
+    if g.logged_in_user.get("role") == ROLE.USER:
+        users = [
+            user
+            for user in users
+            if user["resolver"] == request.User.resolver
+            and str(user["userid"]) == str(request.User.uid)
+        ]
+    else:
+        users = [
+            user
+            for user in users
+            if _admin_user_action_allowed(
+                ACTION.USERLIST,
+                User(login=user["username"], resolver=user["resolver"], uid=user["userid"]),
+                realm,
+            )
+        ]
+    if attr and realm:
+        for user in users:
+            user.update(
+                get_attributes(user["userid"], user["resolver"], get_realm_id(realm))
+            )
 
     g.audit_object.log({"success": True, "info": f"realm: {realm}"})
 
     return send_result(users)
+
+
+def _admin_user_action_allowed(action: str | None, user: User, realm: str | None) -> bool:
+    """Check the target account in realms that contain its resolver."""
+    target_realms = [
+        name
+        for name, config in get_realms(realm.lower() if realm else None).items()
+        if any(entry["name"] == user.resolver for entry in config.get("resolver", []))
+    ]
+    if not realm and not target_realms:
+        target_realms = [""]
+    return any(
+        Match.generic(
+            g,
+            scope=SCOPE.ADMIN,
+            action=action,
+            user_object=User(
+                login=user.login, realm=target_realm, resolver=user.resolver, uid=user.uid
+            ),
+            adminuser=g.logged_in_user["username"],
+            adminrealm=g.logged_in_user["realm"],
+        ).allowed(write_to_audit_log=False)
+        for target_realm in target_realms
+    )
+
+
+def _require_admin_user_action(
+    action: str | None, user: User, realm: str | None = None
+) -> None:
+    if g.logged_in_user.get("role") != ROLE.ADMIN:
+        return
+    if action != ACTION.ADDUSER and user.uid in (None, ""):
+        raise PolicyError("The target user could not be resolved.")
+    if not _admin_user_action_allowed(action, user, user.realm if realm is None else realm):
+        raise PolicyError("You are not allowed to access this user.")
 
 
 @user_blueprint.route("/attribute", methods=["POST"])
@@ -138,6 +198,7 @@ def set_user_attribute():
     attrkey = getParam(request.all_data, "key", optional=False)
     attrvalue = getParam(request.all_data, "value", optional=False)
     attrtype = getParam(request.all_data, "type", optional=True)
+    _require_admin_user_action(None, request.User)
     r = request.User.set_attribute(attrkey, attrvalue, attrtype)
     g.audit_object.log({"success": True, "info": f"{attrkey}"})
     return send_result(r)
@@ -162,6 +223,7 @@ def get_user_attribute():
     """
     _user = getParam(request.all_data, "user", optional=False)
     attrkey = getParam(request.all_data, "key", optional=True)
+    _require_admin_user_action(None, request.User)
     r = request.User.attributes
     if attrkey:
         r = r.get(attrkey)
@@ -186,6 +248,7 @@ def get_editable_attributes():
     :return:
     """
     _user = getParam(request.all_data, "user", optional=False)
+    _require_admin_user_action(None, request.User)
     r = get_allowed_custom_attributes(g, request.User)
     g.audit_object.log({"success": True})
     return send_result(r)
@@ -208,13 +271,9 @@ def delete_user_attribute(attrkey, username, realm=None):
 
     Returns the number of deleted attributes.
     """
-    if g.logged_in_user.get("role") == ROLE.USER:
-        # The policy check in check_custom_user_attributes was done for the
-        # authenticated user, so the positional parameters must not be able
-        # to address anybody else.
-        user = request.User
-    else:
-        user = User(username, realm)
+    # The URL target (or self-service identity) was bound before the policy check.
+    user = request.User
+    _require_admin_user_action(None, user)
     r = user.delete_attribute(attrkey)
     g.audit_object.log({"success": True, "info": f"{attrkey}"})
     return send_result(r)
@@ -242,6 +301,9 @@ def delete_user(resolvername=None, username=None):
 
     """
     user_obj = request.User
+    _require_admin_user_action(
+        ACTION.DELETEUSER, user_obj, getParam(request.all_data, "realm")
+    )
     res = user_obj.delete()
     g.audit_object.log({"success": res, "info": f"{user_obj}"})
     return send_result(res)
@@ -280,6 +342,11 @@ def create_user_api():
     attributes = _get_attributes_from_param(request.all_data)
     username = getParam(request.all_data, "user", optional=False)
     resolvername = getParam(request.all_data, "resolver", optional=False)
+    _require_admin_user_action(
+        ACTION.ADDUSER,
+        User(login=username, resolver=resolvername),
+        getParam(request.all_data, "realm"),
+    )
     # Remove the password from the attributes, so that we can hide it in the
     # logs
     password = attributes.get("password")
@@ -343,6 +410,11 @@ def update_user():
         user_obj = User(resolver=resolvername, uid=userid)
     else:
         user_obj = User(login=username, resolver=resolvername)
+    _require_admin_user_action(
+        ACTION.UPDATEUSER,
+        user_obj,
+        getParam(request.all_data, "realm"),
+    )
     # Remove the password from the attributes, so that we can hide it in the
     # logs
     password = attributes.get("password")
@@ -367,6 +439,9 @@ def _get_attributes_from_param(param):
     # Add attributes
     attributes = {"username": username}
     for attribute in map.keys():
+        if attribute == "username":
+            # The policy checked "user"; a separate field must not override it.
+            continue
         value = getParam(param, attribute)
         if value:
             attributes[attribute] = getParam(param, attribute)
