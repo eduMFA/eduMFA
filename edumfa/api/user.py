@@ -120,9 +120,9 @@ def get_users():
             user
             for user in users
             if _admin_user_action_allowed(
-                ACTION.USERLIST,
                 User(login=user["username"], resolver=user["resolver"], uid=user["userid"]),
-                realm,
+                action=ACTION.USERLIST,
+                realm=realm,
             )
         ]
     if attr and realm:
@@ -136,7 +136,9 @@ def get_users():
     return send_result(users)
 
 
-def _admin_user_action_allowed(action: str | None, user: User, realm: str | None) -> bool:
+def _admin_user_action_allowed(
+    user: User, *, action: str | None = None, realm: str | None = None
+) -> bool:
     """Check the target account in realms that contain its resolver."""
     target_realms = [
         name
@@ -161,13 +163,15 @@ def _admin_user_action_allowed(action: str | None, user: User, realm: str | None
 
 
 def _require_admin_user_action(
-    action: str | None, user: User, realm: str | None = None
+    user: User, *, action: str | None = None, realm: str | None = None
 ) -> None:
     if g.logged_in_user.get("role") != ROLE.ADMIN:
         return
     if action != ACTION.ADDUSER and user.uid in (None, ""):
         raise PolicyError("The target user could not be resolved.")
-    if not _admin_user_action_allowed(action, user, user.realm if realm is None else realm):
+    if not _admin_user_action_allowed(
+        user, action=action, realm=user.realm if realm is None else realm
+    ):
         raise PolicyError("You are not allowed to access this user.")
 
 
@@ -198,7 +202,7 @@ def set_user_attribute():
     attrkey = getParam(request.all_data, "key", optional=False)
     attrvalue = getParam(request.all_data, "value", optional=False)
     attrtype = getParam(request.all_data, "type", optional=True)
-    _require_admin_user_action(None, request.User)
+    _require_admin_user_action(request.User)
     r = request.User.set_attribute(attrkey, attrvalue, attrtype)
     g.audit_object.log({"success": True, "info": f"{attrkey}"})
     return send_result(r)
@@ -223,7 +227,7 @@ def get_user_attribute():
     """
     _user = getParam(request.all_data, "user", optional=False)
     attrkey = getParam(request.all_data, "key", optional=True)
-    _require_admin_user_action(None, request.User)
+    _require_admin_user_action(request.User)
     r = request.User.attributes
     if attrkey:
         r = r.get(attrkey)
@@ -248,7 +252,7 @@ def get_editable_attributes():
     :return:
     """
     _user = getParam(request.all_data, "user", optional=False)
-    _require_admin_user_action(None, request.User)
+    _require_admin_user_action(request.User)
     r = get_allowed_custom_attributes(g, request.User)
     g.audit_object.log({"success": True})
     return send_result(r)
@@ -273,7 +277,7 @@ def delete_user_attribute(attrkey, username, realm=None):
     """
     # The URL target (or self-service identity) was bound before the policy check.
     user = request.User
-    _require_admin_user_action(None, user)
+    _require_admin_user_action(user)
     r = user.delete_attribute(attrkey)
     g.audit_object.log({"success": True, "info": f"{attrkey}"})
     return send_result(r)
@@ -302,7 +306,7 @@ def delete_user(resolvername=None, username=None):
     """
     user_obj = request.User
     _require_admin_user_action(
-        ACTION.DELETEUSER, user_obj, getParam(request.all_data, "realm")
+        user_obj, action=ACTION.DELETEUSER, realm=getParam(request.all_data, "realm")
     )
     res = user_obj.delete()
     g.audit_object.log({"success": res, "info": f"{user_obj}"})
@@ -343,9 +347,9 @@ def create_user_api():
     username = getParam(request.all_data, "user", optional=False)
     resolvername = getParam(request.all_data, "resolver", optional=False)
     _require_admin_user_action(
-        ACTION.ADDUSER,
         User(login=username, resolver=resolvername),
-        getParam(request.all_data, "realm"),
+        action=ACTION.ADDUSER,
+        realm=getParam(request.all_data, "realm"),
     )
     # Remove the password from the attributes, so that we can hide it in the
     # logs
@@ -411,9 +415,9 @@ def update_user():
     else:
         user_obj = User(login=username, resolver=resolvername)
     _require_admin_user_action(
-        ACTION.UPDATEUSER,
         user_obj,
-        getParam(request.all_data, "realm"),
+        action=ACTION.UPDATEUSER,
+        realm=getParam(request.all_data, "realm"),
     )
     # Remove the password from the attributes, so that we can hide it in the
     # logs
