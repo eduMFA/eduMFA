@@ -2392,6 +2392,10 @@ msgid "Configure whether to allow push tokens to poll for challenges"
 msgstr "配置是否允許推送令牌輪詢質詢"
 
 #: lib/tokens/pushtoken.py
+msgid "The token image URL returned to the Push App when polling for challenges."
+msgstr ""
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "eduMFA 推送令牌的URL"
 

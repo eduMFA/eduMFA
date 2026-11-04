@@ -314,6 +314,7 @@ class PushTokenClass(TokenClass):
         SSL_VERIFY = "edupush_ssl_verify"
         WAIT = "edupush_wait"
         ALLOW_POLLING = "edupush_allow_polling"
+        IMAGE_URL = "edupush_image_url"
 
     def __init__(self, db_token):
         TokenClass.__init__(self, db_token)
@@ -460,6 +461,15 @@ class PushTokenClass(TokenClass):
                 },
             },
         }
+
+        if cls.get_class_type() == "edupush":
+            res["policy"][SCOPE.AUTH][cls.PUSH_ACTION.IMAGE_URL] = {
+                "type": "str",
+                "desc": _(
+                    "The token image URL returned to the Push App when polling for challenges."
+                ),
+                "group": cls.get_policy_group(),
+            }
 
         if key:
             ret = res.get(key, {})
@@ -701,8 +711,8 @@ class PushTokenClass(TokenClass):
             "enrollment_credential": self.get_tokeninfo("enrollment_credential")
         }
         imageurl = params.get("appimageurl")
-        if imageurl:
-            extra_data.update({"image": imageurl})
+        if imageurl and self.get_class_type() == "push":
+            extra_data["image"] = imageurl
         if self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
             # Get enrollment values from the policy
             registration_url = getParam(
@@ -786,7 +796,7 @@ class PushTokenClass(TokenClass):
             raise eduMFAError(f"Timestamp {timestamp} not in valid range.")
 
     @classmethod
-    def _api_endpoint_post(cls, request_data):
+    def _api_endpoint_post(cls, request_data, g: object | None = None):
         """Handle all POST requests to the api endpoint
 
         :param request_data: Dictionary containing the parameters of the request
@@ -825,6 +835,12 @@ class PushTokenClass(TokenClass):
             init_detail_dict = request_data
 
             details = token_obj.get_init_detail(init_detail_dict)
+            if cls.get_class_type() == "edupush":
+                details["image"] = get_action_values_from_options(
+                    SCOPE.AUTH,
+                    cls.PUSH_ACTION.IMAGE_URL,
+                    options={"g": g, "user": token_obj.user},
+                )
             result = True
         elif all(k in request_data for k in ("nonce", "signature")):
             log.debug("Handling the authentication response from the smartphone.")
@@ -912,16 +928,18 @@ class PushTokenClass(TokenClass):
             )
 
     @classmethod
-    def _api_endpoint_get(cls, g, request_data):
+    def _api_endpoint_get(
+        cls, g, request_data, details: dict[str, str | None] | None = None
+    ):
         """Handle all GET requests to the api endpoint.
 
         Currently this is only used for polling.
         :param g: The Flask context
         :param request_data: Dictionary containing the parameters of the request
         :type request_data: dict
-        :returns: Result of the polling operation, 'True' if an unanswered and
-                  matching challenge exists, 'False' otherwise.
-        :rtype: bool
+        :param details: Optional response metadata populated after authentication
+        :returns: List of unanswered, valid challenges for the token
+        :rtype: list
         """
         # By default we allow polling if the policy is not set.
         allow_polling = (
@@ -987,6 +1005,12 @@ class PushTokenClass(TokenClass):
                     challenges.append(sp_data)
             # return the challenges as a list in the result value
             result = challenges
+            if details is not None and cls.get_class_type() == "edupush":
+                details["image"] = get_action_values_from_options(
+                    SCOPE.AUTH,
+                    cls.PUSH_ACTION.IMAGE_URL,
+                    options={"g": g, "user": tok.user},
+                )
         except (
             ResourceNotFoundError,
             ParameterError,
@@ -1079,6 +1103,11 @@ class PushTokenClass(TokenClass):
 
           More on polling can be found here: https://github.com/privacyidea/privacyidea/wiki/concept%3A-pushtoken-poll
 
+          Successful eduMFA push responses include ``detail.image`` with the
+          token owner's configured image URL, or ``null`` when no image is configured.
+          Clients should preserve their existing image if older servers omit
+          this field. eduMFA push enrollment QR codes do not include image URLs.
+
         :param request: The Flask request
         :param g: The Flask global object g
         :return: The json string representing the result dictionary
@@ -1086,9 +1115,9 @@ class PushTokenClass(TokenClass):
         """
         details = {}
         if request.method == "POST":
-            result, details = cls._api_endpoint_post(request.all_data)
+            result, details = cls._api_endpoint_post(request.all_data, g)
         elif request.method == "GET":
-            result = cls._api_endpoint_get(g, request.all_data)
+            result = cls._api_endpoint_get(g, request.all_data, details)
         else:
             raise eduMFAError(
                 f"Method {request.method} not allowed in 'api_endpoint' for push token."
