@@ -1,3 +1,9 @@
+edumfa-server (2.9.6{{CODENAME}}) {{CODENAME}}; urgency=high
+
+  * update version number
+
+ -- eduMFA <edumfa-dev@listserv.dfn.de>  Wed, 04 Nov 2026 16:15:28 +0100
+
 edumfa-server (2.9.5{{CODENAME}}) {{CODENAME}}; urgency=high
  
   * update version number
