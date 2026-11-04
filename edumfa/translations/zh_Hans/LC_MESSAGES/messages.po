@@ -941,8 +941,9 @@ msgstr "用户闲置超过logout_time限制时采取的操作。默认为“锁�
 #: lib/policy.py
 msgid ""
 "The REMOTE_USER set by the webserver can be used to login to eduMFA or it"
-" will be ignored. Defaults to \"disable\"."
-msgstr "网络服务器设置的REMOTE_USER可用于登录eduMFA，否则将被忽略。默认为“禁用”。"
+" will be ignored. Defaults to \"disable\". Please read the documentation "
+"for this policy before using."
+msgstr "Web 服务器设置的 REMOTE_USER 可用于登录 eduMFA，也可以被忽略。默认值为“disable”。使用此策略前，请阅读其文档。"
 
 #: lib/policy.py
 msgid ""
