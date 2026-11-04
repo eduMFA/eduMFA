@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from flask import Response
 
+from edumfa.lib.audit import getAudit
 from edumfa.lib.error import UserError
 from edumfa.lib.policy import ACTION, SCOPE, delete_policy, set_policy
 from edumfa.lib.realm import delete_realm, set_realm
@@ -558,9 +559,17 @@ class UserWriteIdentityTestCase(MyApiTestCase):
         )
         owner = User("alice", "writea")
         owner.delete()
+        audit = getAudit(self.app.config)
+        count = audit.get_total({})
         self._request(
             "/user/attribute", "POST", key="hello", value="orphaned", status=401
         )
+        self.assertEqual(count + 1, audit.get_total({}))
+        entry = self.find_most_recent_audit_entry(action="POST /user/attribute")
+        self.assertEqual(0, entry["success"])
+        self.assertEqual("alice", entry["user"])
+        self.assertEqual("writea", entry["realm"])
+        self.assertIn("The authenticated user could not be resolved.", entry["info"])
 
     def test_admin_target_check_normalizes_realm_case(self) -> None:
         response = self._request(

@@ -213,12 +213,6 @@ def before_request(*, restrict_user_resolver: bool = False) -> None:
     edumfa_server = get_app_config_value(
         "EDUMFA_AUDIT_SERVERNAME", get_edumfa_node(request.host)
     )
-    if (
-        restrict_user_resolver
-        and g.logged_in_user.get("role") == "user"
-        and (not request.User or request.User.uid in (None, ""))
-    ):
-        raise AuthError("The authenticated user could not be resolved.")
     # Already get some typical parameters to log
     serial = getParam(request.all_data, "serial")
     if serial and not "*" in serial:
@@ -262,6 +256,13 @@ def before_request(*, restrict_user_resolver: bool = False) -> None:
             "info": "",
         }
     )
+
+    if (
+        restrict_user_resolver
+        and g.logged_in_user.get("role") == "user"
+        and (not request.User or request.User.uid in (None, ""))
+    ):
+        raise AuthError("The authenticated user could not be resolved.")
 
     if g.logged_in_user.get("role") == "admin":
         # An administrator is calling this API
