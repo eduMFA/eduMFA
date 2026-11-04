@@ -286,6 +286,110 @@ class APIUsersTestCase(MyApiTestCase):
             result = res.json.get("result")
             self.assertTrue(result.get("value"))
 
+    def test_02b_user_can_not_update_other_user_by_userid(self):
+        # A user may change their own record, but the "userid" parameter must
+        # not allow addressing another record of the same resolver.
+        realm = "sqlrealm"
+        resolver = "SQL1"
+        parameters = self.parameters
+        parameters["resolver"] = resolver
+        parameters["type"] = "sqlresolver"
+        rid = save_resolver(parameters)
+        self.assertTrue(rid > 0, rid)
+        (added, failed) = set_realm(realm, [resolver])
+        self.assertEqual(len(failed), 0)
+
+        self._create_user_wordy()
+        with self.app.test_request_context(
+            "/user/",
+            method="POST",
+            data={
+                "user": "victim",
+                "resolver": resolver,
+                "surname": "victim",
+                "givenname": "victim",
+                "email": "victim@example.com",
+                "password": "victimpassword",
+            },
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+
+        with self.app.test_request_context(
+            "/user/",
+            method="GET",
+            query_string=urlencode({"username": "victim", "resolver": resolver}),
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            victim_userid = res.json.get("result").get("value")[0].get("userid")
+
+        # wordy logs in and tries to rewrite the victim's record via "userid"
+        self._get_wordy_auth_token()
+        with self.app.test_request_context(
+            "/user/",
+            method="PUT",
+            query_string=urlencode(
+                {
+                    "user": "wordy",
+                    "resolver": resolver,
+                    "userid": victim_userid,
+                    "email": "attacker@example.com",
+                    "password": "hijacked",
+                }
+            ),
+            headers={"Authorization": self.wordy_auth_token},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            self.assertTrue(res.json.get("result").get("value"))
+
+        # The victim's record is untouched ...
+        with self.app.test_request_context(
+            "/user/",
+            method="GET",
+            query_string=urlencode({"username": "victim", "resolver": resolver}),
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            victim = res.json.get("result").get("value")[0]
+            self.assertEqual(victim_userid, victim.get("userid"))
+            self.assertEqual("victim", victim.get("username"))
+            self.assertEqual("victim@example.com", victim.get("email"))
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={"username": f"victim@{realm}", "password": "hijacked"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(401, res.status_code, res.json)
+
+        # ... and wordy only updated himself.
+        with self.app.test_request_context(
+            "/user/",
+            method="GET",
+            query_string=urlencode({"username": "wordy", "resolver": resolver}),
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            wordy = res.json.get("result").get("value")[0]
+            self.assertEqual("attacker@example.com", wordy.get("email"))
+        self._get_wordy_auth_token("hijacked")
+
+        for username in ("victim", "wordy"):
+            with self.app.test_request_context(
+                f"/user/{resolver}/{username}",
+                method="DELETE",
+                headers={"Authorization": self.at},
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertTrue(res.status_code == 200, res)
+                self.assertTrue(res.json.get("result").get("value"))
+
     def test_03_create_update_delete_unicode_user(self):
         realm = "sqlrealm"
         resolver = "SQL1"
@@ -736,3 +840,58 @@ class APIUsersTestCase(MyApiTestCase):
         delete_policy("custom_attr3")
         delete_policy("custom_attr4")
         delete_policy("custom_create_user")
+
+    def test_11_user_can_not_delete_other_users_attribute(self):
+        # A user who may delete an attribute on himself must not be able to
+        # delete it on another user by addressing that user in the URL.
+        set_policy(
+            "admin_set_attr",
+            scope=SCOPE.ADMIN,
+            action=f"{ACTION.SET_USER_ATTRIBUTES}=:*: *",
+        )
+        set_policy(
+            "user_delete_attr",
+            scope=SCOPE.USER,
+            action=f"{ACTION.DELETE_USER_ATTRIBUTES}=hello",
+        )
+        set_policy("custom_create_user", scope=SCOPE.ADMIN, action=ACTION.ADDUSER)
+        self._create_user_wordy()
+        self._get_wordy_auth_token()
+
+        # The admin sets the attribute "hello" for wordy and for cornelius
+        for user in ("wordy@sqlrealm", "cornelius@realm1"):
+            with self.app.test_request_context(
+                "/user/attribute",
+                method="POST",
+                data={"user": user, "key": "hello", "value": "one"},
+                headers={"Authorization": self.at},
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertTrue(res.status_code == 200, res)
+                self.assertTrue(res.json.get("result").get("status"), res.data)
+
+        # wordy addresses cornelius in the URL. Only wordy's own attribute may go.
+        with self.app.test_request_context(
+            "/user/attribute/hello/cornelius/realm1",
+            method="DELETE",
+            headers={"Authorization": self.wordy_auth_token},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            self.assertEqual(1, res.json.get("result").get("value"))
+
+        cornelius = User("cornelius", "realm1")
+        self.assertEqual("one", cornelius.attributes.get("hello"))
+        self.assertNotIn("hello", User("wordy", "sqlrealm").attributes)
+
+        cornelius.delete_attribute("hello")
+        delete_policy("admin_set_attr")
+        delete_policy("user_delete_attr")
+        delete_policy("custom_create_user")
+        with self.app.test_request_context(
+            "/user/SQL1/wordy",
+            method="DELETE",
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)

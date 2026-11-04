@@ -45,7 +45,7 @@ from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
 from edumfa.lib.tokens.registrationtoken import DEFAULT_LENGTH as DEFAULT_LENGTH_REG
 from edumfa.lib.tokens.registrationtoken import RegistrationTokenClass
 from edumfa.lib.tokens.totptoken import HotpTokenClass
-from edumfa.lib.tokens.webauthn import webauthn_b64_decode
+from edumfa.lib.tokens.webauthn import webauthn_b64_decode, webauthn_b64_encode
 from edumfa.lib.tokens.webauthntoken import WEBAUTHNACTION
 from edumfa.lib.tokens.yubikeytoken import YubikeyTokenClass
 from edumfa.lib.user import User
@@ -4412,6 +4412,79 @@ class WebAuthn(MyApiTestCase):
         remove_token(self.serial)
         remove_token("CR2B")
         remove_token("CR2A")
+
+    def test_12d_usernameless_rejects_non_webauthn_userhandle(self):
+        # The userhandle in a usernameless passkey assertion is chosen by the
+        # client. It must only ever resolve WebAuthn tokens: any other token
+        # type must be rejected even if its check_otp() would succeed, which
+        # is the case for spass tokens.
+        set_policy(
+            "allow_usernameless",
+            scope=SCOPE.AUTH,
+            action=WEBAUTHNACTION.USERNAMELESS_AUTHN,
+        )
+        spass_serial = "SPASSUSERLESS1"
+        init_token(
+            {"serial": spass_serial, "type": "spass", "pin": "spasspin"},
+            user=User(self.username, self.realm1),
+        )
+        try:
+            # 1st step: obtain a usernameless challenge, as a login page would
+            with self.app.test_request_context(
+                "/validate/triggerchallenge?type=webauthn",
+                method="GET",
+                headers={
+                    "Host": "pi.example.com",
+                    "authorization": self.at,
+                    "Origin": "https://pi.example.com",
+                },
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertEqual(200, res.status_code, res.json)
+                challenge = (
+                    res.json.get("detail")
+                    .get("attributes")
+                    .get("webAuthnSignRequest")
+                    .get("challenge")
+                )
+
+            # 2nd step: an "assertion" without any valid signature whose
+            # userhandle points at the spass token instead of a passkey
+            client_data = webauthn_b64_encode(
+                json.dumps(
+                    {
+                        "type": "webauthn.get",
+                        "challenge": challenge,
+                        "origin": "https://pi.example.com",
+                        "crossOrigin": False,
+                    }
+                ).encode()
+            )
+            with self.app.test_request_context(
+                "/validate/check?type=webauthn",
+                method="POST",
+                data={
+                    "userhandle": spass_serial,
+                    "credentialid": "eA",
+                    "authenticatordata": "eA",
+                    "signaturedata": "eA",
+                    "clientdata": client_data,
+                },
+                headers={"Host": "pi.example.com", "Origin": "https://pi.example.com"},
+            ):
+                res = self.app.full_dispatch_request()
+                # A serial that is not a WebAuthn token must behave exactly
+                # like an unknown passkey (see test_api_validate_passkey.py)
+                self.assertEqual(404, res.status_code, res.json)
+                self.assertFalse(res.json.get("result").get("status"))
+                self.assertNotIn("user", res.json.get("detail") or {})
+
+            # The spass token must not have recorded a successful authentication
+            spass_token = get_tokens(serial=spass_serial)[0]
+            self.assertEqual(0, spass_token.get_count_auth_success())
+        finally:
+            remove_token(spass_serial)
+            delete_policy("allow_usernameless")
 
     def test_20_authenticate_with_token(self):
         # Ensure that a not readily enrolled WebAuthn token does not disturb the usage
