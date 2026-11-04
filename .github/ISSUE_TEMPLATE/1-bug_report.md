@@ -34,7 +34,7 @@ What did actually happen?
 ### Configuration
 
 * **eduMFA version**:
-* **Installation method**: (from Ubuntu packages, github, PyPI, ...)
+* **Installation method**: (Docker, GitHub, PyPI, ...)
 * **Python version**:
 * **Operating system**:
 * **Webserver**:

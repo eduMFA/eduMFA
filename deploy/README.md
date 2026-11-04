@@ -1,15 +1,8 @@
-This directory contains config information for building packages for different
-deployment strategies.
+This directory contains configuration examples for deploying eduMFA.
 
-apache
-======
-This directory contains the config files for deploying edumfa-apache.deb
-
-nginx + uwsgi
-=============
-These directories contain the config files for deploying edumfa-nginx.deb
-
-edumfa
-===========
-This directory contains some config examples to be deployed from setup.py
-into the python package.
+- `apache`: Apache configuration files and a WSGI application entry point.
+- `nginx`, `uwsgi`, `gunicorn`: Web server and application server configurations.
+- `edumfa`: Configuration examples installed with the Python package.
+- `config`: FreeRADIUS configurations for the eduMFA Perl integration.
+- `crontab`: Cron configuration for periodic tasks.
+- `docker`, `docker-example`: Container configuration and Docker Compose examples.

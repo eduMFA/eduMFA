@@ -13,7 +13,7 @@ for simple statistics and for handling recorded events. Further task modules can
 As eduMFA is a web application, it can not actually execute the defined periodic tasks itself. For that,
 eduMFA comes with a script ``edumfa-cron`` which must be invoked by the system cron daemon.
 This can, for example, be achieved by creating a file ``/etc/cron.d/edumfa`` with the following
-contents (this is done automatically by the Ubuntu package)::
+contents::
 
 	 */5 * * * *	edumfa	edumfa-cron run_scheduled -c
 
