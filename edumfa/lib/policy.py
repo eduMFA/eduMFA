@@ -3023,6 +3023,9 @@ def get_static_policy_definitions(scope=None):
                     "The REMOTE_USER set by the webserver can be used "
                     "to login to eduMFA or it will be ignored. "
                     'Defaults to "disable".'
+                    # TODO: remove this once remote_user_trusted_proxies is
+                    #       enforced for HTTP header usage (eduMFA 3.0.0)
+                    " Please read the documentation for this policy before using."
                 ),
             },
             ACTION.LOGOUTTIME: {
