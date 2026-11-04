@@ -83,9 +83,10 @@ service, either by:
      via ``uwsgi_pass_request_headers off`` plus an allowlist for necessary
      headers
 
-   To get rid of this trap, a future minor version of eduMFA will introduce an
-   optional feature to specify trusted proxy IP addresses. A major version will
-   then make it mandatory to use the ``Remote-User`` HTTP header.
+   A future version of eduMFA is planned to support configuring trusted proxy
+   IP addresses. This configuration will initially be optional and is planned
+   to become mandatory for authentication via the ``Remote-User`` HTTP header
+   in a future major version.
 
 
 Possible values are ``disable``, ``allowed`` and ``force``.
