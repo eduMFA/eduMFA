@@ -2715,8 +2715,16 @@ msgid "Configure whether to allow push tokens to poll for challenges"
 msgstr "İtme belirteçlerinin zorluklar için ankete izin vermeyi yapılandırın"
 
 #: lib/tokens/pushtoken.py
+msgid "Require an additional challenge on the smartphone."
+msgstr ""
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "eduMFA Push Token için URL"
+
+#: lib/tokens/pushtoken.py
+msgid "Select this number on your smartphone:"
+msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid "Questionnaire: Enroll Questions for the user."

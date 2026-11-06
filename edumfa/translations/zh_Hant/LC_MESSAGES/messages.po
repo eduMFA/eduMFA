@@ -2393,8 +2393,16 @@ msgid "Configure whether to allow push tokens to poll for challenges"
 msgstr "配置是否允許推送令牌輪詢質詢"
 
 #: lib/tokens/pushtoken.py
+msgid "Require an additional challenge on the smartphone."
+msgstr ""
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "eduMFA 推送令牌的URL"
+
+#: lib/tokens/pushtoken.py
+msgid "Select this number on your smartphone:"
+msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid "Questionnaire: Enroll Questions for the user."
