@@ -484,11 +484,11 @@ angular.module("eduMfaApp").controller("mainController", [
             ) {
               PollingAuthFactory.stop();
               inform.add(
-                gettextCatalog.getString(
-                  response.data.detail.challenge_status === "challenge_mismatch"
-                    ? "The selected number did not match. Sign in again."
-                    : "The sign-in request was denied.",
-                ),
+                response.data.detail.challenge_status === "challenge_mismatch"
+                  ? gettextCatalog.getString(
+                      "The selected number did not match. Sign in again.",
+                    )
+                  : gettextCatalog.getString("The sign-in request was denied."),
                 { type: "danger" },
               );
               $scope.polling = false;
