@@ -691,18 +691,9 @@ class PushTokenClass(TokenClass):
         user = user or User()
         tokenlabel = params.get("tokenlabel", "<s>")
         tokenissuer = params.get("tokenissuer", "eduMFA")
-        sslverify = getParam(
-            params, self.PUSH_ACTION.SSL_VERIFY, allowed_values=["0", "1"], default="1"
-        )
         # Add rollout state the response
         response_detail["rollout_state"] = self.token.rollout_state
 
-        extra_data = {
-            "enrollment_credential": self.get_tokeninfo("enrollment_credential")
-        }
-        imageurl = params.get("appimageurl")
-        if imageurl:
-            extra_data.update({"image": imageurl})
         if self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
             # Get enrollment values from the policy
             registration_url = getParam(
@@ -718,14 +709,29 @@ class PushTokenClass(TokenClass):
                 )
                 if len(firebase_configs) != 1:
                     raise ParameterError("Unknown Firebase configuration!")
-            # this allows to upgrade our crypto
-            extra_data["v"] = 1
-            extra_data["serial"] = self.get_serial()
-            extra_data["sslverify"] = sslverify
-
-            # enforce App pin
-            if params.get(ACTION.FORCE_APP_PIN):
-                extra_data.update({"pin": True})
+            credential = self.get_tokeninfo("enrollment_credential")
+            extra_data = {"serial": self.get_serial()}
+            if self.get_class_type() == "push":
+                extra_data.update(
+                    {
+                        "v": 1,
+                        "enrollment_credential": credential,
+                        "sslverify": getParam(
+                            params,
+                            self.PUSH_ACTION.SSL_VERIFY,
+                            allowed_values=["0", "1"],
+                            default="1",
+                        ),
+                    }
+                )
+                if imageurl := params.get("appimageurl"):
+                    extra_data["image"] = imageurl
+                if params.get(ACTION.FORCE_APP_PIN):
+                    extra_data["pin"] = True
+            else:
+                extra_data.update({"v": 2, "enrollmentCredential": credential})
+                if params.get(ACTION.FORCE_APP_PIN):
+                    extra_data["requireDeviceAuth"] = "true"
 
             # We display this during the first enrollment step!
             qr_url = self.create_push_token_url(
@@ -745,9 +751,7 @@ class PushTokenClass(TokenClass):
                 "img": create_img(qr_url),
             }
 
-            response_detail["enrollment_credential"] = self.get_tokeninfo(
-                "enrollment_credential"
-            )
+            response_detail["enrollment_credential"] = credential
 
         elif self.token.rollout_state == ROLLOUTSTATE.ENROLLED:
             # in the second enrollment step we return the public key of the server to the smartphone.
