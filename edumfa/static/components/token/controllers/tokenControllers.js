@@ -317,7 +317,7 @@ myApp.controller("tokenEnrollController", [
           $scope.systemDefault["daypassword.timeStep"] || "60",
         );
       }
-      if ($scope.form.type === "vasco") {
+      if ($scope.form.type === "vasco" || $scope.form.type === "yubikey") {
         $scope.form.genkey = false;
       } else {
         $scope.form.genkey = true;
@@ -383,10 +383,12 @@ myApp.controller("tokenEnrollController", [
             };
           }
           UserFactory.getUsers(params, function (data) {
-            var userObject = data.result.value[0];
+            let userObject = data.result.value[0];
             // preset for indexedsecret token
-            $scope.form.otpkey =
-              userObject[$scope.tokensettings.indexedsecret.preset_attribute];
+            if (userObject) {
+              $scope.form.otpkey =
+                userObject[$scope.tokensettings.indexedsecret.preset_attribute];
+            }
           });
         }
       }

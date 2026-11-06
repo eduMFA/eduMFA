@@ -24,6 +24,22 @@ server {
                 uwsgi_param     UWSGI_SCHEME $scheme;
                 uwsgi_param     SERVER_SOFTWARE nginx/$nginx_version;
                 uwsgi_param SCRIPT_NAME '';
+                # Never forward client-supplied request headers to eduMFA.
+                # In particular the "Remote-User" header should not reach eduMFA
+                # to prevent webui.remote_user misconfigurations, see issue
+                # tracker "implement trusted_proxy feature for remote_user".
+                uwsgi_pass_request_headers off;
+                # Explicitly re-add the request headers that eduMFA needs:
+                uwsgi_param HTTP_AUTHORIZATION $http_authorization;
+                uwsgi_param HTTP_HOST $http_host;
+                uwsgi_param HTTP_USER_AGENT $http_user_agent;
+                uwsgi_param HTTP_ACCEPT $http_accept;
+                uwsgi_param HTTP_ACCEPT_LANGUAGE $http_accept_language;
+                uwsgi_param HTTP_ORIGIN $http_origin;
+                uwsgi_param HTTP_X_FORWARDED_FOR $http_x_forwarded_for;
+                # If you use policy conditions on custom HTTP request headers
+                # ("HTTP Request header" section), re-add them here as well, e.g.:
+                # uwsgi_param HTTP_X_CUSTOM_HEADER $http_x_custom_header;
         }
 
         # Yubico servers use /wsapi/2.0/verify as the path in the

@@ -36,6 +36,57 @@ Upgrade Notes
   with their encrypted credential id. Downgrading the schema encrypts the 
   credential ids again.
 
+eduMFA 2.9.6
+------------
+
+This release fixes multiple security issues.
+
+Bug Fixes
+~~~~~~~~~
+
+- Fixed a vulnerability allowing users on an editable resolver to edit other
+  users attributes, see
+  `advisory <https://github.com/eduMFA/eduMFA/security/advisories/GHSA-h4fq-8pff-cq4v>`_.
+- Fixed a vulnerability allowing the impersonation of a user if usernameless
+  login is enabled and the target user has a SPASS token. See
+  `advisory <https://github.com/eduMFA/eduMFA/security/advisories/GHSA-gqm8-ccgr-7r67>`_.
+- Fixed the enrollment of certain types of WebAuthn authenticators.
+- Fixed token defaults not applying for the default tokentype in the WebUI.
+- Fixed the privacyIDEA to eduMFA migration for PostgreSQL databases.
+- Applies security updates to multiple libraries, including certifi. This
+  removes
+  `compromised CA certificates <https://github.com/advisories/GHSA-6q48-6c7w-9gw2>`_.
+
+Documentation
+~~~~~~~~~~~~~
+
+- Updates length recommendations for the secret key and pepper.
+- Adds warning that the ``remote_user`` policy can enable authentication bypass
+  if it is missing a properly configured webserver.
+
+.. note::
+  The ``remote_user`` policy in the WebUI scope enables users to be authenticated
+  by (for example) an external SSO service. If that policy is enabled eduMFA reads
+  the ``remote_user`` WSGI environment variable. Failing that, the HTTP header
+  "Remote-User" is evaluated. This feature is intended for containerized flows,
+  where the WSGI server and reverse proxy doing the authentication are separated.
+  Now, if:
+
+  - this policy is enabled and
+  - there is no authentication in the same webserver setting the WSGI
+    server variable (which takes precedence)
+  - the reverse proxy is passing user-provided Remote-User headers to the WSGI
+    server
+
+  Then an attacker can impersonate any user by simply specifying the "Remote-User"
+  header. This is now communicated more clearly in the WebUI and the
+  documentation.
+  To get rid of this trap, a future minor version of eduMFA will introduce an
+  optional feature to specify trusted proxy IP addresses. A major version will
+  then make it mandatory to use the ``Remote-User`` HTTP header.
+
+See full `commit history <https://github.com/eduMFA/eduMFA/compare/v2.9.5...v2.9.6>`_.
+
 eduMFA 2.9.5
 ------------
 
@@ -48,7 +99,7 @@ eduMFA 2.9.4
 This release fixes the Blast-RADIUS attack for the RADIUS token.
 
 Bug Fixes
-~~~~~~~~
+~~~~~~~~~
 
 - Fixed the `Blast-RADIUS <https://www.blastradius.fail/>`_ attack for RADIUS
   tokens, too. See `advisory <https://github.com/eduMFA/eduMFA/security/advisories/GHSA-hmmw-j78p-f6mv>`_.
@@ -64,7 +115,7 @@ eduMFA 2.9.3
 This release fixes issues introduced in v2.9.2.
 
 Bug Fixes
-~~~~~~~~
+~~~~~~~~~
 
 - Fixed an incompatibility with PostgreSQL. To avoid issues like this in the future:
 
@@ -99,7 +150,7 @@ eduMFA 2.9.1
    enabled first.
 
 Bug Fixes
-~~~~~~~~
+~~~~~~~~~
 
 - Fixed a vulnerability enabling the replay of Passkey logins, see
   `advisory <https://github.com/advisories/GHSA-j5rm-v3vh-vx94>`_.
