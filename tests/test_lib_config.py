@@ -292,7 +292,7 @@ class ConfigTestCase(MyTestCase):
         self.assertIn("totp", ttypes)
         self.assertIn("sms", ttypes)
         self.assertIn("email", ttypes)
-        self.assertIn("push", ttypes)
+        self.assertIn("edupush", ttypes)
         self.assertNotIn("tan", ttypes)
         self.assertNotIn("daplug", ttypes)
         self.assertNotIn("paper", ttypes)
