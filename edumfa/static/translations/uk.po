@@ -549,12 +549,16 @@ msgstr ""
 "Перевіряти усі можливі резолвери користувача для співпадання резолвера\n"
 "                у цій політиці."
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr ""
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "Перевірити PIN-код локально"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr "Перевірити з PIN-кодом OTP."
 
@@ -1276,6 +1280,10 @@ msgstr "Введіть перше значення OTP"
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
 msgstr "Введіть друге значення OTP"
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
+msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
 #, fuzzy

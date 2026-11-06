@@ -540,12 +540,16 @@ msgstr ""
 "檢查使用者的所有可能的解析器以匹配解析器\n"
 "在本政策中。"
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr ""
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "在本地檢查 PIN 碼"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr "使用一次性密碼密碼進行檢查。"
 
@@ -1268,6 +1272,10 @@ msgstr "輸入第一個 OTP 值"
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
 msgstr "輸入第二個一次性密碼值"
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
+msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
 #, fuzzy

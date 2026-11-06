@@ -640,9 +640,9 @@
       <td>
         <button
           class="btn btn-primary"
-          ng-disabled="!testPassword"
+          ng-disabled="!testPassword && token.tokentype != 'webauthn'"
           id="testOtpButton"
-          uib-tooltip="{{ 'Check with OTP PIN.'|translate }}"
+          uib-tooltip="{{ testTokenTooltip }}"
           ng-click="testOtp()"
         >
           <span class="glyphicon glyphicon-question-sign"></span>
@@ -651,6 +651,7 @@
         <button
           class="btn btn-primary"
           ng-disabled="!testPassword"
+          ng-hide="token.tokentype == 'webauthn'"
           id="testOtpOnlyButton"
           uib-tooltip="{{ 'Check OTP only.'|translate }}"
           ng-click="testOtp('1')"

@@ -511,12 +511,16 @@ msgstr ""
 "Hledat uživatele ve všech dostupných resolverech\n"
 "při porovnávání s resolverem v této politice."
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr ""
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "Kontrolovat PIN lokálně"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr "Zkontrolovat jednorázový kód a PIN."
 
@@ -1217,6 +1221,10 @@ msgstr "Vložte první jednorázový kód"
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
 msgstr "Vložte druhý jednorázový kód"
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
+msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
 #, fuzzy

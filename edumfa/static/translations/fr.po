@@ -543,12 +543,16 @@ msgid ""
 "            policy."
 msgstr ""
 
+#: components/token/controllers/tokenDetailController.js
+msgid "Check the PIN and sign a challenge with the authenticator."
+msgstr ""
+
 #: components/token/views/token.enroll.radius.html
 #: components/token/views/token.enroll.remote.html
 msgid "Check the PIN locally"
 msgstr "Vérifier le code PIN localement"
 
-#: components/token/views/token.details.html
+#: components/token/controllers/tokenDetailController.js
 msgid "Check with OTP PIN."
 msgstr ""
 
@@ -1263,6 +1267,10 @@ msgstr ""
 
 #: components/token/views/token.details.html
 msgid "Enter second OTP value"
+msgstr ""
+
+#: components/token/controllers/tokenDetailController.js
+msgid "Enter the PIN (if set) and confirm with your WebAuthn authenticator."
 msgstr ""
 
 #: components/token/views/token.enroll.daypassword.html
