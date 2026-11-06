@@ -94,7 +94,8 @@ class MachineApplication:
 
     @staticmethod
     def get_authentication_item(
-        token_type, serial, challenge=None, options=None, filter_param=None
+        token_type, serial, challenge=None, options=None, filter_param=None,
+        user_agent=None
     ):
         """
         returns a dictionary of authentication items
@@ -118,7 +119,8 @@ class MachineApplication:
 
 @log_with(log)
 def get_auth_item(
-    application, token_type, serial, challenge=None, options=None, filter_param=None
+    application, token_type, serial, challenge=None, options=None, filter_param=None,
+    user_agent=None
 ):
     options = options or {}
     # application_module from application
@@ -131,6 +133,7 @@ def get_auth_item(
         challenge=challenge,
         options=options,
         filter_param=filter_param,
+        user_agent=user_agent,
     )
     return auth_item
 

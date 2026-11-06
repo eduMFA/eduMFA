@@ -479,6 +479,7 @@ def get_auth_items_api(application=None):
         application=application,
         challenge=challenge,
         filter_param=filter_param,
+        user_agent=request.user_agent.string,
     )
     g.audit_object.log(
         {

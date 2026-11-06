@@ -117,7 +117,7 @@ from edumfa.lib.token import (
     get_tokens,
 )
 from edumfa.lib.user import get_user_from_param, log_used_user
-from edumfa.lib.utils import get_client_ip, is_true
+from edumfa.lib.utils import get_client_ip, get_computer_name_from_user_agent, is_true
 
 from ..lib.decorators import check_user_or_serial_in_request
 from ..lib.framework import get_app_config_value
@@ -185,7 +185,7 @@ def offlinerefill():
     :return:
     """
     serial = getParam(request.all_data, "serial", required)
-    refilltoken = getParam(request.all_data, "refilltoken", required)
+    refilltoken_request = getParam(request.all_data, "refilltoken", required)
     password = getParam(request.all_data, "pass", required)
     tokenobj_list = get_tokens(serial=serial)
     if len(tokenobj_list) != 1:
@@ -198,20 +198,51 @@ def offlinerefill():
             # We need the options to pass the count and the rounds for the next offline OTP values,
             # which could have changed in the meantime.
             options = tokenattachments[0].get("options")
-            # check refill token:
-            if tokenobj.get_tokeninfo("refilltoken") == refilltoken:
-                # refill
-                otps = MachineApplication.get_refill(tokenobj, password, options)
-                refilltoken = MachineApplication.generate_new_refilltoken(tokenobj)
-                response = send_result(True)
-                content = response.json
-                content["auth_items"] = {
-                    "offline": [
-                        {"refilltoken": refilltoken, "response": otps, "serial": serial}
-                    ]
-                }
-                response.set_data(json.dumps(content))
-                return response
+            # Check the refill token depending on the token type. WebAuthn
+            # tokens track a refill token per machine, identified by the
+            # computer name in the user agent.
+            if tokenobj.type.lower() == "webauthn":
+                computer_name = get_computer_name_from_user_agent(
+                    request.user_agent.string
+                )
+                if computer_name is None:
+                    raise ParameterError("The computer name is missing.")
+                refilltoken_stored = tokenobj.get_tokeninfo(
+                    "refilltoken_" + computer_name
+                )
+                if refilltoken_stored and refilltoken_stored == refilltoken_request:
+                    refilltoken_new = MachineApplication.generate_new_refilltoken(
+                        tokenobj, request.user_agent.string
+                    )
+                    response = send_result(True)
+                    content = response.json
+                    # A WebAuthn token authenticates offline with the cached
+                    # public key, so there are no new OTP values to refill.
+                    content["auth_items"] = {
+                        "offline": [{"refilltoken": refilltoken_new, "serial": serial}]
+                    }
+                    response.set_data(json.dumps(content))
+                    return response
+            else:
+                refilltoken_stored = tokenobj.get_tokeninfo("refilltoken")
+                if refilltoken_stored and refilltoken_stored == refilltoken_request:
+                    otps = MachineApplication.get_refill(tokenobj, password, options)
+                    refilltoken_new = MachineApplication.generate_new_refilltoken(
+                        tokenobj
+                    )
+                    response = send_result(True)
+                    content = response.json
+                    content["auth_items"] = {
+                        "offline": [
+                            {
+                                "refilltoken": refilltoken_new,
+                                "response": otps,
+                                "serial": serial,
+                            }
+                        ]
+                    }
+                    response.set_data(json.dumps(content))
+                    return response
         raise ParameterError(
             "Token is not an offline token or refill token is incorrect"
         )
