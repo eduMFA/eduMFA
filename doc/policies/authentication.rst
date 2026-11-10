@@ -525,7 +525,7 @@ edupush_text_on_mobile, push_text_on_mobile
 type: string
 
 This is the text that should be displayed on the push notification
-during the login process with a :ref:`edupush_token` or :ref:`push_token`.
+during the login process with a :ref:`edupush_token`.
 You can choose different texts for different users or IP addresses.
 This way you could customize push notifications for different applications.
 
@@ -540,7 +540,7 @@ type: string
 
 This is the title of the push notification that is displayed
 on the user's smartphone during the login process with
-a :ref:`edupush_token` or :ref:`push_token`.
+a :ref:`edupush_token`.
 
 .. _policy_push_wait:
 
