@@ -312,6 +312,16 @@ class IdResolver(UserIdResolver):
         )
         log.info(f"Setting system wide POOLING_LOOP_TIMEOUT to {pooling_loop_timeout}.")
         ldap3.set_config_parameter("POOLING_LOOP_TIMEOUT", pooling_loop_timeout)
+        # The number of seconds the restartable strategy waits before retrying a
+        # failed operation (e.g. after the server closed an idle connection).
+        # ldap3 defaults this to 2 seconds system wide.
+        restartable_sleeptime = get_app_config_value(
+            "EDUMFA_LDAP_RESTARTABLE_SLEEPTIME", 2
+        )
+        log.info(
+            f"Setting system wide RESTARTABLE_SLEEPTIME to {restartable_sleeptime}."
+        )
+        ldap3.set_config_parameter("RESTARTABLE_SLEEPTIME", restartable_sleeptime)
 
     def checkPass(self, uid, password):
         """
