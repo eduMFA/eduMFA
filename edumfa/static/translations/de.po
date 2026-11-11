@@ -2939,6 +2939,10 @@ msgstr ""
 msgid "Select file and import"
 msgstr "Datei auswählen und importieren"
 
+#: components/login/views/enter-response.html
+msgid "Select this number on your smartphone:"
+msgstr "Wählen Sie diese Zahl auf Ihrem Smartphone aus:"
+
 #: components/recovery/views/recovery.html
 msgid "Send Reset Code"
 msgstr "Reset-Code senden"
@@ -3872,6 +3876,10 @@ msgstr ""
 "Der Name der Ressource darf nur Buchstaben, Zahlen und die Zeichen '_', '-' "
 "oder '.' enthalten. Das Wort 'test_request' ist nicht erlaubt"
 
+#: components/login/controllers/loginControllers.js
+msgid "The selected number did not match. Sign in again."
+msgstr "Die ausgewählte Zahl stimmt nicht überein. Melden Sie sich erneut an."
+
 #: components/token/views/token.enroll.4eyes.html
 msgid ""
 "The separator that is used to separate the passwords of the different\n"
@@ -3929,6 +3937,10 @@ msgstr ""
 #: components/token/views/token.enroll.applspec.html
 msgid "The server will create the static password."
 msgstr "Der Server wird ein Passwort erzeugen."
+
+#: components/login/controllers/loginControllers.js
+msgid "The sign-in request was denied."
+msgstr "Die Anmeldeanfrage wurde abgelehnt."
 
 #: components/token/views/token.enroll.html
 msgid ""
