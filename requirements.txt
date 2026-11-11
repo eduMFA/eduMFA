@@ -108,7 +108,7 @@ pycparser==3.11 ; python_full_version < '3.11' and implementation_name != 'PyPy'
     # via cffi
 pycparser==3.12 ; python_full_version >= '3.11' and implementation_name != 'PyPy'
     # via cffi
-pycryptodomex==3.24.1
+pycryptodomex==3.24.2
     # via ldap3
 pydash==8.1.0
     # via edumfa (pyproject.toml)
@@ -126,7 +126,7 @@ python-dateutil==2.9.0.post0
     #   croniter
 python-gnupg==0.5.6
     # via edumfa (pyproject.toml)
-pytz==2026.5
+pytz==2026.6
     # via flask-babel
 pyyaml==6.0.3
     # via edumfa (pyproject.toml)
@@ -144,7 +144,7 @@ smpplib==2.2.4
     # via edumfa (pyproject.toml)
 soupsieve==2.10 ; python_full_version < '3.11.5'
     # via beautifulsoup4
-soupsieve==3.0.4 ; python_full_version >= '3.11.5'
+soupsieve==4.1 ; python_full_version >= '3.11.5'
     # via beautifulsoup4
 sqlalchemy==2.0.51
     # via
