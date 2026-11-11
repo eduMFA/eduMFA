@@ -4,8 +4,18 @@ Largest-Triangle-Three-Buckets (LTTB) downsampling, pure Python.
 Steinarsson, S. (2013): "Downsampling Time Series for Visual Representation".
 """
 
+from collections.abc import Callable, Sequence
+from typing import SupportsFloat, TypeVar, cast
 
-def lttb(points, threshold, x_key=None):
+X = TypeVar("X")
+Y = TypeVar("Y", bound=SupportsFloat)
+
+
+def lttb(
+    points: Sequence[tuple[X, Y]],
+    threshold: int,
+    x_key: Callable[[X], SupportsFloat] | None = None,
+) -> list[tuple[X, Y]]:
     """
     Downsample ``points`` to ``threshold`` points while preserving the visual shape.
 
@@ -15,12 +25,17 @@ def lttb(points, threshold, x_key=None):
     :param x_key: optional callable mapping x to a float (e.g. datetime.timestamp)
     :return: list of (x, y) tuples taken from ``points`` (original objects)
     """
+    if threshold < 3:
+        raise ValueError("threshold must be at least 3")
+
     n = len(points)
-    if threshold >= n or threshold < 3:
+    if threshold >= n:
         return list(points)
 
-    fx = x_key or (lambda x: x)
-    xs = [float(fx(p[0])) for p in points]
+    if x_key is None:
+        xs = [float(cast(SupportsFloat, point[0])) for point in points]
+    else:
+        xs = [float(x_key(point[0])) for point in points]
     ys = [float(p[1]) for p in points]
 
     sampled = [points[0]]
@@ -52,4 +67,3 @@ def lttb(points, threshold, x_key=None):
 
     sampled.append(points[-1])
     return sampled
-

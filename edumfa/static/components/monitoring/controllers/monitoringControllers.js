@@ -130,6 +130,18 @@ myApp.controller("monitoringController", [
       }
     }
 
+    function cancelDatasetRequests() {
+      Object.keys(requestSeq).forEach(function (key) {
+        requestSeq[key]++;
+      });
+      Object.keys(datasetStatusMap).forEach(function (key) {
+        if (datasetStatusMap[key].state === STATUS.LOADING) {
+          delete datasetStatusMap[key];
+        }
+      });
+      MonitoringFactory.cancelAll();
+    }
+
     function extractDetail(error) {
       var res = error && error.data && error.data.result;
       return (
@@ -292,7 +304,7 @@ myApp.controller("monitoringController", [
     };
 
     $scope.onTimeFrameChange = function () {
-      MonitoringFactory.cancelAll();
+      cancelDatasetRequests();
       $scope.tokenTimeline.data.datasets = [];
       $scope.availableStatsKeys.forEach((sk) => {
         if (sk.selected) {
@@ -320,7 +332,7 @@ myApp.controller("monitoringController", [
 
     $scope.$on("piReload", function () {
       if (AuthFactory.checkRight("statistics_read")) {
-        MonitoringFactory.cancelAll();
+        cancelDatasetRequests();
         datasetCache = {};
         datasetStatusMap = {};
         $scope.selectedTimeFrame = $scope.timeFrame[0];
