@@ -211,7 +211,10 @@
                     ng-model="realmForUsersWithToken"
                   >
                     <option value="any" translate>All realms</option>
-                    <option ng-repeat="(realmname, realm) in realms">
+                    <option
+                      ng-repeat="(realmname, realm) in realms"
+                      ng-value="realmname"
+                    >
                       {{ realmname }}
                     </option>
                   </select>
@@ -240,7 +243,10 @@
                     ng-model="tokentypeForUsersWithToken"
                   >
                     <option value="any" translate>Any type</option>
-                    <option ng-repeat="tokentype in tokentypes">
+                    <option
+                      ng-repeat="tokentype in tokentypes"
+                      ng-value="tokentype"
+                    >
                       {{ tokentype }}
                     </option>
                   </select>
