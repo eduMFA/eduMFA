@@ -100,6 +100,15 @@ log = logging.getLogger(__name__)
 optional = True
 required = False
 
+DEPRECATED_TOKEN_TYPES = {
+    "certificate",
+    "daplug",
+    "daypassword",
+    "push",
+    "u2f",
+    "vasco",
+}
+
 
 # Define function to convert Oracle CLOBs to VARCHAR before using them in a
 # compare operation.
@@ -1195,10 +1204,11 @@ def init_token(param, user=None, tokenrealms=None, tokenkind=None):
     serial = param.get("serial") or gen_serial(tokentype, param.get("prefix"))
     check_serial_valid(serial)
     realms = []
+    normalized_type = tokentype.lower()
 
     # unsupported tokentype
     tokentypes = get_token_types()
-    if tokentype.lower() not in tokentypes:
+    if normalized_type not in tokentypes:
         log.error(f"type {tokentype!r} not found in tokentypes: {tokentypes!r}")
         raise TokenAdminError(
             _("init token failed: unknown token type {0!r}").format(tokentype), id=1610
@@ -1210,14 +1220,14 @@ def init_token(param, user=None, tokenrealms=None, tokenkind=None):
     token_count = len(tokenobject_list)
     if token_count == 0:
         # A token with the serial was not found, so we create a new one
-        db_token = Token(serial, tokentype=tokentype.lower())
+        db_token = Token(serial, tokentype=normalized_type)
 
     else:
         # The token already exist, so we update the token
         db_token = tokenobject_list[0].token
         # prevent from changing the token type
         old_typ = db_token.tokentype
-        if old_typ.lower() != tokentype.lower():
+        if old_typ.lower() != normalized_type:
             msg = (
                 f"token {serial!r} already exist with type {old_typ!r}. "
                 f"Can not initialize token with new type {tokentype!r}"
@@ -1307,6 +1317,16 @@ def init_token(param, user=None, tokenrealms=None, tokenkind=None):
     )
     # Safe the token object to make sure all changes are persisted in the db
     tokenobject.save()
+    if token_count == 0 and normalized_type in DEPRECATED_TOKEN_TYPES:
+        log.warning(
+            "Token type %s is deprecated and planned for removal in eduMFA 3.0.0.",
+            normalized_type,
+        )
+    if normalized_type in ("hotp", "totp") and is_true(param.get("2stepinit")):
+        log.warning(
+            "%s two-step enrollment is deprecated and planned for removal in eduMFA 3.0.0.",
+            normalized_type.upper(),
+        )
     return tokenobject
 
 

@@ -90,6 +90,10 @@ idea to backup your system before upgrading.
 Ubuntu upgrade
 ^^^^^^^^^^^^^^
 
+.. warning::
+   The eduMFA Ubuntu packages are planned for removal in eduMFA 3.0.0.
+   See :ref:`deprecations_3_0` before planning a major version upgrade.
+
 If you use the Ubuntu packages in a default setup, the upgrade can should be done
 using::
 

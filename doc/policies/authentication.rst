@@ -518,7 +518,10 @@ dependent on the clients IP address and the user agent.
 .. _policy_push_text_on_mobile:
 
 edupush_text_on_mobile, push_text_on_mobile
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The ``push_text_on_mobile`` action is planned for removal in eduMFA 3.0.0.
 
 .. index:: push token, Firebase service
 
@@ -532,7 +535,10 @@ This way you could customize push notifications for different applications.
 .. _policy_push_title_on_mobile:
 
 edupush_title_on_mobile, push_title_on_mobile
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The ``push_title_on_mobile`` action is planned for removal in eduMFA 3.0.0.
 
 .. index:: push token, Firebase service
 
@@ -545,7 +551,10 @@ a :ref:`edupush_token` or :ref:`push_token`.
 .. _policy_push_wait:
 
 edupush_wait, push_wait
-~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The ``push_wait`` action is planned for removal in eduMFA 3.0.0.
 
 .. index:: push token, push direct authentication
 
@@ -573,7 +582,10 @@ Sensible numbers might be 10 or 20 seconds.
 .. _policy_auth_push_allow_poll:
 
 edupush_allow_polling, push_allow_polling
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The ``push_allow_polling`` action is planned for removal in eduMFA 3.0.0.
 
 .. index:: push token
 
@@ -606,7 +618,11 @@ The default is to ``allow`` polling
 .. _policy_push_ssl_verify_auth:
 
 edupush_ssl_verify, push_ssl_verify
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   Both actions are planned for removal in eduMFA 3.0.0.
+   Use an HTTPS endpoint with a certificate trusted by the mobile device.
 
 type: int
 

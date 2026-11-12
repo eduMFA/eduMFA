@@ -3,6 +3,10 @@
 Day Password Token
 -------------------
 
+.. warning::
+   Day Password tokens are planned for removal in eduMFA 3.0.0. Consider a
+   :ref:`pw_token` or :ref:`indexedsecret_token` with a validity period.
+
 eduMFA supports a password token with arbitrary time periods.
 
 The day password token is a modification of the :ref:`totp_token`. The difference between the

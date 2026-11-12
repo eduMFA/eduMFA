@@ -395,6 +395,31 @@ class TokenTestCase(MyTestCase):
         self.assertEqual(len(serial), len("OATH") + 12)
         set_edumfa_config("SerialLength", 8)
 
+    def test_init_token_deprecation_warnings(self):
+        with self.assertLogs("edumfa.lib.token", level="WARNING") as warnings:
+            token = init_token(
+                {"type": "DayPassword", "genkey": 1, "serial": "DEPRECATED_DAYPASSWORD"}
+            )
+        self.addCleanup(remove_token, token.token.serial)
+        self.assertIn("Token type daypassword is deprecated", warnings.output[0])
+
+        for token_type in ("hotp", "totp"):
+            with self.subTest(token_type=token_type):
+                with self.assertLogs("edumfa.lib.token", level="WARNING") as warnings:
+                    token = init_token(
+                        {
+                            "type": token_type,
+                            "genkey": 1,
+                            "2stepinit": 1,
+                            "serial": f"DEPRECATED_2STEP_{token_type.upper()}",
+                        }
+                    )
+                self.addCleanup(remove_token, token.token.serial)
+                self.assertIn(
+                    f"{token_type.upper()} two-step enrollment is deprecated",
+                    warnings.output[0],
+                )
+
     def test_15_init_token(self):
         count = get_tokens(count=True)
         self.assertTrue(count == 4, count)

@@ -3,6 +3,11 @@
 OCRA
 ----
 
+.. note::
+   This token type is planned for archival in eduMFA 3.0.0. It will remain
+   available with coverage limited to existing unit tests. Report problems
+   through GitHub issues or pull requests.
+
 .. index:: OCRA
 
 eduMFA supports common OCRA tokens.
@@ -42,9 +47,9 @@ Please note the tilde::
 
     POST https://eduMFA.example.com/validate/check
 
-    pass=pin
-    serial=ocra1234
-    challenge=1234567890~423,40~
+    pass=<otp-pin>
+    serial=<ocra-token-serial>
+    challenge=<recipient-account>~<amount>~
     addrandomchallenge=20
     hashchallenge=sha1
 
@@ -52,29 +57,28 @@ This will result in a response like this::
 
    {
      "jsonrpc": "2.0",
-     "signature": "128057011582042...408",
+     "signature": "<response-signature>",
      "detail": {
                 "multi_challenge": [
                    {
                     "attributes": {
-                    "qrcode": "data:image/png;base64, iVBORw0KG..RK5CYII=",
-                    "original_challenge": "83507112  ~320,
-                  00~cfbGSopfdDROOMjeu3IR",
-                    "challenge": "f8a1818f35ae0cc64fe8a191961ec829487dfa82"
+                    "qrcode": "data:image/png;base64, <qr-code-base64>",
+                    "original_challenge": "<recipient-account>~<amount>~<random-challenge>",
+                    "challenge": "<hashed-challenge>"
                     },
-                    "serial": "ocra1234",
-                    "transaction_id": "05221757445370623976"
+                    "serial": "<ocra-token-serial>",
+                    "transaction_id": "<transaction-id>"
                    }
                 ],
                 "threadid": 139847557760768,
                 "attributes": {
-                "qrcode": "data:image/png;base64, iVBO...CYII=",
-                "original_challenge": "83507112  ~320,00~cfbGSopfdDROOMjeu3IR",
-                "challenge": "f8a1818f35ae0cc64fe8a191961ec829487dfa82"
+                "qrcode": "data:image/png;base64, <qr-code-base64>",
+                "original_challenge": "<recipient-account>~<amount>~<random-challenge>",
+                "challenge": "<hashed-challenge>"
                 },
                 "message": "Please answer the challenge",
-                "serial": "ocra1234",
-                "transaction_id": "05221757445370623976"
+                "serial": "<ocra-token-serial>",
+                "transaction_id": "<transaction-id>"
      },
      "versionnumber": "2.20.dev2",
      "version": "eduMFA 2.20.dev2",
@@ -100,18 +104,18 @@ will issue this request::
 
     POST https://eduMFA.example.com/validate/check
 
-    serial=ocra1234
-    transaction_id=05221757445370623976
-    pass=54006635
+    serial=<ocra-token-serial>
+    transaction_id=<transaction-id>
+    pass=<transaction-otp>
 
 eduMFA will respond with a usual authentication response::
 
     {
      "jsonrpc": "2.0",
-     "signature": "162....2454851",
+     "signature": "<response-signature>",
      "detail": {
                 "message": "Found matching challenge",
-                "serial": "ocra1234",
+                "serial": "<ocra-token-serial>",
                 "threadid": 139847549368064
                },
      "versionnumber": "2.20.dev2",
