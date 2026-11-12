@@ -1893,9 +1893,8 @@ msgid "Loading Machines..."
 msgstr "Завантаження комп'ютерів..."
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Loading metrics…"
-msgstr "Завантаження серійних номерів..."
+msgstr ""
 
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html

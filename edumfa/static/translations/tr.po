@@ -1886,9 +1886,8 @@ msgid "Loading Machines..."
 msgstr "Yükleme makineleri ..."
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Loading metrics…"
-msgstr "Seri yükleme ..."
+msgstr ""
 
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
@@ -2004,9 +2003,8 @@ msgid "Metrics could not be loaded."
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "Metrics:"
-msgstr "Yeniden deneme"
+msgstr ""
 
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
@@ -2110,9 +2108,8 @@ msgid "No anonymous referral chasing"
 msgstr "Anonim yönlendirme takibi yok"
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "No data"
-msgstr "Jeton verileri"
+msgstr ""
 
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"

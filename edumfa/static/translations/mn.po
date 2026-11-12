@@ -1960,9 +1960,8 @@ msgid "No anonymous referral chasing"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-#, fuzzy
 msgid "No data"
-msgstr "Токен дата"
+msgstr ""
 
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
