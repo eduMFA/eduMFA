@@ -42,7 +42,7 @@ translate-backend: check-uv
 	# Normalize POT-Creation-Date after update (cross-platform sed)
 	(cd edumfa/translations; sed -i.bak 's/^"POT-Creation-Date:.*"/"POT-Creation-Date: 1970-01-01 00:00+0000\\n"/' messages.pot && rm -f messages.pot.bak)
 	# pybabel init -i messages.pot -d translations -l de
-	(cd edumfa; uv run pybabel update -i translations/messages.pot -d translations)
+	(cd edumfa; uv run pybabel update -i translations/messages.pot -d translations --ignore-obsolete)
 	# create the .mo file
 	(cd edumfa; uv run pybabel compile -d translations)
 

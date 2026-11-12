@@ -23,12 +23,12 @@
     "grunt-angular-gettext": "2.5.3",
     "grunt-cli": "1.5.0",
     "grunt-init": "0.3.2",
-    "prettier": "3.9.9"
+    "prettier": "3.9.10"
   },
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "translate": "grunt nggettext_extract && for language in translations/*.po; do msgmerge -U --backup=off $language translations/template.pot; done && grunt nggettext_compile"
+    "translate": "grunt nggettext_extract && for language in translations/*.po; do msgmerge -U --backup=off $language translations/template.pot && msgattrib --no-obsolete -o $language $language; done && grunt nggettext_compile"
   },
   "repository": {
     "type": "git",

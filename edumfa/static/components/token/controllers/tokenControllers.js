@@ -317,7 +317,7 @@ myApp.controller("tokenEnrollController", [
           $scope.systemDefault["daypassword.timeStep"] || "60",
         );
       }
-      if ($scope.form.type === "vasco") {
+      if ($scope.form.type === "vasco" || $scope.form.type === "yubikey") {
         $scope.form.genkey = false;
       } else {
         $scope.form.genkey = true;
@@ -357,6 +357,16 @@ myApp.controller("tokenEnrollController", [
       $scope.setTwostepEnrollmentDefault();
     };
 
+    // Wait for the system config and the allowed tokentypes to load to avoid
+    // any potential error messages due to missing permissions.
+    let systemConfigLoaded = false;
+    let tokenTypesLoaded = false;
+    $scope.initTokenTypeDefaults = function () {
+      if (systemConfigLoaded && tokenTypesLoaded) {
+        $scope.changeTokenType();
+      }
+    };
+
     // helper function for setting indexed secret attribute
     $scope.preset_indexedsecret = function () {
       if ($scope.form.type === "indexedsecret") {
@@ -373,10 +383,12 @@ myApp.controller("tokenEnrollController", [
             };
           }
           UserFactory.getUsers(params, function (data) {
-            var userObject = data.result.value[0];
+            let userObject = data.result.value[0];
             // preset for indexedsecret token
-            $scope.form.otpkey =
-              userObject[$scope.tokensettings.indexedsecret.preset_attribute];
+            if (userObject) {
+              $scope.form.otpkey =
+                userObject[$scope.tokensettings.indexedsecret.preset_attribute];
+            }
           });
         }
       }
@@ -495,10 +507,6 @@ myApp.controller("tokenEnrollController", [
         for (var tkey in $scope.formInit.tokenTypes) {
           // set the first key to be the default tokentype
           $scope.form.type = tkey;
-          // Set the 2step enrollment value
-          $scope.setTwostepEnrollmentDefault();
-          // Initialize token specific settings
-          $scope.changeTokenType();
           break;
         }
         // Warn about a default tokentype being set which the user can't
@@ -515,6 +523,10 @@ myApp.controller("tokenEnrollController", [
           );
         }
       }
+      // Initialize the token specific settings (if the system config was
+      // loaded already, too).
+      tokenTypesLoaded = true;
+      $scope.initTokenTypeDefaults();
     });
 
     $scope.CAConnectors = [];
@@ -705,7 +717,12 @@ myApp.controller("tokenEnrollController", [
     // get the list of configured CA connectors
     $scope.getCAConnectors = function () {
       ConfigFactory.getCAConnectorNames(function (data) {
-        var CAConnectors = data.result.value;
+        let CAConnectors = data.result.value;
+        // Clear the list to avoid duplicate entries when called multiple times.
+        // Clearing CATemplates is technically not necessary as it only provides
+        // a lookup for CAConnectors. Clearing it anyway for cleanliness' sake.
+        $scope.CAConnectors = [];
+        $scope.CATemplates = {};
         angular.forEach(CAConnectors, function (value, key) {
           $scope.CAConnectors.push(value.connectorname);
           $scope.form.ca = value.connectorname;
@@ -715,7 +732,6 @@ myApp.controller("tokenEnrollController", [
       });
     };
 
-    // If the user is admin, he can read the config.
     ConfigFactory.loadSystemConfig(function (data) {
       /* Default config values like
             radius.server, radius.secret...
@@ -723,7 +739,7 @@ myApp.controller("tokenEnrollController", [
          */
       $scope.systemDefault = data.result.value;
       //debug: console.log("system default config");
-      //debug: console.log(systemDefault);
+      //debug: console.log($scope.systemDefault);
       // TODO: The entries should be handled automatically.
       var entries = [
         "radius.server",
@@ -752,6 +768,10 @@ myApp.controller("tokenEnrollController", [
       $scope.num_answers = $scope.systemDefault["question.num_answers"];
       //debug: console.log($scope.questions);
       //debug: console.log($scope.form);
+      // Initialize the token specific settings (if the allowed token types
+      // were loaded already, too).
+      systemConfigLoaded = true;
+      $scope.initTokenTypeDefaults();
     });
 
     // open the window to generate the key pair
