@@ -52,6 +52,7 @@ monitoring_blueprint = Blueprint("monitoring_blueprint", __name__)
 
 MIN_DOWNSAMPLE_POINTS = 3
 MAX_DOWNSAMPLE_POINTS = 10_000
+LTTB_CANDIDATE_MULTIPLIER = 10
 
 
 def _parse_max_points(value: str | int | None) -> int | None:
@@ -94,10 +95,16 @@ def get_statistics(stats_key=None):
         end = getParam(param, "end")
         if end:
             end = parse_legacy_time(end, return_date=True)
-        values = get_values(
-            stats_key=stats_key, start_timestamp=start, end_timestamp=end
-        )
         max_points = _parse_max_points(getParam(param, "max_points"))
+        candidate_limit = (
+            max_points * LTTB_CANDIDATE_MULTIPLIER if max_points is not None else None
+        )
+        values = get_values(
+            stats_key=stats_key,
+            start_timestamp=start,
+            end_timestamp=end,
+            max_points=candidate_limit,
+        )
         if max_points is not None:
             values = lttb(values, max_points, x_key=lambda d: d.timestamp())
         # convert timestamps to strings
