@@ -3,6 +3,10 @@
 Ubuntu Packages
 ---------------
 
+.. warning::
+   The eduMFA Ubuntu packages are planned for removal in eduMFA 3.0.0.
+   See :ref:`install_docker_compose` for a container-based installation.
+
 .. index:: ubuntu
 
 There are ready made packages for Ubuntu 22.04LTS and 24.04LTS.

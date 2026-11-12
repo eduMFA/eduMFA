@@ -7,8 +7,7 @@ This page tracks notable release highlights for eduMFA.
 For version-to-version upgrade steps, see :ref:`migration_guides`.
 
 .. warning::
-   eduMFA 3.0.0 is expected to remove multiple features. The current work in
-   progress tracking issue is `#875 <https://github.com/eduMFA/eduMFA/issues/875>`_.
+   Review the :ref:`deprecations_3_0` before upgrading to eduMFA 3.0.0.
 
 .. caution::
    Due to new fields in ``edumfa.cfg``, upgrading via Ubuntu packages can cause apt to prompt you to replace it. Replacing it will remove secrets from your current configuration, so keep your existing file and add only the new fields manually.
@@ -17,6 +16,65 @@ For version-to-version upgrade steps, see :ref:`migration_guides`.
 
 eduMFA 2.X.Y (unreleased)
 --------------------------
+
+.. _deprecations_3_0:
+
+Deprecations for eduMFA 3.0.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following changes are planned for eduMFA 3.0.0. See
+`the release tracking issue <https://github.com/eduMFA/eduMFA/issues/875>`_
+for the current status.
+
+* **Token types.** Use the token list's type filter to find enrolled tokens
+  of type ``u2f``, ``push`` (legacy PUSH), ``daypassword``, ``daplug``,
+  ``vasco`` or ``certificate`` and plan replacements before upgrading.
+  Re-enroll compatible U2F devices as :ref:`webauthn` tokens and replace legacy
+  PUSH tokens with :ref:`edupush_token`. For Day Password tokens, consider
+  :ref:`pw_token` or :ref:`indexedsecret_token` with a validity period.
+  If you rely on Certificate tokens, report your use case in the release
+  tracking issue. Archiving that token type is still being considered.
+* **Archived token types.** :ref:`four_eyes_token`, :ref:`questionnaire_token`,
+  :ref:`ocra_token`, :ref:`tiqr_token` and :ref:`motp_token` are planned for
+  archival. They will remain available with coverage limited to the existing
+  unit tests. Report problems through GitHub issues or pull requests.
+* **User management.** Move creation, editing and deletion of users from
+  :ref:`editable resolvers <useridresolvers>` to your identity management
+  system or underlying user directory. Review workflows that depend on
+  writing to a resolver, including self-registration and password reset.
+* **Enrollment and authorization policies.** Use standard enrollment for new
+  HOTP and TOTP tokens and review the :ref:`two-step policies <2step_enrollment>`.
+  Review policies that use :ref:`force_app_pin` or
+  :ref:`application_tokentype_policy`. The WebUI policies
+  ``show_android_privacyidea_authenticator`` and
+  ``show_ios_privacyidea_authenticator`` are planned to be replaced by an
+  eduMFA app policy.
+* **Token images.** The :ref:`appimageurl enrollment policy <policy_appimageurl>`
+  is planned for removal. The planned ``edupush_image_url`` authentication
+  policy provides images for eduPUSH tokens after enrollment and during
+  challenge polling.
+* **Legacy PUSH policies.** ``enrollPUSH`` and the ``push_*`` enrollment
+  and authentication actions are planned for removal, including the
+  per-user token limits.
+* **eduPUSH TLS.** The ``edupush_ssl_verify`` action is planned for removal
+  from enrollment and authentication policies. Use an HTTPS endpoint with
+  a certificate trusted by the mobile device.
+* **TOTP timeshift.** Review the system-wide ``totp.useTimeShift`` setting and
+  policies with ``totp_timeshift=default``. The system default is planned for
+  removal. Set timeshift explicitly for enrollments that require it.
+* **Installation and integrations.** Plan a move from the eduMFA
+  :ref:`Ubuntu packages <install_ubuntu>` to a supported installation method
+  such as :ref:`install_docker_compose`. The bundled FreeRADIUS plugin is
+  planned for removal from this repository. Use the separate
+  `eduMFA RADIUS plugin repository <https://github.com/eduMFA/edumfa-radius>`_.
+
+Server logs report deprecated token enrollments and flag active deprecated
+policies, editable resolvers and the TOTP system default when loading
+configuration.
+
+The future of the ``DisableAutoChallengeJanitor`` and
+``DisableClientTracking`` settings is under discussion in the release
+tracking issue.
 
 Changes
 ~~~~~~~

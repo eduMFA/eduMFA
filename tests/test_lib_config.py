@@ -9,6 +9,7 @@ import importlib
 from flask import current_app
 
 from edumfa.lib.config import (
+    SharedConfigClass,
     delete_edumfa_config,
     get_config_object,
     get_edumfa_config,
@@ -32,7 +33,10 @@ from edumfa.lib.config import (
     set_edumfa_config,
     this,
 )
+from edumfa.lib.policy import SCOPE, delete_policy, set_policy
+from edumfa.lib.resolver import delete_resolver, save_resolver
 from edumfa.lib.resolvers.PasswdIdResolver import IdResolver as PWResolver
+from edumfa.lib.token import get_dynamic_policy_definitions
 from edumfa.lib.tokens.hotptoken import HotpTokenClass
 from edumfa.lib.tokens.totptoken import TotpTokenClass
 from edumfa.models import Config, db, save_config_timestamp
@@ -44,6 +48,99 @@ class ConfigTestCase(MyTestCase):
     """
     Test the config on the database level
     """
+
+    def test_deprecation_warnings_on_config_reload(self):
+        set_policy(
+            name="deprecated_enrollment",
+            scope=SCOPE.ENROLL,
+            action={
+                "appimageurl": "https://example.org/image.png",
+                "edupush_force_app_pin": True,
+                "edupush_registration_url": "https://example.org/ttype/edupush",
+                "hotp_2step_serversize": "20",
+                "push_max_token_per_user": "2",
+            },
+        )
+        self.addCleanup(delete_policy, "deprecated_enrollment")
+        set_policy(
+            name="deprecated_push_authentication",
+            scope=SCOPE.AUTH,
+            action={"edupush_allow_polling": "allow", "push_wait": "5"},
+        )
+        self.addCleanup(delete_policy, "deprecated_push_authentication")
+        set_policy(
+            name="inactive_enrollment",
+            scope=SCOPE.ENROLL,
+            action={"edupush_ssl_verify": "0"},
+            active=False,
+        )
+        self.addCleanup(delete_policy, "inactive_enrollment")
+        set_policy(
+            name="two_step_enrollment",
+            scope=SCOPE.ADMIN,
+            action={"enrollPUSH": True, "hotp_2step": "allow", "totp_2step": "force"},
+        )
+        self.addCleanup(delete_policy, "two_step_enrollment")
+        set_edumfa_config("totp.useTimeShift", "True")
+        self.addCleanup(delete_edumfa_config, "totp.useTimeShift")
+        save_resolver(
+            {"resolver": "editable_sql", "type": "sqlresolver", "Editable": 1}
+        )
+        self.addCleanup(delete_resolver, "editable_sql")
+
+        shared_config = SharedConfigClass()
+        with self.assertLogs("edumfa.lib.config", level="WARNING") as warnings:
+            shared_config.reload_and_clone()
+
+        self.assertEqual(len(warnings.records), 9, warnings.output)
+        warning_text = "\n".join(warnings.output)
+        for feature in (
+            "admin.enrollPUSH",
+            "admin.hotp_2step",
+            "admin.totp_2step",
+            "authentication.push_wait",
+            "enrollment.appimageurl",
+            "enrollment.hotp_2step_serversize",
+            "enrollment.push_max_token_per_user",
+            "totp.useTimeShift",
+            "editable_sql",
+        ):
+            self.assertIn(feature, warning_text)
+
+        save_config_timestamp()
+        db.session.commit()
+        with self.assertNoLogs("edumfa.lib.config", level="WARNING"):
+            shared_config.reload_and_clone()
+
+    def test_push_policy_deprecation_warnings_distinguish_legacy_push(self):
+        expected_actions: set[str] = set()
+        for scope, definitions in get_dynamic_policy_definitions().items():
+            actions = [
+                action
+                for action in definitions
+                if action.startswith(("push_", "edupush_"))
+                or action in ("enrollPUSH", "enrollEDUPUSH")
+            ]
+            if actions:
+                name = f"deprecated_push_{scope}"
+                set_policy(name=name, scope=scope, action=actions)
+                self.addCleanup(delete_policy, name)
+                expected_actions.update(
+                    f"{scope}.{action}"
+                    for action in actions
+                    if action.startswith("push_")
+                    or action in ("enrollPUSH", "edupush_ssl_verify")
+                )
+
+        with self.assertLogs("edumfa.lib.config", level="WARNING") as warnings:
+            SharedConfigClass().reload_and_clone()
+
+        logged_actions = {
+            record.getMessage().split()[1]
+            for record in warnings.records
+            if record.getMessage().startswith("Action ")
+        }
+        self.assertEqual(logged_actions, expected_actions)
 
     def test_00_get_config(self):
         # set the config

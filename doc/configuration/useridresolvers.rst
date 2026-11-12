@@ -37,6 +37,10 @@ When you have added all configuration data, most UIs of the UserIdResolvers have
 button "Test resolver", so that you can test your configuration before saving
 it.
 
+.. warning::
+   Editable resolvers are planned for removal in eduMFA 3.0.0. Manage users
+   in your identity management system or user directory.
+
 Resolvers can be editable, i.e. you can edit
 the users in the user store. Read more about this at :ref:`manage_users`.
 

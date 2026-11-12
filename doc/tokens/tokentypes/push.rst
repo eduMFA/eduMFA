@@ -12,8 +12,9 @@ from `Google Play Store`_ or `Apple App Store`_.
 .. _Apple App Store: https://apps.apple.com/us/app/privacyidea-authenticator/id1445401301
 
 .. warning::
-    The legacy PUSH token type is deprecated and will be removed in the future. We strongly recommend using the
-    :ref:`edupush_token` token type instead.
+    The legacy PUSH token type and its policies are planned for removal in
+    eduMFA 3.0.0. Review the PUSH policies listed in :ref:`deprecations_3_0`
+    and replace legacy PUSH tokens with :ref:`edupush_token` tokens.
 
 The token type *push* sends a cryptographic challenge via the
 Google Firebase service to the smartphone of the user. This push

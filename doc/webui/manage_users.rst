@@ -3,6 +3,11 @@
 Manage Users
 ------------
 
+.. warning::
+   User management through editable resolvers is planned for removal in
+   eduMFA 3.0.0. Manage users in your identity management system or user
+   directory.
+
 .. index:: Edit User, Change User Password, Add User
 
 eduMFA allows you to edit users in the configured

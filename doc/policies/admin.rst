@@ -73,6 +73,9 @@ There are enrollment actions per token type, e.g. ``enrollHOTP``. Only those tok
 types are selectable in the WebUI during enrollment which are allowed by their
 corresponding enroll policy action.
 
+.. warning::
+   The ``enrollPUSH`` action is planned for removal in eduMFA 3.0.0.
+
 enable
 ~~~~~~
 
@@ -795,6 +798,10 @@ and is only used for triggering challenges.
 hotp_2step and totp_2step
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+   The ``hotp_2step`` and ``totp_2step`` actions are planned for removal in
+   eduMFA 3.0.0.
+
 type: string
 
 This allows or forces the administrator to enroll a smartphone based token in two steps.
@@ -843,6 +850,10 @@ Possible values are *30* or *60*, default is *30*.
 
 totp_timeshift
 ~~~~~~~~~~~~~
+
+.. warning::
+   The ``default`` value is planned for removal in eduMFA 3.0.0. Set timeshift
+   explicitly for enrollments that require it.
 
 type: string
 

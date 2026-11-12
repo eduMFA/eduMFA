@@ -3,6 +3,9 @@
 VASCO
 -----
 
+.. warning::
+   VASCO tokens are planned for removal in eduMFA 3.0.0.
+
 .. index:: VASCO
 
 VASCO OTP tokens are a proprietary OTP token. You can import

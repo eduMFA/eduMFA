@@ -3,6 +3,11 @@
 FreeRADIUS
 ----------
 
+.. warning::
+   The bundled FreeRADIUS plugin is planned for removal in eduMFA 3.0.0.
+   It is maintained in the separate
+   `eduMFA RADIUS plugin repository <https://github.com/eduMFA/edumfa-radius>`_.
+
 .. index:: FreeRADIUS
 
 eduMFA has a perl module to "translate" RADIUS requests to the API of the

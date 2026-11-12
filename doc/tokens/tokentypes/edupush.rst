@@ -1,7 +1,7 @@
 .. _edupush_token:
 
 eduPUSH Token
-----------
+-------------
 
 .. index:: eduPush Token, Firebase service
 

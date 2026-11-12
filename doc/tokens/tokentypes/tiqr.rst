@@ -3,6 +3,11 @@
 TiQR
 ----
 
+.. note::
+   This token type is planned for archival in eduMFA 3.0.0. It will remain
+   available with coverage limited to existing unit tests. Report problems
+   through GitHub issues or pull requests.
+
 .. index:: TiQR, OCRA
 
 The TiQR token is a smartphone token, that can be used to login by only

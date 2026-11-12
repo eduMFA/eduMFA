@@ -3,6 +3,11 @@
 TOTP
 ----
 
+.. warning::
+   :ref:`Two-step enrollment <2step_enrollment>` and the system-wide
+   timeshift default (``totp.useTimeShift``) are planned for removal in
+   eduMFA 3.0.0.
+
 The TOTP token is - together with the :ref:`hotp_token` - the most common token.
 The TOTP Algorithm is defined in
 `RFC6238 <https://tools.ietf.org/html/rfc6238>`_.

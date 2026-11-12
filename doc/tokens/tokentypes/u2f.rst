@@ -3,6 +3,10 @@
 U2F
 ----
 
+.. warning::
+   U2F tokens are planned for removal in eduMFA 3.0.0. Re-enroll compatible
+   devices as :ref:`webauthn` tokens.
+
 .. index:: U2F, FIDO
 
 The administrator or the user himself can register a U2F device and use this
