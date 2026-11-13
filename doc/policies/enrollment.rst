@@ -37,6 +37,10 @@ This is the maximum allowed number of tokens in the specified realm.
 max_token_per_user
 ~~~~~~~~~~~~~~~~~~
 
+.. warning::
+   The ``push_max_token_per_user`` action is planned for removal in
+   eduMFA 3.0.0.
+
 type: int
 
 Limit the maximum number of tokens per user in this realm.
@@ -54,6 +58,10 @@ allowed to have assigned.
 
 max_active_token_per_user
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The ``push_max_active_token_per_user`` action is planned for removal in
+   eduMFA 3.0.0.
 
 type: int
 
@@ -101,8 +109,20 @@ The default behaviour is to use the serial number.
    You should rather use a label like ``"{user}@{realm}"``,
    which would result in ``"@"``.
 
+.. _policy_appimageurl:
+
 appimageurl
 ~~~~~~~~~~~
+
+.. warning::
+   Embedding image URLs in HOTP, TOTP and PUSH enrollment QR codes through
+   this policy is planned for removal in eduMFA 3.0.0.
+
+For eduPUSH token images, the planned replacement is the
+``edupush_image_url`` authentication policy. It sends the current image URL
+to compatible authenticator apps after enrollment and during challenge
+polling, so image changes can reach already enrolled tokens. See
+`PR #1318 <https://github.com/eduMFA/eduMFA/pull/1318>`_.
 
 .. index:: Token Image, FreeOTP
 
@@ -379,6 +399,10 @@ If you do not want to verify the validity period, you can check this action.
 2step_clientsize, 2step_serversize, 2step_difficulty
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+   These parameters are planned for removal in eduMFA 3.0.0 with HOTP and
+   TOTP two-step enrollment.
+
 type: string
 
 These are token type specific parameters (with ``hotp_`` or ``totp_`` prefix).
@@ -397,6 +421,10 @@ specifies the number of rounds.
 force_app_pin
 ~~~~~~~~~~~~~
 
+.. warning::
+   The ``hotp_force_app_pin``, ``totp_force_app_pin`` and
+   ``push_force_app_pin`` actions are planned for removal in eduMFA 3.0.0.
+
 type: bool
 
 This is a token type specific parameter (with ``hotp_`` or ``totp_`` prefix).
@@ -410,7 +438,10 @@ to force the user to protect the token with a PIN.
 .. _policy_firebase_config:
 
 edupush_firebase_configuration, push_firebase_configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The ``push_firebase_configuration`` action is planned for removal in eduMFA 3.0.0.
 
 type: string
 
@@ -429,7 +460,10 @@ Note, that you also need to set the authentication policy
 :ref:`policy_auth_push_allow_poll` to allow the push token to poll for challenges.
 
 edupush_registration_url, push_registration_url
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The ``push_registration_url`` action is planned for removal in eduMFA 3.0.0.
 
 type: string
 
@@ -439,7 +473,10 @@ This URL usually ends with ``/ttype/edupush`` for eduPUSH and ``/ttype/push`` le
 may connect to a different eduMFA URL than the URL of the eduMFA Web UI.
 
 edupush_ttl, push_ttl
-~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The ``push_ttl`` action is planned for removal in eduMFA 3.0.0.
 
 This is the time (in minutes) how long the eduMFA server
 accepts the response of the second registration step.
@@ -449,7 +486,11 @@ could take some time to happen.
 .. _policy_push_ssl_verify_enrollment:
 
 edupush_ssl_verify, push_ssl_verify
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   Both actions are planned for removal in eduMFA 3.0.0.
+   Use an HTTPS endpoint with a certificate trusted by the mobile device.
 
 type: int
 
