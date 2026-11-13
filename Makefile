@@ -3,6 +3,12 @@ info:
 	@echo "make translate-frontend	- translate WebUI"
 	@echo "make translate-backend 	- translate string in the server code."
 	@echo "make update-contrib   	- update JS contrib libraries"
+	@echo "make prepare-release VERSION=X.Y.Z"
+	@echo "make prepare-fix-release VERSION=X.Y.Z COMMITS='sha1 sha2'"
+	@echo "make check-release VERSION=X.Y.Z"
+	@echo "make tag-release VERSION=X.Y.Z"
+	@echo "make create-fix-branch VERSION=X.Y.0"
+	@echo "make start-development VERSION=X.Y.Za"
 
 
 BUN_VERSION := $(shell bun --version 2>/dev/null)
@@ -16,13 +22,32 @@ clean:
 	rm -f .coverage
 	(cd doc; make clean)
 
-setversion:
-	vim Makefile
-	vim setup.py
-	vim doc/conf.py
-	vim Changelog
-	@echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	@echo "Please set a tag like:  git tag 3.17"
+.PHONY: prepare-release prepare-fix-release check-release tag-release create-fix-branch start-development
+
+prepare-release: check-uv
+	@test -n "$(VERSION)" || (echo "VERSION is required, for example VERSION=2.10.0"; exit 2)
+	uv run --no-sync python tools/release.py prepare --version "$(VERSION)"
+
+prepare-fix-release: check-uv
+	@test -n "$(VERSION)" || (echo "VERSION is required, for example VERSION=2.9.4"; exit 2)
+	@test -n "$(COMMITS)" || (echo "COMMITS is required, for example COMMITS='abc123 def456'"; exit 2)
+	uv run --no-sync python tools/release.py prepare-fix --version "$(VERSION)" --commits "$(COMMITS)"
+
+check-release: check-uv
+	@test -n "$(VERSION)" || (echo "VERSION is required, for example VERSION=2.10.0"; exit 2)
+	uv run --no-sync python tools/release.py check --version "$(VERSION)"
+
+tag-release: check-uv
+	@test -n "$(VERSION)" || (echo "VERSION is required, for example VERSION=2.10.0"; exit 2)
+	uv run --no-sync python tools/release.py tag --version "$(VERSION)"
+
+create-fix-branch: check-uv
+	@test -n "$(VERSION)" || (echo "VERSION is required, for example VERSION=2.10.0"; exit 2)
+	uv run --no-sync python tools/release.py create-fix-branch --version "$(VERSION)"
+
+start-development: check-uv
+	@test -n "$(VERSION)" || (echo "VERSION is required, for example VERSION=2.11.0a"; exit 2)
+	uv run --no-sync python tools/release.py start-development --version "$(VERSION)"
 
 doc-man:
 	(cd doc; make man)
