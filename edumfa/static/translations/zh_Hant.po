@@ -670,6 +670,10 @@ msgstr "連接參數"
 msgid "Connector name"
 msgstr "連接器名稱"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -1821,6 +1825,10 @@ msgstr "上次定義更新"
 msgid "Last seen:"
 msgstr "上次檢視時間："
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "許可依據"
@@ -1865,6 +1873,10 @@ msgstr "列出令牌"
 msgid "Loading Machines..."
 msgstr "載入機器..."
 
+#: components/dashboard/views/dashboard.html
+msgid "Loading metrics…"
+msgstr ""
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1873,6 +1885,10 @@ msgstr "載入連續出版物..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "載入使用者..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 #, fuzzy
@@ -1972,6 +1988,14 @@ msgstr "最大成功身份驗證計數"
 msgid "Method"
 msgstr "方法"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Metrics:"
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1985,6 +2009,10 @@ msgstr ""
 #, fuzzy
 msgid "Mobile"
 msgstr "手機"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2075,9 +2103,19 @@ msgstr "找不到 OTP 值 {{ otp }} 的序列號。"
 msgid "No anonymous referral chasing"
 msgstr "沒有匿名推薦追逐"
 
+#: components/dashboard/views/dashboard.html
+msgid "No data"
+msgstr ""
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "未找到電腦"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -4345,6 +4383,10 @@ msgstr ""
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
 msgstr "TiQR 令牌設置"
+
+#: components/dashboard/views/dashboard.html
+msgid "Time range:"
+msgstr ""
 
 #: components/config/views/config.radius.edit.html
 #: components/config/views/config.smtp.edit.html

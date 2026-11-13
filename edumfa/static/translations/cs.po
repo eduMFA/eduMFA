@@ -633,6 +633,10 @@ msgstr "Parametry připojení"
 msgid "Connector name"
 msgstr "Název konektoru"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -1741,6 +1745,10 @@ msgstr ""
 msgid "Last seen:"
 msgstr "Poslední aktivita:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Licencováno pod"
@@ -1784,6 +1792,10 @@ msgstr "Zobrazit seznam tokenů"
 msgid "Loading Machines..."
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "Loading metrics…"
+msgstr ""
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1792,6 +1804,10 @@ msgstr "Načítání sériových čísel..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Načítání uživatelů..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1887,6 +1903,14 @@ msgstr "Maximální počet úspěšných autentizací"
 msgid "Method"
 msgstr "Metoda"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Metrics:"
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1899,6 +1923,10 @@ msgstr ""
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Mobil"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -1983,8 +2011,18 @@ msgstr "Nebylo nalezeno žádné sériové číslo pro jednorázový kód {{ otp
 msgid "No anonymous referral chasing"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "No data"
+msgstr ""
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
 msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
@@ -4030,6 +4068,10 @@ msgstr ""
 
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Time range:"
 msgstr ""
 
 #: components/config/views/config.radius.edit.html
