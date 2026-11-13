@@ -124,7 +124,7 @@ test = [
     "pytest-github-actions-annotate-failures==0.4.2",
     "responses==0.26.3",
     "testcontainers[mysql,postgres]==4.15.0",
-    "testfixtures==8.3.0",
+    "testfixtures==12.4.0",
     "tomli==2.4.1",
     "types-PyYAML==6.0.12.20260906",
     "fido2==2.2.1"
