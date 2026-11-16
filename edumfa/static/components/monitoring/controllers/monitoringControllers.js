@@ -2,7 +2,8 @@ myApp.controller("monitoringController", [
   "MonitoringFactory",
   "AuthFactory",
   "$scope",
-  function (MonitoringFactory, AuthFactory, $scope) {
+  "gettext",
+  function (MonitoringFactory, AuthFactory, $scope, gettext) {
     const emptyDefaultTimeline = {
       data: { datasets: [] },
     };
@@ -32,19 +33,18 @@ myApp.controller("monitoringController", [
     const STATUS = { LOADING: "loading", EMPTY: "empty", ERROR: "error" };
 
     $scope.timeFrame = [
-      { label: "24 hours", unit: "hour", amount: 24 },
-      { label: "1 Week", unit: "day", amount: 7 },
-      { label: "1 Month", unit: "month", amount: 1 },
-      { label: "3 Months", unit: "month", amount: 3 },
-      { label: "6 Months", unit: "month", amount: 6 },
-      { label: "1 Year", unit: "year", amount: 1 },
-      { label: "All", unit: null, amount: null },
+      { label: gettext("24 hours"), unit: "hour", amount: 24 },
+      { label: gettext("1 Week"), unit: "day", amount: 7 },
+      { label: gettext("1 Month"), unit: "month", amount: 1 },
+      { label: gettext("3 Months"), unit: "month", amount: 3 },
+      { label: gettext("6 Months"), unit: "month", amount: 6 },
+      { label: gettext("1 Year"), unit: "year", amount: 1 },
+      { label: gettext("All"), unit: null, amount: null },
     ];
 
     $scope.tokenTimeline = angular.copy(emptyDefaultTimeline);
     $scope.selectedTimeFrame = $scope.timeFrame[0];
 
-    var datasetCache = {};
     var datasetStatusMap = {};
     var requestSeq = {};
     var statsKeysSeq = 0;
@@ -134,11 +134,7 @@ myApp.controller("monitoringController", [
       Object.keys(requestSeq).forEach(function (key) {
         requestSeq[key]++;
       });
-      Object.keys(datasetStatusMap).forEach(function (key) {
-        if (datasetStatusMap[key].state === STATUS.LOADING) {
-          delete datasetStatusMap[key];
-        }
-      });
+      datasetStatusMap = {};
       MonitoringFactory.cancelAll();
     }
 
@@ -176,6 +172,11 @@ myApp.controller("monitoringController", [
               return {
                 id: sk,
                 name: sk,
+                // The multi-select renders labels as HTML.
+                displayLabel: sk
+                  .replaceAll("&", "&amp;")
+                  .replaceAll("<", "&lt;")
+                  .replaceAll(">", "&gt;"),
                 color: style.color,
                 visible: true,
                 borderDash: style.borderDash,
@@ -199,10 +200,6 @@ myApp.controller("monitoringController", [
     function getDataset(sk, callback) {
       var startTime = getStartTime($scope.selectedTimeFrame);
       var key = statusKey(sk.name);
-      if (datasetCache[key]) {
-        callback(datasetCache[key]);
-        return;
-      }
       var current = datasetStatusMap[key];
       if (current && current.state === STATUS.LOADING) {
         return;
@@ -242,12 +239,7 @@ myApp.controller("monitoringController", [
             pointHitRadius: 6,
             borderWidth: 2,
           };
-          if (dataset.data.length === 0) {
-            setStatus(key, STATUS.EMPTY);
-          } else {
-            datasetCache[key] = dataset;
-            setStatus(key, null);
-          }
+          setStatus(key, points.length === 0 ? STATUS.EMPTY : null);
           callback(dataset);
         },
         function (error, meta) {
@@ -333,8 +325,6 @@ myApp.controller("monitoringController", [
     $scope.$on("piReload", function () {
       if (AuthFactory.checkRight("statistics_read")) {
         cancelDatasetRequests();
-        datasetCache = {};
-        datasetStatusMap = {};
         $scope.selectedTimeFrame = $scope.timeFrame[0];
         $scope.tokenTimeline = angular.copy(emptyDefaultTimeline);
         getAvailableStatsKeys();
