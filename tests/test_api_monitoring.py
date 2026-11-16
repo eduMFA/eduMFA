@@ -10,6 +10,24 @@ from .base import MyApiTestCase
 
 
 class APIMonitoringTestCase(MyApiTestCase):
+    def test_get_stats_by_query_key_with_slash(self) -> None:
+        stats_key = "auth/success"
+        start = datetime.datetime(2026, 1, 1, tzinfo=datetime.timezone.utc)
+        for index, value in enumerate((1, 10, 1, 2)):
+            write_stats(
+                stats_key, value, timestamp=start + datetime.timedelta(seconds=index)
+            )
+
+        with self.app.test_request_context(
+            "/monitoring/",
+            query_string={"stats_key": stats_key, "max_points": 3},
+            headers={"Authorization": self.at},
+        ):
+            response = self.app.full_dispatch_request()
+            self.assertEqual(200, response.status_code, response)
+            values = response.json["result"]["value"]
+            self.assertEqual([1, 10, 2], [value for _, value in values])
+
     def test_01_get_stats(self):
         # create some statistics
 

@@ -78,13 +78,14 @@ def _parse_max_points(value: object) -> int | None:
 @prepolicy(check_base_action, request, ACTION.STATISTICSREAD)
 def get_statistics(stats_key=None):
     """
-    return a list of all available statistics keys in the database if no *stats_key*
-    is specified.
-
-    If a stats_key is specified it returns the data of this key.
+    Return the available statistics keys when no `stats_key` is specified.
+    Provide `stats_key` in the path or as a query parameter on `/monitoring/`
+    to fetch that key's data. Use the query parameter for keys containing slashes.
     The parameters "start" and "end" can be used to specify a time window,
     from which the statistics data should be fetched.
     """
+    if stats_key is None:
+        stats_key = request.args.get("stats_key")
     if stats_key is None:
         stats_keys = get_stats_keys()
         g.audit_object.log({"success": True})
