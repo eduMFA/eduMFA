@@ -29,6 +29,11 @@ class LTTBTestCase(unittest.TestCase):
 
         self.assertIn((2, 10), sampled)
 
+    def test_penultimate_point_is_in_the_last_candidate_bucket(self) -> None:
+        points = [(index, 10 if index == 15 else 0) for index in range(17)]
+
+        self.assertIn((15, 10), lttb(points, 13))
+
     def test_custom_x_key(self) -> None:
         start = datetime.datetime(2026, 1, 1, tzinfo=datetime.timezone.utc)
         points = [
