@@ -3,5 +3,6 @@
 edumfa-manage -q resolver create_internal testresolver
 edumfa-manage -q realm create testrealm testresolver
 
-edumfa-manage -q config importer -i /opt/edumfa/policy.py
+# Seed missing example policies without overwriting edits on restart.
+edumfa-manage -q policy import -f /opt/edumfa/policy.py
 
