@@ -50,11 +50,7 @@ myApp.factory("MonitoringFactory", [
         callback,
         errorCallback,
       ) {
-        request(
-          cacheKey,
-          monitoringUrl + "/" + encodeURIComponent(stats_key),
-          params,
-        ).then(
+        request(cacheKey, monitoringUrl + "/", { ...params, stats_key }).then(
           function (response) {
             callback(response.data);
           },
