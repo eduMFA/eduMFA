@@ -6,7 +6,7 @@ alembic==1.20.0
     #   flask-migrate
 argon2-cffi==25.1.0
     # via passlib
-argon2-cffi-bindings==26.1.0
+argon2-cffi-bindings==26.2.0
     # via argon2-cffi
 async-timeout==5.0.1 ; python_full_version < '3.11.3'
     # via redis
@@ -144,7 +144,7 @@ smpplib==2.2.4
     # via edumfa (pyproject.toml)
 soupsieve==2.10 ; python_full_version < '3.11.5'
     # via beautifulsoup4
-soupsieve==4.1 ; python_full_version >= '3.11.5'
+soupsieve==4.1.1 ; python_full_version >= '3.11.5'
     # via beautifulsoup4
 sqlalchemy==2.0.51
     # via
