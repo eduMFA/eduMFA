@@ -45,9 +45,7 @@ class Monitoring:
         """
         return []
 
-    def get_values(
-        self, stats_key, start_timestamp=None, end_timestamp=None, max_points=None
-    ):
+    def get_values(self, stats_key, start_timestamp=None, end_timestamp=None):
         """
         Return a list of tuples of (timestamp, value) for the requested stats_key.
 
@@ -56,7 +54,6 @@ class Monitoring:
         :type start_timestamp: timezone aware datetime
         :param end_timestamp:  end of the time frame
         :type end_timestamp: timezone aware datetime
-        :param max_points: optional upper bound for values materialized by the backend
         :return:
         """
         return []

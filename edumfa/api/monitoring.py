@@ -55,12 +55,14 @@ MAX_DOWNSAMPLE_POINTS = 10_000
 LTTB_CANDIDATE_MULTIPLIER = 10
 
 
-def _parse_max_points(value: str | int | None) -> int | None:
+def _parse_max_points(value: object) -> int | None:
     if value in (None, ""):
         return None
+    if not isinstance(value, (str, int)) or isinstance(value, bool):
+        raise ParameterError("max_points must be an integer")
     try:
         max_points = int(value)
-    except (TypeError, ValueError) as ex:
+    except ValueError as ex:
         raise ParameterError("max_points must be an integer") from ex
     if not MIN_DOWNSAMPLE_POINTS <= max_points <= MAX_DOWNSAMPLE_POINTS:
         raise ParameterError(

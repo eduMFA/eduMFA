@@ -70,6 +70,15 @@ class APIMonitoringTestCase(MyApiTestCase):
                 res = self.app.full_dispatch_request()
                 self.assertEqual(400, res.status_code, res)
 
+        with self.app.test_request_context(
+            "/monitoring/key1",
+            json={"max_points": 3.5},
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(400, res.status_code, res)
+
         # check values of key1, with a start value in the past
         with self.app.test_request_context(
             "/monitoring/key1",
