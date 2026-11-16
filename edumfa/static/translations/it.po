@@ -683,6 +683,10 @@ msgstr "Parametri di connessione"
 msgid "Connector name"
 msgstr "Nome del connettore"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -1847,6 +1851,10 @@ msgstr "Ultimo aggiornamento della definizione"
 msgid "Last seen:"
 msgstr "L'ultima volta che è stato visto:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Concesso in licenza ai sensi"
@@ -1891,6 +1899,10 @@ msgstr "Elenco dei token"
 msgid "Loading Machines..."
 msgstr "Caricamento delle macchine..."
 
+#: components/dashboard/views/dashboard.html
+msgid "Loading metrics…"
+msgstr ""
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1899,6 +1911,10 @@ msgstr "Caricamento dei seriali..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Caricamento utenti..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1996,6 +2012,14 @@ msgstr "Numero massimo di autenticazioni riuscite"
 msgid "Method"
 msgstr "Metodo"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Metrics:"
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr "Nome host del worker Microsoft CA"
@@ -2008,6 +2032,10 @@ msgstr "Porta del worker Microsoft CA"
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Cellulare"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2095,9 +2123,19 @@ msgstr ""
 msgid "No anonymous referral chasing"
 msgstr "Nessun riferimento anonimo da seguire"
 
+#: components/dashboard/views/dashboard.html
+msgid "No data"
+msgstr ""
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Nessuna macchina trovata"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -4404,6 +4442,10 @@ msgstr ""
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
 msgstr "Impostazioni del token TiQR"
+
+#: components/dashboard/views/dashboard.html
+msgid "Time range:"
+msgstr ""
 
 #: components/config/views/config.radius.edit.html
 #: components/config/views/config.smtp.edit.html

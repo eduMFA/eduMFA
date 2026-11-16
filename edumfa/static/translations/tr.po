@@ -681,6 +681,10 @@ msgstr "Bağlantı parametreleri"
 msgid "Connector name"
 msgstr "Bağlayıcı adı"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -1833,6 +1837,10 @@ msgstr "Son tanım güncellemesi"
 msgid "Last seen:"
 msgstr "Son görülen:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Lisanslı"
@@ -1877,6 +1885,10 @@ msgstr "Jeton listesi"
 msgid "Loading Machines..."
 msgstr "Yükleme makineleri ..."
 
+#: components/dashboard/views/dashboard.html
+msgid "Loading metrics…"
+msgstr ""
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1885,6 +1897,10 @@ msgstr "Seri yükleme ..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Kullanıcıları Yükleme ..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -1982,6 +1998,14 @@ msgstr "Maksimum Başarı Auth Sayımı"
 msgid "Method"
 msgstr "Yöntem"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Metrics:"
+msgstr ""
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr ""
@@ -1994,6 +2018,10 @@ msgstr ""
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Mobile"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2079,9 +2107,19 @@ msgstr "OTP değeri {{OTP}} için hiçbir seri numarası bulunamadı."
 msgid "No anonymous referral chasing"
 msgstr "Anonim yönlendirme takibi yok"
 
+#: components/dashboard/views/dashboard.html
+msgid "No data"
+msgstr ""
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Makine bulunamadı"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -4362,6 +4400,10 @@ msgstr ""
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
 msgstr "Tiqr Token Ayarları"
+
+#: components/dashboard/views/dashboard.html
+msgid "Time range:"
+msgstr ""
 
 #: components/config/views/config.radius.edit.html
 #: components/config/views/config.smtp.edit.html

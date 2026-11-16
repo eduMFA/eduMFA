@@ -132,3 +132,19 @@ class TokenModelTestCase(MyTestCase):
         # Get the last value of key1
         r = get_last_value("key1")
         self.assertEqual(r, 10)
+
+    def test_05_get_values_with_bounded_sampling(self) -> None:
+        delete_stats("sampled-key")
+        start = datetime.datetime.now(tzlocal())
+        for index in range(100):
+            value = 1_000 if index == 50 else index % 5
+            write_stats(
+                "sampled-key", value, timestamp=start + timedelta(minutes=index)
+            )
+
+        values = get_values("sampled-key", max_points=10)
+
+        self.assertLessEqual(len(values), 10)
+        self.assertEqual(0, values[0][1])
+        self.assertEqual(4, values[-1][1])
+        self.assertIn(1_000, [value for _, value in values])

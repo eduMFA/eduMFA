@@ -21,12 +21,14 @@
 #
 __doc__ = """This module writes statistics data to the SQL database table "monitoringstats".
 """
+import datetime
 import logging
+import math
 import traceback
 
 from dateutil.tz import tzutc
 from sqlalchemy import MetaData, and_, create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import Query, scoped_session, sessionmaker
 
 from edumfa.lib.lifecycle import register_finalizer
 from edumfa.lib.monitoringmodules.base import Monitoring as MonitoringBase
@@ -153,9 +155,14 @@ class Monitoring(MonitoringBase):
         return keys
 
     def get_values(
-        self, stats_key, start_timestamp=None, end_timestamp=None, date_strings=False
-    ):
-        values = []
+        self,
+        stats_key: str,
+        start_timestamp: datetime.datetime | None = None,
+        end_timestamp: datetime.datetime | None = None,
+        date_strings: bool = False,
+        max_points: int | None = None,
+    ) -> list[tuple[datetime.datetime, int]]:
+        values: list[tuple[datetime.datetime, int]] = []
 
         try:
             conditions = [MonitoringStats.stats_key == stats_key]
@@ -165,13 +172,16 @@ class Monitoring(MonitoringBase):
             if end_timestamp:
                 utc_end_timestamp = convert_timestamp_to_utc(end_timestamp)
                 conditions.append(MonitoringStats.timestamp <= utc_end_timestamp)
-            for ms in (
+            query = (
                 self.session.query(MonitoringStats)
                 .filter(and_(True, *conditions))
                 .order_by(MonitoringStats.timestamp.asc())
-            ):
-                aware_timestamp = ms.timestamp.replace(tzinfo=tzutc())
-                values.append((aware_timestamp, ms.stats_value))
+            )
+            total = query.count() if max_points is not None else None
+            if total is not None and total > max_points:
+                values = self._sample_values(query, total, max_points)
+            else:
+                values = [self._to_value(ms) for ms in query]
         except Exception as exx:  # pragma: no cover
             log.error(f"exception {exx!r}")
             log.error("could not fetch list of keys")
@@ -182,6 +192,46 @@ class Monitoring(MonitoringBase):
             self.session.close()
 
         return values
+
+    @staticmethod
+    def _to_value(
+        monitoring_stat: MonitoringStats,
+    ) -> tuple[datetime.datetime, int]:
+        return (
+            monitoring_stat.timestamp.replace(tzinfo=tzutc()),
+            monitoring_stat.stats_value,
+        )
+
+    def _sample_values(
+        self, query: Query[MonitoringStats], total: int, max_points: int
+    ) -> list[tuple[datetime.datetime, int]]:
+        """Stream a bounded min/max candidate set from an ordered query."""
+        bucket_count = max(1, (max_points - 2) // 2)
+        bucket_size = math.ceil((total - 2) / bucket_count)
+        sampled: list[tuple[datetime.datetime, int]] = []
+        bucket: list[tuple[datetime.datetime, int]] = []
+
+        def flush_bucket() -> None:
+            if not bucket:
+                return
+            minimum = min(bucket, key=lambda value: value[1])
+            maximum = max(bucket, key=lambda value: value[1])
+            sampled.extend(sorted({minimum, maximum}, key=lambda value: value[0]))
+            bucket.clear()
+
+        for index, monitoring_stat in enumerate(query.yield_per(1_000)):
+            value = self._to_value(monitoring_stat)
+            if index == 0:
+                sampled.append(value)
+            elif index == total - 1:
+                flush_bucket()
+                sampled.append(value)
+            else:
+                bucket.append(value)
+                if len(bucket) == bucket_size:
+                    flush_bucket()
+
+        return sampled
 
     def get_last_value(self, stats_key):
         val = None
