@@ -22,9 +22,33 @@ msgstr "#"
 msgid "(none)"
 msgstr "(байхгүй)"
 
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Month"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Week"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "1 Year"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "24 hours"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "3 Months"
+msgstr ""
+
 #: components/directives/views/directive.csvdownload.html
 msgid "45% Complete"
 msgstr "45% Гүйцэтгэлтэй"
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "6 Months"
+msgstr ""
 
 #: components/config/views/config.periodictasks.details.html
 msgid ""
@@ -200,6 +224,10 @@ msgstr "Administrator"
 
 #: components/dashboard/views/dashboard.html
 msgid "Adoption"
+msgstr ""
+
+#: components/monitoring/controllers/monitoringControllers.js
+msgid "All"
 msgstr ""
 
 #: components/config/views/config.system.html

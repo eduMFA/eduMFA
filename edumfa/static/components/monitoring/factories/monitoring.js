@@ -36,7 +36,7 @@ myApp.factory("MonitoringFactory", [
             callback(response.data);
           },
           function (error) {
-            var cancelled = error.status === -1;
+            var cancelled = error.xhrStatus === "abort";
             if (errorCallback) errorCallback(error, { cancelled: cancelled });
             if (!cancelled) AuthFactory.authError(error.data);
           },
@@ -55,7 +55,7 @@ myApp.factory("MonitoringFactory", [
             callback(response.data);
           },
           function (error) {
-            var cancelled = error.status === -1;
+            var cancelled = error.xhrStatus === "abort";
             if (errorCallback) errorCallback(error, { cancelled: cancelled });
             if (!cancelled) AuthFactory.authError(error.data);
           },
