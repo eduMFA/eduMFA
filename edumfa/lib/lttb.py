@@ -39,20 +39,21 @@ def lttb(
     ys = [float(p[1]) for p in points]
 
     sampled = [points[0]]
-    every = (n - 2) / (threshold - 2)
+    interior_points = n - 2
+    bucket_count = threshold - 2
     a = 0  # index of the previously selected point
 
-    for i in range(threshold - 2):
+    for i in range(bucket_count):
+        start = i * interior_points // bucket_count + 1
+        end = (i + 1) * interior_points // bucket_count + 1
+
         # bucket after the current one -> its average is the third triangle corner
-        next_start = int((i + 1) * every) + 1
-        next_end = min(int((i + 2) * every) + 1, n)
-        span = next_end - next_start
-        avg_x = sum(xs[next_start:next_end]) / span
-        avg_y = sum(ys[next_start:next_end]) / span
+        next_end = min((i + 2) * interior_points // bucket_count + 1, n)
+        span = next_end - end
+        avg_x = sum(xs[end:next_end]) / span
+        avg_y = sum(ys[end:next_end]) / span
 
         # current bucket -> pick the point with the largest triangle area
-        start = int(i * every) + 1
-        end = int((i + 1) * every) + 1
         ax, ay = xs[a], ys[a]
         max_area = -1.0
         max_idx = start
