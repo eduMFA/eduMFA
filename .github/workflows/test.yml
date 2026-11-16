@@ -26,9 +26,9 @@ jobs:
         python-version: [ '3.10', '3.14' ]
     name: pytest ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup UV
@@ -40,108 +40,117 @@ jobs:
       - name: Run Pytest checks
         run: uv run pytest --cov=edumfa --import-mode=importlib -vs -m "not dbcontainer" tests/
       - name: Codecov upload
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@v7.1.1
         with:
             token: ${{ secrets.CODECOV_TOKEN }}
             files: ./coverage.xml
 
-  database-full-suite:
+  database-full-suite-postgres-17:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - database: postgres-17-psycopg2
-            image: postgres:17-alpine
-            port: 5432
-            test_database_url: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
-            edumfa_config_file: ''
-            health_cmd: pg_isready -U edumfa -d edumfa
-            extra_sync_args: "--extra postgres"
-            system_deps: "libpq-dev"
-          - database: postgres-18-psycopg2
-            image: postgres:18-alpine
-            port: 5432
-            test_database_url: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
-            edumfa_config_file: ''
-            health_cmd: pg_isready -U edumfa -d edumfa
-            extra_sync_args: "--extra postgres"
-            system_deps: "libpq-dev"
-          - database: mariadb-11.5
-            # MariaDB version 11.5 should continue be tested for the foreseeable
-            # future, as that version is vulnerable to
-            # https://github.com/advisories/GHSA-qq2p-4282-cfc5 and testing with
-            # it therefore makes sure the replayability fix keeps working.
-            image: mariadb:11.5
-            port: 3306
-            test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
-            edumfa_config_file: tests/testdata/edumfa-mariadb.cfg
-            health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
-            extra_sync_args: ""
-            system_deps: ""
-          - database: mariadb-11.8
-            image: mariadb:11.8
-            port: 3306
-            test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
-            edumfa_config_file: tests/testdata/edumfa-mariadb.cfg
-            health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
-            extra_sync_args: ""
-            system_deps: ""
-          - database: mariadb-12.3
-            image: mariadb:12.3
-            port: 3306
-            test_database_url: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
-            edumfa_config_file: tests/testdata/edumfa-mariadb.cfg
-            health_cmd: mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa
-            extra_sync_args: ""
-            system_deps: ""
-    name: pytest ${{ matrix.database }}
+    name: pytest postgres-17-psycopg2
+    env: &postgres-test-env
+      TEST_DATABASE_URL: postgresql+psycopg2://edumfa:edumfa@127.0.0.1:5432/edumfa
+      DATABASE_EXTRA: postgres
     services:
       database:
-        image: ${{ matrix.image }}
-        env:
+        image: postgres:17-alpine@sha256:d3244e8ce3f165ee3c93d9c4a4b1d0fe48b3a89e2287b717fdcbbde92d405065
+        env: &postgres-service-env
           POSTGRES_USER: edumfa
           POSTGRES_PASSWORD: edumfa
           POSTGRES_DB: edumfa
-          MARIADB_USER: edumfa
-          MARIADB_PASSWORD: edumfa
-          MARIADB_DATABASE: edumfa
-          MARIADB_ROOT_PASSWORD: edumfa
-        ports:
-          - ${{ matrix.port }}:${{ matrix.port }}
-        options: >-
-          --health-cmd "${{ matrix.health_cmd }}"
+        ports: &postgres-ports
+          - 5432:5432
+        options: &postgres-health >-
+          --health-cmd "pg_isready -U edumfa -d edumfa"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
-    steps:
-      - uses: actions/checkout@v7
+    steps: &database-test-steps
+      - uses: actions/checkout@v7.0.1
       - name: Setup Python 3.14
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.14'
       - name: Setup UV
         uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
-      - name: Install system dependencies
-        if: matrix.system_deps != ''
-        run: sudo apt-get install -y ${{ matrix.system_deps }}
+      - name: Install PostgreSQL dependencies
+        if: env.DATABASE_EXTRA == 'postgres'
+        run: sudo apt-get install -y libpq-dev
       - name: Install dependencies
-        run: uv sync --group test ${{ matrix.extra_sync_args }}
-      - name: Run Pytest checks against ${{ matrix.database }}
-        env:
-          TEST_DATABASE_URL: ${{ matrix.test_database_url }}
-          EDUMFA_CONFIGFILE: ${{ matrix.edumfa_config_file && format('{0}/{1}', github.workspace, matrix.edumfa_config_file) || '' }}
+        run: uv sync --group test ${DATABASE_EXTRA:+--extra "$DATABASE_EXTRA"}
+      - name: Run Pytest checks
         run: uv run pytest --import-mode=importlib -vs -m "not dbcontainer" tests/
+
+  database-full-suite-postgres-18:
+    runs-on: ubuntu-latest
+    name: pytest postgres-18-psycopg2
+    env: *postgres-test-env
+    services:
+      database:
+        image: postgres:18-alpine@sha256:1018733457011bf88d81db98cf43aac6d5150afc18787dbe204771fedf80ff95
+        env: *postgres-service-env
+        ports: *postgres-ports
+        options: *postgres-health
+    steps: *database-test-steps
+
+  database-full-suite-mariadb-11-5:
+    runs-on: ubuntu-latest
+    name: pytest mariadb-11.5
+    env: &mariadb-test-env
+      TEST_DATABASE_URL: mysql+pymysql://edumfa:edumfa@127.0.0.1:3306/edumfa
+      EDUMFA_CONFIGFILE: ${{ github.workspace }}/tests/testdata/edumfa-mariadb.cfg
+    services:
+      database:
+        # Keep testing MariaDB 11.5 to cover the replayability fix for
+        # https://github.com/advisories/GHSA-qq2p-4282-cfc5.
+        image: mariadb:11.5@sha256:2d50fe0f77dac919396091e527e5e148a9de690e58f32875f113bef6506a17f5
+        env: &mariadb-service-env
+          MARIADB_USER: edumfa
+          MARIADB_PASSWORD: edumfa
+          MARIADB_DATABASE: edumfa
+          MARIADB_ROOT_PASSWORD: edumfa
+        ports: &mariadb-ports
+          - 3306:3306
+        options: &mariadb-health >-
+          --health-cmd "mariadb-admin ping -h 127.0.0.1 -uedumfa -pedumfa"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps: *database-test-steps
+
+  database-full-suite-mariadb-11-8:
+    runs-on: ubuntu-latest
+    name: pytest mariadb-11.8
+    env: *mariadb-test-env
+    services:
+      database:
+        image: mariadb:11.8@sha256:d36f18d65a0459510b8b0f643b226a6d299e3206486e2b64ff20754a6d291707
+        env: *mariadb-service-env
+        ports: *mariadb-ports
+        options: *mariadb-health
+    steps: *database-test-steps
+
+  database-full-suite-mariadb-12-3:
+    runs-on: ubuntu-latest
+    name: pytest mariadb-12.3
+    env: *mariadb-test-env
+    services:
+      database:
+        image: mariadb:12.3@sha256:4ebbcf100a3ba320766dfa0e1af008df12261301db6ef72798c7650f70794aed
+        env: *mariadb-service-env
+        ports: *mariadb-ports
+        options: *mariadb-health
+    steps: *database-test-steps
 
   database-backend-smoke:
     runs-on: ubuntu-latest
     name: testcontainers database smoke
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
       - name: Setup Python 3.14
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.14'
       - name: Setup UV
