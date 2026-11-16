@@ -107,7 +107,7 @@ def get_stats_keys():
     return monitoring_obj.get_keys()
 
 
-def get_values(stats_key, start_timestamp=None, end_timestamp=None):
+def get_values(stats_key, start_timestamp=None, end_timestamp=None, max_points=None):
     """
     Return a list of sets of (timestamp, value), ordered by timestamps in ascending order
 
@@ -116,10 +116,13 @@ def get_values(stats_key, start_timestamp=None, end_timestamp=None):
     :type start_timestamp: timezone-aware datetime object
     :param end_timestamp: the end of the timespan, inclusive
     :type end_timestamp: timezone-aware datetime object
+    :param max_points: optional upper bound for values materialized by the backend
     :return: list of tuples, with timestamps being timezone-aware UTC datetime objects
     """
     monitoring_obj = _get_monitoring()
-    return monitoring_obj.get_values(stats_key, start_timestamp, end_timestamp)
+    return monitoring_obj.get_values(
+        stats_key, start_timestamp, end_timestamp, max_points=max_points
+    )
 
 
 def get_last_value(stats_key):

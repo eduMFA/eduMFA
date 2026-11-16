@@ -46,6 +46,30 @@ class APIMonitoringTestCase(MyApiTestCase):
             self.assertEqual(result.get("value")[2][1], 3)
             self.assertEqual(result.get("value")[3][1], 4)
 
+        # Downsampling preserves the first and last values and respects the limit.
+        with self.app.test_request_context(
+            "/monitoring/key1",
+            data={"max_points": 3},
+            method="GET",
+            headers={"Authorization": self.at},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(200, res.status_code, res)
+            values = res.json.get("result").get("value")
+            self.assertEqual(3, len(values))
+            self.assertEqual(1, values[0][1])
+            self.assertEqual(4, values[-1][1])
+
+        for invalid_max_points in ("invalid", 2, 10_001):
+            with self.app.test_request_context(
+                "/monitoring/key1",
+                data={"max_points": invalid_max_points},
+                method="GET",
+                headers={"Authorization": self.at},
+            ):
+                res = self.app.full_dispatch_request()
+                self.assertEqual(400, res.status_code, res)
+
         # check values of key1, with a start value in the past
         with self.app.test_request_context(
             "/monitoring/key1",

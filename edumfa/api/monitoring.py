@@ -31,7 +31,9 @@ from flask import Blueprint, g, request
 
 from edumfa.api.lib.prepolicy import check_base_action, prepolicy
 from edumfa.api.lib.utils import getParam, send_result
+from edumfa.lib.error import ParameterError
 from edumfa.lib.log import log_with
+from edumfa.lib.lttb import lttb
 from edumfa.lib.monitoringstats import (
     delete_stats,
     get_last_value,
@@ -45,8 +47,27 @@ from edumfa.lib.utils import parse_legacy_time
 
 log = logging.getLogger(__name__)
 
-
 monitoring_blueprint = Blueprint("monitoring_blueprint", __name__)
+
+
+MIN_DOWNSAMPLE_POINTS = 3
+MAX_DOWNSAMPLE_POINTS = 10_000
+LTTB_CANDIDATE_MULTIPLIER = 10
+
+
+def _parse_max_points(value: str | int | None) -> int | None:
+    if value in (None, ""):
+        return None
+    try:
+        max_points = int(value)
+    except (TypeError, ValueError) as ex:
+        raise ParameterError("max_points must be an integer") from ex
+    if not MIN_DOWNSAMPLE_POINTS <= max_points <= MAX_DOWNSAMPLE_POINTS:
+        raise ParameterError(
+            f"max_points must be between {MIN_DOWNSAMPLE_POINTS} "
+            f"and {MAX_DOWNSAMPLE_POINTS}"
+        )
+    return max_points
 
 
 @monitoring_blueprint.route("/", methods=["GET"])
@@ -74,9 +95,18 @@ def get_statistics(stats_key=None):
         end = getParam(param, "end")
         if end:
             end = parse_legacy_time(end, return_date=True)
-        values = get_values(
-            stats_key=stats_key, start_timestamp=start, end_timestamp=end
+        max_points = _parse_max_points(getParam(param, "max_points"))
+        candidate_limit = (
+            max_points * LTTB_CANDIDATE_MULTIPLIER if max_points is not None else None
         )
+        values = get_values(
+            stats_key=stats_key,
+            start_timestamp=start,
+            end_timestamp=end,
+            max_points=candidate_limit,
+        )
+        if max_points is not None:
+            values = lttb(values, max_points, x_key=lambda d: d.timestamp())
         # convert timestamps to strings
         values_w_string = [(s[0].strftime(AUTH_DATE_FORMAT), s[1]) for s in values]
         g.audit_object.log({"success": True})

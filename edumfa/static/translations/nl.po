@@ -672,6 +672,10 @@ msgstr "Connectieparameters"
 msgid "Connector name"
 msgstr "Connectornaam"
 
+#: components/dashboard/views/dashboard.html
+msgid "Could not be loaded"
+msgstr ""
+
 #: components/token/views/token.applications.offline.html
 #: components/token/views/token.details.html
 msgid "Count"
@@ -1842,6 +1846,10 @@ msgstr "Laatste definitie-update"
 msgid "Last seen:"
 msgstr "Laatst gezien:"
 
+#: components/dashboard/views/dashboard.html
+msgid "Legend:"
+msgstr ""
+
 #: components/dialogs/views/dialog.about.html
 msgid "Licensed under"
 msgstr "Licentie verleend onder"
@@ -1886,6 +1894,11 @@ msgstr "Lijst tokens"
 msgid "Loading Machines..."
 msgstr "Machines laden ..."
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Loading metrics…"
+msgstr "Serienummers laden..."
+
 #: components/directives/views/directive.assigntoken.html
 #: components/directives/views/directive.attachtoken.html
 msgid "Loading serials..."
@@ -1897,6 +1910,10 @@ msgstr "Gebruikers laden ..."
 
 #: components/dashboard/views/dashboard.html
 msgid "Loading..."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading…"
 msgstr ""
 
 #: templates/menu.html
@@ -1995,6 +2012,15 @@ msgstr "Maximaal aantal gelukte authenticaties"
 msgid "Method"
 msgstr "Methode"
 
+#: components/dashboard/views/dashboard.html
+msgid "Metrics could not be loaded."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "Metrics:"
+msgstr "Pogingen"
+
 #: components/config/views/config.caconnectors.microsoft.html
 msgid "Microsoft CA worker hostname"
 msgstr "Microsoft CA worker hostnaam"
@@ -2007,6 +2033,10 @@ msgstr "Microsoft CA worker poort"
 #: components/user/views/user.password.html
 msgid "Mobile"
 msgstr "Mobiel"
+
+#: components/dashboard/views/dashboard.html
+msgid "Monitoring Chart"
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "Multivalue Attributes"
@@ -2092,9 +2122,20 @@ msgstr "Geen serienummer gevonden voor OTP-waarde {{ otp }}."
 msgid "No anonymous referral chasing"
 msgstr "Niet zoeken achter anonieme verwijzingen"
 
+#: components/dashboard/views/dashboard.html
+#, fuzzy
+msgid "No data"
+msgstr "Token gegeven"
+
 #: components/directives/views/directive.attachmachine.html
 msgid "No machine found"
 msgstr "Geen machine gevonden"
+
+#: components/dashboard/views/dashboard.html
+msgid ""
+"No metrics found. Monitoring may not be set up yet for this\n"
+"            instance."
+msgstr ""
 
 #: components/config/views/config.resolvers.ldap.html
 msgid "No retrieval of schema information"
@@ -4388,6 +4429,10 @@ msgstr ""
 #: components/config/views/config.token.tiqr.html
 msgid "TiQR Token settings"
 msgstr "TiQR Tokeninstellingen"
+
+#: components/dashboard/views/dashboard.html
+msgid "Time range:"
+msgstr ""
 
 #: components/config/views/config.radius.edit.html
 #: components/config/views/config.smtp.edit.html
