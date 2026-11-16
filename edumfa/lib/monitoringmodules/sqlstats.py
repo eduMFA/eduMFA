@@ -130,28 +130,13 @@ class Monitoring(MonitoringBase):
 
         return r
 
-    def get_keys(self):
-        """
-        Return a list of all stored keys.
-        :return:
-        """
-        keys = []
+    def get_keys(self) -> list[str]:
+        """Return a list of all stored keys."""
         try:
-            for monStat in (
-                self.session.query(MonitoringStats)
-                .with_entities(MonitoringStats.stats_key)
-                .distinct()
-            ):
-                keys.append(monStat.stats_key)
-        except Exception as exx:  # pragma: no cover
-            log.error(f"exception {exx!r}")
-            log.error("could not fetch list of keys")
-            log.debug(traceback.format_exc())
-            self.session.rollback()
-
+            query = select(MonitoringStats.stats_key).distinct()
+            return list(self.session.execute(query).scalars())
         finally:
             self.session.close()
-        return keys
 
     def get_values(
         self,
@@ -185,11 +170,13 @@ class Monitoring(MonitoringBase):
                 (timestamp.replace(tzinfo=tzutc()), value)
                 for timestamp, value in self.session.execute(query)
             ]
-        except Exception as exx:  # pragma: no cover
+        except Exception as exx:
             log.error(f"exception {exx!r}")
             log.error("could not fetch monitoring values")
             log.debug(traceback.format_exc())
             self.session.rollback()
+            if max_points is not None:
+                raise
 
         finally:
             self.session.close()

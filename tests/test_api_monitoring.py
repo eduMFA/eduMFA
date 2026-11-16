@@ -1,6 +1,9 @@
 import datetime
+from unittest.mock import patch
 
-from edumfa.lib.monitoringstats import write_stats
+from sqlalchemy.exc import OperationalError
+
+from edumfa.lib.monitoringstats import _get_monitoring, write_stats
 from edumfa.lib.token import init_token
 from edumfa.lib.tokenclass import AUTH_DATE_FORMAT
 from edumfa.lib.user import User
@@ -10,6 +13,29 @@ from .base import MyApiTestCase
 
 
 class APIMonitoringTestCase(MyApiTestCase):
+    def test_chart_requests_report_database_failure(self) -> None:
+        for query in ({}, {"stats_key": "auth/success", "max_points": "3"}):
+            with (
+                self.subTest(query=query),
+                self.app.test_request_context(
+                    "/monitoring/",
+                    query_string=query,
+                    headers={"Authorization": self.at},
+                ),
+            ):
+                monitoring = _get_monitoring()
+                failure = OperationalError(
+                    None, None, ConnectionError("database offline")
+                )
+                with patch.object(monitoring.session, "execute", side_effect=failure):
+                    response = self.app.full_dispatch_request()
+
+                self.assertEqual(500, response.status_code, response)
+                self.assertEqual(
+                    "A database error occurred.",
+                    response.json["result"]["error"]["message"],
+                )
+
     def test_get_stats_by_query_key_with_slash(self) -> None:
         stats_key = "auth/success"
         start = datetime.datetime(2026, 1, 1, tzinfo=datetime.timezone.utc)
