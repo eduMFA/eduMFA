@@ -4612,3 +4612,19 @@ msgstr ""
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
+msgid "Users with matching token"
+msgstr ""
