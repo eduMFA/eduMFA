@@ -28,6 +28,7 @@ This provider is used for the push token and can be used for SMS tokens.
 import json
 import logging
 import time
+from hashlib import sha256
 
 from google.auth.transport.requests import AuthorizedSession
 from google.oauth2 import service_account
@@ -151,7 +152,9 @@ class FirebaseProvider(ISMSProvider):
                         "apns-push-type": "alert",
                         "apns-expiration": str(int(time.time()) + 120),
                         "apns-priority": "10",
-                        "apns-collapse-id": "edumfa.pushtoken",
+                        "apns-collapse-id": sha256(
+                            f"{data.get('serial', '')}|{data.get('nonce', '')}".encode()
+                        ).hexdigest(),
                     },
                     "payload": {
                         "aps": {
@@ -161,6 +164,7 @@ class FirebaseProvider(ISMSProvider):
                             },
                             "sound": "default",
                             "category": "PUSH_AUTHENTICATION",
+                            "thread-id": "edumfa.pushtoken",
                             "interruption-level": "time-sensitive",
                         },
                     },
