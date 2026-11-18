@@ -131,6 +131,9 @@ class FirebaseProvider(ISMSProvider):
         headers = {
             "Content-Type": "application/json; UTF-8",
         }
+        collapse_id = sha256(
+            f"{data.get('serial', '')}|{data.get('nonce', '')}".encode()
+        ).hexdigest()
         fcm_message = {
             "message": {
                 "data": data,
@@ -139,12 +142,9 @@ class FirebaseProvider(ISMSProvider):
                     "body": data.get("question"),
                 },
                 "android": {
-                    "collapse_key": "edumfa.pushtoken",
+                    "collapse_key": collapse_id,
                     "priority": "HIGH",
                     "ttl": "120s",
-                    "notification": {
-                        "channel_id": "PUSH_AUTHENTICATION",
-                    },
                     "fcm_options": {"analytics_label": "AndroidPushToken"},
                 },
                 "apns": {
@@ -152,9 +152,7 @@ class FirebaseProvider(ISMSProvider):
                         "apns-push-type": "alert",
                         "apns-expiration": str(int(time.time()) + 120),
                         "apns-priority": "10",
-                        "apns-collapse-id": sha256(
-                            f"{data.get('serial', '')}|{data.get('nonce', '')}".encode()
-                        ).hexdigest(),
+                        "apns-collapse-id": collapse_id,
                     },
                     "payload": {
                         "aps": {

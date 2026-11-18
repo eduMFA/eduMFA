@@ -66,6 +66,22 @@ def _create_credential_mock():
 
 def _check_firebase_params(request):
     payload = json.loads(request.body)
+    message = payload["message"]
+    assert message["notification"] == {
+        "title": message["data"]["title"],
+        "body": message["data"]["question"],
+    }
+    assert "notification" not in message["android"]
+    assert (
+        message["android"]["collapse_key"]
+        == message["apns"]["headers"]["apns-collapse-id"]
+    )
+    assert message["android"]["priority"] == "HIGH"
+    assert message["android"]["ttl"] == "120s"
+    assert message["apns"]["payload"]["aps"]["alert"] == {
+        "title": message["data"]["title"],
+        "body": message["data"]["question"],
+    }
     # check the signature in the payload!
     data = payload.get("message").get("data")
 
@@ -3537,6 +3553,7 @@ def test_firebase_notifications_keep_distinct_challenges_and_collapse_retries() 
             assert message["apns"]["headers"]["apns-priority"] == "10"
             assert message["apns"]["headers"]["apns-push-type"] == "alert"
             identifier = message["apns"]["headers"]["apns-collapse-id"]
+            assert message["android"]["collapse_key"] == identifier
             assert isinstance(identifier, str)
             assert len(identifier.encode()) <= 64
             identifiers.append(identifier)
