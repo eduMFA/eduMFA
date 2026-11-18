@@ -4716,7 +4716,7 @@ msgid "Users"
 msgstr "Utenti"
 
 #: components/dashboard/views/dashboard.html
-msgid "Users with matching token"
+msgid "Users with matching token:"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
