@@ -260,6 +260,7 @@ msgid "All Policies"
 msgstr "Tüm politikalar"
 
 #: components/config/views/config.realms.html
+#: components/dashboard/views/dashboard.html
 msgid "All Realms"
 msgstr "Tüm alemler"
 
@@ -270,10 +271,6 @@ msgstr "Tüm çözümler"
 #: components/config/views/config.system.html
 msgid "All SMS Gateways"
 msgstr "Tüm SMS Ağ Geçitleri"
-
-#: components/dashboard/views/dashboard.html
-msgid "All realms"
-msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -1770,6 +1767,10 @@ msgstr ""
 "öncelikli olacaktır."
 
 #: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Inactive Events"
 msgstr "Etkin olmayan olaylar"
 
@@ -1885,6 +1886,10 @@ msgstr "Seri yükleme ..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Kullanıcıları Yükleme ..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -3170,6 +3175,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr "Starttls"
 
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Başarıyla doğrulanmış."
@@ -4406,6 +4415,7 @@ msgstr ""
 msgid "Token Applications"
 msgstr "Başvuru"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.getserial.html
 msgid "Token Type"
 msgstr "Token türü"
@@ -4498,7 +4508,6 @@ msgstr "Toplam Zorluklar:"
 msgid "Transaction ID"
 msgstr "İşlem Kimliği"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Tip"
@@ -4666,7 +4675,7 @@ msgid "Users"
 msgstr "Kullanıcılar"
 
 #: components/dashboard/views/dashboard.html
-msgid "Users with matching token:"
+msgid "Users with matching token"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4969,7 +4978,6 @@ msgstr "eylem"
 msgid "action detail"
 msgstr "eylem detayı"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -5004,7 +5012,6 @@ msgstr "müşteri"
 msgid "description"
 msgstr "tanım"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5331,19 +5338,3 @@ msgstr "pencere"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{auditdata.count}} girişleri bulundu."
-
-#: components/dashboard/views/dashboard.html
-msgid "Inactive"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Loading..."
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Status"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Users with matching token"
-msgstr ""

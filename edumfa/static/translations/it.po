@@ -259,6 +259,7 @@ msgid "All Policies"
 msgstr "Tutte le Policy"
 
 #: components/config/views/config.realms.html
+#: components/dashboard/views/dashboard.html
 msgid "All Realms"
 msgstr "Tutti i Realm"
 
@@ -269,10 +270,6 @@ msgstr "Tutti i Resolver"
 #: components/config/views/config.system.html
 msgid "All SMS Gateways"
 msgstr "Tutti gli SMS Gateway"
-
-#: components/dashboard/views/dashboard.html
-msgid "All realms"
-msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -1782,6 +1779,10 @@ msgstr ""
 "precedenza."
 
 #: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Inactive Events"
 msgstr "Eventi inattivi"
 
@@ -1899,6 +1900,10 @@ msgstr "Caricamento dei seriali..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Caricamento utenti..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -3187,6 +3192,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr "StartTLS"
 
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Autenticato con successo."
@@ -4448,6 +4457,7 @@ msgstr ""
 msgid "Token Applications"
 msgstr "Applicazione"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.getserial.html
 msgid "Token Type"
 msgstr "Tipo di token"
@@ -4540,7 +4550,6 @@ msgstr "Totale Challenge:"
 msgid "Transaction ID"
 msgstr "ID transazione"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Tipo"
@@ -4707,7 +4716,7 @@ msgid "Users"
 msgstr "Utenti"
 
 #: components/dashboard/views/dashboard.html
-msgid "Users with matching token:"
+msgid "Users with matching token"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -5016,7 +5025,6 @@ msgstr "azione"
 msgid "action detail"
 msgstr "dettaglio dell'azione"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -5051,7 +5059,6 @@ msgstr "client"
 msgid "description"
 msgstr "descrizione"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -5380,19 +5387,3 @@ msgstr "finestra"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "{{ auditdata.count }} voci trovate."
-
-#: components/dashboard/views/dashboard.html
-msgid "Inactive"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Loading..."
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Status"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Users with matching token"
-msgstr ""

@@ -227,6 +227,7 @@ msgid "All Policies"
 msgstr "Všechny politiky"
 
 #: components/config/views/config.realms.html
+#: components/dashboard/views/dashboard.html
 msgid "All Realms"
 msgstr "Všechny domény"
 
@@ -237,10 +238,6 @@ msgstr "Resolvery"
 #: components/config/views/config.system.html
 msgid "All SMS Gateways"
 msgstr "SMS brány"
-
-#: components/dashboard/views/dashboard.html
-msgid "All realms"
-msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -1678,6 +1675,10 @@ msgstr ""
 "V případě konfliktu mezi politikami se uplatní ta s nižší hodnotou priority."
 
 #: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Inactive Events"
 msgstr "Neaktivní události"
 
@@ -1792,6 +1793,10 @@ msgstr "Načítání sériových čísel..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Načítání uživatelů..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -3044,6 +3049,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr "StartTLS"
 
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Přihlášení bylo úspěšné."
@@ -4068,6 +4077,7 @@ msgstr ""
 msgid "Token Applications"
 msgstr "Aplikace"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.getserial.html
 msgid "Token Type"
 msgstr "Typ tokenu"
@@ -4160,7 +4170,6 @@ msgstr "Celkem výzev:"
 msgid "Transaction ID"
 msgstr "ID transakce"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Typ"
@@ -4324,7 +4333,7 @@ msgid "Users"
 msgstr "Uživatelé"
 
 #: components/dashboard/views/dashboard.html
-msgid "Users with matching token:"
+msgid "Users with matching token"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4612,7 +4621,6 @@ msgstr "akce"
 msgid "action detail"
 msgstr "detaily akce"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4647,7 +4655,6 @@ msgstr "klient"
 msgid "description"
 msgstr "popis"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -4965,19 +4972,3 @@ msgstr "tolerance"
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
 msgstr "Nalezeno {{ auditdata.count }} záznamů."
-
-#: components/dashboard/views/dashboard.html
-msgid "Inactive"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Loading..."
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Status"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Users with matching token"
-msgstr ""

@@ -262,6 +262,7 @@ msgid "All Policies"
 msgstr "Усі політики"
 
 #: components/config/views/config.realms.html
+#: components/dashboard/views/dashboard.html
 msgid "All Realms"
 msgstr "Всі області"
 
@@ -272,10 +273,6 @@ msgstr "Усі резолвери"
 #: components/config/views/config.system.html
 msgid "All SMS Gateways"
 msgstr "Усі SMS-шлюзи"
-
-#: components/dashboard/views/dashboard.html
-msgid "All realms"
-msgstr ""
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -1776,6 +1773,10 @@ msgstr ""
 "У разі конфліктних політик перевагу матиме політика з найменшим пріоритетом."
 
 #: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Inactive Events"
 msgstr "Неактивні події"
 
@@ -1892,6 +1893,10 @@ msgstr "Завантаження серійних номерів..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Завантаження користувачів..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -3139,6 +3144,10 @@ msgstr ""
 msgid "StartTLS"
 msgstr ""
 
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr ""
@@ -4066,6 +4075,7 @@ msgstr ""
 msgid "Token Applications"
 msgstr "Застосунок"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.getserial.html
 msgid "Token Type"
 msgstr ""
@@ -4155,7 +4165,6 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr ""
@@ -4314,7 +4323,7 @@ msgid "Users"
 msgstr ""
 
 #: components/dashboard/views/dashboard.html
-msgid "Users with matching token:"
+msgid "Users with matching token"
 msgstr ""
 
 #: components/token/views/token.enroll.vasco.html
@@ -4566,7 +4575,6 @@ msgstr ""
 msgid "action detail"
 msgstr ""
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4601,7 +4609,6 @@ msgstr ""
 msgid "description"
 msgstr ""
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
@@ -4913,20 +4920,4 @@ msgstr ""
 
 #: components/audit/views/audit.log.html
 msgid "{{ auditdata.count }} entries found."
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Inactive"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Loading..."
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Status"
-msgstr ""
-
-#: components/dashboard/views/dashboard.html
-msgid "Users with matching token"
 msgstr ""
