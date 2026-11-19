@@ -97,7 +97,9 @@
       also change the realms of each token later.
     </p>
     <select class="form-control" ng-model="form.realm">
-      <option ng-repeat="(realmname, realm) in realms">{{ realmname }}</option>
+      <option ng-repeat="(realmname, realm) in realms" ng-value="realmname">
+        {{ realmname }}
+      </option>
     </select>
   </div>
   <div>
