@@ -244,10 +244,12 @@ myApp.controller("dashboardController", [
       });
     };
 
+    $scope.users_with_token = 0;
+    $scope.users_with_token_loading = false;
     $scope.countUsersWithTokenGeneration = 0;
     $scope.countUsersWithToken = function () {
       let generationId = ++$scope.countUsersWithTokenGeneration;
-      $scope.users_with_token = "loading...";
+      $scope.users_with_token_loading = true;
       $scope.params = {
         realm: $scope.realmForUsersWithToken,
         active: $scope.activenessForUsersWithToken,
@@ -267,11 +269,13 @@ myApp.controller("dashboardController", [
           // Make sure the current request does not get overwritten.
           if ($scope.countUsersWithTokenGeneration === generationId) {
             $scope.users_with_token = data.result.value;
+            $scope.users_with_token_loading = false;
           }
         },
         function (generationId, error) {
           if ($scope.countUsersWithTokenGeneration === generationId) {
             $scope.users_with_token = "error";
+            $scope.users_with_token_loading = false;
           }
         },
       );

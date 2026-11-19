@@ -252,6 +252,7 @@ msgid "All Policies"
 msgstr "Alle Richtlinien"
 
 #: components/config/views/config.realms.html
+#: components/dashboard/views/dashboard.html
 msgid "All Realms"
 msgstr "Alle Realms"
 
@@ -262,10 +263,6 @@ msgstr "Alle Resolver"
 #: components/config/views/config.system.html
 msgid "All SMS Gateways"
 msgstr "Alle SMS-Gateways"
-
-#: components/dashboard/views/dashboard.html
-msgid "All realms"
-msgstr "Alle Realms"
 
 #: components/token/views/token.html
 msgid "All tokens"
@@ -1734,6 +1731,10 @@ msgstr ""
 "\"Priorität\"-Wert berücksichtigt."
 
 #: components/dashboard/views/dashboard.html
+msgid "Inactive"
+msgstr ""
+
+#: components/dashboard/views/dashboard.html
 msgid "Inactive Events"
 msgstr "Inaktive Ereginisse"
 
@@ -1846,6 +1847,10 @@ msgstr "Laden Seriennummern..."
 #: components/directives/views/directive.assignuser.html
 msgid "Loading users..."
 msgstr "Lade Benutzer..."
+
+#: components/dashboard/views/dashboard.html
+msgid "Loading..."
+msgstr ""
 
 #: templates/menu.html
 msgid "Lock screen"
@@ -3124,6 +3129,10 @@ msgstr "Spezielle Fehlerbehandlung"
 msgid "StartTLS"
 msgstr "StartTLS"
 
+#: components/dashboard/views/dashboard.html
+msgid "Status"
+msgstr ""
+
 #: components/token/controllers/tokenDetailController.js
 msgid "Successfully authenticated."
 msgstr "Erfolgreich authentisiert."
@@ -4318,6 +4327,7 @@ msgstr ""
 msgid "Token Applications"
 msgstr "Token Anwendungen"
 
+#: components/dashboard/views/dashboard.html
 #: components/token/views/token.getserial.html
 msgid "Token Type"
 msgstr "Tokentyp"
@@ -4408,7 +4418,6 @@ msgstr "Alle Challenges:"
 msgid "Transaction ID"
 msgstr "Transaktions-ID"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 msgid "Type"
 msgstr "Typ"
@@ -4865,7 +4874,6 @@ msgstr "Aktion"
 msgid "action detail"
 msgstr "Aktionsdetail"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "active"
@@ -4900,7 +4908,6 @@ msgstr "Client"
 msgid "description"
 msgstr "Beschreibung"
 
-#: components/dashboard/views/dashboard.html
 #: components/token/views/token.details.html
 #: components/token/views/token.list.html
 msgid "disabled"
