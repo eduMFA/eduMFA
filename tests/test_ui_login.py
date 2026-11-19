@@ -6,14 +6,13 @@ implementation is contained webui/login.py
 
 import re
 
-import flask_babel as babel
-
 from edumfa.app import create_app
 from edumfa.lib.policy import (
     ACTION,
     SCOPE,
     PolicyClass,
     delete_all_policies,
+    delete_policy,
     set_policy,
 )
 from edumfa.lib.utils import to_unicode
@@ -132,6 +131,56 @@ class LoginUITestCase(MyTestCase):
             self.assertTrue(
                 b'<input type="hidden" id="REMOTE_USER" value="foo"' in res.data
             )
+
+        # A Remote-User *header* without the REMOTE_USER server variable is
+        # still passed to the login page while no remote_user_trusted_proxies
+        # policy is set (backwards compatibility).
+        with self.app.test_request_context(
+            "/", method="GET", headers={"Remote-User": "foo"}
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            self.assertTrue(
+                b'<input type="hidden" id="REMOTE_USER" value="foo"' in res.data
+            )
+
+        # With a remote_user_trusted_proxies policy set, the header from a
+        # non-matching peer (here 127.0.0.1) is ignored.
+        set_policy(
+            "trusted_proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=10.1.2.3",
+        )
+        with self.app.test_request_context(
+            "/",
+            method="GET",
+            headers={"Remote-User": "foo"},
+            environ_base={"REMOTE_ADDR": "127.0.0.1"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            self.assertTrue(
+                b'<input type="hidden" id="REMOTE_USER" value=""' in res.data
+            )
+
+        # ... while a header from a trusted proxy peer is passed to the page.
+        set_policy(
+            "trusted_proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=127.0.0.1",
+        )
+        with self.app.test_request_context(
+            "/",
+            method="GET",
+            headers={"Remote-User": "foo"},
+            environ_base={"REMOTE_ADDR": "127.0.0.1"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertTrue(res.status_code == 200, res)
+            self.assertTrue(
+                b'<input type="hidden" id="REMOTE_USER" value="foo"' in res.data
+            )
+        delete_policy("trusted_proxies")
 
     def test_07_privacy_statement_link(self):
         set_policy(

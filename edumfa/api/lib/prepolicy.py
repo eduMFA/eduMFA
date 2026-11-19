@@ -38,14 +38,15 @@ from typing_extensions import ParamSpec, TypeVar
 
 try:
     from OpenSSL import crypto
-except AttributeError as e:
+except AttributeError:
     pass
 import functools
 import importlib
 import re
 
 import jwt
-from flask import current_app, g
+from flask import Request, current_app, g
+from netaddr import AddrFormatError, IPAddress
 
 from edumfa.api.lib.policyhelper import (
     get_init_tokenlabel_parameters,
@@ -59,7 +60,6 @@ from edumfa.lib.clientapplication import save_clientapplication
 from edumfa.lib.config import get_token_class
 from edumfa.lib.crypto import generate_password
 from edumfa.lib.error import (
-    ParameterError,
     PolicyError,
     RegistrationError,
     ResourceNotFoundError,
@@ -88,8 +88,6 @@ from edumfa.lib.tokens.webauthn import (
     AUTHENTICATOR_ATTACHMENT_TYPES,
     RESIDENT_KEY_LEVELS,
     USER_VERIFICATION_LEVELS,
-    USERNAMELESS_AUTHN,
-    USERNAMELESS_REALM_POLICY,
     WebAuthnRegistrationResponse,
 )
 from edumfa.lib.tokens.webauthntoken import (
@@ -102,8 +100,6 @@ from edumfa.lib.tokens.webauthntoken import (
     DEFAULT_RESIDENT_KEY_LEVEL,
     DEFAULT_TIMEOUT,
     DEFAULT_USER_VERIFICATION_REQUIREMENT,
-    DEFAULT_USERNAMELESS_AUTHN,
-    DEFAULT_USERNAMELESS_REALM_POLICY,
     PUBKEY_CRED_ALGORITHMS_ORDER,
     PUBLIC_KEY_CREDENTIAL_ALGORITHMS,
     WEBAUTHNACTION,
@@ -1512,13 +1508,7 @@ def is_remote_user_allowed(req, write_to_audit_log=True):
     :return: Return a value or REMOTE_USER, can be "disable", "active" or "force".
     :rtype: str
     """
-    user = req.remote_user
-    if (
-        not user
-        and not req.headers.get("Remote-User") is None
-        and not req.headers.get("Remote-User") == ""
-    ):
-        user = req.headers.get("Remote-User")
+    user = get_remote_user(req)
 
     if user:
         loginname, realm = split_user(user)
@@ -1532,6 +1522,61 @@ def is_remote_user_allowed(req, write_to_audit_log=True):
 
     # Return default "disable"
     return REMOTE_USER.DISABLE
+
+
+def get_remote_user(req: Request) -> str | None:
+    """
+    Gets the remote user, either by returning the WSGI server variable if it is
+    set, or alternatively the "Remote-User" HTTP header (if trusted by the
+    REMOTE_USER_TRUSTED_PROXIES policy). Until eduMFA 3.0.0, if the policy is
+    not set it will also return the HTTP header if no
+    REMOTE_USER_TRUSTED_PROXIES policy exists.
+
+    :param req: The flask request object.
+    :return: Either the identified remote user (str) or None.
+    """
+    if req.remote_user:
+        return req.remote_user
+    header = req.headers.get("Remote-User")
+    if not header:
+        return None
+    proxies = Match.generic(
+        g, scope=SCOPE.WEBUI, action=ACTION.REMOTE_USER_TRUSTED_PROXIES
+    ).action_values(
+        unique=True, allow_white_space_in_action=True, write_to_audit_log=False
+    )
+    if proxies:
+        peer = req.remote_addr or ""
+        try:
+            peer_ip = IPAddress(peer)
+        except (AddrFormatError, ValueError):
+            log.warning(
+                f"Cannot verify the Remote-User header: invalid or missing "
+                f"peer address {peer}. Ignoring the header."
+            )
+            return None
+        for value, policy_names in proxies.items():
+            policy_name = policy_names[0]
+            for ip in value.split():
+                try:
+                    if IPAddress(ip) == peer_ip:
+                        log.debug(
+                            f"Trusting the Remote-User header from peer {peer} "
+                            f"according to policy {policy_name}."
+                        )
+                        return header
+                except (AddrFormatError, ValueError):
+                    log.error(
+                        f"Invalid entry '{ip}' in policy '{policy_name}', ignoring it."
+                    )
+        return None
+    # TODO: return None instead starting eduMFA 3.0.0
+    log.warning(
+        "Trusting Remote-User HTTP header as authentication source without "
+        f"configured {ACTION.REMOTE_USER_TRUSTED_PROXIES} policy. This will "
+        "stop working in eduMFA 3.0.0."
+    )
+    return header
 
 
 def save_client_application_type(request, action):
