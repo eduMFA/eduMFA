@@ -2829,8 +2829,16 @@ msgstr ""
 "abfragen"
 
 #: lib/tokens/pushtoken.py
+msgid "Require an additional challenge on the smartphone."
+msgstr "Eine zusätzliche Bestätigung auf dem Smartphone verlangen."
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "URL des eduMFA Push Tokens"
+
+#: lib/tokens/pushtoken.py
+msgid "Select this number on your smartphone:"
+msgstr "Wählen Sie diese Zahl auf Ihrem Smartphone aus:"
 
 #: lib/tokens/questionnairetoken.py
 msgid "Questionnaire: Enroll Questions for the user."

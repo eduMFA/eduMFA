@@ -2813,6 +2813,10 @@ msgstr ""
 msgid "Select file and import"
 msgstr ""
 
+#: components/login/views/enter-response.html
+msgid "Select this number on your smartphone:"
+msgstr ""
+
 #: components/recovery/views/recovery.html
 msgid "Send Reset Code"
 msgstr ""
@@ -3558,6 +3562,10 @@ msgid ""
 "must not be the word 'test_request'"
 msgstr ""
 
+#: components/login/controllers/loginControllers.js
+msgid "The selected number did not match. Sign in again."
+msgstr ""
+
 #: components/token/views/token.enroll.4eyes.html
 msgid ""
 "The separator that is used to separate the passwords of the different\n"
@@ -3602,6 +3610,10 @@ msgstr ""
 
 #: components/token/views/token.enroll.applspec.html
 msgid "The server will create the static password."
+msgstr ""
+
+#: components/login/controllers/loginControllers.js
+msgid "The sign-in request was denied."
 msgstr ""
 
 #: components/token/views/token.enroll.html

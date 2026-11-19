@@ -718,7 +718,15 @@ def poll_transaction(transaction_id=None):
         for challenge in matching_challenges:
             if challenge.data == "challenge_declined":
                 declined_challenges.append(challenge)
-        if declined_challenges:
+        mismatched_challenges = [
+            challenge
+            for challenge in matching_challenges
+            if challenge.data == "challenge_mismatch"
+        ]
+        if mismatched_challenges:
+            log_challenges = mismatched_challenges
+            details = {"challenge_status": "challenge_mismatch"}
+        elif declined_challenges:
             log_challenges = declined_challenges
             details = {"challenge_status": "declined"}
         else:
