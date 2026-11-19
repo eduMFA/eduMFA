@@ -107,7 +107,12 @@ def get_stats_keys():
     return monitoring_obj.get_keys()
 
 
-def get_values(stats_key, start_timestamp=None, end_timestamp=None):
+def get_values(
+    stats_key: str,
+    start_timestamp: datetime.datetime | None = None,
+    end_timestamp: datetime.datetime | None = None,
+    max_points: int | None = None,
+) -> list[tuple[datetime.datetime, int]]:
     """
     Return a list of sets of (timestamp, value), ordered by timestamps in ascending order
 
@@ -116,9 +121,16 @@ def get_values(stats_key, start_timestamp=None, end_timestamp=None):
     :type start_timestamp: timezone-aware datetime object
     :param end_timestamp: the end of the timespan, inclusive
     :type end_timestamp: timezone-aware datetime object
+    :param max_points: upper bound for backends that provide get_sampled_values
     :return: list of tuples, with timestamps being timezone-aware UTC datetime objects
     """
     monitoring_obj = _get_monitoring()
+    if max_points is not None:
+        get_sampled_values = getattr(monitoring_obj, "get_sampled_values", None)
+        if callable(get_sampled_values):
+            return get_sampled_values(
+                stats_key, start_timestamp, end_timestamp, max_points
+            )
     return monitoring_obj.get_values(stats_key, start_timestamp, end_timestamp)
 
 

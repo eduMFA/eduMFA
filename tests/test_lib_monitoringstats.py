@@ -1,5 +1,6 @@
 import datetime
 from datetime import timedelta
+from unittest.mock import patch
 
 from dateutil.tz import tzlocal, tzutc
 
@@ -132,3 +133,47 @@ class TokenModelTestCase(MyTestCase):
         # Get the last value of key1
         r = get_last_value("key1")
         self.assertEqual(r, 10)
+
+    def test_05_get_values_with_bounded_sampling(self) -> None:
+        delete_stats("sampled-key")
+        start = datetime.datetime.now(tzlocal())
+        for index in range(100):
+            value = 1_000 if index == 50 else index % 5
+            write_stats(
+                "sampled-key", value, timestamp=start + timedelta(minutes=index)
+            )
+
+        values = get_values("sampled-key", max_points=10)
+
+        self.assertLessEqual(len(values), 10)
+        self.assertEqual(0, values[0][1])
+        self.assertEqual(4, values[-1][1])
+        self.assertIn(1_000, [value for _, value in values])
+
+        window_start = start + timedelta(minutes=48)
+        window_end = start + timedelta(minutes=52)
+        self.assertEqual(
+            get_values("sampled-key", window_start, window_end),
+            get_values("sampled-key", window_start, window_end, max_points=10),
+        )
+        sampled = get_values("sampled-key", window_start, window_end, max_points=3)
+        self.assertEqual([3, 1_000, 2], [value for _, value in sampled])
+
+    def test_legacy_backend_supports_requests_with_and_without_sampling(self) -> None:
+        expected = [(datetime.datetime(2026, 1, 1, tzinfo=tzutc()), 1)]
+
+        class LegacyMonitoring:
+            def get_values(
+                self,
+                stats_key: str,
+                start_timestamp: datetime.datetime | None,
+                end_timestamp: datetime.datetime | None,
+            ) -> list[tuple[datetime.datetime, int]]:
+                return expected
+
+        with patch(
+            "edumfa.lib.monitoringstats._get_monitoring",
+            return_value=LegacyMonitoring(),
+        ):
+            self.assertEqual(expected, get_values("legacy"))
+            self.assertEqual(expected, get_values("legacy", max_points=30))
