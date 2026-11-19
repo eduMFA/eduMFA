@@ -1102,11 +1102,12 @@ msgstr ""
 #: lib/policy.py
 msgid ""
 "The REMOTE_USER set by the webserver can be used to login to eduMFA or it"
-" will be ignored. Defaults to \"disable\"."
+" will be ignored. Defaults to \"disable\". Please read the documentation "
+"for this policy before using."
 msgstr ""
-"Web sunucusu tarafından belirlenen Remote_Userver, PriVaYidea'ya giriş "
-"yapmak için kullanılabilir veya göz ardı edilecektir. Varsayılanlar "
-"\"Devre Dışı Bırak\"."
+"Web sunucusu tarafından ayarlanan REMOTE_USER değeri, eduMFA oturumu "
+"açmak için kullanılabilir veya yok sayılabilir. Varsayılan değer "
+"“disable”dır. Bu politikayı kullanmadan önce lütfen belgelerini okuyun."
 
 #: lib/policy.py
 msgid ""

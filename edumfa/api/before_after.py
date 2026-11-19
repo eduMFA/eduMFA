@@ -122,13 +122,7 @@ def before_user_request():
 @user_blueprint.before_request
 @user_required
 def before_userendpoint_request():
-    before_request()
-    # DEL /user/ has no realm parameter and thus we need to create the user object this way.
-    if not request.User and request.method == "DELETE":
-        resolvername = getParam(request.all_data, "resolvername")
-        username = getParam(request.all_data, "username")
-        if resolvername and username:
-            request.User = User(login=username, resolver=resolvername)
+    before_request(restrict_user_resolver=True)
 
 
 @resolver_blueprint.before_request
@@ -155,7 +149,7 @@ def before_admin_request():
     before_request()
 
 
-def before_request():
+def before_request(*, restrict_user_resolver: bool = False) -> None:
     """
     This is executed before the request.
 
@@ -167,14 +161,36 @@ def before_request():
     # from the Form data or from JSON in the request body.
     ensure_no_config_object()
     request.all_data = get_all_params(request)
+    target = (
+        request.view_args
+        if request.endpoint
+        in {"user_blueprint.delete_user_attribute", "user_blueprint.delete_user"}
+        else None
+    )
+    if target:
+        # URL selectors take precedence over query/body selectors.
+        request.all_data["user"] = target["username"]
+        request.all_data.pop("resolver", None)
+        if "resolvername" in target:
+            request.all_data["resolver"] = target["resolvername"]
     if g.logged_in_user.get("role") == "user":
         # A user is calling this API. First thing we do is restricting the user parameter.
         # ...to restrict token view, audit view or token actions.
         request.all_data["user"] = g.logged_in_user.get("username")
         request.all_data["realm"] = g.logged_in_user.get("realm")
+        if restrict_user_resolver:
+            # Bind self-service reads and writes before policy checks.
+            request.all_data.pop("resolver", None)
 
     try:
-        request.User = get_user_from_param(request.all_data)
+        if target and g.logged_in_user.get("role") == "admin":
+            request.User = User(
+                login=target["username"],
+                realm=target.get("realm", request.all_data.get("realm", "")),
+                resolver=target.get("resolvername", ""),
+            )
+        else:
+            request.User = get_user_from_param(request.all_data)
         # overwrite or set the resolver parameter in case of a logged in user
         if g.logged_in_user.get("role") == "user":
             request.all_data["resolver"] = request.User.resolver
@@ -202,7 +218,7 @@ def before_request():
     if serial and not "*" in serial:
         g.serial = serial
         tokentype = get_token_type(serial)
-        if not request.User:
+        if not request.User and not restrict_user_resolver:
             # We determine the user object by the given serial number
             try:
                 request.User = get_token_owner(serial) or User()
@@ -240,6 +256,13 @@ def before_request():
             "info": "",
         }
     )
+
+    if (
+        restrict_user_resolver
+        and g.logged_in_user.get("role") == "user"
+        and (not request.User or request.User.uid in (None, ""))
+    ):
+        raise AuthError("The authenticated user could not be resolved.")
 
     if g.logged_in_user.get("role") == "admin":
         # An administrator is calling this API

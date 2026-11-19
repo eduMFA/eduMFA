@@ -1096,11 +1096,12 @@ msgstr ""
 #: lib/policy.py
 msgid ""
 "The REMOTE_USER set by the webserver can be used to login to eduMFA or it"
-" will be ignored. Defaults to \"disable\"."
+" will be ignored. Defaults to \"disable\". Please read the documentation "
+"for this policy before using."
 msgstr ""
-"De REMOTE_USER ingesteld door de webserver kan gebruikt worden om aan te "
-"melden bij eduMFA of zal genegeerd worden. Standaard op "
-"\"uitgeschakeld\"."
+"De door de webserver ingestelde waarde REMOTE_USER kan worden gebruikt om"
+" bij eduMFA aan te melden of worden genegeerd. De standaardwaarde is "
+"“disable”. Lees de documentatie voor dit beleid voordat u het gebruikt."
 
 #: lib/policy.py
 msgid ""
