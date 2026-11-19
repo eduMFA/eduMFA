@@ -4578,7 +4578,7 @@ msgstr "Benutzer"
 
 #: components/dashboard/views/dashboard.html
 msgid "Users with matching token:"
-msgstr ""
+msgstr "Benutzer mit entsprechendem Token:"
 
 #: components/token/views/token.enroll.vasco.html
 msgid "VASCO Token blob"
