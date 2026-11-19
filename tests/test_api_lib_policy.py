@@ -65,7 +65,6 @@ from edumfa.api.lib.prepolicy import (
     papertoken_count,
     pushtoken_add_config,
     pushtoken_disable_wait,
-    pushtoken_wait,
     require_description,
     required_email,
     required_piv_attestation,
@@ -1390,6 +1389,102 @@ class PrePolicyDecoratorTestCase(MyApiTestCase):
         self.assertEqual(REMOTE_USER.DISABLE, is_remote_user_allowed(req))
 
         set_edumfa_config(SYSCONF.SPLITATSIGN, True)
+
+        # A Remote-User *header* without the REMOTE_USER server variable is
+        # still accepted from any client while no remote_user_trusted_proxies
+        # policy is set (backwards compatibility).
+        delete_policy("ruser")
+        set_policy(
+            name="ruser",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER}={REMOTE_USER.ACTIVE}",
+        )
+        header_env = builder.get_environ()
+        header_env["REMOTE_ADDR"] = "10.0.0.1"
+        # client-supplied header, no REMOTE_USER server variable
+        header_env["HTTP_REMOTE_USER"] = "admin"
+        header_req = Request(header_env)
+        self.assertEqual(REMOTE_USER.ACTIVE, is_remote_user_allowed(header_req))
+
+        # With a remote_user_trusted_proxies policy set, the header is only
+        # accepted if the direct peer matches a plain IP in the policy.
+        set_policy(
+            name="proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=192.168.0.1",
+        )
+        self.assertEqual(REMOTE_USER.DISABLE, is_remote_user_allowed(header_req))
+
+        # A spoofed X-Forwarded-For naming a trusted proxy must not make the
+        # header trusted: only the direct peer (REMOTE_ADDR) is checked.
+        header_env["HTTP_X_FORWARDED_FOR"] = "192.168.0.1"
+        spoofed_req = Request(header_env)
+        self.assertEqual(REMOTE_USER.DISABLE, is_remote_user_allowed(spoofed_req))
+        del header_env["HTTP_X_FORWARDED_FOR"]
+
+        # Subnets and negations are not supported: entries like "10.0.0.0/8"
+        # or "!10.0.0.99" are invalid and ignored, even though the peer
+        # 10.0.0.1 would be inside that subnet.
+        set_policy(
+            name="proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=10.0.0.0/8 !10.0.0.99",
+        )
+        self.assertEqual(REMOTE_USER.DISABLE, is_remote_user_allowed(header_req))
+
+        # Plain space-separated IP addresses work.
+        set_policy(
+            name="proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=10.0.0.2 10.0.0.1",
+        )
+        self.assertEqual(REMOTE_USER.ACTIVE, is_remote_user_allowed(header_req))
+
+        # IPv6 entries and peers work as well.
+        set_policy(
+            name="proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=2001:db8::1",
+        )
+        v6_env = builder.get_environ()
+        v6_env["REMOTE_ADDR"] = "2001:db8::1"
+        v6_env["HTTP_REMOTE_USER"] = "admin"
+        self.assertEqual(REMOTE_USER.ACTIVE, is_remote_user_allowed(Request(v6_env)))
+
+        # An unparsable peer address makes the header untrusted.
+        bad_peer_env = builder.get_environ()
+        bad_peer_env["REMOTE_ADDR"] = "not-an-ip"
+        bad_peer_env["HTTP_REMOTE_USER"] = "admin"
+        self.assertEqual(
+            REMOTE_USER.DISABLE, is_remote_user_allowed(Request(bad_peer_env))
+        )
+
+        # Without any Remote-User header the login stays disabled.
+        bare_env = builder.get_environ()
+        bare_env["REMOTE_ADDR"] = "10.0.0.1"
+        self.assertEqual(
+            REMOTE_USER.DISABLE, is_remote_user_allowed(Request(bare_env))
+        )
+
+        # Conflicting remote_user_trusted_proxies policies raise a PolicyError.
+        set_policy(
+            name="proxies2",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=10.9.9.9",
+        )
+        self.assertRaises(PolicyError, is_remote_user_allowed, header_req)
+        delete_policy("proxies2")
+
+        # The REMOTE_USER server variable is always trusted and bypasses the
+        # trusted-proxies check, even if the peer is not listed.
+        set_policy(
+            name="proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=192.168.0.1",
+        )
+        self.assertEqual(REMOTE_USER.ACTIVE, is_remote_user_allowed(req))
+
+        delete_policy("proxies")
         delete_policy("ruser")
 
     def test_14_required_email(self):
@@ -4078,7 +4173,7 @@ class PostPolicyDecoratorTestCase(MyApiTestCase):
         # unassign all tokens from the user autoassignuser
         try:
             unassign_token(None, user=user_obj)
-        except Exception as e:
+        except Exception:
             print("no need to unassign token")
 
         # The request with an OTP value and a PIN of a user, who has not

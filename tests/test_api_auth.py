@@ -683,6 +683,103 @@ class AuthApiTestCase(MyApiTestCase):
         self.assertEqual(aentry["success"], 1, aentry)
         self.assertEqual(aentry["policies"], "remote", aentry)
 
+        # A Remote-User *header* without the REMOTE_USER server variable is
+        # still accepted from any client while no remote_user_trusted_proxies
+        # policy is set.
+        set_edumfa_config(SYSCONF.SPLITATSIGN, True)
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={"username": "cornelius@realm1"},
+            headers={"Remote-User": "cornelius@realm1"},
+            environ_base={"REMOTE_ADDR": "127.0.0.1"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 200, res)
+            result = res.json.get("result")
+            self.assertTrue(result.get("status"), result)
+            self.assertEqual(result.get("value").get("role"), "user", result)
+            self.assertEqual(result.get("value").get("realm"), "realm1", result)
+
+        # With a remote_user_trusted_proxies policy set, the header is only
+        # accepted if the direct peer (REMOTE_ADDR, here 127.0.0.1) matches.
+        set_policy(
+            name="trusted_proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=10.9.9.9",
+        )
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={"username": "cornelius@realm1"},
+            headers={"Remote-User": "cornelius@realm1"},
+            environ_base={"REMOTE_ADDR": "127.0.0.1"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 401, res)
+            result = res.json.get("result")
+            self.assertFalse(result.get("status"), result)
+            self.assertEqual(result.get("error").get("code"), 4031, result)
+        aentry = self.find_most_recent_audit_entry(action="POST /auth")
+        self.assertEqual(aentry["action"], "POST /auth", aentry)
+        self.assertEqual(aentry["success"], 0, aentry)
+
+        # A spoofed X-Forwarded-For naming a trusted proxy must NOT make the
+        # header trusted: only the direct peer (REMOTE_ADDR) is checked.
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={"username": "cornelius@realm1"},
+            headers={"Remote-User": "cornelius@realm1", "X-Forwarded-For": "10.9.9.9"},
+            environ_base={"REMOTE_ADDR": "127.0.0.1"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 401, res)
+            result = res.json.get("result")
+            self.assertFalse(result.get("status"), result)
+
+        # The header is accepted again if the direct peer matches the policy.
+        set_policy(
+            name="trusted_proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=127.0.0.1",
+        )
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={"username": "cornelius@realm1"},
+            headers={"Remote-User": "cornelius@realm1"},
+            environ_base={"REMOTE_ADDR": "127.0.0.1"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 200, res)
+            result = res.json.get("result")
+            self.assertTrue(result.get("status"), result)
+            self.assertEqual(result.get("value").get("role"), "user", result)
+            self.assertEqual(result.get("value").get("realm"), "realm1", result)
+
+        # The REMOTE_USER server variable is trusted even when the peer is not
+        # listed in remote_user_trusted_proxies: the policy only guards the
+        # client-supplied Remote-User header.
+        set_policy(
+            name="trusted_proxies",
+            scope=SCOPE.WEBUI,
+            action=f"{ACTION.REMOTE_USER_TRUSTED_PROXIES}=10.9.9.9",
+        )
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data={"username": "cornelius@realm1"},
+            environ_base={"REMOTE_USER": "cornelius@realm1", "REMOTE_ADDR": "127.0.0.1"},
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(res.status_code, 200, res)
+            result = res.json.get("result")
+            self.assertTrue(result.get("status"), result)
+            self.assertEqual(result.get("value").get("role"), "user", result)
+            self.assertEqual(result.get("value").get("realm"), "realm1", result)
+
+        delete_policy(name="trusted_proxies")
         delete_policy(name="remote")
         set_edumfa_config(SYSCONF.SPLITATSIGN, True)
 
