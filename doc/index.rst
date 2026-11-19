@@ -52,10 +52,14 @@ Table of Contents
    workflows_and_tools/index
    jobqueue/index
    modules/index
-   changelog
    migration
+
+.. toctree::
+   :maxdepth: 1
+
    faq/index
    glossary/index
+   changelog
 
 
 If you are missing any information or descriptions
