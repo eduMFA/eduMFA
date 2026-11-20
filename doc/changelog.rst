@@ -28,22 +28,8 @@ Changes
   WebAuthn tokens or a hardware security module. The public key and all other
   token data are not affected. See :ref:`webauthn`.
 
-Bug Fixes
-~~~~~~~~~
-
-- Fixed the token configuration in the WebUI switching off the time shift of
-  TOTP tokens. Saving the configuration of any token type stored
-  ``totp.useTimeShift`` as ``False`` if this setting had never been saved
-  before. See `issue #1321 <https://github.com/eduMFA/eduMFA/issues/1321>`_.
-
 Upgrade Notes
 ~~~~~~~~~~~~~
-
-- Check the setting *Use Time Shift* in the TOTP token configuration of the
-  WebUI. Earlier versions switched it off when the configuration of any token
-  type was saved. Without the time shift, TOTP tokens with a drifting clock,
-  mostly hardware tokens, stop to authenticate. Enable the setting again if you
-  did not switch it off on purpose.
 
 - The database migration decrypts the credential id of all existing WebAuthn
   tokens once. Tokens that can not be decrypted are reported and keep working 
