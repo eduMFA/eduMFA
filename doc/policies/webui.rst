@@ -378,6 +378,10 @@ on from where a user tries to log in.
 show_android_privacyidea_authenticator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. warning::
+   This policy is planned for replacement by an eduMFA app policy in
+   eduMFA 3.0.0.
+
 type: ``bool``
 
 If this policy is activated, the enrollment page for HOTP, TOTP and PUSH tokens
@@ -386,6 +390,10 @@ directly install the unsupported privacyIDEA Authenticator App for Android devic
 
 show_ios_privacyidea_authenticator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning::
+   This policy is planned for replacement by an eduMFA app policy in
+   eduMFA 3.0.0.
 
 type: ``bool``
 

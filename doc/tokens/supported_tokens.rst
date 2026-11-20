@@ -37,6 +37,9 @@ the hardware vendor does not know the secret key.
 **DaPlug**. The DaPlug token is similar to the Yubikey and can be initialized
 via the USB connector. The secret key is not known to the hardware vendor.
 
+.. warning::
+   DaPlug tokens are planned for removal in eduMFA 3.0.0.
+
 **Smartdisplayer OTP Card**. This is a push button card. It features an eInk
 display, that can be read very good in all light condition at all angles.
 The Smartdisplayer OTP card is initialized at the factory and you get a seed

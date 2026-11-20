@@ -1,7 +1,12 @@
 .. _certificate_token:
 
 Certificate Token
-------------
+-----------------
+
+.. warning::
+   Certificate tokens are planned for removal in eduMFA 3.0.0. If you rely on
+   this token type, report your use case in
+   `the release tracking issue <https://github.com/eduMFA/eduMFA/issues/875>`_.
 
 .. index:: certificates, client certificates, request, CSR, CA, attestation
 

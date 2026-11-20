@@ -3,6 +3,11 @@
 Four Eyes
 ---------
 
+.. note::
+   This token type is planned for archival in eduMFA 3.0.0. It will remain
+   available with coverage limited to existing unit tests. Report problems
+   through GitHub issues or pull requests.
+
 .. index:: Four Eyes, 4 Eyes, Two Man
 
 This is a meta
@@ -29,8 +34,8 @@ It does not matter, in which order the tokens from the realms are entered.
 
 Authentication as::
 
-   username: "root@r2"
-   password: "pin123456 secret789434 key098123"
+   username: "<user>@<realm>"
+   password: "<pin1><otp1> <pin2><otp2> <pin3><otp3>"
 
 The three blocks separated by the *blank* are checked, if they match tokens
 in the realms *realm2* and *sqlite*.
@@ -40,7 +45,7 @@ The response looks like this in case of success::
    {
      "detail": {
        "message": "matching 1 tokens",
-       "serial": "PI4E000219E1",
+       "serial": "<four-eyes-token-serial>",
        "type": "4eyes"
      },
      "id": 1,

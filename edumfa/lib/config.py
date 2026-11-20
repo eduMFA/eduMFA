@@ -72,6 +72,44 @@ this = sys.modules[__name__]
 
 this.config = {}
 
+DEPRECATED_POLICY_ACTIONS = {
+    "admin": {"enrollPUSH", "hotp_2step", "totp_2step"},
+    "user": {"enrollPUSH", "hotp_2step", "totp_2step"},
+    "enrollment": {
+        "appimageurl",
+        "edupush_ssl_verify",
+        "force_app_pin",
+        "hotp_2step_clientsize",
+        "hotp_2step_serversize",
+        "hotp_2step_difficulty",
+        "hotp_force_app_pin",
+        "push_firebase_configuration",
+        "push_force_app_pin",
+        "push_max_active_token_per_user",
+        "push_max_token_per_user",
+        "push_registration_url",
+        "push_ssl_verify",
+        "push_ttl",
+        "totp_force_app_pin",
+        "totp_2step_clientsize",
+        "totp_2step_serversize",
+        "totp_2step_difficulty",
+    },
+    "authentication": {
+        "edupush_ssl_verify",
+        "push_allow_polling",
+        "push_ssl_verify",
+        "push_text_on_mobile",
+        "push_title_on_mobile",
+        "push_wait",
+    },
+    "authorization": {"application_tokentype"},
+    "webui": {
+        "show_android_privacyidea_authenticator",
+        "show_ios_privacyidea_authenticator",
+    },
+}
+
 
 class SharedConfigClass:
     """
@@ -99,6 +137,7 @@ class SharedConfigClass:
         self.events = []
         self.timestamp = None
         self.caconnectors = []
+        self._deprecations: set[str] = set()
 
     def _reload_from_db(self):
         """
@@ -122,6 +161,7 @@ class SharedConfigClass:
                 policies = []
                 events = []
                 caconnectors = []
+                deprecations: set[str] = set()
                 # Load system configuration
                 for sysconf in Config.query.all():
                     config[sysconf.Key] = {
@@ -129,6 +169,8 @@ class SharedConfigClass:
                         "Type": sysconf.Type,
                         "Description": sysconf.Description,
                     }
+                    if sysconf.Key == "totp.useTimeShift":
+                        deprecations.add("The TOTP system default (totp.useTimeShift)")
                 # Load resolver configuration
                 for resolver in Resolver.query.all():
                     resolverdef = {
@@ -146,6 +188,10 @@ class SharedConfigClass:
                         data[rconf.Key] = value
                     resolverdef["data"] = data
                     resolverconfig[resolver.name] = resolverdef
+                    if is_true(data.get("Editable")) or is_true(data.get("EDITABLE")):
+                        deprecations.add(
+                            f"User management through editable resolver {resolver.name!r}"
+                        )
                 # Load realm configuration
                 for realm in Realm.query.all():
                     if realm.default:
@@ -167,7 +213,25 @@ class SharedConfigClass:
                     realmconfig[realm.name] = realmdef
                 # Load all policies
                 for pol in Policy.query.all():
-                    policies.append(pol.get())
+                    policy = pol.get()
+                    policies.append(policy)
+                    if not policy["active"]:
+                        continue
+                    scope = policy["scope"]
+                    actions = policy["action"]
+                    for action in actions.keys() & DEPRECATED_POLICY_ACTIONS.get(
+                        scope, ()
+                    ):
+                        deprecations.add(
+                            f"Action {scope}.{action} in policy {pol.name!r}"
+                        )
+                    if scope in ("admin", "user") and actions.get("totp_timeshift") in (
+                        "default",
+                        "'default'",
+                    ):
+                        deprecations.add(
+                            f"The default value for {scope}.totp_timeshift in policy {pol.name!r}"
+                        )
                 # Load all events
                 for event in EventHandler.query.order_by(EventHandler.ordering):
                     events.append(event.get())
@@ -192,6 +256,12 @@ class SharedConfigClass:
                 # Finally, set the current timestamp
                 timestamp = datetime.datetime.now()
                 with self._config_lock:
+                    for feature in sorted(deprecations - self._deprecations):
+                        log.warning(
+                            "%s is deprecated and planned for removal in eduMFA 3.0.0.",
+                            feature,
+                        )
+                    self._deprecations = deprecations
                     self.config = config
                     self.resolver = resolverconfig
                     self.realm = realmconfig
