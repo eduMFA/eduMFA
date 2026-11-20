@@ -83,10 +83,9 @@ service, either by:
      via ``uwsgi_pass_request_headers off`` plus an allowlist for necessary
      headers
 
-   A future version of eduMFA is planned to support configuring trusted proxy
-   IP addresses. This configuration will initially be optional and is planned
-   to become mandatory for authentication via the ``Remote-User`` HTTP header
-   in a future major version.
+   Use a *remote_user_trusted_proxies* policy to limit the IP addresses whose
+   header is trusted. This will become mandatory in eduMFA 3.0.0 to use the
+   "Remote-User" HTTP header.
 
 
 Possible values are ``disable``, ``allowed`` and ``force``.
@@ -136,6 +135,29 @@ in /etc/apache2/sites-available/edumfa.conf::
                 </RequireAny>
         </Directory>
 
+
+remote_user_trusted_proxies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+type: ``string``
+
+A space-separated list of IP addresses (e.g. ``10.0.0.7 10.0.0.8``) of reverse
+proxies that are allowed to assert the authenticated user to eduMFA via the
+``Remote-User`` HTTP header.
+
+This is useful when an authenticating reverse proxy is separate from the
+eduMFA application server (e.g. nginx in front of a gunicorn container) and
+therefore cannot set the WSGI ``REMOTE_USER`` variable directly. The proxy
+authenticates the user and then unconditionally sets the header, e.g. nginx::
+
+        proxy_set_header Remote-User $remote_user;
+
+The ``REMOTE_USER`` server variable still takes precedence over the header.
+
+.. warning:: If no *remote_user_trusted_proxies* policy is set, the
+   ``Remote-User`` header is currently still trusted from **any** client for
+   backwards compatibility (deprecated). Starting eduMFA 3.0.0 the header will
+   be ignored unless this policy is set.
 
 .. index:: logout time
 

@@ -29,7 +29,7 @@ __author__ = "Cornelius Kölbel <cornelius@privacyidea.org>"
 
 from flask import Blueprint, current_app, g, render_template, request
 
-from edumfa.api.lib.prepolicy import is_remote_user_allowed
+from edumfa.api.lib.prepolicy import get_remote_user, is_remote_user_allowed
 from edumfa.api.lib.utils import send_html
 from edumfa.lib.config import SYSCONF, get_edumfa_node, get_from_config
 from edumfa.lib.error import HSMException
@@ -142,14 +142,7 @@ def single_page_application():
         r = is_remote_user_allowed(request, write_to_audit_log=False)
         force_remote_user = r == REMOTE_USER.FORCE
         if r != REMOTE_USER.DISABLE:
-            user = request.remote_user
-            if (
-                not user
-                and not request.headers.get("Remote-User") is None
-                and not request.headers.get("Remote-User") == ""
-            ):
-                user = request.headers.get("Remote-User")
-            remote_user = user
+            remote_user = get_remote_user(request) or ""
         password_reset = is_password_reset(g)
         hsm_ready = True
     except HSMException:
