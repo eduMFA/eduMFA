@@ -4,6 +4,7 @@ from base64 import b32decode, b32encode
 from datetime import datetime, timedelta, timezone
 from threading import Timer
 from unittest import mock
+from urllib.parse import parse_qs, urlsplit
 
 import responses
 from cryptography.hazmat.backends import default_backend
@@ -1800,6 +1801,28 @@ class PushTokenTestCase(MyTestCase):
 
 
 class EduPushTokenTestCase(MyTestCase):
+    def test_v2_enrollment_qr(self) -> None:
+        tok = init_token(param={"type": "edupush", "genkey": 1, **FB_CONFIG_VALS})
+        self.addCleanup(remove_token, tok.get_serial())
+        detail = tok.get_init_detail(
+            params={
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
+                PushTokenClass.PUSH_ACTION.SSL_VERIFY: "0",
+                ACTION.FORCE_APP_PIN: True,
+                "appimageurl": "https://edumfa.io/image",
+            }
+        )
+        query = parse_qs(urlsplit(detail["pushurl"]["value"]).query)
+        self.assertEqual(query["v"], ["2"])
+        self.assertEqual(query["serial"], [tok.get_serial()])
+        self.assertEqual(
+            query["enrollmentCredential"], [detail["enrollment_credential"]]
+        )
+        self.assertEqual(query["requireDeviceAuth"], ["true"])
+        for v1_key in ("enrollment_credential", "sslverify", "image", "pin"):
+            self.assertNotIn(v1_key, query)
+
     serial1 = "EDUP00001"
 
     server_private_key = rsa.generate_private_key(
@@ -1921,7 +1944,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertEqual(detail.get("rollout_state"), "clientwait")
         enrollment_credential = detail.get("enrollment_credential")
         self.assertTrue("pushurl" in detail)
-        self.assertNotIn("pin=True", detail["pushurl"]["value"])
+        self.assertNotIn("requireDeviceAuth=true", detail["pushurl"]["value"])
         self.assertFalse("otpkey" in detail)
 
         # Run enrollment step 2
@@ -1982,7 +2005,7 @@ class EduPushTokenTestCase(MyTestCase):
                 ACTION.FORCE_APP_PIN: True,
             }
         )
-        self.assertIn("pin=True", detail["pushurl"]["value"])
+        self.assertIn("requireDeviceAuth=true", detail["pushurl"]["value"])
         remove_token(tok.get_serial())
 
     def test_02a_lib_enroll(self):
