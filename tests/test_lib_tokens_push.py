@@ -27,7 +27,7 @@ from edumfa.lib.policy import (
     delete_policy,
     set_policy,
 )
-from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG
+from edumfa.lib.smsprovider.FirebaseProvider import FIREBASE_CONFIG, FirebaseProvider
 from edumfa.lib.smsprovider.SMSProvider import delete_smsgateway, set_smsgateway
 from edumfa.lib.token import get_tokens, init_token, remove_token
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
@@ -66,6 +66,22 @@ def _create_credential_mock():
 
 def _check_firebase_params(request):
     payload = json.loads(request.body)
+    message = payload["message"]
+    assert message["notification"] == {
+        "title": message["data"]["title"],
+        "body": message["data"]["question"],
+    }
+    assert "notification" not in message["android"]
+    assert (
+        message["android"]["collapse_key"]
+        == message["apns"]["headers"]["apns-collapse-id"]
+    )
+    assert message["android"]["priority"] == "HIGH"
+    assert message["android"]["ttl"] == "120s"
+    assert message["apns"]["payload"]["aps"]["alert"] == {
+        "title": message["data"]["title"],
+        "body": message["data"]["question"],
+    }
     # check the signature in the payload!
     data = payload.get("message").get("data")
 
@@ -3509,3 +3525,38 @@ class EduPushTokenTestCase(MyTestCase):
         tok.delete_token()
         tok2.delete_token()
         delete_smsgateway(self.firebase_config_name)
+
+
+def test_firebase_notifications_keep_distinct_challenges_and_collapse_retries() -> None:
+    gateway = mock.Mock(option_dict=FB_CONFIG_VALS)
+    provider = FirebaseProvider(smsgateway=gateway)
+    target = "edumfa.lib.smsprovider.FirebaseProvider"
+    with (
+        mock.patch(f"{target}.get_firebase_access_token"),
+        mock.patch(f"{target}.get_app_config_value", return_value=1),
+        mock.patch(f"{target}.time.time", return_value=1_700_000_000),
+        mock.patch(f"{target}.AuthorizedSession") as session,
+    ):
+        session.return_value.post.return_value.status_code = 200
+        for serial, nonce in [
+            ("serial", "first"),
+            ("serial", "second"),
+            ("serial", "first"),
+            ("other", "first"),
+            ("Ä" * 100, "challenge" * 100),
+        ]:
+            assert provider.submit_message("device", {"serial": serial, "nonce": nonce})
+        identifiers: list[str] = []
+        for call in session.return_value.post.call_args_list:
+            message = json.loads(call.kwargs["data"])["message"]
+            assert message["apns"]["headers"]["apns-expiration"] == "1700000120"
+            assert message["apns"]["headers"]["apns-priority"] == "10"
+            assert message["apns"]["headers"]["apns-push-type"] == "alert"
+            identifier = message["apns"]["headers"]["apns-collapse-id"]
+            assert message["android"]["collapse_key"] == identifier
+            assert isinstance(identifier, str)
+            assert len(identifier.encode()) <= 64
+            identifiers.append(identifier)
+            assert message["apns"]["payload"]["aps"]["thread-id"] == "edumfa.pushtoken"
+        assert identifiers[0] == identifiers[2]
+        assert len(set(identifiers)) == 4

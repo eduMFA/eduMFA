@@ -28,6 +28,7 @@ This provider is used for the push token and can be used for SMS tokens.
 import json
 import logging
 import time
+from hashlib import sha256
 
 from google.auth.transport.requests import AuthorizedSession
 from google.oauth2 import service_account
@@ -130,25 +131,28 @@ class FirebaseProvider(ISMSProvider):
         headers = {
             "Content-Type": "application/json; UTF-8",
         }
+        collapse_id = sha256(
+            f"{data.get('serial', '')}|{data.get('nonce', '')}".encode()
+        ).hexdigest()
         fcm_message = {
             "message": {
                 "data": data,
-                "token": firebase_token,
                 "notification": {
                     "title": data.get("title"),
                     "body": data.get("question"),
                 },
                 "android": {
+                    "collapse_key": collapse_id,
                     "priority": "HIGH",
                     "ttl": "120s",
                     "fcm_options": {"analytics_label": "AndroidPushToken"},
                 },
                 "apns": {
                     "headers": {
-                        "apns-priority": "10",
                         "apns-push-type": "alert",
-                        "apns-collapse-id": "privacyidea.pushtoken",
                         "apns-expiration": str(int(time.time()) + 120),
+                        "apns-priority": "10",
+                        "apns-collapse-id": collapse_id,
                     },
                     "payload": {
                         "aps": {
@@ -158,10 +162,13 @@ class FirebaseProvider(ISMSProvider):
                             },
                             "sound": "default",
                             "category": "PUSH_AUTHENTICATION",
+                            "thread-id": "edumfa.pushtoken",
+                            "interruption-level": "time-sensitive",
                         },
                     },
                     "fcm_options": {"analytics_label": "iOSPushToken"},
                 },
+                "token": firebase_token,
             }
         }
 
