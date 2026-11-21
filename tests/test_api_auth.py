@@ -918,6 +918,24 @@ class AuthApiTestCase(MyApiTestCase):
         token_realm1.delete_token()
         delete_policy("pi-login")
 
+    def test_11_auth_with_malformed_json(self):
+        # A malformed JSON body should yield a meaningful 400 error and
+        # not be reported as an internal server error (500).
+        with self.app.test_request_context(
+            "/auth",
+            method="POST",
+            data='{"username": "admin", "password"}',
+            content_type="application/json",
+        ):
+            res = self.app.full_dispatch_request()
+            self.assertEqual(400, res.status_code, res.json)
+            result = res.json.get("result")
+            self.assertFalse(result.get("status"), result)
+            self.assertEqual(905, result["error"]["code"], result)
+            self.assertIn(
+                "does not contain valid JSON", result["error"]["message"], result
+            )
+
 
 class AdminFromUserstore(OverrideConfigTestCase):
     class Config(TestingConfig):

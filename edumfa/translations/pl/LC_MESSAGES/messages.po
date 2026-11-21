@@ -43,6 +43,11 @@ msgid "Description required for {} token."
 msgstr ""
 
 #: api/lib/utils.py
+#, python-brace-format
+msgid "The request body does not contain valid JSON: {0!s}"
+msgstr ""
+
+#: api/lib/utils.py
 msgid "Authentication failure. Missing Authorization header."
 msgstr ""
 
