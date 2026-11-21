@@ -1078,7 +1078,7 @@ msgstr ""
 
 #: lib/policy.py
 msgid ""
-"The sending of an API Auth Key is required duringauthentication. This "
+"The sending of an API Auth Key is required during authentication. This "
 "avoids rogue authenticate requests against the /validate/check interface."
 msgstr ""
 "Die Nutzung eines API Auth Key für die Authentifizierung ist notwendig. "
@@ -1123,15 +1123,14 @@ msgstr ""
 "Standard: \"lockscreen\"."
 
 #: lib/policy.py
+#, fuzzy
 msgid ""
 "The REMOTE_USER set by the webserver can be used to login to eduMFA or it"
 " will be ignored. Defaults to \"disable\". Please read the documentation "
 "for this policy before using."
 msgstr ""
-"Der vom Webserver gesetzte Wert REMOTE_USER kann für die Anmeldung bei "
-"eduMFA verwendet oder ignoriert werden. Der Standardwert ist „disable“. "
-"Bitte lesen Sie vor der Verwendung die Dokumentation zu dieser "
-"Richtlinie."
+"Der Webserver REMOTE_USER wird für die Anmeldung am WebUI verwendet. "
+"Standard: \"disable\"."
 
 #: lib/policy.py
 msgid ""
@@ -2106,6 +2105,24 @@ msgid "Your LDAP config seems to be OK, %i machine objects found."
 msgstr ""
 "Die LDAP-Konfiguration scheint in Ordnung zu sein. Es wurden %i "
 "Maschinen-Objekte gefunden."
+
+#: lib/policies/conditions.py
+msgid ""
+"Raise an error if the data that is required to check the condition is not"
+" available."
+msgstr ""
+
+#: lib/policies/conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"true. Hence, the policy is applied."
+msgstr ""
+
+#: lib/policies/conditions.py
+msgid ""
+"If the required data is not available, the condition is considered to be "
+"false. Hence, the policy is not applied."
+msgstr ""
 
 #: lib/resolvers/LDAPIdResolver.py
 #, python-brace-format
