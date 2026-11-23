@@ -112,7 +112,7 @@ pycryptodomex==3.24.2
     # via ldap3
 pydash==8.1.0
     # via edumfa (pyproject.toml)
-pyjwt==2.15.0
+pyjwt==2.15.1
     # via edumfa (pyproject.toml)
 pymysql==1.2.3
     # via edumfa (pyproject.toml)
