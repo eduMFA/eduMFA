@@ -56,7 +56,7 @@ dependencies = [
     "pyopenssl==26.4.0",
     "pyrad==2.5.4",
     "python-dateutil==2.9.0.post0",
-    "python-gnupg==0.5.6",
+    "python-gnupg==0.5.7",
     "pyyaml==6.0.3",
     "requests==2.34.2",
     "segno==1.6.6",
