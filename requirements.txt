@@ -71,7 +71,7 @@ huey==3.4.0
     # via edumfa (pyproject.toml)
 idna==3.20
     # via requests
-importlib-metadata==8.7.1
+importlib-metadata==9.0.1
     # via edumfa (pyproject.toml)
 itsdangerous==2.2.0
     # via flask
@@ -120,7 +120,7 @@ pyopenssl==26.4.0
     # via edumfa (pyproject.toml)
 pyrad==2.5.4
     # via edumfa (pyproject.toml)
-python-dateutil==2.9.0.post0
+python-dateutil==3.0.0
     # via
     #   edumfa (pyproject.toml)
     #   croniter
@@ -165,6 +165,8 @@ typing-extensions==4.16.0
     #   pyjwt
     #   pyopenssl
     #   sqlalchemy
+tzdata==2026.6
+    # via python-dateutil
 urllib3==2.8.0
     # via requests
 werkzeug==3.1.9
