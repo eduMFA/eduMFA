@@ -127,7 +127,7 @@ test = [
     "testcontainers[mysql,postgres]==4.15.0",
     "testfixtures==8.3.0",
     "tomli==2.4.1",
-    "types-PyYAML==6.0.12.20260906",
+    "types-PyYAML==6.0.12.20261122",
     "fido2==2.2.1"
 ]
 
