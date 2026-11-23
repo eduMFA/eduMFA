@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":pinVersions"],
+  "extends": ["config:recommended", ":preserveSemverRanges"],
   "timezone": "Europe/Berlin",
   "schedule": ["* 0-6 * * 1"],
   "separateMinorPatch": true,
@@ -22,11 +22,6 @@
     }
   },
   "packageRules": [
-    {
-      "description": "Preserve Python compatible-release ranges",
-      "matchManagers": ["pep621"],
-      "rangeStrategy": "replace"
-    },
     {
       "description": "Keep minor and major updates individual",
       "matchUpdateTypes": ["minor", "major"],
