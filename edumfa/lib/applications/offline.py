@@ -27,6 +27,7 @@ from edumfa.lib.crypto import geturandom
 from edumfa.lib.error import ParameterError, ValidateError
 from edumfa.lib.policy import TYPE
 from edumfa.lib.token import get_tokens
+from edumfa.lib.utils import get_computer_name_from_user_agent
 
 log = logging.getLogger(__name__)
 ROUNDS = 6549
@@ -54,14 +55,35 @@ class MachineApplication(MachineApplicationBase):
     application_name = "offline"
 
     @staticmethod
-    def generate_new_refilltoken(token_obj):
+    def generate_new_refilltoken(token_obj, user_agent=None):
         """
         Generate new refill token and store it in the tokeninfo of the token.
+
+        For WebAuthn tokens the refill token is stored per machine, because the
+        same token can be used for offline authentication on multiple machines,
+        which need to be managed separately. The machine is identified by the
+        computer name contained in the user agent.
+
         :param token_obj: token in question
+        :param user_agent: the user agent of the request, used to derive the
+            machine name for WebAuthn tokens
         :return: a string
         """
+
+        log.debug(f"Generating refilltoken for token {token_obj.get_serial()!r} with user agent {user_agent}")
+
+        if token_obj.type.lower() == "webauthn":
+            computer_name = get_computer_name_from_user_agent(user_agent)
+            if computer_name is None:
+                raise ParameterError(
+                    "Unable to generate refilltoken for a WebAuthn token "
+                    "without a computer name."
+                )
+            key = "refilltoken_" + computer_name
+        else:
+            key = "refilltoken"
         new_refilltoken = geturandom(REFILLTOKEN_LENGTH, hex=True)
-        token_obj.add_tokeninfo("refilltoken", new_refilltoken)
+        token_obj.add_tokeninfo(key, new_refilltoken)
         return new_refilltoken
 
     @staticmethod
@@ -133,43 +155,59 @@ class MachineApplication(MachineApplicationBase):
 
     @staticmethod
     def get_authentication_item(
-        token_type, serial, challenge=None, options=None, filter_param=None
+        token_type, serial, challenge=None, options=None, filter_param=None,
+        user_agent=None
     ):
         """
-        :param token_type: the type of the token. At the moment
-                           we only support "HOTP" token. Supporting time
-                           based tokens is difficult, since we would have to
-                           return a looooong list of OTP values.
-                           Supporting "yubikey" token (AES) would be
-                           possible, too.
+        :param token_type: the type of the token. At the moment we support
+                           "HOTP" tokens and "WebAuthn" tokens. Supporting
+                           time based tokens is difficult, since we would have
+                           to return a looooong list of OTP values.
         :param serial:     the serial number of the token.
         :param challenge:  This can contain the password (otp pin + otp
         value) so that we can put the OTP PIN into the hashed response.
         :type challenge: basestring
-        :return auth_item: A list of hashed OTP values
+        :param options: options
+        :param filter_param: parameters
+        :param user_agent: The user agent of the request, used to derive the
+            machine name for WebAuthn tokens
+        :return auth_item: A list of hashed OTP values or pubKey, rpId and
+            credentialId for a WebAuthn token
         """
         ret = {}
         options = options or {}
         password = challenge
-        if token_type.lower() == "hotp":
+        if token_type.lower() in ["hotp", "webauthn"]:
             tokens = get_tokens(serial=serial)
             if len(tokens) == 1:
                 token_obj = tokens[0]
-                if password:
-                    _r, otppin, _ = token_obj.split_pin_pass(password)
-                    if not _r:
-                        raise ParameterError("Could not split password")
+
+                if token_type.lower() == "webauthn":
+                    # Return the pubKey, rpId and the credentialId (contained
+                    # in the otpkey) to allow the machine to verify the
+                    # WebAuthn assertions signed with the token offline.
+                    ret["response"] = {
+                        "pubKey": token_obj.get_tokeninfo("pubKey"),
+                        "credentialId": token_obj.decrypt_otpkey(),
+                        "rpId": token_obj.get_tokeninfo("relying_party_id"),
+                    }
                 else:
-                    otppin = ""
-                otps = MachineApplication.get_offline_otps(
-                    token_obj,
-                    otppin,
-                    int(options.get("count", 100)),
-                    int(options.get("rounds", ROUNDS)),
+                    if password:
+                        _r, otppin, _ = token_obj.split_pin_pass(password)
+                        if not _r:
+                            raise ParameterError("Could not split password")
+                    else:
+                        otppin = ""
+                    ret["response"] = MachineApplication.get_offline_otps(
+                        token_obj,
+                        otppin,
+                        int(options.get("count", 100)),
+                        int(options.get("rounds", ROUNDS)),
+                    )
+
+                ret["refilltoken"] = MachineApplication.generate_new_refilltoken(
+                    token_obj, user_agent
                 )
-                refilltoken = MachineApplication.generate_new_refilltoken(token_obj)
-                ret["response"] = otps
-                ret["refilltoken"] = refilltoken
                 user_object = token_obj.user
                 if user_object:
                     uInfo = user_object.info
