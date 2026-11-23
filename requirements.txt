@@ -38,7 +38,7 @@ click==8.5.1
     #   flask
 configobj==5.0.9
     # via edumfa (pyproject.toml)
-croniter==6.2.4
+croniter==7.0.0
     # via edumfa (pyproject.toml)
 cryptography==50.0.1
     # via
