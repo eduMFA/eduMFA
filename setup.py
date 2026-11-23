@@ -30,7 +30,7 @@ def get_man_pages(dir):
     return r_files
 
 
-def get_scripts(dir):
+def get_scripts(dir: str) -> list[str]:
     """
     Get files that are executable
     :param dir:
@@ -39,7 +39,7 @@ def get_scripts(dir):
     files = os.listdir(dir)
     r_files = []
     for file in files:
-        if os.stat(dir + "/" + file)[stat.ST_MODE] & stat.S_IEXEC:
+        if os.path.isfile(dir + "/" + file) and os.stat(dir + "/" + file)[stat.ST_MODE] & stat.S_IEXEC:
             r_files.append(dir + "/" + file)
     return r_files
 
