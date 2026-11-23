@@ -22,7 +22,7 @@ beautifulsoup4==4.15.0
     # via edumfa (pyproject.toml)
 blinker==1.9.0
     # via flask
-cbor2==6.2.1
+cbor2==6.3.0
     # via edumfa (pyproject.toml)
 certifi==2026.11.20
     # via requests
