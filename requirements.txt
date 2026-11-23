@@ -40,7 +40,7 @@ configobj==5.0.9
     # via edumfa (pyproject.toml)
 croniter==6.2.4
     # via edumfa (pyproject.toml)
-cryptography==50.0.1
+cryptography==50.0.2
     # via
     #   edumfa (pyproject.toml)
     #   google-auth
