@@ -1,0 +1,42 @@
+name: release security
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Scan ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            platform: linux/amd64
+          - os: ubuntu-24.04-arm
+            platform: linux/arm64
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Build image for scanning
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          tags: edumfa:security-check
+          platforms: ${{ matrix.platform }}
+          cache-from: type=gha,scope=release-security-${{ matrix.os }}
+          cache-to: type=gha,scope=release-security-${{ matrix.os }},mode=max
+      - name: Reject HIGH and CRITICAL vulnerabilities
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: edumfa:security-check
+          scanners: vuln
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
+          ignore-unfixed: false
+          exit-code: '1'

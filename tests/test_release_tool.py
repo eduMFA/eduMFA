@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import subprocess
 from pathlib import Path
 from types import ModuleType
 
@@ -148,6 +149,56 @@ def test_fix_release_must_be_tagged_on_maintenance_branch(
 
     with pytest.raises(release_tool.ReleaseError, match="must be tagged on v2.10.x"):
         release_tool.tag_release("2.10.1")
+
+
+@pytest.mark.parametrize("published", [True, False])
+def test_fix_release_checks_fetched_main(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, published: bool
+) -> None:
+    release_tool = load_release_module()
+    remote = tmp_path / "origin.git"
+    repository = tmp_path / "checkout"
+    repository.mkdir()
+
+    def git(*arguments: str) -> str:
+        return subprocess.run(
+            ["git", *arguments],
+            cwd=repository,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+
+    git("init", "--bare", str(remote))
+    git("init", "-b", "main")
+    git("config", "user.name", "Release Test")
+    git("config", "user.email", "release-test@example.com")
+    git("config", "commit.gpgsign", "false")
+    git("commit", "--allow-empty", "-m", "Initial release")
+    initial = git("rev-parse", "HEAD")
+    git("remote", "add", "origin", str(remote))
+    git("push", "origin", "main")
+    git("branch", "v2.10.x")
+    (repository / "fix.txt").write_text("Fix\n", encoding="utf-8")
+    git("add", "fix.txt")
+    git("commit", "-m", "Fix")
+    fix = git("rev-parse", "HEAD")
+    if published:
+        git("push", "origin", "main")
+        git("reset", "--hard", initial)
+        git("update-ref", "refs/remotes/origin/main", initial)
+    git("switch", "v2.10.x")
+    monkeypatch.setattr(release_tool, "ROOT", repository)
+    monkeypatch.setattr(release_tool, "prepare_release", lambda version: None)
+
+    if published:
+        release_tool.prepare_fix_release("2.10.1", [fix])
+        assert (repository / "fix.txt").read_text(encoding="utf-8") == "Fix\n"
+        assert git("rev-parse", "main") == initial
+    else:
+        with pytest.raises(subprocess.CalledProcessError):
+            release_tool.prepare_fix_release("2.10.1", [fix])
+        assert git("rev-parse", "HEAD") == initial
 
 
 def test_create_fix_branch_uses_release_tag(

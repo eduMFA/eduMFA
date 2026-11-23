@@ -31,13 +31,21 @@ release. These remain deliberate maintainer actions.
 
 ## Before every release
 
-1. Assign all intended issues to the release milestone.
+1. Assign all intended pull requests to the release milestone and confirm they
+   are merged into the release branch. Pull requests define the release scope;
+   issue milestones only track when a release containing their fixes is done.
 2. Confirm that no release blockers remain and all required migrations are
    included.
 3. Add an `eduMFA X.Y.Z` section to `doc/changelog.rst`. Include user-visible
    changes, upgrade warnings, permitted security information, and a comparison
    link from `PREVIOUS` to `vX.Y.Z`.
 4. Have another maintainer review the scope and release notes.
+5. Confirm the release security checks pass for the release commit. They build
+   and scan the `linux/amd64` and `linux/arm64` container images with Trivy for
+   operating-system and application dependency vulnerabilities. HIGH or CRITICAL
+   findings block publication, including findings without an available fix.
+   Update the affected base image or dependencies and include the required
+   fixes before releasing. There is no force or bypass option.
 
 The changelog must exist before running a preparation target. For a major or
 minor release it may be an uncommitted local change. For a fix release it must
@@ -153,8 +161,9 @@ $ make prepare-fix-release VERSION=X.Y.Z COMMITS="sha1 sha2"
 $ git diff
 ```
 
-The target verifies that `Z` is non-zero, the current branch is `vX.Y.x`, the
-working tree is clean, and every selected commit belongs to `main`. It then
+The target verifies that `Z` is non-zero, the current branch is `vX.Y.x`, and the
+working tree is clean. It fetches `main` from `origin` and verifies that every
+selected commit belongs to that fetched revision. It then
 cherry-picks the commits in the supplied order and performs the same preparation
 and consistency checks as `prepare-release`.
 
@@ -187,7 +196,11 @@ A fix release does not require a development-version bump on `main`.
 
 ## Publication and verification
 
-Pushing `vX.Y.Z` starts the existing GitHub Actions workflows:
+Pushing `vX.Y.Z` starts the GitHub Actions workflows below. Each workflow first
+runs the shared `release-security.yml` checks against that commit. Publication
+jobs only run after both architecture scans succeed; a failed scan or scanner
+error stops publication. The same checks also run for pull requests and pushes
+to `main` through the Docker and Ubuntu workflows.
 
 | Workflow | Published artifacts |
 | --- | --- |

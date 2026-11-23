@@ -10,6 +10,7 @@ on:
       - 'v*'
     paths:
       - '.github/workflows/docker.yml'
+      - '.github/workflows/release-security.yml'
       - 'deploy/docker/**'
       - 'edumfa/**'
       - 'migrations/**'
@@ -24,7 +25,10 @@ on:
     types: [ opened, reopened, synchronize ]
 
 jobs:
+  security:
+    uses: ./.github/workflows/release-security.yml
   docker:
+    needs: security
     runs-on: ubuntu-latest
     permissions:
       packages: write

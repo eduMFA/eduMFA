@@ -224,8 +224,9 @@ def prepare_fix_release(version: str, commits: Sequence[str]) -> None:
         raise ReleaseError("At least one commit is required for a fix release")
     if run_git(["status", "--porcelain"], capture_output=True):
         raise ReleaseError("The working tree must be clean before cherry-picking fixes")
+    run_git(["fetch", "origin", "main"])
     for commit in commits:
-        run_git(["merge-base", "--is-ancestor", commit, "main"])
+        run_git(["merge-base", "--is-ancestor", commit, "FETCH_HEAD"])
     run_git(["cherry-pick", *commits])
     prepare_release(version)
 

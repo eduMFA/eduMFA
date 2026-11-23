@@ -10,6 +10,7 @@ on:
       - 'v*'
     paths:
       - '.github/workflows/ubuntu.yml'
+      - '.github/workflows/release-security.yml'
       - 'deploy/ubuntu*/**'
       - 'edumfa/**/*.py'
       - 'tools/**'
@@ -20,7 +21,10 @@ on:
     types: [ opened, reopened, synchronize ]
 
 jobs:
+  security:
+    uses: ./.github/workflows/release-security.yml
   build:
+    needs: security
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
