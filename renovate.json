@@ -3,6 +3,7 @@
   "extends": ["config:recommended", ":pinVersions"],
   "timezone": "Europe/Berlin",
   "schedule": ["* 0-6 * * 1"],
+  "separateMinorPatch": true,
   "pip_requirements": {
     "enabled": false
   },
@@ -22,22 +23,32 @@
   },
   "packageRules": [
     {
-      "description": "Group Python minor and patch updates",
+      "description": "Preserve Python compatible-release ranges",
+      "matchManagers": ["pep621"],
+      "rangeStrategy": "replace"
+    },
+    {
+      "description": "Keep minor and major updates individual",
+      "matchUpdateTypes": ["minor", "major"],
+      "groupName": null
+    },
+    {
+      "description": "Group Python patch updates",
       "matchManagers": ["pep621", "pip-compile"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "Python dependencies (non-major)"
+      "matchUpdateTypes": ["patch"],
+      "groupName": "Python dependencies (patch)"
     },
     {
-      "description": "Group frontend minor and patch updates",
+      "description": "Group frontend patch updates",
       "matchManagers": ["bun", "npm"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "frontend dependencies (non-major)"
+      "matchUpdateTypes": ["patch"],
+      "groupName": "frontend dependencies (patch)"
     },
     {
-      "description": "Group GitHub Actions minor and patch updates",
+      "description": "Group GitHub Actions patch updates",
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "GitHub Actions (non-major)"
+      "matchUpdateTypes": ["patch"],
+      "groupName": "GitHub Actions (patch)"
     },
     {
       "matchManagers": ["github-actions"],

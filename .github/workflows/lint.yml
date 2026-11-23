@@ -28,13 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Get Ruff version
-        id: ruff-version
-        run: echo "version=$(grep -Po '(?<=ruff==)[0-9]+\.[0-9]+\.[0-9]+' pyproject.toml)" >> $GITHUB_OUTPUT
       - name: Run Ruff analysis
         uses: astral-sh/ruff-action@v4.1.0
         with:
-          version: ${{ steps.ruff-version.outputs.version }}
+          version-file: uv.lock
   codespell:
     runs-on: ubuntu-latest
     steps:
