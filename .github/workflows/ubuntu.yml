@@ -29,8 +29,6 @@ jobs:
             codename: resolute
           - os: ubuntu-24.04
             codename: noble
-          - os: ubuntu-22.04
-            codename: jammy
     name: build ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7

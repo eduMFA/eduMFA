@@ -5,7 +5,7 @@ Ubuntu Packages
 
 .. index:: ubuntu
 
-The packaging supports Ubuntu 22.04 LTS, 24.04 LTS, and 26.04 LTS.
+The packaging supports Ubuntu 24.04 LTS and 26.04 LTS.
 
 .. note:: The packages ``edumfa-apache2`` and ``edumfa-nginx`` assume
    that you want to run a eduMFA system. These packages deactivate all
@@ -61,12 +61,6 @@ described below.
 
         add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-noble
 
-.. tab:: Ubuntu 22.04LTS
-
-    .. code-block:: bash
-
-        add-apt-repository http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy
-
 As an alternative you can add the repo in a dedicated file. Create a new
 file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the following contents:
 
@@ -81,12 +75,6 @@ file ``/etc/apt/sources.list.d/eduMFA-community.list`` with the following conten
     .. code-block:: bash
 
         deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-noble noble main
-
-.. tab:: Ubuntu 22.04LTS
-
-    .. code-block:: bash
-
-        deb http://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-jammy jammy main
 
 
 Installation of eduMFA 1.x or higher
@@ -153,12 +141,6 @@ Set the Ubuntu release codename in the package changelog.
     .. code-block:: bash
 
         sed -i 's/{{CODENAME}}/noble/g' debian/changelog
-
-.. tab:: Ubuntu 22.04LTS
-
-    .. code-block:: bash
-
-        sed -i 's/{{CODENAME}}/jammy/g' debian/changelog
 
 Install build dependencies and build the package::
 
