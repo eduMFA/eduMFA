@@ -25,6 +25,8 @@ jobs:
     strategy:
       matrix:
         include:
+          - os: ubuntu-26.04
+            codename: resolute
           - os: ubuntu-24.04
             codename: noble
           - os: ubuntu-22.04
@@ -64,5 +66,5 @@ jobs:
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           for deb_file in $(ls ../*.deb); do
-            curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-${{ matrix.codename }}/"
+            curl --fail-with-body -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$deb_file" "https://bb-repo.zedat.fu-berlin.de/repository/edumfa-ubuntu-${{ matrix.codename }}/"
           done
