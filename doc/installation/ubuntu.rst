@@ -5,7 +5,7 @@ Ubuntu Packages
 
 .. index:: ubuntu
 
-The Debian packaging supports Ubuntu 22.04 LTS, 24.04 LTS, and 26.04 LTS.
+The packaging supports Ubuntu 22.04 LTS, 24.04 LTS, and 26.04 LTS.
 
 .. note:: The packages ``edumfa-apache2`` and ``edumfa-nginx`` assume
    that you want to run a eduMFA system. These packages deactivate all
