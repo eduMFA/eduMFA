@@ -303,6 +303,7 @@ class PushTokenClass(TokenClass):
         AUTHENTICATIONMODE.OUTOFBAND,
     ]
     client_mode = CLIENTMODE.POLL
+    enrollment_version = 2
     # If the token is enrollable via multichallenge
     is_multichallenge_enrollable = True
 
@@ -600,6 +601,7 @@ class PushTokenClass(TokenClass):
             # We are in step 1:
             upd_param["2stepinit"] = 1
             self.add_tokeninfo("enrollment_credential", geturandom(20, hex=True))
+            self.add_tokeninfo("push_version", self.enrollment_version)
             # We also store the Firebase config, that was used during the enrollment.
             self.add_tokeninfo(
                 self.PUSH_ACTION.FIREBASE_CONFIG,
@@ -681,7 +683,7 @@ class PushTokenClass(TokenClass):
     def _get_enrollment_qr_params(
         self, params: Mapping[str, object], credential: str | None
     ) -> dict[str, object]:
-        qr_params: dict[str, object] = {"v": 2, "enrollmentCredential": credential}
+        qr_params: dict[str, object] = {"enrollmentCredential": credential}
         if params.get(ACTION.FORCE_APP_PIN):
             qr_params["requireDeviceAuth"] = "true"
         return qr_params
@@ -721,6 +723,7 @@ class PushTokenClass(TokenClass):
             credential = self.get_tokeninfo("enrollment_credential")
             extra_data = {
                 "serial": self.get_serial(),
+                "v": self.enrollment_version,
                 **self._get_enrollment_qr_params(params, credential),
             }
 

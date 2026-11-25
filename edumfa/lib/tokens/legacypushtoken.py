@@ -71,6 +71,8 @@ class LegacyPushTokenClass(PushTokenClass):
     - https://github.com/privacyidea/privacyidea/wiki/concept%3A-PushToken
     """
 
+    enrollment_version = 1
+
     def __init__(self, db_token):
         TokenClass.__init__(self, db_token)
         self.set_type("push")
@@ -103,7 +105,6 @@ class LegacyPushTokenClass(PushTokenClass):
         self, params: Mapping[str, object], credential: str | None
     ) -> dict[str, object]:
         qr_params: dict[str, object] = {
-            "v": 1,
             "enrollment_credential": credential,
             "sslverify": getParam(
                 params,

@@ -260,6 +260,8 @@ class PushTokenTestCase(MyTestCase):
         tparams.update(FB_CONFIG_VALS)
         tok = init_token(param=tparams)
         self.addCleanup(remove_token, tok.get_serial())
+        stored_token = get_tokens(serial=tok.get_serial())[0]
+        self.assertEqual(stored_token.get_tokeninfo("push_version"), "1")
         detail = tok.get_init_detail(
             params={
                 LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
@@ -1814,6 +1816,8 @@ class EduPushTokenTestCase(MyTestCase):
     def test_v2_enrollment_qr(self) -> None:
         tok = init_token(param={"type": "edupush", "genkey": 1, **FB_CONFIG_VALS})
         self.addCleanup(remove_token, tok.get_serial())
+        stored_token = get_tokens(serial=tok.get_serial())[0]
+        self.assertEqual(stored_token.get_tokeninfo("push_version"), "2")
         detail = tok.get_init_detail(
             params={
                 PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
