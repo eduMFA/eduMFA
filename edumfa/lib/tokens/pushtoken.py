@@ -469,9 +469,7 @@ class PushTokenClass(TokenClass):
         if cls.get_class_type() == "edupush":
             res["policy"][SCOPE.AUTH][cls.PUSH_ACTION.IMAGE_URL] = {
                 "type": "str",
-                "desc": _(
-                    "The token image URL returned to the Push App when polling for challenges."
-                ),
+                "desc": _("Token image URL for the push app."),
                 "group": cls.get_policy_group(),
             }
 
@@ -1107,10 +1105,9 @@ class PushTokenClass(TokenClass):
 
           More on polling can be found here: https://github.com/privacyidea/privacyidea/wiki/concept%3A-pushtoken-poll
 
-          Successful eduMFA push responses include ``detail.image`` with the
-          token owner's configured image URL, or ``null`` when no image is configured.
-          Clients should preserve their existing image if older servers omit
-          this field. eduMFA push enrollment QR codes do not include image URLs.
+          Rollout and authenticated polling return ``detail.image`` for
+          eduPush. V2 also returns ``detail.metadata`` with ``version`` and
+          ``image``. Polling returns these fields even without challenges.
 
         :param request: The Flask request
         :param g: The Flask global object g

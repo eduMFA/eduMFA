@@ -2829,7 +2829,7 @@ msgstr ""
 "abfragen"
 
 #: lib/tokens/pushtoken.py
-msgid "The token image URL returned to the Push App when polling for challenges."
+msgid "Token image URL for the push app."
 msgstr ""
 
 #: lib/tokens/pushtoken.py

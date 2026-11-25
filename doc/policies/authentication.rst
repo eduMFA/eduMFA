@@ -549,17 +549,18 @@ edupush_image_url
 
 type: string
 
-The URL of the :ref:`edupush_token` image displayed by the authenticator app.
-The policy is matched against the token owner and belongs to the
-authentication scope and the Push token group.
+The :ref:`edupush_token` image URL for the push app. The policy matches the
+token owner.
 
-The image URL is returned as ``detail.image`` after the second enrollment step
-and during authenticated challenge polling, including when there are no
-pending challenges. Removing the policy
-returns ``null`` so supported apps clear the image. Older servers omit the
-field, so apps preserve their existing image. The URL is not included in the
-enrollment QR code. The enrollment policy ``appimageurl`` is not used for
-eduMFA push token images.
+Rollout and authenticated polling return the image URL even when no challenges
+are pending.
+
+* V1 returns ``detail.image``. Tokens without a stored version use V1.
+* V2 adds ``detail.metadata`` with ``version`` and ``image`` and retains
+  ``detail.image`` for existing clients.
+
+The app clears its saved image on ``null`` and keeps it when the server omits
+the image field.
 
 .. _policy_push_wait:
 

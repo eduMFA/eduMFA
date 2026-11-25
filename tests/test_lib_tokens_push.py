@@ -1502,6 +1502,7 @@ class PushTokenTestCase(MyTestCase):
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertNotIn("image", res[1].get("detail", {}))
+        self.assertNotIn("metadata", res[1].get("detail", {}))
         self.assertNotIn(
             PushTokenClass.PUSH_ACTION.IMAGE_URL,
             LegacyPushTokenClass.get_class_info("policy")[SCOPE.AUTH],
@@ -3218,13 +3219,18 @@ class EduPushTokenTestCase(MyTestCase):
             user="cornelius",
         )
         try:
-            for owner, image in (
-                ("cornelius", "https://example.org/token.png"),
-                ("other", None),
+            for version, owner, image in (
+                (1, "cornelius", "https://example.org/token.png"),
+                (2, "cornelius", "https://example.org/token.png"),
+                (2, "other", None),
             ):
                 tok = init_token(param={"type": "edupush", "genkey": 1})
+                if version == 1:
+                    tok.add_tokeninfo("push_version", version)
                 set_policy("enrollment_image", SCOPE.AUTH, user=owner)
-                tok.add_user(User("cornelius", self.realm1, resolver=self.resolvername1))
+                tok.add_user(
+                    User("cornelius", self.realm1, resolver=self.resolvername1)
+                )
                 serial = tok.get_serial()
                 req = Request(EnvironBuilder(method="POST").get_environ())
                 req.all_data = {
@@ -3244,6 +3250,13 @@ class EduPushTokenTestCase(MyTestCase):
                     self.assertEqual(res["detail"]["rollout_state"], "enrolled")
                     self.assertIn("public_key", res["detail"])
                     self.assertEqual(res["detail"]["image"], image)
+                    if version == 1:
+                        self.assertNotIn("metadata", res["detail"])
+                    else:
+                        self.assertEqual(
+                            res["detail"]["metadata"],
+                            {"version": version, "image": image},
+                        )
                 finally:
                     tok.delete_token()
         finally:
@@ -3307,8 +3320,14 @@ class EduPushTokenTestCase(MyTestCase):
                 res = token_class.api_endpoint(req, g)[1]
                 self.assertEqual(res["result"]["value"], [])
                 self.assertEqual(res["detail"]["image"], image)
+                self.assertEqual(
+                    res["detail"]["metadata"], {"version": 2, "image": image}
+                )
             set_policy("push_image", SCOPE.AUTH, user="other", active=True)
-            self.assertIsNone(token_class.api_endpoint(req, g)[1]["detail"]["image"])
+            tok.del_tokeninfo("push_version")
+            detail = token_class.api_endpoint(req, g)[1]["detail"]
+            self.assertIsNone(detail["image"])
+            self.assertNotIn("metadata", detail)
             req.all_data["signature"] = b32encode(b"invalid")
             with self.assertRaises(eduMFAError):
                 token_class.api_endpoint(req, g)
