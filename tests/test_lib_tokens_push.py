@@ -255,19 +255,29 @@ class PushTokenTestCase(MyTestCase):
         )
         remove_token(self.serial1)
 
-    def test_01a_enroll_with_app_pin(self):
+    def test_01a_enroll_with_app_pin(self) -> None:
         tparams = {"type": "push", "genkey": 1}
         tparams.update(FB_CONFIG_VALS)
         tok = init_token(param=tparams)
+        self.addCleanup(remove_token, tok.get_serial())
         detail = tok.get_init_detail(
             params={
                 LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
                 LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
+                LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY: "0",
                 ACTION.FORCE_APP_PIN: True,
+                "appimageurl": "https://edumfa.io/image",
             }
         )
-        self.assertIn("pin=True", detail["pushurl"]["value"])
-        remove_token(tok.get_serial())
+        query = parse_qs(urlsplit(detail["pushurl"]["value"]).query)
+        self.assertEqual(query["v"], ["1"])
+        self.assertEqual(query["serial"], [tok.get_serial()])
+        self.assertEqual(
+            query["enrollment_credential"], [detail["enrollment_credential"]]
+        )
+        self.assertEqual(query["sslverify"], ["0"])
+        self.assertEqual(query["image"], ["https://edumfa.io/image"])
+        self.assertEqual(query["pin"], ["True"])
 
     def test_02a_lib_enroll(self):
         r = set_smsgateway(

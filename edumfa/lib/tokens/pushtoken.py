@@ -32,6 +32,7 @@ import time
 import traceback
 from base64 import b32decode
 from binascii import Error as BinasciiError
+from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
 from urllib.parse import quote
 
@@ -677,6 +678,14 @@ class PushTokenClass(TokenClass):
 
         return f"{self.get_push_url_prefix()}/{url_label}?url={url_url}&ttl={ttl}&issuer={url_issuer}{_construct_extra_parameters(extra_data)}"
 
+    def _get_enrollment_qr_params(
+        self, params: Mapping[str, object], credential: str | None
+    ) -> dict[str, object]:
+        qr_params: dict[str, object] = {"v": 2, "enrollmentCredential": credential}
+        if params.get(ACTION.FORCE_APP_PIN):
+            qr_params["requireDeviceAuth"] = "true"
+        return qr_params
+
     @log_with(log)
     def get_init_detail(self, params=None, user=None):
         """
@@ -710,28 +719,10 @@ class PushTokenClass(TokenClass):
                 if len(firebase_configs) != 1:
                     raise ParameterError("Unknown Firebase configuration!")
             credential = self.get_tokeninfo("enrollment_credential")
-            extra_data = {"serial": self.get_serial()}
-            if self.get_class_type() == "push":
-                extra_data.update(
-                    {
-                        "v": 1,
-                        "enrollment_credential": credential,
-                        "sslverify": getParam(
-                            params,
-                            self.PUSH_ACTION.SSL_VERIFY,
-                            allowed_values=["0", "1"],
-                            default="1",
-                        ),
-                    }
-                )
-                if imageurl := params.get("appimageurl"):
-                    extra_data["image"] = imageurl
-                if params.get(ACTION.FORCE_APP_PIN):
-                    extra_data["pin"] = True
-            else:
-                extra_data.update({"v": 2, "enrollmentCredential": credential})
-                if params.get(ACTION.FORCE_APP_PIN):
-                    extra_data["requireDeviceAuth"] = "true"
+            extra_data = {
+                "serial": self.get_serial(),
+                **self._get_enrollment_qr_params(params, credential),
+            }
 
             # We display this during the first enrollment step!
             qr_url = self.create_push_token_url(

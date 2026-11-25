@@ -28,8 +28,11 @@ This code is tested in tests/test_lib_tokens_push
 """
 
 import logging
+from collections.abc import Mapping
 
 from edumfa.api.lib.policyhelper import get_legacypushtoken_add_config
+from edumfa.api.lib.utils import getParam
+from edumfa.lib.policy import ACTION
 from edumfa.lib.tokenclass import TokenClass
 from edumfa.lib.tokens.pushtoken import PushTokenClass
 
@@ -95,6 +98,25 @@ class LegacyPushTokenClass(PushTokenClass):
     @staticmethod
     def get_push_url_prefix():
         return "otpauth://pipush"
+
+    def _get_enrollment_qr_params(
+        self, params: Mapping[str, object], credential: str | None
+    ) -> dict[str, object]:
+        qr_params: dict[str, object] = {
+            "v": 1,
+            "enrollment_credential": credential,
+            "sslverify": getParam(
+                params,
+                self.PUSH_ACTION.SSL_VERIFY,
+                allowed_values=["0", "1"],
+                default="1",
+            ),
+        }
+        if image_url := params.get("appimageurl"):
+            qr_params["image"] = image_url
+        if params.get(ACTION.FORCE_APP_PIN):
+            qr_params["pin"] = True
+        return qr_params
 
     class PUSH_ACTION:
         FIREBASE_CONFIG = "push_firebase_configuration"
