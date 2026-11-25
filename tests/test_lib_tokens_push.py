@@ -36,6 +36,7 @@ from edumfa.lib.token import get_tokens, init_token, remove_token
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.pushtoken import (
     DEFAULT_CHALLENGE_TEXT,
+    FIREBASE_FID,
     GWTYPE,
     POLL_ONLY,
     POLLING_ALLOWED,
@@ -1874,14 +1875,25 @@ class EduPushTokenTestCase(MyTestCase):
             "edumfa.lib.smsprovider.FirebaseProvider.get_firebase_access_token",
             return_value=_create_credential_mock(),
         ):
+            token.del_tokeninfo(FIREBASE_FID)
             token.del_tokeninfo(PUSH_VERSION)
+            token.add_tokeninfo("firebase_token", "firebaseT")
             token.create_challenge(options={"g": g})
             for version in (1, 2):
                 token.add_tokeninfo(PUSH_VERSION, version)
                 token.create_challenge(options={"g": g})
+            token.add_tokeninfo(FIREBASE_FID, "c123456789012345678901")
+            token.create_challenge(options={"g": g})
         self.assertEqual(len(responses.calls), 3)
         for call in responses.calls:
             self.assertEqual(call.response.status_code, 200)
+        for call in responses.calls[:2]:
+            message = json.loads(call.request.body)["message"]
+            self.assertIn("token", message)
+            self.assertNotIn("fid", message)
+        message = json.loads(responses.calls[2].request.body)["message"]
+        self.assertEqual(message["fid"], "c123456789012345678901")
+        self.assertNotIn("token", message)
 
     def test_v2_enrollment_qr(self) -> None:
         tok = init_token(param={"type": "edupush", "genkey": 1, **FB_CONFIG_VALS})
@@ -1958,7 +1970,7 @@ class EduPushTokenTestCase(MyTestCase):
             PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name
         )
         tok.add_tokeninfo(PUBLIC_KEY_SMARTPHONE, self.smartphone_public_key_pem_urlsafe)
-        tok.add_tokeninfo("firebase_token", "firebaseT")
+        tok.add_tokeninfo(FIREBASE_FID, "c123456789012345678901")
         tok.add_tokeninfo(PUBLIC_KEY_SERVER, self.server_public_key_pem)
         tok.add_tokeninfo(PRIVATE_KEY_SERVER, self.server_private_key_pem, "password")
         tok.del_tokeninfo("enrollment_credential")
@@ -2042,11 +2054,11 @@ class EduPushTokenTestCase(MyTestCase):
             {
                 "enrollment_credential": enrollment_credential,
                 "serial": self.serial1,
-                "fbtoken": "firebasetoken",
+                "fid": "c123456789012345678901",
                 "pubkey": self.smartphone_public_key_pem_urlsafe,
             }
         )
-        self.assertEqual(token.get_tokeninfo("firebase_token"), "firebasetoken")
+        self.assertEqual(token.get_tokeninfo(FIREBASE_FID), "c123456789012345678901")
         self.assertEqual(
             token.get_tokeninfo("public_key_smartphone"),
             self.smartphone_public_key_pem_urlsafe,
@@ -3197,7 +3209,8 @@ class EduPushTokenTestCase(MyTestCase):
             "enrollment_credential": tok.get_tokeninfo("enrollment_credential"),
             "serial": serial,
             "pubkey": self.smartphone_public_key_pem_urlsafe,
-            "fbtoken": "firebaseT",
+            "fid": "c123456789012345678901",
+            "operation": "complete_enrollment",
         }
         res = PushTokenClass.api_endpoint(req, g)
         self.assertEqual(res[0], "json", res)
@@ -3214,6 +3227,7 @@ class EduPushTokenTestCase(MyTestCase):
         tparams.update(FB_CONFIG_VALS)
         tok = init_token(param=tparams)
         serial = tok.get_serial()
+        tok.del_tokeninfo(PUSH_VERSION)
 
         # Run enrollment step 2
         tok.update(

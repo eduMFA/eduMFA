@@ -79,20 +79,24 @@ Send ``operation`` and ``serial`` in the JSON request to ``POST /ttype/edupush``
 The operation selects the remaining fields.
 
 * ``complete_enrollment`` requires ``enrollment_credential``, ``pubkey`` and
-  ``fbtoken``. It returns the server public key and token updates.
+  ``fid`` (Firebase Installation ID). It returns the server public key and token
+  updates.
 * ``respond_to_challenge`` requires ``nonce`` and ``signature``. The optional
   boolean ``decline`` defaults to ``false``. Sign the array
   ``["respond_to_challenge", serial, nonce, decline]``.
-* ``update_firebase_token`` requires ``new_fb_token``, ``timestamp`` and
-  ``signature``. Sign the array
-  ``["update_firebase_token", serial, new_fb_token, timestamp]``, using the
-  exact ISO 8601 timestamp sent in the request.
+* ``update_firebase_installation`` requires ``fid``, ``timestamp`` and
+  ``signature``. Sign ``["update_firebase_installation", serial, fid, timestamp]``
+  with the exact ISO 8601 timestamp sent in the request. Use this after the
+  app registers the installation with Firebase Cloud Messaging.
 
 Sign the UTF-8 bytes of the compact JSON array with the enrolled device key
-and Base32-encode the signature. These three operations require a V2 token.
-An unknown operation or invalid payload is rejected. POST requests
-without ``operation`` continue to use the existing payload and signature
-formats. GET polling uses the existing format.
+and Base32-encode the signature. These operations require a V2 token.
+An unknown operation or invalid payload is rejected. POST requests without
+``operation`` use the legacy payload and signature formats. Legacy FCM token
+enrollment and updates apply to V1. GET polling uses the existing format.
+
+V2 notification delivery requires a registered FID. V1 uses its FCM
+registration token until the upgrade commits.
 
 Protocol upgrades
 ~~~~~~~~~~~~~~~~~
@@ -111,11 +115,13 @@ above over verified HTTPS. Send ``target_version`` as a JSON integer.
   ``expires_at`` (Unix seconds), and ``require_device_auth``. The offer is valid
   for five minutes. A repeated begin returns the same unexpired offer.
 * ``confirm_upgrade`` requires ``serial``, ``target_version``, ``nonce``,
-  ``require_device_auth`` and ``signature``. Sign
-  ``["confirm_upgrade", serial, target_version, nonce, require_device_auth]``.
+  ``require_device_auth``, ``fid`` and ``signature``. Sign
+  ``["confirm_upgrade", serial, target_version, nonce, require_device_auth, fid]``.
+  Register the installation with Firebase Cloud Messaging before confirming.
   Send the boolean after preparing the app for V2, and set it to ``true``
   after enabling device authentication if required. The upgraded token keeps
-  its serial and enrolled device key.
+  its serial and enrolled device key. The server replaces the FCM registration
+  token with the FID in the same transaction that commits V2.
 
 Successful confirmation returns ``detail.push_version``. Repeating confirmation
 before the offer expires returns the same result. A fresh signed begin also

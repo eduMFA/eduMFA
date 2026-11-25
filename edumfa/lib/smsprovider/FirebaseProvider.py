@@ -109,7 +109,12 @@ class FirebaseProvider(ISMSProvider):
         self.access_token_expires_at = 0
 
     def submit_message(
-        self, firebase_token: str, data: dict[str, str], *, token_version: int = 1
+        self,
+        firebase_token: str | None,
+        data: dict[str, str],
+        *,
+        token_version: int = 1,
+        fid: str | None = None,
     ) -> bool:
         """
         send a message to a registered Firebase client
@@ -120,9 +125,12 @@ class FirebaseProvider(ISMSProvider):
         :param data: the data dictionary part of the message to submit to the phone
         :type data: dict
         :param token_version: the push token protocol version
+        :param fid: the Firebase Installation ID, when registered
         :return: bool
         """
-        res = False
+        if token_version == 2 and not fid:
+            log.warning("Cannot send an eduPush V2 notification without a FID.")
+            return False
 
         credentials = get_firebase_access_token(
             self.smsgateway.option_dict.get(FIREBASE_CONFIG.JSON_CONFIG)
@@ -147,7 +155,7 @@ class FirebaseProvider(ISMSProvider):
         apns_payload: dict[str, object] = {"aps": aps}
         message: dict[str, object] = {
             "data": data,
-            "token": firebase_token,
+            **({"fid": fid} if fid else {"token": firebase_token}),
             "android": {
                 "priority": "HIGH",
                 "ttl": "120s",

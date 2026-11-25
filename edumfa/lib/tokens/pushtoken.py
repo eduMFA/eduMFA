@@ -102,6 +102,8 @@ PRIVATE_KEY_SERVER = "private_key_server"
 PUBLIC_KEY_SERVER = "public_key_server"
 PUBLIC_KEY_SMARTPHONE = "public_key_smartphone"
 PUSH_VERSION = "push_version"
+FIREBASE_FID = "firebase_fid"
+FIREBASE_TOKEN = "firebase_token"
 PUSH_UPGRADE = "push_upgrade"
 PUSH_UPGRADE_PATHS = {1: 2}
 POLLING_ALLOWED = "polling_allowed"
@@ -116,11 +118,11 @@ PUSH_UPGRADE_WINDOW = 5
 POLL_ONLY = "poll only"
 
 POST_OPERATION_FIELDS = {
-    "complete_enrollment": ("enrollment_credential", "pubkey", "fbtoken"),
+    "complete_enrollment": ("enrollment_credential", "pubkey", "fid"),
     "respond_to_challenge": ("nonce", "signature"),
-    "update_firebase_token": ("new_fb_token", "timestamp", "signature"),
+    "update_firebase_installation": ("fid", "timestamp", "signature"),
     "begin_upgrade": ("timestamp", "signature"),
-    "confirm_upgrade": ("nonce", "signature"),
+    "confirm_upgrade": ("nonce", "signature", "fid"),
 }
 
 
@@ -603,7 +605,9 @@ class PushTokenClass(TokenClass):
         for k, v in param.items():
             upd_param[k] = v
 
-        if "serial" in upd_param and "fbtoken" in upd_param and "pubkey" in upd_param:
+        if {"serial", "pubkey"} <= upd_param.keys() and (
+            "fbtoken" in upd_param or "fid" in upd_param
+        ):
             # We are in step 2:
             if self.token.rollout_state != ROLLOUTSTATE.CLIENTWAIT:
                 raise ParameterError(
@@ -616,11 +620,22 @@ class PushTokenClass(TokenClass):
                 raise ParameterError(
                     "Invalid enrollment credential. You are not authorized to finalize this token."
                 )
+            fid = upd_param.get("fid")
+            if self._uses_fid():
+                if "fbtoken" in upd_param or not isinstance(fid, str) or not fid:
+                    raise ParameterError("eduPush V2 enrollment requires a FID.")
+            elif "fid" in upd_param:
+                raise ParameterError("A FID requires an eduPush V2 token.")
             self.del_tokeninfo("enrollment_credential")
             self.token.rollout_state = "enrolled"
             self.token.active = True
             self.add_tokeninfo(PUBLIC_KEY_SMARTPHONE, upd_param.get("pubkey"))
-            self.add_tokeninfo("firebase_token", upd_param.get("fbtoken"))
+            if "fid" in upd_param:
+                self.add_tokeninfo(FIREBASE_FID, fid)
+                self.del_tokeninfo(FIREBASE_TOKEN)
+            else:
+                self.del_tokeninfo(FIREBASE_FID)
+                self.add_tokeninfo(FIREBASE_TOKEN, upd_param.get("fbtoken"))
             # create a keypair for the server side.
             pub_key, priv_key = generate_keypair(4096)
             self.add_tokeninfo(PUBLIC_KEY_SERVER, pub_key)
@@ -813,6 +828,12 @@ class PushTokenClass(TokenClass):
         if not (now - td <= ts <= now + td):
             raise eduMFAError(f"Timestamp {timestamp} not in valid range.")
 
+    def _uses_fid(self) -> bool:
+        return (
+            self.get_class_type() == "edupush"
+            and parse_int(self.get_tokeninfo(PUSH_VERSION), default=1) == 2
+        )
+
     def _get_versioned_details(self, _g: object | None) -> dict[str, object]:
         if self.get_class_type() != "edupush":
             return {}
@@ -874,8 +895,8 @@ class PushTokenClass(TokenClass):
             return True, cls._complete_enrollment(serial, request_data, g, explicit)
         if operation == "respond_to_challenge":
             return cls._respond_to_challenge(serial, request_data, explicit), {}
-        if operation == "update_firebase_token":
-            cls._update_firebase_token(serial, request_data, explicit)
+        if operation in ("update_firebase_token", "update_firebase_installation"):
+            cls._update_firebase_registration(serial, request_data, operation, explicit)
             return True, {}
         if operation in ("begin_upgrade", "confirm_upgrade"):
             return True, cls._upgrade_version(serial, operation, request_data, g)
@@ -959,26 +980,37 @@ class PushTokenClass(TokenClass):
         return True
 
     @classmethod
-    def _update_firebase_token(
-        cls, serial: str, request_data: Mapping[str, object], explicit: bool
+    def _update_firebase_registration(
+        cls,
+        serial: str,
+        request_data: Mapping[str, object],
+        operation: str,
+        explicit: bool,
     ) -> None:
         timestamp = getParam(request_data, "timestamp", optional=False)
         signature = getParam(request_data, "signature", optional=False)
         cls._check_timestamp_in_range(timestamp, UPDATE_FB_TOKEN_WINDOW)
-        new_fb_token = getParam(request_data, "new_fb_token", optional=False)
+        is_fid = operation == "update_firebase_installation"
+        registration = getParam(
+            request_data, "fid" if is_fid else "new_fb_token", optional=False
+        )
         try:
             token = cls._get_post_token(serial, explicit)
+            if not is_fid and token._uses_fid():
+                raise ParameterError("eduPush V2 requires a FID.")
             pubkey_obj = _build_verify_object(
                 token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
             )
             if explicit:
                 sign_data = cls._operation_signing_data(
-                    "update_firebase_token", serial, new_fb_token, timestamp
+                    operation, serial, registration, timestamp
                 )
             else:
-                sign_data = f"{new_fb_token}|{serial}|{timestamp}"
+                sign_data = f"{registration}|{serial}|{timestamp}"
             cls.verify_signature(pubkey_obj, sign_data, signature)
-            token.add_tokeninfo("firebase_token", new_fb_token)
+            token.add_tokeninfo(
+                FIREBASE_FID if is_fid else FIREBASE_TOKEN, registration
+            )
         except (
             ResourceNotFoundError,
             ParameterError,
@@ -1022,7 +1054,7 @@ class PushTokenClass(TokenClass):
     ) -> dict[str, object]:
         target = getParam(request_data, "target_version", optional=False)
         signature = getParam(request_data, "signature", optional=False)
-        confirmation: tuple[str, bool] | None = None
+        confirmation: tuple[str, bool, str] | None = None
         if operation == "begin_upgrade":
             timestamp = getParam(request_data, "timestamp", optional=False)
             cls._check_timestamp_in_range(timestamp, PUSH_UPGRADE_WINDOW)
@@ -1032,9 +1064,10 @@ class PushTokenClass(TokenClass):
         else:
             nonce = getParam(request_data, "nonce", optional=False)
             device_auth = getParam(request_data, "require_device_auth", optional=False)
-            confirmation = (nonce, device_auth)
+            fid = getParam(request_data, "fid", optional=False)
+            confirmation = (nonce, device_auth, fid)
             sign_data = cls._operation_signing_data(
-                operation, serial, target, nonce, device_auth
+                operation, serial, target, nonce, device_auth, fid
             )
 
         try:
@@ -1065,7 +1098,13 @@ class PushTokenClass(TokenClass):
                 for row in TokenInfo.query.filter(
                     TokenInfo.token_id == token_id,
                     TokenInfo.Key.in_(
-                        (PUSH_VERSION, PUSH_UPGRADE, PUBLIC_KEY_SMARTPHONE)
+                        (
+                            PUSH_VERSION,
+                            PUSH_UPGRADE,
+                            PUBLIC_KEY_SMARTPHONE,
+                            FIREBASE_FID,
+                            FIREBASE_TOKEN,
+                        )
                     ),
                 )
                 .with_for_update()
@@ -1093,7 +1132,7 @@ class PushTokenClass(TokenClass):
                     token_id, records, version, target, requires_device_auth
                 )
             else:
-                nonce, device_auth = confirmation
+                nonce, device_auth, fid = confirmation
                 details = cls._confirm_upgrade(
                     token_id,
                     records,
@@ -1102,6 +1141,7 @@ class PushTokenClass(TokenClass):
                     nonce,
                     requires_device_auth,
                     device_auth,
+                    fid,
                 )
             db.session.commit()
             return details
@@ -1188,6 +1228,7 @@ class PushTokenClass(TokenClass):
         nonce: str,
         requires_device_auth: bool,
         device_auth: bool,
+        fid: str,
     ) -> dict[str, object]:
         offer_record = records.get(PUSH_UPGRADE)
         offer = cls._read_upgrade_offer(offer_record)
@@ -1199,7 +1240,13 @@ class PushTokenClass(TokenClass):
             or offer["nonce"] != nonce
         ):
             raise ParameterError("This push upgrade offer is invalid or expired.")
-        if offer["confirmed"] and version == target:
+        fid_record = records.get(FIREBASE_FID)
+        if (
+            offer["confirmed"]
+            and version == target
+            and fid_record
+            and fid_record.Value == fid
+        ):
             return {"push_version": version}
         if offer["confirmed"] or PUSH_UPGRADE_PATHS.get(version) != target:
             raise ParameterError("This push version upgrade is unavailable.")
@@ -1213,6 +1260,12 @@ class PushTokenClass(TokenClass):
             db.session.add(TokenInfo(token_id, PUSH_VERSION, str(target)))
         else:
             version_record.Value = str(target)
+        if fid_record is None:
+            db.session.add(TokenInfo(token_id, FIREBASE_FID, fid))
+        else:
+            fid_record.Value = fid
+        if legacy_record := records.get(FIREBASE_TOKEN):
+            db.session.delete(legacy_record)
         offer["confirmed"] = True
         offer_record.Value = json.dumps(offer)
         return {"push_version": target}
@@ -1497,17 +1550,19 @@ class PushTokenClass(TokenClass):
                         pem_privkey,
                         options,
                     )
-                    firebase_token = self.get_tokeninfo("firebase_token")
-                    if (
-                        isinstance(fb_gateway, FirebaseProvider)
-                        and self.get_class_type() == "edupush"
-                    ):
-                        version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
-                        res = fb_gateway.submit_message(
-                            firebase_token, smartphone_data, token_version=version
+                    if self._uses_fid():
+                        res = isinstance(
+                            fb_gateway, FirebaseProvider
+                        ) and fb_gateway.submit_message(
+                            None,
+                            smartphone_data,
+                            token_version=2,
+                            fid=self.get_tokeninfo(FIREBASE_FID),
                         )
                     else:
-                        res = fb_gateway.submit_message(firebase_token, smartphone_data)
+                        res = fb_gateway.submit_message(
+                            self.get_tokeninfo(FIREBASE_TOKEN), smartphone_data
+                        )
 
             # Create the challenge in the challenge table if either the message
             # was successfully submitted to the Firebase API or if polling is
