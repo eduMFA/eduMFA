@@ -72,6 +72,28 @@ The server returns the token's public key. For V2 tokens, the rollout response
 and each successful challenge poll also include a ``detail.token_update`` object,
 even when a poll finds no pending challenges.
 
+V2 POST operations
+~~~~~~~~~~~~~~~~~~
+
+Send ``operation`` and ``serial`` in the JSON request to ``POST /ttype/edupush``.
+The operation selects the remaining fields.
+
+* ``complete_enrollment`` requires ``enrollment_credential``, ``pubkey`` and
+  ``fbtoken``. It returns the server public key and token updates.
+* ``respond_to_challenge`` requires ``nonce`` and ``signature``. The optional
+  boolean ``decline`` defaults to ``false``. Sign the array
+  ``["respond_to_challenge", serial, nonce, decline]``.
+* ``update_firebase_token`` requires ``new_fb_token``, ``timestamp`` and
+  ``signature``. Sign the array
+  ``["update_firebase_token", serial, new_fb_token, timestamp]``, using the
+  exact ISO 8601 timestamp sent in the request.
+
+Sign the UTF-8 bytes of the compact JSON array with the enrolled device key
+and Base32-encode the signature. Requests with ``operation`` require a V2
+token. An unknown operation or invalid payload is rejected. POST requests
+without ``operation`` continue to use the existing payload and signature
+formats. GET polling uses the existing format.
+
 Authentication
 ~~~~~~~~~~~~~~
 

@@ -27,6 +27,7 @@ and send it back to the authentication endpoint.
 This code is tested in tests/test_lib_tokens_push
 """
 
+import json
 import logging
 import time
 import traceback
@@ -102,6 +103,12 @@ DELAY = 1.0
 POLL_TIME_WINDOW = 1
 UPDATE_FB_TOKEN_WINDOW = 5
 POLL_ONLY = "poll only"
+
+POST_OPERATION_FIELDS = {
+    "complete_enrollment": ("enrollment_credential", "pubkey", "fbtoken"),
+    "respond_to_challenge": ("nonce", "signature"),
+    "update_firebase_token": ("new_fb_token", "timestamp", "signature"),
+}
 
 
 class PushAllowPolling:
@@ -796,115 +803,170 @@ class PushTokenClass(TokenClass):
         return {}
 
     @classmethod
-    def _api_endpoint_post(cls, request_data, g: object | None = None):
-        """Handle all POST requests to the api endpoint
-
-        :param request_data: Dictionary containing the parameters of the request
-        :type request_data: dict
-        :returns: The result of handling the request and a dictionary containing
-                  the details of the request handling
-        :rtype: (bool, dict)
-        """
-        details = {}
-        result = False
-
+    def _api_endpoint_post(
+        cls, request_data: Mapping[str, object], g: object | None = None
+    ) -> tuple[bool, dict[str, object]]:
         serial = getParam(request_data, "serial", optional=False)
-        if all(k in request_data for k in ("fbtoken", "pubkey")):
-            log.debug("Do the 2nd step of the enrollment.")
-            try:
-                token_obj = get_one_token(
-                    serial=serial,
-                    tokentype=cls.get_class_type(),
-                    rollout_state=ROLLOUTSTATE.CLIENTWAIT,
-                )
-                token_obj.update(request_data)
-                # in case of validate/check enrollment
-                chals = get_challenges(serial=serial)
-                if (
-                    chals
-                    and chals[0].is_valid()
-                    and chals[0].get_session() == CHALLENGE_SESSION.ENROLLMENT
-                ):
-                    chals[0].set_otp_status(True)
-                    chals[0].save()
-            except ResourceNotFoundError:
-                raise ResourceNotFoundError(
-                    "No token with this serial number "
-                    "in the rollout state 'clientwait'."
-                )
-            init_detail_dict = request_data
+        explicit = "operation" in request_data
+        if explicit:
+            operation = request_data["operation"]
+            if (
+                cls.get_class_type() != "edupush"
+                or not isinstance(operation, str)
+                or operation not in POST_OPERATION_FIELDS
+            ):
+                raise ParameterError("Unknown push operation.")
 
-            details = token_obj.get_init_detail(init_detail_dict)
-            details.update(token_obj._get_versioned_details(g))
-            result = True
+            required = ("serial", *POST_OPERATION_FIELDS[operation])
+            allowed = {"operation", *required}
+            if operation == "respond_to_challenge":
+                allowed.add("decline")
+            if request_data.keys() - allowed:
+                raise ParameterError("Unexpected parameters for push operation.")
+            for key in required:
+                value = request_data.get(key)
+                if not isinstance(value, str) or not value:
+                    raise ParameterError(f"Expected a non-empty string for {key!r}.")
+            if "decline" in request_data and not isinstance(
+                request_data["decline"], bool
+            ):
+                raise ParameterError("Expected a boolean for 'decline'.")
+        elif all(k in request_data for k in ("fbtoken", "pubkey")):
+            operation = "complete_enrollment"
         elif all(k in request_data for k in ("nonce", "signature")):
-            log.debug("Handling the authentication response from the smartphone.")
-            challenge = getParam(request_data, "nonce")
-            signature = getParam(request_data, "signature")
-            decline = is_true(getParam(request_data, "decline", default=False))
-
-            # get the token_obj for the given serial:
-            token_obj = get_one_token(serial=serial, tokentype=cls.get_class_type())
-            pubkey_obj = _build_verify_object(
-                token_obj.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
-            )
-            # Do the 2nd step of the authentication
-            # Find valid challenges
-            challengeobject_list = get_challenges(serial=serial, challenge=challenge)
-
-            if challengeobject_list:
-                # There are valid challenges, so we check this signature
-                for chal in challengeobject_list:
-                    # verify the signature of the nonce
-                    sign_data = f"{challenge}|{serial}"
-                    if decline:
-                        sign_data += "|decline"
-                    try:
-                        cls.verify_signature(pubkey_obj, sign_data, signature)
-                        # The signature was valid
-                        log.debug(f"Found matching challenge {chal}.")
-                        if decline:
-                            chal.set_data("challenge_declined")
-                        else:
-                            chal.set_otp_status(True)
-                        chal.save()
-                        result = True
-                    except InvalidSignature as _e:
-                        pass
+            operation = "respond_to_challenge"
         elif all(k in request_data for k in ("new_fb_token", "timestamp", "signature")):
-            timestamp = getParam(request_data, "timestamp", optional=False)
-            signature = getParam(request_data, "signature", optional=False)
-            # first check if the timestamp is in the required span
-            cls._check_timestamp_in_range(timestamp, UPDATE_FB_TOKEN_WINDOW)
-            try:
-                tok = get_one_token(serial=serial, tokentype=cls.get_class_type())
-                pubkey_obj = _build_verify_object(
-                    tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
-                )
-                sign_data = f"{request_data['new_fb_token']}|{serial}|{timestamp}"
-                cls.verify_signature(pubkey_obj, sign_data, signature)
-                # If the timestamp and signature are valid we update the token
-                tok.add_tokeninfo("firebase_token", request_data["new_fb_token"])
-                result = True
-            except (
-                ResourceNotFoundError,
-                ParameterError,
-                TypeError,
-                InvalidSignature,
-                ConfigAdminError,
-                BinasciiError,
-            ) as e:
-                # to avoid disclosing information we always fail with an invalid
-                # signature error even if the token with the serial could not be found
-                log.debug(traceback.format_exc())
-                log.info(
-                    f'The following error occurred during the signature check: "{e!r}"'
-                )
-                raise eduMFAError("Could not verify signature!")
+            operation = "update_firebase_token"
         else:
             raise ParameterError("Missing parameters!")
 
-        return result, details
+        if operation == "complete_enrollment":
+            return True, cls._complete_enrollment(serial, request_data, g, explicit)
+        if operation == "respond_to_challenge":
+            return cls._respond_to_challenge(serial, request_data, explicit), {}
+        if operation == "update_firebase_token":
+            cls._update_firebase_token(serial, request_data, explicit)
+            return True, {}
+        raise ParameterError("Unknown push operation.")
+
+    @classmethod
+    def _get_post_token(
+        cls, serial: str, explicit: bool, rollout_state: str | None = None
+    ) -> "PushTokenClass":
+        token = get_one_token(
+            serial=serial, tokentype=cls.get_class_type(), rollout_state=rollout_state
+        )
+        if explicit and parse_int(token.get_tokeninfo(PUSH_VERSION), default=1) != 2:
+            raise ParameterError("This push operation requires an eduPush V2 token.")
+        return token
+
+    @classmethod
+    def _complete_enrollment(
+        cls,
+        serial: str,
+        request_data: Mapping[str, object],
+        g: object | None,
+        explicit: bool,
+    ) -> dict[str, object]:
+        log.debug("Do the 2nd step of the enrollment.")
+        try:
+            token = cls._get_post_token(serial, explicit, ROLLOUTSTATE.CLIENTWAIT)
+            token.update(request_data)
+            # in case of validate/check enrollment
+            chals = get_challenges(serial=serial)
+            if (
+                chals
+                and chals[0].is_valid()
+                and chals[0].get_session() == CHALLENGE_SESSION.ENROLLMENT
+            ):
+                chals[0].set_otp_status(True)
+                chals[0].save()
+        except ResourceNotFoundError:
+            raise ResourceNotFoundError(
+                "No token with this serial number in the rollout state 'clientwait'."
+            )
+        details = token.get_init_detail(request_data)
+        details.update(token._get_versioned_details(g))
+        return details
+
+    @classmethod
+    def _respond_to_challenge(
+        cls, serial: str, request_data: Mapping[str, object], explicit: bool
+    ) -> bool:
+        log.debug("Handling the authentication response from the smartphone.")
+        challenge = getParam(request_data, "nonce")
+        signature = getParam(request_data, "signature")
+        decline = is_true(getParam(request_data, "decline", default=False))
+        token = cls._get_post_token(serial, explicit)
+        pubkey_obj = _build_verify_object(token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE))
+        challenges = get_challenges(serial=serial, challenge=challenge)
+        if not challenges:
+            return False
+
+        if explicit:
+            sign_data = cls._operation_signing_data(
+                "respond_to_challenge", serial, challenge, decline
+            )
+        else:
+            sign_data = f"{challenge}|{serial}"
+            if decline:
+                sign_data += "|decline"
+
+        try:
+            cls.verify_signature(pubkey_obj, sign_data, signature)
+        except (InvalidSignature, ValueError):
+            return False
+
+        for chal in challenges:
+            log.debug(f"Found matching challenge {chal}.")
+            if decline:
+                chal.set_data("challenge_declined")
+            else:
+                chal.set_otp_status(True)
+            chal.save()
+        return True
+
+    @classmethod
+    def _update_firebase_token(
+        cls, serial: str, request_data: Mapping[str, object], explicit: bool
+    ) -> None:
+        timestamp = getParam(request_data, "timestamp", optional=False)
+        signature = getParam(request_data, "signature", optional=False)
+        cls._check_timestamp_in_range(timestamp, UPDATE_FB_TOKEN_WINDOW)
+        new_fb_token = getParam(request_data, "new_fb_token", optional=False)
+        try:
+            token = cls._get_post_token(serial, explicit)
+            pubkey_obj = _build_verify_object(
+                token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
+            )
+            if explicit:
+                sign_data = cls._operation_signing_data(
+                    "update_firebase_token", serial, new_fb_token, timestamp
+                )
+            else:
+                sign_data = f"{new_fb_token}|{serial}|{timestamp}"
+            cls.verify_signature(pubkey_obj, sign_data, signature)
+            token.add_tokeninfo("firebase_token", new_fb_token)
+        except (
+            ResourceNotFoundError,
+            ParameterError,
+            TypeError,
+            InvalidSignature,
+            ConfigAdminError,
+            ValueError,
+        ) as e:
+            # Use the same signature error when the token cannot be found.
+            log.debug(traceback.format_exc())
+            log.info(
+                f'The following error occurred during the signature check: "{e!r}"'
+            )
+            raise eduMFAError("Could not verify signature!")
+
+    @staticmethod
+    def _operation_signing_data(operation: str, *fields: str | bool) -> str:
+        return json.dumps(
+            [operation, *fields], ensure_ascii=False, separators=(",", ":")
+        )
 
     @classmethod
     def verify_signature(cls, pubkey_obj, sign_data, signature):
@@ -1100,7 +1162,15 @@ class PushTokenClass(TokenClass):
         """
         details = {}
         if request.method == "POST":
-            result, details = cls._api_endpoint_post(request.all_data, g)
+            request_data = request.all_data
+            if "operation" in request_data and request.view_args:
+                # The token-type blueprint merges route parameters into all_data.
+                request_data = {
+                    key: value
+                    for key, value in request_data.items()
+                    if key not in request.view_args
+                }
+            result, details = cls._api_endpoint_post(request_data, g)
         elif request.method == "GET":
             result = cls._api_endpoint_get(g, request.all_data, details)
         else:
