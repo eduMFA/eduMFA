@@ -69,6 +69,7 @@ from edumfa.lib.policy import (
     Match,
     get_action_values_from_options,
 )
+from edumfa.lib.smsprovider.FirebaseProvider import FirebaseProvider
 from edumfa.lib.smsprovider.SMSProvider import create_sms_instance, get_smsgateway
 from edumfa.lib.token import get_one_token, init_token
 from edumfa.lib.tokenclass import (
@@ -1496,9 +1497,17 @@ class PushTokenClass(TokenClass):
                         pem_privkey,
                         options,
                     )
-                    res = fb_gateway.submit_message(
-                        self.get_tokeninfo("firebase_token"), smartphone_data
-                    )
+                    firebase_token = self.get_tokeninfo("firebase_token")
+                    if (
+                        isinstance(fb_gateway, FirebaseProvider)
+                        and self.get_class_type() == "edupush"
+                    ):
+                        version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
+                        res = fb_gateway.submit_message(
+                            firebase_token, smartphone_data, token_version=version
+                        )
+                    else:
+                        res = fb_gateway.submit_message(firebase_token, smartphone_data)
 
             # Create the challenge in the challenge table if either the message
             # was successfully submitted to the Firebase API or if polling is
