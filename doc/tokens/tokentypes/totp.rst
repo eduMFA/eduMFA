@@ -4,8 +4,8 @@ TOTP
 ----
 
 .. warning::
-   :ref:`Two-step enrollment <2step_enrollment>` and the system-wide
-   timeshift default (``totp.useTimeShift``) are planned for removal in
+   :ref:`Two-step enrollment <2step_enrollment>` and the ``default`` setting
+   for timeshift (see ``totp.useTimeShift``) are planned for removal in
    eduMFA 3.0.0.
 
 The TOTP token is - together with the :ref:`hotp_token` - the most common token.

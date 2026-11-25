@@ -400,8 +400,8 @@ If you do not want to verify the validity period, you can check this action.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. warning::
-   These parameters are planned for removal in eduMFA 3.0.0 with HOTP and
-   TOTP two-step enrollment.
+   Two-step enrollment for both HOTP and TOTP, including these parameters,
+   is planned for removal in eduMFA 3.0.0.
 
 type: string
 

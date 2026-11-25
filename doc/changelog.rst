@@ -61,20 +61,29 @@ for the current status.
   a certificate trusted by the mobile device.
 * **TOTP timeshift.** Review the system-wide ``totp.useTimeShift`` setting and
   policies with ``totp_timeshift=default``. The system default is planned for
-  removal. Set timeshift explicitly for enrollments that require it.
+  removal. Set timeshift explicitly in the token settings. The default will
+  change from ``True`` to ``False`` in eduMFA 3.0.0.
 * **Installation and integrations.** Plan a move from the eduMFA
   :ref:`Ubuntu packages <install_ubuntu>` to a supported installation method
   such as :ref:`install_docker_compose`. The bundled FreeRADIUS plugin is
   planned for removal from this repository. Use the separate
   `eduMFA RADIUS plugin repository <https://github.com/eduMFA/edumfa-radius>`_.
+* **Scheduled cleanup.** Cleanup of expired challenges and JWT blocklist
+  entries during authentication requests is planned for removal. Schedule
+  both ``edumfa-token-janitor cleanupchallenges`` and
+  ``edumfa-token-janitor cleanupjwtblacklist`` as cronjobs before upgrading.
+  See :ref:`system_config` for scheduling guidance.
+* **Management commands.** The ``edumfa-manage`` banner and the ``createdb``
+  alias are planned for removal. Update scripts to call
+  ``edumfa-manage create_tables`` and avoid relying on banner output.
+  The schema upgrade ``--skipstamp`` flag is also planned for removal.
+* **Subscriptions and welcome dialogs.** The remaining code inherited from
+  privacyIDEA's paid subscription system and the welcome dialog code are
+  planned for removal. Review customization that relies on these features.
 
 Server logs report deprecated token enrollments and flag active deprecated
 policies, editable resolvers and the TOTP system default when loading
 configuration.
-
-The future of the ``DisableAutoChallengeJanitor`` and
-``DisableClientTracking`` settings is under discussion in the release
-tracking issue.
 
 Changes
 ~~~~~~~

@@ -4,8 +4,13 @@ FreeRADIUS
 ----------
 
 .. warning::
-   The bundled FreeRADIUS plugin is planned for removal in eduMFA 3.0.0.
-   It is maintained in the separate
+   The bundled Perl module is deprecated and planned for removal from this
+   repository in eduMFA 3.0.0, together with its Ubuntu package.
+   The module has changed little in recent years and is expected to continue
+   working in existing deployments after removal from this repository.
+
+   New development focuses on the Python plugin, which provides improved
+   logging and maintainability. It is maintained in the separate
    `eduMFA RADIUS plugin repository <https://github.com/eduMFA/edumfa-radius>`_.
 
 .. index:: FreeRADIUS

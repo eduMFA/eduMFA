@@ -42,7 +42,8 @@ There are enrollment actions per token type, e.g. ``enrollHOTP``.
 The user is only allowed to enroll such specified token types.
 
 .. warning::
-   The ``enrollPUSH`` action is planned for removal in eduMFA 3.0.0.
+   The legacy PUSH token is planned for removal in eduMFA 3.0.0. Use
+   :ref:`edupush_token` tokens instead.
 
 assign
 ~~~~~~
@@ -275,7 +276,7 @@ hotp_2step and totp_2step
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. warning::
-   The ``hotp_2step`` and ``totp_2step`` actions are planned for removal in
+   Two-step enrollment for both HOTP and TOTP is planned for removal in
    eduMFA 3.0.0.
 
 type: string
@@ -351,8 +352,9 @@ totp_timeshift
 ~~~~~~~~~~~~~
 
 .. warning::
-   The ``default`` value is planned for removal in eduMFA 3.0.0. Set timeshift
-   explicitly for enrollments that require it.
+   The ``default`` value is planned for removal in eduMFA 3.0.0. Set
+   timeshift explicitly in the token settings. The default will change from
+   ``True`` to ``False`` in eduMFA 3.0.0.
 
 type: string
 

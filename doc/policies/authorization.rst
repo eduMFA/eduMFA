@@ -77,9 +77,10 @@ type: bool
 
 .. warning::
    This policy has been deprecated since 2.4.0 and is planned for removal in
-   eduMFA 3.0.0. Applications can specify the requested token type directly.
+   eduMFA 3.0.0. Applications can specify the requested token type without
+   enabling this policy.
 
-If this policy is set, an application may add a parameter ``type`` as
+An application may add a parameter ``type`` as
 tokentype in the authentication request like ``validate/check``, ``validate/samlcheck``
 or ``validate/triggerchallenge``.
 

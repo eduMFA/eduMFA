@@ -56,6 +56,11 @@ The following parameters are allowed:
 
 ``-s`` or ``--skipstamp`` skips the version stamping during schema update.
 
+.. warning::
+   The schema upgrade ``--skipstamp`` flag is planned for removal in
+   eduMFA 3.0.0. Review upgrade scripts that rely on skipping version
+   stamping.
+
 ``-n`` or ``--noschema`` completely skips the schema update and only updates the code.
 
 
@@ -92,6 +97,7 @@ Ubuntu upgrade
 
 .. warning::
    The eduMFA Ubuntu packages are planned for removal in eduMFA 3.0.0.
+   There will be instructions how to transform them into a pip-based installation.
    See :ref:`deprecations_3_0` before planning a major version upgrade.
 
 If you use the Ubuntu packages in a default setup, the upgrade can should be done

@@ -5,7 +5,8 @@ Ubuntu Packages
 
 .. warning::
    The eduMFA Ubuntu packages are planned for removal in eduMFA 3.0.0.
-   See :ref:`install_docker_compose` for a container-based installation.
+   There will be instructions how to transform them into a pip-based
+   installation. Also see :ref:`install_docker_compose` for a container-based installation.
 
 .. index:: ubuntu
 

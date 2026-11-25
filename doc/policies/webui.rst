@@ -465,6 +465,9 @@ event handlers and subscriptions.
 dialog_no_token
 ~~~~~~~~~~~~~~~
 
+.. warning::
+   The welcome dialog code is planned for removal in eduMFA 3.0.0.
+
 type: ``bool``
 
 When activated, a welcome dialog will be displayed if a user, who has no token assigned, logs in to the Web UI.
@@ -472,6 +475,9 @@ The dialog is contained in the template ``dialog.no.token.html``.
 
 hide_welcome_info
 ~~~~~~~~~~~~~~~~~
+
+.. warning::
+   The welcome dialog code is planned for removal in eduMFA 3.0.0.
 
 type: ``bool``
 
