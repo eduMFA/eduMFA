@@ -17,7 +17,7 @@ from edumfa.lib.token import (
 )
 from edumfa.lib.tokenclass import CLIENTMODE
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
-from edumfa.lib.tokens.pushtoken import PushTokenClass, strip_key
+from edumfa.lib.tokens.pushtoken import FIREBASE_FID, PushTokenClass, strip_key
 from edumfa.lib.user import User
 from edumfa.lib.utils import to_bytes, to_unicode
 
@@ -667,6 +667,26 @@ class EduPushAPITestCase(MyApiTestCase):
         strip_key(smartphone_public_key_pem).replace("+", "-").replace("/", "_")
     )
     serial_push = "EDUP001"
+
+    def test_enrollment_with_firebase_installation_id(self) -> None:
+        token = init_token({"type": "edupush", "genkey": 1})
+        serial = token.get_serial()
+        self.addCleanup(remove_token, serial)
+        enrollment = {
+            "serial": serial,
+            "enrollment_credential": token.get_tokeninfo("enrollment_credential"),
+            "pubkey": self.smartphone_public_key_pem_urlsafe,
+            "fid": "c123456789012345678901",
+        }
+        client = self.app.test_client()
+        response = client.post(
+            "/ttype/edupush", json={**enrollment, "fbtoken": "registration-token"}
+        )
+        self.assertEqual(response.status_code, 400)
+        response = client.post("/ttype/edupush", json=enrollment)
+        self.assertTrue(response.json["result"]["value"], response.json)
+        self.assertEqual(token.get_tokeninfo(FIREBASE_FID), enrollment["fid"])
+        self.assertIsNone(token.get_tokeninfo("firebase_token"))
 
     def test_00_create_realms(self):
         self.setUp_user_realms()

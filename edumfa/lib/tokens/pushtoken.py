@@ -27,6 +27,7 @@ and send it back to the authentication endpoint.
 This code is tested in tests/test_lib_tokens_push
 """
 
+import json
 import logging
 import time
 import traceback
@@ -60,6 +61,7 @@ from edumfa.lib.error import (
 )
 from edumfa.lib.log import log_with
 from edumfa.lib.policy import ACTION, GROUP, SCOPE, get_action_values_from_options
+from edumfa.lib.smsprovider.FirebaseProvider import FirebaseProvider
 from edumfa.lib.smsprovider.SMSProvider import create_sms_instance, get_smsgateway
 from edumfa.lib.token import get_one_token, init_token
 from edumfa.lib.tokenclass import (
@@ -90,6 +92,8 @@ DEFAULT_MOBILE_TEXT = _("Do you want to confirm the login?")
 PRIVATE_KEY_SERVER = "private_key_server"
 PUBLIC_KEY_SERVER = "public_key_server"
 PUBLIC_KEY_SMARTPHONE = "public_key_smartphone"
+FIREBASE_FID = "firebase_fid"
+FIREBASE_TOKEN = "firebase_token"
 POLLING_ALLOWED = "polling_allowed"
 GWTYPE = "edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider"
 ISO_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
@@ -560,7 +564,7 @@ class PushTokenClass(TokenClass):
             ``param`` contains:
 
             - ``serial``
-            - ``fbtoken``
+            - ``fbtoken`` or ``fid``
             - ``pubkey``
 
         :param param: dict of initialization parameters
@@ -572,7 +576,9 @@ class PushTokenClass(TokenClass):
         for k, v in param.items():
             upd_param[k] = v
 
-        if "serial" in upd_param and "fbtoken" in upd_param and "pubkey" in upd_param:
+        if {"serial", "pubkey"} <= upd_param.keys() and (
+            "fbtoken" in upd_param or "fid" in upd_param
+        ):
             # We are in step 2:
             if self.token.rollout_state != ROLLOUTSTATE.CLIENTWAIT:
                 raise ParameterError(
@@ -585,11 +591,22 @@ class PushTokenClass(TokenClass):
                 raise ParameterError(
                     "Invalid enrollment credential. You are not authorized to finalize this token."
                 )
+            if "fid" in upd_param:
+                fid = upd_param["fid"]
+                if "fbtoken" in upd_param or not isinstance(fid, str) or not fid:
+                    raise ParameterError(
+                        "Provide a non-empty 'fid' or 'fbtoken', not both."
+                    )
             self.del_tokeninfo("enrollment_credential")
             self.token.rollout_state = "enrolled"
             self.token.active = True
             self.add_tokeninfo(PUBLIC_KEY_SMARTPHONE, upd_param.get("pubkey"))
-            self.add_tokeninfo("firebase_token", upd_param.get("fbtoken"))
+            if "fid" in upd_param:
+                self.add_tokeninfo(FIREBASE_FID, upd_param["fid"])
+                self.del_tokeninfo(FIREBASE_TOKEN)
+            else:
+                self.add_tokeninfo(FIREBASE_TOKEN, upd_param.get("fbtoken"))
+                self.del_tokeninfo(FIREBASE_FID)
             # create a keypair for the server side.
             pub_key, priv_key = generate_keypair(4096)
             self.add_tokeninfo(PUBLIC_KEY_SERVER, pub_key)
@@ -606,7 +623,7 @@ class PushTokenClass(TokenClass):
             )
         else:
             raise ParameterError(
-                "Invalid Parameters. Either provide (genkey) or (serial, fbtoken, pubkey)."
+                "Invalid parameters. Provide genkey or serial, pubkey, and either fbtoken or fid."
             )
 
         TokenClass.update(self, upd_param, reset_failcount)
@@ -799,7 +816,14 @@ class PushTokenClass(TokenClass):
         result = False
 
         serial = getParam(request_data, "serial", optional=False)
-        if all(k in request_data for k in ("fbtoken", "pubkey")):
+        if (
+            "new_fid" in request_data
+            and {"new_fb_token", "nonce", "pubkey"} & request_data.keys()
+        ):
+            raise ParameterError("A FID update must be sent as a separate request.")
+        if "pubkey" in request_data and (
+            "fbtoken" in request_data or "fid" in request_data
+        ):
             log.debug("Do the 2nd step of the enrollment.")
             try:
                 token_obj = get_one_token(
@@ -860,7 +884,13 @@ class PushTokenClass(TokenClass):
                         result = True
                     except InvalidSignature as _e:
                         pass
-        elif all(k in request_data for k in ("new_fb_token", "timestamp", "signature")):
+        elif "new_fid" in request_data or all(
+            k in request_data for k in ("new_fb_token", "timestamp", "signature")
+        ):
+            is_fid = "new_fid" in request_data
+            registration = request_data["new_fid" if is_fid else "new_fb_token"]
+            if is_fid and (not isinstance(registration, str) or not registration):
+                raise ParameterError("Expected a non-empty string for 'new_fid'.")
             timestamp = getParam(request_data, "timestamp", optional=False)
             signature = getParam(request_data, "signature", optional=False)
             # first check if the timestamp is in the required span
@@ -870,10 +900,23 @@ class PushTokenClass(TokenClass):
                 pubkey_obj = _build_verify_object(
                     tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
                 )
-                sign_data = f"{request_data['new_fb_token']}|{serial}|{timestamp}"
+                if is_fid:
+                    sign_data = json.dumps(
+                        [
+                            "update_firebase_installation",
+                            serial,
+                            registration,
+                            timestamp,
+                        ],
+                        ensure_ascii=False,
+                        separators=(",", ":"),
+                    )
+                else:
+                    sign_data = f"{registration}|{serial}|{timestamp}"
                 cls.verify_signature(pubkey_obj, sign_data, signature)
-                # If the timestamp and signature are valid we update the token
-                tok.add_tokeninfo("firebase_token", request_data["new_fb_token"])
+                tok.add_tokeninfo(
+                    FIREBASE_FID if is_fid else FIREBASE_TOKEN, registration
+                )
                 result = True
             except (
                 ResourceNotFoundError,
@@ -881,7 +924,7 @@ class PushTokenClass(TokenClass):
                 TypeError,
                 InvalidSignature,
                 ConfigAdminError,
-                BinasciiError,
+                ValueError,
             ) as e:
                 # to avoid disclosing information we always fail with an invalid
                 # signature error even if the token with the serial could not be found
@@ -1161,9 +1204,14 @@ class PushTokenClass(TokenClass):
                         pem_privkey,
                         options,
                     )
-                    res = fb_gateway.submit_message(
-                        self.get_tokeninfo("firebase_token"), smartphone_data
-                    )
+                    firebase_token = self.get_tokeninfo(FIREBASE_TOKEN)
+                    fid = self.get_tokeninfo(FIREBASE_FID)
+                    if fid and isinstance(fb_gateway, FirebaseProvider):
+                        res = fb_gateway.submit_message(
+                            firebase_token, smartphone_data, fid=fid
+                        )
+                    else:
+                        res = fb_gateway.submit_message(firebase_token, smartphone_data)
 
             # Create the challenge in the challenge table if either the message
             # was successfully submitted to the Firebase API or if polling is

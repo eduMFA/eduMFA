@@ -33,6 +33,8 @@ from edumfa.lib.token import get_tokens, init_token, remove_token
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.pushtoken import (
     DEFAULT_CHALLENGE_TEXT,
+    FIREBASE_FID,
+    GWTYPE,
     POLL_ONLY,
     POLLING_ALLOWED,
     PRIVATE_KEY_SERVER,
@@ -1800,6 +1802,72 @@ class PushTokenTestCase(MyTestCase):
 
 
 class EduPushTokenTestCase(MyTestCase):
+    @responses.activate
+    def test_firebase_installation_registration_and_delivery(self) -> None:
+        gateway = "firebase-installation-test"
+        set_smsgateway(gateway, GWTYPE, "Firebase installations", FB_CONFIG_VALS)
+        self.addCleanup(delete_smsgateway, gateway)
+        set_policy(
+            "firebase-installation-registration",
+            SCOPE.ENROLL,
+            action=f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL}",
+        )
+        self.addCleanup(delete_policy, "firebase-installation-registration")
+        g = FakeFlaskG()
+        g.policy_object = PolicyClass()
+
+        token = self._create_push_token()
+        serial = token.get_serial()
+        self.addCleanup(remove_token, serial)
+        token.add_tokeninfo(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, gateway)
+        responses.add_callback(
+            responses.POST,
+            "https://fcm.googleapis.com/v1/projects/test-123456/messages:send",
+            callback=_check_firebase_params,
+            content_type="application/json",
+        )
+        with mock.patch(
+            "edumfa.lib.smsprovider.FirebaseProvider.get_firebase_access_token",
+            return_value=_create_credential_mock(),
+        ):
+            token.create_challenge(options={"g": g})
+            fid = "c123456789012345678901"
+            timestamp = datetime.now(timezone.utc).isoformat()
+            sign_data = json.dumps(
+                ["update_firebase_installation", serial, fid, timestamp],
+                separators=(",", ":"),
+            )
+            signature = b32encode_and_unicode(
+                self.smartphone_private_key.sign(
+                    sign_data.encode(), padding.PKCS1v15(), hashes.SHA256()
+                )
+            )
+            registration = {
+                "serial": serial,
+                "new_fid": fid,
+                "timestamp": timestamp,
+                "signature": signature,
+            }
+            client = self.app.test_client()
+            response = client.post(
+                "/ttype/edupush", json={**registration, "new_fid": "tampered"}
+            )
+            self.assertFalse(response.json["result"]["status"])
+            self.assertIsNone(token.get_tokeninfo(FIREBASE_FID))
+            response = client.post("/ttype/edupush", json=registration)
+            self.assertTrue(response.json["result"]["value"])
+            self.assertEqual(token.get_tokeninfo(FIREBASE_FID), fid)
+            self.assertEqual(token.get_tokeninfo("firebase_token"), "firebaseT")
+            token.create_challenge(options={"g": g})
+
+        self.assertEqual(len(responses.calls), 2)
+        legacy = json.loads(responses.calls[0].request.body)["message"]
+        self.assertEqual(legacy["token"], "firebaseT")
+        self.assertNotIn("fid", legacy)
+        updated = json.loads(responses.calls[1].request.body)["message"]
+        self.assertEqual(updated["fid"], fid)
+        self.assertNotIn("token", updated)
+
     serial1 = "EDUP00001"
 
     server_private_key = rsa.generate_private_key(
