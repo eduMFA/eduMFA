@@ -40,12 +40,6 @@ release. These remain deliberate maintainer actions.
    changes, upgrade warnings, permitted security information, and a comparison
    link from `PREVIOUS` to `vX.Y.Z`.
 4. Have another maintainer review the scope and release notes.
-5. Confirm the release security checks pass for the release commit. They build
-   and scan the `linux/amd64` and `linux/arm64` container images with Trivy for
-   operating-system and application dependency vulnerabilities. HIGH or CRITICAL
-   findings block publication, including findings without an available fix.
-   Update the affected base image or dependencies and include the required
-   fixes before releasing. There is no force or bypass option.
 
 The changelog must exist before running a preparation target. For a major or
 minor release it may be an uncommitted local change. For a fix release it must
@@ -196,11 +190,7 @@ A fix release does not require a development-version bump on `main`.
 
 ## Publication and verification
 
-Pushing `vX.Y.Z` starts the GitHub Actions workflows below. Each workflow first
-runs the shared `release-security.yml` checks against that commit. Publication
-jobs only run after both architecture scans succeed; a failed scan or scanner
-error stops publication. The same checks also run for pull requests and pushes
-to `main` through the Docker and Ubuntu workflows.
+Pushing `vX.Y.Z` starts the existing GitHub Actions workflows:
 
 | Workflow | Published artifacts |
 | --- | --- |

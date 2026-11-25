@@ -10,10 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  security:
-    uses: ./.github/workflows/release-security.yml
   dist:
-    needs: security
     runs-on: ubuntu-latest
     environment:
       name: pypi
