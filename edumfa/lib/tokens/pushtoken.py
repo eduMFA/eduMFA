@@ -683,11 +683,11 @@ class PushTokenClass(TokenClass):
         return f"{self.get_push_url_prefix()}/{url_label}?url={url_url}&ttl={ttl}&issuer={url_issuer}{_construct_extra_parameters(extra_data)}"
 
     def _get_enrollment_qr_params(
-        self, params: Mapping[str, object], credential: str | None
+        self, params: Mapping[str, object]
     ) -> dict[str, object]:
-        qr_params: dict[str, object] = {"enrollmentCredential": credential}
+        qr_params: dict[str, object] = {}
         if params.get(ACTION.FORCE_APP_PIN):
-            qr_params["requireDeviceAuth"] = "true"
+            qr_params["require_device_auth"] = "true"
         return qr_params
 
     @log_with(log)
@@ -726,7 +726,8 @@ class PushTokenClass(TokenClass):
             extra_data = {
                 "serial": self.get_serial(),
                 "v": self.enrollment_version,
-                **self._get_enrollment_qr_params(params, credential),
+                "enrollment_credential": credential,
+                **self._get_enrollment_qr_params(params),
             }
 
             # We display this during the first enrollment step!
@@ -791,7 +792,7 @@ class PushTokenClass(TokenClass):
 
         version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
         if version == 2:
-            return {"metadata": {}}
+            return {"token_update": {}}
         return {}
 
     @classmethod

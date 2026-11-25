@@ -102,10 +102,9 @@ class LegacyPushTokenClass(PushTokenClass):
         return "otpauth://pipush"
 
     def _get_enrollment_qr_params(
-        self, params: Mapping[str, object], credential: str | None
+        self, params: Mapping[str, object]
     ) -> dict[str, object]:
         qr_params: dict[str, object] = {
-            "enrollment_credential": credential,
             "sslverify": getParam(
                 params,
                 self.PUSH_ACTION.SSL_VERIFY,

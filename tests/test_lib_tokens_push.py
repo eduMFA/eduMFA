@@ -1831,11 +1831,17 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertEqual(query["v"], ["2"])
         self.assertEqual(query["serial"], [tok.get_serial()])
         self.assertEqual(
-            query["enrollmentCredential"], [detail["enrollment_credential"]]
+            query["enrollment_credential"], [detail["enrollment_credential"]]
         )
-        self.assertEqual(query["requireDeviceAuth"], ["true"])
-        for v1_key in ("enrollment_credential", "sslverify", "image", "pin"):
-            self.assertNotIn(v1_key, query)
+        self.assertEqual(query["require_device_auth"], ["true"])
+        for key in (
+            "enrollmentCredential",
+            "requireDeviceAuth",
+            "sslverify",
+            "image",
+            "pin",
+        ):
+            self.assertNotIn(key, query)
 
     serial1 = "EDUP00001"
 
@@ -1958,7 +1964,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertEqual(detail.get("rollout_state"), "clientwait")
         enrollment_credential = detail.get("enrollment_credential")
         self.assertTrue("pushurl" in detail)
-        self.assertNotIn("requireDeviceAuth=true", detail["pushurl"]["value"])
+        self.assertNotIn("require_device_auth=true", detail["pushurl"]["value"])
         self.assertFalse("otpkey" in detail)
 
         # Run enrollment step 2
@@ -2019,7 +2025,7 @@ class EduPushTokenTestCase(MyTestCase):
                 ACTION.FORCE_APP_PIN: True,
             }
         )
-        self.assertIn("requireDeviceAuth=true", detail["pushurl"]["value"])
+        self.assertIn("require_device_auth=true", detail["pushurl"]["value"])
         remove_token(tok.get_serial())
 
     def test_02a_lib_enroll(self):
@@ -3240,7 +3246,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertTrue(res[1]["result"]["status"], res)
         # No challenge created yet
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"])
-        self.assertNotIn("version", res[1]["detail"]["metadata"])
+        self.assertNotIn("version", res[1]["detail"]["token_update"])
 
         # we need to create a challenge which we can check for with polling
         # use a given time for the challenge (15 seconds before the poll)

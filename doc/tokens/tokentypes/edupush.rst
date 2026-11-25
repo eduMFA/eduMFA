@@ -55,8 +55,9 @@ Step 1
 ......
 
 The user scans a QR code. This QR code contains the
-basic information for the eduPUSH token and a enrollment URL, to which
-the smartphone should respond in the enrollment process.
+basic information for the eduPUSH token and an enrollment URL. V2 QR codes
+include ``enrollment_credential`` and send ``require_device_auth=true`` when
+the policy requires device authentication.
 
 The smartphone stores this data and creates a new key pair.
 
@@ -68,7 +69,7 @@ the serial number and an enrollment credential back to the
 enrollment URL of the eduMFA server.
 
 The server returns the token's public key. For V2 tokens, the rollout response
-and each successful challenge poll also include a ``detail.metadata`` object,
+and each successful challenge poll also include a ``detail.token_update`` object,
 even when a poll finds no pending challenges.
 
 Authentication
