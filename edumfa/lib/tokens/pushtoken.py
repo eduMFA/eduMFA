@@ -1106,8 +1106,8 @@ class PushTokenClass(TokenClass):
           More on polling can be found here: https://github.com/privacyidea/privacyidea/wiki/concept%3A-pushtoken-poll
 
           Rollout and authenticated polling return ``detail.image`` for
-          eduPush. V2 also returns ``detail.metadata`` with ``version`` and
-          ``image``. Polling returns these fields even without challenges.
+          eduPush. V2 also returns ``detail.metadata.image``. Polling returns
+          these fields even without challenges.
 
         :param request: The Flask request
         :param g: The Flask global object g

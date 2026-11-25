@@ -556,8 +556,8 @@ Rollout and authenticated polling return the image URL even when no challenges
 are pending.
 
 * V1 returns ``detail.image``. Tokens without a stored version use V1.
-* V2 adds ``detail.metadata`` with ``version`` and ``image`` and retains
-  ``detail.image`` for existing clients.
+* V2 adds ``detail.metadata.image`` and retains ``detail.image`` for existing
+  clients.
 
 The app clears its saved image on ``null`` and keeps it when the server omits
 the image field.

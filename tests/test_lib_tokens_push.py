@@ -3253,10 +3253,7 @@ class EduPushTokenTestCase(MyTestCase):
                     if version == 1:
                         self.assertNotIn("metadata", res["detail"])
                     else:
-                        self.assertEqual(
-                            res["detail"]["metadata"],
-                            {"version": version, "image": image},
-                        )
+                        self.assertEqual(res["detail"]["metadata"], {"image": image})
                 finally:
                     tok.delete_token()
         finally:
@@ -3320,9 +3317,7 @@ class EduPushTokenTestCase(MyTestCase):
                 res = token_class.api_endpoint(req, g)[1]
                 self.assertEqual(res["result"]["value"], [])
                 self.assertEqual(res["detail"]["image"], image)
-                self.assertEqual(
-                    res["detail"]["metadata"], {"version": 2, "image": image}
-                )
+                self.assertEqual(res["detail"]["metadata"], {"image": image})
             set_policy("push_image", SCOPE.AUTH, user="other", active=True)
             tok.del_tokeninfo("push_version")
             detail = token_class.api_endpoint(req, g)[1]["detail"]
