@@ -2791,6 +2791,10 @@ msgid "Configure whether to allow push tokens to poll for challenges"
 msgstr "Configure si desea permitir que los \"tokens push\" sondeen los desafíos"
 
 #: lib/tokens/pushtoken.py
+msgid "Token image URL for the push app."
+msgstr ""
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "URL para el \"Push Token\" de eduMFA"
 

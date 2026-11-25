@@ -2794,6 +2794,10 @@ msgstr ""
 "challenges"
 
 #: lib/tokens/pushtoken.py
+msgid "Token image URL for the push app."
+msgstr ""
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "URL voor eduMFA Push Token"
 

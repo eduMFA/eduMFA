@@ -542,6 +542,22 @@ This is the title of the push notification that is displayed
 on the user's smartphone during the login process with
 a :ref:`edupush_token` or :ref:`push_token`.
 
+.. _policy_edupush_image_url:
+
+edupush_image_url
+~~~~~~~~~~~~~~~~
+
+type: string
+
+The :ref:`edupush_token` image URL for the push app. The policy matches the
+token owner.
+
+V2 rollout and authenticated polling return the URL in
+``detail.token_update.image``, even when no challenges are pending.
+
+The app clears its saved image on ``null`` and keeps it when the server omits
+the image field.
+
 .. _policy_push_wait:
 
 edupush_wait, push_wait

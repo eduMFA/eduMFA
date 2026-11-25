@@ -2829,6 +2829,10 @@ msgstr ""
 "abfragen"
 
 #: lib/tokens/pushtoken.py
+msgid "Token image URL for the push app."
+msgstr ""
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "URL des eduMFA Push Tokens"
 
