@@ -547,10 +547,10 @@ a :ref:`edupush_token` or :ref:`push_token`.
 edupush_challenge
 ----------------
 
-This authentication policy selects an additional challenge type for eduPUSH
-sign-ins. It is disabled when no policy matches. The first supported value is
-``number``: the sign-in screen displays a two-digit number and the smartphone
-user selects it from three choices. A wrong answer ends the request.
+This policy enables an additional challenge for eduPush V2 sign-ins.
+With ``number``, the sign-in screen displays a two-digit number and the user
+selects it from three choices in the push app. A wrong answer ends the request.
+V1 tokens and V2 tokens without a matching policy use approve/deny.
 
 This feature is supported only by the eduMFA Push app.
 

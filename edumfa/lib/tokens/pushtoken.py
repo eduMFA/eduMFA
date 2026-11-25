@@ -1238,7 +1238,10 @@ class PushTokenClass(TokenClass):
         return self.check_pin(passw, user=user, options=options)
 
     def _get_push_challenge_type(self, options: dict[str, object]) -> str | None:
-        if self.get_class_type() != "edupush":
+        if (
+            self.get_class_type() != "edupush"
+            or parse_int(self.get_tokeninfo(PUSH_VERSION), default=1) != 2
+        ):
             return None
         challenge_type = get_action_values_from_options(
             SCOPE.AUTH, self.PUSH_ACTION.CHALLENGE, options

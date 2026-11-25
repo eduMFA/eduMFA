@@ -112,10 +112,9 @@ answered and automatically login the user.
 Push challenges
 ...............
 
-Administrators opt in with ``edupush_challenge=number`` in an authentication
-policy (PUSH group). Without this policy, push requests keep the existing
-approve/deny flow. The policy selects a challenge type; ``number`` is the first
-supported type.
+Administrators enable number matching for V2 tokens with
+``edupush_challenge=number`` in an authentication policy (PUSH group).
+V1 tokens and V2 tokens without a matching policy use approve/deny.
 
 Push challenges are supported only by the eduMFA Push app.
 

@@ -39,6 +39,7 @@ from edumfa.lib.tokens.pushtoken import (
     PRIVATE_KEY_SERVER,
     PUBLIC_KEY_SERVER,
     PUBLIC_KEY_SMARTPHONE,
+    PUSH_VERSION,
     PushAllowPolling,
     PushTokenClass,
     strip_key,
@@ -3717,6 +3718,29 @@ class EduPushTokenTestCase(MyTestCase):
             chal.save()
             correct = attrs["attributes"]["push_challenge"]["value"]
             self.assertFalse(answer(chal.challenge, correct, correct)[0])
+
+            for version in (1, None, 2):
+                with self.subTest(version=version):
+                    if version is None:
+                        token.del_tokeninfo(PUSH_VERSION)
+                    else:
+                        token.add_tokeninfo(PUSH_VERSION, version)
+                    if version == 2:
+                        set_policy("number-match", SCOPE.AUTH, active=False)
+
+                    _, _, transaction, attrs = token.create_challenge(options=options)
+                    self.assertNotIn("push_challenge", attrs["attributes"])
+                    chal = get_challenges(serial=serial, transaction_id=transaction)[0]
+                    polled = next(
+                        entry
+                        for entry in PushTokenClass._api_endpoint_get(
+                            context, poll_request
+                        )
+                        if entry["nonce"] == chal.challenge
+                    )
+                    self.assertNotIn("challenge_type", polled)
+                    self.assertNotIn("challenge_choices", polled)
+                    self.assertTrue(answer(chal.challenge, None)[0])
         finally:
             token.delete_token()
             delete_policy("number-match")
