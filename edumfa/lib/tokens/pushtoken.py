@@ -35,6 +35,7 @@ from base64 import b32decode
 from binascii import Error as BinasciiError
 from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
+from typing import TypedDict
 from urllib.parse import quote
 
 from cryptography.exceptions import InvalidSignature
@@ -61,7 +62,13 @@ from edumfa.lib.error import (
     eduMFAError,
 )
 from edumfa.lib.log import log_with
-from edumfa.lib.policy import ACTION, GROUP, SCOPE, get_action_values_from_options
+from edumfa.lib.policy import (
+    ACTION,
+    GROUP,
+    SCOPE,
+    Match,
+    get_action_values_from_options,
+)
 from edumfa.lib.smsprovider.SMSProvider import create_sms_instance, get_smsgateway
 from edumfa.lib.token import get_one_token, init_token
 from edumfa.lib.tokenclass import (
@@ -80,7 +87,7 @@ from edumfa.lib.utils import (
     prepare_result,
     to_bytes,
 )
-from edumfa.models import Challenge, db
+from edumfa.models import Challenge, Token, TokenInfo, db
 
 log = logging.getLogger(__name__)
 
@@ -94,6 +101,8 @@ PRIVATE_KEY_SERVER = "private_key_server"
 PUBLIC_KEY_SERVER = "public_key_server"
 PUBLIC_KEY_SMARTPHONE = "public_key_smartphone"
 PUSH_VERSION = "push_version"
+PUSH_UPGRADE = "push_upgrade"
+PUSH_UPGRADE_PATHS = {1: 2}
 POLLING_ALLOWED = "polling_allowed"
 GWTYPE = "edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider"
 ISO_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
@@ -102,13 +111,23 @@ DELAY = 1.0
 # Timedelta in minutes
 POLL_TIME_WINDOW = 1
 UPDATE_FB_TOKEN_WINDOW = 5
+PUSH_UPGRADE_WINDOW = 5
 POLL_ONLY = "poll only"
 
 POST_OPERATION_FIELDS = {
     "complete_enrollment": ("enrollment_credential", "pubkey", "fbtoken"),
     "respond_to_challenge": ("nonce", "signature"),
     "update_firebase_token": ("new_fb_token", "timestamp", "signature"),
+    "begin_upgrade": ("timestamp", "signature"),
+    "confirm_upgrade": ("nonce", "signature"),
 }
+
+
+class PushUpgradeOffer(TypedDict):
+    target_version: int
+    nonce: str
+    expires_at: int
+    confirmed: bool
 
 
 class PushAllowPolling:
@@ -419,7 +438,7 @@ class PushTokenClass(TokenClass):
                         ),
                         "group": GROUP.TOKEN,
                     },
-                    f"push_{ACTION.FORCE_APP_PIN}": {
+                    f"{cls.get_class_type()}_{ACTION.FORCE_APP_PIN}": {
                         "type": "bool",
                         "group": cls.get_policy_group(),
                         "desc": _(
@@ -821,6 +840,16 @@ class PushTokenClass(TokenClass):
             allowed = {"operation", *required}
             if operation == "respond_to_challenge":
                 allowed.add("decline")
+            if operation in ("begin_upgrade", "confirm_upgrade"):
+                allowed.add("target_version")
+                if type(request_data.get("target_version")) is not int:
+                    raise ParameterError("Expected an integer for 'target_version'.")
+            if operation == "confirm_upgrade":
+                allowed.add("require_device_auth")
+                if not isinstance(request_data.get("require_device_auth"), bool):
+                    raise ParameterError(
+                        "Expected a boolean for 'require_device_auth'."
+                    )
             if request_data.keys() - allowed:
                 raise ParameterError("Unexpected parameters for push operation.")
             for key in required:
@@ -847,6 +876,8 @@ class PushTokenClass(TokenClass):
         if operation == "update_firebase_token":
             cls._update_firebase_token(serial, request_data, explicit)
             return True, {}
+        if operation in ("begin_upgrade", "confirm_upgrade"):
+            return True, cls._upgrade_version(serial, operation, request_data, g)
         raise ParameterError("Unknown push operation.")
 
     @classmethod
@@ -963,10 +994,227 @@ class PushTokenClass(TokenClass):
             raise eduMFAError("Could not verify signature!")
 
     @staticmethod
-    def _operation_signing_data(operation: str, *fields: str | bool) -> str:
+    def _operation_signing_data(operation: str, *fields: str | int | bool) -> str:
         return json.dumps(
             [operation, *fields], ensure_ascii=False, separators=(",", ":")
         )
+
+    def _available_upgrade(self) -> int | None:
+        if (
+            self.get_class_type() == "edupush"
+            and self.token.rollout_state == ROLLOUTSTATE.ENROLLED
+            and self.is_active()
+            and not self.is_locked()
+            and not self.is_revoked()
+        ):
+            version = parse_int(self.get_tokeninfo(PUSH_VERSION, default="1"))
+            return PUSH_UPGRADE_PATHS.get(version)
+        return None
+
+    @classmethod
+    def _upgrade_version(
+        cls,
+        serial: str,
+        operation: str,
+        request_data: Mapping[str, object],
+        g: object | None,
+    ) -> dict[str, object]:
+        target = getParam(request_data, "target_version", optional=False)
+        signature = getParam(request_data, "signature", optional=False)
+        confirmation: tuple[str, bool] | None = None
+        if operation == "begin_upgrade":
+            timestamp = getParam(request_data, "timestamp", optional=False)
+            cls._check_timestamp_in_range(timestamp, PUSH_UPGRADE_WINDOW)
+            sign_data = cls._operation_signing_data(
+                operation, serial, target, timestamp
+            )
+        else:
+            nonce = getParam(request_data, "nonce", optional=False)
+            device_auth = getParam(request_data, "require_device_auth", optional=False)
+            confirmation = (nonce, device_auth)
+            sign_data = cls._operation_signing_data(
+                operation, serial, target, nonce, device_auth
+            )
+
+        try:
+            token = cls._get_post_token(serial, False, ROLLOUTSTATE.ENROLLED)
+            public_key = token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
+            if not isinstance(public_key, str) or not public_key:
+                raise eduMFAError("Could not verify signature!")
+            cls.verify_signature(_build_verify_object(public_key), sign_data, signature)
+        except (ResourceNotFoundError, InvalidSignature, TypeError, ValueError):
+            raise eduMFAError("Could not verify signature!")
+
+        try:
+            token_id = token.token.id
+            # Take a write lock even on SQLite before reading upgrade state.
+            matched = Token.query.filter(
+                Token.id == token_id,
+                Token.tokentype == cls.get_class_type(),
+                Token.rollout_state == ROLLOUTSTATE.ENROLLED,
+                Token.active.is_(True),
+                Token.locked.is_not(True),
+                Token.revoked.is_not(True),
+            ).update({Token.active: Token.active}, synchronize_session=False)
+            if not matched:
+                raise ParameterError("This token cannot be upgraded.")
+
+            records = {
+                row.Key: row
+                for row in TokenInfo.query.filter(
+                    TokenInfo.token_id == token_id,
+                    TokenInfo.Key.in_(
+                        (PUSH_VERSION, PUSH_UPGRADE, PUBLIC_KEY_SMARTPHONE)
+                    ),
+                )
+                .with_for_update()
+                .populate_existing()
+                .all()
+            }
+            key_record = records.get(PUBLIC_KEY_SMARTPHONE)
+            if key_record is None or key_record.Value != public_key:
+                raise eduMFAError("Could not verify signature!")
+
+            version_record = records.get(PUSH_VERSION)
+            version = parse_int(version_record.Value) if version_record else 1
+            requires_device_auth = (
+                g is not None
+                and Match.user(
+                    g,
+                    scope=SCOPE.ENROLL,
+                    action=f"{cls.get_class_type()}_{ACTION.FORCE_APP_PIN}",
+                    user_object=token.user,
+                ).any()
+            )
+
+            if confirmation is None:
+                details = cls._begin_upgrade(
+                    token_id, records, version, target, requires_device_auth
+                )
+            else:
+                nonce, device_auth = confirmation
+                details = cls._confirm_upgrade(
+                    token_id,
+                    records,
+                    version,
+                    target,
+                    nonce,
+                    requires_device_auth,
+                    device_auth,
+                )
+            db.session.commit()
+            return details
+        except Exception:
+            db.session.rollback()
+            raise
+
+    @staticmethod
+    def _read_upgrade_offer(record: TokenInfo | None) -> PushUpgradeOffer | None:
+        if record is None:
+            return None
+        try:
+            stored = json.loads(record.Value)
+        except (ValueError, TypeError):
+            return None
+        if not isinstance(stored, dict):
+            return None
+        target, nonce, expires, confirmed = (
+            stored.get(key)
+            for key in ("target_version", "nonce", "expires_at", "confirmed")
+        )
+        if (
+            type(target) is int
+            and isinstance(nonce, str)
+            and type(expires) is int
+            and isinstance(confirmed, bool)
+        ):
+            return {
+                "target_version": target,
+                "nonce": nonce,
+                "expires_at": expires,
+                "confirmed": confirmed,
+            }
+        return None
+
+    @classmethod
+    def _begin_upgrade(
+        cls,
+        token_id: int,
+        records: Mapping[str, TokenInfo],
+        version: int,
+        target: int,
+        requires_device_auth: bool,
+    ) -> dict[str, object]:
+        if version == target and target in PUSH_UPGRADE_PATHS.values():
+            return {"push_version": version}
+        if PUSH_UPGRADE_PATHS.get(version) != target:
+            raise ParameterError("This push version upgrade is unavailable.")
+        record = records.get(PUSH_UPGRADE)
+        offer = cls._read_upgrade_offer(record)
+        now = int(time.time())
+        if (
+            offer is None
+            or offer["confirmed"]
+            or offer["target_version"] != target
+            or offer["expires_at"] <= now
+        ):
+            offer = {
+                "target_version": target,
+                "nonce": geturandom(32, hex=True),
+                "expires_at": now + 60 * PUSH_UPGRADE_WINDOW,
+                "confirmed": False,
+            }
+            if record is None:
+                db.session.add(TokenInfo(token_id, PUSH_UPGRADE, json.dumps(offer)))
+            else:
+                record.Value = json.dumps(offer)
+        return {
+            "upgrade": {
+                "target_version": target,
+                "nonce": offer["nonce"],
+                "expires_at": offer["expires_at"],
+                "require_device_auth": requires_device_auth,
+            }
+        }
+
+    @classmethod
+    def _confirm_upgrade(
+        cls,
+        token_id: int,
+        records: Mapping[str, TokenInfo],
+        version: int,
+        target: int,
+        nonce: str,
+        requires_device_auth: bool,
+        device_auth: bool,
+    ) -> dict[str, object]:
+        offer_record = records.get(PUSH_UPGRADE)
+        offer = cls._read_upgrade_offer(offer_record)
+        if (
+            offer_record is None
+            or offer is None
+            or offer["expires_at"] <= int(time.time())
+            or offer["target_version"] != target
+            or offer["nonce"] != nonce
+        ):
+            raise ParameterError("This push upgrade offer is invalid or expired.")
+        if offer["confirmed"] and version == target:
+            return {"push_version": version}
+        if offer["confirmed"] or PUSH_UPGRADE_PATHS.get(version) != target:
+            raise ParameterError("This push version upgrade is unavailable.")
+        if requires_device_auth and not device_auth:
+            raise PolicyError(
+                "Device authentication is required for this push upgrade."
+            )
+
+        version_record = records.get(PUSH_VERSION)
+        if version_record is None:
+            db.session.add(TokenInfo(token_id, PUSH_VERSION, str(target)))
+        else:
+            version_record.Value = str(target)
+        offer["confirmed"] = True
+        offer_record.Value = json.dumps(offer)
+        return {"push_version": target}
 
     @classmethod
     def verify_signature(cls, pubkey_obj, sign_data, signature):
@@ -1063,6 +1311,9 @@ class PushTokenClass(TokenClass):
             result = challenges
             if details is not None:
                 details.update(tok._get_versioned_details(g))
+                target = tok._available_upgrade()
+                if target is not None:
+                    details["available_upgrade"] = {"target_version": target}
         except (
             ResourceNotFoundError,
             ParameterError,

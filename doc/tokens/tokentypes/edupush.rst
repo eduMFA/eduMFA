@@ -89,10 +89,37 @@ The operation selects the remaining fields.
   exact ISO 8601 timestamp sent in the request.
 
 Sign the UTF-8 bytes of the compact JSON array with the enrolled device key
-and Base32-encode the signature. Requests with ``operation`` require a V2
-token. An unknown operation or invalid payload is rejected. POST requests
+and Base32-encode the signature. These three operations require a V2 token.
+An unknown operation or invalid payload is rejected. POST requests
 without ``operation`` continue to use the existing payload and signature
 formats. GET polling uses the existing format.
+
+Protocol upgrades
+~~~~~~~~~~~~~~~~~
+
+An authenticated poll advertises an eligible upgrade in
+``detail.available_upgrade.target_version``. The supported path is V1 to V2
+for active, enrolled eduPush tokens. A missing stored version counts as V1.
+The app can start the upgrade even when challenge polling is disabled.
+
+Send both operations to ``POST /ttype/edupush`` using the V2 signing format
+above over verified HTTPS. Send ``target_version`` as a JSON integer.
+
+* ``begin_upgrade`` requires ``serial``, ``target_version``, ``timestamp`` and
+  ``signature``. Sign ``["begin_upgrade", serial, target_version, timestamp]``.
+  The response contains ``detail.upgrade`` with ``target_version``, ``nonce``,
+  ``expires_at`` (Unix seconds), and ``require_device_auth``. The offer is valid
+  for five minutes. A repeated begin returns the same unexpired offer.
+* ``confirm_upgrade`` requires ``serial``, ``target_version``, ``nonce``,
+  ``require_device_auth`` and ``signature``. Sign
+  ``["confirm_upgrade", serial, target_version, nonce, require_device_auth]``.
+  Send the boolean after preparing the app for V2, and set it to ``true``
+  after enabling device authentication if required. The upgraded token keeps
+  its serial and enrolled device key.
+
+Successful confirmation returns ``detail.push_version``. Repeating confirmation
+before the offer expires returns the same result. A fresh signed begin also
+returns ``detail.push_version`` if the token already uses the target version.
 
 Authentication
 ~~~~~~~~~~~~~~

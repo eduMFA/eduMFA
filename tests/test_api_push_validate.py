@@ -23,6 +23,7 @@ from edumfa.lib.tokenclass import CLIENTMODE
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.pushtoken import (
     POLL_ONLY,
+    PUSH_UPGRADE,
     PUSH_VERSION,
     PushTokenClass,
     strip_key,
@@ -677,6 +678,13 @@ class EduPushAPITestCase(MyApiTestCase):
     )
     serial_push = "EDUP001"
 
+    def _sign_device_message(self, message: str) -> str:
+        return b32encode_and_unicode(
+            self.smartphone_private_key.sign(
+                message.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
+            )
+        )
+
     def test_v2_post_operations(self) -> None:
         token = init_token(
             {
@@ -690,12 +698,7 @@ class EduPushAPITestCase(MyApiTestCase):
         client = self.app.test_client()
         url = "/ttype/edupush"
 
-        def sign(message: str) -> str:
-            return b32encode_and_unicode(
-                self.smartphone_private_key.sign(
-                    message.encode("utf-8"), padding.PKCS1v15(), hashes.SHA256()
-                )
-            )
+        sign = self._sign_device_message
 
         enrollment = {
             "serial": serial,
@@ -777,6 +780,151 @@ class EduPushAPITestCase(MyApiTestCase):
         response = client.post(url, json=update)
         self.assertTrue(response.json["result"]["value"])
         self.assertEqual(token.get_tokeninfo("firebase_token"), "replacement-token")
+
+    def test_upgrade_existing_edupush_token(self) -> None:
+        token = init_token(
+            {
+                "type": "edupush",
+                "genkey": 1,
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
+            }
+        )
+        serial = token.get_serial()
+        self.addCleanup(remove_token, serial)
+        token.del_tokeninfo(PUSH_VERSION)
+        client = self.app.test_client()
+        url = "/ttype/edupush"
+
+        response = client.post(
+            url,
+            json={
+                "serial": serial,
+                "enrollment_credential": token.get_tokeninfo("enrollment_credential"),
+                "pubkey": self.smartphone_public_key_pem_urlsafe,
+                "fbtoken": "migration-device",
+            },
+        )
+        self.assertTrue(response.json["result"]["value"])
+        public_key = response.json["detail"]["public_key"]
+        set_policy(
+            "upgrade-registration",
+            SCOPE.ENROLL,
+            action=f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={self.REGISTRATION_URL}",
+        )
+        self.addCleanup(delete_policy, "upgrade-registration")
+        set_policy(
+            "upgrade-device-auth",
+            SCOPE.ENROLL,
+            action=f"edupush_{ACTION.FORCE_APP_PIN}",
+        )
+        self.addCleanup(delete_policy, "upgrade-device-auth")
+
+        timestamp = datetime.now(timezone.utc).isoformat()
+        poll = {
+            "serial": serial,
+            "timestamp": timestamp,
+            "signature": self._sign_device_message(f"{serial}|{timestamp}"),
+        }
+        response = client.get(url, query_string=poll)
+        self.assertEqual(response.json["result"]["value"], [])
+        self.assertEqual(
+            response.json["detail"]["available_upgrade"], {"target_version": 2}
+        )
+        self.assertIsNone(token.get_tokeninfo(PUSH_UPGRADE))
+
+        begin = {
+            "operation": "begin_upgrade",
+            "serial": serial,
+            "target_version": 2,
+            "timestamp": timestamp,
+            "signature": self._sign_device_message(
+                json.dumps(
+                    ["begin_upgrade", serial, 2, timestamp], separators=(",", ":")
+                )
+            ),
+        }
+        self.assertFalse(
+            client.post(url, json={**begin, "target_version": 3}).json["result"][
+                "status"
+            ]
+        )
+        unsupported = self._sign_device_message(
+            json.dumps(["begin_upgrade", serial, 3, timestamp], separators=(",", ":"))
+        )
+        self.assertFalse(
+            client.post(
+                url, json={**begin, "target_version": 3, "signature": unsupported}
+            ).json["result"]["status"]
+        )
+        self.assertIsNone(token.get_tokeninfo(PUSH_UPGRADE))
+        set_policy(
+            "upgrade-deny-polling",
+            SCOPE.AUTH,
+            action=f"{PushTokenClass.PUSH_ACTION.ALLOW_POLLING}=deny",
+        )
+        self.addCleanup(delete_policy, "upgrade-deny-polling")
+        self.assertFalse(client.get(url, query_string=poll).json["result"]["status"])
+        response = client.post(url, json=begin)
+        self.assertTrue(response.json["result"]["value"], response.json)
+        offer = response.json["detail"]["upgrade"]
+        self.assertEqual(offer["target_version"], 2)
+        self.assertTrue(offer["require_device_auth"])
+        self.assertEqual(client.post(url, json=begin).json["detail"]["upgrade"], offer)
+        self.assertIsNone(token.get_tokeninfo(PUSH_VERSION))
+
+        def confirmation(nonce: str, device_auth: bool) -> dict[str, object]:
+            return {
+                "operation": "confirm_upgrade",
+                "serial": serial,
+                "target_version": 2,
+                "nonce": nonce,
+                "require_device_auth": device_auth,
+                "signature": self._sign_device_message(
+                    json.dumps(
+                        ["confirm_upgrade", serial, 2, nonce, device_auth],
+                        separators=(",", ":"),
+                    )
+                ),
+            }
+
+        self.assertFalse(
+            client.post(url, json=confirmation(offer["nonce"], False)).json["result"][
+                "status"
+            ]
+        )
+        token.add_tokeninfo(
+            PUSH_UPGRADE, json.dumps({**offer, "expires_at": 0, "confirmed": False})
+        )
+        self.assertFalse(
+            client.post(url, json=confirmation(offer["nonce"], True)).json["result"][
+                "status"
+            ]
+        )
+        refreshed = client.post(url, json=begin).json["detail"]["upgrade"]
+        self.assertNotEqual(refreshed["nonce"], offer["nonce"])
+        confirm = confirmation(refreshed["nonce"], True)
+        self.assertFalse(
+            client.post(url, json={**confirm, "signature": begin["signature"]}).json[
+                "result"
+            ]["status"]
+        )
+        enable_token(serial, enable=False)
+        self.assertFalse(client.post(url, json=confirm).json["result"]["status"])
+        self.assertIsNone(token.get_tokeninfo(PUSH_VERSION))
+        enable_token(serial)
+        for request_data in (confirm, confirm, begin):
+            response = client.post(url, json=request_data)
+            self.assertTrue(response.json["result"]["value"], response.json)
+            self.assertEqual(response.json["detail"]["push_version"], 2)
+
+        stored = get_one_token(serial=serial)
+        self.assertEqual(stored.get_tokeninfo(PUSH_VERSION), "2")
+        self.assertEqual(stored.get_init_detail()["public_key"], public_key)
+        self.assertEqual(stored.get_tokeninfo("firebase_token"), "migration-device")
+        set_policy("upgrade-deny-polling", SCOPE.AUTH, active=False)
+        response = client.get(url, query_string=poll)
+        self.assertIn("token_update", response.json["detail"])
+        self.assertNotIn("available_upgrade", response.json["detail"])
 
     def test_00_create_realms(self):
         self.setUp_user_realms()
