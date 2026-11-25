@@ -55,8 +55,9 @@ Step 1
 ......
 
 The user scans a QR code. This QR code contains the
-basic information for the eduPUSH token and a enrollment URL, to which
-the smartphone should respond in the enrollment process.
+basic information for the eduPUSH token and an enrollment URL. V2 QR codes
+include ``enrollment_credential`` and send ``require_device_auth=true`` when
+the policy requires device authentication.
 
 The smartphone stores this data and creates a new key pair.
 
@@ -67,7 +68,58 @@ The smartphone sends its Firebase ID, the public key of the keypair,
 the serial number and an enrollment credential back to the
 enrollment URL of the eduMFA server.
 
-The server responds with it's public key for this token.
+The server returns the token's public key. For V2 tokens, the rollout response
+and each successful challenge poll also include a ``detail.token_update`` object,
+even when a poll finds no pending challenges.
+
+V2 POST operations
+~~~~~~~~~~~~~~~~~~
+
+Send ``operation`` and ``serial`` in the JSON request to ``POST /ttype/edupush``.
+The operation selects the remaining fields.
+
+* ``complete_enrollment`` requires ``enrollment_credential``, ``pubkey`` and
+  ``fbtoken``. It returns the server public key and token updates.
+* ``respond_to_challenge`` requires ``nonce`` and ``signature``. The optional
+  boolean ``decline`` defaults to ``false``. Sign the array
+  ``["respond_to_challenge", serial, nonce, decline]``.
+* ``update_firebase_token`` requires ``new_fb_token``, ``timestamp`` and
+  ``signature``. Sign the array
+  ``["update_firebase_token", serial, new_fb_token, timestamp]``, using the
+  exact ISO 8601 timestamp sent in the request.
+
+Sign the UTF-8 bytes of the compact JSON array with the enrolled device key
+and Base32-encode the signature. These three operations require a V2 token.
+An unknown operation or invalid payload is rejected. POST requests
+without ``operation`` continue to use the existing payload and signature
+formats. GET polling uses the existing format.
+
+Protocol upgrades
+~~~~~~~~~~~~~~~~~
+
+An authenticated poll advertises an eligible upgrade in
+``detail.available_upgrade.target_version``. The supported path is V1 to V2
+for active, enrolled eduPush tokens. A missing stored version counts as V1.
+The app can start the upgrade even when challenge polling is disabled.
+
+Send both operations to ``POST /ttype/edupush`` using the V2 signing format
+above over verified HTTPS. Send ``target_version`` as a JSON integer.
+
+* ``begin_upgrade`` requires ``serial``, ``target_version``, ``timestamp`` and
+  ``signature``. Sign ``["begin_upgrade", serial, target_version, timestamp]``.
+  The response contains ``detail.upgrade`` with ``target_version``, ``nonce``,
+  ``expires_at`` (Unix seconds), and ``require_device_auth``. The offer is valid
+  for five minutes. A repeated begin returns the same unexpired offer.
+* ``confirm_upgrade`` requires ``serial``, ``target_version``, ``nonce``,
+  ``require_device_auth`` and ``signature``. Sign
+  ``["confirm_upgrade", serial, target_version, nonce, require_device_auth]``.
+  Send the boolean after preparing the app for V2, and set it to ``true``
+  after enabling device authentication if required. The upgraded token keeps
+  its serial and enrolled device key.
+
+Successful confirmation returns ``detail.push_version``. Repeating confirmation
+before the offer expires returns the same result. A fresh signed begin also
+returns ``detail.push_version`` if the token already uses the target version.
 
 Authentication
 ~~~~~~~~~~~~~~

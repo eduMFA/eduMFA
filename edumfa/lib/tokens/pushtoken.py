@@ -27,12 +27,15 @@ and send it back to the authentication endpoint.
 This code is tested in tests/test_lib_tokens_push
 """
 
+import json
 import logging
 import time
 import traceback
 from base64 import b32decode
 from binascii import Error as BinasciiError
+from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
+from typing import TypedDict
 from urllib.parse import quote
 
 from cryptography.exceptions import InvalidSignature
@@ -59,7 +62,14 @@ from edumfa.lib.error import (
     eduMFAError,
 )
 from edumfa.lib.log import log_with
-from edumfa.lib.policy import ACTION, GROUP, SCOPE, get_action_values_from_options
+from edumfa.lib.policy import (
+    ACTION,
+    GROUP,
+    SCOPE,
+    Match,
+    get_action_values_from_options,
+)
+from edumfa.lib.smsprovider.FirebaseProvider import FirebaseProvider
 from edumfa.lib.smsprovider.SMSProvider import create_sms_instance, get_smsgateway
 from edumfa.lib.token import get_one_token, init_token
 from edumfa.lib.tokenclass import (
@@ -74,10 +84,11 @@ from edumfa.lib.utils import (
     b32encode_and_unicode,
     create_img,
     is_true,
+    parse_int,
     prepare_result,
     to_bytes,
 )
-from edumfa.models import Challenge, db
+from edumfa.models import Challenge, Token, TokenInfo, db
 
 log = logging.getLogger(__name__)
 
@@ -90,6 +101,9 @@ DEFAULT_MOBILE_TEXT = _("Do you want to confirm the login?")
 PRIVATE_KEY_SERVER = "private_key_server"
 PUBLIC_KEY_SERVER = "public_key_server"
 PUBLIC_KEY_SMARTPHONE = "public_key_smartphone"
+PUSH_VERSION = "push_version"
+PUSH_UPGRADE = "push_upgrade"
+PUSH_UPGRADE_PATHS = {1: 2}
 POLLING_ALLOWED = "polling_allowed"
 GWTYPE = "edumfa.lib.smsprovider.FirebaseProvider.FirebaseProvider"
 ISO_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
@@ -98,7 +112,23 @@ DELAY = 1.0
 # Timedelta in minutes
 POLL_TIME_WINDOW = 1
 UPDATE_FB_TOKEN_WINDOW = 5
+PUSH_UPGRADE_WINDOW = 5
 POLL_ONLY = "poll only"
+
+POST_OPERATION_FIELDS = {
+    "complete_enrollment": ("enrollment_credential", "pubkey", "fbtoken"),
+    "respond_to_challenge": ("nonce", "signature"),
+    "update_firebase_token": ("new_fb_token", "timestamp", "signature"),
+    "begin_upgrade": ("timestamp", "signature"),
+    "confirm_upgrade": ("nonce", "signature"),
+}
+
+
+class PushUpgradeOffer(TypedDict):
+    target_version: int
+    nonce: str
+    expires_at: int
+    confirmed: bool
 
 
 class PushAllowPolling:
@@ -302,6 +332,7 @@ class PushTokenClass(TokenClass):
         AUTHENTICATIONMODE.OUTOFBAND,
     ]
     client_mode = CLIENTMODE.POLL
+    enrollment_version = 2
     # If the token is enrollable via multichallenge
     is_multichallenge_enrollable = True
 
@@ -408,7 +439,7 @@ class PushTokenClass(TokenClass):
                         ),
                         "group": GROUP.TOKEN,
                     },
-                    f"push_{ACTION.FORCE_APP_PIN}": {
+                    f"{cls.get_class_type()}_{ACTION.FORCE_APP_PIN}": {
                         "type": "bool",
                         "group": cls.get_policy_group(),
                         "desc": _(
@@ -599,6 +630,7 @@ class PushTokenClass(TokenClass):
             # We are in step 1:
             upd_param["2stepinit"] = 1
             self.add_tokeninfo("enrollment_credential", geturandom(20, hex=True))
+            self.add_tokeninfo(PUSH_VERSION, self.enrollment_version)
             # We also store the Firebase config, that was used during the enrollment.
             self.add_tokeninfo(
                 self.PUSH_ACTION.FIREBASE_CONFIG,
@@ -677,6 +709,14 @@ class PushTokenClass(TokenClass):
 
         return f"{self.get_push_url_prefix()}/{url_label}?url={url_url}&ttl={ttl}&issuer={url_issuer}{_construct_extra_parameters(extra_data)}"
 
+    def _get_enrollment_qr_params(
+        self, params: Mapping[str, object]
+    ) -> dict[str, object]:
+        qr_params: dict[str, object] = {}
+        if params.get(ACTION.FORCE_APP_PIN):
+            qr_params["require_device_auth"] = "true"
+        return qr_params
+
     @log_with(log)
     def get_init_detail(self, params=None, user=None):
         """
@@ -691,18 +731,9 @@ class PushTokenClass(TokenClass):
         user = user or User()
         tokenlabel = params.get("tokenlabel", "<s>")
         tokenissuer = params.get("tokenissuer", "eduMFA")
-        sslverify = getParam(
-            params, self.PUSH_ACTION.SSL_VERIFY, allowed_values=["0", "1"], default="1"
-        )
         # Add rollout state the response
         response_detail["rollout_state"] = self.token.rollout_state
 
-        extra_data = {
-            "enrollment_credential": self.get_tokeninfo("enrollment_credential")
-        }
-        imageurl = params.get("appimageurl")
-        if imageurl:
-            extra_data.update({"image": imageurl})
         if self.token.rollout_state == ROLLOUTSTATE.CLIENTWAIT:
             # Get enrollment values from the policy
             registration_url = getParam(
@@ -718,14 +749,13 @@ class PushTokenClass(TokenClass):
                 )
                 if len(firebase_configs) != 1:
                     raise ParameterError("Unknown Firebase configuration!")
-            # this allows to upgrade our crypto
-            extra_data["v"] = 1
-            extra_data["serial"] = self.get_serial()
-            extra_data["sslverify"] = sslverify
-
-            # enforce App pin
-            if params.get(ACTION.FORCE_APP_PIN):
-                extra_data.update({"pin": True})
+            credential = self.get_tokeninfo("enrollment_credential")
+            extra_data = {
+                "serial": self.get_serial(),
+                "v": self.enrollment_version,
+                "enrollment_credential": credential,
+                **self._get_enrollment_qr_params(params),
+            }
 
             # We display this during the first enrollment step!
             qr_url = self.create_push_token_url(
@@ -745,9 +775,7 @@ class PushTokenClass(TokenClass):
                 "img": create_img(qr_url),
             }
 
-            response_detail["enrollment_credential"] = self.get_tokeninfo(
-                "enrollment_credential"
-            )
+            response_detail["enrollment_credential"] = credential
 
         elif self.token.rollout_state == ROLLOUTSTATE.ENROLLED:
             # in the second enrollment step we return the public key of the server to the smartphone.
@@ -785,115 +813,409 @@ class PushTokenClass(TokenClass):
         if not (now - td <= ts <= now + td):
             raise eduMFAError(f"Timestamp {timestamp} not in valid range.")
 
+    def _get_versioned_details(self, _g: object | None) -> dict[str, object]:
+        if self.get_class_type() != "edupush":
+            return {}
+
+        version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
+        if version == 2:
+            return {"token_update": {}}
+        return {}
+
     @classmethod
-    def _api_endpoint_post(cls, request_data):
-        """Handle all POST requests to the api endpoint
-
-        :param request_data: Dictionary containing the parameters of the request
-        :type request_data: dict
-        :returns: The result of handling the request and a dictionary containing
-                  the details of the request handling
-        :rtype: (bool, dict)
-        """
-        details = {}
-        result = False
-
+    def _api_endpoint_post(
+        cls, request_data: Mapping[str, object], g: object | None = None
+    ) -> tuple[bool, dict[str, object]]:
         serial = getParam(request_data, "serial", optional=False)
-        if all(k in request_data for k in ("fbtoken", "pubkey")):
-            log.debug("Do the 2nd step of the enrollment.")
-            try:
-                token_obj = get_one_token(
-                    serial=serial,
-                    tokentype=cls.get_class_type(),
-                    rollout_state=ROLLOUTSTATE.CLIENTWAIT,
-                )
-                token_obj.update(request_data)
-                # in case of validate/check enrollment
-                chals = get_challenges(serial=serial)
-                if (
-                    chals
-                    and chals[0].is_valid()
-                    and chals[0].get_session() == CHALLENGE_SESSION.ENROLLMENT
-                ):
-                    chals[0].set_otp_status(True)
-                    chals[0].save()
-            except ResourceNotFoundError:
-                raise ResourceNotFoundError(
-                    "No token with this serial number "
-                    "in the rollout state 'clientwait'."
-                )
-            init_detail_dict = request_data
+        explicit = "operation" in request_data
+        if explicit:
+            operation = request_data["operation"]
+            if (
+                cls.get_class_type() != "edupush"
+                or not isinstance(operation, str)
+                or operation not in POST_OPERATION_FIELDS
+            ):
+                raise ParameterError("Unknown push operation.")
 
-            details = token_obj.get_init_detail(init_detail_dict)
-            result = True
+            required = ("serial", *POST_OPERATION_FIELDS[operation])
+            allowed = {"operation", *required}
+            if operation == "respond_to_challenge":
+                allowed.add("decline")
+            if operation in ("begin_upgrade", "confirm_upgrade"):
+                allowed.add("target_version")
+                if type(request_data.get("target_version")) is not int:
+                    raise ParameterError("Expected an integer for 'target_version'.")
+            if operation == "confirm_upgrade":
+                allowed.add("require_device_auth")
+                if not isinstance(request_data.get("require_device_auth"), bool):
+                    raise ParameterError(
+                        "Expected a boolean for 'require_device_auth'."
+                    )
+            if request_data.keys() - allowed:
+                raise ParameterError("Unexpected parameters for push operation.")
+            for key in required:
+                value = request_data.get(key)
+                if not isinstance(value, str) or not value:
+                    raise ParameterError(f"Expected a non-empty string for {key!r}.")
+            if "decline" in request_data and not isinstance(
+                request_data["decline"], bool
+            ):
+                raise ParameterError("Expected a boolean for 'decline'.")
+        elif all(k in request_data for k in ("fbtoken", "pubkey")):
+            operation = "complete_enrollment"
         elif all(k in request_data for k in ("nonce", "signature")):
-            log.debug("Handling the authentication response from the smartphone.")
-            challenge = getParam(request_data, "nonce")
-            signature = getParam(request_data, "signature")
-            decline = is_true(getParam(request_data, "decline", default=False))
-
-            # get the token_obj for the given serial:
-            token_obj = get_one_token(serial=serial, tokentype=cls.get_class_type())
-            pubkey_obj = _build_verify_object(
-                token_obj.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
-            )
-            # Do the 2nd step of the authentication
-            # Find valid challenges
-            challengeobject_list = get_challenges(serial=serial, challenge=challenge)
-
-            if challengeobject_list:
-                # There are valid challenges, so we check this signature
-                for chal in challengeobject_list:
-                    # verify the signature of the nonce
-                    sign_data = f"{challenge}|{serial}"
-                    if decline:
-                        sign_data += "|decline"
-                    try:
-                        cls.verify_signature(pubkey_obj, sign_data, signature)
-                        # The signature was valid
-                        log.debug(f"Found matching challenge {chal}.")
-                        if decline:
-                            chal.set_data("challenge_declined")
-                        else:
-                            chal.set_otp_status(True)
-                        chal.save()
-                        result = True
-                    except InvalidSignature as _e:
-                        pass
+            operation = "respond_to_challenge"
         elif all(k in request_data for k in ("new_fb_token", "timestamp", "signature")):
-            timestamp = getParam(request_data, "timestamp", optional=False)
-            signature = getParam(request_data, "signature", optional=False)
-            # first check if the timestamp is in the required span
-            cls._check_timestamp_in_range(timestamp, UPDATE_FB_TOKEN_WINDOW)
-            try:
-                tok = get_one_token(serial=serial, tokentype=cls.get_class_type())
-                pubkey_obj = _build_verify_object(
-                    tok.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
-                )
-                sign_data = f"{request_data['new_fb_token']}|{serial}|{timestamp}"
-                cls.verify_signature(pubkey_obj, sign_data, signature)
-                # If the timestamp and signature are valid we update the token
-                tok.add_tokeninfo("firebase_token", request_data["new_fb_token"])
-                result = True
-            except (
-                ResourceNotFoundError,
-                ParameterError,
-                TypeError,
-                InvalidSignature,
-                ConfigAdminError,
-                BinasciiError,
-            ) as e:
-                # to avoid disclosing information we always fail with an invalid
-                # signature error even if the token with the serial could not be found
-                log.debug(traceback.format_exc())
-                log.info(
-                    f'The following error occurred during the signature check: "{e!r}"'
-                )
-                raise eduMFAError("Could not verify signature!")
+            operation = "update_firebase_token"
         else:
             raise ParameterError("Missing parameters!")
 
-        return result, details
+        if operation == "complete_enrollment":
+            return True, cls._complete_enrollment(serial, request_data, g, explicit)
+        if operation == "respond_to_challenge":
+            return cls._respond_to_challenge(serial, request_data, explicit), {}
+        if operation == "update_firebase_token":
+            cls._update_firebase_token(serial, request_data, explicit)
+            return True, {}
+        if operation in ("begin_upgrade", "confirm_upgrade"):
+            return True, cls._upgrade_version(serial, operation, request_data, g)
+        raise ParameterError("Unknown push operation.")
+
+    @classmethod
+    def _get_post_token(
+        cls, serial: str, explicit: bool, rollout_state: str | None = None
+    ) -> "PushTokenClass":
+        token = get_one_token(
+            serial=serial, tokentype=cls.get_class_type(), rollout_state=rollout_state
+        )
+        if explicit and parse_int(token.get_tokeninfo(PUSH_VERSION), default=1) != 2:
+            raise ParameterError("This push operation requires an eduPush V2 token.")
+        return token
+
+    @classmethod
+    def _complete_enrollment(
+        cls,
+        serial: str,
+        request_data: Mapping[str, object],
+        g: object | None,
+        explicit: bool,
+    ) -> dict[str, object]:
+        log.debug("Do the 2nd step of the enrollment.")
+        try:
+            token = cls._get_post_token(serial, explicit, ROLLOUTSTATE.CLIENTWAIT)
+            token.update(request_data)
+            # in case of validate/check enrollment
+            chals = get_challenges(serial=serial)
+            if (
+                chals
+                and chals[0].is_valid()
+                and chals[0].get_session() == CHALLENGE_SESSION.ENROLLMENT
+            ):
+                chals[0].set_otp_status(True)
+                chals[0].save()
+        except ResourceNotFoundError:
+            raise ResourceNotFoundError(
+                "No token with this serial number in the rollout state 'clientwait'."
+            )
+        details = token.get_init_detail(request_data)
+        details.update(token._get_versioned_details(g))
+        return details
+
+    @classmethod
+    def _respond_to_challenge(
+        cls, serial: str, request_data: Mapping[str, object], explicit: bool
+    ) -> bool:
+        log.debug("Handling the authentication response from the smartphone.")
+        challenge = getParam(request_data, "nonce")
+        signature = getParam(request_data, "signature")
+        decline = is_true(getParam(request_data, "decline", default=False))
+        token = cls._get_post_token(serial, explicit)
+        pubkey_obj = _build_verify_object(token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE))
+        challenges = get_challenges(serial=serial, challenge=challenge)
+        if not challenges:
+            return False
+
+        if explicit:
+            sign_data = cls._operation_signing_data(
+                "respond_to_challenge", serial, challenge, decline
+            )
+        else:
+            sign_data = f"{challenge}|{serial}"
+            if decline:
+                sign_data += "|decline"
+
+        try:
+            cls.verify_signature(pubkey_obj, sign_data, signature)
+        except (InvalidSignature, ValueError):
+            return False
+
+        for chal in challenges:
+            log.debug(f"Found matching challenge {chal}.")
+            if decline:
+                chal.set_data("challenge_declined")
+            else:
+                chal.set_otp_status(True)
+            chal.save()
+        return True
+
+    @classmethod
+    def _update_firebase_token(
+        cls, serial: str, request_data: Mapping[str, object], explicit: bool
+    ) -> None:
+        timestamp = getParam(request_data, "timestamp", optional=False)
+        signature = getParam(request_data, "signature", optional=False)
+        cls._check_timestamp_in_range(timestamp, UPDATE_FB_TOKEN_WINDOW)
+        new_fb_token = getParam(request_data, "new_fb_token", optional=False)
+        try:
+            token = cls._get_post_token(serial, explicit)
+            pubkey_obj = _build_verify_object(
+                token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
+            )
+            if explicit:
+                sign_data = cls._operation_signing_data(
+                    "update_firebase_token", serial, new_fb_token, timestamp
+                )
+            else:
+                sign_data = f"{new_fb_token}|{serial}|{timestamp}"
+            cls.verify_signature(pubkey_obj, sign_data, signature)
+            token.add_tokeninfo("firebase_token", new_fb_token)
+        except (
+            ResourceNotFoundError,
+            ParameterError,
+            TypeError,
+            InvalidSignature,
+            ConfigAdminError,
+            ValueError,
+        ) as e:
+            # Use the same signature error when the token cannot be found.
+            log.debug(traceback.format_exc())
+            log.info(
+                f'The following error occurred during the signature check: "{e!r}"'
+            )
+            raise eduMFAError("Could not verify signature!")
+
+    @staticmethod
+    def _operation_signing_data(operation: str, *fields: str | int | bool) -> str:
+        return json.dumps(
+            [operation, *fields], ensure_ascii=False, separators=(",", ":")
+        )
+
+    def _available_upgrade(self) -> int | None:
+        if (
+            self.get_class_type() == "edupush"
+            and self.token.rollout_state == ROLLOUTSTATE.ENROLLED
+            and self.is_active()
+            and not self.is_locked()
+            and not self.is_revoked()
+        ):
+            version = parse_int(self.get_tokeninfo(PUSH_VERSION, default="1"))
+            return PUSH_UPGRADE_PATHS.get(version)
+        return None
+
+    @classmethod
+    def _upgrade_version(
+        cls,
+        serial: str,
+        operation: str,
+        request_data: Mapping[str, object],
+        g: object | None,
+    ) -> dict[str, object]:
+        target = getParam(request_data, "target_version", optional=False)
+        signature = getParam(request_data, "signature", optional=False)
+        confirmation: tuple[str, bool] | None = None
+        if operation == "begin_upgrade":
+            timestamp = getParam(request_data, "timestamp", optional=False)
+            cls._check_timestamp_in_range(timestamp, PUSH_UPGRADE_WINDOW)
+            sign_data = cls._operation_signing_data(
+                operation, serial, target, timestamp
+            )
+        else:
+            nonce = getParam(request_data, "nonce", optional=False)
+            device_auth = getParam(request_data, "require_device_auth", optional=False)
+            confirmation = (nonce, device_auth)
+            sign_data = cls._operation_signing_data(
+                operation, serial, target, nonce, device_auth
+            )
+
+        try:
+            token = cls._get_post_token(serial, False, ROLLOUTSTATE.ENROLLED)
+            public_key = token.get_tokeninfo(PUBLIC_KEY_SMARTPHONE)
+            if not isinstance(public_key, str) or not public_key:
+                raise eduMFAError("Could not verify signature!")
+            cls.verify_signature(_build_verify_object(public_key), sign_data, signature)
+        except (ResourceNotFoundError, InvalidSignature, TypeError, ValueError):
+            raise eduMFAError("Could not verify signature!")
+
+        try:
+            token_id = token.token.id
+            # Take a write lock even on SQLite before reading upgrade state.
+            matched = Token.query.filter(
+                Token.id == token_id,
+                Token.tokentype == cls.get_class_type(),
+                Token.rollout_state == ROLLOUTSTATE.ENROLLED,
+                Token.active.is_(True),
+                Token.locked.is_not(True),
+                Token.revoked.is_not(True),
+            ).update({Token.active: Token.active}, synchronize_session=False)
+            if not matched:
+                raise ParameterError("This token cannot be upgraded.")
+
+            records = {
+                row.Key: row
+                for row in TokenInfo.query.filter(
+                    TokenInfo.token_id == token_id,
+                    TokenInfo.Key.in_(
+                        (PUSH_VERSION, PUSH_UPGRADE, PUBLIC_KEY_SMARTPHONE)
+                    ),
+                )
+                .with_for_update()
+                .populate_existing()
+                .all()
+            }
+            key_record = records.get(PUBLIC_KEY_SMARTPHONE)
+            if key_record is None or key_record.Value != public_key:
+                raise eduMFAError("Could not verify signature!")
+
+            version_record = records.get(PUSH_VERSION)
+            version = parse_int(version_record.Value) if version_record else 1
+            requires_device_auth = (
+                g is not None
+                and Match.user(
+                    g,
+                    scope=SCOPE.ENROLL,
+                    action=f"{cls.get_class_type()}_{ACTION.FORCE_APP_PIN}",
+                    user_object=token.user,
+                ).any()
+            )
+
+            if confirmation is None:
+                details = cls._begin_upgrade(
+                    token_id, records, version, target, requires_device_auth
+                )
+            else:
+                nonce, device_auth = confirmation
+                details = cls._confirm_upgrade(
+                    token_id,
+                    records,
+                    version,
+                    target,
+                    nonce,
+                    requires_device_auth,
+                    device_auth,
+                )
+            db.session.commit()
+            return details
+        except Exception:
+            db.session.rollback()
+            raise
+
+    @staticmethod
+    def _read_upgrade_offer(record: TokenInfo | None) -> PushUpgradeOffer | None:
+        if record is None:
+            return None
+        try:
+            stored = json.loads(record.Value)
+        except (ValueError, TypeError):
+            return None
+        if not isinstance(stored, dict):
+            return None
+        target, nonce, expires, confirmed = (
+            stored.get(key)
+            for key in ("target_version", "nonce", "expires_at", "confirmed")
+        )
+        if (
+            type(target) is int
+            and isinstance(nonce, str)
+            and type(expires) is int
+            and isinstance(confirmed, bool)
+        ):
+            return {
+                "target_version": target,
+                "nonce": nonce,
+                "expires_at": expires,
+                "confirmed": confirmed,
+            }
+        return None
+
+    @classmethod
+    def _begin_upgrade(
+        cls,
+        token_id: int,
+        records: Mapping[str, TokenInfo],
+        version: int,
+        target: int,
+        requires_device_auth: bool,
+    ) -> dict[str, object]:
+        if version == target and target in PUSH_UPGRADE_PATHS.values():
+            return {"push_version": version}
+        if PUSH_UPGRADE_PATHS.get(version) != target:
+            raise ParameterError("This push version upgrade is unavailable.")
+        record = records.get(PUSH_UPGRADE)
+        offer = cls._read_upgrade_offer(record)
+        now = int(time.time())
+        if (
+            offer is None
+            or offer["confirmed"]
+            or offer["target_version"] != target
+            or offer["expires_at"] <= now
+        ):
+            offer = {
+                "target_version": target,
+                "nonce": geturandom(32, hex=True),
+                "expires_at": now + 60 * PUSH_UPGRADE_WINDOW,
+                "confirmed": False,
+            }
+            if record is None:
+                db.session.add(TokenInfo(token_id, PUSH_UPGRADE, json.dumps(offer)))
+            else:
+                record.Value = json.dumps(offer)
+        return {
+            "upgrade": {
+                "target_version": target,
+                "nonce": offer["nonce"],
+                "expires_at": offer["expires_at"],
+                "require_device_auth": requires_device_auth,
+            }
+        }
+
+    @classmethod
+    def _confirm_upgrade(
+        cls,
+        token_id: int,
+        records: Mapping[str, TokenInfo],
+        version: int,
+        target: int,
+        nonce: str,
+        requires_device_auth: bool,
+        device_auth: bool,
+    ) -> dict[str, object]:
+        offer_record = records.get(PUSH_UPGRADE)
+        offer = cls._read_upgrade_offer(offer_record)
+        if (
+            offer_record is None
+            or offer is None
+            or offer["expires_at"] <= int(time.time())
+            or offer["target_version"] != target
+            or offer["nonce"] != nonce
+        ):
+            raise ParameterError("This push upgrade offer is invalid or expired.")
+        if offer["confirmed"] and version == target:
+            return {"push_version": version}
+        if offer["confirmed"] or PUSH_UPGRADE_PATHS.get(version) != target:
+            raise ParameterError("This push version upgrade is unavailable.")
+        if requires_device_auth and not device_auth:
+            raise PolicyError(
+                "Device authentication is required for this push upgrade."
+            )
+
+        version_record = records.get(PUSH_VERSION)
+        if version_record is None:
+            db.session.add(TokenInfo(token_id, PUSH_VERSION, str(target)))
+        else:
+            version_record.Value = str(target)
+        offer["confirmed"] = True
+        offer_record.Value = json.dumps(offer)
+        return {"push_version": target}
 
     @classmethod
     def verify_signature(cls, pubkey_obj, sign_data, signature):
@@ -912,16 +1234,17 @@ class PushTokenClass(TokenClass):
             )
 
     @classmethod
-    def _api_endpoint_get(cls, g, request_data):
+    def _api_endpoint_get(
+        cls, g, request_data, details: dict[str, object] | None = None
+    ):
         """Handle all GET requests to the api endpoint.
 
         Currently this is only used for polling.
         :param g: The Flask context
         :param request_data: Dictionary containing the parameters of the request
         :type request_data: dict
-        :returns: Result of the polling operation, 'True' if an unanswered and
-                  matching challenge exists, 'False' otherwise.
-        :rtype: bool
+        :param details: Optional response details populated after authentication
+        :returns: Unanswered, valid challenges for the token
         """
         # By default we allow polling if the policy is not set.
         allow_polling = (
@@ -987,6 +1310,11 @@ class PushTokenClass(TokenClass):
                     challenges.append(sp_data)
             # return the challenges as a list in the result value
             result = challenges
+            if details is not None:
+                details.update(tok._get_versioned_details(g))
+                target = tok._available_upgrade()
+                if target is not None:
+                    details["available_upgrade"] = {"target_version": target}
         except (
             ResourceNotFoundError,
             ParameterError,
@@ -1086,9 +1414,17 @@ class PushTokenClass(TokenClass):
         """
         details = {}
         if request.method == "POST":
-            result, details = cls._api_endpoint_post(request.all_data)
+            request_data = request.all_data
+            if "operation" in request_data and request.view_args:
+                # The token-type blueprint merges route parameters into all_data.
+                request_data = {
+                    key: value
+                    for key, value in request_data.items()
+                    if key not in request.view_args
+                }
+            result, details = cls._api_endpoint_post(request_data, g)
         elif request.method == "GET":
-            result = cls._api_endpoint_get(g, request.all_data)
+            result = cls._api_endpoint_get(g, request.all_data, details)
         else:
             raise eduMFAError(
                 f"Method {request.method} not allowed in 'api_endpoint' for push token."
@@ -1161,9 +1497,17 @@ class PushTokenClass(TokenClass):
                         pem_privkey,
                         options,
                     )
-                    res = fb_gateway.submit_message(
-                        self.get_tokeninfo("firebase_token"), smartphone_data
-                    )
+                    firebase_token = self.get_tokeninfo("firebase_token")
+                    if (
+                        isinstance(fb_gateway, FirebaseProvider)
+                        and self.get_class_type() == "edupush"
+                    ):
+                        version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
+                        res = fb_gateway.submit_message(
+                            firebase_token, smartphone_data, token_version=version
+                        )
+                    else:
+                        res = fb_gateway.submit_message(firebase_token, smartphone_data)
 
             # Create the challenge in the challenge table if either the message
             # was successfully submitted to the Firebase API or if polling is

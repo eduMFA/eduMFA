@@ -2,8 +2,10 @@ import json
 import time
 from base64 import b32decode, b32encode
 from datetime import datetime, timedelta, timezone
+from functools import partial
 from threading import Timer
 from unittest import mock
+from urllib.parse import parse_qs, urlsplit
 
 import responses
 from cryptography.hazmat.backends import default_backend
@@ -13,6 +15,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey, RSAPubl
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from flask import Request
 from google.oauth2 import service_account
+from requests import PreparedRequest
 from werkzeug.test import EnvironBuilder
 
 from edumfa.lib.challenge import get_challenges
@@ -33,11 +36,13 @@ from edumfa.lib.token import get_tokens, init_token, remove_token
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.pushtoken import (
     DEFAULT_CHALLENGE_TEXT,
+    GWTYPE,
     POLL_ONLY,
     POLLING_ALLOWED,
     PRIVATE_KEY_SERVER,
     PUBLIC_KEY_SERVER,
     PUBLIC_KEY_SMARTPHONE,
+    PUSH_VERSION,
     PushAllowPolling,
     PushTokenClass,
     strip_key,
@@ -64,10 +69,36 @@ def _create_credential_mock():
     )
 
 
-def _check_firebase_params(request):
-    payload = json.loads(request.body)
+def _check_firebase_params(
+    request: PreparedRequest, *, v2: bool = False
+) -> tuple[int, dict[str, str], str]:
+    assert isinstance(request.body, (str, bytes))
+    message = json.loads(request.body)["message"]
+    assert message["android"]["priority"] == "HIGH"
+    assert message["android"]["ttl"] == "120s"
+    apns = message["apns"]
+    aps = apns["payload"]["aps"]
+    assert aps["category"] == "PUSH_AUTHENTICATION"
+    assert aps["alert"]["title"] == message["data"]["title"]
+    assert aps["alert"]["body"] == message["data"]["question"]
+    if v2:
+        assert "notification" not in message
+        assert "notification" not in message["android"]
+        assert "collapse_key" not in message["android"]
+        assert apns["payload"]["body"] == message["data"]
+        assert aps["mutable-content"] == 1
+        assert "interruption-level" not in aps
+        assert "thread-id" not in aps
+        assert "apns-collapse-id" not in apns["headers"]
+        assert "badge" not in aps
+        assert "content-available" not in aps
+    else:
+        assert message["notification"] == aps["alert"]
+        assert apns["headers"]["apns-collapse-id"] == "privacyidea.pushtoken"
+        assert "body" not in apns["payload"]
+        assert "mutable-content" not in aps
     # check the signature in the payload!
-    data = payload.get("message").get("data")
+    data = message["data"]
 
     sign_string = "{nonce}|{url}|{serial}|{question}|{title}|{sslverify}".format(**data)
     token_obj = get_tokens(serial=data.get("serial"))[0]
@@ -254,19 +285,31 @@ class PushTokenTestCase(MyTestCase):
         )
         remove_token(self.serial1)
 
-    def test_01a_enroll_with_app_pin(self):
+    def test_01a_enroll_with_app_pin(self) -> None:
         tparams = {"type": "push", "genkey": 1}
         tparams.update(FB_CONFIG_VALS)
         tok = init_token(param=tparams)
+        self.addCleanup(remove_token, tok.get_serial())
+        stored_token = get_tokens(serial=tok.get_serial())[0]
+        self.assertEqual(stored_token.get_tokeninfo("push_version"), "1")
         detail = tok.get_init_detail(
             params={
                 LegacyPushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
                 LegacyPushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
+                LegacyPushTokenClass.PUSH_ACTION.SSL_VERIFY: "0",
                 ACTION.FORCE_APP_PIN: True,
+                "appimageurl": "https://edumfa.io/image",
             }
         )
-        self.assertIn("pin=True", detail["pushurl"]["value"])
-        remove_token(tok.get_serial())
+        query = parse_qs(urlsplit(detail["pushurl"]["value"]).query)
+        self.assertEqual(query["v"], ["1"])
+        self.assertEqual(query["serial"], [tok.get_serial()])
+        self.assertEqual(
+            query["enrollment_credential"], [detail["enrollment_credential"]]
+        )
+        self.assertEqual(query["sslverify"], ["0"])
+        self.assertEqual(query["image"], ["https://edumfa.io/image"])
+        self.assertEqual(query["pin"], ["True"])
 
     def test_02a_lib_enroll(self):
         r = set_smsgateway(
@@ -1800,6 +1843,76 @@ class PushTokenTestCase(MyTestCase):
 
 
 class EduPushTokenTestCase(MyTestCase):
+    @responses.activate
+    def test_firebase_notification_uses_stored_version(self) -> None:
+        gateway = "versioned_push_notifications"
+        set_smsgateway(gateway, GWTYPE, "Push notifications", FB_CONFIG_VALS)
+        self.addCleanup(delete_smsgateway, gateway)
+        token = self._create_push_token()
+        self.addCleanup(remove_token, token.get_serial())
+        token.add_tokeninfo(PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, gateway)
+        set_policy(
+            "versioned_push_registration",
+            SCOPE.ENROLL,
+            action=f"{PushTokenClass.PUSH_ACTION.REGISTRATION_URL}={REGISTRATION_URL}",
+        )
+        self.addCleanup(delete_policy, "versioned_push_registration")
+        g = FakeFlaskG()
+        g.policy_object = PolicyClass()
+        versions = iter((False, False, True))
+
+        def check_message(request: PreparedRequest) -> tuple[int, dict[str, str], str]:
+            return _check_firebase_params(request, v2=next(versions))
+
+        responses.add_callback(
+            responses.POST,
+            "https://fcm.googleapis.com/v1/projects/test-123456/messages:send",
+            callback=check_message,
+            content_type="application/json",
+        )
+        with mock.patch(
+            "edumfa.lib.smsprovider.FirebaseProvider.get_firebase_access_token",
+            return_value=_create_credential_mock(),
+        ):
+            token.del_tokeninfo(PUSH_VERSION)
+            token.create_challenge(options={"g": g})
+            for version in (1, 2):
+                token.add_tokeninfo(PUSH_VERSION, version)
+                token.create_challenge(options={"g": g})
+        self.assertEqual(len(responses.calls), 3)
+        for call in responses.calls:
+            self.assertEqual(call.response.status_code, 200)
+
+    def test_v2_enrollment_qr(self) -> None:
+        tok = init_token(param={"type": "edupush", "genkey": 1, **FB_CONFIG_VALS})
+        self.addCleanup(remove_token, tok.get_serial())
+        stored_token = get_tokens(serial=tok.get_serial())[0]
+        self.assertEqual(stored_token.get_tokeninfo("push_version"), "2")
+        detail = tok.get_init_detail(
+            params={
+                PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG: POLL_ONLY,
+                PushTokenClass.PUSH_ACTION.REGISTRATION_URL: "https://edumfa.io/enroll",
+                PushTokenClass.PUSH_ACTION.SSL_VERIFY: "0",
+                ACTION.FORCE_APP_PIN: True,
+                "appimageurl": "https://edumfa.io/image",
+            }
+        )
+        query = parse_qs(urlsplit(detail["pushurl"]["value"]).query)
+        self.assertEqual(query["v"], ["2"])
+        self.assertEqual(query["serial"], [tok.get_serial()])
+        self.assertEqual(
+            query["enrollment_credential"], [detail["enrollment_credential"]]
+        )
+        self.assertEqual(query["require_device_auth"], ["true"])
+        for key in (
+            "enrollmentCredential",
+            "requireDeviceAuth",
+            "sslverify",
+            "image",
+            "pin",
+        ):
+            self.assertNotIn(key, query)
+
     serial1 = "EDUP00001"
 
     server_private_key = rsa.generate_private_key(
@@ -1921,7 +2034,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertEqual(detail.get("rollout_state"), "clientwait")
         enrollment_credential = detail.get("enrollment_credential")
         self.assertTrue("pushurl" in detail)
-        self.assertNotIn("pin=True", detail["pushurl"]["value"])
+        self.assertNotIn("require_device_auth=true", detail["pushurl"]["value"])
         self.assertFalse("otpkey" in detail)
 
         # Run enrollment step 2
@@ -1982,7 +2095,7 @@ class EduPushTokenTestCase(MyTestCase):
                 ACTION.FORCE_APP_PIN: True,
             }
         )
-        self.assertIn("pin=True", detail["pushurl"]["value"])
+        self.assertIn("require_device_auth=true", detail["pushurl"]["value"])
         remove_token(tok.get_serial())
 
     def test_02a_lib_enroll(self):
@@ -2475,7 +2588,7 @@ class EduPushTokenTestCase(MyTestCase):
             responses.add_callback(
                 responses.POST,
                 "https://fcm.googleapis.com/v1/projects/test-123456/messages:send",
-                callback=_check_firebase_params,
+                callback=partial(_check_firebase_params, v2=True),
                 content_type="application/json",
             )
 
@@ -2676,7 +2789,7 @@ class EduPushTokenTestCase(MyTestCase):
             responses.add_callback(
                 responses.POST,
                 "https://fcm.googleapis.com/v1/projects/test-123456/messages:send",
-                callback=_check_firebase_params,
+                callback=partial(_check_firebase_params, v2=True),
                 content_type="application/json",
             )
 
@@ -3203,6 +3316,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertTrue(res[1]["result"]["status"], res)
         # No challenge created yet
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"])
+        self.assertNotIn("version", res[1]["detail"]["token_update"])
 
         # we need to create a challenge which we can check for with polling
         # use a given time for the challenge (15 seconds before the poll)

@@ -108,7 +108,9 @@ class FirebaseProvider(ISMSProvider):
         self.access_token_info = None
         self.access_token_expires_at = 0
 
-    def submit_message(self, firebase_token, data):
+    def submit_message(
+        self, firebase_token: str, data: dict[str, str], *, token_version: int = 1
+    ) -> bool:
         """
         send a message to a registered Firebase client
         This can be a simple OTP value or a cryptographic challenge response.
@@ -117,6 +119,7 @@ class FirebaseProvider(ISMSProvider):
         :type firebase_token: str
         :param data: the data dictionary part of the message to submit to the phone
         :type data: dict
+        :param token_version: the push token protocol version
         :return: bool
         """
         res = False
@@ -130,40 +133,40 @@ class FirebaseProvider(ISMSProvider):
         headers = {
             "Content-Type": "application/json; UTF-8",
         }
-        fcm_message = {
-            "message": {
-                "data": data,
-                "token": firebase_token,
-                "notification": {
-                    "title": data.get("title"),
-                    "body": data.get("question"),
-                },
-                "android": {
-                    "priority": "HIGH",
-                    "ttl": "120s",
-                    "fcm_options": {"analytics_label": "AndroidPushToken"},
-                },
-                "apns": {
-                    "headers": {
-                        "apns-priority": "10",
-                        "apns-push-type": "alert",
-                        "apns-collapse-id": "privacyidea.pushtoken",
-                        "apns-expiration": str(int(time.time()) + 120),
-                    },
-                    "payload": {
-                        "aps": {
-                            "alert": {
-                                "title": data.get("title"),
-                                "body": data.get("question"),
-                            },
-                            "sound": "default",
-                            "category": "PUSH_AUTHENTICATION",
-                        },
-                    },
-                    "fcm_options": {"analytics_label": "iOSPushToken"},
-                },
-            }
+        alert = {"title": data.get("title"), "body": data.get("question")}
+        aps: dict[str, object] = {
+            "alert": alert,
+            "sound": "default",
+            "category": "PUSH_AUTHENTICATION",
         }
+        apns_headers = {
+            "apns-priority": "10",
+            "apns-push-type": "alert",
+            "apns-expiration": str(int(time.time()) + 120),
+        }
+        apns_payload: dict[str, object] = {"aps": aps}
+        message: dict[str, object] = {
+            "data": data,
+            "token": firebase_token,
+            "android": {
+                "priority": "HIGH",
+                "ttl": "120s",
+                "fcm_options": {"analytics_label": "AndroidPushToken"},
+            },
+            "apns": {
+                "headers": apns_headers,
+                "payload": apns_payload,
+                "fcm_options": {"analytics_label": "iOSPushToken"},
+            },
+        }
+        if token_version == 2:
+            # Expo exposes the signed request through notification content.data.
+            apns_payload["body"] = data
+            aps["mutable-content"] = 1
+        else:
+            message["notification"] = alert
+            apns_headers["apns-collapse-id"] = "privacyidea.pushtoken"
+        fcm_message = {"message": message}
 
         proxies = {}
         if self.smsgateway.option_dict.get(FIREBASE_CONFIG.HTTPS_PROXY):
