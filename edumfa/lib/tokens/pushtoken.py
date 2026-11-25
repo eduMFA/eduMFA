@@ -791,7 +791,7 @@ class PushTokenClass(TokenClass):
 
         version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
         if version == 2:
-            return {"metadata": {"version": version}}
+            return {"metadata": {}}
         return {}
 
     @classmethod

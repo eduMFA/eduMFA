@@ -744,7 +744,7 @@ class EduPushAPITestCase(MyApiTestCase):
             # still the same serial number
             self.assertEqual(serial, detail.get("serial"))
             self.assertEqual(detail.get("rollout_state"), "enrolled")
-            self.assertEqual(detail["metadata"]["version"], 2)
+            self.assertNotIn("version", detail["metadata"])
             # Now the smartphone gets a public key from the server
             augmented_pubkey = f"-----BEGIN RSA PUBLIC KEY-----\n{detail.get('public_key')}\n-----END RSA PUBLIC KEY-----\n"
             parsed_server_pubkey = serialization.load_pem_public_key(

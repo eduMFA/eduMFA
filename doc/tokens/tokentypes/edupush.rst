@@ -68,8 +68,8 @@ the serial number and an enrollment credential back to the
 enrollment URL of the eduMFA server.
 
 The server returns the token's public key. For V2 tokens, the rollout response
-and every successful challenge poll also include the protocol version in
-``detail.metadata.version``, even when a poll finds no pending challenges.
+and each successful challenge poll also include a ``detail.metadata`` object,
+even when a poll finds no pending challenges.
 
 Authentication
 ~~~~~~~~~~~~~~

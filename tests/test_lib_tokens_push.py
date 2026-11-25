@@ -3240,7 +3240,7 @@ class EduPushTokenTestCase(MyTestCase):
         self.assertTrue(res[1]["result"]["status"], res)
         # No challenge created yet
         self.assertEqual(res[1]["result"]["value"], [], res[1]["result"])
-        self.assertEqual(res[1]["detail"]["metadata"]["version"], 2)
+        self.assertNotIn("version", res[1]["detail"]["metadata"])
 
         # we need to create a challenge which we can check for with polling
         # use a given time for the challenge (15 seconds before the poll)
