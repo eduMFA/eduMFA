@@ -2794,8 +2794,16 @@ msgstr ""
 "challenges"
 
 #: lib/tokens/pushtoken.py
+msgid "Require an additional challenge on the smartphone."
+msgstr ""
+
+#: lib/tokens/pushtoken.py
 msgid "URL for eduMFA Push Token"
 msgstr "URL voor eduMFA Push Token"
+
+#: lib/tokens/pushtoken.py
+msgid "Select this number on your smartphone:"
+msgstr ""
 
 #: lib/tokens/questionnairetoken.py
 msgid "Questionnaire: Enroll Questions for the user."

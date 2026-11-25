@@ -542,6 +542,22 @@ This is the title of the push notification that is displayed
 on the user's smartphone during the login process with
 a :ref:`edupush_token` or :ref:`push_token`.
 
+.. _policy_edupush_challenge:
+
+edupush_challenge
+----------------
+
+This policy enables an additional challenge for eduPush V2 sign-ins.
+With ``number``, the sign-in screen displays a two-digit number and the user
+selects it from three choices in the push app. A wrong answer ends the request.
+V1 tokens and V2 tokens without a matching policy use approve/deny.
+
+This feature is supported only by the eduMFA Push app.
+
+The policy takes precedence over ``edupush_wait`` so the initiating application
+can display the challenge immediately. See :ref:`edupush_token` for the typed
+API fields and signature format.
+
 .. _policy_push_wait:
 
 edupush_wait, push_wait
