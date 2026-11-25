@@ -22,7 +22,6 @@ from edumfa.lib.token import (
 from edumfa.lib.tokenclass import CLIENTMODE
 from edumfa.lib.tokens.legacypushtoken import LegacyPushTokenClass
 from edumfa.lib.tokens.pushtoken import (
-    FIREBASE_FID,
     POLL_ONLY,
     PUSH_UPGRADE,
     PUSH_VERSION,
@@ -705,13 +704,13 @@ class EduPushAPITestCase(MyApiTestCase):
             "serial": serial,
             "enrollment_credential": token.get_tokeninfo("enrollment_credential"),
             "pubkey": self.smartphone_public_key_pem_urlsafe,
-            "fid": "initial-installation",
+            "fbtoken": "initial-token",
         }
         for operation in (None, "unknown", "update_firebase_token"):
             with self.subTest(operation=operation):
                 response = client.post(url, json={**enrollment, "operation": operation})
                 self.assertEqual(response.status_code, 400)
-                self.assertIsNone(token.get_tokeninfo(FIREBASE_FID))
+                self.assertIsNone(token.get_tokeninfo("firebase_token"))
 
         response = client.post(
             url, json={**enrollment, "operation": "complete_enrollment"}
@@ -755,56 +754,32 @@ class EduPushAPITestCase(MyApiTestCase):
         )
         self.assertTrue(response.json["result"]["value"])
 
+        operation = "update_firebase_token"
         timestamp = datetime.now(timezone.utc).isoformat()
-        legacy_update = {
+        update = {
+            "operation": operation,
             "serial": serial,
             "new_fb_token": "replacement-token",
             "timestamp": timestamp,
-            "signature": sign(f"replacement-token|{serial}|{timestamp}"),
-        }
-        response = client.post(url, json=legacy_update)
-        self.assertFalse(response.json["result"]["status"])
-        self.assertIsNone(token.get_tokeninfo("firebase_token"))
-
-        fid = "c123456789012345678901"
-        operation = "update_firebase_installation"
-        installation = {
-            "operation": operation,
-            "serial": serial,
-            "fid": fid,
-            "timestamp": timestamp,
             "signature": sign(
-                json.dumps([operation, serial, fid, timestamp], separators=(",", ":"))
+                json.dumps(
+                    [operation, serial, "replacement-token", timestamp],
+                    separators=(",", ":"),
+                )
             ),
         }
-        response = client.post(
-            url, json={**installation, "fid": "changed-installation"}
-        )
+        response = client.post(url, json={**update, "new_fb_token": "tampered-token"})
         self.assertFalse(response.json["result"]["status"])
-        self.assertEqual(token.get_tokeninfo(FIREBASE_FID), "initial-installation")
-        response = client.post(url, json=installation)
-        self.assertTrue(response.json["result"]["value"])
-        self.assertEqual(token.get_tokeninfo(FIREBASE_FID), fid)
+        self.assertEqual(token.get_tokeninfo("firebase_token"), "initial-token")
+        token.del_tokeninfo(PUSH_VERSION)
+        response = client.post(url, json=update)
+        self.assertFalse(response.json["result"]["status"])
+        self.assertEqual(token.get_tokeninfo("firebase_token"), "initial-token")
 
-    def test_v2_enrollment_with_fid(self) -> None:
-        token = init_token({"type": "edupush", "genkey": 1})
-        serial = token.get_serial()
-        self.addCleanup(remove_token, serial)
-        client = self.app.test_client()
-        url = "/ttype/edupush"
-        enrollment = {
-            "operation": "complete_enrollment",
-            "serial": serial,
-            "enrollment_credential": token.get_tokeninfo("enrollment_credential"),
-            "pubkey": self.smartphone_public_key_pem_urlsafe,
-            "fid": "c123456789012345678901",
-        }
-        response = client.post(url, json={**enrollment, "fbtoken": "legacy-token"})
-        self.assertEqual(response.status_code, 400)
-        response = client.post(url, json=enrollment)
-        self.assertEqual(response.status_code, 200, response.json)
-        self.assertEqual(token.get_tokeninfo(FIREBASE_FID), enrollment["fid"])
-        self.assertIsNone(token.get_tokeninfo("firebase_token"))
+        token.add_tokeninfo(PUSH_VERSION, 2)
+        response = client.post(url, json=update)
+        self.assertTrue(response.json["result"]["value"])
+        self.assertEqual(token.get_tokeninfo("firebase_token"), "replacement-token")
 
     def test_upgrade_existing_edupush_token(self) -> None:
         token = init_token(
@@ -897,8 +872,6 @@ class EduPushAPITestCase(MyApiTestCase):
         self.assertEqual(client.post(url, json=begin).json["detail"]["upgrade"], offer)
         self.assertIsNone(token.get_tokeninfo(PUSH_VERSION))
 
-        fid = "c123456789012345678901"
-
         def confirmation(nonce: str, device_auth: bool) -> dict[str, object]:
             return {
                 "operation": "confirm_upgrade",
@@ -906,10 +879,9 @@ class EduPushAPITestCase(MyApiTestCase):
                 "target_version": 2,
                 "nonce": nonce,
                 "require_device_auth": device_auth,
-                "fid": fid,
                 "signature": self._sign_device_message(
                     json.dumps(
-                        ["confirm_upgrade", serial, 2, nonce, device_auth, fid],
+                        ["confirm_upgrade", serial, 2, nonce, device_auth],
                         separators=(",", ":"),
                     )
                 ),
@@ -932,11 +904,6 @@ class EduPushAPITestCase(MyApiTestCase):
         self.assertNotEqual(refreshed["nonce"], offer["nonce"])
         confirm = confirmation(refreshed["nonce"], True)
         self.assertFalse(
-            client.post(url, json={**confirm, "fid": "changed-installation"}).json[
-                "result"
-            ]["status"]
-        )
-        self.assertFalse(
             client.post(url, json={**confirm, "signature": begin["signature"]}).json[
                 "result"
             ]["status"]
@@ -944,8 +911,6 @@ class EduPushAPITestCase(MyApiTestCase):
         enable_token(serial, enable=False)
         self.assertFalse(client.post(url, json=confirm).json["result"]["status"])
         self.assertIsNone(token.get_tokeninfo(PUSH_VERSION))
-        self.assertIsNone(token.get_tokeninfo(FIREBASE_FID))
-        self.assertEqual(token.get_tokeninfo("firebase_token"), "migration-device")
         enable_token(serial)
         for request_data in (confirm, confirm, begin):
             response = client.post(url, json=request_data)
@@ -955,8 +920,7 @@ class EduPushAPITestCase(MyApiTestCase):
         stored = get_one_token(serial=serial)
         self.assertEqual(stored.get_tokeninfo(PUSH_VERSION), "2")
         self.assertEqual(stored.get_init_detail()["public_key"], public_key)
-        self.assertIsNone(stored.get_tokeninfo("firebase_token"))
-        self.assertEqual(stored.get_tokeninfo(FIREBASE_FID), fid)
+        self.assertEqual(stored.get_tokeninfo("firebase_token"), "migration-device")
         set_policy("upgrade-deny-polling", SCOPE.AUTH, active=False)
         response = client.get(url, query_string=poll)
         self.assertIn("token_update", response.json["detail"])
@@ -1029,8 +993,7 @@ class EduPushAPITestCase(MyApiTestCase):
                 "enrollment_credential": enrollment_credential,
                 "serial": serial,
                 "pubkey": self.smartphone_public_key_pem_urlsafe,
-                "fid": "c123456789012345678901",
-                "operation": "complete_enrollment",
+                "fbtoken": "firebaseT",
             },
         ):
             res = self.app.full_dispatch_request()
@@ -1059,7 +1022,7 @@ class EduPushAPITestCase(MyApiTestCase):
                 tokeninfo.get("public_key_smartphone"),
                 self.smartphone_public_key_pem_urlsafe,
             )
-            self.assertEqual(tokeninfo.get(FIREBASE_FID), "c123456789012345678901")
+            self.assertEqual(tokeninfo.get("firebase_token"), "firebaseT")
             self.assertEqual(
                 tokeninfo.get("public_key_server")
                 .strip()
@@ -1171,8 +1134,7 @@ class EduPushAPITestCase(MyApiTestCase):
                 "enrollment_credential": enrollment_credential,
                 "serial": serial,
                 "pubkey": self.smartphone_public_key_pem_urlsafe,
-                "fid": "c123456789012345678901",
-                "operation": "complete_enrollment",
+                "fbtoken": "firebaseT",
             },
         ):
             res = self.app.full_dispatch_request()
@@ -1200,7 +1162,7 @@ class EduPushAPITestCase(MyApiTestCase):
                 tokeninfo.get("public_key_smartphone"),
                 self.smartphone_public_key_pem_urlsafe,
             )
-            self.assertEqual(tokeninfo.get(FIREBASE_FID), "c123456789012345678901")
+            self.assertEqual(tokeninfo.get("firebase_token"), "firebaseT")
             self.assertEqual(
                 tokeninfo.get("public_key_server")
                 .strip()
@@ -1437,8 +1399,7 @@ class EduPushAPITestCase(MyApiTestCase):
                 "enrollment_credential": enrollment_credential,
                 "serial": serial,
                 "pubkey": self.smartphone_public_key_pem_urlsafe,
-                "fid": "c123456789012345678901",
-                "operation": "complete_enrollment",
+                "fbtoken": "firebaseT",
             },
         ):
             res = self.app.full_dispatch_request()
@@ -1466,7 +1427,7 @@ class EduPushAPITestCase(MyApiTestCase):
                 tokeninfo.get("public_key_smartphone"),
                 self.smartphone_public_key_pem_urlsafe,
             )
-            self.assertEqual(tokeninfo.get(FIREBASE_FID), "c123456789012345678901")
+            self.assertEqual(tokeninfo.get("firebase_token"), "firebaseT")
             self.assertEqual(
                 tokeninfo.get("public_key_server")
                 .strip()

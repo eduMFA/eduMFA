@@ -534,7 +534,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             PushTokenClass.PUSH_ACTION.FIREBASE_CONFIG, self.firebase_config_name
         )
         tok.add_tokeninfo(PUBLIC_KEY_SMARTPHONE, self.smartphone_public_key_pem_urlsafe)
-        tok.add_tokeninfo("firebase_fid", "c123456789012345678901")
+        tok.add_tokeninfo("firebase_token", "firebaseT")
         tok.add_tokeninfo(PUBLIC_KEY_SERVER, self.server_public_key_pem)
         tok.add_tokeninfo(PRIVATE_KEY_SERVER, self.server_private_key_pem, "password")
         tok.del_tokeninfo("enrollment_credential")
@@ -601,10 +601,8 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             method="POST",
             data={
                 "serial": "wrongserial",
-                "enrollment_credential": enrollment_credential,
                 "pubkey": self.smartphone_public_key_pem_urlsafe,
-                "fid": "c123456789012345678901",
-                "operation": "complete_enrollment",
+                "fbtoken": "firebaseT",
             },
         ):
             res = self.app.full_dispatch_request()
@@ -624,8 +622,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             data={
                 "serial": serial,
                 "pubkey": self.smartphone_public_key_pem_urlsafe,
-                "fid": "c123456789012345678901",
-                "operation": "complete_enrollment",
+                "fbtoken": "firebaseT",
                 "enrollment_credential": "WRonG",
             },
         ):
@@ -647,8 +644,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                 "enrollment_credential": enrollment_credential,
                 "serial": serial,
                 "pubkey": self.smartphone_public_key_pem_urlsafe,
-                "fid": "c123456789012345678901",
-                "operation": "complete_enrollment",
+                "fbtoken": "firebaseT",
             },
         ):
             res = self.app.full_dispatch_request()
@@ -676,7 +672,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                 tokeninfo.get("public_key_smartphone"),
                 self.smartphone_public_key_pem_urlsafe,
             )
-            self.assertEqual(tokeninfo.get("firebase_fid"), "c123456789012345678901")
+            self.assertEqual(tokeninfo.get("firebase_token"), "firebaseT")
             self.assertEqual(
                 tokeninfo.get("public_key_server")
                 .strip()
@@ -819,7 +815,8 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
             self.assertNotIn("otpkey", detail)
             enrollment_credential = detail.get("enrollment_credential")
 
-        # Complete V2 enrollment using a FID even when delivery is polling-only.
+        # 2nd step: as performed by the smartphone. Also in POLL_ONLY the smartphone needs to send
+        #           an empty "fbtoken"
         with self.app.test_request_context(
             "/ttype/edupush",
             method="POST",
@@ -827,8 +824,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                 "enrollment_credential": enrollment_credential,
                 "serial": serial,
                 "pubkey": self.smartphone_public_key_pem_urlsafe,
-                "fid": "c123456789012345678901",
-                "operation": "complete_enrollment",
+                "fbtoken": "",
             },
         ):
             res = self.app.full_dispatch_request()
@@ -856,7 +852,7 @@ class TtypeEduPushAPITestCase(MyApiTestCase):
                 tokeninfo.get("public_key_smartphone"),
                 self.smartphone_public_key_pem_urlsafe,
             )
-            self.assertEqual(tokeninfo.get("firebase_fid"), "c123456789012345678901")
+            self.assertEqual(tokeninfo.get("firebase_token"), "")
             self.assertEqual(
                 tokeninfo.get("public_key_server")
                 .strip()
