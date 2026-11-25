@@ -1502,7 +1502,7 @@ class PushTokenTestCase(MyTestCase):
             res = LegacyPushTokenClass.api_endpoint(req, g)
         self.assertTrue(res[1]["result"]["status"], res)
         self.assertNotIn("image", res[1].get("detail", {}))
-        self.assertNotIn("metadata", res[1].get("detail", {}))
+        self.assertNotIn("token_update", res[1].get("detail", {}))
         self.assertNotIn(
             PushTokenClass.PUSH_ACTION.IMAGE_URL,
             LegacyPushTokenClass.get_class_info("policy")[SCOPE.AUTH],
@@ -3220,7 +3220,7 @@ class EduPushTokenTestCase(MyTestCase):
         )
         try:
             for version, owner, image in (
-                (1, "cornelius", "https://example.org/token.png"),
+                (1, "cornelius", None),
                 (2, "cornelius", "https://example.org/token.png"),
                 (2, "other", None),
             ):
@@ -3249,11 +3249,11 @@ class EduPushTokenTestCase(MyTestCase):
                     self.assertTrue(res["result"]["value"])
                     self.assertEqual(res["detail"]["rollout_state"], "enrolled")
                     self.assertIn("public_key", res["detail"])
-                    self.assertEqual(res["detail"]["image"], image)
+                    self.assertNotIn("image", res["detail"])
                     if version == 1:
-                        self.assertNotIn("metadata", res["detail"])
+                        self.assertNotIn("token_update", res["detail"])
                     else:
-                        self.assertEqual(res["detail"]["metadata"], {"image": image})
+                        self.assertEqual(res["detail"]["token_update"], {"image": image})
                 finally:
                     tok.delete_token()
         finally:
@@ -3316,13 +3316,13 @@ class EduPushTokenTestCase(MyTestCase):
                     )
                 res = token_class.api_endpoint(req, g)[1]
                 self.assertEqual(res["result"]["value"], [])
-                self.assertEqual(res["detail"]["image"], image)
-                self.assertEqual(res["detail"]["metadata"], {"image": image})
-            set_policy("push_image", SCOPE.AUTH, user="other", active=True)
+                self.assertNotIn("image", res["detail"])
+                self.assertEqual(res["detail"]["token_update"], {"image": image})
+            set_policy("push_image", SCOPE.AUTH, user="cornelius", active=True)
             tok.del_tokeninfo("push_version")
-            detail = token_class.api_endpoint(req, g)[1]["detail"]
-            self.assertIsNone(detail["image"])
-            self.assertNotIn("metadata", detail)
+            detail = token_class.api_endpoint(req, g)[1].get("detail", {})
+            self.assertNotIn("image", detail)
+            self.assertNotIn("token_update", detail)
             req.all_data["signature"] = b32encode(b"invalid")
             with self.assertRaises(eduMFAError):
                 token_class.api_endpoint(req, g)

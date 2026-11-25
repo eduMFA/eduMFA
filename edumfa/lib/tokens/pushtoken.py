@@ -798,14 +798,14 @@ class PushTokenClass(TokenClass):
         if self.get_class_type() != "edupush":
             return {}
 
+        version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
+        if version != 2:
+            return {}
+
         image = get_action_values_from_options(
             SCOPE.AUTH, self.PUSH_ACTION.IMAGE_URL, options={"g": g, "user": self.user}
         )
-        version = parse_int(self.get_tokeninfo(PUSH_VERSION), default=1)
-        details: dict[str, object] = {"image": image}
-        if version == 2:
-            details["token_update"] = {"image": image}
-        return details
+        return {"token_update": {"image": image}}
 
     @classmethod
     def _api_endpoint_post(cls, request_data, g: object | None = None):
@@ -1105,9 +1105,8 @@ class PushTokenClass(TokenClass):
 
           More on polling can be found here: https://github.com/privacyidea/privacyidea/wiki/concept%3A-pushtoken-poll
 
-          Rollout and authenticated polling return ``detail.image`` for
-          eduPush. V2 also returns ``detail.metadata.image``. Polling returns
-          these fields even without challenges.
+          V2 rollout and authenticated polling return ``detail.token_update.image``.
+          Polling returns the image even without pending challenges.
 
         :param request: The Flask request
         :param g: The Flask global object g

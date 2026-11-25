@@ -552,12 +552,8 @@ type: string
 The :ref:`edupush_token` image URL for the push app. The policy matches the
 token owner.
 
-Rollout and authenticated polling return the image URL even when no challenges
-are pending.
-
-* V1 returns ``detail.image``. Tokens without a stored version use V1.
-* V2 adds ``detail.metadata.image`` and retains ``detail.image`` for existing
-  clients.
+V2 rollout and authenticated polling return the URL in
+``detail.token_update.image``, even when no challenges are pending.
 
 The app clears its saved image on ``null`` and keeps it when the server omits
 the image field.
